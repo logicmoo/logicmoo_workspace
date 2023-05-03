@@ -1,0 +1,1155 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: vp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+(EAHeadFeaturesForNodeType vp (TheList subcat inf lex object-be))
+
+;;; Note: the object-be feature is present in just those just those verb 
+;;; dictionary entries for Be-TheWord (am are is, was be been being).
+;;; Linking verbs, on the other hand, are a broader class of feature
+;;; that apply to verbs that can take an adjective.
+
+;;;
+;;; Verb Phrases
+;;;
+
+;;;;;;;;;;;;Basic VPs;;;;;;;;;;;;
+;;; Intransitive
+;;; CJM 9/13: This is no longer the baseline for all VPs. 
+;;;           Basic VPs are now formed with direct attachment to verbs
+;;;
+;;;
+(isa -vp->v- EAGrammarRule)
+(comment -vp->v- "present, past, present participle, past participle: 'eat', 'ate', 'eating', 'eaten'")
+(probabilityEAGrammarRule -vp->v- 1.0)
+(grammarRule -vp->v-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (mwp -) (intrans +)
+   (:ACTION ?varv) (sem (thereExists ?varv ?semv))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (lex (? !l will)) (agr ?a) 
+             (vform (? vform pres past prespart pastpart)) (mwp -)
+             (var ?varv) (sem ?semv))))))
+
+(isa -vp->mwpv- EAGrammarRule)
+(comment -vp->mwpv- "like -vp->v- except supports multiword phrases, which won't have vforms or agreement.")
+(probabilityEAGrammarRule -vp->mwpv- 1.0)
+(grammarRule -vp->mwpv-
+ (EATermFn vp
+  (TheList (agr (? a 3s 3p)) (var ?varv) (mwp +) (intrans +)
+   (:ACTION ?varv) (sem (thereExists ?varv ?semv))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (mwp +) (var ?varv) (sem ?semv))))))
+
+
+;;; Transitive verb constructions
+;;; This needs to look inside the vp to prohibit a trailing advpart
+;;;
+;;; CJM 9/13: Now v-np. This doesn't allow v adv-part np.
+;;;           Instead we need a rule for vp -> v adv-part and a separate rule for
+;;;           vp->vp-part-np. That's what Stanford does. Could limit overgeneration by
+;;;           specifying to look inside the vp for adv-part.
+(isa -vp->v-np- EAGrammarRule)
+(comment -vp->v-np- "verb + direct object 'eat the fruit'")
+(probabilityEAGrammarRule -vp->v-np- 1.0)
+(grammarRule -vp->v-np-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj +)
+   (inv-subject ?invsub) (:ACTION ?varv) (:OBJECT ?varnp)
+   (sem (and ?semnp ?semv))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (vform (? vform pres past prespart pastpart)) ; rules out base
+     (agr ?a) (var ?varv) (sem ?semv) 
+     (subcat (? s np np-pp part-np)) (object-be -))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (inv-subject ?invsub)))))
+
+(isa -vp->v-nosubcat-np- EAGrammarRule)
+(comment -vp->v-nosubcat-np- "verb + direct object '(believe in) reincarnation' handles the case where the verb may be an MWW, and thereby have no subcat.")
+(probabilityEAGrammarRule -vp->v-nosubcat-np- 1.0)
+(grammarRule -vp->v-nosubcat-np-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?!vform)
+   (agr (? a 1s 1p 2s 2p 3s 3p))  ; no constraint
+   (dir-obj +) (inv-subject ?invsub)
+   (:ACTION ?varv) (:OBJECT ?varnp)
+   (sem (and ?semnp ?semv))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (vform (? !vform base)) ; rules out base
+     (var ?varv) (sem ?semv) 
+     (subcat -) (object-be -))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (inv-subject ?invsub)))))
+
+;;; allow base vform to support VPbrst
+;;; ignore agr       base forms have no agreement
+;;; ignore subcats   base forms have no subcats
+;;; allow object-be  "be all that you can be"
+;;; *** Are we going to need a variant for ditransitives and pps as well?
+(isa -vp->vbase-np- EAGrammarRule)
+(comment -vp->vbase-np- "verb + direct object 'eat the fruit'")  ; be a man?
+(probabilityEAGrammarRule -vp->vbase-np- 1.0)
+(grammarRule -vp->vbase-np-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vb) (dir-obj +)
+   (inv-subject ?invsub) (:ACTION ?varv) (:OBJECT ?varnp)
+   (sem (and ?semnp ?semv))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (vform (? vb base)) (var ?varv) (sem ?semv))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (inv-subject ?invsub)))))
+
+;;; Ditransitives
+;;; CJM 9/13: Now v-np-np. Also this rule should be 1.0 for ditransitives. Just restricted the subcats.
+(isa -vp->v-np-np- EAGrammarRule)
+(comment -v->v-np-np- "Ditransitives take two objects, one direct and one indirect: 'sing you a song', 'teach him a game'")
+(probabilityEAGrammarRule -vp->v-np-np- 1.0)
+(grammarRule -vp->v-np-np-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj +)
+   (:ACTION ?varv) (:OBJECT ?varnp1) (:OBLIQUE-OBJECT ?varnp2)
+   (:NOUN :SUBJECT) (sem (and ?semv ?semnp1 ?semnp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (subcat (? s np-pp np-pp-pp np-np-pp np-dative-np))
+     (vform (? vform pres past prespart pastpart)) (var ?varv) (agr ?a) (sem ?semv) (aux -) 
+     (modal -) (negated -))))
+  (EATermFn np
+   (TheList (var ?varnp1) (sem ?semnp1) (inf -) (ntime1 -)))
+  (EATermFn np
+   (TheList (var ?varnp2) (sem ?semnp2) (inf -) (ntime1 -)))))
+
+
+;;; e.g. made me sad, anxious, proud, fluffy
+(isa -vp->v-np-adjp- EAGrammarRule)
+(comment -vp->v-np-adjp- ": 'Make me proud', 'Turned it upside-down' 'sanded the wood smooth'")
+(probabilityEAGrammarRule -vp->v-np-adjp- 1.0)
+(grammarRule -vp->v-np-adjp-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj +)
+   (:ACTION ?varv) (:OBJECT ?varnp)
+   (:NOUN :SUBJECT) (sem (and ?semv ?semnp ?semadjp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (subcat (? s np-adj))
+     (vform (? vform pres past prespart pastpart))
+     (var ?varv) (agr ?a) (sem ?semv) (aux -) 
+     (modal -) (negated -))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp)))
+  (EATermFn adjp
+   (TheList (var ?varadjp) (sem ?semadjp)))))
+
+;;;(isa -vp->v-sbrst EAGrammarRule)
+;;;(comment -vp->v-sbrst " They made [the boy eat the sandwich]. Note in FN this is ambig with an np-vbrst
+;;; construction.")
+;;;(grammarRule -vp->v-sbrst )
+
+;;; Prepositional phrases
+;;;
+;;; This is interesting. We do want vp-pp to combine infinite prepositions
+;;; However, in the case of 'drove the boy from the store to the mall' really it's two
+;;; PP arguments to the verb. However, if they aren't compositional (PPs from PPs) then
+;;; you have an issue with PPs as direct arguments because you lose recursion.
+;;;
+;;; Really, it seems like there's a v-pp-pp construction for motion/give/send
+;;; and otherwise a vp-pp rule. Even worse, the double pp can still form with another pp
+;;; as an adjunct, so it's not like we can restrict the vp-pp rule based on subcats. I'm
+;;; stumped on how to control for that...
+(isa -vp->vp-pp- EAGrammarRule)
+(comment -vp->vp-pp- "full vp + prep: 'drove the boy to the store'")
+(probabilityEAGrammarRule -vp->vp-pp- 1.0)
+(grammarRule -vp->vp-pp-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj ?!dir-obj)
+   (:ACTION ?varv) (:OBLIQUE-OBJECT ?varpp) (:NOUN :SUBJECT) (part -) 
+   (prep-lex ?plex) (sem (and ?semv ?sempp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (subcat (? s pp np-pp part-pp pp-pp it-pp)) (vform ?vform)
+     (var ?varv) (agr ?a) (sem ?semv) (aux -) (modal -) (negated -) (intrans -)
+     (inv -) (vpinf -) (dir-obj (? !dir-obj invalid)))))
+  (EATermFn pp
+            (TheList (var ?varpp) (sem ?sempp)
+            (prep-lex (? !lexp of))
+            (prep-lex ?plex)))))
+
+
+
+;;; verbs that take a prepositional direct object.
+(isa -vp->v-pp- EAGrammarRule)
+(comment -vp->v-pp- "vp + prep: 'walked in an orchard'")
+(probabilityEAGrammarRule -vp->v-pp- 1.0)
+(grammarRule -vp->v-pp-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj ?!dir-obj)
+   (:ACTION ?varv) (:OBLIQUE-OBJECT ?varpp) (:NOUN :SUBJECT)
+   (prep-lex ?!lexp) (sem (and ?semv ?sempp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (subcat (? s pp np np-pp part-pp pp-pp)) (vform ?vform)
+     (var ?varv) (agr ?a) (sem ?semv) (aux -) (modal -) (negated -)
+     (inv -) (vpinf -) (dir-obj (? !dir-obj invalid)))))
+  (EATermFn pp
+   (TheList (var ?varpp) (sem ?sempp)
+            (prep-lex (? !lexp of))))))
+            
+(isa -vp->v-of- EAGrammarRule)
+(comment -vp->v-of- "full vp + of: 'he learned of the war', 'think of it', 'heard of him'")
+(probabilityEAGrammarRule -vp->v-of- 1.0)  ; constrain this mightily with a subcat restriction
+(grammarRule -vp->v-of-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj ?!dir-obj)
+   (:ACTION ?varv) (:OBLIQUE-OBJECT ?varpp) (:NOUN :SUBJECT) (part -) 
+   (prep-lex ?plex) (sem (and ?semv ?sempp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (vform ?vform) (subcat (? s of-pp)) 
+     (var ?varv) (agr ?a) (sem ?semv) (aux -) (modal -) (negated -)
+     (inv -) (vpinf -) (dir-obj (? !dir-obj invalid)))))
+  (EATermFn pp
+            (TheList (var ?varpp) (sem ?sempp)
+            (prep-lex (? plex of))))))
+            
+;;; TRH 2-18-18 Removed -vp->vp-pp-cconj-pp- and instead added a rule
+;;; to handle pp conjunctions.  
+
+;;;
+;;;;;;;;;;;;Adverb/Particle constructions;;;;;;;;;;;;
+;;;
+(isa -vp->advp-vp- EAGrammarRule)
+(comment -vp->advp-vp- "advp + vp 'quickly ran to the store'")
+(probabilityEAGrammarRule -vp->advp-vp- 1.0)
+(grammarRule -vp->advp-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (:ACTION ?varv)
+   (:NOUN :SUBJECT) (preavp +) (sem (and ?sema ?semv))))
+ (TheList 
+  (EATermFn advp 
+   (TheList (sem ?sema) (lex (? !advl not never))))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (lex (? !l will)) (agr ?a)
+     (vform (? vform base pres past prespart pastpart)) (var ?varv)
+     (preavp -)
+     (sem ?semv) (lex (? !advlex when where how)))))))
+
+;;;CJM 8/29
+;;; Is this intended for "wrote the book very quickly?" If not, then it needs to be verb...
+;;; What about just "He dealt the cards slowly."?
+(isa -vp->vp-advp- EAGrammarRule)
+(comment -vp->vp-advp- "verb + advp 'wrote very quickly' We want to suppress this if the verb is a linking verb (ie, 'be') TRH changed this from a rule that only took a lexical verb to one taking a verb phrase.")
+(probabilityEAGrammarRule -vp->vp-advp- 1.0)
+(grammarRule -vp->vp-advp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (:ACTION ?varv)
+   (:NOUN :SUBJECT)
+   (postavp +)
+   (sem (thereExists ?varv (and ?sema ?semv)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp  ; we need to ensure that the vp itself doesn't have an adverb.  Don't let this rule fire recursively.
+    (TheList 
+     (modal -)
+     (agr ?a) (link -)
+     (vform (? vform base pres past prespart pastpart)) (var ?varv)
+     (postavp -)
+     (sem ?semv))))
+  (EATermFn advp
+   (TheList (sem ?sema) (lex (? !advlex when where how))))))
+
+;;; Particles
+;;; CJM 1/4: lots of edits.
+;;;    -verb not vp, it's subcat restricted but not necessarily intransitive
+;;;    - Bind Noun to subj of whatever slp it's a part of (inverted)
+;;;    -Object is either missing (The doctor is in) or preposed (The room that the doctor ate in)
+;;;      and so will be bound by the cnp rule. This isn't currently compatible with fn-semprocess
+;;;      because elements (with keywords) are only added when they are in a group pattern and successive
+;;;      keyword binding requires that the keyword already be IN the sem in order to be replaced with
+;;;      another keyword that can be subsequently bound. (e.g. :OBJECT -> :NOUN)
+;;;
+;;;    -The soluton, because of the way dvar-type works is to bind :POSSESSOR to :NOUN at the cnp level.
+;;;     That's deeply twisted.
+(isa -vp->v-particle- EAGrammarRule)
+(comment -vp->v-particle- "v + prep: 'what did he [run into]?'")
+(probabilityEAGrammarRule -vp->v-particle- 1.0)
+(grammarRule -vp->v-particle- 
+  (EATermFn vp 
+    (TheList (var ?varv) (vform ?vform) (agr ?a) (ACTION ?varv) 
+      (:NOUN :SUBJECT) (:POSSESSOR :NOUN) (prep-lex ?prep-lex) 
+      (sem (and ?semv ?semp)) (part +))) 
+  (TheList 
+    (EAHeadFn 
+      (EATermFn Verb 
+        (TheList (subcat (? s pp np np-pp part-pp pp-pp it-pp)) 
+          (vform ?vform) (var ?varv) (agr ?a) (sem ?semv) (aux -) 
+          (modal -)))) 
+    (EATermFn Preposition (TheList (var ?varp) (sem ?semp) (lex ?prep-lex)))))
+
+
+
+(isa -vp->v-advpart- EAGrammarRule)
+(comment -vp->v-advpart- "verb + advpart: 'went up', 'looked down'")
+(probabilityEAGrammarRule -vp->v-advpart- 0.8)  ; prefer non-particle parses
+(grammarRule -vp->v-advpart-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (part +) ; flag that we have a particle
+   (sem (thereExists ?varv (and ?sema ?semv)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (lex (? !l will)) (agr ?a)
+     (vform ?vform)
+     (var ?varv) 
+     (sem ?semv))))
+  (EATermFn Adverb (TheList (sem ?sema) (part +)))))
+ 
+;;; This one should go away and we should extend v-vp->v-advpart- to take a vp and 
+;;; look inside (using % mechanism) to bind any objects, restrict lex & vform.
+(isa -vp->v-object-advpart- EAGrammarRule)
+(comment -vp->v-object-advpart- "verb + direct object + advpart: 'bring the book back'")
+(probabilityEAGrammarRule -vp->v-object-advpart- 0.9)
+(grammarRule -vp->v-object-advpart-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (:OBJECT ?varnp) (part +)
+   (sem
+    (thereExists (TheList ?varv ?varnp)
+     (and ?sema ?semv ?semnp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (lex (? !l will)) (agr ?a)
+     (vform (? vform base pres past prespart pastpart))
+     (object-be -) (var ?varv) (sem ?semv))))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))
+  (EATermFn Adverb (TheList (sem ?sema) (part +)))))
+
+
+(isa -vp->v-object-be-advpart- EAGrammarRule)
+(comment -vp->v-object-be-advpart- "verb + direct object be + advpart 'Is the doctor in?.' (CJM)")
+(probabilityEAGrammarRule -vp->v-object-be-advpart- 1.0)
+(grammarRule -vp->v-object-be-advpart-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (:OBJECT ?varnp) (link ?varv) (vbe +)
+   (sem
+    (thereExists (TheList ?varv ?varnp)
+     (and ?sema ?semv ?semnp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (lex (? !l will)) (agr ?a)
+     (vform (? vform base pres past prespart pastpart))
+     (object-be +) (var ?varv) (sem ?semv))))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (inf -)))
+  (EATermFn Adverb (TheList (sem ?sema) (part +)))))
+
+
+;;;
+;;;;;;;;;;;;Measurement Phrases;;;;;;;;;;;;
+;;;
+;;;cjm10/21/15
+;;; currently no hasAmount because in many of these possession is odd to conclude
+;;; Shoot, this conflicts with the MeasureForAction approach to explicit rates
+;;; better approach is to create measure at the mp level with an unbound var for ACTION.
+(isa -vp->vp-mp- EAGrammarRule)
+(comment -vp->vp-mp- "vp + direct object (mp) 'move 1 inch/produce 3 food points'")
+(probabilityEAGrammarRule -vp->vp-mp- 1.0)
+(grammarRule -vp->vp-mp-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj +)
+   (inv-subject ?invsub) (:ACTION ?varv) (:OBJECT ?varmp)
+   (sem (and ?semv (measure ?varv ?semmp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (agr ?a) (var ?varv) (sem ?semv)
+     (subcat (? s np np-pp part-np)) (inv-subject ?invsub)
+     (aux -) (modal -) (negated -)
+     (inv -) (dir-obj -) (link -) (prep-lex -))))
+  (EATermFn mp (TheList (prep-lex -) (var ?varmp) (sem ?semmp)))))
+
+;; duplicate rule but when the measure has a preposition
+;; Needs a better comment...
+(isa -vp->vp-mp-prep EAGrammarRule)
+(comment -vp->vp-mp-prep "vp + direct object (mp) 'move 1 inch/produce 3 food points'")
+(probabilityEAGrammarRule -vp->vp-mp-prep 1.0)
+(grammarRule -vp->vp-mp-prep
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj +)
+   (inv-subject ?invsub) (:ACTION ?varv) (:OBJECT ?varmp) (prep-lex per)
+   (sem (and ?semv ?semmp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (agr ?a) (var ?varv) (sem ?semv)
+     (subcat (? s np np-pp part-np)) (inv-subject ?invsub)
+     (aux -) (modal -) (negated -)
+     (inv -) (dir-obj -) (link -) (prep-lex -))))
+  (EATermFn mp 
+   (TheList (prep-lex per) (var ?varmp) (sem ?semmp)))))
+   
+;;;
+;;;;;;;;;;;;Infinitive Constructions;;;;;;;;;;;;
+;;;
+;;; So, in our prior grammar, sentences like this explicitly had purposeInEvent in the sem
+;;; However, in FN, the VPto frequently matches to FEs like explanation or purpose.
+;;; So when we have the valence pattern, awesome! When we don't, do we want that info to
+;;; come from the grammar? Alternatively, add semantics from the construction by generalizing
+;;; over examples. Do we have enough examples of things like this? VPto?
+;;;
+;;; CJM 9/18 vp-vpto- because intended to capture "ate to survive" and "ate the apple to survive".
+;;; However, consider "causes the boy to survive". Here "causes the boy" really shouldn't be considered
+;;; as a transitive vp (e.g. "ate the apple"). Even if it were, in the first case it has no GF to survive.
+;;; However in the causal case, it's acting as the subject. The boy is surviving.
+;;;
+;;; We need to treat causal/think/believe/desire np-vpto as separate. See below rule.
+;;;
+;;; Replaces -vp->vp-npimpliedinf-
+(isa -vp->vp-vpto- EAGrammarRule)
+(comment -vp->vp-vpto- "vp + to (purpose) + vp (infinitive): 'ate to survive'.  Note: This is *not* a gerund (it doesn't end in ing) There's an implied 'in order to' here, so we'll call it an npimpliedinf, and prohibit the infinitive subcat frame to avoid redundancy with vp->vp-npinf-.")
+(probabilityEAGrammarRule -vp->vp-vpto- 1.0)
+(grammarRule -vp->vp-vpto-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj invalid)
+           (:ACTION ?varv) 
+           (prep-lex to)
+   (sem
+    (and ?semv  (purposeInEvent :SUBJECT ?varv ?semto)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (var ?varv) (agr ?a) (sem ?semv)
+     (aux -) (modal -) (lex (? !l cause make caused made causes makes causing making))
+     (negated -) (inv -) (dir-obj ?dir-obj) (vpinf -) (link -))))
+  (EATermFn VPto
+   (TheList (var ?varto) (sem ?semto)))))
+
+
+;;;Causation + np vpto. This only triggers with causal verbs. Currently lex-specific. Use feature in future.
+(isa -vp->v-np-vpto- EAGrammarRule)
+(comment -vp->v-np-vpto- "vp-cause + to (purpose) +DO + vp (infinitive): 'cause the boy to survive'")
+(probabilityEAGrammarRule -vp->v-np-vpto- 1.0)
+(grammarRule -vp->v-np-vpto-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj invalid)
+   (:ACTION ?varv) (:SUBJECT ?varnp) (prep-lex to) 
+   (sem
+    (and ?semv ?semnp ?semto))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (vform ?vform) (var ?varv) (agr ?a) (sem ?semv) (subcat (? s that-s)) 
+             (aux -) (modal -) (link -))))
+  (EATermFn np
+            (TheList (var ?varnp) (sem ?semnp) (agr ?na)))
+  (EATermFn VPto
+   (TheList (var ?varto) (sem ?semto)))))
+
+;;; Not covered:
+;;;   - 'wants to run around the park'
+;;;   - 'wants to run'
+;;;
+;;; 9/19 CJM: Changed to VPto
+;;;(isa -vp->vp-npinf- EAGrammarRule)
+;;;(comment -vp->vp-npinf- "vp + infinitive: 'wanted to run around the lake'")
+;;;(probabilityEAGrammarRule -vp->vp-npinf- 1.0)
+;;;(grammarRule -vp->vp-npinf-
+;;; (EATermFn vp
+;;;  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj invalid)
+;;;   (vpinf +) (:ACTION ?varv) (:INF-COMP ?semnp) (:CLAUSE ?semnp) (sem ?semv)))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn vp
+;;;    (TheList (vform ?vform) (subcat (? sc to-inf-sc to-inf-rs))
+;;;     (agr ?a) (var ?varv) (sem ?semv) (dir-obj -) (modal -) (inv -)
+;;;     (vpinf -) (aux -))))
+;;;  (EATermFn np
+;;;   (TheList (var ?varnp) (sem ?semnp) (inf +)))))
+;(isa -vp->vp-np-npinf- EAGrammarRule)
+;(comment -vp->vp-np-npinf- "vp + np + infinitive: 'wanted John to run around the lake'")
+;(probabilityEAGrammarRule -vp->vp-np-npinf- 1.0)
+;(grammarRule -vp->vp-np-npinf-
+; (EATermFn vp
+;  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj invalid)
+;   (vpinf +) (:ACTION ?varv) (:INF-COMP ?semnp) (:OBJECT ?varnp-obj)
+;   (sem ?semv)))
+; (TheList
+;  (EAHeadFn
+;   (EATermFn vp
+;    (TheList (vform ?vform)
+;     (subcat (? sc np-to-inf np-to-inf-vc np-to-inf-oc
+;                np-to-be-adj np-s-inf
+;                    ))
+;     (agr ?a) (var ?varv) (sem ?semv) (modal -) (link -) (inv -)
+;     (aux -) (neg -) (mwp -) (vpinf -) (vmotion -))))
+;  (EATermFn np
+;   (TheList (var ?varnp) (sem ?semnp) (inf +)
+;    (np-obj ?varnp-obj)))))
+;;;CJM 9-19: So do we want the conditional to be a part of the VPto or not?
+;;;          Arg against, the conditional can be moved "If he would swim, he promised to help him."
+(isa -vp->vp-npinf-conditional- EAGrammarRule)
+(comment -vp->vp-npinf-conditional- "conditional infinitive: 'promised to help him if he would swim' (note that the promising is not conditional, which would be slp-sconj-slp)")
+(probabilityEAGrammarRule -vp->vp-npinf-conditional- 1.0)
+(grammarRule -vp->vp-npinf-conditional-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj invalid)
+   (vpinf +) (:ACTION ?varv) (:INF-COMP ?semnp) (:CLAUSE ?semslp)
+   (sem ?semv)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (subcat (? sc to-inf-sc to-inf-rs))
+     (agr ?a) (var ?varv) (sem ?semv) (dir-obj -) (modal -) (vpinf -))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (inf +)))
+  (EATermFn SubordinatingConjunction (TheList (lex if)))
+  (EATermFn slp (TheList (var ?varslp) (sem ?semslp)))))
+
+
+;;; There are no parentheticals in NuLex
+;;; *** This needs to change.  There is no :CLAUSE feature in FrameNet semtranses.
+(isa -vp->vp-that-slp- EAGrammarRule)
+(comment -vp->vp-that-slp- "parenthetical vp + that + slp: 'He believes that John ate the cake.'")
+(probabilityEAGrammarRule -vp->vp-that-slp- 0.9)
+(grammarRule -vp->vp-that-slp-
+ (EATermFn vp
+  (TheList (var ?varvp) (vform ?vform) (agr ?a) (dir-obj invalid)
+   (:ACTION ?varvp) (:CLAUSE ?semslp) (sem ?semvp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (var ?varvp) (agr ?a) (sem ?semvp)
+;     (parenthetical +)
+     (aux -) (modal -) (negated -) (inv -))))
+  (EATermFn SubordinatingConjunction (TheList (lex that)))
+  (EATermFn slp (TheList (var ?varslp) (sem ?semslp)))))
+
+;;; *** This needs to change.  There is no :CLAUSE feature in FrameNet semtranses.
+(isa -vp->vp-vpinv- EAGrammarRule)
+(comment -vp->vp-vpinv- "parenthetical vp + inv 'saw the dog running'")
+(probabilityEAGrammarRule -vp->vp-vpinv- 1.0)
+(grammarRule -vp->vp-vpinv-
+ (EATermFn vp
+  (TheList (var ?varvp) (vform ?vform) (agr ?a) (dir-obj invalid)
+   (:ACTION ?varvp) (:CLAUSE ?semvp2) (sem ?semvp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (var ?varvp) (agr ?a) (sem ?semvp)
+;     (parenthetical +)
+     (aux -) (modal -) (negated -) (inv -)
+     (dir-obj -))))
+  (EATermFn vp (TheList (var ?varvp2) (sem ?semvp2) (inv +)))))
+
+;;; *** This needs to change.  There is no :CLAUSE feature in FrameNet semtranses.
+(isa -vp->vp-if-slp- EAGrammarRule)
+(comment -vp->vp-if-slp- "subordinate if-clause 'discover if this is true', 'know if he came by'")
+(probabilityEAGrammarRule -vp->vp-if-slp- 0.9)
+(grammarRule -vp->vp-if-slp-
+ (EATermFn vp
+  (TheList (var ?varvp) (vform ?vform) (agr ?a) (dir-obj invalid)
+   (:ACTION ?varvp) (:CLAUSE ?semslp) (sem ?semvp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (var ?varvp) (agr ?a) (sem ?semvp)
+     (subcat pp-how-to-inf) (aux -) (modal -) (negated -) (inv -))))
+  (EATermFn SubordinatingConjunction (TheList (lex if)))
+  (EATermFn slp (TheList (var ?varslp) (sem ?semslp)))))
+
+
+;(isa -vp->vbe-vp-subject- EAGrammarRule)
+;(comment -vp->vbe-vp-subject- "progressive aspect 'am/is/are eating', 'was/were eating', '(will) be eating'")
+;(probabilityEAGrammarRule -vp->vbe-vp-subject- 1.0)
+;(grammarRule -vp->vbe-vp-subject-
+; (EATermFn vp
+;  (TheList (agr ?a) (vform ?auxform) (var ?varv) (aux +)
+;   (negated ?neg) (inv ?inv) (progressive +) (sem ?semv) (:SUBJECT ?npvar)))
+; (TheList
+;  (EATermFn AuxVerb
+;   (TheList (sem ?semaux) (var ?varaux) (agr ?a) (root be) (vform ?auxform)))
+;  (EAHeadFn
+;   (EATermFn vp
+;    (TheList (vform (? vf prespart)) (var ?varv) (sem ?semv) (negated ?neg)
+;             (inv ?inv) (:SUBJECT ?npvar))))))
+
+;;; The auxiliary changes tense here.  We intentionally don't pass the vform directly up from the verb phrase.
+(isa -vp->aux-vp- EAGrammarRule)
+(comment -vp->aux-vp- "perfect aspect: 'have eaten', 'being run', 'have not been eating', 'were being followed', 'is hurt'")
+(probabilityEAGrammarRule -vp->aux-vp- 1.0)
+(grammarRule -vp->aux-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv)
+   (aux +) (negated ?neg) (inv ?inv) (perfect +) (sem ?semv)))
+ (TheList 
+  (EATermFn AuxVerb 
+   (TheList (agr ?a) (vform (? !vform base)) (sem ?semaux) (var ?varaux) (modal -)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList 
+     ;(lex (? !l being been doing done)) ; let these be auxiliaries
+     (var ?varv) (vform (? !vf past pres base)) (sem ?semv) (negated ?neg)
+     (inv ?inv))))
+  (EATermFn bind-active-vform ; attached procedure to convert pastpart -> past, prespart -> pres
+    (TheList (aux-vform ?!vform) (active-vform ?vform)))
+   ))
+
+
+
+(isa -vp->will-vp- EAGrammarRule)
+(comment -vp->will-vp- "future tense: 'will eat', 'will be eating', 'will have eaten', 'will have been eating'")
+(probabilityEAGrammarRule -vp->will-vp- 1.0)
+(grammarRule -vp->will-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform future) (var ?varv) (modal +) (negated ?neg)
+    (inv ?inv) (aux +) (sem (willBe ?semv))))
+ (TheList
+  (EATermFn AuxVerb
+   (TheList (modal +) (lex will) (agr ?a)
+    (vform (? vf pres))))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform (? vf pres)) (var ?varv) (sem ?semv)
+    (negated ?neg) (inv ?inv))))))
+
+(isa -vp->going-to-vp- EAGrammarRule)
+(comment -vp->going-to-vp- "future tense: 'going to eat'")
+(probabilityEAGrammarRule -vp->going-to-vp- 1.0)
+(grammarRule -vp->going-to-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform (? vf1 prespart)) (var ?varv) (modal +)
+   (negated ?neg) (inv ?inv) (sem (willBe ?semv))))
+ (TheList (EATermFn Verb (TheList (lex going)))
+  (EATermFn Preposition (TheList (lex to)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform (? vf2 pres)) (var ?varv) (sem ?semv) (negated ?neg)
+     (agr ?a) (inv ?inv))))))
+
+;;;Modals
+
+;;; Why can't this be modal? "He never could spell."
+(isa -vp->not-vp- EAGrammarRule)
+(comment -vp->not-vp- "negating a verb: 'He [never saw her again].'")
+(probabilityEAGrammarRule -vp->not-vp- 1.0)
+(grammarRule -vp->not-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (negated +)
+   (sem ?semv) (modal ?modal)))     ; don't wrap 'not' here - scope it at the slp level
+ (TheList (EATermFn Adverb (TheList (lex (? l not never))))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (agr ?a) (var ?varv) (sem ?semv)
+     (modal ?modal))))))
+
+(isa -vp->modal-vp- EAGrammarRule)
+(comment -vp->modal-vp- "case for non-negated vp: 'They [could eat salad].'")
+(probabilityEAGrammarRule -vp->modal-vp- 1.0)
+(grammarRule -vp->modal-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (modal +) (negated -)
+   (inv ?inv) (aux +) (link ?link) (sem (possible ?semv))))
+ (TheList
+  (EATermFn AuxVerb
+   (TheList (modal +) (lex (? !l did do does will)) ; what about 'cannot'? 'must' should be necessary, not possible.
+    (sem ?semaux)
+    (var ?varaux) (agr ?a) (vform (? vform pres past))))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform (? vf pres)) (var ?varv) (sem ?semv)  (negated -)
+     (inv ?inv) (link ?link))))))
+
+;;; There is no :CLAUSE feature in FrameNet semtranses.
+(isa -vp->modal-not-vp- EAGrammarRule)
+(comment -vp->modal-not-vp- "case for negated vp (need to invert not/modal in the semantics)")
+(probabilityEAGrammarRule -vp->modal-not-vp- 1.0)
+(grammarRule -vp->modal-not-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (modal +)
+   (negated +) (inv ?inv) (link ?link)
+   (sem (and ?semaux ?semv))))
+ (TheList
+  (EATermFn AuxVerb
+   (TheList (modal +) (lex (? !l did do does will)) (sem ?semaux)
+    (var ?varaux) (agr ?a) (vform ?vform)))
+  (EATermFn Adverb (TheList (lex (? lexadv not never))))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform (? vf pres)) (var ?varv) (sem ?semv) ; probably won't handle double negatives right.
+     (inv ?inv) (link ?link))))))
+
+;;; pass up the subject for QA
+(isa -vp->did-vp- EAGrammarRule)
+(comment -vp->did-vp- "did/do are empty modals: 'I [did sing]'")
+(probabilityEAGrammarRule -vp->did-vp- 1.0)
+(grammarRule -vp->did-vp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (negated ?neg)
+   (inv ?inv) (aux +) (sem ?semv) (:SUBJECT ?varnp)))
+ (TheList
+  (EATermFn AuxVerb
+   (TheList (modal +) (lex (? l did do does))
+    (vform (? vform past pres)) (agr ?a)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList 
+     (vform (? vf pres)) (var ?varv)
+     (sem ?semv) (:SUBJECT ?varnp) 
+     (modal -) (negated ?neg) (inv ?inv))))))
+
+(isa -vp->did-not- EAGrammarRule)
+(comment -vp->did-not- "'did not', 'does not' with a verb gap")
+(probabilityEAGrammarRule -vp->did-not- 1.0)
+(grammarRule -vp->did-not-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (negated +) (aux +)
+   (sem (thereExists ?varv ?semv))))  ; removed 'not' here to push it up to slp level
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb  ;; not an AuxVerb?
+    (TheList 
+      (lex (? l did do does)) 
+      (var ?varv) (agr ?a) 
+      (vform (? vform pres past)) 
+      (sem ?semv))))
+  (EATermFn Adverb (TheList (lex not)))))
+
+
+(isa -vp->v-ntime- EAGrammarRule)
+(comment -vp->v-ntime- "verb + ntime: 'ate many times', 'went yesterday'")
+(probabilityEAGrammarRule -vp->v-ntime- 1.0)
+(grammarRule -vp->v-ntime-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (:ACTION ?varv)
+   (:NOUN :SUBJECT)
+   (sem (and (thereExists ?varv ?semv) ?semnp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (lex (? !l will)) (agr ?a) (object-be -)
+     (vform (? vform base pres past prespart pastpart)) (var ?varv)
+     (sem ?semv))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (ntime1 +) (gap -)))))
+
+
+;;; CJM 7/19
+;;; Also applies to any verb slp sentence
+;;; We don't have vsay in Nulex so instead I'm enumerating the viable NULEX subcat frames
+(isa -vp->say-slp- EAGrammarRule)
+(comment -vp->say-slp- "'said/yelled/whispered/etc _'")
+(probabilityEAGrammarRule -vp->say-slp- 0.9)
+(grammarRule -vp->say-slp-
+ (EATermFn vp
+  (TheList (var ?varvp) (vform ?vform) (agr ?a) (dir-obj invalid)
+   (comp +) (:ACTION ?varvp) (:OBLIQUE-OBJECT ?semslp) (sem ?semvp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) 
+    (subcat (? np-to-be-adj s-inf that-s))
+    (vform ?vform) (var ?varvp)
+     (sem ?semvp) (aux -) (modal -) (negated -))))
+  (EATermFn Sfin (TheList (var ?varslp) (sem ?semslp)))))
+  
+;;;cjm 7-19 ditto here, removing vsay for subcats
+(isa -vp->say-that-slp- EAGrammarRule)
+(comment -vp->say-that-slp- "'said/yelled/whispered/etc that _'")
+(probabilityEAGrammarRule -vp->say-that-slp- 1.0)
+(grammarRule -vp->say-that-slp-
+ (EATermFn vp
+  (TheList (var ?varvp) (vform ?vform) (agr ?a) (dir-obj invalid)
+   (comp +) (:ACTION ?varvp) (:CLAUSE ?semslp) (sem ?semvp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (subcat (? that-s pp-that-s np-that it-that)) (vform ?vform) (var ?varvp)
+     (sem ?semvp) (aux -) (modal -) (negated -) (inv -) (comp -))))
+  (EATermFn SubordinatingConjunction (TheList (lex that)))
+  (EATermFn slp (TheList (var ?varslp) (sem ?semslp)))))
+
+(isa -vp->said-comma-quote-s-quote- EAGrammarRule)
+(comment -vp->said-comma-quote-s-quote- "'said/yelled/whispered/etc _'")
+(probabilityEAGrammarRule -vp->said-comma-quote-s-quote- 1.0)
+(grammarRule -vp->said-comma-quote-s-quote-
+  (EATermFn vp
+    (TheList (var ?varvp) (vform ?vform) (agr ?a) (utterance +) (:OBLIQUE-OBJECT ?svar)
+             (:ACTION ?varvp) (sem ?semvp)))
+  (TheList
+   (EAHeadFn
+     (EATermFn Verb
+       (TheList (agr ?a) (vform (? vform pres past future prespart)) (subcat s-quote)
+                (var ?varvp) (sem ?semvp) (aux -) (modal -))))
+   (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+   (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))
+   (EATermFn Sfin (TheList (sem ?sems) (var ?svar)))
+   (EATermFn Punctuation-SP (TheList (lex (? !lex punc-double-quote punc-comma))))
+   (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))))
+
+(isa -vp->said-np-comma-quote-s-quote- EAGrammarRule)
+(comment -vp->said-np-comma-quote-s-quote- "'said/yelled/whispered/etc <recipient> _'")
+(probabilityEAGrammarRule -vp->said-np-comma-quote-s-quote- 1.0)
+(grammarRule -vp->said-np-comma-quote-s-quote-
+ (EATermFn vp
+  (TheList (var ?varvp) (vform ?vform) (agr ?a) (utterance +)
+   (:CLAUSE ?sems) (:ACTION ?varvp) (:OBJECT ?varnp)
+   (sem (and ?semnp ?semvp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (subcat s-quote)
+     (vform (? vform pres past future prespart)) (var ?varvp)
+     (sem ?semvp) (aux -) (modal -) (negated -) (inv -))))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))
+  (EATermFn s (TheList (sem ?sems)))
+  (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))))
+
+;;;THIS is where we were handeling inversion.
+;;; I'd like to get rid of this - "the president order" is not a VP.
+;;; But if it's not a vp I need to treat all inversions as slps tied to the aux
+;;; 
+;;;
+;(isa -vp->np-vp- EAGrammarRule)
+;(comment -vp->np-vp- "'(did) the president order' REM: Try to prevent this from firing on linking (be) verbs! (TRH)")
+;(probabilityEAGrammarRule -vp->np-vp- 0.9)
+;(grammarRule -vp->np-vp-
+; (EATermFn vp
+;  (TheList (inv +) (agr ?a) (var ?varv) (vform ?vform) (utterance ?u)
+;   (:SUBJECT ?varnp) (:ACTION ?varv) (:OBJECT :SUBJECT)
+;   (:INF-COMP :SUBJECT) (inv-subject ?varnp)
+;   (sem (and ?semnp ?semv))))
+; (TheList (EATermFn np (TheList (var ?varnp) (sem ?semnp) (agr ?a) (inf -)))
+;  (EAHeadFn
+;   (EATermFn vp
+;    (TheList (vform ?vform) (var ?varv) (sem ?semv)
+;     (object-be -) (inv -) (utterance ?u))))))
+
+;;; Took (modal -) out since it clobbered '20 species of fish will be extinct.' (TRH)
+(isa -vp->be-adjp- EAGrammarRule)
+(comment -vp->be-adjp- "adjective complement modifies the subject: 'is green'.")
+(probabilityEAGrammarRule -vp->be-adjp- 1.0)
+(grammarRule -vp->be-adjp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varvp) (link ?varvp)
+   (:NOUN :SUBJECT) (:ACTION ?varvp)
+   (sem (thereExists ?varvp ?semadjp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) (object-be +)
+     (inv -) (link -) (aux -) (negated -))))
+  (EATermFn adjp
+   (TheList (sem ?semadjp) (var ?varadjp) (participle -)))))
+
+(isa -vp->be-participle- EAGrammarRule)
+(comment -vp->be-participle- "participle becomes head var")
+(probabilityEAGrammarRule -vp->be-participle- 1.0)
+(grammarRule -vp->be-participle-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varadjp) (link ?varvp)
+   (:NOUN :SUBJECT) (:ACTION ?varadjp)
+   (sem (thereExists ?varvp ?semadjp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) (object-be +)
+     (inv -) (link -) (modal -) (aux -))))
+  (EATermFn adjp
+   (TheList (sem ?semadjp) (var ?varadjp) (participle +)))))
+
+;;; There is no subcat be-pass in nulex.
+;;; *** This won't cut it.  We need to be able to attach an adjp to a vp more generally:
+;;; *** "he seemed tired" "he felt weak" "she looks exhausted"  "he grew fat"
+;;; *** "it tasted delicious" "it ran rough" "he gets excited" "he appeared drunk"
+;;; *** "wound tight", "slides free", etc.  These verbs all take an adj subcat.
+(isa -vp->be-participle-pass- EAGrammarRule)
+(comment -vp->be-participle-pass- "participle becomes head var, passive 'he became tired' 'The crowd turned ugly.'")
+(probabilityEAGrammarRule -vp->be-participle-pass- 1.0)
+(grammarRule -vp->be-participle-pass-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varadjp) (link ?varvp)
+   (:NOUN :SUBJECT) (:ACTION ?varadjp)
+   (sem (thereExists ?varvp ?semadjp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) 
+     (subcat adj))))  ; <- subcat adj essentially means this is a linking verb
+  ;; This is the case where we constructed an adjp out of a passive verb, e.g. 'humiliated'
+  (EATermFn adjp
+   (TheList (sem ?semadjp) (var ?varadjp) (participle +)))))
+
+;; "his face turned red"  (but this won't suffice for "it made her happy")
+(isa -vp->verb-participle-adj-pass- EAGrammarRule)
+(comment -vp->verb-participle-adj-pass- "participle, directly from adjective sense, becomes the head var, passive 'I grew impatient'")
+(probabilityEAGrammarRule -vp->verb-participle-adj-pass- 1.0)
+(grammarRule -vp->verb-participle-adj-pass-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varadj)
+   (:NOUN :SUBJECT)
+   (sem (thereExists ?varvp ?semadj))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb  ; not a veb phrase!
+    (TheList 
+     (agr ?a) (vform ?vform) (var ?varvp) (subcat adj))))
+   ;; In this case, there's an actual adjective:
+  (EATermFn Adjective
+   (TheList (sem ?semadj) (var ?varadj)
+   ))))
+
+(isa -vp->be-np- EAGrammarRule)
+(comment -vp->be-np- "subject complement reidentifies the subject: 'is a fish', 'Jeremiah [was a bullfrog].'")
+(probabilityEAGrammarRule -vp->be-np- 1.0)
+(grammarRule -vp->be-np-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varvp) (link ?varvp) (:OBJECT ?varnp)
+           (sem (and ?semnp (denotes :SUBJECT ?varnp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) (object-be +))))
+  (EATermFn np
+   (TheList (sem ?semnp) (var ?varnp) (gerund -) (inf -)))))
+
+;;; I don't understand this one.  "We could be heroes" works just fine with
+;;; -vp->be-np-.  I've added arg 3s to the agr of "be" in the dictionary.  This might blow up.
+;(isa -vp->be3s-np- EAGrammarRule)
+;(comment -vp->be3s-np- "be with 3s noun, requires modal (thus invalid agreement): 'He could [be a hero].'")
+;(probabilityEAGrammarRule -vp->be3s-np- 1.0)
+;(grammarRule -vp->be3s-np-
+; (EATermFn vp
+;  (TheList (agr invalid) (vform ?vform) (var ?varvp) (link ?varvp)
+;   (sem (and ?semnp (denotes :SUBJECT ?varnp)))))
+; (TheList
+;  (EAHeadFn
+;   (EATermFn Verb
+;    (TheList (vform ?vform) (var ?varvp) (object-be +)
+;     (lex be))))
+;  (EATermFn np
+;   (TheList (agr (? agr 3s)) (sem ?semnp) (var ?varnp) (gerund -) (inf -)))))
+
+;(isa -vp->be-inf- EAGrammarRule)
+;(comment -vp->be-inf- "np be infinitive complement: '(my dream) is to join the army'.")
+;(probabilityEAGrammarRule -vp->be-inf- 1.0)
+;(grammarRule -vp->be-inf-
+; (EATermFn vp
+;  (TheList (agr ?a) (vform ?vform) (var ?varvp) (link ?varvp)
+;   (:SUBJECT (GapFn :SUBJECT))
+;   (sem (denotes :SUBJECT ?seminf))))
+; (TheList
+;  (EAHeadFn
+;   (EATermFn Verb
+;    (TheList (agr ?a) (var ?varvp) (object-be +) (inv -)
+;     (link -))))
+;  (EATermFn np (TheList (inf +) (sem ?seminf) (gap -)))))
+
+(isa -vp->be-pp- EAGrammarRule)
+(comment -vp->be-pp- "prepositional complement: 'is in the room'. is-pp has a different substitution pattern than vp-pp.")
+(probabilityEAGrammarRule -vp->be-pp- 1.0)
+(grammarRule -vp->be-pp-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (link ?varv)
+   (:NOUN :SUBJECT) (sem (and ?semvp ?sempp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform) (var ?varv) (sem ?semvp) (object-be +)  ; all object-be verbs have the same subcats, so don't filter here.
+     (inv -) (link -) (dir-obj -))))
+  (EATermFn pp (TheList (var ?varpp) (sem ?sempp)))))
+
+(isa -vp->be-not-pp- EAGrammarRule)
+(probabilityEAGrammarRule -vp->be-not-pp- 1.0)
+(grammarRule -vp->be-not-pp-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (link ?varv)
+   (:NOUN :SUBJECT) (sem (not ?sempp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (vform ?vform) (var ?varv) (object-be +)
+     (inv -) (dir-obj -))))
+  (EATermFn Adverb (TheList (lex not)))
+  (EATermFn pp (TheList (var ?varpp) (sem ?sempp)))))
+
+(isa -vp->be-not-np- EAGrammarRule)
+(comment -vp->be-not-np- "'The brick is not the apple.'")
+(probabilityEAGrammarRule -vp->be-not-np- 1.0)
+(grammarRule -vp->be-not-np-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varvp) (link ?varvp)
+   (sem (and ?semnp (not (denotes :SUBJECT ?varnp))))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) (object-be +)
+     (link -) (aux -) (modal -) (negated -) (inv -))))
+  (EATermFn Adverb (TheList (lex not)))
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (gerund -) (inf -)))))
+
+(isa -vp->v-mp-object-be- EAGrammarRule)
+(comment -vp->v-mp-object-be- "subject complement with measure phrase: 'is 3 kilograms'")
+(probabilityEAGrammarRule -vp->v-mp-object-be- 1.0)
+(grammarRule -vp->v-mp-object-be-
+ (EATermFn vp
+  (TheList (agr ?agr) (vform ?vform) (var ?varv) (link ?varv)
+   (sem (measure :SUBJECT ?semmp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?agr) (vform ?vform) (var ?varv) (sem ?semv)
+     (object-be +))))
+  (EATermFn mp (TheList (var ?varmp) (sem ?semmp)))))
+
+(isa -vp->v-mp-pp-object-be- EAGrammarRule)
+(comment -vp->v-mp-pp-object-be- "'is 9 feet from the water'")
+(probabilityEAGrammarRule -vp->v-mp-pp-object-be- 1.0)
+(grammarRule -vp->v-mp-pp-object-be-
+ (EATermFn vp
+  (TheList (agr ?agr) (vform ?vform) (var ?varv) (link ?varv)
+   (:NOUN :SUBJECT)
+   (sem (and ?sempp (measure ?prep-var ?semmp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?agr) (vform ?vform) (var ?varv) (sem ?semv)
+     (object-be +))))
+  (EATermFn mp (TheList (var ?varmp) (sem ?semmp)))
+  (EATermFn pp
+   (TheList (var ?varpp) (sem ?sempp) (prep-var ?prep-var)))))
+
+(isa -vp->make-np-adjp- EAGrammarRule)
+(comment -vp->make-np-adjp- "'make the cat sick', 'made the area more accessible'")
+(probabilityEAGrammarRule -vp->make-np-adjp- 1.0)
+(grammarRule -vp->make-np-adjp-
+ (EATermFn vp
+  (TheList (vform ?v) (var ?varvp) (agr ?a) 
+   (:NOUN ?varnp)
+   (:ACTION ?varvp)
+   (:CLAUSE ?semadjp)
+   (sem (thereExists ?varvp (and ?semnp ?semvp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (root make2) (var ?varvp) (sem ?semvp)
+     (vform (? v pres past)))))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (agr ?a)))
+  (EATermFn adjp (TheList (sem ?semadjp) (var ?varadjp)))))
+
+
+  ;;; Again adjective subcats
+(isa -vp->adj-that-slp- EAGrammarRule)
+(comment -vp->adj-that-slp- "adj + that phrase: 'sure that he is stupid', 'afraid that he is wrong'")
+(probabilityEAGrammarRule -vp->adj-that-slp- 0.9)
+(grammarRule -vp->adj-that-slp-
+ (EATermFn adjp
+  (TheList (var ?varslp) (vform ?vform) (agr ?a) (:CLAUSE ?semslp)
+   (sem ?sema)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Adjective
+    (TheList (var ?vara) (sem ?sema))))
+  (EATermFn SubordinatingConjunction (TheList (lex that)))
+  (EATermFn slp (TheList (var ?varslp) (vform ?vform) (agr ?a) (sem ?semslp)))))
+
+;;; Why should this be (dir-obj invalid)?
+;;; Can't we say "He mixed and beat the eggs."?
+(isa -vp->vp-cconj-vp- EAGrammarRule)
+(comment -vp->vp-cconj-vp- "coordinating conjunctions, without second subject (with and without comma)")
+(probabilityEAGrammarRule -vp->vp-cconj-vp- 1.0)
+(grammarRule -vp->vp-cconj-vp-
+ (EATermFn vp
+  (TheList (var (cconj ?varvp1 ?varvp2))
+   (sem (and ?semvp1 ?semvp2)) (agr ?a) (vform ?vform) ;; Remove (aux +) [trh]
+   (dir-obj invalid) (link ?link)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (var ?varvp1) (sem ?semvp1) (agr ?a)
+     (vform (? vform pres past future prespart)) (modal -)
+     (link ?link))))
+  (EATermFn Conjunction (TheList (var ?varc) (sem ?semconj) (lex ?lexc)))
+  (EATermFn vp
+   (TheList (var ?varvp2) (sem ?semvp2) (agr ?a)
+    (vform (? vform pres past future prespart))))))
+    
+
+(isa -vp->vbe-called-quote-np-quote- EAGrammarRule)
+(comment -vp->vbe-called-quote-np-quote- "Further quoted name handling")
+(probabilityEAGrammarRule -vp->vbe-called-quote-np-quote- 1.0)
+(grammarRule -vp->vbe-called-quote-np-quote-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varadjp) (link ?varvp)
+   (:NOUN :SUBJECT) (:ACTION ?varadjp)
+   (sem
+    (thereExists (TheList ?varvp ?varadjp)
+     (and ?semadjp (nameForConcept :SUBJECT ?namelex))))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) (object-be +)
+     (inv -) (link -) (modal -) (aux -))))
+  (EATermFn Verb
+   (TheList (lex called) (vform (? vf pastpart)) (sem ?semadjp)
+    (var ?varadjp)))
+  (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))
+  (EATermFn np (TheList (var ?namevar)))
+  (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))
+  (EATermFn bind-string (TheList (var ?namevar) (lex ?namelex)))))
+
+(isa -vp->vbe-called-det-quote-np-quote- EAGrammarRule)
+(comment -vp->vbe-called-det-quote-np-quote- "Quoted name handling with determiners")
+(probabilityEAGrammarRule -vp->vbe-called-det-quote-np-quote- 1.0)
+(grammarRule -vp->vbe-called-det-quote-np-quote-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varadjp) (link ?varvp)
+   (:NOUN :SUBJECT) (:ACTION ?varadjp)
+   (sem
+    (thereExists (TheList ?varvp ?varadjp)
+     (and ?semadjp (nameForConcept :SUBJECT ?namelex))))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) (object-be +)
+     (inv -) (link -) (modal -) (aux -))))
+  (EATermFn Verb
+   (TheList (lex called) (vform (? vf pastpart)) (sem ?semadjp)
+    (var ?varadjp)))
+  (EATermFn Determiner (TheList (agr ?a) (var ?vardet) (sem ?semdet)))
+  (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))
+  (EATermFn np (TheList (var ?namevar)))
+  (EATermFn Punctuation-SP (TheList (lex punc-double-quote)))
+  (EATermFn bind-string (TheList (var ?namevar) (lex ?namelex)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,26 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ubiquitous.meld
+;;;;    System: CogSketch
+;;;;   Version: 1.0
+;;;;    Author: Jeff Usher
+;;;;   Created: November 7, 2005 18:21:41
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  Modified: Monday, November 7, 2005 at 18:27:48 by usher
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(nameString Cell "Cell")
+(nameString Membrane "Membrane")
+(nameString Chloroplast "Chloroplast")
+(nameString Cytoplasm "Cytoplasm")
+(nameString DNAMolecule "DNA")
+(nameString Mitochondrion "Mitochondrion")
+(nameString CellNucleus "Nucleus")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of File

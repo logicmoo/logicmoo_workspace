@@ -1,0 +1,149 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: task-management.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: April 23, 2015 12:38:51
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory TaskManagementPlansMt)
+
+(isa TaskManagementPlansMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(isa enqueueSRTask ComplexActionPredicate)
+(arity enqueueSRTask 1)
+
+(preconditionForMethod
+ (currentSessionReasoner ?agent)
+ (methodForAction
+  (enqueueSRTask ?plan-form)
+  (actionSequence
+   (TheList
+    (enqueueTaskForAgent ?agent ?plan-form)))))
+
+(isa enqueueLocalTask ComplexActionPredicate)
+(arity enqueueLocalTask 1)
+
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (enqueueLocalTask ?plan-form)
+  (actionSequence
+   (TheList
+    (enqueueTaskForAgent ?agent ?plan-form)))))
+
+(isa enqueueTaskForAgent ComplexActionPredicate)
+(arity enqueueTaskForAgent 2)
+
+(preconditionForMethod
+ (and (evaluate ?plan-name (Arg0Fn ?plan-form))
+      (newUniqueTask ?plan-name ?task-id)
+      (agendaContext ?agenda-context))
+ (methodForAction
+  (enqueueTaskForAgent ?agent ?plan-form)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?agenda-context (assignedTo ?task-id ?agent)))
+    (doEnqueue ?agent ?task-id ?plan-form)))))
+
+(isa enqueueSerialTasks ComplexActionPredicate)
+(arity enqueueSerialTasks 1)
+
+(preconditionForMethod
+ (and (isa ?plan-agent-pairs List)
+      (evaluate ?plan-forms (MapFunctionOverList FirstInListFn ?plan-agent-pairs))
+      (evaluate ?agents (MapFunctionOverList SecondInListFn ?plan-agent-pairs))
+      (evaluate ?task-ids 
+        (MapFunctionOverList
+         (FunctionToArg 2
+           (Kappa (?plan-form ?task-id)
+             (and (evaluate ?plan-name (Arg0Fn ?plan-form))
+                  (newUniqueTask ?plan-name ?task-id))))
+         ?plan-forms))
+      (evaluate ?next-task-ids (RestOfListFn ?task-ids))
+      (agendaContext ?agenda-context))
+ (methodForAction
+  (enqueueSerialTasks ?plan-agent-pairs)
+  (actionSequence
+   (TheList
+    (doMap (?tid ?nid)
+           (doTell (ist-Information ?agenda-context (startsAfterEndingOf ?nid ?tid)))
+           ?task-ids
+           ?next-task-ids)
+    (doMap (?a ?tid)
+           (doTell (ist-Information ?agenda-context (assignedTo ?tid ?a)))
+           ?agents
+           ?task-ids)
+    (doMap (?a ?tid ?planf)
+           (doEnqueue ?a ?tid ?planf)
+           ?agents
+           ?task-ids
+           ?plan-forms)))))
+
+
+(isa enqueueSerialSubTasks ComplexActionPredicate)
+(arity enqueueSerialSubTasks 1)
+
+(preconditionForMethod
+ (and (currentAgendaItem ?current-task-id)
+      (isa ?plan-agent-pairs List)
+      (evaluate ?plan-forms (MapFunctionOverList FirstInListFn ?plan-agent-pairs))
+      (evaluate ?agents (MapFunctionOverList SecondInListFn ?plan-agent-pairs))
+      (evaluate ?task-ids 
+        (MapFunctionOverList
+         (FunctionToArg 2
+           (Kappa (?plan-form ?task-id)
+             (and (evaluate ?plan-name (Arg0Fn ?plan-form))
+                  (newUniqueTask ?plan-name ?task-id))))
+         ?plan-forms))
+      (evaluate ?next-task-ids (RestOfListFn ?task-ids))
+      (agendaContext ?agenda-context))
+ (methodForAction
+  (enqueueSerialSubTasks ?plan-agent-pairs)
+  (actionSequence
+   (TheList
+    (doMap (?tid)
+           (doTell (ist-Information ?agenda-context (subTasks ?current-task-id ?tid)))
+           ?task-ids)
+    (doMap (?tid ?nid)
+           (doTell (ist-Information ?agenda-context (startsAfterEndingOf ?nid ?tid)))
+           ?task-ids
+           ?next-task-ids)
+    (doMap (?a ?tid)
+           (doTell (ist-Information ?agenda-context (assignedTo ?tid ?a)))
+           ?agents
+           ?task-ids)
+    (doMap (?a ?tid ?planf)
+           (doEnqueue ?a ?tid ?planf)
+           ?agents
+           ?task-ids
+           ?plan-forms)))))
+    
+
+(isa doCompare ComplexActionPredicate)
+(arity doCompare 3)
+
+(preconditionForMethod
+ (outsourcedOnly 
+  (blockMostOutOfMappingSupport
+   (reverseCIsAllowed
+    (matchBetween ?base
+                  ?target
+                  ?constraints
+                  ?matcher))))
+ (methodForAction
+  (doCompare ?base ?target ?constraints)
+  (actionSequence
+   (TheList
+    (doAnnounce "performing SME comparison between ~A and ~A  resulted in match ~A" (?base ?target ?matcher))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,87 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: colors.meld
+;;;;    System: 
+;;;;    Author: Scott Friedman
+;;;;   Created: October 9, 2009 13:58:40
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory NuSketchMt)
+
+(isa MappingDisplayColor SecondOrderCollection)
+(genls MappingDisplayColor ChromaticColor)
+(comment MappingDisplayColor
+ "The collection of colors that are used to display analogical mappings in
+  NuSketch.")
+
+(isa OrangeColor MappingDisplayColor)
+(isa GreenColor MappingDisplayColor)
+(isa BlueColor MappingDisplayColor)
+(isa PurpleColor MappingDisplayColor)
+(isa BrilliantBlue-Color MappingDisplayColor)
+(isa BrilliantGreen-Color MappingDisplayColor)
+(isa BrilliantYellow-Color MappingDisplayColor)
+(isa BrilliantViolet-Color MappingDisplayColor)
+(isa BrilliantOrange-Color MappingDisplayColor)
+(isa BrilliantPurple-Color MappingDisplayColor)
+(isa PaleGreen-Color MappingDisplayColor)
+(isa PalePink-Color MappingDisplayColor)
+(isa PaleYellow-Color MappingDisplayColor)
+
+
+;;; supplementing with the RGB color facts because opencyc doesn't have these
+(in-microtheory NaivePhysicsMt)
+
+(colorHasRGBGreenValue OrangeColor 136)
+(colorHasRGBGreenValue GreenColor 127)
+(colorHasRGBGreenValue BlueColor 0)
+(colorHasRGBGreenValue PurpleColor 0)
+(colorHasRGBGreenValue BrilliantBlue-Color 133)
+(colorHasRGBGreenValue BrilliantGreen-Color 167)
+(colorHasRGBGreenValue BrilliantYellow-Color 207)
+(colorHasRGBGreenValue BrilliantViolet-Color 93)
+(colorHasRGBGreenValue BrilliantOrange-Color 184)
+(colorHasRGBGreenValue BrilliantPurple-Color 128)
+(colorHasRGBGreenValue PaleGreen-Color 145)
+(colorHasRGBGreenValue PalePink-Color 203)
+(colorHasRGBGreenValue PaleYellow-Color 219)
+
+(colorHasRGBRedValue PaleYellow-Color 255)
+(colorHasRGBRedValue PalePink-Color 255)
+(colorHasRGBRedValue PaleGreen-Color 141)
+(colorHasRGBRedValue BrilliantPurple-Color 221)
+(colorHasRGBRedValue BrilliantOrange-Color 255)
+(colorHasRGBRedValue BrilliantViolet-Color 117)
+(colorHasRGBRedValue BrilliantYellow-Color 255)
+(colorHasRGBRedValue BrilliantGreen-Color 71)
+(colorHasRGBRedValue BrilliantBlue-Color 66)
+(colorHasRGBRedValue PurpleColor 106)
+(colorHasRGBRedValue BlueColor 0)
+(colorHasRGBRedValue GreenColor 0)
+(colorHasRGBRedValue OrangeColor 255)
+
+(colorHasRGBRedValue OrangeColor 255)(colorHasRGBBlueValue PaleYellow-Color 139)
+(colorHasRGBBlueValue PalePink-Color 187)
+(colorHasRGBBlueValue PaleGreen-Color 122)
+(colorHasRGBBlueValue BrilliantPurple-Color 204)
+(colorHasRGBBlueValue BrilliantOrange-Color 65)
+(colorHasRGBBlueValue BrilliantViolet-Color 154)
+(colorHasRGBBlueValue BrilliantYellow-Color 64)
+(colorHasRGBBlueValue BrilliantGreen-Color 106)
+(colorHasRGBBlueValue BrilliantBlue-Color 180)
+(colorHasRGBBlueValue PurpleColor 186)
+(colorHasRGBBlueValue BlueColor 255)
+(colorHasRGBBlueValue GreenColor 24)
+(colorHasRGBBlueValue OrangeColor 57)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

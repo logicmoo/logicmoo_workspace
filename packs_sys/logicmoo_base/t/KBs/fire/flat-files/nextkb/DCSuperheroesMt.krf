@@ -1,0 +1,52 @@
+(in-microtheory DCSuperheroesMt)
+
+(isa Superman ExtraterrestrialPerson)
+(isa Superman Male)
+(isa ClarkKent Journalist)
+(isa ClarkKent AdultMaleHuman)
+(isa LoisLane Journalist)
+(isa LoisLane AdultFemaleHuman)
+(isa Superman Orphan)
+(isa DickGrayson-HeroAlterEgo Orphan)
+(isa BruceWayne-MillionaireSocialite Orphan)
+(isa BruceWayne-MillionaireSocialite Playboy)
+(isa BruceWayne-MillionaireSocialite Wealthy)
+(isa BruceWayne-MillionaireSocialite FamousHuman)
+(isa TimDrake-HeroAlterEgo Wealthy)
+(isa TimDrake-HeroAlterEgo MaleHuman)
+(isa JasonTodd-HeroAlterEgo MaleHuman)
+(isa DickGrayson-HeroAlterEgo Wealthy)
+(isa DickGrayson-HeroAlterEgo MaleHuman)
+(isa DickGrayson-HeroAlterEgo Acrobat)
+(isa TheFlash AdultMaleHuman)
+(isa TheFlash Superhero)
+(isa Krypton-ThePlanet Kryptonite)
+(isa Krypton-ThePlanet Planet)
+(isa Superman Superhero)
+(isa Robin-BatmanSidekick Acrobat)
+(isa Robin-BatmanSidekick HumanTeenager)
+(isa Robin-BatmanSidekick Vigilante)
+(isa Robin-BatmanSidekick MaleHuman)
+(isa Robin-BatmanSidekick Superhero)
+(isa Batman FamousHuman)
+(isa Batman Superhero)
+(isa Batman HumanAdult)
+(isa Batman MaleHuman)
+(isa Batman Vigilante)
+(not (isa JasonTodd-HeroAlterEgo HumanAdult))
+(comment Batman "The hard-boiled #$Superhero created by Bob Kane for Detective Comics in 1939. Also known as the 'dark knight' or, more camply, the 'caped crusader'. Batman's alterego is Bruce Wayne, a spoiled socialite and Playboy. Batman fights crime in Gotham City, a thinly veiled fictional counterpart of #$CityOfNewYorkNY.")
+(comment Superman "The boy-scout-like superhero created by Siegel and Schuster for
+
+Action Comics in 1938. Also known as the 'man of steel'. #$Superman's
+
+alterego is Clark Kent, a bumbling reporter for the Daily Planet
+
+newspaper. Superman fights crime in Metropolis, a thinly veiled
+
+fictional counterpart of #$CityOfNewYorkNY.")
+(comment LoisLane "The female reporter at the Daily Planet newspaper who works
+with #$ClarkKent. She is in love with #$Superman and is unaware that
+he and #$ClarkKent are one and the same.")
+(comment ClarkKent "The #$alterEgoOfHero of #$Superman. #$Superman poses as the
+clumsey reporter #$ClarkKent.")
+(genls Kryptonite Solid-StateOfMatter)

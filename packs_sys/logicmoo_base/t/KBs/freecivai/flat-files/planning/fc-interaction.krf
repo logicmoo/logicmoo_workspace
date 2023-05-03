@@ -1,0 +1,89 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: fc-interaction.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 15, 2013 17:09:32
+;;;;   Purpose: responding to and initiating user interaction
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 18:04:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory FreecivMt)
+
+;;; This file will translate between formal representations of language 
+;;; utterances and executable actions.
+
+;;; If we say "start a freeciv game", this invokes the plan
+;;; (assimilateRequest (Achieve (ist freeciv2238 Freeciv-TheGame)))
+;;; Translate this into action primitives and execute them here.
+
+(preconditionForMethod
+  (and (subexpressionMatching (achieve (isa ?start-dv Freeciv-TheGame)) ?stmt ?expr1)
+       ) ; and perhaps not already running a game
+  (methodForAction
+    (assimilateRequest ?stmt)
+    (actionSequence
+      (TheList
+        (doStartGame)
+        (doLaunchGui)
+        ))))
+
+
+;;; Start scenario A.
+
+;;; Maximize population over 50 turns.
+
+;;; Build a city on the coast.
+
+;;; Use your warrior to attack the explorer
+
+;;; Build a road from boston to dallas.
+;;; A road network makes commerce more efficient.
+;;; A road network can also be used by an enemy attacker.
+;;; Increase trade revenue by building trade routes between cities.
+;;; Build a caravan in Boston.
+;;; Send the caravan from Boston to Dallas.
+;;; Establish a traderoute between Boston and Dallas.
+;;; You can only establish a traderoute between cities that are farther than 8 tiles apart.
+
+;;; Never leave a city undefended when there are enemy units nearby.
+
+;;; We need to prepare defenses
+;;; We need to prepare for war
+
+;;; We could use a diplomat to bribe them.
+;;; We don't have enough money to maintain a university.
+;;; New York will not produce Settlers until it grows to size 2.
+;;; New York will not grow unless its food production is greater than zero.
+;;; To increase food production in New York, move a citizen to a more productive tile.
+;;; Assign a worker to irrigate that tile.
+
+;;; We need to improve food production in our civilization.
+;;; To do that, we need to irrigate the tiles being worked.
+;;; To build irrigation, we need to have the pottery technology
+;;; Investigate (research) pottery.
+
+;;; The explorer is a unit that is useful for learning about the surrounding terrain.
+;;; The explorer can move faster than most land units.
+;;; The explorer can discover other civilizations.
+;;; The explorer can enter huts.
+;;; You don't want to lose your explorer too early in the game.
+
+;;; We should have defended boston better
+;;; We should not have attacked that destroyer with our trireme.
+
+;;; The liklihood of surviving an enemy attack is proportional to the defense strength of our unit.
+;;; The liklihood of surviving an enemy attack is inversely proportional to the attack strength of the attacking unit (attacker).
+
+;;; The destroyer near Boston threatens our city.
+
+;;; We should accept a cease fire with Mongolia.
+;;; The cease-fire will only last for 20 turns.
+;;; We should build defenses before the cease fire agreement ends.
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

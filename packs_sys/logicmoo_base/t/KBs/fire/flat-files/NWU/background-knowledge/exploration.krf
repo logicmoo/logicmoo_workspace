@@ -1,0 +1,59 @@
+;;;
+;;; exploration.meld
+;;;
+;;; Backfill commonsense knowledge about exploration for Perceptual Agents
+;;;
+ 
+;;; Exploration is a built-in Cyc concept, a spec of InformationGathering 
+;;; (rolesForEventType Exploration infoGatheredAbout)
+;;; (rolesForEventType Exploration informationOrigin)
+
+;;; Cyc seems to have no link between the collections Explorer and Exploration.
+
+(in-microtheory CompanionsMt)
+
+;;; This is a way to specify a type-level cognate:
+(binaryRoleTypePred infoGatheredAbout (BinaryRoleTypePredFn infoGatheredAbout))
+
+;;; For Freeciv exploration, we'd connect the infoGatheredAbout to TerrainTypes of locations.
+;;; We have in BaseKB:
+;;; (isa Explorer PersonTypeByActivity)
+;;; (exploredBy REGION EXPLORER) means that REGION (an instance of GeographicalRegion ) has been explored by EXPLORER.
+
+((TypeCapableFn behaviorCapable) Explorer Exploration performedBy)
+(frequentPrototypicalActivityTypeOfPersonType Exploration Explorer)  ; From PerceptualAgentMt
+
+(purposeOf-EventTypeSitType Exploration RevealingInformation)
+
+;;;(knowsValue ?player ?dest terrainAt)
+;;; An explorer discovers the RegionTypeByTerrain 
+;;; The isa of a region is an instance of RegionTypeByTerrain.
+;;; so (isa (TerritoryFn Kuwait) Desert) 
+;;; and (isa Desert RegionTypeByTerrain)
+;;;
+;;; How about (MakingFn Map)?
+
+
+;;; We want enough information about Exploration that we can compile it out to plans
+;;; using (ComplexActionFn (nonDavidsonianPredFn Exploration (TheList performedBy eventOccursAt)))
+
+
+;;; I don't know why Cyc has Railway as a PathType, but not Roadway.  Now added:
+(isa Roadway PathType)
+
+(isa PathFn Function-Denotational)
+(arity PathFn 2)
+(arg1Isa PathFn SpatialThing-Localized)
+(arg2Isa PathFn SpatialThing-Localized)
+(resultIsa PathFn Path-Spatial)
+(comment PathFn "(PathFn ?origin ?destination) denotes a path from origin to destination.")
+
+;;; Settling new lands
+
+(isa Settler Collection)
+(genls Settler Pioneer)  ; Not in the sense of a thought leader, though.
+(comment Settler "A Settler is someone who moves to new lands and creates a homestead.  A pioneer in the sense of geography.")
+((TypeCapableFn behaviorCapable) Settler SettlingIntoANewPlaceOfResidence performedBy)  ; built in Cyc term.
+(frequentPrototypicalActivityTypeOfPersonType Exploration Settler)  ; Most often in terms of finding new paths to known destinations.
+
+

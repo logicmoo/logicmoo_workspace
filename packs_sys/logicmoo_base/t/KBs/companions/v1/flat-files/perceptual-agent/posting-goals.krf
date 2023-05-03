@@ -1,0 +1,349 @@
+;;; File name: posting-goals.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: November 17, 2011 10:05:20
+;;;   Purpose: Post learning goals on the fly.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;  11-17-11 [TRH] - Split off from case-encoding.meld.
+
+
+(in-microtheory PerceptualAgentMt)
+
+;;; For now, store learning goals themselves in the LearnedKnowledgeMicrotheory,
+;;; rather than in the ActionModel, QualitativeModel, or StrategicModel.  
+;;; Reserve them for beliefs.
+
+;;;
+;;; Goal Posting
+;;;
+
+;;; These should probably also post to the Companion's SelfModelMt.
+;;; Also: Learning goals should be connected to each other in a hierarchy.
+;;; So: an ActionLearningGoal should be a subgoal of the (LearnActionModelFn ?domain)
+;;; goal for the domain.
+
+(isa postActionLearningGoal ComplexActionPredicate)
+(arity postActionLearningGoal 2)
+(arg1Isa postActionLearningGoal Microtheory)
+(arg2Isa postActionLearningGoal ActionPredicate)
+(comment postActionLearningGoal "(postActionLearningGoal ?lkmt ?action-pred) Assume ?lkmt is the learned knowledge microtheory for the domain.")
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (LearnEffectOfActionFn ?action-pred)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement)))
+       (unifies (?lkmt-functor ?domain) ?lkmt))
+  (methodForAction
+    (postActionLearningGoal ?lkmt ?action-pred)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&PostingGoal: ~s" (?goal-statement))
+        (doRecord (ist-Information ?lkmt ?goal-statement))
+        (doRecord (ist-Information ?lkmt 
+          (subgoalFor (LearnActionModelFn ?domain) (LearnEffectOfActionFn ?action-pred))))
+        ))))
+
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postActionLearningGoal ?lkmt ?action-pred)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (postActionLearningGoal ?lkmt ?action-pred) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa postOperatorEffectLearningGoal ComplexActionPredicate)
+(arity postOperatorEffectLearningGoal 2)
+(arg1Isa postOperatorEffectLearningGoal Microtheory)
+(arg2Isa postOperatorEffectLearningGoal ActionPredicate)
+(comment postOperatorEffectLearningGoal "(postOperatorEffectLearningGoal ?lkmt ?operator) posts an action learning goal for the action-pred of ?operator.")
+
+(preconditionForMethod
+  (operatorFormulas ?action-pred ?operator)
+  (methodForAction
+    (postOperatorEffectLearningGoal ?lkmt ?operator)
+    (actionSequence
+      (TheList
+        (postActionLearningGoal ?lkmt ?action-pred)))))
+
+
+(isa postEncodingLearningGoalForDecision ComplexActionPredicate)
+(arity postEncodingLearningGoalForDecision 2)
+(comment postEncodingLearningGoalForDecision "(postEncodingLearningGoalForDecision ?lkmt ?decision)")
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (LearnCaseEncodingFn ?decision)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement))))
+  (methodForAction
+    (postEncodingLearningGoalForDecision ?lkmt ?decision)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Posting goal: ~s" (?goal-statement))
+    (doRecord (ist-Information ?lkmt ?goal-statement))))))
+
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postEncodingLearningGoalForDecision ?lkmt ?decision)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (postEncodingLearningGoalForDecision ?lkmt ?decision) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa postDecisionLearningGoal ComplexActionPredicate)
+(arity postDecisionLearningGoal 2)
+(comment postDecisionLearningGoal "(postDecisionLearningGoal ?lkmt (DecisionFn ?slot)) posts a goal to learn the ramifications of choosing the specified decision.")
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (LearnDecisionFn ?decision)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement)))
+       (unifies (?lkmt-functor ?domain) ?lkmt))
+  (methodForAction
+    (postDecisionLearningGoal ?lkmt ?decision)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Posting goal: ~s" (?goal-statement))
+    (doRecord (ist-Information ?lkmt ?goal-statement))
+    (doRecord (ist-Information ?lkmt 
+          (subgoalFor (LearnActionModelFn ?domain) (LearnDecisionFn ?decision))))
+    ))))
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postDecisionLearningGoal ?lkmt ?decision)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (postDecisionLearningGoal ?lkmt ?decision) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa postInfluenceLearningGoal ComplexActionPredicate)
+(arity postInfluenceLearningGoal 2)
+(comment postInfluenceLearningGoal "(postInfluenceLearningGoal ?lkmt ?quantity-type)")
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (DetectPotentialQualitativeInfluence ?quantity-type)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement)))
+       (unifies (?lkmtmt-functor ?domain) ?lkmt))
+  (methodForAction
+    (postInfluenceLearningGoal ?lkmt ?quantity-type)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Posting goal: ~s" (?goal-statement))
+    (doRecord (ist-Information ?lkmt ?goal-statement))
+    (doRecord (ist-Information ?lkmt 
+          (subgoalFor (LearnQualitativeModelFn ?domain) (DetectPotentialQualitativeInfluence ?quantity-type))))
+    ))))
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postInfluenceLearningGoal ?lkmt ?quantity-type)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (postInfluenceLearningGoal ?lkmt ?quantity-type) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+      
+;;; *** What happened?  We never defined the real method!
+;;; *** In GGP a QuantityLearningGoal was a SourceOfTrend goal.
+      
+(<== (preferInContext (postQuantityLearningGoalForSubgoal ?lkmt ?goal) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa postAffordanceLearningGoal ComplexActionPredicate)
+(arity postAffordanceLearningGoal 2)
+(arg1Isa postAffordanceLearningGoal Microtheory)
+(arg2Isa postAffordanceLearningGoal Collection)
+(comment postAffordanceLearningGoal "(postAffordanceLearningGoal ?lkmt ?entity-type)")
+
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (LearnAffordancesOfEntityFn ?entity-type)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement))))
+  (methodForAction
+    (postAffordanceLearningGoal ?lkmt ?entity-type)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Posting goal: ~s" (?goal-statement))
+    (doRecord (ist-Information ?lkmt ?goal-statement))))))
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postAffordanceLearningGoal ?lkmt ?goal)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (postAffordanceLearningGoal ?lkmt ?goal) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa postDecompositionLearningGoal ComplexActionPredicate)
+(arity postDecompositionLearningGoal 2)
+(comment postDecompositionLearningGoal "(postDecompositionLearningGoal ?lkmt ?goal)")
+
+
+(preconditionForMethod
+  (and (liftedIndexicalGoal ?goal ?lifted-goal)
+       (unifies ?goal-statement
+         (learningGoalForCompanion
+           (LearnDecompositionFn ?lifted-goal)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement))))
+  (methodForAction
+    (postDecompositionLearningGoal ?lkmt ?goal)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Posting goal: ~s" (?goal-statement))
+    (doRecord (ist-Information ?lkmt ?goal-statement))))))
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postDecompositionLearningGoal ?lkmt ?goal)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (postDecompositionLearningGoal ?lkmt ?goal) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa liftedIndexicalGoal BinaryPredicate)
+(arity liftedIndexicalGoal 2)
+(comment liftedIndexicalGoal "(liftedIndexicalGoal ?goal ?lifted-goal) replaces occurences of currentRole with (IndexicalFn currentPlayer).")
+
+;;; To Do: Make this more general.  What if we needed to lift a particuar city, etc?
+(<== (liftedIndexicalGoal ?goal ?lifted-goal)
+     (currentPlayer ?who)         ; ** This is Freeciv-specific.  How about playerName?
+     (evaluate ?lifted-goal
+       (SubstituteFormulaFn (IndexicalFn currentRole) ?who ?goal)))
+
+;;; This might be better as "effectiveLearningGoal" rather than optimal.
+(isa postOptimalityLearningGoal ComplexActionPredicate)
+(arity postOptimalityLearningGoal 2)
+(comment postOptimalityLearningGoal "(postOptimalityLearningGoal ?lkmt ?action-pred)")
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (LearnOptimalConditionFn ?action-pred)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement))))
+  (methodForAction
+    (postOptimalityLearningGoal ?lkmt ?action-pred)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Posting goal: ~s" (?goal-statement))
+    (doRecord (ist-Information ?lkmt ?goal-statement))))))
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postOptimalityLearningGoal ?lkmt ?goal)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (postOptimalityLearningGoal ?lkmt ?action-pred) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+
+(isa postRefinementLearningGoal ComplexActionPredicate)
+(arity postRefinementLearningGoal 2)
+(comment postRefinementLearningGoal "(postRefinementLearningGoal ?lkmt ?concept) posts a goal to refine a concept, 
+which may be a NART indicating an independent or dependent variable or a definition of some kind.")
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (RefineFn ?concept))))
+  (methodForAction
+    (postRefinementLearningGoal ?lkmt ?concept)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&PostingGoal: ~s" (?goal-statement))
+        (doRecord (ist-Information ?lkmt ?goal-statement))))))
+
+
+;;;
+;;; Strategy
+;;;
+
+;;; This needs to index particular instances
+
+(isa postPurposeLearningGoal ComplexActionPredicate)
+(arity postPurposeLearningGoal 2)
+(arg1Isa postPurposeLearningGoal Microtheory)
+(arg2Isa postPurposeLearningGoal ActionPredicate)
+(comment postPurposeLearningGoal "(postPurposeLearningGoal ?lkmt ?action-pred) Assume ?lkmt is the learned knowledge microtheory for the domain.")
+
+(preconditionForMethod
+  (and (unifies ?goal-statement
+         (learningGoalForCompanion
+           (LearnPurposeOfActionFn ?action-pred)))
+       (uninferredSentence
+         (lookupOnly
+           (ist-Information ?lkmt ?goal-statement)))
+       (unifies (?lkmt-functor ?domain) ?lkmt))
+  (methodForAction
+    (postPurposeLearningGoal ?lkmt ?action-pred)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&PostingGoal: ~s" (?goal-statement))
+        (doRecord (ist-Information ?lkmt ?goal-statement))
+        (doRecord (ist-Information ?lkmt 
+          (subgoalFor (LearnStrategicModelFn ?domain) (LearnPurposeOfActionFn ?action-pred))))
+        ))))
+
+
+;;; default = noop
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (postPurposeLearningGoal ?lkmt ?action-pred)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (postPurposeLearningGoal ?lkmt ?action-pred) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

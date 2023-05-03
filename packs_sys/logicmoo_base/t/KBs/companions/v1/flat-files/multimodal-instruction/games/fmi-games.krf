@@ -1,0 +1,1786 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: fmi-games.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 8, 2012 11:54:44
+;;;;   Purpose: Define the epistemic form for games
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+(isa FmiGamesMt Microtheory)
+(genlMt CompanionsMt FmiGamesMt)   ; possibly temporary.
+(genlMt WorldLikeOursCollectorMt FmiGamesMt) ; not temporary!
+
+(in-microtheory FmiGamesMt)
+
+;;; This should only matter when we return to a prior sketch.
+(isa sketchDirectory BinaryPredicate)
+(arity sketchDirectory 2)
+(comment sketchDirectory "(sketchDirectory ?mt ?data-url-prefix) specifies the directory in which to find sketches.")
+
+(sketchDirectory FmiGamesMt "data-file://companions/sketches/fmi/") ; a constant.
+
+;;; Learn the rules of a game through sketching and language instruction.
+;;; Assume games can be encoded via the general-game-playing vocabulary.
+;;; This gives us an epistemic form with which to identify unknowns.
+
+(isa GameEncoding Collection)
+(genls GameEncoding EpistemicForm)
+
+(isa statementNumber BinaryRelation)
+(arity statementNumber 2)
+(comment statementNumber "(statementNumber ?statement-num ?statement) reifies the ordering of statements entered in a session.")
+
+(isa glyphNumber BinaryRelation)
+(arity glyphNumber 2)
+(comment glyphNumber "(glyphNumber ?glyph-num ?glyph) reifies the ordering of glyphs entered in a session.")
+
+;;; Keep track of the last statement added and the last glyph added using 
+;;; defined counters.
+
+
+(isa currentGameDomain UnaryPredicate)
+(arity currentGameDomain 1)
+(arg1Isa currentGameDomain Game)
+
+(<== (currentGameDomain ?game)
+     (currentSessionReasoner ?sr)
+     (localAgent ?sr)
+     (currentSession ?session-id)
+     (lookupOnly
+       (ist-Information (ContextFn ?session-id)
+         (sessionTopic ?session-id ?game)))
+     (lookupOnly
+       (ist-Information (GameRulesMtFn ?game)
+         (gameDomain ?game))))
+
+
+(isa currentGameInstance UnaryPredicate)
+(arity currentGameInstance 1)
+(arg1Isa currentGameInstance Microtheory)
+
+(<== (currentGameInstance ?execution-mt)
+     (currentSessionReasoner ?sr)
+     (localAgent ?sr)
+     (executionContext ?execution-mt))
+         
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Language Interaction
+;;;
+
+;;; assimilateStatement is invoked from an event handler in the session-reasoner 
+;;; defined in event-dispatching.lsp
+
+;;; Topic setting:
+;;; (willBe (and (topicOfInfoTransfer teach40227 TicTacToe) (isa teach40227 Teaching)))
+(preconditionForMethod
+  (and (operatorFormulas willBe ?statement)
+       (subexpressionMatching (isa ?teach Teaching) ?statement ?expr1)
+       (subexpressionMatching (topicOfInfoTransfer ?teach ?topic) ?statement ?expr2)
+       (groundExpression ?topic)  ; be safe
+       (numAnswers 1 (currentSession ?session-id)))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+         (doRecord (ist-Information (ContextFn ?session-id)
+                     (sessionTopic ?session-id ?topic)))
+         (setupGameTopic ?session-id ?topic)))))
+
+(isa setupGameTopic ComplexActionPredicate)
+(arity setupGameTopic 2)
+(arg1Isa setupGameTopic CycLTerm)
+(arg2Isa setupGameTopic Game)
+(comment setupGameTopic "(setupGameTopic ?session-id ?game) sets up microtheories for learning ?game.")
+
+(preconditionForMethod
+  (uninferredSentence
+    (allFactsAllowed
+      (useTransitiveInference
+        (ist-Information WorldLikeOursCollectorMt
+          (isa ?topic Game)))))
+  (methodForAction
+    (setupGameTopic ?session-id ?topic)  ; do we need the session-id?
+    (actionSequence
+      (TheList))))
+
+;;; Interpretation contexts do not inherit in EA.
+;;; As soon as we set the context to Game, we lose the Instruction context.
+;;; (InterpretationMtFn Instruction) can't just be a temporary default
+;;; then. Accessors.lsp will have to write it out for the current session
+;;; if we want this to be re-entrant.
+(preconditionForMethod
+  (and (allFactsAllowed
+         (useTransitiveInference
+           (ist-Information WorldLikeOursCollectorMt (isa ?topic Game))))
+       (numAnswers 1 (localAgent ?sender))
+       (numAnswers 1 (currentInteractionMgr ?im))
+       (unifies ?interpretation-stmt 
+          (ist-Information (ContextFn ?session-id)
+            (interpretationContext (InterpretationMtFn Game))))
+       ;; We don't have a primitive for doRecordOnAgent, and this is simpler
+       ;; than a task:
+       (unifies ?message 
+         (insert :sender ?sender :receiver ?im :content ?interpretation-stmt))
+       (numAnswers 1 (agentContext ?agent-context)))
+  (methodForAction
+    (setupGameTopic ?session-id ?topic)
+    (actionSequence
+      (TheList
+        (doSend ?im ?message)    ; refine the discourse interpretation context
+        (doRecord
+          (ist-Information BaseKB
+            (isa (GameRulesMtFn ?topic) Microtheory)))
+        (doRecord
+          (ist-Information BaseKB
+             (genlMt (GameRulesMtFn ?topic) FmiGamesMt)))
+        (doRecord
+          (ist-Information (GameRulesMtFn ?topic)
+             (gameDomain ?topic)))
+        (doRecord
+          (ist-Information BaseKB
+            (isa (PlanningMtFn ?topic) Microtheory)))
+        (doRecord
+          (ist-Information BaseKB
+            (genlMt (PlanningMtFn ?topic) (GameRulesMtFn ?topic))))
+        (doRecord
+          (ist-Information BaseKB
+            (genlMt (PlanningMtFn ?topic) ?agent-context))) ; still want to inherit generic session-reasoner context.
+        (doSetPlanningContext (PlanningMtFn ?topic))
+        ;;; Expect a sketch opened event (or an already open sketch)
+        ; (subscribeToNuSketchHookupData)  ; ** No! Don't do this anymore!
+        ))))
+
+;;; Game Classification
+
+;;; (isa TicTacToe TwoPersonGame)
+(preconditionForMethod
+  (and (unifies (isa ?game ?type) ?statement)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game))))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+         (doRecord
+           (ist-Information (GameRulesMtFn ?game) ?statement))
+         (importSkeletalRulesFrom ?game ?type)))))
+
+(isa importSkeletalRulesFrom ComplexActionPredicate)
+(arity importSkeletalRulesFrom 2)
+(arg1Isa importSkeletalRulesFrom Game)
+(arg2Isa importSkeletalRulesFrom Collection)
+(comment importSkeletalRulesFrom "(importSkeletalRulesFrom ?game ?game-type) operationalizes knowledge from general ?game-type, such as PieceMovingGame or MarkingGame.")
+
+;;; Just copy from the general game type?
+;;; We may want to apply a tree-shaker later to omit unused preds,
+;;; but we can't tell in advance what will be needed.
+(preconditionForMethod
+  (evaluate ?statements
+    (SubstituteFormulaFn ?game ?game-type
+      (TheClosedRetrievalSetOf ?statement
+        (lookupOnly
+          (allFactsAllowed
+            (localOnly
+              (ist-Information (GameRulesMtFn ?game-type) ?statement)))))))
+  (methodForAction
+    (importSkeletalRulesFrom ?game ?game-type)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext (GameRulesMtFn ?game) ?statements)))))
+
+;;; Roles
+(preconditionForMethod
+  (and (gameRoleStatement ?statement ?role ?name)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game)))
+       (outsourcedOnly (counterValue statements ?statement-num)))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+         (doRecord
+           (ist-Information (GameRulesMtFn ?game) (isa ?role GameRole)))
+         ;; Now maybe write out opponent statements (if this isn't the first role entered)?
+         ;; Breadcrumb for multimodal integration:
+         (maybeLabelLastGlyph (ContextFn ?session-id) ?game ?role ?name)))))
+
+(isa gameRoleStatement TenaryPredicate)
+(arity gameRoleStatement 3)
+(arg1Isa gameRoleStatement CycLExpression)
+(arg2Isa gameRoleStatement GameRole)
+(arg3Isa gameRoleStatement CycLTerm)
+
+;;; Bind both the role (which may be a NAT) and the primitive name/label
+(<== (gameRoleStatement ?stmt ?role ?name)
+     (nonAtomicRoleName ?stmt ?role ?name))
+     
+(<== (gameRoleStatement ?stmt ?role ?name)
+     (uninferredSentence
+       (nonAtomicRoleName ?stmt ?r ?n))
+     (atomicRoleName ?stmt ?role ?name))
+
+(isa nonAtomicRoleName TernaryPredicate)
+
+(<== (nonAtomicRoleName ?stmt ?role ?name)
+     (subexpressionMatching (isa ?role GameRole) ?stmt ?expr)
+     (groundExpression ?role)
+     (unifies (GameRoleFn ?name) ?role))
+
+(isa atomicRoleName TernaryPredicate)
+
+(<== (atomicRoleName ?stmt ?role ?role)
+     (subexpressionMatching (isa ?role GameRole) ?stmt ?expr)
+     (groundExpression ?role)
+     (atomicTerm ?role))
+
+
+;;; Entities
+(preconditionForMethod
+  (and (gamePieceStatement ?statement ?piece)
+       (pieceName ?piece ?piece-name)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game)))
+       (uninferredSentence  ; don't allow an isa to prevent a more elaborate statement to be assimilated.
+         (lookupOnly
+           (localOnly
+             (allFactsAllowed
+               (ist-Information (GameRulesMtFn ?game)
+                 (isa ?piece GamePiece))))))
+       (outsourcedOnly (counterValue statements ?statement-num)))  ; why is this needed?
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+         (doRecord
+           ;; We're assuming we don't draw pieces.
+           (ist-Information (GameRulesMtFn ?game) (isa ?piece GamePiece)))
+         (doRecord
+           (ist-Information (GameRulesMtFn ?game) (entityLabel ?piece ?piece-name))) ; theoretically, we could look in the sketch to verify
+           ))))
+
+(isa gamePieceStatement BinaryPredicate)
+(arity gamePieceStatement 2)
+(arg1Isa gamePieceStatement CycLExpression)
+(arg2Isa gamePieceStatement GamePiece)
+
+;;; Prefer a NAT representation:
+(<== (gamePieceStatement ?stmt ?piece)
+     (subexpressionMatching (isa ?nat GamePiece) ?stmt ?expr)
+     (formulaArgument ?expr 1 ?piece)
+     (not (atomicTerm ?piece))
+     (operatorFormulas GamePieceFn ?piece))
+     
+(<== (gamePieceStatement (isa ?piece GamePiece) ?piece))  ; a simple destructure for atomic term pieces.
+
+
+(isa pieceName BinaryPredicate)
+(arity pieceName 2)
+(arg1Isa pieceName GamePiece)
+(arg2Isa pieceName CycLTerm)
+
+(<== (pieceName ?piece ?name)
+     (atomicTerm ?piece)
+     (unifies ?name ?piece))
+     
+(<== (pieceName ?piece ?name)
+     (not (atomicTerm ?piece))
+     (operatorFormulas GamePieceFn ?piece)
+     (evaluate ?string-list
+       (MapFunctionOverList StringFn (FormulaArgListFn ?piece)))
+     (interpose " " ?string-list ?spaced-string-list)
+     (evaluate ?name
+       (SymbolConcatenateFn ?spaced-string-list)))
+       
+(isa interpose TernaryPredicate)
+(arity interpose 3)
+(arg1Isa interpose CycLTerm)
+(arg2Isa interpose List)
+(arg3Isa interpose List)
+       
+(<== (interpose ?elem ?list ?new-list)
+     (evaluate ?first (FirstInListFn ?list))
+     (evaluate ?rest (RestOfListFn ?list))
+     (different ?rest (TheList))
+     (interpose ?elem ?rest ?intermediate-list)
+     (evaluate ?new-list 
+       (JoinListsFn (TheList ?first) (TheList ?elem) ?intermediate-list)))
+
+(<== (interpose ?elem (TheList ?item) (TheList ?item)))
+(<== (interpose ?elem (TheList) (TheList)))
+
+;;; Set up the cells, initial state, goal, terminal state.
+
+;;; "TicTacToe is played on a 3x3 grid of empty squares." =
+;;; (and (maxCoordY grid40790 3) 
+;;;      (maxCoordX grid40790 3)
+;;;      (isa group-of-square40862 Set-Mathematical))
+
+;;; maxCoordX and maxCoordY are handled in the grammar via the procedural attachment
+;;; for nxm on the feature 'coordinate-extent'.
+
+(preconditionForMethod
+  (and (subexpressionMatching (maxCoordX ?board ?max-x) ?statement ?exp1)
+       (subexpressionMatching (maxCoordY ?board ?max-y) ?statement ?exp2)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game)))
+       (evaluate ?init-stmts
+         (TheClosedRetrievalSetOf ?init-stmt
+           (and (integerBetween 1 ?x ?max-x)
+                (integerBetween 1 ?y ?max-y)
+                (unifies ?init-stmt
+                  (init (cell ?x ?y Empty))))))  ; We'll delete these later if we learn particular initial state
+       (outsourcedOnly (counterValue statements ?statement-num)))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+         (doRecord
+           (ist-Information (GameRulesMtFn ?game) (maxCoordX ?game ?max-x)))
+         (doRecord
+           (ist-Information (GameRulesMtFn ?game) (maxCoordY ?game ?max-y)))
+         (doRecordMembersInContext (GameRulesMtFn ?game) ?init-stmts)
+         ;; Breadcrumbs for multimodal integration:
+         (maybeLabelLastGlyph (ContextFn ?session-id) ?game board board)
+         ))))
+
+;;; Action Description
+
+;;; "X and o take turns marking empty squares." =
+;;; ((and (isa square20501 Square)
+;;;       (fullnessOfContainer square20501 Empty) 
+;;;       (performedBy take-turns20259 x)
+;;;       (performedBy take-turns20259 o) 
+;;;       (objectOfStateChange take-turns20259 mark20359)
+;;;       (isa take-turns20259 SomeSituationAlternating)
+;;;       (objectMarked mark20359 square20501) 
+;;;       (doneBy mark20359 o)
+;;;       (doneBy mark20359 x) 
+;;;       (isa mark20359 MarkingOnASurface)))
+
+(preconditionForMethod
+ (and (not (containsPattern (isa ?win-dv Winning) ?statement))
+      (subexpressionMatching (isa ?action MarkingOnASurface) ?statement ?exp1)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game))))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+        (defineMarkingAction (ContextFn ?session-id) ?game ?action ?statement)))))
+        
+(isa defineMarkingAction ComplexActionPredicate)
+(arity defineMarkingAction 4)
+(arg1Isa defineMarkingAction Microtheory)
+(arg2Isa defineMarkingAction Game)
+(arg3Isa defineMarkingAction CycLTerm)
+(arg4Isa defineMarkingAction CycLExpression)
+(comment defineMarkingAction "(defineMarkingAction ?session-ctxt ?game ?action-dv ?statement) elaborates legal and next rules for a mark action.")
+
+;;; The effect of a marking action is trivial.
+;;; The precondition is not.
+;;; Here, we're saying that the cell contents in the statement is part of 
+;;; the precondition for marking the cell.  For TicTacToe, that 
+;;; precondition contents would be Empty.
+(preconditionForMethod
+  (and (alternatingControlExpression ?action-dv ?statement)
+       (cellContentsExpression ?action-dv ?statement ?contents)
+       (unifies ?legal-rule
+          (<== (legal ?role (mark ?x ?y ?mark))   ; justified by MarkingOnASurface.
+               (currentlyTrue (cell ?x ?y ?contents))  ; justified by cell contents
+               (entityLabel ?role ?mark)          ; mark belongs to role (not necessarily exclusively)
+               (currentlyTrue (control ?role)))))      ; justified by alternating control
+  (methodForAction
+    (defineMarkingAction ?ctxt ?game ?action-dv ?statement)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information (GameRulesMtFn ?game) ?legal-rule))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (defineMarkingAction ?ctxt ?game ?action-dv ?statement)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (defineMarkingAction ?ctxt ?game ?action-dv ?statement) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+     
+(isa alternatingControlExpression BinaryPredicate)
+(arity alternatingControlExpression 2)
+(arg1Isa alternatingControlExpression CycLTerm)
+(arg2Isa alternatingControlExpression CycLExpression)
+(comment alternatingControlExpression "(alternatingControlExpression ?action-dv ?statement)")
+
+(<== (alternatingControlExpression ?action-dv ?statement)
+     (subexpressionMatching (isa ?turn-dv SomeSituationAlternating) ?statement ?expr)
+     (containsPattern (objectOfStateChange ?turn-dv ?action-dv) ?statement))
+     
+(isa cellContentsExpression Predicate)
+(arity cellContentsExpression 3)
+(arg1Isa cellContentsExpression CycLTerm)
+(arg2Isa cellContentsExpression CycLExpression)
+(arg3Isa cellContentsExpression CycLExpression)
+(comment cellContentsExpression "(cellContentsExpression ?action-dv ?statement ?initial-contents)")
+
+(<== (cellContentsExpression ?action-dv ?statement Empty)
+     (subexpressionMatching (objectMarked ?action-dv ?container) ?statement ?expr)
+     (containsPattern (fullnessOfContainer ?container Empty) ?statement))
+     
+;;; We'll need a variant of this for piece-moving games.
+
+;;; "White moves wp."
+;;; ((and (doneBy move5932 (GameRoleFn white)) (objectActedOn move5932 wp)
+;;;       (isa move5932 CausingAnotherObjectsTranslationalMotion)))
+
+(preconditionForMethod
+ (and (not (containsPattern (isa ?win-dv Winning) ?statement))
+      (subexpressionMatching (isa ?action CausingAnotherObjectsTranslationalMotion) ?statement ?exp1)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game))))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+        (defineMovingAction (ContextFn ?session-id) ?game ?action ?statement)
+        (definePieceOwnership (ContextFn ?session-id) ?game ?action ?statement)
+        ))))
+        
+(isa defineMovingAction ComplexActionPredicate)
+(arity defineMovingAction 4)
+(arg1Isa defineMovingAction Microtheory)
+(arg2Isa defineMovingAction Game)
+(arg3Isa defineMovingAction CycLTerm)
+(arg4Isa defineMovingAction CycLExpression)
+(comment defineMovingAction "(defineMovingAction ?session-ctxt ?game ?action-dv ?statement) elaborates legal and next rules for a move action.")
+
+;;; If we say "wp moves one square up the board."
+;;; then the role is implicit, and the doer is wp.
+;;; If we say "white moves wp one square up the board." then
+;;; the role is explicit.
+;;;  Note: These two plans could be coalesced if we wanted to do list surgery.
+;;; Also, this requires a propositional statement of any capture victim.
+;;; To be more general, it should be lifted to any piece owned by the opponent.
+(preconditionForMethod
+  (and (uninferredSentence (diagonalMovement ?action-dv ?statement))
+       (allFactsAllowed
+         (lookupOnly
+           (localOnly
+             (ist-Information (GameRulesMtFn ?game)
+               (isa ?game TwoPersonGame)))))  ; justify turn-taking control clause
+       (roleForAction ?game ?action-dv ?statement ?role)
+       (objectOfAction ?action-dv ?statement ?piece)
+       (numAnswers 1 (destinationMoveContents ?game ?action-dv ?statement ?dest-contents))
+       (numAnswers 1 (moveDeltaX ?action-dv ?statement ?delta-x-fn))
+       (numAnswers 1 (moveDeltaY ?action-dv ?statement ?delta-y-fn))
+       ;; Cartesian movement:
+       (unifies ?legal-rule
+          (<== (legal ?role (move ?piece ?x1 ?y1 ?x2 ?y2))   ; justified by CausingAnotherObjectsTranslationalMotion
+               (currentlyTrue (cell ?x1 ?y1 ?piece))  ; justified by cell contents
+               (currentlyTrue (control ?role))      ; justified by alternating control
+               ?delta-x-fn
+               ?delta-y-fn
+               (currentlyTrue (cell ?x2 ?y2 ?dest-contents)))))
+  (methodForAction
+    (defineMovingAction ?ctxt ?game ?action-dv ?statement)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information (GameRulesMtFn ?game) ?legal-rule))))))
+
+;;; Blow this out.
+(preconditionForMethod
+  (and (diagonalMovement ?action-dv ?statement)
+       (allFactsAllowed
+         (lookupOnly
+           (localOnly
+             (ist-Information (GameRulesMtFn ?game)
+               (isa ?game TwoPersonGame)))))  ; justify turn-taking control clause
+       (roleForAction ?game ?action-dv ?statement ?role)
+       (objectOfAction ?action-dv ?statement ?piece)
+       (numAnswers 1 (destinationMoveContents ?game ?action-dv ?statement ?dest-contents))
+       (numAnswers 1 (moveDeltaY ?action-dv ?statement ?delta-y-fn))
+       ;; Diagonal movement:
+       (unifies ?legal-rule
+          (<== (legal ?role (move ?piece ?x1 ?y1 ?x2 ?y2))   ; justified by CausingAnotherObjectsTranslationalMotion
+               (currentlyTrue (cell ?x1 ?y1 ?piece))  ; justified by cell contents
+               (currentlyTrue (control ?role))      ; justified by alternating control
+               (diagonal (LocFn ?x1 ?y1) (LocFn ?x2 ?y2))
+               ?delta-y-fn
+               (currentlyTrue (cell ?x2 ?y2 ?dest-contents)))))   ; either Empty or the victim of a capture.
+  (methodForAction
+    (defineMovingAction ?ctxt ?game ?action-dv ?statement)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information (GameRulesMtFn ?game) ?legal-rule))))))
+
+
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (defineMovingAction ?ctxt ?game ?action-dv ?statement)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (defineMovingAction ?ctxt ?game ?action-dv ?statement) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa roleForAction QuaternaryPredicate)
+(arity roleForAction 4)
+(arg1Isa roleForAction Game)
+(arg2Isa roleForAction CycLTerm)
+(arg3Isa roleForAction CycLExpression)
+(arg4Isa roleForAction GameRole)
+
+(<== (roleForAction ?game ?action-dv ?statement ?role)
+     (performer ?action-dv ?statement ?role)
+     (lookupOnly 
+       (allFactsAllowed
+         (localOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (isa ?role GameRole))))))
+
+(<== (roleForAction ?game ?action-dv ?statement ?role)
+     (performer ?action-dv ?statement ?doer)
+     (lookupOnly 
+       (allFactsAllowed
+         (localOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (isa ?doer GamePiece)))))
+     (lookupOnly 
+       (allFactsAllowed
+         (localOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (pieceOwner ?role ?doer))))))
+
+;;; ick.
+(isa performer TernaryPredicate)
+(arity performer 3)
+(comment performer "(performer ?action-dv ?statement ?performer)")
+
+(<== (performer ?action-dv ?statement ?performer)
+     (subexpressionMatching (performedBy ?action-dv ?performer) ?statement ?expr))
+     
+(<== (performer ?action-dv ?statement ?performer)
+     (subexpressionMatching (doneBy ?action-dv ?performer) ?statement ?expr))
+     
+(isa objectOfAction TernaryPredicate)
+(arity objectOfAction 3)
+(comment objectOfAction "(objectOfAction ?action-dv ?statement ?object)")
+
+(<== (objectOfAction ?action-dv ?statement ?object)
+     (subexpressionMatching (objectActedOn ?action-dv ?object) ?statement ?expr))
+     
+(<== (objectOfAction ?action-dv ?statement ?object)
+     (subexpressionMatching (objectMoved ?action-dv ?object) ?statement ?expr))
+     
+(<== (objectOfAction ?action-dv ?statement ?object)
+     (subexpressionMatching (objectOfStateChange ?action-dv ?object) ?statement ?expr))
+     
+(<== (objectOfAction ?action-dv ?statement ?object)
+     (subexpressionMatching (objectMarked ?action-dv ?object) ?statement ?expr))
+
+             
+;;; Extract movement config from direction and range (for now)
+;;; up vs down
+;;; one square (or n squares)
+
+; "wp may move diagonally up to capture bp." =
+;  (and (orientationOfEvent move9063 DiagonalMovement)
+;       ((HypothesizedPrepositionSenseFn Up-TheWord Preposition) wp square9360)
+;       (purposeInEvent wp move9063
+;        (and (isa capture9850 CapturingSomething) (performedBy capture9850 wp)
+;             (objectActedOn capture9850 bp)))))
+
+(isa destinationMoveContents QuaternaryPredicate)
+(arity destinationMoveContents 4)
+(arg1Isa destinationMoveContents Game)
+(arg2Isa destinationMoveContents CycLTerm)
+(arg3Isa destinationMoveContents CycLExpression)
+(arg4Isa destinationMoveContents CycLTerm)
+       
+;;; If no mention of 'capture', then Empty.
+;;; Otherwise the object of the capture.
+(<== (destinationMoveContents ?game ?action-dv ?statement ?dest-contents)
+     (not (subexpressionMatching (isa ?capture CapturingSomething) ?statement ?expr))
+     (unifies ?dest-contents Empty))
+
+(<== (destinationMoveContents ?game ?action-dv ?statement ?dest-contents)
+     (subexpressionMatching (isa ?capture-dv CapturingSomething) ?statement ?expr)
+     (objectOfAction ?capture-dv ?statement ?dest-contents))
+
+
+;;; Blow this out more.
+;;; To Do: infer the range
+
+(isa diagonalMovement BinaryPredicate)
+(arity diagonalMovement 2)
+(arg1Isa diagonalMovement CycLTerm)
+(arg2Isa diagonalMovement CycLExpression)
+
+(<== (diagonalMovement ?action-dv ?statement)
+     (subexpressionMatching (orientationOfEvent ?action-dv DiagonalMovement) ?statement ?expr))
+
+(isa moveDeltaX TernaryPredicate)
+(arity moveDeltaX 3)
+(arg1Isa moveDeltaX CycLTerm)
+(arg2Isa moveDeltaX CycLExpression)
+(arg3Isa moveDeltaX CycLExpression)
+
+;;; up or down without diagonal should return ?x2
+(<== (moveDeltaX ?action-dv ?statement (unifies ?x2 ?x1))
+     (subexpressionMatching (orientationOfEvent ?action-dv UpMovement) ?statement ?expr)
+     (uninferredSentence (diagonalMovement ?action-dv ?stmt)))
+     
+(<== (moveDeltaX ?action-dv ?statement (unifies ?x2 ?x1))
+     (subexpressionMatching (HypothesizedPrepositionSenseFn Up-TheWord Preposition) ?statement ?expr)
+     (uninferredSentence (diagonalMovement ?action-dv ?stmt)))
+
+(<== (moveDeltaX ?action-dv ?statement (unifies ?x2 ?x1))
+     (subexpressionMatching (orientationOfEvent ?action-dv DownMovement) ?statement ?expr)
+     (uninferredSentence (diagonalMovement ?action-dv ?stmt)))
+
+(<== (moveDeltaX ?action-dv ?statement (unifies ?x2 ?x1))
+     (subexpressionMatching (HypothesizedPrepositionSenseFn Down-TheWord Preposition) ?statement ?expr)
+     (uninferredSentence (diagonalMovement ?action-dv ?stmt)))
+
+(isa moveDeltaY TernaryPredicate)
+(arity moveDeltaY 3)
+(arg1Isa moveDeltaY CycLTerm)
+(arg2Isa moveDeltaY CycLExpression)
+(arg3Isa moveDeltaY CycLExpression)
+
+;;; Up or down, with or without diagonal should return the right term
+(<== (moveDeltaY ?action-dv ?statement (evaluate ?y2 (DifferenceFn ?y1 1)))
+     (subexpressionMatching (orientationOfEvent ?action-dv UpMovement) ?statement ?expr))
+
+(<== (moveDeltaY ?action-dv ?statement (evaluate ?y2 (DifferenceFn ?y1 1)))
+     (subexpressionMatching (HypothesizedPrepositionSenseFn Up-TheWord Preposition) ?statement ?expr))
+
+(<== (moveDeltaY ?action-dv ?statement (evaluate ?y2 (PlusFn ?y1 1)))
+     (subexpressionMatching (orientationOfEvent ?action-dv DownMovement) ?statement ?expr))
+
+(<== (moveDeltaY ?action-dv ?statement (evaluate ?y2 (PlusFn ?y1 1)))
+     (subexpressionMatching (HypothesizedPrepositionSenseFn Down-TheWord Preposition) ?statement ?expr))
+
+(isa definePieceOwnership ComplexActionPredicate)
+(arity definePieceOwnership 4)
+(arg1Isa definePieceOwnership Microtheory)
+(arg2Isa definePieceOwnership Game)
+(arg3Isa definePieceOwnership CycLTerm)
+(arg4Isa definePieceOwnership CycLExpression)
+(comment definePieceOwnership "(definePieceOwnership ?session-ctxt ?game ?action-dv ?statement) extracts piece ownership from an action statement.")
+
+(preconditionForMethod
+  (and (roleForAction ?game ?action-dv ?statement ?role)
+       (objectOfAction ?action-dv ?statement ?piece)
+       (lookupOnly 
+         (allFactsAllowed
+           (localOnly
+             (ist-Information (GameRulesMtFn ?game)
+               (isa ?piece GamePiece))))))
+  (methodForAction
+    (definePieceOwnership ?ctxt ?game ?action-dv ?statement)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information (GameRulesMtFn ?game) (pieceOwner ?role ?piece)))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (definePieceOwnership ?ctxt ?game ?action-dv ?statement)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (definePieceOwnership ?ctxt ?game ?action-dv ?statement) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; Temporal Relations
+
+;;;"X goes first."
+;;; (nthInSeries go6888 SERIES6914 1)
+;;; (we want to get this too: (objectMoving go6888 x))
+
+(preconditionForMethod
+  (and (subexpressionMatching (nthInSeries ?action ?series 1) ?statement ?exp1)
+       (subexpressionMatching (objectMoving ?action ?player) ?statement ?exp2)
+       (numAnswers 1 (currentSession ?session-id))
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (localOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (isa ?player GameRole)))))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information (GameRulesMtFn ?game) (init (control ?player))))))))
+
+
+;;;
+;;; Initial Board Setup
+;;;
+
+(preconditionForMethod
+  (and (not (containsPattern (isa ?win-dv Winning) ?statement))
+       (subexpressionMatching (isa ?start BeginningAnActivity) ?statement ?expr1)
+       (subexpressionMatching (holdsDuring ?start ?situation) ?statement ?expr2)
+       (subexpressionMatching (objectFoundInLocation ?piece ?config) ?statement ?expr3)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game)))
+       (lookupOnly 
+         (allFactsAllowed
+           (localOnly
+             (ist-Information (GameRulesMtFn ?game)
+               (isa ?piece GamePiece)))))
+       (lookupOnly
+         (allFactsAllowed
+           (localOnly
+             (ist-Information (GameRulesMtFn ?game)
+               (maxCoordX ?game ?max-x)))))
+       (lookupOnly
+         (allFactsAllowed
+           (localOnly
+             (ist-Information (GameRulesMtFn ?game)
+               (maxCoordY ?game ?max-y)))))
+       (configurationCoordinates ?config ?statement ?max-x ?max-y ?coords))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+        (doForEach (LocFn ?x ?y) ?coords
+          (doRecord
+            (ist-Information (GameRulesMtFn ?game)
+              (init (cell ?x ?y ?piece)))))
+        (doForEach (LocFn ?x ?y) ?coords
+      (doForget
+        (ist-Information (GameRulesMtFn ?game)
+              (init (cell ?x ?y Empty)))))))))
+
+
+(isa configurationCoordinates QuintaryPredicate)
+(arity configurationCoordinates 5)
+
+(<== (configurationCoordinates ?config ?statement ?max-x ?max-y ?coords)
+     (subexpressionMatching (isa ?config RowOfObjects) ?statement ?exp1)  ; constant y
+     (subexpressionMatching (isa ?config (ThingDescribableAsFn ?adj Adjective)) ?statement ?expr2)
+     (rowCoords ?adj ?statement ?max-x ?max-y ?coords))
+
+(isa rowCoords QuintaryPredicate)
+(arity rowCoords 5)
+(arg1Isa rowCoords CycLTerm)
+(arg2Isa rowCoords CycLExpression)
+(arg3Isa rowCoords Integer)
+(arg4Isa rowCoords Integer)
+(arg5Isa rowCoords GridLocation)
+
+(<== (rowCoords Bottom-TheWord ?statement ?max-x ?max-y ?coords)
+     (evaluate ?coords
+       (TheClosedRetrievalSetOf ?coord
+         (and (integerBetween 1 ?x ?max-x)
+              (unifies ?coord (LocFn ?x ?max-y))))))
+              
+(<== (rowCoords Top-TheWord ?statement ?max-x ?max-y ?coords)
+     (evaluate ?coords
+       (TheClosedRetrievalSetOf ?coord
+         (and (integerBetween 1 ?x ?max-x)
+              (unifies ?coord (LocFn ?x 1))))))
+
+
+;;; Goal extraction
+
+(preconditionForMethod
+  (and (subexpressionMatching (isa ?win-dv Winning) ?statement ?expr1)
+       (subexpressionMatching (performedBy ?win-dv ?player-dv) ?statement ?expr2)
+       (different ?player-dv (SelfToken-Indexical))  ; "you win."
+       (currentUser ?user)
+       (different ?player-dv ?user)                  ; "i win."
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game))))
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+        (compileGoalStatement ?game ?statement ?player-dv ?win-dv)))))
+            
+(isa compileGoalStatement ComplexActionPredicate)
+(arity compileGoalStatement 4)
+(arg1Isa compileGoalStatement Game)
+(arg2Isa compileGoalStatement CycLExpression)
+(arg3Isa compileGoalStatement CycLTerm)
+(arg4Isa compileGoalStatement CycLTerm)
+(comment compileGoalStatement "(compileGoalStatement ?game ?statement ?player-dv ?win-dv) writes out a goal rule or rules.")
+
+(preconditionForMethod
+  (and (extractGoalStateContent ?game ?statement ?player-dv ?win-dv ?player ?goal-state)
+       (evaluate ?goal-rule
+         (MakeFormulaFn <==
+           (JoinListsFn (TheList (goalState ?player 100)) ?goal-state))))
+  (methodForAction
+    (compileGoalStatement ?game ?statement ?player-dv ?win-dv)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information (GameRulesMtFn ?game) 
+            ?goal-rule))))))
+            
+
+            
+ ; "The first player to move a piece across the board wins."
+; (and (isa win18573 Winning)
+;      (performedBy win18573 player18347)
+;      (doneBy move18356 player18347)
+;      (objectActedOn move18356 piece18390)
+;      (nthInSeries player18347 SERIES18343 1) 
+;      (isa player18347 GameRole) 
+;      (isa board18518 GameBoard)
+;      (isa piece18390 GamePiece)
+;      (isa move18356 CausingAnotherObjectsTranslationalMotion)
+;      ((HypothesizedPrepositionSenseFn Across-TheWord Preposition) piece18390 board18518))
+
+(preconditionForMethod
+  (and (allFactsAllowed 
+         (lookupOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (isa ?game PieceMovingGame))))
+       (subexpressionMatching (isa ?move CausingAnotherObjectsTranslationalMotion) ?statement ?expr1)
+       (objectOfAction ?action-dv ?statement ?piece)
+       (performer ?action-dv ?statement ?player-dv)
+       (subexpressionMatching (isa ?piece GamePiece) ?statement ?expr2)
+       (subexpressionMatching (isa ?board GameBoard) ?statement ?expr3)
+       (subexpressionMatching ((HypothesizedPrepositionSenseFn Across-TheWord Preposition) ?piece ?board) ?statement ?expr4)
+       (evaluate ?roles
+         (TheClosedRetrievalSetOf ?role
+           (allFactsAllowed 
+         (lookupOnly
+           (ist-Information (GameRulesMtFn ?game)
+                 (isa ?role GameRole))))))  ; enumerate roles
+       (numAnswers 1
+         (allFactsAllowed
+           (lookupOnly
+             (localOnly
+               (ist-Information (GameRulesMtFn ?game)
+                 (maxCoordX ?game ?max-x))))))
+       (numAnswers 1
+         (allFactsAllowed
+           (lookupOnly
+             (localOnly
+               (ist-Information (GameRulesMtFn ?game)
+                 (maxCoordY ?game ?max-y)))))))
+  (methodForAction
+    (compileGoalStatement ?game ?statement ?player-dv ?win-dv)
+    (actionSequence
+      (TheList
+        (doForEach ?role ?roles (compileRelativeTransitGoal ?game ?role ?max-x ?max-y))))))
+        
+(isa compileRelativeTransitGoal ComplexActionPredicate)
+(arity compileRelativeTransitGoal 4)
+
+;;; This really only holds when there's only one kind of piece.
+(preconditionForMethod
+  (and (numAnswers 1 (initialBoardSide ?game ?role ?arg ?initial-value))
+       (formulaArgument (TheList ?max-x ?max-y) ?arg ?max)
+       (oppositeBoardSide ?initial-value ?max ?new-value)
+       (formulaArgument (TheList ?x ?y) ?arg ?var)
+       (unifies ?var ?new-value) ; hope the binding is transitive...
+       (unifies ?goal
+         (<== (goalState ?role 100)
+              (pieceOwner ?role ?piece)
+              (currentlyTrue (cell ?x ?y ?piece)))))
+  (methodForAction
+    (compileRelativeTransitGoal ?game ?role ?max-x ?max-y)
+    (actionSequence
+      (TheList
+         (doRecord
+           (ist-Information (GameRulesMtFn ?game) ?goal))))))
+
+(isa initialBoardSide QuaternaryPredicate)
+(arity initialBoardSide 4)
+(arg1Isa initialBoardSide Game)
+(arg2Isa initialBoardSide GameRole)
+(arg3Isa initialBoardSide Integer)
+(arg4Isa initialBoardSide Integer)
+
+(<== (initialBoardSide ?game ?role 1 ?x)
+     (allFactsAllowed
+       (lookupOnly
+         (localOnly 
+           (ist-Information (GameRulesMtFn ?game)
+             (pieceOwner ?role ?piece)))))
+     (evaluate ?init-x-coords
+       (TheClosedRetrievalSetOf ?a
+         (allFactsAllowed
+           (lookupOnly
+             (localOnly 
+               (ist-Information (GameRulesMtFn ?game)
+                 (init (cell ?a ?b ?piece))))))))
+     (unifies (TheSet ?x) ?init-x-coords))
+
+(<== (initialBoardSide ?game ?role 2 ?y)
+     (allFactsAllowed
+       (lookupOnly
+         (localOnly 
+           (ist-Information (GameRulesMtFn ?game)
+             (pieceOwner ?role ?piece)))))
+     (evaluate ?init-y-coords
+       (TheClosedRetrievalSetOf ?b
+         (allFactsAllowed
+           (lookupOnly
+             (localOnly 
+               (ist-Information (GameRulesMtFn ?game)
+                 (init (cell ?a ?b ?piece))))))))
+     (unifies (TheSet ?y) ?init-y-coords))
+
+
+(isa oppositeBoardSide TernaryPredicate)
+(arity oppositeBoardSide 3)
+(arg1Isa oppositeBoardSide Integer)
+(arg2Isa oppositeBoardSide Integer)
+(arg3Isa oppositeBoardSide Integer)
+
+
+(<== (oppositeBoardSide 1 ?max ?max))
+(<== (oppositeBoardSide ?max ?max 1))
+
+ ;"The first player to mark three squares in a row wins." =
+ ;((and (cardinality group-of-square11270 3) (isa group-of-square11270 Set-Mathematical)
+ ;      (relationExistsInstance cardinality 3
+ ;       (CollectionSubsetFn Square
+ ;        (TheSetOf ?square11270
+ ;         (and (isa ?row11341 RowOfObjects) (in-UnderspecifiedContainer ?square11270 ?row11341)
+ ;              (isa ?square11270 Square)))))
+ ;      (isa player11231 GameRole)
+ ;      (isa mark11238 MarkingOnASurface)
+ ;      (isa win11388 Winning)
+ ;      (nthInSeries player11231 SERIES11227 1)
+ ;      (doneBy mark11238 player11231)
+ ;      (objectMarked mark11238 group-of-square11270)
+ ;      (performedBy win11388 player11231)
+ ;      (elementOf square11270 group-of-square11270) 
+ ;      (isa row11341 RowOfObjects)
+ ;      (in-UnderspecifiedContainer square11270 row11341)
+ ;      (isa square11270 Square)))
+
+;;; Produce something like:
+;;;  (<== (goalState ?player 100)
+;;;       (entityLabel ?player ?mark)
+;;;       (currentlyTrue (cell 1 ?m ?mark))
+;;;       (currentlyTrue (cell 2 ?m ?mark))
+;;;       (currentlyTrue (cell 3 ?m ?mark))
+
+(isa extractGoalStateContent Predicate)
+(arity extractGoalStateContent 6)
+
+(<== (extractGoalStateContent ?game ?statement ?player-dv ?win-dv ?player ?goal-state)
+     (allFactsAllowed 
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (isa ?game MarkingGame))))
+     ;; Extract marking config
+     (subexpressionMatching (objectMarked ?marking-dv ?group-dv) ?statement ?expr1)
+     (subexpressionMatching (cardinality ?group-dv ?n) ?statement ?expr2)
+     (subexpressionMatching (elementOf ?square-dv ?group-dv) ?statement ?expr3)
+     (subexpressionMatching (isa ?square-dv Square) ?statement ?expr4) ; individual coordinate
+     (subexpressionMatching (in-UnderspecifiedContainer ?square-dv ?config-dv) ?statement ?expr5)
+     (subexpressionMatching (isa ?config-dv ?config) ?statement ?expr6)
+     (groundExpression ?expr1)
+     (groundExpression ?expr2)
+     (groundExpression ?expr3)
+     (groundExpression ?expr4)
+     (groundExpression ?expr5)
+     (groundExpression ?expr6)
+     (numAnswers 1 (coordinateExtent ?game ?n ?config ?stmt-list))
+     (evaluate ?goal-state
+       (JoinListsFn (TheList (lookupOnly
+                               (localOnly
+                                 (allFactsAllowed
+                                   (ist-Information (GameRulesMtFn ?game)
+                                     (isa ?player GameRole))))) ; rule out the board itself
+                             (numAnswers 1 (entityLabel ?player ?mark)))
+                    ?stmt-list)))
+                    
+(isa coordinateExtent QuaternaryPredicate)
+(arity coordinateExtent 4)
+(arg1Isa coordinateExtent Game)
+(arg2Isa coordinateExtent Integer)
+(arg3Isa coordinateExtent ObjectType)
+(arg4Isa coordinateExtent List)
+
+;;; N in a row, where N is the width of the board:
+(<== (coordinateExtent ?game ?num RowOfObjects ?statements)
+     (groundExpression ?num)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (allFactsAllowed
+             (ist-Information (GameRulesMtFn ?game)
+               (maxCoordX ?game ?num))))))
+;     (lookupOnly
+;       (localOnly
+;         (allFactsAllowed
+;           (ist-Information (GameRulesMtFn ?game)
+;             (maxCoordY ?game ?max-y)))))
+;     (lessThanOrEqualTo ?num ?max-x)
+     (evaluate ?statements
+       (SetToListFn
+         (TheClosedRetrievalSetOf ?statement
+           (and (integerBetween 1 ?x ?num)
+                (unifies ?statement (currentlyTrue (cell ?x ?y ?mark))))))))
+
+
+;;; THIS IS A WASTE OF TIME RIGHT NOW:
+;;; N in a row, where N is less than the width of the board:
+;(<== (coordinateExtent ?game ?num RowOfObjects ?statements)
+;     (groundExpression ?num)
+;     (numAnswers 1
+;       (lookupOnly
+;         (localOnly
+;           (allFactsAllowed
+;             (ist-Information (GameRulesMtFn ?game)
+;               (maxCoordX ?game ?max-x))))))
+;     (lessThan ?num ?max-x)
+;     (greaterThan ?num 1)
+;     (evaluate ?n-1 (DifferenceFn ?num 1))
+;     ;; Ideally, this would be a Knuth-Morris-Pratt string search
+;     (unifies ?statements
+;       (TheList
+;         (currentlyTrue (cell ?xlo ?y ?mark))
+;         (evaluate ?xhi (PlusFn ?xlo ?n-1))
+;         
+;         (everySatisfies ?x
+;           (and (integerBetween ?xlo ?x ?xhi)
+;                (currentlyTrue ?x ?y ?mark)))
+     
+;     (integerSequence ?1 ?n-1 ?offsets)
+;     (evaluate ?vars 
+;       (JoinListsFn (TheList ?x)
+;         (MapFunctionOverList 
+;           (FunctionToArg 2
+;             (Kappa (?num ?sym) 
+;               (evaluate ?sym (SymbolConcatenateFn (TheList "?x+" ?num)))))
+;         ?offsets)))
+;     (evaluate 
+;     )
+     
+     
+;;; We want something like:
+;;; (currentlyTrue (cell ?x ?y ?mark))
+;;; (evaluate ?x+1 (PlusFn ?x 1))
+;;; (currentlyTrue (cell ?x+1 ?y ?mark))
+;;; etc.
+     
+;(<== (integerSequence ?low ?high ?seq)
+;     (evaluate ?seq
+;       (SortFn
+;         (TheClosedRetrievalSetOf ?n
+;           (integerBetween ?low ?n ?high))
+;         lessThan IdentityFn)))
+
+
+;;; Transition to play
+
+;;; "Start a game."
+;;; (and (isa game4984 Game) (isa start4944 BeginningAnActivity))
+
+(preconditionForMethod
+  (and (subexpressionMatching (isa ?start-dv BeginningAnActivity) ?stmt ?expr1)
+       (subexpressionMatching (isa ?game-dv Game) ?stmt ?expr2)
+       (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (numAnswers 1
+         (lookupOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (gameDomain ?game))))
+       (numAnswers 1
+         (lookupOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (init (control ?role))))))
+  (methodForAction
+    (assimilateRequest ?stmt)
+    (actionSequence
+      (TheList
+        (setupGameExecutionContext ?game ?role)))))
+        
+;;; Need an entry for "I'll start" or "I'll go first."
+;;; This would just call setupGameExecutionContext with
+;;; a role other than the one with initial control.
+
+
+;;; Gamestate explanation
+
+;;; "I win."
+;;; (and (winner-First TicTacToe4 Hinrichs)
+;;;      (performedBy win4408 Hinrichs)
+;;;      (isa win4408 Winning))
+
+(preconditionForMethod
+  (and (subexpressionMatching (winner-First ?gameinst ?who) ?statement ?exp1)
+       (executionContext ?gameinst)
+       (numAnswers 1 
+         (roleForPlayer ?gameinst ?who ?winner-role))
+       (numAnswers 1
+         (allFactsAllowed
+           (lookupOnly
+             (ist-Information ?gameinst
+               (gameDomain ?game)))))
+       (uninferredSentence
+         (ist-Information ?gameinst
+           (goalState ?winner-role 100)))
+       )
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+        ;; Stop waiting for another glyph:
+        (clearPendingSketchEvents new-glyphs)
+        ;; Induce a new rule for (goalState ?winner-role 100)
+        (inferNewGoalRule ?gameinst ?game ?winner-role)
+        ))))
+
+
+(isa roleForPlayer TernaryPredicate)
+(arity roleForPlayer 3)
+(comment roleForPlayer "(roleForPlayer ?gameinst ?player ?other-role) is fmi-games specific.")
+
+;;; Pass in game instance and player name to bind role.
+;;; Do it this way so that for non-2-player games, we can 
+;;; simply 
+(<== (roleForPlayer ?gameinst SelfToken-Indexical ?role)
+     (numAnswers 1
+       (lookupOnly 
+         (localOnly 
+           (ist-Information ?gameinst
+             (currentRole ?role))))))
+             
+             
+(<== (roleForPlayer ?gameinst ?player ?other-role)
+     (different ?player SelfToken-Indexical)
+     (numAnswers 1
+       (lookupOnly
+         (contextEnvAllowed
+           (ist-Information ?gameinst
+             (gameDomain ?game)))))
+     (lookupOnly
+       (ist-Information (GameRulesMtFn ?game)
+         (isa ?game TwoPersonGame)))
+     (numAnswers 1
+       (lookupOnly 
+         (localOnly 
+           (ist-Information ?gameinst
+             (currentRole ?role)))))
+     (lookupOnly
+       (localOnly
+         (ist-Information (GameRulesMtFn ?domain)
+           (isa ?other-role GameRole))))
+     (different ?other-role ?role))  ; process of elimination
+
+;;; And if we're not a two-person game, we should store the roleForPlayer 
+;;; explicitly.
+
+(isa clearPendingSketchEvents ComplexActionPredicate)
+(arity clearPendingSketchEvents 1)
+(comment clearPendingSketchEvents "(clearPendingSketchEvents ?event-type) will clear processes waiting on gates for sketch events on the sketch agent.")
+
+(preconditionForMethod
+  (currentSketchAgent ?sketch-agent)
+  (methodForAction
+    (clearPendingSketchEvents ?type)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?sketch-agent
+          (doClearEventCallback new-glyphs))))))
+
+;;; no sketch agent?
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (clearPendingSketchEvents ?type)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (clearPendingSketchEvents ?type) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa inferNewGoalRule ComplexActionPredicate)
+(arity inferNewGoalRule 3)
+(arg1Isa inferNewGoalRule Microtheory)
+(arg2Isa inferNewGoalRule Game)
+(arg3Isa inferNewGoalRule GameRole)
+(comment inferNewGoalRule "(inferNewGoalRule ?game-instance-mt ?game ?role) lifts the current state to a new goal rule.")
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (inferNewGoalRule ?gameinst ?game ?role)
+    (actionSequence
+      (TheList
+        (protestConfusion ?gameinst (goalState ?role 100))))))
+        
+(<== (preferInContext (inferNewGoalRule ?gameinst ?game ?role) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 protestConfusion))
+
+
+(isa protestConfusion ComplexActionPredicate)
+(arity protestConfusion 2)
+(arg1Isa protestConfusion Microtheory)
+(arg2Isa protestConfusion CycLSentence-Assertible)
+(comment protestConfusion "(protestConfusion ?gameinst ?stmt) announces inability to explain ?stmt.")
+
+(preconditionForMethod
+  (and (currentInteractionMgr ?im)
+       (formattedContentString "I don't understand how ~a can be true in ~a" (TheList ?stmt ?gameinst) ?interjection))
+  (methodForAction
+    (protestConfusion ?gameinst ?stmt)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?im (interject ?interjection))))))
+
+
+
+;;; (poor man's) Inductive Logic Programming
+
+;;; extrapolate from existing goal rule
+;;; isStateRule
+;;; definesStateWRTRole
+;;; definesSpatialConfiguration
+;;; definesStatePattern
+;;; 
+
+;;; Since we can't unify on a rule, we've introduced
+;;; a general outsourced predicate to return kb rules that
+;;; match a consequent within a microtheory.
+;;; GGP originally exploited chainerContains, then was updated
+;;; to have a gdlRule outsourced predicate.  We're just
+;;; generalizing that.
+
+(preconditionForMethod
+  (and (uninferredSentence
+         (selectedConfiguration ?gameinst))
+       (outsourcedOnly (ruleConcluding (GameRulesMtFn ?game) (goalState ?role 100) ?rule))  ; existing goal rule (backtrack over multiple bindings if necessary
+       (isStateRule ?rule)
+       (definesStateWRTRole ?rule)
+       (liftedStateRule ?gameinst ?game ?rule ?role ?new-rule))
+  (methodForAction
+    (inferNewGoalRule ?gameinst ?game ?role)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information (GameRulesMtFn ?game) ?new-rule))
+        (doAnnounce "Learned new goal definition: ~s" (?new-rule))
+        ))))
+
+(isa selectedConfiguration UnaryPredicate)
+(arity selectedConfiguration 1)
+(arg1Isa selectedConfiguration Microtheory)
+(comment selectedConfiguration "(selectedConfiguration ?gameinst) means there's more than one selected glyph in the game sketch.")
+
+;;; If there's more than one selected glyph in the sketch, then
+;;; we're probably designating a configuration.  If there's only one, 
+;;; that's a byproduct of drawing.
+(<== (selectedConfiguration ?gameinst)
+     (evaluate ?num
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?glyph
+           (currentSelectedEntity ?glyph)))) ; now outsourced - shouldn't grab sketch-agent's reasoner lock.
+     (greaterThan ?num 1))
+
+(isa isStateRule UnaryPredicate)
+(arity isStateRule 1)
+
+;;; If the goal rule isn't defined by an action, it must be defined by a state:
+(<== (isStateRule ?rule)
+     (noArgumentHasPredicate ?rule doesAction))
+
+(isa definesStateWRTRole UnaryPredicate)
+(arity definesStateWRTRole 1)
+
+;;; We want to know if the (sub-)state that defines the goal is
+;;; specific to the winning role.
+;;; If this is true, then we can lift the role in the new goal definition.
+(<== (definesStateWRTRole ?rule)
+     (formulaArgument ?rule 1 ?consequent)
+     (formulaArgument ?consequent 1 ?role)
+     (subexpressionMatching (entityLabel ?role ?label) ?rule ?expr)
+     (uninferredSentence
+       (containsUnrelatedStateClause ?rule ?role)))
+
+(isa containsUnrelatedStateClause BinaryPredicate)
+(arity containsUnrelatedStateClause 2)
+
+(<== (containsUnrelatedStateClause ?rule ?role)
+     (subexpressionMatching (currentlyTrue ?stmt%) ?rule ?clause)
+     (uninferredSentence
+       (formulaArgument ?stmt% ?n ?role)))
+
+(isa definesSpatialConfiguration TernaryPredicate)
+(arity definesSpatialConfiguration 3)
+(arg1Isa definesSpatialConfiguration CycLFormula)
+(arg2Isa definesSpatialConfiguration List)
+(arg3Isa definesSpatialConfiguration Set-Mathematical)
+
+(<== (definesSpatialConfiguration ?rule ?prefix ?config)
+     (evaluate ?conj-list (FormulaArgListFn ?rule))
+     (evaluate ?config
+       (TheClosedRetrievalSetOf ?clause
+         ; Do this instead of subexpressionMatching to avoid clauses nested in
+         ; uninferredSentence, etc:
+         (and (memberOfList ?clause ?conj-list)
+              (gdlSpatialStatement ?clause))))
+     (evaluate ?prefix
+        (RemoveIfFn ?conj-list gdlSpatialStatement IdentityFn)))
+
+(isa gdlSpatialStatement UnaryPredicate)
+(arity gdlSpatialStatement 1)
+(arg1Isa gdlSpatialStatement CycLExpression)
+(comment gdlSpatialStatement "(gdlSpatialStatement ?expr) means ?expr describes the contents of a spatial coordinate, e.g., (currentlyTrue (cell ?x ?y ?contents))")
+
+(<== (gdlSpatialStatement ?stmt)
+     (matches (currentlyTrue (cell ?x ?y ?contents)) ?stmt))
+
+(isa definesStatePattern UnaryPredicate)
+(arity definesStatePattern 1)
+(arg1Isa definesStatePattern Set-Mathematical)
+(comment definesStatePattern "(definesStatePattern ?expr-set) means that ?expr-set contains variables.")
+
+;;; contains variables:
+(<== (definesStatePattern ?config)
+     (not (variableExpression ?config))
+     (not (groundExpression ?config)))
+
+(isa liftedStateRule Predicate)
+(arity liftedStateRule 5)
+
+;;; Given: a ?rule that defines a state WRT a role,
+;;; lift the portion of the current state related to role
+;;; such that it captures the salient part of the configuration concisely
+(<== (liftedStateRule ?gameinst ?game ?existing-rule ?role% ?new-rule)
+     (definesSpatialConfiguration ?existing-rule ?prefix ?existing-rule-config) ; Have a different rule if example rule isn't spatial (unlikely)
+     (numAnswers 1 
+       (lookupOnly
+         (localOnly
+           (allFactsAllowed
+             (ist-Information (GameRulesMtFn ?game)
+               (entityLabel ?role% ?label%))))))                  ; look up label for particular winning role
+     (subexpressionMatching (entityLabel ?role-var ?label-var) ?existing-rule ?expr)
+     (evaluate ?state-config                                      ; locations of winning player's marks.
+       (SublisFn (TheSet (?label% ?label-var))                    ; lift mark
+         (TheClosedRetrievalSetOf ?clause
+           (and (wmOnly
+                  (lookupOnly
+                    (localOnly
+                      (ist-Information ?gameinst
+                        (currentlyTrue (cell ?x ?y ?label%))))))
+                (unifies ?clause (currentlyTrue (cell ?x ?y ?label%)))))))
+     (numAnswers 1 (liftSpatialPattern ?state-config ?existing-rule-config ?new-config))
+     (evaluate ?new-rule
+       (MakeFormulaFn <==
+         (JoinListsFn ?prefix (SetToListFn ?new-config)))))
+             
+
+(isa liftSpatialPattern TernaryRelation)
+(arity liftSpatialPattern 3)
+
+;;; Case1: no lifting 
+(<== (liftSpatialPattern ?state-config ?existing-rule-config ?state-config)
+     (uninferredSentence
+       (definesStatePattern ?existing-rule-config)))  ; existing rule is propositional
+
+;;; Case2: lift!
+;;;
+;;; We have a set of statements of the form:
+;;;  (currentlyTrue (cell 1 1 ?mark))
+;;;  (currentlyTrue (cell 1 2 ?mark))
+;;;  (currentlyTrue (cell 1 3 ?mark))
+;;; We want to variablize constants
+(<== (liftSpatialPattern ?state-config ?existing-rule-config ?new-state-config)
+     (definesStatePattern ?existing-rule-config)
+     (numAnswers 1 (liftIfConstantX ?state-config ?lifted-x-config))
+     (numAnswers 1 (liftIfConstantY ?lifted-x-config ?new-state-config)))
+
+(isa liftIfConstantX BinaryRelation)
+(arity liftIfConstantX 2)
+
+(<== (liftIfConstantX ?config ?config)
+     (evaluate ?x-vals
+       (TheClosedRetrievalSetOf ?x-val
+         (and (elementOf ?stmt ?config)
+              (unifies (currentlyTrue (cell ?x-val ?b% ?c%)) ?stmt))))
+     (not (matches (TheSet ?singleton) ?x-vals)))
+
+(<== (liftIfConstantX ?config ?lifted-config)
+     (evaluate ?x-vals
+       (TheClosedRetrievalSetOf ?x-val
+         (and (elementOf ?stmt ?config)
+              (unifies (currentlyTrue (cell ?x-val ?b% ?c%)) ?stmt))))
+     (matches (TheSet ?constant) ?x-vals)
+     (evaluate ?lifted-config
+       (TheClosedRetrievalSetOf ?lifted-stmt
+         (and (elementOf ?stmt ?config)
+              (unifies (currentlyTrue (cell ?old-x ?old-y ?old-mark)) ?stmt)
+              (unifies ?lifted-stmt (currentlyTrue (cell ?x ?old-y ?old-mark)))))))
+
+(isa liftIfConstantY BinaryRelation)
+(arity liftIfConstantY 2)
+
+(<== (liftIfConstantY ?config ?config)
+     (evaluate ?y-vals
+       (TheClosedRetrievalSetOf ?y-val
+         (and (elementOf ?stmt ?config)
+              (unifies (currentlyTrue (cell ?a% y-val ?c%)) ?stmt))))
+     (not (matches (TheSet ?singleton) ?y-vals)))
+
+(<== (liftIfConstantY ?config ?lifted-config)
+     (evaluate ?y-vals
+       (TheClosedRetrievalSetOf ?y-val
+         (and (elementOf ?stmt ?config)
+              (unifies (currentlyTrue (cell ?a% ?y-val ?c%)) ?stmt))))
+     (matches (TheSet ?constant) ?y-vals)
+     (evaluate ?lifted-config
+       (TheClosedRetrievalSetOf ?lifted-stmt
+         (and (elementOf ?stmt ?config)
+              (unifies (currentlyTrue (cell ?old-x ?old-y ?old-mark)) ?stmt)
+              (unifies ?lifted-stmt (currentlyTrue (cell ?old-x ?y ?old-mark)))))))
+              
+;;; Case of showing the winning configuration.
+;;; We need to detect when a game is symmetric (do all the goals have variablized roles?)
+(preconditionForMethod
+  (and (selectedConfiguration ?gameinst)
+       (liftDemonstratedRule ?gameinst ?game ?role ?new-rule))
+  (methodForAction
+    (inferNewGoalRule ?gameinst ?game ?role)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information (GameRulesMtFn ?game) ?new-rule))
+        (doAnnounce "Learned new goal definition: ~s" (?new-rule))
+        ))))
+
+(isa liftDemonstratedRule Predicate)
+(arity liftDemonstratedRule 4)
+
+;;; for each glyph, obtain the coordinates.
+;;;  look in game rep for contents (problem: can't select an empty square!)
+(<== (liftDemonstratedRule ?gameinst ?game ?role ?new-rule)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (maxCoordX ?game ?max-x)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information (GameRulesMtFn ?game)
+             (maxCoordY ?game ?max-y)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?gameinst
+             (sketchName ?sketch)))))
+     (currentSketchAgent ?sketch-agent)  ; now outsourced
+     (holdsOnRemoteAgent ?sketch-agent
+       (boardGlyph ?sketch ?board-glyph))
+     (evaluate ?locations     ; a set of LocFn locations with respect to the game board.
+       (TheClosedRetrievalSetOf ?location
+         (and (currentSelectedEntity ?glyph)
+              (holdsOnRemoteAgent ?sketch-agent
+                (glyphCellCoordinates ?glyph ?board-glyph ?max-x ?max-y ?location))
+              )))
+     (liftGoalConfiguration ?gameinst ?game ?role ?locations ?new-rule)
+     )
+
+
+(isa boardGlyph BinaryPredicate)
+(arity boardGlyph 2)
+
+;;; Board glyph is not always available locally, depending on whether 
+;;; memory has been cleared since the glyph was first created.
+;;; Safer to run this query on the sketch agent.
+(<== (boardGlyph ?sketch ?glyph)
+     (wmOnly
+       (lookupOnly
+         (localOnly
+           (ist-Information ?scase
+             (sketchRepresentsObject ?sketch ?scase)))))
+     (wmOnly
+       (lookupOnly
+         (localOnly
+           (ist-Information ?bcase 
+             (nameString ?bcase "GameState")))))  ; Hope there's only one sketch open...
+     (wmOnly
+       (lookupOnly
+         (localOnly
+           (ist-Information ?scase
+             (subSketchGroupRepresentsObject ?ss ?bcase)))))  ; Now we know for sure.
+     (wmOnly
+       (lookupOnly
+         (localOnly
+           (ist-Information ?bcase
+             (nameString ?obj "board")))))
+     (wmOnly
+       (lookupOnly
+         (localOnly
+           (ist-Information ?bcase
+             (glyphRepresentsObject ?glyph ?obj))))))
+
+(isa liftGoalConfiguration Predicate)
+(arity liftGoalConfiguration 5)
+
+;;; We'll really need to think about this for heterogeneous piece-moving games like chess.
+;;; There, we'd be showing how checkmate would be achieved.
+(<== (liftGoalConfiguration ?gameinst ?game ?role ?locations ?new-rule)
+     (symmetricalGame ?game)
+     (homogeneousContents ?gameinst ?locations)
+     ;; should check that entityLabel is really what we want.  (won't work for piece-moving game.)
+     (evaluate ?conjuncts
+       (TheClosedRetrievalSetOf ?conjunct
+         (and (lookupOnly (elementOf ?location ?locations)) ; really just means don't backchain.
+              (unifies (LocFn ?x ?y) ?location)
+              (unifies ?conjunct (currentlyTrue (cell ?x ?y ?mark))))))
+     (evaluate ?new-rule
+       (MakeFormulaFn <==
+         (JoinListsFn 
+           (TheList (goalState ?player 100)
+                    (lookupOnly
+                      (localOnly
+                        (allFactsAllowed
+                          (ist-Information (GameRulesMtFn ?game)
+                            (isa ?player GameRole)))))
+                    (numAnswers 1 (entityLabel ?player ?mark)))
+           (SetToListFn ?conjuncts))))
+     )
+     
+
+
+(isa symmetricalGame UnaryPredicate)
+(arity symmetricalGame 1)
+(comment symmetricalGame "(symmetricalGame ?game) means all roles have the same goals.")
+
+(<== (symmetricalGame ?game)
+     (evaluate (TheSet)
+       (TheClosedRetrievalSetOf ?%role
+         (and (outsourcedOnly
+                (ruleConcluding (GameRulesMtFn ?game) (goalState ?%role 100) ?rule))
+              (groundExpression ?%role)))))
+
+(isa homogeneousContents BinaryPredicate)
+(arity homogeneousContents 2)
+
+(<== (homogeneousContents ?gameinst ?locations)
+     (evaluate ?contents
+       (TheClosedRetrievalSetOf ?content
+         (and (lookupOnly (elementOf ?location ?locations))
+              (unifies (LocFn ?x ?y) ?location)
+              (lookupOnly
+                (localOnly
+                  (ist-Information ?gameinst
+                    (currentlyTrue (cell ?x ?y ?content))))))))  ; really we should be concerned with the owner of the mark or piece
+     (unifies (TheSet ?c) ?contents))
+        
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;          
+;;;
+;;; Sketch interaction
+;;;
+
+;;; This should be invoked whenever a glyph is added to a sketch.
+;;; We will probably want to check that it's the right sketch eventually.
+
+;;; User just drew a glyph to represent a player.
+;;; We just want to say (entityLabel ?role ?role)
+;;; and then go in and ensure that the glyph has ?role as its user-namestring.
+;;; If we were to say something is a VisualMark, then the connection between
+;;; roles and marks would be more complex.
+
+(preconditionForMethod
+  (and (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (isa ?game MarkingGame)))    ; visually reifying a GameRole really only makes sense for marking games.
+       (outsourcedOnly (counterValue statements ?statement-num))  ; find the actual current counter value
+       (wmOnly 
+         (lookupOnly
+           (ist-Information (ContextFn ?session-id)
+             (statementNumber ?statement-num ?statement))))  ; look up the most recent statement
+       (gameRoleStatement ?statement ?role ?name)
+       )
+  (methodForAction
+    (assimilateGlyph ?glyph)
+    (actionSequence
+      (TheList
+        (labelEntity (ContextFn ?session-id) ?game ?glyph ?role ?name)
+        ))))
+        
+;;; We need to find the sketch agent for the currently active sketch
+;;; 
+
+;;; "TicTacToe is played on a 3x3 grid of squares." =
+;;; ((and (maxCoordX grid2917 3) (isa group-of-square2967 Set-Mathematical) (maxCoordY grid2917 3)))
+;;; User just drew a board of some kind:
+(preconditionForMethod
+  (and (currentSession ?session-id)
+       (lookupOnly
+         (ist-Information (ContextFn ?session-id)
+           (sessionTopic ?session-id ?game)))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?game)
+           (gameDomain ?game)))
+       ;; find the actual current counter value
+       (outsourcedOnly (counterValue statements ?statement-num))
+       (wmOnly 
+         (lookupOnly
+           (ist-Information (ContextFn ?session-id)
+             ;; look up the most recent statement
+             (statementNumber ?statement-num ?statement))))
+       (subexpressionMatching (maxCoordX ?board ?max-x) ?statement ?exp1)
+       (subexpressionMatching (maxCoordY ?board ?max-y) ?statement ?exp2)
+       )
+  (methodForAction
+    (assimilateGlyph ?glyph)
+    (actionSequence
+      (TheList
+        (labelEntity (ContextFn ?session-id) ?game ?glyph board board)
+        ))))
+        
+
+(isa maybeLabelLastGlyph ComplexActionPredicate)
+(arity maybeLabelLastGlyph 4)
+(arg1Isa maybeLabelLastGlyph Microtheory)
+(arg2Isa maybeLabelLastGlyph Game)
+(arg3Isa maybeLabelLastGlyph Thing)
+(arg4Isa maybeLabelLastGlyph CycLTerm)
+(comment maybeLabelLastGlyph "(maybeLabelLastGlyph ?session-context ?game ?entity ?name) sets the namestring of the last glyph entered if it hasn't already been done.")
+
+;;; Latest statement entered might name the latest glyph entered if it hasn't already
+;;; been named:
+(preconditionForMethod
+  (and (outsourcedOnly (counterValue glyphs ?glyph-num))
+       (lookupOnly
+         (wmOnly
+           (localOnly
+             (ist-Information ?ctxt
+               (glyphNumber ?glyph-num ?glyph)))))
+       ;; Was the last glyph entered already given a namestring?
+       (uninferredSentence
+         (lookupOnly
+           (wmOnly
+             (localOnly
+               (ist-Information ?ctxt
+                 (glyphNamestring ?glyph ?namestring)))))))
+  (methodForAction
+    (maybeLabelLastGlyph ?ctxt ?game ?entity ?name)
+    (actionSequence
+      (TheList
+        (labelEntity ?ctxt ?game ?glyph ?entity ?name)))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (maybeLabelLastGlyph ?ctxt ?game ?entity ?name)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (maybeLabelLastGlyph ?ctxt ?game ?entity ?name) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa labelEntity ComplexActionPredicate)
+(arity labelEntity 5)
+(arg1Isa labelEntity Microtheory)  ; session context
+(arg2Isa labelEntity Game)
+(arg3Isa labelEntity NuSketchGlyph)
+(arg4Isa labelEntity Thing)
+(arg5Isa labelEntity CycLTerm)
+(comment labelEntity "(labelEntity ?ctxt ?game ?glyph ?entity ?name) sets (and registers) the user-namestring of the glyph corresponding to the conceptual entity ?entity.")
+
+(preconditionForMethod
+  (and ;(allFactsAllowed                           ; *** FIXME:
+       ;  (uninferredSentence                      ; If the game rules are already stored,
+       ;    (ist-Information (GameRulesMtFn ?game) ; this will fail and we won't set
+       ;      (entityLabel ?entity ?anything))))   ; the namestring on the glyph.
+       (currentSketchAgent ?sketch-agent)
+       (evaluate ?namestring (StringFn ?name))
+       (uninferredSentence
+         (holdsOnRemoteAgent ?sketch-agent
+           (glyphNamestringInSketch ?some-glyph ?namestring))))
+  (methodForAction
+    (labelEntity ?ctxt ?game ?glyph ?entity ?name)
+    (actionSequence
+      (TheList
+        (doSynchronousRemotePlan ?sketch-agent
+           (doSetNamestring ?glyph ?namestring))
+        (doTell
+          (ist-Information ?ctxt
+            (glyphNamestring ?glyph ?namestring)))      ; temporary breadcrumb in session context
+        ;; No harm in doing this again if it's already there.
+        (doRecord 
+          (ist-Information (GameRulesMtFn ?game)  ; purely to keep track of the fact that we've assimilated this glyph.
+            (entityLabel ?entity ?name)))))))
+
+;;; default:
+;;; We want this to do nothing unless we have both a new unlabeled glyph and a new
+;;; statement naming it.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (labelEntity ?ctxt ?game ?glyph ?entity ?name)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (labelEntity ?ctxt ?game ?glyph ?entity ?name) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

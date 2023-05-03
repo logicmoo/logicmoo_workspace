@@ -1,0 +1,36 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: NothingPSC.meld
+;;;;    System: Plan B
+;;;;    Author: Jeff Usher
+;;;;   Created: April 11, 2008 19:11:33
+;;;;   Purpose: Defines an empty microtheory that does not genlMt from any of
+;;;;            the global microtheories.  Useful as a default reasoning 
+;;;;            environment when you don't want to inadvertently include
+;;;;            everything in the global microtheories.
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Friday, April 11, 2008 at 19:45:46 by usher
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa NothingPSC Case)
+(isa NothingPSC Microtheory)
+(isa NothingPSC ProblemSolvingCntxt)
+(comment NothingPSC
+  "A problem solving context in which none of the other assertions in the KB 
+   are visible (i.e. #$NothingPSC does not genlMt from any microtheory).  This 
+   context can be useful as a default reasoning environment when you don't 
+   want to inadvertently include everything in the global microtheories.
+   See also #$EverythingPSC and #$InferencePSC.")
+
+(notAssertibleMt NothingPSC)
+
+(multiWordString (TheList "NothingPSC" "PSC") Know-TheWord MassNoun NothingPSC)
+ 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

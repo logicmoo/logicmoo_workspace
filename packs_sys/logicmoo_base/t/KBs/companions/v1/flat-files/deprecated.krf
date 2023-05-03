@@ -1,0 +1,49 @@
+;;;
+;;; deprecated.meld
+;;;
+;;; Crap that should go away, but can't since some people are still using it.
+;;;
+
+(in-microtheory CompanionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Doing a sequence for each item in a list or set
+
+;;; This is obsolete!  Use doForEach instead.
+
+(isa doListSequence ComplexActionPredicate)
+(arity doListSequence 3)
+
+;; If called with a set, convert it to a list, and then continue.
+(preconditionForMethod
+ (and (operatorFormulas TheSet ?set)
+      (evaluate ?list (SetToListFn ?set)))
+ (methodForAction
+  (doListSequence ?item-symbol ?set ?sequence)
+  (actionSequence
+   (TheList
+    (doListSequence ?item-symbol ?list ?sequence)))))
+
+(preconditionForMethod
+ (and (operatorFormulas TheList ?list)
+      (different ?list (TheList))
+      (evaluate ?my-item (FirstInListFn ?list))
+      (evaluate ?rest-list (RestOfListFn ?list))
+      (evaluate ?subd-sequence (SublisFn (TheSet (?item-symbol ?my-item)) ?sequence)))
+ (methodForAction
+  (doListSequence ?item-symbol ?list ?sequence)
+  (actionSequence
+   (TheList
+    (doAgentPlan (actionSequence ?subd-sequence))
+    (doListSequence
+     ?item-symbol ?rest-list ?sequence)))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (doListSequence ?item-symbol (TheList) ?sequence)
+  (actionSequence
+   (TheList))))
+
+;;; End of file

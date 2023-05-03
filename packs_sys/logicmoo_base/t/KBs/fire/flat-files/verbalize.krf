@@ -1,0 +1,537 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: verbalize.meld
+;;;;    System: FIRE
+;;;;    Author: Constantine Nakos
+;;;;   Created: April 26, 2017
+;;;;   Purpose: Predicates and rules for verbalization.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt) ; VerbalizeMt, EnglishMt, CoreMt?
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Verbalization Predicates
+
+(isa VerbalizePred Collection)
+(comment VerbalizePred "VerbalizePred is a parent collection for more specific
+	relations used in verbalization.")
+
+(isa exprForVb BinaryPredicate)
+(arg1Isa exprForVb VerbalizePred)
+;(arg2Isa exprForVb ... Number )
+(comment exprForVb "(exprForVb <pred> <num>) indicates that argument number <num>
+	of VerbalizePred <pred> contains the expression to be verbalized.  Used for
+	preloading verbalization facts into the cache, not in verbalization proper.")
+
+(isa strForVb BinaryPredicate)
+(arg1Isa strForVb VerbalizePred)
+;(arg2Isa strForVb ... Number )
+(comment strForVb "(strForVb <pred> <num>) indicates that argument number <num>
+	of VerbalizePred <pred> contains the string verbalization.")
+
+;; Verbalization Inference Predicates
+
+(genls VerbalizeInfPred VerbalizePred)
+(comment VerbalizeInfPred "VerbalizeInfPred is a collection for all verbalization
+	predicates checked specially during inference.")
+
+(isa genFormatForFormula VerbalizeInfPred)
+(isa genFormatForFormula TernaryPredicate)
+(comment genFormatForFormula "Like genFormat, but works for a complete formula.
+ This should be implemented as a rule or maybe an outsourced predicate.  Useful
+ for predicates which would need more than one format string.")
+(arg1Isa genFormatForFormula CycLFormula)
+(arg2QuotedIsa genFormatForFormula SubLString)
+(arg3Isa genFormatForFormula List)
+(exprForVb genFormatForFormula 1)
+
+(isa genQuestionForFormula VerbalizeInfPred)
+(isa genQuestionForFormula QuaternaryPredicate)
+(comment genQuestionForFormula "Like genQuestion, but works for a complete 
+ formula.  This should be implemented as a rule or maybe an outsourced
+ predicate.  Useful for predicates which would need more than one question
+ format string.")
+(arg1Isa genQuestionForFormula CycLFormula)
+(arg2Isa genQuestionForFormula NonNegativeInteger)
+(arg3QuotedIsa genQuestionForFormula SubLString)
+(arg4Isa genQuestionForFormula List)
+(exprForVb genQuestionForFormula 1)
+
+(isa genUnknownForFormula VerbalizeInfPred)
+(isa genUnknownForFormula QuaternaryPredicate)
+(comment genUnknownForFormula "Like genUnknown, but works for a complete 
+ formula.  This should be implemented as a rule or maybe an outsourced
+ predicate.  Useful for predicates which would need more than one Unknown
+ format string.")
+(arg1Isa genUnknownForFormula CycLFormula)
+(arg2Isa genUnknownForFormula List)
+(arg3QuotedIsa genUnknownForFormula SubLString)
+(arg4Isa genUnknownForFormula List)
+(exprForVb genUnknownForFormula 1)
+
+(isa prettyStringForFormula VerbalizeInfPred)
+(isa prettyStringForFormula BinaryPredicate)
+(comment prettyStringForFormula "Like prettyString, but works for a complete formula.
+	This should be implemented as a rule or maybe an outsourced predicate.  Useful
+	fore predicates which would need more than one pretty string.")
+(arg1Isa prettyStringForFormula CycLFormula)
+(arg2QuotedIsa prettyStringForFormula SubLString)
+(exprForVb prettyStringForFormula 1)
+(strForVb prettyStringForFormula 2)
+
+;; Miscellaneous Verbalization Predicates
+
+(genls VerbalizeMiscPred VerbalizePred)
+(isa multiWordString VerbalizeMiscPred)
+(exprForVb multiWordString 4)
+(isa indexedProperName VerbalizeMiscPred)
+(exprForVb indexedProperName 3)
+(isa genFormat VerbalizeMiscPred)
+(exprForVb genFormat 1)
+(isa genFormat-Precise VerbalizeMiscPred)
+(exprForVb genFormat-Precise 1)
+(isa genQuestion VerbalizeMiscPred)
+(exprForVb genQuestion 1)
+
+; TODO: Place these in the file they're supposed to be in.
+; Right now they're loaded in OpenCyc but not Smoke KB.
+; This is a workaround.
+(arity multiWordString 4)
+(arity indexedProperName 3)
+(arity genFormat 3)
+(arity genFormat-Precise 3)
+(arity genQuestion 4)
+
+; Hand-rolled, so we define it here.
+(isa genUnknown VerbalizeMiscPred)
+(isa genUnknown QuaternaryPredicate)
+(comment genUnknown "Like genQuestion, but with a list of variable positions
+	instead of a single number.  Intended for generating error messages when
+	one or more variables is missing.")
+(arg1Isa genUnknown CycLFormula)
+(arg2Isa genUnknown List)
+(arg3QuotedIsa genUnknown SubLString)
+(arg4Isa genUnknown List)
+(exprForVb genUnknown 1)
+(arity genUnknown 4)
+
+;; Standard Verbalization Predicates
+
+(genls VerbalizeStdPred VerbalizePred)
+(genls VerbalizeStdPred BinaryPredicate)
+(comment VerbalizeStdPred "VerbalizeStdPred is a binary predicate of the form
+	(PRED TERM STRING) for use in verbalization, where STRING is a string
+	suitable for natural language generation.  Such predicates are considered
+	standard.")
+
+(<== (exprForVb ?pred 1) (isa ?pred VerbalizeStdPred))
+(<== (strForVb ?pred 2) (isa ?pred VerbalizeStdPred))
+
+;; Insert standard verbalization predicates into the genls hierarchy.
+;; These statements were automatically generated from a manually-constructed
+;; list of predicates.  There may be a better way to go about this, but
+;; if there were, VerbalizeStdPred might not be necessary in the first place.
+(isa nameString VerbalizeStdPred)
+(isa genStringAssertion VerbalizeStdPred)
+(isa organizationName-Standard VerbalizeStdPred)
+(isa placeName-WithRegion VerbalizeStdPred)
+(isa familyName VerbalizeStdPred)
+(isa definiteDescriptions VerbalizeStdPred)
+(isa givenNames VerbalizeStdPred)
+(isa placeName-Standard VerbalizeStdPred)
+(isa preferredBaseForm VerbalizeStdPred)
+(isa baseForm VerbalizeStdPred)
+(isa singular VerbalizeStdPred)
+(isa nameSpelling VerbalizeStdPred)
+(isa preferredLexification VerbalizeStdPred)
+(isa placeName-WithRegionAbbreviation VerbalizeStdPred)
+(isa initialismString VerbalizeStdPred)
+(isa infinitive VerbalizeStdPred)
+(isa queryTextForTEP VerbalizeStdPred)
+(isa backgroundTextForTEP VerbalizeStdPred)
+(isa textStringForTEPResponse VerbalizeStdPred)
+(isa commentOnTEPResponse VerbalizeStdPred)
+(isa explanationOfTEPResponse VerbalizeStdPred)
+(isa contextDescriptionForTEPResponse VerbalizeStdPred)
+(isa assumptionForTEPResponse VerbalizeStdPred)
+(isa shortNameForFiscalPeriod VerbalizeStdPred)
+(isa massNumber VerbalizeStdPred)
+(isa preferredNameString VerbalizeStdPred)
+(isa familyNameWithFollowingInitials VerbalizeStdPred)
+(isa maximalInitialStringOmittingLast VerbalizeStdPred)
+(isa firstNameInitial VerbalizeStdPred)
+(isa commentOnTextualInferenceProblem VerbalizeStdPred)
+(isa provenanceStringForTEP VerbalizeStdPred)
+(isa nicknames VerbalizeStdPred)
+(isa fullName VerbalizeStdPred)
+(isa nameString-Plural VerbalizeStdPred)
+(isa termStrings VerbalizeStdPred)
+(isa prettyString VerbalizeStdPred)
+(isa englishGloss VerbalizeStdPred)
+(isa prettyString-Canonical VerbalizeStdPred)
+(isa acronymString VerbalizeStdPred)
+(isa genKeyword VerbalizeStdPred)
+(isa firstName VerbalizeStdPred)
+(isa placeName-ShortForm VerbalizeStdPred)
+(isa termSummaryPredicateLabel VerbalizeStdPred)
+(isa middleName VerbalizeStdPred)
+(isa mineralFieldName VerbalizeStdPred)
+(isa schoolSymbolName-Male VerbalizeStdPred)
+(isa abbreviationForLexicalWord VerbalizeStdPred)
+(isa abbreviationString VerbalizeStdPred)
+(isa formerName VerbalizeStdPred)
+(isa abbreviationString-PN VerbalizeStdPred)
+(isa titleOfWork VerbalizeStdPred)
+(isa genStringAssertion-Terse VerbalizeStdPred)
+(isa stockTickerSymbol VerbalizeStdPred)
+(isa genStringAssertion-Precise VerbalizeStdPred)
+(isa regularAdverb VerbalizeStdPred)
+(isa plural VerbalizeStdPred)
+(isa comparativeDegree VerbalizeStdPred)
+(isa asHtmlSourceString VerbalizeStdPred)
+(isa keywordForConstant VerbalizeStdPred)
+(isa genomicsPreferredName VerbalizeStdPred)
+(isa superlativeDegree VerbalizeStdPred)
+(isa pnSingular VerbalizeStdPred)
+(isa unitOfMeasurePrefixString VerbalizeStdPred)
+(isa countryName-ShortForm VerbalizeStdPred)
+(isa hyperlinkHrefValue VerbalizeStdPred)
+(isa placeName-LocalShortForm VerbalizeStdPred)
+(isa countryName-LongForm VerbalizeStdPred)
+(isa titleOfPerson VerbalizeStdPred)
+(isa titleOfPerson-String VerbalizeStdPred)
+(isa agentive-Sg VerbalizeStdPred)
+(isa initialsString VerbalizeStdPred)
+(isa chemicalFormulaString VerbalizeStdPred)
+(isa excerptString VerbalizeStdPred)
+(isa pronounStrings VerbalizeStdPred)
+(isa lastName VerbalizeStdPred)
+(isa folderTitle VerbalizeStdPred)
+(isa schoolSymbolName-Female VerbalizeStdPred)
+(isa adjectiveOfCountry VerbalizeStdPred)
+(isa abbreviationForString VerbalizeStdPred)
+(isa movieTitleString VerbalizeStdPred)
+(isa pseudonym VerbalizeStdPred)
+(isa scientificName VerbalizeStdPred)
+(isa originalPhrase VerbalizeStdPred)
+(isa nameSuffix VerbalizeStdPred)
+(isa sectionTitle VerbalizeStdPred)
+(isa pastTense-Universal VerbalizeStdPred)
+(isa tokenString VerbalizeStdPred)
+(isa genericFacetingDimensionString VerbalizeStdPred)
+(isa maidenName VerbalizeStdPred)
+(isa pnMassNumber VerbalizeStdPred)
+(isa queryContentString VerbalizeStdPred)
+(isa gospelName-Short VerbalizeStdPred)
+(isa tokenizationInputString VerbalizeStdPred)
+(isa perfect VerbalizeStdPred)
+(isa thirdPersonSg-Past VerbalizeStdPred)
+(isa nameString-NC VerbalizeStdPred)
+(isa organizationName-Official VerbalizeStdPred)
+(isa thirdPersonSg-Present VerbalizeStdPred)
+(isa gerund VerbalizeStdPred)
+(isa organizationName VerbalizeStdPred)
+(isa determinerStrings VerbalizeStdPred)
+(isa pnPlural VerbalizeStdPred)
+(isa titleForTablesOfType VerbalizeStdPred)
+(isa presentParticiple VerbalizeStdPred)
+(isa placeName-LocalLongForm VerbalizeStdPred)
+(isa termStrings-Stipulated VerbalizeStdPred)
+(isa alias VerbalizeStdPred)
+(isa unitOfMeasureSymbolString-Suffix VerbalizeStdPred)
+(isa officialUSCodeName VerbalizeStdPred)
+(isa suffixString VerbalizeStdPred)
+(isa stageName VerbalizeStdPred)
+(isa genStringAssertion-Constrained VerbalizeStdPred)
+(isa countryName-LocalShortForm VerbalizeStdPred)
+(isa prepositionStrings VerbalizeStdPred)
+(isa nickname VerbalizeStdPred)
+(isa abbreviationForCompoundString VerbalizeStdPred)
+
+;; Verbalize query wrappers
+
+(isa VerbalizeQueryPredicate Collection)
+(genls VerbalizeQueryPredicate Predicate)
+(comment VerbalizeQueryPredicate
+	"Instances of VerbalizeQueryPredicate are used to modify calls to verbalize.
+	 They are unary or binary predicates whose last argument should be the
+	 verbalization query.  Verbalize will unwrap these and change its behavior
+	 accordingly.")
+
+(isa vbProfile VerbalizeQueryPredicate)
+(arity vbProfile 2)
+;(arg1Isa vbProfile ...)
+(arg2Isa vbProfile CycLAssertion)
+(comment vbProfile
+	"(vbProfile <profile> <query>) means that <query> should be verbalized with
+	 profile <profile>.")
+
+(isa vbContext VerbalizeQueryPredicate)
+(arity vbContext 2)
+;(arg1Isa vbContext ...)
+(arg2Isa vbContext CycLAssertion)
+(comment vbContext
+	"(vbContext <mt> <query>) means that <query> should be verbalized
+	 in context <mt>.")
+
+(isa vbFallback VerbalizeQueryPredicate)
+(arity vbFallback 1)
+(arg1Isa vbFallback CycLAssertion)
+(comment vbFallback
+	"(vbFallback <query>) means that <query> should be verbalized with the
+	 default fallback behavior, namely printing the Lisp-ish form of the query
+	 if no verbalization can be found.  See also vbNoFallback.")
+
+(isa vbNoFallback VerbalizeQueryPredicate)
+(arity vbNoFallback 1)
+(arg1Isa vbNoFallback CycLAssertion)
+(comment vbNoFallback
+	"(vbNoFallback <query>) means that <query> should be verbalized with no
+	 fallback if no verbalization can be found, returning NIL instead.  Used
+	 for nested calls to verbalize.  See also vbFallback.")
+
+(isa vbInfer VerbalizeQueryPredicate)
+(arity vbInfer 1)
+(arg1Isa vbInfer CycLAssertion)
+(comment vbInfer
+	"(vbInfer <query>) means that <query> should be verbalized with the
+	 the default inference behavior, using reasoning to process custom
+	 verbalization rules.  See also vbNoInfer.")
+
+(isa vbNoInfer VerbalizeQueryPredicate)
+(arity vbNoInfer 1)
+(arg1Isa vbNoInfer CycLAssertion)
+(comment vbNoInfer
+	"(vbNoInfer <query>) means that <query> should be verbalized without
+	 doing any inference, speeding up verbalization at the cost of ignoring
+	 custom verbalization rules.  See also vbInfer.")
+
+(isa vbCache VerbalizeQueryPredicate)
+(arity vbCache 1)
+(arg1Isa vbCache CycLAssertion)
+(comment vbCache
+	"(vbCache <query>) means that <query> should be verbalized with the
+	 cache active.  See also vbNoCache.")
+
+(isa vbNoCache VerbalizeQueryPredicate)
+(arity vbNoCache 1)
+(arg1Isa vbNoCache CycLAssertion)
+(comment vbNoCache
+	"(vbNoCache <query>) means that <query> should be verbalized without
+	 using the cache.  This is mostly useful for profiling purposes.  See
+	 also vbCache.")
+
+(isa vbUsePronouns VerbalizeQueryPredicate)
+(arity vbUsePronouns 1)
+(arg1Isa vbUsePronouns CycLAssertion)
+(comment vbUsePronouns
+	"(vbUsePronouns <query>) means that <query> should be verbalized with a
+	 rudimentary mechanism for generating pronouns.  See also vbNoPronouns.")
+
+(isa vbNoPronouns VerbalizeQueryPredicate)
+(arity vbNoPronouns 1)
+(arg1Isa vbNoPronouns CycLAssertion)
+(comment vbNoPronouns
+	"(vbNoPronouns <query>) means that <query> should be verbalized without
+	 using the built-in pronoun mechanism.  See also vbUsePronouns.")
+
+(isa vbConstraints VerbalizeQueryPredicate)
+(arity vbConstraints 2)
+;(arg1Isa vbPredicates ...)
+(arg2Isa vbConstraints CycLAssertion)
+(comment vbConstraints
+	"(vbConstraints <list> <query>) means that <query> should be verbalized
+	 using the constraints in <list>.")
+
+(isa vbCustomHandlers VerbalizeQueryPredicate)
+(arity vbCustomHandlers 2)
+;(arg1Isa vbCustomHandlers ...)
+(arg2Isa vbCustomHandlers CycLAssertion)
+(comment vbCustomHandlers
+	"(vbCustomHandlers <list> <query>) means that <query> should be verbalized
+	 with additional custom handlers specified by the names in <list>.  These
+	 should be functions that take a query and either return a string or NIL.")
+
+(isa vbPredicates VerbalizeQueryPredicate)
+(arity vbPredicates 2)
+;(arg1Isa vbPredicates ...)
+(arg2Isa vbPredicates CycLAssertion)
+(comment vbPredicates
+	"(vbPredicates <list> <query>) means that <query> should be verbalized
+	 using the predicates found in <list>.  Each item in the list can be a
+	 single predicate, a list (or TheList) of predicates, or default value
+	 of :default or NIL.  Verbalize looks for <query> verbalizations using
+	 each set of predicates in turn.  Within each list, the predicates are
+	 checked simultaneously.  Once a predicate list yields a verbalization
+	 the process stops and returns any verbalizations it found.  A default
+	 item of :default or NIL will check verbalize's default predicate list
+	 wherever it falls in the list.
+
+	 Generally speaking, you'll want a predicate list of the form
+	 (TheList <pred1> <pred2> <pred3>) if you want to check predicates in
+	 order and one of the form (TheList (TheList <pred1> <pred2> <pred3>))
+	 if you want to check them together.  You can mix and match between
+	 the two: (TheList (TheList <pred1> <pred2>) (TheList <pred3> <pred4>))
+	 will consider any pred1 or pred2 results, then fall back to pred3 and
+	 pred4 if it doesn't find any.")
+
+(isa vbOmit VerbalizeQueryPredicate)
+(arity vbOmit 2)
+;(arg1Isa vbOmit ...)
+(arg2Isa vbOmit CycLAssertion)
+(comment vbOmit
+	"(vbOmit <list> <query>) means that <query> should be verbalized
+	 without using any of the predicates found in <list>.")
+
+#|
+(isa vbSimultaneous VerbalizeQueryPredicate)
+(arity vbSimultaneous 1)
+(arg1Isa vbSimultaneous CycLAssertion)
+(comment vbSimultaneous
+	"(vbSimultaneous <query>) means that <query> should be verbalized with
+	 the (default) simultaneous strategy, where all results are considered
+	 at once.  See also vbSequential.")
+
+(isa vbSequential VerbalizeQueryPredicate)
+(arity vbSequential 1)
+(arg1Isa vbSequential CycLAssertion)
+(comment vbSequential
+	"(vbSequential <query>) means that <query> should be verbalized with
+	 the sequential strategy, where all results are considered one predicate
+	 or list of predicates at a time.  See also vbSimultaneous.")
+|#
+
+(isa vbPreferences VerbalizeQueryPredicate)
+(arity vbPreferences 2)
+;(arg1Isa vbPreferences ...)
+(arg2Isa vbPreferences CycLAssertion)
+(comment vbPreferences
+	"(vbPreferences <list> <query>) means that <query> should be verbalized
+	 with preference functions specified by the names in <list>.  These should
+	 be functions that take a list of options and either return a (possibly
+	 filtered) list or a string, indicating a choice was made.")
+
+(isa vbBeautify VerbalizeQueryPredicate)
+(arity vbBeautify 1)
+(arg1Isa vbBeautify CycLAssertion)
+(comment vbBeautify
+	"(vbBeautify <query>) means that <query> should be verbalized, then
+	 capitalized and punctuated afterward.  No period will be added if the
+	 text already ends with a period, question mark, or exclamation point.
+	 See also vbPunctuate, vbCapitalize, and vbQuote.")
+
+(isa vbPunctuate VerbalizeQueryPredicate)
+(arity vbPunctuate 2)
+;(arg1Isa vbPunctuate ...)
+(arg2Isa vbPunctuate CycLAssertion)
+(comment vbPunctuate
+	"(vbPunctuate <string> <query>) means that <query> should be punctuated
+	 with punctuation <string> after it is verbalized.  No punctuation will
+	 be added if the text already ends with a period, question mark, or
+	 exclamation point.  See also vbBeautify, vbCapitalize, and vbQuote.")
+
+(isa vbCapitalize VerbalizeQueryPredicate)
+(arity vbCapitalize 1)
+(arg1Isa vbCapitalize CycLAssertion)
+(comment vbCapitalize
+	"(vbCapitalize <query>) means that <query> should be capitalized after
+	 it is verbalized.  The first character will be capitalized if it is a
+	  letter.  See also vbNoCapitalize.")
+
+(isa vbNoCapitalize VerbalizeQueryPredicate)
+(arity vbNoCapitalize 1)
+(arg1Isa vbNoCapitalize CycLAssertion)
+(comment vbNoCapitalize
+	"(vbNoCapitalize <query>) means that <query> should not be capitalized
+	 after it is verbalized.  See also vbCapitalize.")
+
+(isa vbQuote VerbalizeQueryPredicate)
+(arity vbQuote 1)
+(arg1Isa vbQuote CycLAssertion)
+(comment vbQuote
+	"(vbQuote <query>) means that <query> should be quoted after it is
+	 verbalized.  The text will be surrounded by double quotes.  See also
+	 vbNoQuote.")
+
+(isa vbNoQuote VerbalizeQueryPredicate)
+(arity vbNoQuote 1)
+(arg1Isa vbNoQuote CycLAssertion)
+(comment vbNoQuote
+	"(vbNoQuote <query>) means that <query> should not be quoted after it
+	 is verbalized.  See also vbQuote.")
+
+;; Verbalize Determiner Predicates
+
+(isa VerbalizeConstraintPredicate Collection)
+(genls VerbalizeConstraintPredicate VerbalizeQueryPredicate)
+(comment VerbalizeConstraintPredicate
+	"Instances of VerbalizeConstraintPredicate are used to modify verbalization
+	 using the constraint mechanism.  Anything that can be done with a
+	 VerbalizeConstraintPredicate can be done with more effort with vbConstraints.
+	 For now, that mostly means adding determiners or possessives to verbalizations.")
+
+(isa vbA VerbalizeConstraintPredicate)
+(arity vbA 1)
+(arg1Isa vbA CycLAssertion)
+(comment vbA
+	"(vbA <query>) means that 'a/an' should be placed in front of the 
+	 verbalization of <query>, as appropriate.")
+
+(isa vbThe VerbalizeConstraintPredicate)
+(arity vbThe 1)
+(arg1Isa vbThe CycLAssertion)
+(comment vbThe
+	"(vbThe <query>) means that 'the' should be placed in front of the 
+	 verbalization of <query>.")
+
+(isa vbEvery VerbalizeConstraintPredicate)
+(arity vbEvery 1)
+(arg1Isa vbEvery CycLAssertion)
+(comment vbEvery
+	"(vbEvery <query>) means that 'every' should be placed in front of the 
+	 verbalization of <query>.")
+
+(isa vbAll VerbalizeConstraintPredicate)
+(arity vbAll 1)
+(arg1Isa vbAll CycLAssertion)
+(comment vbAll
+	"(vbAll <query>) means that 'all' should be placed in front of the 
+	 verbalization of <query>.")
+
+(isa vbSome VerbalizeConstraintPredicate)
+(arity vbSome 1)
+(arg1Isa vbSome CycLAssertion)
+(comment vbSome
+	"(vbSome <query>) means that 'some' should be placed in front of the 
+	 verbalization of <query>.")
+
+(isa vbNo VerbalizeConstraintPredicate)
+(arity vbNo 1)
+(arg1Isa vbNo CycLAssertion)
+(comment vbNo
+	"(vbNo <query>) means that 'no' should be placed in front of the 
+	 verbalization of <query>.")
+
+(isa vbPossessive VerbalizeConstraintPredicate)
+(arity vbPossessive 1)
+(arg1Isa vbPossessive CycLAssertion)
+(comment vbPossessive
+	"(vbPossessive <query>) means that the verbalization should be made
+	 possessive by appending -'s or -', as appropriate.")
+
+(isa vbEquals VerbalizeConstraintPredicate)
+(arity vbEquals 1)
+(arg1Isa vbEquals CycLAssertion)
+(comment vbEquals
+	"(vbEquals <query>) means that the raw expression should be used as
+	 the verbalization string.  Named vbEquals for the :EQUALS genFormat
+	 constraint.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+
+

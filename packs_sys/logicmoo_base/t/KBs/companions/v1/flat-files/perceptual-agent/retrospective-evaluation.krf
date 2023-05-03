@@ -1,0 +1,78 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: retrospective-evaluation.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: August 28, 2015 14:02:11
+;;;;   Purpose: rules and solve suggestions for evaluating goal performance
+;;;;            post-facto
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+;;; We want to learn from expert execution traces.
+;;; Many problems here:
+;;; 1) carving up a game into relatively independent pieces 
+;;;    (consider Barbella's  knowledge structuring approach?)
+;;; 2) tracking partial goal satisfaction
+;;; 3) tracking qualitative state activations
+;;; 4) rationalizing relative goal priorities
+;;; 5) inferring entity type decompositions
+;;; 6) attributing decisions to dynamic situational context
+;;; 7) inferring abstract quantities as hidden variables
+;;; 8) chunking into macrops, higher levels of abstraction
+;;; 9) attributing decisions to generic efficiency strategies
+
+(in-microtheory PerceptualAgentMt)
+
+(isa goalAssessment TernaryPredicate)
+(arity goalAssessment 3)
+(arg1Isa goalAssessment Microtheroy)
+(arg2Isa goalAssessment Goal)
+(arg3Isa goalAssessment ConflictEventStatus)
+(comment goalAssessment "(goalAssessment ?mt ?goal ?status) characterizes the status of the goal in the conflict (or competition) in ?mt.")
+
+;;; There is no LosingACompetition.  There is LosingAConflict.
+;;; A Competition is a spec of ConflictEvent.
+;;; LosingFn resultIsa is LosingAConflict.
+;;; WinningFn resultIsa is WinningAConflict.
+;;; They're both specs of ConflictEventStatus.
+
+;;; This needs to be invoked in the execution-mt
+;;; but that's a problem, since we want that to be 
+(<== (goalAssessment ?mt (AchieveFn (winner-First ?indexical-competition ?indexical-agent)) (LosingFn ?indexical-competition))
+     (resolveIndexicals ?mt ?indexical-competition ?competition)  ; now outsourced
+     (resolveIndexicals ?mt ?indexical-agent ?agent)
+     (not (variableExpression ?agent))
+     (lookupOnly 
+       (ist-Information ?mt
+         (inputsDestroyed (EventFn ?competition ?num) ?agent)))) ;; If the actor in a conflict is completely destroyed, that's a loss.
+
+;;; Reserves -> FreedomOfAction
+;;; Mobility -> FreedomOfAction
+;;; CivilContentment -> FreedomOfAction
+;;; ConversionCost -> ResourceUsageEfficiency (inversely) only indirectly
+;;; InvestmentHorizon -> Vulnerability 
+;;; DefensiveStrength -> Vulnerability (inversely)
+;;; SituationalAwareness -> Vulnerabilty (invesely)
+;;; Vulnerability -> FreedomOfAction  (inversely)
+
+;;; What kinds of things do we want to recognize?
+;;; Processes for resource accumulation, conversion, loss
+;;; Trajectories through processes
+;;; Desired states  (Why are some states desirable?)
+;;; Clear evidence of goal priorities at some point in time
+;;; Evidence of entity type decompositions
+
+;;; Concrete predicates:
+;;; ---------------------
+;;; presentInRegion
+;;; ableToControl
+;;; capableOfDoing
+;;; actsInCapacity-MainFunction
+;;; performsInsAtLocation
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code ?what

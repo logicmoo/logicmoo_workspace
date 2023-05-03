@@ -1,0 +1,27 @@
+;;;
+;;; ConsALot
+;;;
+;;; A test routine to examine TMS bloat.
+
+(in-microtheory TestPlanMt)        ; make it easy to blow away the  contents
+(genlMt TestPlanMt CompanionsMt)   ; inherit the primitives
+(genlMt CompanionsMt TestPlanMt)
+
+(isa consALot ComplexActionPredicate)
+(arity consALot 1)
+(arg1Isa consALot Set-Mathematical)
+
+(preconditionForMethod
+  (and (elementOf ?item ?set)
+       (testElement ?item))
+  (methodForAction
+    (consALot ?set)
+    (actionSequence
+      (TheList))))
+      
+(isa testElement UnaryPredicate)
+(arity testElement 1)
+
+(<== (testElement ?anything))
+
+;; (consALot (TheSet A B C D E))

@@ -1,0 +1,58 @@
+(in-microtheory NulexMt :exclude-globals t)
+
+;;; Personal pronouns:
+(definitionInDictionary Nulex i I-TheWord Pronoun (TheSet (agr (TheSet 1s))))
+(definitionInDictionary Nulex she She-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex he He-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex they They-TheWord Pronoun (TheSet (agr (TheSet 3p))))
+(definitionInDictionary Nulex we We-TheWord Pronoun (TheSet (agr (TheSet 2p))))
+(definitionInDictionary Nulex you You-TheWord Pronoun (TheSet (agr (TheSet 2s 2p))))
+(definitionInDictionary Nulex what What-TheWord Pronoun (TheSet (agr (TheSet 3s 3p ))))
+(definitionInDictionary Nulex it It-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex that That-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex another Another-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex everyone Everyone-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex something Something-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+
+(definitionInDictionary Nulex one One-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex this This-TheWord Pronoun (TheSet (agr (TheSet 3s)) (definite +) (demonstrative +) (backreference +)))
+(definitionInDictionary Nulex these These-TheWord Pronoun (TheSet (agr (TheSet 3p)) (definite +) (demonstrative +) (backreference +)))
+(definitionInDictionary Nulex those Those-TheWord Pronoun (TheSet (agr (TheSet 3p)) (definite +) (demonstrative +) (backreference +)))
+(definitionInDictionary Nulex where Where-TheWord Pronoun (TheSet))
+(definitionInDictionary Nulex who Who-TheWord Pronoun (TheSet (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex whom Whom-TheWord Pronoun (TheSet (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex when When-TheWord Pronoun (TheSet (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex which Which-TheWord Pronoun (TheSet (agr (TheSet 1s 2s 3s 1p 2p 3p))))
+(definitionInDictionary Nulex whatever Whatever-TheWord Pronoun (TheSet (agr (TheSet 1s 2s 3s 1p 2p 3p))))
+(definitionInDictionary Nulex whoever Whoever-TheWord Pronoun (TheSet (agr (TheSet 1s 2s 3s 1p 2p 3p))))
+(definitionInDictionary Nulex whichever Whichever-TheWord Pronoun (TheSet (agr (TheSet 1s 2s 3s 1p 2p 3p))))
+
+;;; Reflexive pronouns:
+(definitionInDictionary Nulex myself Myself-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex ourselves Ourselves-TheWord Pronoun (TheSet (agr (TheSet 3p))))
+(definitionInDictionary Nulex yourself Yourself-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex yourselves Yourselves-TheWord Pronoun (TheSet (agr (TheSet 3p))))
+(definitionInDictionary Nulex himself Himself-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex herself Herself-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex themselves Themselves-TheWord Pronoun (TheSet (agr (TheSet 3p))))
+(definitionInDictionary Nulex themself Themself-TheWord Pronoun (TheSet (agr (TheSet 3s))))  ; gender-neutral third-person singular
+(definitionInDictionary Nulex itself Itself-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+
+;;;Possessive pronouns
+(definitionInDictionary Nulex mine Mine-TheWord Pronoun (TheSet (proposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex his His-TheWord Pronoun (TheSet (proposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex hers Hers-TheWord Pronoun (TheSet (proposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex theirs Theirs-TheWord Pronoun (TheSet (proposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex ours Ours-TheWord Pronoun (TheSet (proposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex yours Yours-TheWord Pronoun (TheSet (proposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex its Its-TheWord Pronoun (TheSet (agr (?a 3s 3p)) (countable +) (proposs +) (root it)))
+(definitionInDictionary Nulex whose Whose-TheWord Pronoun (TheSet (proposs +) (agr (TheSet 3s 3p))))
+
+;;; Object pronouns:
+(definitionInDictionary Nulex me Me-TheWord Pronoun (TheSet (agr (TheSet 1s))))
+(definitionInDictionary Nulex him Him-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex her Her-TheWord Pronoun (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex us Us-TheWord Pronoun (TheSet (agr (TheSet 2p))))
+(definitionInDictionary Nulex them Them-TheWord Pronoun (TheSet (agr (TheSet 3p))))
+
+

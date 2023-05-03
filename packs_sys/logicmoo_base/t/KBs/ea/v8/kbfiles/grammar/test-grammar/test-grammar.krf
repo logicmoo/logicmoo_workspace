@@ -1,0 +1,494 @@
+
+(in-microtheory TestGrammarMt :exclude-globals t)
+
+(EAHeadFeaturesForNodeType vp (TheList subcat inf vsay np-vsay lex))
+(EAHeadFeaturesForNodeType VPfin (TheList subcat inf vsay np-vsay lex))
+(EAHeadFeaturesForNodeType VPbrst (TheList subcat inf vsay np-vsay lex))
+(EAHeadFeaturesForNodeType VPto (TheList subcat inf vsay np-vsay lex))
+(EAHeadFeaturesForNodeType VPed (TheList subcat inf vsay np-vsay lex))
+(EAHeadFeaturesForNodeType cnp (TheList countable mass nunit ntime))
+(EAHeadFeaturesForNodeType slp (TheList vform perfect progressive agr))
+
+
+(isa -vp->vp-advp- EAGrammarRule)
+(comment -vp->vp-advp- "verb + advp 'wrote very quickly'.")
+(probabilityEAGrammarRule -vp->vp-advp- 0.9)
+(grammarRule -vp->vp-advp-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (:ACTION ?varv)
+   (:NOUN :SUBJECT)
+   (sem (thereExists ?varv (and ?sema ?semv)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList 
+     (modal -)
+     (agr ?a) (link -)
+     (vform (? vform base pres past prespart pastpart)) (var ?varv)
+     (sem ?semv))))
+  (EATermFn advp
+   (TheList (sem ?sema)))))
+
+(isa -cnp->n- EAGrammarRule)
+(comment -cnp->n- "noun as common noun phrase")
+(probabilityEAGrammarRule -cnp->n- 1.0)
+(grammarRule -cnp->n-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (ntime1 ?nt1) (ntime2 ?nt2)
+   (:NOUN ?varn) (sem ?semn)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Noun
+    (TheList (sem ?semn) (agr ?a) (var ?varn)
+     (ntime1 ?nt1) (ntime2 ?nt2))))))
+
+(isa -cnp->adjp-cnp- EAGrammarRule)
+(comment -cnp->adjp-cnp- "'red car', 'hot day'")
+(probabilityEAGrammarRule -cnp->adjp-cnp- 1.0)  ;; changed from 0.9 [trh], 3-26-14
+(grammarRule -cnp->adjp-cnp-
+ (EATermFn cnp
+  (TheList (var ?varcnp) (agr ?a) (modif-adj +)
+   (:NOUN ?varcnp)
+   (:REPLACE (ConceptForInstanceFn ?varcnp ?semcnp))
+   (sem (and ?semcnp ?semadjp))))
+ (TheList
+  (EATermFn adjp
+   ;; (quant -) means if the adj can be treated as a quantifier/determiner, do that.
+   (TheList (sem ?semadjp) (var ?varadjp) (quant -)))
+  (EAHeadFn
+   (EATermFn cnp
+             (TheList (var ?varcnp) (agr ?a) (sem ?semcnp) (gerund -))))))
+
+(isa -cnp->cnp-pp- EAGrammarRule)
+(comment -cnp->cnp-pp- "'bunch of grapes', 'temperature of the brick', 'ball with stripes'")
+(probabilityEAGrammarRule -cnp->cnp-pp- 1.0)
+(grammarRule -cnp->cnp-pp-
+ (EATermFn cnp
+  (TheList (var ?varcnp) (agr ?a) (:NOUN ?varcnp) (:POSSESSOR ?varpp)
+   (:OBLIQUE-OBJECT ?varpp)
+   (:OBL-OBJ-COL (ConceptForInstanceFn ?varpp ?sempp))
+   (:ACTION (GapFn :ACTION)) ; say what? This is the only difference from the rule below.
+   (prep-lex ?!plex)
+   (sem (and ?semcnp ?sempp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (var ?varcnp) (sem ?semcnp) (agr ?a) (gerund -)
+     (nunit -) (modif-adj -))))
+  (EATermFn pp
+   (TheList (var ?varpp) (sem ?sempp)
+    (prep-lex (? !plex into to during at for by out-of))))))
+    
+
+(isa -np->det-cnp- EAGrammarRule)
+(comment -np->det-cnp- "'the cat', 'a cat' 'some cat'")
+(probabilityEAGrammarRule -np->det-cnp- 1.0)
+(grammarRule -np->det-cnp-
+ (EATermFn np
+  (TheList (var ?varcnp) (agr ?a) (det ?vardet)
+   (sem (thereExists ?varcnp ?semcnp))))
+ (TheList
+  (EATermFn Determiner
+   (TheList (agr ?a) (var ?vardet)
+            (sem ?semdet) (lex (? !l every no neither what which))
+            (tposs -)))
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (agr (? a 1s 2s 3s)) (var ?varcnp) (sem ?semcnp)
+     (gerund-dir-obj -))))))
+
+(isa -np->det-cnp-plural- EAGrammarRule)
+(comment -np->det-cnp-plural- "'the cats'. 'those cats' (anything but 'a cats' or 'every cats' or 'no cats')")
+(probabilityEAGrammarRule -np->det-cnp-plural- 1.0)
+(grammarRule -np->det-cnp-plural-
+ (EATermFn np
+  (TheList
+   (var (:DEPSYM group-of- ?varcnp))  ; we're referring to the group
+   (agr ?a)
+   (det ?vardet)
+   (sem
+    (thereExists (:DEPSYM group-of- ?varcnp)
+     (and (isa (:DEPSYM group-of- ?varcnp) Set-Mathematical)
+          (forAll ?varcnp
+           (implies
+            (member ?varcnp (:DEPSYM group-of- ?varcnp))
+            ?semcnp)))))))
+ (TheList
+  (EATermFn Determiner  ;; We actually have separate rules for handling "some" and "all"
+   (TheList (agr ?a) (var ?vardet) (sem ?semdet)
+            (lex (? !l a every some many all that no neither a-few several what which))
+            (tposs -)))
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (agr (? a 1p 2p 3p))
+             (var ?varcnp)
+             (sem ?semcnp)
+             (gerund-dir-obj -))))))
+
+(isa -np->cnp-plural-generic- EAGrammarRule)
+(comment -np->cnp-plural-generic- "plurals: 'cats'. With this rule, plural denotes the type; not a group.  However, this doesn't work, because coreferent-Underspecified is symmetric, so we can't really figure out which genls which... (SEF)")
+(probabilityEAGrammarRule -np->cnp-plural-generic- 1.0)
+(grammarRule -np->cnp-plural-generic-
+ (EATermFn np
+  (TheList (var ?varcnp) (agr ?a) (generic +)
+   (sem
+    (forAll ?varcnp
+     (implies ?semcnp :SCOPED-CLAUSE)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (agr (? a 1p 2p 3p)) (det -) (var ?varcnp) (sem ?semcnp)
+     (gerund -))))))
+
+
+(isa -np->cnp-collective- EAGrammarRule)
+(comment -np->cnp-collective- "collectives: 'there is blood', 'buy bleach'")
+(probabilityEAGrammarRule -np->cnp-collective- 0.9)
+(grammarRule -np->cnp-collective-
+ (EATermFn np
+  (TheList (var ?varcnp) (agr 3s)
+   (sem (thereExists ?varcnp ?semcnp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (agr 3s) (var ?varcnp) (sem ?semcnp) )))))  ; (mass  +)
+
+(isa -np->cnp-conceptual- EAGrammarRule)
+(comment -np->cnp-conceptual- "conceptual terms (catch all)")
+(probabilityEAGrammarRule -np->cnp-conceptual- 0.9)
+(grammarRule -np->cnp-conceptual-
+ (EATermFn np
+  (TheList (var ?varcnp) (agr ?a)
+   (sem (thereExists ?varcnp ?semcnp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (agr (? a 1s 2s 3s)) (var ?varcnp) (sem ?semcnp)))))) ; (countable +) (mass -) (gerund -)
+
+(isa -np->pname- EAGrammarRule)
+(comment -np->pname- "proper names")
+(probabilityEAGrammarRule -np->pname- 1.0)
+(grammarRule -np->pname-
+ (EATermFn np
+  (TheList (agr ?a) (var ?semn)  ; This may look wrong, but it's not.  See parser::build-pname-constit.
+   (sem (properNameReference ?semn))))
+ (TheList
+  (EAHeadFn
+   (EATermFn pname
+    (TheList (agr ?a) (var ?varn) (lex ?lexn) (orth ?orthn)
+     (sem ?semn) (gpname -))))))
+
+;;;
+;;; Possession
+;;; 
+(isa -np->possessive-cnp- EAGrammarRule)
+(comment -np->possessive-cnp- "his cat")
+(probabilityEAGrammarRule -np->possessive-cnp- 1.0)
+(grammarRule -np->possessive-cnp-
+ (EATermFn np
+  (TheList (var ?varcnp) (agr ?a)
+   (pro (PronounMappingFn ?vardet ?semdet))
+   (:POSSESSOR ?vardet)
+   (sem
+    (thereExists (TheList ?vardet ?varcnp)
+     (and ?semcnp
+          (possessiveRelation ?vardet ?varcnp))))))
+ (TheList
+  (EATermFn Determiner
+   (TheList (agr ?a) (var ?vardet) (sem ?semdet) (tposs +)))
+  (EAHeadFn
+   (EATermFn cnp (TheList (agr ?a) (var ?varcnp) (sem ?semcnp))))))
+   
+(isa ->np->cnp-poss-cnp- EAGrammarRule)
+(comment -cnp->cnp-poss-cnp- "possession signified by an appostrophe s, [Sally's children], [the children's mother]")
+(probabilityEAGrammarRule -cnp->possessive-cnp- 1.0)
+(grammarRule -cnp->possessive-cnp-
+ (EATermFn np
+  (TheList (var ?varpossessed) (agr ?a)
+    (:POSSESSOR ?varpossessor)
+    (sem
+      (and ?sempossessor
+           ?sempossessed
+           (possessiveRelation ?varpossessor ?varpossessed)))))
+  (TheList
+    (EATermFn cnp
+      (TheList (var ?varpossessor) (sem ?sempossessor) (lex (? !l it)))) ; it's is a contraction
+    (EATermFn misc
+      (TheList (lex ^s)))
+    (EAHeadFn
+      (EATermFn cnp
+        (TheList (agr ?a) (var ?varpossessed) (sem ?sempossessed))))))
+
+;;;
+;;; Prepositional Phrases
+;;;
+(isa -pp->prep-np- EAGrammarRule)
+(comment -pp->prep-np- "'in an orchard'")
+(probabilityEAGrammarRule -pp->prep-np- 1.0)
+(grammarRule -pp->prep-np-
+ (EATermFn pp
+  (TheList (var ?varnp) (prep-lex ?lexp) (prep-var ?varp)
+   (:OBJECT ?varnp) (:POSSESSOR :NOUN) (sem (and ?semp ?semnp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Preposition (TheList (var ?varp) (sem ?semp) (lex ?lexp))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (np-inf -)))))
+ 
+(isa -adjp->adj-pp- EAGrammarRule)
+(comment -adjp->adj-pp- "'green with envy'")
+(probabilityEAGrammarRule -adjp->adj-pp- 0.9)
+(grammarRule -adjp->adj-pp-
+ (EATermFn adjp
+  (TheList (var ?vara) (:OBLIQUE-OBJECT ?varpp) (prep-lex ?lexp)
+   (sem (and ?sema ?sempp))))
+ (TheList
+  (EAHeadFn (EATermFn Adjective (TheList (var ?vara) (sem ?sema))))
+  (EATermFn pp (TheList (var ?varpp) (sem ?sempp) (prep-lex ?lexp)))))
+
+(isa -adjp->adjp-cconj-adjp- EAGrammarRule)
+(comment -adjp->adjp-cconj-adjp- "coordinating conjunctions REM: but needs some kind of clausal handling")
+(probabilityEAGrammarRule -adjp->adjp-cconj-adjp- 1.0)
+(grammarRule -adjp->adjp-cconj-adjp-
+ (EATermFn adjp (TheList (var ?varc) (sem (and ?sema1 ?sema2))))
+ (TheList
+  (EAHeadFn (EATermFn adjp (TheList (var ?vara1) (sem ?sema1))))
+  (EATermFn Conjunction (TheList (var ?varc) (lex ?lexc)))
+  (EATermFn adjp (TheList (var ?vara2) (sem ?sema2)))))
+
+(isa -vp->v- EAGrammarRule)
+(comment -vp->v- "present, past, present participle, past participle: 'eat', 'ate', 'eating', 'eaten'")
+(probabilityEAGrammarRule -vp->v- 0.5)
+(grammarRule -vp->v-
+ (EATermFn vp
+  (TheList (agr ?a) (vform ?vform) (var ?varv) (mwp ?mwp)
+   (:ACTION ?varv) (sem (thereExists ?varv ?semv))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (lex (? !l will)) (agr ?a)
+     (vform (? vform pres past prespart pastpart)) (mwp ?mwp)
+     (var ?varv) (sem ?semv))))))
+
+;;; Transitive verb constructions
+;;; This needs to look inside the vp to prohibit a trailing advpart
+(isa -vp->vp-np- EAGrammarRule)
+(comment -vp->vp-np- "vp + direct object 'eat the fruit'")
+(probabilityEAGrammarRule -vp->vp-np- 1.0)
+(grammarRule -vp->vp-np-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj +)
+   (inv-subject ?invsub) (:ACTION ?varv) (:OBJECT ?varnp)
+   (sem (and ?semnp ?semv))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform ?vform) (agr ?a) (var ?varv) (sem ?semv)
+     (subcat (? s np np-pp part-np)) (aux -) (part -) 
+     (modal -) (negated -) (inv -) (dir-obj -) (link -) (prep-lex -))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (inv-subject ?invsub)))))
+
+;;; Ditransitives
+(isa -vp->vp-np-np- EAGrammarRule)
+(comment -vp->vp-np-np- "Ditransitives take two objects, one direct and one indirect: 'sing you a song', 'teach him a game'")
+(probabilityEAGrammarRule -vp->vp-np-np- 0.9)
+(grammarRule -vp->vp-np-np-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj ?dir-obj)
+   (:ACTION ?varv) (:OBJECT ?varnp1) (:OBLIQUE-OBJECT ?varnp2)
+   (:NOUN :SUBJECT) (sem (and ?semv ?semnp1 ?semnp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (subcat (? s pp np np-pp part-pp pp-pp))
+     (vform ?vform) (var ?varv) (agr ?a) (sem ?semv) (aux -) (part -) 
+     (modal -) (negated -) (inv -) (vpinf -) (dir-obj -))))
+  (EATermFn np
+   (TheList (var ?varnp1) (sem ?semnp1) (inf -) (ntime1 -)))
+  (EATermFn np
+   (TheList (var ?varnp2) (sem ?semnp2) (inf -) (ntime1 -)))))
+
+;;; Prepositional phrases
+(isa -vp->vp-pp- EAGrammarRule)
+(comment -vp->vp-pp- "vp + prep: 'walking in an orchard', 'drove to the store'")
+(probabilityEAGrammarRule -vp->vp-pp- 1.0)
+(grammarRule -vp->vp-pp-
+ (EATermFn vp
+  (TheList (var ?varv) (vform ?vform) (agr ?a) (dir-obj ?dir-obj)
+   (:ACTION ?varv) (:OBLIQUE-OBJECT ?varpp) (:NOUN :SUBJECT) (part -) 
+   (prep-lex ?!lexp) (sem (and ?semv ?sempp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (subcat (? s pp np np-pp part-pp pp-pp it-pp)) (vform ?vform)
+     (var ?varv) (agr ?a) (sem ?semv) (aux -) (modal -) (negated -)
+     (inv -) (vpinf -) (dir-obj (? !dir-obj invalid)))))
+  (EATermFn pp
+   (TheList (var ?varpp) (sem ?sempp)
+    (prep-lex (? !lexp of))))))
+
+(isa -VPfin->vp- EAGrammarRule)
+(comment -VPfin->vp- "finite verb phrase, e.g., 'fell on your hat', ie, not an infinitive or participle.")
+(probabilityEAGrammarRule -VPfin->vp- 1.0)
+(grammarRule -VPfin->vp-
+ (EATermFn VPfin
+  (TheList 
+   (var ?varv)
+   (vform ?vform) 
+   (agr ?a) 
+   (dir-obj ?dir-obj)
+   (:ACTION ?varv)
+   (vptype VPfin)
+   (sem ?semv)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList
+     ;(subcat (? s pp np np-pp part-pp pp-pp it-pp)) ; what should the subcat be?
+     (vform (? !vform base pastpart prespart))
+     (var ?varv) (agr ?a) 
+     (sem ?semv) (aux -) 
+     (modal -) (negated -)
+     (inv -) (vpinf -))))))
+
+(isa -VPbrst->vp- EAGrammarRule)
+(comment -VPbrst->vp- "'I made him [run a mile].'")
+(probabilityEAGrammarRule -VPbrst->vp- 1.0)
+(grammarRule -VPbrst->vp-
+ (EATermFn VPbrst
+  (TheList
+   (var ?varv)
+   (sem ?semv)
+   (vptype VPbrst)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList
+     (var ?varv)
+     (vform base)
+     (gerund -)
+     (modal -)
+     (inv -)
+     (aux -)
+     (sem ?semv))))))
+
+(isa -VPto->to-VPbrst- EAGrammarRule)
+(comment -VPto->to-VPbrst- "'I like [to run fast].'")
+(probabilityEAGrammarRule -VPto->to-VPbrst- 1.0)
+(grammarRule -VPto->to-VPbrst-
+ (EATermFn VPto
+  (TheList
+   (var ?varv)
+   (sem ?semv)
+   (vptype VPto)))
+ (TheList
+  (EATermFn Preposition
+   (TheList (lex to)))
+  (EAHeadFn
+   (EATermFn VPbrst
+    (TheList
+     (var ?varv)
+     (sem ?semv))))))
+
+(isa -VPed->vp- EAGrammarRule)
+(comment -VPed->vp- "'The seed [planted in the garden] grew quickly.'")
+(probabilityEAGrammarRule -VPed->vp- 1.0)
+(grammarRule -VPed->vp-
+ (EATermFn VPed
+  (TheList (var ?varv)
+           (sem ?semv)
+           (vptype VPed)
+           (agr (? a 1s 2s 3s 1p 2p 3p))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform pastpart)
+             (var ?varv)
+             (sem ?semv)
+             (aux -)
+             (inv -)
+             (modal -))))))
+
+(isa -VPing->vp- EAGrammarRule)
+(comment -VPing->vp- "'[Going to Disneyland] makes me happy.'")
+(probabilityEAGrammarRule -VPing->vp- 1.0)
+(grammarRule -VPing->vp-
+ (EATermFn VPing
+  (TheList 
+   (var ?varv)
+   (sem ?semv)
+   (agr (? a 1s 2s 3s 1p 2p 3p)) 
+   (gerund +)
+   (gerund-dir-obj ?dir-obj) (:OBJECT :OBLIQUE-OBJECT)
+   (:SUBJECT UnspecifiedPassive)  ; should this be relabeled as DNI or something?
+   (:ACTION ?varv)
+   (vptype VPing)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList 
+     (vform prespart) 
+     (var ?varv) 
+     (sem ?semv) 
+     (aux -)
+     (inv -)
+     (modal -) 
+     (dir-obj ?dir-obj))))))
+
+
+(isa -slp->np-vp- EAGrammarRule)
+(comment -slp->np-vp- "normal, positive case")
+(probabilityEAGrammarRule -slp->np-vp- 1.0)
+(grammarRule -slp->np-vp-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (stype ?st) (utterance ?u)
+   (:ACTION ?varvp) (:EVENT ?varvp) (:SUBJECT ?varnp)
+   (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (inv -) (link -) ;(subcat (? !subcat object-be))
+     (negated -) (agr ?a) (var ?varvp) (sem ?semvp)
+     (utterance ?u))))))
+
+
+(isa -Sfin->np-vp- EAGrammarRule)
+(comment -Sfin->np-vp- "Last night I learned [surrealism isn’t just a Salvador Dali thing].")
+(probabilityEAGrammarRule -Sfin->np-vp- 1.0)
+(grammarRule -Sfin->np-vp-
+ (EATermFn Sfin
+  (TheList 
+    (var ?var) (agr ?a) (sem ?sem)
+    (:ACTION ?varvp)
+    (:EVENT ?varvp)
+    (:SUBJECT ?varnp)
+    (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn SubordinatingConjunction (TheList (lex that)))
+  (EATermFn np
+   (TheList 
+    (agr ?a) (sem ?semnp) (var ?varnp)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (var ?varvp) (lex ?vlex) (agr ?a) (sem ?sem))))))
+
+(isa -Sfin->that-np-vp- EAGrammarRule)
+(comment -Sfin->that-np-vp- "Last night I learned [that surrealism isn’t just a Salvador Dali thing].")
+(probabilityEAGrammarRule -Sfin->that-np-vp- 1.0)
+(grammarRule -Sfin->that-np-vp-
+ (EATermFn Sfin
+  (TheList
+    (var ?var) (agr ?a) (sem ?sem)
+    (:ACTION ?varvp)
+    (:EVENT ?varvp)
+    (:SUBJECT ?varnp)
+    (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (var ?var) (lex ?vlex) (agr ?a) (sem ?sem))))))

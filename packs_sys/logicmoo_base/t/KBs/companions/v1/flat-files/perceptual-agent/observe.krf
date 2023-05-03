@@ -1,0 +1,85 @@
+;;;
+;;; observe.meld
+;;;
+;;; Learning by demonstration in perceptual agents.
+;;;
+;;; These plans should be invoked in response to user actions/events.
+;;;
+;;; They should:
+;;; 1) Decide whether an event merits a learning goal to explain it
+;;; 2) Ask questions if relevant and question budget isn't exhausted
+;;; 3) See if the action/event answers any outstanding questions
+;;; 4) Attempt to operationalize policies
+;;; 5) create case libraries and case encodings
+;;; 6) accept tasking from the user, track user actions with respect
+;;;    to high-level plan
+;;; 7) Generalize a type of decision being made.
+
+(in-microtheory PerceptualAgentMt)
+
+;;; We need language interaction (tasking) to be treated as an event, just like
+;;; other game actions.  The perceptual agent should dispatch the events
+;;; in the same way.
+;;; 
+;;; Whereas the interaction manager sends a query for user queries (via
+;;; holdsOnRemoteAgent), it needs to send a remote task for imperatives.
+;;; The generic task should see if there's a perceptual agent serving as
+;;; common focus and fire a reified event.  See lbd.meld for details.  
+;;; The plans here should respond to user interaction events, whether they 
+;;; originate in language, sketching, or direct game actions.
+
+;;; Learning by observation is more general than learning by demonstration.
+;;; We want to be able to learn from an adversary's actions, but in that case
+;;; we're unlikely to have the complete execution trace.  It's a bigger inference
+;;; to figure out how and why an adversary did something, since the trace is
+;;; incomplete and we can't ask them.
+
+(isa operationalizeAdvice ComplexActionPredicate)
+(comment operationalizeAdvice "(operationalizeAdvice ?mt ?utterance-event) is a task to translate abstract advice into actionable plans or constraints.")
+
+(isa queryUserForRationale ComplexActionPredicate)
+(comment queryUserForRationale "(queryUserForRationale ?mt ?command) is a task to request an explanation for an action.")
+
+
+(isa anomalousAction UnaryPredicate)
+(comment anomalousAction "(anomalousAction ?operator) means ?operator cannot be explained with respect to known goals.")
+
+(isa directlyServesGoal BinaryPredicate)
+(comment directlyServesGoal "")
+
+(isa indirectlyServesPolicy BinaryPredicate)
+(comment indirectlyServesPolicy "")
+
+(isa gameType BinaryRelation)
+(arity gameType 2)
+(arg1Isa gameType Microtheory)
+(arg2Isa gameType Game)
+(comment gameType "(gameType ?game-mt ?game-type) associates a game microtheory with the game name (eg, checkers or Freeciv-TheGame)")
+
+(<== (gameType ?mt ?type)
+     (groundExpression ?mt)
+     (isa ?mt (PlayingFn ?type))
+     (instantiationsOfGameAre ?type (GameFn ?type)))
+
+(<== (gameType ?mt ?type)
+     (groundExpression ?mt)
+     (isa ?mt (GameFn ?type))
+     (instantiationsOfGameAre ?type (GameFn ?type)))
+
+(isa abductiveHypothesis BinaryPredicate)
+(arity abductiveHypothesis 2)
+(arg1Isa abductiveHypothesis CycLSentence-Assertible)
+(arg2Isa abductiveHypothesis CycLSentence-Assertible)
+(comment abductiveHypothesis "(abductiveHypothesis ?hyp ?consequence) means ?hyp is proposed as a hypothesis to partially explain ?consequent.")
+
+(isa userRole UnaryPredicate)
+(arity userRole 1)
+(arg1Isa userRole Agent-Generic)
+(comment userRole "(userRole ?role) binds ?role to the role played by the human in the current task or game.")
+
+;;; This is Cyc-native.  It takes an instance of Teaching and an IntelligentAgent.
+;(isa instructor BinaryPredicate)
+;(arity instructor 2)
+;(arg1Isa instructor Microtheory)
+;(arg2Isa instructor HumanCyclist)
+

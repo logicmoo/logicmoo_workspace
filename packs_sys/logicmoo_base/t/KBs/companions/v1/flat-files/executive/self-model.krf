@@ -1,0 +1,52 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: self-model.meld
+;;;;    System: Companions
+;;;;   Version: 1.0
+;;;;    Author: Tom Hinrichs
+;;;;   Created: September 30, 2009 08:57:49
+;;;;   Purpose: initial contents of Companions self model
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;
+;;; The self model contains a companion's reflective model of its own operation.
+;;; Ultimately, it will have three parts:
+;;; 1) the systems active goals
+;;; 2) a representation of the current rates of change of quantities (actual 
+;;;    quantity values are maintained in the session contexts
+;;; 3) a qualitative model that relates quantities
+;;;
+;;; Quantities may include current health assessments, number of learned 
+;;; facts and concepts, goal priorities, rates of interaction, number of 
+;;; miscommunications, size of vocabulary, number of detected anomalies, etc.
+;;; The companion should be able to adjust the relative priorities of goals
+;;; to optimize overall performance and goal satisfaction.
+
+(in-microtheory SelfModelMt)
+
+(learnedModelTopic SelfModelMt SelfToken-Indexical)
+
+;;; Start with some innate goals
+
+;;; goal to extend this very self model:
+(learningGoalForCompanion (LearnSelfModelFn SelfToken-Indexical))
+(goalStatus (LearnSelfModelFn SelfToken-Indexical) PendingStatus)
+
+
+
+
+;;; We'd like to represent quantities for the number of learned facts,
+;;; the rate of learning, the relative proportion of ground facts to inference rules
+;;; the number of active learning goals, number and duration of sessions, 
+;;; average response times for queries and questions,  rates of query failures,
+;;; patterns of activity, etc.
+;;; These can be computed post-facto from the executive.
+
+;;; Then we want to find relationships between the rates of learning and problem-solving 
+;;; and other factors - are there phase changes?  diminishing returns?
+
+;;; We want an "epistemic map" and an "efficiency map".  What kinds of questions can
+;;; we answer and how painful is it?  Can we improve efficency via meta-knowledge?
+;;; Ie, if we know that our knowledge is complete for some query, can we insert
+;;; lookupOnly into those queries to avoid search?

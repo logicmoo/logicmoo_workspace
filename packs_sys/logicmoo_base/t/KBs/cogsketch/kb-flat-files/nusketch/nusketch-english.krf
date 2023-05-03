@@ -1,0 +1,74 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: nusketch-english.krf
+;;;;    System: CogSketch
+;;;;    Author: Maria Chang
+;;;;   Created: September 24, 2013 10:01:45
+;;;;   Purpose: For pretty strings and genFormat statements used in nuSketch
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-10-01 15:53:52 -0500 (Mon, 01 Oct 2018) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(isa NuSketchEnglishMt Microtheory)
+(genlMt NuSketchReasoningCollectorMt NuSketchEnglishMt)
+(genlMt NuSketchEnglishMt EnglishMt)
+(comment NuSketchEnglishMt
+  "This microtheory holds relationships between relations, collections, and entities used
+in NuSketch and words and/or phrases in English.  See also #$genFormat and #$prettyString.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory NuSketchEnglishMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; genFormat statements for relations
+
+;; Spatial Relations
+(genFormat leftOf "~a is to the left of ~a" (1 2))
+(genFormat rightOf "~a is to the right of ~a" (1 2))
+(genFormat below "~a is below ~a" (1 2))
+(genFormat above "~a is above ~a" (1 2))
+(genFormat enclosesVertically "~A vertically encloses ~A" (1 2))
+(genFormat enclosesHorizontally "~A horizontally encloses ~A" (1 2))
+(genFormat enclosedVerticallyBy "~A vertically encloses ~A" (2 1))
+(genFormat enclosedHorizontallyBy "~A horizontally encloses ~A" (2 1))
+(genFormat longerThan "~A is longer than ~A" (1 2))
+(genFormat shorterThan "~A is shorter than ~A" (1 2))
+(genFormat sameLength "~A is about the same length as ~A" (1 2))
+(genFormat occludes "~A is between ~A and ~A" (1 2 3))
+
+;; NuSketch-specific relations
+(genFormat glyphIsBentLine "~A is a bent line." (1))
+(genFormat glyphIsBentLine-DownBumped "~A is a downward-bumped bent line." (1))
+(genFormat glyphIsBentLine-UpBumped "~A is an upward-bumped bent line." (1))
+(genFormat glyphIsBentLine-LeftBumped "~A is a leftward-bumped bent line." (1))
+(genFormat glyphIsBentLine-RightBumped "~A is a rightward-bumped bent line." (1))
+(genFormat glyphIsStraightLine "~A is a straight line." (1))
+(genFormat glyphRepresentsExpression "~A means that ~A" (1 2))
+(genFormat containedGlyphGroupContainer "~A contains the ~A" (1 2))
+(genFormat containedGlyphGroupInsider "~A is inside of the ~A" (1 2))
+(genFormat containedGlyphGroupTangentialInsider "~A is tangentially inside of the ~A" (1 2))
+
+
+;; Miscellaneous
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; prettyStrings for collections and entities
+
+;; Knowledge about other topics
+(in-microtheory UniversalVocabularyMt)
+(prettyString Cell "Cell")
+(prettyString Membrane "Membrane")
+(prettyString Chloroplast "Chloroplast")
+(prettyString Cytoplasm "Cytoplasm")
+(prettyString DNAMolecule "DNA")
+(prettyString Mitochondrion "Mitochondrion")
+(prettyString CellNucleus "Nucleus")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,752 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: explanation-rules.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 29, 2013 08:35:22
+;;;;   Purpose: Rules for abductively explaining actions
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; The explanation rules here are intended to be analogous to
+;;; narrative functions in language.  They look for expected
+;;; patterns in the input.  How to do this in a more forward-chaining
+;;; fashion is an open question.
+
+;;; Explain game actions in terms of instructional events.
+;;; We bind ?how in order to reify something in the case and support
+;;; verbal explanation of reasoning.  Really, ?how should also point
+;;; us towards reified goals to support higher-level explanation.
+
+;;; Rather than have an explicit query-for-questions that runs to 
+;;; quiescence, we'll just have a ClosedRetrievalSet query to gather
+;;; all explanations.
+
+;;; One good source of explanations is prior experience.  If we've
+;;; seen the pattern of behavior often, we should presume the same intent
+;;; and project future outcomes.
+
+;;; Note: If we know what our event type is, we can always consult
+;;; purposeOf-EventTypeSitType.  That should be our default answer.
+
+;;; Assumptions: We're trying to explain actions taken in the context of
+;;; an intentional, adversarial conflict.  These would not help in
+;;; a purely causeal model.
+
+(isa explainsAction QuaternaryPredicate)
+(arity explainsAction 4)
+(arg1Isa explainsAction Microtheory)
+(arg2Isa explainsAction PerceptualAgentCommand)
+(arg3Isa explainsAction CycLExpression)
+(arg4Isa explainsAction CycLExpression)
+(comment explainsAction
+  "(explainsAction ?mt ?cmd ?action ?how) invokes several explanation patterns to explain the motivation behind ?action in the specified context.")
+
+;;; These are meta-goals:
+
+(<== (explainsAction ?mt ?cmd ?action ?how)
+     (achievesFreedomOfAction ?mt ?cmd ?action ?how))
+
+(<== (explainsAction ?mt ?cmd ?action ?how)
+     (providesInformation ?mt ?cmd ?action ?how))
+     
+(<== (explainsAction ?mt ?cmd ?action ?how)
+     (improvesEfficiency ?mt ?cmd ?action ?how))
+     
+(<== (explainsAction ?mt ?cmd ?action ?how)
+     (achievesTacticalGoals ?mt ?cmd ?action ?how))
+
+;;; The problem with this is that we may not know these facts until
+;;; much later.  So: What kinds of changes do we want to be on the lookout
+;;; for, and what analysis should they trigger?
+
+;;; How would we explain building coinage?
+;;;    stockpiling a highly fungible resource
+;;; How would we explain exploration?
+;;;    knowledge acquisiont/ filling in a map Epistemic Form
+;;; How would we explain caravan?
+;;;    mobile, fungible, stoable resource
+;;; How would we explain building irrigation?
+;;;    increasing efficiency of tile food production (resource conversion)
+
+;;; explainAssignmentDecision via:
+;;; agent-type
+;;; availability of individual
+
+;;; -------------------------------------------------------------------------
+
+;;; Freedom Of Action
+
+(isa achievesFreedomOfAction QuaternaryPredicate)
+(arity achievesFreedomOfAction 4)
+(arg1Isa achievesFreedomOfAction Microtheory)
+(arg2Isa achievesFreedomOfAction PerceptualAgentCommand)
+(arg3Isa achievesFreedomOfAction CycLExpression)
+(arg4Isa achievesFreedomOfAction CycLExpression)
+
+(<== (achievesFreedomOfAction ?mt ?cmd ?action ?how)
+     (accumulatesResource ?mt ?cmd ?action ?resource)
+     (unifies ?how (maximizesResource ?cmd ?resource)))
+     
+(<== (achievesFreedomOfAction ?mt ?cmd ?action ?how)
+     (enablesFungibility ?mt ?cmd ?action ?resource1 ?resource2)
+     (unifies ?how (enablesConversion ?cmd ?resource1 ?resource2)))
+
+(<== (achievesFreedomOfAction ?mt ?cmd ?action ?how)
+     (convertsResource ?mt ?cmd ?action ?resource1 ?resource2)
+     (unifies ?how (resourceConversion ?cmd ?resource1 ?resource2)))
+
+(<== (achievesFreedomOfAction ?mt ?cmd ?action ?how)
+     (ist-Information ?mt (cancelsThreat ?cmd ?action ?threat))
+     (unifies ?how (providesTacticalFreedomFrom ?cmd ?threat)))
+
+;;; Resources are a kind of capabiilty (resourceCapable),
+;;; but there are others (behaviorCapable, etc)
+;;; Learning a technology makes us capable of certain actions.
+;;; Possessing a building may enable other actions.
+;;; Infrastructure is kind of a resource, but it's not meant to be
+;;; very fungible.
+(<== (achievesFreedomOfAction ?mt ?cmd ?action ?how)
+     (achievesCapability ?mt ?cmd ?action ?who ?what)
+     (unifies ?how (providesCapability ?cmd ?who ?what)))
+     
+;;; Building the first ship or airplane provides qualitatively new capabilities.
+;;; Building up a massive army provides a quantitatively new capability.
+
+(<== (achievesFreedomOfAction ?mt ?cmd ?action ?how)
+     (preventsCapability ?mt ?cmd ?action ?who ?what)
+     (unifies ?how (deniesCapability ?cmd ?who ?what)))
+
+
+(isa accumulatesResource Predicate)
+(arity accumulatesResource 4)
+(arg1Isa accumulatesResource Microtheory)
+(arg2Isa accumulatesResource PerceptualAgentCommand)
+(arg3Isa accumulatesResource CycLExpression)
+(arg4Isa accumulatesResource Collection)    ; the resource
+(comment accumulatesResource "(accumulatesResource ?mt ?cmd ?action ?resource) classifies ?action as something that accumulates an expendable ?resource.")
+
+(<== (accumulatesResource ?mt ?cmd ?action ?resource)
+     (false))  ; *** TBD
+
+(isa enablesFungibility Predicate)
+(arity enablesFungibility 5)
+(arg1Isa enablesFungibility Microtheory)
+(arg2Isa enablesFungibility PerceptualAgentCommand)
+(arg3Isa enablesFungibility CycLExpression)
+(arg4Isa enablesFungibility Collection)
+(arg5Isa enablesFungibility Collection)
+(comment enablesFungibility "(enablesFungibility ?mt ?cmd ?action ?resource1 ?resource2) means ?action promotes the conversion of ?resource1 into ?resource2.")
+
+
+(<== (enablesFungibility ?mt ?cmd ?action ?resource1 ?resource2)
+     (false))  ; *** TBD
+
+
+(isa convertsResource Predicate)
+(arity convertsResource 5)
+(arg1Isa convertsResource Microtheory)
+(arg2Isa convertsResource PerceptualAgentCommand)
+(arg3Isa convertsResource CycLExpression)
+(arg4Isa convertsResource Collection)
+(arg5Isa convertsResource Collection)
+(comment convertsResource "(convertsResource ?mt ?cmd ?action ?resource1 ?resource2) means ?action converts ?resource1 into the more immediately useful form of ?resource2.")
+
+
+(<== (convertsResource ?mt ?cmd ?action ?resource1 ?resource2)
+     (false))  ; *** TBD
+     
+(isa achievesCapability Predicate)
+(arity achievesCapability 5)
+(arg1Isa achievesCapability Microtheory)
+(arg2Isa achievesCapability PerceptualAgentCommand)
+(arg3Isa achievesCapability CycLExpression)
+(arg4Isa achievesCapability Agent-Generic)
+(arg5Isa achievesCapability Collection)
+(comment achievesCapability "(achievesCapability ?mt ?cmd ?action ?who ?what) means ?action provides ?who (an individual agent) with the capability to do ?what (an action type).")
+
+;;; By consulting indexedPrecond statements, we should be able to infer
+;;; other actions that may become legal and confer capabilities.
+;;; It is typically agents that have capabilities, so producing
+;;; a new kind of agent with novel capabilities would effectively
+;;; achieve that capability.
+(<== (achievesCapability ?mt ?cmd ?action ?who ?what)
+     (false))  ; *** TBD
+     
+(isa preventsCapability Predicate)
+(arity preventsCapability 5)
+(arg1Isa preventsCapability Microtheory)
+(arg2Isa preventsCapability PerceptualAgentCommand)
+(arg3Isa preventsCapability CycLExpression)
+(arg4Isa preventsCapability Agent-Generic)
+(arg5Isa preventsCapability Collection)
+(comment preventsCapability "(preventsCapability ?mt ?cmd ?action ?who ?what) means ?action denies ?who (an individual agent) the capability to do ?what (an action type).")
+
+
+(<== (achievesCapability ?mt ?cmd ?action ?who ?what)
+     (false))  ; *** TBD
+
+;;; We might be canceling a threat by destroying it, or by 
+;;; signing a peace agreement, or by countering it with its
+;;; own threat.  In the case of, e.g., preventing famine,
+;;; we might be re-distributing resources, creating a buffer 
+;;; (such as a granary) or eliminating a resource drain
+;;; (such as setting homecity of a produced unit, or 
+;;; founding a city to reduce Settler food upkeep.)
+
+(isa cancelsThreat TernaryPredicate)
+(arity cancelsThreat 3)
+(arg1Isa cancelsThreat PerceptualAgentCommand)
+(arg2Isa cancelsThreat CycLExpression)
+(arg3Isa cancelsThreat CycLExpression)
+(comment cancelsThreat "(cancelsThreat ?cmd ?action ?threat) renders a threat moot.
+ We might be canceling a threat by destroying it, or by 
+ signing a peace agreement, or by countering it with its
+ own threat.  In the case of, e.g., preventing famine,
+ we might be re-distributing resources, creating a buffer 
+ (such as a granary) or eliminating a resource drain
+ (such as setting homecity of a produced unit, or 
+ founding a city to reduce Settler food upkeep.)" )
+
+
+;;; Canceling by countering a threat:
+(<== (cancelsThreat ?cmd ?action ?threat)
+     (lookupOnly
+       (localOnly
+         (performedBy ?action ?actor)))       ; arg1 of a primitive actor
+     (sovereignAllegianceOfOrg ?actor ?side)  ; Freeciv associates this with a player
+     (threatensVulnerability ?threat ?side)
+     (lookupOnly
+       (localOnly 
+         (performedBy ?threat ?aggressor)))
+     (sovereignAllegianceOfOrg ?aggressor ?aggressor-side)
+     ;; action moves ally into position to counter-threat aggressor
+     (enablesPrecondition ?action 
+       (CollectionSubsetFn AttackOnTangible
+         (TheSet ?counter-attack
+           (and (isa ?counter-attack AttackOnTangible)
+                (threatensVulnerability ?counter-attack ?aggressor-side)
+                (mostAppropriateDefender ?counter-attack ?aggressor-side ?aggressor))))))
+
+;;; -----              
+;;; needs rules for performedBy that can take a non-Davidsonian primitive
+;;; needs implementation of sovereignAllegianceOfOrg
+;;; needs rules for threatensVulnerability
+;;; needs rule for enablesPrecondition
+;;; needs rule for mostAppropriateDefender
+;;; -----
+
+(isa threatensVulnerability BinaryPredicate)
+(arity threatensVulnerability 2)
+(arg1Isa threatensVulnerability Situation)
+(arg2Isa threatensVulnerability Agent-Generic)
+(comment threatensVulnerability "(threatensVulnerability ?threat-situation ?agent) means ?threat-situation threatens some vulnerability of ?agent.")
+
+(<== (threatensVulnerability ?threat-situation ?agent)
+     (false)); *** TBD
+
+(isa enablesPrecondition BinaryPredicate)
+(arity enablesPrecondition 2)
+(arg1Isa enablesPrecondition Situation)
+(arg2Isa enablesPrecondition Agent-Generic)
+(comment enablesPrecondition "(enablesPrecondition ?precond-action ?objective-action) means ?precond-action achieves a precondtion for doing ?objective-action.")
+
+(<== (enablesPrecondition ?precond-action ?objective-action)
+     (false))  ; *** TBD
+
+(isa mostAppropriateDefender TernaryPredicate)
+(arity mostAppropriateDefender 3)
+(arg1Isa mostAppropriateDefender Situation)
+(arg2Isa mostAppropriateDefender Agent-Generic)
+(comment mostAppropriateDefender "(mostAppropriateDefender ?attack ?maleficiary-side ?defender)")
+
+(<== (mostAppropriateDefender ?attack ?maleficiary-side ?defender)
+     (false))  ; *** TBD
+
+     
+;;; We might be restricting mobility to a smaller region, denying access to
+;;; or control over a resource, 
+
+;;; Capability calculus?
+;;; There exists an entity capable of X??
+
+;;; Look for things like (actionPositivelyAffectsQuantity ?quantity ?action)
+;;; which we have for doBuildCity => civPopulation
+
+;;; (operatorAssignsAgent ?operator ?agent)
+;;; just binds arg1 if it's an Agent-Generic.
+;;; Now, to find the CapabilityRole(s), we have, e.g.,:
+;;; (roleMemberType FC-Unit-Marines CapabilityRole4)
+;;; We probably want to abduce a particular capability role.
+
+;;; -------------------------------------------------------------------------
+
+;;; Information
+
+(isa providesInformation QuaternaryPredicate)
+(arity providesInformation 4)
+(arg1Isa providesInformation Microtheory)
+(arg2Isa providesInformation PerceptualAgentCommand)
+(arg3Isa providesInformation CycLExpression)
+(arg4Isa providesInformation CycLExpression)
+(comment providesInformation "(providesInformation ?mt ?cmd ?action ?how) means ?action was performed to gain information, either dynamic or static.")
+
+(<== (providesInformation ?mt ?cmd ?action ?how)
+     (achievesSituationalAwareness ?mt ?cmd ?action ?how))
+     
+;;; achieving situational awareness means uncovering facts about the
+;;; particular situation, rather than generically true relations in
+;;; the domasin. empirically true facts that aren't universal.
+
+(<== (providesInformation ?mt ?cmd ?action ?how)
+     (refinesProcessModel ?mt ?cmd ?action ?how))
+     
+;;; If an action results in adding information to the QualitativeModelMt of 
+;;; the domain, then it's refining the process model.  But from an external
+;;; observer's perspective, how would you tell? We want to capture the notion
+;;; of purposely trying different alternatives in the same context to
+;;; discover relations.  If we see this behavior, that would suggest the
+;;; agent has a learning goal (that perhaps the system should adopt).
+
+(<== (providesInformation ?mt ?cmd ?action ?how)
+     (boundsUncertainty ?mt ?cmd ?action ?how))
+
+;;; If an action results in knowing the quantitative value of a property of
+;;; an instance, then it might bound the range of that property for the class.
+
+(isa achievesSituationalAwareness Predicate)
+(arity achievesSituationalAwareness 4)
+(arg1Isa achievesSituationalAwareness Microtheory)
+(arg2Isa achievesSituationalAwareness PerceptualAgentCommand)
+(arg3Isa achievesSituationalAwareness CycLExpression)
+(arg4Isa achievesSituationalAwareness CycLExpression)
+(comment achievesSituationalAwareness "(achievesSituationalAwareness ?mt ?cmd ?action ?how)")
+
+
+(<== (achievesSituationalAwareness ?mt ?cmd ?action ?how)
+     (exploresStaticSituation ?mt ?cmd ?action ?how))
+
+;;; discovering facts that hardly ever change
+     
+(<== (achievesSituationalAwareness ?mt ?cmd ?action ?how)
+     (monitorsDynamicSituation ?mt ?cmd ?action ?how))
+
+;;; periodically sampling propositions that may change fluidly.
+
+
+(isa exploresStaticSituation QuaternaryPredicate)
+(arity exploresStaticSituation 4)
+(arg1Isa exploresStaticSituation Microtheory)
+(arg2Isa exploresStaticSituation PerceptualAgentCommand)
+(arg3Isa exploresStaticSituation CycLExpression)
+(arg4Isa exploresStaticSituation CycLExpression)
+
+;;; Did we learn the locations and types of entities?
+;;; Did we learn the existence of boundaries and the 
+;;; resource status of adversaries, etc.
+;;; Exploration processes do it through physical movement-translational
+;;; Scientists do it through experimentation
+;;; This basically means filling in an epistemic form:
+;;; 1) Going somewhere we haven't been before
+;;; 2) (experimentally) trying an action we haven't tried before
+;;; 3) Quantitatively probing a system
+(<== (exploresStaticSituation ?mt ?cmd ?action ?how)
+     (false))  ; *** TBD
+     
+;;; A location is intrinsically a property of an individual.
+
+(isa monitorsDynamicSituation QuaternaryPredicate)
+(arity monitorsDynamicSituation 4)
+(arg1Isa monitorsDynamicSituation Microtheory)
+(arg2Isa monitorsDynamicSituation PerceptualAgentCommand)
+(arg3Isa monitorsDynamicSituation CycLExpression)
+(arg4Isa monitorsDynamicSituation CycLExpression)
+
+;;; 1) Periodically sampling an observation
+;;; 2) cyclically monitoring by moving a localized sensor
+;;; 3) emplacing a sensor/observer in one place
+     
+(<== (monitorsDynamicSituation ?mt ?cmd ?action ?how)
+     (false))  ; *** TBD
+     
+;;; Alarm systems do this through placement of sensors.
+;;; Patrols do this by repeatedly revisiting locations to update knowledge
+
+(isa refinesProcessModel Predicate)
+(arity refinesProcessModel 4)
+(arg1Isa refinesProcessModel Microtheory)
+(arg2Isa refinesProcessModel PerceptualAgentCommand)
+(arg3Isa refinesProcessModel CycLExpression)
+(arg4Isa refinesProcessModel CycLExpression)
+(comment refinesProcessModel "(refinesProcessModel ?mt ?cmd ?action ?how) means ?action yields information that reduces ambiguity in the agents qualitative model of the situation, e.g., the direction of causality, or nature of influences.")
+
+;;; Did we learn influences from this action, or acquire boundary conditions?
+;;; Did we learn the outcomes of actions?
+;;; We want to know if the *intent* of the action was to refine a model.
+;;; 1) Did we adjust an input to a known influence with a novel parameter value?
+;;; 2) Did we directly turn a process off or on?
+(<== (refinesProcessModel ?mt ?cmd ?action ?how)
+     (false))  ; *** TBD
+
+(isa boundsUncertainty Predicate)
+(arity boundsUncertainty 4)
+(arg1Isa boundsUncertainty Microtheory)
+(arg2Isa boundsUncertainty PerceptualAgentCommand)
+(arg3Isa boundsUncertainty CycLExpression)
+(arg4Isa boundsUncertainty CycLExpression)
+(comment boundsUncertainty "(boundsUncertainty ?mt ?cmd ?action ?how) is the acquisition of knowledge to make more precise predictions.  Better probability priors, or quantitative range information.")
+
+;;; Did this update a decision tree?     
+(<== (boundsUncertainty ?mt ?cmd ?action ?how)
+     (false))  ; *** TBD
+
+;;; -------------------------------------------------------------------------
+
+;;; Efficiency
+
+(isa improvesEfficiency Predicate)
+(arity improvesEfficiency 4)
+(arg1Isa improvesEfficiency Microtheory)
+(arg2Isa improvesEfficiency PerceptualAgentCommand)
+(arg3Isa improvesEfficiency CycLExpression)
+(arg4Isa improvesEfficiency CycLExpression)
+(comment improvesEfficiency "(improvesEfficiency ?mt ?cmd ?action ?how)")
+
+(<== (improvesEfficiency ?mt ?cmd ?action ?how)
+     (reducesWaste ?mt ?cmd ?action ?how))
+     
+(isa reducesWaste Predicate)
+(arity reducesWaste 4)
+(arg1Isa reducesWaste Microtheory)
+(arg2Isa reducesWaste PerceptualAgentCommand)
+(arg3Isa reducesWaste CycLExpression)
+(arg4Isa reducesWaste CycLExpression)
+(comment reducesWaste "(reducesWaste ?mt ?cmd ?action ?waste) means either decreases a waste quantity, or the extent of wasted entities.  E.g., corruption, or pollution.")
+
+(<== (reducesWaste ?mt ?cmd ?action ?waste)
+     (false))  ; *** TBD
+
+(<== (improvesEfficiency ?mt ?cmd ?action ?how)
+     (amortizesEffort ?mt ?cmd ?action ?how))
+
+(isa amortizesEffort Predicate)
+(arity amortizesEffort 4)
+(arg1Isa amortizesEffort Microtheory)
+(arg2Isa amortizesEffort PerceptualAgentCommand)
+(arg3Isa amortizesEffort CycLExpression)
+(arg4Isa amortizesEffort CycLExpression)
+(comment amortizesEffort "(amortizesEffort ?mt ?cmd ?action ?how) means organizing actions to reuse intermediate states and minimize actions.")
+
+
+(<== (amortizesEffort ?mt ?cmd ?action ?how)
+     (reducesTravelTime ?mt ?cmd ?action ?how))
+     
+(isa reducesTravelTime Predicate)
+(arity reducesTravelTime 4)
+(arg1Isa reducesTravelTime Microtheory)
+(arg2Isa reducesTravelTime PerceptualAgentCommand)
+(arg3Isa reducesTravelTime CycLExpression)
+(arg4Isa reducesTravelTime CycLExpression)
+(comment reducesTravelTime "(reducesTravelTime ?mt ?cmd ?action ?how) means either enhances an agent's mobility, adds a path system, or rearranges schedules and assignments to minimize trips.")
+
+(<== (reducesTravelTime ?mt ?cmd ?action ?how)
+     (constructsPathSystem ?mt ?cmd ?action ?how))
+     
+;;; Also boarding a vehicle, taking a shortcut, consolidating trips.
+     
+(isa constructsPathSystem Predicate)
+(arity constructsPathSystem 4)
+(arg1Isa constructsPathSystem Microtheory)
+(arg2Isa constructsPathSystem PerceptualAgentCommand)
+(arg3Isa constructsPathSystem CycLExpression)
+(arg4Isa constructsPathSystem CycLExpression)
+(comment constructsPathSystem "(constructsPathSystem ?mt ?cmd ?action ?how) ")
+
+(<== (constructsPathSystem ?mt ?cmd ?action ?how)
+     (evaluate ?gen-action (GeneralizeFormulaFn ?action))
+     (ist-Information ?mt (effectOfAction-Props ?gen-action ?effect)) ; might want to use indexedEffect instead
+     (activeProcessTypeAssertion ?effect ?process-type)
+     (ist-Information ?mt (genls ?process-type (MakingFn ?what)))  ; transitively
+     (ist-Information ?mt (genls ?what PathType))
+     (unifies ?how (constructsPathOfType ?what)))
+     
+(isa increasesYield Predicate)
+(arity increasesYield 4)
+(arg1Isa increasesYield Microtheory)
+(arg2Isa increasesYield PerceptualAgentCommand)
+(arg3Isa increasesYield CycLExpression)
+(arg4Isa increasesYield CycLExpression)
+(comment increasesYield "(increasesYield ?mt ?cmd ?action ?output) means either improves likelihood of success in a stochastic process, or enhances a quantity rate multiplier.")
+
+(<== (improvesEfficiency ?mt ?cmd ?action ?how)
+     (increasesYield ?mt ?cmd ?action ?how))
+
+
+;;; Explain efficiency in terms of parallelization, infrastructure,
+;;; ie, maximize events/time, minimize time/event.
+;;; either way, we're maximizing a rate, but the rate is fractional in the
+;;; latter case.
+;;; Also, it may be the rate of a process that's not currently active.
+
+(<== (increasesYield ?mt ?cmd ?action ?how)
+     (actionEnablesProcessType ?mt ?action ?ptype)
+     (processTypeSupportsGoal ?mt ?ptype ?goal)
+     (goalQuantity ?goal ?quantity)
+     (unifies ?how (enablesProcessForQuantityGoal ?ptype ?goal)))  ;; just made this up
+     
+(isa actionEnablesProcessType TernaryPredicate)
+(arity actionEnablesProcessType 3)
+(arg1Isa actionEnablesProcessType Microtheory)
+(arg2Isa actionEnablesProcessType CycLExpression)
+(arg3Isa actionEnablesProcessType ModelFragmentType)
+(comment actionEnablesProcessType "(actionEnablesProcessType ?mt ?action ?ptype) means that action eventually achieves at least one participantConstraint of ?ptype.")
+     
+(<== (actionEnablesProcessType ?mt ?action ?ptype)
+     (operatorFormulas ?action-pred ?action)
+     (numAnswers 1 (variablizedStatement ?action-pred ?action-template))
+     (ist-Information ?mt (eventualEffectOfAction-Props ?action-template ?effect))
+     (effectEnablesProcessType ?mt ?effect ?ptype))
+
+(isa effectEnablesProcessType TernaryPredicate)
+(arity effectEnablesProcessType 3)
+(arg1Isa effectEnablesProcessType Microtheory)
+(arg2Isa effectEnablesProcessType CycLExpression)
+(arg3Isa effectEnablesProcessType ModelFragmentType)
+
+;;; Do we want to limit this to (QualitativeModelMtFn <domain>)?
+;;; Do we need to pass in instantiated action to bind to process roles?
+(<== (effectEnablesProcessType ?mt ?conj-effect ?ptype)
+     (conjuncts ?conj-effect ?effect)
+     ;(numAnswers 1 (variablizedFormula ?effect ?effect-template))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (ist-Information ?mt (participantConstraint ?ptype ?constraint))))
+     (subConstraintOf ?effect ?constraint)
+     )
+
+(isa variablizedFormula BinaryPredicate)
+(arity variablizedFormula 2)
+(arg1Isa variablizedFormula CycLFormula)
+(arg2Isa variablizedFormula CycLFormula)
+(comment variablizedFormula "Replace formula arguments with variables ?var1-?varN.")
+
+;;; Unpack effect statements in order to variablize conjuncts so we can unify:
+(<== (variablizedFormula ?stmt ?template)
+     (operatorFormulas not ?stmt)
+     (formulaArgument ?stmt 1 ?sub-stmt)
+     (variablizedFormula ?sub-stmt ?sub-template)
+     (unifies ?template (not ?sub-template)))
+
+(<== (variablizedFormula ?stmt ?template)
+     (operatorFormulas ?pred ?stmt)
+     (elementOf ?pred (TheSet and or))
+     (evaluate ?template 
+       (MakeFormulaFn ?pred
+         (MapFunctionOverList 
+           (FunctionToArg 2 
+             (Kappa (?stmt-in ?sub-template)
+               (variablizedFormula ?stmt-in ?sub-template)))
+           (FormulaArgListFn ?stmt)))))
+
+(<== (variablizedFormula ?stmt ?template)
+     (operatorFormulas ?pred ?stmt)
+     (not (elementOf ?pred (TheSet and or not)))
+     (variablizedStatement ?pred ?template))
+     
+(isa subConstraintOf BinaryPredicate)
+(arity subConstraintOf 2)
+(arg1Isa subConstraintOf CycLFormula)
+(arg2Isa subConstraintOf CycLFormula)
+
+;;; This probably won't work directly, since process types have
+;;; ground role names as arguments, and the effects may not be totally variablized.
+(<== (subConstraintOf ?stmt ?constraint)
+     (operatorFormulas or ?constraint)
+     (subexpressionMatching ?stmt ?constraint ?inst-stmt))
+
+(<== (subConstraintOf ?stmt ?constraint)
+     (operatorFormulas and ?constraint)
+     (subexpressionMatching ?stmt ?constraint ?inst-stmt))
+     
+(<== (subConstraintOf ?stmt ?constraint)
+     (operatorFormulas ?pred ?constraint)
+     (not (elementOf ?pred (TheSet and or)))
+     (unifies ?stmt ?constraint))
+
+(isa processTypeSupportsGoal TernaryPredicate)
+(arity processTypeSupportsGoal 3)
+(arg1Isa processTypeSupportsGoal Microtheory)
+(arg2Isa processTypeSupportsGoal ModelFragmentType)
+(arg3Isa processTypeSupportsGoal Goal)
+(comment processTypeSupportsGoal "(processTypeSupportsGoal ?mt ?ptype ?goal) means instances of ?ptype with positive rates ultimately influence ?goal in a positive way.")
+     
+(<== (processTypeSupportsGoal ?mt ?ptype ?goal)
+     (ist-Information ?mt (consequenceOf-TypeType ?ptype (?pred ?dep-quantity ?indep-quantity)))
+     (goalForConsequence ?mt ?pred ?dep-quantity ?goal))
+     
+(<== (processTypeSupportsGoal ?mt ?ptype ?goal)
+     (ist-Information ?mt (consequenceOf-TypeType ?ptype (?pred ?quantity)))
+     (goalForConsequence ?mt ?pred ?quantity ?goal))
+     
+(isa goalForConsequence QuaternaryPredicate)
+(arity goalForConsequence 4)
+(arg1Isa goalForConsequence Microtheory)
+(arg2Isa goalForConsequence Predicate)
+(arg3Isa goalForConsequence Quantity)
+(arg4Isa goalForConsequence Goal)
+     
+(<== (goalForConsequence ?mt positiveDependence (?quantity-type ?entity-type) ?goal)
+     (ist-Information ?mt 
+       (goalName ?goal-name
+         (MaximizeFn (?quantity-type ?etype))))
+     (unifies ?goal (MaximizeFn (?quantity-type ?etype))))
+
+(<== (goalForConsequence ?mt i+ (?quantity-type ?entity-type) ?goal)
+     (ist-Information ?mt 
+       (goalName ?goal-name
+         (MaximizeFn (?quantity-type ?etype))))
+     (unifies ?goal (MaximizeFn (?quantity-type ?etype))))
+         
+(<== (goalForConsequence ?mt qprop (?quantity-type ?entity-type) ?goal)
+     (ist-Information ?mt 
+       (goalName ?goal-name
+         (MaximizeFn (?quantity-type ?etype))))
+     (unifies ?goal (MaximizeFn (?quantity-type ?etype))))
+
+
+;;; -------------------------------------------------------------------------
+
+;;; Tactics
+
+(isa achievesTacticalGoals Predicate)
+(arity achievesTacticalGoals 4)
+(arg1Isa achievesTacticalGoals Microtheory)
+(arg2Isa achievesTacticalGoals PerceptualAgentCommand)
+(arg3Isa achievesTacticalGoals CycLExpression)
+(arg4Isa achievesTacticalGoals CycLExpression)
+(comment achievesTacticalGoals "(achievesTacticalGoals ?mt ?cmd ?action ?how)")
+
+(<== (achievesTacticalGoals ?mt ?cmd ?action ?how)
+     (achievesDefensiveGoals ?mt ?cmd ?action ?how))
+
+(<== (achievesTacticalGoals ?mt ?cmd ?action ?how)
+     (achievesOffensiveGoals ?mt ?cmd ?action ?how))
+
+     
+;;; resources, information, space, time, and plans are
+;;; all things we want to protect (or threaten)
+;;; Space and time are kinds of resources, but general 
+;;; enough to be considered independently.
+;;; Plans means the concrete situations and relations that
+;;; enable the intended coordinated activity.
+
+(isa achievesDefensiveGoals Predicate)
+(arity achievesDefensiveGoals 4)
+(arg1Isa achievesDefensiveGoals Microtheory)
+(arg2Isa achievesDefensiveGoals PerceptualAgentCommand)
+(arg3Isa achievesDefensiveGoals CycLExpression)
+(arg4Isa achievesDefensiveGoals CycLExpression)
+(comment achievesDefensiveGoals "(achievesDefensiveGoals ?mt ?cmd ?action ?how) classifies ?action as fight-or-flight in response to external aggression or perceived future threats.")
+
+(<== (achievesDefensiveGoals ?mt ?cmd ?action ?how)
+     (respondsToConcreteThreat ?mt ?cmd ?action ?how))
+     
+(<== (achievesDefensiveGoals ?mt ?cmd ?action ?how)
+     (anticipatesPotentialThreats ?mt ?cmd ?action ?how))
+     
+(isa respondsToConcreteThreat Predicate)
+(arity respondsToConcreteThreat 4)
+(arg1Isa respondsToConcreteThreat Microtheory)
+(arg2Isa respondsToConcreteThreat PerceptualAgentCommand)
+(arg3Isa respondsToConcreteThreat CycLExpression)
+(arg4Isa respondsToConcreteThreat CycLExpression)
+(comment respondsToConcreteThreat "(respondsToConcreteThreat ?mt ?cmd ?action ?how) classifies ?action as a response to a particular localized external current threat.")
+
+
+(<== (respondsToConcreteThreat ?mt ?cmd ?action ?how)
+     (false))   ; *** TBD
+     
+;;; Are we DefendingSomethingAgainstAttack? Executing a StrengtheningEvent?
+
+(isa anticipatesPotentialThreats Predicate)
+(arity anticipatesPotentialThreats 4)
+(arg1Isa anticipatesPotentialThreats Microtheory)
+(arg2Isa anticipatesPotentialThreats PerceptualAgentCommand)
+(arg3Isa anticipatesPotentialThreats CycLExpression)
+(arg4Isa anticipatesPotentialThreats CycLExpression)
+(comment anticipatesPotentialThreats "(anticipatesPotentialThreats ?mt ?cmd ?action ?how) classifies ?action as a preparation against a possible future indeterminate threat.")
+
+
+(<== (anticipatesPotentialThreats ?mt ?cmd ?action ?how)
+     (false))  ; *** TBD
+
+;;; Are we (MakingFn DefensiveStructure)?
+;;; Are we GuardingSomething?
+;;; Are we EscortingSomeone? (Hence, playing the role of Escort-SecurityRelated)
+     
+;;; A threat might not be an adversary.  It could be defending against natural disaster, etc.
+
+(isa achievesOffensiveGoals Predicate)
+(arity achievesOffensiveGoals 4)
+(arg1Isa achievesOffensiveGoals Microtheory)
+(arg2Isa achievesOffensiveGoals PerceptualAgentCommand)
+(arg3Isa achievesOffensiveGoals CycLExpression)
+(arg4Isa achievesOffensiveGoals CycLExpression)
+(comment achievesOffensiveGoals "(achievesOffensiveGoals ?mt ?cmd ?action ?how)")
+
+(<== (achievesOffensiveGoals ?mt ?cmd ?action ?how)
+     (threatensAdversary ?mt ?cmd ?action ?how))
+
+(<== (achievesOffensiveGoals ?mt ?cmd ?action ?how)
+     (encroachesOnAdversary ?mt ?cmd ?action ?how))
+
+(isa threatensAdversary Predicate)
+(arity threatensAdversary 4)
+(arg1Isa threatensAdversary Microtheory)
+(arg2Isa threatensAdversary PerceptualAgentCommand)
+(arg3Isa threatensAdversary CycLExpression)
+(arg4Isa threatensAdversary CycLExpression)
+(comment threatensAdversary "(threatensAdversary ?mt ?cmd ?action ?how) classifies ?action as an offensive move that poses a concrete, local threat to an adversary.")
+
+(<== (threatensAdversary ?mt ?cmd ?action ?how)
+     (false))  ; *** TBD
+
+
+(isa encroachesOnAdversary Predicate)
+(arity encroachesOnAdversary 4)
+(arg1Isa encroachesOnAdversary Microtheory)
+(arg2Isa encroachesOnAdversary PerceptualAgentCommand)
+(arg3Isa encroachesOnAdversary CycLExpression)
+(arg4Isa encroachesOnAdversary CycLExpression)
+(comment encroachesOnAdversary "(encroachesOnAdversary ?mt ?cmd ?action ?how) classifies ?action as an offensive move that poses a vague, future threat to an adversary by asserting control over a region or market.")
+
+(<== (encroachesOnAdversary ?mt ?cmd ?action ?how)
+     (false))  ; *** TBD
+     
+     
+;;; Suppose we want to infer that we're engaged in SearchAndDestroy.
+;;; a) is the agent appropriate for that kind of activity?
+;;; b) is there a potential target it might be headed for?
+;;; c) is the situation such that it's appropriate (ie, at War)?
+;;; d) can we abduce the target?  Then hypothesize the goal and wait and see.
+;;;
+;;; subevents of SearchAndDestroy are:
+;;; 1) TargetPicking 2) Waiting 3) ClosingWithEnemy 4) AttackToDestroy
+;;; as encoded by startsAfterEndOfInSituationType
+;;; look for: (focalProperSubsituationTypes SearchAndDestroy AttackToDestroy) 
+
+;;; RecognizeRegexp
+;;; 
+
+;;; -------------------------------------------------------------------------
+
+;;; Now we have bestUseOfAvailableResource, primaryFunctionOfAgentOrResource,
+;;; leastExpensiveResource, soonestAvailable, etc.
+;;; Can we explain coordination constraints?
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

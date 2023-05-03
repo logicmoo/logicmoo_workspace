@@ -1,0 +1,116 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: common-nusketch-hookup-plans.meld
+;;;;    System: nuSketch hookup
+;;;;    Author: Matt McLure
+;;;;   Created: June 26, 2011 22:13:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Cogsketch-AgentMt)
+
+(genlMt Cogsketch-AgentMt CompanionsMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa colorizePerceptualElementsFromCorrespondences ComplexActionPredicate)
+(arity colorizePerceptualElementsFromCorrespondences 3)
+(arg1Isa colorizePerceptualElementsFromCorrespondences NuSketchSketch)
+(arg2Isa colorizePerceptualElementsFromCorrespondences NuSketchSketch)
+(arg3Isa colorizePerceptualElementsFromCorrespondences Set-Extensional)
+(comment colorizePerceptualElementsFromCorrespondences
+  "(colorizePerceptualElementsFromCorrespondences <sketch-A> <sketch-B> <correspondence-list>)
+   In the provided sketch(es), this colorizes the perceptual elements that show up in the correspondence list
+   according to those correspondences, i.e. matching items should be assigned matching colors.
+   Note that the two sketches can be the same.  Also note that perceptual elements includes decomposition
+   entities like edges, edge-cycles, and ECOs, but does not include glyphs.  It seems aggressive to be changing glyph
+   colors here, since those colors are chosen by the user and as of now we don't have a way to revert this colorization.")
+
+(isa openSketch ComplexActionPredicate)
+(arity openSketch 1)
+(arg1Isa openSketch NuSketchSketch)
+(comment openSketch "(openSketch ?sketch) opens the sketch by looking up its address in the sketch rolodex.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(preconditionForMethod
+ (and (uninferredSentence
+       (wmOnly
+        (ist-Information EverythingPSC
+          (agentForOpenSketch ?sketch ?agent))))
+      (ist-Information CompanionsSketchRolodexMt
+        (nuSketchFileURL ?sketch ?url)))
+ (methodForAction
+  (openSketch ?sketch)
+  (actionSequence
+   (TheList
+    (doAnnounce "~% Opening sketch ~A~%   @URL: ~s" (?sketch ?url))
+    (doOpenSketchFile ?url)))))
+
+(preconditionForMethod
+ (wmOnly
+  (ist-Information EverythingPSC
+    (agentForOpenSketch ?sketch ?agent)))
+ (methodForAction
+  (openSketch ?sketch)
+  (actionSequence
+   (TheList
+    (doAnnounce "~% openSketch: Sketch ~A is already open." (?sketch))))))
+
+(preconditionForMethod
+ (uninferredSentence
+  (ist-Information CompanionsSketchRolodexMt
+    (nuSketchFileURL ?sketch ?url)))
+ (methodForAction
+  (openSketch ?sketch)
+  (actionSequence
+   (TheList
+    (doAnnounce "~% openSketch: Can't find url for sketch ~A in sketch rolodex" (?sketch))))))
+
+(preconditionForMethod
+ (and (agentForOpenSketch ?sketch-base ?agent-base)
+      (agentForOpenSketch ?sketch-target ?agent-target)
+      (evaluate ?corr-list (SetToListFn ?correspondences))
+      (evaluate ?colors
+        (SetToListFn
+         (TheClosedRetrievalSetOf ?color
+           (ist-Information NuSketchMt (isa ?color MappingDisplayColor)))))
+      (evaluate ?base-perceptual-elements
+        (TheClosedRetrievalSetOf ?thing
+          (holdsOnRemoteAgent ?agent-base
+            (ist-Information EverythingPSC
+              (isa ?thing PerceptualElement)))))
+      (evaluate ?target-perceptual-elements
+        (TheClosedRetrievalSetOf ?thing
+          (holdsOnRemoteAgent ?agent-target
+            (ist-Information EverythingPSC
+              (isa ?thing PerceptualElement)))))
+      (evaluate ?item-color-tuples
+        (TheClosedRetrievalSetOf (?item-base ?item-target ?color)
+          (and (elementOf ?correspondence ?correspondences)
+               (unifies ?correspondence (TheList ?item-base ?item-target))
+               (elementOf ?item-base ?base-perceptual-elements)
+               (elementOf ?item-target ?target-perceptual-elements)
+               (evaluate ?pos (PositionInListFn ?correspondence ?corr-list))
+               (evaluate ?color-pos (PlusFn 1 (ModuloFn ?pos (LengthOfListFn ?colors))))
+               (evaluate ?color (NthInListFn ?color-pos ?colors))))))
+ (methodForAction
+  (colorizePerceptualElementsFromCorrespondences ?sketch-base ?sketch-target ?correspondences)
+  (actionSequence
+   (TheList
+    (doForEach (?item-base ?item-target ?color) ?item-color-tuples
+                (actionSequence
+                 (TheList
+                  (doSynchronousRemotePlan ?agent-base
+                                     (doSetInkColor ?item-base ?color))
+                  (doSynchronousRemotePlan ?agent-target
+                                     (doSetInkColor ?item-target ?color)))))
+    (doAnnounce "~% Colorized correspondences:~%  ~a" (?item-color-tuples))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

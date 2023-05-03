@@ -1,0 +1,337 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: locations.meld
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 22, 2017 13:28:00
+;;;;   Purpose: backfill some types of locations.
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-20 17:13:36 -0600 (Thu, 20 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;; Predicates to fill in:
+;;; ----------------------
+;;; objectFoundInLocation
+;;; eventOccursAt
+;;; commonLocationTypeOfEventType
+;;; eventTypeOccursAtLocationType
+;;; locationTypeTypicallyContainsType 
+;;; typePrimaryFunction, typePrimaryFunction-EventOccursAt 
+;;; primaryActivityTypeOfLocation
+;;; typicalLocationTypeOfActorInEventType ; , e.g. the catcher is behind home plate when catching a pitch 
+;;; typicalLocationTypeOfActorInSubEventType (Relation) 
+;;; typicalLocationTypeOfEventType (Relation) 
+;;; typicalLocationTypeOfObjTypeInEventType (Relation) 
+;;; typicalLocationTypeOfType (Relation) 
+;;; typeIntendedBehaviorCapable-EventOccursAt 
+;;; situationOccursOnSurface
+;;; performsActsOfTypeInLocation-Number, performsActsOfTypeInLocation-Ratio, ;;<-- not assertible
+;;; spatiallySubsumes-TypeType
+;;; agentTypeWorksAtLocationType
+;;; (performsInsAtLocation ?AGENT ?EVENT-TYPE ?REGION)
+;;; performsInsAtLocType (Relation)
+;;; doesToWithAtLocation (Relation)
+
+(isa HomeFn Function-Denotational)
+(arity HomeFn 1)
+(arg1Isa HomeFn Person)
+(resultIsa HomeFn ShelterConstruction)
+(functionCorrespondingPredicate HomeFn primaryResidence 2)
+
+
+(isa Attic Collection)
+(isa Attic ExistingObjectType)
+(isa Attic SpatiallyDisjointObjectType)
+(genls Attic RoomInAConstruction)
+(comment Attic "The storage space above the habitable space in a ResidentialDwelling.")
+
+
+(isa GiftShop Collection)
+(genls GiftShop RetailStore)
+(relationExistsMost objectFoundInLocation GiftShop MuseumStructure)
+(agentTypeSellsProductType GiftShop Memento)
+
+(relationExistsMost objectFoundInLocation CoatHanger Closet)
+(relationExistsMost objectFoundInLocation Courtroom Courthouse) ; properPhysicalParts?
+(relationAllExists hasRooms Courthouse Courtroom)
+(relationMostExists placeOfWork DeskWorker OfficeSpace)
+(relationMostExists placeOfWork Metalworker MetalWorkingShop)
+
+(superLocationType Kitchen Building) ; unless it's on a plane
+(superLocationType Downtown City)
+
+(eventTypeOccursAtLocationType HavingAPicnic OutdoorLocation)
+(eventTypeOccursAtLocationType Yardwork Yard-BuildingGrounds)
+(eventTypeOccursAtLocationType WeatherEvent OutdoorLocation)
+(eventTypeOccursAtLocationType Mining Mine-ExcavationFacility)
+
+(typePrimaryFunction ParkingPlace ParkingARoadVehicle eventOccursAt)
+(typePrimaryFunction ParkingFacility ParkingARoadVehicle eventOccursAt)
+(typePrimaryFunction OperatingRoom Surgery eventOccursAt)
+(typePrimaryFunction Classroom Teaching eventOccursAt)
+(typePrimaryFunction ServiceStation (BuyingFn GasolineFuel) eventOccursAt)
+(typePrimaryFunction LibrarySpace (StoringFn BookCopy) eventOccursAt)
+(typePrimaryFunction BedroomCloset (StoringFn Clothing-Generic) eventOccursAt)
+(typePrimaryFunction Pantry (StoringFn Food) eventOccursAt)
+(typePrimaryFunction Bathtub TakingABath eventOccursAt)
+(typePrimaryFunction ShowerStall TakingAShower eventOccursAt)
+(typePrimaryFunction Park RecreationalActivity eventOccursAt)
+(typePrimaryFunction DressingRoom Dressing eventOccursAt)
+(typePrimaryFunction LectureHall Lecturing eventOccursAt)
+(typePrimaryFunction Workshop (CollectionUnionFn (TheSet MakingSomething SimpleRepairing)) eventOccursAt)
+(typePrimaryFunction Garage (StoringFn Automobile) eventOccursAt)
+(typePrimaryFunction AircraftHangar (StoringFn AirTransportationDevice) eventOccursAt)
+(typePrimaryFunction Boathouse (StoringFn Boat) eventOccursAt)
+(typePrimaryFunction BankVault (StoringFn Currency) eventOccursAt)
+(typePrimaryFunction ArtStudio (MakingFn ArtObject) eventOccursAt)
+(typePrimaryFunction LockerRoom Dressing eventOccursAt)
+(typePrimaryFunction LockerRoom TakingAShower eventOccursAt)
+(typePrimaryFunction FootballField (PlayingFn FootballGame-American) eventOccursAt)
+(typePrimaryFunction SoccerField (PlayingFn Soccer) eventOccursAt)
+(typePrimaryFunction BasketballCourt (PlayingFn Basketball-TheGame) eventOccursAt)
+(typePrimaryFunction TargetRange ShootingAGun eventOccursAt)
+(typePrimaryFunction ArcheryRange ArcherySportsEvent eventOccursAt)
+(typePrimaryFunction GolfCourse (PlayingFn Golf) eventOccursAt)
+(typePrimaryFunction TennisCourt (PlayingFn Tennis-TheGame) eventOccursAt)
+(typePrimaryFunction ShotPutField ShotPutSportsEvent eventOccursAt)
+(typePrimaryFunction Greenhouse (HusbandryFn Plant) eventOccursAt)
+(typePrimaryFunction Fireplace FirewoodFire eventOccursAt)
+(typePrimaryFunction Courtroom Trial eventOccursAt)
+(typePrimaryFunction StageForPerformances LiveEntertainment eventOccursAt)
+(typePrimaryFunction WaitingRoom Waiting eventOccursAt)
+(typePrimaryFunction MovieTheaterSpace MovieShowingAtATheater eventOccursAt)
+(typePrimaryFunction AirplaneRunway (CollectionUnionFn (TheSet TakeOff-Flight AirplaneLanding)) eventOccursAt)
+(typePrimaryFunction AirportTerminalBuilding (CollectionUnionFn (TheSet (SubcollectionOfWithRelationToTypeFn BoardingATransportationDevice toLocation AirTransportationVehicle) (SubcollectionOfWithRelationToTypeFn DisembarkingFromATransportationDevice fromLocation AirTransportationVehicle))))
+
+(genls RetailStoreSpace (SubcollectionOfWithRelationFromTypeFn GroundsOfOrganization physicalQuarters RetailStore))
+(relationAllExists physicalQuarters RetailStoreSpace RetailStore)
+(relationAllExists orgFacilities MilitaryBase-Organization MilitaryBase-Grounds)
+(relationAllExists orgFacilities NavyBase-MilitaryOrganization NavalShipBase)
+(relationAllExists orgFacilities AirForceBase-MilitaryOrganization AirForceBase-Grounds)
+(relationAllExists orgFacilities ArmyBase-MilitaryOrganization ArmyBase-Grounds)
+
+(commonLocationTypeOfEventType SimpleRepairing Workshop)
+(commonLocationTypeOfEventType FashioningSomething Workshop)
+(commonLocationTypeOfEventType StorageOfSomethingForFutureUse Attic)
+(commonLocationTypeOfEventType StorageOfSomethingForFutureUse BasementRoom)
+(commonLocationTypeOfEventType StorageOfSomethingForFutureUse Garage-Household)
+(commonLocationTypeOfEventType StorageOfSomethingForFutureUse Closet)
+(commonLocationTypeOfEventType Shopping RetailStoreSpace)
+(commonLocationTypeOfEventType OfferingForSale RetailStoreSpace)
+(commonLocationTypeOfEventType DisplayingSomething Shelf)
+(commonLocationTypeOfEventType WatchingTelevision FamilyRoom)
+(commonLocationTypeOfEventType (SubcollectionOfWithRelationToTypeFn ListeningToMusic deviceUsed StereoSystem) FamilyRoom)  ; Now everyone has smartphones & earbuds. 
+
+(relationAllInstance hasEvaluativeQuantity Bathroom (HighAmountFn PrivacyLevel)) ; bathrooms are private
+;;; loudnessLevel associates an AudibleSound with a level, not a place.
+;;; Sound is a MovementEvent, therefore we can use eventOccursAt to describe ambient sound in a place.
+(relationMostInstance loudnessLevel (SubcollectionOfWithRelationToTypeFn AudibleSound eventOccursAt Library) (LowAmountFn AcousticNoiseLevel))    ; libraries are quiet
+(relationMostInstance loudnessLevel (SubcollectionOfWithRelationToTypeFn AudibleSound eventOccursAt Stadium) (HighAmountFn AcousticNoiseLevel))   ; stadiums are loud
+
+(typicalLocationTypeOfEventType Sleeping Bedroom)
+(typicalLocationTypeOfEventType TakingANightsSleep Bedroom)
+(typicalLocationTypeOfEventType Dressing Bedroom)
+(typicalLocationTypeOfEventType (SubcollectionOfWithRelationToTypeFn Defecating doneBy HomoSapiens) Restroom)
+(typicalLocationTypeOfEventType Urinating Restroom)
+(typicalLocationTypeOfEventType Defecating Restroom)
+(typicalLocationTypeOfEventType Bathing Bathroom)
+(typicalLocationTypeOfEventType PersonalGrooming Bathroom)
+(typicalLocationTypeOfEventType BrushingOnesTeeth Bathroom)
+(typicalLocationTypeOfEventType CookingFood Kitchen)
+(typicalLocationTypeOfEventType BarbecuingFood Backyard)
+(typicalLocationTypeOfEventType OutdoorActivity OutdoorLocation)
+(typicalLocationTypeOfEventType WatchingTelevision LivingRoom)
+(typicalLocationTypeOfEventType Surgery Hospital)
+(typicalLocationTypeOfEventType Banking BankBuilding)
+(typicalLocationTypeOfEventType TakingACourse SchoolBuilding)
+(typicalLocationTypeOfEventType Reading LibrarySpace)
+(typicalLocationTypeOfEventType ParkingARoadVehicle (CollectionUnionFn (TheSet ParkingFacility ParkingPlace)))
+(typicalLocationTypeOfEventType (SubcollectionOfWithRelationToTypeFn Lending transferredThing BookCopy) LibrarySpace)
+(typicalLocationTypeOfEventType WorkingProcess OfficeRoom)
+(typicalLocationTypeOfEventType Metalworking MetalworkingShop)
+(typicalLocationTypeOfEventType YardWork OutdoorLocation)
+(typicalLocationTypeOfEventType Gardening Garden)
+(typicalLocationTypeOfEventType Worshipping ReligiousBuilding)
+(typicalLocationTypeOfEventType Worshipping Church-Building)
+(typicalLocationTypeOfEventType (RepairingFn Automobile) ServiceStation)
+(typicalLocationTypeOfEventType (PlayingFn Basketball-TheGame) BasketballCourt)
+(typicalLocationTypeOfEventType (PlayingFn FootballGame-American) FootballField)
+(typicalLocationTypeOfEventType (PlayingFn Soccer) SoccerField)
+(typicalLocationTypeOfEventType (PlayingFn IceHockey) IceRink)
+(typicalLocationTypeOfEventType BaseballGame BaseballField)
+(typicalLocationTypeOfEventType ArcherySportsEvent ArcheryRange)
+(typicalLocationTypeOfEventType (PlayingFn Golf) GolfCourse)
+(typicalLocationTypeOfEventType (PlayingFn Tennis-TheGame) TennisCourt)
+(typicalLocationTypeOfEventType (ApplyingStuffFn Deodorant) Armpit)
+
+(typicalLocationTypeOfObjTypeInEventType (PlayingFn Basketball-TheGame) BasketballCoach (PerimeterFn BasketballCourt))
+(typicalLocationTypeOfObjTypeInEventType (PlayingFn Basketball-TheGame) BasketballTeam BasketballCourt)
+
+(typicalLocationTypeOfType HairOnHead TopOfHead)
+(typicalLocationTypeOfType HairOnHead-Human TopOfHead)
+(typicalLocationTypeOfType Beard Chin)
+(typicalLocationTypeOfType Skyscraper Downtown)
+(typicalLocationTypeOfType CityHall Downtown)
+(typicalLocationTypeOfType Park OutdoorLocation)
+(typicalLocationTypeOfType Watercraft-Surface (SubcollectionOfWithRelationToTypeFn SurfaceRegion-Tangible objectTopSide BodyOfWater))
+(typicalLocationTypeOfType GasolinePump ServiceStation)
+(typicalLocationTypeOfType AlarmClock Bedroom)
+(typicalLocationTypeOfType Bed Bedroom)
+(typicalLocationTypeOfType Dresser Bedroom)
+(typicalLocationTypeOfType LaundryHamper Bedroom)
+(typicalLocationTypeOfType LaundryHamper LaundryRoom)
+(typicalLocationTypeOfType Refrigerator Kitchen)
+(typicalLocationTypeOfType CookingRange Kitchen)
+(typicalLocationTypeOfType Oven Kitchen)
+(typicalLocationTypeOfType KitchenTable Kitchen)
+(typicalLocationTypeOfType KitchenWorkStation Kitchen)
+(typicalLocationTypeOfType KitchenSet-Furniture Kitchen)
+(typicalLocationTypeOfType KitchenTimer Kitchen)
+(typicalLocationTypeOfType Sink (CollectionUnionFn (TheSet Kitchen Bathroom)))
+(typicalLocationTypeOfType Cupboard Kitchen)
+(typicalLocationTypeOfType Bathtub Bathroom)
+(typicalLocationTypeOfType Toothbrush ToothbrushHolder)
+(typicalLocationTypeOfType ToothbrushHolder Bathroom)
+(typicalLocationTypeOfType Toilet Bathroom)
+(typicalLocationTypeOfType Urinal PublicRestroom)
+(typicalLocationTypeOfType BathtubSkidlessMat Bathtub)
+(typicalLocationTypeOfType Locker LockerRoom)
+(typicalLocationTypeOfType Bookcase LibrarySpace)
+(typicalLocationTypeOfType Bookcase OfficeRoom)
+(typicalLocationTypeOfType OperatingRoom Hospital)
+(typicalLocationTypeOfType ClothesWasher LaundryRoom)
+(typicalLocationTypeOfType ClothesDryer LaundryRoom)
+(typicalLocationTypeOfType ClothesIron LaundryRoom)
+(typicalLocationTypeOfType IroningBoard LaundryRoom)
+(typicalLocationTypeOfType CharcoalGrill OutdoorLocation)
+(typicalLocationTypeOfType LawnMower Garage-Household)
+(typicalLocationTypeOfType GardeningTool Garage-Household)
+(typicalLocationTypeOfType GasGrill OutdoorLocation)
+(typicalLocationTypeOfType SwimmingPool-Outdoor OutdoorLocation)
+(typicalLocationTypeOfType AutomatedTellerMachine BankSpace)
+(typicalLocationTypeOfType AutomatedTellerMachine GroceryStore)
+(typicalLocationTypeOfType AutomatedTellerMachine ShoppingMallBuilding)
+(typicalLocationTypeOfType RetailStoreSpace ShoppingMallBuilding)
+(typicalLocationTypeOfType RetailStoreSpace Downtown)
+(typicalLocationTypeOfType RetailStoreSpace ShoppingDistrict)
+(typicalLocationTypeOfType GroceryCart GroceryStore)
+(typicalLocationTypeOfType CloudInSky Atmosphere)
+(typicalLocationTypeOfType BookEnd Shelf)
+(typicalLocationTypeOfType Junk Junkyard)
+(typicalLocationTypeOfType Locker LockerRoom) ; or hallway in a school
+(typicalLocationTypeOfType Bedbug Mattress)
+(typicalLocationTypeOfType FishingLure TackleBox)
+(typicalLocationTypeOfType SandCastle SandyBeach)
+(typicalLocationTypeOfType Poster (SubcollectionOfWithRelationFromTypeFn Surface objectSurfaces Wall-Vertical))
+(typicalLocationTypeOfType Submarine Underwater)
+(typicalLocationTypeOfType Ship Afloat-OnWater)
+(typicalLocationTypeOfType MovieScreen MovieTheaterSpace)
+(typicalLocationTypeOfType MovieProjector MovieTheaterSpace)
+(typicalLocationTypeOfType Lecturn LectureHall)
+
+(relationMostExists above-Directly Mouth-Mammal Chin)
+(relationMostExists above-Directly Nose Mouth)
+(relationMostExists above-Directly (PairFn Eye) Nose)
+(relationMostExists above-Directly Eyebrow Eye)
+(relationMostExists above-Directly Forehead (PairFn Eye))
+(relationMostExists above-Directly TopOfHead Forehead)  ; aka the crown
+
+(relationAllInstance objectFoundInLocation CloudInSky TheWholeSky) ; Earth clouds, at least
+
+(relationAllInstance sellsProductType GroceryStore GroceryMarketCategory)
+(characteristicActivityTypeOfOrganizationType LibraryOrganization (SubcollectionOfWithRelationToTypeFn Lending transferredThing BookCopy))
+(characteristicActivityTypeOfOrganizationType BankOrganization Banking)
+;;; At a very high level:
+(characteristicActivityTypeOfOrganizationType BankOrganization (StoringFn MonitaryValue))
+(characteristicActivityTypeOfOrganizationType BankOrganization (SubcollectionOfWithRelationToTypeFn Lending transferredThing MonitaryValue))
+
+(orgTypeFacilityType RetailStore RetailStoreSpace)
+(orgTypeFacilityType Bar-DrinkingEstablishment Bar-Place)
+(orgTypeFacilityType Restaurant-Organization RestaurantSpace)
+(orgTypeFacilityType FireDepartment FireStation)
+(orgTypeFacilityType BankOrganization BankSpace)
+(orgTypeFacilityType SchoolInstitution SchoolBuilding)
+(orgTypeFacilityType SchoolInstitution-KThrough12 SchoolBuilding-KThrough12)
+(orgTypeFacilityType College CollegeCampus)
+(orgTypeFacilityType Cinema-Organization MovieTheaterSpace)
+;; AutoRepairShop is an organization.
+
+;;; agentTypeWorksAtLocationType
+(agentTypeWorksAtLocationType MovieProjectionist MovieTheaterSpace)
+(agentTypeWorksAtLocationType DeskWorker OfficeSpace)
+(agentTypeWorksAtLocationType CarMechanic (FacilityOfOrganizationTypeFn AutoRepairShop))
+
+
+;;; Natural Habitats of wild animals
+;;; ---------------------------------
+;;; Fish are found in the aquariums, ocean, lakes, or rivers, but not swimming pools.
+;;; Bears are found in the woods
+;;; Bees are usually outside
+;;; Mosquitos are usually outside
+
+;;; Sunburns are aquired outdoors
+;;; Mosquito bites are acquired outdoors
+;;; Beestings are aquired outdoors
+;;; Pet dogs like to go for walks
+;;; Pet cats don't walk so much
+;;; Dogs go to the bathroom outdoors
+;;; Cats go to the bathroom in litter boxes indoors
+
+(typicalLocationTypeOfType Pothole PavedRoadway)
+(typicalLocationTypeOfType Latrine OutdoorLocation)
+(typicalLocationTypeOfType WildAnimal OutdoorLocation)
+(isa Bear-Animal WildAnimal)  ; usually.
+(typicalLocationTypeOfType Bee OutdoorLocation)
+(typicalLocationTypeOfEventType StingingByBee OutdoorLocation)
+(relationAllExists doneBy StingingByBee Bee)
+;;; A Bee sting hurts:
+(causes-SitTypeSitType StingingByBee (SubcollectionOfWithRelationToFn Pain-PhysiologicalCondition relativeIntensityOfCondition (MediumToHighAmountFn LevelOfPain)))
+
+(typicalLocationTypeOfEventType (DevelopmentOfConditionFn Sunburn) OutdoorLocation)
+(typicalLocationTypeOfEventType WindProcess OutdoorLocation)
+(commonLocationTypeOfEventType MosquitoBiting OutdoorLocation)
+(relationAllExists doneBy MosquitoBiting Mosquito)
+(relationMostExists infectionResultsFrom WestNileEncephalitis MosquitoBiting)
+(commonLocationTypeOfEventType TickBiting OutdoorLocation)
+(relationAllExists doneBy TickBiting Tick)
+(relationAllExists infectionResultsFrom LymeDisease TickBiting)
+(typicalLocationTypeOfEventType (SubcollectionOfWithRelationToTypeFn Urinating doneBy DomesticCat) LitterBox)
+(typicalLocationTypeOfEventType (SubcollectionOfWithRelationToTypeFn Defecating doneBy DomesticCat) LitterBox)
+(typicalLocationTypeOfEventType (SubcollectionOfWithRelationToTypeFn Urinating doneBy Dog) OutdoorLocation)
+(typicalLocationTypeOfEventType (SubcollectionOfWithRelationToTypeFn Defecating Dog DomesticCat) OutdoorLocation)
+
+(relationMostExists illuminationLevel MovieTheaterSpace LitDimly) ; at least during the show
+
+
+
+
+; clothingTypeForSituationTypeAt
+
+; SnowProcess doesn't occur at sealevel at EarthsEquator
+; TropicalStormAsEvent doesnt' occur at high latitudes
+;; Tropics are between TropicOfCancer and  TropicOfCapricorn
+; ArcticCircle and AntarcticCircle, WinterSeason
+
+;;;Some people have small greenhouses in their backyard, outside their home.
+(relationExistsExists objectFoundInLocation Greenhouse Backyard)
+
+(causes-SitSit
+ (holdsIn (EveryFn ColdSeason) (ambientTemperature PlanetEarth Cold))
+ (holdsIn (EveryFn ColdSeason)
+          (typicalLocationTypeOfEventType (HusbandryFn Plant) Greenhouse)))
+          
+(genls (EarlyPartFn SpringSeason) ColdSeason)
+(genls (LatePartFn FallSeason) ColdSeason)
+
+(spatiallySubsumes-TypeType Garage Automobile)
+(spatiallySubsumes-TypeType AircraftHangar AirTransportationDevice)
+(spatiallySubsumes-TypeType Boathouse Boat)
+(spatiallySubsumes-TypeType Bookcase Book)
+(spatiallySubsumes-TypeType FireplaceLogHolder Firewood)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

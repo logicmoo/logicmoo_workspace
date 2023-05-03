@@ -1,0 +1,128 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: mp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+;;;
+;;; Measure Phrases
+;;;
+
+
+(isa -mp->number-unit- EAGrammarRule)
+(comment -mp->number-unit- "'one foot' '16 pounds' '23 inches per second' agreement is all jacked up: 'a 2 pound fish' vs. 'the fish is 2 pounds' could be split into two types of measure phrases")
+(probabilityEAGrammarRule -mp->number-unit- 1.0)
+(grammarRule -mp->number-unit-
+ (EATermFn mp (TheList (var ?varunit)
+                       (agr ?a)
+                       (:NUMBER ?num)
+                       (sem ((ConceptForInstanceFn ?varunit ?semunit) ?num))))
+ (TheList 
+  (EATermFn Number-SP (TheList (lex ?num))) 
+  (EATermFn cnp
+   (TheList (unit +) (var ?varunit) (agr ?a) (sem ?semunit)))))
+
+;;;cjm 11/3/2015 X Units per turn
+;;; Make sure it has prep-lex
+;;;(is -mp->mp-per-np EAGrammarRule)
+;;; A citizen consumes 2 food points per turn.
+;;; perFn as a prepSemTrans doesn't work. In the above, turn is the object at the PP level, and food-points is the object at the VP level
+;;; We'd need to bind :OBJECT :OBJECT to different things.
+;;;(comment -mp->mp-per-np "Units per Time")
+;;;(probabilityEAGrammarRule -mp->mp-per-np 1.0)
+;;;(grammarRule -mp->mp-per-np
+;;;             (EATermFn mp (TheList (var ?varmp) (agr ?a) (prep-lex per) (sem (and ?sempp ?semmp (measureForAction :ACTION ?semunit ?varpp)))))
+;;;             (TheList (EAHeadFn (EATermFn mp (TheList (sem ?semmp) (var ?varmp) (agr ?a) (:NUMBER ?semcardinal) (semunit ?semunit)))) 
+;;;                     (EATermFn pp (TheList (var ?varpp) (sem ?sempp) (prep-lex per)))))
+
+;;; CJM 2/25 New X per Y rule.
+;;; One problem is that 
+;;;(is -mp->mp-per-np3 EAGrammarRule)
+;;;(comment -mp->mp-per-np2 "Units per Time")
+;;;(probabilityEAGrammarRule -mp->mp-per-np2 1.0)
+;;;(grammarRule -mp->mp-per-np3
+;;;            (EATermFn mp (TheList (var ?varmp) (agr ?a) (prep-lex per) (sem (and ?semnp (measure :ACTION ((PerFn ?semunit (ConceptForInstanceFn ?varnp ?semnp)) ?semval))))))
+;;;         (TheList (EAHeadFn (EATermFn mp (TheList (sem ?semmp) (var ?varmp) (agr ?a) (:NUMBER ?semcardinal) (sem (?semunit ?semval))))) 
+;;;               (EATermFn Preposition (TheList (var ?varp) (lex per)))
+;;;            (EATermFn cnp (TheList (var ?varnp) (sem ?semnp))))) 'EAComlexGrammarMt)
+
+(isa -mp->mp-per-np3 EAGrammarRule)  
+(probabilityEAGrammarRule -mp->mp-per-np3 1.0)                
+(grammarRule -mp->mp-per-np3
+  (EATermFn mp
+   (TheList 
+    (var ?varmp) 
+    (agr ?a) 
+    (prep-lex per)
+    (sem (and ?semnp 
+           (measure 
+            :ACTION 
+            ((PerFn ?semunit (ConceptForInstanceFn ?varnp ?semnp)) ?semval))))))
+  (TheList 
+    (EAHeadFn 
+     (EATermFn mp (TheList (sem ?semmp) (var ?varmp) (agr ?a) (:NUMBER ?semcardinal) (sem (?semunit ?semval)))))
+    (EATermFn Preposition (TheList (var ?varp) (lex per))) (EATermFn cnp (TheList (var ?varnp) (sem ?semnp)))))
+
+;;; The denotations for Five-TheWord is now somewhat bollixed.
+(isa -mp->cardinal-unit- EAGrammarRule)
+(comment -mp->cardinal-unit- "'one foot' '16 pounds' '23 inches per second' agreement is all jacked up: 'a 2 pound fish' vs. 'the fish is 2 pounds' could be split into two types of measure phrases")
+(probabilityEAGrammarRule -mp->cardinal-unit- 1.0)
+(grammarRule -mp->cardinal-unit-
+ (EATermFn mp (TheList (var ?varunit) 
+                       (agr ?a)
+                       (:NUMBER ?semcardinal)
+                       (sem ?semunit)
+                       (semunit ((ConceptForInstanceFn ?varunit ?semunit) ?semcardinal))))
+ (TheList
+  (EATermFn cardinal (TheList (sem ?semcardinal)))
+  (EATermFn cnp
+   (TheList (unit +) (var ?varunit) (agr ?a) (sem ?semunit)))))
+
+(isa -mp->a-few-cnp- EAGrammarRule)
+(comment -mp->a-few-cnp- "Nonspecific measure phrase corresponding to 'a few' as in 'a few months'. Also handled in the 'Quantifying groups' section. (JLT)")
+(probabilityEAGrammarRule -mp->a-few-cnp- 1.0)
+(grammarRule -mp->a-few-cnp-
+ (EATermFn mp
+  (TheList (var (:DEPSYM group-of- ?varcnp)) (arg ?a)
+   (sem
+    (thereExists (:DEPSYM group-of- ?varcnp)
+     (and (isa (:DEPSYM group-of- ?varcnp)
+           Set-Mathematical)
+          (qualitativeExtent (:DEPSYM group-of- ?varcnp)
+           AFew-Quant)
+          (forAll ?varcnp
+           (implies
+            (member ?varcnp (:DEPSYM group-of- ?varcnp))
+            ?semcnp)))))))
+ (TheList (EATermFn Noun (TheList (lex a-few)))
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (unit +) (var ?varcnp) (agr ?a) (sem ?semcnp))))))
+
+(isa -mp->adv-mp EAGrammarRule)
+(comment -mp->adv-mp "Approximate measure phrases e.g. 'about 600 miles' (JLT)")
+(probabilityEAGrammarRule -mp->adv-mp 1.0)
+(grammarRule -mp->adv-mp
+ (EATermFn mp (TheList (var ?varmp) (agr ?a) (sem ?semmp)))
+ (TheList (EATermFn Adverb (TheList (var ?vara) (sem ?sema)))
+  (EATermFn mp (TheList (var ?varmp) (sem ?semmp) (agr ?a)))))
+
+(isa -adjp->mp-adj- EAGrammarRule)
+(comment -adjp->mp-adj- "'13 years old', '2 inches long'")
+(probabilityEAGrammarRule -adjp->mp-adj- 1.0)
+(grammarRule -adjp->mp-adj-
+ (EATermFn adjp (TheList (var ?varmp) (:MEASURE ?semmp) (sem ?sema)))
+ (TheList (EATermFn mp (TheList (var ?varmp) (sem ?semmp)))
+  (EAHeadFn (EATermFn Adjective (TheList (var ?vara) (sem ?sema))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

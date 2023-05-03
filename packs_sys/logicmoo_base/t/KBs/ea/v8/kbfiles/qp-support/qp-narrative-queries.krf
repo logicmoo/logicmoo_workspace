@@ -1,0 +1,84 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: qp-narrative-queries.meld
+;;;;    System: EA
+;;;;    Author: Ken Forbus
+;;;;   Created: December 12, 2012 10:25:01
+;;;;   Purpose: 
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationQueriesMt :exclude-globals t)
+
+(abductiveNLUScoringProcedure abductive-score-via-symbol-weights)
+(abductiveNLPredicateScore primaryObjectMoving 5)
+(abductiveNLPredicateScore objectMoving 2)
+
+(genlMt QPInterpretationQueriesMt QPInterpretationMt)
+(genlMt QPInterpretationQueriesMt QPInterpretationRulesMt)
+
+;;; queries to populate qpframes (for semantic interpretation)
+
+;;;;(exhaustiveQueriesForInterpretation QPInterpretationQueriesMt)
+;;;;(queryInModel QPInterpretationQueriesMt)
+
+
+(queryForInterpretation
+ 0 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?quantity-frame IntroductionOfQuantityEvent))
+
+(queryForInterpretation
+ 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?quantity-frame ?sign
+                      IntroductionOfDsInformation))
+
+(queryForInterpretation
+ 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?ordinal-frame IntroductionOfOrdinalEvent))
+
+(queryForInterpretation
+ 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?qprop-frame IntroductionOfQPropEvent))
+
+(queryForInterpretation
+ 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?di-frame IntroductionOfDirectInfluenceEvent))
+
+(queryForInterpretation ;; Should assume ordinals already found
+ 2 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?mf-frame IntroductionOfMFConditionEvent))
+
+(queryForInterpretation
+ 2 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?mf-frame IntroductionOfMFParticipantEvent))
+
+(queryForInterpretation
+ 3 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?top-frame IntroductionOfTopologyFrame))
+
+(queryForInterpretation
+ 4 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?top-frame IntroductionOfTopologyConstraint))
+
+(queryForInterpretation
+ 3 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?qt-frame IntroductionOfQuantityTransferFrame))
+(queryForInterpretation
+ 3 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?process-frame IntroductionOfProcess))
+
+(queryForInterpretation
+ 4 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?process-frame-role IntroducesProcessRole))
+
+(queryForInterpretation
+ 5 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?process-frame-role ApplicableAnalogy))
+
+;;;(queryForInterpretation
+;;; 6 (convertToModelFragments ?MT))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

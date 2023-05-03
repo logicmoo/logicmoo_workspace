@@ -1,0 +1,48 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ee-req-ontology.meld
+;;;;    System: 
+;;;;    Author: Crouse
+;;;;   Created: May 31, 2018 10:42:26
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa evidenceForExpression Predicate)
+(arity evidenceForExpression 3)
+
+(isa reasoningRequiredForEE Predicate)
+(arity reasoningRequiredForEE 1)
+(notForAnalogy reasoningRequiredForEE)
+
+(isa eeSetCardinality Predicate)
+(arity eeSetCardinality 1)
+(notForAnalogy eeSetCardinality)
+
+(isa associatedEEText Predicate)
+(arity associatedEEText 2)
+(notForAnalogy associatedEEText)
+
+(isa functionAppliedToQuery Predicate)
+(arity functionAppliedToQuery 2)
+
+(isa superlativeAppliedToQuery Predicate)
+(arity superlativeAppliedToQuery 3)
+
+(isa adjacentVars Predicate)
+(arity adjacentVars 2)
+
+(isa GeneratedEEs-Library CaseLibrary)
+(isa HandMadeEEs-Library CaseLibrary)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

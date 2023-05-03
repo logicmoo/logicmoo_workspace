@@ -1,0 +1,61 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: reading-questions
+;;;;    System: interaction-manager
+;;;;    Author: David Barbella
+;;;;   Created: March 24, 2014 18:04:39
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa respondToQueryInSentence ComplexActionPredicate)
+(arity respondToQueryInSentence 3)
+(arg1Isa respondToQueryInSentence Microtheory)
+(arg2Isa respondToQueryInSentence CycLTerm)
+(comment respondToQueryInSentence "(respondToQueryInSentence ?context ?sentence-id) attempts
+to answer the question posed in ?sentence.")
+
+(preconditionForMethod
+ (and 
+      ;;; First, check to see if it's even a question
+      (mostSpecificUtteranceType ?sentence-id ?sentence-type)
+      (genls ?sentence-type InformationRequest-IBT )
+      (evaluate ?stmts
+        (TheClosedRetrievalSetOf ?stmt
+          (and (ist-Information ?context
+                 (interpretationOf ?sentence-id ?interpretation))
+               (queryFormForInterpretation ?sentence-type ?sentence-id ?interpretation ?query)
+               (unifies ?stmt
+                        (ist-Information ?context (sentenceQuery ?sentence-id ?interpretation ?query)))))))
+ (methodForAction
+  (respondToQueryInSentence ?context ?sentence-id)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (iteIllocutionaryForce ?sentence-id Query)))
+        (doRecord
+          (ist-Information ?context (isa ?sentence-id RequestingInformation)))
+        (doRecordMembers ?stmts)
+       (respondToQuestion ?context ?sentence-id ?sentence-type)))))
+
+(preconditionForMethod
+ (and 
+      ;;; First, check to see if it's even a question
+      (mostSpecificUtteranceType ?sentence-id ?sentence-type)
+      (uninferredSentence (genls ?sentence-type InformationRequest-IBT ))
+      )
+ (methodForAction
+  (respondToQueryInSentence ?context ?sentence-id)
+    (actionSequence
+      (TheList
+        (doAnnounce "~a does not seem to be a question." (?sentence-id))
+       ))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

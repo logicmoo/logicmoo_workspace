@@ -1,0 +1,563 @@
+;;; File name: explain-decision.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: November 14, 2011 12:16:21
+;;;   Purpose: Explain (or rationalize away) a user decision.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Although decisions don't have to be instrumental to other actions, they
+;;; can be.  If we make a decision that doesn't immediately affect our
+;;; performance goals, then it must be an investment in the future somehow.
+;;; There may be a delayed effect on performance, or it may achieve a 
+;;; precondition of a later action.  Time will tell.
+(isa explainDecision ComplexActionPredicate)
+(arity explainDecision 6)
+(arg1Isa explainDecision Microtheory)
+(arg2Isa explainDecision PerceptualAgentCommand)  ; saves work later.
+(arg3Isa explainDecision CycLExpression)
+(arg4Isa explainDecision Collection)
+(arg5Isa explainDecision FunctionalSlot)
+(arg6Isa explainDecision Date)
+(comment explainDecision "(explainDecision ?mt ?cmd ?operator ?actor-type ?slot ?when)")
+
+;;; Store a decision case for later generalization when we can't immediately
+;;; rationalize away the decision.
+;;; Changed 7-22-13 to use reified goal network. (named goals)
+(preconditionForMethod
+  (and (different ?slot currentPlan)
+       (uninferredSentence
+         (priorExplanationFailure ?mt ?action))
+       ;(lookupOnly (ist-Information ?mt (performanceGoalForGame ?mt ?goal-rep)))
+       ;(lookupOnly (ist-Information ?mt (goalName ?goal ?goal-rep)))
+       (unifies ?goal (GoalFn 0))  ; root goal
+       (uninferredSentence
+         (inactiveStartingGoal ?mt ?goal))
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?spindle (SpindleMtFn ?domain Influences)))  ; Is this even being used anymore? Nope!
+  (methodForAction
+    (explainDecision ?mt ?cmd ?action ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "explainDecision: ~s ~s ~s ~s" (?action ?actor-type ?slot ?when))
+        (indexDecisionCase ?mt ?cmd ?action (DecisionFn ?slot) ?when)  ; Doesn't record much.
+        ;; 10 is an arbitrary cutoff.  As learned model gets more accurate, might want to increase...
+        (explainActionWRTGoal ?mt ?spindle ?cmd ?action (TheSet ?goal) (TheSet) 10)))))
+
+;;; Assume that explainActionWRTGoal no longer fails outright.
+;;; This is the case wehre the performanceGoalForGame is misunderstood, etc.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (explainDecision ?mt ?cmd ?action ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "Failure to explain decision ~s" (?action))))))
+        
+(<== (preferInContext (explainDecision ?mt ?cmd ?action ?actor-type ?slot ?when) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 explainActionWRTGoal))
+
+;;; Try to explain a user decision in terms of known goals.
+
+;;; This is the analytic variant of the decide task.  We'll use the same
+;;; analysis to identify the first high-level goal achievable from the
+;;; given action.
+;;; It would be nice if we could recover the alternative actions (the LCS)
+;;; before the action was taken.  The chosen action might just have been
+;;; the least obnoxious.  
+;;; 
+;;; However, we may use this for explaining actionPlans as well as
+;;; decisions.
+;;;
+;;; The parent goals are being bound recursively as we descend through
+;;; the qualitative model.  We use the outsourced strategyFromGoalNames
+;;; to invoke the regression planner with dynamic programming to
+;;; (attempt to) pick the most promising goal decomposition down to
+;;; the action.  Of course, if the qualitative model is incomplete, 
+;;; this will fail.
+;;; ?subgoals starts out with the top-level (known) performance goal.
+;;; A) subgoaling may fail if this is propositional (now fixed?), and 
+;;; B) this doesn't take advantage of any known goal hierarchy or current
+;;;    state.
+
+(isa explainActionWRTGoal ComplexActionPredicate)
+(arity explainActionWRTGoal 7)
+(arg1Isa explainActionWRTGoal Microtheory)
+(arg2Isa explainActionWRTGoal Microtheory)
+(arg3Isa explainActionWRTGoal PerceptualAgentCommand)
+(arg4Isa explainActionWRTGoal CycLSentence-Assertible)
+(arg5Isa explainActionWRTGoal Set-Mathematical)
+(arg6Isa explainActionWRTGoal Set-Mathematical)
+(arg7Isa explainActionWRTGoal Integer)
+(comment explainActionWRTGoal "(explainActionWRTGoal ?mt ?spindle-mt ?decision-case ?action ?subgoals ?ancestors ?max-depth) explains a reified command action with respect to a specified goal.")
+
+;;; This is abducing an explanation for an action.
+;;; This is almost exactly like breadthFirstGoalSearch in the rational player.
+
+;;; Success case:
+(preconditionForMethod
+  (and (different ?subgoals (TheSet))
+       ;; ?dir is Maximize or Minimize
+       (not (matches (TheSet (?dir ((AggregateQuantityFn ?pred) ?coll))) ?subgoals))  ; hack - should be fixed elsewhere.
+       ;(uninferredSentence
+       ;  (priorExplanationFailure ?mt ?action))  ; check this at a higher level
+       ;; Note: Do *not* bind ?selected-action going in, since the outsourced
+       ;; predicate doesn't define that signature!
+       (strategyFromGoalNames ?mt (TheSet ?action) ?subgoals ?selected-action ?subgoal) ; previously was strategyFromGoals
+       ;(evaluate ?subgoal (LastInListFn ?goal-hierarchy))  ; This is failing because ?goal-hierarchy is bound to (GoalFn 4), not a list.
+       ;(evaluate ?reason (FirstInListFn ?goal-hierarchy))
+       ;(evaluate ?depth (LengthOfListFn ?goal-hierarchy))
+       (formulaArgument ?action 1 ?actor)
+       (unifies ?hyp-subgoal
+         (hypothesizedGoal ?actor ?cmd ?action ?subgoal)))
+  (methodForAction
+    (explainActionWRTGoal ?mt ?spindle-mt ?cmd ?action ?subgoals ?parent-goals ?max-depth)
+    (actionSequence
+      (TheList
+        ;; Validate with user, or write out to case, etc.
+        ;; We've predicted our goal and the action distance to it.
+        (doAnnounce "Predict goal for ~s =~%  ~s" (?action ?subgoal))
+        (doRecord (ist-Information ?mt ?hyp-subgoal))
+        ;(recordGoalHierarchyFor ?mt ?action ?goal-hierarchy)
+        ))))
+
+;;; Failure case:
+;;; When the well runs dry and the qualitative model can't decompose influences anymore.
+;;; Issue: We may want to learn about entity types that are not directly mentioned
+;;; as arguments.  E.g., a Road special is the product of the durative process of building
+;;; a road, it's not an argument to the action.
+(preconditionForMethod
+  (and (cacheComplete (entityTypesOfAction ?action ?entity-types))
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (operatorFormulas ?action-pred ?action))
+  (methodForAction
+    (explainActionWRTGoal ?mt ?spindle-mt ?cmd ?action (TheSet) ?parent-goals ?max-depth)
+    (actionSequence
+      (TheList
+       ;; Failure spawns new goals:
+       (doAnnounce "~&Failed to explain ~s" (?action))
+       (doRecord (ist-Information ?mt (explanationFailure ?action)))
+       (postActionLearningGoal ?lkmt ?action-pred)
+       (postPurposeLearningGoal ?lkmt ?action-pred)
+       (doForEach ?entity-type ?entity-types (postAffordanceLearningGoal ?lkmt ?entity-type))
+       ))))
+
+;;; Where we exceed depth limit:
+(preconditionForMethod
+  (and (cacheComplete (entityTypesOfAction ?action ?entity-types))
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (operatorFormulas ?action-pred ?action))
+  (methodForAction
+    (explainActionWRTGoal ?mt ?spindle-mt ?cmd ?action ?set ?parent-goals 0)
+    (actionSequence
+      (TheList
+       ;; Failure spawns new goals:
+       (doAnnounce "~&Failed to explain ~s" (?action))
+       (doRecord (ist-Information ?mt (explanationFailure ?action)))
+       (postActionLearningGoal ?lkmt ?action-pred)
+       (postPurposeLearningGoal ?lkmt ?action-pred)
+       (doForEach ?entity-type ?entity-types (postAffordanceLearningGoal ?lkmt ?entity-type))
+       ))))
+
+(isa entityTypesOfAction BinaryPredicate)
+(arity entityTypesOfAction 2)
+
+(<== (entityTypesOfAction ?action ?entity-types)
+     (evaluate ?entity-args (RestOfListFn (FormulaArgListFn ?action)))
+     ;; omit the agent here:
+     (evaluate ?entity-types 
+       ;; couldn't we just take arg2?
+       (TheClosedRetrievalSetOf ?entity-type
+         (and (memberOfList ?entity-type ?entity-args)
+              (groundExpression ?entity-type)
+              (atomicTerm ?entity-type)
+              (isa ?entity-type Collection)))))
+
+
+(isa priorExplanationFailure BinaryPredicate)
+
+;;; Turns out, just because there's an active goal, doesn't mean there was a failure
+;;; to explain.
+;(<== (priorExplanationFailure ?mt ?action)
+;     (operatorFormulas ?action-pred ?action)
+;     (numAnswers 1 
+;       (learningGoalForCompanion
+;         (LearnPurposeOfActionFn ?action-pred)))  ; inherit from ?lkmt
+;     (cacheComplete (entityTypesOfAction ?action ?entity-types))
+;     (numAnswers 1  ; advice must go outside the someSatisfies
+;       (someSatisfies ?entity-type ?entity-types
+;         (activeLearningGoal ?entity-type (LearnAffordancesOfEntityFn ?entity-type)))))
+
+;;; Did we fail to explain a prior similar action?
+;;; *** Still no good.  There are often concrete locations in our actions.
+;;; *** We need to variablize everything that isn't an entityTypeOfAction.
+;(<== (priorExplanationFailure ?mt ?action)
+;     (evaluate ?qry (SubstituteFormulaArgPositionFn (TheList 1) ?var% ?action))
+;     (numAnswers 1
+;       (lookupOnly
+;         (localOnly
+;           (ist-Information ?mt
+;             (explanationFailure ?qry))))))
+
+(<== (priorExplanationFailure ?mt ?action)
+     (operatorFormulas ?action-predicate ?action)
+     (evaluate ?qry 
+       (MakeFormulaFn ?action-predicate
+         (MapFunctionOverList 
+           (FunctionToArg 2
+             (Kappa (?arg ?variablized-arg)
+               (variablizedIndividual ?arg ?variablized-arg)))
+           (FormulaArgListFn ?action))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (explanationFailure ?qry))))))
+
+(isa variablizedIndividual BinaryPredicate)
+(arity variablizedIndividual 2)
+(arg1Isa variablizedIndividual CycLTerm)
+(arg2Isa variablizedIndividual CycLTerm)
+(comment variablizedIndividual "(variablizedIndividual ?arg ?var) binds ?var to a variable if ?arg is an Individual.")
+
+;;; Leave unbound variables as-is
+(<== (variablizedIndividual ?arg ?arg)
+     (variableExpression ?arg))
+
+;;; Leave Collections (types) as-is
+(<== (variablizedIndividual ?arg ?arg)
+     (not (variableExpression ?arg))  ; ?arg may be a NAT, but it better be bound.
+     (isa ?arg Collection))
+
+;;; Convert references to individuals to variables:
+(<== (variablizedIndividual ?arg ?var)
+     (not (variableExpression ?arg))
+     (uninferredSentence (isa ?arg Collection))
+     (evaluate ?var (UniquifyVariablesFn ?v)))
+
+;;; Recursive case:
+;;; The doAgentPlan here avoids infinite backtracking.  Subgoaling at the
+;;; type level creates new uniquely variablized goals, which invite infinite
+;;; backtracking  This needs to work, even if we're in the middle of learning
+;;; a qualitative model and all influences are hypotheses in influence cases.
+;;; HypothesizedSubgoalFor should gracefully accommodate that.
+
+(preconditionForMethod
+  (and (different ?subgoals (TheSet))
+       (greaterThan ?max-depth 0)
+       ;; Check this at a higher level:
+       ;(uninferredSentence
+       ;  (priorExplanationFailure ?mt ?action))
+       (evaluate ?new-subgoals
+         (TheClosedRetrievalSetOf ?new-subgoal
+           (and (lookupOnly (elementOf ?parent-goal ?subgoals)) ; ignore rules for inferring from CollectionoSubsetFns, etc
+                (lookupOnly
+                  (contextEnvAllowed
+                    (ist-Information ?mt
+                      (subgoal ?parent-goal ?new-subgoal))))
+                ;; *** This is the only reason we're passing in the spindle.  Now using reified subgoal stmts instead.
+                ;(hypothesizedSubgoalFor ?mt ?spindle-mt ?parent-goal ?new-subgoal)
+                (lookupOnly (not (elementOf ?new-subgoal ?subgoals)))
+                (lookupOnly (not (elementOf ?new-subgoal ?parent-goals))))))
+       (evaluate ?ancestors (SetOrCollectionUnion ?subgoals ?parent-goals)) ; This is just the set of goals we've seen, to avoid infinite search.
+       (evaluate ?new-depth (DifferenceFn ?max-depth 1)))
+   (methodForAction
+     (explainActionWRTGoal ?mt ?spindle-mt ?cmd ?action ?subgoals ?parent-goals ?max-depth)
+     (actionSequence
+       (TheList
+        (doAgentPlan
+          (actionSequence 
+            (TheList
+               (explainActionWRTGoal ?mt ?spindle-mt ?cmd ?action ?new-subgoals ?ancestors ?new-depth))))))))
+
+
+;;; prefer stopping over recursion
+(<== (preferInContext (explainActionWRTGoal ?mt ?spindle-mt ?cmd ?action ?subgoals ?parent-goals ?max-depth) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 explainActionWRTGoal))
+
+;;; HypothesizedSubgoalFor is decomposing a goal based on provisional
+;;; hypothesized influences, rather than the learned qualitative model
+;;; influences in ?lkmt (the learned knowledge microtheory).  This is
+;;; because we need to use the latest decomposition during learning,
+;;; and it hasn't yet been migrated out of the individual influence cases.
+;;; The spindle-mt serves as a virtual case.
+;;; Be aware that the hypothesized influences may contain loops!  
+;;; In particular, quantities that change in lockstep may have posited
+;;; influences between them in both directions.  We have to remove these
+;;; consideration when walking the tree.
+;;; Also: we have to ignore redundant paths, because the hypotheses graph
+;;; is not normalized.
+
+(isa hypothesizedSubgoalFor QuaternaryPredicate)
+(arity hypothesizedSubgoalFor 4)
+(comment hypothesizedSubgoalFor "(hypothesizedSubgoalFor ?spindle-mt ?parent ?child) attempts to find a direct subgoal, but falls back on type-level inference when necessary.")
+
+(isa hypothesizedSubgoalFor-TypeType QuaternaryPredicate)
+(arity hypothesizedSubgoalFor-TypeType 4)
+(arg1Isa hypothesizedSubgoalFor-TypeType Microtheory)
+(arg2Isa hypothesizedSubgoalFor-TypeType Microtheory)
+(arg3Isa hypothesizedSubgoalFor-TypeType QuantityType)
+(arg4Isa hypothesizedSubgoalFor-TypeType QuantityType)
+(comment hypothesizedSubgoalFor-TypeType "(hypothesizedSubgoalFor-TypeType ?mt ?spindle ?type-level-dep-qoal ?type-level-indep-goal) means there is a hypothesized type-level subgoal relation.")
+
+(<== (hypothesizedSubgoalFor ?mt ?inf-spindle ?parent-goal ?subgoal)
+     (uninferredSentence 
+       (ist-Information ?mt (subgoal-TypeType ?parent-goal ?subgoal)))
+     (subgoalFor ?parent-goal ?subgoal))
+
+;;; Modify 12-5-12: switch from subgoalFor-TypeType to subgoal-TypeType.
+(<== (hypothesizedSubgoalFor ?mt ?inf-spindle ?parent-goal ?subgoal)
+     (ist-Information ?mt (subgoal-TypeType ?parent-goal ?subgoal)))  ;; Someday maybe this will be entirely sufficient.
+
+(<== (hypothesizedSubgoalFor ?mt ?inf-spindle ?parent-goal ?subgoal)
+     (propositionalGoalNat ?parent-goal)
+     (resolvesToQuantityGoal ?mt ?parent-goal ?subgoal))
+
+(<== (hypothesizedSubgoalFor ?mt ?inf-spindle ?parent-goal ?subgoal)
+     (hypothesizedSubgoalFor-TypeType ?mt ?inf-spindle ?parent-goal ?subgoal))
+
+(<== (hypothesizedSubgoalFor-TypeType ?mt ?spindle-mt (?supergoal-type ?dep-quantity-type) (?supergoal-type ?indep-quantity-type))
+     (unifies ((MeasurableQuantityFn ?binpred) ?arg) ?dep-quantity-type)
+     (unifies ?inf (?inf-pred (MeasurableQuantityFn ?binpred) ?indep-type ?coll ?indep-coll ?rel))
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?spindle-mt (hypothesis ?inf))))
+     (lookupOnly (elementOf ?inf-pred (TheSet qprop+TypeType c+TypeType i+TypeType)))
+     (uninferredSentence (ambiguousHypothesisDirection ?spindle-mt ?inf))  ; omit ambiguous direction hypotheses
+     (ist-Information ?mt (broaderTerm ?arg ?coll))
+     (unifies ?indep-quantity-type (?indep-type ?indep-coll)))
+
+(<== (hypothesizedSubgoalFor-TypeType ?mt ?spindle-mt (?supergoal-type ?dep-quantity-type) (?subgoal-type ?indep-quantity-type))
+     (unifies ((MeasurableQuantityFn ?binpred) ?arg) ?dep-quantity-type)
+     (unifies ?inf (?inf-pred (MeasurableQuantityFn ?binpred) ?indep-type ?coll ?indep-coll ?rel))
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?spindle-mt (hypothesis ?inf))))
+     (lookupOnly (elementOf ?inf-pred (TheSet qprop-TypeType c-TypeType i-TypeType)))
+     (uninferredSentence (ambiguousHypothesisDirection ?spindle-mt ?inf))  ; omit ambiguous direction hypotheses
+     (ist-Information ?mt (broaderTerm ?arg ?coll))
+     (unifies ?indep-quantity-type (?indep-type ?indep-coll))
+     (oppositeGoalType ?supergoal-type ?subgoal-type))
+
+(<== (hypothesizedSubgoalFor-TypeType ?mt ?spindle-mt (?supergoal-type ?dep-quantity-type) (?subgoal-type ?prop))
+     (unifies ((MeasurableQuantityFn ?binpred) ?arg) ?dep-quantity-type)
+     (ist-Information ?spindle-mt
+       (hypothesis (positivelyDependsOn-TypeType (MeasurableQuantityFn ?binpred) ?coll ?indep-arg ?pred)))
+     (ist-Information ?mt (broaderTerm ?arg ?coll))
+     (numAnswers 1 (variablizedStatement ?pred ?stmt))
+     (evaluate ?prop (SubstituteFormulaArgPositionFn (TheList 2) ?indep-arg ?stmt))
+     (goalTypeForQuantityRel ?supergoal-type positivelyDependsOnProp ?subgoal-type))
+
+(<== (hypothesizedSubgoalFor-TypeType ?mt ?spindle-mt (?supergoal-type ?dep-quantity-type) (?subgoal-type ?prop))
+     (unifies ((MeasurableQuantityFn ?binpred) ?arg) ?dep-quantity-type)
+     (ist-Information ?spindle-mt
+       (hypothesis (negativelyDependsOn-TypeType (MeasurableQuantityFn ?binpred) ?coll ?indep-arg ?pred)))
+     (ist-Information ?mt (broaderTerm ?arg ?coll))
+     (numAnswers 1 (variablizedStatement ?pred ?stmt))
+     (evaluate ?prop (SubstituteFormulaArgPositionFn (TheList 2) ?indep-arg ?stmt))
+     (goalTypeForQuantityRel ?supergoal-type negativelyDependsOnProp ?subgoal-type))
+
+
+;;; -------------------------------------------------------------------------
+;;; Recording Rationale
+;;;
+;;;
+;;; For backwards compatibility with explainUserAction:
+;;;
+
+(isa recordGoalHierarchyFor ComplexActionPredicate)
+(arity recordGoalHierarchyFor 3)
+(arg1Isa recordGoalHierarchyFor Microtheory)
+(arg2Isa recordGoalHierarchyFor CycLExpression)
+(arg3Isa recordGoalHierarchyFor List)
+(comment recordGoalHierarchyFor "(recordGoalHierarchyFor ?mt ?action ?goal-hierarchy) ")
+
+;;; Keep the reasonForTask separate so that we can represent strategies 
+;;; without committing to particular actions.
+;;; To Do: Qualify by phase or named strategy.
+;;; Note: Goal hierarchies are static - they don't change over time.
+;;; However, we erase old hierarcies if they are overly specific.
+;;; e.g., if we decompose a goal to "Learn Alphabet" and from there to maximizing the science
+;;; rate, that's overly specific.  Once we've learned the alphabet, we still want to maximize
+;;; science - it's more properly a subgoal of a higher-level goal.  We fix that here.
+(preconditionForMethod
+  (and (evaluate ?parent-goal (LastInListFn ?goal-stack))
+       (evaluate ?subgoal (FirstInListFn ?goal-stack))
+       (different ?parent-goal ?subgoal)
+       (trimmedList ?goal-stack ?goal-hierarchy)
+       (evaluate ?old-hierarchies
+         (TheClosedRetrievalSetOf ?old-hierarchy
+           (and (localOnly
+                  (lookupOnly
+                    (ist-Information ?mt
+                      (goalHierarchy ?subgoal ?parent-goal ?old-hierarchy))))
+                (different ?old-hierarchy ?goal-hierarchy)))))
+  (methodForAction
+    (recordGoalHierarchyFor ?mt ?action ?goal-stack)
+    (actionSequence
+      (TheList
+        (doForEach ?hierarchy ?old-hierarchies (doForget (ist-Information ?mt (goalHierarchy ?subgoal ?parent-goal ?hierarchy))))
+        (doRecord (ist-Information ?mt (goalHierarchy ?subgoal ?parent-goal ?goal-hierarchy)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (recordReasonForTask ?mt ?action ?subgoal))))))))
+
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (recordGoalHierarchyFor ?mt ?action (TheList ?goal)) ; don't need preference rule, since signature selects.
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (recordReasonForTask ?mt ?action ?goal))))))))
+
+(isa recordReasonForTask ComplexActionPredicate)
+(arity recordReasonForTask 3)
+(arg1Isa recordReasonForTask Microtheory)
+(arg2Isa recordReasonForTask CycLExpression)
+(arg3Isa recordReasonForTask Goal)
+(comment recordReasonForTask "(recordReasonForTask ?mt ?action ?goal) reifies the association between a primitive action and its immediate parent goal.")
+
+;;; This is invoked with a doAgentPlan to ensure that it's planned
+;;; immediately after executing ?action.  That lets us query for
+;;; the action counter to reconstruct the PerceptualAgentCommand.
+(preconditionForMethod
+  (and (not (groundExpression ?action))
+       (outsourcedOnly (counterValue eventCounter ?num))   ; Assume no other domain action has
+       (unifies ?cmd (CommandFn ?mt ?num)) ;  intervened since ?action.
+       (lookupOnly
+         (ist-Information ?mt
+           (infoTransferred ?cmd ?action)))) ; instantiate any open vars
+  (methodForAction
+    (recordReasonForTask ?mt ?action ?goal) ; don't need preference rule, since signature selects.
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?mt (reasonForTask ?cmd ?action ?goal)))))))
+
+(preconditionForMethod
+  (and (groundExpression ?action)
+       (outsourcedOnly (counterValue eventCounter ?num))   ; Assume no other domain action has
+       (unifies ?cmd (CommandFn ?mt ?num))) ;  intervened since ?action.
+  (methodForAction
+    (recordReasonForTask ?mt ?action ?goal) ; don't need preference rule, since signature selects.
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?mt (reasonForTask ?cmd ?action ?goal)))))))
+        
+(isa trimmedList BinaryPredicate)
+(arity trimmedList 2)
+(arg1Isa trimmedList List)
+(arg2Isa trimmedList List)
+(comment trimmedList "(trimmedList ?input-list ?trimmed-list) binds ?trimmed-list to ?input-list with first and last elements trimmed off.")
+
+(<== (trimmedList ?full-list ?trimmed-list)
+     (evaluate ?len (LengthOfListFn ?full-list))
+     (greaterThan ?len 2)
+     (evaluate ?trimmed-list
+       (SublistFromToFn ?full-list 2 (DifferenceFn ?len 1))))
+
+(<== (trimmedList ?full-list (TheList))
+     (evaluate ?len (LengthOfListFn ?full-list))
+     (lessThan ?len 3))
+
+
+
+;;; -------------------------------------------------------------------------
+;;; Querying Rationale
+;;;
+;;;
+
+(isa reasonFor BinaryPredicate)
+(arity reasonFor 2)
+(arg1Isa reasonFor CycLExpression)
+(arg2Isa reasonFor List)
+(comment reasonFor "(reasonFor ?proposition ?audit-trail-of-goals) binds a list representing the hierarchy of goals as rationale for the statement ?proposition.")
+
+(<== (reasonFor ?stmt ?reason)
+     (proximalReasonFor ?stmt ?what)
+     (goalName ?goal-name ?what)
+     (goalHierarchyFor ?goal-name (TheList) ?hierarchy)
+     (reasonForHierarchy ?hierarchy ?reason))
+     
+(isa proximalReasonFor BinaryPredicate)
+
+(<== (proximalReasonFor ?stmt ?goal)
+     (executionContext ?mt)
+     (operatorFormulas ?pred ?stmt)
+     (variablizedStatement ?pred ?vstmt)
+     (indexedEffect ?vstmt ?vaction)
+     (instantiationOf (?stmt ?a) (?vstmt ?vaction) (?stmt ?action))
+     (evaluate ?what
+       (Arg2Fn
+          (FirstInListFn
+           (SortFn
+             (TheClosedRetrievalSetOf ?reason-stmt
+               (and (lookupOnly
+                      (localOnly
+                         (ist-Information ?mt
+                           (holdsIn (CommandFn ?mt ?num)
+                             (reasonForTask ?action ?goal-rep)))))
+                    (unifies ?reason-stmt
+                      (holdsIn ?num (reasonForTask ?action ?goal-rep)))))
+             greaterThan
+            Arg1Fn))))
+     (unifies (reasonForTask ?act ?goal) ?what))
+
+(isa goalHierarchyFor TernaryPredicate)
+
+(<== (goalHierarchyFor ?goal-name ?seen ?hierarchy)
+     (goalActivation ?goal-name ?pct)
+     (unifies (Percent ?activation) ?pct)
+     (greaterThan ?activation 0)
+     (evaluate ?new-seen (JoinListsFn ?seen (TheList ?goal-name)))
+     (subgoal ?parent ?goal-name)
+     (not (memberOfList ?parent ?seen)) ; avoid infinite loops
+     (goalHierarchyFor ?parent ?new-seen ?hierarchy))
+
+;;; This means reasonFor will fail to return anything 
+;;; if the activation of the goal(s) no longer holds.
+;;; It's going to prevent querying from earlier in history.
+(<== (goalHierarchyFor ?goal-name ?seen ?seen)
+     (goalActivation ?goal-name ?pct)
+     (unifies (Percent ?activation) ?pct)
+     (greaterThan ?activation 0)
+     (uninferredSentence (subgoal ?parent ?goal-name)))
+
+(isa strategyOf BinaryPredicate)
+
+(<== (strategyOf ?hierarchy ?strategy)
+     (evaluate ?goal-name (FirstInListFn ?hierarchy))
+     (currentStrategy ?goal-name ?strategy))
+
+(<== (strategyOf ?hierarchy ?strategy)
+     (evaluate ?gn (FirstInListFn ?hierarchy))
+     (uninferredSentence (strategyFor ?gn ?s))
+     (evaluate ?rest (RestOfListFn ?hierarchy))
+     (currentStrategy ?rest ?strategy))
+     
+(isa reasonForHierarchy BinaryPredicate)
+
+(<== (reasonForHierarchy ?hierarchy ?reason)
+     (strategyOf ?hierarchy ?reason))
+
+(<== (reasonForHierarchy ?hierarchy ?reason)
+     (uninferredSentence 
+       (strategyOf ?hierarchy ?strategy))
+     (evaluate ?reason
+       (MapFunctionOverList 
+         (FunctionToArg 2 goalName)
+         ?hierarchy)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of File

@@ -1,0 +1,2148 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: edge-and-shape-rep.meld
+;;;;    System: nuSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: March 22, 2011 14:07:02
+;;;;   Purpose: Most of the edge-repesentation terms are defined in PerceptionMt
+;;;;            (see qrg/perception/kb-flat-files/edges.lsp) and most of the 
+;;;;            shape-repesentation terms are defined in PerceptionMt (see '
+;;;;            qrg/perception/kb-flat-files/shape.lsp).  This file defines
+;;;;            the edge- and shape- representation terms that are specific to 
+;;;;            nuSketch.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Edge-representation microtheories
+;;;
+;;; The edge-representation facts for each glyph are put into their own
+;;; microtheory, which is named (EdgeFactsMtFn <glyph-name>)
+
+(isa BoundingEdgeFactsMtFn Function-Denotational)
+(arity BoundingEdgeFactsMtFn 1)
+(arg1Isa BoundingEdgeFactsMtFn NuSketchGlyph)
+(resultIsa BoundingEdgeFactsMtFn Microtheory)
+(comment BoundingEdgeFactsMtFn
+  "(BoundingEdgeFactsMtFn <glyph>) is the microtheory containing facts about the 
+   bounding edge-representation of the specified #$NuSketchGlyph.")
+(notForAnalogy BoundingEdgeFactsMtFn)
+
+(isa BoundingShapeFactsMtFn Function-Denotational)
+(arity BoundingShapeFactsMtFn 1)
+(arg1Isa BoundingEdgeFactsMtFn NuSketchGlyph)
+(resultIsa BoundingShapeFactsMtFn Microtheory)
+(comment BoundingShapeFactsMtFn
+  "(BoundingShapeFactsMtFn <glyph>) is the microtheory containing facts about the 
+   bounding shape-representation of the specified #$NuSketchGlyph.")
+(notForAnalogy BoundingShapeFactsMtFn)
+
+(isa ECOFactsMtFn Function-Denotational)
+(arity ECOFactsMtFn 1)
+(arg1Isa ECOFactsMtFn NuSketchGlyph)
+(resultIsa ECOFactsMtFn Microtheory)
+(comment ECOFactsMtFn
+  "(ECOFactsMtFn <glyph>) is the microtheory containing facts about the 
+   eco-representation of the specified #$NuSketchGlyph.")
+(notForAnalogy ECOFactsMtFn)
+
+(isa MedialAxisMtFn Function-Denotational)
+(arity MedialAxisMtFn 1)
+(resultIsa MedialAxisMtFn Microtheory)
+(comment MedialAxisMtFn
+  "(MedialAxisMtFn <edge-cycle>) is the microtheory containing facts about the 
+   medial axis representation of the specified #$PerceptualEdgeCycle.")
+(notForAnalogy MedialAxisMtFn)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Edge-Representations
+
+
+(isa EdgeInfoTerm Collection)
+
+(isa EdgeInfoCollection SecondOrderCollection)
+(genls EdgeInfoCollection Collection)
+(genls EdgeInfoCollection EdgeECOInfoTerm)
+
+(isa EdgeInfoPredicate Collection)
+(genls EdgeInfoPredicate PerceptualInfoPredicate)
+(genls EdgeInfoPredicate EdgeInfoTerm)
+(genls EdgeInfoPredicate Predicate)
+
+
+(isa boundingEdgeRepresentationsForGlyph-Legacy Relation)
+(isa boundingEdgeRepresentationsForGlyph-Legacy DynamicUpdatePredicate)
+(arity boundingEdgeRepresentationsForGlyph-Legacy 6)
+(arg1Isa boundingEdgeRepresentationsForGlyph-Legacy NuSketchGlyph)
+(arg2Isa boundingEdgeRepresentationsForGlyph-Legacy RealNumber)
+(arg3Isa boundingEdgeRepresentationsForGlyph-Legacy RealNumber)
+(arg4Isa boundingEdgeRepresentationsForGlyph-Legacy Microtheory)
+(arg5Isa boundingEdgeRepresentationsForGlyph-Legacy Set-Mathematical)
+(arg6Isa boundingEdgeRepresentationsForGlyph-Legacy NonNegativeInteger)
+(comment boundingEdgeRepresentationsForGlyph-Legacy
+  "The primary purpose of this relation is to cause the edge-representations
+   of a given #$NuSketchGlyph to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the edge 
+   facts; (5) the set of all edges created; and (6) the number of edge facts 
+   generated.")
+(notForAnalogy boundingEdgeRepresentationsForGlyph-Legacy)
+
+(isa boundingEdgeRepresentationsForGlyph Relation)
+(isa boundingEdgeRepresentationsForGlyph DynamicUpdatePredicate)
+(arity boundingEdgeRepresentationsForGlyph 6)
+(arg1Isa boundingEdgeRepresentationsForGlyph NuSketchGlyph)
+(arg2Isa boundingEdgeRepresentationsForGlyph RealNumber)
+(arg3Isa boundingEdgeRepresentationsForGlyph RealNumber)
+(arg4Isa boundingEdgeRepresentationsForGlyph Microtheory)
+(arg5Isa boundingEdgeRepresentationsForGlyph Set-Mathematical)
+(arg6Isa boundingEdgeRepresentationsForGlyph NonNegativeInteger)
+(comment boundingEdgeRepresentationsForGlyph
+  "The primary purpose of this relation is to cause the edge-representations
+   of a given #$NuSketchGlyph to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the edge 
+   facts; (5) the set of all edges created; and (6) the number of edge facts 
+   generated.")
+(notForAnalogy boundingEdgeRepresentationsForGlyph)
+
+(isa boundingEdgeRepresentationsForEdgeCycle Relation)
+(arity boundingEdgeRepresentationsForEdgeCycle 6)
+(arg1Isa boundingEdgeRepresentationsForEdgeCycle PerceptualEdgeCycle)
+(arg2Isa boundingEdgeRepresentationsForEdgeCycle RealNumber)
+(arg3Isa boundingEdgeRepresentationsForEdgeCycle RealNumber)
+(arg4Isa boundingEdgeRepresentationsForEdgeCycle Microtheory)
+(arg5Isa boundingEdgeRepresentationsForEdgeCycle Set-Mathematical)
+(arg6Isa boundingEdgeRepresentationsForEdgeCycle NonNegativeInteger)
+(comment boundingEdgeRepresentationsForEdgeCycle
+  "The primary purpose of this relation is to cause the edge-representations
+   of a given #$PerceptualEdgeCycle to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the edge 
+   facts; (5) the set of all edges created; and (6) the number of edge facts 
+   generated.")
+(notForAnalogy boundingEdgeRepresentationsForEdgeCycle)
+
+(isa tracingEdgeRepresentationsForEdgeCycle Relation)
+(arity tracingEdgeRepresentationsForEdgeCycle 6)
+(arg1Isa tracingEdgeRepresentationsForEdgeCycle PerceptualEdgeCycle)
+(arg2Isa tracingEdgeRepresentationsForEdgeCycle RealNumber)
+(arg3Isa tracingEdgeRepresentationsForEdgeCycle RealNumber)
+(arg4Isa tracingEdgeRepresentationsForEdgeCycle Microtheory)
+(arg5Isa tracingEdgeRepresentationsForEdgeCycle Set-Mathematical)
+(arg6Isa tracingEdgeRepresentationsForEdgeCycle NonNegativeInteger)
+(comment tracingEdgeRepresentationsForEdgeCycle
+  "The primary purpose of this relation is to cause the edge-representations
+   of a given #$PerceptualEdgeCycle to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the edge 
+   facts; (5) the set of all edges created; and (6) the number of edge facts 
+   generated.  The difference between tracing edge representations and 
+   bounding edge representations is that tracing edges form cycles that
+   are not limited to closed shapes.  The cycles form by always tracing right
+   at every junction, rather than stopping when a shape closes.")
+(notForAnalogy tracingEdgeRepresentationsForEdgeCycle)
+
+(isa tracingEdgeRepresentationsForEdgeCycle-Unoriented Relation)
+(arity tracingEdgeRepresentationsForEdgeCycle-Unoriented 6)
+(arg1Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented PerceptualEdgeCycle)
+(arg2Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented RealNumber)
+(arg3Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented RealNumber)
+(arg4Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented Microtheory)
+(arg5Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented Set-Mathematical)
+(arg6Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented NonNegativeInteger)
+(comment tracingEdgeRepresentationsForEdgeCycle-Unoriented
+  "Like tracingEdgeRepresentationsForEdgeCycle except without orientation information present.
+   Useful when you want the representations to be insensitive to rotation.")
+(notForAnalogy tracingEdgeRepresentationsForEdgeCycle-Unoriented)
+
+(isa tracingEdgeRepresentationsForEdgeCycle-Unoriented Relation)
+(arity tracingEdgeRepresentationsForEdgeCycle-Unoriented 6)
+(arg1Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented PerceptualEdgeCycle)
+(arg2Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented RealNumber)
+(arg3Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented RealNumber)
+(arg4Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented Microtheory)
+(arg5Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented Set-Mathematical)
+(arg6Isa tracingEdgeRepresentationsForEdgeCycle-Unoriented NonNegativeInteger)
+(comment tracingEdgeRepresentationsForEdgeCycle-Unoriented
+  "Like tracingEdgeRepresentationsForEdgeCycle except without orientation information present.
+   Useful when you want the representations to be insensitive to rotation.")
+(notForAnalogy tracingEdgeRepresentationsForEdgeCycle-Unoriented)
+
+(isa edgeRepresentationsFor Relation)
+(arity edgeRepresentationsFor 6)
+(arg1Isa edgeRepresentationsFor SpatialThing)
+(arg2Isa edgeRepresentationsFor RealNumber)
+(arg3Isa edgeRepresentationsFor RealNumber)
+(arg4Isa edgeRepresentationsFor Microtheory)
+(arg5Isa edgeRepresentationsFor Set-Mathematical)
+(arg6Isa edgeRepresentationsFor NonNegativeInteger)
+(comment edgeRepresentationsFor
+  "The primary purpose of this relation is to cause the edge representations
+   of a given #$SpatialThing (right now only instances of
+   #$NuSketchGlyph) to be computed as a side-effect via a FIRE reasoner source.  
+   The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the edge 
+   facts; (5) the set of all edges created; and (6) the number of edge facts 
+   generated.")
+(notForAnalogy edgeRepresentationsFor)
+
+(isa superEdgeRepresentationsFor Relation)
+(arity superEdgeRepresentationsFor 6)
+(arg1Isa superEdgeRepresentationsFor SpatialThing)
+(arg2Isa superEdgeRepresentationsFor RealNumber)
+(arg3Isa superEdgeRepresentationsFor RealNumber)
+(arg4Isa superEdgeRepresentationsFor Microtheory)
+(arg5Isa superEdgeRepresentationsFor Set-Mathematical)
+(arg6Isa superEdgeRepresentationsFor NonNegativeInteger)
+(comment superEdgeRepresentationsFor
+  "The primary purpose of this relation is to cause the super-edge representations
+   (a vanilla edge representation with atomic edges replaced by their parent super
+   edges, if any)  of a given #$SpatialThing (right now only instances of
+   #$NuSketchGlyph) to be computed as a side-effect via a FIRE reasoner source.  
+   The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the edge 
+   facts; (5) the set of all edges created; and (6) the number of edge facts 
+   generated.")
+(notForAnalogy superEdgeRepresentationsFor)
+
+(isa edgeWSuperEdgeRepresentationsFor Relation)
+(arity edgeWSuperEdgeRepresentationsFor 6)
+(arg1Isa edgeWSuperEdgeRepresentationsFor SpatialThing)
+(arg2Isa edgeWSuperEdgeRepresentationsFor RealNumber)
+(arg3Isa edgeWSuperEdgeRepresentationsFor RealNumber)
+(arg4Isa edgeWSuperEdgeRepresentationsFor Microtheory)
+(arg5Isa edgeWSuperEdgeRepresentationsFor Set-Mathematical)
+(arg6Isa edgeWSuperEdgeRepresentationsFor NonNegativeInteger)
+(comment edgeWSuperEdgeRepresentationsFor
+  "The primary purpose of this relation is to cause the edge representations
+   and super-edge representations of a given #$SpatialThing (right now only 
+   instances of #$NuSketchGlyph) to be computed as a side-effect via a FIRE
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the edge 
+   facts; (5) the set of all edges created; and (6) the number of edge facts 
+   generated. In this representation, super-edges are added into the vanilla
+   (atomic) edge representation, and super-edges are explicitly linked to their
+   sub-edges via the #$subEdge relation.  The parallel structure may be useful
+   if you want to address the one-to-one constraint by providing alternative
+   structures for the ink, in the hopes that SAGE will take statistics over
+   these alternative structures.  However, it will blow out the representations
+   even more so use with caution.")
+(notForAnalogy edgeWSuperEdgeRepresentationsFor)
+
+;;;(hasEdge <thing> <edge>)
+(isa hasEdge Relation)
+(isa hasEdge EdgeInfoPredicate)
+(arity hasEdge 2)
+(arg1Isa hasEdge SpatialThing)
+(arg2Isa hasEdge PerceptualEdge)
+(comment hasEdge
+  "(hasEdge <thing> <edge>) says that for some perceptual
+   decomposition of <thing>, <edge> is a salient edge along
+   the ink of <thing>.")
+
+;;;(tracingEdgeFor <thing> <edge>)
+(isa tracingEdgeFor Relation)
+(isa tracingEdgeFor EdgeInfoPredicate)
+(arity tracingEdgeFor 2)
+(arg1Isa tracingEdgeFor SpatialThing)
+(arg2Isa tracingEdgeFor PerceptualEdge)
+(genlPreds tracingEdgeFor hasEdge)
+(comment tracingEdgeFor
+  "(tracingEdgeFor <thing> <edge>) says that for some perceptual
+   decomposition of <thing>, <edge> lies along the outer surface of the
+   decomposition, and is thus an entity in the tracing edge representation
+   of <thing>. Unlike #$boundingEdgeFor, this is not restricted to closed
+   shapes - it can trace around open parts.")
+
+;;;(boundingEdgeFor <thing> <edge>)
+(isa boundingEdgeFor Relation)
+(isa boundingEdgeFor EdgeInfoPredicate)
+(arity boundingEdgeFor 2)
+(arg1Isa boundingEdgeFor SpatialThing)
+(arg2Isa boundingEdgeFor PerceptualEdge)
+(genlPreds boundingEdgeFor tracingEdgeFor)
+(comment boundingEdgeFor
+  "(boundingEdgeFor <thing> <edge>) says that for some perceptual
+   decomposition of <thing>, <edge> lies along the outer surface of the
+   decomposition, and is thus an entity in the bounding edge representation
+   of <thing>.  Unlike #$tracingEdgeFor, this is restricted to closed shapes")
+
+
+;;;(boundingEdgeRepMtFor <thing> <edge-mt>)
+(isa boundingEdgeRepMtFor Relation)
+(arity boundingEdgeRepMtFor 2)
+(arg1Isa boundingEdgeRepMtFor SpatialThing)
+(arg2Isa boundingEdgeRepMtFor Microtheory)
+(comment boundingEdgeRepMtFor
+  "(boundingEdgeRepMtFor <thing> <edge-mt>) says that the edge-level
+    representation for the outer surface of the perceptual objects of some
+    decomposition of <thing> live in <edge-mt>")
+(notForAnalogy boundingEdgeRepMtFor)
+
+;;;(tracingEdgeRepMtFor <thing> <edge-mt>)
+(isa tracingEdgeRepMtFor Relation)
+(arity tracingEdgeRepMtFor 2)
+(arg1Isa tracingEdgeRepMtFor SpatialThing)
+(arg2Isa tracingEdgeRepMtFor Microtheory)
+(comment tracingEdgeRepMtFor
+  "(tracingEdgeRepMtFor <thing> <edge-mt>) says that the edge-level
+    representation for the outer surface of the perceptual objects of some
+    decomposition of <thing> live in <edge-mt>")
+(notForAnalogy tracingEdgeRepMtFor)
+
+;;;(edgeRepMtFor <thing> <edge-mt>)
+(isa edgeRepMtFor Relation)
+(arity edgeRepMtFor 2)
+(arg1Isa edgeRepMtFor SpatialThing)
+(arg2Isa edgeRepMtFor Microtheory)
+(comment edgeRepMtFor
+  "(edgeRepMtFor <thing> <edge-mt>) says that the edge-level
+    representation for the ink of the perceptual objects of some
+    decomposition of <thing> live in <edge-mt>")
+(notForAnalogy edgeRepMtFor)
+
+;;;(superEdgeRepMtFor <thing> <edge-mt>)
+(isa superEdgeRepMtFor Relation)
+(arity superEdgeRepMtFor 2)
+(arg1Isa superEdgeRepMtFor SpatialThing)
+(arg2Isa superEdgeRepMtFor Microtheory)
+(comment superEdgeRepMtFor
+  "(superEdgeRepMtFor <thing> <edge-mt>) says that the edge-level
+    representation for the ink of the perceptual objects of some
+    decomposition of <thing> live in <edge-mt>, with super-edges
+    replacing their sub-edges")
+(notForAnalogy superEdgeRepMtFor)
+
+;;;(edgeWSuperEdgeRepMtFor uperEdgeRepMtFor <thing> <edge-mt>)
+(isa edgeWSuperEdgeRepMtFor Relation)
+(arity edgeWSuperEdgeRepMtFor 2)
+(arg1Isa edgeWSuperEdgeRepMtFor SpatialThing)
+(arg2Isa edgeWSuperEdgeRepMtFor Microtheory)
+(comment edgeWSuperEdgeRepMtFor
+  "(edgeWSuperEdgeRepMtFor <thing> <edge-mt>) says that the edge-level
+    representation for the outer surface of the perceptual objects of some
+    decomposition of <thing> live in <edge-mt>, with super-edges added to
+    the representation, alongside their sub-edges.")
+(notForAnalogy edgeWSuperEdgeRepMtFor)
+
+;;;(edgeOverlapsObject <object> <edge>)
+(isa edgeOverlapsObject Relation)
+(isa edgeOverlapsObject EdgeInfoPredicate)
+(arity edgeOverlapsObject 2)
+(arg1Isa edgeOverlapsObject SpatialThing)
+(arg2Isa edgeOverlapsObject PerceptualEdge)
+(comment edgeOverlapsObject
+  "(edgeOverlapsObject <object> <edge>) says that
+   <object> overlaps the perceptual edge <edge>")
+
+;;;(edgeOverlapsObjectInk <object> <edge>)
+(isa edgeOverlapsObjectInk Relation)
+(isa edgeOverlapsObjectInk EdgeInfoPredicate)
+(arity edgeOverlapsObjectInk 2)
+(arg1Isa edgeOverlapsObjectInk SpatialThing)
+(arg2Isa edgeOverlapsObjectInk PerceptualEdge)
+(comment edgeOverlapsObjectInk
+  "(edgeOverlapsObjectInk <object> <edge>) says that the ink of <object> Intersects
+   the perceptual edge <edge>")
+
+;;;(edgeInsideObject <object> <edge>)
+(isa edgeInsideObject Relation)
+(isa edgeInsideObject EdgeInfoPredicate)
+(arity edgeInsideObject 2)
+(arg1Isa edgeInsideObject SpatialThing)
+(arg2Isa edgeInsideObject PerceptualEdge)
+(comment edgeInsideObject
+  "(edgeInsideObject <object> <edge>) says that the boundary of <object>
+   completely encloses the perceptual edge <edge>")
+
+
+;;;;;; 6/10/2014 Relationships about edges contacting objects
+
+;;;(edgeContactsTangentially <object> <edge>)
+(isa edgeContactsTangentially Relation)
+(isa edgeContactsTangentially EdgeInfoPredicate)
+(arity edgeContactsTangentially 2)
+(arg1Isa edgeContactsTangentially SpatialThing)
+(arg2Isa edgeContactsTangentially PerceptualEdge)
+(comment edgeContactsTangentially
+  "(edgeContactsTangentially <object> <edge>) says that the boundary of <object>
+   contacts <edge> once, such that one endpoint of <edge> is located in the
+   region of contact and if the edge were extened in the direction of that
+   endpoint, it would not immediately intersect the object.")
+
+;;;(edgeContactsNonTangentially <object> <edge>)
+(isa edgeContactsNonTangentially Relation)
+(isa edgeContactsNonTangentially EdgeInfoPredicate)
+(arity edgeContactsNonTangentially 2)
+(arg1Isa edgeContactsNonTangentially SpatialThing)
+(arg2Isa edgeContactsNonTangentially PerceptualEdge)
+(comment edgeContactsNonTangentially
+  "(edgeContactsNonTangentially <object> <edge>) says that the boundary of
+   <object> contacts <edge> once, such that one endpoint of <edge> is located in
+   the region of contact and if the edge were extened in the direction of that
+   endpoint, it would immediately intersect the object.")
+
+
+;;;(edgeContactsFromInside <object> <edge>)
+(isa edgeContactsFromInside Relation)
+(isa edgeContactsFromInside EdgeInfoPredicate)
+(arity edgeContactsFromInside 2)
+(arg1Isa edgeContactsFromInside SpatialThing)
+(arg2Isa edgeContactsFromInside PerceptualEdge)
+(comment edgeContactsFromInside
+  "(edgeContactsFromInside <object> <edge>) says that the boundary of <object>
+   contacts <edge> once, such that one endpoint of <edge> is located in the
+   region of contact and the rest of the edge extends inward from the object's boundary.")
+
+;;;(edgeContactsFromOutside <object> <edge>)
+(isa edgeContactsFromOutside Relation)
+(isa edgeContactsFromOutside EdgeInfoPredicate)
+(arity edgeContactsFromOutside 2)
+(arg1Isa edgeContactsFromOutside SpatialThing)
+(arg2Isa edgeContactsFromOutside PerceptualEdge)
+(comment edgeContactsFromOutside
+  "(edgeContactsFromOutside <object> <edge>) says that the boundary of
+   <object> contacts <edge> once, such that one endpoint of <edge> is located in the
+   region of contact and the rest of the edge extends inward from the object's boundary.")
+
+;;;(qvOfEdgeContact <object> <edge> <vector>)
+(isa qvOfEdgeContact Relation)
+(isa qvOfEdgeContact EdgeInfoPredicate)
+(arity qvOfEdgeContact 3)
+(arg1Isa qvOfEdgeContact SpatialThing)
+(arg2Isa qvOfEdgeContact PerceptualEdge)
+(arg3Isa qvOfEdgeContact QualitativeVector)
+(comment qvOfEdgeContact
+  "(qvOfEdgeContact <object> <edge> <vector>) says that <edge> has contact with 
+   <object> and leaves it in the direction of <vector>.")
+
+;;(superEdgeContactRelationFor <cycle> <super-edge> ?contacted-edge ?contact-relation)
+(isa superEdgeContactRelationFor Relation)
+(isa superEdgeContactRelationFor EdgeInfoPredicate)
+(arity superEdgeContactRelationFor 4)
+(arg1Isa superEdgeContactRelationFor PerceptualEdgeCycle)
+(arg2Isa superEdgeContactRelationFor SuperEdge)
+(arg3Isa superEdgeContactRelationFor PerceptualEdge)
+(arg4Isa superEdgeContactRelationFor Predicate)
+(comment superEdgeContactRelationFor
+  "(superEdgeContactRelationFor <cycle> <super-edge> ?contacted-edge ?contact-relation)
+   Says that <super-edge>, a member edge of <cycle>, shares some of its sub-edges with
+   the edge ?contact-edge.  ?contact-relation describes where the shared sub-edges are
+   positioned along <super-edge>, as it is traversed in the clockwise direction of
+   <cycle>; it can be #$superEdgeContact-WholeEdge, superEdgeContact-MidEdge,
+   superEdgeContact-LeadingEnd, or superEdgeContact-TrailingEnd.")
+
+(isa superEdgeContact Predicate)
+(arity superEdgeContact 3)
+(arg1Isa superEdgeContact PerceptualEdgeCycle)
+(arg2Isa superEdgeContact SuperEdge)
+(arg3Isa superEdgeContact PerceptualEdge)
+(comment superEdgeContact
+  "(superEdgeContact <cycle> <super-edge> <contacted-edge>)
+   Says that <super-edge>, a member edge of <cycle>, shares some of its sub-edge with
+   the edge <contacted-edge>.")
+
+(isa superEdgeContact-WholeEdge Predicate)
+(arity superEdgeContact-WholeEdge 3)
+(genlPreds superEdgeContact-WholeEdge superEdgeContact)
+(comment superEdgeContact-WholeEdge
+  "(superEdgeContact-WholeEdge <cycle> <super-edge> <contacted-edge>)
+   Says that <super-edge>, a member edge of <cycle>, shares some of its sub-edges with
+   the edge <contacted-edge>, and that the shared edge(s) span the entirety of
+   <super-edge>.")
+
+(isa superEdgeContact-MidEdge Predicate)
+(arity superEdgeContact-MidEdge 3)
+(genlPreds superEdgeContact-MidEdge superEdgeContact)
+(comment superEdgeContact-MidEdge
+  "(superEdgeContact-MidEdge <cycle> <super-edge> <contacted-edge>)
+   Says that <super-edge>, a member edge of <cycle>, shares some of its sub-edges with
+   the edge <contacted-edge>, and that the shared edge(s) lie in the middle of 
+   <super-edge>.")
+
+(isa superEdgeContact-TrailingEnd Predicate)
+(arity superEdgeContact-TrailingEnd 3)
+(genlPreds superEdgeContact-TrailingEnd superEdgeContact)
+(comment superEdgeContact-TrailingEnd
+  "(superEdgeContact-TrailingEnd <cycle> <super-edge> <contacted-edge>)
+   Says that <super-edge>, a member edge of <cycle>, shares some of its sub-edges with
+   the edge <contacted-edge>, and that the shared edge(s) end where <super-edge> ends
+   (as it is traversed in the clockwise direction of <cycle>).")
+
+(isa superEdgeContact-LeadingEnd Predicate)
+(arity superEdgeContact-LeadingEnd 3)
+(genlPreds superEdgeContact-LeadingEnd superEdgeContact)
+(comment superEdgeContact-LeadingEnd
+  "(superEdgeContact-LeadingEnd <cycle> <super-edge> <contacted-edge>)
+   Says that <super-edge>, a member edge of <cycle>, shares some of its sub-edges with
+   the edge <contacted-edge>, and that the shared edge(s) begin where <super-edge> begins
+   (as it is traversed in the clockwise direction of <cycle>).")
+
+(isa subEdge BinaryPredicate)
+(arity subEdge 2)
+(arg1Isa subEdge SuperEdge)
+(arg2Isa subEdge PerceptualEdge)
+(comment subEdge
+  "(subEdge <super-edge> <sub-edge>) says that <sub-edge> is a sub-segment of the
+   #$SuperEdge <super-edge>.")
+
+(isa SuperEdge Collection)
+(genls SuperEdge PerceptualEdge)
+(comment SuperEdge
+  "A SuperEdge is a perceptual edge that is composed of a series of sub-edges.")  
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Shape-Representations
+(isa boundingShapeRepresentationsForGlyph Relation)
+(isa boundingShapeRepresentationsForGlyph DynamicUpdatePredicate)
+(arity boundingShapeRepresentationsForGlyph 6)
+(arg1Isa boundingShapeRepresentationsForGlyph NuSketchGlyph)
+(arg2Isa boundingShapeRepresentationsForGlyph RealNumber)
+(arg3Isa boundingShapeRepresentationsForGlyph RealNumber)
+(arg4Isa boundingShapeRepresentationsForGlyph Microtheory)
+(arg5Isa boundingShapeRepresentationsForGlyph Set-Mathematical)
+(arg6Isa boundingShapeRepresentationsForGlyph NonNegativeInteger)
+(comment boundingShapeRepresentationsForGlyph
+  "The primary purpose of this relation is to cause the shape-representations
+   of a given #$NuSketchGlyph to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the shape-library code; (3) different size ratio modifier for the
+   shape-library code; (4) the name of the microtheory created to hold the shape 
+   facts; (5) the set of all shapes created; and (6) the number of shape facts 
+   generated.")
+(notForAnalogy boundingShapeRepresentationsForGlyph)
+
+;;;(boundingShapeForGlyph <glyph> <shape>)
+(isa boundingShapeForGlyph Relation)
+(arity boundingShapeForGlyph 2)
+(arg1Isa boundingShapeForGlyph NuSketchGlyph)
+(arg2Isa boundingShapeForGlyph 2D-Shape-Generic)
+(comment boundingShapeForGlyph
+  "(boundingShapeForGlyph <glyph> <shape>) says that for some perceptual
+   decomposition of <glyph>, <shape> denotes the shape of the outer surface
+   of one of the perceptual objects in the decomposition, and is thus an
+   entity in the bounding shape representation of <glyph>")
+
+;;;(boundingShapeRepMtForGlyph <glyph> <shape-mt>)
+(isa boundingShapeRepMtForGlyph Relation)
+(arity boundingShapeRepMtForGlyph 2)
+(arg1Isa boundingShapeRepMtForGlyph NuSketchGlyph)
+(arg2Isa boundingShapeRepMtForGlyph Microtheory)
+(comment boundingShapeRepMtForGlyph
+  "(boundingShapeRepMtForGlyph <glyph> <shape-mt>) says that the shape-level
+    representation for the outer surface of the perceptual objects of some
+    decomposition of <glyph> live in <shape-mt>")
+(notForAnalogy boundingShapeRepMtForGlyph)
+
+
+(isa DefaultShapeRepThresholdFor Function-Denotational)
+(arity DefaultShapeRepThresholdFor 1)
+(arg1Isa DefaultShapeRepThresholdFor Relation)  ;; should ontologize so I can be more specific here
+(resultIsa DefaultShapeRepThresholdFor RealNumber)
+(comment DefaultShapeRepThresholdFor
+  "(DefaultShapeRepThresholdFor <shape-rep-relation>) represents the default value
+   for the threshold use in the specified ShapeRepRelation.")
+(notForAnalogy DefaultShapeRepThresholdFor)
+
+
+(isa hasShapeElongationAttribute TernaryRelation)
+(isa hasShapeElongationAttribute ShapeDescriptionPredicate)
+(arity hasShapeElongationAttribute 3)
+(arg1Isa hasShapeElongationAttribute NuSketchGlyph)
+(arg2Isa hasShapeElongationAttribute RealNumber)
+(arg3Isa hasShapeElongationAttribute ShapeElongationAttribute)
+(comment hasShapeElongationAttribute
+  "DOCUMENT THIS.
+   Note that this will generate facts that say either (isa <glyph> ElongatedShape)
+   or (isa <glyph> NonElongatedShape) as side-effects.")
+(notForAnalogy hasShapeElongationAttribute)
+
+
+(isa isFullyCurvedShape BinaryRelation)
+(isa isFullyCurvedShape ShapeDescriptionPredicate)
+(arity isFullyCurvedShape 2)
+(arg1Isa isFullyCurvedShape NuSketchGlyph)
+(arg2Isa isFullyCurvedShape RealNumber)
+(comment isFullyCurvedShape "DOCUMENT THIS.")
+(notForAnalogy isFullyCurvedShape)
+
+(isa FullyCurvedShape Collection)
+(genls FullyCurvedShape 2D-Shape-Generic)
+(comment FullyCurvedShape "DOCUMENT THIS.")
+
+
+(isa isFullyStraightShape BinaryRelation)
+(isa isFullyStraightShape ShapeDescriptionPredicate)
+(arity isFullyStraightShape 2)
+(arg1Isa isFullyStraightShape NuSketchGlyph)
+(arg2Isa isFullyStraightShape RealNumber)
+(comment isFullyStraightShape "DOCUMENT THIS.")
+(notForAnalogy isFullyStraightShape)
+
+(isa FullyStraightShape Collection)
+(genls FullyStraightShape 2D-Shape-Generic)
+(comment FullyStraightShape "DOCUMENT THIS.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Edge cycle Representations
+
+(isa EdgeCycleInfoTerm Collection)
+
+(isa EdgeCycleInfoCollection SecondOrderCollection)
+(genls EdgeCycleInfoCollection Collection)
+(genls EdgeCycleInfoCollection EdgeCycleInfoTerm)
+
+(isa EdgeCycleInfoPredicate Collection)
+(genls EdgeCycleInfoPredicate PerceptualInfoPredicate)
+(genls EdgeCycleInfoPredicate EdgeCycleInfoTerm)
+(genls EdgeCycleInfoPredicate Predicate)
+
+
+(isa PerceptualEdgeCycle Collection)
+(isa PerceptualEdgeCycle EdgeCycleInfoCollection)
+(genls PerceptualEdgeCycle PerceptualElement)
+(comment PerceptualEdgeCycle "")
+
+(isa PerceptualEdgeCycle-Atomic Collection)
+(isa PerceptualEdgeCycle-Atomic EdgeCycleInfoCollection)
+(genls PerceptualEdgeCycle-Atomic PerceptualEdgeCycle)
+(comment PerceptualEdgeCycle-Atomic "")
+
+(isa PerceptualEdgeCycle-Perimeter Collection)
+(isa PerceptualEdgeCycle-Perimeter EdgeCycleInfoCollection)
+(genls PerceptualEdgeCycle-Perimeter PerceptualEdgeCycle)
+(comment PerceptualEdgeCycle-Perimeter "")
+
+(isa PerceptualEdgeProtrudedShape Collection)
+(isa PerceptualEdgeProtrudedShape EdgeCycleInfoCollection)
+(genls PerceptualEdgeProtrudedShape PerceptualEdgeCycle)
+(comment PerceptualEdgeProtrudedShape "")
+
+(isa PerceptualEdgeIntrudedShape Collection)
+(isa PerceptualEdgeIntrudedShape EdgeCycleInfoCollection)
+(genls PerceptualEdgeIntrudedShape PerceptualEdgeCycle)
+(comment PerceptualEdgeIntrudedShape "")
+
+(isa TexturePerimeter Collection)
+(isa TexturePerimeter EdgeCycleInfoCollection)
+(genls TexturePerimeter PerceptualEdgeCycle)
+(comment TexturePerimeter "")
+
+(isa TextureHole Collection)
+(isa TextureHole EdgeCycleInfoCollection)
+(genls TextureHole PerceptualEdgeCycle)
+(comment TextureHole "")
+
+(isa edgeCycleRepresentationsFor Relation)
+(arity edgeCycleRepresentationsFor 6)
+(arg1Isa edgeCycleRepresentationsFor SpatialThing)
+(arg2Isa edgeCycleRepresentationsFor RealNumber)
+(arg3Isa edgeCycleRepresentationsFor RealNumber)
+(arg4Isa edgeCycleRepresentationsFor Microtheory)
+(arg5Isa edgeCycleRepresentationsFor Set-Mathematical)
+(arg6Isa edgeCycleRepresentationsFor NonNegativeInteger)
+(comment edgeCycleRepresentationsFor
+  "The primary purpose of this relation is to cause the shape-representations
+   of a given #$NuSketchGlyph or #$PerceptualEdgeConnectedObject to be computed
+   as a side-effect via a FIRE reasoner source.  The arguments are as follows:
+   (1) ground, glyph or eco name (2) optionally ground, angle threshold modifier
+   for the shape-library code; (3) optionally ground, different size ratio modifier for the
+   shape-library code; (4) variable, the name of the microtheory created to hold the shape 
+   facts; (5) variable, the set of all shapes created; and (6) variable, the number of shape facts 
+   generated.")
+(notForAnalogy edgeCycleRepresentationsFor)
+
+(isa edgeCycleRepresentationsFor-Textured Relation)
+(arity edgeCycleRepresentationsFor-Textured 6)
+(arg1Isa edgeCycleRepresentationsFor-Textured SpatialThing)
+(arg2Isa edgeCycleRepresentationsFor-Textured RealNumber)
+(arg3Isa edgeCycleRepresentationsFor-Textured RealNumber)
+(arg4Isa edgeCycleRepresentationsFor-Textured Microtheory)
+(arg5Isa edgeCycleRepresentationsFor-Textured Set-Mathematical)
+(arg6Isa edgeCycleRepresentationsFor-Textured NonNegativeInteger)
+(comment edgeCycleRepresentationsFor-Textured
+  "The primary purpose of this relation is to cause the shape-representations
+   of a given #$NuSketchGlyph or #$PerceptualEdgeConnectedObject to be computed
+   as a side-effect via a FIRE reasoner source.  The arguments are as follows:
+   (1) ground, glyph or eco name (2) optionally ground, angle threshold modifier
+   for the shape-library code; (3) optionally ground, different size ratio modifier for the
+   shape-library code; (4) variable, the name of the microtheory created to hold the shape 
+   facts; (5) variable, the set of all shapes created; and (6) variable, the number of shape facts 
+   generated.  Local groups of similar cycles are compressed into more abstract cycles, and the
+   grouped cycles are replaced entirely in the representation.")
+(notForAnalogy edgeCycleRepresentationsFor-Textured)
+
+(isa edgeCycleRepresentationsFor-ContinuityBased Relation)
+(arity edgeCycleRepresentationsFor-ContinuityBased 6)
+(arg1Isa edgeCycleRepresentationsFor-ContinuityBased SpatialThing)
+(arg2Isa edgeCycleRepresentationsFor-ContinuityBased RealNumber)
+(arg3Isa edgeCycleRepresentationsFor-ContinuityBased RealNumber)
+(arg4Isa edgeCycleRepresentationsFor-ContinuityBased Microtheory)
+(arg5Isa edgeCycleRepresentationsFor-ContinuityBased Set-Mathematical)
+(arg6Isa edgeCycleRepresentationsFor-ContinuityBased NonNegativeInteger)
+(comment edgeCycleRepresentationsFor-ContinuityBased
+  "The primary purpose of this relation is to cause the shape-representations
+   of a given #$NuSketchGlyph or #$PerceptualEdgeConnectedObject to be computed
+   as a side-effect via a FIRE reasoner source.  The arguments are as follows:
+   (1) ground, glyph or eco name (2) optionally ground, angle threshold modifier
+   for the shape-library code; (3) optionally ground, different size ratio modifier for the
+   shape-library code; (4) variable, the name of the microtheory created to hold the shape 
+   facts; (5) variable, the set of all shapes created; and (6) variable, the number of shape facts 
+   generated.  These representations include cycles traced based on continuity, in addition to
+   the vanilla cycle representations traced strictly using closure.")
+(notForAnalogy edgeCycleRepresentationsFor-ContinuityBased)
+
+(isa edgeCycleRepresentationsFor-TexturedAndContinuityBased Relation)
+(arity edgeCycleRepresentationsFor-TexturedAndContinuityBased 6)
+(arg1Isa edgeCycleRepresentationsFor-TexturedAndContinuityBased SpatialThing)
+(arg2Isa edgeCycleRepresentationsFor-TexturedAndContinuityBased RealNumber)
+(arg3Isa edgeCycleRepresentationsFor-TexturedAndContinuityBased RealNumber)
+(arg4Isa edgeCycleRepresentationsFor-TexturedAndContinuityBased Microtheory)
+(arg5Isa edgeCycleRepresentationsFor-TexturedAndContinuityBased Set-Mathematical)
+(arg6Isa edgeCycleRepresentationsFor-TexturedAndContinuityBased NonNegativeInteger)
+(comment edgeCycleRepresentationsFor-TexturedAndContinuityBased
+  "The primary purpose of this relation is to cause the shape-representations
+   of a given #$NuSketchGlyph or #$PerceptualEdgeConnectedObject to be computed
+   as a side-effect via a FIRE reasoner source.  The arguments are as follows:
+   (1) ground, glyph or eco name (2) optionally ground, angle threshold modifier
+   for the shape-library code; (3) optionally ground, different size ratio modifier for the
+   shape-library code; (4) variable, the name of the microtheory created to hold the shape 
+   facts; (5) variable, the set of all shapes created; and (6) variable, the number of shape facts 
+   generated.  This version combines the extra processing of #$edgeCycleRepresentationsFor-Textured
+   and #$edgeCycleRepresentationsFor-ContinuityBased, replacing the textures but merely adding the
+   continuity cycles.")
+(notForAnalogy edgeCycleRepresentationsFor-TexturedAndContinuityBased)
+
+;;;(edgeCycleRepMtFor <eco> <edge-cycle-mt>)
+(isa edgeCycleRepMtFor Relation)
+(arity edgeCycleRepMtFor 2)
+(arg1Isa edgeCycleRepMtFor SpatialThing)
+(arg2Isa edgeCycleRepMtFor Microtheory)
+(comment edgeCycleRepMtFor
+  "(edgeCycleRepMtFor <thing> <edge-cycle-mt>) says that the edge-cycle-level
+    representation for <thing> live in <edge-mt>")
+(notForAnalogy edgeCycleRepMtFor)
+
+;;; (PerimeterEdgeCycleFn ?eco)
+;;; [MDM 4/4/12] I'm pretty sure we do not want this to be an AtomicAnalogyNAT,
+;;; because we want it to be treated as a first-order relation in the mapping.
+;;; [MDM 2/9/15] Come on Matt from 3 years ago, do we really want to prevent
+;;; perimeters from matching to non-perimeters so strictly?
+(isa PerimeterEdgeCycleFn Function-Denotational)
+(isa PerimeterEdgeCycleFn EdgeCycleInfoTerm)
+(atomicAnalogyNat PerimeterEdgeCycleFn)
+(arity PerimeterEdgeCycleFn 1)
+(arg1Isa PerimeterEdgeCycleFn PerceptualEdgeConnectedObject)
+(resultIsa PerimeterEdgeCycleFn PercetualEdgeCycle)
+(comment PerimeterEdgeCycleFn
+  "(PerimeterEdgeCycleFn <thing>) denotes the perimeter edge cycle of the
+    perceptual element, <thing>.")
+
+
+;;; (PerimeterEdgeCycleFn-Closed ?eco)
+(isa PerimeterEdgeCycleFn-Closed Function-Denotational)
+(isa PerimeterEdgeCycleFn-Closed EdgeCycleInfoTerm)
+(atomicAnalogyNat PerimeterEdgeCycleFn-Closed)
+(arity PerimeterEdgeCycleFn-Closed 1)
+(arg1Isa PerimeterEdgeCycleFn-Closed PerceptualEdgeConnectedObject)
+(resultIsa PerimeterEdgeCycleFn-Closed PercetualEdgeCycle)
+(comment PerimeterEdgeCycleFn-Closed
+  "(PerimeterEdgeCycleFn-Closed <thing>) denotes the perimeter closed edge cycle of the
+    perceptual element, <thing>.")
+
+
+(isa hasEdgeCycle Predicate)
+(isa hasEdgeCycle EdgeCycleInfoPredicate)
+(arity hasEdgeCycle 2)
+(comment hasEdgeCycle "(#$hasEdgeCycle ECO CYCLE) asserts that CYCLE is one of the cycles of perceptual edges in ECO.")
+(arg1Isa hasEdgeCycle PercetualEdgeConnectedObject)
+(arg2Isa hasEdgeCycle PerceptualEdgeCycle)
+
+(isa hasAtomicEdgeCycle Predicate)
+(isa hasAtomicEdgeCycle EdgeCycleInfoPredicate)
+(arity hasAtomicEdgeCycle 2)
+(genlPreds hasAtomicEdgeCycle hasEdgeCycle)
+(comment hasAtomicEdgeCycle "(#$hasAtomicEdgeCycle ECO CYCLE) asserts that CYCLE is one of the cycles of perceptual edges in ECO.")
+(arg1Isa hasAtomicEdgeCycle PercetualEdgeConnectedObject)
+(arg2Isa hasAtomicEdgeCycle PerceptualEdgeCycle)
+
+(isa hasPerimeterEdgeCycle Predicate)
+(isa hasPerimeterEdgeCycle EdgeCycleInfoPredicate)
+(arity hasPerimeterEdgeCycle 2)
+(genlPreds hasPerimeterEdgeCycle hasEdgeCycle)
+(comment hasPerimeterEdgeCycle "(#$hasPerimeterEdgeCycle ECO CYCLE) asserts that CYCLE is the cycle of perceptual edges that traces the perimeter of ECO.")
+(arg1Isa hasPerimeterEdgeCycle PercetualEdgeConnectedObject)
+(arg2Isa hasPerimeterEdgeCycle PerceptualEdgeCycle)
+
+(<== (hasEdgeCycle ?eco ?cycle)
+     (hasPerimeterEdgeCycle ?eco ?cycle))
+
+(<== (hasEdgeCycle ?eco ?cycle)
+     (hasAtomicEdgeCycle ?eco ?cycle))
+
+
+(isa translatedForCycleReferenceFrame EdgeInfoPredicate)
+(arity translatedForCycleReferenceFrame 4)
+(arg1Isa translatedForCycleReferenceFrame CycLSentence-Assertible)
+(arg2Isa translatedForCycleReferenceFrame PerceptualEdgeCycle)
+(arg3Isa translatedForCycleReferenceFrame Microtheory)
+(arg4Isa translatedForCycleReferenceFrame CycLSentence-Assertible)
+
+(isa convexEdgeAfterEdgeInCycle EdgeInfoPredicate)
+(arity convexEdgeAfterEdgeInCycle 3)
+(arg1Isa convexEdgeAfterEdgeInCycle PerceptualEdge)
+(arg2Isa convexEdgeAfterEdgeInCycle PerceptualEdge)
+(arg3Isa convexEdgeAfterEdgeInCycle PerceptualEdgeCycle)
+
+(isa concaveEdgeAfterEdgeInCycle EdgeInfoPredicate)
+(arity concaveEdgeAfterEdgeInCycle 3)
+(arg1Isa concaveEdgeAfterEdgeInCycle PerceptualEdge)
+(arg2Isa concaveEdgeAfterEdgeInCycle PerceptualEdge)
+(arg3Isa concaveEdgeAfterEdgeInCycle PerceptualEdgeCycle)
+
+;;;cornerAdjacent-Dominates
+(isa cornerAdjacent-Dominates Predicate)
+(isa cornerAdjacent-Dominates EdgeCycleInfoPredicate)
+(arity cornerAdjacent-Dominates 2)
+(comment cornerAdjacent-Dominates "(#$cornerAdjacent-Dominates CYCLE1 CYCLE2) asserts that CYCLE1 and CYCLE2 share some L-junction at which CYCLE2 is nestled
+                                  within CYCLE1's concavity at that point.  Note that unlike with $cornerShared, CYCLE1 and CYCLE2 are on opposite sides
+                                  of the shared junction.")
+(arg1Isa cornerAdjacent-Dominates PerceptualEdgeCycle)
+(arg2Isa cornerAdjacent-Dominates PerceptualEdgeCycle)
+
+;;;cornerAdjacent-Dominates-LJunction
+(isa cornerAdjacent-Dominates-LJunction Predicate)
+(isa cornerAdjacent-Dominates-LJunction EdgeCycleInfoPredicate)
+(arity cornerAdjacent-Dominates-LJunction 2)
+(comment cornerAdjacent-Dominates-LJunction "(#$cornerAdjacent-Dominates-LJunction CYCLE1 CYCLE2) Is like $cornerAdjacent-Dominates, where the corner forms a right angle")
+(arg1Isa cornerAdjacent-Dominates-LJunction PerceptualEdgeCycle)
+(arg2Isa cornerAdjacent-Dominates-LJunction PerceptualEdgeCycle)
+
+;;;cornerShared
+(isa cornerShared Predicate)
+(isa cornerShared EdgeCycleInfoPredicate)
+(arity cornerShared 2)
+(comment cornerShared "(#$cornerShared CYCLE1 CYCLE2) asserts that CYCLE1 and CYCLE2 share some L-junction at which CYCLE2 overlaps CYCLE1,
+                                  and also that CYCLE2 is at least partially enclosed by CYCLE1.  Note that unlike with $cornerAdjacent-Dominates, CYCLE1 and CYCLE2 are on the same side
+                                  of the shared junction.")
+(arg1Isa cornerShared PerceptualEdgeCycle)
+(arg2Isa cornerShared PerceptualEdgeCycle)
+
+;;;cornerShared
+(isa cornerShared-LJunction Predicate)
+(isa cornerShared-LJunction EdgeCycleInfoPredicate)
+(arity cornerShared-LJunction 2)
+(comment cornerShared-LJunction "(#$cornerShared-LJunction CYCLE1 CYCLE2) Is like $cornerShared, where the corner forms a right angle.")
+(arg1Isa cornerShared-LJunction PerceptualEdgeCycle)
+(arg2Isa cornerShared-LJunction PerceptualEdgeCycle)
+
+;;;cyclesShareEdge
+(isa cyclesShareEdge Predicate)
+(isa cyclesShareEdge EdgeCycleInfoPredicate)
+(arity cyclesShareEdge 2)
+(comment cyclesShareEdge "(#$cyclesShareEdge CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that have some edge in common.  The shared edge does not need
+                             to be oriented int he same direction across the two cycles.")
+(arg1Isa cyclesShareEdge PerceptualEdgeCycle)
+(arg2Isa cyclesShareEdge PerceptualEdgeCycle)
+(isa cyclesShareEdge SymmetricBinaryPredicate)
+
+;;;edgeSubsetOf
+(isa edgeSubsetOf Predicate)
+(isa edgeSubsetOf EdgeCycleInfoPredicate)
+(arity edgeSubsetOf 2)
+(comment edgeSubsetOf "(#$edgeSubsetOf CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles, where the edges in CYCLE1 are a subset of the edges in CYCLE2,
+                         not necessarily oriented in the same direction.")
+(arg1Isa edgeSubsetOf PerceptualEdgeCycle)
+(arg2Isa edgeSubsetOf PerceptualEdgeCycle)
+
+;;;cornerAdjacent-Dominates-TJunction
+(isa cornerAdjacent-Dominates-TJunction Predicate)
+(isa cornerAdjacent-Dominates-TJunction EdgeCycleInfoPredicate)
+(arity cornerAdjacent-Dominates-TJunction 2)
+(comment cornerAdjacent-Dominates-TJunction "(#$cornerAdjacent-Dominates-TJunction CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that share the same T-junction,
+                                            where CYCLE1 lies above the "top" of the 'T' (along the flat side of the T), and CYCLE2 is one of the other two cycles
+                                            cycles participating in the T (one of the convex corners).")
+(arg1Isa cornerAdjacent-Dominates-TJunction PerceptualEdgeCycle)
+(arg2Isa cornerAdjacent-Dominates-TJunction PerceptualEdgeCycle)
+
+;;;cornerAdjacent-CoDominated-TJunction
+(isa cornerAdjacent-CoDominated-TJunction Predicate)
+(isa cornerAdjacent-CoDominated-TJunction EdgeCycleInfoPredicate)
+(arity cornerAdjacent-CoDominated-TJunction 2)
+(comment cornerAdjacent-CoDominated-TJunction "(#$cornerAdjacent-CoDominated-TJunction CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that share the same T-junction,
+                                     where CYCLE1 and CYCLE2 contribute the complimentary convex corners of the 'T', i.e. the two corners
+                                     that are not along the top, flat part of the 'T'.")
+(arg1Isa cornerAdjacent-CoDominated-TJunction PerceptualEdgeCycle)
+(arg2Isa cornerAdjacent-CoDominated-TJunction PerceptualEdgeCycle)
+(isa cornerAdjacent-CoDominated-TJunction SymmetricBinaryPredicate)
+
+;;;cornerAdjacent-Dominates-ArrowJunction
+(isa cornerAdjacent-Dominates-ArrowJunction Predicate)
+(isa cornerAdjacent-Dominates-ArrowJunction EdgeCycleInfoPredicate)
+(arity cornerAdjacent-Dominates-ArrowJunction 2)
+(comment cornerAdjacent-Dominates-ArrowJunction "(#$cornerAdjacent-Dominates-ArrowJunction CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that share the same arrow-junction,
+                                            where CYCLE1 lies above the concave "hat" of the arrow, and CYCLE2 is one of the other two cycles
+                                            cycles participating in the arrow (one of the convex corners).")
+(arg1Isa cornerAdjacent-Dominates-ArrowJunction PerceptualEdgeCycle)
+(arg2Isa cornerAdjacent-Dominates-ArrowJunction PerceptualEdgeCycle)
+
+;;;cornerAdjacent-CoDominated-ArrowJunction
+(isa cornerAdjacent-CoDominated-ArrowJunction Predicate)
+(isa cornerAdjacent-CoDominated-ArrowJunction EdgeCycleInfoPredicate)
+(arity cornerAdjacent-CoDominated-ArrowJunction 2)
+(comment cornerAdjacent-CoDominated-ArrowJunction "(#$cornerAdjacent-CoDominated-ArrowJunction CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that share the same arrow-junction,
+                                     where CYCLE1 and CYCLE2 contribute the convex corners of the 'T', i.e. the two corners
+                                     that are not along the concave "hat" part of the arrow.")
+(arg1Isa cornerAdjacent-CoDominated-ArrowJunction PerceptualEdgeCycle)
+(arg2Isa cornerAdjacent-CoDominated-ArrowJunction PerceptualEdgeCycle)
+(isa cornerAdjacent-CoDominated-ArrowJunction SymmetricBinaryPredicate)
+
+;;;cornerAdjacent-YJunction
+(isa cornerAdjacent-YJunction Predicate)
+(isa cornerAdjacent-YJunction EdgeCycleInfoPredicate)
+(arity cornerAdjacent-YJunction 2)
+(comment cornerAdjacent-YJunction "(#$cornerAdjacent-YJunction CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that participate in the same Y junction.")
+(arg1Isa cornerAdjacent-YJunction PerceptualEdgeCycle)
+(arg2Isa cornerAdjacent-YJunction PerceptualEdgeCycle)
+(isa cornerAdjacent-YJunction SymmetricBinaryPredicate)
+
+;;;cyclesShareJunction
+(isa cyclesShareJunction Predicate)
+(isa cyclesShareJunction EdgeCycleInfoPredicate)
+(arity cyclesShareJunction 2)
+(comment cyclesShareJunction "(#$cyclesShareJunction CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that share some junction.")
+(arg1Isa cyclesShareJunction PerceptualEdgeCycle)
+(arg2Isa cyclesShareJunction PerceptualEdgeCycle)
+(isa cyclesShareJunction SymmetricBinaryPredicate)
+
+(isa internallyNestedCorner Predicate)
+(isa internallyNestedCorner EdgeCycleInfoPredicate)
+(arity internallyNestedCorner 2)
+(comment internallyNestedCorner "(#$internallyNestedCorner CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that share some corner where the same two edges meet at the same junction, and the cycles lie on the same side of the corner.")
+(arg1Isa internallyNestedCorner PerceptualEdgeCycle)
+(arg2Isa internallyNestedCorner PerceptualEdgeCycle)
+(isa internallyNestedCorner SymmetricBinaryPredicate)
+(genlPreds internallyNestedCorner cyclesShareJunction)
+
+(isa externallyNestedCorner Predicate)
+(isa externallyNestedCorner EdgeCycleInfoPredicate)
+(arity externallyNestedCorner 2)
+(comment externallyNestedCorner "(#$externallyNestedCorner CYCLE1 CYCLE2) says that CYCLE1 and CYCLE2 are edge-cycles that share some corner where the same two edges meet at the same junction, and the cycles lie on opposite sides of the corner.")
+(arg1Isa externallyNestedCorner PerceptualEdgeCycle)
+(arg2Isa externallyNestedCorner PerceptualEdgeCycle)
+(isa externallyNestedCorner SymmetricBinaryPredicate)
+(genlPreds externallyNestedCorner cyclesShareJunction)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ECO Representations
+
+
+(isa ECOInfoTerm Collection)
+
+(isa ECOInfoCollection SecondOrderCollection)
+(genls ECOInfoCollection Collection)
+(genls ECOInfoCollection ECOInfoTerm)
+
+(isa ECOInfoPredicate Collection)
+(genls ECOInfoPredicate PerceptualInfoPredicate)
+(genls ECOInfoPredicate ECOInfoTerm)
+(genls ECOInfoPredicate Predicate)
+
+
+(isa PerceptualEdgeConnectedObject Collection)
+(isa PerceptualEdgeConnectedObject ECOInfoCollection)
+(genls PerceptualEdgeConnectedObject PerceptualElement)
+(comment PerceptualEdgeConnectedObject "")
+
+(isa ecoRepresentationsForGlyph Relation)
+(arity ecoRepresentationsForGlyph 6)
+(arg1Isa ecoRepresentationsForGlyph NuSketchGlyph)
+(arg2Isa ecoRepresentationsForGlyph RealNumber)
+(arg3Isa ecoRepresentationsForGlyph RealNumber)
+(arg4Isa ecoRepresentationsForGlyph Microtheory)
+(arg5Isa ecoRepresentationsForGlyph Set-Mathematical)
+(arg6Isa ecoRepresentationsForGlyph NonNegativeInteger)
+(comment ecoRepresentationsForGlyph
+  "The primary purpose of this relation is to cause the eco representations
+   of a given #$NuSketchGlyph to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the eco 
+   facts; (5) the set of all ECOs created; and (6) the number of eco facts 
+   generated.")
+(notForAnalogy ecoRepresentationsForGlyph)
+
+(isa ecoRepresentationsForGlyph-Exterior Relation)
+(arity ecoRepresentationsForGlyph-Exterior 6)
+(arg1Isa ecoRepresentationsForGlyph-Exterior NuSketchGlyph)
+(arg2Isa ecoRepresentationsForGlyph-Exterior RealNumber)
+(arg3Isa ecoRepresentationsForGlyph-Exterior RealNumber)
+(arg4Isa ecoRepresentationsForGlyph-Exterior Microtheory)
+(arg5Isa ecoRepresentationsForGlyph-Exterior Set-Mathematical)
+(arg6Isa ecoRepresentationsForGlyph-Exterior NonNegativeInteger)
+(comment ecoRepresentationsForGlyph-Exterior
+  "The primary purpose of this relation is to cause the exterior eco representations
+   of a given #$NuSketchGlyph to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the eco 
+   facts; (5) the set of all ECOs created; and (6) the number of eco facts 
+   generated.")
+(notForAnalogy ecoRepresentationsForGlyph-Exterior)
+
+(isa ecoRepresentationsForMAT Relation)
+(arity ecoRepresentationsForMAT 6)
+(arg1Isa ecoRepresentationsForMAT NuSketchGlyph)
+(arg2Isa ecoRepresentationsForMAT RealNumber)
+(arg3Isa ecoRepresentationsForMAT RealNumber)
+(arg4Isa ecoRepresentationsForMAT Microtheory)
+(arg5Isa ecoRepresentationsForMAT Set-Mathematical)
+(arg6Isa ecoRepresentationsForMAT NonNegativeInteger)
+(comment ecoRepresentationsForMAT
+  "The primary purpose of this relation is to cause the eco-representations
+   of a given #$MedialAxis to be computed as a side-effect via a FIRE 
+   reasoner source.  The arguments are as follows: (2) angle threshold 
+   modifier for the perception code; (3) different size ratio modifier for the
+   perception code; (4) the name of the microtheory created to hold the eco 
+   facts; (5) the set of all ECOs created; and (6) the number of eco facts 
+   generated.")
+(notForAnalogy ecoRepresentationsForMAT)
+
+;;;(hasAtomicECO <thing> <ECO>)
+(isa hasAtomicECO Relation)
+(isa hasAtomicECO ECOInfoPredicate)
+(arity hasAtomicECO 2)
+(arg1Isa hasAtomicECO SpatialThing)
+(arg2Isa hasAtomicECO PerceptualEdgeConnectedObject)
+(comment hasAtomicECO
+  "(hasAtomicECO <thing> <eco>) says that for some perceptual
+   decomposition of <thing>, <eco> denotes one of the edge-connected objects
+   in the decomposition that contains no other edge-connected objects, and is
+   thus an entity in the ECO
+   representation of <thing>")
+
+;;;(hasExternalECO <glyph> <ECO>)
+(isa hasExternalECO Relation)
+(isa hasExternalECO ECOInfoPredicate)
+(arity hasExternalECO 2)
+(arg1Isa hasExternalECO SpatialThing)
+(arg2Isa hasExternalECO PerceptualEdgeConnectedObject)
+(comment hasExternalECO
+  "(hasExternalECO <thing> <eco>) says that for some perceptual
+   decomposition of <thing>, <eco> denotes one of the edge-connected objects
+   in the decomposition that is contained by no other edge-connected objects, and is
+   thus an entity in the ECO representation of <thing>")
+
+;;;(hasECO <thing> <ECO>)
+(isa hasECO Relation)
+(isa hasECO ECOInfoPredicate)
+(arity hasECO 2)
+(arg1Isa hasECO SpatialThing)
+(arg2Isa hasECO PerceptualEdgeConnectedObject)
+(comment hasECO
+  "(hasECO <thing> <eco>) says that for some perceptual
+   decomposition of <thing>, <eco> denotes one of the edge-connected objects (ECO's)
+   in the decomposition, and is thus an entity in the ECO representation of <thing>.")
+
+(<== (hasECO ?glyph ?eco)
+     (hasAtomicECO ?glyph ?eco))
+
+(<== (hasECO ?glyph ?eco)
+     (hasExternalECO ?glyph ?eco))
+
+;;;(ecoRepMtFor <thing> <shape-mt>)
+(isa ecoRepMtFor Relation)
+(arity ecoRepMtFor 2)
+(arg1Isa ecoRepMtFor SpatialThing)
+(arg2Isa ecoRepMtFor Microtheory)
+(comment ecoRepMtFor
+  "(ecoRepMtFor <thing> <eco-mt>) says that the
+    representation for the perceptual objects of some
+    decomposition of <thing> live in <eco-mt>")
+(notForAnalogy ecoRepMtFor)
+
+;;; Predicates for ECO's
+
+(isa sameScopeECOs ECOInfoPredicate)
+(isa sameScopeECOs Orientation-Invariant-Term)
+(arity sameScopeECOs 2)
+(arg1Isa sameScopeECOs PerceptualEdgeConnectedObject)
+(arg2Isa sameScopeECOs PerceptualEdgeConnectedObject)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Texture Representations
+
+(isa TextureHoleFn Function-Denotational)
+(atomicAnalogyNat TextureHoleFn)
+(arity TextureHoleFn 2)
+(arg1Isa TextureHoleFn PerceptualTexture)
+(arg2Isa TextureHoleFn Integer)
+(resultIsa TextureHoleFn TextureHole)
+(comment TextureHoleFn "Denotes a hole in a perceptual texture, i.e. an edge-cycle contained
+                        in the texture that doesn't share enough regularity with the texture to be
+                        grouped.")
+
+(isa hasHole BinaryPredicate)
+(arity hasHole 2)
+(arg1Isa hasHole PerceptualTexture)
+(arg2Isa hasHole TextureHole)
+(comment hasHole "Says that the edge cycle is a hole in the texture.")
+
+(isa PerceptualTexture-CycleRegularity Collection)
+(genls PerceptualTexture-CycleRegularity PerceptualTexture)
+(comment PerceptualTexture-CycleRegularity
+  "The collection of perceptual textures organized by grouping adjacent edge-cycles.")
+
+(isa PerceptualTexture-CycleFillRegularity Collection)
+(genls PerceptualTexture-CycleFillRegularity PerceptualTexture-CycleRegularity)
+(comment PerceptualTexture-CycleFillRegularity
+  "The collection of perceptual textures characterized by regularities between adjacent edge-cycles.")
+
+(isa PerceptualTexture-CycleBoundaryRegularity Collection)
+(genls PerceptualTexture-CycleBoundaryRegularity PerceptualTexture-CycleRegularity)
+(comment PerceptualTexture-CycleBoundaryRegularity
+  "The collection of perceptual textures characterized by regularities along in the boundaries of edge-cycles.")
+
+(isa PerceptualTexture-CrossEdgeSize Collection)
+(genls PerceptualTexture-CrossEdgeSize PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-CrossEdgeSize
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, regularities in the sizes of the edges in adjacent cycles that are incident to their
+  shared edge.")
+
+(isa PerceptualTexture-CrossEdgeCurvature Collection)
+(genls PerceptualTexture-CrossEdgeCurvature PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-CrossEdgeCurvature
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, continuities in the curvatures of the edges in adjacent cycles that are incident to their
+  shared edge.")
+
+(isa PerceptualTexture-CrossEdgeOrientation Collection)
+(genls PerceptualTexture-CrossEdgeOrientation PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-CrossEdgeOrientation
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, continuities in the local orientations of the edges in adjacent cycles that are
+  incident to their shared edge.")
+
+(isa PerceptualTexture-CycleSize Collection)
+(genls PerceptualTexture-CycleSize PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-CycleSize
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, regularities in the areas of adjacent cycles.")
+
+(isa PerceptualTexture-CycleEdgeComplexity Collection)
+(genls PerceptualTexture-CycleEdgeComplexity PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-CycleEdgeComplexity
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, regularities in the number of edges in adjacent cycles.")
+
+(isa PerceptualTexture-CycleContents Collection)
+(genls PerceptualTexture-CycleContents PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-CycleContents
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, regularities in the number of edge-connected objects (islands of ink) contained
+  in adjacent cycles.")
+
+(isa PerceptualTexture-CycleOrientation Collection)
+(genls PerceptualTexture-CycleOrientation PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-CycleOrientation
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, regularities in the orientations of the major axes of adjacent cycles, where
+  roundness acts as a z-axis.")
+
+(isa PerceptualTexture-IncidentAngles Collection)
+(genls PerceptualTexture-IncidentAngles PerceptualTexture-CycleFillRegularity)
+(comment PerceptualTexture-IncidentAngles
+  "The collection of perceptual textures characterized by regularities at the edge-cycle level - 
+  specifically, regularities in the magnitudes of the (two pairs of) angles indient to the
+  shared edge (each pair straddles the shared edge).  This regularity would be especially
+  useful for grouping radial textures, e.g. the slices of a pizza or the sections of a bicycle wheel.")
+
+(isa PerceptualTexture-BoundaryEdgeSize Collection)
+(genls PerceptualTexture-BoundaryEdgeSize PerceptualTexture-CycleBoundaryRegularity)
+(comment PerceptualTexture-BoundaryEdgeSize
+  "The collection of perceptual textures characterized by regularities in the sizes of edges along their boundaries.")
+
+(isa PerceptualTexture-BoundaryEdgeCurvature Collection)
+(genls PerceptualTexture-BoundaryEdgeCurvature PerceptualTexture-CycleBoundaryRegularity)
+(comment PerceptualTexture-BoundaryEdgeCurvature
+  "The collection of perceptual textures characterized by regularities in the curvatures of edges along their boundaries.")
+
+(isa PerceptualTexture-BoundaryEdgeOrientation Collection)
+(genls PerceptualTexture-BoundaryEdgeOrientation PerceptualTexture-CycleBoundaryRegularity)
+(comment PerceptualTexture-BoundaryEdgeOrientation
+  "The collection of perceptual textures characterized by regularities in the orientations of edges along their boundaries.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Medial Axis Representations
+
+(isa MedialAxisEdge Collection)
+(isa MedialAxisEdge EdgeInfoCollection)
+(genls MedialAxisEdge PerceptualEdge)
+(comment MedialAxisEdge "")
+
+(isa MedialAxisEdge-Linear Collection)
+(isa MedialAxisEdge-Linear EdgeInfoCollection)
+(genls MedialAxisEdge-Linear MedialAxisEdge)
+(comment MedialAxisEdge-Linear "")
+
+(isa MedialAxisEdge-Concave Collection)
+(isa MedialAxisEdge-Concave EdgeInfoCollection)
+(genls MedialAxisEdge-Concave MedialAxisEdge)
+(comment MedialAxisEdge-Concave "")
+
+(isa MedialAxisEdge-Convex Collection)
+(isa MedialAxisEdge-Convex EdgeInfoCollection)
+(genls MedialAxisEdge-Convex MedialAxisEdge)
+(comment MedialAxisEdge-Convex "")
+
+(isa MedialAxisEdge-Right Collection)
+(isa MedialAxisEdge-Right EdgeInfoCollection)
+(genls MedialAxisEdge-Right MedialAxisEdge)
+(comment MedialAxisEdge-Right "")
+
+(isa MedialAxisEdge-Obtuse Collection)
+(isa MedialAxisEdge-Obtuse EdgeInfoCollection)
+(genls MedialAxisEdge-Obtuse MedialAxisEdge)
+(comment MedialAxisEdge-Obtuse "")
+
+(isa MedialAxisEdge-Acute Collection)
+(isa MedialAxisEdge-Acute EdgeInfoCollection)
+(genls MedialAxisEdge-Acute MedialAxisEdge)
+(comment MedialAxisEdge-Acute "")
+
+(isa DirectedEdge Collection)
+(isa DirectedEdge EdgeInfoCollection)
+(genls DirectedEdge PerceptualEdge)
+(comment DirectedEdge "")
+
+(isa UndirectedEdge Collection)
+(isa UndirectedEdge EdgeInfoCollection)
+(genls UndirectedEdge PerceptualEdge)
+(comment UndirectedEdge "")
+
+(isa DirectedEdge Collection)
+(isa DirectedEdge EdgeInfoCollection)
+(genls DirectedEdge PerceptualEdge)
+(comment DirectedEdge "")
+
+(isa SourceEdge Collection)
+(isa SourceEdge EdgeInfoCollection)
+(genls SourceEdge UndirectedEdge)
+(comment SourceEdge "")
+
+(isa SinkEdge Collection)
+(isa SinkEdge EdgeInfoCollection)
+(genls SinkEdge UndirectedEdge)
+(comment SinkEdge "")
+
+
+(isa MedialAxis Collection)
+(genls MedialAxis PositiveDimensionalThing)
+(isa MedialAxis EdgeCycleInfoCollection)
+(comment MedialAxis "The medial axis of a shape is the collection of
+                     points on the interior of the shape whose nearest point(s)
+                     along the shape's exterior is two or more points")
+
+(isa MedialAxisFn Function-Denotational)
+(arity MedialAxisFn 1)
+(arg1Isa MedialAxisFn SpatialThing)
+(comment MedialAxisFn "")
+(atomicAnalogyNat MedialAxisFn)
+
+(isa medialAxisOf Relation)
+(isa medialAxisOf EdgeCycleInfoPredicate)
+(genlPreds medialAxisOf spatiallyIntersects)
+(arity medialAxisOf 2)
+(arg1Isa medialAxisOf SpatialThing)
+(arg2Isa medialAxisOf MedialAxis)
+(comment medialAxisOf
+  "Relates a closed shape to its medial axis transform.")
+
+;;;(medialAxisEdgeForShape <shape> <edge>)
+(isa medialAxisEdgeForShape Relation)
+(arity medialAxisEdgeForShape 2)
+(arg1Isa medialAxisEdgeForShape PerceptualElement)
+(arg2Isa medialAxisEdgeForShape MedialAxisEdge)
+(comment medialAxisEdgeForShape
+  "(medialAxisEdgeForShape <shape> <edge>) says that <edge> is an edge
+    along the medial axis transform of <shape>.")
+
+;;;(medialAxisEdgeFor <thing> <edge>)
+(isa medialAxisEdgeFor Relation)
+(arity medialAxisEdgeFor 2)
+(arg1Isa medialAxisEdgeFor SpatialThing)
+(arg2Isa medialAxisEdgeFor MedialAxisEdge)
+(comment medialAxisEdgeFor
+  "(medialAxisEdgeFor <thing> <edge>) says that <edge> is an edge
+    along the medial axis transform of <thing>.")
+
+;;;(medialAxisMtForShape <shape> <mat-mt>)
+(isa medialAxisMtForShape Relation)
+(arity medialAxisMtForShape 2)
+(arg1Isa medialAxisMtForShape PerceptualElement)
+(arg2Isa medialAxisMtForShape Microtheory)
+(comment medialAxisMtForShape
+  "(PerceptualElement <shape> <mat-mt>) says that the
+    representations for the medial axis of <shape>
+    live in <mat-mt>")
+(notForAnalogy medialAxisMtForShape)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Predicates for relative Complexity
+
+(genls RelativeComplexityPredicate PerceptualInfoPredicate)
+(genls RelativeEdgeComplexityPredicate RelativeComplexityPredicate)
+(genls RelativeEdgeComplexityPredicate ECOInfoPredicate)
+(genls RelativeEdgeComplexityPredicate EdgeCycleInfoPredicate)
+(genls RelativeEdgeCycleComplexityPredicate RelativeComplexityPredicate)
+(genls RelativeEdgeCycleComplexityPredicate ECOInfoPredicate)
+(genls VeryLowToLowComplexityPredicate RelativeComplexityPredicate)
+(genls LowToMediumComplexityPredicate RelativeComplexityPredicate)
+(genls MediumToLongComplexityPredicate RelativeComplexityPredicate)
+
+
+;;edge complexity
+
+;;this could also be achieved via reltionAllInstance
+(<== (describesQualitativeDegreeAlongDimension PerceptualEdgeComplexity ?pred)
+     (isa ?pred RelativeEdgeComplexityPredicate))
+
+(isa PerceptualEdgeComplexity DimensionOfQualitativeDegree)
+(measurableAlongDimension PerceptualEdgeComplexity PerceptualEdgeCycle)
+(measurableAlongDimension PerceptualEdgeComplexity PerceptualEdgeConnectedObject)
+(describesQualitativeDegreeAlongDimension-Default PerceptualEdgeComplexity edgeComplexityMedium)
+
+(isa edgeComplexityHigh MediumToLongComplexityPredicate)
+(isa edgeComplexityHigh RelativeEdgeComplexityPredicate)
+(isa edgeComplexityHigh HighQualitativeDegreePredicate)
+(isa edgeComplexityHigh Orientation-Invariant-Term)
+(arity edgeComplexityHigh 1)
+(arg1Isa edgeComplexityHigh PerceptualElement)
+
+(isa edgeComplexityMedium LowToMediumComplexityPredicate)
+(isa edgeComplexityMedium MediumToLongComplexityPredicate)
+(isa edgeComplexityMedium RelativeEdgeComplexityPredicate)
+(isa edgeComplexityMedium MediumQualitativeDegreePredicate)
+(isa edgeComplexityMedium Orientation-Invariant-Term)
+(arity edgeComplexityMedium 1)
+(arg1Isa edgeComplexityMedium PerceptualElement)
+
+(isa edgeComplexityLow VeryLowToLowComplexityPredicate)
+(isa edgeComplexityLow LowToMediumComplexityPredicate)
+(isa edgeComplexityLow RelativeEdgeComplexityPredicate)
+(isa edgeComplexityLow LowQualitativeDegreePredicate)
+(isa edgeComplexityLow Orientation-Invariant-Term)
+(arity edgeComplexityLow 1)
+(arg1Isa edgeComplexityLow PerceptualElement)
+
+(isa edgeComplexityVeryLow VeryLowToLowComplexityPredicate)
+(isa edgeComplexityVeryLow RelativeEdgeComplexityPredicate)
+(isa edgeComplexityVeryLow VeryLowQualitativeDegreePredicate)
+(isa edgeComplexityVeryLow Orientation-Invariant-Term)
+(arity edgeComplexityVeryLow 1)
+(arg1Isa edgeComplexityVeryLow PerceptualElement)
+
+(isa PerceptualEdgeComplexityFn Function-Denotational)
+(arity PerceptualEdgeComplexityFn 1)
+(arg1Isa PerceptualEdgeComplexityFn PerceptualElement)
+(resultIsa PerceptualEdgeComplexityFn Individual)
+
+(relationAllInstance denotesSubRange RelativeEdgeComplexityPredicate PerceptualEdgeComplexityFn)
+;;;;; writing a temporary rule as a proxy for
+;;;;; reasoning with this rule macro predicate
+;;;;; hopefully fire will support it someday
+(<== (denotesSubRange ?instance PerceptualEdgeComplexityFn)
+     (isa ?instance RelativeEdgeComplexityPredicate))
+
+
+;;;edge-cycle complexity
+
+;;this could also be achieved via reltionAllInstance
+(<== (describesQualitativeDegreeAlongDimension PerceptualEdgeCycleComplexity ?pred)
+     (isa ?pred RelativeEdgeCycleComplexityPredicate))
+
+(isa PerceptualEdgeCycleComplexity DimensionOfQualitativeDegree)
+(measurableAlongDimension PerceptualEdgeCycleComplexity PerceptualEdgeConnectedObject)
+(describesQualitativeDegreeAlongDimension-Default PerceptualEdgeCycleComplexity edgeCycleComplexityMedium)
+
+(isa edgeCycleComplexityHigh MediumToLongComplexityPredicate)
+(isa edgeCycleComplexityHigh RelativeEdgeCycleComplexityPredicate)
+(isa edgeCycleComplexityHigh Orientation-Invariant-Term)
+(isa edgeCycleComplexityHigh HighQualitativeDegreePredicate)
+(arity edgeCycleComplexityHigh 1)
+(arg1Isa edgeCycleComplexityHigh PerceptualElement)
+
+(isa edgeCycleComplexityMedium LowToMediumComplexityPredicate)
+(isa edgeCycleComplexityMedium MediumToLongComplexityPredicate)
+(isa edgeCycleComplexityMedium RelativeEdgeCycleComplexityPredicate)
+(isa edgeCycleComplexityMedium MediumQualitativeDegreePredicate)
+(isa edgeComplexityHigh Orientation-Invariant-Term)
+(arity edgeCycleComplexityMedium 1)
+(arg1Isa edgeCycleComplexityMedium PerceptualElement)
+
+(isa edgeCycleComplexityLow VeryLowToLowComplexityPredicate)
+(isa edgeCycleComplexityLow LowToMediumComplexityPredicate)
+(isa edgeCycleComplexityLow RelativeEdgeCycleComplexityPredicate)
+(isa edgeCycleComplexityLow LowQualitativeDegreePredicate)
+(isa edgeCycleComplexityLow Orientation-Invariant-Term)
+(arity edgeCycleComplexityLow 1)
+(arg1Isa edgeCycleComplexityLow PerceptualElement)
+
+(isa edgeCycleComplexityVeryLow VeryLowToLowComplexityPredicate)
+(isa edgeCycleComplexityVeryLow RelativeEdgeCycleComplexityPredicate)
+(isa edgeCycleComplexityVeryLow VeryLowQualitativeDegreePredicate)
+(isa edgeCycleComplexityVeryLow Orientation-Invariant-Term)
+(arity edgeCycleComplexityVeryLow 1)
+(arg1Isa edgeCycleComplexityVeryLow PerceptualElement)
+
+
+(isa PerceptualEdgeCycleComplexityFn Function-Denotational)
+(arity PerceptualEdgeCycleComplexityFn 1)
+(arg1Isa PerceptualEdgeCycleComplexityFn PerceptualElement)
+(resultIsa PerceptualEdgeCycleComplexityFn Individual)
+
+(relationAllInstance denotesSubRange RelativeEdgeCycleComplexityPredicate PerceptualEdgeCycleComplexityFn)
+;;;;; writing a temporary rule as a proxy for
+;;;;; reasoning with this rule macro predicate
+;;;;; hopefully fire will support it someday
+(<== (denotesSubRange ?instance PerceptualEdgeCycleComplexityFn)
+     (isa ?instance RelativeEdgeCycleComplexityPredicate))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;Predicates for relative area
+
+
+(genls RelativeAreaPredicate ECOInfoPredicate)
+(genls RelativeAreaPredicate EdgeCycleInfoPredicate)
+(genls RelativeAreaPredicate QualitativeDegreePredicate)
+(genls TinyToSmallAreaPredicate RelativeAreaPredicate)
+(genls SmallToMediumAreaPredicate RelativeAreaPredicate)
+(genls MediumToLargeAreaPredicate RelativeAreaPredicate)
+
+(isa RelativeArea DimensionOfQualitativeDegree)
+(measurableAlongDimension RelativeArea PerceptualEdgeConnectedObject)
+(measurableAlongDimension RelativeArea PerceptualEdgeCycle)
+(describesQualitativeDegreeAlongDimension-Default RelativeArea areaMedium)
+
+(relationAllInstance denotesSubRange RelativeAreaPredicate AreaFn)
+;;;;; writing a temporary rule as a proxy for
+;;;;; reasoning with this rule macro predicate
+;;;;; hopefully fire will support it someday
+(<== (denotesSubRange ?instance AreaFn)
+     (isa ?instance RelativeAreaPredicate))
+
+;;this could also be achieved via reltionAllInstance
+(<== (describesQualitativeDegreeAlongDimension RelativeArea ?pred)
+     (isa ?pred RelativeAreaPredicate))
+
+(genls TinyToSmallAreaPredicate RelativeAreaPredicate)
+(genls SmallToMediumAreaPredicate RelativeAreaPredicate)
+(genls MediumToLargeAreaPredicate RelativeAreaPredicate)
+
+(isa areaLarge MediumToLargeAreaPredicate)
+(isa areaLarge RelativeAreaPredicate)
+(isa areaLarge Orientation-Invariant-Term)
+(arity areaLarge 1)
+(arg1Isa areaLarge PerceptualElement)
+
+(isa areaMedium SmallToMediumAreaPredicate)
+(isa areaMedium MediumToLargeAreaPredicate)
+(isa areaMedium RelativeAreaPredicate)
+(isa areaMedium Orientation-Invariant-Term)
+(arity areaMedium 1)
+(arg1Isa areaMedium PerceptualElement)
+
+(isa areaSmall TinyToSmallAreaPredicate)
+(isa areaSmall SmallToMediumAreaPredicate)
+(isa areaSmall RelativeAreaPredicate)
+(isa areaSmall Orientation-Invariant-Term)
+(arity areaSmall 1)
+(arg1Isa areaSmall PerceptualElement)
+
+(isa areaTiny TinyToSmallAreaPredicate)
+(isa areaTiny RelativeAreaPredicate)
+(isa areaTiny Orientation-Invariant-Term)
+(arity areaTiny 1)
+(arg1Isa areaTiny PerceptualElement)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Predicates for relative mat radius
+
+(isa MedialAxisRadiusFn Function-Denotational)
+(arity MedialAxisRadiusFn 1)
+(arg1Isa MedialAxisRadiusFn PerceptualElement)
+(resultIsa MedialAxisRadiusFn Individual)
+
+
+(genls RelativeMATRadiusPredicate EdgeInfoPredicate)
+(genls RelativeMATRadiusPredicate QualitativeDegreePredicate)
+(genls VeryNarrowToNarrowMATRadiusPredicate RelativeMatRadiusPredicate)
+(genls NarrowToMediumMATRadiusPredicate RelativeMatRadiusPredicate)
+(genls MediumToThickMATRadiusPredicate RelativeMatRadiusPredicate)
+
+(isa RelativeMATRadius DimensionOfQualitativeDegree)
+(measurableAlongDimension RelativeMATRadius MedialAxisEdge)
+(describesQualitativeDegreeAlongDimension-Default RelativeMATRadius matRadiusMedium)
+
+(measurableAlongDimension EdgeLength MedialAxisEdge)
+
+(relationAllInstance denotesSubRange RelativeMATRadiusPredicate MedialAxisRadiusFn)
+;;;;; writing a temporary rule as a proxy for
+;;;;; reasoning with this rule macro predicate
+;;;;; hopefully fire will support it someday
+(<== (denotesSubRange ?instance MedialAxisRadiusFn)
+     (isa ?instance RelativeMATRadiusPredicate))
+
+;;this could also be achieved via reltionAllInstance
+(<== (describesQualitativeDegreeAlongDimension RelativeMATRadius ?pred)
+     (isa ?pred RelativeMATRadiusPredicate))
+
+(isa matRadiusThick MediumToThickMATRadiusPredicate)
+(isa matRadiusThick RelativeMATRadiusPredicate)
+(isa matRadiusThick EdgeInfoPredicate)
+(isa matRadiusThick Orientation-Invariant-Term)
+(arity matRadiusThick 1)
+(arg1Isa matRadiusThick PerceptualElement)
+
+(isa matRadiusMedium NarrowToMediumMATRadiusPredicate)
+(isa matRadiusMedium RelativeMATRadiusPredicate)
+(isa matRadiusMedium MediumToThickMATRadiusPredicate)
+(isa matRadiusMedium EdgeInfoPredicate)
+(isa matRadiusMedium Orientation-Invariant-Term)
+(arity matRadiusMedium 1)
+(arg1Isa matRadiusMedium PerceptualElement)
+
+(isa matRadiusNarrow VeryNarrowToNarrowMATRadiusPredicate)
+(isa matRadiusNarrow RelativeMATRadiusPredicate)
+(isa matRadiusNarrow NarrowToMediumMATRadiusPredicate)
+(isa matRadiusNarrow EdgeInfoPredicate)
+(isa matRadiusNarrow Orientation-Invariant-Term)
+(arity matRadiusNarrow 1)
+(arg1Isa matRadiusNarrow PerceptualElement)
+
+(isa matRadiusVeryNarrow VeryNarrowToNarrowMATRadiusPredicate)
+(isa matRadiusVeryNarrow RelativeMATRadiusPredicate)
+(isa matRadiusVeryNarrow Orientation-Invariant-Term)
+(isa matRadiusVeryNarrow EdgeInfoPredicate)
+(arity matRadiusVeryNarrow 1)
+(arg1Isa matRadiusVeryNarrow PerceptualElement)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Misc MAT stuff
+
+(isa generatingEdgeAfterEdge Relation)
+(isa generatingEdgeAfterEdge EdgeInfoPredicate)
+(isa generatingEdgeAfterEdge Orientation-Invariant-Term)
+(arity generatingEdgeAfterEdge 3)
+(arg1Isa generatingEdgeAfterEdge MedialAxisEdge)
+(arg2Isa generatingEdgeAfterEdge MedialAxisEdge)
+(arg3Isa generatingEdgeAfterEdge PerceptualEdge)
+(comment generatingEdgeAfterEdge
+  "(generatingEdgeAfterEdge <mat-edge> <ref-mat-edge> <gen-edge>) Says that <gen-edge> is a generating edge
+   for <mat-edge>. Since every medial axis edge has generating elements on both sides, the <ref-mat-edge> is
+   meant to provide a reference object for describing which side of <mat-edge> is being talked about.  <gen-edge>
+   is always toward the right as you travel along <mat-edge> away from <ref-mat-edge>")
+
+(isa generatingCornerAfterEdge Relation)
+(isa generatingCornerAfterEdge EdgeInfoPredicate)
+(isa generatingCornerAfterEdge Orientation-Invariant-Term)
+(arity generatingCornerAfterEdge 3)
+(arg1Isa generatingCornerAfterEdge MedialAxisEdge)
+(arg2Isa generatingCornerAfterEdge MedialAxisEdge)
+(arg3Isa generatingCornerAfterEdge CycLExpression)
+(comment generatingCornerAfterEdge
+  "(generatingCornerAfterEdge <mat-edge> <ref-mat-edge> <gen-corner>) Says that <gen-corner> is a generating corner
+   for <mat-edge>. Since every medial axis edge has generating elements on both sides, the <ref-mat-edge> is
+   meant to provide a reference object for describing which side of <mat-edge> is being talked about.  <gen-corner>
+   is always toward the right as you travel along <mat-edge> away from <ref-mat-edge>")
+
+(isa generatingCornerForCorner Relation)
+(isa generatingCornerForCorner EdgeInfoPredicate)
+(isa generatingCornerForCorner Orientation-Invariant-Term)
+(arity generatingCornerForCorner 2)
+(arg1Isa generatingCornerForCorner CycLExpression)
+(arg2Isa generatingCornerForCorner CycLExpression)
+(comment generatingCornerForCorner
+  "")
+
+(isa generatingEdgeForCorner Relation)
+(isa generatingEdgeForCorner EdgeInfoPredicate)
+(isa generatingEdgeForCorner Orientation-Invariant-Term)
+(arity generatingEdgeForCorner 2)
+(arg1Isa generatingEdgeForCorner CycLExpression)
+(arg2Isa generatingEdgeForCorner MedialAxisEdge)
+(comment generatingEdgeForCorner
+  "")
+
+(isa sharedGeneratingEdge Relation)
+(isa sharedGeneratingEdge EdgeInfoPredicate)
+(isa sharedGeneratingEdge Orientation-Invariant-Term)
+(arity sharedGeneratingEdge 2)
+(arg1Isa sharedGeneratingEdge MedialAxisEdge)
+(arg2Isa sharedGeneratingEdge MedialAxisEdge)
+(comment sharedGeneratingEdge "")
+
+
+(isa directedConnection Relation)
+(isa directedConnection EdgeInfoPredicate)
+(isa directedConnection Orientation-Invariant-Term)
+(arity directedConnection 2)
+(arg1Isa directedConnection PerceptualEdge)
+(arg2Isa directedConnection PerceptualEdge)
+(comment directedConnection
+  "")
+
+(isa stronglyDirectedConnection Predicate)
+(isa stronglyDirectedConnection EdgeInfoPredicate)
+(isa stronglyDirectedConnection Orientation-Invariant-Term)
+(arity stronglyDirectedConnection 1)
+(arg1Isa stronglyDirectedConnection CycLSentence-Assertible)
+(comment stronglyDirectedConnection
+  "")
+
+(isa weaklyDirectedConnection Predicate)
+(isa weaklyDirectedConnection EdgeInfoPredicate)
+(isa weaklyDirectedConnection Orientation-Invariant-Term)
+(arity weaklyDirectedConnection 1)
+(arg1Isa weaklyDirectedConnection CycLSentence-Assertible)
+(comment weaklyDirectedConnection
+  "")
+
+(isa sinkConnection Predicate)
+(isa sinkConnection EdgeInfoPredicate)
+(isa sinkConnection Orientation-Invariant-Term)
+(arity sinkConnection 1)
+(arg1Isa sinkConnection CycLSentence-Assertible)
+(comment sinkConnection
+  "")
+
+(isa sourceConnection Predicate)
+(isa sourceConnection EdgeInfoPredicate)
+(isa sourceConnection Orientation-Invariant-Term)
+(arity sourceConnection 1)
+(arg1Isa sourceConnection CycLSentence-Assertible)
+(comment sourceConnection
+  "")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Miscellaneous
+
+(isa glyphForPerceptualElement Relation)
+(arity glyphForPerceptualElement 2)
+(arg1Isa glyphForPerceptualElement PerceptualElement)
+(arg2Isa glyphForPerceptualElement NuSketchGlyph)
+(comment glyphForPerceptualElement
+  "A #$NuSketchGlyph can be decomposed into a set of PerceptualElements.  
+  This relation declares that #$PerceptualElement came from the specified
+  glyph.")
+;; glyphForPerceptualElement is only inferred as needed so at present, it's not
+;; available consistently enough to help with analogies.  This might change in 
+;; the future, though.
+(notForAnalogy glyphForPerceptualElement)
+
+(isa adjacentParts SymmetricBinaryPredicate)
+(arity adjacentParts 2)
+(arg1Isa adjacentParts PerceptualElement)
+(arg2Isa adjacentParts PerceptualElement)
+(comment adjacentParts
+  "Says that two separate instances of #$PerceptualElement in the same
+  decomposition of some #$NuSketchGlyph are adjacent according to a
+  voronoi diaram including parts of its same type.")
+
+(isa legalAngleThresholdModifier UnaryPredicate)
+(arity legalAngleThresholdModifier 1)
+(arg1Isa legalAngleThresholdModifier Number)
+
+(isa defaultAngleThresholdModifier UnaryPredicate)
+(arity defaultAngleThresholdModifier 1)
+(arg1Isa defaultAngleThresholdModifier Number)
+
+(isa legalSizeDifferenceRatioModifier UnaryPredicate)
+(arity legalSizeDifferenceRatioModifier 1)
+(arg1Isa legalSizeDifferenceRatioModifier Number)
+
+(isa defaultSizeDifferenceRatioModifier UnaryPredicate)
+(arity defaultSizeDifferenceRatioModifier 1)
+(arg1Isa defaultSizeDifferenceRatioModifier Number)
+
+
+(<== (legalAngleThresholdModifier ?angle-thresh-mod)
+     (groundExpression ?angle-thresh-mod)
+     (evaluate ?dummy-just-to-check-number-p
+       (RoundFn ?angle-thresh-mod)))
+
+(<== (legalAngleThresholdModifier ?angle-thresh-mod)
+     (variableExpression ?angle-thresh-mod)
+     (defaultAngleThresholdModifier ?angle-thresh-mod))
+
+(defaultAngleThresholdModifier 0)
+
+(<== (legalSizeDifferenceRatioModifier ?diff-size-ratio-mod)
+     (groundExpression ?diff-size-ratio-mod)
+     (evaluate ?dummy-just-to-check-number-p
+       (RoundFn ?diff-size-ratio-mod)))
+
+(<== (legalSizeDifferenceRatioModifier ?diff-size-ratio-mod)
+     (variableExpression ?diff-size-ratio-mod)
+     (defaultSizeDifferenceRatioModifier ?diff-size-ratio-mod))
+
+(defaultSizeDifferenceRatioModifier 0)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Populating working memory with hierarchical decomposition representations 
+
+(isa inkDecompositionHierarchyFor Relation)
+(arity inkDecompositionHierarchyFor 6)
+(arg1Isa inkDecompositionHierarchyFor SpatialThing)
+(arg2Isa inkDecompositionHierarchyFor Number)
+(arg3Isa inkDecompositionHierarchyFor Number)
+(arg4Isa inkDecompositionHierarchyFor Microtheory)
+(arg5Isa inkDecompositionHierarchyFor Set-Mathematical)
+(arg6Isa inkDecompositionHierarchyFor Set-Mathematical)
+(comment inkDecompositionHierarchyFor
+  "(inkDecompositionHierarchyFor ?glyph-or-mat ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts):
+Instances of #$NuSketchGlyph can be decomposed into a set of #$PerceptualEdgeConnectedObject,
+each of which can be deocmposed into a set of #$PerceptualEdgeCycle, each of which
+can be decomposed into a set of #$PerceptualEdge.  This hierarchical decomposition
+process results in a hierarchy of microtheories where the representations are
+stored at each level.  Querying this predicate will compute the representations
+at all the levels, store them in working memory, and return the resulting microtheories.
+The first argument is the glyph name or object name. The second is the angle threshold 
+modifier for adjusting the flexibility in identifying straight or right angles.  The third
+is the size-difference 
+The fourth argument, ?eco-mt is a single microtheory because there is only one glyph,
+and thus only one microtheroy with eco representations. Because there are potentially
+multiple ecos and multiple edge-cycles, the last two arguments are sets of microtheories.
+The facts establishing the parent-child relationships are in the respective microtheories.")
+(notForAnalogy inkDecompositionHierarchyFor)
+
+(<== (inkDecompositionHierarchyFor ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (groundExpression ?glyph)
+     (isa ?glyph NuSketchGlyph)
+     (variableExpression ?eco-mt)
+     (variableExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (numAnswers 1 (ecoRepresentationsForGlyph
+                    ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?ecos ?n-facts))
+     (inkDecompositionHierarchyFor ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts))
+
+(<== (inkDecompositionHierarchyFor ?object ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (glyphRepresentsObject ?glyph ?object)
+     (variableExpression ?eco-mt)
+     (variableExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (numAnswers 1 (ecoRepresentationsForGlyph
+                    ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?ecos ?n-facts))
+     (inkDecompositionHierarchyFor ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts))
+
+(<== (inkDecompositionHierarchyFor ?mat ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (isa ?mat MedialAxis)
+     (variableExpression ?eco-mt)
+     (variableExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (numAnswers 1 (ecoRepresentationsForMAT
+                    ?mat ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?ecos ?n-facts))
+     (inkDecompositionHierarchyFor ?mat ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts))
+
+(<== (inkDecompositionHierarchyFor ?thing ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (groundExpression ?thing)
+     (groundExpression ?eco-mt)
+     (variableExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (evaluate ?cycle-mts
+       (TheClosedRetrievalSetOf ?cycle-mt
+         (and (ist-Information ?eco-mt (hasECO ?thing ?eco))
+              (ist-Information ?eco-mt (isa ?eco PerceptualEdgeConnectedObject))
+              (numAnswers 1 (ist-Information ?eco-mt
+                              (edgeCycleRepresentationsFor
+                               ?eco ?angle-thresh-mod ?size-ratio-mod ?cycle-mt ?cycles ?n-facts))))))
+     (inkDecompositionHierarchyFor ?thing ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts))
+
+(<== (inkDecompositionHierarchyFor ?thing ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (groundExpression ?thing)
+     (groundExpression ?eco-mt)
+     (groundExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (evaluate ?edge-mts
+       (TheClosedRetrievalSetOf ?edge-mt
+         (and (elementOf ?cycle-mt ?cycle-mts)
+              (ist-Information ?cycle-mt (edgeCycleRepMtFor ?eco ?cycle-mt))
+              (ist-Information ?cycle-mt (hasEdgeCycle ?eco ?cycle))
+              (ist-Information ?cycle-mt (isa ?cycle PerceptualEdgeCycle))
+              (numAnswers 1 (ist-Information ?cycle-mt
+                                         (tracingOrientedEdgeRepresentationsForEdgeCycle
+                                          ?cycle ?angle-thresh-mod ?size-ratio-mod ?edge-mt ?edges ?n-facts)))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Populating working memory with hierarchical textured decomposition representations 
+
+(isa inkDecompositionHierarchyFor-Textured Relation)
+(arity inkDecompositionHierarchyFor-Textured 6)
+(arg1Isa inkDecompositionHierarchyFor-Textured SpatialThing)
+(arg2Isa inkDecompositionHierarchyFor-Textured Number)
+(arg3Isa inkDecompositionHierarchyFor-Textured Number)
+(arg4Isa inkDecompositionHierarchyFor-Textured Microtheory)
+(arg5Isa inkDecompositionHierarchyFor-Textured Set-Mathematical)
+(arg6Isa inkDecompositionHierarchyFor-Textured Set-Mathematical)
+(comment inkDecompositionHierarchyFor-Textured
+  "(inkDecompositionHierarchyFor-Textured ?glyph-or-mat ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts):
+Like #$inkDecompositionHierarchyFor, but with elements at the edge-cycle level in the hierarchy potentially
+grouped into textures using local perceptual similarities.")
+(notForAnalogy inkDecompositionHierarchyFor-Textured)
+
+(<== (inkDecompositionHierarchyFor-Textured ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (isa ?glyph NuSketchGlyph)
+     (variableExpression ?eco-mt)
+     (variableExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (numAnswers 1 (ecoRepresentationsForGlyph
+                    ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?ecos ?n-facts))
+     (inkDecompositionHierarchyFor-Textured ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts))
+
+(<== (inkDecompositionHierarchyFor-Textured ?object ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (glyphRepresentsObject ?glyph ?object)
+     (variableExpression ?eco-mt)
+     (variableExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (numAnswers 1 (ecoRepresentationsForGlyph
+                    ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?ecos ?n-facts))
+     (inkDecompositionHierarchyFor-Textured ?glyph ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts))
+
+(<== (inkDecompositionHierarchyFor-Textured ?thing ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (groundExpression ?thing)
+     (groundExpression ?eco-mt)
+     (variableExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (evaluate ?cycle-mts
+       (TheClosedRetrievalSetOf ?cycle-mt
+         (and (ist-Information ?eco-mt (hasECO ?thing ?eco))
+              (ist-Information ?eco-mt (isa ?eco PerceptualEdgeConnectedObject))
+              (numAnswers 1 (ist-Information ?eco-mt
+                              (edgeCycleRepresentationsFor-Textured
+                               ?eco ?angle-thresh-mod ?size-ratio-mod ?cycle-mt ?cycles ?n-facts))))))
+     (inkDecompositionHierarchyFor-Textured ?thing ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts))
+
+(<== (inkDecompositionHierarchyFor-Textured ?thing ?angle-thresh-mod ?size-ratio-mod ?eco-mt ?cycle-mts ?edge-mts)
+     (groundExpression ?thing)
+     (groundExpression ?eco-mt)
+     (groundExpression ?cycle-mts)
+     (variableExpression ?edge-mts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (evaluate ?edge-mts
+       (TheClosedRetrievalSetOf ?edge-mt
+         (and (elementOf ?cycle-mt ?cycle-mts)
+              (ist-Information ?cycle-mt (edgeCycleRepMtFor ?eco ?cycle-mt))
+              (ist-Information ?cycle-mt (hasEdgeCycle ?eco ?cycle))
+              (ist-Information ?cycle-mt (isa ?cycle PerceptualEdgeCycle))
+              (numAnswers 1 (ist-Information ?cycle-mt
+                                         (tracingEdgeRepresentationsForEdgeCycle
+                                          ?cycle ?angle-thresh-mod ?size-ratio-mod ?edge-mt ?edges ?n-facts)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Populating medial axis directed edge representations
+
+(isa medialAxisRepresentationsForEdgeCycle Relation)
+(arity medialAxisRepresentationsForEdgeCycle 6)
+(arg1Isa medialAxisRepresentationsForEdgeCycle PerceptualEdgeCycle)
+(arg2Isa medialAxisRepresentationsForEdgeCycle Number)
+(arg3Isa medialAxisRepresentationsForEdgeCycle Number)
+(arg4Isa medialAxisRepresentationsForEdgeCycle Microtheory)
+(arg5Isa medialAxisRepresentationsForEdgeCycle Set-Mathematical)
+(arg6Isa medialAxisRepresentationsForEdgeCycle Set-Mathematical)
+(comment medialAxisRepresentationsForEdgeCycle
+  "(medialAxisRepresentationsForEdgeCycle ?edge-cycle ?angle-thresh-mod ?size-ratio-mod ?skeleton-mt ?skeleton-edges ?num-edge-facts):
+Instances of #$PerceptualEdgeCycle that have one of the attributes
+2D-Shape-Closed or 2D-Shape-PartiallyClosed can be transformed into a skeleton using
+the version of medial axis transfom (Blum, 1984). CogSketch's algorithm uses the
+edges in the edge-cycle to filter noisy edges in the medial axis transform.  The
+skeleton is then carved up at points where the radius function undergoes qualitative
+changes, inspired by shock graphs (Siddiqi et al. 1999). We end up with a skeleton
+composed of edges, both directed (through narrowing regions in the direction of
+narrowing) and undirected (regions of relatively stable width). The arguments are
+the edge-cycle, the angle threshold modifier, the size threshold modifier, the
+microtheory in which the representations are stored, the set of edges in the
+skeleton, and the number of facts.  When querying for these representations,
+only the first argument is required to be bound.  The second and third arguments - 
+for modifying the angle and size thresholds used to assign qualitative shape attributes -
+are optionally bound, each to an integer from 0 to 3, but if unbound they will default
+to 1 and 1.  The last 3 arguments are output.  To produce representations, this should
+be queried in the context containing the 2D-Shape-Closed or 2D-Shape-PartiallyClosed
+attribute for the cycle being transformed.")
+(notForAnalogy medialAxisRepresentationsForEdgeCycle)
+
+(<== (medialAxisRepresentationsForEdgeCycle ?edge-cycle ?angle-thresh-mod ?size-ratio-mod ?skeleton-mt ?skeleton-edges ?num-edge-facts)
+     (groundExpression ?edge-cycle)
+     (variableExpression ?skeleton-mt)
+     (variableExpression ?skeleton-edges)
+     (variableExpression ?num-edge-facts)
+     (legalAngleThresholdModifier ?angle-thresh-mod)
+     (legalSizeDifferenceRatioModifier ?size-ratio-mod)
+     (numAnswers 1 (medialAxisOf ?edge-cycle ?skeleton))
+     (numAnswers 1 (directedEdgeRepresentationsForMAT ?skeleton ?angle-thresh-mod ?size-ratio-mod ?skeleton-mt ?skeleton-edges ?num-edge-facts)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Special for MNIST experiment
+
+(isa replaceEdgeWithCycle Relation)
+(arity replaceEdgeWithCycle 3)
+(arg1Isa replaceEdgeWithCycle Microtheory)
+(arg2Isa replaceEdgeWithCycle Thing)
+(arg3Isa replaceEdgeWithCycle Thing)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(isa mergeEdgeRepresentationsForNonCycleEdges Relation)
+(arity mergeEdgeRepresentationsForNonCycleEdges 3)
+(arg1Isa mergeEdgeRepresentationsForNonCycleEdges NuSketchGlyph)
+(arg2Isa mergeEdgeRepresentationsForNonCycleEdges RealNumber)
+(arg3Isa mergeEdgeRepresentationsForNonCycleEdges Microtheory)
+(comment mergeEdgeRepresentationsForNonCycleEdges
+  "Merge edges that are not in any closed cycle into super edges based on angle difference. (1) Glyph 
+(2) the threshold that merge edges (3) mt that contains all facts for merged edges")
+(notForAnalogy mergeEdgeRepresentationsForNonCycleEdges)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(isa extractGeonsRepresentationsForObj Relation)
+(arity extractGeonsRepresentationsForObj 2)
+(arg1Isa extractGeonsRepresentationsForObj NuSketchGlyph)
+(arg2Isa extractGeonsRepresentationsForObj Microtheory)
+(comment extractGeonsRepresentationsForObj
+  "Merge edges that are not in any closed cycle into super edges based on angle difference. (1) Glyph 
+(2) the threshold that merge edges (3) mt that contains all facts for merged edges")
+(notForAnalogy extractGeonsRepresentationsForObj)
+
+
+(isa GeonsFactsMtFn Function-Denotational)
+(arity GeonsFactsMtFn 1)
+(arg1Isa GeonsFactsMtFn NuSketchGlyph)
+(resultIsa GeonsFactsMtFn Microtheory)
+(comment GeonsFactsMtFn
+  "(GeonsFactsMtFn <glyph>) is the microtheory containing facts about the 
+   merged edge-representation of the specified #$NuSketchGlyph.")
+(notForAnalogy GeonsFactsMtFn)
+
+;;;(isa segmentsConnected Relation)
+;;;(arity segmentsConnected 3)
+;;;(arg1Isa segmentsConnected PerceptualEdgeCycle)
+;;;(arg2Isa segmentsConnected PerceptualEdgeCycle)
+;;;(arg3Isa segmentsConnected PerceptualEdge)
+;;;(comment segmentsConnected
+;;;  "Describe the connection relation between segments.")
+
+(isa segmentsConnectToViaEdge Relation)
+(arity segmentsConnectToViaEdge 2)
+(arg1Isa segmentsConnectToViaEdge PerceptualEdge)
+(arg2Isa segmentsConnectToViaEdge PerceptualEdgeCycle)
+
+(isa aboveEdgeOfCycleFn Function-Denotational)
+(arity aboveEdgeOfCycleFn 1)
+(arg1Isa aboveEdgeOfCycleFn PerceptualEdgeCycle)
+(resultIsa aboveEdgeOfCycleFn PerceptualEdge)
+
+(isa belowEdgeOfCycleFn Function-Denotational)
+(arity belowEdgeOfCycleFn 1)
+(arg1Isa belowEdgeOfCycleFn PerceptualEdgeCycle)
+(resultIsa belowEdgeOfCycleFn PerceptualEdge)
+
+
+(isa rightOfEdgeOfCycleFn Function-Denotational)
+(arity rightOfEdgeOfCycleFn 1)
+(arg1Isa rightOfEdgeOfCycleFn PerceptualEdgeCycle)
+(resultIsa rightOfEdgeOfCycleFn PerceptualEdge)
+
+
+(isa leftOfEdgeOfCycleFn Function-Denotational)
+(arity leftOfEdgeOfCycleFn 1)
+(arg1Isa leftOfEdgeOfCycleFn PerceptualEdgeCycle)
+(resultIsa leftOfEdgeOfCycleFn PerceptualEdge)
+
+(isa middleEdgeOfCycleFn Function-Denotational)
+(arity middleEdgeOfCycleFn 1)
+(arg1Isa middleEdgeOfCycleFn PerceptualEdgeCycle)
+(resultIsa middleEdgeOfCycleFn PerceptualEdge)
+
+(isa segmentationComponentsOfCycle Relation)
+(arity segmentationComponentsOfCycle 2)
+(arg1Isa segmentationComponentsOfCycle PerceptualEdgeCycle)
+(arg2Isa segmentationComponentsOfCycle PerceptualEdgeCycle)
+(comment segmentationComponentsOfCycle
+  "Describe the segment is a component of a cycle.")
+
+(isa denseGroup Predicate)
+(isa denseGroup EdgeCycleInfoPredicate)
+(arity denseGroup 1)
+(arg1Isa denseGroup PerceptualEdgeCycle)
+(comment denseGroup
+  "denseGroup for cycle")
+
+
+(isa sparseGroup Predicate)
+(isa sparseGroup EdgeCycleInfoPredicate)
+(arity sparseGroup 1)
+(arg1Isa sparseGroup PerceptualEdgeCycle)
+(comment sparseGroup
+  "sparseGroup for cycle")
+
+
+
+(isa cycleShape Predicate)
+(isa cycleShape EdgeCycleInfoPredicate)
+(arity cycleShape 1)
+(arg1Isa cycleShape PerceptualEdgeCycle)
+(comment cycleShape
+  "cycleShape for cycle")
+
+
+(isa jointOfSegments Predicate)
+(isa jointOfSegments EdgeCycleInfoPredicate)
+(arity jointOfSegments 1)
+(arg1Isa jointOfSegments PerceptualEdgeCycle)
+(comment jointOfSegments
+  "jointOfSegments for cycle")
+
+
+
+
+(isa predictedAccuracyForConcept Relation)
+(arity predictedAccuracyForConcept 2)
+(arg1Isa predictedAccuracyForConcept Thing)
+(arg2Isa predictedAccuracyForConcept Number)
+(comment predictedAccuracyForConcept
+  "predicted accuracy for a label")
+(notForAnalogy predictedAccuracyForConcept)
+
+
+(isa correctNumberOfCases Relation)
+(arity correctNumberOfCases 2)
+(arg1Isa correctNumberOfCases Thing)
+(arg2Isa correctNumberOfCases Number)
+(comment correctNumberOfCases
+  "number of correct cases for a label")
+(notForAnalogy correctNumberOfCases)
+
+
+(isa totalNumberOfCases Relation)
+(arity totalNumberOfCases 2)
+(arg1Isa totalNumberOfCases Thing)
+(arg2Isa totalNumberOfCases Number)
+(comment totalNumberOfCases
+  "number of total test cases for a label")
+(notForAnalogy totalNumberOfCases)
+
+
+(isa labelHasCase Relation)
+(arity labelHasCase 3)
+(arg1Isa labelHasCase Thing)
+(arg2Isa labelHasCase Thing)
+(arg2Isa labelHasCase Microtheory)
+(comment labelHasCase
+  "")
+(notForAnalogy labelHasCase)
+
+
+
+(isa leftEdgeOfSegConnectTo Relation)
+(arity leftEdgeOfSegConnectTo 2)
+(arg1Isa leftEdgeOfSegConnectTo PerceptualEdgeCycle)
+(arg2Isa leftEdgeOfSegConnectTo PerceptualEdgeCycle)
+
+(isa rightEdgeOfSegConnectTo Relation)
+(arity rightEdgeOfSegConnectTo 2)
+(arg1Isa rightEdgeOfSegConnectTo PerceptualEdgeCycle)
+(arg2Isa rightEdgeOfSegConnectTo PerceptualEdgeCycle)
+
+(isa aboveEdgeOfSegConnectTo Relation)
+(arity aboveEdgeOfSegConnectTo 2)
+(arg1Isa aboveEdgeOfSegConnectTo PerceptualEdgeCycle)
+(arg2Isa aboveEdgeOfSegConnectTo PerceptualEdgeCycle)
+
+(isa belowEdgeOfSegConnectTo Relation)
+(arity belowEdgeOfSegConnectTo 2)
+(arg1Isa belowEdgeOfSegConnectTo PerceptualEdgeCycle)
+(arg2Isa belowEdgeOfSegConnectTo PerceptualEdgeCycle)
+
+
+(isa middleEdgeOfSegConnectTo Relation)
+(arity middleEdgeOfSegConnectTo 2)
+(arg1Isa middleEdgeOfSegConnectTo PerceptualEdgeCycle)
+(arg2Isa middleEdgeOfSegConnectTo PerceptualEdgeCycle)
+
+
+(isa singularEdgeCycle Predicate)
+(isa singularEdgeCycle EdgeCycleInfoPredicate)
+(arity singularEdgeCycle 1)
+(arg1Isa singularEdgeCycle PerceptualEdgeCycle)
+
+
+(isa arcLongShape Predicate)
+(isa arcLongShape EdgeCycleInfoPredicate)
+(arity arcLongShape 1)
+(arg1Isa arcLongShape PerceptualEdgeCycle)
+(comment arcLongShape
+  "arcLongShape for cycle")
+
+
+
+(isa straightLongShape Predicate)
+(isa straightLongShape EdgeCycleInfoPredicate)
+(arity straightLongShape 1)
+(arg1Isa straightLongShape PerceptualEdgeCycle)
+(comment straightLongShape
+  "straightLongShape for cycle")
+
+
+(isa  Relation)
+(arity predictedLabelForCase 3)
+(arg1Isa predictedLabelForCase Microtheory)
+(arg2Isa predictedLabelForCase Thing)
+(arg3Isa predictedLabelForCase Thing)
+(comment predictedLabelForCase
+  "(predictedLabelForCase <case> <pred-label> <real-label>)")
+(notForAnalogy predictedLabelForCase)
+
+;;; End of Code

@@ -1,0 +1,12 @@
+(in-microtheory RCCVocabularyMt)
+
+(strictlyFunctionalInArgs rcc8RelationHoldsBetween 1)
+(argFormat rcc8RelationHoldsBetween 1 singleEntryFormatInArgs)
+(arg3Format rcc8RelationHoldsBetween openEntryFormatInArgs)
+(argFormat rcc8RelationHoldsBetween 3 openEntryFormatInArgs)
+(openEntryFormatInArgs rcc8RelationHoldsBetween 3)
+(argFormat rcc8RelationHoldsBetween 2 openEntryFormatInArgs)
+(openEntryFormatInArgs rcc8RelationHoldsBetween 2)
+(argCardinality rcc8RelationHoldsBetween 1 1)
+(defnSufficient (SetOfTypeFn HomogeneousExtendedSpaceRegion) (SubLQuoteFn CYC-SET-OF-TYPE-SUFFICIENT))
+(argFormat properPartOfSpaceRegion 2 SetTheFormat)

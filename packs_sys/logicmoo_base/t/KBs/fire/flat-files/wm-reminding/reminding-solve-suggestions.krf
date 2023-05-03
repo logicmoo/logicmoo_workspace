@@ -1,0 +1,34 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: reminding-solve-suggestions.meld
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: December 30, 2013 20:33:05
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory RemindingSuggestionsMt)
+
+(defSuggestion FoundReminding
+    (remindedOf ?probe ?context ?reminding ?mapping ?sub-episode-id)
+  :test (outsourcedOnly (sageWMSelect  ?probe ?context ?cand-reminding ?cand-mapping))
+  :subgoals ((wmOnly (sageWMSelect  ?probe ?context ?cand-reminding ?cand-mapping))
+             (unifies ?reminding ?cand-reminding)
+             (unifies ?mapping ?cand-mapping))
+  :documentation "if a reminding exist for the given probe, it returns it")
+
+(defSuggestion NoRemindingFound
+    (remindedOf ?probe ?context ?reminding ?mapping ?sub-episode-id)
+  :cost-function 2
+  :subgoals ((unifies ?probe ?reminding)
+             (unifies ?probe ?mapping))
+  :documentation "if a reminding can't be found return the probe itself as its reminding")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

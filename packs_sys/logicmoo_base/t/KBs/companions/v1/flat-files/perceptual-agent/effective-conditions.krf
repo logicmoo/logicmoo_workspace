@@ -1,0 +1,653 @@
+;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;; -------------------------------------------------------------------------
+;;; File name: effective-conditions.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: December 21, 2011 13:24:56
+;;;   Purpose: Learning optimal or effective conditions for independent vars.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2019-01-03 15:17:32 -0600 (Thu, 03 Jan 2019) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+
+;;; To really learn how an action fits into a strategy, it almost has to be
+;;; a retrospective process.  Effects are delayed and contingent on other 
+;;; actions and configurations.  
+;;; So we explain beneficial outcomes (and bad outcomes) by looking back over
+;;; history.  For city placement or terrain improvement, we see an effect in 
+;;; the quantities, regress back over the qualitative model to find 
+;;; exogenous factors if possible, and figure out where they got locked in.
+;;;
+;;; E.g., credit a high city growth rate to high food surplus, then to 
+;;; food production, then to tile food production.  We know tileWorkedByCity
+;;; is a critical relation there.  Can that be regressed to actions like 
+;;; doAssignWorker or doBuildCity?  Or do we have to make some kind of
+;;; plausible inference based on coincidence?
+;;;
+;;; doBuildCity doesn't mention a location at all.  Since it involves 
+;;; scanning, we know for sure that location is a salient fact of the case.
+;;; We need to make compileScanningPreconditionTask write out the salience
+;;; of that fact for the task.
+;;; Then other salient facts are anything that mention that location,
+;;; such as terrainType, specials, etc.
+
+
+;;; -------------------------------------------------------------------------
+;;; Pursue optimality criterion:
+
+;;; Given that the user performed ?operator and we have a goal to learn how
+;;; to do ?operator better, see if we can better operationalize it.
+
+;;; Target Representation:
+(isa operatorIndependentVariable TernaryPredicate)
+(arity operatorIndependentVariable 3)
+(arg1Isa operatorIndependentVariable ActionPredicate)
+(arg2Isa operatorIndependentVariable Integer)
+(arg3Isa operatorIndependentVariable FunctionalSlot)
+(comment operatorIndependentVariable "(operatorIndependentVariable ?action-pred ?arg-num ?pred) means that an implicit independent variable in ?action-pred is the second arg value of ?pred applied to arg ?argnum of the operator.  So: doBuildCity would have fcObjectAt of the city argument as an implicit independent variable.")
+
+(isa operatorDependentVariable TernaryPredicate)
+(arity operatorDependentVariable 3)
+(arg1Isa operatorDependentVariable ActionPredicate)
+(arg2Isa operatorDependentVariable Integer)
+(arg3Isa operatorDependentVariable FunctionalSlot)
+(comment operatorDependentVariable "(operatorDependentVariable ?action-pred ?arg-num ?pred) means that an implicit dependent variable in ?action-pred is the second arg value of ?pred applied to arg ?argnum of the operator.  So: doBuildCity would have cityGrowthRate of the city argument as an implicit dependent variable.")
+
+(isa operatorDependentGoalFunc BinaryPredicate)
+(arity operatorDependentGoalFunc 2)
+(arg1Isa operatorDependentGoalFunc ActionPredicate)
+(arg2Isa operatorDependentGoalFunc UnaryFunction)
+(comment operatorDependentGoalFunc "(operatorDependentGoalFunc ?action-pred ?goal-functor) relates MaximizeFn or MinimizeFn to the dependent variable of ?action-pred.")
+
+
+(isa inferEffectiveConditionFor ComplexActionPredicate)
+(arity inferEffectiveConditionFor 4)
+(arg1Isa inferEffectiveConditionFor Microtheory)
+(arg2Isa inferEffectiveConditionFor PerceptualAgentCommand)
+(arg3Isa inferEffectiveConditionFor CycLSentence-Assertible)
+(arg4Isa inferEffectiveConditionFor TimeInterval)
+(comment inferEffectiveConditionFor "(inferEffectiveConditionFor ?mt ?cmd ?operator ?when) Attempts to find an optimal or at least effective function.")
+
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?operator)
+       (unifies ?action-casename (IICaseFn ?mt ?when ?cmd))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (numAnswers 1
+         (ist-Information ?lkmt   ; should this be the action model mt?
+           (legalityConditionFor ?action-pred ?filter-binpred)))
+       (uninferredSentence
+         (ist-Information ?lkmt   ; should this be the strategy model mt?
+           (optimalityConditionFor ?action-pred ?scoring-pred)))
+       (unifies ?inf-spindle (SpindleMtFn ?domain IndirectInfluences))
+       (numAnswers 1 (independentGoalFor ?mt ?cmd ?operator ?action-casename ?indvar))
+       (evaluate ?initial-goal-stmts
+         (TheClosedRetrievalSetOf ?depgoal-stmt
+           ;; Walk the subgoals of game performance goal:
+           (and (dependentGoalFor ?mt ?operator ?inf-spindle ?depgoal)
+                (unifies ?depgoal-stmt (dependentGoalForAction ?operator ?depgoal))))))
+  (methodForAction
+    (inferEffectiveConditionFor ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt ?indvar))
+        (doRecordMembersInContext ?action-casename ?initial-goal-stmts)
+        (writeIndependentVarReificationRule ?operator ?indvar ?lkmt)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (refineDependentVariable ?mt ?action-casename ?lkmt ?operator ?initial-goal-stmts))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (compileScoringFunction ?mt ?lkmt ?operator ?filter-binpred ?action-casename))))))))
+
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (inferEffectiveConditionFor ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (inferEffectiveConditionFor ?mt ?cmd ?operator ?when) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;; Inferring independent variable:
+;;;   We need to establish that the closestLocationSatisfying *was* some
+;;;   particular location.  Then look at the addlist/deletelist in the action
+;;;   case to see what proposition(s) reference it.  If the action is known
+;;;   to create something, then look for the relation between the thing 
+;;;   created and the "location" (we needn't be locked in to location as the
+;;;   indvar of scanning)  We either create a NAT to refer to the location of
+;;;   a city or a horn clause to bind it.  Either way, it's retrospective - 
+;;;   it needs to be able to look up a value in a saved case, rather than 
+;;;   from the situation before taking the action.
+
+(isa independentGoalFor QuintaryPredicate)
+(arity independentGoalFor 5)
+
+;;; Can't count on ?operator always creating something.  Does irrigation
+;;; produce an individual object?  probably not.   Conceivably, there could
+;;; be operators whose internal independent variables involve destroying things.
+;;; Example:
+;;;   operator = (doBuildCity <unit> <city>)
+;;;   indVarChosen = (FreecivLocationFn <x> <y>)
+;;;   addedStatement = (fcObjectAt <city> (FreecivLocationFn <x> <y>))
+;;;   pred = fcObjectAt
+;;;   indvar = (operatorIndependentVariable doBuildCity 2 fcObjectAt)
+(<== (independentGoalFor ?mt ?cmd ?operator ?casename ?indvar)
+     (localOnly
+       (ist-Information ?mt 
+         (indVarChosen ?cmd ?operator ?value)))  ; reified in compileScanningPreconditionTask
+     (operatorFormulas ?action-pred ?operator)
+     ;;(evaluate ?operator-args (FormulaArgListFn ?operator))  ; why did I do this?
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?casename
+           (addedStatement ?added-fact))))     ; race condition here?
+     (operatorFormulas ?pred ?added-fact)
+     (isa ?pred FunctionalSlot)
+     (formulaArgument ?added-fact 2 ?value)    ; overly-restrictive for now.
+     (formulaArgument ?added-fact 1 ?entity)
+     ; bind ?operator-pos in one shot:
+     (formulaArgument ?operator ?operator-pos ?entity)
+     ;; We're not going to bother with deleted facts for now.
+     (unifies ?indvar
+       (operatorIndependentVariable ?action-pred ?operator-pos ?pred)))
+     
+(<== (independentGoalFor ?mt ?cmd ?operator ?casename ?indvar)
+     (operatorFormulas ?action-pred ?operator)
+     (lookupOnly
+       (contextEnvAllowed               ; inherit from ?lkmt
+         (ist-Information ?mt 
+           (operatorIndependentVariable ?action-pred ?operator-pos ?pred))))
+     (unifies ?indvar (operatorIndependentVariable ?action-pred ?operator-pos ?pred)))
+
+
+;;; Inferring dependent variable:
+;;;   The dependent variable of the function is the metric by which we prefer
+;;;   one value over another.  Here, we need to walk down the goal tree to 
+;;;   find the goal quantity that best accounts for the intended effect of
+;;;   this action.  For an action that creates an entity, the cardinality
+;;;   of the entity is probably not the right quantity (unless different
+;;;   parameters make it produce different amounts, or produce more or more
+;;;   rapidly).  Instead, any sibling goal quantities are more likely
+;;;   (e.g., cityPopulation).  But as it turns out, cityPopulation is the
+;;;   same for every newly created city, se we have to look at its
+;;;    influencers, namely cityGrowthRate.  Different cities *do* have 
+;;;   different initial growth rates, so that's the metric to use.
+
+(isa dependentGoalFor Predicate)
+(arity dependentGoalFor 4)
+(comment dependentGoalFor "(dependentGoalFor ?mt ?operator ?inf-spindle ?depgoal) binds ?depgoal, the quantity goal by which to evaluate ?operator.")
+
+
+;;; This needs to walk the subgoals of the performance goal until
+;;; it finds something like cityGrowthRate.
+;;; We can enumerate quantities, some of which changed and some 
+;;; of which didn't.  And we have goals which, in perfect information,
+;;; would connect those quantities.  We ultimately want to pick
+;;; a quantity to serve as the dependent variable.  The thing
+;;; to maximize (or minimize).
+;;; We need the spindle in order to collect hypothesized influences.
+(<== (dependentGoalFor ?mt ?operator ?inf-spindle ?depgoal)
+     (ist-Information ?mt
+       (performanceGoalForGame ?mt ?goal))    ; out top-level goal
+     (walkSubgoalsForDepVar ?mt ?operator ?inf-spindle ?goal ?depgoal))
+
+(isa walkSubgoalsForDepVar QuintaryPredicate)
+(arity walkSubgoalsForDepVar 5)
+(comment walkSubgoalsForDepVar "(walkSubgoalsForDepVar ?mt ?operator ?inf-spindle ?parent-goal ?depgoal) binds the fringe of relevant subgoals for action.")
+
+;;; Return the fringe of relevant goals:
+(<== (walkSubgoalsForDepVar ?mt ?operator ?inf-spindle ?parent-goal ?depgoal)
+     (relevantSubgoalForAction ?mt ?operator ?inf-spindle ?parent-goal ?subgoal)
+     (walkSubgoalsForDepVar ?mt ?operator ?inf-spindle ?subgoal ?depgoal))
+
+;;; base case:
+(<== (walkSubgoalsForDepVar ?mt ?operator ?inf-spindle ?parent-goal ?dep-goal)
+     (uninferredSentence
+       (relevantSubgoalForAction ?mt ?operator ?inf-spindle ?parent-goal ?subgoal))
+     (unifies ?dep-goal ?parent-goal))
+
+(isa relevantSubgoalForAction Predicate)
+(arity relevantSubgoalForAction 5)
+(arg1Isa relevantSubgoalForAction Microtheory)
+(arg2Isa relevantSubgoalForAction CycLSentence-Assertible)
+(arg3Isa relevantSubgoalForAction Microtheory)
+(arg4Isa relevantSubgoalForAction PerformanceGoal)
+(arg5Isa relevantSubgoalForAction PerformanceGoal)
+
+(<== (relevantSubgoalForAction ?mt ?operator ?inf-spindle ?parent-goal ?propositional-goal)
+     (hypothesizedSubgoalFor ?mt ?inf-spindle ?parent-goal ?subgoal)
+     ;; filter goals not relevant to operator and case
+     (formulaArgument ?operator 2 ?entity)
+     (goalApplicableTo ?mt ?subgoal ?entity ?propositional-goal))
+
+(isa goalApplicableTo QuaternaryPredicate)
+(arity goalApplicableTo 4)
+(arg1Isa goalApplicableTo Microtheory)
+(arg2Isa goalApplicableTo PerformanceGoal)
+(arg3Isa goalApplicableTo Thing)
+(arg4Isa goalApplicableTo PerformanceGoal)
+
+(<== (goalApplicableTo ?mt ?goal ?entity ?goal)
+     (containsPattern ?entity ?goal))   ; for propositional goals
+
+(<== (goalApplicableTo ?mt ?goal ?entity ?propositional-goal)
+     (goalQuantity ?goal ?quantity)  ; could be type-level
+     (unifies (?qtype ?arg) ?quantity)
+     (unifies (?functor ?pred) ?qtype)
+     (different ?pred cardinalityOf)     ; <- a really bad way to do this.
+     (not (variableExpression ?arg))
+     (isa ?arg Collection)
+     (ist-Information ?mt (isa ?entity ?arg)) ; This fails if ?entity hasn't yet been reified in game case!
+     (unifies (?goal-type ?quantity) ?goal)
+     (unifies ?propositional-goal (?goal-type (?qtype ?entity))))
+     
+(<== (goalApplicableTo ?mt ?goal ?entity ?goal)
+     (goalQuantity ?goal ?quantity)  ; could be type-level
+     (unifies (?qtype ?arg) ?quantity)
+     (unifies (?functor cardinalityOf) ?qtype))
+
+
+(isa writeIndependentVarReificationRule ComplexActionPredicate)
+(arity writeIndependentVarReificationRule 3)
+(arg1Isa writeIndependentVarReificationRule CycLSentence-Assertible)
+(arg2Isa writeIndependentVarReificationRule CycLSentence-Assertible)
+(arg3Isa writeIndependentVarReificationRule Microtheory)
+
+(preconditionForMethod
+  (and (unifies (operatorIndependentVariable ?action-pred ?argnum ?binrel) ?indvar)
+       (evaluate ?lifted-action (GeneralizeFormulaFn ?action))
+       ;(unifies ?horn-clause1
+       ;  (<== (salientActionFact ?mt ?lifted-action ?fact)
+       ;       (formulaArgument ?lifted-action ?argnum ?ent)
+       ;       (ist-Information ?mt (?binrel ?ent ?value))   ; bind ?value
+       ;       (unifies ?fact (?binrel ?ent ?value))))       ; basic fact may not be domain-specific?
+       (unifies ?horn-clause2
+         (<== (salientActionFact ?mt ?lifted-action ?fact2)
+              (formulaArgument ?lifted-action ?argnum ?ent)
+              (ist-Information ?mt (?binrel ?ent ?value))    ; bind ?value
+              (domainRelationBetween ?some-rel ?some-ent ?value)
+              (unifies ?fact2 (?some-rel ?some-ent ?value)))) ; all domain binrels mentioning indvar in 2nd arg.
+       (unifies ?horn-clause3
+         (<== (salientActionFact ?mt ?lifted-action ?fact3)
+              (formulaArgument ?lifted-action ?argnum ?ent)
+              (ist-Information ?mt (?binrel ?ent ?value))    ; bind ?value
+              (domainRelationBetween ?some-rel ?value ?some-ent)
+              (unifies ?fact3 (?some-rel ?value ?some-ent))))); all domain binrels mentioning indvar in 1st arg.
+  (methodForAction
+    (writeIndependentVarReificationRule ?action ?indvar ?lkmt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt ?horn-clause2))
+        (doRecord (ist-Information ?lkmt ?horn-clause3))))))
+
+;;; Ensure that potential dependent quantities are reified in action cases:
+(isa writeDependentVarReificationRule ComplexActionPredicate)
+(arity writeDependentVarReificationRule 3)
+(arg1Isa writeDependentVarReificationRule CycLSentence-Assertible)
+(arg2Isa writeDependentVarReificationRule PerformanceGoal)
+(arg3Isa writeDependentVarReificationRule Microtheory)
+
+(preconditionForMethod
+  (and (goalQuantity ?dep-goal ?quantity)
+       (unifies (?qtype ?entity) ?quantity)
+       (formulaArgument ?action ?argnum ?entity)  ; bind ?argnum
+       (evaluate ?lifted-action (GeneralizeFormulaFn ?action))
+       (unifies ?horn-clause1
+         (<== (salientActionFact ?mt ?lifted-action ?fact1)
+              (formulaArgument ?lifted-action ?argnum ?ent)
+              (currentQuantityChange (?qtype ?ent) ?magnitude)  ; bind ?magnitude
+              (unifies ?fact1 (quantityChange (?qtype ?ent) ?magnitude))))
+       (unifies ?horn-clause2
+         (<== (salientActionFact ?mt ?lifted-action ?fact2)
+              (formulaArgument ?lifted-action ?argnum ?ent)
+              (priorValue ?mt (?qtype ?ent) ?value)  ;; By convention, influence cases store initial value
+              (unifies ?fact2 (quantityValue (?qtype ?ent) ?value)))))
+  (methodForAction
+    (writeDependentVarReificationRule ?action ?dep-goal ?lkmt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt ?horn-clause1))
+        (doRecord (ist-Information ?lkmt ?horn-clause2))))))
+
+;;; handle case of type-level goal (eg, cardinality of cities)
+(preconditionForMethod
+  (and (goalQuantity ?dep-goal ?quantity)
+       (unifies (?qtype ?entity) ?quantity)
+       (uninferredSentence
+         (formulaArgument ?action ?argnum ?entity))
+       (unifies ?horn-clause1
+         (<== (salientActionFact ?mt ?action ?fact1)
+              (currentQuantityChange (?qtype ?ent) ?magnitude)
+              (unifies ?fact1 (quantityChange ?quantity ?magnitude))))
+       (unifies ?horn-clause2
+         (<== (salientActionFact ?mt ?action ?fact2)
+              (formulaArgument ?action ?argnum ?ent)
+              (priorValue ?mt ?quantity ?value)
+              (unifies ?fact2 (quantityValue ?quantity ?value)))))
+  (methodForAction
+    (writeDependentVarReificationRule ?action ?dep-goal ?lkmt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt ?horn-clause1))
+        (doRecord (ist-Information ?lkmt ?horn-clause2))))))
+
+(isa refineDependentVariable ComplexActionPredicate)
+(arity refineDependentVariable 5)
+(arg1Isa refineDependentVariable Microtheory)
+(arg2Isa refineDependentVariable Microtheory)
+(arg3Isa refineDependentVariable Microtheory)
+(arg4Isa refineDependentVariable CycLSentence-Assertible)
+(arg5Isa refineDependentVariable Set-Mathematical)
+(comment refineDependentVariable "(refineDependentVariable ?mt ?casename ?lkmt ?action ?initial-goal-stmts) ")
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (refineDependentVariable ?mt ?casename ?lkmt ?action ?initial-goals)
+    (actionSequence
+      (TheList))))
+
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?action)
+       (unifies ?optimality-goal (LearnOptimalConditionFn ?action-pred))
+       (unifies ?dep-var-term (DependentVariableFn ?action-pred))
+       (unifies ?dep-var-goal (RefineFn ?dep-var-term))
+       (uninferredSentence
+         (learningGoalForCompanion ?dep-var-goal)))
+  (methodForAction
+    (refineDependentVariable ?mt ?casename ?lkmt ?action ?initial-goals)
+    (actionSequence
+      (TheList
+        (postRefinementLearningGoal ?lkmt ?dep-var-term)
+        (doRecord 
+          (ist-Information ?lkmt
+            (subgoalFor ?optimality-goal ?dep-var-goal)))
+        ))))
+
+;;; Found it amongst indirect influencers of top-level goal:
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?action)
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?action-spindle (SpindleMtFn ?domain ?action-pred))
+       (groundExpression ?action-spindle)
+       (liftingBlist ?action ?blist ?varlist)
+       (evaluate ?dep-goals
+         (TheClosedRetrievalSetOf ?dep-goal
+           (and (localOnly
+                  (ist-Information ?casename
+                    (dependentGoalForAction ?action ?dep-goal))) ; reified abovve in inferEffectiveConditionFor
+                (evaluate ?lifted-dep-goal (SublisFn ?blist ?dep-goal))
+                (goalHasChangeVariance ?lifted-dep-goal ?action-spindle))))
+       (unifies (TheSet ?singleton-goal) ?dep-goals)
+       (unifies (?goal-functor ?quantity) ?singleton-goal)
+       (unifies ((MeasurableQuantityFn ?pred) ?entity) ?quantity)
+       (formulaArgument ?action ?argnum ?entity) ;; *** Assumes dep var is a property of an argument of action
+       )
+  (methodForAction
+    (refineDependentVariable ?mt ?casename ?lkmt ?action ?initial-goals)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt (operatorDependentVariable ?action-pred ?argnum ?pred)))
+        (doRecord (ist-Information ?lkmt (operatorDependentGoalFunc ?action-pred ?goal-functor)))
+        (doRecord (ist-Information ?lkmt (inactiveGoal (RefineFn (DependentVariableFn ?action-pred)))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (writeDependentVarReificationRule ?action ?singleton-goal ?lkmt))))  ; write out case encoding rule to ?lkmt
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (elaborateActionCase ?mt ?action ?casename))))
+        ))))
+
+;;; Look further at direct influencers:
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?action)
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?action-spindle (SpindleMtFn ?domain ?action-pred))
+       (groundExpression ?action-spindle)  ;; safety!
+       (liftingBlist ?action ?blist ?varlist)
+       (evaluate ?initial-dep-goals
+         (TheClosedRetrievalSetOf ?dep-goal
+           (localOnly
+             (ist-Information ?casename
+               (dependentGoalForAction ?action ?dep-goal)))))  ; reified above in inferEffectiveConditionFor
+       (uninferredSentence
+         (and (elementOf ?g ?initial-dep-goals)
+              (evaluate ?lifted-dep-goal (SublisFn ?blist ?g))
+              (goalHasChangeVariance ?lifted-dep-goal ?action-spindle)))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?di-spindle (SpindleMtFn ?domain DirectInfluences))
+       (executionContext ?mt)
+       (evaluate ?dep-goals
+         (TheClosedRetrievalSetOf ?dep-goal
+           (and (elementOf ?goal ?initial-dep-goals)  ; fringe of indirect influencers of goal quantity.
+                (walkSubgoalsForDepVar ?mt ?action ?di-spindle ?goal ?dep-goal)
+                (goalHasMagnitudeVariance ?dep-goal ?action-spindle))))
+       (unifies (TheSet ?singleton-goal) ?dep-goals)
+       (unifies (?goal-functor ?quantity) ?singleton-goal)
+       (unifies ((MeasurableQuantityFn ?pred) ?entity) ?quantity)
+       (formulaArgument ?action ?argnum ?entity)) ;; *** Assumes dep var is a property of an argument of action
+  (methodForAction
+    (refineDependentVariable ?mt ?casename ?lkmt ?action ?initial-goals)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt (operatorDependentVariable ?action-pred ?argnum ?pred)))
+        (doRecord (ist-Information ?lkmt (operatorDependentGoalFunc ?action-pred ?goal-functor)))
+        (doRecord (ist-Information ?lkmt (inactiveGoal (RefineFn (DependentVariableFn ?action-pred)))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (writeDependentVarReificationRule ?action ?singleton-goal ?lkmt))))  ; write out case encoding rule to ?lkmt
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (elaborateActionCase ?mt ?action ?casename))))
+        ))))
+
+(<== (preferInContext (refineDependentVariable ?mt ?casename ?lkmt ?action ?initial-goals) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(<== (preferInContext (refineDependentVariable ?mt ?casename ?lkmt ?action ?initial-goals) ?seq1 ?seq2)
+     (different ?seq2 (actionSequence (TheList)))
+     (noArgumentHasPredicate ?seq1 postRefinementLearningGoal))
+
+;;; We've learned:
+;;; (actionPositivelyAffectsQuantityType
+;;;  (MeasurableQuantityFn cardinalityOf) doBuildCity FreeCiv-City 1 true)
+;;; If we decompose down to a subgoal addressed by the action predicate,
+;;; then we have to determine that the action always affects the cardinality
+;;; goal by the same amount (ie, one city), so that can't be optimized.
+;;; Its sibling goal, to maximize city Population, can.  Unfortunately,
+;;; at the time we first learn the precondition task, we haven't yet
+;;; decomposed the qualitative model beyond this point.  We'll have to 
+;;; wait until we get down to a goal quantity that actually shows 
+;;; variability across instances.
+
+
+(isa goalHasChangeVariance BinaryPredicate)
+(arity goalHasChangeVariance 2)
+(arg1Isa goalHasChangeVariance PerformanceGoal)
+(arg2Isa goalHasChangeVariance Microtheory)
+(comment goalHasChangeVariance "(goalHasChangeVariance ?goal ?spindle) means the quantity in the goal NAT ?goal is changed by different amounts in cases inherited from ?spindle.")
+
+(<== (goalHasChangeVariance ?goal ?spindle)
+     (inferenceOnly (goalQuantity ?goal ?quantity))  ; this is purely syntactic, but quantity may have free vars in it.
+     (varianceInChange ?quantity ?spindle ?num)
+     (greaterThan ?num 0))
+
+(isa varianceInChange TernaryPredicate)
+(arity varianceInChange 3)
+(arg1Isa varianceInChange Quantity)
+(arg2Isa varianceInChange Microtheory)
+(arg3Isa varianceInChange RationalNumber)
+(comment varianceInChange "(varianceInChange ?quantity ?action-spindle ?num) binds the degree of variance in the magnitudes of ?quantity across ?library.")
+
+(<== (varianceInChange ?quantity ?spindle ?num)
+     (unifies (?qtype ?arg) ?quantity)
+     (evaluate ?magnitude-set
+       (TheClosedRetrievalSetOf ?magnitude
+         (lookupOnly
+           (contextEnvAllowed
+             (ist-Information ?spindle
+               (quantityChange (?qtype ?entity) ?magnitude))))))
+     (evaluate ?max (MaximumFn ?magnitude-set IdentityFn))
+     (evaluate ?min (MinimumFn ?magnitude-set IdentityFn))
+     (evaluate ?num (DifferenceFn ?max ?min)))
+
+(isa goalHasMagnitudeVariance BinaryPredicate)
+(arity goalHasMagnitudeVariance 2)
+(arg1Isa goalHasMagnitudeVariance PerformanceGoal)
+(arg2Isa goalHasMagnitudeVariance Microtheory)
+(comment goalHasMagnitudeVariance "(goalHasMagnitudeVariance ?goal ?spindle) means the quantity in the goal NAT ?goal takes on different values in cases inherited from ?spindle.")
+
+(<== (goalHasMagnitudeVariance ?goal ?spindle)
+     (inferenceOnly (goalQuantity ?goal ?quantity))  ; This is purely syntactic.
+     (varianceInMagnitude ?quantity ?spindle ?num)
+     (greaterThan ?num 0))
+
+;;; What we want here is the variance in magnitude of the dependent goal 
+;;; quantity *after* taking the action.
+;;; In general, the value of interest for dependent goals is the resulting
+;;; action.  We're trying to distinguish effects, not motivations.
+
+(isa varianceInMagnitude TernaryPredicate)
+(arity varianceInMagnitude 3)
+(arg1Isa varianceInMagnitude Quantity)
+(arg2Isa varianceInMagnitude Microtheory)
+(arg3Isa varianceInMagnitude RationalNumber)
+(comment varianceInMagnitude "(varianceInMagnitude ?quantity ?action-spindle ?num) binds the degree of variance in the magnitudes of ?quantity across ?library.")
+
+(<== (varianceInMagnitude ?quantity ?spindle ?num)
+     (unifies (?qtype ?arg) ?quantity)
+     (evaluate ?magnitude-set
+       (TheClosedRetrievalSetOf ?magnitude
+         (finalQuantityMagnitude ?spindle ?qtype ?magnitude)))
+     (evaluate ?max (MaximumFn ?magnitude-set IdentityFn))
+     (evaluate ?min (MinimumFn ?magnitude-set IdentityFn))
+     (evaluate ?num (DifferenceFn ?max ?min)))
+
+(isa finalQuantityMagnitude TernaryPredicate)
+(arity finalQuantityMagnitude 3)
+(arg1Isa finalQuantityMagnitude Microtheory)
+(arg2Isa finalQuantityMagnitude QuantityType)
+(arg3Isa finalQuantityMagnitude Number-General)
+
+(<== (finalQuantityMagnitude ?spindle ?qtype ?magnitude)
+     (unifies (MeasurableQuantityFn ?pred) ?qtype)
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?spindle
+           (addedStatement (?pred ?some-entity ?value)))))
+     (valueToMagnitude ?value ?magnitude))
+
+;;; Inferring the scoring function:
+;;;   Given a case library of actions indexed by the action pred, we need to
+;;;   cluster/generalize/discriminate the indvars wrt the depvars.
+;;;   Define a binpred that estimates output from input.  The first thing the
+;;;   binpred should do is invoke the legality pred.  If legality doesn't 
+;;;   hold don't bother computing scores.
+
+(isa compileScoringFunction ComplexActionPredicate)
+(arity compileScoringFunction 5)
+(comment compileScoringFunction "(compileScoringFunction ?mt ?lkmt ?action ?legality-pred ?case) creates and stores a binary predicate to assess an independent variable w.r.t. an action.")
+
+;;; default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (compileScoringFunction ?mt ?lkmt ?action ?legality-pred ?case)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (compileScoringFunction ?mt ?lkmt ?action ?legality-pred ?case) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; Just because we write out the scoring binpred doesn't mean 
+;;; we have a final definition.  The horn clause should invoke other
+;;; predicates that invoke computations over stored propositions.
+;;; Possibly a SAGE generalization that continues to be updated.
+;;; BUT: Can we assume we know the predictive features at this point?
+;;; We don't want to be changing the structure of the dtree on the fly!
+;;; 09-18-12: Introduced the experimentation scannind condition and
+;;; introduced explicit decision tree to try to generalize that
+;;; epistemic form.
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?action)
+       (localOnly
+         (lookupOnly
+           (ist-Information ?lkmt
+             (operatorIndependentVariable ?action-pred ?ind-arg-num ?ind-pred))))
+       (localOnly
+         (lookupOnly
+           (ist-Information ?lkmt
+             (operatorDependentVariable ?action-pred ?dep-arg-num ?dep-pred))))
+       (localOnly
+         (lookupOnly
+           (ist-Information ?lkmt
+             (operatorDependentGoalFunc ?action-pred ?goal-functor))))
+       (arg1Isa ?legality-pred ?argisa)
+       (featureList ?action-pred ?feature-list)  ; Compile this into the predicates, rather than looking it up each time.
+       (evaluate ?scoring-pred ; The name of the binary scoring predicate
+         (SymbolConcatenateFn 
+           (TheList ?action-pred "Score")))
+       (evaluate ?experiment-pred ; The name of the binary experimentation predicate
+         (SymbolConcatenateFn 
+           (TheList ?action-pred "Experiment")))
+       (unifies ?scoring-definition
+         (<== (?scoring-pred ?input ?output) ; consequence
+              (?legality-pred ?input True)   ; filter
+              (numAnswers 1 (dtreeScoreMidpoint (DTreeFn ?action-pred) ?feature-list ?input ?output))))     ; decision tree lookup
+       (unifies ?expt-definition
+         (<== (?experiment-pred ?input True)
+              (?legality-pred ?input True)                    ; filter if not legal
+              (experimentScore (DTreeFn ?action-pred) ?feature-list ?input ?output)))  ; bind True when score is unknown
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?libname (CaseLibraryFn ?domain (ActionFn ?action-pred)))
+       (evaluate ?prior-cases
+         (TheClosedRetrievalSetOf ?prior-case
+           (caseLibraryContains ?libname ?prior-case)))
+       )
+  (methodForAction
+    (compileScoringFunction ?mt ?lkmt ?action ?legality-pred ?case)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt (isa ?scoring-pred BinaryPredicate)))
+        (doRecord (ist-Information ?lkmt (arg1Isa ?scoring-pred ?argisa)))
+        (doRecord (ist-Information ?lkmt (arity ?scoring-pred 2)))  ; this actually doesn't show up in learned knowledge 'cause it's in BaseKB
+        (doRecord (ist-Information ?lkmt ?scoring-definition))
+        (doRecord (ist-Information ?lkmt (optimalityConditionFor ?action-pred ?scoring-pred)))  ; filter-pred should be binary
+        (doRecord (ist-Information ?lkmt ?expt-definition))
+        (doRecord (ist-Information ?lkmt (experimentalConditionFor ?action-pred ?experiment-pred)))
+        (doAnnounce "~%Learned preliminary scoring condition: ~s" (?scoring-pred))
+        ;; We can't deactivate the optimization learning goal yet, since we haven't yet discriminated the condition.
+        (doForEach ?prior-case ?prior-cases (reEncodeActionScore ?prior-case ?lkmt))  ; go back and make sure indexed cases have score recorded.
+        ))))
+
+
+
+
+(isa learnedEvaluationFunction TernaryPredicate)
+(arity learnedEvaluationFunction 3)
+(arg1Isa learnedEvaluationFunction ActionPredicate)
+(arg2Isa learnedEvaluationFunction Thing)
+(arg3Isa learnedEvaluationFunction Number-General) ; ScalarInterval?
+
+;;; This needs to implement a decision tree to efficiently compute
+;;; the midpoint of the max and min scores for the values given the
+;;; predictive features of the location.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

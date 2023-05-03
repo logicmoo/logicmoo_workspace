@@ -1,0 +1,1061 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: devices.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 21, 2017 10:21:45
+;;;;   Purpose: Associate common device types with their primary functions
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-28 12:49:44 -0600 (Fri, 28 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory NaiveDeviceBehaviorVocabularyMt)
+
+;;; predicates to fill in:
+;;; ------------------------
+;;; eventTypeUsesDeviceType 
+;;; commonDeviceTypeUsed
+;;; objectTypeAvailableToAgentType
+;;; availableToAgentTypeForEventType
+;;; deviceTypesCommonlyUsedTogether 
+;;; deviceTypeManipulates
+;;; agentTypeUsesArtifactType 
+;;; agentTypeSellsProductType 
+;;; typePrimaryFunction, typePrimaryFunction-DeviceUsed 
+;;; typeIntendedBehaviorCapable, typeIntendedBehaviorCapable-DeviceUsed 
+;;; typicalMainConstituent-TypeType 
+;;; uniquePhysicalPartTypes
+;;; wornOn-TypeType
+;;; appropriateSeasonForObjectUse
+;;; anatomicalPartTypeRequired
+;;; malfunctionAffectsSitType
+;;; prototypicalPathMediumTypeForTransportationDeviceType
+;;; EquipmentTypeForOccupationTypeFn
+;;; deviceTypeUsesWaveType
+;;; containerCapacity, vehicleCargoCapacity-Volume
+;;; pathTypeConveysType
+
+(relationAllInstance behaviorCapable-DoneBy Pump-Generic PumpingFluid)
+
+;;; Functions
+
+;;; (typePrimaryFunction Thermostat ControllingSomething deviceUsed)  ; How do we say it controls ambient temperature?
+(typePrimaryFunction Abacus DoingAnArithmeticOperation deviceUsed)
+(typePrimaryFunction AlarmDevice GivingAnAlarmSignal deviceUsed)
+(typePrimaryFunction Antiseptic AntisepticizingSomething stuffUsed)
+(typePrimaryFunction AudioSpeaker EmittingSound deviceUsed)
+(typePrimaryFunction AutomatedTellerMachine MakingABankDeposit deviceUsed)
+(typePrimaryFunction AutomatedTellerMachine MakingABankWithdrawl deviceUsed)
+(typePrimaryFunction AutomobileHeadlight (SubcolleectionOfWithRelationToTypeFn ShiningVisibleLightOnSomething objectActedOn Roadway) deviceUsed)
+(typePrimaryFunction BBQGrill GrillingFood deviceUsed)
+(typePrimaryFunction BabyFood (SubcollectionOfWithRelationToTypeFn EatingEvent doneBy HumanInfant) consumedObject)
+(typePrimaryFunction BakingDish BakingFood containerUsed)
+(typePrimaryFunction BandAidBandageProduct (SubcollectionOfWithRelationToTypeFn Covering-ProtectingSomething objectProtected Wound) deviceUsed)
+(typePrimaryFunction Baseball-Ball BaseballContact objectActedOn)
+(typePrimaryFunction Baseball-Ball BaseballDelivery objectThrown)
+(typePrimaryFunction BaseballBat BaseballContact deviceUsed)
+(typePrimaryFunction Baster-Device MakingSomethingWet deviceUsed)
+(typePrimaryFunction Bathtub TakingABath deviceUsed)        ; see locations.krf for eventOccursAt variant
+(typePrimaryFunction BatteryCharger ChargingABattery deviceUsed)
+(typePrimaryFunction BedPillow (SubcollectionOfWithRelationToTypeFn SupportingSomething supportedObject Head-AnimalBodyPart) supportingObject)
+(typePrimaryFunction BlowDryer (SubcollectionOfWithRelationToTypeFn DryingBody objectOfStateChange Hair-Stuff) deviceUsed)
+(typePrimaryFunction Bolt BoltingTo connectorInAttachment)
+(typePrimaryFunction BookCopy Reading ibtUsed)
+(typePrimaryFunction Bookcase (StoringFn BookCopy) deviceUsed)
+(typePrimaryFunction Briefcase (StoringFn Paper-IBO) containerUsed)
+(typePrimaryFunction Broom SweepingAnArea deviceUsed)
+(typePrimaryFunction Calculator DoingMath deviceUsed)
+(typePrimaryFunction Calorimeter (MeasuringFn ThermalEnergy) deviceUsed)
+(typePrimaryFunction Camera TakingAPhotograph deviceUsed)
+(typePrimaryFunction CastForBrokenBone BoneFractureHealing deviceUsed)  ; (PreventingFn ShapeChangeEvent)?
+(typePrimaryFunction CatFood (SubcollectionOfWithRelationToTypeFn EatingEvent doneBy DomesticCat) consumedObject)
+(typePrimaryFunction CellularTelephone MakingACellularCall deviceUsed)
+(typePrimaryFunction Centrifuge Centrifuging deviceUsed)
+(typePrimaryFunction ChessBoard PlayingChess deviceUsed)
+(typePrimaryFunction CigaretteLighter SettingSomethingOnFire deviceUsed)
+(typePrimaryFunction ClothesDryer DryingLaundry deviceUsed)
+(typePrimaryFunction ClothesLine DryingLaundry deviceUsed)
+(typePrimaryFunction ClothesPin DryingLaundry deviceUsed)  ; SupportingFn 
+(typePrimaryFunction ClothesWasher WashingClothesInAMachine deviceUsed)
+(typePrimaryFunction CoinSlot (SubcollectionOfWithRelationToTypeFn IntakingViaPortal objectMoving Coin-Currency) toLocation)
+(typePrimaryFunction CombForHair CombingHair deviceUsed)
+(typePrimaryFunction Connector ConnectingTogether deviceUsed)
+(typePrimaryFunction CookingVessel CookingFood containerUsed)
+(typePrimaryFunction CoolingDevice CoolingProcess deviceUsed)
+(typePrimaryFunction CoolingTower (SubcollectionOfWithRelationToTypeFn Cooling objectActedOn (LiquidFn Water)) deviceUsed)
+(typePrimaryFunction Crowbar DemolitionOfStructure deviceUsed)
+(typePrimaryFunction Crutch CrutchLocomotion deviceUsed)
+(typePrimaryFunction CuttingDevice CuttingSomething deviceUsed)
+(typePrimaryFunction Dashboard (SubcollectionOfWithRelationToTypeFn DisplayingSomething objectDisplayed (CollectionUnionFn (TheSet Gage IndicatorLight))) deviceUsed)
+(typePrimaryFunction Desk-PieceOfFurniture Writing eventOccursAt)
+(typePrimaryFunction DeskScissors (SubcollectionOfWithRelationToTypeFn CuttingSomething objectActedOn Paper) deviceUsed)
+(typePrimaryFunction Die-Standard DiceGame deviceUsed)
+(typePrimaryFunction Dishwasher WashingDishesByMachine deviceUsed)
+(typePrimaryFunction DogFood (SubcollectionOfWithRelationToTypeFn EatingEvent doneBy Dog) consumedObject)
+(typePrimaryFunction DrinkingVessel DrinkingEvent containerUsed)
+(typePrimaryFunction DrumHead HittingAnObject objectActedOn)
+(typePrimaryFunction DrumStick (InstrumentPlayingFn DrumInstrument) deviceUsed)
+(typePrimaryFunction ElectricalToaster MakingToast deviceUsed)
+(typePrimaryFunction Eraser-Board ErasingAMark deviceUsed)
+(typePrimaryFunction Eraser-Pencil ErasingAMark deviceUsed)
+(typePrimaryFunction EyeDropSolution EyeAbsorbtion stuffAbsorbedThroughEye)
+(typePrimaryFunction Eyeglasses-Corrective AidedVisualPerception visualAid)
+(typePrimaryFunction FacialTissue (CleaningFn (OrganismPartTypeFn HomoSapiens FaceOfAnimal)) deviceUsed)
+(typePrimaryFunction Fin-Artifact Swimming-Underwater)
+(typePrimaryFunction FireExtinguisher ExtinguishingAFire deviceUsed)
+(typePrimaryFunction FireHose ExtinguishingAFire deviceUsed)
+(typePrimaryFunction FireHydrant ExtinguishingAFire deviceUsed)
+(typePrimaryFunction FireplaceLogHolder (StoringFn Firewood) containerUsed)
+(typePrimaryFunction FireplacePoker (SubcollectionOfWithRelationToTypeFn Tending-TakingCare-Handling-Management objectTakenCareOf FirewoodFire) deviceUsed)
+(typePrimaryFunction FireplaceTongs (SubcollectionOfWithRelationToTypeFn Tending-TakingCare-Handling-Management objectTakenCareOf FirewoodFire) deviceUsed)
+(typePrimaryFunction FireplaceTool (SubcollectionOfWithRelationToTypeFn Tending-TakingCare-Handling-Management objectTakenCareOf FirewoodFire) deviceUsed)
+(typePrimaryFunction FishHook Fishing deviceUsed)   ; Fishing is (AttemptingFn CatchingFish)
+(typePrimaryFunction FishingLine Fishing deviceUsed)
+(typePrimaryFunction FishingNet-Sport FishingWithANet deviceUsed)
+(typePrimaryFunction FishingPole Fishing deviceUsed)
+(typePrimaryFunction FoodBlender Blending deviceUsed)
+(typePrimaryFunction Funnel FillingProcess deviceUsed)
+(typePrimaryFunction GameBoard PlayingABoardGame deviceUsed)
+(typePrimaryFunction GarbageCan TakingOutTheGarbage deviceUsed)
+(typePrimaryFunction GardeningTool Gardening deviceUsed)
+(typePrimaryFunction GasolinePump PumpingGasEvent deviceUsed)
+(typePrimaryFunction GolfBall HittingAGolfBall objectActedOn)
+(typePrimaryFunction GolfClub HittingAGolfBall deviceUsed)
+(typePrimaryFunction Griddle CookingWithAGriddle deviceUsed)
+(typePrimaryFunction Gun ShootingAGun weaponUsed)
+(typePrimaryFunction HairBrush CombingHair deviceUsed)
+(typePrimaryFunction Hammer HammeringANail deviceUsed)
+(typePrimaryFunction HandSaw SawingSomething deviceUsed)
+(typePrimaryFunction Handle HoldingAHandle deviceUsed)
+(typePrimaryFunction HearingAid (SubcollectionOfWithRespectToTypeFn Hearing doneBy HearingImpairedAnimal) deviceUsed)
+(typePrimaryFunction HeatingDevice HeatingProcess heatTransferSource)
+(typePrimaryFunction HoleMakingTool HoleMakingProcess deviceUsed)
+(typePrimaryFunction Hookah SmokingAPipe deviceUsed)
+(typePrimaryFunction HotWaterHeater (SubcollectionOfWithRelationToTypeFn HeatingProcess heatTransferDestination (LiquidFn Water)) heatTransferSource)
+(typePrimaryFunction InLineSkate InLineSkating deviceUsed)
+(typePrimaryFunction IndicatorLight GivingAnAlarmSignal deviceUsed)
+(typePrimaryFunction Insecticide (KillingFn Insect))  ; nothing for InsectRepellant?
+(typePrimaryFunction Jack-LiftingDevice LiftingAnObject deviceUsed)
+(typePrimaryFunction JackHammer (SubcollectionOfWithRelationToTypeFn PulverizationEvent objectActedOn (CollectionUnionFn (TheSet Pavement Concrete))) deviceUsed)
+(typePrimaryFunction JumperCables TurningOnEngine deviceUsed) ; when battery is dead
+(typePrimaryFunction KeyOfLock ChangingLockState deviceUsed)
+(typePrimaryFunction KeyOfLock LockingALock deviceUsed)
+(typePrimaryFunction Kiln (SubcollectionOfWithRelationToTypeFn Baking objectActedOn Ceramic) deviceUsed)
+(typePrimaryFunction Lathe TurningWorkpieceOnLathe deviceUsed)
+(typePrimaryFunction LaundryBag (StoringFn (SubcollectionOfWithRelationToFn ClothingItem dirtinessOfObject Dirty)) containerUsed)
+(typePrimaryFunction LaundryHamper (StoringFn (SubcollectionOfWithRelationToFn ClothingItem dirtinessOfObject Dirty)) containerUsed)
+(typePrimaryFunction LawnMower MowingGrass deviceUsed)
+(typePrimaryFunction LightingDevice ShiningVisibleLightOnSomething deviceUsed)  ; There's no "illumination"?
+(typePrimaryFunction Mast-Device (SupportingFn Sail-Device) deviceUsed)
+(typePrimaryFunction Match-FireStarter SettingSomethingOnFire deviceUsed)
+(typePrimaryFunction MeasuringCup (MeasuringFn Volume) deviceUsed)
+(typePrimaryFunction MeasuringDevice MeasuringSomething deviceUsed)
+(typePrimaryFunction MetalworkingTool Metalworking)
+(typePrimaryFunction Microscope (SubcollectionOfWithRelationToTypeFn Observing objectsObserved MicroscopicScaleObject) deviceUsed)
+(typePrimaryFunction MicrowaveOven Microwaving deviceUsed)  ; heatTransferSource
+(typePrimaryFunction MilkingMachine MilkingACow deviceUsed)
+(typePrimaryFunction Mirror (SubcollectionOfWithRelationToTypeFn WatchingSomething thingsObserved Reflection-Visual) deviceUsed)
+(typePrimaryFunction Mop MoppingAFloor deviceUsed)
+(typePrimaryFunction Multiplexer SignalMultiplexing deviceUsed)
+(typePrimaryFunction NailFile FilingNails deviceUsed)
+(typePrimaryFunction Nut-TheDevice BoltingTo connectorInAttachment)
+(typePrimaryFunction Oar Rowing deviceUsed)
+(typePrimaryFunction Odometer (MeasuringFn DistanceTravelled) deviceUsed)
+(typePrimaryFunction Oven Baking deviceUsed)
+(typePrimaryFunction PaperTowel (RemovalFn LiquidTangibleThing) deviceUsed)
+(typePrimaryFunction Parachute SkyDiving deviceUsed)
+(typePrimaryFunction PhotocopyMachine PhotocopyingADocument)
+(typePrimaryFunction PiggyBank (StorageInContainerFn Coin-Currency) containingObject)
+(typePrimaryFunction PlayingCard CardGame deviceUsed)
+(typePrimaryFunction PopcornPopper (MakingFn Popcorn-Popped) deviceUsed)
+(typePrimaryFunction Propeller Propelling deviceUsed)
+(typePrimaryFunction PryingImplement PryingSomething deviceUsed)
+(typePrimaryFunction Rake Raking deviceUsed)
+(typePrimaryFunction Ramp (CollectionUnionFn (TheSet AscendingAlongSurface DescendingAlongSurface)) motionPathway-Partial)
+(typePrimaryFunction RegularWindshieldWiper (CleaningFn Windshield) deviceUsed)
+(typePrimaryFunction RidingBoot HorsebackRiding itemWorn)
+(typePrimaryFunction RidingHelmet HorsebackRiding itemWorn)
+(typePrimaryFunction RidingPants HorsebackRiding itemWorn)
+(typePrimaryFunction RollerSkate RollerSkating deviceUsed) ; item worn?
+(typePrimaryFunction RollingPin (SubcollectionOfWithRelationToTypeFn ShapingSomething objectActedOn Dough) deviceUsed)
+(typePrimaryFunction Ruler-MeasuringDevice (MeasuringFn Length) deviceUsed)
+(typePrimaryFunction RunningShoe Running itemWorn)
+(typePrimaryFunction RunningShorts Running itemWorn)
+(typePrimaryFunction RunningTrack Running eventOccursAt)
+(typePrimaryFunction SafetySeatBelt (SubcollectionOfWithRelationToTypeFn ProtectionSituation objectProtected (SubcollectionOfWithRelationFromTypeFn HomoSapiens transportees (ConveyViaFn TransportationDevice-Vehicle))) deviceUsed)
+(typePrimaryFunction Saw SawingSomething deviceUsed)
+(typePrimaryFunction SawHorse (SubcollectionOfWithRelationToTypeFn SupportingSomething supportedObject (SubcollectionOfWithRelationFromTypeFn Wood workpieceIn SawingSomething)))
+(typePrimaryFunction SawHorse (SupportingFn Lumber) deviceUsed)
+(typePrimaryFunction Scalpel UsingAScalpel deviceUsed)
+(typePrimaryFunction Screw-Connector ConnectingTogether-Rigidly connectorInAttachment)
+(typePrimaryFunction Screwdriver ConnectingTogether-Rigidly deviceUsed)
+(typePrimaryFunction SeatingDevice SittingOnSomething deviceUsed)
+(typePrimaryFunction ServiceStation (PhysicalDistributionFn PetroleumProduct) eventOccursAt)
+(typePrimaryFunction ServingVessel ServingFoodOrDrink containerUsed)
+(typePrimaryFunction SewingMachine Sewing deviceUsed)
+(typePrimaryFunction SewingScissors (SubcollectionOfWithRelationToTypeFn CuttingSomething objectActedOn Cloth) deviceUsed)
+(typePrimaryFunction SewingScissors (SubcollectionOfWithRelationToTypeFn CuttingSomething objectActedOn Thread) deviceUsed)
+(typePrimaryFunction ShockAbsorber (IncreaseOnSlotFn RideSmoothness) deviceUsed)
+(typePrimaryFunction ShotPutShot ShotPutSportsEvent deviceUsed)
+(typePrimaryFunction ShowerStall TakingAShower deviceUsed)  ; see locations.krf for eventOccursAt variant
+(typePrimaryFunction SiphonTube Siphoning-FluidFlow deviceUsed)
+(typePrimaryFunction Ski-BoardPart SnowSkiing deviceUsed)
+(typePrimaryFunction SkiArea SnowSkiing eventOccursAt)
+(typePrimaryFunction SkiBoot SnowSkiing itemWorn)
+(typePrimaryFunction SkiLift DownhillSkiing deviceUsed)
+(typePrimaryFunction SkiPole SnowSkiing deviceUsed)
+(typePrimaryFunction Smartphone MakingACellularCall deviceUsed)
+(typePrimaryFunction SnowBrush (SubcollectionOfWithRelationToTypeFn (RemovalFn SnowMob) removalFrom Automobile) deviceUsed)
+(typePrimaryFunction SnowGoggles SnowSkiing itemWorn)
+(typePrimaryFunction Snowball ThrowingAnObject objectThrown)
+(typePrimaryFunction SolderingIron Soldering deviceUsed)
+(typePrimaryFunction SpaceHeater (IncreaseOnSlotFn (RestrictionOnSlotFn SpaceInAHOC ambientTemperature)) deviceUsed)
+(typePrimaryFunction Speedometer (MeasuringFn (SubcollectionOfWithRelationFromTypeFn Speed speedOfObject-Translation TransportationDevice-Vehicle)) deviceUsed)
+(typePrimaryFunction Sponge-CleaningImplement (RemovalFn LiquidTangibleThing) deviceUsed)
+(typePrimaryFunction SprayingDevice Spraying deviceUsed)
+(typePrimaryFunction Sprinkler (SubcollectionOfWithRelationToTypeFn WateringAPlant objectTakenCareOf Lawn) deviceUsed)
+(typePrimaryFunction Stairway (CollectionUnionFn (TheSet AscendingStairs DescendingStairs)) motionPathway-Partial)
+(typePrimaryFunction StereoSystem ListeningToMusic deviceUsed)
+(typePrimaryFunction StorageRollCore (StoringFn (CollectionIntersection2Fn FreeSheet Bendable)) containerUsed)
+(typePrimaryFunction StorageRollCore (StoringFn CordlikeObject) containerUsed)
+(typePrimaryFunction StoveTop CookingFood deviceUsed)
+(typePrimaryFunction Suitcase (StoringFn ClothingItem) containerUsed)
+(typePrimaryFunction SunProtectionStuff (PreventingFn Sunburn))
+(typePrimaryFunction Surfboard Surfing deviceUsed)
+(typePrimaryFunction SwimWear Swimming-Generic itemWorn)
+(typePrimaryFunction SwimmingCap Swimming-Generic itemWorn)
+(typePrimaryFunction SwimmingGoggles Swimming-Generic itemWorn)
+(typePrimaryFunction SwimmingTrunks Swimming-Generic itemWorn)
+(typePrimaryFunction TapeMeasure (MeasuringFn Distance) deviceUsed)
+(typePrimaryFunction TelemetryDetectionDevice TelemetryDetection deviceUsed)
+(typePrimaryFunction Telephone MakingAPhoneCall deviceUsed)
+(typePrimaryFunction Telescope (SubcollectionOfWithRelationToTypeFn Observing objectsObserved AstronomicalObject) deviceUsed)
+(typePrimaryFunction TelevisionSet WatchingTelevision deviceUsed)
+(typePrimaryFunction TennisApparel (PlayingFn Tennis-TheGame) itemWorn)
+(typePrimaryFunction TennisBall (PlayingFn Tennis-TheGame) deviceUsed)
+(typePrimaryFunction TennisCourt (PlayingFn Tennis-TheGame) eventOccursAt)
+(typePrimaryFunction TennisRacket (PlayingFn Tennis-TheGame) deviceUsed)
+(typePrimaryFunction Thermometer (MeasuringFn Temperature) deviceUsed)
+(typePrimaryFunction TireIron ChangingAnAutomobileTire deviceUsed)
+(typePrimaryFunction Toilet Defecating deviceUsed)
+(typePrimaryFunction Toilet Urinating deviceUsed)
+(typePrimaryFunction ToolBox (ConveyFn HandTool) transporter)
+(typePrimaryFunction ToolBox (StoringFn HandTool) containerUsed)
+(typePrimaryFunction Toothbrush BrushingOnesTeeth deviceUsed)
+(typePrimaryFunction Towel DryingBody deviceUsed)
+(typePrimaryFunction UprightVacuumCleaner VacuumingACarpet deviceUsed)
+(typePrimaryFunction Urinal Urinating deviceUsed)
+(typePrimaryFunction VacuumCleaner  Vacuuming deviceUsed)
+(typePrimaryFunction VehicleBrake Braking deviceUsed)
+(typePrimaryFunction VehicleExhaustSystem (SubcollectionOfWithRelationToTypefn FluidFlow-Translation objectTranslating Exhaust-InternalCombustionEngine) deviceUsed)
+(typePrimaryFunction VehicleFuelTank (SubcollectionOfWithRelationToTypeFn ContainingSomething containedObject LiquidFuel) containerUsed)
+(typePrimaryFunction WaffleMaker (MakingFn Waffle) deviceUsed)
+(typePrimaryFunction WalkingCane WalkingWithCane deviceUsed)
+(typePrimaryFunction WalkingShoe WalkingOnTwoLegs deviceUsed)
+(typePrimaryFunction WaterFaucet (SubcollectionOfWithRelationToTypeFn LiquidFlow-Translation primaryObjectMoving (LiquidFn TapWater)) flowSource)
+(typePrimaryFunction WaterFilter WaterTreatment deviceUsed)
+(typePrimaryFunction WaterTank (StoringFn Water) containerUsed)
+(typePrimaryFunction WaterTower (StoringFn Water) containerUsed)
+(typePrimaryFunction WindshieldWiperBlade (SubcollectionOfWithRelationToTypeFn (RemovalFn (LiquidFn Water)) removalFrom Windshield) deviceUsed)
+(typePrimaryFunction WireCutter (SubcollectionOfWithRelationToTypeFn CuttingSomething objectActedOn Wire) deviceUsed)
+(typePrimaryFunction Wok-CookingPot Frying containerUsed)
+(typePrimaryFunction WoodCarvingKnife Woodcarving deviceUsed)
+(typePrimaryFunction Workbench Repairing eventOccursAt)
+(typePrimaryFunction Wrench BoltingTo deviceUsed)
+(typePrimaryFunction Wrench TighteningAConnection deviceUsed)
+(typePrimaryFunction WritingImplement WritingByHand deviceUsed)
+(typePrimaryFunction WritingPen WritingByHand deviceUsed)
+(typePrimaryFunction Yardstick (MeasuringFn Length) deviceUsed)
+
+
+; PlasticWrap
+; FanBelt
+; AutomobileTailLight
+; CarAirFreshener
+; SparkPlug
+; Visor-AutoPart
+; AutomobileDriveTrain
+
+;;; A Napkin is for cleaning your face and hands, usually of food.
+;;; Like to say that a FacialTissue is for BlowingOnesNose, but all we have is 
+;;; Blowing-EmittingAnObject, where the objectEmitted might be (MobFn Mucus)
+;;; and the toLocation would be the FacialTissue.  See also EvacuatingSomething-Excreting.
+
+(inputsDestroyed-TypeType (UsingAForFn CigaretteLighter SettingSomethingOnFire deviceUsed) Butane)
+(inputsDestroyed-TypeType SettingSomethingOnFire Match-FireStarter)
+(typeBehaviorIncapable (SubcollectionOfWithRelationToFn Match-FireStarter wetnessOfObject Wet) SettingSomethingOnFire deviceUsed)
+
+(typeIntendedBehaviorCapable Calorimeter (MeasuringFn ThermalEnergy) deviceUsed)
+(typeIntendedBehaviorCapable (SubcollectionOfWithRelationFromTypeFn TopSurface objectTopSide Desk-PieceOfFurniture) WritingByHand supportingSurfaceUsedInHandling)
+(typeIntendedBehaviorCapable PaperAirplane Gliding objectTranslating)
+(typeProvidesShelterDuringType Umbrella PrecipitationProcess)
+
+(relationAllInstance intendedForUseBy CombForHair (CollectionDifferenceFn HomoSapiens Bald))
+(relationAllInstance intendedForUseBy HairBrush (CollectionDifferenceFn HomoSapiens Bald))
+(relationAllInstance intendedForUseBy HairDryer (CollectionDifferenceFn HomoSapiens Bald))
+(relationAllInstance intendedForConsumptionBy AlcoholicBeverage HumanAdult)
+(relationAllInstance intendedForConsumptionBy BabyFood HumanInfant)
+(relationAllInstance intendedForConsumptionBy DogFood Dog)
+(relationAllInstance intendedForConsumptionBy CatFood DomesticCat)
+(relationAllInstance intendedForConsumptionBy FishFood (CollectionIntersection2Fn Fish DomesticPet))
+
+;;; TBD Braille
+
+(relationAllExists emitter WaterFaucet (LiquidFn TapWater))
+;;; Blueprint exists in OpenCyc as a subcollection of IBT, but nothing says what it conveys.
+(relationAllExists primarilyContainsInfo Blueprint Design)
+(relationExistsMost providesPlanningInformation Constructing Blueprint)
+(relationMostExists providesPlanningInformation Constructing Blueprint)
+
+(typeInstancesHaveQuantity MeasuringDevice Accuracy)
+(typeInstancesHaveQuantity TrackedVehicle Traction)
+
+
+;;; New predicates
+;;; These are needed to avoid Kappa definitions in language parsing.  
+;;; Our interpretation rules can't handle forward propagation of non-ground formulae.
+
+(isa deviceUse BinaryRolePredicate)
+(arity deviceUse 2)
+(arg1Isa deviceUse Artifact-Generic)
+(arg1Isa deviceUse SomethingExisting)
+(arg2Isa deviceUse Collection)
+(comment deviceUse "(deviceUse ?stuff ?use) is a currying of primaryFunction into a BinaryRoldPredicate (needed to avoid Kappas in semtrans definitions).")
+
+;;; Need to relate this to PrimaryFunction (which is ternary)
+(<== (deviceUse ?device ?use)
+     (primaryFunction ?device ?use deviceUsed))
+
+(isa stuffUse BinaryRolePredicate)
+(arity stuffUse 2)
+(arg1Isa stuffUse SomethingExisting)
+(arg2Isa stuffUse Collection)
+(comment stuffUse "(stuffUse ?stuff ?use) is a currying of primaryFunction into a BinaryRoldPredicate (needed to avoid Kappas in semtrans definitions).")
+
+;;; Need to relate this to primaryFunction (which is ternary)
+(<== (stuffUse ?stuff ?use)
+     (primaryFunction ?stuff ?use stuffUsed))
+
+(isa locationUse BinaryRolePredicate)
+(arity locationUse 2)
+(arg1Isa locationUse SomethingExisting)
+(arg2Isa locationUse Collection)
+(comment locationUse "(locationUse ?stuff ?use) is a currying of primaryFunction into a BinaryRoldPredicate (needed to avoid Kappas in semtrans definitions).")
+
+;;; Need to relate this to primaryFunction (which is ternary)
+(<== (locationUse ?location ?use)
+     (primaryFunction ?location ?use eventOccursAt))
+
+
+
+;;; Can't just say the objectActedOn must be a RechargeableBattery, because there are already assertions about recharging a Segway or a Blackberry.
+(relationAllExists objectActedOn ChargingABattery (SubcollectionOfWithRelationToTypeFn ElectricalDevice physicalParts RechargeableBattery))
+
+;;; primary function of Backpack is Conveying Supplies
+(typePrimaryFunction Backpack (ConveyFn Supplies) deviceUsed)  ; Provisions in the case of Camping
+;;; loadCapacity-Conveyance of a Backpack is about 100lbs.
+(relationMostInstance loadCapacity-Conveyance Backpack (Pound-UnitOfMass 100))
+(relationMostInstance containerMadeOf DrinkingCan Aluminum)
+(relationMostInstance containerMadeOf DrinkingBottle Plastic)
+
+(typicalMainConstituent-TypeType DrinkingCan Aluminum)
+(typicalMainConstituent-TypeType DrinkingBottle Glass) 
+(typicalMainConstituent-TypeType DrinkingBottle Plastic) 
+(typicalMainConstituent-TypeType DrinkingGlass Glass) ; but plastic for young children
+(typicalMainConstituent-TypeType SilverwarePiece StainlessSteel) ; not really silver.
+(typicalMainConstituent-TypeType DrinkingMug Ceramic) 
+(typicalMainConstituent-TypeType CookingVessel StainlessSteel)  ; but also Copper, Glass 
+(typicalMainConstituent-TypeType PlasticBag Plastic)
+(typicalMainConstituent-TypeType PlasticBottle Plastic)
+(typicalMainConstituent-TypeType PlasticBox Plastic)
+(typicalMainConstituent-TypeType PlasticContainer Plastic)
+(typicalMainConstituent-TypeType PlasticGroceryBag Plastic)
+(typicalMainConstituent-TypeType PlasticJar Plastic)
+(typicalMainConstituent-TypeType PlasticWrap ClearPlastic)
+(typicalMainConstituent-TypeType PlasticWrapper ClearPlastic)
+(typicalMainConstituent-TypeType Bookcase Wood)  ; a ShelvingSystem might be metal
+(typicalMainConstituent-TypeType PaperBag Paper)
+(typicalMainConstituent-TypeType BookCopy Paper)
+(typicalMainConstituent-TypeType MagazineCopy Paper)
+(typicalMainConstituent-TypeType NewspaperCopy Paper)
+(typicalMainConstituent-TypeType Poster Paper)
+(typicalMainConstituent-TypeType PaperTowel Paper)
+(typicalMainConstituent-TypeType PaperClip Metal)
+(typicalMainConstituent-TypeType PaperWrapping Paper)
+(typicalMainConstituent-TypeType BaseballBat-Wooden Hardwood)
+(typicalMainConstituent-TypeType ChristmasCard Cardboard)
+(typicalMainConstituent-TypeType AutomobileTire Rubber)
+(typicalMainConstituent-TypeType BicycleTire Rubber)
+(typicalMainConstituent-TypeType PavedRoadway Pavement)
+(typicalMainConstituent-TypeType ParkingPlace Pavement)
+(typicalMainConstituent-TypeType SandCastle (MobFn Sand))
+(typicalMainConstituent-TypeType PaperAirplane Paper)
+(typicalMainConstituent-TypeType PhonographRecord VinylAcetate)
+
+
+;;; properPhysicalPartTypes 
+;;; protectsAgainstType 
+;;; mainConstituent-TypeType 
+
+
+;;; These should exist according to the comments, but for some reason aren't in OpenCyc.
+(genls Compartment Container)
+(genls Compartment PhysicalPartOfObject)
+
+(physicalPartTypes Automobile SteeringWheel)
+(physicalPartTypes Automobile BrakeLever)
+(physicalPartTypes Automobile GasPedal)
+(physicalPartTypes Automobile AutomobileHeadLight)
+(physicalPartTypes Automobile AutomobileBattery)
+(physicalPartTypes Automobile AutomobileBumper)
+(physicalPartTypes Automobile AutomobileGrille)
+(physicalPartTypes Automobile AutomobileHeater)
+(physicalPartTypes Automobile AutomobileCDPlayer)
+(physicalPartTypes Automobile AutomobileRadio)
+(physicalPartTypes Automobile AutomobileSeat)
+(physicalPartTypes Automobile AutomobileTire)
+(physicalPartTypes Automobile AutomobileTailLight)
+(physicalPartTypes Automobile AutomobileWheel)
+(physicalPartTypes Automobile AutomobileWindow)
+(physicalPartTypes Automobile AutomobileSuspensionSystem)
+(physicalPartTypes Automobile AutomotiveMirror)
+(physicalPartTypes Automobile WindshieldWiperBlade)
+(physicalPartTypes Automobile VehicleBrake)
+(physicalPartTypes Automobile Odometer)
+(physicalPartTypes Automobile Tachometer)
+(physicalPartTypes Automobile VehicleFuelTank)
+(physicalPartTypes Automobile VehicleTransmission)
+(physicalPartTypes Automobile TemperatureIndicatorLight)
+(physicalPartTypes Automobile SafetySeatBelt)
+(physicalPartTypes Automobile Dashboard)
+(physicalPartTypes Automobile LicensePlate)
+(physicalPartTypes Automobile LicensePlateFrame)
+(physicalPartTypes Automobile WheelAndAxle)
+(physicalPartTypes Automobile EngineCompartment)
+(physicalPartTypes AutomobileSuspensionSystem AutomobileSpring)
+(physicalPartTypes Automobile-GasolineEngine GasolineEngine)
+(physicalPartTypes Automobile-GasolineEngine AutomobileElectricStarter)
+(physicalPartTypes Automobile-GasolineEngine VehicleFuelTank)
+(physicalPartTypes GasolineEngine SparkPlug)
+(physicalPartTypes GasolineEngine Piston)
+
+(physicalPartTypes ServiceStation GasolinePump)
+
+;;; Crap.  DeviceTypeRunningFn doesn't exist in OpenCyc.
+;(inputsDestroyed-TypeType (DeviceTypeRunningFn Automobile-GasolineEngine) GasolineFuel)
+;;; There is, however, DeviceRunning:
+(inputsDestroyed-TypeType (SubcollectionOfWithRelationToTypeFn DeviceRunning doneBy Automobile-GasolineEngine) GasolineFuel)
+(inputsDestroyed-TypeType FirewoodFire Firewood) ; ako Fire-ClassA.
+;;; How would we say that leaving the lights on in your car will drain the battery?
+;;; And that a car won't start with a drained battery?
+;;; And that if one of your tires isa FlatTire, you can't/shouldn't drive on it.
+
+(physicalPartTypes Bicycle BicycleWheel)
+(physicalPartTypes Bicycle BicycleTire)
+(physicalPartTypes Bicycle BicycleHandleBar)
+(physicalPartTypes Bicycle BicycleSeat)
+(physicalPartTypes Bicycle BicycleLight)
+(physicalPartTypes Bicycle BicycleChain)
+(physicalPartTypes Bicycle BicycleCrossbar)
+(physicalPartTypes Bicycle BicycleRack-BikePart)
+(physicalPartTypes BicycleWheel BicycleTire)
+
+(physicalPartTypes Motorcycle MotorcycleEngine)
+(physicalPartTypes Motorcycle MotorcycleSeat)
+(physicalPartTypes Motorcycle VehicleBrake)
+
+(physicalPartTypes AirTransportationDevice AircraftEngine)
+(physicalPartTypes AirTransportationDevice AircraftLandingGear) ; had to invent this concept
+(physicalPartTypes Airplane AirplaneFuselage)
+(physicalPartTypes Airplane AirplaneWing)
+(physicalPartTypes Airplane AirplaneTailAssembly)
+(physicalPartTypes PropellerDrivenAirplane AirPropeller)
+
+(physicalPartTypes AircraftLandingGear LandTransportationWheel)
+
+(physicalPartTypes PickupTruck PickupTruckBed)
+
+(physicalPartTypes Sailboat Keel)
+(physicalPartTypes SailingVessel Mast-Device)
+(physicalPartTypes Sailboat Boom-BoatPart)
+(physicalPartTypes SailingVessel Sail)
+(physicalPartTypes Sailboat Deck-Ship)
+(physicalPartTypes Sailboat Centerboard)
+(physicalPartTypes Sailboat Rudder-ShipPart)
+(physicalPartTypes Sailboat Tiller)
+(physicalPartTypes Sailboat ClosedBow)
+(physicalPartTypes Boat Hull)
+(relationAllInstance rigidityOfObject Mast-Device (HighAmountFn Rigidity))
+
+(physicalPartTypes Toilet ToiletSeat) ; how to say that using a toilet involves a sitting posture?
+(physicalPartTypes Toilet ToiletBowl)
+(physicalPartTypes Toilet Lever)
+(physicalPartTypes Toilet DrainOfBasin)
+
+(physicalPartTypes ShowerStall ShowerHead)
+(physicalPartTypes ShowerStall ShowerCurtain)
+(physicalPartTypes ShowerStall Tap-PlumbingFixture)
+
+(physicalPartTypes HotWaterHeater WaterTank)
+(physicalPartTypes HotWaterHeater HeatingElement)
+
+(physicalPartTypes Fireplace FireplaceScreen)
+(physicalPartTypes Fireplace FireplaceGrate)
+(physicalPartTypes Fireplace Flue)
+
+(physicalPartTypes VacuumCleaner VacuumDustBag)
+(physicalPartTypes VacuumCleaner ElectricalMotor)
+
+(physicalPartTypes Computer CentralProcessingUnit)
+(physicalPartTypes Computer ComputerKeyboard)
+(physicalPartTypes Computer ComputerMonitor-VideoKind)
+(physicalPartTypes Computer ComputerPort)
+(physicalPartTypes Computer ComputerCable)
+
+(physicalPartTypes CRTDisplay CathodeRayTube)
+
+(physicalPartTypes MovieTheaterSpace MovieScreen)
+(physicalPartTypes MovieTheaterSpace MovieProjector)
+
+(physicalPartTypes Camera CameraLens)
+(physicalPartTypes Camera CameraShutter)
+(physicalPartTypes Shoe ShoeSole)
+(physicalPartTypes Shoe ShoeHeel)
+(physicalPartTypes Shoe ShoeUppers)
+(physicalPartTypes ShoeWithLaces ShoeLace)
+
+(physicalPartTypes Bucket Handle)
+(physicalPartTypes Bucket TopPortal)
+
+(physicalPartTypes Desk-PieceOfFurniture DeskDrawer)
+(physicalPartTypes Desk-PieceOfFurniture TopSurface)
+
+(physicalPartTypes House-Modern WindowPortal)
+(relationAllExists surfacePortals House-Modern WindowPortal)
+
+(relationMostExists owns HomeOwner LawnMower)
+(relationMostExists owns HomeOwner ClothesWasher)
+(relationMostExists owns HomeOwner ClothesDryer)
+(relationMostExists owns HomeOwner VacuumCleaner)
+
+;;; A greenhouse usually has a glass or clear (transparent) plastic roof.
+;;; Many greenhouses also have glass or plastic walls.
+(relationAllInstance transparencyOfObject Greenhouse Translucent)
+(mainConstituent-TypeType Greenhouse Glass)
+(protectsAgainstType Greenhouse (SubcollectionOfWithRelationToTypeFn Freezing objectOfStateChange Plant))
+(protectsAgainstType Greenhouse (DyingFromEventTypeFn (SubcollectionOfWithRelationToTypeFn Freezing objectOfStateChange Plant)))
+;;;enables-RoleInSitTypeRoleInSitType
+
+(relationMostInstance foodSourceFor HumanInfant BabyFood)
+(relationMostInstance foodSourceFor HumanInfant (MilkFn HomoSapiens))
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa AircraftLandingGear FirstOrderCollection)
+(isa AircraftLandingGear ArtifactTypeByGenericCategory)
+(isa AircraftLandingGear ExistingObjectType)
+(isa AircraftLandingGear SpatiallyDisjointObjectType)
+(genls AircraftLandingGear PhysicalPartOfObject)
+(genls AircraftLandingGear Artifact)
+(genls AircraftLandingGear (PartsFn-Device AirTransportationDevice))
+(comment AircraftLandingGear "($#AircraftLandingGear is the retractable assembly of wheels that support an aircraft when it is on the ground.")
+
+(isa Piston FirstOrderCollection)
+(isa Piston ArtifactTypeByGenericCategory)
+(isa Piston ExistingObjectType)
+(isa Piston SpatiallyDisjointObjectType)
+(genls Piston PhysicalPartOfObject)
+(genls Piston Artifact)
+(comment Piston "A #$Piston is a cylinder-shaped object that moves along the inside of another cylinder.")
+(shapeTypeOfType Piston Cylinder)
+;(relationExistsAll objectMoving Translation-BackAndForth Piston)
+(typePrimaryFunction Piston (CollectionIntersection2Fn Translation-BackAndForth TranslationAlongASurface) objectMoving)
+; How can we say it's travelling inside a RightCylinder? and in-Snug?
+
+(isa Cylinder-Engine FirstOrderCollection)
+(isa Cylinder-Engine ExistingObjectType)
+(isa Cylinder-Engine SpatiallyDisjointObjectType)
+(genls Cylinder-Engine CavityInteriorRegion)
+(comment Cylinder-Engine "a #$Cylinder-InternalCombustionEngine is a cylinder in an engine inside which a piston translates back and forth.")
+(shapeTypeOfType CombustionEngine RightCylinder)
+(typicalLocationTypeOfType Piston Cylinder-Engine)
+(internalPartTypes (CollectionDifferenceFn Engine TurbineEngine) Cylinder-Engine)
+
+(isa WaterFaucet FirstOrderCollection)
+(isa WaterFaucet ArtifactTypeByGenericCategory)
+(isa WaterFaucet ExistingObjectType)
+(isa WaterFaucet SpatiallyDisjointObjectType)
+(genls WaterFaucet Tap-PlumbingFixture)  ; a "tap" could be a Beer Tap.
+
+(isa FireHydrant ArtifactTypeByGenericCategory)
+(isa FireHydrantExistingObjectType)
+(isa FireHydrant SpatiallyDisjointObjectType)
+(genls FireHydrant Tap-FlowControlDevice)
+(genls FireHydrant FixedObject)
+(comment FireHydrant "A #$FireHydrant is an outdoor water tap intended to supply water to firefighters to extinguish fires.")
+
+(isa JackHammer FirstOrderCollection)
+(isa JackHammer ArtifactTypeByGenericCategory)
+(isa JackHammer ExistingObjectType)
+(isa JackHammer SpatiallyDisjointObjectType)
+(genls JackHammer HardwareTool)
+(genls JackHammer PortableObject)
+(genls JackHammer IndustrialEquipment)
+(comment JackHammer "A #$JackHammer is a loud tool for breaking up #$Pavement and #$Concrete.")
+(relationAllinstance loudnessOfEvent (SubcollectionOfWithRelationToTypeFn DeviceRunning doneBy JackHammer) (HighToVeryHighAmountFn AcousticNoiseLevel))
+;; relationAllInstanceInstance-Conditional?
+
+(isa ToolBox FirstOrderCollection)
+(isa ToolBox ArtifactTypeByGenericCategory)
+(isa ToolBox ExistingObjectType)
+(isa ToolBox SpatiallyDisjointObjectType)
+(genls ToolBox Box-Container)
+(genls ToolBox SinglePurposeDevice)
+
+(isa Welder-Tool FirstOrderCollection)
+(isa Welder-Tool ArtifactTypeByGenericCategory)
+(isa Welder-Tool ExistingObjectType)
+(isa Welder-Tool SpatiallyDisjointObjectType)
+(genls Welder-Tool MetalworkingTool)
+(genls Welder-Tool PortableObject)
+(comment Welder-Tool "#$Welder-Tool is the collection of tools used to join metal, e.g. MigWelders, AcetelyneTorches, TigWelders.")
+
+(isa Blowtorch FirstOrderCollection)
+(isa Blowtorch ArtifactTypeByGenericCategory)
+(isa Blowtorch ExistingObjectType)
+(isa Blowtorch SpatiallyDisjointObjectType)
+(genls Blowtorch Torch)
+(genls Blowtorch HandTool)
+(genls Blowtorch CombustionDevice)
+(genls Blowtorch FuelPoweredDevice)
+(comment Blowtorch  "A #$Blowtorch is a device used by plumbers to loosten connections, solder connections, by Chefs to brown Crem brulee, etc.")
+
+(isa Junk FirstOrderCollection)
+(isa Junk ArtifactTypeByGenericCategory)
+(isa Junk ExistingObjectType)
+(isa Junk SpatiallyDisjointObjectType)
+(genls Junk Artifact)
+(genls Junk Garbage-Generic)
+(genls Junk Abandoned-ExistentialStatus)
+(comment Junk "#$Junk is abandoned garbage artifacts.")
+;(relationAllInstance hasStatus Junk Abandoned-ExistentialStatus)  ; there is no hasStatus
+
+(isa PaperAirplane FirstOrderCollection)
+(isa PaperAirplane ArtifactTypeByGenericCategory)
+(isa PaperAirplane ExistingObjectType)
+(isa PaperAirplane SpatiallyDisjointObjectType)
+(genls PaperAirplane Artifact)
+(genls PaperAirplane (ModelFn Airplane))
+(genls PaperAirplane Projectile-Device)
+(comment PaperAirplane "PaperAirplane is the class of model planes made by folding paper into a glider.")
+(isa (MakingFn PaperAirplane) SkilledActivityType)
+(isa (MakingFn PaperAirplane) LearnedActivityType)
+
+(isa HouseOfCards FirstOrderCollection) 
+(isa HouseOfCards ArtifactTypeByGenericCategory)
+(isa HouseOfCards ExistingObjectType)
+(isa HouseOfCards SpatiallyDisjointObjectType)
+(genls HouseOfCards Artifact)
+(genls HouseOfCards (ModelFn House))
+(comment HouseOfCards "A #$HouseOfCards is a notoriously unstable model of a building made from playing cards.")
+(relationInstanceExistsMany properPhysicalParts HouseOfCards PlayingCard)
+(isa (MakingFn HouseOfCards) SkilledActivityType)
+;; How can we say that there is a high likelihood of a HouseOfCards #$Collapsing-Generic ?
+
+(isa JumpRope FirstOrderCollection)
+(isa JumpRope ArtifactTypeByGenericCategory)
+(isa JumpRope ExistingObjectType)
+(isa JumpRope SpatiallyDisjointObjectType)
+(genls JumpRope Artifact)
+(genls JumpRope Rope)
+(genls JumpRope (CollectionUnionFn (TheSet Toy FitnessEquipment)))
+(genls JumpRope (EquipmentForEventTypeFn JumpingRope))
+(comment JumpRope "A $#JumpRope is a length of rope, about 6 feet long, used for $#JumpingRope, either as recreation or for exercise.")
+
+(isa SandCastle FirstOrderCollection)
+(isa SandCastle ArtifactTypeByGenericCategory)
+(isa SandCastle ExistingObjectType)
+(isa SandCastle SpatiallyDisjointObjectType)
+(genls SandCastle Artifact)
+(genls SandCastle (ModelFn Castle))
+(comment SandCastle "a #$SandCastle is a temporary model of a castle made out of sand, usually at a beach.")
+(commonShape SandCastle (ShapedAsFn Castle))
+(isa (MakingFn SandCastle) SkilledActivityType)
+
+(isa Snowball Collection)
+(isa Snowball ArtifactTypeByGenericCategory)
+(isa Snowball ExistingObjectType)
+(isa Snowball SpatiallyDisjointObjectType)
+(genls Snowball Artifact)
+(genls Snowball (SphericalSolidTypeFn (Inch 2 4)))
+(genls Snowball (MobFn Snowflake)) ; AKA SnowMob
+(genls Snowball Projectile-Device)
+;;; Made by Compressing a SnowMob
+(comment Snowball "A Snowball is an Artifact, a (SphericalSolidTypeFn (Inch 2 4)), a (MobFn Snow), and a Projectile-Device.")
+
+(isa AutomatedTellerMachine Collection)
+(isa AutomatedTellerMachine ArtifactTypeByGenericCategory)
+(isa AutomatedTellerMachine ExistingObjectType)
+(isa AutomatedTellerMachine SpatiallyDisjointObjectType)
+(genls AutomatedTellerMachine ElectronicDevice)
+(comment AutomatedTellerMachine "An #$AutomatedTellerMachine (ATM) is a machine that dispenses money or accepts deposits for a bank.")
+
+(genls CellularTelephone BatteryPoweredDevice)
+(genls SmartPhone BatteryPoweredDevice)
+(genls MP3Player BatteryPoweredDevice)
+(genls PortableCDPlayer BatteryPoweredDevice)
+
+;;; How would we say "Chemistry Set" in Opencyc?
+;;; Is it a group of samples of chemicals?
+
+(isa Schematic ExistingObjectType)
+(isa Schematic SpatiallyDisjointObjectType)
+(genls Schematic DurableGood)
+(genls Schematic HumanAccessibleIBO)
+(genls Schematic Paper)
+(comment Schematic "Schematics are plans for electrical circuits.")
+
+(genls OpticalFiber PathArtifact) ; as well as being a transparent fiber
+
+(relationAllExists primarilyContainsInfo Schematic Design)
+(relationExistsMost providesPlanningInformation WiringACircuit Schematic)
+(relationMostExists providesPlanningInformation WiringACircuit Schematic)
+;; and for malfunction diagnosis
+
+(relationAllInstance electricalResistanceOfObject ElectricalWire ConductorResistance)
+(relationAllInstance electricalResistanceOfObject ElectricalConductor ConductorResistance)
+
+;;; The OpenCyc version of this concept was completely wrong.
+(isa Dumpster ExistingObjectType)
+(isa Dumpster SpatiallyDisjointObjectType)
+(isa Dumpster ArtifactTypeByGenericCategory)
+(genls Dumpster TrashContainer)
+(genls Dumpster DeviceWithNoMovingParts)
+(comment Dumpster "The large rectangular-shaped containers for refuse that are transported by truck.")
+
+(isa CoinSlot ExistingObjectType)
+(isa CoinSlot FirstOrderCollection)
+(genls CoinSlot Portal)
+(genls CoinSlot Artifact-HumanCreated)
+(physicalPartTypes CoinOperatedDevice CoinSlot)
+(comment CoinSlot "A CoinSlot is the portal where you put the coins in a CoinOperatedDevice.")
+
+(isa Kiln FirstOrderCollection)
+(isa Kiln DeviceTypeByFunction)
+(isa Kiln SpatiallyDisjointObjectType)
+(genls Kiln Oven)
+(comment Kiln "A #$Kiln is a very hot #$Oven for baking #$Clay-Wet into hardened #$Ceramic or firing an enamel glaze.")
+
+(isa PiggyBank ExistingObjectType)
+(isa PiggyBank FirstOrderCollection)
+(genls PiggyBank Artifact-HumanCreated)
+(comment PiggyBank "A container for storing #$Coin-Currency . Usually made of #$Ceramic, often shaped like a #$Pig.  Intended for children.")
+(physicalPartTypes PiggyBank CoinSlot)
+
+(isa DrumSet ExistingObjectType)
+(isa DrumSet FirstOrderCollection)
+(genls DrumSet DrumInstrument)
+(comment DrumSet "A #$DrumSet is a collection of #$DrumInstrument and #$Cymbal played in coordination by a single performer, that is commonly employed in the #$JazzMusic or #$RockMusic musical genres. Also called a Trap Set.")
+(physicalPartTypes DrumSet SnareDrum)
+(physicalPartTypes DrumSet BassDrum)  ; but played with the feet.
+(physicalPartTypes DrumSet TomTom)
+(physicalPartTypes DrumSet Cymbal)  ; and a High-Hat.
+(physicalPartTypes DrumInstrument DrumHead)
+
+;;; Drum Pedal would be: Pedal-ControlDevice deviceControlledBy 
+
+(isa Euphonium ArtifactTypeByGenericCategory)
+(isa Euphonium ExistingObjectType)
+(isa Euphonium SpatiallyDisjointObjectType)
+(genls Euphonium BrassInstrument)
+(comment Euphonium "a #$Euphonium is a valved brass musical instrument resembling a small tuba.")
+
+(isa Hookah ExistingObjectType)
+(isa Hookah SpatiallyDisjointObjectType)
+(isa Hookah Pipe-SmokingDevice)
+(isa Hookah DrugParaphernalia)
+(comment Hookah "Hookah - a water pipe for smoking, esp. hashish.  Often called a 'bong' in drug culture.")
+
+(outputsCreated-TypeType Designing Design)
+(outputsCreated-TypeType Planning Plan)
+(outputsCreated-TypeType Constructing ConstructionArtifact)
+(outputsCreated-TypeType ConstructingABuilding Building)
+(outputsCreated-TypeType PaintingAPicture Painting-ArtForm)
+(outputsCreated-TypeType Tattooing Tattoo)
+(outputsCreated-TypeType BatikDyeing BatikCloth)
+(outputsCreated-TypeType FashioningSomething Artifact)
+(outputsCreated-TypeType MakingPottery PotteryArtifact)
+(outputsCreated-TypeType Carving CarvedArtwork)
+(outputsCreated-TypeType Sculpting Sculpture)
+(outputsCreated-TypeType Soldering SolderedConnection)
+(outputsCreated-TypeType WiringACircuit ElectricalCircuit)
+(outputsCreated-TypeType MakingFileOfPapers File-FolderOfPapers)
+(outputsCreated-TypeType (PreparingFoodItem Sandwich) Sandwich)
+(outputsCreated-TypeType MakingCheese Cheese)
+(outputsCreated-TypeType Brewing Beer)
+(outputsCreated-TypeType HomeComposting GardenCompost)
+(outputsCreated-TypeType OrigamiFoldingEvent OrigamiArtifact)
+(outputsCreated-TypeType RustingProcess Rust)
+(outputsCreated-TypeType PavingARoad PavedRoadway)
+(outputsCreated-TypeType Skidding SkidMark)
+(outputsCreated-TypeType ProgrammingAComputer SoftwareObject)
+
+(relationAllExists objectTakenCareOf Gardening Garden)
+
+(mainConstituent-TypeType ThatchedRoof Straw)
+
+(isa RollerSkate (EquipmentTypeForEventTypeFn RollerSkating))
+(isa InLineSkate (EquipmentTypeForEventTypeFn InLineSkating))
+(isa Surfboard (EquipmentTypeForEventTypeFn Surfing))
+(isa Parachute (EquipmentTypeForEventTypeFn SkyDiving))
+(isa GolfClub (EquipmentTypeForEventTypeFn (PlayingFn Golf)))
+(isa GolfBall (EquipmentTypeForEventTypeFn (PlayingFn Golf)))
+(isa Jack-LiftingDevice (EquipmentTypeForEventTypeFn (RepairingFn FlatTire)))
+
+(genls RollerSkate WheeledTransportationDevice)
+(genls CarpentersSquare CarpentryTool) ; introduced in MetaEngineering
+
+(isa Cowbell ExistingObjectType)
+(isa Cowbell SpatiallyDisjointObjectType)
+(genls Cowbell Bell)
+(genls Cowbell DeviceWithNoMovingParts)
+(genls Cowbell PortableObject)
+(mainConstituent-TypeType Cowbell Metal)
+
+(isa Whetstone ArtifactTypeByGenericCategory)
+(isa Whetstone ExistingObjectType)
+(isa Whetstone SpatiallyDisjointObjectType)
+(genls Whetstone SharpeningTool)
+(genls Whetstone PortableObject)
+(genls Whetstone DeviceWithNoMovingParts)
+(mainConstituent-TypeType Whetstone StoneStuff)
+(relationAllExists objectSides Whetstone FlatSurfaceRegion)
+;;; something about purpose,
+;;; EdgeOnObject, BladeOfADevice(ako SharpEdged CuttingDevice)
+
+ 
+(isa Floodgate ExistingObjectType)
+(isa Floodgate SpatiallyDisjointObjectType)
+(genls Floodgate FixedStructure)
+(genls Floodgate FlowControlDevice)
+(genls Floodgate InfrastructureProduct)
+(comment Floodgate "Floodgates are a #$FlowControlDevice for releasing water from a #$Dam to prevent a #$Flood.")
+
+(isa Funnel ExistingObjectType)
+(isa Funnel ArtifactTypeByFunction)
+(isa Funnel SpatiallyDisjointObjectType)
+(genls Funnel FluidConduit)
+(comment Funnel "A #$Funnel is a #$FluidConduit that enables the flow of a liquid into container through a narrow portal.")
+
+
+;;; Stuff
+(isa RootBeer Collection)
+(isa RootBeer TangibleStuffCompositionType)
+(isa RootBeer ArtifactTypeByGenericCategory)
+(isa RootBeer DefaultDisjointEdibleStuffType)
+(genls RootBeer SoftDrink-Flavored)
+(genls RootBeer Opaque)
+(comment RootBeer "Root Beer non-alcoholic soda similar to sassafras.")
+(colorOfType RootBeer BrownColor)
+
+(isa PancakeBatter DefaultDisjointEdibleStuffType)
+(isa PancakeBatter ExistingStuffType)
+(isa PancakeBatter TangibleStuffCompositionType)
+(genls PancakeBatter (LiquidFn Dough))
+
+(isa Molasses DefaultDisjointEdibleStuffType)
+(isa Molasses TangibleStuffCompositionType)
+(genls Molasses OrganicMaterial)
+(genls Molasses LiquidTangibleThing)
+(genls Molasses Opaque)
+(genls Molasses Sweetener)
+(comment Molasses "Molasses is the thick brown syrup made from cane sugar.")
+
+(isa Curry ExistingObjectType)
+(isa Curry SpatiallyDisjointObjectType)
+(isa Curry SpecifiedFoodDishType)
+(genls Curry IndianCuisine)
+(genls Curry FoodComposite)
+(genls Curry FoodOrDrink-Hot)
+(genls Curry SpicyFood)
+
+(commonFoodTypeOfCuisine Curry IndianCuisine)
+(commonFootTypeOfCuisine SpaghettiMarinara  ItalianCuisine)
+
+(isa Burlap Collection)
+(isa Burlap TangibleStuffCompositionType)
+(isa Burlap ArtifactTypeByGenericCategory)
+(genls Burlap HempCloth)
+(comment Burlap "A very strong, coarse cloth, made from jute, flax or hemp.")
+
+(isa ElectricalTape Collection)
+(isa ElectricalTape ExistingStuffType)
+(genls ElectricalTape Tape)
+(comment ElectricalTape "#$ElectricalTape is the black insulating tape used to cover splices in house wiring.")
+
+(genls ShotPutShot (HeavyFn Projectile-Device))
+
+(mainConstituent-TypeType Sheetrock Gypsum)
+(mainConstituent-TypeType OrigamiArtifact Paper) ; Paper inherits from Foldable.
+
+(isa (SubcollectionOfWithRelationToTypeFn Tending-TakingCare-Handling-Management objectTakenCareOf FirewoodFire) SkilledActivityType)
+
+(agentTypeUsesArtifactType (PlayerOfInstrumentFn Drum-Instrument) (PairFn Drumstick)) ; unless they're congas
+(agentTypeUsesArtifactType Arborist PruningSaw)
+(agentTypeUsesArtifactType Arborist PruningShears)
+(agentTypeUsesArtifactType Artist-Visual ArtSupplies)
+(agentTypeUsesArtifactType CarMechanic Jack-LiftingDevice)
+(agentTypeUsesArtifactType Carpenter CarpentersSquare)
+(agentTypeUsesArtifactType Carpenter CarpentryTool)
+(agentTypeUsesArtifactType Carpenter Crowbar)
+(agentTypeUsesArtifactType Carpenter Hammer)
+(agentTypeUsesArtifactType Carpenter MiterSaw)
+(agentTypeUsesArtifactType Carpenter PlasterBoard)
+(agentTypeUsesArtifactType Carpenter Saw)
+(agentTypeUsesArtifactType Carpenter SawHorse)
+(agentTypeUsesArtifactType Carpenter Sheetrock)
+(agentTypeUsesArtifactType ComputerProgrammer Computer)
+(agentTypeUsesArtifactType DentalHygienist DentalTool)
+(agentTypeUsesArtifactType Dentist DentalTool)
+(agentTypeUsesArtifactType Electrician ElectriciansTool)
+(agentTypeUsesArtifactType Electrician SolderingIron)
+(agentTypeUsesArtifactType Electrician WireCutter)
+(agentTypeUsesArtifactType FigureSkater FigureSkate)
+(agentTypeUsesArtifactType Firefighter FireHose)
+(agentTypeUsesArtifactType Fisherman FishingNet)
+(agentTypeUsesArtifactType Gardener GardeningTool)
+(agentTypeUsesArtifactType HairStylist HairDryer)
+(agentTypeUsesArtifactType HairStylist CombForHair)
+(agentTypeUsesArtifactType HairStylist HairCuttingScissors)
+(agentTypeUsesArtifactType HairStylist HairCuttingRazor)
+(agentTypeUsesArtifactType Landscaper Shovel)
+(agentTypeUsesArtifactType Lifeguard LifePreserver)
+(agentTypeUsesArtifactType Lifeguard Whistle)
+(agentTypeUsesArtifactType Lumberjack Axe)
+(agentTypeUsesArtifactType Lumberjack ChainSaw)
+(agentTypeUsesArtifactType Maid DomesticCleaningTool)
+(agentTypeUsesArtifactType Maid Duster-Device)
+(agentTypeUsesArtifactType Mechanic Wrench)
+(agentTypeUsesArtifactType MedicalCareProfessional MedicalDevice)
+(agentTypeUsesArtifactType Metalworker MetalworkingTool)
+(agentTypeUsesArtifactType NailSalon NailFile)
+(agentTypeUsesArtifactType NailSalon NailClippers)
+(agentTypeUsesArtifactType NailSalon EmeryBoard)
+(agentTypeUsesArtifactType Painter-FineArtist)
+(agentTypeUsesArtifactType Photographer Camera)
+(agentTypeUsesArtifactType Plumber PVCPipe)
+(agentTypeUsesArtifactType Plumber Pipe-Plumbing)
+(agentTypeUsesArtifactType Plumber Plunger-HandTool)
+(agentTypeUsesArtifactType Plumber Wrench)
+(agentTypeUsesArtifactType PoliceOfficer-Municipal Club-Weapon)
+(agentTypeUsesArtifactType PoliceOfficer-Municipal Flashlight)  ; Badge?
+(agentTypeUsesArtifactType PoliceOfficer-Municipal Handgun)
+(agentTypeUsesArtifactType Potter Kiln)
+(agentTypeUsesArtifactType Potter PottersWheel)
+(agentTypeUsesArtifactType RoadConstructor JackHammer)
+(agentTypeUsesArtifactType RoadConstructor Shovel)
+(agentTypeUsesArtifactType RoadConstructor RoadRoller)
+(agentTypeUsesArtifactType Schoolteacher Chalk-WritingImplement)
+(agentTypeUsesArtifactType Schoolteacher WritingBoard)
+(agentTypeUsesArtifactType TaxiDriver TaxiCab)
+(agentTypeUsesArtifactType TruckDriver Truck)
+
+(objectTypeAvailableToAgentType LawEnforcementOfficer Handgun)
+(objectTypeAvailableToAgentType DeskWorker PhotocopyMachine)
+(objectTypeAvailableToAgentType Chef KitchenTimer)
+(objectTypeAvailableToAgentType Chef Baster-Device)
+(objectTypeAvailableToAgentType Roofer Ladder)
+(objectTypeAvailableToAgentType Firefighter FireHydrant)
+(objectTypeAvailableToAgentType RoadConstructor JackHammer)
+(objectTypeAvailableToAgentType RoadConstructor Shovel)
+(objectTypeAvailableToAgentType RoadConstructor ConstructionWall)
+(objectTypeAvailableToAgentType RoadConstructor RoadRoller)
+(objectTypeAvailableToAgentType RoadConstructor Bulldozer)
+(objectTypeAvailableToAgentType RoadConstructor Excavator-Vehicle)
+(objectTypeAvailableToAgentType MetalWorker Welder-Tool)
+(objectTypeAvailableToAgentType Plumber Wrench)
+(objectTypeAvailableToAgentType Plumber Plunger-HandTool)
+(objectTypeAvailableToAgentType Plumber Blowtorch)
+(objectTypeAvailableToAgentType Plumber Bucket)
+(objectTypeAvailableToAgentType Plumber PlumbingFixture)
+(objectTypeAvailableToAgentType Electrician ElectricalWire)
+(objectTypeAvailableToAgentType Electrician ElectricalTape)
+(objectTypeAvailableToAgentType Electrician ElectricalConduit)
+(objectTypeAvailableToAgentType Carpenter Lumber)
+(objectTypeAvailableToAgentType Carpenter Nail)
+(objectTypeAvailableToAgentType Painter-Tradesperson PaintBrush)
+(objectTypeAvailableToAgentType Painter-Tradesperson PaintThinner)
+(objectTypeAvailableToAgentType Painter-Tradesperson PaintRoller)
+(objectTypeAvailableToAgentType Painter-Tradesperson HouseholdPaint)
+(objectTypeAvailableToAgentType Painter-Tradesperson IndustrialPaint)
+(objectTypeAvailableToAgentType Painter-FineArtist Paint)
+(objectTypeAvailableToAgentType Painter-FineArtist Canvas)
+(objectTypeAvailableToAgentType Painter-FineArtist Easel)
+(objectTypeAvailableToAgentType Painter-FineArtist Palette)
+(objectTypeAvailableToAgentType Potter Clay-Wet)
+(objectTypeAvailableToAgentType Potter GlazeForCeramics)
+(objectTypeAvailableToAgentType Potter Kiln)
+
+(deviceTypeUsesWaveType RadioTelescope RadioWave)
+(deviceTypeUsesWaveType RadarDevice MicrowaveRadiation)
+(deviceTypeUsesWaveType XRayPhotographicDevice XRay)
+
+(pathTypeConveysType Chimney Smoke)
+(pathTypeConveysType VehicleExhaustSystem Exhaust-InternalCombustionEngine)
+(pathTypeConveysType OpticalFiber Light)
+
+;;; How would we say that x-rays let you image the inside of something?
+;;; Infrared is radiant heat
+;;; A bar of Soap-Personal dissolves slowly with use (by virtue of being a ConsumableProduct)
+(relationMostExists inputsDestroyed Soap-Personal Washing) ; not consumedObject, because it isn't all consumed at once.
+
+;;; toothpaste comes in tubes:
+(relationMostExists packaging (FormalProductFn Toothpaste) ToothpasteTube)
+(genls (FormalProductFn Toothpaste) PackagedProduct)
+
+;;; Soap bubbles pop silently, bubblegum bubbles pop noisily
+;;; Balloons pop, making a sudden noise with their destruction
+;;; Sudden noises are surprising
+;;; Babies are scared by most surprises
+
+;;; Sawdust is the wasteProducts of Sawing:
+(relationMostExists wasteProducts Sawdust Sawing)
+
+;;; Rust is the product of RustingProcesses:
+(relationAllExists outputsCreated RustingProcess Rust)
+
+;;; Legos (Lego-TheToy) hurt when you step on them barefoot,causes Limping
+;;; TakingAStep SupportingOnesWeight BarefootPerson anatomicalPartTypeAffected supportedBy supportingObject
+
+(isa Yardstick ArtifactTypeByGenericCategory)
+(isa Yardstick ExistingObjectType)
+(isa Yardstick SpatiallyDisjointObjectType)
+(genls Yardstick DistanceMeasuringDevice)
+(prettyString-Canonical Yardstick "yardstick")
+(relationAllInstance lengthOfObject Yardstick (Foot-UnitOfMeasure 3))
+
+(relationAllInstance lengthOfObject Ruler-MeasuringDevice (Foot-UnitOfMeasure 1))
+
+;;; HearingAid, Eyeglasses, 
+(conceptuallyRelated HearingAid OldHuman)
+(conceptuallyRelated Eyeglasses-Corrective OldHuman) ; especially reading glasses
+(conceptuallyRelated Stethoscope Doctor-Medical)
+(conceptuallyRelated TongueDepressor Doctor-Medical)
+
+(internalPowerSourceTypes BatteryPoweredDevice Battery)
+(internalPowerSourceTypes HearingAid-Prescription ButtonCell)
+(internalPowerSourceTypes ElectricCar Battery)
+(relationMostExists internalPowerSource Wristwatch ButtonCell)  ; Some watches must be wound
+(relationExistsExists internalPowerSource Wristwatch ClockMainspring)
+
+; a hearing aid is intended to be worn by a (CollectionIntersection2Fn HearingImpairedAnimal HomoSapiens)
+
+
+
+
+;;; containerCapacities:
+;;; (relationAllInstance containerCapacity <container-type> (<unit> <low> <high>))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,228 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: knowledge-segmentation-automate.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: July 1, 2014 14:06:38
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+;;; This file is for automatically running knowledge segmentation over a collection of stored readings.
+;;; It takes a list of primary microtheories and for each thing in them, makes a case, which it stores
+;;; in the kb.
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Takes a primary MT and makes cases seeded on everything it contains.
+
+(isa makeCasesFromSeedsInReadingWithQfQList ComplexActionPredicate)
+(arity makeCasesFromSeedsInReadingWithQfQList 4)
+(arg1Isa makeCasesFromSeedsInReadingWithQfQList InformationBearingThing) ;;; The reading to look in for seeds
+(arg2Isa makeCasesFromSeedsInReadingWithQfQList Integer) ;;; The maximum depth
+(arg3Isa makeCasesFromSeedsInReadingWithQfQList List) ;;; The list of QFQ applied to the reading.
+(arg4Isa makeCasesFromSeedsInReadingWithQfQList Thing) ;;; The experiment name
+(comment makeCasesFromSeedsInReadingWithQfQList "(makeCasesFromSeedsInReadingWithQfQList ?seed-source-reading ?max-depth ?fact-source-mt
+?qfq-list ?experiment-name) segments over the seeds in ?seed-source-mt.")
+
+(preconditionForMethod
+ (evaluate ?list-of-mts
+   (TheClosedRetrievalSetOf ?microtheory
+        (ist-Information StoredSUSDCaseInfoMt
+          (interpretationOfWithRespectTo (SourceTextChapterParagraphFn ?seed-source-reading ?chapt ?para) ?qfq-list 
+                               ?microtheory))))
+ (methodForAction
+  (makeCasesFromSeedsInReadingWithQfQList ?seed-source-reading ?max-depth ?qfq-list ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?next-mt ?list-of-mts
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (makeCasesFromSeedsInMt ?next-mt ?max-depth (SpindleWithSubDrsesFn ?next-mt) ?experiment-name)
+                  ))))))))
+
+(isa makeCasesFromSeedsInMt ComplexActionPredicate)
+(arity makeCasesFromSeedsInMt 4)
+(arg1Isa makeCasesFromSeedsInMt Microtheory) ;;; The microtheory to look in for seeds
+(arg2Isa makeCasesFromSeedsInMt Integer) ;;; The maximum depth
+(arg3Isa makeCasesFromSeedsInMt Microtheory) ;;; The microtheory to look in to build cases
+(arg4Isa makeCasesFromSeedsInMt Thing) ;;; The experiment name
+(comment makeCasesFromSeedsInMt "(makeCasesFromSeedsInMt ?seed-source-mt ?max-depth ?fact-source-mt
+?experiment-name) segments over the seeds in ?seed-source-mt.")
+
+(isa seedUsedToGenerateCaseWithinMt Predicate)
+(arity seedUsedToGenerateCaseWithinMt 6)
+(arg1Isa seedUsedToGenerateCaseWithinMt Thing) ;;; the seed
+(arg2Isa seedUsedToGenerateCaseWithinMt Microtheory) ;;; the microtheory looked in for seeds
+(arg3Isa seedUsedToGenerateCaseWithinMt Integer) ;;; the depth 
+(arg4Isa seedUsedToGenerateCaseWithinMt Microtheory) ;;; The microtheory looked in for cases
+(arg5Isa seedUsedToGenerateCaseWithinMt Thing) ;;; the experiment name.
+(arg6Isa seedUsedToGenerateCaseWithinMt Microtheory) ;;; the case name
+(comment seedUsedToGenerateCaseWithinMt "(seedUsedToGenerateCaseWithinMt ?seed ?seed-source-mt
+ ?max-depth ?fact-source-mt ?experiment-name ?case-name)")
+
+
+
+(isa entitiesInMt Predicate)
+(arity entitiesInMt 2)
+(arg1Isa entitiesInMt Microtheory)
+(arg2Isa entitiesInMt List)
+(comment entitiesInMt "(entitiesInMt ?microtheory ?list) is intended to be used as an
+outsourced predicte that returns a list of the entities mentioned in ?microtheory.")
+
+(isa seedsForCasesMt Microtheory)
+(comment seedsForCasesMt "Stores the seedUsedToGenerateCaseWithinMt facts.")
+
+(preconditionForMethod
+ (entitiesInMt ?seed-source-mt ?seed-entities-list)
+ (methodForAction
+  (makeCasesFromSeedsInMt ?seed-source-mt ?max-depth ?fact-source-mt ?experiment-name)
+  (actionSequence
+   (TheList
+    
+    (doForEach ?seed ?seed-entities-list
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (doClearWorkingMemory)
+                  (doGarbageCollect)
+                  (doRecord (ist-Information seedsForCasesMt 
+                              (seedUsedToGenerateCaseWithinMt 
+                               ?seed ?seed-source-mt ?max-depth ?fact-source-mt ?experiment-name
+                               (caseSegmentedAroundFn ?seed ?fact-source-mt ?experiment-name))))
+                  (segmentOn ?seed ?max-depth ?fact-source-mt ?experiment-name )
+                  ))))))))
+
+
+;;;(segmentOn  system2194 3 
+;;;           (SpindleWithSubDrsesFn ReadingOf-SourceTextChapterParagraphFn-SUSD-Simplified-May2014-01-Chap16-Para5-052614-009-JustCorefMt) 
+;;;           testinghowdrswork0036)
+
+(isa makeCasesFromIndicesInSpindle ComplexActionPredicate)
+(arity makeCasesFromIndicesInSpindle 3)
+(arg1Isa makeCasesFromIndicesInSpindle Microtheory) ;;; The spindle to look in for indices
+(arg2Isa makeCasesFromIndicesInSpindle Integer) ;;; The maximum depth
+(arg3Isa makeCasesFromIndicesInSpindle Thing) ;;; The experiment name
+(comment makeCasesFromIndicesInSpindle "(makeCasesFromIndicesInSpindle ?spindle ?max-depth
+?experiment-name) segments over the topic indices in ?spindle.")
+
+;;; segmentOn needs:
+;;; An entity, which we can get with entity-at-index
+;;; A depth, which gets passed in.
+;;; A spindle to look in, which is SpindleWithSubDrsesFn of 
+;;; (SpindleWithSubDrsesFn 
+;;;      (FactsFromReadingMtFn 
+;;;        ReadingOf-SUSD-Nov2014-01-Ch16-P8-112114-01-Auto)) 
+;;; Which we can get with 
+;;;(car (fire::ask-it 
+;;;         `(interpretationOfWithRespectTo ,(second index) (TheList EAGeneralQueriesMt) 
+;;;                                         ?interpretation)
+;;;       :response '?interpretation))
+;;; and an experiment name, which gets passed in.
+
+(preconditionForMethod
+ (and
+      (evaluate ?first-indices
+        (TheClosedRetrievalSetOf ?first-index
+          (ist-Information CaseRetrievalFactsMt
+            (topicPairIndicesInSpindle ?topic-spindle	
+                           ?first-index
+                                       ?second-index ?name))))
+      (evaluate ?second-indices
+        (TheClosedRetrievalSetOf ?second-index
+          (ist-Information CaseRetrievalFactsMt
+            (topicPairIndicesInSpindle ?topic-spindle	
+                           ?first-index
+                                       ?second-index ?name))))
+      (evaluate ?indices-with-dupes
+        (SetOrCollectionUnion ?first-indices ?second-indices))
+      (evaluate ?indices
+        (RemoveDuplicatesFn ?indices-with-dupes equal IdentityFn)))
+ (methodForAction
+  (makeCasesFromIndicesInSpindle ?topic-spindle ?max-depth ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?index ?indices
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (makeCaseFromIndex ?topic-spindle ?index ?max-depth ?experiment-name)))))))))
+
+;;; segmentOn needs:
+;;; An entity, which we can get with entity-at-index
+;;; A depth, which gets passed in.
+;;; A spindle to look in, which is SpindleWithSubDrsesFn of 
+;;; (SpindleWithSubDrsesFn 
+;;;      (FactsFromReadingMtFn 
+;;;        ReadingOf-SUSD-Nov2014-01-Ch16-P8-112114-01-Auto)) 
+;;; Which we can get with 
+;;;(car (fire::ask-it 
+;;;         `(interpretationOfWithRespectTo ,(second index) (TheList EAGeneralQueriesMt) 
+;;;                                         ?interpretation)
+;;;       :response '?interpretation))
+;;; and an experiment name, which gets passed in.
+
+(isa makeCaseFromIndex ComplexActionPredicate)
+(arity makeCaseFromIndex 4)
+(arg1Isa makeCaseFromIndex Microtheory) ;;; The spindle where the index originated
+(arg2Isa makeCaseFromIndex Thing) ;;; the index
+(arg3Isa makeCaseFromIndex Integer) ;;; The maximum depth
+(arg4Isa makeCaseFromIndex Thing) ;;; The experiment name
+(comment makeCaseFromIndex "(makeCaseFromIndex ?spindle ?index ?max-depth
+?experiment-name) segments over the entity at ?index.")
+
+(isa entityAtIndex Predicate)
+(arity entityAtIndex 2)
+(arg1Isa entityAtIndex Thing)
+(arg2Isa entityAtIndex Thing)
+(comment entityAtIndex "(entityAtIndex ?index ?entity) is meant to be used as
+an outsourced predicate with the second argument open. It returns the entity
+located at ?index.")
+
+(preconditionForMethod
+ (and
+      (entityAtIndex (ParagraphSentenceSpanFn ?source-text ?sen-pos ?span) ?seed-initial)
+      (outResolvedEntityInDiscourse ?seed ?seed-initial)
+      (ist-Information StoredSUSDCaseInfoMt
+        (interpretationOfWithRespectTo ?source-text (TheList EAGeneralQueriesMt) 
+                                       ?interpretation))
+      (unifies ?fact-source-mt (SpindleWithSubDrsesFn ?interpretation))
+      )
+ (methodForAction
+  (makeCaseFromIndex ?topic-spindle 
+                     (ParagraphSentenceSpanFn ?source-text ?sen-pos ?span)
+                     ?max-depth ?experiment-name)
+  (actionSequence
+   (TheList
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doClearWorkingMemory)
+       (doGarbageCollect)
+       (doRecord (ist-Information seedsForCasesMt 
+                   (seedUsedToGenerateCaseWithinMt 
+                    ?seed ?topic-spindle ?max-depth ?fact-source-mt ?experiment-name
+                    (caseSegmentedAroundFn ?seed ?fact-source-mt ?experiment-name))))
+       (segmentOn ?seed ?max-depth ?fact-source-mt ?experiment-name )
+       )))))))
+
+;;; Problem: This needs to know what microtheory spindles the topics come from
+;;; Fortunately, i think that informatino is available. because of how they're stored
+#|
+
+(topicPairIndicesInSpindle	AllJustCorefByParaSUSD16-1125	
+                           (ParagraphSentenceSpanFn (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 2) 0 (SpanFn 8 11))
+                           (ParagraphSentenceSpanFn (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 2) 1 (SpanFn 8 11)))
+
+|#
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

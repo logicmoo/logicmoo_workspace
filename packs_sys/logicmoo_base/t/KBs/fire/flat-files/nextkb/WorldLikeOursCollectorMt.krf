@@ -1,0 +1,17 @@
+
+(in-microtheory WorldLikeOursCollectorMt)
+
+(genls (FemaleFn Bodybuilder) FemaleAnimal)
+(genls (FemaleFn Wrestler) FemaleAnimal)
+(genls (MaleFn Bodybuilder) Bodybuilder)
+(genls Founder-Entrepreneur (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls SportsOfficial (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls (AthletePlayerTypeOfSportFn Rugby) (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls (AthletePlayerTypeOfSportFn Badminton) (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls (ProfessionalFn Golfer) (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls SoleFounder-Entrepreneur (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls Cofounder-Entrepreneur (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls SportsJudge (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls (ExceptionalPerformerTypeOfCharacteristicActivityFn Boxer) (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls BaseballUmpire (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls Referee (CollectionDifferenceFn HomoSapiens HumanInfant))

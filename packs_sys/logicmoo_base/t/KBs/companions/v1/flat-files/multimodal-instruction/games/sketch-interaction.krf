@@ -1,0 +1,794 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: sketch-interaction.meld
+;;;;    System: FMI
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 27, 2013 10:34:38
+;;;;   Purpose: Plans and predicates for sketch-interaction for game playing.
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory FmiGamesMt) ; inherits from SketchAgentMt
+
+;;; Keep in mind the fundamental mismatch between the CogSketch UI and the
+;;; internal representations.  As presented to the user, a bundle is a 
+;;; subsketch comprised of layers.  *Internally*, a subsketch is a layer, and
+;;; a bundle is a subSketchGroup.   Moreover, the reified object name of the 
+;;; bundle is something like Subsketch-05, rather than SubsketchGroup-05.
+;;;
+;;; Unfortunate.
+
+;;; latestEntityAdded is a dynamicUpdatePredicate that looks on a specified
+;;; layer for the last glyph added.  There are corresponding deleted and moved
+;;; versions as well.
+;;; Defined in companions/v1/nuSketch-hookup/nusketch-extensions.lsp.
+
+
+;;; Use the outsourced dynamic update predicate (currentSketchLayer ?what)
+;;; to get the (single) current sketch layer.  Do not rely on 
+;;; currentlyActiveLayerInSketch, since it returns an answer for each bundle.
+
+;;; Incompatible Change:
+;;; the event new-sketch-entity-added no longer exists.  Instead, we have to
+;;; use new-glyphs.
+
+;;; These should execute on the sketch-agent:
+;;; -----------------------------------------
+
+
+(isa glyphNamed QuaternaryPredicate)
+(arity glyphNamed 4)
+
+
+;;; nameString associates an object with a namestring. 
+;;; Need one more dereference to get the glyph name.
+(<== (glyphNamed ?sketch-case ?bundle-namestring ?namestring ?glyph)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?sketch-case
+           (subSketchGroupRepresentsObject ?bundle ?bcase))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?bcase
+           (nameString ?bcase ?bundle-namestring))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?bcase
+           (nameString ?object ?namestring))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?bcase
+           (glyphRepresentsObject ?glyph ?object)))))
+
+
+(isa gameStateBundle TernaryPredicate)
+(arity gameStateBundle 3)
+
+(<== (gameStateBundle ?sketch ?bundle ?bcase)
+     (lookupOnly
+       (wmOnly
+         (ist-Information EverythingPSC  ;; To Do: replace EverythingPSC with something more appropriate
+           (sketchRepresentsObject ?sketch ?sketch-case))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?sketch-case
+           (subSketchGroupRepresentsObject ?bundle ?bcase))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?bcase
+           (nameString ?bcase "GameState")))))
+
+(isa piecesBundle TernaryPredicate)
+(arity piecesBundle 3)
+     
+(<== (piecesBundle ?sketch ?bundle ?bcase)
+     (lookupOnly
+       (wmOnly
+         (ist-Information EverythingPSC ;; To Do: replace EverythingPSC with something more appropriate
+           (sketchRepresentsObject ?sketch ?sketch-case))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?sketch-case
+           (subSketchGroupRepresentsObject ?bundle ?bcase))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?bcase
+           (nameString ?bcase "Pieces")))))
+
+(isa currentBoardGlyph BinaryPredicate)
+(arity currentBoardGlyph 2)
+(comment currentBoardBoardGlyph  "(currentBoardBoardGlyph ?sketch ?board-glyph) is a FMI games-specific predicate that looks up the glyph representing a game board in a sketch.")
+
+(<== (currentBoardGlyph ?sketch ?board-glyph)
+     (numAnswers 1
+       (ist-Information EverythingPSC ;; To Do: replace EverythingPSC with something more appropriate
+         (sketchRepresentsObject ?sketch ?sketch-case)))
+     (numAnswers 1
+       (glyphNamed ?sketch-case "GameState" "board" ?board-glyph)))
+
+(isa prototypeGlyphNamed TernaryPredicate)
+(arity prototypeGlyphNamed 3)
+
+(<== (prototypeGlyphNamed ?sketch ?name ?proto-glyph)
+     (numAnswers 1
+       (ist-Information EverythingPSC ;; To Do: replace EverythingPSC with something more appropriate
+         (sketchRepresentsObject ?sketch ?sketch-case)))
+     (numAnswers 1
+       (glyphNamed ?sketch-case "Pieces" ?name ?proto-glyph)))
+
+(isa glyphNamestringInSketch BinaryPredicate)
+(arity glyphNamestringInSketch 2)
+
+(<== (glyphNamestringInSketch ?glyph ?namestring)
+     (groundExpression ?namestring)
+     (currentSubsketchContext ?bcase)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?bcase
+             (nameString ?object ?namestring)))))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?bcase
+             (glyphRepresentsObject ?glyph ?object))))))
+     
+(<== (glyphNamestringInSketch ?glyph ?namestring)
+     (groundExpression ?glyph)
+     (variableExpression ?namestring)
+     (currentSubsketchContext ?bcase)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?bcase
+             (glyphRepresentsObject ?glyph ?object)))))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?bcase
+             (nameString ?object ?namestring))))))
+
+
+(isa glyphToGameEntity TernaryPredicate)
+(arity glyphToGameEntity 3)
+(arg1Isa glyphToGameEntity Microtheory)
+(arg2Isa glyphToGameEntity NuSketchGlyph)
+(arg3Isa glyphToGameEntity CycLTerm)
+(comment glyphToGameEntity "(glyphToGameEntity ?bundle-case ?glyph ?entity) binds ?entity (a game piece or mark) to the symbol of the namestring of the object of the glyph.")
+
+;;; In an ideal world, the ?mark-obj could be the mark, but I'm not sure
+;;; we have that level of control at the moment.
+;;; This assumes that instantiating a prototype glyph preserves the namestring.
+(<== (glyphToGameEntity ?bcase ?glyph ?mark)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?bcase
+             (glyphRepresentsObject ?glyph ?mark-obj)))))
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?bcase
+             (nameString ?mark-obj ?namestring)))))
+     (evaluate ?mark
+       (SymbolConcatenateFn (TheList ?namestring))))
+
+;;; Convert spatial rep to action rep:
+
+(isa markToGameAction QuaternaryPredicate)
+(arity markToGameAction 4)
+(arg1Isa markToGameAction GameRole)
+(arg2Isa markToGameAction NuSketchGlyph)
+(arg3Isa markToGameAction Coordinate)  ;; define!
+(arg4Isa markToGameAction Action)
+(comment markToGameAction "(markToGameAction ?role ?mark ?coordinate-location ?action) converts a spatial location into a mark action.")
+
+;;; Just swap the functor:
+(<== (markToGameAction ?role ?mark ?locfn ?action)
+     (unifies (LocFn ?x ?y) ?locfn)
+     (unifies ?action (mark ?x ?y ?mark)))
+
+
+;;; Representation:
+;;; Store in the sketch case the mapping from role to layer.
+;;; If we have a bi-directional mapping from layer name to player number,
+;;; then we're good.  NuSketch shouldn't care who's who.
+
+(isa resetGameSketch ComplexActionPredicate)
+(arity resetGameSketch 0)
+
+(preconditionForMethod
+  (numAnswers 1 
+    (gameStateBundle ?sketch ?game-state ?mt)) ; none of these need to be bound
+  (methodForAction                             ; going in, provided this is 
+    (resetGameSketch)                          ; called on the sketch agent.
+    (actionSequence
+      (TheList
+        (doClearEventCallback new-glyphs) ; *** what about clearing entity-moved?
+        (doClearSubsketch ?game-state)))))
+
+;;; We know a sketch is open, since this is executing on a sketch agent.
+(preconditionForMethod
+  (uninferredSentence
+    (gameStateBundle ?sketch ?game-state ?mt))
+  (methodForAction
+    (resetGameSketch)
+    (actionSequence
+     (TheList
+        (maybeSetBundleName "Pieces")      ; for now.  Maybe Catalog would be better.
+        (doEval (setf *auto-spatial-reasoning-default* nil))  ; This is terrible but the alternative will take too long.
+        (doCreateBundle "GameState")       ; This should set the active bundle and layer as well.
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (setupGameStateBundle))))))))          ; hide text labels on subsequent current layer.
+
+
+(isa maybeSetBundleName ComplexActionPredicate)
+(arity maybeSetBundleName 1)
+(comment maybeSetBundleName "(maybeSetBundleName ?new-name) sets the user-namestring of the current bundle to ?new-name if it isn't already.")
+
+(preconditionForMethod
+   (and (currentSubsketchContext ?bcase)    ; outsourced in nuSketch
+        ;; In the bcase, the nameString of the bcase is the visible name.
+        (lookupOnly
+         (ist-Information ?bcase
+           (nameString ?bcase ?name))))
+ (methodForAction
+   (maybeSetBundleName ?name)
+   (actionSequence
+     (TheList))))
+
+(preconditionForMethod
+   (and (currentSubsketchContext ?bcase)    ; outsourced in nuSketch
+        ;; In the bcase, the nameString of the bcase is the visible name.
+        (uninferredSentence
+          (lookupOnly
+            (localOnly
+              (ist-Information ?bcase
+               (nameString ?bcase ?name))))))
+  (methodForAction
+    (maybeSetBundleName ?name)
+      (actionSequence
+        (TheList
+          (doSetNamestring ?bcase ?name)))))
+          
+(isa setupGameStateBundle ComplexActionPredicate)
+(arity setupGameStateBundle 0)
+(comment setupGameStateBundle "(setupGameStateBundle) turns off automatic spatial reasoning inferences and labels on the game state bundle.")
+
+(preconditionForMethod
+  (numAnswers 1 (gameStateBundle ?sketch ?bundle ?mt))
+  (methodForAction
+    (setupGameStateBundle)
+    (actionSequence
+      (TheList
+        (doSetAutoSpatialReasoning ?bundle False)
+        (hideLabels)))))
+        
+(preconditionForMethod
+  (uninferredSentence 
+    (gameStateBundle ?sketch ?bundle ?mt))
+  (methodForAction
+    (setupGameStateBundle)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Couldn't find the gamestate bundle.  Probably a timimg issue.")))))
+
+(isa hideLabels ComplexActionPredicate)
+(arity hideLabels 0)
+(comment hideLabels "(hideLabels) hides the text labels of glyphs on the current layer.")
+
+(preconditionForMethod
+  (currentSketchLayer ?layer-name)
+  (methodForAction
+    (hideLabels)
+    (actionSequence
+      (TheList
+        (doSetLayerTextVisibility ?layer-name False)))))
+
+(preconditionForMethod
+  (uninferredSentence (currentSketchLayer ?layer-name))
+  (methodForAction
+    (hideLabels)
+    (actionSequence
+      (TheList))))
+
+(isa drawBoard ComplexActionPredicate)
+(arity drawBoard 4)
+(arg1Isa drawBoard NuSketchSketch)
+(arg2Isa drawBoard Set-Mathematical)
+(arg3Isa drawBoard Integer)
+(arg4Isa drawBoard Integer)
+(comment drawBoard "(drawBoard ?sketch ?initial-contents ?max-x ?max-y) draws the initial board and sets it up.")
+
+;;; Find or make GameState bundle.
+;;; Pick the top or active layer
+;;; Clear the layer if necessary.
+;;; Instantiate the board on the layer.
+;;; zoom to the board.
+(preconditionForMethod
+  (and (numAnswers 1 (prototypeGlyphNamed ?sketch "board" ?board-prototype))
+       (currentSketchLayer ?layer))
+  (methodForAction
+    (drawBoard ?sketch ?initial-contents ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doInstantiateGlyph ?board-prototype ?layer)
+       ;(doWaitForEvent new-glyphs 10)  ; timeout at 10 seconds
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (zoomToBoard ?sketch ?layer ?initial-contents ?max-x ?max-y))))))))
+
+
+(isa zoomToBoard ComplexActionPredicate)
+(arity zoomToBoard 5)
+(arg1Isa zoomToBoard NuSketchSketch)
+(arg2Isa zoomToBoard SubSketch)  ; a layer
+(arg3Isa zoomToBoard Set-Mathematical)
+(arg4Isa zoomToBoard Integer)
+(arg5Isa zoomToBoard Integer)
+              
+(preconditionForMethod
+  (latestEntityAdded ?layer ?board-glyph)
+  (methodForAction
+    (zoomToBoard ?sketch ?layer ?initial-contents ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%BoardGlyph = ~a" (?board-glyph))
+        (doDeselectGlyph ?board-glyph)
+        ;(doSetLayerTextVisibility ?layer False)
+        (doZoomToFitGlyphs (TheSet ?board-glyph))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (populateBoard ?sketch ?layer ?board-glyph ?initial-contents ?max-x ?max-y))))))))
+
+
+
+;;; Make a populateBoard method to extract max-x and max-y.
+;;; Then we need a method positionPiece to run after executing doInstantiateGlyph
+;;; so that we can extract the new glyph.
+
+(isa populateBoard ComplexActionPredicate)
+(arity populateBoard 6)
+(arg1Isa populateBoard NuSketchSketch)
+(arg2Isa populateBoard SubSketch)
+(arg3Isa populateBoard NuSketchGlyph)
+(arg4Isa populateBoard Set-Mathematical)
+(arg5Isa populateBoard Integer)
+(arg6Isa populateBoard Integer)
+(comment populateBoard "(populateBoard ?sketch ?layer ?board-glyph ?initial-contents ?max-x ?max-y) sets up the pieces in their initial positions.")
+
+;;; We'd like this to happen with events turned off.  How?
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (populateBoard ?sketch ?layer ?board-glyph ?initial-contents ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doSuppressEvents True)
+        (doForEach ?cell-contents ?initial-contents 
+          (populateCell ?sketch ?layer ?board-glyph ?cell-contents ?max-x ?max-y))
+        (doSuppressEvents False)
+        ))))
+
+
+(isa populateCell ComplexActionPredicate)
+(arity populateCell 6)
+(arg1Isa populateCell NuSketchSketch)
+(arg2Isa populateCell SubSketch)
+(arg3Isa populateCell NuSketchGlyph)
+(arg4Isa populateCell Thing)
+(arg5Isa populateCell Integer)
+(arg6Isa populateCell Integer)
+(comment populateCell "(populateCell ?sketch ?layer ?board-glyph ?cell-contents ?max-x ?max-y)")
+
+(preconditionForMethod
+  (and (unifies (cell ?x ?y ?piece) ?cell-contents)
+       ; ToDo: lookup remotely the entityName of ?piece
+       ; Do we need to convert it to a string?
+       (evaluate ?piece-name (StringFn ?piece))  ; temporary?
+       (numAnswers 1 (prototypeGlyphNamed ?sketch ?piece-name ?piece-prototype)))
+  (methodForAction
+    (populateCell ?sketch ?layer ?board-glyph ?cell-contents ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doInstantiateGlyph ?piece-prototype ?layer)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (moveNewGlyphTo ?layer ?board-glyph ?x ?y ?max-x ?max-y))))))))
+
+
+(isa moveNewGlyphTo ComplexActionPredicate)
+(arity moveNewGlyphTo 6)
+(arg1Isa moveNewGlyphTo SubSketch)
+(arg2Isa moveNewGlyphTo NuSketchGlyph)
+(arg3Isa moveNewGlyphTo Integer)
+(arg4Isa moveNewGlyphTo Integer)
+(arg5Isa moveNewGlyphTo Integer)
+(arg6Isa moveNewGlyphTo Integer)
+(comment moveNewGlyphTo "(moveNewGlyphTo ?layer ?board-glyph ?x ?y ?max-x ?max-y)")
+
+(preconditionForMethod
+  (latestEntityAdded ?layer ?glyph)
+  (methodForAction
+    (moveNewGlyphTo ?layer ?board ?x ?y ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doMoveGlyph ?glyph (CoordinateSubregionFn ?board ?x ?y ?max-x ?max-y))))))
+
+(isa acceptBoardGlyph ComplexActionPredicate)
+(arity acceptBoardGlyph 4)
+(arg1Isa acceptBoardGlyph NuSketchSketch)
+(arg2Isa acceptBoardGlyph Set-Mathematical)
+(arg3Isa acceptBoardGlyph Integer)
+(arg4Isa acceptBoardGlyph Integer)
+(comment acceptBoardGlyph "(acceptBoardGlyph ?sketch ?initial-contents ?max-x ?max-y) waits for the user to draw the board and sizes it to fit the window.")
+
+(preconditionForMethod
+  (and (numAnswers 1 (gameStateBundle ?sketch ?bundle ?bundle-case))
+       (currentSketchLayer ?layer))
+  (methodForAction
+    (acceptBoardGlyph ?sketch ?initial-contents ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doSetSketchInteractionMode Draw) ; enable user to draw
+        (doSetStatBarMsg "Draw a board")
+        (doWaitForEvent new-glyphs 30)
+    (doAgentPlan
+      (actionSequence
+        (TheList
+          (zoomToBoard ?sketch ?layer ?initial-contents ?max-x ?max-y))))))))
+
+
+(isa acceptMark ComplexActionPredicate)
+(arity acceptMark 5)
+(arg1Isa acceptMark GameRole)
+(arg2Isa acceptMark Set-Mathematical)
+(arg3Isa acceptMark NuSketchSketch)
+(arg4Isa acceptMark Integer)
+(arg5Isa acceptMark Integer)
+(comment acceptMark "(acceptMark ?role ?allowed-marks ?sketch ?max-x ?max-y) waits for user playing ?role to take his turn.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (acceptMark ?role ?allowed-marks ?sketch ?max-x ?max-y) ; make acceptMark take a set of possible marks?
+    (actionSequence
+      (TheList
+        (doSetSketchInteractionMode Draw) ; enable user to draw
+        ;(doSetStatBarMsg "Your turn")
+        (doWaitForEvent new-glyphs 30)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (updateGameState ?role ?allowed-marks ?sketch ?max-x ?max-y))))))))
+
+
+
+;;; updateGameState propagates from visual to conceptual
+;;; updateGameBoard propagates from conceptual to visual.
+
+;;; Do we want to simply store a fact in wm and let it propagate to 
+;;; subscribers (ie, SR)?
+;;; Do we want to return a message with coordinates?
+
+;;; For now, because we draw our marks, the system can't recognize it automatically.
+;;; Consequently, this only works because there only is one legal mark per player.
+;;; It just assumes the human is making an X.
+;;; For piece moving games, all pieces are instantiated from prototypes, so this isn't a problem.
+
+(isa updateGameState ComplexActionPredicate)
+(arity updateGameState 5)
+(arg1Isa updateGameState GameRole)
+(arg2Isa updateGameState Set-Mathematical)
+(arg3Isa updateGameState NuSketchSketch)
+(arg4Isa updateGameState Integer)
+(arg5Isa updateGameState Integer)
+(comment updateGameState "(updateGameState ?role ?allowed-marks ?sketch ?max-x ?max-y) extracts the latest glyph and updates the state of the game model.")
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentSketchLayer ?layer))
+       (latestEntityAdded ?layer ?glyph)    ; get the glyph name of the new mark
+       (numAnswers 1 (currentBoardGlyph ?sketch ?board))
+       (numAnswers 1
+         (glyphCellCoordinates ?glyph ?board ?max-x ?max-y ?locfn))  ; outsourced pred.
+       (unifies (TheSet ?mark) ?allowed-marks)                       ; trivial case of 1:1 role-mark mapping.
+       ;(gameStateBundle ?sketch ?bundle ?bundle-case)
+       ;(glyphToGameEntity ?bundle-case ?glyph ?mark)  ; ; This is looking up nameString, which doesn't exist on this glyph.
+       (markToGameAction ?role ?mark ?locfn ?action)
+       (currentSessionReasoner ?session-reasoner))
+  (methodForAction
+    (updateGameState ?role ?allowed-marks ?sketch ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Your mark: ~a" (?glyph))
+        (doSetInkColor ?glyph PurpleColor)
+        (doSetStatBarMsg "")
+        (doDeselectGlyph ?glyph)
+        (doRemoteAgentPlan                        ; no need to block here
+          ?session-reasoner
+            (actionSequence 
+              (TheList
+                (doAsynchronousTask
+                  ;; We don't necessarily want this to run in the agenda thread:
+                  (applyOpponentGameAction ?role ?action)))))))))  ; update conceptual representation
+
+
+(isa acceptMove ComplexActionPredicate)
+(arity acceptMove 4)
+(arg1Isa acceptMove GameRole)
+(arg2Isa acceptMove NuSketchSketch)
+(arg3Isa acceptMove Integer)
+(arg4Isa acceptMove Integer)
+(comment acceptMove "(acceptMove ?role ?sketch ?max-x ?max-y) waits for user playing ?role to take his turn moving a piece.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (acceptMove ?role ?sketch ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doSetSketchInteractionMode TapSelect) ; enable user to drag
+        ;(doSetStatBarMsg "Your turn")
+        (doWaitForEvent entity-moved 30)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (updateGameStateFromMove ?role ?sketch ?max-x ?max-y))))))))
+
+(isa updateGameStateFromMove ComplexActionPredicate)
+(arity updateGameStateFromMove 4)
+(arg1Isa updateGameStateFromMove GameRole)
+(arg2Isa updateGameStateFromMove NuSketchSketch)
+(arg3Isa updateGameStateFromMove Integer)
+(arg4Isa updateGameStateFromMove Integer)
+(comment updateGameStateFromMove "(updateGameStateFromMove ?role ?sketch ?max-x ?max-y) extracts the latest glyph and updates the state of the game model.")
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentSketchLayer ?layer))
+       (latestEntityMoved ?layer ?glyph)    ; get the glyph name of the new mark (But we need from/to as well!)
+       (numAnswers 1 (currentBoardGlyph ?sketch ?board))
+       (numAnswers 1
+         (glyphMoveCoordinates ?glyph ?board ?max-x ?max-y ?from-locfn ?to-locfn))  ; outsourced pred.
+       (unifies (LocFn ?x1 ?y1) ?from-locfn) ; destructure
+       (unifies (LocFn ?x2 ?y2) ?to-locfn)   ; destructure
+       ; bind ?piece from ?glyph:
+       (numAnswers 1 (gameStateBundle ?sketch ?bundle ?bundle-case))
+       (numAnswers 1 (glyphToGameEntity ?bundle-case ?glyph ?piece))  ; These glyphs are moved, not drawn from scratch, so they should have namestrings.
+       (unifies ?move (move ?piece ?x1 ?y1 ?x2 ?y2))
+       (currentSessionReasoner ?session-reasoner))
+  (methodForAction
+    (updateGameStateFromMove ?role ?sketch ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Your move: ~a" (?move))
+        (doSetStatBarMsg "")
+        (doDeselectGlyph ?glyph)
+        (deleteCapturedGlyphAt ?board ?glyph ?x2 ?y2 ?max-x ?max-y)  ; Temporary: we don't know user's move was legal yet and we aren't checking the rules for capture.
+        (doRemoteAgentPlan                        ; no need to block here
+          ?session-reasoner
+            (actionSequence 
+              (TheList
+                (doAsynchronousTask
+                  ;; We don't necessarily want this to run in the agenda thread:
+                  (applyOpponentGameAction ?role ?move)))))))))  ; update conceptual representation
+
+(isa glyphCellCoordinates DynamicUpdatePredicate)
+(arity glyphCellCoordinates 5)
+(arg1Isa glyphCellCoordinates NuSketchGlyph)
+(arg2Isa glyphCellCoordinates NuSketchGlyph)
+(arg3Isa glyphCellCoordinates Integer)
+(arg4Isa glyphCellCoordinates Integer)
+(arg5Isa glyphCellCoordinates CycLExpression)  ; location?
+(comment glyphCellCoordinates "(glyphCellCoordinates ?glyph ?board ?max-x ?max-y ?locfn) is an oursourced extension to the nuSketch agent for FMI games. ?locFn should be encoded as (LocFn ?x ?y)")
+
+(isa glyphMoveCoordinates DynamicUpdatePredicate)
+(arity glyphMoveCoordinates 6)
+(arg1Isa glyphMoveCoordinates NuSketchGlyph)
+(arg2Isa glyphMoveCoordinates NuSketchGlyph)
+(arg3Isa glyphMoveCoordinates Integer)
+(arg4Isa glyphMoveCoordinates Integer)
+(arg5Isa glyphMoveCoordinates CycLExpression)  ; location?
+(comment glyphMoveCoordinates "(glyphMoveCoordinates ?glyph ?board ?max-x ?max-y ?from-loc ?to-loc) is an oursourced extension to the nuSketch agent for FMI games.")
+
+
+;;; -----------------------------------------
+;;; Update sketch after system turn
+
+;;;
+;;; Marking game actions:
+;;;
+
+(isa updateSketch ComplexActionPredicate)
+(arity updateSketch 5)
+(arg1Isa updateSketch GameRole)
+(arg2Isa updateSketch NuSketchSketch)
+(arg3Isa updateSketch CycLSentence-Assertible)
+(arg4Isa updateSketch Integer)
+(arg5Isa updateSketch Integer)
+(comment updateSketch "(updateSketch ?role ?sketch ?dest-layer ?move-action ?max-x ?max-y) updates the sketch to reflect the game state.")
+
+(preconditionForMethod
+  (operatorFormulas mark ?move)  ; dispatch on the action type
+  (methodForAction
+    (updateSketch ?role ?sketch ?move ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (markBoard ?role ?sketch ?move ?max-x ?max-y)))))
+
+
+(isa markBoard ComplexActionPredicate)
+(arity markBoard 5)
+(arg1Isa markBoard GameRole)
+(arg2Isa markBoard NuSketchSketch)
+(arg3Isa markBoard CycLSentence-Assertible)
+(arg4Isa markBoard Integer)
+(arg5Isa markBoard Integer)
+(comment markBoard "(markBoard ?role ?sketch ?dest-layer ?move-action ?max-x ?max-y) ")
+
+
+;;; Assume player layers have the same name in Pieces and GameState bundles.
+;;; Also assume there's one mark per player (which wouldn't work for piece-moving games, etc)
+(preconditionForMethod
+  (and (numAnswers 1 (currentSketchLayer ?layer))
+       ;; The mark name is now encoded in the move:
+       (unifies (mark ?x ?y ?mark) ?move)  ; destructure to bind ?mark-name
+       (evaluate ?mark-namestring (StringFn ?mark))
+       (numAnswers 1 (prototypeGlyphNamed ?sketch ?mark-namestring ?mark-prototype)))
+  (methodForAction
+    (markBoard ?role ?sketch ?move ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doInstantiateGlyph ?mark-prototype ?layer)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (positionNewGlyphAt ?sketch ?layer ?move ?max-x ?max-y))))))))
+
+(isa positionNewGlyphAt ComplexActionPredicate)
+(arity positionNewGlyphAt 5)
+(arg1Isa positionNewGlyphAt NuSketchSketch)
+(arg2Isa positionNewGlyphAt NuSketchLayer)
+(arg3Isa positionNewGlyphAt CycLSentence-Assertible)
+(arg4Isa positionNewGlyphAt Integer)
+(arg5Isa positionNewGlyphAt Integer)
+(comment positionNewGlyphAt "(positionNewGlyphAt ?sketch ?dest-layer ?move ?max-x ?max-y) positions the latest glyph added to the relative position on the board when subdivided into max-x and max-y cells.")
+
+(preconditionForMethod
+  (and (unifies (?pred ?x ?y ?contents) ?move)  ; destructure. ?pred can be eitehr (mark ?x ?y ?mark) or (cell ?x ?y ?contents)
+       (numAnswers 1 (currentBoardGlyph ?sketch ?board))
+       ;; Use the dynamicUpdatePredicate to bind the latest entity added:
+       (latestEntityAdded ?dest-layer ?glyph))
+  (methodForAction
+    (positionNewGlyphAt ?sketch ?dest-layer ?move ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doSetInkColor ?glyph BlueColor)
+        (doMoveGlyph ?glyph (CoordinateSubregionFn ?board ?x ?y ?max-x ?max-y))))))
+
+
+
+(isa highlightCells ComplexActionPredicate)
+(arity highlightCells 4)
+(arg1Isa highlightCells NuSketchSketch)
+(arg2Isa highlightCells Set-Mathematical)
+(arg3Isa highlightCells Integer)
+(arg4Isa highlightCells Integer)
+(comment highlightCells "(highlightCells ?sketch ?cells ?max-x ?max-y) highlights each cell in the set of ?cells.")
+
+;;; This depends on extending the siguatures of the glyphCellCoordinates outsourced predicate (in progress)"
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentBoardGlyph ?sketch ?board))
+       (evaluate ?glyphs
+         (TheClosedRetrievalSetOf ?glyph
+           (and (elementOf ?cell ?cells)
+                (unifies (cell ?x ?y ?mark) ?cell)
+                (glyphCellCoordinates ?glyph ?board ?max-x ?max-y (LocFn ?x ?y))  ; outsourced pred.
+                ; (nameString ?glyph ?mark)   ; probably needs to be namestring of object of glyph.
+                ))))
+  (methodForAction
+    (highlightCells ?sketch ?cells ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doForEach ?glyph ?glyphs (doHighlightGlyph ?glyph))))))
+
+;;;
+;;; Piece moving game actions:
+;;;
+
+(preconditionForMethod
+  (operatorFormulas move ?move)  ; dispatch on the action type
+  (methodForAction
+    (updateSketch ?role ?sketch ?move ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (movePiece ?role ?sketch ?move ?max-x ?max-y)))))
+
+;;; ?move is the actual primitive action (an expression) for the particular
+;;; game being played.
+
+;;; Anticipate piece moving games:
+(isa movePiece ComplexActionPredicate)
+(arity movePiece 5)
+(arg1Isa movePiece GameRole)
+(arg2Isa movePiece NuSketchSketch)
+(arg3Isa movePiece CycLSentence-Assertible)
+(arg4Isa movePiece Integer)
+(arg5Isa movePiece Integer)
+(comment movePiece "(movePiece ?role ?sketch ?move-action ?max-x ?max-y) moves a piece (glyph) in the sketch to reflect a game action.")
+
+(preconditionForMethod
+  (and (unifies (move ?piece ?x1 ?y1 ?x2 ?y2) ?move)  ; destructure to bind ?mark-name
+       (numAnswers 1 (currentBoardGlyph ?sketch ?board))
+       ;; bind piece glyph at x1, y1:
+       (glyphCellCoordinates ?glyph ?board ?max-x ?max-y (LocFn ?x1 ?y1)))
+  (methodForAction
+    (movePiece ?role ?sketch ?move ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (deleteCapturedGlyphAt ?board ?glyph ?x2 ?y2 ?max-x ?max-y)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (moveGlyphTo ?board ?glyph ?move ?max-x ?max-y))))))))
+
+(isa deleteCapturedGlyphAt ComplexActionPredicate)
+(arity deleteCapturedGlyphAt 6)
+(arg1Isa deleteCapturedGlyphAt NuSketchGlyph)
+(arg2Isa deleteCapturedGlyphAt NuSketchGlyph)
+(arg3Isa deleteCapturedGlyphAt Integer)
+(arg4Isa deleteCapturedGlyphAt Integer)
+(arg5Isa deleteCapturedGlyphAt Integer)
+(arg6Isa deleteCapturedGlyphAt Integer)
+(comment deleteCapturedGlyphAt "(deleteCapturedGlyphAt ?board ?attacker-glyph ?x ?y ?max-x ?max-y) deletes any glyph on the board at ?x, ?y other than ?attacker-glyph.")
+
+;;; Default if there's nothing there.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (deleteCapturedGlyphAt ?board ?attacker ?x ?y ?max-x ?max-y)
+    (actionSequence
+      (TheList))))
+
+;;; Ultimately, this should check the gdl gamestate to see if glyph should persist.
+;;; Not today.  
+(preconditionForMethod
+  (and (glyphCellCoordinates ?glyph ?board ?max-x ?max-y (LocFn ?x ?y))
+       (different ?glyph ?attacker))
+  (methodForAction
+    (deleteCapturedGlyphAt ?board ?attacker ?x ?y ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doDeleteGlyph ?glyph)))))
+
+
+(<== (preferInContext (deleteCapturedGlyphAt ?board ?glyph ?x ?y ?max-x ?max-y) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa moveGlyphTo ComplexActionPredicate)
+(arity moveGlyphTo 5)
+(arg1Isa moveGlyphTo NuSketchGlyph)
+(arg2Isa moveGlyphTo NuSketchGlyph)
+(arg3Isa moveGlyphTo CycLSentence-Assertible)
+(arg4Isa moveGlyphTo Integer)
+(arg5Isa moveGlyphTo Integer)
+(comment moveGlyphTo "(moveGlyphTo ?board ?glyph ?move ?max-x ?max-y) positions the glyph in the from location of the move to the relative position on the board when subdivided into max-x and max-y cells.")
+
+(preconditionForMethod
+  (and (unifies (move ?piece ?x1 ?y1 ?x2 ?y2) ?move)  ; destructure
+       (unifies ?end-loc (CoordinateSubregionFn ?board ?x2 ?y2 ?max-x ?max-y)))
+  (methodForAction
+    (moveGlyphTo ?board ?glyph ?move ?max-x ?max-y)
+    (actionSequence
+      (TheList
+        (doMoveGlyph ?glyph ?end-loc)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

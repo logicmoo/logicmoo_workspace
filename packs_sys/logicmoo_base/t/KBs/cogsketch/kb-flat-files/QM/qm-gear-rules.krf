@@ -1,0 +1,125 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qm-gear-rules.meld
+;;;;    System: Skea
+;;;;    Author: Jon Wetzel
+;;;;   Created: January 19, 2009 14:57:03
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ----------------------------------------------------------------------------
+
+
+(in-microtheory NuSketchQMRulesMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; because of the way this rule is written, try to make sure gear1 is known
+;; when using enmeshed in other rules.
+(<== (enmeshed ?gear1 ?gear2)
+     (groundExpression ?gear1)
+     (lookupOnly (wmOnly (isa ?gear1 Gear)))
+     (lookupOnly (wmOnly (hasRCC8Relation (GlyphFn ?gear1 ?sketch-layer)
+                                          (GlyphFn ?gear2 ?sketch-layer)
+                                          rcc8-PO)))
+     (lookupOnly (wmOnly (isa ?gear2 Gear))))
+
+(<== (enmeshed ?gear1 ?gear2)
+     (groundExpression ?gear1)
+     (lookupOnly (wmOnly (isa ?gear1 Gear)))
+     (lookupOnly (wmOnly (hasRCC8Relation (GlyphFn ?gear1 ?sketch-layer)
+                                          (GlyphFn ?gear2 ?sketch-layer)
+                                          rcc8-EC)))
+     (lookupOnly (wmOnly (isa ?gear2 Gear))))
+
+;;; Rot constraint Transmission
+
+(<== (rotConstraint ?gear1 ?rdir1)
+     (enmeshed ?gear1 ?gear2)
+     (lookupOnly (wmOnly (isa ?gear1 FixedAxisObject)))
+     (lookupOnly (inverseRotDirection ?rdir1 ?rdir2))
+     (rotConstraint ?gear2 ?rdir2))
+
+;;; Torque transmission
+
+(<== (torqueAppliedToObj ?gear1 ?g1RotDir ?source)
+     (enmeshed ?gear1 ?gear2)
+     (torqueAppliedToObj ?gear2 ?rotDir ?source)
+     (lookupOnly (inverseRotDirection ?rotDir ?g1RotDir)))
+
+
+#|
+;;; This rule isn't the most useful or efficient.  Bagging for now.
+
+;; a gear rotating against a fixed object receives a translational force as well
+(<== (forceAppliedToObj ?gear1 ?dir ?gear2)
+     (enmeshed ?gear1 ?gear2)
+     (netTorque ?gear1 ?rdir)
+     (isa ?rdir RotDirection)
+     (rotFreedom ?gear1 ?rdir)
+
+     (hasContactSurface ?gear1 ?gear2 ?surface)
+     (surfaceNormal ?surface ?surfNormal)
+
+     (rotate90 ?surfNormal ?g2tdir ?rdir)
+     (transConstraint ?gear2 ?g2tdir)
+                      
+     (inverseRotDirection ?rdir ?invrdir)
+     (rotate90 ?surfNormal ?dir ?invrdir))
+|#
+
+;; Constraints
+
+(<== (rotConstraint ?gear1 ?rdir1) ;; gear 1 can't rotate if:
+     (enmeshed ?gear1 ?gear2)
+     (lookupOnly (wmOnly (hasContactSurface ?gear1 ?gear2 ?surface)))
+     (lookupOnly (wmOnly (surfaceNormal ?surface ?surfNormal)))
+     (lookupOnly (inverseRotDirection ?rdir1 ?rdir2))
+     (rotConstraint ?gear2 ?rdir2)  ;; gear 2 can't rotate against you
+     
+     (lookupOnly (rotate90 ?surfNormal ?g2tdir ?rdir1))
+     (transConstraint ?gear2 ?g2tdir)  ;; gear 2 can't move in response
+     
+     (lookupOnly (rotate90 ?surfNormal ?g1tdir ?rdir2))
+     (transConstraint ?gear1 ?g1tdir)) ;; gear 1 can't move in response
+
+(<== (transConstraint ?gear1 ?g1tdir) ;; gear 1 can't move if:
+     (unknownSentence (transFreedom ?gear1 ?g1tdir))
+     (enmeshed ?gear1 ?gear2)
+     (lookupOnly (wmOnly (hasContactSurface ?gear1 ?gear2 ?surface)))
+     (lookupOnly (wmOnly (surfaceNormal ?surface ?surfNormal)))
+     
+     (lookupOnly (rotate90 ?g1tdir ?surfNormal ?rdir))
+     (rotConstraint ?gear2 ?rdir)
+     (lookupOnly (inverseRotDirection ?rdir ?invRdir))
+     (rotConstraint ?gear1 ?invRdir)
+     (sufficientlyConstrained ?gear2 ?g1tDir))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Properties of gears
+
+(<== (textureOfObject ?object ToothedTexture)  
+     (lookupOnly (wmOnly (isa ?object Gear))))
+;; Will need a way to mark or distinguish non-toothed surfaces of gears.
+
+(<== (rotationalOrigin ?obj ?ori)
+     (rotationalOriginByGear ?obj ?ori))
+
+(<== (rotationalOriginByGear ?obj ?center)
+     (lookupOnly (wmOnly (isa ?obj Gear)))
+     (unifies ?obj ?center))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Texture
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; for this version, objects will only have one surface texture at a time
+
+(<== (textureOfSurface ?surface ?texture)
+     (lookupOnly (wmOnly (hasContactSurface ?object ?x ?surface)))
+     (textureOfObject ?object ?texture))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

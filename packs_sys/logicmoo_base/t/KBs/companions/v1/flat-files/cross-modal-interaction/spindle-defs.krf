@@ -1,0 +1,60 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: spindle-defs.meld
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: January 19, 2014 20:06:00
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+
+(isa CrossModalInteractionSpindleMt Microtheory)
+(isa CrossModalInteractionSpindleMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+;;the below should be done dynamically so it doesn't corrupt all companionMt logical environment
+;;(genlMt CompanionsMt CrossModalInteractionSpindleMt)
+
+
+;;Creating a spindle microtheory for solve context
+(genlMt RerepSolveContext RerepresentationSolveSuggestionsMt)
+
+
+;;;Generic Perform Task spindle (This should be always visible for Session-ReasonerMt)
+
+(genlMt CrossModalInteractionSpindleMt utilPlanMt)
+(genlMt CrossModalInteractionSpindleMt VisualEncodingPlansMt)
+(genlMt CrossModalInteractionSpindleMt CrossModalEncodingPlansMt)
+(genlMt CrossModalInteractionSpindleMt CrossModalInteractionDefsMt)
+(genlMt CrossModalInteractionSpindleMt RerepSolveContext)
+(genlMt CrossModalInteractionSpindleMt RemindingSuggestionsMt)
+(genlMt CrossModalInteractionSpindleMt ShapeRerepresentationContext) ;;should this also be bootstrapped
+
+;;;Generic Experiment Infrastructure Spindle (always visible to CompanionsMt)
+(genlMt CrossModalInteractionSpindleMt CrossModalInteractionDefsMt)
+(genlMt CrossModalInteractionSpindleMt TaskManagementPlansMt)
+(genlMt CrossModalInteractionSpindleMt PickingChoiceSuggestionsMt)
+(genlMt CrossModalInteractionSpindleMt PerformForcedChoiceTaskPlansMt)
+
+
+
+;;;kotovsky spindle just for testing purpose MAY NOT NEED THIS ANYMORE
+(genlMt CrossModalInteractionSpindleMt KotovskyExperimentMt)
+(genlMt CrossModalInteractionSpindleMt KotovskyExperimentValuesDefMt1)
+(genlMt CrossModalInteractionSpindleMt KotovskyAnalogyControlMt1)
+
+(genlMt CrossModalInteractionSpindleMt KickStartPlanMt)
+
+;;EA Related
+;;;lexicon and semMt
+(genlMt LearnedLexiconMt (LearnedLexiconMtFn CrossModalInteraction))
+(genlMt EANLU (LearnedSemanticsMtFn CrossModalInteraction))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

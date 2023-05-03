@@ -1,0 +1,95 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: knowledge-segmentation-generalization
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: July 19, 2014 20:22:36
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa SegmentationGenContextFn FunctionOrFunctionalPredicate)
+(arity SegmentationGenContextFn 1)
+;;;(arg1Isa SegmentationGenContextFn AccessingAnIBT) ;;; The reading name
+(arg1Isa SegmentationGenContextFn Thing) ;;; The experiment name
+(resultIsa SegmentationGenContextFn GeneralizationPool)
+(comment SegmentationGenContextFn "(SegmentationGenContextFn ?expt-name)
+is a generalization context for knowledge segmentation cases. ?expt-name is
+the experiment name.")
+
+(isa populateNewGenContextFromReadings ComplexActionPredicate)
+(arity populateNewGenContextFromReadings 4)
+(arg1Isa populateNewGenContextForExperiment List) ;;; The readings
+;;; The readings is a list rather than a set so that things get
+;;; generalized in the same order.
+(arg2Isa populateNewGenContextFromReadings Thing) ;;; The experiment name of the cases
+(arg3Isa populateNewGenContextFromReadings Number)
+(arg4Isa populateNewGenContextFromReadings Thing)
+(comment populateNewGenContextFromReadings "(populateNewGenContextFromReadings
+?list-of-readings ?expt-name-of-cases ?assimilation-threshold ?expt-name-of-generalization) creates a generalization context and
+puts all of the knowledge segmentation cases from those readings into it.")
+
+(isa populateNewGenContextFromNextReading ComplexActionPredicate)
+(arity populateNewGenContextFromNextReading 5)
+(arg1Isa populateNewGenContextFromNextReading AccessingAnIBT) ;;; The reading
+(arg2Isa populateNewGenContextFromNextReading Thing) ;;; The experiment name
+(arg3Isa populateNewGenContextFromNextReading GeneralizationPool)
+(arg4Isa populateNewGenContextFromReadings Number)
+(arg5Isa populateNewGenContextFromNextReading Thing)
+(comment populateNewGenContextFromNextReading "(populateNewGenContextFromNextReading
+?reading ?expt-name-of-cases ?gen-context ?assimilation-threshold ?expt-name-of-generalization) takes a generalization context and
+puts all of the knowledge segmentation cases from those readings into it.")
+
+;;; The generalization context's name is 
+;;; (SegmentationGenContextFn ?expt-name)
+;;; The information we want is stored in the form
+;;; (seedUsedToGenerateCaseWithinMt ?seed ?seed-source-mt ?max-depth ?fact-source-mt ?experiment-name ?case-name)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (populateNewGenContextFromReadings
+   ?list-of-readings ?expt-name-of-cases ?assimilation-threshold ?expt-name-of-generalization)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SegGenThresholdsMt 
+                (gpoolAssimilationThreshold (SegmentationGenContextFn ?expt-name-of-generalization) ?assimilation-threshold)))
+    (doForEach ?next-reading ?list-of-readings
+               (populateNewGenContextFromNextReading
+                ?next-reading ?expt-name-of-cases 
+                (SegmentationGenContextFn ?expt-name-of-generalization)
+                ?assimilation-threshold ?expt-name-of-generalization)
+               )))))
+
+
+;;; This may not need the assimilation threshold, but it's getting it in case it turns out
+;;; to need it later.
+(preconditionForMethod
+ (and 
+      (evaluate ?list-of-mi-cases
+        (TheClosedRetrievalSetOf (metaInfoForMtFn ?case-name)
+          (lookupOnly (nonTransitiveInference
+                       (ist-Information seedsForCasesMt
+                         ;;; Maybe this should be the same experiment name, maybe it shoudn't.
+                         ;;; It should, or at least we should take it another experiment name
+                         (seedUsedToGenerateCaseWithinMt 
+                          ?seed ?reading ?max-depth ?fact-source-mt ?expt-name-of-cases ?case-name)))))))
+ (methodForAction
+  (populateNewGenContextFromNextReading
+   ?reading ?expt-name-of-cases ?gen-context ?assimilation-threshold ?expt-name-of-generalization)
+  (actionSequence
+   (TheList
+    (doForEach ?next-mi-case ?list-of-mi-cases
+              (doTell (sageSelectAndGeneralize ?next-mi-case (SegmentationGenContextFn ?expt-name-of-generalization)))
+               )))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

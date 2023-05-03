@@ -1,0 +1,70 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: dq-test-cases.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: June 12, 2013 13:47:17
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory DQAnalysisTestsMt)
+
+(genlMt DQAnalysisTestsMt DQAnalysisMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Test cases for DQ analysis
+
+(isa TestCaseDQ-A1Mt Microtheory)
+(isa TestCaseDQ-B1Mt Microtheory)
+(isa TestCaseDQ-C1Mt Microtheory)
+
+(isa TestCaseDQ1Mt Microtheory)
+(genlMt TestCaseDQ1Mt DQAnalysisMt)
+
+(in-microtheory TestCaseDQ1Mt)
+;; For testing ordinals in DQA
+(qGreaterThan ((QPQuantityFn Volume) Foo)
+              ((QPQuantityFn Volume) Bar))
+
+(in-microtheory TestCaseDQ-A1Mt)
+;; The algorithm requires both quantities to be known in the
+;; mapping and to correspond.
+(hasQuantity Foo ((QPQuantityFn Volume) Foo))
+(qprop (MassFn Foo) ((QPQuantityFn Density) Foo))
+(qprop (MassFn Foo) (AreaFn Foo))
+(qprop (AreaFn Foo) (LengthFn Foo))
+(valueOf (LengthFn Foo) (Foot-UnitOfMeasure 3))
+(valueOf ((QPQuantityFn Density) Foo) 
+         ((PerFn Pound-UnitOfMass CubicFoot) 3))
+(hasQuantity Foo (TemperatureFn Foo))
+(valueOf (TemperatureFn Foo) (DegreeFahrenheit 72))
+
+(in-microtheory TestCaseDQ-B1Mt)
+(hasQuantity Bar ((QPQuantityFn Volume) Bar))
+(qprop (MassFn Bar) ((QPQuantityFn Density) Bar))
+(qprop (MassFn Bar) (AreaFn Bar))
+(qprop (AreaFn Bar) (LengthFn Bar))
+(valueOf (LengthFn Bar) (Foot-UnitOfMeasure 4))
+(valueOf ((QPQuantityFn Density) Bar) 
+         ((PerFn Pound-UnitOfMass CubicFoot) 2))
+(valueOf (TemperatureFn Bar) (DegreeFahrenheit 72))
+
+(in-microtheory TestCaseDQ-C1Mt)
+(hasQuantity Mumble ((QPQuantityFn Volume) Mumble))
+(qprop (MassFn Mumble) ((QPQuantityFn Density) Mumble))
+(qprop (MassFn Mumble) (AreaFn Mumble))
+(qprop (AreaFn Mumble) (LengthFn Mumble))
+(valueOf (LengthFn Mumble) (Foot-UnitOfMeasure 5))
+(valueOf ((QPQuantityFn Density) Mumble) 
+         ((PerFn Pound-UnitOfMass CubicFoot) 1))
+(valueOf (TemperatureFn Mumble) (DegreeFahrenheit 72))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

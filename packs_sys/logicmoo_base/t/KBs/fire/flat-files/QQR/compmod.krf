@@ -1,0 +1,290 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: compmod
+;;;;    System: QQR
+;;;;    Author: Ken Forbus
+;;;;   Created: January 4, 2010 07:59:46
+;;;;   Purpose: Ontology for compositional modeling
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-20 18:07:09 -0600 (Thu, 20 Dec 2018) $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CompositionalModelingMt) 
+
+;;--------------------------------
+;;  Compositional Modeling
+;;--------------------------------
+
+;;; Compositional modeling generalizes some of the ideas of QP theory,
+;;; introducing explicit modeling assumptions that are used to automatically
+;;; build scenario models from domain theories.  
+
+;;; -------------------------------------------------
+;;; Relationships defining a scenario
+;;; -------------------------------------------------
+
+;;; A scenario is specified via a microtheory.  To allow scenarios to inherit
+;;; background knowledge via the usual Mt logical enviornment mechanism, we must
+;;; distinguish those entities which are considered to be included in the scenario
+;;; from those which are not.  Assertions of the form
+;;;     (considerEntity <entity>)
+;;; indicate those entities which are to be included in the model.
+;;; Importantly, facts of this type can be inferred as well as explicitly stated.
+;;; This is what allows the formulation of coherence constraints in modeling, i.e.,
+;;; if one is to consider thermal properties, then things with heat that are connected
+;;; to an object of interest should also be included, since they will lead to processes
+;;; that affect it. 
+;;; [N.B., we can backchain off declarative specifications of model fragments
+;;; to get a lot of this reasoning more or less for free.]
+
+;;; An important type of modeling assumption is declaring that something
+;;; should be ignored. This is specified by 
+;;;    (ignoreEntity <entity>)
+;;; It is a contradiction for (ignoreEntity En) and (considerEntity En) to be 
+;;; believed in the same logical environment.  This should be enforced by
+;;; coherence rules including antecedents of the form (uninferredSentence (ignoreEntity ?e))
+;;; as their last antecedent [so that the maximum information is available in that context].
+
+;;; Modelers often wish to state general constraints on a scenario model, e.g., 
+;;; ignore heat flows, or ignore heat flows between the system and its environment 
+;;; (i.e., adiabatic).  Ruling out a class of model fragments can be stated via
+;;;    (ignoreMFType <mf>)
+;;; Ruling out specific subclasses of instances could be done either via Horn clauses
+;;; or via a declarative assertion that specifies restrictions on instantiation constraints.
+;;; Since these are relatively rare, we will assume Horn clauses are used for now.
+
+;;; Ascertaining which aspects of a domain theory are relevant is an important problem
+;;; in model formulation.  The results of this reasoning are stated in terms of what
+;;; model fragment types to consider, via
+;;;    (considerMFType <mf>)
+;;; As with ignore/consider entities, considerMFType and ignoreMFType are contradictory, and
+;;; hence inferences of considerMFType should always be done with an antecedent that ensures
+;;; ignoring cannot be inferred.  In other words, advice to ignore dominates advice to include.
+;;; [N.B. This goes beyond Falkenhainer & Forbus 1991, where we just used consider assertions
+;;;  and their negations.  I think this is cleaner and will provide a more natural set of distinctions.
+
+;;; Predicates are also needed for consider/ignore of model fragment instances:
+;;;   (considerMFInstance <mf> <bindings>)
+;;;   (ignoreMFInstance <mf> <bindings>)
+
+;;; CompositionalModelingPredicate
+(isa CompositionalModelingPredicate Collection)
+(comment CompositionalModelingPredicate
+"CompositionalModelingPredicate is the collection of predicates used in 
+compositional modeling, a methodology for automatic model formulation.")
+
+;;; considerEntity
+(isa considerEntity Predicate)
+(isa considerEntity CompositionalModelingPredicate)
+(comment considerEntity 
+"(considerEntity ?e) indicates that ?e is to be included in a model of a scenario.
+Scenarios are specified via microtheories, which start with some number of entities
+marked as included.  Other considerEntity statements are inferred, based on coherence
+constraints of the domain.  Inferring ignoreEntity about ?e must override any conclusion
+of considerEntity.")
+(arity considerEntity 1)
+(arg1Isa considerEntity Thing)
+
+;;; includeEntity
+(isa includeEntity Predicate)
+(isa includeEntity CompositionalModelingPredicate)
+(comment includeEntity 
+"(includeEntity ?e) indicates that ?e is to be included in a model of a scenario,
+unless there is some reason to ignore it.  This is the statement that should be used
+in scenario specifications, to allow inferences about ignoring entities to work properly.")
+(arity includeEntity 1)
+(arg1Isa includeEntity Thing)
+
+;;; ignoreEntity
+(isa ignoreEntity Predicate)
+(isa ignoreEntity CompositionalModelingPredicate)
+(comment ignoreEntity 
+"(ignoreEntity ?e) indicates that ?e is to be excluded in a model of a scenario.
+ignoreEntity statements can be asserted or inferred, based on coherence constraints
+of the domain.  For example, if a system is to be ignored, all of its parts are to be
+ignored as well.  It is a contradiction to believe ignoreEntity and considerEntity
+in the same logical environment.  When reasoning, ignoreEntity dominates considerEntity.")
+(arity ignoreEntity 1)
+(arg1Isa ignoreEntity Thing)
+
+
+;;; Linking the three predicates above, we have the basic nonmonotonic
+;;; inference for considering entities, where ignoring trumps including.
+;;; [Think of a situation where a model is too large and needs to be
+;;;   pruned, and you'll see why ignore should trump consider.]
+
+(<== (considerEntity ?e)
+     (includeEntity ?e)
+     (uninferredSentence (ignoreEntity ?e)))
+
+;;; mfExplanandum
+(isa mfExplanandum UnaryPredicate)
+(arity mfExplanandum 1)
+(arg1Isa mfExplanandum Individual)
+(comment mfExplanandum "(#$mfExplanandum ENT) asserts that the #$Individual ENT is to be explained using model formulation in the present scenario microtheory.")
+
+;; UnknownParticipantFn
+(isa UnknownParticipantFn IndividualDenotingFunction)
+(arity UnknownParticipantFn 2)
+(arg1Isa UnknownParticipantFn ModelFragment)
+(arg2Isa UnknownParticipantFn Predicate)
+(resultIsa UnknownParticipantFn Individual)
+(comment UnknownParticipantFn 
+  "(UnknownParticipantFn MFI ROLE) refers to some unknown/presumed #$Individual that plays #$Predicate ROLE with respect to #$ModelFragment instance MFI.  
+  Consequently, the assertion (ROLE MFI (UnknownParticipantFn MFI ROLE)) will be asserted to instantiate MFI with an underspecified participant.
+  Used for reasoning with incomplete information.  See also #$incompleteMF")
+
+(isa incompleteMF UnaryPredicate)
+(arity incompleteMF 1)
+(arg1Isa incompleteMF ModelFragment)
+(comment incompleteMF "(#$incompleteMF MFI) states that the #$ModelFragment instance MFI is instantiated, but one or more of its participants are incomplete or unknown.
+  see also #$UnknownParticipantFn")
+
+;;;; Relations involving consideration of model fragments
+
+;;; considerMF
+(isa considerMF Predicate)
+(isa considerMF CompositionalModelingPredicate)
+(comment considerMF
+"(considerMF ?mf) indicates that model fragments of type ?mf should be considered when formulating
+a model in the current logical environment.  considerMF conclusions are trumped by ignoreMF
+conclusions.  All model fragments within the logical environment are by default considered, 
+because it is assumed that domain theories are represented by interconnected microtheories,
+so that what to include can be determined via genlMt statements.  That cannot be done with entities,
+since entities are used all over the KB (e.g. states of matter, types of substances).")
+(arity considerMF 1)
+(arg1Isa considerMF ModelFragment)
+
+;;; ignoreMF
+(isa ignoreMF Predicate)
+(isa ignoreMF CompositionalModelingPredicate)
+(comment ignoreMF
+"(ignoreMF ?mf) indicates that model fragments of type ?mf should not be included when formulating
+a model in the current logical environment.  ignoreMF conclusions trump considerMF
+conclusions.")
+(arity ignoreMF 1)
+(arg1Isa ignoreMF ModelFragment)
+
+;;;; non-monotonic inference of considering a model fragment type
+;;; N.B. the groundExpression clause prevents ?mf from being open:
+;;; this is not a a way of listing all the MFs!
+
+(<== (considerMF ?mf)
+     (groundExpression ?mf)
+     (uninferredSentence (ignoreMF ?mf)))
+
+;;; considerMFInstance
+(isa considerMFInstance Predicate)
+(isa considerMFInstance CompositionalModelingPredicate)
+(comment considerMFInstance
+"(considerMFInstance ?mf ?bindings) indicates that an instance of model fragment ?mf with participants
+?bindings should be considered when formulating a model in the current logical environment.  
+considerMFInstance conclusions are trumped by ignoreMFInstance conclusions as well as by type-level
+ignoreMF conclusions.")
+(arity considerMFInstance 2)
+(arg1Isa considerMFInstance ModelFragment)
+(arg2Isa considerMFInstance List)
+
+;;; ignoreMFInstance
+(isa ignoreMFInstance Predicate)
+(isa ignoreMFInstance CompositionalModelingPredicate)
+(comment ignoreMFInstance
+"(ignoreMFInstance ?mf ?bindings) indicates that an instance of model fragment ?mf with participants
+?bindings should not be included when formulating a model in the current logical environment.
+ignoreMFInstance conclusions trump considerMFInstance conclusions.")
+(arity ignoreMFInstance 2)
+(arg1Isa ignoreMFInstance ModelFragment)
+(arg2Isa ignoreMFInstance List)
+
+(<== (considerMFInstance ?mf ?bindings)
+     (groundExpression ?mf)
+     (groundExpression ?bindings)
+     (uninferredSentence (ignoreMFInstance ?mf ?bindings)))
+
+(<== (ignoreMFInstance ?mf ?given-bindings)
+     (groundExpression ?mf)
+     (groundExpression ?bindings)
+     (ignoreMFInstance ?mf ?other-bindings)
+     (subsetOfBindings ?other-bindings ?given-bindings))
+
+;;; -----------------------------------------------------------
+;;; Relationships specifying inferred properties of a scenario
+;;; -----------------------------------------------------------
+
+;;; These are statements inferred as part of model formulation.
+;;; The "inner loop" operation consists of determining what instances of a given
+;;; model fragment are possible for a scenario.
+
+;;; scenarioHasMFI
+(isa scenarioHasMFI Predicate)
+(comment scenarioHasMFI
+ "(scenarioHasMFI ?mt ?mfi) is true when the scenario specified by microtheory ?mt
+includes model fragment instance ?mfi.  The scenario model is typically constructed
+in a microtheory distinct from the scenario itself, to permit alternate scenario
+models to be more easily generated and compared.")
+(arity scenarioHasMFI 2)
+
+;;; Turns out to be quite a disaster if called with open ?mfi.
+;;;(<== (considerEntity ?mfi) 
+;;;     (isa ?mfi ?col)
+;;;     (useTransitiveInference (isa ?col ModelFragmentType)))
+                                 
+;;; -----------------------------------------------------------
+;;; Speculative reasoning within a scenario
+;;; -----------------------------------------------------------
+                   
+;;; When formulating a model, we want to be able to instantiate model fragments
+;;; based on the possibility that some set of conditions can hold.
+;;; [The alternative is to keep looking for new model fragments every time we
+;;;  do any sort of operation.  That seems expensive to me.]
+;;; So we set up a microtheory based on the scenario in which every consequence of
+;;; every model fragment instance is believed to be true.  Tests for participant information
+;;; and constraints are done with respect to this microtheory.
+
+(isa ModelFormulationScratchpadMtFn Function-Denotational)
+(arity ModelFormulationScratchpadMtFn 1)
+(arg1Isa ModelFormulationScratchpadMtFn Microtheory)
+(resultIsa ModelFormulationScratchpadMtFn Microtheory)
+(comment ModelFormulationScratchpadMtFn
+"(ModelFormulationScratchpadMtFn <mt>) denotes the microtheory used as a scratchpad
+for scenario model microtheory <mt> during model formulation.  This allows speculative
+reasoning about instantiated model fragments, since their conclusions and specifications
+are asserted there as being true.  Note that this means this will almost always be
+contradictory, so proof by contradiction should be avoided in this context.  It is 
+always the case that (ModelFormulationScratchpadMtFn <mt>) has <mt> as its sole genlMt.")   
+
+;;; -------------------------------------------------------
+;;; Human-readable model fragment instance names
+;;; -------------------------------------------------------
+;;; Regression tests require canonicalization, and systems which set up and
+;;; use qualitative reasoning might benefit from a simpler way to ensure identity
+;;; across different runs than using analogy (which should also work, of course).
+;;; The mechanism is analogous to goalName as used in the Companions Perceptual Agent,
+;;; i.e. have a concise token that stands for a complex term.  When a QP implementation
+;;; built in FIRE is about to instantiate a model fragment, it must look for mfiName
+;;; assertions.  
+
+(isa mfiName Predicate)
+(arity mfiName 2)
+(arg1Isa mfiName CycLAtomicTerm)
+(arg2Isa mfiName CycLNonAtomicTerm)
+(comment mfiName "(mfiName <token> <NAT>) indicates that <token> should be used to refer to <NAT>
+ in any expressions where normally one would use <NAT> to refer to a model fragment instance.
+ This supports stable names across qualitative analyses, which is useful for regression tests
+ and also for comparing/constrasting results without using analogy.")
+
+(isa ModelFragmentInstanceFn Function-Denotational)
+(arity ModelFragmentInstanceFn 2)
+(arg1Isa ModelFragmentInstanceFn ModelFragmentType)
+(arg2Isa ModelFragmentInstanceFn Set-Extensional)
+(comment ModelFragmentInstanceFn
+  "(ModelFragmentInstanceFn <type> <specs>) denotes the instance of model fragment type <type>
+ whose participants are specified by <specs> a set which consists of lists of the form
+ (TheList <role reln> <entity>).")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

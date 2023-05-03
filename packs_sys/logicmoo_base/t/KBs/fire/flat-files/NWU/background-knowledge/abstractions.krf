@@ -1,0 +1,94 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: abstractions.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 20, 2017 09:37:51
+;;;;   Purpose: Abstractions
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-06 15:06:05 -0600 (Thu, 06 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+
+(isa OptionalAlternative ObjectType)
+(isa OptionalAlternative Collection)
+(comment OptionalAlternative "OptionalAlternative is the collection of alternatives that can be selected.")
+
+(genls OptionalAlternative 
+       (SubcollectionOfWithRelationFromTypeFn
+        SomethingExisting 
+        (Kappa (?evt ?poss) ; possibility
+               (and (actors ?evt ?actor)
+                    (optionsAvailable ?actor ?evt objectSelected ?poss)))
+        Event))
+        
+(relationAllExists (Kappa (?evt ?poss)
+                     (and (actors ?evt ?actor)
+                          (optionsAvailable ?actor ?evt objectSelected ?poss)))
+                   OptionalAlternative
+                   SelectingSomething)
+                   
+(isa Idiot Collection)
+(isa Idiot ExistingObjectType)
+(genls Idiot (AbnormalFn Person))
+(comment Idiot "A person who is not very smart.")
+
+;;; Representing heterogeneity and diversity:
+;;; Lets say that Diversity is a quantity representing the ratio of the cardinality
+;;; of unique elements to total cardinality of a group.
+
+;;; (groupMembers GROUP MEMBER)
+;;; (groupCardinality GROUP NUM)
+;;; (groupMembersPredominantlyOfType GROUP TYPE)
+;;; (groupPrototype GROUP PROTO)
+
+
+(isa Diversity NonAspectualQuantity)
+(isa Diversity DispositionalQuantity)
+(isa Diversity RatioQuantity)
+
+(isa diversityOfGroup NonAspectualQuantitySlot)
+(genlPreds diversityOfGroup hasNonAspectualQuantity)
+(arg1Isa diversityOfGroup Group)
+(arg2Isa diversityOfGroup Diversity)
+
+(isa SuitableThing FirstOrderCollection)
+(genls SuitableThing Individual)
+(genls SuitableThing TemporalThing)
+
+(genls Sincerity EvaluativeQuantity)  ; we need this in order to represent adverbs like 'sincerely' It was just a ScalarQuantity.
+
+
+;;; SelectionOfMultipleItems-Generic
+;;; Selection-Generic  thingSelected , selectionPoolMembers , selectionPool 
+
+
+(isa distance-Indexical BinaryPredicate)
+(arg1Isa distance-Indexical SpatialThing-Localized)
+(arg2Isa distance-Indexical Distance-Absolute)
+(comment distance-Indexical "(distance-Indexical SPATIAL-THING DIST) means that the distance between SPATIAL-THING and Here is DIST.")
+
+(<== (distance-Indexical ?loc ?dist)
+     (distanceBetween ?loc Here ?dist))
+     
+     
+(isa CryptoCurrency FirstOrderCollection)
+(genls CryptoCurrency LiquidAsset) ; can't genl from Currency, because it isn't physical
+(comment CryptoCurrency "CryptoCurrency is a form of liquid asset that exists as entries in a cryptographic ledger on the internet.")
+
+(isa Bitcoin FirstOrderCollection)
+(genls Bitcoin CryptoCurrency)
+(comment Bitcoin "Bitcoin is a type of #$CryptoCurrency based on the blockchain.")
+
+(isa Blockchain FirstOrderCollection)
+(genls Blockchain EncryptedAIS)
+(genls Blockchain Ledger)
+(comment Blockchain "Blockchain is the encrypted ledger on the internet that supports #$CryptoCurrency .")
+
+(enables-Generic Blockchain CryptoCurrency)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

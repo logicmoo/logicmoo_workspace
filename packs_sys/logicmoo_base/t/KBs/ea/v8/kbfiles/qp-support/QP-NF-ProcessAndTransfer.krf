@@ -1,0 +1,292 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QP-NF-ProcessAndTransfer.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: December 5, 2014 14:44:12
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationRulesMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; Quantity Transfer Frames;;;;;;;;;;;;;
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                         ?qt-frame IntroductionOfQuantityTransferFrame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesQuantityTransfer
+       (PresentationEventFn ?sid ?narrative-event)
+       ?qt-frame)))
+
+
+;;; this had a hard-coded restriction of a from and to location
+;;; it makes sense semantically, though in a discourse it's possible
+;;; that these could be external to the sentence 
+
+
+
+(<== (introducesQuantityTransfer (PresentationEventFn ?sid ?nevent) ?qtframeid)
+     (quantityTransferEvent ?from-frame ?to-frame ?rate-frame1 ?rate-frame)
+     (drsForDiscourse ?ddrs-id)
+     (individualSatisfyingConditions 
+      ?qtframeid QuantityTransferFrame
+      (TheSet 
+       (quantityTransferEvent ?from-frame ?to-frame ?rate-frame)))
+     (individualSatisfyingConditions 
+      ?nevent IBTGeneration
+      (TheSet 
+       (quantityTransferEvent ?from-frame ?to-frame ?rate-frame)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qtframeid QuantityTransferFrame)) (TheList (introducesQuantityTransfer (PresentationEventFn ?sid ?nevent) ?qtframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sourceOfTransfer ?qtframeid ?from-frame)) (TheList (introducesQuantityTransfer (PresentationEventFn ?sid ?nevent) ?qtframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (destOfTransfer ?qtframeid ?to-frame)) (TheList (introducesQuantityTransfer (PresentationEventFn ?sid ?nevent) ?qtframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (rateOfTransfer ?qtframeid ?rate-frame)) (TheList (introducesQuantityTransfer (PresentationEventFn ?sid ?nevent) ?qtframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (rateOfTransfer ?qtframeid ?rate-frame1)) (TheList (introducesQuantityTransfer (PresentationEventFn ?sid ?nevent) ?qtframeid)))))
+
+
+(<== (quantityTransferEvent ?from-frame ?to-frame ?rate-frame1 ?rate-frame2)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame1 Positive)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame2 Negative)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?di-frame1 ?to-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?di-frame2 ?from-frame))) 
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?di-frame1 ?rate-frame1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?di-frame2 ?rate-frame2)))
+     ;;;
+     ;;; NEW CJ 7/11/13: Previously any two DIs would match....
+     ;;; at least make sure they are the same q type. Ideally the QTYPE tokens should also resolve
+     ;;; currently no access to those though.
+     ;;;
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?to-frame ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?from-frame ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?rate-frame1 ?event))))
+     
+     
+     
+     
+     ;;;(lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?rate-frame1 ?event)))
+     ;;; are there only two DIs with this event. 
+     ;;; If so we can make a straightforward quantity-transfer-frame         
+;;;     (evaluate ?dis 
+;;;       (LengthOfListFn (SetToListFn (TheClosedRetrievalSetOf ?diframeid
+;;;                                      (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?diframeid ?event)))))))
+;;;     (equals ?dis 2))
+ 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; Process Frames;;;;;;;;;;;;;
+
+;;;
+;;; If I see a process predicate, regardless of anything else there is a process frame
+;;; I then fill in the roles using other kinds of info
+;;;
+;;;
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?process-frame IntroductionOfProcess)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesProcessFrame
+       (PresentationEventFn ?sid ?narrative-event)
+       ?process-frame)))
+
+(<== (introducesProcessFrame
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)))
+     (individualSatisfyingConditions 
+      ?pframeid PhysicalProcessFrame
+      (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)))
+       ))
+     (individualSatisfyingConditions 
+       ?narrative-event IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)))
+       ))
+     
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframeid PhysicalProcessFrame)) (TheList (introducesProcessFrame
+                                                                            (PresentationEventFn ?sid ?narrative-event)
+                                                                            ?pframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event-res)) (TheList (introducesProcessFrame
+                                                                             (PresentationEventFn ?sid ?narrative-event)
+                                                                             ?pframeid)))))
+
+
+     
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?process-frame-role IntroducesProcessRole)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?process-frame-role)))
+
+;;; chain off of direct influences
+(<== (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframeid ?event)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframeid Rate))
+                 (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframe DirectInfluenceFrame))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?qframeid)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?entity-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?entity-frame ?entity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?entity-frame ?fact)))
+     ;;;(containsPattern ?entity1 ?entity)
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (true)
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframeid ?entity)) (TheList (introducesProcessRoles
+                                                                       (PresentationEventFn ?sid ?narrative-event)
+                                                                       ?pframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframeid ?diframe)) (TheList (introducesProcessRoles
+                                                                        (PresentationEventFn ?sid ?narrative-event)
+                                                                        ?pframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframeid ?fact)) (TheList (introducesProcessRoles
+                                                                     (PresentationEventFn ?sid ?narrative-event)
+                                                                                                            ?pframeid)))))
+;;; For indirect influences?
+;;; Currently all indirect influences (when there is a process) are consequences of the process.
+;;; 
+(<== (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframe IndirectInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?qframeid)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?entity-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?diframe ?sign)))
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (true)
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframeid ?diframe)) (TheList (introducesProcessRoles
+                                                                        (PresentationEventFn ?sid ?narrative-event)
+                                                                        ?pframeid)))))
+
+(<== (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event))
+     (uninferredSentence (stoppedEvent ?event))
+     (uninferredSentence (potentialEvent ?sid ?event))
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event))
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (status ?pframeid Active)) (TheList (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)))))
+
+(<== (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event))
+     (stoppedEvent ?event)
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (stoppedEvent ?event)
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (status ?pframeid Inactive)) (TheList (introducesProcessRoles
+                                                                   (PresentationEventFn ?sid ?narrative-event) ?pframeid)))))
+
+(<== (potentialEvent ?sid ?event)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possible ?statement)))
+
+;;; This was added at some point I think for modals.
+;;; Currently causing the active/inactive problem because I took out potentialEvent. Oops
+;;; Commented out 5/4
+
+(<== (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event))
+     (uninferredSentence (stoppedEvent ?event))
+     (potentialEvent ?sid ?event)
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event))
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (status ?pframeid Inactive)) (TheList (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)))))
+
+
+
+
+;;; CJM 2/1/2014: When the event is 'because' of some ordinal event
+;;;
+(<== (introducesProcessRoles
+      (PresentationEventFn ?sid ?narrative-event)
+      ?pframeid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (refferingEvent ?pframeid ?event)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (causes-EventEvent ?compevent ?event))
+     (ist-Information ?dcase (ordinalRelationFrameForEventPossessive ?qf1 ?qf2 ?compevent ?sid))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantity1 ?ordid ?qf1))
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (ist-Information (DrsCaseFn ?ddrs-id) (causes-EventEvent ?compevent ?event))
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (condition ?pframeid ?ordid)) (TheList (introducesProcessRoles
+                                                                   (PresentationEventFn ?sid ?narrative-event) ?pframeid)))))
+
+
+(<== (stoppedEvent ?event)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (interrupts ?stop ?event)))
+
+
+(<== (stoppedEvent ?event)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (pathForEvent ?tframe-id ?path)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?tframe-id ?event)))
+     (ist-Information (DrsCaseFn ?ddrs-id) (objectOfStateChange ?event2 ?path))
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?event ?event-type))
+     (allFactsAllowed
+      (useTransitiveInference (genls ?event-type SeparationEvent))))
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?process-frame-role ApplicableAnalogy)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (ApplyAnalogy
+      (PresentationEventFn ?sid ?narrative-event)
+      ?process-frame-role)))
+
+(<== (ApplyAnalogy
+      (PresentationEventFn ?sid ?narrative-event)
+      ?process-frame-role)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (DiscourseCaseForDrs ?case ?ddrs-id)))
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

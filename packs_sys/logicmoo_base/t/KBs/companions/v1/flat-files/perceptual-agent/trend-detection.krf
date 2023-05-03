@@ -1,0 +1,191 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: trend-detection.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 13, 2011 10:44:51
+;;;;   Purpose: Detect trends in a series of recorded direct-influence cases
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; If we find a clear trend over time, we can label the quantity type
+;;; and look for events at the beginning and end of the trend, to identify
+;;; e.g., counters, rates, etc.
+
+(isa linearTrend Predicate)
+(arity linearTrend 4)
+(arg1Isa linearTrend Microtheory)
+(arg2Isa linearTrend Quantity)
+(arg3Isa linearTrend Microtheory)
+(arg4Isa linearTrend ScalarInterval)
+(comment linearTrend "(linearTrend ?di-case ?quantity ?start-turn ?delta) identify a linear or constant trend in quantity value since ?start-turn.")
+
+(<== (linearTrend ?di-case ?quantity ?starting-turn ?delta)
+     (ist-Information ?di-case
+       (localOnly
+         (lookupOnly
+           (numAnswers 1
+             (quantityChange ?quantity ?delta)))))
+     (trendSince ?di-case ?quantity ?start-di-case ?delta)
+     (different ?start-di-case ?di-case)
+     (unifies (DICaseFn ?mt ?starting-turn) ?start-di-case))
+
+(<== (linearTrend ?di-case ?quantity ?starting-turn 0)
+     (uninferredSentence
+       (ist-Information ?di-case
+         (localOnly
+           (lookupOnly
+             (numAnswers 1
+               (quantityChange ?quantity ?delta))))))
+     (trendSince ?di-case ?quantity ?start-di-case 0)
+     (different ?start-di-case ?di-case)
+     (unifies (DICaseFn ?mt ?starting-turn) ?start-di-case))
+
+(isa trendSince QuaternaryPredicate)
+(arity trendSince 4)
+(arg1Isa trendSince Microtheory)
+(arg2Isa trendSince Quantity)
+(arg3Isa trendSince Microtheory)
+(arg4Isa trendSince ScalarInterval)
+(comment trendSince "(trendSince ?di-case ?quantity ?start-di-case ?delta) binds the starting di case given a concrete delta representing a change magnitude (which may be zero).")
+
+;;; changeIntegratedOverTurns is a special case of this.
+;;; we'll re-write it eventually.
+
+;;; find linear trends
+;;; We're not trying to compute the number of turns here.
+;;; just the beginning and end of the trend and its consistent delta.
+;;; We don't even need to track the value, since we track the change
+(<== (trendSince ?di-case ?quantity ?start-di-case ?delta)
+     (priorDICase ?di-case ?earlier-di-case)
+     (ist-Information ?earlier-di-case
+       (localOnly
+         (lookupOnly
+           (numAnswers 1
+             (quantityChange ?quantity ?delta)))))
+     (trendSince ?earlier-di-case ?quantity ?start-di-case ?delta))
+
+(<== (trendSince ?di-case ?quantity ?di-case ?delta)
+     (uninferredSentence
+       (priorDICase ?di-case ?earlier-di-case)))
+       
+
+(<== (trendSince ?di-case ?quantity ?start-di-case 0)
+     (priorDICase ?di-case ?earlier-di-case)
+     (uninferredSentence
+       (ist-Information ?earlier-di-case
+         (localOnly
+           (lookupOnly
+             (numAnswers 1
+               (quantityChange ?quantity ?delta))))))
+     (trendSince ?earlier-di-case ?quantity ?start-di-case ?delta))
+
+(<== (trendSince ?di-case ?quantity ?di-case ?delta)
+     (different ?delta 0)
+     (priorDICase ?di-case ?earlier-di-case)
+     (uninferredSentence
+       (ist-Information ?earlier-di-case
+         (localOnly
+           (lookupOnly
+             (numAnswers 1
+               (quantityChange ?quantity ?delta)))))))
+
+;;; --------------------------------------------------------------------------
+
+(isa monotonicTrendFromTo QuintaryPredicate)
+(arity monotonicTrendFromTo 5)
+(arg1Isa monotonicTrendFromTo Microtheory)
+(arg2Isa monotonicTrendFromTo Quantity)
+(arg3Isa monotonicTrendFromTo TemporalThing)
+(arg4Isa monotonicTrendFromTo TemporalThing)
+(arg5Isa monotonicTrendFromTo UnaryPredicate) ; bleah!
+(comment monotonicTrendFromTo "(monotonicTrendFromTo ?mt ?quantity ?from ?to ?direction) succeeds if changes in ?quantity had the same sign throughout the interval.")
+
+;;; Don't require a linear trend, just require changes in a consistent direction.
+(<== (monotonicTrendFromTo ?mt ?quantity ?from ?to ?direction)
+     (different ?from ?to)  ;; like to say lessthan, but what if it's a YearFn NAT?
+     (unifies ?di-case (DICaseFn ?mt ?to))
+     (ist-Information ?di-case
+       (localOnly
+         (lookupOnly
+           (numAnswers 1
+             (quantityChange ?quantity ?delta)))))
+     (qualitativeDSValue ?delta ?direction)
+     (numAnswers 1
+       (ist-Information ?mt
+         (followingTurn ?prior ?to)))
+     (monotonicTrendFromTo ?mt ?quantity ?from ?prior ?direction))
+
+;;; base case:
+(<== (monotonicTrendFromTo ?mt ?quantity ?turn ?turn ?direction))
+     
+
+(isa bookendingDiscontinuities QuintaryPredicate)
+(arity bookendingDiscontinuities 5)
+(arg1Isa bookendingDiscontinuities Microtheory)
+(arg2Isa bookendingDiscontinuities Quantity)
+(arg3Isa bookendingDiscontinuities TemporalThing)
+(arg4Isa bookendingDiscontinuities TemporalThing)
+(arg5Isa bookendingDiscontinuities UnaryPredicate) ; bleah!
+(comment bookendingDiscontinuities "(bookendingDiscontinuities ?mt ?quantity ?from ?to ?direction) means discontinuities at turn ?from and ?to surround a monotonicallly increasing or decreasing trend in ?quantity.")
+
+(<== (bookendingDiscontinuities ?mt ?quantity ?from ?to ?direction)
+     (different ?from ?to)
+     (numAnswers 1
+       (ist-Information ?mt
+         (followingTurn ?prior ?to)))
+     (different ?prior ?from)
+     (monotonicTrendFromTo ?mt ?quantity ?from ?prior ?direction)
+     (groundExpression ?direction) ; just to be sure
+     (uninferredSentence
+       (continuityWRT ?mt ?quantity ?to ?direction))
+     (priorDiscontinuityWRT ?mt ?quantity ?from ?direction))
+
+(isa continuityWRT QuaternaryPredicate)
+(arity continuityWRT 4)
+(arg1Isa continuityWRT Microtheory)
+(arg2Isa continuityWRT Quantity)
+(arg3Isa continuityWRT TemporalThing)
+(arg4Isa continuityWRT UnaryPredicate)
+(comment continuityWRT "(continuityWRT ?mt ?quantity ?when ?direction) succeeds if there was a quantity change in direction ?direction in the turn ?when.")
+
+(<== (continuityWRT ?mt ?quantity ?when ?direction)
+     (groundExpression ?direction)
+     (groundExpression ?when)
+     (unifies ?di-case (DICaseFn ?mt ?when))
+     (ist-Information ?di-case
+       (localOnly
+         (lookupOnly
+           (numAnswers 1
+             (quantityChange ?quantity ?delta)))))
+     (qualitativeDSValue ?delta ?direction))
+
+
+(isa priorDiscontinuityWRT QuaternaryPredicate)
+(arity priorDiscontinuityWRT 4)
+(arg1Isa priorDiscontinuityWRT Microtheory)
+(arg2Isa priorDiscontinuityWRT Quantity)
+(arg3Isa priorDiscontinuityWRT TemporalThing)
+(arg4Isa priorDiscontinuityWRT UnaryPredicate)
+(comment priorDiscontinuityWRT "(priorDiscontinuityWRT ?mt ?quantity ?when ?direction) succeeds if there was no quantity change in direction ?direction in the turn prior to ?when (or no prior turn).")
+
+(<== (priorDiscontinuityWRT ?mt ?quantity ?when ?direction)
+     (numAnswers 1
+       (ist-Information ?mt
+         (followingTurn ?prior ?when)))
+     (uninferredSentence
+       (continuityWRT ?mt ?quantity ?prior ?direction)))
+
+;;; The beginning of a game is considered to be discontinuous:
+(<== (priorDiscontinuityWRT ?mt ?quantity ?when ?direction)
+     (uninferredSentence
+       (ist-Information ?mt
+         (followingTurn ?prior ?when))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

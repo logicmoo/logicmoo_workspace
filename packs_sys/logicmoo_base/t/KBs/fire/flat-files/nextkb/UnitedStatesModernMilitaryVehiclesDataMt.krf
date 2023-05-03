@@ -1,0 +1,45 @@
+(in-microtheory UnitedStatesModernMilitaryVehiclesDataMt)
+
+(isa USSCarlVinson NuclearAircraftCarrier)
+(isa USSConstellation-1961 NuclearAircraftCarrier)
+(isa USSKittyHawk NuclearAircraftCarrier)
+(isa USSBlueRidge CommandShip)
+(isa USSCoronado CommandShip)
+(isa USSBelleauWood AmphibiousAssaultShip)
+(isa USSEssex AmphibiousAssaultShip)
+(comment USSEssex "#$USSEssex is an instance of #$AmphibiousAssaultShip in the
+US Navy.")
+(comment USSBelleauWood "#$USSBelleauWood is an instance of #$AmphibiousAssaultShip in the
+
+US Navy. It was commissioned on 
+
+September 23, 1978 in Pascagoula, Mississippi.")
+(comment USSCoronado "#$USSCoronado isa a #$CommandShip in the US Navy. It was built by 
+#$LockheedMartin-CommercialOrganization in Seattle, Washington. 
+Its was commissioned 23 May 1970.")
+(comment USSBlueRidge "#$USSBlueRidge (LCC-19) was built by the Philadelphia Naval Shipyard in 1967 and commissioned November 14, 1970.  She is the flagship for the #$SeventhFleet-USNavy.  The #$USSBlueRidge has an extremely sophisticated Command and Control system. The #$JointMaritimeCommandInformationSystem (JMCIS) consists of numerous powerful computers distributed throughout the ship from which information and data from worldwide sources are entered into a central database. This single integrated database concentrates the available information into a complete tactical picture of air, surface and subsurface contacts, enabling the Fleet Commander to quickly
+
+assess and concentrate on any situation that might arise. This ability to access information from military and civilian sources throughout the world gives Blue Ridge tremendous global command and control capability.")
+(comment USSKittyHawk "The aircraft carrier #$USSKittyHawk is an instance of 
+#$NuclearAircraftCarrier. It was constructed by the 
+New York Shipbuilding Corporation at Camden, New Jersey, 
+and commissioned on April 29, 1961.")
+(comment USSConstellation-1961 "#$USSConstellation-1961 is an instance of 
+
+#$NuclearAircraftCarrier built at the New York Naval Shipyard 
+
+as the second ship in the Kitty Hawk class of aircraft carriers.
+
+It was commissioned on October 27, 1961.")
+(comment USSCarlVinson "#$USSCarlVinson, the third in the 
+series of NIMITZ-class #$NuclearAircraftCarriers, was
+constructed by the Newport News Shipbuilding
+and Drydock Company in Newport News, Va. 
+Named after the late Georgia Congressman Carl
+Vinson, who served in the U.S. House of
+Representatives for more than 50 years
+(1914-1965), the 100,000-ton nuclear-powered
+aircraft carrier is the first U.S. warship to have
+been named for a man who was still alive. 
+#$USSCarlVinson was commissioned on March
+13, 1982.")

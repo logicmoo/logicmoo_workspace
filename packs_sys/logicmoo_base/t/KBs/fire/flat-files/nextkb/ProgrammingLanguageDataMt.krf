@@ -1,0 +1,5 @@
+(in-microtheory ProgrammingLanguageDataMt)
+
+(isa CycL HigherOrderLogicProgrammingLanguage)
+(isa CSharp-ProgrammingLanguage BoundsCheckedProgrammingLanguage)
+(isa JavaProgrammingLanguage BoundsCheckedProgrammingLanguage)

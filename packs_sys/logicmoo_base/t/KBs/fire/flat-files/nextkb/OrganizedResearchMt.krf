@@ -1,0 +1,8 @@
+(in-microtheory OrganizedResearchMt)
+
+(isa SearchForExtraterrestrialIntelligence ResearchProject)
+(isa SearchForExtraterrestrialIntelligence LookingForSomething)
+(isa NewYorkAcademyOfSciences OrganizationOfPeopleOnly)
+(isa NewYorkAcademyOfSciences ResearchOrganization)
+(comment NewYorkAcademyOfSciences "The NYAS, an organization of research scientists and leaders of business, academia and government, has three aims: ''to advance scientific research and knowledge, to support scientific literacy, and to promote the resolution of society's global challenges through science-based solutions.''")
+(comment SearchForExtraterrestrialIntelligence "The Search For Extraterrestrial Intelligence is a research            project hoping to find evidence            of alien intelligences, specifically by searching            for artificially-created electromagnetic radiation.")

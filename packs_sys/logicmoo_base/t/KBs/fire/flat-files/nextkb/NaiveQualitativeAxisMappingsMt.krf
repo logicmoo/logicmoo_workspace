@@ -1,0 +1,23 @@
+(in-microtheory NaiveQualitativeAxisMappingsMt)
+
+(qvPoseAxisMapping LookingFromSide-SubSketch LookingFromTop-SubSketch LeftRightAxis LeftRightAxis)
+(qvPoseAxisMapping LookingFromSide-SubSketch LookingFromTop-SubSketch DownUpAxis InOutAxis)
+(qvPoseAxisMapping LookingFromSide-SubSketch LookingFromTop-SubSketch InOutAxis DownUpAxis)
+(qvPoseAxisMapping LookingFromTop-SubSketch LookingFromSide-SubSketch LeftRightAxis LeftRightAxis)
+(qvPoseAxisMapping LookingFromTop-SubSketch LookingFromSide-SubSketch InOutAxis DownUpAxis)
+(qvPoseAxisMapping LookingFromTop-SubSketch LookingFromSide-SubSketch DownUpAxis InOutAxis)
+(qvPoseAxisMapping LookingFromSide-SubSketch LookingFromFront-SubSketch LeftRightAxis InOutAxis)
+(qvPoseAxisMapping LookingFromSide-SubSketch LookingFromFront-SubSketch DownUpAxis DownUpAxis)
+(qvPoseAxisMapping LookingFromSide-SubSketch LookingFromFront-SubSketch InOutAxis LeftRightAxis)
+(qvPoseAxisMapping LookingFromFront-SubSketch LookingFromSide-SubSketch LeftRightAxis InOutAxis)
+(qvPoseAxisMapping LookingFromFront-SubSketch LookingFromSide-SubSketch DownUpAxis DownUpAxis)
+(qvPoseAxisMapping LookingFromFront-SubSketch LookingFromSide-SubSketch InOutAxis LeftRightAxis)
+(qvPoseAxisMapping LookingFromTop-SubSketch LookingFromFront-SubSketch LeftRightAxis InOutAxis)
+(qvPoseAxisMapping LookingFromTop-SubSketch LookingFromFront-SubSketch DownUpAxis LeftRightAxis)
+(qvPoseAxisMapping LookingFromTop-SubSketch LookingFromFront-SubSketch InOutAxis DownUpAxis)
+(qvPoseAxisMapping LookingFromFront-SubSketch LookingFromTop-SubSketch LeftRightAxis DownUpAxis)
+(qvPoseAxisMapping LookingFromFront-SubSketch LookingFromTop-SubSketch DownUpAxis InOutAxis)
+(qvPoseAxisMapping LookingFromFront-SubSketch LookingFromTop-SubSketch InOutAxis LeftRightAxis)
+(comment NaiveQualitativeAxisMappingsMt "Contains mappings for transforming qualitative axes across layer poses.
+  Assumes the following relation: If side view has the axes in the standard 
+  orientation, x/y/z, then top view is oriented x/z/y and front view is z/y/x.")

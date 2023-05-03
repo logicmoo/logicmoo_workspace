@@ -1,0 +1,74 @@
+;;;
+;;; timeout-plans.meld
+;;;
+;;; 1-30-14 This works again!
+
+(in-microtheory TestPlanMt)
+(genlMt TestPlanMt CompanionsMt)
+(genlMt CompanionsMt TestPlanMt)
+
+(<== (fibonacci 0 0))
+
+(<== (fibonacci 1 1))
+
+(<== (fibonacci ?n ?f)
+     (groundExpression ?n)
+     (greaterThan ?n 1)
+     (evaluate ?n-1 (DifferenceFn ?n 1))
+     (evaluate ?n-2 (DifferenceFn ?n 2))
+     (fibonacci ?n-1 ?fn-1)
+     (fibonacci ?n-2 ?fn-2)
+     (evaluate ?f (PlusFn ?fn-1 ?fn-2)))
+
+(isa timeoutPlan ComplexActionPredicate)
+(arity timeoutPlan 2)
+(comment timeoutPlan "(timeoutPlan ?timelimit ?depthlimit) starts an (inefficient) fibonacci computation to test the handling of resource limits.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (timeoutPlan ?timeout ?depth-limit)
+    (actionSequence
+      (TheList
+        (doAgentPlan (withTimeout ?timeout (slowPlan ?depth-limit)))
+        (doAgentPlan (withCurrentTimestamp (reasonAboutPossibleTimeout)))
+        ))))
+
+(isa slowPlan ComplexActionPredicate)
+(arity slowPlan 1)
+
+(preconditionForMethod
+  (withBackchainingDepth ?depth-limit (fibonacci 30 ?answer))
+  (methodForAction
+    (slowPlan ?depth-limit)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&fibonacci of 30 is ~s" (?answer))))))
+
+;;; Because the depth-limit is being applied to the precondition query
+;;; rather than the plan itself, the method (and therefore the plan)
+;;; can fail unless we have a default method.  Hence the failsafe
+;;; method here:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (slowPlan ?depth-limit)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (slowPlan ?depth-limit) ?seq1 (actionSequence (TheList))))
+
+(isa reasonAboutPossibleTimeout ComplexActionPredicate)
+(arity reasonAboutPossibleTimeout 0)
+
+(preconditionForMethod
+  (and (queryTimedOut ?timed-out)
+       (depthLimitExceeded ?depth-exceeded))
+  (methodForAction
+    (reasonAboutPossibleTimeout)
+    (actionSequence
+      (TheList
+        (doAnnounce "Timeout status is ~s" (?timed-out))
+        (doAnnounce "Depth limit status is ~s" (?depth-exceeded))
+        ))))
+

@@ -1,0 +1,85 @@
+;;; 
+;;; decision-tasks.meld
+;;;
+
+(in-microtheory (LearnedKnowledgeMtFn Freeciv-TheGame) :exclude-globals t)
+
+;;; These can be determined through yes/no questions, but
+;;; for the purposes of regression tests, we'll seed them here.
+
+(decisionTask FreeCiv-City currentlyBuilding)
+(decisionTask FreeCiv-Player currentlyResearching)
+(decisionTask FreeCiv-Player currentGovernment)
+
+;;; Should these be decision tasks?
+;;; a) they don't consume move points
+;;; b) they have instantaneous effects
+;;; c) they may be event-driven (at the beginning of the game), but not always
+(decisionTask FreeCiv-Player currentLuxuryPercent)
+(decisionTask FreeCiv-Player currentSciencePercent)
+(decisionTask FreeCiv-Player currentTaxPercent)
+
+(nonDecisionSlot fcObjectAt)
+(nonDecisionSlot techGoal)
+(nonDecisionSlot currentActivity)
+(nonDecisionSlot currentPlan)
+(nonDecisionSlot unitType)      ; allow planned upgrade actions
+(nonDecisionSlot cityOwner)     ; allow transfer (via diplomatic agreements)
+(nonDecisionSlot unitOwner)
+(nonDecisionSlot transportedBy)
+(nonDecisionSlot cityWorklist)
+
+;;; Decision Triggers (a PerceptualAgent predicate)
+
+(<== (eventTriggersDecision ?GameStartedEvent (decide ?mt ?player currentlyResearching)) 
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?GameStartedEvent GameStartedEvent)) 
+     (ist-Information ?mt (currentPlayer ?player)))
+
+(<== (eventTriggersDecision ?TechLearnedEvent (decide ?mt ?player currentlyResearching)) 
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?TechLearnedEvent TechLearnedEvent)) 
+     (ist-Information ?mt (currentPlayer ?player))
+     (ist-Information ?mt (doneBy ?TechLearnedEvent ?player)))
+
+;;; Because LearnedGovernmentEvent is not handled independently in the PA (as TechLearnedEvent is),
+;;; the default reify-event for chat events doesn't reify a doneBy (as LearnedGovernmentEvent is
+;;; not a spec of PurposefulAction).  So domainRelationsBetween picks up objectActedOn,
+;;; doneBy.
+(<== (eventTriggersDecision ?govt-learned-event (decide ?mt ?player currentGovernment))
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?govt-learned-event LearnedGovernmentEvent))
+     (ist-Information ?mt (currentPlayer ?player))
+     (ist-Information ?mt (objectActedOn ?govt-learned-event ?player)))
+    
+(<== (eventTriggersDecision ?city-creation-event (decide ?mt ?city currentlyBuilding))
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?city-creation-event CityCreationEvent))
+     (ist-Information ?mt (outputsCreated ?city-creation-event ?city)))
+     
+(<== (eventTriggersDecision ?unit-built-event (decide ?mt ?city currentlyBuilding))
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?unit-built-event UnitBuiltEvent))
+     (ist-Information ?mt (doneBy ?unit-built-event ?city)))
+     
+(<== (eventTriggersDecision ?improvement-built-event (decide ?mt ?city currentlyBuilding))
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?improvement-built-event ImprovementBuiltEvent))
+     (ist-Information ?mt (doneBy ?improvement-built-event ?city)))
+
+(<== (eventTriggersDecision ?unit-created-event (decide ?mt ?unit currentPlan))
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?unit-created-event UnitCreatedEvent))
+     (ist-Information ?mt (outputsCreated ?unit-created-event ?unit)))
+
+;;; diplomaticStatus is functional in its third arg,
+;;; which means it isn't a functionalSlot per se, but can be if the slot is a curried Kappa function.
+(<== (eventTriggersDecision ?meeting-requested-event (decide ?mt ?player (Kappa (?player ?status) (diplomaticState ?player ?other-civ ?status))))
+     (executionContext ?mt)
+     (ist-Information ?mt (isa ?meeting-requested-event MeetingRequestedEvent))
+     (ist-Information ?mt (currentPlayer ?player)) ; or we could look at objectActedOn, but that's dubious.
+     (ist-Information ?mt (doneBy ?meeting-requested-event ?other-civ))
+     )
+
+;;;; ------------------------------------------------------------------------
+;;;; End of Code

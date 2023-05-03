@@ -1,0 +1,12 @@
+(in-microtheory QPInterpretationMt :exclude-globals t)
+;;;(genlMt QPInterpretationMt BaseKB)
+;;;(genlMt QPInterpretationMt UniversalVocabularyMt)
+(genlMt QPInterpretationMt QPInterpretationRulesMt)
+(genlMt QPInterpretationMt EAStructuralRulesMt)
+(genlMt QPInterpretationMt EAReferenceResolutionMt)
+(genlMt QPInterpretationMt EADialogueRulesMt)
+(genlMt QPInterpretationMt EATemporalRulesMt)
+
+
+(relationAllInstance temperatureOfObject IceCube ModeratelyCold)
+(relationAllInstance temperatureOfObject Coffee-Hot ModeratelyHot)

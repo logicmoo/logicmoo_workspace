@@ -1,0 +1,45 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: log-communication.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: March 1, 2014 19:02:31
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doEmailIMLogToUser
+
+(isa doEmailIMLogToUser SimpleActionPredicate)
+(arity doEmailIMLogToUser 5)
+(arg1Isa doEmailIMLogToUser CharacterString)
+(arg2Isa doEmailIMLogToUser CharacterString)
+(arg3Isa doEmailIMLogToUser CycLTerm)
+(arg4Isa doEmailIMLogToUser CharacterString)
+(arg5Isa doEmailIMLogToUser CycLTerm)
+(comment doEmailIMLogToUser 
+   "(doEmailIMLogToUser <logname> 
+                      <subject-format-ctrl> <subject-format-args> 
+                      <message-format-ctrl> <message-format-args>) 
+    emails the log to the user if that user allows email notifications and has 
+    specified their email address.")
+
+
+(isa IMCommunicationsMt Microtheory)
+(comment IMCommunicationsMt "A microtheory that stores information about how IM should
+communication with the user, over email and the like.")
+
+(isa emailAddressForIMCommunication Predicate)
+(arity emailAddressForIMCommunication 1)
+(arg1Isa emailAddressForIMCommunication String)
+(comment emailAddressForIMCommunication "(emailAddressForIMCommunication ?email-address)
+indicates that IM should send its emails to ?email-address.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

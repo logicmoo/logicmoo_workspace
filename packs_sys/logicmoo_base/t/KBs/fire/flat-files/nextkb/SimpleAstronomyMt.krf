@@ -1,0 +1,4 @@
+(in-microtheory SimpleAstronomyMt)
+
+(genls CoronaOfStar Plasma-StateOfMatter)
+(genls Star Plasma-StateOfMatter)

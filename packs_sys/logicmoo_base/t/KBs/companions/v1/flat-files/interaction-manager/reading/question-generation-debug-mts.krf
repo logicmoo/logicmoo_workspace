@@ -1,0 +1,24 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: question-generation-debug-mts.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: January 22, 2014 15:35:05
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QuestionGenerationDebugMt-002)
+(isa QuestionGenerationDebugMt-002 Microtheory)
+(isa ChicagoZoo Menagerie)
+(isa ChicoTheBear ZooAnimal)
+(isa GrossBiteWound Bite-Wound)
+(isa MeBitingSomething Biting)
+(isa MeBitingFingernails BitingFingernails)
+(isa MyArm Arm)
+(isa MyHand Hand)
+(isa MyLeftHand (LeftObjectOfPairFn Hand))
+(isa MyRightArm (RightObjectOfPairFn Arm))
+

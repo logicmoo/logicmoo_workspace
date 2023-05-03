@@ -1,0 +1,112 @@
+
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa WMGpool Collection)
+(comment "WMGpool is a collection of gpools that exists only in the working memory")
+
+(isa WMGeneralization Collection)
+(comment "WMGeneralization is a collection of WM generalizations in working memory")
+
+(isa sageWMSelect Predicate)
+(arity sageWMSelect 4)
+
+(isa sageWMGeneralizeWithMapping Predicate)
+(arity sageWMGeneralizeWithMapping 4)
+(comment sageWMGeneralizeWithMapping "(sageWMGeneralizeWithMapping EXEMPLAR GCONTEXT TARGET MAPPING) uses the MAPPING to create a generalization in the GCONTEXT. This is an outsourced fire:tell.")
+(arg1Isa sageWMGeneralizeWithMapping Microtheory)
+(arg2Isa sageWMGeneralizeWithMapping GeneralizationContext)
+(arg3Isa sageWMGeneralizeWithMapping Microtheory)
+(arg4Isa sageWMGeneralizeWithMapping Individual)
+
+(isa sageWMGeneralize Predicate)
+(arity sageWMGeneralize 3)
+(comment sageWMGeneralize "(sageWMGeneralize EXEMPLAR TARGET GCONTEXT) generalizes EXEMPLAR with TARGET inside #$GeneralizationContext GCONTEXT.  Assumes you've used #$sageWMSelect to compute TARGET.  This is an outsourced fire:tell.")
+(arg1Isa sageWMGeneralize Microtheory)
+(arg2Isa sageWMGeneralize Microtheory)
+(arg3Isa sageWMGeneralize GeneralizationContext)
+
+(isa sageWMSelectAndGeneralize Predicate)
+(arity sageWMSelectAndGeneralize 2)
+(comment sageWMSelectAndGeneralize "(sageWMSelectAndGeneralize EXEMPLAR GCONTEXT) generalizes EXEMPLAR inside #$GeneralizationContext GCONTEXT, first by finding a generalization target (via #$sageWMSelect), and then by doing a merge (via #$sageWMGeneralize).  This is an outsourced fire:tell.")
+(arg1Isa sageWMSelectAndGeneralize Microtheory)
+(arg2Isa sageWMSelectAndGeneralize GeneralizationContext)
+
+(isa wmGpoolAddUngeneralized Predicate)
+(arity wmGpoolAddUngeneralized 2)
+(comment wmGpoolAddUngeneralized "(wmGpoolAddUngeneralized ?e ?wmg) adds example ?e to WM generalization pool ?wmg, when used in a tell.")
+(arg1Isa wmGpoolAddUngeneralized Microtheory)
+(arg2Isa wmGpoolAddUngeneralized GeneralizationContext)
+
+(isa nukeWMGpool Predicate)
+(arity nukeWMGpool 1)
+(comment nukeWMGpool "(nukeWMGpool ?wmg) wipes the contents of WM generalization pool ?wmg.")
+(arg1Isa nukeWMGpool GeneralizationContext)
+
+(isa wmGpoolStrategy Predicate)
+(arity wmGpoolStrategy 2)
+(comment wmGpoolStrategy "(wmGpoolStrategy my-context ?x) binds/sets ?x as the selection algorithm that my-context uses.")
+(arg1Isa wmGpoolStrategy GeneralizationContext)
+(arg2Isa wmGpoolStrategy CycLExpression)
+
+(isa wmGpoolUseProbability Predicate)
+(arity wmGpoolUseProbability 2)
+(comment wmGpoolUseProbability "(wmGpoolUseProbability my-context ?x) binds/sets ?x as the truth-value of whether the context uses probability in its abstraction & matching.  Default is true.")
+(arg1Isa wmGpoolUseProbability GeneralizationContext)
+(arg2Isa wmGpoolUseProbability CycLExpression)
+
+(isa wmGpoolAssimilationThreshold Predicate)
+(arity wmGpoolAssimilationThreshold 2)
+(comment wmGpoolAssimilationThreshold "(wmGpoolAssimilationThreshold my-context ?x) binds/sets ?x as the threshold of similarity score, above which new examples will be merged with existing generalizations and ungeneralized examples.")
+(arg1Isa wmGpoolAssimilationThreshold GeneralizationContext)
+(arg2Isa wmGpoolAssimilationThreshold Number)
+
+(isa wmGpoolProbabilityCutoff Predicate)
+(arity wmGpoolProbabilityCutoff 2)
+(comment wmGpoolProbabilityCutoff "(wmGpoolProbabilityCutoff my-context ?x) binds/sets ?x as the threshold of probability, above which facts will be used in SME matching.")
+(arg1Isa wmGpoolProbabilityCutoff GeneralizationPool)
+(arg2Isa wmGpoolProbabilityCutoff Number)
+
+(isa wmGpoolMaxSize Predicate)
+(arity wmGpoolMaxSize 2)
+(comment wmGpoolMaxSize "(wmGpoolMaxSize my-context ?num) states that sageWM context X can hold a maximum of 'num' elements. Both generalizations and ungeneralized examples are counted as an element.")
+(arg1Isa wmGpoolMaxSize GeneralizationPool)
+(arg2Isa wmGpoolMaxSize ScalarInterval)
+
+(isa wmGpoolExample Predicate)
+(arity wmGpoolExample 2)
+(comment wmGpoolExample "(wmGpoolExample ?wmg ?x) indicates that ?x is an unassimilated example in WM generalization pool ?wmg")
+(arg1Isa wmGpoolExample GeneralizationPool)
+(arg2Isa wmGpoolExample Microtheory)
+
+(isa wmGpoolGeneralization Predicate)
+(arity wmGpoolGeneralization 2)
+(comment wmGpoolGeneralization "(wmGpoolGeneralization my-context ?x) binds ?x to the set of generalizations inside GeneralizationPool my-context.")
+(arg1Isa wmGpoolGeneralization GeneralizationPool)
+(arg2Isa wmGpoolGeneralization Microtheory)
+
+(isa wmGpoolNExamples Predicate)
+(arity wmGpoolNExamples 2)
+(comment wmGpoolNExamples "(wmGpoolNExamples my-gmt ?x) binds ?x to the number of examples that have been generalized inside GeneralizationMicrotheory my-gmt.")
+(arg1Isa wmGpoolNExamples GeneralizationMicrotheory)
+(arg2Isa wmGpoolNExamples Number)
+
+(isa wmGpoolProbability Predicate)
+(arity wmGpoolProbability 2)
+(comment wmGpoolProbability "(wmGpoolProbability FACT PROB) indicates that FACT has probability X inside the working memory generalization context that this expression occurs in.")
+(arg1Isa wmGpoolProbability CycLExpression)
+(arg2Isa wmGpoolProbability CycLExpression)
+(notForAnalogy wmGpoolProbability) ;;we should not consider probability assertions for analogy
+
+
+(isa setWMGpoolMaxSize Predicate)
+(arity setWMGpoolMaxSize 2)
+(comment setWMGpoolMaxSize "(setWMGpoolMaxSize GCONTEXT NUMBER) is a tell handler to set the maximum-size i.e. max number of elements that can be in wmgpool at any given time.") 
+(arg1Isa setWMGpoolMaxSize GeneralizationPool)
+(arg2Isa setWMGpoolMaxSize Number)
+
+(isa setWMGpoolAssimilationThreshold Predicate) 
+(arity setWMGpoolAssimilationThreshold 2)
+(comment setWMGpoolAssimilationThreshold "(setWMGpoolAssimilationThreshold GCONTEXT NUMBER) is a tell handler to set the assimilation threshold.")
+(arg1Isa setWMGpoolAssimilationThreshold GeneralizationPool)
+(arg2Isa setWMGpoolAssimilationThreshold Number)

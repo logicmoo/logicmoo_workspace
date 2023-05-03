@@ -1,0 +1,7 @@
+(in-microtheory SpatialGVocabularyMt)
+
+(argFormat touches 2 SetTheFormat)
+(argFormat touches 1 SetTheFormat)
+(negationPreds overlappingSpaceRegions parallelLines)
+(genlPreds overlappingPaths spatiallyIntersects)
+(genlPreds parallelPaths spatiallyDisjoint)

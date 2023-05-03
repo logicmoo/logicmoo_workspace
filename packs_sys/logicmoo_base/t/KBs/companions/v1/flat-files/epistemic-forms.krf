@@ -1,0 +1,201 @@
+;;;
+;;; epistemic-forms.krf
+;;;
+;;; Define predicates for Epistemic Forms and Games.
+;;;
+;;; Author: Tom Hinrichs
+;;; Created: September 2, 2009 09:04:24
+
+(in-microtheory CompanionsMt)
+
+;;; We have a type-token issue here.
+;;; We'll represent Epistemic Forms and Games as 2nd-order collections, so that different 
+;;; types can still be specialized and instantiated.
+;;; So, for example, a DecisionTree is a particular kind of Epistemic Form that specializes
+;;; the Tree Epistemic Form and can be instantiated for particular values.
+
+(isa EpistemicForm SecondOrderCollection)
+(isa EpistemicGame SecondOrderCollection)
+
+
+(isa targetEpistemicForm BinaryPredicate)
+(arg1Isa targetEpistemicForm EpistemicGame)
+(arg2Isa targetEpistemicForm EpistemicForm)
+(comment targetEpistemicForm "(targetEpistemicForm ?game ?form) maps from an instance of an epistemic game to a reified instance of an epistemic form, such as a list, table, tree, or graph.")
+
+(isa epistemicFormElementConstraint BinaryPredicate)
+(arg1Isa epistemicFormElementConstraint EpistemicForm)
+(arg2Isa epistemicFormElementConstraint UnaryPredicate)
+(comment epistemicFormElementConstraint "(epistemicFormElementConstraint ?form ?unary-pred) associates an epistemic form with a constraint on members (possibly defined using a Kappa fn).")
+
+(isa epistemicGameEntryCondition BinaryPredicate)
+(arg1Isa epistemicGameEntryCondition Collection)
+(arg1Genl epistemicGameEntryCondition EpistemicGame)
+(arg2Isa epistemicGameEntryCondition ELSentence-Assertible)
+(comment epistemicGameEntryCondition "(epistemicGameEntryCondition ?game-type ?condition) associates a game type with a CycL statement that must hold.")
+
+;;; GGP defines the argument to legal as (does <role> <stmt>)
+;;; and the effect of (does <role> <stmt>) is defined in next rules.
+;;; We might prefer to reify moves directly, or at least move types.
+(isa epistemicGameLegalMove BinaryPredicate)
+(arg1Isa epistemicGameLegalMove EpistemicGame)
+(arg2Isa epistemicGameLegalMove ELSentence-Assertible)  ;; should it be a NAT?
+(comment epistemicGameLegalMove "(epistemicGameLegalMove ?epistemic-game ?move) succeeds if ?move is legal.  ?move denotes a task somehow.")
+
+;;; Game Types:
+;;; Each of these games has a target form.
+;;; Each form has a set of representational forms that must be filled out to define them.
+;;; E.g., a List (actually a Set) simply requires an association between elements and set, using elementOf.
+;;; A tree requires both elementOf and some boolean child relation.
+;;; A graph must have both parent and child.
+;;; A table will have some ternary relation.
+;;; 
+
+(isa StructualAnalysis-EG Collection)
+(isa StructualAnalysis-EG EpistemicGame)
+
+(isa FunctionalAnalysis-EG Collection)
+(isa FunctionalAnalysis-EG EpistemicGame)
+
+(isa ProcessAnalysis-EG Collection)
+(isa ProcessAnalysis-EG EpistemicGame)
+
+
+(isa ListMaking-EG Collection)
+(isa ListMaking-EG EpistemicGame)
+(genls ListMaking-EG StructuralAnalysis-EG)
+(comment ListMaking-EG "A list-making game is a knowledge-construction process in which the list is the answer to a question, and it's elements cannot simply be retrieved.  Example constraints include: similarity, coverage, distinctness, multiplicity, and brevity.  (These are constraints on the list, not the members.)  Technically, the target form is a set, not a list.")
+
+(isa PrimitiveElementsAnalysis-EG Collection)
+(isa PrimitiveElementsAnalysis-EG EpistemicGame)
+(genls PrimitiveElementAnalysis-EG ListMaking-EG)
+(comment PrimitiveElementAnalysis-EG "The identification of indivisible constituents of some entity.")
+
+(isa SpatialDecomposition-EG Collection)
+(isa SpatialDecomposition-EG EpistemicGame)
+(genls SpatialDecomposition-EG StructuralAnalysis-EG)
+
+(isa TemporalAnalysis-EG Collection)
+(isa TemporalAnalysis-EG EpistemicGame)
+(genls TemporalAnalysis-EG StructuralAnalysis-EG)
+(comment TemporalAnalysis-EG "aka Stage Models")
+
+(isa CompareAndContrast-EG Collection)
+(isa CompareAndContrast-EG EpistemicGame)
+(genls CompareAndContrast-EG StructuralAnalysis-EG)
+(comment CompareAndContrast-EG "a decomposition game involving comparison of two entities.")
+
+(isa CostBenefitAnalysis-EG Collection)
+(isa CostBenefitAnalysis-EG EpistemicGame)
+(genls CostBenefitAnalysis-EG CompareAndContrast-EG)
+(comment CostBenefitAnalysis-EG "A type of compare and contrast game in which the items being compared are alternative courses of action.")
+
+(isa HierarchyConstruction-EG Collection)
+(isa HierarchyConstruction-EG EpistemicGame)
+(genls HierarchyConstruction-EG StructuralAnalysis-EG)
+(comment HierarchyConstruction-EG "aka TreeStructure game.")
+
+(isa AxiomSystemAnalysis-EG Collection)
+(isa AxiomSystemAnalysis-EG EpistemicGame)
+(genls AxiomSystemAnalysis-EG StructuralAnalysis-EG)
+
+(isa CriticalEventAnalysis-EG Collection)
+(isa CriticalEventAnalysis-EG EpistemicGame)
+(genls CriticalEventAnalysis-EG FunctionalAnalysis-EG)
+(comment CriticalEventAnalysis-EG "The reconstruction of a particular set of events leading to or resulting from a particular incident.")
+
+(isa CauseEffectAnalysis-EG Collection)
+(isa CauseEffectAnalysis-EG EpistemicGame)
+(genls CauseEffectAnalysis-EG FunctionalAnalysis-EG)
+(comment CauseEffectAnalysis-EG "A variant of critical event analysis that posits a particular sequence of events and distinguishes preconditions from triggers or causes.")
+
+(isa ProblemCenteredAnalysis-EG Collection)
+(isa ProblemCenteredAnalysis-EG EpistemicGame)
+(genls ProblemCenteredAnalysis-EG FunctionalAnalysis-EG)
+
+(isa MultiCausalAnalysis-EG Collection)
+(isa MultiCausalAnalysis-EG EpistemicGame)
+(genls MultiCausalAnalysis-EG FunctionalAnalysis-EG)
+(comment MultiCausalAnalysis-EG "aka And/Or graph analysis.")
+
+(isa FormFunctionAnalysys-EG Collection)
+(isa FormFunctionAnalysys-EG EpistemicGame)
+(genls FormFunctionAnalysis-EG FunctionalAnalysis-EG)
+
+
+;;; This is the one we're likely to blow out a lot:
+(isa QPModelAnaylsis-EG Collection)
+(isa QPModelAnaylsis-EG EpistemicGame)
+(genls QPModelAnalysis-EG ProcessAnalysis-EG)
+(comment QPModelAnalysis-EG 
+  "In QPModelAnalysis, we attempt to elaborate a qualitative model by identifying processes, 
+continuous quantities, inequalities, and influences.  There will be instantiation conditions,
+boolean conditions, and possibly activation conditions based on other model fragments, but 
+that's an encoding optimization we might not want to worry about yet.  We'll want to 
+take simple causal statements like causes-SitSit and start looking for processes and quantities
+that might explain the causal statement.")
+
+(isa SystemDynamicsAnalysis-EG Collection)
+(isa SystemDynamicsAnalysis-EG EpistemicGame)
+(genls SystemDynamicsAnalysis-EG ProcessAnalysis-EG)
+
+(isa AggregateBehaviorAnalysis-EG Collection)
+(isa AggregateBehaviorAnalysis-EG EpistemicGame)
+(genls AggregateBehaviorAnalysis-EG ProcessAnalysis-EG)
+
+(isa ConstraintSystemAnalysis-EG Collection)
+(isa ConstraintSystemAnalysis-EG EpistemicGame)
+(genls ConstraintSystemAnalysis-EG ProcessAnalysis-EG)
+
+(isa SituationActionAnalysis-EG Collection)
+(isa SituationActionAnalysis-EG EpistemicGame)
+(genls SituationActionAnalysis-EG ProcessAnalysis-EG)
+
+(isa TrendAndCyclicalAnalysis-EG Collection)
+(isa TrendAndCyclicalAnalysis-EG EpistemicGame)
+(genls TrendAndCyclicalAnalysis-EG ProcessAnalysis-EG)
+
+
+;;; Kinds of forms: lists, tables, trees, dags, graphs.
+
+(isa List-EF Collection)
+(isa List-EF EpistemicForm)
+
+(isa Table-EF Collection)
+(isa Table-EF EpistemicForm)
+
+(isa Tree-EF Collection)
+(isa Tree-EF EpistemicForm)
+
+(isa DecisionTree Collection)
+(isa DecisionTree EpistemicForm)
+(genls DecisionTree Tree-EF)
+
+(isa Graph-EF Collection)
+(isa Graph-EF EpistemicForm)
+
+(isa DAG-EF Collection)
+(isa DAG-EF EpistemicForm)
+(genls DAG-EF Graph-EF)
+
+;;; Each form needs a way to enumerate elements and properties of elements.
+
+
+;;; Now, we want rules and plans that infer that we are participating
+;;; in an epistemic game, establish the form, membership criteria, etc.
+;;; Since this is a collaborative task, "moves" may be performed by
+;;; anyone, as can transfers to other forms, critiques and rejections.
+;;; A tutor might guide a student through a form solely for the 
+;;; purpose of showing it to be inadequate.
+
+;;; Forms and games should serve to guide inquiry by directing the 
+;;; inquirer as to which slots to fill and which constraints to meet in
+;;; filling those slots.
+;;; 
+;;; How do we know when to stop?
+;;; 
+
+
+
+;;; End of code
+

@@ -1,0 +1,371 @@
+(in-microtheory (StrategyModelMtFn HRM) :exclude-globals t)
+
+;;; Generated from static analysis
+
+;(goalName (GoalFn 0)
+; (AchieveFn
+;  (winner-First (IndexicalFn executionContext) (IndexicalFn currentRole))))
+;(subgoal (GoalFn 0) (GoalFn 1))
+
+;;; Replace bogus top goal above with existence goal:
+(goalName (GoalFn 0)               ; quantity-conditioned existence of company
+ (MaintainFn
+  (greaterThan
+   ((MeasurableQuantityFn capital) McFeePress)
+   0)))
+(subgoal (GoalFn 0) (GoalFn 1))
+
+(goalName (GoalFn 1)
+ (MaximizeFn ((MeasurableQuantityFn profitability) McFeePress)))
+(subgoal (GoalFn 1) (GoalFn 2))
+(subgoal (GoalFn 1) (GoalFn 3))
+
+(goalName (GoalFn 2) (MaximizeFn ((MeasurableQuantityFn income) McFeePress)))
+(subgoal (GoalFn 2) (GoalFn 4))
+(subgoal (GoalFn 2) (GoalFn 5))
+
+(goalName (GoalFn 3)
+ (MinimizeFn ((MeasurableQuantityFn productionCost) McFeePress)))
+(subgoal (GoalFn 3) (GoalFn 6))
+(subgoal (GoalFn 3) (GoalFn 7))
+
+(goalName (GoalFn 4)
+ (MaximizeFn ((MeasurableQuantityFn production) McFeePress)))
+(subgoal (GoalFn 4) (GoalFn 8))
+(subgoal (GoalFn 4) (GoalFn 9))
+
+(goalName (GoalFn 5)
+ (MaximizeFn ((MeasurableQuantityFn marketFactors) McFeePress)))
+
+(goalName (GoalFn 6)
+ (MinimizeFn ((MeasurableQuantityFn laborCosts) McFeePress)))
+(subgoal (GoalFn 6) (GoalFn 10))
+(subgoal (GoalFn 6) (GoalFn 11))
+
+(goalName (GoalFn 7)
+ (MinimizeFn ((MeasurableQuantityFn fixedCosts) McFeePress)))
+
+(goalName (GoalFn 8)
+ (MaximizeFn
+  ((MeasurableQuantityFn employeeProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 8) (GoalFn 12))
+(assignedToType (GoalFn 8) HRMCharacter)
+
+(goalName (GoalFn 9)
+ (MaximizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn HRMCharacter
+    (TheSetOf ?var1
+     (and (employees McFeePress ?var1)
+          (isa ?var1 HRMCharacter)))))))
+(goalTradeoff (GoalFn 9) (GoalFn 14) TotalAbruptTradeoff)
+(assignedToType (GoalFn 9) HRMCharacter)
+
+(goalName (GoalFn 10)
+ (MinimizeFn ((MeasurableQuantityFn payrollCost) McFeePress)))
+(subgoal (GoalFn 10) (GoalFn 13))
+(subgoal (GoalFn 10) (GoalFn 14))
+
+(goalName (GoalFn 11)
+ (MinimizeFn ((MeasurableQuantityFn trainingCost) McFeePress)))
+(subgoal (GoalFn 11) (GoalFn 14))
+(subgoal (GoalFn 11) (GoalFn 15))
+
+(goalName (GoalFn 12)
+ (MaximizeFn
+  ((MeasurableQuantityFn performance)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 12) (GoalFn 16))
+(subgoal (GoalFn 12) (GoalFn 17))
+(subgoal (GoalFn 12) (GoalFn 18))
+(assignedToType (GoalFn 12) HRMCharacter)
+
+(goalName (GoalFn 13)
+ (MinimizeFn
+  ((MeasurableQuantityFn salary)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(goalTradeoff (GoalFn 13) (GoalFn 34) PartialAbruptTradeoff)
+(assignedToType (GoalFn 13) HRMCharacter)
+
+(goalName (GoalFn 14)
+ (MinimizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn HRMCharacter
+    (TheSetOf ?var1
+     (and (employees McFeePress ?var1)
+          (isa ?var1 HRMCharacter)))))))
+(goalTradeoff (GoalFn 14) (GoalFn 9) TotalAbruptTradeoff)
+(assignedToType (GoalFn 14) HRMCharacter)
+
+(goalName (GoalFn 15)
+ (MinimizeFn
+  ((MeasurableQuantityFn trainingHours)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(goalTradeoff (GoalFn 15) (GoalFn 36) PartialAbruptTradeoff)
+(assignedToType (GoalFn 15) HRMCharacter)
+
+(goalName (GoalFn 16)
+ (MaximizeFn
+  ((MeasurableQuantityFn competence)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 16) (GoalFn 19))
+(subgoal (GoalFn 16) (GoalFn 20))
+(subgoal (GoalFn 16) (GoalFn 21))
+(assignedToType (GoalFn 16) HRMCharacter)
+
+(goalName (GoalFn 17)
+ (MaximizeFn
+  ((MeasurableQuantityFn dedication)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 17) HRMCharacter)
+
+(goalName (GoalFn 18)
+ (MaximizeFn
+  ((MeasurableQuantityFn attitude)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 18) (GoalFn 22))
+(subgoal (GoalFn 18) (GoalFn 23))
+(subgoal (GoalFn 18) (GoalFn 24))
+(subgoal (GoalFn 18) (GoalFn 25))
+(subgoal (GoalFn 18) (GoalFn 26))
+(subgoal (GoalFn 18) (GoalFn 27))
+(subgoal (GoalFn 18) (GoalFn 28))
+(assignedToType (GoalFn 18) HRMCharacter)
+
+(goalName (GoalFn 19)
+ (MaximizeFn
+  ((MeasurableQuantityFn experience)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 19) HRMCharacter)
+
+(goalName (GoalFn 20)
+ (MaximizeFn
+  ((MeasurableQuantityFn aptitude)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 20) HRMCharacter)
+
+(goalName (GoalFn 21)
+ (MinimizeFn
+  ((MeasurableQuantityFn discrepancy)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 21) (GoalFn 29))
+(subgoal (GoalFn 21) (GoalFn 30))
+(assignedToType (GoalFn 21) HRMCharacter)
+
+(goalName (GoalFn 22)
+ (MaximizeFn
+  ((MeasurableQuantityFn qualityOfWorklife)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 22) (GoalFn 21))
+(subgoal (GoalFn 22) (GoalFn 30))
+(assignedToType (GoalFn 22) HRMCharacter)
+
+(goalName (GoalFn 23)
+ (MaximizeFn
+  ((MeasurableQuantityFn qualityOfSupervision)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 23) (GoalFn 17))
+(subgoal (GoalFn 23) (GoalFn 31))
+(subgoal (GoalFn 23) (GoalFn 32))
+(assignedToType (GoalFn 23) HRMCharacter)
+
+(goalName (GoalFn 24)
+ (MaximizeFn
+  ((MeasurableQuantityFn selfEsteem)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 24) HRMCharacter)
+
+(goalName (GoalFn 25)
+ (MaximizeFn
+  ((MeasurableQuantityFn perceptionOfFairness)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 25) HRMCharacter)
+
+(goalName (GoalFn 26)
+ (MaximizeFn
+  ((MeasurableQuantityFn effectOfProbation)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 26) HRMCharacter)
+
+(goalName (GoalFn 27)
+ (MinimizeFn
+  ((MeasurableQuantityFn dissatisfactionWithPay)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 27) (GoalFn 33))
+(subgoal (GoalFn 27) (GoalFn 34))
+(assignedToType (GoalFn 27) HRMCharacter)
+
+(goalName (GoalFn 28)
+ (MinimizeFn
+  ((MeasurableQuantityFn quantityOfWork)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 28) (GoalFn 35))
+(assignedToType (GoalFn 28) HRMCharacter)
+
+(goalName (GoalFn 29)
+ (MinimizeFn
+  ((MeasurableQuantityFn skillDiscrepancy)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 29) (GoalFn 36))
+(diachronicSubgoal (GoalFn 29) (GoalFn 36))
+(assignedToType (GoalFn 29) HRMCharacter)
+
+(goalName (GoalFn 30)
+ (MaximizeFn
+  ((MeasurableQuantityFn educationLevel)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 30) HRMCharacter)
+
+(goalName (GoalFn 31)
+ (MaximizeFn
+  ((MeasurableQuantityFn tenure)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 31) HRMCharacter)
+
+(goalName (GoalFn 32)
+ (MinimizeFn
+  ((MeasurableQuantityFn lastAction)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 32) HRMCharacter)
+
+(goalName (GoalFn 33)
+ (MinimizeFn
+  ((MeasurableQuantityFn expectedSalary)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(subgoal (GoalFn 33) (GoalFn 37))
+(assignedToType (GoalFn 33) HRMCharacter)
+
+(goalName (GoalFn 34)
+ (MaximizeFn
+  ((MeasurableQuantityFn salary)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(goalTradeoff (GoalFn 34) (GoalFn 13) PartialAbruptTradeoff)
+(assignedToType (GoalFn 34) HRMCharacter)
+
+(goalName (GoalFn 35)
+ (MinimizeFn
+  ((MeasurableQuantityFn employmentHours)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 35) HRMCharacter)
+
+(goalName (GoalFn 36)
+ (MaximizeFn
+  ((MeasurableQuantityFn trainingHours)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(goalTradeoff (GoalFn 36) (GoalFn 15) PartialAbruptTradeoff)
+(assignedToType (GoalFn 36) HRMCharacter)
+
+(goalName (GoalFn 37)
+ (MinimizeFn
+  ((MeasurableQuantityFn ambition)
+   (GenericInstanceFn
+    (CollectionSubsetFn HRMCharacter
+     (TheSetOf ?var1
+      (and (employees McFeePress ?var1)
+           (isa ?var1 HRMCharacter))))))))
+(assignedToType (GoalFn 37) HRMCharacter)
+
+(in-microtheory BaseKB)
+
+(persistentCounter GoalFn 37)

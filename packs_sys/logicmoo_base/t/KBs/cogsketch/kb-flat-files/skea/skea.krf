@@ -1,0 +1,59 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: skea.meld
+;;;;    System: sKEA (Sketch-based Knowledge Entry Associate)
+;;;;    Author: Madeline Usher
+;;;;   Created: January 18, 2001 18:20:46
+;;;;   Purpose: KB definitions for sKEA-specific stuff.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+(genlMt SKEAMt NuSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Defining the App
+
+(isa sKEA NuSketchApplication)
+(isa sKEA ReasonerControlState)
+
+(nuSketchAppKBVersion sKEA 3.10)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Analogy
+
+(isa SkeaLayerCaseFn Function-Denotational)
+(arity SkeaLayerCaseFn 2)
+(arg1Isa SkeaLayerCaseFn Case)
+(arg2Isa SkeaLayerCaseFn NuSketchLayer)
+(resultIsa SkeaLayerCaseFn Case)
+(comment SkeaLayerCaseFn
+         "Refers to a case containing all the facts known about all the
+          entities on the specified layer of a sKEA sketch.  Only the
+          facts in the #$Case given by the first argument are searched.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; SKEAReasoningCollectorMt
+
+(isa SKEAReasoningCollectorMt Microtheory)
+(isa SKEAReasoningCollectorMt CollectorMicrotheory)
+
+(genlMt SKEAReasoningCollectorMt SKEAMt)
+(genlMt SKEAReasoningCollectorMt NuSketchReasoningCollectorMt)
+(genlMt SKEAReasoningCollectorMt SKEAAnalogyMt)
+(genlMt SKEAReasoningCollectorMt SKEA-VisualConceptualMappingsMt)
+
+(comment SKEAReasoningCollectorMt 
+  "This #$CollectorMicrotheory includes all the microtheories needed for 
+   reasoning in sKEA.  Each sketch and bundle created is a specMt of 
+   this.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,92 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: pp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+;;;
+;;; Prepositional Phrases
+;;;
+
+(isa -pp->prep-np- EAGrammarRule)
+(comment -pp->prep-np- "'in an orchard', 'to the store'")
+(probabilityEAGrammarRule -pp->prep-np- 1.0)
+(grammarRule -pp->prep-np-
+ (EATermFn pp
+  (TheList (var ?varnp) (prep-lex ?lexp) (prep-var ?varp)
+   (:OBJECT ?varnp) (:POSSESSOR :NOUN) (sem (and ?semp ?semnp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Preposition (TheList (var ?varp) (sem ?semp) (lex ?lexp))))
+  (EATermFn np
+   (TheList (var ?varnp) (sem ?semnp) (np-inf -))))) 
+
+(isa -pp->by-vp- EAGrammarRule)
+(comment -pp->by-vp- "instrumental")
+(probabilityEAGrammarRule -pp->by-vp- 1.0)
+(grammarRule -pp->by-vp-
+ (EATermFn pp
+  (TheList (var ?varvp) (:OBJECT ?varvp) (prep-lex by)
+   (sem (and ?semp ?semvp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Preposition (TheList (var ?varp) (sem ?semp) (lex by))))
+  (EATermFn vp
+   (TheList (var ?varvp) (sem ?semvp) (inv -) 
+    (vform (? vform prespart pastpart))
+    (object-be -)))))
+
+
+;;; Would it be better to make a multiword semtrans here?
+(isa -pp->either-way- EAGrammarRule)
+(comment -pp->either-way- "'either way' REM: adverbial, very similar to the ntime stuff")
+(probabilityEAGrammarRule -pp->either-way- 1.0)
+(grammarRule -pp->either-way-
+ (EATermFn pp
+  (TheList (var ?varn) (:NOUN ?varn) (prep-lex either)
+   (sem (and ?semp ?semn))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Determiner (TheList (var ?varp) (sem ?semp) (lex either))))
+  (EATermFn Noun (TheList (var ?varn) (sem ?semn) (lex way)))))
+
+(isa -pp->between-np-and-np- EAGrammarRule)
+(comment -pp->between-np-and-np- "Textbook-specific pattern")
+(probabilityEAGrammarRule -pp->between-np-and-np- 1.0)
+(grammarRule -pp->between-np-and-np-
+ (EATermFn pp
+  (TheList (var ?varnp1) (prep-lex between)
+   (sem
+    (and ?semnp1 ?semnp2
+         (between ?varnp1 ?varnp2 :SUBJECT)))))
+ (TheList (EAHeadFn (EATermFn Preposition (TheList (lex between))))
+  (EATermFn np (TheList (var ?varnp1) (sem ?semnp1)))
+  (EATermFn Conjunction (TheList (lex and)))
+  (EATermFn np (TheList (var ?varnp2) (sem ?semnp2)))))
+  
+
+(isa -pp->pp-cconj-pp- EAGrammarRule)
+(comment -pp->pp-cconj-pp- "pp + cconj + pp: 'Snow fell [on the mountain and on the valley].' The prepositional phrases essentially function as adverbs modifying an intransitive verb, so there are no objects. Currently treats the sems as a conjunction. However, the cconj should really dictate whether the sempp consituents are conjunct or disjunct and if there are negations, e.g. 'fell neither on the couch nor on the floor.'")
+(probabilityEAGrammarRule -pp->pp-cconj-pp- 1.0)
+(grammarRule -pp->pp-cconj-pp-
+ (EATermFn pp
+  (TheList (var (ConjunctiveVar ?varpp1 ?varpp2))
+   (prep-lex (and ?lexpp1 ?lexpp2))
+   (sem (and ?sempp1 ?sempp2))))
+ (TheList
+  (EATermFn pp
+   (TheList (var ?varpp1) (sem ?sempp1) (prep-lex ?lexpp1)))
+  (EATermFn Conjunction (TheList (lex and)))
+  (EATermFn pp
+   (TheList (var ?varpp2) (sem ?sempp2) (prep-lex ?lexpp2)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

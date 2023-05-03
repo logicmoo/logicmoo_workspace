@@ -1,0 +1,160 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: hrm-qualitative-model.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: September 10, 2017 15:19:29
+;;;;   Purpose: Qualitative model for HRM
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-24 16:52:33 -0500 (Mon, 24 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory (QualitativeModelMtFn HRM) :exclude-globals t)
+(genlMt (QualitativeModelMtFn HRM) QPTheoryMt)      ; Inherit the common modeling vocabulary
+(genlMt (QualitativeModelMtFn HRM) (LearnedKnowledgeMtFn HRM))  ; Qmodel builds on action model
+(genlMt (StrategyModelMtFn HRM) (QualitativeModelMtFn HRM))  ; Strategy model builds on qmodel.
+
+;;; The null condition (that's always active)
+
+(isa NullCondition QPProcessType)
+;;; If there are no participants and no conditions, is it always active?
+
+
+
+(isa HRMEmployeeCompetenceProcess QPProcessType)
+
+(isa HRMEmployeeAttitudeProcess QPProcessType)
+
+(isa HRMEmployeePerformanceProcess QPProcessType)
+(participantType HRMEmployeePerformanceProcess doneBy HRMCharacter)
+(associatedRoleList HRMEmployeePerformanceProcess (TheList doneBy))
+;; what constraints and conditions?
+
+;; This should be capital directly influenced by profitability (integrator)
+(isa HRMCapitalAccumulation QPProcessType)
+(participantType HRMCapitalAccumulation doneBy HRMCompany)
+(consequenceOf-TypeType HRMCapitalAccumulation
+  (i+ ((MeasurableQuantityFn capital) doneBy) ((MeasurableQuantityFn profitability) doneBy)))
+
+;;; profitability is a rate proportional to income (production) - cost.
+;;; It's the total net proceeds per month:
+(isa HRMProfitabilityProcess QPProcessType)
+
+;;; productivity is a measure of efficiency, how much production for a given labor cost.
+
+
+(isa HRMCompanyProductivityProcess QPProcessType)
+
+
+;;; The top goals should be profitability and morale.
+
+;;; These aren't even synchronic next rules, but they could still be qprops:
+;;; fixedCost
+;;; laborCost
+;;; payrollCost
+;;; monthlySalary
+;;; overtime
+;;; trainingCost
+;;; 
+
+;;; profitability, productivity and morale are the top indictors for the company model.
+;;; capital is important because it can lead to bankruptcy (or serve as a single score)
+;;; IMPORTANT! Don't have any quantity preds here that aren't reified as currentlyTrue.
+;;; We need to be able to reason about influence paths and can't if they can't be sampled.
+
+;;; Company influences
+(qprop+TypeType (MeasurableQuantityFn productivity) (MeasurableQuantityFn production) HRMCompany HRMCompany equals)
+(qprop-TypeType (MeasurableQuantityFn productivity) (MeasurableQuantityFn laborCosts) HRMCompany HRMCompany equals)
+(i+TypeType (MeasurableQuantityFn capital) (MeasurableQuantityFn income) HRMCompany HRMCompany equals) 
+(i-TypeType (MeasurableQuantityFn capital) (MeasurableQuantityFn productionCost) HRMCompany HRMCompany equals) 
+(c+TypeType (MeasurableQuantityFn profitability) (MeasurableQuantityFn income) HRMCompany HRMCompany equals)
+(c-TypeType (MeasurableQuantityFn profitability) (MeasurableQuantityFn productionCost) HRMCompany HRMCompany equals)
+
+(qprop+TypeType (MeasurableQuantityFn income) (MeasurableQuantityFn production) HRMCompany HRMCompany equals)             ; production not reified
+(qprop+TypeType (MeasurableQuantityFn income) (MeasurableQuantityFn marketFactors) HRMCompany HRMCompany equals)          ; marketFactors not reified
+(c+TypeType (MeasurableQuantityFn production) (MeasurableQuantityFn employeeProduction) HRMCompany HRMCharacter employees); employeeProduction not reified
+(c+TypeType (MeasurableQuantityFn productionCost) (MeasurableQuantityFn fixedCosts) HRMCompany HRMCompany equals)         ; fixedCosts not reified
+(c+TypeType (MeasurableQuantityFn productionCost) (MeasurableQuantityFn laborCosts) HRMCompany HRMCompany equals)         ; laborCosts not reified
+(c+TypeType (MeasurableQuantityFn laborCosts) (MeasurableQuantityFn trainingCost) HRMCompany HRMCompany equals)           ; trainingCosts not reified
+(c+TypeType (MeasurableQuantityFn laborCosts) (MeasurableQuantityFn payrollCost) HRMCompany HRMCompany equals)
+(qprop+TypeType (MeasurableQuantityFn payrollCost) (MeasurableQuantityFn salary) HRMCompany HRMCharacter employees)
+(qprop+TypeType (MeasurableQuantityFn payrollCost) (MeasurableQuantityFn cardinalityOf) HRMCompany HRMCharacter employees) ; cardinality not reified
+(qprop+TypeType (MeasurableQuantityFn trainingCost) (MeasurableQuantityFn trainingHours) HRMCompany HRMCharacter employees); trainingHours not reified
+
+
+;(qprop+TypeType (MeasurableQuantityFn income) (MeasurableQuantityFn performance) HRMCompany HRMCharacter employees) ; production and employeeProduction isn't a reified quant.
+;(qprop+TypeType (MeasurableQuantityFn income) (MeasurableQuantityFn cardinalityOf) HRMCompany HRMCharacter employees)
+;(qprop+TypeType (MeasurableQuantityFn income) (MeasurableQuantityFn marketFactors) HRMCompany HRMCompany equals)
+;(qprop+TypeType (MeasurableQuantityFn productionCost) (MeasurableQuantityFn salary) HRMCompany HRMCharacter employees)
+;(qprop+TypeType (MeasurableQuantityFn productionCost) (MeasurableQuantityFn cardinalityOf) HRMCompany HRMCharacter employees)
+;(qprop+TypeType (MeasurableQuantityFn productionCost) (MeasurableQuantityFn trainingHours) HRMCompany HRMCharacter employees)
+(qprop+TypeType (MeasurableQuantityFn morale) (MeasurableQuantityFn attitude) HRMCompany HRMCharacter employees)
+
+;;; Employee influences
+(qprop+TypeType (MeasurableQuantityFn employeeProduction) (MeasurableQuantityFn performance) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn performance) (MeasurableQuantityFn competence) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn performance) (MeasurableQuantityFn dedication) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn performance) (MeasurableQuantityFn attitude) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn competence) (MeasurableQuantityFn aptitude) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn competence) (MeasurableQuantityFn experience) HRMCharacter HRMCharacter equals)
+(qprop-TypeType (MeasurableQuantityFn competence) (MeasurableQuantityFn discrepancy) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn attitude) (MeasurableQuantityFn qualityOfWorklife) HRMCharacter HRMCharacter equals)
+(qprop-TypeType (MeasurableQuantityFn attitude) (MeasurableQuantityFn dissatisfactionWithPay) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn attitude) (MeasurableQuantityFn qualityOfSupervision) HRMCharacter HRMCharacter equals)
+(qprop-TypeType (MeasurableQuantityFn attitude) (MeasurableQuantityFn quantityOfWork) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn attitude) (MeasurableQuantityFn selfEsteem) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn attitude) (MeasurableQuantityFn perceptionOfFairness) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn attitude) (MeasurableQuantityFn effectOfProbation) HRMCharacter HRMCharacter equals)
+(qprop-TypeType (MeasurableQuantityFn qualityOfWorklife) (MeasurableQuantityFn discrepancy) HRMCharacter HRMCharacter equals)
+;;; total discrepancy is formal education deficiency + current skill discrepancy.
+(qprop+TypeType (MeasurableQuantityFn discrepancy) (MeasurableQuantityFn skillDiscrepancy) HRMCharacter HRMCharacter equals)
+(qprop-TypeType (MeasurableQuantityFn discrepancy) (MeasurableQuantityFn educationLevel) HRMCharacter HRMCharacter equals) ; the lower the ed, the greater the discrepancy
+(qprop+TypeType (MeasurableQuantityFn qualityOfWorklife) (MeasurableQuantityFn educationLevel) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn dissatisfactionWithPay) (MeasurableQuantityFn expectedSalary) HRMCharacter HRMCharacter equals)
+(qprop-TypeType (MeasurableQuantityFn dissatisfactionWithPay) (MeasurableQuantityFn salary) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn expectedSalary) (MeasurableQuantityFn ambition) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn qualityOfSupervision) (MeasurableQuantityFn tenure) HRMCharacter HRMCharacter equals)
+(qprop-TypeType (MeasurableQuantityFn qualityOfSupervision) (MeasurableQuantityFn lastAction) HRMCharacter HRMCharacter equals)  ; an approximation.  Depends on lastActionSigh
+(qprop+TypeType (MeasurableQuantityFn qualityOfSupervision) (MeasurableQuantityFn dedication) HRMCharacter HRMCharacter equals)
+(qprop+TypeType (MeasurableQuantityFn quantityOfWork) (MeasurableQuantityFn employmentHours) HRMCharacter HRMCharacter equals)
+;;; training reduces skill discrepancy over time:
+(i-TypeType (MeasurableQuantityFn skillDiscrepancy) (MeasurableQuantityFn trainingHours) HRMCharacter HRMCharacter equals)
+;; selfEsteem is a function of rate of improvement in competence.
+
+(eventNegativelyAffectsQuantityType (MeasurableQuantityFn perceptionOfFairness) ImproperTerminationLawsuit HRMCharacter)
+(eventNegativelyAffectsQuantityType (MeasurableQuantityFn perceptionOfFairness) UndertrainingEvent HRMCharacter)
+
+;;; action effects
+(actionPositivelyAffectsQuantityType (MeasurableQuantityFn salary) doHRMGiveRaise HRMCharacter 1 equals)
+(actionPositivelyAffectsQuantityType (MeasurableQuantityFn salary) doHRMPromote HRMCharacter 1 equals)  ; sometimes
+(actionNegativelyAffectsQuantityType (MeasurableQuantityFn performance) doHRMPromote HRMCharacter 1 equals)
+(actionPositivelyAffectsQuantityType (MeasurableQuantityFn selfEsteem) doHRMPromote HRMCharacter 1 equals)  ; added 3-16
+(actionPositivelyAffectsQuantityType (MeasurableQuantityFn trainingHours) doHRMTrain HRMCharacter 1 equals)
+(actionPositivelyAffectsQuantityType (MeasurableQuantityFn qualityOfSupervision) doHRMEvaluate HRMCharacter 1 equals)
+;;; The next two are terrible.  We're not changing the number of characters in the world, just active employees.
+;;; Can we make a collection defining employees wrt an indexical?  Or do we need an actionAffectsQuantity that would capture the full quantity?
+(actionPositivelyAffectsQuantityType 
+  (MeasurableQuantityFn cardinalityOf) 
+  doHRMHire
+  (CollectionSubsetFn HRMCharacter
+    (TheSetOf ?var1
+     (and (employees McFeePress ?var1) 
+          (isa ?var1 HRMCharacter))))
+  1 
+  true)
+
+(actionNegativelyAffectsQuantityType
+  (MeasurableQuantityFn cardinalityOf) 
+  doHRMFire
+  (CollectionSubsetFn HRMCharacter
+    (TheSetOf ?var1
+     (and (employees McFeePress ?var1)
+          (isa ?var1 HRMCharacter))))
+  1 
+  true)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

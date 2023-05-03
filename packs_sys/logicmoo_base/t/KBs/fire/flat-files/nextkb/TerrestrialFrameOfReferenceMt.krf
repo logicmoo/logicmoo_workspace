@@ -1,0 +1,10 @@
+(in-microtheory TerrestrialFrameOfReferenceMt)
+
+(isa OuterSpace Place)
+(isa EarthsOceanSea PartiallyTangible)
+(isa EarthsOceanSea PhysicalSeries)
+(isa PrimeMeridian-Greenwich LongitudeLine)
+(isa AntarcticRegion SpatialThing-Localized)
+(isa ArcticRegion SpatialThing-Localized)
+(isa TheEarthsAtmosphere PhysicalSeries)
+(genls TerrestrialFunctioningObject AboveGround)

@@ -1,0 +1,78 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: polarity.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: January 31, 2003 17:36:13
+;;;;   Purpose: Polarity information for adjectives
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Tuesday, December 8, 2009 at 17:04:04 by taylor
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationMt :exclude-globals t)
+
+;;; This file contains the polarity information for gradable dimensional
+;;; adjectives that (and adverbs), similar to the polarity features used 
+;;; in Bierwisch (1967).
+;;; Adjectives usually come as polar pairs, such as 'long' and 'short' for the
+;;; length dimension. In any case the polarity will indicate whether the quantity
+;;; associated with the adjectives is greater than the norm or not.
+
+;;; Arg1 is the lexicon entry of the adjective, e.g. 'Hot-TheWord',
+;;; Arg2 is the polarity indicated by the IKB constants 'Positive' and 'Negative'
+
+(isa Polarity Collection)
+(genls Polarity AtomicSymbol-Abstract)
+
+(isa Positive Polarity)
+(isa Negative Polarity)
+(isa Unknown Polarity)  ; Don't really like this.  Should be something like UnknownPolarity.
+
+
+(isa polarityOfAdjective NLSemanticPredicate)
+(arity polarityOfAdjective 2)
+(arg1Isa polarityOfAdjective LexicalWord)
+;(arg2Isa polarityOfAdjective IKBConstant)  ; This no longer exists!!
+(arg2Isa polarityOfAdjective Polarity)
+
+
+;;; Polarity information
+
+(polarityOfAdjective Hot-TheWord Positive)
+(polarityOfAdjective Warm-TheWord Positive)
+(polarityOfAdjective Cool-TheWord Negative)
+(polarityOfAdjective Cold-TheWord Negative)
+
+(polarityOfAdjective Long-TheWord Positive)
+(polarityOfAdjective Tall-TheWord Positive)
+(polarityOfAdjective High-TheWord Positive)
+(polarityOfAdjective Short-TheWord Negative)
+(polarityOfAdjective Flat-TheWord Negative)
+(polarityOfAdjective Low-TheWord Negative)
+
+(polarityOfAdjective Wide-TheWord Positive)
+(polarityOfAdjective Narrow-TheWord Negative)
+
+(polarityOfAdjective Deep-TheWord Positive)
+(polarityOfAdjective Shallow-TheWord Negative)
+
+(polarityOfAdjective Great-TheWord Positive)
+(polarityOfAdjective More-TheWord Positive)
+(polarityOfAdjective Less-TheWord Negative)
+
+(polarityOfAdjective Heavy-TheWord Positive)
+(polarityOfAdjective Light-TheWord Negative)
+
+(polarityOfAdjective Fast-TheWord Positive)
+(polarityOfAdjective Slow-TheWord Negative)
+
+(polarityOfAdjective Fat-TheWord Positive)
+(polarityOfAdjective Thick-TheWord Positive)
+(polarityOfAdjective Thin-TheWord Negative)
+
+;;; more to follow ...
+
+    
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

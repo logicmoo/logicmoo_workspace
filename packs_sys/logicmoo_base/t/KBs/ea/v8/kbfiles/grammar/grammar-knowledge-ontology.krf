@@ -1,0 +1,102 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: grammar-knowledge-ontology.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: September 16, 2013 02:06:49
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory EAGrammarOntologyMt)
+
+(isa grammarRule Predicate)
+(arity grammarRule 3)
+(arg1Isa grammarRule EAGrammarRule)
+(arg2Isa grammarRule EAGrammarRuleTerm)
+(arg3Isa grammarRule List)
+(comment grammarRule "(grammarRule ?rule-name ?consequent ?antecedant-list) describes an EA grammar rule. 
+?rule-name is the name of the rule. ?consequent is an EAGrammarRuleTerm of the form (EAGrammarRuleTermFn ?node-type ?feature-list).
+?antecedant-list is a list of antecedents in that same format, except one is wrapped in EAGrammarRuleHeadFn.")
+
+(isa EATermFn FunctionOrFunctionalPredicate)
+(arity EATermFn 2)
+(arg1Isa EATermFn Thing)
+(arg2Isa EATermFn List)
+(resultIsa EATermFn EAGrammarRuleTerm)
+(comment EATermFn "(EATermFn ?node-type ?feature-list) returns a EAGrammarRuleTerm. These are used as the
+antecedents and consequent in a grammarRule statement. ?node-type is the type of node it is, such as NP; ?feature-list is the
+features.")
+
+(isa EAHeadFn FunctionOrFunctionalPredicate)
+(arity EAHeadFn 1)
+(arg1Isa EAHeadFn EAGrammarRuleTerm)
+(resultIsa EAHeadFn EAGrammarRuleTerm)
+(comment EAHeadFn "(EAHeadFn ?term) takes a EAGrammarRuleTerm and returns another EAGrammarRuleTerm. 
+It is used to indicate which term in a list of antecedents is the head.")
+
+(isa EADataFn FunctionOrFunctionalPredicate)
+(arity EADataFn 1)
+(arg1Isa EADataFn EAGrammarRuleTerm)
+(resultIsa EADataFn EAGrammarRuleTerm)
+(comment EADataFn "(EADataFn ?term) indicates that when the grammar is built from the rule, ?term
+should be placed in the data pacakage - d:: - rather than the parser package, parser::.")
+
+(isa EAHeadFeaturesForNodeType Predicate)
+(arity EAHeadFeaturesForNodeType 2)
+(arg1Isa Thing)
+(arg2Isa List)
+(comment EAHeadFeatureForNodeType "(EAHeadFeatureForNodeType ?node-type ?head-features-list) indicates that
+nodes of type ?node-type (such as slp) always have the features in ?head-features-list (such as agr). If you don't
+specifically know what you're doing, you probably don't have to create any more of these rules.")
+
+(isa probabilityEAGrammarRule Predicate)
+(arity probabilityEAGrammarRule 2)
+(arg1Isa probabilityEAGrammarRule EAGrammarRule)
+(arg2Isa probabilityEAGrammarRule Number)
+(comment probabilityEAGrammarRule "(probabilityEAGrammarRule ?rule ?probability) indicates that the probability of the grammar
+rule is ?probability. If you don't know what your probability should be, it should probably be 1.0, which is also the default
+if no probability is found for a statement.") 
+
+(isa EAGrammarRuleTerm Collection)
+(comment EAGrammarRuleTerm "An EAGrammarRuleTerm is either one of the antecedents or the consequent of a EA grammar rule definition.")
+
+(isa EAGrammarRule Collection)
+(comment EAGrammarRule "This is the collection of EA grammar rules, such as -np->noun-comma-np-aside-comma-. The elements of this collection
+are not rule definitions, just their names. The names are connected to definitions using grammarRule facts.")
+
+(isa sentenceParseUsesRuleWithProbabilities Predicate)
+(arity sentenceParseUsesRuleWithProbabilities 2)
+(arg1Isa sentenceParseUsesRuleWithProbabilities EAGrammarRule)
+(arg2Isa sentenceParseUsesRuleWithProbabilities String)
+(comment sentenceParseUsesRuleWithProbabilities "(sentenceParseUsesRuleWithProbabilities ?rule ?sentence) indicates that, when EANLU
+is run with probabilities on, at least one of the parses of ?sentence contains ?rule. It's not necessarily correct, just present.")
+
+(isa sentenceParseUsesRuleNoProbabilities Predicate)
+(arity sentenceParseUsesRuleNoProbabilities 2)
+(arg1Isa sentenceParseUsesRuleNoProbabilities EAGrammarRule)
+(arg2Isa sentenceParseUsesRuleNoProbabilities String)
+(comment sentenceParseUsesRuleNoProbabilities "(sentenceParseUsesRuleNoProbabilities ?rule ?sentence) indicates that, when EANLU
+is run with probabilities off, at least one of the parses of ?sentence contains ?rule. It's not necessarily correct, just present.")
+
+(isa sentenceParseDoesNotUseRuleWithProbabilities Predicate)
+(arity sentenceParseDoesNotUseRuleWithProbabilities 2)
+(arg1Isa sentenceParseDoesNotUseRuleWithProbabilities EAGrammarRule)
+(arg2Isa sentenceParseDoesNotUseRuleWithProbabilities String)
+(comment sentenceParseDoesNotUseRuleWithProbabilities "(sentenceParseDoesNotUseRuleWithProbabilities ?rule ?sentence) indicates that, when EANLU
+is run with probabilities on, none of the parses of ?sentence contain ?rule.")
+
+(isa sentenceParseDoesNotUseRuleNoProbabilities Predicate)
+(arity sentenceParseDoesNotUseRuleNoProbabilities 2)
+(arg1Isa sentenceParseDoesNotUseRuleNoProbabilities EAGrammarRule)
+(arg2Isa sentenceParseDoesNotUseRuleNoProbabilities String)
+(comment sentenceParseDoesNotUseRuleNoProbabilities "(sentenceParseDoesNotUseRuleNoProbabilities ?rule ?sentence) indicates that, when EANLU
+is run with probabilities off, none of the parses of ?sentence contain ?rule.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

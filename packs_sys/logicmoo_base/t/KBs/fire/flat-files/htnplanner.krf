@@ -1,0 +1,437 @@
+;;;
+;;; htnplanner.meld
+;;;
+;;; Defines predicates for the Hierarchical Task Network (HTN) planner.
+;;;
+;;; Author: Tom Hinrichs
+;;;
+
+(in-microtheory  HTNPlanner) 
+
+;;; generalMethodFor returns the binding for the generalized task so that we can
+;;; reconstruct all the variables in the stored statement.
+(isa generalMethodFor Predicate)
+(arity generalMethodFor 2)
+(arg1Isa generalMethodFor ELFormula)
+(arg2Isa generalMethodFor ELFormula)
+(comment generalMethodFor "(generalMethodFor ?task ?stmt) binds ?stmt to a precondition statement for a method that achieves ?task.  Stmt is exactly what is retrieved from the kb, with no variable re-naming.")
+
+(isa acceptableMethodFor Predicate)
+(arity acceptableMethodFor 2)
+(arg1Isa acceptableMethodFor ELFormula)
+(arg2Isa acceptableMethodFor ELFormula)
+(comment acceptableMethodFor "(acceptableMethodFor ?task ?method) means ?method is one way of achieving ?task and satisfies its preconditions.")
+
+(isa bestMethodFor Predicate)
+(arity bestMethodFor 2)
+(arg1Isa bestMethodFor ELFormula)
+(arg2Isa bestMethodFor ELFormula)
+(comment bestMethodFor "(bestMethodFor ?task ?method) means ?method is one of the best ways of achieving ?task.")
+
+(isa previouslyAttempted Predicate)
+(arity previouslyAttempted 3)
+(arg1Isa previouslyAttempted ELFormula)
+(arg2Isa previouslyAttempted ELFormula)
+(arg3Isa previouslyAttempted CycLTerm)
+(comment previouslyAttempted "(previouslyAttempted ?task ?method ?state) means ?method was already attempted in ?state and should be avoided in backtracking.")
+
+(isa preferInContext Predicate)
+(arity preferInContext 3)
+(arg1Isa preferInContext CycLTerm)
+(arg2Isa preferInContext CycLTerm)
+(arg3Isa preferInContext CycLTerm)
+(comment preferInContext "(preferInContext ?task ?choice1 ?choice2) means everything else being equal, choose choice1 over choice2.")
+
+;;; BookKeepingTasks do not have execution methods:
+(isa BookKeepingTask Collection)
+(comment BookKeepingTask "BookKeepingTasks are internal planning tasks that are never returned as part of a plan.")
+
+(isa InferentialTask Collection)
+(comment InferentialTask "InferentialTasks are planning tasks that may be executed immediately.")
+
+(isa achievesPurpose Predicate)
+(arity achievesPurpose 4)
+(arg1Isa achievesPurpose ELFormula)
+(arg2Isa achievesPurpose CycLTerm)
+(arg3Isa achievesPurpose ELFormula)
+(arg4Isa achievesPurpose CycLTerm)
+(comment achievesPurpose "(achievesPurpose ?childTask ?state-token ?parentTask ?parent-stateToken) means instance ?childTask in state ?child-stateToken achieves the purpose of complex task ?parentTask in ?parent-stateToken.")
+
+(isa effectOfAction Predicate)
+(arity effectOfAction 3)
+(arg1Isa effectOfAction CycLFormula)
+(arg2Isa effectOfAction CycLTerm)
+(arg3Isa effectOfAction CycLFormula)
+(comment effectOfAction "(effectOfAction ?task ?var ?query) computes the effect of an action by invoking query on the ?query and extracting the bindings of ?var.")
+
+;;; This should not be necessary.  It's part of Cyc:
+(isa preconditionFor-Props Predicate)
+(arity preconditionFor-Props 2)
+(arg1Isa preconditionFor-Props ELFormula)
+(arg2Isa preconditionFor-Props CycLTerm)
+(comment preconditionFor-Props "(preconditionFor-Props ?query ?task) indicates that ?query (often a conjunction) is the condition which must be satisfied for ?task to be carried out.")
+
+(isa negationOf BinaryPredicate)
+(arity negationOf 2)
+(arg1Isa negationOf CycLFormula)
+(arg2Isa negationOf CycLFormula)
+(comment negationOf "(negationOf ?statement ?negation) binds ?negation to the negation of ?statement.")
+
+;;; This should never be stored in the kb:
+(isa currentState UnaryPredicate)
+(arity currentState 1)
+(arg1Isa currentState Thing) ; a state-token, e.g., state51.
+
+;;; This should never be stored in the kb:
+(isa operatorApplicationLeadsTo TernaryPredicate)
+(arity operatorApplicationLeadsTo 3)
+
+;;; Built into the htn planner algorithm:
+(isa NullExpansionFn UnaryFunction)
+(arity NullExpansionFn 1)
+(arg1Isa NullExansionFn CycLSentence)
+(comment NullExpansionFn "(NullExpansionFn <complex-task>) means that there is no set of precondition bindings for which <complex-task> can succeed.  Used in, e.g., minimax planning.")
+
+
+;;; -------------------
+;;; Task primitives:
+;;; -------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doAssert
+
+(isa doAssert SimpleActionPredicate)
+(isa doAssert InferentialTask)
+(isa doAssert BookKeepingTask)
+(arity doAssert 1)
+(comment doAssert 
+   "(doAssert ?assertion) simply adds ?assertion to the current planning context.")
+
+(effectOfAction-Props
+   (doAssert ?assertion)
+   ?assertion)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doRetract
+   
+(isa doRetract SimpleActionPredicate)
+(isa doRetract InferentialTask)
+(isa doRetract BookKeepingTask)
+(arity doRetract 1)
+(comment doRetract 
+  "(doRetract ?assertion) retracts ?assertion from the current planning context.")
+
+(effectOfAction-Props
+   (doRetract ?assertion)
+   (not ?assertion))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doAssertMembers
+
+(isa doAssertMembers SimpleActionPredicate)
+(isa doAssertMembers InferentialTask)
+(isa doAssertMembers BookKeepingTask)
+(arity doAssertMembers 1)
+(comment doAssertMembers 
+  "(doAssertMembers ?assertion-set) adds the member of ?assertion-set to the current planning context.")
+
+(preconditionFor-Props
+   (operatorFormulas TheSet ?set)
+   (doAssertMembers ?set))
+
+;;; This is a bit tricky: We re-write the set as a conjunction of individual 
+;;; statements.
+;;; Without this, we'd have to write horribly recursive plans.
+(effectOfActionIf-Props 
+  (doAssertMembers ?set)
+  (and (operatorFormulas TheSet ?set)
+       (evaluate ?facts (MakeFormulaFn and (FormulaArgListFn ?set))))
+  ?facts)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doRecord
+
+(isa doRecord SimpleActionPredicate)
+(isa doRecord InferentialTask)  ; This is inferential, but not a BookKeepingTask!
+(arg1Isa doRecord ELSentence-Assertible)
+(arity doRecord 1)
+(comment doRecord "(doRecord ?assertion) stores ?assertion in the current case in the knowledge base.")
+
+;;; For performance reasons, it's a good idea to have preconditions specified,
+;;; even if they're trivial, so that the planner doesn't have to keep searching
+;;; for them in BaseKB.  It's only looking for one unique precondition, so when
+;;; it finds it (maybe in wm), it stops.
+(preconditionFor-Props
+   (true)
+   (doRecord ?assertion))
+   
+(effectOfAction-Props
+  (doRecord ?assertion)
+  ?assertion)  ; like doAssert, but stored in the kb.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doForget
+
+(isa doForget SimpleActionPredicate)
+(isa doForget InferentialTask)
+(arg1Isa doForget ELSentence-Assertible)
+(arity doForget 1)
+(comment doForget "(doForget ?assertion) forgets ?assertion from the kb.")
+
+(preconditionFor-Props
+   (true)
+   (doForget ?assertion))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doRecordMembers
+
+(isa doRecordMembers SimpleActionPredicate)
+(isa doRecordMembers InferentialTask)
+(arity doRecordMembers 1)
+(arg1Isa doRecordMembers Set-Mathematical) ; The set of contextualized statements.
+(comment doRecordMembers 
+   "(doRecordMembers ?assertionSet) stores elements of ?assertionSet in the 
+    knowledgeBase.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doRecordMembers ?assertion-set))
+
+(effectOfActionIf-Props 
+  (doRecordMembers ?set)
+  (and (operatorFormulas TheSet ?set)
+       (evaluate ?facts (MakeFormulaFn and (FormulaArgListFn ?set))))
+  ?facts)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doForgetMembers
+
+(isa doForgetMembers SimpleActionPredicate)
+(isa doForgetMembers InferentialTask)
+(arity doForgetMembers 1)
+(arg1Isa doForgetMembers Set-Mathematical) ; The set of contextualized statements.
+(comment doForgetMembers 
+  "(doForgetMembers ?assertionSet) forgets elements of ?assertionSet from the 
+   knowledgeBase.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doForgetMembers ?assertion-set))
+
+(effectOfActionIf-Props 
+  (doForgetMembers ?set)
+  (and (operatorFormulas TheSet ?set)
+       (evaluate ?facts
+         (MakeFormulaFn and 
+           (MapFunctionOverList 
+             (FunctionToArg 2
+               (Kappa (?formula) (negationOf ?formula ?new-formula)))
+             (FormulaArgListFn ?set)))))
+  ?facts)
+  
+
+(<== (negationOf ?input-term (not ?input-term))
+     (operatorFormulas ?operator ?input-term)
+     (different ?operator not))
+
+
+(<== (negationOf ?input-term ?output-term)
+     (operatorFormulas not ?input-term)
+     (formulaArgument ?input-term 1 ?output-term))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doTell
+
+(isa doTell SimpleActionPredicate)
+(isa doTell InferentialTask)  ; This is inferential, but not a BookKeepingTask!
+(arg1Isa doTell ELSentence-Assertible)
+(arity doTell 1)
+(comment doTell 
+  "(doTell ?assumption) stores ?assumption in the reasoner's working memory.  
+   Unlike doAssert, this is not just for bookkeeping during planning.")
+
+(preconditionFor-Props
+   (true)
+   (doTell ?assumption))
+   
+;;;(effectOfAction-Props
+;;;  (doTell ?assumption)
+;;;  ?assertion)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doTellMembers
+
+(isa doTellMembers SimpleActionPredicate)
+(isa doTellMembers InferentialTask)  ; This is inferential, but not a BookKeepingTask!
+(arg1Isa doTellMembers Set-Mathematical)
+(arity doTellMembers 1)
+(comment doTellMembers 
+  "(doTellMembers ?assumption-set) stores each element of ?assumption-set in the
+reasoner's working memory.  Unlike doAssertMembers, this is not just for bookkeeping
+during planning.")
+
+(preconditionFor-Props
+   (true)
+   (doTellMembers ?assumption-set))
+   
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doUntell
+
+(isa doUntell SimpleActionPredicate)
+(isa doUntell InferentialTask)
+(arg1Isa doUntell ELSentence-Assertible)
+(arity doUntell 1)
+(comment doUntell 
+  "(doUntell ?assumption) removes ?assumption from the working-memory.")
+
+(preconditionFor-Props
+   (true)
+   (doUntell ?assumption))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doUntellMembers
+
+(isa doUntellMembers SimpleActionPredicate)
+(isa doUntellMembers InferentialTask)
+(arg1Isa doUntellMembers Set-Mathematical)
+(arity doUntellMembers 1)
+(comment doUntellMembers 
+  "(doUntell ?assumption-set) removes each element of ?assumption-set from the working-memory.")
+
+(preconditionFor-Props
+   (true)
+   (doUntellMembers ?assumption-set))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doAnnounce
+
+(isa doAnnounce SimpleActionPredicate)
+(isa doAnnounce InferentialTask)
+(arity doAnnounce 2)
+(arg1Isa doAnnounce CharacterString)
+(arg2Isa doAnnounce CycLTerm)
+(comment doAnnounce "(doAnnounce <string> <args>) simply prints <string> to standard output (for tracing execution)")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; chainer utilities
+
+
+;;; These are useful for learning new chainers on the fly:
+;(isa doUpdateChainer SimpleActionPredicate)
+;(isa doUpdateChainer InferentialTask)  ; don't change world model
+;(arity doUpdateChainer 1)
+;(arg1Isa doUpdateChainer Chainer) ; The result of a (ChainerFn <id>) NAT
+;(comment doUpdateChainer "(doUpdateChainer ?chainer-term) dumps a chainer from KB and stashes it in the chainers slot of the current KB and reasoner.")
+
+;(isa doClearChainer SimpleActionPredicate)
+;(isa doClearChainer InferentialTask)
+;(arity doClearChainer 1)
+;(arg1Isa doClearChainer Chainer)
+;(comment doClearChainer "(doClearChainer ?chainer-term) removes a chainer from the chainers slot of the kb and current reasoner.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; analogy utilities
+
+
+(isa doUpdateCaseLibrary SimpleActionPredicate)
+(isa doUpdateCaseLibrary InferentialTask)
+(arity doUpdateCaseLibrary 1)
+(arg1Isa doUpdateCaseLibrary CycLTerm)
+(comment doUpdateCaseLibrary "(doUpdateCaseLibrary ?libraryTerm) retrieves a caselibrary and updates its content vectors.")
+
+(preconditionFor-Props
+  (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+  (doUpdateCaseLibrary ?libraryTerm))
+
+(isa doUncacheDgroup SimpleActionPredicate)
+(isa doUncacheDgroup InferentialTask)
+(arity doUncacheDgroup 1)
+(arg1Isa doUncacheDgroup Case)
+(comment doUncacheDgroup "(doUncacheDgroup ?case-spec) deletes the dgroup for ?case-spec from the analogy source.")
+
+(preconditionFor-Props
+  (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+  (doUncacheDgroup ?case-spec))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; memory utilities
+
+(isa doClearWorkingMemory SimpleActionPredicate)
+(isa doClearWorkingMemory InferentialTask)  ; doesn't change world model
+(arity doClearWorkingMemory 0)
+(comment doClearWorkingMemory "(doClearWorkingMemory) clears the entire contents of working memory.")
+
+(preconditionFor-Props
+  (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+  (doClearWorkingMemory))
+
+
+(isa doClearWMContext SimpleActionPredicate)
+(isa doClearWMContext InferentialTask)  ; doesn't change world model
+(arity doClearWMContext 1)
+(arg1Isa doClearWMContext Microtheory)
+(comment doClearWMContext "(doClearWMContext ?context) clears out a microtheory context in working memory.")
+
+(preconditionFor-Props
+  (true)
+  (doClearWMContext))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doPlan
+
+(isa doPlan SimpleActionPredicate)
+(isa doPlan InferentialTask)  ; generate a plan by executing a plan.
+(arity doPlan 2)
+(arg1Isa doPlan CycLTerm)
+(arg2Isa doPlan ELFormula)
+(comment doPlan "(doPlan ?actor ?goalTasks) generates a plan for ?actor to achieve ?goalTasks and assigns it as the currentPlan of the actor.  ?goalTasks is a (generally non-operational) actionSequence.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Diagnostics
+
+(isa doBreak SimpleActionPredicate)
+(isa doBreak InferentialTask)
+(arity doBreak 3)
+(arg1Isa doBreak CycLTerm)  ; either Planning Execution or something else
+(arg2Isa doBreak CharacterString)
+(arg3Isa doBreak CycLTerm)  ; A lisp list
+(comment doBreak "(doBreak ?when ?msg args) breaks to the debugger during planning if ?when is bound to Planning, or during execution time if ?when is bound to Execution.")
+
+(preconditionFor-Props
+  (true)
+  (doBreak ?when ?msg ?args))
+
+
+;;; -------------------
+;;; Debugging Predicates:
+;;; -------------------
+
+(isa breakOnEmptySet BinaryPredicate)
+(arity breakOnEmptySet 2)
+(comment breakOnEmptySet "(breakOnEmptySet ?set ?when) binds ?when to Planning if set is empty.  Add this to the precondition of a plan and add a (doBreak ?when <format-string> (<format args>)) to the action in order to specify an invariant that ?set should never be empty.")
+
+(isa breakOnZeroValue BinaryPredicate)
+(arity breakOnZeroValue 2)
+(comment breakOnZeroValue "(breakOnZeroValue ?nat ?when) binds ?when to Planning if arg1 of ?nat is 0.  Add this to the precondition of a plan and add a (doBreak ?when <format-string> (<format args>)) to the action in order to specify an invariant that the value of ?nat should never be zero.")
+
+(isa breakOnCondition BinaryPredicate)
+(arity breakOnCondition 2)
+(comment breakOnCondition "(breakOnCondition ?condition ?when) binds ?when to Planning if ?condition is true in the current state.  Add this to the precondition of a plan and add a (doBreak ?when <format-string> (<format args>)) to the action in order to specify an invariant that ?condition should never hold.")
+
+(isa breakUnless BinaryPredicate)
+(arity breakUnless 2)
+(comment breakUnless "(breakUnless ?condition ?when) binds ?when to Planning if ?condition is cannot be inferred in the current state.  Add this to the precondition of a plan and add a (doBreak ?when <format-string> (<format args>)) to the action in order to specify an invariant that ?condition should always hold.")
+
+

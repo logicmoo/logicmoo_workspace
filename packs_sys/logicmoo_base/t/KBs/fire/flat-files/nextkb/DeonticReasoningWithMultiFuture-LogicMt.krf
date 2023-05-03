@@ -1,0 +1,363 @@
+
+ (in-microtheory DeonticReasoningWithMultiFuture-LogicMt)
+ (isa ought-cc-Dual DeonticAndRelatedModalPredicate)
+ (arg2QuotedIsa forbiddenToDo CycLSentence-Assertible)
+ (comment oughtToDo "For each instance AGT of #$IntelligentAgent and each
+instance PROP of #$CycLSentence-Assertible, (#$oughtToDo AGT PROP) means
+that AGT ought to bring it about that PROP.  Note that #$oughtToDo is
+not the same as #$oughtToBe.  Neither is stronger than the other.
+Note also that (#$oughtToDo AGT PROP) is equivalent to (#$oughtToDo
+AGT (#$bringsAbout PROP)) for every PROP, and that (#$oughtToDo AGT
+PROP-1) is equivalent to (#$oughtToDo AGT PROP-2) whenever PROP-1 is
+equivalent to PROP-2.  (#$oughtToDo AGT ___) has two closely related
+operators: (#$forbiddenToDo AGT ___) and (#$permittedToDo AGT ___).
+For each PROP,
+<p>
+<pre>
+ (#$forbiddenToDo AGT PROP) is equivalent to 
+ (#$oughtToDo AGT (#$refrainsFromBringingAbout AGT PROP)) for every PROP,
+</pre>
+<p>
+and 
+<p>
+<pre>
+ (#$permittedToDo AGT PROP) is equivalent to 
+ (#$not (#$oughtToDo AGT (#$refrainsFromBringingAbout PROP))).
+</pre>
+<p>
+Given the relation between #$refrainsFromBringingAbout and
+#$bringsAbout, and given what we said above, it is easy to see that
+for each PROP,
+<p>
+<pre>
+ (#$forbiddenToDo AGT PROP) is equivalent to 
+ (#$oughtToDo AGT (#$not (#$bringsAbout AGT PROP))), and
+
+ (#$permittedToDo AGT PROP) is equivalent to 
+ (#$not (#$oughtToDo AGT (#$not (#$bringsAbout AGT PROP)))).
+</pre>
+<p>
+(Had we only allowed arg2 to be those formulas of the form
+(#$bringsAbout AGT PROP'), we would have
+<p>
+<pre>
+ (#$permittedToDo AGT ___) and 
+ (#$oughtToDo AGT ___)
+</pre>
+<p>
+to be #$dualOperators.)  For ought-to-do operators with parameters,
+see #$oughtToDo-WRT.")
+ (argIsa ought-cc 1 CodeOfConduct)
+ (isa (ModalOpSetFn ought-c IntelligentAgent)
+ (SetOfTypeFn UnaryModalOperator))
+ (negationPreds oughtToDo forbiddenToDo)
+ (comment permittedToDo
+ "For each instance AGT of #$IntelligentAgent and each 
+instance PROP of #$ELSentence-Assertible, (#$permittedToDo AGT PROP) 
+means that AGT is permitted to bring it about that PROP.  Note that 
+#$permittedToDo is not the same as #$permittedToBe.  Note also that 
+(#$permittedToDo AGT PROP) is equivalent to (#$permittedToDo AGT 
+(#$bringsAbout PROP)) for every PROP, and that (#$permittedToDo AGT 
+PROP-1) is equivalent to (#$permittedToDo AGT PROP-2) whenever PROP-1 
+is equivalent to PROP-2.  (#$permittedToDo AGT ___) has two closely 
+related operators: (#$forbiddenToDo AGT ___) and (#$oughtToDo AGT 
+___).  For each PROP, 
+ 
+(#$forbiddenToDo AGT PROP) is equivalent to  
+(#$not (#$permittedToDo AGT PROP)) 
+ 
+and 
+ 
+(#$oughtToDo AGT PROP) is equivalent to  
+(#$not (#$permittedToDo AGT (#$refrainsFromBringingAbout PROP))). 
+ 
+Given the relation between #$refrainsFromBringingAbout and 
+#$bringsAbout, and given what we said above, it is easy to see that 
+for each PROP, 
+ 
+(#$oughtToDo AGT PROP) is equivalent to  
+(#$not (#$permittedToDo AGT (#$not (#$bringsAbout AGT PROP)))). 
+ 
+(Had we only allowed arg2 to be those formulas of the form 
+(#$bringsAbout PROP'), we would have 
+ 
+(#$permittedToDo AGT ___) and  
+(#$oughtToDo AGT ___) 
+ 
+to be #$dualOperators.)  For permitted-to-do operators with 
+parameters, see #$permittedToDo-WRT.")
+ (argIsa ought-cc-Dual 2 IntelligentAgent)
+ (comment NoteOnDeonticToDoOperators
+ "In this note we explain why deontic `to-do' operators take
+sentences rather than actions or action types as arguments, besides
+the reason we give in #$NotesOnUsingSentencesToTalkAboutDoing.  (1)
+That an agent ought to do such and such doesn't mean that the agent
+ought to perform any specific action.  Rather, it usually indicates
+that the agent ought to perform an action of a certain kind.  For
+example, suppose that Fritz ought to make his office clean.  Consider
+hypothetical events e-0 and e-1, both are particular
+`cleaning-Fritz's-office' events performed by Fritz, and in e-0, Fritz
+first vacuums the carpet and then cleans the desk, while in e-1, he
+cleans the desk first and then vacuums the carpet.  As particular
+events, e-0 and e-1 are certainly different, but Fritz's performing
+either of them will (let us assume) fulfill his obligation of making
+his room clean, in which the ordering of cleaning the kitchen and
+vacuuming the carpet doesn't matter.  It then seems to follow that
+`Fritz ought to make his office clean' implies neither `he ought to
+perform e-0' nor `he ought to perform e-1'.  In general `Fritz ought
+to make his office clean' does not even seem to imply `there is a
+particular action x such that Fritz ought to perform x'.  (2) It is
+not the kind of actions themselves but a (`factual') consequence of
+the kind of actions that seems critical at the issue.  For example,
+when taking `Fritz ought to make his office clean' to be true, what
+Fritz might do to fulfill this obligation doesn't have to be one of
+those `cleaning-Fritz's-office' actions --- he may do anything to
+fulfill the obligation, as long as what he does has a consequence that
+`his office is clean'.  For example, he may simply hire someone else
+to clean the office.  If we must use an event or an action to
+translate this ought-sentence, we would face a large disjunction of
+statements about action types, which include ALL kinds of actions
+Fritz can perform that will result in (or cause) the fact that Fritz
+office is clean, or, we would have to make, for each `contingent'
+sentence PROP, a type of all events or actions that have PROP as their
+consequence.  In either case, though one can probably write formulas
+corresponding to `Fritz ought to make his office clean', any inference
+would be quite difficult because the former involves a big
+disjunction, and the latter involves setting up relations between
+those action types obtained by arbitrary sentences.  So neither of the
+two approaches seems advisible or even doable.  These considerations
+lead us to use sentences rather than particular actions or kinds of
+actions as the arg2 to #$oughtToDo.")
+ (arg2QuotedIsa ought-c-Dual CycLSentence-Assertible)
+ (arg1Isa forbiddenToDo IntelligentAgent)
+ (argQuotedIsa oughtToDo 2 CycLSentence-Assertible)
+ (comment forbiddenToDo-WRT
+ "For each instance CODE of #$CodeOfConduct, each instance AGT 
+of #$IntelligentAgent, (#$forbiddenToDo-WRT CODE AGT ___) is an 
+instance of #$CommonUnaryModalOperator.  (forbiddenToDo-WRT CODE AGT 
+PROP) means that in accordance with CODE (an instance of 
+#$CodeOfConduct), AGT is forbidden to bring it about that PROP. 
+ 
+Note that (#$forbiddenToDo-WRT CODE AGT PROP) is equivalent to 
+(#$forbiddenToDo-WRT CODE AGT (#$bringsAbout PROP)) for every PROP, 
+and that (#$forbiddenToDo-WRT CODE AGT PROP-1) is equivalent to 
+(#$forbiddenToDo-WRT CODE AGT PROP-2) whenever PROP-1 is equivalent to 
+PROP-2.  (#$forbiddenToDo-WRT CODE AGT ___) has two closely related 
+operators: (#$permittedToDo-WRT CODE AGT ___) and (#$oughtToDo-WRT 
+CODE AGT ___).  For each PROP, 
+ 
+(#$permittedToDo-WRT CODE AGT PROP) is equivalent to  
+(#$not (#$forbiddenToDo-WRT CODE AGT PROP)) 
+ 
+and 
+ 
+(#$oughtToDo-WRT CODE AGT PROP) is equivalent to  
+(#$forbiddenToDo-WRT CODE AGT (#$refrainsFromBringingAbout PROP)). 
+ 
+Given the relation between #$refrainsFromBringingAbout and 
+#$bringsAbout, and given what we said above, it is easy to see that 
+for each PROP, 
+ 
+(#$oughtToDo-WRT CODE AGT PROP) is equivalent to  
+(#$forbiddenToDo-WRT CODE AGT (#$not (#$bringsAbout AGT PROP))).")
+ (genlPreds ought-c ought-c-Dual)
+ (isa (ModalOpSet1-2Fn ought-cc-Dual CodeOfConduct IntelligentAgent)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa (ModalOpSet1-2Fn ought-cc CodeOfConduct IntelligentAgent)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (argIsa forbiddenToDo-WRT 1 CodeOfConduct)
+ (isa ought-c DeonticAndRelatedModalPredicate)
+ (argIsa permittedToDo-WRT 2 IntelligentAgent)
+ (isa (ModalOpSetFn ought-c-Dual IntelligentAgent)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (argQuotedIsa permittedToDo-WRT 3 CycLSentence-Assertible)
+ (argQuotedIsa permittedToDo 2 CycLSentence-Assertible)
+ (arg1Isa ought-c IntelligentAgent)
+ (isa oughtToDo DeonticAndRelatedModalPredicate)
+ (argIsa oughtToDo-WRT 1 CodeOfConduct)
+ (arg1Isa ought-cc CodeOfConduct)
+ (arg2QuotedIsa permittedToDo CycLSentence-Assertible)
+ (arg2Isa ought-cc-Dual IntelligentAgent)
+ (isa ought-c-Dual DeonticAndRelatedModalPredicate)
+ (arg1Isa permittedToDo IntelligentAgent)
+ (arg2Isa forbiddenToDo-WRT IntelligentAgent)
+ (argIsa ought-cc 2 IntelligentAgent)
+ (argIsa oughtToDo-WRT 2 IntelligentAgent)
+ (arg1Isa permittedToDo-WRT CodeOfConduct)
+ (isa ought-cc DeonticAndRelatedModalPredicate)
+ (arg3QuotedIsa ought-cc-Dual CycLSentence-Assertible)
+ (arg2Isa ought-cc IntelligentAgent)
+ (arg2Isa oughtToDo-WRT IntelligentAgent)
+ (arg1Isa oughtToDo-WRT CodeOfConduct)
+ (argIsa ought-cc-Dual 1 CodeOfConduct)
+ (isa forbiddenToDo DeonticAndRelatedModalPredicate)
+ (comment oughtToDo-WRT
+ "For each instance CODE of #$CodeOfConduct, each instance AGT 
+of #$IntelligentAgent, (#$oughtToDo-WRT CODE AGT ___) is an instance 
+of #$CommonUnaryModalOperator.  (#$oughtToDo-WRT CODE AGT PROP) means 
+that in accordance with CODE (an instance of #$CodeOfConduct), AGT 
+ought to bring it about that PROP.  Note that (#$oughtToDo-WRT CODE 
+AGT PROP) is equivalent to (#$oughtToDo-WRT CODE AGT (#$bringsAbout 
+PROP)) for every PROP, and that (#$oughtToDo-WRT CODE AGT PROP-1) is 
+equivalent to (#$oughtToDo-WRT CODE AGT PROP-2) whenever PROP-1 is 
+equivalent to PROP-2.  (#$oughtToDo-WRT CODE AGT ___) has two closely 
+related operators:  (#$forbiddenToDo-WRT CODE AGT ___) and 
+(#$permittedToDo-WRT CODE AGT ___).  For each PROP, 
+ 
+(#$forbiddenToDo-WRT CODE AGT PROP) is equivalent to  
+(#$oughtToDo-WRT CODE AGT (#$refrainsFromBringingAbout AGT PROP)) 
+ 
+and 
+ 
+(#$permittedToDo-WRT CODE AGT PROP) is equivalent to  
+(#$not (#$oughtToDo-WRT CODE AGT (#$refrainsFromBringingAbout PROP))). 
+ 
+Given the relation between #$refrainsFromBringingAbout and 
+#$bringsAbout, and given what we said above, it is easy to see that 
+for each PROP, 
+ 
+(#$forbiddenToDo-WRT CODE AGT PROP) is equivalent to  
+(#$oughtToDo-WRT CODE AGT (#$not (#$bringsAbout AGT PROP))), and 
+ 
+(#$permittedToDo-WRT CODE AGT PROP) is equivalent to  
+(#$not (#$oughtToDo-WRT CODE AGT (#$not (#$bringsAbout PROP)))). 
+ 
+(Had we only allowed arg3 to be those formulas of the form 
+(#$bringsAbout PROP'), we would have 
+ 
+(#$permittedToDo-WRT CODE AGT ___) and  
+(#$oughtToDo-WRT CODE AGT ___) 
+ 
+to be #$dualOperators.)")
+ (argQuotedIsa ought-c-Dual 2 CycLSentence-Assertible)
+ (arg3QuotedIsa oughtToDo-WRT CycLSentence-Assertible)
+ (isa permittedToDo-WRT DeonticAndRelatedModalPredicate)
+ (arg3QuotedIsa ought-cc CycLSentence-Assertible)
+ (arg1Isa ought-c-Dual IntelligentAgent)
+ (argIsa ought-c-Dual 1 IntelligentAgent)
+ (genlPreds oughtToDo-WRT permittedToDo-WRT)
+ (isa forbiddenToDo-WRT DeonticAndRelatedModalPredicate)
+ (comment ought-c
+ "For each instance AGT of #$IntelligentAgent, and for each
+instance PROP of #$ELSentence-Assertible, (#$ought-c AGT PROP) should
+be read as `AGT weakly ought to bring it about that PROP'.  Here
+#$ought-c is a technical notion that ordinary OE or KE work should
+avoid using (see #$oughtToDo etc. for constants used in ordinary OE or
+KE work).  (#$ought-c AGT PROP) is taken to mean, roughly, that either
+AGT ought to bring it about that PROP or it is settled that PROP.
+When (#$ought-c AGT PROP) is true, AGT may or may not intend to bring
+about the fact described in PROP, neither must PROP be true.  Note
+that (#$ought-c AGT PROP) is equivalent to (#$or (#$oughtToDo AGT
+PROP) (#$necessary-Historical PROP)) and each (#$ought-c AGT ___) is
+assigned as a normal D operator with some extra features.")
+ (comment permittedToDo-WRT
+ "For each instance CODE of #$CodeOfConduct, each instance AGT of #$IntelligentAgent, (#$permittedToDo-WRT CODE AGT ___) is an instance of #$CommonUnaryModalOperator.  (permittedToDo-WRT CODE AGT PROP) means that in accordance with CODE (an instance of #$CodeOfConduct), AGT is permitted to bring it about that PROP.  Note that (#$permittedToDo-WRT CODE AGT PROP) is equivalent to (#$permittedToDo-WRT CODE AGT (#$bringsAbout PROP)) for every PROP, and that (#$permittedToDo-WRT CODE AGT PROP-1) is equivalent to (#$permittedToDo-WRT CODE AGT PROP-2) whenever PROP-1 is equivalent to PROP-2. (#$permittedToDo-WRT CODE AGT ___) has two closely related operators: (#$forbiddenToDo-WRT CODE AGT ___) and (#$oughtToDo-WRT CODE AGT ___).  For each PROP,
+
+(#$forbiddenToDo-WRT CODE AGT PROP) is equivalent to 
+(#$not (#$permittedToDo-WRT CODE AGT PROP))
+
+and
+
+(#$oughtToDo-WRT CODE AGT PROP) is equivalent to 
+(#$not (#$permittedToDo-WRT CODE AGT (#$refrainsFromBringingAbout PROP))).
+
+Given the relation between #$refrainsFromBringingAbout and #$bringsAbout, and given what we said above, it is easy to see that for each PROP,
+
+(#$oughtToDo-WRT CODE AGT PROP) is equivalent to 
+(#$not (#$permittedToDo-WRT CODE AGT (#$not (#$bringsAbout PROP)))).
+
+(Had we only allowed arg3 to be those formulas of the form (#$bringsAbout PROP'), we would have
+
+(#$permittedToDo-WRT CODE AGT ___) and 
+(#$oughtToDo-WRT CODE AGT ___)
+
+to be #$dualOperators.)")
+ (negationPreds permittedToDo-WRT forbiddenToDo-WRT)
+ (isa permittedToDo DeonticAndRelatedModalPredicate)
+ (arg3QuotedIsa forbiddenToDo-WRT CycLSentence-Assertible)
+ (isa oughtToDo-WRT DeonticAndRelatedModalPredicate)
+ (arg2QuotedIsa ought-c CycLSentence-Assertible)
+ (argQuotedIsa ought-cc-Dual 3 CycLSentence-Assertible)
+ (argIsa forbiddenToDo-WRT 2 IntelligentAgent)
+ (comment ought-cc
+ "For each instance CODE of #$CodeOfConduct, each instance AGT
+of #$IntelligentAgent and each instance PROP of
+#$ELSentence-Assertible, (#$ought-cc CODE AGT PROP) should be read as
+`AGT weakly ought to, according to CODE, bring it about that PROP.'
+#$ought-cc is a technical notion that ordinary OE or KE work should
+avoid using (see #$oughtToDo-WRT etc. for constants used in ordinary
+OE or KE work).  (#$ought-cc CODE AGT PROP) is taken to mean, roughly,
+that in accordance with CODE (an instance of #$CodeOfConduct), AGT
+ought to bring it about that PROP, or else it is settled that PROP.
+When (#$ought-cc AGT PROP) is true, AGT may or may not intend to bring
+about the fact described in PROP, neither must PROP be true.  Note
+that (#$ought-cc AGT PROP) is equivalent to (#$or (#$oughtToDo AGT
+PROP) (#$necessary-Historical PROP)) and each (#$ought-cc AGT ___) is
+assigned as a normal D operator with some extra features.")
+ (isa (ModalOpSetFn ought-c-Dual IntelligentAgent)
+ (SetOfTypeFn UnaryModalOperator))
+ (sharedNotes oughtToDo NoteOnDeonticToDoOperators)
+ (arg1Isa oughtToDo IntelligentAgent)
+ (genlPreds ought-cc ought-cc-Dual)
+ (isa (ModalOpSetFn ought-c IntelligentAgent)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (arg1Isa forbiddenToDo-WRT CodeOfConduct)
+ (comment permittedToDoSit-WRT
+ "<code>(#$permittedToDoSit-WRT COC AGT SIT-TYPE)</code> holds just in case COC permits AGT to do (#$doneBy) instances of SIT-TYPE.  More precisely, it holds just in case (#$permittedToDo-WRT COC AGT SENT) where SENT is a sentence of the form (#$doneBy INS AGT) where INS is any suitable instance of SIT-TYPE.  Note: INS must be a \"suitable\" instance of SIT-TYPE.  By \"suitable\" we mean that INS is not also an instance of any collection of events that AGT is prohibited from performing.  For instance, Bob is a licensed driver so (#$permittedToDoSit-WRT USTrafficLaws Bob DrivingAnAutomobile) holds though Bob is not permitted to do any old instance of DrivingAnAutomobile.  Rather, Bob is permitted to do any instance that is not in conflict with any COC that Bob is subject to -- e.g. Bob is not permitted to perform \"DrivingAStolenAutomobile150MPHWhileTransportingAMinorAcrossStateLineForImmoralPurposes\" ")
+ (argQuotedIsa forbiddenToDo 2 CycLSentence-Assertible)
+ (argQuotedIsa forbiddenToDo-WRT 3 CycLSentence-Assertible)
+ (argIsa forbiddenToDo 1 IntelligentAgent)
+ (argQuotedIsa ought-c 2 CycLSentence-Assertible)
+ (argQuotedIsa ought-cc 3 CycLSentence-Assertible)
+ (quotedIsa NoteOnDeonticToDoOperators SharedNote)
+ (isa (ModalOpSet1-2Fn ought-cc-Dual CodeOfConduct IntelligentAgent)
+ (SetOfTypeFn UnaryModalOperator))
+ (arg1Isa ought-cc-Dual CodeOfConduct)
+ (arg2Isa permittedToDo-WRT IntelligentAgent)
+ (negationPreds forbiddenToDo permittedToDo)
+ (argIsa permittedToDo-WRT 1 CodeOfConduct)
+ (isa (ModalOpSet1-2Fn ought-cc CodeOfConduct IntelligentAgent)
+ (SetOfTypeFn UnaryModalOperator))
+ (comment ought-cc-Dual
+ "For each instance AGT in #$IntelligentAgent, (#$ought-cc-Dual
+AGT ___) is the #$dualOperator of (#$ought-cc AGT ___).  This is a
+technical notion that ordinary OE or KE work should avoid using.")
+ (argIsa oughtToDo 1 IntelligentAgent)
+ (argIsa permittedToDo 1 IntelligentAgent)
+ (arg3QuotedIsa permittedToDo-WRT CycLSentence-Assertible)
+ (comment ought-c-Dual
+ "For each instance AGT in #$IntelligentAgent, (#$ought-c-Dual
+AGT ___) is the #$dualOperator of (#$ought-c AGT ___).  This is a
+technical notion that ordinary OE or KE work should avoid using.")
+ (argIsa ought-c 1 IntelligentAgent)
+ (comment forbiddenToDo
+ "For each instance AGT of #$IntelligentAgent and each 
+instance PROP of #$ELSentence-Assertible, (#$forbiddenToDo AGT PROP) 
+means that AGT is forbidden to bring it about that PROP.  Note that 
+#$forbiddenToDo is not the same as #$forbiddenToBe.  Note also that 
+(#$forbiddenToDo AGT PROP) is equivalent to (#$forbiddenToDo AGT 
+(#$bringsAbout PROP)) for every PROP, and that (#$forbiddenToDo AGT 
+PROP-1) is equivalent to (#$forbiddenToDo AGT PROP-2) whenever PROP-1 
+is equivalent to PROP-2.  (#$forbiddenToDo AGT ___) has two closely 
+related operators: (#$permittedToDo AGT ___) and (#$oughtToDo CODE AGT 
+___).  For each PROP, 
+ 
+(#$permittedToDo AGT PROP) is equivalent to  
+(#$not (#$forbiddenToDo AGT PROP)) 
+ 
+and 
+ 
+(#$oughtToDo AGT PROP) is equivalent to  
+(#$forbiddenToDo AGT (#$refrainsFromBringingAbout PROP)). 
+ 
+Given the relation between #$refrainsFromBringingAbout and 
+#$bringsAbout, and given what we said above, it is easy to see that 
+for each PROP, 
+ 
+(#$oughtToDo AGT PROP) is equivalent to  
+(#$forbiddenToDo AGT (#$not (#$bringsAbout AGT PROP))).   
+ 
+For forbidden-to-do operators with parameters, see 
+#$forbiddenToDo-WRT.")
+ (arg2QuotedIsa oughtToDo CycLSentence-Assertible)
+ (argQuotedIsa oughtToDo-WRT 3 CycLSentence-Assertible)

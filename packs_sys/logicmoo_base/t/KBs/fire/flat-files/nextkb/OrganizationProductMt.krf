@@ -1,0 +1,5 @@
+(in-microtheory OrganizationProductMt)
+
+(argFormat madeBy 2 SetTheFormat)
+(argFormat madeBy 1 SetTheFormat)
+(genls (SubcollectionOccursAtFn (ProductionOfFn Opium) Afghanistan) (ProductionOfFn Opium))

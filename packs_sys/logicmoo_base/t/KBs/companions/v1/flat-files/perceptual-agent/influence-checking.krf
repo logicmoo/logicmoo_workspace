@@ -1,0 +1,654 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: influence-checking.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 4, 2011 16:16:57
+;;;;   Purpose: Validating hypothesized influences
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Validating influences against data.
+;;; If new case satisfies prior learned influences, no more need be done.
+;;; If it violates prior hypotheses, they must be repaired.
+;;; If there are no prior hypotheses, better make some.
+
+(isa satisfiesPriorInfluenceHypotheses QuaternaryPredicate)
+(arity satisfiesPriorInfluenceHypotheses 4)
+(arg1Isa satisfiesPriorInfluenceHypotheses Microtheory)
+(arg2Isa satisfiesPriorInfluenceHypotheses Microtheory) 
+(arg3Isa satisfiesPriorInfluenceHypotheses CycLSentence-Assertible)
+(arg4Isa satisfiesPriorInfluenceHypotheses Microtheory)
+(comment satisfiesPriorInfluenceHypotheses "(satisfiesPriorInfluenceHypotheses ?mt ?spindle-mt ?change-stmt ?influence-casename) tests whether prior hypothesized influences hold in the current case.")
+
+(<== (satisfiesPriorInfluenceHypotheses ?mt ?spindle-mt ?change-stmt ?casename)
+     (unifies (quantityChange ?dep-quantity ?magnitude) ?change-stmt)
+     (evaluate ?type-level-influences
+       (TheClosedRetrievalSetOf ?influence
+         (influenceHypothesisOn ?mt ?spindle-mt ?dep-quantity ?influence)))
+     (different ?type-level-influences (TheSet))
+     (satisfiesHypothesizedTypeLevelInfluences ?mt ?dep-quantity ?magnitude ?type-level-influences ?casename))
+
+(isa influenceHypothesisOn QuaternaryPredicate)
+(arity influenceHypothesisOn 4)
+(arg1Isa influenceHypothesisOn Microtheory)
+(arg2Isa influenceHypothesisOn Microtheory)
+(arg3Isa influenceHypothesisOn ContinuousQuantity)
+(arg4Isa influenceHypothesisOn CycLSentence-Assertible)
+(comment influenceHypothesisOn "(influenceHypothesisOn ?mt ?spindle-mt ?dep-quantity ?influence-hypothesis) binds ?influence-hypothesis to relevant prior hypotheses.")
+
+;;; This must filter out inactive influences.
+;;; Either because it's condition on an inactive process or
+;;; because it's a direct influence from a zero rate.
+(<== (influenceHypothesisOn ?mt ?spindle-mt ?dep-quantity ?inf)
+     (not (variableExpression ?dep-quantity))
+     (unifies (?dep-qtype ?quantity-arg) ?dep-quantity)
+     (lookupOnly
+       (ist-Information ?spindle-mt
+         (hypothesis (?pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel))))
+     (allFactsAllowed
+       (ist-Information ?mt
+         (isa ?quantity-arg ?coll1)))
+     (unifies ?inf (?pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel))
+     (currentlyActiveInfluence ?mt ?dep-quantity ?inf)
+     )
+     
+(<== (currentlyActiveInfluence ?mt ?dep-quantity ?inf)
+     (directInfluence ?inf)
+     (unifies (?pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?inf)
+     (unifies (?dep-qtype ?dep-entity) ?dep-quantity)
+     (ist-Information ?mt
+       (propagateBinpred ?rel ?dep-entity ?indep-entity))
+     (allFactsAllowed
+       (ist-Information ?mt
+         (isa ?indep-entity ?coll2)))  ; unnecessary, if ?rel is appropriate
+     (unifies ?indep-quantity (?indep-qtype ?indep-entity))
+     (wmOnly (priorValue ?mt ?indep-quantity ?value))
+     (valueToMagnitude ?value ?prior-magnitude)
+     (greaterThan ?prior-magnitude 0))
+
+(isa currentlyActiveInfluence TernaryPredicate)
+(arity currentlyActiveInfluence 3)
+
+(<== (currentlyActiveInfluence ?mt ?dep-quantity ?inf)
+     (indirectInfluence ?inf)
+     ;;; *** TBD ***
+     )
+
+(isa influenceHypothesisFrom QuaternaryPredicate)
+(arity influenceHypothesisFrom 4)
+(arg1Isa influenceHypothesisFrom Microtheory)
+(arg2Isa influenceHypothesisFrom Microtheory)
+(arg3Isa influenceHypothesisFrom ContinuousQuantity)
+(arg4Isa influenceHypothesisFrom CycLSentence-Assertible)
+(comment influenceHypothesisFrom "(influenceHypothesisFrom ?mt ?spindle-mt ?indep-quantity ?influence-hypothesis) binds ?influence-hypothesis to relevant prior hypotheses.")
+
+(<== (influenceHypothesisFrom ?mt ?spindle-mt ?indep-quantity ?inf)
+     (not (variableExpression ?indep-quantity))
+     (unifies (?indep-qtype ?quantity-arg) ?indep-quantity)
+     (lookupOnly
+       (ist-Information ?spindle-mt
+         (hypothesis (?pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel))))
+     (allFactsAllowed
+       (ist-Information ?mt
+         (isa ?quantity-arg ?coll2)))
+     (unifies ?inf (?pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel)))
+
+
+(isa ambiguousInfluenceHypothesisOn QuaternaryPredicate)
+(arity ambiguousInfluenceHypothesisOn 4)
+(arg1Isa ambiguousInfluenceHypothesisOn Microtheory)
+(arg2Isa ambiguousInfluenceHypothesisOn Microtheory)
+(arg3Isa ambiguousInfluenceHypothesisOn ContinuousQuantity)
+(arg4Isa ambiguousInfluenceHypothesisOn CycLSentence-Assertible)
+(comment ambiguousInfluenceHypothesisOn "(ambiguousInfluenceHypothesisOn ?mt ?ii-spindle ?quantity ?inf) binds ?inf to the possible influence on ?qtype.")
+
+;;; *** Count on relation between entities in ambigous influences being "equal".
+;;; *** Concievably if binrels were truly invertible, we could relax this.
+;(<== (ambiguousInfluenceHypothesisOn ?mt ?spindle-mt ?quantity ?inf)
+;     (not (variableExpression ?quantity))
+;     (unifies (?qtype ?quantity-arg) ?quantity)
+;     (lookupOnly
+;       (ist-Information ?spindle-mt
+;         (ambiguousInfluenceDirection (?pred ?qtype ?indep-qtype ?coll1 ?coll2 equals))))
+;     (ist-Information ?mt (isa ?quantity-arg ?coll1))
+;     (unifies ?inf (?pred ?qtype ?indep-qtype ?coll1 ?coll2 equals)))
+
+;(<== (ambiguousInfluenceHypothesisOn ?mt ?spindle-mt ?quantity ?inf)
+;     (not (variableExpression ?quantity))
+;     (unifies (?qtype ?quantity-arg) ?quantity)
+;     (lookupOnly
+;       (ist-Information ?spindle-mt
+;         (ambiguousInfluenceDirection (?pred ?other-qtype ?qtype ?coll1 ?coll2 equals))))
+;     (ist-Information ?mt (isa ?quantity-arg ?coll2))
+;     (unifies ?inf (?pred ?qtype ?other-qtype ?coll2 ?coll1  equals)))
+
+;;; Ambiguous influences now explicitly stored in both directions.  Bind them both.
+(<== (ambiguousInfluenceHypothesisOn ?mt ?spindle-mt ?quantity ?inf)
+     (not (variableExpression ?quantity))
+     (unifies (?qtype ?quantity-arg) ?quantity)
+     (lookupOnly
+       (ist-Information ?spindle-mt
+         (hypothesis (?pred ?qtype ?other-qtype ?coll ?coll equals))))
+     (ist-Information ?mt (isa ?quantity-arg ?coll))
+     (lookupOnly
+       (ist-Information ?spindle-mt
+         (hypothesis (?pred ?other-qtype ?qtype ?coll ?coll equals))))
+     (lookupOnly
+       (elementOf ?inf (TheSet (?pred ?qtype ?other-qtype ?coll ?coll equals)
+                               (?pred ?other-qtype ?qtype ?coll ?coll equals)))))
+
+(isa ambiguousHypothesisDirection BinaryPredicate)
+(arity ambiguousHypothesisDirection 2)
+(arg1Isa ambiguousHypothesisDirection Microtheory)
+(arg2Isa ambiguousHypothesisDirection CycLSentence-Assertible)
+(comment ambiguousHypothesisDirection "(ambiguousHypothesisDirection ?spindle-mt ?influence) succeeds if ?inf is causally indeterminate.")
+
+;;; succeeds if ?inf is causally indeterminate.
+(<== (ambiguousHypothesisDirection ?spindle-mt ?inf)
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?spindle-mt
+           (hypothesis ?inf))))
+     (unifies (?pred ?dep-qtype ?indep-qtype ?coll ?coll equals) ?inf)
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?spindle-mt
+           (hypothesis (?pred ?indep-qtype ?dep-qtype ?coll ?coll equals))))))
+
+(isa ambiguousInfluenceHypothesisBetween TernaryPredicate)
+(arity ambiguousInfluenceHypothesisBetween 3)
+(arg1Isa ambiguousInfluenceHypothesisBetween Microtheory)
+(arg2Isa ambiguousInfluenceHypothesisBetween CycLSentence-Assertible)
+(arg3Isa ambiguousInfluenceHypothesisBetween CycLSentence-Assertible)
+(comment ambiguousInfluenceHypothesisBetween "(ambiguousInfluenceHypothesisBetween ?ii-spindle ?indep-q1 ?indep-q2) succeeds if the two quantities have an ambiguous indirect influence between them.")
+
+(<== (ambiguousInfluenceHypothesisBetween ?ii-spindle ?indep-q1 ?indep-q2)
+     (unifies (?qtype1 ?ent1) ?indep-q1)
+     (unifies (?qtype2 ?ent2) ?indep-q2)
+     (unifies ?inf1 (?pred1 ?qtype1 ?qtype2 ?coll ?coll equals))
+     (unifies ?inf2 (?pred2 ?qtype2 ?qtype2 ?coll ?coll equals))
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?ii-spindle
+           (hypothesis ?inf1))))
+     (lookupOnly
+       (contextEnvAllowed
+         (ist-Information ?ii-spindle
+           (hypothesis ?inf2)))))
+
+;(isa ambiguousHypothesisDirection QuaternaryPredicate)
+;(arity allInfluenceHypothesesOn 4)
+;(arg1Isa allInfluenceHypothesesOn Microtheory)
+;(arg2Isa allInfluenceHypothesesOn Microtheory)
+;(arg3Isa allInfluenceHypothesesOn ContinuousQuantity)
+;(arg4Isa allInfluenceHypothesesOn CycLSentence-Assertible)
+;(comment allInfluenceHypothesesOn "(allInfluenceHypothesesOn ?mt ?spindle-mt ?dep-quantity ?influence-hypothesis) binds ?influence-hypothesis to relevant prior hypotheses, whether ambiguous or not.")
+
+
+;(<== (allInfluenceHypothesesOn ?mt ?spindle-mt ?dep-quantity ?inf)
+;     (influenceHypothesisOn ?mt ?spindle-mt ?dep-quantity ?inf))
+
+;(<== (allInfluenceHypothesesOn ?mt ?spindle-mt ?dep-quantity ?inf)
+;     (ambiguousInfluenceHypothesisOn ?mt ?spindle-mt ?dep-quantity ?inf))
+
+(isa unambiguousInfluenceHypothesesOn QuaternaryPredicate)
+(arity unambiguousInfluenceHypothesesOn 4)
+(arg1Isa unambiguousInfluenceHypothesesOn Microtheory)
+(arg2Isa unambiguousInfluenceHypothesesOn Microtheory)
+(arg3Isa unambiguousInfluenceHypothesesOn ContinuousQuantity)
+(arg4Isa unambiguousInfluenceHypothesesOn CycLSentence-Assertible)
+(comment unambiguousInfluenceHypothesesOn "(unambiguousInfluenceHypothesesOn ?mt ?spindle-mt ?dep-quantity ?influence-hypothesis) binds ?influence-hypothesis to relevant prior hypotheses, leaving out influences of indeterminate causal direction.")
+
+(<== (unambiguousInfluenceHypothesesOn ?mt ?spindle-mt ?dep-quantity ?inf)
+     (influenceHypothesisOn ?mt ?spindle-mt ?dep-quantity ?inf)
+     (unifies (?pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?inf)
+     (uninferredSentence
+       (lookupOnly
+         (ist-Information ?spindle-mt
+           (hypothesis (?pred ?indep-qtype ?dep-qtype ?coll2 ?coll1 ?some-rel))))))
+
+
+;;; --------------------------------------------------------------------------
+;;; From this point on, it doesn't matter if influences are hypothesized or not.
+;;; They're being passed in, so we shouldn't care.
+;;;
+
+;;; The downside of including the casename here is that it requires us to
+;;; build and store an influence case, even when we're just checking for
+;;; anomalies. May want to change the signature to pass in changes explicitly.
+
+(isa satisfiesHypothesizedTypeLevelInfluences QuintaryPredicate)
+(arity satisfiesHypothesizedTypeLevelInfluences 5)
+(arg1Isa satisfiesHypothesizedTypeLevelInfluences Microtheory)
+(arg2Isa satisfiesHypothesizedTypeLevelInfluences Quantity)
+(arg3Isa satisfiesHypothesizedTypeLevelInfluences MeasurableQuantity)
+(arg4Isa satisfiesHypothesizedTypeLevelInfluences Set-Extensional)
+(arg5Isa satisfiesHypothesizedTypeLevelInfluences Microtheory)
+(comment satisfiesHypothesizedTypeLevelInfluences "(satisfiesHypothesizedTypeLevelInfluences ?mt ?dep-quantity ?magnitude ?type-level-influence-stmts ?casename)")
+
+;;; This needs to collect the set of influences in order to test
+;;; satisfiability.
+(<== (satisfiesHypothesizedTypeLevelInfluences ?mt ?dep-quantity ?change-magnitude ?type-level-influences ?casename)
+     (typeLevelToPropositionalInfluences ?mt ?casename ?dep-quantity ?type-level-influences ?propositional-influences)
+     (satisfiesHypothesizedInfluences ?dep-quantity ?change-magnitude ?propositional-influences))
+
+(isa typeLevelToPropositionalInfluences QuintaryPredicate)
+(arity typeLevelToPropositionalInfluences 5)
+(arg1Isa typeLevelToPropositionalInfluences Microtheory)
+(arg2Isa typeLevelToPropositionalInfluences Microtheory)
+(arg3Isa typeLevelToPropositionalInfluences Quantity)
+(arg4Isa typeLevelToPropositionalInfluences Set-Mathematical)
+(arg5Isa typeLevelToPropositionalInfluences Set-Mathematical)
+(comment typeLevelToPropositionalInfluences "(typeLevelToPropositionalInfluences ?mt ?casename ?dep-quantity ?type-level-influences ?propositional-influence-tuples)")
+
+;;; Type-level influences relate possible quantity pairs in terms of binary 
+;;; relations.  If the relation is 'equals' this is simple enough.  But the
+;;; relation may be dynamic, which means there may be a change in influence
+;;; without any change in either quantity.  Consequently, we have to compute
+;;; and package up the independent quantity, its contextually relevant prior
+;;; value and change magnitude, rather than just directly propositionalize
+;;; the influence.
+(<== (typeLevelToPropositionalInfluences ?mt ?casename ?dep-quantity ?type-level-influences ?propositional-influence-tuples)
+     (not (variableExpression ?dep-quantity))
+     (not (variableExpression ?type-level-influences))
+     (evaluate ?propositional-influence-tuples
+       (TheClosedRetrievalSetOf ?tuple
+         (and (lookupOnly (elementOf ?type-inf ?type-level-influences))
+              (typeLevelToPropositionalInfluenceViaDepQ ?mt ?casename ?dep-quantity ?type-inf ?tuple)))))
+
+(isa typeLevelToPropositionalInfluenceViaDepQ QuintaryPredicate)
+(arity typeLevelToPropositionalInfluenceViaDepQ 5)
+(arg1Isa typeLevelToPropositionalInfluenceViaDepQ Microtheory)
+(arg2Isa typeLevelToPropositionalInfluenceViaDepQ Microtheory)
+(arg3Isa typeLevelToPropositionalInfluenceViaDepQ Quantity)
+(arg4Isa typeLevelToPropositionalInfluenceViaDepQ CycLSentence-Assertible)
+(arg5Isa typeLevelToPropositionalInfluenceViaDepQ CycLTerm)
+(comment typeLevelToPropositionalInfluenceViaDepQ "(typeLevelToPropositionalInfluenceViaDepQ ?mt ?casename ?dep-quantity ?type-level-influence ?influence-tuple) translates a type-level influence statement into a propositional statement given a dependent quantity.")
+
+;;; ?influence-type is now a triple of (?propositional-influence ?prior-indep-q-value ?indep-q-change-magnitude)
+(<== (typeLevelToPropositionalInfluenceViaDepQ ?mt ?casename ?dep-quantity ?type-level-influence ?influence-tuple)
+     (unifies (?type-inf-pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?type-level-influence)
+     (unifies (?dep-qtype ?dep-entity) ?dep-quantity)
+     (invariantBinrel ?mt ?casename ?rel ?dep-entity ?indep-entity)
+     (ist-Information ?mt
+       (isa ?indep-entity ?coll2))  ; unnecessary, if ?rel is appropriate
+     (unifies ?indep-quantity (?indep-qtype ?indep-entity))
+     (wmOnly (priorValue ?mt ?indep-quantity ?value))
+     (valueToMagnitude ?value ?prior-magnitude)
+     (numAnswers 1 (recordedChangeMagnitude ?casename ?indep-quantity ?change-magnitude))
+     (typeLevelInfluencePred ?prop-inf-pred ?type-inf-pred)
+     ;; Revise propositional-influence to package up valid prior value
+     ;; magnitude and change magnitude of independent quantity.
+     (unifies ?propositional-influence (?prop-inf-pred ?dep-quantity ?indep-quantity))
+     (unifies ?influence-tuple (?propositional-influence ?prior-magnitude ?change-magnitude)))
+
+
+;;; Change due to adding a relationship:
+(<== (typeLevelToPropositionalInfluenceViaDepQ ?mt ?casename ?dep-quantity ?type-level-influence ?influence-tuple)
+     (unifies (?type-inf-pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?type-level-influence)
+     (unifies (?dep-qtype ?dep-entity) ?dep-quantity)
+     (cacheComplete (addedBinrel ?casename ?rel ?dep-entity ?indep-entity))
+     (unifies ?indep-quantity (?indep-qtype ?indep-entity))
+     (ist-Information ?mt 
+       (currentQuantityValue ?indep-quantity ?current-value))  ; dynamic update pred
+     (valueToMagnitude ?current-value ?change-magnitude)
+     (typeLevelInfluencePred ?prop-inf-pred ?type-inf-pred)
+     ;; Revise propositional-influence to package up valid prior value
+     ;; magnitude and change magnitude of independent quantity.
+     (unifies ?propositional-influence (?prop-inf-pred ?dep-quantity ?indep-quantity))
+     (unifies ?influence-tuple (?propositional-influence 0 ?change-magnitude)))
+
+;;; Change due to removing a relationship:
+(<== (typeLevelToPropositionalInfluenceViaDepQ ?mt ?casename ?dep-quantity ?type-level-influence ?influence-tuple)
+     (unifies (?type-inf-pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?type-level-influence)
+     (unifies (?dep-qtype ?dep-entity) ?dep-quantity)
+     (cacheComplete (deletedBinrel ?casename ?rel ?dep-entity ?indep-entity))
+     (unifies ?indep-quantity (?indep-qtype ?indep-entity))
+     (wmOnly (priorValue ?mt ?indep-quantity ?value))
+     (valueToMagnitude ?value ?prior-magnitude)
+     (evaluate ?change-magnitude (TimesFn -1 ?prior-magnitude))
+     (typeLevelInfluencePred ?prop-inf-pred ?type-inf-pred)
+     ;; Revise propositional-influence to package up valid prior value
+     ;; magnitude and change magnitude of independent quantity.
+     (unifies ?propositional-influence (?prop-inf-pred ?dep-quantity ?indep-quantity))
+     (unifies ?influence-tuple (?propositional-influence ?prior-magnitude ?change-magnitude)))
+
+(isa recordedChangeMagnitude TernaryPredicate)
+(arity recordedChangeMagnitude 3)
+(arg1Isa recordedChangeMagnitude Microtheory)
+(arg2Isa recordedChangeMagnitude Quantity)
+(arg3Isa recordedChangeMagnitude ScalarInterval)
+(comment recordedChangeMagnitude "(recordedChangeMagnitude ?case ?quantity ?change-magnitude) binds ?change-magnitude to the scalar amount by which ?quantity changed in ?case.")
+
+(<== (recordedChangeMagnitude ?casename ?quantity ?change-magnitude)
+     (localOnly
+       (lookupOnly
+         (ist-Information ?casename
+           (quantityChange ?quantity ?change-magnitude)))))
+
+(<== (recordedChangeMagnitude ?casename ?quantity 0)
+     (uninferredSentence
+       (localOnly
+         (lookupOnly
+           (ist-Information ?casename
+             (quantityChange ?quantity ?change-magnitude))))))
+
+
+(isa invariantBinrel QuintaryPredicate)
+(arity invariantBinrel 5)
+(arg1Isa invariantBinrel Microtheory)
+(arg2Isa invariantBinrel Microtheory)
+(arg3Isa invariantBinrel BinaryRelation)
+(arg4Isa invariantBinrel Thing)
+(arg5Isa invariantBinrel Thing)
+(comment invariantBinrel "(invariantBinrel ?mt ?casename ?binrel ?entity1 ?entity2) binds either ?entity1 or ?entity2 given the other arguments.")
+
+;;; This is the simple case, where the binary relation holds throughout,
+;;; meaning the influence is entirely due to changes in quantity values.
+(<== (invariantBinrel ?mt ?casename equals ?entity ?entity))
+
+
+;;; Here, we have to bind the other entity first, then filter, since it's
+;;; possible that there will be multiple independent entities, some of
+;;; which will be invariant, some not.
+(<== (invariantBinrel ?mt ?casename ?rel ?dep-entity ?indep-entity)
+     (different ?rel equals)
+     (ist-Information ?mt
+       (?rel ?dep-entity ?indep-entity))
+     (uninferredSentence
+       (lookupOnly
+         (localOnly
+           (ist-Information ?casename
+             (deletedStatement (?rel ?dep-entity ?indep-entity))))))
+     (uninferredSentence
+       (lookupOnly
+         (localOnly
+           (ist-Information ?casename
+             (addedStatement (?rel ?dep-entity ?indep-entity))))))
+     )
+
+(isa addedBinrel QuaternaryPredicate)
+(arity addedBinrel 4)
+(arg1Isa addedBinrel Microtheory)
+(arg2Isa addedBinrel BinaryRelation)
+(arg3Isa addedBinrel Thing)
+(arg4Isa addedBinrel Thing)
+(comment addedBinrel "(addedBinrel ?case ?binrel ?dep-entity ?indep-entity) means a binary relation ?binrel was added in the influence case ?case between arg1 (?dep-entity) and arg2 (?indep-entity).")
+
+;;; When the influence is activated because we've added a binrel,
+;;; then we have to compute the prior value of the independent
+;;; quantity as if it were zero, whether or not it was.
+(<== (addedBinrel ?casename ?rel ?dep-entity ?indep-entity)
+     (different ?rel equals)  ; save a lookup, this isn't assertible
+     (lookupOnly
+       (localOnly
+         (ist-Information ?casename
+           (addedStatement (?rel ?dep-entity ?indep-entity))))))
+
+(isa deletedBinrel QuaternaryPredicate)
+(arity deletedBinrel 4)
+(arg1Isa deletedBinrel Microtheory)
+(arg2Isa deletedBinrel BinaryRelation)
+(arg3Isa deletedBinrel Thing)
+(arg4Isa deletedBinrel Thing)
+(comment deletedBinrel "(deletedBinrel ?case ?binrel ?dep-entity ?indep-entity) means a binary relation ?binrel was deleted in the influence case ?case between arg1 (?dep-entity) and arg2 (?indep-entity).")
+
+;;; Likewise, when an influence is deactivated by retracting a binrel,
+;;; then the current value of the influencer must be treated as zero,
+;;; whether or not it really is.  As far as the influence goes, the
+;;; contribution is zero.
+(<== (deletedBinrel ?casename ?rel ?dep-entity ?indep-entity)
+     (different ?rel equals)  ; save a lookup, this isn't assertible
+     (lookupOnly
+       (localOnly
+         (ist-Information ?casename
+           (deletedStatement (?rel ?dep-entity ?indep-entity))))))
+     
+             
+(isa satisfiesHypothesizedInfluences TernaryPredicate)
+(arity satisfiesHypothesizedInfluences 3)
+(arg1Isa satisfiesHypothesizedInfluences ContinuousQuantity)
+(arg2Isa satisfiesHypothesizedInfluences MeasurableQuantity)
+(arg3Isa satisfiesHypothesizedInfluences Set-Mathematical)
+(comment satisfiesHypothesizedInfluences "(satisfiesHypothesizedInfluences ?dep-quantity ?change-magnitude ?propositional-influences)")
+
+;;; If we're talking qprops, then we can't combine the influences in any
+;;; reasonable way, except to say that if they're all pulling in the same
+;;; direction, the dependent quantity better move in the appropriate way.
+
+(<== (satisfiesHypothesizedInfluences ?dep-quantity ?change-magnitude ?influence-tuples)
+     (different ?influence-tuples (TheSet))
+     (formulaArgument ?influence-tuples 1 ?tuple)
+     (unifies (?inf ?val ?change) ?tuple)
+     (operatorFormulas ?pred ?inf)
+     (evaluate ?tuple-list (SetToListFn ?influence-tuples))
+     (wmOnly (satisfiesInfluencesOfType ?dep-quantity ?change-magnitude ?pred ?tuple-list)))
+
+(isa satisfiesInfluencesOfType QuaternaryPredicate)
+(arity satisfiesInfluencesOfType 4)
+(arg1Isa satisfiesInfluencesOfType Quantity)
+(arg2Isa satisfiesInfluencesOfType ScalarInterval)
+(arg3Isa satisfiesInfluencesOfType BinaryRelation)
+(arg4Isa satisfiesInfluencesOfType Thing)  ; a tuple
+     
+(<== (satisfiesInfluencesOfType ?dep-quantity ?change-magnitude ?pred ?influence-tuples)
+     (lookupOnly (elementOf ?pred (TheSet i+ i-)))
+     (everySatisfies ?item ?influence-tuples (diTuple ?item))
+     (combinePriorMagnitudes ?influence-tuples ?change-magnitude))  ; direct influence values should add to equal the change magnitude
+
+(<== (satisfiesInfluencesOfType ?dep-quantity ?change-magnitude ?pred ?influence-tuples)
+     (lookupOnly (elementOf ?pred (TheSet c+ c-)))
+     (everySatisfies ?item ?influence-tuples (additiveTuple ?item))
+     (combineChangeMagnitudes ?influence-tuples ?change-magnitude))
+
+(<== (satisfiesInfluencesOfType ?dep-quantity ?change-magnitude ?pred ?influence-tuples)
+     (lookupOnly (elementOf ?pred (TheSet qprop qprop-)))
+     (isPositiveQuantity ?change-magnitude)
+     (everySatisfies ?item ?influence-tuples (iiTuple ?item))
+     (consistentWithNetPositiveChange ?influence-tuples))  ; there must be some positive influence, possibly a qprop- of a negative magnitude.
+
+(<== (satisfiesInfluencesOfType ?dep-quantity ?change-magnitude ?pred ?influence-tuples)
+     (lookupOnly (elementOf ?pred (TheSet qprop qprop-)))
+     (isNegativeQuantity ?change-magnitude)
+     (everySatisfies ?item ?influence-tuples (iiTuple ?item))
+     (consistentWithNetNegativeChange ?influence-tuples))
+
+(isa combinePriorMagnitudes BinaryPredicate)
+(arity combinePriorMagnitudes 2)
+
+;;; bind the summation of the magnitudes of prior values of influencers
+(<== (combinePriorMagnitudes ?influence-tuples ?total-magnitude)
+     (evaluate ?rest (RestOfListFn ?influence-tuples))
+     (combinePriorMagnitudes ?rest ?partial-magnitude)
+     (evaluate ?first (FirstInListFn ?influence-tuples))
+     (unifies (?inf ?prior-magnitude ?change-magnitude) ?first)
+     (unifies (?pred ?dep-q ?indep-q) ?inf)
+     (combineMagnitudesByRule ?pred ?prior-magnitude ?partial-magnitude ?total-magnitude))
+
+(isa combineMagnitudesByRule QuaternaryPredicate)
+(arity combineMagnitudesByRule 4)
+
+(<== (combineMagnitudesByRule i+ ?value ?sum-so-far ?total)
+     (evaluate ?total (PlusFn ?value ?sum-so-far)))
+     
+(<== (combineMagnitudesByRule i- ?value ?sum-so-far ?total)
+     (evaluate ?total (DifferenceFn ?sum-so-far ?value)))
+
+(<== (combineMagnitudesByRule c+ ?value ?sum-so-far ?total)
+     (evaluate ?total (PlusFn ?value ?sum-so-far)))
+     
+(<== (combineMagnitudesByRule c- ?value ?sum-so-far ?total)
+     (evaluate ?total (DifferenceFn ?sum-so-far ?value)))
+
+(<== (combinePriorMagnitudes (TheList) 0))
+
+(isa combineChangeMagnitudes BinaryPredicate)
+(arity combineChangeMagnitudes 2)
+
+;;; bind the summation of the magnitudes of prior changes of influencers
+(<== (combineChangeMagnitudes ?influence-tuples ?total-change)
+     (evaluate ?rest (RestOfListFn ?influence-tuples))
+     (combineChangeMagnitudes ?rest ?partial-magnitude)
+     (evaluate ?first (FirstInListFn ?influence-tuples))
+     (unifies (?inf ?magnitude ?change-magnitude) ?first)
+     (unifies (?pred ?dep-q ?indep-q) ?inf)
+     (combineMagnitudesByRule ?pred ?change-magnitude ?partial-magnitude ?total-change))
+
+(<== (combineChangeMagnitudes (TheList) 0))
+
+(isa consistentWithNetNegativeChange UnaryPredicate)
+(arity consistentWithNetNegativeChange 1)
+(arg1Isa consistentWithNetNegativeChange Set-Mathematical)
+
+;;; Show that there is at least one negative influence with a positive value (or vice-versa).
+(<== (consistentWithNetNegativeChange ?influence-tuples)
+     (different ?influence-tuples (TheList))
+     (evaluate ?first (FirstInListFn ?influence-tuples))
+     (unifies (?inf ?val ?change) ?first)
+     (impliesNegativeChange ?inf ?change))
+
+(<== (consistentWithNetNegativeChange ?influence-tuples)
+     (different ?influence-tuples (TheList))
+     (evaluate ?first (FirstInListFn ?influence-tuples))
+     (uninferredSentence (impliesNegativeChange ?first))
+     (evaluate ?rest (RestOfListFn ?influence-tuples))
+     (consistentWithNetNegativeChange ?rest))
+
+(isa consistentWithNetPositiveChange UnaryPredicate)
+(arity consistentWithNetPositiveChange 1)
+(arg1Isa consistentWithNetPositiveChange Set-Mathematical)
+
+(<== (consistentWithNetPositiveChange ?influence-tuples)
+     (different ?influence-tuples (TheList))
+     (evaluate ?first (FirstInListFn ?influence-tuples))
+     (unifies (?inf ?val ?change) ?first)
+     (impliesPositiveChange ?inf ?change))
+
+(<== (consistentWithNetPositiveChange ?influence-tuples)
+     (different ?influence-tuples (TheList))
+     (evaluate ?first (FirstInListFn ?influence-tuples))
+     (uninferredSentence (impliesNegativeChange ?first))
+     (evaluate ?rest (RestOfListFn ?influence-tuples))
+     (consistentWithNetPositiveChange ?rest))
+
+(isa impliesNegativeChange BinaryPredicate)
+
+(<== (impliesNegativeChange ?influence ?change-magnitude)
+     (unifies (?pred ?dep-q ?indep-q) ?influence)
+     (oppositeInfluenceDirection ?pred ?change-magnitude))
+
+(isa impliesPositiveChange BinaryPredicate)
+
+(<== (impliesPositiveChange ?influence ?change-magnitude)
+     (unifies (?pred ?dep-q ?indep-q) ?influence)
+     (sameInfluenceDirection ?pred ?change-magnitude))
+
+(isa oppositeInfluenceDirection BinaryPredicate)
+
+(<== (oppositeInfluenceDirection ?pred ?magnitude)
+     (isa ?magnitude PositiveNumber)
+     (lookupOnly (elementOf ?pred (TheSet qprop- c- i-))))
+
+(<== (oppositeInfluenceDirection ?pred ?magnitude)
+     (isa ?magnitude NegativeNumber)
+     (lookupOnly (elementOf ?pred (TheSet qprop c+ i+))))
+
+(isa sameInfluenceDirection BinaryPredicate)
+
+(<== (sameInfluenceDirection ?pred ?magnitude)
+     (isa ?magnitude PositiveNumber)
+     (lookupOnly (elementOf ?pred (TheSet qprop c+ i+))))
+
+(<== (sameInfluenceDirection ?pred ?magnitude)
+     (isa ?magnitude NegativeNumber)
+     (lookupOnly (elementOf ?pred (TheSet qprop- c- i-))))
+     
+;;;
+;;; Accessors/Conversions
+;;;
+
+(isa magnitudeToValue TernaryPredicate)
+(arity magnitudeToValue 3)
+(arg1Isa magnitudeToValue QuantityType)
+(arg2Isa magnitudeToValue Number-General)
+(arg3Isa magnitudeToValue ContinuousQuantity)
+
+(<== (magnitudeToValue ?qtype ?magnitude ?value)
+     (numAnswers 1
+       (quantityPrimitive ?qtype ?colltype ?units))
+     (unitMagnitudeToValue ?magnitude ?units ?value))
+
+(isa unitMagnitudeToValue TernaryPredicate)
+(arity unitMagnitudeToValue 3)
+(arg1Isa unitMagnitudeToValue Number-General)
+
+(<== (unitMagnitudeToValue ?value Number ?value))
+(<== (unitMagnitudeToValue ?magnitude ?units ?value)
+     (different ?units Number)
+     (not (variableExpression ?magnitude))
+     (unifies ?value (?units ?magnitude)))
+     
+(isa valueToMagnitude BinaryPredicate)
+(arity valueToMagnitude 2)
+(arg1Isa valueToMagnitude MeasurableQuantity)
+(arg2Isa valueToMagnitude Number)
+(comment valueToMagnitude "(valueToMagnitude ?quantity-with-units ?number) extracts the numeric magnitude from the dimensional quantity.")
+
+(<== (valueToMagnitude ?magnitude ?magnitude)
+     (groundExpression ?magnitude)
+     (atomicTerm ?magnitude)
+     (isa ?magnitude RealNumber))
+
+(<== (valueToMagnitude ?value ?magnitude)
+     (groundExpression ?value)
+     (not (atomicTerm ?value))
+     (unifies (?units ?magnitude) ?value)
+     (atomicTerm ?magnitude)
+     (isa ?magnitude RealNumber))  ; eats most of the time
+
+(isa valueToUnits BinaryPredicate)
+(arity valueToUnits 2)
+(arg1Isa valueToUnits MeasurableQuantity)
+(arg2Isa valueToUnits Unit)
+(comment valueToUnits "(valueToUnits ?quantity-with-units ?units) extracts the  units from the dimensional quantity.")
+
+
+(<== (valueToUnits ?value ?units)
+     (groundExpression ?value)
+     (not (atomicTerm ?value))
+     (unifies (?units ?magnitude) ?value))
+     
+(<== (valueToUnits ?value Number)
+     (groundExpression ?value)
+     (atomicTerm ?value)
+     (isa ?value RealNumber))
+
+(isa diTuple UnaryPredicate)
+(arity diTuple 1)
+
+(<== (diTuple ?tuple)
+     (unifies (?inf ?val ?ch) ?tuple)
+     (directInfluence ?inf))
+     
+(isa additiveTuple UnaryPredicate)
+(arity additiveTuple 1)
+     
+(<== (additiveTuple ?tuple)
+     (unifies (?inf ?val ?ch) ?tuple)
+     (additiveInfluence ?inf))
+
+(isa iiTuple UnaryPredicate)
+(arity iiTuple 1)
+
+(<== (iiTuple ?tuple)
+     (unifies (?inf ?val ?ch) ?tuple)
+     (indirectInfluence ?inf))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

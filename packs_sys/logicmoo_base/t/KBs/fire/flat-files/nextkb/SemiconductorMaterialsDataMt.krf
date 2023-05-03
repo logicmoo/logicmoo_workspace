@@ -1,0 +1,6 @@
+(in-microtheory SemiconductorMaterialsDataMt)
+
+(isa objectHasApplicableSheetResistance (SlotCollectionForFormulaFn ResistanceOfAConductor-UsingSheetResistDCFormula))
+(isa widthOfObject (SlotCollectionForFormulaFn ResistanceOfAConductor-UsingSheetResistDCFormula))
+(isa lengthOfObject (SlotCollectionForFormulaFn ResistanceOfAConductor-UsingSheetResistDCFormula))
+(isa electricalResistanceOfObject (SlotCollectionForFormulaFn ResistanceOfAConductor-UsingSheetResistDCFormula))

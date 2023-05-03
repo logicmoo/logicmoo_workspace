@@ -1,0 +1,257 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: events.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: January 29, 2013 09:56:25
+;;;;   Purpose: Definitions of event types
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; ----------------------------------------------------------
+;;; Linguistic Events
+;;;
+;;; Bringing communications into the event stream:
+;;;
+;;; When the interaction manager sends a query, request or statement to
+;;; a perceptual agent, the PA needs to run plans to deal with it.
+;;; Instead of just running a query in the execution environment,
+;;; it needs to run a task that fires a perceptual event such that
+;;; the domain level agent is "aware" of the interaction.
+;;; We're not just eavesdropping on a game, we're affecting how it's played.
+
+
+;;; We want to define a primitive that, in freeciv at least, calls the 
+;;; following.
+;;; See the new doNotifyPA in companion-primitives.meld
+;;; See also the new doRecordEvent for explicitly reifying events in the 
+;;;     execution trace.
+
+(genls UserQueryEvent PerceptualAgentEvent)
+(isa UserQueryEvent Collection)
+(comment UserQueryEvent "Denotes an event signifying a query by the human user.")
+
+(genls UserRequestEvent PerceptualAgentEvent)
+(isa UserRequestEvent Collection)
+(comment UserRequestEvent "Denotes an event signifying a request by the human user.")
+
+(genls UserStatementEvent PerceptualAgentEvent)
+(isa UserStatementEvent Collection)
+(comment UserStatementEvent "Denotes an event signifying a statement by the human user.")
+
+(genls SystemQueryEvent PerceptualAgentEvent)
+(isa SystemQueryEvent Collection)
+(comment SystemQueryEvent "Denotes an event signifying a query originating with the Companion.")
+
+;;; A non-atomic term to refer to user queries in a reified case:
+(isa UserQueryFn BinaryFunction)
+(isa UserQueryFn AtomicAnalogyNAT-Function)
+(arity UserQueryFn 2)
+(arg1Isa UserQueryFn Microtheory)
+(arg2Isa UserQueryFn Integer)
+(resultIsa UserQueryFn UserQueryEvent)
+(comment UserQueryFn "(UserQueryFn ?mt ?n) denotes a user query that is the nth primitive interaction in ?mt")
+
+;;; A non-atomic term to refer to user requests in a reified case:
+(isa UserRequestFn BinaryFunction)
+(isa UserRequestFn AtomicAnalogyNAT-Function)
+(arity UserRequestFn 2)
+(arg1Isa UserRequestFn Microtheory)
+(arg2Isa UserRequestFn Integer)
+(resultIsa UserRequestFn UserRequestEvent)
+(comment UserRequestFn "(UserRequestFn ?mt ?n) denotes the nth primitive interactive request in ?mt")
+
+;;; A non-atomic term to refer to user statements in a reified case:
+(isa UserStatementFn BinaryFunction)
+(isa UserStatementFn AtomicAnalogyNAT-Function)
+(arity UserStatementFn 2)
+(arg1Isa UserStatementFn Microtheory)
+(arg2Isa UserStatementFn Integer)
+(resultIsa UserStatementFn UserStatementEvent)
+(comment UserStatementFn "(UserStatementEvent ?mt ?n) denotes the nth primitive user statement in ?mt")
+
+(isa SystemQueryFn BinaryFunction)
+(isa SystemQueryFn AtomicAnalogyNAT-Function)
+(arity SystemQueryFn 2)
+(arg1Isa SystemQueryFn Microtheory)
+(arg2Isa SystemQueryFn Integer)
+(resultIsa SystemQueryFn UserQueryEvent)
+(comment SystemQueryFn "(SystemQueryFn ?mt ?n) denotes a system query that is the nth primitive interaction in ?mt")
+
+;;; ----------------------------------------------------------
+;;; Sketching Events
+;;;
+;;; Definitions of reified events types from the cogsketch interface
+;;;
+
+(genls SketchOpenedEvent PerceptualAgentEvent)
+
+(genls SketchClosedEvent PerceptualAgentEvent)
+
+(genls SketchActivatedEvent  PerceptualAgentEvent)
+
+(genls BundleAddedEvent PerceptualAgentEvent)
+
+(genls BundleClonedEvent PerceptualAgentEvent)
+
+(genls BundleClosedEvent PerceptualAgentEvent)
+
+(genls BundleActivatedEvent PerceptualAgentEvent)
+
+(genls LayerCreatedEvent PerceptualAgentEvent)
+
+(genls LayerDeletedEvent PerceptualAgentEvent)
+
+(genls LayerActivatedEvent PerceptualAgentEvent)
+
+(genls EntityAddedEvent PerceptualAgentEvent)
+
+(genls EntityModifiedEvent PerceptualAgentEvent)
+
+(genls EntityDeletedEvent PerceptualAgentEvent)
+
+(genls EntitySelectedEvent PerceptualAgentEvent)
+
+(genls EntityDeselectedEvent PerceptualAgentEvent)
+
+(genls EntityLabeledEvent PerceptualAgentEvent)
+
+(genls FactsAddedEvent PerceptualAgentEvent)
+
+(genls FactsRemovedEvent PerceptualAgentEvent)
+
+;;; ----------------------------------------------------------
+;;; Agent Monitoring Events
+;;;
+;;; Definitions of reified events types for monitoring agents
+;;;
+
+(genls AgendaPausedEvent PerceptualAgentEvent)
+
+(genls AgendaResumedEvent PerceptualAgentEvent)
+
+(genls ProcessBloatedEvent PerceptualAgentEvent)
+
+
+;;; ----------------------------------------------------------
+;;; Perceptual Agent Goal Events
+;;;
+
+(isa GoalActivationEvent Collection)
+(genls GoalActivationEvent IntrinsicStateChangeEvent)
+(genls GoalActivationEvent PerceptualAgentEvent)
+(comment GoalActivationEvent "The collection of events in which a goal instance becomes active.")
+(rolesForEventType GoalActivationEvent objectOfStateChange)
+
+(isa GoalDeactivationEvent Collection)
+(genls GoalDeactivationEvent IntrinsicStateChangeEvent)
+(genls GoalDeactivationEvent PerceptualAgentEvent)
+(comment GoalDeactivationEvent "The collection of events in which a goal instance becomes active.")
+(rolesForEventType GoalDeactivationEvent objectOfStateChange)
+
+(isa GoalActivationFn BinaryFunction)
+(isa GoalActivationFn AtomicAnalogyNAT-Function)
+(arity GoalActivationFn 2)
+(arg1Isa GoalActivationFn Microtheory)
+(arg2Isa GoalActivationFn Integer)
+(resultIsa GoalActivationFn GoalActivationEvent)
+(comment GoalActivationFn "(GoalActivationFn ?mt ?n) denotes the goal activation that is the nth event in ?mt")
+
+(isa GoalDeactivationFn BinaryFunction)
+(isa GoalDeactivationFn AtomicAnalogyNAT-Function)
+(arity GoalDeactivationFn 2)
+(arg1Isa GoalDeactivationFn Microtheory)
+(arg2Isa GoalDeactivationFn Integer)
+(resultIsa GoalDeactivationFn GoalActivationEvent)
+(comment GoalDeactivationFn "(GoalDeactivationFn ?mt ?n) denotes the goal deactivation that is the nth event in ?mt")
+
+(isa GoalSucceededEvent Collection)
+(genls GoalSucceededEvent IntrinsicStateChangeEvent)
+(genls GoalSucceededEvent GoalDeactivationEvent)
+(comment GoalSucceededEvent "The collection of events in which a goal instance succeeded.")
+(rolesForEventType GoalSucceededEvent objectOfStateChange)
+
+;;; Goal failed is really not the same as saying the task failed.
+;;; When a goal has failed, we really don't pursue it anymore, even with a different actor.
+(isa GoalFailedEvent Collection)
+(genls GoalFailedEvent IntrinsicStateChangeEvent)
+(genls GoalFailedEvent GoalDeactivationEvent)
+(comment GoalFailedEvent "The collection of events in which a goal instance becomes active.")
+(rolesForEventType GoalFailedEvent objectOfStateChange)
+
+(isa ObjectDetectedEvent TemporalStuffType)
+(genls ObjectDetectedEvent PerceptualAgentEvent)
+(genls ObjectDetectedEvent DetectingSomethingPhysical)
+(comment ObjectDetectedEvent "The collection of events in which an object is first detected.")
+(rolesForEventType ObjectDetectedEvent detectedObject)  ; Cyc native role, but must be physical object.
+(rolesForEventType ObjectDetectedEvent eventOccursAt)
+
+(isa ThreatDetectedEvent Collection)
+(genls ThreatDetectedEvent PerceptualAgentEvent)
+(comment ThreatDetectedEvent "ThreatDetectedEvent is the collection of events in which a threat was detected.")
+(genls ThreatDetectedEvent DetectingSomething)
+(genls ThreatDetectedEvent FindingSomething)
+(rolesForEventType ThreatDetectedEvent objectFound)
+(rolesForEventType ThreatDetectedEvent intendedMaleficiary)
+;(rolesForEventType ThreatDetectedEvent eventOccursAt)
+
+(isa ProcessActivationEvent Collection)
+(genls ProcessActivationEvent PerceptualAgentEvent)
+(comment ProcessActivationEvent "ProcessActivationEvent is the collection of events in which a process instance becomes active.")
+
+(isa ProcessDeactivationEvent Collection)
+(genls ProcessDeactivationEvent PerceptualAgentEvent)
+(comment ProcessDeactivationEvent "ProcessDeactivationEvent is the collection of events in which a process instance becomes inactive.")
+
+(isa ProcessActivationFn BinaryFunction)
+(isa ProcessActivationFn AtomicAnalogyNAT-Function)
+(arity ProcessActivationFn 2)
+(arg1Isa ProcessActivationFn Microtheory)
+(arg2Isa ProcessActivationFn Integer)
+(resultIsa ProcessActivationFn ProcessActivationEvent)
+(comment ProcessActivationFn "(ProcessActivationFn ?mt ?n) denotes the process activation that is the nth event in ?mt")
+
+(isa ProcessDeactivationFn BinaryFunction)
+(isa ProcessDeactivationFn AtomicAnalogyNAT-Function)
+(arity ProcessDeactivationFn 2)
+(arg1Isa ProcessDeactivationFn Microtheory)
+(arg2Isa ProcessDeactivationFn Integer)
+(resultIsa ProcessDeactivationFn ProcessActivationEvent)
+(comment ProcessDeactivationFn "(ProcessDeactivationFn ?mt ?n) denotes the process deactivation that is the nth event in ?mt")
+
+(isa StrategyActivationEvent Collection)
+(genls StrategyActivationEvent PerceptualAgentEvent)
+(comment StrategyActivationEvent "StrategyActivationEvent is the collection of events in which a strategy is chosen and enabled.")
+(rolesForEventType StrategyActivationEvent objectOfStateChange) ; We need another role: the strategy type and the goal
+
+(isa StrategyDeactivationEvent Collection)
+(genls StrategyDeactivationEvent PerceptualAgentEvent)
+(comment StrategyDeactivationEvent "StrategyDeactivationEvent is the collection of events in which a strategy is disabled.")
+(rolesForEventType StrategyDeactivationEvent objectOfStateChange)
+
+(isa StrategyActivationFn BinaryFunction)
+(isa StrategyActivationFn AtomicAnalogyNAT-Function)
+(arity StrategyActivationFn 2)
+(arg1Isa StrategyActivationFn Microtheory)
+(arg2Isa StrategyActivationFn Integer)
+(resultIsa StrategyActivationFn StrategyActivationEvent)
+(comment StrategyActivationFn "(StrategyActivationFn ?mt ?n) denotes the strategy activation that is the nth event in ?mt")
+
+(isa StrategyDeactivationFn BinaryFunction)
+(isa StrategyDeactivationFn AtomicAnalogyNAT-Function)
+(arity StrategyDeactivationFn 2)
+(arg1Isa StrategyDeactivationFn Microtheory)
+(arg2Isa StrategyDeactivationFn Integer)
+(resultIsa StrategyDeactivationFn StrategyActivationEvent)
+(comment StrategyDeactivationFn "(StrategyDeactivationFn ?mt ?n) denotes the strategy deactivation that is the nth event in ?mt")
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

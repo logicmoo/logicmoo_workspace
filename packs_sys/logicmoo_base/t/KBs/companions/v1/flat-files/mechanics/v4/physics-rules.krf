@@ -1,0 +1,59 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: physics-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:29:50
+;;;;   Purpose: Rules that incorporate particular knowledge of the physical world
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Background Knowledge
+
+;;;this rule should be divided into two
+;;;one that returns the constant the other
+;;;that returns (MetersPerSecondPerSecond 10) -- KDF: Ah, this is what I needed!
+(<== (valueOf 
+      (MeasurementAtFn 
+       ((QPQuantityFn AccelerationDueToGravity) PlanetEarth) ?event)
+      ?value)
+     (groundExpression ?event) ;; Prevent leakage of vars elsewhere!
+     (localOnly (setOfPossibleAnswerValues ?problem ?answer-values))
+     (containsPattern G-AccelerationDueToEarthsGravity ?answer-values)
+     (unifies ?value G-AccelerationDueToEarthsGravity))
+
+;;;this is an assumption because we are basing it on start times
+(<== (assumeObjectInProjectileMotionAt ?obj ?time)
+      (primaryObjectMoving ?time ?obj)
+      (useTransitiveInference (localOnly (isa ?time ProjectileMotion))))
+
+;;;check out fire::symmetric-binary-pred for why this is necessary
+(isa temporallyCooriginating SymmetricBinaryPredicate)
+
+(<== (assumeObjectInProjectileMotionAt ?obj ?time)
+     (primaryObjectMoving ?time-2 ?obj)
+     (temporallyCooriginating ?time ?time-2)
+     (useTransitiveInference (localOnly (isa ?time-2 ProjectileMotion))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Inferring temporal subsumption
+
+(<== (temporallySubsumes ?temporal-event (TimeIntervalBetweenFn ?start-tp ?end-tp))
+     (temporallySubsumes ?temporal-event ?start-tp)
+     (temporallySubsumes ?temporal-event ?end-tp))
+
+(<== (temporallySubsumes ?temporal-event (StartFn ?event))
+     (equals ?temporal-event ?event))
+
+(<== (temporallySubsumes ?temporal-event (EndFn ?event))
+     (equals ?temporal-event ?event))
+
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

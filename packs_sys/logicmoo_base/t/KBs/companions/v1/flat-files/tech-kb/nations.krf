@@ -1,0 +1,39 @@
+
+(in-microtheory MetaengineeringNationsMt)
+
+;;; Todo: Replace these with Cyc nation references.
+;;; For now, these are only referenced in Patents.
+
+
+;;; Classes
+(isa Country Collection) ; was Nation, but we're aligning to OpenCyc
+
+;;; Object Properties
+
+;;; Datatype Properties
+(isa hasAbbreviation BinaryPredicate)
+
+;;; Annotation Properties
+
+;;; Individuals ; for the purpose of Patent authority mostly
+(isa France Country)
+(isa France Individual)
+(prettyString-Canonical France "France")
+(hasAbbreviation France "FR")
+(isa Germany Country)
+(isa Germany Individual)
+(prettyString-Canonical Germany "Germany")
+(hasAbbreviation Germany "GER")
+(isa UnitedKingdomOfGreatBritainAndNorthernIreland Country)
+(isa UnitedKingdomOfGreatBritainAndNorthernIreland Individual)
+(prettyString-Canonical UnitedKingdomOfGreatBritainAndNorthernIreland "Great Britain")
+(hasAbbreviation UnitedKingdomOfGreatBritainAndNorthernIreland "GBR")
+(isa Italy Country)
+(isa Italy Individual)
+(prettyString-Canonical Italy "Italy")
+(hasAbbreviation Italy "IT")
+(isa UnitedStatesOfAmerica Country)
+(isa UnitedStatesOfAmerica Individual)
+(prettyString-Canonical UnitedStatesOfAmerica "United States")
+(hasAbbreviation UnitedStatesOfAmerica "US")
+

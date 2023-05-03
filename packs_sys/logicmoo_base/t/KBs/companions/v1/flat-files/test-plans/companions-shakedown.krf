@@ -1,0 +1,400 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: companions-shakedown.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 16, 2009 09:09:44
+;;;;   Purpose: HTN plans for rudimentary shakedown
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 16:02:56 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+
+;;; This *cannot* be in ExecutiveMt.  We're defining htn plans that need to
+;;; run on the session reasoner, therefore we need to define these in a 
+;;; microtheory accessible to all agents.
+
+(in-microtheory TestPlanMt)  
+(genlMt TestPlanMt CompanionsMt)   ; inherit the primitives
+(genlMt CompanionsMt TestPlanMt)
+ 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Executive Shakedown
+;;; This could be expanded to run different tests depending on the agent 
+;;; configuration but I am going to start simply by having it do a solve on
+;;; the session reasoner
+
+(isa shakedownCompanions ComplexActionPredicate)
+(arity shakedownCompanions 0)
+(comment shakedownCompanions "(shakedownCompanions) is a second attempt at creating a usable testing facility")
+
+(isa shakedownCompanions-LoadCases ComplexActionPredicate)
+(arity shakedownCompanions-LoadCases 0)
+
+(isa shakedownCompanions-DoTests ComplexActionPredicate)
+(arity shakedownCompanions-DoTests 0)
+
+(isa shakedownCompanions-Evaluate ComplexActionPredicate)
+(arity shakedownCompanions-Evaluate 0)
+
+(preconditionForMethod
+ (and (localAgent ?ex)            ; presumably the executive
+      (agendaContext ?mt)
+      (currentOrNewTickler ?ex-ti)
+      (currentSessionReasoner ?sr)
+      (holdsOnRemoteAgent ?sr (currentOrNewTickler ?sr-ti))
+      (currentKBDelegateAgents ?kb-delegates)
+      (evaluate ?task-delegate-pairs
+        (TheClosedRetrievalSetOf (?load-task ?delegate)
+          (and (elementOf ?delegate ?kb-delegates)
+               (newUniqueTask LoadCases ?load-task))))
+      (newUniqueTask DoShakedown ?test-task)
+      (newUniqueTask EvalShakedown ?eval-task))
+ (methodForAction 
+  (shakedownCompanions)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Clearing all agent agendas." ())
+    (doResetAgenda)
+    (doClearWMContext CompanionsShakedownMt)
+    (doSynchronousRemotePlan ?sr (actionSequence (TheList (doResetAgenda))))
+    (doSynchronousRemotePlan ?ex-ti (actionSequence (TheList (doClearAgentCaches))))
+    (doSynchronousRemotePlan ?sr-ti (actionSequence (TheList (doClearAgentCaches))))
+    ;;Because the load-tasks are preceding tasks for the test-task, we have to assign the test task
+    ;;BEFORE we enqueue the load tasks.  This is because upon enqueueing the preceding task, all sorts
+    ;;of pertinent information about the parent/successor tasks is sent along to the agent performing the
+    ;;preceding task.  If it isn't told who owns the parent/successor tasks, it does not know who to notify
+    ;;upon the preceding task's completion
+    (doTell (ist-Information ?mt (assignedTo ?test-task ?ex)))
+    (doTell (ist-Information ?mt (assignedTo ?eval-task ?ex)))
+    (doForEach (?load-task ?delegate) ?task-delegate-pairs
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (assignedTo ?load-task ?delegate)))
+                 (doTell (ist-Information ?mt (startsAfterEndingOf ?test-task ?load-task)))
+                 (doEnqueue ?delegate ?load-task (shakedownCompanions-LoadCases)))))
+    (doAnnounce "Starting Companions Shakedown - enqueueing tasks ~a and ~a" (?test-task ?eval-task))
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?eval-task ?test-task)))  ; sequencing constraint
+    (doEnqueue ?ex ?test-task (shakedownCompanions-DoTests))
+    (doEnqueue ?ex ?eval-task (shakedownCompanions-Evaluate))))))
+    
+(preconditionForMethod
+  (uninferredSentence
+    (currentOrNewTickler ?ti))
+  (methodForAction
+    (shakedownCompanions)
+    (actionSequence
+      (TheList
+        (doAnnounce "shakedownCompanions fails because there is no tickler in the current session.")))))
+        
+(preconditionForMethod
+  (uninferredSentence
+    (currentSessionReasoner ?sr))
+  (methodForAction
+    (shakedownCompanions)
+    (actionSequence
+      (TheList
+        (doAnnounce "shakedownCompanions because there is no session-reasoner in the current session.")))))
+
+(isa shakedownCompanions-SessionReasoner ComplexActionPredicate)
+(arity shakedownCompanions-SessionReasoner 0)
+(isa shakedownCompanions-SessionReasoner-Eval ComplexActionPredicate)
+(arity shakedownCompanions-SessionReasoner-Eval 0)
+(isa shakedownCompanions-Tickler ComplexActionPredicate)
+(arity shakedownCompanions-Tickler 0)
+(isa shakedownCompanions-Tickler-Eval ComplexActionPredicate)
+(arity shakedownCompanions-Tickler-Eval 0)
+(isa shakedownCompanions-Generalization ComplexActionPredicate)
+(arity shakedownCompanions-Generalization 0)
+(isa shakedownCompanions-Generalization-Eval ComplexActionPredicate)
+(arity shakedownCompanions-Generalization-Eval 0)
+
+
+(preconditionForMethod
+ (and (currentKBUri ?kb-uri)
+      (evaluate ?sketch-resource-uri
+        (ConcatenateStringsFn ?kb-uri "resources/sketches/")))
+ (methodForAction 
+  (shakedownCompanions-LoadCases)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Loading shakedown cases.")
+    (doLoadFlatFile "qrg-file://companions/v1/sketched-concepts/flat-files/pe-strategies/fruit-examples/fruit.krf")
+    (doCopyDirectoryContents "qrg-file://companions/v1/sketched-concepts/flat-files/pe-strategies/fruit-examples/thumbs/"
+                              ?sketch-resource-uri)))))
+ 
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (currentExecutive ?ex)
+      (agendaContext ?mt)
+      (currentAgendaItem ?current-task)   ; bind a Davidsonian representation of this very task instance.
+      (newUniqueTask SRTest ?sr-test)     ; returns (TaskFn SRTest-xxxxxx) where xxxxxx is a unique GUID
+      (newUniqueTask TicklerTest ?sr-tickler-test)
+      (newUniqueTask TicklerTest ?ex-tickler-test)
+      (newUniqueTask GenTest ?gn-test)
+      (newUniqueTask SREval ?sr-eval)
+      (newUniqueTask TicklerEval ?sr-tickler-eval)
+      (newUniqueTask TicklerEval ?ex-tickler-eval)
+      (newUniqueTask GenEval ?gn-eval))
+ (methodForAction 
+  (shakedownCompanions-DoTests)
+  (actionSequence 
+   (TheList
+    (doEnterState "shakedown" ())
+    (doAnnounce "Expanding shakedownCompanions-DoTests into sub-tasks." ())
+    (doTell (ist-Information ?mt (assignedTo ?sr-test ?sr)))
+    (doTell (ist-Information ?mt (assignedTo ?sr-tickler-test ?sr)))
+    (doTell (ist-Information ?mt (assignedTo ?ex-tickler-test ?ex)))
+    (doTell (ist-Information ?mt (assignedTo ?sr-tickler-eval ?sr)))
+    (doTell (ist-Information ?mt (assignedTo ?ex-tickler-eval ?ex)))
+    (doTell (ist-Information ?mt (assignedTo ?gn-test ?sr)))
+    (doTell (ist-Information ?mt (assignedTo ?gn-eval ?sr)))
+    (doForEach ?subtask (TheSet ?sr-test ?gn-test ?sr-tickler-test ?ex-tickler-test
+                                ?sr-eval ?sr-tickler-eval ?ex-tickler-eval ?gn-eval)
+               (doTell (ist-Information ?mt (subTasks ?current-task ?subtask))))
+    
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?sr-eval ?sr-test)))
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?sr-tickler-eval ?sr-tickler-test)))
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?ex-tickler-eval ?ex-tickler-test)))
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?gn-eval ?gn-test)))
+    
+    ;;temporary extra ordering for debugging
+;;;    (doTell (ist-Information ?mt (startsAfterEndingOf ?sr-tickler-test ?ex-tickler-eval)))
+;;;    (doTell (ist-Information ?mt (startsAfterEndingOf ?sr-test ?sr-tickler-eval)))
+;;;    (doTell (ist-Information ?mt (startsAfterEndingOf ?gn-test ?sr-eval)))
+    
+    (doEnqueue ?sr ?sr-test (shakedownCompanions-SessionReasoner))
+    (doEnqueue ?sr ?sr-tickler-test (shakedownCompanions-Tickler))
+    (doEnqueue ?ex ?ex-tickler-test (shakedownCompanions-Tickler))
+    (doEnqueue ?sr ?gn-test (shakedownCompanions-Generalization))
+    (doEnqueue ?ex ?sr-eval (shakedownCompanions-SessionReasoner-Eval))    
+    (doEnqueue ?sr ?sr-tickler-eval (shakedownCompanions-Tickler-Eval))
+    (doEnqueue ?ex ?ex-tickler-eval (shakedownCompanions-Tickler-Eval))
+    (doEnqueue ?sr ?gn-eval (shakedownCompanions-Generalization-Eval))))))
+
+
+(preconditionForMethod
+ (and (evaluate ?failures
+       (TheClosedRetrievalSetOf ?action 
+     (ist-Information CompanionsShakedownMt 
+      (failureForAgents ?action Self-Token))))
+      (different ?failures (TheSet)))
+ (methodForAction 
+  (shakedownCompanions-Evaluate)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Failed the following tests: ~A" (?failures))
+    (doExitState "shakedown" ())))))
+
+(preconditionForMethod
+ (and (evaluate ?failures 
+        (TheClosedRetrievalSetOf ?action 
+      (ist-Information CompanionsShakedownMt 
+        (failureForAgents ?action Self-Token))))
+      (equals ?failures (TheSet)))
+ (methodForAction 
+  (shakedownCompanions-Evaluate)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Shakedown Companions: All tests passed" ())
+    (doExitState "shakedown" ())))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; shakedown session reasoner
+
+;;; This runs on the session-reasoner:
+(preconditionForMethod
+ (currentSessionReasoner ?sr)
+ (methodForAction 
+  (shakedownCompanions-SessionReasoner)
+  (actionSequence 
+   (TheList
+    (doAnnounce "shakedownCompanions-SessionReasoner" ())
+    (doEnterState "test-SR" ())
+    (doSolve (isa ?X Dog) EverythingPSC)
+    (doExitState "test-SR" ())))))
+
+;;; This runs on the executive:
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (holdsOnRemoteAgent ?sr (uninferredSentence (wmOnly (isa ?x Dog)))))
+ (methodForAction 
+  (shakedownCompanions-SessionReasoner-Eval)
+  (actionSequence 
+   (TheList
+    (doAnnounce "shakedownCompanions-SessionReasoner....Failed" ())
+    (doTell 
+      (ist-Information CompanionsShakedownMt
+        (failureForAgents 
+          (evaluateShakedownCompanions-SessionReasoner ?sr) Self-Token)))))))
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (holdsOnRemoteAgent ?sr (wmOnly (isa ?x Dog))))
+ (methodForAction 
+  (shakedownCompanions-SessionReasoner-Eval)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Passed SessionReasoner Shakedown." ())
+    (doTell
+      (ist-Information CompanionsShakedownMt 
+        (successForAgents
+          (evaluateShakedownCompanions-SessionReasoner ?sr) Self-Token)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Shakedown Tickler
+
+(preconditionForMethod
+ (evaluate ?remindings
+   (TheClosedRetrievalSetOf ?reminding
+     (ist-Information BaseKB   ;;need some sort of context here because the planning context gets blown away at planning time
+       (reminding (KBCaseFn Apple-Ex339-SSEE)
+                  (CaseLibrarySansFn (CaseLibraryFn Fruit) Apple-Ex339-SSEE)
+                  (TheSet) ?reminding ?match))))
+ (methodForAction 
+  (shakedownCompanions-Tickler)
+  (actionSequence 
+   (TheList
+    ;;this state will only ever be a blip because the work is done in the precondition, but for symmetry's sake...
+    (doEnterState "test-tickler" ())  
+    (doAnnounce "shakedownCompanions-Tickler - retrieved ~a using probe (KBCaseFn Apple-Ex339-SSEE)" (?remindings ?match))
+    (doExitState "test-tickler" ())
+    ))))
+
+
+(preconditionForMethod
+ (and (currentOrNewTickler ?tickler)
+      (currentExecutive ?ex)
+      (holdsOnRemoteAgent ?tickler
+        (uninferredSentence (lookupOnly
+                             (reminding (KBCaseFn Apple-Ex339-SSEE)
+                                        (CaseLibrarySansFn (CaseLibraryFn Fruit) Apple-Ex339-SSEE)
+                                        (TheSet) Apple-Ex350-SSEE ?match)))))
+ (methodForAction 
+  (shakedownCompanions-Tickler-Eval)
+  (actionSequence 
+   (TheList
+    (doAnnounce "shakedownCompanions-Tickler: Completed abnormally.  Reminding absent on the tickler (so, the tickler client did the retrieval, and not the tickler - the call-through is broken.)." ())
+    (planOnAgent ?ex
+                 (doTell 
+                  (ist-Information CompanionsShakedownMt 
+                    (failureForAgents 
+                           (shakedownCompanions-Tickler) Self-Token))))))))
+
+(preconditionForMethod
+ (and (currentOrNewTickler ?tickler)
+      (currentExecutive ?ex)
+      (uninferredSentence (lookupOnly
+                           (reminding (KBCaseFn Apple-Ex339-SSEE)
+                                      (CaseLibrarySansFn (CaseLibraryFn Fruit) Apple-Ex339-SSEE)
+                                      (TheSet) Apple-Ex350-SSEE ?match))))
+ (methodForAction 
+  (shakedownCompanions-Tickler-Eval)
+  (actionSequence 
+   (TheList
+    (doAnnounce "shakedownCompanions-Tickler: Failed.  Reminding absent on the tickler client." ())
+    (planOnAgent ?ex
+                 (doTell 
+                  (ist-Information CompanionsShakedownMt 
+                    (failureForAgents 
+                     (shakedownCompanions-Tickler) Self-Token))))))))
+
+(preconditionForMethod
+ (and (currentOrNewTickler ?tickler)
+      (currentExecutive ?ex)
+      (lookupOnly
+       (reminding (KBCaseFn Apple-Ex339-SSEE)
+                  (CaseLibrarySansFn (CaseLibraryFn Fruit) Apple-Ex339-SSEE)
+                  (TheSet) Apple-Ex350-SSEE ?match))
+      (holdsOnRemoteAgent ?tickler
+        (lookupOnly
+         (reminding (KBCaseFn Apple-Ex339-SSEE)
+                    (CaseLibrarySansFn (CaseLibraryFn Fruit) Apple-Ex339-SSEE)
+                    (TheSet) Apple-Ex350-SSEE ?other-match))))
+ (methodForAction 
+  (shakedownCompanions-Tickler-Eval)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Passed Tickler-Reminding Shakedown." ())
+    (planOnAgent ?ex
+                 (doTell
+                  (ist-Information CompanionsShakedownMt 
+                    (successForAgents
+                     (shakedownCompanions-Tickler) Self-Token))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Shakedown Generalization
+
+(preconditionForMethod
+ (and (currentOrNewTickler ?tickler)
+      (localAgent ?tickler))
+ (methodForAction
+  (shakedownCompanions-Generalization)
+  (actionSequence 
+   (TheList
+    (doEnterState "test-gen" ())
+    (doAnnounce "shakedownCompanions-Generalization" ())
+    (doAnnounce "Nuking the test context." ())
+    (doTell (nukeGpool companions-test-context))
+    (doRecord (ist-Information BaseKB (gpoolAssimilationThreshold companions-test-context 0.5)))
+    (doAnnounce "Starting generalizing." ())
+    (doTell (sageSelectAndGeneralize Apple-Ex339-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Apple-Ex350-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Apple-Ex370-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Banana-Ex834-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Banana-Ex851-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Banana-Ex859-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Pear-Ex11876-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Pear-Ex11880-SSEE companions-test-context))
+    (doTell (sageSelectAndGeneralize Pear-Ex11894-SSEE companions-test-context))
+    (doAnnounce "Finished generalizing." ())
+    (doSolve (gpoolGeneralization companions-test-context ?gen))
+    (doExitState "test-gen" ())))))  ; *** This should take a context arg!!
+
+(preconditionForMethod
+ (and (currentOrNewTickler ?tickler)
+      (uninferredSentence (localAgent ?tickler)))
+ (methodForAction
+  (shakedownCompanions-Generalization)
+  (actionSequence 
+   (TheList
+    (doSynchronousRemotePlan ?tickler
+                             (shakedownCompanions-Generalization))))))
+
+(preconditionForMethod
+ (and (currentOrNewTickler ?tickler)
+      (currentExecutive ?ex)
+      (holdsOnRemoteAgent ?tickler 
+        (uninferredSentence
+         (gpoolGeneralization companions-test-context ?gen))))
+ (methodForAction
+  (shakedownCompanions-Generalization-Eval)
+  (actionSequence 
+   (TheList
+    (doAnnounce "shakedownCompanions-Generalization: Failed.  Could not find resulting generalization." ())
+    (doSynchronousRemotePlan ?ex 
+                             (doTell 
+                              (ist-Information CompanionsShakedownMt
+                                (failureForAgents shakedownCompanions-Generalization-Eval Self-Token))))))))
+ 
+(preconditionForMethod
+ (and (currentOrNewTickler ?tickler)
+      (currentExecutive ?ex)
+      (holdsOnRemoteAgent ?tickler  
+        (gpoolGeneralization companions-test-context ?gen)))
+ (methodForAction
+  (shakedownCompanions-Generalization-Eval)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Passed Generalization Shakedown - found ~a" (?gen))
+    (doSynchronousRemotePlan ?ex
+                             (doTell 
+                              (ist-Information CompanionsShakedownMt 
+                                (successForAgents shakedownCompanions-Generalization-Eval Self-Token))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,11 @@
+(in-microtheory NaiveQuantumPhysicsMt)
+
+(requiredArg1Pred Photon wavelength)
+(requiredArg1Pred Photon electromagneticEnergyAmount)
+(disjointWith ElectronStateTransition ChemicalObjectEnergyLevelTransition)
+(disjointWith ElectronExcitation ChemicalObjectExcitation)
+(disjointWith ResonanceEnergyTransfer ChemicalObjectExcitation)
+(disjointWith ChemicalObjectExcitedStateDecay ResonanceEnergyTransfer)
+(genls Electron WavePropagation)
+(genls PhotonAbsorption ElectromagneticRadiationAbsorption)
+(genls Photon ElectromagneticRadiation)

@@ -1,0 +1,391 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_ink-partitioning.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: September 12, 2014 16:26:09
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Basic Definitions
+
+(isa inkPartitionWorksheetMatchConstraints Relation)
+(arity inkPartitionWorksheetMatchConstraints 2)
+(arg1Isa inkPartitionWorksheetMatchConstraints InkPartitionRegion)
+(arg2Isa inkPartitionWorksheetMatchConstraints List)
+(comment inkPartitionWorksheetMatchConstraints
+  "(inkPartitionWorksheetMatchConstraints ?region ?constraints)
+    indicates that when creating an analogy between the facts about
+    the glyphs in the base and target ink partitioning regions (see 
+    #$InkPartitionRegion), the match constraints bound to ?constraints 
+    should be used.")
+(notForAnalogy inkPartitionWorksheetMatchConstraints)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; generateSubsketchTutorSuggestions
+
+(defSuggestion TutoringSuggestionsOverallPlan-InkPartitioningRegions-1
+    (generateSubsketchTutorSuggestions ?student-subsketch ?suggestions
+                                       ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs-in-region
+               (TheClosedRetrievalSetOf ?student-glyph
+                 (wmOnly
+                  (lookupOnly
+                   (glyphCreatedByInkPartitionRegion 
+                    ?region ?student-subsketch ?student-glyph)))))
+             (different ?student-glyphs-in-region (TheSet))
+             
+             (solutionForWorksheetStudentWorkspace
+              ?student-subsketch ?solution-subsketch)
+             (solutionCaseForWorksheetStudentWorkspace 
+              ?student-subsketch ?solution-case)
+             (evaluate ?solution-glyphs-in-region
+               (TheClosedRetrievalSetOf ?solution-glyph
+                 (wmOnly
+                  (lookupOnly
+                   (ist-Information ?solution-case
+                     (glyphCreatedByInkPartitionRegion 
+                      ?region ?solution-subsketch ?solution-glyph))))))
+             (different ?solution-glyphs-in-region (TheSet)))
+  :subgoals
+  ((sketchFor ?student-subsketch ?sketch)
+   (tell (retractAllAnalogyResults ?sketch))
+   (tell (computePositionalRelations ?student-subsketch))
+   (runQueryForQuestions ?student-subsketch queryForCogSketchWorksheetQuestions)
+   
+   (suggestionsForStudentInkPartitionRegions 
+    ?student-subsketch ?suggestions ?glyph-correspondences)
+   
+;;; *** To Do: suggestions for glyphs not in ink-partitioning regions.
+;;;   (suggestionsForStudentInkPartitionRegions 
+;;;    ?student-subsketch ?suggs1 ?glyph-corrs1)
+;;;   (evaluate ?suggestions (JoinListsFn ?suggs2 ?suggs1))
+;;;   (evaluate ?glyph-correspondences 
+;;;     (SetOrCollectionUnion ?glyph-corrs1 ?glyph-corrs2))
+   ))
+
+
+(defSuggestion TutoringSuggestionsOverallPlan-InkPartitioningRegions-2
+    (generateSubsketchTutorSuggestions ?student-subsketch ?suggestions
+                                       ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs-in-region
+               (TheClosedRetrievalSetOf ?student-glyph-1
+                 (wmOnly
+                  (lookupOnly
+                   (glyphCreatedByInkPartitionRegion 
+                    ?region ?student-subsketch ?student-glyph-1)))))
+             (unifies ?student-glyphs-in-region (TheSet))
+                          
+             (solutionForWorksheetStudentWorkspace
+              ?student-subsketch ?solution-subsketch)
+             (solutionCaseForWorksheetStudentWorkspace 
+              ?student-subsketch ?solution-case)
+             (evaluate ?solution-glyphs-in-region
+               (TheClosedRetrievalSetOf ?solution-glyph
+                 (wmOnly
+                  (lookupOnly
+                   (ist-Information ?solution-case
+                     (glyphCreatedByInkPartitionRegion 
+                      ?region ?solution-subsketch ?solution-glyph))))))
+             (different ?solution-glyphs-in-region (TheSet)))
+  :subgoals
+  ((sketchFor ?student-subsketch ?sketch)
+   (tell (retractAllAnalogyResults ?sketch))
+   (tell (computePositionalRelations ?student-subsketch))
+   (runQueryForQuestions ?student-subsketch queryForCogSketchWorksheetQuestions)
+   
+   (suggestionsForStudentInkPartitionRegions 
+    ?student-subsketch ?suggestions ?glyph-correspondences)
+   
+;;; *** To Do: suggestions for glyphs not in ink-partitioning regions.
+;;;   (suggestionsForStudentInkPartitionRegions 
+;;;    ?student-subsketch ?suggs1 ?glyph-corrs1)
+;;;   (evaluate ?suggestions (JoinListsFn ?suggs2 ?suggs1))
+;;;   (evaluate ?glyph-correspondences 
+;;;     (SetOrCollectionUnion ?glyph-corrs1 ?glyph-corrs2))
+   ))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsForStudentInkPartitionRegions
+
+(isa suggestionsForStudentInkPartitionRegions Relation)
+(arity suggestionsForStudentInkPartitionRegions 3)
+(arg1Isa suggestionsForStudentInkPartitionRegions NuSketchBundle)
+(arg2Isa suggestionsForStudentInkPartitionRegions List)
+(arg3Isa suggestionsForStudentInkPartitionRegions Set-Mathematical)
+(notForAnalogy suggestionsForStudentInkPartitionRegions)
+
+
+(defSuggestion SuggestionsForStudentInkPartitionRegions
+    (suggestionsForStudentInkPartitionRegions
+     ?student-subsketch ?suggestions ?glyph-correspondences)
+  :subgoals
+  ((subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (solutionCaseForWorksheetStudentWorkspace ?student-subsketch ?solution-case)
+   (evaluate ?regions
+     (TheClosedRetrievalSetOf ?region
+       (and (wmOnly
+             (lookupOnly
+              (nonTransitiveInference
+               (ist-Information ?solution-case
+                 (isa ?region-obj InkPartitionRegion)))))
+            (wmOnly
+             (lookupOnly
+              (ist-Information ?solution-case
+                (glyphRepresentsObject ?region ?region-obj)))))))
+   (solveSequentially ?region2 ?regions
+     (suggestionsForStudentInkPartitionRegion ?student-subsketch ?region2
+                                              ?suggs2 ?glyph-corrs2))
+   (consolidateInkPartitionRegionSuggestions 
+    ?student-subsketch ?suggestions ?glyph-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; consolidateInkPartitionRegionSuggestions
+
+(isa consolidateInkPartitionRegionSuggestions Relation)
+(arity consolidateInkPartitionRegionSuggestions 3)
+(arg1Isa consolidateInkPartitionRegionSuggestions NuSketchBundle)
+(arg2Isa consolidateInkPartitionRegionSuggestions List)
+(arg3Isa consolidateInkPartitionRegionSuggestions Set-Mathematical)
+(notForAnalogy consolidateInkPartitionRegionSuggestions)
+
+
+(defSuggestion ConsolidateInkPartitionRegionSuggestions
+    (consolidateInkPartitionRegionSuggestions
+     ?student-subsketch ?suggestions ?glyph-correspondences)
+  :subgoals
+  ((evaluate ?suggs-sets
+     (TheClosedRetrievalSetOf ?suggs
+       (and (wmOnly
+             (lookupOnly
+              (suggestionsForStudentInkPartitionRegion
+               ?student-subsketch ?region1 ?suggs-list1 ?glyph-corrs1)))
+            (evaluate ?suggs (ListToSetFn ?suggs-list1)))))
+   (evaluate ?suggs-set (SetOfSetsUnionFn ?suggs-sets))
+   (evaluate ?suggestions (SetToListFn ?suggs-set))
+   
+   (evaluate ?corrs-sets
+     (TheClosedRetrievalSetOf ?glyph-corrs2
+       (wmOnly
+        (lookupOnly
+         (suggestionsForStudentInkPartitionRegion
+          ?student-subsketch ?region2 ?suggs-list2 ?glyph-corrs2)))))
+   (evaluate ?glyph-correspondences (SetOfSetsUnionFn ?corrs-sets))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsForStudentInkPartitionRegion
+
+(isa suggestionsForStudentInkPartitionRegion Relation)
+(arity suggestionsForStudentInkPartitionRegion 4)
+(arg1Isa suggestionsForStudentInkPartitionRegion NuSketchBundle)
+(arg2Isa suggestionsForStudentInkPartitionRegion InkPartitionRegion)
+(arg3Isa suggestionsForStudentInkPartitionRegion List)
+(arg4Isa suggestionsForStudentInkPartitionRegion Set-Mathematical)
+(notForAnalogy suggestionsForStudentInkPartitionRegion)
+
+
+(defSuggestion SuggestionsForStudentInkPartitionRegion
+    (suggestionsForStudentInkPartitionRegion 
+     ?student-subsketch ?region ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs
+               (TheClosedRetrievalSetOf ?glyph
+                 (wmOnly
+                  (lookupOnly
+                   (glyphCreatedByInkPartitionRegion 
+                    ?region ?student-subsketch ?glyph)))))
+             (different ?student-glyphs (TheSet)))
+  :subgoals
+  ((bestMatchForStudentInkPartitionRegion ?student-subsketch ?region ?match)
+   (suggestionsForStudentMatch ?student-subsketch ?match 
+                               ?suggestions1 ?glyph-correspondences)
+   (maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 
+    ?student-subsketch ?suggestions1 ?glyph-correspondences ?suggestions)))
+
+
+(defSuggestion SuggestionsForStudentInkPartitionRegion_NoGlyphs
+    (suggestionsForStudentInkPartitionRegion 
+     ?student-subsketch ?region ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs
+               (TheClosedRetrievalSetOf ?glyph
+                 (wmOnly
+                  (lookupOnly
+                   (glyphCreatedByInkPartitionRegion 
+                    ?region ?student-subsketch ?glyph)))))
+             (unifies ?student-glyphs (TheSet)))
+  :subgoals
+  ((suggestionsTextForMissingGlyphsInInkPartitionRegion 
+    ?student-subsketch ?region ?text)
+   (unifies ?suggestions
+     (TheList
+      (CogSketchMissingEntitySuggestionFn ?text (TheSet ?region) (TheSet)
+                                          (TheSet))))
+   (unifies ?glyph-correspondences (TheSet))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsTextForMissingGlyphsInInkPartitionRegion
+
+(isa suggestionsTextForMissingGlyphsInInkPartitionRegion Relation)
+(arity suggestionsTextForMissingGlyphsInInkPartitionRegion 3)
+(arg1Isa suggestionsTextForMissingGlyphsInInkPartitionRegion NuSketchBundle)
+(arg2Isa suggestionsTextForMissingGlyphsInInkPartitionRegion InkPartitionRegion)
+(arg3Isa suggestionsTextForMissingGlyphsInInkPartitionRegion TextString)
+(notForAnalogy suggestionsTextForMissingGlyphsInInkPartitionRegion)
+
+
+(defSuggestion SuggestionsTextForMissingGlyphsInInkPartitionRegion
+    (suggestionsTextForMissingGlyphsInInkPartitionRegion 
+     ?student-subsketch ?region ?text)
+  :test (and (solutionCaseForWorksheetStudentWorkspace
+              ?student-subsketch ?solution-case)
+             (wmOnly
+              (lookupOnly
+               (ist-Information ?solution-case
+                 (glyphRepresentsObject ?region ?region-obj))))
+             (evaluate ?namestrings
+               (TheClosedRetrievalSetOf ?namestring
+                 (wmOnly
+                  (lookupOnly
+                   (ist-Information ?solution-case
+                     (nameString ?region-obj ?namestring))))))
+             (unifies ?namestrings (TheSet)))
+  :subgoals
+  ((evaluate ?text
+     "You haven't drawn any glyphs in this region yet.")))
+
+
+(defSuggestion SuggestionsTextForMissingGlyphsInInkPartitionRegion_namestring
+    (suggestionsTextForMissingGlyphsInInkPartitionRegion 
+     ?student-subsketch ?region ?text)
+  :test (and (solutionCaseForWorksheetStudentWorkspace
+              ?student-subsketch ?solution-case)
+             (wmOnly
+              (lookupOnly
+               (ist-Information ?solution-case
+                 (glyphRepresentsObject ?region ?region-obj))))
+             (evaluate ?namestrings
+               (TheClosedRetrievalSetOf ?namestring
+                 (wmOnly
+                  (lookupOnly
+                   (ist-Information ?solution-case
+                     (nameString ?region-obj ?namestring))))))
+             (different ?namestrings (TheSet)))
+  :subgoals
+  ((wmOnly
+    (lookupOnly
+     (ist-Information ?solution-case
+       (glyphRepresentsObject ?region ?region-obj))))
+   (wmOnly
+    (lookupOnly
+     (ist-Information ?solution-case
+       (nameString ?region-obj ?namestring))))
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You haven't drawn any glyphs in " ?namestring " yet."))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForStudentInkPartitionRegion
+
+(isa bestMatchForStudentInkPartitionRegion Relation)
+(arity bestMatchForStudentInkPartitionRegion 3)
+(arg1Isa bestMatchForStudentInkPartitionRegion CogSketchWorkspaceBundle)
+(arg2Isa bestMatchForStudentInkPartitionRegion InkPartitionRegion)
+(arg3Isa bestMatchForStudentInkPartitionRegion AnalogyMatch)
+(arg3Isa bestMatchForStudentInkPartitionRegion Match)
+(comment bestMatchForStudentInkPartitionRegion
+  "(bestMatchForStudentInkPartitionRegion ?student-subsketch ?region ?match-id) 
+   means that ?match-id is the best analogical match between the facts about
+   the glyphs in the student's #$InkPartitionRegion and those in the 
+   corresponding #$InkPartitionRegion in the solution.")
+(notForAnalogy bestMatchForStudentInkPartitionRegion)
+
+
+(defSuggestion BestMatchForStudentInkPartitionRegion
+    (bestMatchForStudentInkPartitionRegion ?student-subsketch ?region ?match)
+  :subgoals
+  ((solutionCaseForWorksheetStudentWorkspace ?student-subsketch ?solution-case)
+   (displayBusyMsgForInkPartitionRegion ?solution-case ?region)
+   (subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (unifies ?base 
+     (CogSketchTutorInkPartitionRegionCaseFn ?solution-case ?region))
+   (unifies ?target
+     (CogSketchTutorInkPartitionRegionCaseFn ?student-case ?region))
+   (inkPartitionWorksheetMatchConstraints ?region ?constraints)
+   (tell (retractAnalogyResults ?base ?target))
+   (matchBetween ?base ?target ?constraints ?match1)
+   (quantitativelyConstrainedMatch ?match1 ?match)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; displayBusyMsgForInkPartitionRegion
+
+(isa displayBusyMsgForInkPartitionRegion Relation)
+(arity displayBusyMsgForInkPartitionRegion 2)
+(arg1Isa displayBusyMsgForInkPartitionRegion Case)
+(arg2Isa displayBusyMsgForInkPartitionRegion InkPartitionRegion)
+(notForAnalogy displayBusyMsgForInkPartitionRegion)
+
+
+(defSuggestion DisplayBusyMsgForInkPartitionRegion_NoNamestring
+    (displayBusyMsgForInkPartitionRegion ?solution-case ?region)
+  :test (and (wmOnly
+              (lookupOnly
+               (ist-Information ?solution-case
+                 (glyphRepresentsObject ?region ?region-obj))))
+             (evaluate ?namestrings
+               (TheClosedRetrievalSetOf ?namestring
+                 (wmOnly
+                  (lookupOnly
+                   (ist-Information ?solution-case
+                     (nameString ?region-obj ?namestring))))))
+             (unifies ?namestrings (TheSet)))
+  :subgoals
+  ((wmOnly
+    (lookupOnly
+     (ist-Information ?solution-case
+       (glyphRepresentsObject ?region ?region-obj))))
+   (forEffectOnly 
+    (tell (cogSketchBusyMsg "Comparing region ~A to solution ..." 
+            (TheList ?region-obj))))))
+
+(defSuggestion DisplayBusyMsgForInkPartitionRegion_Namestring
+    (displayBusyMsgForInkPartitionRegion ?solution-case ?region)
+  :test (and (wmOnly
+              (lookupOnly
+               (ist-Information ?solution-case
+                 (glyphRepresentsObject ?region ?region-obj))))
+             (evaluate ?namestrings
+               (TheClosedRetrievalSetOf ?namestring
+                 (wmOnly
+                  (lookupOnly
+                   (ist-Information ?solution-case
+                     (nameString ?region-obj ?namestring))))))
+             (different ?namestrings (TheSet)))
+  :subgoals
+  ((wmOnly
+    (lookupOnly
+     (ist-Information ?solution-case
+       (glyphRepresentsObject ?region ?region-obj))))
+   (wmOnly
+    (lookupOnly
+     (ist-Information ?solution-case
+       (nameString ?region-obj ?namestring))))
+   (forEffectOnly 
+    (tell (cogSketchBusyMsg "Comparing ~A to solution ..." 
+            (TheList ?namestring))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

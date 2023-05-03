@@ -1,0 +1,276 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: questions.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: March 3, 2005 14:43:42
+;;;;   Purpose: KB extensions for handling questions
+;;;; ---------------------------------------------------------------------------
+;;;;  Modified: Thursday, July 03, 2008 at 16:42:26 by etomai
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory EANLU :exclude-globals t)
+
+;;; Types of questions
+;;; RCyc already knows about Question-IBT as the parent collection for all types of
+;;; question.  Also, for simple Yes/No, True/False questions the collection
+;;; YesOrNoQuestion-IBT exists. A special variant of Yes/No questions are what Cycorp
+;;; termed 'complex questions'. ComplexQuestion-IBT captures yes/no questions for
+;;; which we generally do not expect a yes/no answer, e.g. 'Have you stopped beating
+;;; your wife?' (weird Cycorp example ...) 
+
+;;; 3/31/08 [TRH] I'm going to make Question-IBT a spec of InterrogativeUtterance.
+;;; Its parent, InformationRequest-IBT is more general in that it could be indirect or
+;;; non-verbal.  But life will be simpler if all questions are InterrogativeUtterances.
+
+;(genls Question-IBT InterrogativeUtterance)  ; a Question-IBT genls from InformationRequest-IBT.
+;;; an InterrogativeUtterance is an AnimalUtterance-IBT, which is a SpokenUtterance.
+
+;;; For quantitative questions, i.e. how much, how many questions 
+;;; that ask for a numerical answer. 
+(isa QuantitativeQuestion-IBT TemporalObjectType)
+;(genls QuantitativeQuestion-IBT InterrogativeUtterance)  ; implies spoken modality
+(genls QuantitativeQuestion-IBT Question-IBT)
+
+;;; count/number, how many books are on the table?
+(isa HowManyQuestion-IBT TemporalObjectType)
+(genls HowManyQuestion-IBT QuantitativeQuestion-IBT)
+
+;;; mass, how much water is in the container?
+(isa HowMuchQuestion-IBT TemporalObjectType)
+(genls HowMuchQuestion-IBT QuantitativeQuestion-IBT)
+
+;;; adjectival/general, how deep is the pool?
+(isa GeneralHowQuestion-IBT TemporalObjectType)
+(genls GeneralHowQuestion-IBT QuantitativeQuestion-IBT)
+
+
+
+;;; For WH questions, i.e. the typical set of 'journalist' questions
+(isa WHQuestion-IBT TemporalObjectType)
+;(genls WHQuestion-IBT InterrogativeUtterance) ; This is wrong.  It implies an AudibleSound.  
+(genls WHQuestion-IBT Question-IBT)
+
+;;; Types of WH questions 
+(isa WhoQuestion-IBT TemporalObjectType)
+(genls WhoQuestion-IBT WHQuestion-IBT)
+
+(isa WhatQuestion-IBT TemporalObjectType)
+(genls WhatQuestion-IBT WHQuestion-IBT)
+
+(isa WhereQuestion-IBT TemporalObjectType)
+(genls WhereQuestion-IBT WHQuestion-IBT)
+
+(isa WhenQuestion-IBT TemporalObjectType)
+(genls WhenQuestion-IBT WHQuestion-IBT)
+
+(isa WhoseQuestion-IBT TemporalObjectType)
+(genls WhoseQuestion-IBT WHQuestion-IBT)
+
+(isa WhomQuestion-IBT TemporalObjectType)
+(genls WhomQuestion-IBT WHQuestion-IBT)
+
+(isa WhichQuestion-IBT TemporalObjectType)
+(genls WhichQuestion-IBT WHQuestion-IBT)
+
+(isa WhyQuestion-IBT TemporalObjectType)
+(genls WhyQuestion-IBT WHQuestion-IBT)
+
+
+
+;;; Support for representing information about questions
+
+
+;;; The following predicates are used to represent general information
+;;; about particular types of question, e.g. the high-level patterns for queries
+;;; and the collections for the expected results.  This information is independent
+;;; from any particular instance of a question and can easily be extended by
+;;; adding more assertions.
+
+
+
+;;; possiblePatternForQuestionType
+;;; Example: (possiblePatternForQuestionType WhereQuestion-IBT (objectFoundInLocation :OBJECT :LOCATION))
+;;; Note: Represents potential high-level query patterns for a type of question
+(isa possiblePatternForQuestionType BinaryPredicate)
+(arity possiblePatternForQuestionType 2)
+(arg1Isa possiblePatternForQuestionType Question-IBT)
+(arg2Isa possiblePatternForQuestionType CycLExpression)
+(comment possiblePatternForQuestion "possiblePatternForQuestionType is used for specifying high-level 
+query patterns for a question type. For example, (possiblePatternForQuestionType WhereQuestion-IBT (objectFoundInLocation :OBJECT :LOCATION))
+defines a pattern for a Where question, with objectFoundInLocation as a high-level predicate.  Note that
+the keyword for the query variable in these patterns should correspond with one of the keywords defined by
+queryVariableInQuestionType.") 
+
+
+(possiblePatternForQuestionType WhoQuestion-IBT (isa :AGENT :THING))
+(possiblePatternForQuestionType WhoQuestion-IBT (actors :EVENT :AGENT))
+(possiblePatternForQuestionType WhereQuestion-IBT (eventOccursAt :EVENT :LOCATION))
+(possiblePatternForQuestionType WhereQuestion-IBT (objectFoundInLocation :OBJECT :LOCATION))
+(possiblePatternForQuestionType WhenQuestion-IBT (startingDate :EVENT :DATE))
+(possiblePatternForQuestionType WhenQuestion-IBT (endingDate :EVENT :DATE))
+(possiblePatternForQuestionType WhenQuestion-IBT (dateOfEvent :EVENT :DATE))
+
+
+;;; queryVariableForQuestionType
+;;; Example: (queryVariableForQuestionType WhoQuestion-IBT IntelligentAgent :ACTOR)
+;;; Note: Identifies the variable we want use for the queries, i.e. the
+;;;       keyword that should be replaced by any information from the
+;;;       sentence parse data. It should be modified for the final query
+;;;       into something like ?actor (for this example)
+;;;       It also specifies the collection which we would expect for the result
+;;;       that binds to this variable.
+(isa queryVariableForQuestionType TernaryPredicate)
+(arity queryVariableForQuestionType 3)
+(arg1Isa queryVariableForQuestionType Question-IBT)
+(arg2Isa queryVariableForQuestionType Thing)
+(arg3Isa queryVariableForQuestionType SubLKeyword)
+(comment queryVariableForQuestionType "queryVariableForQuestionType identifies a keyword and a collection 
+that will be used as a placeholder for a query variable in high-level patterns. Also, the collection
+specified should be consistent with argument restrictions when we're trying to find more specific predicates
+(i.e. specPreds of the ones in the high-level patterns defined via possiblePatternForQuestionType).")
+
+
+(queryVariableForQuestionType WhoQuestion-IBT IntelligentAgent :ACTOR)
+(queryVariableForQuestionType WhoQuestion-IBT IntelligentAgent :AGENT)
+(queryVariableForQuestionType WhoQuestion-IBT IntelligentAgent :SUBJECT)
+(queryVariableForQuestionType WhomQuestion-IBT IntelligentAgent :ACTOR)
+(queryVariableForQuestionType WhomQuestion-IBT IntelligentAgent :AGENT)
+(queryVariableForQuestionType WhomQuestion-IBT IntelligentAgent :OBJECT)
+(queryVariableForQuestionType WhoseQuestion-IBT IntelligentAgent :ACTOR)
+(queryVariableForQuestionType WhoseQuestion-IBT IntelligentAgent :AGENT)
+(queryVariableForQuestionType WhoseQuestion-IBT IntelligentAgent :POSSESSOR)
+(queryVariableForQuestionType WhereQuestion-IBT SpatialThing-Localized :LOCATION)
+(queryVariableForQuestionType WhereQuestion-IBT Location-Underspecified :LOCATION)
+(queryVariableForQuestionType WhenQuestion-IBT TimeInterval :DATE)
+(queryVariableForQuestionType WhatQuestion-IBT Thing :OBJECT)
+(queryVariableForQuestionType WhatQuestion-IBT Thing :THING)
+(queryVariableForQuestionType WhatQuestion-IBT Thing :ACTION)
+(queryVariableForQuestionType WhatQuestion-IBT Thing :EVENT)
+
+
+
+;;; possibleAnswerTypeForQuestionType
+;;; Example: (possibleAnswerTypeForQuestionType WhoQuestion-IBT Organization)
+;;; Note: Answer for question type has the type 
+;;;       of question and the most general collection 
+;;;       that can be acceptable as an answer as arguments
+;;;
+;;;       Maybe this is redundant, because the first two arguments of
+;;;       queryVariableForQuestionType contain the same information.       
+(isa possibleAnswerTypeForQuestionType BinaryPredicate)
+(arity possibleAnswerTypeForQuestionType 2)
+(arg1Isa possibleAnswerTypeForQuestionType Question-IBT)
+(arg2Isa possibleAnswerTypeForQuestionType Collection)
+
+
+(possibleAnswerTypeForQuestionType WhoQuestion-IBT IntelligentAgent)
+(possibleAnswerTypeForQuestionType WhereQuestion-IBT SpatialThing-Localized)
+(possibleAnswerTypeForQuestionType WhereQuestion-IBT Location-Underspecified)
+(possibleAnswerTypeForQuestionType WhomQuestion-IBT IntelligentAgent)
+(possibleAnswerTypeForQuestionType WhenQuestion-IBT TemporalThing)
+(possibleAnswerTypeForQuestionType WhatQuestion-IBT Thing)
+(possibleAnswerTypeForQuestionType WhichQuestion-IBT Thing)
+
+
+
+
+;;; The next predicates related high-level patterns and collections of the expected
+;;; results to a particular question.  This data is generated dynamically, based on the parse
+;;; information (i.e. the identification of a question and its type)
+
+;;; suggestedPatternForQuestion
+;;; Example: (suggestedPatternForQuestion q123 (objectFoundInLocation :OBJECT :LOCATION))
+;;; Note: Similar to possiblePatternForQuestionType, but instead of relating general high-level
+;;;       patterns to a type of question, suggestedPatternForQuestion relates a pattern to a
+;;;       specific question, e.g. q123
+(isa suggestedPatternForQuestion BinaryPredicate)
+(arity suggestedPatternForQuestion 2)
+(arg1Isa suggestedPatternForQuestion CycLTerm)
+(arg2Isa suggestedPatternForQuestion CycLExpression)
+(comment suggestedPatternForQuestion "suggestedPatternForQuestion is similar to possiblePatternForQuestionType, 
+but instead of relating general high-level patterns to a type of question, suggestedPatternForQuestion relates 
+a pattern to a specific question, e.g. q123.")
+
+
+;;; queryVariableForQuestion
+;;; Example: (queryVariableForQuestion q123 IntelligentAgent :ACTOR)
+(isa queryVariableForQuestion TernaryPredicate)
+(arity queryVariableForQuestion 3)
+(arg1Isa queryVariableForQuestion CycLTerm)
+(arg2Isa queryVariableForQuestion Thing)
+(arg3Isa queryVariableForQuestion SubLKeyword)
+(comment queryVariableForQuestion "queryVariableForQuestion relates a specific question to a keyword and 
+a collection that will be used as a placeholder for the query variable in high-level patterns. The collection
+specified should be consistent with argument restrictions of the patterns represented via 
+suggestedPatternForQuestion.")
+
+
+;;; expectedAnswerTypeForQuestion
+;;; Example: (expectedAnswerTypeForQuestion q123 SpatialThing-Localized)
+;;; Note: Similar to possibleAnswerTypeForQuestionType, but instead of relating collection
+;;;       to a type of question, expectedAnswerTypeForQuestion relates a collection to a
+;;;       specific question, e.g. q123
+;;; 
+;;;       Again, this might be redundant, since the same information can be found in the first
+;;;       two arguments of queryVariableForQuestion.
+(isa expectedAnswerTypeForQuestion BinaryPredicate)
+(arity expectedAnswerTypeForQuestion 2)
+(arg1Isa expectedAnswerTypeForQuestion CycLTerm)
+(arg2Isa expectedAnswerTypeForQuestion CycLExpression)
+(comment expectedAnswerTypeForQuestion "")
+
+
+;;; contextForQuestion-Complete 
+;;; Example: (contextForQuestion-Complete q123 (...))
+;;; Note:  Lists the completed expressions that are returned as semantic
+;;;        information for a question, i.e. those that do not have any
+;;;        keywords in them 
+(isa contextForQuestion-Complete BinaryPredicate)
+(arity contextForQuestion-Complete 2)
+(arg1Isa contextForQuestion-Complete CycLTerm)
+(arg2Isa contextForQuestion-Complete List)
+(comment contextForQuestion-Complete "Lists the completed expressions that are returned as semantic
+information for a question, i.e. those that do not have any keywords in them.") 
+
+
+
+;;; contextForQuestion-Open 
+;;; Example: (contextForQuestion-Open q123 (...))
+;;; Note:  Lists the open expressions that are returned as semantic
+;;;        information for a question, i.e. those that have keywords 
+;;;        in them.  Some of these keywords will be the query variable
+;;;        and can be replaced after we find an answer.  These expressions
+;;;        can be moved to the contextForQuestion-Complete list. 
+;;;
+;;;        The remaining expressions with open keywords can then be used to
+;;;        ask follow-up questions (e.g. determine appropriate question
+;;;        type based on keyword, then retrieve potential patterns, etc.
+(isa contextForQuestion-Open BinaryPredicate)
+(arity contextForQuestion-Open 2)
+(arg1Isa contextForQuestion-Open CycLTerm)
+(arg2Isa contextForQuestion-Open List)
+(comment contextForQuestion-Open "Lists the open expressions that are returned as semantic
+information for a question, i.e. those that have keywords in them.  Some of these keywords 
+will be the query variable and can be replaced after we find an answer.  These expressions
+can be moved to the contextForQuestion-Complete list. The remaining expressions with open 
+keywords can then be used to ask follow-up questions (e.g. determine appropriate question
+type based on keyword, then retrieve potential patterns, etc.")
+
+
+
+;;; textOfQuestion
+;;; Example: (textOfQuestion q123 "Where is Osama bin Laden?")
+;;; Note: Stores the text of the original query, mainly for
+;;;       book-keeping purposes.
+(isa textOfQuestion BinaryPredicate)
+(arity textOfQuestion 2)
+(arg1Isa textOfQuestion CycLTerm)
+(arg2Isa textOfQuestion SubLString)
+(comment textOfQuestion "Stores the text of the original query, primarily for
+book-keeping purposes.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

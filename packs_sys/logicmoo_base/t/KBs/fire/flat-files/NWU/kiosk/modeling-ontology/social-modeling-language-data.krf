@@ -1,0 +1,356 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: social-modeling-language-data.krf
+;;;;    System: ???
+;;;;    Author: Constantine Nakos
+;;;;   Created: April 25, 2018
+;;;;   Purpose: Language data for talking about the social modeling ontology.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-11-07 11:59:02 -0600 (Wed, 07 Nov 2018) $
+;;;;  $LastChangedBy: Crouse $
+;;;; ---------------------------------------------------------------------------
+
+;; Language data (e.g., facts for verbalize) for SocialModelingMt and its
+;; specMts/genlMts.  I'm not entirely sure where these facts should go, so let's
+;; stuff them in EnglishMt for now.  Other options include EnglishParaphraseMt,
+;; probably the principled place to put them, and SocialModelingMt itself.
+
+(in-microtheory SocialModelingEnglishMt)
+;;; KDF: This isn't good practice -- we should be defining a spindleMT that
+;;; inherits from the two specialized Mts AND EnglishMt.  That way (a) we can
+;;; wipe the contents of the task-specific Mts easily during development and
+;;; (b) systems/experiments that don't need this knowledge -- or even conflict with it --
+;;; won't be affected by it.  Modularity matters!
+(genlMt EnglishMt SocialModelingEnglishMt)
+(genlMt EnglishMt NUPeopleLanguageInfoMt)
+(genlMt EnglishMt NUCourseLanguageInfoMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Predicates that verbalize can use.  Our verbalize wrapper should be aware
+; of these at the code level so it can take them into account.
+(isa eventName VerbalizeStdPred)
+(isa courseName VerbalizeStdPred)
+
+; SocialModelingMt
+(genFormat recommendNUEvent "~A is recommended for ~A" (TheList 2 1))
+(genFormat SocialModelMtFn "social model of ~A" (TheList 1)) ; the? a?
+(genFormat qualitativelyPositiveValue "~A is a qualitatively positive value" (TheList 1))
+
+; EventsForSocialModelingMt
+(prettyString NUEvent "event at Northwestern University")
+(prettyString EventWithFreeFood "event with free food")
+(genFormat eventName "~A is named \"~A\"" (TheList 1 2)) ; quote?
+(genFormat attendingEvent "~A is scheduled to attend ~A on ~A" (TheList 1 2 3)) ;; TODO: Handle "on today".
+(genFormat eventTopic "the topic of ~A is ~A" (TheList 1 2))
+(genFormat freeFoodTypeAtEvent "free ~A is/are avaialble at ~A" (TheList 2 1)) ; is/are?
+(genFormat eventRecorded "~A was recorded: ~A" (TheList 1 2)) ; TODO: Figure out a way to handle conditionals better.
+; (<== (genFormatForFormula (eventRecorded ?event True) "~A was recorded" (TheList 1)))
+; (<== (genFormatForFormula (eventRecorded ?event False) "~A was not recorded" (TheList 1)))
+(genFormat eventRecordingLink "the recording of ~A can be found at ~A" (TheList 1 2))
+(genFormat eventHost "~A is hosted by ~A" (TheList 1 2))
+(genFormat eventAudience "~A is intended for ~A" (TheList 1 2))
+(genFormat eventCost "the cost of ~A is: ~A" (TheList 1 2))
+; Tense is going to bite us here.  The correct approach (at least within the limits of verbalize)
+; would be to use genFormatForFormula and a trio of Horn clauses that compare against the current
+; date.  Note that this also won't handle Today correctly (i.e., "at today").
+(genFormat dateOfEvent "~A will be at ~A" (TheList 1 2))
+(genFormat durationOfEvent "~A will last ~A" (TheList 1 2))
+(genFormat eventHostContact "the contact information for ~A is ~A" (TheList 1 2))
+; Ignore eventReoccurring because it's not ontologized.
+(genFormat eventCategory "~A belongs to category ~A" (TheList 1 2))
+(genFormat eventLocale "~A is at ~A" (TheList 1 2)) ; Tense is going to be a pain here.
+; (<== (genFormatForFormula (eventLocale ?event ?locale) "~A will be at ~A" (TheList 1 2))
+;      (dateOfEvent ?event ?date)
+;      (laterDateThan? ?date ?today) ; or something.
+;; Probably going to have to dive into genFormatForFormula.
+
+; PeopleForSocialModelingMt
+(genFormat phoneNumberOf "~A phone number is ~A" (TheList (TheList 1 :POSSESSIVE) 2))
+(genFormat emailOf "~A email address is ~A" (TheList (TheList 1 :POSSESSIVE) 2))
+(genFormat personalWebsite "~A personal website is ~A" (TheList (TheList 1 :POSSESSIVE) 2))
+(genFormat officeLocation "~A office is located at ~A" (TheList (TheList 1 :POSSESSIVE) 2))
+(genFormat calendarLink "~A calendar can be found at ~A" (TheList (TheList 1 :POSSESSIVE) 2))
+(genFormat schooling "~A earned ~A at ~A" (TheList 1 (TheList 3 :A-THE-WORD) 2))
+(prettyString NUPerson "person at Northwestern University")
+(prettyString NUVisitor "visitor at Northwestern University")
+(prettyString NUStudent "student at Northwestern University")
+(prettyString NUUndergraduate "undergraduate at Northwestern University")
+(prettyString NUGraduateStudent "graduate student at Northwestern University")
+(prettyString NUPhDStudent "PhD student at Northwestern University")
+(prettyString NUMastersStudent "Masters student at Northwestern University")
+(prettyString NUStaff "staff member at Northwestern University")
+(prettyString NUFaculty "faculty member at Northwestern University")
+(prettyString CSFaculty "CS faculty member")
+(prettyString CSRegularFaculty "CS regular faculty member")
+(prettyString CSResearchFaculty "CS research faculty member")
+(prettyString CSAdjunctFaculty "CS adjunct faculty member")
+(prettyString CSInstructionFaculty "CS instruction faculty member")
+(prettyString CSInstructors "CS instructor")
+(prettyString CEFaculty "CE faculty member")
+(genFormat facultyDepartment "~A department is ~A" (TheList (TheList 1 :POSSESSIVE) (TheList 2 :THE-THE-WORD))) ; Trust the prettyString for the department here.
+(genFormat studentMajor "~A major is ~A" (TheList (TheList 1 :POSSESSIVE) 2))
+(genFormat enrolledInClass "~A is enrolled in ~A" (TheList 1 2))
+(genFormat teachingClass "~A is teaching ~A" (TheList 1 2))
+(prettyString NUClub "club at Northwestern University")
+(genFormat nuClubMember "~A is a member of ~A" (TheList 1 2))
+(prettyString NUGroup "group at Northwestern University")
+(genFormat nuGroupMember "~A is a member of ~A" (TheList 2 1))
+
+(prettyString NUSolidStateAndPhotonics "Solid State and Photonics")
+(prettyString NUSignalsAndSystems "Signals and Systems")
+(prettyString NUComputerEngineeringAndSystems "Computer Engineering and Systems")
+(prettyString NUComputingAlgorithmsAndApplications "Computing Algorithms and Applications")
+(prettyString NUCognitiveSystems "Cognitive Systems")
+(prettyString NUGraphicsAndInteractiveMedia "Graphics and Interactive Media")
+
+(indexedProperName (TheList solid state and) photonics NUSolidStateAndPhotonics)
+(indexedProperName (TheList signals and) systems NUSignalsAndSystems)
+(indexedProperName (TheList) signals NUSignalsAndSystems) ; Will bite us later.
+(indexedProperName (TheList) systems NUSignalsAndSystems) ; Will bite us later.
+(indexedProperName (TheList computer engineering and) systems NUComputerEngineeringAndSystems)
+(indexedProperName (TheList computer) engineering NUComputerEngineeringAndSystems)
+(indexedProperName (TheList computing algorithms and) applications NUComputingAlgorithmsAndApplications)
+(indexedProperName (TheList algorithms and) applications NUComputingAlgorithmsAndApplications)
+(indexedProperName (TheList computing) algorithms NUComputingAlgorithmsAndApplications)
+(indexedProperName (TheList) algorithms NUComputingAlgorithmsAndApplications) ; Will bite us later.
+(indexedProperName (TheList cognitive) systems NUCognitiveSystems)
+(indexedProperName (TheList graphics and interactive) media NUGraphicsAndInteractiveMedia)
+(indexedProperName (TheList graphics and) media NUGraphicsAndInteractiveMedia)
+(indexedProperName (TheList interactive) media NUGraphicsAndInteractiveMedia)
+(indexedProperName (TheList) graphics NUGraphicsAndInteractiveMedia) ; Will bite us later.
+(indexedProperName (TheList the solid state and photonics) group NUSolidStateAndPhotonics)
+(indexedProperName (TheList the systems) group NUSignalsAndSystems)
+(indexedProperName (TheList the signals) group NUSignalsAndSystems)
+(indexedProperName (TheList the signals and systems) group NUSignalsAndSystems)
+(indexedProperName (TheList the computer engineering) group NUComputerEngineeringAndSystems)
+(indexedProperName (TheList the computer engineering and systems) group NUComputerEngineeringAndSystems)
+(indexedProperName (TheList the algorithms) group NUComputingAlgorithmsAndApplications)
+(indexedProperName (TheList the computing algorithms) group NUComputingAlgorithmsAndApplications)
+(indexedProperName (TheList the algorithms and applications) group NUComputingAlgorithmsAndApplications)
+(indexedProperName (TheList the computing algorithms and applications) group NUComputingAlgorithmsAndApplications)
+(indexedProperName (TheList the cognitive systems) group NUCognitiveSystems)
+(indexedProperName (TheList the graphics) group NUGraphicsAndInteractiveMedia)
+(indexedProperName (TheList the interactive media) group NUGraphicsAndInteractiveMedia)
+(indexedProperName (TheList the graphics and media) group NUGraphicsAndInteractiveMedia)
+(indexedProperName (TheList the graphics and interactive media) group NUGraphicsAndInteractiveMedia)
+;; TODO: More variations, if we care.
+
+(genFormat familiarityWithBuilding "~A is ~A familiar with ~A" (TheList 1 3 2)) ; TODO: Make this not suck.
+; Also TODO: Write prettyStrings for highAmountOf, etc.  This gets into the syntactic constraints we've
+; tried to avoid so far.
+(genFormat numberOfTimesVisited "~A has visited the agent ~A times" (TheList 1 2)) ; Use ~D instead?
+
+; CoursesForSocialModelingMt
+;; TODO: MUCH more to do here, but checking this in for now just to get it going.
+
+(genFormat CoursesMtFn "courses microtheory for ~A" (TheList 1))
+(genFormat AcademicYearFn "the ~A academic year at ~A" (TheList 2 1))
+(genFormat FallSemesterFn "the fall semester of ~A" (TheList 1))
+(genFormat SpringSemesterFn "the spring semester of ~A" (TheList 1))
+(genFormat FallQuarterFn "the fall quarter of ~A" (TheList 1))
+(genFormat WinterQuarterFn "the summer quarter of ~A" (TheList 1))
+(genFormat SpringQuarterFn "the spring quarter of ~A" (TheList 1))
+(genFormat SummerQuarterFn "the summer quarter of ~A" (TheList 1))
+
+(prettyString NUCourse "NU course")
+(prettyString NUCourse-EECS "EECS course")
+(prettyString NUCourse-CS "CS course")
+(prettyString NUCourse-CE "CE course")
+(prettyString NUCourse-EE "EE course")
+
+(prettyString AcademicTopic "academic topic")
+(prettyString ComputerScience-Topic "computer science")
+(prettyString ComputerEngineering-Topic "computer engineering")
+(prettyString ElectricalEngineering-Topic "electrical engineering")
+
+(genFormat primaryCourseID "the primary course ID of ~A is ~A" (TheList 1 2))
+(genFormat secondaryCourseID "the secondary course ID of ~A is ~A" (TheList 1 2))
+(genFormat tertiaryCourseID "the tertiary course ID of ~A is ~A" (TheList 1 2))
+(genFormat quaternaryCourseID "the quaternary course ID of ~A is ~A" (TheList 1 2))
+(genFormat courseName "~A has name ~A" (TheList 1 2))
+(genFormat courseTopic "~A has topic ~A" (TheList 1 2))
+(genFormat courseTerm "~A is in ~A" (TheList 1 2))
+(genFormat courseInstructor "~A is the instructor of ~A" (TheList 2 1))
+(genFormat courseTime "~A meets at ~A" (TheList 1 2))
+(genFormat courseTimeString "~A meets at ~A" (TheList 1 2))
+(genFormat courseLocation "~A location is ~A" (TheList (TheList 1 :POSSESSIVE) 2))
+
+#|
+(prettyString SchoolTerm "school term")
+(prettyString SpringQuarter-SchoolTerm "spring quarter")
+(prettyString FallQuarter-SchoolTerm "fall quarter")
+(prettyString WinterQuarter-SchoolTerm "winter quarter")
+|#
+
+#|
+(isa teachCourse Predicate)
+(arity teachCourse 3)
+(arg1Isa teachCourse Agent-Generic)
+(arg2Isa teachCourse NUCourse)
+(arg3Isa teachCourse SchoolTerm)
+(comment teachCourse "(teachCourse ?person ?course ?quarter) says that ?person teaches ?course during ?quarter")
+
+(isa timeOfCourse Predicate)
+(arity timeOfCourse 4)
+(arg1Isa timeOfCourse NUCourse)
+(arg2Isa timeOfCourse SchoolTerm)
+(arg3Isa timeOfCourse TimeOfWeekType)
+(arg4Isa timeOfCourse UnitOfTime)
+(comment timeOfCourse "(timeOfCourse ?course ?quarter ?timeOfWeek ?periodOfTime) says that ?course is offered during ?quarter on ?timeOfWeek for ?periodOfTime")
+|#
+
+; Miscellaneous
+
+(genFormat titleOfPerson "~A title is \"~A\"" (TheList (TheList 1 :POSSESSIVE) 2))
+(genFormat YearFn "~A" (TheList 1))
+
+; For the time being, just use a basic American date format.  There may be a way
+; to make this more general, but trying to do it at the knowledge level will be hard.
+; Because ?min, ?hour, etc. aren't top-level arguments, a genFormatForFormula statement
+; doesn't help us here.  Instead we just generate a prettyString that contains everything we need.
+(<== (prettyStringForFormula (MinuteFn ?min (HourFn ?hour ?dayexp)) ?str)
+	 (prettyStringForFormula ?dayexp ?daystr)
+	 (formattedContentString "~A at ~2,'0D:~2,'0D" (TheList ?daystr ?hour ?min) ?str))
+(<== (prettyStringForFormula (DayFn ?day (MonthFn ?month (YearFn ?year))) ?str)
+	 (formattedContentString "~A ~A, ~A" (TheList ?month ?day ?year) ?str))
+; Note: formattedContentString requires IM to be loaded, so this won't work in FIRE alone.
+
+(genFormat interests "~A interest in ~A is ~A" (TheList (TheList 1 :POSSESSIVE) 2 3))
+
+; Durations can take one or two arguments, so we have to use inference here.
+(<== (genFormatForFormula (SecondsDuration ?num) "~A seconds" (TheList 1)))
+(<== (genFormatForFormula (SecondsDuration ?min ?max) "~A to ~A seconds" (TheList 1 2)))
+
+(<== (genFormatForFormula (MinutesDuration ?num) "~A minutes" (TheList 1)))
+(<== (genFormatForFormula (MinutesDuration ?min ?max) "~A to ~A minutes" (TheList 1 2)))
+
+(<== (genFormatForFormula (HoursDuration ?num) "~A hours" (TheList 1)))
+(<== (genFormatForFormula (HoursDuration ?min ?max) "~A to ~A hours" (TheList 1 2)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Test data for the new description framework.  Eventually the groundwork 
+;; predicates should be spun out into its own MT and included somewhere principled.
+
+;; Right now (8/9/18) this is just clutter, so I'm commenting it out.
+;; If we want to move forward with descriptions, we can put this back in.
+;; If not, we can delete it or move it to cold stoarge somewhere.
+
+#|
+(in-microtheory SocialModelingDescriptionMt)
+(genlMt SocialModelingMt SocialModelingDescriptionMt)
+|#
+
+;; Descriptions are tricky to construct automatically, so we're going to use
+;; hand-authored templates for now.
+
+;; TODO: Cyc already has a handful of concepts for descriptions that we might
+;; be able to use.  These are the ones I've found so far:
+;;   - descriptionSentences asserts that a formula constitutes a partial
+;;     description of a given term.  With the right Horn clauses, this relation
+;;     could be used as the grist for a more robust description system.
+;;   - descriptionAscribesRelnToIns and descriptionAscribesRelnToType are used
+;;     to specify the contents of reified descriptions.  These aren't currently
+;;     used anywhere, and they're a little clunky, but they're worth looking into.
+;;   - Description-PCW is the collection for reified descriptions.
+;;   - thingDescribed relates a Description-PCW to the object being described.
+
+;; For our current purposes, the descriptionFor relation will suffice.  All it
+;; does is connect a concept to a formula that can be used to describe it.
+;; The formula should be a pattern that can be passed to fire::query.  Assuming
+;; the query succeeds, the statements within it will be verbalized one at a time.
+
+;; Future versions of descriptionFor may include more advanced description
+;; specifications.  For now, the only special processing is as follows:
+;;   - (and A B C ...) or (or A B C ...) will unpack to "A B C ...".
+;;   - (true) and (false) will be ignored for query generation. (NB: This causes errors right now.)
+;; On the code side, we can also work in REG and aggregation, potentially
+
+;; Horn clauses and eval functions will be useful in providing good descriptions.
+
+;; The more principled approach would be to use solve suggestions to construct
+;; descriptions, giving us access to more advanced strategies.  But solve
+;; suggestions (and HTN plans, for that matter) bring their own baggage.
+;; For now, raw templates are easier to prototype.
+
+;; UPDATE: The above is no longer a full description of the descriptionFor
+;; micro-language.  See the code for documentation for now.
+
+#|
+(isa descriptionFor Relation)
+(arity descriptionFor 2)
+(arg1Isa descriptionFor Thing)
+;(arg2QuotedIsa descriptionFor descriptionFor CycLSentence-Assertible) ; TODO: Figure this out.
+;(genlPreds descriptionFor actors) ; TODO: Or something.
+(comment descriptionFor
+	"(descriptionFor THING FORMULA) indicates that FORMULA constitutes a description
+	 for THING.")
+|#
+
+;; (<== (descriptionFor ?x (and (or (isa ?x EventWithFreeFood) (isa ?x NUEvent))
+;;	                         (eventTopic ?x ?topic)
+;;	                         (eventHost ?x ?host)))
+;;	 (isa ?x NUEvent))
+
+; :all (descAll), :one (descOne), :optional (descOpt), :string (descString) / :quote / canned text,
+; :no/:null/:no-op/:null-op for pure bindings
+; TODO: Do this the right way and pass off the bindings.
+
+;; This is just a test.  Do not uncomment.
+#|
+(<== (descriptionFor ?x (:and
+	                      (:aux (isa ?x NUEvent)) ; no-op
+	                      (:all-unique (isa ?x ?col))
+	                      (:optional
+	                      	(eventTopic ?x ?topic)
+	                      	(eventHost ?x ?host))
+	                      (:optional (:all (freeFoodTypeAtEvent ?x ?food))))) ; TODO: Make (:optional (:all ...)) work.
+     (isa ?x NUEvent))
+
+(isa SampleEvent123 EventWithFreeFood)
+(isa SampleEvent123 NUEvent)
+(eventName SampleEvent123 "Sample Event 123") ; TODO: Plug this into prettyString system.
+(eventTopic SampleEvent123 ArtificialIntelligence)
+(eventHost SampleEvent123 Forbus)
+|#
+
+#|
+(<== (descriptionFor ?x (:optional
+	                      (dateOfEvent ?x ?date)
+	                      (eventHost ?x ?host)
+	                      (eventLocale ?x ?loc)
+	                      (durationOfEvent ?x ?dur)
+	                      ; (:all (eventAudience ?x ?aud)) ; Too wordy.
+	                      (eventCost ?x ?cost)
+	                      ; (:all (freeFoodTypeAtEvent ?x ?food))
+	                      (:n 1 (eventHostContact ?x ?contact))))
+	(isa ?x NUEvent))
+|#
+
+; Right now scraped events aren't ontologized correctly.
+; Eventually we want this to be an (isa ?x NUEvent) check.
+; Also TODO: Get enough REG to use "it" in eventHost.
+
+; No point in isas, since all are just NUEvents.
+; eventTopic seems to have gone the way of the dodo.
+; freeFoodTypeAtEvent seems to have been mostly hypothetical.
+
+#|
+(<== (descriptionFor ?x (:and
+	                      (:all-unique (isa ?x ?col))
+	                      (:optional
+	                      	(:or ; Kludge to get around wonky ontologizing, for now.
+	                      		(:all-unique (facultyDepartment ?x ?dept))
+	                      		(:all-unique (department ?x ?dept)))
+	                      	(:all (schooling ?x ?school ?level)))
+	                      (:optional
+	                      	(officeLocation ?x ?loc)
+	                      	(emailOf ?x ?email)
+	                      	(phoneNumberOf ?x ?num)
+	                      	(personalWebsite ?x ?site))))
+	(isa ?x NUFaculty))
+|#
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

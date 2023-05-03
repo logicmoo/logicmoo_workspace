@@ -1,0 +1,401 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: strategies.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 2, 2011 17:17:53
+;;;;   Purpose: Definitions of abstract strategies
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-04 20:42:49 -0600 (Tue, 04 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; A strategy is a process with intent.
+;;; Therefore, an abstract strategy template should be a superset of a
+;;; type-level process specification.
+
+;;; Still struggling with whether strategies should be instances or colls.
+;;; A strategy is a lot like a Path in Cyc.  Just as an instance of a Path
+;;; is distinct from an instance of a traversal of the path, so too should 
+;;; a Strategy be distinct from an execution of the Strategy.  But the 
+;;; strategies that already exist in Cyc are kind of vague (or silent) about
+;;; whether they are Collections of Individuals.
+;;;
+;;; We want to have categories of strategies for problem-solving, for 
+;;; resource optimization, for adversarial planning, etc.
+;;; Each class of resource might have its own strategies, eg, temporal 
+;;; strategies such as least-commitment, or spatial strategies, such
+;;; as massing, configuring, buffer zones, minimizing boundaries/exposure,
+;;; etc.
+
+;;; relations central to representation of strategies:
+;;;   strategyFor 
+;;;     (strategyFor ?goal ?situation ?strategy-type) associates a named
+;;;     strategy type with a goal in the scope of ?situation.  Situation
+;;;     may be an entire game, or a named phase or process, or a turn.
+;;;   subTasks  (see agenda.meld)
+;;;     (subTasks TASK1 TASK2) states that Task TASK2 is a subordinate task
+;;;     of Task TASK1, such that TASK1 is comprised of TASK2 and, optionally,
+;;;     other tasks.  (see agenda.meld)
+;;;   assignedToRole
+;;;   roleMember  (see functional-roles.meld)
+;;;     (startsAfterEndingOf TASK2 TASK1) states that TASK1 is a preceding
+;;;     task for TASK2. So, TASK2 cannot commence until TASK1 is completed.
+;;;   resourceInPlan  (Cyc predicate)
+;;;   measureOfMerit
+;;;     a measure of merit is a quantity condition that converts a
+;;;     quantitative goal into a success criterion
+;;;   recognitionStrategy
+;;;     relates a solve suggestion/backchaining query to a named strategy
+;;;   applicability conditions
+;;;     relates a solve suggestion/backchaining query to a named strategy
+;;;   taskAchieves
+;;;     relates a task/strategy to a propositional goal
+;;;   decisionPoint
+;;;     A named contingency.  a relative timepoint associated with 
+;;;     alternative strategies.
+;;;   various temporal relations
+
+(isa StrategyType SecondOrderCollection)
+(genls StrategyType FirstOrderCollection)
+(comment StrategyType "StrategyType is a second-order collection whose members are Strategies.  This enables strategies to be referenced and typed without instantiating them.")
+
+(isa DecompositionType SecondOrderCollection)
+(genls DecompositionType StrategyType)
+(comment DecompositionType "DecompositionType is a second-order collection whose members are DecompositionStrategies.")
+
+;;; Is this supposed to support a reified statement indicating the instance
+;;; of the strategy that was chosen for the particular situation?
+;;; If so, it's functional.
+(isa strategyFor TernaryPredicate)
+(arity strategyFor 3)
+(arg1Isa strategyFor Goal)
+(arg2Isa strategyFor Situation)  ; Worst case, make this a TemporalThing.
+(arg3Isa strategyFor Strategy)
+(comment strategyFor "(strategyFor ?goal ?situation ?strategy)")
+
+;;; Strategy Role Relations
+;;;
+
+(isa strategicGoal BinaryRelation)
+(arity strategicGoal 2)
+(arg1Isa strategicGoal Strategy)
+(arg2Isa strategicGoal Goal) ; type-level? does it matter?
+(comment strategicGoal "(strategicGoal ?strategy ?goal) associates the intended goal of the strategy.")
+
+
+
+(isa currentHierarchicalStrategyFor TernaryPredicate)
+(arity currentHierarchicalStrategyFor 3)
+(arg1Isa currentHierarchicalStrategyFor Microtheory)
+(arg2Isa currentHierarchicalStrategyFor Goal)
+(arg3Isa currentHierarchicalStrategyFor List)
+(comment currentHierarchicalStrategyFor "(currentHierarchicalStrategyFor ?mt ?goal ?goal-hierarchy) associates the goal stack for some goal.")
+
+;;; One form of strategy is a pure goal-stack.  If we have one, exploit it.
+(<== (currentHierarchicalStrategyFor ?mt ?goal ?goal-hierarchy)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (goalHierarchy ?subgoal ?goal ?goal-stack))))
+     (evaluate ?goal-hierarchy
+       (JoinListsFn (TheList ?subgoal) ?goal-stack (TheList ?goal))))
+
+
+(isa noCurrentStrategyFor BinaryPredicate)
+(arity noCurrentStrategyFor 2)
+(arg1Isa noCurrentStrategyFor Microtheory)
+(arg2Isa noCurrentStrategyFor Goal)
+
+(<== (noCurrentStrategyFor ?mt ?goal)
+     (uninferredSentence
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt 
+             (goalHierarchy ?subgoal ?goal ?goal-hierarchy))))))
+
+;;; This allows us to refer to strategy instances without explicitly naming
+;;; them.
+;;; *** This won't work.  There may be one strategy for some of the entities
+;;; *** and a different one for others.  Unless the situation is an
+;;; *** individual event involving particular entities at a particular time.
+(isa StrategyFn Function-Denotational)
+(arity StrategyFn 2)
+(arg1Isa StrategyFn Goal)
+(arg2Isa StrategyFn Situation)
+(comment StrategyFn "(StrategyFn ?goal ?situation) denotes the instance of a strategy employed in ?situation to pursue ?goal.")
+
+;;; This is the strategy for computing the decomposition of a goal, not the decomposition itself.
+;;; That's represented via goalDecomposition (qqv)
+(isa decompositionStrategyFor TernaryPredicate)
+(arity decompositionStrategyFor 3)
+(arg1Isa decompositionStrategyFor Goal)
+(arg2Isa decompositionStrategyFor Situation)
+(arg3Isa decompositionStrategyFor DecompositionStrategy)  ; Do we need to instantiate decomposition strategies?
+(comment decompositionStrategyFor "(decompositionStrategyFor ?goal ?situation ?decomp-strategy) designates the strategy for decomposing a goal.")
+
+;;; cf. SpecsFn-Reifiable for a Cyc-native alternative.
+(isa DecompositionFn VariableArityFunction)
+(argsIsa DecompositionFn CycLTerm) ; predicate or dimension
+(comment DecompositionFn "(DecompositionFn <property1>...<propertyN>) denotes a sequential decomposition by each property in turn.")
+
+;;; Actual scheduling should be represented via startsAfterEndingOf, etc. (STN predicates)
+(isa schedulingStrategyFor TernaryPredicate)
+(arity schedulingStrategyFor 3)
+(arg1Isa schedulingStrategyFor Goal)
+(arg2Isa schedulingStrategyFor Situation)
+(arg3Isa schedulingStrategyFor SchedulingStrategy)  ; Do we need to instantiate scheduling strategies?
+(comment schedulingStrategyFor "(schedulingStrategyFor ?goal ?situation ?scheduling-strategy) designates the strategy for scheduling subgoals.")
+
+(isa measureOfMeritFor TernaryPredicate)
+(arity measureOfMeritFor 3)
+(arg1Isa measureOfMeritFor Goal)
+(arg2Isa measureOfMeritFor Situation)  ; should this take a strategy and a context?  Strategy could be an experiment.
+(arg3Isa measureOfMeritFor Quantity)
+(comment measureOfMeritFor "(measureOfMeritFor ?goal ?situation ?dependent-quantity) designates a measure of merit for a strategy.)")
+
+;;; This should allow us to apply a strategy to generate actions.
+;;; After decomposing and scheduling, this might invoke compileSTN to
+;;; schedule activities in a non-linear, non-sequential manner.
+(isa executeStrategy ComplexActionPredicate)
+(arity executeStrategy 1)
+(arg1Isa executeStrategy Strategy)
+(comment executeStrategy "(executeStrategy ?strategy) applies the instance ?strategy to produce concrete actions to take in the current situation.")
+
+;;; Would this be better as a solve suggestion?
+;;; Maybe, but we'd still need actions to write out results if we're going to
+;;; learn from experience.  But do we *want* to save out every intermediate
+;;; subgoal?  Or just an audit trail of strategies?
+(isa decompose ComplexActionPredicate)
+(arity decompose 3)
+(arg1Isa decompose Goal)
+(arg2Isa decompose Situation)
+(arg3Isa decompose DecompositionStrategy)
+(comment decompose "(decompose ?goal ?sit ?strat) breaks ?goal down to subgoals and writes them out to the execution context case.")
+
+(isa schedule ComplexActionPredicate)
+(arity schedule 3)
+(arg1Isa schedule Goal)
+(arg2Isa schedule Situation)
+(arg3Isa schedule DecompositionStrategy)
+(comment schedule "(schedule ?goal ?sit ?strat) schedules subgoals of ?goal and writes ordering constraints out to the execution context case.")
+
+;;; The initialStrategy outsourced predicate returns a hierarchy of goals
+;;; in list form. Turn that into independent statements with this:
+(isa implicitSubgoalRelations BinaryPredicate)
+(arity implicitSubgoalRelations 2)
+(arg1Isa implicitSubgoalRelations List-Extensional)
+(arg2Isa implicitSubgoalRelations Set-Mathematical)
+(comment implicitSubgoalRelations "(implicitSubgoalRelations ?list ?explicit-subgoal-relations) binds relations to a set of (subgoalFor ?parent ?child) statements.")
+
+(<== (implicitSubgoalRelations (TheList) (TheSet)))
+(<== (implicitSubgoalRelations (TheList ?goal) (TheSet)))
+(<== (implicitSubgoalRelations (TheList ?child ?parent) ?stmts)
+     (unifies ?stmts (TheSet (subgoalFor ?parent ?child))))
+(<== (implicitSubgoalRelations ?lst ?stmts)
+     (evaluate ?num (LengthOfListFn ?lst))
+     (greaterThan ?num 2)
+     (evaluate ?rest (RestOfListFn ?lst))
+     (evaluate ?first (FirstInListFn ?lst))
+     (evaluate ?next (SecondInListFn ?lst))
+     (implicitSubgoalRelations ?rest ?parent-goal-relns)
+     (evaluate ?stmts (SetAdjoinFn ?parent-goal-relns (subgoalFor ?first ?next))))
+
+
+;;; Do we want to have role relations for breaking down strategies?
+;;; for a game-playing strategy, we'd want decomposition stratgies
+;;; and scheduling strategies.  Where would this end?  Would we then need
+;;; coordination strategy roles? risk mitigation role relations?
+;;; Is a COA a fully fleshed out strategy?
+;;; Is an HTN just a fully operational strategy?
+
+
+;;; Should strategy be thought of as a slot on an agent?
+;;; Or is there one universal strategy?
+;;; As with a coa, we should think of agents as having assigned tasks within
+;;; a coa.  The tasks are delimited w.r.t. phase, regions, etc.
+
+;;; Cyc defines a hierarchy of collections:
+;;; Strategy
+;;;  ProblemSolvingStrategy
+;;;   DecompositionStrategy
+
+
+;;; What are the agents and their roles?
+;;; What are the spatial and temporal constraints between them?
+;;; What is the required duration of the coordination?
+;;; What goal does this serve?
+
+;;; Decomposition strategies need to be able to specify concretely how they
+;;; break down into subgoals, how to evaluate them with respect to other
+;;; extant strategies, how to determine when they are applicable.
+;;; One reason to support different decompositions is to better evaluate
+;;; the robustness of strategies.  If we wish to improve global performance,
+;;; find the decomposition that exhibits the variation - find the weak spots.
+
+;;; Decomposition strategies should decompose a goal.
+;;; This suggests a matrix of goal-types vs strategy types.
+;;; The rational player by default decomposes by agency.  
+;;; We'd like to make this explicit.
+
+(isa DecomposeByAgentType Collection)
+(isa DecomposeByAgentType DecompositionType)
+(genls DecomposeByAgentType DecompositionStrategy)
+(comment DecomposeByAgentType "DecomposeByAgentType is the collection of strategies that decompose a goal according to the type of agent/actor that can pursue it.")
+
+(preconditionForMethod
+  (and (isa ?strategy DecomposeByAgentType))
+  (methodForAction
+    (executeStrategy ?strategy)
+    (actionSequence
+      (TheList
+        ))))
+        
+;(preconditionForMethod
+;  (true)
+;  (methodForAction
+;    (executeStrategyType ?goal ?situation DecomposeByAgentType)
+;    (actionSequence
+;      (TheList
+;        ))))
+
+(isa DecomposeByAgency Collection)
+(isa DecomposeByAgentType DecompositionType)
+(genls DecomposeByAgency DecompositionStrategy)  ; This is by particular actor?
+(comment DecomposeByAgency "DecomposeByAgency partitions a goal by individual actors that can pursue it.")
+
+(isa DecomposeBySpace Collection)
+(isa DecomposeBySpace DecompositionType)
+(genls DecomposeBySpace DecompositionStrategy)
+(comment DecomposeBySpace "DecomposeBySpace decomposes a goal into different subgoals for different qualitative spatial regions in its scope.")
+
+(isa DecomposeByTime Collection)
+(isa DecomposeByTime DecompositionType)
+(genls DecomposeByTime DecompositionStrategy)
+(comment DecomposeByTime "DecomposeByTime decomposes a goal into different subgoals for different temporal phases.")
+
+(isa DecomposeByResource Collection)
+(isa DecomposeByResource DecompositionType)
+(genls DecomposeByResource DecompositionStrategy)
+(comment DecompositionByResource "DecomposeByResource decomposes a goal into different subgoals based on different resources consumed or converted.")
+
+;;; Breakdown by target or enemy unit, etc:
+(isa DecomposeByObjectType Collection)
+(isa DecomposeByObjectType DecompositionType)
+(genls DecomposeByObjectType DecompositionStrategy)
+(comment DecomposeByObjectType "DecomposeByObjectType creates distinct subgoals for each type of entity it covers.")
+
+
+;;; Breakdown by offensive & defensive strategies:
+(isa DecomposeByAdversarialPosture Collection)
+(isa DecomposeByAdversarialPosture DecompositionType)
+(genls DecomposeByAdversarialPosture DecompositionStrategy)
+(comment DecomposeByAdversarialPosture "DecomposeByAdversarialPosture decomposes a goal based on whether the actor has an offensive or defensive posture wrt the object.")
+
+;;; By conjunct or sequencing by precondition:
+(isa DecomposeByRequirement Collection)
+(isa DecomposeByRequirement DecompositionType)
+(genls DecomposeByRequirement DecompositionStrategy)
+
+;;; The ones actually used:
+
+(isa DecomposeByPerformance Collection)
+(isa DecomposeByPerformance DecompositionType)
+(genls DecomposeByPerformance DecompositionStrategy)
+
+(isa InstrumentalProcessChaining Collection)
+(isa InstrumentalProcessChaining DecompositionType)
+(genls InstrumentalProcessChaining DecompositionStrategy)
+
+(isa PipelineDecomposition Collection)
+(isa PipelineDecomposition DecompositionType)
+(genls PipelineDecomposition DecompositionStrategy)
+
+(isa PlanStepDecomposition Collection)
+(isa PlanStepDecomposition DecompositionType)
+(genls PlanStepDecomposition DecompositionStrategy)
+
+;;; by mainEffort/supportingEffort?
+
+;;; These strategies address implicit goals, rather than explicit domain performance goals:
+
+(isa CoordinationStrategy StrategyType)
+(genls CoordinationStrategy Strategy)
+
+(isa RiskMitigationStrategy StrategyType)
+(genls RiskMitigationStrategy Strategy)
+(comment RiskMitigationStrategy "The collection of strategies aimed at reducing uncertainty and risk toward some goal.")
+;;; Must be able to enumerate vulnerabilities, possibly from failed cases.
+
+(isa EfficiencyStrategy StrategyType)
+(genls EfficiencyStrategy Strategy)
+(comment EfficiencyStrategy "The collection of strategies aimed a improving efficiency in pursuing a particular goal.")
+
+
+;;; Are growth and investment types of strategies?
+;;;   trading off immediate benefit for long term reward
+;;;   trading off reward for long-term risk?
+;;;   implementing a temporary fix/boost?
+
+;;; strategies for building strategies include:
+;;;   specializing for particular types of resources (to facilitate recognition)
+;;;   adapting to support a parasitic task (like risk mgmt)
+;;;   extending by concatenating strategies
+
+;;; We need to be able to scope a domain strategy with respect to its
+;;; time/space/knowledge/resource boundaries.
+;;; We need role relations for strategies
+;;; We need measures of merit, preferences, decompositions, etc.
+;;;
+;;; We need to enable the user to talk about strategies in order to 
+;;; rationalize actions.
+
+;;; Need: counterplanning strategies,
+;;; parallelization strategies
+;;; prioritization strategies
+
+
+;;; ---------------------------------------------------
+;;; COMPOSING STRATEGIES
+
+;;; strategy composition - determines how to trade off and combine goals.
+;;;
+;;; 1) Sequencing
+;;; 2) Apportioning
+;;; 3) Choice policy
+;;; 4) Bounding (search depth, etc)  across different levels
+;;; 5) Amortizing
+;;; 6) Eval fns (pick state space to search)
+;;; 7) Decomposing strategy (find an alternative decomposition that avoids prob)
+
+;;; Recognize the following building-block processes in behavior
+;;; and apply strategies to improve efficiency, etc.
+;;;
+;;; Movement
+;;; Growth
+;;; EntityProduction
+;;; ResourceConversion
+;;; Offense
+;;; Defense
+
+;;; ---------------------------------------------------
+;;; STRATEGY VOCABULARY
+
+;;; Defense
+;;; Offense
+;;; ThreatMonitoring
+;;; SpecializedRoles
+;;; Race
+;;; ResourceTransformation
+;;; Deterrent
+;;; InformationGathering
+;;; BuyingTime
+;;; AdvantageInNumbers
+;;; AdvantageInType
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

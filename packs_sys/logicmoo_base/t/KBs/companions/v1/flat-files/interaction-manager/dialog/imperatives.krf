@@ -1,0 +1,176 @@
+;;;
+;;; imperatives.meld
+;;;
+;;; Support imperatives in dialog as commands and advice
+;;;
+;;; Author: Tom Hinrichs
+;;; Created: November 30, 2010 09:07:00
+;;; $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;; $LastChangedBy: hinrichs $
+;;;
+;;; In an interactive, collaborative task, imperatives may be direct commands
+;;; or they may be advice in the form of constraints or preferences.
+;;; They will inevitably refer to entities in a shared context, rather than
+;;; be exclusively limited to a narrative.  The prior history of a DRS is 
+;;; only relevant to the extent that it might provide clues for reference
+;;; resolution.
+;;;
+;;; Two kinds of ambiguities arise immediately:
+;;; 1) attachment ambiguities
+;;; 2) reference ambiguities
+;;; The ability (or failure) to resolve the latter can help resolve the former.
+;;; E.g. "Attack the unit by the river" - if there are multiple units, but only
+;;; one is by the river, then the preposition is most likely attached to the 
+;;; noun phrase.  If there's only one unit but it's not currently by the river,
+;;; then the preposition is most likely attached to the verb and the command
+;;; is to set up an ambush and wait for the unit to arrive at the river.
+
+(in-microtheory Interaction-ManagerMt)
+
+
+(isa interpretImperative ComplexActionPredicate)
+
+
+;;; Execute a command immediately.
+;;; If it is possible to interpret the statement as a primitive action,
+;;; then do so.  Consider this as analogous to respondToQuestion.
+(isa respondToCommand ComplexActionPredicate)
+(arity respondToCommand 3)
+(arg1Isa respondToCommand Microtheory)
+(arg2Isa respondToCommand CycLTerm)
+(arg3Isa respondToCommand Collection)
+(comment respondToCommand "(respondToCommand ?context ?sentence-id ?sentence-type) implements the methods by which the companion executes a user Command.")
+
+(isa performCommand ComplexActionPredicate)
+(arity performCommand 2)
+(arg1Isa performCommand Microtheory)
+(arg2Isa performCommand ELSentence-Assertible)
+(comment performCommand "(performCommand ?context ?command) goes off and does it.  Usually by sending a task to the session reasoner.")
+
+;;; Formulate a new policy, constraint, or preference for future planning:
+(isa interpretAdvice ComplexActionPredicate)
+(arity interpretAdvice 3)
+(arg1Isa interpretAdvice Microtheory)
+(arg2Isa interpretAdvice CycLTerm)
+(arg3Isa interpretAdvice Collection)
+(comment interpretAdvice "(interpretAdvice ?context ?sentence-id ?sentence-type) operationalizes user advice.")
+
+
+(isa commandFormForInterpretation TernaryPredicate)
+(arity commandFormForInterpretation 3)
+(arg1Isa commandFormForInterpretation Collection)
+(arg2Isa commandFormForInterpretation CycLFormula)
+(arg3Isa commandFormForInterpretation CycLFormula)
+(comment commandFormForInterpretation "(commandFormForInterpretation ?sentence-type ?interp ?command) binds ?command to a re-formulation of the EA interpretation ?interp.")
+
+
+;;; How do we interpret an imperative as a command?
+;;; 0) Test that this is a positive statement, not a negative
+;;; 1) We need to know what our shared focus is
+;;; 2) We need to know what the vocabulary of actions is in that domain
+;;; 3) We need to be able to resolve references
+;;; 4) We need some kind of bi-directional translation of primitives to language.
+;;;    For learned strategies, that should be the language from which it was learned.
+;;; 5) Given entities and a situation, what kinds of actions does it make sense to perform?
+
+;;; *** PUNT!  Push the marble through the pipes:
+(<== (commandFormForInterpretation ImperativeUtterance ?stmt (achieve ?stmt)))
+
+(isa focalDomainMicrotheory UnaryPredicate)
+(arity focalDomainMicrotheory 1)
+(arg1Isa focalDomainMicrotheory Microtheory)
+(comment focalDomainMicrotheory "(focalDomainMicrotheory ?mt) binds ?mt to the microtheory specific to the session.")
+
+(<== (focalDomainMicrotheory ?mt)
+     (currentSessionReasoner ?sr)
+     (localAgent ?agent)
+     (different ?agent ?sr)
+     (holdsOnRemoteAgent ?sr (agentContext ?mt)))
+
+(<== (focalDomainMicrotheory ?mt)
+     (currentSessionReasoner ?sr)
+     (localAgent ?sr)
+     (agentContext ?mt))
+
+
+;;; We need to map the verb-concept to possible primitives in the domain, then
+;;; resolve entity references by scanning in space, time, and similarity.
+;;; Issue: we may refer to things that don't exist yet.
+
+
+
+;;; How do we interpret an imperative as advice?
+;;; 1) A negative statement  (never do X)
+;;; 2) An objection to a stated course of action
+;;; 3) A conditionalization delineating when something is appropriate
+;;; 4) Long-term, non-operational directives
+;;; 5) A hint (in the Martha Evens style).
+
+;;; Stupid default:
+(preconditionForMethod
+  (outsourcedOnly
+    (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (respondToCommand ?context ?sentence-id ImperativeUtterance)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance Replying))  ; a kind of explicit Acknowledgement
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Promise))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance "I'll do that.")))))  ; a really annoying response
+
+
+(preconditionForMethod
+  (and
+    (uniqueInterpretation ?context ?sentence-id ?interpretation)
+    (commandFormForInterpretation ImperativeUtterance ?interpretation ?command)
+    (unifies ?stmt
+       (ist-Information ?context (sentenceCommand ?sentence-id ?interpretation ?command)))
+    (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (respondToCommand ?context ?sentence-id ImperativeUtterance)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance Replying))  ; a kind of explicit Acknowledgement
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Promise))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRecord ?stmt)                        ; Write out the command interpretation.
+        (doRespond ?system-utterance "Ok.")     ; Send a response.
+        (performCommand ?context ?command)))))  ; Now go off and do it.
+
+(<== (preferInContext (respondToCommand ?context ?sentence-id ImperativeUtterance) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 performCommand))
+
+
+;;; This needs to call doRemoteAgentPlan
+;;; Modeled after generateAnswers.
+;;; This assumes that the session-reasoner defines the notify-listeners method
+;;; on UserRequestEvent (which it does in event-dispatching.lsp)
+;;; Simple sketch actions are dispatched on to the relevant sketch agent, 
+;;; while other actions are handled through the assimilateRequest task.
+;;; Define methods for that task to extend command capabilities.
+;;; The freeciv-agent defines primary methods for notify-listeners.
+(preconditionForMethod 
+  (and (localAgent ?local-agent)
+       (currentInteractionMgr ?im)  ; outsourced handler doesn't support tests yet.
+       (equals ?im ?local-agent)
+       (currentSessionReasoner ?session-reasoner)  ;; Figure out that command ought to be done on the sr.
+       (unifies ?op-command ?command)) ;; Provide hook for translation step in other system, e.g. environment references
+  (methodForAction
+    (performCommand ?context ?command)
+    (actionSequence
+     (TheList
+      (doRemoteAgentPlan  
+       ?session-reasoner
+       (actionSequence 
+        (TheList
+         (doNotifyPA ?op-command UserRequestEvent))))
+      ))))
+
+
+;;; End of File
+

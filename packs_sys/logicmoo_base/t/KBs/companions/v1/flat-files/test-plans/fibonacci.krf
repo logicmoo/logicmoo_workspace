@@ -1,0 +1,38 @@
+
+
+(in-microtheory TestPlanMt)
+(genlMt TestPlanMt CompanionsMt)   ; inherit the primitives
+(genlMt CompanionsMt TestPlanMt)
+
+;;; World's stupidest fibonacci, for the purpose of testing timeouts:
+
+(<== (fibonacci 0 0))
+
+(<== (fibonacci 1 1))
+
+(<== (fibonacci ?n ?f)
+     (groundExpression ?n)
+     (greaterThan ?n 1)
+     (evaluate ?n-1 (DifferenceFn ?n 1))
+     (evaluate ?n-2 (DifferenceFn ?n 2))
+     (fibonacci ?n-1 ?fn-1)
+     (fibonacci ?n-2 ?fn-2)
+     (evaluate ?f (PlusFn ?fn-1 ?fn-2)))
+
+#||
+;;; This should time out.
+(fire:query '(withBackchainingDepth 100 
+               (withTimeout 2 (fibonacci 18 ?what)))
+             :context 'TestPlanMt)
+||#
+
+(isa smartFibonacci BinaryPredicate)
+
+(<== (smartFibonacci ?n ?f)
+     (groundExpression ?n)
+     (greaterThan ?n 1)
+     (evaluate ?n-1 (DifferenceFn ?n 1))
+     (evaluate ?n-2 (DifferenceFn ?n 2))
+     (cacheComplete (fibonacci ?n-1 ?fn-1))
+     (cacheComplete (fibonacci ?n-2 ?fn-2))
+     (evaluate ?f (PlusFn ?fn-1 ?fn-2)))

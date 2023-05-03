@@ -1,0 +1,207 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: justification-structure-ontology
+;;;;    System: 
+;;;;    Author: Scott Friedman
+;;;;   Created: October 11, 2010 14:11:20
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory JustificationStructureOntologyMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Collections.
+
+(isa Node Collection)
+(comment Node "A #$Node is an entity in an abstract network or graph, connected to other #$Node instances via edges or links.")
+
+(isa Contradiction Collection)
+(comment Contradiction "A #$Contradiction is a logical inconsistency.")
+
+
+;;
+;; Belief nodes and subordinates.
+
+(isa BeliefNode Collection)
+(comment BeliefNode "A #$BeliefNode is a node within justification structure.  It has a fact as its value, and it can be used in justifications.  The #$CycL fact itself is the term/instance identifier.")
+(genls BeliefNode Node)
+(genls BeliefNode CycLTerm)
+
+(isa ConceptNode Collection)
+(comment ConceptNode "A #$ConceptNode is a #$BeliefNode that refers to some conceptual structure, such as a #$ModelFragmentType, a Horn clause, a SAGE generalization, and so forth.")
+(genls ConceptNode BeliefNode)
+
+
+;;
+;; Justification nodes and subordinates.
+
+(isa JustificationNode Collection)
+(comment JustificationNode "A #$JustificationNode justifies at least one #$BeliefNode via (#$consequencesOf JUST NODE), and has #$BeliefNode instances as its antecedents, via (#$antecedentsOf JUST NODE).")
+(genls JustificationNode Node)
+
+(isa ModelFragmentInstantiation Collection)
+(comment ModelFragmentInstantiation "A #$ModelFragmentInstantiation is a #$JustificationNode whose antecedents are the constraints and participant bindings, and whose consequences are the role bindings.")
+(genls ModelFragmentInstantiation JustificationNode)
+
+(isa ModelFragmentActivation Collection)
+(comment ModelFragmentActivation "A #$ModelFragmentActivation is a #$JustificationNode whose antecedents are the roles and conditions of a model fragment instance, and whose consequences are the consequences of the model fragment instance.")
+(genls ModelFragmentActivation JustificationNode)
+
+(isa UpstreamStateQuantifier Collection)
+(comment UpstreamStateQuantifier "A #$UpstreamStateQuantifier within the justification structure asserts that the belief(s) immediately downstream (resulting) from the USQ depends on the upstream (antecedent) belief(s) being contextualized according to the accompanying #$upstreamQuantifier assertion.")
+(genls UpstreamStateQuantifier JustificationNode)
+
+(isa MechanismIsolation Collection)
+(comment MechanismIsolation "A #$MechanismIsolation within the justification structure asserts that the belief(s) immediately downstream (resulting) from the MI is true, provided the antecedent belief(s) are influence statements and they're the only mechanisms directly or indirectly acting on the affected quantity.")
+(genls MechanismIsolation JustificationNode)
+
+;;
+;; Explanation nodes and subordinates.
+
+(isa XPNode Collection)
+(genls XPNode Explanation)
+(genls XPNode Node)
+(comment XPNode "A #$XPNode is an #$Explanation that contains a number of #$JustificationNode instances (via #$containsInformation).")
+
+(isa XPMtFn Function-Denotational)
+(arity XPMtFn 1)
+(comment XPMtFn "(#$XPMtFn XP) refers to a #$Microtheory that contains the beliefs that constitute the #$XPNode XP.")
+(resultIsa XPMtFn Microtheory)
+(arg1Isa XPMtFn XPNode)
+
+;;
+;; Beliefs and justifications are disjoint.
+
+(disjointCollections BeliefNode JustificationNode)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Relations for describing justifications.
+;;
+
+(isa antecedentsOf BinaryPredicate)
+(comment antecedentsOf "(#$antecedentsOf JUST NODE) states that #$BeliefNode NODE is an antecedent of #$JustificationNode JUST.")
+(arity antecedentsOf 2)
+(arg1Isa antecedentsOf JustificationNode)
+(arg2Isa antecedentsOf BeliefNode)
+
+(isa consequencesOf BinaryPredicate)
+(comment consequencesOf "(#$consequencesOf JUST NODE) states that #$BeliefNode NODE is the consequence of #$JustificationNode JUST.")
+(arity consequencesOf 2)
+(arg1Isa consequencesOf JustificationNode)
+(arg2Isa consequencesOf BeliefNode)
+
+(isa justificationInformant BinaryPredicate)
+(comment justificationInformant "(#$justificationInformant JUST INFORMANT) stores a #$CycLTerm INFORMANT as the reason for the #$JustificationNode JUST.")
+(arity justificationInformant 2)
+(arg1Isa justificationInformant JustificationNode)
+(arg2Isa justificationInformant CycLTerm)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; XP beliefs and contextualization.
+;;
+
+(isa xpUsesBelief BinaryPredicate)
+(arity xpUsesBelief 2)
+(arg1Isa xpUsesBelief XPNode)
+(arg2Isa xpUsesBelief BeliefNode)
+
+(isa mtQuantifier Predicate)
+(comment mtQuantifier "(#$mtQuantifier MT #$holdsSometimeDuring STATE) asserts that for any fact F in MT, (#$holdsSometimeDuring STATE F).  Can also be used with #$holdsIn, and other $#TemporalPredicate instances.")
+(arity mtQuantifier 3)
+(arg1Isa mtQuantifier Microtheory)
+(arg2Isa mtQuantifier TemporalPredicate)
+(arg3Isa mtQuantifier TemporalThing)
+
+(isa upstreamQuantifier Predicate)
+(comment upstreamQuantifier "(#$upstreamQuantifier USQ #$holdsSometimeDuring STATE) asserts that for any belief or fact F upstream of #$UpstreamStateQuantifier USS, (#$holdsSometimeDuring STATE F).  Can also be used with #$holdsIn, and other $#TemporalPredicate instances.")
+(arity upstreamQuantifier 3)
+(arg1Isa upstreamQuantifier UpstreamStateQuantifier)
+(arg2Isa upstreamQuantifier TemporalPredicate)
+(arg3Isa upstreamQuantifier TemporalThing)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Contradiction
+;;
+
+(isa contradictorySentences BinaryPredicate)
+(isa contradictorySentences SymmetricBinaryPredicate)
+(arity contradictorySentences 2)
+(comment contradictorySentences "(#$contradictorySentences SENT1 SENT2) implies that an the two sentences are contradictory.")
+
+(isa contradictoryExplanations BinaryPredicate)
+(isa contradictoryExplanations SymmetricBinaryPredicate)
+(arity contradictoryExplanations 2)
+(comment contradictoryExplanations "(#$contradictoryExplanations EX1 EX2) implies that an the two #$Explanation instances are contradictory.")
+(arg1Isa contradictoryExplanations Explanation)
+(arg2Isa contradictoryExplanations Explanation)
+
+(isa contradictoryExplanation Predicate)
+(arity contradictoryExplanation 1)
+(comment contradictoryExplanation "(#$contradictoryExplanation EX) implies that an the #$Explanation instance has at least one contradictory sentence inside it.")
+(arg1Isa contradictoryExplanation Explanation)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Inter-explanation relations
+;;
+
+(isa dependsOn-XPXP AsymmetricBinaryPredicate)
+(comment dependsOn-XPXP "(#$dependsOn-XPXP XP1 XP2) asserts that #$XPNode XP1 depends on #$XPNode XP2, such that some assumed belief in XP1 is explicitly justified in XP2.")
+(arity dependsOn-XPXP 2)
+(arg1Isa dependsOn-XPXP XPNode)
+(arg2Isa dependsOn-XPXP XPNode)
+
+(isa xpAlternatives SymmetricBinaryPredicate)
+(comment xpAlternatives "(#$xpAlternatives XP1 XP2) asserts that both #$Explanation instances explain the same phenomena, but are alternate ways of doing so.")
+(arity xpAlternatives 2)
+(arg1Isa xpAlternatives Explanation)
+(arg2Isa xpAlternatives Explanation)
+
+(isa xpMoreSpecificThan AsymmetricBinaryPredicate)
+(comment xpMoreSpecificThan "(#$xpMoreSpecificThan XP1 XP2) asserts that (#$xpAlternatives XP1 XP2), and that XP1 is more specific than XP2.")
+(arity xpMoreSpecificThan 2)
+(arg1Isa xpMoreSpecificThan Explanation)
+(arg2Isa xpMoreSpecificThan Explanation)
+
+(isa xpPreference AsymmetricBinaryPredicate)
+(comment xpPreference "(#$xpPreference XP1 XP2) asserts that XP1 is a better explanation than XP2, ceteris paribus.  See also #$xpPartialPreference.")
+(arity xpPreference 2)
+(arg1Isa xpPreference Explanation)
+(arg2Isa xpPreference Explanation)
+
+(isa xpPartialPreference Predicate)
+(comment xpPartialPreference "(#$xpPartialPreference XP1 XP2 DIMENSION) asserts that XP1 is a better explanation than XP2 when considered along dimension DIMENSION, ceteris paribus.  See also #$xpPreference.")
+(arity xpPartialPreference 3)
+(arg1Isa xpPartialPreference Explanation)
+(arg2Isa xpPartialPreference Explanation)
+(arg3Isa xpPartialPreference CycLTerm)
+
+(isa xpsAnalogous SymmetricBinaryPredicate)
+(comment xpsAnalogous "(#$xpsAnalogous XP1 XP2) asserts that both #$Explanation instances (1) explain analogous phenomena, (2) have identical structure, and (3) use concepts with analogous participant slots.  The actual justification instances that constitute the #$XPNodes are different instances, and may be of different types.  See also #$xpsIdentical.")
+(arity xpsAnalogous 2)
+(arg1Isa xpsAnalogous Explanation)
+(arg2Isa xpsAnalogous Explanation)
+
+(isa xpsIdentical SymmetricBinaryPredicate)
+(comment xpsIdentical "(#$xpsIdentical XP1 XP2) asserts that both #$Explanation instances (1) explain the exact same phenomena, (2) have identical structure, and (3) use the exact same concepts.  The actual justification instances that constitute the #$XPNodes can be different instances, but they must be of the same type.  See also #$xpsAnalogous.")
+(arity xpsIdentical 2)
+(arg1Isa xpsIdentical Explanation)
+(arg2Isa xpsIdentical Explanation)
+
+(isa acceptedExplanationFor BinaryPredicate)
+(comment acceptedExplanationFor "(#$acceptedExplanationFor EXPLANANDUM XP) means that the belief/entity EXPLANANDUM is credited with the explanation XP, due to local or global preferences/cost function.") 
+(arity acceptedExplanationFor 2)
+(arg1Isa acceptedExplanationFor CycLTerm)
+(arg2Isa acceptedExplanationFor Explanation)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

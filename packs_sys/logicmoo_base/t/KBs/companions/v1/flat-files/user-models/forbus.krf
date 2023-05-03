@@ -1,0 +1,47 @@
+;;;
+;;; Forbus.meld
+;;;
+
+(in-microtheory CyclistDefinitionalMt)
+
+(isa Forbus HumanCyclist)
+
+(in-microtheory PeopleDataMt)
+
+(isa Forbus MaleHuman)
+(isa Forbus AdultMaleHuman)
+(isa Forbus ComputerScientist)
+(isa Forbus ArtificialIntelligenceResearcher)
+(isa Forbus Teacher)
+(isa Forbus AcademicProfessional)
+(hasDegreeInField Forbus PhDDegree ComputerScience)
+(languageSpoken Forbus EnglishLanguage)
+(citizens-Birth UnitedStatesOfAmerica Forbus)
+(schooling Forbus MIT Graduate)
+(titleOfPerson Forbus Dr)
+(programsIn Forbus Lisp)
+(holdsIn (TimeIntervalInclusiveFn (YearFn 1990) Now)
+  (employees NorthwesternUniversity Forbus))
+(holdsIn (TimeIntervalInclusiveFn (YearFn 1990) Now)
+  (hasWorkers QualitativeReasoningGroupAtNorthwesternU Forbus))
+(hasLeaders QualitativeReasoningGroupAtNorthwesternU Forbus)
+
+
+(in-microtheory EnglishMt)
+
+(fullName Forbus "Kenneth D. Forbus")
+(nameString Forbus "Ken")
+(nickname Forbus "Forbus")
+
+
+(in-microtheory UniversityDataMt)
+
+(subOrganizations NorthwesternUniversity QualitativeReasoningGroupAtNorthwesternU)
+
+;;; consider built-in cyc preds:
+;;;(modelMtOfUser (UserModelMtFn Guest) Guest)
+
+(in-microtheory EANLU-Pnames :exclude-globals t)
+
+(indexedProperName (TheList ken) forbus Forbus)
+(indexedProperName (TheList kenneth) forbus Forbus)

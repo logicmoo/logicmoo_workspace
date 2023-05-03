@@ -1,0 +1,1555 @@
+;;;
+;;; primitives.meld
+;;;
+;;; Action definitions for FreeCiv task primitives
+;;; Note: By making some predicates functionalInArgs, we can simplify some
+;;; of the effects models to omit explicit negations.  
+;;; Note: According to the Cyc documentation:
+;;; The first argument to an event predicate will always be the "agentive force" in the event.
+;;; This means that, at least for domain-level predicates, we're justified in 
+;;; assuming that arg1 is the actor.
+;;; 
+;;; 7-26-11: Move everything out of here except the bare minimum needed to run
+;;; the HTN planner.  Other meta-knownedge about the actions is now in 
+;;; fc-actions.meld.
+
+(in-microtheory FreecivPlanningDomain)
+
+
+;;; ToDo:
+;;; -----------
+;;; doAirlift
+;;; doParadropTo
+;;; doInvestigateCity
+;;; doSabotageCity
+;;; doStealAdvance
+;;; doInciteCityRebellion
+;;; doPoisonCityWater
+;;; doBuildFarmland ; Farmland tiles are those which have been irrigated a second time. Requires refrigeration.
+;;; and handle other terrain transforms achievable via irrigation & mining packets.
+;;; doSaveGame  ; see companion-primitives.meld for knowledge def.
+;;; doEndGame   ; see companion-primitives.meld
+
+
+;;;
+;;; Bookkeeping
+;;;
+
+(isa doAssert SimpleActionPredicate)
+(isa doAssert InferentialTask)
+(isa doAssert BookKeepingTask)
+(arity doAssert 1)
+(comment doAssert "(doAssert ?assertion) simply adds ?assertion to the current planning context.")
+
+(effectOfAction-Props
+   (doAssert ?assertion)
+   ?assertion)
+   
+(isa doRetract SimpleActionPredicate)
+(isa doRetract InferentialTask)
+(isa doRetract BookKeepingTask)
+(arity doRetract 1)
+(comment doRetract "(doRetract ?assertion) retracts ?assertion from the current planning context.")
+
+(effectOfAction-Props
+   (doRetract ?assertion)
+   (not ?assertion))
+
+;;; doRecord, doForget, doRecordMembers, doForgetMembers all add or delete assertions 
+;;; from the KB.  If their assertions are not already contextualized, they will 
+;;; be contextualized in the current game case.
+(isa doRecord SimpleActionPredicate)
+(isa doRecord InferentialTask)  ; This is inferential, but not a BookKeepingTask!
+(arg1Isa doRecord ELSentence-Assertible)
+(arity doRecord 1)
+(comment doRecord "(doRecord ?assertion) stores ?assertion in the current case in the knowledge base.")
+
+;;; For performance reasons, it's a good idea to have preconditions specified,
+;;; even if they're trivial, so that the planner doesn't have to keep searching
+;;; for them in BaseKB.  It's only looking for one unique precondition, so when
+;;; it finds it (maybe in wm), it stops.
+(preconditionFor-Props
+   (true)
+   (doRecord ?assertion))
+   
+(effectOfAction-Props
+  (doRecord ?assertion)
+  ?assertion)  ; like doAssert, but stored in the kb.
+
+(isa doForget SimpleActionPredicate)
+(isa doForget InferentialTask)
+(arg1Isa doForget ELSentence-Assertible)
+(arity doForget 1)
+(comment doForget "(doForget ?assertion) forgets ?assertion from the kb.")
+
+(preconditionFor-Props
+   (true)
+   (doForget ?assertion))
+
+(isa doRecordMembers SimpleActionPredicate)
+(isa doRecordMembers InferentialTask)
+(arity doRecordMembers 1)
+(arg1Isa doRecordMembers Set-Mathematical) ; The set of contextualized statements.
+(comment doRecordMembers "(doRecordMembers ?assertionSet) stores elements of ?assertionSet in the knowledgeBase.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doRecordMembers ?assertion-set))
+
+(isa doForgetMembers SimpleActionPredicate)
+(isa doForgetMembers InferentialTask)
+(arity doForgetMembers 1)
+(arg1Isa doForgetMembers Set-Mathematical) ; The set of contextualized statements.
+(comment doForgetMembers "(doForgetMembers ?assertionSet) forgets elements of ?assertionSet from the knowledgeBase.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doForgetMembers ?assertion-set))
+
+;;;
+;;; Remember a fact into working memory (and unremember it) (wms 5/14/07)
+;;;
+(isa doTell SimpleActionPredicate)
+(isa doTell InferentialTask)  ; This is inferential, but not a BookKeepingTask!
+(arg1Isa doTell ELSentence-Assertible)
+(arity doTell 1)
+(comment doTell "(doTell ?assertion) stores ?assertion in the current case in working memory.")
+
+(preconditionFor-Props
+   (true)
+   (doTell ?assertion))
+   
+(effectOfAction-Props
+  (doTell ?assertion)
+  ?assertion) 
+
+;;; Remove a fact from working memory
+(isa doUntell SimpleActionPredicate)
+(isa doUntell InferentialTask)
+(arg1Isa doUntell ELSentence-Assertible)
+(arity doUntell 1)
+(comment doUntell "(doUntell ?assertion) forgets ?assertion from the working memory.")
+
+(preconditionFor-Props
+   (true)
+   (doUntell ?assertion))
+
+
+(isa doUncacheDgroup SimpleActionPredicate)
+(isa doUncacheDgroup InferentialTask)
+(arity doUncacheDgroup 1)
+(arg1Isa doUncacheDgroup Case)
+(comment doUncacheDgroup "(doUncacheDgroup ?case-spec) deletes the dgroup for ?case-spec from the analogy source.")
+
+(preconditionFor-Props
+  (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+  (doUncacheDgroup ?case-spec))
+
+(isa doAnnounce SimpleActionPredicate)
+(isa doAnnounce InferentialTask)
+(arity doAnnounce 2)
+(arg1Isa doAnnounce CharacterString)
+(arg2Isa doAnnounce CycLTerm)
+(comment doAnnounce "(doAnnounce <string> <args>) simply prints <string> to standard output (for tracing execution)")
+
+;;;
+;;; Meta-level Actions
+;;;
+
+(isa doWait SimpleActionPredicate)
+(arity doWait 2)
+(arg1Isa doWait FreeCiv-Object)
+(arg2Isa doWait ELSentence-Assertible)
+(comment doWait "(doWait ?actor ?condition) defers execution on ?actor until ?condition holds.")
+
+(effectOfAction-Props
+  (doWait ?waiting-actor ?condition)
+  ?condition)
+
+(isa doCallback SimpleActionPredicate)
+(isa doCallback InferentialTask)
+(arity doCallback 4)
+(arg1Isa doCallback FreeCiv-Object)
+(arg2Isa doCallback Set-Mathematical)
+(arg3Isa doCallback ELFormula)
+(arg4Isa doCallback ELFormula)
+(comment doCallback "(doCallback ?actor ?eventSet ?condition ?goalTasks) indexes a plan specification by the condition under which it should be invoked.")
+
+;(isa doBuffer SimpleActionPredicate)
+;(arity doBuffer 2)
+;(arg1Isa doBuffer Set-Mathematical)
+;(arg2Isa doBuffer Set-Mathematical)
+;(comment doBuffer "(doBuffer ?qtype-set ?mentions-set) buffers primitive quantity values that mention entities in ?mentions-set.")
+
+
+
+;;;
+;;; Science
+;;;
+
+(isa doResearch SimpleActionPredicate)
+(arity doResearch 2)
+(arg1Isa doResearch FreeCiv-Player)
+(arg2Isa doResearch FreeCiv-Tech)
+(comment doResearch "(doResearch ?player ?tech) instructs scientists to work on ?tech.")
+
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        ;(currentlyResearchable ?player ?tech)
+        (lookupOnly (isa ?tech FreeCiv-Tech))  ; allow it to generate bindings for ?tech in legal player.
+        (different ?tech FC-Tech-None)
+        (uninferredSentence
+          (playerKnowsTech ?player ?tech))       ; Learning is monotonic.
+        ;(uninferredSentence
+        ;  (currentlyResearching ?player ?tech))  ; It's possible to be researching nothing currently.  Don't fail on that account.
+        (evaluate ?tech-preconds
+          (TheClosedRetrievalSetOf ?prior-tech
+            (cacheComplete
+              (lookupOnly
+                (researchRequiresTech ?tech ?prior-tech)))))
+        (everySatisfies ?prior-tech ?tech-preconds (playerKnowsTech ?player ?prior-tech)))
+   (doResearch ?player ?tech))
+
+(effectOfAction-Props
+   (doResearch ?player ?tech)
+   (currentlyResearching ?player ?tech))
+   
+;;; It would be simpler if we got rid of this.
+;;; That would only work if we could reify each change in research
+;;; as an explicit doResearch action.
+(isa doSetTechGoal SimpleActionPredicate)
+(arity doSetTechGoal 2)
+(arg1Isa doSetTechGoal FreeCiv-Player)
+(arg2Isa doSetTechGoal FreeCiv-Tech)
+(comment doSetTechGoal "(doSetTechGoal ?player ?goal) sets long-term research goal to ?goal.")
+
+;;; 
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (groundExpression ?goal)  ; Don't even let it try this bottom up.
+        (lookupOnly (isa ?goal FreeCiv-Tech))
+        (uninferredSentence (playerKnowsTech ?player ?goal)))
+   (doSetTechGoal ?player ?goal))
+
+(effectOfAction-Props
+   (doSetTechGoal ?player ?goal)
+   (techGoal ?player ?goal))
+
+
+
+;;; Spaceship
+
+;;; currentPlayer must know spaceflight
+;;; some player must have achieved the Apollo Wonder
+;;; Must have parts assembled in cities. 
+;;; 1-32 SpaceStructurals
+;;; 1-4 SpaceModules of each type: Habitation, LifeSupport, and SolarPanels
+;;; 1-8 pairs of SpaceComponents of types Propulsion and Fuel
+;;; Each city in which they are built must have a Factory
+;;; Must have researched Plastics for Components, and Superconductors for Modules.
+;;; Can't have already launched a spaceship.
+
+;;; Question: How do we query for the existence of the components?
+;;; It's not a simple cityHasImprovement statement.
+;;; We actually have to have a quantity of these things/parts.
+;;; We're going to have to have new outsourced preds to query
+;;; for spaceshipAssemblyStatus.
+(isa doLaunchSpaceship SimpleActionPredicate)
+(arity doLaunchSpaceship 1)
+(arg1Isa doLaunchSpaceship FreeCiv-Player)
+(comment doLaunchSpaceship "(doLaunchSpaceship ?player) launches the spaceship to Alpha-Centauri.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (playerKnowsTech ?player FC-Tech-SpaceFlight))  ; more than this.  Later.
+  (doLaunchSpaceship ?player))
+       
+(effectOfAction-Props
+  (doLaunchSpaceship ?player)
+  (spaceshipStatus ?player FC-SpaceshipLaunched))  ; The immediate effect.
+
+;;;
+;;; Government
+;;;
+
+(isa doSetRates SimpleActionPredicate)
+(arity doSetRates 4)
+(arg1Isa doSetRates FreeCiv-Player)
+(arg2Isa doSetRates Integer)
+(arg3Isa doSetRates Integer)
+(arg4Isa doSetRates Integer)
+(comment doSetRates "(doSetRates ?tax ?lux ?sci) sets the percentages for taxes, luxury and science.  Cannot exceed 100.")
+
+(effectOfAction-Props
+   (doSetRates ?player ?tax ?lux ?sci)
+   (and (currentTaxPercent ?player ?tax)
+        (currentSciencePercent ?player ?sci)
+        (currentLuxuryPercent ?player ?lux)))
+
+(isa doSetGov SimpleActionPredicate)
+(arity doSetGov 2)
+(arg1Isa doSetGov FreeCiv-Player)
+(arg2Isa doSetGov FreeCiv-Government)
+(comment doSetGov "(doSetGov ?newGov) attempts to set civilization government to ?newGov.")
+
+(preconditionFor-Props
+  (and (currentPlayer ?player)
+       ;;(canSetGovernment ?player ?gov)     ; new!  improved!  (doesn't work :-()
+       (isa ?gov FreeCiv-Government)
+       (cacheComplete
+         (lookupOnly
+           (objectProductionRequiresTech ?gov ?tech)))
+       (playerKnowsTech ?player ?tech)                       ; purely to connect the effect of research with precondition
+       (uninferredSentence
+         (currentGovernment ?player ?gov)))
+  (doSetGov ?player ?gov))
+
+;;; This actually isn't immediate.  Usually, there's a period of anarchy before the government is achieved.
+(effectOfAction-Props
+  (doSetGov ?player ?gov)
+  (currentGovernment ?player ?gov))
+
+
+
+;;;
+;;; Unit Actions
+;;;
+
+
+;;; This only moves one square and won't let you send a land unit into the ocean.
+;;; Will that be a problem loading onto transports?
+(isa doMove SimpleActionPredicate)
+(arity doMove 2)
+(arg1Isa doMove FreeCiv-Unit)
+(arg2Isa doMove SpatialThing-Localized)
+(comment doMove "(doMove ?unit ?loc) moves unit one step (tile) to ?loc.")
+
+(preconditionFor-Props
+  (and ;(unitType ?unit ?unitType)
+       ;(genls ?unitType FreeCiv-Unit)   ;; Should we be more specific when we start having airborne units?
+       (currentPlayer ?player)
+       (unitOwner ?unit ?player)
+       (isa ?unit FreeCiv-Unit)  ; Moved this down for the sake of legal player.  Avoids enumerating all units.
+       (numAnswers 1 (fcObjectAt ?unit ?start))
+       ;; Can't use adjacentToPos now, since it only works for terrain and specials!
+       (fcDistance ?start ?dest 1)      ;; a one-step move.  Would (adjacentToPos ?unit ?dest) be better? 
+       (numAnswers 1 (terrainAt ?dest ?terrain))
+       (canTravelOn ?unit ?terrain))
+   (doMove ?unit ?dest))
+
+(effectOfAction-Props
+   (doMove ?unit ?dest)
+   (and ; (uninferredSentence (fcObjectAt ?unit ?start)) ; No longer needed
+        (fcObjectAt ?unit ?dest)
+        (knowsValue ?player ?dest terrainAt)))           ; necessitates swapping args of terrainAt
+
+;;; We should ontologize the 3rd argument to be a Path-Generic.
+;;; It's not necessarily a Path-Spatial, since there may not be an EnduringThing-Localized (e.g., a road)
+;;; but this would let us refer to a Path object, rather than just a list.
+
+(isa doGoToDest SimpleActionPredicate)
+(arity doGoToDest 3)
+(arg1Isa doGoToDest FreeCiv-Unit)
+(arg2Isa doGoToDest SpatialThing-Localized)
+(arg3Isa doGoToDest List) ; This is correct.  It literally is (TheList ...)
+(comment doGoToDest "(doGoToDest ?unit ?loc ?plan) sends unit to destination.")
+
+;;;;; Removed to generalize for special-purpose path planners (wms 5/28/07)
+;;;;;     (pathFromTo ?unit ?dest ?plan))  ;; invoke A* planner
+
+(preconditionFor-Props
+ (and (groundExpression ?dest)
+      (isa ?unit FreeCiv-Unit)   ;; Should we be more specific when we start having airborne units?
+      (validPathPlan ?unit ?dest ?plan))
+ (doGoToDest ?unit ?dest ?plan))
+
+(effectOfAction-Props
+   (doGoToDest ?unit ?dest ?plan)
+   (and (fcObjectAt ?unit ?dest)  ;; Really, this is an eventual result
+        (fcDistance ?unit ?dest 0)))
+
+(isa doConnectBy SimpleActionPredicate)
+(arity doConnectBy 4)
+(arg1Isa doConnectBy FreeCiv-LandUnit)
+(arg2Isa doConnectBy SpatialThing-Localized)
+(arg3Isa doConnectBy FreeCiv-Special)
+(arg4Isa doConnectBy List)
+(comment doConnectBy "(doConnectBy ?unit ?loc ?special ?plan) assigns ?unit to go to ?loc while performing activity to generate ?special, e.g., to connect by road, rail, or irrigation.")
+
+;;; How are we going to check that we don't plan roads over rivers 
+;;; unless we have the bridge-building technology?
+;;; Or that irrigation is possible at start location?
+;;; Probably need to make validPathPlan take an activity,
+;;; but more to the point, we need the path planning to take an activity.
+;;; We also need a better representation to connect activities with technologies.
+;;; We have researchRequiresTech and objectProductionRequiresTech.  
+;;; We also need activityRequiresTech.  (e.g., Railroad)  That won't get us bridges, though.
+(preconditionFor-Props
+  (and (groundExpression ?dest)
+       (isa ?unit FreeCiv-Unit)
+       (activityProduces ?activity ?special)
+       (numAnswers 1 (behaviorCapable ?unit doConnectBy performedBy))
+       (numAnswers 1 (behaviorCapable ?unit ?activity performedBy))
+       (fcObjectAt ?unit ?origin)           ; need this to encode eventualEffectOfAction-Props
+       (validPathPlan ?unit ?dest ?plan))   ; This is too opaque!
+ (doConnectBy ?unit ?dest ?special ?path))
+
+;;; This effect completely bollixes our ability to do classical action planning.
+;;; Specifically, get-enablement-for-terminal-prop makes doConnectBy a subgoal of just about everything.
+;(effectOfAction-Props
+;  (doConnectBy ?unit ?dest ?special ?path)
+;  (currentActivity ?unit ?activity))  ; depends on flowing bindings from precond to effect.
+
+(isa doCancelOrders SimpleActionPredicate)
+(arity doCancelOrders 1)
+(arg1Isa doCancelOrders FreeCiv-Unit)
+(comment doCancelOrders "(doCancelOrders ?unit) interrupts ongoing orders and returns the unit to idle.")
+
+(preconditionFor-Props
+  (and (groundExpression ?dest)
+       (isa ?unit FreeCiv-Unit))
+  (doCancelOrders ?unit))
+  
+(effectOfAction-Props
+  (doCancelOrders ?unit)
+  (currentActivity ?unit FC-ActivityIdle))
+
+(isa doIdle SimpleActionPredicate)
+(arity doIdle 1)
+(arg1Isa doIdle FreeCiv-Unit)
+(comment doIdle "(doIdle ?unit) sets unit's activity to idle.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?unit ?player)))
+  (doIdle ?unit))
+  
+(effectOfAction-Props
+  (doIdle ?unit)
+  (currentActivity ?unit FC-ActivityIdle))
+
+(isa doExplore SimpleActionPredicate)
+(arity doExplore 1)
+(arg1Isa doExplore FreeCiv-Unit)
+(comment doExplore "(doExplore ?unit) sets unit's activity to FC-ActivityExplore.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?unit ?player)))
+  (doExplore ?unit))
+  
+(effectOfAction-Props
+  (doExplore ?unit)
+  (currentActivity ?unit FC-ActivityExplore))
+
+;;; A unit ordered to sentry remains in place indefinitely and no longer 
+;;; asks for orders each turn. Sentry units can not only be reactivated
+;;; manually (by selecting them), but activate automatically should an
+;;; enemy unit come into view. 
+(isa doSentry SimpleActionPredicate)
+(arity doSentry 2)
+(arg1Isa doSentry FreeCiv-Unit)
+(arg2Isa doSentry FreecivLocation)
+(comment doSentry "(doSentry ?unit ?loc) makes unit perform sentry duties.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1  (unitOwner ?unit ?player))
+       (numAnswers 1 (behaviorCapable ?unit FC-ActivitySentry performedBy))
+       (numAnswers 1 (fcObjectAt ?unit ?loc)))
+  (doSentry ?unit ?loc))
+       
+(effectOfAction-Props
+  (doSentry ?unit ?loc)
+  (currentActivity ?unit FC-ActivitySentry))
+
+
+;;; Land units can additionally be ordered to fortify, which means they spend
+;;; one movement point preparing to be attacked; once fortified they enjoy the
+;;; same advantage as units within an unwalled city. A unit whose movement
+;;; points are exhausted cannot fortify - it must have one movement point left
+;;; at the end of a turn to begin the next turn fortified.
+(isa doFortify SimpleActionPredicate)
+(arity doFortify 1)
+(arg1Isa doFortify FreeCiv-Unit)
+(comment doFortify "(doFortify ?unit) instructs ?Unit to build fortifications.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1  (unitOwner ?unit ?player))
+       (behaviorCapable ?unit FC-ActivityFortifying performedBy)) ; most land units
+  (doFortify ?unit))
+
+(effectOfAction-Props
+  (doFortify ?unit)
+  (currentActivity ?unit FC-ActivityFortifying))
+
+;;; Building a fortress requires the construction advance. To begin 
+;;; construction, move settlers, workers, or engineers to the location at
+;;; which you desire a fort and give them the build fortress order. The work
+;;; will require only three settler-turns. A fortress can stand anywhere
+;;; outside of a city. 
+(isa doFortress SimpleActionPredicate)
+(arity doFortress 2)
+(arg1Isa doFortress FreeCiv-LandUnit)
+(arg2Isa doFortress FreecivLocation)
+(comment doFortress "(doFortress ?unit ?loc) instructs a Settler, Worker, or Engineer to build a fortress.  Requires Construction.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?unit ?player))
+       (playerKnowsTech ?player FC-Tech-Construction)
+       (isa ?unit FreeCiv-LandUnit)  ; new 
+       (behaviorCapable ?unit FC-ActivityFortress performedBy)   ; Settlers, Workers & Engineers
+       (numAnswers 1 (fcObjectAt ?unit ?loc))
+       (numAnswers 1 (terrainAt ?loc ?terrain))
+       (isa ?terrain FreeCiv-LandTile)
+       (uninferredSentence (specialAt ?loc FC-Special-Fortress)))
+  (doFortress ?unit))
+
+(effectOfAction-Props
+  (doFortress ?unit ?loc)
+  (currentActivity ?unit FC-ActivityFortress))  ; Can happen in one turn.
+
+
+;;; Building an airbase requires the radio advance. 
+(isa doBuildAirbase SimpleActionPredicate)
+(arity doBuildAirbase 2)
+(arg1Isa doBuildAirbase FreeCiv-LandUnit)
+(arg2Isa doBuildAirbase FreecivLocation)
+(comment doBuildAirbase "(doBuildAirbase ?unit) instructs a Worker, or Engineer to build an airbase.  Requires Radio.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (playerKnowsTech ?player FC-Tech-Radio)
+       (numAnswers 1 (unitOwner ?unit ?player))
+       (isa ?unit FreeCiv-LandUnit)  ; new 
+       (behaviorCapable ?unit FC-ActivityAirbase performedBy)   ; Workers & Engineers
+       (numAnswers 1 (fcObjectAt ?unit ?loc))
+       (numAnswers 1 (terrainAt ?loc ?terrain))
+       (isa ?terrain FreeCiv-LandTile)
+       (uninferredSentence (specialAt ?loc FC-Special-Airbase)))
+  (doBuildAirbase ?unit ?loc))
+
+;;; Is this really an instantaneous activity?  I don't think so.
+(effectOfAction-Props
+  (doBuildAirbase ?unit ?loc)
+  (specialAt ?loc FC-Special-Airbase))  ;; bind ?loc via precondition bindings.
+
+
+;;; Keep moving back and forth between current location and destination,
+;;; maintaining vigilance.
+(isa doPatrol SimpleActionPredicate)
+(arity doPatrol 3)
+(arg1Isa doPatrol FreeCiv-Unit)
+(arg2Isa doPatrol SpatialThing-Localized)
+(arg3Isa doPatrol List)
+(comment doPatrol "(doPatrol ?unit ?dest ?plan) makes unit perform patrol duties.")
+
+;;; effects of doPatrol?
+;;; awareOf ?unit ?any-actitivity-that-may-happen-nearby???
+
+;;; Disbanding certain units in a city will recover 50% of the production cost
+(isa doDisband SimpleActionPredicate)
+(arity doDisband 2)
+(arg1Isa doDisband FreeCiv-Unit)
+(arg2Isa doDisband FreecivLocation)
+(comment doDisband "(doDisband ?unit ?loc) disbands unit at ?loc.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (unitOwner ?unit ?player)
+       (isa ?unit FreeCiv-Unit)
+       (numAnswers 1 (fcObjectAt ?unit ?loc))
+       (fcObjectAt ?city ?loc)
+       (numAnswers 1 (cityOwner ?city ?player))
+       (isa ?unit FreeCiv-City))
+  (doDisband ?unit ?loc))
+
+(effectOfAction-Props
+  (doDisband ?unit ?loc)
+  (and (not (unitOwner ?unit ?player))
+       (agentsExistentialState ?unit MultiIndividualAgentNowDisbanded)))  ; cyc concept
+  
+
+(isa doUpgrade SimpleActionPredicate)
+(arity doUpgrade 1)
+(arg1Isa doUpgrade FreeCiv-Unit)
+(comment doUpgrade "(doUpgrade ?unit) changes unit to a more advanced type.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?unit ?player))
+       (numAnswers 1 (unitType ?unit ?unittype))
+       (objectTypeObsoletes ?next-type ?unittype) ; actually, not good enough.  Can skip over several levels.
+       (canBuild ?player ?next-type))
+  (doUpgrade ?unit))
+
+;;; How to specify the effect of this action?
+;;; How can we effectively use former-pred or FormerFn?
+;;; FormerPersonTypeFn?
+;(effectOfAction-Props
+;  (doUpgrade ?unit)
+;  (unitType ?unit ?next-type))  ; This is normally outsourced.  Is it dynamic?
+
+;;; We want to be able to recognize a change in type:  
+(effectOfAction-Props
+  (doUpgrade ?unit)
+  (and (isa ?unit (FormerFn ?unittype))
+       (isa ?unit ?next-type)))
+
+(isa doUpgradeType SimpleActionPredicate)
+(arity doUpgradeType 1)
+(arg1Isa doUpgradeType FreeCiv-UnitType)
+(comment doUpgradeType "(doUpgradeType ?type) updgrades as many of ?type as possible.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (objectTypeObsoletes ?next-type ?unittype)
+       (canBuild ?player ?next-type))
+  (doUpgradeType ?unittype))
+
+
+(isa doMakeHomeCity SimpleActionPredicate)
+(arity doMakeHomeCity 2)
+(arg1Isa doMakeHomeCity FreeCiv-Unit)
+(arg2Isa doMakeHomeCity FreeCiv-City)
+(comment doMakeHomeCity "(doMakeHomeCity ?unit ?city) makes ?city the new home city of ?unit.")
+
+;;; The city has to be able to support the unit
+;;; The city and unit both have to belong to player's civilization
+;;; Does the unit have to be in the city?
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?unit ?player))
+        (isa ?unit FreeCiv-Unit)
+        (numAnswers 1 (unitHomeCity ?unit ?home))
+        (numAnswers 1 (cityOwner ?city ?player)) ;; may have to enumerate cities in legal player
+        (different ?city ?home)
+        (isa ?city FreeCiv-City)
+        ;; Apparently, unit must be in the city it's trying to adopt.
+        (numAnswers 1 (fcObjectAt ?unit ?loc))
+        (nunAnswers 1 (fcObjectAt ?city ?loc)))
+   (doMakeHomeCity ?unit ?city))
+   
+(effectOfAction-Props
+   (doMakeHomeCity ?unit ?city)
+   (unitHomeCity ?unit ?city))
+
+(isa doLoad SimpleActionPredicate)
+(arity doLoad 2)
+(arg1Isa doLoad FreeCiv-Unit)  ; the cargo
+(arg2Isa doLoad FreeCiv-Unit)    ; the transporter
+(comment doLoad "(doLoad ?cargo ?transporter) loads cargo onto transporter.")
+
+
+;;; Q: How does loading really work?  Does the transporter have to be
+;;; next to the unit?  It looks like loading and unloading are handled
+;;; as special kinds of moves, but it's not clear that's specified as 
+;;; packets.
+
+;; (unitHasTransportCapacity ?transporter ?cap)
+;;;(fcDistance ?unitloc ?transportloc 1)
+;;;(isa ?unit FreeCiv-LandUnit)
+;;;(equal ?unitOwner ?transportOwner)  ; both should be currentPlayer
+
+;;; Try to make this legal-player friendly by constraining enumerations 
+;;; as much as possible.
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?transport ?player))  ; allow enumerating potential transports in legal player.
+        (numAnswers 1 (unitType ?transport ?transport-type))
+        (unitTypeHasTransportCapacity ?transport-type ?n)
+        (greaterThan ?n 0)
+        (numAnswers 1 (unitOwner ?cargo ?player))
+        (different ?cargo ?transport)
+        (numAnswers 1 (fcObjectAt ?cargo ?cargo-loc))
+        (numAnswers 1 (fcObjectAt ?transport ?transport-loc))
+        (numAnswers 1 (fcDistance ?cargo-loc ?transport-loc ?dist))
+        (lessThanOrEqualTo ?dist 1))
+   (doLoad ?cargo ?transport))
+
+(effectOfAction-Props
+   (doLoad ?unit ?transport)
+   (transportedBy ?unit ?transport))
+
+(isa doUnload SimpleActionPredicate)
+(arity doUnload 3)
+(arg1Isa doUnload FreeCiv-Unit)  ; the cargo
+(arg2Isa doUnload FreeCiv-Unit)    ; the transporter
+(arg3Isa doUnload FreecivLocation)
+(comment doUnload  "(doUnload ?cargo ?transporter ?dest) unloads cargo from transporter.")
+
+;;; How do we avoid unloading from an aircraft in mid-flight?
+;;; Doesn't seem to be a problem.  Only ships have transport capacity.
+;;; Paratroopers seem to be handled separately.
+;;; a) make sure transporter is not being transported (apparently recursion is allowed)
+;;; b) make sure the unit is being transported by the transporter.
+;;; c) make sure the unit can survive at the location.
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (transportedBy ?cargo ?transport))
+       (numAnswers 1 (unitOwner ?cargo ?player))
+       (numAnswers 1 (fcObjectAt ?cargo ?cargo-loc))
+       (numAnswers 1 (fcDistance ?cargo-loc ?dest ?dist)) ; ** this will fail in legal player.
+       (lessThanOrEqualTo ?dist 1)
+       (numAnswers 1 (terrainAt ?dest ?terrain))
+       (canTravelOn ?cargo ?terrain))             ; legal to get off here
+  (doUnload ?cargo ?transport ?dest))
+
+(effectOfAction-Props
+   (doUnload ?cargo ?transport ?dest)
+   (not (transportedBy ?cargo ?transport))) ; and ?cargo is at ?dest?
+
+;;; Cities can only be built by Settlers
+;;; Cities can only be built on land
+;;; Cities cannot be built too close to other cities??
+(isa doBuildCity SimpleActionPredicate)
+(arity doBuildCity 2)
+(arg1Isa doBuildCity FC-Unit-Settlers)
+(arg2Isa doBuildCity FreecivLocation)
+(comment doBuildCity "(doBuildCity ?settlers ?newCity) instructs settlers to build a city at their current location.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitType ?settler FC-Unit-Settlers))  ; maybe not already in city?
+       (numAnswers 1 (unitOwner ?settler ?player)) ; numAnswers is unnecessary here since it's a ground query.
+       (numAnswers 1 (fcObjectAt ?settler ?loc))
+       ;; No! Don't relate the player to the location or the scanning filter condition will be screwed! 
+;;     (numAnswers 1 (knowsValue ?player ?loc terrainAt))   ; a hint that maybe exploring will be necessary
+       (numAnswers 1 (terrainAt ?loc ?terrain))
+       (lookupOnly (isa ?terrain FreeCiv-LandTile))
+       (different ?terrain FC-Terrain-Glacier)
+       (inferenceOnly (potentialCityAt ?loc)))              ; this now omits existing cities.
+   (doBuildCity ?settler ?loc))
+
+;;; This is a problem.  We can't bind a propositional name for ?city to write it out.
+(effectOfAction-Props
+   (doBuildCity ?settler ?loc)   ; ?city is really city, but we're working around a problem with unbound task args.
+   (and (fcObjectAt (CitySkolemFn ?loc) ?loc)   ; should this just be fcObjectAt?  Would that screw up the planning graph construction?
+        (cityOwner (CitySkolemFn ?loc) ?player) ; added 9-2-14
+        (not (isa ?settler FC-Unit-Settlers)))) ; Settler turns into citizen
+        
+(isa doAddToCity SimpleActionPredicate)
+(arity doAddToCity 2)
+(arg1Isa doAddToCity FC-Unit-Settlers)
+(arg2Isa doAddToCity FreeCiv-City)
+(comment doAddToCity "(doAddToCity ?settlers ?existingCity) instructs settlers to add to an existing city at their current location.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?settler ?player))
+       (numAnswers 1 (unitType ?settler FC-Unit-Settlers))
+       (numAnswers 1 (fcObjectAt ?settler ?loc))
+       (numAnswers 1 (fcObjectAt ?city ?loc))  ; probably fewer things at that location than there are cities.
+       (numAnswers 1 (cityOwner ?city ?player)))
+   (doAddToCity ?settler ?city))
+   
+;;; Effect should add to size of city.
+
+;;; Irrigation can only be built by Workers, Settlers or Engineers
+;;; Irrigation can only be performed on certain types of terrain
+;;; (check the may_irrigate field of ruleset_terrain_control)
+(isa doIrrigate SimpleActionPredicate)
+(arity doIrrigate 2)
+(arg1Isa doIrrigate FreeCiv-LandUnit)
+(arg2Isa doIrrigate FreecivLocation)
+(comment doIrrigate "(doIrrigate ?worker ?loc) instructs workers to build irrigation at their current location.")
+
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?worker ?player))
+        (isa ?worker FreeCiv-LandUnit)  ; Note: This can't be lookupOnly, since it's recorded in the execution context, and we rely on horn clauses to invoke the outsourced pred unitType.
+        (behaviorCapable ?worker FC-ActivityIrrigate performedBy)
+        (numAnswers 1 (fcObjectAt ?worker ?loc))
+        (uninferredSentence (specialAt ?loc FC-Special-Irrigation))
+        (numAnswers 1 (terrainAt ?loc ?terrain))
+        (possibleToIrrigate ?terrain)
+        (uninferredSentence (cityAt ?city ?loc))   ; never irrigate the city center.
+        (nextToWater ?loc))
+   (doIrrigate ?worker ?loc))
+
+(effectOfAction-Props
+  (doIrrigate ?worker ?loc)
+  (currentActivity ?worker FC-ActivityIrrigate))
+
+
+(isa doMine SimpleActionPredicate)
+(arity doMine 2)
+(arg1Isa doMine FreeCiv-LandUnit)
+(arg2Isa doMine FreecivLocation)
+(comment doMine "(doMine ?worker ?loc) instructs workers to build a mine at their current location.")
+
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?worker ?player))
+        (isa ?worker FreeCiv-LandUnit) ; note can't be lookupOnly
+        (behaviorCapable ?worker FC-ActivityMine performedBy)
+        (numAnswers 1 (fcObjectAt ?worker ?loc))
+        (uninferredSentence (specialAt ?loc FC-Special-Mine))  ; not strictly impossible, just counter-productive
+        (numAnswers 1 (terrainAt ?loc ?terrain))
+        (possibleToMine ?terrain)
+        (uninferredSentence (cityAt ?city ?loc)))   ; never mine the city center.
+   (doMine ?worker ?loc))
+
+(effectOfAction-Props
+  (doMine ?worker ?loc)
+  (currentActivity ?worker FC-ActivityMine))
+
+
+;;; Connect this to the RoadConstructing concept.
+(isa doBuildRoad SimpleActionPredicate)
+(arity doBuildRoad 2)
+(arg1Isa doBuildRoad FreeCiv-LandUnit)
+(arg2Isa doBuildRoad FreecivLocation)
+(comment doBuildRoad "(doBuildRoad ?worker ?loc) instructs workers to start building a road at their current location.")
+
+
+;;; If ?loc has a river, then can only build a road if player has bridge-building
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?worker ?player))
+        (isa ?worker FreeCiv-LandUnit) ; Note: this can't be lookupOnly
+        (behaviorCapable ?worker FC-ActivityRoad performedBy)
+        (numAnswers 1 (fcObjectAt ?worker ?loc))
+        (uninferredSentence (specialAt ?loc FC-Special-Road))
+        (numAnswers 1 (terrainAt ?loc ?terrain))
+        (possibleToRoad ?terrain)
+        (uninferredSentence (cityAt ?city ?loc))   ; never build a road in the city center.
+        (uninferredSentence (roadBlockedByRiver ?player ?loc)))
+   (doBuildRoad ?worker ?loc))
+
+(effectOfAction-Props
+   (doBuildRoad ?worker ?loc)
+   (currentActivity ?worker FC-ActivityRoad))
+
+   
+;;; The process kicked off by doBuildRoad should be a PathCreatingEvent
+;;; where the outputsCreated-TypeType is a FC-Special-Road
+
+(isa doBuildRailRoad SimpleActionPredicate)
+(arity doBuildRailRoad 2)
+(arg1Isa doBuildRailRoad FreeCiv-LandUnit)
+(arg2Isa doBuildRailRoad FreecivLocation)
+(comment doBuildRailRoad "(doBuildRailRoad ?worker ?loc) instructs workers to start building a railroad at their current location.")
+
+;;; The railroad requires certain tech advances.
+;;; Apparently, railroads are only available as upgrades of roads.
+;;; (objectProductionRequiresTech FC-Tech-Railroad ?precondition)
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (playerKnowsTech ?player FC-Tech-Railroad)
+        (numAnswers 1 (unitOwner ?worker ?player))
+        (isa ?worker FreeCiv-LandUnit) ; this can't be lookupOnly
+        (behaviorCapable ?worker FC-ActivityRailroad performedBy)
+        (numAnswers 1 (fcObjectAt ?worker ?loc))
+        (specialAt ?loc FC-Special-Road))
+   (doBuildRailRoad ?worker ?loc))
+
+(effectOfAction-Props
+   (doBuildRailRoad ?worker ?loc)
+   (currentActivity ?worker FC-ActivityRailroad))
+
+(isa doCleanPollution SimpleActionPredicate)
+(arity doCleanPollution 2)
+(arg1Isa doCleanPollution FreeCiv-Unit)
+(arg2Isa doCleanPollution FreecivLocation)
+(comment doCleanPollution "(doCleanPollution ?worker ?loc) instructs workers to clean up pollution at their current location.")
+
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?worker ?player))
+        (isa ?worker FreeCiv-Unit) ; can't be lookupOnly
+        (behaviorCapable ?worker FC-ActivityPollution performedBy)
+        (numAnswers 1 (fcObjectAt ?worker ?loc))
+        (specialAt ?loc FC-Special-Pollution))
+   (doCleanPollution ?worker ?loc))
+   
+(effectOfAction-Props
+   (doCleanPollution ?worker)
+   (currentActivity ?worker FC-ActivityPollution))
+
+(isa doCleanFallout SimpleActionPredicate)
+(arity doCleanFallout 2)
+(arg1Isa doCleanFallout FreeCiv-Unit)
+(arg2Isa doCleanFallout FreecivLocation)
+(comment doCleanFallout "(doCleanFallout ?worker ?loc) instructs workers to clean up pollution at their current location.")
+
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?worker ?player))
+        (isa ?worker FreeCiv-Unit)  ; Can't be lookupOnly
+        (behaviorCapable ?worker FC-ActivityFallout performedBy)
+        (numAnswers 1 (fcObjectAt ?worker ?loc))
+        (specialAt ?loc FC-Special-Fallout))
+   (doCleanFallout ?worker ?loc))
+   
+(effectOfAction-Props
+   (doCleanFallout ?worker ?loc)
+   (currentActivity ?worker FC-ActivityFallout))
+
+(isa doTransform SimpleActionPredicate)
+(arity doTransform 2)
+(arg1Isa doTransform FreeCiv-LandUnit)
+(arg2Isa doTransform FreecivLocation)
+(comment doTransform "(doTransform ?engineer ?loc) instructs engineers to transform the terrain at their current location.")
+
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (unitOwner ?engineer ?player))
+        (isa ?engineer FreeCiv-LandUnit)  ; Note: Can't be lookupOnly
+        (behaviorCapable ?engineer FC-ActivityTransform performedBy)
+        (numAnswers 1 (fcObjectAt ?engineer ?loc))
+        (numAnswers 1 (terrainAt ?loc ?oldTerrain))
+        (numAnswers 1 (terrainTransformsTo ?oldTerrain ?newTerrain)))
+   (doTransform ?engineer ?loc))
+
+(effectOfAction-Props
+   (doTransform ?engineer ?loc)
+   (currentActivity ?engineer FC-ActivityTransform))
+
+
+;;; A unit cannot enter a square occupied by an enemy unit, and when directed
+;;; to do so will attack instead, locking the two units in combat until one is
+;;; destroyed. An attack usually costs the aggressor one movement point, but
+;;; results in no actual motion - the surviving unit remains where it was when
+;;; the combat started. 
+;;; *** Units must have a nonzero attack strength to attack
+;;; *** Land units can only attack other land units, while Sea units can attack
+;;; *** adjacent land units.
+(isa doAttack SimpleActionPredicate)
+(arity doAttack 2)
+(arg1Isa doAttack FreeCiv-Unit)
+(arg2Isa doAttack FreeCiv-Actor) ; Unit or City
+(comment doAttack "(doAttack ?attacker ?target) instructs ?attacker to attack ?target.")
+
+(preconditionFor-Props
+  (and (differentSymbols ?attacker ?target)
+       (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?attacker ?player))
+       (behaviorCapable ?attacker doAttack performedBy) ; replaces the attack strength test above.
+       ;; Querying owns here is more efficient when ?target is bound.
+       ;; For legal player, it's better to query for players and then enumerate things they own.
+       (owns ?other-player ?target) ; target is either a city or a unit.
+       (outsourcedOnly (player ?other-player))
+       (different ?player ?other-player)
+       (distanceBetween ?attacker ?target (FreecivTileDistance 1))) ; directly adjacent
+  (doAttack ?attacker ?target))
+
+;;; This should be accurate, since we only really attack units.
+;;; Even for cities, we're attacking the units inside the city.
+;;; Otherwise just walk right in.
+(effectOfAction-Props
+   (doAttack ?attacker ?target)
+   (agentsExistentialStatus ?target AgentNowTerminated))   ; not Destroyed-ExistentialStatus since that's for artifacts
+
+;;; The effect is the destruction of one of the units (and damage to the other)
+
+(isa doPillage SimpleActionPredicate)
+(arity doPillage 2)
+(arg1Isa doPillage FreeCiv-Unit)
+(arg2Isa doPillage FreecivLocation)
+(comment doPillage "(doPillage ?attackers ?loc) instructs ?attackers to destroy infrastructure from tiles.")
+
+;;; Pillaging doesn't seem to require a positive attack strength.
+;;; You probably want to check that you're on foreign soil...
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?attacker ?player))
+       (behaviorCapable ?attacker FC-ActivityPillage performedBy)
+       (isa ?attacker FreeCiv-Unit))
+  (doPillage ?attacker ?loc))
+
+(effectOfAction-Props
+   (doPillage ?attacker ?loc)
+   (currentActivity ?attacker FC-ActivityPillage))
+
+
+;;; When a caravan enters a city, it can do two things:
+;;; 1) establish a traderoute
+;;; 2) help build a wonder
+;;; We may want to create a common genl of caravan and freight
+;;; in order to specialize the argIsa (for determining unique capabilities)
+
+;;; Traderoute allows originating city to sell its goods at the destination city,
+;;; gaining gold and science.
+(isa doEstablishTraderoute SimpleActionPredicate)
+(arity doEstablishTraderoute 3)
+(arg1Isa doEstablishTraderoute FreeCiv-TradingUnit)
+(comment doEstablishTraderoute "(doEstablishTraderoute ?caravan ?city ?homecity) instructs caravan or freight to establish a traderoute between its home city and the city it's currently in.")
+
+
+;;; Limited to four traderoutes per city.  Weakest one lost automatically 
+;;; when new one created.
+;;; *** Issue: will this hang waiting for a verification dialog?
+;;; Need to check that ?city doesn't already have 4 traderoutes (though it will just bump the least profitable, if so).
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?unit ?player))
+       (isa ?unit FreeCiv-TradingUnit)
+       (numAnswers 1 (unitHomeCity ?unit ?homecity))
+       (numAnswers 1 (fcObjectAt ?unit ?loc))
+       (numAnswers 1 (fcObjectAt ?city ?loc))          ; There can only be at most one city in a location.
+       (numAnswers 1 (cityOwner ?city ?someone))       ; There is no requirement that city be in same civ.
+       (different ?city ?homecity)                     ; cheap check
+       (numAnswers 1 (fcObjectAt ?homecity ?homeloc))  ; Distance requirement relaxed if city belongs to different civ.
+       (numAnswers 1 (fcDistance ?loc ?homeloc ?dist))
+       (greaterThan ?dist 8)
+;       (canonicalizeExpression (TradeRouteFn ?homecity ?city) ?traderoute) ; do this to support planning graph?
+       )  ; And doesn't already have a traderoute between them!!
+   (doEstablishTraderoute ?unit ?city ?homecity))
+
+
+;;; Outsourced representation for having a traderoute is:
+;;; (tradeRoute ?from-city ?to-city ?revenue)
+;;; Maybe we should have a reifiable predicate defined by a horn-clause
+;;; that doesn't include the revenue, solely for the purpose of planning.
+;;; We probably also want to reify the startingDate of the route.
+(effectOfAction-Props
+   (doEstablishTraderoute ?unit ?city ?homecity)
+   (tradeRoute ?home-city ?city ?revenue)) ; Don't have a binding for ?revenue at the moment.
+
+;;; Only applicable for Caravans and Freight
+(isa doHelpBuildWonder SimpleActionPredicate)
+(arity doHelpBuildWonder 2)
+(arg1Isa doHelpBuildWonder FreeCiv-TradingUnit)
+(arg2Isa doHelpBuildWonder FreeCiv-City)
+(comment doHelpBuildWonder "(doHelpBuildWonder ?unit ?city) direct ?unit to contribute to building a wonder in ?city")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?unit ?player))
+       (isa ?unit FreeCiv-TradingUnit)
+       (numAnswers 1 (fcObjectAt ?unit ?loc))
+       (numAnswers 1 (fcObjectAt ?city ?loc))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (numAnswers 1 (currentlyBuilding ?city ?wonder))
+       (isa ?wonder FreeCiv-Wonder-Type))
+  (doHelpBuildWonder ?unit ?city))  ; Should this signature include the wonder being built?
+       
+
+(isa doAirlift SimpleActionPredicate)
+(arity doAirlift 2)
+(arg1Isa doAirlift FreeCiv-Unit)
+(arg2Isa doAirlift FreeCiv-City)
+(comment doAirlift "(doAirlift ?unit ?city) Not sure how this works.")
+
+;;; TBD
+
+(isa doParadropTo SimpleActionPredicate)
+(arity doParadropTo 2)
+(arg1Isa doParadropTo FreeCiv-Unit)
+(arg2Isa doParadropTo FreecivLocation)
+(comment doParadropTo "(doParadropTo ?unit ?location) drops ?unit at ?location, if they can survive there.")
+
+(isa doUnitNuke SimpleActionPredicate)
+(arity doUnitNuke 2)
+(arg1Isa doUnitNuke FC-Unit-Nuclear)
+(arg2Isa doUnitNuke FreeCiv-Actor) ; Unit or City
+(comment doUnitNuke "(doUnitNuke ?unit ?target) sets off a nuke.")
+
+(preconditionFor-Props
+  (and (different ?attacker ?target)
+       (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?attacker ?player))
+       (behaviorCapable ?attacker doUnitNuke performedBy) ; Only Nuclear units
+       (owns ?other-player ?target) ; target is either a city or a unit.
+       (outsourcedOnly (player ?other-player))
+       (different ?player ?other-player)
+       (distanceBetween ?attacker ?target (FreecivTileDistance 1))) ; directly adjacent
+  (doUnitNuke ?attacker ?target))
+
+;;; Very problematic. 
+;;; The effect is relative, and dependent on type of target.
+(effectOfAction-Props
+   (doUnitNuke ?attacker ?target)
+   (agentsExistentialStatus ?target AgentNowTerminated))  ; Not quite true.  Units are terminated within 3x3 blast radius, whereas cities have population cut in half.
+
+;;; TBD
+
+;;; This may require a new argument - the base type.
+;;; The base type may be a fortress or an airbase or other (seabase? space?)
+;;; This isn't ready to be used yet.
+(isa doBase SimpleActionPredicate)  ; new in fc2.2
+(arity doBase 2)
+(arg1Isa doBase FreeCiv-LandUnit)
+(arg2Isa doBase FreecivLocation)
+(comment doBase "(doBase ?worker ?loc) instructs workers to build a base at their current location.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1  (unitOwner ?unit ?player))
+       (behaviorCapable ?unit FC-ActivityBase performedBy)
+       (numAnswers 1 (fcObjectAt ?unit ?loc)))
+  (doBase ?unit ?loc))
+
+
+
+;;;
+;;; Diplomacy Actions
+;;;
+;;; Ongoing meetings (essentially open treaty offers) are captured on the fc::*DIPLOMACY_LIST* list.
+;;; We need to expose that as (diplomaticMeeting ?player ?opponent ?treaty)
+
+(isa doInitMeeting SimpleActionPredicate)
+(arity doInitMeeting 2)
+(arg1Isa doInitMeeting FreeCiv-Player)
+(arg2Isa doInitMeeting FreeCiv-Player)
+(comment doInitMeeting "(doInitMeeting ?player ?other-player) starts negotiation for a treaty with ?other-player.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (isa ?opponent FreeCiv-Player)
+       (couldMeetWith ?player ?opponent))
+  (doInitMeeting ?player ?opponent))
+  
+(effectOfAction-Props
+   (doInitMeeting ?player ?opponent)
+   (currentlyMeetingWith ?player ?opponent))
+
+;;; *** TBD
+;;; condition: you must have met them (achieved firstContact?)
+
+(isa doCancelMeeting SimpleActionPredicate)
+(arity doCancelMeeting 2)
+(arg1Isa doCancelMeeting FreeCiv-Player)
+(arg2Isa doCancelMeeting FreeCiv-Player)
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (isa ?opponent FreeCiv-Player)
+       (currentlyMeetingWith ?player ?opponent)
+       (numAnswers 1 (diplomaticState ?player ?opponent ?state)))  ; bind for transfer to effect
+  (doCancelMeeting ?player ?opponent))
+  
+(effectOfAction-Props
+   (doCancelMeeting ?player ?opponent)
+   (and (not (currentlyMeetingWith ?player ?opponent))
+        (diplomaticState ?player ?opponent ?state)))
+
+
+;;; creating a clause involves request and response packets
+(isa doCreateClause SimpleActionPredicate)
+(arity doCreateClause 5)
+(arg1Isa doCreateClause FreeCiv-Player)
+(arg2Isa doCreateClause FreeCiv-Player)
+(arg3Isa doCreateClause FreeCiv-Player)
+(arg4Isa doCreateClause Freeciv-TreatyClause)
+(arg5Isa doCreateClause FreeCiv-Object)
+(comment doCreateClause "(doCreateClause ?player ?counterpart ?giver ?clause-type ?value) adds a clause to a treaty being negotiated.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (isa ?opponent FreeCiv-Player)
+       (currentlyMeetingWith ?player ?opponent))  ;; *** need more checks!
+  (doCreateClause ?player ?opponent ?giver ?clause-type ?value))
+
+
+(isa doRemoveClause SimpleActionPredicate)
+(arity doRemoveClause 5)
+(arg1Isa doRemoveClause FreeCiv-Player)
+(arg2Isa doRemoveClause FreeCiv-Player)
+(arg3Isa doRemoveClause FreeCiv-Player)
+(arg4Isa doRemoveClause Freeciv-TreatyClause)
+(arg5Isa doRemoveClause FreeCiv-Object)
+(comment doRemoveClause "(doRemoveClause ?player ?counterpart ?giver ?clause-type ?value) removes a clause from a treaty being negotiated.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (isa ?opponent FreeCiv-Player)
+       (currentlyMeetingWith ?player ?opponent))  ;; *** need more checks!
+  (doRemoveClause ?player ?opponent ?giver ?clause-type ?value))
+ 
+(isa doAcceptTreaty SimpleActionPredicate)
+(arity doAcceptTreaty 2)
+(arg1Isa doAcceptTreaty FreeCiv-Player)
+(arg2Isa doAcceptTreaty FreeCiv-Player)
+(comment doAcceptTreaty "(doAcceptTreaty ?player ?other-player) accepts the currently proposed treaty.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (isa ?opponent FreeCiv-Player)
+       (currentlyMeetingWith ?player ?opponent)
+       (proposedDiplomaticState ?player ?opponent ?state))
+  (doAcceptTreaty ?player ?opponent))
+  
+(effectOfAction-Props
+   (doAcceptTreaty ?player ?opponent)
+   (and (not (currentlyMeetingWith ?player ?opponent))
+        (diplomaticState ?player ?opponent ?state)))
+
+
+(isa doCancelPact SimpleActionPredicate)
+(arity doCancelPact 3)
+(arg1Isa doCancelPact FreeCiv-Player)
+(arg2Isa doCancelPact FreeCiv-Player)
+(arg3Isa doCancelPact Freeciv-TreatyClause)
+(comment doCancelPact "(doCancelPact ?player ?other-player ?clause-type) unilaterally cancels a particular type of TreatyClause, such as Pease, sharing vision, or advances.")
+
+
+;;; TBD
+
+;;;
+;;; Diplomat Actions
+;;;
+
+(isa doInvestigateCity SimpleActionPredicate)
+(arity doInvestigateCity 2)
+(arg1Isa doInvestigateCity FreeCiv-DiplomaticUnit)
+(arg2Isa doInvestigateCity FreeCiv-City)
+(comment doInvestigateCity "(doInvestigateCity ?diplomat ?city) directs ?diplomat to investigate ?city.")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?diplomat ?player))
+       (isa ?diplomat FreeCiv-DiplomaticUnit)   ; Diplomat or Spy
+       (numAnswers 1 (fcObjectAt ?diplomat ?loc))
+       (numAnswers 1 (fcObjectAt ?city ?loc))
+       (numAnswers 1 (cityOwner ?city ?other-player))
+       (different ?other-player ?player))
+  (doInvestigateCity ?diplomat ?city))
+
+;;; What are the effects?  (knowsAbout ?player ?city) ??
+
+;;; Making an embassy is not a specific packet.  It's a field on another packet.
+(isa doMakeEmbassy SimpleActionPredicate)
+(arity doMakeEmbassy 2)
+(arg1Isa doMakeEmbassy FreeCiv-DiplomaticUnit)  ; Diplomats and Spies can do this
+(arg2Isa doMakeEmbassy FreeCiv-City)
+(comment doMakeEmbassy "(doMakeEmbassy ?diplomat ?city) makes an embassy in ?city")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?diplomat ?player))
+       (isa ?diplomat FC-Unit-Diplomat)
+       (numAnswers 1 (fcObjectAt ?diplomat ?loc))
+       (numAnswers 1 (fcObjectAt ?city ?loc))
+       (numAnswers 1 (cityOwner ?city ?other-player))
+       (different ?other-player ?player)
+       (uninferredSentence
+         (hasEmbassy ?player ?other-player)))
+  (doMakeEmbassy ?diplomat ?city))
+
+(effectOfAction-Props
+   (doMakeEmbassy ?diplomat ?city)      ; bindings flow from preconds. Ick.
+   (hasEmbassy ?player ?other-player))  ; outsourced pred
+
+
+;;; BribeUnit
+;;; The implementation of this needs to silently request and respond to two packets,
+;;; like the city name request packet in doBuildCity.  The bribe request returns the
+;;; cost (and possibility) of bribing the unit.  It should fail if the treasury 
+;;; doesn't have that much.
+
+;;; calculate how expensive it is to bribe the unit
+;;; depends on distance to the capital, and government form
+;;; settlers are half price
+;;;
+ ;;; Plus, the damage to the unit reduces the price.
+ ;;; There is a field on the game object: base_bribe_cost that is the starting point for the calculation.
+ 
+(isa doBribe SimpleActionPredicate)
+(arity doBribe 2)
+(arg1Isa doBribe FreeCiv-DiplomaticUnit)
+(arg2Isa doBribe FreeCiv-Unit)
+(comment doBribe "(doBribe ?diplomat ?target-unit) bribes the ?target-unit")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (currentGoal ?player ?gold))  ; How much do we need?
+       (numAnswers 1 (unitOwner ?diplomat ?player))
+       (behaviorCapable ?diplomat doBribe performedBy) ; replaces the attack strength test above.
+       (numAnswers 1 (fcObjectAt ?diplomat ?loc1))
+       (outsourcedOnly (player ?other-player))
+       (different ?player ?other-player)
+       (currentGovernment ?other-player ?government)  ; Do we get this for other civs?
+       (different ?government FC-Democracy)  ; can't be bribed
+       (unitOwner ?target ?other-player) ; either a city or a unit.
+       (numAnswers 1 (fcObjectAt ?target ?loc2))
+       (fcDistance ?loc1 ?loc2 1))
+  (doBribe ?diplomat ?target))
+  
+(effectOfAction-Props
+  (doBribe ?diplomat ?target)
+  (unitOwner ?target ?player))
+
+;;; *** TBD
+
+(isa doSabotageCity SimpleActionPredicate)
+(arity doSabotageCity 2)
+(arg1Isa doSabotageCity FreeCiv-DiplomaticUnit)
+(arg2Isa doSabotageCity FreeCiv-City)
+(comment doSabotageCity "(doSabotageCity ?diplomat ?city) sabotages ?city")
+
+;;; *** TBD
+
+;;; You can't actually specify a particular tech for Diplomats, only Spies.
+(isa doStealAdvance SimpleActionPredicate)
+(arity doStealAdvance 3)
+(arg1Isa doStealAdvance FreeCiv-DiplomaticUnit)
+(arg2Isa doStealAdvance FreeCiv-City)
+(arg3Isa doStealAdvance FreeCiv-Tech)
+(comment doStealAdvance "(doStealAdvance ?diplomat ?city ?tech) directs ?diplomat to steal advance ?tech.")
+
+;;; *** TBD
+
+;;; Note: This is basically bribing a city, as opposed to a unit.
+;;; There is a field on the game object, base_incite_cost that
+;;; is the starting point for calculating the cost of inciting rebellion.
+(isa doInciteCityRebellion SimpleActionPredicate)
+(arity doInciteCityRebellion 2)
+(arg1Isa doInciteCityRebellion FreeCiv-DiplomaticUnit)
+(arg2Isa doInciteCityRebellion FreeCiv-City)
+(comment doInciteCityRebellion "(doInciteCityRebellion ?diplomat ?city) incites a rebellion in ?city.")
+;;; Note: You cannot incite rebellion in a city under Democracy.
+
+;;; *** TBD
+
+;;; Only Spies can poison water:
+(isa doPoisonCityWater SimpleActionPredicate)
+(arity doPoisonCityWater 2)
+(arg1Isa doPoisonCityWater FC-Unit-Spy)
+(arg2Isa doPoisonCityWater FreeCiv-City)
+(comment doPoisonCityWater "(doPoisonCityWater ?spy ?city) causes ?spy to poison the water in ?city.")
+
+;;; *** TBD
+
+;;; doSpySabotageUnit would have to be ternary to specify a particular building.
+;;; Not sure how to do this yet.
+
+;;; What about diplomatMove and spyGetSabotageList?
+
+;;;
+;;; City Actions
+;;;
+
+(isa doChangeProduction SimpleActionPredicate)
+(arity doChangeProduction 2)
+(arg1Isa doChangeProduction FreeCiv-City)
+(arg2Isa doChangeProduction FreeCiv-BuildableThing-Type)
+(comment doChangeProduction "(doChangeProduction ?city ?item-type) changes what is currently being built, possibly incurring a penalty.")
+
+;;; Should this check for ?obj not being obsolete?
+;;; The handling of tech and improvement preconditions only works here
+;;; because there's only ever 1 of each.  By augmenting the ontology 
+;;; with FC-Tech-None and FC-Improvement-None, we can avoid having
+;;; an everySatisfies conjunct.  We're not so lucky with doResearch.
+(preconditionFor-Props
+   (and (numAnswers 1 (currentPlayer ?player))
+        (numAnswers 1 (cityOwner ?city ?player))
+        (cityCanBuild ?city ?obj)
+        (different ?obj FC-Improvment-None)
+        (cacheComplete 
+          (lookupOnly 
+            (objectProductionRequiresTech ?obj ?tech)))    ; This only works because there's an explicit Tech-None
+        (playerKnowsTech ?player ?tech)             ; purely to connect the effect of research with precondition
+        (numAnswers 1                               ; required-improvement may be FC-Improvement-None
+          (objectProductionRequiresImprovement ?obj ?required-improvement))
+        (cityHasImprovement ?city ?required-improvement) ; inferrable from eventualEffectOfAction-Props
+        ;; and canAfford upkeep on ?obj
+        ;(uninferredSentence
+        ;  (currentlyBuilding ?city ?obj))       ; What's the harm?
+          )
+   (doChangeProduction ?city ?obj))
+
+(effectOfAction-Props
+   (doChangeProduction ?city ?obj)
+   (currentlyBuilding ?city ?obj))
+
+;;; As with doSetTechGoal, it might be easier if this didn't exist.
+;;; Again, that would only work if we could reify each change in 
+;;; production as a discrete doChangeProduction.
+(isa doSetWorklist SimpleActionPredicate)
+(arity doSetWorklist 2)
+(arg1Isa doSetWorklist FreeCiv-City)
+(arg2Isa doSetWorklist List)
+(comment doSetWorklist "(doSetWorklist ?city ?worklist) sets ?city's worklist to ?worklist, in the form (TheList <item> <item>...)")
+
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (groundExpression ?worklist)    ; don't do this bottom-up
+       (formulaArgument ?worklist 1 ?item)
+       (canBuild ?player ?item))
+  (doSetWorklist ?city ?worklist))
+
+(effectOfAction-Props
+  (doSetWorklist ?city ?worklist)
+  (cityWorklist ?city ?worklist))
+
+;;; Setting the worklist is problematic, because we're interested in the
+;;; eventual effects of *adding* something to the worklist, but that's not
+;;; a primitive.  We might, of course, want to know when the worklist is
+;;; exhausted, in order to prevent default selections from being made.
+;;; But we're going to have to handle action effects explicitly in the case
+;;; of plans that add items to the worklist.
+
+
+
+;;; The formula for units is: twice the difference between total production
+;;; needed and the accumulated production points plus the square of that
+;;; difference divided by twenty. The formula for everything else (buildings,
+;;; wonders, etc.) is: twice the difference between the total production 
+;;; needed and the accumulated production points. The cost is multiplied
+;;; by two if the project is a wonder.
+(isa doCityBuy SimpleActionPredicate)
+(arity doCityBuy 2)
+(arg1Isa doCityBuy FreeCiv-City)
+(arg2Isa doCityBuy FreeCiv-BuildableThing-Type)  ; but not coinage.
+(comment doCityBuy "(doCityBuy ?city ?object-type) attempts to buy the item currently being built.  When money is available, this is useful for speeding up development.")
+
+
+;;; This doesn't take into account inability to build settlers in cities smaller than 2 citizens.
+;;; Should this represent precond in terms of resourceCapable?
+;;; No - It's possible to "buy" Settlers prematurely, they just don't be built.
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (numAnswers 1 (currentlyBuilding ?city ?obj-type))
+       (different ?obj-type FC-Coinage)
+       (numAnswers 1 (objectTypeHasProductionCost ?obj-type ?production-points))
+       (numAnswers 1 (cityBuyCost ?city ?costFn))
+       (numAnswers 1 (currentGold ?player ?capitalFn))
+       (natArgument ?costFn 1 ?cost)
+       (natArgument ?capitalFn 1 ?gold)
+       (greaterThan ?gold ?cost))  ; though it's not advisable to draw down the treasury too far.
+  (doCityBuy ?city ?obj-type))
+
+;;; This is literally what it does.  It doesn't guarantee you'll get the thing you're building.
+(effectOfAction-Props
+  (doCityBuy ?city ?obj-type)
+  (cityShieldReserves ?city ?production-points))
+  
+
+;;; How would this work for units?
+;;; Would there be some kind of (unitHomeCity (SkolemizedInstanceFn ?obj) ?city) statement?
+;;; How about an explicit exists statement?  This doesn't really help, since
+;;; there's no way to say that it is a *new* existing unit.
+
+(isa doCitySell SimpleActionPredicate)
+(arity doCitySell 2)
+(arg1Isa doCitySell FreeCiv-City)
+(arg2Isa doCitySell FreeCiv-Building-Type)
+(comment doCitySell "(doCitySell ?city ?improvement) attempts to sell ?improvement to raise capital.")
+
+;;; Are there limits on what can be sold?
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (numAnswers 1 (cityHasImprovement ?city ?improvement))
+       (different ?improvement FC-Building-Palace))
+  (doCitySell ?city ?improvement))
+
+(effectOfAction-Props
+  (doCitySell ?city ?improvement)
+  (not (cityHasImprovement ?city ?improvement)))  ; but they have more money!
+
+(isa doConvertWorkerToSpecialist SimpleActionPredicate)
+(arity doConvertWorkerToSpecialist 2)
+(arg1Isa doConvertWorkerToSpecialist FreeCiv-City)
+(arg2Isa doConvertWorkerToSpecialist FreecivLocation)
+(comment doConvertWorkerToSpecialist "(doConvertWorkerToSpecialist ?city ?loc) converts city worker at ?x ?y to Elvis.")
+
+;;; doConvertWorkerToSpecialist
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (numAnswers 1 (fcObjectAt ?city ?city-loc))
+       (different ?city-loc ?old-worked-loc)
+       (numAnswers 1 (numSpecialists ?city FC-Specialist-Elvis ?numElvis))  ; oversimplifying.  It depends on what new specialists are set to become 
+       (evaluate ?newElvis (PlusFn ?numElvis 1))             ; (and that's constrained by citySize)
+       (numAnswers 1 (cityWorkingTileAt ?city ?old-worked-loc)))
+  (doConvertWorkerToSpecialist ?city ?old-worked-loc))
+  
+(effectOfAction-Props
+  (doConvertWorkerToSpecialist ?city ?old-worked-loc)
+  (and (not (cityWorkingTileAt ?city ?old-worked-loc))
+       (numSpecialists ?city FC-Specialist-Elvis ?newElvis)))
+
+
+(isa doConvertSpecialistToWorker SimpleActionPredicate)
+(arity doConvertSpecialistToWorker 2)
+(arg1Isa doConvertSpecialistToWorker FreeCiv-City)
+(arg2Isa doConvertSpecialistToWorker FreecivLocation)
+(comment doConvertSpecialistToWorker "(doConvertSpecialistToWorker ?city ?loc) converts a city specialist to a a worker at tile ?loc.")
+  
+;;; doConvertSpecialistToWorker
+;;; How do we determine if we have an available specialist?
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (numAnswers 1 (fcObjectAt ?city ?city-loc))
+       (different ?city-loc ?new-worked-loc)
+       (numAnswers 1 (numSpecialists ?city FC-Specialist-Elvis ?elvii))
+       (greaterThan ?elvii 0)
+       (evaluate ?newElvis (PlusFn ?elvii -1))
+       (uninferredSentence (cityWorkingTileAt ?anycity ?new-worked-loc)))
+  (doConvertSpecialistToWorker ?city ?new-worked-loc))
+
+(effectOfAction-Props
+  (doConvertSpecialistToWorker ?city ?new-worked-loc)
+  (and (cityWorkingTileAt ?city ?new-worked-loc)
+       (numSpecialists ?city FC-Specialist-Elvis ?newElvis)))
+
+
+(isa doChangeSpecialist SimpleActionPredicate)
+(arity doChangeSpecialist 3)
+(arg1Isa doChangeSpecialist FreeCiv-City)
+(arg2Isa doChangeSpecialist FreeCiv-Specialist)
+(arg3Isa doChangeSpecialist FreeCiv-Specialist)
+(comment doChangeSpecialist "(doChangeSpecialist ?city ?from-type ?to-type) converts a city's specialist from one type to another (eg, FC-Specialist-Elvis to FC-Specialist-Scientist)")
+
+
+;;; A city has to be larger than size 4 before it can have anything
+;;; other than elvises.
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?city ?player))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (numAnswers 1 (citySize ?city ?popFn))
+       (natArgument ?popFn ?1 ?size)
+       (greaterThan ?size 4)
+       (numAnswers 1 (numSpecialists ?city ?from-type ?numFrom))
+       (greaterThan ?numFrom 0)
+       (numAnswers 1 (numSpecialists ?city ?to-type ?numTo))
+       (different ?from-type ?to-type)
+       (evaluate ?changeFromType (PlusFn ?numFrom -1))
+       (evaluate ?changeToType (PlusFn ?numTo 1)))
+  (doChangeSpecialist ?city ?from-type ?to-type))
+
+(effectOfAction-Props
+  (doChangeSpecialist ?city ?from-type ?to-type)
+  (and (numSpecialists ?city ?from-type ?changeFromType)
+       (numSpecialists ?city ?to-type ?changeToType)))
+
+(isa doMoveWorker SimpleActionPredicate)
+(arity doMoveWorker 3)
+(arg1Isa doMoveWorker FreeCiv-City)
+(arg2Isa doMoveWorker FreecivLocation)
+(arg3Isa doMoveWorker FreecivLocation)
+(comment doMoveWorker "(doMoveWorker ?city ?from-loc ?to-loc) moves a city's worker from one tile to another.")
+
+;;; The moveWorkerPermitted checks to see that we aren't in a situation where
+;;; it would be (much) better to convert a specialist.  Although this is kind
+;;; of a preference rule, it is here so that analogical transfer won't blindly
+;;; replay this operator without considering the alternative.
+(preconditionFor-Props
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (cityOwner ?city ?player))
+       (numAnswers 1 (fcObjectAt ?city ?city-loc))
+       (groundExpression ?from-loc)
+       (groundExpression ?to-loc)
+       (different ?from-loc ?city-loc)
+       (different ?to-loc ?city-loc)
+       (cityWorkingTileAt ?city ?from-loc)
+       (moveWorkerPermitted ?city)       ; Hokey, but necessary for analogical transfer
+       (uninferredSentence (cityWorkingTileAt ?anycity ?to-loc)))
+  (doMoveWorker ?city ?from-loc ?to-loc))
+
+(effectOfAction-Props
+  (doMoveWorker ?city ?from-loc ?to-loc)
+  (and (not (cityWorkingTileAt ?city ?from-loc))
+       (cityWorkingTileAt ?city ?to-loc)))
+
+
+;;; End of File

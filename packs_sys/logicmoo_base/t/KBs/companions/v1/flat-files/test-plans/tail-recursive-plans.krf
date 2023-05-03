@@ -1,0 +1,85 @@
+;;;
+;;; Tail-recursive-plans.meld
+;;;
+
+(in-microtheory TestPlanMt)        ; make it easy to blow away the  contents
+(genlMt TestPlanMt CompanionsMt)   ; inherit the primitives
+(genlMt CompanionsMt TestPlanMt)
+
+(isa quantityCount BinaryPredicate)
+(arg1Isa quantityCount CycLTerm)   ; counter name
+(arg2Isa quantityCount Integer)    ; count
+
+(isa tailRecursivePlan ComplexActionPredicate)
+(arity tailRecursivePlan 1)
+
+(isa multiRecursivePlan ComplexActionPredicate)
+(arity multiRecursivePlan 1)
+
+(isa incrementCount ComplexActionPredicate)
+(arity incrementCount 1)
+
+(isa decrementCount ComplexActionPredicate)
+(arity decrementCount 1)
+
+(quantityCount testCounter 0)     ; initial value
+
+(preconditionForMethod
+  (localOnly
+    (ist-Information TestPlanMt
+      (quantityCount ?counter ?value)))
+  (methodForAction
+    (tailRecursivePlan ?counter)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%In tailRecursivePlan, value = ~s" (?value))
+        (doAgentPlan (incrementCount ?counter))))))
+
+(preconditionForMethod
+  (localOnly
+    (ist-Information TestPlanMt
+      (quantityCount ?counter ?value)))
+  (methodForAction
+    (multiRecursivePlan ?counter)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%In multiRecursivePlan, value = ~s" (?value))
+        (doAgentPlan (incrementCount ?counter))
+        (doAgentPlan (decrementCount ?counter))
+        ))))
+
+(preconditionForMethod
+  (and (localOnly
+         (ist-Information TestPlanMt
+           (quantityCount ?counter ?value)))
+       (evaluate ?next-value
+         (PlusFn ?value 1)))
+  (methodForAction
+    (incrementCount ?counter)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Incrementing value from ~s to ~s" (?value ?next-value))
+        (doForget
+          (ist-Information TestPlanMt
+             (quantityCount ?counter ?value)))
+        (doRecord
+          (ist-Information TestPlanMt
+             (quantityCount ?counter ?next-value)))))))
+
+(preconditionForMethod
+  (and (localOnly
+         (ist-Information TestPlanMt
+           (quantityCount ?counter ?value)))
+       (evaluate ?next-value
+         (DifferenceFn ?value 1)))
+  (methodForAction
+    (decrementCount ?counter)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Decrementing value from ~s to ~s" (?value ?next-value))
+        (doForget
+          (ist-Information TestPlanMt
+             (quantityCount ?counter ?value)))
+        (doRecord
+          (ist-Information TestPlanMt
+             (quantityCount ?counter ?next-value)))))))

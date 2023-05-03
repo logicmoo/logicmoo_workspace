@@ -1,0 +1,551 @@
+;;;
+;;; events.meld
+;;;
+
+(in-microtheory FreecivMt)
+
+;;; Should we label certain events as intrinsically bad?
+;;; e.g., famine, city shrinkage, unit being killed by barbarians,
+;;; city can't build, city can't grow, low funds events, eco disaster.
+;;; This is hard, because sometimes a city destruction event might be
+;;; intentional if, eg, we're moving the capital inland.
+;;; and anarchy is a necessary step towards new government.
+
+;;; Shouldn't there be a GameEvent collection?
+
+(isa FC-Command FirstOrderCollection)
+(genls FC-Command PerceptualAgentCommand)
+
+;;; A non-atomic term to refer to user actions in a reified case.
+;;; *** Deprecate this in favor of CommandFn 
+;;; (see companions/v1/flat-files/perceptual-agent/perceptual-agent.meld)
+(isa FreeCivCommandFn BinaryFunction)
+(isa FreeCivCommandFn AtomicAnalogyNAT-Function)
+(arity FreeCivCommandFn 2)
+(arg1Isa FreeCivCommandFn Microtheory)
+(arg2Isa FreeCivCommandFn Integer)
+(resultIsa FreeCivCommandFn FC-Command)
+(comment FreeCivCommandFn "(FreeCivCommandFn ?game ?n) denotes the nth primitive action in ?game")
+
+(isa FreeCivEvent Collection)
+(genls FreeCivEvent PerceptualAgentEvent) ; and  by implication, (isa FreeCivEvent TemporalStuffType)
+
+(genls GameStartedEvent FreeCivEvent) ; enable enumeration of domain events
+(genls GameEndedEvent FreeCivEvent)
+
+
+(isa NextYearEvent Collection)
+(genls NextYearEvent FreeCivEvent)
+(comment NextYearEvent "NextYearEvent is a 'virtual event'.  We don't reify it, because we reify followingTurn instead.  We have it so that we can poll for certain callbacks on every turn.")
+
+;;; The creation and destruction events aren't used anymore. 
+;;; We simply treat the city/unit as a temporal event in itself, with start and end dates.
+;;;
+(isa CityCreationEvent TemporalStuffType)
+(genls CityCreationEvent FreeCivEvent)
+(genls CityCreationEvent PhysicalCreationEvent)
+(comment CityCreationEvent "The collection of events in which a FreeCiv-City is created.")
+(rolesForEventType CityCreationEvent outputsCreated)
+(outputsCreated-TypeType CityCreationEvent FreeCiv-City)
+;;; *usually* we destroy a Settler to make a city.  But not if it's found in a hut, etc.
+;;; I think those are different events.
+
+(isa CityDestructionEvent TemporalStuffType)
+(genls CityDestructionEvent FreeCivEvent)
+(genls CityDestructionEvent PhysicalDestructionEvent)
+(comment CityDestructionEvent "The collection of events in which a FreeCiv-City is destroyed.")
+(rolesForEventType CityDestructionEvent inputsDestroyed)
+(inputsDestroyed-TypeType CityDestructionEvent FreeCiv-City)
+
+
+;;; Intentional founding of a city costs one Settler:
+(isa CityBuiltEvent TemporalStuffType)
+(genls CityBuiltEvent FreeCivEvent)
+(genls CityBuiltEvent CityCreationEvent)
+(genls CityBuiltEvent PhysicalCreationEvent)
+(comment CityBuiltEvent "The collection of events in which a FreeCiv-City is created.")
+(rolesForEventType CityBuiltEvent outputsCreated)
+(outputsCreated-TypeType CityBuiltEvent FreeCiv-City)
+;;; *usually* we destroy a Settler to make a city.  But not if it's found in a hut, etc.
+;;; I think those are different events.
+(inputsDestroyed-TypeType CityBuiltEvent FC-Unit-Settlers)  ; Settlers is actually in the default ruleset.  Alas, use it anyway.
+(possibleCausalOutcomeOfActionTypeEventType doBuildCity CityBuiltEvent)
+
+;;; The creation and destruction events are usually accompanied by
+;;; assertions of the form (outputsCreated <event> <object>)
+;;; or (inputsDestroyed <event> <object>)
+
+;;; Whether an event is a PurposefulAction or not determines whether 
+;;; city is the objectActedOn or the event is doneBy the city.
+
+(isa CityGrowthEvent Collection)
+(genls CityGrowthEvent GrowthEvent)
+(genls CityGrowthEvent FreeCivEvent)
+(comment CityGrowthEvent "The collection of events in which a FreeCiv-City grows in size.")
+(rolesForEventType CityGrowthEvent objectOfStateChange)
+(relationAllExists objectOfStateChange CityGrowthEvent FreeCiv-City)
+
+(isa CityMaySoonGrowEvent Collection)
+(genls CityMaySoonGrowEvent FreeCivEvent)
+(comment CityMaySoonGrowEvent "The collection of events warning of imminent growth.")
+
+(isa CityShrinkEvent Collection)
+(genls CityShrinkEvent IntrinsicStateChangeEvent)
+(genls CityShrinkEvent DecreaseEvent)
+(genls CityShrinkEvent FreeCivEvent)
+(comment CityShrinkEvent "The collection of events in which a FreeCiv-City shrinks in size.")
+(rolesForEventType CityShrinkEvent objectOfStateChange)
+(relationAllExists objectOfStateChange CityShrinkEvent FreeCiv-City)
+
+;;; Grow and Shrink events will be triggered by update-property methods,
+;;; since the FAP interface only receives a changed event.
+;;; They should be accompanied by an objectOfStateChange statement.
+
+(isa CityFamineEvent Collection)
+(genls CityFamineEvent IntrinsicStateChangeEvent)
+(genls CityFamineEvent DecreaseEvent)
+(genls CityFamineEvent FreeCivEvent)
+(genls CityFamineEvent Famine)    ; connect to Cyc concept.
+(comment CityFamineEvent "The collection of events in which a FreeCiv-City shrinks due to famine.")
+;; Cyc has concept Famine - tie into that?
+(rolesForEventType CityFamineEvent objectOfStateChange)
+(relationAllExists objectOfStateChange CityFamineEvent FreeCiv-City)
+
+(isa CityCelebrationEvent Collection)
+(genls CityCelebrationEvent FreeCivEvent)
+(rolesForEventType CityCelebrationEvent objectOfStateChange)
+(relationAllExists objectOfStateChange CityCelebrationEvent FreeCiv-City)
+
+(isa CityDisorderEvent Collection)
+(genls CityDisorderEvent FreeCivEvent)
+(genls CityDisorderEvent IntrinsicStateChangeEvent)
+(genls CityDisorderEvent CivilUnrest)   ; connect to generic Cyc concept
+(rolesForEventType CityDisorderEvent objectOfStateChange)
+(relationAllExists objectOfStateChange CityDisorderEvent FreeCiv-City)
+
+(isa CityReturnToNormalEvent Collection)
+(genls CityReturnToNormalEvent FreeCivEvent)
+(genls CityReturnToNormalEvent IntrinsicStateChangeEvent)
+(rolesForEventType CityReturnToNormalEvent objectOfStateChange)
+(relationAllExists objectOfStateChange CityReturnToNormalEvent FreeCiv-City)
+
+(isa CityCantGrowEvent Collection)
+(genls CityCantGrowEvent FreeCivEvent)
+(rolesForEventType CityCantGrowEvent unchangedActors)
+(relationAllExists unchangedActors CityCantGrowEvent FreeCiv-City)
+;; (behaviorIncapable ?city CityGrowEvent doneBy)
+
+(isa CityCantBuildEvent Collection)
+(genls CityCantBuildEvent FreeCivEvent)
+(genls CityCantBuildEvent Warning)
+(rolesForEventType CityCantBuildEvent unchangedActors)
+(relationAllExists unchangedActors CityCantBuildEvent FreeCiv-City)
+;; (behaviorIncapable ?city CityFinishedBuildingEvent doneBy)
+;; incapableOfRoleInSituationType
+;; roleInScriptRequires-Neg
+
+;;; Coming close to an imability to meet financial obligations
+(isa LowFundsEvent Collection)
+(genls LowFundsEvent FreeCivEvent)
+(genls LowFundsEvent Warning)
+(rolesForEventType LowFundsEvent objectOfStateChange)
+;; (LowAmountFn MonetaryValue) 
+(relationAllExists objectOfStateChange CityCantBuildEvent FreeCiv-Player)
+
+;;; Do we want to say that forAll CityFamineEvent(x), (STIB CityFamineEvent(x) FamineImmenentEvent(x))?
+(isa FamineImminentEvent Collection)
+(genls FamineImminentEvent FreeCivEvent)
+(genls FamineImminentEvent Warning)
+(rolesForEventType FamineImminentEvent objectOfStateChange)
+(relationAllExists objectOfStateChange FamineImminentEvent FreeCiv-City)
+
+(isa ImprovementBuiltEvent Collection)
+(genls ImprovementBuiltEvent PhysicalCreationEvent)
+(genls ImprovementBuiltEvent PurposefulAction)
+(genls ImprovementBuiltEvent FreeCivEvent)
+(roleTypesForEventType ImprovementBuiltEvent outputsCreated-TypeType)
+(outputsCreated-TypeType ImprovementBuiltEvent FreeCiv-Building)
+(rolesForEventType ImprovementBuiltEvent outputsCreated)
+;;(outputsCreated ?evt ?thing)
+      
+(isa ImprovementAuctionedEvent Collection)                ; Bad outcome
+(genls ImprovementAuctionedEvent FreeCivEvent)
+(genls ImprovementAuctionedEvent PhysicalDestructionEvent)
+(objectTypeOfPossessionTransfer ImprovementAuctionedEvent FreeCiv-BuildableThing)
+
+(isa ImprovementSelectedByDefaultEvent Collection)        ; Bad outcome
+(genls ImprovementSelectedByDefaultEvent SelectingSomething)
+(genls ImprovementSelectedByDefaultEvent FreeCivEvent)
+
+;;; Are the Bought Events in place of the Built Events, or in addition to? (addition to)
+;;; This isn't really right.  There is no possessionTransfer going on.
+;;; We actually reify the effect as outputsCreated, rather than objectOfPossessionTransfer.
+(isa ImprovementBoughtEvent Collection)
+(genls ImprovementBoughtEvent Buying)
+(genls ImprovementBoughtEvent PurposefulAction)
+(genls ImprovementBoughtEvent FreeCivEvent)
+(roleTypesForEventType ImprovementBoughtEvent objectTypeOfPossessionTransfer)
+(objectTypeOfPossessionTransfer ImprovementBoughtEvent FreeCiv-BuildableThing)
+
+;;; Also wrong.  We're reifying the effect of this as inputsDestroyed.
+(isa ImprovementSoldEvent Collection)
+(genls ImprovementSoldEvent PurposefulAction)   ; There is no "selling" event type.  It's a buying with reversed arguments.
+(genls ImprovementSoldEvent FreeCivEvent)
+(genls ImprovementSoldEvent PhysicalDestructionEvent) ; as far as learning a qmodel, this is true.
+(genls ImprovementSoldEvent MonetaryExchangeOfUserRights)
+(objectTypeOfPossessionTransfer ImprovementSoldEvent FreeCiv-BuildableThing)
+
+;; Revolution-Political
+(isa RevolutionStartedEvent Collection)         ; How could we handle this as one event
+(genls RevolutionStartedEvent FreeCivEvent)
+(genls RevolutionStartedEvent IntrinsicStateChangeEvent)
+
+(isa RevolutionEndedEvent Collection)           ; with a starting and ending point?
+(genls RevolutionEndedEvent FreeCivEvent)
+(genls RevolutionEndedEvent ChangeOfGovernment) ; connect to Cyc concept
+(genls RevolutionEndedEvent IntrinsicStateChangeEvent)
+
+(isa CivilWarEvent Collection)
+(genls CivilWarEvent FreeCivEvent)
+(genls CivilWarEvent WagingWar)  ; no concept of Civil War in Cyc??
+(genls CivilWarEvent DisasterEvent)
+(genls CivilWarEvent IntrinsicStateChangeEvent)
+
+(isa LearnedGovernmentEvent Collection)
+(genls LearnedGovernmentEvent TechLearnedEvent)  ; a special case
+(genls LearnedGovernmentEvent Learning)
+(genls LearnedGovernmentEvent PurposefulAction)
+(genls LearnedGovernmentEvent FreeCivEvent)
+(rolesForEventType LearnedGovernmentEvent infoTransferred)
+;; (infoTransferred LearnedGovernmentEvent ?gov-tech) ; would have to be an aspatial store...
+
+(isa AnarchyEvent Collection)
+(genls AnarchyEvent FreeCivEvent)
+(genls AnarchyEvent IntrinsicStateChangeEvent)
+;; cyc has concept Anarchy
+
+;;; This is an abstraction that other events can genl from.
+;;; We might use it in queries where we don't care about the distinction between
+;;; building, discovering, etc.  It doesn't directly correspond to a chat event type.
+(isa UnitCreationEvent TemporalStuffType)
+(genls UnitCreationEvent FreeCivEvent)
+(genls UnitCreationEvent PhysicalCreationEvent)
+(comment UnitCreationEvent "The collection of events in which a FreeCiv-Unit is created.")
+(outputsCreated-TypeType UnitCreationEvent FreeCiv-Unit)
+(roleTypesForEventType UnitCreationEvent outputsCreated-TypeType)
+(rolesForEventType UnitCreationEvent outputsCreated)
+
+;;; This also doesn't correspond to a chat event type.
+(isa UnitDestructionEvent TemporalStuffType)
+(genls UnitDestructionEvent FreeCivEvent)
+(genls UnitDestructionEvent PhysicalDestructionEvent)
+(comment UnitDestructionEvent "The collection of events in which a FreeCiv-Unit is destroyed.")
+(inputsDestroyed-TypeType UnitDestructionEvent FreeCiv-Unit)
+(rolesForEventType UnitDestructionEvent inputsDestroyed)
+
+
+(isa UnitBuiltEvent Collection)
+(genls UnitBuiltEvent UnitCreationEvent)
+(genls UnitBuiltEvent PhysicalCreationEvent)
+(genls UnitBuiltEvent PurposefulAction)
+(genls UnitBuiltEvent FreeCivEvent)
+(outputsCreated-TypeType UnitBuiltEvent FreeCiv-Unit)
+
+;;; It turns out that this event is never sent by the server.  You just get a unit built event.
+(isa UnitBoughtEvent Collection)
+(genls UnitBoughtEvent Buying)
+(genls UnitBoughtEvent UnitCreationEvent)
+(genls UnitBoughtEvent PurposefulAction)
+(genls UnitBoughtEvent FreeCivEvent)
+(genls UnitBoughtEvent PhysicalCreationEvent)  ; It really is.  Buying just speeds it up.
+(objectTypesBought UnitBoughtEvent FreeCiv-Unit)
+
+(isa UnitKilledByBarbariansEvent Collection)
+(genls UnitKilledByBarbariansEvent UnitDestructionEvent)
+(genls UnitKilledByBarbariansEvent PhysicalDestructionEvent)
+(genls UnitKilledByBarbariansEvent FreeCivEvent)
+
+(isa UnitTypeUpgradedEvent Collection)
+(genls UnitTypeUpgradedEvent FreeCivEvent)
+(genls UnitTypeUpgradedEvent ImprovementEvent)
+(roleTypesForEventType UnitTypeUpgradedEvent objectOfStateChange)
+(relationAllExists objectOfStateChange UnitTypeUpgradedEvent FreeCiv-Unit)
+
+(isa NuclearDetonationEvent Collection)
+(genls NuclearDetonationEvent FreeCivEvent)
+
+(isa EcoDisasterEvent Collection)
+(genls EcoDisasterEvent FreeCivEvent)
+(genls EcoDisasterEvent DisasterEvent)
+
+;;; 9-20-10 Changed this to refer to techs gained from GreatLibrary
+(isa TechGainedEvent Collection)
+(genls TechGainedEvent Learning)  ; LearningASkill?
+(genls TechGainedEvent PurposefulAction)
+(genls TechGainedEvent FreeCivEvent)
+;; (infoTransferred ?evt ?AspatialInformationStore)  ; could be a FieldOfStudy, such as a FreeCiv-Tech
+(comment TechGainedEvent "TechGainedEvent refers to technologies acquired from the GreatLibrary or stolen or any other means.")
+(rolesForEventType TechGainedEvent infoTransferred)
+
+(isa TechLearnedEvent Collection)
+(genls TechLearnedEvent TechGainedEvent)  ; For our purposes, this is a special case.
+(genls TechLearnedEvent Learning)
+(genls TechLearnedEvent PurposefulAction)
+(genls TechLearnedEvent FreeCivEvent)
+(genls TechLearnedEvent ImprovementEvent)
+(comment TechLearnedEvent "TechLearnedEvent refers to technologies learned from research, rather than gained through trade.")
+(rolesForEventType TechLearnedEvent infoTransferred)
+
+(isa TechFoundEvent Collection)
+(genls TechFoundEvent TechGainedEvent)
+(genls TechFoundEvent Learning)
+(genls TechFoundEvent FreeCivEvent)
+(rolesForEventType TechFoundEvent infoTransferred)
+
+
+(isa ActivityCompletedEvent Collection)
+(genls ActivityCompletedEvent PurposefulAction)
+(genls ActivityCompletedEvent FreeCivEvent)
+(comment ActivityCompletedEvent "ActivityCompletedEvent means unit has finished an intended activity to produce, remove, or transform something.")
+
+(isa AchievedVeteranStatusEvent Collection)
+(genls AchievedVeteranStatusEvent IntrinsicStateChangeEvent)
+(genls AchievedVeteranStatusEvent ImprovementEvent)
+(genls AchievedVeteranStatusEvent StrengtheningEvent)
+(genls AchievedVeteranStatusEvent FreeCivEvent)
+
+(isa CityProductionChangedEvent Collection)
+(genls CityProductionChangedEvent PurposefulAction)
+(genls CityProductionChangedEvent FreeCivEvent)
+
+;;; Do we receive this only for wonders we produce?  
+;;; or do we get event when someone else achieves a wonder too?
+(isa WonderFinished Collection)
+(genls WonderFinished CreationEvent)
+(genls WonderFinished PurposefulAction)
+(genls WonderFinished FreeCivEvent)
+(roleTypesForEventType WonderFinished outputsCreated-TypeType)
+(outputsCreated-TypeType WonderFinished FreeCiv-Wonder)
+(rolesForEventType WonderFinished doneBy)
+(rolesForEventType WonderFinished outputsCreated)
+
+(isa WonderStarted Collection)
+(genls WonderStarted PurposefulAction)
+(genls WonderStarted FreeCivEvent)
+
+ ;; QuittingFn
+(isa WonderStopped Collection)
+(genls WonderStopped PurposefulAction)
+(genls WonderStopped FreeCivEvent)
+
+(isa WonderObsolete Collection)
+(genls WonderObsolete IntrinsicStateChangeEvent)
+(genls WonderObsolete FreeCivEvent)
+
+;;; New: 9-22-10
+
+(genls BarbariansRousedInHutEvent FreeCivEvent)
+(isa BarbariansRousedInHutEvent Collection)
+(rolesForEventType BarbariansRousedInHutEvent eventOccursAt)
+(genls BarbarianUprisingEvent FreeCivEvent)
+(isa BarbarianUprisingEvent Collection)
+(rolesForEventType BarbarianUprisingEvent eventOccursAt)
+(genls CityFoundedFromHutEvent FreeCivEvent)
+(genls CityFoundedFromHutEvent CityCreationEvent)
+(isa CityFoundedFromHutEvent Collection)
+(rolesForEventType CityFoundedFromHutEvent eventOccursAt)
+(genls GoldFoundInHutEvent FreeCivEvent)
+(isa GoldFoundInHutEvent Collection)
+(rolesForEventType GoldFoundInHutEvent eventOccursAt)
+(genls MercenariesFoundInHutEvent FreeCivEvent)
+(genls MercenariesFoundInHutEvent UnitCreationEvent)
+(isa MercenariesFoundInHutEvent Collection)
+(rolesForEventType MercenariesFoundInHutEvent eventOccursAt)
+(genls SettlerFoundInHutEvent FreeCivEvent)
+(genls SettlerFoundInHutEvent UnitCreationEvent)
+(isa SettlerFoundInHutEvent Collection)
+(rolesForEventType SettlerFoundInHutEvent eventOccursAt)
+
+(genls AttackFailedEvent FreeCivEvent)
+(isa AttackFailedEvent Collection)
+(genls AttackSucceededEvent FreeCivEvent)
+(genls AttackSucceededEvent PurposefulAction)
+(rolesForEventType AttackSucceededEvent maleficiary)
+(isa AttackSucceededEvent Collection)
+(rolesForEventType DefenderSurvivedEvent eventOccursAt)
+
+(genls DefenderDestroyedEvent FreeCivEvent)
+(genls DefenderDestroyedEvent UnitDestructionEvent)
+(rolesForEventType DefenderDestroyedEvent maleficiary)
+(isa DefenderDestroyedEvent Collection)
+
+(genls DefenderSurvivedEvent FreeCivEvent)
+(genls DefenderSurvivedEvent PurposefulAction)
+(isa DefenderSurvivedEvent Collection)
+(rolesForEventType DefenderSurvivedEvent eventOccursAt)
+
+(isa possibleCausalOutcomeOfActionTypeEventType Relation)
+(arity possibleCausalOutcomeOfActionTypeEventType 2)
+(arg1Isa possibleCausalOutcomeOfActionTypeEventType ActionPredicate)
+(arg2Isa possibleCausalOutcomeOfActionTypeEventType Event)
+(comment possibleCausalOutcomeOfActionTypeEventType
+  "(possibleCausalOutcomeOfActionTypeEventType <action type> <event type>) indicates
+   that an event of <event type> may be caused by an action of <action type>.  Useful
+   for packaging up actions and their outcomes, and something that should be learned.")
+(possibleCausalOutcomeOfActionTypeEventType doAttack UnitDestructionEvent)
+(possibleCausalOutcomeOfActionTypeEventType doAttack DefenderDestroyedEvent)
+(possibleCausalOutcomeOfActionTypeEventType doAttack DefenderSurvivedEvent)
+(possibleCausalOutcomeOfActionTypeEventType doAttack AttackFailedEvent)
+(possibleCausalOutcomeOfActionTypeEventType doAttack AttackSucceededEvent)
+(possibleCausalOutcomeOfActionTypeEventType doAttack CityDestructionEvent)
+
+
+(genls UnitRelocatedEvent FreeCivEvent)
+(isa UnitRelocatedEvent Collection)
+
+(genls DiplomaticMessageEvent FreeCivEvent)  ; This is just the announcement of the event in the message window.
+(genls DiplomaticMessageEvent DiplomaticRequest)
+(isa DiplomaticMessageEvent Collection)
+
+(genls EmbassyTreatyEvent FreeCivEvent)
+(genls EmbassyTreatyEvent EstablishingRelations) ; This is *not* symmetric!
+(genls EmbassyTreatyEvent AppointingAmbassador)
+(isa EmbassyTreatyEvent Collection)
+
+(genls TreatyAllianceEvent FreeCivEvent)
+(genls TreatyAllianceEvent MakingAnAgreement)  ; role = agreeingAgents
+(isa TreatyAllianceEvent Collection)           ; produces an InterrnationalAlliance?
+
+(genls TreatyBrokenEvent FreeCivEvent)
+(genls TreatyBrokenEvent BreakingAnAgreement)     ; role = agreeingAgents
+(genls TreatyBrokenEvent EndingRelations)         ; also TerminatingDiplomaticRelations?
+(genls TreatyBrokenEvent EscalationOfHostilities)
+(isa TreatyBrokenEvent Collection)
+
+(genls TreatyCeaseFireEvent FreeCivEvent)
+(genls TreatyCeaseFireEvent MakingAnAgreement)
+(isa TreatyCeaseFireEvent Collection)
+
+(genls PeaceTreatyEvent FreeCivEvent)
+(genls PeaceTreatyEvent MakingAnAgreement)
+(genls PeaceTreatyEvent RatifyingAnInternationalAgreement)
+(isa PeaceTreatyEvent Collection)
+
+(genls SharedVisionTreatyEvent FreeCivEvent)
+(genls SharedVisionTreatyEvent MakingAnAgreement)
+(isa SharedVisionTreatyEvent Collection)
+
+(genls MeetingRequestedEvent FreeCivEvent)
+(isa MeetingRequestedEvent Collection)    ; Making this up as a synthetic event.  There's a packet for it.
+(genls MeetingCancelledEvent FreeCivEvent)
+(isa MeetingCancelledEvent Collection)
+
+(genls FirstContactEvent FreeCivEvent)
+(genls FirstContactEvent EstablishingRelations)
+(isa FirstContactEvent Collection)
+
+(isa WarDeclarationEvent Collection)  ; A synthesized event.  Really kind of necessary.
+(genls WarDeclarationEvent WagingWar)
+(genls WarDeclarationEvent FreeCivEvent)
+(comment WarDeclarationEvent "WarDeclarationEvent is a synthesized event thrown by the update-property method when diplomatic status changes to War.")
+
+(genls PollutionEvent FreeCivEvent)
+(isa PollutionEvent Collection)
+(genls PollutionEvent PollutionProcess)  ; Tie to Cyc concept
+(rolesForEventType PollutionEvent eventOccursAt)
+
+(genls SpaceshipEvent FreeCivEvent)
+(isa SpaceshipEvent Collection)
+
+(genls DiplomaticIncidentEvent FreeCivEvent)
+(isa DiplomaticIncidentEvent Collection)
+
+(genls PlayerDiplomatBribeEvent FreeCivEvent)
+(genls PlayerDiplomatBribeEvent OfferingABribe)
+(isa PlayerDiplomatBribeEvent Collection)
+
+(genls PlayerDiplomatEscapeEvent FreeCivEvent)
+(isa PlayerDiplomatEscapeEvent Collection)
+
+(genls PlayerDiplomatEmbassyEvent FreeCivEvent)
+(isa PlayerDiplomatEmbassyEvent Collection)
+
+(genls PlayerDiplomatFailedEvent FreeCivEvent)
+(isa PlayerDiplomatFailedEvent Collection)
+
+(genls PlayerDiplomatInciteEvent FreeCivEvent)
+(isa PlayerDiplomatInciteEvent Collection)
+
+(genls PlayerDiplomatPoisonEvent FreeCivEvent)
+(isa PlayerDiplomatPoisonEvent Collection)
+
+(genls PlayerDiplomatSabotageEvent FreeCivEvent)
+(isa PlayerDiplomatSabotageEvent Collection)
+
+(genls PlayerDiplomatTheftEvent FreeCivEvent)
+(isa PlayerDiplomatTheftEvent Collection)
+
+(genls EnemyDiplomatBribeEvent FreeCivEvent)
+(isa EnemyDiplomatBribeEvent Collection)
+
+;(genls EnemyDiplomatEscapeEvent FreeCivEvent)
+;(isa EnemyDiplomatEscapeEvent Collection)
+
+(genls EnemyDiplomatEmbassyEvent FreeCivEvent)
+(isa EnemyDiplomatEmbassyEvent Collection)
+
+(genls EnemyDiplomatFailedEvent FreeCivEvent)
+(isa EnemyDiplomatFailedEvent Collection)
+
+(genls EnemyDiplomatInciteEvent FreeCivEvent)
+(isa EnemyDiplomatInciteEvent Collection)
+
+(genls EnemyDiplomatPoisonEvent FreeCivEvent)
+(isa EnemyDiplomatPoisonEvent Collection)
+
+(genls EnemyDiplomatSabotageEvent FreeCivEvent)
+(isa EnemyDiplomatSabotageEvent Collection)
+
+(genls EnemyDiplomatTheftEvent FreeCivEvent)
+(isa EnemyDiplomatTheftEvent Collection)
+
+;; New 10-9-13
+
+(isa CaravanEvent Collection)
+(genls CaravanEvent FreeCivEvent)
+
+(isa CityNukedEvent Collection)
+(genls CityNukedEvent FreeCivEvent)
+(genls CityNukedEvent DisasterEvent)
+
+(isa CityWorklistEvent Collection)
+(genls CityWorklistEvent FreeCivEvent)
+
+(isa UnitSparedByBarbariansEvent Collection)
+(genls UnitSparedByBarbariansEvent FreeCivEvent)
+
+(isa TechGoalEvent Collection)
+(genls TechGoalEvent FreeCivEvent)
+
+(isa UnitLostEvent Collection)
+(genls UnitLostEvent FreeCivEvent)
+
+(isa CityNeedsAqueductEvent Collection)
+(genls CityNeedsAqueductEvent FreeCivEvent)
+(genls CityNeedsAqueductEvent Warning)
+
+(isa CityTransferEvent Collection)  ; city changes ownership
+(genls CityTransferEvent FreeCivEvent)
+(genls CityTransferEvent ExchangeOfUserRights)
+
+(isa BadCommandEvent Collection)
+(genls BadCommandEvent FreeCivEvent)
+
+;; New 9-12-15
+
+(isa EnemyDetectedEvent Collection)
+(genls EnemyDetectedEvent FreeCivEvent)
+(genls EnemyDetectedEvent DetectingSomethingPhysical)  ; allow detectedObject role relation
+(comment EnemyDetectedEvent "EnemyDetectedEvent is a synthetic event ultimately thrown by the update-property method whenever one of our units changes activity from Sentry to Idle.")
+
+;;; Losing orders is an instance of CancellingAStandingOrder.

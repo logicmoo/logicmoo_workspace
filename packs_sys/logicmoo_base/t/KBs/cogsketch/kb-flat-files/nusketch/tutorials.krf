@@ -1,0 +1,130 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: tutorials.meld
+;;;;    System: NuSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: October 11, 2010 20:01:19
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchTutorialsMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutorial
+
+(isa nuSketchTutorialAutorunDisabled UnaryPredicate)
+(arity nuSketchTutorialAutorunDisabled 1)
+(arg1Isa nuSketchTutorialAutorunDisabled NuSketchCase)
+(isa nuSketchTutorialAutorunDisabled NotForAnalogyPredicate)
+(comment nuSketchTutorialAutorunDisabled
+  "If this statement is present in a tutorial sketch's context, the tutorial
+   will not run automatically upon loading the sketch.  This is useful when
+   building the tutorial.")
+
+
+(isa nuSketchTutorialName UnaryPredicate)
+(arity nuSketchTutorialName 1)
+(arg1Isa nuSketchTutorialName String)
+(notForAnalogy nuSketchTutorialName)
+
+
+(isa nuSketchTutorialVarsToBind UnaryPredicate)
+(arity nuSketchTutorialVarsToBind 1)
+(arg1Isa nuSketchTutorialVarsToBind List)
+(notForAnalogy nuSketchTutorialVarsToBind)
+
+
+(isa NuSketchTutorialSketch Collection)
+(genls NuSketchTutorialSketch NuSketchSketch)
+(comment NuSketchTutorialSketch
+ "This kind of #$NuSketchSketch can be run as a tutorial.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutorial Steps
+;;;   content
+
+(isa nuSketchTutorialStepContent BinaryPredicate)
+(arity nuSketchTutorialStepContent 2)
+(arg1Isa nuSketchTutorialStepContent Integer)    ;; Step #
+(arg2Isa nuSketchTutorialStepContent List)       ;; Content Items
+(notForAnalogy nuSketchTutorialStepContent)
+
+;;; autorun
+(isa nuSketchTutorialAutorunDisabledForStep UnaryPredicate)
+(arity nuSketchTutorialAutorunDisabledForStep 1)
+(arg1Isa nuSketchTutorialAutorunDisabledForStep Integer)
+(notForAnalogy nuSketchTutorialAutorunDisabledForStep)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Actions 
+;;;   actions taken at the start of a step
+
+(isa nuSketchTutorialStepActions BinaryPredicate)
+(arity nuSketchTutorialStepActions 2)
+(arg1Isa nuSketchTutorialStepActions Integer)    ;; Step #
+(arg2Isa nuSketchTutorialStepActions List)       ;; Actions
+(notForAnalogy nuSketchTutorialStepActions)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Conditions
+;;;   conditions required to advance to future steps
+
+(isa nuSketchTutorialStepConditions BinaryPredicate)
+(arity nuSketchTutorialStepConditions 2)
+(arg1Isa nuSketchTutorialStepConditions Integer)    ;; Step #
+(arg2Isa nuSketchTutorialStepConditions List)       ;; Conditions
+(notForAnalogy nuSketchTutorialStepConditions)
+
+;; Example conditions
+;; (new-glyph-created "square")
+;; (glyph-modified 
+;; (sentence-modified 
+
+(isa glyphCreatedOnTutorialStep UnaryPredicate)
+(arity glyphCreatedOnTutorialStep 1)
+(arg1Isa glyphCreatedOnTutorialStep Entity)
+(notForAnalogy glyphCreatedOnTutorialStep)
+
+(isa subsketchCreatedOnTutorialStep UnaryPredicate)
+(arity subsketchCreatedOnTutorialStep 1)
+(arg1Isa subsketchCreatedOnTutorialStep Entity)
+(notForAnalogy subsketchCreatedOnTutorialStep)
+
+(isa sentenceAddedOnTutorialStep UnaryPredicate)
+(arity sentenceAddedOnTutorialStep 1)
+(arg1Isa sentenceAddedOnTutorialStep Entity)
+(notForAnalogy sentenceAddedOnTutorialStep)
+
+(isa feedbackRequestedOnTutorialStep UnaryPredicate)
+(arity feedbackRequestedOnTutorialStep 1)
+(arg1Isa feedbackRequestedOnTutorialStep Entity)
+(notForAnalogy feedbackRequestedOnTutorialStep)
+
+(isa glyphEditedOnTutorialStep BinaryPredicate)
+(arity glyphEditedOnTutorialStep 2)
+(arg1Isa glyphEditedOnTutorialStep Thing) ;; e.g. Object-2
+(arg2Isa glyphEditedOnTutorialStep Integer) ;; Step #
+(notForAnalogy glyphEditedOnTutorialStep)
+
+(isa glyphSegmentedOnTutorialStep BinaryPredicate)
+(arity glyphSegmentedOnTutorialStep 2)
+(arg1Isa glyphSegmentedOnTutorialStep Thing)  ;; e.g. Object-2
+(arg2Isa glyphSegmentedOnTutorialStep Integer) ;; Step #
+(notForAnalogy glyphSegmentedOnTutorialStep)
+
+(isa holdsOnTutorialStep BinaryPredicate)
+(arity holdsOnTutorialStep 2)
+(arg1Isa holdsOnTutorialStep Integer) ;; Step #
+(arg2Isa holdsOnTutorialStep CycLSentence) ;; fact
+(notForAnalogy holdsOnTutorialStep)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

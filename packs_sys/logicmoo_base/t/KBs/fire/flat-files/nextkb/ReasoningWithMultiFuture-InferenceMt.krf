@@ -1,0 +1,16 @@
+
+ (in-microtheory ReasoningWithMultiFuture-InferenceMt)
+ (arg1Isa mtAlternatives ReasoningWithTenseMicrotheory)
+ (argIsa mtAlternatives 1 ReasoningWithTenseMicrotheory)
+ (arg2Isa mtAlternatives ReasoningWithTenseMicrotheory)
+ (argIsa mtAlternatives 2 ReasoningWithTenseMicrotheory)
+ (comment mtAlternatives "For any instances MT-1 and MT-2 of
+#$ReasoningWithMultiFutureMicrotheory, (#$mtAlternatives MT-1 and MT-2)
+means that MT-1 and MT-2 share the same time (see
+#$reasoningWithTenseMtTime) but may have different futures.
+Consequently, if (#$mtAlternatives MT-1 MT-2) holds, then for each instance
+PROP of #$CycFormulaWithoutFutureTrace, PROP is true in MT-1 iff PROP
+is true in MT-2, but there can be some formula PROP-1 
+(typically those with future tense operators as major operators) that is 
+true in MT-1 but false in MT-2.")
+ (isa mtAlternatives GeneralTenseReasoningConstant)

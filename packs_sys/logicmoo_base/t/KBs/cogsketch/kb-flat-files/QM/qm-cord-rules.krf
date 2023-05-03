@@ -1,0 +1,485 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qm-cord-rules.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: January 2, 2013 23:40:25
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchQMRulesMt :exclude-globals t)
+
+;; Assumes all cords are taut
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Connections - these rules are used in the pre-computation!  use lookuponly
+;;;               for these preds after calling update-cord-connection-knowledge
+;;;               for efficiency
+;;;  It appears wmOnly doesn't significantly speed these up in practice, and
+;;;  it makes debugging slightly harder so after a while I stopped adding it
+;;;  They can probably all be taken out if the predicate isn't an "isa" or other
+;;;  widely used kb pred(?)
+
+;; connectedAtEnd
+(<== (connectedAtEnd ?cordSeg ?obj)
+     (lookupOnly (wmOnly (edgeContactsNonTangentially ?obj ?edge)))
+     (lookupOnly (wmOnly (edgeRepresentsCordSegment ?edge ?cordSeg))))
+
+;; cordSegEntersPulley
+(<== (cordSegEntersPulley ?cordSeg ?pulley)
+     (lookupOnly (wmOnly (isa ?pulley Pulley)))
+     (lookupOnly (wmOnly (edgeContactsTangentially ?pulley ?edge)))
+     (lookupOnly (wmOnly (edgeRepresentsCordSegment ?edge ?cordSeg))))
+
+;; qvFromCordConnection
+(<== (qvFromCordConnection ?cordSeg ?obj ?dir)
+     (lookupOnly (wmOnly (qvOfEdgeContact ?obj ?edge ?objToEdgeDir)))
+     (lookupOnly (wmOnly (edgeRepresentsCordSegment ?edge ?cordSeg)))
+     (lookupOnly (inverseVector ?objToEdgeDir ?dir)))
+
+;; qvToCordConnection (requires qvFromCordConnection)
+(<== (qvToCordConnection ?obj ?cordSeg ?dir)
+     (lookupOnly (wmOnly (qvFromCordConnection ?cordSeg ?obj ?dirInverse)))
+     (lookupOnly (inverseVector ?dirInverse ?dir)))
+
+;; cordSegsConnectThroughPulley
+;; Symmetry
+(<== (cordSegsConnectThroughPulley ?cordSegA ?cordSegB ?pulley)
+     (lookupOnly (cordSegsConnectThroughPulley ?cordSegB ?cordSegA ?pulley)))
+
+;; 2 of Same cord glyph ==> connection
+(<== (cordSegsConnectThroughPulley ?cordSegA ?cordSegB ?pulley)
+     (cordSegEntersPulley ?cordSegA ?pulley)
+     (cordSegEntersPulley ?cordSegB ?pulley)
+     (different ?cordSegA ?cordSegB)
+     (cordSegmentOf ?cordSegA ?cord)
+     (cordSegmentOf ?cordSegB ?cord)
+     (evaluate ?cordSegCount  ;; Always 2, there are (or rather, should be)
+       (CardinalityFn (TheClosedRetrievalSetOf 
+                          ?cordSeg 
+                        (and (cordSegEntersPulley ?cordSeg ?pulley)
+                             (cordSegmentOf ?cordSeg ?cord)))))
+     (equals ?cordSegCount 2))
+
+;; if these are the only two entering the pulley, then they connect
+(<== (cordSegsConnectThroughPulley ?cordSegA ?cordSegB ?pulley)
+     (cordSegEntersPulley ?cordSegA ?pulley)
+     (cordSegEntersPulley ?cordSegB ?pulley)
+     (different ?cordSegA ?cordSegB)
+     (evaluate ?cordSegCount
+       (CardinalityFn (TheClosedRetrievalSetOf 
+                          ?cordSeg (cordSegEntersPulley ?cordSeg ?pulley))))
+     (equals ?cordSegCount 2))
+
+;; if there are four, connect the two which aren't part of the same cord
+(<== (cordSegsConnectThroughPulley ?cordSegA ?cordSegB ?pulley)
+     (lookupOnly (wmOnly (isa ?pulley Pulley)))
+     (evaluate ?cordSegs
+       (TheClosedRetrievalSetOf 
+           ?cordSeg (cordSegEntersPulley ?cordSeg ?pulley)))
+     (evaluate ?cordSegCount
+       (CardinalityFn ?cordSegs))
+     (equals ?cordSegCount 4)
+     ;; Identify the two cords which are already a pair, and their cord
+     ;; don't use sameCord or cordSegsConnect.. to avoid wasteful loop
+     (cordSegEntersPulley ?cordSegC ?pulley)
+     (cordSegEntersPulley ?cordSegD ?pulley)
+     (different ?cordSegC ?cordSegD)
+     (cordSegmentOf ?cordSegC ?cord)
+     (cordSegmentOf ?cordSegD ?cord)
+
+     ;; Thought about using evalfn to do this, but it didn't appear to save work
+     ;; while still arriving at both answers (remember A and B are symmetric)
+     (cordSegEntersPulley ?cordSegA ?pulley)
+     (different ?cordSegA ?cordSegC)
+     (different ?cordSegA ?cordSegD)
+     (cordSegEntersPulley ?cordSegB ?pulley)
+     (different ?cordSegB ?cordSegA)
+     (different ?cordSegB ?cordSegC)
+     (different ?cordSegB ?cordSegD)
+     )
+
+;; normalOfInnerCord (requires cordSegsConnectThroughPulley)
+
+(<== (normalOfInnerCord ?pulley ?segA ?segB ?dir)
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?segA ?segB ?pulley)))
+     (lookupOnly (wmOnly (qvFromCordConnection ?segA ?pulley ?AToPulleyDir)))
+     (lookupOnly (wmOnly (qvFromCordConnection ?segB ?pulley ?BToPulleyDir)))
+     (unifies ?AToPulleyDir ?BToPulleyDir)
+     (inverseVector ?AToPulleyDir ?dir))
+
+(<== (normalOfInnerCord ?pulley ?segA ?segB ?dir)
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?segA ?segB ?pulley)))
+     (qvToCordConnection ?pulley ?segA ?pulleyToADir)
+     (qvToCordConnection ?pulley ?segB ?pulleyToBDir)
+     (rotate45 ?pulleyToADir ?pulleyToBDir ?rotDir)
+     (isa ?pulleyToADir 2DDiagonal)
+     (unifies ?pulleyToADir ?dir))
+
+(<== (normalOfInnerCord ?pulley ?segA ?segB ?dir)
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?segA ?segB ?pulley)))
+     (qvToCordConnection ?pulley ?segA ?pulleyToADir)
+     (qvToCordConnection ?pulley ?segB ?pulleyToBDir)
+     (rotate45 ?pulleyToADir ?pulleyToBDir ?rotDir)
+     (isa ?pulleyToBDir 2DDiagonal)
+     (unifies ?pulleyToBDir ?dir))
+
+(<== (normalOfInnerCord ?pulley ?segA ?segB ?dir)
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?segA ?segB ?pulley)))
+     (qvToCordConnection ?pulley ?segA ?pulleyToADir)
+     (qvToCordConnection ?pulley ?segB ?pulleyToBDir)
+     (rotate90 ?pulleyToADir ?pulleyToBDir ?rotDir)
+     (rotate45 ?pulleyToADir ?dir ?rotDir))
+     
+(<== (normalOfInnerCord ?pulley ?segA ?segB ?dir)
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?segA ?segB ?pulley)))
+     (qvToCordConnection ?pulley ?segA ?pulleyToADir)
+     (qvToCordConnection ?pulley ?segB ?pulleyToBDir)
+     (uninferredSentence (openHalfPlane ?pulleyToADir ?pulleyToBDir))
+     (rotate90 ?pulleyToADir ?dir ?rotDir1)
+     (inverseRotDirection ?rotDir1 ?rotDir2)
+     (rotate45 ?pulleyToBDir ?dir ?rotDir2)
+     (isa ?dir 2DDiagonal))
+
+(<== (normalOfInnerCord ?pulley ?segA ?segB ?dir)
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?segA ?segB ?pulley)))
+     (qvToCordConnection ?pulley ?segA ?pulleyToADir)
+     (qvToCordConnection ?pulley ?segB ?pulleyToBDir)
+     (uninferredSentence (openHalfPlane ?pulleyToADir ?pulleyToBDir))
+     (rotate45 ?pulleyToADir ?dir ?rotDir1)
+     (inverseRotDirection ?rotDir1 ?rotDir2)
+     (rotate90 ?pulleyToBDir ?dir ?rotDir2)
+     (isa ?dir 2DDiagonal))
+
+;; sameCord
+
+(<== (sameCord ?cordSeg1 ?cordSeg2)
+     (lookupOnly (cordSegsConnectThroughPulley ?cordSeg1 ?cordSeg2 ?pulley)))
+
+(<== (sameCord ?cordSeg1 ?cordSeg2)
+     (lookupOnly (cordSegsConnectThroughPulley ?cordSeg2 ?cordSeg1 ?pulley)))
+
+
+(<== (sameCord ?cordSeg1 ?cordSeg2)
+     (cordSegmentOf ?cordSeg1 ?cord)
+     (cordSegmentOf ?cordSeg2 ?cord)) ;; gives reflexive answer for free too
+
+(<== (sameCord ?cordSeg1 ?cordSeg2)
+     (lookupOnly (sameCord ?cordSeg1 ?cordSeg3))
+     (different ?cordSeg1 ?cordSeg3)
+     (lookupOnly (sameCord ?cordSeg2 ?cordSeg3))
+     (different ?cordSeg2 ?cordSeg3))
+
+
+;; cordConnection (end-to-end via cord)
+(<== (cordConnection ?objA ?objB ?cordSeg ?cordSeg)
+     (connectedAtEnd ?cordSeg ?objA)
+     (connectedAtEnd ?cordSeg ?objB)
+     (different ?objA ?objB))
+
+(<== (cordConnection ?objA ?objB ?cordSegA ?cordSegB)
+     (connectedAtEnd ?cordSegA ?objA)
+     (connectedAtEnd ?cordSegB ?objB)
+     (different ?objA ?objB)
+     ;; even though sameCord isn't itself based on timestamped antecedents, using honorTimestamps earlier sets 
+     ;; *force-recompute?* to true, which means lookupOnly alone will fail.  that's why ignoreTimestamps is needed here.
+     ;; Note that I'm only using ignoreTimestamps because I KNOW that sameCord facts don't go stale!!
+     (ignoreTimestamps (lookupOnly (sameCord ?cordSegA ?cordSegB)))) 
+
+(<== (cordConnection ?objA ?objB ?cordSegA ?cordSegB)
+     (groundExpression ?objA)
+     (groundExpression ?objB)
+     (groundExpression ?cordSegA)
+     (groundExpression ?cordSegB)
+     (cordConnection ?objB ?objA ?cordSegB ?cordSegA))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; EVERYTHING BELOW THIS POINT should use lookupOnly on the preds above for
+;;; efficiency!
+;;; These preds get queried AFTER running update-cord-knowledge
+;;; 
+;;; Note: This efficiency comes at a price.  These rules will not work if
+;;; honorTimestamps is used because the facts in WM will be stale and horn
+;;; clauses won't be used because of the lookupOnly wrappers.  By wrapping
+;;; some of these queries with ignoreTimestamps, we will be able to retrieve
+;;; them from working memory even when honorTimestamps is used.  By wrapping
+;;; others with cacheComplete, we will enable inference and still honor
+;;; timestamps.
+;;; -MDC, 12/1/2014
+
+
+;; it's only a kinematic chain if the cord doesn't go through movable pulleys
+(<== (kinematicCordConnection ?objA ?objB ?cordSegA ?cordSegB)
+     (cacheComplete (cordConnection ?objA ?objB ?cordSegA ?cordSegB))
+     (evaluate (TheSet)
+       (TheClosedRetrievalSetOf ?pulley
+         (movablePulleyOnCord ?cordSegA ?pulley))))
+
+(<== (movablePulleyOnCord ?cordSeg ?pulley)
+     (cacheComplete (sameCord ?cordSegA ?cordSeg))
+                        ;; ?corSegB gets bound to all segs of this cord
+     (cacheComplete (cordSegEntersPulley ?cordSeg ?pulley))
+     (cacheComplete (normalOfInnerCord ?pulley ?cordSeg ?cordSegC ?dir))
+     (notSufficientlyConstrained ?pulley ?dir))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rotOrigin from cord connection
+(<== (rotationalOriginByCordConnection ?obj ?ori)
+     (uninferredSentence (rotationalOriginByAnnotation ?obj ?ori))
+     (kinematicCordConnection ?obj ?objB ?cordSegA ?cordSegB)
+     (cacheComplete (qvFromCordConnection ?cordSeg ?objB ?cordToBDir))
+     (inverseVector ?cordToBDir ?bToCordDir)
+     (transConstraint ?objB ?bToCordDir)
+     (lookupOnly (glyphRepresentsObject ?objB-glyph ?objB))
+     (cacheComplete (edgeRepresentsCordSegment ?edge ?cordSegA))     
+     (lookupOnly (farEndOfContactEdge ?obj ?edge ?ori))
+     )
+
+(<== (rotationalOrigin ?obj ?ori)
+     (rotationalOriginByCordConnection ?obj ?ori))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; For determining if an object is constrained such that it's cord can't be
+;; pulled via rotating the object
+
+;; Case 1: Rot origin is not on the axis of the cord
+(<== (rotationallyConstrainedAtCordSeg ?obj ?cordSeg)
+     (uninferredSentence (lookupOnly (isa ?obj FixedObject)))
+     (cacheComplete (qvToCordConnection ?obj ?cordSeg ?dirToCord))
+     (rotationalOrigin ?obj ?ori)
+     (lookupOnly (closeEndOfContactEdge ?obj ?edge ?connection-point))
+     (safeQualitativeVectorBetween (CentroidPointFn ?connection-point)
+                                   (CentroidPointFn ?ori)
+                                   ?connectionToOriDir)
+     (rotate90 ?dirToCord ?90offAxis ?rotDir)
+     (openHalfPlane ?90offAxis ?connectionToOriDir)
+     (rotConstraint ?obj ?rotDir)
+     )
+
+;; Case 2: Rot origin is on the axis of the cord ==> constrained
+(<== (rotationallyConstrainedAtCordSeg ?obj ?cordSeg)
+     (uninferredSentence (lookupOnly (isa ?obj FixedObject)))
+     (cacheComplete (qvToCordConnection ?obj ?cordSeg ?dirToCord))
+     (rotationalOrigin ?obj ?ori)
+     (lookupOnly (closeEndOfContactEdge ?obj ?edge ?connection-point))
+     (safeQualitativeVectorBetween (CentroidPointFn ?connection-point)
+                                   (CentroidPointFn ?ori)
+                                   ?connectionToOriDir)
+     (qvAxisAligned ?dirToCord ?axis)
+     (qvAxisAligned ?connectionToOriDir ?axis)
+     )
+
+;; Case 3: The object is fixed 
+(<== (rotationallyConstrainedAtCordSeg ?obj ?cordSeg)
+     (lookupOnly (isa ?obj FixedObject))
+     (cacheComplete (connectedAtEnd ?cordSeg ?obj)))
+
+;; Case 4: No origin
+(<== (rotationallyConstrainedAtCordSeg ?obj ?cordSeg)
+     (evaluate (TheSet)
+       (TheClosedRetrievalSetOf ?ori
+         (rotationalOrigin ?obj ?ori))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; inferences from cordConnection
+;;; CC1: transfers constraint
+;;; CC2: transfers force
+
+;;; CC1: transfers constraint from B to A
+(<== (transConstraint ?obj ?dir)
+     (unknownSentence (transFreedom ?obj ?dir))
+     (kinematicCordConnection ?obj ?objB ?cordSegA ?cordSegB)
+     (cacheComplete (qvFromCordConnection ?cordSegB ?objB ?cordToBDir))
+     (inverseVector ?cordToBDir ?bToCordDir)
+     (sufficientlyConstrained ?objB ?bToCordDir)
+     (rotationallyConstrainedAtCordSeg ?objB ?cordSegB)
+     (cacheComplete (qvFromCordConnection ?cordSegA ?obj ?cordToADir))
+     (openHalfPlane ?cordToADir ?dir)
+     )
+
+(<== (rotConstraint ?obj ?rotDir)
+     (cacheComplete
+      (kinematicCordConnection ?obj ?objB ?cordSegA ?cordSegB))
+     (numAnswers 1 (rotationalOrigin ?obj1 ?origin))
+     (cacheComplete (qvFromCordConnection ?cordSegB ?objB ?cordToBDir))
+     (inverseVector ?cordToBDir ?bToCordDir)
+     (sufficientlyConstrained ?objB ?bToCordDir)
+     (rotationallyConstrainedAtCordSeg ?objB ?cordSegB)
+
+     (cacheComplete (cordSegmentOf ?cordSegA ?cord))  ;; need glyph not edge
+     (lookupOnly (glyphRepresentsObject ?cord-glyph ?cord))
+     (lookupOnly (glyphRepresentsObject ?obj-glyph ?obj))
+     (cacheComplete (qvFromCordConnection ?cordSegA ?obj ?cordToADir))
+
+     (safeOverlappingParts ?obj-glyph ?obj-part ?cord-glyph ?cord-part)
+     (safeQualitativeVectorBetween ?obj-part
+                                   (CentroidPointFn ?origin)
+                                   ?dirToOrigin)
+     (rotate90 ?cordToADir ?surfNormalR90 ?rotDir)
+     (openHalfPlane ?surfNormalR90 ?dirToOrigin)
+     )
+     
+;;; CC2: transfers force from A to B
+(<== (forceAppliedToObj ?obj ?dir ?source) ;; ?obj = B
+     (kinematicCordConnection ?objA ?obj ?cordSegA ?cordSegB)
+     ;; A received the source force first
+     (cacheComplete (qvFromCordConnection ?cordSegA ?objA ?cordToADir))
+     (forceAppliedToObj ?objA ?sourceForceDir ?source)
+     (openHalfPlane ?cordToADir ?sourceForceDir) ;; sourceF aligned with cord
+     (cacheComplete (qvFromCordConnection ?cordSegB ?obj ?cordToBDir))
+     (inverseVector ?cordToBDir ?dir) ;; cord pulls B in its direction
+     (notSufficientlyConstrained ?obj ?dir)
+     )
+
+(<== (forceAppliedToObj ?obj AmbigQVector ?source) ;; ?obj = B
+     (cacheComplete (wmOnly (cordConnection ?objA ?obj ?cordSegA ?cordSegB)))
+     (numAnswers 1 (movablePulleyOnCord ?cordSegA ?pulley)) ;; any pulley
+
+     ;; A received the source force first
+     (cacheComplete (qvFromCordConnection ?cordSegA ?objA ?cordToADir))
+     (forceAppliedToObj ?objA ?sourceForceDir ?source)
+     (openHalfPlane ?cordToADir ?sourceForceDir) ;; sourceF aligned with cord
+     
+     ;; B must be movable
+     ;; if B couldn't move, force would be cancelled or put on pulley instead
+     (cacheComplete (qvFromCordConnection ?cordSegB ?obj ?cordToBDir))
+     (inverseVector ?cordToBDir ?dir) ;; cord pulls B in its direction
+     (notSufficientlyConstrained ?obj ?dir)
+     )
+
+
+;;; force on A generates a torque on B
+(<== (torqueAppliedToObj ?obj ?rotDir ?source) ;; ?obj = B
+     (kinematicCordConnection ?objA ?obj ?cordSegA ?cordSegB)
+     ;; a force on A tugs the cord
+     (forceAppliedToObj ?objA ?dir ?source)
+     (cacheComplete (qvFromCordConnection ?cordSegA ?objA ?cordToADir))
+     (openHalfPlane ?cordToADir ?sourceForceDir)
+     
+     ;; B's origin is not in the direction of the cord pulling on it
+     (rotationalOrigin ?obj ?ori)
+     (cacheComplete (qvFromCordConnection ?cordSegB ?obj ?cordToBDir))
+     (lookupOnly (edgeRepresentsCordSegment ?edge ?cordsegB))
+     (lookupOnly (closeEndOfContactEdge ?obj ?edge ?connection-point))
+     
+     (safeQualitativeVectorBetween (CentroidPointFn ?connection-point)
+                                   (CentroidPointFn ?ori)
+                                   ?connectionToOriDir)
+     (different ?connectionToOriDir ?cordToBDir)
+     (inverseVector ?cordToBDir ?bToCordDir)
+     (openHalfPlane ?forcePlaneDir ?bToCordDir)
+     (rotate90 ?forcePlaneDir ?connectionToOriDir ?rotDir)
+     )
+
+;;; forceAssumed on A -> torqueApplied on A
+(<== (torqueAppliedToObj ?obj ?rotDir ?source) ;; ?obj = A
+     (rotationalOriginByCordConnection ?obj ?ori)
+     (kinematicCordConnection ?obj ?objB ?cordSegA ?cordSegB)
+     
+     ;; assumed force on A tugs the cord
+     (forceAssumed ?obj ?sourceForceDir ?source)
+     (cacheComplete (qvFromCordConnection ?cordSegA ?obj ?cordToADir))
+     (closedHalfPlane ?cordToADir ?sourceForceDir)
+     
+     ;; B can't be pulled by cord
+     (cacheComplete (qvFromCordConnection ?cordSegB ?objB ?cordToBDir))
+     (inverseVector ?cordToBDir ?bToCordDir)
+     (sufficientlyConstrained ?objB ?bToCordDir)
+     (rotationallyConstrainedAtCordSeg ?objB ?cordSegB)
+     
+     ;; A rotates around the cord connection
+     (openHalfPlane ?forcePlaneDir ?sourceForceDir)
+     (rotate90 ?cordToADir ?forcePlaneDir ?rotDir))
+
+;;; 4, force applied to cord ==> forces on objects
+(<== (forceAppliedToObj ?obj ?dir ?source)
+     (cacheComplete (connectedAtEnd ?cordSeg ?obj))
+     (cacheComplete (cordSegmentOf ?cordSeg ?cord))
+     (cacheComplete (qvFromCordConnection ?cordSeg ?obj ?cordToObjDir))
+     (forceAppliedToObj ?cord ?sourceDir ?source)
+     (lookupOnly (inverseVector ?cordToObjDir ?dir))
+     (lookupOnly (openHalfPlane ?dir ?sourceDir)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; force applied to cord -> forceApplied to cord segment
+ ;; this needs to depend on the direction of the cord segment...
+
+(<== (forceAppliedToObj ?cordseg ?dir ?source)
+     (cacheComplete (cordSegmentOf ?cordseg ?cord))
+     (forceAssumed ?cord ?dir ?source)
+     (cacheComplete (qvFromCordConnection ?cordseg ?connected ?cordDir))
+     (lookupOnly (qvAxisAligned ?dir ?axis))
+     (lookupOnly (qvAxisAligned ?cordDir ?axis)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; PULLEYS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; force transfers through a pulley
+;; 1. cordB feels force from cordA, which is connected to B through a pulley
+
+(<== (forceAppliedToObj ?cordB ?dir ?source)
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?cordA ?cordB ?pulley)))
+     (forceAppliedToObj ?cordA ?sourceDir ?source)
+     (lookupOnly (wmOnly 
+                  (qvFromCordConnection ?cordA ?pulley ?cordAToPulleyDir)))
+     (lookupOnly (wmOnly
+                  (qvFromCordConnection ?cordB ?pulley ?cordBToPulleyDir)))
+     (lookupOnly (inverseVector ?cordAToPulleyDir ?pulleyToCordADir))
+     ;; the source force must pull cordA away from the pulley
+     (lookupOnly (openHalfPlane ?pulleyToCordADir ?sourceDir))
+     ;; the resultant force will pull toward the pulley along cordB
+     (lookupOnly (unifies ?cordBToPulleyDir ?dir))
+     )
+
+#|
+;; 2. A cord can feel a force from the pulley itself
+(<== (forceAppliedToObj ?cord ?dir ?source)
+     (lookupOnly (wmOnly (cordSegEntersPulley ?cord ?pulley)))
+     (forceAppliedToObj ?pulley ?sourceDir ?source)
+     (lookupOnly (wmOnly 
+                  (qvFromCordConnection ?cord ?pulley ?cordToPulleyDir)))
+     (closedHalfPlane ?cordToPulleyDir ?sourceDir)
+     (unifies ?cordToPulleyDir ?dir))
+|#
+
+;; 3. pulley feels force from cord going through it because it's constrained
+(<== (forceAppliedToObj ?obj ?dir ?source) ;;?obj = pulley
+     (lookupOnly (wmOnly (cordSegsConnectThroughPulley ?segA ?segB ?obj)))
+     ;; the resulting force moves away from the normal of the cord as it 
+     ;; goes through the pulley
+     (lookupOnly (wmOnly (normalOfInnerCord ?obj ?segA ?segB ?dir)))
+     (notSufficientlyConstrained ?obj ?dir) ;; free to move?
+     ;; not worried about obj rotation constraint because it's a pulley!
+     
+     (cacheComplete (movablePulleyCordTerminus ?obj ?segB ?terminus))
+     
+     ;; the movable end of the cord must be pulled away from the pulley
+     (forceAppliedToObj ?segA ?sourceDir ?source)
+     (lookupOnly (qvToCordConnection ?obj ?segA ?pulleyToCordADir))
+     (closedHalfPlane ?pulleyToCordADir ?sourceDir)
+     )
+
+(<== (movablePulleyCordTerminus ?pulley ?pushingSeg ?pulley)
+     (lookupOnly (sameCord ?pushingSeg ?cordSeg))
+     (lookupOnly (connectedAtEnd ?cordSeg ?pulley)))
+
+(<== (movablePulleyCordTerminus ?pulley ?pushingSeg ?constrainedObj)
+     (lookupOnly (sameCord ?pushingSeg ?cordSeg))
+     (lookupOnly (connectedAtEnd ?cordSeg ?constrainedObj))
+     (different ?constrainedObj ?pulley)
+     (lookupOnly (qvToCordConnection ?constrainedObj ?seg ?constrainedToSegDir))
+     (sufficientlyConstrained ?constrainedObj ?constrainedToSegDir)
+     (rotationallyConstrainedAtCordSeg ?constrainedObj ?cordSeg))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

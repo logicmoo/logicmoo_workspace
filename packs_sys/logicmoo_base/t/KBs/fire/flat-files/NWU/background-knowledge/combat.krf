@@ -1,0 +1,276 @@
+;;;
+;;; combat.meld
+;;;
+;;; Backfill commonsense knowledge about combat for Perceptual Agents
+;;;
+
+(in-microtheory CompanionsMt)
+
+(isa AgentOperationallyEffective TemporalThingTypeByExistentialStatus)
+
+(isa InterAgentStateType SecondOrderCollection)
+(isa War InterAgentStateType)
+(isa InternationalTerritorialDispute InterAgentStateType)
+(isa Peace InterAgentStateType)
+
+;;; I'm amazed something like this doesn't exist in Cyc:
+(isa diplomaticState TernaryPredicate)
+(functionalInArgs diplomaticState 3)
+(arity diplomaticState 3)
+(arg1Isa diplomaticState IntelligentAgent)
+(arg2Isa diplomaticState IntelligentAgent)
+(arg3Isa diplomaticState InterAgentStateType)
+
+(<== (diplomaticState ?country1 ?country2 Peace)
+     (uninferredSentence
+       (conflictBetween ?country1 ?country2 ?conflict)))
+
+(<== (diplomaticState ?country1 ?country2 ?state)
+     (numAnswers 1
+       (conflictBetween ?country1 ?country2 ?conflict)) ; ?conflict is a particular conflict
+     (numAnswers 1
+       (interAgentStateTypeOf ?conflict ?state)))
+
+(isa conflictBetween TernaryPredicate)
+(arity conflictBetween 3)
+(arg1Isa conflictBetween IntelligentAgent)
+(arg2Isa conflictBetween IntelligentAgent)
+(arg3Isa conflictBetween ConflictEvent)
+(comment conflictBetween "(conflictBetween ?a ?b ?conf) just checks opponentsInConflict with the agents in both orders.")
+
+;;; opponentsInConflict can't be symmetric, since it's ternary.
+(<== (conflictBetween ?country1 ?country2 ?conflict)
+     (numAnswers 1 
+       (opponentsInConflict ?country1 ?country2 ?conflict)))
+
+(<== (conflictBetween ?country1 ?country2 ?conflict)
+     (numAnswers 1 
+       (opponentsInConflict ?country2 ?country1 ?conflict)))
+
+(isa interAgentStateTypeOf BinaryPredicate)
+(arg1Isa interAgentStateTypeOf ConflictEvent)
+(arg2Isa interAgentStateTypeOf Collection)
+(comment interAgentStateTypeOf "(interAgentStateTypeOf ?conflict ?state-type) identifies the appropriate genl of ?conflict that isa InterAgentStateType.")
+
+;;; Not sophisticated:
+(<== (interAgentStateTypeOf ?conflict War)
+     (isa ?conflict War))
+
+(<== (interAgentStateTypeOf ?conflict InternationalTerritorialDispute)
+     (isa ?conflict InternationalTerritorialDispute))
+
+
+;;; Consider also the event of CrossingABorder, formsBorderBetween, etc.
+
+(isa adversarialIncursion BinaryPredicate)
+(arg1Isa adversarialIncursion IntelligentAgent)
+(arg2Isa adversarialIncursion GeographicalRegion)
+
+(<== (adversarialIncursion ?who ?where)
+     (currentPlayer ?player)   ; might be more game specific than we'd like
+     (executionContext ?game)
+     (opponentsInConflict ?player ?adversary ?game)
+     (sovereignAllegianceOfOrg ?who ?adversary)  ; those units we can detect
+     (inRegion ?who (TerritoryFn ?player))
+     (objectFoundInLocation ?who ?where))
+
+;; built-in cyc pred:
+(<== (agentPosesThreat ?threatener ?threatenee)
+     (threatensNationalSovereignty ?threatener ?threatenee))
+
+(isa threatensNationalSovereignty BinaryPredicate)
+(genlPreds threatensNationalSovereignty adversarialIncursion)
+(arg1Isa threatensNationalSovereignty IntelligentAgent)
+(arg2Isa threatensNationalSovereignty IntelligentAgent)
+(comment threatensNationalSovereignty "(threatensNationalSovereignty ?who ?nation) identifies units at war with nation in its own territory.")
+
+(<== (threatensNationalSovereignty ?who ?nation)
+     (opponentsInConflict ?nation ?adversary ?game)
+     (diplomaticState ?nation ?adversary ?state)
+     (genls ?state War)
+     (sovereignAllegianceOfOrg ?who ?adversary)
+     (inRegion ?who (TerritoryFn ?nation)))
+
+
+;;; It's a goal to want to hurt your enemies:     
+(<== (goalCategoryForAgent ?actor 
+       (relationExistsInstance maleficiary HarmingAnAgent ?enemy)
+       HarmingEnemiesGoal)
+     (diplomaticState ?actor ?enemy ?state)
+     (genls ?state War))
+     
+
+(<== (opponents ?agt1 ?agt2)
+     (sovereignAllegianceOfOrg ?agt1 ?nation1)
+     (sovereignAllegianceOfOrg ?agt2 ?nation2)
+     (different ?nation1 ?nation2)              ; shortcut a lookup.
+     (opponentsInConflict ?nation1 ?nation2 ?situation))
+
+(<== (considersAsEnemy ?u ?v)
+     (different ?u ?v)
+     (opponentsInConflict ?nation1 ?nation2 ?situation)
+     (diplomaticState ?nation1 ?nation2 ?state) ; fc-specific?  holdsIn Now?
+     (genls ?state War))
+
+(<== (ableToControl ?directingAgent ?thing)
+     (owns ?directingAgent ?thing))
+
+(<== (relationAllExists inputsDestroyed (PhysicalDestructionEvent ?x) ?x))
+(<== (inputsDestroyed-TypeType (PhysicalDestructionEvent ?x) ?x))
+
+;;; existential status changes over time.  If you want prior status, wrap it in holdsIn.
+(isa agentsExistentialStatus BinaryPredicate)
+(isa agentsExistentialStatus FunctionalPredicate)
+(isa agentsExistentialStatus DynamicUpdatePredicate)
+(arity agentsExistentialStatus 2)
+(arg1Isa agentsExistentialStatus Agent-Generic)
+(arg2Isa agentsExistentialStatus TemporalThingTypeByExistentialStatus)
+
+(<== (agentsExistentialStatus ?target AgentNowTerminated)
+     (inputsDestroyed ?some-event ?target)
+     (isa ?target Agent-Generic))
+
+(<== (agentsExistentialStatus ?agent AgentOperationallyEffective)
+     (isa ?agent Agent-Generic)
+     (uninferredSentence 
+       (agentsExistentialStatus ?agent AgentNowTerminated)))
+
+;;; -------------------------------------------------------------------------
+;;; OFFENSIVE ACTIONS
+
+(isa SearchAndDestroy DurativeEventType)
+(isa SearchAndDestroy Collection)
+(genls SearchAndDestroy PurposefulAction)
+(comment SearchAndDestroy "A SearchAndDestroy mission is the extended event of looking for targets, maneuvering, closing on, and destroying them.")
+
+(isa agentTypeResourceInEvent BinaryPredicate)
+(arg1Isa agentTypeResourceInEvent Event)
+(arg2Isa agentTypeResourceInEvent Collection)
+
+;;; This would be a problem to specify ?type as ModernMilitaryUnit-Deployable
+;;; when we have Freeciv military units with no attack strength, such as Galleons and Transports.
+(<== (agentTypeResourceInEvent ?evt ?type)
+     (groundExpression ?evt) ; safety check.
+     (genls ?evt SearchAndDestroy)
+     ;; Not lookupOnly:
+     ((TypeCapableFn behaviorCapable) ?type AttackOnTangible performedBy))  ; No Galleons!
+     
+(properSubEventTypes SearchAndDestroy TargetPicking)               ; selecting targets
+(candidateProperSubSituationTypes SearchAndDestroy MilitaryManeuver-Offensive)  ; getting into position
+(candidateProperSubSituationTypes SearchAndDestroy Waiting)        ; optionally wait for best advantage, surprise, etc.
+(properSubEventTypes SearchAndDestroy ClosingWithEnemy)            ; should this just be bundled into AttackToDestroy?
+(properSubEventTypes SearchAndDestroy AttackToDestroy)
+(focalProperSubsituationTypes SearchAndDestroy AttackToDestroy) 
+(startsAfterEndOfInSituationType SearchAndDestroy MilitaryManeuver-Offensive TargetPicking)
+(startsAfterEndOfInSituationType SearchAndDestroy Waiting MilitaryManeuver-Offensive)
+(startsAfterEndOfInSituationType SearchAndDestroy ClosingWithEnemy TargetPicking) ; waiting is optional
+(startsAfterStartOfInSituationType SearchAndDestroy AttackToDestroy ClosingWithEnemy)
+
+(someTypePlaysRoleInSubSituationType SearchAndDestroy GeographicalRegion AttackToDestroy eventOccursAt) ; Kill Zone?
+(someTypePlaysRoleInSubSituationType SearchAndDestroy Agent-Generic TargetPicking intendedMaleficiary)
+
+;; objectFound-Indefinite is ternary
+
+(isa TargetPicking Collection)
+(genls TargetPicking LookingForSomething-Indefinite)  ; Learn to scan for targets
+;; performedBy = agent
+;; searchCriterion-Indefinite = CRITERION
+
+(isa ClosingWithEnemy Collection)
+(genls ClosingWithEnemy Approaching)
+(genls ClosingWithEnemy Translation-LocationChange)
+;; performedBy = agent
+;; primaryObjectMoving = agent
+;; toLocation = location of enemy
+;; actually, you want to close to the distance that is
+;; EqualTo-UnitValuesFn the range 
+;; (proximityConstraints-Type AttackOnTangible performedBy intendedMaleficiary ?range)
+
+
+(isa AttackToDestroy Collection)
+(genls AttackToDestroy (CollectionIntersection2Fn DestroyingAnEnemyForce  AttackOnTangible))
+;; performedBy = agent
+;; intendedMaleficiary = target
+
+
+;;; -------------------------------------------------------------------------
+;;; DEFENSIVE ACTIONS
+
+;;; AreaDefense-MilitaryOperation exists in Cyc
+
+;;; GuardingSomething is not an intrinsically military action
+
+;;; DefendingSomethingAgainstAttack
+
+;;; The GoalTypeByCategory of a StengtheningEvent is BeingStrong but that's too specific to bodyBuilding
+;;; Learn to scan for threats
+
+;(isa DefensiveStrengthFn Function-Denotational)
+;(comment DefensiveStrengthFn "(DefensiveStrengthFn ?inst ?coll) refers to the ability of ?inst to withstand attacks by instances of ?coll.")
+;(arity DefensiveStrengthFn 1)
+;(arg1Isa DefensiveStrengthFn Agent-Generic)
+;(resultIsa DefensiveStrengthFn ContinuousQuantity)
+
+;;; By analogy to DistanceFn:
+;(functionCorrespondingPredicate DefensiveStrengthFn defenseStrengthWRTType 3)
+
+(isa defenseStrengthWRTType TernaryPredicate)
+(functionalInArgs defenseStrengthWRTType 3)
+(arity defenseStrengthWRTType 3)
+(arg1Isa defenseStrengthWRTType Agent-Generic)
+(arg2Isa defenseStrengthWRTType Collection)
+(arg3Isa defenseStrengthWRTType ContinuousQuantity)
+(comment defenseStrengthWRTType "(defenseStrengthWRTType ?defender ?attacker-type ?strength) means the defense strength of ?defender against attackers of type ?attacker-type is ?strength.")
+
+
+((TypeCapableFn behaviorCapable) ModernMilitaryUnit-Deployable DefendingSomethingAgainstAttack performedBy)
+(frequentPrototypicalActivityTypeOfPersonType DefendingSomethingAgainstAttack ModernMilitaryUnit-Deployable)
+
+;;; -------------------------------------------------------------------------
+;;; OFFENSIVE ACTIONS
+
+;(isa OffensiveStrengthFn Function-Denotational)
+;(comment OffensiveStrengthFn "(OffensiveStrengthFn ?inst) refers to the ability of ?inst to successfully engage and attack enemy units.")
+;(arity OffensiveStrengthFn 1)
+;(arg1Isa OffensiveStrengthFn Agent-Generic)
+;(resultIsa OffensiveStrengthFn ContinuousQuantity)
+
+;(functionCorrespondingPredicate OffensiveStrengthFn offensiveStrength 2)
+
+(isa offensiveStrength BinaryPredicate)
+(isa offensiveStrength FunctionalPredicate)
+(functionalInArgs offensiveStrength 2)
+(arity offensiveStrength 2)
+(arg1Isa offensiveStrength Agent-Generic)
+(arg2Isa offensiveStrength ContinuousQuantity)
+(comment offensiveStrength "(offensiveStrength ?attacker ?strength) means the attack strength of ?attacker is ?strength.")
+
+
+
+;;; -------------------------------------------------------------------------
+;;; GOAL TYPES (the arg3 of goalCategoryForAgent)
+;;;
+;;; FoodSupplyGoal
+;;; BeingStrong
+;;; NationalDefenseGoal
+;;; NationalEconomyGoal
+;;; SelfPreservationGoal
+;;; StrategicInterest
+;;; StrategicNationalInterest
+;;; TradeGoal
+;;; TerritorialIntegrityGoal
+;;; ThwartingAThreatGoal
+;;; ToIncreaseProfits
+;;; VitalNationalInterest
+
+;;; So a Freeciv civ has (intrinsically) a SelfPreservationGoal and a StrategicNationalInterestGoal.
+
+;;; (typePrimaryFunction ?thing Movement-TranslationEvent motionPathway-Partial)
+
+
+;;; -------------------------------------------------------------------------
+;;; PATH SYSTEMS
+
+;;; -------------------------------------------------------------------------
+;;; CAPABILITY CALCULUS
+

@@ -1,0 +1,178 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: design-buddy-rules.meld
+;;;;    System: sKEA
+;;;;    Author: Jon Wetzel
+;;;;   Created: January 26, 2010 16:25:42
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory SKEADBFactsMt :exclude-globals t)
+(isa SKEADBRulesMt Microtheory)
+(genlMt SKEADBRulesMt SKEADBFactsMt)
+(comment SKEADBRulesMt "Holds the rules for Design Buddy.")
+
+
+(in-microtheory SKEAMt)
+(genlMt SKEAReasoningCollectorMt SKEADBRulesMt)
+
+(in-microtheory SKEADBRulesMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; QM rules adapted for using outsourced predicates in dbmts (scratchpads)
+;;; wraps the outsourced pred in ist-information of the dbmts' bundlecase
+;; State Transition Rules
+
+(<== (stateTransitionRequires ?b1-dbmt ?b2-dbmt (transMotion ?obj1 ?dir))
+     (different ?b1-dbmt ?b2-dbmt)
+     (wmOnly (genlMt ?b1-dbmt ?b1))
+     (wmOnly (genlMt ?b2-dbmt ?b2))
+     (lookupOnly (causes-SitSit ?b1 ?b2))     
+     (ist-Information ?b1-dbmt (isa ?obj2 FixedObject))
+     (ist-Information ?b2-dbmt (isa ?obj2 FixedObject))
+     
+     (ist-Information ?b1-dbmt (isa ?obj1 RigidOb))
+     (uninferredSentence (ist-Information ?b1-dbmt (isa ?obj1 FixedObject)))
+     (different ?obj1 ?obj2)
+     (ist-Information ?b2-dbmt (isa ?obj1 RigidOb))
+     (uninferredSentence (ist-Information ?b2-dbmt (isa ?obj1 FixedObject)))
+
+     (uninferredSentence (stateTransitionRequires ?b1-dbmt ?b2-dbmt
+                                                  (rotMotion ?obj ?dir)))
+     
+     (relativePositionChange ?b1 ?b2 ?obj1 ?obj2 ?dir)
+     ;;(fixedAxisRotation ?b1 ?b2 ?obj1 ?fixedPoint)
+     ;;(equals ?fixedPoint NONE)
+     
+     (ist-Information ?b1 (inkLastModifiedTime (GlyphFn ?obj1 ?layer1) ?time1))
+     (ist-Information ?b2 (inkLastModifiedTime (GlyphFn ?obj1 ?layer2) ?time2))
+     )
+
+(<== (stateTransitionRequires ?b1-dbmt ?b2-dbmt (rotMotion ?obj ?rotDir))
+     (different ?b1-dbmt ?b2-dbmt)
+     (wmOnly (genlMt ?b1-dbmt ?b1))
+     (wmOnly (genlMt ?b2-dbmt ?b2))
+     (lookupOnly (causes-SitSit ?b1 ?b2))
+     
+     (ist-Information ?b1-dbmt (isa ?obj RigidOb))
+     (uninferredSentence (ist-Information ?b1-dbmt (isa ?obj FixedObject)))
+     (ist-Information ?b2-dbmt (isa ?obj RigidOb))
+     (uninferredSentence (ist-Information ?b2-dbmt (isa ?obj FixedObject)))
+
+     (shortestRotationDir ?b1 ?b2 ?obj ?rotDir)
+     (different ?rotDir ZeroRot)
+
+     (ist-Information ?b1 (inkLastModifiedTime (GlyphFn ?obj ?layer1) ?time1))
+     (ist-Information ?b2 (inkLastModifiedTime (GlyphFn ?obj ?layer2) ?time2))
+     )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; safe rules
+#|
+(<== (safeOverlappingParts ?objA ?objA-part ?objB ?objB-part)
+     (queryContext ?context)
+     (isa ?context DesignBuddyMicrotheory)
+     (wmOnly (genlMt ?context ?bundlecase))
+     (ist-Information
+         ?bundlecase (overlappingParts ?objA ?objA-part ?objB ?objB-part)))
+
+(<== (safeQualitativeVectorBetween ?ptA ?ptB ?dir)
+     (queryContext ?context)    
+     (isa ?context DesignBuddyMicrotheory)
+     (wmOnly (genlMt ?context ?bundlecase))
+     (ist-Information ?bundlecase (qualitativeVectorBetween ?ptA ?ptB ?dir)))
+
+(<== (safeToTheLeftOf ?glyph1 ?glyph2)
+     (queryContext ?context) 
+     (isa ?context DesignBuddyMicrotheory)
+     (wmOnly (genlMt ?context ?bundlecase))
+     (ist-Information ?bundlecase (toTheLeftOf ?glyph1 ?glyph2)))
+
+(<== (safeToTheRightOf ?glyph1 ?glyph2)
+     (queryContext ?context) 
+     (isa ?context DesignBuddyMicrotheory)
+     (wmOnly (genlMt ?context ?bundlecase))
+     (ist-Information ?bundlecase (toTheRightOf ?glyph1 ?glyph2)))
+|#
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; connection from attaches sentences 
+#| ;; still thinking about this
+(<== (connectedTo-Directly ?obj1 ?obj2)
+     (dbStudentSays (functionAchievedVia Attachment-TF ?way
+                                         (TheList ?obj1 ?obj2)
+                                         (TheList ?state)))
+     (touchesDirectly ?obj1 ?obj2))
+
+(<== (connectedTo-Directly ?obj1 ?obj2)
+     (dbStudentSays (functionAchievedVia Attachment-TF ?way
+                                         (TheList ?obj2 ?obj1)
+                                         (TheList ?state)))
+     (touchesDirectly ?obj1 ?obj2))
+|#
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Design Buddy Metaknowledge rules -- UNUSED
+;;; This was an attempt from 2010 that didn't work out.
+
+
+#|
+;;All queries should be made in the context of the bundle's microtheory (bmt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dbProven
+
+
+(<== (dbProven (ist-Information ?bmt ?fact))
+     (groundExpression ?fact)
+     ?fact
+     (genlMt ?bmt ?skmt)
+     (isa ?skmt NuSketchCase)
+     (ist-Information ?skmt (dbStudentSays (ist-Information ?bmt ?fact))))
+
+;; not as efficient as giving it the sketch mt directly probably
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dbContradiction
+
+(<== (dbContradiction (ist-Information ?bmt ?fact) ?reason)
+     (uninferredSentence 
+      (dbProven (ist-Information ?bmt ?fact)))
+     (numAnswers 1 (contradicts (ist-Information ?bmt ?fact) ?reason))
+     (genlMt ?bmt ?skmt)
+     (isa ?skmt NuSketchCase)
+     (ist-Information ?skmt (dbStudentSays (ist-Information ?bmt ?fact))))
+
+(<== (contradicts (ist-Information ?bmt (transMotion ?obj ?ss-dir)) 
+                  (ist-Information ?bmt (transMotion ?obj ?actual-dir)))
+     (numAnswers 1 (transMotion ?obj ?actual-dir)))
+     
+(<== (contradicts (ist-Information ?bmt (rotMotion ?obj ?ss-dir)) 
+                  (ist-Information ?bmt (rotMotion ?obj ?actual-dir)))
+     (numAnswers 1 (rotMotion ?obj ?actual-dir)))
+
+(<== (contradicts (ist-Information ?bmt (touchesDirectly ?obj1 ?obj2)
+                    (uninferredSentence 
+                     (ist-Information ?bmt (touchesDirectly ?obj1 ?obj2)))))
+     (uninferredSentence 
+      (ist-Information ?bmt (touchesDirectly ?obj1 ?obj2))))
+
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dbUnproven     
+
+(<== (dbUnproven (ist-Information ?bmt ?fact))
+     (uninferredSentence (dbContradiction (ist-Information ?bmt ?fact) ?reason))
+     (uninferredSentence (dbProven (ist-Information ?bmt ?fact)))
+     (genlMt ?bmt ?skmt)
+     (isa ?skmt NuSketchCase)
+     (ist-Information ?skmt (dbStudentSays (ist-Information ?bmt ?fact)))
+     )
+|#
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

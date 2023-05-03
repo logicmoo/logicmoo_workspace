@@ -1,0 +1,15 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv activity
+;; -------------------
+
+(isa FreeCiv-ActivityType SecondOrderCollection)
+(genls FreeCiv-ActivityType FreeCiv-ObjectType)
+(typeGenls FreeCiv-ActivityType FreeCiv-Activity)
+
+(isa FreeCiv-Activity FirstOrderCollection)
+(isa FreeCiv-Activity FreeCiv-ActivityType)
+(genls FreeCiv-Activity FreeCiv-Object)
+(genls FreeCiv-Activity PurposefulAction)
+

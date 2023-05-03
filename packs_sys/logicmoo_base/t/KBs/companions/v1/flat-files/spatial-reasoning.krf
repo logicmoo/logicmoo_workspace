@@ -1,0 +1,69 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: spatial-reasoning.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 14, 2013 10:52:08
+;;;;   Purpose: spatial reasoning vocabulary for Companions
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+
+;;; Map one bounding box onto another:
+(isa CoordinateSubregionFn Function-Denotational)
+(arity CoordinateSubregionFn 5)
+(arg1Isa CoordinateSubregionFn SurfaceRegion-Underspecified)
+(arg2Isa CoordinateSubregionFn Integer)
+(arg3Isa CoordinateSubregionFn Integer)
+(arg4Isa CoordinateSubregionFn Integer)
+(arg5Isa CoordinateSubregionFn Integer)
+(resultIsa CoordinateSubregionFn SurfaceRegion-Underspecified)
+(comment CoordinateSubregionFn "(CoordinateSubregionFn SUPER X Y MAX-X MAX-Y) denotes the subregion of SUPER at cell coordinate X,Y when divided into a grid of MAX-X, MAX-Y cells.")
+
+;;; We probably want a TranslationFn as well, to designate an offset of a
+;;; bounding box.  The question, though, is what would the ruler be?  We
+;;; certainly don't want to specify absolute screen coordinates.  So when
+;;; we say that we want to move a glyph some amount in X and Y, we probably
+;;; want to specify that as a percentage of its own width and height.
+
+
+;;; Scarfed from Maria's supporting-systems-theory in CogSketch:
+(isa DistanceFn Function-Denotational)
+(comment DistanceFn "(DistanceFn ?a ?b) refers to the magnitude of the distance between A and B.")
+(arity DistanceFn 2)
+(arg1Isa DistanceFn SpatialThing)
+(arg2Isa DistanceFn SpatialThing)
+(resultIsa DistanceFn ContinuousQuantity)  ; Would it be wrong to say it's a Distance? Or is a Distance not a fluent?
+
+;;; Use the built-in Cyc pred (distanceBetween ?THAT ?THIS ?DIST)) 
+(functionCorrespondingPredicate DistanceFn distanceBetween 3)
+
+;;; A role relation used in BOTE science olympics
+;;; (this is a Cyc built-in predicate)
+;(isa distanceTranslated MeasurableQuantitySlot)
+;(arg1Isa distanceTranslated Movement-TranslationEvent)
+;(arg2Isa distanceTranslated Distance)
+
+;;; Try to operationalize trajectoryPassesThrough
+;;; Want to be able to predict movements that cross borders (CrossingABorder),
+;;; pass within attack range, etc.
+
+
+;;; Things to operationalize
+
+;;; trajectoryPassesThrough
+;;; trajectoryComplete
+;;; CrossingABorder
+;;; formsBorderBetween
+
+;;; spatiallySubsumes
+;;; inRegion
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

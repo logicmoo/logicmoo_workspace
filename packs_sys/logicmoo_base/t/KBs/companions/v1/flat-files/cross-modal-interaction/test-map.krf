@@ -1,0 +1,174 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: test-map.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: April 24, 2015 11:43:13
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory TestMapMt)
+(isa TestMapMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(genlMt CompanionsMt TestMapMt)
+
+(isa testMap1 ComplexActionPredicate)
+(arity testMap1 0)
+(isa testMap2 ComplexActionPredicate)
+(arity testMap2 0)
+(isa testMap3 ComplexActionPredicate)
+(arity testMap3 0)
+(isa testMap4 ComplexActionPredicate)
+(arity testMap4 0)
+(isa testMap5 ComplexActionPredicate)
+(arity testMap5 0)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (testMap1)
+  (actionSequence
+   (TheList
+    (doAnnounce "test this" ())
+    (doMap (?a) 
+           (actionSequence 
+            (TheList
+             (doAnnounce "this kinda works ~A" (?a))))
+           (TheSet 1 2 3))))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (testMap2)
+  (actionSequence
+   (TheList
+    (doAnnounce "test this" ())
+    (doMap (?a ?b) 
+           (actionSequence 
+            (TheList
+             (doAnnounce "this kinda works ~A ~A" (?a ?b))))
+           (TheSet 1 2 3)
+           (TheSet 4 5 6))))))
+
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (testMap3)
+  (actionSequence
+   (TheList
+    (doAnnounce "test this" ())
+    (doMap (?a ?b ?c) 
+           (actionSequence 
+            (TheList
+             (doAnnounce "this kinda works ~A ~A ~A" (?a ?b ?c))))
+           (TheSet 1 2 3)
+           (TheSet 4 5 6)
+           (TheSet 7 8 9))))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (testMap4)
+  (actionSequence
+   (TheList
+    (doAnnounce "test this" ())
+    (doMap (?a ?b ?c) 
+           (actionSequence 
+            (TheList
+             (doAnnounce "this kinda works ~A ~A ~A" (?a ?b ?c))))
+           (TheSet 1 2 3)
+           (TheSet 4 5)
+           (TheSet 7 8 9 0))))))
+
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (testMap5)
+  (actionSequence
+   (TheList
+    (doAnnounce "test this" ())
+    (doMap (?a ?b ?c) 
+           (doAnnounce "this kinda works ~A ~A ~A" (?a ?b ?c))
+           (TheSet 1 2 3)
+           (TheSet 4 5)
+           (TheSet 7 8 9 0))))))
+
+(isa agenda1 ComplexActionPredicate)
+(arity agenda1 0)
+(isa agenda2 ComplexActionPredicate)
+(arity agenda2 0)
+(isa agenda3 ComplexActionPredicate)
+(arity agenda3 0)
+(isa startAgenda ComplexActionPredicate)
+(arity startAgenda 0)
+(isa startAgenda1 ComplexActionPredicate)
+(arity startAgenda1 0)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (agenda1)
+    (actionSequence
+   (TheList
+    (doAnnounce "agenda1" ())))))
+
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (agenda2)
+    (actionSequence
+   (TheList
+    (doAnnounce "agenda2" ())))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (agenda3)
+  (actionSequence
+   (TheList
+    (doAnnounce "agenda3" ())))))
+
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (currentExecutive ?ex)
+      (newUniqueTask agenda1 ?task1)
+      (newUniqueTask agenda2 ?task2)
+      (agendaContext ?mt))
+ (methodForAction
+  (startAgenda)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (assignedTo ?task1 ?ex)))
+    (doTell (ist-Information ?mt (assignedTo ?task2 ?sr)))
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?task2 ?task1)))
+    (doEnqueue ?ex ?task1 (agenda1))
+    (doEnqueue ?sr ?task2 (agenda2))))))
+
+
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (currentExecutive ?ex))
+ (methodForAction
+  (startAgenda1)
+  (actionSequence
+   (TheList
+    (enqueueSerialTasks (TheList
+                         (TheList (agenda1) ?ex)
+                         (TheList (agenda2) ?sr)))))))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

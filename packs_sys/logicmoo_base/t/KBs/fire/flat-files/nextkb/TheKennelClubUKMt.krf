@@ -1,0 +1,10 @@
+(in-microtheory TheKennelClubUKMt)
+
+(isa Dachshund-MiniatureSizedVariety DogTypeByBreedAndVariety)
+(isa Dachshund-MiniatureSizedVariety OrganismVarietyBySize)
+(isa Dachshund-StandardSizedVariety DogTypeByBreedAndVariety)
+(isa Dachshund-StandardSizedVariety OrganismVarietyBySize)
+(rewriteOf Dachshund-MiniatureSizedVariety (ToySizedVarietyFn Dachshund))
+(rewriteOf Dachshund-StandardSizedVariety (StandardSizedVarietyFn Dachshund))
+(genls Dachshund-StandardSizedVariety Dachshund)
+(genls Dachshund-MiniatureSizedVariety Dachshund)

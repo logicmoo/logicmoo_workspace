@@ -1,0 +1,969 @@
+;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;; -------------------------------------------------------------------------
+;;; File name: performance-goals.meld
+;;;    Author: Tom Hinrichs
+;;;   Created: November 24, 2010 14:44:22
+;;;   Purpose: Definition of performance goals for Companions
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+;;;
+;;; Define the types of performance goals (ie, objective functions) for
+;;; game playing and problem solving.  A performance goal may simply
+;;; be a state to achieve or it may be defined relative to ordinal values,
+;;; e.g. MinimizeFn, etc.
+;;;
+;;; We also define relationships between goals and subgoals in order to
+;;; support regressing to actions.
+;;;
+;;; Note that a performance goal need not be limited to PerceptualAgent domains.
+;;; If performance is purly inferential, like the performance of a classifier,
+;;; then there wouldn't be any extended actions or events.
+
+;;; How do we want to deal with GoalTypeByCategory?
+;;; Should we be able to say things like
+;;;  (goalCategoryForAgent ?actor (GoalFn 2) SelfPreservationGoal)??
+
+(in-microtheory CompanionsMt)
+(genlMt CompanionsMt QPTheoryMt)  ; This just isn't going to work if CompanionsMt doesn't inherit from QPTheoryMt.
+
+(isa PerformanceGoal Collection)
+(genls PerformanceGoal Goal)
+(comment PerformanceGoal "A PerformanceGoal is a (typically evaluable) goal for achieving a task.  This is intended to be distinct from LearningGoals, but it's conceivable that in the degenerate case, they might be one and the same (e.g., an exploration goal in Freeciv).")
+
+(isa QuantityGoal Collection)
+(genls QuantityGoal PerformanceGoal)
+
+(isa PropositionalGoal Collection)
+(genls PropositionalGoal PerformanceGoal)
+
+(partitionedInto PerformanceGoal (ThePartition QuantityGoal PropositionalGoal))
+(disjointWith QuantityGoal PropositionalGoal)
+
+(isa goalTypeOf BinaryPredicate)
+(arg1Isa goalTypeOf Goal)
+(arg2Isa goalTypeOf Collection)
+(comment goalTypeOf "(goalTypeOf ?goal ?type) classifies ?goal into either QuantitativeGoal or PropositionalGoal.")
+
+(<== (goalTypeOf ?goal PropositionalGoal)
+     (not (variableExpression ?goal))
+     (propositionalGoalNat ?goal))
+
+(<== (goalTypeOf ?goal QuantityGoal)
+     (not (variableExpression ?goal))
+     (quantitativeGoalNat ?goal))
+     
+(<== (purposeOfEvent-GoalType ?event ?goaltype)
+     (purposeInEvent ?agent ?event ?formula)
+     (goalCategoryForAgent ?agent ?formula ?goaltype))
+     
+(isa goalActivation BinaryPredicate)
+(isa goalActivation DynamicUpdatePredicate)  ; outsourced
+(arity goalActivation 2)
+(arg1Isa goalActivation Goal)
+(arg2Isa goalActivation MeasurableQuantity) ; a Percentage
+(comment goalActivation "(goalActivation ?goal ?activation) is an outsourced predicate that represents the current priority or goal activation as a Percentage.  (Percent 50) would be half activated.
+  When wrapped in a MeasurableQuantityFn NAT, the goalActivation predicate can denote a continuous quantity fluent with which we can represent influences.")
+
+(isa goalEntity BinaryPredicate)
+(isa goalEntity DynamicUpdatePredicate)
+(arity goalEntity 2)
+(arg1Isa goalEntity Goal)
+(arg2Isa goalEntity Thing)
+(comment goalEntity "(goalEntity ?goal ?entity) is an outsourced predicate that binds each ?entity that could propositionalize type-level ?goal (a goal name NAT).")
+
+(isa possibleGoal BinaryPredicate)
+(isa possibleGoal DynamicUpdatePredicate)
+(arity possibleGoal 2)
+(arg1Isa possibleGoal CycLExpression)
+(arg2Isa possibleGoal CycLExpression)
+(comment possibleGoal "(possibleGoal ?action ?prop) means, in the context of the most recent dynamic programming trellis, that ?prop is a possible future state of ?action that could be a goal in the current situation.")
+
+(isa nonTransitivePossibleGoal TernaryPredicate)
+(isa nonTransitivePossibleGoal DynamicUpdatePredicate)
+(arity nonTransitivePossibleGoal 3)
+(arg1Isa nonTransitivePossibleGoal CycLExpression)
+(arg2Isa nonTransitivePossibleGoal CycLExpression)
+(arg3Isa nonTransitivePossibleGoal CycLExpression)
+(comment nonTransitivePossibleGoal "(nonTransitivePossibleGoal ?action ?prop ?next-action) binds ?prop and ?next-action to the resulting propositions from ?action and the actions they enables, by scraping the trellis after an attempt to decide something.")
+
+(isa futureGoal UnaryPredicate)
+(isa futureGoal DynamicUpdatePredicate)
+(arity futureGoal 1)
+(arg1Isa futureGoal Goal)
+(comment futureGoal "(futureGoal ?goal-name) checks the strategy table to collect goals that are not currently active either because they are suppressed by a strategy or there are no current entity instances in their scope.")
+
+(isa transitiveSubgoalOf BinaryPredicate)
+(arity transitiveSubgoalOf 2)
+(arg1Isa transitiveSubgoalOf Goal)
+(arg2Isa transitiveSubgoalOf Goal)
+(commment transitiveSubgoalOf "(transitiveSubgoalOf ?subgoal ?supergoal) checks the strategy table to determine if ?subgoal is transitively a synchronic subgoal of ?supergoal.")
+
+;;; An outsourced predicate that calls pa::collect-subgoal-influencers
+(isa influencingQuantities BinaryPredicate)
+(arity influencingQuantities 2)
+(arg1Isa influencingQuantities Goal)
+(arg2Isa influencingQuantities Set-Mathematical)
+(comment influencingQuantities "(influencingQuantities ?goal ?quantity-set) binds ?quantity-set to the set of quantities that contribute to achieving ?goal.")
+
+(isa currentlyTracking UnaryPredicate)
+(arity currentlyTracking 1)
+(arg1Isa currentlyTracking CycLExpression)
+(comment currentlyTracking "(currentlyTracking ?mfi-spec) indicates that the model fragment instance ?mfi-spec is registered for activation tracking (via the doTrackModelFragmentActivation primitive).")
+
+(isa currentStrategy BinaryPredicate)
+(isa currentStrategy DynamicUpdatePredicate)
+(arity currentStrategy 2)
+(arg1Isa currentStrategy Goal)
+(arg2Isa currentStrategy StrategyType)
+(comment currentStrategy "(currentStrategy ?goal-name ?strategy-name) is an outsourced predicate that looks up the strategy-name for the goal in the strategy-table.")
+
+(isa DecompositionType Collection) ; second order
+
+(isa NullDecomposition DecompositionType)
+(genls NullDecomposition DecompositionStrategy) ; degenerate case
+;;; DecompositionStrategy is defined in Cyc as a spec of ProblemSolvingStrategy.
+
+;;; goalDecomposition is written out to the execution context by the 
+;;; strategy-table code whenever it creates a scenario-specific goal decomposition.
+;;; Hence, it doesn't need to be outsourced.
+(isa goalDecomposition TernaryPredicate)
+(arity goalDecomposition 3)
+(arg1Isa goalDecomposition Goal)
+(arg2Isa goalDecomposition Goal)
+(arg3Isa goalDecomposition DecompositionType)
+(comment goalDecomposition "(goalDecomposition ?parent-goal ?child-goal ?decomposition-strategy) expresses the decomposition of ?parent-goal to (multiple) ?child-goals.
+  Whereas subgoal represents a type-level decomposition, a decomposition may be a scenario-specific breakdown of the entity collection of the parent goal.
+  I.e., it's a partial propositionalization.")
+
+;;; This should be replaced by performanceGoalForTask (defined in CompanionsMt).
+;;; Really, what we're saying is that this is the top-level performance goal for
+;;; the current execution context.  Doesn't really matter if it's a game.
+;;; Could be a robot performing a task.
+;;; This is used in Freeciv to reify relevant quantities
+;;; It's used in the rational player to seed the goal tree for influence-based decomposition.
+;;; It's used in effectiveConditions to initialize the search for dependent variables,
+;;; and in explainDecision to search for motivations.
+(isa performanceGoalForGame BinaryPredicate)
+(arity performanceGoalForGame 2)
+(arg1Isa performanceGoalForGame Microtheory)
+(arg2Isa performanceGoalForGame PerformanceGoal)
+(comment performanceGoalForGame 
+  "(performanceGoalForGame ?performance-goal ?mt) asserts that ?performance-goal is the top-level goal for the current game ?mt.")
+
+(isa performanceGoalForTask BinaryPredicate)
+(arity performanceGoalForTask 2)
+(arg1Isa performanceGoalForTask ELSentence-Assertible)  ; ie, ground
+(arg2Isa performanceGoalForTask PerformanceGoal)
+(comment performanceGoalForTask "(performanceGoalForTask ?task ?goal) asserts that ?goal is a performance goal for achieving ?task.")
+
+(isa performanceGoalForQuantity BinaryPredicate)
+(arity performanceGoalForQuantity 2)
+(arg1Isa performanceGoalForQuantity MeasurableQuantity)
+(arg2Isa performanceGoalForQuantity PerformanceGoal)
+(comment performanceGoalForQuantity "(performanceGoalForQuantity ?quantity ?goal) asserts that ?goal is a current goal for ?quantity, e.g. to maximize it or minimize it.")
+
+(isa oppositeGoalType BinaryPredicate)
+(arity oppositeGoalType 2)
+(arg1Isa oppositeGoalType UnaryFunction)
+(arg2Isa oppositeGoalType UnaryFunction)
+(comment oppositeGoalType "(oppositeGoalType ?type1 ?type2) means the goal types are inverses, such as MaximizeFn and MinimizeFn.")
+
+;;; Simpler than a rule:
+(oppositeGoalType MaximizeFn MinimizeFn)
+(oppositeGoalType MinimizeFn MaximizeFn)
+(oppositeGoalType AchieveFn PreventFn)
+(oppositeGoalType PreventFn AchieveFn)
+
+;;; This is used in computing subgoal relations:
+(isa goalTypeForQuantityRel TernaryPredicate)
+(arity goalTypeForQuantityRel 3)
+(arg1Isa goalTypeForQuantityRel UnaryFunction)
+(arg2Isa goalTypeForQuantityRel BinaryPredicate)
+(arg3Isa goalTypeForQuantityRel UnaryFunction)
+(comment goalTypeForQuantityRel "(goalTypeForQuantityRel ?superGoalType ?relation ?subGoalType) means ?subGoalType is the type of goal functor (eg MaximizeFn) to achieve ?superGoal when ?relation holds between goal quantity and independent variable.")
+
+;;; Implementation is domain-specific:
+(isa quantityMeetsGoalThreshold BinaryPredicate)
+(arity quantityMeetsGoalThreshold 2)
+(arg1Isa quantityMeetsGoalThreshold PerformanceGoal) ; really a quantity goal
+(arg2Isa quantityMeetsGoalThreshold MeasurableQuantity)
+(comment quantityMeetsGoalThreshold "(quantityMeetsGoalThreshold ?goal ?quantity) is true if the value of ?quantity is greater than zero for maximize goals.")
+
+;;; Implementation is domain-specific:
+(isa goalOutcomeStatus QuaternaryPredicate)
+(arity goalOutcomeStatus 4)
+(arg1Isa goalOutcomeStatus Case)
+(arg2Isa goalOutcomeStatus Case)
+(arg3Isa goalOutcomeStatus PerformanceGoal)
+(arg4Isa goalOutcomeStatus GoalOutcomeType)
+(comment goalOutcomeStatus "(goalOutcomeStatus ?before-case ?after-case ?goal ?status) means the outcome of ?goal is ?status as it changes from ?before-case to ?after-case.")
+
+(isa GoalOutcomeType Collection)
+(isa PositiveOutcome Individual)
+(isa PositiveOutcome GoalOutcomeType)
+(isa NegativeOutcome Individual)
+(isa NegativeOutcome GoalOutcomeType)
+(isa NeutralOutcome Individual)
+(isa NeutralOutcome GoalOutcomeType)
+
+(isa statusOfGoalDirection TernaryPredicate)
+(arity statusOfGoalDirection 3)
+(arg1Isa statusOfGoalDirection PerformanceGoal)
+(arg2Isa statusOfGoalDirection LevelOfChange)   ; PositiveChange, NegativeChange, or NoChange
+(arg3Isa statusOfGoalDirection GoalOutcomeType) ; PositiveOutcome, NegativeOutcome, or NeutralOutcome
+(comment statusOfGoalDirection "(statusOfGoalDirection ?goal ?change ?outcome) means when the quantity of ?goal is taken in direction ?change (a LevelOfChange), it has outcome ?outcome.")
+
+(<== (statusOfGoalDirection ?goal ?change PositiveOutcome)
+     (changeInGoalDirection ?goal ?change))
+
+(<== (statusOfGoalDirection ?goal ?change NegativeOutcome)
+     (changeInGoalDirection ?goal ?desiredDirection)
+     (different ?directionPred ?desiredDirection)
+     (different ?change NoChange))
+     
+(<== (statusOfGoalDirection ?goal NoChange NeutralOutcome))
+
+(isa changeInGoalDirection BinaryPredicate)
+(arity changeInGoalDirection 2)
+(arg1Isa changeInGoalDirection PerformanceGoal)
+(arg2Isa changeInGoalDirection LevelOfChange)
+(comment changeInGoalDirection "(changeInGoalDirection ?goal ?dir) binds ?dir to the direction a quantity should take to attain the goal (either a MaximizeFn or MinimizeFn)")
+
+(<== (changeInGoalDirection (MaximizeFn ?quantity) PositiveChange))
+(<== (changeInGoalDirection (MinimizeFn ?quantity) NegativeChange))
+
+;;; The next two are reified when systems try to learn the effects of tasks and actions 
+;;; on performance goals.
+(isa outcomeOfTask TernaryPredicate)
+(isa outcomeOfTask PlanningMetaPredicate)
+(arity outcomeOfTask 3)
+(arg1Isa outcomeOfTask CycLFormula)
+(arg2Isa outcomeOfTask Goal)
+(arg3Isa outcomeOfTask GoalOutcomeType)
+(comment outcomeOfTask "(outcomeOfTask ?action ?goal ?outcome) relates a ground task to the outcome of ?goal, either PositiveOutcome or NegativeOutcome")
+
+(isa outcomeOfAction TernaryPredicate)
+(isa outcomeOfAction PlanningMetaPredicate)
+(arity outcomeOfAction 3)
+(arg1Isa outcomeOfAction CycLFormula)
+(arg2Isa outcomeOfAction Goal)
+(arg3Isa outcomeOfAction GoalOutcomeType)
+(comment outcomeOfAction "(outcomeOfAction ?action ?goal ?outcome) relates an individual action to the outcome of ?goal, either PositiveOutcome or NegativeOutcome")
+
+;;; This exists for case elaboration:
+(<== (outcomeOfTask ?task ?goal ?outcome)
+     (planForTask ?task ?plan)
+     (outcomeOfAction ?plan ?goal ?outcome))
+
+;;; MaximizeQuantityGoal
+;;; "Maximize the amount of some dependent variable"
+(isa MaximizeQuantityGoal GoalTypeByCategory) ; and by inference, a FirstOrderCollection
+(genls MaximizeQuantityGoal QuantityGoal)
+
+;;; MinimizeQuantityGoal
+;;; "Minimize the value of some dependent variable"
+(isa MinimizeQuantityGoal GoalTypeByCategory)
+(genls MinimizeQuantityGoal QuantityGoal)
+
+;;; BalanceQuantitiesGoal
+;;; "Balance two quantities"
+(isa BalanceQuantitiesGoal GoalTypeByCategory)
+(genls BalanceQuantitiesGoal QuantityGoal)
+
+(isa AchievePropGoal GoalTypeByCategory)
+(genls AchievePropGoal PropositionalGoal)
+
+(isa PreventPropGoal GoalTypeByCategory)
+(genls PreventPropGoal PropositionalGoal)
+
+(isa MaintainPropGoal GoalTypeByCategory)
+(genls MaintainPropGoal PropositionalGoal)
+
+;;; Note: See also the Cyc action PreventingSomething and associated pred preventedProp.
+
+;;; NATs for denoting goals:
+
+(isa MaximizeFn UnaryFunction)
+(arity MaximizeFn 1)
+(arg1Isa MaximizeFn MeasurableQuantity)
+(resultIsa MaximizeFn MaximizeQuantityGoal)
+(comment MaximizeFn "Denotes the goal to maximize a specified quantity.")
+
+(isa MinimizeFn UnaryFunction)
+(arity MinimizeFn 1)
+(arg1Isa MinimizeFn MeasurableQuantity)
+(resultIsa MinimizeFn MinimizeQuantityGoal)
+(comment MinimizeFn "Denotes the goal to minimize a specified quantity.")
+
+;;; Instead of BalanceFn, need (MinimizeFn totalImbalance), where
+;;; (i+ totalImbalance (AbsoluteValueFn (DifferenceFn Q1 Q2)))
+
+(isa BalanceFn BinaryFunction)
+(arity BalanceFn 2)
+(arg1Isa BalanceFn MeasurableQuantity)
+(arg2Isa BalanceFn MeasurableQuantity)
+(resultIsa BalanceFn BalanceQuantitiesGoal)
+(comment BalanceFn "Denotes the goal to balance two specified quantities.")
+
+
+;;; I have no doubt there are already versions of these in Cyc somewhere.
+;;; Too bad.  
+;;; *** Look it up - this one *does* exist ***
+;;; 
+(isa AchieveFn UnaryFunction)
+(arity AchieveFn 1)
+(arg1Isa AchieveFn ELSentence-Assertible)
+(resultIsa AchieveFn AchievePropGoal)
+(comment AchieveFn "Denotes the goal to achieve a specified proposition")
+
+;;; There is a PreventingFn in Cyc
+(isa PreventFn UnaryFunction)
+(arity PreventFn 1)
+(arg1Isa PreventFn ELSentence-Assertible)
+(resultIsa PreventFn PreventPropGoal)
+(comment PreventFn "Denotes the goal to prevent a specified proposition")
+
+;;; There is a MaintenanceFn in Cyc (which denotes events)
+(isa MaintainFn UnaryFunction)
+(arity MaintainFn 1)
+(arg1Isa MaintainFn ELSentence-Assertible)
+(resultIsa MaintainFn MaintainPropGoal)
+(comment MaintainFn "Denotes the goal to maintain a specified proposition")
+
+(isa quantitativeGoalNat UnaryPredicate)
+(arity quantitativeGoalNat 1)
+(arg1Isa quantitativeGoalNat QuantityGoal)
+
+;;; A bit of a cheat, but the fastest way for now is to map the functor to the
+;;; goal category via a rule.  Could also rely on ask to traverse the resultIsa
+;;; and make, e.g., MaximizeQuantityGoal genl from quantitativeGoalNat, which might
+;;; be cleaner.
+(<== (quantitativeGoalNat (MaximizeFn ?q)))
+(<== (quantitativeGoalNat (MinimizeFn ?q)))
+(<== (quantitativeGoalNat (BalanceFn ?q)))
+
+;;; In some cases, table lookup is easier than chainer rules:
+(goalTypeForQuantityRel MaximizeFn positivelyInfluencedBy MaximizeFn)
+(goalTypeForQuantityRel MaximizeFn negativelyInfluencedBy MinimizeFn)
+(goalTypeForQuantityRel MinimizeFn positivelyInfluencedBy MinimizeFn)
+(goalTypeForQuantityRel MinimizeFn negativelyInfluencedBy MaximizeFn)
+(goalTypeForQuantityRel MaximizeFn positivelyDependsOnProp AchieveFn)
+(goalTypeForQuantityRel MaximizeFn negativelyDependsOnProp PreventFn)
+(goalTypeForQuantityRel MinimizeFn positivelyDependsOnProp PreventFn)
+(goalTypeForQuantityRel MinimizeFn negativelyDependsOnProp AchieveFn)
+(goalTypeForQuantityRel MaximizeFn positivelyInfluencedBy-TypeType MaximizeFn)
+(goalTypeForQuantityRel MaximizeFn negativelyInfluencedBy-TypeType MinimizeFn)
+(goalTypeForQuantityRel MinimizeFn positivelyInfluencedBy-TypeType MinimizeFn)
+(goalTypeForQuantityRel MinimizeFn negativelyInfluencedBy-TypeType MaximizeFn)
+(goalTypeForQuantityRel MaximizeFn positivelyDependsOn-TypeType AchieveFn)
+(goalTypeForQuantityRel MaximizeFn negativelyDependsOn-TypeType PreventFn)
+(goalTypeForQuantityRel MinimizeFn positivelyDependsOn-TypeType PreventFn)
+(goalTypeForQuantityRel MinimizeFn negativelyDependsOn-TypeType AchieveFn)
+
+(isa goalQuantity BinaryPredicate)
+(arity goalQuantity 2)
+(arg1Isa goalQuantity QuantityGoal)
+(arg2Isa goalQuantity MeasurableQuantity)
+(comment goalQuantity "(goalQuantity ?goal ?quantity) binds ?quantity to the quantity of the ?goal.")
+
+;;; Extract the quantity from a goal:
+(<== (goalQuantity ?goal ?quantity)
+     (inferenceOnly (quantitativeGoalNat ?goal)) ; if ?goal isn't ground, don't lookup and bind internal vars!
+     (natArgument ?goal 1 ?quantity))
+
+(isa propositionalGoalNat UnaryPredicate)
+(arity propositionalGoalNat 1)
+(arg1Isa propositionalGoalNat PropositionalGoal)
+
+(<== (propositionalGoalNat (AchieveFn ?q)))
+(<== (propositionalGoalNat (PreventFn ?q)))
+(<== (propositionalGoalNat (MaintainFn ?q)))
+
+(isa goalProposition BinaryPredicate)
+(arity goalProposition 2)
+(arg1Isa goalProposition PropositionalGoal)
+(arg2Isa goalProposition CycLSentence-Assertible)
+(comment goalProposition "(goalProposition ?goal ?prop) binds ?prop to the proposition of the ?goal.")
+
+(<== (goalProposition ?goal ?prop)
+     (inferenceOnly (propositionalGoalNat ?goal))
+     (natArgument ?goal 1 ?prop))
+     
+;;;  Collecting subgoals:
+;;; This uses the qualitative model to identify subgoals which can in turn 
+;;; determine actionsToAchieve.  Unfortunately, it appears to be just generating
+;;; leaf goals.  If there are actions that can achieve intermediate goals,
+;;; we should achieve them.
+
+
+;;; Decompose supergoal into minimize or maximize of influencing quantity:
+(<== (subgoalFor ?superGoal (?goal-type ?indepQuantity))
+     (natFunction ?superGoal ?goal-type)
+     (natArgument ?superGoal 1 ?depQuantity)
+     ;; check for a concrete quantity here??
+     (positivelyInfluencedBy ?depQuantity ?indepQuantity))
+ 
+(<== (subgoalFor ?superGoal (?subgoal-type ?indepQuantity))
+     (natFunction ?superGoal ?goal-type )
+     (natArgument ?superGoal 1 ?depQuantity)
+     (negativelyInfluencedBy ?depQuantity ?indepQuantity)
+     (oppositeGoalType ?goal-type ?subgoal-type))
+
+;;; Decompose supergoal into achieve or prevent of some influencing proposition:
+(<== (subgoalFor ?superGoal (?subgoal-type ?prop))
+     (natFunction ?superGoal ?goal-type)
+     (natArgument ?superGoal 1 ?depQuantity)
+     (positivelyDependsOnProp ?depQuantity ?prop)
+     (goalTypeForQuantityRel ?goal-type positivelyDependsOnProp ?subgoal-type))
+
+(<== (subgoalFor ?superGoal (?subgoal-type ?prop))
+     (natFunction ?superGoal ?goal-type)
+     (natArgument ?superGoal 1 ?depQuantity)
+     (negativelyDependsOnProp ?depQuantity ?prop)
+     (goalTypeForQuantityRel ?goal-type negativelyDependsOnProp ?subgoal-type))
+
+;;; Handle AggregateQuantityFn explicitly, rather than setting up 
+;;; qualitative influences on it.
+;;; This is problematic.  If there are qualified entities satisfying
+;;; a subcollection specification, then postivielyInfluencedBy and negativelyInfluencedBy
+;;; will enumerate them, rendering this redundant.  If not, then this is 
+;;; binding a potential subgoal with no actual propositionalizations.
+;;; Perhaps the type-level subgoaling should work this way, but this shouldn't.
+;;; *** Commented out 9-4-12
+;(<== (subgoalFor (?supergoal-type ?dep-quantity-type) ?subgoal)
+;     (unifies ((AggregateQuantityFn ?binpred) ?set-spec) ?dep-quantity-type)
+;     (setSpecCollection ?set-spec ?arg)
+;     (unifies ?subgoal (?supergoal-type ((MeasurableQuantityFn ?binpred) ?arg))))
+
+;;; The propositional subgoal should not lose the full subcollection specification.
+;;; But that doesn't solve the problem, since that's still a collection, not an
+;;; individual.  Really, we want the binpred to be a composition of cardinalityOf
+;;; and the given binrel inside the set spec.
+(<== (subgoalFor (?supergoal-type ?dep-quantity-type) ?subgoal)
+     (unifies ((AggregateQuantityFn ?binpred) ?set-spec) ?dep-quantity-type)
+     (setSpecCollection ?set-spec ?arg)
+     (unifies ?subgoal (?supergoal-type ((MeasurableQuantityFn cardinalityOf) ?arg))))
+     
+;;; Type-level subgoaling
+
+;;; For this to work, a quantity type needs to be a pair of ((MeasurableQuantityFn ?prop) ?collection)
+;;; whereas a particular fluent quantity needs to have an individual for its argument.
+;;;
+
+
+;;; (comment GenericInstanceFn "A unary #$ReifiableFunction used to represent
+;;;   a generic individual belonging to a given collection. 
+;;;   (#$GenericInstanceFn COLLECTION) denotes an instance of COLLECTION
+;;;   which is generic in the sense that it possesses all the qualities had
+;;;   by paradigmatic, typical or normal instances of that collection. 
+;;;   For example, (#$GenericInstanceFn #$Cat) represents a cat with whiskers
+;;;   and a tail, even though certain actual cats lack these anatomical parts.
+;;;   See also #$SomeFn and #$ArbitraryInstanceFn.")
+
+
+;;; (positivelyDependsOn-TypeType ?qtype ?coll1 ?coll2 ?binpred) means
+;;; quantities defined by the quantity type applied to an instance of ?coll1
+;;; are positively influenced by the propositional relation between the
+;;; instance of ?coll1 and an instance of ?coll2."
+
+;;; E.g.:
+;;; Let supergoal be (MaximizeFn ((MeasurableQuantityFn tileFoodProduction)
+;;;                                 (GenericInstanceFn
+;;;                                   (CollectionSubsetFn FreecivLocation
+;;;                                      (TheSetOf ?loc
+;;;                                         (and (tileWorkedByCity ?loc ?city)
+;;;                                              (cityOwner ?city ?player)
+;;;                                              (currentPlayer ?player)))))))
+;;; Given:
+;;; (positivelyDependsOn-TypeType (MeasurableQuantityFn tileFoodProduction) 
+;;;                                FreecivLocation FC-Special-Irrigation specialAt)
+;;;
+;;; then subgoal should be: (AchieveFn
+;;;                            (and (specialAt ?loc FC-Special-Irrigation)
+;;;                                 (isa ?loc FreecivLocation)
+;;;                                 (tileWorkedByCity ?loc ?city)
+;;;                                 (isa ?city FreeCiv-City)
+;;;                                 (cityOwner ?city ?player)
+;;;                                 (currentPlayer ?player)))
+
+
+(isa subgoal-TypeType BinaryPredicate)
+(arity subgoal-TypeType 2)
+(arg1Isa subgoal-TypeType Goal)
+(arg2Isa subgoal-TypeType Goal)
+(comment subgoal-TypeType "(subgoal-TypeType ?parent-goal ?subgoal) infers the subgoal relation via type-level influence statements.")
+
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) ?subgoal)
+     (unifies ((MeasurableQuantityFn ?binpred) ?dep-entity) ?dep-quantity)
+     (positivelyInfluencedBy-TypeType (MeasurableQuantityFn ?binpred) ?indep-qtype ?dep-coll ?indep-coll ?rel)
+     (numAnswers 1 (compatibleEntityType ?dep-entity ?dep-coll))  ; type-check
+     (uninferredSentence (isa ?indep-coll SecondOrderCollection))
+     (uninferredSentence (isa ?indep-coll CollectionType))
+     (numAnswers 1 (generalizeEntity ?dep-entity ?indep-coll ?rel ?indep-entity))
+     ;; Want to say if ?indep-entity not a variant of ?dep-entity, then maximize cardinality as well
+     (subgoals-TypeType ?dep-entity ?indep-entity ?supergoal-type ?indep-qtype ?rel ?subgoal))
+
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) ?subgoal)
+     (unifies ((MeasurableQuantityFn ?binpred) ?dep-entity) ?dep-quantity)
+     (negativelyInfluencedBy-TypeType (MeasurableQuantityFn ?binpred) ?indep-qtype ?dep-coll ?indep-coll ?rel)
+     (numAnswers 1 (compatibleEntityType ?dep-entity ?dep-coll))
+     (uninferredSentence (isa ?indep-coll SecondOrderCollection))
+     (uninferredSentence (isa ?indep-coll CollectionType))
+     (numAnswers 1 (generalizeEntity ?dep-entity ?indep-coll ?rel ?indep-entity))
+     (oppositeGoalType ?supergoal-type ?subgoal-type)
+     (subgoals-TypeType ?dep-entity ?indep-entity ?subgoal-type ?indep-qtype ?rel ?subgoal))
+
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) (?subgoal-type ?prop))
+     (unifies ((MeasurableQuantityFn ?binpred) ?dep-entity) ?dep-quantity)
+     (positivelyDependsOn-TypeType (MeasurableQuantityFn ?binpred) ?coll ?indep-literal ?pred)
+     (compatibleEntityType ?dep-entity ?coll)
+     (numAnswers 1 (generalizeProposition ?dep-entity ?indep-literal ?pred ?prop))
+     (goalTypeForQuantityRel ?supergoal-type positivelyDependsOn-TypeType ?subgoal-type))
+
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) (?subgoal-type ?prop))
+     (unifies ((MeasurableQuantityFn ?binpred) ?dep-entity) ?dep-quantity)
+     (negativelyDependsOn-TypeType (MeasurableQuantityFn ?binpred) ?coll ?indep-literal ?pred)
+     (numAnswers 1 (compatibleEntityType ?dep-entity ?coll))
+     (numAnswers 1 (generalizeProposition ?dep-entity ?indep-literal ?pred ?prop))
+     (numAnswers 1 (goalTypeForQuantityRel ?supergoal-type negativelyDependsOn-TypeType ?subgoal-type)))
+
+
+;;;; AggregateQuantityFn
+
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) ?subgoal)
+     (unifies ((AggregateQuantityFn ?binpred) ?set-spec) ?dep-quantity)
+     (unifies ?subgoal (?supergoal-type ((MeasurableQuantityFn ?binpred) (GenericInstanceFn ?set-spec)))))
+
+;;; Do we want to preserve the set-specification or loosely say, e.g., 
+;;; anything that increases the number of cities will increase our cities?
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) ?subgoal)
+     (unifies ((AggregateQuantityFn ?binpred) ?set-spec) ?dep-quantity)
+     (unifies ?subgoal (?supergoal-type ((MeasurableQuantityFn cardinalityOf) ?set-spec))))
+
+;;;; Referencing achievement goals:
+
+;;; achieve cardinality of something = 0 => minimize thing.
+(<== (subgoal-TypeType (AchieveFn (cardinalityOf ?thing 0)) (MinimizeFn ((MeasurableQuantityFn cardinalityOf) ?thing))))
+
+(<== (subgoal-TypeType (MinimizeFn ((MeasurableQuantityFn cardinalityOf) ?entity-type)) ?subgoal)
+     (quantityConditionedExistence ?entity-type ?condition)
+     (numAnswers 1 (counterQuantityGoal ?condition ?subgoal))
+     )
+
+
+(<== (subgoal-TypeType (?supergoal-type (activeMF (MFInstanceFn ?ptype ?arglist))) ?subgoal)
+     (numAnswers 1 (mfArglistToBlist ?ptype ?arglist ?bindings))
+     (numAnswers 1 (propositionEnablesProcessType ?ptype ?bindings ?prop))
+     (numAnswers 1 (propositionalGoalFor ?prop ?supergoal-type ?subgoal)))
+
+(<== (subgoal-TypeType (?supergoal-type (activeMF (MFInstanceFn ?ptype ?arglist))) ?subgoal)
+     (numAnswers 1 (mfArglistToBlist ?ptype ?arglist ?bindings))
+     (subgoalConditionsProcessType ?ptype ?bindings ?enabling-subgoal)
+     (unifies (?functor ?quantity) ?enabling-subgoal)
+     (unifies (?qtype ?espec) ?quantity)
+     (numAnswers 1 (elaborateEntityFromParentArglist ?espec ?arglist ?extended-espec))
+     (numAnswers 1 (combineQuantityFunctors ?supergoal-type ?functor ?subgoal-type))
+     (unifies ?subgoal (?subgoal-type (?qtype ?extended-espec))))
+
+;;; If ?ptype is only enabled by quantity conditions and not participantConstraints,
+;;; we'll need another rule. (c.f.  CityDisorderState).
+;;; But it's not clear we want a minimize/maximize pair of goals.
+;;; It may just be that we want a goal to enable/disable process instances
+;;; and figure out how at planning time.
+
+;;; Referencing maintenanced goals:
+
+(<== (subgoal-TypeType (MaintainFn (exists ?thing)) ?subgoal-type)
+     (numAnswers 1 (quantityConditionedExistence ?thing ?condition))
+     ;; We want to prevent an opponent from countering ?condition.
+     (unifies ?subgoal-type
+       (MaintainFn ?condition))) ;; Maintain our existence quantities means defend ourself.
+
+;;;; Referencing a process model:
+
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) ?subgoal)
+     (elementOf ?supergoal-type (TheSet MaximizeFn MinimizeFn))  ; not BalanceFn...
+     (unifies (?qtype ?dep-entity) ?dep-quantity)  ; make this work for QPQuantityFn as well
+     (not (unifies (MeasurableQuantityFn cardinalityOf) ?qtype))
+     (cacheComplete (positiveConsequenceOfProcessType ?dep-quantity ?ptype ?bindings))  ; probably need bindings here
+     (numAnswers 1 (propositionEnablesProcessType ?ptype ?bindings ?prop))
+     (numAnswers 1 (propositionalGoalFor ?prop ?supergoal-type ?subgoal)))
+     
+(<== (subgoal-TypeType (?supergoal-type ?dep-quantity) ?subgoal)
+     (elementOf ?supergoal-type (TheSet MaximizeFn MinimizeFn))  ; not BalanceFn...
+     (unifies (?qtype ?dep-entity) ?dep-quantity)  ; make this work for QPQuantityFn as well
+     (not (unifies (MeasurableQuantityFn cardinalityOf) ?qtype))
+     (cacheComplete (negativeConsequenceOfProcessType ?dep-quantity ?ptype ?bindings))
+     (numAnswers 1 (propositionEnablesProcessType ?ptype ?bindings ?prop))
+     (numAnswers 1 (oppositeGoalType ?supergoal-type ?flipped-goal-type))
+     (numAnswers 1 (propositionalGoalFor ?prop ?flipped-goal-type ?subgoal)))  ; Takes account of whether supergoal-type is MaximizeFn or MinimizeFn.
+     
+
+(isa propositionalGoalFor TernaryPredicate)
+(arity propositionalGoalFor 3)
+(arg1Isa propositionalGoalFor ELSentence-Assertible)
+(arg2Isa propositionalGoalFor UnaryFunction)
+(arg3Isa propositionalGoalFor PropositionalGoal)
+(comment propositionalGoalFor "(propositionalGoalFor ?prop ?goal) turns an achievable proposition into a goal.")
+
+;;; Be aware ?prop might be (activeMF <model fragment specification>)
+(<== (propositionalGoalFor (not ?prop) MaximizeFn (PreventFn ?prop))) ; assume no double-negatives!
+
+(<== (propositionalGoalFor ?prop MaximizeFn (AchieveFn ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred not))
+
+(<== (propositionalGoalFor (not ?prop) AchieveFn (PreventFn ?prop))) ; assume no double-negatives!
+
+(<== (propositionalGoalFor ?prop AchieveFn (AchieveFn ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred not))
+
+(<== (propositionalGoalFor (not ?prop) MinimizeFn (AchieveFn ?prop)))
+
+(<== (propositionalGoalFor ?prop MinimizeFn (PreventFn ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred not))
+
+(<== (propositionalGoalFor (not ?prop) PreventFn (AchieveFn ?prop)))
+
+(<== (propositionalGoalFor ?prop PreventFn (PreventFn ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred not))
+
+(isa mfArglistToBlist TernaryPredicate)
+(arity mfArglistToBlist 3)
+(comment mfArglistToBlist "(mfArglistToBlist ?mf-type ?arglist ?bindings) combines the specified arglist instances with roles from the model-fragment associatedRoleList to create a bindinglist.")
+
+(<== (mfArglistToBlist ?ptype ?arglist ?bindings)
+     (groundExpression ?ptype)
+     (groundExpression ?arglist)
+     (numAnswers 1
+       (associatedRoleList ?ptype ?rolelist))
+     ;; Given two lists, we want one list of pairs:
+     (evaluate ?bindings
+       (TheClosedRetrievalSetOf ?pair
+         (and (formulaArgument ?rolelist ?n ?role)
+              (formulaArgument ?arglist ?n ?arg)
+              (unifies ?pair (?role ?arg))))))
+              
+
+(isa elaborateEntityFromParentArglist TernaryPredicate)
+(arity elaborateEntityFromParentArglist 3)
+(comment elaborateEntityFromParentArglist "(elaborateEntityFromParentArglist ?espec ?arglist ?extended-espec) elaborates the entity spec produced by a process model with respect to the parent goal entity spec in the model fragment arglist.")
+
+(<== (elaborateEntityFromParentArglist ?espec ?arglist ?extended-espec)
+     (numAnswers 1 
+       (elaborateEntityFromArglist ?espec ?arglist ?extended-espec)))
+
+(<== (elaborateEntityFromParentArglist ?espec ?arglist ?espec)
+     (uninferredSentence
+       (elaborateEntityFromArglist ?espec ?arglist ?extended-espec)))
+
+(isa elaborateEntityFromArglist TernaryPredicate)
+(arity elaborateEntityFromArglist 3)
+(comment elaborateEntityFromArglist "(elaborateEntityFromArglist ?espec ?arglist ?extended-espec) elaborates the entity spec produced by a process model with respect to the parent goal entity spec in the model fragment arglist.")
+
+(<== (elaborateEntityFromArglist ?espec ?arglist ?extended-espec)
+     (not (variableExpression ?arglist))
+     (unifies ?espec (GenericInstanceFn ?cspec))
+     (not (variableExpression ?cspec))
+     (atomicTerm ?cspec)  ; we have our type
+     (memberOfList ?gspec ?arglist)
+     (unifies (GenericInstanceFn 
+                (CollectionSubsetFn ?cspec ?set-spec))
+              ?gspec)
+     (unifies ?extended-espec ?gspec))
+     
+
+(isa combineQuantityFunctors TernaryPredicate)
+(arity combineQuantityFunctors 3)
+(comment combineQuantityFunctors "(combineQuantityFunctors ?functor1 ?functor2 ?functor3) does simple modular arithmetic on the specified goal functors. Two negatives yield a positive, etc.")
+
+(<== (combineQuantityFunctors MaximizeFn MaximizeFn MaximizeFn))
+(<== (combineQuantityFunctors MinimizeFn MaximizeFn MinimizeFn))
+(<== (combineQuantityFunctors MaximizeFn MinimizeFn MinimizeFn))
+(<== (combineQuantityFunctors MinimizeFn MinimizeFn MaximizeFn))
+;;; Parent quantity may be propositional:
+(<== (combineQuantityFunctors AchieveFn MaximizeFn MaximizeFn))
+(<== (combineQuantityFunctors PreventFn MaximizeFn MinimizeFn))
+(<== (combineQuantityFunctors AchieveFn MinimizeFn MinimizeFn))
+(<== (combineQuantityFunctors PreventFn MinimizeFn MaximizeFn))
+
+;;; Transitivity:
+
+
+(isa subgoals-TypeType Predicate)
+(arity subgoals-TypeType 6)
+(arg1Isa subgoals-TypeType Thing)
+(arg2Isa subgoals-TypeType Thing)
+(arg3Isa subgoals-TypeType UnaryFunction)
+(arg4Isa subgoals-TypeType UnaryFunction)
+(arg5Isa subgoals-TypeType BinaryPredicate)
+(arg6Isa subgoals-TypeType Goal)
+(comment subgoals-TypeType "(subgoals-TypeType ?dep-entity ?indep-entity ?subgoal-type ?indep-qtype ?rel ?subgoal) binds the quantity-type specific subgoal and a cardinalityOf goal if appropriate.")
+
+(<== (subgoals-TypeType ?dep-entity-descr ?indep-entity-descr ?goal-type ?qtype ?rel ?goal)
+     (different ?dep-entity-descr ?indep-entity-descr)
+     ;; We cannot maximize the cardinality of something there's only one of:
+     (uninferredSentence (isa ?rel FunctionalSlot))
+     (denotesIndividual ?dep-entity-descr)
+     (unifies (GenericInstanceFn ?spec) ?indep-entity-descr)
+     (unifies ?goal (?goal-type ((MeasurableQuantityFn cardinalityOf) ?spec))))  ; Can't build-in valence here.
+
+(<== (subgoals-TypeType ?dep-entity-descr ?indep-entity-descr ?goal-type ?qtype ?rel ?goal)
+     (different ?qtype (MeasurableQuantityFn cardinalityOf))
+     (unifies ?goal (?goal-type (?qtype ?indep-entity-descr))))
+     
+;;; We want to filter out those potential influences that could not apply
+;;; for the specified goal quantity.
+
+(isa compatibleEntityType BinaryPredicate)
+(arity compatibleEntityType 2)
+(arg1Isa compatibleEntityType Thing)
+(arg2Isa compatibleEntityType Thing)
+(comment compatibleEntityType "(compatibleEntityType ?ent ?type) means ?ent could be an instance (or subcollection) of ?type or vice versa.")
+
+(<== (compatibleEntityType ?type1 ?type1))
+
+(<== (compatibleEntityType ?ent1 ?type2)
+     (not (variableExpression ?ent1))    ; atomicTerm completely chokes if passed a variable.
+     (not (variableExpression ?type2))
+     (atomicTerm ?ent1)
+     (atomicTerm ?type2)
+     (isa ?ent1 ?type2))  ; This can go down a rabbit hole if isa is defined by a horn clause
+     
+(<== (compatibleEntityType ?ent1 ?type2)
+     (not (variableExpression ?ent1))
+     (not (variableExpression ?type2))
+     (atomicTerm ?ent1)
+     (atomicTerm ?type2)
+     (symmetricGenls ?ent1 ?type2))
+
+(<== (compatibleEntityType (GenericInstanceFn ?coll1) ?type2)
+     (not (variableExpression ?coll1))
+     (compatibleEntityType ?coll1 ?type2))
+
+(<== (compatibleEntityType (CollectionSubsetFn ?coll1 ?specialization) ?type2)
+     (not (variableExpression ?coll1))
+     (atomicTerm ?type2)
+     (symmetricGenls ?coll1 ?type2))
+     
+(<== (compatibleEntityType (IndexicalFn ?pred) ?type2)
+     (not (variableExpression ?pred))
+     (arg1Isa ?pred ?type1)
+     (genls ?type2 ?type1))
+
+(isa symmetricGenls SymmetricBinaryPredicate)
+(arg1Isa symmetricGenls Collection)
+(arg2Isa symmetricGenls Collection)
+
+(<== (symmetricGenls ?c1 ?c2)
+     (genls ?c1 ?c2))
+
+;;; There are probably lots of functions that return individuals.  Bleah.
+;;; We don't want to test for (isa ?ent Individual), since that's really
+;;; situation-specific (and may not be reified), whereas collections are
+;;; a bit easier to detect.
+
+(isa denotesIndividual UnaryPredicate)  ; probably.
+(arity denotesIndividual 1)
+
+(<== (denotesIndividual (IndexicalFn ?pred))
+     (not (variableExpression ?pred)))
+
+(<== (denotesIndividual (GenericInstanceFn ?set))
+     (not (variableExpression ?set)))
+
+(<== (denotesIndividual ?ent)
+     (not (variableExpression ?ent))
+     (atomicTerm ?ent)
+     (uninferredSentence
+       (isa ?ent Collection)))
+
+(isa generalizeEntity QuaternaryPredicate)
+(arity generalizeEntity 4)
+(arg1Isa generalizeEntity Thing)
+(arg2Isa generalizeEntity Collection)
+(arg3Isa generalizeEntity BinaryRelation)
+(arg4Isa generalizeEntity Thing)
+(comment generalizeEntity "(generalizeEntity ?entity ?collection ?binrel ?generalized-entity) combines an entity description with a binrel to another entity of type ?collection and returns the new entity description (possibly a GenericInstanceFn term).")
+
+;;; Simplest case: same entity
+(<== (generalizeEntity ?parent ?child-coll equals ?parent))
+
+;;; Next simplest case: atomic entities
+(<== (generalizeEntity ?parent ?child-coll ?rel ?entity)
+     (not (variableExpression ?parent))
+     (not (variableExpression ?child-coll))
+     (not (variableExpression ?rel))
+     (atomicOrIndexical ?parent)   ; A name
+     (atomicTerm ?child-coll)
+     (unifies ?entity (GenericInstanceFn 
+                         (CollectionSubsetFn ?child-coll
+                           (TheSetOf ?var1
+                             (and (isa ?var1 ?child-coll)
+                                  (?rel ?parent ?var1)))))))
+
+;;; Harder case: progressively refine a collection specification:
+(<== (generalizeEntity ?parent ?child-coll ?rel ?entity)
+     (different ?rel equals)
+     (not (variableExpression ?parent))
+     (not (variableExpression ?child-coll))
+     (not (variableExpression ?rel))
+     (matches (GenericInstanceFn ?coll-spec) ?parent)
+     (numAnswers 1          ; cache complete.
+       (ignoreTimestamps    ; analytical
+         (combineEntityDescription ?coll-spec ?child-coll ?rel ?new-coll-spec)))
+     (wrappedAnonymousEntity ?new-coll-spec ?entity))
+
+;;; Variant case: parent entity is itself a collection specification:
+(<== (generalizeEntity ?parent-coll ?child-coll ?rel ?entity)
+     (different ?rel equals)
+     (not (variableExpression ?parent-coll))
+     (not (variableExpression ?child-coll))
+     (not (variableExpression ?rel))
+     (matches (CollectionSubsetFn ?local-var ?specification) ?parent-coll)
+     (numAnswers 1          ; cache complete.
+       (ignoreTimestamps    ; analytical
+         (combineEntityDescription ?parent-coll ?child-coll ?rel ?new-coll-spec)))
+     (wrappedAnonymousEntity ?new-coll-spec ?entity))
+
+(isa wrappedAnonymousEntity BinaryPredicate)
+(comment wrappedAnonymousEntity "(wrappedAnonymousEntity ?col-spec ?entity) is a helper predicate that wraps GenericInstanceFn around ?col-spec iff it is an anonymous collection designated by CollectionSubsetFn.")
+
+(<== (wrappedAnonymousEntity (CollectionSubsetFn ?coll ?spec) ?entity)
+     (unifies ?entity (GenericInstanceFn (CollectionSubsetFn ?coll ?spec))))
+     
+(<== (wrappedAnonymousEntity ?entity ?entity)
+     (not (matches (CollectionSubsetFn ?coll ?spec) ?entity)))
+     
+(isa atomicOrIndexical UnaryPredicate)
+(arity atomicOrIndexical 1)
+(comment atomicOrIndexical "(atomicOrIndexical) succeeds if the argument is either atomic or an IndexicalFn denoting an atomic individual.")
+
+(<== (atomicOrIndexical ?arg)
+     (not (variableExpression ?arg))
+     (atomicTerm ?arg))
+
+(<== (atomicOrIndexical (IndexicalFn ?pred))
+     (not (variableExpression ?pred)))
+
+(isa combineEntityDescription QuaternaryPredicate)
+(arity combineEntityDescription 4)
+(arg1Isa combineEntityDescription Collection)
+(arg2Isa combineEntityDescription Collection)
+(arg3Isa combineEntityDescription BinaryRelation)
+(arg4Isa combineEntityDescription Collection)
+(comment combineEntityDescription "(combineEntityDescription ?coll-spec ?child-coll ?rel ?new-coll-spec) refines the definition of a collectionSubset based on a child collection.")
+
+(<== (combineEntityDescription ?coll-spec ?child-coll equals ?coll-spec))
+
+(<== (combineEntityDescription ?coll-spec ?child-coll ?rel ?new-coll-spec)
+     (different ?rel equals)
+     (unifies (CollectionSubsetFn ?parent-type (TheSetOf ?v1 ?spec)) ?coll-spec)
+     (numAnswers 1 (conjunctList ?spec ?prop-list))
+     (uninferredSentence
+       (tautologicalRelationInCollectionSpec ?rel ?prop-list))
+     (evaluate ?v2 (UniquifyVariablesFn ?v))
+     (evaluate ?conj 
+       (MakeFormulaFn and 
+         (JoinListsFn ?prop-list (TheList (?rel ?v1 ?v2) (isa ?v2 ?child-coll)))))
+     (unifies ?new-coll-spec (CollectionSubsetFn ?child-coll (TheSetOf ?v2 ?conj))))
+
+;;; Optimization: eliminate tautological descriptions.
+(<== (combineEntityDescription ?coll-spec ?child-coll ?rel ?new-coll-spec)
+     (different ?rel equals)
+     (unifies (CollectionSubsetFn ?parent-type (TheSetOf ?v1 ?spec)) ?coll-spec)
+     (numAnswers 1 (conjunctList ?spec ?prop-list))
+     (inverseBinaryPredicateOf ?rel ?inv-rel)
+     (subexpressionMatching (?inv-rel ?local-arg ?v1) ?prop-list ?tautology)
+     ;; get rid of the tautology and any conjunct mentioning ?parent-local-arg
+     (evaluate ?filtered-prop-list
+       (RemoveIfFn ?prop-list 
+         (Kappa (?conjunct) 
+           (evaluate True (ListMemberFn ?v1 (FormulaVariableListFn ?conjunct))))
+         IdentityFn))
+     ;; Consider that the prop-list may now be empty:
+     (numAnswers 1
+       (rewriteCollectionSpec ?local-arg ?filtered-prop-list ?child-coll ?new-coll-spec)))
+
+(isa rewriteCollectionSpec QuaternaryPredicate)
+(comment rewriteCollectionSpec "(rewriteCollectionSpec ?local-arg ?prop-list ?child-coll ?new-coll-spec) is a helper predicate to simplify CollectionSubsetFn specifications.")
+
+(<== (rewriteCollectionSpec ?local-arg (TheList) ?child-coll ?local-arg)
+     (not (variableExpression ?local-arg)))
+
+(<== (rewriteCollectionSpec ?local-arg (TheList) ?child-coll ?child-coll)
+     (variableExpression ?local-arg))
+
+(<== (rewriteCollectionSpec ?local-arg ?filtered-prop-list ?child-coll ?new-coll-spec)
+     (different ?filtered-prop-list (TheList))
+     (evaluate ?conj
+       (MakeFormulaFn and ?filtered-prop-list))
+     (unifies ?new-coll-spec (CollectionSubsetFn ?child-coll (TheSetOf ?local-arg ?conj))))
+
+(isa generalizeProposition QuaternaryPredicate)
+(arity generalizeProposition 4)
+(arg1Isa generalizeProposition Thing)
+(arg2Isa generalizeProposition Thing)
+(arg3Isa generalizeProposition BinaryRelation)
+(arg4Isa generalizeProposition CycLFormula)
+(comment generalizeProposition "(generalizeProposition ?parent-entity ?literal ?binrel ?new-proposition) creates a new proposition by combining (?binrel ?parent-entity ?literal) with the description of ?parent-entity.")
+
+(<== (generalizeProposition ?parent-entity ?indep-literal ?pred ?prop)
+     (matches (GenericInstanceFn ?coll-spec) ?parent-entity)
+     (different ?pred equals)
+     (not (variableExpression ?pred))
+     (not (variableExpression ?indep-literal))
+     (numAnswers 1          ; cache complete.
+       (ignoreTimestamps    ; analytical
+         (combineEntityProp ?coll-spec ?indep-literal ?pred ?prop))))
+     
+(isa combineEntityProp QuaternaryPredicate)
+(arity combineEntityProp 4)
+(arg1Isa combineEntityProp Collection)
+(arg2Isa combineEntityProp Thing)
+(arg3Isa combineEntityProp Predicate)
+(arg4Isa combineEntityProp CycLFormula)
+(comment combineEntityProp "(combineEntityProp ?coll-spec ?literal ?pred ?prop) is a helper predicate for generalizeProposition.")
+     
+(<== (combineEntityProp ?coll-spec ?literal ?pred ?prop)
+     (unifies (CollectionSubsetFn ?parent-type (TheSetOf ?v1 ?spec)) ?coll-spec)
+     (conjunctList ?spec ?prop-list)
+     (evaluate ?unchecked-prop-list (JoinListsFn ?prop-list (TheList (?pred ?v1 ?literal))))
+     ;; It is a problem having isas before binrels, alas.  
+     ;; Enumerating members of a type is expensive.
+     (numAnswers 1
+       (ensureTypeFilter (isa ?v1 ?parent-type) ?unchecked-prop-list ?typechecked-prop-list))
+     (evaluate ?prop
+       (MakeFormulaFn and ?typechecked-prop-list)))
+
+(isa ensureTypeFilter TernaryPredicate)
+(arity ensureTypeFilter 3)
+(arg1Isa ensureTypeFilter CycLFormula)
+(arg2Isa ensureTypeFilter List)
+(arg3Isa ensureTypeFilter List)
+(comment ensureTypeFilter "(ensureTypeFilter ?prop ?prop-list ?new-prop-list) ensures that ?prop is on the ?new-prop-list without duplicating it.") 
+
+(<== (ensureTypeFilter ?type-filter ?prop-list ?new-prop-list)
+     (not (memberOfList ?type-filter ?prop-list))  ; structural pred lets us use not instead of uninferredSentence
+     (evaluate ?new-prop-list (JoinListsFn (TheList ?type-filter) ?prop-list)))
+
+(<== (ensureTypeFilter ?type-filter ?prop-list ?prop-list)
+     (memberOfList ?type-filter ?prop-list))
+
+(isa tautologicalRelationInCollectionSpec BinaryPredicate)
+(arg1Isa tautologicalRelationInCollectionSpec BinaryRelation)
+(arg2Isa tautologicalRelationInCollectionSpec List)
+(comment tautologicalRelationInCollectionSpec "(tautologicalRelationInCollectionSpec ?binrel ?prop-list) means the inverse of ?binrel exists in ?prop-list.")
+
+(<== (tautologicalRelationInCollectionSpec ?rel ?prop-list)
+     (inverseBinaryPredicateOf ?rel ?inv)
+     (subexpressionMatching (?inv ?v1 ?v2) ?prop-list ?tautology))
+
+
+;;; End Of Code

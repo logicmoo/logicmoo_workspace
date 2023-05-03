@@ -1,0 +1,1153 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: cycorp-kb-patches.meld
+;;;;    System: Companions
+;;;;   Version: 1.0
+;;;;    Author: Kenneth D. Forbus
+;;;;   Created: June 18, 2006 20:04:02
+;;;;   Purpose: 
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; -------------------------------------------------------------------------
+
+
+;; ---- BoxTheContainer
+;; --------------------------
+(isa BoxTheContainer Collection)
+
+;; genls
+(genls BoxTheContainer StorageConstruct)
+
+;; isas
+(isa BoxTheContainer ArtifactTypeByGenericCategory)
+(isa BoxTheContainer ExistingObjectType)
+(isa BoxTheContainer SpatiallyDisjointObjectType)
+
+;; specs
+(genls ClothesDryer BoxTheContainer)
+(genls CookingRange BoxTheContainer)
+(genls Oven BoxTheContainer)
+(genls Cabinet-PieceOfFurniture BoxTheContainer)
+(genls Cabinet-StorageConstruction BoxTheContainer)
+(genls Dresser-PieceOfFurniture BoxTheContainer)
+(genls Fireplace BoxTheContainer)
+(genls BoxedSet-TheProduct BoxTheContainer)
+(genls Humidor BoxTheContainer)
+(genls PlasticBox BoxTheContainer)
+(genls Briefcase BoxTheContainer)
+(genls CarryingCase BoxTheContainer)
+(genls CardboardBox BoxTheContainer)
+(genls Chest-PieceOfFurniture BoxTheContainer)
+(genls FuseBox BoxTheContainer)
+(genls OutletBox BoxTheContainer)
+(genls SafeTheLocker BoxTheContainer)
+(genls Suitcase BoxTheContainer)
+(genls WaxedCardboardCarton BoxTheContainer)
+(genls MailBox-InDoor BoxTheContainer)
+
+
+;; ---- ETSPhysicsSampleQuery
+;; --------------------------
+(isa ETSPhysicsSampleQuery Collection)
+
+;; genls
+(genls ETSPhysicsSampleQuery KBContentTest-FullySpecified)
+
+;; isas
+(isa ETSPhysicsSampleQuery KBContentTestSpecificationType)
+(isa ETSPhysicsSampleQuery KBDependentCollection)
+
+
+;; ---- Falling-Freefall
+;; --------------------------
+(isa Falling-Freefall Collection)
+
+;; genls
+(genls Falling-Freefall ForceAffectingAnObjectsMovement)
+(genls Falling-Freefall FallingEvent)
+
+;; isas
+(isa Falling-Freefall TemporalStuffType)
+
+
+;; ---- FrictionVector
+;; --------------------------
+(isa FrictionVector Collection)
+
+;; genls
+(genls FrictionVector SurfaceForceVector)
+
+;; isas
+(isa FrictionVector AtemporalNecessarilyEssentialCollectionType)
+(isa FrictionVector VectorIntervalType)
+
+;; specs
+(genls AirResistance FrictionVector)
+(genls DynamicFriction FrictionVector)
+(genls StaticFriction FrictionVector)
+(genls StickingFriction FrictionVector)
+
+
+;; ---- PhysicsProblem-ConstantAcceleration
+;; --------------------------
+(isa PhysicsProblem-ConstantAcceleration Collection)
+
+;; genls
+(genls PhysicsProblem-ConstantAcceleration Individual)
+(genls PhysicsProblem-ConstantAcceleration PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-ConstantAcceleration PhysicsProblemTypeByConceptInvolved)
+(isa PhysicsProblem-ConstantAcceleration ObjectType)
+
+
+;; ---- PhysicsProblem-DistanceTime
+;; --------------------------
+(isa PhysicsProblem-DistanceTime Collection)
+
+;; genls
+(genls PhysicsProblem-DistanceTime Individual)
+(genls PhysicsProblem-DistanceTime PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-DistanceTime PhysicsProblemTypeByConceptInvolved)
+(isa PhysicsProblem-DistanceTime ObjectType)
+
+
+;; ---- PhysicsProblem-DistanceVelocity
+;; --------------------------
+(isa PhysicsProblem-DistanceVelocity Collection)
+
+;; genls
+(genls PhysicsProblem-DistanceVelocity Individual)
+(genls PhysicsProblem-DistanceVelocity PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-DistanceVelocity PhysicsProblemTypeByConceptInvolved)
+(isa PhysicsProblem-DistanceVelocity ObjectType)
+
+
+;; ---- PhysicsProblem-InclinedPlane
+;; --------------------------
+(isa PhysicsProblem-InclinedPlane Collection)
+
+;; genls
+(genls PhysicsProblem-InclinedPlane PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-InclinedPlane ObjectType)
+(isa PhysicsProblem-InclinedPlane PhysicsProblemTypeByConceptInvolved)
+
+
+;; ---- PhysicsProblem-MassAndWeight
+;; --------------------------
+(isa PhysicsProblem-MassAndWeight Collection)
+
+;; genls
+(genls PhysicsProblem-MassAndWeight PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-MassAndWeight ObjectType)
+(isa PhysicsProblem-MassAndWeight PhysicsProblemTypeByConceptInvolved)
+
+
+;; ---- PhysicsProblem-NewtonsSecondLaw
+;; --------------------------
+(isa PhysicsProblem-NewtonsSecondLaw Collection)
+
+;; genls
+(genls PhysicsProblem-NewtonsSecondLaw PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-NewtonsSecondLaw ObjectType)
+(isa PhysicsProblem-NewtonsSecondLaw PhysicsProblemTypeByConceptInvolved)
+
+
+;; ---- PhysicsProblem-PotentialAndKineticEnergy
+;; --------------------------
+(isa PhysicsProblem-PotentialAndKineticEnergy Collection)
+
+;; genls
+(genls PhysicsProblem-PotentialAndKineticEnergy PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-PotentialAndKineticEnergy ObjectType)
+(isa PhysicsProblem-PotentialAndKineticEnergy PhysicsProblemTypeByConceptInvolved)
+
+
+;; ---- PhysicsProblem-RelationBetweenVelocityAndAcceleration
+;; --------------------------
+(isa PhysicsProblem-RelationBetweenVelocityAndAcceleration Collection)
+
+;; genls
+(genls PhysicsProblem-RelationBetweenVelocityAndAcceleration Individual)
+(genls PhysicsProblem-RelationBetweenVelocityAndAcceleration PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-RelationBetweenVelocityAndAcceleration PhysicsProblemTypeByConceptInvolved)
+(isa PhysicsProblem-RelationBetweenVelocityAndAcceleration ObjectType)
+
+
+;; ---- PhysicsProblem-VectorAdditionOfForcesInOneDimension
+;; --------------------------
+(isa PhysicsProblem-VectorAdditionOfForcesInOneDimension Collection)
+
+;; genls
+(genls PhysicsProblem-VectorAdditionOfForcesInOneDimension Individual)
+(genls PhysicsProblem-VectorAdditionOfForcesInOneDimension PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-VectorAdditionOfForcesInOneDimension PhysicsProblemTypeByConceptInvolved)
+(isa PhysicsProblem-VectorAdditionOfForcesInOneDimension ObjectType)
+
+
+;; ---- PhysicsProblem-WorkEnergyTheorem
+;; --------------------------
+(isa PhysicsProblem-WorkEnergyTheorem Collection)
+
+;; genls
+(genls PhysicsProblem-WorkEnergyTheorem Individual)
+(genls PhysicsProblem-WorkEnergyTheorem PhysicsProblem)
+
+;; isas
+(isa PhysicsProblem-WorkEnergyTheorem PhysicsProblemTypeByConceptInvolved)
+(isa PhysicsProblem-WorkEnergyTheorem ObjectType)
+
+
+;; ---- PhysicsWorkedSolution
+;; --------------------------
+(isa PhysicsWorkedSolution Collection)
+
+;; genls
+(genls PhysicsWorkedSolution WorkedSolution)
+
+;; isas
+(isa PhysicsWorkedSolution ObjectType)
+
+
+;; ---- QualitativeMultipleChoiceQuestion
+;; --------------------------
+(isa QualitativeMultipleChoiceQuestion Collection)
+
+;; genls
+(genls QualitativeMultipleChoiceQuestion Individual)
+(genls QualitativeMultipleChoiceQuestion Question-PCW)
+
+;; isas
+(isa QualitativeMultipleChoiceQuestion QuestionTypeByAnswerTypeRequested)
+(isa QualitativeMultipleChoiceQuestion ObjectType)
+
+
+;; ---- WorkedSolutionStep
+;; --------------------------
+(isa WorkedSolutionStep Collection)
+
+;; genls
+(genls WorkedSolutionStep Individual)
+(genls WorkedSolutionStep TextualPCW)
+
+;; isas
+(isa WorkedSolutionStep ObjectType)
+
+;; specs
+(genls PhysicsWorkedSolutionStep WorkedSolutionStep)
+
+
+;;;; File name: fns-defns.meld
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+
+;; ---- MeasurementAtFn
+;; --------------------------
+(isa MeasurementAtFn Function-Denotational)
+
+;; isas
+(isa MeasurementAtFn UnreifiableFunction)
+(isa MeasurementAtFn BinaryFunction)
+
+;; arity
+(arity MeasurementAtFn 2)
+
+;; arg isas
+(arg1Isa MeasurementAtFn ScalarOrVectorInterval)
+(arg2Isa MeasurementAtFn TemporalThing)
+
+;; results isa
+(resultIsa MeasurementAtFn ScalarOrVectorInterval)
+
+
+;; ---- TestQueryFn
+;; --------------------------
+(isa TestQueryFn Function-Denotational)
+
+;; isas
+(isa TestQueryFn IndividualDenotingFunction)
+(isa TestQueryFn UnaryFunction)
+(isa TestQueryFn ReifiableFunction)
+
+;; arity
+(arity TestQueryFn 1)
+
+;; arg isas
+(arg1Isa TestQueryFn KBContentTest)
+
+;; results isa
+
+
+;; ---- VectorDirectionFn
+;; --------------------------
+(isa VectorDirectionFn Function-Denotational)
+
+;; isas
+(isa VectorDirectionFn UnreifiableFunction)
+(isa VectorDirectionFn UnaryFunction)
+
+;; arity
+(arity VectorDirectionFn 1)
+
+;; arg isas
+(arg1Isa VectorDirectionFn VectorInterval)
+
+;; results isa
+(resultIsa VectorDirectionFn Direction)
+
+
+;; ---- VectorMagnitudeFn
+;; --------------------------
+(isa VectorMagnitudeFn Function-Denotational)
+
+;; isas
+(isa VectorMagnitudeFn UnreifiableFunction)
+(isa VectorMagnitudeFn UnaryFunction)
+
+;; arity
+(arity VectorMagnitudeFn 1)
+
+;; arg isas
+(arg1Isa VectorMagnitudeFn VectorInterval)
+
+;; results isa
+(resultIsa VectorMagnitudeFn ScalarInterval)
+
+
+;; ---- VectorQuantityOfFn
+;; --------------------------
+(isa VectorQuantityOfFn Function-Denotational)
+
+;; isas
+(isa VectorQuantityOfFn FunctionDenotingFunction)
+(isa VectorQuantityOfFn ReifiableFunction)
+(isa VectorQuantityOfFn UnaryFunction)
+
+;; arity
+(arity VectorQuantityOfFn 1)
+
+;; arg isas
+(arg1Isa VectorQuantityOfFn Collection)
+
+;; results isa
+(resultIsa VectorQuantityOfFn FixedArityFunction)
+
+(resultArity VectorQuantityOfFn 1)
+
+;;;; File name: preds-defns.meld
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+
+;; ---- accelerationDueToGravityOnPlanetaryBody
+;; --------------------------
+(isa accelerationDueToGravityOnPlanetaryBody Predicate)
+
+;; isas
+(isa accelerationDueToGravityOnPlanetaryBody FunctionalSlot)
+(isa accelerationDueToGravityOnPlanetaryBody BinaryQuantityPredicate)
+(isa accelerationDueToGravityOnPlanetaryBody BinaryPredicate)
+
+;; arity
+(arity accelerationDueToGravityOnPlanetaryBody 2)
+
+;; arg isas
+(arg1Isa accelerationDueToGravityOnPlanetaryBody PlanetaryBody)
+(arg2Isa accelerationDueToGravityOnPlanetaryBody Acceleration)
+
+
+;; ---- constantThroughoutEvent-Fluent
+;; --------------------------
+(isa constantThroughoutEvent-Fluent Predicate)
+
+;; isas
+(isa constantThroughoutEvent-Fluent BinaryPredicate)
+
+;; arity
+(arity constantThroughoutEvent-Fluent 2)
+
+;; arg isas
+(arg1Isa constantThroughoutEvent-Fluent ScalarOrVectorInterval)
+(arg2Isa constantThroughoutEvent-Fluent Event)
+
+;; negationPreds
+(negationPreds constantThroughoutEvent-Fluent increasesThroughoutEvent-Fluent)
+(negationPreds constantThroughoutEvent-Fluent decreasesThroughoutEvent-Fluent)
+
+
+;; ---- directionOfPulling
+;; --------------------------
+(isa directionOfPulling Predicate)
+
+;; isas
+(isa directionOfPulling VectorIntervalSlot)
+(isa directionOfPulling BinaryPredicate)
+
+;; arity
+(arity directionOfPulling 2)
+
+;; arg isas
+(arg1Isa directionOfPulling PullingAnObject)
+(arg2Isa directionOfPulling UnitVectorInterval)
+
+;; genlPreds
+(genlPreds directionOfPulling directionOfForceApplication)
+
+
+;; ---- equationForSolution
+;; --------------------------
+(isa equationForSolution Predicate)
+
+;; isas
+(isa equationForSolution BinaryPredicate)
+
+;; arity
+(arity equationForSolution 2)
+
+;; arg isas
+(arg1Isa equationForSolution WorkedSolution)
+(argQuotedIsa equationForSolution 2 CycLSentence)
+
+
+;; ---- equationFormFor
+;; --------------------------
+(isa equationFormFor Predicate)
+
+;; comment
+(comment equationFormFor "(equationFormFor PRINCIPLE EQUATION) means that EQUATION is the form of a mathematical equation that corresponds to the physical principle, PRINCIPLE.  For example, NewtonsSecondLaw, as it is commonly expressed, corresponds to the equation F=ma, where F is the sum of the forces acting on an object, m is its mass and a is its accelerration.")
+
+;; isas
+(isa equationFormFor StrictlyFunctionalSlot)
+
+;; arity
+(arity equationFormFor 2)
+
+;; arg isas
+(arg1Isa equationFormFor PhysicalPrinciple)
+(argQuotedIsa equationFormFor 2 CycLSentence)
+
+
+;; ---- except
+;; --------------------------
+(isa except Predicate)
+
+;; isas
+(isa except UnaryPredicate)
+
+;; arity
+(arity except 1)
+
+;; arg isas
+(argQuotedIsa except 1 CycLAssertion)
+
+
+;; ---- firstSolutionStep
+;; --------------------------
+(isa firstSolutionStep Predicate)
+
+;; isas
+(isa firstSolutionStep StrictlyFunctionalSlot)
+(isa firstSolutionStep CoexistingObjectsPredicate)
+(isa firstSolutionStep NonPhysicalPartPredicate)
+(isa firstSolutionStep IrreflexiveBinaryPredicate)
+
+;; arity
+(arity firstSolutionStep 2)
+
+;; arg isas
+(arg1Isa firstSolutionStep WorkedSolution)
+(arg2Isa firstSolutionStep WorkedSolutionStep)
+
+;; genlPreds
+(genlPreds firstSolutionStep hasSolutionSteps)
+
+
+;; ---- forceActsOnObjectThroughout
+;; --------------------------
+(isa forceActsOnObjectThroughout Predicate)
+
+;; isas
+(isa forceActsOnObjectThroughout TernaryPredicate)
+
+;; arity
+(arity forceActsOnObjectThroughout 3)
+
+;; arg isas
+(arg1Isa forceActsOnObjectThroughout ForceVector)
+(arg2Isa forceActsOnObjectThroughout PartiallyTangible)
+(arg3Isa forceActsOnObjectThroughout TemporalThing)
+
+
+;; ---- hasSolutionSteps
+;; --------------------------
+(isa hasSolutionSteps Predicate)
+
+;; isas
+(isa hasSolutionSteps CoexistingObjectsPredicate)
+(isa hasSolutionSteps NonPhysicalPartPredicate)
+(isa hasSolutionSteps IrreflexiveBinaryPredicate)
+
+;; arity
+(arity hasSolutionSteps 2)
+
+;; arg isas
+(arg1Isa hasSolutionSteps WorkedSolution)
+(arg2Isa hasSolutionSteps WorkedSolutionStep)
+
+;; genlPreds
+(genlPreds hasSolutionSteps textualPCWSubSections)
+
+;; spec preds
+(genlPreds lastSolutionStep hasSolutionSteps)
+(genlPreds firstSolutionStep hasSolutionSteps)
+
+
+;; ---- hypotheticalMicrotheoryOfTest
+;; --------------------------
+(isa hypotheticalMicrotheoryOfTest Predicate)
+
+;; isas
+(isa hypotheticalMicrotheoryOfTest BinaryPredicate)
+
+;; arity
+(arity hypotheticalMicrotheoryOfTest 2)
+
+;; arg isas
+(arg1Isa hypotheticalMicrotheoryOfTest KBContentTest)
+(arg2Isa hypotheticalMicrotheoryOfTest Microtheory)
+
+
+;; ---- increasesThroughoutEvent-Fluent
+;; --------------------------
+(isa increasesThroughoutEvent-Fluent Predicate)
+
+;; isas
+(isa increasesThroughoutEvent-Fluent BinaryPredicate)
+
+;; arity
+(arity increasesThroughoutEvent-Fluent 2)
+
+;; arg isas
+(arg1Isa increasesThroughoutEvent-Fluent ScalarOrVectorInterval)
+(arg2Isa increasesThroughoutEvent-Fluent Event)
+
+;; negationPreds
+(negationPreds increasesThroughoutEvent-Fluent constantThroughoutEvent-Fluent)
+(negationPreds increasesThroughoutEvent-Fluent decreasesThroughoutEvent-Fluent)
+
+
+;; ---- lastSolutionStep
+;; --------------------------
+(isa lastSolutionStep Predicate)
+
+;; isas
+(isa lastSolutionStep StrictlyFunctionalSlot)
+(isa lastSolutionStep CoexistingObjectsPredicate)
+(isa lastSolutionStep NonPhysicalPartPredicate)
+(isa lastSolutionStep IrreflexiveBinaryPredicate)
+
+;; arity
+(arity lastSolutionStep 2)
+
+;; arg isas
+(arg1Isa lastSolutionStep WorkedSolution)
+(arg2Isa lastSolutionStep WorkedSolutionStep)
+
+;; genlPreds
+(genlPreds lastSolutionStep hasSolutionSteps)
+
+
+;; ---- mathEquals
+;; --------------------------
+(isa mathEquals Predicate)
+
+;; isas
+(isa mathEquals EquivalenceRelation)
+
+;; arity
+(arity mathEquals 2)
+
+;; arg isas
+(arg1Isa mathEquals ScalarOrVectorInterval)
+(arg2Isa mathEquals ScalarOrVectorInterval)
+
+;; genlPreds
+(genlPreds mathEquals intangibleParts)
+
+;; spec preds
+(genlPreds valueOf mathEquals)
+(genlPreds numericallyEquals mathEquals)
+
+
+;; ---- maximumMotionInDirection
+;; --------------------------
+(isa maximumMotionInDirection Predicate)
+
+
+;; isas
+(isa maximumMotionInDirection TernaryPredicate)
+
+;; arity
+(arity maximumMotionInDirection 3)
+
+;; arg isas
+(arg1Isa maximumMotionInDirection MovementEvent)
+(arg2Isa maximumMotionInDirection MovementEvent)
+(arg3Isa maximumMotionInDirection Direction)
+
+
+;; ---- multipleChoiceSingleOptionList
+;; --------------------------
+(isa multipleChoiceSingleOptionList Predicate)
+
+;; isas
+(isa multipleChoiceSingleOptionList BinaryPredicate)
+
+;; arity
+(arity multipleChoiceSingleOptionList 2)
+
+;; arg isas
+(arg1Isa multipleChoiceSingleOptionList KBContentTest)
+(arg2Isa multipleChoiceSingleOptionList List)
+
+
+;; ---- nearestScalarInSet
+;; --------------------------
+(isa nearestScalarInSet Predicate)
+
+;; isas
+(isa nearestScalarInSet TernaryPredicate)
+(isa nearestScalarInSet FunctionalPredicate)
+
+;; arity
+(arity nearestScalarInSet 3)
+
+;; arg isas
+(arg1Isa nearestScalarInSet ScalarInterval)
+(arg2Isa nearestScalarInSet ScalarInterval)
+(arg3Isa nearestScalarInSet (SetOfTypeFn ScalarInterval))
+
+
+;; ---- objectStationary
+;; --------------------------
+(isa objectStationary Predicate)
+
+;; isas
+(isa objectStationary ActorSlot)
+
+;; arity
+(arity objectStationary 2)
+
+;; arg isas
+(arg1Isa objectStationary PhysicalEvent)
+(arg2Isa objectStationary PartiallyTangible)
+
+;; genlPreds
+(genlPreds objectStationary objectStationary-Generalized)
+(genlPreds objectStationary actors)
+
+;; negationPreds
+(negationPreds objectStationary objectMoving)
+
+
+;; ---- objectStationary-Generalized
+;; --------------------------
+(isa objectStationary-Generalized Predicate)
+
+;; isas
+(isa objectStationary-Generalized BinaryPredicate)
+
+;; arity
+(arity objectStationary-Generalized 2)
+
+;; arg isas
+(arg1Isa objectStationary-Generalized TemporalThing)
+(arg2Isa objectStationary-Generalized PartiallyTangible)
+
+;; genlPreds
+(genlPreds objectStationary-Generalized temporallyIntersects)
+
+;; spec preds
+(genlPreds objectStationary objectStationary-Generalized)
+
+;; negationPreds
+(negationPreds objectStationary-Generalized objectMoving)
+
+
+;; ---- objectTopSide
+;; --------------------------
+(isa objectTopSide Predicate)
+
+;; isas
+(isa objectTopSide AsymmetricBinaryPredicate)
+(isa objectTopSide StrictlyFunctionalSlot)
+(isa objectTopSide PhysicalPartPredicate)
+
+;; arity
+(arity objectTopSide 2)
+
+;; arg isas
+(arg1Isa objectTopSide PartiallyTangible)
+(arg2Isa objectTopSide SurfaceRegion-Tangible)
+
+;; genlPreds
+(genlPreds objectTopSide objectSides)
+
+;; negationPreds
+(negationPreds objectTopSide objectBottomSide)
+(negationPreds objectTopSide objectFrontSide)
+(negationPreds objectTopSide objectBackSide)
+(negationPreds objectTopSide objectRightSide)
+(negationPreds objectTopSide objectLeftSide)
+
+
+;; ---- objectsInContact
+;; --------------------------
+(isa objectsInContact Predicate)
+
+;; isas
+(isa objectsInContact BinaryRolePredicate)
+
+;; arity
+(arity objectsInContact 2)
+
+;; arg isas
+(arg1Isa objectsInContact PhysicalContactSituation)
+(arg2Isa objectsInContact PartiallyTangible)
+
+;; genlPreds
+(genlPreds objectsInContact situationConstituents)
+
+;; spec preds
+(genlPreds borderingNeighbors objectsInContact)
+
+
+;; ---- partFarthestInDirection
+;; --------------------------
+(isa partFarthestInDirection Predicate)
+
+;; isas
+(isa partFarthestInDirection StrictlyFunctionalPredicate)
+(isa partFarthestInDirection TemporallyQualifiableRelation)
+(isa partFarthestInDirection RelativeLocationalPredicate)
+(isa partFarthestInDirection TernaryPredicate)
+
+;; arity
+(arity partFarthestInDirection 3)
+
+;; arg isas
+(arg1Isa partFarthestInDirection PartiallyTangible)
+(arg2Isa partFarthestInDirection Direction)
+(arg3Isa partFarthestInDirection PartiallyTangible)
+
+
+;; ---- priorSolutionStep
+;; --------------------------
+(isa priorSolutionStep Predicate)
+
+;; isas
+(isa priorSolutionStep StrictlyFunctionalSlot)
+(isa priorSolutionStep AsymmetricBinaryPredicate)
+
+;; arity
+(arity priorSolutionStep 2)
+
+;; arg isas
+(arg1Isa priorSolutionStep WorkedSolutionStep)
+(arg2Isa priorSolutionStep WorkedSolutionStep)
+
+
+;; ---- querySentenceOfQuery
+;; --------------------------
+(isa querySentenceOfQuery Predicate)
+
+;; isas
+(isa querySentenceOfQuery DefaultMonotonicPredicate)
+(isa querySentenceOfQuery StrictlyFunctionalSlot)
+
+;; arity
+(arity querySentenceOfQuery 2)
+
+;; arg isas
+(arg1Isa querySentenceOfQuery CycLQuerySpecification)
+(arg2Isa querySentenceOfQuery Thing)
+(argQuotedIsa querySentenceOfQuery 2 CycLSentence-Askable)
+
+
+;; ---- solutionStepOperationType
+;; --------------------------
+(isa solutionStepOperationType Predicate)
+
+;; isas
+(isa solutionStepOperationType BinaryPredicate)
+
+;; arity
+(arity solutionStepOperationType 2)
+
+;; arg isas
+(arg1Isa solutionStepOperationType WorkedSolutionStep)
+(arg2Isa solutionStepOperationType SolutionStepEventType)
+
+
+;; ---- solutionStepResult
+;; --------------------------
+(isa solutionStepResult Predicate)
+
+;; isas
+(isa solutionStepResult BinaryPredicate)
+
+;; arity
+(arity solutionStepResult 2)
+
+;; arg isas
+(arg1Isa solutionStepResult WorkedSolutionStep)
+(arg2Isa solutionStepResult Thing)
+(argQuotedIsa solutionStepResult 2 CycLSentence-Assertible)
+
+
+;; ---- solutionStepUses
+;; --------------------------
+(isa solutionStepUses Predicate)
+
+;; isas
+(isa solutionStepUses BinaryPredicate)
+
+;; arity
+(arity solutionStepUses 2)
+
+;; arg isas
+(arg1Isa solutionStepUses WorkedSolutionStep)
+(arg2Isa solutionStepUses Thing)
+(argQuotedIsa solutionStepUses 2 CycLSentence-Askable)
+
+
+;; ---- termToSolveFor
+;; --------------------------
+(isa termToSolveFor Predicate)
+
+;; isas
+(isa termToSolveFor TernaryPredicate)
+
+;; arity
+(arity termToSolveFor 3)
+
+;; arg isas
+(arg1Isa termToSolveFor CycLQuerySpecification)
+(argQuotedIsa termToSolveFor 2 CycLSentence-Askable)
+(arg3Isa termToSolveFor Thing)
+(argQuotedIsa termToSolveFor 3 CycLTerm)
+
+
+;; ---- testAnswers-SingleCorrectMultipleChoice
+;; --------------------------
+(isa testAnswers-SingleCorrectMultipleChoice Predicate)
+
+;; isas
+(isa testAnswers-SingleCorrectMultipleChoice StrictlyFunctionalSlot)
+(isa testAnswers-SingleCorrectMultipleChoice DefaultMonotonicPredicate)
+
+;; arity
+(arity testAnswers-SingleCorrectMultipleChoice 2)
+
+;; arg isas
+(arg1Isa testAnswers-SingleCorrectMultipleChoice KBContentTest-FullySpecified)
+(arg2Isa testAnswers-SingleCorrectMultipleChoice Thing)
+
+
+;; ---- testQuerySpecification
+;; --------------------------
+(isa testQuerySpecification Predicate)
+
+;; isas
+(isa testQuerySpecification BinaryPredicate)
+(isa testQuerySpecification TimeDependentRelation)
+
+;; arity
+(arity testQuerySpecification 2)
+
+;; arg isas
+(arg1Isa testQuerySpecification KBContentTest)
+(arg2Isa testQuerySpecification CycLQuerySpecification)
+
+
+;; ---- thingAttached
+;; --------------------------
+(isa thingAttached Predicate)
+
+;; isas
+(isa thingAttached BinaryRolePredicate)
+
+;; arity
+(arity thingAttached 2)
+
+;; arg isas
+(arg1Isa thingAttached Attachment)
+(arg2Isa thingAttached PartiallyTangible)
+
+;; genlPreds
+(genlPreds thingAttached configuredObjects)
+
+
+;; ---- thingAttachedTo
+;; --------------------------
+(isa thingAttachedTo Predicate)
+
+;; comment
+(comment thingAttachedTo "A specialization of configuredObjects. <code>(thingAttachedTo ATTACH THING)</code> means that some other object is attached to <code>THING</code> in the attachment configuration <code>ATTACH</code>.")
+
+;; isas
+(isa thingAttachedTo BinaryRolePredicate)
+
+;; arity
+(arity thingAttachedTo 2)
+
+;; arg isas
+(arg1Isa thingAttachedTo Attachment)
+(arg2Isa thingAttachedTo PartiallyTangible)
+
+;; genlPreds
+(genlPreds thingAttachedTo configuredObjects)
+
+
+;; ---- thingIrrelevantToThing
+;; --------------------------
+(isa thingIrrelevantToThing Predicate)
+
+;; isas
+(isa thingIrrelevantToThing BinaryPredicate)
+
+;; arity
+(arity thingIrrelevantToThing 2)
+
+;; arg isas
+(arg1Isa thingIrrelevantToThing FirstOrderCollection)
+(arg2Isa thingIrrelevantToThing Thing)
+
+
+;; ---- valueOf
+;; --------------------------
+(isa valueOf Predicate)
+
+;; comment
+(comment valueOf "A BinaryPredicate and specialization of mathEquals.  <code>(valueOf X Y)</code> means that the term '<code>X</code>' is, in effect, a definite description that (contingently) picks out the ScalarOrVectorInterval that is directly denoted by '<code>Y</code>'.  
+<p>
+For example, <code>(valueOf ((QPQuantityFn Mass) EiffelTower) (MetricTon 10100))</code> is true.")
+
+;; isas
+(isa valueOf AsymmetricBinaryPredicate)
+(isa valueOf FunctionalSlot)
+
+;; arity
+(arity valueOf 2)
+
+;; arg isas
+(arg1Isa valueOf ScalarOrVectorInterval)
+(argQuotedIsa valueOf 1 CycLDenotationalTerm)
+(arg2Isa valueOf ScalarOrVectorInterval)
+(argQuotedIsa valueOf 2 CycLDenotationalTerm)
+
+;; genlPreds
+(genlPreds valueOf mathEquals)
+(genlPreds valueOf intangibleParts)
+
+
+;; ---- workedSolutionForKBContentTest
+;; --------------------------
+(isa workedSolutionForKBContentTest Predicate)
+
+;; isas
+(isa workedSolutionForKBContentTest BinaryPredicate)
+
+;; arity
+(arity workedSolutionForKBContentTest 2)
+
+;; arg isas
+(arg1Isa workedSolutionForKBContentTest KBContentTest)
+(arg2Isa workedSolutionForKBContentTest WorkedSolution)
+
+
+;; ---- workedSolutionMtForTestMt
+;; --------------------------
+(isa workedSolutionMtForTestMt Predicate)
+
+;; isas
+(isa workedSolutionMtForTestMt BinaryPredicate)
+
+;; arity
+(arity workedSolutionMtForTestMt 2)
+
+;; arg isas
+(arg1Isa workedSolutionMtForTestMt Microtheory)
+(arg2Isa workedSolutionMtForTestMt Microtheory)
+
+;;;; File name: steps-defns.meld
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+
+;; ---- DeterminingSpecificScalarOrVectorValuesFromContext
+;; --------------------------
+(isa DeterminingSpecificScalarOrVectorValuesFromContext Collection)
+
+;; genls
+(genls DeterminingSpecificScalarOrVectorValuesFromContext SolvingAProblem)
+
+;; isas
+(isa DeterminingSpecificScalarOrVectorValuesFromContext PhysicsCoreSolutionStepEventType)
+(isa DeterminingSpecificScalarOrVectorValuesFromContext TemporalObjectType)
+
+
+;; ---- SanityCheckingPhysicsProblemSolution
+;; --------------------------
+(isa SanityCheckingPhysicsProblemSolution Collection)
+
+;; genls
+(genls SanityCheckingPhysicsProblemSolution SolvingAProblem)
+
+;; isas
+(isa SanityCheckingPhysicsProblemSolution TemporalObjectType)
+(isa SanityCheckingPhysicsProblemSolution PhysicsCoreSolutionStepEventType)
+
+
+;; ---- CategorizingAPhysicsProblem
+;; --------------------------
+(isa CategorizingAPhysicsProblem Collection)
+
+;; genls
+(genls CategorizingAPhysicsProblem SolvingAProblem)
+(genls CategorizingAPhysicsProblem GroupingThingsMentally)
+
+;; isas
+(isa CategorizingAPhysicsProblem PhysicsCoreSolutionStepEventType)
+(isa CategorizingAPhysicsProblem TemporalObjectType)
+
+
+;; ---- SubstitutingBindingsForVariables
+;; --------------------------
+(isa SubstitutingBindingsForVariables Collection)
+
+;; genls
+(genls SubstitutingBindingsForVariables SolvingAProblem)
+
+;; isas
+(isa SubstitutingBindingsForVariables PhysicsCoreSolutionStepEventType)
+
+
+;; ---- SolvingAMathematicalEquation
+;; --------------------------
+(isa SolvingAMathematicalEquation Collection)
+
+;; genls
+(genls SolvingAMathematicalEquation SolvingAProblem)
+(genls SolvingAMathematicalEquation DoingMath)
+(genls SolvingAMathematicalEquation IntelligentAgentActivity)
+
+;; isas
+(isa SolvingAMathematicalEquation PhysicsCoreSolutionStepEventType)
+(isa SolvingAMathematicalEquation TechniqueType)
+
+
+;; ---- DeterminingTheBestAnswerFromASetOfChoices
+;; --------------------------
+(isa DeterminingTheBestAnswerFromASetOfChoices Collection)
+
+;; genls
+(genls DeterminingTheBestAnswerFromASetOfChoices PurposefulAction)
+
+;; isas
+(isa DeterminingTheBestAnswerFromASetOfChoices PhysicsCoreSolutionStepEventType)
+
+
+;; ---- IdentifyingAWholeWithTheSumOfItsParts
+;; --------------------------
+(isa IdentifyingAWholeWithTheSumOfItsParts Collection)
+
+;; genls
+(genls IdentifyingAWholeWithTheSumOfItsParts AnalyzingSomething)
+
+;; isas
+(isa IdentifyingAWholeWithTheSumOfItsParts PhysicsOptionalSolutionStepEventType)
+
+
+;; ---- MakingNecessaryBackgroundAssumptions
+;; --------------------------
+(isa MakingNecessaryBackgroundAssumptions Collection)
+
+;; genls
+(genls MakingNecessaryBackgroundAssumptions AssumingSomethingToBeTrue)
+(genls MakingNecessaryBackgroundAssumptions DecidingToDoSomething)
+
+;; isas
+(isa MakingNecessaryBackgroundAssumptions TemporalObjectType)
+(isa MakingNecessaryBackgroundAssumptions PhysicsOptionalSolutionStepEventType)
+
+;;; Microtheories for physics problem solving knowledge
+
+(isa PhysicsProblemSolvingMt Microtheory)
+(comment PhysicsProblemSolvingMt "PhysicsProblemSolvingMt contains knowledge needed to solve physics problems.  This doesn't include the equations of physics, but rather, the knowledge about how to use equations in problem-solving.")
+
+(isa EquationSolvingRulesMt Microtheory)
+(comment EquationSolvingRulesMt "EquationSolvingRulesMt expresses some rules for solving equations.")
+(genlMt PhysicsProblemSolvingMt EquationSolvingRulesMt)
+(genlMt EquationSolvingRulesMt AlgebraMt)
+
+(isa QRDerivativeRulesMt Microtheory)
+(comment QRDerivativeRulesMt "QRDerivativeRulesMt expresses some rules for reasoning about qualitative derivatives.")
+(genlMt PhysicsProblemSolvingMt QRDerivativeRulesMt)
+
+;; ---- SolveProblemCollectorMt
+;; ----------------------------
+(isa SolveProblemCollectorMtFn Functional-Denotational)
+(arity SolveProblemCollectorMtFn 1)
+(arg1Isa SolveProblemCollectorMtFn Thing) ;; ?? or is it just the name of the problem
+(resultIsa SolveProblemCollectorMtFn Microtheory)
+(comment SolveProblemCollectorMtFn "SolveProblemCollectorMt gathers together the problem definition and the domain rules.")
+;(genlMt SolveProblemCollectorMtFn PhysicsProblemSolvingMt)
+
+
+;; ---- WorkedProblemMtFn
+;; ----------------------
+(isa WorkedProblemMtFn Functional-Denotational)
+(arity WorkedProblemMtFn 2)
+(arg1Isa WorkedProblemMtFn Thing) ;; ?? or is it just the name of the problem
+(arg2Isa WorkedProblemMtFn Thing) ;; some unique identifier for the problem solving attempt
+(resultIsa WorkedProblemMtFn Microtheory)
+(comment WorkedProblemMtFn "WorkedProblemMtFn represents the context in which an attempt to solve a problem was made.  The first argument is the problem being solved.  The second argument is an identifier on the attempt to solve the problem.  This microtheory represented should be a spindle of all the microtheories used to solve the problem.")
+;(genlMt (WorkedProblemMtFn ?foo) SolveProblemCollectorMt)
+
+
+;; ---- AppraisalMtFn
+;; ----------------------
+(isa AppraisalMtFn Functional-Denotational)
+(arity AppraisalMtFn 1)
+(arg1Isa AppraisalMtFn Thing)
+(resultIsa AppraisalMtFn Microtheory)
+(comment AppraisalMtFn "AppraisalMtFn represents the affective appraisal in the context of its argument.")
+
+;; ---- ReAppraisalMtFn
+;; ----------------------
+(isa ReAppraisalMtFn Functional-Denotational)
+(arity ReAppraisalMtFn 1)
+(arg1Isa ReAppraisalMtFn Thing)
+(resultIsa ReAppraisalMtFn Microtheory)
+(comment ReAppraisalMtFn "ReAppraisalMtFn represents the affective appraisal in the context of its argument.")
+
+
+;;;; -------------------------------------------------------------------------
+;;;; End of Code
+

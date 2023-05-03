@@ -1,0 +1,9 @@
+
+ (in-microtheory ReasoningWithTense-LogicMt-LinearTime)
+ (comment ReasoningWithTense-LogicMt-LinearTime
+ "This microtheory contains rules involving tense operators 
+for linear time.  That is to say, this microtheory assumes that 
+moments in temporal structures are ordered into not only an event 
+ordering but a strict linear ordering.")
+ (sharedNotes ReasoningWithTense-LogicMt-LinearTime
+ SemanticAssumptionsMadeForReasoningWithTenseMts)

@@ -1,0 +1,99 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: post-mortem.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 6, 2013 17:14:33
+;;;;   Purpose: post-mortem learning for scenario experiments.
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+(isa runPostMortem ComplexActionPredicate)
+(arity runPostMortem 1)
+(arg1Isa runPostMortem Microtheory)
+(comment runPostMortem "(runPostMortem ?ctxt) analyzes results of an experiment after a game has completed.")
+
+
+;;; default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (runPostMortem ?ctxt)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (runPostMortem ?ctxt) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+     
+;;; At the end of a scenario, see if there's an explicit experiment or a
+;;; strategy with an active learning goal.  These are handled differently,
+;;; since the former will make explicit what to measure, while the latter
+;;; will not.
+
+;;; The game case will have this information in it if run from an experiment:
+;;; (isa Test-Expt3 CompanionsExperiment)
+;;; (experimentLearningGoal Test-Expt3 (LearnQualitativeModelFn Freeciv-TheGame))
+;;; (experimentScenario Test-Expt3 "C")
+;;; (experimentObjectiveFunction Test-Expt3 
+;;;   (MaximizeFn 
+;;;     ((AggregateQuantityFn cityFoodSurplus)
+;;;        (CollectionSubsetFn FreeCiv-City 
+;;;          (TheSetOf ?city 
+;;;            (and (currentPlayer ?player)
+;;;                 (cityOwner ?city ?player)))))))
+;;; (experimentMaxTurns Test-Expt3 5)
+
+
+(preconditionForMethod
+  (and (lookupOnly
+         (ist-Information ?ctxt
+           (interactionMode ?ctxt Experimentation))))
+  (methodForAction
+    (runPostMortem ?ctxt)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%PostMortem for experiment" ())
+        ))))
+        
+;;; Reifying novelty.
+;;; Do we want to load the entire trace into wm first?
+;;; Do we want to restrict queries to actions doneBy HumanUser?
+;;; Can we find the domain of a context, or do we have to fall back on currentDomain?
+(preconditionForMethod
+  (and (currentDomain ?domain)
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (evaluate ?action-preds
+         (TheClosedRetrievalSetOf ?action-pred
+           (and (lookupOnly
+                  (localOnly
+                    (ist-Information ?ctxt
+                      (infoTransferred (CommandFn ?ctxt ?num) ?action))))
+                (operatorFormulas ?action-pred ?action))))
+       (evaluate ?novel-action-preds
+         (TheClosedRetrievalSetOf ?novel-pred
+           (and (elementOf ?novel-pred ?action-preds)
+                (variablizedStatement ?novel-pred ?stmt)
+                (uninferredSentence
+                  ;; Better make it (CaseSpindleFn <domain>):
+                  (lookupOnly
+                    (contextEnvAllowed
+                      (ist-Information (SpindleMtFn ?domain ExecutionTraces) ;; The expisodic memory
+                        (infoTransferred ?cmd ?stmt))))))))
+       (different ?novel-action-preds (TheSet)))
+  (methodForAction
+    (runPostMortem ?ctxt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?ctxt (novelActionPreds ?novel-action-preds)))
+        (doForEach ?action-pred ?novel-action-preds (postActionLearningGoal ?lkmt ?action-pred))
+        ))))
+
+;;; If we're running on the cluster and we don't have a sequence of trials to run,
+;;; do homework and try to pursue the learning goals.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

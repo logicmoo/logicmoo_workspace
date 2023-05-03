@@ -1,0 +1,1054 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: companion-primitives.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 12, 2009 09:56:17
+;;;;   Purpose: Representations of action primitives shared by all agent types
+;;;; ---------------------------------------------------------------------------
+;;;
+;;; See fire/flat-files/htnplanner.meld for more action predicate definitions.
+;;; See also companions/v1/agents/plan-execution for the lisp implementation
+;;; of these actions.
+
+
+(in-microtheory CompanionsMt)
+
+
+;;;
+;;; doSend
+;;;
+
+(isa doSend SimpleActionPredicate)
+(arity doSend 2)
+(arg1Isa doSend CompanionsAgent)
+(arg2Isa doSend Thing) ;; a KQML message
+(comment doSend "(doSend ?agent ?message) sends the specified kqml message to ?agent")
+
+(preconditionFor-Props
+   (true)
+   (doSend ?receiver ?msg))
+
+;;;
+;;; doRecordMembersInContext
+;;;
+
+(isa doRecordMembersInContext SimpleActionPredicate)
+(isa doRecordMembersInContext InferentialTask)
+(arity doRecordMembersInContext 2)
+(arg1Isa doRecordMembersInContext Microtheory)
+(arg2Isa doRecordMembersInContext Set-Mathematical) ; The set of uncontextualized statements.
+(comment doRecordMembersInContext 
+   "(doRecordMembersInContext ?mt ?assertionSet) stores elements of ?assertionSet in the knowledgeBase in context ?mt.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doRecordMembersInContext ?mt ?assertion-set))
+
+(effectOfActionIf-Props 
+  (doRecordMembersInContext ?mt ?set)
+  (and (operatorFormulas TheSet ?set)
+       (evaluate ?facts (MakeFormulaFn and (FormulaArgListFn ?set))))
+  ?facts)  ; close enuf
+
+(preconditionFor-Props
+ (true)
+ (doForgetKBMt ?foo))
+
+(isa doForgetKBMt SimpleActionPredicate)
+(isa doForgetKBMt InferentialTask)
+(arity doForgetKBMt 1)
+(arg1Isa doForgetKBMt Microtheory)
+(comment doForgetKBMt
+  "(doForgetKBMt ?mt) is a primitive action that causes the KB microtheory ?mt to have
+ all of its facts directly in it forgotten.
+   This does not remove genlMt statements that mention it.")
+
+;;;
+;;; doForgetInheritedFacts
+;;;
+
+(isa doForgetInheritedFacts SimpleActionPredicate)
+(isa doForgetInheritedFacts InferentialTask)
+(arity doForgetInheritedFacts 2)
+(arg1Isa doForgetInheritedFacts Microtheory) 
+(arg2Isa doForgetInheritedFacts CycLExpression)  ; either an assertible statement or a set of assertible statements.
+(comment doForgetInheritedFacts 
+  "(doForgetInheritedFacts ?context ?assertion-set) forgets inherited elements of ?assertion-set from the visible contexts of ?context.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doForgetInheritedFacts ?context ?assertion-set))
+
+(effectOfActionIf-Props 
+  (doForgetInheritedFacts ?context ?set)
+  (and (operatorFormulas TheSet ?set)
+       (evaluate ?facts
+         (MakeFormulaFn and 
+           (MapFunctionOverList 
+             (FunctionToArg 2
+               (Kappa (?formula) (negationOf ?formula ?new-formula)))
+             (FormulaArgListFn ?set)))))
+  ?facts)
+  
+(isa doRecordIntent SimpleActionPredicate)
+(isa doRecordIntent InferentialTask)
+(arity doRecordIntent 2)
+(arg1Isa doRecordIntent Agent-Generic)
+(arg2Isa doRecordIntent CycLExpression)
+(comment doRecordIntent "(doRecordIntent ?actor ?operator) writes out intentForActor statement in the current execution context.")
+
+(isa doRecordPlanningFailure SimpleActionPredicate)
+(isa doRecordPlanningFailure InferentialTask)
+(arity doRecordPlanningFailure 1)
+(arg1Isa doRecordPlanningFailure CycLExpression)
+(comment doRecordPlanningFailure "(doRecordPlanningFailure ?operator) writes out planningFailureFor statement in the current execution context.")
+
+(isa doRecordExecutionFailure SimpleActionPredicate)
+(isa doRecordExecutionFailure InferentialTask)
+(arity doRecordExecutionFailure 1)
+(arg1Isa doRecordExecutionFailure CycLExpression)
+(comment doRecordExecutionFailure "(doRecordExecutionFailure ?operator) writes out executionFailureFor statement in the current execution context.")
+
+(isa doLoadFlatFile SimpleActionPredicate)
+(isa doLoadFlatFile InferentialTask)
+(arity doLoadFlatFile 1)
+(arg1Isa doLoadFlatFile CharacterString)
+(comment doLoadFlatFile "(doLoadFlatFile <url>) loads the flatfile into the kb.")
+
+(isa doWriteKBMtToFlatFile SimpleActionPredicate)
+(isa doWriteKBMtToFlatFile InferentialTask)
+(arity doWriteKBMtToFlatFile 2)
+(arg1Isa doWriteKBMtToFlatFile Microtheory)
+(arg2Isa doWriteKBMtToFlatFile CharacterString)
+(comment doWriteKBMtToFlatFile "(doWriteKBMtToFlatFile <mt> <url>) writes the <mt> to a flatfile at url <url>.")
+(preconditionFor-Props
+ (true)
+ (doWriteKBMtToFlatFile ?mt ?file-name))
+
+(isa doCopyDirectoryContents SimpleActionPredicate)
+(isa doCopyDirectoryContents InferentialTask)
+(arity doCopyDirectoryContents 2)
+(arg1Isa doCopyDirectoryContents CharacterString)
+(arg2Isa doCopyDirectoryContents CharacterString)
+(comment doCopyDirectoryContents "(doCopyDirectoryContents <src-url> <dest-url>) Copies the contents of the directory at <src-url> to <dest-url>, and creates <dest-url> in the process if it doesn't exist.")
+
+(isa doEnsureDirectoryExists SimpleActionPredicate)
+(isa doEnsureDirectoryExists InferentialTask)
+(arity doEnsureDirectoryExists 1)
+(arg1Isa doEnsureDirectoryExists CharacterString)
+(comment doEnsureDirectoryExists "(doEnsureDirectoryExists ?dir-url) Creates a directory at ?dir-url, if one doesn't exist.")
+
+(isa doDeleteFile SimpleActionPredicate)
+(isa doDeleteFile InferentialTask)
+(arity doDeleteFile 1)
+(arg1Isa doDeleteFile Microtheory)
+(comment doDeleteFile "(doDeleteFile <url>) deletes the file at url <url>.")
+
+(isa doWriteFactToFlatFile SimpleActionPredicate)
+(isa doWriteFactToFlatFile InferentialTask)
+(arity doWriteFactToFlatFile 2)
+(arg1Isa doWriteFactToFlatFile CycLSentence-Assertible)
+(arg2Isa doWriteFactToFlatFile CharacterString)
+(comment doWriteFactToFlatFile "(doWriteFactToFlatFile <fact> <krf-url> saves the <fact> to a krf located at <krf-url>. If the flat file does not exist, creates it.")
+
+(isa doWriteFactsToFlatFile SimpleActionPredicate)
+(isa doWriteFactsToFlatFile InferentialTask)
+(arity doWriteFactsToFlatFile 2)
+(arg1Isa doWriteFactsToFlatFile List)
+(arg2Isa doWriteFactsToFlatFile CharacterString)
+(comment doWriteFactsToFlatFile "(doWriteFactsToFlatFile <facts> <krf-url> saves the <facts> to a krf located at <krf-url>. If the flat file does not exist, creates it.")
+
+
+;;;
+;;; doJustifyMembersBy
+;;;
+
+(isa doJustifyMembersBy SimpleActionPredicate)
+(isa doJustifyMembersBy InferentialTask)
+(arity doJustifyMembersBy 2)
+(arg1Isa doJustifyMembersBy Thing)  ; strictly speaking, should be a CycLSentence-Assertible
+(arg2Isa doJustifyMembersBy Set-Mathematical)
+(comment doJustifyMembersBy "(doJustifyMembersBy ?justification ?statements) causes belief in ?statements to be predicated on ?justification.")
+
+;;;(preconditionFor-Props
+;;;   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+;;;   (doJustifyMembersBy ?just ?assertion-set))
+
+;;;
+;;; doAgentPlan
+;;;
+
+(isa doAgentPlan SimpleActionPredicate)
+(isa doAgentPlan InferentialTask)  ; generate a plan by executing a plan.
+(arity doAgentPlan 1)
+(arg1Isa doAgentPlan CycLSentence-Assertible)
+(comment doAgentPlan "(doAgentPlan ?goal-tasks) generates a plan to achieve ?goal-tasks.  ?goal-tasks is a (generally non-operational) actionSequence.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doAgentPlan ?goal-tasks))
+
+;;;
+;;; doAsynchronousTask
+;;;
+
+(isa doAsynchronousTask SimpleActionPredicate)
+(isa doAsynchronousTask InferentialTask)  ; generate a plan by executing a plan.
+(arity doAsynchronousTask 1)
+(arg1Isa doAsynchronousTask CycLSentence-Assertible)
+(comment doAsynchronousTask "(doAsynchronousTask ?goal-tasks) spawns a process to plan and execute ?goal-tasks. Upon completion, the child process will attempt to unblock the parent process if it is blocked and has no other active child.")
+
+
+(isa doSuspend SimpleActionPredicate)
+(arity doSuspend 0)
+(comment doSuspend "(doSuspend) blocks the current process on a gate registered in the process-gates slot of the agent.")
+
+
+;;;
+;;; doWaitForEvent
+;;;
+
+(isa doWaitForEvent SimpleActionPredicate)
+(isa doWaitForEvent InferentialTask)
+(arity doWaitForEvent 2)
+(arg1Isa doWaitForEvent Event)
+(arg2Isa doWaitForEvent Integer) ; number of seconds (for now)
+(comment doWaitForEvent "(doWaitForEvent <event-type><num-seconds>) blocks the current process for up to <num-seconds> until an asynchronous event is received.")
+
+;;;
+;;; doClearEventCallback
+;;;
+
+(isa doClearEventCallback SimpleActionPredicate)
+(isa doClearEventCallback InferentialTask)
+(arity doClearEventCallback 1)
+(arg1Isa doClearEventCallback Event)
+(comment doClearEventCallback "(doClearEventCallback <event-type>) kills any callback processes currently waiting for an event of type <event-type>.")
+
+;;;
+;;; doSuppressEvents
+;;;
+(isa doSuppressEvents SimpleActionPredicate)
+(arity doSuppressEvents 1)
+(arg1Isa doSuppressEvents TruthValue)
+(comment doSuppressEvents "(doSuppressEvents <truth-value>) prevents the local agent from passing on events to its subscribers.")
+
+;;;
+;;; doSetAgentContext
+;;;
+
+(isa doSetAgentContext SimpleActionPredicate)
+(isa doSetAgentContext InferentialTask)
+(arity doSetAgentContext 1)
+(arg1Isa doSetAgentContext Microtheory)
+(comment doSetAgentContext "(doSetAgentContext ?mt) sets the agent-context of the current agent to ?mt.")
+
+
+;;;
+;;; doSetExecutionContext
+;;;
+
+(isa doSetExecutionContext SimpleActionPredicate)
+(isa doSetExecutionContext InferentialTask)
+(arity doSetExecutionContext 1)
+(arg1Isa doSetExecutionContext Microtheory)
+(comment doSetExecutionContext "(doSetExecutionContext ?mt) sets the execution-context of the current agent to ?mt.")
+
+;;;
+;;; doSetPlanningContext
+;;;
+
+(isa doSetPlanningContext SimpleActionPredicate)
+(isa doSetPlanningContext InferentialTask)
+(arity doSetPlanningContext 1)
+(arg1Isa doSetPlanningContext Microtheory)
+(comment doSetPlanningContext "(doSetPlanningContext ?mt) sets the planning-context of the current agent to ?mt.")
+
+;;;
+;;; doRemoteAgentPlan
+;;;
+
+(isa doRemoteAgentPlan SimpleActionPredicate)
+(arity doRemoteAgentPlan 2)
+(arg1Isa doRemoteAgentPlan CompanionsAgent)
+(arg2Isa doRemoteAgentPlan CycLSentence-Assertible)
+(comment doRemoteAgentPlan "(doRemoteAgentPlan <remote-agent-name> <action-sequence>) requests <remote-agent-name> to start working on <tasks> Action-sequence should be of the form: (actionSequence (TheList <task1> <task2> ...)).  It does not wait for a result.")
+
+(preconditionFor-Props
+   (true)  ; Efficiency hack to avoid fruitless searches in BaseKB
+   (doRemoteAgentPlan ?remote-agent ?action-sequence))
+
+;;;
+;;; doRecordPlans
+;;;
+
+(isa doRecordPlans SimpleActionPredicate)
+(arity doRecordPlans 4)
+(arg1Isa doRecordPlans Microtheory)
+(arg2Isa doRecordPlans CycLSentence-Askable)
+(arg3Isa doRecordPlans CycLSentence-Assertible)
+(arg2Isa doRecordPlans Integer)
+(comment doRecordPlans "(doRecordPlans ?mt ?init-query ?task ?n) initializes planning state with the results of ?init-query and generates up to ?n plans for ?tasks and records them in microtheory ?mt using planForTask.")
+
+;;;
+;;; doSynchronousRemotePlan
+;;;
+
+(isa doSynchronousRemotePlan SimpleActionPredicate)
+(arity doSynchronousRemotePlan 2)
+(arg1Isa doSynchronousRemotePlan CompanionsAgent)
+(arg2Isa doSynchronousRemotePlan CycLSentence-Assertible)
+(comment doSynchronousRemotePlan "(doSynchronousRemotePlan ?agent ?action-sequence) invokes planning and executing on the specified remote agent and waits for a result.")
+
+;;;
+;;; doParallelTask
+;;;
+(isa doParallelTask SimpleActionPredicate)
+(arity doParallelTask 1)
+(arg1Isa doParallelTask CycLSentence-Assertible)
+(comment doParallelTask "(doParallelTask ?action-sequence) plans and executes ?action-sequence on each simple agent in the current session and waits for completion.")
+
+;;;
+;;; doForEach
+;;;
+(isa doForEach SimpleActionPredicate)
+(arity doForEach 3)
+(arg1Isa doForEach Thing) ; a local variable
+(arg2Isa doForEach Set-Mathematical)
+(arg3Isa doForEach CycLExpression) ; a primitive task
+(comment doForEach "(doForEach ?var ?set ?primitive-subtask) maps the elements of ?set over the subtask and invokes task for each binding.")
+
+;;;
+;;; doMap
+;;;
+(isa doMap SimpleActionPredicate)
+(isa doMap VariableArityRelation)
+(comment doMap "(doMap (?var1 [?var2...]) ?subtask ?set1 [?set2..]) the mapping operation involves performing the ?subtask to successive sets of arguments
+in which one argument is obtained from each sequence. The iteration terminates when the shortest set runs out. This is very similar to map in common lisp. ")
+
+;;;
+;;; doChangePlanningContext
+;;;
+
+(isa doChangePlanningContext SimpleActionPredicate)
+(arity doChangePlanningContext 1)
+(arg1Isa doChangePlanningContext Microtheory)
+(comment doChangePlanningContext "(doChangePlanningContext <context>) sets the planning context of the executive to <context>")
+
+;;;
+;;; doEnqueue
+;;;
+
+(isa doEnqueue SimpleActionPredicate)
+(isa doEnqueue InferentialTask)  ; generate a plan by executing a plan.
+(arity doEnqueue 3)
+(arg1Isa doEnqueue CompanionsAgent)
+(arg2Isa doEnqueue CycLTerm)
+(arg3Isa doEnqueue ELFormula)
+(comment doEnqueue 
+  "(doEnqueue ?agent ?task ?action-sequence) adds ?action-sequence to the agent's agenda.  ?action-sequence may be a complex actionSequence to be reduced before executing..")
+
+(preconditionFor-Props
+   (true)
+   (doEnqueue ?agent ?task ?action-seq))
+
+;;;
+;;; doSolve
+;;;
+
+(isa doSolve SimpleActionPredicate)
+(arity doSolve 2)
+(comment doSolve "arg1 is the query and arg2 is the context for the query")
+
+
+
+;;;
+;;; doEnterState
+;;;
+
+(isa doEnterState SimpleActionPredicate)  
+(arity doEnterState 2)
+(arg1Isa doEnterState CharacterString)
+(arg2Isa doEnterState CycLTerm)
+(comment doEnterState "(doEnterState ?status-string ?format-args) Adds status to the state of the agent in the first (most recent) position in the list.")
+
+
+;;;
+;;; doExitState
+;;;
+
+(isa doExitState SimpleActionPredicate)
+(arity doExitState 2)
+(arg1Isa doExitState CharacterString)
+(arg2Isa doExitState CycLTerm)
+(comment doExitState "(doExitState ?status-string ?format-args) Removes status from the state of the agent.")
+
+
+;;;
+;;; doDisplayThumbnail
+;;;
+
+(isa doDisplayThumbnail SimpleActionPredicate)
+(arity doDisplayThumbnail 1)
+(arg1Isa doDisplayThumbnail CharacterString)
+(comment doDisplayThumbnail "(doDisplayThumbnail ?url) If the thumbnail can be found at ?url, this displays the image in the session manager.")
+
+;;;
+;;; doDeferExecution
+;;;
+
+(isa doDeferExecution SimpleActionPredicate)
+(isa doDeferExecution InferentialTask)  ; This is inferential, but not a BookKeepingTask
+(arity doDeferExecution 0)
+(comment doDeferExecution "(doDeferExecution) postpones further execution of the current plan and sends it back to the agenda.")
+
+(isa doIncrementCount SimpleActionPredicate)
+(arity doIncrementCount 1)
+(arg1Isa doIncrementCount CycLTerm)
+(comment doIncrementCount "(doIncrementCount <counter-name>) increments a count of an event or quantity.  Used for general knowledge-level statistics capture for dashboards and session metadata.")
+
+(isa doSetCounter SimpleActionPredicate)
+(arity doSetCounter 2)
+(arg1Isa doSetCounter CycLTerm)
+(arg2Isa doSetCounter Integer)
+(comment doSetCounter "(doSetCounter <counter-name> <count>) sets a named counter to <count>.")
+
+(isa doIncrementTurn SimpleActionPredicate)
+(arity doIncrementTurn 0)
+(comment doIncrementTurn "(doIncrementTurn) increments the current turn.")
+
+(isa doSetTurn SimpleActionPredicate)
+(arity doSetTurn 1)
+(arg2Isa doSetTurn Integer)
+(comment doSetTurn "(doSetTurn <count>) sets the turn number to <count>.")
+
+;;; doDeleteCases
+;;;
+
+(isa doDeleteCases SimpleActionPredicate)
+(arity doDeleteCases 1)
+(arg1Isa doDeleteCases Set-Mathematical)
+(comment doDeleteCases "(doDeleteCases ?set-of-case-terms) deletes the assertions in the case, removes the case from all libraries, and clears any existing cached dgroups.")
+
+
+;;; doConstructCaseKB
+;;;
+
+(isa doConstructCaseKB SimpleActionPredicate)
+(arity doConstructCaseKB 1)
+(arg1Isa doConstructCaseKB Microtheory)
+(comment doConstructCaseKB 
+"(doConstructCaseKB <case term>) constructs the case denoted by <case term> directly into the KB.")
+
+;;; doCopyWMCaseToKB
+;;;
+
+(isa doCopyWMCaseToKB SimpleActionPredicate)
+(arity doCopyWMCaseToKB 1)
+(arg1Isa doCopyWMCaseToKB Microtheory)
+(comment doCopyWMCaseToKB "(doCopyWMCaseToKB <case term>) copies the case <case term> from WM into the KB.  It is assumed that any dynamic construction and/or expansion has already occurred.")
+
+;;; doCopyKBCaseToWM
+;;;
+
+(isa doCopyKBCaseToWM SimpleActionPredicate)
+(arity doCopyKBCaseToWM 1)
+(arg1Isa doCopyKBCaseToWM Microtheory)
+(comment doCopyKBCaseToWM
+ "(doCopyKBCaseToWM <case term>) copies the case <case term> from WM into the KB.  It is assumed that any dynamic construction and/or expansion has already occurred.")
+
+;;;
+;;; doCheckpointKB
+;;;
+(isa doCheckpointKB SimpleActionPredicate)
+(arity doCheckpointKB 1)
+(arg1Isa doCheckpointKB CycLTerm)
+(comment doCheckpointKB "(doCheckpointKB ?tag) backs up a version of the kb from which it can be restored.")
+
+;;; 
+;;; doRestoreKB
+;;;
+(isa doRestoreKB SimpleActionPredicate)
+(arity doRestoreKB 2)
+(arg1Isa doRestoreKB CycLTerm)
+(arg2Isa doRestoreKB CycLTerm)
+(comment doRestoreKB "(doRestoreKB ?tag ?time) restores an agents' KB to the checkpoint determined by
+   the checkpoint-name ?tag and the universal-time ?time.  ?time may also be :earliest or :latest.")
+
+
+;;;
+;;; doJournalBegin
+;;;
+(isa doJournalBegin SimpleActionPredicate)
+(arity doJournalBegin 0)
+(comment doJournalBegin "(doJournalBegin) turns on kb journaling if it isn't already on.")
+
+;;;
+;;; doJournalEnd
+;;;
+(isa doJournalEnd SimpleActionPredicate)
+(arity doJournalEnd 0)
+(comment doJournalEnd "(doJournalEnd) turns off kb journaling if it isn't already off.")
+
+;;;
+;;; doEnableJournalBatchMode
+;;;
+(isa doEnableJournalBatchMode SimpleActionPredicate)
+(arity doEnableJournalBatchMode 0)
+(comment doEnableJournalBatchMode "(doEnableJournalBatchMode) turns on journal batch mode, which is faster, but the journal is not guaranteed to be accurate if a kb is closed unexpectedy (usually if an agent crashes). This is not the default setting.")
+
+;;;
+;;; doDisableJournalBatchMode
+;;;
+(isa doDisableJournalBatchMode SimpleActionPredicate)
+(arity doDisableJournalBatchMode 0)
+(comment doDisableJournalBatchMode "(doDisableJournalBatchMode) turns off journal batch mode, so journaling is slower, but more conservative and safer in the face of unexpected crashes.  This is the default setting.")
+
+;;;
+;;; doEnableJournaling
+;;;
+(isa doEnableJournaling SimpleActionPredicate)
+(arity doEnableJournaling 0)
+(comment doEnableJournaling "(doEnableJournaling) enables kb journaling for the local agent's KB, which may be shared.")
+
+;;;
+;;; doDisableJournaling
+;;;
+(isa doDisableJournaling SimpleActionPredicate)
+(arity doDisableJournaling 0)
+(comment doDisableJournaling "(doDisableJournaling) disables kb journaling for the local agent's KB, which may be shared.")
+
+;;;
+;;; doJournalFlush
+;;;
+(isa doJournalFlush SimpleActionPredicate)
+(arity doJournalFlush 0)
+(comment doJournalFlush "(doJournalEnd) flushes out the journal stream.")
+
+;;;
+;;; doJournalApply
+;;;
+(isa doJournalApply SimpleActionPredicate)
+(arity doJournalApply 1)
+(arg1Isa doJournalApply CompanionsAgent)
+(comment doJournalApply "(doJournalApply <remote-agent>) applies the current journal contents to the KB of <remote-agent>.")
+
+;;;
+;;; doSendFile
+;;;
+(isa doSendFile SimpleActionPredicate)
+(arity doSendFile 2)
+(arg1Isa doSendFile CompanionsAgent)
+(arg2Isa doSendFile CharacterString)
+(comment doSendFile "(doSendFile ?to-agent ?data-url) ships the contents of a file to a remote agent to be saved in the corresponding file path.")
+
+;;;
+;;; doCopyRemotely
+;;;
+(isa doCopyRemotely SimpleActionPredicate)
+(arity doCopyRemotely 2)
+(arg1Isa doCopyRemotely CompanionsAgent)
+(arg2Isa doCopyRemotely CharacterString)
+(comment doCopyRemotely "(doCopyRemotely ?to-agent ?url) ships a file or directory at <url> to a remote agent via SCP.")
+
+;;;
+;;; doCleanAgenda
+;;;
+
+(isa doCleanAgenda SimpleActionPredicate)
+(isa doCleanAgenda InferentialTask)
+(arity doCleanAgenda 0)
+(comment doCleanAgenda 
+  "(doCleanAgenda) Cleans up any completed task objects in the agenda that don't have any pending successors or in-progress parents (these are the two types of tasks that could check on (and potentially block on) these tasks later).")
+
+;;;
+;;; doWriteHandoffMt
+;;;
+
+(isa doWriteHandoffMt SimpleActionPredicate)
+(isa doWriteHandoffMt InferentialTask)
+(arity doWriteHandoffMt 1)
+(arg1Isa doWriteHandoffMt Microtheory)
+(comment doWriteHandoffMt 
+  "(doWriteHandoffMt <mt>) Writes a handoff microtheory in which the current state of the agenda is persisted.")
+
+;;;
+;;; doLoadHandoffMt
+;;;
+
+(isa doLoadHandoffMt SimpleActionPredicate)
+(isa doLoadHandoffMt InferentialTask)
+(arity doLoadHandoffMt 1)
+(arg1Isa doLoadHandoffMt Microtheory)
+(comment doLoadHandoffMt 
+  "(doLoadHandoffMt <mt>) Loads the handoff microtheory in which a former state of the agenda was persisted during the current session.
+  As long as the microtheory exists, this will start the agenda where it left off when the microtheory was written.")
+
+;;;
+;;; doResetAgenda
+;;;
+(isa doResetAgenda SimpleActionPredicate)
+(arity doResetAgenda 0)
+(comment doResetAgenda "(doResetAgenda) clears the agenda of the agent, in KB and WM.")
+
+;;;
+;;; doResetAgent
+;;;
+(isa doResetAgent SimpleActionPredicate)
+(arity doResetAgent 0)
+(comment doResetAgent "(doResetAgent) clears the working memory, analogy caches, solves, and subscriptions in order to free up memory.")
+
+;;;
+;;; doClearAgentCaches
+;;;
+(isa doClearAgentCaches SimpleActionPredicate)
+(arity doClearAgentCaches 0)
+(comment doClearAgentCaches "(doClearAgentCaches) clears the working memory, analogy caches, and solves.")
+
+;;;
+;;; doClearSMEs
+;;;
+(isa doClearSMEs SimpleActionPredicate)
+(arity doClearSMEs 0)
+(comment doClearSMEs "(doClearSMEs) clears the SMEs from the analogy source.")
+
+;;;
+;;; doClearDGroupCaches
+;;;
+(isa doClearDGroupCaches SimpleActionPredicate)
+(arity doClearDGroupCaches 0)
+(comment doClearDGroupCaches "(doClearDGroupCaches) clears the dgroup caches from the analogy source.")
+
+;;;
+;;; doClearWMContext
+;;;
+(isa doClearWMContext SimpleActionPredicate)
+(arity doClearWMContext 1)
+(arg1Isa doClearWMContext Microtheory)
+(comment doClearWMContext
+ "(doClearWMContext ?mt) clears facts from <mt> in the working memory.")
+
+;;;
+;;; doNotifyPA
+;;;
+(isa doNotifyPA SimpleActionPredicate)
+(isa doNotifyPA InferentialTask)
+(arity doNotifyPA 2)
+(arg1Isa doNotifyPA CycLFormula)
+(comment doNotifyPA "(doNotifyPA ?content ?event-type) notifies any registered perceptual agents of the event and content.")
+
+;;;
+;;; doInitializeStrategyTable
+;;;
+(isa doInitializeStrategyTable SimpleActionPredicate)
+(arity doInitializeStrategyTable 0)
+(comment "(doInitializeStrategyTable) initializes the strategy table for the current execution microtheory.  It will fail if there isn't one.")
+
+;;;
+;;; doClearStrategyTable
+;;;
+(isa doClearStrategyTable SimpleActionPredicate)
+(arity doClearStrategyTable 0)
+(comment doClearStrategyTable "(doClearStrategyTable) clears the strategy table.")
+
+;;;
+;;; doApplyStrategy
+;;;
+(isa doApplyStrategy SimpleActionPredicate)
+(arity doApplyStrategy 2)
+(arg1Isa doApplyStrategy Goal)
+(arg2Isa doApplyStrategy Strategy)
+(comment doApplyStrategy "(doApplyStrategy ?goal ?strategy) updates the strategy table mechanism to set ?strategy in the entry of ?goal.  Strategies are qualitative processes that influence goal activations.")
+
+;;;
+;;; doClearTrellis
+;;;
+(isa doClearTrellis SimpleActionPredicate)
+(arity doClearTrellis 0)
+(comment doClearTrellis "(doClearTrellis) clears the dynamic programming trellis when invoked.")
+
+;;;
+;;; doTrackModelFragmentActivation
+;;;
+(isa doTrackModelFragmentActivation SimpleActionPredicate)
+(arity doTrackModelFragmentActivation 1)
+(arg1Isa doTrackModelFragmentActivation CycLExpression)
+(comment doTrackModelFragmentActivation "(doTrackModelFragmentActivation ?active-mf-instance-spec) registers a model fragment specification to be tracked over time such that its activation and deactivation are reified events.")
+
+
+;;;
+;;; doStopTrackingModelFragmentActivation
+;;;
+(isa doStopTrackingModelFragmentActivation SimpleActionPredicate)
+(arity doStopTrackingModelFragmentActivation 1)
+(arg1Isa doStopTrackingModelFragmentActivation CycLExpression)
+(comment doStopTrackingModelFragmentActivation "(doStopTrackingModelFragmentActivation ?mf-instance-spec) unregisters a model fragment specification from being tracked over time.")
+
+
+;;;
+;;; doClearTrackingRegistry
+;;;
+(isa doClearTrackingRegistry SimpleActionPredicate)
+(arity doClearTrackingRegistry 0)
+(comment doClearTrackingRegistry "(doClearTrackingRegistry) clears all model fragment specifications from the tracking registry.")
+
+;;;
+;;; doRecordEvent
+;;;
+(isa doRecordEvent SimpleActionPredicate)
+(isa doRecordEvent InferentialTask)
+(arity doRecordEvent 2)
+(arg1Isa doRecordEvent Collection) ; typeGenls = Event
+(arg2Isa doRecordEvent List)
+(comment doRecordEvent "(doRecordEvent ?event-type ?arg-list) reifies a possibly synthesized event in the execution history, provided agents::record-event is supported in the domain.  A game domain may reify primitive events automatically, but this allows the agent to events identified via polling, process activation, etc.")
+
+;;;
+;;; doFlushKBCaches
+;;;
+(isa doFlushKBCaches SimpleActionPredicate)
+(arity doFlushKBCaches 0)
+(comment doFlushKBCaches "(doFlushKBCaches) clears the kb cached objects.")
+
+;;;
+;;; doCompressKB
+;;;
+(isa doCompressKB SimpleActionPredicate)
+(arity doCompressKB 0)
+(comment doCompressKB "(doCompressKB) performs KB compression.")
+
+;;;
+;;; doGlobalGarbageCollect
+;;;
+(isa doGlobalGarbageCollect SimpleActionPredicate)
+(arity doGlobalGarbageCollect 0)
+(comment doGlobalGarbageCollect "(doGlobalGarbageCollect) performs a global garbage collection (gc t).")
+
+;;;
+;;; doClearCommandWindow
+;;;
+(isa doClearCommandWindow SimpleActionPredicate)
+(arity doClearCommandWindow 0)
+(comment doClearCommandWindow "(doClearCommandWindow) can be called from any agent to clear the command window on the session manager.")
+
+;;;
+;;; Solve Commands
+;;;
+
+(isa doPauseSolve SimpleActionPredicate)
+(arity doPauseSolve 1)
+(arg1Isa doPauseSolve SolveActivity)
+(comment doPauseSolve
+ "(doPauseSolve ?s) pauses solve activity ?s.")
+
+(isa doRestartSolve SimpleActionPredicate)
+(arity doRestartSolve 1)
+(arg1Isa doRestartSolve SolveActivity)
+(comment doRestartSolve
+ "(doRestartSolve ?s) restarts solve activity ?s.")
+
+(isa doChangeSolveMaxDepth SimpleActionPredicate)
+(arity doChangeSolveMaxDepth 2)
+(arg1Isa doChangeSolveMaxDepth SolveActivity)
+(arg2Isa doChangeSolveMaxDepth Integer)
+(comment doChangeSolveMaxDepth 
+ "(doChangeSolveMaxDepth ?s ?n) changes the maximum depth for solve activity ?s to ?n.")
+
+(isa doChangeSolveMaxAgendaWork SimpleActionPredicate)
+(arity doChangeSolveMaxAgendaWork 2)
+(arg1Isa doChangeSolveMaxAgendaWork SolveActivity)
+(arg2Isa doChangeSolveMaxAgendaWork Integer)
+(comment doChangeSolveMaxAgendaWork 
+ "(doChangeSolveMaxAgendaWork ?s ?n) changes the maximum number of agenda items that will be processed for solve activity ?s of agent ?a to ?n.")
+
+(isa doNextSolveStep SimpleActionPredicate)
+(arity doNextSolveStep 1)
+(arg1Isa doNextSolveStep SolveActivity)
+(comment doNextSolveStep 
+  "(doNextSolveStep (SolveActivityFn <id>)) processes the next item on the agenda of the solve tree denoted by the argument.")
+  
+(isa doRunSolverNSteps SimpleActionPredicate)
+(arity doRunSolverNSteps 2)
+(arg1Isa doRunSolverNSteps SolveActivity)
+(arg2Isa doRunSolverNSteps Integer)
+(comment doRunSolverNSteps
+  "(doRunSolverNSteps ?solver ?n) runs up to n items from the agents of the ao-tree denoted by ?solver.  Will stop sooner if it finds a solution or exceeds resource bounds.")
+
+(isa doRunToSolution SimpleActionPredicate)
+(arity doRunToSolution 1)
+(arg1Isa doRunToSolution SolveActivity)
+(comment doRunToSolution
+  "(doRunToSolution ?solver) runs the ao-tree denoted by ?solver until the next solution, or failure, or exhaustion of resources.")
+
+;;;
+;;; Game Commands
+;;;
+
+;;; The implementation of game commands is game-specific.
+;;; This is just a knowledge-level API
+
+(isa doStartGame SimpleActionPredicate)
+(arity doStartGame 2)
+(arg1Isa doStartGame CharacterString)
+(arg2Isa doStartGame InteractionMode)
+(comment doStartGame "(doStartGame ?gamename ?mode) starts a game.  ?gamename may be a type of game or a file containing a specific initial state.")
+
+(preconditionFor-Props
+  (true)
+  (doStartGame ?gamename ?mode))
+  
+(isa doLaunchGui SimpleActionPredicate)
+(arity doLaunchGui 0)
+(comment doLaunchGui "(doLaunchGui) starts the (game-specific) gui on the user's windows machine.  It looks in the execution context for necessary parameters.  Currently only supported for Freeciv.")
+
+(isa doStartAutonomousGame SimpleActionPredicate)
+(arity doStartAutonomousGame 2)
+(arg1Isa doStartAutonomousGame CharacterString)
+(arg2Isa doStartAutonomousGame InteractionMode)
+(comment doStartAutonomousGame "(doStartAutonomousGame ?gamename) starts and joins a game.  ?gamename may be a type of game or a file containing a specific initial state.  This primitive cannot support an external gui.")
+
+(preconditionFor-Props
+  (true)
+  (doStartAutonomousGame ?gamename ?mode))
+  
+(isa doPlayGame SimpleActionPredicate)
+(arity doPlayGame 1)
+(arg1Isa doPlayGame Microtheory)
+(comment doPlayGame "(doPlayGame ?execution-context) plays turns until either the turn limit or terminal condition is reached.")
+
+(preconditionFor-Props
+  (true)
+  (doPlayGame ?mt))
+
+(isa doPlayNTurns SimpleActionPredicate)
+(arity doPlayNTurns 1)
+(arg1Isa doPlayNTurns Integer)
+(comment doPlayNTurns "(doPlayNTurns ?n) plays ?n turns autonomously in the currently active game.")
+
+(preconditionFor-Props
+  (true)
+  (doPlayNTurns ?n))
+
+(isa doPlayUntil SimpleActionPredicate)
+(arity doPlayUntil 1)
+(arg1Isa doPlayUntil CycLFormula)
+(comment doPlayUntil "(doPlayUntil ?condition) plays turns until condition holds.")
+
+(preconditionFor-Props
+  (true)
+  (doPlayUntil ?condition))
+  
+(isa doPlanStrategicGoalActions SimpleActionPredicate)
+(arity doPlanStrategicGoalActions 2)
+(arg1Isa doPlanStrategicGoalActions Microtheory)
+(arg2Isa doPlanStrategicGoalActions TimeInterval)
+(comment doPlanStrategicGoalActions "(doPlanStrategicGoalActions ?mt ?when) invokes code to plan game actions based on qualitative model.")
+
+(preconditionFor-Props
+  (true)
+  (doPlanStrategicGoalActions ?mt ?when))
+
+(isa doReifySalientQuantityChanges SimpleActionPredicate)
+(arity doReifySalientQuantityChanges 2)
+(arg1Isa doReifySalientQuantityChanges Microtheory)
+(arg2Isa doReifySalientQuantityChanges CycLExpression)
+(comment doReifySalientQuantityChanges "(doReifySalientQuantityChanges ?mt ?action) reifies quantity changes due to ?action in the execution trace ?mt.")
+
+(preconditionFor-Props
+  (true)
+  (doReifySalientQuantityChanges ?mt ?action))
+
+(isa doSaveGame SimpleActionPredicate)
+(arity doSaveGame 1)
+(arg1Isa doSaveGame CharacterString)
+(comment doSaveGame "(doSaveGame ?save-name) saves the current state of the game as ?save-name so that it can later be restarted (use ?save-name as an argument to start-game).")
+
+(preconditionFor-Props
+  (numAnswers 1 (fcExecutionContext ?mt))  ; There is a current game
+  (doSaveGame ?name))
+
+
+(isa doEndGame SimpleActionPredicate)
+(arity doEndGame 0)
+(comment doEndGame "(doEndGame) terminates the running freeciv server.")
+
+(preconditionFor-Props
+  (true)
+  (doEndGame))
+  
+;;;
+;;; Support for simulating individual game actions
+;;;
+
+;(isa doGameAction SimpleActionPredicate)
+;(arity doGameAction 2)
+;(arg1Isa doGameAction Agent-Generic)
+;(arg2Isa doGameAction CycLExpression)
+;(comment doGameAction "(doGameAction ?role ?action) simulates an individual primitive game action. The particular implementation depends on the domain, but for a game domain like GGP, the primitive is responsible for updating the game state in the execution context.")
+
+;(preconditionFor-Props
+;  (true)
+;  (doGameAction))
+
+
+;;;
+;;; SimpleTemporalNetwork support
+;;;
+
+;;;
+;;; doCompileSTN
+;;;
+
+(isa doCompileSTN SimpleActionPredicate)
+(arity doCompileSTN 1)
+(arg1Isa doCompileSTN Microtheory)
+(comment doCompileSTN "(doCompileSTN <context>) compiles and caches a dispatchable stn graph on the stns slot of agent, computed from the temporal constraints visible in <context>.")
+
+(preconditionFor-Props
+  (true)
+  (doCompileSTN ?mt))
+
+;;; It's up to complex tasks and solve suggestions to reason about and select an alternative.  
+;;; This is just an accessor to inform STN dispatching.
+(isa doChooseAlternative SimpleActionPredicate)
+(arity doChooseAlternative 2)
+(arg1Isa doChooseAlternative CycLTerm)
+(arg2Isa doChooseAlternative CycLTerm)
+(comment doChooseAlternative "(doChooseAlternative ?named-decision-set ?alternative) updates the environment label of any relevant active STNs with the choice.")
+
+
+;;;
+;;; Qualitative Modeling support
+;;;
+
+(isa doSetMeasureQuantities SimpleActionPredicate)
+(arity doSetMeasureQuantities 1)
+(arg1Isa doSetMeasureQuantities Set-Mathematical)
+(comment doSetMeasureQuantities "(doSetMeasureQuantities ?quantity-spec-set) sets the measure-quantities slot on a simple agent to the members of ?quantity-spec-set.")
+
+(isa doAdoptHypothesizedInfluences SimpleActionPredicate)
+(arity doAdoptHypothesizedInfluences 1)
+(arg1Isa doAdoptHypothesizedInfluences Thing) ; the domain, or other topic
+(comment doAdoptHypothesizedInfluences "(doAdoptHypothesizedInfluences ?domain) migrates consistent hypothezed influences into a qualitative model for ?domain.")
+
+(isa doExplainActions SimpleActionPredicate)
+(arity doExplainActions 1)
+(arg1Isa doExplainActions TruthValue)
+(comment doExplainActions "(doExplainActions ?truth-value) controls whether an agent will try to explain demonstrated actions.")
+
+(isa doExplainQuantityChanges SimpleActionPredicate)
+(arity doExplainQuantityChanges 1)
+(arg1Isa doExplainQuantityChanges TruthValue)
+(comment doExplainQuantityChanges "(doExplainQuantityChanges ?truth-value) controls whether an agent will try to explain observed quantity changes.")
+
+
+;;;
+;;; Debugging primitives
+;;;
+
+(isa doBusyWaitForUser SimpleActionPredicate)
+(arity doBusyWaitForUser 1)
+(arg1Isa doBusyWaitForUser CharacterString)
+
+(isa doSleep SimpleActionPredicate)
+(arity doSleep 1)
+(arg1Isa doSleep Number)
+
+(isa doPauseAgenda SimpleActionPredicate)
+(isa doPauseAgenda InferentialTask)
+(arity doPauseAgenda 0)
+
+(isa doPauseAgendaAndWait SimpleActionPredicate)
+(isa doPauseAgendaAndWait InferentialTask)
+(arity doPauseAgendaAndWait 0)
+
+(isa doResumeAgenda SimpleActionPredicate)
+(isa doResumeAgenda InferentialTask)
+(arity doResumeAgenda 0)
+
+(isa doNoop SimpleActionPredicate)
+(arity doNoop 0)
+(comment doNoop "(doNoop) does precisely nothing.  Useful for debugging in certain situations.")
+
+(isa doInitializeRandomState SimpleActionPredicate)
+(arity doInitializeRandomState 0)
+(comment doInitializeRandomState "(doInitializeRandomState) initializes *random-state* to a fresh random state.  Especially useful since unique task ID's are generated using calls to random, and are often stored in the KB.")
+
+(isa doEval SimpleActionPredicate)
+(arity doEval 1)
+(arg1Isa doEval Thing)
+(comment doEval "We should be ashamed...")
+
+(isa doExecutionError SimpleActionPredicate)
+(arity doExecutionError 0)
+(comment doExecutionError "(doExecutionError) provides a way to test plans for robustness in the face of execution-time errors.")
+
+(preconditionFor-Props
+  (true)
+  (doExecutionError))
+  
+(isa doPrintHelloWorld SimpleActionPredicate)
+(arity doPrintHelloWorld 0)
+  
+;;;
+;;; Subscription Stuff
+;;;
+
+(isa doSubscribeToAll SimpleActionPredicate)
+(isa doSubscribeToAll InferentialTask)
+(arity doSubscribeToAll 1)
+(arg1Isa doSubscribeToAll CycLExpression-Askable)
+(comment doSubscribeToAll "(doSubscribeToAll ?pattern) subscribes to all advertised sources for facts that match ?pattern.  The callback used is agents::new-facts-in-session")
+
+(isa doSubscribeToSome SimpleActionPredicate)
+(isa doSubscribeToSome InferentialTask)
+(arity doSubscribeToSome 1)
+(arg1Isa doSubscribeToSome CycLExpression-Askable)
+(comment doSubscribeToSome "(doSubscribeToSome ?pattern) subscribes to some of the advertised sources for facts that match ?pattern.  The selection process occurs via maybeSubscribeTo.  The callback used is agents::new-facts-in-session.  N.B. Executing this should result in (maybeSubscribeTo ?ad-pattern) for every advertisement with a pattern ?ad-pattern, dominated by ?pattern.")
+
+(isa doSubscribeToOne SimpleActionPredicate)
+(isa doSubscribeToOne InferentialTask)
+(arity doSubscribeToOne 1)
+(arg1Isa doSubscribeToOne CycLExpression-Askable)
+(comment doSubscribeToOne "(doSubscribeToOne ?pattern) subscribes to the first advertised source for facts that match ?pattern.  The callback used is agents::new-facts-in-session")
+
+(isa doSubscribeToRemindings SimpleActionPredicate)
+(isa doSubscribeToRemindings InferentialTask)
+(arity doSubscribeToRemindings 3)
+(arg1Isa doSubscribeToRemindings Case)
+(arg2Isa doSubscribeToRemindings CaseLibrary)
+(arg3Isa doSubscribeToRemindings Set-Mathematical)
+(comment doSubscribeToRemindings "(doSubscribeToRemindings ?case-spec ?case-lib-spec ?constraints) subscribes to remindings from the tickler for case ?case-spec, case library ?case-lib-term, and constraints ?constraints.")
+
+(isa doUnsubscribeFromAll SimpleActionPredicate)
+(isa doUnsubscribeFromAll InferentialTask)
+(arity doUnsubscribeFromAll 1)
+(arg1Isa doUnsubscribeFromAll CycLExpression-Askable)
+(comment doUnsubscribeFromAll "(doUnsubscribeFromAll ?pattern) Unsubscribes from all the subscriptions to sources for facts that match ?pattern.")
+
+;;;
+;;; Toggling multicore macfac
+;;;
+
+(isa doEnableMulticoreMACFAC SimpleActionPredicate)
+(isa doEnableMulticoreMACFAC InferentialTask)
+(arity doEnableMulticoreMACFAC 0)
+(comment doEnableMulticoreMACFAC "(doEnableMulticoreMACFAC) Enables multicore MACFAC via the flag fire::*use-multicore-macfac*.")
+
+(isa doDisableMulticoreMACFAC SimpleActionPredicate)
+(isa doDisableMulticoreMACFAC InferentialTask)
+(arity doDisableMulticoreMACFAC 0)
+(comment doDisableMulticoreMACFAC "(doDisableMulticoreMACFAC) Disables multicore MACFAC via the flag fire::*use-multicore-macfac*.")
+
+;;;
+;;; doAnnounceDebug
+;;; like doAnnounce but conditional on debug?=t.
+
+(isa doAnnounceDebug SimpleActionPredicate)
+(isa doAnnounceDebug InferentialTask)
+(arity doAnnounceDebug 2)
+(arg1Isa doAnnounceDebug CharacterString)
+(arg2Isa doAnnounceDebug CycLTerm)
+(comment doAnnounceDebug "(doAnnounceDebug <string> <args>) IFF an agent is in debug mode, informs the user of <string>.")
+
+;;; End of Code

@@ -1,0 +1,588 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: 2d-mechanics-theory.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: January 12, 2011 12:17:14
+;;;;   Purpose: 2D mechanics based on Forbus AAAI 1982 paper
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory 2D-MechanicsTheoryMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(comment 2D-MechanicsTheoryMt "QQR domain theory for 2-dimensional mechanics.
+                               Based on Forbus 1984")
+(genlMt ConceptualPhysicsDomainTheoryCollectorMt 2D-MechanicsTheoryMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Inclusion
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(<== (includeEntity ?x)
+     (wmOnly (isa ?x Physob)))
+
+(<== (includeEntity ?x)
+     (wmOnly (isa ?x VectorInterval)))
+
+(<== (includeEntity ?x)
+     (wmOnly (isa ?x 2DQVector)))
+
+(<== (includeEntity ?x)
+     (wmOnly (isa ?x CordlikeArtifact)))
+
+
+(<== (ignoreEntity ?x)
+     (wmOnly (isa ?x FixedObject)))
+
+(<== (ignoreEntity ?x)
+     (wmOnly (isa ?x CordSegment)))
+
+(<== (considerSpatialMF VectorAddition)
+     (numAnswers 1 (lookupOnly (annotationGlyphRepresentsObject ?ag ?arrow)))
+     (lookupOnly (wmOnly (isa ?arrow VectorAnnotation))))
+
+;; These require further analysis to know if they're relevant
+(considerMF MechanicalEquilibrium)
+(considerMF StaticEquilibrium)
+(considerMF OpposingForces)
+(considerMF ForceApplied)
+(considerMF ForceApplied-Horizontal)
+(considerMF ForceApplied-Vertical)
+(considerMF ForceApplied-Diagonal)
+(considerMF 2DNetForce)
+(considerMF AccelerationProcess)
+(considerMF MotionProcess)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Quantity: PositionFn
+(isa PositionFn Function-Denotational)
+(comment PositionFn
+  "(PositionFn ?obj ?axis) refers to the position of ?obj along ?axis.")
+(arity PositionFn 2)
+(arg1Isa PositionFn PartiallyTangible)
+(arg2Isa PositionFn Axis)
+(resultIsa PositionFn ContinuousQuantity)
+;;;(<== (hasQuantity ?obj (PositionFn ?obj ?axis))
+;;;     (wmOnly (isa ?obj Physob))
+;;;     (lookupOnly (isa ?axis QVAxis)))
+
+;;Quantity: MassFn
+(isa MassFn Function-Denotational)
+(comment MassFn 
+"(MassFn ?x) refers to the mass of ?x.")
+(arity MassFn 1)
+(arg1Isa MassFn PartiallyTangible)
+(resultIsa MassFn ContinuousQuantity)
+(<== (hasQuantity ?obj (MassFn ?obj))
+     (wmOnly (isa ?obj Physob)))
+
+;;Quantity: ForceAppliedFn
+(isa ForceAppliedFn Function-Denotational)
+(comment ForceAppliedFn 
+"(ForceAppliedFn ?obj ?source) refers to the amount of force applied to ?obj by
+ ?source.")
+(arity ForceAppliedFn 2)
+(arg1Isa ForceAppliedFn PartiallyTangible)
+(arg2Isa ForceAppliedFn Thing) ;; could be a force arrow, spring, etc
+(resultIsa ForceAppliedFn ContinuousQuantity)
+(resultIsa ForceAppliedFn VectorInterval)
+
+
+
+;;Quantity: ForceAngleFn 
+(isa ForceAngleFn Function-Denotational)
+(comment ForceAngleFn 
+"(ForceAngleFn ?obj ?source ?axis) refers to the shortest angle from the 
+force applied to ?obj from ?source to ?axis.")
+(arity ForceAngleFn 3)
+(arg1Isa ForceAngleFn PartiallyTangible)
+(arg2Isa ForceAngleFn Thing) ;; could be a force arrow or spring, etc
+(arg3Isa ForceAngleFn QVAxis) 
+(resultIsa ForceAngleFn ContinuousQuantity)
+;;;(<== (hasQuantity ?obj (ForceAngleFn ?obj ?source ?axis))
+;;;     (forceAppliedToObj ?obj ?dir ?source)
+;;;     (majorAxis ?axis))
+
+;;Quantity: 1DNetForceFn
+(isa 1DNetForceFn Function-Denotational)
+(comment 1DNetForceFn 
+"(1DNetForceFn ?obj ?axis) refers to the sum of the forces applied to ?obj
+along ?axis.")
+(arity 1DNetForceFn 2)
+(arg1Isa 1DNetForceFn PartiallyTangible)
+(arg2Isa 1DNetForceFn Thing) ;; could be a force arrow or spring, etc
+(resultIsa 1DNetForceFn ContinuousQuantity)
+(resultIsa 1DNetForceFn VectorInterval)
+
+
+;;Quantity: 2DNetForceFn
+(isa 2DNetForceFn Function-Denotational)
+(comment 2DNetForceFn 
+"(2DNetForceFn ?obj) refers to the sum of the forces applied to ?obj in a 2D
+plane")
+(arity 2DNetForceFn 1)
+(arg1Isa 2DNetForceFn PartiallyTangible)
+(resultIsa 2DNetForceFn ContinuousQuantity)
+(resultIsa 2DNetForceFn VectorInterval)
+
+;;Quantity: 2DNetVelocityFn
+(isa 2DNetVelocityFn Function-Denotational)
+(comment 2DNetVelocityFn 
+  "(2DNetVelocityFn ?obj ?axis) refers to the magnitude of the velocity of
+   ?obj along ?axis.")
+(arity 2DNetVelocityFn 1)
+(arg1Isa 2DNetVelocityFn Physob)
+(resultIsa 2DNetVelocityFn ContinuousQuantity)
+(resultIsa 2DNetVelocityFn VectorInterval)
+
+
+;;Quantity: 2DNetAccelerationFn
+(isa 2DNetAccelerationFn Function-Denotational)
+(comment 2DNetAccelerationFn 
+  "(2DNetAccelerationFn ?obj ?axis) refers to the magnitude of the
+   acceleration of ?obj along ?axis.")
+(arity 2DNetAccelerationFn 1)
+(arg1Isa 2DNetAccelerationFn Physob)
+(resultIsa 2DNetAccelerationFn ContinuousQuantity)
+(resultIsa 2DNetAccelerationFn VectorInterval)
+
+
+;;Quantity: (QPQuantityFn VectorMagnitude)
+(isa (QPQuantityFn VectorMagnitude) Function-Denotational)
+(arity (QPQuantityFn VectorMagnitude) 1)
+(arg1Isa (QPQuantityFn VectorMagnitude) VectorAnnotation)
+(arg1Isa (QPQuantityFn VectorMagnitude) VectorInterval)
+(resultIsa (QPQuantityFn VectorMagnitude) ContinuousQuantity)
+;;;(<== (hasQuantity ?obj ((QPQuantityFn VectorMagnitude) ?obj))
+;;;     (wmOnly (isa ?obj VectorAnnotation)))
+
+;;Quantity: (QPQuantityFn AngleBetweenVectors)
+(isa (QPQuantityFn AngleBetweenVectors) Function-Denotational)
+(arity (QPQuantityFn AngleBetweenVectors) 2)
+(arg1Isa (QPQuantityFn AngleBetweenVectors) VectorAnnotation)
+(arg2Isa (QPQuantityFn AngleBetweenVectors) VectorAnnotation)
+(resultIsa (QPQuantityFn AngleBetweenVectors) ContinuousQuantity)
+(<== (hasQuantity ?obj ((QPQuantityFn AngleBetweenVectors) ?obj ?obj2))
+     (wmOnly (isa ?obj VectorAnnotation))
+     (wmOnly (isa ?obj2 VectorAnnotation))
+     (different ?obj ?obj2))
+
+;;Quantity: (QPQuantityFn Length)
+(isa (QPQuantityFn Length) Function-Denotational)
+(arity (QPQuantityFn Length) 1)
+(arg1Isa (QPQuantityFn Length) SpatialThing)
+(resultIsa (QPQuantityFn Length) ContinuousQuantity)
+;;;(<== (hasQuantity ?obj ((QPQuantityFn Length) ?obj))
+;;;     (wmOnly (isa ?obj Physob)))
+;;;(<== (hasQuantity ?obj ((QPQuantityFn Length) ?obj))
+;;;     (lookupOnly (glyphRepresentsObject ?g ?obj)))
+
+
+;;; With new 2D mechanics, may not need this...
+;;; hasQuantity for NetVectorMagFn and sub types
+
+(<== (hasQuantity ?object (?net-quantity-fn ?object))
+     (groundExpression ?net-quantity-fn)  ;; e.g. NetForceMagFn
+     (lookupOnly (netQuantityFnFor ?vector-type ?net-quantity-fn))
+     (cacheComplete (commonVectorsForObject ?object ?vectors ?vector-type)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantity type -> expression conversion
+
+;;; NOTE: with new 2D mechanics theory I might not need this anymore..
+;;; revisit..
+
+;;; This is needed to support NetVectorMagFn quantities where
+;;; the axis remains a variable
+;;; e.g. (NetForceMagFn ?thing) --> (NetForceMagFn <bound-thing>)
+(<== (quantityExpression (?vector-fn ?obj-var) ?obj ?q-expr)
+     (groundExpression ?vector-fn)
+     (groundExpression ?obj)
+     (unifies ?q-expr (?vector-fn ?obj)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model fragment participants
+
+(isa objectOf MFParticipantSlot)
+(arity objectOf 2)
+(genlPreds objectOf mfParticipant)
+(comment objectOf 
+  "(objectOf ?mfi ?c) indicates that the object of ?mfi is ?c.")
+
+(isa forceSourceOf MFParticipantSlot)
+(arity forceSourceOf 2)
+(genlPreds forceSourceOf mfParticipant)
+(comment forceSourceOf 
+  "(forceSourceOf ?mfi ?c) indicates that the source of force of ?mfi is ?c.")
+
+(isa forceDirectionOf MFParticipantSlot)
+(arity forceDirectionOf 2)
+(genlPreds forceDirectionOf mfParticipant)
+(comment forceDirectionOf 
+  "(forceDirectionOf ?mfi ?c) indicates that the direction (a 2DQvector) of force
+   of ?mfi is ?c.")
+
+(isa movingObjectOf MFParticipantSlot)
+(arity movingObjectOf 2)
+(genlPreds movingObjectOf mfParticipant)
+(genlPreds movingObjectOf primaryObjectMoving) ; connection to EA
+(comment movingObjectOf
+  "(movingObjectOf ?mfi ?o) indicates that the moving object for ?mfi is ?o.")
+
+(isa movingDirOf MFParticipantSlot)
+(arity movingDirOf 2)
+(genlPreds movingDirOf mfParticipant)
+
+(isa motionOf MFParticipantSlot)
+(arity motionOf 2)
+(genlPreds motionOf mfParticipant)
+(comment motionOf
+  "(motionOf ?mfi ?m) means that ?m is the motion particpating in ?mfi.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Other helper relations
+
+(isa visualVectorSum Relation) 
+(arity visualVectorSum 2)
+
+;; netquantityFnFor (and axioms)
+(isa netQuantityFnFor Relation)
+(arity netQuantityFnFor 2)
+(netQuantityFnFor ForceArrow 2DNetForceFn)
+(netQuantityFnFor VelocityArrow 2DNetVelocityFn) 
+(netQuantityFnFor AccelerationArrow 2DNetAccelerationFn)
+
+
+;; commonVectorsForObject
+(isa commonVectorsForObject Relation)
+(arity commonVectorsForObject 3)
+(<== (commonVectorsForObject ?object ?vectors ForceArrow)
+     (evaluate ?vectors
+       (TheClosedRetrievalSetOf ?v
+         (and (lookupOnly (isa ?v ForceArrow))
+              (lookupOnly (glyphRepresentsObject ?g ?object))
+              (lookupOnly (glyphAnnotatedBy ?g ?anno-glyph))
+              (lookupOnly (annotationGlyphRepresentsObject ?anno-glyph ?v)))))
+     (different ?vectors (TheSet)))
+
+(<== (commonVectorsForObject ?object ?vectors VelocityArrow)
+     (evaluate ?vectors
+       (TheClosedRetrievalSetOf ?v
+         (and (lookupOnly (isa ?v VelocityArrow))
+              (lookupOnly (glyphRepresentsObject ?g ?object))
+              (lookupOnly (glyphAnnotatedBy ?g ?anno-glyph))
+              (lookupOnly (annotationGlyphRepresentsObject ?anno-glyph ?v)))))
+     (different ?vectors (TheSet)))
+
+(<== (commonVectorsForObject ?object ?vectors AccelerationArrow)
+     (evaluate ?vectors
+       (TheClosedRetrievalSetOf ?v
+         (and (lookupOnly (isa ?v AccelerationArrow))
+              (lookupOnly (glyphRepresentsObject ?g ?object))
+              (lookupOnly (glyphAnnotatedBy ?g ?anno-glyph))
+              (lookupOnly (annotationGlyphRepresentsObject ?anno-glyph ?v)))))
+     (different ?vectors (TheSet)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model Fragments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Vector Addition -- A general/visual appraoch
+
+(isa VectorAddition ConceptualModelFragmentType)
+(isa VectorAddition Collection)
+(comment VectorAddition 
+  "A conceptual model fragment type for adding vector arrows.  This should
+   be able to handle more than 2 arrows.")
+
+(mfTypeParticipant VectorAddition ?object Physob objectOf)
+(mfTypeParticipant VectorAddition ?vectors Set-Extensional)
+(mfTypeParticipant VectorAddition ?resultant-vector VectorInterval)
+
+(mfTypeParticipantConstraint 
+ VectorAddition 
+ (and (commonVectorsForObject ?object ?unsorted-vectors ?vector-type)
+      (evaluate ?vectors
+          (SortFn ?unsorted-vectors 
+                 (Kappa (?one ?two) (alphalessp ?one ?two))
+                  IdentityFn))
+      (cacheComplete (visualVectorSum ?vectors ?resultant-vector))
+      (netQuantityFnFor ?vector-type ?net-quantity-fn)))
+
+(mfTypeCondition VectorAddition (hasQuantity ?object (?net-quantity-fn ?object)))
+
+(mfTypeConsequence VectorAddition
+ (qEqualTo (?net-quantity-fn ?object) 
+           ((QPQuantityFn VectorMagnitude) ?resultant-vector)))
+(mfTypeConsequence VectorAddition
+ (qprop (?net-quantity-fn ?object) ((QPQuantityFn Length) ?resultant-vector)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Mechanical Equilibrium (includes StaticEquilibrium)
+
+(isa MechanicalEquilibrium PhysicalModelFragmentType)
+(comment MechanicalEquilibrium
+  "Describes an object with net force equal to zero.")
+(mfTypeParticipant MechanicalEquilibrium ?obj Physob objectOf)
+(mfTypeParticipantConstraint MechanicalEquilibrium (wmOnly (isa ?obj Physob)))
+(mfTypeBiconditionalConsequence MechanicalEquilibrium (qEqualTo ((QPQuantityFn VectorMagnitude) (2DNetForceFn ?obj)) Zero))
+(mfTypeConsequence MechanicalEquilibrium (qEqualTo ((QPQuantityFn VectorMagnitude) (1DNetForceFn ?obj DownUpAxis)) Zero))
+(mfTypeConsequence MechanicalEquilibrium (qEqualTo ((QPQuantityFn VectorMagnitude) (1DNetForceFn ?obj LeftRightAxis)) Zero))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Static Equilibrium, special case of Mechanical Equilibrium
+
+(isa StaticEquilibrium PhysicalModelFragmentType)
+(comment StaticEquilibrium
+  "Describes an object at rest.")
+(mfTypeParticipant StaticEquilibrium ?obj Physob objectOf)
+(mfTypeParticipantConstraint StaticEquilibrium (wmOnly (isa ?obj Physob)))
+(mfTypeCondition StaticEquilibrium (cacheComplete (transMotion ?obj ZeroQVector))) ;; this comes from QM
+(mfTypeConsequence StaticEquilibrium (qEqualTo ((QPQuantityFn VectorMagnitude) (2DNetForceFn ?obj)) Zero))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; forceApplied - 1 per source-object pair
+;; Note: forces can be exerted onto instances of Physob.  However, in our representation,
+;; forces can come from instances of SomethingExisting.  The force source is more
+;; general to accommodate things like symbols (e.g. Gravity) and force arrow annotations.
+(isa ForceApplied PhysicalModelFragmentType)
+(comment ForceApplied
+"ForceApplied represents the affect of a force on an object from some source.")
+
+(mfTypeParticipantConstraint ForceApplied
+                             (and (wmOnly (isa ?obj Physob))
+                                  (uninferredSentence (isa ?obj FixedObject))
+                                  (cacheComplete (hasQuantity ?obj (ForceAppliedFn ?obj ?fdir ?source)))))
+
+(mfTypeParticipant ForceApplied ?obj Physob objectOf)
+(mfTypeParticipant ForceApplied ?source SomethingExisting forceSourceOf)
+(mfTypeParticipant ForceApplied ?fdir 2DQVector forceDirOf)
+
+(mfTypeCondition ForceApplied (cacheComplete (hasQuantity ?obj (ForceAppliedFn ?obj ?fDir ?source))))
+
+(mfTypeConsequence ForceApplied (hasQuantity ?obj (1DNetForceFn ?obj DownUpAxis)))
+(mfTypeConsequence ForceApplied (hasQuantity ?obj (1DNetForceFn ?obj LeftRightAxis)))
+(mfTypeConsequence ForceApplied (hasQuantity ?obj (2DNetForceFn ?obj)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ForceApplied-Horizontal
+(isa ForceApplied-Horizontal PhysicalModelFragmentType)
+(comment ForceApplied-Horizontal
+  "Describes the influence horizontal forces have on the x component of a net force.")
+
+(mfTypeParticipantConstraint ForceApplied-Horizontal
+                             (and (objectOf ?fa ?obj)
+                                  (forceSourceOf ?fa ?source)
+                                  (forceDirOf ?fa ?fdir)
+                                  (qvAxisAligned ?fdir LeftRightAxis)))
+
+(mfTypeParticipant ForceApplied-Horizontal ?fa ForceApplied mfParticipant)
+(mfTypeParticipant ForceApplied-Horizontal ?obj Physob objectOf)
+(mfTypeParticipant ForceApplied-Horizontal ?source SomethingExisting forceSourceOf)
+(mfTypeParticipant ForceApplied-Horizontal ?fdir 2DQVector forceDirOf)
+
+(mfTypeCondition ForceApplied-Horizontal (activeMF ?fa))
+
+;; Horizontal forces only influence the 1DNetForce along the LeftRightAxis
+(mfTypeConsequence ForceApplied-Horizontal (qprop (1DNetForceFn ?obj LeftRightAxis)
+                                                  (ForceAppliedFn ?obj ?fdir ?source)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ForceApplied-Vertical
+(isa ForceApplied-Vertical PhysicalModelFragmentType)
+(comment ForceApplied-Vertical
+  "Describes the influence vertical forces have on the y component of a net force.")
+
+(mfTypeParticipantConstraint ForceApplied-Vertical
+                             (and (objectOf ?fa ?obj)
+                                  (forceSourceOf ?fa ?source)
+                                  (forceDirOf ?fa ?fdir)
+                                  (qvAxisAligned ?fdir DownUpAxis)))
+
+(mfTypeParticipant ForceApplied-Vertical ?fa ForceApplied mfParticipant)
+(mfTypeParticipant ForceApplied-Vertical ?obj Physob objectOf)
+(mfTypeParticipant ForceApplied-Vertical ?source SomethingExisting forceSourceOf)
+(mfTypeParticipant ForceApplied-Vertical ?fdir 2DQVector forceDirOf)
+
+(mfTypeCondition ForceApplied-Vertical (activeMF ?fa))
+
+;; Vertical forces only influence the 1DNetForce along the DownUpAxis
+(mfTypeConsequence ForceApplied-Vertical (qprop (1DNetForceFn ?obj DownUpAxis)
+                                                (ForceAppliedFn ?obj ?fdir ?source)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ForceApplied-Diagonal
+(isa ForceApplied-Diagonal PhysicalModelFragmentType)
+(comment ForceApplied-Diagonal
+  "Describes the influence diagonal forces have on the x and y components of a net force.")
+
+(mfTypeParticipantConstraint ForceApplied-Diagonal
+                             (and (objectOf ?fa ?obj)
+                                  (fourceSourceOf ?fa ?source)
+                                  (forceDirOf ?fa ?fdir)
+                                  (uninferredSentence (qvAxisAligned ?fdir DownUpAxis))
+                                  (uninferredSentence (qvAxisAligned ?fidr LeftRightAxis))))
+
+(mfTypeParticipant ForceApplied-Diagonal ?fa ForceApplied mfParticipant)
+(mfTypeParticipant ForceApplied-Diagonal ?obj Physob objectOf)
+(mfTypeParticipant ForceApplied-Diagonal ?source SomethingExisting forceSourceOf)
+(mfTypeParticipant ForceApplied-Diagonal ?fdir 2DQVector forceDirOf)
+
+(mfTypeCondition ForceApplied-Diagonal (activeMF ?fa))
+
+;; diagonal forces influence net forces on both DownUp and LeftRight axes
+(mfTypeConsequence ForceApplied-Diagonal (qprop (1DNetForceFn ?obj DownUpAxis)
+                                                (ForceAppliedFn ?obj ?fdir ?source)))
+(mfTypeConsequence ForceApplied-Diagonal (qprop (1DNetForceFn ?obj LeftRightAxis)
+                                                (ForceAppliedFn ?obj ?fdir ?source)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Opposing Forces during Equilibrium
+
+(isa OpposingForces PhysicalModelFragmentType)
+(comment OpposingForces
+  "Describes negative relationship between opposing forces acting on an object
+in a state of mechanical equilibrium.")
+
+(mfTypeParticipantConstraint OpposingForces
+                             (and (objectOf ?fa1 ?obj)
+                                  (objectOf ?fa2 ?obj)
+                                  (different ?fa1 ?fa2)
+                                  (forceSourceOf ?fa1 ?forcer1)
+                                  (forceSourceOf ?fa2 ?forcer2)
+                                  (different ?forcer1 ?forcer2)
+                                  (objectOf ?me ?obj)
+                                  (forceDirOf ?fa1 ?fdir1)
+                                  (forceDirOf ?fa2 ?fdir2)
+                                  (inverseVector ?fdir1 ?fdir2)))
+
+(mfTypeParticipant OpposingForces ?obj Physob objectOf)
+(mfTypeParticipant OpposingForces ?me MechanicalEquilibrium mfParticipant)
+(mfTypeParticipant OpposingForces ?fa1 ForceApplied mfParticipant) 
+(mfTypeParticipant OpposingForces ?fa2 ForceApplied mfParticipant)
+(mfTypeParticipant OpposingForces ?forcer1 SomethingExisting forceSourceOf)
+(mfTypeParticipant OpposingForces ?forcer2 SomethingExisting forceSourceOf)
+(mfTypeParticipant OpposingForces ?fdir1 Physob forceDirOf)
+(mfTypeParticipant OpposingForces ?fdir2 Physob forceDirOf)
+
+(mfTypeCondition OpposingForces (activeMF ?fa1)) 
+(mfTypeCondition OpposingForces (activeMF ?fa2)) 
+(mfTypeCondition OpposingForces (activeMF ?me))
+(mfTypeConsequence OpposingForces (qprop- (ForceAppliedFn ?obj ?fdir1 ?forcer1)
+                                          (ForceAppliedFn ?obj ?fdir2 ?forcer2)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 2DNetForce 
+(isa 2DNetForce PhysicalModelFragmentType)
+(comment 2DNetForce
+"2DNetForce represents the effect of 1D net forces (component forces) on 2D net force.")
+
+;; participant constraints: there's a force applied
+(mfTypeParticipantConstraint 2DNetForce 
+                             (and (hasQuantity ?obj (1DNetForceFn ?obj DownUpAxis))
+                                  (hasQuantity ?obj (1DNetForceFn ?obj LeftRightAxis))
+                                  (objectOf ?fa ?obj)
+                                  (forceDirOf ?fa ?dir)))
+
+;; participants:
+(mfTypeParticipant 2DNetForce ?obj Physob objectOf)
+(mfTypeParticipant 2DNetForce ?fa ForceApplied mfParticipant)
+
+(mfTypeCondition 2DNetForce (activeMF ?fa))
+;; Component forces influence the 2D net force
+(mfTypeConsequence 2DNetForce (hasQuantity ?obj (2DNetForceFn ?obj)))
+(mfTypeConsequence 2DNetForce (qprop (2DNetForceFn ?obj)
+                                     (1DNetForceFn ?obj LeftRightAxis)))
+(mfTypeConsequence 2DNetForce (qprop (2DNetForceFn ?obj)
+                                     (1DNetForceFn ?obj DownUpAxis)))
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Processes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Motion
+
+(isa MotionProcess QPProcessType)
+(isa MotionProcess Collection)
+
+(genls MotionProcess MovementEvent)
+
+(comment MotionProcess "This model fragment type describes the motion
+                        of rigid bodies.")
+
+(mfTypeParticipantConstraint MotionProcess (wmOnly (isa ?obj Physob)))
+(mfTypeParticipantConstraint MotionProcess (cacheComplete (transMotion ?obj ?dir)))
+
+(mfTypeParticipant MotionProcess ?obj Physob movingObjectOf)
+(mfTypeParticipant MotionProcess ?dir QualitativeVector movingDirOf)
+
+(mfTypeCondition MotionProcess (and (groundExpression ?obj) ; just in case
+                                    (uninferredSentence (qEqualTo (2DNetVelocityFn ?obj) Zero))
+                                    (cacheComplete (transMotion ?obj ?dir))
+                                    (different ?dir ZeroQVector)))
+
+(mfTypeConsequence MotionProcess (hasQuantity ?obj (2DNetVelocityFn ?obj)))
+(mfTypeConsequence MotionProcess (i+ (PositionFn ?obj ?axis) 
+                                     (2DNetVelocityFn ?obj)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 2DNetForce -> Acceleration
+(isa AccelerationProcess QPProcessType)
+(isa AccelerationProcess Collection)
+(comment AccelerationProcess "2DAcceleration represents F = MA")
+                                
+(mfTypeParticipantConstraint AccelerationProcess
+                             (and (wmOnly (isa ?motion MotionProcess))
+                                  (movingObjectOf ?motion ?obj)))
+
+(mfTypeParticipant AccelerationProcess ?obj Physob objectOf)
+(mfTypeParticipant AccelerationProcess ?motion MotionProcess mfParticipant)
+
+;; conditions: 2DNetforce != 0
+(mfTypeCondition AccelerationProcess (activeMF ?motion))
+(mfTypeCondition AccelerationProcess (not (qEqualTo (2DNetForceFn ?obj) Zero)))
+
+;; consequences: 
+(mfTypeConsequence MotionProcess (hasQuantity ?obj (2DNetAccelerationFn ?obj)))
+(mfTypeConsequence AccelerationProcess (qprop (2DNetAccelerationFn ?obj)
+                                            (2DNetForceFn ?obj)))
+(mfTypeConsequence AccelerationProcess (qprop- (2DNetAccelerationFn ?obj)
+                                             (MassFn ?obj)))
+(mfTypeConsequence AccelerationProcess (i+ (2DNetVelocityFn ?obj)
+                                           (2DNetAccelerationFn ?obj)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,35 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cross-modal-default-values
+;;;;    System: CogSketch
+;;;;    Author: subu
+;;;;   Created: January 27, 2014 16:21:08
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory KotovskyExperimentValuesDefMt1)
+
+(isa KotovskyExperimentValuesDefMt1 (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(defaultRerepThreshold ForcedChoiceTask 0.60)
+(defaultAssimilationThreshold ForcedChoiceTask 0.95)
+(defaultSizeLimit ForcedChoiceTask 5)
+
+(defaultGeneralizationStrategy ForcedChoiceTask GeneralizeMappingAsExampleStrategy)
+(currentDefaultEncodingStrategy DirectVisualEncoding)
+(currentEncodingWithRemindingStrategy FreqIntersectionBasedEncoding)
+
+
+(defaultNormalizationStrategy ForcedChoiceTask baseNormalizedScoreOf)
+(defaultNormalizationStrategy Rerepresentation normalizedScoreOf)
+
+(defaultNormalizationStrategy Reminding targetNormalizedScoreOf);;;the one thats used in SAGE
+;;its not really connected though (planning to connect them later)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,79 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: shape-groups.lsp
+;;;;    System: CogSketch
+;;;;    Author: Andrew Lovett
+;;;;   Created: July 8, 2008 15:28:35
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:35:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-package :data)
+
+(in-microtheory PerceptionMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;Basic shape group stuff
+
+(isa ShapeGroupType Collection)
+
+(isa 2D-Shape-Group PerceptualElement)
+(isa 2D-Shape-Group Orientation-Invariant-Term)
+(genls Proximal-Similar-Shape-Group 2D-Shape-Group)
+(isa Proximal-Similar-Shape-Group ShapeGroupType)
+
+(isa shapeGroupMember Predicate)
+(isa shapeGroupMember Orientation-Invariant-Term)
+(arity shapeGroupMember 2)
+(arg1Isa shapeGroupMember 2D-Shape-Generic)
+(arg2Isa shapeGroupMember 2D-Shape-Group)
+
+(isa ShapeList VariableArityFunction)
+      
+(isa shapeGroupMembers Predicate)
+(isa shapeGroupMembers Orientation-Invariant-Term)
+(arity shapeGroupMembers 2)
+(arg1Isa shapeGroupMembers 2D-Shape-Group)
+(arg2Isa shapeGroupMembers VariableArityFunction)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;Transformations between shape groups
+
+(genls GroupTransformation ShapeTransformation)
+
+(isa ScaledGroup-Larger GroupTransformation)
+(isa ScaledGroup-Smaller GroupTransformation)
+(isa RearrangedGroup GroupTransformation)
+(isa ScaledGroup-Larger Orientation-Invariant-Term)
+(isa ScaledGroup-Smaller Orientation-Invariant-Term)
+(isa RearrangedGroup Orientation-Invariant-Term)
+
+(comment ScaledGroup-Larger "Describes a group that has become larger, i.e.,
+                             elements have been added to it.")
+(comment ScaledGroup-Smaller "Describes a group that has become smaller, i.e., 
+                              elements have been removed from it.")
+
+(comment RearrangedGroup "Describes a group whose elements have been rearranged.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;Weird attributes for shape positions in a row
+
+(isa PositionalAttribute ObjectType)
+
+(isa FirstShape PositionalAttribute)
+(isa SecondShape PositionalAttribute)
+(isa ThirdShape PositionalAttribute)
+(isa FourthShape PositionalAttribute)
+
+(isa FirstShape Orientation-Specific-Term)
+(isa SecondShape Orientation-Specific-Term)
+(isa ThirdShape Orientation-Specific-Term)
+(isa FourthShape Orientation-Specific-Term)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

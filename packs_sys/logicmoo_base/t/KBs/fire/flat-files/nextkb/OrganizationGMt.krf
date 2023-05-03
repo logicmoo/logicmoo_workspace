@@ -1,0 +1,84 @@
+(in-microtheory OrganizationGMt)
+
+(isa CurrencyExchangeCompany BusinessTypeByActivityType)
+(isa ImportExportOrganization BusinessTypeByActivityType)
+(isa CommercialHoldingCompany BusinessTypeByActivityType)
+(isa CommercialFarmOrganization BusinessTypeByActivityType)
+(isa OrganizationTypeByProfitMotive NonAbducibleCollection)
+(isa OrganizationBySector NonAbducibleCollection)
+(isa AramcoOverseasCo CommercialServiceOrganization)
+(isa Amway-CommercialOrganization RetailOrganization)
+(isa Pez-TheCompany LargeIncorporatedBusiness)
+(transitiveViaArgInverse positiveVestedInterest subOrganizations 1)
+(argFormat agentPolicies 2 SetTheFormat)
+(argFormat executives 2 SetTheFormat)
+(argFormat keySuborganizations 2 SetTheFormat)
+(strictlyFunctionalInArgs stockListedWith 2)
+(strictlyFunctionalInArgs holding 2)
+(argFormat stockListedWith 2 SingleEntry)
+(argFormat performedByPart 2 SetTheFormat)
+(argFormat controllingSuborganizations 2 SetTheFormat)
+(argFormat memberTypes 2 SetTheFormat)
+(argFormat holding 2 SingleEntry)
+(argFormat hasDepartments 2 SetTheFormat)
+(argFormat hasMembers 1 SetTheFormat)
+(argFormat overlappingOrgs 2 SetTheFormat)
+(argFormat holding 1 SetTheFormat)
+(argFormat organizationPolicies 2 SetTheFormat)
+(argFormat overlappingOrgs 1 SetTheFormat)
+(argFormat seniorExecutives 2 SetTheFormat)
+(argFormat economicInterestIn 1 SetTheFormat)
+(argFormat hasLeaders 2 SetTheFormat)
+(argFormat hasMembers 2 SetTheFormat)
+(argFormat organizationKeyMembers 2 SetTheFormat)
+(argFormat subOrganizations 2 SetTheFormat)
+(argFormat economicInterestIn 2 SetTheFormat)
+(typeGenls RetailOutletCategoryType RetailOrganization)
+(comment FoundingASuccessorOrganization "The subcollection of #$FoundingAnOrganization in which a new
+organization is derived from or is the successor of an existing
+organization.  Each instance of this collection is an event in which a
+series of steps are taken that result in some subgroup or
+sub-organization of an organization becoming an independent
+organization i.e. no longer being a sub-organization of the \"parent\"
+organization.  It is important to note that there must be some similarity in the goals
+or types of activities between the successor organization and the parent organization.
+A group of employess who left company A to form company B would likely be considered a 
+successor organization of the new company only if they performed similar activities, 
+sold similar products, or some such thing.")
+(comment organizationDerivedFrom "(#$organizationDerivedFrom FOUND ORG) holds just in case the
+organization created by the event FOUND was in some way dervied from
+ORG.  FOUND is an event in which a series of steps were taken that resulted 
+in some subgroup or sub-organization of ORG becoming an independent
+organization.  This predicate is useful for expressing that a certain organization 
+is the \"parent\" organization of the organization created in FOUND.  
+See #$FoundingASuccessorOrganization.")
+(comment organizationFormedFromOrg "(#$organizationFormedFromOrg NEW-ORG SOURCE-ORG) holds just in
+case there was an event that was a #$FoundingASuccessorOrganization
+where NEW-ORG was formed from some sub-group of SOURCE-ORG.")
+(comment OrganizationMerger "The collection of actions in which one organization is merged into another.  This is not a specialization of #$CreationEvent because an entity is not always brought into being during these actions.  In some cases, the merged organization becomes a owned suborganization of the organization into which it is being merged.  In others, the merged organizations become parts of a new organization that was created by the merger.  This collection includes cases where both organizations are voluntary participants as well as cases that people consider to be \"forced\" mergers.")
+(comment organizationMergedIntoOrg "(#$organizationMergedIntoOrg ORG-A ORG-B) holds just in case
+there exists an #$OrganizationMerger-NonCreationEvent which was
+#$performedBy ORG-B in which ORG-A was merged into ORG-B.  This
+relates the actors in both peaceful and hostile merger events.")
+(comment OrganizationMerger-CreationEvent "A subcollection of #$OrganizationMerger.  Each instance of #$OrganizationMerger-CreationEvent is a organizational merger in which two or more organizations come together to form a new organization.  Examples include the merger of #$AmericaOnlineInc and  #$TimeWarner-Corporation, the latter of which was itself formed by a merger of this type in 1989. This collection includes cases where the #$mergees retain organizational status and operate as suborganizations of the created organization, as well as cases where one or more of the mergees cease to exist as a result of the merger.")
+(comment OrganizationMerger-NonCreationEvent "A subcollection of #$OrganizationMerger.  The collection of all organizational mergers in which one organization is merged into another but where a new organization is not created by the merger.  The organization that was merged into the other can end up being a suborganization of the target organization, or it can be broken up and assimilated into the other organization and cease to exist as a result of the merger.")
+(comment mergedToOrg "(#$mergedToOrg
+MERGER MERGED) holds just in case MERGED was the organization into
+which another organization was merged in MERGER.")
+(comment mergedFromOrg "(#$mergedFromOrg MERGER MERGED) holds just in
+case MERGED was the organization that was merged into another
+organization in MERGER.")
+(comment squadLeaderInGroup "A #$BinaryPredicate that relates an instance of (#$GroupFn #$Agent-Generic) to a #$Person.  (#$squadLeaderInGroup GROUP PERSON) means that PERSON is a squad leader in GROUP.")
+(comment doubleAgentInOrg "A #$BinaryPredicate that relates an instance of #$Organization to a #$Person.  (#$doubleAgentInOrg ORG PERSON) means that PERSON is a member of ORG and is also secretly a member of another organization that is a rival or opponent of ORG and PERSON uses his position in ORG to provide information to the other organization.")
+(comment worksWithInOrg "(#$worksWithInOrg ORG PERSON1 PERSON2) holds just in case PERSON1 and PERSON2 are members of ORG and work closely together or are in close contact with each other on a regular basis.  Note: \"work\" in this context doesn't necessarily mean that ORG is their employer.  Two volunteers at a local soup kitchen can stand in this relation if they are both part of the same charitable organization and often help out on the same evenings.")
+(comment mergees "(#$mergees MERGER ORG) holds just
+in case ORG is one of the organizations that was merged in the
+#$OrganizationMerger MERGER.  In some cases, ORG may no longer
+be an independent entity or, in extreme cases, may have ceased to
+exist as a result of the merger.")
+(genls AutoMechanicShop RetailOrganization)
+(genlPreds orgMilitaryWing affiliatedWith)
+(genls CommercialFarmOrganization Business)
+(genls CommercialHoldingCompany Business)
+(genls ImportExportOrganization Business)
+(genls CurrencyExchangeCompany Business)

@@ -1,0 +1,37 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ontologized-for-commonsense.meld
+;;;;    System: Companions
+;;;;    Author: Blass
+;;;;   Created: January 23, 2016 17:18:55
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory OntologizedForCommonSenseMt)
+;;; this microtheory is ONLY for ontologized representations that should properly be in UniversalVocabularyMt
+;;; but which are segmented for easy refreshing. Don't put anything you aren't comfortable having in UniversalVocabularyMt
+;;; in, and don't make OntologizedForCommonSenseMt inherit from anything else!
+(genlMt UniversalVocabularyMt OntologizedForCommonSenseMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa BruisedEye Collection)
+(genls BruisedEye Bruise)
+(comment BruisedEye "Having a black eye, e.g. after being punched.")
+
+(isa ViolentImpact Collection)
+(genls ViolentImpact Collision)
+(genls ViolentImpact HittingAnObject)
+(comment ViolentImpact "The collection of things where something is violently impacted.")
+
+(in-microtheory CommonsenseVocabMt)
+(genlMt CommonsenseVocabMt GeneralEnglishMt)
+
+(posForms Splatter-TheWord Verb)
+(posForms Splatter-TheWord CountNoun)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

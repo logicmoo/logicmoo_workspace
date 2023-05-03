@@ -1,0 +1,12 @@
+(in-microtheory InterAgentArtifactMt)
+
+(strictlyFunctionalInArgs constituent-MostActive 2)
+(argFormat artifactHonors 1 SetTheFormat)
+(argFormat products 2 SetTheFormat)
+(argFormat constituent-MostActive 2 SingleEntry)
+(argFormat artifactHonors 2 SetTheFormat)
+(resultGenl ProducerFn-PTProductType Agent-Generic)
+(genls (GroupFn Platform-Military) (GroupFn TransportationDevice))
+(genls (GroupFn AirTransportationDevice) (GroupFn TransportationDevice))
+(genls (GroupFn TransportationDevice-Vehicle) (GroupFn TransportationDevice))
+(genls (GroupFn TransportationDevice) (GroupFn PhysicalDevice))

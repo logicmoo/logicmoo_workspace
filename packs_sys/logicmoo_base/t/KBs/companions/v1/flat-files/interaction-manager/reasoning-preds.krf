@@ -1,0 +1,31 @@
+;;;
+;;; reasoning-preds.meld
+;;;
+;;; Define predicates for generating queries from questions.
+;;;
+
+(in-microtheory Interaction-ManagerMt)
+
+(isa logicalStatement TernaryFunction)
+(arity logicalStatement 3)
+(arg1Isa logicalStatement Predicate)
+(arg2Isa logicalStatement List-Extensional)
+(arg3Isa logicalStatement ELSentence-Assertible)
+(comment logicalStatement "(logicalStatement ?pred ?arglist ?statement) promotes singleton clauses.")
+
+
+;;; Omit singleton ands and ors:
+
+(<== (logicalStatement ?pred ?arglist ?statement)
+     (different ?pred not)
+     (evaluate 1 (LengthOfListFn ?arglist))
+     (evaluate ?statement (FirstInListFn ?arglist)))
+
+(<== (logicalStatement not ?arglist ?statement)
+     (evaluate ?statement (MakeFormulaFn not ?arglist)))
+
+(<== (logicalStatement ?pred ?arglist ?statement)
+     (different ?pred not)
+     (evaluate ?n (LengthOfListFn ?arglist))
+     (different ?n 1)
+     (evaluate ?statement (MakeFormulaFn ?pred ?arglist)))

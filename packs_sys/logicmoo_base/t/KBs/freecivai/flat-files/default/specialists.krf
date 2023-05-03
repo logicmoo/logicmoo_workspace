@@ -1,0 +1,6 @@
+(in-microtheory Freeciv-defaultMt)
+
+(isa FC-Specialist-Elvis FreeCiv-Specialist)
+(isa FC-Specialist-Scientist FreeCiv-Specialist)
+(isa FC-Specialist-Taxman FreeCiv-Specialist)
+

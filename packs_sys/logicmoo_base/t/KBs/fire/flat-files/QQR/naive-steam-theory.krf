@@ -1,0 +1,682 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: naive-steam-theory
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: November 13, 2009 10:03:25
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+
+(in-microtheory NaiveSteamTheoryMt)
+
+(genlMt NaiveSteamTheoryMt QPTheoryMt)
+(genlMt NaiveSteamTheoryMt CompositionalModelingMt)
+
+(comment NaiveSteamTheoryMt
+  "NaiveSteamTheoryMt contains model fragments for the classic QP domain theory 
+capturing simple notions of liquids, gasses, flows, and phase changes.  
+Specifically, it implements the contained stuff ontology for liquids
+and contains a stub model for gases. Physical processes modeled include heat flow, 
+liquid flow, and boiling.  More sophisticated domain theories for these phenomena
+were developed in the 1980s, but this domain theory is very useful for testing.")
+
+;;; Assumed from OpenCyc ontology: 
+;;;  Container
+;;;  ChemicalCompoundTypeByChemicalSpecies
+;;;  Liquid-StateOfMatter
+;;;  Gaseous-StateOfMatter
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; The 2nd order function QPQuantityFn is used when there is a pre-existing
+;;; OpenCyc collection we can exploit, e.g., temperature, pressure, Mass.
+;;; Otherwise, we use functions that denote instances of ContinuousQuantity.
+
+;; Geometric properties
+
+;; BottomHeightFn
+(isa BottomHeightFn Function-Denotational)
+(comment BottomHeightFn 
+"(BottomHeightFn ?x) refers to the height of the bottom of ?x, in whatever
+global coordinate frame is being used in the current analysis.")
+(arity BottomHeightFn 1)
+(arg1Isa BottomHeightFn PartiallyTangible)
+(resultIsa BottomHeightFn ContinuousQuantity)
+;; TopHeightFn
+(isa TopHeightFn Function-Denotational)
+(comment TopHeightFn 
+"(TopHeightFn ?x) refers to the height of the top of ?x, in whatever
+global coordinate frame is being used in the current analysis.")
+(arity TopHeightFn 1)
+(arg1Isa TopHeightFn PartiallyTangible)
+(resultIsa TopHeightFn ContinuousQuantity)
+;; MaxHeightFn
+(isa MaxHeightFn Function-Denotational)
+(comment MaxHeightFn 
+"(MaxHeightFn ?x) refers to the maximum height of ?x, in whatever
+global coordinate frame is being used in the current analysis.")
+(arity MaxHeightFn 1)
+(arg1Isa MaxHeightFn PartiallyTangible)
+(resultIsa MaxHeightFn ContinuousQuantity)
+
+;; Fluid properties
+;;AmountOfFn
+(isa AmountOfFn Function-Denotational)
+(comment AmountOfFn 
+"(AmountOfFn ?sub ?phase ?can) refers to the amount of substance ?sub in phase ?phase
+in the container ?can.  This is an intuitive notion, which translates into traditional
+physics as number of molecules.")
+(arity AmountOfFn 3)
+(arg1Isa AmountOfFn ChemicalCompoundTypeByChemicalSpecies)
+(arg2Isa AmountOfFn MatterTypeByPhysicalState)
+(arg3Isa AmountOfFn Container)
+(resultIsa AmountOfFn ContinuousQuantity)
+;;(QPQuantityFn Mass)
+(comment (QPQuantityFn Mass) 
+"((QPQuantityFn Mass) ?x) refers to the mass of ?x.")
+(arg1Isa (QPQuantityFn Mass) PartiallyTangible)
+;;LiquidLevelFn
+(isa LiquidLevelFn Function-Denotational)
+(arity LiquidLevelFn 1)
+(comment LiquidLevelFn 
+"(LiquidLevelFn ?x) refers to the level of the contained liquid ?x, relative to the
+coordinate frame of the container which individuates it.")
+(arg1Isa LiquidLevelFn ContainedLiquid)
+(resultIsa LiquidLevelFn ContinuousQuantity)
+;;(QPQUantityFn Volume)
+(comment (QPQuantityFn Volume)
+"((QPQuantityFn Volume) ?x) refers to the volume of ?x.")
+;;(QPQuantityFn Pressure)
+(comment (QPQuantityFn Pressure) 
+"((QPQuantityFn Pressure) ?x) refers to the pressure of ?x.  For liquids, this is
+assumed to be at the bottom of whatever container defines them.")
+
+;; Thermal properties
+
+(isa HeatFn Function-Denotational)
+(comment HeatFn
+"(HeatFn ?e) refers to the internal energy of ?e, colloquially referred to as heat.")
+(arity HeatFn 1)
+(arg1Isa HeatFn PartiallyTangible)
+(resultIsa HeatFn ContinuousQuantity)
+(isa TemperatureFn Function-Denotational)
+(comment TemperatureFn
+"(TemperatureFn ?e) refers to the temperature of ?e.")
+(arity TemperatureFn 1)
+(arg1Isa TemperatureFn PartiallyTangible)
+(resultIsa TemperatureFn ContinuousQuantity)
+
+(isa TBoilFn Function-Denotational)
+(arity TBoilFn 2)
+(comment TBoilFn
+"(TBoilFn ?sub ?can) refers to the boiling point of substance ?sub within container ?can.
+The dependence on the container enables the pressure to be defined, which is physically
+necessary for capturing the dependence of boiling point on pressure.")
+(arity TemperatureFn 2)
+(arg1Isa TBoilFn PartiallyTangible)
+(arg2Isa TBoilFn Container)
+(resultIsa TBoilFn ContinuousQuantity)
+
+;; Rate parameters
+(isa HeatFlowRateFn Function-Denotational)
+(comment HeatFlowRateFn 
+"(HeatFlowRateFn ?p) denotes the heat flow rate of continuous process ?p.")
+(arity HeatFlowRateFn 1)
+(arg1Isa HeatFlowRateFn QPProcess)
+(resultIsa HeatFlowRateFn ContinuousQuantity)
+
+(isa LiquidFlowRateFn Function-Denotational)
+(comment LiquidFlowRateFn 
+"(LiquidFlowRateFn ?p) denotes the liquid flow rate of continuous process ?p.")
+(arity LiquidFlowRateFn 1)
+(arg1Isa LiquidFlowRateFn QPProcess)
+(resultIsa LiquidFlowRateFn ContinuousQuantity)
+
+(isa GasGenerationRateFn Function-Denotational)
+(comment GasGenerationRateFn 
+"(GasGenerationRateFn ?p) denotes the gas generation rate of continuous process ?p.")
+(arity GasGenerationRateFn 1)
+(arg1Isa GasGenerationRateFn QPProcess)
+(resultIsa GasGenerationRateFn ContinuousQuantity)
+
+(isa HeatAbsorbtionRateFn Function-Denotational)
+(comment HeatAbsorbtionRateFn 
+"(HeatAbsorbtionRateFn ?p) denotes the heat absorbtion rate of continuous process ?p.")
+(arity HeatAbsorbtionRateFn 1)
+(arg1Isa HeatAbsorbtionRateFn QPProcess)
+(resultIsa HeatAbsorbtionRateFn ContinuousQuantity)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Physobs
+
+(isa Physob Collection)
+(genls Physob PartiallyTangible)
+(comment Physob
+"Instances of Physob are things that are viewed as physical objects for the purposes of
+QP analyses in this domain theory.  Thus by considering something as a Physob or not, we
+ control whether or not it is included in models we build.")
+
+(isa VolumetricPhysob Collection)
+(genls VolumetricPhysob Physob)
+(comment VolumetricPhysob 
+"Instances of VolumetricPhysob are Physobs which have the quantities of volume and pressure.")
+(<== (hasQuantity ?obj ((QPQuantityFn Volume) ?obj)) (isa ?obj VolumetricPhysob))
+(<== (hasQuantity ?obj ((QPQuantityFn Pressure) ?obj)) (isa ?obj VolumetricPhysob))
+
+
+(isa ThermalPhysob Collection)
+(genls ThermalPhysob Physob)
+(comment ThermalPhysob 
+"Instances of ThermalPhysob are Physobs which have the quantities of heat and temperature.")
+(<== (hasQuantity ?obj (HeatFn ?obj)) (isa ?obj ThermalPhysob))
+(<== (hasQuantity ?obj (TemperatureFn ?obj)) (isa ?obj ThermalPhysob))
+
+(isa TemperatureSource Collection)
+(genls TemperatureSource ThermalPhysob)
+(comment TemperatureSource
+"Instances of TemperatureSource are thermal physobs with no causal relationship constraining
+temperature.  Thus the temperature cannot change, no matter how much the heat does.")
+
+(isa FiniteThermalPhysob Collection)
+(genls FiniteThermalPhysob ThermalPhysob)
+(comment FiniteThermalPhysob
+"Instances of FiniteThermalPhysob are thermal physobs that are not temperature sources.
+That is, changing their heat will cause their temperature to change.")
+;;; This rule is one way of expressing the default relationship.  Best way?  Don't know, but
+;;; it does nicely capture the intended pattern of reasoning.
+(<== (isa ?obj FiniteThermalPhysob) (isa ?obj ThermalPhysob)
+     (uninferredSentence (isa ?obj TemperatureSource)))
+;;; Consequences of being a finite thermal physob:
+(<== (sourceOfInfluence (qprop (TemperatureFn ?obj) (HeatFn ?obj))
+                        ?obj)
+     (isa ?obj FiniteThermalPhysob))
+(<== (qpCorrespondence (TemperatureFn ?obj) Zero
+                       (HeatFn ?obj) Zero) 
+     (isa ?obj FiniteThermalPhysob))
+
+;;; Other relationships
+(isa canContainSubstance TernaryRelation)
+(arg1Isa canContainSubstance Container)
+(arg2Isa canContainSubstance ChemicalCompoundTypeByChemicalSpecies)
+(arg3Isa canContainSubstance MatterTypeByPhysicalState)
+;; ***** ChemicalCompoundTypeByChemicalSpecies not quite right here, because it
+;; ***** doesn't include mixtures.  Check out the naive physics Mt for something better,
+;; ***** or add our own.
+(comment canContainSubstance
+    "(canContainSubstance ?c ?s ?p) indicates that container ?c can contain substance ?s
+in phase ?p.")
+(<== (hasQuantity ?obj (TBoilFn ?sub ?obj))
+    (canContainSubstance ?obj ?sub Liquid-StateOfMatter))
+(<== (hasQuantity ?obj (TBoilFn ?sub ?obj))
+     (canContainSubstance ?obj ?sub Gaseous-StateOfMatter))
+(<== (hasQuantity ?sub (TBoilFn ?sub ?obj))
+     (canContainSubstance ?obj ?sub Liquid-StateOfMatter))
+(<== (hasQuantity ?sub (TBoilFn ?sub ?obj))
+     (canContainSubstance ?obj ?sub Gaseous-StateOfMatter))
+
+;;; Inferring the existence of quantities
+(<== (hasQuantity ?obj (BottomHeightFn ?obj)) (isa ?obj Container))
+(<== (hasQuantity ?obj (TopHeightFn ?obj)) (isa ?obj Container))
+(<== (hasQuantity ?obj (MaxHeightFn ?obj)) (isa ?obj FluidPath))
+
+;;; Constraints on container height. This domain theory assumes that
+;;;  containers don't move or rotate.
+
+(<== (qGreaterThan (TopHeightFn ?obj) (BottomHeightFn ?obj))
+     (groundExpression ?obj)
+     (isa ?obj Container))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Paths
+;;
+;; N.B. Many of the specs of FluidConduit would only
+;; constrain the motion of liquids, not gases. Hence
+;; some subclasses are needed.
+
+(isa LiquidPath Collection)
+(genls LiquidPath FluidConduit)
+(comment LiquidPath
+"Instances of LiquidPath are entities through or in which liquid can travel.  The path imposes
+a constraint on the movement, as opposed to simply being the path it happened to take
+(e.g., the particular meandering of water droplets down an inclined plane).")
+(isa GasPath Collection)
+(genls GasPath FluidConduit)
+(comment GasPath
+"Instances of GasPath are entities through which gasses can travel.  The path constrains
+the movement of the gas, rather than just being the path though which gas happened to move.")
+
+(isa HeatPath Collection)
+(genls HeatPath Path-Spatial)
+(comment HeatPath
+"Instances of HeatPath are physical paths along which heat can flow.")
+(isa heatConnection Predicate)
+(arity heatConnection 3)
+(arg1Isa heatConnection HeatPath)
+(arg2Isa heatConnection ThermalPhysob)
+(arg3Isa heatConnection ThermalPhysob)
+(comment heatConnection
+"(heatConnection ?p ?s ?d) means that ?p is a heat path which connections source ?s to
+destination ?d.  In this domain theory, heat connections are assumed to be starting
+assumptions, computed by other means.  So for example the fact that heat paths are actually
+symmetric will be ignored, since we may want to ignore that possibility in the analysis
+at hand.")
+(<== (heatConnection ?heat-path ?heat-source ?cstuff)
+;; Heat connection exists to contained stuff by virtue of can
+;; N.B. assumes ?can isn't a total insulator -- if it were, how could it be
+;; part of a heat path?  In Gizmo version this was a model fragment.  
+     (isa ?cstuff ContainedStuff)
+     (containerOf ?cstuff ?can)
+     (activeMF ?cstuff)
+     (heatConnection ?heat-path ?heat-source ?can))
+(isa heatAligned Predicate)
+(arity heatAligned 1)
+(arg1Isa heatAligned HeatPath)
+(comment heatAligned
+"(heatAligned ?p) is true exactly when ?p is able to conduct heat.  Aligned is an engineering
+metaphorical term, meaning all the valves/switches are turned on, allowing flow.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model fragments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; As traditional with QP modeling languages, we take ?self to refer to
+;;; the model fragment instance itself.   Hard to do without this, since
+;;; quantities tied to the entity implied by the model fragment will also
+;;; need this as an argument, not just role relations.  But it is a bit
+;;; inelegant, requiring some specialization in systems that learn models.
+
+;; Participant role relations introduced in this domain theory
+;; These are often shared among model fragments
+
+(isa containerOf MFParticipantSlot)
+(arity containerOf 2)
+(genlPreds containerOf mfParticipant)
+(comment containerOf 
+  "(containerOf ?mfi ?c) indicates that the container of ?mfi is ?c.")
+(isa substanceOf MFParticipantSlot)
+(arity substanceOf 2)
+(genlPreds substanceOf mfParticipant)
+(comment substanceOf
+  "(substanceOf ?mfi ?s) indicates that the substance of ?mfi is ?s.")
+(isa phaseOf MFParticipantSlot)
+(arity phaseOf 2)
+(genlPreds phaseOf mfParticipant)
+(comment phaseOf
+  "(phaseOf ?mfi ?s) indicate that the phase of ?mfi is ?s.")
+;; For heat flow
+(isa sourceOfHeat MFParticipantSlot)
+(arity sourceOfHeat 2)
+(genlPreds sourceOfHeat mfParticipant)
+(comment sourceOfHeat
+"(sourceOfHeat ?mfi ?s) indicates that the source of heat for ?mfi is ?s.")
+(isa destinationOfHeat MFParticipantSlot)
+(arity destinationOfHeat 2)
+(genlPreds destinationOfHeat mfParticipant)
+(comment destinationOfHeat
+ "(destinationOfHeat ?mfi ?d) indicates that the destination of heat for ?mfi is ?s.")
+(isa pathOfHeat MFParticipantSlot)
+(arity pathOfHeat 2)
+(isa pathOfHeat MFParticipantSlot)
+(comment pathOfHeat
+ "(pathOfHeat ?mfi ?p) indicate that the path heat travels in ?mfi is ?p.")
+;; For liquid flow
+(isa sourceOfLiquid MFParticipantSlot)
+(arity sourceOfLiquid 2)
+(genlPreds sourceOfLiquid mfParticipant)
+(comment sourceOfLiquid
+"(sourceOfLiquid ?mfi ?s) indicates that the source of liquid for ?mfi is ?s.")
+(isa destinationOfLiquid MFParticipantSlot)
+(arity destinationOfLiquid 2)
+(genlPreds destinationOfLiquid mfParticipant)
+(comment destinationOfLiquid
+ "(destinationOfLiquid ?mfi ?d) indicates that the destination of liquid for ?mfi is ?s.")
+(isa pathOfLiquid MFParticipantSlot)
+(arity pathOfLiquid 2)
+(isa pathOfLiquid MFParticipantSlot)
+(comment pathOfLiquid
+ "(pathOfLiquid ?mfi ?p) indicate that the path liquid travels in ?mfi is ?p.")
+(isa sourceLiquid MFParticipantSlot)
+(arity sourceLiquid 2)
+(genlPreds pathOfLiquid mfParticipant)
+(comment sourceLiquid
+"(sourceLiquid ?mfi ?l) means that ?l is the liquid which is the source for ?mfi.")
+(isa destinationLiquid MFParticipantSlot)
+(arity destinationLiquid 2)
+(genlPreds destinationLiquid mfParticipant)
+(comment destinationLiquid
+"(destinationLiquid ?mfi ?l) means that ?l is the liquid which is the destination for ?mfi.")
+(isa liquidOf MFParticipantSlot)
+(arity liquidOf 2)
+(genlPreds liquidOf mfParticipant)
+(comment liquidOf
+"(liquidOf ?mfi ?l) means that ?l is the liquid particpating in ?mfi.")
+(isa gasOf MFParticipantSlot)
+(arity gasOf 2)
+(genlPreds gasOf mfParticipant)
+(comment gasOf
+"(gasOf ?mfi ?l) means that ?l is the gas particpating in ?mfi.")
+(isa heatFlowOf MFParticipantSlot)
+(arity heatFlowOf 2)
+(genlPreds heatFlowOf mfParticipant)
+(comment heatFlowOf
+"(heatFlowOf ?mfi ?l) means that ?l is the heat flow particpating in ?mfi.")
+(isa boilingOf MFParticipantSlot)
+(arity boilingOf 2)
+(genlPreds boilingOf mfParticipant)
+(comment boilingOf
+"(boilingOf ?mfi ?l) means that ?l is the boiling particpating in ?mfi.")
+
+
+;;; The model fragments themselves
+
+(isa ContainedStuffPossibility ConceptualModelFragmentType)
+(comment ContainedStuffPossibility
+  "Instances of ContainedStuffPossibility represent the potential for a contained
+fluid entity of a particular substance and phase inside a specific container.")
+;; Participants
+(mfTypeParticipant ContainedStuffPossibility ?can Container containerOf)
+(mfTypeParticipant ContainedStuffPossibility ?phase MatterTypeByPhysicalState
+                   phaseOf)
+(mfTypeParticipant ContainedStuffPossibility ?sub ChemicalCompoundTypeByChemicalSpecies
+                   substanceOf)
+(mfTypeCondition ContainedStuffPossibility
+                 (canContainSubstance ?can ?sub ?phase))
+(mfTypeBiconditionalConsequence ContainedStuffPossibility
+                                (hasQuantity ?self (AmountOfFn ?sub ?phase ?can)))
+(mfTypeConsequence ContainedStuffPossibility
+                   (hasQuantity ?sub (AmountOfFn ?sub ?phase ?can)))
+(mfTypeConsequence ContainedStuffPossibility
+                   (hasQuantity ?phase (AmountOfFn ?sub ?phase ?can)))
+(mfTypeConsequence ContainedStuffPossibility
+                   (hasQuantity ?can (AmountOfFn ?sub ?phase ?can)))
+(mfTypeConsequence ContainedStuffPossibility
+                   (qGreaterThanOrEqualTo (AmountOfFn ?sub ?phase ?can) Zero))
+
+(isa ContainedStuff PhysicalModelFragmentType)
+(comment ContainedStuff
+" An instance of ContainedStuff is a piece of stuff individuated by being in
+a particular container, and further according to phase and substance.  The
+water and steam inside a boiler are examples: Same place, same substance, different
+phase.")
+(mfTypeParticipant ContainedStuff ?can Container containerOf)
+(mfTypeParticipant ContainedStuff ?phase MatterTypeByPhysicalState phaseOf)
+(mfTypeParticipant ContainedStuff ?sub ChemicalCompoundTypeByChemicalSpecies
+                   substanceOf)
+(mfTypeParticipant ContainedStuff ?csp ContainedStuffPossibility mfParticipant)
+(mfTypeParticipantConstraint ContainedStuff (phaseOf ?csp ?phase))
+(mfTypeParticipantConstraint ContainedStuff (substanceOf ?csp ?sub))
+(mfTypeParticipantConstraint ContainedStuff (containerOf ?csp ?can))
+(mfTypeCondition ContainedStuff (qGreaterThan (AmountOfFn ?sub ?phase ?can) Zero))
+(mfTypeBiconditionalConsequence ContainedStuff (hasQuantity ?self ((QPQuantityFn Mass) ?self)))
+(mfTypeConsequence ContainedStuff (q= ((QPQuantityFn Mass) ?self)
+                                      (AmountOfFn ?sub ?phase ?can)))
+(mfTypeBiconditionalConsequence ContainedStuff (isa ?self VolumetricPhysob))
+(mfTypeBiconditionalConsequence ContainedStuff (isa ?self FiniteThermalPhysob))
+;;; Even though the implications above introduce the quantities, they do not
+;;; take into account the biconditional nature of quantities associated with
+;;; a model fragment: When that model fragment is inactive, they do not exist.
+;;; Need to add biconditional consequences for them.  Non-modular, alas.
+(mfTypeBiconditionalConsequence ContainedStuff (hasQuantity ?self ((QPQuantityFn Volume) ?self)))
+(mfTypeBiconditionalConsequence ContainedStuff (hasQuantity ?self ((QPQuantityFn Pressure) ?self)))
+(mfTypeBiconditionalConsequence ContainedStuff (hasQuantity ?self (HeatFn ?self)))
+(mfTypeBiconditionalConsequence ContainedStuff (hasQuantity ?self (TemperatureFn ?self)))
+
+(isa ContainedLiquid Collection)
+(genls ContainedLiquid LiquidTangibleThing)
+(comment ContainedLiquid
+ "Instances of ContainedLiquid are pieces of liquid individuated by being
+within a container.  Typically they are introduced by QP model fragments.
+The collection ContainedLiquid does not have ContainedStuff as a genl, 
+since then we would have two distinct instances, each of which is considered
+to be a physical object, for the same real entity.")
+
+(isa ContainedLiquidProperties ConceptualModelFragmentType)
+(comment ContainedLiquidProperties
+ "Instances of ContainedLiquidProperties describe the properties of a contained liquid.
+Its participants are the contained liquid entity itself, the substance, and the container.
+It introduces a quantity to represent its level, and explicit functions that tie mass
+to amountOf, and level to the mass and the container geometry as well.")
+(mfTypeParticipant ContainedLiquidProperties ?cliquid ContainedStuff
+                   liquidOf)
+(mfTypeParticipant ContainedLiquidProperties ?can Container
+                   containerOf)
+(mfTypeParticipant ContainedLiquidProperties ?sub
+                   ChemicalCompoundTypeByChemicalSpecies
+                   substanceOf)
+(mfTypeParticipantConstraint ContainedLiquidProperties (containerOf ?cliquid ?can))
+(mfTypeParticipantConstraint ContainedLiquidProperties
+                             (phaseOf ?cliquid Liquid-StateOfMatter))
+(mfTypeParticipantConstraint ContainedLiquidProperties (substanceOf ?cliquid ?sub))
+(mfTypeCondition ContainedLiquidProperties (activeMF ?cliquid))
+(mfTypeBiconditionalConsequence ContainedLiquidProperties (hasQuantity ?cliquid (LiquidLevelFn ?cliquid)))
+(mfTypeConsequence ContainedLiquidProperties (isa ?cliquid ContainedLiquid))
+(mfTypeConsequence ContainedLiquidProperties
+                   (qpExplicitFunction Mass<-AmountOfFn
+                                       ((QPQuantityFn Mass) ?cliquid)
+                                       (TheSet (AmountOfFn ?sub Liquid-StateOfMatter ?can))
+                                       (TheSet)))
+(mfTypeConsequence ContainedLiquidProperties
+                   (qpCorrespondence ((QPQuantityFn Mass) ?cliquid) Zero
+                                     (AmountOfFn ?sub Liquid-StateOfMatter ?can)
+                                              Zero))
+(mfTypeConsequence ContainedLiquidProperties
+                   (qpExplicitFunction Level<-MassFn
+                                       (LiquidLevelFn ?cliquid)
+                                       (TheSet ((QPQuantityFn Mass) ?cliquid))
+                                       (TheSet)))
+(mfTypeConsequence ContainedLiquidProperties
+                   (qpExplicitFunction Volume<-MassFn
+                                       ((QPQuantityFn Volume) ?cliquid)
+                                       (TheSet ((QPQuantityFn Mass) ?cliquid))
+                                       (TheSet)))
+(mfTypeConsequence ContainedLiquidProperties
+                   (qpCorrespondence (LiquidLevelFn ?cliquid)
+                                     (BottomHeightFn ?can)
+                                     ((QPQuantityFn Mass) ?cliquid) Zero))
+(mfTypeConsequence ContainedLiquidProperties
+                   (qpExplicitFunction Pressure<-LiquidLevelFn
+                                       ((QPQuantityFn Pressure) ?cliquid)
+                                       (TheSet (LiquidLevelFn ?cliquid))
+                                       (TheSet )))
+(mfTypeConsequence ContainedLiquidProperties
+                   (qLessThanOrEqualTo (TemperatureFn ?cliquid)
+                                       (TBoilFn ?sub ?can)))
+
+(isa ContainedGas Collection)
+(genls ContainedGas GaseousTangibleThing)
+(comment ContainedGas
+ "Instances of ContainedGas are pieces of gas individuated by being
+within a container.  Typically they are introduced by QP model fragments.
+The collection ContainedGas does not have ContainedStuff as a genl, 
+since then we would have two distinct instances, each of which is considered
+to be a physical object, for the same real entity.")
+
+
+(isa ContainedGasProperties ConceptualModelFragmentType)
+(comment ContainedGasProperties
+ "Instances of ContainedGasProperties describe the properties of a contained gas.
+Its participants are the contained gas entity itself, the substance, and the container.
+It describes the causal relationships between its pressure and its other properties,
+as well as constraining its boiling temperature.")
+(mfTypeParticipant ContainedGasProperties ?cgas ContainedStuff
+                   gasOf)
+(mfTypeParticipant ContainedGasProperties ?sub ChemicalCompoundTypeByChemicalSpecies
+                   substanceOf)
+(mfTypeParticipant ContainedGasProperties ?can Container
+                   containerOf)
+(mfTypeParticipantConstraint ContainedGasProperties (containerOf ?cgas ?can))
+(mfTypeParticipantConstraint ContainedGasProperties (substanceOf ?cgas ?sub))
+(mfTypeParticipantConstraint ContainedGasProperties (phaseOf ?cgas Gaseous-StateOfMatter))
+(mfTypeCondition ContainedGasProperties (activeMF ?cgas))
+(mfTypeConsequence ContainedGasProperties (isa ?cgas ContainedGas))
+(mfTypeConsequence ContainedGasProperties (qGreaterThanOrEqualTo (TemperatureFn ?cgas)
+                                                                 (TBoilFn ?sub ?can)))
+(mfTypeConsequence ContainedGasProperties
+                   (qprop ((QPQuantityFn Mass) ?cgas)
+                          (AmountOfFn ?sub Gaseous-StateOfMatter ?can)))
+(mfTypeConsequence ContainedGasProperties
+                   (qprop ((QPQuantityFn Pressure) ?cgas) ((QPQuantityFn Mass) ?cgas)))
+(mfTypeConsequence ContainedGasProperties 
+                   (qprop- ((QPQuantityFn Pressure) ?cgas) ((QPQuantityFn Volume) ?cgas)))
+(mfTypeConsequence ContainedGasProperties 
+                   (qprop ((QPQuantityFn Pressure) ?cgas) (HeatFn ?cgas)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Continuous Processes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa HeatFlowProcess QPProcessType)
+(comment HeatFlowProcess
+"Instances of HeatFlowProcess are heat flows that are individuated by happening
+between a particular source, destination, and path.  Instances are active when the path
+can conduct heat and when the temperature of the source is greater than the temperature
+of the destination.  Each instance has a rate, which is constrained by the temperature
+difference, and directly influences the heats of the source and destination.")
+(mfTypeParticipant HeatFlowProcess ?src ThermalPhysob sourceOfHeat)
+(mfTypeParticipant HeatFlowProcess ?dst ThermalPhysob destinationOfHeat)
+(mfTypeParticipant HeatFlowProcess ?path HeatPath pathOfHeat)
+(mfTypeParticipantConstraint HeatFlowProcess (heatConnection ?path ?src ?dst))
+(mfTypeCondition HeatFlowProcess (heatAligned ?path))
+(mfTypeCondition HeatFlowProcess (qGreaterThan (TemperatureFn ?src)
+                                               (TemperatureFn ?dst)))
+(mfTypeBiconditionalConsequence HeatFlowProcess (hasQuantity ?self (HeatFlowRateFn ?self)))
+(mfTypeConsequence HeatFlowProcess (q= (HeatFlowRateFn ?self)
+                                       (QDifferenceFn (TemperatureFn ?src)
+                                                      (TemperatureFn ?dst))))
+(mfTypeConsequence HeatFlowProcess (i- (HeatFn ?src) (HeatFlowRateFn ?self)))
+(mfTypeConsequence HeatFlowProcess (i+ (HeatFn ?dst) (HeatFlowRateFn ?self)))
+
+(isa liquidConnection TernaryPredicate)
+(arity liquidConnection 3)
+(comment liquidConnection "(liquidConnection ?path ?source ?dest) indicates that path ?path
+ supports liquid flow from ?source to ?dest.  Since there can be one-way paths, this relationship
+ is not commutative in its second and third arguments.")
+(arg1Isa liquidConnection LiquidPath)
+(arg2Isa liquidConnection Container)
+(arg3Isa liquidConnection Container)
+
+(isa liquidAligned UnaryPredicate)
+(arity liquidAligned 1)
+(comment liquidAligned "(liquidAligned ?p) is true exactly when there is nothing preventing
+ liquid flow in path ?p.  Paths are more abstract than piping systems, in that a piping system
+ might have an insertable one-way valve, in which case one direction would be aligned for
+ liquid flow while the other would not be.")
+(arg1Isa liquidAligned LiquidPath)
+
+(isa LiquidFlowProcess QPProcessType)
+(comment LiquidFlowProcess
+"Instances of LiquidFlowProcess are liquid flows that are individuated by happening
+between a particular source, destination, and path.  Instances are active when the path
+can conduct liquid and when the pressure of the source is greater than the pressure
+of the destination.  Each instance has a rate, which is constrained by the pressure
+difference, and directly influences the amounts of of the source and destination.
+We further assume no chemical reactions or mixing, essentially single-substance situations.")
+(mfTypeParticipant LiquidFlowProcess ?src Container sourceOfLiquid)
+(mfTypeParticipant LiquidFlowProcess ?dst Container destinationOfLiquid)
+(mfTypeParticipant LiquidFlowProcess ?path LiquidPath pathOfLiquid)
+(mfTypeParticipant LiquidFlowProcess ?sub ChemicalCompoundTypeByChemicalSpecies substanceOf)
+(mfTypeParticipant LiquidFlowProcess ?src-stuff ContainedLiquid sourceLiquid) 
+(mfTypeParticipant LiquidFlowProcess ?dst-stuff ContainedLiquid destinationLiquid)
+(mfTypeParticipantConstraint LiquidFlowProcess (liquidConnection ?path ?src ?dst))
+(mfTypeParticipantConstraint LiquidFlowProcess (containerOf ?src-stuff ?src))
+(mfTypeParticipantConstraint LiquidFlowProcess (containerOf ?dst-stuff ?dst))
+(mfTypeParticipantConstraint LiquidFlowProcess (substanceOf ?src-stuff ?sub))
+(mfTypeParticipantConstraint LiquidFlowProcess (substanceOf ?dst-stuff ?sub))
+(mfTypeCondition LiquidFlowProcess (liquidAligned ?path))
+(mfTypeCondition LiquidFlowProcess (qGreaterThan ((QPQuantityFn Pressure) ?src-stuff)
+                                                 ((QPQuantityFn Pressure) ?dst-stuff)))
+(mfTypeBiconditionalConsequence LiquidFlowProcess (hasQuantity ?self (LiquidFlowRateFn ?self)))
+(mfTypeConsequence LiquidFlowProcess (q= (LiquidFlowRateFn ?self)
+                                         (QDifferenceFn ((QPQuantityFn Pressure) ?src-stuff)
+                                                        ((QPQuantityFn Pressure) ?dst-stuff))))
+(mfTypeConsequence LiquidFlowProcess
+                   (i- (AmountOfFn ?sub Liquid-StateOfMatter ?src)
+                       (LiquidFlowRateFn ?self)))
+(mfTypeConsequence LiquidFlowProcess 
+                   (i+ (AmountOfFn ?sub Liquid-StateOfMatter ?dst)
+                       (LiquidFlowRateFn ?self)))
+
+(isa BoilingProcess QPProcessType)
+(comment BoilingProcess
+"Boiling occurs when a liquid reaches its boiling point.  The liquid is transformed into
+a gas, which is modeled by a pair of direct influences implementing a transfer pattern.
+The energy required to do the boiling is provided by a heat flow into the liquid, which
+is presumed to be driving the process.")
+(mfTypeParticipant BoilingProcess ?cliquid ContainedLiquid liquidOf)
+(mfTypeParticipant BoilingProcess ?sub ChemicalCompoundTypeByChemicalSpecies substanceOf)
+(mfTypeParticipant BoilingProcess ?can Container containerOf)
+(mfTypeParticipant BoilingProcess ?heat-flow HeatFlowProcess heatFlowOf)
+(mfTypeParticipantConstraint BoilingProcess (substanceOf ?cliquid ?sub))
+(mfTypeParticipantConstraint BoilingProcess (containerOf ?cliquid ?can))
+(mfTypeParticipantConstraint BoilingProcess (destinationOfHeat ?heat-flow ?cliquid))
+(mfTypeCondition BoilingProcess
+                 (qGreaterThanOrEqualTo (TemperatureFn ?cliquid) (TBoilFn ?sub ?can)))
+(mfTypeCondition BoilingProcess (activeMF ?heat-flow))
+(mfTypeBiconditionalConsequence BoilingProcess (hasQuantity ?self (GasGenerationRateFn ?self)))
+(mfTypeConsequence BoilingProcess (qGreaterThan (GasGenerationRateFn ?self) Zero))
+(mfTypeConsequence BoilingProcess (i+ (AmountOfFn ?sub Gaseous-StateOfMatter ?can)
+                                      (GasGenerationRateFn ?self)))
+(mfTypeConsequence BoilingProcess (i- (AmountOfFn ?sub Liquid-StateOfMatter ?can)
+                                      (GasGenerationRateFn ?self)))
+(mfTypeConsequence BoilingProcess (i- (HeatFn ?cliquid) (HeatFlowRateFn ?heat-flow)))
+
+(isa LatentHeatAbsorptionBySteamProcess QPProcessType)
+(comment LatentHeatAbsorptionBySteamProcess
+"LatentHeatAbsorptionBySteamProcess expresses the tendency of producing gas to absorb
+the heat that is being transferred to the steam from its surroundings when boiling occurs.
+If the boiling point is constant, this leads to constant temperatures for the liquid and
+the gas components of the mixture.  This model implicitly assumes single substances and
+ignores chemical reactions.")
+(mfTypeParticipant LatentHeatAbsorptionBySteamProcess ?boiling BoilingProcess boilingOf)
+(mfTypeParticipant LatentHeatAbsorptionBySteamProcess ?cliquid ContainedLiquid liquidOf)
+(mfTypeParticipant LatentHeatAbsorptionBySteamProcess ?cgas ContainedGas gasOf)
+(mfTypeParticipant LatentHeatAbsorptionBySteamProcess ?sub
+                   ChemicalCompoundTypeByChemicalSpecies substanceOf)
+(mfTypeParticipant LatentHeatAbsorptionBySteamProcess ?can Container containerOf)
+(mfTypeParticipant LatentHeatAbsorptionBySteamProcess ?heat-flow HeatFlowProcess heatFlowOf)
+(mfTypeParticipantConstraint LatentHeatAbsorptionBySteamProcess (liquidOf ?boiling ?cliquid))
+(mfTypeParticipantConstraint LatentHeatAbsorptionBySteamProcess (substanceOf ?cliquid ?sub))
+(mfTypeParticipantConstraint LatentHeatAbsorptionBySteamProcess (substanceOf ?cgas ?sub))
+(mfTypeParticipantConstraint LatentHeatAbsorptionBySteamProcess (containerOf ?cliquid ?can))
+(mfTypeParticipantConstraint LatentHeatAbsorptionBySteamProcess (containerOf ?cgas ?can))
+(mfTypeParticipantConstraint LatentHeatAbsorptionBySteamProcess
+                             (destinationOfHeat ?heat-flow ?cgas))
+(mfTypeCondition LatentHeatAbsorptionBySteamProcess (activeMF ?boiling))
+(mfTypeCondition LatentHeatAbsorptionBySteamProcess (activeMF ?heat-flow))
+(mfTypeCondition LatentHeatAbsorptionBySteamProcess (activeMF ?cliquid))
+(mfTypeCondition LatentHeatAbsorptionBySteamProcess (activeMF ?cgas))
+;;;(mfTypeBiconditionalConsequence LatentHeatAbsorptionBySteamProcess
+;;;                   (hasQuantity ?self (HeatAbsorbtionRateFn ?self)))
+;;;(mfTypeConsequence LatentHeatAbsorptionBySteamProcess 
+;;;                   (qGreaterThan (HeatAbsorbtionRateFn ?self) Zero))                                          
+(mfTypeConsequence LatentHeatAbsorptionBySteamProcess 
+                   (i- (HeatFn ?cgas) (HeatFlowRateFn ?heat-flow)))
+
+(isa RapidThermalEquilibriumWithinContainer ConceptualModelFragmentType)
+(mfTypeParticipant RapidThermalEquilibriumWithinContainer ?cliquid ContainedLiquid liquidOf)
+(mfTypeParticipant RapidThermalEquilibriumWithinContainer ?cgas ContainedGas gasOf)
+(mfTypeParticipant RapidThermalEquilibriumWithinContainer ?sub
+                   ChemicalCompoundTypeByChemicalSpecies substanceOf)
+(mfTypeParticipant RapidThermalEquilibriumWithinContainer ?can Container containerOf)
+(mfTypeParticipantConstraint RapidThermalEquilibriumWithinContainer (substanceOf ?cliquid ?sub))
+(mfTypeParticipantConstraint RapidThermalEquilibriumWithinContainer (substanceOf ?cgas ?sub))
+(mfTypeParticipantConstraint RapidThermalEquilibriumWithinContainer (containerOf ?cliquid ?can))
+(mfTypeParticipantConstraint RapidThermalEquilibriumWithinContainer (containerOf ?cgas ?can))
+(mfTypeCondition RapidThermalEquilibriumWithinContainer (activeMF ?cliquid))
+(mfTypeCondition RapidThermalEquilibriumWithinContainer (activeMF ?cgas))
+(mfTypeConsequence RapidThermalEquilibriumWithinContainer
+                   (qEqualTo (TemperatureFn ?cliquid)
+                             (TemperatureFn ?cgas)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

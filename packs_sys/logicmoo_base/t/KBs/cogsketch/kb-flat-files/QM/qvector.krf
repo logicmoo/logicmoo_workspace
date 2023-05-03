@@ -1,0 +1,456 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qvector.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: July 7, 2008 15:44:29
+;;;;   Purpose: Qualitative mechanics facts for Design Buddy.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+;;;-----------------------
+;;; qualitatative vector
+;;;-----------------------
+
+(isa Sense Collection)
+;;;(genls Sense ScalarInterval) 
+
+(comment Sense
+ "Sense is the collection of symbols used to denote qualitative values, like
+  Plus, Minus, Zero, and Ambig.")
+
+(isa Plus Sense)
+(isa Minus Sense)
+(isa Zero Sense)
+(isa Ambig Sense)
+
+(isa inverseSense BinaryPredicate)
+(arity inverseSense 2)
+(arg1Isa inverseSense Sense)
+(arg2Isa inverseSense Sense)
+
+(comment inverseSense
+ "inverseSense is true exactly when its arguments are qualitative values that
+  are opposite, e.g., plus/minus.")
+
+(inverseSense Plus Minus)
+(inverseSense Minus Plus)
+
+(isa QualitativeVector Collection)
+(genls QualitativeVector VectorInterval)
+(genls QualitativeVector SpatialThing)
+
+(genls 2DQVector QualitativeVector)
+(genls 3DQVector QualitativeVector)
+
+
+(comment QualitativeVector
+ "QualiativeVector is the collection of vectors whose components are
+  qualitative values.")
+(comment 2DQVector
+ "2dQualitativeVector is the collection of two dimensional qualitative vectors.")  
+(comment 3DQVector
+ "3dQualitativeVector is the collection of three dimensional qualitative vectors.") 
+
+(genls 2DQDirection 2DQVector)
+(comment 2DQDirection 
+ "2DQDirection is the set of non-ambiguous/zero two dimensional qualitative vectors.")
+
+(genls 2DDiagonal 2DQDirection)
+(comment 2DDiagonal 
+ "2DDiagonal is the set of diagonal two dimensional qualitative vectors.")
+
+(genls 2DNonDiagonal 2DQDirection)
+(comment 2DNonDiagonal 
+ "2DNonDiagonal is the set of non-diagonal two dimensional qualitative vectors.")
+
+(isa xSense BinaryPredicate)
+(arity xSense 2)
+(arg1Isa xSense QualitativeVector)
+(arg2Isa xSense Sense)
+
+(isa ySense BinaryPredicate)
+(arity ySense 2)
+(arg1Isa ySense QualitativeVector)
+(arg2Isa ySense Sense)
+
+;;;--------------------------
+;;; 8 directions in 2D space
+;;; Nielsen Thesis, page 13
+
+(isa Right 2DQVector)
+(isa Right 2DQDirection)
+(isa Right 2DNonDiagonal)
+(xSense Right Plus)
+(ySense Right Zero)
+
+(isa Quad1 2DQVector)
+(isa Quad1 2DQDirection)
+(isa Quad1 2DDiagonal)
+(xSense Quad1 Plus)
+(ySense Quad1 Plus)
+
+(isa Up 2DQVector)
+(isa Up 2DQDirection)
+(isa Up 2DNonDiagonal)
+(xSense Up Zero)
+(ySense Up Plus)
+
+(isa Quad2 2DQVector)
+(isa Quad2 2DQDirection)
+(isa Quad2 2DDiagonal)
+(xSense Quad2 Minus)
+(ySense Quad2 Plus)
+
+(isa Left 2DQVector)
+(isa Left 2DQDirection)
+(isa Left 2DNonDiagonal)
+(xSense Left Minus)
+(ySense Left Zero)
+
+(isa Quad3 2DQVector)
+(isa Quad3 2DQDirection)
+(isa Quad3 2DDiagonal)
+(xSense Quad3 Minus)
+(ySense Quad3 Minus)
+
+(isa Down 2DQVector)
+(isa Down 2DQDirection)
+(isa Down 2DNonDiagonal)
+(xSense Down Zero)
+(ySense Down Minus)
+
+(isa Quad4 2DQVector)
+(isa Quad4 2DQDirection)
+(isa Quad4 2DDiagonal)
+(xSense Quad4 Plus)
+(ySense Quad4 Minus)
+
+(isa ZeroQVector 2DQVector)
+(xSense ZeroQVector Zero)
+(ySense ZeroQVector Zero)
+
+(isa AmbigQVector 2DQVector) ;;what about cases where only one sense is ambig?
+(xSense AmbigQVector Ambig)
+(ySense AmbigQVector Ambig)
+
+;;;------------------
+;;; Vector Sum
+
+(isa senseSum TernaryPredicate)
+(comment senseSum "senseSum is true iff the sense sum of the the first two 
+arguments is the third argument.")
+(arity senseSum 3)
+(arg1Isa senseSum Sense)
+(arg2Isa senseSum Sense)
+(arg3Isa senseSum Sense)
+
+(senseSum Plus Plus Plus)
+(senseSum Plus Zero Plus)
+(senseSum Plus Minus Ambig)
+(senseSum Plus Ambig Ambig)
+(senseSum Zero Plus Plus)
+(senseSum Zero Zero Zero)
+(senseSum Zero Minus Minus)
+(senseSum Zero Ambig Ambig)
+(senseSum Minus Plus Ambig)
+(senseSum Minus Zero Minus)
+(senseSum Minus Minus Minus)
+(senseSum Minus Ambig Ambig)
+(senseSum Ambig Plus Ambig)
+(senseSum Ambig Zero Ambig)
+(senseSum Ambig Minus Ambig)
+(senseSum Ambig Ambig Ambig)
+
+
+(isa 2DQVectorSum TernaryPredicate)
+(comment 2DQVectorSum "2DQVectorSum is true iff the sum of the the first 
+argument vector and the second argument vector is the third argument.")
+(arity 2DQVectorSum 3)
+(arg1Isa 2DQVectorSum QualitativeVector)
+(arg2Isa 2DQVectorSum QualitativeVector)
+(arg3Isa 2DQVectorSum QualitativeVector)
+
+;; Todo: finish this list of facts or make a rule that does it.
+;(2DQVectorSum Quad1 Right Quad1)
+;(2DQVectorSum Quad1 Up Quad1)
+;(2DQVectorSum Up Right Quad1)
+
+;(2DQVectorSum Quad2 Left Quad2)
+;(2DQVectorSum Quad1 Up Quad2)
+;(2DQVectorSum Up Left Quad2)
+
+
+;;------------------------
+;;; openHalfPlane
+
+(isa openHalfPlane BinaryPredicate)
+(comment openHalfPlane "openHalfPlane is true iff the sign vector dot product of 
+the first argument and the second argument is +.")
+(arity openHalfPlane 2)
+(arg1Isa openHalfPlane QualitativeVector)
+(arg2Isa openHalfPlane QualitativeVector)
+
+(openHalfPlane Right Quad4) 
+(openHalfPlane Right Right) 
+(openHalfPlane Right Quad1) 
+(openHalfPlane Quad1 Right)
+(openHalfPlane Quad1 Quad1) 
+(openHalfPlane Quad1 Up) 
+(openHalfPlane Up Quad1) 
+(openHalfPlane Up Up) 
+(openHalfPlane Up Quad2) 
+(openHalfPlane Quad2 Up)
+(openHalfPlane Quad2 Quad2) 
+(openHalfPlane Quad2 Left) 
+(openHalfPlane Left Quad2)
+(openHalfPlane Left Left)
+(openHalfPlane Left Quad3) 
+(openHalfPlane Quad3 Left)
+(openHalfPlane Quad3 Quad3) 
+(openHalfPlane Quad3 Down)
+(openHalfPlane Down Quad3)
+(openHalfPlane Down Down)
+(openHalfPlane Down Quad4) 
+(openHalfPlane Quad4 Down)
+(openHalfPlane Quad4 Quad4) 
+(openHalfPlane Quad4 Right)
+
+(isa closedHalfPlane BinaryPredicate)
+(comment closedHalfPlane "closedHalfPlane is like openHalfPlane, but also
+ includes the line defining the plane")
+(arity closedHalfPlane 2)
+(arg1Isa closedHalfPlane QualitativeVector)
+(arg2Isa closedHalfPlane QualitativeVector)
+(genlPreds openHalfPlane closedHalfPlane)
+
+(closedHalfPlane Right Up)
+(closedHalfPlane Right Down)
+(closedHalfPlane Left Up)
+(closedHalfPlane Left Down)
+(closedHalfPlane Up Right)
+(closedHalfPlane Up Left)
+(closedHalfPlane Down Right)
+(closedHalfPlane Down Left)
+
+;;;---------------------
+;;; inverseVector
+
+(isa inverseVector SymmetricBinaryPredicate)
+(comment inverseVector "inverseVector is true iff the two vectors are opposite.")
+(arity inverseVector 2)
+(arg1Isa inverseVector QualitativeVector)
+(arg2Isa inverseVector QualitativeVector)
+
+(inverseVector Right Left)
+(inverseVector Quad1 Quad3)
+(inverseVector Up Down)
+(inverseVector Quad2 Quad4)
+(inverseVector Left Right)
+(inverseVector Quad3 Quad1)
+(inverseVector Down Up)
+(inverseVector Quad4 Quad2)
+
+;;;----------------------
+;;; rotate90
+
+
+(isa RotVector Collection)
+(genls RotVector Thing)
+(comment RotVector
+ "RotVector is the collection of symbols used to denote direction of rotation, 
+  like Counter-Clockwise and Clockwise.")
+
+(isa RotDirection Collection)
+(genls RotDirection RotVector)
+(comment RotDirection
+ "RotDirection is the set of non-zero/ambiguous RotVectors.")
+
+(isa rotSense BinaryPredicate)
+(arity rotSense 2)
+(arg1Isa rotSense RotVector)
+(arg2Isa rotSense Sense)
+
+(isa CW RotDirection)
+(rotSense CW Plus)
+
+(isa CCW RotDirection)
+(rotSense CCW Minus)
+
+(isa ZeroRot RotVector)
+(rotSense ZeroRot Zero)
+
+(isa AmbigRot RotVector)
+(rotSense AmbigRot Ambig)
+
+(isa inverseRotDirection SymmetricBinaryPredicate)
+(comment inverseRotDirection
+ "inverseRotDirection is true exactly when its arguments are directions of rotation 
+  that are opposite, e.g., CW/CCW.")
+(arity inverseRotDirection 2)
+(arg1Isa inverseRotDirection RotDirection)
+(arg2Isa inverseRotDirection RotDirection)
+(genlPreds inverseRotDirection inverseVector)
+
+(inverseRotDirection CW CCW)
+(inverseRotDirection CCW CW) 
+
+(isa rotate90 TernaryPredicate)
+(comment rotate90 "rotate90 is true iff the second argument vector is perpendicular to 
+ the first argument vector by rotation in direction of the third argument.") 
+(arity rotate90 3)
+(arg1Isa rotate90 2DQVector) 
+(arg2Isa rotate90 2DQVector) 
+(arg3Isa rotate90 RotDirection)
+
+(rotate90 Right Down CW)
+(rotate90 Quad1 Quad4 CW)
+(rotate90 Up Right CW)
+(rotate90 Quad2 Quad1 CW)
+(rotate90 Left Up CW)
+(rotate90 Quad3 Quad2 CW)
+(rotate90 Down Left CW)
+(rotate90 Quad4 Quad3 CW) 
+
+(rotate90 Right Up CCW)
+(rotate90 Quad1 Quad2 CCW)
+(rotate90 Up Left CCW)
+(rotate90 Quad2 Quad3 CCW)
+(rotate90 Left Down CCW)
+(rotate90 Quad3 Quad4  CCW)
+(rotate90 Down Right CCW)
+(rotate90 Quad4 Quad1 CCW) 
+
+
+(isa rotate45 TernaryPredicate)
+(comment rotate45 "rotate45 is true iff the second argument vector is 45 
+ degrees from the first argument vector by rotation in direction of the third 
+ argument.") 
+(arity rotate45 3)
+(arg1Isa rotate45 2DQVector) 
+(arg2Isa rotate45 2DQVector) 
+(arg3Isa rotate45 RotDirection)
+
+(rotate45 Right Quad4 CW)
+(rotate45 Quad1 Right CW)
+(rotate45 Up Quad1 CW)
+(rotate45 Quad2 Up CW)
+(rotate45 Left Quad2 CW)
+(rotate45 Quad3 Left CW)
+(rotate45 Down Quad3 CW)
+(rotate45 Quad4 Down CW) 
+
+(rotate45 Right Quad1 CCW)
+(rotate45 Quad1 Up CCW)
+(rotate45 Up Quad2 CCW)
+(rotate45 Quad2 Left CCW)
+(rotate45 Left Quad3 CCW)
+(rotate45 Quad3 Down  CCW)
+(rotate45 Down Quad4 CCW)
+(rotate45 Quad4 Right CCW)
+
+
+(isa qOrientation BinaryPredicate)
+(comment qOrientation "qOrientation is true iff the second argument is the 
+ qualitative direction in which Thing is oriented.  Used for arrows in QM.")
+(arity qOrientation 2)
+(arg1Isa qOrientation Thing)
+(arg2Isa qOrientation QualitativeVector)
+
+;;;----------------------
+;;; Axes
+
+(isa QVAxis LinearObjectConcept)
+(isa QVAxis SpatiallyDisjointObjectType)
+(isa QVAxis SpatialThingTypeByGeometricShape)
+(genls QVAxis Axis)
+(comment QVAxis "QVAxis is the set of axes in a qualitative plane or space.")
+
+(isa LeftRightAxis QVAxis)
+(isa DownUpAxis QVAxis)
+(isa Quad2Quad4Axis QVAxis)
+(isa Quad3Quad1Axis QVAxis)
+
+(perpendicular LeftRightAxis DownUpAxis)
+(perpendicular Quad2Quad4Axis Quad3Quad1Axis)
+
+;;; 3D
+(isa InOutAxis QVAxis)
+
+
+(isa qvAxisAligned BinaryPredicate)
+(genlPreds qvAxisAligned aligned)  ;;; does Axis actually genls SpatialThing??
+(arity qvAxisAligned 2)
+(arg1Isa qvAxisAligned QualitativeVector)
+(arg2Isa qvAxisAligned QVAxis)
+(comment qvAxisAligned 
+  "(qvAxisAligned ?vector ?axis) is true when the QualitativeVector is aligned with the QVAxis.")
+
+(qvAxisAligned Left LeftRightAxis)
+(qvAxisAligned Right LeftRightAxis)
+(qvAxisAligned Down DownUpAxis)
+(qvAxisAligned Up DownUpAxis)
+(qvAxisAligned Quad2 Quad2Quad4Axis)
+(qvAxisAligned Quad4 Quad2Quad4Axis)
+(qvAxisAligned Quad3 Quad3Quad1Axis)
+(qvAxisAligned Quad1 Quad3Quad1Axis)
+
+
+(isa qvAxisAlignedSense TernaryPredicate)
+(arity qvAxisAlignedSense 3)
+(arg1Isa qvAxisAlignedSense QVAxis)
+(arg2Isa qvAxisAlignedSense QualitativeVector)
+(arg3Isa qvAxisAlignedSense Sense)
+(comment qvAxisAlignedSense
+  "Indicates the conventional senses associated with directions along a particular axis, e.g.
+   (qvAxisAlignedSense LeftRightAxis Left Minus) and (qvAxisAlignedSense LeftRightAxis Right Plus).")
+
+(qvAxisAlignedSense LeftRightAxis Left Minus)
+(qvAxisAlignedSense LeftRightAxis Right Plus)
+(qvAxisAlignedSense DownUpAxis Down Minus)
+(qvAxisAlignedSense DownUpAxis Up Plus)
+(qvAxisAlignedSense Quad2Quad4Axis Quad2 Minus)
+(qvAxisAlignedSense Quad2Quad4Axis Quad4 Plus)
+(qvAxisAlignedSense Quad3Quad1Axis Quad3 Minus)
+(qvAxisAlignedSense Quad3Quad1Axis Quad1 Plus)
+
+
+(isa majorAxis UnaryPredicate)
+(arity majorAxis 1)
+(arg1Isa majorAxis Axis)
+(comment majorAxis 
+  "(majorAxis ?axis) is true when ?axis is a major axis in the current context. 
+   Used in QQR.")
+
+
+
+
+
+;;; transformations across views
+
+(isa qvPoseAxisMapping QuaternaryPredicate)
+(arity qvPoseAxisMapping 4)
+(arg1Isa qvPoseAxisMapping SubSketchPoseCollection)
+(arg2Isa qvPoseAxisMapping SubSketchPoseCollection)
+(arg3Isa qvPoseAxisMapping QVAxis)
+(arg4Isa qvPoseAxisMapping QVAxis)
+
+(isa qvPoseVectorMapping QuaternaryPredicate)
+(arity qvPoseVectorMapping 4)
+(arg1Isa qvPoseVectorMapping SubSketchPoseCollection)
+(arg2Isa qvPoseVectorMapping SubSketchPoseCollection)
+(arg3Isa qvPoseVectorMapping QualitativeVector)
+(arg4Isa qvPoseVectorMapping QualitativeVector)
+
+;;;
+
+(isa safeQualitativeVectorBetween TernaryPredicate)
+(comment safeQualitativeVectorBetween 
+  "Rules written for this wrapper for qualitativeVectorBetween allows the query
+   to take place in contexts genlMt from the nusketch bundle case.")
+(genlPreds safeQualitativeVectorBetween qualitativeVectorBetween)
+

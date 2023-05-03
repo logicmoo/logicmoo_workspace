@@ -1,0 +1,49 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: suggestions-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:20:39
+;;;;   Purpose: Creating suggestions based on problem-specific data
+;;;; ---------------------------------------------------------------------------
+;;;;  Modified: Thursday, August 31, 2006 at 10:38:46 by mek802
+;;;; ---------------------------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Deducing suggestions from information in the problem
+;;; These very specific suggestions exploit knowledge about the problem context to be more
+;;; targeted.  The predicate
+;;; (data::suggestForSpecifics ,goal-form ?name ?trigger)
+;;; is sought via query during solve operations.
+
+;;;(chainerContains (ChainerFn QMOutcomeChainer)
+;;;                 (<== (suggestForSpecifics  
+;;;                       (solveForNumericalValue ?parameter ?i-value ?equation-set)
+;;;                       SolveEquationForNumericalValue
+;;;                       (solveEquationForNumericalValue ?new-equation ?parameter ?i-value
+;;;                                                       ?new-equation-set))
+;;; NOTE findIndependentEquationFor now passes around the preconditions
+;;;                      (findIndependentEquationFor
+;;;                       ?parameter ?equation-set ?new-equation ?new-equation-set)))
+
+
+;;; Should be redundant with generated equations
+;;;(chainerContains (ChainerFn QMOutcomeChainer)
+;;;                 (<== (suggestForSpecifics
+;;;                       (solveForNumericalValue (MeasurementAtFn ?q ?e)
+;;;                                               ?value ?equation-set)
+;;;                       SolveRelatedQuantityForNumericalValue
+;;;                       (solveRelatedQuantityForNumericalValue (MeasurementAtFn ?q ?e)
+;;;                                                              (MeasurementAtFn ?q ?other-e)
+;;;                                                       ?value ?equation-set))
+;;;                      (valuesUsefulAcrossEvents ?q ?e ?other-e)
+;;;                      (different ?e ?other-e)
+;;;                      (independentEquationFrom (mathEquals (MeasurementAtFn ?q ?e)
+;;;                                                           (MeasurementAtFn ?q ?other-e))
+;;;                                               ?equation-set)))
+
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

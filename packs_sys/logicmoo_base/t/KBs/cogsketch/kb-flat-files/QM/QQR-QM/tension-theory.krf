@@ -1,0 +1,75 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: tension-theory.meld
+;;;;    System: CogSketch
+;;;;    Author: Maria Chang
+;;;;   Created: June 23, 2011 14:48:03
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory TensionTheoryMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment TensionTheoryMt "QQR domain theory for vertical, horizontal and net tension.")
+(genlMt TensionTheoryMt QPTheoryMt)
+(genlMt TensionTheoryMt CompositionalModelingMt)
+(genlMt ConceptualPhysicsDomainTheoryCollectorMt TensionTheoryMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; Rules for inferring Tension depend on the physical configuration
+;; (e.g. something being hung by a rope)
+;;;(isa XTensionFn Function-Denotational)
+;;;(comment XTensionFn
+;;;  "(XTensionFn ?a) refers to the horizontal tension in ?a.  
+;;;   ?a must be an instance of #$Flexible.")
+;;;(arity XTensionFn 1)
+;;;(arg1Isa XTensionFn Flexible)
+;;;(resultIsa XTensionFn ContinuousQuantity)
+;;;
+;;;(<== (hasQuantity ?obj (XTensionFn ?obj))
+;;;     (isa ?obj Flexible))
+;;;
+;;;
+;;;(isa YTensionFn Function-Denotational)
+;;;(comment YTensionFn
+;;;  "(YTensionFn ?a) refers to the horizontal tension in ?a. 
+;;;   ?a must be an instance of #$Flexible.")
+;;;(arity YTensionFn 1)
+;;;(arg1Isa YTensionFn Flexible)
+;;;(resultIsa YTensionFn ContinuousQuantity)
+;;;
+;;;(<== (hasQuantity ?obj (YTensionFn ?obj))
+;;;     (isa ?obj Flexible))
+;;;
+;;;(isa NetTensionFn Function-Denotational)
+;;;(comment NetTensionFn
+;;;  "(NetTensionFn ?a) refers to the net tension in ?a.  
+;;;   ?a must be an instance of #$Flexible.")
+;;;(arity NetTensionFn 1)
+;;;(arg1Isa NetTensionFn Flexible)
+;;;(resultIsa NetTensionFn ContinuousQuantity)
+;;;
+;;;(<== (hasQuantity ?obj (NetTensionFn ?obj))
+;;;     (isa ?obj Flexible))
+
+
+
+     
+     
+     
+     
+     
+     
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

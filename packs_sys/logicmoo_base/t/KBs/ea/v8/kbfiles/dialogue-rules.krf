@@ -1,0 +1,200 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ----------------------------------------------------------------------------
+;;;; File name: dialogue-rules.meld
+;;;;    System: EA
+;;;;    Author: Emmett Tomai
+;;;;   Created: November 18, 2008 15:55:05
+;;;;   Purpose: 
+;;;; ----------------------------------------------------------------------------
+;;;;  Modified: Thursday, February 19, 2009 at 16:46:04 by etomai
+;;;; ----------------------------------------------------------------------------
+
+(in-microtheory EADialogueRulesMt :exclude-globals t)
+
+(genlMt EADialogueRulesMt EATemporalRulesMt)
+(genlMt EADialogueRulesMt EAStructuralRulesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; backward dialogue functions
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; simple reply
+
+(<== (backwardDialogueFunction ?drs-id ?answer ?statement Replying)
+     (contextIndependentDrsFor ?drs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (dialogueEvent ?ddrs-id ?statement Informing ?stater ?replier)
+     (dialogueEvent ?drs-id ?reply CommunicationAct-Single ?replier-dv ?stater-dv)
+     (resolveReference (ReferenceInSentenceFn ?replier-dv ?sid) (ReferentInDrsFn ?replier ?ddrs-id))
+     (resolveReference (ReferenceInSentenceFn ?stater-dv ?sid) (ReferentInDrsFn ?stater ?ddrs-id))
+     (leadsTo ?statement ?reply)
+     (uninferredSentence
+      (dialogueUtteranceBetween ?ddrs-id ?other-utterance Informing 
+                                ?other-sender ?stater
+                                ?statement ?reply)))
+
+(<== (backwardDialogueFunction ?drs-id ?answer ?statement Replying)
+     (contextIndependentDrsFor ?drs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (dialogueEvent ?ddrs-id ?statement Informing ?stater ?replier)
+     (dialogueEventNoRcpt ?drs-id ?reply CommunicationAct-Single ?replier-dv)
+     (resolveReference (ReferenceInSentenceFn ?replier-dv ?sid) (ReferentInDrsFn ?replier ?ddrs-id))
+     (leadsTo ?statement ?reply)
+     (uninferredSentence
+      (dialogueUtteranceBetween ?ddrs-id ?other-utterance Informing 
+                                ?other-sender ?stater
+                                ?statement ?reply)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; answering an implicit question
+
+(<== (backwardDialogueFunction ?drs-id ?answer ?question ReplyingToAQuestion)
+     (dialogueEventNoRcpt ?drs-id ?answer ReplyingToAQuestion ?answerer)
+     (dialogueEvent ?drs-id ?question Informing ?questioner ?answerer)
+     (before ?question ?answer)
+     (uninferredSentence
+      (dialogueUtteranceBetween ?drs-id ?other-utterance Informing 
+                                ?other-sender ?answerer
+                                ?question ?answer)))
+
+;; chaining through elaboration
+(<== (backwardDialogueFunction ?drs-id ?answer ?question Answer)
+     (backwardDialogueFunction ?drs-id ?answer ?stmt Answer)
+     (backwardDialogueFunction ?drs-id ?stmt ?question Elaboration))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; elaboration
+(<== (backwardDialogueFunction ?drs-id ?stmt2 ?stmt1 Elaboration)
+     (dialogueEventNoRcpt ?drs-id ?stmt2 Informing ?speaker)
+     (dialogueEvent ?drs-id ?stmt1 Informing ?speaker ?hearer)
+     (before ?stmt1 ?stmt2)
+     (uninferredSentence
+      (dialogueUtteranceBetween ?drs-id ?other-utterance Informing 
+                                ?other-speaker ?other-hearer
+                                ?stmt1 ?stmt2)))
+
+(<== (backwardDialogueFunction ?drs-id ?stmt2 ?stmt1 Elaboration)
+     (dialogueEventNoRcpt ?drs-id ?stmt2 Informing ?speaker)
+     (dialogueEvent ?drs-id ?stmt1 RequestingInformation ?speaker ?hearer)
+     (before ?stmt1 ?stmt2)
+     (uninferredSentence
+      (dialogueUtteranceBetween ?drs-id ?other-utterance Informing 
+                                ?other-speaker ?other-hearer
+                                ?stmt1 ?stmt2)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; recognizing utterances at part of a dialogue
+
+;; adding utterances to an explicit dialogue
+(<== (utteranceInDialogue ?drs-id ?vsay ?d-event)
+     (isaInDrs ?d-event ?drs-id Conversation)
+     (trueInDrs ?drs-id (performedBy ?d-event ?speaker))
+     (trueInDrs ?drs-id (startsDuring ?vsay ?d-event)) ;; or starts
+     (trueInDrs ?drs-id (senderOfInfo ?vsay ?speaker)))
+
+(<== (utteranceInDialogue ?drs-id ?answer ?d-event)
+     (backwardDialogueFunction ?drs-id ?answer ?question ?fn)
+     (utteranceInDialogue ?drs-id ?question ?d-event))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dialogue acts
+
+(<== (dialogueEvent ?drs-id ?event ?type ?sender ?recipient)
+     (isaInDrs ?event ?drs-id ?type)
+     (trueInDrs ?drs-id (senderOfInfo ?event ?sender))
+     (trueInDrs ?drs-id (recipientOfInfo ?event ?recipient))
+     (allFactsAllowed (useTransitiveInference (genls ?type CommunicationAct-Single))))
+
+(<== (dialogueEvent ?drs-id ?event ?type ?sender ?recipient)
+     (isaInDrs ?event ?drs-id ?type)
+     (trueInDrs ?drs-id (performedBy ?event ?sender))
+     (trueInDrs ?drs-id (recipientOfInfo ?event ?recipient))
+     (allFactsAllowed (useTransitiveInference (genls ?type CommunicationAct-Single))))
+
+(<== (dialogueEventNoRcpt ?drs-id ?event ?type ?sender)
+     (isaInDrs ?event ?drs-id ?type)
+     (trueInDrs ?drs-id (senderOfInfo ?event ?sender))
+     (allFactsAllowed (useTransitiveInference (genls ?type CommunicationAct-Single))))
+
+(<== (dialogueEventNoRcpt ?drs-id ?event ?type ?sender)
+     (isaInDrs ?event ?drs-id ?type)
+     (trueInDrs ?drs-id (performedBy ?event ?sender))
+     (allFactsAllowed (useTransitiveInference (genls ?type CommunicationAct-Single))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; temporal reasoning
+
+(<== (temporallySubsumes ?d-event ?vsay)
+     (discourseCaseForDrs ?dcase ?drs-id)
+     (ist-Information ?dcase (utteranceInDialogue ?drs-id ?vsay ?d-event)))
+
+(<== (dialogueUtteranceBetween ?drs-id ?event ?type ?sender ?recipient ?prior-event ?latter-event)
+     (dialogueEvent ?drs-id ?event ?type ?sender ?recipient)
+     (trueInDrs ?drs-id (before ?prior-event ?event))
+     (trueInDrs ?drs-id (before ?event ?latter-event)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dialogue-based reasoning
+
+(<== (informOf ?sdrs-id ?inform-drs-id)
+     (headVarForDrs ?hv ?sdrs-id)
+     (elementInHeadVar ?hv ?inform)
+     (isaInDrs ?inform ?sdrs-id Informing)
+     (trueInDrs ?sdrs-id (infoTransferred ?inform (DrsCaseFn ?inform-drs-id))))
+
+(<== (informOf ?ddrs-id ?inform-drs-id)
+     (drsForDiscourse ?ddrs-id)
+     (isaInDrs ?inform ?ddrs-id Informing)
+     (trueInDrs ?ddrs-id (infoTransferred ?inform (DrsCaseFn ?inform-drs-id))))
+
+(<== (topicOf ?drs-id ?comm ?comm-drs-id ?topic)
+     (trueInDrs ?drs-id (infoTransferred ?comm (DrsCaseFn ?comm-drs-id)))
+     (topicOfDrs ?topic ?comm-drs-id))
+
+(<== (recipientOfInfo ?vsay ?listener)
+     (utteranceInDialogue ?vsay ?d-event)
+     (senderOfInfo ?vsay ?speaker)
+     (performedBy ?d-event ?speaker)
+     (performedBy ?d-event ?listener)
+     (different ?speaker ?listener))
+
+(<== (recipientOfInfo ?answer ?questioner)
+     (discourseCaseForDrs ?dcase ?drs-id)
+     (ist-Information ?dcase
+                      (backwardDialogueFunction ?drs-id ?answer ?question Replying))
+     (ist-Information ?dcase (drsForDiscourse ?ddrs-id))
+     (ist-Information ?dcase
+                      (trueInDrs ?ddrs-id (senderOfInfo ?question ?questioner))))
+
+(<== (recipientOfInfo ?response ?recipient)
+     (discourseCaseForDrs ?dcase ?sdrs-id)
+     (ist-Information ?dcase (recipientOfInfo-IP ?sdrs-id ?response ?recipient)))
+
+(<== (recipientOfInfo-IP ?sdrs-id ?response ?recipient)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (leadsTo ?action ?response)
+     (trueInDrs ?ddrs-id (performedBy ?action ?recipient))
+     (trueInDrs ?sdrs-id (senderOfInfo ?response ?responder-sdv))
+     (memberOfGroupOrSelf ?sdrs-id ?responder-sdv ?group-or-self-sdv)
+     (resolveReference (ReferenceInSentenceFn ?group-or-self-sdv ?sid) (ReferentInDrsFn ?group-or-self ?ddrs-id))
+     (different ?group-or-self ?recipient))
+
+(<== (memberOfGroupOrSelf ?sdrs-id ?self ?self)
+     (uninferredSentence 
+      (trueInDrs ?sdrs-id (member ?self ?group))))
+
+(<== (memberOfGroupOrSelf ?sdrs-id ?self ?group)
+     (trueInDrs ?sdrs-id (member ?self ?group)))
+
+(<== (recipientOfInfo ?stmt2 ?hearer)
+     (backwardDialogueFunction ?stmt2 ?stmt1 Elaboration)
+     (recipientOfInfo ?stmt1 ?hearer))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; end of code

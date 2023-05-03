@@ -1,0 +1,502 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: maps-processor.meld
+;;;;    System: nuSketch COA Creator
+;;;;    Author: Madeline Usher
+;;;;   Created: February 8, 2002 07:56:04
+;;;;   Purpose: Axioms and definitions for Voronoi Processor handling.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Definitions
+
+;; (VDiagramFn <id>)
+(isa VDiagramFn Function-Denotational)
+(arity VDiagramFn 1)
+(notForAnalogy VDiagramFn)
+(comment VDiagramFn "Denotes a voronoi diagram created for a particular object.")
+
+
+;; (SiteFn <sketch-thing> <vdiagram>)
+(isa SiteFn Function-Denotational)
+(arity SiteFn 1)
+
+
+
+;; (vDiagramForApp ?app ?vd-type)
+(isa vDiagramForApp BinaryPredicate)
+(arity vDiagramForApp 2)
+(comment vDiagramForApp "Says that the specified type of Vector voronoi 
+                         diagram is used in the given application.")
+
+
+;; (vDiagramForItem ?case ?sketch-item ?vd-type)
+(isa vDiagramForItem Relation)
+(arity vDiagramForItem 4)
+
+
+;; (voronoiFor ?sketch-item ?voronoi)
+(isa voronoiFor Relation)
+(arity voronoiFor 2)
+(comment voronoiFor "Says that the specified sketch-item has a place on the
+                     specified voronoi diagram.  Used with the Vector processor.")
+
+
+;; (siteNear ?site-1 ?site-2)
+(isa siteNear BinaryPredicate)
+(arity siteNear 2)
+(comment siteNear "Says that one Vector site is near another.  Used with the
+                   Vector Processor.")
+(isa siteNear CommutativeRelation)
+
+
+;; (vNear ?obj1 ?obj2)
+(isa vNear BinaryPredicate)
+(arity vNear 2)
+(arg1Isa vNear SpatialThing)
+(arg2Isa vNear SpatialThing)
+(comment vNear "Says that there is at least one Voronoi diagram computed in 
+                which obj1 is near obj2.")
+(isa vNear CommutativeRelation)
+
+
+
+;; (siteAdjacent ?site-1 ?site-2)
+(isa siteAdjacent BinaryPredicate)
+(arity siteAdjacent 2)
+(comment siteAdjacent "Says that one Vector site is directly adjacent to another.
+                       Used with the Vector Processor.")
+(isa siteAdjacent CommutativeRelation)
+
+
+;; (vAdjacent ?obj1 ?obj2)
+(isa vAdjacent BinaryPredicate)
+(arity vAdjacent 2)
+(arg1Isa vAdjacent SpatialThing)
+(arg2Isa vAdjacent SpatialThing)
+(comment vAdjacent "Says that their is at least one Voronoi diagram computed in 
+                    which obj1 is directly adjacent to obj2.")
+(isa vAdjacent CommutativeRelation)
+
+
+
+;; (siteOutside ?site-1 ?site-2)
+(isa siteOutside BinaryPredicate)
+(arity siteOutside 2)
+(comment siteOutside "Says that one Vector site is outside another.  
+                      Used with the Vector Processor.")
+
+
+;; (siteInside ?site-1 ?site-2)
+(isa siteInside BinaryPredicate)
+(arity siteInside 2)
+(comment siteInside "Says that one Vector site is inside another.
+                     Used with the Vector Processor.")
+
+
+;; (siteLeftSide ?site-1 ?site-2)
+(isa siteLeftSide BinaryPredicate)
+(arity siteLeftSide 2)
+(comment siteLeftSide "Says that one Vector site is to the left of near another.  
+                       Used with the Vector Processor.")
+
+
+;; (siteRightSide ?site-1 ?site-2)
+(isa siteRightSide BinaryPredicate)
+(arity siteRightSide 2)
+(comment siteRightSide "Says that one Vector site is to the right of another.  
+                        Used with the Vector Processor.")
+
+
+;; (siteFront ?site-1 ?site-2)
+(isa siteFront BinaryPredicate)
+(arity siteFront 2)
+(comment siteFront "Says that one Vector site is in front of another.  
+                    Used with the Vector Processor.")
+
+
+
+;; (siteBetween ?site ?site-1 ?site-2)
+(isa siteBetween Relation)
+(arity siteBetween 3)
+(comment siteBetween "Says that one Vector site is between ?site-1 and ?site-2.
+                      Used with the Vector Processor.")
+
+
+;; (vBetween ?obj1 ?obj2 ?obj3)
+(isa vBetween Predicate)
+(arity vBetween 3)
+(arg1Isa vBetween SpatialThing)
+(arg2Isa vBetween SpatialThing)
+(arg3Isa vBetween SpatialThing)
+(comment vBetween "Says that there is at least one Voronoi diagram computed in 
+                   which obj2 is between obj1 and obj3.")
+
+
+
+
+;; (siteBehind ?site-1 ?site-2)
+(isa siteBehind BinaryPredicate)
+(arity siteBehind 2)
+(comment siteBehind "Says that one Vector site is behind another.  
+                     Used with the Vector Processor.")
+
+
+
+;; (sameSubSketchGroupFor ?item1 ?item2)
+(isa sameSubSketchGroupFor BinaryPredicate)
+(arity sameSubSketchGroupFor 2)
+(comment sameSubSketchGroupFor 
+         "For two items on a sketch (glyphs or ink or whatnot), this statement
+          says that they both exist in the same SubSketchGroup.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Specifications for the types of sites to make for each glyph
+
+(isa SiteTypeDescriptor Collection)
+(genls SiteTypeDescriptor AttributeType)
+(comment SiteTypeDescriptor "Different types of glyphs are represented using
+                             different types of sites in the Vector processor.
+                             These various types of site are denoted with
+                             SiteTypeDescriptors.")
+
+(isa SiteType-Point       SiteTypeDescriptor)
+(isa SiteType-LineSegment SiteTypeDescriptor)
+(isa SiteType-Rectangle   SiteTypeDescriptor)
+(isa SiteType-Polygon     SiteTypeDescriptor)
+(isa SiteType-Polyline    SiteTypeDescriptor)
+(isa SiteType-Bitmap      SiteTypeDescriptor)
+
+
+
+(isa siteTypeFor BinaryPredicate)
+(arity siteTypeFor 2)
+(arg1Isa siteTypeFor Collection)
+(arg2Isa siteTypeFor SiteTypeDescriptor)
+(comment siteTypeFor "Declares that a given type of Vector site should be used
+                      to represent the specified type of object.")
+
+
+
+;; Note that in nuSketch, there is a hard-wired default siteType of 
+;; SiteType-Polygon, so if you don't see a type of object represented 
+;; below, don't panic too much.  :p
+
+(siteTypeFor ModernMilitaryUnit-Deployable SiteType-Point)
+(siteTypeFor Lake SiteType-Polygon)
+(siteTypeFor LandTopographicalFeature SiteType-Polygon)
+(siteTypeFor TerrainSeverelyRestricted SiteType-Polygon)
+(siteTypeFor TerrainRestricted SiteType-Polygon)
+(siteTypeFor GeographicalRegion SiteType-Polygon)
+(siteTypeFor MilitaryBoundedArea SiteType-Polygon)
+(siteTypeFor UrbanArea SiteType-Polygon)
+(siteTypeFor BuiltUpArea SiteType-Polygon)
+(siteTypeFor KeyFeatureArea SiteType-Polygon)
+(siteTypeFor Bridge SiteType-Polygon)
+(siteTypeFor MineField SiteType-Polygon)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; List the Voronoi Diagrams used in the COA Application
+
+(vDiagramForApp NuSketchCOA VD-MilUnits)
+(vDiagramForApp NuSketchCOA VD-Terrain)
+(vDiagramForApp NuSketchCOA VD-TerrainAndUnits)
+(vDiagramForApp NuSketchCOA VD-TerrainClassAndUnits)
+(vDiagramForApp NuSketchCOA VD-PositionsAndUnits)
+(vDiagramForApp NuSketchCOA VD-PathsAndUnits)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Axioms for Determining what Glyphs go on what Voronoi Diagram Types
+
+(isa vDiagramSpec Predicate)
+(arity vDiagramSpec 3)
+(arg1Isa vDiagramSpec Thing)
+(arg2Isa vDiagramSpec Thing)
+(arg3Isa vDiagramSpec Thing)
+
+(vDiagramSpec (NuSketchCOA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (glyphRepresentsObject ?glyph ?obj)
+       (isa ?obj ModernMilitaryUnit-Deployable))
+  VD-MilUnits)
+
+(vDiagramSpec (NuSketchCOA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (glyphRepresentsObject ?glyph ?obj)
+       (or (isa ?obj Bridge)
+           (isa ?obj UrbanArea)
+           (isa ?obj BuiltUpArea)
+           (isa ?obj WoodedArea)
+           (isa ?obj EcologicalRegion)
+           (isa ?obj TopographicalFeature)))
+  VD-Terrain)
+
+(vDiagramSpec (NuSketchCOA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (glyphRepresentsObject ?glyph ?obj)
+       (or (isa ?obj Bridge)
+           (isa ?obj UrbanArea)
+           (isa ?obj BuiltUpArea)
+           (isa ?obj WoodedArea)
+           (isa ?obj EcologicalRegion)
+           (isa ?obj TopographicalFeature)
+           (isa ?obj ModernMilitaryUnit-Deployable)))
+  VD-TerrainAndUnits)
+
+(vDiagramSpec (NuSketchCOA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (glyphRepresentsObject ?glyph ?obj)
+       (or (degreeOfTrafficability ?obj ?degree)
+           (isa ?obj ModernMilitaryUnit-Deployable)))
+  VD-TerrainClassAndUnits)
+
+(vDiagramSpec (NuSketchCOA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (glyphRepresentsObject ?glyph ?obj)
+       (or (isa ?obj KeyFeatureArea)
+           (isa ?obj MilitaryControlMeasure)
+           (isa ?obj ModernMilitaryUnit-Deployable)))
+  VD-PositionsAndUnits)
+
+(vDiagramSpec (NuSketchCOA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (glyphRepresentsObject ?glyph ?obj)
+       (or (isa ?obj Path-Generic)
+           (isa ?obj ModernMilitaryUnit-Deployable)))
+  VD-PathsAndUnits)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Axioms for Determining what Spatial Relations to compute for a Glyph
+;;;
+;;; Note that the consequences can be an expression with ands and ors.
+
+;; N.B. The following sequence
+;;        (voronoiFor ?glyph1 ?vd1)
+;;        (voronoiFor ?glyph2 ?vd2)
+;;       (equals ?vd1 ?vd2)
+;;; can be simplified to
+;;         (voronoiFor ?glyph1 ?vd)
+;;         (voronoiFor ?glyph2 ?vd)
+;; Have done so in the rules below.
+
+(isa spatialRelationSpec Predicate)
+(arity spatialRelationSpec 3)
+(arg1Isa spatialRelationSpec Thing)
+(arg2Isa spatialRelationSpec Thing)
+(arg3Isa spatialRelationSpec Thing)
+
+(isa spatialRelationsFor Predicate)
+(arity spatialRelationsFor 4)
+(arg1Isa spatialRelationsFor Microtheory)
+(arg2Isa spatialRelationsFor NuSketchGlyph)
+(arg3Isa spatialRelationsFor NuSketchApplication)
+(arg4Isa spatialRelationsFor List)
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 ModernMilitaryUnit-Deployable)
+       (voronoiFor ?glyph1 ?vd)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (isa ?obj2 ModernMilitaryUnit-Deployable)
+       (voronoiFor ?glyph2 ?vd)
+       (siteAdjacent (SiteFn ?glyph1 ?vd) (SiteFn ?glyph2 ?vd)))
+  (adjacentTo ?obj1 ?obj2))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 AvenueOfApproach-Ground)
+       (voronoiFor ?glyph1 ?vd)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (or (isa ?obj2 Bridge)
+           (isa ?obj2 Mountain))
+       (voronoiFor ?glyph2 ?vd)
+       (siteAdjacent (SiteFn ?glyph1 ?vd) (SiteFn ?glyph2 ?vd)))
+  (adjacentTo ?obj1 ?obj2))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 MineField)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (or (isa ?obj2 UrbanArea)
+           (isa ?obj2 BuiltUpArea))
+       (spatiallyIntersects ?glyph1 ?glyph2))
+  (objectFoundInLocation ?obj1 ?obj2))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 EngagementArea)
+       (isa ?glyph2 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (isa ?obj2 AxisOfAdvance)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (spatiallyIntersects ?glyph1 ?glyph2))
+  (onPath ?obj1 ?obj2))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 EngagementArea)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (isa ?obj2 MilitaryContainment)
+       (spatiallyIntersects ?glyph1 ?glyph2))
+  (objectFoundInLocation ?obj1 ?obj2))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 HumanRegionalBorder)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (isa ?obj2 MilitaryBoundedArea)
+       (rcc8-PO ?glyph1 ?glyph2))
+  (spatiallyIntersects ?obj1 ?obj2))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 Bridge))
+  (isa ?obj1 ChokePoint))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (isa ?obj1 GeographicalThing)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (isa ?obj2 GeographicalThing)
+       (directionalSignature ?glyph1 ?glyph2 ?dirs)
+       (compassPositionalRelationFor ?obj1 ?obj2 ?glyph1 ?glyph2 ?dirs ?reln))
+  (?reln ?obj1 ?obj2))
+
+(spatialRelationSpec (NuSketchCOA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (glyphRepresentsObject ?glyph1 ?obj1)
+       (voronoiFor ?glyph1 ?vd)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (voronoiFor ?glyph2 ?vd)
+       (glyphRepresentsObject ?glyph2 ?obj2)
+       (siteAdjacent (SiteFn ?glyph1 ?vd) (SiteFn ?glyph2 ?vd))
+       (directionalSignature ?glyph1 ?glyph2 ?dirs)
+       (compassPositionalRelationFor ?obj1 ?obj2 ?glyph1 ?glyph2 ?dirs ?reln))
+  (?reln ?obj1 ?obj2))
+
+
+;;;;;; sKEA spatial operations
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Voronoi Diagrams used in sKEA
+;;; Initial theory: We'll use one VD per layer.
+;;; For some genre/viewpoint combinations we'll use more, e.g. maps,
+;;; but that will be specified as part of the visual symbology domain theory.
+
+(vDiagramForApp sKEA VDWholeBundle)
+
+(vDiagramSpec (sKEA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (uninferredSentence (isa ?glyph NuSketchGhostGlyph))
+       (subSketchFor ?glyph ?layer)
+       (uninferredSentence (isa ?layer NuSketchHiddenLayer))
+       (uninferredSentence (isa ?layer NuSketchNonSpatialLayer)))
+  VDWholeBundle)
+
+(vDiagramSpec (sKEA ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (subSketchFor ?glyph ?layer)
+       (isa ?layer NuSketchGhostLayer))
+  (VDiagramFn ?layer))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Voronoi Diagrams used in CogSketch
+;;; Initial theory: We'll use one VD per layer, just like in sKEA.
+;;; For some genre/viewpoint combinations we'll use more, e.g. maps,
+;;; but that will be specified as part of the visual symbology domain theory.
+
+(vDiagramForApp CogSketch VDWholeBundle)
+
+(vDiagramSpec (CogSketch ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (uninferredSentence (isa ?glyph NuSketchGhostGlyph))
+       (subSketchFor ?glyph ?layer)
+       (uninferredSentence (isa ?layer NuSketchHiddenLayer))
+       (uninferredSentence (isa ?layer NuSketchNonSpatialLayer)))
+  VDWholeBundle)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Voronoi Diagrams used in WebSketch
+;;;
+;;; WebSketch uses exactly the same kinds of Voronoi diagrams as CogSketch 
+;;; since we want both apps to see sketches in the same way.
+;;;
+
+(vDiagramForApp WebSketch VDWholeBundle)
+
+(vDiagramSpec (WebSketch ?glyph)
+  (and (isa ?glyph NuSketchGlyph)
+       (uninferredSentence (isa ?glyph NuSketchGhostGlyph))
+       (subSketchFor ?glyph ?layer)
+       (uninferredSentence (isa ?layer NuSketchHiddenLayer))
+       (uninferredSentence (isa ?layer NuSketchNonSpatialLayer)))
+  VDWholeBundle)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Incremental positional relations computation
+;; We only compute the positional relation between glyphs, counting on the LTRE
+;; rules to propagate this information as appropriate.
+;; We only compute positional relations between glyphs that are site-adjacent
+;; i.e., those which are directly linked in the delaney triangulation.
+;; 
+;; Question for the future: It's tempting to leave such relationships around even when
+;; new entities are added, since they don't stop being true, they are just less salient.
+;; The problem with that approach is that it makes the set of spatial relationships computed
+;; a function of the order in which things are drawn.  That seems problematic in some ways.
+;; We'll have to think about this more and experiment with it to see what is really going on.
+
+(spatialRelationSpec (sKEA ?glyph1)
+  (and (isa ?glyph1 NuSketchGlyph)
+       (isa ?glyph2 NuSketchGlyph)
+       (different ?glyph1 ?glyph2)
+       (sameSubSketchGroupFor ?glyph1 ?glyph2)
+       (voronoiFor ?glyph1 ?vd)
+       (voronoiFor ?glyph2 ?vd)
+       (siteAdjacent (SiteFn ?glyph1 ?vd) (SiteFn ?glyph2 ?vd))
+       (directionalSignature ?glyph1 ?glyph2 ?dirs)
+       (positionalRelationFor ?glyph1 ?glyph2 ?dirs ?reln))
+  (?reln ?glyph1 ?glyph2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

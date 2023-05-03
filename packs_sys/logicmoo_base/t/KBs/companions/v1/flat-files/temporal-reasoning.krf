@@ -1,0 +1,186 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: temporal-reasoning.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: January 15, 2018 10:24:55
+;;;;   Purpose: 
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+(isa DateFn UnaryFunction)
+(isa DateFn AtomicAnalogyNAT-Function)
+(arity DateFn 1)
+(arg1Isa DateFn CycUniversalDate)
+(resultIsa DateFn Date)
+(comment DateFn "Denotes a Date when applied to a CycUniversalDate, which is essentially an integer in YYYYMMDD format.")
+
+(isa TimeFn UnaryFunction)
+(isa TimeFn AtomicAnalogyNAT-Function)
+(arity TimeFn 1)
+(arg1Isa TimeFn CycUniversalTime)
+(resultIsa TimeFn TimePoint)
+(comment DateFn "Denotes a TimePoint when applied to a CycUniversalTime, which is essentially an integer in HHMMSS format.")
+
+;;; Moved from Interaction Manager and updated:
+
+(isa yesterday UnaryPredicate)
+(isa yesterday DynamicUpdatePredicate) ; This better be a dynamic update pred.  It's Diectic.
+(arity yesterday 1)
+(arg1Isa yesterday Date)
+(comment yesterday "(yesterday DATE) binds or tests DATE and succeeds when DATE denotes Yesterday-Indexical.")
+
+;;; Test whether ?date was yesterday.
+(<== (yesterday (DateFn ?date)) ; ?date is a raw integer in YYYYMMDD format
+     (groundExpression ?date)
+     (currentDate ?now)
+     (different ?now ?date)
+     (destructuredCycDate ?now ?year1 ?month1 ?today)
+     (destructuredCycDate ?date ?year2 ?month2 ?yesterday)
+     (previousDay ?year1 ?year2 ?month1 ?month2 ?today ?yesterday))
+     
+(<== (yesterday ?date)   ; ?date is unbound
+     (variableExpression ?date)
+     (currentDate ?now)
+     (destructuredCycDate ?now ?year1 ?month1 ?today)
+     (previousDay ?year1 ?year ?month1 ?month ?today ?yesterday)
+     (evaluate ?date-num
+       (PlusFn ?yesterday (TimesFn 100 ?month) (TimesFn 10000 ?year)))
+     (unifies ?date (DateFn ?date-num)))
+
+(isa previousDay Predicate)
+(arity previousDay 6)
+
+(isa previousMonthIndex Predicate)
+(arity previousMonthIndex 2)
+(comment previousMonthIndex "(previousMonthIndex ?month ?prior-month) returns the month index.")
+     
+;;; Assume ?today is bound:
+(<== (previousDay ?year ?year ?month ?month ?today ?yesterday)
+     (groundExpression ?today)
+     (different ?today 1)
+     (evaluate ?yesterday (DifferenceFn ?today 1)))
+
+(<== (previousDay ?year ?year ?month ?last-month ?today ?yesterday)
+     (equals ?today 1) ; not merely ground, but day 1
+     (previousMonthIndex ?month ?last-month-idx)
+     (calendarMonthIndex GregorianMonthType ?month ?last-month-idx)
+     (monthLength ?month ?yesterday)) ; last day of prior month
+
+;;; day before NewYears is Dec 31, prior year.
+(<== (previousDay ?year ?last-year 1 12 1 31)
+     (groundExpression ?year)
+     (evaluate ?last-year (DifferenceFn ?year 1))) ; check for sequential years
+
+(<== (previousMonthIndex ?later-month ?prior-month)
+     (groundExpression ?later-month)
+     (evaluate ?prior-month
+       (PlusFn 1 (ModuloFn (DifferenceFn ?later-month 2) 12))))
+
+
+
+;;; Today
+
+(isa today UnaryPredicate)
+(isa today DynamicUpdatePredicate) ; This better be a dynamic update pred.  It's Diectic.
+(arity today 1)
+(arg1Isa today Date)
+(comment today "(today DATE) binds or tests DATE and succeeds when DATE denotes Today-Indexical.")
+
+(<== (today (DateFn ?date))
+     (currentDate ?date))
+
+
+;; Tomorrow:
+
+(isa tomorrow UnaryPredicate)
+(isa tomorrow DynamicUpdatePredicate) ; This better be a dynamic update pred.  It's Diectic.
+(arity tomorrow 1)
+(arg1Isa tomorrow Date)
+(comment tomorrow "(tomorrow DATE) binds or tests DATE and succeeds when DATE denotes Tomorrow-Indexical.")
+
+(<== (tomorrow (DateFn ?date)) ; ?date is a raw integer in YYYYMMDD format
+     (groundExpression ?date)
+     (currentDate ?now)
+     (different ?now ?date)
+     (destructuredCycDate ?date ?year1 ?month1 ?today)
+     (destructuredCycDate ?now ?year2 ?month2 ?tomorrow)
+     (previousDay ?year1 ?year2 ?month1 ?month2 ?tomorrow ?today))
+     
+(<== (tomorrow ?date)
+     (variableExpression ?date)
+     (currentDate ?now)
+     (destructuredCycDate ?now ?year2 ?month2 ?today)
+     (previousDay ?year ?year2 ?month ?month2 ?tomorrow ?today)
+     (evaluate ?date-num
+       (PlusFn ?tomorrow (TimesFn 100 ?month) (TimesFn 10000 ?year)))
+     (unifies ?date (DateFn ?date-num)))
+     
+;;; Assume ?today is bound:
+(<== (previousDay ?year ?year ?month ?month ?tomorrow ?today)
+     (groundExpression ?today)
+     (calendarMonthIndex GregorianMonthType ?month-name ?month)
+     (calendarMonthLength GregorianMonthType ?month-name ?last-day)
+     (different ?today ?last-day)
+     (evaluate ?tomorrow (PlusFn ?today 1)))
+
+(<== (previousDay ?year ?year ?next-month ?month ?tomorrow ?today)
+     (groundExpression ?today)
+     (calendarMonthIndex GregorianMonthType ?month-name ?month)
+     (calendarMonthLength GregorianMonthType ?month-name ?today); wrap around
+     (different ?month 12)
+     (previousMonthIndex ?next-month ?month))
+     
+(<== (previousDay ?next-year ?year 1 12 1 31)  ; last day of the year
+     (groundExpression ?year)
+     (evaluate ?next-year (PlusFn ?year 1)))
+
+;;; This will bind the later-month:
+(<== (previousMonthIndex ?later-month ?prior-month)
+     (groundExpression ?prior-month)
+     (not (groundExpression ?later-month))
+     (evaluate ?later-month
+       (PlusFn 1 (ModuloFn ?prior-month 12))))
+
+(calendarMonthIndex GregorianMonthType January 1)
+(calendarMonthIndex GregorianMonthType February 2)
+(calendarMonthIndex GregorianMonthType March 3)
+(calendarMonthIndex GregorianMonthType April 4)
+(calendarMonthIndex GregorianMonthType May 5)
+(calendarMonthIndex GregorianMonthType June 6)
+(calendarMonthIndex GregorianMonthType July 7)
+(calendarMonthIndex GregorianMonthType August 8)
+(calendarMonthIndex GregorianMonthType September 9)
+(calendarMonthIndex GregorianMonthType October 10)
+(calendarMonthIndex GregorianMonthType November 11)
+(calendarMonthIndex GregorianMonthType December 12)
+
+
+(isa calendarMonthLength TernaryPredicate)
+(comment calendarMonthLength "(calendarMonthLength ?month-type ?month ?num-days) indicates how long the month is.")
+
+(calendarMonthLength GregorianMonthType January 31)
+(calendarMonthLength GregorianMonthType February 28)  ; 'cept leap year
+(calendarMonthLength GregorianMonthType March 31)
+(calendarMonthLength GregorianMonthType April 30)
+(calendarMonthLength GregorianMonthType May 31)
+(calendarMonthLength GregorianMonthType June 30)
+(calendarMonthLength GregorianMonthType July 31)
+(calendarMonthLength GregorianMonthType August 31)
+(calendarMonthLength GregorianMonthType September 30)
+(calendarMonthLength GregorianMonthType October 31)
+(calendarMonthLength GregorianMonthType November 30)
+(calendarMonthLength GregorianMonthType December 31)
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,338 @@
+;;;
+;;; systems.meld
+;;;
+;;; The ontology and rules defined here support reasoning about systems
+;;; decomposition.
+
+;;; We want to address the problem of intermediate (landmark) goals by 
+;;; supporting decomposition based on systems.  
+;;; So: a game is a system, but we want to look at the domain-specific
+;;; entities, events, actions and relations and use their high-level genls to
+;;; identify systems in the game, such as path systems, defensive systems, 
+;;; agricultural systems,logistics, governance, economy, research.
+;;; 
+;;; Given a set of systems, we can characterize the health of a system and 
+;;; relative balance between systems.  That gives us a valence for hooking
+;;; into the qualitative model and subgoaling from the very high-level goal.
+;;;
+;;; We want to associate systems with abstractQuantities (qv), and use the 
+;;; system to operationalize the quantity goal.
+;;; Note: it would make no sense to have a goal around TechnologyLevel in
+;;; Chess, but makes pefect sense given the system.
+
+;;; Kinds of systems
+;;; -----------------
+;;; Economic Systems (fungible resources)
+;;; Logistics (paths & transporters)
+;;; Natural Resources (food, minerals, etc)
+;;; Territorial Systems (controlled landmass, territory)
+;;; Military Systems (deployed defensive and offensive units)
+;;; Technological Systems (research & development investments)
+;;; Maintenance Systems (ability to reduce waste, preserve integrity of other systems)
+;;; Labor Systems (workers with variable productivity, states)
+;;; Governmental Systems (control, decision making)
+;;; Information systems (alarms, sensors, situational awareness)
+
+(in-microtheory PerceptualAgentMt)
+
+(isa EconomicSystem Collection)
+(genls EconomicSystem FunctionalSystem)
+(typeInstancesHaveQuantity EconomicSystem InvestmentHorizon)
+;; systemComponents is instance-level
+;; a specPred of possessiveRelation, similar to groupMembers.
+(collRelation systemComponents EconomicSystem Capital)  ; Capital is a built-in coll, but not a quantity.  It's physical stuff.  Do we need (AmountFn Capital)  
+
+(isa GovernmentalSystem Collection)
+(genls GovernmentalSystem FunctionalSystem)
+;;; components: diplomats, tax rates, capitals, gov types
+(collRelation systemComponents GovernmentalSystem GeopoliticalEntityBySystemOfGovernment)
+
+(isa TransportationSystem Collection)
+(genls TransportationSystem FunctionalSystem)
+(typeInstancesHaveQuantity TransportationSystem Mobility)
+(relationAllExists systemComponents TransportationSystem TransportationEvent)
+(relationAllExists systemComponents TransportationSystem TransportationDevice)
+(relationExistsAll systemComponents TransportationSystem RoadSystem)
+(relationExistsAll systemComponents TransportationSystem StreetSystem)
+;;; components: pathsystems, vehicles, terrain
+
+(isa MilitarySystem Collection)
+(genls MilitarySystem FunctionalSystem)
+(typeInstancesHaveQuantity MilitarySystem MilitaryPreparedness)
+(typeInstancesHaveQuantity MilitarySystem DefensiveStrength)
+(typeInstancesHaveQuantity MilitarySystem OffensiveStrength)
+(typeInstancesHaveQuantity MilitarySystem ForceProjection)
+;;; components: military units, weapons, 
+
+(isa LogisticsSystem Collection)
+(genls LogisticsSystem FunctionalSystem)
+;; quantities: latency & throughput
+;; components: transportation system, cargo, transporters
+
+(isa TerritorialInfluenceSystem Collection)
+(genls TerritorialInfluenceSystem FunctionalSystem)
+(collRelation systemComponents TerritorialInfluenceSystem GeographicalRegion-Declared)
+(collRelation systemComponents TerritorialInfluenceSystem Border)
+;;; components: borders
+;;; quantities: landarea
+
+(isa ResearchSystem Collection)
+(genls ResearchSystem FunctionalSystem)
+(relationAllExists systemComponents ResearchSystem FieldOfStudy)
+(relationAllExists systemComponents ResearchSystem Learning)
+
+(isa LaborSystem Collection)
+(genls LaborSystem FunctionalSystem)
+(typeInstancesHaveQuantity LaborSystem CivilUnrest) ; CivilUnrest is not a Quantity.
+
+(isa AwarenessSystem Collection)
+(genls AwarenessSystem FunctionalSystem)
+;;; components: sensors, guards, patrols, explorers, spies
+(relationExistsAll systemComponents AwarenessSystem Explorer)  ; all Explorers are part of an AwarenessSystem
+(relationExistsAll systemComponents AwarenessSystem Spy)
+(relationExistsAll systemComponents AwarenessSystem GuardingSomething)
+(relationExistsAll systemComponents AwarenessSystem Sensor)
+
+;;; What we want to do with these systems is identify them in a particular domain, and
+;;; operationalize goals related to them.  The domain-specific components 
+;;; tell us how to build-up or develop a system.
+
+
+
+;;; -------------------------------------------------------------
+
+(isa extractSystemsFromDomain ComplexActionPredicate)
+(arity extractSystemsFromDomain 2) ; really could be 0.
+
+;;; In the case of Freeciv, for the session-reasoner, the spec-mt is the
+;;; planning context  and the genl-mt is the agent-context.
+;;; But that's not universally true.
+(preconditionForMethod
+  (and (different ?spec-mt ?genl-mt)
+       (evaluate ?constructables 
+         (TheClosedRetrievalSetOf ?thing
+           (constructableThing ?spec-mt ?genl-mt ?thing)))
+       )
+  (methodForAction
+    (extractSystemsFromDomain ?spec-mt ?genl-mt)
+    (actionSequence
+      (TheList
+        ))))
+
+;;; -----------------------------------------------
+;;; Systems from Entities
+
+;;; Recall that because ist-InContextRange is an outsourced predicate, it
+;;; won't bind variables inside partially ground arguments.
+;;; It binds the fourth arguments, which must then be destructured.
+
+(isa constructableThing TernaryPredicate)
+
+;;; What kinds of things can be produced?
+(<== (constructableThing ?spec-mt ?genl-mt ?thing-type) 
+     (ist-InContextRange (makingTypeOfType ?process-type ?thing-type) ?spec-mt ?genl-mt ?ans)
+     (unifies (makingTypeOfType ?process-type ?thing-type) ?ans))  ; bind ?thing-type
+     
+;(<== (constructableThing ?spec-mt ?genl-mt ?thing-type)
+;     (ist-InContextRange (genls ?event-type PhysicalCreationEvent) ?spec-mt ?genl-mt ?ans) ; we need to bind the type of thing created
+;     (unifies (genls ?event-type PhysicalCreationEvent) ?ans)  ; bind ?event-type
+;     (outputsCreated-TypeType ?event-type ?thing-type))
+
+(isa growableThing TernaryPredicate)
+
+;;; What kinds of things can grow?
+;;; We know that a Freeciv CityGrowthEvent genls from GrowthEvent
+;;; But what about national terrritory?  There's no reified event there.
+(<== (growableThing ?spec-mt ?genl-mt ?thing)
+     (ist-InContextRange (genls ?evt GrowthEvent) ?spec-mt ?genl-mt ?ans)
+     (unifies (genls ?evt GrowthEvent) ?ans)
+     (ist-Information ?spec-mt (relationAllExists objectOfStateChange ?evt ?thing)))
+
+(isa consumableThing TernaryPredicate)
+
+;;; What kinds of things (resources) can be consumed?
+;;; ?type will be a spec of partiallyTangible.  Doesn't hold for money.
+(<== (consumableThing ?spec-mt ?genl-mt ?type)
+     (ist-InContextRange (inputsDestroyed-TypeType ?evt ?type) ?spec-mt ?genl-mt ?ans)
+     (unifies (inputsDestroyed-TypeType ?evt ?type) ?ans))
+     
+(isa monetaryDimension TernaryPredicate)
+
+;;; What kinds of things serve as money?  Highly fungible resources?
+(<== (monetaryDimension ?spec-mt ?genl-mt ?money-type)
+     (ist-InContextRange (genls ?money-type MonetaryValue) ?spec-mt ?genl-mt ?ans)
+     (unifies (genls ?money-type MonetaryValue) ?ans))
+     
+(isa monetaryUnits TernaryPredicate)
+
+(<== (monetaryUnits ?spec-mt ?genl-mt ?money-unit)
+     (ist-InContextRange (isa ?x UnitOfMoney) ?spec-mt ?genl-mt ?ans)
+     (unifies (isa ?money-unit UnitOfMoney) ?ans))
+
+(isa monetaryFluents TernaryPredicate)
+     
+(<== (monetaryFluents ?spec-mt ?genl-mt ?quantity-type)
+     (monetaryUnits ?spec-mt ?genl-mt ?money-unit)
+     (ist-InContextRange (quantityPrimitive ?quantity-type ?arg-type ?money-unit) ?spec-mt ?genl-mt ?ans)
+     (unifies (quantityPrimitive ?quantity-type ?arg-type ?money-unit) ?ans))
+
+(isa impliedGovernmentalSystem TernaryPredicate)
+
+;;; Governmental System
+(<== (impliedGovernmentalSystem ?spec-mt ?genl-mt ?gov)
+     (ist-InContextRange 
+       (genls ?gov-type GeopoliticalEntityBySystemOfGovernment)
+       ?spec-mt ?genl-mt ?ans)
+     (unifies (genls ?gov-type GeopoliticalEntityBySystemOfGovernment) ?ans)
+     (ist-InContextRange (isa ?gov ?gov-type) ?spec-mt ?genl-mt ?ans2)
+     (unifies (isa ?gov ?gov-type) ?ans2))
+
+
+
+
+;;; look for, e.g.,: (outputsCreated-TypeType CityBuiltEvent FreeCiv-City)   
+;;; (expansion inputsDestroyed-TypeType (relationAllExists inputsDestroyed ARG1 ARG2))
+;;; ------------------------------------------------
+;;; Systems from Events
+
+;;; Transportation Systems: look for path systems, vehicles & things that move
+;;; In Freeciv, we should be seeing transportedBy as the nonDavidsonian 
+;;; equivalent to TransportationEvent.
+
+(isa impliedTransportationEvents TernaryPredicate)
+
+;;; Do we need to turn the pred into a durative event?
+(<== (impliedTransportationEvents ?spec-mt ?genl-mt ?pred)  ; return the event predicate, not the collection
+     (ist-InContextRange (nonDavidsonianPredReln ?event-type ?args ?pred) ?spec-mt ?genl-mt ?ans)
+     (unifies (nonDavidsonianPredReln ?event-type ?args ?pred) ?ans)
+     (ist-Information ?spec-mt (genls ?event-type TransportationEvent)))
+
+(<== (impliedTransportationEvents ?spec-mt ?genl-mt ?event-type)  
+     (ist-InContextRange (genls ?event-type TransportationEvent) ?spec-mt ?genl-mt ?ans)
+     (unifies (genls ?event-type TransportationEvent) ?ans)
+     (different ?event-type TransportationEvent))
+
+;;; Economic Systems: Look for Buying and Selling, Bartering, financial 
+;;; obligations, etc.
+;;; What passes for the apex fungible resource (money)?
+
+(isa impliedEconomicEvents TernaryPredicate)
+
+(<== (impliedEconomicEvents ?spec-mt ?genl-mt ?pred)
+     (ist-InContextRange (nonDavidsonianPredReln ?event ?args ?pred) ?spec-mt ?genl-mt ?ans)
+     (unifies (nonDavidsonianPredReln ?event ?args ?pred) ?ans)
+     (ist-Information ?spec-mt (genls ?event EconomicEvent)))
+     
+(<== (impliedEconomicEvents ?spec-mt ?genl-mt ?event-type)  
+     (ist-InContextRange (genls ?event-type EconomicEvent) ?spec-mt ?genl-mt ?ans)
+     (unifies (genls ?event-type EconomicEvent) ?ans)
+     (different ?event-type EconomicEvent))
+
+;;; Technically, Buying is a spec of EconomicEvent, but we can't query for that in 
+;;; ist-InContextRange
+(<== (impliedEconomicEvents ?spec-mt ?genl-mt ?event-type)  
+     (ist-InContextRange (genls ?event-type Buying) ?spec-mt ?genl-mt ?ans)
+     (unifies (genls ?event-type Buying) ?ans)
+     (different ?event-type Buying))
+     
+(isa impliedImprovementEvents TernaryPredicate)
+
+(<== (impliedImprovementEvents ?spec-mt ?genl-mt ?event-type)
+     (ist-InContextRange (genls ?event-type ImprovementEvent) ?spec-mt ?genl-mt ?ans)
+     (unifies (genls ?event-type ImprovementEvent) ?ans)
+     (different ?event-type ImprovementEvent))
+
+;;; ------------------------------------------------
+;;; Infer relations between systems from process models
+;;; ie, do the entities in systems contribute to gating functions on 
+;;; quantities in other systems?
+
+;;; so we have FC-Republic and FC-Democracy being participant constraints on
+;;; RaptureProcess, which ought to be represented as ako GrowthEvent.
+;;; use termAssertedSentences to find references to Republic in the domain.
+
+;;; Check out actionInitiatesProcess as well (define this in process preds)
+
+;;;
+;;; Work through examples from Freeciv to infer intermediate waypoint goals.
+;;; 
+;;; Ie, if we can't connect conquering to pushing quantities in particular 
+;;; directions, then we want to identify relevant systems, and enhance those 
+;;; systems (in the context of adversarial conflict)
+;;; 
+
+;;; See SynchronicityOfComplexAction for a representation of plan fragility.
+
+
+;;; Cyc-native specs of System:
+;;; ClassificationSystem, Computer-Generic, CoordinateSystem, EconomicSystem,
+;;; Ecosystem, EducationalSystem, Filesystem, FunctionalSystem, PathSystem, 
+;;; PhysicalSystem, PlanetarySystem, ProcessControlSystem, System, 
+;;; WeaponSystem.
+
+
+;;; Cyc-native roles of System:
+;;; members , graphDepicts , equationSetOfSystem , systemControls ,
+;;; systemExternalControls , systemInternalControls , graphStructureOfSystem,
+;;; systemComponents 
+
+;;; genlPreds: systemComponents possessiveRelation
+;;; genlPreds: systemControls systemComponents
+;;; genlPreds: componentInSystem-FunctionalRole systemComponents 
+;;; genlPreds: agentInEcosystem componentInSystem-FunctionalRole
+;;; genlPreds: resourceProcessor-FunctionalRole 
+;;;               componentInSystem-FunctionalRole
+
+;;; (expansion componentInSystem-FunctionalRole 
+;;;   (expected-ToBe 
+;;;     (behaviorCapable ARG2 
+;;;       (SubcollectionOfWithRelationToFn Event objectActedOn ARG1) 
+;;;       actors)))
+;;;       
+;;; (expansion resourceProcessor-FunctionalRole 
+;;;   (expected-ToBe 
+;;;     (behaviorCapable ARG2 
+;;;       (SubcollectionOfWithRelationToTypeFn ActionOnObject 
+;;;         objectActedOn 
+;;;         (SubcollectionOfWithRelationToFn PartiallyTangible 
+;;;           resourceInSystem ARG1))
+;;;       doneBy)))
+
+;;; -------------------------------------------------------------------------
+;;; GOAL TYPES (the arg3 of goalCategoryForAgent)
+;;;
+;;; FoodSupplyGoal
+;;; BeingStrong
+;;; NationalDefenseGoal
+;;; NationalEconomyGoal
+;;; SelfPreservationGoal
+;;; StrategicInterest
+;;; StrategicNationalInterest
+;;; TradeGoal
+;;; TerritorialIntegrityGoal
+;;; ThwartingAThreatGoal
+;;; ToIncreaseProfits
+;;; VitalNationalInterest
+
+;;; So a Freeciv civ has (intrinsically) a SelfPreservationGoal and a StrategicNationalInterestGoal.
+
+;;; (typePrimaryFunction ?thing Movement-TranslationEvent motionPathway-Partial)
+
+
+(isa transitivelyContains TernaryPredicate)
+(arg1Isa transitivelyContains TransitiveBinaryPredicate)
+(arg2Isa transitivelyContains CycLTerm)
+(arg3Isa transitivelyContains CycLTerm)
+(comment transitivelyContains "(transitivelyContains ?transitive-binpred ?e1 ?e2) succeeds if (transitive-binpred* ?e1 ?e2).")
+
+;;; Base case:
+(<== (transitivelyContains ?pred ?arg ?arg)
+     (groundExpression ?arg))
+
+(<== (transitivelyContains ?pred ?arg1 ?arg2)
+     (different ?arg1 ?arg2)
+     (groundExpression ?arg1)
+     (groundExpression ?arg2)
+     (?pred ?arg1 ?intermediate-arg)
+     (transitivelyContains ?pred ?intermediate-arg ?arg2))
+

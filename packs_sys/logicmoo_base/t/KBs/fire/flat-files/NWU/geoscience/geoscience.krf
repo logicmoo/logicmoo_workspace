@@ -1,0 +1,354 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: geoscience.krf
+;;;;    System: FIRE
+;;;;    Author: Jeff Usher
+;;;;   Created: March 6, 2009 13:52:22
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-10-02 16:41:17 -0500 (Tue, 02 Oct 2018) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory GeoscienceMt)
+
+(isa GeoscienceMt Microtheory)
+(genlMt GeoscienceMt GeographicalRegionGMt)
+(comment GeoscienceMt 
+  "The GeoscienceMt contains facts that extend the #$GeographicalRegionGMt with more 
+   detailed geoscience knowledge.")
+
+(isa GeoscienceFactsMt Microtheory)
+(genlMt GeoscienceFactsMt GeoscienceMt)
+
+(in-microtheory GeoscienceFactsMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; General Definitions: Boundary, RockUnit and GeologicalPoint
+
+(isa GeologicalBoundary Collection)
+(genls GeologicalBoundary Border)
+(comment GeologicalBoundary " This is an intersection between two rock-units, such as a fault, or between a rock-unit and the outside world, 
+such as the surface of the Earth. ")
+
+
+(genls Fault-Topographical GeologicalBoundary)
+(nameString Fault-Topographical "fault")
+
+
+(isa GeologicalRockUnit Collection)
+(isa GeologicalRockUnit ExistingObjectType)
+(genls GeologicalRockUnit NaturalThing)
+(genls GeologicalRockUnit LandTopographicalFeature)
+(comment GeologicalRockUnit " This is a mass of rock, such as a shale formation or the down-thrown block of a fault. ")
+(nameString StoneObject-Natural "rock")
+
+
+(isa GeologicalPoint Collection)
+(genls GeologicalPoint Point-Empirical)
+(comment GeologicalPoint " This is a location on rock-units (see GeologicalRockUnit) or along boundaries (see GeologicalBoundary). 
+Examples include the top of a shale or the bottom of the surface of the Earth. ")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rocks
+
+(isa SedimentaryRock Collection)
+(genls SedimentaryRock GeologicalRockUnit)
+(comment SedimentaryRock
+  "#$SedimentaryRock is the rock that forms either by the cementing together of fragments broken off
+   preexisting rock or by the precipitation of mineral crystals out of water solutions at or near
+   the Earth's surface.")
+
+(isa IgneousRock Collection)
+(genls IgneousRock GeologicalRockUnit)
+(comment IgneousRock
+  "#$IgneousRock is the rock that forms when hot molten rock(magma or lava) cools and freezes solid.")
+
+(isa MetamorphicRock Collection)
+(genls MetamorphicRock GeologicalRockUnit)
+(comment MetamorphicRock
+  "#$MetamorphicRock is the rock that forms when preexisting rock changes into new rock as a result
+   of an increase in pressure and temperature and/or shearing under elevated temperatures; 
+   metamorphism occurs without the rock first becoming a melt or a sediment.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Faults, Stress
+
+(isa Fault-Topographical_DipSlip Collection)
+(genls Fault-Topographical_DipSlip Fault-Topographical)
+(siblingDisjointWith Fault-Topographical_DipSlip Fault-Topographical_StrikeSlip)
+(siblingDisjointWith Fault-Topographical_DipSlip Fault-Topographical_ObliqueSlip)
+(nameString Fault-Topographical_DipSlip "dip-slip fault")
+(comment Fault-Topographical_DipSlip
+  "This is a specialization of #$Fault-Topographical where the main movement 
+   along the fault is vertical.")
+
+(isa Fault-Topographical_Normal Collection)
+(genls Fault-Topographical_Normal Fault-Topographical_DipSlip)
+(genls Fault-Topographical_Normal Fault-Topographical)
+(nameString Fault-Topographical_Normal "normal fault")
+(comment Fault-Topographical_Normal
+  "In this kind of #$Fault-Topographical_DipSlip the hanging wall goes down relative to footwall.")
+
+(isa Fault-Topographical_Reverse Collection)
+(genls Fault-Topographical_Reverse Fault-Topographical_DipSlip)
+(genls Fault-Topographical_Reverse Fault-Topographical)
+(nameString Fault-Topographical_Reverse "reverse fault")
+(comment Fault-Topographical_Reverse
+  "In this kind of #$Fault-Topographical_DipSlip the hanging wall goes up relative to footwall 
+   and the slope of fault is steep.")
+
+(isa Fault-Topographical_Thrust Collection)
+(genls Fault-Topographical_Thrust Fault-Topographical_DipSlip)
+(genls Fault-Topographical_Thrust Fault-Topographical)
+(nameString Fault-Topographical_Thrust "thrust fault")
+(comment Fault-Topographical_Thrust
+  "In this kind of #$Fault-Topographical_DipSlip the hanging wall goes up relative to footwall 
+   and the slope of fault is not steep.")
+
+
+(isa Fault-Topographical_StrikeSlip Collection)
+(genls Fault-Topographical_StrikeSlip Fault-Topographical)
+(siblingDisjointWith Fault-Topographical_StrikeSlip Fault-Topographical_DipSlip)
+(siblingDisjointWith Fault-Topographical_StrikeSlip Fault-Topographical_ObliqueSlip)
+(nameString Fault-Topographical_StrikeSlip "strike-slip fault")
+(comment Fault-Topographical_StrikeSlip
+  "This is a specialization of #$Fault-Topographical where the main movement 
+   along the fault is horizontal.")
+
+(isa Fault-Topographical_StrikeSlip_RightLateral Collection)
+(genls Fault-Topographical_StrikeSlip_RightLateral Fault-Topographical_StrikeSlip)
+(genls Fault-Topographical_StrikeSlip_RightLateral Fault-Topographical)
+(siblingDisjointWith Fault-Topographical_StrikeSlip_RightLateral 
+                     Fault-Topographical_StrikeSlip_LeftLateral)
+(nameString Fault-Topographical_StrikeSlip_RightLateral 
+            "strike-slip fault, right-lateral")
+
+(isa Fault-Topographical_StrikeSlip_LeftLateral Collection)
+(genls Fault-Topographical_StrikeSlip_LeftLateral Fault-Topographical_StrikeSlip)
+(genls Fault-Topographical_StrikeSlip_LeftLateral Fault-Topographical)
+(siblingDisjointWith Fault-Topographical_StrikeSlip_LeftLateral
+                     Fault-Topographical_StrikeSlip_RightLateral)
+(nameString Fault-Topographical_StrikeSlip_LeftLateral 
+            "strike-slip fault, left-lateral")
+
+
+
+(isa Fault-Topographical_ObliqueSlip Collection)
+(genls Fault-Topographical_ObliqueSlip Fault-Topographical)
+(siblingDisjointWith Fault-Topographical_ObliqueSlip Fault-Topographical_DipSlip)
+(siblingDisjointWith Fault-Topographical_ObliqueSlip Fault-Topographical_StrikeSlip)
+(nameString Fault-Topographical_ObliqueSlip "oblique-slip fault")
+(comment Fault-Topographical_ObliqueSlip
+  "This is a specialization of #$Fault-Topographical where the main movement 
+   along the fault is both horizontal and vertical.  Use this only when it's
+   not clearly one or the other.")
+
+
+(isa Fault-Wall Collection)
+(genls Fault-Wall NaturalThing)
+(genls Fault-Wall LandTopographicalFeature)
+(genls Fault-Wall GeologicalRockUnit)
+(comment Fault-Wall
+  "Walls that surround faults and enable fault classification.  The direction
+of movement of the walls relative to the fault determines the fault type.")
+
+(isa Fault-HangingWall Collection)
+(isa Fault-HangingWall NaturalFeatureType)
+(genls Fault-HangingWall Fault-Wall)
+(siblingDisjointWith Fault-HangingWall Fault-FootWall)
+(nameString Fault-HangingWall "hanging wall")
+(comment Fault-HangingWall
+  "This side of a #$Fault-Topographical_DipSlip is above the plane of the fault-line.")
+
+(isa Fault-FootWall Collection)
+(isa Fault-FootWall NaturalFeatureType)
+(genls Fault-FootWall Fault-Wall)
+(siblingDisjointWith Fault-FootWall Fault-HangingWall)
+(nameString Fault-FootWall "foot wall")
+(comment Fault-FootWall
+  "This side of a #$Fault-Topographical_DipSlip is below the plane of the fault-line.")
+
+(isa GeologicStress-Tension Collection)
+(genls GeologicStress-Tension ForceType)
+(genls GeologicStress-Tension ForceVector)
+(siblingDisjointWith GeologicStress-Tension GeologicStress-Shear)
+(siblingDisjointWith GeologicStress-Tension GeologicStress-Compression)
+(nameString GeologicStress-Tension "tension")
+(comment GeologicStress-Tension
+  "Tension(rock lengthening) which pulls the rocks apart, together with gravity which pulls down the hanging block,
+   cause forming a #$Fault-Topographical_Normal.")
+
+(isa GeologicStress-Compression Collection)
+(genls GeologicStress-Compression ForceType)
+(genls GeologicStress-Compression ForceVector)
+(siblingDisjointWith GeologicStress-Compression GeologicStress-Shear)
+(siblingDisjointWith GeologicStress-Compression GeologicStress-Tension)
+(nameString GeologicStress-Compression "compression")
+(comment GeologicStress-Compression
+  "Compression(rock shortening) pushes the rocks together, one block of rockgets pushed atop another,
+   which causes forming a #$Fault-Topographical_Reverse or #$Fault-Topographical_Thrust.")
+
+(isa GeologicStress-Shear Collection)
+(genls GeologicStress-Shear ForceType)
+(genls GeologicStress-Shear ForceVector)
+(siblingDisjointWith GeologicStress-Shear GeologicStress-Tension)
+(siblingDisjointWith GeologicStress-Shear GeologicStress-Compression)
+(nameString GeologicStress-Shear "shear")
+(comment GeologicStress-Shear
+  "#$Fault-Topographical_Normal is caused by Shear and involves horizontal motions of rocks.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Folded Structures
+
+(isa Folds-Geological Collection)
+(isa Folds-Geological NaturalFeatureType)
+(genl Folds-Geological NaturalThing)
+(nameString Folds-Geological "folds")
+(comment Folds-Geological
+  "#$Folds-Geological are upward or downward bends of rock layers.")
+
+(isa Antiforms Collection)
+(genls Antiforms Folds-Geological)
+(siblingDisjointWith Antiforms Synforms)
+(comment Antiforms
+  "#$Antiforms are "upfolds" or "convex folds".")
+
+(isa Synforms Collection)
+(genls Antiforms Folds-Geological)
+(siblingDisjointWith Synforms Antiforms)
+(comment Synforms
+  "#$Synforms are "downfolds" or "concave folds".")
+
+(isa Anticlines Collection)
+(genls Anticlines Antiforms)
+(siblingDisjointWith Anticlines Synclines)
+(comment Anticlines
+  "If the oldest rocks are in the middle, the #$Antiforms are called #$Anticlines.")
+
+(isa Synclines Collection)
+(genls Synclines Antiforms)
+(siblingDisjointWith Synclines Anticlines)
+(comment Synclines
+  "If the youngest rocks are in the middle, the #$Synforms are called #$Synclines.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Layers of the Earth
+
+(isa PlantaryBodyLayer-Crust Collection)
+(genls PlantaryBodyLayer-Crust RockyPlanetaryStuff)
+(genls PlantaryBodyLayer-Crust GeologicalRockUnit)
+(siblingDisjointWith PlantaryBodyLayer-Crust PlantaryBodyLayer-Mantle)
+(siblingDisjointWith PlantaryBodyLayer-Crust PlantaryBodyLayer-InnerCore)
+(siblingDisjointWith PlantaryBodyLayer-Crust PlantaryBodyLayer-OuterCore)
+(nameString PlantaryBodyLayer-Crust "crust")
+(comment PlantaryBodyLayer-Crust
+  "The #$PlantaryBodyLayer-Crust is the outer layer of a #$RockyPlanetaryBody.")
+
+(isa PlantaryBodyLayer-Mantle Collection)
+(genls PlantaryBodyLayer-Mantle RockyPlanetaryStuff)
+(genls PlantaryBodyLayer-Mantle GeologicalRockUnit)
+(siblingDisjointWith PlantaryBodyLayer-Mantle PlantaryBodyLayer-Crust)
+(siblingDisjointWith PlantaryBodyLayer-Mantle PlantaryBodyLayer-InnerCore)
+(siblingDisjointWith PlantaryBodyLayer-Mantle PlantaryBodyLayer-OuterCore)
+(nameString PlantaryBodyLayer-Mantle "mantle")
+(comment PlantaryBodyLayer-Mantle
+  "The #$PlantaryBodyLayer-Mantle is a layer of the #$RockyPlanetaryBody.")
+
+(isa PlantaryBodyLayer-OuterCore Collection)
+(genls PlantaryBodyLayer-OuterCore RockyPlanetaryStuff)
+(genls PlantaryBodyLayer-OuterCore GeologicalRockUnit)
+(siblingDisjointWith PlantaryBodyLayer-OuterCore PlantaryBodyLayer-Crust)
+(siblingDisjointWith PlantaryBodyLayer-OuterCore PlantaryBodyLayer-InnerCore)
+(siblingDisjointWith PlantaryBodyLayer-OuterCore PlantaryBodyLayer-Mantle)
+(nameString PlantaryBodyLayer-OuterCore "outer core")
+(comment PlantaryBodyLayer-OuterCore
+  "The #$PlantaryBodyLayer-OuterCore is a layer of the #$RockyPlanetaryBody.")
+
+(isa PlantaryBodyLayer-InnerCore Collection)
+(genls PlantaryBodyLayer-InnerCore RockyPlanetaryStuff)
+(genls PlantaryBodyLayer-InnerCore GeologicalRockUnit)
+(siblingDisjointWith PlantaryBodyLayer-InnerCore PlantaryBodyLayer-Crust)
+(siblingDisjointWith PlantaryBodyLayer-InnerCore PlantaryBodyLayer-OuterCore)
+(siblingDisjointWith PlantaryBodyLayer-InnerCore PlantaryBodyLayer-Mantle)
+(nameString PlantaryBodyLayer-InnerCore "inner core")
+(comment PlantaryBodyLayer-InnerCore
+  "The #$PlantaryBodyLayer-InnerCore is a layer of the #$RockyPlanetaryBody.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Sedimentary Structure
+
+(isa BoundingSurface Collection)
+(genls BoundingSurface GeologicalBoundary)
+(genls BoundingSurface GeographicalPlace-2D)
+(nameString BoundingSurface "bounding surface")
+(comment BoundingSurface
+  "The #$BoundingSurface, which is a kind of surfaces that envelope & enclose discrete 
+   geometric bodies of sediment, subdivide sedimentary sections.")
+
+(isa Conformity-Geological Collection)
+(genls Conformity-Geological GeographicalPlace-2D)
+(nameString Conformity-Geological "conformity")
+(comment Conformity-Geological
+  "The #$Conformity-Geological is a contact between adjacent strata or formations, of which the rocks
+   on both sides formed at about the same time.")
+
+(isa Unconformity-Geological Collection)
+(genls Unconformity-Geological GeographicalPlace-2D)
+(nameString Unconformity-Geological "unconformity")
+(comment Unconformity-Geological
+  "The #$Unconformity-Geological is a contact, of which the rocks on both sides did NOT form at 
+   the same time. It represents a gap in the geologic record. An unconformity can be a buried surface
+   where there was a pause in sedimentation, or a surface that was eroded before more sediment was 
+   deposited on top of it.")
+
+(isa Disconformity-Geological Collection)
+(genls Disconformity-Geological Unconformity-Geological)
+(siblingDisjointWith Disconformity-Geological AngularUnconformity-Geological)
+(siblingDisjointWith Disconformity-Geological Nonconformity-Geological)
+(nameString Disconformity-Geological "disconformity")
+(comment Disconformity-Geological
+  "The #$Disconformity-Geological is an unconformity between parallel strata or lava flows. Most 
+   disconformities are very irregular surfaces, and pieces of the underlying rock are often included 
+   in the strata above them.")
+
+(isa AngularUnconformity-Geological Collection)
+(genls AngularUnconformity-Geological Unconformity-Geological)
+(siblingDisjointWith AngularUnconformity-Geological Disconformity-Geological)
+(siblingDisjointWith AngularUnconformity-Geological Nonconformity-Geological)
+(nameString AngularUnconformity-Geological "angular unconformity")
+(comment AngularUnconformity-Geological
+  "The #$AngularUnconformity-Geological is an unconformity between nonparallel strata.")
+
+(isa Nonconformity-Geological Collection)
+(genls Nonconformity-Geological Unconformity-Geological)
+(siblingDisjointWith Nonconformity-Geological Disconformity-Geological)
+(siblingDisjointWith Nonconformity-Geological AngularUnconformity-Geological)
+(nameString Nonconformity-Geological "nonconformity")
+(comment Nonconformity-Geological
+  "The #$Nonconformity-Geological is an unconformity formed when stratified sedimentary rocks are
+   deposited on eroded igneous or metamorphic rock.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Miscellaneous
+
+(isa GeologicalRockLayer Collection)
+(genls GeologicalRockLayer GeologicalRockUnit)
+(genls GeologicalRockLayer GeographicalPlace-2D)
+(comment GeologicalRockLayer "A layer (either horizontal or vertical) of rock.")
+
+(isa GeologicalMarkerBed Collection)
+(genls GeologicalMarkerBed GeologicalRockLayer)
+(nameString GeologicalMarkerBed "marker bed")
+(comment GeologicalMarkerBed
+  "A bed of rock strata that are readily distinguishable by reason of physical 
+   characteristics and are traceable over large horizontal distances.
+   (from Encyclopaedia Britannica)")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

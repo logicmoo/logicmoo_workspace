@@ -1,0 +1,328 @@
+;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;; -------------------------------------------------------------------------
+;;; File name: decision-tree.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: December 19, 2011 19:34:53
+;;;   Purpose: decision-tree plans.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;
+;;; Limitation: This is really static.  It learns one criteria for optimality
+;;; that must hold forever.  But in Freeciv, the goals for things like city
+;;; siting may shift over time.  Early on, we want to place cities where they
+;;; will grow quickly.  Later, we may be more interested in defensive
+;;; position, or science output.  We may need a different dependent variable 
+;;; then, determined by the current goal.
+;;;
+;;; That's ok.  We're learning a function approximation.  That doesn't depend
+;;; on the goal.  What constitutes optimality may depend on the goal, but
+;;; the decision tree specifies the independent variable and features and
+;;; produces a score in terms of the dependent variable.  Should be context-
+;;; free.
+
+
+;;; ToDo: Regression planning gives us a propositional goal hierarchy.  Can
+;;; we set up a dtree of durations for each step along the hierarchy?
+;;; If our goal is, say, to achieve having a library, there's the time
+;;; associated with the durative action of building the library (assuming
+;;; you have the technology).  Of course, turnsToBuild tells us this directly,
+;;; and the production cost plus shield surplus anticipate this.  Do we need function
+;;; approximation to identify these relations, or are we simply unable to
+;;; exploit them, or what?
+
+(in-microtheory PerceptualAgentMt)
+
+(isa DTreeFn Function-Denotational)
+(arity DTreeFn 1)
+(arg1Isa DTreeFn Thing)
+(resultIsa DTreeFn DecisionTree)
+(comment DTreeFn "(DTreeFn <thing>) denotes a decision tree epistemic form.")
+
+;;; Constructing the decision tree:
+;;; We want to write out (dtreeScore ?action-pred ?value-list ?min ?max)
+;;; stmts for progressive prefixes of ?value-list.
+
+(isa indexCaseScore ComplexActionPredicate)
+(arity indexCaseScore 4)
+(arg1Isa indexCaseScore Microtheory)
+(arg2Isa indexCaseScore CycLSentence-Assertible)
+(arg3Isa indexCaseScore Microtheory)
+(arg4Isa indexCaseScore Number-General)
+(comment indexCaseScore "(indexCaseScore ?case ?action ?lkmt ?score) indexes the action case score in a decision tree to enable rapid lookup of expected outcome score.")
+
+(preconditionForMethod
+  (and (operatorFormulas ?action-predicate ?action)
+       (operatorIndependentVariable ?action-predicate ?argnum ?binrel)
+       (formulaArgument ?action ?argnum ?entity)
+       (numAnswers 1 (localOnly (ist-Information case (?binrel ?entity ?input))))
+       (numAnswers 1 (featureList ?action-predicate ?feature-list))
+       (evaluate ?value-list
+         (MapFunctionOverList 
+           (FunctionToArg 2
+             (Kappa (?attribute ?value)
+               (featureValue ?attribute ?input ?value)))
+           ?feature-list))
+       (evaluate ?feature-len (LengthOfListFn ?value-list))
+       (evaluate ?prefix-lengths
+         (TheClosedRetrievalSetOf ?pos
+           (integerBetween 0 ?pos ?feature-len))))
+  (methodForAction
+    (indexCaseScore ?case ?action ?lkmt ?score)
+    (actionSequence
+      (TheList
+        (doForEach ?prefix-len ?prefix-lengths
+          (indexCaseScoreStmt ?case (DTreeFn ?action-predicate) ?score ?value-list ?prefix-len ?lkmt))
+        ))))
+
+(isa indexCaseScoreStmt ComplexActionPredicate)
+(arity indexCaseScoreStmt 6)
+(arg1Isa indexCaseScoreStmt Microtheory)
+(arg2Isa indexCaseScoreStmt DecisionTree)
+(arg3Isa indexCaseScoreStmt Number-General)
+(arg4Isa indexCaseScoreStmt List)
+(arg5Isa indexCaseScoreStmt Integer)
+(arg6Isa indexCaseScoreStmt Microtheory)
+(comment indexCaseScoreStmt "(indexCaseScoreStmt ?case ?action-predicate ?score ?value-list ?prefix-len ?lkmt) indexes a particular branch point in the decision tree for predicting outcome scores of action cases.")
+
+(preconditionForMethod
+  (and (evaluate ?values-prefix 
+         (SublistFromToFn ?value-list 0 ?prefix-len))
+       (numAnswers 1 (scoreBoundsNeedsUpdating ?dtree ?values-prefix ?score ?min ?max ?old-stmts ?lkmt)))
+  (methodForAction
+    (indexCaseScoreStmt ?case ?dtree ?score ?value-list ?prefix-len ?lkmt)
+    (actionSequence
+      (TheList
+        (doForgetMembers ?old-stmts)
+        (doRecord (ist-Information ?lkmt (dtreeScore ?dtree ?values-prefix ?min ?max)))
+        ))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (indexCaseScoreStmt ?case ?dtree ?score ?value-list ?prefix-len ?lkmt)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (indexCaseScoreStmt ?case ?dtree ?score ?value-list ?prefix-len ?lkmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa scoreBoundsNeedsUpdating Predicate)
+(arity scoreBoundsNeedsUpdating 7)
+(arg1Isa scoreBoundsNeedsUpdating DecisionTree)
+(arg2Isa scoreBoundsNeedsUpdating List)
+(arg3Isa scoreBoundsNeedsUpdating Number-General)
+(arg4Isa scoreBoundsNeedsUpdating Number-General)
+(arg5Isa scoreBoundsNeedsUpdating Number-General)
+(arg6Isa scoreBoundsNeedsUpdating Set-Mathematical)
+(arg7Isa scoreBoundsNeedsUpdating Microtheory)
+(comment scoreBoundsNeedsUpdating "(scoreBoundsNeedsUpdating ?dtree ?values-prefix ?score ?min ?max ?old-stmts ?lkmt) means the case ?score extends the range of previously known scores for the particular set of feature values.")
+
+(<== (scoreBoundsNeedsUpdating ?dtree ?values-prefix ?score ?min ?max ?old-stmts ?lkmt)
+     (kbOnly
+       (lookupOnly
+         (ist-Information ?lkmt
+           (dtreeScore ?dtree ?values-prefix ?old-min ?old-max))))
+     (uninferredSentence
+       (numericallyBetween ?score ?old-min ?old-max))
+     (unifies ?old-stmts
+       (TheSet
+         (ist-Information ?lkmt
+           (dtreeScore ?dtree ?values-prefix ?old-min ?old-max))))
+     (minimum ?score ?old-min ?min)
+     (maximum ?score ?old-max ?max))
+
+(<== (scoreBoundsNeedsUpdating ?dtree ?values-prefix ?score ?score ?score (TheSet) ?lkmt)
+     (uninferredSentence
+       (kbOnly
+         (lookupOnly
+           (ist-Information ?lkmt
+             (dtreeScore ?dtree ?values-prefix ?old-min ?old-max))))))
+
+(isa numericallyBetween TernaryPredicate)
+(arity numericallyBetween 3)
+(arg1Isa numericallyBetween ScalarInterval)
+(arg2Isa numericallyBetween ScalarInterval)
+(arg3Isa numericallyBetween ScalarInterval)
+
+
+;;; I would have thought we'd had this already:
+(<== (numericallyBetween ?num ?min ?max)
+     (groundExpression ?num)
+     (groundExpression ?min)
+     (groundExpression ?max)
+     (lessThanOrEqualTo ?min ?num)
+     (greaterThanOrEqualTo ?max ?num))
+     
+;;;
+;;; Looking up predicted score ranges in the decision tree:
+;;;
+
+;(isa actionScore TernaryPredicate)
+;(arity actionScore 3)
+;(arg1Isa actionScore ActionPredicate)
+;(arg2Isa actionScore Thing)
+;(arg3Isa actionScore Number-General)
+
+(isa dtreeScoreMidpoint QuaternaryPredicate)
+(arity dtreeScoreMidpoint 4)
+(arg1Isa dtreeScoreMidpoint DecisionTree)
+(arg2Isa dtreeScoreMidpoint List-Extensional)
+(arg3Isa dtreeScoreMidpoint Thing)
+(arg4Isa dtreeScoreMidpoint Number-General)
+
+(isa retrieveDtreeScoreBounds Predicate)
+(arity retrieveDtreeScoreBounds 6)
+(comment retrieveDtreeScoreBounds "(retrieveDtreeScoreBounds ?input ?dtree ?feature-list ?min ?max)")
+
+(isa branchOnTest Predicate)
+(arity branchOnTest 6)
+
+(isa featureList BinaryPredicate)
+(isa featureList FunctionalPredicate)
+(arity featureList 2)
+(arg1Isa featureList Thing)  ; Don't limit to ActionPredicates!
+(arg2Isa featureList List)
+(comment featureList "(featureList ?thing ?predictive-feature-list) binds a list of attribute names in order to support decision tree querying.")
+
+;;; This is where a true ID3-like system would do a lot of analysis
+;;; to determine the most informative order to test.
+;;; *** This will have to do for now:
+(<== (featureList ?thing ?feature-list)
+     (evaluate ?predictive-features
+       (TheClosedRetrievalSetOf ?feature
+         (lookupOnly
+           (and (predictiveFeature ?thing ?feature)  ; written out by elaborateActionCase
+                (isa ?feature FunctionalPredicate)))))
+     ;; filter, partition, and sort
+     (evaluate ?feature-list
+       (SortFn ?predictive-features lessThan (FunctionToArg 2 potentialFeatureSpace))))
+
+(isa potentialFeatureSpace BinaryPredicate)
+(arity potentialFeatureSpace 2)
+(arg1Isa potentialFeatureSpace BinaryPredicate)
+(arg2Isa potentialFeatureSpace Integer)
+(comment potentialFeatureSpace "(potentialFeatureSpace ?pred ?size) binds ?size to the number of known possible arg2's of ?pred.")
+
+;;; Assume features are functional binrels:
+(<== (potentialFeatureSpace ?pred ?size)
+     (arg2Isa ?pred ?type)
+     ;; How do we efficiently compute the number of instances?  Does planB support this?
+     (numberOfInstances ?type ?size))
+
+(isa featureValue TernaryPredicate)
+(arity featureValue 3)
+(comment featureValue "(featureValue ?attribute ?entity ?value) binds ?value to the current attribute value of ?entity, or None if it doesn't exist.")
+
+(isa dtreeScore Predicate)
+(arity dtreeScore 4)
+(arg1Isa dtreeScore DecisionTree)
+(arg2Isa dtreeScore List-Extensional)
+(arg3Isa dtreeScore Number-General)  ; limit to reals?  Collapse to a scalar interval?
+(arg4Isa dtreeScore Number-General)
+(comment dtreeScore "(dtreeScore ?dtree ?feature-values ?min ?max) is a reifiable statement that relates the maximum and minimum numerical bounds observed for the list of features in the decision tree instance.")
+
+
+;(<== (actionScore ?action-pred ?input ?score)
+;     (featureList ?action-pred ?feature-list)
+;     (numAnswers 1 (retrieveDtreeScoreBounds ?input (DTreeFn ?action-pred) ?feature-list (TheList) ?min ?max))
+;     (evaluate ?score (QuotientFn (PlusFn ?min ?max) 2))) ; Score is the midpoint of the range
+
+;;; This should be agnostic about the syntax of the decision tree name.
+;(<== (dtreeScoreMidpoint ?dtree ?feature-list ?input ?score)
+;     (numAnswers 1 (retrieveDtreeScoreBounds ?input ?dtree ?feature-list (TheList) ?min ?max))
+;     (evaluate ?score (QuotientFn (PlusFn ?min ?max) 2))) ; Score is the midpoint of the range
+
+;;; This is the intermediate predicate that tries to recursively descend through the dtree:
+(<== (retrieveDtreeScoreBounds ?input ?dtree ?feature-list ?value-list ?min ?max)
+     (evaluate ?feature-pred (FirstInListFn ?feature-list))
+     (evaluate ?rest-features (RestOfListFn ?feature-list))
+     (numAnswers 1 (featureValue ?feature-pred ?input ?feature-value))
+     (evaluate ?next-value-list (JoinListsFn ?value-list (TheList ?feature-value)))
+     (numAnswers 1 (branchOnTest ?input ?dtree ?rest-features ?next-value-list ?min ?max)))
+
+(<== (branchOnTest ?input ?dtree ?feature-list ?value-list ?min ?max)
+     (uninferredSentence
+       (retrieveDtreeScoreBounds ?input ?dtree ?feature-list ?value-list ?min ?max))
+     (numAnswers 1 (dtreeScore ?dtree ?value-list ?min ?max)))
+
+(<== (branchOnTest ?input ?dtree ?feature-list ?value-list ?min ?max)
+     (different ?feature-list (TheList))
+     (numAnswers 1 (retrieveDtreeScoreBounds ?input ?dtree ?feature-list ?value-list ?min ?max)))
+
+;;; This is banking on feature values being outsourced.  Otherwise context would be a problem.
+(<== (featureValue ?pred ?arg1 ?arg2)
+     (numAnswers 1 (?pred ?arg1 ?arg2)))
+
+(<== (featureValue ?pred ?arg1 None)
+     (uninferredSentence
+       (?pred ?arg1 ?arg2)))
+       
+;;; Support experimentation:
+
+(isa experimentScore QuaternaryPredicate)
+(arity experimentScore 4)
+(arg1Isa experimentScore DecisionTree)
+(arg2Isa experimentScore List-Extensional)
+(arg3Isa experimentScore Thing)
+(arg4Isa experimentScore CycLTerm) ; either a number or True
+(comment experimentScore "(experimentScore ?dtree ?feature-list ?input ?output)")
+
+;;; ?output can either be a number or True
+(<== (experimentScore ?dtree ?feature-list ?input ?output)
+     (evaluate ?value-list
+       (MapFunctionOverList
+         (FunctionToArg 2 
+           (Kappa (?attribute ?value)
+             (featureValue ?attribute ?input ?value)))
+         ?feature-list))
+     (unindexedOrMidpointScore ?dtree ?value-list ?output))
+     
+(isa unindexedOrMidpointScore TernaryPredicate)
+(arity unindexedOrMidpointScore 3)
+(arg1Isa unindexedOrMidpointScore DecisionTree)
+(arg2Isa unindexedOrMidpointScore List-Extensional)
+(arg3Isa unindexedOrMidpointScore CycLTerm)  ; number or True
+(comment unindexedOrMidpointScore "(unindexedOrMidpointScore ?dtree ?value-list ?score-or-True)")
+     
+(<== (unindexedOrMidpointScore ?dtree ?value-list ?score)
+     (numAnswers 1
+       (lookupOnly
+         (dtreeScore ?dtree ?value-list ?min ?max)))  ; straight lookup given all feature values in order
+     (evaluate ?score (QuotientFn (PlusFn ?min ?max) 2)))
+
+(<== (unindexedOrMidpointScore ?dtree ?value-list True)
+     (uninferredSentence
+       (lookupOnly
+         (dtreeScore ?dtree ?value-list ?min ?max))))
+         
+;;; We need experiment score to look like:
+;;; (<== (doBuildCityExperiment ?input ?output)
+;;;  (doBuildCityFilter ?input True)
+;;;  (experimentScore (DTreeFn doBuildCity)
+;;;    (TheList terrainAt resourceAt) ?input ?output))
+
+;;;  Testing
+#||
+(dtreeScore test (TheList) 1 16)
+(dtreeScore test (TheList plotz) 1 10)
+(dtreeScore test (TheList plotz florg) 3 5)
+(dtreeScore test (TheList plotz sniffle) 8 10)
+(dtreeScore test (TheList doltz) 8 16)
+(dtreeScore test (TheList doltz flurm) 8 12)
+(dtreeScore test (TheList doltz None) 16 16)
+(feature1 input1 plotz)
+(feature2 input1 florg)
+(feature1 input2 plotz)
+(feature2 input2 sniffle)
+(feature1 input3 doltz)
+(feature2 input3 flurm)
+(feature1 input4 doltz)
+(feature2 input5 sniffle)  ; this one fails.
+(feature1 input6 plotz)
+(feature2 input6 xxaaaavw)
+||#
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

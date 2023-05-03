@@ -1,0 +1,68 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: inertia-theory.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: March 28, 2011 11:12:48
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory InertiaTheoryMt :exclude-globals t)
+
+(isa InertiaTheoryMt Microtheory)
+(genlMt InertiaTheoryMt QPTheoryMt)
+(genlMt InertiaTheoryMt CompositionalModelingMt)
+(genlMt InertiaTheoryMt 2D-MechanicsTheoryMt)
+(genlMt ConceptualPhysicsDomainTheoryCollectorMt InertiaTheoryMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa InertiaFn Function-Denotational)
+(comment InertiaFn 
+"(InertiaFn ?x) refers the amount of force required to change the motion of
+ ?x.")
+(arity InertiaFn 1)
+(arg1Isa InertiaFn Physob)
+(resultIsa InertiaFn ContinuousQuantity)
+(<== (hasQuantity ?obj (InertiaFn ?obj))
+     (wmOnly (isa ?obj Physob))
+     (uninferredSentence (isa ?obj FixedObject)))
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model Fragments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa MassInertia PhysicalModelFragmentType)
+(comment MassInertia  
+ "An instance of MassInertia is an object possessing inertia at rest.")
+(mfTypeParticipant MassInertia ?obj Physob objectOf)
+(mfTypeParticipantConstraint MassInertia 
+                             (and (isa ?obj Physob)
+                                  (hasQuantity ?obj (MassFn ?obj))))
+(mfTypeCondition MassInertia (qGreaterThan (MassFn ?obj) Zero))
+(mfTypeConsequence MassInertia (qprop (InertiaFn ?obj) (MassFn ?obj)))
+(isa RestingInertia Collection) ;; makes SME happy
+
+
+(isa MovingInertia PhysicalModelFragmentType)
+(comment MovingInertia  
+ "An instance of MovingInertia is an object possessing inertia from motion.")
+(mfTypeParticipant MovingInertia ?obj Physob objectOf)
+(mfTypeParticipantConstraint MovingInertia 
+                             (and (isa ?obj Physob)
+                                  (uninferredSentence (isa ?obj FixedObject))
+                                  (transMotion ?obj ?dir)
+                                  (different ?dir ZeroQVector)))
+(mfTypeCondition MovingInertia (hasQuantity ?obj (2DNetVelocityFn ?obj)))
+(mfTypeConsequence MovingInertia (qprop (InertiaFn ?obj)
+                                        (2DNetVelocityFn ?obj)))
+(isa MovingInertia Collection) ;; makes SME happy
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

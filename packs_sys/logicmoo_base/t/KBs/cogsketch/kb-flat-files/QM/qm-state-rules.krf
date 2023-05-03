@@ -1,0 +1,107 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qm-state-rules.meld
+;;;;    System: SKea
+;;;;    Author: Jon Wetzel
+;;;;   Created: November 19, 2008 10:18:16
+;;;;   Purpose: Rules for QM state transitions
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory NuSketchQMRulesMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; transMotion
+
+
+(<== (stateTransitionRequires ?b1 ?b2 (transMotion ?obj1 ?dir))
+     (different ?b1 ?b2)
+     (causes-SitSit ?b1 ?b2)
+     (lookupOnly (wmOnly (ist-Information ?b1 (isa ?obj2 FixedObject))))
+     (lookupOnly (wmOnly (ist-Information ?b2 (isa ?obj2 FixedObject))))
+     
+     (lookupOnly (wmOnly (ist-Information ?b1 (isa ?obj1 RigidOb))))
+     (uninferredSentence (lookupOnly 
+                          (wmOnly
+                           (ist-Information ?b1 (isa ?obj1 FixedObject)))))
+     (different ?obj1 ?obj2)
+     (lookupOnly (wmOnly (ist-Information ?b2 (isa ?obj1 RigidOb))))
+     (uninferredSentence (lookupOnly 
+                          (wmOnly 
+                           (ist-Information ?b2 (isa ?obj1 FixedObject)))))
+
+     (uninferredSentence (stateTransitionRequires ?b1 ?b2
+                                                  (rotMotion ?obj ?dir)))
+     
+     (relativePositionChange ?b1 ?b2 ?obj1 ?obj2 ?dir)
+     ;;(fixedAxisRotation ?b1 ?b2 ?obj1 ?fixedPoint)
+     ;;(equals ?fixedPoint NONE)
+     
+     (lookupOnly 
+      (wmOnly 
+       (ist-Information 
+           ?b1 (inkLastModifiedTime (GlyphFn ?obj1 ?layer1) ?time1))))
+     (lookupOnly 
+      (wmOnly 
+       (ist-Information
+           ?b2 (inkLastModifiedTime (GlyphFn ?obj1 ?layer2) ?time2))))
+     )
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rotMotion
+(<== (stateTransitionRequires ?b1 ?b2 (rotMotion ?obj ?rotDir))
+     (different ?b1 ?b2)
+     (lookupOnly (wmOnly (causes-SitSit ?b1 ?b2)))
+     (lookupOnly (wmOnly (ist-Information ?b1 (isa ?obj RigidOb))))
+     (uninferredSentence (lookupOnly (wmOnly (ist-Information 
+                                                 ?b1 (isa ?obj FixedObject)))))
+     (lookupOnly (wmOnly (ist-Information ?b2 (isa ?obj RigidOb))))
+     (uninferredSentence (lookupOnly (wmOnly (ist-Information
+                                                 ?b2 (isa ?obj FixedObject)))))
+
+     (shortestRotationDir ?b1 ?b2 ?obj ?rotDir)
+     (different ?rotDir ZeroRot)
+
+     (lookupOnly 
+      (wmOnly
+       (ist-Information 
+           ?b1 (inkLastModifiedTime (GlyphFn ?obj ?layer1) ?time1))))
+     (lookupOnly
+      (wmOnly 
+       (ist-Information
+           ?b2 (inkLastModifiedTime (GlyphFn ?obj ?layer2) ?time2))))
+     )
+
+#|
+(<== (stateTransitionRequires ?b1 ?b2 (rotMotion ?obj ?dir))
+     (different ?b1 ?b2)
+     (causes-SitSit ?b1 ?b2)
+     (ist-Information ?b1 (q-2D-orientation (GlyphFn ?obj ?layer1) ?x1 ?y1))
+     (ist-Information ?b2 (q-2D-orientation (GlyphFn ?obj ?layer2) ?x2 ?y2))
+
+     (ist-Information ?b1 (isa ?obj RigidOb))
+     (uninferredSentence (ist-Information ?b1 (isa ?obj FixedObject)))
+     (ist-Information ?b2 (isa ?obj RigidOb))
+     (uninferredSentence (ist-Information ?b2 (isa ?obj FixedObject)))
+     
+     (different-pairs ?x1 ?x2 ?y1 ?y2)
+
+     (ist-Information ?b1 (inkLastModifiedTime (GlyphFn ?obj ?layer1) ?time1))
+     (ist-Information ?b2 (inkLastModifiedTime (GlyphFn ?obj ?layer2) ?time2))
+     )
+
+(<== (different-pairs ?x1 ?x2 ?y1 ?y2)
+     (different ?x1 ?x2))
+
+(<== (different-pairs ?x1 ?x2 ?y1 ?y2)
+     (different ?y1 ?y2))
+|#
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

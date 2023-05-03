@@ -1,0 +1,48 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: primitives.meld
+;;;;    System: nuSketch hookup
+;;;;    Author: Matt McLure
+;;;;   Created: June 26, 2011 22:13:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Cogsketch-AgentMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;define doOpenSketchFile primitive
+(isa doOpenSketchFile SimpleActionPredicate)
+(arity doOpenSketchFile 1)
+(arg1Isa doOpenSketchFile CharacterString)
+(comment doOpenSketchFile "(doOpenSketchFile ?file-URL) opens the sketch stored in the file denotes by ?file-URL.")
+
+(isa doSaveSketchAs SimpleActionPredicate)
+(arity doSaveSketchAs 2)
+(arg1Isa doSaveSketchAs SketchAgent-CA)
+(arg2Isa doSaveSketchAs CharacterString)
+(comment doSaveSketchAs "(doSaveSketchAs ?sketch-agent ?file-URL) saves the sketch associated with ?sketch-agent to the designated file.")
+
+;;;define doCreateNewSketch primitive
+(isa doCreateNewSketch SimpleActionPredicate)
+(arity doCreateNewSketch 0)
+(comment doCreateNewSketch "(doCreateNewSketch) Creates a new sketch and spawns the corresponding sketch agent.")
+
+(isa doSetActiveSketch SimpleActionPredicate)
+(arity doSetActiveSketch 1)
+(arg1Isa doSetActiveSketch NuSketchSketch)
+(comment doSetActiveSketch "(doSetActiveSketch ?sketch) ensures the specified sketch is the active sketch.")
+
+;;;define doCloseSketch primitive
+(isa doCloseSketch SimpleActionPredicate)
+(arity doCloseSketch 1)
+(arg1Isa doCloseSketch NuSketchSketch)
+(comment doCloseSketch "(doCloseSketch ?sketch) closes the sketch ?sketch and its corresponding agent.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

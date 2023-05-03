@@ -1,0 +1,121 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: analogy.meld
+;;;;    System: CogSketch
+;;;;    Author: Kate Lockwood
+;;;;   Created: November 7, 2005 18:21:41
+;;;;   Purpose: CogSketch-specific analogy-related definitions.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchAnalogyMt :exclude-globals t)
+
+(genlMt CogSketchAnalogyMt SKEAAnalogyMt)
+(comment CogSketchAnalogyMt
+  "Contains CogSketch-specific analogy-related definitions.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchWorksheetSAGEInputCaseFn
+
+(isa CogSketchWorksheetSAGEInputCaseFn CaseFunctions)
+(arity CogSketchWorksheetSAGEInputCaseFn 3)
+(arg1Isa CogSketchWorksheetSAGEInputCaseFn Case)
+(arg2Isa CogSketchWorksheetSAGEInputCaseFn NuSketchBundle)
+(arg3Isa CogSketchWorksheetSAGEInputCaseFn TextString)
+(resultIsa CogSketchWorksheetSAGEInputCaseFn Case)
+(comment CogSketchWorksheetSAGEInputCaseFn
+  "Creates a case that can be used as input to SAGE.  It includes the facts
+in Case and any new facts asserted via query for questions.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa MatchConstraintsMtFn Function-Denotational)
+(arity MatchConstraintsMtFn 1)
+(arg1Isa MatchConstraintsMtFn Case)
+(resultIsa MatchConstraintsMtFn Microtheory)
+(comment MatchConstraintsMtFn
+  "Creates a microtheory than contains all the match constraints associated with its
+argument.  This is a useful alternative to storing match constraints directly
+in the case argument, as they can result in a lot of artificial entity correspondences
+and relational structure.")
+
+(isa matchConstraintsMtFor BinaryRelation)
+(arity matchConstraintsMtFor 2)
+(arg1Isa matchConstraintsMtFor Case)
+(arg2Isa matchConstraintsMtFor Microtheory)
+(comment matchConstraintsMtFor
+  "Indicates that the second argument is the Case containing match constraint information
+for the first argument, e.g. (matchConstraintsMtFor <root-case> <case-with-match-constraints>).")
+(notForAnalogy matchConstraintsMtFor)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ubiquitousForAnalogy
+
+;;;(ubiquitousForAnalogy VeryRoundGlyph)
+;;;(ubiquitousForAnalogy NotVeryRoundGlyph)
+;;;(ubiquitousForAnalogy SomewhatRoundGlyph)
+;;;(ubiquitousForAnalogy VeryRound)
+;;;(ubiquitousForAnalogy NotVeryRound)
+;;;(ubiquitousForAnalogy SomewhatRound)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; notForAnalogy
+
+(notForAnalogy unifies)
+(notForAnalogy different)
+
+(notForAnalogy cogsketchAdviceTemplate)
+(notForAnalogy cogsketchAdviceString)
+(notForAnalogy cogSketchTutoringQuantityMinVal)
+(notForAnalogy cogSketchTutoringQuantityMaxVal)
+(notForAnalogy cogSketchTutoringMinValString)
+(notForAnalogy cogSketchTutoringMaxValString)
+(notForAnalogy cogSketchTutoringExtraGlyphsAllowedForCollection)
+(notForAnalogy cogSketchTutoringExtraGlyphsAllowedForRelation)
+(notForAnalogy cogsketchGradingTotalPoints)
+(notForAnalogy cogsketchGradingCriterion)
+(notForAnalogy importanceOrderFor)
+(notForAnalogy showEdgeDecompWithTutorAdvice)
+
+(notForAnalogy cogsketchExperimentInstructions)
+(notForAnalogy cogsketchExperimentFinishInstructions)
+(notForAnalogy cogsketchProblemStatement)
+(notForAnalogy cogsketchAllowedCollections)
+(notForAnalogy cogsketchFreeTextEntryForCollections)
+(notForAnalogy cogsketchAllowedRelations)
+(notForAnalogy cogsketchFreeTextEntryForRelations)
+(notForAnalogy cogsketchAllowedAnnotations)
+(notForAnalogy cogsketchFreeTextEntryForAnnotations)
+(notForAnalogy cogsketchExperimentSubsketchOrdering)
+(notForAnalogy cogsketchAllottedTimeForSubsketch)
+(notForAnalogy cogsketchDefaultLineWidth)
+(notForAnalogy cogsketchInitialViewBox)
+(notForAnalogy cogsketchActionRequiredToContinue)
+(notForAnalogy cogsketchExperimentRightClickMenuDisabled)
+(notForAnalogy cogsketchUserAssignedNamestringsAllowed)
+(notForAnalogy cogsketchExperimentAutorunPrompt)
+(notForAnalogy cogsketchExperimentSubjectNamePrompt)
+(notForAnalogy cogsketchExperimentPlayAudioFile)
+(notForAnalogy cogsketchExperimentInitialInteractionMode)
+
+(notForAnalogy FeedbackRubric)
+(notForAnalogy CogSketchFeedbackRubricFn)
+(notForAnalogy suggestionForFeedbackRubric)
+(notForAnalogy activeSuggestionPatternForWorksheet)
+(notForAnalogy feedbackRubricForWorksheet)
+
+(notForAnalogy ArrowDrawnSymbol)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; atomicAnalogyNat
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

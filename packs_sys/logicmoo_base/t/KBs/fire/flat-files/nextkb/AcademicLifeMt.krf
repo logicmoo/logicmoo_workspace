@@ -1,0 +1,4 @@
+(in-microtheory AcademicLifeMt)
+
+(isa Lecturer PersonTypeByPositionInOrg)
+(genls Teacher AcademicProfessional)

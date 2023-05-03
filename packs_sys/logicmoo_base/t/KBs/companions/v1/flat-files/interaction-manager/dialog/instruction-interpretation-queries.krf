@@ -1,0 +1,70 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: instruction-interpretation-queries.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: June 3, 2013 11:02:32
+;;;;   Purpose: Narrative interpretation queries for general instruction
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+;;; IN-PROGRESS
+
+(in-microtheory (InterpretationMtFn Instruction) :exclude-globals t) 
+
+(genlMt (InterpretationMtFn Instruction) InstructionNarrativeRulesMt)
+
+;;; In an instructional setting, statements and questions have a somewhat
+;;; different interpretation than in other task-oriented settings.
+
+;;; Topic Setting
+;;; Declarative statements about what will be discussed, its similarities
+;;; and differences to other prior-knowledge, etc.
+
+(queryForInterpretation
+ 0 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      TopicIntroduction))
+
+;;; Generic abduction of descriptive properties:
+;(queryForInterpretation
+; 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+;                      DescribesProperty))
+
+
+;;; Socratic Questioning
+;;; Interrogatives aimed at bringing background knowledge into the discourse
+;;; and guiding reasoning.
+
+;(queryForInterpretation
+; 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+;                      SocraticQuestion))
+
+
+;;; Self-Assessment Tasking
+;;; Imperatives to reconsider a line of reasoning (backtrack), find 
+;;; additional examples, practice a skill
+
+;(queryForInterpretation
+; 3 (directiveFunction (DirectiveEventFn :REPLACE-SID ?event-id)
+;                      Practice))
+
+;(queryForInterpretation
+; 3 (directiveFunction (DirectiveEventFn :REPLACE-SID ?event-id)
+;                      ExploreImpliciations))  
+
+;;; Domain Knowledge Insertion
+;;; Stating of facts and relations.
+
+;(queryForInterpretation
+; 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+;                      FactualStatement))
+
+;(queryForInterpretation
+; 0 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+;                      CorrectionOrConfirmation))
+                      
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

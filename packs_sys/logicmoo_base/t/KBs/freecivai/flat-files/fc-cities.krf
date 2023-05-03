@@ -1,0 +1,18 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic Freeciv cities
+;; -------------------
+
+(isa FreeCiv-City Collection)
+(genls FreeCiv-City City)               ; tie into generic knowledge
+(genls FreeCiv-City FreeCiv-Actor)      ; Cities can take actions
+
+;; This should probably tie into a concept above the
+;; FreeCiv level...
+; (genls FreeCiv-City ComputerGame-Strategy-City)
+
+(isa FreeCiv-CityStyle Collection)
+(genls FreeCiv-CityStyle FreeCiv-Object)
+
+;;; The TerritoryFn of a city is the 21 tiles surrounding it.

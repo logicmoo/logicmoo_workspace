@@ -1,0 +1,822 @@
+;;; *** This file is generated automatically.  Please do not edit directly.***
+
+(in-microtheory (LanguageMtFn Freeciv-TheGame))
+(genlMt (LanguageMtFn Freeciv-TheGame) FrameNetSemTransMt) ; not EANLU anymore
+(genlMt FreecivMt (LanguageMtFn Freeciv-TheGame))
+
+(FNVerbSemtrans (TheList) Irrigate-TheWord
+ (and (isa :ACTION (MakingFn FC-Special-Irrigation))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNVerbSemtrans (TheList) Mine-TheWord
+ (and (isa :ACTION (MakingFn FC-Special-Mine))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Anarchy-TheWord (and (isa :NOUN FC-Anarchy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Despotism-TheWord (and (isa :NOUN FC-Despotism))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Monarchy-TheWord (and (isa :NOUN FC-Monarchy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Communism-TheWord (and (isa :NOUN FC-Communist))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Republic-TheWord (and (isa :NOUN FC-Republic))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Democracy-TheWord (and (isa :NOUN FC-Democracy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "barbarian") Leader-TheWord
+ (and (isa :NOUN FC-Unit-BarbarianLeader)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Ceasefire-TheWord
+ (and (isa :NOUN TreatyCeaseFireEvent)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Citizen-TheWord (and (isa :NOUN FC-Unit-Citizens))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) City-TheWord (and (isa :NOUN FreeCiv-City))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Civilization-TheWord (and (isa :NOUN FreeCiv-Player))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Corruption-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityCorruption))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Defense-TheWord (and (isa :NOUN DefensiveStructure))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Food-TheWord (and (isa :NOUN Food-Freeciv))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "game") Turn-TheWord (and (isa :NOUN Turn-GameEvent))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Gold-TheWord (and (isa :NOUN Gold-Freeciv))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Irrigation-TheWord
+ (and (isa :NOUN FC-Special-Irrigation)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Literacy-TheWord (and (isa :NOUN FC-Tech-Literacy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Location-TheWord (and (isa :NOUN FreecivLocation))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Mine-TheWord (and (isa :NOUN FC-Special-Mine))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Place-TheWord (and (isa :NOUN FreecivLocation))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Population-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityPopulation))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Population-TheWord (and (isa :NOUN cityPopulation))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Production-TheWord
+ (and (isa :NOUN Production-Freeciv)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Road-TheWord (and (isa :NOUN FC-Special-Road))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Science-TheWord (and (isa :NOUN Science-Freeciv))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Shield-TheWord (and (isa :NOUN Shield-Freeciv))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Spot-TheWord (and (isa :NOUN FreecivLocation))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Tile-TheWord (and (isa :NOUN FreecivLocation))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Trade-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityTradeProduction))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Trade-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn tileTradeProduction))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Trade-TheWord (and (isa :NOUN Trade-Freeciv))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Turn-TheWord (and (isa :NOUN Turn-GameEvent))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Unit-TheWord (and (isa :NOUN FreeCiv-Unit))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) AWACS-TheWord (and (isa :NOUN FC-Unit-AWACS))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "aegis") Cruiser-TheWord
+ (and (isa :NOUN FC-Unit-AEGISCruiser)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Airport-TheWord (and (isa :NOUN FC-Building-Airport))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "alpine") Troops-TheWord
+ (and (isa :NOUN FC-Unit-AlpineTroops)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Aqueduct-TheWord
+ (and (isa :NOUN FC-Building-Aqueduct)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Archer-TheWord (and (isa :NOUN FC-Unit-Archers))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Armor-TheWord (and (isa :NOUN FC-Unit-Armor))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Artillery-TheWord (and (isa :NOUN FC-Unit-Artillery))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Bank-TheWord (and (isa :NOUN FC-Building-Bank))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Barracks-TheWord
+ (and (isa :NOUN FC-Building-Barracks)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) BarracksII-TheWord
+ (and (isa :NOUN FC-Building-BarracksII)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) BarracksIII-TheWord
+ (and (isa :NOUN FC-Building-BarracksIII)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Battleship-TheWord
+ (and (isa :NOUN FC-Unit-Battleship)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Bomber-TheWord (and (isa :NOUN FC-Unit-Bomber))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Cannon-TheWord (and (isa :NOUN FC-Unit-Cannon))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Caravan-TheWord (and (isa :NOUN FC-Unit-Caravan))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Caravel-TheWord (and (isa :NOUN FC-Unit-Caravel))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Carrier-TheWord (and (isa :NOUN FC-Unit-Carrier))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Catapult-TheWord (and (isa :NOUN FC-Unit-Catapult))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Cathedral-TheWord
+ (and (isa :NOUN FC-Building-Cathedral)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Cavalry-TheWord (and (isa :NOUN FC-Unit-Cavalry))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Chariot-TheWord (and (isa :NOUN FC-Unit-Chariot))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "city") Walls-TheWord
+ (and (isa :NOUN FC-Building-CityWalls)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "coastal") Defense-TheWord
+ (and (isa :NOUN FC-Building-CoastalDefense)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Colosseum-TheWord
+ (and (isa :NOUN FC-Building-Colosseum)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Courthouse-TheWord
+ (and (isa :NOUN FC-Building-Courthouse)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "cruise") Missile-TheWord
+ (and (isa :NOUN FC-Unit-CruiseMissile)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Cruiser-TheWord (and (isa :NOUN FC-Unit-Cruiser))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Crusader-TheWord (and (isa :NOUN FC-Unit-Crusaders))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Destroyer-TheWord (and (isa :NOUN FC-Unit-Destroyer))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Diplomat-TheWord (and (isa :NOUN FC-Unit-Diplomat))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Dragoon-TheWord (and (isa :NOUN FC-Unit-Dragoons))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Elephant-TheWord (and (isa :NOUN FC-Unit-Elephants))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Engineer-TheWord (and (isa :NOUN FC-Unit-Engineers))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Explorer-TheWord (and (isa :NOUN FC-Unit-Explorer))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Factory-TheWord (and (isa :NOUN FC-Building-Factory))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Fanatic-TheWord (and (isa :NOUN FC-Unit-Fanatics))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Fighter-TheWord (and (isa :NOUN FC-Unit-Fighter))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Freight-TheWord (and (isa :NOUN FC-Unit-Freight))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Frigate-TheWord (and (isa :NOUN FC-Unit-Frigate))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Galleon-TheWord (and (isa :NOUN FC-Unit-Galleon))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Granary-TheWord (and (isa :NOUN FC-Building-Granary))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Harbour-TheWord (and (isa :NOUN FC-Building-Harbour))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Helicopter-TheWord
+ (and (isa :NOUN FC-Unit-Helicopter)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Horseman-TheWord (and (isa :NOUN FC-Unit-Horsemen))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Howitzer-TheWord (and (isa :NOUN FC-Unit-Howitzer))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) HydroPlant-TheWord
+ (and (isa :NOUN FC-Building-HydroPlant)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Ironclad-TheWord (and (isa :NOUN FC-Unit-Ironclad))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Knight-TheWord (and (isa :NOUN FC-Unit-Knights))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Legion-TheWord (and (isa :NOUN FC-Unit-Legion))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Library-TheWord (and (isa :NOUN FC-Building-Library))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "manufacturing") Plant-TheWord
+ (and (isa :NOUN FC-Building-Mfg.Plant)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Marine-TheWord (and (isa :NOUN FC-Unit-Marines))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Marketplace-TheWord
+ (and (isa :NOUN FC-Building-Marketplace)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "mass") Transit-TheWord
+ (and (isa :NOUN FC-Building-MassTransit)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "mechanized") Infantry-TheWord
+ (and (isa :NOUN FC-Unit-Mech.Inf.)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Musketeer-TheWord
+ (and (isa :NOUN FC-Unit-Musketeers)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "nuclear") Plant-TheWord
+ (and (isa :NOUN FC-Building-NuclearPlant)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "nuclear") Unit-TheWord
+ (and (isa :NOUN FC-Unit-Nuclear)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "offshore") Platform-TheWord
+ (and (isa :NOUN FC-Building-OffshorePlatform)) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Palace-TheWord (and (isa :NOUN FC-Building-Palace))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Paratrooper-TheWord
+ (and (isa :NOUN FC-Unit-Paratroopers)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Partisan-TheWord (and (isa :NOUN FC-Unit-Partisan))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Phalanx-TheWord (and (isa :NOUN FC-Unit-Phalanx))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Pikeman-TheWord (and (isa :NOUN FC-Unit-Pikemen))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "police") Station-TheWord
+ (and (isa :NOUN FC-Building-PoliceStation)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "port") Facilility-TheWord
+ (and (isa :NOUN FC-Building-PortFacility)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "power") Plant-TheWord
+ (and (isa :NOUN FC-Building-PowerPlant)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "recycling") Center-TheWord
+ (and (isa :NOUN FC-Building-RecyclingCenter)) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "research") Lab-TheWord
+ (and (isa :NOUN FC-Building-ResearchLab)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Rifleman-TheWord (and (isa :NOUN FC-Unit-Riflemen))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "sam") Battery-TheWord
+ (and (isa :NOUN FC-Building-SAMBattery)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "sdi") Defense-TheWord
+ (and (isa :NOUN FC-Building-SDIDefense)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Settler-TheWord (and (isa :NOUN FC-Unit-Settlers))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "sewer") System-TheWord
+ (and (isa :NOUN FC-Building-SewerSystem)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "solar") Plant-TheWord
+ (and (isa :NOUN FC-Building-SolarPlant)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "space") Component-TheWord
+ (and (isa :NOUN FC-Building-SpaceComponent)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "space") Module-TheWord
+ (and (isa :NOUN FC-Building-SpaceModule)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "space") Structure-TheWord
+ (and (isa :NOUN FC-Building-SpaceStructural)) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Spy-TheWord (and (isa :NOUN FC-Unit-Spy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) StealthBomber-TheWord
+ (and (isa :NOUN FC-Unit-StealthBomber)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) StealthFighter-TheWord
+ (and (isa :NOUN FC-Unit-StealthFighter)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "stock") Exchange-TheWord
+ (and (isa :NOUN FC-Building-StockExchange)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Submarine-TheWord (and (isa :NOUN FC-Unit-Submarine))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) SuperHighways-TheWord
+ (and (isa :NOUN FC-Building-SuperHighways)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Supermarket-TheWord
+ (and (isa :NOUN FC-Building-Supermarket)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Temple-TheWord (and (isa :NOUN FC-Building-Temple))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Transport-TheWord (and (isa :NOUN FC-Unit-Transport))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Trireme-TheWord (and (isa :NOUN FC-Unit-Trireme))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) University-TheWord
+ (and (isa :NOUN FC-Building-University)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Warrior-TheWord (and (isa :NOUN FC-Unit-Warriors))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Worker-TheWord (and (isa :NOUN FC-Unit-Workers))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "advanced") Flight-TheWord
+ (and (isa :NOUN FC-Tech-AdvancedFlight)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Alphabet-TheWord (and (isa :NOUN FC-Tech-Alphabet))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "amphibious") Warfare-TheWord
+ (and (isa :NOUN FC-Tech-AmphibiousWarfare)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Astronomy-TheWord (and (isa :NOUN FC-Tech-Astronomy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "atomic") Theory-TheWord
+ (and (isa :NOUN FC-Tech-AtomicTheory)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Automobile-TheWord
+ (and (isa :NOUN FC-Tech-Automobile)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Banking-TheWord (and (isa :NOUN FC-Tech-Banking))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "bridge") Building-TheWord
+ (and (isa :NOUN FC-Tech-BridgeBuilding)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "bronze") Working-TheWord
+ (and (isa :NOUN FC-Tech-BronzeWorking)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "ceremonial") Burial-TheWord
+ (and (isa :NOUN FC-Tech-CeremonialBurial)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Chemistry-TheWord (and (isa :NOUN FC-Tech-Chemistry))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Chivalry-TheWord (and (isa :NOUN FC-Tech-Chivalry))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) CodeOfLaws (and (isa :NOUN FC-Tech-CodeOfLaws))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "combined") Arms-TheWord
+ (and (isa :NOUN FC-Tech-CombinedArms)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Combustion-TheWord
+ (and (isa :NOUN FC-Tech-Combustion)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Communism-TheWord (and (isa :NOUN FC-Tech-Communism))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Computers-TheWord (and (isa :NOUN FC-Tech-Computers))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Conscription-TheWord
+ (and (isa :NOUN FC-Tech-Conscription)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Construction-TheWord
+ (and (isa :NOUN FC-Tech-Construction)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Currency-TheWord (and (isa :NOUN FC-Tech-Currency))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Democracy-TheWord (and (isa :NOUN FC-Tech-Democracy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Economics-TheWord (and (isa :NOUN FC-Tech-Economics))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Electricity-TheWord
+ (and (isa :NOUN FC-Tech-Electricity)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Electronics-TheWord
+ (and (isa :NOUN FC-Tech-Electronics)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Engineering-TheWord
+ (and (isa :NOUN FC-Tech-Engineering)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Environmentalism-TheWord
+ (and (isa :NOUN FC-Tech-Environmentalism)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Espionage-TheWord (and (isa :NOUN FC-Tech-Espionage))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Explosives-TheWord
+ (and (isa :NOUN FC-Tech-Explosives)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Feudalism-TheWord (and (isa :NOUN FC-Tech-Feudalism))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Flight-TheWord (and (isa :NOUN FC-Tech-Flight))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Fundamentalism-TheWord
+ (and (isa :NOUN FC-Tech-Fundamentalism)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "fusion") Power-TheWord
+ (and (isa :NOUN FC-Tech-FusionPower)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "genetic") Engineering-TheWord
+ (and (isa :NOUN FC-Tech-GeneticEngineering)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "guerilla") Warfare-TheWord
+ (and (isa :NOUN FC-Tech-GuerillaWarfare)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Gunpowder-TheWord (and (isa :NOUN FC-Tech-Gunpowder))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "horseback") Riding-TheWord
+ (and (isa :NOUN FC-Tech-HorsebackRiding)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Industrialization-TheWord
+ (and (isa :NOUN FC-Tech-Industrialization)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Invention-TheWord (and (isa :NOUN FC-Tech-Invention))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "iron") Working-TheWord
+ (and (isa :NOUN FC-Tech-IronWorking)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "labor") Union-TheWord
+ (and (isa :NOUN FC-Tech-LaborUnion)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Laser-TheWord (and (isa :NOUN FC-Tech-Laser))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Leadership-TheWord
+ (and (isa :NOUN FC-Tech-Leadership)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Literacy-TheWord (and (isa :NOUN FC-Tech-Literacy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "machine") Tools-TheWord
+ (and (isa :NOUN FC-Tech-MachineTools)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Magnetism-TheWord (and (isa :NOUN FC-Tech-Magnetism))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "map") Making-TheWord
+ (and (isa :NOUN FC-Tech-MapMaking)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Masonry-TheWord (and (isa :NOUN FC-Tech-Masonry))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "mass") Production-TheWord
+ (and (isa :NOUN FC-Tech-MassProduction)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Mathematics-TheWord
+ (and (isa :NOUN FC-Tech-Mathematics)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Medicine-TheWord (and (isa :NOUN FC-Tech-Medicine))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Metallurgy-TheWord
+ (and (isa :NOUN FC-Tech-Metallurgy)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Miniaturization-TheWord
+ (and (isa :NOUN FC-Tech-Miniaturization)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "mobile") Warfare-TheWord
+ (and (isa :NOUN FC-Tech-MobileWarfare)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Monarchy-TheWord (and (isa :NOUN FC-Tech-Monarchy))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Monotheism-TheWord
+ (and (isa :NOUN FC-Tech-Monotheism)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Mysticism-TheWord (and (isa :NOUN FC-Tech-Mysticism))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Navigation-TheWord
+ (and (isa :NOUN FC-Tech-Navigation)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "nuclear") Fission-TheWord
+ (and (isa :NOUN FC-Tech-NuclearFission)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "nuclear") Power-TheWord
+ (and (isa :NOUN FC-Tech-NuclearPower)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Philosophy-TheWord
+ (and (isa :NOUN FC-Tech-Philosophy)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Physics-TheWord (and (isa :NOUN FC-Tech-Physics))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Plastics-TheWord (and (isa :NOUN FC-Tech-Plastics))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Polytheism-TheWord
+ (and (isa :NOUN FC-Tech-Polytheism)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Pottery-TheWord (and (isa :NOUN FC-Tech-Pottery))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Radio-TheWord (and (isa :NOUN FC-Tech-Radio))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Railroad-TheWord (and (isa :NOUN FC-Tech-Railroad))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Recycling-TheWord (and (isa :NOUN FC-Tech-Recycling))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Refining-TheWord (and (isa :NOUN FC-Tech-Refining))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Refrigeration-TheWord
+ (and (isa :NOUN FC-Tech-Refrigeration)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Robotics-TheWord (and (isa :NOUN FC-Tech-Robotics))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Rocketry-TheWord (and (isa :NOUN FC-Tech-Rocketry))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Sanitation-TheWord
+ (and (isa :NOUN FC-Tech-Sanitation)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Seafaring-TheWord (and (isa :NOUN FC-Tech-Seafaring))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "space") Flight-TheWord
+ (and (isa :NOUN FC-Tech-SpaceFlight)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Stealth-TheWord (and (isa :NOUN FC-Tech-Stealth))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "steam") Engine-TheWord
+ (and (isa :NOUN FC-Tech-SteamEngine)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Steel-TheWord (and (isa :NOUN FC-Tech-Steel))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Superconductors-TheWord
+ (and (isa :NOUN FC-Tech-Superconductors)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Tactics-TheWord (and (isa :NOUN FC-Tech-Tactics))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "the") Corporation-TheWord
+ (and (isa :NOUN FC-Tech-TheCorporation)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "the") Republic-TheWord
+ (and (isa :NOUN FC-Tech-TheRepublic)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "the") Wheel-TheWord
+ (and (isa :NOUN FC-Tech-TheWheel)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Theology-TheWord (and (isa :NOUN FC-Tech-Theology))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) TheoryOfGravity
+ (and (isa :NOUN FC-Tech-TheoryOfGravity)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Trade-TheWord (and (isa :NOUN FC-Tech-Trade))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) University-TheWord
+ (and (isa :NOUN FC-Tech-University)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "warrior") Code-TheWord
+ (and (isa :NOUN FC-Tech-WarriorCode)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList) Writing-TheWord (and (isa :NOUN FC-Tech-Writing))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "food") Surplus-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityFoodSurplus))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "tile" "food") Production-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn tileFoodProduction))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "city" "food") Production-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityFoodProduction))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "tile" "shield") Production-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn tileShieldProduction))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "city" "trade") Production-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityTradeProduction))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "shield") Production-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityShieldProduction))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "science") Output-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityScienceTotal))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "growth") Rate-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn cityGrowthRate))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "move") Point-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn currentMovepoints))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "hit") Point-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn currentHitpoints))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "veteran") Level-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn veteranStatus))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "food") Consumption-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn FoodConsumptionRate))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "food") Production-TheWord
+ (and (isa :NOUN (MeasurableQuantityFn FoodProductionRate))) (frame Freeciv)
+ (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "food") Point-TheWord (and (isa :NOUN FoodPoints))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "shield") Point-TheWord (and (isa :NOUN ShieldPoints))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "production") Point-TheWord
+ (and (isa :NOUN ProductionPoints)) (frame Freeciv) (bindingTemplate)
+ (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "trade") Point-TheWord (and (isa :NOUN TradePoints))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))
+
+(FNNounSemtrans (TheList "luxury") Point-TheWord (and (isa :NOUN LuxuryPoints))
+ (frame Freeciv) (bindingTemplate) (groupPatterns (TheList)))

@@ -1,0 +1,53 @@
+(in-microtheory ComputerGVocabularyMt)
+
+(isa XML-MarkupLanguage ComputerLanguage)
+(isa StandardGeneralizedMarkupLanguage ComputerLanguage)
+(isa OWL-WebOntologyLanguage ComputerLanguage)
+(isa RDFS-ResourceDescriptionFrameworkSchema ComputerLanguage)
+(isa RDF-ResourceDescriptionFramework ComputerLanguage)
+(isa KML-KeyholeMarkupLanguage ComputerLanguage)
+(isa GML-GeographyMarkupLanguage ComputerLanguage)
+(isa doGetCodeToExecuteAsOn ComplexActionPredicate)
+(isa JDBCDatabaseProtocol MachineProtocol)
+(isa (NonDavidsonianPredFn ComputerProcessRunning (TheList doneBy programOfProcess processRunningAs processRunningOn)) SituationPredicate)
+(isa (ComplexActionFn (NonDavidsonianPredFn ComputerProcessRunning (TheList doneBy programOfProcess processRunningAs processRunningOn))) ComplexActionPredicate)
+(isa LocalAreaTransportProtocol CommunicationProtocol)
+(isa BSIDISCPD20001 Specification)
+(isa TelnetProtocol InternetStandard)
+(isa TelnetProtocol CommunicationProtocol)
+(isa FileTransferProtocol InternetStandard)
+(isa SecureSocketsLayer CommunicationsSecurityProtocol)
+(isa SecureSocketsLayer InternetStandard)
+(isa MIMEStandard ProductStandard)
+(isa MIMEStandard CommunicationProtocol)
+(isa PlanDocumentationDirectory-DynamicIndexedInfoSource DynamicIndexedInfoSource)
+(isa ComputerType CollectionType)
+(strictlyFunctionalInArgs vulnerabilityDatabaseURLFormatString 2)
+(argFormat requestForCommentsDocument 1 SetTheFormat)
+(argFormat requestForCommentsDocument 2 SetTheFormat)
+(argFormat vulnerabilityDatabaseURLFormatString 2 SingleEntry)
+(argFormat fileCopyFoundOnComputer 1 SetTheFormat)
+(argFormat fileCopyFoundOnComputer 2 SetTheFormat)
+(comment PlanDocumentationDirectory-DynamicIndexedInfoSource "#$PlanDocumentationDirectory-DynamicIndexedInfoSource is an instance of         #$DynamicIndexedInfoSource. It is a directory in which information about the plans returned for Cyc-Secure is stored.")
+(comment MIMEStandard "MIME, the Multi-purpose Internet Mail Extensions, is a freely available set of specifications that offers a way to interchange text
+
+in languages with different character sets, and multi-media e-mail
+
+among many different computer systems that use Internet mail
+
+standards.")
+(comment XML-MarkupLanguage "#$XML-MarkupLanguage is the markup language designed to improve upon weaknesses in #$HypertextMarkupLanguage and allow Web users to define their own tags and attributes instead of using the HTML tagging scheme.  It might be more properly seen as a metalanguage as XML is the basis for defining document type definitions (DTDs) that in turn each define a different #$XML-BasedLanguage. See also #$XMLInterpreter.")
+(comment LocalAreaTransportProtocol "#$LocalAreaTransportProtocol is a DEC-specific, non-routable network protocol.")
+(comment ComputerSoftwareOrHardwareTypeByFeature "A collection of collections.  Each instance of #$ComputerSoftwareOrHardwareTypeByFeature is a collection of instances of computer hardware or computer software that share some property.  Specializations of #$ComputerSoftwareOrHardwareTypeByFeature include #$ComputerSoftwareTypeByFeature and 
+
+#$ComputerTypeByHardware.")
+(comment ComputerSoftwareTypeByFeature-Generic "A collection of collections.  Each instance of #$ComputerSoftwareAttribute is a collection of instances of #$ComputerProgram-CW that share some property.")
+(comment RDFS-ResourceDescriptionFrameworkSchema "#$RDFS-ResourceDescriptionFrameworkSchema extends #$RDF-ResourceDescriptionFramework by providing argument contraints for the RDF properties.  See also #$OWL-WebOntologyLanguage.")
+(comment OWL-WebOntologyLanguage "#$OWL-WebOntologyLanguage extends #$RDFS-ResourceDescriptionFrameworkSchema by providing ontology description properties and classes.  OWL is subsumed by CycL.  OWL has only binary predicates and does not allow functional terms.  OWL does not make the Unique Names Assumption. As of 2003, OWL does not support rules.")
+(comment GML-GeographyMarkupLanguage "#$GML-GeographyMarkupLanguage is an XML grammar defined to describe geographical features.")
+(comment KML-KeyholeMarkupLanguage "#$KML-KeyholeMarkupLanguage  is a file format used to display geographic data in an earth browser, such as Google Earth or Google Maps.")
+(comment RDF-ResourceDescriptionFramework "#$RDF-ResourceDescriptionFramework allows the definition of classes and properties in a taxonomy.  The classes are equivalent to Cyc collections and the properties are equivalent to Cyc binary predicates.  RDF can be serialized using #$XML-MarkupLanguage.  See also #$RDFS-ResourceDescriptionFrameworkSchema and #$OWL-WebOntologyLanguage.")
+(genls IndexDataStructure Index-PointerList)
+(genls (GroupFn ProtocolStackLayer) (GroupFn NetworkProtocol))
+(genls (GroupFn WorldWideWebSite) (GroupFn WebSite))
+(genls (GroupFn WebSite) (GroupFn SomethingExisting))

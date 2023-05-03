@@ -1,0 +1,41 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: BOTEQuestions.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: July 22, 2013 14:31:55
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory BOTENarrativeQueriesMt :exclude-globals t)
+
+(genlMt BOTENarrativeQueriesMt BOTEMt)
+
+(exhaustiveQueriesForInterpretation BOTENarrativeQueriesMt)
+(queryInModel BOTENarrativeQueriesMt)
+
+
+
+(queryForInterpretation
+ 0 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?question-frame IntroductionOfRequestForInformation))
+
+(queryForInterpretation
+ 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?quantity-frame IntroductionOfQuantityEvent))
+(queryForInterpretation
+ 2 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ?part-question IntroductionOfQuestType))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+

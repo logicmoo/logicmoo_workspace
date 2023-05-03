@@ -1,0 +1,206 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: topographical-rules.meld
+;;;;    System: nuSketch
+;;;;    Author: Andrew Lovett
+;;;;   Created: March 4, 2010 16:27:45
+;;;;   Purpose: Contains rules for generating some topographical relations based
+;;;;            upon existing RCC-8 facts.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-package :data)
+
+(in-microtheory TopographicalRulesMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Definitions
+
+(isa objectsIntersect Predicate)
+(isa objectsIntersect SymmetricRelation)
+(arity objectsIntersect 2)
+(arg1Isa objectsIntersect SpatialThing)
+(arg2Isa objectsIntersect SpatialThing)
+(comment objectsIntersect 
+  "This relation tells us two #$SpatialThing objects intersect.")
+(genFormat objectsIntersect 
+   "The outer boundary of ~A intersects the outer boundary of  ~A" (1 2))
+
+
+(isa objectsOverlap Predicate)
+(isa objectsOverlap SymmetricRelation)
+(arity objectsOverlap 2)
+(arg1Isa objectsOverlap SpatialThing)
+(arg2Isa objectsOverlap SpatialThing)
+(comment objectsOverlap 
+  "This relation tells us two #$SpatialThing objects overlap.")
+(genFormat objectsOverlap "~A overlaps with ~A" (1 2))
+
+
+(isa objectContains Predicate)
+(arity objectContains 2)
+(arg1Isa objectContains SpatialThing)
+(arg2Isa objectContains SpatialThing)
+(comment objectContains 
+  "This relation tells us one #$SpatialThing completely contains another.")
+(genFormat objectContains "~A is directly contained by ~A" (2 1))
+
+
+(isa hollowObjectContains Predicate)
+(arity hollowObjectContains 2)
+(arg1Isa hollowObjectContains SpatialThing)
+(arg2Isa hollowObjectContains SpatialThing)
+(genlPreds hollowObjectContains objectContains)
+(comment hollowObjectContains
+  "This relation tells us that the first argument contains the second argument and that
+   the first argument it relatively hollow.")
+
+(isa objectContains-Transitive Predicate)
+(arity objectContains-Transitive 2)
+(arg1Isa objectContains-Transitive SpatialThing)
+(arg2Isa objectContains-Transitive SpatialThing)
+(comment objectContains-Transitive 
+  "This relation tells us one #$SpatialThing completely contains another.  It allows for transitive containment.")
+(genFormat objectContains-Transitive "~A is contained by ~A" (2 1))
+
+(isa symmetricBisection Predicate)
+(isa symmetricBisection SymmetricRelation)
+(arity symmetricBisection 2)
+(arg1Isa symmetricBisection SpatialThing)
+(arg2Isa symmetricBisection SpatialThing)
+(comment symmetricBisection 
+  "This relation tells us that two instances of #$SpatialThing overlap to the point where they bisect one another.")
+
+(isa bisects Predicate)
+(arity bisects 2)
+(arg1Isa bisects SpatialThing)
+(arg2Isa bisects SpatialThing)
+(comment bisects 
+  "This relation tells us that thing1 bisects thing2.")
+
+(isa objectsHave2DIntersection SymmetricBinaryPredicate)
+(arity objectsHave2DIntersection 2)
+(arg1Isa objectsHave2DIntersection SpatialThing)
+(arg2Isa objectsHave2DIntersection SpatialThing)
+(comment objectsHave2DIntersection 
+  "(objectsHave2DIntersection THINGA THINGB) Says that there is some intersection between the 2D extent
+   of THINGA and the 2D extent of THINGB, while taking holes into account for polygons.")
+
+(isa overlapsCentroid Predicate)
+(arity overlapsCentroid 2)
+(arg1Isa overlapsCentroid SpatialThing)
+(arg2Isa overlapsCentroid SpatialThing)
+(comment overlapsCentroid 
+  "(overlapsCentroid thing1 thing2) This relation tells us that thing2 overlaps the centroid of thing1.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rules
+
+(<== (topoRelBetween ?obj1 ?obj2 ?rel objectsIntersect)
+     (equals ?rel rcc8-PO))
+
+(<== (topoRelBetween ?obj1 ?obj2 ?rel objectsIntersect)
+     (equals ?rel rcc8-EC))
+
+(<== (topoRelBetween ?obj1 ?obj2 ?rel objectsIntersect)
+     (equals ?rel rcc8-EQ))
+
+(<== (topoRelBetween ?obj1 ?obj2 ?rel objectsIntersect)
+     (equals ?rel rcc8-TPP))
+
+(<== (topoRelBetween ?obj1 ?obj2 ?rel objectsIntersect)
+     (equals ?rel rcc8-TPPi))
+
+
+
+(<== (topoRelBetween ?obj1 ?obj2 ?rel objectsOverlap)
+     (equals ?rel rcc8-PO))
+
+;;;(<== (topoRelBetween ?obj1 ?obj2 ?rel objectContains)
+;;;     (or (equals ?rel rcc8-TPPi)
+;;;         (equals ?rel rcc8-NTPPi)))
+
+
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+     (equals ?rel rcc8-PO))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (rcc8-PO ?obj1 ?obj2))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+     (equals ?rel rcc8-EC))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (rcc8-EC ?obj1 ?obj2))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+     (equals ?rel rcc8-EQ))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (rcc8-EQ ?obj1 ?obj2))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+     (equals ?rel rcc8-TPP))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (rcc8-TPP ?obj1 ?obj2))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+     (equals ?rel rcc8-TPPi))
+
+(<== (objectsIntersect ?obj1 ?obj2)
+     (rcc8-TPPi ?obj1 ?obj2))
+
+(<== (objectsOverlap ?obj1 ?obj2)
+     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+     (equals ?rel rcc8-PO))
+
+(<== (objectsOverlap ?obj1 ?obj2)
+     (rcc8-PO ?obj1 ?obj2))
+
+(<== (objectContains-Transitive ?obj1 ?obj2)
+     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+     (or (equals ?rel rcc8-TPPi)
+         (equals ?rel rcc8-NTPPi)))
+
+;;;(<== (objectContains ?obj1 ?obj2)
+;;;     (hasRCC8Relation ?obj1 ?obj2 ?rel)
+;;;     (or (equals ?rel rcc8-TPPi)
+;;;         (equals ?rel rcc8-NTPPi)))
+
+(<== (objectsIntersect ?obj1 (ConvexHullFn ?obj2))
+     (groundExpression ?obj2)
+     (lookupOnly (objectsIntersect ?obj1 ?obj2)))
+
+(<== (objectsOverlap ?obj1 (ConvexHullFn ?obj2))
+     (groundExpression ?obj2)
+     (lookupOnly (objectsOverlap ?obj1 ?obj2)))
+
+(<== (objectContains ?obj1 ?obj2)
+     (groundExpression ?obj2)
+     (lookupOnly (objectContains ?obj1 (ConvexHullFn ?obj2))))
+
+(<== (objectContains (ConvexHullFn ?obj1) ?obj2)
+     (groundExpression ?obj1)
+     (lookupOnly (objectContains ?obj1 ?obj2)))
+
+(<== (objectContains-Transitive ?obj1 ?obj2)
+     (groundExpression ?obj2)
+     (lookupOnly (objectContains-Transitive ?obj1 (ConvexHullFn ?obj2))))
+
+(<== (objectContains-Transitive (ConvexHullFn ?obj1) ?obj2)
+     (groundExpression ?obj1)
+     (lookupOnly (objectContains-Transitive ?obj1 ?obj2)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

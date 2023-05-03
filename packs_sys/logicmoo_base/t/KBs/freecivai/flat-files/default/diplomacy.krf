@@ -1,0 +1,68 @@
+(in-microtheory Freeciv-defaultMt)
+
+;;; How do we connect these to the higher-level Cyc concepts?
+;;; There is a concept War and a concept CeaseFire, etc.
+;;; Do we say that (isa FC-War War)?  Wouldn't that mean it's a
+;;; particular war?  We're really referring to a War-Type.
+;;; Should these be collections instead of individuals?
+
+(isa FC-ClauseAdvance Freeciv-TreatyClause)
+(isa FC-ClauseGold Freeciv-TreatyClause)
+(isa FC-ClauseMap Freeciv-TreatyClause)
+(isa FC-ClauseSeamap Freeciv-TreatyClause)
+(isa FC-ClauseCity Freeciv-TreatyClause)
+(isa FC-ClauseCeasefire Freeciv-TreatyClause)
+(isa FC-ClausePeace Freeciv-TreatyClause)
+(isa FC-ClauseAlliance Freeciv-TreatyClause)
+(isa FC-ClauseVision Freeciv-TreatyClause)
+(isa FC-ClauseTeam Freeciv-TreatyClause)
+(isa FC-ClauseEmbassy Freeciv-TreatyClause)
+
+;(isa FC-Neutral Freeciv-DiplomaticState)
+(isa FC-Armistice Freeciv-DiplomaticState)
+(isa FC-War Freeciv-DiplomaticState)
+(genls FC-War War)                        ; tie to commonsense knowledge.
+(lookupGenls FC-War War)
+
+(isa FC-Ceasefire Freeciv-DiplomaticState)
+(isa FC-Peace Freeciv-DiplomaticState)
+(isa FC-Alliance Freeciv-DiplomaticState)
+(isa FC-NoContact Freeciv-DiplomaticState)
+(isa FC-Team Freeciv-DiplomaticState)
+
+(isa FC-Bribe Freeciv-DiplomatAction)
+(isa FC-Embassy Freeciv-DiplomatAction)
+(isa FC-Sabotage Freeciv-DiplomatAction)
+(isa FC-Steal Freeciv-DiplomatAction)
+(isa FC-Incite Freeciv-DiplomatAction)
+(isa FC-SpyPoison Freeciv-DiplomatAction)
+(isa FC-Investigate Freeciv-DiplomatAction)
+(isa FC-SpySabotageUnit Freeciv-DiplomatAction)
+(isa FC-SpyGetSabotageList Freeciv-DiplomatAction)
+(isa FC-DiplomatMove Freeciv-DiplomatAction)
+(isa FC-DiplomatUnspecified Freeciv-DiplomatAction)
+
+(isa FC-Genocidal Freeciv-OpponentAttitude)
+(isa FC-Belligerent Freeciv-OpponentAttitude)
+(isa FC-Hostile Freeciv-OpponentAttitude)
+(isa FC-Uncooperative Freeciv-OpponentAttitude)
+(isa FC-Uneasy Freeciv-OpponentAttitude)
+(isa FC-Neutral Freeciv-OpponentAttitude)
+(isa FC-Respectful Freeciv-OpponentAttitude)
+(isa FC-Helpful Freeciv-OpponentAttitude)
+(isa FC-Enthusiastic Freeciv-OpponentAttitude)
+(isa FC-Admiring Freeciv-OpponentAttitude)
+(isa FC-Worshipful Freeciv-OpponentAttitude)
+
+(followingValueOnScale FC-Belligerent FC-Genocidal Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Hostile FC-Belligerent Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Uncooperative FC-Hostile Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Uneasy FC-Uncooperative Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Neutral FC-Uneasy Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Respectful FC-Neutral Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Helpful FC-Respectful Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Enthusiastic FC-Helpful Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Admiring FC-Enthusiastic Freeciv-OpponentAttitude)
+(followingValueOnScale FC-Worshipful FC-Admiring Freeciv-OpponentAttitude)
+
+

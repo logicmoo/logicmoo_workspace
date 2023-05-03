@@ -1,0 +1,6 @@
+(in-microtheory ProgrammingLanguageMt)
+
+(rewriteOf ImpureFunctionalProgrammingLanguage (CollectionDifferenceFn FunctionalProgrammingLanguage PurelyFunctionalProgrammingLanguage))
+(disjointWith PurelyFunctionalProgrammingLanguage ImpureFunctionalProgrammingLanguage)
+(genls ImpureFunctionalProgrammingLanguage FunctionalProgrammingLanguage)
+(genls FunctionalProgrammingLanguage AbstractProgrammingLanguage)

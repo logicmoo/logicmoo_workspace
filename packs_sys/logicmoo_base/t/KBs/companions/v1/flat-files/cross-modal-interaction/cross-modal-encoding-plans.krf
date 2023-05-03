@@ -1,0 +1,190 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cross-modal-encoding-plans
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: April 23, 2015 12:30:00
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CrossModalEncodingPlansMt)
+
+(isa CrossModalEncodingPlansMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(<== (sketchForReferent ?referent ?sketch)
+     (unifies ?referent (ReferentInPerceptualSourceFn ?selected-items ?layer ?subsketch ?sketch)))
+
+(<== (subsketchForReferent ?referent ?subsketch)
+     (unifies ?referent (ReferentInPerceptualSourceFn ?selected-items ?layer ?subsketch ?sketch)))
+
+(<== (layerForReferent ?referent ?layer)
+     (unifies ?referent (ReferentInPerceptualSourceFn ?selected-items ?layer ?subsketch ?sketch)))
+
+(<== (selectedItemsForReferent ?referent ?selected-items)
+     (unifies ?referent (ReferentInPerceptualSourceFn ?selected-items ?layer ?subsketch ?sketch)))
+
+
+(isa encodeSketchReferent ComplexActionPredicate)
+(arity encodeSketchReferent 3)
+
+;;;get a handle of nusketchsketch agent not the sketch's agent inself
+;;;query sketch agent
+
+(preconditionForMethod
+ (and (currentNuSketchHookup ?nusketch-hookup-agent)
+      (selectedItemsForReferent ?referent ?selected-items)
+      (currentSessionReasoner ?sr))
+ (methodForAction
+  (encodeSketchReferent ?label ?dem-var ?referent)
+  (actionSequence
+   (TheList
+    (doMap (?item)
+           (enqueueSerialSubTasks 
+            (TheList 
+             (TheList (processVisualInput ?label ?dem-var ?item) ?nusketch-hookup-agent)
+             (TheList (encodeSketchObject ?label ?dem-var ?item ?nusketch-hookup-agent) ?sr)
+             (TheList (encodeVisually (PerceptualReferentCaseFn ?label ?dem-var ?item)) ?sr)))
+           ?selected-items)))))
+           
+
+(isa encodeSketchObject ComplexActionPredicate)
+(arity encodeSketchObject 4)
+
+(preconditionForMethod
+ ;;if its an already seen item i.e (label -> sketch-object) inform user and just maintain a pointer like relation
+ (isa (PerceptualReferentCaseFn ?label ?_ignore ?item) 
+      PerceptualReferentWMMicrotheory)
+ (methodForAction
+  (encodeSketchObject ?label ?dem-var ?item ?nusketch-hookup-agent)
+  (actionSequence
+   (TheList
+    (doAnnounce "Have seen the object ~A pointing to ~A before" (?label ?item))
+    ;;need to ontologize this
+    ;;says that the objects encoded are the same
+    (doTell (sameVisualEncodedObject (PerceptualReferentCaseFn ?label ?dem-var ?item)
+                                     (PerceptualReferentCaseFn ?label ?_ignore ?item)))))))                              
+
+(preconditionForMethod
+ ;;if its not a seen item i.e (label -> sketch-object) we should encode 
+ (and (uninferredSentence (isa (PerceptualReferentCaseFn ?label ?_ignore ?item) 
+                               PerceptualReferentWMMicrotheory))
+      (holdsOnRemoteAgent ?nusketch-hookup-agent 
+        (ist-Information BaseKB (caseForSubsketchItem ?item ?subsketch-case)))
+      (evaluate ?facts (TheClosedRetrievalSetOf ?fact
+                         (holdsOnRemoteAgent ?nusketch-hookup-agent
+                           (wmOnly
+                            (lookupOnly
+                             (ist-Information 
+                                 (FilteredFactsForItemMt ?label ?dem-var ?item ?subsketch-case) ?fact)))))))
+ (methodForAction
+  (encodeSketchObject ?label ?dem-var ?item ?nusketch-hookup-agent)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information BaseKB 
+              (isa (PerceptualReferentCaseFn ?label ?dem-var ?item) PerceptualReferentWMMicrotheory)))
+    (doMap (?fact) 
+           (doTell (ist-Information (PerceptualReferentCaseFn ?label ?dem-var ?item) ?fact))
+           ?facts)))))
+    
+;;PERFORMING MAPPING                        
+;;;(wmOnly (matchBetween (WMCaseFn (EncodedCaseFn ?standard ?sub-episode-id)) 
+;;;                      (WMCaseFn (EncodedCaseFn ?choice ?sub-episode-id))
+;;;                      (TheSet)
+;;;                      ?matcher))
+
+;;;ADDING IT TO VISUAL BUFFER
+;;;     (doTell (ist-Information (ResultGenFn ?stimulus)
+;;;               (sageWMGeneralizeWithMapping ?standard 
+;;;                                            (ResultGenFn ?stimulus) 
+;;;                                            ?winning-choice 
+;;;                                            ?winning-mapping))))
+;;;    (doAgentPlan (addExampleToVisualBuffer (SageGenFn 0 (ResultGenFn ?stimulus))))
+
+;;;1.perform mapping between the two encoded cases
+;;;2.Add the mapping as example into visual buffer
+
+(isa createLabeledAbstraction ComplexActionPredicate)
+(arity createLabeledAbstraction 3)
+(comment createLabeledAbstraction " insert comment ")
+
+(preconditionForMethod
+ (and (unifies ?referent (ReferentInPerceptualSourceFn ?referred-item-set ?_layer ?_subsketch ?_sketch))
+      (evaluate ?cardinality (CardinalityFn ?referred-item-set))
+      (greaterThan ?cardinality 1)
+      (evaluate ?ref-item-list (SetToListFn ?referred-item-set))
+      (evaluate ?encoded-cases 
+        (MapFunctionOverList
+         (FunctionToArg 2
+           (Kappa (?ref ?encoding)
+             (encodingForObject (PerceptualReferentCaseFn ?label ?_ignore ?ref) ?encoding)))
+         ?ref-item-list))
+      (evaluate ?first-encoding (FirstInListFn ?encoded-cases))
+      (evaluate ?rest-of-cases (RestOfListFn ?encoded-cases)))
+ (methodForAction 
+  (createLabeledAbstraction ?label ?dem-var ?referent) 
+  (actionSequence
+   (TheList
+    ;;;enhanace cases if possible via mapping
+    (doTell (enhanceCasesViaComparison ?encoded-cases))
+    ;;;clear all analogy caches
+    (doClearDGroupCaches)
+    (doClearSMEs)
+    ;;;should nuke gpool if one exist already. 
+    (doTell (nukeWMGpool (GenLabeledAbstractionContextFn ?label)))
+    ;;;genlmt to the spindle for analogy control
+    (doTell (genlMt (GenLabeledAbstractionContextFn ?label) CrossModalInteractionSpindleMt))
+    ;;adding the first case creates the wmgpool and adds the case as an ungeneralized example
+    (doTell (ist-Information (GenLabeledAbstractionContextFn ?label)
+              (sageWMSelectAndGeneralize  ?first-encoding (GenLabeledAbstractionContextFn ?label))))
+    ;;to enforce the power of same label + visually accessible we drop the assimilation threshold to 0.1, thereby force generalize
+    (doTell (ist-Information (GenLabeledAbstractionContextFn ?label) 
+              (setWMGpoolAssimilationThreshold (GenLabeledAbstractionContextFn ?label) 0.1)))
+    ;;add the rest of the referents into the generalization, due to low threshhold they all should generalize
+    (doMap (?enc)
+           (doTell (ist-Information (GenLabeledAbstractionContextFn ?label)
+                     (sageWMSelectAndGeneralize ?enc (GenLabeledAbstractionContextFn ?label))))
+           ?rest-of-cases)
+    (doAgentPlan (copyLabeledAbstraction ?referred-item-set ?label))
+    (doAnnounce "abstraction created for referent ~A" (?referent))))))
+     
+
+(isa copyLabeledAbstraction ComplexActionPredicate)
+(arity copyLabeledAbstraction 2)
+
+;;;old way
+;;; (evaluate ?facts (SetToListFn 
+;;;                   (TheClosedRetrievalSetOf ?fact 
+;;;                     (lookupOnly (wmOnly (ist-Information (SageGenFn 0 (GenLabeledAbstractionContextFn ?label)) ?fact))))))
+
+;;;; we copy the facts that satisfy probability cutoof into another Mt for bookkeeping and easy debugging
+(<== (filteredFactsByProbCutOff ?generalization ?facts)
+     (unifies (SageGenFn ?_gen-no ?gen-context) ?generalization)
+     (lookupOnly (wmOnly (ist-Information ?gen-context (wmGpoolProbabilityCutOff ?gen-context ?prob-cutoff))))
+     (evaluate ?facts (SetToListFn 
+                       (TheClosedRetrievalSetOf ?fact 
+                         (lookupOnly (wmOnly (ist-Information ?generalization 
+                                               (and (wmGpoolProbability ?fact ?fact-prob)
+                                                    (greaterThan ?fact-prob ?prob-cutoff)))))))))
+
+(preconditionForMethod
+ (filteredFactsByProbCutOff (SageGenFn 0 (GenLabeledAbstractionContextFn ?label)) ?facts)
+ (methodForAction
+  (copyLabeledAbstraction ?referred-item-set ?label)
+  (actionSequence
+   (TheList
+    (doTell (isa (LabeledAbstractionFn ?label ?referred-item-set) LabeledAbstractionWMMicrotheory))
+    (doMap (?fact)
+           (doTell (ist-Information (LabeledAbstractionFn ?label ?referred-item-set) ?fact))
+           ?facts)
+    (doAnnounce "Labeled abstraction created for label ~A and referent ~A" (?label ?referred-item-set))))))
+
+                        
+                        
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

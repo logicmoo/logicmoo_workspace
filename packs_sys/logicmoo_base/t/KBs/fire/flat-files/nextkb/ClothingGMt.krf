@@ -1,0 +1,25 @@
+(in-microtheory ClothingGMt)
+
+(isa Clothing-Top KEClarifyingCollectionType)
+(comment SomethingToWearTypeByGenericCategory "An instance of #$SecondOrderCollection. Each instance of #$SomethingToWearTypeByGenericCategory is a collection of instances of #$SomethingToWear, grouped together according to some feature(s) other than brand.")
+(comment frequentlyWearsType "A #$BinaryPredicate that relates an instance of #$Animal to a specialization of #$SomethingToWear.  <code>(#$frequentlyWearsType ANIMAL STW-TYPE)</code> means that <code>ANIMAL</code> frequently wears instances of <code>STW-TYPE</code>.  For example, <code>(#$frequentlyWearsType Bob #$Suspenders)</code> means that Bob frequently wears suspenders.  That is:
+<pre>
+(#$playsRoleWithFrequency Bob (#$WearingFn #$Suspenders) #$wearer (#$HighAmountFn #$Frequency)).")
+(comment WearingFn "A #$UnaryFunction that takes a specialization of #$SomethingToWear and returns the collection of all instances of #$WearingSomething in which the #$itemWorn is of that type.  For example, <code>(#$WearingFn #$Shirt)</code> is the collection of all shirt-wearings.")
+(comment wearingTypeForSomethingToWearType "A #$BinaryPredicate that relates a specialization of #$SomethingToWear to a specialization of #$WearingSomething.  <code>(#$wearingTypeForSomethingToWearType STW-TYPE WS-TYPE)</code> means that <code>WS-TYPE</code> is the collection of all instances of #$WearingSomething in which an instance of <code>STW-TYPE</code> is the #$itemWorn.  This is the predicate corresponding to #$WearingFn (q.v.).")
+(comment Visor-HeadgearPart "An #$ArtifactTypeByGenericCategory and specialization of #$SomethingToWearPart.  Each instance of #$Visor-HeadgearPart is a visor (i.e. surface that protects the eyes) that is part of, or is designed to be part of, a piece of #$Headgear, e.g. a #$BaseballCap or #$Visor-Cap.")
+(comment Hat "An instance of #$SomethingToWearTypeByGenericCategory and specialization of #$Headgear.  Each instance of #$Hat is a #$ClothingAccessory that is designed to be worn on (and cover most of) the top part of the head (#$Head-AnimalBodyPart).  Specializations include #$CowboyHat, #$Fedora, and #$Sombrero.
+<p>
+Note that #$Hat is orthogonal with #$Cap: some #$Hats are also #$Caps (e.g. #$BaseballCaps); some #$Hats are not #$Caps (e.g. #$CowboyHats); and some #$Caps are not #$Hats (e.g. #$SwimmingCaps).")
+(comment Cap "An instance of #$SomethingToWearTypeByGenericCategory.  Each instance of #$Cap is piece of #$Headgear (not necessarily a #$ClothingAccessory) that is relatively casual, small, and flexible.  Specializations include #$BaseballCap, #$SwimmingCap, and #$StockingCap.
+<p>
+Note that #$Hat is orthogonal with #$Cap: some #$Hats are also #$Caps (e.g. #$BaseballCaps); some #$Hats are not #$Caps (e.g. #$CowboyHats); and some #$Caps are not #$Hats (e.g. #$SwimmingCaps).")
+(comment Earmuffs "An instance of #$SomethingToWearTypeByGenericCategory and a specialization of #$Headgear and #$ProtectiveAttire.  Each instance of #$Earmuffs is a device similar to #$Headphones that has cup- or disclike contraptions that cover the ears to protect them from cold or loud noise (such as gunshots).")
+(disjointWith SpatiallyContinuousThing (CostumeFn SantaClaus))
+(genls BlueJeans BlueColor)
+(genls SurgicalGlove Glove-ChemicalAndBiological)
+(genls BallGown VeryFormalClothing)
+(genls WetSuit Casual)
+(genls SomethingToWear Opaque)
+(genls ClothingItem Opaque)
+(genls TraditionalClothing NonModernClothingStyle)

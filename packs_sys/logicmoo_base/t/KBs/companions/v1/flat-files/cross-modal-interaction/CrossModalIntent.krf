@@ -1,0 +1,234 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: CrossModalIntent
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: March 17, 2015 16:47:20
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory (IntentMtFn CrossModalInteraction))
+
+(isa (IntentMtFn CrossModalInteraction) (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(genlMt Interaction-ManagerMt (IntentMtFn CrossModalInteraction))
+
+;;;simple queries to verify the communication act type
+(<== (isMultiModalUtteranceDiscourse ?discourse-ctxt ?sentence-id)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information 
+           ?discourse-ctxt 
+         (communicationActTypeOf (UtteranceFn ?sentence-id) MultiModalUtterance)))))
+
+(<== (isConceptExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information 
+           ?discourse-ctxt 
+         (communicationActTypeOf (UtteranceFn ?sentence-id) ConceptExampleIntroduction)))))
+
+(<== (isNewConceptExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information 
+           ?discourse-ctxt 
+         (communicationActTypeOf (UtteranceFn ?sentence-id) NewConceptExampleIntroduction)))))
+
+(<== (isMultipleExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information 
+           ?discourse-ctxt 
+         (communicationActTypeOf (UtteranceFn ?sentence-id) MultipleExampleIntroduction)))))
+
+(<== (isWhichConceptInterrogation ?discourse-ctxt ?sentence-id)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information 
+           ?discourse-ctxt 
+         (communicationActTypeOf (UtteranceFn ?sentence-id) WhichConceptInterrogation)))))
+
+
+;;;Query to find out the the referents for a known labeled concept, like, "these are cats"
+(<== (labelPointsToReferent ?discourse-ctxt ?sentence-id ?label ?var ?referent)
+     ;;;check if its a concept example introduction
+     (isMultipleExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?sentence-id)
+         (implies-DrsDrs (DrsCaseFn ?cause-drs-id)
+                         (DrsCaseFn ?effect-drs-id)))))
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?cause-drs-id) 
+         (isa ?token (ConceptKnownAsFn ?label)))));;; is collection the same as label for known-cases??
+      (groundExpression ?label);;this should not be needed (ask for cleanup help from EA folks)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?effect-drs-id)
+         (denotes (DemonstrativeFn ?var) ?token))))
+     ;;; get the perceptual target of the referent i.e this1239 refers to Subusketch-3
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information ?discourse-ctxt 
+         (referent (ReferenceInSentenceFn ?var ?sentence-id) 
+                   (ReferentInDrsFn ?referent ?discourse-id))))))
+
+(<== (labelPointsToReferent ?discourse-ctxt ?sentence-id ?label ?var ?referent)
+     ;;;check if its a concept example introduction
+     (isConceptExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+     ;;; get the variable ?var (ex: this1239) and ?token (ex: jiggy1234)
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?sentence-id)
+         (denotes (DemonstrativeFn ?var) ?token))))
+     ;;; get the concept's label/name using the token (ex: (isa jiggy1234 (ConceptKnownAsFn jiggy))
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?sentence-id) 
+         (isa ?token (ConceptKnownAsFn ?label)))))
+     ;;; get the perceptual target of the referent i.e this1239 refers to Subusketch-3
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information ?discourse-ctxt 
+         (referent (ReferenceInSentenceFn ?var ?sentence-id) 
+                   (ReferentInDrsFn ?referent ?discourse-id))))))
+
+(<== (questionPointsToSketchReferent ?discourse-ctxt ?sentence-id ?label ?var ?referent)
+     ;;check if its a which question 
+     (isWhichConceptInterrogation ?discourse-ctxt ?sentence-id)
+     ;;get the variable
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?sentence-id) 
+         (member ?one-of (DemonstrativeFn ?var)))))
+     ;;get the label
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?sentence-id)
+         (denotes ?one-of ?token))))
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information (DrsCaseFn ?sentence-id) 
+         (isa ?token (ConceptKnownAsFn ?label)))))
+     ;;; get the perceptual target of the referent i.e this1239 refers to Subusketch-3
+     (wmOnly 
+      (ignoreTimestamps
+       (ist-Information ?discourse-ctxt 
+         (referent (ReferenceInSentenceFn ?var ?sentence-id) 
+                   (ReferentInDrsFn ?referent ?discourse-id))))))
+     
+
+;;;get the referent and verify if its a sketch referent
+(<== (labelPointsToSketchReferent ?discourse-ctxt ?sentence-id ?label ?dem-var ?referent)
+     (labelPointsToReferent ?discourse-ctxt ?sentence-id ?label ?dem-var ?referent)
+     (unifies ?referent (ReferentInPerceptualSourceFn ?pointed-items ?layer ?subsketch ?sketch)))
+
+;;; a new concept i.e a never before heard word and a single selected item in sketch
+(preconditionForMethod
+ (and (labelPointsToSketchReferent ?discourse-ctxt ?sentence-id ?label ?dem-var ?referent)
+      (isNewConceptExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+      (uninferredSentence (isMultipleExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id))
+      (currentSessionReasoner ?sr)
+      (localAgent ?agent));;interaction manager
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doAnnounce "The label ~A and token ~A and referent ~A" (?label ?dem-var ?referent))
+    (enqueueSerialTasks (TheList
+                         (TheList (encodeSketchReferent ?label ?dem-var ?referent) ?sr)
+                         (TheList (appendLexiconInfo ?label ?dem-var) ?agent)
+                         (TheList (indicateCompletion) ?agent)))))))
+
+;;; a new concept i.e a never before heard word and a single selected item in sketch
+(preconditionForMethod
+ (and (labelPointsToSketchReferent ?discourse-ctxt ?sentence-id ?label ?dem-var ?referents)
+      (isNewConceptExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+      (isMultipleExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id))
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doAnnounce "direct introduction of a new label/concept using multiple examples: not handled yet" ())))))
+
+;;; a known concept (label already introduced) and multiple selected items
+(preconditionForMethod
+ (and (labelPointsToSketchReferent ?discourse-ctxt ?sentence-id ?label ?dem-var ?referent)
+      (uninferredSentence (isNewConceptExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id))
+      (isMultipleExampleIntroductionDiscourse ?discourse-ctxt ?sentence-id)
+      (currentSessionReasoner ?sr)
+      (localAgent ?agent))
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doAnnounce "The label ~A and token ~A and referents ~A" (?label ?dem-var ?referent))
+    (enqueueSerialTasks (TheList
+                         (TheList (encodeSketchReferent ?label ?dem-var ?referent) ?sr)
+                         (TheList (createLabeledAbstraction ?label ?dem-var ?referent) ?sr)
+                         (TheList (indicateCompletion) ?agent)))))))
+
+
+;;interrogative utterances
+;; which one of these is a toma?
+(preconditionForMethod
+ (and (questionPointsToSketchReferent ?discourse-ctxt ?sentence-id ?label ?dem-var ?referent)
+      (isWhichConceptInterrogation ?discourse-ctxt ?sentence-id) ;;may be redundant check, candidate for chopping off for optimization
+      (currentSessionReasoner ?sr)
+      (localAgent ?agent))
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doAnnounce " The question label ~A and token ~A and referents ~A" (?label ?dem-var ?referent))
+    (enqueueSerialTasks (TheList
+                         (TheList (encodeSketchReferent (PossibleLabelFn ?label) ?dem-var ?referent) ?sr)
+                         (TheList (selectChoiceMatchingLabel ?label ?dem-var ?referent) ?sr)
+                         (TheList (indicateCompletion) ?agent)))))))
+ 
+
+;;append lexical information
+(isa appendLexiconInfo ComplexActionPredicate)
+(arity appendLexiconInfo 2)
+(comment appendLexiconInfo "adds new lexical information to the appropriate learedlexiconMt for the current companions domain.")
+
+(preconditionForMethod
+ (and (currentDomain ?domain)
+      (unifies ?lex-mt (LearnedLexiconMtFn ?domain))
+      (unifies ?sem-mt (LearnedSemanticsMtFn ?domain)))
+ (methodForAction 
+  (appendLexiconInfo ?label ?referent) 
+  (actionSequence
+   (TheList 
+    (doAnnounce "appendLexiconInfo: recieved  label ~A and referent ~A" (?label ?referent))
+    (doTell (createLexSemEntry ?label ?lex-mt ?sem-mt))))))
+
+
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 encodeSketchReferent))
+
+
+(isa indicateCompletion ComplexActionPredicate)
+(arity indicateCompletion 0)
+
+;;;poor mans language just used for indicating that processing has been completed
+(preconditionForMethod
+ (newReifiedUtterance ?system-utterance) ; Make a unique symbol
+ (methodForAction
+  (indicateCompletion)
+  (actionSequence
+   (TheList
+    (doRespond ?system-utterance "Yes.")))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

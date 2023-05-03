@@ -1,0 +1,45 @@
+;;; Ad hoc graph type for displaying QP frames from a given microtheory
+
+(in-microtheory QPInterpretationMt  :exclude-globals t)
+
+;;; (adHocEdge <graph type> <origin data> <terminus data> <label> <data>
+;;;      <directed?> <color> <style> <width>)
+
+(<== (adHocEdge QPFrameGraph ?frame ?filler ?role ?data True BlackColor :solid 1)
+     (lookupOnly (wmOnly (isa ?frame ?frame-type)))
+     (evaluate True (ListMemberFn ?frame-type (TheList DirectInfluenceFrame
+                                                   IndirectInfluenceFrame
+                                                   InfluenceFrame
+                                                   OrdinalRelationFrame
+                                                   PhysicalProcessFrame
+                                                   QuantityFrame
+                                                   QuantityTransferFrame)))
+     (usesQPFrameElement ?frame-type ?role)
+     (?role ?frame ?filler)
+     (unifies ?data (?role ?frame ?filler)))
+
+(<== (adHocVertex QPFrameGraph ?frame ?data :box BlackColor)
+     (lookupOnly (wmOnly (isa ?frame ?frame-type)))
+     (evaluate True (ListMemberFn ?frame-type (TheList DirectInfluenceFrame
+                                                   IndirectInfluenceFrame
+                                                   InfluenceFrame
+                                                   OrdinalRelationFrame
+                                                   PhysicalProcessFrame
+                                                   QuantityFrame
+                                                   QuantityTransferFrame)))
+     (usesQPFrameElement ?frame-type ?role)
+     (?role ?frame ?filler)
+     (unifies ?data ?frame))
+
+(<== (adHocVertex QPFrameGraph ?filler ?data :box BlackColor)
+     (lookupOnly (wmOnly (isa ?frame ?frame-type)))
+     (evaluate True (ListMemberFn ?frame-type (TheList DirectInfluenceFrame
+                                                   IndirectInfluenceFrame
+                                                   InfluenceFrame
+                                                   OrdinalRelationFrame
+                                                   PhysicalProcessFrame
+                                                   QuantityFrame
+                                                   QuantityTransferFrame)))
+     (usesQPFrameElement ?frame-type ?role)
+     (?role ?frame ?filler)
+     (unifies ?data ?filler))

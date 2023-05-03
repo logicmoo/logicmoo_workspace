@@ -1,0 +1,33 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: friction.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: March 17, 2009 13:31:44
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa frictionalForceApplied TernaryPredicate)
+(comment frictionalForceApplied "frictionalForceApplied means that the first 
+ surface experiences a force in the given direction from friction with the
+ second surface.")
+(arg1Isa frictionalForceApplied Surface)
+(arg2Isa frictionalForceApplied QualitativeVector)
+(arg3Isa frictionalForceApplied Surface)
+
+(isa contactHasFriction BinaryPredicate)
+(comment contactHasFriction "contactHasFriction means that the two textures will 
+ have some non-negligible amount friction when in contact")
+(arg1Isa contactHasFriction Texture)
+(arg2Isa contactHasFriction Texture)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

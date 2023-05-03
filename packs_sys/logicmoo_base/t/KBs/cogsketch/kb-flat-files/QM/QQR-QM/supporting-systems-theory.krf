@@ -1,0 +1,178 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: supporting-systems-theory.meld
+;;;;    System: CogSketch
+;;;;    Author: Maria Chang
+;;;;   Created: March 8, 2011 15:07:52
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SupportingSystemsTheoryMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(comment SupportingSystemsTheoryMt "QQR domain theory for systems involving support (e.g. 
+  bridges and hanging objects).")
+(genlMt ConceptualPhysicsDomainTheoryCollectorMt SupportingSystemsTheoryMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Inclusion
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(<== (includeEntity ?list)
+     (operatorFormulas TheList ?list))
+
+(<== (includeEntity ?set)
+     (operatorFormulas TheSet ?set))
+
+(<== (considerSpatialMF HangingSystem)
+     (numAnswers 1 (lookupOnly (cordConnection ?a ?b ?c1 ?c2))))
+
+(<== (considerSpatialMF HangingSystem-twoCords)
+     (numAnswers 1 (lookupOnly (cordConnection ?a ?b ?csa ?csb)))
+     (lookupOnly (cordSegmentOf ?cs1 ?c1))
+     (lookupOnly (cordSegmentOf ?cs2 ?c2))
+     (different ?c1 ?c2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; distance between two spatial things
+(isa DistanceFn Function-Denotational)
+(comment DistanceFn
+  "(DistanceFn ?a ?b) refers to the magnitude of the distance between A and B.")
+(arity DistanceFn 2)
+(arg1Isa DistanceFn SpatialThing)
+(arg2Isa DistanceFn SpatialThing)
+(resultIsa DistanceFn ContinuousQuantity)
+
+;; pretty specific
+(<== (hasQuantity ?obj (DistanceFn ?obj (CenterOfMassFn ?set)))
+     (groundExpression ?obj)
+     (operatorFormulas TheList ?set))
+
+(isa CenterOfMassFn Function-Denotational)
+(comment CenterOfMassFn
+  "Denotes the center of mass of a set of things.")
+(arity CenterOfMassFn 1)
+(resultIsa CenterOfMassFn ContinuousQuantity)
+(arg1Isa CenterOfMassFn Set-Mathematical)
+
+
+
+;; inferring support --
+;; to support == bear all or part of the weight of
+(<== (supportedBy ?supported-thing ?support)
+     (groundExpression ?support)
+     (cacheComplete (touchesDirectly ?supported-thing ?support))
+     (lookupOnly (wmOnly (isa ?supported-thing RigidOb)))
+     (transMotion ?supported-thing ZeroQVector)
+     ;; these are essentially the justifications for
+     ;; transConstraint that let us know that ?support
+     ;; is responsible for keeping the ?supported-thing from
+     ;; moving down.
+     (cacheComplete (transConstraint ?supported-thing Down))
+     (lookupOnly (hasContactSurface ?supported-thing ?support ?surface))
+     (lookupOnly (surfaceNormal ?surface Down)))
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model Fragments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ForceDistribution
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; if I do this nicely, I think it should end up in 2D mechanics theory.
+;;; This needs to show that forces transferred from one object to two others
+;;; are split between the two destination objects.
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                                            
+                                               
+(isa HangingSystem Collection)
+(isa HangingSystem PhysicalModelFragmentType)
+(comment HangingSystem
+  "An instance of HangingSystem has one or more cords keeping something suspended.")
+(mfTypeParticipant HangingSystem ?hanging-thing SolidTangibleThing hangingThingOf)
+(mfTypeParticipant HangingSystem ?cord-set Set-Extensional cordSetOf)
+(mfTypeParticipant HangingSystem ?all-hanging-things List-Extensional allHangingThingsOf)
+(mfTypeParticipantConstraint 
+ HangingSystem
+ (and (lookupOnly (cordConnection ?hanging-thing ?top ?any-cordseg ?any-cordseg)) ;; 1-edged cord
+      (lookupOnly (wmOnly (isa ?top FixedObject)))
+      (lookupOnly (wmOnly (isa ?hanging-thing RigidOb)))
+      (evaluate ?cord-set
+        (ListToSetFn
+         (SortFn (TheClosedRetrievalSetOf ?cord
+                   (and (lookupOnly (cordConnection ?hanging-thing ?top ?cordSeg1 ?cordSeg2))
+                        (lookupOnly (cordSegmentOf ?cordSeg1 ?cord))))
+                 (Kappa (?one ?two) (alphalessp ?one ?two))
+                 IdentityFn)))
+      (evaluate ?unsorted-hanging-things
+        (TheClosedRetrievalSetOf ?object
+          (supportedBy ?object ?hanging-thing)))
+      (evaluate ?all-hanging-things
+        ;; sort needed to avoid violated 1:1 mappings
+        ;; because (TheSet a b c) != (TheSet b c a) for SME
+        (SortFn
+         (SetOrCollectionUnion (TheSet ?hanging-thing)
+                               ?unsorted-hanging-things)
+         (Kappa (?one ?two) (alphalessp ?one ?two))
+         IdentityFn))))
+(mfTypeCondition HangingSystem (unifies :constraints :constraints))
+;;(mfTypeCondition HangingSystem (everySatisfies ?cord ?cord-set (hasQuantity ?cord (YTensionFn ?cord))))
+;;(mfTypeCondition HangingSystem (everySatisfies ?cord ?cord-set (hasQuantity ?cord (XTensionFn ?cord))))
+;;(mfTypeCondition HangingSystem (everySatisfies ?cord ?cord-set (hasQuantity ?cord (NetTensionFn ?cord))))
+;;; Now for consequences:
+;;; 1) each cord has (qprop- YTension distance-to-COM)
+;;; 2) sum of XTensions == zero (how to express this with a set?)
+;;; 3) qprop+ YTension NetTension
+(mfTypeConsequence 
+ HangingSystem 
+ (everySatisfies 
+  ?cord ?cord-set (qprop- (YTensionFn ?cord) (DistanceFn ?cord (CenterOfMassFn ?all-hanging-things)))))
+(mfTypeConsequence 
+ HangingSystem 
+ (everySatisfies 
+  ?cord ?cord-set (qprop (NetTensionFn ?cord) (YTensionFn ?cord))))
+
+
+
+;; Special case: hanging system with two cords
+(isa HangingSystem-twoCords Collection)
+(isa HangingSystem-twoCords PhysicalModelFragmentType)
+(comment HangingSystem-twoCords
+  "Describes the special case of a hanging system where there are two cords/ropes.")
+(mfTypeParticipant HangingSystem-twoCords ?hanging-system HangingSystem generalHangingSystemOf)
+(mfTypeParticipant HangingSystem-twoCords ?cord1 Cord firstCordOf)
+(mfTypeParticipant HangingSystem-twoCords ?cord2 Cord secondCordOf)
+(mfTypeParticipantConstraint HangingSystem-twoCords
+                             (and (activeMF ?hanging-system)
+                                  (cordSetOf ?hanging-system ?cord-set)
+                                  (evaluate ?cord1 (FirstInListFn (SetToListFn ?cord-set)))
+                                  (evaluate ?cord2 (SecondInListFn (SetToListFn ?cord-set)))))
+(mfTypeCondition HangingSystem-twoCords (evaluate 2 (CardinalityFn ?cord-set)))
+(mfTypeConsequence HangingSomething-ByTwo (qEqualTo (XTensionFn ?cord1) (XTensionFn ?cord2)))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

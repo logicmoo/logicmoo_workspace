@@ -1,0 +1,2502 @@
+(in-microtheory CopaQATestMt)
+
+(questionText (CopaQFn 1) "My body cast a shadow over the grass.")
+(questionType (CopaQFn 1) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 1) A) "The sun was rising.")
+(mcTestOption (CopaAnsFn (CopaQFn 1) B) "The grass was cut.")
+
+(questionText (CopaQFn 2) "The woman tolerated her friend's difficult behavior.")
+(questionType (CopaQFn 2) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 2) A) "The woman knew her friend was going through a hard time.")
+(mcTestOption (CopaAnsFn (CopaQFn 2) B) "The woman felt that her friend took advantage of her kindness.")
+
+(questionText (CopaQFn 3) "The women met for coffee.")
+(questionType (CopaQFn 3) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 3) A) "The cafe reopened in a new location.")
+(mcTestOption (CopaAnsFn (CopaQFn 3) B) "They wanted to catch up with each other.")
+
+(questionText (CopaQFn 4) "The runner wore shorts.")
+(questionType (CopaQFn 4) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 4) A) "The forecast predicted high temperatures.")
+(mcTestOption (CopaAnsFn (CopaQFn 4) B) "She planned to run along the beach.")
+
+(questionText (CopaQFn 5) "The guests of the party hid behind the couch.")
+(questionType (CopaQFn 5) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 5) A) "It was a surprise party.")
+(mcTestOption (CopaAnsFn (CopaQFn 5) B) "It was a birthday party.")
+
+(questionText (CopaQFn 6) "The politician lost the election.")
+(questionType (CopaQFn 6) Cause)
+(questionType (CopaQFn 6) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 6) A) "He ran negative campaign ads.")
+(mcTestOption (CopaAnsFn (CopaQFn 6) B) "No one voted for him.")
+
+(questionText (CopaQFn 7) "The stain came out of the shirt.")
+(questionType (CopaQFn 7) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 7) A) "I patched the shirt.")
+(mcTestOption (CopaAnsFn (CopaQFn 7) B) "I bleached the shirt.")
+
+(questionText (CopaQFn 8) "The man got a discount on his groceries.")
+(questionType (CopaQFn 8) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 8) A) "He greeted the cashier.")
+(mcTestOption (CopaAnsFn (CopaQFn 8) B) "He used a coupon.")
+
+(questionText (CopaQFn 9) "The physician misdiagnosed the patient.")
+(questionType (CopaQFn 9) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 9) A) "The patient filed a malpractice lawsuit against the physician.")
+(mcTestOption (CopaAnsFn (CopaQFn 9) B) "The patient disclosed confidential information to the physician.")
+
+(questionText (CopaQFn 10) "The customer filed a complaint with the store manager.")
+(questionType (CopaQFn 10) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 10) A) "The sales associate undercharged the customer.")
+(mcTestOption (CopaAnsFn (CopaQFn 10) B) "The sales associate acted rude to the customer.")
+
+(questionText (CopaQFn 11) "The woman repaired her faucet.")
+(questionType (CopaQFn 11) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 11) A) "The faucet was leaky.")
+(mcTestOption (CopaAnsFn (CopaQFn 11) B) "The faucet was turned off.")
+
+(questionText (CopaQFn 12) "The elderly woman suffered a stroke.")
+(questionType (CopaQFn 12) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 12) A) "The woman's daughter came over to clean her house.")
+(mcTestOption (CopaAnsFn (CopaQFn 12) B) "The woman's daughter moved in to take care of her.")
+
+(questionText (CopaQFn 13) "The pond froze over for the winter.")
+(questionType (CopaQFn 13) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 13) A) "People skated on the pond.")
+(mcTestOption (CopaAnsFn (CopaQFn 13) B) "People brought boats to the pond.")
+
+(questionText (CopaQFn 14) "The offender violated parole.")
+(questionType (CopaQFn 14) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 14) A) "She was sent back to jail.")
+(mcTestOption (CopaAnsFn (CopaQFn 14) B) "She stole money from a church.")
+
+(questionText (CopaQFn 15) "I poured water on my sleeping friend.")
+(questionType (CopaQFn 15) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 15) A) "My friend awoke.")
+(mcTestOption (CopaAnsFn (CopaQFn 15) B) "My friend snored.")
+
+(questionText (CopaQFn 16) "The girl gasped.")
+(questionType (CopaQFn 16) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 16) A) "Her friend stuck an ice cube down her back.")
+(mcTestOption (CopaAnsFn (CopaQFn 16) B) "Her friend gave her a pat on the back.")
+
+(questionText (CopaQFn 17) "The shirt shrunk.")
+(questionType (CopaQFn 17) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 17) A) "I poured bleach on it.")
+(mcTestOption (CopaAnsFn (CopaQFn 17) B) "I put it in the dryer.")
+
+(questionText (CopaQFn 18) "It got dark outside.")
+(questionType (CopaQFn 18) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 18) A) "Snowflakes began to fall from the sky.")
+(mcTestOption (CopaAnsFn (CopaQFn 18) B) "The moon became visible in the sky.")
+
+(questionText (CopaQFn 19) "I hung up the phone.")
+(questionType (CopaQFn 19) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 19) A) "The caller said goodbye to me.")
+(mcTestOption (CopaAnsFn (CopaQFn 19) B) "The caller identified himself to me.")
+
+(questionText (CopaQFn 20) "The woman's ring slipped off in the shower.")
+(questionType (CopaQFn 20) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 20) A) "The woman polished the ring.")
+(mcTestOption (CopaAnsFn (CopaQFn 20) B) "The ring went down the drain.")
+
+(questionText (CopaQFn 21) "The girl received a trophy.")
+(questionType (CopaQFn 21) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 21) A) "She won a spelling bee.")
+(mcTestOption (CopaAnsFn (CopaQFn 21) B) "She made a new friend.")
+
+(questionText (CopaQFn 22) "The woman's date wanted to look like a gentleman.")
+(questionType (CopaQFn 22) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 22) A) "He opened the door for her.")
+(mcTestOption (CopaAnsFn (CopaQFn 22) B) "He asked her if she liked sushi.")
+
+(questionText (CopaQFn 23) "The farmland needed irrigation.")
+(questionType (CopaQFn 23) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 23) A) "A canal was constructed.")
+(mcTestOption (CopaAnsFn (CopaQFn 23) B) "A flood occurred.")
+
+(questionText (CopaQFn 24) "The host cancelled the party.")
+(questionType (CopaQFn 24) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 24) A) "She was certain she had the flu.")
+(mcTestOption (CopaAnsFn (CopaQFn 24) B) "She worried she would catch the flu.")
+
+(questionText (CopaQFn 25) "The woman gave the man her phone number.")
+(questionType (CopaQFn 25) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 25) A) "She was attracted to him.")
+(mcTestOption (CopaAnsFn (CopaQFn 25) B) "She was repulsed by him.")
+
+(questionText (CopaQFn 26) "The skydiver glided safely to the ground.")
+(questionType (CopaQFn 26) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 26) A) "She opened her parachute.")
+(mcTestOption (CopaAnsFn (CopaQFn 26) B) "She jumped out of the plane.")
+
+(questionText (CopaQFn 27) "The toddler became cranky.")
+(questionType (CopaQFn 27) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 27) A) "Her mother put her down for a nap.")
+(mcTestOption (CopaAnsFn (CopaQFn 27) B) "Her mother fixed her hair into pigtails.")
+
+(questionText (CopaQFn 28) "The child became immune to the disease.")
+(questionType (CopaQFn 28) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 28) A) "He avoided exposure to the disease.")
+(mcTestOption (CopaAnsFn (CopaQFn 28) B) "He received the vaccine for the disease.")
+
+(questionText (CopaQFn 29) "The grape juice fermented.")
+(questionType (CopaQFn 29) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 29) A) "The juice turned to wine.")
+(mcTestOption (CopaAnsFn (CopaQFn 29) B) "The juice evaporated.")
+
+(questionText (CopaQFn 30) "The friends' debate dragged on interminably.")
+(questionType (CopaQFn 30) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 30) A) "The friends saw eye to eye.")
+(mcTestOption (CopaAnsFn (CopaQFn 30) B) "The friends were splitting hairs.")
+
+(questionText (CopaQFn 31) "The woman hummed to herself.")
+(questionType (CopaQFn 31) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 31) A) "She was nervous.")
+(mcTestOption (CopaAnsFn (CopaQFn 31) B) "She was in a good mood.")
+
+(questionText (CopaQFn 32) "The man hated his new haircut.")
+(questionType (CopaQFn 32) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 32) A) "He wore a hat.")
+(mcTestOption (CopaAnsFn (CopaQFn 32) B) "He grew a beard.")
+
+(questionText (CopaQFn 33) "The police aimed their weapons at the fugitive.")
+(questionType (CopaQFn 33) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 33) A) "The fugitive fell to the ground.")
+(mcTestOption (CopaAnsFn (CopaQFn 33) B) "The fugitive dropped his gun.")
+
+(questionText (CopaQFn 34) "The patient was dehydrated.")
+(questionType (CopaQFn 34) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 34) A) "The nurse tested his reflexes.")
+(mcTestOption (CopaAnsFn (CopaQFn 34) B) "The nurse gave him an IV.")
+
+(questionText (CopaQFn 35) "The girl found the missing puzzle piece.")
+(questionType (CopaQFn 35) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 35) A) "She completed the puzzle.")
+(mcTestOption (CopaAnsFn (CopaQFn 35) B) "She took apart the puzzle.")
+
+(questionText (CopaQFn 36) "The man urgently leaped out of bed.")
+(questionType (CopaQFn 36) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 36) A) "He wanted to shut off the alarm clock.")
+(mcTestOption (CopaAnsFn (CopaQFn 36) B) "He wanted to iron his pants before work.")
+
+(questionText (CopaQFn 37) "The papers were disorganized.")
+(questionType (CopaQFn 37) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 37) A) "I made photocopies of them.")
+(mcTestOption (CopaAnsFn (CopaQFn 37) B) "I put them into alphabetical order.")
+
+(questionText (CopaQFn 38) "The woman won the lottery.")
+(questionType (CopaQFn 38) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 38) A) "She bought a yacht.")
+(mcTestOption (CopaAnsFn (CopaQFn 38) B) "She joined a church.")
+
+(questionText (CopaQFn 39) "The seamstress pushed the threaded needle into the fabric.")
+(questionType (CopaQFn 39) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 39) A) "The thread wrapped around the needle.")
+(mcTestOption (CopaAnsFn (CopaQFn 39) B) "The thread went through the fabric.")
+
+(questionText (CopaQFn 40) "The woman hired a lawyer.")
+(questionType (CopaQFn 40) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 40) A) "She decided to sue her employer.")
+(mcTestOption (CopaAnsFn (CopaQFn 40) B) "She decided to run for office.")
+
+(questionText (CopaQFn 41) "The tenant misplaced his keys to his apartment.")
+(questionType (CopaQFn 41) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 41) A) "His landlord unlocked the door.")
+(mcTestOption (CopaAnsFn (CopaQFn 41) B) "His landlord repaired the door.")
+
+(questionText (CopaQFn 42) "My favorite song came on the radio.")
+(questionType (CopaQFn 42) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 42) A) "I covered my ears.")
+(mcTestOption (CopaAnsFn (CopaQFn 42) B) "I sang along to it.")
+
+(questionText (CopaQFn 43) "The executive decided not to hire the applicant.")
+(questionType (CopaQFn 43) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 43) A) "The applicant failed a background check.")
+(mcTestOption (CopaAnsFn (CopaQFn 43) B) "The applicant had experience for the job.")
+
+(questionText (CopaQFn 44) "The man's eye became infected.")
+(questionType (CopaQFn 44) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 44) A) "He went blind.")
+(mcTestOption (CopaAnsFn (CopaQFn 44) B) "He put on glasses.")
+
+(questionText (CopaQFn 45) "The bird couldn't fly.")
+(questionType (CopaQFn 45) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 45) A) "It migrated for the winter.")
+(mcTestOption (CopaAnsFn (CopaQFn 45) B) "It injured its wing.")
+
+(questionText (CopaQFn 46) "The girl made a wish.")
+(questionType (CopaQFn 46) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 46) A) "She saw a black cat.")
+(mcTestOption (CopaAnsFn (CopaQFn 46) B) "She saw a shooting star.")
+
+(questionText (CopaQFn 47) "The woman shivered as she got out the pool.")
+(questionType (CopaQFn 47) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 47) A) "She wrapped herself in a towel.")
+(mcTestOption (CopaAnsFn (CopaQFn 47) B) "She poured herself some lemonade.")
+
+(questionText (CopaQFn 48) "The nurse prepared the needle for the patient's injection.")
+(questionType (CopaQFn 48) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 48) A) "The patient bled.")
+(mcTestOption (CopaAnsFn (CopaQFn 48) B) "The patient tensed up.")
+
+(questionText (CopaQFn 49) "The man threw out the bread.")
+(questionType (CopaQFn 49) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 49) A) "It was fresh.")
+(mcTestOption (CopaAnsFn (CopaQFn 49) B) "It was stale.")
+
+(questionText (CopaQFn 50) "The children knocked over a lamp.")
+(questionType (CopaQFn 50) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 50) A) "They had a pillow fight.")
+(mcTestOption (CopaAnsFn (CopaQFn 50) B) "They jumped on the bed.")
+
+(questionText (CopaQFn 51) "I drank from the water fountain.")
+(questionType (CopaQFn 51) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 51) A) "I was thirsty.")
+(mcTestOption (CopaAnsFn (CopaQFn 51) B) "I felt nauseous.")
+
+(questionText (CopaQFn 52) "The homeowners disliked their nosy neighbors.")
+(questionType (CopaQFn 52) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 52) A) "They built a fence around their property.")
+(mcTestOption (CopaAnsFn (CopaQFn 52) B) "They hosted a barbeque in their backyard.")
+
+(questionText (CopaQFn 53) "The bodybuilder lifted weights.")
+(questionType (CopaQFn 53) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 53) A) "The gym closed.")
+(mcTestOption (CopaAnsFn (CopaQFn 53) B) "Her muscles became fatigued.")
+
+(questionText (CopaQFn 54) "The cook stirred the ingredients in the bowl.")
+(questionType (CopaQFn 54) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 54) A) "The ingredients melted.")
+(mcTestOption (CopaAnsFn (CopaQFn 54) B) "The ingredients blended together.")
+
+(questionText (CopaQFn 55) "The man signed the document.")
+(questionType (CopaQFn 55) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 55) A) "The transaction was voided.")
+(mcTestOption (CopaAnsFn (CopaQFn 55) B) "The transaction became official.")
+
+(questionText (CopaQFn 56) "The police officer dropped the gun.")
+(questionType (CopaQFn 56) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 56) A) "The gun recoiled.")
+(mcTestOption (CopaAnsFn (CopaQFn 56) B) "The gun went off.")
+
+(questionText (CopaQFn 57) "The woman felt compelled to help someone in need.")
+(questionType (CopaQFn 57) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 57) A) "She donated blood.")
+(mcTestOption (CopaAnsFn (CopaQFn 57) B) "She wrote a poem.")
+
+(questionText (CopaQFn 58) "The woman felt lonely.")
+(questionType (CopaQFn 58) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 58) A) "She renovated her kitchen.")
+(mcTestOption (CopaAnsFn (CopaQFn 58) B) "She adopted a cat.")
+
+(questionText (CopaQFn 59) "I rubbed sandpaper on the wood.")
+(questionType (CopaQFn 59) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 59) A) "The wood became smooth.")
+(mcTestOption (CopaAnsFn (CopaQFn 59) B) "The wood became sticky.")
+
+(questionText (CopaQFn 60) "The crowd gave the band a standing ovation.")
+(questionType (CopaQFn 60) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 60) A) "The band signed autographs.")
+(mcTestOption (CopaAnsFn (CopaQFn 60) B) "The band reappeared on the stage.")
+
+(questionText (CopaQFn 61) "The man threw his empty can onto the street.")
+(questionType (CopaQFn 61) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 61) A) "He was jumped from behind.")
+(mcTestOption (CopaAnsFn (CopaQFn 61) B) "He was fined for littering.")
+
+(questionText (CopaQFn 62) "My stomach growled.")
+(questionType (CopaQFn 62) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 62) A) "I forgot to eat breakfast.")
+(mcTestOption (CopaAnsFn (CopaQFn 62) B) "I was full from breakfast.")
+
+(questionText (CopaQFn 63) "The boaters set off a flare.")
+(questionType (CopaQFn 63) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 63) A) "Their boat drifted to shore.")
+(mcTestOption (CopaAnsFn (CopaQFn 63) B) "Their boat was rescued.")
+
+(questionText (CopaQFn 64) "The man removed his coat.")
+(questionType (CopaQFn 64) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 64) A) "He entered the house.")
+(mcTestOption (CopaAnsFn (CopaQFn 64) B) "He loosened his tie.")
+
+(questionText (CopaQFn 65) "The family took their dog to the veterinarian.")
+(questionType (CopaQFn 65) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 65) A) "The dog chewed on a bone.")
+(mcTestOption (CopaAnsFn (CopaQFn 65) B) "The dog injured his paw.")
+
+(questionText (CopaQFn 66) "The woman dangled the biscuit above the dog.")
+(questionType (CopaQFn 66) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 66) A) "The dog jumped up.")
+(mcTestOption (CopaAnsFn (CopaQFn 66) B) "The dog scratched its fur.")
+
+(questionText (CopaQFn 67) "I learned how to play the board game.")
+(questionType (CopaQFn 67) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 67) A) "My friend explained the rules to me.")
+(mcTestOption (CopaAnsFn (CopaQFn 67) B) "My friend got the rules wrong.")
+
+(questionText (CopaQFn 68) "The man went away for the weekend.")
+(questionType (CopaQFn 68) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 68) A) "He wanted to relax.")
+(mcTestOption (CopaAnsFn (CopaQFn 68) B) "He felt content.")
+
+(questionText (CopaQFn 69) "The shop was closed.")
+(questionType (CopaQFn 69) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 69) A) "The owner was helping customers.")
+(mcTestOption (CopaAnsFn (CopaQFn 69) B) "The shop was undergoing renovation.")
+
+(questionText (CopaQFn 70) "The boy tuned the radio.")
+(questionType (CopaQFn 70) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 70) A) "The station was playing rock music.")
+(mcTestOption (CopaAnsFn (CopaQFn 70) B) "The station was coming in with static.")
+
+(questionText (CopaQFn 71) "The terrorist set off the bomb.")
+(questionType (CopaQFn 71) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 71) A) "The bomb exploded.")
+(mcTestOption (CopaAnsFn (CopaQFn 71) B) "The bomb was deactivated.")
+
+(questionText (CopaQFn 72) "The police handcuffed the suspect.")
+(questionType (CopaQFn 72) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 72) A) "The police called for backup.")
+(mcTestOption (CopaAnsFn (CopaQFn 72) B) "The suspect resisted arrest.")
+
+(questionText (CopaQFn 73) "The authorities vowed to protect the identity of the crime victim.")
+(questionType (CopaQFn 73) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 73) A) "The victim struggled to recall details about the crime.")
+(mcTestOption (CopaAnsFn (CopaQFn 73) B) "They withheld the victim's name from the public.")
+
+(questionText (CopaQFn 74) "The man's clothes fit loosely.")
+(questionType (CopaQFn 74) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 74) A) "He bought them on sale.")
+(mcTestOption (CopaAnsFn (CopaQFn 74) B) "He lost weight.")
+
+(questionText (CopaQFn 75) "The clock stopped ticking.")
+(questionType (CopaQFn 75) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 75) A) "I took extra time to get ready.")
+(mcTestOption (CopaAnsFn (CopaQFn 75) B) "The clock showed the wrong time.")
+
+(questionText (CopaQFn 76) "The man closed the umbrella.")
+(questionType (CopaQFn 76) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 76) A) "He got out of the car.")
+(mcTestOption (CopaAnsFn (CopaQFn 76) B) "He approached the building.")
+
+(questionText (CopaQFn 77) "The man craved a cigarette.")
+(questionType (CopaQFn 77) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 77) A) "His family urged him to quit smoking.")
+(mcTestOption (CopaAnsFn (CopaQFn 77) B) "He was addicted to nicotine.")
+
+(questionText (CopaQFn 78) "The man dropped food on the floor.")
+(questionType (CopaQFn 78) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 78) A) "His dog jumped up on him.")
+(mcTestOption (CopaAnsFn (CopaQFn 78) B) "His dog ran over to eat the food.")
+
+(questionText (CopaQFn 79) "The girl was angry with her friend.")
+(questionType (CopaQFn 79) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 79) A) "The girl spread a rumor about her friend.")
+(mcTestOption (CopaAnsFn (CopaQFn 79) B) "The girl told a secret to her friend.")
+
+(questionText (CopaQFn 80) "The fugitive hid from the police.")
+(questionType (CopaQFn 80) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 80) A) "The police dropped the case.")
+(mcTestOption (CopaAnsFn (CopaQFn 80) B) "The fugitive remained at large.")
+
+(questionText (CopaQFn 81) "I tipped the bottle.")
+(questionType (CopaQFn 81) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 81) A) "The liquid in the bottle froze.")
+(mcTestOption (CopaAnsFn (CopaQFn 81) B) "The liquid in the bottle poured out.")
+
+(questionText (CopaQFn 82) "The woman spoke with a foreign accent.")
+(questionType (CopaQFn 82) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 82) A) "She came from a wealthy family.")
+(mcTestOption (CopaAnsFn (CopaQFn 82) B) "She migrated from another country.")
+
+(questionText (CopaQFn 83) "The boy's mouth stung.")
+(questionType (CopaQFn 83) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 83) A) "He ate a pepper.")
+(mcTestOption (CopaAnsFn (CopaQFn 83) B) "He blew out the candle.")
+
+(questionText (CopaQFn 84) "I finished a page of the book.")
+(questionType (CopaQFn 84) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 84) A) "I ripped out the next page.")
+(mcTestOption (CopaAnsFn (CopaQFn 84) B) "I turned to the next page.")
+
+(questionText (CopaQFn 85) "The service at the restaurant was slow.")
+(questionType (CopaQFn 85) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 85) A) "There were many empty tables.")
+(mcTestOption (CopaAnsFn (CopaQFn 85) B) "The restaurant was crowded.")
+
+(questionText (CopaQFn 86) "I saw a woman getting robbed on the street.")
+(questionType (CopaQFn 86) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 86) A) "I called 911.")
+(mcTestOption (CopaAnsFn (CopaQFn 86) B) "I hailed a cab.")
+
+(questionText (CopaQFn 87) "My stomach hurt.")
+(questionType (CopaQFn 87) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 87) A) "I jogged on the treadmill.")
+(mcTestOption (CopaAnsFn (CopaQFn 87) B) "I ate birthday cake.")
+
+(questionText (CopaQFn 88) "I put my plate in the sink.")
+(questionType (CopaQFn 88) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 88) A) "I finished eating.")
+(mcTestOption (CopaAnsFn (CopaQFn 88) B) "I skipped dinner.")
+
+(questionText (CopaQFn 89) "The man closed the book.")
+(questionType (CopaQFn 89) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 89) A) "He finished reading it.")
+(mcTestOption (CopaAnsFn (CopaQFn 89) B) "It provoked him to think.")
+
+(questionText (CopaQFn 90) "The boy read the novel aloud to his grandfather.")
+(questionType (CopaQFn 90) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 90) A) "His grandfather was deaf.")
+(mcTestOption (CopaAnsFn (CopaQFn 90) B) "His grandfather was blind.")
+
+(questionText (CopaQFn 91) "My foot went numb.")
+(questionType (CopaQFn 91) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 91) A) "I put my shoes on.")
+(mcTestOption (CopaAnsFn (CopaQFn 91) B) "I shook my foot.")
+
+(questionText (CopaQFn 92) "The photographer got the child to smile.")
+(questionType (CopaQFn 92) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 92) A) "The photographer quickly snapped the child's photo.")
+(mcTestOption (CopaAnsFn (CopaQFn 92) B) "The photographer quickly changed the child's pose.")
+
+(questionText (CopaQFn 93) "The window was opaque.")
+(questionType (CopaQFn 93) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 93) A) "The glass was stained.")
+(mcTestOption (CopaAnsFn (CopaQFn 93) B) "The blinds were open.")
+
+(questionText (CopaQFn 94) "I slipped on the floor.")
+(questionType (CopaQFn 94) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 94) A) "The tile was wet.")
+(mcTestOption (CopaAnsFn (CopaQFn 94) B) "The tile was cracked.")
+
+(questionText (CopaQFn 95) "The man slid the razor across his chin.")
+(questionType (CopaQFn 95) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 95) A) "His stubble grew.")
+(mcTestOption (CopaAnsFn (CopaQFn 95) B) "His stubble disappeared.")
+
+(questionText (CopaQFn 96) "The woman took her family on vacation.")
+(questionType (CopaQFn 96) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 96) A) "Her husband got laid off.")
+(mcTestOption (CopaAnsFn (CopaQFn 96) B) "She received a salary bonus.")
+
+(questionText (CopaQFn 97) "The woman awakened.")
+(questionType (CopaQFn 97) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 97) A) "She took sleeping pills.")
+(mcTestOption (CopaAnsFn (CopaQFn 97) B) "Her husband was snoring.")
+
+(questionText (CopaQFn 98) "The woman sensed a pleasant smell.")
+(questionType (CopaQFn 98) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 98) A) "She remembered to take her medication.")
+(mcTestOption (CopaAnsFn (CopaQFn 98) B) "She was reminded of her childhood.")
+
+(questionText (CopaQFn 99) "The bar closed.")
+(questionType (CopaQFn 99) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 99) A) "It was crowded.")
+(mcTestOption (CopaAnsFn (CopaQFn 99) B) "It was 3 AM.")
+
+(questionText (CopaQFn 100) "The driver got pulled over by the police.")
+(questionType (CopaQFn 100) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 100) A) "He was parking.")
+(mcTestOption (CopaAnsFn (CopaQFn 100) B) "He was speeding.")
+
+(questionText (CopaQFn 101) "The teacher took roll.")
+(questionType (CopaQFn 101) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 101) A) "She identified the students that were absent.")
+(mcTestOption (CopaAnsFn (CopaQFn 101) B) "She gave her students a pop quiz.")
+
+(questionText (CopaQFn 102) "I pushed the pendulum.")
+(questionType (CopaQFn 102) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 102) A) "It slowed to a stop.")
+(mcTestOption (CopaAnsFn (CopaQFn 102) B) "It swung back and forth.")
+
+(questionText (CopaQFn 103) "The child kicked the stack of blocks.")
+(questionType (CopaQFn 103) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 103) A) "The stack towered over the boy's head.")
+(mcTestOption (CopaAnsFn (CopaQFn 103) B) "The blocks scattered all over the rug.")
+
+(questionText (CopaQFn 104) "The teenager ran away from home.")
+(questionType (CopaQFn 104) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 104) A) "He relied on his parents.")
+(mcTestOption (CopaAnsFn (CopaQFn 104) B) "His parents abused him.")
+
+(questionText (CopaQFn 105) "I botched the job interview.")
+(questionType (CopaQFn 105) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 105) A) "The interviewer asked difficult questions.")
+(mcTestOption (CopaAnsFn (CopaQFn 105) B) "I anticipated the interviewer's questions.")
+
+(questionText (CopaQFn 106) "The pharmaceutical company recalled the drug.")
+(questionType (CopaQFn 106) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 106) A) "Users reported dangerous side effects.")
+(mcTestOption (CopaAnsFn (CopaQFn 106) B) "Users got refills on their prescriptions.")
+
+(questionText (CopaQFn 107) "The man looked at his watch.")
+(questionType (CopaQFn 107) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 107) A) "He realized he forgot something.")
+(mcTestOption (CopaAnsFn (CopaQFn 107) B) "He realized he was early.")
+
+(questionText (CopaQFn 108) "I dabbed the floor with a paper towel.")
+(questionType (CopaQFn 108) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 108) A) "I spilled juice on the floor.")
+(mcTestOption (CopaAnsFn (CopaQFn 108) B) "The floor was permanently stained.")
+
+(questionText (CopaQFn 109) "The bartender refused to serve the patron.")
+(questionType (CopaQFn 109) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 109) A) "The patron was alone.")
+(mcTestOption (CopaAnsFn (CopaQFn 109) B) "The patron was drunk.")
+
+(questionText (CopaQFn 110) "I was confused by the professor's lecture.")
+(questionType (CopaQFn 110) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 110) A) "I paid attention to the professor.")
+(mcTestOption (CopaAnsFn (CopaQFn 110) B) "I asked the professor questions.")
+
+(questionText (CopaQFn 111) "The book was deemed inappropriate for children.")
+(questionType (CopaQFn 111) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 111) A) "Schools banned it from its libraries.")
+(mcTestOption (CopaAnsFn (CopaQFn 111) B) "Teachers required students to read it.")
+
+(questionText (CopaQFn 112) "The man begged for forgiveness.")
+(questionType (CopaQFn 112) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 112) A) "The woman took pity on him.")
+(mcTestOption (CopaAnsFn (CopaQFn 112) B) "The woman joked around with him.")
+
+(questionText (CopaQFn 113) "I received a package in the mail.")
+(questionType (CopaQFn 113) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 113) A) "The package triggered my curiosity.")
+(mcTestOption (CopaAnsFn (CopaQFn 113) B) "I took the package to the post office.")
+
+(questionText (CopaQFn 114) "The surfer caught the wave.")
+(questionType (CopaQFn 114) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 114) A) "The wave carried her to the shore.")
+(mcTestOption (CopaAnsFn (CopaQFn 114) B) "She paddled her board into the ocean.")
+
+(questionText (CopaQFn 115) "The speaker disarmed her debate opponent.")
+(questionType (CopaQFn 115) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 115) A) "The speaker congratulated her opponent.")
+(mcTestOption (CopaAnsFn (CopaQFn 115) B) "The speaker won the debate.")
+
+(questionText (CopaQFn 116) "I moved to a new city.")
+(questionType (CopaQFn 116) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 116) A) "I found a better-paying job.")
+(mcTestOption (CopaAnsFn (CopaQFn 116) B) "My son was born.")
+
+(questionText (CopaQFn 117) "I avoided giving a straight answer to the question.")
+(questionType (CopaQFn 117) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 117) A) "The question made me uncomfortable.")
+(mcTestOption (CopaAnsFn (CopaQFn 117) B) "I wanted to be honest.")
+
+(questionText (CopaQFn 118) "The student received detention.")
+(questionType (CopaQFn 118) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 118) A) "He talked back to the teacher.")
+(mcTestOption (CopaAnsFn (CopaQFn 118) B) "The teacher graded his homework.")
+
+(questionText (CopaQFn 119) "The boy's hands were shaking.")
+(questionType (CopaQFn 119) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 119) A) "He planned to ask the girl out.")
+(mcTestOption (CopaAnsFn (CopaQFn 119) B) "His palms were cold and sweaty.")
+
+(questionText (CopaQFn 120) "The fans in the stadium cheered.")
+(questionType (CopaQFn 120) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 120) A) "The game ended in a tie.")
+(mcTestOption (CopaAnsFn (CopaQFn 120) B) "The player scored.")
+
+(questionText (CopaQFn 121) "The girl went down the hill on her bike.")
+(questionType (CopaQFn 121) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 121) A) "Her bike swerved.")
+(mcTestOption (CopaAnsFn (CopaQFn 121) B) "Her bike sped up.")
+
+(questionText (CopaQFn 122) "A man cut in front of me in the long line.")
+(questionType (CopaQFn 122) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 122) A) "I confronted him.")
+(mcTestOption (CopaAnsFn (CopaQFn 122) B) "I smiled at him.")
+
+(questionText (CopaQFn 123) "The inside of the train went dark.")
+(questionType (CopaQFn 123) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 123) A) "The train travelled through a tunnel.")
+(mcTestOption (CopaAnsFn (CopaQFn 123) B) "The train ran off the tracks.")
+
+(questionText (CopaQFn 124) "The man contemplated the painting.")
+(questionType (CopaQFn 124) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 124) A) "He felt in awe.")
+(mcTestOption (CopaAnsFn (CopaQFn 124) B) "He collapsed.")
+
+(questionText (CopaQFn 125) "The turtle hid in its shell.")
+(questionType (CopaQFn 125) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 125) A) "It ate a fish.")
+(mcTestOption (CopaAnsFn (CopaQFn 125) B) "It detected a predator.")
+
+(questionText (CopaQFn 126) "The girl handed down her clothes to her younger sister.")
+(questionType (CopaQFn 126) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 126) A) "The clothes were tattered.")
+(mcTestOption (CopaAnsFn (CopaQFn 126) B) "She outgrew the clothes.")
+
+(questionText (CopaQFn 127) "Several witnesses of the crime testified against the suspect.")
+(questionType (CopaQFn 127) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 127) A) "The suspect was acquitted.")
+(mcTestOption (CopaAnsFn (CopaQFn 127) B) "The suspect was convicted.")
+
+(questionText (CopaQFn 128) "The parents left their children with a babysitter.")
+(questionType (CopaQFn 128) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 128) A) "Their youngest child started attending preschool.")
+(mcTestOption (CopaAnsFn (CopaQFn 128) B) "They made plans to celebrate their anniversary.")
+
+(questionText (CopaQFn 129) "The trip took a long time.")
+(questionType (CopaQFn 129) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 129) A) "The driver talked the whole way.")
+(mcTestOption (CopaAnsFn (CopaQFn 129) B) "The driver made a wrong turn.")
+
+(questionText (CopaQFn 130) "The product was heavily advertised.")
+(questionType (CopaQFn 130) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 130) A) "Consumers recognized the product.")
+(mcTestOption (CopaAnsFn (CopaQFn 130) B) "The product became outdated.")
+
+(questionText (CopaQFn 131) "I rubbed the soap between my hands.")
+(questionType (CopaQFn 131) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 131) A) "The soap foamed.")
+(mcTestOption (CopaAnsFn (CopaQFn 131) B) "My hands went numb.")
+
+(questionText (CopaQFn 132) "The cowgirl threw her lasso towards the horse.")
+(questionType (CopaQFn 132) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 132) A) "The lasso grabbed onto the horse.")
+(mcTestOption (CopaAnsFn (CopaQFn 132) B) "The horse trotted into the barn.")
+
+(questionText (CopaQFn 133) "The group overlooked the woman's faux pas.")
+(questionType (CopaQFn 133) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 133) A) "The woman was relieved.")
+(mcTestOption (CopaAnsFn (CopaQFn 133) B) "The woman apologized.")
+
+(questionText (CopaQFn 134) "The girl came across an unfamiliar word in her textbook.")
+(questionType (CopaQFn 134) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 134) A) "She looked the term up in the dictionary.")
+(mcTestOption (CopaAnsFn (CopaQFn 134) B) "She chucked the textbook across the room.")
+
+(questionText (CopaQFn 135) "The man became disabled.")
+(questionType (CopaQFn 135) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 135) A) "His family offered him financial support.")
+(mcTestOption (CopaAnsFn (CopaQFn 135) B) "His family cut off contact with him.")
+
+(questionText (CopaQFn 136) "The flashlight was dead.")
+(questionType (CopaQFn 136) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 136) A) "I took it apart.")
+(mcTestOption (CopaAnsFn (CopaQFn 136) B) "I replaced the batteries.")
+
+(questionText (CopaQFn 137) "The skunk sprayed the dog.")
+(questionType (CopaQFn 137) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 137) A) "The dog emitted a foul smell.")
+(mcTestOption (CopaAnsFn (CopaQFn 137) B) "The skunk roamed the woods.")
+
+(questionText (CopaQFn 138) "I scratched my skin.")
+(questionType (CopaQFn 138) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 138) A) "My itch went away.")
+(mcTestOption (CopaAnsFn (CopaQFn 138) B) "My scar faded.")
+
+(questionText (CopaQFn 139) "I wrote a thank-you note to my grandmother.")
+(questionType (CopaQFn 139) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 139) A) "She became forgetful.")
+(mcTestOption (CopaAnsFn (CopaQFn 139) B) "She sent me a gift.")
+
+(questionText (CopaQFn 140) "A burglar broke into the house.")
+(questionType (CopaQFn 140) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 140) A) "The homeowners were asleep.")
+(mcTestOption (CopaAnsFn (CopaQFn 140) B) "The security alarm went off.")
+
+(questionText (CopaQFn 141) "I held the door for the woman entering behind me.")
+(questionType (CopaQFn 141) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 141) A) "The door slammed shut.")
+(mcTestOption (CopaAnsFn (CopaQFn 141) B) "The woman thanked me.")
+
+(questionText (CopaQFn 142) "The mirror in the bathroom fogged up.")
+(questionType (CopaQFn 142) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 142) A) "The girl turned on the fan.")
+(mcTestOption (CopaAnsFn (CopaQFn 142) B) "The girl applied her makeup.")
+
+(questionText (CopaQFn 143) "The security guard tackled the man.")
+(questionType (CopaQFn 143) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 143) A) "The man reached into his pocket.")
+(mcTestOption (CopaAnsFn (CopaQFn 143) B) "The man displayed a weapon.")
+
+(questionText (CopaQFn 144) "The driver rotated the steering wheel.")
+(questionType (CopaQFn 144) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 144) A) "The car halted.")
+(mcTestOption (CopaAnsFn (CopaQFn 144) B) "The car turned.")
+
+(questionText (CopaQFn 145) "The army surrendered the battle.")
+(questionType (CopaQFn 145) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 145) A) "They were outnumbered.")
+(mcTestOption (CopaAnsFn (CopaQFn 145) B) "They stormed the city.")
+
+(questionText (CopaQFn 146) "The navy bombed the ship.")
+(questionType (CopaQFn 146) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 146) A) "The ship crashed into the pier.")
+(mcTestOption (CopaAnsFn (CopaQFn 146) B) "The ship's debris sunk in the sea.")
+
+(questionText (CopaQFn 147) "I ironed my shirt.")
+(questionType (CopaQFn 147) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 147) A) "It was clean.")
+(mcTestOption (CopaAnsFn (CopaQFn 147) B) "It was wrinkled.")
+
+(questionText (CopaQFn 148) "The girl felt dizzy.")
+(questionType (CopaQFn 148) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 148) A) "She lost her balance.")
+(mcTestOption (CopaAnsFn (CopaQFn 148) B) "She did stretches.")
+
+(questionText (CopaQFn 149) "The driver pulled over to the side of the road.")
+(questionType (CopaQFn 149) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 149) A) "He went through an intersection.")
+(mcTestOption (CopaAnsFn (CopaQFn 149) B) "He noticed a stranded vehicle.")
+
+(questionText (CopaQFn 150) "The hospital sent the patient home.")
+(questionType (CopaQFn 150) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 150) A) "The patient's symptoms cleared up.")
+(mcTestOption (CopaAnsFn (CopaQFn 150) B) "The patient's family visited him.")
+
+(questionText (CopaQFn 151) "The child caught a life-threatening illness.")
+(questionType (CopaQFn 151) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 151) A) "She didn't get vaccinated.")
+(mcTestOption (CopaAnsFn (CopaQFn 151) B) "She was adopted.")
+
+(questionText (CopaQFn 152) "We found empty seats in the theatre.")
+(questionType (CopaQFn 152) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 152) A) "The film began.")
+(mcTestOption (CopaAnsFn (CopaQFn 152) B) "We sat down.")
+
+(questionText (CopaQFn 153) "The parents recognized their daughter's creativity.")
+(questionType (CopaQFn 153) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 153) A) "They taught her how to ride a bike.")
+(mcTestOption (CopaAnsFn (CopaQFn 153) B) "They encouraged her to become an artist.")
+
+(questionText (CopaQFn 154) "The boy turned the lid on the jar.")
+(questionType (CopaQFn 154) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 154) A) "The jar became warm.")
+(mcTestOption (CopaAnsFn (CopaQFn 154) B) "The lid came off.")
+
+(questionText (CopaQFn 155) "The woman received a diploma.")
+(questionType (CopaQFn 155) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 155) A) "She enrolled in college.")
+(mcTestOption (CopaAnsFn (CopaQFn 155) B) "She graduated from college.")
+
+(questionText (CopaQFn 156) "I chugged the pitcher of water.")
+(questionType (CopaQFn 156) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 156) A) "I walked upstairs.")
+(mcTestOption (CopaAnsFn (CopaQFn 156) B) "I ran five miles.")
+
+(questionText (CopaQFn 157) "I came upon a puddle on the sidewalk.")
+(questionType (CopaQFn 157) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 157) A) "I leapt over the puddle.")
+(mcTestOption (CopaAnsFn (CopaQFn 157) B) "I played in the puddle.")
+
+(questionText (CopaQFn 158) "The woman covered her ears.")
+(questionType (CopaQFn 158) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 158) A) "The fire alarm blared.")
+(mcTestOption (CopaAnsFn (CopaQFn 158) B) "The woman smelled smoke.")
+
+(questionText (CopaQFn 159) "The archeologist dug up the site.")
+(questionType (CopaQFn 159) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 159) A) "She excavated ancient artifacts.")
+(mcTestOption (CopaAnsFn (CopaQFn 159) B) "She read about the site's history.")
+
+(questionText (CopaQFn 160) "The audience booed the comedian off the stage.")
+(questionType (CopaQFn 160) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 160) A) "He told a racist joke.")
+(mcTestOption (CopaAnsFn (CopaQFn 160) B) "He entertained the audience.")
+
+(questionText (CopaQFn 161) "The coach gave his player a high five.")
+(questionType (CopaQFn 161) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 161) A) "The player got a penalty.")
+(mcTestOption (CopaAnsFn (CopaQFn 161) B) "The player scored a point.")
+
+(questionText (CopaQFn 162) "I tossed the ball upwards.")
+(questionType (CopaQFn 162) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 162) A) "The ball rolled across the ground.")
+(mcTestOption (CopaAnsFn (CopaQFn 162) B) "The ball hit the ceiling.")
+
+(questionText (CopaQFn 163) "My breath smelled of garlic.")
+(questionType (CopaQFn 163) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 163) A) "I wiped my mouth.")
+(mcTestOption (CopaAnsFn (CopaQFn 163) B) "I brushed my teeth.")
+
+(questionText (CopaQFn 164) "The man was lost.")
+(questionType (CopaQFn 164) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 164) A) "He asked for directions.")
+(mcTestOption (CopaAnsFn (CopaQFn 164) B) "He drew a map.")
+
+(questionText (CopaQFn 165) "The baby pulled the mother's hair.")
+(questionType (CopaQFn 165) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 165) A) "The baby burped.")
+(mcTestOption (CopaAnsFn (CopaQFn 165) B) "The mother grimaced.")
+
+(questionText (CopaQFn 166) "I stood on one foot.")
+(questionType (CopaQFn 166) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 166) A) "My balance wavered.")
+(mcTestOption (CopaAnsFn (CopaQFn 166) B) "I kneeled down.")
+
+(questionText (CopaQFn 167) "I pushed the gas pedal.")
+(questionType (CopaQFn 167) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 167) A) "The car accelerated.")
+(mcTestOption (CopaAnsFn (CopaQFn 167) B) "The car door opened.")
+
+(questionText (CopaQFn 168) "My car was towed.")
+(questionType (CopaQFn 168) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 168) A) "I parked illegally.")
+(mcTestOption (CopaAnsFn (CopaQFn 168) B) "I jumped the battery.")
+
+(questionText (CopaQFn 169) "The woman got away with the crime.")
+(questionType (CopaQFn 169) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 169) A) "Her accomplice was apprehended.")
+(mcTestOption (CopaAnsFn (CopaQFn 169) B) "She destroyed the evidence.")
+
+(questionText (CopaQFn 170) "The dust came off the desk.")
+(questionType (CopaQFn 170) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 170) A) "I wiped the desk with a cloth.")
+(mcTestOption (CopaAnsFn (CopaQFn 170) B) "I removed the books from the desk.")
+
+(questionText (CopaQFn 171) "The motorcyclist twisted the throttle.")
+(questionType (CopaQFn 171) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 171) A) "The motorcycle coasted to a halt.")
+(mcTestOption (CopaAnsFn (CopaQFn 171) B) "The motorcycle shot forward.")
+
+(questionText (CopaQFn 172) "The teacher caught the student chewing gum.")
+(questionType (CopaQFn 172) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 172) A) "The gum stuck to the student's shoe.")
+(mcTestOption (CopaAnsFn (CopaQFn 172) B) "The student spit out the gum.")
+
+(questionText (CopaQFn 173) "The host served dinner to his guests.")
+(questionType (CopaQFn 173) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 173) A) "His guests were gracious.")
+(mcTestOption (CopaAnsFn (CopaQFn 173) B) "His guests went hungry.")
+
+(questionText (CopaQFn 174) "The boy climbed the tree.")
+(questionType (CopaQFn 174) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 174) A) "A cat got stuck in the tree.")
+(mcTestOption (CopaAnsFn (CopaQFn 174) B) "A bird built a nest in the tree.")
+
+(questionText (CopaQFn 175) "The chair squeaked.")
+(questionType (CopaQFn 175) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 175) A) "The man carried the chair to his office.")
+(mcTestOption (CopaAnsFn (CopaQFn 175) B) "The man scooted the chair closer to his desk.")
+
+(questionText (CopaQFn 176) "The father shut off the children's television.")
+(questionType (CopaQFn 176) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 176) A) "It was bedtime for the children.")
+(mcTestOption (CopaAnsFn (CopaQFn 176) B) "The children were watching cartoons.")
+
+(questionText (CopaQFn 177) "The man held his breath.")
+(questionType (CopaQFn 177) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 177) A) "He went underwater.")
+(mcTestOption (CopaAnsFn (CopaQFn 177) B) "He treaded water.")
+
+(questionText (CopaQFn 178) "I clumsily bumped into the stranger.")
+(questionType (CopaQFn 178) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 178) A) "I ran away.")
+(mcTestOption (CopaAnsFn (CopaQFn 178) B) "I apologized to him.")
+
+(questionText (CopaQFn 179) "The boat capsized.")
+(questionType (CopaQFn 179) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 179) A) "The captain raised the sail.")
+(mcTestOption (CopaAnsFn (CopaQFn 179) B) "It was caught in a hurricane.")
+
+(questionText (CopaQFn 180) "The mother suspected that her son was lying.")
+(questionType (CopaQFn 180) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 180) A) "He refused to talk to her.")
+(mcTestOption (CopaAnsFn (CopaQFn 180) B) "He avoided making eye contact with her.")
+
+(questionText (CopaQFn 181) "The young woman was denied entrance into the bar.")
+(questionType (CopaQFn 181) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 181) A) "Her friends stood her up.")
+(mcTestOption (CopaAnsFn (CopaQFn 181) B) "She forgot her ID.")
+
+(questionText (CopaQFn 182) "A crater formed on the moon.")
+(questionType (CopaQFn 182) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 182) A) "A comet passed by the moon.")
+(mcTestOption (CopaAnsFn (CopaQFn 182) B) "A comet collided with the moon.")
+
+(questionText (CopaQFn 183) "I planted the seeds in the soil.")
+(questionType (CopaQFn 183) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 183) A) "I watered the soil.")
+(mcTestOption (CopaAnsFn (CopaQFn 183) B) "The seeds sprouted.")
+
+(questionText (CopaQFn 184) "The benefactor requested to stay anonymous.")
+(questionType (CopaQFn 184) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 184) A) "He wanted to maintain his privacy.")
+(mcTestOption (CopaAnsFn (CopaQFn 184) B) "He supported the cause behind his donation.")
+
+(questionText (CopaQFn 185) "The woman felt ashamed of scar on her face.")
+(questionType (CopaQFn 185) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 185) A) "She explained the scar to strangers.")
+(mcTestOption (CopaAnsFn (CopaQFn 185) B) "She hid the scar with makeup.")
+
+(questionText (CopaQFn 186) "The doctor x-rayed the patient's arm.")
+(questionType (CopaQFn 186) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 186) A) "He discovered that the patient's arm was broken.")
+(mcTestOption (CopaAnsFn (CopaQFn 186) B) "He put the patient's arm in a cast.")
+
+(questionText (CopaQFn 187) "The boy filled the bucket with sand.")
+(questionType (CopaQFn 187) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 187) A) "He was collecting seashells in the sand.")
+(mcTestOption (CopaAnsFn (CopaQFn 187) B) "He was building a sand castle.")
+
+(questionText (CopaQFn 188) "The woman upgraded her computer hardware.")
+(questionType (CopaQFn 188) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 188) A) "She deleted old files on the computer.")
+(mcTestOption (CopaAnsFn (CopaQFn 188) B) "She installed new software on the computer.")
+
+(questionText (CopaQFn 189) "The girl performed in a dance recital.")
+(questionType (CopaQFn 189) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 189) A) "Her parents showed her how to dance.")
+(mcTestOption (CopaAnsFn (CopaQFn 189) B) "Her parents came to watch the recital.")
+
+(questionText (CopaQFn 190) "The baby was wailing in his crib.")
+(questionType (CopaQFn 190) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 190) A) "The mother picked up the baby.")
+(mcTestOption (CopaAnsFn (CopaQFn 190) B) "The baby crawled to the mother.")
+
+(questionText (CopaQFn 191) "The woman had a religious awakening.")
+(questionType (CopaQFn 191) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 191) A) "She began going to church.")
+(mcTestOption (CopaAnsFn (CopaQFn 191) B) "She began travelling abroad.")
+
+(questionText (CopaQFn 192) "The bureau drawers were cluttered.")
+(questionType (CopaQFn 192) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 192) A) "I threw away unnecessary contents.")
+(mcTestOption (CopaAnsFn (CopaQFn 192) B) "I locked the drawers shut.")
+
+(questionText (CopaQFn 193) "The student flaunted his test grade to his classmates.")
+(questionType (CopaQFn 193) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 193) A) "He received a perfect score.")
+(mcTestOption (CopaAnsFn (CopaQFn 193) B) "He feigned interest in the class.")
+
+(questionText (CopaQFn 194) "The boy felt homesick.")
+(questionType (CopaQFn 194) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 194) A) "He went away to camp.")
+(mcTestOption (CopaAnsFn (CopaQFn 194) B) "He bickered with his sister.")
+
+(questionText (CopaQFn 195) "The rocket flew up into the sky.")
+(questionType (CopaQFn 195) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 195) A) "The girl launched it.")
+(mcTestOption (CopaAnsFn (CopaQFn 195) B) "The girl designed it.")
+
+(questionText (CopaQFn 196) "The boy murmured his reply to his mother.")
+(questionType (CopaQFn 196) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 196) A) "His mother told him to whisper.")
+(mcTestOption (CopaAnsFn (CopaQFn 196) B) "His mother told him to speak up.")
+
+(questionText (CopaQFn 197) "My flight got delayed.")
+(questionType (CopaQFn 197) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 197) A) "Tornadoes were sighted in the area.")
+(mcTestOption (CopaAnsFn (CopaQFn 197) B) "I was held up at airport security.")
+
+(questionText (CopaQFn 198) "The smoke alarm went off.")
+(questionType (CopaQFn 198) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 198) A) "I lit a candle.")
+(mcTestOption (CopaAnsFn (CopaQFn 198) B) "I burnt my dinner.")
+
+(questionText (CopaQFn 199) "The vase broke.")
+(questionType (CopaQFn 199) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 199) A) "I stenciled it.")
+(mcTestOption (CopaAnsFn (CopaQFn 199) B) "I glued it back together.")
+
+(questionText (CopaQFn 200) "The woman felt an electric shock.")
+(questionType (CopaQFn 200) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 200) A) "She grabbed the doorknob.")
+(mcTestOption (CopaAnsFn (CopaQFn 200) B) "She pounded on the door.")
+
+(questionText (CopaQFn 201) "The man had lipstick on his cheek.")
+(questionType (CopaQFn 201) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 201) A) "The woman kissed him.")
+(mcTestOption (CopaAnsFn (CopaQFn 201) B) "The woman made him blush.")
+
+(questionText (CopaQFn 202) "I jumped instinctively in fright.")
+(questionType (CopaQFn 202) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 202) A) "I sensed someone approaching me from behind.")
+(mcTestOption (CopaAnsFn (CopaQFn 202) B) "I heard people chuckling in the adjacent room.")
+
+(questionText (CopaQFn 203) "The gardener wanted his plants to flourish.")
+(questionType (CopaQFn 203) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 203) A) "He planted a variety of seeds.")
+(mcTestOption (CopaAnsFn (CopaQFn 203) B) "He put fertilizer in the soil.")
+
+(questionText (CopaQFn 204) "A water pipe in the house burst.")
+(questionType (CopaQFn 204) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 204) A) "The water was unsanitary.")
+(mcTestOption (CopaAnsFn (CopaQFn 204) B) "The pipe froze.")
+
+(questionText (CopaQFn 205) "The waistband on my pants was loose.")
+(questionType (CopaQFn 205) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 205) A) "I put on a belt.")
+(mcTestOption (CopaAnsFn (CopaQFn 205) B) "I put on a hat.")
+
+(questionText (CopaQFn 206) "The company lost money.")
+(questionType (CopaQFn 206) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 206) A) "Its products received positive consumer reviews.")
+(mcTestOption (CopaAnsFn (CopaQFn 206) B) "Some of its products were manufactured defectively.")
+
+(questionText (CopaQFn 207) "The tenants were evicted from the apartment.")
+(questionType (CopaQFn 207) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 207) A) "They neglected to pay their rent.")
+(mcTestOption (CopaAnsFn (CopaQFn 207) B) "They got along with their landlord.")
+
+(questionText (CopaQFn 208) "The man woke up with a toothache.")
+(questionType (CopaQFn 208) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 208) A) "He missed an appointment with the dentist.")
+(mcTestOption (CopaAnsFn (CopaQFn 208) B) "He made an appointment with the dentist.")
+
+(questionText (CopaQFn 209) "The team lost the game.")
+(questionType (CopaQFn 209) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 209) A) "Their best player was injured.")
+(mcTestOption (CopaAnsFn (CopaQFn 209) B) "Their coach pumped them up.")
+
+(questionText (CopaQFn 210) "The parents forbade their children from watching the movie. ")
+(questionType (CopaQFn 210) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 210) A) "The movie was rated R.")
+(mcTestOption (CopaAnsFn (CopaQFn 210) B) "The movie was animated.")
+
+(questionText (CopaQFn 211) "The woman deleted the email.")
+(questionType (CopaQFn 211) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 211) A) "The sender tried to solicit money from her.")
+(mcTestOption (CopaAnsFn (CopaQFn 211) B) "The sender requested a response from her.")
+
+(questionText (CopaQFn 212) "The police eliminated the woman from the list of suspects.")
+(questionType (CopaQFn 212) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 212) A) "The police interrogated her.")
+(mcTestOption (CopaAnsFn (CopaQFn 212) B) "Her alibi checked out.")
+
+(questionText (CopaQFn 213) "The climbers reached the peak of the mountain.")
+(questionType (CopaQFn 213) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 213) A) "They encountered an avalanche.")
+(mcTestOption (CopaAnsFn (CopaQFn 213) B) "They congratulated each other.")
+
+(questionText (CopaQFn 214) "The vandals threw a rock at the window.")
+(questionType (CopaQFn 214) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 214) A) "The window cracked.")
+(mcTestOption (CopaAnsFn (CopaQFn 214) B) "The window fogged up.")
+
+(questionText (CopaQFn 215) "The fortune teller's revelations were convincing.")
+(questionType (CopaQFn 215) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 215) A) "She received many returning customers.")
+(mcTestOption (CopaAnsFn (CopaQFn 215) B) "Many customers asked for refunds.")
+
+(questionText (CopaQFn 216) "The woman's makeup smeared.")
+(questionType (CopaQFn 216) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 216) A) "She brushed her hair.")
+(mcTestOption (CopaAnsFn (CopaQFn 216) B) "She wiped her eyes.")
+
+(questionText (CopaQFn 217) "The company's profits started to level off.")
+(questionType (CopaQFn 217) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 217) A) "It increased its marketing efforts for new products.")
+(mcTestOption (CopaAnsFn (CopaQFn 217) B) "It moved its headquarters to a suburban location.")
+
+(questionText (CopaQFn 218) "The student's answer on the exam was incorrect.")
+(questionType (CopaQFn 218) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 218) A) "The teacher added bonus points to the student's grade.")
+(mcTestOption (CopaAnsFn (CopaQFn 218) B) "The teacher subtracted points off the student's grade.")
+
+(questionText (CopaQFn 219) "The girl wanted to demonstrate proper etiquette.")
+(questionType (CopaQFn 219) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 219) A) "She threw away her napkin after eating.")
+(mcTestOption (CopaAnsFn (CopaQFn 219) B) "She put her napkin on her lap before eating.")
+
+(questionText (CopaQFn 220) "The detective flashed his badge to the police officer.")
+(questionType (CopaQFn 220) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 220) A) "The police officer confiscated the detective's badge.")
+(mcTestOption (CopaAnsFn (CopaQFn 220) B) "The police officer let the detective enter the crime scene.")
+
+(questionText (CopaQFn 221) "The girl wanted to make her mother happy.")
+(questionType (CopaQFn 221) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 221) A) "The girl ate the cookies her mother baked.")
+(mcTestOption (CopaAnsFn (CopaQFn 221) B) "The girl picked a flower for her mother.")
+
+(questionText (CopaQFn 222) "The toddler started crying.")
+(questionType (CopaQFn 222) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 222) A) "Her parents took away her toy.")
+(mcTestOption (CopaAnsFn (CopaQFn 222) B) "Her parents gave her a toy.")
+
+(questionText (CopaQFn 223) "The stranger cried out to me in a foreign language.")
+(questionType (CopaQFn 223) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 223) A) "I stared blankly at him.")
+(mcTestOption (CopaAnsFn (CopaQFn 223) B) "I stopped to chat with him.")
+
+(questionText (CopaQFn 224) "The man uncovered incriminating evidence against his enemy.")
+(questionType (CopaQFn 224) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 224) A) "The man avoided his enemy.")
+(mcTestOption (CopaAnsFn (CopaQFn 224) B) "The man blackmailed his enemy.")
+
+(questionText (CopaQFn 225) "The girl pushed herself off the top of the slide.")
+(questionType (CopaQFn 225) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 225) A) "She glided down the slide.")
+(mcTestOption (CopaAnsFn (CopaQFn 225) B) "She crawled up the slide.")
+
+(questionText (CopaQFn 226) "My jaw dropped open.")
+(questionType (CopaQFn 226) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 226) A) "I was unhappy.")
+(mcTestOption (CopaAnsFn (CopaQFn 226) B) "I was shocked.")
+
+(questionText (CopaQFn 227) "The child disobeyed her parents.")
+(questionType (CopaQFn 227) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 227) A) "Her parents hugged her.")
+(mcTestOption (CopaAnsFn (CopaQFn 227) B) "Her parents punished her.")
+
+(questionText (CopaQFn 228) "The car looked filthy.")
+(questionType (CopaQFn 228) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 228) A) "The owner took it to the car wash.")
+(mcTestOption (CopaAnsFn (CopaQFn 228) B) "He owner took it in for a paint job.")
+
+(questionText (CopaQFn 229) "My friend paid for my ticket.")
+(questionType (CopaQFn 229) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 229) A) "I sought a refund.")
+(mcTestOption (CopaAnsFn (CopaQFn 229) B) "I paid her back.")
+
+(questionText (CopaQFn 230) "The woman was wrongly convicted for the crime.")
+(questionType (CopaQFn 230) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 230) A) "The jury was fair.")
+(mcTestOption (CopaAnsFn (CopaQFn 230) B) "She was framed.")
+
+(questionText (CopaQFn 231) "The girl applied the scissors to the paper.")
+(questionType (CopaQFn 231) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 231) A) "The paper sliced apart.")
+(mcTestOption (CopaAnsFn (CopaQFn 231) B) "The paper crinkled.")
+
+(questionText (CopaQFn 232) "The woman visited her family.")
+(questionType (CopaQFn 232) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 232) A) "She distrusted them.")
+(mcTestOption (CopaAnsFn (CopaQFn 232) B) "She missed them.")
+
+(questionText (CopaQFn 233) "I burst into a fit of laughter.")
+(questionType (CopaQFn 233) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 233) A) "My teeth began to chatter.")
+(mcTestOption (CopaAnsFn (CopaQFn 233) B) "My eyes welled up with tears.")
+
+(questionText (CopaQFn 234) "The school principal implemented a dress code.")
+(questionType (CopaQFn 234) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 234) A) "Students protested the decision.")
+(mcTestOption (CopaAnsFn (CopaQFn 234) B) "Students were expelled from school.")
+
+(questionText (CopaQFn 235) "The balloon expanded.")
+(questionType (CopaQFn 235) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 235) A) "I blew into it.")
+(mcTestOption (CopaAnsFn (CopaQFn 235) B) "I pricked it.")
+
+(questionText (CopaQFn 236) "I wanted to lighten the mood of the conversation.")
+(questionType (CopaQFn 236) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 236) A) "I remained quiet.")
+(mcTestOption (CopaAnsFn (CopaQFn 236) B) "I told a joke.")
+
+(questionText (CopaQFn 237) "The man broke his toe.")
+(questionType (CopaQFn 237) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 237) A) "He got a hole in his sock.")
+(mcTestOption (CopaAnsFn (CopaQFn 237) B) "He dropped a hammer on his foot.")
+
+(questionText (CopaQFn 238) "The man had an attack of conscience.")
+(questionType (CopaQFn 238) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 238) A) "He manipulated his friend.")
+(mcTestOption (CopaAnsFn (CopaQFn 238) B) "He admitted his indiscretion.")
+
+(questionText (CopaQFn 239) "A fistfight broke out in the hall of the school.")
+(questionType (CopaQFn 239) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 239) A) "The principal suspended the students involved.")
+(mcTestOption (CopaAnsFn (CopaQFn 239) B) "The principal called off classes for the day.")
+
+(questionText (CopaQFn 240) "The photo albums collected dust in the attic.")
+(questionType (CopaQFn 240) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 240) A) "They remained untouched for years.")
+(mcTestOption (CopaAnsFn (CopaQFn 240) B) "The family reminisced over the photos.")
+
+(questionText (CopaQFn 241) "I got distracted from my conversation with the woman.")
+(questionType (CopaQFn 241) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 241) A) "Everyone in the room was talking.")
+(mcTestOption (CopaAnsFn (CopaQFn 241) B) "The woman was telling a funny story.")
+
+(questionText (CopaQFn 242) "I put coins in the washing machine at the laundromat.")
+(questionType (CopaQFn 242) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 242) A) "The machine powered on.")
+(mcTestOption (CopaAnsFn (CopaQFn 242) B) "I ran out of laundry detergent.")
+
+(questionText (CopaQFn 243) "The family postponed the barbeque.")
+(questionType (CopaQFn 243) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 243) A) "The forecast called for storms.")
+(mcTestOption (CopaAnsFn (CopaQFn 243) B) "It was a holiday weekend.")
+
+(questionText (CopaQFn 244) "Air leaked out of the beach ball.")
+(questionType (CopaQFn 244) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 244) A) "It was inflated.")
+(mcTestOption (CopaAnsFn (CopaQFn 244) B) "There was a hole in it.")
+
+(questionText (CopaQFn 245) "Our group's conversation gradually lulled to silence.")
+(questionType (CopaQFn 245) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 245) A) "I felt awkward.")
+(mcTestOption (CopaAnsFn (CopaQFn 245) B) "I became enraged.")
+
+(questionText (CopaQFn 246) "I clenched the candy wrapper in my fist.")
+(questionType (CopaQFn 246) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 246) A) "The wrapper crinkled.")
+(mcTestOption (CopaAnsFn (CopaQFn 246) B) "The wrapper ripped.")
+
+(questionText (CopaQFn 247) "The woman pressed down on the piano key.")
+(questionType (CopaQFn 247) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 247) A) "A sound played.")
+(mcTestOption (CopaAnsFn (CopaQFn 247) B) "The key got stuck.")
+
+(questionText (CopaQFn 248) "The girl met her favorite actor.")
+(questionType (CopaQFn 248) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 248) A) "She went to see his new film.")
+(mcTestOption (CopaAnsFn (CopaQFn 248) B) "She asked him for his autograph.")
+
+(questionText (CopaQFn 249) "The vehicles travelled slowly.")
+(questionType (CopaQFn 249) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 249) A) "It was cloudy.")
+(mcTestOption (CopaAnsFn (CopaQFn 249) B) "It was foggy.")
+
+(questionText (CopaQFn 250) "The chandelier shattered on the floor.")
+(questionType (CopaQFn 250) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 250) A) "The chandelier dropped from the ceiling.")
+(mcTestOption (CopaAnsFn (CopaQFn 250) B) "The chandelier's lights flickered on and off.")
+
+(questionText (CopaQFn 251) "The cat purred.")
+(questionType (CopaQFn 251) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 251) A) "It scratched me.")
+(mcTestOption (CopaAnsFn (CopaQFn 251) B) "I petted it.")
+
+(questionText (CopaQFn 252) "The boy pushed his sister.")
+(questionType (CopaQFn 252) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 252) A) "His sister tattled on him.")
+(mcTestOption (CopaAnsFn (CopaQFn 252) B) "They played hide and seek.")
+
+(questionText (CopaQFn 253) "The man gained weight.")
+(questionType (CopaQFn 253) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 253) A) "He got his suit altered.")
+(mcTestOption (CopaAnsFn (CopaQFn 253) B) "He got his shoes shined.")
+
+(questionText (CopaQFn 254) "The clouds looked dark.")
+(questionType (CopaQFn 254) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 254) A) "I brought my laptop to work.")
+(mcTestOption (CopaAnsFn (CopaQFn 254) B) "I brought my umbrella to work.")
+
+(questionText (CopaQFn 255) "The engine of the airplane was faulty.")
+(questionType (CopaQFn 255) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 255) A) "The airplane crashed.")
+(mcTestOption (CopaAnsFn (CopaQFn 255) B) "The pilot made an error.")
+
+(questionText (CopaQFn 256) "Cars moved to the shoulder of the road.")
+(questionType (CopaQFn 256) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 256) A) "The traffic light turned green.")
+(mcTestOption (CopaAnsFn (CopaQFn 256) B) "A screaming ambulance approached.")
+
+(questionText (CopaQFn 257) "The boy lost hold of the bar of soap.")
+(questionType (CopaQFn 257) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 257) A) "The bar was slippery.")
+(mcTestOption (CopaAnsFn (CopaQFn 257) B) "The bar emitted a fragrance.")
+
+(questionText (CopaQFn 258) "The button on my shirt fell off.")
+(questionType (CopaQFn 258) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 258) A) "I sewed the button back on.")
+(mcTestOption (CopaAnsFn (CopaQFn 258) B) "I glued the button back on.")
+
+(questionText (CopaQFn 259) "The celebrity wore sunglasses.")
+(questionType (CopaQFn 259) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 259) A) "She wanted to thank her fans.")
+(mcTestOption (CopaAnsFn (CopaQFn 259) B) "She wanted to avoid recognition.")
+
+(questionText (CopaQFn 260) "My grandmother passed away.")
+(questionType (CopaQFn 260) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 260) A) "My family held a funeral.")
+(mcTestOption (CopaAnsFn (CopaQFn 260) B) "My family held a reunion.")
+
+(questionText (CopaQFn 261) "The police officer pulled over the celebrity.")
+(questionType (CopaQFn 261) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 261) A) "The celebrity offered the officer a bribe.")
+(mcTestOption (CopaAnsFn (CopaQFn 261) B) "The celebrity sued the police officer.")
+
+(questionText (CopaQFn 262) "The man revealed personal information to the therapist.")
+(questionType (CopaQFn 262) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 262) A) "He trusted the therapist.")
+(mcTestOption (CopaAnsFn (CopaQFn 262) B) "He disagreed with the therapist.")
+
+(questionText (CopaQFn 263) "The man fell unconscious.")
+(questionType (CopaQFn 263) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 263) A) "The assailant struck the man in the head.")
+(mcTestOption (CopaAnsFn (CopaQFn 263) B) "The assailant took the man's wallet.")
+
+(questionText (CopaQFn 264) "I approached the man.")
+(questionType (CopaQFn 264) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 264) A) "He looked busy.")
+(mcTestOption (CopaAnsFn (CopaQFn 264) B) "He looked familiar.")
+
+(questionText (CopaQFn 265) "The leader received praise.")
+(questionType (CopaQFn 265) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 265) A) "He fought poverty.")
+(mcTestOption (CopaAnsFn (CopaQFn 265) B) "He raised taxes.")
+
+(questionText (CopaQFn 266) "The man read the cartoon in the newspaper.")
+(questionType (CopaQFn 266) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 266) A) "He sipped coffee.")
+(mcTestOption (CopaAnsFn (CopaQFn 266) B) "He chuckled.")
+
+(questionText (CopaQFn 267) "My mailbox was overflowing with letters.")
+(questionType (CopaQFn 267) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 267) A) "The lid on the mailbox broke.")
+(mcTestOption (CopaAnsFn (CopaQFn 267) B) "I went on vacation for two weeks.")
+
+(questionText (CopaQFn 268) "The bananas ripened.")
+(questionType (CopaQFn 268) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 268) A) "We squeezed them.")
+(mcTestOption (CopaAnsFn (CopaQFn 268) B) "We ate them.")
+
+(questionText (CopaQFn 269) "The chef pressed down on the dough.")
+(questionType (CopaQFn 269) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 269) A) "The dough crumbled.")
+(mcTestOption (CopaAnsFn (CopaQFn 269) B) "The dough flattened.")
+
+(questionText (CopaQFn 270) "The clay hardened.")
+(questionType (CopaQFn 270) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 270) A) "The potter rolled the clay into a ball.")
+(mcTestOption (CopaAnsFn (CopaQFn 270) B) "The potter put the clay in the oven.")
+
+(questionText (CopaQFn 271) "My feet were blistered.")
+(questionType (CopaQFn 271) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 271) A) "I went hiking.")
+(mcTestOption (CopaAnsFn (CopaQFn 271) B) "I went swimming.")
+
+(questionText (CopaQFn 272) "The woman betrayed her friend.")
+(questionType (CopaQFn 272) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 272) A) "Her friend sent her a greeting card.")
+(mcTestOption (CopaAnsFn (CopaQFn 272) B) "Her friend cut off contact with her.")
+
+(questionText (CopaQFn 273) "The man took notice of the woman.")
+(questionType (CopaQFn 273) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 273) A) "He caught a whiff of her perfume.")
+(mcTestOption (CopaAnsFn (CopaQFn 273) B) "He had his back turned to her.")
+
+(questionText (CopaQFn 274) "The woman and her boyfriend got into a fight.")
+(questionType (CopaQFn 274) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 274) A) "They stopped seeing each other.")
+(mcTestOption (CopaAnsFn (CopaQFn 274) B) "They planned a vacation together.")
+
+(questionText (CopaQFn 275) "The bully stuck his foot out in front of his classmate.")
+(questionType (CopaQFn 275) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 275) A) "The bully picked up his classmate.")
+(mcTestOption (CopaAnsFn (CopaQFn 275) B) "The bully's classmate tripped.")
+
+(questionText (CopaQFn 276) "The man wanted to get revenge on his enemy.")
+(questionType (CopaQFn 276) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 276) A) "The man framed his enemy for a crime.")
+(mcTestOption (CopaAnsFn (CopaQFn 276) B) "The man declared a truce with his enemy.")
+
+(questionText (CopaQFn 277) "I drank a cup of coffee.")
+(questionType (CopaQFn 277) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 277) A) "My yawning ceased.")
+(mcTestOption (CopaAnsFn (CopaQFn 277) B) "I nodded off to sleep.")
+
+(questionText (CopaQFn 278) "The woman was mistaken for her sister.")
+(questionType (CopaQFn 278) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 278) A) "The woman was close with her sister.")
+(mcTestOption (CopaAnsFn (CopaQFn 278) B) "The woman looked like her sister.")
+
+(questionText (CopaQFn 279) "The man made an error in his calculations.")
+(questionType (CopaQFn 279) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 279) A) "He checked his work.")
+(mcTestOption (CopaAnsFn (CopaQFn 279) B) "His work was hasty.")
+
+(questionText (CopaQFn 280) "The woman's eyeglasses fogged up.")
+(questionType (CopaQFn 280) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 280) A) "She reclined by the pool.")
+(mcTestOption (CopaAnsFn (CopaQFn 280) B) "She entered the sauna.")
+
+(questionText (CopaQFn 281) "The shopper wondered about the cost of the item.")
+(questionType (CopaQFn 281) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 281) A) "He checked its price tag.")
+(mcTestOption (CopaAnsFn (CopaQFn 281) B) "He decided to buy it.")
+
+(questionText (CopaQFn 282) "The host of the trivia show called on the contestant for an answer.")
+(questionType (CopaQFn 282) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 282) A) "The contestant was in the lead.")
+(mcTestOption (CopaAnsFn (CopaQFn 282) B) "The contestant rang the buzzer.")
+
+(questionText (CopaQFn 283) "The boy was afraid to go to bed.")
+(questionType (CopaQFn 283) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 283) A) "He turned on his nightlight.")
+(mcTestOption (CopaAnsFn (CopaQFn 283) B) "He watched a horror movie.")
+
+(questionText (CopaQFn 284) "The woman wanted to be a doctor.")
+(questionType (CopaQFn 284) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 284) A) "She visited the hospital.")
+(mcTestOption (CopaAnsFn (CopaQFn 284) B) "She went to medical school.")
+
+(questionText (CopaQFn 285) "The boy found the television show boring.")
+(questionType (CopaQFn 285) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 285) A) "He recorded it.")
+(mcTestOption (CopaAnsFn (CopaQFn 285) B) "He shut it off.")
+
+(questionText (CopaQFn 286) "My daughter suffered an allergy attack.")
+(questionType (CopaQFn 286) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 286) A) "I encouraged her to take deep breaths.")
+(mcTestOption (CopaAnsFn (CopaQFn 286) B) "I took her to the emergency room.")
+
+(questionText (CopaQFn 287) "The boy had trouble buttoning his shirt.")
+(questionType (CopaQFn 287) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 287) A) "He refused to wear the shirt.")
+(mcTestOption (CopaAnsFn (CopaQFn 287) B) "He asked his mother for help.")
+
+(questionText (CopaQFn 288) "I spit out my chewing gum.")
+(questionType (CopaQFn 288) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 288) A) "I blew a bubble with the gum.")
+(mcTestOption (CopaAnsFn (CopaQFn 288) B) "The gum lost its flavor.")
+
+(questionText (CopaQFn 289) "The boy painted a picture for his mother.")
+(questionType (CopaQFn 289) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 289) A) "His mother hung the picture on the wall.")
+(mcTestOption (CopaAnsFn (CopaQFn 289) B) "His mother sold the picture to a gallery.")
+
+(questionText (CopaQFn 290) "The competition ended.")
+(questionType (CopaQFn 290) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 290) A) "The teams got pumped up.")
+(mcTestOption (CopaAnsFn (CopaQFn 290) B) "The teams shook hands.")
+
+(questionText (CopaQFn 291) "The girl politely declined the hamburger.")
+(questionType (CopaQFn 291) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 291) A) "She was a vegetarian.")
+(mcTestOption (CopaAnsFn (CopaQFn 291) B) "She liked fast food.")
+
+(questionText (CopaQFn 292) "I scrubbed the stain on the floor.")
+(questionType (CopaQFn 292) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 292) A) "I got rid of the stain.")
+(mcTestOption (CopaAnsFn (CopaQFn 292) B) "I got dirt on the floor.")
+
+(questionText (CopaQFn 293) "The documents contained important information.")
+(questionType (CopaQFn 293) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 293) A) "I paper clipped them together.")
+(mcTestOption (CopaAnsFn (CopaQFn 293) B) "I kept them in a secure place.")
+
+(questionText (CopaQFn 294) "The egg splattered.")
+(questionType (CopaQFn 294) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 294) A) "I dropped it.")
+(mcTestOption (CopaAnsFn (CopaQFn 294) B) "I boiled it.")
+
+(questionText (CopaQFn 295) "The girl pushed her friend.")
+(questionType (CopaQFn 295) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 295) A) "Her friend choked.")
+(mcTestOption (CopaAnsFn (CopaQFn 295) B) "Her friend fell over.")
+
+(questionText (CopaQFn 296) "A group of teenagers crashed the party.")
+(questionType (CopaQFn 296) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 296) A) "The host of the party kicked them out.")
+(mcTestOption (CopaAnsFn (CopaQFn 296) B) "The host of the party invited them in.")
+
+(questionText (CopaQFn 297) "The man took a shower.")
+(questionType (CopaQFn 297) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 297) A) "He was sweaty from working out.")
+(mcTestOption (CopaAnsFn (CopaQFn 297) B) "He opened a new bar of soap.")
+
+(questionText (CopaQFn 298) "The screen on the laptop went black.")
+(questionType (CopaQFn 298) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 298) A) "The laptop's warranty expired.")
+(mcTestOption (CopaAnsFn (CopaQFn 298) B) "The laptop's battery died.")
+
+(questionText (CopaQFn 299) "The book became a huge bestseller.")
+(questionType (CopaQFn 299) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 299) A) "It was adapted into a movie.")
+(mcTestOption (CopaAnsFn (CopaQFn 299) B) "The author faded into obscurity.")
+
+(questionText (CopaQFn 300) "The man felt thankful to be alive.")
+(questionType (CopaQFn 300) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 300) A) "He was cured of cancer.")
+(mcTestOption (CopaAnsFn (CopaQFn 300) B) "His wife was diagnosed with cancer.")
+
+(questionText (CopaQFn 301) "The woman wrote a check to the gas company.")
+(questionType (CopaQFn 301) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 301) A) "She preferred paying by cash.")
+(mcTestOption (CopaAnsFn (CopaQFn 301) B) "She received her monthly bill.")
+
+(questionText (CopaQFn 302) "The woman felt reluctant to switch careers.")
+(questionType (CopaQFn 302) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 302) A) "She made a lot of money in her current occupation.")
+(mcTestOption (CopaAnsFn (CopaQFn 302) B) "She endured a lot of stress in her current occupation.")
+
+(questionText (CopaQFn 303) "The woman filed a restraining order against the man.")
+(questionType (CopaQFn 303) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 303) A) "The man called her.")
+(mcTestOption (CopaAnsFn (CopaQFn 303) B) "The man stalked her.")
+
+(questionText (CopaQFn 304) "The ocean tide was dangerous.")
+(questionType (CopaQFn 304) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 304) A) "The swimmers put on more sunscreen.")
+(mcTestOption (CopaAnsFn (CopaQFn 304) B) "The swimmers returned towards the shore.")
+
+(questionText (CopaQFn 305) "The woman refused a second beer.")
+(questionType (CopaQFn 305) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 305) A) "She was the designated driver for the night.")
+(mcTestOption (CopaAnsFn (CopaQFn 305) B) "She was familiar with the bartender.")
+
+(questionText (CopaQFn 306) "I ran out of breath.")
+(questionType (CopaQFn 306) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 306) A) "I climbed several flights of stairs.")
+(mcTestOption (CopaAnsFn (CopaQFn 306) B) "I read several chapters of the book.")
+
+(questionText (CopaQFn 307) "The woman was deemed mentally ill.")
+(questionType (CopaQFn 307) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 307) A) "She was sent to a psychiatric institution.")
+(mcTestOption (CopaAnsFn (CopaQFn 307) B) "She sought a career as a psychiatrist.")
+
+(questionText (CopaQFn 308) "The sun emerged from the clouds.")
+(questionType (CopaQFn 308) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 308) A) "The woman glanced at her watch.")
+(mcTestOption (CopaAnsFn (CopaQFn 308) B) "The woman took her sweater off.")
+
+(questionText (CopaQFn 309) "The football coach lost his voice after the game.")
+(questionType (CopaQFn 309) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 309) A) "He yelled whenever a player fumbled the ball.")
+(mcTestOption (CopaAnsFn (CopaQFn 309) B) "He whistled whenever a player scored a touchdown.")
+
+(questionText (CopaQFn 310) "The woman complimented the man.")
+(questionType (CopaQFn 310) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 310) A) "He sneezed.")
+(mcTestOption (CopaAnsFn (CopaQFn 310) B) "He blushed.")
+
+(questionText (CopaQFn 311) "I applied pressure to the cut on my arm.")
+(questionType (CopaQFn 311) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 311) A) "It healed.")
+(mcTestOption (CopaAnsFn (CopaQFn 311) B) "It stopped bleeding.")
+
+(questionText (CopaQFn 312) "The woman had an infection.")
+(questionType (CopaQFn 312) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 312) A) "She took antibiotics.")
+(mcTestOption (CopaAnsFn (CopaQFn 312) B) "She washed her hands.")
+
+(questionText (CopaQFn 313) "The woman was summoned for jury duty.")
+(questionType (CopaQFn 313) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 313) A) "She contacted her lawyer.")
+(mcTestOption (CopaAnsFn (CopaQFn 313) B) "She cancelled her appointments.")
+
+(questionText (CopaQFn 314) "The woman fanned herself with her hand.")
+(questionType (CopaQFn 314) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 314) A) "She installed the air conditioner in the room.")
+(mcTestOption (CopaAnsFn (CopaQFn 314) B) "The air conditioner in the room broke.")
+
+(questionText (CopaQFn 315) "The doctors amputated the patient's leg.")
+(questionType (CopaQFn 315) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 315) A) "It was badly bruised.")
+(mcTestOption (CopaAnsFn (CopaQFn 315) B) "It was severely infected.")
+
+(questionText (CopaQFn 316) "The girl stared at herself in the mirror.")
+(questionType (CopaQFn 316) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 316) A) "She felt self-conscious.")
+(mcTestOption (CopaAnsFn (CopaQFn 316) B) "The mirror was smudged.")
+
+(questionText (CopaQFn 317) "The man was bitten by mosquitoes.")
+(questionType (CopaQFn 317) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 317) A) "He went camping in the woods.")
+(mcTestOption (CopaAnsFn (CopaQFn 317) B) "He fell asleep on his couch.")
+
+(questionText (CopaQFn 318) "The woman presented her brother with a gift.")
+(questionType (CopaQFn 318) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 318) A) "Her brother refused to accept the gift.")
+(mcTestOption (CopaAnsFn (CopaQFn 318) B) "Her brother unwrapped the gift.")
+
+(questionText (CopaQFn 319) "The administrator cleared her throat.")
+(questionType (CopaQFn 319) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 319) A) "The meeting was postponed.")
+(mcTestOption (CopaAnsFn (CopaQFn 319) B) "The meeting commenced.")
+
+(questionText (CopaQFn 320) "The children ran through the sprinkler.")
+(questionType (CopaQFn 320) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 320) A) "They ate popsicles.")
+(mcTestOption (CopaAnsFn (CopaQFn 320) B) "They were hot.")
+
+(questionText (CopaQFn 321) "The man needed coins to fill the parking meter.")
+(questionType (CopaQFn 321) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 321) A) "He searched under his car seats for loose change.")
+(mcTestOption (CopaAnsFn (CopaQFn 321) B) "He begged people on the street for loose change.")
+
+(questionText (CopaQFn 322) "The customer thought the souvenir was overpriced.")
+(questionType (CopaQFn 322) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 322) A) "The vender sold it to him.")
+(mcTestOption (CopaAnsFn (CopaQFn 322) B) "He bargained with the vendor.")
+
+(questionText (CopaQFn 323) "The scientist gained recognition.")
+(questionType (CopaQFn 323) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 323) A) "She discovered a new species.")
+(mcTestOption (CopaAnsFn (CopaQFn 323) B) "She received tenure at the university.")
+
+(questionText (CopaQFn 324) "The car stopped at the crosswalk.")
+(questionType (CopaQFn 324) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 324) A) "The pedestrian crossed the road.")
+(mcTestOption (CopaAnsFn (CopaQFn 324) B) "The pedestrian waited on the sidewalk.")
+
+(questionText (CopaQFn 325) "The boy giggled uncontrollably.")
+(questionType (CopaQFn 325) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 325) A) "His brother tickled him.")
+(mcTestOption (CopaAnsFn (CopaQFn 325) B) "His brother kicked him.")
+
+(questionText (CopaQFn 326) "My knees buckled on the stairs.")
+(questionType (CopaQFn 326) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 326) A) "I caught myself on the railing.")
+(mcTestOption (CopaAnsFn (CopaQFn 326) B) "The railing came loose from the wall.")
+
+(questionText (CopaQFn 327) "I went to bed.")
+(questionType (CopaQFn 327) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 327) A) "It was a clear night.")
+(mcTestOption (CopaAnsFn (CopaQFn 327) B) "It was late.")
+
+(questionText (CopaQFn 328) "My friend was recovering from surgery.")
+(questionType (CopaQFn 328) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 328) A) "I dropped her off at the hospital.")
+(mcTestOption (CopaAnsFn (CopaQFn 328) B) "I brought her a card and flowers.")
+
+(questionText (CopaQFn 329) "The DJ turned the music on.")
+(questionType (CopaQFn 329) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 329) A) "People left the party.")
+(mcTestOption (CopaAnsFn (CopaQFn 329) B) "People began to dance.")
+
+(questionText (CopaQFn 330) "The security guard replayed the surveillance footage.")
+(questionType (CopaQFn 330) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 330) A) "The surveillance camera was out of focus.")
+(mcTestOption (CopaAnsFn (CopaQFn 330) B) "He noticed some suspicious activity.")
+
+(questionText (CopaQFn 331) "I lingered in bed upon awakening.")
+(questionType (CopaQFn 331) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 331) A) "I was hungry.")
+(mcTestOption (CopaAnsFn (CopaQFn 331) B) "It was Saturday.")
+
+(questionText (CopaQFn 332) "The man lifted the heavy box.")
+(questionType (CopaQFn 332) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 332) A) "He put out his back.")
+(mcTestOption (CopaAnsFn (CopaQFn 332) B) "He scratched his back.")
+
+(questionText (CopaQFn 333) "The woman's purse was missing.")
+(questionType (CopaQFn 333) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 333) A) "It contained a lot of junk.")
+(mcTestOption (CopaAnsFn (CopaQFn 333) B) "She left it unsupervised.")
+
+(questionText (CopaQFn 334) "The woman suffered amnesia.")
+(questionType (CopaQFn 334) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 334) A) "She had an allergic reaction.")
+(mcTestOption (CopaAnsFn (CopaQFn 334) B) "She got into a car accident.")
+
+(questionText (CopaQFn 335) "I needed to get cash.")
+(questionType (CopaQFn 335) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 335) A) "I went to the bank.")
+(mcTestOption (CopaAnsFn (CopaQFn 335) B) "I bought a wallet.")
+
+(questionText (CopaQFn 336) "The rider fell to the ground.")
+(questionType (CopaQFn 336) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 336) A) "The bull bucked the rider.")
+(mcTestOption (CopaAnsFn (CopaQFn 336) B) "The bull chased the rider.")
+
+(questionText (CopaQFn 337) "The boy wanted to be muscular.")
+(questionType (CopaQFn 337) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 337) A) "He lifted weights.")
+(mcTestOption (CopaAnsFn (CopaQFn 337) B) "He played computer games.")
+
+(questionText (CopaQFn 338) "The scientist conducted an experiment.")
+(questionType (CopaQFn 338) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 338) A) "She validated her theory.")
+(mcTestOption (CopaAnsFn (CopaQFn 338) B) "She fabricated her data.")
+
+(questionText (CopaQFn 339) "The milk stayed cold.")
+(questionType (CopaQFn 339) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 339) A) "It was pasteurized.")
+(mcTestOption (CopaAnsFn (CopaQFn 339) B) "I stored it in the refrigerator.")
+
+(questionText (CopaQFn 340) "The fussy baby calmed down.")
+(questionType (CopaQFn 340) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 340) A) "The parents shook a rattle in front of the baby.")
+(mcTestOption (CopaAnsFn (CopaQFn 340) B) "The parents picked out a name for the baby.")
+
+(questionText (CopaQFn 341) "I put ice cubes in the hot soup.")
+(questionType (CopaQFn 341) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 341) A) "The soup cooled down.")
+(mcTestOption (CopaAnsFn (CopaQFn 341) B) "The soup became thick.")
+
+(questionText (CopaQFn 342) "The girl shared her lunch with her friend.")
+(questionType (CopaQFn 342) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 342) A) "Her friend forgot to bring his lunch.")
+(mcTestOption (CopaAnsFn (CopaQFn 342) B) "Her friend sat next to her at lunch.")
+
+(questionText (CopaQFn 343) "The police closed the investigation.")
+(questionType (CopaQFn 343) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 343) A) "They apprehended the suspect.")
+(mcTestOption (CopaAnsFn (CopaQFn 343) B) "The victim recovered.")
+
+(questionText (CopaQFn 344) "The rain subsided.")
+(questionType (CopaQFn 344) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 344) A) "I went for a walk.")
+(mcTestOption (CopaAnsFn (CopaQFn 344) B) "I browsed the internet.")
+
+(questionText (CopaQFn 345) "The cup of tea was scalding hot.")
+(questionType (CopaQFn 345) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 345) A) "I blew on it.")
+(mcTestOption (CopaAnsFn (CopaQFn 345) B) "I poured it out.")
+
+(questionText (CopaQFn 346) "The photograph faded.")
+(questionType (CopaQFn 346) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 346) A) "It was fake.")
+(mcTestOption (CopaAnsFn (CopaQFn 346) B) "It was old.")
+
+(questionText (CopaQFn 347) "The boy got a black eye.")
+(questionType (CopaQFn 347) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 347) A) "The bully mocked the boy.")
+(mcTestOption (CopaAnsFn (CopaQFn 347) B) "The bully punched the boy.")
+
+(questionText (CopaQFn 348) "I misplaced my wallet.")
+(questionType (CopaQFn 348) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 348) A) "I retrieved my phone.")
+(mcTestOption (CopaAnsFn (CopaQFn 348) B) "I retraced my steps.")
+
+(questionText (CopaQFn 349) "The hunter ran out of ammunition.")
+(questionType (CopaQFn 349) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 349) A) "He reloaded the gun.")
+(mcTestOption (CopaAnsFn (CopaQFn 349) B) "He aimed at the deer.")
+
+(questionText (CopaQFn 350) "Marine life diminished.")
+(questionType (CopaQFn 350) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 350) A) "Boats sailed through the ocean.")
+(mcTestOption (CopaAnsFn (CopaQFn 350) B) "Oil spilled into the ocean.")
+
+(questionText (CopaQFn 351) "I ran the ice cube under warm water.")
+(questionType (CopaQFn 351) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 351) A) "The ice cube stuck to my fingers.")
+(mcTestOption (CopaAnsFn (CopaQFn 351) B) "The ice cube vanished.")
+
+(questionText (CopaQFn 352) "The customer came into the boutique.")
+(questionType (CopaQFn 352) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 352) A) "She left her wallet at home.")
+(mcTestOption (CopaAnsFn (CopaQFn 352) B) "The window display caught her eye.")
+
+(questionText (CopaQFn 353) "The man drank water with his meal.")
+(questionType (CopaQFn 353) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 353) A) "His meal was cold.")
+(mcTestOption (CopaAnsFn (CopaQFn 353) B) "His meal was spicy.")
+
+(questionText (CopaQFn 354) "The woman stayed away from public places.")
+(questionType (CopaQFn 354) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 354) A) "She was contagious.")
+(mcTestOption (CopaAnsFn (CopaQFn 354) B) "She was intoxicated.")
+
+(questionText (CopaQFn 355) "The putrid odor filled the room.")
+(questionType (CopaQFn 355) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 355) A) "I clamped my hand over my nose.")
+(mcTestOption (CopaAnsFn (CopaQFn 355) B) "I put the rubber gloves on.")
+
+(questionText (CopaQFn 356) "The employee missed work.")
+(questionType (CopaQFn 356) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 356) A) "Her family got in touch with her.")
+(mcTestOption (CopaAnsFn (CopaQFn 356) B) "There was a death in her family.")
+
+(questionText (CopaQFn 357) "The magnet attracted the paperclip.")
+(questionType (CopaQFn 357) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 357) A) "The paperclip dropped from the magnet.")
+(mcTestOption (CopaAnsFn (CopaQFn 357) B) "The paperclip stuck to the magnet.")
+
+(questionText (CopaQFn 358) "The gardener pulled the weeds.")
+(questionType (CopaQFn 358) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 358) A) "The weeds came out of the soil.")
+(mcTestOption (CopaAnsFn (CopaQFn 358) B) "The weeds produced seeds.")
+
+(questionText (CopaQFn 359) "We ordered a pizza.")
+(questionType (CopaQFn 359) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 359) A) "The pizza was delivered.")
+(mcTestOption (CopaAnsFn (CopaQFn 359) B) "The pizza got cold.")
+
+(questionText (CopaQFn 360) "The teenager grew taller than his father.")
+(questionType (CopaQFn 360) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 360) A) "He went through a growth spurt.")
+(mcTestOption (CopaAnsFn (CopaQFn 360) B) "He joined the basketball team.")
+
+(questionText (CopaQFn 361) "The patient underwent the risky medical procedure.")
+(questionType (CopaQFn 361) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 361) A) "The procedure was costly.")
+(mcTestOption (CopaAnsFn (CopaQFn 361) B) "Specialists recommended the procedure.")
+
+(questionText (CopaQFn 362) "The man caught his shirtsleeve on the rungs of the fence.")
+(questionType (CopaQFn 362) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 362) A) "He hopped the fence.")
+(mcTestOption (CopaAnsFn (CopaQFn 362) B) "The sleeve ripped.")
+
+(questionText (CopaQFn 363) "The investigators deemed the man's death a suicide.")
+(questionType (CopaQFn 363) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 363) A) "He left a note.")
+(mcTestOption (CopaAnsFn (CopaQFn 363) B) "He had children.")
+
+(questionText (CopaQFn 364) "The computer crashed.")
+(questionType (CopaQFn 364) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 364) A) "I backed up my files.")
+(mcTestOption (CopaAnsFn (CopaQFn 364) B) "I downloaded a virus.")
+
+(questionText (CopaQFn 365) "The girl's mouth ached.")
+(questionType (CopaQFn 365) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 365) A) "She lost a tooth.")
+(mcTestOption (CopaAnsFn (CopaQFn 365) B) "She swallowed her gum.")
+
+(questionText (CopaQFn 366) "The room was dim.")
+(questionType (CopaQFn 366) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 366) A) "I opened the blinds.")
+(mcTestOption (CopaAnsFn (CopaQFn 366) B) "I washed the windows.")
+
+(questionText (CopaQFn 367) "The father put his daughter in her stroller.")
+(questionType (CopaQFn 367) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 367) A) "She learned to walk.")
+(mcTestOption (CopaAnsFn (CopaQFn 367) B) "He was tired of carrying her.")
+
+(questionText (CopaQFn 368) "The spy discovered the enemy's location.")
+(questionType (CopaQFn 368) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 368) A) "The spy bugged the enemy's phone.")
+(mcTestOption (CopaAnsFn (CopaQFn 368) B) "The spy was hired by the government.")
+
+(questionText (CopaQFn 369) "The glasses on the table spilled.")
+(questionType (CopaQFn 369) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 369) A) "The child drew on the table.")
+(mcTestOption (CopaAnsFn (CopaQFn 369) B) "The child yanked the tablecloth.")
+
+(questionText (CopaQFn 370) "The water in the teapot started to boil.")
+(questionType (CopaQFn 370) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 370) A) "The teapot cooled.")
+(mcTestOption (CopaAnsFn (CopaQFn 370) B) "The teapot whistled.")
+
+(questionText (CopaQFn 371) "The city re-elected the mayor.")
+(questionType (CopaQFn 371) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 371) A) "The city cut its budget.")
+(mcTestOption (CopaAnsFn (CopaQFn 371) B) "The mayor fulfilled his promises.")
+
+(questionText (CopaQFn 372) "The woman exaggerated the details of the story.")
+(questionType (CopaQFn 372) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 372) A) "She wanted attention.")
+(mcTestOption (CopaAnsFn (CopaQFn 372) B) "She felt shy.")
+
+(questionText (CopaQFn 373) "The woman hit a midlife crisis.")
+(questionType (CopaQFn 373) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 373) A) "She retired.")
+(mcTestOption (CopaAnsFn (CopaQFn 373) B) "She went sky diving.")
+
+(questionText (CopaQFn 374) "The man went into denial about the tragedy.")
+(questionType (CopaQFn 374) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 374) A) "He got over it easily.")
+(mcTestOption (CopaAnsFn (CopaQFn 374) B) "He refused to talk about it.")
+
+(questionText (CopaQFn 375) "The man grieved.")
+(questionType (CopaQFn 375) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 375) A) "His wife criticized him.")
+(mcTestOption (CopaAnsFn (CopaQFn 375) B) "His mother passed away.")
+
+(questionText (CopaQFn 376) "The girl had a phobia of dogs.")
+(questionType (CopaQFn 376) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 376) A) "She rescued an abandoned dog.")
+(mcTestOption (CopaAnsFn (CopaQFn 376) B) "She was bitten by a dog.")
+
+(questionText (CopaQFn 377) "I made a resolution to eat a healthy diet.")
+(questionType (CopaQFn 377) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 377) A) "I attended a yoga class.")
+(mcTestOption (CopaAnsFn (CopaQFn 377) B) "I bought fruits and vegetables.")
+
+(questionText (CopaQFn 378) "The patient went into a coma.")
+(questionType (CopaQFn 378) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 378) A) "He suffered emotional trauma.")
+(mcTestOption (CopaAnsFn (CopaQFn 378) B) "He suffered brain damage.")
+
+(questionText (CopaQFn 379) "The friends' dinnertime conversation turned to politics.")
+(questionType (CopaQFn 379) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 379) A) "The conversation quieted down.")
+(mcTestOption (CopaAnsFn (CopaQFn 379) B) "A debate erupted.")
+
+(questionText (CopaQFn 380) "The woman spotted her friend from across the room.")
+(questionType (CopaQFn 380) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 380) A) "The woman waved.")
+(mcTestOption (CopaAnsFn (CopaQFn 380) B) "The woman escaped.")
+
+(questionText (CopaQFn 381) "The mother needed help looking after her children.")
+(questionType (CopaQFn 381) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 381) A) "She sent the children to daycare.")
+(mcTestOption (CopaAnsFn (CopaQFn 381) B) "She gave up custody of the children.")
+
+(questionText (CopaQFn 382) "The driver honked her horn.")
+(questionType (CopaQFn 382) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 382) A) "Another car swerved into her lane.")
+(mcTestOption (CopaAnsFn (CopaQFn 382) B) "She made a right turn at the light.")
+
+(questionText (CopaQFn 383) "The man wanted to save money.")
+(questionType (CopaQFn 383) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 383) A) "He withdrew money from his savings account.")
+(mcTestOption (CopaAnsFn (CopaQFn 383) B) "He cut back on making frivolous purchases.")
+
+(questionText (CopaQFn 384) "I put shoes on.")
+(questionType (CopaQFn 384) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 384) A) "The floor contained broken glass.")
+(mcTestOption (CopaAnsFn (CopaQFn 384) B) "The paint on the walls was wet.")
+
+(questionText (CopaQFn 385) "The librarian located the book in the stacks.")
+(questionType (CopaQFn 385) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 385) A) "I requested the librarian's help.")
+(mcTestOption (CopaAnsFn (CopaQFn 385) B) "The book was checked out.")
+
+(questionText (CopaQFn 386) "The mother became eye level with her son.")
+(questionType (CopaQFn 386) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 386) A) "She squatted down.")
+(mcTestOption (CopaAnsFn (CopaQFn 386) B) "She held his hand.")
+
+(questionText (CopaQFn 387) "I packed up my belongings.")
+(questionType (CopaQFn 387) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 387) A) "I was hunting for a new apartment.")
+(mcTestOption (CopaAnsFn (CopaQFn 387) B) "I was moving out of my apartment.")
+
+(questionText (CopaQFn 388) "The boy mimicked his older brother.")
+(questionType (CopaQFn 388) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 388) A) "The boy looked up to his older brother.")
+(mcTestOption (CopaAnsFn (CopaQFn 388) B) "The boy wrestled with his older brother.")
+
+(questionText (CopaQFn 389) "The girl desired her parent's approval.")
+(questionType (CopaQFn 389) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 389) A) "She ran away from home.")
+(mcTestOption (CopaAnsFn (CopaQFn 389) B) "She obeyed her parent's rules.")
+
+(questionText (CopaQFn 390) "The truck crashed into the motorcycle on the bridge.")
+(questionType (CopaQFn 390) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 390) A) "The motorcyclist died.")
+(mcTestOption (CopaAnsFn (CopaQFn 390) B) "The bridge collapsed.")
+
+(questionText (CopaQFn 391) "The retail shop shut down.")
+(questionType (CopaQFn 391) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 391) A) "Its sales were lagging.")
+(mcTestOption (CopaAnsFn (CopaQFn 391) B) "It renewed its lease.")
+
+(questionText (CopaQFn 392) "The swimmer won the race.")
+(questionType (CopaQFn 392) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 392) A) "She received a gold medal.")
+(mcTestOption (CopaAnsFn (CopaQFn 392) B) "Her team lost the meet.")
+
+(questionText (CopaQFn 393) "Air pollution in the city worsened.")
+(questionType (CopaQFn 393) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 393) A) "Factories increased their production.")
+(mcTestOption (CopaAnsFn (CopaQFn 393) B) "Factories shut down.")
+
+(questionText (CopaQFn 394) "The mother scolded her daughter.")
+(questionType (CopaQFn 394) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 394) A) "Her daughter burped at the kitchen table.")
+(mcTestOption (CopaAnsFn (CopaQFn 394) B) "Her daughter set the kitchen table.")
+
+(questionText (CopaQFn 395) "I excused myself from the group.")
+(questionType (CopaQFn 395) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 395) A) "I turned off my phone.")
+(mcTestOption (CopaAnsFn (CopaQFn 395) B) "My phone rang.")
+
+(questionText (CopaQFn 396) "The skier slipped on the slope.")
+(questionType (CopaQFn 396) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 396) A) "She dropped her ski poles.")
+(mcTestOption (CopaAnsFn (CopaQFn 396) B) "She hit a patch of ice.")
+
+(questionText (CopaQFn 397) "The print on the brochure was tiny.")
+(questionType (CopaQFn 397) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 397) A) "The man put his glasses on.")
+(mcTestOption (CopaAnsFn (CopaQFn 397) B) "The man retrieved a pen from his pocket.")
+
+(questionText (CopaQFn 398) "I flipped the light switch up and down.")
+(questionType (CopaQFn 398) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 398) A) "The light faded.")
+(mcTestOption (CopaAnsFn (CopaQFn 398) B) "The light flickered.")
+
+(questionText (CopaQFn 399) "The man's watch was broken.")
+(questionType (CopaQFn 399) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 399) A) "He waited at the bus stop.")
+(mcTestOption (CopaAnsFn (CopaQFn 399) B) "He asked a stranger for the time.")
+
+(questionText (CopaQFn 400) "The soldiers were concealed in the brush.")
+(questionType (CopaQFn 400) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 400) A) "They were armed with rifles.")
+(mcTestOption (CopaAnsFn (CopaQFn 400) B) "They wore camouflage uniforms.")
+
+(questionText (CopaQFn 401) "The man turned on the faucet.")
+(questionType (CopaQFn 401) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 401) A) "The toilet filled with water.")
+(mcTestOption (CopaAnsFn (CopaQFn 401) B) "Water flowed from the spout.")
+
+(questionText (CopaQFn 402) "The girl found a bug in her cereal.")
+(questionType (CopaQFn 402) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 402) A) "She poured milk in the bowl.")
+(mcTestOption (CopaAnsFn (CopaQFn 402) B) "She lost her appetite.")
+
+(questionText (CopaQFn 403) "The woman retired.")
+(questionType (CopaQFn 403) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 403) A) "She received her pension.")
+(mcTestOption (CopaAnsFn (CopaQFn 403) B) "She paid off her mortgage.")
+
+(questionText (CopaQFn 404) "I wanted to conserve energy.")
+(questionType (CopaQFn 404) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 404) A) "I swept the floor in the unoccupied room.")
+(mcTestOption (CopaAnsFn (CopaQFn 404) B) "I shut off the light in the unoccupied room.")
+
+(questionText (CopaQFn 405) "The hamburger meat browned.")
+(questionType (CopaQFn 405) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 405) A) "The cook froze it.")
+(mcTestOption (CopaAnsFn (CopaQFn 405) B) "The cook grilled it.")
+
+(questionText (CopaQFn 406) "I doubted the salesman's pitch.")
+(questionType (CopaQFn 406) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 406) A) "I turned his offer down.")
+(mcTestOption (CopaAnsFn (CopaQFn 406) B) "He persuaded me to buy the product.")
+
+(questionText (CopaQFn 407) "I decided to stay home for the night.")
+(questionType (CopaQFn 407) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 407) A) "The forecast called for storms.")
+(mcTestOption (CopaAnsFn (CopaQFn 407) B) "My friends urged me to go out.")
+
+(questionText (CopaQFn 408) "My eyes became red and puffy.")
+(questionType (CopaQFn 408) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 408) A) "I was sobbing.")
+(mcTestOption (CopaAnsFn (CopaQFn 408) B) "I was laughing.")
+
+(questionText (CopaQFn 409) "The flame on the candle went out.")
+(questionType (CopaQFn 409) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 409) A) "I blew on the wick.")
+(mcTestOption (CopaAnsFn (CopaQFn 409) B) "I put a match to the wick.")
+
+(questionText (CopaQFn 410) "The man drank heavily at the party.")
+(questionType (CopaQFn 410) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 410) A) "He had a headache the next day.")
+(mcTestOption (CopaAnsFn (CopaQFn 410) B) "He had a runny nose the next day.")
+
+(questionText (CopaQFn 411) "The bowling ball knocked over the bowling pins.")
+(questionType (CopaQFn 411) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 411) A) "The man rolled the bowling ball down the alley.")
+(mcTestOption (CopaAnsFn (CopaQFn 411) B) "The man dropped the bowling ball on his foot.")
+
+(questionText (CopaQFn 412) "The community learned of the man's death.")
+(questionType (CopaQFn 412) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 412) A) "His family buried him in the cemetery.")
+(mcTestOption (CopaAnsFn (CopaQFn 412) B) "His obituary appeared in the newspaper.")
+
+(questionText (CopaQFn 413) "My computer crashed.")
+(questionType (CopaQFn 413) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 413) A) "I installed new speakers.")
+(mcTestOption (CopaAnsFn (CopaQFn 413) B) "I lost all my data.")
+
+(questionText (CopaQFn 414) "The woman resigned from her job.")
+(questionType (CopaQFn 414) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 414) A) "She aspired to hold an executive position in the firm.")
+(mcTestOption (CopaAnsFn (CopaQFn 414) B) "She believed her superiors were acting unethically.")
+
+(questionText (CopaQFn 415) "The player caught the ball.")
+(questionType (CopaQFn 415) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 415) A) "Her teammate threw it to her.")
+(mcTestOption (CopaAnsFn (CopaQFn 415) B) "Her opponent tried to intercept it.")
+
+(questionText (CopaQFn 416) "The judge pounded the gavel.")
+(questionType (CopaQFn 416) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 416) A) "The courtroom broke into uproar.")
+(mcTestOption (CopaAnsFn (CopaQFn 416) B) "The jury announced its verdict.")
+
+(questionText (CopaQFn 417) "The woman banished the children from her property.")
+(questionType (CopaQFn 417) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 417) A) "The children hit a ball into her yard.")
+(mcTestOption (CopaAnsFn (CopaQFn 417) B) "The children trampled through her garden.")
+
+(questionText (CopaQFn 418) "The kidnappers released the hostage.")
+(questionType (CopaQFn 418) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 418) A) "They accepted ransom money.")
+(mcTestOption (CopaAnsFn (CopaQFn 418) B) "They escaped from jail.")
+
+(questionText (CopaQFn 419) "The cook's eyes watered.")
+(questionType (CopaQFn 419) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 419) A) "He ran out of onions.")
+(mcTestOption (CopaAnsFn (CopaQFn 419) B) "He cut an onion.")
+
+(questionText (CopaQFn 420) "The woman ran her finger under cold water.")
+(questionType (CopaQFn 420) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 420) A) "She burned her finger on the toaster.")
+(mcTestOption (CopaAnsFn (CopaQFn 420) B) "She put a diamond ring on her finger.")
+
+(questionText (CopaQFn 421) "The student misspelled the word.")
+(questionType (CopaQFn 421) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 421) A) "The teacher corrected her.")
+(mcTestOption (CopaAnsFn (CopaQFn 421) B) "The teacher dismissed her.")
+
+(questionText (CopaQFn 422) "I regained composure from my fit of anger.")
+(questionType (CopaQFn 422) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 422) A) "My heart pounded.")
+(mcTestOption (CopaAnsFn (CopaQFn 422) B) "I took deep breaths.")
+
+(questionText (CopaQFn 423) "I put my hands under the running faucet.")
+(questionType (CopaQFn 423) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 423) A) "The soap rinsed off my hands.")
+(mcTestOption (CopaAnsFn (CopaQFn 423) B) "The water splashed in my face.")
+
+(questionText (CopaQFn 424) "The man dressed in his best suit.")
+(questionType (CopaQFn 424) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 424) A) "He scheduled a meeting with an important client.")
+(mcTestOption (CopaAnsFn (CopaQFn 424) B) "His wife bought him a new tie.")
+
+(questionText (CopaQFn 425) "The man confessed his love for the woman.")
+(questionType (CopaQFn 425) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 425) A) "The woman rejected him.")
+(mcTestOption (CopaAnsFn (CopaQFn 425) B) "The woman envied him.")
+
+(questionText (CopaQFn 426) "The driver got a flat tire.")
+(questionType (CopaQFn 426) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 426) A) "He went over the speed limit.")
+(mcTestOption (CopaAnsFn (CopaQFn 426) B) "He ran over a nail.")
+
+(questionText (CopaQFn 427) "My view of the movie screen was blocked.")
+(questionType (CopaQFn 427) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 427) A) "The couple behind me was whispering.")
+(mcTestOption (CopaAnsFn (CopaQFn 427) B) "A tall person was sitting in front of me.")
+
+(questionText (CopaQFn 428) "The driver turned on the car's headlights.")
+(questionType (CopaQFn 428) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 428) A) "He heard thunder.")
+(mcTestOption (CopaAnsFn (CopaQFn 428) B) "The sun went down.")
+
+(questionText (CopaQFn 429) "The girl refused to eat her vegetables.")
+(questionType (CopaQFn 429) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 429) A) "Her father told her to drink her milk.")
+(mcTestOption (CopaAnsFn (CopaQFn 429) B) "Her father took away her dessert.")
+
+(questionText (CopaQFn 430) "The woman covered her mouth with her hand.")
+(questionType (CopaQFn 430) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 430) A) "She exhaled.")
+(mcTestOption (CopaAnsFn (CopaQFn 430) B) "She sneezed.")
+
+(questionText (CopaQFn 431) "The secretary put the caller on hold.")
+(questionType (CopaQFn 431) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 431) A) "The caller's phone lost reception.")
+(mcTestOption (CopaAnsFn (CopaQFn 431) B) "The caller waited on the line.")
+
+(questionText (CopaQFn 432) "The woman walked with crutches.")
+(questionType (CopaQFn 432) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 432) A) "She shaved her legs.")
+(mcTestOption (CopaAnsFn (CopaQFn 432) B) "She broke her leg.")
+
+(questionText (CopaQFn 433) "I coughed.")
+(questionType (CopaQFn 433) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 433) A) "I inhaled smoke.")
+(mcTestOption (CopaAnsFn (CopaQFn 433) B) "I lowered my voice.")
+
+(questionText (CopaQFn 434) "The clock chimed.")
+(questionType (CopaQFn 434) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 434) A) "It was the top of the hour.")
+(mcTestOption (CopaAnsFn (CopaQFn 434) B) "The hour seemed to drag on.")
+
+(questionText (CopaQFn 435) "The chef hit the egg on the side of the bowl.")
+(questionType (CopaQFn 435) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 435) A) "The egg cracked.")
+(mcTestOption (CopaAnsFn (CopaQFn 435) B) "The egg rotted.")
+
+(questionText (CopaQFn 436) "The police searched the offender's car.")
+(questionType (CopaQFn 436) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 436) A) "They were trying to elicit a confession.")
+(mcTestOption (CopaAnsFn (CopaQFn 436) B) "They were looking for illegal drugs.")
+
+(questionText (CopaQFn 437) "The couple travelled south for the winter.")
+(questionType (CopaQFn 437) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 437) A) "They were retired.")
+(mcTestOption (CopaAnsFn (CopaQFn 437) B) "They were separated.")
+
+(questionText (CopaQFn 438) "The man felt obligated to attend the event.")
+(questionType (CopaQFn 438) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 438) A) "He turned down his friend's invitation to go.")
+(mcTestOption (CopaAnsFn (CopaQFn 438) B) "He promised his friend that he would go.")
+
+(questionText (CopaQFn 439) "The bride got cold feet before the wedding.")
+(questionType (CopaQFn 439) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 439) A) "The wedding guests brought gifts.")
+(mcTestOption (CopaAnsFn (CopaQFn 439) B) "She called the wedding off.")
+
+(questionText (CopaQFn 440) "The man grew old.")
+(questionType (CopaQFn 440) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 440) A) "His hair turned gray.")
+(mcTestOption (CopaAnsFn (CopaQFn 440) B) "He sold his belongings.")
+
+(questionText (CopaQFn 441) "The friends decided to share the hamburger.")
+(questionType (CopaQFn 441) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 441) A) "They cut the hamburger in half.")
+(mcTestOption (CopaAnsFn (CopaQFn 441) B) "They ordered fries with the hamburger.")
+
+(questionText (CopaQFn 442) "I twisted the cap off the soda bottle.")
+(questionType (CopaQFn 442) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 442) A) "The soda fizzed.")
+(mcTestOption (CopaAnsFn (CopaQFn 442) B) "The soda leaked out.")
+
+(questionText (CopaQFn 443) "The pair of students came under scrutiny by the teacher.")
+(questionType (CopaQFn 443) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 443) A) "The students both received excellent grades.")
+(mcTestOption (CopaAnsFn (CopaQFn 443) B) "Their responses on the assignment were identical.")
+
+(questionText (CopaQFn 444) "The student was in a rush to get to school on time.")
+(questionType (CopaQFn 444) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 444) A) "He left his assignment at home.")
+(mcTestOption (CopaAnsFn (CopaQFn 444) B) "He brought his lunch to school.")
+
+(questionText (CopaQFn 445) "The journalist wrote a biography about the humanitarian's life.")
+(questionType (CopaQFn 445) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 445) A) "The humanitarian was difficult for the journalist to interview.")
+(mcTestOption (CopaAnsFn (CopaQFn 445) B) "The journalist was intrigued by the humanitarian's work.")
+
+(questionText (CopaQFn 446) "The man defied the authorities of the church.")
+(questionType (CopaQFn 446) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 446) A) "He donated money to the church.")
+(mcTestOption (CopaAnsFn (CopaQFn 446) B) "He was excommunicated from the church.")
+
+(questionText (CopaQFn 447) "The woman's hair fell in her face.")
+(questionType (CopaQFn 447) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 447) A) "She pulled her hair back with a clip.")
+(mcTestOption (CopaAnsFn (CopaQFn 447) B) "She lathered shampoo into her hair.")
+
+(questionText (CopaQFn 448) "The ring on my finger got stuck.")
+(questionType (CopaQFn 448) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 448) A) "My finger swelled.")
+(mcTestOption (CopaAnsFn (CopaQFn 448) B) "I chipped my fingernail.")
+
+(questionText (CopaQFn 449) "I pulled the rubber band.")
+(questionType (CopaQFn 449) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 449) A) "It flung across the room.")
+(mcTestOption (CopaAnsFn (CopaQFn 449) B) "It stretched.")
+
+(questionText (CopaQFn 450) "I pressed my hand into the wet cement.")
+(questionType (CopaQFn 450) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 450) A) "My handprint dried in the cement.")
+(mcTestOption (CopaAnsFn (CopaQFn 450) B) "Cracks emerged in the cement.")
+
+(questionText (CopaQFn 451) "My skin broke out into a rash.")
+(questionType (CopaQFn 451) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 451) A) "I brushed against poison ivy in my yard.")
+(mcTestOption (CopaAnsFn (CopaQFn 451) B) "I eradicated the poison ivy from my yard.")
+
+(questionText (CopaQFn 452) "My subscription to the magazine expired.")
+(questionType (CopaQFn 452) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 452) A) "I discarded the new issue.")
+(mcTestOption (CopaAnsFn (CopaQFn 452) B) "I stopped receiving new issues.")
+
+(questionText (CopaQFn 453) "The detective revealed an anomaly in the case.")
+(questionType (CopaQFn 453) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 453) A) "He finalized his theory.")
+(mcTestOption (CopaAnsFn (CopaQFn 453) B) "He scrapped his theory.")
+
+(questionText (CopaQFn 454) "The boy threw a temper tantrum.")
+(questionType (CopaQFn 454) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 454) A) "His brother took his toys from him.")
+(mcTestOption (CopaAnsFn (CopaQFn 454) B) "He shared his toys with his brother.")
+
+(questionText (CopaQFn 455) "The child learned how to read.")
+(questionType (CopaQFn 455) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 455) A) "He began attending school.")
+(mcTestOption (CopaAnsFn (CopaQFn 455) B) "He skipped a grade in school.")
+
+(questionText (CopaQFn 456) "The boy skipped dinner.")
+(questionType (CopaQFn 456) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 456) A) "His mother cooked his favorite meal.")
+(mcTestOption (CopaAnsFn (CopaQFn 456) B) "He ate a big lunch.")
+
+(questionText (CopaQFn 457) "The woman lavished her friend with flattery.")
+(questionType (CopaQFn 457) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 457) A) "She wanted to ask her friend for a favor.")
+(mcTestOption (CopaAnsFn (CopaQFn 457) B) "She was irritated with her friend's whining.")
+
+(questionText (CopaQFn 458) "The key was missing from my pants pocket.")
+(questionType (CopaQFn 458) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 458) A) "The pocket had a hole.")
+(mcTestOption (CopaAnsFn (CopaQFn 458) B) "The pants were new.")
+
+(questionText (CopaQFn 459) "The man fainted.")
+(questionType (CopaQFn 459) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 459) A) "He took a nap.")
+(mcTestOption (CopaAnsFn (CopaQFn 459) B) "He ran a marathon.")
+
+(questionText (CopaQFn 460) "The man lost the competition.")
+(questionType (CopaQFn 460) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 460) A) "The competition was sabotaged.")
+(mcTestOption (CopaAnsFn (CopaQFn 460) B) "He intimidated his competitors.")
+
+(questionText (CopaQFn 461) "The mother called an ambulance.")
+(questionType (CopaQFn 461) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 461) A) "Her son lost his cat.")
+(mcTestOption (CopaAnsFn (CopaQFn 461) B) "Her son fell out of his bed.")
+
+(questionText (CopaQFn 462) "The driver slammed on his brakes.")
+(questionType (CopaQFn 462) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 462) A) "A deer appeared on the road.")
+(mcTestOption (CopaAnsFn (CopaQFn 462) B) "The car radio shut off.")
+
+(questionText (CopaQFn 463) "The lock opened.")
+(questionType (CopaQFn 463) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 463) A) "I turned the key in the lock.")
+(mcTestOption (CopaAnsFn (CopaQFn 463) B) "I made a duplicate of the key.")
+
+(questionText (CopaQFn 464) "I put rubber gloves on.")
+(questionType (CopaQFn 464) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 464) A) "I was preparing to wash my hands.")
+(mcTestOption (CopaAnsFn (CopaQFn 464) B) "I was preparing to clean the bathroom.")
+
+(questionText (CopaQFn 465) "The animal species became endangered.")
+(questionType (CopaQFn 465) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 465) A) "Their habitat was destroyed.")
+(mcTestOption (CopaAnsFn (CopaQFn 465) B) "Their predators went extinct.")
+
+(questionText (CopaQFn 466) "The man perceived that the woman looked different.")
+(questionType (CopaQFn 466) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 466) A) "The woman got her hair cut.")
+(mcTestOption (CopaAnsFn (CopaQFn 466) B) "The woman wore a bracelet.")
+
+(questionText (CopaQFn 467) "The student forgot to do her assignment.")
+(questionType (CopaQFn 467) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 467) A) "She made up an excuse to tell the teacher.")
+(mcTestOption (CopaAnsFn (CopaQFn 467) B) "The teacher promoted her to the next grade.")
+
+(questionText (CopaQFn 468) "The dog barked.")
+(questionType (CopaQFn 468) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 468) A) "The cat lounged on the couch.")
+(mcTestOption (CopaAnsFn (CopaQFn 468) B) "A knock sounded at the door.")
+
+(questionText (CopaQFn 469) "Plans were announced to replace a local park with a shopping mall.")
+(questionType (CopaQFn 469) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 469) A) "Environmentalists started a petition.")
+(mcTestOption (CopaAnsFn (CopaQFn 469) B) "Environmentalists produced a documentary.")
+
+(questionText (CopaQFn 470) "The couple was happy to see each other.")
+(questionType (CopaQFn 470) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 470) A) "They kissed.")
+(mcTestOption (CopaAnsFn (CopaQFn 470) B) "They rested.")
+
+(questionText (CopaQFn 471) "The woman asked the man to leave.")
+(questionType (CopaQFn 471) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 471) A) "He insulted her.")
+(mcTestOption (CopaAnsFn (CopaQFn 471) B) "He thanked her.")
+
+(questionText (CopaQFn 472) "The tree branch landed in the river.")
+(questionType (CopaQFn 472) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 472) A) "The branch moved downstream.")
+(mcTestOption (CopaAnsFn (CopaQFn 472) B) "The river's current became stronger.")
+
+(questionText (CopaQFn 473) "The teacher assigned homework to the students.")
+(questionType (CopaQFn 473) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 473) A) "The students passed notes.")
+(mcTestOption (CopaAnsFn (CopaQFn 473) B) "The students groaned.")
+
+(questionText (CopaQFn 474) "The seasons changed from summer to autumn.")
+(questionType (CopaQFn 474) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 474) A) "People evacuated their homes.")
+(mcTestOption (CopaAnsFn (CopaQFn 474) B) "Leaves fell from the trees.")
+
+(questionText (CopaQFn 475) "The politician was convicted of fraud.")
+(questionType (CopaQFn 475) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 475) A) "He campaigned for re-election.")
+(mcTestOption (CopaAnsFn (CopaQFn 475) B) "He was removed from office.")
+
+(questionText (CopaQFn 476) "I pushed the wagon.")
+(questionType (CopaQFn 476) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 476) A) "The objects in the wagon fell out.")
+(mcTestOption (CopaAnsFn (CopaQFn 476) B) "The wagon wheels spun forward.")
+
+(questionText (CopaQFn 477) "The lobbyist persuaded the legislature to support the bill.")
+(questionType (CopaQFn 477) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 477) A) "The president vetoed the bill.")
+(mcTestOption (CopaAnsFn (CopaQFn 477) B) "The legislature passed the bill.")
+
+(questionText (CopaQFn 478) "My closet was messy.")
+(questionType (CopaQFn 478) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 478) A) "I organized it.")
+(mcTestOption (CopaAnsFn (CopaQFn 478) B) "I decorated it.")
+
+(questionText (CopaQFn 479) "I stayed up late.")
+(questionType (CopaQFn 479) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 479) A) "I had vivid dreams that night.")
+(mcTestOption (CopaAnsFn (CopaQFn 479) B) "I was tired in the morning.")
+
+(questionText (CopaQFn 480) "The man's pocket jingled as he walked.")
+(questionType (CopaQFn 480) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 480) A) "His pocket was filled with coins.")
+(mcTestOption (CopaAnsFn (CopaQFn 480) B) "He sewed the hole in his pocket.")
+
+(questionText (CopaQFn 481) "Everyone in the class turned to stare at the student.")
+(questionType (CopaQFn 481) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 481) A) "The student's phone rang.")
+(mcTestOption (CopaAnsFn (CopaQFn 481) B) "The student took notes.")
+
+(questionText (CopaQFn 482) "The horse bucked.")
+(questionType (CopaQFn 482) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 482) A) "A fly bit the horse.")
+(mcTestOption (CopaAnsFn (CopaQFn 482) B) "The rider stroked the horse.")
+
+(questionText (CopaQFn 483) "The jewelry thieves were caught.")
+(questionType (CopaQFn 483) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 483) A) "The stolen jewelry was returned to its owners.")
+(mcTestOption (CopaAnsFn (CopaQFn 483) B) "The cost of the stolen jewelry was calculated.")
+
+(questionText (CopaQFn 484) "Political violence broke out in the nation.")
+(questionType (CopaQFn 484) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 484) A) "Many citizens relocated to the capitol.")
+(mcTestOption (CopaAnsFn (CopaQFn 484) B) "Many citizens took refuge in other territories.")
+
+(questionText (CopaQFn 485) "The woman was arrested.")
+(questionType (CopaQFn 485) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 485) A) "She checked into rehab.")
+(mcTestOption (CopaAnsFn (CopaQFn 485) B) "She committed assault.")
+
+(questionText (CopaQFn 486) "The woman read the newspaper.")
+(questionType (CopaQFn 486) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 486) A) "She discovered the outcome of the election.")
+(mcTestOption (CopaAnsFn (CopaQFn 486) B) "She casted a vote in the election.")
+
+(questionText (CopaQFn 487) "The sick child coughed on his friend.")
+(questionType (CopaQFn 487) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 487) A) "His friend got sick.")
+(mcTestOption (CopaAnsFn (CopaQFn 487) B) "His friend sneezed.")
+
+(questionText (CopaQFn 488) "The couple got engaged.")
+(questionType (CopaQFn 488) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 488) A) "They planned a wedding.")
+(mcTestOption (CopaAnsFn (CopaQFn 488) B) "They took some time apart.")
+
+(questionText (CopaQFn 489) "The woman contacted the real estate agent.")
+(questionType (CopaQFn 489) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 489) A) "The woman planned to buy a condo.")
+(mcTestOption (CopaAnsFn (CopaQFn 489) B) "The woman needed to clean her house.")
+
+(questionText (CopaQFn 490) "The man won the lottery.")
+(questionType (CopaQFn 490) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 490) A) "He became rich.")
+(mcTestOption (CopaAnsFn (CopaQFn 490) B) "He owed money.")
+
+(questionText (CopaQFn 491) "I lit the candle.")
+(questionType (CopaQFn 491) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 491) A) "Wax dripped off the candle.")
+(mcTestOption (CopaAnsFn (CopaQFn 491) B) "The wax on the candle hardened.")
+
+(questionText (CopaQFn 492) "I spent the day at the pool.")
+(questionType (CopaQFn 492) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 492) A) "I sprained my ankle.")
+(mcTestOption (CopaAnsFn (CopaQFn 492) B) "My face got sunburned.")
+
+(questionText (CopaQFn 493) "The man received a parking ticket.")
+(questionType (CopaQFn 493) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 493) A) "He parallel parked on the street.")
+(mcTestOption (CopaAnsFn (CopaQFn 493) B) "The parking meter expired.")
+
+(questionText (CopaQFn 494) "The woman became famous.")
+(questionType (CopaQFn 494) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 494) A) "Photographers followed her.")
+(mcTestOption (CopaAnsFn (CopaQFn 494) B) "Her family avoided her.")
+
+(questionText (CopaQFn 495) "The girl wanted to wear earrings.")
+(questionType (CopaQFn 495) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 495) A) "She got her ears pierced.")
+(mcTestOption (CopaAnsFn (CopaQFn 495) B) "She got a tattoo.")
+
+(questionText (CopaQFn 496) "My ears were ringing.")
+(questionType (CopaQFn 496) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 496) A) "I went to a museum.")
+(mcTestOption (CopaAnsFn (CopaQFn 496) B) "I went to a concert.")
+
+(questionText (CopaQFn 497) "I tidied up my house.")
+(questionType (CopaQFn 497) Cause)
+(mcTestOption (CopaAnsFn (CopaQFn 497) A) "I was swamped with work.")
+(mcTestOption (CopaAnsFn (CopaQFn 497) B) "I was expecting company.")
+
+(questionText (CopaQFn 498) "The airline mishandled my luggage.")
+(questionType (CopaQFn 498) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 498) A) "They offered me compensation.")
+(mcTestOption (CopaAnsFn (CopaQFn 498) B) "They cancelled my flight.")
+
+(questionText (CopaQFn 499) "The computer was expensive to fix.")
+(questionType (CopaQFn 499) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 499) A) "I got it repaired.")
+(mcTestOption (CopaAnsFn (CopaQFn 499) B) "I bought a new one.")
+
+(questionText (CopaQFn 500) "The woman was in a bad mood.")
+(questionType (CopaQFn 500) Result)
+(mcTestOption (CopaAnsFn (CopaQFn 500) A) "She engaged in small talk with her friend.")
+(mcTestOption (CopaAnsFn (CopaQFn 500) B) "She told her friend to leave her alone.")

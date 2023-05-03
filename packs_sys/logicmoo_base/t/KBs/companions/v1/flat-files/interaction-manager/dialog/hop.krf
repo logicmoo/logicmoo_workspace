@@ -1,0 +1,92 @@
+;;;
+;;; hop.meld
+;;;
+;;; higher-order pattern detection
+;;;
+;;; -------------------------------------------------------------------------
+;;;
+;;; For questions, we can hold at most 1 thing constant.
+;;; For declaratives, we can hold 2.
+;;; Use sentenceSubject (and others) to extract subject-verb-object forms of
+;;; beliefs.
+
+;;; Epistemic games:
+;;; 1) leading by the nose to an inevitable conclusion
+;;; 2) playing 20 questions to rule out possibilities, perhaps leaving a unique answer.
+
+;;; Common patterns:
+;;; Holding subject constant, varying predicate
+;;;   - elaborating a description
+;;;
+;;; Holding predicate constant, varying subject
+;;;   - enumerating a collection
+;;;   - if "object" is consistent, is this a natural kind?  Things that have
+;;;     the same property value?
+;;;   - hypothesis: is there something else similar about these subject
+;;;     entities to predict property?
+;;; 
+;;; Relation to ILP: theta-subsumption, least-general-generalizer
+;;;
+
+;;; discourse pattern - add a fact that lets a previous query succeed
+;;;   eg, if we knew that proximity to the ocean and hot climate contributed
+;;;   to hurricanes, could the addition of those facts cause us to revisit 
+;;;   a prior failed query (failure-as-negation response)?
+
+;;; Can we rapidly traverse a rule and identify signatures of antecedents 
+;;; we'd be interested in?
+
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; Consider the relational propositions from Rhetorical Structure Theory 
+;;; [Mann & Thompson, 1986]::
+;;; 
+;;; Solutionhood        "I'm hungry.  Let's go to Fuji Gardens"
+;;; Evidence            "They're having a party again next door.
+;;;                      I couldn't find a parking space."
+;;; Elaboration         "I love to collect classic automobiles.
+;;;                      My favorite car is my 1899 Duryea."
+;;; Motivation          "Take Bufferin. The buffering component prevents
+;;;                      excess stomach acid."
+;;; Thesis/Antithesis   "Players want the referee to balance a bad call
+;;;                      benefiting one team with a bad call benefiting
+;;;                      the other. As a referee,  I just want to call 
+;;;                      each play as I see it."
+;;; Concession          "I know you have great credentials.  I'm looking for
+;;;                      someone with great experience."
+;;; Condition           "Give her a subscription to Science magazine.
+;;;                      She'll be in seventh heaven."
+;;; Reason              "I'm going to the corner.  We're all out of milk."
+;;; Justification       "Let me make one thing perfectly clear.  
+;;;                      I am not a crook."
+
+
+
+;;; From Cyc:
+;;; (hypothesizes <agent> <prop>)
+;;; (hypothesisAcceptanceStatus <hyp> <status>)
+;;; status isa HypothesisAcceptanceStatus =
+;;;          {AcceptedHypothesis, RejectedStatus, UncertainStatus}
+;;;
+;;; (goals <agent> <sentence>)
+;;; (goalCategoryForAgent <agent> <formula> <goalcategory>)
+;;; goalcategory isa GoalTypeByCategory
+;;; e.g., (isa 
+;;;         (GoalOfVerifyingHypothesizedInfoAboutTopicFn Parts-Topic)
+;;;        GoalTypeByCategory)
+
+
+;;;
+;;; predicates
+;;;
+
+;;;
+;;; rules
+;;;
+
+
+;;;
+;;; plans
+;;;
+

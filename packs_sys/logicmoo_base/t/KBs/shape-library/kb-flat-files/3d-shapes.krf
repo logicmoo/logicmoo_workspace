@@ -1,0 +1,344 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: 3d-shapes.lsp
+;;;;    System: CogSketch
+;;;;    Author: Andrew Lovett
+;;;;   Created: July 8, 2008 15:32:34
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:35:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-package :data)
+
+(in-microtheory PerceptionMt)
+ 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa ConvexEdge Collection)
+(isa ConcaveEdge Collection)
+(isa LimbEdge Collection)
+
+(isa MajorArcEdge Collection)
+(isa MinorArcEdge Collection)
+(isa SemicircleEdge Collection)
+
+(genls Perceptual-Edge Perceptual-Element)
+
+(genls Perceptual-Junction Perceptual-Element)
+
+(genls Perceptual-Surface Perceptual-Element)
+
+(genls Perceptual-Hole Perceptual-Element)
+
+(genls Jct-Terminal Perceptual-Junction)
+(genls Jct-L Perceptual-Junction)
+(genls Jct-Curved-L Perceptual-Junction)
+(genls Jct-T Perceptual-Junction)
+(genls Jct-Pseudo Perceptual-Junction)
+(genls Jct-3-Tangent Perceptual-Junction)
+(genls Jct-Arrow Perceptual-Junction)
+(genls Jct-Y Perceptual-Junction)
+(genls Jct-Multi Perceptual-Junction)
+(genls Jct-Curved-T Perceptual-Junction)
+(genls Jct-Interior-L Perceptual-Junction)
+(genls Jct-Curved-L-C Perceptual-Junction)
+(genls Jct-Curved-L-I Perceptual-Junction)
+
+(isa EdgeList FunctionOrFunctionalPredicate)
+(isa EdgeList VariableArityFunction)
+
+(isa junction-for-edges Predicate)
+(arity junction-for-edges 2)
+(arg1Isa junction-for-edges Function)
+(arg2Isa junction-for-edges Perceptual-Junction)
+
+(isa junction-for-connection Predicate)
+(arity junction-for-connection 2)
+(arg1Isa junction-for-connection Predicate)
+(arg2Isa junction-for-connection Perceptual-Junction)
+
+(genls CornerPredicate Predicate)
+
+(isa convexCornerAlongSurface CornerPredicate)
+(arity convexCornerAlongSurface 3)
+(arg1Isa convexCornerAlongSurface Perceptual-Edge)
+(arg2Isa convexCornerAlongSurface Perceptual-Surface)
+(arg3Isa convexCornerAlongSurface Perceptual-Edge)
+
+(isa concaveCornerAlongSurface CornerPredicate)
+(arity concaveCornerAlongSurface 3)
+(arg1Isa concaveCornerAlongSurface Perceptual-Edge)
+(arg2Isa concaveCornerAlongSurface Perceptual-Surface)
+(arg3Isa concaveCornerAlongSurface Perceptual-Edge)
+
+(isa smoothCornerAlongSurface CornerPredicate)
+(arity smoothCornerAlongSurface 3)
+(arg1Isa smoothCornerAlongSurface Perceptual-Edge)
+(arg2Isa smoothCornerAlongSurface Perceptual-Surface)
+(arg3Isa smoothCornerAlongSurface Perceptual-Edge)
+
+(isa tangentCornerAlongSurface CornerPredicate)
+(arity tangentCornerAlongSurface 3)
+(arg1Isa tangentCornerAlongSurface Perceptual-Edge)
+(arg2Isa tangentCornerAlongSurface Perceptual-Surface)
+(arg3Isa tangentCornerAlongSurface Perceptual-Edge)
+
+(isa tangentInCornerAlongSurface CornerPredicate)
+(arity tangentInCornerAlongSurface 3)
+(arg1Isa tangentInCornerAlongSurface Perceptual-Edge)
+(arg2Isa tangentInCornerAlongSurface Perceptual-Surface)
+(arg3Isa tangentInCornerAlongSurface Perceptual-Edge)
+
+(isa tangentOutCornerAlongSurface CornerPredicate)
+(arity tangentOutCornerAlongSurface 3)
+(arg1Isa tangentOutCornerAlongSurface Perceptual-Edge)
+(arg2Isa tangentOutCornerAlongSurface Perceptual-Surface)
+(arg3Isa tangentOutCornerAlongSurface Perceptual-Edge)
+
+(isa TInCornerAlongSurface CornerPredicate)
+(arity TInCornerAlongSurface 3)
+(arg1Isa TInCornerAlongSurface Perceptual-Edge)
+(arg2Isa TInCornerAlongSurface Perceptual-Surface)
+(arg3Isa TInCornerAlongSurface Perceptual-Edge)
+
+(isa TOutCornerAlongSurface CornerPredicate)
+(arity TOutCornerAlongSurface 3)
+(arg1Isa TOutCornerAlongSurface Perceptual-Edge)
+(arg2Isa TOutCornerAlongSurface Perceptual-Surface)
+(arg3Isa TOutCornerAlongSurface Perceptual-Edge)
+
+(isa limbFirstCornerAlongSurface CornerPredicate)
+(arity limbFirstCornerAlongSurface 3)
+(arg1Isa limbFirstCornerAlongSurface Perceptual-Edge)
+(arg2Isa limbFirstCornerAlongSurface Perceptual-Surface)
+(arg3Isa limbFirstCornerAlongSurface Perceptual-Edge)
+
+(isa limbLastCornerAlongSurface CornerPredicate)
+(arity limbLastCornerAlongSurface 3)
+(arg1Isa limbLastCornerAlongSurface Perceptual-Edge)
+(arg2Isa limbLastCornerAlongSurface Perceptual-Surface)
+(arg3Isa limbLastCornerAlongSurface Perceptual-Edge)
+
+(isa shortToLongCornerAlongSurface CornerPredicate)
+(arity shortToLongCornerAlongSurface 3)
+(arg1Isa shortToLongCornerAlongSurface Perceptual-Edge)
+(arg2Isa shortToLongCornerAlongSurface Perceptual-Surface)
+(arg3Isa shortToLongCornerAlongSurface Perceptual-Edge)
+
+(isa longToShortCornerAlongSurface CornerPredicate)
+(arity longToShortCornerAlongSurface 3)
+(arg1Isa longToShortCornerAlongSurface Perceptual-Edge)
+(arg2Isa longToShortCornerAlongSurface Perceptual-Surface)
+(arg3Isa longToShortCornerAlongSurface Perceptual-Edge)
+
+(isa convexCornerAlongEdge CornerPredicate)
+(isa convexCornerAlongEdge SymmetricRelation)
+(arity convexCornerAlongEdge 4)
+(arg1Isa convexCornerAlongEdge Perceptual-Surface)
+(arg2Isa convexCornerAlongEdge Perceptual-Edge)
+(arg3Isa convexCornerAlongEdge Perceptual-Edge)
+(arg4Isa convexCornerAlongEdge Perceptual-Surface)
+
+(isa concaveCornerAlongEdge CornerPredicate)
+(isa concaveCornerAlongEdge SymmetricRelation)
+(arity concaveCornerAlongEdge 4)
+(arg1Isa concaveCornerAlongEdge Perceptual-Surface)
+(arg2Isa concaveCornerAlongEdge Perceptual-Edge)
+(arg3Isa concaveCornerAlongEdge Perceptual-Edge)
+(arg4Isa concaveCornerAlongEdge Perceptual-Surface)
+
+(isa concaveCornerWithEdges CornerPredicate)
+(isa concaveCornerWithEdges SymmetricRelation)
+(arity concaveCornerWithEdges 2)
+(arg1Isa concaveCornerWithEdges Perceptual-Edge)
+(arg2Isa concaveCornerWithEdges Perceptual-Edge)
+
+(isa convexCornerWithEdges CornerPredicate)
+(isa convexCornerWithEdges SymmetricRelation)
+(arity convexCornerWithEdges 2)
+(arg1Isa convexCornerWithEdges Perceptual-Edge)
+(arg2Isa convexCornerWithEdges Perceptual-Edge)
+
+(isa concaveCornerWithEdgesFull CornerPredicate)
+(isa concaveCornerWithEdgesFull SymmetricRelation)
+(arity concaveCornerWithEdgesFull 4)
+(arg1Isa concaveCornerWithEdgesFull Perceptual-Surface)
+(arg2Isa concaveCornerWithEdgesFull Perceptual-Edge)
+(arg3Isa concaveCornerWithEdgesFull Perceptual-Edge)
+(arg4Isa concaveCornerWithEdgesFull Perceptual-Surface)
+
+(isa convexCornerWithEdgesFull CornerPredicate)
+(isa convexCornerWithEdgesFull SymmetricRelation)
+(arity convexCornerWithEdgesFull 4)
+(arg1Isa convexCornerWithEdgesFull Perceptual-Surface)
+(arg2Isa convexCornerWithEdgesFull Perceptual-Edge)
+(arg3Isa convexCornerWithEdgesFull Perceptual-Edge)
+(arg4Isa convexCornerWithEdgesFull Perceptual-Surface)
+
+(isa concaveCornerWithEdge CornerPredicate)
+(isa concaveCornerWithEdge SymmetricRelation)
+(arity concaveCornerWithEdge 3)
+(arg1Isa concaveCornerWithEdge Perceptual-Surface)
+(arg2Isa concaveCornerWithEdge Perceptual-Edge)
+(arg3Isa concaveCornerWithEdge Perceptual-Surface)
+
+(isa convexCornerWithEdge CornerPredicate)
+(isa convexCornerWithEdge SymmetricRelation)
+(arity convexCornerWithEdge 3)
+(arg1Isa convexCornerWithEdge Perceptual-Surface)
+(arg2Isa convexCornerWithEdge Perceptual-Edge)
+(arg3Isa convexCornerWithEdge Perceptual-Surface)
+
+(isa concaveCornerWithEdgeAsym CornerPredicate)
+(arity concaveCornerWithEdgeAsym 3)
+(arg1Isa concaveCornerWithEdgeAsym Perceptual-Surface)
+(arg2Isa concaveCornerWithEdgeAsym Perceptual-Edge)
+(arg3Isa concaveCornerWithEdgeAsym Perceptual-Surface)
+
+(isa concaveCornerWithEdgeAsym CornerPredicate)
+(arity concaveCornerWithEdgeAsym 3)
+(arg1Isa concaveCornerWithEdgeAsym Perceptual-Surface)
+(arg2Isa concaveCornerWithEdgeAsym Perceptual-Edge)
+(arg3Isa concaveCornerWithEdgeAsym Perceptual-Surface)
+
+
+(isa consecutiveCorners Predicate)
+(arity consecutiveCorners 2)
+(arg1Isa consecutiveCorners CornerPredicate)
+(arg2Isa consecutiveCorners CornerPredicate)
+
+(isa consecutiveCornerTriplet Predicate)
+(arity consecutiveCornerTriplet 3)
+(arg1Isa consecutiveCornerTriplet CornerPredicate)
+(arg2Isa consecutiveCornerTriplet CornerPredicate)
+(arg3Isa consecutiveCornerTriplet CornerPredicate)
+
+(isa holeAlongEdge Predicate)
+(arity holeAlongEdge 3)
+(arg1Isa holeAlongEdge Perceptual-Surface)
+(arg2Isa holeAlongEdge Perceptual-Edge)
+(arg3Isa holeAlongEdge Perceptual-Hole)
+
+(isa parallelSurfaces Predicate)
+(isa parallelSurfaces SymmetricRelation)
+(arity parallelSurfaces 2)
+(arg1Isa parallelSurfaces Perceptual-Surface)
+(arg2Isa parallelSurfaces Perceptual-Surface)
+;;;      (arg3Isa parallelSurfaces Perceptual-Edge)
+;;;      (arg4Isa parallelSurfaces Perceptual-Surface)
+
+(isa cornersSupportProposition Predicate)
+(isa cornersSupportProposition SymmetricRelation)
+(arity cornersSupportProposition 3)
+(arg1Isa cornersSupportProposition CornerPredicate)
+(arg2Isa cornersSupportProposition Predicate)
+(arg3Isa cornersSupportProposition CornerPredicate)
+
+(isa cornersSupportPropositionAsym Predicate)
+(arity cornersSupportPropositionAsym 3)
+(arg1Isa cornersSupportPropositionAsym CornerPredicate)
+(arg2Isa cornersSupportPropositionAsym Predicate)
+(arg3Isa cornersSupportPropositionAsym CornerPredicate)
+
+(isa cornersSupportPropositionHor Predicate)
+(arity cornersSupportPropositionHor 3)
+(arg1Isa cornersSupportPropositionHor CornerPredicate)
+(arg2Isa cornersSupportPropositionHor Predicate)
+(arg3Isa cornersSupportPropositionHor CornerPredicate)
+
+(isa cornersSupportPropositionVert Predicate)
+(arity cornersSupportPropositionVert 3)
+(arg1Isa cornersSupportPropositionVert CornerPredicate)
+(arg2Isa cornersSupportPropositionVert Predicate)
+(arg3Isa cornersSupportPropositionVert CornerPredicate)
+
+(isa colinearEdgesSupportProposition Predicate)
+(arity colinearEdgesSupportProposition 3)
+(arg1Isa colinearEdgesSupportProposition Predicate)
+(arg2Isa colinearEdgesSupportProposition Predicate)
+(arg3Isa colinearEdgesSupportProposition Predicate)
+
+(isa colinearEdgesWithSurfaces Predicate)
+(isa colinearEdgesWithSurfaces SymmetricRelation)
+(arity colinearEdgesWithSurfaces 4)
+(arg1Isa colinearEdgesWithSurfaces Perceptual-Edge)
+(arg2Isa colinearEdgesWithSurfaces Perceptual-Surface)
+(arg3Isa colinearEdgesWithSurfaces Perceptual-Surface)
+(arg4Isa colinearEdgesWithSurfaces Perceptual-Edge)
+
+(isa colinearEdgesWithSurfacesAsym Predicate)
+(arity colinearEdgesWithSurfacesAsym 4)
+(arg1Isa colinearEdgesWithSurfacesAsym Perceptual-Edge)
+(arg2Isa colinearEdgesWithSurfacesAsym Perceptual-Surface)
+(arg3Isa colinearEdgesWithSurfacesAsym Perceptual-Surface)
+(arg4Isa colinearEdgesWithSurfacesAsym Perceptual-Edge)
+
+(isa colinearEdgesWithSurfacesRight Predicate)
+(arity colinearEdgesWithSurfacesRight 4)
+(arg1Isa colinearEdgesWithSurfacesRight Perceptual-Edge)
+(arg2Isa colinearEdgesWithSurfacesRight Perceptual-Surface)
+(arg3Isa colinearEdgesWithSurfacesRight Perceptual-Surface)
+(arg4Isa colinearEdgesWithSurfacesRight Perceptual-Edge)
+
+(isa colinearEdgesWithSurfacesLeft Predicate)
+(arity colinearEdgesWithSurfacesLeft 4)
+(arg1Isa colinearEdgesWithSurfacesLeft Perceptual-Edge)
+(arg2Isa colinearEdgesWithSurfacesLeft Perceptual-Surface)
+(arg3Isa colinearEdgesWithSurfacesLeft Perceptual-Surface)
+(arg4Isa colinearEdgesWithSurfacesLeft Perceptual-Edge)
+
+(isa colinearEdgesWithSurfacesAbove Predicate)
+(arity colinearEdgesWithSurfacesAbove 4)
+(arg1Isa colinearEdgesWithSurfacesAbove Perceptual-Edge)
+(arg2Isa colinearEdgesWithSurfacesAbove Perceptual-Surface)
+(arg3Isa colinearEdgesWithSurfacesAbove Perceptual-Surface)
+(arg4Isa colinearEdgesWithSurfacesAbove Perceptual-Edge)
+
+(isa colinearEdgesWithSurfacesBelow Predicate)
+(arity colinearEdgesWithSurfacesBelow 4)
+(arg1Isa colinearEdgesWithSurfacesBelow Perceptual-Edge)
+(arg2Isa colinearEdgesWithSurfacesBelow Perceptual-Surface)
+(arg3Isa colinearEdgesWithSurfacesBelow Perceptual-Surface)
+(arg4Isa colinearEdgesWithSurfacesBelow Perceptual-Edge)
+
+(isa colinearEdges Predicate)
+(isa colinearEdges SymmetricRelation)
+(arity colinearEdges 2)
+(arg1Isa colinearEdges Perceptual-Edge)
+(arg2Isa colinearEdges Perceptual-Edge)
+
+(isa colinearEdgesAsym Predicate)
+(arity colinearEdgesAsym 2)
+(arg1Isa colinearEdgesAsym Perceptual-Edge)
+(arg2Isa colinearEdgesAsym Perceptual-Edge)
+
+(isa geoEvidence Predicate)
+(arity geoEvidence 1)
+(arg1Isa geoEvidence Predicate)
+
+(isa geoResult Predicate)
+(arity geoResult 1)
+(arg1Isa geoResult Predicate)
+
+(isa surfaceJunction Predicate)
+(arity surfaceJunction 3)
+(arg1Isa surfaceJunction Perceptual-Surface)
+(arg2Isa surfaceJunction Perceptual-Surface)
+(arg3Isa surfaceJunction Perceptual-Surface)
+
+(isa parallelEdges Predicate)
+(isa parallelEdges SymmetricRelation)
+(arity parallelEdges 2)
+(arg1Isa parallelEdges Perceptual-Edge)
+(arg2Isa parallelEdges Perceptual-Edge)
+
+(isa parallelEdgesSupportProposition Predicate)
+(arity parallelEdgesSupportProposition 2)
+(arg1Isa parallelEdgesSupportProposition Predicate)
+(arg2Isa parallelEdgesSupportProposition Predicate)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

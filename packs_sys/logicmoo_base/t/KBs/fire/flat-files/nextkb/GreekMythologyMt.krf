@@ -1,0 +1,213 @@
+(in-microtheory GreekMythologyMt)
+
+(isa Oceanus-TheTitan God)
+(isa Oceanus-TheTitan MaleHuman)
+(isa Kronos-TheTitan MaleHuman)
+(isa Rhea-TheTitaness FemaleHuman)
+(isa Olympian Group)
+(isa Hyperion-TheTitan MaleHuman)
+(isa Hebe-TheGoddess FemaleHuman)
+(isa Crius-TheTitan MaleHuman)
+(isa Leto-TheTitaness FemaleHuman)
+(isa Demeter-TheGoddess FemaleHuman)
+(isa Hermes-TheGod MaleHuman)
+(isa Hyperion-TheTitan God)
+(isa Persephone-TheGoddess God)
+(isa Hebe-TheGoddess God)
+(isa Atlas-TheTitan God)
+(isa Ares-TheGod MaleHuman)
+(isa Persephone-TheGoddess FemaleHuman)
+(isa Themis-TheTitaness FemaleHuman)
+(isa Hermes-TheGod God)
+(isa Zeus God)
+(isa Hestia-TheGoddess Virgin)
+(isa Themis-TheTitaness God)
+(isa Dionysus-TheGod God)
+(isa Atlas-TheTitan MaleHuman)
+(isa Ares-TheGod God)
+(isa Pegasus Horse)
+(isa Coeus-TheTitan MaleHuman)
+(isa Crius-TheTitan God)
+(isa God OrganismClassificationType)
+(isa Zeus MaleHuman)
+(isa Hephaestus-TheGod God)
+(isa Artemis-TheGoddess Virgin)
+(isa Dionysus-TheGod MaleHuman)
+(isa Coeus-TheTitan God)
+(isa Phoebe-TheTitaness FemaleHuman)
+(isa Hephaestus-TheGod MaleHuman)
+(isa Athena-TheGoddess Virgin)
+(isa Uranus-TheGod God)
+(isa Iapetus-TheTitan MaleHuman)
+(isa Pegasus WhiteColor)
+(isa Hestia-TheGoddess FemaleHuman)
+(isa Phoebe-TheTitaness God)
+(isa Apollo-God God)
+(isa Uranus-TheGod MaleHuman)
+(isa Iapetus-TheTitan God)
+(isa Eos-TheTitaness FemaleHuman)
+(isa Artemis-TheGoddess God)
+(isa Poseidon-TheGod God)
+(isa Titan Group)
+(isa Hestia-TheGoddess God)
+(isa Apollo-God MaleHuman)
+(isa Thia-TheTitaness FemaleHuman)
+(isa Hades-TheGod MaleHuman)
+(isa Eos-TheTitaness God)
+(isa Artemis-TheGoddess FemaleHuman)
+(isa Poseidon-TheGod MaleHuman)
+(isa Dione-TheTitaness God)
+(isa Hera-TheGoddess FemaleHuman)
+(isa Thia-TheTitaness God)
+(isa Hades-TheGod God)
+(isa Tethys-TheTitaness God)
+(isa Dione-TheTitaness FemaleHuman)
+(isa Prometheus-TheTitan MaleHuman)
+(isa Aphrodite-TheGoddess God)
+(isa Kronos-TheTitan God)
+(isa Mnemosyne-TheTitaness FemaleHuman)
+(isa Tethys-TheTitaness FemaleHuman)
+(isa Athena-TheGoddess God)
+(isa Hera-TheGoddess God)
+(isa Gaia-TheGoddess God)
+(isa Mnemosyne-TheTitaness God)
+(isa Prometheus-TheTitan God)
+(isa Aphrodite-TheGoddess FemaleHuman)
+(isa Rhea-TheTitaness God)
+(isa Athena-TheGoddess AdultFemaleHuman)
+(isa Gaia-TheGoddess FemaleHuman)
+(isa Leto-TheTitaness God)
+(isa Demeter-TheGoddess God)
+(comment Hera-TheGoddess "She is the sister and spouse of #$Zeus.  Although she has the distinction of being the queen of heaven; she is continuously at odds with the lovers of #$Zeus and the children he had with them.  She is the patron of married women and is known for her jealousy.")
+(comment Kronos-TheTitan "The ruler of the titans and the father of many of the Olympian gods.  He was eventually overthrown by #$Zeus.  He was the counterpart of the Roman Saturn.")
+(comment Dione-TheTitaness "A Titaness who mated with Zeus and
+
+ gave a birth to #$Aphrodite-TheGoddess.")
+(comment Hades-TheGod "Hades is a Greek god and a son of #$Kronos-TheTitan.  He was allotted the dominion of the underworld, or the place where the shades of the dead reside.  He abducted #$Persephone-TheGoddess from #$Demeter-TheGoddess.")
+(comment Tethys-TheTitaness "A Titaness who was married to 
+
+#$Oceanus-TheTitan.  According to Greek myth, she nursed and protected
+
+#$Hera-TheGoddess during the Titanomachy.")
+(comment Poseidon-TheGod "Poseidon, the Greek god, is the son of #$Kronos-TheTitan and the brother of #$Zeus and #$Hades-TheGod.  Also known as the earth-shaker, he was given the dominion of the sea; just as Zeus got the sky and Hades the Underworld. He was the first to concern himself with seafaring and the first to tame horses.")
+(comment Artemis-TheGoddess "A Greek goddess devoted to hunting.  She discovered how to effect the healing of young children and the foods which are suitable to the nature of babes.  Artemis is the daughter of #$Zeus and Leto; her brother is #$Apollo-God.  Artemis remained a virgin and protects the sanctity of childhood.  She is the patron of midwives and women undergoing childbirth.")
+(comment Eos-TheTitaness "Eos, a Titaness, is also Dawn.  After she
+
+had an affair with #$Ares-TheGod, #$Aphrodite-TheGoddess made her 
+
+perpetually in love.")
+(comment Thia-TheTitaness "A Titaness who is also called
+
+ Euryphaessa.  She was married to #$Hyperion-TheTitan.  For her 
+
+sake men set a stamp upon gold and use it as current coin.")
+(comment Athena-TheGoddess "The Greek goddess of war, handicraft, and wisdom, counterpart of the Roman Minerva.")
+(comment Hestia-TheGoddess "She is a Greek goddess and the daughter of #$Kronos-TheTitan.  Her name means 'hearth' and she never leaves home or gets involved in the affairs of men.  Hestia also remained a virgin.")
+(comment Titan "The Titans are a group of gods in Greek mythology who descended from #$Uranus-TheGod and #$Gaia-TheGoddess and rose to ruling the heavens under the leadership of #$Kronos-TheTitan.  However, their reign was ended by a rebellion of younger gods known as the #$Olympians, who were also
+
+descendents of the Titans.  The war between the Titans and the Olympians
+
+is called the Titanomachy.  After the Titans lost, they were confined 
+
+to a realm beneath Hades, known as Tartarus.")
+(comment Iapetus-TheTitan "A Titan who is the father of #$Atlas-TheTitan.")
+(comment Uranus-TheGod "Uranus, or sky, is the son of
+
+ #$Gaia-TheGoddess and eventually became her lover.  He was
+
+the first ruler of the universe.  He sired the #$Titans, but oppressed
+
+them because he feared his eventual overthrow.  #$Kronos-TheTitan avenged
+
+the Titans by castrating Uranus and usurping rule over the universe.")
+(comment Phoebe-TheTitaness "A Titaness who was married to #$Coeus-TheTitan.  
+
+She was the mother of #$Leto-TheGoddess.")
+(comment Hephaestus-TheGod "Hephaestus is the Greek god of the smiths. He discovered the ways of working iron, copper, gold, silver, and everything else which requires fire for working.")
+(comment Coeus-TheTitan "A Titan who is the father of Leto.")
+(comment Dionysus-TheGod "He is a Greek god and the son of #$Zeus and the mortal woman, Semele.  This is a god who gives pleasure to mankind: he discovered honey and the vine and its cultivation. Dionysus was attended by satyrs and maenads, whom he formed into an army, making a campaign over all the inhabited world as far as India.")
+(comment Themis-TheTitaness "The Titaness Themis introduced the ordinances which concern the gods and instructed men in the
+
+   ways of obedience to laws and peace.")
+(comment Apollo-God "In Greek mythology, Apollo is the god of art, music and poetry, and is the archetype of manly beauty.")
+(comment Crius-TheTitan "A Titan and son of Uranus and Gaia.")
+(comment Pegasus "Pegasus is a winged horse in Greek mythology.")
+(comment Ares-TheGod "Ares, the Greek god is the son of #$Zeus and #$Hera-TheGoddess, and is the lover of #$Aphrodite-TheGoddess.  He loves to wage war, but is fickle about which side he favors.  His personality is generally cruel and unimaginative.")
+(comment Atlas-TheTitan "#$Atlas-TheTitan worked out the science
+
+ of astrology and discovered the spherical nature of the stars.
+
+ However, he is best known for bearing on his shoulders the pillars
+
+ which keep earth and heaven apart. This burden, a heavy one and
+
+ difficult to grasp, is the punishment #$Zeus imposed on him for
+
+ having been the leader of the #$Titans during their war against the
+
+ #$Olympians.  And Atlas, they say, though pre-eminent in strength,
+
+ moans as he holds the vault of the sky on his back.")
+(comment Hermes-TheGod "Hermes, a Greek god, is the messenger of #$Zeus and the herald of the gods.  He is the son of #$Zeus and Maia.  Hermes is also known as the robber and cattle driver, the prince of tricksters, the thief at the gates, the bringer of dreams, the patron of travellers, and the governor of the tongue and the guide of intelligent speech.")
+(comment Hebe-TheGoddess "She is a Greek goddess and the daughter of #$Zeus and #$Hera-TheGoddess.  Hebe, who some have called Ganymeda, is Youth. She is the cup-bearer in Heaven and pours the nectar to the gods when they are assembled. At times she does other things too, like helping #$Hera-TheGoddess to prepare her chariot, or bathing #$Ares-TheGod after a battle. Hebe married Heracles after he obtained immortality.")
+(comment Persephone-TheGoddess "She is a Greek goddess and the daughter of #$Zeus and #$Demeter-TheGoddess.  Persephone is the Queen of the Underworld. She was carried off by Hades-TheGod and because of her eating a seed of a pomegranate in the Underworld had to divide her time between this and the upper world.")
+(comment Hyperion-TheTitan "Hyperion, the Titan, has been identified with the 
+
+sun. He is said to have been the first to understand the movement of
+
+ the sun, moon and stars.")
+(comment Olympian "The Olympians are a group of gods in Greek mythology who live in the House of Olympus, which sometimes means heaven but is also a mountain in in Pieria, a part of Thessaly in northern Greece. The Olympian gods, presided by #$Zeus, came to rule the universe after they overthrew the Titans. The gods, being immortal, neither eat bread nor drink wine, wherefore they are also  bloodless. Instead they drink and eat nectar and ambrosia and their blood is called Ichor.")
+(comment Demeter-TheGoddess "Demeter is a Greek goddess and the daughter of #$Kronos-TheTitan.  She is also the mother of #$Persephone-TheGoddess.  Demeter is the goddess of fertility, the mother of the corn. She was the first to gather the corn, prepare and preserve it, and to instruct mankind how to sow it.")
+(comment Leto-TheTitaness "Because she was the lover of #$Zeus,
+
+ she was hunted over the whole earth by #$Hera-TheGoddess, until she
+
+ came to Delos where she gave birth to #$Apollo-God and 
+
+#$Artemis-TheGoddess.")
+(comment Zeus "Zeus was allotted the dominion of the sky after
+
+ having waged war against Cronos and the #$Titans.  Zeus surpasses all others in spirit, wisdom and justice. He prevails upon good men by persuasion, intimidating the evil by punishment. Zeus, some say, caused the Trojan War, so
+
+ that the load of death might empty the world. Zeus got the thunderbolt
+
+, his ultimate weapon, from the cyclopes, and an eagle brings back the thunderbolts which Zeus has flung.")
+(comment Rhea-TheTitaness "A daughter of #$Uranus-TheGod and #$Gaia-TheGoddess.  She beacame the 
+
+spouse of #$Kronos-TheTitan and was the mother of the #$Olympians.  She
+
+eventually helped #$Zeus overthrow the #$Titans.")
+(comment Oceanus-TheTitan "Oceanus, one of the Titans,
+
+ is sometimes considered to be at the origin of all things.
+
+ This is the god of the backward-flowing river Ocean, which bounds
+
+ the earth and from which all rivers flow and every sea, and all
+
+ the springs and wells.  #$Tethys-TheTitaness was his wife.")
+(comment Mnemosyne-TheTitaness "A Titaness.  She is also memory and the mother of the Muses. She discovered the uses of the power of reason and gave a designation to every object.")
+(comment Gaia-TheGoddess "Gaia is the Earth. 
+
+She is the offspring of Chaos or comes into being after it.
+
+She is the mother of the Cyclopes and the #$Titans.")
+(comment Prometheus-TheTitan "Prometheus, a Titan,  moulded men
+
+ out of water and earth and gave them also fire, which, unknown
+
+ to #$Zeus, he had hidden in a stalk of fennel. But when Zeus learned
+
+ of it, he ordered #$Hephaestus-TheGod to nail his body to Mount 
+
+Caucasus, which he did with the help of Cratos and Bia, but some 
+
+say it was #$Hermes-TheGod who nailed Prometheus. On it Prometheus was
+
+ kept bound for many years. Every day an eagle swooped on him and
+
+ devoured the lobes of his liver, which grew by night as much as the
+
+ eagle had devoured during the day. But when Heracles came
+
+ to Caucasus he shot the eagle and released Prometheus.")

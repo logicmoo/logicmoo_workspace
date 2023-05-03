@@ -1,0 +1,114 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qualitative-rules.lsp
+;;;;    System: Cmmpanions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:32:34
+;;;;   Purpose: Inferences about qualitative values
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QRDerivativeRulesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Time-varying quantities -- detection thereof
+
+;;;; N.B. These are okay as far as they go, but they don't actually detect when something
+;;;; does have a temporal dependence, because they don't recognize that case.  
+;;;; Not clear what the conventions are for that, which is why it has been left out.
+
+(<== (freeOfTimeVaryingParameters ?exp)
+     (isa ?exp RealNumber))
+
+(<== (freeOfTimeVaryingParameters ?exp)
+     (isa ?exp NumericalValueWithUnits))
+
+(<== (freeOfTimeVaryingParameters ?exp)
+     (valueOf ?exp ?value)
+     (freeOfTimeVaryingParameters ?value))
+
+;;;(chainerContains (ChainerFn QMOutcomeChainer)
+;;;                 (<== (freeOfTimeVaryingParameters ?exp)
+;;;                      (algebraParametersOf ?exp ?parameters)
+;;;                      (everySatisfies ?var ?parameters
+;;;                                      (and (valueOf ?var ?var-value)
+;;;                                           (freeOfTimeVaryingParameters ?var-value)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Figuring out qualitative distinctions
+
+(<== (constantThroughoutEvent-Fluent ?q ?e)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (valueOf (MeasurementAtFn ?q ?e) ?v)
+     (freeOfTimeVaryingParameters ?v))
+
+;; Tying amounts to derivatives
+
+(<== (increasesThroughoutEvent-Fluent ?q ?e)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (derivativesOfFunction ?q ?q-d)
+     (positiveThroughoutEvent-Fluent ?q-d ?e))
+
+(<== (decreasesThroughoutEvent-Fluent ?q ?e)
+     (derivativesOfFunction ?q ?q-d)
+     (negativeThroughoutEvent-Fluent ?q-d ?e))
+
+(<== (constantThroughoutEvent-Fluent ?q ?e)
+     (derivativesOfFunction ?q ?q-d)
+     (zeroThroughoutEvent-Fluent ?q-d ?e))
+
+;;; Kludge.  Current Cyc vocabulary doesn't seem to permit a clean way of
+;;; doing this.
+
+(<== (derivativesOfFunction ((QPQuantityFn Speed) ?obj)
+                            ((QPQuantityFn Acceleration) ?obj))
+     (groundExpression ?obj))
+
+;;; These methods are for the simple case of constants.
+;;; If something does vary over time, it still might be 
+;;; of constant sign over an interval, but we won't be able
+;;; to determine that without more algebraic sophistication.
+
+(<== (positiveThroughoutEvent-Fluent ?q ?e)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (valueOf (MeasurementAtFn ?q ?e) ?v)
+     (freeOfTimeVaryingParameters ?v)
+     (isa ?v PositiveNumber))
+                 
+(<== (negativeThroughoutEvent-Fluent ?q ?e)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (valueOf (MeasurementAtFn ?q ?e) ?v)
+     (freeOfTimeVaryingParameters ?v)
+     (isa ?v NegativeNumber))
+
+(<== (zeroThroughoutEvent-Fluent ?q ?e)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (valueOf (MeasurementAtFn ?q ?e) ?v)
+     (freeOfTimeVaryingParameters ?v)
+     ;; Okay, this is kind of a hack.  But it works.
+     (isa ?v NonNegativeNumber)
+     (isa ?v NonPositiveNumber))
+
+(<== (nonZeroThroughoutEvent-Fluent ?q ?e)
+     (positiveThroughoutEvent-Fluent ?q ?e))
+
+(<== (nonZeroThroughoutEvent-Fluent ?q ?e)
+     (negativeThroughoutEvent-Fluent ?q ?e))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Speed Rules
+
+(<== (nonZeroThroughoutEvent-Fluent ((QPQuantityFn Speed) ?obj) ?event)
+     (directionOfTranslation-Throughout ?event ?dir)
+     (primaryObjectMoving ?event ?obj))
+
+(<== (zeroThroughoutEvent-Fluent ((QPQuantityFn Speed) ?obj) ?event)
+     (objectStationary (StartFn ?event) ?object)
+     (zeroThroughoutEvent-Fluent ((QPQuantityFn Acceleration) ?obj) ?event))
+
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

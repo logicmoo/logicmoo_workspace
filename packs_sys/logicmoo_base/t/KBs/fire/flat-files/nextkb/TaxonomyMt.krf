@@ -1,0 +1,11 @@
+(in-microtheory TaxonomyMt)
+
+(isa TheCycOntology ConceptFilter)
+(isa FederalDepositInsuranceCorporation (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))
+(isa FederalHousingAdministration (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))
+(isa FinancialServicesAuthority-UK (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))
+(isa SmallBusinessAdministration (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))
+(isa SecuritiesAndExchangeCommission (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))
+(isa RuralHousingService (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))
+(isa OccupationalSafetyAndHealthAdministration (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))
+(isa FederalTradeCommission (CollectionIntersection2Fn InvestmentRelatedThing RegulatoryAgency))

@@ -1,0 +1,78 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: value-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:19:51
+;;;;   Purpose: Inferences concerning values of parameters
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Batch value availability
+;;;
+;;; We need to extract all the values we can up front, to reduce going back and
+;;; re-deriving the same values over and over again.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; MEK: It is debatable when to do consistence checking 9-5-06
+;;; I currently think we should do it after solving each equation
+
+;; If we've solved it already, make the value available.
+(<== (valueOf ?quantity ?ret-value)
+     (solveForNumericalValue ?quantity ?value ?equation-set)
+     (groundExpression ?value)
+     (consistentValueByValue ?quantity ?value ?ret-value))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Propagating information across cotemporal events
+
+(<== (valueOf (MeasurementAtFn ?q ?e1) ?v)
+     (cotemporal ?e1 ?e2)
+     (different ?e1 ?e2)
+     (valueOf (MeasurementAtFn ?q ?e2) ?v)
+     ;; Paranoid
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q)))
+
+(<== (cotemporal ?e1 ?e2)
+     (cotemporal ?e2 ?e1))
+
+(<== (increasesThroughoutEvent-Fluent ?q ?e1)
+     (cotemporal ?e1 ?e2)
+     (different ?e1 ?e2)
+     (increasesThroughoutEvent-Fluent ?q ?e2))
+
+(<== (decreasesThroughoutEvent-Fluent ?q ?e1)
+     (cotemporal ?e1 ?e2)
+     (different ?e1 ?e2)
+     (decreasesThroughoutEvent-Fluent ?q ?e2))
+
+(<== (constantThroughoutEvent-Fluent ?q ?e1)
+     (cotemporal ?e1 ?e2)
+     (different ?e1 ?e2)
+     (constantThroughoutEvent-Fluent ?q ?e2))
+
+(<== (zeroThroughoutEvent-Fluent ?q ?e1)
+     (cotemporal ?e1 ?e2)
+     (different ?e1 ?e2)
+     (zeroThroughoutEvent-Fluent ?q ?e2))
+
+(<== (positiveThroughoutEvent-Fluent ?q ?e1)
+     (cotemporal ?e1 ?e2)
+     (different ?e1 ?e2)
+     (positiveThroughoutEvent-Fluent ?q ?e2))
+
+(<== (negativeThroughoutEvent-Fluent ?q ?e1)
+     (cotemporal ?e1 ?e2)
+     (different ?e1 ?e2)
+     (negativeThroughoutEvent-Fluent ?q ?e2))
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

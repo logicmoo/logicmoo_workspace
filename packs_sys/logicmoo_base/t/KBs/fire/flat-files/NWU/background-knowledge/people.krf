@@ -1,0 +1,454 @@
+;;;
+;;; people.meld
+;;;
+
+;;; Some people definitions from current events
+
+(in-microtheory PeopleDataMt)
+
+
+(isa BillGates MaleHuman)
+(isa BillGates FamousHuman)
+(isa BillGates Founder-Entrepreneur)
+(isa StevenJobs MaleHuman)
+(isa StevenJobs FamousHuman)
+(isa StevenJobs Individual)
+(isa StevenJobs Cofounder-Entrepreneur)
+(isa StevenJobs Deceased)
+(isa SteveWozniak Cofounder-Entrepreneur)
+(isa ElonMusk-Person Founder-Entrepreneur)
+(isa ElonMusk-Person FamousHuman)
+(isa ElonMusk-Person Individual)
+(isa GeorgeWBush MaleHuman)
+(isa GeorgeWBush FamousHuman)
+(isa LauraBush-Person FemaleHuman)
+(isa LauraBush-Person Individual)
+(isa JennaBush-Teacher FemaleHuman)
+(isa JennaBush-Teacher Individual)
+(isa BarbaraPBush-Person FemaleHuman)
+(isa BarbaraPBush-Person Individual)
+(isa BarackObama Individual)
+(isa BarackObama MaleHuman)
+(isa BarackObama FamousHuman)
+(isa MichelleObama-FirstLady FemaleHuman)
+(isa MichelleObama-FirstLady FamousHuman)
+(isa MichelleObama-FirstLady Individual)
+(isa SashaObama-Person FemaleHuman)
+(isa MaliaObama-Person FemaleHuman)
+(isa JosephBiden MaleHuman)
+(isa DonaldTrump Individual)
+(isa DonaldTrump MaleHuman)
+(isa DonaldTrump FamousHuman)
+(isa DonaldTrump (FormerFn (SubcollectionOfWithRelationFromTypeFn TelevisionStar televisionActors RealityTVShow)))
+(isa MikePence MaleHuman)
+(isa MikePence FamousHuman)
+(isa MikePence Individual)
+(isa IvankaTrump-Person Individual)
+(isa IvankaTrump-Person FemaleHuman)
+(isa IvankaTrump-Person FamousHuman)
+(isa IvankaTrump-Person BusinessPerson)
+(isa DonaldTrumpJr MaleHuman)
+(isa DonaldTrumpJr-Person Individual)
+(isa DonaldTrumpJr-Person BusinessPerson)
+(isa EricTrump-Person MaleHuman)
+(isa EricTrump-Person Individual)
+(isa EricTrump-Person BusinessPerson)
+(isa MarlaMaples-Actor FemaleHuman)
+(isa MarlaMaples-Actor Individual)
+(isa TiffanyTrump-Person FemaleHuman)
+(isa TiffanyTrump-Person Individual)
+(isa MelaniaTrump-Person FemaleHuman)
+(isa MelaniaTrump-Person Individual)
+(isa MelaniaTrump-Person FamousHuman)
+(isa BarronTrump-Person MaleHuman)
+(isa BarronTrump-Person Individual)
+(isa BarronTrump-Person FamousHuman)
+(isa JaredKushner-Person MaleHuman)
+(isa JaredKushner-Person FamousHuman)
+(isa JaredKushner-Person Individual)
+(isa SteveBannon-Person MaleHuman)
+(isa SteveBannon-Person FamousHuman)
+(isa SteveBannon-Person Individual)
+(isa RexTillerson-Person MaleHuman)
+(isa RexTillerson-Person FamousHuman)
+(isa RexTillerson-Person Individual)
+(isa RexTillerson-Person Diplomat)
+
+(occupation BillGates Philanthropist)
+(formerOccupation BillGates (SubcollectionOfWithRelationToFn ChiefExecutiveOfficer affiliatedWith MicrosoftInc))
+(formerOccupation StevenJobs (SubcollectionOfWithRelationToFn ChiefExecutiveOfficer affiliatedWith AppleInc))
+
+(birthDate SteveWozniak (YearFn 1950))
+(birthDate BillGates (YearFn 1955))
+(birthDate StevenJobs (YearFn 1955))
+
+(firstName ElonMusk-Person "Elon")
+(middleName ElonMusk-Person "Reeve")
+(familyName ElonMusk-Person "Musk")
+(birthDate ElonMusk-Person (YearFn 1971))
+(occupation ElonMusk-Person (SubcollectionOfWithRelationToFn ChiefExecutiveOfficer affiliatedWith SpaceX))  ; don't think SpaceX or Tesla are defined
+(occupation ElonMusk-Person (SubcollectionOfWithRelationToFn ChiefExecutiveOfficer affiliatedWith TeslaInc))  ; don't think SpaceX or Tesla are defined
+(originallyFromRegion ElonMusk-Person CityOfPretoriaSouthAfrica)
+
+(firstName JeffBezos-Person "Jeff")
+(familyName JeffBezos-Person "Bezos")
+(occupation JeffBezos-Person (SubcollectionOfWithRelationToFn ChiefExecutiveOfficer affiliatedWith Amazon-CommercialOrganization))
+(birthDate JeffBezos-Person (YearFn 1964))
+
+(firstName MarkZuckerberg "Mark")
+(familyName MarkZuckerberg "Zuckerberg")
+(occupation MarkZuckerberg (SubcollectionOfWithRelationToFn ChiefExecutiveOfficer affiliatedWith FacebookTheCompany))
+(isa MarkZuckerberg (SubcollectionOfWithRelationFromTypeFn Person chairperson-OrganizationalRole BoardOfDirectors))
+(birthDate MarkZuckerberg (YearFn 1984))
+
+;;;
+;;; Presidents
+;;;
+
+(dateOfDeath AbrahamLincoln (DayFn 14 (MonthFn April (YearFn 1865))))
+(birthDate AbrahamLincoln (DayFn 12 (MonthFn February (YearFn 1809))))
+(isa AssassinationOfLincoln AssassinatingSomeone)
+(isa AssassinationOfLincoln (KillingByMeansOfFn Gun))
+(subEvents AssassinationOfLincoln DyingOfLincoln)
+(isa DyingOfLincoln Dying)
+(bodilyDoer DyingOfLincoln AbrahamLincoln)
+(dateOfEvent AssassinationOfLincoln (DayFn 14 (MonthFn April (YearFn 1865))))
+(agentAssassinated AssassinationOfLincoln AbrahamLincoln)
+(perpetrator AssassinationOfLincoln JohnWilkesBooth-Person)
+(isa JohnWilkesBooth-Person MaleHuman)
+(isa JohnWilkesBooth-Person Individual)
+(firstName JohnWilkesBooth-Person "John")
+(middleName JohnWilkesBooth-Person "Wilkes")
+(familyName JohnWilkesBooth-Person "Booth")
+
+(holdsIn (TimeIntervalBetweenFn 
+           (MonthFn March (YearFn 1861))
+           (DayFn 14 (MonthFn April (YearFn 1865))))
+   (presidentOfCountry UnitedStatesOfAmerica AbrahamLincoln))
+
+(birthDate JohnKennedy  (DayFn 29 (MonthFn May (YearFn 1917))))
+(dateOfDeath JohnKennedy (DayFn 22 (MonthFn November (YearFn 1963))))
+(isa AssassinationOfJFK AssassinatingSomeone)
+(isa AssassinationOfJFK (KillingByMeansOfFn Gun))
+(subEvents AssassinationOfJFK DyingOfJFK)
+(isa DyingOfJFK Dying)
+(bodilyDoer DyingOfJFK JohnKennedy)
+(dateOfEvent AssassinationOfJFK (DayFn 14 (MonthFn April (YearFn 1865))))
+(eventOccursAt AssassinationOfJFK CityOfDallasTX)
+(agentAssassinated AssassinationOfJFK JohnKennedy)
+(perpetrator AssassinationOfJFK LeeHarveyOswald)
+(isa LeeHarveyOswald MaleHuman)
+(isa LeeHarveyOswald Individual)
+(firstName LeeHarveyOswald "Lee")
+(middleName LeeHarveyOswald "Harvey")
+(familyName LeeHarveyOswald "Oswald")
+
+(holdsIn (TimeIntervalBetweenFn 
+           (MonthFn January (YearFn 1961))
+           (DayFn 22 (MonthFn November (YearFn 1963))))
+   (presidentOfCountry UnitedStatesOfAmerica JohnKennedy))
+
+
+(birthDate RonaldReagan (DayFn 6 (MonthFn February (YearFn 1911))))
+(dateOfDeath RonaldReagan (DayFn 5 (MonthFn June (YearFn 2004))))
+(isa AttemptedAssinationOfReagan (AttemptingFn AssassinatingSomeone))
+(intendedVictim AttemptedAssassinationOfReagan RonaldReagan)
+(subEvents AttemptedAssassinationOfReagan InjuringOfReagan)
+(isa InjuringOfReagan IncurringAnInjury)
+(bodilyDoer InjuringOfReagan RonaldReagan)
+(injurers InjuringOfReagan JohnHinkleyJr)
+(hasInjuryMeans InjuringOfReagan ShootingAndHittingSomething)
+(dateOfEvent AttemptedAssassinationOfReagan (DayFn 23 (MonthFn March (YearFn 1981))))
+(perpetrator AttemptedAssassinationOfReagan JohnHinkleyJr)
+(isa JohnHinkleyJr Individual)
+(isa JohnHinkleyJr MaleHuman)
+(firstName JohnHinkleyJr "John")
+(lastName JohnHinkleyJr "Hinkley")
+
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 1981)))) 
+           (HourFn 11 (DayFn 20 (MonthFn January (YearFn 1989)))))
+ (presidentOfCountry UnitedStatesOfAmerica RonaldReagan))
+
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 1993)))) 
+           (HourFn 11 (DayFn 20 (MonthFn January (YearFn 2001)))))
+ (presidentOfCountry UnitedStatesOfAmerica BillClinton))
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 1993)))) 
+           (HourFn 11 (DayFn 20 (MonthFn January (YearFn 2001)))))
+ (vicePresidentOfCountry UnitedStatesOfAmerica AlGore))
+
+(competingAgents USPresidentialElection-2000 AlGore)
+(competingAgents USPresidentialElection-2000 GeorgeWBush)
+(runningMates GeorgeWBush DickCheney USPresidentialElection-2000)
+(winner-First USPresidentialElection-2000 GeorgeWBush)
+(winnerInConflict USPresidentialElection-2000 GeorgeWBush)
+
+(competingAgents USPresidentialElection-2004 JohnKerry)
+(competingAgents USPresidentialElection-2004 GeorgeWBush)
+(winner-First USPresidentialElection-2004 GeorgeWBush)
+(winnerInConflict USPresidentialElection-2004 GeorgeWBush)
+
+(successorInPosition GeorgeWBush BillClinton 
+   President-HeadOfGovernmentOrHeadOfState UnitedStatesOfAmerica)
+
+(successorInPosition BarackObama GeorgeWBush  
+   President-HeadOfGovernmentOrHeadOfState UnitedStatesOfAmerica)
+
+(successorInPosition DonaldTrump BarackObama   
+   President-HeadOfGovernmentOrHeadOfState UnitedStatesOfAmerica)
+   
+;;; Federal Occupations:
+;;; --------------------
+;;; Ambassador
+;;; Minister-Diplomatic
+;;; MinisterOfAgriculture
+;;; MinisterOfDefense
+;;; MinisterOfEnergy
+;;; MinisterOfForeignAffairs
+;;; USSecretaryOfCommerce
+;;; USSecretaryOfDefense
+;;; USSecretaryOfHomelandSecurity
+;;; USSecretaryOfState-Federal
+;;; USStateSecretaryOfState
+;;; WhiteHouseChiefOfStaff
+;;; WhiteHousePressSecretary
+
+   
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2001)))) 
+           (HourFn 11 (DayFn 20 (MonthFn January (YearFn 2009)))))
+ (presidentOfCountry UnitedStatesOfAmerica GeorgeWBush))
+ 
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2001)))) 
+           (HourFn 11 (DayFn 20 (MonthFn January (YearFn 2009)))))
+ (vicePresidentOfCountry UnitedStatesOfAmerica DickCheney))
+
+(holdsIn (TimeIntervalInclusiveFn (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2009)))) Now)
+   (formerOccupation GeorgeWBush UnitedStatesPresident))
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (DayFn 3 (MonthFn January (YearFn 2001)))
+           (DayFn 21 (MonthFn January (YearFn 2009))))
+ (occupation HillaryClinton USSenator))
+
+(holdsIn (TimeIntervalInclusiveFn
+           (DayFn 21 (MonthFn January (YearFn 2009))) Now)
+ (formerOccupation HillaryClinton USSenator))
+
+(holdsIn (TimeIntervalInclusiveFn
+           (DayFn 21 (MonthFn January (YearFn 2009)))
+           (DayFn 1 (MonthFn February (YearFn 2013))))
+ (occupation HillaryClinton USSecretaryOfState-Federal))
+
+(holdsIn (TimeIntervalInclusiveFn
+           (DayFn 1 (MonthFn February (YearFn 2013))) Now)
+ (formerOccupation HillaryClinton USSecretaryOfState-Federal))
+ 
+(holdsIn (TimeIntervalInclusiveFn
+           (DayFn 1 (MonthFn February (YearFn 2013)))
+           (DayFn 20 (MonthFn January (YearFn 2017))))
+ (occupation JohnKerry USSecretaryOfState-Federal))
+ 
+(holdsIn (TimeIntervalInclusiveFn (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2017)))) Now)
+   (formerOccupation JohnKerry USSecretaryOfState-Federal))
+ 
+;; No collection for Secretary of State?  USSecretaryOfState-Federal
+ 
+(firstName HillaryClinton "Hillary")
+(middleName HillaryClinton "Rodham")
+(familyName HillaryClinton "Clinton")
+
+(firstName BarackObama "Barack")
+(middleName BarackObama "Hussein")
+(familyName BarackObama "Obama")
+
+(competingAgents USPresidentialElection-2008 BarackObama)
+(competingAgents USPresidentialElection-2008 JohnMcCain)
+(runningMates BarackObama JosephBiden USPresidentialElection-2008)
+(winner-First USPresidentialElection-2008 BarackObama)
+(winnerInConflict USPresidentialElection-2008 BarackObama)
+
+(competingAgents USPresidentialElection-2012 BarackObama)
+(competingAgents USPresidentialElection-2012 MittRomney-Politician)
+(runningMates BarackObama JosephBiden USPresidentialElection-2012)
+(winner-First USPresidentialElection-2012 BarackObama)
+(winnerInConflict USPresidentialElection-2012 BarackObama)
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2009))))
+           (HourFn 11 (DayFn 20 (MonthFn January (YearFn 2017)))))
+ (presidentOfCountry UnitedStatesOfAmerica BarackObama))
+
+(holdsIn (TimeIntervalInclusiveFn (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2009)))) Now)
+   (formerOccupation BarackObama USSenator))
+
+(holdsIn (TimeIntervalInclusiveFn (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2017)))) Now)
+   (formerOccupation BarackObama UnitedStatesPresident))
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2009))))
+           (HourFn 11 (DayFn 20 (MonthFn January (YearFn 2017)))))
+ (vicePresidentOfCountry UnitedStatesOfAmerica JosephBiden))
+
+(holdsIn (TimeIntervalInclusiveFn (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2009)))) Now)
+   (formerOccupation JosephBiden USSenator))
+   
+(holdsIn (TimeIntervalInclusiveFn (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2017)))) Now)
+   (formerOccupation JosephBiden UnitedStatesVicePresident))
+
+(firstName DonaldTrump "Donald")
+(middleName DonaldTrump "John")
+(familyName DonaldTrump "Trump")
+
+(competingAgents USPresidentialElection-2016 HillaryClinton)
+(competingAgents USPresidentialElection-2016 DonaldTrump)
+(runningMates DonaldTrump MikePence USPresidentialElection-2016)
+
+(winner-First USPresidentialElection-2016 DonaldTrump)
+(winnerInConflict USPresidentialElection-2016 DonaldTrump)
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2017)))) Now)
+ (presidentOfCountry UnitedStatesOfAmerica DonaldTrump))
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2017)))) Now)
+ (formerOccupation DonaldTrump BusinessPerson))  ; Hah!
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2017)))) Now)
+ (vicePresidentOfCountry UnitedStatesOfAmerica MikePence))
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 20 (MonthFn January (YearFn 2017)))) Now)
+ (formerOccupation MikePence USSenator))
+
+(holdsIn (TimeIntervalInclusiveFn 
+           (HourFn 12 (DayFn 1 (MonthFn February (YearFn 2017)))) 
+           (DayFn 31 (MonthFn March (YearFn 2018))))
+ (occupation RexTillerson USSecretaryOfState-Federal))
+ 
+;;;
+;;; Families
+;;;
+
+(spouse BillClinton HillaryClinton)
+(biologicalFather ChelseaClinton BillClinton)
+(biologicalMother ChelseaClinton HillaryClinton)
+
+(spouse GeorgeWBush LauraBush-Person)
+(biologicalFather GeorgeWBush GeorgeHWBush)
+(biologicalMother GeorgeWBush BarbaraBush)
+(biologicalFather JennaBush-Teacher GeorgeWBush)
+(biologicalMother JennaBush-Teacher LauraBush-Person)
+(biologicalFather BarbaraPBush-Person GeorgeWBush)
+(biologicalMother BarbaraPBush-Person LauraBush-Person)
+(twins-Fraternal BarbaraPBush-Person JennaBush-Teacher)
+
+(spouse BarackObama MichelleObama-FirstLady)
+(biologicalFather SashaObama-Person BarackObama)
+(biologicalMother SashaObama-Person MichelleObama-FirstLady)
+(biologicalFather MaliaObama-Person BarackObama)
+(biologicalFather MaliaObama-Person MichelleObama-FirstLady)
+(fullSiblings MaliaObama-Person SashaObama-Person)
+
+(spouse DonaldTrump MelaniaTrump-Person)
+(formerSpouse DonaldTrump MarlaMaples-Actor)
+(formerSpouse DonaldTrump IvanaTrump)
+(biologicalFather IvankaTrump-Person DonaldTrump)
+(biologicalMother IvankaTrump-Person IvanaTrump)
+(spouse IvankaTrump-Person JaredKushner-Person)
+(biologicalFather DonaldTrumpJr-Person DonaldTrump)
+(biologicalMother DonaldTrumpJr-Person IvanaTrump)
+(biologicalFather DonaldTrumpJr-Person DonaldTrump)
+(biologicalMother DonaldTrumpJr-Person IvanaTrump)
+(biologicalFather EricTrump-Person DonaldTrump)
+(biologicalMother EricTrump-Person IvanaTrump)
+(biologicalFather TiffanyTrump-Person DonaldTrump)
+(biologicalMother TiffanyTrump-Person MarlaMaples-Actor)
+(biologicalFather BarronTrump-Person DonaldTrump)
+(biologicalMother BarronTrump-Person MelaniaTrump-Person)
+
+(advisorFor DonaldTrump IvankaTrump-Person)
+(advisorFor DonaldTrump JaredKushner-Person)
+(advisorFor DonaldTrump SteveBannon-Person)
+(advisorFor DonaldTrump RexTillerson-Person)
+
+(birthDate GeorgeWBush (YearFn 1946))
+(birthDate JennaBush-Teacher (YearFn 1981))
+(birthDate BarbaraPBush-Person (YearFn 1981))
+
+(birthDate BarackObama (YearFn 1961))
+(birthDate MichelleObama-FirstLady (YearFn 1964))
+(birthDate MaliaObama-Person (YearFn 1998))
+(birthDate SashaObama-Person (YearFn 2001))
+
+(birthDate IvanaTrump (YearFn 1949))
+(birthDate DonaldTrump (YearFn 1946))
+(birthDate DonaldTrumpJr-Person (YearFn 1977))
+(birthDate IvankaTrump-Person (YearFn 1981))
+(birthDate JaredKushner-Person (YearFn 1981))
+(birthDate EricTrump-Person (YearFn 1984))
+(birthDate TiffanyTrump-Person (YearFn 1983))
+(birthDate BarronTrump-Person (YearFn 2006))
+(birthDate MarlaMaples-Actor (YearFn 1963))
+(birthDate MelaniaTrump-Person (YearFn 1970))
+(birthDate SteveBannon-Person (YearFn 1953))
+(birthDate RexTillerson (YearFn 1952))
+
+(fullSiblings DonaldTrumpJr-Person IvankaTrump-Person)
+(fullSiblings DonaldTrumpJr-Person EricTrump-Person)
+(halfSiblings DonaldTrumpJr-Person TiffanyTrump-Person)
+(halfSiblings DonaldTrumpJr-Person BarronTrump-Person)
+(halfSiblings IvankaTrump-Person TiffanyTrump-Person)
+(halfSiblings IvankaTrump-Person BarronTrump-Person)
+(halfSiblings EricTrump-Person TiffanyTrump-Person)
+(halfSiblings EricTrump-Person BarronTrump-Person)
+
+(originallyFromRegion DonaldTrump CityOfNewYorkNY)
+(originallyFromRegion IvanaTrump CzechRepublic)
+(originallyFromRegion MelaniaTrump-Person Yugoslavia)
+(isa MelaniaTrump-Person (FormerFn SlovenianPerson))
+(originallyFromRegion MikePence Indiana-State)
+
+(divorcedFrom DonaldTrump IvanaTrump)
+(divorcedFrom DonaldTrump MarlaMaples-Actor)
+
+
+(in-microtheory EANLU-Pnames :exclude-globals t)
+
+(indexedProperName (TheList michelle) obama MichelleObama-FirstLady)
+(indexedProperName (TheList) sasha SashaObama-Person)
+(indexedProperName (TheList sasha) obama SashaObama-Person)
+(indexedProperName (TheList) malia MaliaObama-Person)
+(indexedProperName (TheList malia) obama MaliaObama-Person)
+(indexedProperName (TheList mike) Pence MikePence)
+
+(indexedProperName (TheList) melania MelaniaTrump-Person)
+(indexedProperName (TheList melania) trump MelaniaTrump-Person)
+(indexedProperName (TheList) ivanka IvankaTrump-Person)
+(indexedProperName (TheList ivanka) trump IvankaTrump-Person)
+(indexedProperName (TheList jared) kushner JaredKushner-Person)
+(indexedProperName (TheList steve) bannon SteveBannon-Person)
+(indexedProperName (TheList rex) tillerson RexTillerson-Person)
+
+(indexedProperName (TheList) spacex SpaceX)
+(indexedProperName (TheList) tesla TeslaInc)
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa SpaceX Individual)
+(isa SpaceX PrivatelyHeldCorporation)
+(isa SpaceX HighTechManufacturingEnterprise)
+(isa SpaceX (ManufacturerFn Rocket-MultiStage))
+(isa TeslaInc Individual)
+(isa TeslaInc PubliclyHeldCorporation)
+(isa TeslaInc AutomobileManufacturingOrganization)
+(isa TeslaInc (ManufacturerFn ElectricCar))
+

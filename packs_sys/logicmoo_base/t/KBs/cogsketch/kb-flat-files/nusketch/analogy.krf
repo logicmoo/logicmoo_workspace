@@ -1,0 +1,173 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: analogy.meld
+;;;;    System: nuSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: June 25, 2008 15:52:12
+;;;;   Purpose: nuSketch-specific analogy-related definitions.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchAnalogyMt :exclude-globals t)
+
+(comment NuSketchAnalogyMt
+  "Contains nuSketch-specific analogy-related definitions.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ubiquitousForAnalogy
+
+(ubiquitousForAnalogy conceptualGroupGlyph)
+(ubiquitousForAnalogy connectedGlyphGroupTangentialConnection)
+(ubiquitousForAnalogy connectedGlyphGroupMember)
+
+(ubiquitousForAnalogy NuSketchLayer)
+(ubiquitousForAnalogy q-2D-orientation)
+(ubiquitousForAnalogy q-roundness)
+(ubiquitousForAnalogy rcc8-DC)
+
+(ubiquitousForAnalogy ArrowHeadFn)
+(ubiquitousForAnalogy ArrowTailFn)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; notForAnalogy
+
+(notForAnalogy inkLastModifiedTime)
+(notForAnalogy userRelationArgsLastAssertionTime)
+(notForAnalogy NuSketchSketchTimeFn)
+(notForAnalogy hasVisualRelation)
+(notForAnalogy hasRCC8Relation)
+(notForAnalogy glyphGraphEdgesFor)
+(notForAnalogy directionalSignature)
+(notForAnalogy nameString)
+(notForAnalogy prettyString)
+(notForAnalogy reminding)
+
+(notForAnalogy userRefusedAnswerFor)
+(notForAnalogy userSpecifiedConceptualRelnForBinaryVisualRelation)
+(notForAnalogy askConceptualForBinaryVisualRelation)
+(notForAnalogy conceptualRelationAskedForAlready)
+(notForAnalogy needVisualPositionalRelation)
+(notForAnalogy visualToConceptualSuggestedRelation)
+
+(notForAnalogy nonVisualFactTemplate)
+(notForAnalogy templateVarDef)
+(notForAnalogy templateListVarDef)
+(notForAnalogy nonVisualFactLastModified)
+
+(notForAnalogy VDiagramFn)
+(notForAnalogy SiteFn)
+(notForAnalogy vDiagramForApp)
+(notForAnalogy vDiagramForItem)
+(notForAnalogy voronoiFor)
+(notForAnalogy spatialRelationSpec)
+(notForAnalogy spatialRelationsFor)
+(notForAnalogy siteNear)
+(notForAnalogy vNear)
+(notForAnalogy siteAdjacent)
+(notForAnalogy vAdjacent)
+(notForAnalogy siteOutside)
+(notForAnalogy siteInside)
+(notForAnalogy siteLeftSide)
+(notForAnalogy siteRightSide)
+(notForAnalogy siteFront)
+(notForAnalogy siteBetween)
+(notForAnalogy vBetween)
+(notForAnalogy siteBehind)
+(notForAnalogy sameSubSketchGroupFor)
+(notForAnalogy siteTypeFor)
+
+(notForAnalogy qualitativeVectorBetween)
+(notForAnalogy overlappingParts)
+(notForAnalogy outsideNormal)
+(notForAnalogy distanceBetween)
+
+(notForAnalogy compassPositionalRelationFor)
+(notForAnalogy compassCentroidRelationFor)
+(notForAnalogy positionalRelationFor)
+(notForAnalogy entityCentroidOnPath)
+(notForAnalogy facingDirMakesSenseFor)
+(notForAnalogy facingDirection)
+(notForAnalogy facingDirLastModifiedTime)
+(notForAnalogy facingRelation)
+(notForAnalogy computeShapeRelationsFor)
+(notForAnalogy computeShapeAttributesFor)
+(notForAnalogy shapeRelationsComputed)
+
+(notForAnalogy nuSketchCaseID)
+(notForAnalogy nuSketchFileURL)
+(notForAnalogy notesFor)
+(notForAnalogy nuSketchCaseNotes)
+(notForAnalogy nuSketchCreationMachine)
+(notForAnalogy nuSketchCreator)
+(notForAnalogy subSketchRepresentsObject)
+(notForAnalogy subSketchGroupRepresentsObject)
+(notForAnalogy sketchRepresentsObject)
+(notForAnalogy activeSketchObject)
+(notForAnalogy justifiedBy)
+(notForAnalogy userAssertedRelation)
+(notForAnalogy sketchCreatedWithVersion)
+(notForAnalogy sketchModifiedWithVersion)
+(notForAnalogy inkLastModifiedTime)
+(notForAnalogy bundleLastModifiedTime)
+(notForAnalogy bboxLastModifiedTime)
+(notForAnalogy csysLastModifiedTime)
+(notForAnalogy entityTypesLastModifiedTime)
+(notForAnalogy nameStringLastModifiedTime)
+(notForAnalogy caseTransferLastModifiedTime)
+(notForAnalogy fromExternalApp)
+(notForAnalogy correspondsInMapping)
+(notForAnalogy caseFact)
+
+(notForAnalogy subSketchFor)
+(notForAnalogy subSketchGroupFor)
+(notForAnalogy sketchFor)
+(notForAnalogy subSketchGroupPertinent)
+(notForAnalogy subSketchGroupClonedFrom)
+(notForAnalogy sketchUsesCoordinateSystem)
+(notForAnalogy dimensionsOfCoordinateSystem)
+(notForAnalogy unitsForCoordinateSystem)
+(notForAnalogy eastingDistance)
+(notForAnalogy northingDistance)
+(notForAnalogy distancePerDegree)
+
+(notForAnalogy genlsInclusive)
+(notForAnalogy genlPredsInclusive)
+(notForAnalogy genlsTransitive)
+(notForAnalogy genlPredsTransitive)
+(notForAnalogy analogySuggestionFor)
+(notForAnalogy userCWA)
+
+(notForAnalogy composableFigureFor)
+(notForAnalogy composableFigureSpec)
+(notForAnalogy storedForm)
+(notForAnalogy referenceFigure)
+
+(notForAnalogy glyphRelation-arg)
+(notForAnalogy glyphRelation-userArg)
+(notForAnalogy glyphRepresentsRelation)
+(notForAnalogy relationDependsUponGlyphInk)
+
+(notForAnalogy UserIDFn)
+(notForAnalogy AnonUserIDFn)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; atomicAnalogyNat
+
+(atomicAnalogyNat GlyphFn)
+(atomicAnalogyNat AnnotationGlyphFn)
+(atomicAnalogyNat ConnectedGlyphGroupFn)
+(atomicAnalogyNat ContainedGlyphGroupFn)
+(atomicAnalogyNat GlyphConnectionGraphFn)
+(atomicAnalogyNat GlyphContainedGraphFn)
+(atomicAnalogyNat SketchFn)
+
+(atomicAnalogyNat AnalogySkolemFn)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

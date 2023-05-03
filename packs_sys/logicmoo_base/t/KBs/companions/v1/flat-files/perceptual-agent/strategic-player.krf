@@ -1,0 +1,530 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: strategic-player.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 30, 2014 17:02:01
+;;;;   Purpose: Exploit strategies 
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Maintain a view of active strategies for the relevant participants
+;;; and continuous quantitied goal activations.
+;;; Compute updates to goal activations based on state of the world and
+;;; state of the strategy activations (intent)
+;;; Strategies sequence & prioritize goals by manipulating their activation
+;;; Strategies are chosen as means of resolving goal tradeoffs.  Without a
+;;; tradeoff, there is no need to prioritize or pick a goal.
+
+;;; Different kinds of goal tradeoffs:
+;;; TotalAbruptTradeoff - at any given moment in time one goal must win.
+;;; PartialAbruptTradeoff - partial allocation between two goals is possible.
+;;; InitialPartialProgressiveTradeoff - Prioritize from first goal to second
+;;; DeferredPartialProgressiveTradeoff - Prioritize second goal first,
+
+;;; So progressive tradeoff strategies should have direct influences that
+;;; drive activation of the initial goal down and deferred goal up over time.
+
+;;; 1) update quantities in world model
+;;; 2) update quantities in strategy model
+;;; 3) update goal activations
+;;; 4) make decisions informed by goal priorities
+
+;;; Issues: 
+;;; We want to be able to plan abstractly, which argues for a common reprs
+;;; at different levels of abstraction.  Ie, a fractal representation. 
+;;; That's what QPT gives us.  We can have strategies for exerting an 
+;;; influence on a quantity, regardless of how abstract that quantity is.
+
+;;; new preds: 
+;;; goalDecomposition
+;;; goalActivation
+;;; activeModelFragmentsInMt
+
+;;; Decision Planning
+;;; This can be very expensive, since decideSlot invokes dynamic programming.
+;;; If it cannot identify attainable goals, it can spin its wheels a lot
+;;; before failing.
+(preconditionForMethod
+  (and ;(uninferredSentence
+       ;  (lookupOnly
+       ;    (ist-Information ?mt
+       ;      (currentlyFailing ?mt ?actor ?slot))))
+       (decideSlot ?mt ?actor ?slot ?action ?goal) ; This fails when we can't find a goal
+       (numAnswers 1
+         (lookupOnly
+           (ist-Information ?mt
+             (goalName ?goal ?goal-rep)))))
+  (methodForAction
+    (decide ?mt ?actor ?slot)
+    (actionSequence
+      (TheList
+        ?action
+        (doAgentPlan
+          (recordRationale ?mt ?action ?goal-rep))))))  ; Wait until after executing action to extract cmd num.
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (decide ?mt ?actor ?slot)
+    (actionSequence
+      (TheList
+        (resolveFailureToDecide ?mt ?actor ?slot)))))
+        
+(<== (preferInContext (decide ?mt ?actor ?slot) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 resolveFailureToDecide))
+
+;;; Need a default method to run when decideSlot fails.
+;;; It should try to decide another way, possibly by ruling out bad alternatives
+;;; and choosing randomly from among remainder, or by using CBR.
+
+(isa planStrategicGoalActions ComplexActionPredicate)
+(arity planStrategicGoalActions 2)
+(arg1Isa planStrategicGoalActions TimeInterval)
+(arg2Isa planStrategicGoalActions Microtheory)
+(comment planStrategicGoalActions "(planStrategicGoalActions ?when ?mt) is the entry point to planning at the beginning of a turn.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planStrategicGoalActions ?when ?mt)
+    (actionSequence
+      (TheList
+        (updateStrategyForGoalChanges ?when ?mt)
+        (doAgentPlan (assignAvailableActors ?when ?mt))))))
+        
+(isa updateStrategyForGoalChanges ComplexActionPredicate)
+(arity updateStrategyForGoalChanges 2)
+(arg1Isa updateStrategyForGoalChanges TimeInterval)
+(arg2Isa updateStrategyForGoalChanges Microtheory)
+(comment updateStrategyForGoalChanges "(updateStrategyForGoalChanges ?when ?mt) makes abstract strategy decisions based on newly activated or deactivated goals.")
+
+(preconditionForMethod
+  (and (ist-Information ?mt (followingTurn  ?prior-turn ?when))
+       (evaluate ?activations
+         (TheClosedRetrievalSetOf ?goal
+           (goalActivationsIn ?mt ?prior-turn ?goal)))
+       (evaluate ?deactivations
+         (TheClosedRetrievalSetOf ?goal
+           (goalDeactivationsIn ?mt ?prior-turn ?goal)))
+       (not (evaluate (TheSet) (SetOrCollectionUnion ?activations ?deactivations)))
+       )
+  (methodForAction
+    (updateStrategyForGoalChanges ?when ?mt)
+    (actionSequence
+      (TheList
+        (doAnnounce "activated goals in ~s: ~s" (?prior-turn ?activations))
+        (doAnnounce "deactivated goals in ~s: ~s" (?prior-turn ?deactivations))
+        ))))
+        
+;;; default method for when previousTurn fails:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (updateStrategyForGoalChanges ?when ?mt)
+    (actionSequence 
+      (TheList))))
+
+
+(<== (preferInContext (updateStrategyForGoalChanges ?when ?mt) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+(isa goalActivationsIn TernaryPredicate)
+(arity goalActivationsIn 3)
+(arg1Isa goalActivationsIn Microtheory)
+(arg2Isa goalActivationsIn CycLTerm)  ; a turn?
+(arg3Isa goalActivationsIn Goal)
+(comment goalActivationsIn "(goalActivationsIn ?mt ?turn ?goal) binds ?goal to goals activated during ?turn.")
+
+(<== (goalActivationsIn ?mt ?turn ?goal)
+     (ist-Information ?mt
+       (dateOfEvent (GoalActivationFn ?mt ?n) ?turn))
+     (ist-Information ?mt
+       (objectOfStateChange (GoalActivationFn ?mt ?n) ?goal)))
+
+(isa goalDeactivationsIn TernaryPredicate)
+(arity goalDeactivationsIn 3)
+(arg1Isa goalDeactivationsIn Microtheory)
+(arg2Isa goalDeactivationsIn CycLTerm)  ; a turn?
+(arg3Isa goalDeactivationsIn Goal)
+(comment goalDeactivationsIn "(goalDeactivationsIn ?mt ?turn ?goal) binds ?goal to goals deactivated during ?turn.")
+
+(<== (goalDeactivationsIn ?mt ?turn ?goal)
+     (ist-Information ?mt
+       (dateOfEvent (GoalDeactivationFn ?mt ?n) ?turn))
+     (ist-Information ?mt
+       (objectOfStateChange (GoalDeactivationFn ?mt ?n) ?goal)))
+
+(isa assignAvailableActors ComplexActionPredicate)
+(arity assignAvailableActors 2)
+(arg1Isa assignAvailableActors TimeInterval)
+(arg2Isa assignAvailableActors Microtheory)
+(comment assignAvailableActors "(assignAvailableActors ?when ?mt) assigns actor resources to pursuing the most important and appropriate goals.")
+
+;;; Action Planning:
+(preconditionForMethod
+  (evaluate ?assignable-actors
+    (SetToListFn 
+      (TheClosedRetrievalSetOf ?actor
+        (and (assignableActorOfType ?actor ?type)  ; This pred really should take the scenario!
+             (uninferredSentence
+               (busyActor ?actor))))))
+  (methodForAction
+    (assignAvailableActors ?when ?mt)
+    (actionSequence
+      (TheList
+        (doForEach ?actor ?assignable-actors (assignActor ?when ?mt ?actor))))))
+
+(isa assignActor ComplexActionPredicate)
+(arity assignActor 3)
+(arg1Isa assignActor TimeInterval)
+(arg2Isa assignActor Microtheory)
+(arg3Isa assignActor Agent-Generic)
+(comment assignActor "(assignActor ?when ?mt ?actor) selects an appropriate goal for an actor, plans for and executes it.")
+
+;;; Yes, this needs to be recursive.  We need to actually make decisions 
+;;; and execute them before moving on to the next actor.
+;;; To Consider: We now write out the reason why an actor (unit) was created
+;;; using the form(s):
+;;; (holdsIn <creation-event> (goalForActor <actor> <goal-name>) and
+;;; (holdsIn <creation-event> (intentForActor <actor> <achievable-clause>)
+;;; So to exploit this in a domain-independent way, we'd have to figure out
+;;; when the actor's startingDate was, look for it's creation event 
+;;; then, and look for the goal and intent then.
+;;; Alternatively, we might variablize the event, retrieve all intent
+;;; for the actor and sort after the fact.
+;;; Or: we keep an intent stack explicitly in the stategy table for 
+;;; each actor.  How to coordinate across actors, tho?
+(preconditionForMethod
+  (and (evaluate ?goals
+         (SortFn
+           (TheClosedRetrievalSetOf ?possible-goal
+             (possibleGoalAssignment ?mt ?actor ?possible-goal)) ; enumerate possibilities
+           greaterThan
+           (FunctionToArg 2 
+             (Kappa (?in ?out)
+               (and (goalActivation ?in ?percent)
+                    (unifies (Percent ?out) ?percent))))))
+        (partitionFirstCohort ?goals goalActivation ?top-goals ?rest-goals)) ; fail if there are no goals
+  (methodForAction
+    (assignActor ?when ?mt ?actor)
+    (actionSequence
+      (TheList
+        (assignActorToGoals ?when ?mt ?actor ?top-goals ?rest-goals)))))
+        
+(<== (preferInContext (assignActor ?when ?mt ?actor) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 assignActorToGoals))
+        
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (allFactsAllowed
+        (ist-Information ?mt 
+          (holdsIn ?whenever (intentForActor ?actor ?intent))))))
+  (methodForAction
+    (assignActor ?when ?mt ?actor)
+    (actionSequence
+      (TheList
+        (achieve ?intent)))))
+
+;;; No valid goal found, look for prototypical activity:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assignActor ?when ?mt ?actor)
+    (actionSequence
+      (TheList
+        (assignActorToTypicalActivity ?mt ?actor)))))
+        
+(<== (preferInContext (assignActor ?when ?mt ?actor) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq2 assignActorToTypicalActivity))
+
+(isa assignActorToGoals ComplexActionPredicate)
+(arity assignActorToGoals 5)
+(arg1Isa assignActorToGoals TimeInterval)
+(arg2Isa assignActorToGoals Microtheory)
+(arg3Isa assignActorToGoals Agent-Generic)
+(arg4Isa assignActorToGoals List)
+(arg5Isa assignActorToGoals List)
+(comment assignActorToGoals "(assignActorToGoal ?when ?mt ?actor ?top-goals ?rest-goals) searches for the best goal for actor to pursue.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assignActorToGoals ?when ?mt ?actor ?top-goals ?rest-goals)
+    (actionSequence
+      (TheList
+        (assignActionToGoals ?when ?mt ?actor ?top-goals)))))   ; needs to take care of bookkeeping as well as execution. 
+
+(preconditionForMethod
+  (and (different ?rest-goals (TheList))
+       (partitionFirstCohort ?rest-goals goalActivation ?goals ?remaining-goals))
+  (methodForAction
+    (assignActorToGoals ?when ?mt ?actor ?top-goals ?rest-goals)
+    (actionSequence
+      (TheList
+        (assignActorToGoals ?when ?mt ?actor ?goals ?remaining-goals)))))
+
+        
+(<== (preferInContext (assignActorToGoals ?when ?mt ?actor ?goals ?remaining-goals) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 assignActionToGoals))
+     
+(isa assignActionToGoals ComplexActionPredicate)
+(arity assignActionToGoals 4)
+(arg1Isa assignActionToGoals TimeInterval)
+(arg2Isa assignActionToGoals Microtheory)
+(arg3Isa assignActionToGoals Agent-Generic)
+(arg4Isa assignActionToGoals List)
+(comment assignActionToGoals "(assignActionToGoals ?when ?mt ?actor ?goals) picks the best action instantiation and attempts to plan for it.")
+
+(preconditionForMethod
+  (outsourcedOnly
+   (sortedActionPairs ?when ?mt ?actor ?goals ?sorted-pairs)) ; sorted-pairs is a list in order of increasing distance.
+  (methodForAction
+    (assignActionToGoals ?when ?mt ?actor ?goals)
+    (actionSequence
+      (TheList
+        (executeBestAction ?when ?mt ?actor ?sorted-pairs))))) ; actions are now sorted in appropriate search order
+
+(isa partitionFirstCohort QuaternaryPredicate)
+(arity partitionFirstCohort 4)
+(arg1Isa partitionFirstCohort List)
+(arg2Isa partitionFirstCohort BinaryPredicate)
+(arg3Isa partitionFirstCohort List)
+(arg4Isa partitionFirstCohort List)
+(comment partitionFirstCohort "(partitionFirstCohort ?input-list ?pred ?first-cohort ?rest-list) partitions sorted ?inputlist into the first cohort of elements with the same value of ?pred, and the remainder list.")
+
+(<== (partitionFirstCohort ?input-list ?pred ?first-cohort ?rest-list)
+     (different ?input-list (TheList))
+     (evaluate ?first (FirstInListFn ?input-list))
+     (?pred ?first ?value)
+     (evaluate ?rest (RestOfListFn ?input-list))
+     (nextValueListPos ?rest ?pred ?value 1 ?pos ?rest-list)
+     (evaluate ?first-cohort (SublistFromToFn ?input-list 1 ?pos)))
+     
+(isa nextValueListPos Predicate)
+(arity nextValueListPos 6)
+(comment nextValueListPos "(nextValueListPos ?input-list ?pred ?value ?current ?pos ?remainder) is a helper predicate that binds ?pos and ?remainder in order to find the first cohort of members in ?input-list, which is sorted wrt ?pred.")
+
+(<== (nextValueListPos ?input-list ?pred ?value ?current ?pos ?remainder)
+     (evaluate ?first (FirstInListFn ?input-list))
+     (?pred ?first ?value)
+     (evaluate ?rest (RestOfListFn ?input-list))
+     (evaluate ?next (PlusFn 1 ?current))
+     (nextValueListPos ?rest ?pred ?value ?next ?pos ?remainder))
+
+(<== (nextValueListPos (TheList) ?pred ?value ?current ?current (TheList)))
+(<== (nextValueListPos ?input-list ?pred ?value ?current ?current ?input-list)
+     (evaluate ?first (FirstInListFn ?input-list))
+     (?pred ?first ?other-value)
+     (different ?other-value ?value))
+
+(isa assignActorToTypicalActivity ComplexActionPredicate)
+(arity assignActorToTypicalActivity 2)
+(arg1Isa assignActorToTypicalActivity Microtheory)
+(arg2Isa assignActorToTypicalActivity Agent-Generic)
+(comment assignActorToTypicalActivity "(assignActorToTypicalActivity ?mt ?actor) attempts to find a prototypical activity for ?actor and set him to it.")
+
+(preconditionForMethod
+  (and (likelyActivityFor ?actor ?what)
+       (genls ?activity ?what)
+       (mapActivityToOperator ?actor ?activity ?operator))  ; may be domain-specific. uses indexedEffect
+  (methodForAction
+    (assignActorToTypicalActivity ?mt ?actor)
+    (actionSequence
+      (TheList
+        ?operator
+        (doRecord (ist-Information ?mt (defaultActivity ?actor ?activity)))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assignActorToTypicalActivity ?mt ?actor)
+    (actionSequence
+      (TheList
+        (doAnnounce "Unable to assign actor ~s" (?actor))
+        (recordAssignmentFailure ?mt ?actor)
+        ))))
+        
+(<== (preferInContext (assignActorToTypicalActivity ?mt ?actor) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 recordAssignmentFailure))
+
+(isa executeBestAction ComplexActionPredicate)
+(arity executeBestAction 4)
+(arg1Isa executeBestAction TimeInterval)
+(arg2Isa executeBestAction Microtheory)
+(arg3Isa executeBestAction Agent-Generic)
+(arg4Isa executeBestAction List)
+(comment executeBestAction "(executeBestAction ?when ?mt ?actor ?action-goal-pairs) iterated through actions in sorted order, trying each in turn until one succeeds or method fails.")
+
+(preconditionForMethod
+  (and (evaluate ?action-pair (FirstInListFn ?action-goal-pairs))
+       (unifies (?action ?goal) ?action-pair))
+  (methodForAction
+    (executeBestAction ?when ?mt ?actor ?action-goal-pairs)
+    (actionSequence
+      (TheList
+        (executePlan ?when ?mt ?actor ?goal ?action)))))
+
+(preconditionForMethod
+  (evaluate ?rest-action-pairs (RestOfListFn ?action-goal-pairs))
+  (methodForAction
+    (executeBestAction ?when ?mt ?actor ?action-goal-pairs)
+    (actionSequence
+      (TheList
+        (executeBestAction ?when ?mt ?actor ?rest-action-pairs)))))
+
+(<== (preferInContext (executeBestAction ?when ?mt ?actor ?action-goal-pairs) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 executePlan))
+
+;;; Also consider looking at process model (though complexTaskAchieves might be able to do that.)
+
+;;; We need executePlan to actually register intent.
+;;; It can't be responsible for executing a plan through to completion -
+;;; It can only execute until a unit runs out of move points, then it must
+;;; proceed on to the next unit.
+;;; Remember: No plan survives first contact with reality.
+
+(isa executePlan ComplexActionPredicate)
+(arity executePlan 5)
+(arg1Isa executePlan TimeInterval)
+(arg2Isa executePlan Microtheory)
+(arg3Isa executePlan Agent-Generic)
+(arg4Isa executePlan Goal)   ; now just the name
+(arg5Isa executePlan CycLTerm)
+(comment executePlan "(executePlan ?when ?mt ?actor ?goal ?action-sequence) handles executing and recording rationale.")
+
+;;; Case of singleton action
+;;; Should we support case where there's no actionSequence wrapper?
+(preconditionForMethod
+  (and (operatorFormulas ?task-pred ?action)
+       (isa ?task-pred SimpleActionPredicate)
+       (inferredArguments ?action ?inst-action)   ; outsourced
+       (groundExpression ?inst-action)
+       (numAnswers 1
+         (lookupOnly
+           (ist-Information ?mt
+             (goalName ?goal ?goal-rep)))))
+  (methodForAction
+    (executePlan ?when ?mt ?actor ?goal ?action)
+    (actionSequence
+      (TheList
+        (recordIntent ?when ?mt ?actor ?goal-rep ?action)
+        ?inst-action
+        (doAgentPlan                                      ; not so much a cut as a deferral until after execution,
+          (recordRationale ?mt ?inst-action ?goal-rep))   ; so cmd counter values will be updated. ?goal is a goal name.
+        ))))
+        
+(preconditionForMethod
+  (and (operatorFormulas ?task-pred ?action)
+       (isa ?task-pred SimpleActionPredicate)
+       (numAnswers 1
+         (lookupOnly
+           (ist-Information ?mt
+             (goalName ?goal ?goal-rep)))))
+  (methodForAction
+    (executePlan ?when ?mt ?actor ?goal ?action)
+    (actionSequence
+      (TheList
+        (recordIntent ?when ?mt ?actor ?goal-rep (achieve (PreconditionOfFn ?action)))       ; This records the intent to do something, but even though we've
+        (achieve (PreconditionOfFn ?action))              ; successfully planned to achieve the preconditions, 
+        (doAgentPlan                                      ; the world may change and the prim may no longer be legal afterwards.
+          (executeInstantiatedTask ?mt ?action ?goal))    ; Make sure implied args are blown out before trying to execute.
+        ))))
+
+
+(preconditionForMethod
+  (and (operatorFormulas ?task-pred ?task)
+       (isa ?task-pred ComplexActionPredicate))
+  (methodForAction
+    (executePlan ?when ?mt ?actor ?goal ?task)
+    (actionSequence
+      (TheList
+        (recordIntent ?when ?mt ?actor ?goal ?task)            ; recordIntent will get the cmd number wrong for complex tasks.
+        ?task))))                                         ; do *not* wrap in doAgentPlan - fail if first action not legal.
+
+(<== (preferInContext (executePlan ?when ?mt ?actor ?goal ?task) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 recordRationale))
+     
+
+(isa executeInstantiatedTask ComplexActionPredicate)
+(arity executeInstantiatedTask 3)
+(arg1Isa executeInstantiatedTask Microtheory)
+(arg2Isa executeInstantiatedTask CycLExpression)
+(arg3Isa executeInstantiatedTask Goal)
+(comment executeInstantiatedTask "(executeInstantiatedTask ?mt ?action ?goal) instantiates any functionally-determined args to ?action, attempts it and records goal rationale.")
+
+(preconditionForMethod
+  (and (inferredArguments ?action ?inst-action)  ; outsourced
+       (groundExpression ?inst-action)
+       (numAnswers 1
+         (lookupOnly
+           (ist-Information ?mt
+             (goalName ?goal ?goal-rep)))))
+  (methodForAction
+    (executeInstantiatedTask ?mt ?action ?goal)
+    (actionSequence
+      (TheList
+        ?inst-action
+        (doAgentPlan                                      ; not so much a cut as a deferral until after execution,
+          (recordRationale ?mt ?inst-action ?goal-rep))   ; so cmd counter values will be updated.
+       ))))
+
+;;;       
+;;; Failure Handling
+;;;
+
+(isa resolveFailureToDecide ComplexActionPredicate)
+(arity resolveFailureToDecide 3)
+(arg1Isa resolveFailureToDecide Microtheory)
+(arg2Isa resolveFailureToDecide Agent-Generic)
+(arg3Isa resolveFailureToDecide FunctionalSlot)
+(comment resolveFailureToDecide "(resolveFailureToDecide ?mt ?actor ?slot) attempts to elaborate goal structures as needed to enable a dicision to be made.")
+
+(preconditionForMethod
+  (true)  ; default
+  (methodForAction
+    (resolveFailureToDecide ?mt ?actor ?slot)
+    (actionSequence
+      (TheList
+        (doRecordPlanningFailure (decide ?mt ?actor ?slot))
+        ;(doRecord (ist-Information ?mt (currentlyFailing ?mt ?actor ?slot))) ; prevent wheel spinning.
+        ;(doBreak Execution "no decision made" ())
+        )))) 
+
+
+;;; Can we gather the history and current active goals for the decision and
+;;; post a supergoal?
+;;; There are three possibilities:
+;;;  no legal actions
+;;;  no active goals
+;;;  no connection between legal actions and goals.
+;;; If it's the latter, perhaps we can rule out some clearly bad actions and
+;;; pick randomly from the remainder.
+;;; Also, find out if we've ever made this decision before and if the prior
+;;; goal is simply inactive.  See if there's a reasonable supergoal.
+;;; Argh! decisions are not recorded that way.  Only failures.
+;;; We need to look up the decisionTask first, then find the most recent 
+;;; instance of that operator.
+;(preconditionForMethod
+;  (and (evaluate ?legal-actions
+;          (TheClosedRetrievalSetOf ?action
+;             (legalInstantiatedActions ?mt (?slot ?actor ?action))))
+;       )
+;  (methodForAction
+;    (resolveFailureToDecide ?mt ?actor ?slot)
+;    (actionSequence
+;      (TheList
+;        ;; post a new goal
+;        (doForget (ist-Information ?mt (currentlyFailing ?mt ?actor ?slot)))))))
+
+;;; prefer anything but the default (which is to give up):
+(<== (preferInContext (resolveFailureToDecide ?mt ?actor ?slot) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 doRecordPlanningFailure))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

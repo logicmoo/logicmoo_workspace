@@ -1,0 +1,57 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: knowledge-segmentation-data.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: May 23, 2014 21:06:42
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+;;; This file contains information about what predicates and collections
+;;; Should not be used at all when doing knowledge segmentation
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory DefaultKnowledgeSegmentationConstraintsMt)
+
+(notForSegmentationChainingCollection QuantityType)
+(notForSegmentationChainingCollection DirectInfluenceFrame)
+(notForSegmentationChainingCollection ScalarInterval)
+(notForSegmentationChainingCollection IntrinsicStateChangeEvent)
+(notForSegmentationChainingCollection PhysicalProcessFrame)
+(notForSegmentationChainingCollection QuantityFrame)
+(notForSegmentationChainingCollection IntrinsicStateChangeEvent)
+(notForSegmentationChainingCollection PhysicalProcessFrame)
+(notForSegmentationChainingCollection ScalarProperInterval)
+
+;;;(notForSegmentationChainingPred quantityType)
+;;;(notForSegmentationChainingPred quantityValue)
+(notForSegmentationChainingPred sign)
+(notForSegmentationChainingPred status)
+
+(notForSegmentationCollection Backreference-NLAttrType)
+(notForSegmentationCollection Demonstrative-NLAttrType)
+(notForSegmentationCollection Individual)
+(notForSegmentationCollection GenericQuantity)
+(notForSegmentationCollection NonNumericQuantity)
+
+(notForSegmentationPred forEffectOnly)
+(notForSegmentationPred justify)
+(notForSegmentationPred getAllPotentialBinPreds)
+(notForSegmentationPred getPotentialIsas)
+(notForSegmentationPred justify)
+(notForSegmentationPred quantityInDrs)
+(notForSegmentationPred resolvedVar)
+(notForSegmentationPred uninferredSentence)
+(notForSegmentationPred missingSemTrans)
+(notForSegmentationPred drsForDiscourse)
+(notForSegmentationPred discourseCaseForDrs)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

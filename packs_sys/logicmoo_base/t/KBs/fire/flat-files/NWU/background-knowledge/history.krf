@@ -1,0 +1,136 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: history.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: December 28, 2017 16:06:16
+;;;;   Purpose: Represent important events in history
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-11-20 07:05:37 -0600 (Tue, 20 Nov 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory WorldHistoryMt)
+
+
+(isa AmericanRevolution RevolutionaryWar)
+(isa AmericanRevolution Individual)
+(eventOccursAt AmericanRevolution ContinentOfNorthAmerica)
+(startingDate AmericanRevolution (DayFn 19 (MonthFn April (YearFn 1775))))
+(endingDate AmericanRevolution (DayFn 3 (MonthFn September (YearFn 1783))))
+(opponentsInConflict UnitedStatesOfAmerica GreatBritain AmericanRevolution)
+
+(eventOccursAt TheFrenchRevolution-HistoricEvent France) ; concept pre-existed in OpenCyc
+(startingDate TheFrenchRevolution-HistoricEvent (DayFn 14 (MonthFn July (YearFn 1789))))    ;(July 14, 1789 - Nov 9, 1799)
+(endingDate TheFrenchRevolution-HistoricEvent (DayFn 9 (MonthFn November (YearFn 1799))))
+
+(isa AmericanCivilWar CivilWar)
+(isa AmericanCivilWar Individual)
+(eventOccursAt AmericanCivilWar UnitedStatesOfAmerica)  ; TeritoryFn?
+(startingDate AmericanCivilWar (DayFn 12 (MonthFn April (YearFn 1861))))
+(endingDate AmericanCivilWar (DayFn 9 (MonthFn May (YearFn 1865))))
+(opponentsInConflict UnitedStatesOfAmerica ConfederateStatesOfAmerica AmericanCivilWar)
+(isa ConferateStatesOfAmerica Alliance-Organization)
+;; How to say that the ConfederateStates were in the South?
+(territoryOf ConfederateStatesOfAmerica (SouthernRegionFn UnitedStatesOfAmerica))
+
+(isa WorldWarI War)
+(isa WorldWarI Individual)
+(eventOccursAt WorldWarI ContinentOfEurope)
+(eventOccursAt WorldWarI MiddleEast-Region)
+(opponentsInConflict UnitedStatesOfAmerica Germany WorldWarI)
+(opponentsInConflict GreatBritain Germany WorldWarI)
+(startingDate WorldWarI (DayFn 28 (MonthFn July (YearFn 1914))))
+(endingDate WorldWarI (DayFn 11 (MonthFn November (YearFn 1918))))
+
+(isa WorldWarII War)
+(isa WorldWarII Individual)
+(eventOccursAt WorldWarII ContinentOfEurope)
+(eventOccursAt WorldWarII ContinentOfAsia)
+(eventOccursAt WorldWarII (NorthernRegionFn ContinentOfAfrica))
+(eventOccursAt WorldWarII MiddleEast-Region)
+(startingDate WorldWarII (DayFn 1 (MonthFn September (YearFn 1939))))
+(endingDate WorldWarII (DayFn 2 (MonthFn September (YearFn 1945))))
+;;; There is a concept AxisPowers, a TemporalThing.
+(holdsIn WorldWarII (allies Germany Italy)) ; Japan?
+(opponentsInConflict UnitedStatesOfAmerica Germany WorldWarII)
+(opponentsInConflict UnitedStatesOfAmerica Italy WorldWarII)
+(opponentsInConflict UnitedStatesOfAmerica Japan WorldWarII)
+(opponentsInConflict Russia Germany WorldWarII)
+(defeatedInConflict WorldWarII Germany)
+(defeatedInConflict WorldWarII Italy)
+(defeatedInConflict WorldWarII Japan)
+(monumentHonors WorldWarIIMemorialInWashingtonDC (SubcollectionOfWithRelationFromTypeFn UnitedStatesPerson organismKilled WorldWarII))
+
+(isa KoreanWar CivilWar)
+(isa KoreanWar Individual)
+(eventOccursAt KoreanWar KoreanPeninsula)
+(startingDate KoreanWar (DayFn 25 (MonthFn June (YearFn 1950))))
+(endingDate KoreanWar (DayFn 27 (MonthFn July (YearFn 1953))))
+(dateOfEvent KoreanWar (TimeIntervalInclusiveFn (DayFn 25 (MonthFn June (YearFn 1950))) (DayFn 27 (MonthFn July (YearFn 1953)))))
+(holdsIn KoreanWar (allies UnitedStatesOfAmerica SouthKorea))
+(opponentsInConflict UnitedStatesOfAmerica NorthKorea KoreanWar)
+(opponentsInConflict SouthKorea NorthKorea KoreanWar)
+
+(isa VietnamWar CivilWar)
+(isa VietnamWar Individual)
+(eventOccursAt VietnamWar SoutheastAsia)
+(startingDate VietnamWar (DayFn 1 (MonthFn November (YearFn 1955))))
+(endingDate VietnamWar (DayFn 30 (MonthFn April (YearFn 1975))))
+(dateOfEvent VietnamWar (TimeIntervalInclusiveFn (DayFn 1 (MonthFn November (YearFn 1955))) (DayFn 30 (MonthFn April (YearFn 1975)))))
+(holdsIn VietnamWar (allies UnitedStatesOfAmerica SouthVietnam))
+(opponentsInConflict UnitedStatesOfAmerica NorthVietnam VietnamWar)
+(opponentsInConflict SouthKorea NorthVietnam VietnamWar)
+(monumentHonors VietnamMemorialInWashingtonDC (SubcollectionOfWithRelationFromTypeFn UnitedStatesPerson organismKilled WorldWarII))
+
+
+(isa GulfWar War)  ; c.f. DesertStorm
+(isa GulfWar Individual)
+(eventOccursAt GulfWar PersianGulf)  ; knowledge bug: both a collection and individual
+;; initial invasion of Kuwait was 2-4 August 1990.
+(startingDate GulfWar (DayFn 17 (MonthFn January (YearFn 1991))))
+(endingDate GulfWar (DayFn 28 (MonthFn February (YearFn 1991))))
+(dateOfEvent GulfWar (TimeIntervalInclusiveFn (DayFn 17 (MonthFn January (YearFn 1991))) (DayFn 28 (MonthFn February (YearFn 1991)))))
+
+(isa IraqWar War)
+(isa IraqWar Individual)
+(eventOccursAt IraqWar (TerritoryFn Iraq))
+(startingDate IraqWar (DayFn 20 (MonthFn March (YearFn 2003))))
+(endingDate IraqWar (DayFn 18 (MonthFn December (YearFn 2011))))
+(opponentsInConflict UnitedStatesOfAmerica Iraq IraqWar)
+(dateOfEvent IraqWar (TimeIntervalInclusiveFn (DayFn 20 (MonthFn March (YearFn 2003))) (DayFn 18 (MonthFn December (YearFn 2011)))))
+
+;;; Absolutely necessary for making Monte Python jokes:
+(isa SpanishInquisition Individual)
+(isa SpanishInquisition TemporalThing)
+(isa SpanishInquisition Event)
+(startingDate SpanishInquisition (DayFn 1 (MonthFn November (YearFn 1478))))
+(endingDate SpanishInquisition (DayFn 15 (MonthFn July (YearFn 1834))))
+(occurrentSubeventType SpanishInquisition (SubcollectionOfWithRelationToTypeFn Torture maleficiary (BelieverFn Islam)))
+(dateOfEvent SpanishInquisition (TimeIntervalInclusiveFn (DayFn 1 (MonthFn November (YearFn 1478))) (DayFn 15 (MonthFn July (YearFn 1834)))))
+
+;;; (and (isa ?person Person) (not (expects ?person (maleficiary SpanishInquisition ?person)))) 
+
+;;; French and Indian War (1754 - 1763)
+;;; French Revolution (July 14, 1789 - Nov 9, 1799)
+;;; War of 1812 (June 18, 1812 - December 24, 1814) Treaty of Ghent
+;;; Mexican War (1846-1848)
+
+;;; Non wars:
+;;; Columbus discovered the Americas in 1492
+;;; The Lewis and Clark expedition was from 1804-1806
+;;; Red Cross founded October 1863 in Switzerland
+;;; Krakatau erupts 1883
+;;; SanFrancisco Earthquake April 18, 1906
+;;; Titanic sinks April 15, 1912
+;;; DustBowl spring 1934
+;;; Tacoma Narrows Bridge falls 1940
+;;; Mt. St. Helens erupts May 18, 1980
+;;; Moon Landing, July 20, 1969
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

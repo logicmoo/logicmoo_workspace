@@ -1,0 +1,277 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: fc-interpretation-rules.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 17, 2013 12:45:49
+;;;;   Purpose: Narrative rules for interacting with Freeciv
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 18:04:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+;;; IN PROGRESS
+
+(in-microtheory FreecivInterpretationRules)
+
+
+(genlMt FreecivInterpretationRules Freeciv-defaultMt)  ; inherits FreecivMt, FreecivNLU
+(genlMt FreecivInterpretationRules EAStructuralRulesMt)
+(genlMt FreecivInterpretationRules EAReferenceResolutionMt)
+(genlMt FreecivInterpretationRules InstructionNarrativeRulesMt)
+(genlMt FreecivInterpretationRules CompanionsMt) 
+
+;;; Types of Presentation Events:
+;;;  Resources
+;;;  Quantities
+;;;  Outcomes
+;;;  Functions
+;;;  Explanations
+;;;  Goals
+;;;  Limits and Constraints
+;;;  Spatial Configurations
+;;;  Temporal Configurations
+;;;  Advice
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) ResourceIntroduction)
+     (introducesResource (PresentationEventFn ?sid ?narrative-event) ?resource))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) OutcomeDefinition)
+     (definesPossibleOutcome (PresentationEventFn ?sid ?narrative-event) ?event ?outcome))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) Configuration-Spatial)
+     (introducesSpatialConfiguration (PresentationEventFn ?sid ?narrative-event) ?config))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) Configuration-Temporal)
+     (introducesTemporalConfiguration (PresentationEventFn ?sid ?narrative-event) ?config))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) Explanation)
+     (explainsEvent (PresentationEventFn ?sid ?narrative-event) ?event))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) GoalIntroduction)
+     (introducesGoal (PresentationEventFn ?sid ?narrative-event) ?situation ?goal))
+     
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) LimitPoint)
+     (introducesLimitPoint (PresentationEventFn ?sid ?narrative-event) ?process ?limit))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) GameStateDescription)
+     (gameStateDescription (PresentationEventFn ?sid ?narrative-event) ?current-game ?actor ?state))
+
+(<== (directiveFunction (DirectiveEventFn ?sid ?event-id) Directive)
+     (specifiesCommand (DirectiveEventFn ?sid ?event-id) ?command))
+     
+;;; Do we need an "advice" narrative function?  That's like a generalized directive
+;;; without a full explanation.
+
+
+(isa introducesResource BinaryPredicate)
+(arity introducesResource 2)
+(arg1Isa introducesResource IBTGeneration)
+(arg2Isa introducesResource ObjectType)
+
+(<== (introducesResource (PresentationEventFn ?sid ?narrative-event) ?resource)
+     (groundExpression ?sid)
+     (introducesResource-IP ?sid ?resource)
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (introducesResource-IP ?sid ?resource))))
+
+
+(isa definesPossibleOutcome TernaryPredicate)
+(arity definesPossibleOutcome 3)
+(arg1Isa definesPossibleOutcome IBTGeneration)
+(arg2Isa definesPossibleOutcome Collection)
+(arg3Isa definesPossibleOutcome Collection)
+
+(<== (definesPossibleOutcome (PresentationEventFn ?sid ?event-id) ?event ?outcome)
+     (groundExpression ?sid)
+     (definesPossibleOutcome-IP ?sid ?event ?outcome)
+     (individualSatisfyingConditions ?event-id IBTGeneration
+       (TheSet (definesPossibleOutcome-IP ?sid ?event ?outcome))))
+     
+(isa introducesSpatialConfiguration BinaryPredicate)
+(arity introducesSpatialConfiguration 2)
+(arg1Isa introducesSpatialConfiguration IBTGeneration)
+(arg2Isa introducesSpatialConfiguration ObjectType)
+
+(<== (introducesSpatialConfiguration (PresentationEventFn ?sid ?narrative-event) ?config)
+     (groundExpression ?sid)
+     (introducesSpatialConfiguration-IP ?sid ?resource)
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (introducesSpatialConfiguration-IP ?sid ?config))))
+
+(isa introducesTemporalConfiguration BinaryPredicate)
+(arity introducesTemporalConfiguration 2)
+(arg1Isa introducesTemporalConfiguration IBTGeneration)
+(arg2Isa introducesTemporalConfiguration ObjectType)
+
+(<== (introducesTemporalConfiguration (PresentationEventFn ?sid ?narrative-event) ?config)
+     (groundExpression ?sid)
+     (introducesTemporalConfiguration-IP ?sid ?resource)
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (introducesTemporalConfiguration-IP ?sid ?config))))
+
+;;; This should probably bind the explanandum as well.
+;;; Not sure what its type would be.
+(isa explainsEvent BinaryPredicate)
+(arity explainsEvent 2)
+(arg1Isa explainsEvent IBTGeneration)
+(arg2Isa explainsEvent Event)
+
+(<== (explainsEvent (PresentationEventFn ?sid ?narrative-event) ?event)
+     (groundExpression ?sid)
+     (explainsEvent-IP ?sid ?event)
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (explainsEvent-IP ?sid ?event))))
+
+
+
+(isa introducesGoal TernaryPredicate)
+(arity introducesGoal 3)
+(arg1Isa introducesGoal IBTGeneration)
+(arg2Isa introducesGoal Collection)
+(arg3Isa introducesGoal Collection)
+
+(<== (introducesGoal (PresentationEventFn ?sid ?event-id) ?situation ?goal)
+     (groundExpression ?sid)
+     (introducesGoal-IP ?sid ?situation ?goal)
+     (individualSatisfyingConditions ?event-id IBTGeneration
+       (TheSet (introducesGoal-IP ?sid ?situation ?goal))))
+
+(isa introducesLimitPoint TernaryPredicate)
+(arity introducesLimitPoint 3)
+(arg1Isa introducesLimitPoint IBTGeneration)
+(arg2Isa introducesLimitPoint Collection)
+(arg3Isa introducesLimitPoint Collection)
+
+(<== (introducesLimitPoint (PresentationEventFn ?sid ?event-id) ?process ?limit)
+     (groundExpression ?sid)
+     (introducesLimitPoint-IP ?sid ?process ?limit)
+     (individualSatisfyingConditions ?event-id IBTGeneration
+       (TheSet (introducesLimitPoint-IP ?sid ?process ?limit))))
+
+(isa gameStateDescription QuaternaryPredicate)
+(arity gameStateDescription 4)
+(arg1Isa gameStateDescription IBTGeneration)
+(arg2Isa gameStateDescription Collection)
+(arg3Isa gameStateDescription Collection)
+(arg4Isa gameStateDescription Collection)
+
+(<== (gameStateDescription (PresentationEventFn ?sid ?event-id) ?current-game ?actor ?state)
+     (groundExpression ?sid)
+     (gameStateDescription-IP ?sid ?current-game ?actor ?state)
+     (individualSatisfyingConditions ?event-id IBTGeneration
+       (TheSet (gameStateDescription-IP ?sid ?current-game ?actor ?state))))
+
+
+(isa specifiesCommand BinaryPredicate)
+(arity specifiesCommand 2)
+(arg1Isa specifiesCommand IBTGeneration)
+(arg2Isa specifiesCommand CycLSentence-Assertible)
+
+(<== (specifiesCommand (DirectiveEventFn ?sid ?event-id) ?command)
+     (groundExpression ?sid)
+     (sentenceTypeFeat (ParseTreeFn ?sid ?ptid) ImperativeUtterance)
+     (specifiesCommand-IP ?sid ?command ?arglist)
+     (individualSatisfyingConditions ?event-id Command 
+       (TheSet (specifiesCommand-IP ?sid ?command ?arglist))))
+
+;;;
+;;; Intermediate Predicates TBD
+;;;
+
+(isa introducesResource-IP BinaryPredicate)
+(arity introducesResource-IP 2)
+(arg1Isa introducesResource-IP CycLTerm)
+(arg2Isa introducesResource-IP ObjectType)
+
+
+(isa definesPossibleOutcome-IP TernaryPredicate)
+(arity definesPossibleOutcome-IP 3)
+(arg1Isa definesPossibleOutcome-IP CycLTerm)
+(arg2Isa definesPossibleOutcome-IP Collection)
+(arg3Isa definesPossibleOutcome-IP Collection)
+
+
+(isa introducesSpatialConfiguration-IP BinaryPredicate)
+(arity introducesSpatialConfiguration-IP 2)
+(arg1Isa introducesSpatialConfiguration-IP CycLTerm)
+(arg2Isa introducesSpatialConfiguration-IP ObjectType)
+
+(isa introducesTemporalConfiguration-IP BinaryPredicate)
+(arity introducesTemporalConfiguration-IP 2)
+(arg1Isa introducesTemporalConfiguration-IP CycLTerm)
+(arg2Isa introducesTemporalConfiguration-IP ObjectType)
+
+(isa explainsEvent-IP BinaryPredicate)
+(arity explainsEvent-IP 2)
+(arg1Isa explainsEvent-IP CycLTerm)
+(arg2Isa explainsEvent-IP Event)
+
+(isa introducesGoal-IP TernaryPredicate)
+(arity introducesGoal-IP 3)
+(arg1Isa introducesGoal-IP CycLTerm)
+(arg2Isa introducesGoal-IP Collection)
+(arg3Isa introducesGoal-IP Collection)
+
+;;; maximize, minimize, balance, achieve, prevent, maintain...
+
+(isa introducesLimitPoint-IP TernaryPredicate)
+(arity introducesLimitPoint-IP 3)
+(arg1Isa introducesLimitPoint-IP CycLTerm)
+(arg2Isa introducesLimitPoint-IP Collection)
+(arg3Isa introducesLimitPoint-IP Collection)
+
+(isa gameStateDescription-IP QuaternaryPredicate)
+(arity gameStateDescription-IP 4)
+(arg1Isa gameStateDescription-IP CycLTerm)
+(arg2Isa gameStateDescription-IP Collection)
+(arg3Isa gameStateDescription-IP Collection)
+(arg4Isa gameStateDescription-IP Collection)
+
+;;; "What is the current science percent?"
+;;; (currentCivSciencePercent <dv>)
+
+;(<== (gameStateDescription-IP ?sid ?current-game ?actor ?state)
+;     (drsForDiscourse ?ddrs-id)
+;     (contextIndependentDrsFor ?sdrs-id ?sid)
+;     (localOnly
+;       (wmOnly
+;         (ist-Information (DrsCaseFn ?sdrs-id)
+;           (isa ?config CoordinateGrid))))
+;     (withBackchainingDepth 4
+;       (resolveReference    ; Don't simply use referent here, since it's an indefinite reference. 
+;         (ReferenceInSentenceFn ?config ?sid)
+;         (ReferentInDrsFn ?config ?ddrs-id))))
+
+
+(isa specifiesCommand-IP TernaryPredicate)
+(arity specifiesCommand-IP 3)
+(arg1Isa specifiesCommand-IP CycLTerm)
+(arg2Isa specifiesCommand-IP CycLSentence-Assertible)
+(arg3Isa specifiesCommand-IP List)
+
+;;; We need to go through the sentence and identify likly domain-specific terms
+;;; that may otherwise be ambiguous and nail them down along with any parse trees
+;;; they determine.  So if someone mentions "food production" or "move points",
+;;; the abductive rule should snap to the compound string.  
+
+
+;;; increase, decrease, make, build, 
+;;; If these are completely operational, then they're commands, 
+;;; otherwise, they're advice or goals.
+
+
+;;; Assume a statement may explain the motivation behind the prior action:
+
+;;; Example sentences we would want to parse:
+;;; Accumulate Gold to support your city improvements.
+;;; Military units with veteran status are more likely to survive attacks.
+;;; Cannon are good offensive units.
+;;; Archers are good offensive units.
+;;; Hills are good Defensive terrain 
+;;; cf, OffensivelyAdvantageousTerrain vs DefensivelyAdvantageousTerrain
+;;; Veteran units are more likely to be successful when attacking or defending.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

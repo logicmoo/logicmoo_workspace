@@ -1,0 +1,248 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: COPA-ontology.meld
+;;;;    System: Companions
+;;;;    Author: Joe Blass
+;;;;   Created: December 4, 2015 14:45:50
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory COPA-Reasoning-Mt)
+
+(genlMt Interaction-ManagerMt COPA-Reasoning-Mt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; NOTE: AS OF 1/21/16, ONLY USE DoReadCOPAList!!!
+
+(isa CopaQFn Predicate)
+(arity CopaQFn 1)
+(arg1Isa CopaQFn Integer)
+(comment CopaQFn
+  "(CopaQFn <number>) is the index for a particular COPA question")
+
+(isa CopaAnsFn Predicate)
+(arity CopaAnsFn 2)
+(arg1Isa CopaAnsFn Thing)
+(arg2Isa CopaAnsFn Thing)
+(comment CopaAnsFn
+  "(CopaAnsFn <CopaQuestionIndex> <Ans>) is the index for the answer <Ans> for the particular COPA question <COPAQuestionIndex>")
+
+(isa COPA-question-mtFn Function-Denotational)
+(arity COPA-question-mtFn 1)
+(arg1Isa COPA-question-mtFn Thing)
+(resultIsa COPA-question-mtFn Microtheory)
+(comment COPA-question-mtFn
+  "(COPA-question-mtFn <CopaQIndex>) is the microtheory for the COPA question <CopaQIndex>")
+
+(isa doEAReadCopaQA ComplexActionPredicate)
+(arity doEAReadCopaQA 3)
+(arg1Isa doEAReadCopaQA CharacterString)
+(arg2Isa doEAReadCopaQA Thing)
+(arg3Isa doEAReadCopaQA Thing)
+(comment doEAReadCopaQA
+  "(doEAReadCopaQA ?question ?answer ?readingName) reads and interprets the text 
+of ?question along with its possible choice ?answer. It has to be enqueued by another task.")
+
+(isa doEAReadSingleCopaQA ComplexActionPredicate)
+(arity doEAReadSingleCopaQA 3)
+(arg1Isa doEAReadSingleCopaQA CharacterString)
+(arg2Isa doEAReadSingleCopaQA Thing)
+(arg3Isa doEAReadSingleCopaQA Thing)
+(comment doEAReadSingleCopaQA
+  "(doEAReadSingleCopaQA ?question ?ans ?reading-name) reads and interprets the text 
+of ?question along with its possible choice ?answer. It can be called as its own task, 
+but can't guaranteed proper agenda order as part of a larger plan.")
+
+(isa doClearCOPAReadings ComplexActionPredicate)
+(arity doClearCOPAReadings 0)
+(comment doClearCOPAReadings "(doClearCOPAReadings) erases the contents of all the read in copa questions and answers")
+
+(isa doReadCOPAList ComplexActionPredicate)
+(arity doReadCOPAList 1)
+(arg1Isa doReadCOPAList List)
+(comment doReadCOPAList
+  "(doReadCOPAList ?qSet) reads in the specified set of COPA questions with their answers and stores them appropriately")
+
+(isa gatherAllCopaFactsIntoMt ComplexActionPredicate)
+(arity gatherAllCopaFactsIntoMt 2)
+(arg1Isa gatherAllCopaFactsIntoMt Thing)
+(arg2Isa gatherAllCopaFactsIntoMt Thing)
+(comment gatherAllCopaFactsIntoMt
+  "(gatherAllCopaFactsIntoMt <q> <a> gathers all the facts from reading the reading interpretation
+of question <q> and answer <a>. It checks the spindleMt with all of the constituent Mts and gather those facts.
+This is necessary because we don't know what the form of the fact will be (otherwise we could query it directly)")
+
+(preconditionForMethod
+ (and (different ?qList (TheList))
+      (evaluate ?firstQ (FirstInListFn ?qList))
+      (evaluate ?restQs (RestOfListFn ?qList))
+      (evaluate ?reading-nameA (ConcatenateStringsFn "reading" ?firstQ "A"))
+      (evaluate ?reading-nameB (ConcatenateStringsFn "reading" ?firstQ "B"))
+      (newUniqueTask reading-ansA ?readingA-id)
+      (newUniqueTask reading-ansB ?readingB-id)
+      (newUniqueTask restOfReadings ?restOfReadings-id)
+      (currentInteractionMgr ?im)
+      (agendaContext ?mt))
+ (methodForAction
+  (doReadCOPAList ?qList)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?mt (startsAfterEndingOf ?readingB-id ?readingA-id)))
+    (doRecord (ist-Information ?mt (startsAfterEndingOf ?restOfReadings-id ?readingB-id)))
+    (doEnqueue ?im ?readingA-id (doEAReadCopaQA (CopaQFn ?firstQ) A ?reading-nameA))
+    (doEnqueue ?im ?readingB-id (doEAReadCopaQA (CopaQFn ?firstQ) B ?reading-nameB))
+    (doEnqueue ?im ?restOfReadings-id (doReadCOPAList ?restQs))))))
+
+(preconditionForMethod 
+ (and (kbOnly (ist-Information CopaQATestMt
+                (questionText ?question ?qText)))
+      (kbOnly (ist-Information CopaQATestMt
+                (mcTestOption (CopaAnsFn ?question ?ans) ?ansText)))
+      (evaluate ?text (ConcatenateStringsFn ?qText " " ?ansText))
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (newUUIDSymbol iterateOverDiscourse ?iterator-id)
+      (currentAgendaItem ?parent-task)
+      (agendaContext ?actx)
+      (currentInteractionMgr ?im))
+ (methodForAction
+  ;;; ?question should be of the form (CopaQFn <num>), and ?reading-name has to be a string in quotes)
+  (doEAReadCopaQA ?question ?ans ?reading-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doTell (ist-Information COPA-Reasoning-Mt (currentReadingName ?reading-name)))
+    (doTell (ist-Information COPA-Reasoning-Mt (currentCopaQA ?question ?ans)))
+    (doTell (ist-Information ?actx (assignedTo ?iterator-id ?im)))
+    (doTell (ist-Information ?actx (subTasks ?parent-task ?iterator-id)))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEAProcessParagraphs ?text (CopaQAFn ?question ?ans))
+       (doEnqueue ?im ?iterator-id
+                  (iterateOverDiscourse ?discourse-id
+                                        InterpretCopaQA))
+       )))))))
+
+(preconditionForMethod 
+ (and (kbOnly (ist-Information CopaQATestMt
+                (questionText ?question ?qText)))
+      (kbOnly (ist-Information CopaQATestMt
+                (mcTestOption (CopaAnsFn ?question ?ans) ?ansText)))
+      (evaluate ?text (ConcatenateStringsFn ?qText " " ?ansText))
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (newUUIDSymbol iterateOverDiscourse ?iterator-id)
+      (agendaContext ?actx)
+      (currentInteractionMgr ?im))
+ (methodForAction
+  ;;; ?question should be of the form (CopaQFn <num>), and ?reading-name has to be a string in quotes)
+  (doEAReadSingleCopaQA ?question ?ans ?reading-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doTell (ist-Information COPA-Reasoning-Mt (currentReadingName ?reading-name)))
+    (doTell (ist-Information COPA-Reasoning-Mt (currentCopaQA ?question ?ans)))
+    (doTell (ist-Information ?actx (assignedTo ?iterator-id ?im)))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEAProcessParagraphs ?text (CopaQAFn ?question ?ans))
+       (doEnqueue ?im ?iterator-id
+                  (iterateOverDiscourse ?discourse-id
+                                        InterpretCopaQA))
+       )))))))
+
+;;;;;; Discourse Iterator function: InterpretCopaQA
+
+(isa InterpretCopaQA ComplexActionPredicate)
+(arity InterpretCopaQA 2)
+(comment InterpretCopaQA 
+  "(InterpretCopaQA ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse. ?state is either 
+ discourse markup or a sentence to read and interpret.")
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (InterpretCopaQA ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Currently reading ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1))
+      (ist-Information COPA-Reasoning-Mt 
+        (currentCopaQA ?question ?ans))
+      (ist-Information COPA-Reasoning-Mt 
+        (currentReadingName ?reading-name))
+      (or (and (uninferredSentence 
+                (ist-Information EverythingPSC 
+                  (gatherDiscourseChoiceSets ?choiceSets)))
+               (evaluate ?choiceSets nil))
+          (cacheComplete (gatherDiscourseChoiceSets ?choiceSets))))
+ (methodForAction
+  (InterpretCopaQA ?state ?d)
+  (actionSequence
+   (TheList
+    (doRetract (gatherDiscourseChoiceSets ?choiceSets))
+    (doAnnounce " Reading the sentence ~A." (?tokens))
+    (doEAReadSingleSentence ?state ?d)
+    (doAnnounce " Disambiguating choices.")
+    (disambiguateSourceTextWithHeuristicContext
+     (CopaQAFn ?question ?ans) ?reading-name ExperimentalDisambiguationMt2 DefaultDisambiguationWeightsMt)
+    (useDiscourseCoreferenceResolutionForSentence ?state)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (InterpretCopaQA ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (and (unifies ?state (EndOfDiscourseFn ?d))
+      (ist-Information COPA-Reasoning-Mt 
+        (currentCopaQA ?question ?ans))
+      (ist-Information COPA-Reasoning-Mt 
+        (currentReadingName ?reading-name))
+      (or (and (uninferredSentence 
+                (ist-Information EverythingPSC 
+                  (gatherDiscourseChoiceSets ?choiceSets)))
+               (evaluate ?choiceSets nil))
+          (cacheComplete (gatherDiscourseChoiceSets ?choiceSets))))
+ (methodForAction
+  (InterpretCopaQA ?state ?d)
+  (actionSequence
+   (TheList 
+    (doRetract (gatherDiscourseChoiceSets ?choiceSets))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSourceTextWithHeuristicContext
+        (CopaQAFn ?question ?ans) ?reading-name ExperimentalDisambiguationMt2 DefaultDisambiguationWeightsMt)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          ;(useDiscourseCoreferenceResolution)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (doAnnounce "Storing interpretation")
+             (storeInterpretationInKB (FactsFromReadingCopaQAMtFn ?question ?ans)
+                                      (CopaQAFn ?question ?ans)
+                                      ?reading-name)
+             (doStoreLiftedInterpretationInfo (AllFactsFromReadingCopaQAMtFn ?question ?ans))
+             (doAnnounce "End of interpreting that question-answer pair."))))))))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,38 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: CrossModalLanguage.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: August 29, 2014 14:57:49
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+;;sem transes
+(in-microtheory EANLU :exclude-globals t)
+
+(compoundSemTrans Go-TheWord (TheList "with") Verb TransitiveNPFrame
+                  (compatibleWithIn :SUBJECT :OBJECT Script-Underspecified))
+
+(compoundSemTrans Go-TheWord (TheList "best" "with") Verb TransitiveNPFrame
+                  (compatibleWithIn :SUBJECT :OBJECT Script-Underspecified))
+
+(adverbSemTrans Why-TheWord 0 FrameForAdverbs 
+                (objectOfEvent :ACTION (Why-ReasonFor :CLAUSE)))
+
+
+;;lexicon
+(in-microtheory ComlexMt :exclude-globals t)
+
+(definitionInDictionary COMLEX31Lexicon "why" (why (adverb (orth "why") (root why1) (wh q)) why1))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

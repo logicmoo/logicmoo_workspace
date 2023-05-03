@@ -1,0 +1,56 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: fc-interpretation-queries.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 17, 2013 14:11:49
+;;;;   Purpose: Queries for Interpretation in Freeciv
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 18:04:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory (InterpretationMtFn Freeciv-TheGame))
+
+(genlMt (InterpretationMtFn Freeciv-TheGame) (InterpretationMtFn Instruction))
+(genlMt (InterpretationMtFn Freeciv-TheGame) FreecivInterpretationRules)
+
+
+(queryForInterpretation
+ 0 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ResourceIntroduction))
+
+(queryForInterpretation
+ 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      OutcomeDefinition))
+                      
+(queryForInterpretation
+ 2 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      Configuration-Spatial))
+
+(queryForInterpretation
+ 2 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      Configuration-Temporal))
+
+(queryForInterpretation
+ 3 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      Explanation))
+
+(queryForInterpretation
+ 4 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      GoalIntroduction))
+
+(queryForInterpretation
+ 0 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      LimitPoint))
+                      
+(queryForInterpretation
+ 0 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      GameStateDescription))
+                      
+(queryForInterpretation
+ 3 (directiveFunction (DirectiveEventFn :REPLACE-SID ?event-id)
+                      Directive))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

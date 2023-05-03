@@ -1,0 +1,57 @@
+Data License for NextKB 1.0
+
+The complete data in NextKB is available under the Creative Commons
+Attribution 4.0 license. In addition to contributions from members of
+Northwestern University's Qualitative Reasoning Group, this resource
+relies on the following other resources:
+
+       * OpenCyc KB contents, from Cycorp. Their heroic and persistent
+efforts spanning decades have produced a clean ontology and ideas that
+are extremely usable for the AI and Cognitive Science communities, and
+we hope this resource increases interest in Cyc itself.
+
+   * WordNet contents, from the Princeton WordNet project. This
+project, started by the late George Miller, provides useful lexical
+information that can be nicely combined with the others.  
+
+* VerbNet
+contents, from the University of Colorado VerbNet project.
+
+* FrameNet contents, from the Berkeley FrameNet project. This project,
+started by the late Charles Fillmore, provides a rich language-centric
+view on semantics that we have been integrating with the OpenCyc
+ontology.
+
+We express our gratitude to those who contributed to the above
+resources. We have filtered, transformed, and combined them, along
+with making our own contributions, so errors and limitations may well
+be introduced by us rather than by them. The QRG contributions include
+the linkages between the four resources above, plus representations
+that we have developed for qualitative, visual, spatial, and
+analogical reasoning and learning.
+
+Funding for the Qualitative Reasoning Group's work represented here
+includes the National Science Foundation, via the Spatial Intelligence
+and Learning Center, the Office of Naval Research, the Air Force
+Office of Scientific Research, the Defense Advanced Projects Research
+Agency, and IBM.
+
+In academic papers where NextKB is used, we ask that you please cite
+the following paper:
+
+Forbus, K. & Hinrichs, T. (2017). Analogy and Qualitative
+Representations in the Companion Cognitive Architecture. AI Magazine,
+38(4):34-42.
+
+To give credit to NextKB in software that uses it, please put this
+text in a user-visible place:
+
+This work includes data from NextKB, which was compiled by the
+Qualitative Reasoning Group at Northwestern University. NextKB is
+freely available under the Creative Commons Attribution 4.0 license
+from http://qrg.northwestern.edu/nextkb/index.html. The included data
+was created by contributors to the Qualitative Reasoning Group,
+contributors to Cycorp's OpenCyc, University of California at
+Berkeley's FrameNet project, the VerbNet project, and Princeton
+University's WordNet project. For details of attributions, please see
+http://www.qrg.northwestern.edu/nextkb/license.html

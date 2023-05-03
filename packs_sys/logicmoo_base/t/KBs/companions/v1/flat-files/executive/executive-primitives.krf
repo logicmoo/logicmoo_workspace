@@ -1,0 +1,139 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: executive-primitives.meld
+;;;;    System: Companions
+;;;;   Version: 1.0
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 1, 2005 11:25:18
+;;;;   Purpose: Executive task primitives
+;;;; ---------------------------------------------------------------------------
+;;; 2/5/08 [TRH] I moved the definitions of universal primitives to fire/flat-files/htnplanner.meld
+;;; including: doAssert, doRetract, doAssertMembers, doRecord, doForget, doRecordMembers, doForgetMembers,
+;;; doTell and doUntell.
+;;;
+;;; For performance reasons, it's a good idea to have preconditions specified,
+;;; even if they're trivial, so that the planner doesn't have to keep searching
+;;; for them in BaseKB.  It's only looking for one unique precondition, so when
+;;; it finds it (maybe in wm), it stops.
+
+
+(in-microtheory ExecutiveMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doSchedulePeriodicTask
+
+(isa doSchedulePeriodicTask SimpleActionPredicate)
+(isa doSchedulePeriodicTask InferentialTask)  ; generate a plan by executing a plan.
+(arity doSchedulePeriodicTask 2)
+(arg1Isa doSchedulePeriodicTask Time-Quantity)
+(arg2Isa doSchedulePeriodicTask CycLFormula)
+(comment doSchedulePeriodicTask 
+  "(doSchedulePeriodicTask ?period ?action-sequence) adds ?action-sequence to the executive agenda.")
+
+(preconditionFor-Props
+   (true)
+   (doSchedulePeriodicTask ?period ?action-seq))
+
+(isa doTerminateAgent SimpleActionPredicate)
+(arity doTerminateAgent 1)
+(arg1Isa doTerminateAgent CompanionsAgent)
+(comment doTerminateAgent "(doTerminateAgent ?agent) halts and unregisters ?agent.")
+
+(isa doLaunchNewAgent SimpleActionPredicate)
+(arity doLaunchNewAgent 1)
+(arg1Isa doLaunchNewAgent CycLTerm)
+(comment doLaunchNewAgent "(doLaunchNewAgent ?type) launches a new agent of type ?type into the current session.")
+
+(isa doRebootAgentsInProcess SimpleActionPredicate)
+(arity doRebootAgentsInProcess 1)
+(arg1Isa doRebootAgentsInProcess CompanionsAgent)
+(comment doRebootAgentsInProcess "(doRebootAgentsInProcess ?agent) reboots ?agent's lisp and restarts all the same agents in the new lisp.")
+
+(isa doRebootAgentsInProcess-Unresponsive SimpleActionPredicate)
+(arity doRebootAgentsInProcess-Unresponsive 1)
+(arg1Isa doRebootAgentsInProcess-Unresponsive CompanionsAgent)
+(comment doRebootAgentsInProcess-Unresponsive "(doRebootAgentsInProcess-Unresponsive ?agent) reboots ?agent's lisp and restarts all the same agents in the new lisp while assuming that it is unresponsive.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doLog
+
+(isa doLog SimpleActionPredicate)
+(arity doLog 3)
+(arg1Isa doLog CharacterString)
+(arg2Isa doLog CharacterString)
+(arg3Isa doLog CycLTerm)
+(comment doLog 
+   "(doLog <logname> <format-control> <format-args>) creates a string as by the
+    Lisp format function and then writes it to the specified log-file.  On the 
+    cluster, the logfile will be 
+    /data/<username>/data/agent-logs/misc/<logname>.txt")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doWipeLog
+
+(isa doWipeLog SimpleActionPredicate)
+(arity doWipeLog 1)
+(arg1Isa doWipeLog CharacterString)
+(comment doWipeLog 
+   "(doWipeLog <logname>) deletes the specified logfile.  On the cluster, the 
+    logfile will be /data/<username>/data/agent-logs/misc/<logname>.txt")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doArchiveLog
+
+(isa doArchiveLog SimpleActionPredicate)
+(arity doArchiveLog 1)
+(arg1Isa doArchiveLog CharacterString)
+(comment doArchiveLog 
+   "(doArchiveLog <logname>) saves the log to a unique filename.  On the cluster,
+    the archived logfile will be in /data/<username>/data/agent-logs/archive/")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doSendLogToUser
+
+(isa doSendLogToUser SimpleActionPredicate)
+(arity doSendLogToUser 1)
+(arg1Isa doSendLogToUser CharacterString)
+(comment doSendLogToUser 
+   "(doSendLogToUser <logname>) sends the log to the user via the Session
+    Manager.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doEmailLogToUser
+
+(isa doEmailLogToUser SimpleActionPredicate)
+(arity doEmailLogToUser 5)
+(arg1Isa doEmailLogToUser CharacterString)
+(arg2Isa doEmailLogToUser CharacterString)
+(arg3Isa doEmailLogToUser CycLTerm)
+(arg4Isa doEmailLogToUser CharacterString)
+(arg5Isa doEmailLogToUser CycLTerm)
+(comment doEmailLogToUser 
+   "(doEmailLogToUser <logname> 
+                      <subject-format-ctrl> <subject-format-args> 
+                      <message-format-ctrl> <message-format-args>) 
+    emails the log to the user if that user allows email notifications and has 
+    specified their email address.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; doDelegate
+
+(isa doDelegate SimpleActionPredicate)
+(isa doDelegate InferentialTask)  ; generate a plan by executing a plan.
+(arity doDelegate 2)
+(arg1Isa doDelegate CompanionsAgent)
+(arg2Isa doDelegate CycLTerm)
+(comment doDelegate 
+  "(doDelegate ?assigned-agent ?task) removes a previously enqueued ?task from the local agent's agenda and puts it on the assigned-agent's agenda.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

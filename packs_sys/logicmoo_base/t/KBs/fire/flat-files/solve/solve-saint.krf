@@ -1,0 +1,228 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: solve-saint.meld
+;;;;    System: Companions
+;;;;   Version: 1.0
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 26, 2006 15:30:34
+;;;;   Purpose: shakedown for solve
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;
+;;; usage:
+;;; (fire::meld-file->kb "C:\\qrg\\fire\\flat-files\\solve\\solve-saint.meld")
+
+;;; Note:
+;;; (log arg) is the natural logarithm (ln) of arg
+;;; (log arg base) is the base logarithm of arg.
+;;; (exp num) is e^num
+;;; (expt base num) is base^num
+
+(in-microtheory SaintMt)
+
+
+;;; Some trivial simplifications:
+
+(defSuggestion AtomicIdentity
+    (simplify ?term1 ?term2)
+  :test (atomicTerm ?term1)
+  :subgoals ((unifies ?term2 ?term1)))  ; Suggestions must have subgoals or they are ignored!
+
+(defSuggestion ZeroAugendElimination
+    (simplify (+ 0 ?expr) ?sum)
+  :subgoals ((unifies ?sum ?expr)))
+
+(defSuggestion ZeroAddendElimination
+    (simplify (+ 0 ?expr) ?sum)
+  :subgoals ((unifies ?sum ?expr)))
+
+(defSuggestion ZeroSubtrahendElimination
+    (simplify (- ?expr 0) ?diff)
+  :subgoals ((unifies ?diff ?expr)))
+
+(defSuggestion ZeroMinuendElimination
+    (simplify (- 0 ?expr) ?diff)
+  :subgoals ((unifies ?diff (- ?expr))))
+
+(defSuggestion UnitFactor1Elimination
+    (simplify (* 1 ?expr) ?prod)
+  :subgoals ((unifies ?prod ?expr)))
+
+(defSuggestion UnitFactor2Elimination
+    (simplify (* ?expr 1) ?prod)
+  :subgoals ((unifies ?prod ?expr)))
+  
+(defSuggestion UnitDivisorElimination
+    (simplify (/ ?expr 1) ?quot)
+  :subgoals ((unifies ?quot ?expr)))
+
+(defSuggestion RepeatedSubtractionElimination
+    (simplify (- (- ?expr)) ?simp)
+  :subgoals ((unifies ?simp ?expr)))
+  
+(defSuggestion UnitRatioElimination
+    (simplify (/ ?divisor ?quotient) ?ratio)
+  :test (and (equalSymbols ?divisor ?quotient)
+             (different ?quotient 0))
+  :subgoals ((unifies ?ratio 1)))
+
+;;; sin^2 (x) + cos^2 (x) = 1
+(defSuggestion TrigIdentity
+    (simplify (+ (sqr (sin ?term1)) (sqr (cos ?term2))) ?simp)
+  :test (equalSymbols ?term1 ?term2)
+  :subgoals ((unifies ?simp 1)))
+
+;;; This will fail if there is no simplification.
+;;; How do we write a default suggestion that simply binds the result
+;;; to the unsimplified input?
+(defSuggestion SimplifyIntegral
+    (simplify (integral ?integrand ?var ?int) ?simp)
+  :subgoals ((simplify ?integrand ?simpint)
+             (integral ?simpint ?var ?simp)))
+
+;;; Integration
+
+;;; This is another way to invoke simplification before integration,
+;;; but it never seems to get invoked.  Can there be preferences 
+;;; between suggestions?
+(defSuggestion SimplifyIntegrand
+    (integral ?integrand ?var ?int)
+  :subgoals ((simplify ?integrand ?expr)  ; before integrating, try simplifications
+             (integral ?expr ?var ?int)))
+
+(defSuggestion IntegralOfConstant
+    (integral ?const ?var ?int)
+  :test (and (different ?const ?var)
+             (not (termFormulas ?const ?var)))
+  :subgoals ((unifies ?int (* ?const ?var))))
+
+;;; integral x dx = 1/2 x^2
+;;; Use the test to check for equivalence, not the goal signature.
+;;; This allows us to specify that they are the same, not that they merely unify.
+(defSuggestion IntegralOfSelf
+    (integral ?expr ?term ?int)
+    :test (equalSymbols ?expr ?term)
+  :subgoals ((unifies ?int (/ (expt ?term 2) 2))))
+
+(defSuggestion MoveConstantOutside
+    (integral (* ?const ?nonconst) ?var ?int)
+  :test (and (not (termFormulas ?const ?var))
+             (termFormulas ?nonconst ?var))
+  :subgoals ((integral ?nonconst ?var ?subint)
+             (unifies ?int (* ?const ?subint))))
+
+(defSuggestion IntegralOfSum
+    (integral (+ ?term1 ?term2) ?var ?int)
+  :cost-function 2
+  :subgoals ((integral ?term1 ?var ?int1)
+             (integral ?term2 ?var ?int2)
+             (unifies ?int (+ ?int1 ?int2))))
+
+;; Can't handle n-ary sum yet
+
+(defSuggestion IntegralOfUMinus
+    (integral (- ?term) ?var ?int)
+  :subgoals ((integral ?term ?var ?subint)
+             (unifies ?int (- ?subint))))
+
+(defSuggestion IntegralOfMinus
+    (integral (- ?term1 ?term2) ?var ?int)
+  :subgoals ((integral ?term1 ?var ?int1)
+             (integral ?term2 ?var ?int2)
+             (unifies ?int (- ?int1 ?int2))))
+
+(defSuggestion IntegralOfSQR
+    (integral (sqr ?var) ?var ?int)    ; sqr is not a builtin lisp fn.
+  :subgoals ((unifies ?int (/ (expt ?var 3) 3))))
+
+(defSuggestion IntegralOfPolyterm
+    (integral (expt ?var ?n) ?var ?int)
+  :test (isa ?n PositiveInteger)
+  :subgoals ((unifies ?int (/ (expt ?var (+ 1 ?n)) (+ 1 ?n)))))
+
+(defSuggestion SimpleEIntegral
+    (integral (exp ?var) ?var ?int)
+  :subgoals ((unifies ?int (exp ?var))))
+
+(defSuggestion EIntegral
+    (integral (exp (* ?a ?var)) ?var ?int)
+  :test (not (termFormulas ?a ?var))
+  :subgoals ((unifies ?int (/ (exp (* ?a ?var)) ?a))))
+
+(defSuggestion SimpleNonEPowerIntegral
+    (integral (expt ?b ?var) ?var ?int)
+  :test (not (termFormulas ?b ?var))
+  :subgoals ((unifies ?int (/ (expt ?b ?var) (log ?b)))))
+
+(defSuggestion NonEPowerIntegral
+    (integral (expt ?b (* ?a ?var)) ?var ?int)
+  :test (and (not (termFormulas ?a ?var))
+             (not (termFormulas ?b ?var)))
+  :subgoals ((unifies ?int (/ (expt ?b (* ?a ?var)) (* ?a (log ?b))))))
+
+(defSuggestion LogIntegral
+    (integral (log ?var) ?var ?int)
+  :subgoals ((unifies ?int (- (* ?var (log ?var)) ?var))))
+
+(defSuggestion SimpleSinIntegral
+    (integral (sin ?var) ?var ?int)
+  :subgoals ((unifies ?int (- (cos ?var)))))
+
+(defSuggestion SinIntegral
+    (integral (sin (* ?a ?var)) ?var ?int)
+  :test (not (termFormulas ?a ?var))
+  :subgoals ((unifies ?int (- (/ (cos (* ?a ?var)) ?a)))))
+
+(defSuggestion SimpleCosIntegral
+    (integral (cos ?var) ?var ?int)
+  :subgoals ((unifies ?int (sin ?var))))
+
+(defSuggestion CosIntegral
+    (integral (cos (* ?a ?var)) ?var ?int)
+  :test (not (termFormulas ?a ?var))
+  :subgoals ((unifies ?int (/ (sin (* ?a ?var)) ?a))))
+
+(defSuggestion SinSqrIntegral
+    (integral (sqr (sin ?var)) ?var ?int)
+  :cost-function 2
+  :subgoals ((unifies ?int (- (/ ?var 2) (/ (sin (* 2 ?var)) 4)))))
+
+(defSuggestion CosSqrIntegral
+    (integral (sqr (cos ?var)) ?var ?int)
+  :cost-function 2
+  :subgoals ((unifies ?int (+ (/ ?var 2) (/ (sin (* 2 ?var)) 4)))))
+
+
+#|
+
+(fire:solve '(integral 4 x ?int) :context 'SaintMt :response '?int)
+  =>  (* 4 x)
+(fire:solve '(integral x x ?int) :context 'SaintMt :response '?int)
+  =>  (/ (expt x 2) 2)
+(fire:solve '(integral (+ (* a x) (* b x)) x ?int) :context 'SaintMt :response '?int)
+  =>  (+ (* a (/ (expt x 2) 2)) (* b (/ (expt x 2) 2)))
+(fire:solve '(integral (sin (* 2 x)) x ?int) :context 'SaintMt :response '?int)
+  => (- (/ (cos (* 2 x)) 2))
+
+;; This one is problematic.
+;; We'd like it to simplify sin^2(x) + cos^2(x) and take the integral of 1dx,
+;; but instead it splits it into two integrals and prefers the IntegralOfSum
+;; suggestion over SimplifyIntegrand.  The cost-function should prevent that.
+(fire:solve '(integral (+ (sqr (sin x)) (sqr (cos x))) x ?int) :context 'SaintMt :response '?int)
+  => (+ (- (/ x 2) (/ (sin (* 2 x)) 4)) (+ (/ x 2) (/ (sin (* 2 x)) 4)))
+ 
+
+(fire:solve '(simplify (+ (sqr (sin x)) (sqr (cos x))) ?simp) :context 'SaintMt :response '?simp) => 1
+(fire:solve '(simplify (- 0 2) ?simp) :context 'SaintMt :response '?simp) => (- 2)
+(fire:solve '(simplify (/ x x) ?simp) :context 'SaintMt :response '?simp) => 1
+
+;; Try: (display-aotree fire::*ao-tree*)
+;; to see the solve tree
+
+
+|#
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

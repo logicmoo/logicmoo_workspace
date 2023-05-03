@@ -1,0 +1,526 @@
+;;;
+;;; operationalizer.meld
+;;;
+
+(in-microtheory PerceptualAgentMt)
+
+;;; The operationalizer takes a learned qualitative model and a top-level goal and
+;;; produces a reified goal hierarchy. Goals are concisely named (eg, (GoalFn 1))
+;;; to reduce the complexity of matching.  By reifying the goal hierarchy, we 
+;;; vastly reduce the computational burden of subgoaling.  The goals are 
+;;; indexicalized, so that they are essentially type-level.  To generate 
+;;; behavior from goal types still requires propositionalizing them with
+;;; concrete entities, but this is a much simpler problem, especially when
+;;; reified Capability Roles provide a ready-made type decomposition to
+;;; associate goal types with enumerable sets of entity types and entities.
+
+;;; In order to produce role assignments, this must run *after* the capability
+;;; roles are defined and after the qualitative model is learned.  In fact, 
+;;; whenever we learn a  new influence fact, such as 
+;;; actionPositivelyAffectsQuantity, we should re-compute the role assignments.
+;;; Capability roles, on the other hand, are static with respect to the 
+;;; definitions of primitives.
+
+(isa GoalFn ReifiableFunction)
+(isa GoalFn AtomicAnalogyNAT-Function)
+(arity GoalFn 1)
+(arg1Isa GoalFn Integer)
+(resultIsa GoalFn Goal)  ; really a goal type.
+(comment GoalFn "(GoalFn #) is a concise name for an arbitrarily complex goal.  The association between the name and the goal representation is stated with the relation (goalName <name> <goal>).")
+
+(isa SGoalFn ReifiableFunction)
+(isa SGoalFn AtomicAnalogyNAT-Function)
+(arity SGoalFn 1)
+(arg1Isa SGoalFn Integer)
+(resultIsa SGoalFn Goal)
+(comment SGoalFn "(SGoalFn <id>) is a concise name for a scenario-specific goal.  Introduced to avoid collisions with the progressively growing set of static domain-level goals.")
+
+(isa GoalTypeFn ReifiableFunction)
+(isa GoalTypeFn AtomicAnalogyNAT-Function)
+(arity GoalTypeFn 1)
+(arg1Isa GoalTypeFn CycLTerm)
+(resultIsa GoalTypeFn Collection)
+(resultGenl GoalTypeFn Goal)
+(comment GoalTypeFn "(GoalTypeFn <Situation>) denotes the subcollection of Goal pertaining to bringing about <Situation>, which may be a StaticSituation, Event, or Action .")
+
+(isa goalName FunctionalPredicate) ; move this to performance goals?
+(arity goalName 2)
+(arg1Isa goalName Goal)
+(arg2Isa goalName CycLExpression)
+(comment goalName "(goalName (GoalFn <id>) <goal-type representation>) associates a complex goal-type representation with a concise name.")
+
+(isa subgoal BinaryPredicate)
+(arity subgoal 2)
+(arg1Isa subgoal Goal)
+(arg2Isa subgoal Goal)
+(comment subgoal "(subgoal g1 g2) is a reifiable predicate meaning that goal-type g2 is a subgoal of goal-type g1")
+
+(isa operationalizeGoalNetwork ComplexActionPredicate)
+(arity operationalizeGoalNetwork 2)
+(arg1Isa operationalizeGoalNetwork Microtheory)
+(arg2Isa operationalizeGoalNetwork Goal)
+(comment operationalizeGoalNetwork "(operationalizeGoalNetwork ?lkmt ?root-goal) reifies a hierarchy of goals from a root goal and a qualitative model.")
+
+;;; Argh! This isn't called in Freeciv.  Fap initialization directly executes operationalizeSubgoals and elaborateTradeoffs!
+(preconditionForMethod
+  (true)
+  (methodForAction 
+    (operationalizeGoalNetwork ?smmt ?root-goal)
+    (actionSequence
+      (TheList
+        (operationalizeSubgoals ?smmt ?root-goal (TheList))
+        (doAgentPlan (reifyDiachronicSubgoals ?smmt))
+        (doAgentPlan (elaborateTradeoffs ?smmt))))))
+
+;;; Currently invoked from reify-goal-hierarchy in freecivai (via initialize-player):
+
+
+(isa operationalizeSubgoals ComplexActionPredicate)
+(arity operationalizeSubgoals 3)
+(arg1Isa operationalizeSubgoals Microtheory)
+(arg2Isa operationalizeSubgoals Goal)
+(arg3Isa operationalizeSubgoals List)
+(comment operationalizeSubgoals "(operationalizeSubgoals ?lkmt ?goal ?parent-types) is a one-pass partial operationalization of the goal tree.")
+
+;;; We want to reify the tradeoffs too.  (planForInteractions did this in a particular way)
+;;; Also invoke resolvesToQuantityGoal as needed.
+;;; Instead of making TradeoffFn be an intermediate goal in the
+;;; hierarchy, just reify (annotatate) it with a relationship.
+;;; goalInteractionsAmong
+;;; The goalHierarchySignature now captures the entire sequence of tradeoffs and goal types
+;;; for use in comparing operational goals.
+;;; 7-22-13: Now storing static subgoaling information in the strategicModelMtFn 
+;;; rather than re-computing it each time for the execution context.
+(preconditionForMethod
+  (ignoreTimestamps  ; Static information - don't check timestamps at all.
+    (and (numAnswers 1 (reifiedGoalName ?smmt ?name ?goal-probe ?goal)) ; find-or-make
+         (uninferredSentence
+           (lookupOnly
+             (localOnly
+               (ist-Information ?smmt
+                 (subgoal ?name ?something)))))  ; already processed?  - *** This is problematic.
+         (evaluate ?subgoals
+           (TheClosedRetrievalSetOf (?subgoal-name ?subgoal)
+             (and (inferenceOnly (subgoal-TypeType ?goal ?subgoal-probe)) ; Try computing this in the query context.
+                  (numAnswers 1
+                    (reifiedGoalName ?smmt ?subgoal-name ?subgoal-probe ?subgoal)))))
+          ;;(different ?subgoals (TheSet))
+          ;; Don't short-circuit this - otherwise subgoal rep may not get reified.
+          (evaluate ?assignments
+            (TheClosedRetrievalSetOf ?assignment
+              (and (lookupOnly (elementOf ?pair ?subgoals)) ; We know this is a simple set - don't backchain
+                   (unifies (?subgoal-name ?subgoal) ?pair)
+                   (achievableByRole ?role ?subgoal)
+                   (unifies ?assignment (assignedToRole ?subgoal-name ?role)))))))
+  (methodForAction
+    (operationalizeSubgoals ?smmt ?goal-probe ?parent-types)
+    (actionSequence
+      (TheList
+        ; This is a problem.  If the goalName statement is already there, it may be a variant.  Don't re-store!
+        (doRecord (ist-Information ?smmt (goalName ?name ?goal)))  ; May already be there
+        (doForEach (?subgoal-name ?subgoal) ?subgoals 
+          (actionSequence
+            (TheList
+              (doAnnounce "~%reifying ~a -> ~a" (?name ?subgoal-name))
+              (doRecord (ist-Information ?smmt (goalName ?subgoal-name ?subgoal)))
+              (doRecord (ist-Information ?smmt (subgoal ?name ?subgoal-name))))))
+        (doForEach ?assignment ?assignments (doRecord (ist-Information ?smmt ?assignment)))
+        (doForEach (?subgoal-name ?subgoal) ?subgoals (operationalizeSubgoals ?smmt ?subgoal ?type-sequence))))))
+
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (operationalizeSubgoals ?smmt ?goal ?parent-types)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (operationalizeSubgoals ?smmt ?goal ?parent-types) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa reifiedGoalName QuaternaryPredicate)
+(arity reifiedGoalName 4)
+(arg1Isa reifiedGoalName Microtheory)
+(arg2Isa reifiedGoalName CycLTerm)
+(arg3Isa reifiedGoalName Goal)
+(arg4Isa reifiedGoalName Goal)
+(comment reifiedGoalName "(reifiedGoalName ?mt ?name ?goal-probe ?goal) finds or makes a reifiable NAT name for ?goal representation.")
+
+(<== (reifiedGoalName ?mt ?name ?goal-probe ?goal)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (goalName ?name ?goal-probe)))))
+     (unifies ?goal ?goal-probe))
+
+(<== (reifiedGoalName ?mt ?name ?goal-probe ?goal)
+     (uninferredSentence
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (goalName ?some-name ?goal-probe)))))
+     (numAnswers 1
+       (nextPersistentCounterValue GoalFn ?count))  ;; Had to make this persistent to work across sessions..
+     (unifies (?name ?goal) ((GoalFn ?count) ?goal-probe)))
+
+
+;;; This is analogous to taskAchieves, but doesn't index a particular
+;;; task or bind variables.  It just reifies the fact that members of
+;;; ?role have the intrinsic capability to execute a task to pursue
+;;; the goal.
+;;; Unlike taskAchieves, this needs to bind the role if necessary,
+;;; rather than just test it.
+(<== (achievableByRole ?role (MaximizeFn ?q))
+     (not (variableExpression ?q))
+     (cacheComplete (actionPositivelyAffectsQuantity ?q ?action))
+     (cacheComplete (roleCouldDo ?role ?action)))
+
+(<== (achievableByRole ?role (MinimizeFn ?q))
+     (not (variableExpression ?q))
+     (cacheComplete (actionNegativelyAffectsQuantity ?q ?action))
+     (cacheComplete (roleCouldDo ?role ?action)))
+
+;;; Long term, this is not sufficient.
+;;; We don't want to say that the city is the right unit to
+;;; achieve irrigation, just because they can move workers
+;;; around.  The conjunct that the role can achieve needs 
+;;; to be the most specific, whose variables are all 
+;;; functionally determined by the other conjuncts.
+(<== (achievableByRole ?role (AchieveFn ?prop))
+     (not (variableExpression ?prop))
+     (operatorFormulas and ?prop)
+     (formulaArgument ?prop ?n ?conj)
+     (achievableByRole ?role (AchieveFn ?conj)))
+     
+;(<== (achievableByRole ?role (AchieveFn ?prop))
+;     (not (variableExpression ?prop))
+;     (operatorFormulas and ?prop)
+;     (evaluate ?role-set
+;       (SetOfSetsIntersectionFn
+;         (TheClosedRetrievalSetOf ?subset
+;           (and (formulaArgument ?prop ?n ?conj)
+;                (achievableByRoleSet ?subset (AchieveFn ?conj))))))
+;     (elementOf ?role ?role-set))
+
+(isa achievableByRoleSet BinaryPredicate)
+(arity achievableByRoleSet 2)
+(arg1Isa achievableByRoleSet Set-Mathematical)
+(arg2Isa achievableByRoleSet Goal)
+(comment achievableByRoleSet "(achievableByRoleSet ?role-set ?achievement-goal-type) binds ?role-set to the set of capability roles that could achieve the goal.")
+
+(<== (achievableByRoleSet ?role-set (AchieveFn ?prop))
+     (evaluate ?role-set
+       (TheClosedRetrievalSetOf ?role
+         (achievableByRole ?role (AchieveFn ?prop))))
+     (different ?role-set (TheSet)))
+
+(<== (achievableByRole ?role (AchieveFn ?prop))
+     (not (variableExpression ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and)
+     (different ?pred isa)  ;; *** Added 9-29-14
+     (evaluate ?var-prop (GeneralizeFormulaFn ?prop))
+     (cacheComplete
+       (lookupOnly
+          (enablementRelation ?action-pred ?var-prop ?later-pred)))
+     (roleEntailsCapability ?role ?action-pred))
+
+;;; Extend this out, since enablementRelations are triples and
+;;; the action-pred might not be known to be used by anything yet.
+(<== (achievableByRole ?role (AchieveFn ?prop))
+     (not (variableExpression ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and)
+     (different ?pred isa)  ;; *** Added 9-29-14
+     (cacheComplete
+       (lookupOnly
+         (indexedEffect ?prop ?action-stmt)))
+     (not (atomicTerm ?action-stmt))
+     (operatorFormulas ?action-pred ?action-stmt)
+     (cacheComplete
+       (roleEntailsCapability ?role ?action-pred)))
+
+(isa roleCouldDo BinaryPredicate)
+(arity roleCouldDo 2)
+(arg1Isa roleCouldDo FunctionalRole)
+(arg2Isa roleCouldDo CycLExpression)
+(comment roleCouldDo "(roleCouldDo ?role ?action) means the members of ?role are all type-capable of performing ?action.")
+
+
+(<== (roleCouldDo ?role ?action)
+     (not (variableExpression ?action))
+     (operatorFormulas ?action-pred ?action)
+     (roleEntailsCapability ?role ?action-pred))
+
+;;; Fallback if we can't grab roles in one retrieval:
+(<== (roleCouldDo ?role ?action)
+     (not (variableExpression ?action))
+     (operatorFormulas ?action-pred ?action)
+     (uninferredSentence
+       (roleEntailsCapability ?some-role ?action-pred))
+     (arg1Isa ?action-pred ?isa)  ; by convention, the first argument to an action is the actor.
+     (isa ?role CapabilityRole) ;; check or bind possible roles
+     (uninferredSentence
+      (incompatibleRole ?role ?isa)))
+
+(isa incompatibleRole BinaryPredicate)
+(arity incompatibleRole 2)
+(arg1Isa incompatibleRole FunctionalRole)
+(arg2Isa incompatibleRole Collection)
+(comment incompatibleRole "(incompatibleRole ?role ?type) means the members of ?role are not all specs of ?isa.")
+
+(<== (incompatibleRole ?role ?type)
+     (roleMemberType ?actor-type ?role)
+     (uninferredSentence
+       (genls ?actor-type ?type)))
+
+
+
+;;; Gather non-empty roles:
+;;; 
+
+(<== (roleMember ?mt ?actor ?role)
+     (cacheComplete (capabilityRole ?role))     ; if specified, this is just a test, otherwise enumerate
+     (cacheComplete (roleMemberType ?resource-type ?role))  ; domain-wide knowledge
+     (ist-Information ?mt (assignableActorOfType ?actor ?resource-type))  ; Ensures actors/pieces belong to currentPlayer (and currently exist)
+     (uninferredSentence
+       (ist-Information ?mt 
+         (currentPlan ?actor ?what))))
+
+     
+;;; We don't really have a way to say one role is better than another,
+;;; so we blow out individual members and evaluate their suitability.
+
+;;; Gather operational goals
+;;; *** This does not seem to be called anywhere.
+;;; *** Probably just as well, since it's not clear whether goal is a
+;;; *** goal name or a representation.
+(isa operationalGoal TernaryPredicate)
+(arity operationalGoal 3)
+
+(<== (operationalGoal ?mt ?goal ?possible-actor)
+     (cacheComplete
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (assignedToRole ?goal ?role)))))
+     (uninferredSentence
+       (lookupOnly
+         (ist-Information ?mt (inactiveGoal ?goal))))
+     (cacheComplete
+       (roleMember ?mt ?possible-actor ?role)))
+
+;;; Do we do the cross-product?
+;;; all operational goals x all available assignments?
+
+;;; That produces 7 possible assignments for 2 units.
+;;; Probably won't scale.
+;;; The problem is that goal selection and unit assignment are not independent.
+;;; It may be really convenient for a unit to irrigate but not to build a road,
+;;; or it may be that a Settler would be nearby and available for irrigating,
+;;; but better suited for founding cities.
+;;; so: focus on purpose-directed goal selection first, make tentative
+;;; assignments, then clean up with opportunistic tasking?
+;;; Conceivably, this could be a self-modeling parameter: (proactive) initiative?
+
+
+;;;
+;;; Identify diachronic subgoals
+;;;
+
+(isa reifyDiachronicSubgoals ComplexActionPredicate)
+(arity reifyDiachronicSubgoals 1)
+(comment reifyDiachronicSubgoals "(reifyDiachronicSubgoals ?smmt) reifies diachronicSubgoal statements in ?smmt.")
+
+(preconditionForMethod 
+  (and (uninferredSentence
+         (lookupOnly
+           (localOnly
+             (kbOnly
+               (ist-Information ?smmt
+                 (diachronicSubgoal ?p ?c))))))
+       (evaluate ?subgoals
+         (TheClosedRetrievalSetOf ?subgoal
+           (and (cacheComplete (diachronicSubgoal ?parent ?child))
+                (unifies ?subgoal (diachronicSubgoal ?parent ?child))))))
+  (methodForAction
+    (reifyDiachronicSubgoals ?smmt)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?smmt ?subgoals)))))
+        
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (reifyDiachronicSubgoals ?smmt)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (reifyDiachronicSubgoals ?lkmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa achievableClause BinaryPredicate)
+(arity achievableClause 2)
+(arg1Isa achievableClause Goal)
+(arg2Isa achievableClause CycLFormula)
+(comment achievableClause "(achievableClause ?GOAL ?EXPR) reifies the fact that ?EXPR is a conjunct in an achievable proposition of ?GOAL (a goal name), as opposed to a filter condition.")
+
+(isa diachronicSubgoal BinaryPredicate)
+(arity diachronicSubgoal 2)
+(arg1Isa diachronicSubgoal Goal)
+(arg2Isa diachronicSubgoal Goal)
+(comment diachronicSubgoal "(diachronicSubgoal ?parent-goalname ?child-goalname) enumerates the subgoal pairs that are durative - created by a direct influence.")
+
+(<== (diachronicSubgoal ?parent ?child)
+     (lookupOnly
+       (subgoal ?parent ?child))
+     (numAnswers 1
+       (goalName ?parent ?parent-rep))
+     (quantitativeGoalNat ?parent-rep)
+     (numAnswers 1
+       (goalName ?child ?child-rep))
+     (numAnswers 1
+       (quantitativeGoalNat ?child-rep))
+     (unifies (?parent-functor (?dep-qtype ?dep-entity)) ?parent-rep)
+     (groundExpression ?dep-qtype)
+     (unifies (?child-functor (?indep-qtype ?indep-entity)) ?child-rep)
+     (groundExpression ?indep-qtype)
+     (cacheComplete
+       (diachronicInfluence ?dep-qtype ?indep-qtype)))
+
+(isa diachronicInfluence BinaryPredicate)
+(arity diachronicInfluence 2)
+(comment diachronicInfluence "(diachronicInfluence ?dep-qtype ?indep-qtype) succeeds if there is some kind of direct influence between the two quantity types.")
+
+(<== (diachronicInfluence ?dep-qtype ?indep-qtype)
+     (numAnswers 1 
+       (i+TypeType ?dep-qtype ?indep-qtype ?dep-type ?indep-type ?rel)))
+
+(<== (diachronicInfluence ?dep-qtype ?indep-qtype)
+     (numAnswers 1 
+       (i-TypeType ?dep-qtype ?indep-qtype ?dep-type ?indep-type ?rel)))
+
+(<== (diachronicInfluence ?dep-qtype ?indep-qtype)
+     (numAnswers 1 
+       (consequenceOf-TypeType ?process-type
+         (i+ (?dep-qtype ?dep-entity) (?indep-qtype ?indep-entity-type)))))
+
+(<== (diachronicInfluence ?dep-qtype ?indep-qtype)
+     (numAnswers 1 
+       (consequenceOf-TypeType ?process-type
+         (i- (?dep-qtype ?dep-entity) (?indep-qtype ?indep-entity-type)))))
+         
+(<== (diachronicSubgoal ?parent ?child)
+     (lookupOnly
+       (subgoal ?parent ?child))
+     (numAnswers 1
+       (goalName ?parent (AchieveFn ?prop)))
+     (not (variableExpression ?prop))
+     (numAnswers 1
+       (goalName ?child (MaximizeFn ?quantity)))
+     (not (variableExpression  ?quantity))
+     (unifies (?indep-qtype ?indep-entity) ?quantity)
+     (groundExpression ?indep-qtype)
+     ;; Assume that if there's any quantity being directly influenced by subgoal quantity,
+     ;; then that's the process of achieving the proposition.
+     ;; That's pretty much valid, given that the only way we compute subgoal-TypeType
+     ;; between an achieve and a maximize is that way.
+     (cacheComplete 
+       (diachronicInfluence ?dep-qtype ?indep-qtype)))
+
+
+;;; This makes no sense.  When is a quantitative subgoal of a prevent goal diachronic?
+;;; e.g., prevent disorder by maximizing happiness
+;(<== (diachronicSubgoal ?parent ?child)
+;     (lookupOnly
+;       (subgoal ?parent ?child))
+;     (numAnswers 1
+;       (goalName ?parent (PreventFn ?prop)))
+;     (not (variableExpression ?prop))
+;     (numAnswers 1
+;       (goalName ?child ?child-rep))
+;     (numAnswers 1
+;       (quantitativeGoalNat ?child-rep))
+;     (unifies (?functor ?quantity) ?child-rep)
+;     (not (variableExpression  ?quantity)))
+       
+
+;;; -------------------------------------------------------------------------
+;;;  subgoal achieve -> maximize rate of achieving
+;;; 
+;;; This was in the rational player, but that's almost entirely obsolete now.
+;;; I would move this up to performance goals, except that it relies on some
+;;; PerceptualAgent preds (like hypothesizedProcessLimitFromAction)
+;;; We might want to make an alternative rule that scrapes the process model
+;;; more systematically.
+
+;;; Resolve propositional -> quantity goal
+(<== (subgoal-TypeType (AchieveFn ?prop) ?subgoal)
+     (not (variableExpression ?prop))
+     (agentContext ?mt)  ; Changed from queryContext.  This needs to be a context that inherits from the qualitative model
+     (resolvesToQuantityGoal ?mt (AchieveFn ?prop) ?subgoal))
+
+(isa resolvesToQuantityGoal TernaryPredicate)
+(arity resolvesToQuantityGoal 3)
+(arg1Isa resolvesToQuantityGoal Microtheory)
+(arg2Isa resolvesToQuantityGoal Goal) ; PropositionalGoal?
+(arg3Isa resolvesToQuantityGoal Goal)
+(comment resolvesToQuantityGoal "(resolvesToQuantityGoal ?mt ?performance-goal ?quantity-goal) infers a quantitative goal from a propositional achievement goal.")
+
+;;; Use the planning graph to find an action that contributes to achieving ?prop.
+;;; Lookup an eventual process limit started by that action
+;;; Find the dependent variable that reaches the limit point
+;;; Find the influencer of that variable that represents a rate
+;;; Construct a goal to maximize that rate.
+
+;; can't directly convert for Prevent - type goals.
+;;; This is also invoked in explain-decision via hypothesizedSubgoalFor
+(<== (resolvesToQuantityGoal ?mt (AchieveFn ?p) ?quantity-goal)
+     (not (variableExpression ?p))
+     (outsourcedOnly (actionsForGoal ?mt (AchieveFn ?p) ?action))  ; This is overkill.  We don't need instantiated actions, just the pred.
+     ;; We want to subtract the particular conjunct achieved by this action.
+     (operatorFormulas ?action-pred ?action)
+     (numAnswers 1  ; not cache complete.  We don't care about the particular event type.
+       (ist-Information ?mt
+         (hypothesizedProcessLimitFromAction ?action-pred ?event-type)))
+     (ist-Information ?mt
+       (processDependentVariable (ActionProcessTypeFn ?action-pred) ?dep-qtype))
+     (ist-Information ?mt
+       (influenceDirection (ActionProcessTypeFn ?action-pred) ?dep-qtype increases))
+     (ist-Information ?mt
+       (i+TypeType ?dep-qtype ?indep-qtype ?col1 ?col2 ?rel))
+     (resolveEntityFromProp ?mt ?action ?p ?col1 ?col2 ?rel ?indep-entity)
+     (unifies ?quantity-goal
+       (MaximizeFn (?indep-qtype ?indep-entity))))
+
+
+(isa resolveEntityFromProp Predicate)
+(arity resolveEntityFromProp 7)
+(comment resolveEntityFromProp "(resolveEntityFromProp ?mt ?action ?prop ?col1 ?col2 ?rel ?resolved-entity)")
+
+;;; Ick: We've hit the 7-argument limit.
+(<== (resolveEntityFromProp ?mt ?action ?prop ?col1 ?col2 ?rel ?resolved-entity)
+     (formulaArgument ?action 1 ?entity)  ;; *** If action is part of a type-level statement, ?entity won't be bound.
+     (not (variableExpression ?entity))
+     (ist-Information ?mt    ; isas and genls may be domain-specific, but this rule isn't
+       (compatibleEntityType ?entity ?col1))
+     (ist-Information ?mt
+       (propagateBinpred ?rel ?entity ?resolved-entity)))
+      
+(<== (resolveEntityFromProp ?mt ?action ?p ?col1 ?col2 ?rel ?resolved-entity)
+     (formulaArgument ?action 1 ?entity)
+     (variableExpression ?entity)
+     (effectFilteredDescription ?mt ?action ?p ?filtered-prop)
+     (generalizeEntity
+       (GenericInstanceFn
+        (CollectionSubsetFn ?col1
+          (TheSetOf ?entity
+            ?filtered-prop)))
+       ?col2 ?rel ?resolved-entity))
+
+
+     
+;;; -------------------------------------------------------------------------
+;;; End Of File

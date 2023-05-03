@@ -1,0 +1,113 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: mathematics-kb-additions.meld
+;;;;    System: 
+;;;;   Version: 1.0
+;;;;    Author: Kenneth D. Forbus
+;;;;   Created: February 18, 2006 18:36:20
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  Modified: Saturday, June 17, 2006 at 15:56:47 by forbus
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory AlgebraMt)
+
+;;; There are some missing bits in the Cyc KB regarding mathematics.  
+
+(isa Log2Fn MathematicalFunctionOnScalars)
+(arity Log2Fn 2)
+(arg1Isa Log2Fn NonNegativeNumber)
+(arg2Isa Log2Fn PositiveNumber)
+(resultIsa Log2Fn RealNumber)
+(comment Log2Fn
+         "(Log2Fn ?arg ?base) denotes the logarithm of ?arg with respect to base ?base.  We restrict the base to be positive and the argument to be non-negative.")
+
+
+(isa E-LogarithmBase IrrationalNumber)
+(comment E-LogarithmBase
+  "E-LogarithmBase is Cycish for mathematician's e, roughly 2.7182817.")
+
+;;;; Ontological extensions for our algebra system
+
+(isa algebraParametersOf Predicate)
+(arity algebraParametersOf 2)
+(comment algebraParametersOf "(algebraParametersOf ?e ?s) indicates that the mathematical expression or equation ?e has the set of parameters ?s.")
+
+(isa algebraSimplificationOf Predicate)
+(arity algebraSimplificationOf 2)
+(comment algebraSimplificationOf "(algebraSimplificationOf ?e1 ?e2) indicates that ?e2 is a simplified version of ?e1.")
+
+
+(isa containsAlgebraParameter Predicate)
+(arity containsAlgebraParameter 2)
+(comment containsAlgebraParameter "(containsAlgebraParameter ?p ?e) indicates that equation or expression ?e contains parameter ?p.")
+
+(isa freeInAlgebraParameter Predicate)
+(arity freeInAlgebraParameter 2)
+(comment freeInAlgebraParameter "(freeInAlgebraParameter ?p ?e) indicates that equation or expression ?e does not contain parameter ?p.")
+
+(isa freeInSetOfAlgebraParameters Predicate)
+(arity freeInSetOfAlgebraParameters 2)
+(comment freeInSetOfAlgebraParameters "(freeInSetOfAlgebraParameters ?p ?e) indicates that equation or expression ?e does not contain any of the parameters in ?p.")
+
+(isa equationLHS Predicate)
+(arity equationLHS 2)
+(comment equationLHS "(equationLHS ?e ?l) indicates that ?l is the left-hand side of equation ?e.")
+
+(isa equationRHS Predicate)
+(arity equationRHS 2)
+(comment equationRHS "(equationRHS ?e ?l) indicates that ?l is the right-hand side of equation ?e.")
+
+(isa resultOfSubstitutingInFor Predicate)
+(arity resultOfSubstitutingInFor 4)
+(comment resultOfSubstitutingInFor
+  "(resultOfSubstitutingInFor ?p ?v ?old ?new) indicates that ?new is the result of substituting ?v for ?p in ?old.")
+
+(isa solveEquationFor Predicate)
+(arity solveEquationFor 3)
+(comment solveEquationFor "(solveEquationFor ?e ?u ?v) indicates that solving equation ?e for unknown ?u yields ?v.")
+
+(isa createSumEquation Predicate)
+(arity createSumEquation 2)
+(comment createSumEquation "(createSumEquation ?q-adds ?eqn) indicates that ?eqn is the equation resulting from the constituents in ?q-adds.")
+
+(isa algebraSimplificationOf Predicate)
+(arity algebraSimplificationOf 2)
+(comment algebraSimplificationOf "(algebraSimplificationOf ?e ?r) indicates that ?r is the result of simplifying ?e.")
+
+(isa algebraExpressionsEqual Predicate)
+(arity algebraExpressionsEqual 2)
+(comment algebraExpressionsEqual "(algebraExpressionsEqual ?e1 ?e2) indicates that algebraic expressions ?e1 and ?e2 are equivalent, after being simplified.")
+
+;;; From chainers
+
+(isa mathExpression Predicate)
+(arity mathExpression 1)
+(comment mathExpression "(mathExpression ?e) indicates that ?e is a mathematical expression.")
+
+(isa numericAnswer Predicate)
+(arity numericAnswer 1)
+(comment numericAnswer "(numericAnswer ?e) indicates that ?e is a number, perhaps with units.")
+
+(isa freeOfTimeVaryingParameters Predicate)
+(arity freeOfTimeVaryingParameters 1)
+(comment freeOfTimeVaryingParameters "(freeOfTimeVaryingParameters ?e) indicates that ?e does not contain any parameters whose value varies with time.")
+
+(isa scoreForSymbolicChoice Predicate)
+(arity scoreForSymbolicChoice 4)
+(comment scoreForSymbolicChoice "(scoreForSymbolicChoice ?choice ?value ?computed ?score) indicates that the computed value ?computed has a score of ?score, when viewed as a reason for accepting answer ?choice based on its given value of ?value.")
+
+(isa scoreForNumericalChoice Predicate)
+(arity scoreForNumericalChoice 4)
+(comment scoreForNumericalChoice "(scoreForSymbolicChoice ?choice ?value ?computed ?score) indicates that the computed value ?computed has a score of ?score, when viewed as a reason for accepting answer ?choice based on its given value of ?value.")
+
+(isa otherParametersInEquation Predicate)
+(arity otherParametersInEquation 3)
+(comment otherParametersInEquation "(otherParametersInEquation ?equation ?parameter ?others) computes the paramters in ?equation other than ?paramater.")
+
+(isa constructNumericalEquationViaSubstitutions Predicate)
+(arity constructNumericalEquationViaSubstitutions 4)
+(comment constructNumericalEquationViaSubstitutions "(constructNumericalEquationViaSubstitutions ?equation ?others ?final-equation ?equation-set) gather assertions of the form (solveForNumericalValue ?other-parameter ?value ?equation-set) from the current context and do the substitutions.")
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

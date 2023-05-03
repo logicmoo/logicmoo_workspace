@@ -1,0 +1,1993 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: companion-predicates.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 12, 2009 09:56:17
+;;;;   Purpose: Define predicates common to all companion agents.
+;;;; ------------------------------------------------------------------------
+
+
+(in-microtheory BaseKB)   ;; Wondering if this shouldn't be UniversalVocabularyMt?
+
+(isa CompanionsMt Microtheory)
+(genlMt CompanionsMt BaseKB)
+(genlMt CompanionsMt HTNPlanner)  ;; Agents use the planner
+(genlMt CompanionsMt SolveMt)     ;; and solve
+(genlMt CompanionsMt SuggestionsMt)
+
+(isa Simple-AgentMt Microtheory)  ;; support test clients
+(genlMt Simple-AgentMt CompanionsMt)
+
+(isa ExecutiveMt Microtheory)     ;; Unnecessary.  This is stored automatically for each agent type
+(genlMt ExecutiveMt CompanionsMt) ;; in setup-agent-context (via the accessor on simple-agent).
+(isa ExecutiveAgendaMt Microtheory)
+(genlMt ExecutiveAgendaMt ExecutiveMt)
+
+(isa Interaction-ManagerMt Microtheory)     ;; Unnecessary.  This is stored automatically for each agent type
+(genlMt Interaction-ManagerMt CompanionsMt) ;; in setup-agent-context (via the accessor on simple-agent).
+(genlMt Interaction-ManagerMt EANLU)        ;; Inherit the definitions of WHQuestion-IBT, etc.
+
+(isa Session-ReasonerMt Microtheory)
+(genlMt Session-ReasonerMt CompanionsMt)
+
+(isa UserModelMt Microtheory)  ;; Parent microtheory of individual user microtheories.
+(genlMt UserModelMt CyclistsMt)
+(modelMtOfUser (UserModelMtFn Hinrichs) Hinrichs) ; relate the modeling mt with the instance of HumanCyclist.
+(modelMtOfUser (UserModelMtFn Forbus) Forbus)
+(modelMtOfUser (UserModelMtFn Mdm998) McLure)
+
+(isa SelfModelMt Microtheory)  ;; The microtheory in which metaknowledge about the Companion is stored.
+(genlMt SelfModelMt CompanionsMt)
+
+;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+;;;
+;;; DynamicPredicate definitions
+;;; (these are implemented in "agents/dynamic-preds.lsp")
+;;;
+
+(isa uniqueCounterValue UnaryPredicate) ; This was colliding with Ken's counterValue in executive-plans.krf
+(arity uniqueCounterValue 1)
+(comment uniqueCounterValue "(uniqueCounterValue ?x) binds ?x to a unique integer in the current lisp image.")
+
+;;;
+;;; Support for agent class definitions
+;;;
+
+(isa CompanionSystem Collection)
+(genls CompanionSystem FunctionalSystem)
+(genls CompanionSystem SoftwareAgent)
+(genls CompanionSystem MachineImplementation)
+(genls CompanionSystem SocialBeing)
+(genls CompanionSystem IntelligentAgent)
+(genls CompanionSystem PerceptualAgent)
+(genls CompanionSystem IntangibleIndividual)
+(comment CompanionSystem "An instance of CompanionSystem is a particular companion comprised of a set of agents.")
+
+;;; Every CompanionSystem consists of at least one CompanionsAgent:
+(relationAllExists intangibleParts CompanionSystem CompanionsAgent)
+
+;;; Every Companion has at most one facilitator:
+(relationAllExistsMax intangibleParts CompanionSystem Facilitator-CA 1)
+
+;;; Every Companion has at most one executive:
+(relationAllExistsMax intangibleParts CompanionSystem Executive-CA 1)
+
+;;; SelfToken-Indexical is a particular instance of a Companion System
+(isa SelfToken-Indexical CompanionSystem)
+(isa SelfToken-Indexical IndexicalConcept)
+(comment SelfToken-Indexical
+ "SelfToken-Indexical is the KB term denoting the agent itself.  For use in self-models and for communication purposes.")
+
+
+(isa CompanionsAgent Collection)
+(genls CompanionsAgent SoftwareAgent)
+(comment CompanionsAgent "The collection of software agents making up the
+                          Companions architecture (by Northwestern 
+                          University's Qualitative Reasoning Group).")
+
+(isa CompanionsAgentType Collection)
+(isa CompanionsAgentType SecondOrderCollection)
+(comment CompanionsAgentType "The collection of agent types")
+
+(isa classNameForAgentType BinaryPredicate)
+(arity classNameForAgentType 2)
+(arg1Isa classNameForAgentType CompanionsAgentType)
+(arg2Isa classNameForAgentType ProgramObject)
+(comment classNameForAgentType
+  "Associates a #$CompanionsAgentType with the name of the class used for instantiating the agent in the Companions #$ComputerCode.")
+
+(isa agentClassUsesKB UnaryPredicate)
+(arity agentClassUsesKB 1)
+(arg1Isa agentClassUsesKB ProgramObject)
+(comment agentClassUsesKB
+  "Says that the given Companions agent class uses a knowledge-base.  See also (#$defaultKB <domain> <kb>) which specifies which KB should be used for a given domain.")
+
+(isa agentClassRunsUnderOS BinaryPredicate)
+(arity agentClassRunsUnderOS 2)
+(arg1Isa agentClassRunsUnderOS ProgramObject)
+(arg2Isa agentClassRunsUnderOS OperatingSystem)
+(comment agentClassRunsUnderOS
+  "Says that the given Companions agent class will work under the specified #$OperatingSystem.  At present, we support #$MSWindows and #$Linux.")
+
+;;;
+;;; Agent Types
+;;;
+
+(isa Facilitator-CA Collection)
+(isa Facilitator-CA CompanionsAgentType)
+(genls Facilitator-CA CompanionsAgent)
+(comment Facilitator-CA "The collection of facilitator agents.")
+
+(isa Executive-CA Collection)
+(isa Executive-CA CompanionsAgentType)
+(genls Executive-CA CompanionsAgent)
+(comment Executive-CA "The collection of executive agents")
+
+(typePlaysFunctionalRoleInType Executive-CA executive-FunctionalRole CompanionSystem)
+
+(isa SessionReasoner-CA Collection)
+(isa SessionReasoner-CA  CompanionsAgentType)
+(genls SessionReasoner-CA  CompanionsAgent)
+(comment SessionReasoner-CA  "The collection of session-reasoner agents")
+
+(isa Tickler-CA Collection)
+(isa Tickler-CA  CompanionsAgentType)
+(genls Tickler-CA  CompanionsAgent)
+(comment Tickler-CA  "The collection of tickler agents")
+
+(isa InteractionManager-CA Collection)
+(isa InteractionManager-CA CompanionsAgentType)
+(genls InteractionManager-CA CompanionsAgent)
+(genls InteractionManager-CA Agent-Generic)  ; somebody we can communicate with.
+(comment InteractionManager-CA "The collection of interaction manager agents")
+
+(isa NuSketchBattlespaceAgent-CA Collection)
+(isa NuSketchBattlespaceAgent-CA CompanionsAgentType)
+(genls NuSketchBattlespaceAgent-CA CompanionsAgent)
+(comment NuSketchBattlespaceAgent-CA 
+  "Each member of this collection is an instance of a #$CompanionsAgent that allows nuSketch Battlespace to communicate with a Companions system.")
+ 
+(isa CogSketchAgent-CA Collection)
+(isa CogSketchAgent-CA CompanionsAgentType)
+(genls CogSketchAgent-CA CompanionsAgent)
+(comment CogSketchAgent-CA 
+  "Each member of this collection is an instance of a #$CompanionsAgent that allows #$CogSketch to communicate with a Companions system.")
+
+(isa SpatialAgent-CA Collection)
+(isa SpatialAgent-CA CompanionsAgentType)
+(genls SpatialAgent-CA CompanionsAgent)
+(comment SpatialAgent-CA 
+  "Each member of this collection is an instance of a #$CompanionsAgent that allows #$CogSketch to communicate with a Companions system.")
+
+(isa SketchAgent-CA Collection)
+(isa SketchAgent-CA CompanionsAgentType)
+(genls SketchAgent-CA CompanionsAgent)
+(comment SketchAgent-CA 
+  "Each member of this collection is an instance of a #$CompanionsAgent that hosts a #$CogSketch sketch.")
+
+(isa Reader-CA Collection)
+(isa Reader-CA CompanionsAgentType)
+(genls Reader-CA CompanionsAgent)
+(comment Reader-CA
+  "Supports ConnectionGraph search.  See Abhishek for details.")
+
+;;; For now, at least, Freeciv is a specialized agent. 
+;;; This is necessary because it has a significantly augmented plan executor.
+(isa Freeciv-CA Collection)
+(isa Freeciv-CA  CompanionsAgentType)
+(genls Freeciv-CA  CompanionsAgent)
+(comment Freeciv-CA  "The collection of freeciv agents")
+
+(isa SimpleAgent-CA Collection)
+(isa SimpleAgent-CA CompanionsAgentType)
+(genls SimpleAgent-CA CompanionsAgent)
+(comment SimpleAgent-CA "The collection of simple agents")
+
+;;;
+;;; Functions
+;;;
+
+(isa ContextFn UnaryFunction)
+(arity ContextFn 1)
+(arg1Isa Context CycLTerm)
+(resultIsa ContextFn Microtheory)
+(comment ContextFn "(ContextFn <session-id>) is a function that wraps around a session-id to denote a microtheory context.")
+
+(isa MetadataContextFn UnaryFunction)
+(arity MetadataContextFn 1)
+(arg1Isa MetadataContextFn CycLTerm)
+(resultIsa MetadataContextFn Microtheory)
+(comment MetadataContextFn "(MetadataContextFn <session-id>) is a function wraps around a session-id to denote a microtheory that contains propositional metadatsa about a session.  It reifies metrics.")
+
+(isa PlanningMtFn UnaryFunction)
+(arity PlanningMtFn 1)
+(arg1Isa PlanningMtFn CycLTerm)
+(resultIsa PlanningMtFn Microtheory)
+(comment PlanningMtFn "(PlanningMtFn <domain>) denotes the scratchpad microtheory in which to plan in <domain>.  It should inherit from the agent context. Typically the value of the planning context of an agent.")
+
+(isa InterpretationMtFn UnaryFunction)
+(arity InterpretationMtFn 1)
+(arg1Isa InterpretationMtFn CycLTerm)  ; Thing?
+(resultIsa InterpretationMtFn Microtheory)
+(comment InterpretationMtFn "(InterpretationMtFn <topic>) denotes the microtheory in which abductive interpretation queries are defined for ?topic.  There may be more than one of these specified in the current session context via the predicate interpretationContext.")
+
+(isa GrammarMtFn UnaryFunction)
+(arity GrammarMtFn 1)
+(arg1Isa GrammarMtFn CycLTerm)  ; Thing?
+(resultIsa GrammarMtFn Microtheory)
+(comment GrammarMtFn "(GrammarMtFn <topic>) allows us to add custom grammar rules based on domain (for example we can add multi-modal grammar rules for multi-modal domain)")
+
+(isa IntentMtFn UnaryFunction)
+(arity IntentMtFn 1)
+(arg1Isa IntentMtFn CycLTerm)  ; Thing?
+(resultIsa IntentMtFn Microtheory)
+(comment IntentMtFn "(IntentMtFn <topic>) allows us to add custom inferIntent rules based on domain (for example we can add multi-modal grammar rules for multi-modal domain)")
+ 
+;;; Currently only used in currentQuantityValue rule.
+(isa IndexicalFn UnaryFunction)
+(arity IndexicalFn 1)
+(arg1Isa IndexicalFn Thing)
+(resultIsa IndexicalFn Thing)
+(comment IndexicalFn "(IndexicalFn ?unary-functional-pred) resolves to the entity determined by ?pred.")
+
+(isa TicklerFn UnaryFunction)
+(arity TicklerFn 1)
+(arg1Isa TicklerFn CompanionsAgent)
+(resultIsa TicklerFn CompanionsAgent)
+(comment TicklerFn "(TicklerFn <client-agent>) denotes the tickler agent corresponding to a client agent.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Domain support
+;;; Reify CompanionsDomain as something independent of CaseLibrary:
+(isa CompanionsDomain Collection)
+
+(isa domainCodeFor BinaryPredicate)
+(arity domainCodeFor 2)
+(arg1Isa domainCodeFor CompanionsDomain)
+(arg2Isa domainCodeFor CharacterString)  ;; Actually a url.  Do we have a type for this?
+(comment domainCodeFor "(domainCodeFor ?domain ?url) associates auxiliary code with a domain via a qrg-url.")
+
+(isa systemKeywordFor BinaryPredicate)
+(arity systemKeywordFor 2)
+(arg1Isa systemKeywordFor CompanionsDomain)
+(arg2Isa systemKeywordFor CycLTerm) ; specifically, a keyword
+(comment systemKeywordFor "(systemKeywordFor ?domain ?keyword) associates the system module name with a domain name.")
+
+(isa domainCommandsFor BinaryPredicate)
+(arity domainCommandsFor 2)
+(arg1Isa domainCommandsFor CompanionsDomain)
+(arg2Isa domainCommandsFor CharacterString) ;; A url
+(comment domainCommandsFor "(domainCommandsFor ?domain ?url) associates a file of CompanionsCommandLanguage definitions specific to ?domain")
+
+(isa defaultCaseLibraryFor BinaryPredicate)
+(arity defaultCaseLibraryFor 2)
+(arg1Isa defaultCaseLibraryFor CompanionsDomain)
+(arg2Isa defaultCaseLibraryFor CaseLibrary)
+(comment defaultCaseLibraryFor "(defaultCaseLibraryFor ?domain ?library) indicates the default base library for ?domain.")
+
+;;; defaultCaseConstructorFor ?domain ?case-constructor
+(isa defaultCaseConstructorFor BinaryPredicate)
+(arity defaultCaseConstructorFor 2)
+(arg1Isa defaultCaseConstructorFor CompanionsDomain)
+(arg2Isa defaultCaseConstructorFor CaseFunctions)
+
+;;; filterNuSketchPreds ?domain
+(isa filterNuSketchPreds UnaryPredicate)
+(arity filterNuSketchPreds 1)
+(arg1Isa filterNuSketchPreds CompanionsDomain)
+(comment filterNuSketchPreds "(filterNuSketchPreds ?domain) is true iff kqml communications should filter out NuSketch-specific predicates.")
+
+;;; filterNuSketchBookkeepingPreds ?domain
+(isa filterNuSketchBookkeepingPreds UnaryPredicate)
+(arity filterNuSketchBookkeepingPreds 1)
+(arg1Isa filterNuSketchBookkeepingPreds CompanionsDomain)
+(comment filterNuSketchBookkeepingPreds "(filterNuSketchBookkeepingPreds ?domain) is true iff kqml communications should filter out NuSketch bookkeeping predicates.  This is a less strict filter than filterNuSketchPreds.")
+
+;;; displayPerceptualSketchComponentsOnAsk ?domain
+(isa displayPerceptualSketchComponentsOnAsk UnaryPredicate)
+(arity displayPerceptualSketchComponentsOnAsk 1)
+(arg1Isa displayPerceptualSketchComponentsOnAsk CompanionsDomain)
+(comment displayPerceptualSketchComponentsOnAsk "(displayPerceptualSketchComponents ?domain) says that any perceptual sketch components that may be computed by the companion in sessions of this type will be displayed upon computation to the user.  This is not the default behavior of nusketch outsourced preds.")
+
+(isa defaultAgentConfiguration BinaryPredicate)
+(arity defaultAgentConfiguration 2)
+(arg1Isa defaultAgentConfiguration CompanionsDomain)
+(arg2Isa defaultAgentConfiguration List)  ; NOT a set, since we can have duplicates.
+(comment defaultAgentConfiguration "(defaultAgentConfiguration ?domain ?agent-list) specifies the (unordered) list of agent types to launch in this domain.")
+
+(isa defaultTicklerClients BinaryPredicate)
+(arity defaultTicklerClients 2)
+(arg1Isa defaultTicklerClients CompanionsDomain)
+(arg2Isa defaultTicklerClients Set-Mathematical)
+(comment defaultTicklerClients "(defaultTicklerClients ?domain ?agent-list) specifies the set of agent types in this domain that should launch with ticklers.")
+
+(isa defaultSpatialAgentClients BinaryPredicate)
+(arity defaultSpatialAgentClients 2)
+(arg1Isa defaultSpatialAgentClients CompanionsDomain)
+(arg2Isa defaultSpatialAgentClients Set-Mathematical)
+(comment defaultSpatialAgentClients "(defaultSpatialAgentClients ?domain ?agent-list) specifies the set of agent types in this domain that should launch with spatial agents, which, at least for now, are always in-process.")
+
+(isa separateProcessAgentForDomain BinaryPredicate)
+(arity separateProcessAgentForDomain 2)
+(arg1Isa separateProcessAgentForDomain CompanionsDomain)
+(arg2Isa separateProcessAgentForDomain ProgramObject)
+(comment separateProcessAgentForDomain 
+  "(separateProcessAgentForDomain ?domain ?agent-type) specifies that the given type of agent should be launched in its own process even if the session is running in local mode and thus launching agents in a shared process.  This is typically used only for agents that consume lots of resources (memory in particular).  Ticklers and nuSketch agents are good candidates.")
+
+(isa inProcessTicklersForDomain UnaryPredicate)
+(arity inProcessTicklersForDomain 1)
+(arg1Isa inProcessTicklersForDomain CompanionsDomain)
+(comment inProcessTicklersForDomain 
+  "(inProcessTicklersForDomain ?domain) Says that ticklers in this domain should always be launched in the same processes as their clients.")
+
+(isa defaultKB BinaryPredicate)
+(arity defaultKB 2)
+(arg1Isa defaultKB CompanionsDomain)
+(arg2Isa defaultKB CharacterString)
+(comment defaultKB 
+  "(defaultKB ?domain ?kb-name) defines the kb to use for this domain (optional)")
+
+(isa shareKBChangesAmongAgents UnaryPredicate)
+(arity shareKBChangesAmongAgents 1)
+(arg1Isa shareKBChangesAmongAgents CompanionsDomain)
+(comment shareKBChangesAmongAgents "(shareKBChangesAmongAgents ?domain) is true iff all KB changes should be shared among agents (if true, this is usually performed during the end-of-session debrief).")
+
+
+
+;;;
+;;; Outsourced predicates
+;;; (these are implemented in "agents/agents-source.lsp")
+;;;
+
+(isa currentDate UnaryPredicate)
+(isa currentDate DynamicUpdatePredicate)
+(arity currentDate 1)
+(arg1Isa currentDate CycUniversalDate)
+(comment currentDate "(currentDate ?cyc-universal-date) binds ?cyc-universal-date to the current date in CYC-style YYYYMMDD encoding.")
+
+(isa currentTime UnaryPredicate)
+(isa currentTime DynamicUpdatePredicate)
+(arity currentTime 1)
+(arg1Isa currentTime CycUniversalSecond)
+(comment currentTime "(currentTime ?cyc-universal-second) binds ?cyc-universal-second to the current time in CYC-style HHMMSS encoding.")
+
+(isa currentUptime BinaryPredicate)
+(isa currentUptime DynamicUpdatePredicate)
+(arity currentUptime 2)
+(arg1Isa currentUptime CompanionsAgent)
+(arg2Isa currentUptime Time-Quantity)
+(comment currentTime "(currentUptime ?agent ?duration) binds ?duration to a NAT representing the uptime duration of ?agent. This will look something like (PlusFn (MinutesDuration 5) (SecondsDuration 3))")
+
+(isa currentSession UnaryPredicate)
+(isa currentSession DynamicUpdatePredicate)
+(arity currentSession 1)
+(arg1Isa currentSession CycLTerm)
+(comment currentSession "(currentSession ?session-id) binds ?session-id to the current session token.")
+
+(isa currentDomain UnaryPredicate)
+(isa currentDomain DymanicUpdatePredicate)
+(arity currentDomain 1)
+(arg1Isa currentDomain CompanionsDomain)
+(comment currentDomain "(currentDomain ?domain) returns the domain of the current session.")
+
+(isa currentUser UnaryPredicate)
+(isa currentUser DynamicUpdatePredicate)
+(arity currentUser 1)
+(arg1Isa currentUser HumanCyclist)
+(comment currentUser "(currentUser ?who) binds ?who to the human user in the current session.")
+
+(isa currentlyOffline UnaryPredicate)
+(isa currentlyOffline DynamicUpdatePredicate)
+(arity currentlyOffline 1)
+(arg1Isa currentlyOffline CycLTerm)
+(comment currentlyOffline "(currentlyOffline ?session-id) succeeds if user has left the session.")
+
+(isa sessionDomain BinaryPredicate)
+(arity sessionDomain 2)
+(arg1Isa sessionDomain CycLTerm)
+(arg2Isa sessionDomain CompanionsDomain)
+(comment sessionDomain "(sessionDomain ?session-id ?domain) binds ?domain to the domain associated with ?session-id.")
+
+(isa sessionContext UnaryPredicate)
+(arity sessionContext 1)
+(arg1Isa sessionContext Microtheory)
+(comment sessionContext "(sessionContext ?context) binds the current session case context.")
+
+(isa agentContext UnaryPredicate)
+(arity agentContext 1)
+(arg1Isa agentContext Microtheory)
+(comment agentContext "(agentContext ?context) binds the current agent case context.")
+
+(isa planningContext UnaryPredicate)
+(arity planningContext 1)
+(arg1Isa planningContext Microtheory)
+(comment planningContext "(planningContext ?context) binds the current planning case context.")
+
+(isa agendaContext UnaryPredicate)
+(arity agendaContext 1)
+(arg1Isa agendaContext Microtheory)
+(comment agendaContext "(agendaContext ?context) binds the agenda context of the executive.")
+
+(isa executionContext UnaryPredicate)
+(isa executionContext DynamicUpdatePredicate)  ; This should *always* be outsourced.
+(arity executionContext 1)
+(arg1Isa executionContext Microtheory)
+(comment executionContext "(executionContext ?context) binds the current execution context microtheory.")
+
+(isa localAgent UnaryPredicate)
+(arity localAgent 1)
+(arg1Isa localAgent CompanionsAgent)
+(comment localAgent "(localAgent ?agent) answers the question 'Who am I?'  It binds ?agent to the name of the agent executing the query.")
+
+(isa localNode UnaryPredicate)
+(arity localNode 1)
+(arg1Isa localNode Computer)
+(comment localNode "(localNode ?node) answers the question 'Where am I?'  It binds ?node to the name of the node where the agent executing the query resides, but only if the agent is running on the cluster.")
+
+(isa agentsInProcess UnaryPredicate)
+(isa agentsInProcess DynamicUpdatePredicate)
+(arity agentsInProcess 1)
+(arg1Isa agentsInProcess Set-Extensional)
+(comment agentsInProcess "(agentsInProcess ?agents) binds ?agents to the agents in the same lisp as this reasoner.")
+
+(isa currentAgents UnaryPredicate)
+(arity currentAgents 1)
+(arg1Isa currentAgents Set-Mathematical)
+(comment currentAgents "(currentAgents ?agents) binds ?agents to the Set of agents in the current session.")
+
+(isa currentKBDelegateAgents UnaryPredicate)
+(arity currentKBDelegateAgents 1)
+(arg1Isa currentKBDelegateAgents Set-Mathematical)
+(comment currentKBDelegateAgents "(currentKBDelegateAgents ?agents) binds ?agents to the maximal subset of the agents in the session for which all members are running on different KBs in the session.  This is especially useful if you want to efficiently broadcast a kb transaction at the plan level.")
+
+(isa currentFacilitator UnaryPredicate)
+(arity currentFacilitator 1)
+(arg1Isa currentFacilitator CompanionsAgent)
+(comment currentFacilitator "(currentFacilitator ?fac) binds ?fac to the name of the current Facilitator of the querying agent.")
+
+(isa currentSessionManager UnaryPredicate)
+(arity currentSessionManager 1)
+(arg1Isa currentSessionManager CompanionsAgent)
+(comment currentSessionManager "(currentSessionManager ?sm) binds ?sm to the name of the current Session Manager.")
+
+(isa currentExecutive UnaryPredicate)
+(arity currentExecutive 1)
+(arg1Isa currentExecutive CompanionsAgent)
+(comment currentExecutive "(currentExecutive ?exec) binds ?exec to the name of the executive agent")
+
+(isa currentInteractionMgr UnaryPredicate)
+(arity currentInteractionMgr 1)
+(arg1Isa currentInteractionMgr CompanionsAgent)
+(comment currentInteractionMgr "(currentInteractionMgr ?im) binds ?im to the name of the interaction manager in ?session")
+
+(isa currentNuSketchHookup UnaryPredicate)
+(arity currentNuSketchHookup 1)
+(arg1Isa currentNuSketchHookup CompanionsAgent)
+(comment currentNuSketchHookup "(currentNuSketchHookup ?hookup) binds ?hookup to the NuSketch hookup of the current session.")
+
+(isa currentSpatialAgent UnaryPredicate)
+(arity currentSpatialAgent 1)
+(arg1Isa currentSpatialAgent CompanionsAgent)
+(comment currentSpatialAgent "(currentSpatialAgent ?spatial-agent) binds ?spatial-agent to the spatial agent (server) for the local agent (client).")
+
+(isa currentOrNewSpatialAgent UnaryPredicate)
+(arity currentOrNewSpatialAgent 1)
+(arg1Isa currentOrNewSpatialAgent CompanionsAgent)
+(comment currentOrNewSpatialAgent "(currentOrNewSpatialAgent ?spatial-agent) binds ?spatial-agent to the spatial agent (server) for the local agent (client), spawning one if one doesn't exist.")
+
+(isa currentSketchAgentNamed BinaryPredicate)
+(arity currentSketchAgentNamed 2)
+(arg1Isa currentSketchAgentNamed CharacterString)
+(arg2Isa currentSketchAgentNamed CompanionsAgent)
+(comment currentSketchAgentNamed "(currentSketchAgentNamed ?name ?sketch-agent) binds ?sketch-agent to the open sketch agent whose user-namestring is ?name")
+
+(isa currentSketchAgent UnaryPredicate)
+(isa currentSketchAgent DynamicUpdatePredicate)
+(arity currentSketchAgent 1)
+(arg1Isa currentSketchAgent CompanionsAgent)
+(comment currentSketchAgent "(currentSketchAgent ?sketch-agent) binds ?sketch-agent to the currently active sketch agent.")
+
+(isa currentBundleCase BinaryPredicate)
+(isa currentBundleCase DynamicUpdatePredicate)
+(arity currentBundleCase 2)
+(arg1Isa currentBundleCase CompanionsAgent)
+(arg2Isa currentBundleCase Microtheory)
+(comment currentBundleCase "(currentBundleCase ?sketch-agent ?bcase) binds ?bcase to the casename of the currently active bundle of the sketch agent.")
+
+(isa currentBundleName BinaryPredicate)
+(isa currentBundleName DynamicUpdatePredicate)
+(arity currentBundleName 2)
+(arg1Isa currentBundleName CompanionsAgent)
+(arg2Isa currentBundleName CharacterString)
+(comment currentBundleName "(currentBundleName ?sketch-agent ?username) binds ?username to the user label of the currently active bundle of the sketch agent.")
+
+(isa currentSelectedEntity UnaryPredicate)
+(isa currentSelectedEntity DynamicUpdatePredicate)
+(arity currentSelectedEntity 1)
+(arg1Isa currentSelectedEntity NuSketchGlyph)
+(comment currentSeltecedEntity "(currentSelectedEntity ?glyph) binds ?glyph to the glyph(s) currently selected in the active sketch.")
+
+(isa currentTickler UnaryPredicate)
+(arity currentTickler 1)
+(arg1Isa currentTickler CompanionsAgent)
+(comment currentTickler "(currentTickler ?tickler) binds ?tickler to the Tickler of the local agent in the current session.")
+
+(isa currentOrNewTickler UnaryPredicate)
+(arity currentOrNewTickler 1)
+(arg1Isa currentOrNewTickler CompanionsAgent)
+(comment currentOrNewTickler "(currentOrNewTickler ?tickler) binds ?tickler to the Tickler of the local agent in the current session, spawning one if one doesn't exist.")
+
+(isa currentSessionReasoner UnaryPredicate)
+(arity currentSessionReasoner 1)
+(arg1Isa currentSessionReasoner CompanionsAgent)
+(comment currentSessionReasoner "(currentSessionReasoner ?agent) binds ?agent to the Session-Reasoner(s) of the current session.")
+
+;;; Support for discrete time representation.
+;;; Let the interaction-manager and game agents use this.  
+;;; We'll add a turn slot to simple agents that holds an integer.
+;;; It may be an utterance number, a turn number, or a year (for Freeciv).
+;;; The outsourced predicate should just access the raw integer.
+;;; Allow context-specific 
+(isa currentTurn UnaryPredicate)
+(isa currentTurn DynamicUpdatePredicate)
+(arity currentTurn 1)
+(arg1Isa currentTurn Integer)
+(comment currentTurn "(currentTurn ?turn) binds ?turn to the current turn (if any) in whatever domain-specific encoding is appropriate.")
+
+(isa holdsOnRemoteAgent BinaryPredicate)
+(isa holdsOnRemoteAgent DynamicUpdatePredicate)
+(arity holdsOnRemoteAgent 2)
+(arg1Isa holdsOnRemoteAgent SoftwareAgent)
+(arg2Isa holdsOnRemoteAgent CycLExpression)
+(comment holdsOnRemoteAgent
+         "(holdsOnRemoteAgent ?agent ?fact) says that ?fact is true according to some other software agent.")
+
+;;; This is the backing store for persistentCounterValue.
+;;; You shouldn't access it from knowledge.
+(isa persistentCounter BinaryPredicate)
+(arity persistentCounter 2)
+(arg1Isa persistentCounter Thing)
+(arg2Isa persistentCounter Integer)
+(comment persistentCounter "(persistentCounter ?prefix ?count) maintains a persistent counter for generating new symbols using the newPersistentSymbol, persistentCounterValue and nextPersistentCounterValue outsourced predicate.  Do not access it directly from the knowledge level.")
+
+(isa newPersistableSymbol BinaryPredicate)
+(isa newPersistableSymbol DynamicUpdatePredicate)
+(arity newPersistableSymbol 2)
+(arg1Isa newPersistableSymbol Thing)
+(arg2Isa newPersistableSymbol Thing)
+(comment newPersistableSymbol "(newPersistableSymbol ?prefix ?symbol) binds ?symbol to a unique, new persistable symbol.  It increments a counter in the kb with the statement (list 'data::persistentCounter prefix 'data::?count).")
+
+(isa newUUIDSymbol BinaryPredicate)
+(isa newUUIDSymbol DynamicUpdatePredicate)
+(arity newUUIDSymbol 2)
+(arg1Isa newUUIDSymbol Thing)
+(arg2Isa newUUIDSymbol Thing)
+(comment newUUIDSymbol "(newUUIDSymbol ?prefix ?symbol) binds ?symbol to a new universally unique identifier (UUID) symbol.  It generates an alphnumeric string after the prefix so that the change of collision is about 1/the-number-of-atoms-in-the-universe.")
+
+;;; These counter values are transient.  They're maintained in a plist on the agent & reset each session.
+(isa counterValue BinaryPredicate)
+(isa counterValue DynamicUpdatePredicate)
+(arity counterValue 2)
+(arg1Isa counterValue CycLTerm)
+(arg2Isa counterValue Integer)
+(comment counterValue "(counterValue <counter-name> ?value) binds ?value to the current value of named counter (typically set by doIncrementCount, qqv.)   These counters are transient and reset on each session.")
+
+;;; An alternative to invoking an action primitive:
+(isa nextCounterValue BinaryPredicate)
+(isa nextCounterValue DynamicUpdatePredicate)
+(arity nextCounterValue 2)
+(arg1Isa nextCounterValue CycLTerm)
+(arg2Isa nextCounterValue Integer)
+(comment nextCounterValue "(nextCounterValue <counter-name> ?value) increments the named counter and binds ?value to the new value.")
+
+(isa persistentCounterValue BinaryPredicate)
+(isa persistentCounterValue DynamicUpdatePredicate)
+(arity persistentCounterValue 2)
+(arg1Isa persistentCounterValue CycLTerm)
+(arg2Isa persistentCounterValue Integer)
+(comment persistentCounterValue "(persistentCounterValue <counter-name> ?value) binds ?value to the value of named counter as stored persistently in the kb.")
+
+;;; An alternative to invoking an action primitive:
+(isa nextPersistentCounterValue BinaryPredicate)
+(isa nextPersistentCounterValue DynamicUpdatePredicate)
+(arity nextPersistentCounterValue 2)
+(arg1Isa nextPersistentCounterValue CycLTerm)
+(arg2Isa nextPersistentCounterValue Integer)
+(comment nextPersistentCounterValue "(nextPersistentCounterValue <counter-name> ?value) increments the persistent counter value in the kb and binds ?value to the new value.")
+
+;; This is similar to what doAnnounce does, but lets you bind the string and re-use it.
+(isa formattedContentString TernaryPredicate)
+(arity formattedContentString 3)
+(arg1Isa formattedContentString CharacterString)
+(arg2Isa formattedContentString List)
+(arg3Isa formattedContentString CharacterString)
+(comment formattedContentString "(formattedContentString ?format-string ?arglist ?output-string) binds ?output-string to the results of applying format to the args.")
+
+(isa collectionMember BinaryPredicate)
+(arity collectionMember 2)
+(arg1Isa collectionMember Collection)
+(arg2Isa collectionMember Individual)
+(comment collectionMember "(collectionMember ?collection-spec ?indiv) enumerates the extent of ?collection-spec within the query context.")
+
+(isa activeProcessBindings TernaryPredicate)
+(isa activeProcessBindings DynamicUpdatePredicate)
+(arity activeProcessBindings 3)
+(arg1Isa activeProcessBindings Microtheory)
+(arg2Isa activeProcessBindings Collection)
+(arg3Isa activeProcessBindings List-Extensional)
+(comment activeProcessBindings "(activeProcessBindings ?scenario-mt ?process-type ?binding-list) identifies active processes of the specified type in terms of participant bindings.")
+
+(isa activeModelFragmentsInMt BinaryPredicate)
+(isa activeModelFragmentsInMt DynamicUpdatePredicate)
+(arity activeModelFragmentsInMt 2)
+(arg1Isa activeModelFragmentsInMt Microtheory)
+(arg2Isa activeModelFragmentsInMt ModelFragment)
+(comment activeModelFragmentsInMt "(activeModelFragmentsInMt ?scenario-mt ?active-process-fn) binds ?active-process-fn to NATs w/functor ActiveProcessFn and args model-fragment-type and binding-list.")
+
+;;; This is useful for experimentation:
+(isa currentMeasureQuantities UnaryPredicate)
+(isa currentMeasureQuantities DynamicUpdatePredicate)
+(arity currentMeasureQuantities 1)
+(arg1Isa currentMeasureQuantities Set-Mathematical)
+(comment currentMeasureQuantities "(currentMeasureQuantities ?set) specifies the quantities that are to be reified each turn.")  ; must be supported by domain code.
+
+(isa currentExplanationQuantities UnaryPredicate)
+(isa currentExplanationQuantities DynamicUpdatePredicate)
+(arity currentExplanationQuantities 1)
+(arg1Isa currentExplanationQuantities Set-Mathematical)
+(comment currentExplanationQuantities "(currentExplanationQuantities ?quantity-set) specifies (via a set of patterns) which quantities should be tracked for explanation.")
+
+;;; latestDomainAction, currentAddList and currentDeleteList are just slot accessors on simple agents. 
+;;; It's up to an application program to keep them up to date.
+
+(isa latestDomainAction UnaryPredicate)
+(isa latestDomainAction DynamicUpdatePredicate)
+(arity latestDomainAction 1)
+(arg1Isa latestDomainAction Event)  ; Generally a PerceptualAgentCommand.
+(comment latestDomainAction "(latestDomainAction ?cmd) binds the last domain-level primitive action performed.")
+
+(isa currentAddList UnaryPredicate)
+(isa currentAddList DynamicUpdatePredicate)
+(arity currentAddList 1)
+(arg1Isa currentAddList Set-Mathematical)
+(comment currentAddList "(currentAddList ?set) reifies the propositions that have been added since the list was last cleared.")
+
+(isa currentDeleteList UnaryPredicate)
+(isa currentDeleteList DynamicUpdatePredicate)
+(arity currentDeleteList 1)
+(arg1Isa currentDeleteList Set-Mathematical)
+(comment currentDeleteList "(currentDeleteList ?set) reifies the propositions that have been deleted since the list was last cleared.")
+
+(isa planReferences BinaryPredicate)
+(arity planReferences 2)
+(arg1Isa planReferences CycLFormula)
+(arg2Isa planReferences CycLFormula)
+(comment planReferences "(planReferences ?plan ?prim) binds ?plan to plans that reference ?prim in their actionSequence.")
+
+(isa capabilityGroup TernaryPredicate)
+(arity capabilityGroup 3)
+(arg1Isa capabilityGroup Agent-Generic)
+(arg2Isa capabilityGroup Set-Mathematical)
+(arg3Isa capabilityGroup Set-Mathematical)
+(comment capabiiltyGroup "(capabilityGroup ?parent-type ?subtypes ?capabilities) clusters subtypes into groups with common sets of type-level capabilities.  Typically used in static analysis plans to construct capability-based functional roles.")
+
+(isa performableByType BinaryPredicate)
+(arity performableByType 2)
+(arg1Isa performableByType SimpleActionPredicate)
+(arg2Isa performableByType Collection)
+(comment performableByType "(performableByType ?action-pred ?agent-type) succeeds if ?action-type can possibly perform ?action-type.")
+
+(isa resolveIndexicals TernaryPredicate)
+(arity resolveIndexicals 3)
+(arg1Isa resolveIndexicals Microtheory)
+(arg2Isa resolveIndexicals CycLExpression)
+(arg3Isa resolveIndexicals CycLExpression)
+(comment resolveIndexicals "(resolveIndexicals ?mt ?expr ?translated-expr) rewrites terms of the form (IndexicalFn <0-arity-pred>) with the unique entities they refer to in the specified microtheory.")
+
+;;;(isa initialStrategy QuintaryPredicate)
+;;;(arity initialStrategy 5)
+;;;(arg1Isa initialStrategy Microtheory)
+;;;(arg2Isa initialStrategy Set-Mathematical)
+;;;(arg3Isa initialStrategy Set-Mathematical)
+;;;(arg4Isa initialStrategy CycLSentence)
+;;;(arg5Isa initialStrategy List)
+;;;(comment initialStrategy "(initialStrategy ?mt ?legal-actions ?goal-actions ?action ?goal-hierarchy)")
+
+;;;(isa strategyFromGoals QuintaryPredicate)
+;;;(arity strategyFromGoals 5)
+;;;(arg1Isa strategyFromGoals Microtheory)
+;;;(arg2Isa strategyFromGoals Set-Mathematical)
+;;;(arg3Isa strategyFromGoals Set-Mathematical)
+;;;(arg4Isa strategyFromGoals CycLSentence)
+;;;(arg5Isa strategyFromGoals List)
+;;;(comment strategyFromGoals "(strategyFromGoals ?mt ?legal-actions ?goals ?action ?goal-hierarchy) is similar to initialStrategy, but it takes goals rather than goal actions.")
+
+(isa strategyFromGoalNames QuintaryPredicate)
+(arity strategyFromGoalNames 5)
+(arg1Isa strategyFromGoalNames Microtheory)
+(arg2Isa strategyFromGoalNames Set-Mathematical)
+(arg3Isa strategyFromGoalNames Set-Mathematical)
+(arg4Isa strategyFromGoalNames CycLSentence)
+(arg5Isa strategyFromGoalNames Goal)
+(comment strategyFromGoalNames "(strategyFromGoalNames ?mt ?legal-actions ?goal-names ?action ?goal-name) is similar to strategyFromGoals, but it takes goal names rather than goal actions.")
+
+;;; Formerly used in the rational player:
+;;;(isa substrategyFromGoalHierarchy QuintaryPredicate)
+;;;(arity substrategyFromGoalHierarchy 5)
+;;;(arg1Isa substrategyFromGoalHierarchy Microtheory)
+;;;(arg2Isa substrategyFromGoalHierarchy Set-Mathematical)
+;;;(arg3Isa substrategyFromGoalHierarchy List)
+;;;(arg4Isa substrategyFromGoalHierarchy CycLSentence)
+;;;(arg5Isa substrategyFromGoalHierarchy List)
+;;;(comment substrategyFromGoalHierarchy "(substrategyFromGoalHierarchy ?mt ?legal-actions ?goal-hierarchy-list ?action ?sub-hierarchy) is similar to initialStrategy, but it takes goals rather than goal actions.  Given a goal hierarchy in the form of a list from lowest child goal to highest parent goal, bind a particular action and sub-hierarchy that will achieve the lowest goal in the given goal hierarchy.")
+
+;;; Only defined for signature (:known :known :variable)
+(isa actionsForGoal TernaryPredicate)
+(arity actionsForGoal 3)
+(arg1Isa actionsForGoal Microtheory)
+(arg2Isa actionsForGoal Goal)
+(arg3Isa actionsForGoal CycLSentence-Assertible)
+(comment actionsForGoal "(actionsForGoal ?mt ?goal ?action) means ?action is one way to achieve the ?goal in execution context ?mt.")
+
+(isa currentLegalAction UnaryPredicate)
+(isa currentLegalAction DynamicUpdatePredicate)
+(arity currentLegalAction 1)
+(arg1Isa currentLegalAction CycLSentence-Assertible)
+(comment currentLegalAction "(currentLegalAction ?operator) tests whether ?operator is currently legal in the execution context of agent.")
+
+(isa legalInstantiatedActions TernaryPredicate)
+(arity legalInstantiatedActions 3)
+(arg1Isa legalInstantiatedActions Microtheory)
+(arg2Isa legalInstantiatedActions CycLFormula)
+(arg3Isa legalInstantiatedActions CycLSentence-Assertible)
+(comment legalInstantiatedActions "(legalInstantiatedActions ?mt ?prop ?action) means ?action is one way to achieve the ?prop in execution context ?mt.")
+
+(isa effectFilteredDescription QuaternaryPredicate)
+(arity effectFilteredDescription 4)
+(arg1Isa effectFilteredDescription Microtheory)
+(arg2Isa effectFilteredDescription CycLSentence-Assertible)
+(arg3Isa effectFilteredDescription CycLFormula)
+(arg4Isa effectFilteredDescription CycLFormula)
+(comment effectFilteredDescription "(effectFilteredDescription ?mt ?action ?proposition ?filtered-proposition) subtracts effects of ?action from (conjunctive) ?proposition.")
+
+(isa quantityMentions BinaryPredicate)
+(arity quantityMentions 2)
+(arg1Isa quantityMentions ContinuousMeasurableQuantity)
+(arg2Isa quantityMentions Thing)
+(comment quantityMentions "(quantityMentions ?quantity ?entity) enables the enumeration of quantitytypes given a specific entity.")
+
+(isa domainRelationBetween TernaryPredicate)
+(arity domainRelationBetween 3)
+(arg1Isa domainRelationBetween BinaryRelation)
+(arg2Isa domainRelationBetween Thing)
+(arg3Isa domainRelationBetween Thing)
+(comment domainRelationBetween "(domainRelationBetween ?relation ?entity1 ?entity2) allows the enumerating of relations or entities.")
+
+(isa priorDomainRelationBetween TernaryPredicate)
+(arity priorDomainRelationBetween 3)
+(arg1Isa priorDomainRelationBetween BinaryRelation)
+(arg2Isa priorDomainRelationBetween Thing)
+(arg3Isa priorDomainRelationBetween Thing)
+(comment priorDomainRelationBetween "(priorDomainRelationBetween ?relation ?entity1 ?entity2) allows the enumerating of relations or entities that held in the immediately prior state.")
+
+(isa determinesFunctionalSlot BinaryPredicate)
+(arity determinesFunctionalSlot 2)
+(arg1Isa determinesFunctionalSlot SimpleActionPredicate)
+(arg2Isa determinesFunctionalSlot FunctionalSlot)
+(comment determinesFunctionalSlot "(determinesFunctionalSlot ?prim ?slot) binds ?slot to the functional slot (if any) determined by action predicate ?prim.")
+
+(isa enablementRelation TernaryPredicate)
+(arity enablementRelation 3)
+(arg1Isa enablementRelation ActionPredicate)
+(arg2Isa enablementRelation CycLFormula)
+(arg3Isa enablementRelation ActionPredicate)
+(comment enablementRelation "(enablementRelation ?pred1 ?prop ?pred2) means one effect of actions involving ?pred1 is ?prop which is an achievable precondition of actions involving ?pred2.  The network of these relations is essentially a planning graph used for reachability heuristics.")
+
+(isa indexedEffect BinaryRelation)
+(arity indexedEffect 2)
+(arg1Isa indexedEffect CycLFormula)
+(arg2Isa indexedEffect CycLFormula)
+(comment indexedEffect "(indexedEffect ?effect-conjunct ?action-signature) indexes effectOfAction-Props by individual effects for rapid lookup.")
+
+(isa indexedPrecond BinaryRelation)
+(arity indexedPrecond 2)
+(arg1Isa indexedPrecond CycLFormula)
+(arg2Isa indexedPrecond CycLFormula)
+(comment indexedPrecond "(indexedPrecond ?action-signature ?precondition-prop) indexes preconditionForAction-Props by individual achievable propositions for rapid lookup.")
+
+(isa indexedFilterCond BinaryRelation)
+(arity indexedFilterCond 2)
+(arg1Isa indexedFilterCond CycLFormula)
+(arg2Isa indexedFilterCond CycLFormula)
+(comment indexedFilterCond "(indexedFilterCond ?action-signature ?precondition-prop) indexes preconditionForAction-Props by individual filter conditions for rapid lookup.")
+
+(isa influencePathFromTo TernaryPredicate)
+(arity influencePathFromTo 3)
+(arg1Isa influencePathFromTo Quantity)
+(arg2Isa influencePathFromTo Quantity)
+(arg3Isa influencePathFromTo List)
+(comment influencePathFromTo "(influencePathFromTo ?dep-quantity ?indep-quantity ?influence-path) means there is a type-level ?influence-path from the independent-quantity to the dependent quantity.")
+
+(isa influencePathExists QuaternaryPredicate)
+(arity influencePathExists 4)
+(arg1Isa influencePathExists Microtheory)
+(arg2Isa influencePathExists Quantity)
+(arg3Isa influencePathExists Quantity)
+(arg4Isa influencePathExists Microtheory)
+(comment influencePathExists "(influencePathExists ?mt ?dep-q ?indep-q ?spindle-mt) means there exists a type-level influence path between ?indep-q and ?dep-q.")
+
+(isa completesLongerInfluencePath QuintaryPredicate)
+(arity completesLongerInfluencePath 5)
+(arg1Isa completesLongerInfluencePath Microtheory)
+(arg2Isa completesLongerInfluencePath Quantity)
+(arg3Isa completesLongerInfluencePath Quantity)
+(arg4Isa completesLongerInfluencePath Microtheory)
+(arg5Isa completesLongerInfluencePath CycLSentence-Assertible)
+(comment completesLongerInfluencePath "(completesLongerInfluencePath ?mt ?dep-q ?indep-q ?spindle-mt ?influence) means there the proposed type-level influence path between ?indep-q and ?dep-q makes a prior influence, ?influence, redundant.")
+
+(isa redundantInfluences BinaryPredicate)
+(arity redundantInfluences 2)
+(arg1Isa redundantInfluences Microtheory)
+(arg2Isa redundantInfluences CycLSentence-Assertible)
+(comment redundantInfluences "(redundantInfluences ?spindle-mt ?influence) binds ?influence to every redundant influence in the hypothesized influence graph reachable from ?spindle-mt.")
+
+;;; Migrated to fire/metaknowledge.lsp:
+;(isa microtheoriesOf BinaryPredicate)
+;(arity microtheoriesOf 2)
+;(arg1Isa microtheoriesOf CycLSentence-Assertible)
+;(arg2Isa microtheoriesOf Microtheory)
+;(comment microtheoriesOf "(microtheoriesOf ?sentence ?mt) binds ?mt to each of the microtheories in which ?sentence is asserted.")
+
+(isa satisfiesTypeLevelInfluences QuaternaryPredicate)
+(arity satisfiesTypeLevelInfluences 4)
+(arg1Isa satisfiesTypeLevelInfluences Quantity)
+(arg2Isa satisfiesTypeLevelInfluences ScalarInterval)
+(arg3Isa satisfiesTypeLevelInfluences Microtheory)
+(arg4Isa satisfiesTypeLevelInfluences Set-Mathematical)
+(comment satisfiesTypeLevelInfluences "(satisfiesTypeLevelInfluences ?dep-quantity ?change-magnitude ?casename ?type-level-influences) is a code-accelerated algorithm to check influence satisfaction.")
+
+(isa binrelIn BinaryPredicate)
+(arity binrelIn 2)
+(arg1Isa binrelIn Microtheory)
+(arg2Isa binrelIn CycLSentence-Assertible)
+(comment binrelIn "(binrelIn ?mt ?binrel) binds ?binrel to binary relation expressions in wm in the specified microtheory.")
+
+;;; This is admittedly pretty hokey and might be better implemented in planB using some kind of compositional context designator.  No time today.
+(isa ist-InContextRange QuaternaryPredicate)
+(arity ist-InContextRange 4)
+(arg1Isa ist-InContextRange CycLExpression)
+(arg2Isa ist-InContextRange Microtheory)
+(arg3Isa ist-InContextRange Microtheory)
+(arg4Isa ist-InContextRange CycLExpression)
+(comment ist-InContextRange "(ist-InContextRange ?query ?spec-mt ?genl-mt ?fact) retrieves ?facts that unify with ?query and are true in the range of microtheories from ?spec-mt to ?genl-mt (but no higher).")
+
+(isa ruleConcluding TernaryPredicate)
+(arg1Isa ruleConcluding Microtheory)
+(arg2Isa ruleConcluding CycLSentence-Assertible)
+(arg3Isa ruleConcluding CycLExpression) ; a horn clause.
+(comment ruleConcluding "(ruleConcluding ?mt ?consequent ?rule) retrieves rules from the kb, local to ?mt, whose consequent unify with ?consequent.")
+
+(isa dtreeScoreMidpoint QuaternaryPredicate)
+(arity dtreeScoreMidpoint 4)
+(arg1Isa dtreeScoreMidpoint DecisionTree)
+(arg2Isa dtreeScoreMidpoint List-Extensional)
+(arg3Isa dtreeScoreMidpoint Thing)
+(arg4Isa dtreeScoreMidpoint Number-General)
+
+;;; used in computing tradeoff strategies:
+(isa labeledIntersections TernaryPredicate)
+(arity labeledIntersections 3)
+(arg1Isa labeledIntersections Set-Mathematical)
+(arg2Isa labeledIntersections Set-Mathematical)
+(arg3Isa labeledIntersections Thing) ; typically a goal.
+(comment labeledIntersections "(labeledIntersections ?labeled-sets ?intersection ?commmon-element) binds ?intersections to the set of labels associated with a common element by intersecting the elements of labeled sets in the form (?label ?elements).")
+
+;;; strategy table:
+(isa decideSlot Predicate)
+(isa decideSlot DynamicUpdatePredicate)
+(arity decideSlot 5)
+(arg1Isa decideSlot Microtheory)
+(arg2Isa decideSlot Agent-Generic)
+(arg3Isa decideSlot FunctionalSlot)
+(arg4Isa decideSlot CycLExpression)
+(arg5Isa decideSlot Goal)
+(comment decideSlot "(decideSlot ?mt ?actor ?slot ?action ?goalname) invokes dynamic programming to select an action to set the slot value.")
+
+;;; strategy table:
+(isa possibleGoalAssignment TernaryPredicate)
+(arity possibleGoalAssignment 3)
+(arg1Isa possibleGoalAssignment Microtheory)
+(arg2Isa possibleGoalAssignment Agent-Generic)
+(arg3Isa possibleGoalAssignment Goal)
+(comment possibleGoalAssignment "(possibleGoalAssignment ?mt ?actor ?goal) identifies possible goals for ?actor in scenario microtheory ?mt.")
+
+;;; strategy table
+(isa sortedActionPairs Predicate)
+(arity sortedActionPairs 5)
+(arg1Isa sortedActionPairs TimeInterval)
+(arg2Isa sortedActionPairs Microtheory)
+(arg3Isa sortedActionPairs Agent-Generic)
+(arg4Isa sortedActionPairs Set-Mathematical)
+(arg5Isa sortedActionPairs List)
+(comment sortedActionPairs "(sortedActionPairs ?when ?mt ?actor ?goals ?list) binds ?list to a sorted list of pairs of (?instantiated-action ?goal).")
+
+(isa domainGoalActionPair TernaryPredicate)
+(arity domainGoalActionPair 3)
+(arg1Isa domainGoalActionPair Game)
+(arg2Isa domainGoalActionPair Goal)
+(arg3Isa domainGoalActionPair Predicate)
+(comment domainGoalActionPair "(domainGoalActionPair ?domain ?goal ?action-pred) binds ?goal and ?action-pred to operational goals and their action predicates (as determined by a qualitative model) for GGP-style games.")
+
+;;; nextGDLTurnAction
+(isa nextGDLTurnAction BinaryPredicate)
+(arity nextGDLTurnAction 2)
+(arg1Isa nextGDLTurnAction GameRole)
+(arg2Isa nextGDLTurnAction CycLExpression)
+(comment nextGDLTurnAction "(nextGDLTurnAction ?role ?action) binds ?action to a legal, goal-supported action in the current GGP game.")
+
+;;; nextGDLGoalAction
+(isa nextGDLGoalAction Predicate)
+(arity nextGDLGoalAction 4)
+(arg1Isa nextGDLGoalAction GameRole)
+(arg2Isa nextGDLGoalAction Goal)
+(arg3Isa nextGDLGoalAction Predicate)
+(arg4Isa nextGDLGoalAction CycLExpression)
+(comment nextGDLGoalAction "(nextGDLGoalAction ?role ?goal ?action-pred ?action) binds ?action to a legal, goal-supported action in the current GGP game.")
+
+;;; strategy table (used in strategic player):
+(isa ignorablePreconditionArg BinaryPredicate)
+(arity ignorablePreconditionArg 2)
+(arg1Isa ignorablePreconditionArg Integer)
+(arg2Isa ignorablePreconditionArg CycLExpression)
+(comment ignorablePreconditionArg "(ignorablePreconditionArg ?argnum ?task) means the the argument in ?argnum position never appears in the primitive action preconditions of ?task.")
+
+(isa inferredArguments BinaryPredicate)
+(arity inferredArguments 2)
+(arg1Isa inferredArguments CycLExpression)
+(arg2Isa inferredArguments CycLExpression)
+(comment inferredArguments "Instantiate any variable arguments that can be functionally inferred directly from other arguments.")
+
+;;; This is kind of gross, but necessary for the rational player:
+(isa appendNonVariants TernaryPredicate)
+(arity appendNonVariants 3)
+(arg1Isa appendNonVariants Set-Mathematical)
+(arg2Isa appendNonVariants List)
+(arg3Isa appendNonVariants List)
+(comment appendNonVariants "(appendNonVariants ?set ?list ?combined-list) adds elements of ?set to the end of ?list if they are not variants of elemetns already there.  ?combined-list is the resulting appended list.")
+
+(isa agendaPausedBeforeTimeout Predicate)
+(arity agendaPausedBeforeTimeout 1)
+(arg1Isa agendaPausedBeforeTimeout Number-General)
+(comment agendaPausedBeforeTimeout "(agendaPausedBeforeTimeout <timeout>) Issuing a ground query initiates an agenda pause on the agent and holds true iff the agenda successfully pauses before <timeout>.")
+
+(isa agentsInSameProcess BinaryPredicate)
+(arity agentsInSameProcess 2)
+(arg1Isa agentsInSameProcess Agent-Generic)
+(arg2Isa agentsInSameProcess Set-Extensional)
+(comment agentsInSameProcess "(agentsInSameProcess <agent> ?agents) Says the agents in the same lisp as <agent> are ?agents.")
+
+(isa experimentalConditionSymbol BinaryPredicate)
+(arity experimentalConditionSymbol 2)
+(arg1Isa experimentalConditionSymbol ExperimentalCondition)
+(arg2Isa experimentalConditionSymbol CycLTerm)
+(comment experimentalConditionSymbol "(experimentalConditionSymbol <condition> ?symbol).")
+
+(isa flattenedExpressionAcronymSymbol BinaryPredicate)
+(arity flattenedExpressionAcronymSymbol 2)
+(arg1Isa flattenedExpressionAcronymSymbol Thing)
+(arg2Isa flattenedExpressionAcronymSymbol CycLTerm)
+(comment flattenedExpressionAcronymSymbol "(flattenedExpressionAcronymSymbol <expression> ?symbol) binds ?symbol to a brief acronym-like symbol for the expression.")
+
+(isa splitStringAtSubstring QuaternaryPredicate)
+(isa splitStringAtSubstring DynamicUpdatePredicate)
+(arity splitStringAtSubstring 4)
+(arg1Isa splitStringAtSubstring CharacterString)
+(arg2Isa splitStringAtSubstring CharacterString)
+(arg3Isa splitStringAtSubstring CharacterString)
+(arg4Isa splitStringAtSubstring CharacterString)
+(comment splitStringAtSubstring "(splitStringAtSubstring ?string ?pre-substring ?split-substring ?post-substring) binds ?pre-substring/?post-substring to everything before/after ?split-substring in ?string.")
+
+(isa fileExists QuaternaryPredicate)
+(isa fileExists DynamicUpdatePredicate)
+(arity fileExists 4)
+(arg1Isa fileExists String)
+(arg2Isa fileExists String)
+(arg3Isa fileExists String)
+(arg4Isa fileExists String)
+(comment fileExists "(fileExists ?directory ?filename ?extension ?url) Matches a directory/filename/extension combination (possibly variablized) to the url(s) for one or more existing files.
+If it is invoked with a bound path argument - this is effectively an existence test - the other arguments should be unbound (they cannot help specify anything in these cases, so why support them?).
+If it is invoked with an unbound url argument, the directory argument needs to be bound (it's not going to search the file-system for you).
+All other combinations are supported.  You can use it to enumerate all the files in a directory, or just the sketch files (sk), or just the files named Foo, or to extract the directory, file and extension from a url, as long as the file exists.") 
+
+
+(isa subdirectoryExists TernaryPredicate)
+(isa subdirectoryExists DynamicUpdatePredicate)
+(arity subdirectoryExists 3)
+(arg1Isa subdirectoryExists String)
+(arg2Isa subdirectoryExists String)
+(arg3Isa subdirectoryExists String)
+(comment subdirectoryExists "(subdirectoryExists ?directory ?subdirectory ?url) Matches a directory/subdirectory combination (possibly variablized) to the url(s) for one or more existing subdirectories.
+Currently only works to list all subdirectories of a directory (i.e. with instantiated ?directory and variablized ?subdirectory and ?url) but can be extended to match #$fileExists")
+
+(isa pathsEquivalent Predicate)
+(arity pathsEquivalent 2)
+(arg1Isa pathsEquivalent String)
+(arg2Isa pathsEquivalent String)
+(comment pathsEquivalent "(pathsEquivalent ?path1 ?path2) checks for equivalence between qrg-file/data-file/kb-resource/etc. paths")
+
+(isa pseudoRandomShuffle Predicate)
+(arity pseudoRandomShuffle 3)
+(arg1Isa pseudoRandomShuffle List-Extensional)
+(arg2Isa pseudoRandomShuffle Number-General)
+(arg3Isa pseudoRandomShuffle List-Extensional)
+(comment pseudoRandomShuffle "(pseudoRandomShuffle ?lst ?seed ?shuffled-lst) binds ?shuffled-lst to a pseudo-randomly shuffled version of ?lst, using a provided seed.  this is useful when you want to generate something that shuffles some stuff in a reproducible way.")
+
+(isa sortedAlphabetically Predicate)
+(arity sortedAlphabetically 2)
+(arg1Isa sortedAlphabetically List-Extensional)
+(arg2Isa sortedAlphabetically List-Extensional)
+(comment sortedAlphabetically "(sortedAlphabetically ?lst ?sorted-lst) binds ?sorted-lst to the alphabetically sorted version of ?lst.")
+
+(arity agentForRBrowsing 2)
+(arg1Isa agentForRBrowsing Thing)
+(arg2Isa agentForRBrowsing CompanionsAgent)
+(comment agentForRBrowsing "(agentForRBrowsing ?conceptual-entity ?agent) Means that if possible, ?conceptual-entity should be rbrowsed in ?agent's KB.")
+
+(isa intervalDuration-Minutes Predicate)
+(arity intervalDuration-Minutes 5)
+(arg1Isa intervalDuration-Minutes Integer)
+(arg2Isa intervalDuration-Minutes Integer)
+(arg3Isa intervalDuration-Minutes Integer)
+(arg4Isa intervalDuration-Minutes Integer)
+(arg5Isa intervalDuration-Minutes Time-Quantity)
+(comment intervalDuration-Minutes "(intervalDuration-Minutes ?date1 ?time1 ?date2 ?time2 ?minutes)")
+
+(isa destructuredCycDate QuaternaryPredicate)
+(arity destructuredCycDate 4)
+(arg1Isa destructuredCycDate Integer)
+(arg2Isa destructuredCycDate Integer)
+(arg3Isa destructuredCycDate Integer)
+(arg4Isa destructuredCycDate Integer)
+(comment destructuredCycDate "(destructuredCycDate ?date ?day ?month ?year) unpacks a Cyc date into constituent fields.")
+;;;
+;;; Session support
+;;; (reified predicates written out by agent plans)
+
+(isa Session Collection)
+(isa Session MicrotheoryType)
+(genls Session Case)
+(comment Session "A Session represents a temporally contiguous sequence of 
+                  user interactions on some topic.")
+                  
+(isa sessionID Predicate)
+(arity sessionID 2)
+(arg1Isa sessionID Session)
+(arg2Isa sessionID CycLTerm)
+(comment sessionID "(sessionID <session> <id>) indicates that the
+                     session id of <session> was <id>.")
+
+;;; Now disentangled from the dynamic update predicate currentUser.
+;;; Use this to record the fact in the kb.
+(isa sessionUser Predicate)
+(arity sessionUser 2)
+(arg1Isa sessionUser Session)
+(arg2Isa sessionUser HumanCyclist)
+(comment sessionUser "(sessionUser <session> <user>) indicates that the 
+                      human participant in <session> was <user>.")
+
+(isa sessionTopic Predicate)
+(arity sessionTopic 2)
+(arg1Isa sessionTopic Session)
+(arg2Isa sessionTopic CycLTerm)
+(comment sessionTopic "(sessionTopic <session> <topic>) indicates that the 
+                       topic or domain in <session> was <topic> (generally 
+                       a term denoting a caseLibrary).")
+
+(isa sessionDate UnaryPredicate)
+(arity sessionDate 1)
+(arg1Isa sessionDate CycTime)
+(comment sessionDate "(sessionDate ?cyc-time) reifies the date of the (start of the) current session.")
+
+(isa sessionTime UnaryPredicate)
+(arity sessionTime 1)
+(arg1Isa sessionTime CycSeconds)
+(comment sessionTime "(sessionTime ?cyc-seconds) reifies the time of the (start of the) current session.")
+
+(isa sessionDuration UnaryPredicate)
+(arity sessionDuration 1)
+(arg1Isa sessionDuration Time-Quantity)
+(comment sessionDuration "(sessionDuration ?duration) records the elapsed time (in minutes) of the session represented by the microtheory in which it is recorded")
+
+(isa sessionStartTime Predicate)
+(arity sessionStartTime 2)
+(arg1Isa sessionStartTime Session)
+(arg2Isa sessionStartTime TimePoint)
+(comment sessionStartTime "(sessionStartTime <session> <time>) indicates that 
+                           <session> began at time <time>.")
+
+(isa sessionEndTime Predicate)
+(arity sessionEndTime 2)
+(arg1Isa sessionEndTime Session)
+(arg2Isa sessionEndTime TimePoint)
+(comment sessionEndTime "(sessionEndTime <session> <time>) indicates that 
+                         <session> ended at time <time>.")
+
+(isa latestSession Relation)
+(arity latestSession 2)
+(comment latestSession
+  "(latestSession user session) 
+says that a given #$Session was in the most recent session 
+whose sessionUser was user.")
+(arg1Isa latestSession HumanCyclist)
+(arg2Isa latestSession Session)
+(isa latestSession NotForAnalogyPredicate)
+
+(isa stnScenarioMt BinaryPredicate)
+(arity stnScenarioMt 2)
+(arg1Isa stnScenarioMt STN)
+(arg2Isa stnScenarioMt Microtheory)
+(comment stnScenarioMt "(stnScenarioMt ?term ?mt) binds ?term to the term for the simple temporal network defined in microtheory ?mt, or binds ?mt given the term.")
+
+(isa stnTimePoint BinaryPredicate)
+(arity stnTimePoint 2)
+(arg1Isa stnTimePoint STN)
+(arg2Isa stnTimePoint TimePoint) ; typically either (StartFn <evt>) or (EndFn <evt>)
+(comment stnTimePoint "(stnTimePoint ?stn ?time-point) is true iff ?time-point is a member of the vertices of the simple temporal network ?stn.")
+
+(isa stnEdge BinaryPredicate)
+(arity stnEdge 2)
+(arg1Isa stnEdge STN)
+(arg2Isa stnEdge CycLTerm) ; Needs better ontologizing.
+(comment stnEdge "(stnEdge ?stn ?edge) is true iff ?edge is a member of the edges of the simple temporal network ?stn.")
+
+(isa stnTimeUnits BinaryPredicate)
+(arity stnTimeUnits 2)
+(arg1Isa stnTimeUnits STN)
+(arg2Isa stnTimeUnits UnitOfTime)
+(comment stnTimeUnits "(stnTimeUnits ?stn ?units) binds ?units to the temporal units used in the simple temporal network ?stn.")
+
+(isa earliestFeasibleSchedule BinaryPredicate)
+(arity earliestFeasibleSchedule 2)
+(arg1Isa earliestFeasibleSchedule STN)
+(arg2Isa earliestFeasibleSchedule List)
+(comment earliestFeasibleSchedule "(earliestFeasibleSchedule ?stn ?list-of-temporally-ordered-start-points) computes the ordered seqence of earliest feasible start times for the stn.")
+
+(isa latestFeasibleSchedule BinaryPredicate)
+(arity latestFeasibleSchedule 2)
+(arg1Isa latestFeasibleSchedule STN)
+(arg2Isa latestFeasibleSchedule List)
+(comment latestFeasibleSchedule "(latestFeasibleSchedule ?stn ?list-of-temporally-ordered-start-points) computes the ordered seqence of latest feasible start times for the stn.")
+
+
+;;;
+;;; Companions Collections
+;;;
+
+(isa STN Collection)
+(genls STN Network)
+(comment STN "An STN is a Simple Temporal Network.  In the context of a companions, it denotes a specific datastructure for computing temporal relations.")
+
+(isa STNFn UnaryFunction)
+(arity STNFn 1)
+(arg1Isa STNFn Integer)
+(resultIsa STNFn STN)
+(comment STNFn "(STNFn ?id) denotes the simple temporal network with the particular stn-id ?id.")
+
+(isa Problem Collection)
+(comment Problem "Problem is the collection of all tasks to be solved in a quiz.")
+(isa Quiz Collection)
+(comment Quiz "Quiz is the collection of quizzes which consist of problems.")
+(isa Experiment Collection)
+(comment Experiment "Experiment is the collection of experiments which are sequences of quizzes and bookkeeping activities.")
+
+
+;;;
+;;; Reifiable predicates
+;;;
+
+(isa exists Predicate)
+(comment exists "(#$exists INDIVIDUAL) implies that the individual exists in the current context.")
+(arity exists 1)
+(arg1Isa exists Individual)
+
+(isa problemSetupFile BinaryPredicate)
+(arity problemSetupFile 2)
+(arg1Isa problemSetupFile Problem)
+(arg2Isa problemSetupFile CharacterString)
+(comment problemSetupFile "(problemSetupFile ?problem ?data-url) associates a relative qrg url for a scenario krf file with a problem.")
+
+(isa problemQuery BinaryPredicate)
+(arity problemQuery 2)
+(arg1Isa problemQuery Problem)
+(arg2Isa problemQuery CycLSentence-Askable)
+(comment problemQuery "(problemQuery ?problem ?query) associates a query with a problem.")
+
+(isa problemContext BinaryPredicate)
+(arity problemContext 2)
+(arg1Isa problemContext Problem)
+(arg2Isa problemContext Microtheory)
+(comment problemContext "(problemContext ?problem ?microtheory) associates a problem-solving microtheory context with a problem.")
+
+(isa quizProblemList BinaryPredicate)
+(arity quizProblemList 2)
+(arg1Isa quizProblemList Quiz)
+(arg2Isa quizProblemList List-Extensional)
+(comment quizProblemList "(quizProblemList ?quiz ?problem-list) binds ?problem-list to the reified list of problems constituting ?quiz.")
+
+(isa experimentalResultsFile BinaryPredicate)
+(arity experimentalResultsFile 2)
+(arg1Isa experimentalResultsFile Experiment)
+(arg2Isa experimentalResultsFile CharacterString)
+(comment experimentalResultsFile "(experimentalResultsFile ?experiment ?data-url) associates a relative qrg url with an experiment.")
+
+;;; Assume that we use planForTask to associate an executable actionSequence with an experiment.
+;;; runExperiment will look for such a sequence to execute.
+
+;;; See the executive krf files for definitions of solveProblem, takeQuiz, & runExperiment.
+
+(isa agentForOpenSketch BinaryPredicate)
+(arity agentForOpenSketch 2)
+(arg1Isa agentForOpenSketch NuSketchSketch)
+(arg2Isa agentForOpenSketch CompanionsAgent)
+(comment agentForOpenSketch "(agentForOpenSketch ?sketch ?sketch-agent)")
+
+(isa selectedItemInSketch BinaryRelation)
+(arity selectedItemInSketch 2)
+(arg1Isa selectedItemInSketch NuSketchSketch)
+(arg2Isa selectedItemInSketch NuSketchGlyph)
+
+(isa currentlyActiveSketch UnaryRelation)
+(arity currentlyActiveSketch 1)
+(arg1Isa currentlyActiveSketch NuSketchSketch)
+
+(isa currentlyActiveBundleInSketch BinaryRelation)
+(arity currentlyActiveBundleInSketch 2)
+(arg1Isa currentlyActiveBundleInSketch NuSketchSketch)
+(arg2Isa currentlyActiveBundleInSketch NuSketchBundle)
+
+(isa currentlyActiveLayerInSketch BinaryRelation)
+(arity currentlyActiveLayerInSketch 2)
+(arg1Isa currentlyActiveLayerInSketch NuSketchSketch)
+(arg2Isa currentlyActiveLayerInSketch NuSketchLayer)
+
+(isa factFromRemoteAgent Relation)
+(isa factFromRemoteAgent NotForAnalogyPredicate)
+(arity factFromRemoteAgent 2)
+(arg1Isa factFromRemoteAgent CycLExpression)
+(arg2Isa factFromRemoteAgent SoftwareAgent)
+(comment factFromRemoteAgent
+  "(factFromRemoteAgent <fact> <agent>) indicates that the specified 
+fact was received from some other SoftwareAgent.")
+
+(isa ticklerTrackingCase Relation)
+(isa ticklerTrackingCase NotForAnalogyPredicate)
+(arity ticklerTrackingCase 3)
+(arg1Isa ticklerTrackingCase Case)
+(arg2Isa ticklerTrackingCase Set-Mathematical)
+(arg3Isa ticklerTrackingCase CaseLibrary)
+(comment ticklerTrackingCase
+  "(ticklerTrackingCase ?case ?constraints ?library) indicates that the tickler for this
+ agent should be tracking case ?case, under match/retrieval constraints ?constraints,
+ using case library ?library.")
+
+
+(isa ticklerReminding Relation)
+(isa ticklerReminding NotForAnalogyPredicate)
+(arity ticklerReminding 6)
+(comment ticklerReminding
+ "(ticklerReminding probe library constraints found-case match-token time) 
+says that a given probe Case was found by the Analogical Tickler 
+to be similar to some other Case in the specified CaseLibrary.")
+(arg1Isa ticklerReminding Case)
+(arg2Isa ticklerReminding CaseLibrary)
+(arg3Isa ticklerReminding Set-Mathematical)
+(arg4Isa ticklerReminding Case)
+(arg5Isa ticklerReminding Match)
+(arg6Isa ticklerReminding TimePoint)
+
+
+(isa latestTicklerReminding Relation)
+(isa latestTicklerReminding DynamicUpdatePredicate)
+(isa latestTicklerReminding NotForAnalogyPredicate)
+(arity latestTicklerReminding 5)
+(arg1Isa latestTicklerReminding Case)
+(arg2Isa latestTicklerReminding CaseLibrary)
+(arg3Isa latestTicklerReminding Set-Mathematical)
+(arg4Isa latestTicklerReminding Case)
+(arg5Isa latestticklerReminding TimePoint)
+(comment latestTicklerReminding
+ "(latestTicklerReminding probe-case library found-case) 
+says that a given Case was in the most recent batch of cases found 
+to be similar to a given probe Case within the specified 
+CaseLibrary.  This is a dynamic update predicate.")
+
+(isa matchConstraints Predicate)
+(arity matchConstraints 2)
+(arg1Isa matchConstraints Microtheory)
+(arg2Isa matchConstraints Set-Mathematical)
+(comment matchConstraints
+  "(matchConstraints <case> ?constraints) Says that ?constraints are the set
+   of SME match constraints that are visible from the current context,
+   for use in analogical processing such as SAGE and MAC/FAC")
+
+(<== (matchConstraints ?mt ?constraints)
+     (ist-Information ?mt (matchConstraintsMtFor ?mt ?mc-mt))
+     ;;for the record, I feel dirty doing it this way^, but it's a SAGE convention
+     ;;and I guess I might as well play along.
+     (evaluate ?sets-of-constraints
+       (TheClosedRetrievalSetOf ?constraints-of-type
+         (and (elementOf ?constraint-query
+                (TheSet (requireWithinPartitionCorrespondences ?col)
+                        (excludedCross-PartitionCorrespondences ?set)
+                        (identicalFunctions)
+                        (requiredBaseCorrespondence ?base-item)
+                        (excludedBaseCorrespondence ?base-item)
+                        (requiredTargetCorrespondence ?target-item)
+                        (excludedTargetCorrespondence ?target-item)
+                        (requiredCorrespondence ?base-item ?target-item)
+                        (excludedCorrespondence ?base-item ?target-item)))
+              (evaluate ?constraints-of-type
+                (TheClosedRetrievalSetOf ?constraint-query
+                  (ist-Information ?mc-mt ?constraint-query))))))
+     (evaluate ?constraints-list
+       (SetToListFn
+        (SetOfSetsUnionFn
+         ?sets-of-constraints)))
+     ;;;alphabetize, because its in our best interest for the order of the set to be stable (for unification)
+     (evaluate ?alphabetical-constraints
+       (SortFn ?constraints-list 
+               (Kappa (?one ?two) (alphalessp ?one ?two))
+               IdentityFn))
+     (evaluate ?constraints
+       (ListToSetFn ?alphabetical-constraints)))
+
+(<== (matchConstraints ?mt (TheSet))
+     (uninferredSentence
+      (ist-Information ?mt (matchConstraintsMtFor ?mt ?mc-mt))))
+
+(isa matchConstraintUnion Predicate)
+(arity matchConstraintUnion 3)
+(arg1Isa matchConstraintUnion Microtheory)
+(arg2Isa matchConstraintUnion Microtheory)
+(arg3Isa matchConstraintUnion Set-Mathematical)
+(comment matchConstraintUnion
+  "(matchConstraintUnion <case1> <case2> ?constraints) Says that ?constraints are the set
+   of SME match constraints that are visible from contexts <case1> and <case2>, for use
+   in analogical processing such as SAGE and MAC/FAC")
+
+(<== (matchConstraintUnion ?mt1 ?mt2 ?constraints)
+     (numAnswers 1 (matchConstraints ?mt1 ?constraints1))
+     (numAnswers 1 (matchConstraints ?mt2 ?constraints2))
+     (evaluate ?constraints-list
+       (SetToListFn
+        (SetOrCollectionUnion ?constraints1 ?constraints2)))
+     (evaluate ?alphabetical-constraints   ;;;alphabetize, because its in our best interest for the order of the set to be stable (for unification)
+       (SortFn ?constraints-list 
+               (Kappa (?one ?two) (alphalessp ?one ?two))
+               IdentityFn))
+     (evaluate ?constraints
+       (ListToSetFn ?alphabetical-constraints)))
+
+(isa caseLibraryForReminding Predicate)
+(arity caseLibraryForReminding 1)
+(arg1Isa caseLibraryForReminding CaseLibrary)
+
+(<== (caseLibraryForReminding (CaseLibraryFn ?caselib))
+     (uninferredSentence (lookupOnly (caseLibraryForReminding ?any-caselib)))
+     (currentDomain ?domain)
+     (defaultCaseLibraryFor ?domain ?caselib))
+
+(isa selfSimilarityScore Predicate)
+(arity selfSimilarityScore 3)
+(arg1Isa selfSimilarityScore Microtheory)
+(arg2Isa selfSimilarityScore Set-Mathematical)
+(arg3Isa selfSimilarityScore Number-General)
+(notForAnalogy selfSimilarityScore)
+
+
+(<== (selfSimilarityScore ?case ?constraints ?self-score)
+     (numAnswers 1 (matchBetween ?case ?case ?constraints ?self-match))
+     (bestMapping ?self-match ?self-mapping)
+     (structuralEvaluationScoreOf ?self-mapping ?self-score))
+
+
+(isa goalPertainsToAgent BinaryPredicate)
+(arity goalPertainsToAgent 2)
+(arg1Isa goalPertainsToAgent Goal)
+(arg2Isa goalPertainsToAgent CycLFormula)
+(comment goalPertainsToAgent "(goalPertainsToAgent GOAL AGENT) asserts that the goal GOAL should be pursued by agent AGENT.")
+
+
+(isa TimePointFn UnaryFunction)
+(isa TimePointFn AtomicAnalogyNAT-Function)
+(arity TimePointFn 1)
+(arg1Isa TimePointFn Integer)
+(resultIsa TimePointFn TimePoint)
+(comment TimePointFn "Maps an integer in CYC-style seconds-minutes-hours encoding to a TimePoint.")
+
+;;; The sharedFocus relation is important.  It tells us where to look (in what context) for 
+;;; answers to user questions.  In Freeciv, a sharedFocus statement is added to the sessionContext
+;;; in the doStartGame primitive.  The general idea is that any execution context should be able
+;;; to serve as a shared focus, but also things like sketch contexts.
+(isa sharedFocus Relation)
+(isa sharedFocus NotForAnalogyPredicate)
+(arity sharedFocus 2)
+(arg1Isa sharedFocus Microtheory)
+(arg2Isa sharedFocus Microtheory)
+(comment sharedFocus
+  "(sharedFocus ?session-context ?focus-context) means ?focus-context is a dynamically changing microtheory that serves as a focus for reference resolution in natural interaction.")
+
+(isa userQuery UnaryPredicate)
+(arity userQuery 1)
+(arg1Isa userQuery CycLFormula)
+(comment userQuery "(userQuery ?query) means that the formula ?query originally derived from a user's question and thus might refer to a shared focus.")
+
+(<== (userQuery ?query)
+     (sharedFocus ?mt ?ctxt)  ; From within the query context, find statements through lookup.  It will bind both vars.
+     (not (containsPattern SelfToken-Indexical ?query))
+     (ist-Information ?ctxt ?query))
+
+;;; If the companion is playing a game or something, there is typically a role
+;;; that it translates to.  In the degenerate case, that might just translate
+;;; to itself.
+;;; (playsRole SIT THING ROLE) is a Cyc relation.
+;(<== (userQuery ?query)
+;     (sharedFocus ?mt ?ctxt)
+;     (containsPattern SelfToken-Indexical ?query)
+;     (ist-Information ?ctxt (playsRole ?ctxt SelfToken-Indexical ?role))
+;     (evaluate ?new-query
+;       (SublisFn (TheSet (SelfToken-Indexical ?role)) ?query))
+;     (ist-Information ?ctxt ?new-query))
+
+;;; If we can't translate SelfToken, then we pretty much have to
+;;; ask the question in the context of the self model.
+;(<== (userQuery ?query)
+;     (sharedFocus ?mt ?ctxt)
+;     (containsPattern SelfToken-Indexical ?query)
+;     (uninferredSentence
+;       (ist-Information ?ctxt (playsRole ?ctxt SelfToken-Indexical ?role))) ; technically, the 1st arg should be a Situation.
+;     (ist-Information SelfModelMt ?query))
+
+;;; At last, we can get rid of trueInDescriptiveContext!!
+;;; Aack!  Not really.  Simply querying in CurrentWorldDataCollectorMt-NonHomocentric
+;;; doesn't gather specpreds, so "Where is the Parthenon?" fails.
+(<== (userQuery ?query)
+     (uninferredSentence
+       (sharedFocus ?mt ?ctxt))
+     (allFactsAllowed
+       (contextEnvAllowed
+         (ist-Information CurrentWorldDataCollectorMt-NonHomocentric
+           ?query))))
+
+;;; This is one way to answer denotes queries.  Probably not the best.      
+(<== (userQuery (denotes ?ans ?thing))
+     (variableExpression ?ans)
+     (groundExpression ?thing)
+     (comment ?thing ?ans))
+
+(isa confirmed UnaryPredicate)
+(arity confirmed 1)
+(arg1Isa confirmed CycLSentence-Assertible)
+(comment confirmed "(confirmed ?query) reifies the user's positive answer to the yes/no question translated as ?query")
+
+(isa disconfirmed UnaryPredicate)
+(arity disconfirmed 1)
+(arg1Isa disconfirmed CycLSentence-Assertible)
+(comment disconfirmed "(disconfirmed ?query) reifies the user's negative answer to the yes/no question translated as ?query")
+
+;;; Define this here rather than Interaction-ManagerMt, so domains 
+;;; don't need to inherit from IM.
+(isa mapVerbToPrimitive TernaryRelation)
+(arity mapVerbToPrimitive 3)
+(arg1Isa mapVerbToPrimitive Microtheory)
+(arg2Isa mapVerbToPrimitive PurposefulPhysicalAction)
+(arg3Isa mapVerbToPrimitive SimpleActionPredicate)
+(comment mapVerbToPrimitive "(mapVerbToPrimive ?mt ?conceptual-action ?primtive-action) maps high-level conceptual terms (e.g., MakingSomething) to primitive action terms in the domain ?mt (e.g., doBuildCity).")
+
+;;; 9/17/12 Moved this from performance-goals.krf:
+(isa subgoalFor BinaryPredicate)
+(arity subgoalFor 2)
+(arg1Isa subgoalFor Goal) ; Why limit this to performance goals?
+(arg2Isa subgoalFor Goal)
+(comment subgoalFor "(subgoalFor ?super-goal ?sub-goal) means ?sub-goal is (or could be) a sub-goal of ?super-goal")
+
+;;; 12/1/11 Changed these to be unary, presuming that they can always be 
+;;; queried from an appropriate context. [TRH]
+
+(isa activeGoal UnaryPredicate)
+(arity activeGoal 1)
+(arg1Isa activeGoal Goal)
+(comment activeGoal "(activeGoal ?goal) means ?goal is some kind of goal for Companion and is currently active.")
+
+(<== (activeGoal ?goal)
+     (learningGoalForCompanion ?goal)  ; there might also be performance goals for Companions?
+     (uninferredSentence
+       (inactiveGoal ?goal)))
+         
+(isa inactiveGoal UnaryPredicate)
+(arity inactiveGoal 1)
+(arg1Isa inactiveGoal Goal)
+(comment inactiveGoal "(inactiveGoal ?goal) is a reifiable statement indicating that ?goal is not at present active, either because it has been satisfied or is no longer relevant.")
+
+;;;
+;;; HTN Preference rule support
+;;;
+
+;;; predicatePosition has been re-implemented in code in structural.lsp
+;;; for efficiency.
+
+(isa predicatePosition TernaryPredicate)
+(arity predicatePosition 3)
+(arg1Isa predicatePosition CycLFormula)
+(arg2Isa predicatePosition List-Extensional)
+(arg3Isa predicatePosition Integer)
+(comment predicatePosition "(predicatePosition ?stmt ?pred-list ?n) binds ?n to the first predicate in ?pred-list that appears somewhere in ?stmt.")
+
+(isa firstPredicateIn TernaryPredicate)
+(arity firstPredicateIn 3)
+(arg1Isa firstPredicateIn CycLFormula)
+(arg2Isa firstPredicateIn List-Extensional)
+(arg3Isa firstPredicateIn Predicate)
+(comment firstPredicateIn "(firstPredicateIn ?stmt ?pred-list ?pred) binds ?pred to the first predicate in ?pred-list that appears somewhere in ?stmt.")
+
+     
+(<== (firstPredicateIn ?stmt ?pred-list ?pred)
+     (evaluate ?pred (FirstInListFn ?pred-list))
+     (someArgumentHasPredicate ?stmt ?pred))
+     
+(<== (firstPredicateIn ?stmt ?pred-list ?pred)
+     (evaluate ?first (FirstInListFn ?pred-list))
+     (noArgumentHasPredicate ?stmt ?first)
+     (evaluate ?rest (RestOfListFn ?pred-list))
+     (numAnswers 1 (firstPredicateIn ?stmt ?rest ?pred)))
+
+;;; Action reasoning
+
+(isa likelihoodOfSuccess BinaryPredicate)
+(arity likelihoodOfSuccess 2)
+(arg1Isa likelihoodOfSuccess Attempting)
+#-:rc4
+(arg2Isa likelihoodOfSuccess Probability-QuantityType)  ; This may be limited to rc-one
+#+:rc4
+(arg2Isa likelihoodOfSuccess Likelihood-QuantityType)  ; This may be limited to rc-4
+(comment likelihoodOfSuccess "(likelihoodOfSuccess ?attempting ?probability-quantity-type) is shorthand (currying) of
+the more verbose (likelihood (successfulForAgents ?attempting ?performer) ?probability-quantity-type) which is more
+amenable to representation as a QP Continuous Quantity to allow statements about influencing the likelihood of success.")
+
+(<== (likelihoodOfSuccess ?attempting ?likelihood)
+     (performedBy ?attempting ?performer)
+     (likelihood (successfulForAgents ?attempting ?performer) ?likelihood))
+     
+     
+;;;
+;;; Syntax
+;;;
+
+(isa variablizedStatement BinaryRelation)
+(arity variablizedStatement 2)
+(arg1Isa variablizedStatement Predicate)
+(arg2Isa variablizedStatement CycLFormula)
+
+(<== (variablizedStatement ?pred ?stmt)
+     (groundExpression ?pred)
+     (not (elementOf ?pred (TheSetOf and or not)))
+     (numAnswers 1 (allFactsAllowed (lookupOnly (arity ?pred ?arity))))
+     (evaluate ?stmt 
+       (UniquifyVariablesFn
+         (MakeFormulaFn ?pred
+           (SublistFromToFn (TheList ?1 ?2 ?3 ?4 ?5 ?6 ?7) 1 ?arity)))))
+
+
+;;;
+;;; Logic hacking
+;;;
+
+(isa negationOf BinaryPredicate)
+(arity negationOf 2)
+(arg1Isa negationOf CycLFormula)
+(arg2Isa negationOf CycLFormula)
+(comment negationOf "(negationOf ?input ?output) binds ?output to negation of ?input, without introducing double-negatives.")
+
+;; Avoid double-negations:
+(<== (negationOf ?input-term (not ?input-term))
+     (operatorFormulas ?operator ?input-term)
+     (different ?operator not))
+
+(<== (negationOf ?input-term ?output-term)
+     (operatorFormulas not ?input-term)
+     (formulaArgument ?input-term 1 ?output-term))
+
+(isa simplifiedConjunction BinaryRelation)
+(arity simplifiedConjunction 2)
+
+(<== (simplifiedConjunction ?conj ?conj)
+     (not (variableExpression ?conj))
+     (not (atomicTerm ?conj))
+     (operatorFormulas ?pred ?conj)
+     (different ?pred and))
+
+(<== (simplifiedConjunction ?conj ?conj)
+     (not (variableExpression ?conj))
+     (not (atomicTerm ?conj))
+     (operatorFormulas and ?conj)
+     (evaluate ?n (LengthOfListFn (FormulaArgListFn ?conj)))
+     (different ?n 1))
+
+(<== (simplifiedConjunction (and ?stmt) ?stmt))
+
+(isa conjunction BinaryRelation)
+(arity conjunction 2)
+(comment conjunction "(conjunction ?prop ?conj) ensures that ?conj is a conjunction.")
+
+(<== (conjunction ?conj ?conj)
+     (not (variableExpression ?conj))
+     (operatorFormulas and ?conj))
+
+(<== (conjunction ?prop (and ?prop))
+     (not (variableExpression ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and))
+
+(isa conjunctList BinaryRelation)
+(arity conjunctList 2)
+(arg1Isa conjunctList CycLFormula)
+(arg2Isa conjunctList List-Extensional)
+
+(<== (conjunctList ?prop ?list)
+     (not (variableExpression ?prop))
+     (operatorFormulas and ?prop)
+     (evaluate ?list (FormulaArgListFn ?prop)))
+       
+(<== (conjunctList ?prop ?list)
+     (not (variableExpression ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and)
+     (unifies ?list (TheList ?prop)))
+     
+
+(isa conjunctSet BinaryPredicate)
+(arity conjunctSet 2)
+(arg1Isa conjunctSet CycLFormula)
+(arg2Isa conjunctSet Set-Mathematical)
+(comment conjunctSet "(conjunctSet ?prop ?set) binds ?set to the set of conjuncts of ?prop, or just a singleton set if ?prop is not a conjunction.")
+
+(<== (conjunctSet ?prop ?set)
+     (not (variableExpression ?prop))
+     (operatorFormulas and ?prop)
+     (evaluate ?set
+       (ListToSetFn (FormulaArgListFn ?prop))))
+       
+(<== (conjunctSet ?prop ?set)
+     (not (variableExpression ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and)
+     (unifies ?set (TheSet ?prop)))
+     
+(isa conjuncts BinaryPredicate)
+(arity conjuncts 2)
+(arg1Isa conjuncts CycLExpression)
+(arg2Isa conjuncts CycLExpression)
+(comment conjuncts "(conjuncts ?prop ?conjunct) binds ?conjunct to each of the conjuncts of ?prop (or just ?prop if it's not a conjunction).")
+
+(<== (conjuncts ?prop ?conjunct)
+     (not (variableExpression ?prop))
+     (operatorFormulas and ?prop)
+     (formulaArgument ?prop ?n ?conjunct))
+     
+(<== (conjuncts ?prop ?prop)
+     (not (variableExpression ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and))
+
+(isa canonicalizeExpression BinaryPredicate)
+(arity canonicalizeExpression 2)
+(arg1Isa canonicalizeExpression CycLExpression)
+(arg2Isa canonicalizeExpression CycLExpression)
+(comment canonicalizeExpression "(canonicalizeExpression ?expr ?canonical) alphabetizes the arguments of ?expr.")
+
+(<== (canonicalizeExpression ?expr ?canonical)
+     (not (variableExpression ?expr))
+     (not (atomicTerm ?expr))
+     (operatorFormulas ?functor ?expr)
+     (evaluate ?args (FormulaArgListFn ?expr))
+     (evaluate ?canonical
+       (MakeFormulaFn ?functor
+         (SortFn ?args alphalessp IdentityFn))))
+     
+(<== (gensym ?string ?symbol)
+     (uniqueCounterValue ?num)          ; a dynamicUpdatePredicate
+     (evaluate ?symbol (SymbolConcatenateFn (TheList ?string ?num))))
+     
+
+;;; By analogy to OwnerFn-Individual, except that the referent is an individual agent, not
+;;; a collection.
+(isa UniqueOwnerFn-Individual Function-Denotational)
+(arity UniqueOwnerFn-Individual 1)
+(arg1Isa UniqueOwnerFn-Individual SomethingExisting)
+(resultIsa UniqueOwnerFn-Individual Agent-Generic)
+(comment UniqueOwnerFn-Individual "A functional term denoting the (individual) owner of the individual comprising its argument.")
+
+(functionCorrespondingPredicate UniqueOwnerFn-Individual owns 1)
+
+;;; 
+;;; Set Filtering
+;;;
+
+(isa filterBy TernaryPredicate)
+(arity filterBy 3)
+(arg1Isa filterBy Set-Mathematical)
+(arg2Isa filterBy UnaryPredicate)   ; Kappa stmt usually
+(arg3Isa filterBy Set-Mathematical)
+(comment filterBy "(filterBy ?input-set ?unary-pred ?output-set) reduces a set by tossing any element that fails ?unary-pred.")
+
+(<== (filterBy ?input-set ?filter-pred ?output-set)
+     (evaluate ?output-set
+       (TheClosedRetrievalSetOf ?item
+         (and (elementOf ?item ?input-set)
+              (?filter-pred ?item)))))
+
+(isa preferenceFilterBy TernaryPredicate)
+(arity preferenceFilterBy 3)
+(arg1Isa preferenceFilterBy Set-Mathematical)
+(arg2Isa preferenceFilterBy UnaryPredicate)   ; Kappa stmt or defined pred
+(arg3Isa preferenceFilterBy Set-Mathematical)
+(comment preferenceFilterBy "(preferenceFilterBy ?input-set ?unary-pred ?output-set) reduces ?input-set only if the result is not empty.")
+
+(<== (preferenceFilterBy ?input-set ?filter-pred ?output-set)
+     (inferenceOnly (filterBy ?input-set ?filter-pred ?filtered-set))
+     (inferenceOnly (filterEmptySet ?input-set ?filtered-set ?output-set)))  ; when sets are large, retrieval is the weak (slow) link.
+
+(isa filterEmptySet TernaryPredicate)
+(arity filterEmptySet 3)
+(arg1Isa filterEmptySet Set-Mathematical)
+(arg2Isa filterEmptySet Set-Mathematical)
+(arg3Isa filterEmptySet Set-Mathematical)
+(comment filterEmptySet "(filterEmptySet ?input ?filtered ?output) binds ?output to ?filtered if it is not the empty set, otherwise it binds to ?input.")
+
+(<== (filterEmptySet ?input-set ?filtered-set ?filtered-set)
+     (different ?filtered-set (TheSet)))
+     
+(<== (filterEmptySet ?input-set (TheSet) ?input-set))
+
+;;; Don't do this.  It entails executing the filter twice if it returns the empty set.
+;(<== (preferenceFilterBy ?input-set ?filter-pred ?input-set)
+;     (filterBy ?input-set ?filter-pred (TheSet)))
+
+(isa augmentBy TernaryPredicate)
+(arity augmentBy 3)
+(arg1Isa augmentBy Set-Mathematical)
+(arg2Isa augmentBy CycLSentence-Askable)
+(arg3Isa augmentBy Set-Mathematical)
+
+(<== (augmentBy ?set ?query ?set)
+     (different ?set (TheSet)))
+     
+(<== (augmentBy (TheSet) ?query ?output-set)
+     (operatorFormulas evaluate ?query)
+     ?query
+     (formulaArgument ?query 1 ?output-set)
+     (operatorFormulas TheSet ?output-set))
+
+
+(isa filterList TernaryPredicate)
+(arity filterList 3)
+(arg1Isa filterList List)
+(arg2Isa filterList Set-Mathematical)
+(arg3Isa filterList List)
+(comment filterList "(filterList ?input-list ?set ?output-list) deletes elements of ?input-list that are in ?set.")
+
+(<== (filterList ?input-list ?set ?output-list)
+     (unifies ?pred (Kappa (?item) (elementOf ?item ?set)))
+     (evaluate ?output-list
+       (RemoveIfFn ?input-list ?pred IdentityFn)))
+
+(isa filterListComplement TernaryPredicate)
+(arity filterListComplement 3)
+(comment filterListComplement "(filterListComplement ?input-list ?set ?output-list) deletes elements of ?input-list that are not in ?set.")
+
+(<== (filterListComplement ?input-list ?set ?output-list)
+     (unifies ?pred (Kappa (?item) (not (elementOf ?item ?set))))
+     (evaluate ?output-list
+       (RemoveIfFn ?input-list ?pred IdentityFn)))
+
+
+(isa spindleForMts Predicate)
+(arity spindleForMts 2)
+(arg1Isa spindleForMts List)
+(arg2Isa spindleForMts Microtheory)
+(comment spindleForMts "(spindleForMts ?list-of-mts ?microtheory) indicates that ?microtheory is a spindler containing the microtheories
+in the list ?list-of-mts. When used as an outsourced predicate with the second argument open, it creates such a spindler.")
+
+(isa companionsSpindleInfoMt Microtheory)
+(comment companionsSpindleInfoMt "companionsSpindleInfoMt has information about spindlers used in companions.")
+
+(isa subscribedToAll Predicate)
+(arity subscribedToAll 1)
+(arg1Isa subscribedToAll CycLSentence-Askable)
+(comment subscribedToAll "(subscribedToAll ?query) indicates that the local agent is subscribed to an ask-all of the query ?query.")
+
+(isa subscribeToFutureSketchMicrotheories Predicate)
+(arity subscribeToFutureSketchMicrotheories 1)
+(arg1Isa subscribeToFutureSketchMicrotheories CompanionsAgent)
+(comment subscribeToFutureSketchMicrotheories "(subscribeToFutureSketchMicrotheories ?agent) indicates that the ?agent should subscribe to sketch microtheories when they become availble.")
+
+(isa agentProgressLog BinaryPredicate)
+(arity agentProgressLog 2)
+(arg1Isa agentProgressLog CompanionsAgent)
+(arg2Isa agentProgressLog CharacterString)
+(comment agentProgressLog "(agentProgressLog <agent> ?log) gives the name of the progress log for the agent")
+
+(<== (agentProgressLog ?agent ?log)
+     (groundExpression ?agent)
+     (variableExpression ?log)
+     (evaluate ?log (ConcatenateStringsFn
+                     (StringFn (SymbolConcatenateFn (MakeListFn ?agent))) ;;this accomodates non-symbol agent names
+                     "-progress-log")))
+
+(isa genlMt-WMTransitive BinaryRelation)
+(arity genlMt-WMTransitive 2)
+(arg1Isa genlMt-WMTransitive Microtheory)
+(arg2Isa genlMt-WMTransitive Microtheory)
+(comment genlMt-WMTransitive "(genlMt-WMTransitive ?A ?B) Is a transitive version of genlMt for genlMt statements in working memory. Unfortunately, a bug in fire is currently preventing this from being true of the standard genlMt predicate.  Hopefully soon the bug will be fixed and this predicate, which is a total hack, will be obsolete.")
+
+(<== (genlMt-WMTransitive ?A ?B)
+     (wmOnly (genlMt ?A ?B)))
+
+(<== (genlMt-WMTransitive ?A ?C)
+     (groundExpression ?A)
+     (genlMt-WMTransitive ?A ?B)
+     (genlMt-WMTransitive ?B ?C))
+
+(<== (genlMt-WMTransitive ?A ?C)
+     (groundExpression ?C)
+     (genlMt-WMTransitive ?B ?C)
+     (genlMt-WMTransitive ?A ?B))
+
+
+(isa urlForFlatFileTransport BinaryRelation)
+(arity urlForFlatFileTransport 2)
+(arg2Isa urlForFlatFileTransport CharacterString)
+(comment urlForFlatFileTransport "(urlForFlatFileTransport ?prefix ?url) Says that ?url is the location where a temporary flat file will be stored to transmit knowledge accross agents on different machines.")
+(<== (urlForFlatFileTransport ?prefix ?url)
+     (groundExpression ?prefix)
+     (variableExpression ?url)
+     (flattenedExpressionAcronymSymbol ?prefix ?sym)
+     (newUUIDSymbol ?sym ?title-sym)      ;;because two agents might be transporting the same mt to the same agent at the same time
+     (evaluate ?url (ConcatenateStringsFn
+                     "qrg-file://companions/"
+                     (StringFn ?title-sym)
+                     "_temp.krf")))
+
+
+(isa ensureActionSequence BinaryRelation)
+(arity ensureActionSequence 2)
+(arg1Isa ensureActionSequence CycLSentence-Assertible)
+(arg2Isa ensureActionSequence CycLSentence-Assertible)
+(comment ensureActionSequence "(ensureActionSequence ?action ?action-sequence) asserts that ?action-sequence unifies with (actionSequence (TheList ?action)) unless ?action is already wrapped in actionSequence.")
+
+(<== (ensureActionSequence ?action-sequence ?action-sequence)
+     (unifies ?action-sequence (actionSequence ?sequence)))
+
+(<== (ensureActionSequence ?action ?action-sequence)
+     (uninferredSentence (unifies ?action (actionSequence ?sequence)))
+     (unifies ?action-sequence (actionSequence (TheList ?action))))
+
+(isa HandoffMtFn Function-Denotational)
+(arity HandoffMtFn 2)
+(arg1Isa HandoffMtFn CompanionsAgent)
+(comment HandoffMtFn "(HandoffMtFn <session> <agent>) denotes the microtheory in which <agent> in <session> last persisted its agenda.  It acts as a checkpoint if, for example, the agent needs to reboot.")
+
+
+
+(isa enumerateFromToBy Predicate)
+(arity enumerateFromToBy 4)
+(arg1Isa enumerateFromToBy Integer)
+(arg2Isa enumerateFromToBy Integer)
+(arg3Isa enumerateFromToBy Integer)
+(arg4Isa enumerateFromToBy List-Extensional)
+(comment enumerateFromToBy
+  "(enumerateFromToBy <start> <end> <increment> ?number-list)
+   testingFoldsForCVTestRound creates a list of integers ?number-list
+   that starts at <start> and increments by <increment> until it reaches <end>.")
+
+;; The number of numbers this can enumerate is bounded by the backchaining depth,
+;; so to ensure that it works properly for your purposes,
+;; just wrap it in a withBackchainingDepth wrapper, like so...
+;;   (withBackchainingDepth 100 (enumerateFromToBy ?new-min ?max ?inc ?seq))
+(<== (enumerateFromToBy ?min ?max ?inc ?seq)
+     (uninferredSentence (greaterThan ?min ?max))
+     (evaluate ?new-min (PlusFn ?min ?inc))
+     (enumerateFromToBy ?new-min ?max ?inc ?sub-seq)
+     (evaluate ?seq (JoinListsFn (TheList ?min) ?sub-seq)))
+
+(<== (enumerateFromToBy ?min ?max ?inc (TheList))
+     (greaterThan ?min ?max))
+       
+
+;;(rotatedList ?original ?pos-to-front ?rotated)
+(isa rotatedList Predicate)
+(arity rotatedList 3)
+(arg1Isa rotatedList List-Extensional)
+(arg2Isa rotatedList Integer)
+(arg3Isa rotatedList List-Extensional)
+(comment rotatedList
+  "(testingFoldsForCVTestRound <list> <shift-position> ?rotated-list)
+   Says that ?rotated-list is in the same (circular) order as <list>,
+   except shifted by <shift-position>.")
+
+(<== (rotatedList ?original ?pos-to-front ?rotated)
+     (greaterThan ?pos-to-front 1)
+     (evaluate ?len (LengthOfListFn ?original))
+     (uninferredSentence (greaterThan ?pos-to-front ?len))
+     (evaluate ?front (SublistFromToFn ?original 1 (DifferenceFn ?pos-to-front 1)))
+     (evaluate ?back (SublistFromToFn ?original ?pos-to-front ?len))
+     (evaluate ?rotated (JoinListsFn ?back ?front)))
+
+(<== (rotatedList ?original ?pos-to-front ?original)
+     (uninferredSentence (greaterThan ?pos-to-front 1)))
+
+(<== (rotatedList ?original ?pos-to-front ?original)
+     (evaluate ?len (LengthOfListFn ?original))
+     (greaterThan ?pos-to-front ?len))
+
+
+(isa firstDifferenceAcrossLists QuaternaryPredicate)
+(arity firstDifferenceAcrossLists 4)
+(arg1Isa firstDifferenceAcrossLists List)
+(arg2Isa firstDifferenceAcrossLists List)
+(arg3Isa firstDifferenceAcrossLists CycLTerm)
+(arg4Isa firstDifferenceAcrossLists CycLTerm)
+
+(<== (firstDifferenceAcrossLists ?list1 ?list2 ?diff-item1 ?diff-item2)
+     (evaluate ?first1 (FirstInListFn ?list1))
+     (evaluate ?first2 (FirstInListFn ?list2))
+     (equals ?first1 ?first2)
+     (evaluate ?cdr1
+       (SublistFromToFn ?list1
+                        (PlusFn 1 (PositionInListFn ?first1 ?list1))
+                        (LengthOfListFn ?list1)))
+     (evaluate ?cdr2
+       (SublistFromToFn ?list2
+                        (PlusFn 1 (PositionInListFn ?first2 ?list2))
+                        (LengthOfListFn ?list2)))
+     (firstDifferenceAcrossLists ?cdr1 ?cdr2 ?diff-item1 ?diff-item2))
+
+(<== (firstDifferenceAcrossLists ?list1 ?list2 ?first1 ?first2)
+     (evaluate ?first1 (FirstInListFn ?list1))
+     (evaluate ?first2 (FirstInListFn ?list2))
+     (different ?first1 ?first2))
+
+;;;
+;;; specPredInference
+;;;
+
+(isa inferViaSpecPreds TernaryPredicate)
+(arity inferViaSpecPreds 3)
+(arg1Isa inferViaSpecPreds CycLFormula)
+(arg2Isa inferViaSpecPreds Microtheory)
+(arg3Isa inferViaSpecPreds CycLFormula)
+(comment inferViaSpecPreds "(inferViaSpecPreds ?query ?mt ?spec-query) binds ?spec-query to the fact in the microtheory ?mt that has the same arguments as ?query but where the relation of ?spec-query is a spec pred of ?query.")
+
+(isa optimizedQuery BinaryPredicate)
+(arity optimizedQuery 2)
+(arg1Isa optimizedQuery CycLFormula)
+(arg2Isa optimizedQuery CycLFormula)
+(comment optimizedQuery "(optimizedQuery ?query ?optimized-query) binds ?optimizecd-query to the direct fire query that might answer the yes-no question denoted by ?query.  It strengthens predicates on the basis of arg-isas.")
+
+;;; grabbing internal choice sets from a top-level choice set
+;;; this takes a conjunct of choice sets (choicesets are n-ary) and binds them individually
+
+(isa getSubChoicesFromChoiceSetConjunct BinaryPredicate)
+(arity getSubChoicesFromChoiceSetConjunct 2)
+(arg1Isa getSubChoicesFromChoiceSetConjunct CycLFormula)
+(arg2Isa getSubChoicesFromChoiceSetConjunct CycLFormula)
+(comment getSubChoicesFromChoiceSetConjunct
+  "(getSubChoicesFromChoiceSetConjunct <choiceConjunct> <choiceSet>) binds <choiceSet>, a member of <choiceConjunct>")
+
+;;;
+;;; End of File
+;;;

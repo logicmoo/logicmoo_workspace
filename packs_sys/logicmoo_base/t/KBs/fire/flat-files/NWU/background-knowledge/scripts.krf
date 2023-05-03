@@ -1,0 +1,300 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: scripts.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 27, 2017 10:59:20
+;;;;   Purpose: Backfilling some scripts (compound actions)
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-07 16:59:57 -0600 (Fri, 07 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;(isa XXX-Script IterativeSituationType)
+;(isa XXX-Script ProcessType)
+;(properSubEventTypes XXX-Script Informing)
+;(properSubEventTypes XXX-Script PersuadingToAct)
+;(relationAllExists properSubEvents XXX-Script Informing)
+;(relationAllExists properSubEvents XXX-Script PersuadingToAct)
+;(candidateProperSubSituationTypes XXX-Script CoercingAnAgent)
+;(someTypePlaysRoleInSituationType XXX-Script Person (SubEventRoleFn performedBy))
+;(startsAfterStartOfInSituationType XXX-Script Accepting-CommunicationAct Informing)
+;(startsAfterEndOfInSituationType XXX-Script YYY-After  ZZZ-Before)
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa Breath FirstOrderCollection)
+(genls Breath GaseousTangibleThing)
+(relationAllAll stuffExhaled Exhaling-BreathingOut Breath)
+
+(isa Halitosis PhysiologicalConditionType)
+(genls Halitosis AilmentCondition)
+(comment Halitosis "Halitosis is bad breath.")
+
+;;; objectEmitsOdor, hasOdorMagnitude, ailmentTypeAfflictsPartType
+
+(in-microtheory AnimalActivitiesMt)
+
+;;; Breathing
+
+(properSubEventTypes Breathing Inhaling-BreathingIn)    ; stuffInhaled
+(properSubEventTypes Breathing Exhaling-BreathingOut)   ; stuffExhaled
+
+(in-microtheory HumanSocialLifeMt)
+
+(subEventTypes CoffeeBreak (SubcollectionOfWithRelationToTypeFn DrinkingEvent thingsConsumed Coffee-Beverage))
+;;;GoingToGetCoffee
+;;;MakingCoffee-TheBeverage
+;;;  CoffeeGrinder 
+;;;  Coffee-Ground  ; output of the grinding, input to the brewing
+;;;  CoffeeFilter
+;;;  HotBeveragePot
+;;;  CoffeeCup
+
+(relationAllAll thingsConsumed DrinkingDecaf DecaffeinatedCoffee-Beverage)
+
+;;;
+;;; Camping
+;;;
+
+(isa Tent (EquipmentTypeForEventTypeFn Camping))
+(genls Tent ShelteringArtifact)
+(typeProvidesShelterDuringType Tent PrecipitationProcess)
+(isa SleepingBag (EquipmentTypeForEventTypeFn Camping))
+(isa CampingStove (EquipmentTypeForEventTypeFn Camping))
+(isa Backpack (EquipmentTypeForEventTypeFn Backpacking))  ; ako HikingEvent
+(typePrimaryFunction Campsite Sleeping eventOccursAt)
+(typePrimaryFunction Campfire CookingFood heatTransferSource)
+(typePrimaryFunction (InteriorsOfTypeFn Tent) Sleeping)
+(eventTypeHasCloselyAssociatedObjectTypes Camping Tent)
+(eventTypeHasCloselyAssociatedObjectTypes Camping Campfire)
+(eventTypeHasCloselyAssociatedObjectTypes Camping SleepingBag)
+(eventTypeHasCloselyAssociatedObjectTypes Camping WoodedArea)  ; certainly not required
+(characteristicEssentialProperSubEventTypes Camping Sleeping)
+;;; Need to say that sleeping happens inside the sleeping bag inside the tent
+;;; Primary function of sleeping bag is to keep sleepers warm.
+
+(isa ChoosingACampsite AccomplishmentType)
+(genls ChoosingACampsite SelectingSomething)
+(objectSelected-TypeType ChoosingACampsite Campsite)
+
+(isa (MakingFn Campfire) SkilledActivityType)  ; See also FirewoodFire
+(outputsCreated-TypeType (MakingFn Campfire) Campfire)
+(isa
+  (SubcollectionOfWithRelationToTypeFn Tending-TakingCare-Handling-Management objectTakenCareOf Campfire)
+  SkilledActivityType)
+(isa PitchingATent AccomplishentType)
+(isa PitchingATent SkilledActivityType)
+(genls PitchingATent 
+  (SubcollectionOfWithRelationToTypeFn 
+    Assembling assemblyInputs (PartsFn-Device Tent)))
+(outputsCreated-TypeType PitchingATent Tent) ; Not quite right;.  You're not making the tent!  Consider objectConfiguredDuring
+
+(properSubEventTypes Camping Backpacking)
+(properSubEventTypes Camping ChoosingACampsite)
+(properSubEventTypes Camping PitchingATent)
+(properSubEventTypes Camping (MakingFn Campfire))
+(properSubEventTypes Camping 
+  (SubcollectionOfWithRelationToTypeFn Tending-TakingCare-Handling-Management objectTakenCareOf Campfire))
+(properSubEventTypes Camping CookingFood)
+(properSubEventTypes Camping HavingAMeal)
+(properSubEventTypes Camping Sleeping)
+;;; May want to extinguish the fire before sleeping.
+
+;;; Making a Campfire requires dry matches (or a lighter) and dry firewood.
+;;; Don't make a fire if it's too windy.
+(properSubEventTypes (MakingFn Campfire)
+  (SubcollectionOfWithRelationToTypeFn PhysicalCollectionEvent objectTypesCollected Firewood))
+(properSubEventTypes (MakingFn Campfire)
+  (SubcollectionOfWithRelationToTypeFn LightingUp-SettingSomethingOnFire objectActedOn Firewood))
+
+(parts-Device Tent TentPole)     ; usually at least 2
+(parts-Device Tent Tarp (CollectionIntersection2Fn Canvas SeparatePhysicalPartOfObject))
+(parts-Device Tent Stake)         ; at least 4
+
+(typePrimaryFunction Stake
+  (CollectionSubsetFn Attachment
+    (TheSetOf ?attach
+      (and (isa ?attach Attachment)
+           (thingAttached ?attach ?tent)
+           (isa ?tent Tent)
+           (thingAttachedTo ?attach PlanetEarth))))
+  connectorInAttachment)
+  
+(genls TentPole Pole-Rod)
+(typePrimaryFunction TentPole 
+  (SubcollectionOfWithRelationToTypeFn SupportingSomething supportedObject Tent)
+  supportingObject)
+
+(startsAfterStartOfInSituationType Camping ChoosingACampsite Backpacking)
+(startsAfterEndOfInSituationType Camping PitchingATent ChoosingACampsite)
+(startsAfterEndOfInSituationType Camping (MakinFn Campfire) ChoosingACampsite)
+(startTogetherInSituationType Camping 
+  (SubcollectionOfWithRelationToTypeFn Tending-TakingCare-Handling-Management objectTakenCareOf Campfire)
+  (MakingFn Campfire))
+(startsAfterStartOfInSituationType Camping CookingFood (MakingFn Campfire))
+(startsAfterEndOfInSituationType Camping Sleeping PitchingATent)
+(startsAfterStartOfInSituationType (MakingFn Campfire)
+  (SubcollectionOfWithRelationToTypeFn LightingUp-SettingSomethingOnFire objectActedOn Firewood)
+  (SubcollectionOfWithRelationToTypeFn PhysicalCollectionEvent objectTypesCollected Firewood))
+(startsAfterStartOfInSituationType Camping HavingAMeal CookingFood)
+(startsAfterEndOfInSituationType Camping Sleeping HavingAMeal)
+(startsAfterEndOfInSituationType Camping Sleeping PitchingATent)
+
+;;;--------------------------------------------------------------
+
+;;; MakingPottery
+
+;;; Shaping the pot ("Throwing" a pot on a wheel?)
+(properSubEventTypes MakingPottery (SubcollectionOfWithRelationToTypeFn ShapingSomething objectActedOn Clay-Wet))
+;;; Firing the clay pot:
+(properSubEventTypes MakingPottery (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn Baking objectActedOn Clay-Wet) deviceUsed Kiln))
+;;; Glazing:
+(properSubEventTypes MakingPottery (SubcollectionOfWithRelationToTypeFn CoatingDeposition stuffSpread CeramicGlaze))
+;;; Firing the glaze:
+(properSubEventTypes MakingPottery (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn Baking objectActedOn CeramicGlaze) deviceUsed Kiln))
+
+
+;;;--------------------------------------------------------------
+
+;;; GoingToTheBathroom (existing OpenCyc collection)
+;;; How do we say the doer of a subevent is inherited?
+;;; pulling pants down?
+(properSubEventTypes GoingToTheBathroom (SubcollectionOfWithRelationToTypeFn Movement-TranslationEvent toLocation Restroom))
+(properSubEventTypes GoingToTheBathroom (SubcollectionOfWithRelationToTypeFn Undressing objectRemoved Clothing-Bottom))
+(properSubEventTypes GoingToTheBathroom (SubcollectionOfWithRelationToTypeFn SittingOnSomething seat ToiletSeat))
+(properSubEventTypes GoingToTheBathroom Defecating)
+(properSubEventTypes GoingToTheBathroom FlushingAToilet)
+(properSubEventTypes GoingToTheBathroom (SubcollectionOfWithRelationToFn ReplacingSomething objectTypeReplaced  Clothing-Bottom))
+(properSubEventTypes GoingToTheBathroom WashingHands)
+
+(firstProperSubSituationTypes GoingToTheBathroom (SubcollectionOfWithRelationToTypeFn Movement-TranslationEvent toLocation Restroom))
+(focalProperSubsituationTypes GoingToTheBathroom Defecating) ; CycL actually has lowercase "s" here!
+
+(startsAfterEndOfInSituationType GoingToTheBathroom 
+   (SubcollectionOfWithRelationToTypeFn Undressing objectRemoved Clothing-Bottom)
+   (SubcollectionOfWithRelationToTypeFn Movement-TranslationEvent toLocation Restroom))
+(startsAfterEndOfInSituationType GoingToTheBathroom 
+   (SubcollectionOfWithRelationToTypeFn SittingOnSomething seat ToiletSeat)
+   (SubcollectionOfWithRelationToTypeFn Undressing objectRemoved Clothing-Bottom))
+(startsAfterStartOfInSituationType GoingToTheBathroom 
+   Defecating
+   (SubcollectionOfWithRelationToTypeFn SittingOnSomething seat ToiletSeat))
+(endsAfterEndOfInSituationType GoingToTheBathroom 
+   (SubcollectionOfWithRelationToTypeFn SittingOnSomething seat ToiletSeat)
+   Defecating)
+(startsAfterEndOfInSituationType GoingToTheBathroom 
+   FlushingAToilet
+   Defecating)
+   ;; StandingUp?
+(startsAfterEndOfInSituationType GoingToTheBathroom 
+   (SubcollectionOfWithRelationToFn ReplacingSomething objectTypeReplaced  Clothing-Bottom)
+   FlushingAToilet)
+(startsAfterEndOfInSituationType GoingToTheBathroom 
+   WashingHands
+   (SubcollectionOfWithRelationToFn ReplacingSomething objectTypeReplaced  Clothing-Bottom))
+
+(inheritRolePlayers 
+  GoingToTheBathroom GoingToTheBathroom 
+  (SubcollectionOfWithRelationToTypeFn Movement-TranslationEvent toLocation Restroom)
+  doneBy doneBy)
+
+(inheritRolePlayers 
+  GoingToTheBathroom GoingToTheBathroom 
+  (SubcollectionOfWithRelationToTypeFn Undressing objectRemoved Clothing-Bottom)
+  doneBy doneBy)
+  
+(inheritRolePlayers 
+  GoingToTheBathroom GoingToTheBathroom 
+  (SubcollectionOfWithRelationToTypeFn SittingOnSomething seat ToiletSeat)
+  doneBy seated)
+  
+(inheritRolePlayers GoingToTheBathroom GoingToTheBathroom Defecating doneBy doneBy)
+(inheritRolePlayers GoingToTheBathroom GoingToTheBathroom FlushingAToilet doneBy doneBy)
+
+(inheritRolePlayers 
+  GoingToTheBathroom GoingToTheBathroom 
+  (SubcollectionOfWithRelationToFn ReplacingSomething objectTypeReplaced  Clothing-Bottom)
+  doneBy doneBy)
+  
+(inheritRolePlayers GoingToTheBathroom GoingToTheBathroom WashingHands doneBy doneBy)
+
+;;; Consider: subSituationTypes, subEventTypes, SubSitTypeWithTypeInRoleFn
+;;; soleActorOfTypeInEvent, 
+;;; differentRolePlayers-SitTypeToSubSitType, equivalentRolePlayersOfType-SubSitTypeToSubSitType
+;;; firstProperSubSituationTypes, focalProperSubSituationTypes
+;;; inheritRolePlayers, inheritRolePlayersOfType-SubSitTypeToSubSitType
+;;; predHoldsBetweenProperSubSits
+
+;;; -------------------------------------------------------------
+;;; Construction Methods
+
+(properSubEventTypes (MakingFn PaperAirplane) (SubcollectionOfWithRelationToTypeFn Folding objectFolded SheetOfPaper))
+(properSubEventTypes (MakingFn Snowball) (SubcollectionOfWithRelationToTypeFn Compressing objectActedOn SnowMob))
+
+
+
+(properSubEventTypes JumpingRope JumpingUpAndDown)
+(properSubEventTypes JumpingRope (SubcollectionOfWithRelationToTypeFn Rotation-Periodic objectRotating JumpRope))
+(properSubEventTypes JumpingRope (SubcollectionOfWithRelationToTypeFn JumpingOverSomething objectHurdled JumpRope))
+
+;;; -------------------------------------------------------------
+;;; Being stopped/pulled over by Polics
+;;; isa StoppingActionOfOthers
+
+;;;--------------------------------------------------------------
+;;; SpellingBee
+
+(isa SpellingBee FirstOrderCollection)
+(isa SpellingBee TemporalStuffType)
+(isa SpellingBee DurativeEventType)
+(genls SpellingBee (CompetitionEventTypeFn Spelling))
+
+(relationAllOnly competingAgents SpellingBee  (CollectionIntersection2Fn Student HumanChild))
+
+(comment SpellingBee "A SpellingBee is a formal competition to test capability in spelling. Sub events involve elimination rounds.  Competitors take turns attempting to spell different words. The last remaining competitor wins.")
+
+;;;--------------------------------------------------------------
+;;; Weddings
+;;; 
+
+(properSubEventTypes WeddingEvent-Entire WeddingCeremony)
+(properSubEventTypes WeddingCeremony WalkingDownTheAisle)
+(properSubEventTypes WeddingCeremony BrideAndGroomStandBeforeOfficiant)
+(properSubEventTypes WeddingCeremony CeremonialExchangeOfWeddingRings)
+(properSubEventTypes WeddingEvent-Entire WeddingReception)
+
+;;; cf WeddingRing, CeremonialExchangeOfWeddingRings, BrideAndGroomStandBeforeOfficiant
+;;; WeddingReception 
+
+;;;--------------------------------------------------------------
+;;; MusicalChairs
+
+;;; BeerPong
+
+;;; BirthdayParty
+;;; birthdayPartyFor
+;;; PartyGame
+;;; BlowingOutTheCandlesOnABirthdayCake
+;;; HappyBirthdayToYou-TheSong
+;;; GroupSinging-Human
+;;; GiftGiving
+;;; BirthdayPresent
+
+;;; GettingADriversLicense  ;<- made up
+;;; DriversLicense-LicenseAgreement
+;;; DepartmentOfMotorVehicles
+;;; DriverVisionTest
+
+(relationExistsMost licenseFor DriversLicense-LicenseAgreement (TransportViaFn RoadVehicle))
+(relationExistsMost licenseFor FlyingLicense (TransportViaFn Airplane))
+(relationExistsMost licenseFor TrainEngineerLicense (TransportViaFn Train-TransportationDevice))
+
+;;; BeingStoppedForSpeeding ; <- made up
+;;; ChangingAFlatTire
+;;; GoingToATheaterShow
+;;; ChargingABattery
+;;; TyingOnesShoelaces ; <- made up  cf Shoelace.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

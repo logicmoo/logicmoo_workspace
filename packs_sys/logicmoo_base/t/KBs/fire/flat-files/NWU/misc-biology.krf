@@ -1,0 +1,76 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: misc-biology.meld
+;;;;    System: FIRE
+;;;;    Author: Jeff Usher
+;;;;   Created: November 6, 2001 15:13:26
+;;;;   Purpose: Miscellaneous biology knowledge that wasn't included in CYC's 
+;;;;            KB.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BiologyVocabularyMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(isa Homeostasis Collection)
+(genls Homeostasis Equilibrium)
+(comment Homeostasis
+  "The collection of states in homeostasis.  Homeostasis is the tendency of a 
+system to maintain internal stability.  Examples of Homeostasis include the 
+regulation of temperature and the balance between acidity and alkalinity (pH).")
+
+(isa SubstrateMolecule Collection)
+(genls SubstrateMolecule Molecule)
+(comment SubstrateMolecule
+  "The collection of molecules that act as substrates in reactions with enzymes.
+In such reactions, the enzyme acts as a catalyst to convert the substrate molecule
+into different molecules.  See also, #$Enzyme.")
+
+(genls Organelle CellPart)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(genFormat geneticallyIdentical "~A is genetically identical to ~A" (1 2))
+
+(isa resultsFromSynthesisOf BinaryPredicate)
+(arity resultsFromSynthesisOf 2)
+(arg1Isa resultsFromSynthesisOf SomethingExisting)
+(arg2Isa resultsFromSynthesisOf SomethingExisting)
+(comment "(#$resultsFromSynthesisOf A B) says that B is the result of some synthesis event.")
+(genFormat resultsFromSynthesisOf "~A is synthesized from ~A" (1 2))
+
+(isa performedBy BinaryPredicate) 
+(isa doneBy BinaryPredicate)
+(isa inputsCommitted BinaryPredicate)
+(isa outputsCreated BinaryPredicate)
+(isa physicalCopies BinaryPredicate)
+
+(genFormat physicalCopies "~A is a copy of ~A" (1 2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Rules
+
+(<== (catalyst ?reaction ?catalyst)
+     (preActors ?reaction ?catalyst)
+     (isa ?catalyst Enzyme)
+     (isa ?reaction ChemicalReaction))
+
+(<== (chemicalReactants ?reaction ?reactant)
+     (preActors ?reaction ?reactant)
+     ;; this might be correct:
+     ;;(uninferredSentence 
+     ;; (isa ?reactant Enzyme))) 
+     ;; but, this is more conservative:
+     (isa ?reactant SubstrateMolecule))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,419 @@
+;;;
+;;; type-level-qmodel.meld
+;;;
+
+(in-microtheory (QualitativeModelMtFn Freeciv-TheGame) :exclude-globals t)
+
+;;; CJM 8/7/2014: I'm annotating each of the rules with a relevant sentence in the manual that they could plausibly be extracted from
+;;;    This will provide my gold standard for interpretation
+(qprop+TypeType (MeasurableQuantityFn cityPopulation) (MeasurableQuantityFn citySize) FreeCiv-City FreeCiv-City equals)
+
+(i+TypeType (MeasurableQuantityFn citySize) (MeasurableQuantityFn cityGrowthRate) FreeCiv-City FreeCiv-City equals)
+
+(i-TypeType (MeasurableQuantityFn numTurnsToGrow) (MeasurableQuantityFn cityGrowthRate) FreeCiv-City FreeCiv-City equals)
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityGrowthRate) FreeCiv-City FC-Building-Granary cityHasImprovement)
+
+(qprop+TypeType (MeasurableQuantityFn cityGrowthRate) (MeasurableQuantityFn cityFoodSurplus) FreeCiv-City FreeCiv-City equals)
+
+(i+TypeType (MeasurableQuantityFn cityFoodReserves) (MeasurableQuantityFn cityFoodSurplus) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn cityFoodSurplus) (MeasurableQuantityFn cityFoodProduction) FreeCiv-City FreeCiv-City equals)
+
+(qprop-TypeType (MeasurableQuantityFn cityFoodSurplus) (MeasurableQuantityFn supportedUnitsFoodUpkeep) FreeCiv-City FreeCiv-City equals)
+
+;; Supported units food upkeep should be proportional to the number of units with that homecity.
+
+(qprop+TypeType (MeasurableQuantityFn supportedUnitsFoodUpkeep) (MeasurableQuantityFn cardinalityOf) FreeCiv-City FC-Unit-Settlers homeCityOf)
+
+(qprop+TypeType (MeasurableQuantityFn cityFoodProduction) (MeasurableQuantityFn tileFoodProduction) FreeCiv-City FreecivLocation cityWorkingTileAt)
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityFoodProduction) FreeCiv-City FC-Building-Harbour cityHasImprovement)
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityFoodProduction) FreeCiv-City FC-Building-Supermarket cityHasImprovement)
+
+(qprop+TypeType (MeasurableQuantityFn cityFoodProduction) (MeasurableQuantityFn numWorkers) FreeCiv-City FreeCiv-City equals) ; added manually 7-7-14
+
+(qprop+TypeType (MeasurableQuantityFn numWorkers) (MeasurableQuantityFn citySize) FreeCiv-City FreeCiv-City equals) ; added manually 7-7-14
+
+(qprop+TypeType (MeasurableQuantityFn tileFoodProduction) (MeasurableQuantityFn terrainBaseFoodProduction) FreecivLocation FreeCiv-TerrainTile terrainAt)
+
+;;; The next two are removed because they are duplicated in the full Process Model for IrrigationBonus.
+;(positivelyDependsOn-TypeType (MeasurableQuantityFn tileFoodProduction) FreecivLocation FC-Special-Irrigation specialAt)
+
+;(positivelyDependsOn-TypeType (MeasurableQuantityFn tileFoodProduction) FreecivLocation FC-Special-Farmland specialAt)
+
+
+;;(negativelyDependsOn-TypeType (MeasurableQuantityFn numTurnsToGrow) FreeCiv-City FC-Building-Granary cityHasImprovement)
+
+;;(positivelyDependsOn-TypeType (MeasurableQuantityFn cityFoodSurplus) FreeCiv-City FC-Building-Granary cityHasImprovement)
+
+
+(qprop-TypeType (MeasurableQuantityFn numTurnsToBuild) (MeasurableQuantityFn cityShieldReserves) FreeCiv-City FreeCiv-City equals)
+
+(i+TypeType  (MeasurableQuantityFn cityShieldReserves) (MeasurableQuantityFn cityShieldSurplus) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn cityShieldSurplus) (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FreeCiv-City equals)
+
+(qprop-TypeType (MeasurableQuantityFn cityShieldSurplus) (MeasurableQuantityFn supportedUnitsShieldUpkeep) FreeCiv-City FreeCiv-City equals)
+
+;;; Under Despotism the city containing the palace gains a +75% production bonus, and under Monarchy a +50% production bonus.
+;;;(positivelyDependsOn-TypeType (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FC-Building-Palace cityHasImprovement)
+
+(qprop+TypeType (MeasurableQuantityFn cityShieldProduction) (MeasurableQuantityFn tileShieldProduction) FreeCiv-City FreecivLocation cityWorkingTileAt)
+
+(qprop+TypeType (MeasurableQuantityFn cityShieldProduction) (MeasurableQuantityFn numWorkers) FreeCiv-City FreeCiv-City equals) ; added manually 7-7-14
+
+(qprop+TypeType (MeasurableQuantityFn tileShieldProduction) (MeasurableQuantityFn terrainBaseShieldProduction) FreecivLocation FreeCiv-TerrainTile terrainAt)
+
+;;; Duplicated in process model:
+;(positivelyDependsOn-TypeType (MeasurableQuantityFn tileShieldProduction) FreecivLocation FC-Special-Mine specialAt)
+
+
+(qprop+TypeType (MeasurableQuantityFn cityTradeSurplus) (MeasurableQuantityFn cityTradeProduction) FreeCiv-City FreeCiv-City equals)
+
+(qprop-TypeType (MeasurableQuantityFn cityTradeSurplus) (MeasurableQuantityFn cityCorruption) FreeCiv-City FreeCiv-City equals)
+
+(negativelyDependsOn-TypeType (MeasurableQuantityFn cityCorruption) FreeCiv-City FC-Building-Courthouse cityHasImprovement)
+
+
+;;; This is wrong (since upkeep is taken out before computing city gold surplus):
+;;(i-TypeType (MeasurableQuantityFn currentGold) (MeasurableQuantityFn cityImprovementsUpkeep) FreeCiv-Player FreeCiv-City ownsCity)
+
+;;; aggregate income from all traderoutes in city (up to 4).
+(qprop+TypeType (MeasurableQuantityFn cityTradeProduction) (MeasurableQuantityFn tradeRouteIncome) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn cityTradeProduction) (MeasurableQuantityFn tileTradeProduction) FreeCiv-City FreecivLocation cityWorkingTileAt)
+
+(qprop+TypeType (MeasurableQuantityFn cityTradeProduction) (MeasurableQuantityFn numWorkers) FreeCiv-City FreeCiv-City equals) ; added manually 7-7-14
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityTradeProduction) FreeCiv-City FC-Building-SuperHighways cityHasImprovement)
+
+(qprop+TypeType (MeasurableQuantityFn tileTradeProduction) (MeasurableQuantityFn terrainBaseTradeProduction) FreecivLocation FreeCiv-TerrainTile terrainAt)
+
+;;; The next two are omitted because they're handled in the full Process Model.:
+;;; Only for a few terrains, though (Desert, Grassland, and Plains):
+;(positivelyDependsOn-TypeType (MeasurableQuantityFn tileTradeProduction) FreecivLocation FC-Special-Road specialAt)
+
+;;; Only for a few terrains, though:
+;(positivelyDependsOn-TypeType (MeasurableQuantityFn tileTradeProduction) FreecivLocation FC-Special-Railroad specialAt)
+
+;; and depends on the type of government
+
+(qprop+TypeType (MeasurableQuantityFn currentTechsResearched) (MeasurableQuantityFn currentBulbsResearched) FreeCiv-Player FreeCiv-Player equals)
+
+(i+TypeType (MeasurableQuantityFn currentBulbsResearched) (MeasurableQuantityFn civBulbsPerTurn) FreeCiv-Player FreeCiv-Player equals)
+
+(qprop+TypeType (MeasurableQuantityFn civBulbsPerTurn) (MeasurableQuantityFn cityScienceTotal) FreeCiv-Player FreeCiv-City ownsCity)
+
+(qprop+TypeType (MeasurableQuantityFn cityScienceTotal) (MeasurableQuantityFn cityTradeSurplus) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn cityScienceTotal) (MeasurableQuantityFn currentSciencePercent) FreeCiv-City FreeCiv-Player cityOwner)
+
+(qprop+TypeType (MeasurableQuantityFn cityScienceTotal) (MeasurableQuantityFn numScientists) FreeCiv-City FreeCiv-City equals)
+
+
+(qprop+TypeType (MeasurableQuantityFn numScientists) (MeasurableQuantityFn citySize) FreeCiv-City FreeCiv-City equals)
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityScienceTotal) FreeCiv-City FC-Building-ResearchLab cityHasImprovement)
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityScienceTotal) FreeCiv-City FC-Building-Library cityHasImprovement)
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityScienceTotal) FreeCiv-City FC-Building-University cityHasImprovement)
+
+
+
+(i+TypeType (MeasurableQuantityFn currentGold) (MeasurableQuantityFn civGoldProduction) FreeCiv-Player FreeCiv-Player equals)
+
+;;; civGoldProduction is the sum of cityGoldSurpluses and cityCoinageProductions
+(c+TypeType (MeasurableQuantityFn civGoldProduction) (MeasurableQuantityFn cityGoldSurplus) FreeCiv-Player FreeCiv-City ownsCity)
+
+;;; civGoldProduction is also dependent on any coinage produced by its cities.
+(c+TypeType (MeasurableQuantityFn civGoldProduction) (MeasurableQuantityFn cityCoinageProduction) FreeCiv-Player FreeCiv-City ownsCity)
+
+(c+TypeType (MeasurableQuantityFn cityGoldSurplus) (MeasurableQuantityFn cityGoldProduction) FreeCiv-City FreeCiv-City equals)
+
+(c-TypeType (MeasurableQuantityFn cityGoldSurplus) (MeasurableQuantityFn cityImprovementsUpkeep) FreeCiv-City FreeCiv-City equals)
+
+(c+TypeType (MeasurableQuantityFn cityImprovementsUpkeep) (MeasurableQuantityFn objectTypeHasUpkeepGoldCost) FreeCiv-City FreeCiv-Building cityHasImprovement)
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityCoinageProduction) FreeCiv-City FC-Coinage currentlyBuilding)
+
+;;; What we have is tax collected = cityGoldProduction = (trade surplus * tax rate).  taxCollected is the rate per turn of tax revenue.
+
+(qprop+TypeType (MeasurableQuantityFn cityGoldProduction) (MeasurableQuantityFn currentTaxPercent) FreeCiv-City FreeCiv-Player cityOwner)
+
+(qprop+TypeType (MeasurableQuantityFn cityGoldProduction) (MeasurableQuantityFn numTaxCollectors) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn numTaxCollectors) (MeasurableQuantityFn citySize) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn cityGoldProduction) (MeasurableQuantityFn cityTradeSurplus) FreeCiv-City FreeCiv-City equals)
+
+;;; Marketplace increases luxury and tax by 50%
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityGoldProduction) FreeCiv-City FC-Building-Marketplace cityHasImprovement)
+
+;;; Bank increases luxury and tax by 100%
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityGoldProduction) FreeCiv-City FC-Building-Bank cityHasImprovement)
+
+;;; StockExchange with Bank and Marketplace increases luxury and tax by 150%
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityGoldProduction) FreeCiv-City FC-Building-StockExchange cityHasImprovement)
+
+(qprop+TypeType (MeasurableQuantityFn cityHappiness) (MeasurableQuantityFn cityLuxuryTotal) FreeCiv-City FreeCiv-City equals)
+
+;;; We need this if cityHappiness is not directly installed as a top-level goal (which it shouldn't be)
+(qprop+TypeType (MeasurableQuantityFn happyCitizens) (MeasurableQuantityFn cityLuxuryTotal) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn cityLuxuryTotal) (MeasurableQuantityFn currentLuxuryPercent) FreeCiv-City FreeCiv-Player cityOwner)
+
+(qprop+TypeType (MeasurableQuantityFn cityLuxuryTotal) (MeasurableQuantityFn numEntertainers) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn numEntertainers) (MeasurableQuantityFn citySize) FreeCiv-City FreeCiv-City equals)
+
+(qprop+TypeType (MeasurableQuantityFn cityLuxuryTotal) (MeasurableQuantityFn cityTradeSurplus) FreeCiv-City FreeCiv-City equals)
+
+;;; Marketplace increases luxury and tax by 50%
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityLuxuryTotal) FreeCiv-City FC-Building-Marketplace cityHasImprovement)
+
+;;; Bank increases luxury and tax by 100%
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityLuxuryTotal) FreeCiv-City FC-Building-Bank cityHasImprovement)
+
+;;; StockExchange with Bank and Marketplace increases luxury and tax by 150%
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityLuxuryTotal) FreeCiv-City FC-Building-StockExchange cityHasImprovement)
+
+(qprop+TypeType (MeasurableQuantityFn cityHappiness) (MeasurableQuantityFn happyCitizens) FreeCiv-City FreeCiv-City equals)
+
+(qprop-TypeType (MeasurableQuantityFn cityHappiness) (MeasurableQuantityFn unhappyCitizens) FreeCiv-City FreeCiv-City equals)
+
+(qprop-TypeType (MeasurableQuantityFn cityHappiness) (MeasurableQuantityFn angryCitizens) FreeCiv-City FreeCiv-City equals)
+
+(negativelyDependsOn-TypeType (MeasurableQuantityFn unhappyCitizens) FreeCiv-City FC-Building-Colosseum cityHasImprovement)
+
+(negativelyDependsOn-TypeType (MeasurableQuantityFn unhappyCitizens) FreeCiv-City FC-Building-Temple cityHasImprovement)
+
+(negativelyDependsOn-TypeType (MeasurableQuantityFn unhappyCitizens) FreeCiv-City FC-Building-Cathedral cityHasImprovement)
+
+(negativelyDependsOn-TypeType (MeasurableQuantityFn unhappyCitizens) FreeCiv-City FC-Building-PoliceStation cityHasImprovement)
+
+;;; Experiment.  Really, they measure the same thing.
+;;; Don't do this!  It's pointless!
+;;;(qprop+TypeType (MeasurableQuantityFn cardinalityOf) (MeasurableQuantityFn numWorkers) FreecivLocation FreeCiv-City tileWorkedByCity)
+
+
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FC-Building-Factory cityHasImprovement)
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FC-Building-Mfg.Plant cityHasImprovement)
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FC-Building-NuclearPlant cityHasImprovement)
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FC-Building-HydroPlant cityHasImprovement)
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FC-Building-PowerPlant cityHasImprovement)
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityShieldProduction) FreeCiv-City FC-Building-OffshorePlatform cityHasImprovement)
+
+
+;;; It's not strictly the power plant that causes pollution.  It's the excess production created by it.
+(positivelyDependsOn-TypeType (MeasurableQuantityFn cityPollution) FreeCiv-City FC-Building-PowerPlant cityHasImprovement)
+
+(negativelyDependsOn-TypeType (MeasurableQuantityFn cityPollution) FreeCiv-City FC-Building-HydroPlant cityHasImprovement)
+(negativelyDependsOn-TypeType (MeasurableQuantityFn cityPollution) FreeCiv-City FC-Building-NuclearPlant cityHasImprovement)
+(negativelyDependsOn-TypeType (MeasurableQuantityFn cityPollution) FreeCiv-City FC-Building-MassTransit cityHasImprovement)
+(negativelyDependsOn-TypeType (MeasurableQuantityFn cityPollution) FreeCiv-City FC-Building-RecyclingCenter cityHasImprovement)
+(negativelyDependsOn-TypeType (MeasurableQuantityFn cityPollution) FreeCiv-City FC-Building-SolarPlant cityHasImprovement)
+
+;;; Pollution is not a top-level quantity.
+;;; To be accurate here, we should say that the presence of pollution on a particular tile reduces the production on that particular tile by 50%.
+(qprop-TypeType (MeasurableQuantityFn tileTradeProduction) (MeasurableQuantityFn cityPollution) FreecivLocation FreeCiv-City tileWorkedByCity)
+(qprop-TypeType (MeasurableQuantityFn tileFoodProduction) (MeasurableQuantityFn cityPollution) FreecivLocation FreeCiv-City tileWorkedByCity)
+(qprop-TypeType (MeasurableQuantityFn tileShieldProduction) (MeasurableQuantityFn cityPollution) FreecivLocation FreeCiv-City tileWorkedByCity)
+
+;;; Process limits
+
+;;; These aren't being learned:
+(processDependentVariable (ActionProcessTypeFn doChangeProduction)
+ (MeasurableQuantityFn cityShieldReserves))
+ 
+(influenceDirection (ActionProcessTypeFn doChangeProduction)
+ (MeasurableQuantityFn cityShieldReserves) increases)
+
+;;; destination city increases trade:
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn tradeRouteIncome) doEstablishTraderoute FreeCiv-City 2 equals)
+
+;;; origin city increases trade:
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn tradeRouteIncome) doEstablishTraderoute FreeCiv-City 3 equals)
+
+;;; These are:
+
+;(hypothesizedProcessLimitFromAction doChangeProduction CityGrowthEvent)  ; incorrect
+
+(hypothesizedProcessLimitFromAction doChangeProduction UnitBuiltEvent)
+
+(hypothesizedProcessLimitFromAction doChangeProduction ImprovementBuiltEvent) ; manually added
+
+(hypothesizedProcessLimitFromAction doChangeProduction CityCantBuildEvent) ; sort of correct
+
+(hypothesizedProcessLimitFromAction doResearch TechLearnedEvent)
+ 
+;(hypothesizedProcessLimit
+; (i+TypeType (MeasurableQuantityFn cityFoodReserves)
+;  (MeasurableQuantityFn cityFoodSurplus) FreeCiv-City FreeCiv-City
+;  equals)
+; (qLessThan (MeasurableQuantityFn cityFoodReserves) (FoodPoints 3))
+; (TheSet))
+ 
+;(hypothesizedProcessLimit
+; (i+TypeType (MeasurableQuantityFn currentBulbsResearched)
+;  (MeasurableQuantityFn civBulbsPerTurn) FreeCiv-Player FreeCiv-Player
+;  equals)
+; (qLessThan (MeasurableQuantityFn currentBulbsResearched)
+;  (SciencePoints 23))
+; (TheSet))
+ 
+
+;(hypothesizedProcessLimit
+; (i+TypeType (MeasurableQuantityFn currentBulbsResearched)
+;  (MeasurableQuantityFn civBulbsPerTurn) FreeCiv-Player FreeCiv-Player
+;  equals)
+; (qLessThan (MeasurableQuantityFn currentBulbsResearched)
+;  (SciencePoints 22))
+; (TheSet))
+
+;(hypothesizedProcessLimit
+; (i+TypeType (MeasurableQuantityFn currentBulbsResearched)
+;  (MeasurableQuantityFn civBulbsPerTurn) FreeCiv-Player FreeCiv-Player
+;  equals)
+; (qLessThan (MeasurableQuantityFn currentBulbsResearched)
+;  (SciencePoints 21))
+; (TheSet))
+
+(processDependentVariable (ActionProcessTypeFn doResearch)
+ (MeasurableQuantityFn currentBulbsResearched))
+ 
+(influenceDirection (ActionProcessTypeFn doResearch)
+ (MeasurableQuantityFn currentBulbsResearched) increases)
+
+;(hypothesizedProcessLimit
+; (i+TypeType (MeasurableQuantityFn currentGold)
+;  (MeasurableQuantityFn civTaxTotal) FreeCiv-Player FreeCiv-Player
+;  equals)
+; (qLessThan (MeasurableQuantityFn currentGold) (GoldPoints 103))
+; (TheSet))
+
+;(hypothesizedProcessLimit
+; (i+TypeType (MeasurableQuantityFn currentBulbsResearched)
+;  (MeasurableQuantityFn civBulbsPerTurn) FreeCiv-Player FreeCiv-Player
+;  equals)
+; (qLessThan (MeasurableQuantityFn currentBulbsResearched)
+;  (SciencePoints 17))
+; (TheSet))
+
+;(hypothesizedProcessLimit
+; (i+TypeType (MeasurableQuantityFn currentBulbsResearched)
+;  (MeasurableQuantityFn civBulbsPerTurn) FreeCiv-Player FreeCiv-Player
+;  equals)
+; ?condition ?event-types)
+ 
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn cardinalityOf) doBuildCity FreeCiv-City 1 true)
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn cardinalityOf) doBuildCity FreeCiv-Building 1 true)   ; only true for Palace
+
+;; This was manually specialized from FreeCiv-Unit to FC-Unit-Settlers:
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn cardinalityOf) doBuildCity FC-Unit-Settlers 1 true)   ; building a city consumes a Settler
+ 
+ ;;; Now that the second argument to doBuildCity is a location, not the name of the city, the following
+ ;;; no longer hold:
+;(actionPositivelyAffectsQuantityType
+; (MeasurableQuantityFn tileFoodProduction) doBuildCity FreecivLocation 2 tileWorkedByCity)  ; Oh crap! This is invalid now.
+;(actionPositivelyAffectsQuantityType
+; (MeasurableQuantityFn tileTradeProduction) doBuildCity FreecivLocation 2 tileWorkedByCity)
+;(actionPositivelyAffectsQuantityType
+; (MeasurableQuantityFn tileShieldProduction) doBuildCity FreecivLocation 2 tileWorkedByCity)
+ 
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn tileFoodProduction) doConvertWorkerToSpecialist FreecivLocation 2 equals)
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn tileTradeProduction) doConvertWorkerToSpecialist FreecivLocation 2 equals) 
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn tileShieldProduction) doConvertWorkerToSpecialist FreecivLocation 2 equals)
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn tileFoodProduction) doConvertSpecialistToWorker FreecivLocation 2 equals)
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn tileTradeProduction) doConvertSpecialistToWorker FreecivLocation 2 equals)
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn tileShieldProduction) doConvertSpecialistToWorker FreecivLocation 2 equals)
+ 
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn cardinalityOf) doAttack FreeCiv-Unit 1 true) ; Does this imply attack==suicide?
+ 
+;;; How do we express the fact that buying an object on the production queue
+;;; consumes gold from the treasury? That would be the currentGold of the owner of the city.
+;;; Do we really need to introduce a binrel for that?
+
+;;; Hardcode:
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn currentGold) doCityBuy FreeCiv-Player 1 cityOwner) ; player's gold goes down whenever his cities buy stuff.
+
+;;; Hardcode:
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn numTurnsToBuild) doCityBuy FreeCiv-City 1 equals) ; Buying an object reduces time to build to 1 turn.
+ 
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn cityShieldReserves) doCityBuy FreeCiv-City 1 equals)
+
+;;; Hardcode:
+(actionNegativelyAffectsQuantityType
+ (MeasurableQuantityFn numWorkers) doConvertWorkerToSpecialist FreeCiv-City 1 equals)
+ 
+;;; Hardcode
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn numEntertainers) doConvertWorkerToSpecialist FreeCiv-City 1 equals)
+
+;;; Hardcode
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn numTaxCollectors) doChangeSpecialist FreeCiv-City 1 equals)
+
+;;; Hardcode
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn numScientists) doChangeSpecialist FreeCiv-City 1 equals)
+
+;;; Hardcode
+(actionPositivelyAffectsQuantityType
+ (MeasurableQuantityFn numWorkers) doConvertSpecialistToWorker FreeCiv-City 1 equals)
+
+;;; Unfortunately, numSpecialists is ternary.  Makes it kind of useless.
+
+;;; ----------
+;;; Supporting diplomacy and abstract quantity types
+
+;;; The action influences don't figure into the goal network creation, but
+;;; they are referenced in the regression planner to find goalActions at run time.
+
+;;; Accepting a treaty reduces hostility:
+(actionNegativelyAffectsQuantityType
+  (QPQuantityFn HostilityLevel) doAcceptTreaty IntelligentAgent 2 equals)
+  
+(actionPositivelyAffectsQuantityType
+  (QPQuantityFn FreedomOfAction) doCancelMeeting IntelligentAgent 2 equals)
+  
+;;; Now, we want to be able to say that certain *processes* enhance defense.
+;;; There is no 'defend' primitive.  That has to be more nebulous.
+  
+
+;;; ----------
+;;; Supporting DefenseStrength, etc (manually added)
+
+(qprop+TypeType (QPQuantityFn DefensiveStrength) (MeasurableQuantityFn unitHasDefendStrength) FreeCiv-Unit FreeCiv-Unit equals)
+(qprop+TypeType (QPQuantityFn OffensiveStrength) (MeasurableQuantityFn unitHasAttackStrength) FreeCiv-Unit FreeCiv-Unit equals)
+(qprop+TypeType (QPQuantityFn Mobility)          (MeasurableQuantityFn unitHasMoveRate) FreeCiv-Unit FreeCiv-Unit equals)
+;;; currentHealth is the percentage of maximum hitpoints.
+(qprop+TypeType (QPQuantityFn DefensiveStrength) (MeasurableQuantityFn currentHealth) FreeCiv-Unit FreeCiv-Unit equals)
+(qprop+TypeType (QPQuantityFn OffensiveStrength) (MeasurableQuantityFn currentHealth) FreeCiv-Unit FreeCiv-Unit equals)
+(qprop+TypeType (QPQuantityFn Mobility)          (MeasurableQuantityFn currentMovepoints) FreeCiv-Unit FreeCiv-Unit equals)
+
+;;; FreedomOfAction is also determined by currentHealth and currentMovepoints.
+;;; AttackStrength increases with veteranStatus
+;;; DefenseStrength increases with veteranStatus
+;;; DefenseStrength depends on terrain
+
+
+;;; The InfrastructureEffectOnHealing is insufficient to connect Barracks, PortFacilities and Airports to healingRate.
+;;; We'll rewrite it as three separate processes.

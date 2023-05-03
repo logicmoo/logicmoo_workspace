@@ -1,0 +1,95 @@
+;;;
+;;; test-stn.meld
+;;;
+;;; A plan to collect temporal constraints and compile a dispatchable STN 
+;;; from them, then schedule its execution.
+;;; Assume external harness provides microtheory from which to gather
+;;; temporal constraints.
+
+;;; See agents/perceptual-agent/agenda-regression-test.lsp for harness
+
+(in-microtheory TestPlanMt)  
+(genlMt CompanionsMt TestPlanMt)
+
+(isa testSTN ComplexActionPredicate)
+(arity testSTN 1)
+(arg1Isa testSTN Microtheory)
+(comment testSTN "(testSTN ?mt) exercises the dispatchable stn compiler and dispatcher.")
+
+(preconditionForMethod
+  (and (kbOnly (ist-Information ?ctxt ?fact))  ; reify scenario facts in wm
+       (agentContext ?agent-ctxt))
+  (methodForAction
+    (testSTN ?ctxt)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Compiling stn for ~s" (?ctxt))
+        (doCompileSTN ?ctxt)
+        ;; genlMts are not fully transitive in wm:
+        (doRecord (genlMt ?agent-ctxt ?ctxt)) ; enable planner to find scenario facts.
+        ))))
+
+(isa beginDurativeTask ComplexActionPredicate)
+(arity beginDurativeTask 1)
+(arg1Isa beginDurativeTask Task)
+(comment beginDurativeTask "(beginDurativeTask ?task) reports the start of the task and randomly picks an ending turn within its duration and ends and reports the task upon completion.  For testing.")
+
+(preconditionForMethod
+  (and (currentTurn ?turn)
+       (duration ?task (Turns ?min ?max))  ; for now, assume both bounds present
+       (evaluate ?end-turn
+         (PlusFn ?turn
+           (RandomMemberFn
+             (TheClosedRetrievalSetOf ?n
+               (integerBetween ?min ?n ?max))))))
+  (methodForAction
+    (beginDurativeTask ?task)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Starting ~s at turn ~s" (?task ?turn))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (arbitrarilyTerminateDurativeTask ?task ?end-turn))))))))
+
+(isa arbitrarilyTerminateDurativeTask ComplexActionPredicate)
+(arity arbitrarilyTerminateDurativeTask 2)
+(arg1Isa arbitrarilyTerminateDurativeTask Task)
+(arg2Isa arbitrarilyTerminateDurativeTask Integer)
+(comment arbitrarilyTerminateDurativeTask "(arbitrarilyTerminateDurativeTask ?task ?end-turn) successfully ends ?task upon ?end-turn.")
+
+;;; For testing purposes, we want our durative tasks to end sometime within the
+;;; execution window we set for them.  Do that randomly.
+(preconditionForMethod
+  (currentTurn ?end-turn)
+  (methodForAction
+    (arbitrarilyTerminateDurativeTask ?task ?end-turn)
+    (actionSequence
+      (TheList
+        ;; terminate the task somehow (by returning :success)
+        (doAnnounce "~%Completing durative task ~s on turn ~s" (?task ?end-turn))
+        ))))
+        
+(preconditionForMethod
+  (and (currentTurn ?turn)
+       (lessThan ?turn ?end-turn))
+  (methodForAction
+    (arbitrarilyTerminateDurativeTask ?task ?end-turn)
+    (actionSequence
+      (TheList
+        (doDeferExecution)  ; wait for next turn
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (arbitrarilyTerminateDurativeTask ?task ?end-turn))))))))
+
+
+(preconditionForMethod
+  (and (currentTurn ?turn)
+       (greaterThan ?turn ?end-turn))
+  (methodForAction
+    (arbitrarilyTerminateDurativeTask ?task ?end-turn)
+    (actionSequence
+      (TheList
+       (doAnnounce "~%This should *not* happen! Missed the deadline: (~s > ~s)" (?turn ?end-turn))))))
+

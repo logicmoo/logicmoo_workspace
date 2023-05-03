@@ -1,0 +1,23 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                         -*-
+;;;; --------------------------------------------------------------------------
+;;;; File name: individuals.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: December 13, 2018 11:06:32
+;;;;   Purpose: Non-person individuals
+;;;; --------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2016-10-24 17:08:27 -0500 (Mon, 24 Oct 2016) $
+;;;;  $LastChangedBy: Hinrichs $
+;;;; --------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;; Websites
+
+(isa YouTube-WebSite WebSite)
+(isa Wikipedia-WebSite ReferenceWebSite)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

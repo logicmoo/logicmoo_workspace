@@ -1,0 +1,39 @@
+;;;
+;;; post-mortem.meld
+;;;
+;;; This file contains definitions of task models for Companions 
+;;; natural language interaction.  These tasks are run at the 
+;;; conclusion of a session to extract lessons learned.
+;;; DEPRECATED.  Moved to CompanionsMt, primarily for execution by executive.
+
+(in-microtheory Interaction-ManagerMt) 
+
+;(isa sessionPostMortem ComplexActionPredicate)
+;(arity sessionPostMortem 1)
+;(arg1Isa sessionPostMortem Microtheory)
+;(comment sessionPostMortem "(sessionPostMortem ?session-context) summarizes the session and sets new learning goals.")
+
+;;; For now, this does nothing but record how long the session lasted:
+;(preconditionForMethod
+;  (and (lookupOnly
+;         (ist-Information ?session-context (sessionTime ?start-time)))
+;       (lookupOnly
+;         (ist-Information ?session-context (sessionDate ?start-date)))
+;       (currentTime ?end-time)
+;       (currentDate ?end-date)
+;       (intervalDuration-Minutes ?start-date ?start-time ?end-date ?end-time ?duration))
+;  (methodForAction
+;    (sessionPostMortem ?session-context)
+;    (actionSequence
+;      (TheList
+;        (doAnnounce "session duration = ~a" (?duration))
+;        (doRecord (ist-Information ?session-context (sessionDuration ?duration)))
+;        ))))
+
+
+;;; Things to reify:
+;;;  session duration
+;;;  number of mis-communications
+;;;  number of total user utterances
+;;;  number of learned facts/words/concepts
+;;;  average response time?

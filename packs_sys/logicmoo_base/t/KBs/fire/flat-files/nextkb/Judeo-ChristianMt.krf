@@ -1,0 +1,29 @@
+(in-microtheory Judeo-ChristianMt)
+
+(isa GodOfAbrahamIsaacAndJacob Omnibenevolent)
+(isa Pentateuch NonfictionalPCW)
+(isa OldTestament NonfictionalPCW)
+(isa NewTestament NonfictionalPCW)
+(isa Bible NonfictionalPCW)
+(isa Satan EvilBeing)
+(isa GodTheSon God)
+(isa Hell Place)
+(isa Heaven Place)
+(isa Satan Angel)
+(isa Baal FictionalThing)
+(isa Baal God)
+(isa GodOfAbrahamIsaacAndJacob God)
+(comment Baal "#$Baal is one of the #$Gods 
+
+described in the Old Testament. He was worshipped
+
+by some of the Caananites who lived in Caanan
+
+before the Hebrews arrived.")
+(comment GodOfAbrahamIsaacAndJacob "The supreme being worshipped in Judaism,  Christianity, and Islam.  Note that each tradition believes different things  about this deity and ascribes different historical actions to Him  (or sometimes to Her), but nearly all adherents of these faiths agree that  they do, in some sense, worship the same God.   This constant was previously named GodOfThreeMainWorldMonotheisms, but this  was thought too broad a banner for comfort. Adherents of the Judaic, Christian and Islamic traditions should recognize a common entity in  #$GodOfAbrahamIsaacAndJacob while possibly disagreeing with the belief-specific properties attributed  to this entity since the times of Abraham, Isaac and Jacob.  Note that this concept is defined merely as an #$Entity. The real flesh for the concept is defined in terms of sub-abstractions. Thus, the christian  subabstractions are #$GodTheFather, #$GodTheSon and #$GodTheHolyGhost. The  Islamic view is captured via the namestring 'Allah', while the Judaic view is captured view the namestring mapping 'Jehovah'.")
+(comment Heaven "The #$Place where #$GodOfAbrahamIsaacAndJacob lives, and the souls of the blessed go for eternal bliss.")
+(comment Hell "The #$Place where #$Satan lives, and the souls of the damned go for eternal torment.")
+(genls Murder ImmoralAct)
+(genls ExtraMaritalSexualBehavior ImmoralAct)
+(genls PreMaritalSexualBehavior ImmoralAct)
+(genls Seduction ImmoralAct)

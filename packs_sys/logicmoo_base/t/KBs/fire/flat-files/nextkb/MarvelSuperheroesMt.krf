@@ -1,0 +1,34 @@
+(in-microtheory MarvelSuperheroesMt)
+
+(isa ProfessorX-FictionalCharacter AdultMaleHuman)
+(isa JeanGrey-FictionalCharacter AdultFemaleHuman)
+(isa CaptainAmerica-FictionalCharacter AdultMaleHuman)
+(isa CaptainAmerica-FictionalCharacter Male)
+(isa FranklinRichards-FictionalCharacter MaleHuman)
+(isa FranklinRichards-FictionalCharacter HumanAdult)
+(isa MadelynePryor-FictionalCharacter AdultFemaleHuman)
+(isa MadelynePryor-FictionalCharacter HumanAdult)
+(isa Spiderman Mutant)
+(isa Spiderman Vigilante)
+(isa Spiderman MaleHuman)
+(isa Spiderman HumanAdult)
+(isa Spiderman Superhero)
+(comment Spiderman "The #$Superhero from the #$ComicBookSeries created by Stan Lee and
+
+Steve Ditko in 1961. Spiderman's first appearance was in the last issue, no. 15, of 
+
+Amazing Fantasy. #$Spiderman created a trend in #$ComicBookSeries that represented
+
+a move away from the glossy froth of #$Superman toward a more realistic 
+
+consideration of a character's personality and social milieu. Spidey
+
+obtained his superpowers after being bitten by a radioactive spider, causing him
+
+to exhibit the proportional strength of a #$Spider. He uses home-made
+
+'web-shooters' to extrude long strands of a synthetic web-substance at high
+
+speed, and uses these strands to fly through the cityscape in a Tarzan/vine-like
+
+ manner.")

@@ -1,0 +1,271 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_elaboration.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: January 28, 2013 16:45:28
+;;;;   Created: January 24, 2013 17:20:43
+;;;;   Purpose: SOLVE suggestions for doing the fact elaboration part of our 
+;;;;            tutoring.  worksheet-tutor_classic.meld makes use of these.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- Worksheet Elaboration by query for questions
+
+(defSuggestion ClassicWorksheetElaboration
+    (runQueryForQuestions ?student-subsketch ?qfq-pred)
+  :subgoals
+  ((worksheetElaborationQueries ?student-subsketch ?qfq-pred ?queries)
+   (different (TheList) ?queries)
+   (solveSequentially ?query ?queries
+     (forEffectOnly ?query))))
+                           
+
+(defSuggestion ClassicWorksheetElaborationNotApplicable
+    (runQueryForQuestions ?student-subsketch ?qfq-pred)
+  :subgoals
+  ((worksheetElaborationQueries ?student-subsketch ?qfq-pred ?queries)
+   (unifies (TheList) ?queries)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- Worksheet Elaboration, Edge and Shape Reps
+
+(isa computeApplicableEdgeAndShapeRepsForSubsketch Relation)
+(arity computeApplicableEdgeAndShapeRepsForSubsketch 1)
+(arg1Isa computeApplicableEdgeAndShapeRepsForSubsketch NuSketchBundle)
+(notForAnalogy computeApplicableEdgeAndShapeRepsForSubsketch)
+
+(defSuggestion EdgeAndShapeRepsForSubsketch
+    (computeApplicableEdgeAndShapeRepsForSubsketch ?subsketch)
+  :subgoals
+  ((evaluate ?glyphs
+               (TheClosedRetrievalSetOf ?glyph1
+                 (and (subSketchGroupFor ?layer ?subsketch)
+                      (subSketchFor ?glyph1 ?layer)
+                      (localOnly (lookupOnly (isa ?glyph1 NuSketchGlyph))))))
+   (computeApplicableEdgeAndShapeRepsForGlyphSet ?glyphs)))
+
+
+
+(isa computeApplicableEdgeAndShapeRepsForGlyphSet Relation)
+(arity computeApplicableEdgeAndShapeRepsForGlyphSet 1)
+(arg1Isa computeApplicableEdgeAndShapeRepsForGlyphSet Set-Mathematical)
+(notForAnalogy computeApplicableEdgeAndShapeRepsForGlyphSet)
+
+(defSuggestion EdgeAndShapeRepsForGlyphSet
+    (computeApplicableEdgeAndShapeRepsForGlyphSet ?glyphs)
+  :test (unifies ?glyphs (TheSet))
+  :subgoals
+  ((unifies ?glyphs ?glyphs)))
+
+(defSuggestion EdgeAndShapeRepsForGlyphSet_NA
+    (computeApplicableEdgeAndShapeRepsForGlyphSet ?glyphs)
+  :test (different ?glyphs (TheSet))
+  :subgoals
+   ((solveSequentially ?glyph2 ?glyphs
+      (computeApplicableEdgeAndShapeRepsForGlyph ?glyph2))))
+
+
+
+(isa computeApplicableEdgeAndShapeRepsForGlyph Relation)
+(arity computeApplicableEdgeAndShapeRepsForGlyph 1)
+(arg1Isa computeApplicableEdgeAndShapeRepsForGlyph NuSketchGlyph)
+(notForAnalogy computeApplicableEdgeAndShapeRepsForGlyph)
+
+(defSuggestion EdgeAndShapeRepsForGlyph_NA
+    (computeApplicableEdgeAndShapeRepsForGlyph ?glyph)
+  :test (honorTimestamps
+         (uninferredSentence
+          (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)))
+  ;; Apparently you need at least one subgoal even if it really doesn't do
+  ;; anything.
+  :subgoals ((unifies ?glyph ?glyph)))
+
+(defSuggestion ECO_RepsForGlyph
+    (computeApplicableEdgeAndShapeRepsForGlyph ?glyph)
+  :test (and (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+             (honorTimestamps
+              (uninferredSentence
+               (computeEdgeCycleRepsForGlyph ?glyph ?cycle-thresh1 ?cycle-thresh2))))
+  :subgoals ((forEffectOnly 
+              (and (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+                   (ecoRepresentationsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2
+                                               ?eco-facts-mt ?ecos ?num-ecos)))))
+
+(defSuggestion ECO-EdgeCycle_RepsForGlyph
+    (computeApplicableEdgeAndShapeRepsForGlyph ?glyph)
+  :test (and (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+             (computeEdgeCycleRepsForGlyph ?glyph ?cycle-thresh1 ?cycle-thresh2)
+             (honorTimestamps
+              (uninferredSentence
+               (computeEdgeRepsForGlyph ?glyph ?edge-thresh1 ?edge-thresh2))))
+  :subgoals ((forEffectOnly 
+              (and (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+                   (computeEdgeCycleRepsForGlyph ?glyph 
+                                                 ?cycle-thresh1 ?cycle-thresh2)
+                   (ecoRepresentationsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2
+                                               ?eco-facts-mt ?ecos ?num-ecos)
+                   (elementOf ?eco ?ecos)
+                   (ist-Information ?eco-facts-mt
+                     (edgeCycleRepresentationsFor
+                      ?eco ?cycle-thresh1 ?cycle-thresh2 
+                      ?edge-cycle-facts-mt ?edge-cycles ?num-edge-cycles))))))
+
+(defSuggestion ECO-EdgeCycle-Edge_RepsForGlyph
+    (computeApplicableEdgeAndShapeRepsForGlyph ?glyph)
+  :test (and (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+             (computeEdgeCycleRepsForGlyph ?glyph ?cycle-thresh1 ?cycle-thresh2)
+             (computeEdgeRepsForGlyph ?glyph ?edge-thresh1 ?edge-thresh2))
+  :subgoals ((forEffectOnly 
+              (and (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+                   (computeEdgeCycleRepsForGlyph ?glyph 
+                                                 ?cycle-thresh1 ?cycle-thresh2)
+                   (computeEdgeRepsForGlyph ?glyph ?edge-thresh1 ?edge-thresh2)
+                   (ecoRepresentationsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2
+                                               ?eco-facts-mt ?ecos ?num-ecos)
+                   (elementOf ?eco ?ecos)
+                   (ist-Information ?eco-facts-mt
+                     (edgeCycleRepresentationsFor 
+                      ?eco ?cycle-thresh1 ?cycle-thresh2 
+                      ?edge-cycle-facts-mt ?edge-cycles ?num-edge-cycles))
+                   (elementOf ?edge-cycle ?edge-cycles)
+                   (ist-Information ?edge-cycle-facts-mt
+                     (boundingEdgeRepresentationsForEdgeCycle 
+                      ?edge-cycle ?edge-thresh1 ?edge-thresh2
+                      ?edge-facts-mt ?edges ?num-edges))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- Worksheet Elaboration, ECO Facts
+
+(isa computeApplicableECOFactsForSubsketch Relation)
+(arity computeApplicableECOFactsForSubsketch 1)
+(arg1Isa computeApplicableECOFactsForSubsketch NuSketchBundle)
+(notForAnalogy computeApplicableECOFactsForSubsketch)
+
+(isa computeApplicableECOFactsForGlyphSet Relation)
+(arity computeApplicableECOFactsForGlyphSet 1)
+(arg1Isa computeApplicableECOFactsForGlyphSet Set-Mathematical)
+(notForAnalogy computeApplicableECOFactsForGlyphSet)
+
+(isa computeApplicableECOFactsForGlyph Relation)
+(arity computeApplicableECOFactsForGlyph 2)
+(arg1Isa computeApplicableECOFactsForGlyph NuSketchGlyph)
+(arg2Isa computeApplicableECOFactsForGlyph Set-Mathematical)
+(notForAnalogy computeApplicableECOFactsForGlyph)
+
+
+
+(defSuggestion ECOFactsForSubsketch
+    (computeApplicableECOFactsForSubsketch ?subsketch)
+  :subgoals
+  ((evaluate ?glyphs
+     (TheClosedRetrievalSetOf ?glyph1
+       (and (subSketchGroupFor ?layer ?subsketch)
+            (subSketchFor ?glyph1 ?layer)
+            (localOnly (lookupOnly (isa ?glyph1 NuSketchGlyph))))))
+   (computeApplicableECOFactsForGlyphSet ?glyphs)))
+
+
+
+(defSuggestion ECOFactsForGlyphSet_NA
+    (computeApplicableECOFactsForGlyphSet ?glyphs)
+  :test (unifies ?glyphs (TheSet))
+  :subgoals
+  ((unifies ?glyphs ?glyphs)))
+
+(defSuggestion ECOFactsForGlyphSet
+    (computeApplicableECOFactsForGlyphSet ?glyphs)
+  :test (different ?glyphs (TheSet))
+  :subgoals
+   ((solveSequentially ?glyph ?glyphs
+      (computeApplicableECOFactsForGlyph ?glyph ?ecos))))
+
+
+
+(defSuggestion ECOFactsForGlyph_NA
+    (computeApplicableECOFactsForGlyph ?glyph ?ecos)
+  :test (honorTimestamps
+         (uninferredSentence
+          (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)))
+  :subgoals ((unifies ?ecos (TheSet))))
+
+(defSuggestion ECOFactsForGlyph
+    (computeApplicableECOFactsForGlyph ?glyph ?ecos)
+  :test (computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+  :subgoals ((computeECORepsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2)
+             (ecoRepresentationsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2
+                                         ?eco-facts-mt ?ecos ?num-ecos)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- Worksheet Elaboration, Edge Cycle facts
+
+(isa computeApplicableEdgeCycleFactsForECO Relation)
+(arity computeApplicableEdgeCycleFactsForECO 3)
+(arg1Isa computeApplicableEdgeCycleFactsForECO NuSketchGlyph)
+(arg2Isa computeApplicableEdgeCycleFactsForECO PerceptualEdgeConnectedObject)
+(arg3Isa computeApplicableEdgeCycleFactsForECO Set-Mathematical)
+(notForAnalogy computeApplicableEdgeCycleFactsForECO)
+
+
+(defSuggestion EdgeCycleFactsForECO_NA
+    (computeApplicableEdgeCycleFactsForECO ?glyph ?eco ?edge-cycles)
+  :test (honorTimestamps
+         (uninferredSentence
+          (computeEdgeCycleRepsForGlyph ?glyph ?cycle-thresh1 ?cycle-thresh2)))
+  :subgoals ((unifies ?edge-cycles (TheSet))))
+
+(defSuggestion EdgeCycleFactsForECO
+    (computeApplicableEdgeCycleFactsForECO ?glyph ?eco ?edge-cycles)
+  :test (computeEdgeCycleRepsForGlyph ?glyph ?cycle-thresh1 ?cycle-thresh2)
+  :subgoals
+  ((computeEdgeCycleRepsForGlyph ?glyph ?cycle-thresh1 ?cycle-thresh2)
+   (lookupOnly
+    (ecoRepresentationsForGlyph ?glyph ?eco-thresh1 ?eco-thresh2
+                                ?eco-facts-mt ?ecos ?num-ecos))
+   (elementOf ?eco ?ecos)
+   (ist-Information ?eco-facts-mt
+     (edgeCycleRepresentationsFor 
+      ?eco ?cycle-thresh1 ?cycle-thresh2 
+      ?edge-cycle-facts-mt ?edge-cycles ?num-edge-cycles))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- Worksheet Elaboration, Edge facts
+
+(defSuggestion EdgeFactsForEdgeCycle_NA
+    (computeApplicableEdgeFactsForEdgeCycle ?glyph ?edge-cycle ?edges)
+  :test (honorTimestamps
+         (uninferredSentence
+          (computeEdgeRepsForGlyph ?glyph ?edge-thresh1 ?edge-thresh2)))
+  :subgoals ((unifies ?edges (TheSet))))
+
+(defSuggestion EdgeFactsForEdgeCycle
+    (computeApplicableEdgeFactsForEdgeCycle ?glyph ?edge-cycle ?edges)
+  :test (computeEdgeRepsForGlyph ?glyph ?edge-thresh1 ?edge-thresh2)
+  :subgoals
+  ((computeEdgeRepsForGlyph ?glyph ?edge-thresh1 ?edge-thresh2)
+   (lookupOnly (ecoRepMtFor ?glyph ?eco-facts-mt))
+   (lookupOnly
+    (ist-Information ?eco-facts-mt
+      (edgeCycleRepresentationsFor 
+       ?eco ?cycle-thresh1 ?cycle-thresh2 
+       ?edge-cycle-facts-mt ?edge-cycles ?num-edge-cycles)))
+   (elementOf ?edge-cycle ?edge-cycles)
+   (ist-Information ?edge-cycle-facts-mt
+     (boundingEdgeRepresentationsForEdgeCycle 
+      ?edge-cycle ?edge-thresh1 ?edge-thresh2
+      ?edge-facts-mt ?edges ?num-edges))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

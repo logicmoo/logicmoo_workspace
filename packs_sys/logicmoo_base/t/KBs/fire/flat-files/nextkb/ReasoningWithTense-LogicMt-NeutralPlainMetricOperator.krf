@@ -1,0 +1,230 @@
+
+ (in-microtheory ReasoningWithTense-LogicMt-NeutralPlainMetricOperator)
+ (arg2Isa since-Metric PositiveInteger)
+ (arg2Isa was-Metric PositiveInteger)
+ (argIsa since-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (arg1Genl willBe-NthDate Date)
+ (comment willBe-Metric "#$willBe-Metric has different definitions in 
+#$ReasoningWithTense-LogicMt-SingleDateSeries and 
+#$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (argIsa willBe-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (comment was-Metric "#$was-Metric has different definitions in 
+#$ReasoningWithTense-LogicMt-SingleDateSeries and 
+#$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (arg1Genl was-NthDate Date)
+ (isa since-Metric TensePredicate)
+ (argQuotedIsa was-Metric 3 CycLSentence-Assertible)
+ (argIsa until-Metric 2 PositiveInteger)
+ (isa was-NthDate TensePredicate)
+ (argIsa was-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (isa until-NthDate TensePredicate)
+ (argIsa since-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (arg3QuotedIsa was-Metric CycLSentence-Assertible)
+ (isa
+ (ModalOpSet1-2Fn until-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (arg1Isa until-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (isa
+ (ModalOpSet1-2Fn was-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa
+ (ModalOpSet1-2Fn until-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (arg1Genl since-NthDate Date)
+ (argIsa was-NthDate 2 PositiveInteger)
+ (arg2Isa since-NthDate PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn willBe-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (argQuotedIsa willBe-Metric 3 CycLSentence-Assertible)
+ (arg2Isa willBe-NthDate PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn willBe-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa until-Metric TensePredicate)
+ (comment since-NthDate
+ "(since-NthDate TYPE n PROP) means that it has been
+uninterruptedly the case that PROP since the nth `date' counting from
+now toward the past, where the interpretation of `date' is determined
+by TYPE.  For example, the sentence `Fritz has been out of his office
+since last Friday (the latest Friday in the past)' should be
+symbolized as (#$since-NthDate #$Friday 1 `Fritz is out of his
+office').  To symbolize a sentence like `Fritz has been out of his
+office since yesterday', use #$since-Metric.")
+ (arg1Isa willBe-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (arg3QuotedIsa was-NthDate CycLSentence-Assertible)
+ (arg1Isa since-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (comment was-NthDate
+ "(#$was-NthDate TYPE n PROP) means that it was the case that 
+PROP on the n-th date of type TYPE, counting toward past from and 
+excluding the current date of type TYPE.  For example, (#$was-NthDate 
+#$Friday 1 `Fritz is to sick') means that Fritz was sick last Friday 
+(the first Friday when counting toward past), and (#$was-NthDate 
+#$July 2 `Cyc goes public') means that Cyc went public in July, a year 
+before the last.  Note that #$willBe-NthDate is used in different ways 
+in #$ReasoningWithTense-LogicMt-SingleDateSeries and 
+#$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (isa
+ (ModalOpSet1-2Fn was-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (arg1Genl until-NthDate Date)
+ (argQuotedIsa until-Metric 3 CycLSentence-Assertible)
+ (argIsa willBe-Metric 2 PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn was-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (argIsa since-NthDate 2 PositiveInteger)
+ (arg3QuotedIsa willBe-Metric CycLSentence-Assertible)
+ (isa
+ (ModalOpSet1-2Fn since-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (arg1Isa until-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (argQuotedIsa was-NthDate 3 CycLSentence-Assertible)
+ (argIsa until-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (arg3QuotedIsa until-Metric CycLSentence-Assertible)
+ (arg3QuotedIsa since-NthDate CycLSentence-Assertible)
+ (isa
+ (ModalOpSet1-2Fn was-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (arg2Isa until-Metric PositiveInteger)
+ (argQuotedIsa since-Metric 3 CycLSentence-Assertible)
+ (argIsa was-Metric 2 PositiveInteger)
+ (argIsa until-NthDate 2 PositiveInteger)
+ (arg3QuotedIsa until-NthDate CycLSentence-Assertible)
+ (argGenl willBe-NthDate 1 Date)
+ (argQuotedIsa willBe-NthDate 3 CycLSentence-Assertible)
+ (argIsa willBe-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (comment ReasoningWithTense-LogicMt-NeutralPlainMetricOperator
+ "This #$Microtheory stores rules involving plain metric tense 
+operators #$willBe-Metric, #$was-Metric, #$willBe-NthDate, #$was-NthDate,  
+#$until-Metric, #$since-Metric, #$until-NthDate and #$since-NthDate,  
+which can be shared byboth #$ReasoningWithTense-LogicMt-SingleDateSeries 
+and #$ReasoningWithTense-LogicMt-MixedDateSeries.  Note that 
+#$willBe-Metric and #$was-Metric are defined differently in the two 
+microtheories above.")
+ (comment until-Metric
+ "(#$until-Metric TYPE n PROP) means that it will be
+uninterruptedly the case that PROP until the nth `step' from now on,
+where the interpretation of `step' is determined by TYPE.  For
+example, the sentence `Fritz will be out of his office until the day
+after tomorrow' should be symbolized as (#$until-Metric #$CalendarDay
+2 `Fritz is out of his office').  To symbolize a sentence like `Fritz
+will be out of his office until next Friday', use #$until-NthDate.")
+ (argQuotedIsa since-NthDate 3 CycLSentence-Assertible)
+ (isa
+ (ModalOpSet1-2Fn until-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (arg2Isa willBe-Metric PositiveInteger)
+ (arg3QuotedIsa willBe-NthDate CycLSentence-Assertible)
+ (arg2Isa until-NthDate PositiveInteger)
+ (comment until-NthDate
+ "(until-NthDate TYPE n PROP) means that it will be
+uninterruptedly the case that PROP until the nth `date' counting from
+now on toward the future, where the interpretation of `date' is
+determined by TYPE.  For example, the sentence `Fritz will be out of
+his office until next Friday (the first coming Friday)' should be
+symbolized as (#$until-NthDate #$Friday 1 `Fritz is out of his
+office').  To symbolize a sentence like `Fritz will be out of his
+office until tomorrow', use #$until-Metric.")
+ (arg3QuotedIsa since-Metric CycLSentence-Assertible)
+ (argGenl since-NthDate 1 Date)
+ (isa since-NthDate TensePredicate)
+ (comment since-Metric
+ "(#$since-Metric TYPE n PROP) means that it has been
+uninterruptedly the case that PROP since the nth `step', counting
+toward past, where the interpretation of `step' is determined by TYPE.
+For example, the sentence `Fritz has been out of his office since the
+day before yesterday' should be symbolized as (#$since-Metric
+#$CalendarDay 2 `Fritz is out of his office').  To symbolize a
+sentence like `Fritz has been out of his office since last Friday',
+use #$since-NthDate.")
+ (argIsa was-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (argIsa until-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (arg2Isa was-NthDate PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn willBe-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa
+ (ModalOpSet1-2Fn since-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (argGenl until-NthDate 1 Date)
+ (arg1Isa since-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (arg1Isa willBe-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (comment willBe-NthDate
+ "(#$willBe-NthDate TYPE n PROP) means that it will be the 
+case that PROP on the n-th date of type TYPE, counting toword future 
+from and excluding the current date of type TYPE.  For example, 
+(#$willBe-NthDate #$Friday 1 `Fritz goes to LA') means that Fritz will 
+go to LA next Friday (the first coming Friday), and (#$willBe-NthDate 
+#$July 2 `Cyc goes public') means that Cyc will go public a year from 
+the coming July.  Note that #$willBe-NthDate is used in different ways 
+in #$ReasoningWithTense-LogicMt-SingleDateSeries and 
+#$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (isa
+ (ModalOpSet1-2Fn since-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (arg1Isa was-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (isa willBe-NthDate TensePredicate)
+ (argIsa willBe-NthDate 2 PositiveInteger)
+ (isa (ModalOp1-2Fn willBe-Metric CalendarDay 5) UnaryModalOperator)
+ (argQuotedIsa until-NthDate 3 CycLSentence-Assertible)
+ (argIsa since-Metric 2 PositiveInteger)
+ (arg1Isa was-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (isa
+ (ModalOpSet1-2Fn until-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa
+ (ModalOpSet1-2Fn since-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (isa
+ (ModalOpSet1-2Fn willBe-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (argGenl was-NthDate 1 Date)

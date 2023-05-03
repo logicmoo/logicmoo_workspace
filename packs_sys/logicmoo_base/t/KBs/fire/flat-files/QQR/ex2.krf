@@ -1,0 +1,131 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ex2
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: December 27, 2010 14:12:02
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2015-07-15 16:44:47 -0500 (Wed, 15 Jul 2015) $
+;;;;  $LastChangedBy: usher $
+
+(in-microtheory QPExampleEx2Mt)
+
+(comment QPExampleEx2Mt
+  "QPExampleEx2Mt is a microtheory describing the classic boiling water scenario, used in testing QP theory implementations.")
+
+
+(includeEntity Can)
+(includeEntity Stove)
+(includeEntity Burner)
+
+(includeEntity Liquid-StateOfMatter)
+(includeEntity Gaseous-StateOfMatter)
+(includeEntity Water)
+
+(isa Can Container)
+(canContainSubstance Can Water Liquid-StateOfMatter)
+(canContainSubstance Can Water Gaseous-StateOfMatter)
+(isa Stove TemperatureSource)
+(isa Burner HeatPath)
+(heatConnection Burner Stove Can)
+(qGreaterThan (TemperatureFn Stove) (TboilFn Water Can))
+
+(mfiName Can-PossibleL
+         (ModelFragmentInstanceFn ContainedStuffPossibility
+                                  (TheSet (TheList containerOf Can) 
+                                          (TheList phaseOf Liquid-StateOfMatter)
+                                          (TheList substanceOf Water))))
+(mfiName Can-PossibleG
+         (ModelFragmentInstanceFn ContainedStuffPossibility
+                                  (TheSet (TheList containerOf Can) 
+                                          (TheList phaseOf Gaseous-StateOfMatter)
+                                          (TheList substanceOf Water))))
+(mfiName Gcan
+         (ModelFragmentInstanceFn ContainedStuff
+                                  (TheSet (TheList containerOf Can) 
+                                          (TheList mfParticipant Can-PossibleG)
+                                          (TheList phaseOf Gaseous-StateOfMatter) 
+                                          (TheList substanceOf Water))))
+(mfiName Wcan
+         (ModelFragmentInstanceFn ContainedStuff
+                                  (TheSet (TheList containerOf Can) 
+                                          (TheList mfParticipant Can-PossibleL)
+                                          (TheList phaseOf Liquid-StateOfMatter) 
+                                          (TheList substanceOf Water))))
+(mfiName Stove-H>Wcan
+         (ModelFragmentInstanceFn HeatFlowProcess
+                                  (TheSet (TheList destinationOfHeat Wcan) 
+                                          (TheList pathOfHeat Burner)
+                                          (TheList sourceOfHeat Stove))))
+(mfiName Stove-H>Gcan
+         (ModelFragmentInstanceFn HeatFlowProcess
+                                  (TheSet (TheList destinationOfHeat Gcan) 
+                                          (TheList pathOfHeat Burner)
+                                          (TheList sourceOfHeat Stove))))
+(mfiName Gcan-Props
+         (ModelFragmentInstanceFn ContainedGasProperties
+                                  (TheSet (TheList containerOf Can)
+                                          (TheList gasOf Gcan)
+                                          (TheList substanceOf Water))))
+(mfiName Wcan-Props
+         (ModelFragmentInstanceFn ContainedLiquidProperties
+                                  (TheSet (TheList containerOf Can) 
+                                          (TheList liquidOf Wcan) 
+                                          (TheList substanceOf Water))))
+(mfiName Can-W-G-Equil
+         (ModelFragmentInstanceFn RapidThermalEquilibriumWithinContainer
+                                  (TheSet (TheList containerOf Can)
+                                          (TheList gasOf Gcan)
+                                          (TheList liquidOf Wcan)
+                                          (TheList substanceOf Water))))
+(mfiName Boil-Can
+         (ModelFragmentInstanceFn BoilingProcess
+                                  (TheSet (TheList containerOf Can)
+                                          (TheList heatFlowOf Stove-H>Wcan)
+                                          (TheList liquidOf Wcan)
+                                          (TheList substanceOf Water))))
+(mfiName Gcan-LatentHeatAbsorb
+         (ModelFragmentInstanceFn LatentHeatAbsorptionBySteamProcess
+                                  (TheSet (TheList boilingOf Boil-Can)
+                                          (TheList containerOf Can)
+                                          (TheList gasOf Gcan)
+                                          (TheList heatFlowOf Stove-H>Gcan) 
+                                          (TheList liquidOf Wcan)
+                                          (TheList substanceOf Water))))
+
+
+
+
+
+(in-microtheory QPExampleEx2-ic1Mt)
+(genlMt QPExampleEx2-ic1Mt QPExampleEx2Mt)
+(comment QPExampleEx2-ic1Mt
+ "QPExampleEx2-ic1Mt is the microtheory describing the classic QP boiling water scenario, with
+ just water on the stove.")
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter Can) Zero)
+(qEqualTo (AmountOfFn Water Gaseous-StateOfMatter Can) Zero)
+(qGreaterThan (TemperatureFn Stove) (TemperatureFn Wcan))
+(qLessThan (TemperatureFn Wcan) (TBoilFn Water Can))
+(heatAligned Burner)
+
+(in-microtheory QPExampleEx2-ic2Mt)
+(genlMt QPExampleEx2-ic2Mt QPExampleEx2Mt)
+(comment QPExampleEx2-ic2Mt
+ "QPExampleEx2-ic2Mt is the microtheory describing the classic QP boiling water scenario, with
+ both water and steam existing, and boiling occurring.")
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter Can) Zero)
+(qGreaterThan (AmountOfFn Water Gaseous-StateOfMatter Can) Zero)
+(qEqualTo (TemperatureFn Wcan) (TBoilFn Water Can))
+(qGreaterThan (TemperatureFn Stove) (TemperatureFn Gcan))
+(qGreaterThan (TemperatureFn Stove) (TemperatureFn Wcan))
+(heatAligned Burner)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

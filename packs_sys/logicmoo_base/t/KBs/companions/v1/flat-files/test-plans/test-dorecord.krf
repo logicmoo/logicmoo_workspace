@@ -1,0 +1,63 @@
+;;;
+;;; Test doRecord
+;;;
+
+;;; 1) (forget-mt 'TestPlanMt)
+;;; 2) (load-ff)   ; navigate to this file
+;;; 3) (in-agent *im*)
+;;; 4) (clear-wm)
+;;; 5) (agents::execute *im* '(testDoRecord TestPlanMt))
+
+(in-microtheory TestPlanMt)        ; make it easy to blow away the  contents
+(genlMt TestPlanMt CompanionsMt)   ; inherit the primitives
+(genlMt CompanionsMt TestPlanMt)
+
+(isa testDoRecord ComplexActionPredicate)
+(arity testDoRecord 1)
+
+(preconditionForMethod 
+  (true)
+  (methodForAction
+    (testDoRecord ?context)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?context (foo bar)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (testDoRecord1 ?context))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (testDoRecord2 ?context))))))))
+
+(isa testDoRecord1 ComplexActionPredicate)
+(arity testDoRecord1 1)
+
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (ist-Information ?context
+        (foo ?what))))
+  (methodForAction
+    (testDoRecord1 ?context)
+    (actionSequence
+      (TheList
+        (doForget (ist-Information ?context (foo ?what)))
+        (doRecord (ist-Information ?context (foo baz)))))))
+
+(isa testDoRecord2 ComplexActionPredicate)
+(arity testDoRecord2 1)
+
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context
+          (foo ?what)))))
+  (methodForAction
+    (testDoRecord2 ?context)
+    (actionSequence
+      (TheList
+        (doAnnounce "found (foo ~s)" (?what))))))
+        

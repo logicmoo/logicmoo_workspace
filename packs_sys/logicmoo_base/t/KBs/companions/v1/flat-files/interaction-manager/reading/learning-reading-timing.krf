@@ -1,0 +1,245 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: learning-reading-timing.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 1, 2015 07:41:40
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?time)))
+ (methodForAction
+  (recordReadingStartTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (thisRecordingDoesIt)))
+    (doRecord (ist-Information lbrProcessMt (readingStartedAt ?reading-name ?experiment-name ?time)))))))
+
+(isa readingStartedAt Predicate)
+(arity readingStartedAt 3)
+(arg1Isa readingStartedAt AccessingAnIBT)
+(arg2Isa readingStartedAt Thing)
+(arg3Isa readingStartedAt TimePoint)
+(comment readingStartedAt "(readingStartedAt ?reading-name ?experiment-name ?time) indicates that ?reading-name started at ?time.")
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?end-time))
+      (ist-Information lbrProcessMt (readingStartedAt ?reading-name ?experiment-name ?start-time))
+      (unifies ?start-time (UniversalTimeFn ?start-time-numerical))
+      (unifies ?end-time (UniversalTimeFn ?end-time-numerical))
+      (evaluate ?duration (DifferenceFn ?end-time-numerical ?start-time-numerical))
+      )
+ (methodForAction
+  (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (readingEndedProcessingAt ?reading-name ?experiment-name ?end-time)))
+    (doRecord (ist-Information lbrProcessMt (readingProcessingDuration ?reading-name ?experiment-name ?duration)))))))
+
+(isa readingEndedProcessingAt Predicate)
+(arity readingEndedProcessingAt 3)
+(arg1Isa readingEndedProcessingAt AccessingAnIBT)
+(arg2Isa readingEndedProcessingAt Thing)
+(arg3Isa readingEndedProcessingAt TimePoint)
+(comment readingEndedProcessingAt "(readingEndedProcessingAt ?reading-name ?experiment-name ?time) indicates that ?reading-name ended processing the text at ?time.")
+
+(isa readingProcessingDuration Predicate)
+(arity readingProcessingDuration 3)
+(arg1Isa readingProcessingDuration AccessingAnIBT)
+(arg2Isa readingProcessingDuration Thing)
+(arg3Isa readingProcessingDuration TimePoint)
+(comment readingProcessingDuration "(readingProcessingDuration ?reading-name ?experiment-name ?duration)
+ indicates that ?reading-name took ?duration seconds for processing.")
+
+
+;;;;;;;;;;;;;; Timing disambiguation
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?time)))
+ (methodForAction
+  (recordDisambiguationStartTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (disambiguationBeganAt ?reading-name ?experiment-name ?time)))))))
+
+(isa disambiguationBeganAt Predicate)
+(arity disambiguationBeganAt 3)
+(arg1Isa disambiguationBeganAt AccessingAnIBT)
+(arg2Isa disambiguationBeganAt Thing)
+(arg3Isa disambiguationBeganAt TimePoint)
+(comment disambiguationBeganAt "(disambiguationBeganAt ?reading-name ?experiment-name ?time) indicates that ?reading-name started disambiguating at ?time.")
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?end-time))
+      (ist-Information lbrProcessMt (disambiguationBeganAt ?reading-name ?experiment-name ?start-time))
+      (unifies ?start-time (UniversalTimeFn ?start-time-numerical))
+      (unifies ?end-time (UniversalTimeFn ?end-time-numerical))
+      (evaluate ?duration (DifferenceFn ?end-time-numerical ?start-time-numerical))
+      )
+ (methodForAction
+  (recordDisambiguationEndTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (disambiguationEndedAt ?reading-name ?experiment-name ?end-time)))
+    (doRecord (ist-Information lbrProcessMt (readingDisambiguationDuration ?reading-name ?experiment-name ?duration)))))))
+
+(isa disambiguationEndedAt Predicate)
+(arity disambiguationEndedAt 3)
+(arg1Isa disambiguationEndedAt AccessingAnIBT)
+(arg2Isa disambiguationEndedAt Thing)
+(arg3Isa disambiguationEndedAt TimePoint)
+(comment disambiguationEndedAt "(disambiguationEndedAt ?reading-name ?experiment-name ?time) indicates that ?reading-name ended disambiguation the text at ?time.")
+
+(isa readingDisambiguationDuration Predicate)
+(arity readingDisambiguationDuration 3)
+(arg1Isa readingDisambiguationDuration AccessingAnIBT)
+(arg2Isa readingDisambiguationDuration Thing)
+(arg3Isa readingDisambiguationDuration TimePoint)
+(comment readingDisambiguationDuration "(readingDisambiguationDuration ?reading-name ?experiment-name ?duration)
+ indicates that ?reading-name took ?duration seconds for disambiguation")
+
+(isa recordDisambiguationStartTime ComplexActionPredicate)
+(arity recordDisambiguationStartTime 2)
+(arg1Isa recordDisambiguationStartTime AccessingAnIBT)
+(arg1Isa recordDisambiguationStartTime Thing)
+(comment recordDisambiguationStartTime "(recordDisambiguationStartTime ?reading ?experiment-name) records a disambiguation's start time.")
+
+(isa recordDisambiguationEndTime ComplexActionPredicate)
+(arity recordDisambiguationEndTime 2)
+(arg1Isa recordDisambiguationEndTime AccessingAnIBT)
+(arg2Isa recordDisambiguationEndTime Thing)
+(comment recordDisambiguationEndTime "(recordDisambiguationEndTime ?reading ?experiment-name) records the
+universal time at which disambiguation finished.")
+
+;;;; Coreference timeing
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?time)))
+ (methodForAction
+  (recordCoreferenceStartTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (coreferenceBeganAt ?reading-name ?experiment-name ?time)))))))
+
+(isa coreferenceBeganAt Predicate)
+(arity coreferenceBeganAt 3)
+(arg1Isa coreferenceBeganAt AccessingAnIBT)
+(arg2Isa coreferenceBeganAt Thing)
+(arg3Isa coreferenceBeganAt TimePoint)
+(comment coreferenceBeganAt "(coreferenceBeganAt ?reading-name ?experiment-name ?time) indicates that ?reading-name started coreference at ?time.")
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?end-time))
+      (ist-Information lbrProcessMt (coreferenceBeganAt ?reading-name ?experiment-name ?start-time))
+      (unifies ?start-time (UniversalTimeFn ?start-time-numerical))
+      (unifies ?end-time (UniversalTimeFn ?end-time-numerical))
+      (evaluate ?duration (DifferenceFn ?end-time-numerical ?start-time-numerical)))
+ (methodForAction
+  (recordCoreferenceEndTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (coreferenceEndedAt ?reading-name ?experiment-name ?end-time)))
+    (doRecord (ist-Information lbrProcessMt (readingCoreferenceDuration ?reading-name ?experiment-name ?duration)))
+    ))))
+
+(isa readingCoreferenceDuration Predicate)
+(arity readingCoreferenceDuration 3)
+(arg1Isa readingCoreferenceDuration AccessingAnIBT)
+(arg2Isa readingCoreferenceDuration Thing)
+(arg3Isa readingCoreferenceDuration TimePoint)
+(comment readingCoreferenceDuration "(readingCoreferenceDuration ?reading-name ?experiment-name ?duration)
+ indicates that ?reading-name took ?duration seconds for coreference.")
+
+(isa coreferenceEndedAt Predicate)
+(arity coreferenceEndedAt 3)
+(arg1Isa coreferenceEndedAt AccessingAnIBT)
+(arg2Isa coreferenceEndedAt Thing)
+(arg3Isa coreferenceEndedAt TimePoint)
+(comment coreferenceEndedAt "(coreferenceEndedAt ?reading-name ?experiment-name ?time) indicates that ?reading-name ended coreference over the text at ?time.")
+
+(isa recordCoreferenceStartTime ComplexActionPredicate)
+(arity recordCoreferenceStartTime 2)
+(arg1Isa recordCoreferenceStartTime AccessingAnIBT)
+(arg1Isa recordCoreferenceStartTime Thing)
+(comment recordCoreferenceStartTime "(recordCoreferenceStartTime ?reading ?experiment-name) records a coreference's start time.")
+
+(isa recordCoreferenceEndTime ComplexActionPredicate)
+(arity recordCoreferenceEndTime 2)
+(arg1Isa recordCoreferenceEndTime AccessingAnIBT)
+(arg2Isa recordCoreferenceEndTime Thing)
+(comment recordCoreferenceEndTime "(recordCoreferenceEndTime ?reading ?experiment-name) records a coreference's end time.")
+
+;;;;;;;;;;;;;; Timing ADA
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?time)))
+ (methodForAction
+  (recordADAStartTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (ADABeganAt ?reading-name ?experiment-name ?time)))))))
+
+(isa ADABeganAt Predicate)
+(arity ADABeganAt 3)
+(arg1Isa ADABeganAt AccessingAnIBT)
+(arg2Isa ADABeganAt Thing)
+(arg3Isa ADABeganAt TimePoint)
+(comment ADABeganAt "(ADABeganAt ?reading-name ?experiment-name ?time) indicates that ?reading-name started ADA
+processing at ?time.")
+
+(preconditionForMethod 
+ (and (outsourcedOnly (getUniversalTime ?end-time))
+      (ist-Information lbrProcessMt (ADABeganAt ?reading-name ?experiment-name ?start-time))
+      (unifies ?start-time (UniversalTimeFn ?start-time-numerical))
+      (unifies ?end-time (UniversalTimeFn ?end-time-numerical))
+      (evaluate ?duration (DifferenceFn ?end-time-numerical ?start-time-numerical))
+      )
+ (methodForAction
+  (recordADAEndTime ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information lbrProcessMt (ADAEndedAt ?reading-name ?experiment-name ?end-time)))
+    (doRecord (ist-Information lbrProcessMt (readingADADuration ?reading-name ?experiment-name ?duration)))))))
+
+(isa ADAEndedAt Predicate)
+(arity ADAEndedAt 3)
+(arg1Isa ADAEndedAt AccessingAnIBT)
+(arg2Isa ADAEndedAt Thing)
+(arg3Isa ADAEndedAt TimePoint)
+(comment ADAEndedAt "(ADAEndedAt ?reading-name ?experiment-name ?time) indicates that ?reading-name ended 
+ADA processing of the text at ?time.")
+
+(isa readingADADuration Predicate)
+(arity readingADADuration 3)
+(arg1Isa readingADADuration AccessingAnIBT)
+(arg2Isa readingADADuration Thing)
+(arg3Isa readingADADuration TimePoint)
+(comment readingADADuration "(readingADADuration ?reading-name ?experiment-name ?duration)
+ indicates that ?reading-name took ?duration seconds for ADA processing.")
+
+(isa recordADAStartTime ComplexActionPredicate)
+(arity recordADAStartTime 2)
+(arg1Isa recordADAStartTime AccessingAnIBT)
+(arg1Isa recordADAStartTime Thing)
+(comment recordADAStartTime "(recordADAStartTime ?reading ?experiment-name) records a 
+ADA processing run's start time.")
+
+(isa recordADAEndTime ComplexActionPredicate)
+(arity recordADAEndTime 2)
+(arg1Isa recordADAEndTime AccessingAnIBT)
+(arg2Isa recordADAEndTime Thing)
+(comment recordADAEndTime "(recordADAEndTime ?reading ?experiment-name) records the
+universal time at which ADA processing finished.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

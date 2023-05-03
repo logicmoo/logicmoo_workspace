@@ -1,0 +1,708 @@
+(in-microtheory MetaengineeringEquationsMt)
+
+(genlMt MetaengineeringEquationsMt MetaengineeringUnitsMt)
+
+;;; Equations should also reference quantities and units.
+
+(isa EquationType Collection)
+
+(isa FramingEquation EquationType)
+(isa BridgingEquation EquationType)
+(isa InternalEquation EquationType)
+
+(isa equationType BinaryRelation)
+(arg1Isa equationType Innovation)
+(arg2Isa equationType EquationType)
+(comment equationType "Characterizes an equation by its type (Framing, Bridging, or Internal).")
+
+(isa contentML BinaryRelation)
+(arg1Isa contentML Innovation)
+(arg2Isa contentML CharacterString)
+(comment contentML "Associates the MathML content markup for an equation with the Innovation (principle, law, rule) it describes.")
+
+(isa presentationML BinaryRelation)
+(arg1Isa presentationML Innovation)
+(arg2Isa presentationML CharacterString)
+(comment presentationML "Associates the MathML presentation markup for an equation with the Innovation (principle, law, rule) it describes.")
+
+
+(equationType AmperesLaw FramingEquation)  ; Framing Equation
+(contentML AmperesLaw
+"<math> 
+  <apply>
+    <eq/>
+    <ci>F</ci>
+    <apply>
+      <divide/>
+      <apply>
+        <times/>
+        <ci>B</ci>
+        <ci>I</ci>
+        <ci>L</ci>
+        <apply>
+         <sin/>
+         <ci>&#x003B8;</ci>
+        </apply>
+      </apply>
+      <cn>10</cn>
+    </apply>
+  </apply> 
+</math>")
+(presentationML AmperesLaw
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <mi>F</mi>
+    <mo>=</mo>
+    <mrow>
+      <mfrac>
+        <mrow>
+          <mi>V</mi>
+          <mo>&InvisibleTimes;</mo>
+          <mi>Q</mi>
+          <mo>&InvisibleTimes;</mo>
+          <mi>B</mi>
+          <mo>&InvisibleTimes;</mo>
+          <mi>sin</mi>
+          <mo>&ApplyFunction;</mo>
+          <mi>&alpha;</mi>
+        </mrow>
+        <mrow>
+          <mn>10</mn>
+        </mrow>
+      </mfrac>
+    </mrow>
+  </mrow>
+</math>")
+
+(equationType BernoullisTheorem FramingEquation)
+(contentML BernoullisTheorem
+"<math> 
+  <apply>
+    <eq/>
+    <ci>H</ci>
+    <apply>
+      <plus/>
+      <ci>h</ci>
+      <apply>
+        <divide/>
+        <ci>P</ci>
+        <apply>
+          <times/>
+           <ci>&#x003C1;</ci>
+           <ci>g</ci>
+        </apply>
+      </apply>
+      <apply>
+        <divide/>
+        <apply>
+          <power/>
+          <ci>v</ci>
+          <cn>2</cn>
+        </apply>
+        <apply>
+          <times/>
+          <cn>2</cn>
+          <ci>g</ci>
+        </apply>
+      </apply>
+    </apply>
+  </apply> 
+</math>")
+(presentationML BernoullisTheorem
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <mi>H</mi>
+    <mo>=</mo>
+    <mrow>
+      <mrow>
+        <mi>h</mi>
+        <mo>+</mo>
+        <mfrac>
+          <mrow>
+            <mi>P</mi>
+          </mrow>
+          <mrow>
+            <mi>&rho;</mi>
+            <mo>&InvisibleTimes;</mo>
+            <mi>g</mi>
+          </mrow>
+        </mfrac>
+      </mrow>
+      <mo>+</mo>
+      <mrow>
+        <mfrac>
+          <mrow>
+            <msup>
+              <mi>v</mi>
+              <mn>2</mn>
+            </msup>
+          </mrow>
+          <mrow>
+            <mn>2</mn>
+            <mo>&InvisibleTimes;</mo>
+            <mi>g</mi>
+          </mrow>
+        </mfrac>
+      </mrow>
+    </mrow>
+  </mrow>
+</math>")
+
+(contentML ConservationOfMassAndEnergy 
+"<math> 
+  <apply>
+    <eq/>
+    <ci>e</ci>
+    <apply>
+      <times/>
+      <ci>m</ci>
+      <apply>
+        <power/>
+        <ci>c</ci>
+        <cn>2</cn>
+      </apply> 
+    </apply>
+  </apply> 
+</math>")
+
+(equationType CoulombsLaw FramingEquation)
+(contentML CoulombsLaw
+"<math> 
+  <apply>
+    <eq/>
+    <ci>
+    <mi mathvariant=""bold"">F</mi>
+    </ci>
+    <apply>
+      <times/>
+      <ci>k</ci>
+      <apply>
+        <divide/>
+        <apply>
+          <times/>
+          <ci>
+            <msub>
+             <mi>m</mi>
+             <mi>1</mi>
+            </msub>
+          </ci>
+          <ci>
+            <msub>
+             <mi>m</mi>
+             <mi>2</mi>
+            </msub>
+          </ci>
+        </apply>
+        <apply>
+          <power/>
+          <ci>r</ci>
+          <cn>2</cn>
+        </apply>
+      </apply>
+      <ci>
+        <msub>
+          <mi mathvariant=""bold"">r</mi>
+          <mi>0</mi>
+        </msub>
+      </ci>
+    </apply>
+  </apply> 
+</math>")
+
+(contentML DiffractionOfLight
+"<math> 
+  <apply>
+    <eq/>
+    <ci>&#x003B8;</ci>
+    <apply>
+      <divide/>
+      <apply>
+        <times/>
+        <cn>1.22</cn>
+        <ci>&#x003BB;</ci>
+      </apply>
+      <ci>D</ci>
+    </apply>
+  </apply> 
+</math>")
+
+(equationType ReynoldsNumber-Effect FramingEquation)
+(contentML ReynoldsNumber-Effect
+"<math> 
+  <apply>
+    <eq/>
+    <ci>
+      <msub>
+       <mi>N</mi>
+       <mi>R</mi>
+      </msub>
+    </ci>
+    <apply>
+      <divide/>
+      <apply>
+        <times/>
+        <ci>V</ci>
+        <ci>d</ci>
+        <ci>p</ci>
+      </apply>
+      <ci>&#x003BC;</ci>
+    </apply>
+  </apply> 
+</math>")
+
+(contentML HookesLaw
+"<math> 
+  <apply>
+    <eq/>
+    <ci>K</ci>
+    <apply>
+      <divide/>
+      <ci>F</ci>
+      <ci>x</ci>
+    </apply>
+  </apply> 
+</math>")
+
+(contentML KerrElectro-OpticEffect
+"<math> 
+  <apply>
+    <eq/>
+    <ci>&#x003C3;</ci>
+    <apply>
+      <times/>
+      <cn>2</cn>
+      <ci>K</ci>
+      <ci>L</ci>
+      <apply>
+        <power/>
+        <ci>E</ci>
+        <cn>2</cn>
+      </apply>
+    </apply>
+  </apply> 
+</math>")
+
+(contentML NewtonsFirstLaw
+"<math> 
+  <apply>
+    <eq/>
+    <ci>F</ci>
+    <apply>
+      <times/>
+      <ci>m</ci>
+      <ci>a</ci>
+    </apply>
+  </apply> 
+</math>")
+
+(contentML SchrodingersWaveEquation
+"<math> 
+  <apply>
+    <eq/>
+    <apply>
+      <plus/>
+      <apply>
+        <partialdiff/>
+        <bvar>
+          <ci>r</ci>
+          <degree><cn>2</cn></degree>
+        </bvar>
+        <ci>&#x003C8;</ci>
+      </apply>
+      <apply>
+        <times/>
+        <apply>
+      <divide/>
+      <apply>
+        <times/>
+        <cn>8</cn>
+        <apply>
+          <power/>
+          <ci>&#x003C0;</ci>
+          <cn>2</cn>
+        </apply>
+        <ci>m</ci>
+      </apply>
+      <apply>
+        <power/>
+        <ci>h</ci>
+        <cn>2</cn>
+      </apply>
+        </apply>
+        <apply>
+          <plus/>
+          <ci>E</ci>
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci>Z</ci>
+              <apply>
+                <power/>
+                <ci>e</ci>
+                <cn>2</cn>
+              </apply>
+            </apply>
+            <ci>r</ci>
+          </apply>
+        </apply>
+        <ci>&#x003C8;</ci>
+      </apply>
+    </apply>
+    <cn>0</cn>
+  </apply> 
+</math>")
+
+(equationType SnellsLaw FramingEquation)
+(presentationML SnellsLaw
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <mfrac>
+        <msub>
+          <mi>v</mi>
+          <mi>i</mi>
+        </msub>
+        <msub>
+          <mi>v</mi>
+          <mi>r</mi>
+        </msub>
+    </mfrac>
+    <mo>=</mo>
+      <mfrac>
+        <mrow>
+          <mi>sin</mi>
+          <mo>&ApplyFunction;</mo>
+          <msub>
+            <mi>&theta;</mi>
+            <mi>i</mi>
+          </msub>
+        </mrow>
+        <mrow>
+          <mi>sin</mi>
+          <mo>&ApplyFunction;</mo>
+          <msub>
+            <mi>&theta;</mi>
+            <mi>r</mi>
+          </msub>
+        </mrow>
+      </mfrac>
+    <mo>=</mo>
+    <mfrac>
+        <msub>
+          <mi>&eta;</mi>
+          <mi>i</mi>
+        </msub>
+        <msub>
+          <mi>&eta;</mi>
+          <mi>r</mi>
+        </msub>
+    </mfrac>
+  </mrow>
+</math>")
+
+(presentationML Stefan-BoltzmannLaw 
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <msub><mi>q</mi><mi>b</mi></msub>
+    <mo>=</mo>
+    <mn>0.174</mn>
+    <mo>&#215;</mo>
+    <msup><mn>10</mn><mn>8</mn></msup>
+    <mo>&InvisibleTimes;</mo>
+    <mi>A</mi>
+    <mo>&InvisibleTimes;</mo>
+    <msup>
+      <mfenced>
+        <mi>T</mi>
+      </mfenced>
+      <mn>4</mn>
+    </msup>
+  </mrow>
+</math>")
+
+(equationType StokesLaw InternalEquation)
+(presentationML StokesLaw
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <msub><mi>V</mi><mi>s</mi></msub>
+    <mo>=</mo>
+    <mrow>
+      <mfrac>
+        <mrow>
+          <mn>2</mn>
+          <mo>&InvisibleTimes;</mo>
+          <mi>g</mi>
+          <mo>&InvisibleTimes;</mo>
+          <msup>
+            <mi>r</mi>
+            <mn>2</mn>
+          </msup>
+        </mrow>
+        <mrow>
+          <mn>9</mn>
+          <mo>&InvisibleTimes;</mo>
+          <mi>N</mi>
+        </mrow>
+      </mfrac>
+      <mo>&InvisibleTimes;</mo>
+      <mfenced>
+        <mrow>
+          <mi>&sigma;</mi>
+          <mo>-</mo>
+          <mi>&rho;</mi>
+        </mrow>
+      </mfenced>
+    </mrow>
+  </mrow>
+</math>")
+
+(contentML SeebeckEffect
+"<math>
+  <apply>
+    <eq/>
+    <ci><msub><mi>E</mi><mi>AB</mi></msub></ci>
+    <apply>
+      <int/>
+      <bvar><ci>t</ci></bvar>
+      <interval>
+        <ci><msub><mi>t</mi><mn>0</mn></msub></ci>
+        <ci>t</ci>
+      </interval>
+      <apply>
+       <minus/>
+       <ci><msub><mi>S</mi><mi>A</mi></msub></ci>
+       <ci><msub><mi>S</mi><mi>B</mi></msub></ci>
+      </apply>
+    </apply>
+  </apply>
+</math>")
+
+(equationType LoadedCoil FramingEquation)
+(contentML LoadedCoil
+"<math> 
+  <apply>
+    <eq/>
+    <ci>
+      <msub>
+       <mi>f</mi>
+       <mi>c</mi>
+      </msub>
+    </ci>
+    <apply>
+      <divide/>
+      <cn>1</cn>
+      <apply>
+        <times/>
+        <ci>&#x003C0;</ci>
+        <apply>
+          <root/>
+          <degree><cn>2</cn></degree>
+          <apply>
+            <times/>
+            <ci>L</ci>
+            <ci>S</ci>
+            <ci>C</ci>
+          </apply>
+        </apply>
+      </apply>
+    </apply>
+  </apply> 
+</math>")
+
+(contentML HookesLaw0
+"<math>
+  <apply>
+    <eq/>
+    <ci>L</ci>
+    <apply>
+      <times/>
+      <ci>T</ci>
+      <apply>
+        <diff/>
+        <bvar>
+          <ci>T</ci>
+        </bvar>
+        <ci>p</ci>
+      </apply>
+      <ci><mrow><mi>&#x00394;</mi><mo>&#8289;</mo><mi>V</mi></mrow></ci>
+    </apply>
+  </apply>
+</math>")
+
+(equationType TheoremOfTorricelli BridgingEquation)
+(presentationML TheoremOfTorricelli
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <msup><msub><mi>&nu;</mi><mi>B</mi></msub><mn>2</mn></msup>
+    <mo>=</mo>
+    <mrow>
+      <mi>2</mi>
+      <mo>&InvisibleTimes;</mo>
+      <mi>g</mi>
+      <mo>&InvisibleTimes;</mo>
+      <mfenced>
+        <mrow>
+          <msub><mi>h</mi><mi>A</mi></msub>
+          <mo>-</mo>
+          <msub><mi>h</mi><mi>B</mi></msub>
+        </mrow>
+      </mfenced>
+    </mrow>
+  </mrow>
+</math>")
+
+(equationType NewtonsLawOfUniversalGravitation FramingEquation)
+(contentML NewtonsLawOfUniversalGravitation
+"<math> 
+  <apply>
+    <eq/>
+    <ci>g</ci>
+    <apply>
+      <times/>
+      <ci>k</ci>
+      <apply>
+        <divide/>
+        <apply>
+          <times/>
+          <ci>
+            <msub>
+             <mi>m</mi>
+             <mi>1</mi>
+            </msub>
+          </ci>
+          <ci>
+            <msub>
+             <mi>m</mi>
+             <mi>2</mi>
+            </msub>
+          </ci>
+        </apply>
+        <apply>
+          <power/>
+          <ci>r</ci>
+          <cn>2</cn>
+        </apply>
+      </apply>
+    </apply>
+  </apply> 
+</math>")
+(presentationML NewtonsLawOfUniversalGravitation
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <mi>g</mi>
+    <mo>=</mo>
+    <mi>k</mi>
+    <mo>&InvisibleTimes;</mo>
+    <mfrac>
+      <mrow>
+        <msub>
+          <mi>m</mi>
+          <mn>1</mn>
+        </msub>
+        <mo>&InvisibleTimes;</mo>
+        <msub>
+          <mi>m</mi>
+          <mn>2</mn>
+        </msub>
+      </mrow>
+      <msup>
+      <mi>r</mi>
+      <mn>2</mn>
+      </msup>
+    </mfrac>
+  </mrow>
+</math>")
+
+(contentML YoungsModulus
+"<math> 
+  <apply>
+    <eq/>
+    <ci>Y</ci>
+    <apply>
+      <times/>
+      <apply>
+        <divide/>
+        <ci>F</ci>
+        <ci>e</ci>
+      </apply>
+      <apply>
+        <divide/>
+        <ci>L</ci>
+        <ci>A</ci>
+      </apply>
+    </apply>
+  </apply> 
+</math>")
+
+(contentML BraggsLaw
+"<math> 
+  <apply>
+    <eq/>
+    <apply>
+     <times/>
+     <ci>n</ci>
+     <ci>&#x003BB;</ci>
+    </apply>
+    <apply>
+      <times/>
+      <cn>2</cn>
+      <ci>d</ci>
+      <apply>
+        <sin/>
+        <ci>&#x003D5;</ci>
+      </apply>
+    </apply>
+  </apply> 
+</math>")
+
+(equationType QuadraticEquation FramingEquation)
+(presentationML QuadraticEquation
+"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE math SYSTEM ""dtd/mathml2.dtd"">
+<math xmlns=""http://www.w3.org/1998/Math/MathML"" mode=""display"">
+  <mrow>
+    <mi>x</mi>
+    <mo>=</mo>
+    <mfrac>
+      <mrow>
+        <mrow><mo>-</mo><mi>b</mi></mrow>
+        <mo>&PlusMinus;</mo>
+        <msqrt>
+          <mrow>
+            <msup><mi>b</mi><mn>2</mn></msup>
+            <mo>-</mo>
+            <mrow>
+              <mn>4</mn>
+              <mo>&InvisibleTimes;</mo>
+              <mi>a</mi>
+              <mo>&InvisibleTimes;</mo>
+              <mi>c</mi>
+             </mrow>
+          </mrow>
+        </msqrt>
+      </mrow>
+      <mrow>
+       <mn>2</mn>
+       <mo>&InvisibleTimes;</mo>
+       <mi>a</mi>
+      </mrow>
+    </mfrac>
+  </mrow>
+</math>")
+
+
+

@@ -1,0 +1,317 @@
+;;;
+;;; legal-player.meld
+;;;
+;;; To Do: Promote this to PerceptualAgent so it can be used for other games.
+
+(in-microtheory FreecivPlanningDomain)
+
+
+;;; --------------------------------------------------------------------------
+;;; LEGAL PLAYER
+;;;
+;;; Total bottom-up, do whatever is legal.
+;;; Two Problems: 
+;;; 1) Method sorting preferences take forever doing it this way.  Try Random
+;;;    picking from a set.  
+;;; 2) The first action to be deferred hangs the rest of the plan.  Bad if a 
+;;;    unit holds up entire civ.
+;;; Rewrote this.  We now collect the actors in the domain first, then for 
+;;; each of them in some order, plan their random actions.  We want a unit to 
+;;; recursively invoke more planning for that unit until it is deferred.  Then,
+;;; instead of deferring the infinite remainder of doPlanning for that agent, 
+;;; just drop it.  Does it ever make sense to defer doAgentPlan?
+;;;
+;;; ToDo: The primitive predcondititions can't use outsourcedOnly, 
+;;; because that absolutely prevents us from checking consistency
+;;; of planned states.  So for efficiency, we use numAnswer 1
+;;; on functional relations.  But that causes a problem here, since
+;;; we're trying to derive arguments from non-ground primitives
+;;; and need to enumerate all values.  So this code needs to 
+;;; unwrap all numAnswers wrappers before generating bindings.
+(preconditionForMethod
+  (and (randomAutonomousPlay ?mt)  ; no knowledge whatsoever
+       (evaluate ?actors
+         (TheClosedRetrievalSetOf ?actor
+           (ist-Information ?mt
+             (assignableActorOfType ?actor ?type)))))
+  (methodForAction
+    (planGameActions ?mt ?player)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (doForEach ?actor ?actors (planRandomActionFor ?mt ?actor)))))))
+          
+
+(isa planRandomActionFor ComplexActionPredicate)
+(arity planRandomActionFor 2)
+(arg1Isa planRandomActionFor Microtheory)
+(arg2Isa planRandomActionFor Agent-Generic)
+(comment planRandomActionFor "(planRandomActionFor ?mt ?actor) selects and executes random legal operations for ?actor without repetition.")
+
+;;; The problem here may be that we're checking legality before the
+;;; game has had time to update its state.  How can we wait until
+;;; we know if action was successful?  If the primitive could tell us,
+;;; we might be able to use a doWait, otherwise we might need a doSleep.
+(preconditionForMethod
+  (wmOnly
+    (and (evaluate ?possible-actions           ; randomly pick from legal actions for actor
+           (TheClosedRetrievalSetOf ?possible-action
+             (inferenceOnly (legalActionFor ?mt ?actor ?possible-action))))
+         ;; Check that it's not merely legal but that we aren't stuck in a loop?
+         (different ?possible-actions (TheSet))
+         (evaluate ?action
+           (RandomMemberFn ?possible-actions))))
+  (methodForAction
+    (planRandomActionFor ?mt ?actor)
+    (actionSequence
+      (TheList
+    ?action
+        (doAgentPlan
+          (actionSequence 
+            (TheList
+              (planRandomActionFor ?mt ?actor))))))))
+
+;;; Base case:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planRandomActionFor ?mt ?actor)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (planRandomActionFor ?mt ?actor) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa randomAutonomousPlay UnaryPredicate)
+(arity randomAutonomousPlay 1)
+(arg1Isa randomAutonomousPlay Microtheory)
+(comment randomAutonomousPlay "(randomAutonomousPlay ?mt) means the game player is running fully autonomously with no strategic knowledge whatsoever.")
+
+(<== (randomAutonomousPlay ?mt)
+     (currentActivityMode ?mode)  ; outsourced in freeciv source.
+     (elementOf ?mode (TheSet Experimentation PerformTask))
+     (uninferredSentence
+       (decisionQuantifier ?scope ?decision-fn)))  ; Don't even have a structure for making decisions.
+
+(isa legalActionFor TernaryPredicate)
+(arity legalActionFor 3)
+(arg1Isa legalActionFor Microtheory)
+(arg2Isa legalActionFor Agent-Generic)
+(arg3Isa legalActionFor CycLExpression)
+(comment legalActionFor "(legalActionFor ?mt ?actor ?action) binds ?action to a currently legal action for agent ?actor.")
+
+(<== (legalActionFor ?mt ?actor ?action)
+     (groundExpression ?mt)
+     (groundExpression ?actor)
+     (variableExpression ?action)
+     (uninferredSentence
+       (ist-Information ?mt
+         (outsourcedOnly
+           (doneMoving ?actor))))
+     (possibleActionFor ?mt ?actor ?action))
+
+(isa legalAction BinaryPredicate)
+(isa legalAction DynamicUpdatePredicate)
+(arity legalAction 2)
+(arg1Isa legalAction Microtheory)
+(arg2Isa legalAction CycLExpression)
+(comment legalAction "(legalAction ?mt ?action) binds ?action to a primitive, domain-level action that can be performed now.")
+
+(<== (legalAction ?mt ?action)
+     (groundExpression ?mt)
+     (variableExpression ?action)
+     ; 1st pass at finding plausible decision tasks:
+     ; find domainActors for which we can plan.
+     (ist-Information ?mt
+       (assignableActorOfType ?actor ?type))
+     (uninferredSentence
+       (ist-Information ?mt
+         (currentPlan ?actor ?plan)))
+     (uninferredSentence
+       (ist-Information ?mt
+         (doneMoving ?actor)))
+     (possibleActionFor ?mt ?actor ?action))
+
+;;; Test for legality:
+(<== (legalAction ?mt ?action)
+     (groundExpression ?mt)
+     (not (variableExpression ?action))
+     (not (atomicTerm ?action))
+     (formulaArgument ?action ?1 ?actor)
+     (not (variableExpression ?actor))
+     (possibleActionFor ?mt ?actor ?action))
+     
+(isa possibleActionFor TernaryPredicate)
+(arity possibleActionFor 3)
+(arg1Isa possibleActionFor Microtheory)
+(arg2Isa possibleActionFor Agent-Generic)
+(arg3Isa possibleActionFor CycLExpression) ; a non-Davidsonian task expression
+(comment possibleActionFor "(possibleActionFor ?mt ?actor ?action) binds a legal action for ?actor.")
+
+;;; We want to find domain-level actions for which ?actor could be
+;;; one of the arguments.
+(<== (possibleActionFor ?mt ?actor ?action)
+     (variableExpression ?action)
+     (allFactsAllowed
+       (ist-Information ?mt
+         (lookupOnly
+           (actionPrimitive ?pred))))  ; domain-level, non-inferential primitives.
+     (possibleActionForPred ?mt ?actor ?pred ?action))
+
+;;; Test a (partially-specified) action for legality wrt actor.
+(<== (possibleActionFor ?mt ?actor ?action)
+     (not (variableExpression ?action))
+     (not (atomicTerm ?action))  ; not necessarily ground
+     (operatorFormulas ?pred ?action)
+     (possibleActionForPred ?mt ?actor ?pred ?action))
+
+(isa possibleActionForPred QuaternaryPredicate)
+(arity possibleActionForPred 4)
+(arg1Isa possibleActionForPred Microtheory)
+(arg2Isa possibleActionForPred Agent-Generic)
+(arg3Isa possibleActionForPred SimpleActionPredicate)
+(arg4Isa possibleActionForPred CycLExpression) ; a non-Davidsonian task expression
+(comment possibleActionForPred "(possibleActionForPred ?mt ?actor ?pred ?action) binds a legal action for ?actor.")
+
+;;; ?pred is a simpleActionPredicate.  
+;;; Look at the preconditions to see if it's legal for ?actor.
+;;; Bind arg1 to the actor, since arg1 must be the doneBy argument 
+;;; (see documentation on EventPredicate)
+;;; Because this is testing the legality of an instantiated precondition against
+;;; the current state of the execution context, it must be a dynamicUpdatePredicate.
+;;; Don't rely on cached values.
+(<== (possibleActionForPred ?mt ?actor ?pred ?action)
+     (not (variableExpression ?action))
+     (numAnswers 1 (allFactsAllowed (lookupOnly (arity ?pred ?arity))))       ;;
+     (numAnswers 1 (allFactsAllowed (lookupOnly (arg1Isa ?pred ?type))))      ;;
+     (allFactsAllowed (lookupOnly (ist-Information ?mt (isa ?actor ?type))))  ;; This part could be done much more efficiently
+     ; Now we have a possible thing for them to do, but we 
+     ; have to fill in the rest of the arguments.
+     (numAnswers 1 (instantiatedPrec ?pred 1 ?actor ?prec-stmt))
+     (formulaArgument ?prec-stmt 1 ?prec)
+     ; *** Need to re-write prec to omit all numAnswers wrappers here!! ***
+     (allFactsAllowed
+       (ist-Information ?mt ?prec))  ; should result in multiple instantiations when there are open vars
+     (formulaArgument ?prec-stmt 2 ?arg2)  ; hopefully acquires bindings from above clause.
+     (matches ?arg2 ?action)
+     (makesProgress ?mt ?actor ?action))
+     
+(<== (possibleActionForPred ?mt ?actor ?pred ?action)
+     (variableExpression ?action)
+     (numAnswers 1 (allFactsAllowed (lookupOnly (arity ?pred ?arity))))       ;;
+     (numAnswers 1 (allFactsAllowed (lookupOnly (arg1Isa ?pred ?type))))      ;;
+     (allFactsAllowed (lookupOnly (ist-Information ?mt (isa ?actor ?type))))  ;; This part could be done much more efficiently
+     ; Now we have a possible thing for them to do, but we 
+     ; have to fill in the rest of the arguments.
+     (numAnswers 1 (instantiatedPrec ?pred 1 ?actor ?prec-stmt))
+     (formulaArgument ?prec-stmt 1 ?prec)
+     ; *** Need to re-write prec to omit all numAnswers wrappers here!! ***
+     (allFactsAllowed
+       (ist-Information ?mt ?prec))  ; should result in multiple instantiations when there are open vars
+     (formulaArgument ?prec-stmt 2 ?action)  ; hopefully acquires bindings from above clause.
+     (makesProgress ?mt ?actor ?action))
+
+(isa instantiatedPrec QuaternaryRelation)
+(arity instantiatedPrec 4)
+(arg1Isa instantiatedPrec Predicate)
+(arg2Isa instantiatedPrec Integer)
+(arg3Isa instantiatedPrec Thing)
+(arg4Isa instantiatedPrec CycLExpression)
+
+(<== (instantiatedPrec ?pred ?n ?val ?stmt)
+     (numAnswers 1 (variablizedStatement ?pred ?var-prim))  ; defined in companions-predicates
+     (allFactsAllowed
+       (numAnswers 1
+         (preconditionFor-Props ?prec ?var-prim)))
+     (unifies ?var-stmt (preconditionFor-Props ?prec ?var-prim))
+     (formulaArgument ?var-stmt 2 ?prim)
+     (formulaArgument ?prim ?n ?var)
+     (evaluate ?stmt (SublisFn (TheSet (?var ?val)) ?var-stmt)))
+
+
+;;; Wrinkle: we want to avoid "churn" - re-making the same decision over and 
+;;; over (especially within a turn, but also across turns).  E.g., don't keep
+;;; changing research goals or changing production.  So we want to know if the
+;;; decision type a) was made automatically, or b) has not yet resulted in its
+;;; expected effect.  Can't rely on busy-actor to tell us this.  We should be
+;;; able to do this without knowing decision tasks a-priori.
+
+;;; An "open decision" is one for which either the predicate has not been 
+;;; executed before with the specified actor, or it's effect has been realized
+;;; already.  So, in Freeciv, we wouldn't change production in a city until 
+;;; the last cp has finished producing it's improvement.  Likewise don't
+;;; change research goals until the last one you set has been achieved.
+;;; 
+
+(isa makesProgress TernaryPredicate)
+(isa makesProgress DynamicUpdatePredicate)
+(arity makesProgress 3)
+(arg1Isa makesProgress Microtheory)
+(arg2Isa makesProgress Agent-Generic)
+(arg3Isa makesProgress CycLExpression)
+(comment makesProgress "(makesProgress ?mt ?agent ?action) means that, in the execution context ?mt, action will not undo previous work within the current turn .")
+
+(<== (makesProgress ?mt ?actor ?action)
+     (groundExpression ?mt)
+     (groundExpression ?actor)
+     (not (variableExpression ?action))  ; Don't be Draconian here.  doBuildCity may have a variablized city.
+     (numAnswers 1 (currentYear ?year))
+     (uninferredSentence 
+       (clobbersPriorAction ?mt ?year ?actor ?action))
+     (uninferredSentence
+       (allFactsAllowed
+         (lookupOnly
+           (localOnly
+             (ist-Information ?mt
+               (holdsIn ?year (executionFailureFor ?action)))))))) ; avoid perseveration
+
+(isa clobbersPriorAction QuaternaryPredicate)
+(isa clobbersPriorAction DynamicUpdatePredicate)
+(arity clobbersPriorAction 4)
+(arg1Isa clobbersPriorAction Microtheory)
+(arg2Isa clobbersPriorAction TemporalInterval)
+
+;;; Since movement is absolute, not relative, doing the exact same thing
+;;; in the same year is verboten:
+;;; *** This is Freeciv-dependent!  Other games might have relative movement
+;;; *** where the same command (e.g., move left) wouldn't be a repetition.
+;;; *** We need to address this.
+(<== (clobbersPriorAction ?mt ?year ?actor ?action)
+     (actionsSoFar ?mt ?year ?actor ?prior-action)
+     (equals ?action ?prior-action))  ; don't unify them.
+
+(<== (clobbersPriorAction ?mt ?year ?actor ?action)
+     (uninferredSentence 
+       (allFactsAllowed
+         (lookupOnly 
+           (ist-Information ?mt
+             (isa ?actor FreeCiv-Unit)))))   ; *** freeciv-specific.  Fix this someday.
+     (actionsSoFar ?mt ?year ?actor ?prior-action)
+     (operatorFormulas ?pred ?action)
+     (operatorFormulas ?pred ?prior-action))
+
+(isa actionsSoFar QuaternaryRelation)
+(isa actionsSoFar DynamicUpdatePredicate)
+(arity actionsSoFar 4)
+(comment actionsSoFar "(actionsSoFar ?mt ?year ?actor ?prior-action) binds ?prior-action to actions executed by ?actor in ?year.")
+
+(<== (actionsSoFar ?mt ?year ?actor ?prior-action)
+     (allFactsAllowed
+       (localOnly 
+         (lookupOnly
+           (ist-Information ?mt
+             (dateOfEvent (CommandFn ?mt ?num) ?year)))))  ; enumerate all commands that year
+     (allFactsAllowed
+       (localOnly
+         (lookupOnly
+           (numAnswers 1
+             (ist-Information ?mt
+               (infoTransferred (CommandFn ?mt ?num) ?prior-action))))))
+     (not (atomicTerm ?prior-action))
+     (formulaArgument ?prior-action 1 ?actor))
+
+     
+;;;
+;;; End of Code
+;;;

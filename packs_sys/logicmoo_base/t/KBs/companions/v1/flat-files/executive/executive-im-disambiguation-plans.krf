@@ -1,0 +1,195 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: executive-im-disambiguation-plans.meld
+;;;;    System: Companions
+;;;;    Author: David Barbella
+;;;;   Created: July 20, 2007 16:20:43
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;
+
+(in-microtheory ExecutiveMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (processSourceTextFromFile "c:/qrg/greenhouse-demo.txt"
+;;; GreenhouseDemo01 TestReading-1111-1721
+;;; GreenhouseDemo01DisambiguationMt LbrDisambiguationMt)
+
+;;; ******* These complex actions are defined in learning-reading-v2,
+;;; ******* We need the isa statements here, or the planner won't know
+;;; ******* about them, and having the ExecutivePlanMt know about everything
+;;; ******* in the interaction manager seems like a violation of modularity.
+;;; ******* In that spirit, I don't think we need to put the comments
+;;; ******* here, and definitely not the arity, since that is global.
+;;; ******* argIsas aren't, so they may be needed, but maybe not.
+
+(isa processSourceTextFromFile ComplexActionPredicate)
+(arity processSourceTextFromFile 5)
+(arg1Isa processSourceTextFromFile Thing) ;;; The location of the file.
+(arg2Isa processSourceTextFromFile InformationBearingThing)
+(arg3Isa processSourceTextFromFile AccessingAnIBT)
+(arg4Isa processSourceTextFromFile Microtheory)
+(arg5Isa processSourceTextFromFile Microtheory)
+(comment processSourceTextFromFile
+  "(processSourceTextFromFile ?file-location ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt) tells the interaction manager
+to attempt to process from the file at ?file-location, call the reading ?reading-name, and use the information in the microtheories to
+parameterize the disambiguation.")
+
+
+(isa readInSourceText ComplexActionPredicate)
+(arity readInSourceText 1)
+(arg1Isa readInSourceText InformationBearingThing) ;;; The name of the source text.
+(comment readInSourceText
+  "(readInSourceText ?source-text-name) looks in the KB to see if there's a file location associated with ?source-text-name. If there is,
+it reads it in using EA.")
+
+(isa readInLocation ComplexActionPredicate)
+(isa readQPFile ComplexActionPredicate)
+(isa readARFile ComplexActionPredicate)
+
+(isa readAndInterpret ComplexActionPredicate)
+(arity readAndInterpret 2)
+(arg1Isa readAndInterpret InformationBearingThing) ;;; The name of the source text.
+(arg2Isa readAndInterpret AccessingAnIBT)
+(comment readAndInterpret
+  "(readAndInterpret ?source-text-name ?reading-name) looks in the KB to see if there's a file location associated with ?source-text-name. If there is,
+it reads it in using EA, calling the reading ?reading-name, then attempts to do disambiguation and reference resolution. It needs all the facts that relate
+the source text name to the disambiguation and file information to be present to work. If there's no information to disambiguate
+with, it pops up the EA browser..")
+
+(isa processAnalogyDialogueActs ComplexActionPredicate)
+(arity processAnalogyDialogueActs 0)
+(comment processAnalogyDialogueActs
+  "(processAnalogyDialogueActs) tells the interaction manager
+to launch analogical dialogue act processing on the current source text.")
+
+(isa retrieveStoredAnalogyCases ComplexActionPredicate)
+(arity retrieveStoredAnalogyCases 1)
+(arg1Isa retrieveStoredAnalogyCases InformationBearingThing) ;;; The name of the source text.
+(comment retrieveStoredAnalogyCases
+  "(retrieveStoredAnalogyCases ?source-text-name) looks in the KB to see if there's 
+stored analogy cases, and if there are, it puts them in working memory.")
+
+(isa runSMEOnAnalogies ComplexActionPredicate)
+(arity runSMEOnAnalogies 0)
+(comment runSMEOnAnalogies
+  "(runSMEOnAnalogies) runs SME on analogy facts in working memory.")
+
+(preconditionForMethod 
+ (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+ (methodForAction
+  (processSourceTextFromFile ?file-location ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+                         (disambiguateSourceTextWithHeuristicContext ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+                         (useSourceTextCoreferenceResolution))))))))
+
+(preconditionForMethod 
+ (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+ (methodForAction
+  (processAnalogyDialogueActs)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (analyzeADA)
+                         (getCurrentAnalogyFactsFromMt ADABackgroundMt)
+                         (doAgentPlan
+             (actionSequence
+              (TheList
+               (runSMEOnADAInfo ADAQuestionAnsweringMt)))))))))))
+
+
+
+;;;(readInSourceText ?source-text-name)
+(preconditionForMethod 
+ (and
+      (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+      (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?file-location ?source-text-name)))
+ (methodForAction
+  (readInSourceText ?source-text-name)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name))))))))
+
+
+;;; Just go to the interaction manager.
+;;; This needs to call something in the interaction manager that just takes in a location.
+(preconditionForMethod 
+ (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+ (methodForAction
+  (readInLocation ?location)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (readInLocation ?location))))))))
+
+(preconditionForMethod 
+ (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+ (methodForAction
+  (readQPFile ?location)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (readQPFile ?location))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; The methods below are duplicates of methods in learning-reading-v2, put here for
+;;;; easy use during debugging and demoing.
+
+(preconditionForMethod 
+ (and
+      (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+      (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?file-location ?source-text-name))
+      (uninferredSentence (ist-Information SourceTextFileLocationsMt (disambiguationMtOfSourceText ?heuristic-mt ?source-text-name))))
+ (methodForAction
+  (readAndInterpret ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+                         (doLaunchEABrowser))))))))
+
+(preconditionForMethod 
+ (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+ (methodForAction
+  (retrieveStoredAnalogyCases ?source-text-name)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (retrieveStoredAnalogyCases ?source-text-name))))))))
+
+(preconditionForMethod 
+ (outsourcedOnly (currentInteractionMgr ?interaction-mgr))
+ (methodForAction
+  (runSMEOnAnalogies)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?interaction-mgr
+                       (actionSequence
+                        (TheList
+                         (runSMEOnADAInfo ADAQuestionAnsweringMt))))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

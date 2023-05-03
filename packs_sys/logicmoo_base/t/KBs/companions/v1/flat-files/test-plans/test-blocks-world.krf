@@ -1,0 +1,51 @@
+(in-microtheory BlocksWorldMt)
+(genlMt CompanionsMt BlocksWorldMt)
+
+;;; Make sure planSpecificationMt of agent inherits from BlocksWorldMt
+;;; Copy scenario mt into planSpecificationMt of agent
+;;; justify initial state with (StateFn 0)
+;;; doAgentPlan <agent> (achieveGoals (TheSet <conj1> <conj2>...))
+
+(isa solveBlocksWorldProblem ComplexActionPredicate)
+(arity solveBlocksWorldProblem 1)
+
+(preconditionForMethod
+  (and (sessionContext ?session-context)
+       (evaluate ?goals
+         (TheClosedRetrievalSetOf ?goal
+           (and (lookupOnly
+                  (localOnly
+                    (ist-Information ?scenario-mt
+                      (goal ?stmt))))
+                (unifies ?goal (goal ?stmt))))))
+  (methodForAction
+    (solveBlocksWorldProblem ?scenario-mt)
+    (actionSequence
+      (TheList
+        (doRecordPlans ?session-context 
+            (ist-Information ?scenario-mt ?fact)
+            (achieveGoals ?goals)
+            1)
+        (doAgentPlan (announcePlan ?session-context ?scenario-mt))))))
+
+(isa announcePlan ComplexActionPredicate)
+(arity announcePlan 2)
+
+(preconditionForMethod
+  (and (lookupOnly
+         (localOnly
+           (ist-Information ?session-context
+             (planForTask (achieveGoals ?goals) ?plan))))
+       (evaluate ?goal-formula
+         (MakeFormulaFn and
+           (TheClosedRetrievalSetOf ?conj
+             (and (elementOf ?goal ?goals)
+                  (formulaArgument ?goal 1 ?conj))))))
+  (methodForAction
+    (announcePlan ?session-context ?scenario-mt)
+    (actionSequence
+      (TheList
+        (doAnnounce "Goals(~s): ~s" (?scenario-mt ?goal-formula))
+        (doAnnounce "Plan(~s): ~s" (?scenario-mt ?plan))))))
+
+

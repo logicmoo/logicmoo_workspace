@@ -1,0 +1,639 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: learning-reading-ada.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 1, 2015 07:34:39
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa analyzeADA ComplexActionPredicate)
+(arity analyzeADA 0)
+(comment analyzeADA
+  "(analyzeADA) attempts to use EA's discourse-level interpretation to analyze ADA acts.")
+
+(isa foldMacroFactsIntoDomains ComplexActionPredicate)
+(arity foldMacroFactsIntoDomains 0)
+(comment foldMacroFactsIntoDomains
+  "(foldMacroFactsIntoDomains) adds to the base and target domains facts we learned from ruleMacroPredicates.")
+
+(isa getAnalogyFactsFromMt ComplexActionPredicate)
+(arity getAnalogyFactsFromMt 2)
+(arg1Isa getAnalogyFactsFromMt Microtheory)
+(arg2Isa getAnalogyFactsFromMt Thing)
+(comment getAnalogyFactsFromMt
+  "(getAnalogyFactsFromMt ?mt ?discourse-id) gets facts from ?mt related to the base and target domains as defined in the interpretation case of the discourse with id ?discourse-id and adds them to wm.")
+
+(isa getBaseFactsFromMt ComplexActionPredicate)
+(arity getBaseFactsFromMt 2)
+(arg1Isa getBaseFactsFromMt Microtheory)
+(arg2Isa getBaseFactsFromMt Thing)
+(comment getBaseFactsFromMt
+  "(getBaseFactsFromMt ?mt ?discourse-id) gets facts from ?mt related to the base domain as defined in the interpretation case of the discourse with id ?discourse-id and adds them to wm.")
+
+(isa getTargetFactsFromMt ComplexActionPredicate)
+(arity getTargetFactsFromMt 2)
+(arg1Isa getTargetFactsFromMt Microtheory)
+(arg2Isa getTargetFactsFromMt Thing)
+(comment getTargetFactsFromMt
+  "(getTargetFactsFromMt ?mt ?discourse-id) gets facts from ?mt related to the target domain as defined in the interpretation case of the discourse with id ?discourse-id and adds them to wm.")
+
+(isa getCurrentAnalogyFactsFromMt ComplexActionPredicate)
+(arity getCurrentAnalogyFactsFromMt 1)
+(arg1Isa getCurrentAnalogyFactsFromMt Microtheory)
+(comment getCurrentAnalogyFactsFromMt
+  "(getCurrentAnalogyFactsFromMt ?mt) gets facts from ?mt related to the base and target domains (as described in the interpretation case of the current discourse) and adds them to wm.")
+
+(isa getCurrentBaseFactsFromMt ComplexActionPredicate)
+(arity getCurrentBaseFactsFromMt 1)
+(arg1Isa getCurrentBaseFactsFromMt Microtheory)
+(comment getCurrentBaseFactsFromMt
+  "(getCurrentBaseFactsFromMt ?mt) gets facts from ?mt related to the base domain (as described in the interpretation case of the current discourse) and adds them to wm.")
+
+(isa getCurrentTargetFactsFromMt ComplexActionPredicate)
+(arity getCurrentTargetFactsFromMt 1)
+(arg1Isa getCurrentTargetFactsFromMt Microtheory)
+(comment getCurrentTargetFactsFromMt
+  "(getCurrentTargetFactsFromMt ?mt) gets facts from ?mt related to the target domain (as described in the interpretation case of the current discourse) and adds them to wm.")
+
+(isa runSMEOnADAInfo ComplexActionPredicate)
+(arity runSMEOnADAInfo 1)
+(arg1Isa runSMEOnADAInfo Microtheory)
+(comment runSMEOnADAInfo "(runSMEOnADAInfo ?context) runs SME using information in the discourse interpretation as a result of having done analyzeADA. The things we learn are put into ?context.")
+
+
+(isa requiredCorrespondences-Get Predicate)
+(arity requiredCorrespondences-Get 1)
+(arg1Isa requiredCorrespondences-Get List)
+(comment requiredCorrespondences-Get "(requiredCorrespondences-Get ?list) indicates that in the current discourse, the requiredCorrespondences are the list ?list.")
+
+
+(isa wrapFactsInBaseDomainCase Predicate)
+(arity wrapFactsInBaseDomainCase 2)
+(arg1Isa wrapFactsInBaseDomainCase List)
+(arg2Isa wrapFactsInBaseDomainCase List)
+(comment wrapFactsInBaseDomainCase "(wrapFactsInBaseDomainCase ?fact-list ?wrapped-list) is intended to be used as an outsourced predicate
+to classify information pulled in to fill out the base of an analogy.")
+
+(isa wrapFactsInTargetDomainCase Predicate)
+(arity wrapFactsInTargetDomainCase 2)
+(arg1Isa wrapFactsInTargetDomainCase List)
+(arg2Isa wrapFactsInTargetDomainCase List)
+(comment wrapFactsInTargetDomainCase "(wrapFactsInTargetDomainCase ?fact-list ?wrapped-list) is intended to be used as an outsourced predicate
+to classify information pulled in to fill out the target of an analogy.")
+
+
+
+;;;(currentBaseCollections ?discourse-id ?base-cols)
+(isa currentBaseCollections Predicate)
+(arity currentBaseCollections 2)
+(arg1Isa currentBaseCollections Thing)
+(arg2Isa currentBaseCollections List)
+(comment currentBaseCollections "(currentBaseCollections ?discourse-id ?base-cols) is intended to be used as an outsourced predicate
+to get the collections of the elements of the base of an analogy under consideration.")
+
+
+(isa currentTargetCollections Predicate)
+(arity currentTargetCollections 2)
+(arg1Isa currentTargetCollections Thing)
+(arg2Isa currentTargetCollections List)
+(comment currentTargetCollections "(currentTargetCollections ?discourse-id ?target-cols) is intended to be used as an outsourced predicate
+to get the collections of the elements of the target of an analogy under consideration.")
+
+(preconditionForMethod
+ ;;; Get the number of sentences
+ (outsourcedOnly (lengthOfCurrentDiscourse ?length))
+ (methodForAction
+  (analyzeADA)
+  (actionSequence
+   (TheList
+    (doEADiscourseInterpretation ADAInterpretationQueriesMt ?length nil)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (reportOnADAIntroducingAnalogyComparison))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (reportOnADAIntroducingAnalogyMatchHypothesis))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEADiscourseInterpretation ADAEvaluationQueriesPrecomputeMt ?length nil))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEADiscourseInterpretation ADAEvaluationQueriesBaseMt ?length nil))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEADiscourseInterpretation ADAEvaluationQueriesTargetMt ?length nil))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEADiscourseInterpretation ADAEvaluationQueries2Mt ?length nil)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (reportOnADAExtendingBaseDomain)
+          (reportOnADAExtendingTargetDomain)))))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEADiscourseInterpretation ADAEvaluationQueries3Mt ?length nil)
+       (doAnnounce "~%Analyze ADA - Facts extracted." ())
+       (doAnnounce "~%Analyze ADA completed." ()))))
+    
+    ))))
+
+
+
+
+(isa reportOnADAIntroducingAnalogyComparison ComplexActionPredicate)
+(arity reportOnADAIntroducingAnalogyComparison 0)
+(comment reportOnADAIntroducingAnalogyComparison "(reportOnADAIntroducingAnalogyComparison) reports on introductions of analogies.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (evaluate ?sen-texts
+        (TheClosedRetrievalSetOf
+            ?sen-text
+          (and
+               
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+
+                  (communicationActTypeOf (InfoTransferredFn (DrsCaseFn ?drs-id)) IntroducingAnalogyComparison))
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+                 (drsEntailedBySentence ?drs-id ?sen-id))
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+                 (sentenceText ?sen-id ?sen-text))))))
+ (methodForAction
+  (reportOnADAIntroducingAnalogyComparison)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%ADA Analysis: Hypothesized to be introducing analogy comparison:" ())
+    (doForEach ?next-sen-text ?sen-texts 
+               (doAnnounce "~%~A" (?next-sen-text))
+               )))))
+ 
+;;;(preconditionForMethod
+;;; (and
+;;;      (outsourcedOnly (currentDiscourseId ?discourse-id))
+;;;      (uninferredSentence
+;;;       (and
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (
+;;;               (communicationActTypeOf (InfoTransferredFn (DrsCaseFn ?drs-id)) IntroducingAnalogyComparison)))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (drsEntailedBySentence ?drs-id ?sen-id))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (sentenceText ?sen-id ?sen-text)))))
+;;; (methodForAction
+;;;  (reportOnADAIntroducingAnalogyComparison)
+;;;  (actionSequence
+;;;   (TheList))))
+
+(isa reportOnADAIntroducingAnalogyMatchHypothesis ComplexActionPredicate)
+(arity reportOnADAIntroducingAnalogyMatchHypothesis 0)
+(comment reportOnADAIntroducingAnalogyMatchHypothesis "(reportOnADAIntroducingAnalogyComparison) reports on introductions of correspondences.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (evaluate ?sen-texts
+        (TheClosedRetrievalSetOf
+            ?sen-text
+          (and
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+                 (lookupOnly
+                  (communicationActTypeOf (InfoTransferredFn (DrsCaseFn ?drs-id)) IntroducingAnalogyMatchHypothesis)))
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+                 (drsEntailedBySentence ?drs-id ?sen-id))
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+                 (sentenceText ?sen-id ?sen-text))))))
+ (methodForAction
+  (reportOnADAIntroducingAnalogyMatchHypothesis)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%ADA Analysis: Hypothesized to be putting two entities in correspondence:" ())
+    (doForEach ?next-sen-text ?sen-texts 
+               (doAnnounce "~%~A" (?next-sen-text))
+               )))))
+ 
+;;;(preconditionForMethod
+;;; (and
+;;;      (outsourcedOnly (currentDiscourseId ?discourse-id))
+;;;      (uninferredSentence
+;;;       (and
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (lookupOnly
+;;;               (communicationActTypeOf (InfoTransferredFn (DrsCaseFn ?drs-id)) IntroducingAnalogyMatchHypothesis)))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (drsEntailedBySentence ?drs-id ?sen-id))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (sentenceText ?sen-id ?sen-text)))))
+;;; (methodForAction
+;;;  (reportOnADAIntroducingAnalogyMatchHypothesis)
+;;;  (actionSequence
+;;;   (TheList))))
+
+(isa reportOnADAExtendingBaseDomain ComplexActionPredicate)
+(arity reportOnADAExtendingBaseDomain 0)
+(comment reportOnADAExtendingBaseDomain "(reportOnADAExtendingBaseDomain) reports on extensions of the base domain.")
+
+(isa reportOnADAExtendingTargetDomain ComplexActionPredicate)
+(arity reportOnADAExtendingTargetDomain 0)
+(comment reportOnADAExtendingTargetDomain "(reportOnADAExtendingTargetDomain) reports on extensions of the target domain.")
+
+;;;(preconditionForMethod
+;;; (and
+;;;      (outsourcedOnly (currentDiscourseId ?discourse-id))
+;;;      (evaluate ?sen-texts
+;;;        (TheClosedRetrievalSetOf
+;;;            ?sen-text
+;;;          (and
+;;;               (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;                 (lookupOnly
+;;;                  (communicationActTypeOf (InfoTransferredFn (DrsCaseFn ?drs-id)) ExtendingBaseDomain)))
+;;;               (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;                 (drsEntailedBySentence ?drs-id ?sen-id))
+;;;               (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;                 (sentenceText ?sen-id ?sen-text))))))
+;;; (methodForAction
+;;;  (reportOnADAExtendingBaseDomain)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doAnnounce "~%ADA Analysis: Hypothesized to be extending the base domain:" ())
+;;;    (doForEach ?next-sen-text ?sen-texts 
+;;;               (doAnnounce "~%~A" (?next-sen-text))
+;;;               )))))
+
+(preconditionForMethod
+ (getSentencesOfAdaType ExtendingBaseDomain ?sen-texts)
+ (methodForAction
+  (reportOnADAExtendingBaseDomain)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%ADA Analysis: Hypothesized to be extending the base domain:" ())
+    (doForEach ?next-sen-text ?sen-texts 
+               (doAnnounce "~%~A" (?next-sen-text))
+               )))))
+ 
+;;;(preconditionForMethod
+;;; (and
+;;;      (outsourcedOnly (currentDiscourseId ?discourse-id))
+;;;      (uninferredSentence
+;;;       (and
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;                 (lookupOnly
+;;;               (communicationActTypeOf (InfoTransferredFn (DrsCaseFn ?drs-id)) ExtendingBaseDomain)))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (drsEntailedBySentence ?drs-id ?sen-id))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (sentenceText ?sen-id ?sen-text)))))
+;;; (methodForAction
+;;;  (reportOnADAExtendingBaseDomain)
+;;;  (actionSequence
+;;;   (TheList))))
+
+(preconditionForMethod
+ (getSentencesOfAdaType ExtendingTargetDomain ?sen-texts)
+ (methodForAction
+  (reportOnADAExtendingTargetDomain)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%ADA Analysis: Hypothesized to be extending the target domain:" ())
+    (doForEach ?next-sen-text ?sen-texts 
+               (doAnnounce "~%~A" (?next-sen-text))
+               )))))
+ 
+;;;(preconditionForMethod
+;;; (and
+;;;      (outsourcedOnly (currentDiscourseId ?discourse-id))
+;;;      (uninferredSentence
+;;;       (and
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (lookupOnly
+;;;               (communicationActTypeOf (InfoTransferredFn (DrsCaseFn ?drs-id)) ExtendingTargetDomain)))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (drsEntailedBySentence ?drs-id ?sen-id))
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;              (sentenceText ?sen-id ?sen-text)))))
+;;; (methodForAction
+;;;  (reportOnADAExtendingTargetDomain)
+;;;  (actionSequence
+;;;   (TheList))))
+
+(isa getSentencesOfAdaType Predicate)
+(arity getSentencesOfAdaType 2)
+(arg1Isa getSentencesOfAdaType Collection)
+(arg2Isa getSentencesOfAdaType List)
+(comment getSentencesOfAdaType "(getSentencesOfAdaType ?type ?list) is an outsourced predicate that gets the sentences that ADA processing thinks are of type ?type.")
+
+(isa analyzeAndEvaluateADA ComplexActionPredicate)
+(arity analyzeAndEvaluateADA 0)
+(comment analyzeAndEvaluateADA "(analyzeAndEvaluateADA) runs analyzeADA, then runs an SME over the results using runSMEOnADAInfo.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (analyzeAndEvaluateADA)
+  (actionSequence
+   (TheList
+    (analyzeADA)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (runSMEOnADAInfo ADAQuestionAnsweringMt))))))))
+
+;;; (runADAIfEnabled ?experiment-name)
+
+(isa runADAIfEnabled ComplexActionPredicate)
+(arity runADAIfEnabled 2)
+(comment runADAIfEnabled "(runADAIfEnabled ?experiment-name ?reading-name) runs analyzeADA, then runs an SME over the results using runSMEOnADAInfo,
+if it's enabled for ?expt-name.")
+
+;;; It's enabled
+(preconditionForMethod
+ (lookupOnly (ist-Information ADARunForExptsMt
+                (ADARunForExpt ?experiment-name)))
+ (methodForAction
+  (runADAIfEnabled ?experiment-name ?reading-name)
+    (actionSequence
+     (TheList
+      (doClearAllAnalogyCaches)
+      (recordADAStartTime ?reading-name ?experiment-name)
+     (doAgentPlan
+      (actionSequence
+       (TheList
+        (analyzeADA)
+     (doAgentPlan
+      (actionSequence
+       (TheList
+        (useADABackgroundIfEnabled ?experiment-name)
+     (doAgentPlan
+      (actionSequence
+       (TheList
+        (runSMEOnADAInfo ADAQuestionAnsweringMt)
+     (doAgentPlan
+      (actionSequence
+       (TheList
+        (recordADAEndTime ?reading-name ?experiment-name)
+        ;;;; This may need to go in a different place to work with background information
+        ;;;; What calls the background information?
+     (doAgentPlan
+      (actionSequence
+       (TheList
+        (recordADALearnedInfo ?experiment-name ?reading-name )
+          
+       )))))))))))))))))))
+
+;;; It's not enabled
+(preconditionForMethod
+ (uninferredSentence (ist-Information ADARunForExptsMt
+                       (ADARunForExpt ?experiment-name)))
+ (methodForAction
+  (runADAIfEnabled ?experiment-name ?reading-name)
+  (actionSequence
+   (TheList))))
+
+(isa useADABackgroundIfEnabled ComplexActionPredicate)
+(arity useADABackgroundIfEnabled 1)
+(comment useADABackgroundIfEnabled "(useADABackgroundIfEnabled ?experiment-name) gets the
+relevent background facts for the comparison, if using background facts is enabled.
+It looks to see what context is associated with ?experiment-name. If none, it uses
+ADABackgroundMt")
+
+(isa ADABackgroundMtForExperiment Predicate)
+(arity ADABackgroundMtForExperiment 2)
+(comment ADABackgroundMtForExperiment "(ADABackgroundMtForExperiment ?expt ?mt)
+indicates that ?mt is the ADA background MT for ?expt.")
+
+;;; It's enabled, and there's a context specified
+(preconditionForMethod
+ (and
+      (lookupOnly (ist-Information ADARunForExptsMt
+                    (ADABackgroundForExpt ?experiment-name)))
+      (lookupOnly  (ist-Information ADARunForExptsMt
+                    (ADABackgroundMtForExperiment ?experiment-name ?background-mt)))           
+             )
+ (methodForAction
+  (useADABackgroundIfEnabled ?experiment-name)
+  (actionSequence
+   (TheList
+    (getCurrentAnalogyFactsFromMt ?background-mt)
+    (doAgentPlan
+     (actionSequence
+      (TheList (foldMacroFactsIntoDomains)
+    )))))))
+
+;;; It's enabled, but there's no context specified
+(preconditionForMethod
+ (and
+      (lookupOnly (ist-Information ADARunForExptsMt
+                    (ADABackgroundForExpt ?experiment-name)))
+      (uninferredSentence (lookupOnly  (ist-Information ADARunForExptsMt
+                    (ADABackgroundMtForExperiment ?experiment-name ?background-mt)))))
+ (methodForAction
+  (useADABackgroundIfEnabled ?experiment-name)
+  (actionSequence
+   (TheList
+    (getCurrentAnalogyFactsFromMt ADABackgroundMt)
+    (doAgentPlan
+     (actionSequence
+      (TheList (foldMacroFactsIntoDomains)
+    )))))))
+
+;;; It's not enabled
+(preconditionForMethod
+ (uninferredSentence (ist-Information ADARunForExptsMt
+                       (ADABackgroundForExpt ?experiment-name)))
+ (methodForAction
+  (useADABackgroundIfEnabled ?experiment-name)
+  (actionSequence
+   (TheList))))
+
+;;; After we've gotten information from ruleMacroPreds in the KB, this folds them into the domains. (Complete)
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (foldMacroFactsIntoDomains)
+  (actionSequence
+   (TheList
+    (doEADiscourseInterpretation ADAMacroQueriesBaseMt 0 nil)
+    (doEADiscourseInterpretation ADAMacroQueriesTargetMt 0 nil)
+    (doAnnounce "~%foldMacroFactsIntoDomains completed." ())))))
+
+;;; This gets the facts about things in the base and the target of the current
+;;; discourse from the designated microtheory in the kb.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?discourse-id)))
+ (methodForAction
+  (getCurrentAnalogyFactsFromMt ?mt)
+  (actionSequence
+   (TheList
+    (getAnalogyFactsFromMt ?mt ?discourse-id)
+    (doAnnounce "~%getCurrentAnalogyFactsFromMt completed." ())))))
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      )
+ (methodForAction
+  (getCurrentBaseFactsFromMt ?mt)
+  (actionSequence
+   (TheList
+    (getBaseFactsFromMt ?mt ?discourse-id)
+    (doAnnounce "~%getCurrentBaseFactsFromMt completed." ())))))
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      )
+ (methodForAction
+  (getCurrentTargetFactsFromMt ?mt)
+  (actionSequence
+   (TheList
+    (getTargetFactsFromMt ?mt ?discourse-id)
+    (doAnnounce "~%getCurrentTargetFactsFromMt completed." ())))))
+
+
+;;; (recordADALearnedInfo ?experiment-name)
+
+(isa recordADALearnedInfo ComplexActionPredicate)
+(arity recordADALearnedInfo 2)
+(comment recordADALearnedInfo "(recordADALearnedInfo ?experiment-name ?reading-name) records what is learned
+from the candidate inferences.")
+
+(isa ADALearnedInfo ComplexActionPredicate)
+(arity ADALearnedInfo 2)
+(comment ADALearnedInfo "(ADALearnedInfo ?experiment-name ?reading-name) triggers a tell handler
+that puts the information the system learned into a QA microtheory.")
+
+;;; It's enabled
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (recordADALearnedInfo ?experiment-name ?reading-name)
+    (actionSequence
+     (TheList
+      (doTell (ADALearnedInfo ?experiment-name ?reading-name ))
+      ))))
+
+
+;;; ?mt is the microtheory in the kb to get facts from.
+;;; ?discourse-id is the discourse whose discourse interpretation case should be examined for the base
+;;; and target cases.
+;;; NEEDS TO: Call the query-for-information method, twice.
+;;; That will be an outsourced predicate.
+;;; Can we do this with just the factsInMtAboutConcepts pred?
+;;; To do that we need:
+;;; The mt to look in - HAVE.
+;;; A way to get the facts and the collections they appear in into a single list with just queries. - HAVE
+;;; The discourse interpretation case - HAVE
+;;;
+;;; What we have now: (TheList ...) where ... is the list of facts we want.
+;;; Questions:
+;;; Where do we want to tell these?
+;;; doTell tells things using ist-Information, not by taking context as another arg. Can we write a wrapper to it?
+;;; Also, doTell only does one thing at a time. Our wrapper should probably handle that too.
+;;; doTellAllToContext
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (currentBaseCollections ?discourse-id ?base-cols)
+      (currentTargetCollections ?discourse-id ?target-cols)   
+      ;;; Actually want a list concat of ?base-cols and just the actual bases. Do that later.
+      ;;; Rather than these, we actually want these wrapped in factForBaseDomain, or macroForBaseDomain if it's a macro
+      (baseFactsInMtAboutConcepts ?base-cols ?base-aug-facts ?mt)
+      (targetFactsInMtAboutConcepts ?target-cols ?target-aug-facts ?mt)
+      (wrapFactsInBaseDomainCase ?base-aug-facts ?wrapped-base-aug-facts)
+      (wrapFactsInTargetDomainCase ?target-aug-facts ?wrapped-target-aug-facts)
+      )
+ (methodForAction
+  (getAnalogyFactsFromMt ?mt ?discourse-id)
+  (actionSequence
+   (TheList
+    (doTellAllInContext ?wrapped-base-aug-facts (DiscourseCaseFn ?discourse-id)) ;;; Do we want these in some other context?
+    (doTellAllInContext ?wrapped-target-aug-facts (DiscourseCaseFn ?discourse-id)) ;;; I think we might so we know where they came from.
+    (doAnnounce "~%getAnalogyFactsFromMt ~A in ~A completed." (?mt ?discourse-id))))))
+
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (currentBaseCollections ?discourse-id ?base-cols)   
+      ;;; Actually want a list concat of ?base-cols and just the actual bases. Do that later.
+      ;;; Rather than these, we actually want these wrapped in factForBaseDomain, or macroForBaseDomain if it's a macro
+      (baseFactsInMtAboutConcepts ?base-cols ?base-aug-facts ?mt)
+      (wrapFactsInBaseDomainCase ?base-aug-facts ?wrapped-base-aug-facts)
+      )
+ (methodForAction
+  (getBaseFactsFromMt ?mt ?discourse-id)
+  (actionSequence
+   (TheList
+    (doTellAllInContext ?wrapped-base-aug-facts (DiscourseCaseFn ?discourse-id)) ;;; Do we want these in some other context?
+    (doAnnounce "~%getBaseFactsFromMt completed." ())))))
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (currentTargetCollections ?discourse-id ?target-cols)   
+      (targetFactsInMtAboutConcepts ?target-cols ?target-aug-facts ?mt)
+      (wrapFactsInTargetDomainCase ?target-aug-facts ?wrapped-target-aug-facts)
+      )
+ (methodForAction
+  (getTargetFactsFromMt ?mt ?discourse-id)
+  (actionSequence
+   (TheList
+    (doTellAllInContext ?wrapped-target-aug-facts (DiscourseCaseFn ?discourse-id)) ;;; I think we might so we know where they came from.
+    (doAnnounce "~%getTargetFactsFromMt completed." ())))))
+
+;;; This wants the actual base and target entity. Maybe let the case constructor get that?
+;;; That is what IntroducingAnalogyComparison should be for.
+;;; Then our case constructor will take ?context and ?base/target as its arguments.
+;;; What calls this?
+(preconditionForMethod
+ (and
+      (requiredCorrespondences-Get ?req-cor)
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (matchBetween (ADAFactsCaseFn Base ?discourse-id)
+                    (ADAFactsCaseFn Target ?discourse-id)
+                    ?req-cor
+                    ?match)   
+      )
+ (methodForAction
+  (runSMEOnADAInfo ?context)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Finished running SME on cases extraced using ADA for ~A." (?context))))))
+
+
+(isa baseFactsInMtAboutConcepts Predicate)
+(arity baseFactsInMtAboutConcepts 3)
+(arg1Isa baseFactsInMtAboutConcepts List)
+(arg2Isa baseFactsInMtAboutConcepts List)
+(arg3Isa baseFactsInMtAboutConcepts Microtheory)
+(comment baseFactsInMtAboutConcepts "In (baseFactsInMtAboutConcepts ?concepts ?facts ?mt), list of facts ?facts is all the facts about the concepts in the list of concepts ?concepts in the microtheory ?mt.")
+
+
+(isa targetFactsInMtAboutConcepts Predicate)
+(arity targetFactsInMtAboutConcepts 3)
+(arg1Isa targetFactsInMtAboutConcepts List)
+(arg2Isa targetFactsInMtAboutConcepts List)
+(arg3Isa targetFactsInMtAboutConcepts Microtheory)
+(comment targetFactsInMtAboutConcepts "In (targetFactsInMtAboutConcepts ?concepts ?facts ?mt), list of facts ?facts is all the facts about the concepts in the list of concepts ?concepts in the microtheory ?mt.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

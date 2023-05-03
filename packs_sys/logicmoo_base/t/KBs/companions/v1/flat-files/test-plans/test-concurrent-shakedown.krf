@@ -1,0 +1,124 @@
+;;;
+;;; test-concurrent-shakedown.meld
+;;;
+
+(in-microtheory TestPlanMt)
+(genlMt TestPlanMt CompanionsMt)
+(genlMt CompanionsMt TestPlanMt)
+
+(isa shakedown3 ComplexActionPredicate)
+(arity shakedown3 0)
+
+(preconditionForMethod
+  (and (currentExecutive ?ex)
+       (currentSessionReasoner ?sr)
+       (agendaContext ?mt)
+       (newUniqueTask task1 ?task1)  ; make a new name of the form (TaskFn task1XXXX)
+       (newUniqueTask task2 ?task2)
+       (newUniqueTask task3 ?task3))
+  (methodForAction
+    (shakedown3)
+    (actionSequence
+      (TheList
+        (doAnnounce "Expanding shakedown2 into sub-tasks." ())
+        (doTell (ist-Information ?mt (assignedTo ?task1 ?ex)))
+        (doTell (ist-Information ?mt (assignedTo ?task2 ?sr)))
+        (doTell (ist-Information ?mt (assignedTo ?task3 ?ex)))
+        (doTell (ist-Information ?mt (subTasks ?task1 ?task2)))
+        ;; child tasks 2a & 2b are implicitly concurrent & volatile
+        (doTell (ist-Information ?mt (startsAfterEndingOf ?task3 ?task1)))
+        (doEnqueue ?ex ?task1 (s3Task1))
+        (doEnqueue ?sr ?task2 (s3Task2))
+        (doEnqueue ?ex ?task3 (s3Task3))))))
+
+
+;;; What can it mean to say on the executive that two tasks on the session-reasoner have
+;;; a subtask or precedence relation?  What we want is complete transparency with respect
+;;; to agent locality.
+;;; If task X invokes taskY on a different machine, then Y is intrinsically a subtask
+;;; of X.  Y should inform X when it finishes, whether or not X cares.
+;;; We can do this because whenever we schedule a task, either locally or remotely,
+;;; we can look at the currentAgendaItem slot to see if we're operating in the context
+;;; of a task.  We don't need an explicit subTasks relation.  It's nice to have for 
+;;; reasoning about, but it isn't necessary for notification.
+
+;;; Precedence ordering is more challenging.  We may state that sibling tasks on 
+;;; different agents are sequenced, but how do we know whom to notify upon completion?
+;;; If the session reasoner depends on completion of a task on the tickler, we don't
+;;; want the executive necessarily involved, yet that's where the assignments and
+;;; constraints are written out.  The executive lays out the roadways, but it isn't
+;;; the traffic cop.
+
+(isa s3Task1 ComplexActionPredicate)
+(arity s3Task1 0)
+
+(preconditionForMethod
+  (localAgent ?agent)
+  (methodForAction
+    (s3Task1)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%s3Task1 running on ~a" (?agent))))))
+
+(isa s3Task2 ComplexActionPredicate)
+(arity s3Task2 0)
+
+(preconditionForMethod
+  (localAgent ?agent)
+  (methodForAction
+    (s3Task2)
+    (actionSequence
+      (TheList
+        (doAnnounce "in parent process" ())
+        (doAsynchronousTask
+          (actionSequence
+            (TheList
+              (doAnnounce "starting child 1" ())
+              (s3Task2a)
+              (doAnnounce "ending child 1" ()))))
+        (doAsynchronousTask
+          (actionSequence
+            (TheList
+              (doAnnounce "starting child 2" ())
+              (s3Task2b)
+              (doAnnounce "ending child 2" ()))))
+        (doAnnounce "suspending parent task" ())
+        (doSuspend)
+        (doAnnounce "resuming parent task" ())))))
+
+(isa s3Task2a ComplexActionPredicate)
+(arity s3Task2a 0)
+
+(preconditionForMethod
+  (localAgent ?agent)
+  (methodForAction
+    (s3Task2a)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%s3Task2a running on ~a" (?agent))
+        (doBusyWaitForUser "Finish 2a?")))))
+
+(isa s3Task2b ComplexActionPredicate)
+(arity s3Task2b 0)
+
+(preconditionForMethod
+  (localAgent ?agent)
+  (methodForAction
+    (s3Task2b)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%s3Task2b running on ~a" (?agent))
+        (doBusyWaitForUser "Finish 2b?")))))
+
+(isa s3Task3 ComplexActionPredicate)
+(arity s3Task3 0)
+
+(preconditionForMethod
+  (localAgent ?agent)
+  (methodForAction
+    (s3Task3)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%s3Task3 running on ~a" (?agent))))))
+
+

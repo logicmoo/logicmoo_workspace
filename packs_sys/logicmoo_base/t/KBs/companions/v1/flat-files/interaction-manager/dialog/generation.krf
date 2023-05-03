@@ -1,0 +1,226 @@
+;;;
+;;; generation.meld
+;;;
+;;; This file contains low-level plans for generating linguistic
+;;; responses to questions, given an answer.
+;;;
+;;; 
+
+(in-microtheory Interaction-ManagerMt)
+
+
+(isa generateUtterance ComplexActionPredicate)
+(arity generateUtterance 3)
+(arg1Isa generateUtterance Microtheory)
+(arg2Isa generateUtterance CycLTerm)
+(arg3Isa generateUtterance Collection)
+(comment generateUtterance "(generateUtterance ?context ?sentence-id ?sentence-type) constructs a semi-linguistic utterance and communicates it to the user.")
+
+(isa generateTypeListUtterance ComplexActionPredicate)
+(arity generateTypeListUtterance 4)
+(arg1Isa generateTypeListUtterance Microtheory)
+(arg2Isa generateTypeListUtterance CycLTerm)
+(arg3Isa generateTypeListUtterance Individual)
+(arg4Isa generateTypeListUtterance Set-Mathematical)
+(comment generateTypeListUtterance "(generateTypeListUtterance ?context ?sentence-id ?entity ?types) ")
+
+;;;
+;;; Generating a utterance in response to a question.
+;;;
+
+
+;;; To Do: handle implicit affirmations and denials, such as "It does."
+;;; "Yes." => (NLResponseFn Affirmative-NLResponse)
+;;; "No." => (NLResponseFn Negative-NLResponse)
+;;; "It does." => (and (isa ?do1682 PurposefulAction) (doneBy ?do1682 ?it1677))
+
+        
+;;; Does a statement answer some prior open question?
+;;; Does a statement contradict some prior answer?
+;;; Does the answer to a question enable a prior question to be answered?
+
+;;; resolveUserInducedContradiction.
+;;; - check to see if prior answer disagreed with user answer
+;;; - if contradiction detected, spawn an executive goal to try to learn something.
+
+
+        
+(preconditionForMethod
+  (and (ist-Information ?context (queryAnswer ?sentence-id ?answer))  ; True or False
+       (newReifiedUtterance ?system-utterance)
+       (yesNoReply ?answer ?utterance-string))  ; eschew convoluted format strings.
+  (methodForAction
+    (generateUtterance ?context ?sentence-id YesOrNoQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+         (TheSet
+          ;;shouldn't this be ReplyingToAYesOrNoQuestion rather than Affirming-Replying?
+          ;;what if the answer is no? -mdm 12/24/11
+            (ist-Information ?context (isa ?system-utterance Affirming-Replying)) ; a spec of ReplyingToAYesOrNoQuestion 
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+       (doRespond ?system-utterance ?utterance-string)))))
+
+(preconditionForMethod
+ (and (ist-Information ?context (isa ?sentence-id ClassificationRequest-Binary))
+      (lookupOnly (ist-Information ?context (queryAnswer ?sentence-id (aggregatedBinaryClassificationJudgement ?instance ?concept ?answer ?confidence))))
+      (newReifiedUtterance ?system-utterance)
+      (prettyString ?instance ?instance-string)
+      (classificationReplyWithConfidence ?instance-string ?concept ?answer ?confidence ?utterance-string))
+ (methodForAction
+  (generateUtterance ?context ?sentence-id YesOrNoQuestion-IBT)
+  (actionSequence
+   (TheList
+    (doRecordMembers
+          (TheSet
+           (ist-Information ?context (isa ?system-utterance ReplyingToAYesOrNoQuestion))
+           (ist-Information ?context (isa ?system-utterance ReplyingToAClassificationRequest))
+           (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+    (doRespond ?system-utterance ?utterance-string)))))
+
+(<== (preferInContext (generateUtterance ?context ?sentence-id YesOrNoQuestion-IBT) ?seq1 ?seq2)
+     (containsPattern (ist-Information ?context (isa ?system-utterance ReplyingToAClassificationRequest)) ?seq1))
+
+
+;;This is way out of date.
+(preconditionForMethod
+ (and (ist-Information ?context (isa ?sentence-id ClassificationRequest-Open))
+      (lookupOnly (ist-Information SketchedConceptLearning-Rules (defaultMutuallyExclusiveConcepts True)))
+      (lookupOnly (ist-Information ?context (queryAnswer ?sentence-id (aggregatedMutuallyExclusiveClassificationJudgement ?instance ?class ?confidence))))
+      (newReifiedUtterance ?system-utterance)
+      (prettyString ?instance ?instance-string)
+      (classificationReplyWithConfidence ?instance-string ?class Positive ?confidence ?utterance-string))
+ (methodForAction
+  (generateUtterance ?context ?sentence-id WhatQuestion-IBT)
+  (actionSequence
+   (TheList
+    (doRecordMembers
+     (TheSet
+      (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion))
+      (ist-Information ?context (isa ?system-utterance ReplyingToAClassificationRequest))
+      (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+    (doRespond ?system-utterance ?utterance-string)))))
+
+(preconditionForMethod
+ (and (ist-Information ?context (isa ?sentence-id ClassificationRequest-Open))
+      (lookupOnly (ist-Information SketchedConceptLearning-Rules (defaultMutuallyExclusiveConcepts False)))
+      (evaluate ?utterance-pairs
+        (TheClosedRetrievalSetOf (?system-utterance ?utterance-string)
+          (and (lookupOnly (ist-Information ?context (queryAnswer ?sentence-id (aggregatedClassificationJudgement ?instance ?class ?confidence))))
+               (newReifiedUtterance ?system-utterance)
+               (prettyString ?instance ?instance-string)
+               (classificationReplyWithConfidence ?instance-string ?class Positive ?confidence ?utterance-string))))
+      (different ?utterance-pairs (TheSet)))
+ (methodForAction
+  (generateUtterance ?context ?sentence-id WhatQuestion-IBT)
+  (actionSequence
+   (TheList
+    (doForEach (?system-utterance ?utterance-string) ?utterance-pairs
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (doRecordMembers
+                   (TheSet
+                    (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion))
+                    (ist-Information ?context (isa ?system-utterance ReplyingToAClassificationRequest))
+                    (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+                  (doRespond ?system-utterance ?utterance-string)))))))))
+
+(<== (preferInContext (generateUtterance ?context ?sentence-id WhatQuestion-IBT) ?seq1 ?seq2)
+     (containsPattern (ist-Information ?context (isa ?system-utterance ReplyingToAClassificationRequest)) ?seq1))
+
+
+
+;;; Answer with a list of types:
+(preconditionForMethod
+  (and (numAnswers 1 (colloquialName ?entity ?name-string))
+       (newReifiedUtterance ?system-utterance)
+       (typeDescription ?name-string ?types ?utterance-string)
+       (evaluate ?answers
+         (MakeFormulaFn and
+           (TheClosedRetrievalSetOf ?answer
+             (and (elementOf ?type ?types)
+                  (unifies ?answer (isa ?entity ?type))))))  ; Reify entire propositions as answers, not just isas.
+       (simplifiedConjunction ?answers ?query-answer))
+  (methodForAction
+    (generateTypeListUtterance ?context ?sentence-id ?entity ?types)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))
+            (ist-Information ?context (queryAnswer ?sentence-id ?query-answer))))
+        (doRespond ?system-utterance ?utterance-string)))))
+
+
+
+;;; Enumerate the (multiple) referents:
+
+(preconditionForMethod
+  (and (different ?question-type YesOrNoQuestion-IBT)
+       (ist-Information ?context (queryAnswer ?sentence-id ?answers))  ; A Set of answers
+       (newReifiedUtterance ?system-utterance)
+       (listDescription ?answers ?utterance-string))  ; eschew convoluted format strings.
+  (methodForAction
+    (generateUtterance ?context ?sentence-id ?question-type)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion)) ; a spec of ReplyingToAYesOrNoQuestion 
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?utterance-string)))))
+
+
+
+
+;;; When no answer can be constructed (even an empty set), then the answer is Unknown.
+(preconditionForMethod
+ (and (genls ?question-type Question-IBT)
+      (uninferredSentence (ist-Information ?context (queryAnswer ?sentence-id ?answers)))
+      (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (generateUtterance ?context ?sentence-id ?question-type)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance "Unknown.")))))
+
+;;; WhatQuestion-IBT
+;;; WhichQuestion-IBT
+;;; WhenQuestion-IBT
+;;; WhereQuestion-IBT
+;;; HowManyQuestion-IBT
+;;; GeneralHowQuestion-IBT
+;;; HowMuchQuestion-IBT
+
+
+
+
+;;; Some types of where questions are less likely.
+;;; E.g., "Where is the eastern-most part of the United States?"
+;;; Perhaps: "Where do the Mississippi and Missouri rivers meet?"
+;;; Or: "Where is the closest chinese restaurant?"
+
+
+
+(preconditionForMethod
+ (and (ist-Information ?context (exampleProvidedInUtterance ?sentence-id ?example))
+      (newReifiedUtterance ?system-utterance)
+      (prettyString ?example ?instance-string)
+      (formattedContentString "Finished processing ~a." (TheList ?instance-string) ?utterance-string))
+ (methodForAction
+  (generateUtterance ?context ?sentence-id ProvidingAnExample)
+  (actionSequence
+   (TheList
+    (doRecordMembers
+          (TheSet
+           (ist-Information ?context (isa ?system-utterance InformingTheUser))
+           (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+    (doRespond ?system-utterance ?utterance-string)))))
+
+;;; End Of File

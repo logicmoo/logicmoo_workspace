@@ -1,0 +1,480 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: instruction.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 25, 2013 10:10:53
+;;;;   Purpose: Learning from instructional interaction.
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; To Do: Support feedback on positive events (e.g., "That was good.")
+
+
+;;; -------------------------------------------------------------------------
+;;; Interaction
+
+(isa verifyViaUser ComplexActionPredicate)
+(arity verifyViaUser 2)
+(arg1Isa verifyViaUser Microtheory)
+(arg2Isa verifyViaUser CycLExpression)
+(comment verifyViaUser "(verifyViaUser ?context ?hypothesis) is a complex action task to ask the user to confirm a hypothesis.")
+
+(preconditionForMethod 
+  (and (numAnswers 1 (localAgent ?local-agent))
+       (numAnswers 1 (currentSessionReasoner ?session-reasoner)) ; outsourced handler doesn't support tests yet.
+       (equals ?session-reasoner ?local-agent)
+       (numAnswers 1 (currentInteractionMgr ?im)))
+  (methodForAction
+    (verifyViaUser ?context ?hypothesis)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan  
+          ?im
+          (actionSequence 
+            (TheList
+              (requestConfirmation ?context ?hypothesis))))
+        ))))
+
+;;; Confirmation comes back via a doNotifyPA event with payload 
+;;; (decisionTask FreeCiv-Player currentlyResearching) or some such.
+;;; This gets written into the current case, qualified by the current year.
+
+
+(isa assimilateUserStatement ComplexActionPredicate)
+(arity assimilateUserStatement 4)
+(arg1Isa assimilateUserStatement Microtheory)
+(arg2Isa assimilateUserStatement PerceptualAgentEvent)
+(arg3Isa assimilateUserStatement CycLExpression)
+(arg4Isa assimilateUserStatement TimeInterval)
+(comment assimilateUserStatement "(assimilateUserStatement ?mt ?evt ?info ?when) assimilates a user statement.")
+
+;;; Confirm a decision task:
+(preconditionForMethod
+  (and (operatorFormulas decisionTask ?prop)
+       (priorCommand ?mt ?evt ?cmd)
+       (numAnswers 1
+         (lookupOnly
+           (localOnly
+             (ist-Information ?mt
+               (infoTransferred ?cmd ?operator))))))
+  (methodForAction
+    (assimilateUserStatement ?mt ?evt (confirmed ?prop) ?year)
+    (actionSequence
+      (TheList
+        (recordNewDecisionTask ?mt ?cmd ?operator ?prop ?year)))))
+
+;;; Disconfirm a decision task:
+(preconditionForMethod
+  (and (operatorFormulas decisionTask ?prop)
+       (priorCommand ?mt ?evt ?cmd)
+       (numAnswers 1
+         (lookupOnly
+           (localOnly
+             (ist-Information ?mt
+               (infoTransferred ?cmd ?operator))))))
+  (methodForAction
+    (assimilateUserStatement ?mt ?evt (disconfirmed ?prop) ?year)
+    (actionSequence
+      (TheList
+        (rejectDecisionTask ?mt ?cmd ?operator ?prop ?year)))))
+
+;;; 
+;;; Signalling a negative outcome (e.g., "That was bad.")
+;;;
+
+;;; BadEvent:
+(preconditionForMethod
+  (and (numAnswers 1 
+         (priorDomainEvent ?mt ?evt ?latest-evt)) ; ?evt is the user interaction.  ?latest-evt is preceding domain event.
+       (numAnswers 1
+         (lookupOnly
+           (localOnly
+             (ist-Information ?mt
+               (dateOfEvent ?evt ?when)))))
+       (evaluate ?possible-referents
+         (TheClosedRetrievalSetOf ?prior-evt
+           (ist-Information ?mt  ; Can't be localOnly, since the genls is in the domain knowledge.
+             (immediatelyPrecedingDomainEvents ?mt ?latest-evt ?prior-evt ?when))))
+       (mostSpecificSalientEvent ?mt ?possible-referents ?bad-evt)
+       (numAnswers 1
+         (localOnly
+           (ist-Information ?mt
+             (currentPlayer ?player)))))
+  (methodForAction
+    (assimilateUserStatement ?mt ?evt (hasEvaluativeQuantity ?something (MediumToVeryHighAmountFn Badness-Generic)) ?year)
+    (actionSequence
+      (TheList
+        ;; Reify the concrete negative outcome in the execution trace:
+        (doRecord 
+          (ist-Information ?mt 
+            (negativeOutcomeForActor ?bad-evt ?player)))
+        (generalizeNegativeEvent ?mt ?bad-evt ?player))))) ; we don't even care about the year here.
+
+
+(isa immediatelyPrecedingDomainEvents QuaternaryPredicate)
+(arity immediatelyPrecedingDomainEvents 4)
+(arg1Isa immediatelyPrecedingDomainEvents Microtheory)
+(arg2Isa immediatelyPrecedingDomainEvents PerceptualAgentEvent)
+(arg3Isa immediatelyPrecedingDomainEvents PerceptualAgentEvent)
+(arg4Isa immediatelyPrecedingDomainEvents TimeInterval)  ; turn
+(comment immediatelyPrecedingDomainEvents "(immediatelyPrecedingDomainEvents ?mt ?later ?earlier ?when) binds ?earlier to the prior domain event (ie, not a command or linguistic utterance) within the same turn, not separated by commands.")
+
+;;; This will stop on commands and prior turns.
+;;; Transitive rule:
+(<== (immediatelyPrecedingDomainEvents ?mt ?later ?prior-event ?when)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (followsInProgression ?later ?prior-event ?mt)))))
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (dateOfEvent ?prior-event ?when))))
+     (domainEvent ?mt ?prior-event))
+
+;;; Reflexive rule
+(<== (immediatelyPrecedingDomainEvents ?mt ?event ?event ?when)) 
+
+(isa mostSpecificSalientEvent TernaryPredicate)
+(arity mostSpecificSalientEvent 3)
+(comment mostSpecificSalientEvent "(mostSpecificSalientEvent ?mt ?event-set ?event) binds ?event to the most most specific, salient event of the set, where salience might be determined by whether the event was accompanied by a text message.")
+
+;;; Accept singleton event:
+(<== (mostSpecificSalientEvent ?mt ?events ?event)
+     (groundExpression ?events)
+     (unifies (TheSet ?event) ?events))
+     
+(<== (mostSpecificSalientEvent ?mt ?events ?event)
+     (groundExpression ?events)
+     (not (unifies (TheSet ?event) ?events))
+     (communicatedEvents ?mt ?events ?communicated-events)
+     (evaluate ?evt-list (SetToListFn ?communicated-events))
+     (numAnswers 1 (mostSpecificInstance ?mt ?evt-list ?event)))
+
+(isa communicatedEvents TernaryPredicate)
+(comment communicatedEvents "(communicatedEvents ?mt ?event-set ?event-subset) preference filters those events that are accompanied by text messages.")
+
+(<== (communicatedEvents ?mt ?events ?event-subset)
+     (unifies ?has-msg-pred (Kappa (?evt) (numAnswers 1 (lookupOnly (localOnly (ist-Information ?mt (textMessageFor ?evt ?what)))))))
+     (preferenceFilterBy ?events ?has-msg-pred ?event-subset))
+
+(isa moreSpecificEvent QuaternaryPredicate)
+(comment moreSpecificEvent "(moreSpecificEvent ?mt ?evt1 ?evt2 ?spec-evt) binds ?spec-evt to the instance of the more specific type.")
+
+(<== (moreSpecificEvent ?mt ?evt1 ?evt2 ?spec-evt)
+     (lookupOnly
+       (localOnly
+         (kbOnly
+           (ist-Information ?mt 
+             (isa ?evt1 ?type1)))))
+     (lookupOnly
+       (localOnly
+         (kbOnly
+           (ist-Information ?mt
+             (isa ?evt2 ?type2)))))
+     (moreSpecificType ?mt ?type1 ?type2 ?evt1 ?evt2 ?spec-evt))
+
+(isa moreSpecificType Predicate)
+(arity moreSpecificType 6)
+(comment moreSpecificType "(moreSpecificType ?mt ?type1 ?type2 ?inst1 ?inst2 ?instance) compares collections ?type1 and ?type2 and returns the correspondingly more specific of the two instances.")
+
+(<== (moreSpecificType ?mt ?type1 ?type2 ?inst1 ?inst2 ?inst1)
+     (different ?type1 ?type2)
+     (groundExpression ?type1)
+     (groundExpression ?type2)
+     (lookupOnly
+       (ist-Information ?mt
+         (genls ?type1 ?type2))))
+
+(<== (moreSpecificType ?mt ?type1 ?type2 ?inst1 ?inst2 ?inst2)
+     (different ?type1 ?type2)
+     (groundExpression ?type1)
+     (groundExpression ?type2)
+     (lookupOnly
+       (ist-Information ?mt
+         (genls ?type2 ?type1))))
+
+(isa mostSpecificInstance TernaryPredicate)
+
+(<== (mostSpecificInstance ?mt (TheList ?inst) ?inst))
+
+;;; Reduce:         
+(<== (mostSpecificInstance ?mt ?inst-list ?inst)
+     (different ?inst-list (TheList))
+     (evaluate ?first (FirstInListFn ?inst-list))
+     (evaluate ?second (SecondInListFn ?inst-list))
+     (numAnswers 1 (moreSpecificEvent ?mt ?first ?second ?item))
+     (evaluate ?remainder (JoinListsFn (TheList ?item) (RestOfListFn (RestOfListFn ?inst-list))))
+     (numAnswers 1 (mostSpecificInstance ?mt ?remainder ?inst)))
+
+;(isa newListRemainder TernaryPredicate)
+;(arity newListRemainder 3)
+;(comment newListRemainder "(newListRemainder ?item ?list ?new-list) tacks ?item onto the cddr of ?list.  Won't fail if ?list is empty.")
+
+;;; This is annoying. RestOfListFn fails if list is empty.
+;(<== (newListRemainder ?item ?lst ?new-remainder)
+;     (evaluate ?new-remainder (JoinListsFn ?item (RestOfListFn (RestOfListFn ?lst)))))
+
+;(<== (newListRemainder ?item ?lst (TheList ?item))
+;     (uninferredSentence
+;       (evaluate ?rem (RestOfListFn (RestOfListFn ?lst)))))
+     
+
+(isa generalizeNegativeEvent ComplexActionPredicate)
+(arity generalizeNegativeEvent 3)
+(arg1Isa generalizeNegativeEvent Microtheory)
+(arg2Isa generalizeNegativeEvent PerceptualAgentEvent)
+(arg3Isa generalizeNegativeEvent Agent-Generic)
+(comment generalizeNegativeEvent "(generalizeNegativeEvent ?mt ?bad-evt ?actor) generalizes event and spawns learning goals to find out how to prevent it.")
+
+(preconditionForMethod
+  (and (generalizedEventSpec ?mt ?evt ?actor ?generalized-event)
+       (unifies ?prop 
+         (negativeOutcomeForActor ?generalized-event (IndexicalFn currentRole)))
+       (unifies ?prevent-goal (PreventFn ?prop))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (StrategyModelMtFn ?domain)))
+  (methodForAction
+    (generalizeNegativeEvent ?mt ?evt ?actor)
+    (actionSequence
+      (TheList
+        ;; Reify the *generalized* negative event in the strategy model microtheory:
+        (doRecord
+          (ist-Information ?lkmt
+            (negativeOutcomeForActor ?generalized-event (IndexicalFn currentRole))))
+        ;; Post a goal to prevent it!!
+        (reifyPreventionGoal ?lkmt ?prevent-goal (GoalFn 0)) ; bit of a cheat.  This is the top-level game goal.
+        (doAgentPlan (invokePlanRepair ?mt ?lkmt ?evt ?actor ?prevent-goal))
+        ))))
+
+;;; default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (generalizeNegativeEvent ?mt ?evt ?actor)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (generalizeNegativeEvent ?mt ?evt ?actor) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa generalizedEventSpec Predicate)
+(arity generalizedEventSpec 4)
+(arg1Isa generalizedEventSpec Microtheory)
+(arg2Isa generalizedEventSpec PerceptualAgentEvent)
+(arg3Isa generalizedEventSpec Agent-Generic)
+(arg4Isa generalizedEventSpec PerceptualAgentEvent)
+(comment generalizedEventSpec "(generalizedEventSpec ?mt ?event ?actor ?generalized-event) lifts and generalizes an event instance to the type level.")
+
+;;; generalizeEventSpec should produce a GenericInstanceFn of a CollectionSubsetFn
+;;; Can we use (generalizeEntity ?parent ?child-coll ?rel ?entity) here?
+;;; We'd need to collect all the extant role relations,
+;;; create a (temporary) dictionary to parent concept (actor)
+;;; *** If there's only one role relation (e.g., unchangedActors), then interArgRelations returns (TheSet)
+;;; *** and this totally bails.  But it should only bail if #relns < (#roles - 1).
+(<== (generalizedEventSpec ?mt ?evt ?actor ?generalized-event)
+     (groundExpression ?evt) ; safety!
+     (lookupOnly
+       (localOnly
+         (nonTransitiveInference  ; do we want kbOnly?
+           (ist-Information ?mt
+             (isa ?evt ?event-type)))))
+     (different ?event-type PerceptualAgentEvent) ; a proper spec hopefully
+     (evaluate ?roles
+       (TheClosedRetrievalSetOf ?rel    ; a set of role relation stmts, such as (TheSet (objectDestroyed <evt1> <inst2>)...) 
+         (roleRelationInst ?mt ?evt ?type ?rel))) 
+     (interArgRelations ?mt ?actor ?roles ?relns) ; relations between ?entities and ?actor, e.g. (TheSet (unitOwner <inst2> <actor>)...)
+     (different ?relns (TheSet))  ; in case the delete list is empty, it's better not to learn a bad rule.
+     (entityLiftingBlist ?actor ?roles ?lifting-blist)
+     (unifies ?given-blist (TheSet (?actor (IndexicalFn currentPlayer)) (?evt ?evt-var))) ; the indexical root can't be a variable.
+     (evaluate ?blist (SetOrCollectionUnion ?given-blist ?lifting-blist))
+     (evaluate ?set-spec
+       (SublisFn ?blist
+         (MakeFormulaFn and
+           (JoinListsFn
+             (TheList (lookupOnly (isa ?evt-var ?event-type)))  ; don't backchain on isa.
+             (SetToListFn ?roles)
+             (SetToListFn ?relns)))))
+     (unifies ?generalized-event 
+       (GenericInstanceFn
+         (CollectionSubsetFn ?event-type
+           (TheSetOf ?evt-var ?set-spec)))))
+
+;;; We need to search for functional paths from mentioned entities to the apecified actor.
+;;; Since there's only one such actor, that's likely to be the functional value of a relation,
+;;; hence, arg2.  Search towards that from the entity, always looking for functional relaitons.
+
+(isa roleRelationInst QuaternaryPredicate)
+(arity roleRelationInst 4)
+(arg1Isa roleRelationInst Microtheory)
+(arg2Isa roleRelationInst PerceptualAgentEvent)
+(arg3Isa roleRelationInst Collection)
+(arg4Isa roleRelationInst BinaryRelation)
+(comment roleRelationInst "(roleRelationInst ?mt ?evt ?evt-type ?rel) binds the binary relation ?rel to bound role relations on ?evt.")
+
+(<== (roleRelationInst ?mt ?evt ?evt-type ?rel)
+     (rolesForEventType ?evt-type ?role)    ; Assume these are defined for all event types of interest.
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (?role ?evt ?thing))))
+     (unifies ?rel (?role ?evt ?thing))) ; don't filter by ?thing being a domain thing.  Yet.
+     
+
+(isa interArgRelations QuaternaryPredicate)
+(arity interArgRelations 4)
+(arg1Isa interArgRelations Microtheory)
+(arg2Isa interArgRelations Agent-Generic)
+(arg3Isa interArgRelations Set-Mathematical)
+(arg4Isa interArgRelations Set-Mathematical)
+(comment interArgRelations "(interArgRelations ?mt ?actor ?roles ?rels) binds ?rels, the binary domain relations that holds (or held) between ?actor and the other ?roles of some event.")
+
+;;; For now this isn't going to chain:
+(<== (interArgRelations ?mt ?actor ?roles ?rels)
+     (evaluate ?rels
+       (TheClosedRetrievalSetOf ?rel
+         (and (lookupOnly (elementOf ?role ?roles))
+              (unifies (?pred ?evt ?entity) ?role)
+              (different ?entity ?actor)
+              (priorDomainRelationBetween ?rel-pred ?entity ?actor) ; cached and outsourced for current domain.
+              (unifies ?rel (?rel-pred ?entity ?actor))))))
+
+(isa entityLiftingBlist TernaryPredicate)
+(arity entityLiftingBlist 3)
+(arg1Isa entityLiftingBlist Agent-Generic)
+(arg2Isa entityLiftingBlist Set-Mathematical)
+(arg3Isa entityLiftingBlist Set-Methematical)
+
+(<== (entityLiftingBlist ?actor ?roles ?blist)
+     (evaluate ?entities
+       (SetToListFn
+         (TheClosedRetrievalSetOf ?entity
+           (and (lookupOnly (elementOf ?role ?roles))
+                (unifies (?pred ?evt ?entity) ?role)
+                (different ?entity ?actor)))))
+     (evaluate ?len (LengthOfListFn ?entities))
+     (evaluate ?blist 
+       (TheClosedRetrievalSetOf ?binding
+         (and (integerBetween 1 ?pos ?len)
+              (varBindingFor ?pos ?entities ?binding))))
+      )
+
+
+(isa varBindingFor TernaryPredicate)
+(arity varBindingFor 3)
+(arg1Isa varBindingFor Integer)
+(arg2Isa varBindingFor List)
+(arg3Isa varBindingFor CycLTerm)
+(comment varBindingFor "(varBindingFor ?position ?entity-list ?binding-pair) makes an anonymous variable corresponding to position and binds the corresponding entity to it in ?binding-pair.")
+
+(<== (varBindingFor ?pos ?entities ?binding)
+     (evaluate ?item (NthInListFn ?pos ?entities))
+     (evaluate ?var (SymbolConcatenateFn (TheList "?var" ?pos)))
+     (unifies ?binding (?item ?var)))
+
+
+(isa reifyPreventionGoal ComplexActionPredicate)
+(arity reifyPreventionGoal 3)
+(arg1Isa reifyPreventionGoal Microtheory)
+(arg2Isa reifyPreventionGoal Goal)  ; expanded goal representation
+(arg3Isa reifyPreventionGoal Goal)  ; goal name
+(comment reifyPreventionGoal "(reifyPreventionGoal ?mt ?pgoal ?parent-goal) writes out a goal to prevent a general proposition.")
+
+;;; The goal may already exist (from a prior turn),
+;;; so don't fail if it does.
+;;; We want to make sure ?mt is the StrategyModelMtFn microtheory (if goal is generic)
+;;; Issue: scoping.  Do we know that this event description is bad in all situations?
+;;; Going to assume yes for now.
+(preconditionForMethod
+  (and (uninferredSentence 
+         (lookupOnly
+           (localOnly
+             (ist-Information ?lkmt
+               (goalName ?named-goal ?goal-rep)))))
+       (reifiedGoalName ?lkmt ?name ?goal-rep ?goal-rep)  ; generate a new name
+       (pgoalToRecognitionRule ?name ?goal-rep ?recognition-rule))
+  (methodForAction
+    (reifyPreventionGoal ?lkmt ?goal-rep ?parent-goal)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?lkmt
+            (goalName ?name ?goal-rep)))   ; reify in the game instance context, rather than the strategy model.
+        (doRecord
+          (ist-Information ?lkmt
+            (subgoal ?parent-goal ?name)))
+        (doRecord
+          (ist-Information ?lkmt
+            ?recognition-rule))
+        (doAnnounce "~%Learned new goal: (goalName ~s ~s)" (?name ?goal-rep))
+        (doAnnounce "~%Learned new rule: ~s" (?recognition-rule))
+        ))))
+            
+(preconditionForMethod
+  (numAnswers 1
+    (lookupOnly
+      (localOnly
+        (ist-Information ?mt
+          (goalName ?named-goal ?goal-rep)))))
+  (methodForAction
+    (reifyPreventionGoal ?mt ?goal-rep ?parent-goal)
+    (actionSequence
+      (TheList))))
+
+(isa pgoalToRecognitionRule TernaryPredicate)
+(arity pgoalToRecognitionRule 3)
+(arg1Isa pgoalToRecognitionRule Goal)
+(arg2Isa pgoalToRecognitionRule Goal)
+(arg3Isa pgoalToRecognitionRule CycLExpression)
+(comment pgoalToRecognitionRule "(pgoalToRecognitionRule ?goal-name ?propositional-goal ?recognition-rule) generates a horn clause to recognize the proposition in a goal.")
+
+;;; For now, we'll have to assume recognition rules are queried in the execution context.
+(<== (pgoalToRecognitionRule ?goal-name ?pgoal ?rule)
+     (goalProposition ?pgoal ?prop)
+     (unifies (?pred (GenericInstanceFn (CollectionSubsetFn ?type ?set-spec)) (IndexicalFn ?role-pred)) ?prop)
+     (formulaArgument ?set-spec 1 ?v)
+     (formulaArgument ?set-spec 2 ?conj)
+     (operatorFormulas and ?conj)
+     (unifies ?conse (eventTriggersResponse ?v (respondToGoalFailure ?mt ?role% ?v ?goal-name)))
+     (unifies ?ante1 (executionContext ?mt))
+     (unifies ?ante2 (?role-pred ?role%))  ; e.g. currentPlayer
+     (evaluate ?antes
+       (SubstituteFormulaFn ?role% (IndexicalFn ?role-pred) ; remove indexical
+         (MapFunctionOverList
+           (FunctionToArg 2
+             (Kappa (?in ?out)
+               (contextualizeIfNecessary ?mt ?in ?out)))
+           (MakeFormulaFn TheList ?conj))))
+     (evaluate ?rule
+       (MakeFormulaFn <==
+         (JoinListsFn (TheList ?conse  ?ante1 ?ante2) ?antes))))
+
+(isa contextualizeIfNecessary TernaryPredicate)
+(arity contextualizeIfNecessary 3)
+(arg1Isa contextualizeIfNecessary Microtheory)
+(arg2Isa contextualizeIfNecessary CycLSentence-Askable)
+(arg3Isa contextualizeIfNecessary CycLSentence-Askable)
+(comment contextualizeIfNecessary "(contextualizeIfNecessary ?mt ?stmt ?contextualized-stmt) contextualizes ?stmt if the predicate is not global.")
+
+(<== (contextualizeIfNecessary ?mt ?stmt ?stmt)
+     (not (variableExpression ?stmt))
+     (operatorFormulas ?pred ?stmt)
+     (globalPredicate ?pred))
+     
+(<== (contextualizeIfNecessary ?mt ?stmt ?output)
+     (not (variableExpression ?stmt))
+     (operatorFormulas ?pred ?stmt)
+     (not (globalPredicate ?pred))
+     (unifies ?output (ist-Information ?mt ?stmt)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

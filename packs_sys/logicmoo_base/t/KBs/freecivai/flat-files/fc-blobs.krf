@@ -1,0 +1,373 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: fc-blobs.meld
+;;;;    System: FreeCiv AI
+;;;;    Author: Matt McLure
+;;;;   Created: April 12, 2011 10:20:23
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 18:04:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory FreecivMt)
+
+(isa FreeCiv-BlobType SecondOrderCollection)
+(isa FreeCiv-BlobType-Exhaustive SecondOrderCollection)
+(genls FreeCiv-BlobType-Exhaustive FreeCiv-BlobType)
+
+(isa FreeCiv-Blob Collection)
+(genls FreeCiv-Blob FreeCiv-Object)
+
+(isa FreeCiv-InteractionBlob Collection)
+(isa FreeCiv-InteractionBlob FreeCiv-BlobType)
+(genls FreeCiv-InteractionBlob FreeCiv-Blob)
+
+(isa FreeCiv-TacticalBlob Collection)
+(isa FreeCiv-TacticalBlob FreeCiv-BlobType)
+(genls FreeCiv-TacticalBlob FreeCiv-Blob)
+
+(isa FreeCiv-TerrainBlob Collection)
+(isa FreeCiv-TerrainBlob FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob FreeCiv-Blob)
+
+(isa FreeCiv-TerrainBlob-Trafficability Collection)
+(isa FreeCiv-TerrainBlob-Trafficability FreeCiv-BlobType-Exhaustive)
+(genls FreeCiv-TerrainBlob-Trafficability FreeCiv-TerrainBlob)
+
+(isa FreeCiv-TerrainBlob-Label Collection)
+(isa FreeCiv-TerrainBlob-Label FreeCiv-BlobType-Exhaustive)
+(genls FreeCiv-TerrainBlob-Label FreeCiv-TerrainBlob)
+
+(isa FreeCiv-TerrainBlob-Continent Collection)
+(isa FreeCiv-TerrainBlob-Continent FreeCiv-BlobType-Exhaustive)
+(genls FreeCiv-TerrainBlob-Continent FreeCiv-TerrainBlob)
+
+(isa FreeCiv-TerrainBlob-Water Collection)
+(isa FreeCiv-TerrainBlob-Water FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Water FreeCiv-TerrainBlob-Continent)
+
+(isa FreeCiv-TerrainBlob-Land Collection)
+(isa FreeCiv-TerrainBlob-Land FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Land FreeCiv-TerrainBlob-Continent)
+
+(isa FreeCiv-TerrainBlob-UnrestrictedLand Collection)
+(isa FreeCiv-TerrainBlob-UnrestrictedLand FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-UnrestrictedLand FreeCiv-TerrainBlob-Trafficability)
+
+(isa FreeCiv-TerrainBlob-RestrictedLand Collection)
+(isa FreeCiv-TerrainBlob-RestrictedLand FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-RestrictedLand FreeCiv-TerrainBlob-Trafficability)
+
+(isa FreeCiv-TerrainBlob-SeverelyRestrictedLand Collection)
+(isa FreeCiv-TerrainBlob-SeverelyRestrictedLand FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-SeverelyRestrictedLand FreeCiv-TerrainBlob-Trafficability)
+
+(isa FreeCiv-TerrainBlob-UnrestrictedWater Collection)
+(isa FreeCiv-TerrainBlob-UnrestrictedWater FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-UnrestrictedWater FreeCiv-TerrainBlob-Trafficability)
+
+(isa FreeCiv-TerrainBlob-DeepOcean Collection)
+(isa FreeCiv-TerrainBlob-DeepOcean FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-DeepOcean FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Desert Collection)
+(isa FreeCiv-TerrainBlob-Desert FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Desert FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Forest Collection)
+(isa FreeCiv-TerrainBlob-Forest FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Forest FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Glacier Collection)
+(isa FreeCiv-TerrainBlob-Glacier FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Glacier FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Grassland Collection)
+(isa FreeCiv-TerrainBlob-Grassland FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Grassland FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Hills Collection)
+(isa FreeCiv-TerrainBlob-Hills FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Hills FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Jungle Collection)
+(isa FreeCiv-TerrainBlob-Jungle FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Jungle FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Lake Collection)
+(isa FreeCiv-TerrainBlob-Lake FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Lake FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Mountains Collection)
+(isa FreeCiv-TerrainBlob-Mountains FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Mountains FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Ocean Collection)
+(isa FreeCiv-TerrainBlob-Ocean FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Ocean FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Plains Collection)
+(isa FreeCiv-TerrainBlob-Plains FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Plains FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Swamp Collection)
+(isa FreeCiv-TerrainBlob-Swamp FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Swamp FreeCiv-TerrainBlob-Label)
+
+(isa FreeCiv-TerrainBlob-Tundra Collection)
+(isa FreeCiv-TerrainBlob-Tundra FreeCiv-BlobType)
+(genls FreeCiv-TerrainBlob-Tundra FreeCiv-TerrainBlob-Label)
+
+
+(isa blobContains BinaryPredicate)
+(arity blobContains 2)
+(arg1Isa blobContains FreeCiv-Blob)
+(arg2Isa blobContains FreecivLocation)
+(comment blobContains "(blobContains ?blob (FreecivLocationFn ?x ?y)) means...")
+
+(isa blobsOverlap SymmetricBinaryPredicate)
+(arity blobsOverlap 2)
+(arg1Isa blobsOverlap FreeCiv-Blob)
+(arg2Isa blobsOverlap FreeCiv-Blob)
+(comment blobsOverlap "(blobsOverlap ?blob1 ?blob2) means...")
+
+(isa blobsAdjacent SymmetricBinaryPredicate)
+(arity blobsAdjacent 2)
+(arg1Isa blobsAdjacent FreeCiv-Blob)
+(arg2Isa blobsAdjacent FreeCiv-Blob)
+(comment blobsAdjacent "(blobsAdjacent ?blob1 ?blob2) means...")
+
+(comment polyOpAdjacent
+ "(polyOpAdjacent <glyph1> <glyph2>) Says that glyph1 and glyph2 are adjacent by virtue of the fact that they were created via difference and intersection operations (respectively) on the same two parent glyphs.")
+(isa polyOpAdjacent SymmetricBinaryPredicate)
+(arity polyOpAdjacent 2)
+(arg1Isa polyOpAdjacent NuSketchGlyph)
+(arg2Isa polyOpAdjacent NuSketchGlyph)
+
+(isa polyOpBlobAdjacent TernaryPredicate)  
+(arity polyOpBlobAdjacent 3)
+(arg1Isa polyOpBlobAdjacent NuSketchGlyph)
+(arg2Isa polyOpBlobAdjacent NuSketchGlyph)
+(arg3Isa polyOpBlobAdjacent NuSketchSketch)
+(comment polyOpBlobAdjacent "(polyOpBlobAdjacent ?blob1 ?blob2 ?sketch) means...")
+
+(isa blobOverlapsBlobOfType TernaryPredicate)
+(arity blobOverlapsBlobOfType 3)
+(arg1Isa blobOverlapsBlobOfType FreeCiv-Blob)
+(arg2Isa blobOverlapsBlobOfType FreeCiv-Blob)
+(arg3Isa blobOverlapsBlobOfType FreeCiv-BlobType)
+(comment blobOverlapsBlobOfType "(blobOverlapsBlobOfType ?blob1 ?blob2 ?blob2-type) means...")
+
+(isa glyphInSketchForBlob TernaryPredicate)
+(arity glyphInSketchForBlob 3)
+(arg1Isa glyphInSketchForBlob FreeCiv-Blob)
+(arg2Isa glyphInSketchForBlob NuSketchSketch)
+(arg3Isa glyphInSketchForBlob NuSketchGlyph)
+(comment glyphInSketchForBlob "(glyphInSketchForBlob ?blob ?sketch ?glyph) means...")
+
+(isa sameTerrain SymmetricBinaryPredicate)
+(arity sameTerrain 2)
+(arg1Isa sameTerrain FreecivLocation)
+(arg2Isa sameTerrain FreecivLocation)
+(comment sameTerrain "(sameTerrain ?loc1 ?loc2) means ?loc1 and ?loc2 have identical terrain.")
+
+(isa sameTerrainBlob-Label SymmetricBinaryPredicate)
+(arity sameTerrainBlob-Label 2)
+(arg1Isa sameTerrainBlob-Label FreecivLocation)
+(arg2Isa sameTerrainBlob-Label FreecivLocation)
+(comment sameTerrainBlob-Label "(sameTerrainBlob-Trafficability ?loc1 ?loc2) means...")
+
+(isa sameTerrainBlob-Trafficability SymmetricBinaryPredicate)
+(arity sameTerrainBlob-Trafficability 2)
+(arg1Isa sameTerrainBlob-Trafficability FreecivLocation)
+(arg2Isa sameTerrainBlob-Trafficability FreecivLocation)
+(comment sameTerrainBlob-Trafficability "(sameTerrainBlob-Trafficability ?loc1 ?loc2) means...")
+
+(isa sameTerrainBlob-Continent SymmetricBinaryPredicate)
+(arity sameTerrainBlob-Continent 2)
+(arg1Isa sameTerrainBlob-Continent FreecivLocation)
+(arg2Isa sameTerrainBlob-Continent FreecivLocation)
+(comment sameTerrainBlob-Continent "(sameTerrainBlob-Continent ?loc1 ?loc2) means...")
+
+(isa blobContainsLocation BinaryPredicate)  ; Outsourced
+(arity blobContainsLocation 2)
+(arg1Isa blobContainsLocation FreeCiv-Blob)
+(arg2Isa blobContainsLocation FreecivLocation)
+(comment blobContainsLocation "(blobContainsLocation ?blob ?loc) means...")
+
+(isa blobOfTypeContainsLocation BinaryPredicate) ; Outsourced
+(arity blobOfTypeContainsLocation 2)
+(arg1Isa blobOfTypeContainsLocation FreeCiv-Blob)
+(arg2Isa blobOfTypeContainsLocation FreecivLocation)
+(arg3Isa blobOfTypeContainsLocation FreeCiv-BlobType)
+(comment blobOfTypeContainsLocation "(blobOfTypeContainsLocation ?blob ?loc) means...")
+
+
+
+(<== (sameTerrain ?loc1 ?loc2)
+     (terrainAt ?loc2 ?terrain)
+     (terrainAt ?loc1 ?terrain))
+     
+(isa sameLandStatus BinaryPredicate)
+(arity sameLandStatus 2)
+(arg1Isa sameLandStatus FreecivLocation)
+(arg2Isa sameLandStatus FreecivLocation)
+
+(<== (sameLandStatus ?loc1 ?loc2)
+     (terrainAt ?loc2 ?terrain2)
+     (terrainAt ?loc1 ?terrain1)
+     (isa ?terrain2 FreeCiv-LandTile)
+     (isa ?terrain1 FreeCiv-LandTile))
+
+(<== (sameLandStatus ?loc1 ?loc2)
+     (terrainAt ?loc2 ?terrain2)
+     (terrainAt ?loc1 ?terrain1)
+     (isa ?terrain2 FreeCiv-WaterTile)
+     (isa ?terrain1 FreeCiv-WaterTile))
+     
+(isa sameTrafficability BinaryPredicate)
+(arity sameTrafficability 2)
+(arg1Isa sameTrafficability FreecivLocation)
+(arg2Isa sameTrafficability FreecivLocation)
+
+(<== (sameTrafficability ?loc1 ?loc2)
+     (terrainAt ?loc2 ?terrain2)
+     (terrainAt ?loc1 ?terrain1)
+     (Trafficability ?terrain1 ?val)
+     (Trafficability ?terrain2 ?val))
+
+(<== (sameTerrainBlob-Label ?loc1 ?loc2)
+     (fcDistance ?loc1 ?loc2 1)
+     (sameTerrain ?loc1 ?loc2))
+
+(<== (sameTerrainBlob-Trafficability ?loc1 ?loc2)
+     (fcDistance ?loc1 ?loc2 1)
+     (sameTrafficability ?loc1 ?loc2))
+
+(<== (sameTerrainBlob-Continent ?loc1 ?loc2)
+     (fcDistance ?loc1 ?loc2 1)
+     (sameLandStatus ?loc1 ?loc2))
+
+;;transitivity
+
+(<== (sameTerrainBlob-Label ?loc1 ?loc2)
+     (sameTerrain ?loc1 ?loc2)
+     (sameTerrainBlob-Label ?loc1 ?loc3)
+     (sameTerrainBlob-Label ?loc2 ?loc3))
+
+(<== (sameTerrainBlob-Trafficability ?loc1 ?loc2)
+     (sameTrafficability ?loc1 ?loc2)
+     (sameTerrainBlob-Continent ?loc1 ?loc2)
+     (sameTerrainBlob-Trafficability ?loc1 ?loc3)
+     (sameTerrainBlob-Trafficability ?loc2 ?loc3))
+
+(<== (sameTerrainBlob-Continent ?loc1 ?loc2)
+     (sameLandStatus ?loc1 ?loc2)
+     (sameTerrainBlob-Continent ?loc1 ?loc3)
+     (sameTerrainBlob-Continent ?loc2 ?loc3))
+
+;;relationships between blobs
+
+;;  blobsOverlap: some tile in ?blob1 is also in ?blob2
+(<== (blobsOverlap ?blob1 ?blob2)
+     (groundExpression ?blob1)
+     (groundExpression ?blob2)
+     (different ?blob1 ?blob2)
+     (blobContainsLocation ?blob1 ?loc)
+     (blobContainsLocation ?blob2 ?loc))
+
+(<== (blobsOverlap ?blob-known ?blob-unknown)
+     (groundExpression ?blob-known)
+     (blobContainsLocation ?blob-known ?loc) ;;bind enclosed tiles first!! (or this will be slow as hell)
+     (blobContainsLocation ?blob-unknown ?loc)
+     (different ?blob-known ?blob-unknown))
+
+(<== (blobsOverlap ?blob1 ?blob2)
+     (genls ?blob-type FreeCiv-TerrainBlob)
+     (different ?blob-type FreeCiv-TerrainBlob)
+     (blobOverlapsBlobOfType ?blob1 ?blob2 ?blob-type))
+     
+;;  blobsOverlap: some tile in ?blob1 is also in ?blob2, where blob2 is type ?blob-type
+(<== (blobOverlapsBlobOfType ?blob1 ?blob2 ?blob-type)
+     (genls ?blob-type FreeCiv-TerrainBlob)
+     (different ?blob-type FreeCiv-TerrainBlob)
+     (groundExpression ?blob1)
+     (groundExpression ?blob2)
+     (blobContainsLocation ?blob1 ?loc)
+     (blobOfTypeContainsLocation ?blob2 ?blob-type ?loc)
+     (different ?blob1 ?blob2))
+
+(<== (blobOverlapsBlobOfType ?blob-known ?blob-unknown ?blob-type)
+     (genls ?blob-type FreeCiv-TerrainBlob)
+     (different ?blob-type FreeCiv-TerrainBlob)
+     (groundExpression ?blob-known)
+     (blobContainsLocation ?blob-known ?loc) ;;bind enclosed tiles first!! (or this will be slow as hell)
+     (blobOfTypeContainsLocation ?blob-unknown ?blob-type ?loc)
+     (different ?blob-known ?blob-unknown))
+
+;; This is pretty CogSketch-Companions specific but it is also very freeciv specific.
+;; Perhaps we need a new loaction for stuff like this.
+
+(<== (glyphInSketchForBlob ?blob ?sketch ?glyph)
+     (groundExpression ?glyph)
+     (wmOnly (agentForOpenSketch ?sketch ?agent))
+     (fcExecutionContext ?context)
+     (numAnswers 1 (holdsOnRemoteAgent ?agent (glyphRepresentsObject ?glyph ?blob)))
+     (ist-Information ?context (isa ?blob FreeCiv-Blob)))
+
+(<== (glyphInSketchForBlob ?blob ?sketch ?glyph)
+     (groundExpression ?blob)
+     (wmOnly (agentForOpenSketch ?sketch ?agent))
+     (ist-Information ?context (isa ?blob FreeCiv-Blob))
+     (fcExecutionContext ?context)
+     (numAnswers 1 (holdsOnRemoteAgent ?agent (glyphRepresentsObject ?glyph ?blob))))
+
+(<== (polyOpBlobAdjacent ?glyph1 ?glyph2 ?sketch)
+     (contextEnvAllowed (lookupOnly (polyOpAdjacent ?glyph1 ?glyph2))))
+
+(<== (polyOpBlobAdjacent ?glyph1 ?glyph2 ?sketch)
+     (lookupOnly (glyphFromGlyphIntersection ?blob-glyph2 ?blob-glyph1 ?layer ?glyph1))
+     (lookupOnly (glyphFromGlyphIntersection ?blob-glyph3 ?blob-glyph1 ?layer ?glyph2))
+     (glyphInSketchForBlob ?blob2 ?sketch ?blob-glyph2)
+     (glyphInSketchForBlob ?blob3 ?sketch ?blob-glyph3)
+     (blobsAdjacent ?blob2 ?blob3))
+
+(<== (polyOpBlobAdjacent ?glyph1 ?glyph2 ?sketch)
+     (lookupOnly (glyphFromGlyphDifference ?blob-glyph2 ?blob-glyph1 ?layer ?glyph1))
+     (lookupOnly (glyphFromGlyphDifference ?blob-glyph3 ?blob-glyph1 ?layer ?glyph2))
+     (glyphInSketchForBlob ?blob2 ?sketch ?blob-glyph2)
+     (glyphInSketchForBlob ?blob3 ?sketch ?blob-glyph3)
+     (blobsAdjacent ?blob2 ?blob3))
+
+;;; RADIOACTIVE MATERIAL
+;;; Right now there are no rules for querying intersection with open variables
+;;; we can add more rules for blobs intersect, but must be delicate WRT efficiency
+
+(isa blobsIntersect BinaryPredicate)
+(arg1Isa blobsIntersect FreeCiv-Blob)
+(arg2Isa blobsIntersect FreeCiv-Blob)
+(comment blobsIntersect "some tile in ?blob1 is also in ?blob2")
+
+(<== (blobsIntersect ?blob1 ?blob2)
+     (groundExpression ?blob1)
+     (groundExpression ?blob2)
+     (blobsOverlap ?blob1 ?blob2))
+
+(<== (blobsIntersect ?blob1 ?blob2)
+     (groundExpression ?blob1)
+     (groundExpression ?blob2)
+     (blobContainsLocation ?blob1 ?loc1) 
+     (blobContainsLocation ?blob2 ?loc2)
+     (fcDistance ?loc1 ?loc2 1))
+     
+(isa blobCharacteristic BinaryPredicate)
+(arg1Isa blobCharacteristic FreeCiv-Blob)
+(arg2Isa blobCharacteristic FreeCiv-Blob)
+
+(<== (blobCharacteristic ?blob1 ?blob2)
+     (genls ?blob-type FreeCiv-TerrainBlob)
+     (different ?blob-type FreeCiv-TerrainBlob)
+     (blobOverlapsBlobOfType ?blob1 ?blob2 ?blob-type))
+
+    

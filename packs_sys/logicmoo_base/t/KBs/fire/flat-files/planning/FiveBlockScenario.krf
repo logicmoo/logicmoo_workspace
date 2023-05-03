@@ -1,0 +1,20 @@
+(in-microtheory FiveBlockScenario :exclude-globals t)
+
+(isa BlockA Block)
+(isa BlockB Block)
+(isa BlockC Block)
+(isa BlockD Block)
+(isa BlockE Block)
+
+(onTable BlockC)
+(onTable BlockE)
+(clear BlockA)
+(clear BlockD)
+(on-Physical BlockA BlockB)
+(on-Physical BlockB BlockC)
+(on-Physical BlockD BlockE)
+
+
+(goal (on-Physical BlockD BlockC))
+(goal (on-Physical BlockA BlockE))
+(goal (on-Physical BlockE BlockB))

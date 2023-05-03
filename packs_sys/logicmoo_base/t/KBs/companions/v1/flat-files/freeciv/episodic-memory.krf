@@ -1,0 +1,41 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: episodic-memory
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: April 22, 2018 17:17:49
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Freeciv-defaultMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment ImmediateFCActionOutcomeCaseFn
+  "(ImmediateActionOutcomeCaseFn <action> <command> <game>) denotes a case consisting
+  of action <action>, the <command> of freeciv game <game>), which includes information
+  that should be useful in building up a model of <action>.")
+(isa ImmediateFCActionOutcomeCaseFn Function-Denotational)
+(resultIsa ImmediateFCActionOutcomeCaseFn Case)
+(arity ImmediateFCActionOutcomeCaseFn 3)
+(arg1Isa ImmediateFCActionOutcomeCaseFn Action)
+(arg2Isa ImmediateFCActionOutcomeCaseFn Event)
+(arg3Isa ImmediateFCActionOutcomeCaseFn Microtheory)
+
+(comment ImmediateFCActionGPoolFn
+  "(ImmediateFCActionGPoolFn <action>) is a generalization pool for accumulating
+  information about the immediate outcomes of <action>.  This is one type of
+  generalization pool that serves as a Companion's episodic memory for the domain.")
+(isa ImmediateFCActionGPoolFn Function-Denotational)
+(arity ImmediateFCActionGPoolFn 1)
+(resultIsa ImmediateFCActionGPoolFn GeneralizationPool)
+(arg1Isa Action)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

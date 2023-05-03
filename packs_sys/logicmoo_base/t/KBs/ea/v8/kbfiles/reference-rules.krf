@@ -1,0 +1,1724 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                      -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: reference-rules.meld
+;;;;    System: EA
+;;;;    Author: Emmett Tomai
+;;;;   Created: November 18, 2008 15:55:05
+;;;;   Purpose: 
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EAReferenceResolutionMt :exclude-globals t)
+
+(genlMt EAReferenceResolutionMt EAStructuralRulesMt)
+
+(isa preferredBinding BinaryPredicate)
+(arity preferredBinding 2)
+(arg1Isa preferredBinding CycLExpression)
+(arg2Isa preferredBinding ScalarInterval)
+(comment preferredBinding "(preferredBinding FORM WEIGHT) preferrs the lowest weight abductive binding of FORM. Note this doesn't mean that 
+ rival forms won't be asserted into the WM. It just means that only one will be true in preferredBinding")
+
+
+(isa candidateReferent QuaternaryPredicate)
+(arity candidateReferent 4)
+(comment candidateReferent "(candidateReferent ?discourse-var ?type-NAT ?sid ?ref-dv) needs to be better ontologized.")
+
+
+(isa intraCandidateReferent QuintaryPredicate)
+(arity intraCandidateReferent 5)
+(comment intraCandidateReferent 
+  "(intraCandidateReferent ?sid ?reference ?type-NAT ?referent ?referent-drs-id) needs to be better ontologized.")
+
+
+(isa rescopeReferent BinaryPredicate)
+(arity rescopeReferent 2)
+(comment rescopeReferent "(rescopeReferent (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?drs-id)) needs to be better ontologized.")
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; resolving unresolved reference choice sets
+
+;;; CJM 4/23: This is the top level query for reference resolution. It first finds all possible choice sets and
+;;;  ensures that they aren't already chosen.
+;;; It calls filterByPreference on resolveReference. 
+;;; filterByPreference is a dynamicUpdate predicate defined in code.  It invokes preferredBinding rules.
+;;;
+(<== (resolveUnresolvedReferences ?sid ?var)
+     (groundExpression ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (choiceSetFromSentenceAll ?csid ?sid)
+     ;;; Finds the reference choice sets and binds ?var
+     (choiceSet (ChoiceSetFn Reference ?var ?type-NAT) ?csid)
+     ;;; Ensures we haven't already chosen something for the choice set.
+     (honorTimestamps (unknownSentence (selectedChoice ?csid ?some-cid ?some-ref)))
+     (filterByPreference
+      (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id))))
+
+
+;; pronouns prefer last subject
+;; Subject of last sentence, not the last subject that they agree to. 
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.2)
+     (choiceSet (ChoiceSetFn Reference ?var (PronounFn ThirdPerson-NLAttr ?number ?gender ?pronoun-col)) ?csid)
+     (sentenceAttachment ?sid ?referent-sid)
+     (cacheComplete (subjectOfSentence ?ref (ParseTreeFn ?referent-sid ?ptid))))
+
+
+(<== (subjectOfSentence ?ref (ParseTreeFn ?referent-sid ?ptid))
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly 
+       (subjectOfSentence ?pro-ref (ParseTreeFn ?referent-sid ?ptid)))
+     (lookupOnly 
+       (referent 
+         (ReferenceInSentenceFn ?pro-ref ?referent-sid)
+         (ReferentInDrsFn ?ref ?ddrs-id))))
+
+;; pname subject (arity problem!)
+(<== (subjectOfSentence ?ref (ParseTreeFn ?referent-sid ?ptid))
+     (not (matches (choiceSet ?csfn) ?ref))
+     (subjectOfSentence (choiceSet 
+                         (ChoiceSetFn FrameSemantics ?constit-NAT ?ref))
+                        (ParseTreeFn ?referent-sid ?ptid)))
+
+;; reference gender is preferred (over possible reference gender)
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 1)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (PronounFn ?person ?number ?gender ?pronoun-col)) ?csid))
+     (lookupOnly
+      (referenceGender ?ref ?col ?gender)))
+
+
+;; Prefer most recent subject for definite reference, too.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.401)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?referent-sid)
+     (subjectOfSentence ?intra-ref (ParseTreeFn ?referent-sid ?ptid))
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs))))
+
+
+
+;; Match something in the last sentence if you're a definite reference if you can't get the subject.
+;; Prefer to match whatever that thing refers to over that actual thing.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.4015)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?referent-sid)
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs)))
+     (dvSpanInParseTree ?intra-ref ?span
+                        (ParseTreeFn ?referent-sid
+                                     ?ptid))
+     (uninferredSentence (subjectOfSentence ?intra-ref (ParseTreeFn ?referent-sid ?ptid))))
+
+
+;; Prefer to match to something else rather than itself if all other weights fail.
+;;CJM 3/23/2016
+;;;(<== (preferredBinding  (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 20)
+;;;     (different ?var ?ref))
+
+(<== (preferredBinding  (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.402)
+     (qlabel1)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs)))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?referent-sid-2back)
+     (dvSpanInParseTree ?intra-ref ?span
+                        (ParseTreeFn ?referent-sid-2back
+                                     ?ptid)))
+
+;; Match something three sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.403)
+     (qlabel 2)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs)))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?referent-sid-3back)
+     (dvSpanInParseTree ?intra-ref ?span
+                        (ParseTreeFn ?referent-sid-3back
+                                     ?ptid)))
+
+;; Match something four sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.404)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs)))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?referent-sid-4back)
+     (dvSpanInParseTree ?intra-ref ?span
+                        (ParseTreeFn ?referent-sid-4back
+                                     ?ptid)))
+
+;; Match something five sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.405)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs)))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?sid-4back)
+     (sentenceAttachment ?sid-4back ?referent-sid-5back)
+     (dvSpanInParseTree ?intra-ref ?span
+                        (ParseTreeFn ?referent-sid-5back
+                                     ?ptid)))
+;; Match something six sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.406)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs)))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?sid-4back)
+     (sentenceAttachment ?sid-4back ?sid-5back)
+     (sentenceAttachment ?sid-5back ?referent-sid-6back)
+     (dvSpanInParseTree ?intra-ref ?span
+                        (ParseTreeFn ?referent-sid-6back
+                                     ?ptid)))
+
+;; Match something seven sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.407)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (outsourcedOnly (currentDiscourseId ?cur-discourse-id))
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?intra-ref ?some-other-sid)
+         (ReferentInDrsFn ?ref ?ref-drs)))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?sid-4back)
+     (sentenceAttachment ?sid-4back ?sid-5back)
+     (sentenceAttachment ?sid-5back ?sid-6back)
+     (sentenceAttachment ?sid-6back ?referent-sid-7back)
+     (dvSpanInParseTree ?intra-ref ?span
+                        (ParseTreeFn ?referent-sid-7back
+                                     ?ptid)))
+
+;;; These ones don't chain.
+;; Prefer most recent subject for definite reference, too.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40105)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?referent-sid)
+     (subjectOfSentence ?ref (ParseTreeFn ?referent-sid ?ptid)))
+
+;; Match something in the last sentence if you're a definite reference if you can't get the subject.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40155)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?referent-sid)
+     (dvSpanInParseTree ?ref ?span
+                        (ParseTreeFn ?referent-sid
+                                     ?ptid))
+     (uninferredSentence (subjectOfSentence ?ref (ParseTreeFn ?referent-sid ?ptid))))
+
+;; Match something two sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40205)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?referent-sid-2back)
+     (dvSpanInParseTree ?ref ?span
+                        (ParseTreeFn ?referent-sid-2back
+                                     ?ptid)))
+
+;; Match something three sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40305)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?referent-sid-3back)
+     (dvSpanInParseTree ?ref ?span
+                        (ParseTreeFn ?referent-sid-3back
+                                     ?ptid)))
+
+;; Match something four sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40405)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?referent-sid-4back)
+     (dvSpanInParseTree ?ref ?span
+                        (ParseTreeFn ?referent-sid-4back
+                                     ?ptid)))
+
+;; Match something four sentences back if you really need to.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40505)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?sid-4back)
+     (sentenceAttachment ?sid-4back ?referent-sid-5back)
+     (dvSpanInParseTree ?ref ?span
+                        (ParseTreeFn ?referent-sid-5back
+                                     ?ptid)))
+
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40605)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?sid-4back)
+     (sentenceAttachment ?sid-4back ?sid-5back)
+     (sentenceAttachment ?sid-5back ?referent-sid-6back)
+     (dvSpanInParseTree ?ref ?span
+                        (ParseTreeFn ?referent-sid-6back
+                                     ?ptid)))
+
+
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.40705)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (sentenceAttachment ?sid ?sid-1back)
+     (sentenceAttachment ?sid-1back ?sid-2back)
+     (sentenceAttachment ?sid-2back ?sid-3back)
+     (sentenceAttachment ?sid-3back ?sid-4back)
+     (sentenceAttachment ?sid-4back ?sid-5back)
+     (sentenceAttachment ?sid-5back ?sid-6back)
+     (sentenceAttachment ?sid-6back ?referent-sid-7back)
+     (dvSpanInParseTree ?ref ?span
+                        (ParseTreeFn ?referent-sid-7back
+                                     ?ptid)))
+
+
+;;; Definite references that are qualities of other things "the depth of the water" prefer to match to the something that's
+;;; a quality of the same sort of thing instead of the most recent thing.
+;;; If
+;;; (possessiveRelation Y X)
+;;; (isa Y YCol)
+;;; (isa K YCol)
+;;; (possessiveRelation K J)
+;;; Prefer to have X refer to J.
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.1)
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var (ReferenceFn Definite-NLAttr)) ?csid))
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (nonTransitiveInference (trueInDrs ?sdrs-id (possessiveRelation ?possessor-var ?var)))
+     (nonTransitiveInference (trueInDrs ?sdrs-id (isa ?possessor-var ?possessor-var-collection)))
+     (nonTransitiveInference (trueInDrs ?ddrs-id (possessiveRelation ?possessor-ref ?ref)))
+     (nonTransitiveInference (trueInDrs ?ddrs-id (isa ?possessor-ref ?possessor-var-collection))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; front end to resolution
+
+;; self
+;;(<== (resolveReference (ReferenceInSentenceFn ?var1 ?sid) (ReferentInDrsFn ?var2 ?drs-id))
+;;     (groundExpression ?var1)
+;;     (groundExpression ?var2)
+;;     (equals ?var1 ?var2)
+;;     (groundExpression ?drs-id)
+;;     (groundExpression ?sid))
+
+;; proper name doesn't need resolution
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?var ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?var)
+     (drsEntailedBySentence ?sdrs-id ?sid)
+     (numAnswers 1
+                 (trueInDrs ?sdrs-id (properNameReference ?var))))
+
+;; indefinite reference maps to self
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?var ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?var)
+     (numAnswers 1
+       (indefiniteReference ?var ?sid)))
+
+;; listener reference maps to listener token
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn :LISTENER ?drs-id))
+     (groundExpression ?drs-id)
+     (numAnswers 1
+       (listenerReference ?sid ?var)))
+
+(<== (listenerReference ?sid ?var)
+     (ptConstitFeat 
+      ?entry pro 
+      (PronounMappingFn ?var (PronounFn SecondPerson-NLAttr ?number ?gender ?type)))
+     (ptEntry ?entry (ParseTreeFn ?sid ?ptid))
+     (choice ?pt-csid ?pt-cid ?ptid)
+     (selectedChoice ?pt-csid ?pt-cid ?ptid))
+     
+;; speaker reference maps to speaker token
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn :SPEAKER ?drs-id))
+     (groundExpression ?drs-id)
+     (numAnswers 1
+                 (speakerReference ?sid ?var)))
+            
+       
+;;; rule currently defined in InstructionNarrativeRulesMt in order to not
+;;; break anyone's fables & etc.
+(isa speakerReference BinaryPredicate)
+(arity speakerReference 2)
+(comment speakerReference "(speakerReference ?sid ?discourse-var) succeeds if ?discourse-var is a first-person pronoun.")
+
+
+
+;;; cjm6/12/2014: This rule is wrong. First of all, there are cases of self-reference outside of the first sentence
+;;;   so this rule can't be responsible for those. Secondly, there are cases of intra-sentential reference within first sentences
+;;;
+;;; cjm 7/15/14 No longer breaks "You can by X from Y" in QP. Commenting out again. Let me know if it breaks anything
+;;;   
+;; first sentence dvs map to self (for simplicity)
+;;;(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?var ?drs-id))
+;;;     (groundExpression ?drs-id)
+;;;     (groundExpression ?var)
+;;;     (sentenceInDiscourse ?sid 0 ?tokens)
+;;;     
+;;;     )
+
+
+
+
+;; possessed reference maps to self (if no other options)
+;; I'm pretty sure that this isn't used for anything and is now causing
+;; issues.
+;;;(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?var ?drs-id))
+;;;     (groundExpression ?drs-id)
+;;;     (groundExpression ?sid)
+;;;     (groundExpression ?var)
+;;;     (contextIndependentDrsFor ?sdrs-id ?sid)
+;;;     ;;; This needs to not find things that are ruled out as options.
+;;;     ;;; We don't want to make it a lookupOnly, because that will make
+;;;     ;;; abduction sad, but right now abduction just flagrantly disregards
+;;;     ;;; what it should be allowed to consider. It's happy to abduce things
+;;;     ;;; that are ruled out.
+;;;     (nonTransitiveInference (trueInDrs ?sdrs-id (possessiveRelation ?possessor ?var)))
+;;;     (ptConstitFeat ?constit var ?var)
+;;;     (ptConstitFeat ?constit POSSESSOR ?possessor)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     ;;; This is causing fire::*abduction-asms* to get incredibly large incredibly fast.
+;;;     (uninferredSentence
+;;;      (resolveOtherReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id))))
+
+;;; CJM 3/24 suspected problem
+;; part references map to self (may be too broad)
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?var ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?var)
+     (partReference ?var ?sid))
+
+;; generated group dvs inherit from the example member
+;;; *** but... but... that's not what this rule does!
+;;; *** Given that the rule for indefinite reference subsumes this entirely, 
+;;; *** this rule is pointless.
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?var ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?var)
+     (variableInUniverse ?var ?sdrs-id Clause)
+     (numAnswers 1
+       (trueInDrs ?sdrs-id (isa ?var Set-Mathematical)))
+     (numAnswers 1
+       (indefiniteReference ?var ?sid)))
+
+;; subset of group maps to itself, resolves the group reference
+;;; *** example? "Some cats sat on a mat. Two of the cats left."  no, that doesn't work.
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?var ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?var)
+     (variableInUniverse ?var ?sdrs-id Clause)
+     (numAnswers 1
+                 (inferenceOnly
+                  (isaInDrs ?var ?sdrs-id Set-Mathematical)))
+     (numAnswers 1
+       (trueInDrs ?sdrs-id (subsetOf ?var ?group-sdv)))
+     (numAnswers 1
+       (resolveReference (ReferenceInSentenceFn ?group-sdv ?sid) (ReferentInDrsFn ?group ?drs-id))))
+
+;;;SUSPECT
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?referent ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?var)
+     (numAnswers 1
+       (referent 
+         (ReferenceInSentenceFn ?var ?sid)
+        (ReferentInDrsFn ?referent ?drs-id)))
+     (groundExpression ?referent))
+
+;; chain through intra reference
+;; This comes in with everything but ?referent bound.
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?referent ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?sid)
+     (groundExpression ?var)
+     ;;; Find the sentence drs for the sentence that the reference is in
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     ;;; Look to see if the reference is being referred to by something in its own sentence already
+     (referent 
+      (ReferenceInSentenceFn ?var ?sid)
+      (ReferentInDrsFn ?intra-ref ?sdrs-id))
+     ;;; If it is, that should refer to the referent's referent. The problem is that resolveReference will return false
+     ;;; if there is no referent. So unfortunately we want to branch here. Resolve if there is one, otherwise don't.
+     ;;; the problem is that will be expensive (do the same thing twice unless I figure out caching).
+     (resolveIntraCandidateReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id)))
+
+(isa resolveIntraCandidateReference Predicate)
+(arity resolveIntraCandidateReference 2)
+(comment resolveIntraCandidateReference "(resolveIntraCandidateReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))
+ binds ?refferent to ?intra-ref if ?intra-ref has no refferent. If it does, it will bind to the ?intra-ref's refferent.")
+
+(isa resolveVeryLongInference Predicate)
+(arity resolveVeryLongInference 2)
+(comment resolveVeryLongInference "A wrapper for efficient branching. See the wiki on this topic.")
+
+(isa noPriorReferent Predicate)
+(arity noPriorReferent 2)
+(comment noPriorReferent "A wrapper for efficient branching. See the wiki on this topic.  Negative branch.")
+
+;;;negativeBranch
+(<== (resolveIntraCandidateReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))
+     (noPriorReferent (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))
+     (unifies ?referent ?intra-ref)
+     (justify (variableInUniverse ?var ?drs-id Discourse)
+              (TheList
+               (resolveIntraCandidateReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id)))))
+
+(<== (resolveVeryLongInference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))
+     (cacheComplete (resolveReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))))
+
+(<== (noPriorReferent (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))
+     (uninferredSentence (resolveVeryLongInference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))))
+
+;;; Positive Branch
+(<== (resolveIntraCandidateReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id))
+     (uninferredSentence (noPriorReferent (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id)))
+     (cacheComplete (resolveReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id)))
+     (justify (variableInUniverse ?var ?drs-id Discourse)
+              (TheList
+               (resolveIntraCandidateReference (ReferenceInSentenceFn ?intra-ref ?sid) (ReferentInDrsFn ?referent ?drs-id)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; indefinite reference
+
+(<== (indefiniteReference ?var ?sid)
+     (ptConstitFeat ?constit var ?var)
+     (ptConstitFeat ?constit det Indefinite-NLAttr)
+     (ptEntry ?constit (ParseTreeFn ?sid ?ptid))
+     (validParseTree ?ptid))
+
+;; for resolution purposes, "another" is indefinite
+(<== (indefiniteReference ?var ?sid)
+     (ptConstitFeat ?constit var ?var)
+     (ptConstitFeat ?constit det Another-NLAttr)
+     (ptEntry ?constit (ParseTreeFn ?sid ?ptid))
+     (validParseTree ?ptid))
+
+;; verbs can be indefinite (no other ref)
+;;; 5/8 CJM: What is the use case for this? Why would resolving to itself be a thing?
+;;;(<== (indefiniteReference ?var ?sid)
+;;;     (ptConstitFeat ?constit var ?var)
+;;;     (ptConstitLexCat ?constit verb)
+;;;     (ptEntry ?constit (ParseTreeFn ?sid ?ptid))
+;;;     (validParseTree ?ptid)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (uninferredSentence
+;;;      (resolveOtherReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id))))
+
+;; dynamically created individuals are indefinite
+(<== (indefiniteReference ?var ?sid)
+     (groundExpression ?var)
+     (atomicTerm ?var)
+     (uninferredSentence (ptConstitFeat ?constit var ?var)))
+
+;;; What is this actually used for? Basically, it's checking to see if there is another thing
+;;; that something resolves to.
+(<== (resolveOtherReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id))
+     (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id))
+     (different ?var ?ref))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; part reference
+
+;; "the <var> of <whole>"
+(<== (partReference ?var ?sid)
+     (ptConstitFeat ?constit var ?var)
+     (ptConstitFeat ?constit det Definite-NLAttr)
+     (ptEntry ?constit (ParseTreeFn ?sid ?ptid))
+     (validParseTree ?ptid)
+     (variableInUniverse ?var ?sdrs-id Clause)
+     (numAnswers 1
+       (trueInDrs ?sdrs-id (possessiveRelation ?whole ?var))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; choosing a referent
+
+
+(<== (referent (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?drs-id))
+     (uninferredSentence (drsEntailedBySentence ?drs-id ?any-sid))
+     (choiceSet (ChoiceSetFn Reference ?var ?type-NAT) ?csid)
+     (choiceSetFromSentenceAll ?csid ?sid)
+     (honorTimestamps (openChoiceSet ?csid))
+     (wmOnly (candidateReferent ?var ?type-NAT ?sid ?ref))
+     (rescopeReferent (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?drs-id))
+     (individualSatisfyingConditions
+      ?cid CycLTerm  ;; There's no such thing as a CycL-Assertable!
+      (TheSet
+       (choiceSet (ChoiceSetFn Reference ?var ?type-NAT) ?csid)
+       (choiceSetFromSentenceAll ?csid ?sid)
+       (openChoiceSet ?csid)
+       (candidateReferent ?var ?type-NAT ?sid ?ref)))
+     ;;; I'm not totally clear why this works, but it does? [DMB]
+     (selectedChoice ?csid ?cid ?ref)
+     (forEffectOnly (justify 
+                     (choice ?csid ?cid ?ref)
+                     (TheList 
+                      (choiceSet (ChoiceSetFn Reference ?var ?type-NAT) ?csid)
+                      (openChoiceSet ?csid)
+                       (candidateReferent ?var ?type-NAT ?sid ?ref)))))
+
+;; trivial case
+(<== (referent (ReferenceInSentenceFn ?var1 ?sid) (ReferentInDrsFn ?var2 ?drs-id))
+     (equals ?var1 ?var2) ; do the cheapest test first.
+     (groundExpression ?var1) ; Now you don't need to check if ?var2 is ground.
+     (variableInUniverse ?var2 ?drs-id Discourse)
+     (variableInUniverse ?var1 ?sdrs-id Clause)
+     (drsEntailedBySentence ?sdrs-id ?sid))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; pronomial reference
+
+;;; never used?:
+(<== (pronounReference ?var (PronounFn ?person ?number ?gender ?pronoun-col))
+     (choiceSet (ChoiceSetFn Reference ?var (PronounFn ?person ?number ?gender ?pronoun-col)) ?csid))
+
+(<== (candidateReferent ?var (PronounFn ThirdPerson-NLAttr ?number ?gender ?pronoun-col) ?referring-sid ?referent)
+     (drsForDiscourse ?ddrs-id)
+     (accessibleProReferentForSentence ?referring-sid ?referent ?referent-sid ?referent-sdrs-id ?referent-ddrs-id)
+;;     (variableInUniverse ?referent ?referent-drs-id Discourse)
+     (matchPronounFeatures ?referring-sid ?referent ?referent-ddrs-id ?number ?gender))  ;; ** Really? referent-ddrs-id?
+;;     (matchPronounFeatures ?referent ?referent-sdrs-id ?number ?gender))
+;;     (possibleReferenceNumber ?referent ?referent-sdrs-id ?number)
+;;     (possibleReferenceGender ?referent ?referent-sdrs-id ?gender))
+
+;;; ?referring-sid is bound going into this.
+(<== (accessibleProReferentForSentence ?referring-sid ?referent ?referent-sid ?sdrs-id ?ddrs-id)
+     (sentenceAttachment ?referring-sid ?referent-sid) ;;; Binds ?referent-sid? to the previous sentence
+     (accessibleDrs ?sdrs-id ?referent-sid) ;;; Binds ?sdrs-id to the referent sentence's drs.
+     (variableInUniverse ?referent ?sdrs-id Clause) ;;; binds ?referent to the variables in that sentence
+     (uninferredSentence
+      (inferenceOnly
+       (isaInDrs ?referent ?sdrs-id Event))) ;; no pronouns to events; don't stash the Event fact!
+     ;;; This used to have minimumValueFor wrapped around it. It seems to work without that.
+     (variableInUniverse ?referent ?ddrs-id Discourse))
+
+
+;;; pnames
+(<== (accessibleProReferentForSentence ?referring-sid ?referent ?referent-sid ?sdrs-id ?ddrs-id)
+     (sentenceAttachment ?referring-sid ?referent-sid)
+     (accessibleDrs ?sdrs-id ?referent-sid)
+     (trueInDrs ?sdrs-id (properNameReference ?referent))
+     (drsForDiscourse ?ddrs-id))
+
+;;; chain through other pronomial referent
+(<== (accessibleProReferentForSentence ?referring-sid ?referent ?referent-sid ?sdrs-id ?referent-ddrs-id)
+     (sentenceAttachment ?referring-sid ?pro-referent-sid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?pro-referent ?pro-referent-sid) 
+         (ReferentInDrsFn ?referent ?ddrs-id)))
+     (variableInUniverse ?referent ?sdrs-id Clause)
+     (drsEntailedBySentence ?sdrs-id ?referent-sid)
+     ;; *** This can't possibly work!! (TRH)
+     ;;;(minimumValueFor ?referent-ddrs-id  ;; Doesn't exist properly in V8.  Re-write!
+                      (variableInUniverse ?referent ?referent-ddrs-id Discourse))
+     
+
+;;; and for pnames
+(<== (accessibleProReferentForSentence ?referring-sid ?referent ?i-referent-sid ?i-sdrs-id ?ddrs-id)
+     (sentenceAttachment ?referring-sid ?pro-referent-sid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?pro-referent ?pro-referent-sid) 
+         (ReferentInDrsFn ?referent ?ddrs-id)))
+     (properNameReference ?referent))
+
+(<== (accessibleDrs ?drs-id ?sid)
+     (drsEntailedBySentence ?drs-id ?sid))
+;;     (drsForSentence ?drs-id ?sid))
+     
+;;(<== (accessibleDrs ?drs-id ?sid)
+;;     (drsForSentence ?sdrs-id ?sid)
+;;     (modalEmbedding ?sdrs-id ?drs-id))
+
+;; prior sentence
+(<== (sentenceAttachment ?sid ?attach-to-sid)
+     (sentenceInDiscourse ?sid ?pos ?i-tokens)
+     (evaluate ?prior-pos (DifferenceFn ?pos 1))
+     (sentenceInDiscourse ?attach-to-sid ?prior-pos ?i-att-tokens))
+
+;; prior to the super-sentence
+(<== (sentenceAttachment ?subsid ?attach-to-sid)
+     (subSentence ?subsid ?sid ?subpos)
+     (sentenceInDiscourse ?sid ?pos ?i-tokens)
+     (evaluate ?prior-pos (DifferenceFn ?pos 1))
+     (sentenceInDiscourse ?attach-to-sid ?prior-pos ?i-att-tokens))
+
+;; handled by intra reference
+;;;; prior to the sub-sentence
+;;(<== (sentenceAttachment ?subsid ?attach-to-subsid)
+;;     (subSentence ?subsid ?sid ?subpos)
+;;     (evaluate ?prior-subpos (DifferenceFn ?subpos 1))
+;;     (subSentence ?attach-to-subsid ?sid ?prior-subpos))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Verb Coreference
+;;; To begin with, this is going to be clamped pretty tightly.
+;;; First desiderata - isa the same thing. Check
+;;; Second desiderata - any immediate arguments - that is, not stuff like the causation - must be things that
+;;; the referent has AND those things must also match up.
+;;; How do we get the actual choice associated with exactly the var?
+;;; Weaksauce Option 1 - find the thing that has the isa. Don't like that.
+;;; Use
+;;;(ist-Information (DiscourseCaseFn Discourse-3503642579-3150)
+;;;  (dvSpanInParseTree sleep90508 (SpanFn 2 3)
+;;;    (ParseTreeFn Sentence-3503949818-90485
+;;;      ParseTree-3503949819-90532)))
+;;; Combined with information about what parse tree was selected
+;;; to get the span. - Done
+;;; Use the span to get the choice set - Done
+;;; use the choice set to get the selected choice
+;;; use the selected choice to get the requirements
+
+;;; This matches to anything at all that's isa the same thing - too loose.
+;;; When we get here for the tic tac toe example, everything but ?referent is bound.
+(<== (candidateReferent ?var (ReferenceFn Verb-Referer) ?referring-sid ?referent)
+     (lookupOnly (kbOnly (ist-Information EAReferenceResolutionParametersMt (numberOfSentencesToLookBackForNounCoreference ?num-to-look-back))))
+     (wmOnly (drsForDiscourse ?discourse-case))
+     (variableInUniverse ?var ?var-drs-id Clause)
+     ;;; This binds ?col
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?var ?var-drs-id ?col))
+     (different ?col Set-Mathematical)
+     (different ?col Agent-Generic)
+     (unqualifiedInDrs ?var ?var-drs-id)
+     ;;; This fires with ?referent and ?referent-drs-id both unbound. Does that work?
+     ;;; It shouldn't not work, unless it's looking in the wrong place.
+     ;;; Okay, the problem is that these don't exist when nothing is see
+     (honorTimestamps (variableInUniverse ?referent ?referent-drs-id Discourse))
+     
+     (wmOnly (introducedOrReferencedWithinNSentences ?referring-sid ?referent ?num-to-look-back ?discourse-case))
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?referent ?referent-drs-id ?col))
+     ;;; If David's 6/21/13 coreference changes break anything, comment out the following line.
+     (validVerbReferent ?var ?referring-sid ?referent) 
+     )
+
+(isa validVerbReferent Predicate)
+(arity validVerbReferent 3)
+(comment validVerbReferent "If (validVerbReferent ?referring-var ?referring-sid ?referent) can be implied, then
+?referring-var in ?referring-sid might legitly refer to ?referent.")
+
+;;; If you are done by different things, you're not okay.
+;;;(<== (validVerbReferent ?referring-var ?referring-sid ?referent)
+;;;     (lookupOnly (dvSpanInParseTree ?referring-var ?span-of-referring-var (ParseTreeFn ?referring-sid ?parse-tree-id))) ;;; Gets the span.
+;;;     (lookupOnly (selectedChoice ?ptree-choice-set-id ?ptree-choice-id ?parse-tree-id)) ;;; Confirms that the parse tree is selected for that span.
+;;;     (lookupOnly
+;;;      (choiceSet
+;;;       (ChoiceSetFn FrameSemantics (TokenFn ?referring-sid ?span-of-referring-var))
+;;;       ?referring-var-choice-set-id))
+;;;     (lookupOnly (selectedChoice ?referring-var-choice-set-id ?ref-var-choice-id ?referring-var-args)) ;;; This isn't working. What is this even supposed to be getting?
+;;;     ;;; We need to get the same thing for the referent's info. Or not, since we're looking for subsettery.
+;;;     ;;; We have (and (isa ?var see1245) (doneBy ?var cat2355) (objectPercieved ?var dog2453))
+;;;     ;;; For each of those, we need to know if A, there is a corresponding thing for the referent, and B, if the thing it's being done 
+;;;     ;;; to refers to that. That needs to be an outsourced predicate.
+;;;     (argumentsCanRefer ?referring-var ?referent ?referring-var-args))
+
+(<== (validVerbReferent ?referring-var ?referring-sid ?referent)
+     (uninferredSentence (invalidVerbReferent ?referring-var ?referring-sid ?referent)))
+
+(isa invalidVerbReferent Predicate)
+(arity invalidVerbReferent 3)
+(comment invalidVerbReferent "If (invalidVerbReferent ?referring-var ?referring-sid ?referent) can be implied, then
+?referring-var in ?referring-sid can't legitly refer to ?referent.")
+
+(isa getAllPotentialBinPreds Predicate)
+(arity getAllPotentialBinPreds 5)
+(comment "(getAllPotentialBinPreds ?sid ?entity ?top-genls ?pred ?context)")
+
+(isa getSenBinPreds Predicate)
+(arity getSenBinPreds 4)
+(comment "(getSenBinPreds ?sid ?top-genls ?pred ?context)")
+
+;;; So essentially we want to see what actor-slots could be true of this verb if selected
+;;; then see what actor-slots are already active for the verb we refer to
+;;; if they match, then no dice.
+
+
+(<== (invalidVerbReferent ?referring-var ?referring-sid ?referent)
+     (currentDiscourseId ?discourse-id)
+     ;;; Find the drs-id of the referring variable
+     (wmOnly (variableInUniverse ?referring-var ?referring-var-drs-id Clause))
+     ;;; Find the drs-id of the referent variable
+     (wmOnly (variableInUniverse ?referent ?referent-var-drs-id Clause))
+     (drsForDiscourse ?ddrs-id)
+     ;;; Get the discourse case
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     ;;; Look in the discourse case to see if the referent already refers to something
+     ;;; We don't want this to fail if it doesn't though. ;;; This seems unnecessary or at least broken.
+;;;     (uninferredSentence (wmOnly (lookupOnly (ist-Information ?dcase 
+;;;                           (referent 
+;;;                            (ReferenceInSentenceFn ?intermediate-referent 
+;;;                                                   ?sid1) 
+;;;                            (ReferentInDrsFn ?referent ?ddrs-id))))))
+     ;;; get all of the binary predicates that are isas of Predicate in the referring
+     ;;; sid. (This is sort of artifacty; it's Predicate instead of just ActorSlot because
+     ;;; role relations are not ontologized well.
+     ;;; I feel like ?entity should maybe be bound here?
+     ;;; This is kind of inefficient...
+;;;     (getAllPotentialBinPreds ?referring-sid ?entity Predicate ?pred EverythingPSC)
+     (getSenBinPreds ?referring-sid Predicate ?pred EverythingPSC)
+     ;;; Look to see if something is already filling that role. If it is, make sure that it's
+     ;;; not the same thing.
+     ;;; These are generic ?drs because the information might be anywhere.
+     (ist-Information (DiscourseCaseFn ?discourse-id) (drsEntailedBySentence ?drs-second ?referring-sid))
+     (ist-Information (DiscourseCaseFn ?discourse-id) (drsEntailedBySentence ?drs-first ?any-sid))
+     (ist-Information (DrsCaseFn ?drs-first) (?pred ?referent ?other-role-filler))
+     (ist-Information (DrsCaseFn ?drs-second) (?pred ?referring-var ?referring-role-filler))
+     (uninferredSentence (referentOrSameEntity ?referring-role-filler ?referring-sid ?other-role-filler ?ddrs-id)))
+
+;;; This needs to account for chained reference - if they refer to the same thing.
+(isa referentOrSameEntity Predicate)
+(arity referentOrSameEntity 4)
+(comment referentOrSameEntity "(referentOrSameEntity ?referring-var ?referring-sid ?referent ?ddrs-id) means that
+two things are either referent or the same entity.")
+
+(<== (referentOrSameEntity ?referring-var ?referring-sid ?referent ?ddrs-id)
+     (referent (ReferenceInSentenceFn ?referring-var ?referring-sid) 
+               (ReferentInDrsFn ?referent ?ddrs-id)))
+
+;;; Can this work with only lookups?
+;;; No, but doing it this way kills speed...
+;;; What if we swap the order?
+(<== (referentOrSameEntity ?referring-var ?referring-sid ?referent ?ddrs-id)
+     
+     (lookupOnly (wmOnly
+                  (referent (ReferenceInSentenceFn ?referent ?referrent-sid) 
+                            (ReferentInDrsFn ?prior-referent ?ddrs-id))))
+     (referent (ReferenceInSentenceFn ?referring-var ?referring-sid) 
+               (ReferentInDrsFn ?prior-referent ?ddrs-id))
+     )
+
+(<== (referentOrSameEntity ?referring-var ?referring-sid ?referent ?ddrs-id)
+     (equals ?referring-var ?referent))
+
+
+     
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; definite reference
+
+(<== (candidateReferent ?var (ReferenceFn Definite-NLAttr) ?referring-sid ?referent)
+     (lookupOnly (kbOnly (ist-Information EAReferenceResolutionParametersMt (numberOfSentencesToLookBackForNounCoreference ?num-to-look-back))))
+     (variableInUniverse ?var ?var-drs-id Clause)
+     (wmOnly (drsForDiscourse ?discourse-case))
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?var ?var-drs-id ?col))
+     (different ?col Set-Mathematical)
+     (different ?col Agent-Generic)
+     (unqualifiedInDrs ?var ?var-drs-id)
+     (uninferredSentence (ist-Information (DrsCaseFn ?var-drs-id) (namedEntityInDiscourse ?var)))
+     ;;; This is getting every variableInUniverse. Way too loose. We should be able to trim these
+     ;;; down.
+     (wmOnly (lookupOnly (variableInUniverse ?referent ?referent-drs-id ?scope)))
+     ;;; We don't want accidential intra-reference here.
+     (different ?referent-drs-id ?var-drs-id)
+     ;;; The problem is that I don't know
+     ;;; if there's any way to do it fewer times. Can we tell anything important about the variables, in
+     ;;; terms of what sentence they're from? And only go back five?
+     
+     (wmOnly (introducedOrReferencedWithinNSentences ?referring-sid ?referent ?num-to-look-back ?discourse-case))
+     ;;; This is a semi-expensive operation and we do it a LOT of times. 
+     (nonTransitiveInference (wmOnly  (isaOrGroupOfInDrs ?referring-sid ?referent ?referent-drs-id ?col)))
+;;;; 4/16/2014 CJM     
+;;;     (uninferredSentence (contradictoryContainers ?referent ?referent-drs-id ?var ?var-drs-id))
+     (containersCanCorefer ?referent ?referent-drs-id ?var ?var-drs-id ?referring-sid)
+     )
+
+
+;;; Right now, this is only going to work for cases where the var is qualified by
+;;; age, renownLevel, or being nthInSeries.  Kind of a waste.
+(<== (candidateReferent ?var (ReferenceFn Definite-NLAttr) ?referring-sid ?referent)
+     (variableInUniverse ?var ?ante-var-drs-id Clause)
+     ;;; Handle plurals correctly
+     ;;; This is in a sentence - what sentence? What do we know about the sentence
+     ;;; This probably requires other changes.
+     (wmOnly (drsEntailedBySentence ?ante-var-drs-id ?sen-id))
+     (wmOnly 
+      (ist-Information (DrsCaseFn ?sen-id)
+          (implies-DrsDrs (DrsCaseFn ?ante-var-drs-id) 
+                          (DrsCaseFn ?var-drs-id))))
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?var ?var-drs-id ?col))
+     (different ?col Set-Mathematical)
+     (different ?col Agent-Generic)
+     (qualifiedInDrs ?var ?var-drs-id ?reln ?val)
+     (variableInUniverse ?referent ?referent-drs-id Discourse)
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?referent ?referent-drs-id ?col))
+     (qualifiedInDrs ?referent ?referent-drs-id ?reln ?val))
+
+
+;;; This is the one that should handle plurals in a standard way.
+(<== (candidateReferent ?var (ReferenceFn Definite-NLAttr) ?referring-sid ?referent)
+     (lookupOnly (kbOnly (ist-Information EAReferenceResolutionParametersMt (numberOfSentencesToLookBackForNounCoreference ?num-to-look-back))))
+     (variableInUniverse ?var ?ante-var-drs-id Clause)
+     (wmOnly (drsForDiscourse ?discourse-case))  ;;  Uh... No.  This binds the ddrs-id.
+     (wmOnly (drsEntailedBySentence ?ante-var-drs-id ?sen-id))
+     (wmOnly 
+      (ist-Information (DrsCaseFn ?sen-id)
+          (implies-DrsDrs (DrsCaseFn ?ante-var-drs-id) 
+                          (DrsCaseFn ?var-drs-id))))
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?var ?var-drs-id ?col))
+     (different ?col Set-Mathematical)
+     (different ?col Agent-Generic)
+     (unqualifiedInDrs ?var ?var-drs-id)
+     (uninferredSentence (ist-Information (DrsCaseFn ?var-drs-id) (namedEntityInDiscourse ?var)))
+     ;;; This may not be getting us the thing we want - it's only finding one hole.
+     ;;; It is the right hole, though.
+     (variableInUniverse ?referent ?referent-drs-id Discourse)
+     
+     (wmOnly (introducedOrReferencedWithinNSentences ?referring-sid ?referent ?num-to-look-back ?discourse-case))
+     ;;; This needs to change to work like the other one.
+     (isOrInferred ?referring-sid ?referent ?referent-drs-id ?col)
+     
+     (containersCanCorefer ?referent ?referent-drs-id ?var ?var-drs-id ?referring-sid)
+     )
+
+
+
+(isa isOrInferred Predicate)
+(arity isOrInferred 4)
+(comment isOrInferred "(isOrInferred ?referring-sid ?referent ?referent-drs-id ?col)
+  checks to see if (isaOrGroupOfInDrs ?referring-sid ?referent ?referent-drs-id ?col)
+or if it is that inside the consequent of an implication.")
+
+(<== (isOrInferred ?referring-sid ?referent ?referent-drs-id ?col)
+     (nonTransitiveInference (wmOnly  (isaOrGroupOfInDrs ?referring-sid ?referent ?referent-drs-id ?col))))
+
+;;; (isOrInferred Sentence-3636501763-3119 hole3036 DRS-3636501804-3193 Cavity)
+;;; referring-sid is pretty useless.
+(<== (isOrInferred ?referring-sid ?referent ?referent-drs-id ?col)
+;;;     (wmOnly (drsEntailedBySentence ?referent-drs-id ?sen-id))
+     ;;; The third argument needs to be the implied thing
+     (wmOnly (drsForDiscourse ?ddrs-id))
+     (wmOnly 
+      (ist-Information (DrsCaseFn ?ddrs-id)
+          (implies-DrsDrs (DrsCaseFn ?referent-drs-id) 
+                          (DrsCaseFn ?implied-referent-drs-id))))
+     (nonTransitiveInference (wmOnly  (isaOrGroupOfInDrs ?referring-sid ?referent ?implied-referent-drs-id ?col))))
+
+
+(isa containersCanCorefer Predicate)
+(arity containersCanCorefer 5)
+(comment containersCanCorefer "(containersCanCorefer ?referent
+ ?referent-drs-id ?var ?var-drs-id ?referring-sid) checks to see if ?referent and ?var
+are in containers that might be the same container.")
+
+;;; If either one is not in a container, we're fine.
+;;; This is fast
+(<== (containersCanCorefer ?referent ?referent-drs-id ?var ?var-drs-id ?referring-sid)
+     (honorTimestamps
+      (uninferredSentence
+       (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id))))
+
+;; This is not fast.
+(<== (containersCanCorefer ?referent ?referent-drs-id ?var ?var-drs-id ?referring-sid)
+     ;;; This looks to see if the thing we're trying to refer to is contained
+     (trueInDrs ?referent-drs-id (possessiveRelation ?referent-container ?referent))
+     ;;; This finds a bunch of stuff that isn't true. It looks to see if the thing that is referring
+     ;;; is contained
+     (trueInDrs ?var-drs-id (possessiveRelation ?var-container ?var))
+     (drsForDiscourse ?ddrs-id)
+     (referent (ReferenceInSentenceFn ?var-container ?referring-sid)
+               (ReferentInDrsFn ?referent-container ?ddrs-id))
+     )
+
+(isa sameContainer Predicate)
+(arity sameContainer 2)
+(comment sameContainer "(sameContainer ?container-1 ?container-2)
+checks if the containers are the same thing.")
+
+(<== (sameContainer ?ref-potential-container ?var-container)
+     (equals ?ref-potential-container ?var-container))
+
+;;; trueInDrs isn't what we want here.
+
+(isa potentiallyIncompatibleContainers Predicate)
+(arity potentiallyIncompatibleContainers 4)
+(comment potentiallyIncompatibleContainers
+  "(potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+checks to see if the containers of ?referent and ?var are potentially not the same thing.")
+
+
+(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+     (wmOnly (lookupOnly (possessiveRelation ?something ?referent)))
+     (wmOnly (lookupOnly (possessiveRelation ?something2 ?var)))
+     (different ?something2 ?something))
+
+(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+     (wmOnly (lookupOnly (in-UnderspecifiedContainer ?referent ?container)))
+     (wmOnly (lookupOnly (in-UnderspecifiedContainer ?var ?container2)))
+     (different ?container2 ?container))
+
+(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+     (wmOnly (lookupOnly (ist-Information EverythingPSC (possessiveRelation ?something ?referent))))
+     (wmOnly (lookupOnly (ist-Information EverythingPSC (possessiveRelation ?something2 ?var))))
+     (different ?something2 ?something))
+
+(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+     (wmOnly (lookupOnly (ist-Information EverythingPSC (in-UnderspecifiedContainer ?referent ?container))))
+     (wmOnly (lookupOnly (ist-Information EverythingPSC (in-UnderspecifiedContainer ?var ?container2))))
+     (different ?container2 ?container))
+
+
+(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+     (trueInOrLiftToDrs ?referent-drs-id (possessiveRelation ?something ?referent))
+     (trueInOrLiftToDrs ?var-drs-id (possessiveRelation ?something2 ?var))
+     (different ?something2 ?something))
+
+(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+     (trueInOrLiftToDrs ?referent-drs-id (in-UnderspecifiedContainer ?referent ?container))
+     (trueInOrLiftToDrs ?var-drs-id (in-UnderspecifiedContainer ?var ?container2))
+     (different ?container2 ?container))
+
+;;;(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+;;;     (ist-Information (DrsCaseFn ?referent-drs-id) (possessiveRelation ?something ?referent))
+;;;     (ist-Information (DrsCaseFn ?var-drs-id) (possessiveRelation ?something2 ?var))
+;;;     (different ?something2 ?something))
+;;;
+;;;(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+;;;     (ist-Information (DrsCaseFn ?referent-drs-id) (in-UnderspecifiedContainer ?referent ?container))
+;;;     (ist-Information (DrsCaseFn ?var-drs-id) (in-UnderspecifiedContainer ?var ?container2))
+;;;     (different ?container2 ?container))
+
+;;;(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+;;;     (trueInDrs ?referent-drs-id (possessiveRelation ?something ?referent))
+;;;     (trueInDrs ?var-drs-id (possessiveRelation ?something2 ?var))
+;;;     (different ?something2 ?something))
+;;;
+;;;(<== (potentiallyIncompatibleContainers ?referent ?referent-drs-id ?var ?var-drs-id)
+;;;     (trueInDrs ?referent-drs-id (in-UnderspecifiedContainer ?referent ?container))
+;;;     (trueInDrs ?var-drs-id (in-UnderspecifiedContainer ?var ?container2))
+;;;     (different ?container2 ?container))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Introduced or referenced within n sentences
+
+(isa introducedOrReferencedWithinNSentences Predicate)
+(arity introducedOrReferencedWithinNSentences 4)
+(comment introducedOrReferencedWithinNSentences
+  "(introducedOrReferencedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+  indicates that ?var was either introduced or referenced in the past ?max-gap
+sentences before ?current-sentence.")
+
+(isa introducedWithinNSentences Predicate)
+(arity introducedWithinNSentences 4)
+(comment introducedWithinNSentences
+  "(introducedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+  indicates that ?var was introduced in the past ?max-gap
+sentences before ?current-sentence.")
+
+(isa referencedWithinNSentences Predicate)
+(arity referencedWithinNSentences 4)
+(comment referencedWithinNSentences
+  "(referencedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+  indicates that ?var was referenced in the past ?max-gap
+sentences before ?current-sentence.")
+
+(isa dvSpanOrMemberInDvSpan Predicate)
+(arity dvSpanOrMemberInDvSpan 3)
+(comment dvSpanOrMemberInDvSpan "(dvSpanOrMemberInDvSpan ?discourse-case ?var ?introducing-sentence)
+finds the sentence that introduces ?var or the group that ?var belongs to.")
+
+;;;(isa sentenceIntroducingVar Predicate)
+;;;(arity sentenceIntroducingVar 4)
+;;;(comment sentenceIntroducingVar
+;;;  "(sentenceIntroducingVar ?introducing-sentence ?var ?discourse-case)
+;;;  indicates that ?var was introduced in ?introducing-sentence.")
+;;; This misses groups somehow. It's because they have no dvSpanInParseTree.
+;;; *** Wow, this is incorrectly documented.  ?discourse-case here is actually the ddrs-id.
+(<== (introducedOrReferencedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+     (introducedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case))
+
+;;;(<== (introducedOrReferencedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+;;;     (uninferredSentence (introducedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case))
+;;;     (referencedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case))
+
+;;; This needs an alternate version that does something besides dvSpanInParseTree
+;;; for groups.
+;;;(<== (introducedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+;;;     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+;;;                   (sentenceInDiscourse ?current-sentence ?current-sentence-position 
+;;;                                        ?tokens-cur)))
+;;;     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+;;;                   (dvSpanInParseTree ?var ?span 
+;;;                                      (ParseTreeFn ?introducing-sentence 
+;;;                                                   ?introducing-pt))))
+;;;     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+;;;                   (sentenceInDiscourse ?introducing-sentence ?introducing-sentence-position 
+;;;                                        ?tokens-int)))
+;;;     (evaluate ?actual-gap (DifferenceFn ?current-sentence-position ?introducing-sentence-position))
+;;;     (lessThanOrEqualTo ?actual-gap ?max-gap))
+
+(<== (introducedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+                   (sentenceInDiscourse ?current-sentence ?current-sentence-position 
+                                        ?tokens-cur)))
+     (dvSpanOrMemberInDvSpan ?discourse-case ?var ?introducing-sentence)
+     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+                   (sentenceInDiscourse ?introducing-sentence ?introducing-sentence-position 
+                                        ?tokens-int)))
+     (evaluate ?actual-gap (DifferenceFn ?current-sentence-position ?introducing-sentence-position))
+     (lessThanOrEqualTo ?actual-gap ?max-gap))
+
+(<== (dvSpanOrMemberInDvSpan ?discourse-case ?var ?introducing-sentence)
+     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+                   (dvSpanInParseTree ?var ?span 
+                                      (ParseTreeFn ?introducing-sentence 
+                                                   ?introducing-pt)))))
+
+(<== (dvSpanOrMemberInDvSpan ?discourse-case ?var-group ?introducing-sentence)
+     (lookupOnly (wmOnly (drsForSemExpr ?local-drs (member ?var ?var-group))))
+     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+                   (dvSpanInParseTree ?var ?span 
+                                      (ParseTreeFn ?introducing-sentence 
+                                                   ?introducing-pt)))))
+
+(<== (referencedWithinNSentences ?current-sentence ?var ?max-gap ?discourse-case)
+     (lookupOnly (ist-Information (DiscourseCaseFn ?discourse-case) 
+                   (referent 
+                    (ReferenceInSentenceFn ?referring-var 
+                                           ?referring-sid) 
+                    (ReferentInDrsFn ?var ?referent-drs))))
+     (different ?referring-var ?var)
+     (introducedOrReferencedWithinNSentences ?current-sentence ?referring-var ?max-gap ?discourse-case))
+
+(isa unqualifiedInDrs Predicate)
+(arity unqualifiedInDrs 2)
+(comment unqualifiedInDrs "(unqualifiedInDrs ?var ?drs-id)
+means that at the current time,
+ (uninferredSentence 
+       (qualifiedInDrs ?var ?drs-id ?reln ?val))")
+       
+(<== (unqualifiedInDrs ?var ?drs-id)
+     (honorTimestamps 
+      (uninferredSentence 
+       (qualifiedInDrs ?var ?drs-id ?reln ?val))))
+
+(<== (candidateReferent ?var (ReferenceFn Definite-NLAttr) ?referring-sid ?referent)
+     (variableInUniverse ?var ?var-drs-id Clause)
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?var ?var-drs-id ?col))
+     (different ?col Set-Mathematical)
+     (different ?col Agent-Generic)
+     (qualifiedInDrs ?var ?var-drs-id ?reln ?val)
+;;     (priorDrsInDiscourse ?referent-drs-id ?referring-sid)
+;;     (variableInUniverse ?referent ?referent-drs-id Clause)
+;;     (qualifiedInDrs ?referent ?referent-drs-id ?reln ?val)
+;;     (isaInDrs ?referent ?referent-drs-id ?col)
+     (variableInUniverse ?referent ?referent-drs-id Discourse)
+     (nonTransitiveInference (isaOrGroupOfInDrs ?referring-sid ?referent ?referent-drs-id ?col))
+     (qualifiedInDrs ?referent ?referent-drs-id ?reln ?val))
+
+
+
+;;; 4/8/2013
+;;; group friendly isas
+
+(<== (isaOrGroupOfInDrs ?sid ?var ?drs-id ?col)
+     (isaInOrLiftToDrs ?sid ?var ?drs-id ?col))
+
+(<== (isaOrGroupOfInDrs ?sid ?var ?drs-id ?col)
+     (lookupOnly 
+       (localOnly 
+         (wmOnly
+           (ist-Information (DrsCaseFn ?drs-id)
+             (isa ?var Set-Mathematical)))))
+     (lookupOnly 
+       (localOnly 
+         (wmOnly
+           (ist-Information (DrsCaseFn ?drs-id)
+             (implies-DrsDrs (DrsCaseFn ?ante-drs-id) (DrsCaseFn ?cons-drs-id))))))
+     (lookupOnly 
+       (localOnly 
+         (wmOnly
+           (ist-Information (DrsCaseFn ?ante-drs-id)
+             (member ?elt ?var)))))
+     (isaInOrLiftToDrs ?sid ?elt ?cons-drs-id ?col))
+
+
+;;; different ways of qualifying references
+
+(isa qualifiedInDrs Predicate)
+(arity qualifiedInDrs 4)
+(comment qualifiedInDrs "(qualifiedInDrs ?var ?drs-id ?pred ?arg)
+ indicates that ?var is qualified in ?drs-id according to ?pred.")
+
+(<== (qualifiedInDrs ?var ?drs-id nthInSeries ?ct)
+     (numAnswers 1
+       (trueInDrs ?drs-id (nthInSeries ?var ?ignore ?ct))))
+
+(<== (qualifiedInDrs ?var ?drs-id age ?val)
+     (numAnswers 1
+       (trueInDrs ?drs-id (age ?var (RelativeGenericValueFn age ?group-case ?val)))))
+
+(<== (qualifiedInDrs ?var ?drs-id renownLevel ?level)
+     (numAnswers 1
+       (trueInDrs ?drs-id (renownLevel ?var ?level))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; this/that event reference
+;;; 10/7/14 - We're experimentally having this refer to the sentence DRS
+;;; of the previous sentence, rather than to the main verb or whatever.
+;;; There may be some lifting trickiness that goes into this.
+
+;;this/that as a backreference
+;;;(<== (candidateReferent ?var ?backreference-type ?referring-sid ?referent)
+;;;     ;;; Checks to see if this is a backreference word.
+;;;     (allFactsAllowed
+;;;       (ist-Information UniversalVocabularyMt
+;;;         (isa ?backreference-type Backreference-NLAttrType)))
+;;;     ;;; Finds the sentence ID of the previous sentence
+;;;     (priorSentenceInDiscourse ?referring-sid ?prior-sid)
+;;;     ;;; Finds the DRS of that sentence
+;;;     (drsForSentence ?sdrs-id ?prior-sid)
+;;;     ;;; Finds the head var for that sentence (usually the main verb).
+;;;     (headVarForDrs ?referent ?sdrs-id)
+;;;     ;;; The head variable isn't a coordinating conjunction
+;;;     (uninferredSentence (unifies ?referent (cconj ?x ?y))))
+;;;
+;;;(<== (candidateReferent ?var ?backreference-type ?referring-sid ?referent)
+;;;     ;;; Checks to see if this is a backreference word.
+;;;     (allFactsAllowed
+;;;       (ist-Information UniversalVocabularyMt
+;;;         (isa ?backreference-type Backreference-NLAttrType)))
+;;;     ;;; Finds the sentence ID of the previous sentence
+;;;     (priorSentenceInDiscourse ?referring-sid ?prior-sid)
+;;;     ;;; Finds the DRS of that sentence
+;;;     (drsForSentence ?sdrs-id ?prior-sid)
+;;;     ;;; Finds the head var for that sentence (usually the main verb).
+;;;     (headVarForDrs ?cconj-referent ?sdrs-id)
+;;;     ;;; The head variable is a coordinating conjunction - if it is, use only the second thing.
+;;;     (unifies ?cconj-referent (cconj ?x ?referent)))
+
+;;; Experimental: Refer to the sdrs instead. (This is the non-cconj version; we might not need
+;;; to distinguish those any longer.
+
+(<== (candidateReferent ?var ?backreference-type ?referring-sid ?sdrs-case)
+     ;;; Checks to see if this is a backreference word.
+     (allFactsAllowed
+       (ist-Information UniversalVocabularyMt
+         (isa ?backreference-type Backreference-NLAttrType)))
+     ;;;make sure that there is not a Deictic referent source present
+     (uninferredSentence (potentialDeicticReferentInSource ?sdrs-case))
+     ;;; Finds the sentence ID of the previous sentence
+     (priorSentenceInDiscourse ?referring-sid ?prior-sid)
+     ;;; Finds the DRS of that sentence
+     (drsForSentence ?sdrs-id ?prior-sid)
+     ;;; Finds the head var for that sentence (usually the main verb).
+     (headVarForDrs ?referent ?sdrs-id)
+     ;;; We actually want the case to be the referent 
+     (unifies ?sdrs-case (DrsCaseFn ?sdrs-id))
+     ;;; The head variable isn't a coordinating conjunction
+     (uninferredSentence (unifies ?referent (cconj ?x ?y))))
+
+
+;;;;;;;;;;;;;THIS IS WHERE I NEED TO ADD DEICTIC REFERENCE RESOLUTION
+(<== (candidateReferent ?var ?demonstrative-type ?referring-sid ?referent)
+     (allFactsAllowed
+       (ist-Information UniversalVocabularyMt 
+         (isa ?demonstrative-type Demonstrative-NLAttrType)))
+     (potentialDeicticReferentInSource ?referent))
+
+;; Preference rules
+;; SUSPECT
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.1)
+     (allFactsAllowed
+       (ist-Information UniversalVocabularyMt
+         (isa ?backreference-type Backreference-NLAttrType)))
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var ?backreference-type) ?csid))
+     (priorSentenceInDiscourse ?sid ?prior-sid)
+     (drsForSentence ?sdrs-id ?prior-sid)
+     (headVarForDrs ?referent ?sdrs-id))
+
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.21)
+     (allFactsAllowed
+       (ist-Information UniversalVocabularyMt
+         (isa ?demonstrative-type Demonstrative-NLAttrType)))
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var ?demonstrative-type) ?csid))
+     (ist-Information (DeicticReferenceRecordsFn ?ddrs-id)
+       (selectedItemsInSketchAtTime  ?entities ?time))
+     (ist-Information (DeicticReferenceRecordsFn ?ddrs-id)
+       (currentlyActiveSketch ?sketch))
+     (unifies ?ref (ReferentInPerceptualSourceFn ?entities ?sketch)))
+
+(<== (preferredBinding (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?ddrs-id)) 0.21)
+     (allFactsAllowed
+       (ist-Information UniversalVocabularyMt
+         (isa ?demonstrative-type Demonstrative-NLAttrType)))
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?var ?demonstrative-type) ?csid))
+     (currentlyActiveBundleInSketch ?sketch ?bundle)
+     (currentlyActiveSketch ?sketch)
+     (unifies ?ref (ReferentInPerceptualSourceFn ?bundle ?sketch)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rescoping
+
+;;; if an embedded variable in the discourse is referenced, it needs to
+;;;  be rescoped at the root discourse drs
+;;; This doesn't work at all.
+(<== (rescopeReferent (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?drs-id))
+     (variableQuantifiedFor ?ref ?drs-id Discourse))
+
+(<== (rescopeReferent (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?drs-id))
+     ;;; What function is this line serving?
+;;;     (variableInUniverse ?ref ?ref-drs-id Discourse)
+     (uninferredSentence
+      (variableQuantifiedFor ?ref ?drs-id Discourse))
+     (forEffectOnly
+      (justify (variableInUniverse ?ref ?drs-id Discourse)
+        (TheList
+          (referent 
+            (ReferenceInSentenceFn ?var ?sid) 
+           (ReferentInDrsFn ?ref ?drs-id))))))
+
+;;; This handles DRS referents
+;;; How do we determine that we've got a sentence DRS as our referent?
+;;; It looks something like this:
+;;; (rescopeReferent
+;;;  (ReferenceInSentenceFn this5917 Sentence-3621820877-5911)
+;;;  (ReferentInDrsFn (DrsCaseFn Sentence-3621820875-5858)
+;;;   Discourse-3621732674-2183))
+(<== (rescopeReferent (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?drs-id))
+     (unifies ?ref (DrsCaseFn ?sdrs-id)))
+
+;;; to see if the referent was resolved to a sketch referent
+(<== (rescopeReferent (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?ref ?drs-id))
+     (unifies ?ref (ReferentInPerceptualSourceFn ?entities ?layer ?subsketch ?sketch)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; deictic reference rules
+;;; using '_' as in prolog. meaning those variables are not used for anything
+(<== (potentialDeicticReferentInSource ?referent)
+     (drsForDiscourse ?drs-id)
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlyActiveSketch ?sketch))
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlyActiveSubsketch ?subsketch))
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlyActiveLayer ?layer))
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlySelectedItems ?entities))
+     (unifies ?referent (ReferentInPerceptualSourceFn ?entities ?layer ?subsketch ?sketch)))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; number/gender matching (queried in discourse case)
+
+;;; want to restrict the isa lookup as they tend to be expensive
+(<== (matchPronounFeatures ?referring-sid ?referent ?referent-drs-id ?number ?gender)
+     ;; check to see if parser has already written out a constraint.
+     (uninferredSentence (invalidGender ?referent ?gender))
+     ;;(variableInUniverse ?referent ?drs-id Discourse)
+     (nonTransitiveInference (isaInOrLiftToDrs ?referring-sid ?referent ?referent-drs-id ?col))
+     (referenceNumber ?referent ?col ?number)
+     (possibleReferenceGender ?referent ?col ?gender))
+
+;; and for pnames
+(<== (matchPronounFeatures ?referring-sid ?referent ?referent-drs-id ?number ?gender)
+     (properNameReference ?referent)
+     (allFactsAllowed 
+       (nonTransitiveInference 
+         (ist-Information CurrentWorldDataCollectorMt-NonHomocentric
+           (isa ?referent ?col))))
+     (referenceNumber ?referent ?col ?number)
+     (possibleReferenceGender ?referent ?col ?gender))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; number matching
+
+;;(<== (possibleReferenceNumber ?ref ?drs-id ?number)
+;;     (referenceNumber ?ref ?drs-id ?number))
+
+;;(<== (possibleReferenceNumber ?ref ?drs-id Singular-NLAttr)
+;;     (uninferredSentence
+;;      (referenceNumber ?ref ?drs-id Plural-NLAttr)))
+
+;;(<== (possibleReferenceNumber ?ref ?drs-id Plural-NLAttr)
+;;     (uninferredSentence
+;;      (referenceNumber ?ref ?drs-id Singular-NLAttr)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; reference must be singular
+
+;; explicit individuals are singular if they
+;;  are not also groups
+(<== (referenceNumber ?ref ?col Singular-NLAttr)
+     (groundExpression ?col)
+     (allFactsAllowed
+      (useTransitiveInference 
+        (ist-Information EverythingPSC 
+          (genls ?col Individual))))
+     (allFactsAllowed
+      (useTransitiveInference
+       (uninferredSentence (genls ?col Group)))))
+
+;;(<== (referenceNumber ?ref ?drs-id Singular-NLAttr)
+;;     (isaInDrs ?ref ?drs-id Individual)
+;;     (uninferredSentence
+;;      (isaInDrs ?ref ?drs-id Group)))
+
+;; events and situations are singular
+(<== (referenceNumber ?ref ?col Singular-NLAttr)
+     (groundExpression ?col)
+     (allFactsAllowed
+      (useTransitiveInference 
+        (ist-Information EverythingPSC
+          (genls ?col Situation)))))
+
+;;(<== (referenceNumber ?ref ?drs-id Singular-NLAttr)
+;;     (isaInDrs ?ref ?drs-id Situation))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; reference must be plural
+
+;; explicit groups are plural
+(<== (referenceNumber ?ref ?col Plural-NLAttr)
+     (groundExpression ?col)
+     (allFactsAllowed
+      (useTransitiveInference
+       (someSatisfies ?x (TheList Group
+                                  Set-Mathematical
+                                  )
+                      (genls ?col ?x)))))
+
+;;(<== (referenceNumber ?ref ?drs-id Plural-NLAttr)
+;;     (isaInDrs ?ref ?drs-id Group))
+
+;;(<== (referenceNumber ?ref ?drs-id Plural-NLAttr)
+;;     (isaInDrs ?ref ?drs-id Set-Mathematical))
+
+;; lexically plural nouns are plural
+;;(<== (referenceNumber ?ref ?i-drs Plural-NLAttr)
+;;     (discourseEntityIntroducedInSentence ?ref ?sent-id)
+;;     (ist-Information (SentenceCaseFn ?sent-id)
+;;                      (discourseVarNounPluralExclusively ?ref)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; gender matching
+
+(<== (invalidGender ?var ?gender)
+     (lookupOnly 
+       (referent
+         (ReferenceInSentenceFn ?sdv ?sid) 
+         (ReferentInDrsFn ?var ?drs-id)))
+     (invalidGender ?sdv ?gender))
+
+
+(<== (possibleReferenceGender ?i-ref ?i-col ?gender)
+     (equals ?gender Ungendered-NLAttr))
+
+(<== (possibleReferenceGender ?ref ?col ?gender)
+     (referenceGender ?ref ?col ?gender))
+
+(<== (possibleReferenceGender ?ref ?col Masculine-NLAttr)
+     (uninferredSentence
+      (referenceGender ?ref ?col Feminine-NLAttr))
+     (uninferredSentence
+      (referenceGender ?ref ?col Neuter-NLAttr)))
+
+(<== (possibleReferenceGender ?ref ?col Feminine-NLAttr)
+     (uninferredSentence
+      (referenceGender ?ref ?col Masculine-NLAttr))
+     (uninferredSentence
+      (referenceGender ?ref ?col Neuter-NLAttr)))
+
+(<== (possibleReferenceGender ?ref ?col Neuter-NLAttr)
+     (uninferredSentence
+      (referenceGender ?ref ?col Masculine-NLAttr))
+     (uninferredSentence
+      (referenceGender ?ref ?col Feminine-NLAttr))
+     (uninferredSentence
+      (inferenceOnly
+       (isaInDrs ?ref ?col Animal))))  ; ** This is unquestionably wrong.  ?col is not a drs.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; reference must be masculine
+
+(<== (referenceGender ?ref ?col Masculine-NLAttr)
+     (allFactsAllowed
+      (useTransitiveInference
+        (ist-Information EverythingPSC
+          (genls ?col Male)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; reference must be feminine
+
+(<== (referenceGender ?ref ?col Feminine-NLAttr)
+     (allFactsAllowed
+      (useTransitiveInference
+        (ist-Information EverythingPSC
+          (genls ?col Female)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; reference must be neuter
+
+;; explicitly neuter
+(<== (referenceGender ?ref ?col Neuter-NLAttr)
+     (allFactsAllowed
+      (useTransitiveInference
+        (ist-Information EverythingPSC 
+         (someSatisfies ?x (TheList NeuterObject              ;; explicitly neuter
+                                    Situation                 ;; events and situations are neuter
+                                    Intangible                ;; intangibles are neuter
+                                    InformationBearingThing   ;; IBTs are neuter
+                                    Path-Underspecified       ;; paths
+                                    Place                     ;; geographical regions
+                                    InanimateObject
+                                    )
+                        (genls ?col ?x))))))
+
+;; explicitly neuter by not being specific enough
+(<== (referenceGender ?ref ?col Neuter-NLAttr)
+     (memberOfList ?col (TheList DangerousTangibleThing)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; prior references dictate
+
+(<== (referenceGender ?ref ?i-col ?gender)
+     (lookupOnly
+       (referent
+         (ReferenceInSentenceFn ?pro ?pro-sid) 
+         (ReferentInDrsFn ?ref ?ddrs-id)))
+     (lookupOnly
+      (choiceSet (ChoiceSetFn Reference ?pro (PronounFn ?person ?number ?gender ?pronoun-col)) ?csid)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; intra-sentential reference
+
+;; simplest case
+(<== (resolveIntraReference (ReferenceInSentenceFn ?reference ?sid)
+                            (ReferentInDrsFn ?referent ?referent-drs-id))
+     (equals ?reference ?referent))
+
+(<== (resolveIntraReference (ReferenceInSentenceFn ?reference ?sid)
+                            (ReferentInDrsFn ?referent ?referent-drs-id))
+     (groundExpression ?sid)
+     (groundExpression ?referent-drs-id)
+     (numAnswers 1
+       (referent
+         (ReferenceInSentenceFn ?reference ?sid)
+         (ReferentInDrsFn ?referent ?referent-drs-id))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; simplified frontend  (** Apparently never used **)
+
+;; discourse version
+(<== (intraReference ?reference ?referent ?referent-drs-id)
+     (equals ?reference ?referent))
+
+;; sentence version
+(<== (intraReference ?reference ?referent ?referent-drs-id)
+     (drsEntailedBySentence ?referent-drs-id ?sid)
+     (resolveIntraReference (ReferenceInSentenceFn ?reference ?sid) (ReferentInDrsFn ?referent ?referent-drs-id)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; choosing a referent (within the same sentence)
+
+(<== (referent (ReferenceInSentenceFn ?reference ?sid) (ReferentInDrsFn ?referent ?referent-drs-id))
+     (drsEntailedBySentence ?referent-drs-id ?sid)
+     (choiceSet (ChoiceSetFn Reference ?reference ?type-NAT) ?csid)
+     (choiceSetFromSentenceAll ?csid ?sid)
+     (openChoiceSet ?csid)
+     (numAnswers 1
+       (intraCandidateReferent ?sid ?reference ?type-NAT ?referent ?referent-drs-id))
+     ;;(rescopeReferent (ReferenceInSentenceFn ?reference ?sid) (ReferentInDrsFn ?ref ?referent-drs-id))
+     (individualSatisfyingConditions
+      ?cid CycLTerm  ;  There's no such thing as a CycL-Assertable!
+      (TheSet
+       (choiceSet (ChoiceSetFn Reference ?reference ?type-NAT) ?csid)
+       (choiceSetFromSentenceAll ?csid ?sid)
+       (openChoiceSet ?csid)
+       (intraCandidateReferent ?sid ?reference ?type-NAT ?referent ?referent-drs-id)))
+     (selectedChoice ?csid ?cid ?referent)
+     (forEffectOnly (justify
+                     (choice ?csid ?cid ?referent)
+                     (TheList
+                      (choiceSet (ChoiceSetFn Reference ?reference ?type-NAT) ?csid)
+                      (openChoiceSet ?csid)
+                      (intraCandidateReferent ?sid ?reference ?type-NAT ?referent ?referent-drs-id)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; pronomial reference
+
+;;; third person
+(<== (intraCandidateReferent ?sid ?reference (PronounFn ThirdPerson-NLAttr ?number ?gender ?pronoun-col) 
+                             ?referent ?referent-drs-id)
+     (accessibleProReferentInSentence ?reference ?sid ?referent ?referent-drs-id)
+     (matchPronounFeatures ?sid ?referent ?referent-drs-id ?number ?gender))
+
+(<== (accessibleProReferentInSentence ?reference ?sid ?referent ?referent-drs-id)
+     (accessibleDrs ?referent-drs-id ?sid)
+     (variableInUniverse ?referent ?referent-drs-id Clause)
+     (numAnswers 1
+       (spanAfterInSentence ?reference ?referent))
+     (uninferredSentence
+      (inferenceOnly
+       (isaInDrs ?referent ?referent-drs-id Event))) ;; no pronouns to events; don't stash the eventFact!
+     (uninferredSentence                           ;; no need to chain through pronouns
+      (choiceSet (ChoiceSetFn Reference ?referent (PronounFn ThirdPerson-NLAttr ?number ?gender ?pronoun-col)) ?csid)))
+
+;;; pnames
+(<== (accessibleProReferentInSentence ?reference ?sid ?referent ?referent-drs-id)
+     (accessibleDrs ?referent-drs-id ?sid)
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (properNameReference ?referent))))
+
+;;; first person in dialogue
+(<== (intraCandidateReferent ?sid ?reference (PronounFn FirstPerson-NLAttr Singular-NLAttr ?gender ?pronoun-col)
+                             ?referent ?referent-drs-id)
+     (variableInUniverse ?reference ?reference-drs-id Clause)
+     (drsEmbeddedInDrs ?reference-drs-id ?referent-drs-id)
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (infoTransferred ?say (DrsCaseFn ?reference-drs-id))))
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (senderOfInfo ?say ?referent))))
+
+;;; first person plural in dialogue
+(<== (intraCandidateReferent ?sid ?reference (PronounFn FirstPerson-NLAttr Plural-NLAttr ?gender ?pronoun-col) 
+                             ?referent ?referent-drs-id)
+     (variableInUniverse ?reference ?reference-drs-id Clause)
+     (drsEmbeddedInDrs ?reference-drs-id ?referent-drs-id)
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (member ?referent-elt ?referent)))
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (infoTransferred ?say (DrsCaseFn ?reference-drs-id))))
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (senderOfInfo ?say ?referent-elt))))
+
+;;; first person plural in dialogue
+(<== (intraCandidateReferent ?sid ?reference (PronounFn FirstPerson-NLAttr Plural-NLAttr ?gender ?pronoun-col) 
+                             ?referent ?referent-drs-id)
+     (variableInUniverse ?reference ?reference-drs-id Clause)
+     (drsEmbeddedInDrs ?reference-drs-id ?referent-drs-id)
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (infoTransferred ?say (DrsCaseFn ?reference-drs-id))))
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (senderOfInfo ?say ?referent)))
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (isa ?referent ?col)))
+     (referenceNumber ?referent ?col Plural-NLAttr))
+
+;;; second person in dialogue
+(<== (intraCandidateReferent ?sid ?reference (PronounFn SecondPerson-NLAttr ?number ?gender ?pronoun-col) 
+                             ?referent ?referent-drs-id)
+     (variableInUniverse ?reference ?reference-drs-id Clause)
+     (drsEmbeddedInDrs ?reference-drs-id ?referent-drs-id)
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (infoTransferred ?say (DrsCaseFn ?some-drs-id))))
+     (drsEmbeddedInOrEqualToDrs ?reference-drs-id ?some-drs-id)
+     (numAnswers 1
+       (trueInDrs ?referent-drs-id (recipientOfInfo ?say ?referent))))
+
+;; definite reference
+(<== (intraCandidateReferent ?referring-sid ?var (ReferenceFn Definite-NLAttr) ?referent ?var-drs-id)
+     (variableInUniverse ?var ?var-drs-id Clause)
+     ;;; This can't be numAnswers 1 because it might pick the wrong one randomly. The latter can be numAnswers1 because ?col is bound.
+     (isaOrGroupOfInDrs ?referring-sid ?var ?var-drs-id ?col)
+     (different ?col Set-Mathematical)
+     (variableInUniverse ?referent ?var-drs-id Clause)
+     (numAnswers 1
+       (spanAfterInSentence ?var ?referent))
+     (numAnswers 1
+                 (isaOrGroupOfInDrs ?referring-sid ?referent ?var-drs-id ?col)))
+
+;; this/that as a demonstrative
+;;;(<== (intraCandidateReferent ?sid ?reference ?demonstrative-type 
+;;;                              ?referent ?ref-sdrs-id)
+;;;     (allFactsAllowed
+;;;       (ist-Information UniversalVocabularyMt 
+;;;         (isa ?demonstrative-type Demonstrative-NLAttrType)))
+;;;     (drsForDiscourse ?referent-drs-id)
+;;;     (potentialDeicticReferentInSource ?referent ?referent-drs-id))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; complex unification
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa unifiesEvent Predicate)
+(arity unifiesEvent 4)
+(comment unifiesEvent "unifiesEvent is only used in narrative-rules.")
+
+(<== (unifiesEvent ?sdrs-id ?e1 ?ddrs-id ?e2)
+     (nonTransitiveInference (trueInDrs ?sdrs-id (isa ?e1 ?type)))
+     (isaInDrs ?e2 ?ddrs-id ?type)
+     (unifiesRole ?sdrs-id ?e1 ?ddrs-id ?e2 maleficiary objectActedOn)
+     )
+
+(<== (unifiesRole ?sdrs-id ?e1 ?ddrs-id ?e2 ?role1 ?role2)
+     (trueInDrs ?sdrs-id (?role1 ?e1 ?ent1))
+     (trueInDrs ?ddrs-id (?role2 ?e2 ?ent2))
+     (drsEntailedBySentence ?sdrs-id ?sid)
+     (parentSentenceId ?parent-sid ?sid)
+     (resolveReference (ReferenceInSentenceFn ?ent1 ?parent-sid) (ReferentInDrsFn ?ent2 ?ddrs-id)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; end of code

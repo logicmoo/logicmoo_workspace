@@ -1,0 +1,109 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: minimax.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 5, 2013 12:40:33
+;;;;   Purpose: Generic implementation of minimax strategy for GGP games
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory FmiGamesMt)
+
+(isa minimax ComplexActionPredicate)
+(arity minimax 5)
+
+
+;;; ?lookahead is the number of plys to lookahead.  Decrements on each 
+;;; recursive call.
+
+;;; We don't need individual SimpleActionPredicates for game-level actions.
+;;; Since we're going to extract the effects by querying for next, we can
+;;; just have one game-action, doesAction, and treat the erstwhile action
+;;; as an argument to that.
+;;; This assumes that the initial state of the plan has been asserted into
+;;; the planning context via doAssertMembers.
+
+;;; 2-turn lookahead
+
+
+(isa minimax ComplexActionPredicate)
+(arity minimax 5)
+(arg1Isa minimax Microtheory)
+(arg2Isa minimax GameRole)
+(arg3Isa minimax GameRole)
+(arg4Isa minimax Integer)
+(arg5Isa minimax CycLExpression)
+
+;;; Take an action that wins the game:
+(preconditionForMethod
+  (and (legal ?role1 ?action)
+       (firstMove ?plan-so-far ?action ?move))
+  (methodForAction
+    (minimax ?execution-context ?role1 ?role2 ?lookahead ?plan-so-far)
+    (actionSequence
+      (TheList
+        (doesAction ?role1 ?action)   ; projects the next state by querying for next
+        (win ?role1 ?role2)
+        (applyOwnGameAction ?execution-context ?role1 ?move)))))
+
+
+;;; Next best answer: prevent opponent win
+(preconditionForMethod
+  (greaterThan ?lookahead 0)
+  (methodForAction 
+    (minimax ?execution-context ?role1 ?role2 ?lookahead ?plan-so-far)
+    (actionSequence
+      (TheList
+        (thwart ?role1 ?role2 ?lookahead ?plan-so-far ?execution-context)))))
+
+;;; A heuristic to prefer winning over not losing:
+(<== (preferInContext (minimax ?ctxt ?role1 ?role2 ?lookahead ?plan)
+                      ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 win))
+
+
+(isa thwart ComplexActionPredicate)
+(arity thwart 5)
+(arg5Isa thwart Microtheory)
+(arg1Isa thwart GameRole)
+(arg2Isa thwart GameRole)
+(arg3Isa thwart Integer)
+(arg4Isa thwart CycLExpression)
+
+;;; Find some action for ?role1 for which ?role2 cannot win within lookahead.
+(preconditionForMethod
+  (and (greaterThan ?lookahead 0)
+       (evaluate ?new-lookahead (DifferenceFn ?lookahead 1))
+       (legal ?role1 ?action)
+       (evaluate ?new-plan (JoinListsFn ?plan-so-far (TheList ?action)))
+       (firstMove ?plan-so-far ?action ?move))
+  (methodForAction 
+    (thwart ?role1 ?role2 ?lookahead ?plan-so-far ?execution-context)
+    (actionSequence
+      (TheList
+        (doesAction ?role1 ?action)
+        (NullExpansionFn (minimax ?execution-context ?role2 ?role1 ?new-lookahead ?new-plan))
+        (applyOwnGameAction ?execution-context ?role1 ?move)))))
+
+(isa win ComplexActionPredicate)
+(arity win 2)
+
+(preconditionForMethod
+  (goalState ?role1 100)
+  (methodForAction
+   (win ?role1 ?role2)
+   (actionSequence
+      (TheList))))
+    
+(isa firstMove TernaryPredicate)
+
+(<== (firstMove (TheList) ?action ?action))
+
+(<== (firstMove ?actions ?last-action ?move)
+     (evaluate ?move (FirstInListFn ?actions)))
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

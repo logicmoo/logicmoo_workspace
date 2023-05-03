@@ -1,0 +1,223 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: sketch-agent-vocabulary.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 18, 2013 13:13:14
+;;;;   Purpose: exteneded nuSketch predicates, accessible as dynamic preds.
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory Sketch-AgentMt)
+
+
+(isa latestEntityAdded DynamicUpdatePredicate)
+(arity latestEntityAdded 2)
+(arg1Isa latestEntityAdded NuSketchLayer)
+(arg2Isa latestEntityAdded NuSketchGlyph)
+(comment latestEntityAdded "(latestEntityAdded ?layer ?glyph) means ?glyph was the last glyph added to ?layer.")
+
+(isa latestEntityDeleted DynamicUpdatePredicate)
+(arity latestEntityDeleted 2)
+(arg1Isa latestEntityDeleted NuSketchLayer)
+(arg2Isa latestEntityDeleted NuSketchGlyph)
+(comment latestEntityDeleted "(latestEntityDeleted ?layer ?glyph) means ?glyph was the last glyph deletedeleted from ?layer.")
+
+(isa latestEntityMoved DynamicUpdatePredicate)
+(arity latestEntityMoved 2)
+(arg1Isa latestEntityMoved NuSketchLayer)
+(arg2Isa latestEntityMoved NuSketchGlyph)
+(comment latestEntityMoved "(latestEntityMoved ?layer ?glyph) means ?glyph was the last glyph moved in ?layer.")
+
+;;; Backfill some fairly obvious facts:
+
+(in-microtheory NaivePhysicsMt)
+
+;;; Cyc Colors without RGB Values:
+;;; ------------------------------
+;;; AlabasterColor
+;;; AluminumColor
+;;; AmberColor
+;;; AmethystColor
+;;; AquaColor
+;;; AquamarineColor
+;;; Auburn-HairColor
+;;; AureolinColor
+;;; BeigeColor
+;;; BisqueColor
+;;; BistreColor
+;;; Black-EyeColor
+;;; Black-HairColor
+;;; BlackColor
+;;; Blonde-HairColor
+;;; Blue-EyeColor
+;;; BlueColor
+;;; BrassColor
+;;; BrindleColor
+;;; BronzeColor
+;;; Brown-EyeColor
+;;; Brown-HairColor
+;;; BrownColor
+;;; BuffColor
+;;; CamelColor
+;;; CarmineColor
+;;; CeriseColor
+;;; CeruleanColor
+;;; ChamoisColor
+;;; CharcoalColor
+;;; ChartreuseColor
+;;; CitronColor
+;;; CopperColor
+;;; CreamColor
+;;; CrimsonColor
+;;; CyanColor
+;;; EbonyColor
+;;; EcruColor
+;;; EmeraldColor
+;;; FleshBlackColor
+;;; FleshBrownColor
+;;; FleshPinkColor
+;;; FleshRedColor
+;;; FleshWhiteColor
+;;; FuchsiaColor
+;;; GarnetColor
+;;; GoldColor
+;;; GraphiteColor
+;;; Gray-EyeColor
+;;; Gray-HairColor
+;;; GrayColor
+;;; Green-EyeColor
+;;; GreenColor
+;;; GreigeColor
+;;; Hazel-EyeColor
+;;; IndigoColor
+;;; IvoryColor
+;;; KhakiColor
+;;; LakeColor
+;;; LavenderColor
+;;; LilacColor
+;;; LimeGreenColor
+;;; MadderColor
+;;; MagentaColor
+;;; MaroonColor
+;;; MauveColor
+;;; MidnightColor
+;;; MintColor
+;;; MummyColor
+;;; MustardColor
+;;; NavyColor
+;;; NickelColor
+;;; OchreColor
+;;; Olive-FleshColor
+;;; OliveColor
+;;; OrangeColor
+;;; OrchidColor
+;;; OrpimentColor
+;;; ParchmentColor
+;;; PeachColor
+;;; PeridotColor
+;;; PeriwinkleColor
+;;; PewterColor
+;;; PinkColor
+;;; PlatinumColor
+;;; PlumColor
+;;; PureBlackColor
+;;; PureGrayColor
+;;; PureWhiteColor
+;;; PurpleColor
+;;; PuttyColor
+;;; RealgarColor
+;;; Red-HairColor
+;;; RedColor
+;;; RoseColor
+;;; RubyColor
+;;; SalmonColor
+;;; SandarachColor
+;;; ScarletColor
+;;; SepiaColor
+;;; SilverColor
+;;; SlateColor
+;;; SmaltColor
+;;; StrawberryBlonde-HairColor
+;;; SunTan-FleshColor
+;;; TopazColor
+;;; TurquoiseColor
+;;; UltramarineColor
+;;; VerdigrisColor
+;;; VermilionColor
+;;; VioletColor
+;;; ViridianColor
+;;; White-HairColor
+;;; WhiteColor
+;;; YellowColor
+
+;;; Try to adopt the NuSketch canonical colors:
+(colorHasRGBRedValue BlackColor 0)
+(colorHasRGBGreenValue BlackColor 0)
+(colorHasRGBBlueValue BlackColor 0)
+
+(colorHasRGBRedValue WhiteColor 255)
+(colorHasRGBGreenValue WhiteColor 255)
+(colorHasRGBBlueValue WhiteColor 255)
+
+(colorHasRGBRedValue RedColor 199)
+(colorHasRGBGreenValue RedColor 0)
+(colorHasRGBBlueValue RedColor 0)
+
+(colorHasRGBRedValue GreenColor 0)
+(colorHasRGBGreenValue GreenColor 127)
+(colorHasRGBBlueValue GreenColor 24)
+
+(colorHasRGBRedValue BlueColor 0)
+(colorHasRGBGreenValue BlueColor 0)
+(colorHasRGBBlueValue BlueColor 255)
+
+(colorHasRGBRedValue PurpleColor 106)
+(colorHasRGBGreenValue PurpleColor 0)
+(colorHasRGBBlueValue PurpleColor 186)
+
+(colorHasRGBRedValue GrayColor 127)
+(colorHasRGBGreenValue GrayColor 127)
+(colorHasRGBBlueValue GrayColor 127)
+
+(colorHasRGBRedValue BrownColor 137)
+(colorHasRGBGreenValue BrownColor 90)
+(colorHasRGBBlueValue BrownColor 57)
+
+(colorHasRGBRedValue OrangeColor 255)
+(colorHasRGBGreenValue OrangeColor 136)
+(colorHasRGBBlueValue OrangeColor 57)
+
+(colorHasRGBRedValue YellowColor 230)
+(colorHasRGBGreenValue YellowColor 230)
+(colorHasRGBBlueValue YellowColor 0)
+
+(colorHasRGBRedValue PeachColor 246)
+(colorHasRGBGreenValue PeachColor 213)
+(colorHasRGBBlueValue PeachColor 202)
+
+(colorHasRGBRedValue CyanColor 0)
+(colorHasRGBGreenValue CyanColor 255)
+(colorHasRGBBlueValue CyanColor 255)
+
+(colorHasRGBRedValue MagentaColor 233)
+(colorHasRGBGreenValue MagentaColor 0)
+(colorHasRGBBlueValue MagentaColor 236)
+
+(colorHasRGBRedValue PinkColor 255)
+(colorHasRGBGreenValue PinkColor 136)
+(colorHasRGBBlueValue PinkColor 209)
+
+(colorHasRGBRedValue LimeGreenColor 0)
+(colorHasRGBGreenValue LimeGreenColor 255)
+(colorHasRGBBlueValue LimeGreenColor 0)
+
+(colorHasRGBRedValue LilacColor 220)
+(colorHasRGBGreenValue LilacColor 211)
+(colorHasRGBBlueValue LilacColor 251)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

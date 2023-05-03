@@ -1,0 +1,36 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: likelihoods.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 23, 2018 13:48:44
+;;;;   Purpose: probabilities of different kinds of evidence
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2016-10-24 17:08:27 -0500 (Mon, 24 Oct 2016) $
+;;;;  $LastChangedBy: Hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB) ; FixMe!
+
+;;; From OCyc comment on conditionalLikelihood:
+(conditionalLikelihood 
+ (fanOf  GeorgeWBush  WillieNelson)
+ (originallyFromRegion  GeorgeWBush  Texas-State)
+ (MediumToVeryHighAmountFn  Likelihood-QuantityType))
+
+;(likelihood PROP QUANT) 
+;(likelihood-PlayedRoleInEvent AGT EVT ROLE PROB)
+;(chanceForRoleBecauseIs AGENT EVTTYPE ROLE PROP VAL) 
+;(vulnerabilityOfBecauseIs AGENT EVTTYPE ROLE PROP VAL) 
+;(likelihoodOfInsBeingIns SOC1 SOC2 QUANT) ; Likelihood-QuantityType  == most
+;(probabilityOfInsBeingIns SOC1 SOC2 N)    ; a Real number between 0 and 1.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+
+
+; (implies (knownSentence (not ?SENT)) 
+;  (likelihood ?SENT (NumericLikelihoodFn 0)))
+
+;SelectiveBarrierTransport
+;(objectTypeAdmitted ?FILTERING ?GRANULE-TYPE) 

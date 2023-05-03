@@ -1,0 +1,649 @@
+;;; File name: explain-plan.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: November 17, 2011 09:27:46
+;;;   Purpose: tie user actions into known goals and qmodels
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;
+;;; When you observe an action (eg, doBuildCity) and that action is not a 
+;;; decision task (ie, is not always available to the agent), 4 questions
+;;; obtain:
+;;; 1) Why this actor?
+;;; 2) Why this object?
+;;; 3) Why now?
+;;; 4) Why here?
+;;; and possibly:
+;;; 5) How was the precondition attained?
+
+;;; If action synchronically affected a known goal, then that gives us an
+;;; evaluation metric right off the bat.
+
+;;; We also need to rationalize prior goals post-facto.  Can we view
+;;; prior actions as achieving the preconditions of this one?
+
+;;; action case name has form (CaseFn ?mt ?turn ?cmd (ActionFn ?action-pred))
+
+
+(in-microtheory PerceptualAgentMt)
+
+(isa explainPlan ComplexActionPredicate)
+(arity explainPlan 4)
+(arg1Isa explainPlan Microtheory)
+(arg2Isa explainPlan PerceptualAgentCommand)
+(arg3Isa explainPlan CycLSentence-Assertible)
+(arg4Isa explainPlan TimeInterval)
+(comment explainPlan "(explainPlan ?mt ?cmd ?operator ?when) attempts to explain a user action in terms of known goals and qualitative models.")
+
+;;; default - ignore:
+(preconditionForMethod
+  (continuationOfGoal ?mt ?cmd ?operator)
+  (methodForAction
+    (explainPlan ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Continues prior plan." ())
+        ))))
+
+;;; Upon failure to explain:
+(preconditionForMethod
+  (and (uninferredSentence
+         (continuationOfGoal ?mt ?cmd ?operator))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (operatorFormulas ?action-pred ?operator))
+  (methodForAction
+    (explainPlan ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Posting learning goals." ())
+        (postActionLearningGoal ?lkmt ?action-pred)
+        (postPurposeLearningGoal ?lkmt ?action-pred)
+        ))))
+
+;; bottom-up explanation:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (explainPlan ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        ;; needs elaboration:
+        (predictAgentGoals ?mt ?cmd ?operator ?when)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              ; given an action and a hypothesized goal, construct an achievementTask plan:
+              (inferPlansFor ?mt ?cmd ?operator ?when))))))))
+
+;; top-down explanation:
+;;; Just because we failed to explain something before doesn't mean we'll 
+;;; fail this time.  Could either be we didn't have enough of a learned model before,
+;;; or the circumstances were ambiguous.
+(preconditionForMethod
+  (and ;(uninferredSentence
+       ;  (priorExplanationFailure ?mt ?operator))  ; what is this doing?  It's keeping us from learning precondition of doBuildCity!...
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (unifies ?spindle (SpindleMtFn ?domain Influences)) ; We'd like this to work even when there's a strong model.
+       (lookupOnly 
+         (ist-Information ?mt
+           (performanceGoalForGame ?mt ?goal-rep)))   ; This isn't right.  We want the root goal.
+       (lookupOnly
+         (ist-Information ?mt 
+           (goalName ?goal ?goal-rep)))
+       (uninferredSentence
+         (inactiveStartingGoal ?mt ?goal)))
+  (methodForAction
+    (explainPlan ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (explainActionWRTGoal ?mt ?spindle ?cmd ?operator (TheSet ?goal) (TheSet) 10)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (inferPlansFor ?mt ?cmd ?operator ?when))))))))
+
+(<== (preferInContext (explainPlan ?mt ?cmd ?operator ?when) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 doAnnounce)
+     (noArgumentHasPredicate ?seq1 postPurposeLearningGoal))
+     
+(<== (preferInContext (explainPlan ?mt ?cmd ?operator ?when) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 predictAgentGoals))
+
+(isa predictAgentGoals ComplexActionPredicate)
+(arity predictAgentGoals 4)
+(arg1Isa predictAgentGoals Microtheory)
+(arg2Isa predictAgentGoals PerceptualAgentCommand)
+(arg3Isa predictAgentGoals CycLExpression)
+(arg4Isa predictAgentGoals TimeInterval)
+(comment predictAgentGoals "(predictAgentGoals ?mt ?cmd ?operator ?when) is bottom-up explanation of an action based on what plans it could be part of.")
+
+;;; Bottom-up goal prediction:
+
+;;; Given an action that is not a decisionTask, predict what the actor
+;;; may be doing, on the basis of known achievement goals and unique 
+;;; capabilities.
+;;; This may be done both bottom-up and top-down.  Bottom-up 
+;;; explanation looks at what known plans reference the primitive
+;;; action.  Top-down decomposes the game goal and uses the
+;;; regression planner to find the best explanation for the singleton action.
+;;; There's no reason this should fail.  The sets may just be empty.
+;;; *** Problem: This could come up with dozens of possible goals.
+;;; *** Do we want to limit it to one?
+(preconditionForMethod
+  (and (ist-Information ?mt
+         (operatorAssignsAgent ?operator ?actor))
+       (evaluate ?hyp-subgoals
+         (TheClosedRetrievalSetOf ?subgoal
+           (and (hypothesizePlan ?operator ?plan)       ; uses planReferences
+                (unifies (methodForAction ?task ?meth) ?plan)
+                (complexTaskAchieves ?actor ?subgoal ?task))))
+       (unifies (TheSet ?hyp-goal) ?hyp-subgoals)) ; fail if !=1
+  (methodForAction
+    (predictAgentGoals ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "Most likely subgoal is ~s" (?hyp-goal))
+        ;; Record prediction for later verification.
+        ;; The hypothesizedGoal statement is used later when compiling out 
+        ;; precondition plans.  We're lifting descriptions of tasks that are
+        ;; instrumental to some other primitive action.
+        (doRecord 
+          (ist-Information ?mt
+            (hypothesizedGoal ?actor ?cmd ?operator ?hyp-goal)))))))
+
+;;; The goal of a non-decision task action is some proposition
+;;; that furthers the future aims.  If we can identify this proposition,
+;;; we can connect it to the goal tree
+;;; *** explainsAction is defined in explanation-rules.meld to be abductive
+;;; *** plan recognition.  Not really online yet.
+(preconditionForMethod
+  (and (evaluate ?goal-stmts
+         (TheClosedRetrievalSetOf ?goal-stmt
+           (and (explainsAction ?mt ?cmd ?action ?goal)
+                (unifies ?goal-stmt (hypothesizedGoal ?actor ?cmd ?operator ?goal)))))
+       (different ?goal-stmts (TheSet)))
+  (methodForAction
+    (predictAgentGoals ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?mt ?goal-stmts)))))
+
+;;;(liftDomainLevelActor ?mt ?operator ?entity-type) ; This may return multiple collections.
+;;;(operatorFormulas ?action-pred ?operator)
+;;;(evaluate ?unique-capabilities
+;;;  (TheClosedRetrievalSetOf ?pred
+;;;    (and (actionPrimitive ?pred)
+;;;    (arg1Isa ?pred ?entity-type))))
+;;;(nonObviousGoals ?action-pred ?unique-capabilities ?possible-goals)
+
+(isa nonObviousGoals TernaryPredicate)
+(arity nonObviousGoals 3)
+(arg1Isa nonObviousGoals SimpleActionPredicate)
+(arg2Isa nonObviousGoals Set-Mathematical)
+(arg3Isa nonObviousGoals Set-Mathematical)
+(comment nonObviousGoals "(nonObviousGoals ?action-pred ?candidate-actions ?possible-goals) filters ?candidate-actions to (TheSet) if it includes ?action-pred.")
+
+(<== (nonObviousGoals ?action-pred ?capabilities (TheSet))
+     (lookupOnly (elementOf ?action-pred ?capabilities)))
+
+(<== (nonObviousGoals ?action-pred ?capabilities ?capabilities)
+     (not (lookupOnly (elementOf ?action-pred ?capabilities))))
+
+(isa operatorAssignsAgent BinaryPredicate)
+(arity operatorAssignsAgent 2)
+(arg1Isa operatorAssignsAgent CycLSentence-Assertible)
+(arg2Isa operatorAssignsAgent Agent-Generic)
+(comment operatorAssignsAgent "(operatorAssignsAgent ?operator ?agent) means the primitive task ?operator assigns its first argument (an Agent-Generic) to do something.")
+
+(<== (operatorAssignsAgent ?operator ?entity)  ; really need to be more concrete.
+     (formulaArgument ?operator 1 ?entity)
+     (isa ?entity Agent-Generic))
+
+(isa uniqueCapability BinaryPredicate)
+(arity uniqueCapability 2)
+(arg1Isa uniqueCapability Thing)
+(arg2Isa uniqueCapability SimpleActionPredicate)
+
+;;; Say we start moving a settler.  Why might we do that?  We know that settlers 
+;;; have the unique capability of founding cities.  That's a pretty big clue.
+;;; *** This is not used anymore?? ***
+(<== (uniqueCapability ?entity ?pred)
+     (executionContext ?mt)
+     (ist-Information ?mt
+       (nonTransitiveInference (isa ?entity ?entity-type)))
+     (actionPrimitive ?pred)
+     (arg1Isa ?pred ?entity-type))      ; big assumption, but it's the convention
+
+;;; At some point we're going to want to characterize actors by their
+;;; extremal properties with respect to the available pool.  E.g., what's
+;;; relevant about a phalanx w.r.t. a worker is its offensive (& defensive)
+;;; strength.
+
+;;; Plan recognition
+
+(isa continuationOfGoal TernaryPredicate)
+(arity continuationOfGoal 3)
+(arg1Isa continuationOfGoal Microtheory)
+(arg2Isa continuationOfGoal PerceptualAgentCommand)
+(arg3Isa continuationOfGoal CycLExpression)
+(comment continuationOfGoal "(continuationOfGoal ?mt ?cmd ?operator) succeeds if ?operator continues pursuit of a prior goal.")
+
+
+(<== (continuationOfGoal ?mt ?cmd ?operator)
+     (ist-Information ?mt
+       (operatorAssignsAgent ?operator ?actor))
+     (latestHypothesizedGoalFor ?mt ?actor ?cmd ?prior-op ?goal)
+     (operatorFormulas ?action-pred ?operator)
+     (operatorFormulas ?action-pred ?prior-op)
+     (uninferredSentence
+       (argumentSpecific ?goal ?prior-op ?operator)))
+
+(isa argumentSpecific TernaryPredicate)
+(arity argumentSpecific 3)
+(arg1Isa argumentSpecific CycLFormula)
+(arg2Isa argumentSpecific CycLFormula)
+(arg3Isa argumentSpecific CycLFormula)
+(comment argumentSpecific "(argumentSpecific ?statement ?operator1 ?operator2) succeeds if some argument of ?op1 differs from the corresponding argument in ?op2 and is mentioned in ?statement.")
+
+;;; Only meaningful if ?op1 and ?op2 have same predicate.
+(<== (argumentSpecific ?goal ?op1 ?op2)
+     (formulaArgument ?op1 ?n ?term)
+     (formulaArgument ?op2 ?n ?other-term)
+     (different ?term ?other-term)
+     (containsPattern ?term ?goal))
+
+;;; *** ToDo: For this to work seamlessly, we may need to update the
+;;; plan-references table cache whenever we learn a new htn method.
+
+(isa hypothesizePlan BinaryPredicate)
+(arity hypothesizePlan 2)
+(arg1Isa hypothesizePlan CycLExpression)
+(arg2Isa hypothesizePlan CycLExpression)
+
+(<== (hypothesizePlan ?operator ?inst-plan)
+     (planningContext ?ctxt)                        ; Why do we need this again?
+     (operatorFormulas ?prim ?operator)
+     (planReferences ?plan ?prim)                   ; companions-specific
+     (subexpressionMatching ?operator ?plan ?expt)  ; filter based on complete operator
+     (formulaArgument ?operator 1 ?inst-arg)        ; transfer the actor, but nothing else
+     (formulaArgument ?expt 1 ?var-arg)
+     (unifies ?var-arg ?inst-arg)
+     (unifies ?inst-plan ?plan))                    ; instantiate ?plan
+
+;;; Do we want to induce a hierarchy up to some common task?  
+;;; How to propagate bindings?
+
+;;; We should be able to look at the preconditions and effects of primitives
+;;; to see what the intended effect might be.  For that we need to fix the 
+;;; representations for currentlyResearchable, etc.  
+;;; objectProductionRequiresTech is overloaded to mean both improvements and
+;;; technologies.  Let's separate them.
+
+;;; We also want to know if an action can lead to the satisfaction of the
+;;; preconditions of some other action or plan.
+
+;;; Then we want to be able to discern quantitative effects of actions.
+;;; How can we tell if an action affects a quantity?  How can we tell what
+;;; constitutes a resource?  We want to identify actions that convert one 
+;;; kind of resource to another.
+
+;;; Can we identify tradeoffs being made?
+
+;;; Then we want to be able to exploit whatever qual. model we already have.
+;;; This is what we're extending, but it may allow us to explain away actions.
+;;; Finally, we want to consult the hierarchical goal structure of the game.
+
+;;;
+;;; Reified Predicates
+;;;
+
+(isa hypothesizedGoal QuaternaryPredicate)
+(arity hypothesizedGoal 4)
+(arg1Isa hypothesizedGoal Agent-Generic)
+(arg2Isa hypothesizedGoal PerceptualAgentCommand)
+(arg3Isa hypothesizedGoal CycLSentence-Assertible)
+(arg4Isa hypothesizedGoal PerformanceGoal)
+(comment hypothesizedGoal "(hypothesizedGoal ?actor ?cmd ?operator ?performance-goal) records hypothesized goals.")
+
+;;; A goal hierarchy is a concise representation of the parent goal stack,
+;;; indexed by a subgoal.
+(isa goalHierarchy TernaryRelation)
+(arity goalHierarchy 3)
+(arg1Isa goalHierarchy Goal)
+(arg2Isa goalHierarchy Goal)
+(arg3Isa goalHierarchy List)
+(comment goalHierarchy "(goalHierarchyFor ?subgoal ?parent-goal ?goal-stack) represents the goal stack hierarchy from ?subgoal to ?parent-goal.")
+
+
+
+
+;;;
+;;; Experimental
+;;;
+
+;;; As part of explanation, we want to be able to ask
+;;; "What prior actions enabled or led to this action?"
+;;; Even if you can't explain how or why the current action 
+;;; was taken, you might be able to explain the motivation
+;;; behind the earlier actions in terms of this later action,
+;;; even if we can't connect it to the distal goals of the game.
+
+;;; Note: This is the "temporal credit assignment" problem,
+;;; as opposed to "structual credit assignment".
+;;; c.f. Goel & Jones 2011 p.152
+
+(isa relevantPriorOperator Predicate) ;; don't make this a plan
+(arity relevantPriorOperator 6)
+(arg1Isa relevantPriorOperator Microtheory)
+(arg2Isa relevantPriorOperator PerceptualAgentCommand)
+(arg3Isa relevantPriorOperator CycLSentence-Assertible)
+(arg4Isa relevantPriorOperator TimeInterval)
+(arg5Isa relevantPriorOperator PerceptualAgentCommand)
+(arg6Isa relevantPriorOperator CycLSentence-Assertible)
+(comment relevantPriorOperator "(relevantPriorOperator ?mt ?later-cmd ?later-operator ?when ?earlier-cmd ?earlier-operator) collects the fringe of operators that enabled the later operator") 
+
+;;; See development log from 9-27-13 for notes on this topic.
+
+;;; Segment out parts of the precondition that mean 
+;;;  "achieve availability of an actor of the appropriate type"
+;;; Identify inter-arg relations
+;;; Identify which of them are achievable somehow.
+;;; For establishing a traderoute, the key is acquiring the caravan.
+;;; Can we lift to CapabilityRole7?
+;(<== (relevantPriorOperator ?mt ?cmd ?later-operator ?when ?earlier-cmd ?earlier-operator)
+;     (formulaArgument ?later-operator ?1 ?actor)
+;     (operatorInstantiatedPrecondition ?later-operator ?prec-stmt)
+;     (unwrappedFormula ?prec ?unwrapped-prec)
+;     )
+
+
+;;; This is looking back from the consumption of a resource to its initial production
+;;; to try to explain the production decision based on its ultimate use.
+(<== (relevantPriorOperator ?mt ?later-cmd ?later-operator ?when ?earlier-cmd ?earlier-operator)
+     (resourceConsumedBy ?mt ?later-cmd ?later-operator ?resource)
+     (resourceProducedBy ?mt ?later-cmd ?later-operator ?resource ?earlier-cmd ?earlier-operator)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (dateOfEvent ?earlier-cmd ?when))))  ; We really should divorce this from the Freeciv-centric year format & replace with TurnFn.
+     )
+
+(isa resourceConsumedBy QuaternaryPredicate)
+(arity resourceConsumedBy 4)
+(arg1Isa resourceConsumedBy Microtheory)
+(arg2Isa resourceConsumedBy PerceptualAgentCommand)
+(arg3Isa resourceConsumedBy CycLSentence-Assertible)
+(arg4Isa resourceConsumedBy SomethingExisting)
+(comment resourceConsumedBy "(resourceConsumedBy ?mt ?cmd ?operator ?resource) means ?actor was destroyed as a byproduct of performing ?operator.")
+
+(<== (resourceConsumedBy ?mt ?cmd ?operator ?resource)
+     (formulaArgument ?operator ?argnum ?resource)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent ?cmd ?when)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (inputsDestroyed ?evt ?resource))))) ; For this to happen, ?resource must be an instance of SomethingExisting
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent ?evt ?when)))))
+     (numAnswers 1 
+       (priorCommand ?mt ?evt ?cmd)))
+
+;;; Assume planning graph has something like:
+;;; (enablementRelation doChangeProduction (resourceTypeAvailable ?player FreeCiv-TradingUnit) doEstablishTraderoute)
+
+
+(isa resourceProducedBy Predicate)
+(arity resourceProducedBy 6)
+(arg1Isa resourceProducedBy Microtheory)
+(arg2Isa resourceProducedBy PerceptualAgentCommand)
+(arg3Isa resourceProducedBy CycLSentence-Assertible)
+(arg4Isa resourceProducedBy SomethingExisting)
+(arg5Isa resourceProducedBy PerceptualAgentCommand)
+(arg6Isa resourceProducedBy CycLSentence-Assertible)
+(comment resourceProducedBy "(resourceProducedBy ?mt ?later-cmd ?later-operator ?resource ?earlier-cmd ?earlier-operator) means ?actor was destroyed as a byproduct of performing ?operator.")
+
+;;; Given a bound ?resource and an operator that consumed it, what action produced it?
+(<== (resourceProducedBy ?mt ?later-cmd ?later-operator ?resource ?earlier-cmd ?earlier-operator)
+     (not (variableExpression ?resource)) ; sanity check.
+     ;(ist-Information ?mt (startingDate ?resource ?when))
+     ;; Don't use startingDate.  We need the event in order to track down the doneBy.
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (outputsCreated ?evt ?resource)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent ?evt ?date)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (doneBy ?evt ?producer)))))
+     (currentDomain ?domain)
+     (unifies ?lkmt (ActionModelMtFn ?domain))
+     (operatorFormulas ?consuming-pred ?later-operator)
+     (lookupOnly
+       (localOnly
+         (cacheComplete
+           (ist-Information ?lkmt  ; Only reason to do this instead of inherit from ?mt is to avoid polluting execution context.
+             (enablementRelation ?creation-pred (resourceTypeAvailable ?actor ?type) ?consuming-pred)))))
+     (ist-Information ?mt
+       (isa ?resource ?type))
+     ;; Now find the instance of an operator sometime before ?when that could have produced ?resource (but *where*???)
+     ;; gotta use the doneBy
+     ;; Find the prior action by ?producer immediately before ?evt
+     (numAnswers 1
+       (priorCommand ?mt ?evt ?cmd))
+     (withBackchainingDepth 25   ; there could be many actions within a turn that have nothing to do with this.  Hope this is a reasonable bound.
+       (numAnswers 1
+         (priorCommandBy ?mt ?creation-pred ?producer ?cmd ?earlier-cmd ?earlier-operator)))
+     )
+
+(isa producesResource Predicate)
+(arity producesResource 6)
+
+;;; Figure out if ?earlier-cmd produced a resource consumed by ?later-operator:
+(<== (producesResource ?mt ?earlier-cmd ?earlier-operator ?resource ?later-cmd ?later-operator)
+     (formulaArgument ?earlier-operator 1 ?actor)
+     (currentDomain ?domain)
+     (unifies ?lkmt (ActionModelMtFn ?domain))
+     (operatorFormulas ?creation-pred ?earlier-operator)
+     (lookupOnly
+       (localOnly
+         (cacheComplete
+           (ist-Information ?lkmt  ; Only reason to do this instead of inherit from ?mt is to avoid polluting execution context.
+             (enablementRelation ?creation-pred (resourceTypeAvailable ?directing-actor ?type) ?consuming-pred)))))
+     (withBackchainingDepth 100  ;; OMG!
+       (nextCreationEvent ?mt ?earlier-cmd ?actor ?type ?event ?resource)))
+
+(isa nextCreationEvent Predicate)
+(arity nextCreationEvent 6)
+(arg1Isa nextCreationEvent Microtheory)
+(arg2Isa nextCreationEvent PerceptualAgentEvent)
+(arg3Isa nextCreationEvent Agent-Generic)
+(arg4Isa nextCreationEvent Collection)
+(arg5Isa nextCreationEvent PerceptualAgentEvent)
+(arg6Isa nextCreationEvent SomethingExisting)
+(comment nextCreationEvent "(nextCreationEvent ?mt ?prior-event ?actor ?type ?creation-event ?resource) binds ?creation-event and ?resource if the if there is a creation event on actor following ?event but before the next command.") 
+
+;;; Assume ?mt, ?earlier-evt, ?actor, and ?type are bound.
+;;; Find the next event affecting ?actor that has an outputsCreated of ?resource of type ?type.
+;;; Stop upon the next command issued by ?actor.
+(<== (nextCreationEvent ?mt ?event ?actor ?type ?event ?resource)
+     (numAnswers 1 (eventProducesResourceOfType ?mt ?event ?type ?resource)))
+     
+(<== (nextCreationEvent ?mt ?evt ?actor ?type ?event ?resource)
+     (uninferredSentence
+       (eventProducesResourceOfType ?mt ?evt ?type ?res))
+     (nextEventOnActor ?mt ?actor ?evt ?next-evt)
+     (nextCreationEvent ?mt ?next-evt ?actor ?type ?event ?resource))
+
+
+;;; This includes commands and events:
+(isa nextEventOnActor QuaternaryPredicate)
+(arity nextEventOnActor 4)
+(arg1Isa nextEventOnActor Microtheory)
+(arg2Isa nextEventOnActor Agent-Generic)
+(arg3Isa nextEventOnActor PerceptualAgentEvent)
+(arg4Isa nextEventOnActor PerceptualAgentEvent)
+(comment nextEventOnActor "(nextEventOnActor ?mt actor ?earlier ?later) binds ?later to the next event after ?earlier.")
+
+(<== (nextEventOnActor ?mt ?actor ?current-event ?later-event)
+     (numAnswers 1 
+       (localOnly
+         (ist-Information ?mt
+           (followsInProgression ?next-event ?current-event ?mt))))
+     (futureEventOnActor ?mt ?actor ?next-event ?later-event))
+
+(isa futureEventOnActor QuaternaryPredicate)
+(arity futureEventOnActor 4)
+(arg1Isa futureEventOnActor Microtheory)
+(arg2Isa futureEventOnActor Agent-Generic)
+(arg3Isa futureEventOnActor PerceptualAgentEvent)
+(arg4Isa futureEventOnActor PerceptualAgentEvent)
+(comment futureEventOnActor "(futureEventOnActor ?mt ?actor ?earlier ?later) binds ?later to the next event after ?earlier.")
+
+
+(<== (futureEventOnActor ?mt ?actor ?evt ?later-event)
+     (uninferredSentence
+       (ist-Information ?mt
+         (doneBy ?evt ?actor)))  ; different actor, keep recursing
+     (nextEventOnActor ?mt ?actor ?evt ?later-event))
+     
+(<== (futureEventOnActor ?mt ?actor ?event ?event)
+     (not (variableExpression ?event))   ; safety
+     (ist-Information ?mt
+       (doneBy ?event ?actor)) ; same actor, better not be a command.
+     (not (matches (CommandFn ?mt ?num) ?event))) ; stop on next cmd performed by ?actor
+
+(isa eventProducesResourceOfType QuaternaryPredicate)
+(arity eventProducesResourcesOfType 4)
+(arg1Isa eventProducesResourceOfType Microtheory)
+(arg2Isa eventProducesResourceOfType PerceptualAgentEvent)
+(arg3Isa eventProducesResourceOfType Collection)
+(arg4Isa eventProducesResourceOfType SomethingExisting)
+(comment eventProducesResourceOfType "(eventProducesResourceOfType ?mt ?evt ?type ?res)")
+
+(<== (eventProducesResourceOfType ?mt ?evt ?type ?res)
+     (numAnswers 1
+       (localOnly
+         (ist-Information ?mt
+           (outputsCreated ?evt ?res))))
+     (numAnswers 1
+       (contextEnvAllowed
+         (ist-Information ?mt
+           (isa ?res ?type)))))
+
+(isa priorCommandBy Predicate)
+(arity priorCommandBy 6)
+(comment priorCommandBy "priorCommandBy ?mt ?pred ?actor ?cmd ?cmd ?operator)")
+
+(<== (priorCommandBy ?mt ?pred ?actor ?cmd ?cmd ?operator)
+     (numAnswers 1 (commandDoneBy ?mt ?pred ?actor ?cmd ?operator)))
+
+(<== (priorCommandBy ?mt ?pred ?actor ?cmd ?earlier-cmd ?operator)
+     (uninferredSentence
+       (commandDoneBy ?mt ?pred ?actor ?cmd ?some-operator))
+     (priorCommand ?mt ?cmd ?intermediate-cmd)
+     (numAnswers 1 (priorCommandBy ?mt ?pred ?actor ?intermediate-cmd ?earlier-cmd ?operator)))
+
+(isa commandDoneBy Predicate)
+(arity commandDoneBy 5)
+(arg1Isa commandDoneBy Microtheory)
+(arg2Isa commandDoneBy Predicate)
+(arg3Isa commandDoneBy Agent-Generic)
+(arg4Isa commandDoneBy PerceptualAgentCommand)
+(arg5Isa commandDoneBy CycLExpression)
+
+(<== (commandDoneBy ?mt ?pred ?actor ?cmd ?operator)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?mt
+             (infoTransferred ?cmd ?operator)))))
+     (operatorFormulas ?pred ?operator)
+     (formulaArgument ?operator 1 ?actor))  ; found it
+
+
+;;; What about when explorer is killed in a hut?
+
+;;; If the actor that performed an action ceased to exist immediately afterwards,
+;;; it's a safe bet that it was consumed by the action, making it a resource
+;;; for the action.  Thus constructing it was part of the achievement of the
+;;; preconditions.
+
+     
+;;; Should be able to ask "Where did agent come from?"
+;;; It's easy enough to lookup the starting date for a particular agent
+;;; But connecting that to the decision that produced it is more problematic.
+;;; Does the planningGraph do this?  Or the qualitative model?
+
+
+;;; Break explanation down into recursive explanations
+;;; Make this work for both primitives and HTNs - though learned
+;;; HTNs may not require cracking open the preconditions so much.
+;;; 
+;;; Range over args of operator
+;;; Determine if arg is an individual domain entity
+;;;   If so, posit it as a (discrete) resource
+;;;     Identify type constraints on arg (from precondition of operator)
+;;;       Explain resourceAvailableFn (type)
+;;;   If arg is a (continuous) quantity designator
+;;;     Identify amount constraints on arg
+;;;       Explain quantityAvailableFn (type)
+;;; Identify inter-arg restrictions in precondition
+;;;   If direct relationship between args, 
+;;;     If extrinsic relationship,
+;;;       explain achievement of arg relationship
+;;;     If intrinsic relationship,
+;;;       explain arg selection
+;;;   If indirect relationship between args (transitive or nested)
+;;;     
+
+
+;;; Location is an intrinsic property of a city, but extrinsic property
+;;; of a unit.  What about size of a city?
+;;; There's no single operator you can point to that controls the size 
+;;; of a city.  There *might* be a plan for maximizing the size, or
+;;; we might be able to walk the type-level goals to interpret prior
+;;; actions as affecting the city size, but it seems unlikely.
+
+;;; When queried the execution context, this will let us find the 
+;;; starting date of buildings, assuming we use the BuildingInstanceFn NAT.
+
+(<== (startingDate ?thing ?date)
+     (queryContext ?mt)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (outputsCreated ?evt ?thing)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent ?evt ?date))))))
+
+;; (precededByRelatedAction ?mt ?event ?when ?command ?action ?action-turn)
+;;; The planning graph should tell you exactly what properties you're looking for.
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

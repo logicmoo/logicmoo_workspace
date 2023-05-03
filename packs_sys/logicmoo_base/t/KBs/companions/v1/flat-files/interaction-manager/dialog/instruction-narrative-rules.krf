@@ -1,0 +1,398 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: instruction-narrative-rules.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: June 19, 2013 09:04:59
+;;;;   Purpose: Narrative rules for generalized instruction
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+;;; This version is for EA v8
+
+
+(in-microtheory InstructionNarrativeRulesMt) 
+
+(genlMt InstructionNarrativeRulesMt EAStructuralRulesMt)
+(genlMt InstructionNarrativeRulesMt EAReferenceResolutionMt)
+(genlMt InstructionNarrativeRulesMt CompanionsMt) 
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) TopicIntroduction)
+     (introducesTopic (PresentationEventFn ?sid ?event-id) ?topic))
+     
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) DescribesProperty)
+     (describesProperty (PresentationEventFn ?sid ?event-id) ?object ?property))
+     
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) SocraticQuestion)
+     (relatesToPriorKnowledge (PresentationEventFn ?sid ?event-id) ?relation))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Topic Introduction
+
+(<== (introducesTopic (PresentationEventFn ?sid ?event-id) ?topic)
+     (groundExpression ?sid)
+     (introducesTopic-IP ?sid ?topic)
+     (individualSatisfyingConditions ?event-id IBTGeneration (TheSet (introducesTopic-IP ?sid ?topic))))
+
+;;; Need a different rule if we're introducing a new topic concept
+;;; with no prior name.
+(<== (introducesTopic-IP ?sid ?topic)
+     (drsForDiscourse ?ddrs-id)
+     (teachTopic ?sid ?teach-dv ?topic)
+     (forEffectOnly
+       (resolveReference 
+           (ReferenceInSentenceFn ?teach-dv ?sid) 
+           (ReferentInDrsFn ?teach ?ddrs-id))))
+
+;;; We should be able to say:
+;;; "I am going to teach you <topic>."
+;;; "I am going to teach you about <X>."
+;;; "I am going to teach you to <X>."
+;;; "I am going to teach you how to <X>."
+;;; "I am going to teach you when to <X>."
+;;; etc.
+
+;;; "I am going to teach you about <topic>."
+
+;;; Because it could be future tense, the ?teach-dv is in a
+;;; sub-drs of the sentence.
+
+;;; teach about <topic>
+(<== (teachTopic ?sid ?teach-dv ?topic)
+     (drsEntailedBySentence ?teaching-drs ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?teaching-drs)
+           (isa ?teach-dv Teaching))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?teaching-drs)
+           (topicOfInfoTransfer ?teach-dv ?topic))))  ; "teach you about X"
+     (variableInUniverse ?teach-dv ?teaching-drs Clause)
+     (uninferredSentence
+       (ptConstitFeat ?entry pro
+         (PronounMappingFn ?topic ?pmf))) ; topic better not be a pronoun in any context
+     (uninferredSentence
+       (variableInUniverse ?topic ?teaching-drs Clause)))  ; name of a known concept(?)
+
+;;; teach <you> to play <topic>
+;;; Although this works, we get an embedded drs in the 
+;;; behavior capable statement which remains opaque to translate-drs.
+;;; Consequently, we never see the topic unless we do the explicit justify
+;;; to add a topicOfInfoTransfer.
+(<== (teachTopic ?sid ?teach-dv ?topic)
+     (drsEntailedBySentence ?teaching-drs ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?teaching-drs)
+           (isa ?teach-dv Teaching))))
+     (studentReference ?sid ?teaching-drs ?teach-dv ?listener-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?teaching-drs)
+           (holdsIn (STIF ?teach-dv)
+             (behaviorCapable ?listener-dv (DrsCaseFn ?sub-drs) performedBy)))))
+     (compatibleDrses ?teaching-drs ?sub-drs)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sub-drs)
+           (isa ?play-dv PlayingAGame))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sub-drs)
+           (doneBy ?play-dv ?listener-dv))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sub-drs)
+           (gamePlayed ?play-dv ?topic))))
+     (variableInUniverse ?teach-dv ?teaching-drs Clause)
+     (uninferredSentence
+       (variableInUniverse ?topic ?sub-drs Clause))
+     (forEffectOnly
+       (justify
+         (ist-Information (DrsCaseFn ?teaching-drs)
+           (topicOfInfoTransfer ?teach-dv ?topic))
+         (TheList (teachTopic ?sid ?teach-dv ?topic)))))
+
+(<== (studentReference ?sid ?drs-id ?teach-dv ?student-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?drs-id)
+           (recipientOfInfo ?teach-dv ?student-dv)))))
+
+(<== (studentReference ?sid ?drs-id ?teach-dv ?student-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?drs-id)
+           (beneficiary ?teach-dv ?student-dv)))))
+
+;;; Causes first person pronouns to be replaced with :SPEAKER in reference
+;;; resolution:
+
+
+(<== (speakerReference ?sid ?var)
+     (ptConstitFeat 
+      ?entry pro 
+      (PronounMappingFn ?var (PronounFn FirstPerson-NLAttr ?number ?gender ?type)))
+     (ptEntry ?entry (ParseTreeFn ?sid ?ptid))
+     (choice ?pt-csid ?pt-cid ?ptid)
+     (selectedChoice ?pt-csid ?pt-cid ?ptid))
+
+
+(<== (allCompatibleDrses ?sid ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (equal ?drs1 ?drs2))
+
+(<== (allCompatibleDrses ?sid ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (variableExpression ?drs2)
+     (drsEntailedBySentence ?drs2 ?sid)
+     (compatibleDrses ?drs1 ?drs2))
+     
+(<== (allCompatibleDrses ?sid ?drs1 ?drs2)
+     (variableExpression ?drs1)
+     (groundExpression ?drs2)
+     (drsEntailedBySentence ?drs1 ?sid)
+     (compatibleDrses ?drs1 ?drs2))
+
+(<== (compatibleDrses ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (groundExpression ?drs2)
+     (parseTreeIdForDrs ?drs1 ?ptid)
+     (parseTreeIdForDrs ?drs2 ?ptid))
+
+(<== (compatibleDrses ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (groundExpression ?drs2)
+     (uninferredSentence
+       (parseTreeIdForDrs ?drs1 ?ptid)))
+       
+(<== (compatibleDrses ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (groundExpression ?drs2)
+     (uninferredSentence
+       (parseTreeIdForDrs ?drs2 ?ptid)))
+       
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Term introduction
+;;; "X means Y"
+;;;
+;;; Look for: (isa mean2564 EntailingSomething)
+;;; use requiredRoleRelation on thingEntailed and doneBy
+;;; if the span of the doneBy is > 1, make a multiwordSemtrans
+;;; (or other indexing depending on shared token)
+;;; The semantics related to the scope of the thingEntailed
+;;; needs to be lifted and processed to make a definition.
+
+  ;; (requiredRole ?sid ?drs-id ?event-dv ?parent-role-pred ?role-dv)
+;(<== (introducesTerm (PresentationEventFn ?sid ?event-id) ?term ?def)
+;     (groundExpression ?sid)
+;     (drsForDiscourse ?drs-id ?sid)
+;     (introducesTerm-IP (DrsCaseFn ?drs-id) ?term ?def)
+;     (resolveReference
+;         (ReferenceInSentenceFn 
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Property Description
+
+;;; We have a lot of trouble with adjectives.  We'd like this rule to prefer
+;;; actual property statements over ThingDescribableAsFn or XXX-HairColor, etc.
+;;; Until we have a way to apply weights to abductions, we'll need discrete 
+;;; rules.
+
+(<== (describesProperty (PresentationEventFn ?sid ?event-id) ?object ?property)
+     (groundExpression ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (drsEntailedBySentence ?drs-id ?sid)
+     (describesProperty-IP (DrsCaseFn ?drs-id) ?object-dv ?property)
+     ;; Move this stuff up so it only occurs once:
+     (resolveReference 
+         (ReferenceInSentenceFn ?object-dv ?sid) 
+         (ReferentInDrsFn ?object ?ddrs-id))
+     (individualSatisfyingConditions ?event-id IBTGeneration (TheSet (describesProperty-IP ?sid ?object ?property))))
+
+;;; Try to prefer canonical representations for shape, color, size, dimension, proximity, etc.
+
+;;; Handle gradable dimensions like sizeParameterOfObject and lengthOfObject,
+;;; thicknessOfObject.
+;;; How can we prefer extremal values? Can we branch on features like superlative: +?
+(<== (describesProperty-IP ?mt ?object-dv ?property)
+     (localOnly
+       (wmOnly
+         (ist-Information ?mt
+           (?pred ?object-dv (RelativeGenericValueFn ?pred ?type ?degree)))))
+     (unifies ?property (RelativeGenericValueFn ?pred ?type ?degree))
+     )
+
+;;; We don't get RelativeGenericValueFn for temperature for some reason.
+(<== (describesProperty-IP ?mt ?object-dv ?temp)
+     (localOnly
+       (wmOnly
+         (ist-Information ?mt
+           (temperatureOfObject ?object-dv ?temp))))
+     )
+     
+(<== (describesProperty-IP ?mt ?object-dv ?color)
+     (localOnly
+       (wmOnly
+         (ist-Information ?mt
+           (mainColorOfObject ?object-dv ?color))))
+     (uninferredSentence
+       (useTransitiveInference
+         (allFactsAllowed
+           (ist-Information WorldLikeOursCollectorMt
+             (genls ?color Hair-Stuff))))))
+
+(<== (describesProperty-IP ?mt ?object-dv ?shape)
+     (localOnly
+       (wmOnly
+         (ist-Information ?mt
+           (objectShapeType ?object-dv ?shape)))))
+
+;;; "a strong drink" should not resolve to forceCapacity:
+(<== (describesProperty-IP ?mt ?object-dv ?degree)
+     (localOnly
+       (wmOnly
+         (ist-Information ?mt
+           (forceCapacity ?object-dv ?degree))))
+     (localOnly
+       (wmOnly
+         (ist-Information ?mt
+           (isa ?object-dv ?object-type))))
+     (useTransitiveInference
+       (allFactsAllowed
+         (ist-Information WorldLikeOursCollectorMt
+           (genls ?object-type Agent-Generic)))))
+
+
+;;; hasPhysiologicalFeature
+
+;;; "a fast car" => (isa car3628 Automobile) (possessiveRelation car3628 (HighAmountFn Speed))
+;;; "a profitable venture" => ThingDescribableAsFn
+;;;  We probably want an adjSemTrans that would take profitable to 
+;;; (averageProfit ?entity (RelativeGenericValueFn averageProfit Profits highToVeryHighAmountOf)
+
+
+;;; You can say "The square" or "the square block" or "the red square", but
+;;; you can't say "The red." (well, you can actually, but that's either designating
+;;; the color or an elision of the referent)
+
+;;; Scanning pattern:
+;;;  (localOnly
+;;;    (wmOnly
+;;;      (ist-Information (DrsCaseFn ?sdrs-id)
+;;;        (isa ?shape-dv ?shape))))
+;;;  (allFactsAllowed 
+;;;    (lookupOnly                     ; Stop backchaining on isa! (or do we need this to fire irules?)
+;;;      (useTransitiveInference
+;;;        (ist-Information WorldLikeOursCollectorMt
+;;;          (isa ?shape TwoDimensionalShapeType)))))
+
+;;; look for sizeParameterOfObject,
+;;; mainColorOfObject,
+;;; objectShapeType
+;;; feelsEmotionTypeAtLevel ?agent (?some-amountFn ?emotion-type))
+;;; textureOfObject ?surfact Rough
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Socratic Tutoring
+
+(<== (relatesToPriorKnowledge (PresentationEventFn ?sid ?event-id) ?relation)
+     (groundExpression ?sid)
+     (socraticQuery-IP ?sid ?relation)
+     (individualSatisfyingConditions ?event-id IBTGeneration (TheSet (socraticQuery-IP ?sid ?relation))))
+
+
+(<== (socraticQuery-IP ?sid ?relation)
+     (drsForDiscourse ?ddrs-id)
+     (drsForSentence ?sdrs-id ?sid)
+     ;; Remember, we're querying in the discourse case.
+     (sentenceTypeFeat (ParseTreeFn ?sid ?ptid) ?stype)
+     (allFactsAllowed
+       (useTransitiveInference
+         (ist-Information CurrentWorldDataCollectorMt-NonHomocentric
+           (genls ?stype InformationRequest-IBT))))
+     (validParseTree ?ptid)
+     (socraticQuery ?sid ?sdrs-id ?ptid ?dv ?relation)
+     (resolveReference 
+       (ReferenceInSentenceFn ?dv ?sid) 
+       (ReferentInDrsFn ?entity ?ddrs-id)))
+         
+
+;;; There had better be some relationship involving the subject of the
+;;; sentence.
+;;; How does drsForSentence differ from contextIndependentDrsFor??
+(<== (socraticQuery ?sid ?sdrs ?ptid ?dv ?relation)
+     (abduceMainVerb ?sid ?sdrs ?ptid ?dv ?relation))
+
+
+;;; Prefence filtering is kind of antithetical to abduction,
+;;; but heck with it, we're trying it.
+(<== (abduceMainVerb ?sid ?sdrs ?ptid ?verb-dv ?relation)
+     (sentenceSubject ?sid ?subj)  ; outcourced in im-source.  Don't trust subjectOfSentence!
+     (uninferredSentence
+       (variableInUniverse ?subj ?sdrs-id Clause))  ; talk'in about a real thing here
+     ;; Find the main verb:
+     (verbFormInParseTree ?verb-dv ?tense ?perfect ?progressive (ParseTreeFn ?sid ?ptid))
+     (headVarForDrs ?verb-dv ?sdrs-id)
+     (mvChoiceSet ?sid ?sdrs-id ?ptid ?csid)
+     (evaluate ?choices
+       (TheClosedRetrievalSetOf ?choice
+         (and (choiceMentionsSubject ?subj ?csid ?choice-id ?expr)
+              (unifies ?choice (choice ?csid ?choice-id ?expr)))))
+     (different ?choices (TheSet))
+     (unifies ?positional-preference 
+       (Kappa (?stmt) 
+         (and (unifies (choice ?csid ?choice-id ?expr) ?stmt)
+              (inferenceOnly (positionalRep ?expr)))))
+     (inferenceOnly (preferenceFilterBy ?choices ?positional-preference ?filtered-choices))
+     ;; and preference filter by semantics somehow
+     (unifies (TheSet (choice ?csid ?cid ?relation)) ?filtered-choices) ; singleton?
+     (selectedChoice ?csid ?cid ?relation))  ; <- the target of the predicate-speciffic abduction
+     
+;;; main verb choice set:
+(<== (mvChoiceSet ?sid ?sdrs-id ?ptid ?csid)
+     (headVarForDrs ?hv ?sdrs-id)
+     (dvSpanInParseTree ?hv ?span (ParseTreeFn ?sid ?ptid))
+     (choiceSet (ChoiceSetFn FrameSemantics (TokenFn ?sid ?span)) ?csid))
+
+(<== (choiceMentionsSubject ?subject ?csid ?choice-id ?expr)
+     (wmOnly (lookupOnly (choice ?csid ?choice-id ?expr)))
+     (containsPattern ?subject ?expr))
+     
+(<== (positionalRep ?expr)
+     (not (variableExpression ?expr))
+     (not (atomicTerm ?expr))
+     (operatorFormulas ?pred ?expr)
+     (different ?pred and)
+     (different ?pred isa))
+     
+;;; (headVarForDrs border2532 DRS-3585498863-2503) 
+;;; is defined by an irule in the dcase.  It depends
+;;; on abductively assuming a parse tree.
+;;; (elementInHeadVar ?hv ?action)
+
+;;; If we run:
+;;; (fire::with-wm-rules-only
+;;;    (fire::query '(headVarForDrs ?hv DRS-3585498863-2503)
+;;;       :context '(DiscourseCaseFn Discourse-3585493879-2192)
+;;;       :facts :wmExclusively))
+;;;
+;;; it at least finds the i-rules and tries to run them.  It fails upon 
+;;; hitting the abductiveAssumption, even though the fact is true.
+;;;
+;;;(sentenceSubject Sentence-3585507630-2862 Florida-State)
+;;;(verbFormInParseTree border2892 pres Non-Perfect Non-Progressive
+;;;  (ParseTreeFn Sentence-3585507630-2862 ParseTree-3585507630-3022))
+;;;(headVarForDrs border2892 DRS-3585507630-2863)
+;;;
+;;; Prefer frame semantic choices for the main verb that mention the subject
+;;; Prefer positional over Davidsonian rep
+;;; Prefer arg-isa agreement
+;;; 
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

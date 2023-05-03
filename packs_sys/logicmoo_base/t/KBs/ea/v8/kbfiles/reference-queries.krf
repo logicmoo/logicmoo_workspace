@@ -1,0 +1,23 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: reference-queries.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: January 10, 2017 10:44:34
+;;;;   Purpose: Invoke hard-coded reference resolution
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory EAReferenceQueriesMt :exclude-globals t)
+
+
+;;; Invoke the outsourced predicate discourseVarResolvesTo 
+;;; to run the lisp-coded reference resolution.
+(queryForInterpretation 0 (discourseVarResolvesTo ?var :REPLACE-SID ?referent))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of code

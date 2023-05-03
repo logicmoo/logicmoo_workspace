@@ -1,0 +1,242 @@
+(in-microtheory CoursesForSocialModelingMt)
+(genlMt CoursesForSocialModelingMt SocialModelingMt)
+(genlMt SocialModelingMt CoursesForSocialModelingMt)
+
+;;; //\\//\\//\\// Academic Terms \\//\\//\\//\\
+
+;; Pre-existing collections we'll be using:
+;;   AcademicTerm
+;;   AcademicYear
+;;   AcademicSemester
+;;   AcademicQuarter
+;; There's probably a way to hook these up to CalendarSeason, but right
+;; now we don't need it.
+
+;; Microtheories
+
+(isa CoursesMtFn Function-Denotational)
+(arity CoursesMtFn 1)
+(resultIsa CoursesMtFn Microtheory)
+(arg1Isa CoursesMtFn AcademicTerm)
+(comment CoursesMtFn "(CoursesMtFn ?term) denotes the microtheory containing
+	the course information for a given AcademicTerm.  For example,
+	(CoursesMtFn (AcademicYearFn NorthwesternUniversity (YearFn 2018))
+	would contain the course information for Northwestern University in the
+	2018-2019 academic year.")
+
+;; Years
+
+(isa AcademicYearFn Function-Denotational)
+(arity AcademicYearFn 2)
+(resultIsa AcademicYearFn AcademicYear)
+(arg1Isa AcademicYearFn AcademicOrganization)
+(arg2Isa AcademicYearFn CalendarYear)
+(comment AcademicYearFn
+	"(AcademicYearFn ?school ?year) denotes the AcademicYear for AcademicOrganization
+	 ?school that begins in CalendarYear ?year.  For example,
+	 (AcademicYearFn NorthwesternUniversity (YearFn 2018)) would represent the 2018-2019
+	 school year at Northwestern University.")
+
+;; Semesters
+
+(isa FallSemesterFn Function-Denotational)
+(arity FallSemesterFn 1)
+(resultIsa FallSemesterFn AcademicSemester)
+(arg1Isa FallSemesterFn AcademicYear)
+(comment FallSemesterFn
+	"(FallSemesterFn ?year) denotes the fall semester for a given AcademicYear.
+	 For example, (FallSemesterFn (AcademicYearn NorthwesternUniversity (YearFn 2018)))
+	 indicates the fall semester of the 2018-2019 school year at Northwestern University.")
+
+(isa SpringSemesterFn Function-Denotational)
+(arity SpringSemesterFn 1)
+(resultIsa SpringSemesterFn AcademicSemester)
+(arg1Isa SpringSemesterFn AcademicYear)
+(comment SpringSemesterFn
+	"(SpringSemesterFn ?year) denotes the spring semester for a given AcademicYear.
+	 For example, (SpringSemesterFn (AcademicYearn NorthwesternUniversity (YearFn 2018)))
+	 indicates the spring semester of the 2018-2019 school year at Northwestern University.")
+
+;; Quarters
+
+(isa FallQuarterFn Function-Denotational)
+(arity FallQuarterFn 1)
+(resultIsa FallQuarterFn AcademicQuarter)
+(arg1Isa FallQuarterFn AcademicYear)
+(comment FallQuarterFn
+	"(FallQuarterFn ?year) denotes the fall quarter for a given AcademicYear.
+	 For example, (FallQuarterFn (AcademicYearn NorthwesternUniversity (YearFn 2018)))
+	 indicates the fall quarter of the 2018-2019 school year at Northwestern University.")
+
+(isa WinterQuarterFn Function-Denotational)
+(arity WinterQuarterFn 1)
+(resultIsa WinterQuarterFn AcademicQuarter)
+(arg1Isa WinterQuarterFn AcademicYear)
+(comment WinterQuarterFn
+	"(WinterQuarterFn ?year) denotes the winter quarter for a given AcademicYear.
+	 For example, (WinterQuarterFn (AcademicYearn NorthwesternUniversity (YearFn 2018)))
+	 indicates the winter quarter of the 2018-2019 school year at Northwestern University.")
+
+(isa SpringQuarterFn Function-Denotational)
+(arity SpringQuarterFn 1)
+(resultIsa SpringQuarterFn AcademicQuarter)
+(arg1Isa SpringQuarterFn AcademicYear)
+(comment SpringQuarterFn
+	"(SpringQuarterFn ?year) denotes the spring quarter for a given AcademicYear.
+	 For example, (SpringQuarterFn (AcademicYearn NorthwesternUniversity (YearFn 2018)))
+	 indicates the spring quarter of the 2018-2019 school year at Northwestern University.")
+
+(isa SummerQuarterFn Function-Denotational)
+(arity SummerQuarterFn 1)
+(resultIsa SummerQuarterFn AcademicQuarter)
+(arg1Isa SummerQuarterFn AcademicYear)
+(comment SummerQuarterFn
+	"(SummerQuarterFn ?year) denotes the summer quarter for a given AcademicYear.
+	 For example, (SummerQuarterFn (AcademicYearn NorthwesternUniversity (YearFn 2018)))
+	 indicates the summer semester of the 2018-2019 school year at Northwestern University.")
+
+;; Predicates
+
+;; TODO: Horn clauses and predicates for temporal reasoning and deixis.  (E.g., "next fall")
+
+;;; //\\//\\//\\// Courses \\//\\//\\//\\
+
+;; Courses
+
+(isa NUCourse Collection)
+(genls NUCourse Course-Collegiate)
+(comment NUCourse "A NUCourse is an course offered at Northwestern University.")
+
+(isa NUCourse-EECS Collection)
+(genls NUCourse-EECS NUCourse)
+(comment NUCourse-EECS "A NUCourse-EECS is an EECS course offered at Northwestern University.")
+
+(isa NUCourse-CS Collection)
+(genls NUCourse-CS NUCourse-EECS)
+(comment NUCourse-CS "A NUCourse-CS is an Computer Science (CS) course offered at Northwestern University.")
+
+(isa NUCourse-CE Collection)
+(genls NUCourse-CE NUCourse-EECS)
+(comment NUCourse-CE "A NUCourse-CE is an Computer Engineering (CE) course offered at Northwestern University.")
+
+(isa NUCourse-EE Collection)
+(genls NUCourse-EE NUCourse-EECS)
+(comment NUCourse-EE "A NUCourse-EE is an Electrical Engineering (EE) course offered at Northwestern University.")
+
+;; Topics 
+
+(isa AcademicTopic Collection)
+(genls AcademicTopic Topic)
+(comment AcademicTopic "An AcademicTopic is a topic studied or researched at an AcademicOrganization.")
+
+;; Individual topics are all technically collections, but we only care that they
+;; are topics, not what they contain.  For an existing example of what we're trying
+;; to replicate, see Chemistry-Topic, minus all the concepts that isa to it.
+
+;; These are loosely, but not formally, aligned with the areas of courses in the
+;; EECS course catalog.  More topics should be added as needed.
+(isa ComputerScience-Topic AcademicTopic)
+(isa ComputerEngineering-Topic AcademicTopic)
+(isa ElectricalEngineering-Topic AcademicTopic)
+
+;;; //\\//\\//\\// Predicates \\//\\//\\//\\
+
+;; Course IDs
+
+(isa primaryCourseID Predicate)
+(arity primaryCourseID 2)
+(arg1Isa primaryCourseID Course-Collegiate)
+(arg2Isa primaryCourseID StringObject)
+(comment primaryCourseID
+	"(primaryCourseID ?course ?string) gives the ID number for the course (e.g., '395').")
+
+(isa secondaryCourseID Predicate)
+(arity secondaryCourseID 2)
+(arg1Isa secondaryCourseID Course-Collegiate)
+(arg2Isa secondaryCourseID StringObject)
+(comment secondaryCourseID
+	"(secondaryCourseID ?course ?string) gives the secondary ID number for the course (e.g., '395').")
+
+(isa tertiaryCourseID Predicate)
+(arity tertiaryCourseID 2)
+(arg1Isa tertiaryCourseID Course-Collegiate)
+(arg2Isa tertiaryCourseID StringObject)
+(comment tertiaryCourseID
+	"(tertiaryCourseID ?course ?string) gives the tertiary ID number for the course (e.g., '395').")
+
+(isa quaternaryCourseID Predicate)
+(arity quaternaryCourseID 2)
+(arg1Isa quaternaryCourseID Course-Collegiate)
+(arg2Isa quaternaryCourseID StringObject)
+(comment quaternaryCourseID
+	"(quaternaryCourseID ?course ?string) gives the tertiary ID number for the course (e.g., '395').")
+
+;; Course information
+
+(isa courseName Predicate)
+(genlPreds courseName nameString)
+(arity courseName 2)
+(arg1Isa courseName  Course-Collegiate)
+; Maybe use ProperNameString here, following nameString.
+; I [CSN] changed it to StringObject because (isa "foo" ProperNameString) is false.
+(arg2Isa courseName  StringObject)
+(comment courseName  "(courseName ?course ?name) indicates a ?course has name ?name")
+
+(isa courseTopic Predicate)
+(arity courseTopic 2)
+(arg1Isa courseTopic Course-Collegiate)
+(arg2Isa courseTopic AcademicTopic)
+(comment courseTopic "(courseTopic ?course ?topic) indicates that course ?course has ?topic
+	as its topic.  For example (courseTopic EECS325 ComputerScience-Topic) indicates that
+	EECS325 is a computer science course.")
+
+(isa courseTerm Predicate)
+(arity courseTerm 2)
+(arg1Isa courseTerm Course-Collegiate)
+(arg2Isa courseTerm AcademicTerm)
+(comment courseTerm "(courseTerm ?course ?term) idnicates that course ?course occurs
+	during AcademicTerm ?term, typically a quarter or semester.")
+
+(isa courseInstructor Predicate)
+(arity courseInstructor 2)
+(arg1Isa courseInstructor Course-Collegiate)
+(arg2Isa courseInstructor AcademicProfessional)
+(comment courseInstructor "(courseInstructor ?course ?instructor) indicates that ?instructor
+	is the instructor of a given Course-Collegiate ?course.")
+
+(isa courseTime Predicate)
+(arity courseTime 2)
+(arg1Isa courseTime Course-Collegiate)
+(arg2Isa courseTime TimeThing)
+(comment courseTime "(courseTime ?course ?time) indicates that Course-Collegiate ?course
+	meets during TimeThing ?time.  For an example of the kind of TimeThing we want,
+	see TimeOfWeekFn.")
+#|  For courses that meet on multiple days, try something like
+	(TemporalUnionFn (TimeOfWeekFn Monday (TimeOfDayFn TimeOfDay-NoonHour .")|#
+
+(isa courseTimeString Predicate)
+(arity courseTimeString 2)
+(arg1Isa courseTimeString Course-Collegiate)
+(arg2Isa courseTimeString StringObject)
+(comment courseTimeString "(courseTimeString ?course ?string) indicates that Course-Collegiate ?course
+	meets weekly during a time specified by ?string.  This is a workaround for courseTime.")
+
+(isa courseLocation Predicate)
+(arity courseLocation 2)
+(arg1Isa courseLocation Course-Collegiate)
+(arg2Isa courseLocation StringObject) ; StreetAddress?
+(comment courseLocation "(courseLocation ?course ?string) indicates that Course-Collegiate ?course
+	meets weekly at a location specified by ?string.")
+
+;; Cyc does NOT have something like this, as far as I can tell.
+;; Thus we will roll our own.
+
+#|(isa TemporalUnionFn IndividualDenotingFunction)
+(isa TemporalUnionFn VariableArityFunction)
+(argsIsa TemporalUnionFn TemporalThing)
+(resultIsa TemporalUnionFn TemporalThing)
+(comment TemporalUnionFn "(TemporalUnionFn ?time1 ?time2 ...) represents the discontinuous TimeThing
+	that is the union of the times.")|#
+
+
+

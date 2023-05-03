@@ -1,0 +1,196 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: conceptualps-qqr.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 7, 2014 11:19:58
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2013-01-06 13:30:52 -0600 (Sun, 06 Jan 2013) $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ConceptualPS-QQRMt)
+
+(isa ConceptualPS-QQRMt Microtheory)
+(genlMt ConceptualPS-QQRMt CompositionalModelingMt)
+(genlMt ConceptualPS-QQRMt DQAnalysisMt)
+(genlMt ConceptualPS-QQRMt QPTheoryMt)
+(genlMt SKEAReasoningCollectorMt ConceptualPS-QQRMt)
+
+(comment ConceptualPSMt "ConceptualPSMt provides problem analysis knowledge that,
+ combined with methods for qualitative and quantiative reasoning, support the
+ solution of conceptual problems concerning continuous systems.  Examples include
+ physics problems and everyday physical reasoning.")
+
+(isa quantityComparisonProblem Relation)
+(arity quantityComparisonProblem 4)
+;;; ***** Need to add argIsas
+(comment quantityComparisonProblem
+  "(quantityComparisonProblem ?qtype ?ent-sits ?rel ?ent-sit) describes an n-way
+ comparison problem.  ?ent-sits is a list of pairs, each an entity and a situation.
+ ?qtype is the quantity type of interest, and ?rel is the comparative relationship.
+ ?ent-sit is the pair that satisfies ?rel for (?qtype ?ent) over all the elements
+ of ?ent-sits.  For example, if there were more information in UniverseDataMt,
+   (quantityComparisonProblem
+      (FunctionToArg 2 diameterOfObject)
+        (TheList (TheList PlanetEarth UniverseDataMt)
+                 (TheList PlanetJupiter UniverseDataMt))
+        MaximumFn ?ent-sit)
+ should produce a binding of (TheList PlanetJupiter UniverseDataMt) for ?ent-sit.
+ Returning the list is important, because often selecting the right choice in
+ a multiple choice question requires referring to the situation, which is linked
+ to a choice.")
+
+(defSuggestion HandleDegenerateQuantityComparisonCase
+    (quantityComparisonProblem ?qtype ?ent-sits ?rel ?ent-sit)
+  :test (evaluate False (GreaterThan-UnitValuesFn (LengthOfListFn ?ent-sits) 1))
+  :subgoals ((evaluate ?ent-sit (ListToSetFn ?ent-sits)))
+  :documentation "HandleDegenerateQuantityComparisonCase takes care of situations
+ where fewer than two situations are passed in.  Not really clear what to do in
+ this case, but turning it into a set is type-compatible with the rest of the
+ implementaiton for this part of the problem-solving.")
+
+(defSuggestion ReduceQuantityComparisonToBinaryDQ
+    (quantityComparisonProblem ?qtype ?ent-sits ?rel ?ent-sit)
+  :test (evaluate 2 (LengthOfListFn ?ent-sits))
+  :subgoals ((evaluate ?first-pair (FirstInListFn ?ent-sits))
+             (evaluate ?second-pair (SecondInListFn ?ent-sits))
+             (extractFirstPairsFromListOrSet ?first-pair ?base-obj ?base-dgr)
+             (extractFirstPairsFromListOrSet ?second-pair ?target-obj ?target-dgr)
+;;;             (contextForCase ?base ?base-mt)
+;;;             (contextForCase ?target ?target-mt)
+;;;             (ist-Information ?base
+;;;               (quantityExpression ?qtype ?base-obj ?q-base))
+;;;             (ist-Information ?target
+;;;               (quantityExpression ?qtype ?target-obj ?q-target))
+             ;;;             (solveDQProblemBinarySystems ?q-base ?base-mt ?q-target ?target-mt ?value)
+             (contextForCase ?base-dgr ?base-mt)
+             (contextForCase ?target-dgr ?target-mt)             
+             (quantityExpression ?qtype ?base-obj ?q-base)
+             (quantityExpression ?qtype ?target-obj ?q-target)
+             (tell (ist-Information ?base-mt (hasQuantity ?base-obj ?q-base)))
+             (tell (ist-Information ?target-mt (hasQuantity ?target-obj ?q-target)))
+             (solveDQProblemBinarySystems ?q-base ?base-dgr ?q-target ?target-dgr ?value)
+             (selectSituationForComparativeAnswer
+              ?first-pair ?second-pair ?value ?rel ?ent-sit))
+  :documentation "ReduceQuantityComparisonToBinaryDQ handles the case where there
+                  are only two situations to compare.")
+
+(isa extractFirstPairsFromListOrSet Predicate)
+(arity extractFirstPairsFromListOrSet 3)
+(arg1Isa extractFirstPairsFromListOrSet SetOrList-Extensional)
+(arg2Isa extractFirstPairsFromListOrSet SetOrList-Extensional)
+(arg3Isa extractFirstPairsFromListOrSet SetOrList-Extensional)
+(comment extractFirstPairsFromListOrSet
+  "(extractFirstPairsFromListOrSet <list or set> <first> <second>) is a helper for ReduceQuantityComparisonToBinaryDQ,
+ to handle the case where a prior stage of processing provided a set of entries instead of just one.
+ That is, the first argument is either (TheList <first> <second>) or (TheSet (TheList <some 1st> <some 2nd>) ...).
+ The assumption is that, since the situations represented were equivalent, it doesn't matter which of
+ them is chosen for the next step of processing.")
+
+(<== (extractFirstPairsFromListOrSet ?pair-or-set ?first ?second)
+     (operatorFormulas TheSet ?pair-or-set)
+     (evaluate ?equivalent-list (SetToListFn ?pair-or-set))
+     (evaluate ?entry (FirstInListFn ?equivalent-list))
+     (evaluate ?first (FirstInListFn ?entry))
+     (evaluate ?second (SecondInListFn ?entry)))
+
+(<== (extractFirstPairsFromListOrSet ?pair-or-set ?first ?second)
+     (operatorFormulas TheList ?pair-or-set)
+     (evaluate ?first (FirstInListFn ?pair-or-set))
+     (evaluate ?second (SecondInListFn ?pair-or-set)))
+
+(isa quantityExpression TernaryPredicate)
+(arity quantityExpression 3)
+(arg1Isa quantityExpression CycLExpression)
+(arg2Isa quantityExpression Thing)
+(arg3Isa quantityExpression CycLExpression)
+(comment quantityExpression 
+  "(quantityExpression <quantity-type> <thing> <quantity-expression>) is a helper for ReduceQuantityComparisonToBinaryDQ
+   that combines the thing with the quantity type to create an expression that denotes the quantity of interest.
+   The quantity type can be an atomic term or a pattern with a variable, e.g., 
+   (quantityExpression MassFn Earth (MassFn Earth)) and 
+   (quantityExpression (NetForceMagFn ?obj LeftRightAxis) block (NetForceMagFn block LeftRightAxis)).")
+
+(<== (quantityExpression ?qtype ?obj ?q-expr)
+     (atomicTerm ?qtype)
+     (tell (hasQuantity ?obj (?qtype ?obj)))
+     (unifies ?q-expr (?qtype ?obj)))
+
+(<== (quantityExpression (QPQuantityFn ?cyc-Q) ?obj ?q-expr)
+     (atomicTerm ?cyc-Q)
+     (tell (hasQuantity ?obj ((QPQuantityFn ?cyc-Q) ?obj)))
+     (unifies ?q-expr ((QPQuantityFn ?cyc-Q) ?obj)))
+
+;; only handles 1 variable, otherwise, how would we know which one to substitute?
+;; patterns with more than one variable need specialized rules.
+(<== (quantityExpression ?qtype ?obj ?q-expr)
+     (not (atomicTerm ?qtype))
+     (evaluate ?unbound-args 
+       (TheClosedRetrievalSetOf ?var 
+         (and (formulaArgument ?qtype ?n ?var)
+              (variableExpression ?var))))
+     (unifies (TheSet ?q-var) ?unbound-args)  ;; can only handle 1 variable
+     (evaluate ?q-expr (SublisFn (TheSet (?q-var ?obj)) ?qtype)))
+
+(defSuggestion ReduceN-wayQuantityComparisonProblem
+    (quantityComparisonProblem ?qtype ?ent-sits ?rel ?ent-sit)
+  :test (evaluate True (GreaterThan-UnitValuesFn (LengthOfListFn ?ent-sits) 2))
+  :subgoals ((evaluate ?first-pair (FirstInListFn ?ent-sits))
+             (evaluate ?second-pair (SecondInListFn ?ent-sits))
+             (evaluate ?rest (RestOfListFn (RestOfListFn ?ent-sits)))
+             (evaluate ?first-comparison (TheList ?first-pair ?second-pair))
+             (quantityComparisonProblem ?qtype ?first-comparison ?rel ?first-answer)
+             (evaluate ?next-sits (JoinListsFn (TheList ?first-answer) ?rest))
+             (quantityComparisonProblem ?qtype ?next-sits ?rel ?ent-sit)))
+
+;;; N.B. Since one of possibleDQValue is Ambig, doing diagnosis of a failed
+;;; problem attempt should look for DQ entries with that value.  That's a fairly
+;;; direct indicator of which pair of models might need to be reformulated.
+
+;; Implementing selectSituationForComparativeAnswer via rules, since that is cheaper
+;; and the logic isn't something we're ever going to inspect, I suspect.
+
+(isa selectSituationForComparativeAnswer Predicate)
+(arity selectSituationForComparativeAnswer 5)
+(arg1Isa selectSituationForComparativeAnswer List-Extensional)
+(arg2Isa selectSituationForComparativeAnswer List-Extensional)
+(arg3Isa selectSituationForComparativeAnswer PossibleDSValue)
+(arg4Isa selectSituationForComparativeAnswer FluentOrdinalPredicate)
+(arg5Isa selectSituationForComparativeAnswer List-Extensional)
+(comment selectSituationForComparativeAnswer
+  "(selectSituationForComparativeAnswer ?first ?second ?value ?rel ?chosen) is used to compute
+   which pair of ?first, ?second satisifies the relationship ?rel, via looking at the DQ value
+   ?value.  The answer is bound to ?chosen.  When values are the same, ?chosen is bound
+   to a set of both.")
+    
+;;; Clear cases
+(<== (selectSituationForComparativeAnswer ?first ?second -1 qLessThan ?first))
+(<== (selectSituationForComparativeAnswer ?first ?second 1 qLessThan ?second))
+(<== (selectSituationForComparativeAnswer ?first ?second -1 qGreaterThan ?second))
+(<== (selectSituationForComparativeAnswer ?first ?second 1 qGreaterThan ?first))
+(<== (selectSituationForComparativeAnswer ?first ?second -1 MaximumFn ?first))
+(<== (selectSituationForComparativeAnswer ?first ?second 1 MaximumFn ?second))
+(<== (selectSituationForComparativeAnswer ?first ?second -1 MinimumFn ?second))
+(<== (selectSituationForComparativeAnswer ?first ?second 1 MinimumFn ?first))
+
+;; Slightly different behavior for dqValue = 0.
+;; If a previous set of ent-sit pairs is equal to the second ent-sit pair, we want
+;; them to be in one set.
+(<== (selectSituationForComparativeAnswer ?first ?second 0 ?rel ?ent-sit-pair-set)
+     (operatorFormulas TheSet ?first)
+     (evaluate ?ent-sit-pair-set 
+       (SetOrCollectionUnion ?first (TheSet ?second))))
+
+(<== (selectSituationForComparativeAnswer ?first ?second 0 ?rel ?ent-sit-pair-set)
+     (operatorFormulas TheList ?first)
+     (evaluate ?ent-sit-pair-set (TheSet ?first ?second)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

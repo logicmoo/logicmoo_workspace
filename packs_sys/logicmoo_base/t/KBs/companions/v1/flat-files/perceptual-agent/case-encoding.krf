@@ -1,0 +1,747 @@
+;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;; -------------------------------------------------------------------------
+;;; File name: case-encoding.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: August 18, 2011 09:14:33
+;;;   Purpose: A knowledge-level API for encoding cases.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2019-01-03 15:17:32 -0600 (Thu, 03 Jan 2019) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;
+;;; 12-8-11 Eliminate separate decision case and action case microtheories.
+;;; Instead, augment existing indirect influence cases and index specially.
+
+(in-microtheory PerceptualAgentMt)
+
+;;; ---------------------------------------------------------------
+;;; Encoding Decision Cases
+;;;
+
+(isa ActionCaseFn UnaryFunction)
+(arity ActionCaseFn 1)
+(arg1Isa ActionCaseFn ActionPredicate)
+(resultIsa ActionCaseFn Case)
+
+(isa EventCaseFn BinaryFunction)
+(arity EventCaseFn 2)
+(arg1Isa EventCaseFn Thing)
+(arg2Isa EventCaseFn Collection)  ; a spec of Event.
+(resultIsa EventCaseFn Case)
+
+;;; In a decision case, you're setting the functional value of a slot.
+;;; You don't have to look at the action model effects because that's a given.
+;;; On the other hand, if we want to learn by analogy how to make such a
+;;; decision, we need to store more than just the action and it's immeditate 
+;;; effect.  We should store the set of alternative legal values, the goal
+;;; being served, and ideally information about the strategy being followed.
+;;; So in Freeciv, if we're seeking military supremacy, we may prioritize
+;;; seafaring over enlightened governance.  A strategy is some set of 
+;;; waypoints along a trajectory.  We want to capture the 'why' behind
+;;; a decision.
+
+;;; The problem with this is that almost no decision tasks result in immediate
+;;; quantity changes.  They typically initiate processes.  How can we detect
+;;; and capture this?
+
+(isa indexDecisionCase ComplexActionPredicate)
+(arity indexDecisionCase 5)
+(arg1Isa indexDecisionCase Microtheory)
+(arg2Isa indexDecisionCase PerceptualAgentCommand)
+(arg3Isa indexDecisionCase CycLFormula)
+(arg4Isa indexDecisionCase DecisionTask)  ; ?decision is a (DecisionFn <slot>)
+(arg5Isa indexDecisionCase TimeInterval)
+(comment indexDecisionCase "(indexDecisionCase ?mt ?cmd ?action ?decision ?when) saves the relevant domain facts of the case in the kb.")
+
+(isa decisionCase BinaryPredicate)
+(comment decisionCase "(decisionCase ?casename ?decision) is a reifiable predicate that indexes a decision case in a game microtheory.")
+
+;;; We're going to have case libraries named something like:
+;;; (CaseLibraryFn ?domain (DecisionFn currentlyResearching))
+;;; and case names like:
+;;; (CaseFn fc-game1 (YearFn -4000) (CommandFn fc-game1 2) (DecisionFn currentlyBuilding))
+;;; Note: caseLibraryContains is a global predicate.
+
+(preconditionForMethod
+  (and (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (unifies ?libname (CaseLibraryFn ?domain ?decision))
+       (unifies ?decision-spindle  (SpindleMtFn ?domain ?decision))
+       ;; Look up the Davidsonian command in order to create role relations:
+       ;(formulaArgument ?action 1 ?actor)
+       (unifies ?casename (IICaseFn ?mt ?turn ?cmd))
+       (evaluate ?casefacts
+         (TheClosedRetrievalSetOf ?fact
+           (decisionCaseFacts ?mt ?action ?decision ?fact))))   ; Handle case where we know what's salient
+  (methodForAction
+    (indexDecisionCase ?mt ?cmd ?action ?decision ?turn)                   ; ?decision is a (DecisionFn <slot>)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information BaseKB (isa ?casename Microtheory)))
+        (doRecord (ist-Information BaseKB (isa ?decision-spindle Microtheory)))
+        (doRecord (ist-Information BaseKB (isa ?libname CaseLibrary))) ; reify it explicitly
+        (doRecord (ist-Information BaseKB (caseLibraryContains ?libname ?casename)))
+        (doRecord (ist-Information BaseKB (genlMt ?decision-spindle ?casename)))
+        (doRecord (ist-Information ?mt (decisionCase ?casename ?decision)))   ; don't need a holdsIn since casename has turn
+        (doRecord (ist-Information ?casename (dateOfEvent ?cmd ?turn)))
+        (doRecord (ist-Information ?casename (infoTransferred ?cmd ?action)))
+        ;; It's not correct to say that the action was done by a game actor if we've
+        ;; recorded the command as being done by HumanUser!
+        ;(doRecord (ist-Information ?casename (doneBy ?cmd ?actor)))
+        (doRecordMembersInContext ?casename ?casefacts)                             ; Do we want to record the casefacts in the gamecase as well?
+        ))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (indexDecisionCase ?mt ?cmd ?action ?decision ?turn)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Failed to store decision case for ~s" (?decision))))))  ;  TBD: learn case encoding
+
+(<== (preferInContext (indexDecisionCase ?mt ?cmd ?action ?decision ?turn) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 doRecordMembers))
+
+(isa storeDecisionCase ComplexActionPredicate)
+(arity storeDecisionCase 4)
+(arg1Isa storeDecisionCase Microtheory)
+(arg2Isa storeDecisionCase CycLFormula)
+(arg3Isa storeDecisionCase DecisionTask)
+(arg4Isa storeDecisionCase Set-Mathematical)
+(comment storeDecisionCase "(storeDecisionCase ?mt ?action ?decision ?actions) stores the alternative choices not selected.")
+
+(preconditionForMethod
+  (and (iiCaseName ?mt ?casename)
+       (unifies (IICaseFn ?mt ?turn ?cmd) ?casename)
+       (legalActionStatements ?casename ?actions ?legal-stmts))
+  (methodForAction
+    (storeDecisionCase ?mt ?action ?decision ?actions)
+    (actionSequence
+      (TheList
+        (indexDecisionCase ?mt ?cmd ?action ?decision ?turn)
+        (doRecordMembers ?legal-stmts)))))
+
+
+;;; This is the version to be called from the rational player:
+;;; Assume it's called immediately after performing an action.
+;;; This differes from storeDecisionCase in that it also stores the decomposition information in the form of ?dist and ?goal.
+(isa storeExtendedDecisionCase ComplexActionPredicate)
+(arity storeExtendedDecisionCase 7)
+(arg1Isa storeExtendedDecisionCase Microtheory)
+(arg2Isa storeExtendedDecisionCase Agent-Generic)
+(arg3Isa storeExtendedDecisionCase CycLFormula)
+(arg4Isa storeExtendedDecisionCase DecisionTask)  ; ?decision is a (DecisionFn <slot>)
+(arg5Isa storeExtendedDecisionCase Integer)
+(arg6Isa storeExtendedDecisionCase Goal)
+(arg7Isa storeExtendedDecisionCase Set-Mathematical)
+(comment storeExtendedDecisionCase "(storeExtendedDecisionCase ?mt ?actor ?action ?decision ?distance ?goal ?legal-actions) saves the relevant domain facts of the case in the kb.")
+
+(preconditionForMethod
+  (and (activeLearningGoal ?decision ?learning-goal) ; see bottom of learning-goals.meld
+       (iiCaseName ?mt ?casename)
+       (unifies (IICaseFn ?mt ?turn ?cmd) ?casename) ; destructure
+       (formulaArgument ?action 1 ?actor)
+       (legalActionStatements ?casename ?legal-actions ?legal-stmts)) ; Statements encoding the LCS
+  (methodForAction
+    (storeExtendedDecisionCase ?mt ?actor ?action ?decision ?dist ?goal ?legal-actions)  ; ?decision is a (DecisionFn <slot>)
+    (actionSequence
+      (TheList
+        (indexDecisionCase ?mt ?cmd ?action ?decision ?turn)
+        (doRecordMembers ?legal-stmts)
+        (doRecord (ist-Information ?casename (goalForDecision ?actor ?decision ?goal)))
+        (doRecord (ist-Information ?casename (actionGoalDistance ?action ?goal ?dist)))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (storeExtendedDecisionCase ?mt ?actor ?action ?decision ?dist ?goal ?legal-actions)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (storeExtendedDecisionCase ?mt ?actor ?action ?decision ?dist ?goal ?legal-actions) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa iiCaseName BinaryPredicate)
+(isa iiCaseName DynamicUpdatePredicate)
+(arity iiCaseName 2)
+(arg1Isa iiCaseName Microtheory)
+(arg2Isa iiCaseName Microtheory)
+(comment iiCaseName "(iiCaseName ?mt ?casename) binds ?casename to the name of the indirect influence case for the latest action.")
+
+(<== (iiCaseName ?mt ?casename)
+     (gameTurn ?turn)  ; a year in freeciv (compute it here, since we've run out of arguments)
+     (counterValue eventCounter ?num)
+     (unifies ?cmd (CommandFn ?mt ?num))
+     (unifies ?casename (IICaseFn ?mt ?turn ?cmd)))
+
+(isa decisionCaseFacts QuaternaryPredicate)
+(arity decisionCaseFacts 4)
+(arg1Isa decisionCaseFacts Microtheory)
+(arg2Isa decisionCaseFacts CycLFormula)
+(arg3Isa decisionCaseFacts DecisionTask)
+(arg4Isa decisionCaseFacts CycLSentence-Assertible)
+(comment decisionCaseFacts "(decisionCaseFacts ?mt ?action ?decision ?fact) binds ?fact to reifiable elements of a case encoding for the decision case.")
+;
+;;; We probably want to know the turn and the goal
+(<== (decisionCaseFacts ?mt ?action ?decision ?fact)
+     (decisionQuantityChanges ?mt ?action ?decision ?fact))
+
+(<== (decisionCaseFacts ?mt ?action ?decision ?fact)
+     (uninferredSentence
+       (ist-Information ?mt (salientCaseQuantity ?decision ?quantity-type)))
+     (defaultQuantityChanges ?mt ?action ?decision ?fact))
+
+
+(isa decisionQuantityChanges QuaternaryPredicate)
+(arity decisionQuantityChanges 4)
+(arg1Isa decisionQuantityChanges Microtheory)
+(arg2Isa decisionQuantityChanges CycLFormula)
+(arg3Isa decisionQuantityChanges DecisionTask)   ; ie (DecisionFn <slot>)
+(arg4Isa decisionQuantityChanges CycLSentence-Assertible)
+(comment decisionQuantityChanges "(decisionQuantityChanges ?mt ?action ?decision ?fact) binds ?fact to reifiable quantity changes for encoding the decision case outcome.")
+
+;;; This is a kind of query-for-questions pattern.
+;;; Here, we're basically relying on pre-determined salience of quantities that mention the doer.
+(<== (decisionQuantityChanges ?mt ?action ?decision ?fact)
+     (ist-Information ?mt (salientCaseQuantity ?decision ?quantity-type))
+     ;; What we want is not the value of the quantity, but the change.
+     (formulaArgument ?action 1 ?arg1)
+     (ist-Information ?mt (quantityChange (?quantity-type ?arg1) ?change))
+     (qualitativeDSValue ?change ?pred)                 ; ?pred will be either increases or decreases.
+     (unifies ?fact (?pred (?quantity-type ?arg1))))    ; 
+
+(isa salientCaseQuantity BinaryPredicate)
+(arity salientCaseQuantity 2)
+(comment salientCaseQuantity "(salientCaseQuantity ?decision ?quantity-type) is a reifiable statement indicating that ?quantity-type is relevant to making ?decision.")
+
+;(isa knownCaseEncoding BinaryPredicate)
+;(arity knownCaseEncoding 2)
+;(comment knownCaseEncoding "(knownCaseEncoding ?mt ?task) succeeds when salient quantities are known for ?task.")
+;
+;;; Bundle this up here to avoid multiple bindings in plan preconditions:
+;(<== (knownCaseEncoding ?mt ?task)
+;     (numAnswers 1
+;       (lookupOnly
+;         (ist-Information ?mt
+;           (salientCaseQuantity ?task ?qtype)))))
+
+(isa defaultQuantityChanges QuaternaryPredicate)
+(arity defaultQuantityChanges 4)
+(arg1Isa defaultQuantityChanges Microtheory)
+(arg2Isa defaultQuantityChanges CycLFormula)
+(arg3Isa defaultQuantityChanges DecisionTask)
+(arg4Isa defaultQuantityChanges CycLSentence-Assertible)
+(comment defaultQuantityChanges "(defaultQuantityChanges ?mt ?action ?decision ?fact) binds ?fact to every buffered quantity fact that mentions the args of ?action.")
+
+;;; Rewrite this!
+;(<== (defaultQuantityChanges ?mt ?action ?decision ?fact)
+;     (evaluate ?args
+;       (ListToSetFn
+;         (FormulaArgListFn ?action)))
+;     (bufferedQuantitiesMentioning ?args ?quantity)
+;     (ist-Information ?mt (quantityChange ?quantity ?change))
+;     (qualitativeDSValue ?change ?pred)
+;     (unifies ?fact (?pred ?quantity)))
+
+
+(isa legalActionStatements TernaryPredicate)
+(arity legalActionStatements 3)
+(arg1Isa legalActionStatements Microtheory)
+(arg2Isa legalActionStatements Set-Mathematical)
+(arg3Isa legalActionStatements Set-mathematical)
+(comment legalActionStatements "(legalActionStatements ?mt ?action-set ?statement-set) expands a set of actions into separate statements for case encoding.")
+
+(<== (legalActionStatements ?mt ?action-set ?stmt-set)
+     (groundExpression ?action-set)
+     (evaluate ?stmt-set
+       (TheClosedRetrievalSetOf ?stmt
+         (and (elementOf ?action ?action-set)
+              (unifies ?stmt
+                (ist-Information ?mt
+                  (alternativeLegalAction ?action)))))))
+
+
+;;; Reifiable predicates:
+(isa alternativeLegalAction UnaryPredicate)
+(arity alternativeLegalAction 1)
+(comment alternativeLegalAction "(alternativeLegalAction ?action) is a reifiable statement indicating ?action is legal in the current context.")
+
+(isa goalForDecision TernaryPredicate)
+(arity goalForDecision 3)
+(arg1Isa goalForDecision Agent-Generic)
+(arg2Isa goalForDecision DecisionTask)
+(arg3Isa goalForDecision Goal)
+(comment goalForDecision "(goalForDecision ?actor ?decision ?goal) associates a decision task with the goal it pursues.")
+
+
+(isa actionGoalDistance TernaryPredicate)
+(arity actionGoalDistance 3)
+(arg1Isa actionGoalDistance CycLExpression)
+(arg2Isa actionGoalDistance Goal)
+(arg3Isa actionGoalDistance Integer)
+(comment actionGoalDistance "(actionGoalDistance ?action ?goal ?distance) reifies the anticipated action distance to achieve goal.")
+
+;;; ---------------------------------------------------------------
+;;; Encoding Action Cases
+;;;
+
+;;; We want to capture quantity changes as a result of discrete actions, even
+;;; if they don't set a functional slot.
+;;; Moving workers around in freeciv is one such example.
+;;; We'll want to keep track of the action (the command plus info transferred)
+;;; along with all quantity changes plus possibly some static quantity values
+;;; and propositions.
+
+(isa elaborateActionCaseForActiveGoals ComplexActionPredicate)
+(arity elaborateActionCaseForActiveGoals 4)
+(arg1Isa elaborateActionCaseForActiveGoals Microtheory)
+(arg2Isa elaborateActionCaseForActiveGoals CycLFormula) 
+(arg3Isa elaborateActionCaseForActiveGoals CycLSentence-Assertible)
+(arg4Isa elaborateActionCaseForActiveGoals TimeInterval)
+(comment elaborateActionCaseForActiveGoals "(elaborateActionCaseForActiveGoals ?mt ?cmd ?action ?when).")
+
+;;; This is invoked from explainQuantityChanges.  We need to call it from there
+;;; because then we know that the change packets have arrived, whereas the explainAction
+;;; process may be running before any effects of the action have been received.
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?action)
+       (activeGoal (LearnOptimalConditionFn ?action-pred)))
+  (methodForAction
+    (elaborateActionCaseForActiveGoals ?mt ?cmd ?action ?when)
+    (actionSequence
+      (TheList
+        (indexActionCase ?mt ?cmd ?action ?when)
+        (inferEffectiveConditionFor ?mt ?cmd ?action ?when)  ; will be a noop if condition exists
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (elaborateActionCase ?mt ?action (IICaseFn ?mt ?when ?cmd)))))))))
+
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?action)
+       (uninferredSentence
+         (activeGoal (LearnOptimalConditionFn ?action-pred))))
+  (methodForAction
+    (elaborateActionCaseForActiveGoals ?mt ?cmd ?action ?when)
+    (actionSequence
+      (TheList))))
+
+
+(isa indexActionCase ComplexActionPredicate)
+(arity indexActionCase 4)
+(arg1Isa indexActionCase Microtheory)
+(arg2Isa indexActionCase CycLFormula)
+(arg3Isa indexActionCase CycLSentence-Assertible)
+(arg4Isa indexActionCase TimeInterval)
+(comment indexActionCase "(indexActionCase ?mt ?cmd ?action ?when) does the bare-minimum of cross-indexing an influence-case as an action-case.")
+
+(preconditionForMethod
+  (and (outsourcedOnly (currentDomain ?domain))
+       (operatorFormulas ?action-pred ?action)
+       (unifies ?libname (CaseLibraryFn ?domain (ActionFn ?action-pred)))
+       (unifies ?action-spindle (SpindleMtFn ?domain ?action-pred))
+       (unifies ?casename (IICaseFn ?mt ?turn ?cmd)))
+  (methodForAction
+    (indexActionCase ?mt ?cmd ?action ?turn)
+    (actionSequence
+      (TheList
+        ;; cross-index influence case as an action case:
+        (doRecord (ist-Information BaseKB (isa ?action-spindle Microtheory)))
+        (doRecord (ist-Information BaseKB (isa ?libname CaseLibrary))) ; reify it explicitly
+        (doRecord (ist-Information BaseKB (caseLibraryContains ?libname ?casename)))
+        (doRecord (ist-Information BaseKB (genlMt ?action-spindle ?casename)))
+        (doRecord (ist-Information ?mt (actionCase ?casename (ActionFn ?action-pred))))   ; don't know if this is useful
+        (doRecord (ist-Information ?casename (dateOfEvent ?cmd ?turn)))
+        (doRecord (ist-Information ?casename (infoTransferred ?cmd ?action)))))))
+
+(isa elaborateActionCase ComplexActionPredicate)
+(arity elaborateActionCase 3)
+(arg1Isa elaborateActionCase Microtheory)
+(arg2Isa elaborateActionCase CycLFormula)
+(arg3Isa elaborateActionCase Microtheory)
+(comment elaborateActionCase "(elaborateActionCase ?mt ?action ?case) elaborates ?case with salient facts for learning semi-optimal behavior.")
+
+;;; If the action case is different from the indirect influence case,
+;;; then it should probably inherit from it (assuming there is one)
+
+;;; We want to learn additional encoding in order to discriminate
+;;; good action choices from poor choices.  E.g., when does it make
+;;; sense to irrigate?  Where should be build cities to maximize
+;;; eventual return?  etc.
+;;;
+;;; Here, we'll be more likely to use a case library than a spindle.
+;;;
+;;; This is invoked from explainPlan.
+;;; *** So long as this is invoked from explainPlan (and further from 
+;;; *** explainAction), we have a problem.  The cityinfo packet
+;;; *** hasn't always arrived yet, so the case facts cannot be elaborated.
+;;; *** We have a race condition.
+
+(preconditionForMethod
+  (and (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (operatorFormulas ?action-pred ?action)
+;      (unifies ?libname (CaseLibraryFn ?domain (ActionFn ?action-pred)))
+;      (unifies ?action-spindle (SpindleMtFn ?domain ?action-pred))
+       ;; Retroactively index prior cases that preceded learning goal:
+;       (evaluate ?unindexed-action-cases
+;         (TheClosedRetrievalSetOf ?unindexed-case
+;           (and (unindexedActionCaseName ?mt ?action ?libname ?unindexed-case)
+;                (different ?unindexed-case ?casename))))
+       ;; Elaborate case based on learned salience information:
+       (evaluate ?casefacts
+         (TheClosedRetrievalSetOf ?fact
+           (salientActionFact ?mt ?action ?fact)))   ; Handle case where we know what's salient
+       ;; Record base predictive features based on learned independent variable knowledge:
+       (evaluate ?predictive-feature-stmts
+         (TheClosedRetrievalSetOf ?feature-stmt
+           (and (elementOf ?casefact ?casefacts)
+                (predictiveCasePred ?mt ?action ?casefact ?featurepred)
+                (unifies ?feature-stmt (predictiveFeature ?action-pred ?featurepred))))))
+  (methodForAction
+    (elaborateActionCase ?mt ?action ?casename)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?casename ?casefacts)
+        (doRecordMembersInContext ?lkmt ?predictive-feature-stmts)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (writeCaseScore ?casename ?action ?lkmt))))
+        ;; backfill action case indexing to leverage earlier cases that preceded learning goal:
+;        (doForEach ?prior-case ?unindexed-action-cases
+;          (reEncodeActionCase ?prior-case ?libname ?action-spindle ?lkmt))
+        ))))
+
+(isa unindexedActionCaseName QuaternaryPredicate)
+(arity unindexedActionCaseName 4)
+(arg1Isa unindexedActionCaseName Microtheory)
+(arg2Isa unindexedActionCaseName CycLExpression)
+(arg3Isa unindexedActionCaseName CaseLibrary)
+(arg4Isa unindexedActionCaseName Microtheory)
+(comment unindexedActionCaseName "(unindexedActionCaseName ?mt ?action ?libname ?casename) binds ?casename to existing indirect influence cases to enable retroactive indexing in the relevant action case library.")
+
+(<== (unindexedActionCaseName ?mt ?action ?libname ?casename)
+     (evaluate ?lifted-action (GeneralizeFormulaFn ?action))
+     (localOnly
+       (ist-Information ?mt
+         (infoTransferred (CommandFn ?mt ?num) ?lifted-action)))  ; implicitly instantiate command and lifted-action
+     (localOnly
+       (ist-Information ?mt
+         (dateOfEvent (CommandFn ?mt ?num) ?when)))
+     (unifies ?casename (IICaseFn ?mt ?when (CommandFn ?mt ?num)))
+     (uninferredSentence
+       (caseLibraryContains ?libname ?casename)))
+
+
+(isa actionCase BinaryPredicate)
+(comment actionCase "(actionCase ?casename ?actionname) is a reifiable predicate that indexes an action case in a game microtheory.  ?actionname is of the form (ActionFn ?action-pred)")
+
+
+;;; Salient facts are relevant to the target
+;;; predictive facts are relevant to the base (a subset of the salient facts)
+;;; The salient facts of a case will include things in the solution 
+;;; (e.g., the location of the city built) that cannot be part of the problem.
+
+(isa salientActionFact TernaryPredicate)
+(comment salientActionFact "(salientActionFact ?mt ?action ?fact) binds ?fact to relevant case facts based on current goals and learned salience information.")
+
+(isa predictiveFeature BinaryPredicate)
+(arity predictiveFeature 2)
+(arg1Isa predictiveFeature ActionPredicate)
+(arg2Isa predictiveFeature BinaryRelation)
+(comment predictiveFeature "(predictiveFeature ?action-pred ?binrel) is a reifiable statement that helps predict dependent var score.")
+
+
+(isa predictiveCasePred QuaternaryPredicate)
+(arity predictiveCasePred 4)
+(comment predictiveCasePred "(predictiveCasePred ?mt ?action ?casefact ?featurepred) computes the binary predicates that serve as properties of the independent variable in an actioncase.")
+
+;;; This filters out all but the properties of independent variable.
+;;; So, for doBuildCity, we get specialAt and terrainAt, but not 
+;;; blobContainsLocation or fcObjectAt.  For now, that should be 
+;;; enough.
+(<== (predictiveCasePred ?mt ?action ?casefact ?featurepred)
+     (operatorFormulas ?action-pred ?action)
+     (numAnswers 1 (operatorIndependentVariable ?action-pred ?argnum ?binrel))
+     (formulaArgument ?action ?argnum ?entity)
+     ;; Case hasn't been written out yet - use execution-context:
+     (numAnswers 1 (localOnly (ist-Information ?mt (?binrel ?entity ?input))))
+     (unifies (?featurepred ?input ?somevalue) ?casefact)
+     (different ?somevalue ?entity))
+
+
+(isa writeCaseScore ComplexActionPredicate)
+(arity writeCaseScore 3)
+(arg1Isa writeCaseScore Microtheory)
+(arg2Isa writeCaseScore CycLSentence-Assertible)
+(arg3Isa writeCaseScore Microtheory)
+(comment writeCaseScore "(writeCaseScore ?case ?action ?lkmt) reifies the magnitude of the operatorDependentVariable for the action predicate, if one exists.")
+
+(preconditionForMethod
+  (and (numAnswers 1 (caseScore ?case ?action ?score))
+       (operatorFormulas ?action-pred ?action))
+  (methodForAction
+    (writeCaseScore ?case ?action ?lkmt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?case (caseScore ?case ?action ?score)))
+        (indexCaseScore ?case ?action ?lkmt ?score)
+        ))))
+
+(preconditionForMethod
+  (uninferredSentence (caseScore ?case ?action ?score))
+  (methodForAction
+    (writeCaseScore ?case ?action ?lkmt)
+    (actionSequence
+      (TheList))))
+
+(isa caseScore TernaryPredicate)
+(arity caseScore 3)
+(arg1Isa caseScore Microtheory)
+(arg2Isa caseScore CycLSentence-Assertible)
+(arg3Isa caseScore Number-General)
+(comment caseScore "(caseScore ?case ?action ?score) is a reifiable statement that binds/relates the numeric evaluation score of an action case with respect to the operatorDependentVariable of the action.")
+
+;;; **** ToDo: Handle case of operatorDependentGoalFunc being MinimizeFn
+;;; **** What happens if ?pred isn't newly added in case?
+;;; **** We were having a problem with retractively scoring cases and 
+;;; **** getting getting current value of dependent var, rather than
+;;; **** the value at the time of the action.
+(<== (caseScore ?case ?action ?score)
+     (operatorFormulas ?action-pred ?action)
+     (operatorDependentVariable ?action-pred ?argnum ?pred)
+     (formulaArgument ?action ?argnum ?entity)
+     (numAnswers 1
+       (localOnly
+         (ist-Information ?case
+           (addedStatement (?pred ?entity ?score-val)))))
+     (valueToMagnitude ?score-val ?score))
+     
+
+;;; **** This is currently commented out.  
+;;; **** ToDo: Make this look at the add-list to write out the correct
+;;; **** salient features and score.
+;;; **** Do terrainAt and resourceAt show up in addlist upon building cities?
+(isa reEncodeActionCase ComplexActionPredicate)
+(arity reEncodeActionCase 4)
+
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (ist-Information ?case (infoTransferred ?cmd ?action))))
+  (methodForAction
+    (reEncodeActionCase ?case ?libname ?action-spindle ?lkmt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information BaseKB (caseLibraryContains ?libname ?case)))
+        (doRecord (ist-Information BaseKB (genlMt ?action-spindle ?case)))
+        (writeCaseScore ?case ?action ?lkmt)
+        ))))
+
+
+(isa reEncodeActionScore ComplexActionPredicate)
+(arity reEncodeActionScore 2)
+
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (ist-Information ?case (infoTransferred ?cmd ?action))))
+  (methodForAction
+    (reEncodeActionScore ?case ?lkmt)
+    (actionSequence
+      (TheList
+        (writeCaseScore ?case ?action ?lkmt)
+        ))))
+
+;;; Make a default so the doForEach doesn't fail:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (reEncodeActionScore ?case ?lkmt)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (reEncodeActionScore ?case ?lkmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; ---------------------------------------------------------------
+;;; Encoding Influence Cases
+;;;
+
+(isa SpindleMtFn Function-Denotational)
+(arity SpindleMtFn 2)
+(resultIsa SpindleMtFn Microtheory)
+(comment SpindleMtFn "(SpindleMtFn ?domain ?type) defines a microtheory to be used as a query spindle for the associated case library.")
+
+;;; Syntactic transforms to make it easy to change spindles:
+(isa infSpindleFor BinaryPredicate)
+(isa diSpindleFor BinaryPredicate)
+(isa iiSpindleFor BinaryPredicate)
+
+(<== (infSpindleFor (SpindleMtFn ?domain ?type) (SpindleMtFn ?domain Influences))
+     (groundExpression ?domain))
+     
+(<== (diSpindleFor (SpindleMtFn ?domain ?type) (SpindleMtFn ?domain DirectInfluences))
+     (groundExpression ?domain))
+     
+(<== (iiSpindleFor (SpindleMtFn ?domain ?type) (SpindleMtFn ?domain IndirectInfluences))
+     (groundExpression ?domain))
+
+(isa IICaseFn CaseFunctions)
+(arity IICaseFn 3)
+(arg1Isa IICaseFn Microtheory)
+(arg2Isa IICaseFn TimeInterval)
+(arg3Isa IICaseFn PerceptualAgentCommand)
+(resultIsa IICaseFn Case)
+(comment IICaseFn "(IICaseFn ?mt ?when ?cmd)  denotes the changed facts and quantity values pertiaining to one or more hypothesized indirect influences.")
+
+(isa priorIICase BinaryPredicate)
+(arity priorIICase 2)
+(comment priorIICase "(priorIICase ?later-di-case ?earlier-di-case) ")
+
+;;; **** ToDo: Handle the new casename format for non-action triggered ii-cases.
+;;; **** e.g., (IICaseFn fc-game43 (YearFn -3400) (TurnFn (YearFn -3400)))
+;;;
+;;; **** ToDo: Consider changing case name format to (IICaseFn (CommandFn ?mt ?turn ?cmd-num))
+
+(<== (priorIICase ?ii-case ?prior)
+     (unifies (IICaseFn ?mt ?turn (CommandFn ?mt ?num)) ?ii-case)
+     (evaluate ?prior-num (DifferenceFn ?num 1))
+     (numAnswers 1
+       (caseLibraryContains (CaseLibraryFn ?domain IndirectInfluences)
+         (IICaseFn ?mt ?some-turn (CommandFn ?mt ?prior-num))))
+     (unifies ?prior (IICaseFn ?mt ?some-turn (CommandFn ?mt ?prior-num))))
+
+(isa synchronicChange UnaryPredicate)
+(arity synchronicChange 1)
+(arg1Isa synchronicChange Microtheory)
+(comment synchronicChange "(synchronicChange ?mt) succeeds if ?mt is an indirect influence case which is known to represent an instantaneous change.")
+
+(<== (synchronicChange (IICaseFn ?mt ?when (CommandFn ?mt ?num))))
+
+
+(isa storeIICase ComplexActionPredicate)
+(arity storeIICase 3)
+(arg1Isa storeIICase Microtheory)
+(arg2Isa storeIICase Microtheory)
+(arg3Isa storeIICase Set-Mathematical)
+(comment storeIICase "(storeIICase ?mt ?casename ?changes)")
+
+(preconditionForMethod
+  (and (outsourcedOnly (currentDomain ?domain))
+       (unifies ?libname (CaseLibraryFn ?domain IndirectInfluences))
+       (unifies ?spindlename (SpindleMtFn ?domain IndirectInfluences)))
+  (methodForAction
+    (storeIICase ?mt ?casename ?changes)
+    (actionSequence
+      (TheList
+        (doRecord (genlMt ?spindlename ?casename))   ; spindle is a spec of the case
+        (doRecord (caseLibraryContains ?libname ?casename))
+        (storeInfluenceCase ?mt ?casename ?changes)))))
+
+;;; auxiliary indexing
+(isa iiCaseForGoal BinaryPredicate)
+(arity iiCaseForGoal 2)
+(arg1Isa iiCaseForGoal LearningGoal)
+(arg2Isa iiCaseForGoal Microtheory)
+(comment iiCaseForGoal "(iiCaseForGoal ?goal ?casename) is a reifiable predicate that indexes an indirect influence case in a game microtheory for which the influence was relevant but ambiguous.")
+
+
+(isa DICaseFn CaseFunctions)
+(arity DICaseFn 2)
+(arg1Isa DICaseFn Microtheory)
+(arg2Isa DICaseFn TimeInterval)
+(resultIsa DICaseFn Case)
+(comment DICaseFn "(DICaseFn ?mt ?when) denotes the changed facts and quantity values pertaining to one or more hypothesized direct influences.")
+
+(isa priorDICase BinaryPredicate)
+(arity priorDICase 2)
+(comment priorDICase "(priorDICase ?later-di-case ?earlier-di-case) ")
+
+;;; This will return the name of a prior di case, even if such a case does not exist.
+(<== (priorDICase ?di-case ?prior)
+     (unifies (DICaseFn ?mt ?turn) ?di-case)
+     (numAnswers 1
+       (ist-Information ?mt
+         (followingTurn ?earlier ?turn)))
+     (unifies ?prior (DICaseFn ?mt ?earlier)))
+
+(isa priorCase BinaryPredicate)
+(<== (priorCase ?later-case ?earlier-case)
+     (priorDICase ?later-case ?earlier-case))
+
+(<== (priorCase ?later-case ?earlier-case)
+     (priorIICase ?later-case ?earlier-case))
+
+(isa storeDICase ComplexActionPredicate)
+(arity storeDICase 3)
+(arg1Isa storeDICase Microtheory)
+(arg2Isa storeDICase Microtheory)
+(arg3Isa storeDICase Set-Mathematical)
+(comment storeDICase "(storeDICase ?mt ?casename ?changes)")
+
+
+(preconditionForMethod
+  (and (outsourcedOnly (currentDomain ?domain))
+       (unifies ?libname (CaseLibraryFn ?domain DirectInfluences))
+       (unifies ?spindlename (SpindleMtFn ?domain DirectInfluences)))
+  (methodForAction
+    (storeDICase ?mt ?casename ?changes)
+    (actionSequence
+      (TheList
+        (doRecord (genlMt ?spindlename ?casename))   ; spindle is a spec of the case
+        (doRecord (caseLibraryContains ?libname ?casename))
+        (storeInfluenceCase ?mt ?casename ?changes)))))
+
+(isa storeInfluenceCase ComplexActionPredicate)
+(arity storeInfluenceCase 3)
+(arg1Isa storeInfluenceCase Microtheory)
+(arg2Isa storeInfluenceCase Microtheory)
+(arg3Isa storeInfluenceCase Set-Mathematical)
+(comment storeInfluenceCase "(storeInfluenceCase ?mt ?casename ?changes)")
+
+
+(isa addedStatement UnaryPredicate)
+(arity addedStatement 1)
+(arg1Isa addedStatement CycLSentence-Assertible)
+(comment addedStatement "(addedStatement <sentence>) reifies the fact that <sentence> because true in the current execution context.  It reifies an element of the currentAddList.")
+
+(isa deletedStatement UnaryPredicate)
+(arity deletedStatement 1)
+(arg1Isa deletedStatement CycLSentence-Assertible)
+(comment deletedStatement "(deletedStatement <sentence>) reifies the fact that <sentence> because false in the current execution context.  It reifies an element of the currentDeleteList.")
+
+
+;;; Store the before (deleted) value of quantities that change into the case.
+;;; Don't try to store into the game case directly, since the holdsIn is too
+;;; vague.
+(preconditionForMethod
+  (and (outsourcedOnly (currentAddList ?addlist))       ; technically, a set rather than a list.
+       (outsourcedOnly (currentDeleteList ?deletelist)) ; ditto
+       (evaluate ?added-stmts
+         (TheClosedRetrievalSetOf ?stmt
+           (and (elementOf ?prop ?addlist)
+                (unifies ?stmt (addedStatement ?prop)))))
+       (evaluate ?deleted-stmts
+         (TheClosedRetrievalSetOf ?stmt
+           (and (elementOf ?prop ?deletelist)
+                (unifies ?stmt (deletedStatement ?prop)))))
+       (evaluate ?quantity-value-stmts
+         (TheClosedRetrievalSetOf ?stmt
+           (and (elementOf ?dynamic-change ?changes)
+                (unifies (quantityChange ?quantity ?change) ?dynamic-change)
+                (priorValue ?mt ?quantity ?value)
+                (unifies ?stmt (quantityValue ?quantity ?value))))))
+  (methodForAction
+    (storeInfluenceCase ?mt ?casename ?changes)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information BaseKB (isa ?casename Microtheory)))
+        (doRecordMembersInContext ?casename ?added-stmts)
+        (doRecordMembersInContext ?casename ?deleted-stmts)
+        (doRecordMembersInContext ?casename ?quantity-value-stmts)
+        (doRecordMembersInContext ?casename ?changes)))))
+
+;;; End of file

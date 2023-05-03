@@ -1,0 +1,1073 @@
+;;;; Axioms for d:\qrg\fire\v3\evalfns.lsp
+;;;; Automatically generated 8/3/2018, 11:16:10.
+;;;; PLEASE DO NOT MANUALLY EDIT.
+
+
+;;;; (see create-fire-default-evaluation-files)
+(in-microtheory UniversalVocabularyMt)
+
+
+;;; Axioms concerning IdentityFn
+
+(comment IdentityFn
+ "When applied to an instance THING of Thing, IdentityFn returns THING as its value, so that (equals (IdentityFn THING) THING) holds.")
+(isa IdentityFn EvaluatableFunction)
+(arity IdentityFn 1)
+(lispProcedureImplementing IdentityFn IdentityFn-FIRE-evalfn-handler)
+(arg1Isa IdentityFn Thing)
+(resultIsa IdentityFn Thing)
+
+;;; Axioms concerning LengthOfListFn
+
+(comment LengthOfListFn "Computes the length of a list")
+(isa LengthOfListFn EvaluatableFunction)
+(arity LengthOfListFn 1)
+(lispProcedureImplementing LengthOfListFn
+ LengthOfListFn-FIRE-evalfn-handler)
+(arg1Isa LengthOfListFn List)
+(resultIsa LengthOfListFn NonNegativeInteger)
+
+;;; Axioms concerning CardinalityFn
+
+(comment CardinalityFn
+ "Computes the cardinality of a set implemented in a list")
+(isa CardinalityFn EvaluatableFunction)
+(arity CardinalityFn 1)
+(lispProcedureImplementing CardinalityFn
+ CardinalityFn-FIRE-evalfn-handler)
+(arg1Isa CardinalityFn Set)
+(resultIsa CardinalityFn NonNegativeInteger)
+
+;;; Axioms concerning ListFn
+
+(comment ListFn
+ "Creates a form thats Cyc's representation of a list from the arguments passed to it, e.g. evaluating (ListFn foo bar) returns (TheList foo bar)")
+(isa ListFn EvaluatableFunction)
+(isa ListFn VariableArityFunction)
+(lispProcedureImplementing ListFn ListFn-FIRE-evalfn-handler)
+(resultIsa ListFn List)
+
+;;; Axioms concerning ListMemberFn
+
+(comment ListMemberFn
+ "(ListMemberFn ?elt ?lst) returns True or False depending upon whether ?elt is present in ?lst")
+(isa ListMemberFn EvaluatableFunction)
+(arity ListMemberFn 2)
+(lispProcedureImplementing ListMemberFn
+ ListMemberFn-FIRE-evalfn-handler)
+(arg1Isa ListMemberFn Thing)
+
+;;; Axioms concerning CountFn
+
+(comment CountFn
+ "(CountFn ?elt ?lst) returns the number of times ?elt occurrs in ?lst.  This is basically an implementation of Lisp's count function.")
+(isa CountFn EvaluatableFunction)
+(arity CountFn 2)
+(lispProcedureImplementing CountFn CountFn-FIRE-evalfn-handler)
+(arg1Isa CountFn Thing)
+(arg2Isa CountFn AtemporalNecessarilyEssentialCollectionType)
+(resultIsa CountFn Integer)
+
+;;; Axioms concerning MaxCountInListFn
+
+(comment MaxCountInListFn
+ "(MaxCountInListFn ?lst) returns the element of the list with the highest count. If multiple elements have the same count, will return the first occuring element. See also #$CountFn")
+(isa MaxCountInListFn EvaluatableFunction)
+(arity MaxCountInListFn 1)
+(lispProcedureImplementing MaxCountInListFn
+ MaxCountInListFn-FIRE-evalfn-handler)
+(arg1Isa MaxCountInListFn List)
+(resultIsa MaxCountInListFn Thing)
+
+;;; Axioms concerning RemoveFromListFn
+
+(comment RemoveFromListFn
+ "(RemoveFromListFn ?elt ?lst) removes the element ?elt from the list ?lst. This is just the listp remove funtion")
+(isa RemoveFromListFn EvaluatableFunction)
+(arity RemoveFromListFn 2)
+(lispProcedureImplementing RemoveFromListFn
+ RemoveFromListFn-FIRE-evalfn-handler)
+(arg1Isa RemoveFromListFn Thing)
+(arg2Isa RemoveFromListFn List)
+(resultIsa RemoveFromListFn List)
+
+;;; Axioms concerning SublistFromToFn
+
+(comment SublistFromToFn
+ "(SublistFromToFn ?list ?from ?to) extracts a subset of a list.")
+(isa SublistFromToFn EvaluatableFunction)
+(arity SublistFromToFn 3)
+(lispProcedureImplementing SublistFromToFn
+ SublistFromToFn-FIRE-evalfn-handler)
+(arg1Isa SublistFromToFn List)
+(arg2Isa SublistFromToFn Integer)
+(arg3Isa SublistFromToFn Integer)
+(resultIsa SublistFromToFn List)
+
+;;; Axioms concerning AssocFn
+
+(comment AssocFn
+ "(AssocFn ?key ?alist) is Lisp Assoc, with equal as the test and each binding pair wrapped in (TheList).")
+(isa AssocFn EvaluatableFunction)
+(arity AssocFn 2)
+(lispProcedureImplementing AssocFn AssocFn-FIRE-evalfn-handler)
+(arg1Isa AssocFn Thing)
+(arg2Isa AssocFn List)
+
+;;; Axioms concerning LogicSublisFn
+
+(comment LogicSublisFn
+ "(LogicSublisFn ?alist ?form) is Lisp Sublis, with equal as the test and each binding pair wrapped in (TheList).")
+(isa LogicSublisFn EvaluatableFunction)
+(arity LogicSublisFn 2)
+(lispProcedureImplementing LogicSublisFn
+ LogicSublisFn-FIRE-evalfn-handler)
+(arg1Isa LogicSublisFn List)
+(arg2Isa LogicSublisFn Thing)
+
+;;; Axioms concerning PositionInListFn
+
+(comment PositionInListFn
+ "(PositionInListFn ?item ?list) returns the position of ?item in ?list, counting from 1.")
+(isa PositionInListFn EvaluatableFunction)
+(arity PositionInListFn 2)
+(lispProcedureImplementing PositionInListFn
+ PositionInListFn-FIRE-evalfn-handler)
+(arg1Isa PositionInListFn Thing)
+(arg2Isa PositionInListFn List)
+(resultIsa PositionInListFn Integer)
+
+;;; Axioms concerning NthInListFn
+
+(comment NthInListFn
+ "(NthInListFn ?n ?list) returns the ?nth element of ?list (starting at 1).")
+(isa NthInListFn EvaluatableFunction)
+(arity NthInListFn 2)
+(lispProcedureImplementing NthInListFn NthInListFn-FIRE-evalfn-handler)
+(arg1Isa NthInListFn Integer)
+(arg2Isa NthInListFn List)
+(resultIsa NthInListFn Thing)
+
+;;; Axioms concerning FirstInListFn
+
+(comment FirstInListFn
+ "(FirstInListFn ?list) returns the first element of ?list.")
+(isa FirstInListFn EvaluatableFunction)
+(arity FirstInListFn 1)
+(lispProcedureImplementing FirstInListFn
+ FirstInListFn-FIRE-evalfn-handler)
+(arg1Isa FirstInListFn List)
+(resultIsa FirstInListFn Thing)
+
+;;; Axioms concerning SecondInListFn
+
+(comment SecondInListFn
+ "(SecondInListFn ?list) returns the second element of ?list.")
+(isa SecondInListFn EvaluatableFunction)
+(arity SecondInListFn 1)
+(lispProcedureImplementing SecondInListFn
+ SecondInListFn-FIRE-evalfn-handler)
+(arg1Isa SecondInListFn List)
+(resultIsa SecondInListFn Thing)
+
+;;; Axioms concerning ThirdInListFn
+
+(comment ThirdInListFn
+ "(ThirdInListFn ?list) returns the third element of ?list.")
+(isa ThirdInListFn EvaluatableFunction)
+(arity ThirdInListFn 1)
+(lispProcedureImplementing ThirdInListFn
+ ThirdInListFn-FIRE-evalfn-handler)
+(arg1Isa ThirdInListFn List)
+(resultIsa ThirdInListFn Thing)
+
+;;; Axioms concerning FourthInListFn
+
+(comment FourthInListFn
+ "(FourthInListFn ?list) returns the fourth element of ?list.")
+(isa FourthInListFn EvaluatableFunction)
+(arity FourthInListFn 1)
+(lispProcedureImplementing FourthInListFn
+ FourthInListFn-FIRE-evalfn-handler)
+(arg1Isa FourthInListFn List)
+(resultIsa FourthInListFn Thing)
+
+;;; Axioms concerning FifthInListFn
+
+(comment FifthInListFn
+ "(FifthInListFn ?list) returns the fifth element of ?list.")
+(isa FifthInListFn EvaluatableFunction)
+(arity FifthInListFn 1)
+(lispProcedureImplementing FifthInListFn
+ FifthInListFn-FIRE-evalfn-handler)
+(arg1Isa FifthInListFn List)
+(resultIsa FifthInListFn Thing)
+
+;;; Axioms concerning SixthInListFn
+
+(comment SixthInListFn
+ "(SixthInListFn ?list) returns the sixth element of ?list.")
+(isa SixthInListFn EvaluatableFunction)
+(arity SixthInListFn 1)
+(lispProcedureImplementing SixthInListFn
+ SixthInListFn-FIRE-evalfn-handler)
+(arg1Isa SixthInListFn List)
+(resultIsa SixthInListFn Thing)
+
+;;; Axioms concerning SeventhInListFn
+
+(comment SeventhInListFn
+ "(SeventhInListFn ?list) returns the seventh element of ?list.")
+(isa SeventhInListFn EvaluatableFunction)
+(arity SeventhInListFn 1)
+(lispProcedureImplementing SeventhInListFn
+ SeventhInListFn-FIRE-evalfn-handler)
+(arg1Isa SeventhInListFn List)
+(resultIsa SeventhInListFn Thing)
+
+;;; Axioms concerning LastInListFn
+
+(comment LastInListFn
+ "(LastInListFn ?list) returns the last element of ?list.")
+(isa LastInListFn EvaluatableFunction)
+(arity LastInListFn 1)
+(lispProcedureImplementing LastInListFn
+ LastInListFn-FIRE-evalfn-handler)
+(arg1Isa LastInListFn List)
+(resultIsa LastInListFn Thing)
+
+;;; Axioms concerning RestOfListFn
+
+(comment RestOfListFn
+ "(RestOfListFn ?list) returns all but the first element of ?list, in the same order.")
+(isa RestOfListFn EvaluatableFunction)
+(arity RestOfListFn 1)
+(lispProcedureImplementing RestOfListFn
+ RestOfListFn-FIRE-evalfn-handler)
+(arg1Isa RestOfListFn List)
+(resultIsa RestOfListFn List)
+
+;;; Axioms concerning JoinListsFn
+
+(comment JoinListsFn "(JoinListsFn . ?lists) appends n lists.")
+(isa JoinListsFn EvaluatableFunction)
+(isa JoinListsFn VariableArityFunction)
+(lispProcedureImplementing JoinListsFn JoinListsFn-FIRE-evalfn-handler)
+(resultIsa JoinListsFn List)
+
+;;; Axioms concerning ReverseListFn
+
+(comment ReverseListFn
+ "(ReverseListFn ?list) creates a new list with the elements reversed.")
+(isa ReverseListFn EvaluatableFunction)
+(arity ReverseListFn 1)
+(lispProcedureImplementing ReverseListFn
+ ReverseListFn-FIRE-evalfn-handler)
+(resultIsa ReverseListFn List)
+
+;;; Axioms concerning TheList
+
+(comment TheList "(TheList <stuff>) refers to the list of <stuff>")
+(isa TheList EvaluatableFunction)
+(isa TheList VariableArityFunction)
+(lispProcedureImplementing TheList TheList-FIRE-evalfn-handler)
+(resultIsa TheList List)
+
+;;; Axioms concerning TheSet
+
+(comment TheSet "(TheSet <stuff>) refers to the set of <stuff>")
+(isa TheSet EvaluatableFunction)
+(isa TheSet VariableArityFunction)
+(lispProcedureImplementing TheSet TheSet-FIRE-evalfn-handler)
+(resultIsa TheSet Set)
+
+;;; Axioms concerning SetToListFn
+
+(comment SetToListFn
+ "(SetToListFn <set>) refers to the list whose members are the elements of <set>")
+(isa SetToListFn EvaluatableFunction)
+(arity SetToListFn 1)
+(lispProcedureImplementing SetToListFn SetToListFn-FIRE-evalfn-handler)
+(resultIsa SetToListFn List)
+
+;;; Axioms concerning ListToSetFn
+
+(comment ListToSetFn
+ "(ListToSetFn <list>) refers to the set consisting of the members of <list>.")
+(isa ListToSetFn EvaluatableFunction)
+(arity ListToSetFn 1)
+(lispProcedureImplementing ListToSetFn ListToSetFn-FIRE-evalfn-handler)
+(resultIsa ListToSetFn Set-Extensional)
+
+;;; Axioms concerning MakeListFn
+
+(comment MakeListFn
+ "(MakeListFn <lisp-style list>) refers to the CycL-style list made from the members of <lisp-style list>.")
+(isa MakeListFn EvaluatableFunction)
+(arity MakeListFn 1)
+(lispProcedureImplementing MakeListFn MakeListFn-FIRE-evalfn-handler)
+(resultIsa MakeListFn List)
+
+;;; Axioms concerning MakeSetFn
+
+(comment MakeSetFn
+ "(MakeSetFn <lisp-style list>) refers to the Cycl-style set made from the members of <lisp-style list>.")
+(isa MakeSetFn EvaluatableFunction)
+(arity MakeSetFn 1)
+(lispProcedureImplementing MakeSetFn MakeSetFn-FIRE-evalfn-handler)
+(resultIsa MakeSetFn Set-Extensional)
+
+;;; Axioms concerning ConsFn
+
+(comment ConsFn
+ "(ConsFn <a> <b>) does what you might expect.  Good for creating lists.")
+(isa ConsFn EvaluatableFunction)
+(arity ConsFn 2)
+(lispProcedureImplementing ConsFn ConsFn-FIRE-evalfn-handler)
+(resultIsa ConsFn LispConsObject)
+
+;;; Axioms concerning StringFn
+
+(comment StringFn
+ "(StringFn <token>) refers to the string form of the symbolic token.")
+(isa StringFn EvaluatableFunction)
+(arity StringFn 1)
+(lispProcedureImplementing StringFn StringFn-FIRE-evalfn-handler)
+(resultIsa StringFn CharacterString)
+
+;;; Axioms concerning StringCapitalizeFn
+
+(comment StringCapitalizeFn
+ "(StringCapitalizeFn <token-or-string>) refers to the capitalized string form of the token.")
+(isa StringCapitalizeFn EvaluatableFunction)
+(arity StringCapitalizeFn 1)
+(lispProcedureImplementing StringCapitalizeFn
+ StringCapitalizeFn-FIRE-evalfn-handler)
+(resultIsa StringCapitalizeFn CharacterString)
+
+;;; Axioms concerning ConcatenateStringsFn
+
+(comment ConcatenateStringsFn
+ "A variable-arity IndividualDenotingFunction that takes one or more abstract character-strings and (in effect) concatenates them.")
+(isa ConcatenateStringsFn EvaluatableFunction)
+(isa ConcatenateStringsFn VariableArityFunction)
+(lispProcedureImplementing ConcatenateStringsFn
+ ConcatenateStringsFn-FIRE-evalfn-handler)
+(resultIsa ConcatenateStringsFn CharacterString)
+
+;;; Axioms concerning StringEqualFn
+
+(comment StringEqualFn
+ "An evaluable function that tests whether or not two strings are equal.")
+(isa StringEqualFn EvaluatableFunction)
+(arity StringEqualFn 2)
+(lispProcedureImplementing StringEqualFn
+ StringEqualFn-FIRE-evalfn-handler)
+(resultIsa StringEqualFn TruthValue)
+
+;;; Axioms concerning StringPluralFn
+
+(comment StringPluralFn
+ "(StringPluralFn <token-or-string>) refers to a pluralized
+                   string form of token-or-string.")
+(isa StringPluralFn EvaluatableFunction)
+(arity StringPluralFn 1)
+(lispProcedureImplementing StringPluralFn
+ StringPluralFn-FIRE-evalfn-handler)
+(resultIsa StringPluralFn CharacterString)
+
+;;; Axioms concerning trimTokenizationFn
+
+(comment trimTokenizationFn
+ "(trimTokenizationFn <token>) trims the numbers off a token to give just the token type.")
+(isa trimTokenizationFn EvaluatableFunction)
+(arity trimTokenizationFn 1)
+(lispProcedureImplementing trimTokenizationFn
+ trimTokenizationFn-FIRE-evalfn-handler)
+(resultIsa trimTokenizationFn CharacterString)
+
+;;; Axioms concerning QuantityConversionFn
+
+(comment QuantityConversionFn
+ "(QuantityConversionFn <unit> <physical number>) denotes <physical number> converted to <unit>.")
+(isa QuantityConversionFn EvaluatableFunction)
+(arity QuantityConversionFn 2)
+(lispProcedureImplementing QuantityConversionFn
+ QuantityConversionFn-FIRE-evalfn-handler)
+(resultIsa QuantityConversionFn Number-General)
+
+;;; Axioms concerning QuantityNumberFn
+
+(comment QuantityNumberFn
+ "(QuantityNumberFn <unit> <value>) denotes the physical number whose magnitude is <value> with units <unit>.")
+(isa QuantityNumberFn EvaluatableFunction)
+(arity QuantityNumberFn 2)
+(lispProcedureImplementing QuantityNumberFn
+ QuantityNumberFn-FIRE-evalfn-handler)
+(resultIsa QuantityNumberFn Number-General)
+
+;;; Axioms concerning ValueFromUnitsFn
+
+(comment ValueFromUnitsFn "(ValueFromUnitsFn (?u ?v)) denotes ?v.")
+(isa ValueFromUnitsFn EvaluatableFunction)
+(arity ValueFromUnitsFn 1)
+(lispProcedureImplementing ValueFromUnitsFn
+ ValueFromUnitsFn-FIRE-evalfn-handler)
+(resultIsa ValueFromUnitsFn Number-General)
+
+;;; Axioms concerning GeometricMeanFn
+
+(comment GeometricMeanFn
+ "(GeometricMeanFn ?n) is an evaluable function that, when given a range, returns
+ the geometric mean of that range, and for numbers, returns them.  Units are preserved.")
+(isa GeometricMeanFn EvaluatableFunction)
+(arity GeometricMeanFn 1)
+(lispProcedureImplementing GeometricMeanFn
+ GeometricMeanFn-FIRE-evalfn-handler)
+(resultIsa GeometricMeanFn Number-General)
+
+;;; Axioms concerning PlusFn
+
+(comment PlusFn "PlusFn is n-ary addition.")
+(isa PlusFn EvaluatableFunction)
+(isa PlusFn VariableArityFunction)
+(lispProcedureImplementing PlusFn PlusFn-FIRE-evalfn-handler)
+(resultIsa PlusFn Number-General)
+
+;;; Axioms concerning TimesFn
+
+(comment TimesFn "TimesFn is n-ary multiplication.")
+(isa TimesFn EvaluatableFunction)
+(isa TimesFn VariableArityFunction)
+(lispProcedureImplementing TimesFn TimesFn-FIRE-evalfn-handler)
+(resultIsa TimesFn Number-General)
+
+;;; Axioms concerning DifferenceFn
+
+(comment DifferenceFn "DifferenceFn is binary subtraction.")
+(isa DifferenceFn EvaluatableFunction)
+(arity DifferenceFn 2)
+(lispProcedureImplementing DifferenceFn
+ DifferenceFn-FIRE-evalfn-handler)
+(resultIsa DifferenceFn Number-General)
+
+;;; Axioms concerning QuotientFn
+
+(comment QuotientFn "QuotientFn is division.")
+(isa QuotientFn EvaluatableFunction)
+(arity QuotientFn 2)
+(lispProcedureImplementing QuotientFn QuotientFn-FIRE-evalfn-handler)
+(resultIsa QuotientFn Number-General)
+
+;;; Axioms concerning AbsoluteValueFn
+
+(comment AbsoluteValueFn "AbsoluteValueFn is absolute value.")
+(isa AbsoluteValueFn EvaluatableFunction)
+(arity AbsoluteValueFn 1)
+(lispProcedureImplementing AbsoluteValueFn
+ AbsoluteValueFn-FIRE-evalfn-handler)
+(resultIsa AbsoluteValueFn Number-General)
+
+;;; Axioms concerning RoundFn
+
+(comment RoundFn "RoundFn is round.")
+(isa RoundFn EvaluatableFunction)
+(arity RoundFn 1)
+(lispProcedureImplementing RoundFn RoundFn-FIRE-evalfn-handler)
+(resultIsa RoundFn Integer)
+
+;;; Axioms concerning FloorFn
+
+(comment FloorFn "FloorFn is floor")
+(isa FloorFn EvaluatableFunction)
+(arity FloorFn 1)
+(lispProcedureImplementing FloorFn FloorFn-FIRE-evalfn-handler)
+(resultIsa FloorFn Integer)
+
+;;; Axioms concerning TruncateFn
+
+(comment TruncateFn "TruncateFn is floor.")
+(isa TruncateFn EvaluatableFunction)
+(arity TruncateFn 1)
+(lispProcedureImplementing TruncateFn TruncateFn-FIRE-evalfn-handler)
+(resultIsa TruncateFn Integer)
+
+;;; Axioms concerning ExponentFn
+
+(comment ExponentFn
+ "(ExponentFn ?base ?number) is ?base to the ?number.")
+(isa ExponentFn EvaluatableFunction)
+(arity ExponentFn 2)
+(lispProcedureImplementing ExponentFn ExponentFn-FIRE-evalfn-handler)
+(resultIsa ExponentFn Number-General)
+
+;;; Axioms concerning ExpFn
+
+(comment ExpFn "(ExpFn ?exp) is E to the ?exp.")
+(isa ExpFn EvaluatableFunction)
+(arity ExpFn 1)
+(lispProcedureImplementing ExpFn ExpFn-FIRE-evalfn-handler)
+(resultIsa ExpFn Number-General)
+
+;;; Axioms concerning LogFn
+
+(comment LogFn "(LogFn ?num) is the logarithm of ?num.")
+(isa LogFn EvaluatableFunction)
+(arity LogFn 1)
+(lispProcedureImplementing LogFn LogFn-FIRE-evalfn-handler)
+(resultIsa LogFn Number-General)
+
+;;; Axioms concerning Log-10Fn
+
+(comment Log-10Fn
+ "(Log-10Fn ?num) is the logarithm of ?num in base 10.")
+(isa Log-10Fn EvaluatableFunction)
+(arity Log-10Fn 1)
+(lispProcedureImplementing Log-10Fn Log-10Fn-FIRE-evalfn-handler)
+(resultIsa Log-10Fn Number-General)
+
+;;; Axioms concerning ModuloFn
+
+(comment ModuloFn
+ "(ModuloFn ?divisor ?dividend) is the remainder of dividing ?divisor by ?dividend.")
+(isa ModuloFn EvaluatableFunction)
+(arity ModuloFn 2)
+(lispProcedureImplementing ModuloFn ModuloFn-FIRE-evalfn-handler)
+(resultIsa ModuloFn Number-General)
+
+;;; Axioms concerning MaximumFn
+
+(comment MaximumFn
+ "(MaximumFn ?set ?function) finds the largest element of ?function mapped over ?set.")
+(isa MaximumFn EvaluatableFunction)
+(arity MaximumFn 2)
+(lispProcedureImplementing MaximumFn MaximumFn-FIRE-evalfn-handler)
+(resultIsa MaximumFn Thing)
+(arg1Isa MaximumFn SetOrList-Extensional)
+(arg2Isa MaximumFn EvaluatableFunction)
+
+;;; Axioms concerning MinimumFn
+
+(comment MinimumFn
+ "(MinimumFn ?set ?function) finds the smallest element of ?function mapped over ?set.")
+(isa MinimumFn EvaluatableFunction)
+(arity MinimumFn 2)
+(lispProcedureImplementing MinimumFn MinimumFn-FIRE-evalfn-handler)
+(resultIsa MinimumFn Thing)
+(arg1Isa MinimumFn SetOrList-Extensional)
+(arg2Isa MinimumFn EvaluatableFunction)
+
+;;; Axioms concerning PlusAll
+
+(comment PlusAll
+ "(PlusAll ?set ?function) sums the result of mapping ?function over ?set.")
+(isa PlusAll EvaluatableFunction)
+(arity PlusAll 2)
+(lispProcedureImplementing PlusAll PlusAll-FIRE-evalfn-handler)
+(resultIsa PlusAll Number-General)
+
+;;; Axioms concerning TimesAll
+
+(comment TimesAll
+ "(TimesAll ?set ?function) multiplies the result of mapping ?function over ?set.")
+(isa TimesAll EvaluatableFunction)
+(arity TimesAll 2)
+(lispProcedureImplementing TimesAll TimesAll-FIRE-evalfn-handler)
+(resultIsa TimesAll Number-General)
+
+;;; Axioms concerning Average
+
+(comment Average
+ "Computes the average of the function values over all elements in the Set.")
+(isa Average EvaluatableFunction)
+(arity Average 2)
+(lispProcedureImplementing Average Average-FIRE-evalfn-handler)
+(arg1Isa Average SetOrCollection)
+(arg2Isa Average UnaryFunction)
+(resultIsa Average ScalarInterval)
+
+;;; Axioms concerning VarianceFn
+
+(comment VarianceFn
+ "Computes the variance of the function values over all elements in the Set.")
+(isa VarianceFn EvaluatableFunction)
+(arity VarianceFn 2)
+(lispProcedureImplementing VarianceFn VarianceFn-FIRE-evalfn-handler)
+(arg1Isa VarianceFn SetOrCollection)
+(arg2Isa VarianceFn UnaryFunction)
+(resultIsa VarianceFn ScalarInterval)
+
+;;; Axioms concerning SortFn
+
+(comment SortFn
+ "(SortFn ?set-or-list ?binpred ?function) orders the elements of ?set-or-list as mapped by ?function with respect to ?binpred.  Currently supports greaterThan or lessThan or Kappa (anonymous function similar to lambda in common lisp).")
+(isa SortFn EvaluatableFunction)
+(arity SortFn 3)
+(lispProcedureImplementing SortFn SortFn-FIRE-evalfn-handler)
+(arg1Isa SortFn AtemporalNecessarilyEssentialCollectionType)
+(arg2Isa SortFn BinaryPredicate)
+(arg3Isa SortFn UnaryFunction)
+(resultIsa SortFn List)
+
+;;; Axioms concerning GreaterThan-UnitValuesFn
+
+(comment GreaterThan-UnitValuesFn
+ "(GreaterThan-UnitValuesFn ?x ?y ) This is a comparision operator for items of the form (Unit Value).  Returns True or False.")
+(isa GreaterThan-UnitValuesFn EvaluatableFunction)
+(arity GreaterThan-UnitValuesFn 2)
+(lispProcedureImplementing GreaterThan-UnitValuesFn
+ GreaterThan-UnitValuesFn-FIRE-evalfn-handler)
+(arg1Isa GreaterThan-UnitValuesFn MeasurableQuantity)
+(arg2Isa GreaterThan-UnitValuesFn MeasurableQuantity)
+(resultIsa GreaterThan-UnitValuesFn TruthValue)
+
+;;; Axioms concerning LessThan-UnitValuesFn
+
+(comment LessThan-UnitValuesFn
+ "(LessThan-UnitValuesFn ?x ?y ) This is a comparision operator for items of the form (Unit Value).  Returns True or False.")
+(isa LessThan-UnitValuesFn EvaluatableFunction)
+(arity LessThan-UnitValuesFn 2)
+(lispProcedureImplementing LessThan-UnitValuesFn
+ LessThan-UnitValuesFn-FIRE-evalfn-handler)
+(arg1Isa LessThan-UnitValuesFn MeasurableQuantity)
+(arg2Isa LessThan-UnitValuesFn MeasurableQuantity)
+(resultIsa LessThan-UnitValuesFn TruthValue)
+
+;;; Axioms concerning EqualTo-UnitValuesFn
+
+(comment EqualTo-UnitValuesFn
+ "(EqualTo-UnitValuesFn ?x ?y ) This is a comparision operator for items of the form (Unit Value).  Returns True or False.")
+(isa EqualTo-UnitValuesFn EvaluatableFunction)
+(arity EqualTo-UnitValuesFn 2)
+(lispProcedureImplementing EqualTo-UnitValuesFn
+ EqualTo-UnitValuesFn-FIRE-evalfn-handler)
+(arg1Isa EqualTo-UnitValuesFn MeasurableQuantity)
+(arg2Isa EqualTo-UnitValuesFn MeasurableQuantity)
+(resultIsa EqualTo-UnitValuesFn TruthValue)
+
+;;; Axioms concerning GreaterThanByFn
+
+(comment GreaterThanByFn
+ "(GreaterThanByFn ?x ?y ?percent) is true when ?x is greater than (100 + ?percent)% of ?y.  Returns True or False.")
+(isa GreaterThanByFn EvaluatableFunction)
+(arity GreaterThanByFn 3)
+(lispProcedureImplementing GreaterThanByFn
+ GreaterThanByFn-FIRE-evalfn-handler)
+(arg1Isa GreaterThanByFn Number-General)
+(arg2Isa GreaterThanByFn Number-General)
+(arg3Isa GreaterThanByFn Number-General)
+(resultIsa GreaterThanByFn Number-General)
+
+;;; Axioms concerning LessThanByFn
+
+(comment LessThanByFn
+ "(LessThanByFn ?x ?y ?percent) is true when ?x is less than (100 - ?percent)% of ?y.  Returns True or False.")
+(isa LessThanByFn EvaluatableFunction)
+(arity LessThanByFn 3)
+(lispProcedureImplementing LessThanByFn
+ LessThanByFn-FIRE-evalfn-handler)
+(arg1Isa LessThanByFn Number-General)
+(arg2Isa LessThanByFn Number-General)
+(arg3Isa LessThanByFn Number-General)
+(resultIsa LessThanByFn Number-General)
+
+;;; Axioms concerning EqualToWithinFn
+
+(comment EqualToWithinFn
+ "(EqualToWithinFn ?x ?y ?percent) is true when ?x is within (?percent)% of ?y.  Returns True or False.")
+(isa EqualToWithinFn EvaluatableFunction)
+(arity EqualToWithinFn 3)
+(lispProcedureImplementing EqualToWithinFn
+ EqualToWithinFn-FIRE-evalfn-handler)
+(arg1Isa EqualToWithinFn Number-General)
+(arg2Isa EqualToWithinFn Number-General)
+(arg3Isa EqualToWithinFn Number-General)
+(resultIsa EqualToWithinFn Number-General)
+
+;;; Axioms concerning LaterThanFn
+
+(comment LaterThanFn
+ "(LaterThanFn LATE_DATE EARLY_DATE) returns true when LATE_DATE and EARLY_DATE are Dates, and LATE_DATE starts after EARLY_DATE is over. For LaterThanFn to be evaluated, the date arguments must be of the form (DayFn ?day (MonthFn ?month (YearFn ?year)))).  Returns True or False.")
+(isa LaterThanFn EvaluatableFunction)
+(arity LaterThanFn 2)
+(lispProcedureImplementing LaterThanFn LaterThanFn-FIRE-evalfn-handler)
+(arg1Isa laterThan Date)
+(arg2Isa laterThan Date)
+
+;;; Axioms concerning RemoveDuplicatesFn
+
+(comment RemoveDuplicatesFn
+ "(RemoveDuplicatesFn ?set-or-list ?test-pred ?key-fn) removes the duplicates from the given set or list as mapped by ?key-fn and tested for equality by the specified ?test-pred.")
+(isa RemoveDuplicatesFn EvaluatableFunction)
+(arity RemoveDuplicatesFn 3)
+(lispProcedureImplementing RemoveDuplicatesFn
+ RemoveDuplicatesFn-FIRE-evalfn-handler)
+(arg1Isa RemoveDuplicatesFn AtemporalNecessarilyEssentialCollectionType)
+(arg2Isa RemoveDuplicatesFn BinaryPredicate)
+(arg3Isa RemoveDuplicatesFn UnaryFunction)
+(resultIsa RemoveDuplicatesFn
+ AtemporalNecessarilyEssentialCollectionType)
+
+;;; Axioms concerning RemoveIfFn
+
+(comment RemoveIfFn
+ "(RemoveIfFn ?set-or-list ?test-pred ?key-fn) maps ?key-fn over ?set-or-list and removes items that satisfy ?test-pred.")
+(isa RemoveIfFn EvaluatableFunction)
+(arity RemoveIfFn 3)
+(lispProcedureImplementing RemoveIfFn RemoveIfFn-FIRE-evalfn-handler)
+(arg1Isa RemoveIfFn AtemporalNecessarilyEssentialCollectionType)
+(arg2Isa RemoveIfFn BinaryPredicate)
+(arg3Isa RemoveIfFn UnaryFunction)
+(resultIsa RemoveIfFn AtemporalNecessarilyEssentialCollectionType)
+
+;;; Axioms concerning FunctionToArg
+
+(comment FunctionToArg
+ "(FunctionToArg N PRED) denotes the function defined by treating all but the Nth arguments to PRED as inputs, and the Nth one as being the output.")
+(isa FunctionToArg EvaluatableFunction)
+(arity FunctionToArg 2)
+(lispProcedureImplementing FunctionToArg
+ FunctionToArg-FIRE-evalfn-handler)
+(resultIsa FunctionToArg Function)
+
+;;; Axioms concerning TheClosedRetrievalSetOf
+
+(comment TheClosedRetrievalSetOf
+ "(TheClosedRetrievalSetOf ?var ?statement) is evaluated by using ASK.")
+(isa TheClosedRetrievalSetOf EvaluatableFunction)
+(arity TheClosedRetrievalSetOf 2)
+(lispProcedureImplementing TheClosedRetrievalSetOf
+ TheClosedRetrievalSetOf-FIRE-evalfn-handler)
+(resultIsa TheClosedRetrievalSetOf Set-Mathematical)
+
+;;; Axioms concerning SetOrCollectionUnion
+
+(comment SetOrCollectionUnion
+ "Returns a Set-Mathematical of the union of the elements of the set-or-collection arguments.")
+(isa SetOrCollectionUnion EvaluatableFunction)
+(arity SetOrCollectionUnion 2)
+(lispProcedureImplementing SetOrCollectionUnion
+ SetOrCollectionUnion-FIRE-evalfn-handler)
+(resultIsa SetOrCollectionUnion Set-Mathematical)
+
+;;; Axioms concerning SetOfSetsUnionFn
+
+(comment SetOfSetsUnionFn
+ "Returns a Set-Mathematical of the union of the elements of all sets contained within the Set-Mathematical argument.")
+(isa SetOfSetsUnionFn EvaluatableFunction)
+(arity SetOfSetsUnionFn 1)
+(lispProcedureImplementing SetOfSetsUnionFn
+ SetOfSetsUnionFn-FIRE-evalfn-handler)
+(resultIsa SetOfSetsUnionFn Set-Mathematical)
+(arg1Isa SetOfSetsUnionFn Set-Mathematical)
+
+;;; Axioms concerning SetOrCollectionIntersection
+
+(comment SetOrCollectionIntersection
+ "Returns a Set-Mathematical of the intersection of the elements of the set-or-collection arguments.")
+(isa SetOrCollectionIntersection EvaluatableFunction)
+(arity SetOrCollectionIntersection 2)
+(lispProcedureImplementing SetOrCollectionIntersection
+ SetOrCollectionIntersection-FIRE-evalfn-handler)
+(resultIsa SetOrCollectionIntersection Set-Mathematical)
+
+;;; Axioms concerning SetOfSetsIntersectionFn
+
+(comment SetOfSetsIntersectionFn
+ "Returns a Set-Mathematical of the intersection of the elements of all sets contained within the Set-Mathematical argument.")
+(isa SetOfSetsIntersectionFn EvaluatableFunction)
+(arity SetOfSetsIntersectionFn 1)
+(lispProcedureImplementing SetOfSetsIntersectionFn
+ SetOfSetsIntersectionFn-FIRE-evalfn-handler)
+(resultIsa SetOfSetsIntersectionFn Set-Mathematical)
+(arg1Isa SetOfSetsIntersectionFn Set-Mathematical)
+
+;;; Axioms concerning CartesianProductFn
+
+(comment CartesianProductFn
+ "Given a set of sets or a list of sets, this returns the cartesian product of the sets - i.e. another set of lists in which each list contains exactly one element from each of the sets in the input set, ordered according to the order of input sets.")
+(isa CartesianProductFn EvaluatableFunction)
+(arity CartesianProductFn 1)
+(lispProcedureImplementing CartesianProductFn
+ CartesianProductFn-FIRE-evalfn-handler)
+(resultIsa CartesianProductFn Set-Mathematical)
+(arg1Isa CartesianProductFn Set-Mathematical)
+
+;;; Axioms concerning SetDifferenceFn
+
+(comment SetDifferenceFn
+ "(SetDifferenceFn ?set1 ?set2) returns the set ?set1 with every item removed that exists in ?set2.")
+(isa SetDifferenceFn EvaluatableFunction)
+(arity SetDifferenceFn 2)
+(lispProcedureImplementing SetDifferenceFn
+ SetDifferenceFn-FIRE-evalfn-handler)
+(arg1Isa SetDifferenceFn Set-Mathematical)
+(arg2Isa SetDifferenceFn Set-Mathematical)
+(resultIsa SetDifferenceFn Set-Mathematical)
+
+;;; Axioms concerning SetMinusFn
+
+(comment SetMinusFn
+ "Returns the set ?set with ?item removed.  This is not the same as SetDifferenceFn, which takes two sets.")
+(isa SetMinusFn EvaluatableFunction)
+(arity SetMinusFn 2)
+(lispProcedureImplementing SetMinusFn SetMinusFn-FIRE-evalfn-handler)
+(arg1Isa SetMinusFn Set-Mathematical)
+(arg2Isa SetMinusFn CycLTerm)
+(resultIsa SetMinusFn Set-Mathematical)
+
+;;; Axioms concerning SetAdjoinFn
+
+(comment SetAdjoinFn
+ "Returns the set ?set with ?item added if it's not already a member.")
+(isa SetAdjoinFn EvaluatableFunction)
+(arity SetAdjoinFn 2)
+(lispProcedureImplementing SetAdjoinFn SetAdjoinFn-FIRE-evalfn-handler)
+(arg1Isa SetAdjoinFn Set-Mathematical)
+(arg2Isa SetAdjoinFn CycLTerm)
+(resultIsa SetAdjoinFn Set-Mathematical)
+
+;;; Axioms concerning RandomMemberFn
+
+(comment RandomMemberFn "Returns a random element from ?set.")
+(isa RandomMemberFn EvaluatableFunction)
+(arity RandomMemberFn 1)
+(lispProcedureImplementing RandomMemberFn
+ RandomMemberFn-FIRE-evalfn-handler)
+(arg1Isa RandomMemberFn Set-Mathematical)
+(resultIsa RandomMemberFn Thing)
+
+;;; Axioms concerning RandomizedListFn
+
+(comment RandomizedListFn
+ "Returns a list containing the elements of the specified set arranged in a random order.")
+(isa RandomizedListFn EvaluatableFunction)
+(arity RandomizedListFn 1)
+(lispProcedureImplementing RandomizedListFn
+ RandomizedListFn-FIRE-evalfn-handler)
+(arg1Isa RandomizedListFn Set-Mathematical)
+(resultIsa RandomizedListFn List)
+
+;;; Axioms concerning SubstituteFormulaFn
+
+(comment SubstituteFormulaFn
+ "A function that substitutes one term for another within a formula")
+(isa SubstituteFormulaFn EvaluatableFunction)
+(arity SubstituteFormulaFn 3)
+(lispProcedureImplementing SubstituteFormulaFn
+ SubstituteFormulaFn-FIRE-evalfn-handler)
+(arg1Isa SubstituteFormulaFn CyclTerm)
+(arg2Isa SubstituteFormulaFn CyclTerm)
+(arg3Isa SubstituteFormulaFn ELFormula)
+(resultIsa SubstituteFormulaFn ELFormula)
+
+;;; Axioms concerning SublisFn
+
+(comment SublisFn "This function is a FIRE implementation of sublis")
+(isa SublisFn EvaluatableFunction)
+(arity SublisFn 2)
+(lispProcedureImplementing SublisFn SublisFn-FIRE-evalfn-handler)
+(arg1Isa SublisFn ELFormula)
+(arg2Isa SublisFn ELFormula)
+(resultIsa SublisFn ELFormula)
+
+;;; Axioms concerning GeneralizeFormulaFn
+
+(comment GeneralizeFormulaFn
+ "A function that replaces all the arguments in ?formula with new variables.")
+(isa GeneralizeFormulaFn EvaluatableFunction)
+(arity GeneralizeFormulaFn 1)
+(lispProcedureImplementing GeneralizeFormulaFn
+ GeneralizeFormulaFn-FIRE-evalfn-handler)
+(arg1Isa GeneralizeFormulaFn ELFormula)
+(resultIsa GeneralizeFormulaFn ELFormula)
+
+;;; Axioms concerning UniquifyVariablesFn
+
+(comment UniquifyVariablesFn
+ "A function that replaces all the variables in ?formula with gensymed variables.")
+(isa UniquifyVariablesFn EvaluatableFunction)
+(arity UniquifyVariablesFn 1)
+(lispProcedureImplementing UniquifyVariablesFn
+ UniquifyVariablesFn-FIRE-evalfn-handler)
+(arg1Isa UniquifyVariablesFn ELFormula)
+(resultIsa UniquifyVariablesFn ELFormula)
+
+;;; Axioms concerning DeleteVariantsFn
+
+(comment DeleteVariantsFn
+ "(DeleteVariantsFn ?set) omits variants from ?set.")
+(isa DeleteVariantsFn EvaluatableFunction)
+(arity DeleteVariantsFn 1)
+(lispProcedureImplementing DeleteVariantsFn
+ DeleteVariantsFn-FIRE-evalfn-handler)
+(arg1Isa DeleteVariantsFn Set-Mathematical)
+(resultIsa DeleteVariantsFn Set-Extensional)
+
+;;; Axioms concerning SubstituteFormulaArgPositionFn
+
+(comment SubstituteFormulaArgPositionFn
+ "(SubstituteFormulaArgPositionFn ARG-POSITION NEW-TERM FORMULA) denotes the CycLFormula formed by replacing the term at ARG-POSITION in FORMULA with NEW-TERM.")
+(isa SubstituteFormulaArgPositionFn EvaluatableFunction)
+(arity SubstituteFormulaArgPositionFn 3)
+(lispProcedureImplementing SubstituteFormulaArgPositionFn
+ SubstituteFormulaArgPositionFn-FIRE-evalfn-handler)
+(arg1Isa SubstituteFormulaArgPositionFn List-Extensional)
+(arg2Isa SubstituteFormulaArgPositionFn CycLTerm)
+(arg3Isa SubstituteFormulaArgPositionFn CycLFormula)
+(resultIsa SubstituteFormulaArgPositionFn CycLFormula)
+
+;;; Axioms concerning SymbolConcatenateFn
+
+(comment SymbolConcatenateFn
+ "A function that generates a possibly new symbol by concatenating a Cyc-style list of symbols.")
+(isa SymbolConcatenateFn EvaluatableFunction)
+(arity SymbolConcatenateFn 1)
+(lispProcedureImplementing SymbolConcatenateFn
+ SymbolConcatenateFn-FIRE-evalfn-handler)
+(arg1Isa SymbolConcatenateFn List-Extensional)
+(resultIsa SymbolConcatenateFn CycLTerm)
+
+;;; Axioms concerning MapFunctionOverList
+
+(comment MapFunctionOverList
+ "This function applies a unary (evaluatable) function to all elements in a given list and returns the resulting list of values. For example, asking (evaluate ?VAR (MapFunctionOverList SquaredFn (TheList 1 2))) will return the binding (TheList 1 4) for ?VAR.")
+(isa MapFunctionOverList EvaluatableFunction)
+(arity MapFunctionOverList 2)
+(lispProcedureImplementing MapFunctionOverList
+ MapFunctionOverList-FIRE-evalfn-handler)
+(arg1Isa MapFunctionOverList UnaryFunction)
+(arg2Isa MapFunctionOverList List)
+(resultIsa MapFunctionOverList List)
+
+;;; Axioms concerning FormulaArgListFn
+
+(comment FormulaArgListFn
+ "(FormulaArgListFn RELATION-EXPRESSION) denotes a list of the arguments in RELATION-EXPRESSION. For example, (FormulaArgListFn (genls Dog Animal)) denotes (TheList Dog Animal).")
+(isa FormulaArgListFn EvaluatableFunction)
+(arity FormulaArgListFn 1)
+(lispProcedureImplementing FormulaArgListFn
+ FormulaArgListFn-FIRE-evalfn-handler)
+(arg1Isa FormulaArgListFn CycLFormula)
+(resultIsa FormulaArgListFn List)
+
+;;; Axioms concerning MakeFormulaFn
+
+(comment MakeFormulaFn
+ "(MakeFormulaFn OPERATOR (TheList . ARGS)) yields the formula (OPERATOR . ARGS)).")
+(isa MakeFormulaFn EvaluatableFunction)
+(arity MakeFormulaFn 2)
+(lispProcedureImplementing MakeFormulaFn
+ MakeFormulaFn-FIRE-evalfn-handler)
+(arg1Isa MakeFormulaFn Relation)
+(resultIsa MakeFormulaFn List-Extensional)
+
+;;; Axioms concerning FormulaVariableListFn
+
+(comment FormulaVariableListFn
+ "(FormulaVariableListFn ?formula) yields an ordered List of variables present in ?formula.")
+(isa FormulaVariableListFn EvaluatableFunction)
+(arity FormulaVariableListFn 1)
+(lispProcedureImplementing FormulaVariableListFn
+ FormulaVariableListFn-FIRE-evalfn-handler)
+(arg1Isa FormulaVariableListFn List-Extensional)
+
+;;; Axioms concerning Arg0Fn
+
+(comment Arg0Fn "(Arg0Fn ?formula) returns the functor of ?formula.")
+(isa Arg0Fn EvaluatableFunction)
+(arity Arg0Fn 1)
+(lispProcedureImplementing Arg0Fn Arg0Fn-FIRE-evalfn-handler)
+(arg1Isa Arg0Fn CycLFormula)
+(resultIsa Arg0Fn CycLTerm)
+
+;;; Axioms concerning Arg1Fn
+
+(comment Arg1Fn
+ "(Arg1Fn ?formula) returns the first argument of ?formula.")
+(isa Arg1Fn EvaluatableFunction)
+(arity Arg1Fn 1)
+(lispProcedureImplementing Arg1Fn Arg1Fn-FIRE-evalfn-handler)
+(arg1Isa Arg1Fn CycLFormula)
+(resultIsa Arg1Fn CycLTerm)
+
+;;; Axioms concerning Arg2Fn
+
+(comment Arg2Fn
+ "(Arg2Fn ?formula) returns the second argument of ?formula.")
+(isa Arg2Fn EvaluatableFunction)
+(arity Arg2Fn 1)
+(lispProcedureImplementing Arg2Fn Arg2Fn-FIRE-evalfn-handler)
+(arg1Isa Arg2Fn CycLFormula)
+(resultIsa Arg2Fn CycLTerm)
+
+;;; Axioms concerning Arg3Fn
+
+(comment Arg3Fn
+ "(Arg3Fn ?formula) returns the third argument of ?formula.")
+(isa Arg3Fn EvaluatableFunction)
+(arity Arg3Fn 1)
+(lispProcedureImplementing Arg3Fn Arg3Fn-FIRE-evalfn-handler)
+(arg1Isa Arg3Fn CycLFormula)
+(resultIsa Arg3Fn CycLTerm)
+
+;;; Axioms concerning Arg4Fn
+
+(comment Arg4Fn
+ "(Arg4Fn ?formula) returns the fourth argument of ?formula.")
+(isa Arg4Fn EvaluatableFunction)
+(arity Arg4Fn 1)
+(lispProcedureImplementing Arg4Fn Arg4Fn-FIRE-evalfn-handler)
+(arg1Isa Arg4Fn CycLFormula)
+(resultIsa Arg4Fn CycLTerm)
+
+;;; Axioms concerning Arg5Fn
+
+(comment Arg5Fn
+ "(Arg5Fn ?formula) returns the fifth argument of ?formula.")
+(isa Arg5Fn EvaluatableFunction)
+(arity Arg5Fn 1)
+(lispProcedureImplementing Arg5Fn Arg5Fn-FIRE-evalfn-handler)
+(arg1Isa Arg5Fn CycLFormula)
+(resultIsa Arg5Fn CycLTerm)
+
+;;; Axioms concerning Arg6Fn
+
+(comment Arg6Fn
+ "(Arg6Fn ?formula) returns the sixth argument of ?formula.")
+(isa Arg6Fn EvaluatableFunction)
+(arity Arg6Fn 1)
+(lispProcedureImplementing Arg6Fn Arg6Fn-FIRE-evalfn-handler)
+(arg1Isa Arg6Fn CycLFormula)
+(resultIsa Arg6Fn CycLTerm)
+
+;;; Axioms concerning Arg7Fn
+
+(comment Arg7Fn
+ "(Arg7Fn ?formula) returns the seventh argument of ?formula.")
+(isa Arg7Fn EvaluatableFunction)
+(arity Arg7Fn 1)
+(lispProcedureImplementing Arg7Fn Arg7Fn-FIRE-evalfn-handler)
+(arg1Isa Arg7Fn CycLFormula)
+(resultIsa Arg7Fn CycLTerm)
+
+;;; Axioms concerning SensePlusFn
+
+(comment SensePlusFn "SensePlusFn is n-ary addition of senses.")
+(isa SensePlusFn EvaluatableFunction)
+(arity SensePlusFn 1)
+(lispProcedureImplementing SensePlusFn SensePlusFn-FIRE-evalfn-handler)
+(resultIsa SensePlusFn Sense)
+
+;;; Axioms concerning NextUniqueIDFn
+
+(comment NextUniqueIDFn
+ "Returns a identifier integer unique to others in this reasoner.")
+(isa NextUniqueIDFn EvaluatableFunction)
+(arity NextUniqueIDFn 0)
+(lispProcedureImplementing NextUniqueIDFn
+ NextUniqueIDFn-FIRE-evalfn-handler)
+(resultIsa NextUniqueIDFn Integer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of File

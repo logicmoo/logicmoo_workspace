@@ -1,0 +1,11 @@
+(in-microtheory SimpleAstronomyDataVocabularyMt)
+
+(isa PlanetPluto Planet)
+(isa PlanetUranus Planet)
+(isa PlanetJupiter Planet)
+(isa PlanetNeptune Planet)
+(isa PlanetSaturn Planet)
+(isa PlanetVenus Planet)
+(isa PlanetMercury Planet)
+(isa PlanetMars Planet)
+(isa PlanetTauBooB (LargeFn Planet))

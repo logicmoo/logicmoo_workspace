@@ -1,0 +1,122 @@
+(in-microtheory Freeciv-defaultMt)
+
+;;; These remain types rather than individuals in order to
+;;; be compatible with the cyc pred 'does'.
+
+(isa FC-ActivityIdle            FreeCiv-ActivityType)
+(isa FC-ActivityIdle            Collection)
+(genls FC-ActivityIdle          FreeCiv-Activity)
+(genls FC-ActivityIdle          Waiting)
+
+(isa FC-ActivityPollution       FreeCiv-ActivityType)
+(isa FC-ActivityPollution       Collection)
+(isa FC-ActivityPollution       AccomplishmentType)
+(genls FC-ActivityPollution     FreeCiv-Activity)
+(genls FC-ActivityPollution     (SubcollectionOfWithRelationToTypeFn Cleaning objectRemoved (MobFn Pollutant)))
+
+(isa FC-ActivityRoad            FreeCiv-ActivityType)
+(isa FC-ActivityRoad            Collection)
+(isa FC-ActivityRoad            AccomplishmentType)
+(genls FC-ActivityRoad          FreeCiv-Activity)
+(genls FC-ActivityRoad          (MakingFn FC-Special-Road))
+(genls FC-ActivityRoad          RoadConstructing)
+(genls FC-ActivityRoad          PathCreatingEvent)
+(makingTypeOfType FC-ActivityRoad FC-Special-Road)
+
+(isa FC-ActivityMine            FreeCiv-ActivityType)
+(isa FC-ActivityMine            Collection)
+(isa FC-ActivityMine            AccomplishmentType)
+(genls FC-ActivityMine          FreeCiv-Activity)
+(genls FC-ActivityMine          (MakingFn FC-Special-Mine))  ; but only when it isn't really transforming
+(makingTypeOfType FC-ActivityMine FC-Special-Mine)
+
+(isa FC-ActivityIrrigate        FreeCiv-ActivityType)
+(isa FC-ActivityIrrigate        Collection)
+(isa FC-ActivityIrrigate        AccomplishmentType)
+(genls FC-ActivityIrrigate      FreeCiv-Activity)
+(genls FC-ActivityIrrigate      (MakingFn FC-Special-Irrigation)) ; but only when it isn't really transforming or farming
+(makingTypeOfType FC-ActivityIrrigate FC-Special-Irrigation)
+
+(isa FC-ActivityFortified       FreeCiv-ActivityType)
+(isa FC-ActivityFortified       Collection)
+(genls FC-ActivityFortified     FreeCiv-Activity)
+(genls FC-ActivityFortified     StrengtheningEvent)
+
+(isa FC-ActivityFortress        FreeCiv-ActivityType)
+(isa FC-ActivityFortress        Collection)
+(isa FC-ActivityFortress        AccomplishmentType)
+(genls FC-ActivityFortress      FreeCiv-Activity)
+(genls FC-ActivityFortress      (MakingFn FC-Special-Fortress))
+(makingTypeOfType FC-ActivityFortress FC-Special-Fortress)
+
+(isa FC-ActivitySentry          FreeCiv-ActivityType)
+(isa FC-ActivitySentry          Collection)
+(genls FC-ActivitySentry        FreeCiv-Activity)
+(genls FC-ActivitySentry        GuardingSomething)  ; DefendingSomethingAgainstAttack ?
+(genls FC-ActivitySentry        DefendingSomethingAgainstAttack)
+
+(isa FC-ActivityRailroad        FreeCiv-ActivityType)
+(isa FC-ActivityRailroad        Collection)
+(isa FC-ActivityRailroad        AccomplishmentType)
+(genls FC-ActivityRailroad      FreeCiv-Activity)
+(genls FC-ActivityRailroad      (MakingFn FC-Special-Railroad))
+(genls FC-ActivityRailroad      PathCreatingEvent)
+(makingTypeOfType FC-ActivityRailroad FC-Special-Railroad)
+
+(isa FC-ActivityPillage         FreeCiv-ActivityType)
+(isa FC-ActivityPillage         Collection)
+(isa FC-ActivityPillage         AccomplishmentType)
+(genls FC-ActivityPillage       FreeCiv-Activity)
+(genls FC-ActivityPillage       Vandalism)
+
+(isa FC-ActivityGoTo            FreeCiv-ActivityType)
+(isa FC-ActivityGoTo            Collection)
+(isa FC-ActivityGoTo            AccomplishmentType)
+(genls FC-ActivityGoTo          FreeCiv-Activity)
+(genls FC-ActivityGoTo          Movement-TranslationProcess)
+
+(isa FC-ActivityExplore         FreeCiv-ActivityType)
+(isa FC-ActivityExplore         Collection)
+(genls FC-ActivityExplore       FreeCiv-Activity)
+(genls FC-ActivityExplore       Exploration)
+
+(isa FC-ActivityTransform       FreeCiv-ActivityType)
+(isa FC-ActivityTransform       Collection)
+(isa FC-ActivityTransform       AccomplishmentType)
+(genls FC-ActivityTransform     FreeCiv-Activity)
+(genls FC-ActivityTransform     Transformation)
+
+(isa FC-ActivityUnknown         FreeCiv-ActivityType)
+(isa FC-ActivityUnknown         Collection)
+(genls FC-ActivityUnknown       FreeCiv-Activity)
+
+(isa FC-ActivityAirbase         FreeCiv-ActivityType)
+(isa FC-ActivityAirbase         Collection)
+(isa FC-ActivityAirbase       AccomplishmentType)
+(genls FC-ActivityAirbase       FreeCiv-Activity)
+(genls FC-ActivityAirbase       (MakingFn FC-Special-Airbase))
+(makingTypeOfType FC-ActivityAirbase FC-Special-Airbase)
+
+
+(isa FC-ActivityFortifying      FreeCiv-ActivityType)  ; how does this differ from Fortified?
+(isa FC-ActivityFortifying      Collection)
+(genls FC-ActivityFortifying    FreeCiv-Activity)
+(genls FC-ActivityFortifying    StrengtheningEvent)
+
+(isa FC-ActivityFallout         FreeCiv-ActivityType)
+(isa FC-ActivityFallout         Collection)
+(isa FC-ActivityFallout         AccomplishmentType)
+(genls FC-ActivityFallout       FreeCiv-Activity)
+(genls FC-ActivityFallout       (SubcollectionOfWithRelationToTypeFn Cleaning objectRemoved (MobFn NuclearFalloutParticle)))
+
+(isa FC-ActivityPatrol_Unused   FreeCiv-ActivityType)
+(isa FC-ActivityPatrol_Unused   Collection)
+(genls FC-ActivityPatrol_Unused FreeCiv-Activity)
+
+(isa FC-ActivityBase            FreeCiv-ActivityType)
+(isa FC-ActivityBase            Collection)
+(isa FC-ActivityBase            AccomplishmentType)
+(genls FC-ActivityBase          FreeCiv-Activity)
+(genls FC-ActivityBase          (MakingFn DefenseSystem))
+(makingTypeOfType FC-ActivityBase DefenseSystem)
+

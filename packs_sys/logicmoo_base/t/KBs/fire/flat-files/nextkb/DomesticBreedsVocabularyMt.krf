@@ -1,0 +1,5 @@
+(in-microtheory DomesticBreedsVocabularyMt)
+
+(isa DogTypeByBreed-Pure NonAbducibleCollection)
+(genls Mule DomesticatedAnimal)
+(genls Dog DomesticatedAnimal)

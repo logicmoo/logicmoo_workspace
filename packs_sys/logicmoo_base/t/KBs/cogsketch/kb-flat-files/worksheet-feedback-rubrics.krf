@@ -1,0 +1,121 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-feedback-rubrics.meld
+;;;;    System: CogSketch
+;;;;    Author: Maria Chang
+;;;;   Created: January 13, 2014 15:32:45
+;;;;   Purpose: Knowledge level defs and rules for worksheet feedback rubrics
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchTutorSuggestionsMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Defs
+
+(isa FeedbackRubric Collection)
+(genls FeedbackRubric Group)
+(comment FeedbackRubric
+  "A feedback rubric is a is a collection or group of hints of feedback types.
+   Feedback rubrics allow suggestions to be given in categories, rather than
+   all at once.  See also #$CogSketchFeedbackRubricFn")
+
+(isa CogSketchFeedbackRubricFn FunctionOrFunctionalPredicate)
+(arity CogSketchFeedbackRubricFn 1)
+(arg1Isa CogSketchFeedbackRubricFn TextString)
+(resultIsa CogSketchFeedbackRubricFn FeedbackRubric)
+(comment CogSketchFeedbackRubricFn
+  "(CogSketchFeedbackRubricFn ?name) denotes a feedback rubric with the human-~
+   readable namestring ?name.~
+   See also #$suggestionForFeedbackRubric and #$activeSuggestionPatternForWorksheet")
+
+(isa suggestionForFeedbackRubric BinaryRelation)
+(isa suggestionForFeedbackRubric CogSketchTutorControlPredicate)
+(arity suggestionForFeedbackRubric 2)
+(arg1Isa suggestionForFeedbackRubric CycLExpression)
+(arg2Isa suggestionForFeedbackRubric FeedbackRubric)
+(comment suggestionForFeedbackRubric
+  "suggestionForFeedbackRubric relates a suggestion pattern (first argument) to a~
+   feedback rubric (second argument).  The first argument is a non-atomic term
+   similar in form to the non-atomic terms used to describe instances of #$CogSketchWorksheetSuggestion .
+   It is itself not really a #$CogSketchWorksheetSuggestion because it has variables
+   instead of properties that are unknown until the student's sketch exists.
+   The suggestion pattern is used to group tutor suggestions into their appropriate rubrics.")
+
+(isa activeSuggestionPatternForWorksheet BinaryRelation)
+(isa activeSuggestionPatternForWorksheet CogSketchTutorControlPredicate)
+(arity activeSuggestionPatternForWorksheet 2)
+(arg1Isa activeSuggestionPatternForWorksheet CycLExpression)
+(arg2Isa activeSuggestionPatternForWorksheet NuSketchSketch)
+(comment activeSuggestionPatternForWorksheet
+  "activeSuggestionPatternForWorksheet relates a suggestion pattern with the sketch
+   for which it is defined.  The suggestion pattern is a CycLExpression that contains
+   partial information about the suggestion, e.g. the text of the suggestion and
+   any suggestion slots that are known before the student starts the worksheet.")
+
+(isa feedbackRubricForWorksheet BinaryRelation)
+(isa feedbackRubricForWorksheet CogSketchTutorControlPredicate)
+(arity feedbackRubricForWorksheet 2)
+(arg1Isa feedbackRubricForWorksheet FeedbackRubric)
+(arg2Isa feedbackRubricForWorksheet NuSketchSketch)
+(comment feedbackRubricForWorksheet
+  "feedbackRubricForWorksheet relates a feedback rubric to a CogSketch worksheet.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rules
+
+;;; For backward compatibility and suggestions via extensions
+
+;; CI suggestions
+(<== (activeSuggestionPatternForWorksheet ?pattern ?sketch)
+     (unifies ?sketch (SketchFn ?sketch-case-name))
+     (localOnly (lookupOnly (cogsketchAdviceString ?teacher-fact ?text)))
+     (unifies ?pattern
+       (CogSketchCandidateInferenceSuggestionFn ?text ?g1 ?g2 
+                                                ?teacher-fact ?student-fact)))
+
+;; Quant Ink suggestions
+(<== (activeSuggestionPatternForWorksheet ?pattern ?sketch)
+     (unifies ?sketch (SketchFn ?sketch-case-name))
+     (localOnly (lookupOnly (quantInkAdviceEnabledForGlyph ?teacher-glyph)))
+     (localOnly (lookupOnly (quantInkAdviceString ?teacher-glyph ?text)))
+     (unifies ?pattern
+       (CogSketchQuantitativeInkSuggestionFn ?text ?g1 ?g2 
+                                             ?teacher-glyph ?pts1 ?pts2)))
+
+(<== (activeSuggestionPatternForWorksheet ?pattern ?sketch)
+     (unifies ?sketch (SketchFn ?sketch-case-name))
+     (localOnly 
+      (lookupOnly 
+       (quantInkAdviceEnabledForPerceptualElement ?teacher-item)))
+;;;     (localOnly 
+;;;      (uninferredSentence
+;;;       (quantInkAdviceEnabledForItem-positionDependent ?teacher-item ?pos-rel)))
+     (localOnly (lookupOnly (quantInkAdviceString ?teacher-item ?text)))
+     (unifies ?pattern
+       (CogSketchQuantitativeInkSuggestionFn ?text ?g1 ?g2 
+                                             ?teacher-item ?pts1 ?pts2)))
+
+
+;;; Just include the non-position-dependent quantitative ink advice.  If that's
+;;; tagged as part of a rubric, then automatically assume that all its
+;;; position-dependent advice is part of the same rubric.
+;;;
+;;;(<== (activeSuggestionPatternForWorksheet ?pattern ?sketch)
+;;;     (unifies ?sketch (SketchFn ?sketch-case-name))
+;;;     (localOnly 
+;;;      (lookupOnly 
+;;;       (quantInkAdviceEnabledForItem-positionDependent ?teacher-item ?pos-rel)))
+;;;     (localOnly 
+;;;      (lookupOnly 
+;;;       (quantInkAdvice-positionDependent ?teacher-item ?pos-rel ?text)))
+;;;     (unifies ?pattern
+;;;       (CogSketchQuantitativeInkSuggestionFn ?text ?g1 ?g2 
+;;;                                             ?teacher-item ?pts1 ?pts2)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

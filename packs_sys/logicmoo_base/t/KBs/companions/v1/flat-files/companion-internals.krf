@@ -1,0 +1,257 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: companion-internals.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 23, 2004 09:37:30
+;;;;   Purpose: Domain definitions used by the facilitator.
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-03 14:11:21 -0600 (Mon, 03 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+;;;
+;;; 10/12/09 [TRH] - Moved most predicate and primitive definitions to 
+;;; separate files as this was getting too big.  Especially since this file  
+;;; is read dynamically by the facilitator on startup (See fetch-domain-info
+;;;  in facilitators.lsp)
+;;; 03/17/14 [TRH] - Moved even more out.  Only info needed by facilitator 
+;;; agent launching remains.
+
+
+(in-microtheory CompanionsMt)
+
+(genlMt CurrentWorldDataCollectorMt-NonHomocentric CompanionsMt) ; Add it to the spindle
+
+;;; Turns out there's a ton of geographical info stored in 
+;;; TourAndVacationPackageItinerariesMt that we never see unless we do this:
+(genlMt CurrentWorldDataCollectorMt-NonHomocentric TourAndVacationPackageItinerariesMt) 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Companions Agent Parameters
+
+(classNameForAgentType Executive-CA executive)
+(agentClassUsesKB executive)
+(agentClassRunsUnderOS executive MSWindows)
+(agentClassRunsUnderOS executive Linux)
+
+(classNameForAgentType SessionReasoner-CA session-reasoner)
+(agentClassUsesKB session-reasoner)
+(agentClassRunsUnderOS session-reasoner MSWindows)
+(agentClassRunsUnderOS session-reasoner Linux)
+
+(classNameForAgentType Tickler-CA tickler)
+(agentClassUsesKB tickler)
+(agentClassRunsUnderOS tickler MSWindows)
+(agentClassRunsUnderOS tickler Linux)
+
+(classNameForAgentType InteractionManager-CA interaction-manager)
+(agentClassUsesKB interaction-manager)
+(agentClassRunsUnderOS interaction-manager MSWindows)
+(agentClassRunsUnderOS interaction-manager Linux)
+
+(classNameForAgentType NuSketchBattlespaceAgent-CA nusketch-battlespace-agent)
+(agentClassUsesKB nusketch-battlespace-agent)
+(agentClassRunsUnderOS nusketch-battlespace-agent MSWindows)
+
+(classNameForAgentType CogSketchAgent-CA cogsketch-agent)
+(agentClassUsesKB cogsketch-agent)
+(agentClassRunsUnderOS cogsketch-agent MSWindows)
+
+(classNameForAgentType CogSketchAgent-CA spatial-agent)
+(agentClassUsesKB spatial-agent)
+(agentClassRunsUnderOS spatial-agent MSWindows)
+(agentClassRunsUnderOS spatial-agent Linux)
+
+(classNameForAgentType Reader-CA reader)
+(agentClassUsesKB reader)
+(agentClassRunsUnderOS reader MSWindows)
+(agentClassRunsUnderOS reader Linux)
+
+(classNameForAgentType Freeciv-CA freeciv-agent)
+(agentClassUsesKB freeciv-agent)
+(agentClassRunsUnderOS freeciv-agent MSWindows)
+(agentClassRunsUnderOS freeciv-agent Linux)
+
+(classNameForAgentType SimpleAgent-CA simple-agent)
+(agentClassUsesKB simple-agent)
+(agentClassRunsUnderOS simple-agent MSWindows)
+(agentClassRunsUnderOS simple-agent Linux)
+
+
+(classNameForAgentType Pythonian-CA simple-agent) ; What?  No.
+;; pythonian doesn't open a kb
+(agentClassRunsUnderOS pythonian MSWindows)
+(agentClassRunsUnderOS pythonian Linux)
+(agentClassRunsUnderOS python-test-agent MSWindows)
+(agentClassRunsUnderOS python-test-agent Linux)
+(agentClassRunsUnderOS python-owl-agent MSWindows)
+(agentClassRunsUnderOS python-owl-agent Linux)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Companions Domain Definitions
+
+;;; Note: This domain name cannot be simply "Interaction", because the domain 
+;;; name is downcased and interned in the keyword package to produce the 
+;;; system identifier for loading additional domain code.
+;;; A bit crufty to be sure, but for now that's the way it works.
+(isa Interaction-Manager CompanionsDomain)  ; The "un-domain" for interacting before picking a domain. 
+;;;(defaultAgentConfiguration Interaction-Manager (TheList executive session-reasoner interaction-manager))
+(defaultAgentConfiguration Interaction-Manager (TheList  session-reasoner executive interaction-manager))
+(defaultCaseLibraryFor Interaction-Manager  SessionCaseLibrary)
+(domainCodeFor Interaction-Manager "qrg-file://companions/v1/interaction-manager/defsys.lsp")
+(systemKeywordFor Interaction-Manager :interaction-manager)
+(defaultKB Interaction-Manager "nextkb")
+
+;;; The executable can't support domains that load additional code at runtime:
+#-:executable
+(isa Freeciv-TheGame CompanionsDomain)
+(isa Freeciv-TheGame Game)
+(defaultCaseLibraryFor Freeciv-TheGame (CaseLibraryFn Freeciv-TheGame))
+(domainCodeFor Freeciv-TheGame "qrg-file://companions/v1/freeciv/defsys.lsp")
+(systemKeywordFor Freeciv-TheGame :freeciv)
+(domainCommandsFor Freeciv-TheGame "qrg-file://companions/v1/freeciv/freeciv-commands.lsp")
+(defaultAgentConfiguration Freeciv-TheGame (TheList freeciv-agent interaction-manager executive)) ; cogsketch-agent))
+(defaultTicklerClients Freeciv-TheGame (TheSet freeciv-agent))
+(defaultKB Freeciv-TheGame "nextkb")
+(filterNuSketchBookkeepingPreds Freeciv-TheGame)
+
+(isa ShakedownCompanions CompanionsDomain)
+(defaultAgentConfiguration ShakedownCompanions (TheList session-reasoner executive))
+(defaultTicklerClients ShakedownCompanions (TheSet session-reasoner))
+(defaultKB ShakedownCompanions "smoke-kb")
+
+(isa CogSketchCompanionsDomain CompanionsDomain)
+(filterNuSketchBookkeepingPreds CogSketchCompanionsDomain)
+(defaultAgentConfiguration CogSketchCompanionsDomain 
+    (TheList executive session-reasoner cogsketch-agent))
+(defaultKB CogSketchCompanionsDomain "nextkb")
+(defaultCaseLibraryFor CogSketchCompanionsDomain SketchedConcepts-Cases)  ;;probably want to change this - any ideas?
+
+(isa Kiosk CompanionsDomain)
+(defaultAgentConfiguration Kiosk (TheList executive session-reasoner interaction-manager))
+(defaultKB Kiosk "nextkb")
+(defaultCaseLibraryFor Kiosk  SessionCaseLibrary)
+(domainCodeFor Kiosk "qrg-file://companions/v1/kiosk/defsys.lsp")
+(systemKeywordFor Kiosk :kiosk)
+
+(isa PythonTestAgent CompanionsDomain)
+(defaultAgentConfiguration PythonTestAgent (TheList session-reasoner python-test-agent))
+(defaultKB PythonTestAgent "nextkb")
+(separateProcessAgentForDomain PythonTestAgent python-test-agent)
+
+(isa PythonOWLAgent CompanionsDomain)
+(defaultAgentConfiguration PythonOWLAgent (TheList session-reasoner python-owl-agent))
+(defaultKB PythonOWLAgent "nextkb") ; opened by the session-reasoner, not the python-owl-agent
+(separateProcessAgentForDomain PythonOWLAgent python-owl-agent)
+
+#-:executable
+(isa SpatialConceptLearning CompanionsDomain)
+(filterNuSketchBookkeepingPreds SpatialConceptLearning)
+(displayPerceptualSketchComponentsOnAsk SpatialConceptLearning)
+(defaultAgentConfiguration SpatialConceptLearning 
+    (TheList executive session-reasoner))
+(defaultKB SpatialConceptLearning "nextkb")
+(defaultCaseLibraryFor SpatialConceptLearning SpatialConceptLearning-Cases)
+(domainCodeFor SpatialConceptLearning "qrg-file://companions/v1/sketched-concepts/defsys.lsp")
+(systemKeywordFor SpatialConceptLearning :sketched-concepts)
+(inProcessTicklersForDomain SpatialConceptLearning)
+;;works just like default tickler clients...
+;;;(defaultSpatialAgentClients SpatialConceptLearning
+;;;    (TheSet session-reasoner))
+
+;(isa GeneralCompanions CompanionsDomain)
+;(defaultAgentConfiguration GeneralCompanions (TheList executive session-reasoner))
+;(defaultTicklerClients GeneralCompanions (TheSet session-reasoner))
+;(defaultKB GeneralCompanions "nextkb")
+
+;(isa CrossModalInteraction CompanionsDomain)
+;(filterNuSketchBookkeepingPreds CrossModalInteraction)
+;(filterNuSketchPreds CrossModalInteraction)
+;;;(domainCodeFor CrossModalInteraction "qrg-file://companions/v1/mechanics/epr/defsys.lsp")
+;; Ever need more than one set of domain code?
+;;;(displayPerceptualSketchComponentsOnAsk CrossModalInteraction)
+;(defaultAgentConfiguration CrossModalInteraction 
+;    (TheList executive session-reasoner cogsketch-agent interaction-manager))
+;(defaultTicklerClients CrossModalInteraction (TheSet session-reasoner))
+;(defaultKB CrossModalInteraction "rc4-kb")
+;(defaultCaseLibraryFor CrossModalInteraction SketchedConcepts-Cases)
+
+;;; Boil this down to the minimum to enable running on laptops, etc.
+;;; Otherwise we'd just use CrossModalInteraction.
+;(isa FMI CompanionsDomain)
+;(filterNuSketchBookkeepingPreds FMI)
+;(defaultAgentConfiguration FMI 
+;    (TheList session-reasoner cogsketch-agent interaction-manager))
+;(defaultKB FMI "rc-one-kb")
+
+;(isa GGP CompanionsDomain)
+;;;(defaultCaseLibraryFor GGP ???)
+;;;(defaultCaseConstructorFor GGP ???)
+;(domainCodeFor GGP "qrg-file://companions/v1/ggp/defsys.lsp")
+;(systemKeywordFor GGP :ggp)
+;(defaultAgentConfiguration GGP (TheList executive session-reasoner))
+
+;(isa ConceptualChange CompanionsDomain)
+;(domainCodeFor ConceptualChange "qrg-file://companions/v1/cc/defsys.lsp")
+;(systemKeywordFor ConceptualChange :cc)
+;(filterNuSketchPreds ConceptualChange)
+;(defaultAgentConfiguration ConceptualChange 
+;    (TheList session-reasoner executive interaction-manager))
+;;(separateProcessAgentForDomain ConceptualChange cogsketch-agent)
+;(defaultKB ConceptualChange "rc-one-kb")
+
+;(isa DomainTransfer CompanionsDomain)
+;(domainCodeFor DomainTransfer "qrg-file://companions/v1/mechanics/domain-transfer/defsys.lsp")
+;(systemKeywordFor DomainTransfer :domain-transfer)
+;(defaultAgentConfiguration DomainTransfer (TheList session-reasoner executive))
+;(defaultTicklerClients DomainTransfer (TheSet session-reasoner))
+;(defaultKB DomainTransfer "nextkb")
+
+;(isa Nulex-Interaction-Manager CompanionsDomain)
+;(defaultAgentConfiguration Nulex-Interaction-Manager (TheList executive session-reasoner interaction-manager))
+;(defaultCaseLibraryFor Nulex-Interaction-Manager SessionCaseLibrary)
+;(domainCodeFor Nulex-Interaction-Manager "qrg-file://companions/v1/interaction-manager/defsys.lsp")
+;(systemKeywordFor Nulex-Interaction-Manager :interaction-manager)
+;(defaultKB Nulex-Interaction-Manager "nextkb")
+
+;(isa Mechanics CompanionsDomain)
+;(defaultCaseLibraryFor Mechanics PhysicsCaseLibrary)
+;(defaultCaseConstructorFor Mechanics PhysicsCaseFn)
+;(domainCodeFor Mechanics "qrg-file://companions/v1/mechanics/defsys.lsp")
+;(systemKeywordFor Mechanics :mechanics)
+;(defaultAgentConfiguration Mechanics (TheList executive session-reasoner))
+;(defaultTicklerClients Mechanics (TheSet session-reasoner))
+;(defaultKB Mechanics "nextkb")
+
+;(isa Reader CompanionsDomain)
+;(domainCodeFor Reader "qrg-file://companions/v1/reader/defsys.cl")
+;(systemKeywordFor Reader :reader)
+;(defaultAgentConfiguration Reader (TheList executive session-reasoner reader))
+;(defaultKB Reader "rc-one-kb")
+
+;(isa EPR CompanionsDomain)
+;(defaultCaseLibraryFor EPR EPRCaseLibrary)
+;(defaultCaseConstructorFor EPR EPRWholeSubsketchCaseFn)
+;(systemKeywordFor EPR :epr)
+;(domainCodeFor EPR "qrg-file://companions/v1/mechanics/epr/defsys.lsp")
+;(defaultAgentConfiguration EPR (TheList executive interaction-manager session-reasoner cogsketch-agent))
+;(defaultTicklerClients EPR (TheSet session-reasoner))
+;(defaultKB EPR "rc-one-kb")
+;;; Shouldn't need this with 64 bit Lisp
+;;; (separateProcessAgentForDomain EPR cogsketch-agent)
+;(filterNuSketchBookkeepingPreds EPR)
+;(displayPerceptualSketchComponentsOnAsk EPR)
+
+;(isa TacticalDecisionGames CompanionsDomain)
+;(defaultCaseLibraryFor TacticalDecisionGames TDGLib)
+;(defaultCaseConstructorFor TacticalDecisionGames ConceptualFactsOfCaseFn)
+;(filterNuSketchPreds TacticalDecisionGames)
+;(defaultAgentConfiguration TacticalDecisionGames 
+;    (TheList executive session-reasoner nusketch-battlespace-agent))
+;(defaultTicklerClients TacticalDecisionGames (TheSet session-reasoner))
+;(separateProcessAgentForDomain TacticalDecisionGames nusketch-battlespace-agent)
+;(defaultKB TacticalDecisionGames "nextkb")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

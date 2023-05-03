@@ -1,0 +1,36 @@
+(in-microtheory NaiveSpatialVocabularyMt)
+
+(negationPreds above-Indirectly above-Directly)
+(argFormat touches-Externally 1 SetTheFormat)
+(argFormat touches-Externally 2 SetTheFormat)
+(argFormat sheetSurfaceConnected 1 SetTheFormat)
+(argFormat sheetSurfaceConnected 2 SetTheFormat)
+(comment nextToLike-Horizontally "A #$RelativeLocationalPredicate and specialization of #$nextToLikeObjects (q.v.).  (#$nextToLike-Horizontally OBJ1 OBJ2 TYPE) is true just in case (#$nextToLikeObjects OBJ1 OBJ2 TYPE) and, additionally, the bottom of OBJ1 is not #$above-Generally the top of OBJ2, or vice versa.  In other words, OBJ1 and OBJ2 are members of an #$ArrangementOfLikeObjects (q.v.) whose elements are arranged along a roughly horizontal axis.")
+(comment lateralShiftFootprintRegion "A predicate relating an object to the space it would occupy
+if it shifted one entire footprint to the left or right.
+(#$lateralShiftRegion STHING DIRFN LAT-REGION) means that the
+#$GeographicalRegion LAT-REGION is adjacent to (#$FootprintOfObjectFn
+STHING) in the direction denoted by (DIRFN STHING), and has the same
+area as (#$FootprintOfObjectFn STHING).  If STHING were to shift one
+footprint in that direction, it would occupy LAT-REGION.")
+(comment FootprintOfLateralShiftFn "(#$FootprintOfLateralShiftFn STHING DIRFN) denotes the region
+LAT-REGION adjacent to the current (#$FootprintOfObjectFn STHING) in the direction denoted by (DIRFN ?STHING) by one footprint. For example,
+(#$FootprintOfLateralShiftFn #$TheWhiteHouse #$LeftwardsFn) denotes
+the region to the left of the White House (where left is defined by
+the White House's orientation), adjacent to the space currently
+occupied by the White House, and the same size as the currently
+occupied space.  It is the space the White House would occupy if it
+were shifted one-whole-White-House-footprint to its left. The
+predicate corresponding to this function is #$lateralShiftFootprintRegion.")
+(genlPreds alignedCylinderWithin inRegion)
+(genlPreds alignedCylinderWithin aligned)
+(genlPreds adjacentCylinderAligned alignedAlong)
+(genlPreds spiralsAround alignedAlongLength)
+(genlPreds onPath-Alongside near)
+(genlPreds objectPerimeter spatiallyRelated)
+(genlPreds xyCrossSectionShape spatiallyRelated)
+(genlPreds yzCrossSectionShape spatiallyRelated)
+(genlPreds xzCrossSectionShape spatiallyRelated)
+(genlPreds sameYlocation spatiallyRelated)
+(genlPreds frequentlyFoundInLocation spatiallyRelated)
+(genlPreds above-Indirectly above-Generally)

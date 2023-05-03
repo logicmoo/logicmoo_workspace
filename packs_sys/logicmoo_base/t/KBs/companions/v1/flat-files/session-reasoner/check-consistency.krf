@@ -1,0 +1,63 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: check-consistency.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: April 28, 2013 17:42:20
+;;;;   Purpose: Provides hooks for checking consistency of what we've read so far
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Session-ReasonerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(isa checkConsistencyOfChoice ComplexActionPredicate)
+(arity checkConsistencyOfChoice 5)
+(arg1Isa checkConsistencyOfChoice Thing)
+(arg2Isa checkConsistencyOfChoice Microtheory)
+(arg3Isa checkConsistencyOfChoice Microtheory)
+(arg4Isa checkConsistencyOfChoice AccessingAnIBT)
+(arg5Isa checkConsistencyOfChoice Thing)
+(comment checkConsistencyOfChoice "(checkConsistencyOfChoice ?choice ?mt-to-compare-against ?mt-of-contradictions-to-check-for  ?reading-name ?experiment-name)
+ looks in ?mt-of-contradictions-to-check-for to get a list of contradiction types to check for. It then checks ?choice to see if there's any contradictions
+there, using ?mt-to-compare-against as the universe of thingsit might be contradictory with.")
+
+
+(preconditionForMethod 
+ (evaluate ?contradictions-to-check-for
+   (TheClosedRetrievalSetOf ?contradiction
+     (ist-Information ?mt-of-contradictions-to-check-for ?contradiction)))
+ (methodForAction
+  (checkConsistencyOfChoice ?choice ?mt-to-compare-against ?mt-of-contradictions-to-check-for ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?next-contradiction ?contradictions-to-check-for
+               (checkChoiceForContradiction ?choice ?next-contradiction ?mt-to-compare-against ?reading-name ?experiment-name))))))
+
+
+;;; choiceMakesAnArgIsaThatViolatesEarlierIsa
+;;; Currently doesn't actually check anything
+;;; What this should do:
+;;; Check the argIsas of any of the things in the choice.
+;;; Ugh, this needs to respect coreference resolution.
+;;; Let's make general mechanisms for that.
+
+;;;(preconditionForMethod 
+;;; (and
+;;;      (evaluate ?choice-semantics
+;;;        (TheClosedRetrievalSetOf ?contradiction
+;;;          (ist-Information ?mt-of-contradictions-to-check-for ?contradiction)))
+;;;      )
+;;; (methodForAction
+;;;  (checkChoiceForContradiction ?choice choiceMakesAnArgIsaThatViolatesEarlierIsa ?mt-to-compare-against ?reading-name ?experiment-name)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doAnnounce "Checking to see if ~A makes an argIsa that's violated by an Isa created earlier." (?choice))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

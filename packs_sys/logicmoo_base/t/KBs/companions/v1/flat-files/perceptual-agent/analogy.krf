@@ -1,0 +1,45 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: analogy.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: January 13, 2014 16:49:10
+;;;;   Purpose: Analogy support for perceptual agents.
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Support the comparison of two (hopefully small) execution traces
+;;; to find critical differences.  Allow pinning of particular events
+;;; via correspondence constraints.  Make sure CommandFn NATs are
+;;; atomicAnalogyNATFns. (They are)
+
+
+
+;;; Analogical transfer from prior case:
+;;; (These were invoked an old version of the rational player.)  May be useful someday.
+
+(isa observedStrategyFor Predicate)
+(arity observedStrategyFor 5)
+(arg1Isa observedStrategyFor Microtheory)
+(arg2Isa observedStrategyFor Agent-Generic)
+(arg3Isa observedStrategyFor Goal)
+(arg4Isa observedStrategyFor List)
+(arg5Isa observedStrategyFor List)
+(comment observedStrategyFor "(observedStrategyFor ?mt ?actor ?goal ?parent-goals ?decomposition) extracts a goal decomposition from a prior case.")
+
+(isa transferPriorStrategy ComplexActionPredicate)
+(arity transferPriorStrategy 4)
+(arg1Isa transferPriorStrategy Microtheory)
+(arg2Isa transferPriorStrategy Agent-Generic)
+(arg3Isa transferPriorStrategy Goal)
+(arg4Isa transferPriorStrategy List)
+(comment transferPriorStrategy "(transferPriorStrategy ?mt ?actor ?goal ?decomposition) adapts a hierarchical goal decomposition from a prior case.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

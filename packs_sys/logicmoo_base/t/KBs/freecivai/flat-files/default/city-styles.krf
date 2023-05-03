@@ -1,0 +1,11 @@
+(in-microtheory Freeciv-defaultMt)
+
+(isa FC-CityStyle-Asian FreeCiv-CityStyle)
+(isa FC-CityStyle-Classical FreeCiv-CityStyle)
+(isa FC-CityStyle-European FreeCiv-CityStyle)
+(isa FC-CityStyle-Industrial FreeCiv-CityStyle)
+(isa FC-CityStyle-Modern FreeCiv-CityStyle)
+(isa FC-CityStyle-PostModern FreeCiv-CityStyle)
+(isa FC-CityStyle-Renaissance FreeCiv-CityStyle)
+(isa FC-CityStyle-Tropical FreeCiv-CityStyle)
+

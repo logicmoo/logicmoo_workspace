@@ -1,0 +1,123 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: suggestions.meld
+;;;;    System: sKEA
+;;;;    Author: Jon Wetzel
+;;;;   Created: March 15, 2010 14:12:50
+;;;;   Purpose: Axioms for reifiying tutoring suggestions
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Wednesday, March 24, 2010 at 14:42:02 by jww737
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+(isa NuSketchTutoringSuggestionsMt Microtheory)
+(comment NuSketchTutoringSuggestionsMt "Axioms defining tutoring suggestions.")
+
+(in-microtheory NuSketchTutoringSuggestionsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Basic defs
+
+(isa NuSketchTutoringSuggestion Collection)
+(comment NuSketchTutoringSuggestion 
+  "A suggestion for tutoring in sKEA based applications.")
+
+(isa NuSketchTutoringSuggestionType CollectionType)
+(genls NuSketchTutoringSuggestionType Collection)
+(comment NuSketchTutoringSuggestionType
+  "A type of suggestion for tutoring in sKEA based applications.")
+
+(isa NuSketchTutoringSuggestion NuSketchTutoringSuggestionType)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; "Fields" for a suggestion
+
+(isa textForSuggestion BinaryPredicate)
+(arg1Isa textForSuggestion NuSketchTutoringSuggestion)
+(arg2Isa textForSuggestion NaturalLanguageString)
+(comment textForSuggestion "Text for a NuSketch tutoring suggestion.")
+
+(isa highlightedGlyphForSuggestion BinaryPredicate)
+(arg1Isa highlightedGlyphForSuggestion NuSketchTutoringSuggestion)
+(arg2Isa highlightedGlyphForSuggestion NuSketchGlyph)
+(comment highlightedGlyphForSuggestion 
+  "Glyphs to be highlighted with a NuSketch tutoring suggestion.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Relating Sketches/Subsketches to suggestions
+
+(isa suggestionForSubsketch TernaryPredicate)
+(arg1Isa suggestionForSubsketch NuSketchCase)
+(arg2Isa suggestionForSubsketch NuSketchTutoringSuggestionType)
+(arg3Isa suggestionForSubsketch NuSketchTutoringSuggestion)
+(comment suggestionForSubsketch
+  "A tutoring suggestion for a NuSketch subsketch.")
+
+(isa suggestionForSketch TernaryPredicate)
+(arg1Isa suggestionForSketch NuSketchCase)
+(arg2Isa suggestionForSketch NuSketchTutoringSuggestionType)
+(arg3Isa suggestionForSketch NuSketchTutoringSuggestion)
+(comment suggestionForSketch
+  "A tutoring suggestion for a NuSketch sketch.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rules
+
+(isa NuSketchTutoringSuggestionRulesMt Microtheory)
+(genlMt NuSketchTutoringSuggestionRulesMt NuSketchTutoringSuggestionsMt)
+(comment NuSketchTutoringSuggestionRulesMt 
+  "All NuSketch tutoring suggestion rule microtheories should genlMt this one
+   to get the shared microtheories.")
+
+(isa NuSketchTutoringSuggestionRulesCollectorMt CollectorMicrotheory)
+(comment NuSketchTutoringSuggestionRulesCollectorMt 
+  "All NuSketch tutoring suggestion rule microtheories should be genlMt'd
+   by this microtheory so sketches can use them. ")
+
+;; Add our collector to the sKEA one, so sketchmt's can see our rules.
+(in-microtheory SKEAMt :exclude-globals t)
+(genlMt SKEAReasoningCollectorMt NuSketchTutoringSuggestionRulesCollectorMt)
+(in-microtheory NuSketchTutoringSuggestionsMt :exclude-globals t) ;; back to 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rollin' your own fact/rule mts
+
+;; You probably want an fact mt to hold the facts for your rule mt.
+;; Start that file with the following lines:
+;; (in-microtheory NuSketchTutoringSuggestionsMt)
+;; (isa <your fact mt> Microtheory)
+;; (genlMt <your fact mt> NuSketchTutoringSuggestionsMt)
+;; (in-microtheory <your fact mt>)
+;; <then define your facts here>
+
+;; All rule microtheories should specMt the rule mt and genlMt to the collector.
+;; To make and use your own rule microtheory, start the file with these 5 lines:
+;; (in-microtheory NuSketchTutoringSuggestionsRulesMt)
+;; (isa <your rule mt> Microtheory)
+;; (genlMt <your rule mt> NuSketchTutoringSuggestionRulesMt)
+;; (genlMt NuSketchTutoringSuggestionRulesCollectorMt <your rule mt>)
+;; (in-microtheory <your rule mt>)
+;; (genlMt <your rule mt> <your fact mt>)
+;; <then define your rules here>
+
+
+;;; Rule templates
+#|
+(<== (suggestionForSketch <sketch mt> <suggestion-type> ?suggname)
+     ;;antecedents go here first
+     ;;   . . .
+     ;;   . . .
+     ;;if all antecedents pass then we generate the suggestion name
+     (evaluate ?suggname (SymbolConcatenateFn "suggestion-" (NextUniqueIDFn))))
+
+(<== (highlightedGlyphForSuggestion ?suggname ?glyph)
+     (suggestionForSketch <sketch mt> <suggestion-type> ?suggname)
+     ;; other antecedents used to infer which glyph(s) to bind to ?glyph
+     ;; based on the mt and suggestion type
+     )
+|#
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

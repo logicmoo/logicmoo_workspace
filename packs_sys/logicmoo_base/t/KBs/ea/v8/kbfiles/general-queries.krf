@@ -1,0 +1,32 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ----------------------------------------------------------------------------
+;;;; File name: general-queries.meld
+;;;;    System: 
+;;;;    Author: Emmett Tomai
+;;;;   Created: November 28, 2008 15:55:05
+;;;;   Purpose: 
+;;;; ----------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ----------------------------------------------------------------------------
+
+(in-microtheory EAGeneralQueriesMt :exclude-globals t)
+
+(genlMt EAGeneralQueriesMt EAReferenceResolutionMt)
+(genlMt EAGeneralQueriesMt EAStructuralRulesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; control facts
+
+;;;(exhaustiveQueriesForInterpretation EANarrativeQueriesMt)
+;;;(queryInModel EANarrativeQueriesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; 
+
+(queryForInterpretation 0 (resolveUnresolvedReferences :REPLACE-SID ?var))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of code

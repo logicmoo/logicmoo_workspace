@@ -1,0 +1,146 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: units-dt-x.meld
+;;;;    System: reasoning and KB systems
+;;;;    Author: Jeff Usher
+;;;;   Created: October 2, 1998 14:33:07
+;;;;   Purpose: Extensions to the units definitions contained in the Base-KB
+;;;;            domain theory.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-package :data)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Need to review the usefulness and correctness of this file!  Some facts are
+;;; redundant with Cyc's current KBs and some conflict (Yard-UnitOfMeasure
+;;; versus Yard-UnitOfDistance, for example).
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Unit Definitions
+;;; SI
+
+;;; UnitOfDistance
+
+(isa Yoctometer UnitOfDistance)
+(unitMultiplicationFactor Yoctometer Meter 10.0d+23)
+
+
+(isa Zeptometer UnitOfDistance)
+(unitMultiplicationFactor Zeptometer Meter 1.0d+21)
+
+
+(isa Attometer UnitOfDistance)
+(unitMultiplicationFactor Attometer Meter 1.0d+18)
+
+
+(isa Femtometer UnitOfDistance)
+(unitMultiplicationFactor Femtometer Meter 1.0d+15)
+
+
+(isa Picometer UnitOfDistance)
+(unitMultiplicationFactor Picometer Meter 1.0d+12)
+
+
+(isa Nanometer UnitOfDistance)
+(unitMultiplicationFactor Nanometer Meter 1.0d+9)
+
+
+(isa Micrometer UnitOfDistance)
+(unitMultiplicationFactor Micrometer Meter 1000000.0d0)
+
+
+(isa Millimeter UnitOfDistance)
+(unitMultiplicationFactor Millimeter Meter 1000.0d0)
+
+
+(isa Centimeter UnitOfDistance)
+(unitMultiplicationFactor Centimeter Meter 100.0d0)
+
+
+(isa Decimeter UnitOfDistance)
+(unitMultiplicationFactor Decimeter Meter 10.0d0)
+
+
+(isa Decameter UnitOfDistance)
+(unitMultiplicationFactor Meter Decameter 10.0d0)
+
+
+(isa Hectometer UnitOfDistance)
+(unitMultiplicationFactor Meter Hectometer 100.0d0)
+
+
+(isa Megameter UnitOfDistance)
+(unitMultiplicationFactor Meter Megameter 1000000.0d0)
+
+
+(isa Gigameter UnitOfDistance)
+(unitMultiplicationFactor Meter Gigameter 1.0d+9)
+
+
+(isa Terameter UnitOfDistance)
+(unitMultiplicationFactor Meter Terameter 1.0d+12)
+
+
+(isa Petameter UnitOfDistance)
+(unitMultiplicationFactor Meter Petameter 1.0d+15)
+
+
+(isa Exameter UnitOfDistance)
+(unitMultiplicationFactor Meter Exameter 1.0d+18)
+
+
+(isa Zettameter UnitOfDistance)
+(unitMultiplicationFactor Meter Zettameter 1.0d+21)
+
+
+(isa Yottameter UnitOfDistance)
+(unitMultiplicationFactor Meter Yottameter 10.0d+23)
+
+
+;;; UnitOfMomentum / UnitOfAngularMomentum
+
+(isa UnitOfMomentum Collection)
+(genls UnitOfMomentum UnitOfMeasure)
+
+(isa Newton-Second Function-Denotational)
+(isa Newton-Second UnitOfMomentum)
+
+(isa UnitOfAngularMomentum Collection)
+(genls UnitOfAngularMomentum UnitOfMeasure)
+
+(isa Newton-Meter-Second Function-Denotational)
+(isa Newton-Meter-Second UnitOfAngularMomentum)
+
+(isa Joule-Second Function-Denotational)
+(isa Joule-Second UnitOfAngularMomentum)
+
+
+;;; English
+
+(isa HundredthsOfInch UnitOfDistance)
+(unitMultiplicationFactor HundredthsOfInch Inch 100)
+
+
+(unitMultiplicationFactor Foot-UnitOfMeasure Furlong 660)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Miscellaneous
+
+(comment defaultUnitsFor
+ "Declares that numbers given in ?case-name are given in 
+                  ?unit-name unless otherwise specified.")
+(arity defaultUnitsFor 2)
+(isa defaultUnitsFor Predicate)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End Of Code

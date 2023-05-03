@@ -1,0 +1,263 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QP-NF-TopologyFrames.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: December 5, 2014 14:41:15
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationRulesMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; Topology Frames;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Find things like the path of flow
+;;; 
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?top-frame 
+                        IntroductionOfTopologyFrame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+       ?top-frame)))
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?topoframe 
+                        IntroductionOfTopologyConstraint)
+      (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesTopologyConstraint
+       (PresentationEventFn ?sid ?event-id)
+       ?topoframe)))
+;;; 9/1/2015 cjm: Adding possession
+(<== (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe)
+     (drsForDiscourse ?ddrs-id)
+     (introducesPossessor ?sid ?possessor ?thing)
+     (individualSatisfyingConditions
+      ?topoframe TopologyFrame 
+      (TheSet (introducesPossessor ?sid ?possessor ?thing)))
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (introducesPossessor ?sid ?possessor ?thing)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topoframe TopologyFrame)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (possessor ?topoframe ?possessor)) 
+                             (TheList (introducesTopology
+                                       (PresentationEventFn ?sid ?event-id) ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (requiredRel ?topoframe possessiveRelation)) 
+                             (TheList (introducesTopology
+                                       (PresentationEventFn ?sid ?event-id) ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?topoframe ?thing)) 
+                             (TheList (introducesTopology (PresentationEventFn ?sid ?event-id)
+                                                          ?topoframe)))))
+
+(<== (introducesPossessor ?sid ?possessor ?thing)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?possessor-un ?thing-un))
+     
+     (resolvedVar ?sid ?possessor-un ?possessor)
+     (resolvedVar ?sid ?thing-un ?thing))
+     
+     
+;;; This is meant for X is in Y: CONTAINMENT
+(<== (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe)
+     (drsForDiscourse ?ddrs-id)
+     (introducesContainment ?sid ?container ?substance ?rel)
+     (individualSatisfyingConditions
+      ?topoframe TopologyFrame 
+      (TheSet (introducesContainment ?sid ?container ?substance ?rel)))
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration
+      (TheSet (introducesContainment ?sid ?container ?substance)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topoframe TopologyFrame)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (container ?topoframe ?container)) 
+                             (TheList (introducesTopology
+                                       (PresentationEventFn ?sid ?event-id) ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (requiredRel ?topoframe ?rel)) 
+                             (TheList (introducesTopology
+                                       (PresentationEventFn ?sid ?event-id) ?topoframe))))
+     
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?topoframe ?substance)) 
+                             (TheList (introducesTopology (PresentationEventFn ?sid ?event-id) ?topoframe)))))
+
+;;; containment, specifically X contains Y
+(<== (introducesContainment ?sid ?container-res ?substance-res ?rel)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (contains-Underspecified ?container ?substance))
+     (validQPEntity ?sid just-containment ?container ?container-type ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id (isa ?container ?container-type)))
+     ;;; Again, we don't really need to worry about binding the entity. It isn't returned through here...
+     ;;;(ist-Information (DrsCaseFn ?sdrs-id) (isa ?substance ?chem))
+     (groundExpression ?container)
+     (groundExpression ?substance)
+     (resolvedVar ?sid ?container ?container-res)
+     (resolvedVar ?sid ?substance ?substance-res)
+     (unifies ?rel contains-Underspecified)
+     )
+
+;;;; in-Underspecified Topology frame
+(<== (introducesContainment ?sid ?container-res ?substance-res ?rel)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?substance ?container))
+     (validQPEntity ?sid just-containment ?container ?container-type ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id (isa ?container ?container-type)))
+     (groundExpression ?container)
+     (groundExpression ?substance)
+     (resolvedVar ?sid ?container ?container-res)
+     (resolvedVar ?sid ?substance ?substance-res)
+     (unifies ?rel in-UnderspecifiedContainer)
+     )
+
+
+;;;; Path of MOTION
+(<== (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe)
+     (drsForDiscourse ?ddrs-id)
+     (introducesPath ?sid ?event ?path ?rel)
+     (individualSatisfyingConditions
+      ?topoframe TopologyFrame 
+      (TheSet (introducesPath ?sid ?event ?path ?rel)))
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration 
+      (TheSet (introducesPath ?sid ?event ?path)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topoframe TopologyFrame))
+                             (TheList (introducesTopology (PresentationEventFn ?sid ?event-id)
+                                                          ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (requiredRel ?topoframe ?rel))
+                             (TheList (introducesTopology (PresentationEventFn ?sid ?event-id)
+                                                          ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (pathForFrame ?topoframe ?path))
+                             (TheList (introducesTopology (PresentationEventFn ?sid ?event-id)
+                                                          ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?topoframe ?event))
+                             (TheList (introducesTopology (PresentationEventFn ?sid ?event-id)
+                                                          ?topoframe)))))
+
+
+;;;3/27 I think I want to add a TopologyFrameRule that generates a pathBetween which
+;;;      unifies both flow-through x y and connection regardless of the type of connection
+;;;      
+
+;;;CJM 3/27 check that Event is an actual event
+(<== (introducesPath ?sid ?event ?path ?rel)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (motionPathway-Partial ?event ?path))
+     (unifies ?rel motionPathway-Partial)
+     (lookupOnly (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?eventType))))))
+
+(<== (introducesPath ?sid ?event ?path ?rel)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (trajectoryPassesThrough ?event ?path))
+     (unifies ?rel trajectoryPassesThrough)
+     (lookupOnly (wmOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?eventType))))))
+
+
+;;;; Connection between two objects by a third
+(<== (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (pathConnects ?path ?loc1 ?loc2))
+     (validQPEntity ?sid ?qtype ?path ?etype ?ddrs-id) ;;so qtype is going to be unbound here
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?path ?etype))
+     (individualSatisfyingConditions
+      ?topoframe TopologyFrame 
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (pathConnects ?path ?loc1 ?loc2))))
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration 
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (pathConnects ?path ?loc1 ?loc2))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topoframe TopologyFrame)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (pathForFrame ?topoframe ?path)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (connectedEntity ?topoframe ?loc1)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (connectedEntity ?topoframe ?loc2)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe)))))
+
+(<== (introducesTopologyConstraint
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe)
+     (changeInAccessibility ?sid ?changeEvent ?path ?event)
+     (entity ?topoframe ?event)
+     (isa ?topoframe ToplogyFrame)
+     (tell (notAccessible ?event-id2 ?path)))
+
+
+;;;
+;;; Any kind of direct connection
+(<== (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (directConnection ?sid ?loc1 ?loc2 ?rel)
+     (validQPEntity ?sid ?qtype ?loc1 ?etype ?ddrs-id)
+     (validQPEntity ?sid ?qtype ?loc2 ?etype2 ?ddrs-id);;so qtype is going to be unbound here
+     (wmOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?loc1 ?etype1))))
+     (wmOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?loc2 ?etype2))))
+     (resolvedVar ?sid ?loc1 ?loc1-res)
+     (resolvedVar ?sid ?loc2 ?loc2-res)
+     (individualSatisfyingConditions
+      ?topoframe TopologyFrame 
+      (TheSet (directConnection ?sdrs-id ?loc1 ?loc2 ?rel)))
+     (individualSatisfyingConditions
+      ?event-id IBTGeneration 
+      (TheSet (directConnection ?sdrs-id ?loc1 ?loc2 ?rel)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (requiredRel ?topoframe ?rel)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topoframe TopologyFrame)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (connectedEntity ?topoframe ?loc1-res)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+      ?topoframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (connectedEntity ?topoframe ?loc2-res)) (TheList (introducesTopology
+       (PresentationEventFn ?sid ?event-id)
+                                                                                                          ?topoframe)))))
+
+
+(<== (directConnection ?sid ?loc1 ?loc2 ?rel)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (on-UnderspecifiedSurface ?loc1 ?loc2))
+     (unifies ?rel on-UnderspecifiedSurface))
+
+(<== (directConnection ?sid ?loc1 ?loc2 ?rel)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     ;;;;(ist-Information ?dcase (drsEntailedBySentence ?sdrs-id ?sid))
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (touches-Directly ?loc1 ?loc2))
+     (unifies ?rel touches-Directly))
+     
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

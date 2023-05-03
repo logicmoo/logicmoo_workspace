@@ -1,0 +1,359 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: adjp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+
+
+;;;
+;;; Adjective Phrases
+;;;
+
+(isa -adjp->adj- EAGrammarRule)
+(comment -adjp->adj- "'green', 'big'")
+(probabilityEAGrammarRule -adjp->adj- 1.0)
+(grammarRule -adjp->adj-
+ (EATermFn adjp (TheList (var ?vara) (sem ?sema) (lex ?lex) (superlative ?sup) (comparative ?comp)))
+ (TheList
+  (EAHeadFn (EATermFn Adjective (TheList (var ?vara) (sem ?sema) (lex ?lex) (superlative ?sup) (comparative ?comp))))))
+  
+;;; Adjective strings
+(isa -adjp->adj-comma-adjp- EAGrammarRule)
+(comment -adjp->adj-comma-adjp- "Adjective strings: 'wet, hot, American summer'")
+(probabilityEAGrammarRule -adjp->adj-comma-adjp-  1.0)
+(grammarRule -adjp->adj-comma-adjp- 
+ (EATermFn adjp (TheList (var ?vara) (sem (and ?sema ?semap)) (superlative ?sup) (comparative ?comp)))
+ (TheList
+  (EAHeadFn (EATermFn Adjective (TheList (var ?vara) (sem ?sema) (superlative ?sup) (comparative ?comp))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn adjp (TheList (sem ?semap)))))
+
+(isa -adjp->adv-adj EAGrammarRule)
+(comment -adjp->adv-adj "'most/least populous'")
+(probabilityEAGrammarRule -adjp->adv-adj 1.0)
+(grammarRule -adjp->adv-adj
+             (EATermFn adjp (TheList (var ?vara) (sem ?sema) (modlex ?l) (superlative +) (comparative -)))
+             (TheList (EATermFn Adverb (TheList (lex (? l most least)) (var ?var) (superlative +)))
+                      (EAHeadFn
+                       (EATermFn Adjective (TheList (var ?vara) (sem ?sema) (superlative -) (comparative -))))))
+
+(isa -adjp->adj-pp- EAGrammarRule)
+(comment -adjp->adj-pp- "'green with envy'")
+(probabilityEAGrammarRule -adjp->adj-pp- 0.9)
+(grammarRule -adjp->adj-pp-
+ (EATermFn adjp
+  (TheList (var ?vara) (:OBLIQUE-OBJECT ?varpp) (prep-lex ?lexp)
+   (sem (and ?sema ?sempp))))
+ (TheList
+  (EAHeadFn (EATermFn Adjective (TheList (var ?vara) (sem ?sema))))
+  (EATermFn pp (TheList (var ?varpp) (sem ?sempp) (prep-lex ?lexp)))))
+
+(isa -adjp->adjp-cconj-adjp- EAGrammarRule)
+(comment -adjp->adjp-cconj-adjp- "coordinating conjunctions REM: but needs some kind of clausal handling")
+(probabilityEAGrammarRule -adjp->adjp-cconj-adjp- 1.0)
+(grammarRule -adjp->adjp-cconj-adjp-
+ (EATermFn adjp (TheList (var ?varc) (sem (and ?sema1 ?sema2)) (conj +)))
+ (TheList
+  (EAHeadFn (EATermFn adjp (TheList (var ?vara1) (sem ?sema1))))
+  (EATermFn Conjunction (TheList (var ?varc) (lex ?lexc)))
+  (EATermFn adjp (TheList (var ?vara2) (sem ?sema2)))))
+
+(isa -adjp->adjp-npinf- EAGrammarRule)
+(comment -adjp->adjp-npinf- "adj + infinitive (w/o inverted subject)")
+(probabilityEAGrammarRule -adjp->adjp-npinf- 0.9)
+(grammarRule -adjp->adjp-npinf-
+ (EATermFn adjp
+  (TheList (var ?varinf) (inf +) (:NOUN ?varinf)
+   (:SUBJECT (GapFn :SUBJECT)) (:OBJECT :SUBJECT)
+   (sem (and ?sema ?seminf))))
+ (TheList (EATermFn adjp (TheList (var ?vara) (sem ?sema)))
+  (EAHeadFn
+   (EATermFn np
+    (TheList (var ?varinf) (sem ?seminf) (inf +)
+     (inv-subject -))))))
+
+(isa -adjp->adjp-npinf-invsub- EAGrammarRule)
+(comment -adjp->adjp-npinf-invsub- "adj + infinitive (w/ inverted subject)")
+(probabilityEAGrammarRule -adjp->adjp-npinf-invsub- 0.9)
+(grammarRule -adjp->adjp-npinf-invsub-
+ (EATermFn adjp
+  (TheList (var ?varinf) (inf +) (:NOUN ?varinf) (:SUBJECT ?!invsub)
+   (:OBJECT :SUBJECT) (sem (and ?sema ?seminf))))
+ (TheList (EATermFn adjp (TheList (var ?vara) (sem ?sema)))
+  (EAHeadFn
+   (EATermFn np
+    (TheList (var ?varinf) (sem ?seminf) (inf +)
+     (inv-subject (? !invsub -)))))))
+
+(isa -adjp->equal-to-np- EAGrammarRule)
+(comment -adjp->equal-to-np- "'equal to ...'")
+(probabilityEAGrammarRule -adjp->equal-to-np- 1.0)
+(grammarRule -adjp->equal-to-np-
+ (EATermFn adjp
+  (TheList (var ?varadj)
+   (sem
+    (and ?semnp (isa :ACTION ComparisonEvent)
+         (comparer :ACTION :SUBJECT)
+         (comparee :ACTION ?varnp)
+         (comparativeRelation :ACTION ?varadj)
+         (degreeInformation ?varadj equals
+          equals)))))
+ (TheList
+  (EAHeadFn (EATermFn Adjective (TheList (lex equal) (var ?varadj))))
+  (EATermFn Preposition (TheList (lex to)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))))
+
+(isa -adjp->the-same-as-np- EAGrammarRule)
+(comment -adjp->the-same-as-np- "'the same as ...'")
+(probabilityEAGrammarRule -adjp->the-same-as-np- 1.0)
+(grammarRule -adjp->the-same-as-np-
+ (EATermFn adjp
+  (TheList (var ?varadj)
+   (sem
+    (and ?semnp (isa :ACTION ComparisonEvent)
+         (comparer :ACTION :SUBJECT)
+         (comparee :ACTION ?varnp)
+         (comparativeRelation :ACTION ?varadj)
+         (degreeInformation ?varadj equals
+          equals)))))
+ (TheList (EATermFn Determiner (TheList (lex the)))
+  (EAHeadFn (EATermFn Adjective (TheList (lex same) (var ?varadj))))
+  (EATermFn Preposition (TheList (lex as)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))))
+
+(isa -adjp->different-from-np- EAGrammarRule)
+(comment -adjp->different-from-np- "'different from ...'")
+(probabilityEAGrammarRule -adjp->different-from-np- 1.0)
+(grammarRule -adjp->different-from-np-
+ (EATermFn adjp
+  (TheList (var ?varadj)
+   (sem
+    (and ?semnp (isa :ACTION ComparisonEvent)
+         (comparer :ACTION :SUBJECT)
+         (comparee :ACTION ?varnp)
+         (comparativeRelation :ACTION ?varadj)
+         (degreeInformation ?varadj different
+          different)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Adjective (TheList (lex different) (var ?varadj))))
+  (EATermFn Preposition (TheList (lex from)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))))
+
+;;; Should adjp take into account the noun?
+;;; Does the comparative semantics come only from the compp? No.
+;;;
+;;;Comparatives and Superlatives
+;;; Needed:
+;;;   -comparative reference: "The bigger ball..." "Choose the bigger one."
+;;;   -comparative questions (no compp): "Which dog is larger?"
+;;;   -comparative-correlative: "The larger the dog, the louder its bark"
+;;;   -comparison - diff dimensions: "I am taller than I am wide." -currently impossible with our representation. 
+;;;                                    Not actually all that common so...
+;;;   -comparison explicit noun: I am a taller man than bill. 
+
+;;;   
+;;;   -supperlative: "The largest dog."
+;;;   -supperlative-compositional: "The largest dog with the loudest bark."
+;;;   -superlative-q: "Which dog is the largest?"
+;;;                   "What is the largest dog?"
+;;;                   "Which dog has the largest ears?"
+;;;   -superlative-q-ref: "Which dog is the largest for its breed?"
+;;;              
+;;; 
+
+;;; Done:
+;;;   -basic comparative: "The boy is larger than the girl."
+;;;   -basic comparative-more: "The boy is more large than the girl."
+;;;
+;;; Updated 10-19 to handle a broader range of adjective representations.
+;;; See changes in procedures.lsp
+;;;
+;;; Wait, could I make this work better by doing faster race as an np? Then do -adjp->cnp-compp
+;;; Then have separate be-adjp rules? huh...
+;;;
+;;;(isa -adjp->adjp-cnp-compp- EAGrammarRule)
+;;;(comment -adjp->adjp-compp- "For compound adj phrases like 'Saturday was a warmer day than today.'
+;;; where the comparison class is explicit. Currently uses the same procedural attachment as without the
+;;; explicit comparison class. The class is just an isa for the comparer and comparee.")
+;;;(grammarRule -adjp->adjp-compp-
+;;;             (EATermFn adjp
+;;;                       (TheList (var ?varadjp) (:RELATION ?semrel)
+;;;                                (:CONSTITUENT1 :SUBJECT) (:CONSTITUENT2 ?varcompp)
+;;;                                (sem ?semcompp)))
+;;;             (TheList
+;;;              (EAHeadFn
+;;;               (EATermFn adjp
+;;;                         (TheList (comparative +) (var ?varadjp) (sem ?semadjp))))
+;;;              (EATermFn compp (TheList (var ?varcompp) (sem ?semcompp)))
+;;;              (EATermFn bind-comparative-relation
+;;;                        (TheList (inp ?semadjp) (sem ?semrel))))
+  
+           
+
+  
+
+(isa -adjp->adjp-compp- EAGrammarRule)
+(comment -adjp->adjp-compp- "Modified to use procedural attachment to construct a comparative 
+  relation given an adjective phrase like 'more comprehensive'. (JLT)")
+(probabilityEAGrammarRule -adjp->adjp-compp- 1.0)
+(grammarRule -adjp->adjp-compp-
+ (EATermFn adjp
+  (TheList (var ?varadjp) (:RELATION ?semrel)
+   (:CONSTITUENT1 :SUBJECT) (:CONSTITUENT2 ?varcompp)
+   (sem ?semcompp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn adjp
+    (TheList (comparative +) (var ?varadjp) (sem ?semadjp))))
+  (EATermFn compp (TheList (var ?varcompp) (sem ?semcompp)))
+  (EATermFn bind-comparative-relation
+   (TheList (inp ?semadjp) (sem ?semrel)))))
+
+(isa -adjp->more-adjp- EAGrammarRule)
+(comment -adjp->more-adjp- "This needs to glue degree information on to the sem, but bind-comparative-relation can't handle this case yet. (JLT)")
+(probabilityEAGrammarRule -adjp->more-adjp- 1.0)
+(grammarRule -adjp->more-adjp-
+ (EATermFn adjp
+  (TheList (var ?varadjp) (comparative +) (sem ?semadjp)))
+ (TheList (EATermFn Adverb (TheList (lex more)))
+  (EAHeadFn (EATermFn adjp (TheList (var ?varadjp) (sem ?semadjp))))))
+
+(isa -adjp->adj-compp- EAGrammarRule)
+(comment -adjp->adj-compp- "REM: Modified to use procedural attachment to construct a comparative relation given an adjective like 'bigger'. (JLT)")
+(probabilityEAGrammarRule -adjp->adj-compp- 1.0)
+(grammarRule -adjp->adj-compp-
+ (EATermFn adjp
+  (TheList (var ?varadj) (:RELATION ?semrel) (:CONSTITUENT1 :SUBJECT)
+   (:CONSTITUENT2 ?varcompp) (sem ?semcompp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Adjective
+    (TheList (comparative +) (var ?varadj) (sem ?semadj))))
+  (EATermFn compp (TheList (var ?varcompp) (sem ?semcompp)))
+  (EATermFn bind-comparative-relation
+   (TheList (inp ?semadj) (sem ?semrel)))))
+
+(isa -adjp->how-quant- EAGrammarRule)
+(comment -adjp->how-quant- "How many X")
+(probabilityEAGrammarRule -adjp->how-quant- 1.0)
+(grammarRule -adjp->how-quant-
+ (EATermFn adjp
+  (TheList (stype HowQuantQuestion-IBT) 
+           (var (WhQuestionFn how ?vquant))
+           (sem (WHFocus (WhQuestionFn how ?vquant) :SUBJECT))))
+ (TheList 
+  (EATermFn Adverb (TheList (orth "how")))
+  (EAHeadFn
+   (EATermFn Quantifier-SP (TheList (var ?vquant) (comparable -))))))
+
+;;; cjm 7-19 removed modif
+;;; TRH 4-3-17 This is inadequate.  "not" is an adverb. "not sad" is not working out so well.
+;;; Going to limit this to gradable adverbs
+(isa -adjp->adverb-adj- EAGrammarRule)
+(comment -adjp->adverb-adj- "'very green' 'slightly dry'")
+(probabilityEAGrammarRule -adjp->adverb-adj- 0.9)
+(grammarRule -adjp->adverb-adj-
+ (EATermFn adjp
+  (TheList (var ?varadj)
+   (:GENERIC-VALUE-FN
+    (ConceptForInstanceFn ?varadvp ?semadvp))
+   (sem ?semadj)))
+ (TheList
+  (EATermFn Adverb
+   (TheList (gradable +) (var ?varadvp) (sem ?semadvp)))
+  (EAHeadFn
+   (EATermFn Adjective (TheList (var ?varadj) (sem ?semadj))))))
+   
+(isa -adjp->not-adj- EAGrammarRule)
+(comment -adjp->not-adj- "'not sad' 'never sleepy'")
+(probabilityEAGrammarRule -adjp->not-adj- 0.9)
+(grammarRule -adjp->not-adj-
+ (EATermFn adjp
+  (TheList (var ?varadj)
+   (sem (not ?semadj))))
+ (TheList
+  (EATermFn Adverb (TheList (lex (? l not never))))
+  (EAHeadFn
+   (EATermFn Adjective (TheList (var ?varadj) (sem ?semadj))))))
+
+
+;;; This is absurd! [TRH, 3-27-17]
+;;;(isa -adjp->vp- EAGrammarRule)
+;;;(comment -adjp->vp- "'The car was driven to Wisconsin.'")
+;;;(probabilityEAGrammarRule -adjp->vp- 0.9)
+;;;(grammarRule -adjp->vp-
+;;;             (EATermFn adjp
+;;;  (TheList (var ?varv) (participle +) (:OBJECT :NOUN)
+;;;   (:SUBJECT UnspecifiedPassive) (:ACTION ?varv)
+;;;   (sem ?semv)))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn vp
+;;;    (TheList (vform (? vform prespart pastpart)) (var ?varv)
+;;;     (sem ?semv) (:OBLIQUE-OBJECT ?oblique) (prep-lex (? !lexp by))
+;;;     (aux -) (modal -) (negated -) (inv -) (dir-obj -)
+;;;     (utterance -))))))
+
+(isa -adjp->vp-specified-passive- EAGrammarRule)
+(comment -adjp->vp-specified-passive- "'The car was driven by Fred.'")
+(probabilityEAGrammarRule -adjp->vp-specified-passive- 0.9)
+(grammarRule -adjp->vp-specified-passive-
+ (EATermFn adjp
+  (TheList (var ?varv) (participle +) (:OBJECT :SUBJECT)
+   (:SUBJECT ?oblique) (:ACTION ?varv) (sem ?semv)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform (? vform prespart pastpart)) (var ?varv)
+     (sem ?semv) (:OBLIQUE-OBJECT ?oblique) (prep-lex by) (aux -)
+     (modal -) (negated -) (inv -) (dir-obj -) (utterance -))))))
+
+(isa -adjp->mp-adj- EAGrammarRule)
+(comment -adjp->mp-adj- "'13 years old', '2 inches long'")
+(probabilityEAGrammarRule -adjp->mp-adj- 1.0)
+(grammarRule -adjp->mp-adj-
+ (EATermFn adjp (TheList (var ?varmp) (:MEASURE ?semmp) (sem ?sema)))
+ (TheList (EATermFn mp (TheList (var ?varmp) (sem ?semmp)))
+  (EAHeadFn (EATermFn Adjective (TheList (var ?vara) (sem ?sema))))))
+
+
+(isa -adjp->m-by-n- EAGrammarRule)
+(comment -adjp->m-by-n- "Dimensional Phrases (TRH)")
+(probabilityEAGrammarRule -adjp->m-by-n- 1.0)
+(grammarRule -adjp->m-by-n-
+ (EATermFn adjp
+  (TheList
+   (sem
+    (and (maxCoordX :NOUN ?m)
+         (maxCoordY :NOUN ?n)))))
+ (TheList (EATermFn Number-SP (TheList (sem ?m)))
+  (EAHeadFn (EATermFn Preposition (TheList (lex by))))
+  (EATermFn Number-SP (TheList (sem ?n)))))
+
+
+;;; 
+;;; Unknowns
+;;;
+
+(isa -adjp->unknown- EAGrammarRule)
+(comment -adjp->unknown- "unknown as adjp. E.g. '3x3' (TRH)")
+(probabilityEAGrammarRule -adjp->unknown- 1.0)
+(grammarRule -adjp->unknown-
+ (EATermFn adjp (TheList (var ?var) (sem ?sema)))
+ (TheList
+  (EAHeadFn (EATermFn unknown (TheList (var ?var) (lex ?lex))))
+  (EATermFn coordinate-extent
+   (TheList (var ?var) (lex ?lex) (sem ?sema)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

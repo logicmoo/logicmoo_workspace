@@ -1,0 +1,228 @@
+;; academic_groups.meld
+;; Scraped information regarding group membership in NU EECS.
+;; Scraped on 8/7/18
+
+(in-microtheory (SocialModelMtFn KorayAydin))
+(nuGroupMember NUSolidStateAndPhotonics KorayAydin)
+
+(in-microtheory (SocialModelMtFn MatthewGrayson))
+(nuGroupMember NUSolidStateAndPhotonics MatthewGrayson)
+
+(in-microtheory (SocialModelMtFn JieGu))
+(nuGroupMember NUSolidStateAndPhotonics JieGu)
+(nuGroupMember NUComputerEngineeringAndSystems JieGu)
+
+(in-microtheory (SocialModelMtFn Seng-TiongHo))
+(nuGroupMember NUSolidStateAndPhotonics Seng-TiongHo)
+
+(in-microtheory (SocialModelMtFn PedramKhalili))
+(nuGroupMember NUSolidStateAndPhotonics PedramKhalili)
+
+(in-microtheory (SocialModelMtFn PremKumar))
+(nuGroupMember NUSolidStateAndPhotonics PremKumar)
+
+(in-microtheory (SocialModelMtFn HoomanMohseni))
+(nuGroupMember NUSolidStateAndPhotonics HoomanMohseni)
+
+(in-microtheory (SocialModelMtFn MartinPlonus))
+(nuGroupMember NUSolidStateAndPhotonics MartinPlonus)
+
+(in-microtheory (SocialModelMtFn ManijehRazeghi))
+(nuGroupMember NUSolidStateAndPhotonics ManijehRazeghi)
+
+(in-microtheory (SocialModelMtFn SelimShahriar))
+(nuGroupMember NUSolidStateAndPhotonics SelimShahriar)
+
+(in-microtheory (SocialModelMtFn HoraceYuen))
+(nuGroupMember NUSolidStateAndPhotonics HoraceYuen)
+(nuGroupMember NUSignalsAndSystems HoraceYuen)
+
+(in-microtheory (SocialModelMtFn BrennaArgall))
+(nuGroupMember NUSignalsAndSystems BrennaArgall)
+(nuGroupMember NUCognitiveSystems BrennaArgall)
+
+(in-microtheory (SocialModelMtFn RandallBerry))
+(nuGroupMember NUSignalsAndSystems RandallBerry)
+
+(in-microtheory (SocialModelMtFn ArthurButz))
+(nuGroupMember NUSignalsAndSystems ArthurButz)
+
+(in-microtheory (SocialModelMtFn RandyFreeman))
+(nuGroupMember NUSignalsAndSystems RandyFreeman)
+
+(in-microtheory (SocialModelMtFn DongningGuo))
+(nuGroupMember NUSignalsAndSystems DongningGuo)
+
+(in-microtheory (SocialModelMtFn MichaelHonig))
+(nuGroupMember NUSignalsAndSystems MichaelHonig)
+
+(in-microtheory (SocialModelMtFn AggelosKKatsaggelos))
+(nuGroupMember NUSignalsAndSystems AggelosKKatsaggelos)
+(nuGroupMember NUGraphicsAndInteractiveMedia AggelosKKatsaggelos)
+
+(in-microtheory (SocialModelMtFn Chung-ChiehLee))
+(nuGroupMember NUSignalsAndSystems Chung-ChiehLee)
+
+(in-microtheory (SocialModelMtFn Thrasyvoulos(Thrasos)NPappas))
+(nuGroupMember NUSignalsAndSystems Thrasyvoulos(Thrasos)NPappas)
+
+(in-microtheory (SocialModelMtFn AlanVSahakian))
+(nuGroupMember NUSignalsAndSystems AlanVSahakian)
+(nuGroupMember NUComputerEngineeringAndSystems AlanVSahakian)
+
+(in-microtheory (SocialModelMtFn JackETumblin))
+(nuGroupMember NUSignalsAndSystems JackETumblin)
+(nuGroupMember NUGraphicsAndInteractiveMedia JackETumblin)
+
+(in-microtheory (SocialModelMtFn ErminWei))
+(nuGroupMember NUSignalsAndSystems ErminWei)
+
+(in-microtheory (SocialModelMtFn Chi-HaurWu))
+(nuGroupMember NUSignalsAndSystems Chi-HaurWu)
+(nuGroupMember NUComputerEngineeringAndSystems Chi-HaurWu)
+
+(in-microtheory (SocialModelMtFn YingWu))
+(nuGroupMember NUSignalsAndSystems YingWu)
+
+(in-microtheory (SocialModelMtFn FabianEBustamante))
+(nuGroupMember NUComputerEngineeringAndSystems FabianEBustamante)
+
+(in-microtheory (SocialModelMtFn YanChen))
+(nuGroupMember NUComputerEngineeringAndSystems YanChen)
+(nuGroupMember NUComputingAlgorithmsAndApplications YanChen)
+
+(in-microtheory (SocialModelMtFn AlokChoudhary))
+(nuGroupMember NUComputerEngineeringAndSystems AlokChoudhary)
+
+(in-microtheory (SocialModelMtFn ChristosDimoulas))
+(nuGroupMember NUComputerEngineeringAndSystems ChristosDimoulas)
+(nuGroupMember NUComputingAlgorithmsAndApplications ChristosDimoulas)
+
+(in-microtheory (SocialModelMtFn PeterDinda))
+(nuGroupMember NUComputerEngineeringAndSystems PeterDinda)
+
+(in-microtheory (SocialModelMtFn RobbyFindler))
+(nuGroupMember NUComputerEngineeringAndSystems RobbyFindler)
+
+(in-microtheory (SocialModelMtFn NikosHardavellas))
+(nuGroupMember NUComputerEngineeringAndSystems NikosHardavellas)
+
+(in-microtheory (SocialModelMtFn LarryHenschen))
+(nuGroupMember NUComputerEngineeringAndSystems LarryHenschen)
+(nuGroupMember NUCognitiveSystems LarryHenschen)
+
+(in-microtheory (SocialModelMtFn JosiahHester))
+(nuGroupMember NUComputerEngineeringAndSystems JosiahHester)
+
+(in-microtheory (SocialModelMtFn RussellJoseph))
+(nuGroupMember NUComputerEngineeringAndSystems RussellJoseph)
+
+(in-microtheory (SocialModelMtFn AleksandarKuzmanovic))
+(nuGroupMember NUComputerEngineeringAndSystems AleksandarKuzmanovic)
+
+(in-microtheory (SocialModelMtFn HanLiu))
+(nuGroupMember NUComputerEngineeringAndSystems HanLiu)
+
+(in-microtheory (SocialModelMtFn GokhanMemik))
+(nuGroupMember NUComputerEngineeringAndSystems GokhanMemik)
+
+(in-microtheory (SocialModelMtFn SedaOMemik))
+(nuGroupMember NUComputerEngineeringAndSystems SedaOMemik)
+
+(in-microtheory (SocialModelMtFn MortezaAmirRahimi))
+(nuGroupMember NUComputerEngineeringAndSystems MortezaAmirRahimi)
+
+(in-microtheory (SocialModelMtFn JennieMRogers))
+(nuGroupMember NUComputerEngineeringAndSystems JennieMRogers)
+
+(in-microtheory (SocialModelMtFn JesseTov))
+(nuGroupMember NUComputerEngineeringAndSystems JesseTov)
+
+(in-microtheory (SocialModelMtFn HaiZhou))
+(nuGroupMember NUComputerEngineeringAndSystems HaiZhou)
+(nuGroupMember NUComputingAlgorithmsAndApplications HaiZhou)
+
+(in-microtheory (SocialModelMtFn QiZhu))
+(nuGroupMember NUComputerEngineeringAndSystems QiZhu)
+(nuGroupMember NUComputingAlgorithmsAndApplications QiZhu)
+
+(in-microtheory (SocialModelMtFn NabilAlshurafa))
+(nuGroupMember NUComputingAlgorithmsAndApplications NabilAlshurafa)
+
+(in-microtheory (SocialModelMtFn AnindyaDe))
+(nuGroupMember NUComputingAlgorithmsAndApplications AnindyaDe)
+
+(in-microtheory (SocialModelMtFn JasonDHartline))
+(nuGroupMember NUComputingAlgorithmsAndApplications JasonDHartline)
+
+(in-microtheory (SocialModelMtFn NicoleImmorlica))
+(nuGroupMember NUComputingAlgorithmsAndApplications NicoleImmorlica)
+
+(in-microtheory (SocialModelMtFn Ming-YangKao))
+(nuGroupMember NUComputingAlgorithmsAndApplications Ming-YangKao)
+
+(in-microtheory (SocialModelMtFn KonstantinMakarychev))
+(nuGroupMember NUComputingAlgorithmsAndApplications KonstantinMakarychev)
+
+(in-microtheory (SocialModelMtFn AllenTaflove))
+(nuGroupMember NUComputingAlgorithmsAndApplications AllenTaflove)
+
+(in-microtheory (SocialModelMtFn AravindanVijayaraghavan))
+(nuGroupMember NUComputingAlgorithmsAndApplications AravindanVijayaraghavan)
+
+(in-microtheory (SocialModelMtFn LarryBirnbaum))
+(nuGroupMember NUCognitiveSystems LarryBirnbaum)
+(nuGroupMember NUGraphicsAndInteractiveMedia LarryBirnbaum)
+
+(in-microtheory (SocialModelMtFn DouglasDowney))
+(nuGroupMember NUCognitiveSystems DouglasDowney)
+
+(in-microtheory (SocialModelMtFn KenForbus))
+(nuGroupMember NUCognitiveSystems KenForbus)
+
+(in-microtheory (SocialModelMtFn DarrenGergle))
+(nuGroupMember NUCognitiveSystems DarrenGergle)
+(nuGroupMember NUGraphicsAndInteractiveMedia DarrenGergle)
+
+(in-microtheory (SocialModelMtFn KristianJHammond))
+(nuGroupMember NUCognitiveSystems KristianJHammond)
+(nuGroupMember NUGraphicsAndInteractiveMedia KristianJHammond)
+
+(in-microtheory (SocialModelMtFn BrentHecht))
+(nuGroupMember NUCognitiveSystems BrentHecht)
+(nuGroupMember NUGraphicsAndInteractiveMedia BrentHecht)
+
+(in-microtheory (SocialModelMtFn MichaelHorn))
+(nuGroupMember NUCognitiveSystems MichaelHorn)
+(nuGroupMember NUGraphicsAndInteractiveMedia MichaelHorn)
+
+(in-microtheory (SocialModelMtFn IanHorswill))
+(nuGroupMember NUCognitiveSystems IanHorswill)
+(nuGroupMember NUGraphicsAndInteractiveMedia IanHorswill)
+
+(in-microtheory (SocialModelMtFn EleanorO'Rourke))
+(nuGroupMember NUCognitiveSystems EleanorO'Rourke)
+
+(in-microtheory (SocialModelMtFn BryanPardo))
+(nuGroupMember NUCognitiveSystems BryanPardo)
+(nuGroupMember NUGraphicsAndInteractiveMedia BryanPardo)
+
+(in-microtheory (SocialModelMtFn ChrisRiesbeck))
+(nuGroupMember NUCognitiveSystems ChrisRiesbeck)
+
+(in-microtheory (SocialModelMtFn SaraOwsleySood))
+(nuGroupMember NUCognitiveSystems SaraOwsleySood)
+
+(in-microtheory (SocialModelMtFn UriWilensky))
+(nuGroupMember NUCognitiveSystems UriWilensky)
+(nuGroupMember NUGraphicsAndInteractiveMedia UriWilensky)
+
+(in-microtheory (SocialModelMtFn MarceloWorsley))
+(nuGroupMember NUCognitiveSystems MarceloWorsley)
+
+(in-microtheory (SocialModelMtFn HaoqiZhang))
+(nuGroupMember NUCognitiveSystems HaoqiZhang)
+(nuGroupMember NUGraphicsAndInteractiveMedia HaoqiZhang)
+
+(in-microtheory (SocialModelMtFn OliverSCossairt))
+(nuGroupMember NUGraphicsAndInteractiveMedia OliverSCossairt)

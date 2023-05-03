@@ -1,0 +1,557 @@
+;;;
+;;; rational-player.meld
+;;;
+;;; 11-1-12 Replaced all the knowledge-level regression planning with the
+;;; outsourced queries that use Dynamic Programming.
+;;; Faster, better, cheaper!
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+
+;;; Action Plans
+
+;;; UNITS -> ROLES -> GOALS
+;;;
+;;; That's the order.  
+;;; 1) Compute available units
+;;; 2) Determine their functional roles
+;;; 3) Look up relevant goals for those roles
+;;;
+;;; => we can keep planGameActionsForInstancesOf as-is (almost)
+
+;;; Part of the reason we don't want to defer recording 
+;;; reason for task is to avoid duplicating the task.
+;;; This means we have to rely on the turn rather than the
+;;; command number to encode rationale.
+;;; (holdsIn <turn> (reasonForTask <task> (GoalFn #)) is all we need.
+
+;;; Do  this: 
+;;; (fire:query '(and (assignableActorOfType ?who ?type) (roleMemberType ?type ?role))
+;;;  :context 'fc-game79 :response '(?who ?role))
+
+
+
+;;; Collect the resource pool of actors:
+;(preconditionForMethod
+;  (and (evaluate ?assignable-actors
+;         (TheClosedRetrievalSetOf (?actor ?type)
+;           (and (assignableActorOfType ?actor ?type)  ; This is a cheap way of getting the domain actor type
+;                (uninferredSentence
+;                  (busyActor ?actor)))))
+;        (different ?assignable-actors (TheSet))
+;        (currentTopPriorityGoal ?mt ?goal-type ?goal ?role))
+;  (methodForAction
+;    (planStrategicGoalActions ?when ?mt)
+;    (actionSequence
+;      (TheList
+;        (assignActorsToGoals ?mt ?goal-type ?goal ?role ?assignable-actors (TheList) takeAction)))))
+
+;;; base case/default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planStrategicGoalActions ?when ?mt)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (planStrategicGoalActions ?when ?mt) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+
+;;; Given a highest priority goal,
+;;; Find an actor whose ?type plays ?role.
+;;; Attempt to task him.
+;;; On success, remove actor from resource pool and recurse
+;;; On failure, skip to the next goal until we either run out of goals or run out of actors
+;;; goal-type is a name, like (GoalFn 3)
+;;; goal is a rep, like (AchieveFn (playerKnowsTech (IndexicalFn currentPlayer) FC-Tech-Democracy))
+
+
+;;; assignActorsToGoals should have *no* default base-case.
+;;; In order for it to backtrack and try a different set of bindings, it
+;;; must fail, which it will not do if there's a default method.
+;;; So the default has been promoted to planStrategicGoalActions.
+
+
+(isa assignActorsToGoals ComplexActionPredicate)
+(arity assignActorsToGoals 7)
+(arg1Isa assignActorsToGoals Microtheory)
+(arg2Isa assignActorsToGoals Goal)
+(arg3Isa assignActorsToGoals Goal)
+(arg4Isa assignActorsToGoals FunctionalRole)
+(arg5Isa assignActorsToGoals Set-Mathematical)
+(arg6Isa assignActorsToGoals List)
+(arg7Isa assignActorsToGoals Predicate)
+(comment assignActorsToGoals "(assignActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition) attempts to continue the goal when appropriate, else find the next highest priority goal and assign actors.")
+
+;;; For active cardinality goals, try to keep addressing as long as possible:
+(preconditionForMethod
+  (and (different ?actor-type-pairs (TheSet))
+       (bestActorAssignment ?mt ?goal ?role ?actor-type-pairs ?actor-type-pair)
+       (unifies (?actor ?type) ?actor-type-pair)
+       (ist-Information ?mt
+         (complexTaskAchieves ?actor ?goal ?action))
+       (uninferredSentence 
+         (actionPlanned ?actor ?action ?planned-actions)) ; Is somebody already assigned to do this?
+       (evaluate ?remaining-actor-type-pairs
+         (SetMinusFn ?actor-type-pairs ?actor-type-pair))
+       (evaluate ?new-actions (JoinListsFn (TheList ?action) ?planned-actions)))
+  (methodForAction
+    (assignActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition)
+    (actionSequence
+      (TheList
+        (?disposition ?mt ?actor ?goal-type ?action ?new-actions)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (assignRemainingActorsToGoals ?mt ?goal-type ?goal ?role ?remaining-actor-type-pairs ?new-actions ?disposition))))
+        ))))
+
+;;; *** We need a less-preferred method that looks for primitiveAchieves.
+;;; *** In other words, we want to prefer one over the other based on the precondition, rather than the method.
+;;; *** The simplest way to do this is just to make the methods slightly different.
+
+(preconditionForMethod
+  (and (different ?actor-type-pairs (TheSet))
+       (bestActorAssignment ?mt ?goal ?role ?actor-type-pairs ?actor-type-pair)
+       (unifies (?actor ?type) ?actor-type-pair)
+       (ist-Information ?mt
+         (primitiveAchieves ?actor ?goal ?action))
+       (uninferredSentence 
+         (actionPlanned ?actor ?action ?planned-actions)) ; Is somebody already assigned to do this?
+       (evaluate ?remaining-actor-type-pairs
+         (SetMinusFn ?actor-type-pairs ?actor-type-pair))
+       (evaluate ?new-actions (JoinListsFn (TheList ?action) ?planned-actions)))
+  (methodForAction
+    (assignActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition)
+    (actionSequence
+      (TheList
+        (flagImprovisedPlan ?mt ?goal ?action)
+        (?disposition ?mt ?actor ?goal-type ?action ?new-actions)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (assignRemainingActorsToGoals ?mt ?goal-type ?goal ?role ?remaining-actor-type-pairs ?new-actions ?disposition))))
+        ))))
+        
+(<== (preferInContext (assignActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 flagImprovisedPlan))
+
+(isa flagImprovisedPlan ComplexActionPredicate)
+(arity flagImprovisedPlan 3)
+(comment flagImprovisedPlan "(flagImprovisedPlan ?mt ?goal ?action) records the fact that ?action is constructed from regression planning.  Primarily used to distinguish (& prefer) learned plans over constructed (improvised) plans.")
+
+(preconditionForMethod 
+  (true)
+  (methodForAction
+    (flagImprovisedPlan ?mt ?goal ?action)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?mt (goalForImprovisedPlan ?goal ?action)))))))
+
+(isa assignRemainingActorsToGoals ComplexActionPredicate)
+(arity assignRemainingActorsToGoals 7)
+(arg1Isa assignRemainingActorsToGoals Microtheory)
+(arg2Isa assignRemainingActorsToGoals Goal)
+(arg3Isa assignRemainingActorsToGoals Goal)
+(arg4Isa assignRemainingActorsToGoals FunctionalRole)
+(arg5Isa assignRemainingActorsToGoals Set-Mathematical)
+(arg6Isa assignRemainingActorsToGoals List)
+(arg7Isa assignRemainingActorsToGoals Predicate)
+(comment assignRemainingActorsToGoals "(assignRemainingActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition) attempts to continue the goal when appropriate, else find the next highest priority goal and assign actors.")
+
+
+;;; Continue with the same goal for cardinality goals for as long as possible.
+;;; *** Ultimately, this is something we should infer from goalTradeoffs.
+(preconditionForMethod
+  (and (different ?actor-type-pairs (TheSet))
+       (matches (?dir ((MeasurableQuantityFn cardinalityOf) ?collection-spec)) ?goal))
+  (methodForAction
+    (assignRemainingActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition)
+    (actionSequence
+      (TheList
+        (assignActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition)))))
+
+;;; After preferring the continuation of a goal, we defer the expansion
+;;; of the method that computes the next goal, since that side-effects the
+;;; continuation.  We don't want to hit that unless the more preferred method
+;;; has failed.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assignRemainingActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition)
+    (actionSequence
+      (TheList
+        (assignRemainingActorsToNextGoals ?mt ?actor-type-pairs ?planned-actions ?disposition)))))
+
+;;; Prefer to assign more actors to the smae goal if that's possible:
+(<== (preferInContext (assignRemainingActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 assignRemainingActorsToNextGoals))
+
+(isa assignRemainingActorsToNextGoals ComplexActionPredicate)
+(arity assignRemainingActorsToNextGoals 4)
+(arg1Isa assignRemainingActorsToNextGoals Microtheory)
+(arg2Isa assignRemainingActorsToNextGoals Set-Mathematical)
+(arg3Isa assignRemainingActorsToNextGoals List)
+(arg4Isa assignRemainingActorsToNextGoals Predicate)
+(comment assignRemainingActorsToNextGoals "(assignRemainingActorsToNextGoals ?mt ?actor-type-pairs ?planned-actions ?disposition) identifies the top priority goal, assigns an actor to a task, and recurses until there are no more actors or there are no more goals.
+disposition is a task predicate, either takeAction or recordAction, that determines whether the task is executed or merely recorded for reflecting on.")
+
+;;; Move on to a different goal:
+;;; *** OBSOLETE: nextHighestPriorityGoal no longer outsourced
+(preconditionForMethod
+  (and (different ?actor-type-pairs (TheSet))
+       (nextHighestPriorityGoal ?mt ?next-goal-type ?next-goal ?next-role))  ; Although this is dynamic, it's ok to backtrack here.
+  (methodForAction
+    (assignRemainingActorsToNextGoals ?mt ?actor-type-pairs ?planned-actions ?disposition)
+    (actionSequence
+      (TheList
+        (assignActorsToGoals ?mt ?goal-type ?goal ?role ?actor-type-pairs ?planned-actions ?disposition)))))
+
+;;; No more goals or actors:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assignRemainingActorsToNextGoals ?mt ?actor-type-pairs ?planned-actions ?disposition)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (assignRemainingActorsToNextGoals ?mt ?actor-type-pairs ?planned-actions ?disposition) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;; *** This isn't really finding the best actor assignment.
+;;; *** It's merely finding some legal assignment based on capability role.
+;;; *** Moveover, at this stage, we don't even know if there's a viable plan to address the goal.
+(isa bestActorAssignment QuintaryPredicate)
+(arity bestActorAssignment 5)
+(arg1Isa bestActorAssignment Microtheory)
+(arg2Isa bestActorAssignment Goal)
+(arg3Isa bestActorAssignment FunctionalRole)
+(arg4Isa bestActorAssignment Set-Mathematical)
+(arg5Isa bestActorAssignment CycLTerm)
+(comment bestActorAssignment "(bestActorAssignment ?mt ?goal ?role ?actor-type-pairs ?actor-type-pair)")
+
+(<== (bestActorAssignment ?mt ?goal ?role ?actor-type-pairs ?actor-type-pair)
+     (lookupOnly (elementOf ?actor-type-pair ?actor-type-pairs))
+     (unifies (?actor ?type) ?actor-type-pair)
+     (roleMemberType ?type ?role)
+     ;; and ideally, some appropriateness check based on extrinsic properties of individual, like proximity, etc
+     )
+
+(isa filteredActorsByRoles TernaryPredicate)
+(arity filteredActorsByRoles 3)
+(comment filteredActorsByRoles "(filteredActorsByRoles ?actor-type-pairs ?roles ?actors) binds ?actors to the set of actors that can play of of the ?roles.")
+
+(<== (filteredActorsByRoles ?actor-type-pairs ?roles ?filtered-actor-type-pairs)
+     (evaluate ?filtered-actor-type-pairs
+       (TheClosedRetrievalSetOf ?pair
+         (and (lookupOnly (elementOf ?pair ?actor-type-pairs))
+              (unifies (?actor ?type) ?pair)
+              (someSatisfies ?role ?roles (roleMemberType ?type ?role))))))
+
+     
+(isa actionPlanned TernaryPredicate)
+(arity actionPlanned 3)
+(arg1Isa actionPlanned Agent-Generic)
+(arg2Isa actionPlanned CycLExpression)
+(arg3Isa actionPlanned List)
+(comment actionPlanned "(actionPlanned ?actor ?proposed-action ?planned-actions) succeeds if the ?proposed-action is already on the list of ?planned-actions to be performed by some actor.")
+
+;;; Dubious.  If ?action is a complex task, then even with identical args, 
+;;; it could resolve to different primitive actions due to diectic references 
+;;; and dynamic predicates.  irrigate the best location?
+(<== (actionPlanned ?actor ?action ?planned-actions)
+     (groundExpression ?action)
+     (evaluate ?lifted-action (SublisFn (TheSet (?actor ?actor-var%)) ?action))
+     (containsPattern ?lifted-action ?planned-actions))
+     
+(isa takeAction ComplexActionPredicate)
+(arity takeAction 5)
+(arg1Isa takeAction Microtheory)
+(arg2Isa takeAction Agent-Generic)
+(arg3Isa takeAction Goal)
+(arg4Isa takeAction CycLExpression)
+(arg5Isa takeAction List)
+(comment takeAction "(takeAction ?mt ?actor ?goal ?action ?planned-actions) executes action, solving for preconditions first if necessary, and recording rationale.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (takeAction ?mt ?actor ?goal ?action ?planned-actions)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%(takeAction ~s)" (?action))
+        ;(doRecord (ist-Information ?mt (holdsIn (CommandFn ?mt ?n) (reasonForTask ?action ?goal))))
+        ?action
+        (doAgentPlan
+          (recordRationale ?mt ?action ?goal))
+        ))))
+
+
+;;; The planner won't project the eventual effects of actions.
+;;; Pity.
+;;; We need to record the fact that this is the start of pursuing a goal (that could fail)
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (takeAction ?mt ?actor ?goal ?action ?planned-actions)
+    (actionSequence
+      (TheList
+        (achieve (PreconditionOfFn ?action))  ; Ideally, the planner would project the effects here.  Does that still work?
+        (doAgentPlan                          ; Otherwise we need doAgentPlan here.
+          (actionSequence
+            (TheList
+               ;; Why is this recursive rather than just invoking action?
+               ;; Because the world may have changed by the time we execute the precondition task.
+               (takeAction ?mt ?actor ?goal ?action ?planned-actions))))))))
+
+;;; Failure: Try to find something else to do.
+;;; **** No! This won't work!   assignActorsToGoals takes many more args than are available here.
+;(preconditionForMethod
+;  (assignableActorOfType ?actor ?type)
+;  (methodForAction
+;    (takeAction ?mt ?actor ?goal ?action ?planned-actions)
+;    (actionSequence
+;      (TheList
+;        (assignActorsToGoals ?mt (TheSet (?actor ?type)) ?planned-actions takeAction)))))
+
+(<== (preferInContext (takeAction ?mt ?actor ?goal ?action ?planned-actions) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 PreconditionOfFn))
+
+(<== (preferInContext (takeAction ?mt ?actor ?goal ?action ?planned-actions) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 PreconditionOfFn))
+     
+;;; Support for reasoning about actions without actually executing them.
+;;; recordAction is isomorphic to takeAction.
+
+(isa planTurnActions ComplexActionPredicate)
+(arity planTurnActions 1)
+(arg1Isa planTurnActions Microtheory)
+(comment planTurnActions "(planTurnActions ?mt)")
+
+;;; Collect the resource pool of actors:
+(preconditionForMethod
+  (and (evaluate ?assignable-actors
+         (TheClosedRetrievalSetOf (?actor ?type)
+           (and (assignableActorOfType ?actor ?type)  ; This is a cheap way of getting the domain actor type
+                (uninferredSentence
+                  (busyActor ?actor)))))
+        (different ?assignable-actors (TheSet))
+        ;; *** OBSOLETE: currentTopPriorityGoal no longer outsourced
+        (currentTopPriorityGoal ?mt ?goal-type ?goal ?role))
+  (methodForAction
+    (planTurnActions ?mt)
+    (actionSequence
+      (TheList
+        (assignActorsToGoals ?mt ?goal-type ?goal ?role ?assignable-actors (TheList) recordAction)))))
+
+;;; base case/default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planTurnActions ?mt)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (planTurnActions ?mt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa recordAction ComplexActionPredicate)
+(arity recordAction 5)
+(arg1Isa recordAction Microtheory)
+(arg2Isa recordAction Agent-Generic)
+(arg3Isa recordAction Goal)
+(arg4Isa recordAction CycLExpression)
+(arg5Isa recordAction List)
+(comment recordAction "(recordAction ?mt ?actor ?goal-name ?action ?planned-actions) records the action that would be taken (and its goal rationale), but doesn't actually take the action.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (recordAction ?mt ?actor ?goal-type-name ?action ?planned-actions)
+    (actionSequence
+      (TheList
+        (doRecordPlans ?mt (false) (planOperatorApplication ?mt ?action) 1)
+        (recordRationale ?mt ?action ?goal-type-name)
+        ))))
+
+;;; continue/backtrack when action can't be made legal:
+;;; *** This can't work! assignActorsToGoals takes a lot more arguments than recordAction now.
+;(preconditionForMethod
+;  (true)
+;  (methodForAction
+;    (recordAction ?mt ?actor ?goal-type-name ?action ?planned-actions)
+;    (actionSequence
+;      (TheList
+;        (assignActorsToGoals ?mt (TheSet (?actor ?type)) ?planned-actions recordAction)))))
+
+(isa planOperatorApplication ComplexActionPredicate)
+(arity planOperatorApplication 2)
+(arg1Isa planOperatorApplication Microtheory)
+(arg2Isa planOperatorApplication CycLExpression)
+(comment planOperatorApplication "(planOperatorApplication ?mt ?action) generates and records the action sequence to be applied.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planOperatorApplication ?mt ?action)
+    (actionSequence
+      (TheList
+        ?action))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planOperatorApplication ?mt ?action)
+    (actionSequence
+      (TheList
+        (achieve (PreconditionOfFn ?action))
+        ?action))))
+        
+(<== (preferInContext (planOperatorApplication ?mt ?action) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 PreconditionOfFn))
+
+;;; -------------------------------------------------------------------------
+
+;;; Decision Tasks.
+
+;;; Decide is the general htn method for learned DecisionTasks.
+;;; These are event-driven tasks in a form like:
+;;; (<== (eventTriggersDecision ?game-started-event (decide ?mt ?player currentlyResearching))
+;;;      (isa ?game-started-event GameStartedEvent)
+;;;      (fcExecutionContext ?mt)
+;;;      (currentPlayer ?player))
+;;; They invoke the regression planner, which uses dynamic programming to choose a good path
+;;; from the known instantiated legal actions that set the associated slot to the 
+;;; highest value currently active game goal.
+;;;
+;;; Assume that part of strategic knowledge would be to provide rules to override the
+;;; rational player 'decide' method given an active strategy.
+;;; All the strategic method has to do is specify a particular starting goal,
+;;; from which it can still use dynamic programming.  That would be kind of like
+;;; setting the TechGoal in Freeciv.
+
+;(preconditionForMethod
+;  (and (instantiatedOperatorSet ?mt ?actor ?slot ?actions)
+;       ;; don't enumerate subgoals if there's nothing to choose between:
+;       (different ?actions (TheSet))) 
+;  (methodForAction
+;    (decide ?mt ?actor ?slot)
+;    (actionSequence
+;      (TheList
+;        (decideAmongAlternatives ?mt ?actor ?slot ?actions)))))
+        
+;;; decideAmongAlternatives should probably be in a doAgentPlan so that it
+;;; can be wrapped in a withTimeout.
+;;; Then a sequel task should check if it timed out and pick something randomly
+;;; or request further deliberation.  Definitely record the failure, though.
+
+;;; We don't have to pass the goal hierarchy around anymore, since it's reified already.
+
+(isa decideAmongAlternatives ComplexActionPredicate)
+(arity decideAmongAlternatives 4)
+(arg1Isa decideAmongAlternatives Microtheory)
+(arg2Isa decideAmongAlternatives Agent-Generic)
+(arg3Isa decideAmongAlternatives BinaryPredicate)
+(arg4Isa decideAmongAlternatives Set-Mathematical)
+(comment decideAmongAlternatives "(decideAmongAlternatives ?mt ?actor ?slot ?actions) either chooses a novel experimental alternative, or regresses through quantity goals to find a rational choice.")
+
+;;; *** For this to work, performanceGoalForGame will have to be indexicalized.
+;;; *** Start breadth-first search here so methods above this can intercept and 
+;;; *** experiment and/or amortize strategies.
+(preconditionForMethod
+  (and (lookupOnly (ist-Information ?mt (performanceGoalForGame ?mt ?goal-rep)))
+       (lookupOnly 
+         (contextEnvAllowed
+           (ist-Information ?mt (goalName ?goal ?goal-rep))))
+       (uninferredSentence
+         (inactiveStartingGoal ?mt ?goal)))  ; e.g., have we already achieved Democracy?
+  (methodForAction
+    (decideAmongAlternatives ?mt ?actor ?slot ?actions)
+    (actionSequence
+      (TheList
+        (breadthFirstGoalSearch ?mt ?actor ?slot ?actions (TheSet ?goal) (TheSet))))))
+
+(isa breadthFirstGoalSearch ComplexActionPredicate)
+(arity breadthFirstGoalSearch 6)
+(arg1Isa breadthFirstGoalSearch Microtheory)
+(arg2Isa breadthFirstGoalSearch Agent-Generic)
+(arg3Isa breadthFirstGoalSearch BinaryPredicate)
+(arg4Isa breadthFirstGoalSearch Set-Mathematical)
+(arg5Isa breadthFirstGoalSearch Set-Mathematical)
+(arg6Isa breadthFirstGoalSearch Set-Mathematical)
+(comment breadthFirstGoalSearch "(breadthFirstGoalSearch ?mt ?actor ?slot ?actions ?goals ?seen)")
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (breadthFirstGoalSearch ?mt ?actor ?slot ?actions (TheSet) ?seen)
+    (actionSequence
+      (TheList))))
+
+;;; Recursion step:
+(preconditionForMethod
+  (and (different ?goals (TheSet))
+       (evaluate ?subgoals
+         (TheClosedRetrievalSetOf ?subgoal
+           (and (elementOf ?goal ?goals)
+                (cacheComplete
+                  (lookupOnly
+                    (contextEnvAllowed
+                      (ist-Information ?mt
+                        (subgoal ?goal ?subgoal)))))
+                 (uninferredSentence
+                   (elementOf ?subgoal ?seen)))))
+       (evaluate ?new-seen (SetOrCollectionUnion ?subgoals ?seen)))
+  (methodForAction
+    (breadthFirstGoalSearch ?mt ?actor ?slot ?actions ?goals ?seen)
+    (actionSequence
+      (TheList
+        (breadthFirstGoalSearch ?mt ?actor ?slot ?actions ?subgoals ?new-seen)
+        ))))
+
+;;; Make a decision wrt goals.
+;;; This deliberation can get overwhelmed by too many alternatives and
+;;; underconstrained regression planning.  Put it on a leash.
+;;; If we could detect that we've run out of time, we might 
+;;; either choose randomly (object-level strategy) or reflect on 
+;;; how to make the decision at an abstract level to reduce choice.
+(preconditionForMethod
+  (and (different ?goals (TheSet))
+       (deliberationBudget ?seconds)
+       (withTimeout ?seconds
+         (strategyFromGoalNames ?mt ?actions ?goals ?action ?goal)))  ; offload some of the tedious lookup.
+  (methodForAction
+    (breadthFirstGoalSearch ?mt ?actor ?slot ?actions ?goals ?seen)
+    (actionSequence
+      (TheList
+        ?action
+        (doAgentPlan
+          (recordRationale ?mt ?action ?goal))))))  ; Wait until after executing action to extract cmd num.
+
+(<== (preferInContext (breadthFirstGoalSearch ?mt ?actor ?slot ?actions ?goals ?seen) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 breadthFirstGoalSearch))
+
+
+(isa deliberationBudget UnaryPredicate)
+(arity deliberationBudget 1)
+(arg1Isa deliberationBudget Integer)
+(comment deliberationBudget "(deliberationBudget ?seconds) allows the deliberation budget to be manipulated and preset by the executive.")
+
+;;; Allow the deliberation budget to be manipulated and preset by the executive.
+(<== (deliberationBudget ?seconds)
+     (outsourcedOnly (counterValue deliberationBudget ?seconds)))
+
+;;; But fall back on 5 seconds if not:
+(<== (deliberationBudget 5)
+     (uninferredSentence
+       (counterValue deliberationBudget ?seconds)))
+
+;;; ------------------------------------------------------------------------
+;;; End Of File

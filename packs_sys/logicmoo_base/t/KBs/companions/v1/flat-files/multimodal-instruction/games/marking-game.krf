@@ -1,0 +1,54 @@
+;;; marking-game.meld
+
+(in-microtheory (GameRulesMtFn MarkingGame))
+
+(genlMt (GameRulesMtFn MarkingGame) FmiGamesMt)
+
+(spatialLocationPred MarkingGame cell 3)
+
+(isa cell GamePredicate)
+(arity cell 3)
+
+;;; Action Primitives:
+
+;(isa mark SimpleActionPredicate)
+;(arity mark 3)
+
+;(preconditionFor-Props
+; (and (currentRole ?w)
+;      (legal ?w (mark ?x ?y ?m)))
+; (mark ?x ?y ?m))
+
+;(effectOfAction (mark ?x ?y ?m) ?effect
+; (withCounterfactual (doesAction ?w (mark ?x ?y ?m))
+;  (nextStateProp ?effect)))
+  
+
+;;; Inference Rules:
+
+;;; marking changes content of cell:
+(<== (next (cell ?m ?n ?mark))
+     (doesAction ?player (mark ?m ?n ?mark))
+     )
+
+;;; contents persist unless marked:
+(<== (next (cell ?m ?n ?contents))
+     (currentlyTrue (cell ?m ?n ?contents))
+     (uninferredSentence
+       (doesAction ?some-player (mark ?m ?n ?anything)))) ; implicitly says you can't mark a cell with its current contents
+
+;;; Legal to mark blank squares when it's your turn
+;;; *** This combines 2-player, cartesian grid and marking.
+(<== (legal ?w (mark ?x ?y ?mark))
+     (currentlyTrue (cell ?x ?y Empty))
+     (currentlyTrue (control ?w))
+     (allFactsAllowed (entityLabel ?w ?mark)))
+
+;;; End on filled board:
+(<== (terminalState)
+     (uninferredSentence
+       (currentlyTrue (cell ?m ?n Empty))))
+
+;;; End on win:
+(<== (terminalState)
+     (goalState ?player 100))

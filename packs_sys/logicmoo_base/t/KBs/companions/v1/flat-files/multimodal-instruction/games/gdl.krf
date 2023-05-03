@@ -1,0 +1,114 @@
+;;;
+;;; gdl.meld
+;;;
+;;; Define Game Description Language primitives here
+;;; We construct gdl- prefixed names in order not to clash with 
+;;; existing CYC preds.
+
+(in-microtheory LogicalTruthMt)
+(isa disjunction VariableArityRelation)
+
+(in-microtheory FmiGamesMt)
+
+(isa GDLPrimitive Collection)
+(comment GDLPrimitive "Predicates that are defined in the Game Definition Language Spec.")
+
+(isa GamePredicate Collection)
+(notForAnalogy GamePredicate)
+(genls GamePredicate Predicate)
+(comment GamePredicate "Predicates that are defined in individual games.")
+
+(isa GameRole Collection)  ; tokens representing players
+
+
+(isa init UnaryPredicate)
+(isa init GDLPrimitive)
+(ubiquitousForAnalogy init)
+(arity init 1)
+(arg1Isa init ELSentence-Assertible)
+
+;;; Change gdl-true to currentlyTrue (== holdsIn Now)
+(isa currentlyTrue UnaryPredicate)
+(isa currentlyTrue GDLPrimitive)
+(arity currentlyTrue 1)
+(arg1Isa currentlyTrue ELSentence-Assertible)
+
+;;; Replace with different
+;(isa gdl-distinct BinaryPredicate)
+;(isa gdl-distinct GDLPrimitive)
+;(arity gdl-distinct 2)
+;(arg1Isa gdl-distinct CycLTerm)
+;(arg2Isa gdl-distinct CycLTerm)
+
+;;; Replace with currentRole
+;(isa gdl-role UnaryPredicate)
+;(isa gdl-role GDLPrimitive)
+;(arity gdl-role 1)
+;(arg1Isa gdl-role GameRole)
+
+(isa legal BinaryPredicate)
+(isa legal GDLPrimitive)
+(arity legal 2)
+(arg1Isa legal GameRole)
+(arg2Isa legal ELSentence-Assertible)
+
+;;; Change gdl-does to doesAction (inverted args from Cyc does relation)
+(isa doesAction BinaryPredicate)
+(isa doesAction GDLPrimitive)
+(arity doesAction 2)
+(arg1Isa doesAction GameRole)
+(arg2Isa doesAction ELSentence-Assertible)
+
+;;; Maybe change this to nextState
+(isa next UnaryPredicate)
+(isa next GDLPrimitive)
+(arity next 1)
+(arg1Isa next ELSentence-Assertible)
+
+;;; Change gdl-goal to goalState (resolve conflict with BFSMT)
+(isa goalState BinaryPredicate)
+(isa goalState GDLPrimitive)
+(arity goalState 2)
+(arg1Isa goalState GameRole)
+(arg2Isa goalState Integer)  ;; between 0 - 100
+
+;;; Change terminal to terminalState
+(isa terminalState Predicate)
+(isa terminalState GDLPrimitive)
+(arity terminalState 0)
+
+;;; Define this instead of Cyc's or, so that we can backchain on it
+;;; and embed it in Prolog-style rules:
+(isa disjunction CommutativeRelation)
+(isa disjunction AssociativeRelation)
+(isa disjunction GDLPrimitive)
+(argsIsa disjunction ELSentence-Assertible)
+
+;;; Experiment with treating doesAction as the sole game-level action
+;;; per se.  For the purposes of strategy learning and planning ahead,
+;;; we want use legal and next as parts of the preconditions and
+;;; effects of the action.
+;;; The issue with this vs. marking and moving as primitives is
+;;; in the code support for execution.  I think we can handle that 
+;;; using methods to extend the operator if necessary.
+
+(isa doesAction SimpleActionPredicate)
+(arity doesAction 2)
+
+(preconditionFor-Props
+ (legal ?r ?a)
+ (doesAction ?r ?a))
+
+(isa nextStateProp UnaryPredicate)
+(arity nextStateProp 1)
+
+;;; We can't get rid of the counterfactual, given the way next rules work.
+(effectOfAction (doesAction ?r ?a) ?effect
+ (withCounterfactual (doesAction ?r ?a)
+  (nextStateProp ?effect)))
+
+;;; We need this because the wrapper withCounterfactual takes a query as its
+;;; second argument.
+(<== (nextStateProp (currentlyTrue ?stmt))
+     (next ?stmt))
+  

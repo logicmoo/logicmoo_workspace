@@ -1,0 +1,31 @@
+(in-microtheory NulexMt :exclude-globals t)
+
+(definitionInDictionary Nulex the The-TheWord Determiner (TheSet (definite +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex a A-TheWord Determiner (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex an An-TheWord Determiner (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex another Another-TheWord Determiner (TheSet (agr (TheSet 3s))))
+
+(definitionInDictionary Nulex every Every-TheWord Determiner (TheSet (agr (TheSet 3s))))
+(definitionInDictionary Nulex each Each-TheWord Determiner (TheSet (agr (TheSet 3s))))
+;(definitionInDictionary Nulex all All-TheWord Determiner (TheSet (agr (TheSet 3p))))
+;(definitionInDictionary Nulex some Some-TheWord Determiner (TheSet (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex any Any-TheWord Determiner (TheSet (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex no No-TheWord Determiner (TheSet (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex neither Neither-TheWord Determiner (TheSet (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex what What-TheWord Determiner (TheSet (agr (TheSet 1s 2s 3s 1p 2p 3p))))
+(definitionInDictionary Nulex which Which-TheWord Determiner (TheSet (agr (TheSet 1s 2s 3s 1p 2p 3p))))
+
+;;; Demonstratives:
+(definitionInDictionary Nulex this This-TheWord Determiner (TheSet (definite +) (demonstrative +) (backreference +) (agr (TheSet 3s))))
+(definitionInDictionary Nulex that That-TheWord Determiner (TheSet (definite +) (demonstrative +) (backreference +) (agr (TheSet 3s))))
+(definitionInDictionary Nulex these These-TheWord Determiner (TheSet (definite +) (demonstrative +) (backreference +) (agr (TheSet 3p))))
+(definitionInDictionary Nulex those Those-TheWord Determiner (TheSet (definite +) (demonstrative +) (backreference +) (agr (TheSet 3p))))
+
+;;;Possessive determiners (Actually, these are possessive adjectives)
+(definitionInDictionary Nulex my My-TheWord Determiner (TheSet (tposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex your Your-TheWord Determiner (TheSet (tposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex his His-TheWord Determiner (TheSet (tposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex her Her-TheWord Determiner (TheSet (tposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex our Our-TheWord Determiner (TheSet (tposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex their Their-TheWord Determiner (TheSet (tposs +) (agr (TheSet 3s 3p))))
+(definitionInDictionary Nulex its Its-TheWord Determiner (TheSet (tposs +) (agr (TheSet 3s 3p))))

@@ -1,0 +1,19 @@
+;;;
+;;; Reified collections needed to support FrameNet semantics
+;;;
+
+(in-microtheory UniversalVocabularyMt)
+
+
+(isa primaryActor BinaryRolePredicate)
+(arg1Isa primaryActor Accompanying)
+(arg2Isa primaryActor Agent-Generic)
+(comment primaryActor "(primaryActor ACCOMP PRIMARY) is the actor being accompanied.")
+
+(isa supportingActor BinaryRolePredicate)
+(arg1Isa supportingActor Accompanying)
+(arg2Isa supportingActor Agent-Generic)
+(comment supportingActor "(supportingActor ACCOMP SUPP) is the actor accompanying the main event.")
+
+
+

@@ -1,0 +1,13 @@
+(in-microtheory BuildingMt)
+
+(comment Condominium "An instance of #$ArtifactTypeByGenericCategory.  Each instance of #$Condominium is a #$ResidentialBuilding whose #$SingleResidenceUnits are individually owned and whose common areas are jointly owned by the residents of the building.")
+(comment ConstructionSitePropertyFn "(#$ConstructionSitePropertyFn CONSTRUCTTYPE) returns the collection of instances of #$ConstructionSite that are site for a construct of the type CONSTRUCTTYPE.  This collection represents the property a construction site has if it is a site for type CONSTRUCTTYPE.  This is a 'baptismal' property in the sense that a particular region has the property (#$ConstructionSitePropertyFn CONSTRUCTTYPE) from the moment it is designated a construction site for a construct of type CONSTRUCTTYPE, regardless of whether or not overt construction has started at the site.  It is conceivable that for some designated construction sites, construction never in fact takes place: having the property (being a member of the collection returned by this function) implies, at best, that there exists an agent who intends that construction on a construct of the kind cited will take place.")
+(comment HospitalCareEvent "An #$ExistingObjectType and specialization of #$MedicalFacility.  Each instance of #$HospitalBuilding is a #$Building that is used by a #$Hospital to perform #$HospitalCareEvents.")
+(comment BarRoomSpace "The lounge or bar space which is run by the #$Bar-DrinkingEstablishment. May or may not be its own building. Cheers would be an instance of #$BarRoomSpace.")
+(comment FireStation "A specialization of #$Building and #$FirefightingEquipment.  Each instance of #$FireStation is a building where #$Firefighters work and #$FirefightingEquipment is kept.")
+(comment AirportTerminalBuilding "A specialization of #$Terminal-TransferPoint and #$Building.  Each instance of #$AirportTerminalBuilding is a building from and to which passengers board and exit #$Airplanes.")
+(disjointWith MovieTheaterSpace TransportationDevice-Vehicle)
+(disjointWith Elevator TransportationDevice-Vehicle)
+(comment PartOfBuilding-AboveGroundFloor "A specialization of #$PartOfBuilding.  Each instance of #$PartOfBuilding-AboveGroundFloor is part of a building that is located entirely (or at least mostly) above the ground floor of that building.  Specializations include #$RoofOfAConstruction and #$Balcony-BuildingPart.")
+(comment ExternalPartOfBuilding "A specialization of #$PartOfBuilding.  Each instance of #$ExternalPartOfBuilding is a part of a building that is at least partially located on the outside of that building.  Specializations include #$RoofOfAConstruction and #$Porch.")
+(genls Condominium ResidentialBuilding)

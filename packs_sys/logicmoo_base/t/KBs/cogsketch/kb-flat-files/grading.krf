@@ -1,0 +1,95 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: grading.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: November 10, 2009 16:47:09
+;;;;   Purpose: KB defs for information used to grade student assignments.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa cogsketchGradingTotalPoints Relation)
+(arity cogsketchGradingTotalPoints 2)
+(arg1Isa cogsketchGradingTotalPoints NuSketchSketch)
+(arg2Isa cogsketchGradingTotalPoints Number-General)
+(comment cogsketchGradingTotalPoints
+  "Used when automatically grading a CogSketch assignment.  This is the total 
+   number of points that a student can achieve.  Points assigned via the various
+   grading criteria will be normalized to this value.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Grading Criteria Types
+
+(isa CogsketchGradingCriteriaType Collection)
+(genls CogsketchGradingCriteriaType Collection)
+(comment CogsketchGradingCriteriaType
+  "The collection of all types of grading criteria that can be used by CogSketch
+   to assign grades to student worksheets.")
+
+
+(isa CogsketchGradingCriterion-MissingGlyphs CogsketchGradingCriteriaType)
+(genls CogsketchGradingCriterion-MissingGlyphs EvaluativeCriterion)
+(comment CogsketchGradingCriterion-MissingGlyphs
+  "These grading points are assigned if the student's sketch is not missing 
+   various glyphs.")
+
+(isa CogsketchGradingCriterion-CIs CogsketchGradingCriteriaType)
+(genls CogsketchGradingCriterion-CIs EvaluativeCriterion)
+(comment CogsketchGradingCriterion-CIs
+  "Grading based on the candidate-inferences when comparing the student's sketch
+   to the solution.")
+
+(isa CogsketchGradingCriterion-QuantitativeVals CogsketchGradingCriteriaType)
+(genls CogsketchGradingCriterion-QuantitativeVals EvaluativeCriterion)
+(comment CogsketchGradingCriterion-QuantitativeVals
+  "This kind of grading criteria applies to quantitative values assigned to 
+   items in a sketch.  The teacher declares the min and max values acceptable.")
+
+(isa CogsketchGradingCriterion-QuantitativeInk CogsketchGradingCriteriaType)
+(genls CogsketchGradingCriterion-QuantitativeInk EvaluativeCriterion)
+(comment CogsketchGradingCriterion-QuantitativeInk
+  "This kind of grading criteria applies to the quantitative ink comparisons --
+   comparisons done on the actually coordinate values of the ink drawn.  
+   Basically, this supplies a numeric rating of how similar the student's ink
+   was drawn to the solution's ink.")
+
+(isa CogsketchGradingCriterion-ExtraEntitiesOfType CogsketchGradingCriteriaType)
+(genls CogsketchGradingCriterion-ExtraEntitiesOfType EvaluativeCriterion)
+(comment CogsketchGradingCriterion-ExtraEntitiesOfType
+  "This is the check done to ensure that the student has not drawn extra glyphs
+   of certain types where not allowed.")
+
+(isa CogsketchGradingCriterion-MultipleChoiceQuestion CogsketchGradingCriteriaType)
+(genls CogsketchGradingCriterion-MultipleChoiceQuestion EvaluativeCriterion)
+(comment CogsketchGradingCriterion-MultipleChoiceQuestion
+  "These grading criteria are used for the multiple-choice questions (if any)
+   associated with a worksheet.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Grading Criteria Relations
+
+(isa cogsketchGradingCriterion Relation)
+(arity cogsketchGradingCriterion 4)
+(arg1Isa cogsketchGradingCriterion NuSketchSketch)
+(arg2Isa cogsketchGradingCriterion CogsketchGradingCriteriaType)
+(arg3Isa cogsketchGradingCriterion Thing)
+(arg4Isa cogsketchGradingCriterion Number-General)
+(comment cogsketchGradingCriterion
+  "(#$cogsketchGradingCriterion <sketch> <kind> <descriptor> <points>)
+   describes the points that will be assigned if the student gets the specified
+   criterion correct in a CogSketch worksheet.  <descriptor> is rather
+   vague at this point -- we will define this better once we have more use 
+   cases.")
+  
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

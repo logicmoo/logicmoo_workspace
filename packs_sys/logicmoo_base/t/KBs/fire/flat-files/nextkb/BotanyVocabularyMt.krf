@@ -1,0 +1,10 @@
+(in-microtheory BotanyVocabularyMt)
+
+(isa (MobFn Seed) ExistingStuffType)
+(comment CastorBeanPlant "A tall plant that produces extremely poisonous seeds.")
+(comment PlantTypeByPhysiology "A collection of collections.  Each instance of #$PlantTypeByPhysiology is a collection of instances of #$Plant that share some physiological property.  At the very least, these include seasonal stages, physical properties, and plant health.  Instances of #$PlantTypeByPhysiology apply to entire plants rather than just to certain parts of them.")
+(genls (FruitFn BananaTree) YellowColor)
+(genls (FlowerFn DandelionPlant) YellowColor)
+(genls (FruitFn LemonTree) YellowColor)
+(genls (FruitFn PumpkinPlant) OrangeColor)
+(genls (FruitFn AlmondTree) Fruit)

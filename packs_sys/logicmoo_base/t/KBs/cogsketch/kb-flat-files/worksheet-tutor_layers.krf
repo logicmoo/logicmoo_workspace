@@ -1,0 +1,181 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_layers.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: June 14, 2013 14:27:10
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsForWorksheetLayers
+
+(isa suggestionsForWorksheetLayers Relation)
+(arity suggestionsForWorksheetLayers 4)
+(arg1Isa suggestionsForWorksheetLayers NuSketchBundle)
+(arg2Isa suggestionsForWorksheetLayers Set-Mathematical)  ;; solution layers
+(arg3Isa suggestionsForWorksheetLayers List)
+(arg4Isa suggestionsForWorksheetLayers Set-Mathematical)
+(notForAnalogy suggestionsForWorksheetLayers)
+
+
+(defSuggestion SuggestionsForWorksheetLayers
+    (suggestionsForWorksheetLayers ?student-subsketch ?solution-layers
+                                   ?suggestions ?glyph-correspondences)
+  
+  :subgoals
+  ((solveSequentially ?solution-layer ?solution-layers
+     (suggestionsForWorksheetLayer ?student-subsketch ?solution-layer 
+                                   ?suggs ?glyph-corrs))
+   (consolidateWorksheetLayerSuggestions ?student-subsketch ?solution-layers
+                                         ?suggestions ?glyph-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; consolidateWorksheetLayerSuggestions
+
+(isa consolidateWorksheetLayerSuggestions Relation)
+(arity consolidateWorksheetLayerSuggestions 4)
+(arg1Isa consolidateWorksheetLayerSuggestions NuSketchBundle)
+(arg2Isa consolidateWorksheetLayerSuggestions Set-Mathematical)
+(arg3Isa consolidateWorksheetLayerSuggestions List)
+(arg4Isa consolidateWorksheetLayerSuggestions Set-Mathematical)
+(notForAnalogy consolidateWorksheetLayerSuggestions)
+
+
+(defSuggestion ConsolidateWorksheetLayerSuggestions
+    (consolidateWorksheetLayerSuggestions ?student-subsketch ?solution-layers
+                                          ?suggestions ?glyph-correspondences)
+  :subgoals
+  ((evaluate ?suggs-sets
+     (TheClosedRetrievalSetOf ?suggs
+       (and (lookupOnly
+             (suggestionsForWorksheetLayer ?student-subsketch ?layer1
+                                           ?suggs-list1 ?glyph-corrs1))
+            (elementOf ?layer1 ?solution-layers)
+            (evaluate ?suggs (ListToSetFn ?suggs-list1)))))
+   (evaluate ?suggs-set (SetOfSetsUnionFn ?suggs-sets))
+   (evaluate ?suggestions (SetToListFn ?suggs-set))
+   
+   (evaluate ?corrs-sets
+     (TheClosedRetrievalSetOf ?glyph-corrs2
+       (and (lookupOnly
+             (suggestionsForWorksheetLayer ?student-subsketch ?layer2
+                                           ?suggs-list2 ?glyph-corrs2))
+            (elementOf ?layer2 ?solution-layers))))
+   (evaluate ?glyph-correspondences (SetOfSetsUnionFn ?corrs-sets))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsForWorksheetLayer
+
+(isa suggestionsForWorksheetLayer Relation)
+(arity suggestionsForWorksheetLayer 4)
+(arg1Isa suggestionsForWorksheetLayer NuSketchBundle)
+(arg2Isa suggestionsForWorksheetLayer NuSketchLayer)
+(arg3Isa suggestionsForWorksheetLayer List)
+(arg4Isa suggestionsForWorksheetLayer Set-Mathematical)
+(notForAnalogy suggestionsForWorksheetLayer)
+
+
+(defSuggestion SuggestionsForWorksheetLayer
+    (suggestionsForWorksheetLayer ?student-subsketch ?solution-layer 
+                                  ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs
+               (TheClosedRetrievalSetOf ?glyph
+                 (and (solutionLayerForStudentWorkspaceLayer
+                       ?student-subsketch ?student-layer ?solution-layer)
+                      (subSketchFor ?glyph ?student-layer)
+                      (isa ?glyph NuSketchGlyph))))
+             (different ?student-glyphs (TheSet)))
+  :subgoals
+  ((bestMatchForWorksheetLayer ?student-subsketch ?solution-layer ?match)
+   (suggestionsForStudentMatch ?student-subsketch ?match 
+                               ?suggestions1 ?glyph-correspondences)
+   (maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 
+    ?student-subsketch ?suggestions1 ?glyph-correspondences ?suggestions)))
+
+
+(defSuggestion SuggestionsForWorksheetLayer_NoGlyphs
+    (suggestionsForWorksheetLayer ?student-subsketch ?solution-layer 
+                                  ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs
+               (TheClosedRetrievalSetOf ?glyph
+                 (and (solutionLayerForStudentWorkspaceLayer
+                       ?student-subsketch ?student-layer ?solution-layer)
+                      (subSketchFor ?glyph ?student-layer)
+                      (isa ?glyph NuSketchGlyph))))
+             (unifies ?student-glyphs (TheSet)))
+  :subgoals
+  ((solutionLayerForStudentWorkspaceLayer ?student-subsketch 
+                                          ?student-layer ?solution-layer)
+   (suggestionsTextForMissingGlyphsInLayer ?student-layer ?text)
+   (unifies ?suggestions
+     (TheList
+      (CogSketchSuggestionFn ?text (TheSet) (TheSet))))
+   (unifies ?glyph-correspondences (TheSet))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsTextForMissingGlyphsInLayer
+
+(isa suggestionsTextForMissingGlyphsInLayer BinaryRelation)
+(arity suggestionsTextForMissingGlyphsInLayer 2)
+(arg1Isa suggestionsTextForMissingGlyphsInLayer NuSketchLayer)
+(arg2Isa suggestionsTextForMissingGlyphsInLayer TextString)
+(notForAnalogy suggestionsTextForMissingGlyphsInLayer)
+
+
+(defSuggestion SuggestionsTextForMissingGlyphsInLayer
+    (suggestionsTextForMissingGlyphsInLayer ?student-layer ?text)
+  :subgoals
+  ((nameString ?student-layer ?namestring)
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You haven't drawn any glyphs on the " ?namestring " layer yet."))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForWorksheetLayer
+
+(isa bestMatchForWorksheetLayer Relation)
+(arity bestMatchForWorksheetLayer 3)
+(arg1Isa bestMatchForWorksheetLayer CogSketchWorkspaceBundle)
+(arg2Isa bestMatchForWorksheetLayer NuSketchLayer)
+(arg3Isa bestMatchForWorksheetLayer AnalogyMatch)
+(arg3Isa bestMatchForWorksheetLayer Match)
+(notForAnalogy bestMatchForWorksheetLayer)
+
+
+(defSuggestion BestMatchForWorksheetLayer
+    (bestMatchForWorksheetLayer ?student-subsketch ?solution-layer ?match)
+  :subgoals
+  ((solutionLayerForStudentWorkspaceLayer ?student-subsketch ?student-layer
+                                          ?solution-layer)
+   (nameString ?student-layer ?layer-namestr)
+   (forEffectOnly 
+    (tell (cogSketchBusyMsg "Comparing ~A to solution ..." 
+            (TheList ?layer-namestr))))
+   
+   (subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (solutionCaseForWorksheetStudentWorkspace ?student-subsketch ?solution-case)
+      
+   (unifies ?base 
+     (CogSketchTutorLayerCaseFn ?solution-case ?solution-layer))
+   (unifies ?target
+     (CogSketchTutorLayerCaseFn ?student-case ?student-layer))
+   
+   (layerWorksheetMatchConstraints ?solution-layer ?student-layer ?constraints)
+   (tell (retractAnalogyResults ?base ?target))
+   (matchBetween ?base ?target ?constraints ?match1)
+   (quantitativelyConstrainedMatch ?match1 ?match)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,9 @@
+(in-microtheory SemiconductorQueryMt)
+
+(isa Series1Member1 TemporalThing)
+(isa Series1Member2 TemporalThing)
+(isa Series1Member2 PartiallyTangible)
+(isa Series1Member1 PartiallyTangible)
+(except (ist UniversalVocabularyMt (genlMt HumanActivitiesMt ProductUsageMt)))
+(except (ist UniversalVocabularyMt (genlMt FinancialTransactionMt OrganizationMt)))
+(except (ist BaseKB (implies (and (genlPreds ?SPEC-PRED ?GENL-PRED) (relationAllExists ?SPEC-PRED ?COL-1 ?COL-2)) (relationAllExists ?GENL-PRED ?COL-1 ?COL-2))))

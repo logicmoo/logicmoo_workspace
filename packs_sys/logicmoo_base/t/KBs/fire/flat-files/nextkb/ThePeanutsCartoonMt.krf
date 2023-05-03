@@ -1,0 +1,12 @@
+(in-microtheory ThePeanutsCartoonMt)
+
+(isa Snoopy DomesticPet)
+(isa CharlieBrown HomoSapiens)
+(isa Snoopy MaleAnimal)
+(isa Snoopy Beagle)
+(isa Woodstock-FictionalCharacter Bird)
+(isa TheRedheadInThePeanuts FemaleHuman)
+(isa CharlieBrown MaleHuman)
+(comment CharlieBrown "Charlie Brown is a famous comic strip character in the Charlie Brown series of comic strips.")
+(comment TheRedheadInThePeanuts "#$TheRedheadInThePeanuts is the redheaded girl in ``The Peanuts'' cartoon.")
+(comment Woodstock-FictionalCharacter "#$Woodstock-FictionalCharacter is the small yellow bird from the comic strip 'Peanuts'.")

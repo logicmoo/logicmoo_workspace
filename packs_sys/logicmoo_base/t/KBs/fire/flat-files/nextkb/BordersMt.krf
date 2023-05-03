@@ -1,0 +1,5 @@
+(in-microtheory BordersMt)
+
+(argFormat hasAsBoundary 2 SetTheFormat)
+(argFormat borderOf 2 SetTheFormat)
+(argFormat borderOf 1 SingleEntry)

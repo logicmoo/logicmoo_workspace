@@ -1,0 +1,208 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: geometry.meld
+;;;;    System: sKEA (Sketch-based Knowledge Entry Associate)
+;;;;    Author: Emmett Tomai
+;;;;   Created: June 25, 2004 16:09:10
+;;;;   Purpose: additional geometric knowledge
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Shapes
+
+;;; Starting from ShapeType we specialize to TwoDimensionalShapeType and 
+;;;  GenericShapeType
+
+;;; TwoDimensionalShapeType already include:
+
+;; Polygon
+;; Circle
+;; Square
+;; Rectangle-2D
+;; Octagon
+;; Hexagon
+;; SectorShaped
+
+;;; To which we add the following:
+
+(isa HalfCircle Collection)
+(genls HalfCircle RoundShape)
+(genls HalfCircle SectorShaped)
+(isa HalfCircle TwoDimensionalShapeType)
+(comment HalfCircle "The collection of all two dimensional geometric shapes which are
+                    an enclosed half a circle made up of a line and an arc.")
+
+(isa Dot Collection)
+(genls Dot RoundShape)
+(isa Dot TwoDimensionalShapeType)
+(comment Dot "The collection of all two dimensional point shapes with volume.")
+
+(isa GeometricFigure-LatinCapitalLetterA Collection)
+(genls GeometricFigure-LatinCapitalLetterA TwoDimensionalGeometricThing)
+(isa GeometricFigure-LatinCapitalLetterA TwoDimensionalShapeType)
+(comment GeometricFigure-LatinCapitalLetterA 
+         "The collection of geometric polyline figures recognizable as the
+         latin uppercase letter A.")
+
+(isa GeometricFigure-LatinCapitalLetterB Collection)
+(genls GeometricFigure-LatinCapitalLetterB TwoDimensionalGeometricThing)
+(isa GeometricFigure-LatinCapitalLetterB TwoDimensionalShapeType)
+(comment GeometricFigure-LatinCapitalLetterB 
+         "The collection of geometric polyline figures recognizable as the
+         latin uppercase letter B.")
+
+(isa GeometricFigure-LatinCapitalLetterI Collection)
+(genls GeometricFigure-LatinCapitalLetterI TwoDimensionalGeometricThing)
+(isa GeometricFigure-LatinCapitalLetterI TwoDimensionalShapeType)
+(comment GeometricFigure-LatinCapitalLetterI 
+         "The collection of geometric polyline figures recognizable as the
+         latin uppercase letter I.")
+
+(isa GeometricFigure-LatinCapitalLetterT Collection)
+(genls GeometricFigure-LatinCapitalLetterT TwoDimensionalGeometricThing)
+(isa GeometricFigure-LatinCapitalLetterT TwoDimensionalShapeType)
+(comment GeometricFigure-LatinCapitalLetterT 
+         "The collection of geometric polyline figures recognizable as the
+         latin uppercase letter T.")
+
+(isa GeometricFigure-LatinCapitalLetterV Collection)
+(genls GeometricFigure-LatinCapitalLetterV TwoDimensionalGeometricThing)
+(isa GeometricFigure-LatinCapitalLetterV TwoDimensionalShapeType)
+(comment GeometricFigure-LatinCapitalLetterV 
+         "The collection of geometric polyline figures recognizable as the
+         latin uppercase letter V.")
+
+(isa GeometricFigure-LatinCapitalLetterZ Collection)
+(genls GeometricFigure-LatinCapitalLetterZ TwoDimensionalGeometricThing)
+(isa GeometricFigure-LatinCapitalLetterZ TwoDimensionalShapeType)
+(comment GeometricFigure-LatinCapitalLetterZ 
+         "The collection of geometric polyline figures recognizable as the
+         latin uppercase letter Z.")
+
+(isa ShadedPolygon Collection)
+(genls ShadedPolygon Polygon)
+(comment ShadedPolygon "The collection of two dimensional polygons drawn with some form of
+                       internal shading.")
+
+;;; GenericShapeType already includes:
+
+;; LineSegment
+;; Polyline
+;; Arc
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Orientations
+
+(isa OrientationType CollectionType)
+(isa OrientationType SiblingDisjointCollectionType)
+(genls OrientationType ObjectType)
+
+(isa TwoDimensionalOrientationType CollectionType)
+(isa TwoDimensionalOrientationType SiblingDisjointCollectionType)
+(genls TwoDimensionalOrientationType OrientationType)
+
+(isa QualitativeOrientationType CollectionType)
+(isa QualitativeOrientationType SiblingDisjointCollectionType)
+(genls QualitativeOrientationType OrientationType)
+
+(genls OrientedNuSketchGlyphType TwoDimensionalOrientationType)
+(genls OrientedNuSketchGlyphType QualitativeOrientationType)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Sizes
+
+(isa SizeType CollectionType)
+(isa SizeType SiblingDisjointCollectionType)
+(genls SizeType ObjectType)
+
+(isa QualitativeSizeType CollectionType)
+(isa QualitativeSizeType SiblingDisjointCollectionType)
+(genls QualitativeSizeType SizeType)
+
+(genls SizedNuSketchGlyphType QualitativeSizeType)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Object Type Differences
+
+;;; predicate lookup by type
+(isa typeDifferencePredOf Predicate)
+(arity typeDifferencePredOf 2)
+(arg1Isa typeDifferencePredOf ObjectType)
+(arg2Isa typeDifferencePredOf ObjectType)
+
+;;; Orientation Differences
+
+;;; predicate lookup by type
+(typeDifferencePredOf OrientationType rotationBetween)
+
+(isa rotationBetween Predicate)
+(arity rotationBetween 3)
+(arg1Isa rotationBetween OrientationType)
+(arg2Isa rotationBetween OrientationType)
+(arg3Isa rotationBetween MovementRotation)
+
+;;; 45 degree differences
+(isa Rotation-45 Collection)
+(genls Rotation-45 MovementRotation)
+
+(isa Rotation-Clockwise45 Collection)
+(genls Rotation-Clockwise45 Rotation-45)
+
+(isa Rotation-CounterClockwise45 Collection)
+(genls Rotation-CounterClockwise45 Rotation-45)
+
+(rotationBetween QVerticalGlyph QDiagonalUpwardGlyph Rotation-Clockwise45)
+(rotationBetween QVerticalGlyph QDiagonalDownwardGlyph Rotation-CounterClockwise45)
+(rotationBetween QHorizontalGlyph QDiagonalUpwardGlyph Rotation-CounterClockwise45)
+(rotationBetween QHorizontalGlyph QDiagonalDownwardGlyph Rotation-Clockwise45)
+
+(rotationBetween QDiagonalDownwardGlyph QVerticalGlyph Rotation-Clockwise45)
+(rotationBetween QDiagonalDownwardGlyph QHorizontalGlyph Rotation-CounterClockwise45)
+(rotationBetween QDiagonalUpwardGlyph QVerticalGlyph Rotation-CounterClockwise45)
+(rotationBetween QDiagonalUpwardGlyph QHorizontalGlyph Rotation-Clockwise45)
+
+;;; 90 degree differences
+(isa Rotation-90 Collection)
+(genls Rotation-90 MovementRotation)
+
+(isa Rotation-Clockwise90 Collection)
+(genls Rotation-Clockwise90 Rotation-90)
+
+(isa Rotation-CounterClockwise90 Collection)
+(genls Rotation-CounterClockwise90 Rotation-90)
+
+;;; 135 degree differences
+(isa Rotation-135 Collection)
+(genls Rotation-135 MovementRotation)
+
+(isa Rotation-Clockwise135 Collection)
+(genls Rotation-Clockwise135 Rotation-135)
+
+(isa Rotation-CounterClockwise135 Collection)
+(genls Rotation-CounterClockwise135 Rotation-135)
+
+;;; 180 degree differences
+(isa Rotation-180 Collection)
+(genls Rotation-180 MovementRotation)
+
+;;; no difference
+(isa Rotataion-None Collection)
+(genls Rotation-None MovementRotation)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Glyph Visual Similarity Cross Mapping
+
+(isa crossMappingSimilarity Predicate)
+(arity crossMappingSimilarity 2)
+
+(isa RotationFn BinaryFunction)
+(arity RotationFn 2)

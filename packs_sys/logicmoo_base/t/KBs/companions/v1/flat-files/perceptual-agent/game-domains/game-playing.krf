@@ -1,0 +1,736 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: game-playing.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: September 7, 2017 09:22:55
+;;;;   Purpose: Basic GDL game playing
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-10-12 17:23:52 -0500 (Fri, 12 Oct 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;
+;;; Simplify this to be a single player game.
+;;; Then turns don't correspond to control, but to elapsed time.
+;;; Let doNextTurn be the privledged action that moves time forward.
+
+(in-microtheory GamesMt)
+(genlMt CompanionsMt GamesMt)  ; really? Companions inherits from Games?
+
+(isa defaultMeasureQuantity BinaryPredicate)
+(arity defaultMeasureQuantity 2)
+(arg1Isa defaultMeasureQuantity Game)
+(arg2Isa defaultMeasureQuantity MeasurableQuantity)
+
+(isa setupSimpleGameExecutionContext ComplexActionPredicate)
+(arity setupSimpleGameExecutionContext 2)
+(arg1Isa setupSimpleGameExecutionContext Game)
+(arg2Isa setupSimpleGameExecutionContext GameRole)
+(comment setupSimpleGameExecutionContext "(setupSimpleGameExecutionContext ?game-domain ?role) sets the game execution context and initializes the initial state.")
+
+(preconditionForMethod
+  (and (not (matches (quote ?something) ?role))
+       (uninferredSentence
+         (currentSketchAgent ?sketch-agent))
+       (groundExpression ?game-domain)
+       (atomicTerm ?game-domain)
+       (newPersistableSymbol ?game-domain ?gameinst)
+       (persistentCounter ?game-domain ?count)) ; stored in BaseKB
+  (methodForAction
+    (setupSimpleGameExecutionContext ?game-domain ?role)
+    (actionSequence
+      (TheList
+        (doClearStrategyTable)  ; reset
+        (doSetCounter state 0)  ; exploit the accessible counters
+        (doSetTurn 0)           ; increment on doNextTurn
+        (doRecord (ist-Information BaseKB (isa ?gameinst Individual)))
+        (doRecord (ist-Information BaseKB (isa ?gameinst Microtheory)))
+        ;; Do we need (isa ?gameinst (PlayingFn ?game-domain))?
+        (doRecord (ist-Information BaseKB (genlMt ?gameinst (GameRulesMtFn ?game-domain))))
+        (doRecord (ist-Information BaseKB (genlMt (SpindleMtFn ?game-domain (PlayingFn ?game-domain)) ?gameinst)))
+        (doRecord (ist-Information ?gameinst (gameNumber ?game-domain ?count))) ; implicit in the mt name, but useful for sorting.
+        (doSetExecutionContext ?gameinst)
+        (doRecord (ist-Information ?gameinst (gameDomain ?game-domain)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (initializeSimpleGameInstance (GameRulesMtFn ?game-domain) ?gameinst ?role))))
+       ))))
+
+(preconditionForMethod
+  (matches (quote ?something) ?role)
+  (methodForAction
+    (setupSimpleGameExecutionContext ?game-domain ?role)
+    (actionSequence
+      (TheList
+        (doAnnounce "Don't quote the role name: ~s" (?role))))))
+        
+(isa gameNumber BinaryPredicate)
+(arity gameNumber 2)
+(arg1Isa gameNumber Game)
+(arg2Isa gameNumber Integer) ; positive integer
+(comment gameNumber "(gameNumber ?game ?trial-number) records the ordinal trial number of this playing of game.")
+
+(isa initializeSimpleGameInstance ComplexActionPredicate)
+(arity initializeSimpleGameInstance 3)
+(arg1Isa initializeSimpleGameInstance Microtheory)
+(arg2Isa initializeSimpleGameInstance Microtheory)
+(arg3Isa initializeSimpleGameInstance GameRole)
+(comment initializeSimpleGameInstance "(initializeSimpleGameInstance ?game-rules-mt ?game-instance ?role) sets up the initial state of the game.")
+
+      
+;;; If this is the first turn of the match, add it to the library.
+;;; Also, identify the overarching strategy for this game instance.
+;;; The rules-mt is going to be (GameRulesMtFn TicTacToe).  Should this be
+;;; the agentContext?
+(preconditionForMethod
+  (and (unifies ?just (ist-Information ?gameinst (StateTurnFn 0 0)))
+       (evaluate ?stmts 
+         (TheClosedRetrievalSetOf ?stmt
+           (and (kbOnly
+                  (lookupOnly
+                    (localOnly
+                      (ist-Information ?rules-mt (init ?init))))) ; this has to be the rules mt of the domain.
+                (unifies ?stmt
+                  (ist-Information ?gameinst
+                    (currentlyTrue ?init))))))
+       (evaluate ?initial-control-stmts  ; do this so it won't halt if no control inferred
+         (TheClosedRetrievalSetOf ?stmt
+           (and (initialControl ?rules-mt ?role ?who)
+                (unifies ?stmt
+          (ist-Information ?gameinst
+                    (currentlyTrue (control ?who)))))))
+       (localAgent ?agent))  ; used to enqueue turn planning.
+  (methodForAction
+    (initializeSimpleGameInstance ?rules-mt ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?gameinst (currentRole ?role)))  ; the player's role in this game.
+        (doAnnounce "First turn in game: ~a" (?gameinst))
+        (doTell ?just)    ; justification for beliefs
+        (doJustifyMembersBy ?just ?stmts)  ; set up the initial state
+        (doJustifyMembersBy ?just ?initial-control-stmts)
+        (doInitializeStrategyTable)
+       ))))
+       
+(isa initialControl TernaryPredicate)
+(arity initialControl 3)
+(arg1Isa initialControl Microtheory)
+(arg2Isa initialControl GameRole)
+(arg3Isa initialControl GameRole)
+(comment initialControl "(initialControl ?domain ?role ?who) binds ?who to the role that has the first move.")
+
+(<== (initialControl ?mt ?role ?role)
+     (localOnly
+       (ist-Information ?mt
+         (gameDomain ?domain)))
+     (localOnly
+       (ist-Information ?mt
+         (isa ?domain OnePersonGame))))
+     
+;;; TBD: Otherwise we have to see if there's an opponent, etc.
+
+
+;;; To make the system play autonomously, we want to fact that this is a single-player
+;;; game to force the currentlyTrue control statement to always be the current role player.
+;;; We could do that by defining a next rule here that checks for the domain being single player.
+;;; Or better, just define that next rule in the domain game rules.
+
+(isa startAutonomousPlay ComplexActionPredicate)
+(arity startAutonomousPlay 1)
+(arg1Isa startAutonomousPlay Microtheory)
+(comment startAutonomousPlay "(startAutonomousPlay ?gameinst) starts autonomously playing turns.  Should stop when terminal succeeds.")
+
+(preconditionForMethod
+ (and (localAgent ?agent)
+      (lookupOnly (ist-Information ?gameinst (currentRole ?role))))
+ (methodForAction
+  (startAutonomousPlay ?gameinst)
+  (actionSequence
+   (TheList
+    (doAgentPlan (planTurn ?gameinst ?role))))))
+
+;;; planTurn needs to define the sequence of decisions and reify them. 
+;;; Then just enqueue planGameActions.
+;;; Q: Could this be done once at the beginning of the game?
+;;; A: Not if activations change over time.
+(preconditionForMethod
+  (and (numAnswers 1 (ist-Information ?gameinst (gameDomain ?domain))) ; as opposed to the session domain.
+       (numAnswers 1 (localAgent ?agent))
+       (numAnswers 1 (currentTurn ?turn))
+       (numAnswers 1 (counterValue state ?statenum)) ; or could look up the step number in wm
+       (evaluate ?action-decisions
+         (TheClosedRetrievalSetOf (GoalActionPredFn ?goal ?action-pred)
+           (outsourcedOnly (domainGoalActionPair ?domain ?goal ?action-pred))))
+       (different ?action-decisions (TheSet))
+       ;; How do we know which goal-pred pair to pursue?
+       ;; sort the pairs and reify, then enqueue planGameActions
+       (evaluate ?decision-sequence (SortFn ?action-decisions greaterThan (FunctionToArg 2 decisionGoalActivation)))
+       (evaluate ?quantity-set
+         (TheClosedRetrievalSetOf ?quantity
+           (lookupOnly
+             (localOnly
+               (ist-Information (StrategyModelMtFn ?domain)
+                 (tradeoffQuantity ?domain ?quantity)))))))
+  (methodForAction
+    (planTurn ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?gameinst (holdsIn (TurnFn ?turn) (decisionSequence ?decision-sequence))))
+        (doForEach ?quant ?quantity-set (reifyGameQuantity ?gameinst ?quant)) 
+        (doEnqueue ?agent (TaskFn ?statenum) (planGameAction ?gameinst ?role))
+        ))))
+
+(isa decisionGoalActivation BinaryPredicate)
+(arity decisionGoalActivation 2)
+(arg1Isa decisionGoalActivation CycLExpression)
+(arg2Isa decisionGoalActivation Integer)
+(comment decisionGoalActivation "(decisionGoalActivation ?goal-pred-pair ?activation) binds ?activation to the goal activation of a term with the form (GoalActionPredFn ?goal ?action-pred).")
+
+(<== (decisionGoalActivation (GoalActionPredFn ?goal ?action-pred) ?activation)
+     (goalActivation ?goal ?activation))
+
+(isa reifyGameQuantity ComplexActionPredicate)
+(arity reifyGameQuantity 2)
+(arg1Isa reifyGameQuantity Microtheory)
+(arg2Isa reifyGameQuantity CycLExpression)
+(comment reifyGameQuantity "(reifyGameQuantity ?game-inst ?quantity) reifies all the instantiated measurements of ?quantity in the kb.")
+
+;;; Not every quantity is maintained in the currentlyTrue state.
+;;; For once-a-turn reification, we can ignore intermediate rule-defined quantities and focus on
+;;; next-rule quantities and cardinalities
+(preconditionForMethod
+  (and (currentTurn ?turn)
+       (natFunction ?quant ?qtype)
+       (natArgument ?quant 1 ?espec)
+       (unifies (MeasurableQuantityFn ?pred) ?qtype)
+       (evaluate ?stmts
+         (TheClosedRetrievalSetOf (holdsIn (TurnFn ?turn) (?pred ?arg ?val))
+           (quantityValueIn ?gameinst ?pred ?espec ?arg ?val))))
+  (methodForAction
+    (reifyGameQuantity ?gameinst ?quant)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?gameinst ?stmts)))))
+        
+(isa quantityValueIn QuaternaryPredicate)
+(arity quantityValueIn 4)
+(arg1Isa quantityValueIn Microtheory)
+(arg2Isa quantityValueIn BinaryPredicate)
+(arg3Isa quantityValueIn Thing)
+(arg4Isa quantityValueIn Integer)
+(comment quantityValueIn "(quantityValueIn ?mt ?binpred ?espec ?val) evaluates a measurable quantity.")
+        
+(<== (quantityValueIn ?mt cardinalityOf ?espec ?arg ?val)
+     (outsourcedOnly (ist-Information ?mt (extentCardinality ?espec ?val)))
+     (unifies ?arg ?espec))
+     
+(<== (quantityValueIn ?mt ?pred ?espec ?arg ?val)
+     (different ?pred cardinalityOf)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?mt
+             (currentlyTrue (?pred ?arg ?val)))))))
+
+(<== (quantityValueIn ?mt ?pred ?espec ?arg ?val)
+     (groundExpression ?pred)
+     (different ?pred cardinalityOf)
+     (ist-Information ?mt (collectionMember ?espec ?arg))
+     (ist-Information ?mt (?pred ?arg ?val)))
+
+;;; Fallback when we've run out of actions this turn, proceed to the next turn
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planGameAction ?game-instance ?role)
+    (actionSequence
+      (TheList
+        (applyGameAction ?game-instance ?role (doNextTurn))))))
+        
+(<== (preferInContext (planGameAction ?game-instance ?role) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList)))
+     (noArgumentHasPredicate ?seq1 doNextTurn))
+
+;;; Define a planGameAction method that plans experiments.
+;;;   a) look for active learning goals
+;;;   b) look for pertinent tradeoffs
+;;;   c) 
+;;; Define a planGameAction method that plans strategically. 
+
+(isa applyGameAction ComplexActionPredicate)
+(arity applyGameAction 3)
+(arg1Isa applyGameAction Microtheory)
+(arg2Isa applyGameAction GameRole)
+(arg3Isa applyGameAction CycLExpression)
+(comment applyGameAction "(applyGameAction ?gameinst ?role ?action)  justifies (doesAction ?role ?action) in wm and stores it persistently in the kb in the temporal context of ?state before computing the next state.")
+
+;;; This collides with version in FMI!
+(preconditionForMethod
+ (and (counterValue state ?statenum)  ; This just replicates step in HRM
+      (currentTurn ?turn)
+      (unifies ?state (StateTurnFn ?statenum ?turn)))
+  (methodForAction
+    (applyGameAction ?gameinst ?role ?action)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?gameinst (holdsIn ?state (doesAction ?role ?action))))  ; recording the execution trace
+        (doAnnounce "(doesAction ~a ~a)" (?role ?action))
+        ;; The current doesAction action must exist in the current state
+        ;; in order to compute the next state.
+        (doJustifyMembersBy 
+          (ist-Information ?gameinst ?state)
+          (TheSet 
+            (ist-Information ?gameinst (doesAction ?role ?action))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (computeNextGameState ?gameinst ?role ?action ?state))))
+        ))))
+
+(isa computeNextGameState ComplexActionPredicate)
+(arity computeNextGameState 4)
+(arg1Isa computeNextGameState Microtheory)
+(arg2Isa computeNextGameState GameRole)
+(arg3Isa computeNextGameState CycLExpression)
+(arg4Isa computeNextGameState Situation)
+(comment computeNextGameState "(computeNextGameState ?gameinst ?role ?action ?prior-state) computes and justifies the next game state.")
+
+;;; Compute the next state and the next role. 
+;;; (but only if this is alternating turn-taking and not phased turns.)
+;;; ToDo: We want to query for currentMeasureQuantities to find the subset
+;;; of currentlyTrue statements to be reified in KB.
+;;; Expect these to be in the form:
+;;; ((MeasurableQuantityFn performance)
+;;;    (GenericInstanceFn
+;;;     (CollectionSubsetFn HRMCharacter
+;;;      (TheSetOf ?emp
+;;;       (employeeName ?emp ?name)))))
+
+
+(preconditionForMethod
+  (and (evaluate ?next-beliefs
+         (TheClosedRetrievalSetOf (ist-Information ?gameinst (currentlyTrue ?stmt))
+           (wmOnly
+              (inferenceOnly
+               (ist-Information ?gameinst (next ?stmt))))))
+       ;; Bind next-state based on prior-state, but don't side-effect or 
+       ;; increment here since we might backtrack.
+       (nextStateToken ?last-action ?prior-state ?state)
+       (unifies ?state (StateTurnFn ?new-state-num ?new-turn-num)))
+  (methodForAction
+    (computeNextGameState ?gameinst ?role ?last-action ?prior-state)
+    (actionSequence
+      (TheList
+        (doUntell (ist-Information ?gameinst ?prior-state))  ; Retract old state
+        (doSetCounter state ?new-state-num)                  ; Now we can side-effect.
+        (doSetTurn ?new-turn-num)  ; turn may not have changed, but that's ok.
+        (doTell (ist-Information ?gameinst ?state))
+        (doJustifyMembersBy (ist-Information ?gameinst ?state) ?next-beliefs)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              ; at this point the doesAction is gone, because we retracted its support
+             (fireAndReifyEvents ?gameinst ?role ?last-action ?state))))))))
+
+(isa fireAndReifyEvents ComplexActionPredicate)
+(arity fireAndReifyEvents 4)
+(arg1Isa fireAndReifyEvents Microtheory)
+(arg2Isa fireAndReifyEvents GameRole)
+(arg3Isa fireAndReifyEvents CycLExpression)
+(arg4Isa fireAndReifyEvents CycLExpression)
+(comment fireAndReifyEvents "(fireAndReifyEvents ?gameinst ?role ?last-action ?state-token) runs after the currentlyTrue statements so that it can identify events in the current state.")
+
+(preconditionForMethod
+  (evaluate ?events
+    (TheClosedRetrievalSetOf (eventOccurs ?entity ?type)
+      (wmOnly
+        (ist-Information ?gameinst (currentlyTrue (eventOccurs ?entity ?type))))))
+  (methodForAction
+    (fireAndReifyEvents ?gameinst ?role ?last-action ?state-token)
+    (actionSequence
+      (TheList
+        (doForEach ?event ?events (doNotifyPA ?event GameEvent))  ; invoke plans on listener agents.
+        (doForEach ?event ?events (doAnnounce "~s" (?event)))
+        (doForEach ?event ?events 
+          (doRecord (ist-Information ?gameinst (holdsIn ?state-token ?event))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+             (doReifySalientQuantityChanges ?gameinst ?last-action)
+             (enqueueNextGameAction ?gameinst ?role ?last-action))))))))  ; at this point the doesAction is gone, because we retracted its support
+        
+
+
+(isa nextStateToken TernaryPredicate)
+(arg1Isa nextStateToken CycLExpression)
+(arg2Isa nextStateToken Situation)
+(arg3Isa nextStateToken Situation)
+(comment nextStateToken "(nextState ?last-action ?prior-state ?next-state) binds ?next-state to the token for the next state, which may depend on the action. For action-phase games, this has the form (StateTurnFn STATENUM TURNNUM).")
+
+(<== (nextStateToken (doNextTurn) (StateTurnFn ?prior-statenum ?prior-turnnum) ?next-state)
+     (evaluate ?next-statenum (PlusFn 1 ?prior-statenum))
+     (evaluate ?next-turnnum (PlusFn 1 ?prior-turnnum))
+     (unifies ?next-state (StateTurnFn ?next-statenum ?next-turnnum)))
+     
+(<== (nextStateToken ?action (StateTurnFn ?prior-statenum ?prior-turnnum) ?next-state)
+     (different ?action (doNextTurn))
+     (evaluate ?next-statenum (PlusFn 1 ?prior-statenum))
+     (unifies ?next-state (StateTurnFn ?next-statenum ?prior-turnnum)))
+
+(isa enqueueNextGameAction ComplexActionPredicate)
+(arity enqueueNextGameAction 3)
+(arg1Isa enqueueNextGameAction Microtheory)
+(arg2Isa enqueueNextGameAction GameRole)
+(arg3Isa enqueueNextGameAction CycLExpression)
+(comment enqueueNextGameAction "(enqueueNextTurn ?gameinst ?role) places a game decision task on the agenda.")
+
+(preconditionForMethod
+  (and (different ?prior-action (doNextTurn))
+       (counterValue state ?statenum) ; or could look up the step number in wm
+       (localAgent ?agent))
+  (methodForAction
+    (enqueueNextGameAction ?gameinst SelfToken-Indexical ?prior-action)
+    (actionSequence
+      (TheList
+        (doEnqueue ?agent (TaskFn ?statenum) (planGameAction ?gameinst SelfToken-Indexical))))))
+
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (enqueueNextGameAction ?gameinst SelfToken-Indexical (doNextTurn))
+    (actionSequence
+      (TheList
+        (enqueueNextGameTurn ?gameinst SelfToken-Indexical)))))  ; plan a whole turn
+
+;;; For manual play, don't schedule automatic decisions
+(preconditionForMethod
+  (different ?role SelfToken-Indexical)
+  (methodForAction
+    (enqueueNextGameAction ?gameinst ?role ?prior-action)
+    (actionSequence
+      (TheList))))
+        
+(isa enqueueNextGameTurn ComplexActionPredicate)
+(arity enqueueNextGameTurn 2)
+(arg1Isa enqueueNextGameTurn Microtheory)
+(arg2Isa enqueueNextGameTurn GameRole)
+(comment enqueueNextGameTurn "(enqueueNextTurn ?gameinst ?role) places a planTurn task on the agenda.")
+
+
+;;; We're done
+;;; Note: We can no longer ignore timestamps here, since we don't clear the microtheory
+;;; like we used to.
+(preconditionForMethod
+  (and (ist-Information ?gameinst (terminalState)) ; game is over
+       (ist-Information ?gameinst (goalState ?role ?score)))
+  (methodForAction
+    (enqueueNextGameTurn ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?gameinst (goalState ?role ?score)))  ; record the outcome/score
+        (announceGameOutcome ?gameinst ?role)
+        (doNotifyPA ?gameinst GameEndedEvent)))))  ; invoke post-mortem learning
+
+;;; (For single player games): only keep playing if the Companion is playing by itself.
+(preconditionForMethod
+  (and (continueGame ?role ?gameinst)
+       (localAgent ?agent))
+  (methodForAction
+    (enqueueNextGameTurn ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doEnqueue ?agent (TaskFn (NextTurnFn ?gameinst)) (planTurn ?gameinst ?role))))))
+        
+(isa NextTurnFn Function-Denotational)
+(arity NextTurnFn 1)
+(arg1Isa NextTurnFn Microtheory)
+(resultIsa NextTurnFn Turn-GameEvent)
+(comment NextTurnFn "(NextTurnFn ?mt) denotes the next consecutive turn to be played in the game ?mt.")
+        
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (enqueueNextGameTurn ?gameinst ?role)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (enqueueNextGameTurn ?gameinst ?role) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa continueGame BinaryPredicate)
+(arity continueGame 2)
+(arg1Isa continueGame GameRole)
+(arg2Isa continueGame Microtheory)
+(comment continueGame "(continueGame ?role ?gameinst) succeeds if game is not over and this is either a multiplayer game or the companion is playing autonomously.")
+
+(<== (continueGame SelfToken-Indexical ?gameinst)
+     (uninferredSentence
+       (ist-Information ?gameinst (terminalState))))
+
+(<== (continueGame ?role ?gameinst)
+     (different ?role SelfToken-Indexical)
+     (uninferredSentence
+       (ist-Information ?gameinst (terminalState)))
+     (numAnswers 1
+       (lookupOnly
+         (ist-Information ?gameinst
+           (gameDomain ?game-domain))))
+     (uninferredSentence
+       (lookupOnly
+         (ist-Information ?gameinst
+           (isa ?game-domain OnePersonGame)))))  ; if a human is playing a single player game, don't schedule additional turns.
+
+;;; announceWinner assumes multimodal, 2-player game.
+(isa announceGameOutcome ComplexActionPredicate)
+(arity announceGameOutcome 2)
+(arg1Isa announceGameOutcome Microtheory)
+(arg2Isa announceGameOutcome GameRole)
+(comment announceGameOutcome "(announceGameOutcome ?gameinst ?role) announces the game outcome")
+
+(preconditionForMethod
+  (and (ist-Information ?gameinst (goalState ?role 100))
+       (currentTurn ?turn))
+  (methodForAction
+    (announceGameOutcome ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?gameinst (gameWinner ?gameinst ?role)))
+        (doRecord (ist-Information ?gameinst (goalState ?role 100)))
+        (doAnnounce "Winner: ~s in turn ~s" (?role ?turn))))))
+        
+(preconditionForMethod
+  (and (ist-Information ?gameinst (goalState ?role ?score))
+       (lessThan ?score 100)
+       (currentTurn ?turn))
+  (methodForAction
+    (announceGameOutcome ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?gameinst (goalState ?role ?score)))
+        (doAnnounce "Game ~s lost in turn ~s" (?gameinst ?turn))))))
+        
+
+;;;
+;;; Turn planning
+;;;
+
+;;; Figure out what order to make decisions in and make them.
+;(preconditionForMethod
+;  (and (lookupOnly
+;         (numAnswers 1
+;           (ist-Information ?gameinst 
+;             (gameDomain ?domain))))
+;       (uninferredSentence
+;         (ist-Information (GameRulesMtFn ?domain)
+;           (isa ?domain TwoPersonGame)))
+;       (numAnswers 1 (counterValue state ?statenum)) ; or could look up the step number in wm
+;       (numAnswers 1 (localAgent ?agent))
+;       (lookupOnly (ist-Information ?gameinst (currentRole ?role)))
+;       
+;       )
+;  (methodForAction
+;    (planTurn ?gameinst ?role)
+;    (actionSequence
+;      (TheList
+;        ;; write out the kinds of decisions
+;        ;; write out the order of decisions
+;        (doEnqueue ?agent (TaskFn ?statenum) (planGameAction ?gameinst ?role))
+;        ))))
+
+;;; We don't have capabilityRoles here, like we do in Freeciv.
+;;; we just look at argIsas.
+
+(isa actionType BinaryPredicate)
+(arg1Isa actionType Microtheory)
+(arg2Isa actionType Predicate)
+(comment actionType "(actionType ?domain-mt ?predicate) binds ?predicate to SimpleActionPredicates in the domain.")
+
+(<== (actionType ?domain ?pred)
+     (lookupOnly
+       (localOnly
+         (ist-Information (GameRulesMtFn ?domain)
+           (isa ?pred SimpleActionPredicate)))))
+
+(isa objectType BinaryPredicate)
+(arg1Isa objectType Microtheory)
+(arg2Isa objectType Collection)
+(comment objectType "(objectType ?domain-mt ?coll) binds ?coll to the arg1Isas of simple actions in the domain.")
+
+(<== (objectType ?domain ?objtype)
+     (cacheComplete (actionType ?domain ?pred))
+     (arg1Isa ?pred ?objtype))
+
+(isa domainObject TernaryPredicate)
+(arg1Isa domainObject Microtheory)
+(arg2Isa domainObject Microtheory)
+(arg3Isa domainObject Individual)
+(comment domainObject "(domainObject ?gameinst ?domain-mt ?obj) binds ?obj to instances of objects in the game instance ?gameinst whose rules are defined in ?domain-mt.")
+
+(<== (domainObject ?gameinst ?domain ?obj)
+     (cacheComplete (objectType ?domain ?objtype))
+     (lookupOnly
+       (localOnly
+         (ist-Information ?gameinst
+           (isa ?obj ?objtype)))))
+
+;;; Given an object, what primitives could apply?
+;;; Given a primitive, what goals could pertain?
+;;; Given a goal, what tradeoffs ensue?
+;;; Given a tradeoff, should that action be taken?
+;;; and in what order?
+
+;;; We actually have facts in the goalnet like:
+;;; (assignedToType (GoalFn 8) HRMCharacter)
+;;; and facts in the qmodel like:
+;;; (actionNegativelyAffectsQuantityType (MeasurableQuantityFn salary) doHRMFire HRMCharacter 1 equals)
+;;; so if we were to walk the goal net, looking for things to improve, 
+;;; we'd be able to solicit possible actions.
+
+(isa decisionTypeSequence BinaryPredicate)
+(arity decisionTypeSequence 2)
+(arg1Isa decisionTypeSequence CycLExpression)  ; TimePoint? State?
+(arg2Isa decisionTypeSequence List-Extensional)
+
+;;; Maybe?
+(isa ObjectFirstDecisionStrategy Individual)
+(isa GoalFirstDecisionStrategy Individual)
+(isa ActionFirstDecisionStrategy Individual)
+
+
+;;; planGameAction ?gameinst ?role
+;;;   lookup decisionTypeSequence for current decision or turn
+;;;   lookup value preference for current decision (explore? exploit? control?)
+;;;   given such preferences, choose an action to apply to an object (if possible)
+;;;   then do it and continue.
+
+;(preconditionForMethod
+;  (false)  ; check for existence of learning goal
+;  (methodForAction
+;    (planGameAction ?game-instance ?role)
+;    (actionSequence
+;      (TheList
+;        (decideExperimentally ?game-instance ?role)))))
+
+
+(isa decideRandomlyWithoutReplacement ComplexActionPredicate)
+(arity decideRandomlyWithoutReplacement 2)
+(arg1Isa decideRandomlyWithoutReplacement Microtheory)
+(arg2Isa decideRandomlyWithoutReplacement GameRole)
+(comment decideRandomlyWithoutReplacement "(decideRandomlyWithoutReplacement ?game-instance ?role) randomly selects legal actions that haven't been tried so far this turn.")
+
+
+;;; This is effectively, planGameAction:
+;;; Random choice without repetition within a turn:
+(preconditionForMethod
+  (and (currentTurn ?turn)
+       (evaluate ?legal-moves
+         (TheClosedRetrievalSetOf ?move
+           (and (ist-Information ?gameinst
+                  (legal ?role ?move))
+                ;; without replacement:
+                (uninferredSentence
+                  (ist-Information ?gameinst 
+                    (holdsIn (StateTurnFn ?some-state ?turn) (doesAction ?role ?action)))))))
+       (different ?legal-moves (TheSet))
+       (evaluate ?move (RandomMemberFn ?legal-moves))  ; pick randomly
+       (groundExpression ?move))                       ; better be!
+  (methodForAction
+    (decideRandomlyWithoutReplacement ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (applyGameAction ?gameinst ?role ?move)))))
+
+;;; Also planGameAction, but follow a sequence of decisions and 
+;;; consider activation in adjusting the number of entities, to account for goal tradeoffs.
+;;; There's still nothing here that would prohibit randomly firing people just to
+;;; keep headcount low.
+(preconditionForMethod
+  (outsourcedOnly (nextGDLTurnAction ?role ?action))
+  (methodForAction
+    (planGameAction ?game-instance ?role)
+      (actionSequence
+        (TheList
+          (applyGameAction ?game-instance ?role ?action)))))
+
+(isa decisionSequence Relation)
+(arity decisionSequence 1)
+(arg1Isa decisionSequence List)
+(comment "(decisionSequence (TheList <decision1> <decision2> ...)) records the order of decisions to be made.")
+
+(isa GoalActionPredFn Function-Denotational)
+(arity GoalActionPredFn 2)
+(arg1Isa GoalActionPredFn Goal)
+(arg2Isa GoalActionPredFn ActionPredicate)
+(comment GoalActionPredFn "(GoalActionPredFn ?goal ?actionpred) bundles up an action predicate and the goal it serves to denote a decision to be made about how to operationalize it.")
+
+     
+     
+;;; -------------------------------------------------------------------------
+;;; Experiment tasks
+
+(isa runGameExperiment ComplexActionPredicate)
+(arity runGameExperiment 3)
+(arg1Isa runGameExperiment Game)
+(arg2Isa runGameExperiment Set-Mathematical)
+(arg3Isa runGameExperiment Set-Mathematical)
+(comment runGameExperiment "(runGameExperiment ?domain ?controls ?conditions) schedules an experiment with the specified experimental conditions.")
+
+;;; Anything that has to be written to the game instance must be done here
+;;; because experimental parameters are define long before the game instance
+;;; is created.  Unpack the control conditions and write the necessary
+;;; information to the mt.
+
+(preconditionForMethod
+  (and (localAgent ?agent))
+  (methodForAction
+    (runGameExperiment ?domain ?controls ?conditions)
+    (actionSequence
+      (TheList
+        (doCleanAgenda) ; prune completed tasks from agenda.
+        (setupSimpleGameExecutionContext ?domain SelfToken-Indexical)  ;; we need to execute this first in order to have the name of the gameinst.
+        (doAgentPlan 
+          (actionSequence
+            (TheList
+              (initializeAndRunExperiment ?domain ?controls ?conditions))))))))
+
+(isa initializeAndRunExperiment ComplexActionPredicate)
+(arity initializeAndRunExperiment 3)
+(arg1Isa initializeAndRunExperiment Game)
+(arg2Isa initializeAndRunExperiment Set-Mathematical)
+(arg3Isa initializeAndRunExperiment Set-Mathematical)
+(comment initializeAndRunExperiment "(initializeAndRunExperiment ?domain ?controls ?conditions) schedules an experiment with the specified experimental conditions.")
+
+(preconditionForMethod
+  (and ;(not (natFunction ?lg LearnTradeoffFn))
+       (executionContext ?gameinst))
+  (methodForAction
+    (initializeAndRunExperiment ?domain ?controls ?conditions)
+    (actionSequence
+      (TheList
+        (doRecord (genlMt ?gameinst ExperimentMt))
+        (doRecordMembersInContext ?gameinst ?controls)
+        (doRecordMembersInContext ?gameinst ?conditions)
+        (startAutonomousPlay ?gameinst))))) ; calls planTurn, which sets up decisionSequence *before* getting a chance to slam activations.
+
+;;; 
+;(preconditionForMethod
+;  (and (natFunction ?lg LearnTradeoffFn)
+;       (natArgument ?lg 1 ?goal1)  ; the goal to activate
+;       (evaluate ?remaining-goals (RestOfListFn (FormulaArgListFn ?lg)))
+;       (executionContext ?gameinst))
+;  (methodForAction
+;    (initializeAndRunExperiment ?domain ?lg ?qstate ?aspec ?conditions)
+;    (actionSequence
+;      (TheList
+;        (doRecord (genlMt ?gameinst ExperimentMt))
+;        (doRecord (ist-Information ?gameinst (controlCondition ?lg ?qstate ?aspec)))
+;        ;; what do we do here??
+;        (startAutonomousPlay ?gameinst)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

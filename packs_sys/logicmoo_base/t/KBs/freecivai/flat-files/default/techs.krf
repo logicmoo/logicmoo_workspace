@@ -1,0 +1,713 @@
+(in-microtheory Freeciv-defaultMt)
+
+;; ------------------------
+;; FC-Tech-None
+;; ------------------------
+(isa FC-Tech-None FreeCiv-Tech)
+(comment FC-Tech-None "Believe it or not, we need to explicitly represent FC-Tech-None in order to make
+some preconditions more declarative to allow reasoning about enablement conditions.  Without this, we
+end up burying the connection between effects and preconditions either inside an outsourced predicate or
+inside a horn clause, either way making it difficult to reason about.")
+
+;; ------------------------
+;; FC-Tech-AdvancedFlight
+;; ------------------------
+(isa FC-Tech-AdvancedFlight FreeCiv-Tech)
+(researchRequiresTech FC-Tech-AdvancedFlight FC-Tech-Radio)
+(researchRequiresTech FC-Tech-AdvancedFlight FC-Tech-MachineTools)
+
+
+;; ------------------------
+;; FC-Tech-Alphabet
+;; ------------------------
+(isa FC-Tech-Alphabet FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Alphabet FC-Tech-None)
+
+
+;; ------------------------
+;; FC-Tech-AmphibiousWarfare
+;; ------------------------
+(isa FC-Tech-AmphibiousWarfare FreeCiv-Tech)
+(researchRequiresTech FC-Tech-AmphibiousWarfare FC-Tech-Navigation)
+(researchRequiresTech FC-Tech-AmphibiousWarfare FC-Tech-Tactics)
+
+
+;; ------------------------
+;; FC-Tech-Astronomy
+;; ------------------------
+(isa FC-Tech-Astronomy FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Astronomy FC-Tech-Mysticism)
+(researchRequiresTech FC-Tech-Astronomy FC-Tech-Mathematics)
+
+
+;; ------------------------
+;; FC-Tech-AtomicTheory
+;; ------------------------
+(isa FC-Tech-AtomicTheory FreeCiv-Tech)
+(researchRequiresTech FC-Tech-AtomicTheory FC-Tech-TheoryOfGravity)
+(researchRequiresTech FC-Tech-AtomicTheory FC-Tech-Physics)
+
+
+;; ------------------------
+;; FC-Tech-Automobile
+;; ------------------------
+(isa FC-Tech-Automobile FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Automobile FC-Tech-Combustion)
+(researchRequiresTech FC-Tech-Automobile FC-Tech-Steel)
+;;(unitHasFlag FC-Tech-Automobile Population_Pollution_Inc)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Banking
+;; ------------------------
+(isa FC-Tech-Banking FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Banking FC-Tech-Trade)
+(researchRequiresTech FC-Tech-Banking FC-Tech-TheRepublic)
+
+
+;; ------------------------
+;; FC-Tech-BridgeBuilding
+;; ------------------------
+(isa FC-Tech-BridgeBuilding FreeCiv-Tech)
+(researchRequiresTech FC-Tech-BridgeBuilding FC-Tech-IronWorking)
+(researchRequiresTech FC-Tech-BridgeBuilding FC-Tech-Construction)
+;;(unitHasFlag FC-Tech-BridgeBuilding Bridge)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-BronzeWorking
+;; ------------------------
+(isa FC-Tech-BronzeWorking FreeCiv-Tech)
+(researchRequiresTech FC-Tech-BronzeWorking FC-Tech-None)
+
+;; ------------------------
+;; FC-Tech-CeremonialBurial
+;; ------------------------
+(isa FC-Tech-CeremonialBurial FreeCiv-Tech)
+(researchRequiresTech FC-Tech-CeremonialBurial FC-Tech-None)
+
+;; ------------------------
+;; FC-Tech-Chemistry
+;; ------------------------
+(isa FC-Tech-Chemistry FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Chemistry FC-Tech-University)
+(researchRequiresTech FC-Tech-Chemistry FC-Tech-Medicine)
+
+
+;; ------------------------
+;; FC-Tech-Chivalry
+;; ------------------------
+(isa FC-Tech-Chivalry FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Chivalry FC-Tech-Feudalism)
+(researchRequiresTech FC-Tech-Chivalry FC-Tech-HorsebackRiding)
+
+
+;; ------------------------
+;; FC-Tech-CodeOfLaws
+;; ------------------------
+(isa FC-Tech-CodeOfLaws FreeCiv-Tech)
+(researchRequiresTech FC-Tech-CodeOfLaws FC-Tech-Alphabet)
+
+
+;; ------------------------
+;; FC-Tech-CombinedArms
+;; ------------------------
+(isa FC-Tech-CombinedArms FreeCiv-Tech)
+(researchRequiresTech FC-Tech-CombinedArms FC-Tech-MobileWarfare)
+(researchRequiresTech FC-Tech-CombinedArms FC-Tech-AdvancedFlight)
+
+
+;; ------------------------
+;; FC-Tech-Combustion
+;; ------------------------
+(isa FC-Tech-Combustion FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Combustion FC-Tech-Refining)
+(researchRequiresTech FC-Tech-Combustion FC-Tech-Explosives)
+
+
+;; ------------------------
+;; FC-Tech-Communism
+;; ------------------------
+(isa FC-Tech-Communism FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Communism FC-Tech-Philosophy)
+(researchRequiresTech FC-Tech-Communism FC-Tech-Industrialization)
+
+
+;; ------------------------
+;; FC-Tech-Computers
+;; ------------------------
+(isa FC-Tech-Computers FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Computers FC-Tech-MassProduction)
+(researchRequiresTech FC-Tech-Computers FC-Tech-Miniaturization)
+
+
+;; ------------------------
+;; FC-Tech-Conscription
+;; ------------------------
+(isa FC-Tech-Conscription FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Conscription FC-Tech-Democracy)
+(researchRequiresTech FC-Tech-Conscription FC-Tech-Metallurgy)
+
+
+;; ------------------------
+;; FC-Tech-Construction
+;; ------------------------
+(isa FC-Tech-Construction FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Construction FC-Tech-Masonry)
+(researchRequiresTech FC-Tech-Construction FC-Tech-Currency)
+;;(unitHasFlag FC-Tech-Construction Fortress)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Currency
+;; ------------------------
+(isa FC-Tech-Currency FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Currency FC-Tech-BronzeWorking)
+
+
+;; ------------------------
+;; FC-Tech-Democracy
+;; ------------------------
+(isa FC-Tech-Democracy FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Democracy FC-Tech-Banking)
+(researchRequiresTech FC-Tech-Democracy FC-Tech-Invention)
+
+
+;; ------------------------
+;; FC-Tech-Economics
+;; ------------------------
+(isa FC-Tech-Economics FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Economics FC-Tech-Banking)
+(researchRequiresTech FC-Tech-Economics FC-Tech-University)
+
+
+;; ------------------------
+;; FC-Tech-Electricity
+;; ------------------------
+(isa FC-Tech-Electricity FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Electricity FC-Tech-Metallurgy)
+(researchRequiresTech FC-Tech-Electricity FC-Tech-Magnetism)
+
+
+;; ------------------------
+;; FC-Tech-Electronics
+;; ------------------------
+(isa FC-Tech-Electronics FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Electronics FC-Tech-TheCorporation)
+(researchRequiresTech FC-Tech-Electronics FC-Tech-Electricity)
+
+
+;; ------------------------
+;; FC-Tech-Engineering
+;; ------------------------
+(isa FC-Tech-Engineering FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Engineering FC-Tech-TheWheel)
+(researchRequiresTech FC-Tech-Engineering FC-Tech-Construction)
+
+
+;; ------------------------
+;; FC-Tech-Environmentalism
+;; ------------------------
+(isa FC-Tech-Environmentalism FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Environmentalism FC-Tech-Recycling)
+(researchRequiresTech FC-Tech-Environmentalism FC-Tech-SpaceFlight)
+
+
+;; ------------------------
+;; FC-Tech-Espionage
+;; ------------------------
+(isa FC-Tech-Espionage FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Espionage FC-Tech-Communism)
+(researchRequiresTech FC-Tech-Espionage FC-Tech-Democracy)
+
+
+;; ------------------------
+;; FC-Tech-Explosives
+;; ------------------------
+(isa FC-Tech-Explosives FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Explosives FC-Tech-Gunpowder)
+(researchRequiresTech FC-Tech-Explosives FC-Tech-Chemistry)
+
+
+;; ------------------------
+;; FC-Tech-Feudalism
+;; ------------------------
+(isa FC-Tech-Feudalism FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Feudalism FC-Tech-WarriorCode)
+(researchRequiresTech FC-Tech-Feudalism FC-Tech-Monarchy)
+
+
+;; ------------------------
+;; FC-Tech-Flight
+;; ------------------------
+(isa FC-Tech-Flight FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Flight FC-Tech-Combustion)
+(researchRequiresTech FC-Tech-Flight FC-Tech-TheoryOfGravity)
+;;(unitHasFlag FC-Tech-Flight Trade_Revenue_Reduce)     ;; do we care about this?
+;;(unitHasFlag FC-Tech-Flight Build_Airborne)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Fundamentalism
+;; ------------------------
+;;(isa FC-Tech-Fundamentalism FreeCiv-Tech)
+;;(researchRequiresTech FC-Tech-Fundamentalism FC-Tech-Never)
+;;(researchRequiresTech FC-Tech-Fundamentalism FC-Tech-Never)
+
+
+;; ------------------------
+;; FC-Tech-FusionPower
+;; ------------------------
+(isa FC-Tech-FusionPower FreeCiv-Tech)
+(researchRequiresTech FC-Tech-FusionPower FC-Tech-NuclearPower)
+(researchRequiresTech FC-Tech-FusionPower FC-Tech-Superconductors)
+
+
+;; ------------------------
+;; FC-Tech-GeneticEngineering
+;; ------------------------
+(isa FC-Tech-GeneticEngineering FreeCiv-Tech)
+(researchRequiresTech FC-Tech-GeneticEngineering FC-Tech-Medicine)
+(researchRequiresTech FC-Tech-GeneticEngineering FC-Tech-TheCorporation)
+
+
+;; ------------------------
+;; FC-Tech-GuerillaWarfare
+;; ------------------------
+(isa FC-Tech-GuerillaWarfare FreeCiv-Tech)
+(researchRequiresTech FC-Tech-GuerillaWarfare FC-Tech-Communism)
+(researchRequiresTech FC-Tech-GuerillaWarfare FC-Tech-Tactics)
+
+
+;; ------------------------
+;; FC-Tech-Gunpowder
+;; ------------------------
+(isa FC-Tech-Gunpowder FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Gunpowder FC-Tech-Invention)
+(researchRequiresTech FC-Tech-Gunpowder FC-Tech-IronWorking)
+
+
+;; ------------------------
+;; FC-Tech-HorsebackRiding
+;; ------------------------
+(isa FC-Tech-HorsebackRiding FreeCiv-Tech)
+(researchRequiresTech FC-Tech-HorsebackRiding FC-Tech-None)
+
+
+;; ------------------------
+;; FC-Tech-Industrialization
+;; ------------------------
+(isa FC-Tech-Industrialization FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Industrialization FC-Tech-Railroad)
+(researchRequiresTech FC-Tech-Industrialization FC-Tech-Banking)
+;;(unitHasFlag FC-Tech-Industrialization Population_Pollution_Inc)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Invention
+;; ------------------------
+(isa FC-Tech-Invention FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Invention FC-Tech-Engineering)
+(researchRequiresTech FC-Tech-Invention FC-Tech-Literacy)
+;;(unitHasFlag FC-Tech-Invention Watchtower)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-IronWorking
+;; ------------------------
+(isa FC-Tech-IronWorking FreeCiv-Tech)
+(researchRequiresTech FC-Tech-IronWorking FC-Tech-BronzeWorking)
+(researchRequiresTech FC-Tech-IronWorking FC-Tech-WarriorCode)
+
+
+;; ------------------------
+;; FC-Tech-LaborUnion
+;; ------------------------
+(isa FC-Tech-LaborUnion FreeCiv-Tech)
+(researchRequiresTech FC-Tech-LaborUnion FC-Tech-MassProduction)
+(researchRequiresTech FC-Tech-LaborUnion FC-Tech-GuerillaWarfare)
+
+
+;; ------------------------
+;; FC-Tech-Laser
+;; ------------------------
+(isa FC-Tech-Laser FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Laser FC-Tech-MassProduction)
+(researchRequiresTech FC-Tech-Laser FC-Tech-NuclearPower)
+
+
+;; ------------------------
+;; FC-Tech-Leadership
+;; ------------------------
+(isa FC-Tech-Leadership FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Leadership FC-Tech-Chivalry)
+(researchRequiresTech FC-Tech-Leadership FC-Tech-Gunpowder)
+
+
+;; ------------------------
+;; FC-Tech-Literacy
+;; ------------------------
+(isa FC-Tech-Literacy FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Literacy FC-Tech-Writing)
+(researchRequiresTech FC-Tech-Literacy FC-Tech-CodeOfLaws)
+
+
+;; ------------------------
+;; FC-Tech-MachineTools
+;; ------------------------
+(isa FC-Tech-MachineTools FreeCiv-Tech)
+(researchRequiresTech FC-Tech-MachineTools FC-Tech-Steel)
+(researchRequiresTech FC-Tech-MachineTools FC-Tech-Tactics)
+
+
+;; ------------------------
+;; FC-Tech-Magnetism
+;; ------------------------
+(isa FC-Tech-Magnetism FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Magnetism FC-Tech-IronWorking)
+(researchRequiresTech FC-Tech-Magnetism FC-Tech-Physics)
+
+
+;; ------------------------
+;; FC-Tech-MapMaking
+;; ------------------------
+(isa FC-Tech-MapMaking FreeCiv-Tech)
+(researchRequiresTech FC-Tech-MapMaking FC-Tech-Alphabet)
+
+
+;; ------------------------
+;; FC-Tech-Masonry
+;; ------------------------
+(isa FC-Tech-Masonry FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Masonry FC-Tech-None)
+
+;; ------------------------
+;; FC-Tech-MassProduction
+;; ------------------------
+(isa FC-Tech-MassProduction FreeCiv-Tech)
+(researchRequiresTech FC-Tech-MassProduction FC-Tech-Automobile)
+(researchRequiresTech FC-Tech-MassProduction FC-Tech-TheCorporation)
+;;(unitHasFlag FC-Tech-MassProduction Population_Pollution_Inc)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Mathematics
+;; ------------------------
+(isa FC-Tech-Mathematics FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Mathematics FC-Tech-Alphabet)
+(researchRequiresTech FC-Tech-Mathematics FC-Tech-Masonry)
+
+
+;; ------------------------
+;; FC-Tech-Medicine
+;; ------------------------
+(isa FC-Tech-Medicine FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Medicine FC-Tech-Philosophy)
+(researchRequiresTech FC-Tech-Medicine FC-Tech-Trade)
+
+
+;; ------------------------
+;; FC-Tech-Metallurgy
+;; ------------------------
+(isa FC-Tech-Metallurgy FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Metallurgy FC-Tech-Gunpowder)
+(researchRequiresTech FC-Tech-Metallurgy FC-Tech-University)
+
+
+;; ------------------------
+;; FC-Tech-Miniaturization
+;; ------------------------
+(isa FC-Tech-Miniaturization FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Miniaturization FC-Tech-MachineTools)
+(researchRequiresTech FC-Tech-Miniaturization FC-Tech-Electronics)
+
+
+;; ------------------------
+;; FC-Tech-MobileWarfare
+;; ------------------------
+(isa FC-Tech-MobileWarfare FreeCiv-Tech)
+(researchRequiresTech FC-Tech-MobileWarfare FC-Tech-Automobile)
+(researchRequiresTech FC-Tech-MobileWarfare FC-Tech-Tactics)
+
+
+;; ------------------------
+;; FC-Tech-Monarchy
+;; ------------------------
+(isa FC-Tech-Monarchy FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Monarchy FC-Tech-CeremonialBurial)
+(researchRequiresTech FC-Tech-Monarchy FC-Tech-CodeOfLaws)
+
+
+;; ------------------------
+;; FC-Tech-Monotheism
+;; ------------------------
+(isa FC-Tech-Monotheism FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Monotheism FC-Tech-Philosophy)
+(researchRequiresTech FC-Tech-Monotheism FC-Tech-Polytheism)
+
+
+;; ------------------------
+;; FC-Tech-Mysticism
+;; ------------------------
+(isa FC-Tech-Mysticism FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Mysticism FC-Tech-CeremonialBurial)
+
+
+;; ------------------------
+;; FC-Tech-Navigation
+;; ------------------------
+(isa FC-Tech-Navigation FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Navigation FC-Tech-Seafaring)
+(researchRequiresTech FC-Tech-Navigation FC-Tech-Astronomy)
+;;(unitHasFlag FC-Tech-Navigation Reduce_Trireme_Loss2)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-NuclearFission
+;; ------------------------
+(isa FC-Tech-NuclearFission FreeCiv-Tech)
+(researchRequiresTech FC-Tech-NuclearFission FC-Tech-MassProduction)
+(researchRequiresTech FC-Tech-NuclearFission FC-Tech-AtomicTheory)
+
+
+;; ------------------------
+;; FC-Tech-NuclearPower
+;; ------------------------
+(isa FC-Tech-NuclearPower FreeCiv-Tech)
+(researchRequiresTech FC-Tech-NuclearPower FC-Tech-NuclearFission)
+(researchRequiresTech FC-Tech-NuclearPower FC-Tech-Electronics)
+;;(unitHasFlag FC-Tech-NuclearPower Boat_Fast)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Philosophy
+;; ------------------------
+(isa FC-Tech-Philosophy FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Philosophy FC-Tech-Mysticism)
+(researchRequiresTech FC-Tech-Philosophy FC-Tech-Literacy)
+;;(unitHasFlag FC-Tech-Philosophy Bonus_Tech)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Physics
+;; ------------------------
+(isa FC-Tech-Physics FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Physics FC-Tech-Literacy)
+(researchRequiresTech FC-Tech-Physics FC-Tech-Navigation)
+
+
+;; ------------------------
+;; FC-Tech-Plastics
+;; ------------------------
+(isa FC-Tech-Plastics FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Plastics FC-Tech-Refining)
+(researchRequiresTech FC-Tech-Plastics FC-Tech-SpaceFlight)
+;;(unitHasFlag FC-Tech-Plastics Population_Pollution_Inc)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Polytheism
+;; ------------------------
+(isa FC-Tech-Polytheism FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Polytheism FC-Tech-HorsebackRiding)
+(researchRequiresTech FC-Tech-Polytheism FC-Tech-CeremonialBurial)
+
+
+;; ------------------------
+;; FC-Tech-Pottery
+;; ------------------------
+(isa FC-Tech-Pottery FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Pottery FC-Tech-None)
+
+
+;; ------------------------
+;; FC-Tech-Radio
+;; ------------------------
+(isa FC-Tech-Radio FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Radio FC-Tech-Flight)
+(researchRequiresTech FC-Tech-Radio FC-Tech-Electricity)
+;;(unitHasFlag FC-Tech-Radio Airbase)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Railroad
+;; ------------------------
+(isa FC-Tech-Railroad FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Railroad FC-Tech-SteamEngine)
+(researchRequiresTech FC-Tech-Railroad FC-Tech-BridgeBuilding)
+;;(unitHasFlag FC-Tech-Railroad Railroad)     ;; do we care about this?
+;;(unitHasFlag FC-Tech-Railroad Trade_Revenue_Reduce)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Recycling
+;; ------------------------
+(isa FC-Tech-Recycling FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Recycling FC-Tech-MassProduction)
+(researchRequiresTech FC-Tech-Recycling FC-Tech-Democracy)
+
+
+;; ------------------------
+;; FC-Tech-Refining
+;; ------------------------
+(isa FC-Tech-Refining FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Refining FC-Tech-Chemistry)
+(researchRequiresTech FC-Tech-Refining FC-Tech-TheCorporation)
+
+
+;; ------------------------
+;; FC-Tech-Refrigeration
+;; ------------------------
+(isa FC-Tech-Refrigeration FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Refrigeration FC-Tech-Sanitation)
+(researchRequiresTech FC-Tech-Refrigeration FC-Tech-Electricity)
+;;(unitHasFlag FC-Tech-Refrigeration Farmland)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-Robotics
+;; ------------------------
+(isa FC-Tech-Robotics FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Robotics FC-Tech-MobileWarfare)
+(researchRequiresTech FC-Tech-Robotics FC-Tech-Computers)
+
+
+;; ------------------------
+;; FC-Tech-Rocketry
+;; ------------------------
+(isa FC-Tech-Rocketry FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Rocketry FC-Tech-AdvancedFlight)
+(researchRequiresTech FC-Tech-Rocketry FC-Tech-Electronics)
+
+
+;; ------------------------
+;; FC-Tech-Sanitation
+;; ------------------------
+(isa FC-Tech-Sanitation FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Sanitation FC-Tech-Engineering)
+(researchRequiresTech FC-Tech-Sanitation FC-Tech-Medicine)
+
+
+;; ------------------------
+;; FC-Tech-Seafaring
+;; ------------------------
+(isa FC-Tech-Seafaring FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Seafaring FC-Tech-Pottery)
+(researchRequiresTech FC-Tech-Seafaring FC-Tech-MapMaking)
+;;(unitHasFlag FC-Tech-Seafaring Reduce_Trireme_Loss1)     ;; do we care about this?
+
+
+;; ------------------------
+;; FC-Tech-SpaceFlight
+;; ------------------------
+(isa FC-Tech-SpaceFlight FreeCiv-Tech)
+(researchRequiresTech FC-Tech-SpaceFlight FC-Tech-Computers)
+(researchRequiresTech FC-Tech-SpaceFlight FC-Tech-Rocketry)
+
+
+;; ------------------------
+;; FC-Tech-Stealth
+;; ------------------------
+(isa FC-Tech-Stealth FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Stealth FC-Tech-Superconductors)
+(researchRequiresTech FC-Tech-Stealth FC-Tech-Robotics)
+
+
+;; ------------------------
+;; FC-Tech-SteamEngine
+;; ------------------------
+(isa FC-Tech-SteamEngine FreeCiv-Tech)
+(researchRequiresTech FC-Tech-SteamEngine FC-Tech-Physics)
+(researchRequiresTech FC-Tech-SteamEngine FC-Tech-Invention)
+
+
+;; ------------------------
+;; FC-Tech-Steel
+;; ------------------------
+(isa FC-Tech-Steel FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Steel FC-Tech-Electricity)
+(researchRequiresTech FC-Tech-Steel FC-Tech-Industrialization)
+
+
+;; ------------------------
+;; FC-Tech-Superconductors
+;; ------------------------
+(isa FC-Tech-Superconductors FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Superconductors FC-Tech-NuclearPower)
+(researchRequiresTech FC-Tech-Superconductors FC-Tech-Laser)
+
+
+;; ------------------------
+;; FC-Tech-Tactics
+;; ------------------------
+(isa FC-Tech-Tactics FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Tactics FC-Tech-Conscription)
+(researchRequiresTech FC-Tech-Tactics FC-Tech-Leadership)
+
+
+;; ------------------------
+;; FC-Tech-TheCorporation
+;; ------------------------
+(isa FC-Tech-TheCorporation FreeCiv-Tech)
+(researchRequiresTech FC-Tech-TheCorporation FC-Tech-Economics)
+(researchRequiresTech FC-Tech-TheCorporation FC-Tech-Industrialization)
+
+
+;; ------------------------
+;; FC-Tech-TheRepublic
+;; ------------------------
+(isa FC-Tech-TheRepublic FreeCiv-Tech)
+(researchRequiresTech FC-Tech-TheRepublic FC-Tech-Literacy)
+
+
+;; ------------------------
+;; FC-Tech-TheWheel
+;; ------------------------
+(isa FC-Tech-TheWheel FreeCiv-Tech)
+(researchRequiresTech FC-Tech-TheWheel FC-Tech-HorsebackRiding)
+
+
+;; ------------------------
+;; FC-Tech-Theology
+;; ------------------------
+(isa FC-Tech-Theology FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Theology FC-Tech-Feudalism)
+(researchRequiresTech FC-Tech-Theology FC-Tech-Monotheism)
+
+
+;; ------------------------
+;; FC-Tech-TheoryOfGravity
+;; ------------------------
+(isa FC-Tech-TheoryOfGravity FreeCiv-Tech)
+(researchRequiresTech FC-Tech-TheoryOfGravity FC-Tech-Astronomy)
+(researchRequiresTech FC-Tech-TheoryOfGravity FC-Tech-University)
+
+
+;; ------------------------
+;; FC-Tech-Trade
+;; ------------------------
+(isa FC-Tech-Trade FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Trade FC-Tech-Currency)
+(researchRequiresTech FC-Tech-Trade FC-Tech-CodeOfLaws)
+
+
+;; ------------------------
+;; FC-Tech-University
+;; ------------------------
+(isa FC-Tech-University FreeCiv-Tech)
+(researchRequiresTech FC-Tech-University FC-Tech-Mathematics)
+(researchRequiresTech FC-Tech-University FC-Tech-Philosophy)
+
+
+;; ------------------------
+;; FC-Tech-WarriorCode
+;; ------------------------
+(isa FC-Tech-WarriorCode FreeCiv-Tech)
+(researchRequiresTech FC-Tech-WarriorCode FC-Tech-None)
+
+
+;; ------------------------
+;; FC-Tech-Writing
+;; ------------------------
+(isa FC-Tech-Writing FreeCiv-Tech)
+(researchRequiresTech FC-Tech-Writing FC-Tech-Alphabet)

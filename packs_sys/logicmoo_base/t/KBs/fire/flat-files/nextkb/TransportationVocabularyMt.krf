@@ -1,0 +1,56 @@
+(in-microtheory TransportationVocabularyMt)
+
+(isa (NonDavidsonianPredFn Conveying-Generic (TheList performedBy transportees)) SituationPredicate)
+(isa (SubcollectionOfWithRelationToTypeFn Accident damages Automobile) FirstOrderCollection)
+(isa (SubcollectionOfWithRelationToTypeFn VehicleAccident damages Airplane) FirstOrderCollection)
+(isa (SubcollectionOfWithRelationToTypeFn Automobile internalParts FourWheelDrive) FirstOrderCollection)
+(isa (SubcollectionOfWithRelationToTypeFn LeavingAPlace transporter TransportationDevice-Vehicle) FirstOrderCollection)
+(isa (SubcollectionOfWithRelationToTypeFn ServiceEvent subEvents TransportingPeople) FirstOrderCollection)
+(isa (SubcollectionOfWithRelationToTypeFn ArrivingAtAPlace transporter TransportationDevice-Vehicle) FirstOrderCollection)
+(isa (SubcollectionOfWithRelationToTypeFn Accident damages TransportationDevice-Vehicle) FirstOrderCollection)
+(isa (TravelingByMeansOfFn Airplane) TransportationEventByVehicleType)
+(isa (TravelingByMeansOfFn Helicopter) TransportationEventByVehicleType)
+(isa (CollectionIntersection2Fn OfficeFurniture Wagon) ExistingObjectType)
+(isa (TransportViaFn Raft) TemporalStuffType)
+(typeGenls VehicleTypeByPathway TransportationDevice-Vehicle)
+(facets-Generic TransportationDevice-Vehicle VehicleTypeByPathway)
+(quotedIsa TransportationPathSystemType PathSystemCycLConstant)
+(quotedIsa TransportationPathSystem PathSystemCycLConstant)
+(argFormat featureOfPathArtifact 2 SetTheFormat)
+(argFormat conveyor-Stationary 1 SetTheFormat)
+(argFormat conveyor-Stationary 2 SetTheFormat)
+(comment BlockingTraffic "A collection of all events of blocking traffic.  Each             instance of #$BlockingTraffic is also a purposeful action              done by some agent with a purpose of stopping the traffic              on a certain path.  For any #$BlockingTraffic, there is              at least one #$objectActedOn which is a #$Path-Customary             (e.g., a bridge which is broken or a road which is blocked             to prevent vehicles or people from passing through it).")
+(comment RoadwayTypeByClassification "A collection of collections.  Each instance of #$RoadwayTypeByClassification is a collection of roads that share a particular importance within a given road system. The importance of a road is conventionally evaluated in relation to nearby particular road(s) or a given area or again a certain type of activity conducted in a particular area.")
+(comment Primary-RoadClassification "The collection of main roads in a
+given #$RoadSystem or in a #$GeographicalRegion. They connect important
+populated places of an area. They are usually comparatively of better
+quality than secondary roads: see #$Secondary-RoadClassification.")
+(comment Restricted-RoadClassification "The collection of roads that are restricted for certain types of vehicles or users that do not have authorization to use them by some relevant controlling authority.")
+(comment Secondary-RoadClassification "The collection of secondary roads in
+a given #$RoadSystem or in a #$GeographicalRegion. Roads with this
+attribute are those connecting minor places of an area. Also included are
+roads connecting two main roads [see #$Primary-RoadClassification] or at
+least one road of higher classification. These roads are usually
+used less, the infrastructure is less developed and the surface of
+lower quality than the standard main roads in the area.")
+(comment Utility-RoadClassification "The collection of all roads that are used to access certain areas in order to perform maintenance tasks.")
+(comment airportServicesCity "(#$airportServicesCity AIRPORT CITY) means the an instance
+of #$Airport-Physical services CITY.  This means flights arrive and depart at a
+location very close to, if not in, that city.")
+(comment TransportOfTypeWithinFn "(#$TransportOfTypeWithinFn TRANSPORT-TYPE REGION) denotes the collection of all instances of the class of #$TransportationEvent TRANSPORTATION-TYPE whose #$toLocation and #$fromLocation are both within REGION.")
+(genls (PreviouslyOwnedFn Automobile) Automobile)
+(genls (TravelingByMeansOfFn Helicopter) TransportingPeople)
+(genls (TravelingByMeansOfFn Airplane) TransportingPeople)
+(genls (TravelingByMeansOfFn Helicopter) Travel-TripEvent)
+(genls (TravelingByMeansOfFn Airplane) Travel-TripEvent)
+(genlPreds streetOfAddress onSamePlanetSurfaceAs)
+(genlPreds streetOfAddress notFarFrom)
+(genlPreds pathCircumventsObject notFarFrom)
+(genls (PhysicalDestructionFn Airplane) PhysicalDestructionEvent)
+(genls GettingOnToARoad (TransportViaFn RoadVehicle))
+(genls (GroupFn Platform-Military) (GroupFn TransportationDevice))
+(genls (GroupFn AirTransportationDevice) (GroupFn TransportationDevice))
+(genls (GroupFn TransportationDevice-Vehicle) (GroupFn TransportationDevice))
+(genls (GroupFn LandTransportationVehicle) (GroupFn TransportationDevice-Vehicle))
+(genls (GroupFn TransportationDevice) (GroupFn PhysicalDevice))
+(genls UsedAutomobile Automobile)

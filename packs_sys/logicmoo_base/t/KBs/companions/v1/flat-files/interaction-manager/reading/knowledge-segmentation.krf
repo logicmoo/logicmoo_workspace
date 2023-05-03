@@ -1,0 +1,1049 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: knowledge-segmentation.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: November 26, 2013 01:36:47
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(isa rebuildSegmentation Predicate)
+(arity rebuildSegmentation 3)
+(arg1Isa rebuildSegmentation Microtheory) ;;; The base Mt
+(arg2Isa rebuildSegmentation Case) ;;; The caseSegmentedAroundFn case
+(arg3Isa rebuildSegmentation Thing) ;;; The experiment name.
+(comment rebuildSegmentation "(rebuildSegmentation ?baseMt ?case ?experiment-name)
+rebuilds in the KB a case from a stored segmentation.")
+
+
+(isa ReconstructedDRSCaseFn FunctionOrFunctionalPredicate)
+(arity ReconstructedDRSCaseFn 3)
+(arg1Isa ReconstructedDRSCaseFn Case)
+(arg2Isa ReconstructedDRSCaseFn Thing)
+(arg3Isa ReconstructedDRSCaseFn Case)
+(resultIsa Case)
+(comment ReconstructedDRSCaseFn "(ReconstructedDRSCaseFn ?old-name ?case-segmented-around-thing ?experiment-name)
+is a microtheory in a reconstructed segmentation.")
+
+
+
+
+(isa promoteCurrentInterpretationToKB ComplexActionPredicate)
+(arity promoteCurrentInterpretationToKB 1)
+(arg1Isa promoteCurrentInterpretationToKB Microtheory)
+(comment promoteCurrentInterpretationToKB "(promoteCurrentInterpretationToKB ?microtheory)
+ makes ?microtheory the root microtheory for the
+current discourse interpretation as it stores it there in the kb.")
+
+;;;(preconditionForMethod
+;;; (and
+;;;      ;;; Get the discourse id
+;;;      (wmOnly (currentDiscourseId ?discourse-id))
+;;;      ;;; Get the primary discourse interpretation
+;;;      (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id)
+;;;                (drsForDiscourse ?main-interpretation-drs)))
+;;;      ;;; Get all of the sub-discourses - there might be zero of these, which is 100% okay.
+;;;      (evaluate ?sub-drses
+;;;        (TheClosedRetrievalSetOf ?sub-drs
+;;;          (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id) 
+;;;                    (drsEmbeddedInDrs ?sub-drs ?some-sentence-drs)))))
+;;;      ;;; Get all of the resolutions
+;;;      (evaluate ?refs
+;;;        (TheClosedRetrievalSetOf 
+;;;            (ist-Information
+;;;                resolvedReferencesInReadingsMt
+;;;                (resolvedReferenceInReading ?referent ?reference ?kb-microtheory))
+;;;          (wmOnly
+;;;           (lookupOnly
+;;;            (ist-Information (DiscourseCaseFn ?discourse-id) 
+;;;                    (referent 
+;;;                     (ReferenceInSentenceFn ?reference ?any-sen) 
+;;;                     (ReferentInDrsFn ?referent ?discourse)))))))
+;;;      
+;;;   )
+;;;  (methodForAction
+;;;    (promoteCurrentInterpretationToKB ?kb-microtheory)
+;;;    (actionSequence
+;;;      (TheList
+;;;       (promoteWMMtToKBMt (DrsCaseFn ?main-interpretation-drs) ?kb-microtheory)
+;;;       (doForEach ?next-sub-drs ?sub-drses
+;;;                  (promoteWMMtToKBMt (DrsCaseFn ?next-sub-drs) (DrsCaseFn ?next-sub-drs)))
+;;;       (doForEach ?next-sub-drs ?sub-drses
+;;;                  (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt
+;;;                              (storedDrsHasSubDrs ?kb-microtheory (DrsCaseFn ?next-sub-drs)))))
+;;;       (doForEach ?next-ref ?refs
+;;;                  (doRecord ?next-ref))
+;;;       (doAgentPlan
+;;;        (actionSequence
+;;;         (dumpInterpretationToFlatFile ?main-interpretation-drs
+;;;                                       ?sub-drses ?reading-name ?kb-microtheory)))
+;;;       ))))
+
+
+
+
+(isa promoteWMMtToKBMt ComplexActionPredicate)
+(arity promoteWMMtToKBMt 2)
+(arg1Isa promoteWMMtToKBMt Microtheory)
+(arg2Isa promoteWMMtToKBMt Microtheory)
+(comment promoteWMMtToKBMt "(promoteWMMtToKBMt ?wm-microtheory ?kb-microtheory) 
+puts the things from ?wm-microtheory into ?kb-microtheory.")
+
+(isa KnowledgeSegmentationBookkeepingMt Microtheory)
+(comment KnowledgeSegmentationBookkeepingMt "KnowledgeSegmentationBookkeepingMt 
+stores information about relationships between different stored
+microtheories for knowledge segmentation.")
+
+(isa storedDrsHasSubDrs Predicate)
+(arity storedDrsHasSubDrs 2)
+(arg1Isa storedDrsHasSubDrs Microtheory)
+(arg2Isa storedDrsHasSubDrs Microtheory)
+(comment storedDrsHasSubDrs "(storedDrsHasSubDrs ?main-DRS ?sub-DRS) indicates 
+that ?sub-drs is a part of ?main-drs's interpretation.
+Note that for reasons dealing with how things are lifted to the discourse 
+interpretation, this is a different relationship than
+drsEmbeddedInDrs, which deals with sentence interpretations.")
+
+;;; This will now also remember the original DRS of the things being promoted.
+(preconditionForMethod
+ (evaluate ?facts-in-mt
+   (TheClosedRetrievalSetOf ?fact
+     ;;; We don't want implications in here.
+     (and
+          (wmOnly (ist-Information ?microtheory ?fact))
+          (noArgumentHasPredicate (visWrapper ?fact) <==)
+          )))
+  (methodForAction
+    (promoteWMMtToKBMt ?microtheory ?kb-mt)
+    (actionSequence
+     (TheList
+      (doForEach ?next-fact ?facts-in-mt
+                 (storeOriginalDRSInformation ?next-fact ?kb-mt))
+      (doRecordMembersInContext ?kb-mt ?facts-in-mt)
+      ))))
+
+(isa storeOriginalDRSInformation ComplexActionPredicate)
+(arity storeOriginalDRSInformation 2)
+(arg1Isa storeOriginalDRSInformation CycLSentence)
+(arg2Isa storeOriginalDRSInformation Microtheory)
+(comment storeOriginalDRSInformation "(storeOriginalDRSInformation ?fact ?kb-mt) 
+puts the information about the DRSes that facts
+originated in in (originalDRSInfoFn ?kb-mt).")
+
+
+(preconditionForMethod
+ (and (currentDiscourseId ?disc-id)
+      (ist-Information (DiscourseCaseFn ?disc-id)  (originDrsId ?fact ?original-drs)))
+  (methodForAction
+    (storeOriginalDRSInformation ?fact ?kb-mt)
+    (actionSequence
+     (TheList
+      (doRecord (ist-Information (originalDRSInfoFn ?kb-mt) 
+                  (originDrsId ?fact ?original-drs)))
+      (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt 
+                  (drsOriginMtOf ?kb-mt (originalDRSInfoFn ?kb-mt))))
+      (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt 
+                  (drsOriginMtOf ?kb-mt (originalDRSInfoFn ?kb-mt))))
+      ))))
+
+;;; Base case
+(preconditionForMethod
+ (and (currentDiscourseId ?disc-id)
+      (uninferredSentence (lookupOnly (ist-Information (DiscourseCaseFn ?disc-id)  
+ (originDrsId ?fact ?original-drs)))))
+ (methodForAction
+    (storeOriginalDRSInformation ?fact ?kb-mt)
+    (actionSequence
+     (TheList
+      ))))
+
+
+(arity SourceTextChapterParagraphFn 3)
+(isa SourceTextChapterParagraphFn FunctionOrFunctionalPredicate)
+(arg1Isa SourceTextChapterParagraphFn InformationBearingThing)
+(arg2Isa SourceTextChapterParagraphFn Number)
+(arg3Isa SourceTextChapterParagraphFn Number)
+(resultIsa SourceTextChapterParagraphFn String)
+(comment SourceTextChapterParagraphFn "(SourceTextChapterParagraphFn
+ ?source-text-name ?chapter-number ?paragraph-number)
+refers to a paragraph within a chapter in a source text. 
+If the source text has no chapters, ?chapter-number is just 1.
+Both ?chapter-number and ?paragraph-number start counting from 1 
+(to make it so that the chapter numbers align with how
+most actual books number their chapters.)")
+
+
+(isa segmentOn ComplexActionPredicate)
+(arity segmentOn 4)
+(arg1Isa segmentOn Thing) ;;; The entity
+(arg2Isa segmentOn CaseDepth) ;;; The depth
+(arg3Isa segmentOn Microtheory) ;;; The place we're pulling facts from.
+(arg4Isa segmentOn Thing)
+(comment segmentOn "(segmentOn ?seed ?max-depth ?fact-source-mt ?experiment-name) calls buildLocalCaseFromSeedEntity with
+default microtheory names.")
+
+(isa caseSegmentedAroundFn FunctionOrFunctionalPredicate)
+(arity caseSegmentedAroundFn 3)
+(arg1Isa caseSegmentedAroundFn Thing)
+(arg2Isa caseSegmentedAroundFn Microtheory)
+(arg3Isa caseSegmentedAroundFn Thing)
+(resultIsa caseSegmentedAroundFn Microtheory)
+(comment caseSegmentedAroundFn "(caseSegmentedAroundFn ?seed ?fact-source-mt ?experiment-name) is a segmentation case of things built around ?seed, drawn from ?fact-source-mt.")
+
+(isa metaInfoForMtFn FunctionOrFunctionalPredicate)
+(arity metaInfoForMtFn 1)
+(arg1Isa metaInfoForMtFn Microtheory)
+(resultIsa metaInfoForMtFn Microtheory)
+(comment metaInfoForMtFn "(metaInfoForMtFn ?case) is a microtheory containing meta-information about ?case.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (segmentOn ?seed ?max-depth ?fact-source-mt ?experiment-name)
+  (actionSequence
+   (TheList
+    (buildLocalCaseFromSeedEntity ?seed ?max-depth (caseSegmentedAroundFn ?seed ?fact-source-mt ?experiment-name)
+                                  (metaInfoForMtFn (caseSegmentedAroundFn ?seed ?fact-source-mt ?experiment-name)) 
+                                  ?fact-source-mt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       
+       (dumpSegmentationCaseToFlatFile (caseSegmentedAroundFn ?seed ?fact-source-mt ?experiment-name)))))))))
+
+
+(isa segmentationStored Predicate)
+(arity segmentationStored 1)
+(arg1Isa segmentationStored Microtheory)
+(comment segmentationStored "(segmentationStored ?case-name) stores an
+segmentation FROM THE KB into a flat file. (metaInfoForMtFn ?case-name)
+should be where the case's information is.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (segmentationStored ?case-name)))
+;;;      (outsourcedOnly (concatenatedList (TheList ?reading-name ".meld") ?file-name))
+ (methodForAction
+  (dumpSegmentationCaseToFlatFile ?case-name)
+  (actionSequence
+   (TheList
+    ;;; This needs to be a string that is ?reading-name.meld
+    ;;; We're trimming this, they're produced in too great a quantity for this to be practical.
+;;;    (doEmailIMLogToUser ?file-name "Reading of ~A" (?reading-name) 
+;;;                                                      "See attached message"
+;;;                                                      ())
+    (doAnnounce "~%dumpSegmentationCaseToFlatFile completed for ~A." (?case-name))))))
+
+(isa buildLocalCaseFromSeedEntity ComplexActionPredicate)
+(arity buildLocalCaseFromSeedEntity 5)
+(arg1Isa buildLocalCaseFromSeedEntity Thing) ;;; The entity
+(arg2Isa buildLocalCaseFromSeedEntity CaseDepth) ;;; The depth
+(arg3Isa buildLocalCaseFromSeedEntity Microtheory) ;;; The place to store the case.
+(arg4Isa buildLocalCaseFromSeedEntity Microtheory) ;;; The place to store meta-information about the case.
+(arg5Isa buildLocalCaseFromSeedEntity Microtheory) ;;; The place we're pulling facts from
+(comment buildLocalCaseFromSeedEntity "(buildLocalCaseFromSeedEntity ?seed ?max-depth ?case-name ?case-meta-info-mt ?fact-source-mt)")
+
+(isa dumpSegmentationCaseToFlatFile ComplexActionPredicate)
+(arity dumpSegmentationCaseToFlatFile 5)
+(arg1Isa dumpSegmentationCaseToFlatFile Thing) ;;; The entity
+(arg2Isa dumpSegmentationCaseToFlatFile CaseDepth) ;;; The depth
+(arg3Isa dumpSegmentationCaseToFlatFile Microtheory) ;;; The place to store the case.
+(arg4Isa dumpSegmentationCaseToFlatFile Microtheory) ;;; The place to store meta-information about the case.
+(arg5Isa dumpSegmentationCaseToFlatFile Microtheory) ;;; The place we're pulling facts from
+(comment dumpSegmentationCaseToFlatFile "(dumpSegmentationCaseToFlatFile ?seed ?max-depth ?case-name ?case-meta-info-mt ?fact-source-mt)")
+
+(isa extendLocalCaseFromEntity ComplexActionPredicate)
+(arity extendLocalCaseFromEntity 7)
+(arg1Isa extendLocalCaseFromEntity Thing) ;;; The seed
+(arg2Isa extendLocalCaseFromEntity Thing) ;;; The entity to extend from
+(arg3Isa extendLocalCaseFromEntity Thing) ;;; The host fact
+(arg4Isa extendLocalCaseFromEntity CaseDepthProgress) ;;; The current/max depth
+(arg5Isa extendLocalCaseFromEntity Microtheory) ;;; The place to store the case.
+(arg6Isa extendLocalCaseFromEntity Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa extendLocalCaseFromEntity Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseFromEntity "(extendLocalCaseFromEntity ?seed ?entity
+?host-fact ?depth-progress ?case-name ?case-meta-info-mt ?fact-source-mt)")
+
+(isa factsContextualizedInMtAboutConcepts Predicate)
+(arity factsContextualizedInMtAboutConcepts 3)
+(arg1Isa factsContextualizedInMtAboutConcepts List)
+(arg2Isa factsContextualizedInMtAboutConcepts List)
+(arg3Isa factsContextualizedInMtAboutConcepts Microtheory)
+(comment factsContextualizedInMtAboutConcepts "In (factsContextualizedInMtAboutConcepts ?concepts ?facts-with-context ?mt), list of facts ?facts-with-context is all the facts about the concepts in the list of concepts 
+?concepts in the microtheory ?mt, contextualized in the microtheory that they're actually directly asserted in even if ?mt is a spindle.")
+
+(isa validSegmentationEntity Predicate)
+(arity validSegmentationEntity 1)
+(arg1Isa validSegmentationEntity Thing)
+(comment validSegmentationEntity "validSegmentationEntity is a check to make sure that language bookkeeping
+information is not treated as fact knowledge for segmentation.")
+
+(<== (validSegmentationEntity ?x)
+     (uninferredSentence (lookupOnly (ist-Information UniversalVocabularyMt (isa ?x LexicalWord)))))
+
+;;; This does not need to change to be compliant with contextualization.
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (buildLocalCaseFromSeedEntity ?seed ?max-depth ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (extendLocalCaseFromEntity ?seed ?seed ANY-FACT (caseDepthProgressFn 0 ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt))))))))
+
+;;; This is a base case - we're at the max depth, but we haven't seen the entity before.
+;;; This does not need to change to be compliant with contextualization.
+;;; This does need to check (or something that calls this needs to check) that the entity is an actual entity.
+(preconditionForMethod
+ (and 
+      (honorTimestamps (equals ?current-depth-no ?max-depth))
+      (honorTimestamps (uninferredSentence (ist-Information ?case-meta-info-mt
+                                             (elementOfConstructedCase ?entity ?case-name (caseDepthFn ?any-depth)))))
+      (validSegmentationEntity ?entity)
+      )
+ (methodForAction
+  (extendLocalCaseFromEntity ?seed ?entity ?host-fact 
+                             (caseDepthProgressFn ?current-depth-no ?max-depth)
+                             ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?case-meta-info-mt (elementOfConstructedCase ?entity ?case-name (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-meta-info-mt (elementAddedElement ?host-fact ?entity (caseDepthFn ?current-depth-no))))
+    ;;; isa facts are free
+    (gatherForLocalCaseIsaFactsForEntity ?seed ?entity (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                         ?case-name ?case-meta-info-mt ?fact-source-mt)
+    (doAnnounce "Wrapping up segmentation...")
+    ))))
+
+;;; This is a base case - we're at the max depth, and we have seen the entity before.
+;;; This does not need to change to be compliant with contextualization.
+(preconditionForMethod
+ (and (honorTimestamps (equals ?current-depth-no ?max-depth))
+      (honorTimestamps (ist-Information ?case-meta-info-mt 
+                         (elementOfConstructedCase ?entity ?case-name (caseDepthFn ?any-depth)))))
+ (methodForAction
+  (extendLocalCaseFromEntity ?seed ?entity ?host-fact 
+                             (caseDepthProgressFn ?current-depth-no ?max-depth) 
+                             ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doAnnounce "Wrapping up segmentation...")
+    ))))
+
+
+(preconditionForMethod
+ (and 
+      
+      (uninferredSentence (validSegmentationEntity ?entity))
+      )
+ (methodForAction
+  (extendLocalCaseFromEntity ?seed ?entity ?host-fact 
+                             (caseDepthProgressFn ?current-depth-no ?max-depth)
+                             ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList    ))))
+
+;;; Here we aren't at the max depth, and we haven't seen the entity before
+;;; This does not need to change to be compliant with contextualization.
+(preconditionForMethod
+ (and (different ?current-depth-no ?max-depth)
+      (evaluate ?new-depth-no (PlusFn 1 ?current-depth-no))
+      (honorTimestamps (uninferredSentence (ist-Information ?case-meta-info-mt (elementOfConstructedCase ?entity ?case-name (caseDepthFn ?any-depth)))))
+      (validSegmentationEntity ?entity)
+      )
+ (methodForAction
+  (extendLocalCaseFromEntity ?seed ?entity ?host-fact (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?case-meta-info-mt (elementOfConstructedCase ?entity ?case-name (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-meta-info-mt (elementAddedElement ?host-fact ?entity (caseDepthFn ?current-depth-no))))
+    (gatherForLocalCaseIsaFactsForEntity ?seed ?entity (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt)
+    ;;; This 'costs' one depth. Should this just be horn clauses?
+    (extendLocalCaseToFactsThatMentionEntity ?seed ?entity ?host-fact (caseDepthProgressFn ?new-depth-no ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt)
+    ))))
+
+;;; Here we aren't at the max depth, but we have seen the entity before
+;;; This does not need to change to be compliant with contextualization.
+(preconditionForMethod
+ (and (different ?current-depth-no ?max-depth)
+      (honorTimestamps (ist-Information ?case-meta-info-mt (elementOfConstructedCase ?entity ?case-name (caseDepthFn ?any-depth)))))
+ (methodForAction
+  (extendLocalCaseFromEntity ?seed ?entity ?host-fact (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    ))))
+
+
+(isa extendLocalCaseToFactsThatMentionEntity ComplexActionPredicate)
+(arity extendLocalCaseToFactsThatMentionEntity 7)
+(arg1Isa extendLocalCaseToFactsThatMentionEntity Thing) ;;; The seed
+(arg2Isa extendLocalCaseToFactsThatMentionEntity Thing) ;;; The entity to extend from
+(arg3Isa extendLocalCaseToFactsThatMentionEntity Thing) ;;; The host fact.
+(arg4Isa extendLocalCaseToFactsThatMentionEntity CaseDepthProgress) ;;; The current depth
+(arg5Isa extendLocalCaseToFactsThatMentionEntity Microtheory) ;;; The place to store the case.
+(arg6Isa extendLocalCaseToFactsThatMentionEntity Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa extendLocalCaseToFactsThatMentionEntity Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseToFactsThatMentionEntity "(extendLocalCaseToFactsThatMentionEntity ?seed ?entity 
+?host-fact ?case-depth-progress ?case-name ?case-meta-info-mt ?fact-source-mt)")
+
+;;; This gets the facts that mention ?entity in ?fact-source-mt
+;;; Here's the issue - we want these to be contextualized in the DRS that
+;;; they actually come from.
+;;; That means that factsInMtAboutConcepts needs to change or be something else. Where is that defined?
+;;; This can probably now use factsContextualizedInMtAboutConcepts. Is that all we need?
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ 
+ (and (unifies ANY-FACT ?host-fact)
+      (factsContextualizedInMtAboutConcepts (TheList ?entity) ?facts-found ?fact-source-mt))
+ ;;; Experimentally use this:
+ 
+
+ (methodForAction
+  (extendLocalCaseToFactsThatMentionEntity ?seed ?entity ?host-fact 
+                                           (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                           ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?nonisa-fact-to-stash ?facts-found
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (recordNonIsaFact ?seed ?nonisa-fact-to-stash ?entity
+                                    (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                    ?case-name ?case-meta-info-mt ?fact-source-mt))))
+               )
+    ))))
+
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ ;;; (factsContextualizedInMtAboutConcepts (TheList ?entity) ?facts-found ?fact-source-mt)
+ ;;; Experimentally use this:
+ (and (different ANY-FACT ?host-fact)
+      (inParagraphFactsMentioningEntities ?host-fact (TheList ?entity) ?fact-source-mt ?facts-found))
+
+ (methodForAction
+  (extendLocalCaseToFactsThatMentionEntity ?seed ?entity ?host-fact 
+                                           (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                           ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?nonisa-fact-to-stash ?facts-found
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (recordNonIsaFact ?seed ?nonisa-fact-to-stash ?entity
+                                    (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                    ?case-name ?case-meta-info-mt ?fact-source-mt))))
+               )
+    ))))
+
+(isa recordNonIsaFact ComplexActionPredicate)
+(arity recordNonIsaFact 7)
+(arg1Isa recordNonIsaFact Thing) ;;; The seed
+(arg2Isa recordNonIsaFact CycLSentence-Assertible) ;;; The entity to extend from
+(arg3Isa recordNonIsaFact Thing) ;;; The immediate parent of the addition.
+(arg4Isa recordNonIsaFact CaseDepthProgress) ;;; The current depth
+(arg5Isa recordNonIsaFact Microtheory) ;;; The place to store the case.
+(arg6Isa recordNonIsaFact Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa recordNonIsaFact Microtheory) ;;; The place we're pulling facts from
+(comment recordNonIsaFact "(recordNonIsaFact ?seed ?fact ?immediate-parent
+ ?depth-progress ?case-name ?case-meta-info-mt ?fact-source-mt) records
+that the fact belongs in ?case-name if it isn't already there and isn't an isa fact.")
+
+
+;;; This actually records the fact. Right now it's stored in its contextualized format.
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (and (uninferredSentence (unifies ?fact (ist-Information ?mt (isa ?x ?y))))
+      (honorTimestamps (uninferredSentence (ist-Information ?case-meta-info-mt (factInConstructedCase ?fact ?case-name (caseDepthFn ?any-depth)))))
+      )
+ (methodForAction
+  (recordNonIsaFact ?seed ?fact ?immediate-parent (caseDepthProgressFn ?current-depth-no ?max-depth)
+                    ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?case-meta-info-mt (factInConstructedCase ?fact ?case-name (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-meta-info-mt (elementAddedElement ?immediate-parent ?fact (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-name (StoredFactFn ?fact)))
+    (extendLocalCaseToEntitiesInFact ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                     ?case-name ?case-meta-info-mt ?fact-source-mt)
+    ;;; Let's get these working one at a time.
+    ;;; checking to see if this works/what it does.
+    (extendLocalCaseToDRSesFactAppearsIn ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                         ?case-name ?case-meta-info-mt ?fact-source-mt)
+    (extendLocalCaseToDRSesMentionedInFact ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                           ?case-name ?case-meta-info-mt ?fact-source-mt)
+    ))))
+
+;;; Don't record if you get one of these cases
+;;; This needs to check if it's the contextualized
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (unifies ?fact (ist-Information ?mt (isa ?x ?y)))
+ (methodForAction
+  (recordNonIsaFact ?seed ?fact ?immediate-parent
+                    (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name
+                    ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    
+    ))))
+
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (ist-Information ?case-meta-info-mt (factInConstructedCase ?fact ?case-name (caseDepthFn ?any-depth)))
+ (methodForAction
+  (recordNonIsaFact ?seed ?fact ?immediate-parent
+                    (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name 
+                    ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    
+    ))))
+
+(isa gatherForLocalCaseIsaFactsForEntity ComplexActionPredicate)
+(arity gatherForLocalCaseIsaFactsForEntity 6)
+(arg1Isa gatherForLocalCaseIsaFactsForEntity Thing) ;;; The seed
+(arg2Isa gatherForLocalCaseIsaFactsForEntity Thing) ;;; The entity to extend from
+(arg3Isa gatherForLocalCaseIsaFactsForEntity CaseDepthProgress) ;;; The current depth
+(arg4Isa gatherForLocalCaseIsaFactsForEntity Microtheory) ;;; The place to store the case.
+(arg5Isa gatherForLocalCaseIsaFactsForEntity Microtheory) ;;; The place to store meta-information about the case.
+(arg6Isa gatherForLocalCaseIsaFactsForEntity Microtheory) ;;; The place we're pulling facts from
+(comment gatherForLocalCaseIsaFactsForEntity "(gatherForLocalCaseIsaFactsForEntity ?seed ?entity ?depth-progress
+?case-name ?case-meta-info-mt ?fact-source-mt) gets the isa
+facts for the entity. This has no depth cost.")
+
+
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (and 
+;;;      (different (caseDepthFn ?current-depth-no) ?max-depth)
+;;;      (evaluate ?new-depth-no (PlusFn 1 ?current-depth-no))
+      (factsContextualizedInMtAboutConcepts (TheList ?entity) ?facts-found ?fact-source-mt))
+ (methodForAction
+  (gatherForLocalCaseIsaFactsForEntity ?seed ?entity (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                       ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?isa-fact-to-stash ?facts-found
+               ;;;(doRecord (ist-Information ?case-meta-info-mt (factInConstructedCase ?isa-fact-to-stash ?case-name 
+               ;;; (caseDepthFn ?current-depth-no))))
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (recordIsaFact ?seed ?isa-fact-to-stash ?entity
+                                 (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                 ?case-name ?case-meta-info-mt ?fact-source-mt))))
+               )
+    ))))
+
+
+(isa recordIsaFact ComplexActionPredicate)
+(arity recordIsaFact 7)
+(arg1Isa recordIsaFact Thing) ;;; The seed
+(arg2Isa recordIsaFact CycLSentence-Assertible) ;;; The entity to extend from
+(arg3Isa recordIsaFact Thing) ;;; The immediate parent
+(arg4Isa recordIsaFact CaseDepthProgress) ;;; The current depth
+(arg5Isa recordIsaFact Microtheory) ;;; The place to store the case.
+(arg6Isa recordIsaFact Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa recordIsaFact Microtheory) ;;; The place we're pulling facts from
+(comment recordIsaFact "(recordIsaFact ?seed ?fact ?immediate-parent
+?depth-progress ?case-name ?case-meta-info-mt ?fact-source-mt) records
+that the fact belongs in ?case-name if it isn't already there and is an isa fact.")
+
+;;; This actually records the fact. Right now it's stored in its contextualized format.
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and nonisa facts.
+ (and 
+      (different ?current-depth-no ?max-depth)
+      (evaluate ?new-depth-no (PlusFn 1 ?current-depth-no))
+      (unifies ?fact (ist-Information ?mt (isa ?entity ?collection)))
+      (honorTimestamps (uninferredSentence (ist-Information ?case-meta-info-mt (factInConstructedCase ?fact ?case-name (caseDepthFn ?any-depth)))))
+      )
+ (methodForAction
+  (recordIsaFact ?seed ?fact ?immediate-parent 
+                 (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name 
+                 ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?case-meta-info-mt (factInConstructedCase ?fact ?case-name (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-meta-info-mt (elementAddedElement ?immediate-parent ?fact (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-name (StoredFactFn ?fact)))
+    ;;; This is sending ?entity as an open variable. We don't wand that.
+    (recordCollectionFacts ?seed ?collection ?entity (caseDepthProgressFn ?current-depth-no ?max-depth)
+                           ?case-name ?case-meta-info-mt ?fact-source-mt)                
+    ;;; There's depth left, get other entities that are members of that collection. This costs one depth.
+    ;;; (extendLocalCaseToEntitiesInCollection ?seed ?collection ?fact 
+    ;;;    (caseDepthProgressFn ?new-depth-no ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt) 
+    (extendLocalCaseToDRSesFactAppearsIn ?seed ?fact 
+                                         (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                         ?case-name ?case-meta-info-mt ?fact-source-mt)
+    ))))
+
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and nonisa facts.
+ (and 
+      (equals ?current-depth-no ?max-depth)
+      (unifies ?fact (ist-Information ?mt (isa ?entity ?collection)))
+      (honorTimestamps (uninferredSentence (ist-Information ?case-meta-info-mt
+                                             (factInConstructedCase ?fact ?case-name (caseDepthFn ?any-depth)))))
+      )
+ (methodForAction
+  (recordIsaFact ?seed ?fact ?immediate-parent 
+                 (caseDepthProgressFn ?current-depth-no ?max-depth)
+                 ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?case-meta-info-mt (factInConstructedCase ?fact ?case-name (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-meta-info-mt (elementAddedElement ?immediate-parent ?fact (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-name (StoredFactFn ?fact)))
+    ;;; This is sending ?entity as an open variable. We don't wand that.
+    (recordCollectionFacts ?seed ?collection ?entity (caseDepthProgressFn ?current-depth-no ?max-depth)
+                           ?case-name ?case-meta-info-mt ?fact-source-mt)   
+    (extendLocalCaseToDRSesFactAppearsIn ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                         ?case-name ?case-meta-info-mt ?fact-source-mt)
+    ))))
+
+;;; Don't record if you get one of these cases
+;;; This needs to check if it's the contextualized
+(preconditionForMethod
+ ;;; We want to filter out nonisa facts.
+ (uninferredSentence (unifies ?fact (ist-Information ?mt (isa ?x ?y))))
+ (methodForAction
+  (recordIsaFact ?seed ?fact ?immediate-parent
+                 (caseDepthProgressFn ?current-depth-no ?max-depth)
+                 ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    
+    ))))
+
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there.
+ (ist-Information ?case-meta-info-mt (factInConstructedCase ?fact ?case-name (caseDepthFn ?any-depth)))
+ (methodForAction
+  (recordIsaFact ?seed ?fact ?immediate-parent
+                 (caseDepthProgressFn ?current-depth-no ?max-depth)
+                 ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    
+    ))))
+
+(isa recordCollectionFacts ComplexActionPredicate)
+(arity recordCollectionFacts 7)
+(arg1Isa recordCollectionFacts Thing) ;;; The seed
+(arg2Isa recordCollectionFacts Collection) ;;; The collection
+(arg3Isa recordCollectionFacts Thing) ;;; The entity in question
+(arg4Isa recordCollectionFacts CaseDepthProgress) ;;; The current depth
+(arg5Isa recordCollectionFacts Microtheory) ;;; The place to store the case.
+(arg6Isa recordCollectionFacts Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa recordCollectionFacts Microtheory) ;;; The place we're pulling facts from
+(comment recordCollectionFacts "(recordCollectionFacts ?seed ?collection ?entity ?depth-progress
+ ?case-name ?case-meta-info-mt ?fact-source-mt) records
+that the fact belongs in ?case-name if it isn't already there and isn't an isa fact.")
+
+;;; This needs to be context-sensitive. What calls this?
+(preconditionForMethod
+ (and
+      (honorTimestamps (uninferredSentence (ist-Information ?case-meta-info-mt (collectionInConstructedCase ?collection ?case-name ?any-depth)))))
+ (methodForAction
+  (recordCollectionFacts ?seed ?collection ?entity (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+;;;    (doRecord (ist-Information ?case-meta-info-mt (factInConstructedCase (isa ?entity ?collection)  ?case-name (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-name (StoredFactFn (isa ?entity ?collection))))
+    (doRecord (ist-Information ?case-meta-info-mt (elementAddedElement ?entity ?collection (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-meta-info-mt (collectionInConstructedCase ?collection ?case-name (caseDepthFn ?current-depth-no))))
+    ))))
+
+(preconditionForMethod
+ (and
+      (honorTimestamps (ist-Information ?case-meta-info-mt (collectionInConstructedCase ?collection ?case-name ?any-depth))))
+ (methodForAction
+  (recordCollectionFacts ?seed ?collection ?entity (caseDepthProgressFn ?current-depth-no ?max-depth) ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    ))))
+
+(isa extendLocalCaseToEntitiesInCollection ComplexActionPredicate)
+(arity extendLocalCaseToEntitiesInCollection 7)
+(arg1Isa extendLocalCaseToEntitiesInCollection Thing) ;;; The seed
+(arg2Isa extendLocalCaseToEntitiesInCollection Collection) ;;; The collection to extend from
+(arg3Isa extendLocalCaseToEntitiesInCollection Thing)
+(arg4Isa extendLocalCaseToEntitiesInCollection CaseDepthProgress) ;;; The current depth
+(arg5Isa extendLocalCaseToEntitiesInCollection Microtheory) ;;; The place to store the case.
+(arg6Isa extendLocalCaseToEntitiesInCollection Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa extendLocalCaseToEntitiesInCollection Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseToEntitiesInCollection "(extendLocalCaseToEntitiesInCollection ?seed ?collection ?fact 
+?depth-progress ?case-name ?case-meta-info-mt ?fact-source-mt)
+adds entities in the collection to the case. This is experimental, since it may be a bad idea.")
+
+
+;;;(inParagraphEntitiesInCollection ?fact ?collection ?fact-source-mt ?list-of-entities)
+(isa inParagraphEntitiesInCollection Predicate)
+(arity inParagraphEntitiesInCollection 4)
+(arg1Isa inParagraphEntitiesInCollection Thing)
+(arg2Isa inParagraphEntitiesInCollection Collection)
+(arg3Isa inParagraphEntitiesInCollection Microtheory)
+(arg4Isa inParagraphEntitiesInCollection List)
+(comment inParagraphEntitiesInCollection
+  "(inParagraphEntitiesInCollection ?fact ?collection ?fact-source-mt ?list-of-entities) is
+meant to be used as an outsourced predicate. It gets the entities that are members of the
+collection ?collection that are in the paragraph(s) that generated ?fact in ?fact-source-mt.")
+
+(isa inParagraphFactsMentioningEntities Predicate)
+(arity inParagraphFactsMentioningEntities 4)
+(arg1Isa inParagraphFactsMentioningEntities Thing)
+(arg2Isa inParagraphFactsMentioningEntities List)
+(arg3Isa inParagraphFactsMentioningEntities Microtheory)
+(arg4Isa inParagraphFactsMentioningEntities List)
+(comment inParagraphFactsMentioningEntities
+  "(inParagraphFactsMentioningEntities ?host-fact ?entity-list ?fact-source-mt ?list-of-facts) is
+meant to be used as an outsourced predicate. It gets the entities that are members of the
+collection ?collection that are in the paragraph(s) that generated ?host-fact in ?fact-source-mt.")
+     
+;;; This needs to stop considering DRS cases to be entities. Done - they don't have isas.
+;;; How is this leaking?
+(preconditionForMethod
+ (and 
+      (inParagraphEntitiesInCollection ?fact ?collection ?fact-source-mt ?list-of-entities)
+;;;      (evaluate ?list-of-entities
+;;;        (TheClosedRetrievalSetOf ?entity
+;;;          (lookupOnly (nonTransitiveInference (ist-Information ?fact-source-mt (isa ?entity ?collection))))))
+                                       )
+ (methodForAction
+  (extendLocalCaseToEntitiesInCollection ?seed ?collection ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                         ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?next-entity ?list-of-entities
+               (extendLocalCaseFromEntity ?seed ?next-entity ANY-FACT (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                          ?case-name ?case-meta-info-mt ?fact-source-mt))))))
+
+(isa extendLocalCaseToEntitiesInFact ComplexActionPredicate)
+(arity extendLocalCaseToEntitiesInFact 6)
+(arg1Isa extendLocalCaseToEntitiesInFact Thing) ;;; The seed
+(arg2Isa extendLocalCaseToEntitiesInFact CycLSentence-Assertible) ;;; The fact to extend from
+(arg3Isa extendLocalCaseToEntitiesInFact CaseDepthProgress) ;;; The current depth
+(arg4Isa extendLocalCaseToEntitiesInFact Microtheory) ;;; The place to store the case.
+(arg5Isa extendLocalCaseToEntitiesInFact Microtheory) ;;; The place to store meta-information about the case.
+(arg6Isa extendLocalCaseToEntitiesInFact Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseToEntitiesInFact "(extendLocalCaseToEntitiesInFact ?seed ?fact ?depth-progress ?case-name ?case-meta-info-mt ?fact-source-mt)
+adds entities in the collection to the case. This is experimental, since it may be a bad idea.")
+
+
+;;; This needs to be able to identify entities in a fact.
+;;; Things in the fact that... is there just an entity? Yes, but it does nothing.
+;;; (kb::entity-exists-in-kb? 'cat123) is what we want.
+;;; This needs to stop considering DRS cases to be entities - done.
+(preconditionForMethod
+ (and (nonDRSEntitiesInFact ?fact ?entities-found))
+ (methodForAction
+  (extendLocalCaseToEntitiesInFact ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                   ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?next-entity ?entities-found
+               (extendLocalCaseFromEntity ?seed ?next-entity ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                          ?case-name ?case-meta-info-mt ?fact-source-mt))))))
+
+
+(isa entitiesInFact Predicate)
+(arity entitiesInFact 2)
+(arg1Isa entitiesInFact CycLSentence-Assertible)
+(arg2Isa entitiesInFact Set)
+(comment "Intended to be used as an outsourced predicate with the second argument open, 
+(entitiesInFact ?fact ?entities) returns a list of the entities mentioned in a fact.
+The function it uses is entity-exists-in-kb?, with collections, functions, and preds
+filtered out.")
+
+(isa nonDRSEntitiesInFact Predicate)
+(arity nonDRSEntitiesInFact 2)
+(arg1Isa nonDRSEntitiesInFact CycLSentence-Assertible)
+(arg2Isa nonDRSEntitiesInFact Set)
+(comment "Intended to be used as an outsourced predicate with the second argument open, 
+(nonDRSEntitiesInFact ?fact ?entities) returns a list of the entities mentioned in a fact.
+The function it uses is entity-exists-in-kb?, with collections, functions, DRSes and preds
+filtered out.")
+
+(isa DRSEntitiesInFact Predicate)
+(arity DRSEntitiesInFact 2)
+(arg1Isa DRSEntitiesInFact CycLSentence-Assertible)
+(arg2Isa DRSEntitiesInFact Set)
+(comment "Intended to be used as an outsourced predicate with the second argument open, 
+(DRSEntitiesInFact ?fact ?entities) returns a list of the entities mentioned in a fact.
+The function it uses is entity-exists-in-kb?, with nonDRSes
+filtered out.")
+
+(isa extendLocalCaseToDRSesMentionedInFact ComplexActionPredicate)
+(arity extendLocalCaseToDRSesMentionedInFact 6)
+(arg1Isa extendLocalCaseToDRSesMentionedInFact Thing) ;;; The seed
+(arg2Isa extendLocalCaseToDRSesMentionedInFact CycLSentence-Assertible) ;;; The fact to extend from
+(arg3Isa extendLocalCaseToDRSesMentionedInFact CaseDepthProgress) ;;; The current depth
+(arg5Isa extendLocalCaseToDRSesMentionedInFact Microtheory) ;;; The place to store the case.
+(arg6Isa extendLocalCaseToDRSesMentionedInFact Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa extendLocalCaseToDRSesMentionedInFact Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseToDRSesMentionedInFact "(extendLocalCaseToDRSesMentionedInFact ?seed ?fact ?depth-progress 
+ ?case-name ?case-meta-info-mt ?fact-source-mt) adds DRSes a fact mentions to the case.
+ This is experimental, since it may be a bad idea.")
+
+
+;;; This identifies entities in a fact.
+(preconditionForMethod
+ (and (DRSEntitiesInFact ?fact ?DRSes-found))
+ (methodForAction
+  (extendLocalCaseToDRSesMentionedInFact ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                         ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?next-DRS ?DRSes-found
+               (extendLocalCaseFromDRS ?seed (DrsCaseFn ?next-DRS) ?fact
+                                       (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                       ?case-name ?case-meta-info-mt ?fact-source-mt))))))
+
+(preconditionForMethod
+ (uninferredSentence (DRSEntitiesInFact ?fact ?DRSes-found))
+ (methodForAction
+  (extendLocalCaseToDRSesMentionedInFact ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                         ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    ))))
+
+(isa extendLocalCaseToDRSesFactAppearsIn ComplexActionPredicate)
+(arity extendLocalCaseToDRSesFactAppearsIn 6)
+(arg1Isa extendLocalCaseToDRSesFactAppearsIn Thing) ;;; The seed
+(arg2Isa extendLocalCaseToDRSesFactAppearsIn CycLSentence-Assertible) ;;; The fact to extend from
+(arg3Isa extendLocalCaseToDRSesFactAppearsIn CaseDepthProgress) ;;; The current depth
+(arg4Isa extendLocalCaseToDRSesFactAppearsIn Microtheory) ;;; The place to store the case.
+(arg5Isa extendLocalCaseToDRSesFactAppearsIn Microtheory) ;;; The place to store meta-information about the case.
+(arg6Isa extendLocalCaseToDRSesFactAppearsIn Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseToDRSesFactAppearsIn "(extendLocalCaseToDRSesFactAppearsIn ?seed ?fact ?depth-progress 
+?case-name ?case-meta-info-mt ?fact-source-mt) adds DRSes a fact appears in to the case. They still
+need to be accessible. We don't just add random DRSes.")
+
+(isa DRSesContainingFactInSpindle Predicate)
+(arity DRSesContainingFactInSpindle 3)
+(arg1Isa DRSesContainingFactInSpindle CycLSentence-Assertible) ;;; The fact to extend from
+(arg2Isa DRSesContainingFactInSpindle Microtheory) ;;; The spindle
+(arg3Isa DRSesContainingFactInSpindle List) ;;; The DRSes
+(comment DRSesContainingFactInSpindle "(DRSesContainingFactInSpindle
+?fact ?fact-source-mt ?DRSes-found) finds DRSes a fact appears in that are part of the spindle.")
+
+
+;;; This identifies DRSes that a particular fact is true in. That will generally only
+;;; be one DRS, but it might be more, especially for isa facts.
+(preconditionForMethod
+ (and 
+      (unifies ?fact (ist-Information ?next-drs ?deconned-fact))
+      (ist-Information KnowledgeSegmentationBookkeepingMt (storedDrsHasSubDrs ?top-level-DRS ?next-drs))
+      )
+ (methodForAction
+  (extendLocalCaseToDRSesFactAppearsIn ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                       ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (extendLocalCaseFromDRS ?seed ?next-drs ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                            ?case-name ?case-meta-info-mt ?fact-source-mt)))))
+
+(preconditionForMethod
+
+ (and 
+      ;;; This might be unnecessary, with things contextualized. (it is)
+;;;      (DRSesContainingFactInSpindle ?fact ?fact-source-mt ?DRSes-found )
+      (unifies ?fact (ist-Information ?next-drs ?deconned-fact))
+      (uninferredSentence (ist-Information KnowledgeSegmentationBookkeepingMt (storedDrsHasSubDrs ?top-level-DRS ?next-drs)))
+      )
+ (methodForAction
+  (extendLocalCaseToDRSesFactAppearsIn ?seed ?fact (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                       ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+               ))))
+
+(isa extendLocalCaseFromDRS ComplexActionPredicate)
+(arity extendLocalCaseFromDRS 7)
+(arg1Isa extendLocalCaseFromDRS Thing) ;;; The seed
+(arg2Isa extendLocalCaseFromDRS Microtheory) ;;; The DRS to extend from
+(arg3Isa extendLocalCaseFromDRS Thing) ;;; The immediate parent
+(arg4Isa extendLocalCaseFromDRS CaseDepthProgres) ;;; The current depth
+(arg5Isa extendLocalCaseFromDRS Microtheory) ;;; The place to store the case.
+(arg6Isa extendLocalCaseFromDRS Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa extendLocalCaseFromDRS Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseFromDRS "(extendLocalCaseFromDRS ?seed ?drs
+?immediate-parent ?depth-progress 
+ ?case-name ?case-meta-info-mt ?fact-source-mt)" extends the local case from the
+  drs ?drs.)
+
+;;; This needs to record the drsInConstructedCase statement, and also fire off relevant subsequent plans.
+;;; For now, let's just make sure this actually works, though.
+(preconditionForMethod
+ (and (honorTimestamps (uninferredSentence (ist-Information ?case-meta-info-mt (drsInConstructedCase ?drs ?case-name ?any-depth)))))
+ (methodForAction
+  (extendLocalCaseFromDRS ?seed ?drs ?immediate-parent (caseDepthProgressFn ?current-depth-no ?max-depth)
+                          ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?case-meta-info-mt (drsInConstructedCase ?drs ?case-name (caseDepthFn ?current-depth-no))))
+    (doRecord (ist-Information ?case-meta-info-mt (elementAddedElement ?immediate-parent ?drs (caseDepthFn ?current-depth-no))))
+    (extendLocalCaseToFactsInsideDRS ?seed ?drs (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                     ?case-name ?case-meta-info-mt ?fact-source-mt)
+    (extendLocalCaseToFactsThatMentionDRS ?seed ?drs (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                          ?case-name ?case-meta-info-mt ?fact-source-mt)
+    ))))
+
+
+
+
+;;; This is the already-in-there case.
+(preconditionForMethod
+ (and (honorTimestamps (ist-Information ?case-meta-info-mt (drsInConstructedCase ?drs ?case-name ?any-depth))))
+ (methodForAction
+  (extendLocalCaseFromDRS ?seed ?drs ?immediate-parent (caseDepthProgressFn ?current-depth-no ?max-depth)
+                          ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    ))))
+
+;;; addFactsWithinDRS needs to find all of the facts that are in the DRS and then add them.
+
+(isa extendLocalCaseToFactsThatMentionDRS ComplexActionPredicate)
+(arity extendLocalCaseToFactsThatMentionDRS 6)
+(arg1Isa extendLocalCaseToFactsThatMentionDRS Thing) ;;; The seed
+(arg2Isa extendLocalCaseToFactsThatMentionDRS Microtheory) ;;; The collection to extend from
+(arg3Isa extendLocalCaseToFactsThatMentionDRS CaseDepthProgress) ;;; The current depth
+(arg5Isa extendLocalCaseToFactsThatMentionDRS Microtheory) ;;; The place to store the case.
+(arg6Isa extendLocalCaseToFactsThatMentionDRS Microtheory) ;;; The place to store meta-information about the case.
+(arg7Isa extendLocalCaseToFactsThatMentionDRS Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseToFactsThatMentionDRS "(extendLocalCaseToFactsThatMentionDRS ?seed ?DRS ?depth-progress
+ ?case-name ?case-meta-info-mt ?fact-source-mt)
+adds facts that mention the DRS to the case.")
+
+;;; addFactsMentioningDRS needs to find all of the facts that mention the DRS and then add them.
+;;; It will work just like the entity version.
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (and (unifies ?drs (DrsCaseFn ?drs-id))
+      (factsContextualizedInMtAboutConcepts (TheList ?drs-id) ?facts-found ?fact-source-mt))
+ (methodForAction
+  (extendLocalCaseToFactsThatMentionDRS ?seed ?drs (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                        ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?nonisa-fact-to-stash ?facts-found
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (recordNonIsaFact ?seed ?nonisa-fact-to-stash ?drs
+                                    (caseDepthProgressFn ?current-depth-no ?max-depth) 
+                                    ?case-name ?case-meta-info-mt ?fact-source-mt)))))))))
+
+
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (and (uninferredSentence (unifies ?drs (DrsCaseFn ?drs-id))))
+ (methodForAction
+  (extendLocalCaseToFactsThatMentionDRS ?seed ?drs (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                        ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    ))))
+
+
+(isa extendLocalCaseToFactsInsideDRS ComplexActionPredicate)
+(arity extendLocalCaseToFactsInsideDRS 6)
+(arg1Isa extendLocalCaseToFactsInsideDRS Thing) ;;; The seed
+(arg2Isa extendLocalCaseToFactsInsideDRS Microtheory) ;;; The DRS to look inside
+(arg3Isa extendLocalCaseToFactsInsideDRS CaseDepthProgress) ;;; The current depth
+(arg4Isa extendLocalCaseToFactsInsideDRS Microtheory) ;;; The place to store the case.
+(arg5Isa extendLocalCaseToFactsInsideDRS Microtheory) ;;; The place to store meta-information about the case.
+(arg6Isa extendLocalCaseToFactsInsideDRS Microtheory) ;;; The place we're pulling facts from
+(comment extendLocalCaseToFactsInsideDRS "(extendLocalCaseToFactsInsideDRS ?seed ?DRS ?depth-progress 
+?case-name ?case-meta-info-mt ?fact-source-mt)
+adds facts inside the DRS to the case.")
+
+;; It's not a proper subdrs
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (and (uninferredSentence (unifies ?drs (DrsCaseFn ?drs-id))))
+ (methodForAction
+  (extendLocalCaseToFactsInsideDRS ?seed ?drs (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                   ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList))))
+
+
+;;; It is a proper subdrs
+(preconditionForMethod
+ ;;; We want to filter out facts that are already there and isa facts.
+ (and (unifies ?drs (DrsCaseFn ?drs-id))
+      ;;; This is insanely slow.
+      (evaluate ?list-of-all-statements
+        (TheClosedRetrievalSetOf (ist-Information ?drs ?fact)
+          (lookupOnly (nonTransitiveInference (ist-Information ?drs ?fact))))))
+ (methodForAction
+  (extendLocalCaseToFactsInsideDRS ?seed ?drs (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                   ?case-name ?case-meta-info-mt ?fact-source-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?isa-fact-to-stash ?list-of-all-statements ;;; Experimenting with this.
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (recordIsaFact ?seed ?isa-fact-to-stash ?drs
+                                 (caseDepthProgressFn ?current-depth-no ?max-depth)
+                                 ?case-name ?case-meta-info-mt ?fact-source-mt)))))
+    ;;; This is okay because it filters out isas anyway.
+    (doForEach ?nonisa-fact-to-stash ?list-of-all-statements
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  (recordNonIsaFact ?seed ?nonisa-fact-to-stash ?drs
+                                    (caseDepthProgressFn ?current-depth-no ?max-depth) 
+                                    ?case-name ?case-meta-info-mt ?fact-source-mt)))))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Constructing the actual cases
+
+;;;(isa buildCaseFromStoredMetaInfo ComplexActionPredicate)
+;;;(arity buildCaseFromStoredMetaInfo 2)
+;;;(arg1Isa buildCaseFromStoredMetaInfo Microtheory) ;;; The meta-info
+;;;(arg2Isa buildCaseFromStoredMetaInfo Thing) ;;; The experiment name
+;;;(comment buildCaseFromStoredMetaInfo "(buildCaseFromStoredMetaInfo ?case-meta-info-mt ?experiment-name)
+;;;builds an actual case using a stored metaInfo microtheory.")
+;;;
+;;;(preconditionForMethod
+;;; ;;; Get all of the things that are supposed to be fact. That's all we need.
+;;; (lookupOnly 
+;;;  (nonTransitiveInference 
+;;;   (ist-Information ?case-meta-info-mt 
+;;;     (factInConstructedCase 
+;;;      (ist-Information (DrsCaseFn DRS-3610669963-6206) 
+;;;        (objectActedOn capture3165 heat3245)) 
+;;;      (caseSegmentedAroundFn heat3245 
+;;;                             (SpindleWithSubDrsesFn 
+;;;                              ReadingOf-SourceTextChapterParagraphFn-SUSD-Simplified-May2014-01-Chap16-Para5-052614-009-JustCorefMt) 
+;;;                             testinghowsegmentationworks00017) (caseDepthFn 1)))
+;;;                                       
+;;;      )
+;;; (methodForAction
+;;;  (buildCaseFromStoredMetaInfo ?case-meta-info-mt ?experiment-name)
+;;;  (actionSequence
+;;;   (TheList
+;;;    
+;;;    ))))
+

@@ -1,0 +1,8 @@
+(in-microtheory SemiconductorManufacturingConceptsMt)
+
+(isa maxQuantValue VectorOrQuantitySlot)
+(partitionedInto MetrologyWaferSiteTest (ThePartition WaferTest-Defect WaferTest-Electrical WaferTest-Physical))
+(disjointWith N-TypeSemiconductorStuff P-TypeSemiconductorStuff)
+(disjointWith Electron ElectronHole)
+(genls N-TypeSemiconductorStuff N-TypeSemiconductorStuff)
+(genls P-TypeSemiconductorStuff P-TypeSemiconductorStuff)

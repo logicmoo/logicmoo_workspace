@@ -1,0 +1,204 @@
+
+(in-microtheory ExecutiveMt)
+
+;;; SEF: Tom and I figured out that the following statement can cause problems
+;;; with the agent properly finding complex actions.
+;;; (planDomain ExecutiveMt) 
+
+;;; Strategies for the executive agent
+
+;;; monitorSelfHealth detects agents that are about to die.
+(isa monitorSelfHealth ComplexActionPredicate)
+(arity monitorSelfHealth 0)
+(comment monitorSelfHealth "(monitorSelfHealth) is a high-level periodic task that reifies the health of the agents.")
+
+(isa reifyCompanionHealth ComplexActionPredicate)
+(arity reifyCompanionHealth 2)
+(arg1Isa reifyCompanionHealth ?Microtheory)
+(arg2Isa reifyCompanionHealth List-Extensional)
+(comment reifyCompanionHealth "(reifyCompanionHealth ?context ?rest-agents) queries each agent and records their health.")
+
+(isa reifyAgentHealth ComplexActionPredicate)
+(arity reifyAgentHealth 2)
+(arg1Isa reifyAgentHealth ?Microtheory)
+(arg2Isa reifyAgentHealth CompanionsAgent)
+(comment reifyAgentHealth "(reifyAgentHealth ?context ?agent) records reflective information in the session context.")
+
+
+;;; monitorProgress detects underperforming agents and computational tarpits
+(isa monitorProgress ComplexActionPredicate)
+(arity monitorProgress 1)
+(arg1Isa monitorProgress CompanionsAgent)
+(comment monitorProgress "(monitorProgress ?executive) checks to ensure that sub-agents are not stuck.")
+
+;;; acceptAdvice operationalizes direct feedback
+(isa acceptAdvice ComplexActionPredicate)
+(arity acceptAdvice 2)
+(arg1Isa acceptAdvice CompanionsAgent)
+(arg2Isa acceptAdvice ELSentence-Assertible)
+(comment acceptAdvice "(acceptAdvice ?executive ?advice) accepts and operationalizes externally-provided advice.")
+
+;;; identifyLearningOpportunities spawns learning goals
+(isa identifyLearningOpportunities ComplexActionPredicate)
+(arity identifyLearningOpportunities 2)
+(arg1Isa identifyLearningOpportunities CompanionsAgent)
+(arg2Isa identifyLearningOpportunities Set-Mathematical)
+(comment identifyLearningOpportunities "(identifyLearningOpportunities ?executive ?learning-goal-set) constructs and assigns learning goals.")
+
+;;; operationalizeTask invokes plan recognition
+(isa operationalizeTask ComplexActionPredicate)
+(arity operationalizeTask 3)
+(arg1Isa operationalizeTask CompanionsAgent)
+(arg2Isa operationalizeTask ComplexActionPredicate)
+(arg3Isa operationalizeTask List)
+(comment operationalizeTask "(operationalizeTask ?executive ?action ?plan) binds ?plan to an operationalization of ?action and stores it in the current context.")
+
+;;; pursuePendingLearningGoals pursues all learning goals in SelfModelMt that have a pending status.
+(isa pursuePendingLearningGoals ComplexActionPredicate)
+(arity pursuePendingLearningGoals 0)
+(comment pursuePendingLearningGoals "(pursuePendingLearningGoals) pursues all learning goals in SelfModelMt that have a pending status.")
+
+;;; pursueLearningGoal invokes learning strategies to satisfy a learning goal.
+(isa pursueLearningGoal ComplexActionPredicate)
+(arity pursueLearningGoal 1)
+(arg1Isa pursueLearningGoal LearningGoal)
+(comment pursueLearningGoal "(pursueLearningGoal ?learning-goal) invokes strategies to satisfy ?learning-goal.")
+
+
+;(preconditionForMethod
+;  (and (localAgent ?agent)
+;       (currentExecutive ?agent))
+;  (methodForAction
+;    (setupInitialAgenda ?agenda-context)
+;    (actionSequence
+;      (TheList
+;       (doSchedulePeriodicTask (HoursDuration 1) (actionSequence (TheList (monitorSelfHealth))))
+;       ;(doEnqueue
+;       ; ?agent
+;       ; AnonymousTask
+;       ; (actionSequence 
+;       ;  (TheList 
+;       ;   (processGoals))))
+;       ))))
+
+(preconditionForMethod
+  (and (localAgent ?agent)
+       (evaluate ?task-list
+         (SetToListFn
+          (TheClosedRetrievalSetOf ?task
+            (and (allFactsAllowed
+                  (lookupOnly
+                   (localOnly
+                    (ist-Information SelfModelMt
+                      (learningGoalForCompanion ?goal)))))
+                 (allFactsAllowed
+                  (lookupOnly
+                   (localOnly
+                    (ist-Information SelfModelMt
+                      (goalStatus ?goal PendingStatus)))))
+                 (unifies ?task (pursueLearningGoal ?goal)))))))
+ (methodForAction
+  (pursuePendingLearningGoals)
+  (actionSequence
+   (TheList
+    (doForEach ?task ?task-list (doEnqueue ?agent AnonymousTask ?task))))))
+
+
+
+;;; For each agent, reify its current health in terms of memory usage, uptime,
+;;; tms nodes, etc.
+(preconditionForMethod
+  (and (currentAgents ?agents)
+       (sessionContext ?context)
+       (planningContext ?pcontext))
+  (methodForAction
+    (monitorSelfHealth)
+    (actionSequence
+      (TheList
+        (doForEach ?agent ?agents (reifyAgentHealth ?context ?agent))
+        (doClearWMContext ?pcontext))))) ; fact-gc the planning context
+       
+
+;;; Reifying individual agent health.
+;;; Note: Since the preconditions contains dynamic predicates, you *really*
+;;; don't want to backtrack to here - it will go forever!
+;;; Moreover: The session manager doesn't have a reasoner, so it can't
+;;; support reflection queries (or any other queries for that matter).
+;;; Hence, we have a (less-preferred) do-nothing fallback method.
+(preconditionForMethod
+  (and (currentTime ?time)
+       (currentHeapSpace ?agent ?used ?avail)
+       (numTMSNodes ?agent ?nodes ?clauses)
+       (numSMEs ?agent ?num-smes)
+       (agentUptime ?agent ?uptime)
+       (agentState ?agent ?state ?how-long)
+       ;;; More concise encoding:
+       ;(unifies ?health-tuple  ;; trick to surmount arity 7 limitation
+       ;  (TheList ?used ?avail ?nodes ?clauses ?num-smes ?uptime ?state ?how-long))
+       ;(summarizeHealth ?agent ?health-tuple ?healthPct ?stuck)  ;; *** incomplete rule!
+       )
+  (methodForAction
+    (reifyAgentHealth ?context ?agent)
+    (actionSequence
+      (TheList
+        ;(doAnnounce "~&Reifying health of ~a in context ~a" (?agent ?context))
+        (doRecord 
+          (ist-Information ?context
+            (holdsIn ?time
+              (currentHeapSpace ?agent ?used ?avail))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?time
+              (numTMSNodes ?agent ?nodes ?clauses))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?time
+              (numSMEs ?agent ?num-smes))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?time
+              (agentUptime ?agent ?uptime))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?time
+              (agentState ?agent ?state ?how-long))))
+        ))))
+
+;;; Default:    
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (reifyAgentHealth ?context ?agent)
+    (actionSequence
+      (TheList))))
+
+;;; Skip recording health if the queries fail:
+(<== (preferInContext (reifyAgentHealth ?context ?agent) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (pursueLearningGoal ?learning-goal)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%If there were any strategies, I'd be pursuing a learning goal right now: ~a" (?learning-goal))))))
+
+;;; **** We probably need a preference to avoid the above plan.
+
+;;; Yep, and this is the best I can think of for now.  It should do, as long as all the methods
+;;; in learning-strategies.lsp have learning goals that are NATs.
+;;; from what I can gather from htn.lsp, ?seq1 and ?seq2 are actually entire methods,
+;;; not just action sequences, so this should work.  - MDM
+
+(<== (preferInContext (pursueLearningGoal ?learning-goal) ?seq1 ?seq2) 
+     (containsPattern (pursueLearningGoal ?learning-goal-term1) ?seq1)
+     (containsPattern (pursueLearningGoal ?learning-goal-term2) ?seq2)
+     (uninferredSentence (variableExpression ?learning-goal-term2))
+     (variableExpression ?learning-goal-term2))
+         
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

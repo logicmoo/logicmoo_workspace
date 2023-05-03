@@ -1,0 +1,14 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv tech
+;; -------------------
+
+(isa FreeCiv-Tech SecondOrderCollection)
+(genls FreeCiv-Tech FreeCiv-ObjectType)
+(genls FreeCiv-Tech FieldOfStudy)  ; thereby enabling reference via ResearchInFn.
+
+;; This should probably tie into a concept above the
+;; FreeCiv level...
+; (genls FreeCiv-Tech ComputerGame-Strategy-Tech)
+

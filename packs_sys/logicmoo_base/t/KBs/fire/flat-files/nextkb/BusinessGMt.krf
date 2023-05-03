@@ -1,0 +1,22 @@
+(in-microtheory BusinessGMt)
+
+(isa 2MTek-Company Business)
+(isa AmericaWestDrillingSupply Business)
+(requiredArg1Pred CappedRateMortgage interestRateCeiling)
+(comment Stock "A specialization of #$AuthorizedAgreement and #$TradeableSecurity. Each instance of this collection is a share of ownership in some instance of #$LegalCorporation; its owner is an agent who is recorded as a shareholder in the official records of that corporation. A company may have several classes of #$Stock, such as Common, Preferred, Class A, Class B, etc.")
+(comment AssetConversionLoan "The collection of #$LoanAgreements that are short term loans whose primary repayment source is the anticipated conversion of an asset to cash.  Such loans are typically #$CommercialLoanAgreements, rather than #$ConsumerLoanAgreements.")
+(comment agentTypeSellsProductType "A #$BinaryPredicate that relates a specialization of #$LegalAgent to a specialization of #$TemporalThing.  <code>(#$agentTypeSellsProductType AGT-TYPE PROD-TYPE)</code> means that instances of <code>AGT-TYPE</code> typically sell instances of <code>PROD-TYPE</code>.  For instance, (#$agentTypeSellsProductType #$BicycleShop #$Bicycle); (#$agentTypeSellsProductType #$RealEstateAgent #$RealEstate). 
+ 
+<code>(#$agentTypeSellsProductType AGT-TYPE PROD-TYPE)</code> does not hold when instances of <code>AGT-TYPE</code> merely sell products which have instances of <code>PROD-TYPE</code> as parts, components, or ingredients.  For example, it would be inappropriate to assert (#$agentTypeSellsProductType #$Pizzeria #$Pepperoni), for even though pizzerias typically sell lots of pepperoni pizza, they rarely if ever sell pepperoni by itself.
+
+See also #$sells and #$sellsProductType.")
+(comment PetStore "An #$ExistingObjectType.  Each instance of #$PetStore is a #$RetailStore that sells #$DomesticPets and pet supplies (e.g. #$PetFood).")
+(comment BurgerOrientedFastFoodRestaurant "A specialization of #$FastFoodRestaurant-Organization.  Each instance of #$BurgerOrientedFastFoodRestaurant is a fast food restaurant that specializes in selling #$HamburgerSandwiches.")
+(comment ChickenOrientedFastFoodRestaurant "A specialization of #$FastFoodRestaurant-Organization.  Each instance of #$ChickenOrientedFastFoodRestaurant is a fast food restaurant that specializes in selling cooked chicken, usually fried.")
+(genlPreds nonpermanentResidentAlien residentAlien)
+(genls BusinessTypeByActivityType KEClarifyingCollectionType)
+(genls ManufacturerTypeByFocalProductType KEClarifyingCollectionType)
+(genls OliveGardenRestaurant (RestaurantSpecializingInCuisineFn ItalianCuisine))
+(genls RestaurantTypeByCuisine KEClarifyingCollectionType)
+(genlPreds insMarketedAs conceptuallyRelated)
+(genls SportsFranchise Business)

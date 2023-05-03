@@ -1,0 +1,533 @@
+;;; 
+;;; File name: quantity-reasoning.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: December 9, 2010 13:01:42
+;;;   Purpose: general reasoning about quantities.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2011-04-07 14:50:09 -0500 (Thu, 07 Apr 2011) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+
+;;; Define higher-order functions to convert predicates into quantities
+;;; that can be related in a qualitative model.  This allows a planner
+;;; to make choices based on some notion of what influences what in a way
+;;; that is learnable and transferrable.
+
+(isa ContinuousMeasurableQuantity Collection)
+(genls ContinuousMeasurableQuantity ContinuousQuantity)
+(genls ContinuousMeasurableQuantity MeasurableQuantity)
+(comment ContinuousMeasurableQuantity "Tie qualitative models into the rest of Cyc so we can use the MeasurableQuantitySlot concept.")
+
+(isa MeasurableQuantityFn UnaryFunction)
+(arity MeasurableQuantityFn 1)
+(arg1Isa MeasurableQuantityFn MeasurableQuantitySlot)
+(resultIsa MeasurableQuantityFn VariableArityFunction)
+(resultResultIsa MeasurableQuantityFn ContinuousQuantity)
+(comment MeasurableQuantityFn "An alternative to QPQuantityFn that takes a MeasurableQuantitySlot, rather than a ContinuousQuantity.")
+
+(isa GenericValueQuantityFn UnaryFunction)
+(arity GenericValueQuantityFn 1)
+(arg1Isa GenericValueQuantityFn QuantitySlot)
+(resultIsa GenericValueQuantityFn VariableArityFunction)
+(resultResultIsa GenericValueQuantityFn ContinuousQuantity)
+(comment GenericValueQuantityFn "An alternative to QPQuantityFn and MeasurableQuantityFn that takes a generic Quantity slot - ie, something that can take on (HighAmountFn <X>), etc.")
+
+(isa AggregateQuantityFn UnaryFunction)
+(isa AggregateQuantityFn ReifiableFunction)
+(arg1Isa AggregateQuantityFn MeasurableQuantitySlot)
+(resultIsa AggregateQuantityFn VariableArityFunction)
+(resultResultIsa AggregateQuantityFn ContinuousMeasurableQuantity)
+(comment AggregateQuantityFn "AggregateQuantityFn takes a binary relation and returns a function that returns the quantity representing the sum of quantities in the set delimited by its argument.")
+
+;;; Is it a problem if the argMax is not unique?
+(isa MaximumWRTFn UnaryFunction)
+(arity MaximumWRTFn 1)
+(arg1Isa MaximumWRTFn MeasurableQuantitySlot)
+(resultIsa MaximumWRTFn VariableArityFunction)
+(resultResultIsa MaximumWRTFn ContinuousQuantity)
+(comment MaximumWRTFn "(MaximumWRTFn <prop>) denotes a function that can be applied to a Set to denote the element of the set with the maximum value of <prop>, a quantity slot.")
+
+(isa MinimumWRTFn UnaryFunction)
+(arity MinimumWRTFn 1)
+(arg1Isa MinimumWRTFn MeasurableQuantitySlot)
+(resultIsa MinimumWRTFn VariableArityFunction)
+(resultResultIsa MinimumWRTFn ContinuousQuantity)
+(comment MinimumWRTFn "(MinimumWRTFn <prop>) denotes a function that can be applied to a Set to denote the element of the set with the minimum value of <prop>, a quantity slot.")
+
+(isa RateFn Function-Denotational)
+(arity RateFn 1)
+(arg1Isa RateFn QPProcess)
+(resultIsa RateFn ContinuousQuantity)
+(comment "(RateFn ?process) denotes the rate of the specified process.")
+
+(functionCorrespondingPredicate-Canonical RateFn rateOf 2)
+
+;;; Do we want to be able to talk about the likelihood of a
+;;; GenericInstanceFn of some event description?
+;;; Or should it take an event type and return a function that takes a concrete situation and returns a likelihood quantity?
+(isa LikelihoodFn UnaryFunction)
+(arity LikelihoodFn 1)
+(arg1Isa LikelihoodFn Event)
+(resultIsa LikelihoodFn ContinuousQuantity)  ; really. it's a Probability-QuantityType.
+(comment LikelihoodFn "(LikelihoodFn <event>) denotes the (current) likelihood of <event>.")
+
+(functionCorrespondingPredicate-Canonical LikelihoodFn likelihoodOfEvent 2) ; see process-preds.meld
+
+(isa LikelihoodOfSuccessFn UnaryFunction)
+(arity LikelihoodOfSuccessFn 1)
+(arg1Isa LikelihoodOfSuccessFn Event)
+(resultIsa LikelihoodOfSuccessFn ContinuousQuantity)  ; really. it's a Probability-QuantityType.
+(comment LikelihoodOfSuccessFn "(LikelihoodOfSuccessFn <action>) denotes the (current) likelihood of ?action succeeding.")
+     
+(functionCorrespondingPredicate-Canonical LikelihoodOfSuccessFn likelihoodOfSuccess 2)
+
+(isa EfficiencyFn UnaryFunction)
+(arity EfficiencyFn 1)
+(arg1Isa EfficiencyFn QPProcess)  ; but as far as I'm concerned, not necessarily physical!
+(resultIsa EfficiencyFn ContinuousQuantity)
+(comment EfficiencyFn "(EfficiencyFn <process>) denotes the efficiency of <process> in converting inputs to outputs.")
+
+(functionCorrespondingPredicate-Canonical EfficiencyFn processEfficiency 2) ; see process-preds.meld
+
+;;; e.g.: 
+;;; (AggregateQuantityFn cityPopulation 
+;;;   (CollectionSubsetFn FreeCiv-City 
+;;;     (TheSetOf ?city 
+;;;       (and (currentPlayer ?player) 
+;;;            (cityOwner ?city ?player)))))
+
+(isa QuantitySetFn BinaryFn)
+(isa QuantitySetFn ReifiableFunction)
+(arg1Isa QuantitySetFn MeasurableQuantitySlot)
+(arg2Isa QuantitySetFn SetOrCollection)
+(resultIsa QuantitySetFn Set-Mathematical)
+(comment QuantitySetFn "(QuantitySetFn ?prop ?set) represents the set of ContinuousMeasurableQuantities formed from ?property mapped over the elements ?set.")
+
+(<== (elementOf ?q (QuantitySetFn ?prop ?set))
+     (not (variableExpression ?set))
+     (not (atomicTerm ?set))
+     (variableExpression ?q)
+     (elementOf ?obj ?set)
+     (unifies ?q ((MeasurableQuantityFn ?prop) ?obj)))
+
+;;; Optimization - don't enumerate set if you can avoid it:
+(<== (elementOf ?q (QuantitySetFn ?prop ?set))
+     (not (variableExpression ?set))
+     (not (atomicTerm ?set))
+     (not (variableExpression ?q))
+     (unifies ?q ((MeasurableQuantityFn ?prop) ?obj))
+     (elementOf ?obj ?set))
+     
+;;; Define a new predicate so we don't collide with valueOf.
+;;; Use this in reified statements.
+(isa quantityValue BinaryPredicate)
+(isa quantityValue FunctionalPredicate)
+(functionalInArgs quantityValue 2)
+(arity quantityValue 2)
+(arg1Isa quantityValue ContinuousQuantity)  ; fluent
+(arg2Isa quantityValue ContinuousQuantity)  ; value of fluent
+(comment quantityValue "Maps from a functional denotation of a term to a First-Order Reified Term (FORT).")
+
+;;; Implement this with a backchaining rule that expands to outsourced
+;;; predicates in the execution context of an agent.
+(isa currentQuantityValue BinaryPredicate)
+(isa currentQuantityValue FunctionalPredicate)
+(isa currentQuantityValue DynamicUpdatePredicate)
+(functionalInArgs currentQuantityValue 2)
+(arity currentQuantityValue 2)
+(arg1Isa currentQuantityValue ContinuousQuantity)  ; fluent
+(arg2Isa currentQuantityValue ContinuousQuantity)  ; value of fluent
+(comment currentQuantityValue "Maps from a functional denotation of a term to a First-Order Reified Term (FORT).")
+
+;;; Consider the Cyc relation:
+;;; (functionCorrespondingPredicate (QPQuantityFn Mass) massOfObject 2)
+;;; That's a little bit more general way of relating the NonAtomicTerm 
+;;; with a way to look up its value than we use here.
+;;; In our representation, I'm banking on using MeasurableQuantitySlot
+;;; to provide a binary, functional relation that can look up values.
+;;; We use the pun of embedding the slot itself in the NAT representation.
+;;; Cycorp folks would probably gag.
+
+(functionCorrespondingPredicate-Canonical (MeasurableQuantityFn ?slot) ?slot 2)
+;;(<== (functionCorrespondingPredicate (MeasurableQuantityFn ?slot) ?slot 2))
+
+;;; What's the current value of a quantity-denoting term?
+;;; This rule assumes the quantity NAT has an atomic term as its argument.
+;;; For full generality, this won't always be true.  If ?arg is a NAT,
+;;; we need to (recursively) look up its denotandum.  Here, we'll have
+;;; to use functionCorrespondingPredicate.
+(<== (currentQuantityValue ((MeasurableQuantityFn ?slot) ?arg) ?value)
+     (argValue ?arg ?arg-value)
+     (not (variableExpression ?slot))
+     ;; Don't wrap this in TrueSentence!
+     (?slot ?arg-value ?value))          ; expands out typically to an outsourced predicate call.
+     
+(<== (currentQuantityValue ?nat ?value)
+     (not (variableExpression ?nat))
+     (not (atomicTerm ?nat))
+     (not (matches ((MeasurableQuantityFn ?slot) ?arg) ?nat))  ; not our standard NAT
+     (not (matches (AggregateQuantityFn ?slot ?set-or-coll) ?nat))     ; handle this specially
+     (resolveNat ?nat ?value))
+     
+;;; This is barfing when ?arg is (FreeCivLocationFn <x> <y>)
+;;; which, for our purposes, should be treated as an atomic term.
+;(<== (currentQuantityValue ((MeasurableQuantityFn ?slot) ?arg) ?value)
+;     (not (variableExpression ?arg))
+;     (not (atomicTerm ?arg))
+;     (operatorFormulas ?functor ?arg)
+;     ;; *** TBD: Don't proceed unless ?functor is a quantity composing function!
+;     (fail)
+;     (evaluate ?arglist (FormulaArgListFn ?arg))
+;     (valueOfFunctionForArgs ?functor ?arglist ?term)
+;     (quantityValue ((MeasurableQuantityFn ?slot) ?term) ?value))
+
+(isa argValue BinaryRelation)
+(arity argValue 2)
+(comment argValue "(argValue ?arg ?value) resolves ?arg if it is an IndexicalFn, otherwise passes it through.")
+
+;;; Probably should check that ?pred is a strictly functional unary predicate.
+(<== (argValue ?arg ?arg)
+     (not (variableExpression ?arg))
+     (not (matches (IndexicalFn ?pred) ?arg)))
+     
+(<== (argValue ?arg ?value)
+     (not (variableExpression ?arg))
+     (unifies (IndexicalFn ?pred) ?arg)
+     (?pred ?value))
+
+;;; This will only go one level deep.  We want to be able to compose functions.
+(<== (valueOfFunctionForArgs ?function ?arglist ?value)
+     (groundExpression ?arglist)                ; This forgives local variables, like kappa args.
+     (everySatisfies ?v ?arglist (atomicTerm ?v))  ; simple NATs only
+     (functionCorrespondingPredicate-Canonical ?function ?pred ?argnum)
+     (evaluate ?len (LengthOfListFn ?arglist))
+     (maximum ?argnum ?len ?end)
+     (evaluate ?prefix (SublistFromToFn ?arglist 1 ?argnum))
+     (evaluate ?suffix (SublistFromToFn ?arglist ?argnum ?end))
+     (evaluate ?expr
+       (MakeFormulaFn ?pred (JoinListsFn ?prefix (TheList ?value) ?suffix)))
+     (trueSentence ?expr))
+
+(<== (valueOfFunctionForArgs ?function ?arglist ?value)
+     (groundExpression ?arglist)
+     (uninferredSentence
+       (everySatisfies ?v ?arglist (atomicTerm ?v)))
+     (evaluate ?resolved-arglist
+       (MapFunctionOverList
+         (FunctionToArg 2 resolveNat)
+         ?arglist))
+     (everySatisfies ?v ?resolved-arglist (atomicTerm ?v))  ; avoid infinite recursion
+     (valueOfFunctionForArgs ?function ?resolved-arglist ?value))
+
+(isa resolveNat BinaryPredicate)
+(arity resolveNat 2)
+(arg1Isa resolveNat CycLFormula)  ; really a NAT
+(arg2Isa resolveNat CycLTerm)
+(comment resolveNat "(resolveNat ?nat ?atomic-term) resolves a non-atomic term into the thing it denotes (if any).")
+
+(<== (resolveNat ?nat ?atomic-term)
+     (not (variableExpression ?nat))
+     (not (atomicTerm ?nat))
+     (natFunction ?nat ?function)
+     (evaluate ?arglist (FormulaArgListFn ?nat))
+     (valueOfFunctionForArgs ?function ?arglist ?atomic-term))
+     
+(<== (resolveNat ?atomic-term ?atomic-term)
+     (atomicTerm ?atomic-term))
+
+;;; (fire::query '(quantityValue (AggregateQuantityFn unitHasFoodUpkeep FreeCiv-Unit) ?value) :context 'fc-game2)
+
+;;; support case where ?term is (AggregateQuantityFn ?col ?set)
+;;; Here, ?set should be bound to a set of MeasurableQuantityFn NATs
+;;; (either intensionally or extensionally)
+(<== (currentQuantityValue ((AggregateQuantityFn ?prop) ?set-or-coll) ?value)
+     (inferenceOnly (extent ?set-or-coll ?proper-set))
+     (different ?proper-set (TheSet))
+     (evaluate ?value
+       (PlusAll ?proper-set (FunctionToArg 2 ?prop))))
+
+(<== (currentQuantityValue ((MeasurableQuantityFn cardinalityOf) ?set-or-coll) ?value)
+     (inferenceOnly (extent ?set-or-coll ?proper-set))
+     (evaluate ?value (CardinalityFn ?proper-set)))
+
+;;; Used by updateStatisticsForQuantities in explanation.meld
+(isa quantityStatement TernaryPredicate)
+(arity quantityStatement 3)
+(arg1Isa quantityStatement ContinuousMeasurableQuantity)
+(arg2Isa quantityStatement ContinuousMeasurableQuantity)
+(arg3Isa quantityStatement ELSentence-Assertible)
+(comment quantityStatement "(quantityStatement ?term ?value ?stmt) binds ?stmt to an assertible sentence by destructuring term.")
+
+;;; Given a quantity term and a value, bind an assertible statement:
+(<== (quantityStatement ?term ?value ?stmt)
+     (not (variableExpression ?term))
+     (natFunction ?term ?func)
+     (natArgument ?term 1 ?arg)
+     (unifies ?func (MeasurableQuantityFn ?slot))
+     (unifies ?stmt (?slot ?arg ?value)))
+
+;;; Consider the built-in Cyc preds:
+;;; changesQuantityInDirection,
+;;; changesQuantityByAmount
+;;; changesQuantityByFraction
+;;; quantityChangeFunction
+;;; dependsOn-Pairwise
+;;; oppositeFunction
+;;;
+;;; Maybe addOurOwn: (changesQuantityFromTo ?time ?action ?quantity ?from ?to)
+;;; Then again, with (holdsIn ?year (quantityValue...)) plus changesQuantityByAmount, 
+;;; we have all we need.
+
+(isa quantityChange BinaryPredicate)
+(arity quantityChange 2)
+(arg1Isa quantityChange ContinuousQuantity)
+(arg2Isa quantityChange MeasurableQuantity) ; a value, in practice, this seems to be a number!
+(comment quantityChange "(quantityChange ?quantity ?change) is the reifiable (non-Dynamic) version of quantityChange (qv).")
+
+;;; Promoted from Freeciv to perceptualAgent so learning algorithms can rely on them.
+;;; However, since this is a DynamicUpdatePredicate, it cannot be used to reify changes in cases.
+(isa currentQuantityChange BinaryPredicate)
+(isa currentQuantityChange DynamicUpdatePredicate)
+(arity currentQuantityChange 2)
+(arg1Isa currentQuantityChange ContinuousQuantity)
+(arg2Isa currentQuantityChange MeasurableQuantity)  ; a value, in practice this seems to be a number!
+(comment currentQuantityChange "(currentQuantityChange ?quantity ?change) allows you to compare the current value of ?quantity against its value immediately prior to the last action.")
+
+
+(isa isPositiveQuantity UnaryPredicate)
+(arity isPositiveQuantity 1)
+(isa isNegativeQuantity UnaryPredicate)
+(arity isNegativeQuantity 1)
+(isa isZeroQuantity UnaryPredicate)
+(arity isZeroQuantity 1)
+(isa isNonZeroQuantity UnaryPredicate)
+(arity isNonZeroQuantity 1)
+
+(<== (isPositiveQuantity ?num)
+     (groundExpression ?num)
+     (atomicTerm ?num)
+     (isa ?num PositiveNumber))   ; specially handled in fire/primitive-datatypes.lsp
+     
+(<== (isPositiveQuantity ?q)
+     (groundExpression ?q)
+     (not (atomicTerm ?q))
+     (unifies (?units ?num) ?q)
+     (isa ?num PositiveNumber))   ; hokey, but it'll do for now.
+
+(<== (isNegativeQuantity ?num)
+     (groundExpression ?num)
+     (atomicTerm ?num)
+     (isa ?num NegativeNumber))
+
+(<== (isNegativeQuantity ?q)
+     (groundExpression ?q)
+     (not (atomicTerm ?q))
+     (unifies (?units ?num) ?q)
+     (isa ?num NegativeNumber))   ; specially handled in fire/primitive-datatypes.lsp
+     
+(<== (isZeroQuantity ?q)
+     (equals ?q 0))               ; don't implicitly bind ?q
+
+(<== (isZeroQuantity ?q)
+     (groundExpression ?q)
+     (matches (?units 0) ?q))
+     
+(<== (isNonZeroQuantity ?q)       ; This is better than uninferredSentence, because
+     (groundExpression ?q)        ; it doesn't have to re-derive each time.
+     (different ?q 0)
+     (not (matches (?units 0) ?q)))
+
+(isa increases UnaryPredicate)
+(isa decreases UnaryPredicate)
+
+;;; If ?action were a reified (Davidsonian) event, we could use (increasesSlotFor ?evt ?obj ?slot):
+
+(isa qualitativeDSValue BinaryPredicate)
+(arity qualitativeDSValue 2)
+(arg1Isa qualitativeDSValue Number-General)
+(comment qualitativeDSValue "(qualitativeDSValue ?number ?change) binds ?change to either increases or decreases, based on the sign of ?num.")
+
+(<== (qualitativeDSValue ?num increases)
+     (isPositiveQuantity ?num))   ; indirection in case ?num isn't a pure number.
+
+(<== (qualitativeDSValue ?num decreases)
+     (isNegativeQuantity ?num))
+
+;;; Used in quantityChangeInCases:
+
+(isa changeInQuantityValue TernaryPredicate)
+(isa changeInQuantityValue FunctionalPredicate)
+(arity changeInQuantityValue 3)
+(functionalInArgs changeInQuantityValue 3)
+(arg1Isa changeInQuantityValue ContinuousMeasurableQuantity) ; a NAT
+(arg2Isa changeInQuantityValue ContinuousMeasurableQuantity)
+(arg3Isa changeInQuantityValue CycLFormula)
+(comment changeInQuantityValue "(changeInQuantityValue ?before ?after ?change) compares two NATs representing the same quantity before and after an action and binds a sign direction predicate.")
+
+;;; Assume ?v1 and ?v2 are NATs
+;;; Bind ?change to (increaseFromTo (FreeCivCapitalFn 1) (FreeCivCapitalFn 2)), etc.
+;;; (Cyc's changesQuantityInDirection is not quite what we want)
+(<== (changeInQuantityValue ?v1 ?v2 ?change)
+     (natArgument ?v1 1 ?n1)
+     (natArgument ?v2 1 ?n2)
+     (evaluate ?diff (DifferenceFn ?n2 ?n1))  ; we don't have a signum function
+     (different ?diff 0)                      ; make sure there *is* a change
+     (signDirectionPred ?diff ?changePred)
+     (unifies ?change (?changePred ?v1 ?v2)))
+
+(isa increaseFromTo BinaryPredicate)
+(arity increaseFromTo 2)
+(arg1Isa increaseFromTo ContinuousMeasurableQuantity)
+(arg2Isa increaseFromTo ContinuousMeasurableQuantity)
+(comment increaseFromTo "(increaseFromTo ?val1 ?val2) denotes an increase (of some quanity) from ?val1 to ?val2")
+
+(isa decreaseFromTo BinaryPredicate)
+(arity decreaseFromTo 2)
+(arg1Isa decreaseFromTo ContinuousMeasurableQuantity)
+(arg2Isa decreaseFromTo ContinuousMeasurableQuantity)
+(comment decreaseFromTo "(decreaseFromTo ?val1 ?val2) denotes a decrease (of some quanity) from ?val1 to ?val2")
+
+;;; Use the Cyc built-in collection LevelOfChange to record qualitative changes:
+;;; PositiveChange, NegativeChange, and NoChange.
+
+(isa signDirectionPred BinaryPredicate)
+;;; This really should go away:
+(arity signDirectionPred 2)
+(arg1Isa signDirectionPred Number)
+(arg2Isa signDirectionPred BinaryPredicate)
+(comment signDirectionPred "(signDirectionPred ?num ?pred) maps the sign of ?num onto a predicate (either increaseFromTo or decreaseFromTo).")
+
+(<== (signDirectionPred ?num increaseFromTo)
+     (evaluate ?num (AbsoluteValueFn ?num))) ; ?num is positive
+
+(<== (signDirectionPred ?num decreaseFromTo)
+     (evaluate ?abs (AbsoluteValueFn ?num))
+     (different ?num ?abs))                  ; ?num is negative
+
+
+;;; These are the relational predicate versions of MaximumFn and MinimumFn,
+;;; except that they don't take sets as arguments.
+(isa maximum TernaryPredicate)
+(isa maximum FunctionalPredicate)
+(arity maximum 3)
+(arg1Isa maximum ContinuousMeasurableQuantity)
+(arg2Isa maximum ContinuousMeasurableQuantity)
+(arg3Isa maximum ContinuousMeasurableQuantity)
+(comment maximum "(maximum a b c) binds c to the larger of a or b.")
+
+(<== (maximum ?a ?b ?a)
+     (isa ?a Number-General)
+     (isa ?b Number-General)
+     (greaterThanOrEqualTo ?a ?b))
+       
+(<== (maximum ?a ?b ?b)
+     (isa ?a Number-General)
+     (isa ?b Number-General)
+     (lessThan ?a ?b))
+
+(<== (maximum ?a ?b ?a)
+     (uninferredSentence (isa ?a Number-General))
+     (uninferredSentence (isa ?b Number-General))
+     (natFunction ?a ?afn)
+     (natFunction ?b ?bfn)
+     (equals ?afn ?bfn)
+     (natArgument ?a 1 ?aval)
+     (natArgument ?b 1 ?bval)
+     (greaterThanOrEqualTo ?aval ?bval))
+
+(<== (maximum ?a ?b ?b)
+     (uninferredSentence (isa ?a Number-General))
+     (uninferredSentence (isa ?b Number-General))
+     (natFunction ?a ?afn)
+     (natFunction ?b ?bfn)
+     (equals ?afn ?bfn)
+     (natArgument ?a 1 ?aval)
+     (natArgument ?b 1 ?bval)
+     (lessThan ?aval ?bval))       
+
+(isa minimum TernaryPredicate)
+(isa minimum FunctionalPredicate)
+(arity minimum 3)
+(arg1Isa minimum ContinuousMeasurableQuantity)
+(arg2Isa minimum ContinuousMeasurableQuantity)
+(arg3Isa minimum ContinuousMeasurableQuantity)
+(comment minimum "(minimum a b c) binds c to the lesser of a or b.")
+  
+(<== (minimum ?a ?b ?a)
+     (isa ?a Number-General)
+     (isa ?b Number-General)
+     (lessThanOrEqualTo ?a ?b))
+       
+(<== (minimum ?a ?b ?b)
+     (isa ?a Number-General)
+     (isa ?b Number-General)
+     (greaterThan ?a ?b))
+
+(<== (minimum ?a ?b ?a)
+     (uninferredSentence (isa ?a Number-General))
+     (uninferredSentence (isa ?b Number-General))
+     (natFunction ?a ?afn)
+     (natFunction ?b ?bfn)
+     (equals ?afn ?bfn)
+     (natArgument ?a 1 ?aval)
+     (natArgument ?b 1 ?bval)
+     (lessThanOrEqualTo ?aval ?bval))
+
+(<== (minimum ?a ?b ?b)
+     (uninferredSentence (isa ?a Number-General))
+     (uninferredSentence (isa ?b Number-General))
+     (natFunction ?a ?afn)
+     (natFunction ?b ?bfn)
+     (equals ?afn ?bfn)
+     (natArgument ?a 1 ?aval)
+     (natArgument ?b 1 ?bval)
+     (greaterThan ?aval ?bval))
+
+;;;
+;;; Backfill:
+;;; cardinalityOf is the functionalPredicate version of CardinalityFn.
+;;; It exists in Cyc, but was only added in 2008, so our version of
+;;; rc-one doens't have it.  Add it here.
+
+(isa cardinalityOf StrictlyFunctionalSlot)
+(isa cardinalityOf Predicate)               ; redundant, but I'm being careful
+(arity cardinalityOf 2)
+(arg1Isa cardinalityOf SetOrCollection)     ; disagrees with Cyc, but so does our version of CardinalityFn.
+(arg2Isa cardinalityOf NonNegativeInteger)
+(comment cardinalityOf "A predicate corresponding to the function CardinalityFn. (cardinalityOf X (CardinalityFn X)) will always be true for X meeting the relevant arg constraints." )
+(functionCorrespondingPredicate-Canonical CardinalityFn cardinalityOf 2)
+
+;;; These are defined in Cyc as rule-macro-predicates.
+;;; We'll do our best to define them here using our own crude rmp support.
+;;; Sadly, this doesn't work, since our implementation of relationAllInstance
+;;; requires pred to be ground.
+(<== (maximumValueForTypeWRTSlot ?coll ?slot ?value)
+     (relationAllInstance 
+       (Kappa (?inst)
+         (uninferredSentence   ; this allows for instances with unknown slot values
+           (and (?slot ?inst ?inst-val)
+                (evaluate True (GreaterThan-UnitValuesFn ?inst-val ?value))))) 
+       ?coll ?value))
+       
+(<== (minimumValueForTypeWRTSlot ?coll ?slot ?value)
+     (relationAllInstance 
+       (Kappa (?inst)
+         (uninferredSentence
+           (and (?slot ?inst ?inst-val)
+                (evaluate True (LessThan-UnitValuesFn ?inst-val ?value))))) 
+       ?coll ?value))
+
+;(<== (lengthInMiles ?inst ?number)
+;     (lengthOfObject ?inst (Mile ?number)))  ; a cheat - doesn't do conversions.
+;     
+;(<== (lengthInKilometers ?inst ?number)
+;     (lengthOfObject ?inst (Kilometer ?number)))
+;
+
+
+
+;;; End Of Code

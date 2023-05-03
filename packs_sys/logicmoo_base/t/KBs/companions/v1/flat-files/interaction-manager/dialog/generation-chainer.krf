@@ -1,0 +1,248 @@
+;;;
+;;; Generation Chainer
+;;;
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; -------------------
+;;; Language Generation
+;;; -------------------
+
+;(<== (unknownPhraseMessage (TheSet ?phrase) "~&Unknown phrase:~% ~s" (TheList ?phrase))
+;     (evaluate ?len (LengthOfListFn ?phrase))
+;     (greaterThan ?len 1))
+       
+(<== (unknownPhraseMessage (TheSet ?word) ?msg)
+     (formattedContentString "~&Unknown word: ~s" (TheList ?word) ?msg))
+  
+(<== (unknownPhraseMessage ?words ?msg)
+     (different ?words (TheSet))
+     (not (unifies ?words (TheSet ?word)))
+     (formattedContentString "~&Unknown words:~@{ ~s~}" ?words ?msg))
+
+(<== (unknownConceptMessage (TheSet ?word) ?msg)
+     (formattedContentString "~&Unknown meanings: ~s" (TheList ?word) ?msg))
+  
+(<== (unknownConceptMessage ?words ?msg)
+     (different ?words (TheSet))
+     (not (unifies ?words (TheSet ?word)))
+     (formattedContentString "~&Unknown meanings:~@{ ~s~}" ?words ?msg))
+
+
+(<== (syntacticalAmbiguityMessage ?msg)
+     (outsourcedOnly (currentSentenceString ?string))
+     (formattedContentString "Syntactically ambiguous: ~s" (TheList ?string) ?msg))
+
+;;; This can't be diectic:
+(<== (semanticAmbiguityMessage ?context ?sid ?msg)
+     (lookupOnly
+       (ist-Information ?context
+         (userUtteranceAt ?timestamp ?sid ?string)))
+     (formattedContentString "Semantically ambiguous: ~s" (TheList ?string) ?msg))
+
+(<== (cantClassifyMessage ?sentence-id "Unable to classify sentence.  Try adding punctuation.")
+     (uninferredSentence
+       (terminatingPunctuation ?sentence-id ?punc)))
+
+(<== (cantClassifyMessage ?sentence-id "Unable to classify sentence as declarative, interrogative, or imperative.")
+     (terminatingPunctuation ?sentence-id ?i-punc))
+
+
+;;;
+;;; *** This implementation of numberedList leads to some wacky intermediate results
+;;; *** being cached in wm.  Could this bite us eventually?
+;;;
+
+;;; Add a selection number in front of each item in list:
+(<== (selectionMsgFromList ?choice-list ?msg)
+     (different ?choice-list (TheList))
+     (numberedList ?choice-list ?num ?numbered-list)
+     (formattedContentString "~%What did you mean?~{~1@*~@{~% ~{~s. ~s~}~}~^~}" (TheList ?numbered-list) ?msg))
+
+;;; (format t "~{~1@*~@{~% ~s~}~^~}" '(TheList a b c))
+
+
+;;; recursive case
+(<== (numberedList ?list ?num ?numbered-list)
+     (groundExpression ?num)
+     (different ?list (TheList))
+     (evaluate ?rest (RestOfListFn ?list))
+     (evaluate ?first (FirstInListFn ?list))
+     (evaluate ?next-num (PlusFn 1 ?num))
+     (numberedList ?rest ?next-num ?sublist)
+     (unifies ?entry (?num ?first))
+     (evaluate ?numbered-list (JoinListsFn (TheList ?entry) ?sublist)))
+
+;;; base case
+(<== (numberedList (TheList) ?num (TheList)))
+
+;;; initial case
+(<== (numberedList ?list ?num ?numbered-list)
+     (variableExpression ?num)
+     (different ?list (TheList))
+     (evaluate ?num (LengthOfListFn ?list))
+     (numberedList ?list 1 ?numbered-list))
+     
+     
+(<== (yesNoReply True "Yes."))
+(<== (yesNoReply False "I don't believe so."))  ; hedge
+(<== (yesNoReply ?answer ?reply)
+     (not (elementOf ?answer (TheSet True False)))
+     (formattedContentString "Yes, specifically ~s" (TheList ?answer)  ?reply))
+
+
+(isa yesNoReply-Confidence TernaryPredicate)
+(arity yesNoReply-Confidence 3)
+
+(<== (yesNoReply-Confidence True ?confidence ?reply)
+     (formattedContentString "Yes, with confidence ~a." (TheList ?confidence) ?reply))
+
+(<== (yesNoReply-Confidence False ?confidence ?reply)
+     (formattedContentString "No, with confidence ~a." (TheList ?confidence) ?reply))
+
+(<== (classificationReplyWithConfidence ?item ?class Positive ?confidence ?reply)
+     (formattedContentString "~a is a ~a. (confidence: ~a)" (TheList ?item ?class ?confidence) ?reply))
+
+(<== (classificationReplyWithConfidence ?item ?class Negative ?confidence ?reply)
+     (formattedContentString "~a is not a ~a. (confidence: ~a)" (TheList ?item ?class ?confidence) ?reply))
+
+(<== (prettyString (ReferentInPerceptualSourceFn ?item ?source) ?name-string)
+;;;     (formattedContentString "~a in ~a" (TheList ?item ?source) ?name-string)
+     (formattedContentString "~a" (TheList ?item) ?name-string))
+
+(<== (colloquialName ?person ?name-string)
+     (ist-Information EnglishMt (nameString ?person ?name-string)))
+
+(<== (colloquialName ?person ?person)
+     (uninferredSentence
+       (ist-Information EnglishMt (nameString ?person ?name-string))))
+       
+(<== (typeDescription ?name ?types ?description)
+     (different ?types (TheSet))
+     (formattedContentString "~a is a: ~{~1@*~#[~:;~@{~s~^ ~}.~]~}" (TheList ?name ?types) ?description))
+     
+(<== (typeDescription ?name (TheSet) ?description)
+     (formattedContentString "I don't know ~a" (TheList ?name) ?description))
+     
+(<== (listDescription ?set ?description)
+     (different ?set (TheSet))
+     (pidginizeExpression ?set ?list)
+     (formattedContentString "~{~1@*~#[~:;~@{~a~^ ~}.~]~}" (TheList ?list) ?description))
+
+(<== (listDescription (TheSet) "Unknown."))
+
+(<== (quantityString ?quantity ?string)
+     (unifies (?unit ?num) ?quantity)
+     (isa ?quantity ScalarInterval)
+     (formattedContentString "~a ~a~:p" (TheList ?num ?unit) ?string))
+     
+(<== (pidginizeTerm ?term ?string)
+     (quantityString ?term ?string))
+     
+(<== (pidginizeTerm ?term ?string)
+     (uninferredSentence
+       (quantityString ?term ?str))
+     (unifies ?string ?term))
+     
+(<== (pidginizeExpression ?in ?out)
+     (evaluate ?out
+       (MapFunctionOverList
+         (FunctionToArg 2 pidginizeTerm)
+         (SetToListFn ?in))))
+
+(<== (listReasons ?set ?description)
+     (different ?set (TheSet))
+     (formattedContentString "~{~1@*~#[~:;~@{~&~s~^ ~}~]~}" (TheList ?set) ?description))
+
+(<== (listReasons (TheSet) "Unknown."))
+
+;;; Take the differences captured by parseTreeDifferences and convert them into 
+;;; (TheList (TheList <token-span-string> <parts of speech> <example concept>) ...)
+(<== (syntaxDifferentialGloss ?discourse-context ?sentence-id ?utterance-string)
+     (outsourcedOnly (parseTreeDifferences ?sentence-id ?diffs))
+     (evaluate ?difflist (SetToListFn ?diffs))
+     (liftedGrammarAmbiguityMessages ?discourse-context ?sentence-id ?difflist ?utterance-string))
+
+(<== (liftedGrammarAmbiguityMessages ?discourse-context ?sentence-id (TheList) ""))
+
+(<== (liftedGrammarAmbiguityMessages ?discourse-context ?sentence-id ?difflist ?msg)
+     (evaluate ?first (FirstInListFn ?difflist))
+     (evaluate ?rest (RestOfListFn ?difflist))
+     (liftedGrammarAmbiguity ?discourse-context ?sentence-id ?first ?span-string ?parts-of-speech)
+     (syntaxDifferenceGloss ?span-string ?parts-of-speech ?gloss)
+     (liftedGrammarAmbiguityMessages ?discourse-context ?sentence-id ?rest ?rest-msg)
+     (formattedContentString "~a~a" (TheList ?gloss ?rest-msg) ?msg))
+
+(isa liftedGrammarAmbiguity Predicate)
+(arity liftedGrammarAmbiguity 5)
+
+;;; Take a diff in the form of (TheSet <pt-entry> <pt-entry> ...)
+(<== (liftedGrammarAmbiguity ?discourse-context ?sentence-id ?diff ?span-string ?types)
+     (different ?diff (TheSet))
+     (formulaArgument ?diff 1 ?example-entry)
+     (unifies (ptEntry ?example-constit (ParseTreeFn ?sentence-id ?example-ptid))
+              ?example-entry)  ; destructure to bind 1st constituent
+     (wmOnly
+       (lookupOnly
+         (ist-Information ?discourse-context
+           (ptEntrySpan ?example-constit (SpanFn ?from ?to)))))
+     (wmOnly
+       (lookupOnly
+         (ist-Information ?discourse-context
+           (sentenceTokens ?sentence-id ?token-list))))
+     (sentenceSpanString ?token-list ?start-tok ?from ?span-string)
+     ;; now for each entry in the set, make a syntax gloss and put them together:
+     (evaluate ?types
+       (TheClosedRetrievalSetOf ?type
+         (and (elementOf ?entry ?diff)
+              (unifies (ptEntry ?constit (ParseTreeFn ?sentence-id ?pt-id)) ?entry)
+              (wmOnly
+                (lookupOnly
+                  (ist-Information ?discourse-context
+                    (ptConstitLexCat ?constit ?type))))))))
+
+(isa sentenceSpanString Predicate)
+(arity sentenceSpanString 4)
+
+;;; Bind a string representing the token span.
+(<== (sentenceSpanString ?token-list ?from-1 ?to ?span-string)
+     (wmOnly
+       (lookupOnly
+         (ist-Information ?discourse-context
+           (sentenceTokens ?sentence-id ?token-list))))
+     (evaluate ?from (PlusFn ?from-1 1))
+     (evaluate ?sublist 
+       (SublistFromToFn ?token-list ?from ?to))
+     (formattedContentString "~@{~s~^ ~}" ?sublist ?span-string))
+
+;;; For a single span, describe the ambiguity:
+(<== (syntaxDifferenceGloss ?token-span-string ?parts-of-speech ?gloss)
+     (evaluate ?format-args (JoinListsFn (TheList ?token-span-string) (SetToListFn ?parts-of-speech)))
+     (formattedContentString 
+       "~s could be a(n): ~@{~#[~;~a~;~a~<~%~0:; or ~>~<~%~0:;~a~>~:;~@{~#[~;~<~%~1:;or ~>~]~<~%~1:;~a~>~^, ~}~]~}"
+       ?format-args ?gloss))
+
+(isa tokenAttachments QuaternaryPredicate)
+(arity tokenAttachments 4)
+(comment tokenAttachments "(tokenAttachments ?sentence-id ?discourse-case ?spanlst ?attachment-string) expresses attachment ambiguities by displaying different breaks in the sentence fragment.")
+
+;;; Express attachment ambiguities by displaying different breaks in the sentence fragment:
+(<== (tokenAttachments ?sentence-id ?discourse-case ?spanlst ?attachment-string)
+     (unifies (TheList (SpanFn ?from1 ?to1) (SpanFn ?from2 ?to2)) ?spanlst)
+     (wmOnly
+       (lookupOnly
+         (ist-Information ?discourse-case
+           (sentenceTokens ?sentence-id ?token-list))))
+     (sentenceSpanString ?token-list ?from1 ?to1 ?prefix)
+     (sentenceSpanString ?token-list ?from2 ?to2 ?suffix)
+     (formattedContentString "~a    /   ~a" (TheList ?prefix ?suffix) ?attachment-string))
+
+(<== (versionMismatchMsg ?contentver ?codever ?msg)
+     (greaterThan ?contentver ?codever)
+     (unifies ?msg "!!!The codebase is out of date with respect to the kb content.  Please re-compile the Interaction Manager.!!!"))
+     
+(<== (versionMismatchMsg ?contentver ?codever ?msg)
+     (greaterThan ?codever ?contentver)
+     (unifies ?msg "!!!The kb contents are out of date with respect to the codebase.  Please reload the IM content with (update-im-plans)!!!"))
+     
+     

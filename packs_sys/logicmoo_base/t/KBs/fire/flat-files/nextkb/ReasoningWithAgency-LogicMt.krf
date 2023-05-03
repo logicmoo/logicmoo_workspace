@@ -1,0 +1,160 @@
+
+ (in-microtheory ReasoningWithAgency-LogicMt)
+ (argQuotedIsa refrainsFromBringingAbout 2 CycLSentence-Assertible)
+ (arg2QuotedIsa refrainsFromBringingAbout CycLSentence-Assertible)
+ (argQuotedIsa bringsAbout 2 CycLSentence-Assertible)
+ (arg2QuotedIsa bringsAbout CycLSentence-Assertible)
+ (argQuotedIsa cstit 2 CycLSentence-Assertible)
+ (arg2QuotedIsa cstit CycLSentence-Assertible)
+ (argQuotedIsa cstit-Dual 2 CycLSentence-Assertible)
+ (arg2QuotedIsa cstit-Dual CycLSentence-Assertible)
+ (argQuotedIsa bringsAbout-Int 2 CycLSentence-Assertible)
+ (arg2QuotedIsa bringsAbout-Int CycLSentence-Assertible)
+ (argQuotedIsa refrainsFromBringingAbout-Int 2 CycLSentence-Assertible)
+ (arg2QuotedIsa refrainsFromBringingAbout-Int CycLSentence-Assertible)
+ (isa (ModalOpSetFn cstit-Dual IntelligentAgent)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa (ModalOpSetFn cstit-Dual IntelligentAgent)
+ (SetOfTypeFn UnaryModalOperator))
+ (comment cstit-Dual
+ "For each instance AGT of #$IntelligentAgent, (#$cstit-Dual
+AGT ___) is the #$dualOperator of (#$cstit AGT ___).  This is a
+technical notion, which ordinary OE or KE work should avoid using.")
+ (argIsa cstit-Dual 1 IntelligentAgent)
+ (arg1Isa cstit-Dual IntelligentAgent)
+ (isa cstit-Dual DeonticAndRelatedModalPredicate)
+ (isa refrainsFromBringingAbout DeonticAndRelatedModalPredicate)
+ (isa bringsAbout DeonticAndRelatedModalPredicate)
+ (isa cstit DeonticAndRelatedModalPredicate)
+ (comment refrainsFromBringingAbout
+ "For each instance AGT of #$IntelligentAgent, and for each
+instance PROP of #$ELSentence-Assertible, (#$refrainsFromBringingAbout
+AGT PROP) should be read as `AGT refrains from bringing it about that
+PROP'.  Here #$refrainsFromBringingAbout is not an intentional notion
+but a causal notion (see #$refrainsFromBringingAbout-Int).
+(#$refrainsFromBringingAbout AGT PROP) is taken to mean that
+(#$bringsAbout AGT PROP) is guaranteed false due to an action by AGT
+at the current moment.  That is to say (see #$bringsAbout), it is
+taken to mean what (#$bringsAbout AGT (#$not (#$bringsAbout AGT
+PROP))) means.  Note that when (#$refrainsFromBringingAbout AGT PROP)
+is true, AGT may or may not intend to bring it about that (#$not
+(#$bringsAbout AGT PROP)).  This notion of refraining is quite weak,
+but quite precise.  From the causal point of view, refraining has two
+aspects --- it is a combination of doing and not-doing.  Refraining is
+not merely a happening but a kind of doing.  To say that AGT refrains
+from doing something, we are not describing something that happens to
+AGT, but rather something AGT does, i.e., AGT's refraining is a kind
+of doing (thus we take refraining to be (#$bringsAbout AGT ...)).  The
+other aspect of refraining is the absence of a doing, the doing that
+AGT is said to refrain from.  Thus if the doing AGT refrains from is
+expressed as (#$bringsAbout AGT PROP), the absence of this doing means
+(#$not (#$bringsAbout AGT PROP)).  These two aspects (doing and not
+doing) embedded together, we take this weak notion of refraining to be
+`doing the not-doing', or `bringing about the not-doing'.  For an
+intentional notion of refraining, see #$refrainsFromBringingAbout-Int.
+Note that (#$refrainsFromBringingAbout AGT PROP) implies (#$not
+(#$bringsAbout AGT PROP)) as well as (#$possible-Historical
+(#$bringsAbout AGT PROP)).")
+ (argIsa refrainsFromBringingAbout 1 IntelligentAgent)
+ (arg1Isa refrainsFromBringingAbout IntelligentAgent)
+ (comment bringsAbout
+ "For each instance AGT of #$IntelligentAgent, and for each
+instance PROP of #$ELSentence-Assertible, (#$bringsAbout AGT PROP)
+should be read as `AGT brings it about that PROP'.  Here #$bringsAbout
+is not an intentional notion but a causal notion (see
+#$bringsAbout-Int).  (#$bringsAbout AGT PROP) is taken to mean,
+roughly, that PROP is guaranteed true due to an action by AGT at the
+current moment.  When (#$bringsAbout AGT PROP) is true, AGT may or may
+not intend to bring about the fact described in PROP.  Note that
+(#$bringsAbout AGT PROP) implies PROP as well as
+(#$possible-Historical (#$not PROP)).")
+ (argIsa bringsAbout 1 IntelligentAgent)
+ (arg1Isa bringsAbout IntelligentAgent)
+ (quotedIsa NotesOnUsingSentencesToTalkAboutDoing SharedNote)
+ (sharedNotes refrainsFromBringingAbout-Int
+ NotesOnUsingSentencesToTalkAboutDoing)
+ (comment refrainsFromBringingAbout-Int
+ "For each instance AGT of #$IntelligentAgent, and for each
+instance PROP of #$ELSentence-Assertible,
+(#$refrainsFromBringingAbout-Int AGT PROP) should be read as that AGT
+intentionally refrains from bringing it about that PROP.  Here
+#$refrainsFromBringingAbout-Int is not merely a causal notion, but an
+intentional notion as well (see #$refrainsFromBringingAbout).
+(#$refrainsFromBringingAbout-Int AGT PROP) is taken to mean that (i)
+AGT intends, at the current moment, NOT to bring it about that PROP,
+(ii) AGT does (causally) refrain from bringing it about that PROP,
+i.e., (#$bringsAbout AGT PROP) is guaranteed false due to an AGT's
+action at the moment, and (iii) AGT's intention not to bring it about
+that PROP is an explanation as to why AGT refrains from bringing it
+about that PROP.  Under such an interpretation,
+(#$refrainsFromBringingAbout-Int AGT PROP) is taken to mean the same
+as (#$bringsAbout-Int AGT (#$not (#$bringsAbout AGT PROP))), and it
+implies both (#$refrainsFromBringingAbout AGT PROP) and (#$intends AGT
+(#$not (#$bringsAbout PROP))).")
+ (genlPreds refrainsFromBringingAbout-Int refrainsFromBringingAbout)
+ (argIsa refrainsFromBringingAbout-Int 1 IntelligentAgent)
+ (arg1Isa refrainsFromBringingAbout-Int IntelligentAgent)
+ (isa refrainsFromBringingAbout-Int DeonticAndRelatedModalPredicate)
+ (sharedNotes bringsAbout-Int NotesOnUsingSentencesToTalkAboutDoing)
+ (sharedNotes refrainsFromBringingAbout
+ NotesOnUsingSentencesToTalkAboutDoing)
+ (sharedNotes bringsAbout NotesOnUsingSentencesToTalkAboutDoing)
+ (comment NotesOnUsingSentencesToTalkAboutDoing
+ "There is a group of notions which often go together in
+common reasoning.  The members of this group include particular
+agents' beliefs, knowledge, intentions, goals, desires, plans,
+strategies, what they in fact do, what they might do, and what they
+ought to do (permitted to do or forbidden to do) according to certain
+codes concerning rationality, morality or laws, etc.  Most of these
+notions are represented in Cyc as predicates using sentences as their
+arguments.  Exceptions are `what agents do' and `plans' (as of July
+2000, `strategy' is not in Cyc at all), where we use particular
+actions or types of actions.  It has been realised how difficult to
+connect these individual actions or types of actions to goals,
+intends, etc.  One reason, which is probably the most important
+reason, is that goals, intends and beliefs etc. are represented by
+sentences, while actions etc. are by terms.  To provide a language in
+which relations between actions and intends etc. can be easily
+presented, we introduce agentive sentences, which use sentences rather
+than terms to represent actions.  A translation from `event talk' to
+`modal talk', using something similar to dynamic logic, will serve as
+a bridge between the work on plans and `modal talk' about actions,
+intends, goals etc. --- a good idea from Daniel Mahler.")
+ (comment bringsAbout-Int
+ "For each instance AGT of #$IntelligentAgent, and for each
+instance PROP of #$ELSentence-Assertible, (#$bringsAbout-Int AGT PROP)
+should be read as `AGT intentionally brings it about that PROP'.  Here
+#$bringsAbout-Int is not merely a causal notion, but an intentional
+notion as well (see #$bringsAbout).  (#$bringsAbout-Int AGT PROP) is
+taken to mean that (i) AGT intends at the moment to bring it about
+that PROP, (ii) AGT does (causally) bring it about that PROP at the
+moment, i.e., PROP is guaranteed true due to an AGT's action at the
+moment, and (iii) AGT's intention to bring it about that PROP is an
+explanation as to why AGT brings it about that PROP.  Under such an
+interpretation, (#$bringsAbout-Int AGT PROP) implies both
+(#$bringsAbout AGT PROP) and (#$intends AGT PROP).")
+ (genlPreds bringsAbout-Int intends)
+ (genlPreds bringsAbout-Int bringsAbout)
+ (argIsa bringsAbout-Int 1 IntelligentAgent)
+ (arg1Isa bringsAbout-Int IntelligentAgent)
+ (isa bringsAbout-Int DeonticAndRelatedModalPredicate)
+ (genlPreds cstit cstit-Dual)
+ (isa (ModalOpSetFn cstit IntelligentAgent)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa (ModalOpSetFn cstit IntelligentAgent)
+ (SetOfTypeFn UnaryModalOperator))
+ (comment cstit
+ "For each instance AGT of #$IntelligentAgent, and for each
+instance PROP of #$ELSentence-Assertible, (#$cstit AGT
+PROP) should be read as `AGT weakly brings it about that PROP'.  Here
+#$cstit is a technical notion (see #$bringsAbout and
+#$bringsAbout-Int).  (#$cstit AGT PROP) is taken to mean,
+roughly, that PROP is either settled true at the current moment, or is
+guaranteed true due to an action by AGT at the current moment.  When
+(#$cstit AGT PROP) is true, AGT may or may not intend to
+bring about the fact described in PROP.  Note that (#$cstit
+AGT PROP) is equivalent to (#$or (#$bringsAbout AGT PROP)
+(#$necessary-Historical PROP)) and each (#$cstit AGT ___)
+is assigned as an S5 operator.")
+ (argIsa cstit 1 IntelligentAgent)
+ (arg1Isa cstit IntelligentAgent)

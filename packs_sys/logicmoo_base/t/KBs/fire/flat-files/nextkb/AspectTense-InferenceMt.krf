@@ -1,0 +1,16 @@
+(in-microtheory AspectTense-InferenceMt)
+
+(isa mtPrecedes-Immediately GeneralTenseReasoningConstant)
+(comment mtPrecedes-Immediately "Suppose that MT1 and MT2 are instances of
+
+#$ReasoningWithTenseMicrotheory; then (#$mtPrecedes-Immediately
+
+MT1 MT2) is true iff (#$mtPrecedes MT1 and MT2), and
+
+(#$reasoningWithTenseMtTime MT1 BEFORE), and (#$reasoningWithTenseMtTime
+
+MT2 AFTER), and (#$contiguousAfter AFTER BEFORE). Other than a
+
+contiguous-instant temporal relation, no particular assumption is made
+
+about the temporal extension of MT1 and MT2.")

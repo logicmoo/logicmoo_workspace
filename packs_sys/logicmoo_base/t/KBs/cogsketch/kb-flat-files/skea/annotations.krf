@@ -1,0 +1,215 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: annotations.meld
+;;;;    System: sKEA (Sketch-based Knowledge Entry Associate)
+;;;;    Author: Klenk
+;;;;   Created: January 18, 2001 18:20:46
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchQMFactsMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa annotationLastModifiedTime BinaryPredicate)
+(arity annotationLastModifiedTime 2)
+(arg1Isa annotationLastModifiedTime NuSketchGlyph)
+(arg2Isa annotationLastModifiedTime TimePoint)
+(comment annotationLastModifiedTime
+ "States when a specified #$SketchAnnotation was last modified.")
+
+
+(isa annotationDependsUponGlyphInk BinaryPredicate)
+(arity annotationDependsUponGlyphInk 2)
+(arg1Isa annotationDependsUponGlyphInk SketchAnnotation)
+(arg2Isa annotationDependsUponGlyphInk NuSketchGlyph)
+(comment annotationDependsUponGlyphInk
+  "Says that a given #$SketchAnnotation is only valid until the ink in the 
+   #$NuSketchGlyph mentioned is changed.  In other words, that ink was important 
+   in computing some of the facts inferred from the annotation, so if any of 
+   that ink changes, those inferred facts might not be true anymore.")
+
+
+
+(isa AnnotationGlyphFn Function-Denotational)
+(arity AnnotationGlyphFn 2)
+(arg1Isa AnnotationGlyphFn Thing)
+(arg2Isa AnnotationGlyphFn NuSketchLayer)
+(comment AnnotationGlyphFn 
+  "This is basically the same thing as the #$GlyphFn but for annotation glyphs.")
+
+
+
+(isa NuSketchAnnotationGlyph Collection)
+(genls NuSketchAnnotationGlyph NuSketchGlyph)
+(comment NuSketchAnnotationGlyph
+ "This kind of #$NuSketchGlyph is used for annotating other glyphs.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa visualQuantityQuantitativeMeasurement BinaryPredicate)
+(arity visualQuantityQuantitativeMeasurement 2)
+(comment visualQuantityQuantitativeMeasurement
+  "visualQuantityQuantitativeMeasurement links a visual quantity to a user- 
+   provided quantitative value, i.e. a length indicator could be said to 
+   represent 10 meters regardless of scale")
+(arg1Isa visualQuantityQuantitativeMeasurement VisualQuantity)
+(arg2Isa visualQuantityQuantitativeMeasurement ScalarOrVectorInterval)
+
+
+;;;other annotations go directly to valueOf statements
+
+(isa visualQuantityMeasurement BinaryPredicate)
+(arity visualQuantityMeasurement 2)
+(comment visualQuantityMeasurement
+  "visualQuantityMeasurement is a BinaryPredicate that takes a quantitative 
+   measurement of a ContinuousQuantity in a sketch.")
+(arg1Isa visualQuantityMeasurement VisualQuantity)
+(arg2Isa visualQuantityMeasurement ScalarOrVectorInterval)
+
+(isa ContinuousQuantityDenotingFn Collection)
+(isa ContinuousQuantityDenotingFn FunctionType)
+(genls ContinuousQuantityDenotingFn Function-Denotational)
+(genls ContinuousQuantityDenotingFn VariableArityFunction)
+(comment ContinuousQuantityDenotingFn
+  "This is the #$Collection of all #$Function-Denotational that describe 
+   continuous quantities.")
+
+(isa ConceptKnownAsFn UnaryFunction)
+(arity ConceptKnownAsFn 1)
+(arg1Isa ConceptKnownAsFn TextString)
+(resultIsa ConceptKnownAsFn ContinuousQuantityDenotingFn)
+(resultResultIsa ConceptKnownAsFn VariableArityFunction)
+(comment ConceptKnownAsFn 
+  "(ConceptKnownAsFn <string>) denotes a #$VariableArityFunction which is also a
+   #$ContinuousQuantityDenotingFn.  It provides an intermediate form for specifying
+   quantities from natural language.")
+
+(isa QuantityDenotedByAnnotation TernaryFunction)
+(arity QuantityDenotedByAnnotation 3)
+(arg1Isa QuantityDenotedByAnnotation SketchAnnotation)
+(arg2Isa QuantityDenotedByAnnotation VisualQuantityIndicator)
+(arg3Isa QuantityDenotedByAnnotation Set-Mathematical)
+(resultIsa QuantityDenotedByAnnotation VisualQuantity)
+(comment QuantityDenotedByAnnotation 
+  "Refers to the quantity denoted when annotating a set of entities with a 
+   #$VisualQuantityIndicator.")
+
+(isa VisualQuantity Collection)
+(genls VisualQuantity ContinuousQuantity)
+(comment VisualQuantity 
+  "VisualQuantity is the collection of all #$ContinuousQuantity that can be 
+   measured visually.")
+
+;; Not used, may need it in future, though.
+;;;(isa annotationQuantity BinaryPredicate)
+;;;(arity annotationQuantity 2)
+;;;(arg1Isa annotationQuantity SketchAnnotation)
+;;;(arg2Isa annotationQuantity Quantity)
+;;;(comment annotationQuantity 
+;;;  "Says that the given #$SketchAnnotation is associated with the specified
+;;;   #$Quantity.  Useful for tying together a quantity like 'mass of carbon in
+;;;   the oceans' to the annotation that was used to denote that quantity on a
+;;;   sketch.")
+;;;
+;;;(isa annotationQuantityVal BinaryPredicate)
+;;;(arity annotationQuantityVal 2)
+;;;(arg1Isa annotationQuantityVal SketchAnnotation)
+;;;(arg2Isa annotationQuantityVal ScalarOrVectorInterval)
+;;;(comment annotationQuantityVal 
+;;;  "Says that the given #$SketchAnnotation is associated with a specified
+;;;   quantitative value.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa DisplacementIndicator Collection)
+(genls DisplacementIndicator SketchAnnotation)
+(prettyString-Canonical DisplacementIndicator "displacement")
+(comment DisplacementIndicator 
+  "This kind of #$SketchAnnotation indicates that the object being annotated has
+   been displaced.  It gives very little information other than that.  
+   #$DirectionOfMovement, #$LengthIndicator, and the various #$specs of 
+   #$VectorAnnotation might be more useful if you also need the annotation to
+   indicate quantitative or qualitative values.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa MassIndicator Collection)
+(genls MassIndicator VisualQuantityIndicator)
+(comment MassIndicator
+  "This is the collection of sketch annotations used to indicate the mass of an
+   object.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa TemperatureIndicator Collection)
+(genls TemperatureIndicator VisualQuantityIndicator)
+(comment TemperatureIndicator
+  "This is the collection of sketch annotations used to indicate the temperature
+   of an object.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; The following are nasty -- they were created at the last minute for the
+;;; geoscience carbon cycle worksheet.  Need a better way of handling these.
+
+(isa UnitOfMassOfCarbon UnitOfMeasureConcept)
+(genls UnitOfMassOfCarbon UnitOfMeasureConcept)
+
+(isa PetagramsOfCarbon UnitOfMassOfCarbon)
+;; *** The following is wrong -- need to figure out why 
+;;     fire:evaluatable-unit-expression? doesn't find this unit without making
+;;     it an instance of UnitOfMeasureNoPrefix.
+(isa PetagramsOfCarbon UnitOfMeasureNoPrefix)
+(isa PetagramsOfCarbon VariableArityFunction)
+(argsIsa PetagramsOfCarbon NumericInterval)
+(resultIsa PetagramsOfCarbon Quantity)
+(prettyString-Canonical PetagramsOfCarbon "petagrams")
+
+(isa CarbonMassIndicator Collection)
+(genls CarbonMassIndicator VisualQuantityIndicator)
+
+
+
+
+;;;;; not yet thoroughly defined:
+;;;(isa Petagram UnitOfMass)
+;;;;; *** The following is wrong -- need to figure out why 
+;;;;;     fire:evaluatable-unit-expression? doesn't find this unit without making
+;;;;;     it an instance of UnitOfMeasureNoPrefix.
+;;;(isa Petagram UnitOfMeasureNoPrefix)
+;;;(isa Petagram VariableArityFunction)
+;;;(argsIsa Petagram NumericInterval)
+
+
+
+(isa MassTransferPerTimeIndicator Collection)
+(genls MassTransferPerTimeIndicator VisualQuantityIndicator)
+(comment MassTransferPerTimeIndicator
+  "This is the collection of sketch annotations used to indicate the mass 
+   moved in a given interval of time.")
+
+;; not yet thoroughly defined:
+(isa UnitOfMassPerTime UnitOfMeasureConcept)
+(genls UnitOfMassPerTime TwoDimensionalUnitOfMeasure)
+
+;; not yet thoroughly defined:
+(isa PetagramsPerYear UnitOfMassPerTime)
+;; *** The following is wrong -- need to figure out why 
+;;     fire:evaluatable-unit-expression? doesn't find this unit without making
+;;     it an instance of UnitOfMeasureNoPrefix.
+(isa PetagramsPerYear UnitOfMeasureNoPrefix) 
+(isa PetagramsPerYear VariableArityFunction)
+(argsIsa PetagramsPerYear NumericInterval)
+(resultIsa PetagramsPerYear Quantity)
+(prettyString-Canonical PetagramsPerYear "petagrams/year")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

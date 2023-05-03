@@ -1,0 +1,56 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: source-relations.meld
+;;;;    System: EA NLU\v8
+;;;;    Author: Ken Forbus
+;;;;   Created: April 22, 2015 09:30:55
+;;;;   Purpose: Ontology information for Barbella's predicates for text sources
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2011-03-08 22:12:45 -0600 (Tue, 08 Mar 2011) $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory EANLU)
+
+(isa TextContentsOfSourceTextsCanonicalMt Microtheory)
+(comment TextContentsOfSourceTextsCanonicalMt
+  "TextContentsOfSourceTextsCanonicalMt provides a context for storing text source materials,
+ in paragraph form, to support reading directly from the KB.")
+
+(isa listOfParasInChapter Predicate)
+(arity listOfParasInChapter 2)
+(arg1Isa listOfParasInChapter CycLTerm)
+(arg2Isa listOfParasInChapter List)
+(comment listOfParasInChapter
+  "(listOfParasInChapter ?chapter ?para-list) indicates that chapter ?chapter consists of the
+ paragraphs named in ?para-list.  Note that the list contents are reified,
+ see textContentsOfSourceText-Canonical for the link to the actual strings.")
+
+(isa textContentsOfSourceText-Canonical Predicate)
+(arity textContentsOfSourceText-Canonical 2)
+(arg1Isa textContentsOfSourceText-Canonical Paragraph-TextualPCW)
+(arg2Isa textContentsOfSourceText-Canonical NLParagraph)
+(comment textContentsOfSourceText-Canonical
+  "(textContentsOfSourceText-Canonical ?para-name ?text) indicates that the reified paragraph ?para-name
+ consists of the text ?text.")
+
+(isa SourceTextChapterParagraphFn Function-Denotational)
+(arity SourceTextChapterParagraphFn 3)
+(resultIsa SourceTextChapterParagraphFn Paragraph-TextualPCW)
+(arg1Isa SourceTextChapterParagraphFn PropositionalConceptualWork)
+(arg2Isa  SourceTextChapterParagraphFn CycLTerm)
+(arg3Isa  SourceTextChapterParagraphFn CycLTerm)
+;; N.B. the last two are terms because at this level numbers suffice for
+;; reference, we don't need to reify all the way down.
+(comment  SourceTextChapterParagraphFn
+  "(SourceTextChapterParagraphFn ?source ?chapter ?pn) denotes the ?pn-th paragraph of
+  chapter ?chapter of the propositional conceptual work ?source)")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

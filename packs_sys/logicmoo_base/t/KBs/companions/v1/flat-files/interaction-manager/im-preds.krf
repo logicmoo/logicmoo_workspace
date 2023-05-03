@@ -1,0 +1,854 @@
+;;;
+;;; im-preds.meld
+;;;
+;;; Define predicates for the interaction-manager.
+;;;
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;; -------------------
+;;; Types & Collections
+;;; -------------------
+
+;;; taskModel
+;;;  tutoring
+;;;    assertingFacts
+;;;    testingComprehension
+;;;    socraticQuestion
+;;;  problemSolving
+;;;  summarizing
+;;;  communicating
+;;;    speechAct
+
+
+(isa Correction TemporalStuffType)
+
+
+(isa contentVersion BinaryPredicate)
+(arity contentVersion 2)
+(arg1Isa contentVersion Microtheory)
+(arg2Isa contentVersion Integer)
+(comment contentVersion "(contentVersion <microtheory> <integer>) helps reconcile kb content with code.")
+
+(contentVersion Interaction-ManagerMt 6) ; This needs to be in sync with the lisp parameter *im-subversion*
+
+;;; -------------------
+;;; Outsourced Predicates
+;;; -------------------
+
+(isa checkSingularOrPlural Predicate)
+(arity checkSingularOrPlural 2)
+(arg1Isa checkSingularOrPlural Entity)
+(comment checkSingularOrPlural "(checkSingularOrPlural ?ent ?singOrPl) indicates whether ?ent is one item or a group-of-item")
+
+(isa getPotentialIsas Predicate)
+(arity getPotentialIsas 6)
+(comment getPotentialIsas "(getPotentialIsas ?sid ?dv ?gpool ?col ?mt ?drs) ?sid is the sentence id, ?dv is the discourse variable, ?gpool collection you want to genls to, ?col is the unbound variable you want to return, ?mt is the microtheory context, and ?drs is the drs id.")
+
+(isa codeVersion BinaryPredicate)
+(isa codeVersion DynamicUpdatePredicate)
+(arity codeVersion 2)
+(arg1Isa codeVersion Microtheory)
+(arg2Isa codeVersion Integer)
+(comment codeVersion "(codeVersion <microtheory> <integer>) is an outsourced predicate that helps reconcile kb content with code.")
+
+(isa interpretationContext UnaryPredicate)
+(arity interpretationContext 1)
+(arg1Isa interpretationContext Microtheory)
+(comment interpretationContext "(interpretationContext <mt>) means that the EA query-for-questions interpretation context is <mt> in the current session.  This is reifiable in the current session microtheory.")
+
+(isa textInterpretation BinaryPredicate)
+(arity textInterpretation 2)
+(arg1Isa textInterpretation StringObject)
+(arg2Isa textInterpretation ELSentence-Assertible)
+(comment textInterpretation "(textInterpretation ?text ?interpretation) binds a CycL ?interpretation for the NL ?text.")
+
+(isa sentenceSubject BinaryPredicate)
+;;(isa sentenceSubject DynamicUpdatePredicate) ; no, we want to reify this in the kb after the fact.
+(arity sentenceSubject 2)
+(arg1Isa sentenceSubject CycLTerm)
+(arg2Isa sentenceSubject CycLTerm)
+(comment sentenceSubject "(sentenceSubject ?sentence-id ?subject) extracts the subject of the specified sentence provided there is a selected root parse tree representing a complete sentence.")
+
+(isa sentenceForm BinaryPredicate)
+(arity sentenceForm 2)
+(arg1Isa sentenceForm ELSentence-Assertible)
+(arg2Isa sentenceForm StringObject)
+(comment sentenceForm "(sentenceForm ?prop ?text) generates natural language ?text for the specified proposition ?prop.")
+
+(isa currentSentenceId UnaryPredicate)
+(isa currentSentenceId DynamicUpdatePredicate)
+(arity currentSentenceId 1)
+(arg1Isa currentSentenceId CycLTerm)
+(comment currentSentenceId "(currentSentenceId ?sentence-id) binds the id of the just-processed sentence.")
+
+(isa currentSentencePos UnaryPredicate)
+(isa currentSentencePos DynamicUpdatePredicate)
+(arity currentSentencePos 1)
+(arg1Isa currentSentencePos CycLTerm)
+(comment currentSentencePos "(currentSentencePos ?sentence-pos) binds the position of the just-processed sentence.")
+
+(isa currentDiscourseId UnaryPredicate)
+(isa currentDiscourseId DynamicUpdatePredicate)
+(arity currentDiscourseId 1)
+(arg1Isa currentDiscourseId CycLTerm)
+(comment currentDiscourseId "(currentDiscourseId ?discourse-id) binds the id of *discourse*.")
+
+(isa currentSentenceString UnaryPredicate)
+(isa currentSentenceString DynamicUpdatePredicate)
+(arity currentSentenceString 1)
+(arg1Isa currentSentenceString StringObject)
+(comment currentSentenceString "(currentSentenceString ?sentence) binds the surface form ?text of the current sentence.")
+
+(isa currentSystemUtterance UnaryPredicate)
+(isa currentSystemUtterance DynamicUpdatePredicate)
+(arity currentSystemUtterance 1)
+(arg1Isa currentSystemUtterance CommunicationAct-Single)
+(comment currentSystemUtterance "(currentSystemUtterance ?comm-act) binds ?comm-act to the latest communication-act representing a system utterance.")
+
+;;; Replaced by currentTurn:
+;(isa currentUtteranceTurn UnaryPredicate)
+;(isa currentUtteranceTurn DynamicUpdatePredicate)
+;(arity currentUtteranceTurn 1)
+;(arg1Isa currentUtteranceTurn Integer)
+;(comment currentUtteranceTurn "(currentUtteranceTurn ?num) binds ?num to an integer representing the latest utterance from either the user or the system.")
+
+;;; Replaced by a counter value
+;(isa currentAmbiguity UnaryPredicate)
+;(isa currentAmbiguity DynamicUpdatePredicate)
+;(arity currentAmbiguity 1)
+;(arg1Isa currentAmbiguity Integer)
+;(comment currentAmbiguity "(currentAmbiguity ?num) binds ?num to the total number of interpretations that would be produced if all open choices were selected in all combinations.")
+
+(isa interpretationFromDrs TernaryPredicate)
+(arity interpretationFromDrs 3)
+(arg1Isa interpretationFromDrs CycLTerm)
+(arg2Isa interpretationFromDrs Microtheory)
+(arg3Isa interpretationFromDrs CycLFormula)
+(comment interpretationFromDrs "(interpretationFromDrs ?sentence-id ?discourse-case ?formula) re-queries for interpretation statements given a previously interpreted and disambiguated sentence.")
+
+(isa inconsistentInterpretation TernaryPredicate)
+(arity inconsistentInterpretation 3)
+(arg1Isa inconsistentInterpretation CycLTerm)
+(arg2Isa inconsistentInterpretation Microtheory)
+(arg3Isa inconsistentInterpretation CycLFormula)
+(comment inconsistentInterpretation "(inconsistentInterpretation ?sentence-id ?discourse-case ?formula) retrieves interpretations that may violate arg-isa constraints from a previously parsed sentence.")
+
+(isa openChoiceSet TernaryPredicate)
+(arity openChoiceSet 3)
+(arg1Isa openChoiceSet CycLTerm)
+(arg2Isa openChoiceSet Microtheory)
+(arg3Isa openChoiceSet CycLTerm)
+(comment openChoiceSet "(openChoiceSet ?sentence-id ?discourse-case ?choice-set-id) binds ?choice-set-id to open choices sets (or tests if a choice set is open)")
+
+(isa instantiatedConcept BinaryPredicate)
+(isa instantiatedConcept DynamicUpdatePredicate)
+(arity instantiatedConcept 2)
+(arg1Isa instantiatedConcept Thing) ; a Pattern.  Could be a variable, could be a variablized sentence.
+(arg2Isa instantiatedConcept Thing)
+(comment instantiatedConcept "(instantiatedConcept ?pattern ?unique-instance) replaces variables in ?pattern with gensymed symbolic concepts.  Pattern may be a single variable or a complete sentence.")
+
+(isa newReifiedUtterance UnaryPredicate)
+(isa newReifiedUtterance DynamicUpdatePredicate)
+(arity newReifiedUtterance 1)
+(arg1Isa newReifiedUtterance Thing)
+(comment newReifiedUtterance "(newReifiedUtterance ?utterance) binds its argument to a new SystemUtterance symbol so that we can assert facts about specific system-generated statements.")
+
+(isa variablizedInterpretation TernaryPredicate)
+(arity variablizedInterpretation 3)
+(arg1Isa variablizedInterpretation CycLTerm)
+(arg2Isa variablizedInterpretation CycLFormula)
+(arg3Isa variablizedInterpretation CycLFormula)
+(comment variablizedInterpretation "(variablizedInterpretation ?sentence-id ?interp ?query) lifts discourse variables to logic variables.")
+
+(isa integerString BinaryPredicate)
+(arity integerString 2)
+(arg1Isa integerString CharacterString)
+(arg2Isa integerString Integer)
+(comment integerString "(integerString ?string ?integer) parses ?string into an integer if possible.")
+
+(isa cycTermForString BinaryPredicate)
+(arity cycTermForString 2)
+(arg1Isa cycTermForString CharacterString)
+(arg2Isa cycTermForString Individual)
+(comment cycTermForString "(cycTermForString ?string ?term) constructs a capitalized symbol and binds ?term to that symbol if it exists as an individual in the KB.")
+
+(isa pseudoVarBlist BinaryPredicate)
+(arity pseudoVarBlist 2)
+(arg1Isa pseudoVarBlist CycLFormula)
+(arg2Isa pseudoVarBlist List-Extensional)
+(comment pseudoVarBlist "(pseudoVarBlist ?formula ?blist) binds ?blist to a Cyc List of mappings between pseudo variables (prefixed with a colon) and their corresponding fire variables (prefixed with a question-mark)  This allows certain plans to pass bindings along explicitly for explanation purposes.")
+
+(isa instantiatedFormula TernaryPredicate)
+(arity instantiatedFormula 3)
+(arg1Isa instantiatedFormula CycLFormula)
+(arg2Isa instantiatedFormula List-Extensional)
+(arg3Isa instantiatedFormula CycLFormula)
+(comment instantiatedFormula "(instantiatedFormula ?formula ?pseudo-var-blist ?instantiated-formula) binds ?instantiated-formula to the instantiation of ?formula, given the pseudo variable binding list.")
+
+(isa isomorphicParseTrees UnaryPredicate)
+(arity isomorphicParseTrees 1)
+(arg1Isa isomorphicParseTrees CycLTerm)
+(comment isomorphicParseTrees "(isomorphicParseTrees ?sentence-id) succeeds if all parse trees of ?sentence-id are isomorphic with respect to part of speech.")
+
+(isa parseTreeDifferences BinaryPredicate)
+(arity parseTreeDifferences 2)
+(arg1Isa parseTreeDifferences CycLTerm)
+(arg2Isa parseTreeDifferences Set-Mathematical)
+(comment parseTreeDifferences "(parseTreeDifferences ?sentence-id ?difference-set) binds ?difference-set to a set of sets of (ptEntry <node> <pt>) triples.  If the set is empty, the trees are isomorphic with respect to part of speech.")
+
+;;; -------------------
+;;; Rule Predicates
+;;; -------------------
+
+
+(isa userModelMtName BinaryPredicate)
+(arity userModelMtName 2)
+(arg1Isa userModelMtName HumanCyclist)
+(arg2Isa userModelMtName Microtheory)
+(comment "(userModelMtName ?user ?mt) generates the name of a microtheory for a HumanCyclist model, but doesn't create the microtheory.")
+
+(isa nickname BinaryPredicate)
+(arity nickname 2)
+(arg1Isa nickname HumanCyclist)
+(arg2Isa nickname CharacterString)
+(comment nickname "(nickname ?user ?nickname) binds ?nickname to a character string for addressing the user.")
+
+(isa mostSpecificUtteranceType BinaryPredicate)
+(arity mostSpecificUtteranceType 2)
+(arg1Isa mostSpecificUtteranceType CycLTerm)
+(arg2Isa mostSpecificUtteranceType CycLTerm)
+(comment mostSpecificUtteranceType "(mostSpecificUtteranceType ?sentence-id ?sentence-type) classifies ?sentence-id as concretely as possible.")
+
+(isa unknownTokens TernaryPredicate)
+(arity unknownTokens 3)
+(arg1Isa unknownTokens CycLTerm)
+(arg2Isa unknownTokens Set-Mathematical)
+(arg3Isa unknownTokens Microtheory)
+(comment unknownTokens "(unknownTokens ?sentence-id ?token-set ?discourse-ctxt) binds ?token-set to a set of tokens in the sentence that are missing lexical information.")
+
+(isa unknownConcepts TernaryPredicate)
+(arity unknownConcepts 3)
+(arg1Isa unknownConcepts CycLTerm)
+(arg2Isa unknownConcepts Set-Mathematical)
+(arg3Isa unknownConcepts Microtheory)
+(comment unknownConcepts "(unknownConcepts ?sentence-id ?word-set ?discourse-ctxt) binds ?word-set to a set of words in the sentence that are missing semantic information.")
+
+(isa likelyNameToken QuaternaryPredicate)
+(arity likelyNameToken 4)
+(arg1Isa likelyNameToken CycLTerm)
+(arg2Isa likelyNameToken CharacterString)
+(arg3Isa likelyNameToken Microtheory)
+(arg4Isa likelyNameToken Thing)
+(comment likelyNameToken "(likelyNameToken ?sentence-id ?token ?discourse-ctxt ?concept)")
+
+(isa previousSentenceId BinaryPredicate)
+(arity previousSentenceId 2)
+(arg1Isa previousSentenceId CycLTerm)
+(arg2Isa previousSentenceId CycLTerm)
+(comment previousSentenceId "(previousSentenceId ?sid ?previous-id) ")
+
+(isa missingLexInfo TernaryPredicate)
+(arity missingLexInfo 3)
+(arg1Isa missingLexInfo CycLTerm)
+(arg2Isa missingLexInfo Thing)
+(arg3Isa missingLexInfo Microtheory)
+(comment missingLexInfo "(missingLexInfo ?sentence-id ?token ?discourse-context)")
+
+(isa missingSemInfo QuaternaryPredicate)
+(arity missingSemInfo 4)
+(arg1Isa missingSemInfo CycLTerm)
+(arg2Isa missingSemInfo Thing)
+(arg3Isa missingSemInfo Microtheory)
+(arg4Isa missingSemInfo CycLTerm)
+(comment missingSemInfo "(missingSemInfo ?sentence-id ?token ?discourse-ctxt ?parse-tree-id)")
+
+(isa spanLexCat QuaternaryPredicate)
+(arity spanLexCat 4)
+(arg1Isa spanLexCat CycLTerm)
+(arg2Isa spanLexCat Thing)    ;; how is the span represented?
+(arg3Isa spanLexCat CycLTerm) ;; the category
+(arg4Isa spanLexCat Microtheory) 
+(comment spanLexCat "(spanLexCat ?sentence-id ?span ?cat ?discourse-ctxt)")
+
+(isa choiceSetCat QuaternaryPredicate)
+(arity choiceSetCat 4)
+(arg1Isa choiceSetCat CycLTerm)
+(arg2Isa choiceSetCat CycLTerm)
+(arg3Isa choiceSetCat CycLTerm) ; the category
+(arg4Isa choiceSetCat CycLTerm) 
+(comment choiceSetCat "(choiceSetCat ?sentence-id ?choice-set-id ?cat ?discourse-ctxt)")
+
+
+
+;;; Ambiguity Detection
+
+(isa accceptableAmbiguity TernaryPredicate)
+(arity accceptableAmbiguity 3)
+(arg1Isa accceptableAmbiguity CycLTerm)
+(arg2Isa accceptableAmbiguity Microtheory)
+(arg3Isa accceptableAmbiguity Set-Mathematical)
+(comment accceptableAmbiguity "(accceptableAmbiguity ?sentence-id ?discourse-ctxt ?interpretations) succeeds for singleton interpretations or multiple interpretations when sentence is an InterrogativeUtterance.")
+
+(isa uniqueInterpretation TernaryPredicate)
+(arity uniqueInterpretation 3)
+(arg1Isa uniqueInterpretation Microtheory)
+(arg2Isa uniqueInterpretation CycLTerm)
+(arg3Isa uniqueInterpretation CycLFormula)
+(comment uniqueInterpretation "(uniqueInterpretation ?context ?sentence-id ?formula) binds ?formula to the sentence interpretation if it is unique.")
+
+(isa fragmentaryParse BinaryPredicate)
+(arity fragmentaryParse 2)
+(arg1Isa fragmentaryParse CycLTerm)
+(arg2Isa fragmentaryParse Microtheory)
+(comment fragmentaryParse "(fragmentaryParse ?sentence-id ?discourse-ctxt) succeeds if the sentence has multiple, incomplete parses.")
+
+(isa fragmentaryQuestionType TernaryPredicate)
+(arity fragmentaryQuestionType 3)
+(arg1Isa fragmentaryQuestionType CycLTerm)
+(arg2Isa fragmentaryQuestionType CycLTerm)
+(arg3Isa fragmentaryQuestionType CycLTerm)
+(comment fragmentaryQuestionType "(fragmentaryQuestionType ?sentence-id ?discourse-ctxt ?qtype) binds ?qtype to a type of relative follow up question.")
+
+(isa syntacticallyAmbiguous TernaryPredicate)
+(arity syntacticallyAmbiguous 3)
+(arg1Isa syntacticallyAmbiguous CycLTerm)
+(arg2Isa syntacticallyAmbiguous CycLTerm)
+(arg3Isa syntacticallyAmbiguous Microtheory)
+(comment syntacticallyAmbiguous "(syntacticallyAmbiguous ?sentence-id ?csid ?discourse-context) means the sentence parsed into multiple unresolved top-level parse trees corresponding to choice-set ?csid.")
+
+(isa parseTreeRootChoiceSet BinaryPredicate)
+(arity parseTreeRootChoiceSet 2)
+(arg1Isa parseTreeRootChoiceSet CycLTerm)
+(arg2Isa parseTreeRootChoiceSet Microtheory)
+(comment parseTreeRootChoiceSet "(parseTreeRootChoiceSet ?csid ?discourse-ctxt) succeeds iff ?csid corresponds to a choice among entire rooted parse trees.")
+
+(isa selectedParseTreeRoot TernaryPredicate)
+(arity selectedParseTreeRoot 3)
+(arg1Isa selectedParseTreeRoot CycLTerm)
+(arg2Isa selectedParseTreeRoot CycLTerm)
+(arg3Isa selectedParseTreeRoot Microtheory)
+(comment selectedParseTreeRoot "Which root is selected?")
+
+(isa semanticallyAmbiguous TernaryPredicate)
+(arity semanticallyAmbiguous 3)
+(arg1Isa semanticallyAmbiguous CycLTerm)
+(arg2Isa semanticallyAmbiguous CycLTerm)
+(arg3Isa semanticallyAmbiguous Microtheory)
+(comment semanticallyAmbiguous "(semanticallyAmbiguous ?sentence-id ?csid ?discourse-context) succeeds if the sentence interpretation contains unresolved semantic choice sets.")
+
+(isa terminatingPunctuation BinaryPredicate)
+(arity terminatingPunctuation 2)
+(arg1Isa terminatingPunctuation CycLTerm)
+(arg2Isa terminatingPunctuation CycLTerm)
+(comment terminatingPunctuation "(terminatingPunctuation ?sentence-id ?punc) binds ?punc to the punctuation mark at the end of the sentence, or fails.")
+
+(isa quantificationAmbiguity QuaternaryPredicate)
+(arity quantificationAmbiguity 4)
+(arg1Isa quantificationAmbiguity CycLTerm)
+(arg2Isa quantificationAmbiguity CycLTerm)
+(arg3Isa quantificationAmbiguity CycLTerm)
+(arg4Isa quantificationAmbiguity CycLTerm)
+(comment quantificationAmbiguity "(quantificationAmbiguity ?sentence-id ?discourse-case ?universal-pt-id ?existential-pt-id) binds the respective parse trees to the ids of parse tree roots that differ solely in their quantifiers.")
+
+(isa bindGeneralSpecificConstituents QuaternaryPredicate)
+(arity bindGeneralSpecificConstituents 4)
+(arg1Isa bindGeneralSpecificConstituents CycLTerm)
+(arg2Isa bindGeneralSpecificConstituents CycLTerm)
+(arg3Isa bindGeneralSpecificConstituents CycLTerm)
+(arg4Isa bindGeneralSpecificConstituents CycLTerm)
+(comment bindGeneralSpecificConstituents "(bindGeneralSpecificConstituents ?universal-entry ?existential-entry ?entry1 ?entry2) classifies entry1 and entry2 and binds ?universal-entry and ?existential-entry as appropriate.")
+
+(isa preferParseTree TernaryPredicate)
+(arity preferParseTree 3)
+(arg1Isa preferParseTree CycLTerm)
+(arg2Isa preferParseTree Microtheory)
+(arg3Isa preferParseTree CycLTerm)
+(comment preferParseTree "(preferParseTree ?sentence-id ?discourse-context ?parse-tree-id) applies preference heuristics to competing parse trees.")
+
+(isa smallestBranchingPtEntry QuaternaryPredicate)
+(arity smallestBranchingPtEntry 4)
+(arg1Isa smallestBranchingPtEntry Microtheory)
+(arg2Isa smallestBranchingPtEntry List-Extensional)
+(arg3Isa smallestBranchingPtEntry CycLTerm)
+(arg4Isa smallestBranchingPtEntry CycLTerm)
+(comment smallestBranchingPtEntry "(smallestBranchingPtEntry ?discourse-context ?differing-lst ?smallest-so-far ?pt-entry)")
+
+(isa fewerParseNodeChildren QuaternaryPredicate)
+(arity fewerParseNodeChildren 4)
+(comment fewerParseNodeChildren "(fewerParseNodeChildren ?discourse-context ?entry1 ?entry2 ?fewer) binds ?fewer to the parse tree entry with fewer children, failing if it isn't unique.")
+
+(isa fewerEntryChildren QuintaryPredicate)
+(arity fewerEntryChildren 5)
+(comment fewerEntryChildren "(fewerEntryChildren ?entry1 ?num1 ?entry2 ?num2 ?entry1)")
+
+(isa competingSemanticChoiceList TernaryPredicate)
+(arity competingSemanticChoiceList 3)
+(arg1Isa competingSemanticChoiceList Microtheory)
+(arg2Isa competingSemanticChoiceList CycLTerm)
+(arg3Isa competingSemanticChoiceList List-Extensional)
+(comment competingSemanticChoiceList "(competingSemanticChoiceList ?discourse-ctxt ?csid ?choice-list) identifies choices in a choice set that actually compete.")
+
+(isa enabledChoice QuaternaryPredicate)
+(arity enabledChoice 4)
+(arg1Isa enabledChoice Microtheory)
+(arg2Isa enabledChoice CycLTerm)
+(arg3Isa enabledChoice CycLTerm)
+(arg4Isa enabledChoice CycLTerm)
+(comment enabledChoice "(enabledChoice ?discourse-ctxt ?csid ?choiceid ?choice) means ?choice is either explicitly or implicitly enabled.")
+
+(isa preferSemanticChoice QuintaryPredicate)
+(arity preferSemanticChoice 5)
+(arg1Isa preferSemanticChoice CycLTerm)
+(arg2Isa preferSemanticChoice Microtheory)
+(arg3Isa preferSemanticChoice CycLTerm)
+(arg4Isa preferSemanticChoice List-Extensional)
+(arg5Isa preferSemanticChoice CycLTerm)
+(comment preferSemanticChoice "(preferSemanticChoice ?sentence-id ?discourse-ctxt ?choice-set-id ?choice-list ?choice) applies preference heuristics to competing semantic choices.")
+
+(isa previouslyResolved TernaryPredicate)
+(arity previouslyResolved 3)
+(arg1Isa previouslyResolved Microtheory)
+(arg2Isa previouslyResolved CycLTerm)
+(arg3Isa previouslyResolved List-Extensional)
+(comment previouslyResolved "(previouslyResolved ?context ?sentence-id ?choice-list) means the choice-set implied by ?choice-list has already been disambiguated by the user in the current session.")
+
+;;; Intent recognition
+
+(isa followupQuestion BinaryPredicate) ; relation?
+(arity followupQuestion 2)
+(arg1Isa followupQuestion CycLTerm)
+(arg2Isa followupQuestion CycLTerm)
+(comment followupQuestion "(followupQuestion ?question1-id1 ?question2-id) means ?question2-id is a followup question to ?question1-id.")
+
+(isa comprehensionCheck BinaryPredicate)
+(arity comprehensionCheck 2)
+(arg1Isa comprehensionCheck CycLTerm)
+(arg2Isa comprehensionCheck CycLTerm)
+(comment comprehensionCheck "(comprehensionCheck ?declarative-id ?question-id) in a tutoring context means ?question-id should be answerable from information asserted in ?declarative-id.")
+
+(isa descriptiveElaboration BinaryPredicate)
+(arity descriptiveElaboration 2)
+(arg1Isa descriptiveElaboration CycLTerm)
+(arg2Isa descriptiveElaboration CycLTerm)
+(comment descriptiveElaboration "(descriptiveElaboration ?declarative1-id ?declarative2-id) describes two (not necessarily consequtive) declarative statements with the same subject.")
+
+(isa correctiveStatement BinaryPredicate)
+(arity correctiveStatement 2)
+(arg1Isa correctiveStatement CycLTerm)
+(arg2Isa correctiveStatement CycLTerm)
+(comment correctiveStatement "(correctiveStatement ?question-id ?declarative-id) describes a statement that answers a prior question.")
+
+
+;;; Metonymy resolution
+
+(isa metonymicReference BinaryPredicate)
+(arity metonymicReference 2)
+(arg1Isa metonymicReference CycLFormula)
+(arg2Isa metonymicReference CycLFormula)
+(comment metonymicReference "(metonymicReference ?formula ?new-formula) binds ?new-formula to a re-written formula that resolves any metonymic references.")
+
+(isa rewriteMetonymicReferences QuaternaryPredicate)
+(arity rewriteMetonymicReferences 4)
+(arg1Isa rewriteMetonymicReferences Set-Mathematical)
+(arg2Isa rewriteMetonymicReferences Set-Mathematical)
+(arg3Isa rewriteMetonymicReferences Set-Mathematical)
+(arg4Isa rewriteMetonymicReferences Set-Mathematical)
+(comment rewriteMetonymicReferences "(rewriteMetonymicReferences ?relations ?type-stmts ?new-type-stmts ?descriptive-formulae) ")
+
+(isa rewriteArgIsaViolations QuintaryPredicate)
+(arity rewriteArgIsaViolations 5)
+(arg1Isa rewriteArgIsaViolations CycLFormula)
+(arg2Isa rewriteArgIsaViolations Integer)
+(arg3Isa rewriteArgIsaViolations CycLTerm)
+(arg4Isa rewriteArgIsaViolations Collection)
+(arg5Isa rewriteArgIsaViolations List)
+(comment rewriteArgIsaViolations "(rewriteArgIsaViolations ?formula ?i ?arg ?collection ?triple)  binds ?triple to (TheList <removed-isa-stmt> <added-isa-stmt> <new-descriptive-relation>.")
+
+(isa collectionOf TernaryPredicate)
+(arity collectionOf 3)
+(arg1Isa collectionOf CycLTerm)
+(arg2Isa collectionOf Set-Mathematical)
+(arg3Isa collectionOf Collection)
+(comment collectionOf "(collectionOf ?arg ?type-stmts ?collection) binds ?collection to the type of ?arg, as explicitly represented in ?type-stmts.")
+
+(isa argIsaViolation QuaternaryPredicate)
+(arity argIsaViolation 4)
+(arg1Isa argIsaViolation CycLFormula)
+(arg2Isa argIsaViolation Integer)
+(arg3Isa argIsaViolation CycLTerm)
+(arg4Isa argIsaViolation Collection)
+(comment argIsaViolation "(argIsaViolation ?formula ?arg-num ?arg ?arg-isa) binds ?arg-isa to a violated arg-isa collection.")
+
+(isa typeToDescription TernaryPredicate)
+(arity typeToDescription 3)
+(arg1Isa typeToDescription CycLTerm)
+(arg2Isa typeToDescription Collection)
+(arg3Isa typeToDescription CycLFormula)
+(comment typeToDescription "(typeToDescription ?instance ?collection ?formula) uses denotation and frame semantic information to recast ?collection as an adjective and instantiate a descriptive formula for ?instance.")
+
+;;; Interpretation
+
+(isa userResponseExpected BinaryPredicate)
+(isa userResponseExpected DynamicUpdatePredicate)
+(arity userResponseExpected 2)
+(arg1Isa userResponseExpected Microtheory)
+(arg2Isa userResponseExpected TemporalObject)
+(comment userResponseExpected "(userResponseExpected ?context ?question-type) indicates that the most recent system utterance was a Query with type ?question-type.")
+
+(isa answersPriorQuestion QuintaryPredicate)
+(arity answersPriorQuestion 5)
+(arg1Isa answersPriorQuestion Microtheory)
+(arg2Isa answersPriorQuestion CycLTerm)
+(arg3Isa answersPriorQuestion CycLFormula)
+(arg4Isa answersPriorQuestion CycLTerm)
+(arg5Isa answersPriorQuestion CycLFormula)
+(comment answersPriorQuestion "(answersPriorQuestion ?context ?sentence-id ?interpretation ?question-id ?query) binds ?interpretation to an interpretation of ?sentence-id that answers the most recent question question-id query.")
+
+(isa answersPriorQuestionRec Predicate)
+(arity answersPriorQuestionRec 6)
+(arg1Isa answersPriorQuestionRec Microtheory)
+(arg2Isa answersPriorQuestionRec CycLTerm)
+(arg3Isa answersPriorQuestionRec CycLTerm)
+(arg4Isa answersPriorQuestionRec CycLFormula)
+(arg5Isa answersPriorQuestionRec CycLTerm)
+(arg6Isa answersPriorQuestionRec CycLFormula)
+(comment answersPriorQuestion "(answersPriorQuestionRec ?context ?sentence-id ?prior-id ?interpretation ?question-id ?query) is a recursive helper predicate for answersPriorQuestion.")
+
+(isa answersQuery QuntaryPredicate)
+(arity answersQuery 5)
+(arg1Isa answersQuery Microtheory)
+(arg2Isa answersQuery CycLTerm)
+(arg3Isa answersQuery CycLTerm)
+(arg4Isa answersQuery CycLFormula)
+(arg5Isa answersQuery CycLFormula)
+(comment answersQuery "(answersQuery ?context ?sentence-id ?question-id ?interpretation ?query) is a helper predicate for answersPriorQuestionRec.  Given a context, sentence-id and question-id, binds ?interpretation and ?query if the former answers the latter.")
+
+(isa statementAnswersQuery TernaryPredicate)
+(arity statementAnswersQuery 3)
+(arg1Isa statementAnswersQuery Microtheory)
+(arg2Isa statementAnswersQuery CycLTerm)
+(arg3Isa statementAnswersQuery CycLFormula)
+(comment statementAnswersQuery "(statementAnswersQuery ?context ?prop ?query) succeeds if declarative propsition ?prop would be an answer to query formula ?query in ?context.")
+
+(isa patternContained TernaryPredicate)
+(arity patternContained 3)
+(arg1Isa patternContained CycLFormula)
+(arg2Isa patternContained CycLFormula)
+(arg3Isa patternContained CycLFormula)
+(comment patternContained "(patternContained ?prop ?query ?pattern) means ?prop unifies with some conjunct of ?query via ?pattern.")
+
+(isa populateScratchpad BinaryPredicate)
+(arity populateScratchpad 2)
+(arg1Isa populateScratchpad Microtheory)
+(arg2Isa populateScratchpad List-Extensional)
+(comment populateScratchpad "(populateScratchpad ?scratch-mt ?props) does a bunch of tells to add the propositions to the scratchpad microtheory.")
+
+(isa relationToAnswer QuaternaryPredicate)
+(arity relationToAnswer 4)
+(arg1Isa relationToAnswer Microtheory)
+(arg2Isa relationToAnswer CycLTerm)
+(arg3Isa relationToAnswer CycLTerm)
+(arg4Isa relationToAnswer Collection)
+(comment relationToAnswer "(relationToAnswer ?context ?sentence-id ?question-id ?relation)")
+
+(isa relationBetweenPropositions QuaternaryPredicate)
+(arity relationBetweenPropositions 4)
+(arg1Isa relationBetweenPropositions CycLFormula)
+(arg2Isa relationBetweenPropositions CycLFormula)
+(arg3Isa relationBetweenPropositions TruthValue)
+(arg4Isa relationBetweenPropositions TemporalStuffType)
+(comment relationBetweenPropositions "(relationBetweenPropositions ?query ?stmts ?answer ?relation)")
+
+(isa contextuallyRelevantInterpretation QuaternaryPredicate)
+(arity contextuallyRelevantInterpretation 4)
+(arg1Isa contextuallyRelevantInterpretation Microtheory)
+(arg2Isa contextuallyRelevantInterpretation CycLTerm)
+(arg3Isa contextuallyRelevantInterpretation CycLFormula)
+(arg4Isa contextuallyRelevantInterpretation CycLTerm)
+(comment contextuallyRelevantInterpretation "(contextuallyRelevantInterpretation ?context ?stmt-id ?interpretation ?question-id)")
+
+(isa goalStatementForContradiction QuaternaryPredicate)
+(arity goalStatementForContradiction 4)
+(arg1Isa goalStatementForContradiction Microtheory)
+(arg2Isa goalStatementForContradiction ELSentence-Assertible)
+(arg3Isa goalStatementForContradiction ELSentence-Assertible)
+(arg4Isa goalStatementForContradiction ELSentence-Assertible)
+(comment goalStatementForContradiction "(goalStatementForContradiction ?context ?query ?answer ?goal-stmt) constructs a learning goal given an answer ?answer to a prior query ?query.")
+
+(isa conjunctiveStatementSet TernaryPredicate)
+(arity conjunctiveStatementSet 3)
+(arg1Isa conjunctiveStatementSet Microtheory)
+(arg2Isa conjunctiveStatementSet CycLFormula)
+(arg3Isa conjunctiveStatementSet Set-Mathematical)
+(comment conjunctiveStatementSet "(conjunctiveStatementSet ?context ?prop ?stmts) binds ?stmts to a set consisting of the possibly conjunctive clauses of ?prop")
+
+(isa justificationForBelief TernaryPredicate)
+(arity justificationForBelief 3)
+(arg1Isa justificationForBelief Microtheory)
+(arg2Isa justificationForBelief CycLTerm)
+(arg3Isa justificationForBelief Set-Mathematical)
+(comment justificationForBelief "(justificationForBelief ?context ?question-id ?reasons) attempts to produce reasons why the question ?question-id was answered the way it was.")
+
+(isa firstOrderReasonsFor BinaryPredicate)
+(arity firstOrderReasonsFor 2)
+(arg1Isa firstOrderReasonsFor ELSentence-Assertible)
+(arg2Isa firstOrderReasonsFor Set-Mathematical)
+
+(isa explanatoryAntecedent UnaryPredicate)
+(arity explanatoryAntecedent 1)
+(arg1Isa explanatoryAntecedent ELSentence-Assertible)
+
+(isa translateAndQueryWM Predicate)
+(arity translateAndQueryWM 5)
+(comment translateAndQueryWM "(translateAndQueryWM ?lifted-query ?genlpred ?query-var ?bdg ?stmt) is a helper predicate for justificationForBelief.")
+
+(isa exampleProvidedInUtterance Predicate)
+(arity exampleProvidedInUtterance 2)
+(comment exampleProvidedInUtterance "(exampleProvidedInUtterance ?sentence-id ?example) says that ?sentence-id provides ?example as an example of some concept.")
+
+
+;;; Generation
+
+(isa unknownPhraseMessage BinaryPredicate)
+(arity unknownPhraseMessage 2)
+(arg1Isa unknownPhraseMessage Set-Mathematical)
+(arg2Isa unknownPhraseMessage StringObject)
+(comment unknownPhraseMessage "(unknownPhraseMessage ?words ?msg) binds ?msg to an appropriate message string for communicating missing lexical items.")
+
+
+(isa unknownConceptMessage BinaryPredicate)
+(arity unknownConceptMessage 2)
+(arg1Isa unknownConceptMessage Set-Mathematical)
+(arg2Isa unknownConceptMessage StringObject)
+(comment unknownConceptMessage "(unknownConceptMessage ?word-set ?msg) binds ?msg to an appropriate message string for communicating missing conceptual mappings.")
+
+(isa syntacticalAmbiguityMessage UnaryPredicate)
+(arity syntacticalAmbiguityMessage 1)
+(arg1Isa syntacticalAmbiguityMessage CharacterString)
+(comment syntacticalAmbiguityMessage "(syntacticalAmbiguityMessage ?msg) binds ?msg to an appropriate message expressing syntactic ambiguity.")
+
+(isa semanticAmbiguityMessage TernaryPredicate)
+(arity semanticAmbiguityMessage 3)
+(arg1Isa semanticAmbiguityMessage Microtheory)
+(arg2Isa semanticAmbiguityMessage CycLTerm)
+(arg3Isa semanticAmbiguityMessage CharacterString)
+(comment semanticAmbiguityMessage "(semanticAmbiguityMessage ?context ?sentence-id ?msg) binds ?msg to an appropriate message expressing semantic ambiguity.")
+
+(isa cantClassifyMessage BinaryPredicate)
+(arity cantClassifyMessage 2)
+(arg1Isa cantClassifyMessage CycLTerm)
+(arg2Isa cantClassifyMessage CharacterString)
+(comment cantClassifyMessage "(cantClassifyMessage ?sentence-id ?msg) binds ?msg to an appropriate message.")
+
+(isa selectionMsgFromList BinaryPredicate)
+(arity selectionMsgFromList 2)
+(arg1Isa selectionMsgFromList List-Extensional)
+(arg2Isa selectionMsgFromList CharacterString)
+(comment selectionMsgFromList "(selectionMsgFromList ?choice-list ?msg) ")
+
+(isa numberedList TernaryPredicate)
+(arity numberedList 3)
+(arg1Isa numberedList List-Extensional)
+(arg2Isa numberedList Integer)
+(arg3Isa numberedList List-Extensional)
+(comment numberedList "(numberedList ?list ?length ?numbered-list) binds ?length and ?numbered-list to the length of ?list and an ordered list of pairs (<position> <item>) for use in making selection lists.")
+
+(isa yesNoReply BinaryPredicate)
+(arity yesNoReply 2)
+(arg1Isa yesNoReply TruthValue)
+(arg2Isa yesNoReply CharacterString)
+(comment yesNoReply "(yesNoReply ?truthValue ?string) converts True to yes and False to no.")
+
+(isa colloquialName BinaryPredicate)
+(arity colloquialName 2)
+(arg1Isa colloquialName CycLTerm)
+(arg2Isa colloquialName CharacterString)
+(comment colloquialName "(colloquialName ?person ?name) looks up a namestring. It should never fail.")
+
+(isa typeDescription TernaryPredicate)
+(arity typeDescription 3)
+(arg1Isa typeDescription CycLTerm)
+(arg2Isa typeDescription Set-Mathematical)
+(arg3Isa typeDescription CharacterString)
+(comment typeDescription "(typeDescription ?name ?type-set ?description) binds ?description to a string describing ?name")
+
+(isa listDescription BinaryPredicate)
+(arity listDescription 2)
+(arg1Isa listDescription Set-Mathematical)
+(arg2Isa listDescription CharacterString)
+(comment listDescription "(listDescription ?set ?description) binds ?description to a string describing ?set")
+
+(isa listReasons BinaryPredicate)
+(arity listReasons 2)
+(arg1Isa listReasons Set-Mathematical)
+(arg2Isa listReasons CharacterString)
+(comment listReasons "(listReasons ?set ?description) binds ?description to a string (with linefeeds) describing ?set")
+
+(isa quantityString BinaryPredicate)
+(arity quantityString 2)
+(arg1Isa quantityString ScalarInterval)
+(arg2Isa quantityString CharacterString)
+(comment quantityString "(quantityString ?quantity ?string) binds ?string to a pidginized form of the quantity.")
+
+(isa pidginizeTerm BinaryPredicate)
+(arity pidginizeTerm 2)
+(arg1Isa pidginizeTerm CycLTerm)
+(arg2Isa pidginizeTerm CharacterString)
+(comment pidginizeTerm "(pidginizeTerm ?term ?string) bind ?string to a pidginized form of the term.")
+
+(isa pidginizeExpression BinaryPredicate)
+(arity pidginizeExpression 2)
+(arg1Isa pidginizeExpression List-Extensional)  ; or Set-Mathematical
+(arg2Isa pidginizeExpression List-Extensional)
+(comment pidginizeExpression "(pidginizeExpression ?input-list ?pidginized-list) bind ?list to a pidginized form of the input.")
+
+(isa syntaxDifferentialGloss TernaryPredicate)
+(arity syntaxDifferentialGloss 3)
+(arg1Isa syntaxDifferentialGloss Microtheory)
+(arg2Isa syntaxDifferentialGloss CycLTerm)
+(arg3Isa syntaxDifferentialGloss CharacterString)
+(comment syntaxDifferentialGloss "(syntaxDifferentialGloss ?discourse-context ?previous-user-sentence-id ?utterance-string) binds ?utterance-string to a simple English explanation for why a sentence was ambiguous.")
+
+(isa versionMismatchMsg TernaryPredicate)
+(arity versionMismatchMsg 3)
+(arg1Isa versionMismatchMsg Integer)
+(arg2Isa versionMismatchMsg Integer)
+(arg3Isa versionMismatchMsg CharacterString)
+(comment versionMismatchMsg "(versionMismatchMsg ?contentver ?codever ?msg) warns the user if code and content are out of synch.")
+
+;;; -------------------
+;;; Elaborated Relational Predicates
+;;; -------------------
+
+(isa selectionForInterpretation QuintaryPredicate)
+(arity selectionForInterpretation 5)
+(arg1Isa selectionForInterpretation CycLFormula)
+(arg2Isa selectionForInterpretation CycLTerm)
+(arg3Isa selectionForInterpretation CycLTerm)
+(comment selectionForInterpretation "(selectionForInterpretation ?sid ?interpretation ?csid ?cid ?choice) provides an audit trail for tracking choices that justify an interpretation.")
+
+(isa interpretationOf BinaryPredicate)
+(arity interpretationOf 2)
+(arg1Isa interpretationOf CycLTerm)
+(arg2Isa interpretationOf CycLFormula)
+(comment interpretationOf "(interpretationOf ?sentence-id ?prop) reifies proposition ?prop as one possible CycL interpretation of ?sentence-id.")
+
+(isa preferredInterpretation BinaryPredicate)
+(arity preferredInterpretation 2)
+(arg1Isa preferredInterpretation CycLTerm)
+(arg2Isa preferredInterpretation CycLFormula)
+(comment preferredInterpretation "(preferredInterpretation ?sentence-id ?prop) reifies a unique preferred interpretation from among several possibilities.")
+
+(isa userUtteranceAt TernaryPredicate)
+(arity userUtteranceAt 3)
+(arg1Isa userUtteranceAt CycSeconds)
+(arg2Isa userUtteranceAt CommunicationAct-Single)
+(arg3Isa userUtteranceAt CharacterString)
+(comment userUtteranceAt "(userUtteranceAt ?time ?sentence-id ?string) records the time, sentence-id and surface form of a user utterance.")
+
+(isa utteranceType BinaryPredicate)
+(arity utteranceType 2)
+(arg1Isa utteranceType CycLTerm)
+(arg2Isa utteranceType CycLTerm)
+(comment utteranceType "(utteranceType ?sentence-id ?type) is the reification of the mostSpecificUtteranceType of the sentence.")
+
+;;; What do we want to do here?  Have a sentence-id as with user utterances?
+;;; At issue is how to reconstruct the turn order, plus the fact that we don't always have
+;;; a well-formed Cyc formula we're generating language from.
+;;; Also, doAnnounce doesn't lend itself to constructing the string for storage.
+(isa systemUtteranceAt TernaryPredicate)
+(arity systemUtteranceAt 3)
+(arg1Isa systemUtteranceAt CycSeconds)
+(arg2Isa systemUtteranceAt CommunicationAct-Single)
+(arg3Isa systemUtteranceAt CharacterString)
+(comment systemUtteranceAt "(systemUtteranceAt ?time ?meaning-rep ?string) records the time, predicate-calculus, and surface form of a system utterance.")
+
+(isa turnUtterance BinaryPredicate)
+(arity turnUtterance 2)
+(arg1Isa turnUtterance Integer)
+(arg2Isa turnUtterance CommunicationAct-Single)
+(comment turnUtterance "(turnUtterance ?turn ?utterance) relates a turn number to an utterance id, either a user utterance or a system utterance.")
+
+;;; Written out when the companion responds to a question:
+(isa sentenceQuery TernaryPredicate)
+(arity sentenceQuery 3)
+(arg1Isa sentenceQuery CycLTerm)
+(arg2Isa sentenceQuery CycLFormula)
+(arg3Isa sentenceQuery CycLFormula)
+(comment sentenceQuery "(sentenceQuery ?sentence-id ?raw-interpretation ?query) associates a sentence-id with its optimized query interpretation.")
+
+(isa queryChoices BinaryPredicate)
+(arity queryChoices 2)
+(arg1Isa queryChoices CycLTerm)
+(arg2Isa queryChoices List-Extensional)
+(comment queryChoices "(queryChoices ?system-utterance ?choice-list) associates a list of choices with a question sentence-id.")
+
+(isa queryAnswer BinaryPredicate)
+(arity queryAnswer 2)
+(arg1Isa queryAnswer CycLTerm)
+(arg2Isa queryAnswer CycLFormula)
+(comment queryAnswer "(queryAnswer ?sentence-id ?answer) records the CycL answer to the query denoted by ?sentence-id.")
+
+(isa userDisambiguatedChoice QuaternaryPredicate)
+(arity userDisambiguatedChoice 4)
+(arg1Isa userDisambiguatedChoice CycLTerm)
+(arg2Isa userDisambiguatedChoice CycLTerm)
+(arg3Isa userDisambiguatedChoice CycLTerm)
+(arg4Isa userDisambiguatedChoice CycLTerm)
+(comment userDisambiguatedChoice "(userDisambiguatedChoice ?sentence-id ?csid ?choiceid ?choice) records the fact that the user explicitly selected ?choice from choice-set ?csid in the context of ?sentence.")
+
+(isa systemDisambiguatedChoice QuaternaryPredicate)
+(arity systemDisambiguatedChoice 4)
+(arg1Isa systemDisambiguatedChoice CycLTerm)
+(arg2Isa systemDisambiguatedChoice CycLTerm)
+(arg3Isa systemDisambiguatedChoice CycLTerm)
+(arg4Isa systemDisambiguatedChoice CycLTerm)
+(comment systemDisambiguatedChoice "(systemDisambiguatedChoice ?sentence-id ?csid ?choiceid ?choice) records the fact that ?choice from choice-set ?csid was selected by the system in the process of answering ?sentence.")
+
+(isa choiceViolatesArgIsaConstraints TernaryPredicate)
+(arity choiceViolatesArgIsaConstraints 3)
+(arg1Isa choiceViolatesArgIsaConstraints ELSentence-Assertible)
+(arg2Isa choiceViolatesArgIsaConstraints CycLTerm)
+(arg3Isa choiceViolatesArgIsaConstraints CycLTerm)
+(comment choiceViolatesArgIsaConstraints "(choiceViolatesArgIsaConstraints choice csid sentence-id) is written out by the valid-choice? routine when a choice is rejected because it violates arg-isa constraints.")
+
+(isa preferredDenotation TernaryPredicate)
+(arity preferredDenotation 3)
+(arg1Isa preferredDenotation CompanionsDomain)  ; It would be better to use a microtheory here
+(arg2Isa preferredDenotation EnglishWord)
+(arg3Isa preferredDenotation Collection)
+(comment preferredDenotation "(preferredDenotation ?domain ?word ?concept) specifies a preferred denoation in the context of a particular domain.")
+
+(isa interpretedReferent BinaryPredicate)
+(arity interpretedReferent 2)
+(comment interpretedReferent "(interpretedReferent ?reference ?referent) specifies the referent for a reference.")
+
+(isa deconjunctifySet BinaryPredicate)
+(arity deconjunctifySet 2)
+(arg1Isa deconjunctifySet Set-Mathematical)
+(arg2Isa deconjunctifySet Set-Mathematical)
+(comment deconjunctifySet "(deconjunctifySet <original-set> <deconjunctified>) takes all the conjunctions in the 
+<original-set> and turns them into lists.")
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa ReplyingWithUnknown TemporalObjectType)
+(genls ReplyingWithUnknown ReplyingToAQuestion)
+(comment ReplyingWithUnknown "ReplyingWithUnknown denotes a failure to answer a question.")
+
+(isa ProvidingAnExample ObjectType)
+(isa ProvidingAnExample TemporalStuffType)
+(genls ProvidingAnExample DeclarativeUtterance)
+(comment ProvidingAnExample "ProvidingAnExample denotes an utterance which provides an example of a concept.")
+
+(isa concatenatedList Predicate)
+(arity concatenatedList 2)
+(arg1Isa List)
+(arg2Isa String)
+(comment concatenatedList "(concatenatedList ?list-of-things-to-concatenate ?result-string) is an all-purpose
+concatenation predicate that can handle any list of strings or symbols or both. It converts symbols to the
+symbol-name when they're used that way.")
+
+;;; End of file

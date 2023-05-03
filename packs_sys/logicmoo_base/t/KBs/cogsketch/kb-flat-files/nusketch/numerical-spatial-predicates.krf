@@ -1,0 +1,37 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: numerical-spatial-predicates.meld
+;;;;    System: 
+;;;;    Author: Scott Friedman
+;;;;   Created: October 9, 2009 13:58:40
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Friday, October 9, 2009 at 14:26:21 by sef318
+;;;; ---------------------------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa majorAxisAngle Predicate)
+(comment majorAxisAngle "Represents the major axis angle, relative to the current 2D orientation of the object.") 
+(arity majorAxisAngle 2)
+(arg1Isa majorAxisAngle SpatialThing)
+(arg2Isa majorAxisAngle AngularDistance)
+
+(isa lengthAlongMajorAxis Predicate)
+(comment lengthAlongMajorAxis "Represents the length of an object along its major axis.") 
+(arity lengthAlongMajorAxis 2)
+(arg1Isa lengthAlongMajorAxis SpatialThing)
+(arg2Isa lengthAlongMajorAxis Distance)
+
+(isa widthAcrossMajorAxis Predicate)
+(comment widthAcrossMajorAxis "Represents the width of an object across its major axis.") 
+(arity widthAcrossMajorAxis 2)
+(arg1Isa widthAcrossMajorAxis SpatialThing)
+(arg2Isa widthAcrossMajorAxis Distance)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

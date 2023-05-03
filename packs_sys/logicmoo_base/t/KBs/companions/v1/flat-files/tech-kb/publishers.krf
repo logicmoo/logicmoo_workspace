@@ -1,0 +1,796 @@
+(in-microtheory MetaengineeringReferencesMt)
+
+;;; Publishers
+
+(isa A-And-W-Publishers Individual)
+(isa A-And-W-Publishers PublishingCompany)
+(nameString A-And-W-Publishers "A&W Publishers")
+
+(isa AGMA Individual)
+(isa AGMA PublishingCompany)
+(nameString AGMA "AGMA - Association Of Gear Manufacturers Of America")
+
+(isa ASME Individual)
+(isa ASME PublishingCompany)
+(nameString ASME "ASME - American Society of Mechanical Engineers")
+
+(isa AbelardSchumanLtd-Publishers Individual)
+(isa AbelardSchumanLtd-Publishers PublishingCompany)
+(nameString AbelardSchumanLtd-Publishers "Abelard-Schuman Limited")
+
+(isa AcademicPress Individual)
+(isa AcademicPress PublishingCompany)
+(nameString AcademicPress "Academic Press")
+
+(isa AddisonWesley-Publishers Individual)
+(isa AddisonWesley-Publishers PublishingCompany)
+(nameString AddisonWesley-Publishers "Addison Wesley")
+
+(isa AerospaceCorporation Individual)
+(isa AerospaceCorporation PublishingCompany)
+(nameString AerospaceCorporation "Aerospace Corporation")
+
+(isa AlfredAKnopf-Publishers Individual)
+(isa AlfredAKnopf-Publishers PublishingCompany)
+(nameString AlfredAKnopf-Publishers "Alfred A. Knopf")
+
+(isa AllenAndUnwin-Publishers Individual)
+(isa AllenAndUnwin-Publishers PublishingCompany)
+(nameString AllenAndUnwin-Publishers "Allen &  Unwin")
+
+(isa AlthonePress Individual)
+(isa AlthonePress PublishingCompany)
+(nameString AlthonePress  "Althone Press")
+
+(isa AmericanHeritagePublishingCo Individual)
+(isa AmericanHeritagePublishingCo PublishingCompany)
+(nameString AmericanHeritagePublishingCo "American Heritage Publishing Co.")
+
+(isa AmericanInstituteOfPhysics Individual)
+(isa AmericanInstituteOfPhysics PublishingCompany)
+(nameString AmericanInstituteOfPhysics "AIP - American Institute of Physics")
+
+(isa AvonBooks Individual)
+(isa AvonBooks PublishingCompany)
+(nameString AvonBooks "Avon Books")
+
+(isa BabcockAndWilcoxCo Individual)
+(isa BabcockAndWilcoxCo PublishingCompany)
+(nameString BabcockAndWilcoxCo "Babcock & Wilcox Co.")
+
+(isa BallentineBooks Individual)
+(isa BallentineBooks PublishingCompany)
+(nameString BallentineBooks "Ballentine Books")
+
+(isa BantamBooks Individual)
+(isa BantamBooks PublishingCompany)
+(nameString BantamBooks "Bantam Books")
+
+(isa BarnesAndNobleBooks Individual)
+(isa BarnesAndNobleBooks PublishingCompany)
+(nameString BarnesAndNobleBooks "Barnes&Noble Books")
+
+(isa BasicBooksInc Individual)
+(isa BasicBooksInc PublishingCompany)
+(nameString BasicBooksInc "Basic Books")
+
+(isa BellTelephoneLaboratories Individual)
+(isa BellTelephoneLaboratories PublishingCompany)
+(nameString BellTelephoneLaboratories "Bell Telephone Laboratories")
+
+(isa BerkleyBooksInc Individual)
+(isa BerkleyBooksInc PublishingCompany)
+(nameString BerkleyBooksInc "Berkley Books")
+
+(isa BobbsMerrillCo-Publishers Individual)
+(isa BobbsMerrillCo-Publishers PublishingCompany)
+(nameString BobbsMerrillCo-Publishers "The Bobbs-Merrill Co.")
+
+(isa BonanzaBooks-Publishers Individual)
+(isa BonanzaBooks-Publishers PublishingCompany)
+(nameString BonanzaBooks-Publishers "Bonanza Books")
+
+(isa BookPublishersInc Individual)
+(isa BookPublishersInc PublishingCompany)
+(nameString BookPublishersInc "Book Publishers, Inc.")
+
+(isa Borderland-Publishers Individual)
+(isa Borderland-Publishers PublishingCompany)
+(nameString Borderland-Publishers "Borderland Sciences Research Foundation")
+
+;(isa BournesInc Individual)
+;(isa BournesInc PublishingCompany)
+;(nameString BournesInc "Bournes, Inc.")
+
+(isa Brazilier-Publishers Individual)
+(isa Brazilier-Publishers PublishingCompany)
+(nameString Brazilier-Publishers "George Brazillier, Inc.")
+
+(isa BritishMuseumPublicationsLtd Individual)
+(isa BritishMuseumPublicationsLtd PublishingCompany)
+(nameString BritishMuseumPublicationsLtd "British Museum Publications, Ltd.")
+
+(isa BroadwayBooks Individual)
+(isa BroadwayBooks PublishingCompany)
+(nameString BroadwayBooks "Broadway Books")
+
+(isa BrownUniversityPress Individual)
+(isa BrownUniversityPress PublishingCompany)
+(nameString BrownUniversityPress "Brown University Press")
+
+(isa BurndyLibrary Individual)
+(isa BurndyLibrary PublishingCompany)
+(nameString BurndyLibrary "Burndy Library")
+
+(isa Butterworths-Publishers Individual)
+(isa Butterworths-Publishers PublishingCompany)
+(nameString Butterworths-Publishers "Butterworths Publishers")
+
+(isa CRCPress Individual)
+(isa CRCPress PublishingCompany)
+(nameString CRCPress "CRC Press")
+
+(isa CahnersBooks Individual)
+(isa CahnersBooks PublishingCompany)
+(nameString CahnersBooks "Cahners Books")
+
+(isa CambridgeUniversityPress Individual)
+(isa CambridgeUniversityPress PublishingCompany)
+(nameString CambridgeUniversityPress "Cambridge University Press")
+
+(isa CarrollAndGraf-Publishers Individual)
+(isa CarrollAndGraf-Publishers PublishingCompany)
+(nameString CarrollAndGraf-Publishers "Carroll & Graf publishers")
+
+(isa ChambersEncyclopedicGuides Individual)
+(isa ChambersEncyclopedicGuides PublishingCompany)
+(nameString ChambersEncyclopedicGuides "Chambers Encyclopedic Guides")
+
+(isa CheckmarkBooks Individual)
+(isa CheckmarkBooks PublishingCompany)
+(nameString CheckmarkBooks "Checkmark Books")
+
+(isa Chilton-Publishers Individual)
+(isa Chilton-Publishers PublishingCompany)
+(nameString Chilton-Publishers "Chilton Publishers")
+
+(isa ClarendonPress Individual)
+(isa ClarendonPress PublishingCompany)
+(nameString ClarendonPress "Clarendon Press")
+
+(isa CollierBooks-Publishers Individual)
+(isa CollierBooks-Publishers PublishingCompany)
+(nameString CollierBooks-Publishers "Collier Books")
+
+(isa ColumbiaUniversityPress Individual)
+(isa ColumbiaUniversityPress PublishingCompany)
+(nameString ColumbiaUniversityPress "Columbia University Press")
+
+(isa ContemporaryBooks Individual)
+(isa ContemporaryBooks PublishingCompany)
+(nameString "Contemporary Books")
+
+(isa CornellUniversityPress Individual)
+(isa CornellUniversityPress PublishingCompany)
+(nameString CornellUniversityPress "Cornell University Press")
+
+(isa CounterpointPublications Individual)
+(isa CounterpointPublications PublishingCompany)
+(nameString CounterpointPublications "Counterpoint Publications")
+
+(isa CraneRussakAndCo-Publishers Individual)
+(isa CraneRussakAndCo-Publishers PublishingCompany)
+(nameString CraneRussakAndCo-Publishers "Crane, Russak & Co, Inc.")
+
+(isa DelacortePress Individual)
+(isa DelacortePress PublishingCompany)
+(nameString DelacortePress "Delacorte Press")
+
+(isa DoddMeadAndCo-Publishers Individual)
+(isa DoddMeadAndCo-Publishers PublishingCompany)
+(nameString DoddMeadAndCo-Publishers "Dodd, Mead & Co.")
+
+(isa Doubleday-Publishers Individual)
+(isa Doubleday-Publishers PublishingCompany)
+(nameString Doubleday-Publishers "Doubleday")
+
+(isa Dover-Publishers Individual)
+(isa Dover-Publishers PublishingCompany)
+(nameString Dover-Publishers "Dover")
+
+(isa EAndFNSpon-Publishers Individual)
+(isa EAndFNSpon-Publishers PublishingCompany)
+(nameString EAndFNSpon-Publishers "E&FN Spon")
+
+(isa EPDuttonAndCo-Publishers Individual)
+(isa EPDuttonAndCo-Publishers PublishingCompany)
+(nameString EPDuttonAndCo-Publishers "E.P. Dutton & Co")
+
+(isa EdinburghUniversityPress Individual)
+(isa EdinburghUniversityPress PublishingCompany)
+(nameString EdinburghUniversityPress "Edinburgh University Press")
+
+(isa EdwardArnold-Publishers Individual)
+(isa EdwardArnold-Publishers PublishingCompany)
+(nameString EdwardArnold-Publishers "Edward Arnold Publishers")
+
+(isa FarrarStrausAndGiroux-Publishers Individual)
+(isa FarrarStrausAndGiroux-Publishers PublishingCompany)
+(nameString FarrarStrausAndGiroux-Publishers "Farrar, Straus and Giroux")
+
+(isa FawcettPublishing Individual)
+(isa FawcettPublishing PublishingCompany)
+(nameString FawcettPublishing "Fawcett Publishing")
+
+(isa FriedmanFairfax-Publishers Individual)
+(isa FriedmanFairfax-Publishers PublishingCompany)
+(nameString FriedmanFairfax-Publishers "Friedman/Fairfax Publishers")
+
+(isa FuchsAndLang-Publishers Individual)
+(isa FuchsAndLang-Publishers PublishingCompany)
+(nameString FuchsAndLang-Publishers "Fuchs & Lang")
+
+(isa GBellAndSons-Publishers Individual)
+(isa GBellAndSons-Publishers PublishingCompany)
+(nameString GBellAndSons-Publishers "G. Bell and Sons, Publishers")
+
+(isa GKKent-Publishers Individual)
+(isa GKKent-Publishers PublishingCompany)
+(nameString GKKent-Publishers "G.K. Kent & Co.")
+
+(isa GPPutnamsSons-Publishers Individual)
+(isa GPPutnamsSons-Publishers PublishingCompany)
+(nameString GPPutnamsSons-Publishers "G. P. Putnam's Sons")
+
+(isa Garland-Publishers Individual)
+(isa Garland-Publishers PublishingCompany)
+(nameString Garland-Publishers "Garland Pubs.")
+
+(isa GeneralElectric Individual)
+(isa GeneralElectric PublishingCompany)
+(nameString GeneralElectric "General Electric")
+
+(isa GrantaBooks Individual)
+(isa GrantaBooks PublishingCompany)
+(nameString GrantaBooks "Granta Books")
+
+(isa HanoverHouse-Publishers Individual)
+(isa HanoverHouse-Publishers PublishingCompany)
+(nameString HanoverHouse-Publishers "Hanover House Publishers")
+
+(isa HarcourtBraceAndCo-Publishers Individual)
+(isa HarcourtBraceAndCo-Publishers PublishingCompany)
+(nameString HarcourtBraceAndCo-Publishers "Harcourt Brace & Co.")
+
+(isa HarperBrothers-Publishers Individual)
+(isa HarperBrothers-Publishers PublishingCompany)
+(nameString HarperBrothers-Publishers "Harper & Brothers Publishers")
+
+(isa HarperTorchbooks-Publishers Individual)
+(isa HarperTorchbooks-Publishers PublishingCompany)
+(nameString HarperTorchbooks-Publishers "Harper Torchbooks publishers")
+
+(isa HarvardBusinessSchoolPress Individual)
+(isa HarvardBusinessSchoolPress PublishingCompany)
+(nameString HarvardBusinessSchoolPress "Harvard Business School Press")
+
+(isa HarvardUniversityPress Individual)
+(isa HarvardUniversityPress PublishingCompany)
+(nameString HarvardUniversityPress "Harvard University Press")
+
+(isa HawthorneBooksInc Individual)
+(isa HawthorneBooksInc PublishingCompany)
+(nameString HawthorneBooksInc "Hawthorne Books Inc")
+
+(isa HearstBooks Individual)
+(isa HearstBooks PublishingCompany)
+(nameString HearstBooks "Hearst Books")
+
+(isa Heinemann-Publishers Individual)
+(isa Heinemann-Publishers PublishingCompany)
+(nameString Heinemann-Publishers "Heinemann Publishers")
+
+(isa HenryHoltAndCo-Publishers Individual)
+(isa HenryHoltAndCo-Publishers PublishingCompany)
+(nameString HenryHoltAndCo-Publishers "Henry Holt and Co.")
+
+(isa HerMajestysStationeryOffice Individual)
+(isa HerMajestysStationeryOffice PublishingCompany)
+(nameString HerMajestysStationeryOffice "Her Majesty's Stationery Office")
+
+(isa HoltRinehartAndWinston-Publishers Individual)
+(isa HoltRinehartAndWinston-Publishers PublishingCompany)
+(nameString HoltRinehartAndWinston-Publishers "Holt, Rinehart and Winston")
+
+(isa HoughtonMifflin-Publishers Individual)
+(isa HoughtonMifflin-Publishers PublishingCompany)
+(nameString HoughtonMifflin-Publishers "Houghton Mifflin")
+
+(isa HowardWSams-Publishers Individual)
+(isa HowardWSams-Publishers PublishingCompany)
+(nameString HowardWSams-Publishers "Howard W. Sams & Co. Inc.")
+
+(isa HutchinsonsScientificAndTechnicalPublications Individual)
+(isa HutchinsonsScientificAndTechnicalPublications PublishingCompany)
+(nameString HutchinsonsScientificAndTechnicalPublications "Hutchinson's Scientific and Technical Publications")
+
+(isa Hyperion-Publishers Individual)
+(isa Hyperion-Publishers PublishingCompany)
+(nameString Hyperion-Publishers "Hyperion")
+
+(isa IBMInc Individual)
+(isa IBMInc PublishingCompany)
+(nameString IBMInc "IBM")
+
+(isa IEEE-Press Individual)
+(isa IEEE-Press PublishingCompany)
+(nameString IEEE-Press "IEEE Press")
+
+(isa InstituteOfPhysics Individual)
+(isa InstituteOfPhysics PublishingCompany)
+(nameString InstituteOfPhysics "The Institute of Physics")
+
+(isa InstrumentsPublishingCo Individual)
+(isa InstrumentsPublishingCo PublishingCompany)
+(nameString InstrumentsPublishingCo "Instruments Publishing Co.")
+
+(isa InternationalUnionOfCrystallography Individual)
+(isa InternationalUnionOfCrystallography PublishingCompany)
+(nameString InternationalUnionOfCrystallography "International Union of Crystallography")
+
+(isa IntersciencePublishers Individual)
+(isa IntersciencePublishers PublishingCompany)
+(nameString IntersciencePublishers "Interscience Publishers, Inc.")
+
+(isa IowaStateUniversityPress Individual)
+(isa IowaStateUniversityPress PublishingCompany)
+(nameString IowaStateUniversityPress "Iowa State University Press")
+
+(isa JBLippincott-Publishers Individual)
+(isa JBLippincott-Publishers PublishingCompany)
+(nameString JBLippincott-Publishers "J.B. Lippincott")
+
+(isa JohnFRider-Publishers Individual)
+(isa JohnFRider-Publishers PublishingCompany)
+(nameString JohnFRider-Publishers "John F. Rider, Publishers")
+
+(isa JohnWileyAndSons-Publishers Individual)
+(isa JohnWileyAndSons-Publishers PublishingCompany)
+(nameString JohnWileyAndSons-Publishers "John Wiley & Sons")
+
+(isa JohnsHopkinsUniversityPress Individual)
+(isa JohnsHopkinsUniversityPress PublishingCompany)
+(nameString JohnsHopkinsUniversityPress "Johns Hopkins University Press")
+
+(isa LittleBrownAndCo Individual)
+(isa LittleBrownAndCo PublishingCompany)
+(nameString LittleBrownAndCo "Litle, Brown and Co.")
+
+(isa Lothrop-Publishers Individual)
+(isa Lothrop-Publishers PublishingCompany)
+(nameString Lothrop-Publishers "Lothrop, Lee & Shepard Publishers")
+
+(isa MITPress Individual)
+(isa MITPress PublishingCompany)
+(nameString MITPress "MIT Press")
+
+(isa MacMillan-Publishers Individual)
+(isa MacMillan-Publishers PublishingCompany)
+(nameString MacMillan-Publishers "MacMillan Publishers")
+
+(isa Marshall-Publishers Individual)
+(isa Marshall-Publishers PublishingCompany)
+(nameString Marshall-Publishers "Marshall Publishers")
+
+(isa MarshallCavendishLtd-Publishers Individual)
+(isa MarshallCavendishLtd-Publishers PublishingCompany)
+(nameString MarshallCavendishLtd-Publishers "Marshall Cavendish Limited, Publishers")
+
+(isa McFarlandAndCo-Publishers Individual)
+(isa McFarlandAndCo-Publishers PublishingCompany)
+(nameString McFarlandAndCo-Publishers "McFarland & Co, Inc.")
+
+(isa McGrawHill-Publishers Individual)
+(isa McGrawHill-Publishers PublishingCompany)
+(nameString McGrawHill-Publishers "McGraw Hill")
+
+(isa Meredith-Publishers Individual)
+(isa Meredith-Publishers PublishingCompany)
+(nameString Meredith-Publishers "Meredith Publishing Company")
+
+(isa Merell-Publishers Individual)
+(isa Merell-Publishers PublishingCompany)
+(nameString Merell-Publishers "Merrell publishers")
+
+(isa MicroSwitchInc Individual)
+(isa MicroSwitchInc PublishingCompany)
+(nameString MicroSwitchInc "Micro Switch, Inc.")
+
+(isa MirPublishers Individual)
+(isa MirPublishers PublishingCompany)
+(nameString MirPublishers "Mir Publishers")
+
+(isa MurrayHillBooks Individual)
+(isa MurrayHillBooks PublishingCompany)
+(nameString MurrayHillBooks "Murray Hill Books")
+
+(isa MuseumOfScienceAndIndustry Individual)
+(isa MuseumOfScienceAndIndustry PublishingCompany)
+(nameString MuseumOfScienceAndIndustry "Museum of Science and Industry")
+
+(isa NASA Individual)
+(isa NASA PublishingCompany)
+(nameString NASA "NASA")
+
+(isa NEMA Individual)
+(isa NEMA PublishingCompany)
+(nameString NEMA "NEMA - National Electrical Manufacturers Association")
+
+;(isa NationalAcademyOfSciences Individual)
+;(isa NationalAcademyOfSciences PublishingCompany)
+;(nameString NationalAcademyOfSciences "The National Academy of Sciences")
+
+(isa NationalGeographicSociety Individual)
+(isa NationalGeographicSociety PublishingCompany)
+(nameString NationalGeographicSociety "National Geographic Society")
+
+(isa NationalMicrographicsAssociation Individual)
+(isa NationalMicrographicsAssociation PublishingCompany)
+(nameString NationalMicrographicsAssociation "National Micrographics Association")
+
+(isa NavalResearchLaboratory Individual)
+(isa NavalResearchLaboratory PublishingCompany)
+(nameString NavalResearchLaboratory "Naval Research Laboratory")
+
+(isa NewHorizons-Publishers Individual)
+(isa NewHorizons-Publishers PublishingCompany)
+(nameString NewHorizons-Publishers "New Horizons Publishing, Inc")
+
+(isa NewYorkUniversityPress Individual)
+(isa NewYorkUniversityPress PublishingCompany)
+(nameString NewYorkUniversityPress "New York University Press")
+
+(isa NoondayPress Individual)
+(isa NoondayPress PublishingCompany)
+(nameString NoondayPress "Noonday Press")
+
+(isa Norton-Publishers Individual)
+(isa Norton-Publishers PublishingCompany)
+(nameString Norton-Publishers "Norton publishers")
+
+(isa OakKnollBooks Individual)
+(isa OakKnollBooks PublishingCompany)
+(nameString OakKnollBooks "Oak Knoll Books")
+
+(isa OfficeOfNavalResearch Individual)
+(isa OfficeOfNavalResearch PublishingCompany)
+(nameString OfficeOfNavalResearch "Office of Naval Research")
+
+(isa OpenCourt-Publishers Individual)
+(isa OpenCourt-Publishers PublishingCompany)
+(nameString OpenCourt-Publishers "The Open Court Publishing Co.")
+
+(isa OryxPress Individual)
+(isa OryxPress PublishingCompany)
+(nameString OryxPress "Oryx Press")
+
+(isa OxfordUniversityPress Individual)
+(isa OxfordUniversityPress PublishingCompany)
+(nameString OxfordUniversityPress "Oxford University Press")
+
+(isa PalisadesPress Individual)
+(isa PalisadesPress PublishingCompany)
+(nameString PalisadesPress "Palisades Press")
+
+(isa PallasPublications Individual)
+(isa PallasPublications PublishingCompany)
+(nameString PallasPublications "Pallas Publications")
+
+(isa ParagonHouse-Publishers Individual)
+(isa ParagonHouse-Publishers PublishingCompany)
+(nameString ParagonHouse-Publishers "Paragon House Publishers")
+
+(isa PelicanBooks Individual)
+(isa PelicanBooks PublishingCompany)
+(nameString PelicanBooks "Pelican Books")
+
+(isa PenguinBooks Individual)
+(isa PenguinBooks PublishingCompany)
+(nameString PenguinBooks "Penguin Books")
+
+(isa PennsylvaniaStateUniversityPress Individual)
+(isa PennsylvaniaStateUniversityPress PublishingCompany)
+(nameString PennsylvaniaStateUniversityPress "Pennsylvania State University Press")
+
+(isa Penton-Publishers Individual)
+(isa Penton-Publishers PublishingCompany)
+(nameString Penton-Publishers "Penton Publishers")
+
+(isa PercivalMarshallAndCo-Publishers Individual)
+(isa PercivalMarshallAndCo-Publishers PublishingCompany)
+(nameString PercivalMarshallAndCo-Publishers "Percival Marshall & Co.")
+
+(isa PergamonPress Individual)
+(isa PergamonPress PublishingCompany)
+(nameString PergamonPress "Pergamon Press")
+
+(isa PerseusBooks-Publishers Individual)
+(isa PerseusBooks-Publishers PublishingCompany)
+(nameString PerseusBooks-Publishers "Perseus Books")
+
+(isa PhilosophicalLibrary Individual)
+(isa PhilosophicalLibrary PublishingCompany)
+(nameString PhilosophicalLibrary "Philosophical Library")
+
+(isa PhlogistonPress Individual)
+(isa PhlogistonPress PublishingCompany)
+(nameString PhlogistonPress "Phlogiston Press")
+
+(isa PopularSciencePublishingCo Individual)
+(isa PopularSciencePublishingCo PublishingCompany)
+(nameString PopularSciencePublishingCo "Popular Science Publishing Co.")
+
+(isa PrenticeHall-Publishers Individual)
+(isa PrenticeHall-Publishers PublishingCompany)
+(nameString PrenticeHall-Publishers "Prentice Hall publishers")
+
+(isa PressesUniversitairesDeFrance Individual)
+(isa PressesUniversitairesDeFrance PublishingCompany)
+(nameString PressesUniversitairesDeFrance "Presses Universitaires de France")
+
+(isa PrincetonUniversityPress Individual)
+(isa PrincetonUniversityPress PublishingCompany)
+(nameString PrincetonUniversityPress "Princeton University Press")
+
+(isa PrometheusBooks Individual)
+(isa PrometheusBooks PublishingCompany)
+(nameString PrometheusBooks "Prometheus Books")
+
+(isa RandomHouse-Publishers Individual)
+(isa RandomHouse-Publishers PublishingCompany)
+(nameString RandomHouse-Publishers "Random House")
+
+(isa ReinholdPublishing Individual)
+(isa ReinholdPublishing PublishingCompany)
+(nameString ReinholdPublishing "Reinhold Publishing")
+
+(isa RockefellerUniversityPress Individual)
+(isa RockefellerUniversityPress PublishingCompany)
+(nameString RockefellerUniversityPress "Rockefeller University Press")
+
+(isa RocketLab-Publishers Individual)
+(isa RocketLab-Publishers PublishingCompany)
+(nameString RocketLab-Publishers "RocketLab Publishers")
+
+(isa Routledge-Publishers Individual)
+(isa Routledge-Publishers PublishingCompany)
+(nameString Routledge-Publishers "Routledge & Kegan Paul Ltd.")
+
+(isa RussellESacken-Publishers Individual)
+(isa RussellESacken-Publishers PublishingCompany)
+(nameString RussellESacken-Publishers "Russell E. Sacken, Inc.")
+
+(isa SangamoElectricCompany Individual)
+(isa SangamoElectricCompany PublishingCompany)
+(nameString SangamoElectricCompany  "Sangamo Electric Company")
+
+(isa Scribners-Publishers Individual)
+(isa Scribners-Publishers PublishingCompany)
+(nameString Scribners-Publishers "Charles Scribner's Sons")
+
+(isa Signet-Publishers Individual)
+(isa Signet-Publishers PublishingCompany)
+(nameString Signet-Publishers "Signet Publishers")
+
+(isa SignetScienceLibrary-Publishers Individual)
+(isa SignetScienceLibrary-Publishers PublishingCompany)
+(nameString SignetScienceLibrary-Publishers "Signet Science Library")
+
+(isa SimonAndSchuster-Publishers Individual)
+(isa SimonAndSchuster-Publishers PublishingCompany)
+(nameString SimonAndSchuster-Publishers "Simon & Schuster")
+
+(isa SmithsonianExpositionBooks Individual)
+(isa SmithsonianExpositionBooks PublishingCompany)
+(nameString SmithsonianExpositionBooks  "Smithsonian Exposition Books")
+
+(isa SmithsonianInstitution Individual)
+(isa SmithsonianInstitution PublishingCompany)
+(nameString SmithsonianInstitution "The Smithsonian Institution")
+
+(isa SogoWay-Publishers Individual)
+(isa SogoWay-Publishers PublishingCompany)
+(nameString SogoWay-Publishers "Sogo Way Publishers")
+
+(isa SpencerPress Individual)
+(isa SpencerPress PublishingCompany)
+(nameString SpencerPress "Spencer Press")
+
+(isa Springer-Publishers Individual)
+(isa Springer-Publishers PublishingCompany)
+(nameString Springer-Publishers "Springer Verlag Publishers")
+
+(isa StMartinsPress Individual)
+(isa StMartinsPress PublishingCompany)
+(nameString StMartinsPress "St. Martin's Press")
+
+(isa SyracuseUniversityPress Individual)
+(isa SyracuseUniversityPress PublishingCompany)
+(nameString SyracuseUniversityPress "Syracuse University Press")
+
+(isa TABBooksInc Individual)
+(isa TABBooksInc PublishingCompany)
+(nameString TABBooksInc "TAB Books")
+
+(isa TempusBooks Individual)
+(isa TempusBooks PublishingCompany)
+(nameString TempusBooks "Tempus Books of Microsoft Press")
+
+(isa TheAmericanPhilosophicalSociety Individual)
+(isa TheAmericanPhilosophicalSociety PublishingCompany)
+(nameString TheAmericanPhilosophicalSociety "The American Philosophical Society")
+
+(isa TheEnglishUniversitiesPressLtd Individual)
+(isa TheEnglishUniversitiesPressLtd PublishingCompany)
+(nameString TheEnglishUniversitiesPressLtd "The English Universities Press Ltd.")
+
+(isa TheFocalPress Individual)
+(isa TheFocalPress PublishingCompany)
+(nameString TheFocalPress "The Focal Press")
+
+(isa TheFortWorthMuseumOfScienceAndHistoryAssociation Individual)
+(isa TheFortWorthMuseumOfScienceAndHistoryAssociation PublishingCompany)
+(nameString TheFortWorthMuseumOfScienceAndHistoryAssociation "Fort Worth Museum of Science and History Association")
+
+(isa TheFreePress Individual)
+(isa TheFreePress PublishingCompany)
+(nameString TheFreePress  "The Free Press")
+
+(isa TheHagleyMuseum Individual)
+(isa TheHagleyMuseum PublishingCompany)
+(nameString TheHagleyMuseum "The Hagley Museum")
+
+(isa TheHallOfHistory Individual)
+(isa TheHallOfHistory PublishingCompany)
+(nameString TheHallOfHistory "The Hall Of History")
+
+(isa TheLondonScienceMuseum Individual)
+(isa TheLondonScienceMuseum PublishingCompany)
+(nameString TheLondonScienceMuseum  "London Science Museum")
+
+(isa TheLyonsPress Individual)
+(isa TheLyonsPress PublishingCompany)
+(nameString TheLyonsPress "The Lyons Press")
+
+(isa TheMathematicalAssociationOfAmerica Individual)
+(isa TheMathematicalAssociationOfAmerica PublishingCompany)
+(nameString TheMathematicalAssociationOfAmerica "The Mathematical Association of America")
+
+(isa TheNewAmericanLibrary Individual)
+(isa TheNewAmericanLibrary PublishingCompany)
+(nameString TheNewAmericanLibrary "The New American Library")
+
+(isa TheOldRoyalObservatory Individual)
+(isa TheOldRoyalObservatory PublishingCompany)
+(nameString TheOldRoyalObservatory  "The Old Royal Observatory")
+
+(isa TheWisdomLibrary Individual)
+(isa TheWisdomLibrary PublishingCompany)
+(nameString TheWisdomLibrary "The Wisdom Library")
+
+(isa ThomasYCrowellCo-Publishers Individual)
+(isa ThomasYCrowellCo-Publishers PublishingCompany)
+(nameString ThomasYCrowellCo-Publishers "Thomas Y. Crowell Co.")
+
+(isa TimeLife-Publishers Individual)
+(isa TimeLife-Publishers PublishingCompany)
+(nameString TimeLife-Publishers "Time-Life Publishers, Inc.")
+
+(isa USGovernmentPrintingOffice Individual)
+(isa USGovernmentPrintingOffice PublishingCompany)
+(nameString USGovernmentPrintingOffice "U.S. Government Printing Office")
+
+(isa UnitedStatesNavalInstitute Individual)
+(isa UnitedStatesNavalInstitute PublishingCompany)
+(nameString UnitedStatesNavalInstitute "The United States Naval Institute")
+
+(isa UniverseBooks Individual)
+(isa UniverseBooks PublishingCompany)
+(nameString UniverseBooks "Universe Books")
+
+(isa UniversityOfCaliforniaPress Individual)
+(isa UniversityOfCaliforniaPress PublishingCompany)
+(nameString UniversityOfCaliforniaPress "University of California Press")
+
+(isa UniversityOfChicagoPress Individual)
+(isa UniversityOfChicagoPress PublishingCompany)
+(nameString UniversityOfChicagoPress "University of Chicago Press")
+
+(isa UniversityOfIllinoisPress Individual)
+(isa UniversityOfIllinoisPress PublishingCompany)
+(nameString UniversityOfIllinoisPress "University of Illinois Press")
+
+(isa UniversityOfMichiganPress Individual)
+(isa UniversityOfMichiganPress PublishingCompany)
+(nameString UniversityOfMichiganPress "University of Michigan Press")
+
+(isa UniversityOfMinnesotaPress Individual)
+(isa UniversityOfMinnesotaPress PublishingCompany)
+(nameString UniversityOfMinnesotaPress "University of Minnesota Press")
+
+(isa UniversityOfNewMexicoPress Individual)
+(isa UniversityOfNewMexicoPress PublishingCompany)
+(nameString UniversityOfNewMexicoPress "University of New Mexico Press")
+
+(isa UniversityOfPennsylvaniaPress Individual)
+(isa UniversityOfPennsylvaniaPress PublishingCompany)
+(nameString UniversityOfPennsylvaniaPress "University of Pennsylvania Press")
+
+(isa UniversityOfPittsburghPress Individual)
+(isa UniversityOfPittsburghPress PublishingCompany)
+(nameString UniversityOfPittsburghPress "University of Pittsburgh Press")
+
+(isa UniversityOfTorontoPress Individual)
+(isa UniversityOfTorontoPress PublishingCompany)
+(nameString UniversityOfTorontoPress "University of Toronto Press")
+
+(isa VCH-Publishers Individual)
+(isa VCH-Publishers PublishingCompany)
+(nameString VCH-Publishers "VCH Publishers, Inc.")
+
+(isa VanNostrand-Publishers Individual)
+(isa VanNostrand-Publishers PublishingCompany)
+(nameString VanNostrand-Publishers "D. Van Nostrand Co.")
+
+(isa Viking-Publishers Individual)
+(isa Viking-Publishers PublishingCompany)
+(nameString Viking-Publishers "Viking Publishers")
+
+(isa VintageBooks-Publishers Individual)
+(isa VintageBooks-Publishers PublishingCompany)
+(nameString VintageBooks-Publishers "Vintage Books")
+
+(isa WHFreemanAndCo Individual)
+(isa WHFreemanAndCo PublishingCompany)
+(nameString WHFreemanAndCo "W. H. Freeman and Co.")
+
+(isa WalterJBlackInc-Publishers Individual)
+(isa WalterJBlackInc-Publishers PublishingCompany)
+(nameString WalterJBlackInc-Publishers "Walter J. Black, Inc.")
+
+(isa WarnerBooks Individual)
+(isa WarnerBooks PublishingCompany)
+(nameString WarnerBooks "Warner Books")
+
+(isa WayneStateUniversityPress Individual)
+(isa WayneStateUniversityPress PublishingCompany)
+(nameString WayneStateUniversityPress "Wayne State University Press")
+
+(isa WestvacoCorp Individual)
+(isa WestvacoCorp PublishingCompany)
+(nameString WestvacoCorp "Westvaco Corp.")
+
+(isa WestviewPress Individual)
+(isa WestviewPress PublishingCompany)
+(nameString WestviewPress "Westview Press")
+
+(isa WilliamMorrowAndCo-Publishers Individual)
+(isa WilliamMorrowAndCo-Publishers PublishingCompany)
+(nameString WilliamMorrowAndCo-Publishers "William Morrow & Co.")
+
+(isa WilliamWoodAndCo-Publishers Individual)
+(isa WilliamWoodAndCo-Publishers PublishingCompany)
+(nameString WilliamWoodAndCo-Publishers "William Wood & Co.")
+
+;(isa WinfredMBergCo Individual)
+;(isa WinfredMBergCo PublishingCompany)
+;(nameString WinfredMBergCo "Berg, Winfred M. Co.")
+
+(isa WorldBook-Publishers Individual)
+(isa WorldBook-Publishers PublishingCompany)
+(nameString WorldBook-Publishers "World Book Publishers")
+
+(isa YaleUniversityPress Individual)
+(isa YaleUniversityPress PublishingCompany)
+(nameString YaleUniversityPress "Yale University Press")
+

@@ -1,0 +1,732 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ----------------------------------------------------------------------------
+;;;; File name: structural-rules.meld
+;;;;    System: Author:
+;;;;    Author: Emmett Tomai
+;;;;   Created: October 18, 2007 15:55:05
+;;;;   Purpose: 
+;;;; ----------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ----------------------------------------------------------------------------
+
+(in-microtheory EAStructuralRulesMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; sentence positions
+
+(<== (drsPriorInDiscourse ?drs-id ?sid)
+     (drsEntailedBySentence ?drs-id ?prior-sid)
+     (sentenceInDiscourse ?sid ?pos ?tokens)
+     (sentenceInDiscourse ?prior-sid ?prior-pos ?prior-tokens)
+     (lessThan ?prior-pos ?pos))
+
+;;; sole reference is commented out in reference rules:
+(<== (priorDrsInDiscourse ?drs-id ?sid)
+     (sentenceInDiscourse ?sid ?pos ?tokens)
+     (sentenceInDiscourse ?prior-sid ?prior-pos ?prior-tokens)
+     (lessThan ?prior-pos ?pos)
+     (drsEntailedBySentence ?drs-id ?prior-sid))
+
+(<== (sameSentence ?drs-id1 ?drs-id2)
+     (drsEntailedBySentence ?drs-id1 ?sid)
+     (drsEntailedBySentence ?drs-id2 ?sid))
+
+(<== (priorSentenceInDiscourse ?sid ?prior-sid)
+     (sentenceInDiscourse ?sid ?pos ?tokens)
+     (evaluate ?prior-pos (PlusFn ?pos -1))
+     (sentenceInDiscourse ?prior-sid ?prior-pos ?prior-tokens))
+
+(<== (sentencePriorInDiscourse ?sid ?prior-sid)
+     (sentenceInDiscourse ?sid ?pos ?tokens)
+     (sentenceInDiscourse ?prior-sid ?prior-pos ?prior-tokens)
+     (lessThan ?prior-pos ?pos))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; head vars
+
+(<== (priorInHeadVar (cconj ?prior ?later) ?prior))
+
+(<== (priorInHeadVar (sconj ?prior when ?later) ?prior))
+
+(<== (priorInHeadVar (sconj ?prior in ?later) ?later))
+
+(<== (priorInHeadVar ?prior ?prior)
+     (uninferredSentence (unifies (cconj ?p ?l) ?prior))
+     (uninferredSentence (unifies (sconj ?p ?sconj ?l) ?prior)))
+
+(<== (laterInHeadVar (cconj ?prior ?later) ?later))
+
+(<== (laterInHeadVar (sconj ?prior when ?later) ?later))
+
+(<== (laterInHeadVar (sconj ?prior in ?later) ?later))
+
+(<== (elementInHeadVar ?hv ?elt)
+     (priorInHeadVar ?hv ?elt))
+
+(<== (elementInHeadVar ?hv ?elt)
+     (laterInHeadVar ?hv ?elt))
+
+(<== (topicOfDrs ?event ?drs-id)
+     (headVarForDrs ?hv ?drs-id)
+     (elementInHeadVar ?hv ?event))
+
+;; more restrictive heads
+
+(<== (pointOfActionInDrs ?event ?drs-id)
+     (headVarForDrs (cconj ?event ?other-event) ?drs-id)
+     (verbForm ?head past Non-Perfect Non-Progressive))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rules for dealing with hierarchical drs
+
+;;; variable scoping
+
+(<== (variableQuantifiedFor ?var ?drs-id Clause)
+     (variableInUniverse ?var ?drs-id ?type))
+
+(<== (variableQuantifiedFor ?var ?drs-id Clause)
+     (drsEmbeddedInDrs ?drs-id ?parent)
+     (variableQuantifiedFor ?var ?parent Clause))
+
+(<== (variableQuantifiedFor ?var ?drs-id Clause)
+     (trueInDrs ?drs-id (properNameReference ?var)))
+
+(<== (variableQuantifiedFor ?var ?drs-id Discourse)
+     (variableInOrLiftToUniverse ?var ?drs-id))
+
+(<== (variableQuantifiedFor ?var ?drs-id Discourse)
+     (drsEmbeddedInDrs ?drs-id ?parent)
+     (variableQuantifiedFor ?var ?parent Discourse))
+
+(<== (variableQuantifiedFor ?var ?drs-id Discourse)
+     (properNameReference ?var))
+
+
+;;; nested embedding
+(<== (drsEmbeddedInDrs ?sub ?super)
+     (groundExpression ?sub)
+     (groundExpression ?super)
+     (drsEmbeddedInDrs ?sub ?other)
+     (drsEmbeddedInDrs ?other ?super))
+
+;;; equality accessor
+(<== (drsEmbeddedInOrEqualToDrs ?sub ?sub))
+
+(<== (drsEmbeddedInOrEqualToDrs ?sub ?super)
+     (drsEmbeddedInDrs ?sub ?super))
+     
+
+;;; enumerating the different embeddings to avoid unfettered drsEntailedBySentence
+
+(<== (nonModalEmbedding ?grp-drs-id ?member-drs-id)
+     (causalEmbedding ?grp-drs-id ?cause ?member-drs-id))
+
+(<== (nonModalEmbedding ?grp-drs-id ?member-drs-id)
+     (trueInDrs ?grp-drs-id (?embedding-fn ?ct (DrsCaseFn ?member-drs-id))))
+
+(<== (nonModalEmbedding ?drs-id ?drs-id)
+     (equals ?drs-id ?drs-id))
+
+;;; raw causal embeddings imply the ante and the cons
+(<== (causalEmbedding ?drs-id ?thing ?emb-drs-id)
+     (groundExpression ?drs-id)
+     (trueInDrs ?drs-id (causes-ThingProp ?thing (DrsCaseFn ?emb-drs-id))))
+
+(<== (causalEmbedding ?drs-id ?sit ?emb-drs-id)
+     (groundExpression ?drs-id)
+     (trueInDrs ?drs-id (causes-SitProp ?sit (DrsCaseFn ?emb-drs-id))))
+
+(<== (modalEmbedding ?drs-id ?emb-drs-id)
+     (groundExpression ?drs-id)
+     (trueInDrs ?drs-id (willBe (DrsCaseFn ?emb-drs-id))))
+
+(<== (modalEmbedding ?drs-id ?emb-drs-id)
+     (groundExpression ?drs-id)
+     (trueInDrs ?drs-id (possible-Historical (DrsCaseFn ?emb-drs-id))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; fast type lookups that don't litter the drs
+;;; (not sure if these sped up in fire v3)
+;;; Sadly, these *do* litter the drs in EA v8.  
+
+;; collection lookup
+;;; For some reason this isn't finding things as being parts of collections during coreference under v8
+;;;(<== (isaInDrs ?dv ?drs ?col)
+;;;     (groundExpression ?drs)
+;;;     (lookupOnly
+;;;       (localOnly
+;;;         (wmOnly
+;;;           (ist-Information (DrsCaseFn ?drs)
+;;;             (isa ?dv ?col))))))
+;;;
+;;;(<== (isaInDrs ?dv ?drs ?col)
+;;;     (groundExpression ?drs)
+;;;     (lookupOnly
+;;;       (localOnly
+;;;         (wmOnly
+;;;           (ist-Information (DrsCaseFn ?drs)
+;;;             (isa ?dv ?col))))))
+;;;
+;;; transitive isa
+;;;(<== (isaInDrs ?dv ?drs ?col)
+;;;     (groundExpression ?col)
+;;;     (groundExpression ?drs)
+;;;     (lookupOnly 
+;;;       (localOnly 
+;;;         (wmOnly
+;;;           (ist-Information (DrsCaseFn ?drs)
+;;;             (isa ?dv ?dv-col)))))
+;;;     (groundExpression ?dv-col)
+;;;     (allFactsAllowed
+;;;      (useTransitiveInference
+;;;       (genls ?dv-col ?col))))
+;;;
+;;; functional result isa
+;;;(<== (isaInDrs ?dv ?drs ?col)
+;;;     (groundExpression ?col)
+;;;     (groundExpression ?drs)
+;;;     (lookupOnly 
+;;;       (localOnly 
+;;;         (wmOnly
+;;;           (ist-Information (DrsCaseFn ?drs)
+;;;             (isa ?dv ?isa)))))
+;;;     (groundExpression ?isa)
+;;;     (unifies (?fn ?thing) ?isa)   ; a NAT
+;;;     (allFactsAllowed
+;;;      (resultGenl ?fn ?col)))
+;;;
+;;;;; transitive functional result isa
+;;;(<== (isaInDrs ?dv ?drs ?col)
+;;;     (groundExpression ?col)
+;;;     (groundExpression ?drs)
+;;;     (lookupOnly 
+;;;       (localOnly 
+;;;         (wmOnly
+;;;           (ist-Information (DrsCaseFn ?drs)
+;;;             (isa ?dv ?isa)))))
+;;;     (unifies (?fn ?thing) ?isa)   ; a NAT
+;;;     (allFactsAllowed
+;;;      (resultGenl ?fn ?fn-col))
+;;;     (groundExpression ?fn-col)
+;;;     (allFactsAllowed
+;;;      (useTransitiveInference
+;;;       (genls ?fn-col ?col))))
+
+
+;;; --------------------------------------
+;;; Version using outsourced predicate:
+
+;; collection lookup -- discourse variable known
+(<== (isaInDrs ?dv ?drs ?col)
+     (groundExpression ?drs)
+     (groundExpression ?dv)
+     (variableExpression ?col)
+     (nonTransitiveInference (localOnly (wmOnly (ist-Information (DrsCaseFn ?drs) (isa ?dv ?col)))))
+     )
+
+;; Test with known ?dv and ?col
+(<== (isaInDrs ?dv ?drs ?col)
+     (groundExpression ?drs)
+     (groundExpression ?col)
+     (groundExpression ?dv)
+     (wmOnly
+      (localOnly 
+       (nonTransitiveInference
+        (ist-Information (DrsCaseFn ?drs) (isa ?dv ?dv-col)))))
+     ;(lookupTrueInDrs ?drs (isa ?dv ?dv-col))
+     (groundExpression ?dv-col)
+     (atomicTerm ?dv-col) ;; NAT handled by rule below
+     (genlsOrUnifies ?dv-col ?col))
+(<== (genlsOrUnifies ?dv-col ?col)
+     (allFactsAllowed
+      (useTransitiveInference
+       (genls ?dv-col ?col))))
+(<== (genlsOrUnifies ?dv-col ?col)
+     (unifies ?dv-col ?col))
+
+;; transitive functional result isa
+(<== (isaInDrs ?dv ?drs ?col)
+     (groundExpression ?drs)
+     (groundExpression ?col)
+     (wmOnly (localOnly
+              (lookupOnly
+               (ist-Information (DrsCaseFn ?drs) (isa ?dv (?fn ?fn-col))))))
+     (allFactsAllowed
+      (resultGenl ?fn ?fn-col))
+     (groundExpression ?fn-col)
+     (allFactsAllowed
+      (useTransitiveInference
+       (genls ?fn-col ?col))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; trueInDrs/holdsIn wrappers 
+
+(<== (trueInDrs ?drs ?fact)
+     (ist-Information (DrsCaseFn ?drs) ?fact))
+
+(isa trueOrHoldsInDrs Predicate)
+(arity trueOrHoldsInDrs 2)
+(comment trueOrHoldsInDrs "(trueOrHoldsInDrs ?drs ?fact) 
+checks to see if (trueInDrs ?drs ?fact).")
+
+(<== (trueOrHoldsInDrs ?drs ?fact)
+     (trueInDrs ?drs ?fact))
+
+(<== (lookupTrueInDrs ?drs ?fact)
+     (localOnly 
+      (lookupOnly
+       (ist-Information (DrsCaseFn ?drs) ?fact))))
+
+;;; Be careful here.  This only works because we know that EA doesn't produce
+;;; conjunctions of the form (and (uninferredSentence ?fact) ...)
+;;; If semtranses ever involved negation, we'd be in trouble.
+;;;(<== (lookupTrueInDrs ?drs ?fact)
+;;;     (lookupOnly 
+;;;      (wmOnly
+;;;       (ist-Information (DrsCaseFn ?drs) ?conjunction)))
+;;;     (operatorFormulas and ?conjunction)
+;;;     (containsPattern ?fact ?conjunction))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; proper names
+
+;; properNameReference is asserted in the sdrs, acting like a variableInUniverse
+;; however, sometimes we need to check it globally
+
+(<== (properNameReference ?pname)
+     (properNameReferenceInParseTree ?pname (ParseTreeFn ?sid ?ptid))
+     (validParseTree ?ptid))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; presentation (parse-level) queries
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;
+;;; parse tree abduction
+
+
+;;; Changed for v8
+(<== (validParseTree ?ptid)
+     (choice ?cs ?cid ?ptid)
+     ;(abductiveAssumption    ; this is gone now.
+       (selectedChoice ?cs ?cid ?ptid)
+     ;)
+     )
+
+
+;;;;;;;;;;;;;;;;;;;;
+;;; verb forms
+
+(<== (verbAside ?verb ?head)
+     (verbAsideInParseTree ?verb ?head (ParseTreeFn ?sid ?ptid))
+     (validParseTree ?ptid))
+
+(<== (verbForm ?prior ?tense ?perfect ?progressive)
+     (verbFormInParseTree ?prior ?tense ?perfect ?progressive (ParseTreeFn ?sid ?ptid))
+     (validParseTree ?ptid))
+
+
+;;;;;;;;;;;;;;;;;;;;
+;;; subsentences
+
+(<== (choiceSetFromSentenceAll ?csid ?sid)
+     (choiceSetFromSentence ?csid ?sid))
+
+(<== (choiceSetFromSentenceAll ?csid ?sid)
+     (subSentence ?subsid ?sid ?subpos)
+     (choiceSetFromSentence ?csid ?subsid))
+
+(<== (parentSentenceId ?parent-sid ?sid)
+     (subSentence ?sid ?parent-sid ?subpos))
+
+(<== (parentSentenceId ?sid ?sid)
+     (uninferredSentence (subSentence ?sid ?parent-sid ?subpos)))
+
+
+;;;;;;;;;;;;;;;;;;;;
+;;; leads to (presentation sequentiality)
+
+;; "he sat at the table and ate dinner" (leadsTo sat ate)
+;; "he threw the stick and went inside" (leadsTo throw went)
+(<== (leadsTo ?prior ?later)
+     (headVarForDrs (cconj ?prior ?later) ?drs-id))
+
+;; "the fox, seeing them, said..." (leadsTo see said)
+(<== (leadsTo ?prior ?latter)
+     (verbAside ?prior ?latter)
+     (verbForm ?prior ?form Non-Perfect ?progressive))
+
+;; "They sat up when he walked in." (leadsTo walk sat)
+(<== (leadsTo ?prior ?later)
+     (headVarForDrs (sconj ?prior when ?later) ?drs-id))
+
+;; cursor after, head of next
+(<== (leadsTo ?prior ?later)
+     ;; cursor placed after ?prior
+     (groundExpression ?prior)
+     (variableInUniverse ?prior ?prior-sdrs-id Clause)
+     (drsForSentence ?prior-sdrs-id ?prior-sid)
+     (placedAfter (ReferencePointFn ?prior-sid) ?prior)
+     (priorSentenceInDiscourse ?sid ?prior-sid)
+     ;; ?later is head of current sentence
+     (drsForSentence ?sdrs-id ?sid)
+     (headVarForDrs ?head-var ?sdrs-id)
+     (priorInHeadVar ?head-var ?later))
+
+(<== (leadsTo ?prior ?later)
+     ;; cursor placed after ?prior
+     (groundExpression ?later)
+     ;; ?later is head of current sentence
+     (variableInUniverse ?later ?sdrs-id Clause)
+     (contextIndependentDrsFor ?sdrs-id ?sid) ;; has to be root of sentence
+     (headVarForDrs ?head-var ?sdrs-id)
+     (priorInHeadVar ?head-var ?later)
+     (priorSentenceInDiscourse ?sid ?prior-sid)
+     (placedAfter (ReferencePointFn ?prior-sid) ?prior))
+
+
+;;;;;;;;;;;;;;;;;;;;
+;;; cursor operations
+
+;; activity
+(<== (placedDuring (ReferencePointFn ?sid) ?activity)
+     (contextIndependentDrsFor ?drs-id ?sid)
+     (headVarForDrs ?event ?drs-id)
+     (trueInDrs ?drs-id (isa ?event BeginningAnActivity))
+     (trueInDrs ?drs-id (activityBegun ?event (DrsCaseFn ?activity-drs-id)))
+     (headVarForDrs ?activity ?activity-drs-id))
+
+;; basic action
+(<== (placedAfter (ReferencePointFn ?sid) ?event)
+     (contextIndependentDrsFor ?drs-id ?sid)
+     (headVarForDrs ?event ?drs-id)
+     (isaInDrs ?event ?drs-id Event) ;; not situation "to-be", in particular
+     (verbForm ?event past ?perfect Non-Progressive))
+
+;; coordinating conjunctions
+(<== (placedAfter (ReferencePointFn ?sid) ?latter)
+     (contextIndependentDrsFor ?drs-id ?sid)
+     (headVarForDrs (cconj ?former ?latter) ?drs-id)
+     (isaInDrs ?former ?drs-id Event) ;; not situation "to-be", in particular
+     (verbForm ?former past ?perfect Non-Progressive)
+     (isaInDrs ?latter ?drs-id Event) ;; not situation "to-be", in particular
+     (verbForm ?latter past ?perfect Non-Progressive))
+
+(<== (placedAfter (ReferencePointFn ?sid) ?latter)
+     (contextIndependentDrsFor ?drs-id ?sid)
+     (headVarForDrs (cconj ?former ?latter) ?drs-id)
+     (isaInDrs ?former ?drs-id Situation)
+     (isaInDrs ?latter ?drs-id Event) ;; not situation "to-be", in particular
+     (verbForm ?latter past ?perfect Non-Progressive))
+
+;; subordinating conjunctions
+(<== (placedAfter (ReferencePointFn ?sid) ?latter)
+     (contextIndependentDrsFor ?drs-id ?sid)
+     (headVarForDrs (sconj ?former when ?latter) ?drs-id)
+     (isaInDrs ?latter ?drs-id Event) ;; not situation "to-be", in particular
+     (verbForm ?latter past Non-Perfect Non-Progressive))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; lift me up
+;;;
+
+(<== (isaInOrLiftToDrs ?sid ?var ?drs-id ?col)
+       (isaInDrs ?var ?drs-id ?col))
+
+(<== (isaInOrLiftToDrs ?sid ?var ?drs-id ?col)
+     (groundExpression ?var)
+     (groundExpression ?sid)
+     (drsForDiscourse ?drs-id)
+     (variableInUniverse ?var ?sdrs-id Clause)
+     (drsPriorInDiscourse ?sdrs-id ?sid)
+     (lookupOnly (numAnswers 1
+       (ist-Information (DrsCaseFn ?sdrs-id) (isa ?var ?col))))
+     (forEffectOnly
+      (justify
+       (ist-Information (DrsCaseFn ?drs-id) (isa ?var ?col))
+       (TheList
+        (variableInUniverse ?var ?sdrs-id Clause)
+        (drsPriorInDiscourse ?sdrs-id ?sid)
+        (isaInDrs ?var ?sdrs-id ?col)))))
+
+(<== (isaInOrLiftToDrs ?sid ?var ?drs-id ?col)
+     (groundExpression ?sid)
+     (groundExpression ?drs-id)
+     (sourceDrsForDrs ?sdrs-id ?drs-id ?emb-expr)
+     (drsPriorInDiscourse ?sdrs-id ?sid)
+     (numAnswers 1
+       (isaInDrs ?var ?sdrs-id ?col))
+     (forEffectOnly
+      (justify
+       (ist-Information (DrsCaseFn ?drs-id) (isa ?var ?col))
+       (TheList
+        (sourceDrsForDrs ?sdrs-id ?drs-id ?emb-expr)
+        (drsPriorInDiscourse ?sdrs-id ?sid)
+        (isaInDrs ?var ?sdrs-id ?col)))))
+
+(<== (isaInOrLiftToDrs ?sid ?var ?drs-id ?col)
+     (groundExpression ?var)
+     (groundExpression ?sid)
+     (drsForDiscourse ?drs-id)
+     (numAnswers 1 (priorSentenceInDiscourse ?sid ?prior-sid))
+     (lookupOnly 
+       (wmOnly 
+         (referent (ReferenceInSentenceFn ?reference ?prior-sid)
+                   (ReferentInDrsFn ?var ?referent-drs-id))))
+     (variableInUniverse ?reference ?ref-drs-id Clause)
+     (numAnswers 1
+       (isaInDrs ?reference ?ref-drs-id ?col))
+     (forEffectOnly
+      (justify
+       (ist-Information (DrsCaseFn ?drs-id) (isa ?var ?col))
+       (TheList
+        (referent (ReferenceInSentenceFn ?reference ?prior-sid) (ReferentInDrsFn ?var ?referent-drs-id))
+        (priorSentenceInDiscourse ?sid ?prior-sid)
+        (variableInUniverse ?reference ?ref-drs-id Clause)
+        (isaInDrs ?reference ?ref-drs-id ?col)))))
+
+(<== (variableInOrLiftToUniverse ?var ?drs-id)
+     (variableInUniverse ?var ?drs-id Discourse))
+
+(<== (variableInOrLiftToUniverse ?var ?drs-id)
+     (sourceDrsForDrs ?sdrs-id ?drs-id ?emb-expr)
+     (variableInUniverse ?svar ?sdrs-id Clause)
+     (resolveReference (ReferenceInSentenceFn ?svar ?sid) (ReferentInDrsFn ?var ?drs-id))
+     (forEffectOnly
+      (justify
+       (variableInUniverse ?var ?drs-id Discourse)
+       (TheList (variableInUniverse ?svar ?sdrs-id Clause)
+                (resolveReference (ReferenceInSentenceFn ?svar ?sid) (ReferentInDrsFn ?var ?drs-id))))))
+
+
+;;; We're going to assume ?fact is not a conjunction:
+(<== (trueInOrLiftToDrs ?drs-id ?fact)
+     (not (variableExpression ?fact)) ; not necessarily ground, though
+     (localOnly
+       (lookupOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?drs-id)
+             ?fact)))))
+
+;;; These are failing because the dynamic preds went away in EA v8.
+(<== (trueInOrLiftToDrs ?drs-id ?fact)
+     (groundExpression ?drs-id)
+     (not (variableExpression ?fact))
+     (not (matches (isa ?v ?c) fact))
+     (uninferredSentence
+       (localOnly
+         (lookupOnly
+           (wmOnly
+             (ist-Information (DrsCaseFn ?drs-id)
+               ?fact)))))  ; don't try both ways if it's already in ddrs.
+     (numAnswers 1 (sourceDrsForDrs ?sdrs-id ?drs-id ?emb-exp))
+     (drsEntailedBySentence ?sdrs-id ?sid)
+     ;; for all dvs in ?fact
+     ;; resolve reference
+     (resolveToLocalForm ?drs-id ?fact ?sid ?source-query)  
+     (localOnly
+       (lookupOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?sdrs-id)
+               ?source-query))))
+     ;; for all new dvs in ?fact
+     ;; resolve reference
+     (resolveToGlobalForm ?drs-id ?fact ?sid ?sdrs-id ?source-query))
+
+(<== (trueInOrLiftToDrs ?drs-id ?fact)
+     (groundExpression ?drs-id)
+     (not (variableExpression ?fact))
+     (unifies (isa ?var ?col) ?fact)
+     (drsForDiscourse ?drs-id)                  ; test that drs-id is discourse drs.
+     (variableInUniverse ?var ?sdrs-id Clause)  ; instead of sourceDrsForDrs
+     (drsEntailedBySentence ?sdrs-id ?sid)      ; bind ?sid
+     ;; for all dvs in ?fact, resolve reference
+     (resolveToLocalForm ?drs-id (isa ?var ?col) ?sid ?source-query)
+     (localOnly
+       (lookupOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?sdrs-id)
+               ?source-query))))
+     ;; translate back
+     (resolveToGlobalForm ?drs-id (isa ?var ?col) ?sid ?sdrs-id ?source-query))
+
+
+;;; Just create the binding list, don't translate the form:
+(<== (resolveToLocalForm ?ddrs-id ?global-form ?sid ?local-form)
+     (groundExpression ?ddrs-id)
+     (groundExpression ?sid)
+     (not (variableExpresssion ?global-form))
+     (evaluate ?dvars 
+       (SetToListFn
+         (TheClosedRetrievalSetOf ?dvar
+           (and (termFormulas ?global-form ?dvar)  ; enumerate all terms
+                (lookupOnly
+                  (wmOnly
+                    (variableInUniverse ?dvar ?drs Discourse)))))))
+     (evaluate ?blist
+       (MapFunctionOverList 
+         (FunctionToArg 2
+           (Kappa (?dv ?binding)
+             (and (resolveReference
+                    (ReferenceInSentenceFn ?inst-dv ?sid)
+                    (ReferentInDrsFn ?dv ?ddrs-id))
+                  (unifies ?binding (?dv ?inst-dv)))))))
+     (evaluate ?local-form
+       (SublisFn ?blist ?global-form)))
+
+(<== (resolveToGlobalForm ?ddrs-id ?global-form ?sid ?local-form)
+     (groundExpression ?ddrs-id)
+     (groundExpression ?sid)
+     (not (variableExpression ?local-form))
+     (evaluate ?dvars 
+       (SetToListFn
+         (TheClosedRetrievalSetOf ?dvar
+           (and (termFormulas ?local-form ?dvar)
+                (lookupOnly
+                  (wmOnly
+                    (variableInUniverse ?dvar ?drs Clause)))))))
+     (evaluate ?blist
+       (MapFunctionOverList 
+         (FunctionToArg 2
+           (Kappa (?dv ?binding)
+             (and (resolveReference
+                    (ReferenceInSentenceFn ?dv ?sid)
+                    (ReferentInDrsFn ?global-dv ?ddrs-id))
+                  (unifies ?binding (?dv ?global-dv)))))))
+     (evaluate ?global-form
+       (SublisFn ?blist ?local-form)))
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; generating a new drs
+
+
+;;; This is silly.  It's never invoked with a bound ?emb-expr.
+(<== (sourceDrsForDrs ?sdrs-id ?ddrs-id ?emb-expr)
+     (groundExpression ?sdrs-id)
+     (groundExpression ?emb-expr)
+     (individualSatisfyingConditions
+      ?ddrs-id DRS
+      (TheSet ?emb-expr)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; positioning
+
+(<== (spanAfterInSentence ?dv1 ?dv2)
+     (dvSpan ?dv1 (SpanFn ?s1 ?e1))
+     (dvSpan ?dv2 (SpanFn ?s2 ?e2))
+     (greaterThan ?s1 ?e2))
+
+(<== (dvSpan ?dv (SpanFn ?s ?e))
+     (dvSpanInParseTree ?dv (SpanFn ?s ?e) (ParseTreeFn ?sid ?ptid))
+     ;;;(validParseTree ?ptid)
+     )
+
+(<== (dvSpan ?dv (SpanFn ?s ?e))
+     (variableInUniverse ?dv ?drs-id Clause)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?drs-id)
+             (implies-DrsDrs (DrsCaseFn ?ante-drs-id) (DrsCaseFn ?cons-drs-id))))))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?ante-drs-id)
+             (member ?elt ?dv)))))
+     (dvSpanInParseTree ?elt (SpanFn ?s ?e) (ParseTreeFn ?sid ?ptid))
+     (validParseTree ?ptid))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; sentence features
+
+(<== (sentenceAdjunct ?sid ?adjunct)
+     (sentenceAdjunctAdverbial (ParseTreeFn ?sid ?ptid) ?adjunct)
+     (validParseTree ?ptid))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; misc utils
+
+(<== (atLeastAmount ?x ?x))
+
+(<== (trueViaSpecPred ?context ?pred ?arg1 ?arg2)
+     (groundExpression (?pred ?arg1 ?arg2))
+     (lookupOnly
+       (ist-Information ?context
+         (?pred ?arg1 ?arg2))))     ; try reflexive case first
+
+(<== (trueViaSpecPred ?context ?pred ?arg1 ?arg2)
+     (groundExpression (?pred ?arg1 ?arg2))
+     (uninferredSentence
+       (lookupOnly
+         (ist-Information ?context
+           (?pred ?arg1 ?arg2))))
+     (genlPreds ?specpred ?pred)
+     (lookupOnly
+       (ist-Information ?context
+         (?specpred ?arg1 ?arg2))))  ; If arg1 and arg2 are ground, this should stop on first hit.
+
+
+(isa allCompatibleDrses TernaryPredicate)
+(arity allCompatibleDrses 3)
+(arg1Isa allCompatibleDrses CycLTerm)
+(arg2Isa allCompatibleDrses CycLTerm)
+(arg3Isa allCompatibleDrses CycLTerm)
+(comment allCompatibleDrses "(allCompatibleDrses ?sid ?drs1 ?drs2) binds drs2 to all the drses of ?sid that follow from the same parse tree as ?drs1.")
+
+(<== (allCompatibleDrses ?sid ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (equal ?drs1 ?drs2))
+
+(<== (allCompatibleDrses ?sid ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (variableExpression ?drs2)
+     (drsEntailedBySentence ?drs2 ?sid)
+     (compatibleDrses ?drs1 ?drs2))
+     
+(<== (allCompatibleDrses ?sid ?drs1 ?drs2)
+     (variableExpression ?drs1)
+     (groundExpression ?drs2)
+     (drsEntailedBySentence ?drs1 ?sid)
+     (compatibleDrses ?drs1 ?drs2))
+
+(isa compatibleDrses BinaryPredicate)
+(arity compatibleDrses 2)
+(arg1Isa compatibleDrses CycLTerm)
+(arg2Isa compatibleDrses CycLTerm)
+(comment compatibleDreses "(compatibleDrses ?drs1 ?drs2) means ?drs1 and ?drs2 derive from the same parse tree.")
+
+(<== (compatibleDrses ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (groundExpression ?drs2)
+     (parseTreeIdForDrs ?drs1 ?ptid)
+     (parseTreeIdForDrs ?drs2 ?ptid))
+
+(<== (compatibleDrses ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (groundExpression ?drs2)
+     (uninferredSentence
+       (parseTreeIdForDrs ?drs1 ?ptid)))
+       
+(<== (compatibleDrses ?drs1 ?drs2)
+     (groundExpression ?drs1)
+     (groundExpression ?drs2)
+     (uninferredSentence
+       (parseTreeIdForDrs ?drs2 ?ptid)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

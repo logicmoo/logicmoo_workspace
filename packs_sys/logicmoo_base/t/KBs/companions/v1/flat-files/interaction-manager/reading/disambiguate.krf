@@ -1,0 +1,1324 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: disambiguate.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: May 14, 2010 14:57:04
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+;;;; new stuff added for the rebuild
+(isa selectBestChoicesForSentence Predicate)
+(arity selectBestChoicesForSentence 1)
+(arg1Isa selectBestChoicesForSentence Thing)
+(comment selectBestChoicesForSentence
+  "(selectBestChoicesForSentence <sentence-id>) uses the new evidence accrual scheme to score sentence choices, then selects 
+the highest scored choices.")
+
+;;;; older stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; This file contains experimental code for the constrution of an initial disambiguation framework that runs in HTN plans.
+
+(isa doClearAllAnalogyCaches SimpleActionPredicate)
+(arity doClearAllAnalogyCaches 3)
+(arg1Isa doClearAllAnalogyCaches Thing)
+(arg2Isa doClearAllAnalogyCaches Thing)
+(arg3Isa doClearAllAnalogyCaches Thing)
+(comment doClearAllAnalogyCaches "(doClearAllAnalogyCaches clears the analogy cache.")
+
+(isa doEASelect SimpleActionPredicate)
+(arity doEASelect 3)
+(arg1Isa doEASelect Thing)
+(arg2Isa doEASelect Thing)
+(arg3Isa doEASelect Thing)
+(comment doEASelect "(doEASelect ?choice-set-id ?choice ?discourse-id) causes EA to make the choice ?choice from the choice set ?choice-set-id in the current discourse.")
+
+(isa doEASafeSelect SimpleActionPredicate)
+(arity doEASafeSelect 3)
+(arg1Isa doEASafeSelect Thing)
+(arg2Isa doEASafeSelect Thing)
+(arg3Isa doEASafeSelect Thing)
+(comment doEASafeSelect "(doEASafeSelect ?choice-set-id ?choice ?discourse-id) causes EA to make the choice ?choice from the choice set ?choice-set-id in the current discourse, but unlike doEASelect, it will not override already made choices.")
+
+(isa doEASelectSet SimpleActionPredicate)
+(arity doEASelectSet 2)
+(arg1Isa doEASelectSet Set-Mathematical)
+(arg2Isa doEASelectSet Thing)
+(comment doEASelectSet "(doEASelectSet (TheSet (?choice-set-id ?choice) (?choice-set-id ?choice)...) ?discourse-id) causes EA to make the choice ?choice from the choice set ?choice-set-id in the current discourse for each ?choice and ?choice-set-id. ?choice is the actual choice, not the choice-id. Note that if you try to select two choices from the same choice set, only one will end up getting selected.")
+
+(isa doEASafeSelectSet SimpleActionPredicate)
+(arity doEASafeSelectSet 2)
+(arg1Isa doEASafeSelectSet Set-Mathematical)
+(arg2Isa doEASafeSelectSet Thing)
+(comment doEASafeSelectSet "(doEASafeSelectSet (TheSet (?choice-set-id ?choice) (?choice-set-id ?choice)...) ?discourse-id) causes EA to make the choice ?choice from the choice set ?choice-set-id in the current discourse for each ?choice and ?choice-set-id. ?choice is the actual choice, not the choice-id. Note that if you try to select two choices from the same choice set, only one will end up getting selected. Also,
+unlike doEASelectSet, this will not override already made choices.")
+
+(isa doEAUnselect SimpleActionPredicate)
+(arity doEAUnselect 2)
+(arg1Isa doEAUnselect Thing)
+(arg2Isa doEAUnselect Thing)
+(comment doEAUnselect "(doEAUnselect ?choice-set-id ?discourse) causes EA to unselect the choice set ?choice-set-id in the current discourse.")
+
+(isa doLaunchEABrowser SimpleActionPredicate)
+(arity doLaunchEABrowser 0)
+(comment doLaunchEABrowser "(doLaunchEABrowser) causes EA to launch the ea browser.")
+
+(isa loadFromFileForManualDisambiguation ComplexActionPredicate)
+(arity loadFromFileForManualDisambiguation 2)
+(arg1Isa loadFromFileForManualDisambiguation CharacterString)
+(arg2Isa loadFromFileForManualDisambiguation Microtheory)
+(comment loadFromFileForManualDisambiguation "(loadFromFileForManualDisambiguation ?location ?context) reads and sentence-level tokenizes the file at location ?location and stores a record of the call in ?context in working memory.
+ It calls ea::process, then pops up the EA browser for manual disambiguation.")
+
+
+;;; NYI
+(isa recordSentenceInterpretation ComplexActionPredicate)
+(arity recordSentenceInterpretation 2)
+(comment recordSentenceInterpretation "(recordSentenceInterpretation ?sentence-id ?microtheory) attempts to record the
+ interpretation currently in working memory for the sentence ?sentence-id into the KB in ?microtheory. This is a persistant record.")
+
+
+(isa recordCurrentDiscourseInterpretation ComplexActionPredicate)
+(arity recordCurrentDiscourseInterpretation 1)
+(arg1Isa recordCurrentDiscourseInterpretation Microtheory)
+(comment recordCurrentDiscourseInterpretation "(recordCurrentDiscourseInterpretation ?microtheory) attempts to record the
+ interpretation currently in working memory into the KB in ?microtheory. This is a persistant record. To store what you learned
+in a particular reading, use storeInterpretationInKB instead.")
+
+(isa recordCurrentDiscourseChoices ComplexActionPredicate)
+(arity recordCurrentDiscourseChoices 3)
+(arg1Isa recordCurrentDiscourseChoices Microtheory)
+(arg2Isa recordCurrentDiscourseChoices InformationBearingThing)
+(arg3Isa recordCurrentDiscourseChoices AccessingAnIBT)
+(comment recordCurrentDiscourseChoices "(recordCurrentDiscourseChoices ?microtheory ?source-text-name ?reading-name) attempts to record the
+ currently selected choices for the discourse currently in working memory into the KB in ?microtheory. This is a persistant record.")
+
+(isa recordCurrentDiscourseSentenceChoices ComplexActionPredicate)
+(arity recordCurrentDiscourseSentenceChoices 3)
+(arg1Isa recordCurrentDiscourseSentenceChoices Microtheory)
+(arg2Isa recordCurrentDiscourseSentenceChoices InformationBearingThing)
+(arg3Isa recordCurrentDiscourseSentenceChoices AccessingAnIBT)
+(comment recordCurrentDiscourseSentenceChoices "(recordCurrentDiscourseChoices ?microtheory ?source-text-name ?reading-name) attempts to record the
+ currently selected choices for the discourse currently in working memory into the KB in ?microtheory. This is a persistant record, and it includes sentence information..")
+
+(isa recordCurrentDiscourseAsGoldStandard ComplexActionPredicate)
+(arity recordCurrentDiscourseAsGoldStandard 1)
+(arg1Isa recordCurrentDiscourseAsGoldStandard InformationBearingThing)
+(comment recordCurrentDiscourseAsGoldStandard "(recordCurrentDiscourseAsGoldStandard ?source-text-name) attempts to record the
+ currently selected choices for the discourse currently in working memory into the KB in ?microtheory as a gold standard. This is a persistant record, and it includes sentence information..")
+
+(isa dumpCurrentDiscourseAsGoldStandard ComplexActionPredicate)
+(arity dumpCurrentDiscourseAsGoldStandard 1)
+(arg1Isa dumpCurrentDiscourseAsGoldStandard InformationBearingThing)
+(comment dumpCurrentDiscourseAsGoldStandard "(dumpCurrentDiscourseAsGoldStandard ?source-text-name) attempts to record the
+ currently selected choices for the discourse currently in working memory into the KB in ?microtheory as a gold standard. 
+This is a perminent record, and it includes sentence information.")
+
+(isa GoldStandardReading Collection)
+(genls GoldStandardReading AccessingAnIBT)
+(comment GoldStandardReading "A GoldStandardReading is a reading of a source text that is verified by a human to be correct, at least at the time of its creation.")
+
+(isa goldStandardReadingOfSourceText Predicate)
+(arity goldStandardReadingOfSourceText 2)
+(comment goldStandardReadingOfSourceText "(goldStandardReadingOfSourceText ?reading ?source-text) means that ?reading is a gold standard reading of ?source-text.")
+
+(isa recordMembersInContext ComplexActionPredicate)
+(arity recordMembersInContext 2)
+(arg1Isa recordMembersInContext Set-Mathematical)
+(arg2Isa recordMembersInContext Microtheory)
+(comment recordMembersInContext "(recordMembersInContext ?set ?microtheory) attempts to record the
+ facts in ?set into the KB in ?microtheory, regardless of their current context. This is a persistant record.")
+
+;;; (smeAlignmentSuggestionsPlan ?source-mt ?storage-mt ?source-text ?reading-to-compare-to ?current-reading)
+(isa smeAlignmentSuggestionsPlan ComplexActionPredicate)
+(arity smeAlignmentSuggestionsPlan 5)
+(arg1Isa smeAlignmentSuggestionsPlan Microtheory) ;;; This is the microtheory which contains the source text we're working from. This maybe should be something else, like a case - but all cases are microtheories anyway.
+(arg2Isa smeAlignmentSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg3Isa smeAlignmentSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa smeAlignmentSuggestionsPlan AccessingAnIBT) ;;; The reading in wm to compare to.
+(arg5Isa smeAlignmentSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment smeAlignmentSuggestionsPlan "(smeAlignmentSuggestionsPlan ?source-mt ?storage-mt ?source-text ?reading-to-compare-to ?current-reading) makes disambiguation suggestions for ?source-text based on previously selected choices, as stored in ?mt.
+ This is useful for, for example, disambiguating a sentence that was disambiguated earlier. The suggestions are put into ?storage-mt with the reasons preserved.")
+
+;;; This is intended to be used as an outsourced predicate, to contextualize a set of facts.
+(isa contextualizedFactSet Predicate)
+(arity contextualizedFactSet 3)
+(arg1Isa contextualizedFactSet Set-Mathematical) ;;; The set of facts to be contextualized
+(arg2Isa contextualizedFactSet Microtheory) ;;; The microtheory that the facts in the set should be put into.
+(arg3Isa contextualizedFactSet Set-Mathematical) ;;; A new set, with all the fact in the original set wrapped in ist-Information for the microtheory, instead of what they were before.
+(comment contextualizedFactSet "(contextualizedFactSet ?original-set ?mt ?contextualized-set) is intended to be used
+ primarily as an outsourced predicate. ?original-set is a set of facts, which may or may not be contextualized.
+ ?contextualized-set is the set of the same facts, but wrapped in ist-Information that places them in ?mt instead of
+ where they were before. For example,
+ (contextualizedFactSet (TheSet (isa Snoopy Dog) (ist-Information MoviesMt (isa Lassie Dog))) DogsMt (TheSet (ist-Information DogsMt (isa Snoopy Dog)) (ist-Information DogsMt (isa Lassie Dog)))) holds.
+ The contextualizedFactSet fact itself says nothing about the veracity of the facts in the sets, only that ?contextualized-set consists
+ of contextualized or recontextualized versions of hte facts in ?original-set.")
+
+
+;;; NYI
+(isa reifyCurrentDocument ComplexActionPredicate)
+(arity reifyCurrentDocument 1)
+(arg1Isa reifyCurrentDocument Thing) ;;; This becomes the name of the entity representing the document.
+(comment reifyCurrentDocument "(reifyCurrentDocument ?name) will reify whatever's in EANLU as a document. The name
+ of the entity created will be ?name. It also creates a fact relating that name to the text.")
+
+
+;;;(entitiesMentionedInChoice (TheSet ...) ?choice ?source-text)
+(isa entitiesMentionedInChoice Predicate)
+(arity entitiesMentionedInChoice 2)
+(arg1Isa entitiesMentionedInChoice Thing)
+(arg2Isa entitiesMentionedInChoice List)
+(comment entitiesMentionedInChoice "entitiesMentionedInChoice gets the entities mentioned in a choice.")
+
+(isa ChoiceConflictStatus Collection)
+(comment ChoiceConflictStatus "This is a collection of potential statuses that two choices from different chioce sets can be in. See the instances of ChoiceConflictStatus for more information.")
+(isa choicesAgnostic ChoiceConflictStatus)
+(comment choicesAgnostic "This ChoiceConflictStatus indicates that the two choices in (choiceConflictStatus ?choice1 ?choice2 ?source-text choicesAgnostic) are not in conflict, but do not support each other.")
+(isa choicesInConflict ChoiceConflictStatus)
+(comment choicesInConflict "This ChoiceConflictStatus indicates that the two choices in (choiceConflictStatus ?choice1 ?choice2 ?source-text choicesInConflict) are in conflict. For example, one might put an entity in a position in a fact where an argisa of that fact's predicate is incompatible with the collection that the other fact says the entity isa.")
+(isa choicesInSupport ChoiceConflictStatus)
+(comment choicesInSupport "This ChoiceConflictStatus indicates that the two choices in (choiceConflictStatus ?choice1 ?choice2 ?source-text choicesInSupport) provide support for choosing them together. For example, one might put an entity in a position in a fact where an argisa of that fact's predicate is compatable with the collection that the other fact says the entity isa.")
+
+(isa ChoiceConflictReason Collection)
+(comment ChoiceConflictReason "ChoiceConflictReason is the collection of reasons that can be used for justifying that two choices have a particualr ChoiceConflictStatus.")
+(isa argIsaAlignment ChoiceConflictReason)
+(comment argIsaAlignment "argIsaAlignment, as a ChoiceConflictReason, indicates that the choices got their ChoiceConflictStatus because of how the argisas lined up. This may be positive if they lined up, negative if they conflicted, or neutral if they didn't have anything to do with each other or the argisas were absent.")
+
+;;; Implemented, but currently just uses argisas. Might need a less general name.
+(isa choiceConflictStatus Predicate)
+(arity choiceConflictStatus 5)
+(arg1Isa choiceConflictStatus Thing)
+(arg2Isa choiceConflictStatus Thing)
+(arg3Isa choiceConflictStatus Thing)
+(arg4Isa choiceConflictStatus ChoiceConflictStatus)
+(arg5Isa choiceConflictStatus ChoiceConflictReason)
+(comment choiceConflictStatus "(choiceConflictStatus ?choice1 ?choice2 ?source-text ?conflictStatus ?reason) means that, in ?source-text, the choices have conflict status ?conflictStatus, for the reason ?reason (which may be the heuristic that generated the fact). See also the collection ChoiceConflictStatus and its instances.")
+
+(isa ChoiceFavorFn FunctionOrFunctionalPredicate)
+(arity ChoiceFavorFn 1)
+(arg1Isa ChoiceFavorFn RealNumber)
+(resultIsa ChoiceFavorFn ChoiceFavor)
+
+(isa MtForSourceTextFn FunctionOrFunctionalPredicate)
+(arity MtForSourceTextFn 1)
+(arg1Isa MtForSourceTextFn InformationBearingThing)
+(resultIsa MtForSourceTextFn Microtheory)
+
+(isa choiceFavorStatus Predicate)
+(arity choiceFavorStatus 4)
+(arg1Isa choiceFavorStatus Thing)
+(arg2Isa choiceFavorStatus Thing)
+(arg3Isa choiceFavorStatus ChoiceFavor)
+(arg4Isa choiceFavorStatus ChoiceFavorReason)
+(comment choiceFavorStatus "(choiceFavorStatus ?choice ?source-text ?favor ?reason) means that, in ?source-text, the choice ?choice has favor ?favorStatus, for the reason ?reason (which may be the heuristic that generated the fact). See also the collection ChoiceFavor and its instances.")
+
+(isa choiceSelectedInSourceTextInReading Predicate)
+(arity choiceSelectedInSourceTextInReading 3)
+(arg1Isa choiceSelectedInSourceTextInReading Thing) ;;; The choice
+(arg2Isa choiceSelectedInSourceTextInReading InformationBearingThing) ;;; The SourceText
+(arg3Isa choiceSelectedInSourceTextInReading AccessingAnIBT) ;;; The particular reading. It debatably could be a Reading, a spec of AccessingAnIBT, but that consists of accessing a TextualMaterial, which the SourceText may or may not be.
+(comment choiceSelectedInSourceTextInReading "(choiceSelectedInSourceTextInReading ?choice ?source-text-name ?reading) indicates that
+ in the reading ?reading of ?source-text-name, one of the choices selected was ?choice.")
+
+(isa choiceSelectedInSentenceInSourceTextInReading Predicate)
+(arity choiceSelectedInSentenceInSourceTextInReading 4)
+(arg1Isa choiceSelectedInSentenceInSourceTextInReading Thing) ;;; The choice
+(arg1Isa choiceSelectedInSentenceInSourceTextInReading Thing) ;;; The sentence id
+(arg2Isa choiceSelectedInSentenceInSourceTextInReading InformationBearingThing) ;;; The SourceText
+(arg3Isa choiceSelectedInSentenceInSourceTextInReading AccessingAnIBT) ;;; The particular reading. It debatably could be a Reading, a spec of AccessingAnIBT, but that consists of accessing a TextualMaterial, which the source text may or may not be.
+(comment choiceSelectedInSentenceInSourceTextInReading "(choiceSelectedInSentenceInSourceTextInReading ?choice ?sen-id ?source-text-name ?reading) indicates that
+ in the reading ?reading of ?source-text, one of the choices selected was ?choice in the sentence with sentence id ?sen-id.")
+
+(isa evidenceForChoiceInSourceTextInReading Predicate)
+(arity evidenceForChoiceInSourceTextInReading 5)
+(arg1Isa evidenceForChoiceInSourceTextInReading Thing) ;;; The evidence
+(arg2Isa evidenceForChoiceInSourceTextInReading Thing) ;;; The choice
+(arg3Isa evidenceForChoiceInSourceTextInReading ChoiceFavor) ;;; The assigned weight
+(arg4Isa evidenceForChoiceInSourceTextInReading InformationBearingThing) ;;; The SourceText
+(arg5Isa evidenceForChoiceInSourceTextInReading AccessingAnIBT) ;;; The particular reading.
+(comment evidenceForChoiceInSourceTextInReading "(evidenceForChoiceInSourceTextInReading ?evidence ?choice ?favor ?source-text ?reading) is DEPRECATED,
+ but included here as a reference for old stored things that might still use it. It indicates that
+ in the reading ?reading of ?source-text, one of the bits of evidence for or against ?choice was ?evidence. ?favor is a ChoiceFavor describing how positive
+ or negative the heuristic through the choice was.
+ This does not mean that ?choice was a choice that was or was not selected, only that that bit of evidence existed. The fact that an evidenceForChoiceInSourceTextInReading fact does
+ not exist doesn't mean that the evidence wasn't there; it may have never been looked for.")
+
+
+;;;(evidenceForChoiceInSentence ?evidence ?choice ?choice-id ?favor ?sentence)  -> Same place
+(isa evidenceForChoiceInSentence Predicate)
+(arity evidenceForChoiceInSentence 5)
+(arg1Isa evidenceForChoiceInSentence DisambiguationHeuristic)
+(arg2Isa evidenceForChoiceInSentence EAChoice)
+(arg3Isa evidenceForChoiceInSentence EAChoiceId)
+(arg4Isa evidenceForChoiceInSentence ChoiceFavor)
+(arg5Isa evidenceForChoiceInSentence EASentenceID)
+(comment evidenceForChoiceInSentence "(evidenceForChoiceInSentence ?evidence ?choice ?choice-id ?favor ?sentence)
+indicates that in ?sentence, one of the bits of evidence for or against ?choice was ?evidence. ?favor is a ChoiceFavor describing how positive
+ or negative the heuristic through the choice was.
+ This does not mean that ?choice was a choice that was or was not selected, only that that bit of evidence existed.
+ The fact that an evidenceForChoiceInSentence fact does not exist doesn't mean that the evidence wasn't there;
+ it may have never been looked for.")
+
+;;;(sentenceInSourceTextInReading ?sentence ?source-text-name ?current-reading ?sen-position ?sen-tokens)
+(isa sentenceInSourceTextInReading Predicate)
+(arity sentenceInSourceTextInReading 5)
+(arg1Isa sentenceInSourceTextInReading EASentenceID)
+(arg2Isa sentenceInSourceTextInReading InformationBeartingThing)
+(arg3Isa sentenceInSourceTextInReading AccessingAnIBT)
+(arg4Isa sentenceInSourceTextInReading Integer)
+(arg5Isa sentenceInSourceTextInReading List)
+(comment sentenceInSourceTextInReading "(sentenceInSourceTextInReading ?sentence ?source-text-name ?reading ?sen-position ?sen-tokens)
+indicates that in ?reading of ?source-text-name, the sentence at position ?sen-position had the sentence-id ?sentence. ?sen-tokens is the
+actual tokens of the text of the sentence.")
+
+;;; This is really meant to be used just as an outsourced predicate for making evidenceForChoiceInSentence statements. It's kind of a glorfied knowledgy mapcan.
+(isa evidenceSetForDisambiguation Predicate)
+(arity evidenceSetForDisambiguation 6)
+(arg1Isa evidenceSetForDisambiguation Set-Mathematical) ;;; The choices that should be made into evidenceForChoiceInSentence statements.
+(arg2Isa evidenceSetForDisambiguation Thing) ;;; The reason for assigning the choices this level of favor. Typically this will include the heuristic used in some way.
+(arg3Isa evidenceSetForDisambiguation ChoiceFavor) ;;; The weight that the choices in ARG1 get.
+(arg4Isa evidenceSetForDisambiguation InformationBearingThing) ;;; The source text
+(arg5Isa evidenceSetForDisambiguation AccessingAnIBT) ;;; The current reading
+(arg6Isa evidenceSetForDisambiguation Set-Mathematical) ;;; The set of evidenceForChoiceInSentence statements
+(comment evidenceSetForDisambiguation "(evidenceSetForDisambiguation ?choices ?reason ?favor ?source-text ?reading ?evidence-set). This is meant to be used as an outsourced predicate for making
+evidenceForChoiceInSentence statements.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; High-level structural stuff for disambiguating a source text.
+
+;;; (processSourceTextFromFile ?file-location ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+(isa processSourceTextFromFile ComplexActionPredicate)
+(arity processSourceTextFromFile 5)
+(arg1Isa processSourceTextFromFile Thing) ;;; The location of the file.
+(arg2Isa processSourceTextFromFile InformationBearingThing)
+(arg3Isa processSourceTextFromFile AccessingAnIBT)
+(arg4Isa processSourceTextFromFile Microtheory)
+(arg5Isa processSourceTextFromFile Microtheory)
+(comment processSourceTextFromFile
+  "(processSourceTextFromFile ?file-location ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt) attempts to process from the file at ?file-location, call the reading ?reading-name, and use the information in the microtheories to
+parameterize the disambiguation.")
+
+
+;;; (disambiguateSourceTextWithHeuristicContext ?source-text-name ?reading-name ?heuristic-set-mt ?heuristic-weight-mt)
+(isa disambiguateSourceTextWithHeuristicContext ComplexActionPredicate)
+(arity disambiguateSourceTextWithHeuristicContext 4)
+(arg1Isa disambiguateSourceTextWithHeuristicContext InformationBearingThing) ;;; The SourceText itself
+(arg2Isa disambiguateSourceTextWithHeuristicContext AccessingAnIBT) ;;; The name of the reading.
+(arg3Isa disambiguateSourceTextWithHeuristicContext Microtheory) ;;; The microtheory containing the heuristics to use
+(arg4Isa disambiguateSourceTextWithHeuristicContext Microtheory) ;;; A microtheory that has information about how to weight the heuristics.
+(comment disambiguateSourceTextWithHeuristicContext "(disambiguateSourceTextWithHeuristicContext ?name ?reading ?heuristic-mt ?heuristic-weight-mt) attempts to disambiguate a source text
+using the heuristics in heuristic-mt, and weighting
+them based on the knowledge in ?heuristic-weight-mt. ?reading is the name of the reading.")
+;;;If it is GenNewReading, a new reading name will be generated automatically (based on the time the command is executed and the name of the source text.)")
+
+;;; (disambiguateSourceText ?name ?reading ?heuristic-set ?heuristic-weight-mt)
+(isa disambiguateSourceText ComplexActionPredicate)
+(arity disambiguateSourceText 4)
+(arg1Isa disambiguateSourceText InformationBearingThing) ;;; The SourceText itself
+(arg2Isa disambiguateSourceText AccessingAnIBT) ;;; The name of the reading.
+(arg3Isa disambiguateSourceText Set-Mathematical) ;;; The heuristics to use
+(arg4Isa disambiguateSourceText Microtheory) ;;; A microtheory that has information about how to weight the heuristics.
+(comment disambiguateSourceText "(disambiguateSourceText ?name ?reading ?heuristic-set ?heuristic-weight-mt) attempts to disambiguate a SourceText
+using the heuristics in heuristic-set (identified by their names; they are members of the DisambiguationHeuristic collection), and weighting
+them based on the knowledge in ?heuristic-weight-mt. ?reading is the name of the reading. If it is GenNewReading, a new reading name will
+be generated automatically (based on the time the command is executed and the name of the SourceText.)")
+;;; If it is GenNewReading, a new reading name will be generated automatically (based on the time the command is executed and the name of the source text.)")
+
+;;; (disambiguateSentence ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set ?heuristic-weight-mt)
+(isa disambiguateSentence ComplexActionPredicate)
+(arity disambiguateSentence 7)
+(arg1Isa disambiguateSentence InformationBearingThing) ;;; The source text itself
+(arg2Isa disambiguateSentence Microtheory)
+(arg3Isa disambiguateSentence AccessingAnIBT) ;;; The name of the reading.
+(arg4Isa disambiguateSentence Thing)
+(arg5Isa disambiguateSentence Integer)
+(arg6Isa disambiguateSentence Set-Mathematical) ;;; The heuristics to use
+(arg7Isa disambiguateSentence Microtheory) ;;; A microtheory that has information about how to weight the heuristics.
+(comment disambiguateSentence "(disambiguateSentence ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set ?heuristic-weight-mt)
+attempts to disambiguate a sentence using the heuristics in heuristic-set (identified by their names; they are members of the DisambiguationHeuristic collection), and weighting
+them based on the knowledge in ?heuristic-weight-mt. ?reading is the name of the reading.")
+
+;;; NYT
+(isa runDiscourseHeuristics ComplexActionPredicate)
+(arity runDiscourseHeuristics 4)
+(arg1Isa runDiscourseHeuristics InformationBearingThing)
+(arg2Isa runDiscourseHeuristics Microtheory)
+(arg3Isa runDiscourseHeuristics AccessingAnIBT)
+(arg4Isa runDiscourseHeuristics Set-Mathematical) ;;; The list of heuristics
+(comment runDiscourseHeuristics "(runDiscourseHeuristics ?source-text-name ?source-text-mt ?reading-name ?heuristic-set) will run whatever heuristics in ?heuristic-set
+are DiscourseLevelDisambiguationHeuristics.")
+
+(isa typeOfHeuristic Predicate)
+(arity typeOfHeuristic 4)
+(arg1Isa typeOfHeuristic Thing)
+(arg2Isa typeOfHeuristic Thing)
+(comment typeOfHeuristic "(typeOfHeuristic ?heuristic ?type) is basically isa, but it's not because isa
+lookups are incredibly slow for some reason.")
+
+;;; (runSentenceHeuristics ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set)
+(isa runSentenceHeuristics ComplexActionPredicate)
+(arity runSentenceHeuristics 6)
+(arg1Isa runSentenceHeuristics InformationBearingThing)
+(arg2Isa runSentenceHeuristics Microtheory)
+(arg3Isa runSentenceHeuristics AccessingAnIBT)
+(arg4Isa runSentenceHeuristics Thing)
+(arg5Isa runSentenceHeuristics Integer)
+(arg6Isa runSentenceHeuristics Set-Mathematical) ;;; The list of heuristics
+(comment runSentenceHeuristics "(runSentenceHeuristics ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set) will run
+whatever heuristics in ?heuristic-set are SentenceLevelDisambiguationHeuristics.")
+
+;;; (instantiateSourceText ?name ?mt-name)
+(isa instantiateSourceText ComplexActionPredicate)
+(arity instantiateSourceText 2)
+(arg1Isa instantiateSourceText InformationBearingThing) ;;; The SourceText name itself
+(arg2Isa instantiateSourceText Microtheory) ;;; A microtheory that has information about how to weight the heuristics.
+(comment instantiateSourceText "(instantiateSourceText ?name ?mt-name) makes a new microtheory for the SourceText named ?name, if one doesn't
+already exist. ?mt-name is the name that the microtheory is given.
+If ?mt-name is GenNewMtName, a new microtheory name will be generated automatically (based on the name of the SourceText.)")
+
+;;; (fileLocationOfSourceText ?location ?source-text-name)
+(isa fileLocationOfSourceText Predicate)
+(arity fileLocationOfSourceText 2)
+(arg1Isa fileLocationOfSourceText Thing)
+(arg2Isa fileLocationOfSourceText InformationBearingThing)
+(comment fileLocationOfSourceText "(fileLocationOfSourceText ?location ?source-text-name) means that a file containing the text of ?source-text-name is at ?location.")
+
+(isa disambiguationMtOfSourceText Predicate)
+(arity disambiguationMtOfSourceText 2)
+(arg1Isa disambiguationMtOfSourceText Microtheory)
+(arg2Isa disambiguationMtOfSourceText InformationBearingThing)
+(comment disambiguationMtOfSourceText "(disambiguationMtOfSourceText ?mt ?source-text-name) means ?mt contains the disambiguation heuristics for ?source-text-name.")
+
+;;; disambiguationContextForScenario
+;;; Number of args on this subject to change.
+(isa disambiguationContextForScenario Predicate)
+(arity disambiguationContextForScenario 2)
+(arg1Isa disambiguationContextForScenario InformationBearingThing)
+(arg2Isa disambiguationContextForScenario Microtheory)
+(comment disambiguationContextForScenario "(disambiguationContextForScenario ?source-text-name ?mt) means ?mt contains the disambiguation heuristics for ?source-text-name. This is supposed to be the master outsourced predicate used to determine which context to use.")
+
+
+(isa heuristicWeightMtOfSourceText Predicate)
+(arity heuristicWeightMtOfSourceText 2)
+(arg1Isa heuristicWeightMtOfSourceText Thing)
+(arg2Isa heuristicWeightMtOfSourceText InformationBearingThing)
+(comment heuristicWeightMtOfSourceText "(heuristicWeightMtOfSourceText ?mt ?source-text-name) means ?mt contains the disambiguation heuristic weights for ?source-text-name.")
+
+
+;;; (instantiateReading ?reading-name ?source-text-name)
+(isa instantiateReading ComplexActionPredicate)
+(arity instantiateReading 2)
+(arg1Isa instantiateReading AccessingAnIBT) ;;; The name of the reading. If it is GenNewReading, a new reading name will be generated automatically (based on the time the command is executed and the name of the source text.)
+(arg2Isa instantiateReading InformationBearingThing) ;;; The source text entity.
+(comment instantiateReading "(instantiateReading ?reading-name ?source-text-name) makes a new reading named ?reading-name for the source text named
+?source-text-name. ?mt-name is the name that the microtheory is given. If it is GenNewReading, a new reading name will be generated automatically
+(based on the time the command is executed and the name of the source text.)")
+
+;;;If it is GenNewReading, a new reading name will be generated automatically (based on the time the command is executed and the name of the source text.)")
+
+(isa generatedReadingName Predicate)
+(arity generatedReadingName 2)
+(arg1Isa generatedReadingName InformationBearingThing)
+(arg2Isa generatedReadingName AccessingAnIBT)
+(comment generatedReadingName "(generatedReadingName ?source-text-name ?reading-name) is meant to be used an an outsourced predicate. It generates
+ a new name for a reading of ?source-text-name based on the current time.")
+
+(isa generatedSourceTextName Predicate)
+(arity generatedSourceTextName 2)
+(arg1Isa generatedSourceTextName CharacterString)
+(arg2Isa generatedSourceTextName InformationBearingThing)
+(comment generatedSourceTextName "(generatedSourceTextName ?location ?source-text-name) is meant to be used an an outsourced predicate. It generates
+ a new name for the source-text stored in ?location based on the current time.")
+
+(isa generatedSourceTextMicrotheoryName Predicate)
+(arity generatedSourceTextMicrotheoryName 2)
+(arg1Isa generatedSourceTextMicrotheoryName InformationBearingThing)
+(arg2Isa generatedSourceTextMicrotheoryName Microtheory)
+(comment generatedSourceTextMicrotheoryName "(generatedSourceTextMicrotheoryName ?source-text-name ?mt-name) is meant to be used an an outsourced predicate. It generates
+ a new name for a microtheory for ?source-text-name. This method is largely unneccesary now that Mt names for source texts use a functional format, but it is preserved (at least temporarily)
+for potential compatibility issues.")
+
+(isa generatedGoldStandardReadingName Predicate)
+(arity generatedGoldStandardReadingName 2)
+(arg1Isa generatedGoldStandardReadingName InformationBearingThing)
+(arg2Isa generatedGoldStandardReadingName AccessingAnIBT)
+(comment generatedGoldStandardReadingName "(generatedGoldStandardReadingName ?source-text-name ?gold-standard-reading-name) is meant to be used an an outsourced predicate. It generates
+ a new name for a gold standard reading for ?source-text-name.")
+
+;;; This has two important features.
+;;; The first is that it filters out things that aren't well-formed source-text heuristics.
+;;; The second is that it generates a list that can be used as an executable action sequence for a plan.
+;;; (plansForSentenceDisambiguation ?source-text-name ?source-text-mt ?reading-name ?heuristic-set ?heuristic-weight-mt ?sentence-plan-list)
+(isa plansForSentenceDisambiguation Predicate)
+(arity plansForSentenceDisambiguation 6)
+(arg1Isa plansForSentenceDisambiguation InformationBearingThing)
+(arg2Isa plansForSentenceDisambiguation Microtheory)
+(arg3Isa plansForSentenceDisambiguation AccessingAnIBT)
+(arg4Isa plansForSentenceDisambiguation Set-Mathematical)
+(arg5Isa plansForSentenceDisambiguation Microtheory)
+(arg6Isa plansForSentenceDisambiguation List)
+(comment plansForSentenceDisambiguation "Intended to be used as an outsourced 
+predicate with the last argument open, (plansForSentenceDisambiguation ?source-text-name ?source-text-mt ?reading-name ?heuristic-set ?heuristic-weight-mt ?sentence-plan-list)
+indicates that ?sentence-plan-list is a list that can be used
+as an executable actionSequence for a plan. The list take the form (TheList (disambiguateSentence...) (disambiguateSentence...) ...).")
+
+;;; This that it generates a list that can be used as an executable action sequence for a plan.
+;;; (plansForSentenceCSSelection ?source-text-name ?source-text-mt ?reading-name ?heuristic-set ?heuristic-weight-mt ?sentence-plan-list)
+(isa plansForSentenceCSSelection Predicate)
+(arity plansForSentenceCSSelection 6)
+(arg1Isa plansForSentenceCSSelection InformationBearingThing)
+(arg2Isa plansForSentenceCSSelection Microtheory)
+(arg3Isa plansForSentenceCSSelection AccessingAnIBT)
+(arg4Isa plansForSentenceCSSelection Set-Mathematical)
+(arg5Isa plansForSentenceCSSelection Microtheory)
+(arg6Isa plansForSentenceCSSelection Set-Mathematical)
+(comment plansForSentenceCSSelection "Intended to be used as an outsourced predicate with the last argument open, (plansForSentenceCSSelection
+?source-text-name ?source-text-mt ?reading-name ?sentence-plan-list) indicates that ?sentence-plan-list is a list that can be used
+as an executable actionSequence for a plan. The list take the form (TheList (disambiguateSentence...) (disambiguateSentence...) ...).")
+
+
+
+
+
+;;; (disambiguateSentencesInSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+;;; Calls disambiguateSentence on every sentence in the source text.
+(isa disambiguateSentencesInSourceText ComplexActionPredicate)
+(arity disambiguateSentencesInSourceText 4)
+(arg1Isa disambiguateSentencesInSourceText InformationBearingThing)
+(arg2Isa disambiguateSentencesInSourceText AccessingAnIBT) 
+(arg3Isa disambiguateSentencesInSourceText Set-Mathematical) ;;; The set of heuristics to use on the sentences
+(arg4Isa disambiguateSentencesInSourceText Microtheory) ;;; The microtheory where weights on heuristics are stored.
+(comment disambiguateSentencesInSourceText "(disambiguateSentencesInSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+uses the plan disambiguateSentence on each sentence in the source text, using the heuristics in the set.")
+
+;;; (bestChoicesForSentenceInCurrentReading ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt ?best-choices)
+(isa bestChoicesForSentenceInCurrentReading Predicate)
+(arity bestChoicesForSentenceInCurrentReading 6)
+(arg1Isa bestChoicesForSentenceInCurrentReading InformationBearingThing)
+(arg2Isa bestChoicesForSentenceInCurrentReading Microtheory)
+(arg3Isa bestChoicesForSentenceInCurrentReading AccessingAnIBT)
+(arg4Isa bestChoicesForSentenceInCurrentReading Thing)
+(arg5Isa bestChoicesForSentenceInCurrentReading Microtheory)
+(arg6Isa bestChoicesForSentenceInCurrentReading List)
+(comment bestChoicesForSentenceInCurrentReading "Intended to be used as an outsourced predicate with the last argument open, (bestChoicesForSentenceInCurrentReading
+?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt ?best-choices) indicates that ?best-choices is a list taking the form
+(TheList (choice-set-id choice) (choice-set-id choice) ...) that indicates that for that reading, the best choices for the source text are in ?best-choices.")
+
+;;; (selectBestChoicesForSentenceInCurrentReading ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt ?best-choices)
+(isa selectBestChoicesForSentenceInCurrentReading Predicate)
+(arity selectBestChoicesForSentenceInCurrentReading 5)
+(arg1Isa selectBestChoicesForSentenceInCurrentReading InformationBearingThing)
+(arg2Isa selectBestChoicesForSentenceInCurrentReading Microtheory)
+(arg3Isa selectBestChoicesForSentenceInCurrentReading AccessingAnIBT)
+(arg4Isa selectBestChoicesForSentenceInCurrentReading Thing)
+(arg5Isa selectBestChoicesForSentenceInCurrentReading Microtheory)
+(comment selectBestChoicesForSentenceInCurrentReading "(selectBestChoicesForSentenceInCurrentReading
+?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt) finds the best choices for the sentence ?sentence-id according to the
+heuristics in ?heuristic-weight-mt and makes them.")
+
+;;; (bestParseTreeChoicesForSentenceInCurrentReading ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt ?best-choices)
+(isa bestParseTreeChoicesForSentenceInCurrentReading Predicate)
+(arity bestParseTreeChoicesForSentenceInCurrentReading 6)
+(arg1Isa bestParseTreeChoicesForSentenceInCurrentReading InformationBearingThing)
+(arg2Isa bestParseTreeChoicesForSentenceInCurrentReading Microtheory)
+(arg3Isa bestParseTreeChoicesForSentenceInCurrentReading AccessingAnIBT)
+(arg4Isa bestParseTreeChoicesForSentenceInCurrentReading Thing)
+(arg5Isa bestParseTreeChoicesForSentenceInCurrentReading Microtheory)
+(arg6Isa bestParseTreeChoicesForSentenceInCurrentReading List)
+(comment bestParseTreeChoicesForSentenceInCurrentReading "Intended to be used as an outsourced predicate with the last argument open, (bestParseTreeChoicesForSentenceInCurrentReading
+?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt ?best-choices) indicates that ?best-choices is a list taking the form
+(TheList (choice-set-id choice) (choice-set-id choice) ...) that indicates that for that reading, the best choices for the sentence parse are in ?best-choices.")
+
+
+;;; (makeSentenceChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt)
+(isa makeSentenceChoices ComplexActionPredicate)
+(arity makeSentenceChoices 6)
+(arg1Isa makeSentenceChoices InformationBearingThing)
+(arg2Isa makeSentenceChoices Microtheory) ;;; The source-text microtheory
+(arg3Isa makeSentenceChoices AccessingAnIBT)
+(arg4Isa makeSentenceChoices Thing)
+(arg5Isa makeSentenceChoices Set-Mathematical) ;;; The set of heuristics to use on the sentences
+(arg6Isa makeSentenceChoices Microtheory) ;;; The microtheory where weights on heuristics are stored.
+(comment makeSentenceChoices "(makeSentenceChoices ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+makes selections for the choice sets in the sentence based on what evidence has been generated.")
+
+;;; (makeSentenceParseChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt)
+(isa makeSentenceParseChoices ComplexActionPredicate)
+(arity makeSentenceParseChoices 6)
+(arg1Isa makeSentenceParseChoices InformationBearingThing)
+(arg2Isa makeSentenceParseChoices Microtheory) ;;; The source-text microtheory
+(arg3Isa makeSentenceParseChoices AccessingAnIBT)
+(arg4Isa makeSentenceParseChoices Thing)
+(arg5Isa makeSentenceParseChoices Set-Mathematical) ;;; The set of heuristics to use on the sentences
+(arg6Isa makeSentenceParseChoices Microtheory) ;;; The microtheory where weights on heuristics are stored.
+(comment makeSentenceParseChoices "(makeSentenceParseChoices ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+makes selections for the parse tree choice sets in the sentence based on what evidence has been generated.")
+
+;;; This has two important features.
+;;; The first is that it filters out things that aren't well-formed discourse heuristics.
+;;; The second is that it generates a list that can be used as an executable action sequence for a plan.
+;;; (plansForDiscourseHeuristics ?source-text-name ?source-text-mt ?reading-name ?heuristic-set ?heuristic-weight-mt ?heuristic-set ?heuristic-plan-mt ?heuristic-plan-list) 
+(isa plansForDiscourseHeuristics Predicate)
+(arity plansForDiscourseHeuristics 6)
+(arg1Isa plansForDiscourseHeuristics InformationBearingThing)
+(arg2Isa plansForDiscourseHeuristics Microtheory)
+(arg3Isa plansForDiscourseHeuristics AccessingAnIBT)
+(arg4Isa plansForDiscourseHeuristics Set-Mathematical)
+(arg5Isa plansForDiscourseHeuristics Microtheory)
+(arg6Isa plansForDiscourseHeuristics List)
+(comment plansForDiscourseHeuristics "Intended to be used as an outsourced predicate with the last argument open, 
+(plansForDiscourseHeuristics ?source-text-name ?source-text-mt ?reading-name 
+?heuristic-set ?heuristic-plan-mt ?heuristic-plan-list) 
+indicates that ?heuristic-plan-list is a list that can be used
+as an executable actionSequence for a plan. The list is adapted 
+from the discourse heuristics in ?heuristic-set based on their heuristicUsesPlan
+features in ?heuristic-plan-mt.")
+
+;;; (plansForSentenceHeuristics ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number 
+;;; ?heuristic-set ?heuristic-plan-mt ?heuristic-plan-list)
+(isa plansForSentenceHeuristics Predicate)
+(arity plansForSentenceHeuristics 7)
+(arg1Isa plansForSentenceHeuristics InformationBearingThing)
+(arg2Isa plansForSentenceHeuristics Microtheory)
+(arg3Isa plansForSentenceHeuristics AccessingAnIBT)
+(arg4Isa plansForSentenceHeuristics Thing)
+(arg5Isa plansForSentenceHeuristics Set-Mathematical)
+(arg6Isa plansForSentenceHeuristics Microtheory)
+(arg7Isa plansForSentenceHeuristics List)
+(comment plansForSentenceHeuristics "Intended to be used as an outsourced predicate 
+with the last argument open, (plansForSentenceHeuristics
+?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set
+?heuristic-plan-mt ?heuristic-plan-list) indicates that
+?heuristic-plan-list is a list that can be used as an
+executable actionSequence for a plan. The list is adapted from the sentence heuristics in
+?heuristic-set based on their heuristicUsesPlan features in ?heuristic-plan-mt")
+
+(isa DisambiguationHeuristic Collection)
+(comment DisambiguationHeuristic "DisambiguationHeuristic is the collection of heuristics used for disambiguation.")
+
+(isa DisambiguationHeuristicPlan Collection)
+(comment DisambiguationHeuristicPlan "DisambiguationHeuristicPlan is the collection of plans for heuristics used for disambiguation.")
+
+(isa DiscourseLevelDisambiguationHeuristicPlan Collection)
+(genls DiscourseLevelDisambiguationHeuristicPlan DisambiguationHeuristicPlan)
+(comment DiscourseLevelDisambiguationHeuristicPlan "A DiscourseLevelDisambiguationHeuristicPlan is a DisambiguationHeuristicPlan that is run only once and
+which operates over the whole discourse. Compare to the SentenceLevelDisambiguationHeuristicPlan collection.")
+
+(isa DiscourseLevelDisambiguationHeuristic Collection)
+(genls DiscourseLevelDisambiguationHeuristic DisambiguationHeuristic)
+(comment DiscourseLevelDisambiguationHeuristic "A DiscourseLevelDisambiguationHeuristic is a DisambiguationHeuristic whose plan is run only once and
+which operates over the whole discourse. Compare to the SentenceLevelDisambiguationHeuristic collection.")
+
+(isa SentenceLevelDisambiguationHeuristicPlan Collection)
+(genls SentenceLevelDisambiguationHeuristicPlan DisambiguationHeuristic)
+(comment SentenceLevelDisambiguationHeuristicPlan "A SentenceLevelDisambiguationHeuristicPlan is a DisambiguationHeuristicPlan that is run once
+for each sentence in a discourse, over that sentence. Compare to DiscourseLevelDisambiguationHeuristic.")
+
+(isa SentenceLevelDisambiguationHeuristic Collection)
+(genls SentenceLevelDisambiguationHeuristic DisambiguationHeuristic)
+(comment SentenceLevelDisambiguationHeuristic "A SentenceLevelDisambiguationHeuristic is a DisambiguationHeuristic whose plan is run once
+for each sentence in a discourse, over that sentence. Compare to DiscourseLevelDisambiguationHeuristic.")
+
+(isa microtheoryForSourceText Predicate)
+(arity microtheoryForSourceText 2)
+(arg1Isa microtheoryForSourceText Microtheory)
+(arg2Isa microtheoryForSourceText InformationBearingThing)
+(comment microtheoryForSourceText "(microtheoryForSourceText ?mt ?source-text) indicates that ?mt is the microtheory that information from
+readings of ?source-text should be stored in.")
+
+(isa readingOfSourceText Predicate)
+(arity readingOfSourceText 2)
+(arg1Isa readingOfSourceText AccessingAnIBT)
+(arg2Isa readingOfSourceText InformationBearingThing)
+(comment readingOfSourceText "(readingOfSourceText ?reading ?source-text) indicates that ?reading is a reading of ?source-text.")
+
+(isa heuristicUsesPlan Predicate)
+(arity heuristicUsesPlan 2)
+(arg1Isa heuristicUsesPlan Thing)
+(arg2Isa heuristicUsesPlan Thing)
+(comment heuristicUsesPlan "(heuristicUsesPlan ?heuristic-pattern ?plan-pattern) means that if ?heuristic-pattern appears in a list of heuristics
+to use, ?plan-pattern is the plan that should actually be called. ?heuristic-pattern takes the form (?heuristic-name ...), where ?heuristic-name
+is a DisambiguationHeuristic. ?plan-pattern takes the form (?plan-predicate ...), where ?plan-predicate is a ComplexActionPredicate that is called
+when ?heuristic-pattern is included in a set of heuristics to use.")
+
+(isa LbrDisambiguationMt Microtheory)
+(comment LbrDisambiguationMt "LbrDisambiguationMt is a microtheory that contains general information about readings for learning
+by reading.")
+
+(isa LbrSourceTextsMt Microtheory)
+(comment LbrSourceTextsMt "LbrSourceTextsMt is a microtheory that genlmts to every microtheory for a source-text.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Things used for SME alignment
+
+(isa ChoiceSetsCaseFn CaseFunctions)
+(arity ChoiceSetsCaseFn 1)
+(arg1Isa ChoiceSetsCaseFn CycL-Formula)
+(resultIsa ChoiceSetsCaseFn Case)
+(comment ChoiceSetsCaseFn "(ChoiceSetsCaseFn ?query) denotes the case defined by the set of facts retrieved via ?query, with isa subbed out for something that won't get cast to a feature.")
+
+;;;(isa isaToken Predicate)
+;;;(arity isaToken 2)
+;;;(arg1Isa isaToken Thing)
+;;;(arg2Isa isaToken Thing)
+;;;(comment isaToken "This is a token that replaces isa in SME matching functions where isa statements should be treated structurally,
+;;;and not as indicators that something is a feature.")
+
+(isa potentialMatchChoice Predicate)
+(arity potentialMatchChoice 1)
+(arg1Isa potentialMatchChoice Thing)
+(comment potentialMatchChoice "Used in analogical choice set alignment, (potentialMatchChoice ?thing) indicates that ?thing is something which might be aligned with
+something in the other set of choice sets.")
+
+(isa potentialMatchSentenceChoice Predicate)
+(arity potentialMatchSentenceChoice 2)
+(arg1Isa potentialMatchSentenceChoice Thing)
+(arg2Isa potentialMatchSentenceChoice Thing)
+(comment potentialMatchSentenceChoice "Used in analogical choice set alignment, (potentialMatchSentenceChoice ?sentence ?thing) indicates that ?thing is something which might be aligned with
+something in the other set of choice sets and that ?thing comes from ?sentence.")
+
+;;;(isa replaceIsaTokenWithIsa Predicate)
+;;;(arity replaceIsaTokenWithIsa 2)
+;;;(arg1Isa replaceIsaTokenWithIsa Thing)
+;;;(arg2Isa replaceIsaTokenWithIsa Thing)
+;;;(comment isaToken "Meant to be used as an outsourced predicate, (replaceIsaTokenWithIsa ?isa-token-version ?isa-version) indicates that
+;;;?isa-version is ?isa-token-version with all of the instances of isaToken replaced with isa.")
+
+(isa retrieveStoredAnalogyCases ComplexActionPredicate)
+(arity retrieveStoredAnalogyCases 1)
+(arg1Isa retrieveStoredAnalogyCases InformationBearingThing) ;;; The name of the source text.
+(comment retrieveStoredAnalogyCases
+  "(retrieveStoredAnalogyCases ?source-text-name) looks in the KB to see if there's 
+stored analogy cases, and if there are, it puts them in working memory.")
+
+
+;;; Records the contents of the current discourse interpretation in the microtheory ?microtheory
+;;; in the KB. This is a persistant record.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id)
+                (drsForDiscourse ?discourse-interpretation-id)))
+      (evaluate ?interpretation-facts
+        (TheClosedRetrievalSetOf ?belief
+          (ist-Information (DrsCaseFn ?discourse-interpretation-id) ?belief)))) ;;; Everything in that microtheory
+ (methodForAction
+  (recordCurrentDiscourseInterpretation ?microtheory)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?interpretation-facts ?microtheory))))) 
+
+;;; recordCurrentDiscourseAsGoldStandard records the currently made choices for the current discourse as a gold standard.
+;;;(doRecord (ist-Information LbrSourceTextsMt (microtheoryForSourceText (MtForSourceTextFn ?source-text-name) ?source-text-name)))
+(preconditionForMethod
+ (and (generatedGoldStandardReadingName ?source-text-name ?gs-reading-name)) ;;; The name to use
+ (methodForAction
+  (recordCurrentDiscourseAsGoldStandard ?source-text-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information LbrSourceTextsMt (microtheoryForSourceText (MtForSourceTextFn ?source-text-name) ?source-text-name)))
+    (doRecord (ist-Information LbrSourceTextsMt (goldStandardReadingOfSourceText ?gs-reading-name ?source-text-name)))
+    (recordCurrentDiscourseChoices (MtForSourceTextFn ?source-text-name) ?source-text-name ?gs-reading-name)))))
+
+(preconditionForMethod
+ (generatedGoldStandardReadingName ?source-text-name ?gs-reading-name)
+ (methodForAction
+  (dumpCurrentDiscourseAsGoldStandard ?source-text-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information LbrSourceTextsMt (microtheoryForSourceText (MtForSourceTextFn ?source-text-name) ?source-text-name)))
+    (doRecord (ist-Information LbrSourceTextsMt (goldStandardReadingOfSourceText ?gs-reading-name ?source-text-name)))
+    (recordCurrentDiscourseChoices (MtForSourceTextFn ?source-text-name) ?source-text-name ?gs-reading-name)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (dumpReadingToFlatFile ?gs-reading-name)
+       
+       (doTell (dumpFactToExperimentalDataFile (ist-Information LbrSourceTextsMt (goldStandardReadingOfSourceText ?gs-reading-name ?source-text-name)) "gold-standards.meld"))
+       )))))))
+
+(isa dumpFactToExperimentalDataFile Predicate)
+(arity dumpFactToExperimentalDataFile 2)
+(comment dumpFactToExperimentalDataFile "(dumpFactToExperimentalDataFile ?fact ?file) puts the fact in the file in the experimental data storage area.")
+
+(isa dumpReadingToFlatFile ComplexActionPredicate)
+(arity dumpReadingToFlatFile 1)
+(arg1Isa dumpReadingToFlatFile AccessingAnIBT) ;;; The name of the reading)
+(comment dumpReadingToFlatFile
+  "(dumpReadingToFlatFile ?reading) dumps the reading to a flat file. It puts it in a default location.")
+
+(isa dumpReadingToFlatFileInLocation ComplexActionPredicate)
+(arity dumpReadingToFlatFileInLocation 2)
+(arg1Isa dumpReadingToFlatFileInLocation AccessingAnIBT) ;;; The name of the reading.
+(arg2Isa dumpReadingToFlatFileInLocation Thing) ;;; The file location to put it.
+(comment dumpReadingToFlatFileInLocation
+  "(dumpReadingToFlatFileInLocation ?reading ?st ?location) is a plan that dumps the reading to a flat file. It puts it in ?location.")
+
+(isa readingStoredInLocation Predicate)
+(arity readingStoredInLocation 2)
+(arg1Isa readingStoredInLocation AccessingAnIBT) ;;; The name of the reading.
+(arg2Isa readingStoredInLocation Thing) ;;; The file location to put it.
+(comment readingStoredInLocation
+  "(readingStoredInLocation ?reading ?location) is an outsourced predicate that dumps the reading to a flat file. It puts it in ?location.")
+
+(isa locationToStoreReading Predicate)
+(arity locationToStoreReading 2)
+(arg1Isa locationToStoreReading AccessingAnIBT) ;;; The name of the reading.
+(arg2Isa locationToStoreReading Thing) ;;; The file location to put it.
+(comment locationToStoreReading
+  "(locationToStoreReading ?reading ?location) is an outsourced predicate that figures out a reasonable place to stash a reading on disk.")
+
+;;;- Dump that to a flat file. Include
+;;;(in-microtheory SUSD02-FragmentMt) - This means we need the microtheory things should be in.
+;;;(microtheoryForSourceText SUSD02-FragmentMt SUSD02-Fragment) - This means we need the source text name and the microtheory things should be in.
+;;;(genlMt LbrSourceTextsMt SUSD02-FragmentMt) - This means we need the microtheory things should be in.
+(preconditionForMethod
+ (and (locationToStoreReading ?reading ?location-to-store-it)) ;;; Get a location 
+ (methodForAction
+  (dumpReadingToFlatFile ?reading)
+  (actionSequence
+   (TheList
+    (dumpReadingToFlatFileInLocation ?reading ?location-to-store-it)))))
+
+(preconditionForMethod
+ (and 
+      (readingStoredInLocation ?reading ?location)) ;;; Store it!
+ (methodForAction
+  (dumpReadingToFlatFileInLocation ?reading ?location)
+  (actionSequence
+   (TheList
+    (doAnnounce "dumpReadingToFlatFileInLocation completed. ~A stored in ~A." (?reading ?location))))))
+
+;;; Records the currently made choices for the current discourse into the microtheory ?microtheory.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?discourse-id))      
+      (evaluate ?choice-facts
+        (TheClosedRetrievalSetOf 
+            (choiceSelectedInSourceTextInReading ?selected-choice ?source-text-name ?reading-name)
+          (ist-Information (DiscourseCaseFn ?discourse-id)
+            (selectedChoice ?choice-set-id ?choice-id ?selected-choice))))) ;;; The selected choices
+ (methodForAction
+  (recordCurrentDiscourseChoices ?microtheory ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?microtheory (readingOfSourceText ?reading-name ?source-text-name)))
+    (doAnnounce "Recording discourse choices for the reading ~A." (?reading-name ))
+    (recordMembersInContext ?choice-facts ?microtheory)))))
+
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?discourse-id))      
+      (evaluate ?choice-facts
+        (TheClosedRetrievalSetOf 
+            (choiceSelectedInSentenceInSourceTextInReading ?selected-choice ?sen-id ?source-text-name ?reading-name)
+          (and
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+                 (selectedChoice ?choice-set-id ?choice-id ?selected-choice))
+               (ist-Information (DiscourseCaseFn ?discourse-id)
+                 (choiceSetFromSentence ?choice-set-id ?sen-id)))))) ;;; The selected choices
+ (methodForAction
+  (recordCurrentDiscourseSentenceChoices ?microtheory ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?choice-facts ?microtheory)))))
+
+(preconditionForMethod
+ (and
+      (contextualizedFactSet ?fact-set ?microtheory ?con-interpretation-facts))
+ (methodForAction
+  (recordMembersInContext ?fact-set ?microtheory)
+  (actionSequence
+   (TheList
+    (doRecordMembers ?con-interpretation-facts) 
+;;; (doAnnounce "recordMembersInContext completed. New information stored in ~A." (?microtheory))
+    ))))
+
+;;; (processSourceTextFromFile ?file-location ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+(preconditionForMethod 
+ (true)
+ (methodForAction
+  (processSourceTextFromFile ?file-location ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (disambiguateSourceTextWithHeuristicContext ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+    (useSourceTextCoreferenceResolution)))))
+
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (loadFromFileForManualDisambiguation ?location ?context)
+  (actionSequence
+   (TheList
+    (processFromFileAtLocation ?location ?context)
+    (doLaunchEABrowser)
+    (doAnnounce "loadFromFileForManualDisambiguation has launched the ea browser for manual disambiguation for the location ~A, or at least it thinks it has." (?location))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Plans
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?targetSuggestions
+        (TheClosedRetrievalSetOf ?target
+          (and
+               ;;; This needs to not fall back on the match that's already there. We need it to make a new one each time.
+               (outsourcedOnly
+                (matchBetween
+                 (ChoiceSetsCaseFn
+                  (TheSetOf (potentialMatchSentenceChoice ?sentence ?choice)
+                    (ist-Information ?source-mt (choiceSelectedInSentenceInSourceTextInReading ?choice ?sentence ?source-text ?reading-to-compare-to))))
+                 (ChoiceSetsCaseFn
+                  (TheSetOf (potentialMatchSentenceChoice ?sentence ?choice)
+                    (and
+                         (ist-Information (DiscourseCaseFn ?current-discourse-id) (choice ?choice-set-id ?choice-id ?choice))
+                         (ist-Information (DiscourseCaseFn ?current-discourse-id) (choiceSetFromSentence ?choice-set-id ?sentence)))))
+                 (TheSet) ?match))
+               
+               (bestMapping ?match ?map)
+               (correspondsInMapping ?map ?all-base ?all-target) ;;; This is dumb-looking, but gets things into wm so the narrower method can find them.
+               (correspondsInMapping ?map (potentialMatchSentenceChoice ?b-sentence ?base) (potentialMatchSentenceChoice ?t-sentence ?target))
+               )))
+      ;;; Produce a set of evidence statements ready to be told into a microtheory.
+      ;;; Does this do anything? Where is ?target-suggestions even used?
+      (outsourcedOnly
+       (evidenceSetForDisambiguation ?targetSuggestions
+                                     (smeAlignmentSuggestions ?reading-to-compare-to ?source-mt) (ChoiceFavorFn 0.8)
+                                     ?source-text ?current-reading ?evidence-set)))
+ (methodForAction
+  (smeAlignmentSuggestionsPlan ?source-mt ?storage-mt ?source-text ?reading-to-compare-to ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?storage-mt)))))
+
+
+
+;;; (disambiguateSourceText ?name ?heuristic-set ?heuristic-weight-mt)
+
+;;; (comment disambiguateSourceText "(disambiguateSourceText ?name ?reading ?heuristic-set ?heuristic-weight-mt) attempts to disambiguate a source text
+;;; using the heuristics in heuristic-set (identified by their names; they are members of the DisambiguationHeuristic collection), and weighting
+;;; them based on the knowledge in ?heuristic-weight-mt. ?reading is the name of the reading. If it is GenNewReading, a new reading name will
+;;; be generated automatically (based on the time the command is executed and the name of the source text.)")
+;;; be generated automatically (based on the time the command is executed and the name of the source text.)") ;;; NFI
+
+;;; First thing to do: Get this source text's microtheory - check.
+;;; Instantiate this reading: Check.
+;;; Get the group of discourse Heuristics. - Pretend we have this.
+;;; Get the group of sentence heuristics.
+;;; Run the discourse heuristics - pretend we can do this. (This will be a new plan step.)
+;;; (new plan step)
+;;; For each sentence - how can we get these? We need a way for a plan to kick off an arbitrary number of plans.
+;;; Potentially: build TheList in the preconditions or something.
+;;; Run the sentence heuristics
+;;; Get the best choices. Make them.
+
+;;; New plan steps:
+;;; runDiscourseHeuristics - for each discourse heuristic, run it.
+;;; runEachSentence - for each sentence, runSentenceHeuristics
+;;; runSentenceHeuristics - for each sentence heuristic, run it.
+
+
+(preconditionForMethod
+ (and
+  (ist-Information LbrSourceTextsMt (microtheoryForSourceText ?source-text-mt ?source-text-name)))
+ (methodForAction
+  (disambiguateSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (instantiateReading ?reading-name ?source-text-name)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (storeReadingSentenceInformationInMt ?source-text-mt ?reading-name ?source-text-name)
+       (runDiscourseHeuristics ?source-text-name ?source-text-mt ?reading-name ?heuristic-set)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSentencesInSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt))))
+       )))
+    ))))
+
+;;; This is if there's not an existing microtheory for the source text and we need to generate one.
+;;; Update - we now use (MtForSourceTextFn ?source-text-name) instead of generating one.
+
+
+(preconditionForMethod
+ (and
+      (uninferredSentence (ist-Information LbrSourceTextsMt (microtheoryForSourceText ?some-existing-source-text-mt ?source-text-name)))
+      ;;;(generatedSourceTextMicrotheoryName ?source-text-name ?source-text-mt)
+      )
+ (methodForAction
+  (disambiguateSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information LbrSourceTextsMt (microtheoryForSourceText (MtForSourceTextFn ?source-text-name) ?source-text-name)))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (instantiateReading ?reading-name ?source-text-name))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (storeReadingSentenceInformationInMt ?source-text-mt ?reading-name ?source-text-name)
+       (runDiscourseHeuristics ?source-text-name (MtForSourceTextFn ?source-text-name) ?reading-name ?heuristic-set)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSentencesInSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt))))
+       )))
+    ))))
+
+(preconditionForMethod
+ ;;; The closed retrieval set of things in ?heuristic-set-mt is ?heuristic-set
+ (evaluate ?heuristic-set
+   (TheClosedRetrievalSetOf ?heuristic
+     (ist-Information ?heuristic-set-mt ?heuristic)))
+ (methodForAction
+  (disambiguateSourceTextWithHeuristicContext ?source-text-name ?reading-name ?heuristic-set-mt ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (disambiguateSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)))))
+
+;;; (disambiguateSentencesInSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+(preconditionForMethod
+ (and
+      (ist-Information LbrSourceTextsMt (microtheoryForSourceText ?source-text-mt ?source-text-name))
+      (outsourcedOnly (plansForSentenceDisambiguation ?source-text-name ?source-text-mt ?reading-name ?heuristic-set ?heuristic-weight-mt ?sentence-plan-list)))
+ (methodForAction
+  (disambiguateSentencesInSourceText ?source-text-name ?reading-name ?heuristic-set ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (doAgentPlan (actionSequence ?sentence-plan-list))))))
+
+;;; Disambiguates a single sentence using whatever SentenceLevelDisambiguationHeuristics are in ?heuristic-set.
+;;; (disambiguateSourceText ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set ?heuristic-weight-mt)
+;;; runSentenceHeuristics doesn't have to be a seperate plan.
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (disambiguateSentence ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (runSentenceHeuristics ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (makeSentenceChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt))))))))
+
+;;;(comment instantiateSourceText "(instantiateSourceText ?name ?mt-name) makes a new microtheory for the source text named ?name, if one doesn't
+;;;already exist. ?mt-name is the name that the microtheory is given.
+;;;If ?mt-name is GenNewMtName, a new microtheory name will be generated automatically (based on the name of the source text.)") ;;; NFI
+;;; Works
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (instantiateSourceText ?source-text-name ?mt-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information LbrDisambiguationMt (isa ?mt-name Microtheory)))
+    (doRecord (ist-Information ?mt-name (microtheoryForSourceText ?mt-name ?source-text-name)))
+    (doRecord (ist-Information ?mt-name (isa ?source-text-name InformationBearingThing)))
+    (doRecord (ist-Information LbrSourceTextsMt (genlMt LbrSourceTextsMt ?mt-name)))
+    ))))
+
+
+;;; (comment instantiateReading "(instantiateReading ?reading-name ?source-text-name) makes a new reading named ?reading-name for the source text named
+;;; ?source-text-name. ?mt-name is the name that the microtheory is given. If it is GenNewReading, a new reading name will be generated automatically
+;;; (based on the time the command is executed and the name of the source text.)")
+
+;;; Next, instantiate the reading. This involves: Checking to see if the reading is GenNewReading; if it is, generating a new symbol for it.
+;;; Either way, make (isa ?reading-name AccessingAnIBT) and (readingOfSourceText ?reading-name ?source-text-name)
+;;; This should probably be its own thing. LbrDisambiguationMt
+(preconditionForMethod
+ (and
+      (ist-Information LbrSourceTextsMt (microtheoryForSourceText ?mt-name ?souce-text-name))
+      (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name)))
+ (methodForAction
+  (instantiateReading GenNewReading ?source-text-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?mt-name (readingOfSourceText ?generated-reading-name ?source-text-name)))
+    (doRecord (ist-Information ?mt-name (isa ?generated-reading-name AccessingAnIBT)))
+    ))))
+
+
+(preconditionForMethod
+ (and
+      (different ?reading-name GenNewReading)
+      (ist-Information LbrSourceTextsMt (microtheoryForSourceText ?mt-name ?source-text-name)))
+ (methodForAction
+  (instantiateReading ?reading-name ?source-text-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?mt-name (readingOfSourceText ?reading-name ?source-text-name)))
+    (doRecord (ist-Information ?mt-name (isa ?reading-name AccessingAnIBT)))
+    ))))
+
+
+;;; Only the first three apply here, and we already have them? Will this work?
+;;;(d::SOURCE-TEXT-NAME . ,source-text-name)
+;;;(d::SOURCE-TEXT-MT . ,source-text-mt)
+;;;(d::CURRENT-READING . ,reading-name)
+;;;(d::SENTENCE-ID . ,sentence-ID)
+;;;(d::SENTENCE-NUMBER . ,sentence-number))
+(preconditionForMethod 
+ (true)
+ (methodForAction
+  ;;; This already has the heuristics, and they're in ?heuristic-set. We just need their plans. Just do this as a doForEach
+  (runDiscourseHeuristics ?source-text-name ?source-text-mt ?reading-name ?heuristic-set)
+  (actionSequence
+   (TheList
+    (doForEach ?heuristic ?heuristic-set
+               (runNextDiscourseHeuristic ?source-text-name ?source-text-mt ?reading-name ?heuristic))))))
+
+(isa runNextDiscourseHeuristic ComplexActionPredicate)
+(arity runNextDiscourseHeuristic 4)
+(arg1Isa runNextDiscourseHeuristic InformationBearingThing)
+(arg2Isa runNextDiscourseHeuristic Microtheory)
+(arg3Isa runNextDiscourseHeuristic AccessingAnIBT)
+(arg4Isa runNextDiscourseHeuristic Thing) ;;; The heuristic
+(comment runNextDiscourseHeuristic "(runNextDiscourseHeuristic ?source-text-name ?source-text-mt ?reading-name ?heuristic) will run ?heuristic.")
+
+(isa planForDiscourseHeuristic Predicate)
+(arity planForDiscourseHeuristic 5)
+(arg1Isa planForDiscourseHeuristic Thing) ;;; The heuristic
+(arg2Isa planForDiscourseHeuristic Thing)
+(arg3Isa planForDiscourseHeuristic InformationBearingThing)
+(arg4Isa planForDiscourseHeuristic Microtheory) 
+(arg5Isa planForDiscourseHeuristic AccessingAnIBT)
+(comment planForDiscourseHeuristic "(planForDiscourseHeuristic ?heuristic ?plan
+ ?source-text-name-input ?source-text-mt-input ?reading-name-input) finds ?plan,
+given a heuristic name.")
+
+;;; In theory, these things should bind correctly. Also, this needs to actually get the plans. Forgot about that.
+;;; nothing's binding to ?source-text-mt. Is that the fault of what calls this? Why did this suddenly stop working?????
+(preconditionForMethod 
+ (planForDiscourseHeuristic ?heuristic ?plan ?source-text-name-input ?source-text-mt-input ?reading-name-input)
+ (methodForAction
+  (runNextDiscourseHeuristic ?source-text-name-input ?source-text-mt-input ?reading-name-input ?heuristic)
+  (actionSequence
+   (TheList
+    ?plan))))
+
+(preconditionForMethod 
+ (uninferredSentence (planForDiscourseHeuristic ?heuristic ?plan ?source-text-name-input ?source-text-mt-input ?reading-name-input))
+ (methodForAction
+  (runNextDiscourseHeuristic ?source-text-name-input ?source-text-mt-input ?reading-name-input ?heuristic)
+  (actionSequence
+   (TheList
+    ))))
+
+;;; This may be unnecessarily complex.
+;;;(<== (planForHeuristic ?heuristic ?whatever ?source-text-name-input ?source-text-mt-input ?reading-name-input)
+;;;     (outsourcedOnly (locationToStoreReading (blazzFn ?source-text-name-input ?source-text-mt-input ?reading-name-input ?heuristic) ?wherever)) ;;; This is just to get the variables to bind.
+;;;     (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?any-heuristic ?any-plan))
+;;;     (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?heuristic ?plan))
+;;;     (outsourcedOnly (unifies ?source-text-mt ?source-text-mt-input))
+;;;     (outsourcedOnly (unifies ?source-text-name ?source-text-name-input))
+;;;     (outsourcedOnly (unifies ?reading-name ?reading-name-input))
+;;;     (outsourcedOnly (unifies ?plan ?whatever)))
+
+;;; This is very inefficient.
+(<== (planForDiscourseHeuristic ?heuristic ?whatever ?source-text-name-input ?source-text-mt-input ?reading-name-input)
+     (outsourcedOnly (locationToStoreReading (blazzFn ?source-text-name-input ?source-text-mt-input ?reading-name-input ?heuristic) ?wherever)) ;;; This is just to get the variables to bind.
+;;;     (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?any-heuristic ?any-plan))
+     (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?heuristic ?plan))
+     (evaluate ?heuristicAsList (ConsFn TheList ?heuristic))
+     (evaluate ?nameOfHeuristic (FirstInListFn ?heuristicAsList))
+     (ist-Information Interaction-ManagerMt (lookupOnly (typeOfHeuristic ?nameOfHeuristic DiscourseLevelDisambiguationHeuristic)))
+     (outsourcedOnly (unifies ?source-text-mt ?source-text-mt-input))
+     (outsourcedOnly (unifies ?source-text-name ?source-text-name-input))
+     (outsourcedOnly (unifies ?reading-name ?reading-name-input))
+     (outsourcedOnly (unifies ?plan ?whatever)))
+
+
+
+(preconditionForMethod 
+;;; (and 
+;;;;;;      (outsourcedOnly (locationToStoreReading (blazzFn ?source-text-name ?source-text-mt ?reading-name ?heuristic) ?wherever)) ;;; This is just to get the variables to bind.
+;;;;;;      (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?any-heuristic ?any-plan))
+ ;;;      (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?heuristic ?plan)))
+ (true)
+ (methodForAction
+  (runNextDiscourseHeuristic-experimental ?source-text-name ?source-text-mt ?reading-name (?heuristic ?gen-context-family ?stub-mt))
+  (actionSequence
+   (TheList
+    (analogicalRecallGenContextSuggestionsPlan ?gen-context-family
+      ?source-text-mt ?source-text-name ?reading-name ?stub-mt)))))
+
+
+
+(preconditionForMethod 
+ (true)
+ (methodForAction
+  ;;; This alraedy has the heuristics, and they're in ?heuristic-set. We just need their plans. Just do this as a doForEach
+  ;;; This even already knows the things we need to know.
+  (runSentenceHeuristics ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set)
+  (actionSequence
+   (TheList
+    (doForEach ?heuristic ?heuristic-set
+               (runNextSentenceHeuristic ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic))))))
+
+(isa runNextSentenceHeuristic ComplexActionPredicate)
+(arity runNextSentenceHeuristic 4)
+(arg1Isa runNextSentenceHeuristic InformationBearingThing)
+(arg2Isa runNextSentenceHeuristic Microtheory)
+(arg3Isa runNextSentenceHeuristic AccessingAnIBT)
+(arg4Isa runNextSentenceHeuristic Thing)
+(arg5Isa runNextSentenceHeuristic Integer)
+(arg6Isa runNextSentenceHeuristic Thing) ;;; The heuristic
+(comment runNextSentenceHeuristic "(runNextSentenceHeuristic ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic) will run ?heuristic.")
+
+(isa planForSentenceHeuristic Predicate)
+(arity planForSentenceHeuristic 7)
+(arg1Isa planForSentenceHeuristic Thing) ;;; The heuristic
+(arg2Isa planForSentenceHeuristic Thing)
+(arg3Isa planForSentenceHeuristic InformationBearingThing)
+(arg4Isa planForSentenceHeuristic Microtheory) 
+(arg5Isa planForSentenceHeuristic AccessingAnIBT)
+(arg6Isa planForSentenceHeuristic Sentence)
+(arg7Isa planForSentenceHeuristic Integer)
+(comment planForSentenceHeuristic "(planForSentenceHeuristic ?heuristic ?plan
+ ?source-text-name-input ?source-text-mt-input ?reading-name-input
+?sentence-id ?sentence-number) finds ?plan,
+given a heuristic name.")
+
+(preconditionForMethod 
+ (planForSentenceHeuristic ?heuristic ?plan ?source-text-name-input ?source-text-mt-input ?reading-name-input ?sentence-id ?sentence-number)
+ (methodForAction
+  (runNextSentenceHeuristic ?source-text-name-input ?source-text-mt-input ?reading-name-input ?sentence-id ?sentence-number ?heuristic)
+  (actionSequence
+   (TheList
+    ?plan))))
+
+(preconditionForMethod 
+ (uninferredSentence (planForSentenceHeuristic ?heuristic ?plan ?source-text-name-input ?source-text-mt-input ?reading-name-input ?sentence-id ?sentence-number))
+ (methodForAction
+  (runNextSentenceHeuristic ?source-text-name-input ?source-text-mt-input ?reading-name-input ?sentence-id ?sentence-number ?heuristic)
+  (actionSequence
+   (TheList
+    ))))
+
+;;; Are more things supposed to be bound coming into this?
+(<== (planForSentenceHeuristic ?heuristic ?whatever ?source-text-name-input ?source-text-mt-input ?reading-name-input ?sentence-id-input ?sentence-number-input)
+     (outsourcedOnly (locationToStoreReading (blazzFn ?source-text-name-input ?source-text-mt-input ?reading-name-input ?heuristic) ?wherever)) ;;; This is just to get the variables to bind.
+;;;     (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?any-heuristic ?any-plan))
+     (ist-Information LbrDisambiguationMt (heuristicUsesPlan ?heuristic ?plan))
+     (evaluate ?heuristicAsList (ConsFn TheList ?heuristic))
+     (evaluate ?nameOfHeuristic (FirstInListFn ?heuristicAsList))
+     (ist-Information Interaction-ManagerMt (lookupOnly (typeOfHeuristic ?nameOfHeuristic SentenceLevelDisambiguationHeuristic)))
+     (outsourcedOnly (unifies ?source-text-mt ?source-text-mt-input))
+     (outsourcedOnly (unifies ?source-text-name ?source-text-name-input))
+     (outsourcedOnly (unifies ?reading-name ?reading-name-input))
+     (outsourcedOnly (unifies ?sentence-id ?sentence-id-input))
+     (outsourcedOnly (unifies ?sentence-number ?sentence-number-input))
+     (outsourcedOnly (unifies ?plan ?whatever)))
+
+
+;;; (makeSentenceChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?sentence-number ?heuristic-set ?heuristic-weight-mt)
+;;; Uses the available existing evidence to make selections.
+;;; This strategy just doesn't work; we need to make the choices one at a time.
+;;; I think the best plan is to just have bestChoicesForSentenceInCurrentReading be selectBestChoicesForSentenceInCurrentReading
+;;;(preconditionForMethod
+;;; (outsourcedOnly (bestChoicesForSentenceInCurrentReading ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt ?best-choices))
+;;; (methodForAction
+;;;  (makeSentenceChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt) 
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doAgentPlan
+;;;     (actionSequence
+;;;      (TheList
+;;;       (doEASelectSet ?best-choices ?source-text-name))))
+;;;    (doAgentPlan
+;;;     (actionSequence
+;;;      (TheList
+;;;       (makeSentenceParseChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt))))
+;;;    ))))
+
+(preconditionForMethod
+ (outsourcedOnly (selectBestChoicesForSentenceInCurrentReading ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt))
+ (methodForAction
+  (makeSentenceChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt) 
+  (actionSequence
+   (TheList
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (makeSentenceParseChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt))))
+    ))))
+
+(preconditionForMethod
+ (outsourcedOnly (bestParseTreeChoicesForSentenceInCurrentReading ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-weight-mt ?best-choices))
+ (methodForAction
+  (makeSentenceParseChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt) 
+  (actionSequence
+   (TheList
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doEASafeSelectSet ?best-choices ?source-text-name))))))))
+
+
+(preconditionForMethod 
+ (and 
+      (ist-Information SourceTextFileLocationsMt (baseTargetCaseMtForSourceText ?baseTargetCaseMt ?source-text-name))
+      (outsourcedOnly (currentDiscourseId ?source-text-id))
+      (evaluate ?caseFacts
+        (TheClosedRetrievalSetOf ?caseFact
+          (ist-Information ?baseTargetCaseMt ?caseFact)))
+      )
+ (methodForAction
+  (retrieveStoredAnalogyCases ?source-text-name)
+  (actionSequence
+   (TheList
+    (doTellAllInContext ?caseFacts (DiscourseCaseFn ?source-text-id))))))
+
+(isa baseTargetCaseMtForSourceText Predicate)
+(arity baseTargetCaseMtForSourceText 2)
+(arg1Isa baseTargetCaseMtForSourceText Microtheory)
+(arg2Isa baseTargetCaseMtForSourceText InformationBearingThing)
+(comment baseTargetCaseMtForSourceText "(baseTargetCaseMtForSourceText
+?baseTargetCaseMt ?source-text-name means that ?baseTargetCaseMt stores
+information about the base and target cases of analogy for ?source-text-name.")
+   
+(isa storeReadingSentenceInformationInMt ComplexActionPredicate)
+(arity storeReadingSentenceInformationInMt 3)
+(arg1Isa storeReadingSentenceInformationInMt Microtheory)
+(arg2Isa storeReadingSentenceInformationInMt AccessingAnIBT)
+(arg3Isa storeReadingSentenceInformationInMt InformationBearingThing)
+(comment storeReadingSentenceInformationInMt
+  "(storeReadingSentenceInformationInMt ?storage-mt ?current-reading ?source-text-name) is a plan that stores sentence information in ?location.")
+
+(preconditionForMethod 
+ (and 
+      (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?sentence-info
+        (TheClosedRetrievalSetOf 
+            (sentenceInSourceTextInReading ?sentence ?source-text-name ?current-reading ?sen-position ?sen-tokens)
+          (and 
+               (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                 (sentenceInDiscourse ?sentence ?sen-position ?sen-tokens))
+                 ))))
+ (methodForAction
+  (storeReadingSentenceInformationInMt ?storage-mt ?current-reading ?source-text-name)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?sentence-info ?source-text-name)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,53 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qm-states.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: November 19, 2008 10:18:16
+;;;;   Purpose: Rules for QM state transitions
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+(isa stateTransitionRequires TernaryPredicate)
+(arity stateTransitionRequires 3)
+(comment "stateTransitionRequires is true when a transition from the state
+ represented by the first argument to that of the second argument requires that 
+ the third argument be true in the first argument.")
+(arg1Isa stateTransitionRequires Microtheory)
+(arg2Isa stateTransitionRequires Microtheory)
+(arg3Isa stateTransitionRequires CycLSentence)
+
+
+(isa alternateViewOf SymmetricBinaryPredicate)
+(arity alternateViewOf 2)
+(comment alternateViewOf 
+  "alternateViewOf is true when the first situation is the second situation 
+   viewed from some alternate viewpoint")
+(arg1Isa alternateViewOf Situation)
+(arg2Isa alternateViewOf Situation)
+(arg1Isa alternateViewOf NuSketchLayer)
+(arg2Isa alternateViewOf NuSketchLayer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory NuSketchQMFactsMt :exclude-globals t)
+
+(isa relativePositionChange QuintaryPredicate)
+(arity relativePositionChange 5)
+(comment "relativePositionChange is true when the last argument is the qualitative
+ between the vector difference of the 3rd and 4th arguments going from case 1
+ (first arg) to case 2 (second arg).")
+(arg1Isa relativePositionChange NuSketchCase)
+(arg2Isa relativePositionChange NuSketchCase)
+(arg3Isa relativePositionChange RigidOb)
+(arg4Isa relativePositionChange RigidOb)
+(arg5Isa relativePositionChange QualitativeVector)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

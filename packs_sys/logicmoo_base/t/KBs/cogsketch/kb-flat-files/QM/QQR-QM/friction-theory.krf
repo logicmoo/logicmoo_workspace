@@ -1,0 +1,94 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: friction-theory.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: March 15, 2011 11:48:08
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory FrictionTheoryMt)
+
+(isa FrictionTheoryMt Microtheory)
+(genlMt FrictionTheoryMt QPTheoryMt)
+(genlMt FrictionTheoryMt CompositionalModelingMt)
+(genlMt ConceptualPhysicsDomainTheoryCollectorMt FrictionTheoryMt)
+
+;; requires 2d-mechanics-theory.meld, gravity-theory.meld
+(genlMt FrictionTheoryMt GravityTheoryMt)
+(genlMt FrictionTheoryMt 2D-MechanicsTheoryMt)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa movingDirectionOf MFParticipantSlot)
+(arity movingDirectionOf 2)
+(genlPreds movingDirectionOf mfParticipant)
+(comment movingDirectionOf
+"(movingDirectionOf ?mfi ?o) indicates that the moving object for ?mfi is ?o.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantities
+
+
+(isa ForceAlongFn Function-Denotational)
+(comment ForceAlongFn 
+"(ForceAlongFn ?o) refers to the force on ?o causing it to slide parallel to 
+ a surface it is in contact with.")
+(arity ForceAlongFn 1)
+(arg1Isa ForceAlongFn Physob)
+(resultIsa ForceAlongFn ContinuousQuantity)
+
+(isa FrictionForceFn Function-Denotational)
+(comment FrictionForceFn 
+"(FrictionForceFn ?o) refers to the friction force on ?o from sliding on 
+ a surface.")
+(arity FrictionForceFn 1)
+(arg1Isa FrictionForceFn Physob)
+(resultIsa FrictionForceFn ContinuousQuantity)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model Fragments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Static Friction
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Dynamic Friction
+
+(isa MovingFrictionProcess QPProcessType)
+
+(mfTypeParticipant MovingFrictionProcess ?object RigidOb movingObjectOf)
+(mfTypeParticipant MovingFrictionProcess ?motion MotionProcess motionOf)
+(mfTypeParticipantConstraint MovingFrictionProcess 
+                             (movingObjectOf ?motion ?object))
+(mfTypeParticipantConstraint MovingFrictionProcess 
+                             (movingDirectionOf ?motion ?dir))
+(mfTypeCondition MovingFrictionProcess 
+                 (hasContactSurface ?surfObj ?object ?surface))
+;;; one contact surface at a time.
+(mfTypeCondition MovingFrictionProcess
+                 (surfaceNormal ?surface ?normalDir))
+(mfTypeCondition MovingFrictionProcess
+                 (rotate90 ?normalDir ?dir ?rdir))
+(mfTypeConsequence  MovingFrictionProcess
+                   (qprop (FrictionForceFn ?object ?s) 
+                          (NormalForceFn ?object ?s)))
+(mfTypeConsequence  MovingFrictionProcess
+                   (i- (ForceAlongFn ?object ?s) 
+                       (FrictionForceFn ?object ?s)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

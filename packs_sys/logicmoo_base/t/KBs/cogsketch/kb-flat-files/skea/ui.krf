@@ -1,0 +1,33 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ui.meld
+;;;;    System: 
+;;;;    Author: Emmett Tomai
+;;;;   Created: July 8, 2003 12:00:10
+;;;;   Purpose: Predicates for intelligent user interaction
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; userCWA
+;;;
+;;; A user identified closed world assumption provides a way for the user to
+;;; insert an arbitrary state assumption on which to justify additional facts.
+;;; This is intended for use in experimenting with visual reasoning computations
+;;; (e.g. relative size, group centers) and their effect on SME without having
+;;; to make them properly update right off the bat.
+;;;
+
+(isa userCWA Relation)
+(arity userCWA 2)
+(comment userCWA 
+  "(userCWA TAG TIME) is a user identified closed world assumption")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

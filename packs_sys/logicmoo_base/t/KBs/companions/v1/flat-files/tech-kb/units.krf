@@ -1,0 +1,252 @@
+
+(in-microtheory MetaengineeringUnitsMt)
+
+(genlMt MetaengineeringUnitsMt MetaengineeringDimensionsMt)
+
+
+
+;;; Binrels
+(isa hasDimension BinaryPredicate)
+
+
+;;; Individuals
+
+(isa Ampere UnitOfMeasure)
+(isa Ampere Individual)
+(hasDimension Ampere Electric-current-dimension)
+(prettyString-Canonical Ampere "ampere")
+
+(isa Ampere-per-volt-meter UnitOfMeasure)
+(isa Ampere-per-volt-meter Individual)
+(hasDimension Ampere-per-volt-meter Electrical-conductivity-dimension)
+(prettyString-Canonical Ampere-per-volt-meter "ampere-per-volt-meter")
+
+(isa AtomicNumber UnitOfMeasure)
+(isa AtomicNumber Individual)
+(hasDimension AtomicNumber Dimensionless)
+(prettyString-Canonical AtomicNumber "atomic number")
+
+(isa Bit UnitOfMeasure)  ; exists in opencyc
+(isa Bit Individual)
+(hasDimension Bit Information-dimension)
+(prettyString-Canonical Bit "bit")
+
+(isa BitsPerCubicCentimeter UnitOfMeasure)
+(isa BitsPerCubicCentimeter Individual)
+(hasDimension BitsPerCubicCentimeter Information-density-dimension)
+(prettyString-Canonical BitsPerCubicCentimeter "bits-per-cubic-centimeter")
+
+(isa BitsPerSecond UnitOfMeasure)
+(isa BitsPerSecond Individual)
+(hasDimension BitsPerSecond Information-flow-rate-dimension)
+(prettyString-Canonical BitsPerSecond "bits-per-second")
+
+(isa BitsPerSquareCentimeter UnitOfMeasure)
+(isa BitsPerSquareCentimeter Individual)
+(hasDimension BitsPerSquareCentimeter Information-surface-density)
+(prettyString-Canonical BitsPerSquareCentimeter "bits-per-square-centimeter")
+
+(isa Byte UnitOfMeasure)  ; exists in opencyc
+(isa Byte Individual)
+(hasDimension Byte Information-dimension)
+(prettyString-Canonical Byte "byte")
+
+(isa Candela UnitOfMeasure)  ; exists in opencyc
+(isa Candela Individual)
+(hasDimension Candela Luminous-intensity-dimension)
+(prettyString-Canonical Candela "candela")
+
+(isa Centimeter UnitOfMeasure)
+(isa Centimeter Individual)
+(hasDimension Centimeter Length-dimension)
+(prettyString-Canonical Centimeter "centimeter")
+
+(isa Coulomb UnitOfMeasure)  ; exists in opencyc
+(isa Coulomb Individual)
+(hasDimension Coulomb Charge-dimension)
+(prettyString-Canonical Coulomb "coulomb")
+
+(isa CubicMeter UnitOfMeasure)  ; exists in opencyc
+(isa CubicMeter Individual)
+(hasDimension CubicMeter Volume-dimension)
+(prettyString-Canonical CubicMeter "cubic-meter")
+
+(isa CubicMeterPerSecond UnitOfMeasure)  ; exists in opencyc
+(isa CubicMeterPerSecond Individual)
+(hasDimension CubicMeterPerSecond Volumetric-flow-rate)
+(prettyString-Canonical CubicMeterPerSecond "cubic-meter-per-second")
+
+(isa Dimensionless Individual)
+
+(isa Farad UnitOfMeasure)
+(isa Farad Individual)
+(hasDimension Farad Electric-capacity-dimension)
+(prettyString-Canonical Farad "farad")
+
+(isa Gram UnitOfMeasure)  ; exists in opencyc
+(isa Gram Individual)
+(hasDimension Gram Mass-dimension)
+(prettyString-Canonical Gram "gram")
+
+(isa Hertz UnitOfMeasure)  ; exists in opencyc
+(isa Hertz Individual)
+(hasDimension Hertz Frequency-dimension)
+(prettyString-Canonical Hertz "hertz")
+(isa Information-surface-density Individual)
+
+(isa Joule UnitOfMeasure)  ; exists in opencyc
+(isa Joule Individual)
+(hasDimension Joule Energy-dimension)
+(prettyString-Canonical Joule "joule")
+
+(isa JoulesPerDegree UnitOfMeasure)
+(isa JoulesPerDegree Individual)
+(hasDimension JoulesPerDegree Entropy-dimension)
+(prettyString-Canonical JoulesPerDegree "joules-per-degree")
+
+(isa JoulesPerKilogram UnitOfMeasure)
+(isa JoulesPerKilogram Individual)
+(hasDimension JoulesPerKilogram Enthalpy-dimension)
+(prettyString-Canonical JoulesPerKilogram "joules-per-kilogram")
+
+(isa Joule-per-kilogram-degree UnitOfMeasure)
+(isa Joule-per-kilogram-degree Individual)
+(hasDimension Joule-per-kilogram-degree Specific-heat-dimension)
+(prettyString-Canonical Joule-per-kilogram-degree "joule-per-kilogram-degree")
+
+(isa JoulesPerMole UnitOfMeasure)
+(isa JoulesPerMole Individual)
+(hasDimension JoulesPerMole Molar-specific-heat-dimension)
+(prettyString-Canonical JoulesPerMole "joules-per-mole")
+
+(isa JoulesPerSecond UnitOfMeasure)
+(isa JoulesPerSecond Individual)
+(hasDimension JoulesPerSecond Heat-flow-rate-dimension)
+(prettyString-Canonical JoulesPerSecond "joule-per-second")
+
+(isa Kelvin UnitOfMeasure)  ; exists in opencyc
+(isa Kelvin Individual)
+(hasDimension Kelvin Temperature-dimension)
+(prettyString-Canonical Kelvin "kelvin")
+
+(isa Kilogram UnitOfMeasure)  ; exists in opencyc
+(isa Kilogram Individual)
+(hasDimension Kilogram Mass-dimension)
+(prettyString-Canonical Kilogram "kilogram")
+
+(isa KilogramsPerSecond UnitOfMeasure)
+(isa KilogramsPerSecond Individual)
+(hasDimension KilogramsPerSecond Mass-flow-rate-dimension)
+(prettyString-Canonical KilogramsPerSecond "kg-per-second")
+
+(isa KilogramsPerCubicMeter UnitOfMeasure)
+(isa KilogramsPerCubicMeter Individual)
+(hasDimension KilogramsPerCubicMeter Density-dimension)
+(prettyString-Canonical KilogramsPerCubicMeter "kgs-per-cubic-meter")
+
+(isa Kilogram-per-mole UnitOfMeasure)
+(isa Kilogram-per-mole Individual)
+(hasDimension Kilogram-per-mole Molar-weight-dimension)
+(prettyString-Canonical Kilogram-per-mole "kilogram-per-mole")
+
+(isa Meter UnitOfMeasure)  ; exists in opencyc
+(isa Meter Individual)
+(hasDimension Meter Length-dimension)
+(prettyString-Canonical Meter "meter")
+
+(isa MetersPerSecond UnitOfMeasure)  ; exists in opencyc
+(isa MetersPerSecond Individual)
+(hasDimension MetersPerSecond Velocity-dimension)
+(prettyString-Canonical MetersPerSecond "meters per second")
+
+(isa MetersPerSecondPerSecond UnitOfMeasure)  ; exists in opencyc
+(isa MetersPerSecondPerSecond Individual)
+(hasDimension MetersPerSecondPerSecond Acceleration-dimension)
+(prettyString-Canonical MetersPerSecondPerSecond "meter-per-second-per-second")
+
+(isa Mole-ChemicalCountUnit UnitOfMeasure)  ; exists in opencyc
+(isa Mole-ChemicalCountUnit Individual)
+(hasDimension Mole-ChemicalCountUnit Amount-dimension)
+(prettyString-Canonical Mole-ChemicalCountUnit "mole")
+
+(isa MolesPerSecond UnitOfMeasure)
+(isa MolesPerSecond Individual)
+(hasDimension MolesPerSecond Amount-flow-rate)
+(prettyString-Canonical MolesPerSecond "moles per second")
+
+(isa Newton UnitOfMeasure)
+(isa Newton Individual)
+(hasDimension Newton Force-dimension)
+(prettyString-Canonical Newton "newton")
+
+(isa Ohm UnitOfMeasure)  ; exists in opencyc
+(isa Ohm Individual)
+(hasDimension Ohm Electrical-resistance-dimension)
+(prettyString-Canonical Ohm "ohms")
+
+(isa Pascal-UnitOfPressure UnitOfMeasure)
+(isa Pascal-UnitOfPressure Individual)
+(hasDimension Pascal-UnitOfPressure Pressure-dimension)
+(prettyString-Canonical Pascal-UnitOfPressure "pascals")
+
+(isa Radian UnitOfMeasure)  ; exists in opencyc
+(isa Radian Individual)
+(hasDimension Radian Angle-dimension)
+(prettyString-Canonical Radian "radian")
+
+(isa RadiansPerSecond UnitOfMeasure)  ; exists in opencyc
+(isa RadiansPerSecond Individual)
+(hasDimension RadiansPerSecond Angular-velocity-dimension)
+(prettyString-Canonical RadiansPerSecond "radian-per-second")
+
+(isa RadiansPerSecondPerSecond UnitOfMeasure)   ; exists in opencyc
+(isa RadiansPerSecondPerSecond Individual)
+(hasDimension RadiansPerSecondPerSecond Angular-acceleration-dimension)
+(prettyString-Canonical RadiansPerSecondPerSecond "radian-per-second-per-second")
+
+(isa SecondsDuration UnitOfMeasure)   ; exists in opencyc
+(isa SecondsDuration Individual)
+(hasDimension SecondsDuration Time-dimension)
+(prettyString-Canonical SecondsDuration "seconds")
+
+(isa SquareMeter UnitOfMeasure)   ; exists in opencyc
+(isa SquareMeter Individual)
+(hasDimension SquareMeter Area-dimension)
+(prettyString-Canonical SquareMeter "square-meter")
+
+(isa Sterarian UnitOfMeasure)
+(isa Sterarian Individual)
+(hasDimension Sterarian Solid-angle-dimension)
+(prettyString-Canonical Sterarian "sterarian")
+
+(isa Tesla UnitOfMeasure)
+(isa Tesla Individual)
+(hasDimension Tesla Magnetic-flux-density-dimension)
+(prettyString-Canonical Tesla "tesla")
+
+(isa Volt UnitOfMeasure)  ; exists in opencyc
+(isa Volt Individual)
+(hasDimension Volt Electromotive-force-dimension)
+(prettyString-Canonical Volt "volt")
+
+(isa VoltsPerMeter UnitOfMeasure)
+(isa VoltsPerMeter Individual)
+(hasDimension VoltsPerMeter Electric-field-strength-dimension)
+(prettyString-Canonical VoltsPerMeter "volt-per-meter")
+
+(isa FlowRate Individual)  ; exists in opencyc.  This is the volumetric flow rate
+
+(isa Watt UnitOfMeasure)  ; exists in opencyc.
+(isa Watt Individual)
+(hasDimension Watt Electric-capacity-dimension)
+(prettyString-Canonical Watt "watt")
+
+(isa WattsPerMeterDegree UnitOfMeasure)
+(isa WattsPerMeterDegree Individual)
+(hasDimension WattsPerMeterDegree Thermal-conductivity-dimension)
+(prettyString-Canonical WattsPerMeterDegree "watts-per-meter-degree")
+
+(isa Weber UnitOfMeasure)
+(isa Weber Individual)
+(hasDimension Weber Inductance-dimension)
+(prettyString-Canonical Weber "weber")

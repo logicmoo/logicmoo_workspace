@@ -1,0 +1,4 @@
+(in-microtheory SetTheoryMt)
+
+(implies (and (elementOf ?X ?SETORCOL1) (subsetOf ?SETORCOL1 ?SETORCOL2)) (elementOf ?X ?SETORCOL2))
+(implies (and (isa ?SET1 Set-Mathematical) (subsetOf ?SET2 ?SET1) (subsetOf ?SET1 ?SET2) (isa ?SET2 Set-Mathematical)) (equals ?SET1 ?SET2))

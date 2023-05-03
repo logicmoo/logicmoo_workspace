@@ -1,0 +1,2124 @@
+(in-microtheory (GameRulesMtFn HRM))
+(genlMt (GameRulesMtFn HRM) GamesMt)
+(genlMt (GameRulesMtFn HRM) PerceptualAgentMt) ; just like Freeciv, this must inherit from PA.
+(genlMt (LearnedKnowledgeMtFn HRM) (GameRulesMtFn HRM))
+(genlMt (ActionModelMtFn HRM) (GameRulesMtFn HRM))
+(genlMt (QualitativeModelMtFn HRM) (GameRulesMtFn HRM))
+(genlMt (StrategyModelMtFn HRM) (GameRulesMtFn HRM))
+(genlMt (GameRulesMtFn HRM) (LearnedKnowledgeMtFn HRM))
+(genlMt (GameRulesMtFn HRM) (ActionModelMtFn HRM))
+(genlMt (GameRulesMtFn HRM) (QualitativeModelMtFn HRM))
+(genlMt (GameRulesMtFn HRM) (StrategyModelMtFn HRM))
+
+(isa (SpindleMtFn HRM (PlayingFn HRM)) Microtheory)
+
+;;; Learned knowledge references game rules, but not vice versa
+
+(isa (PlanningMtFn HRM) Microtheory)
+(genlMt (PlanningMtFn HRM) (GameRulesMtFn HRM))
+
+
+(gameDomain HRM)
+
+;;; Simplification: Assume 4 positions, one employee per position.
+
+(isa HRM OnePersonGame)
+
+(gameObjective HRM  
+  (MaximizeFn 
+    ((MeasurableQuantityFn profitability) McFeePress)))  ; The indexical needs to be the company.
+
+;;; Actions:
+;;; hire, fire, train, giveRaise, promote, evaluate, nextTurn
+;;;
+;;; Quantities:
+;;; productivity, morale, competence, earnings, payroll, qualityOfLife
+;;;
+;;; Events:
+;;; bankruptcy, quitting, retirement, vacation
+
+
+;;; Really, the player is a surrogate for the Company.  Does the game interpreter need this?
+;;; Or could it be (HRMgr <Company>)?
+(isa (GameRoleFn player) GameRole)
+
+(isa synchronicNext UnaryPredicate)
+(arg1Isa synchronicNext CycLExpression)
+(comment synchronicNext "(synchronicNext ?stmt) computes the next state after an instantaneous game action.")
+
+(isa synchronicEmployeeNext BinaryPredicate)
+(comment synchronicEmployeeNext "(synchronicEmployeeNext ?emp ?stmt) computes the next synchronic state for a particular employee.")
+
+(isa synchronicCompanyNext BinaryPredicate)
+(comment synchronicCompanyNext "(synchronicCompanyNext ?company ?stmt) computes the next synchronic state for a particular company.")
+
+(isa diachronicNext UnaryPredicate)
+(arg1Isa diachronicNext CycLExpression)
+(comment diachronicNext "(diachronicNext ?stmt) computes the next state after a time delay (ie, a turn).")
+
+(isa diachronicEmployeeNext BinaryPredicate)
+(comment diachronicEmployeeNext "(diachronicEmployeeNext ?emp ?stmt) computes the next diachronic state for a particular employee.")
+
+(isa diachronicCompanyNext BinaryPredicate)
+(comment diachronicCompanyNext "(diachronicCompanyNext ?company ?stmt) computes the next diachronic state for a particular company.")
+
+;(isa diachronicEvent ?event)
+;(comment diachronicEvent "(diachronicEvent ?event-statement) means the eventOccurs statement happens after the passage of time.")
+
+;(isa synchronicEvent ?event)
+;(comment synchronicEvent "(synchronicEvent ?event-statement) means the eventOccurs statement happens immediately after the most recent action.")
+
+(isa HRMCharacter Collection)
+(genls HRMCharacter Person)
+(comment HRMCharacter "HRMCharacter is the collection of applicants and employees in the Human Resources Management game.")
+
+(isa HRMCompany Collection)
+(genls HRMCompany Business)
+(comment HRMCompany "HRMCompany is the collection of companies in the Human Resources Management game.")
+
+;;; Let step count discrete actions,
+(isa step GamePredicate)
+(arity step 1)
+(comment step "(step N) denotes the Nth action taken in the current HRM game.")
+
+;;; Let turn be the passage of time (in months):
+(isa turn GamePredicate)
+(arity turn 1)
+(comment turn "(turn N) denotes the Nth month in the simulation of the company in HRM.")
+
+(isa eventOccurs GamePredicate)
+(arity eventOccurs 2)
+(comment eventOccurs "(eventOccurs ?entity ?type) records events in the currentlyTrue state of the game.")
+
+(isa gameEmployee BinaryPredicate)
+(arg2Isa gameEmployee HRMCharacter)
+(isa positionFilled BinaryPredicate)
+(arg2Isa positionFilled HRMPosition)
+(isa trainingCourse BinaryPredicate)
+(arg2Isa trainingCourse TrainingCourse)
+(isa promotedTo BinaryPredicate)
+(arg2Isa promotedTo HRMPosition)
+
+
+;;; Game Actions
+
+;;; Wait for the next month (one turn)
+(isa doNextTurn GamePredicate)
+(isa doNextTurn SimpleActionPredicate)
+(arity doNextTurn 0)
+(comment doNextTurn "(doNextTurn) advances the HRM game to the next month.")
+
+(isa doHRMHire GamePredicate)
+(isa doHRMHire SimpleActionPredicate)
+(arity doHRMHire 2) ; should this be 3? include salary?
+(arg1Isa doHRMHire HRMCharacter)
+(arg2Isa doHRMHire HRMPosition)
+(comment doHRMHire "(doHRMHire ?employee ?position) hires an applicant to the specified position.")
+(associatedActorSlotList doHRMHire (TheList gameEmployee positionFilled)) ; but positionToFill is ternary :-(
+
+(isa doHRMFire GamePredicate)
+(isa doHRMFire SimpleActionPredicate)
+(arity doHRMFire 1)
+(arg1Isa doHRMFire HRMCharacter)
+(comment doHRMFire "(doHRMFire ?employee) terminates the specified employee.")
+(associatedActorSlotList doHRMFire (TheList gameEmployee))
+
+(isa doHRMTrain GamePredicate)
+(isa doHRMTrain SimpleActionPredicate)
+(arity doHRMTrain 2)
+(arg1Isa doHRMTrain HRMCharacter)
+(arg2Isa doHRMTrain TrainingCourse)
+(comment doHRMTrain "(doHRMTrain ?employee ?course) assigns ?employee to take the specified ?course to gain skills.")
+(associatedActorSlotList doHRMTrain (TheList gameEmployee trainingCourse))
+
+(isa doHRMGiveRaise GamePredicate)
+(isa doHRMGiveRaise SimpleActionPredicate)
+(arity doHRMGiveRaise 1) ; don't worry about how much. Assume it's 3%
+(arg1Isa doHRMGiveRaise HRMCharacter)
+(comment doHRMGiveRaise "(doHRMGiveRaise ?employee) increases the employee's salary by 3%.")
+(associatedActorSlotList doHRMGiveRaise (TheList gameEmployee))
+
+(isa doHRMPromote GamePredicate)
+(isa doHRMPromote SimpleActionPredicate)
+(arity doHRMPromote 1)
+(arg1Isa doHRMPromote HRMCharacter)
+(comment doHRMPromote "(doHRMPromote ?employee) increments the ?employee's position.")
+(associatedActorSlotList doHRMPromote (TheList gameEmployee))
+
+(isa doHRMSetProbation GamePredicate)
+(isa doHRMSetProbation SimpleActionPredicate)
+(arity doHRMSetProbation 1)
+(arg1Isa doHRMSetProbation HRMCharacter)
+(comment doHRMSetProbation "(doHRMSetProbation ?employee) puts an under-performing employee on probation.")
+(associatedActorSlotList doHRMSetProbation (TheList gameEmployee))
+
+(isa doHRMRemoveProbation GamePredicate)
+(isa doHRMRemoveProbation SimpleActionPredicate)
+(arity doHRMRemoveProbation 1)
+(arg1Isa doHRMRemoveProbation HRMCharacter)
+(comment doHRMRemoveProbation "(doHRMRemoveProbation ?employee) returns ?employee to normal active status.")
+(associatedActorSlotList doHRMRemoveProbation (TheList gameEmployee))
+
+(isa doHRMEvaluate GamePredicate)
+(isa doHRMEvaluate SimpleActionPredicate)
+(arity doHRMEvaluate 1)
+(arg1Isa doHRMEvaluate HRMCharacter)
+(comment doHRMEvaluate "(doHRMEvaluate ?employee) is a management action that provides feedback to the employee.")
+(associatedActorSlotList doHRMEvaluate (TheList gameEmployee))
+
+
+;;; EMPLOYEE MODEL
+
+(isa EmployeeStatus Collection)
+(isa Applicant EmployeeStatus)
+(isa Employee EmployeeStatus)
+(isa Probation EmployeeStatus)
+
+(isa EducationalAchievement Collection)
+(isa GED EducationalAchievement)
+(isa HighSchoolDiploma EducationalAchievement)
+(isa TechCertificate EducationalAchievement)
+(isa TwoYearsCollege EducationalAchievement)
+(isa BachelorsDegree EducationalAchievement)
+(isa GraduateDegree EducationalAchievement)
+
+(educationName 1 GED)
+(educationName 2 HighSchoolDiploma)
+(educationName 3 TechCertificate)
+(educationName 4 TwoYearsCollege)
+(educationName 5 BachelorsDegree)
+(educationName 6 GraduateDegree)
+
+(isa HRMSkill Collection)
+(isa McFeePressOperation HRMSkill)
+(isa StrongVerbalSkills HRMSkill)
+(isa SupervisorySkills HRMSkill)
+(isa TechnicalAptitude HRMSkill)
+(isa ComplianceKnowledge HRMSkill)
+
+(isa employeeProduction GamePredicate)
+(arity employeeProduction 2)
+(arg1Isa employeeProduction HRMCharacter)
+
+(isa performance GamePredicate)
+(arity performance 2)
+(arg1Isa performance HRMCharacter)
+(comment performance "(performance ?employee ?perf) measures the degree to which an employee actually works.")
+
+(isa fractionalWork GamePredicate)
+(arity fractionalWork 2)
+(arg1Isa fractionalWork HRMCharacter)
+
+(isa competence GamePredicate)
+(arity competence 2)
+(arg1Isa competence HRMCharacter)
+(comment competence "(competence ?employee ?comp) measures an employee's ability to do work.
+It is a function of experience, training, formal education, and difficulty of the job.
+Competence is a monotonic function, in that an employee never becomes less competent 
+at a task.  Only when an employee is promoted can his competence decrease.  Competence is
+measured on a scale from 0(hopeless) to 100(excellent).")
+
+(isa priorCompetence GamePredicate)
+(arity priorCompetence 2)
+(arg1Isa priorCompetence HRMCharacter)
+(comment priorCompetence "(priorCompetence ?employee ?competence) is last month's competence.")
+
+;(isa lowCompetence GamePredicate)
+;(arity lowCompetence 2)
+;(arg1Isa lowCompetence HRMCharacter)
+
+(isa slowImprovement GamePredicate)
+(arity slowImprovement 1)
+(arg1Isa slowImprovement HRMCharacter)
+
+(isa cMax GamePredicate)
+(arity cMax 2)
+(arg1Isa cMax HRMCharacter)
+(comment cMax "cMax is the asymptotoc maximum competence a give employee can achieve in a particular
+position, given his training, education, and abilities.")
+
+(isa cMin GamePredicate)
+(arity cMin 2)
+(arg1Isa cMin HRMCharacter)
+
+(isa competenceAsymptote GamePredicate)
+(arity competenceAsymptote 2)
+(arg1Isa competenceAsymptote HRMCharacter)
+(comment competenceAsymptote "(competenceAsymptote ?emp ?num) contributes to experience-based competence.")
+
+(isa discrepancy GamePredicate)
+(arity discrepancy 2)
+(arg1Isa discrepancy HRMCharacter)
+
+(isa skillDiscrepancy GamePredicate)
+(arity skillDiscrepancy 2)
+(arg1Isa skillDiscrepancy HRMCharacter)
+
+(isa attitude GamePredicate)
+(arity attitude 2)
+(arg1Isa attitude HRMCharacter)
+(comment attitude "(attitude ?employee ?att) measures an employee's inclination to do work.")
+
+(isa qualityOfWorklife GamePredicate)
+(arity qualityOfWorklife 2)
+(arg1Isa qualityOfWorklife HRMCharacter)
+(comment qualityOfWorklife "(QWL) measures job satisfaction in terms of the the degree to which
+job requirements match an employee's skills.  If someone is over-qualified (has skills they aren't
+using), they will be bored.")
+
+(isa dissatisfactionWithPay GamePredicate)
+(arity dissatisfactionWithPay 2)
+(arg1Isa dissatisfactionWithPay HRMCharacter)
+(comment dissatisfactionWithPay "(dissatisfactionWithPay ?emp ?amt) measures an employee's satisfaction.  This is a positive number representing how dissatisfied the employee is.")
+
+(isa qualityOfSupervision GamePredicate)
+(arity qualityOfSupervision 2)
+(arg1Isa qualityOfSupervision HRMCharacter)
+(comment qualityOfSupervision "(QOS) measures whether or not an employee has been evaluated,
+counseled, trained, rewarded, or promoted recently and fairly.  This is an event-based 
+influence that can be characterized as the superposition of short-term and long-term effects")
+
+(isa attentionDecay GamePredicate)
+(arity attentionDecay 2)
+(arg1Isa attentionDecay HRMCharacter)
+
+
+(isa qos GamePredicate)
+(arity qos 5)
+(arg1Isa qos HRMCharacter)
+(comment qos "(qos ?root ?last-action ?sign ?dedication ?qos) computes the quality of supervision.")
+
+(isa quantityOfWork GamePredicate)
+(arity quantityOfWork 2)
+(arg1Isa quantityOfWork HRMCharacter)
+(comment quantityOfWork "(quantityOfWork ?employee ?dissatisfaction) is a measure of how overworked an employee is.  
+Overtime is a progressive dissatisfier which decays half as fast as it accumulates.")
+
+(isa scaledOvertime GamePredicate)
+(arity scaledOvertime 2)
+(arg1Isa scaledOvertime HRMCharacter)
+
+(isa selfEsteem GamePredicate)
+(arity selfEsteem 2)
+(arg1Isa selfEsteem HRMCharacter)
+(comment selfEsteem "SE reflects the degree to which an employee's competence meets his employer's
+expectations.  An employee's self esteem will be low if his competence is low (say, below 50%)
+and  his rate of increase is also low (e.g., less than 10% / month)  This should lead to
+progressive decline in attitude. SelfEsteem is lessThanOrEqualTo zero.")
+
+(isa perceptionOfFairness GamePredicate)
+(arity perceptionOfFairness 2)
+(arg1Isa perceptionOfFairness HRMCharacter)
+(comment perceptionOfFairness "(POF) represents the degree to which the employee feels 
+that he has been treated fairly in comparison to other employees.  This should be a
+decaying dissatisfier, represented as a negative integer or zero.")
+
+(isa existsUnfairAction GamePredicate)
+(arity existsUnfairAction 1)
+(arg1Isa existsUnfairAction HRMCharacter)
+
+(isa existsUnfairPromotion GamePredicate)
+(arity existsUnfairPromotion 1)
+(arg1Isa existsUnfairPromotion HRMCharacter)
+
+(isa existsUnfairTermination GamePredicate)
+(arity existsUnfairTermination 1)
+(arg1Isa existsUnfairTermination HRMCharacter)
+
+(isa undeservingOfTermination GamePredicate)
+(arity undeservingOfTermination 1)
+(arg1Isa undeservingOfTermination HRMCharacter)
+
+;(isa terminationWithoutProbation GamePredicate)
+;(arity terminationWithoutProbation 1)
+
+(isa effectOfProbation GamePredicate)
+(arity effectOfProbation 2)
+
+(isa wrongfulTermination GamePredicate)
+(arity wrongfulTermination 2)
+
+(isa employeeName GamePredicate)
+(arity employeeName 2)
+(arg1Isa employeeName HRMCharacter)
+
+(isa employeeAge GamePredicate)
+(arity employeeAge 2)
+(arg1Isa employeeAge HRMCharacter)
+
+(isa position GamePredicate)
+(arity position 2)
+(arg1Isa position HRMCharacter)
+(arg2Isa position HRMPosition)
+(comment position "(position ?employee ?position) is the position the employee holds.")
+
+(isa employmentHours GamePredicate)
+(arity employmentHours 2)
+(arg1Isa employmentHours HRMCharacter)
+(arg2Isa employmentHours Integer)
+(comment employmentHours "(employmentHours ?employee ?hours-per-week) indicates how many hours per week an employee is nominally working (typically 40).")
+
+(isa salary GamePredicate)
+(arity salary 2)
+(arg1Isa salary HRMCharacter)
+(arg2Isa salary Integer)
+(comment salary "(salary ?employee ?amount) indicates how much you're nominally paying the employee per year.")
+
+(isa monthlySalary GamePredicate)
+(arity monthlySalary 2)
+(arg1Isa monthlySalary HRMCharacter)
+(arg2Isa monthlySalary Integer)
+(comment monthlySalary "(monthlySalary ?employee ?amount) indicates how much you actually pay the employee this month considering overtime.")
+
+(isa hasSkill GamePredicate)
+(arity hasSkill 2)
+(arg1Isa hasSkill HRMCharacter)
+(arg2Isa hasSkill HRMSkill)
+
+(isa training GamePredicate)
+(arity training 2)
+(arg1Isa training HRMCharacter)
+
+(isa trainingHours GamePredicate)
+(arity trainingHours 2)
+(arg1Isa trainingHours HRMCharacter)
+
+(isa status GamePredicate)
+(arity status 2)
+(arg1Isa status HRMCharacter)
+(arg2Isa status EmployeeStatus)
+
+(isa tenure GamePredicate)
+(arity tenure 2)
+(arg1Isa tenure HRMCharacter)
+(comment tenure "(tenure ?employee ?num-months) represents the number of months an employee has been with the company.")
+
+(isa experience GamePredicate)
+(arity experience 2)
+(arg1Isa experience HRMCharacter)
+(comment experience "(experience ?employee ?num-months) represents the number of months an employee has been in his current position.")
+
+(isa educationName GamePredicate) ; Map from an integer to a name, like BachelorsDegree. 
+(arity educationName 2)
+(arg1Isa educationName Integer)
+(arg2Isa educationName EducationalAchievement)
+(comment educationName "(education ?level ?level) maps from an Integer to a named educational attainment, such as HighSchoolDiploma or BachelorsDegree.")
+
+(isa educationLevel GamePredicate)
+(arity educationLevel 2)
+(arg1Isa educationLevel HRMCharacter)
+(arg2Isa educationLevel Integer)
+(comment educationLevel "(educationLevel ?employee ?numeric-amount) indicates the amount of formal education an employee has, as an integer. See educationName for a mapping to names like HighSchoolDiploma or BachelorsDegree.")
+
+(isa aptitude GamePredicate)
+(arity aptitude 2)
+(arg1Isa aptitude HRMCharacter)
+(arg2Isa aptitude Integer)
+(comment aptitude "(aptitude ?emp ?num) indicates an employee's raw aptitude on a scale of 1-5.")
+
+(isa dedication GamePredicate)
+(arity dedication 2)
+(arg1Isa dedication HRMCharacter)
+(arg2Isa dedication Integer)
+(comment dedication "(dedication ?employee ?num) rates an employees inclination to do work on a scale of 1-5.")
+
+(isa ambition GamePredicate)
+(arity ambition 2)
+(arg1Isa ambition HRMCharacter)
+(arg2Isa ambition Integer)
+(comment ambition "(ambition ?employee ?num) rates an employee's desire for promotion on a scale of 1-5.")
+
+(isa expAsymptote GamePredicate)
+(arity expAsymptote 2)
+(arg1Isa expAsymptote HRMCharacter)
+
+(isa expectedSalary GamePredicate)
+(arity expectedSalary 2)
+(arg1Isa expectedSalary HRMCharacter)
+(comment expectedSalary "(expectedSalary ?employee ?expected-salary) indicates what employee thinks he is worth.")
+
+(isa actualWorth GamePredicate)
+(arity actualWorth 2)
+(arg1Isa actualWorth HRMCharacter)
+(comment actualWorth "(actualWorth ?employee ?nominal-salary) indicates what ?employee should be paid, givn his competence.")
+
+(isa lastAction GamePredicate)
+(arity lastAction 2)
+(arg1Isa lastAction HRMCharacter)
+(arg2Isa lastAction Integer)
+(comment lastAction "(lastAction ?employee ?months) tracks the number of months since the last supervisory action on ?employee.")
+
+(isa lastActionSign GamePredicate)
+(arity lastActionSign 2)
+(arg1Isa lastActionSign HRMCharacter)
+(arg2Isa lastActionSign Integer)
+(comment lastActionSigh "(lastActionSign ?employee ?valence) indicates whether most recent supervisory action was positive or negative (e.g., giving a raise or putting on probation.")
+
+;;; employee hours should be a function of their position (or overtime? based on under-staffing)
+
+
+;;; COMPANY MODEL
+
+(isa capital GamePredicate)
+(arity capital 2)
+(arg1Isa capital HRMCompany)
+(comment capital "How much cushion there is before negative profitability bankrupts the company.")
+
+(isa profitability GamePredicate)
+(arity profitability 2)
+(arg1Isa profitability HRMCompany)
+(comment profitability "The ratio of earnings to costs.")
+
+(isa profit GamePredicate)
+(arity profit 2)
+(arg1Isa profit HRMCompany)
+(comment profit "Income - cost.")
+
+(isa income GamePredicate)
+(arity income 2)
+(arg1Isa income HRMCompany)
+
+(isa production GamePredicate)
+(arity production 2)
+(arg1Isa production HRMCompany)
+
+(isa marketFactors GamePredicate)
+(arity marketFactors 2)
+(arg1Isa marketFactors HRMCompany)
+
+(isa productionCost GamePredicate)
+(arity productionCost 2)
+(arg1Isa productionCost HRMCompany)
+
+(isa laborCosts GamePredicate)
+(arity laborCosts 2)
+(arg1Isa laborCosts HRMCompany)
+
+(isa fixedCosts GamePredicate)
+(arity fixedCosts 2)
+(arg1Isa fixedCosts HRMCompany)
+(comment fixedCosts "(fixedCosts ?num) is the amount of money spent per month on rent and utilities, independent of employees and sales.")
+
+(isa payrollCost GamePredicate)
+(arity payrollCost 2)
+(arg1Isa payrollCost HRMCompany)
+
+(isa trainingCost GamePredicate)
+(arity trainingCost 2)
+(arg1Isa trainingCost HRMCompany)
+
+(isa productivity GamePredicate)
+(arity productivity 2)
+(arg1Isa productivity HRMCompany)
+
+(isa morale GamePredicate)
+(arity morale 2)
+(arg1Isa morale HRMCompany)
+(comment morale "(morale ?num) is the average attitude of employees.")
+
+(isa companyName GamePredicate)
+(arity companyName 2)
+(arg1Isa companyName HRMCompany)
+
+
+;;; Events
+(isa GameEvent Collection)
+(genls GameEvent PerceptualAgentEvent)
+
+(isa EmployeeQuits-HRMEvent GameEvent)
+(comment EmployeeQuits-HRMEvent-HRMEvent "EmployeeQuits-HRMEvent occurs when an employee's attitude drops below 20%")
+(isa ImproperTerminationLawsuit-HRMEvent GameEvent)
+(comment ImproperTerminationLawsuit-HRMEvent "ImproperTerminationLawsuit-HRMEvent occurs when an employee is fired without first being put on probation.")
+(isa OverpayingNotice-HRMEvent GameEvent)
+(comment OverpayingNotice-HRMEvent "OverpayingNotice-HRMEvent occurs when an employee's salary exceeds their actual worth to the company by more than 10%")
+(isa UnderstaffingNotice-HRMEvent GameEvent)
+(comment UnderstaffingNotice-HRMEvent "UnderstaffingNotice-HRMEvent occurs when an employees' hours exceed 50/week for 2 months in a row.")
+(isa RetirementEvent-HRMEvent GameEvent)
+(comment RetirementEvent-HRMEvent "RetirementEvent-HRMEvent occurs when an employees's age exceeds 65 years.")
+(isa UndertrainingEvent-HRMEvent GameEvent)
+(comment UndertrainingEvent-HRMEvent "UndertrainingEvent-HRMEvent occurs when an employees with tenure > 6months has competence is less than 50% that is due to missing skills.")
+(isa OvertrainingEvent-HRMEvent GameEvent)
+(comment OvertrainingEvent-HRMEvent "OvertrainingEvent-HRMEvent occurs when an employees is trained for skills they already have.")
+(isa PrematurePromotion-HRMEvent GameEvent)
+(comment PrematurePromotion-HRMEvent "PrematurePromotion-HRMEvent occurs when an employees is promoted when their competence is < 75%")
+(isa UnwarrantedPromotion-HRMEvent GameEvent)
+(comment UnwarrantedPromotion-HRMEvent "UnwarrantedPromotion-HRMEvent occurs when an employee is promoted and his new comptence is < 50%.")
+(isa InsufficientEvaluations-HRMEvent GameEvent)
+(comment InsufficientEvaluations-HRMEvent "InsufficientEvaluations-HRMEvent occurs when an employees is not evaluated for 13 months or more.")
+(isa OverRetention-HRMEvent GameEvent)
+(comment OverRetention-HRMEvent "OverRetention-HRMEvent occurs when an employees's performance remains < 50% for 6 months or more.")
+(isa Bankruptcy-HRMEvent GameEvent)
+(comment Bankruptcy-HRMEvent "Bankruptcy-HRMEvent occurs when the company capital reaches 0.")
+
+;;; POSITIONS
+
+(isa HRMPosition Collection)
+(comment HRMPosition "(An HRMPosition is an employment position (job) in the HumanResourcesManagement game.")
+
+(isa exceedsSalaryOrPosition GamePredicate)
+(arity exceedsSalaryOrPosition 2)
+(comment exceedsSalaryOrPosition "(exceedsSalaryOrPosition ?employee1 ?employee2) means ?employee1 has a higher salary or position than ?employee2.")
+(isa nextPosition GamePredicate)
+(arity nextPosition 2)
+(arg1Isa nextPosition HRMPosition)
+(arg2Isa nextPosition HRMPosition)
+(comment nextPosition "(nextPosition ?lower-pos ?higher-pos) represents the promotion sequence of positions in HRM.")
+(isa positionExceeds GamePredicate)
+(arity positionExceeds 2)
+(isa positionMinSalary GamePredicate)
+(arity positionMinSalary 2)
+(comment positionMinSalary "(positionMinSalary ?position ?salary) represents the minimum annual salary that can be paid to a person with the specified ?position.")
+(isa positionMaxSalary GamePredicate)
+(arity positionMaxSalary 2)
+(comment positionMinSalary "(positionMaxSalary ?position ?salary) represents the maximum annual salary that can be paid to a person with the specified ?position.")
+(isa positionSkillRequirement GamePredicate)
+(arity positionSkillRequirement 2)
+(arg1Isa positionSkillRequirement HRMPosition)
+(arg2Isa positionSkillRequirement HRMSkill)
+(comment positionSkillRequirement "(positionSkillRequirement ?position ?skill) means ?skill is required to properly perform the job ?position.")
+(isa positionScaleFactor GamePredicate)
+(arity positionScaleFactor 2)
+(arg1Isa positionScaleFactor HRMPosition)
+(comment positionScaleFactor "(positionScaleFactor ?position ?factor) is used to compute the severity of a skill and/or education discrepancy in computing the competence asymptote.")
+
+(isa requiredSkill GamePredicate)
+(arity requiredSkill 2)
+(arg1Isa requiredSkill HRMPosition)
+(arg2Isa requiredSkill HRMSkill)
+(isa requiredEducation GamePredicate)
+(arity requiredEducation 2)
+(arg1Isa requiredEducation HRMPosition)
+(arg2Isa requiredEducation Integer)
+(comment requiredEducation "(requiredEducation ?position ?level) contributes to computing competence at a job.  ?level is just a number, where 1 = GED and 6 = GraduateDegree")
+
+;;; 6 kinds of positions:
+(isa Trainee HRMPosition)
+(isa PressOperator HRMPosition)
+(isa SrPressOperator HRMPosition)
+(isa LineSupervisor HRMPosition)
+(isa ShiftSupervisor HRMPosition)
+(isa Manager HRMPosition)
+
+(nextPosition Trainee PressOperator)
+(nextPosition PressOperator SrPressOperator)
+(nextPosition SrPressOperator LineSupervisor)
+(nextPosition LineSupervisor ShiftSupervisor)
+(nextPosition ShiftSupervisor Manager)
+
+(<== (positionExceeds ?pos1 ?pos2)
+     (different ?pos1 ?pos2)
+     (evaluate ?level1 (PositionInListFn ?pos1 (TheList Trainee PressOperator SrPressOperator LineSupervisor ShiftSupervisor Manager)))
+     (evaluate ?level2 (PositionInListFn ?pos2 (TheList Trainee PressOperator SrPressOperator LineSupervisor ShiftSupervisor Manager)))
+     (greaterThan ?level1 ?level2))
+
+(positionMinSalary Trainee 10000)  ; 10K/yr
+(positionMaxSalary Trainee 20000)  ; 20K/yr
+(positionMinSalary PressOperator 20000)
+(positionMaxSalary PressOperator 30000)
+(positionMinSalary SrPressOperator 30000)
+(positionMaxSalary SrPressOperator 40000)
+(positionMinSalary LineSupervisor 40000)
+(positionMaxSalary LineSupervisor 55000)
+(positionMinSalary ShiftSupervisor 55000)
+(positionMaxSalary ShiftSupervisor 70000)
+(positionMinSalary Manager 70000)
+(positionMaxSalary Manager 90000)
+
+(positionScaleFactor Trainee 10)
+(positionScaleFactor PressOperator 8.33)
+(positionScaleFactor SrPressOperator 6.25)
+(positionScaleFactor LineSupervisor 5)
+(positionScaleFactor ShiftSupervisor 3.57)
+(positionScaleFactor Manager 3.84)
+
+(requiredSkill PressOperator McFeePressOperation)
+(requiredSkill SrPressOperator McFeePressOperation)
+(requiredSkill LineSupervisor SupervisorySkills)
+(requiredSkill ShiftSupervisor SupervisorySkills)
+(requiredSkill Manager SupervisorySkills)
+(requiredSkill Manager ComplianceKnowledge)
+
+(requiredEducation Trainee 1)          ; GED
+(requiredEducation PressOperator 2)    ; High school
+(requiredEducation SrPressOperator 2)
+(requiredEducation LineSupervisor 3)   ; 2 yrs college
+(requiredEducation ShiftSupervisor 3)
+(requiredEducation Manager 5)          ; Bachelor's Degree
+
+
+(isa probationMagnitude GamePredicate)
+(arity probationMagnitude 3)
+
+;;; TRAINING COURSE ATTRIBUTES
+
+(isa TrainingCourse Collection)
+;;; Assume each course lasts one month.
+
+(isa courseName GamePredicate)
+(arity courseName 2)
+
+(isa courseHours GamePredicate)
+(arity courseHours 2)
+(comment courseHours "(courseHours ?course ?hours) means the training course ?course takes ?hours hours per week. This subtracts from productivity.")
+
+(isa courseCost GamePredicate)
+(arity courseCost 2)
+(comment courseCost "(courseCost ?course ?cost) indicates the cost of an employee training course. This contributes to labor costs.")
+
+(isa teachesSkill GamePredicate)
+(arity teachesSkill 2)
+(arg2Isa teachesSkill HRMSkill)
+(comment teachesSkill "(teachesSkill ?course ?skill) means ?course adds ?skill to an employee's skill set.")
+
+(isa courseDescription GamePredicate)
+(arity courseDescription 2)
+(comment courseDescription "(courseDescription ?course ?description) is a textual description, purely for human players.")
+
+;;; Should courses have prereqs?
+
+
+;;; The goal of the game is to keep the company running for some number of turns.
+
+;;; staying afloat for 20 turns - 50% + 1/2 profitability%
+(<== (goalState ?player ?x)
+     (currentlyTrue (capital McFeePress ?capital))
+     (greaterThan ?capital 0)
+     (currentlyTrue (profitability McFeePress ?profitability))
+     (evaluate ?x (MinimumFn (TheSet 100 (PlusFn 50 (TimesFn 50 ?profitability))) IdentityFn)))
+
+;;; crashed the company - 50% of score comes from surviving x% of 20 turns
+(<== (goalState ?player ?endurance)
+     (currentlyTrue (capital McFeePress ?capital))
+     (lessThanOrEqualTo ?capital 0)
+     (currentlyTrue (turn ?turn))
+     (evaluate ?endurance (MinimumFn (TheSet (TimesFn ?turn 2.5) 50) IdentityFn)))  ; 1/2(percentage of 20 turns)
+
+
+(<== (terminalState) (currentlyTrue (capital ?company 0)))    ; bankrupt  
+(<== (terminalState) (currentlyTrue (turn 20)))  ; stop after 20 turns.
+
+;;; Legal rules
+
+;;; Always legal to wait for next turn:
+(<== (legal ?player (doNextTurn))
+     (uninferredSentence (terminalState)))
+
+;;; Should hiring constrain position based on education level? No.
+(<== (legal ?player (doHRMHire ?applicant ?position)) ; and salary?
+     (currentlyTrue (status ?applicant Applicant))  ; available
+     (isa ?position HRMPosition))
+
+;;; can only fire your own employees:
+(<== (legal ?player (doHRMFire ?employee))
+     (currentlyTrue (position ?employee ?anything)))
+     
+;;; can only train an active employee for a skill they don't have
+(<== (legal ?player (doHRMTrain ?employee ?course))
+     (currentlyTrue (status ?employee Employee)) ; not on-leave, applicant, or on-probation
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (teachesSkill ?course ?skill))))
+     (currentlyTrue (position ?employee ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (requiredSkill ?position ?skill)))
+     ;; Do we want this to be illegal or just a mistake?
+     (uninferredSentence 
+       (currentlyTrue 
+         (hasSkill ?employee ?skill)))
+     (uninferredSentence
+      (currentlyTrue
+         (training ?employee ?some-course)))  ; no concurrent training
+     )
+
+;;; Probably should check that salary isn't maxed out for position
+(<== (legal ?player (doHRMGiveRaise ?employee))
+     (currentlyTrue (status ?employee Employee)) ; not on-leave, applicant, or on-probation
+     )
+     
+(<== (legal ?player (doHRMPromote ?employee))
+     (currentlyTrue (position ?employee ?position))
+     (allFactsAllowed
+       (contextEnvAllowed
+         (nextPosition ?position ?next-position)))
+     (currentlyTrue (status ?employee Employee)) ; not on-leave, applicant, or on-probation
+     )
+     
+(<== (legal ?player (doHRMSetProbation ?employee))
+     (currentlyTrue (status ?employee Employee)) ; not on-leave, applicant, or on-probation
+     )
+     
+(<== (legal ?player (doHRMRemoveProbation ?employee))
+     (currentlyTrue (status ?employee Probation)) ; not on-leave, applicant, or on-probation
+     )
+     
+(<== (legal ?player (doHRMEvaluate ?employee))
+     (currentlyTrue (status ?employee ?status))
+     (different ?status Applicant))
+
+
+;;; Next rules
+
+;;; I think this needs to be broken down into nextGameState, nextEmployeeState, and nextCompanyState
+;;; where the employee state query takes a ground employee.
+;;; This effectely creates a depth-first search, which is much easier to debug.
+;;; Also, we need to calculate attitude changes immediately, in order for them to have an 
+;;; effect on the company in the next turn.
+
+;;; Because this is a single person game:
+(<== (next (control ?who))
+     (currentlyTrue (control ?who)))
+     
+
+(<== (next ?stmt)
+     (doesAction ?player (doNextTurn))
+     (diachronicNext ?stmt))
+
+;;; Update the turn number.  
+;;; *** Why wouldn't this use the agent't built-in turn counter?
+(<== (diachronicNext (turn ?turn))
+     (currentlyTrue (turn ?old-turn))
+     (evaluate ?turn (PlusFn ?old-turn 1)))
+
+;;; Even if we compute events first, they won't be reified in currentlyTrue
+;;; statements until execution time.  If a quitting event happens across turns,
+;;; that won't affect employee status unless we explicitly query for it.
+(<== (diachronicNext ?stmt)
+     (currentlyTrue (status ?emp ?something)) ; bind all active employees
+     (diachronicEmployeeNext ?emp ?stmt))
+
+;;; Computes the effect of actions within the same turn:
+(<== (next ?stmt)
+     (uninferredSentence (doesAction ?player (doNextTurn)))
+     (synchronicNext ?stmt))
+
+(<== (synchronicNext (step ?step))
+     (currentlyTrue (step ?old-step))
+     (evaluate ?step (PlusFn ?old-step 1)))
+
+(<== (diachronicNext (step ?step))
+     (currentlyTrue (step ?step)))
+
+(<== (synchronicNext (turn ?turn))
+     (currentlyTrue (turn ?turn)))
+
+(<== (synchronicNext ?stmt)
+     (currentlyTrue (position ?emp ?something))
+     (synchronicEmployeeNext ?emp ?stmt)) ; this allows us to ensure that employee is bound
+     
+(<== (synchronicEmployeeNext ?emp (performance ?emp ?perf))
+     (currentlyTrue (performance ?emp ?perf)))
+
+;;; initial performance
+(<== (synchronicEmployeeNext ?emp (performance ?emp ?perf))
+     (doesAction ?player (doHRMHire ?emp ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (dedication ?emp ?dedication))))
+     (evaluate ?perf
+       (RoundFn
+         (TimesFn
+           130   ; initial attitude = 100, initial competence = 30
+           ?dedication
+           0.1))))
+     
+
+(<== (diachronicEmployeeNext ?emp (performance ?emp ?perf))
+     (currentlyTrue (attitude ?emp ?tude))
+     (currentlyTrue (competence ?emp ?comp))
+     (allFactsAllowed
+       (contextEnvAllowed
+         (numAnswers 1 (dedication ?emp ?dedication))))
+     (fractionalWork ?emp ?frac)
+     (evaluate ?perf
+       (RoundFn
+        (TimesFn 
+          (PlusFn ?tude ?comp) 
+          ?dedication
+          ?frac
+          0.1))))    ; handles division by 2, for avg(attitude, competence), and division by 5 of dedication.
+         
+;;; fractionalWork = ((4 * hours) - currentTraingHours) / 160
+;;; 160 because 40 hrs/week * 4 weeks/month.
+;;; We could simplify this if currentTrainingHours were per week.
+(<== (fractionalWork ?emp ?fw)
+     (currentlyTrue (employmentHours ?emp ?hours))
+     (trainingHours ?emp ?training-hours)
+     (evaluate ?fw (QuotientFn (DifferenceFn (TimesFn 4 ?hours) ?training-hours) 160)))
+
+
+(<== (trainingHours ?emp ?hours)
+     (currentlyTrue (training ?emp ?course))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (courseHours ?course ?hours)))))
+
+(<== (trainingHours ?emp 0)
+     (uninferredSentence (currentlyTrue (training ?emp ?course))))
+
+(<== (synchronicEmployeeNext ?emp (competence ?emp ?comp))
+     (currentlyTrue (competence ?emp ?comp)))
+
+(<== (synchronicEmployeeNext ?emp (competence ?emp 30)) ; punt
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (diachronicEmployeeNext ?emp (competence ?emp ?comp))
+     (numAnswers 1 (cMax ?emp ?cmax))   ; cmax takes the position, aptitude, and skill discrepency into account
+     (evaluate ?cmin (DifferenceFn ?cmax 50))
+     (numAnswers 1 (experience ?emp ?exp))
+     (evaluate ?minterm 
+       (MaximumFn (TheSet ?cmin ?exp) IdentityFn))
+     (evaluate ?comp 
+       (RoundFn (MinimumFn (TheSet ?cmax ?minterm) IdentityFn))))
+
+;;; Asymptotic maximum performance:
+(<== (cMax ?emp ?cmax)
+     (numAnswers 1 (synchronicEmployeeNext ?emp (position ?emp ?pos)))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (aptitude ?emp ?aptitude))))  ; a number, 1-5
+     (numAnswers 1 (discrepancy ?emp ?discrepancy))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionScaleFactor ?pos ?psf))))
+     (evaluate ?normalized-aptitude
+       (TimesFn (DifferenceFn 5 ?aptitude) 6))
+     (evaluate ?cmax
+               (DifferenceFn 100 (PlusFn (TimesFn ?psf ?discrepancy) ?normalized-aptitude))))
+
+
+;;; Nothing depends on old values of experience, so this doesn't need to be a next rule.
+(<== (experience ?emp ?exp)
+     (cMax ?emp ?cmax)
+     (currentlyTrue (competenceAsymptote ?emp ?asymptote))
+     (evaluate ?exp
+               (DifferenceFn ?cmax (TimesFn 50 ?asymptote))))
+
+;;; We treat cMin as cMax - 50.
+;;; Change this from the recurrence relation to one that depends on an explicit tenure value.
+;(<== (experience ?emp ?exp)
+;     (numAnswers 1 (cMax ?emp ?cmax))
+;     ;(currentlyTrue (competenceAsymptote ?emp ?asymptote))
+;     (allFactsAllowed 
+;       (contextEnvAllowed
+;         (numAnswers 1 (aptitude ?emp ?apt))))
+;     (synchronicEmployeeNext ?emp (tenure ?emp ?tenure))
+;     (evaluate ?exp
+;               (RoundFn 
+;                 (DifferenceFn ?cmax 
+;                   (QuotientFn 50 
+;                     (ExponentFn 2
+;                       (QuotientFn
+;                         (TimesFn ?apt ?tenure)
+;                         5)))))))
+
+(<== (synchronicEmployeeNext ?emp (priorCompetence ?emp ?comp))
+     (lookupOnly 
+       (localOnly 
+        (currentlyTrue (priorCompetence ?emp ?comp)))))
+        
+(<== (synchronicEmployeeNext ?emp (priorCompetence ?emp 30)) ; punt
+     (doesAction ?player (doHRMHire ?emp ?position)))
+     
+(<== (diachronicEmployeeNext ?emp (priorCompetence ?emp ?comp))
+     (lookupOnly 
+       (localOnly 
+        (currentlyTrue (competence ?emp ?comp)))))
+
+;;; Employee Status: 
+
+(<== (synchronicEmployeeNext ?emp (status ?emp Employee))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (synchronicEmployeeNext ?emp (status ?emp Probation))
+     (doesAction ?player (doHRMSetProbation ?emp ?position)))
+
+(<== (synchronicEmployeeNext ?emp (status ?emp Employee))
+     (doesAction ?player (doHRMRemoveProbation ?emp ?position)))
+
+(<== (synchronicEmployeeNext ?emp (status ?emp ?status))
+     (currentlyTrue (status ?emp ?status))
+     (uninferredSentence
+       (doesAction ?player (doHRMHire ?emp ?position)))
+     (uninferredSentence
+       (doesAction ?player (doHRMFire ?emp)))
+     (uninferredSentence
+       (doesAction ?player (doHRMSetProbation ?emp)))
+     (uninferredSentence
+       (doesAction ?player (doHRMRemoveProbation ?emp))))
+     ;; we're not tracking age, so we can't have retirements yet.
+
+(<== (diachronicEmployeeNext ?emp (status ?emp Applicant))
+     (currentlyTrue (status ?emp Applicant)))
+
+(<== (diachronicEmployeeNext ?emp (status ?emp ?status))
+     (currentlyTrue (attitude ?emp ?attitude))
+     (greaterThanOrEqualTo ?attitude 20)  ; the quitting threshold
+     (currentlyTrue (status ?emp ?status)))
+
+;;; Employee Salary:
+
+(<== (synchronicEmployeeNext ?emp (salary ?emp ?salary))
+     (currentlyTrue (salary ?emp ?salary))
+     (uninferredSentence
+       (doesAction ?player (doHRMFire ?emp)))
+     (uninferredSentence
+       (doesAction ?player (doHRMGiveRaise ?emp)))
+     (uninferredSentence
+       (doesAction ?player (doHRMPromote ?emp))))
+
+(<== (synchronicEmployeeNext ?emp (salary ?emp ?salary))
+     (doesAction ?player (doHRMHire ?emp ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMinSalary ?position ?salary)))))
+
+;;; This will be questionable if promotion and raise happen on the same turn
+(<== (synchronicEmployeeNext ?emp (salary ?emp ?new-salary))
+     (doesAction ?player (doHRMGiveRaise ?emp))
+     (currentlyTrue (salary ?emp ?old-salary))
+     (currentlyTrue (position ?emp ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMaxSalary ?position ?max))))
+     (evaluate ?calc-salary
+       (PlusFn ?old-salary 
+         (TimesFn ?old-salary 0.03)))  ; 3% raise
+     (evaluate ?new-salary (RoundFn (MinimumFn (TheSet ?max ?calc-salary) IdentityFn))))
+
+(<== (synchronicEmployeeNext ?emp (salary ?emp ?new-salary))
+     (doesAction ?player (doHRMPromote ?emp))
+     (currentlyTrue (position ?emp ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (nextPosition ?position ?promotion))))
+     (currentlyTrue (salary ?emp ?old-salary))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMinSalary ?promotion ?min))))
+     (evaluate ?new-salary
+      (MaximumFn (TheSet ?min ?old-salary) IdentityFn)))
+
+;;; Assuming they didn't quit
+(<== (diachronicEmployeeNext ?emp (salary ?emp ?salary))
+     (currentlyTrue (salary ?emp ?salary))
+     (currentlyTrue (attitude ?emp ?attitude))
+     (greaterThanOrEqualTo ?attitude 20))  ; the quitting threshold
+
+;;; Employee position: 
+
+(<== (synchronicEmployeeNext ?emp (position ?emp ?position))
+     (currentlyTrue (position ?emp ?position))
+     (uninferredSentence
+       (doesAction ?player (doHRMHire ?emp ?pos)))
+     (uninferredSentence
+       (doesAction ?player (doHRMFire ?emp)))
+     (uninferredSentence
+       (doesAction ?player (doHRMPromote ?emp)))
+     )
+
+(<== (synchronicEmployeeNext ?emp (position ?emp ?position))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+     
+(<== (synchronicEmployeeNext ?emp (position ?emp ?new-position))
+     (doesAction ?player (doHRMPromote ?emp))
+     (currentlyTrue (position ?emp ?old-position))
+     (allFactsAllowed
+       (contextEnvAllowed
+         (numAnswers 1 (nextPosition ?old-position ?new-position)))))
+
+;;; People's position and salary don't change automatically with the passage of time.
+(<== (diachronicEmployeeNext ?emp (position ?emp ?position))
+     (currentlyTrue (position ?emp ?position))
+     (currentlyTrue (attitude ?emp ?attitude))
+     (greaterThanOrEqualTo ?attitude 20))  ; the quitting threshold
+     
+;;; Employee Hours:
+
+(<== (synchronicEmployeeNext ?emp (employmentHours ?emp ?hours))
+     (currentlyTrue (employmentHours ?emp ?hours)))  ; elaborate this when we start supporting overtime
+     
+(<== (synchronicEmployeeNext ?emp (employmentHours ?emp 40))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (diachronicEmployeeNext ?emp (employmentHours ?emp ?hours))
+     (currentlyTrue (attitude ?emp ?attitude))
+     (greaterThanOrEqualTo ?attitude 20)  ; the quitting threshold
+     (currentlyTrue (employmentHours ?emp ?hours)))
+
+;;; Tenure
+(<== (synchronicEmployeeNext ?emp (tenure ?emp 0))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (synchronicEmployeeNext ?emp (tenure ?emp ?tenure))
+     (currentlyTrue (tenure ?emp ?tenure)))
+
+(<== (diachronicEmployeeNext ?emp (tenure ?emp ?new-tenure))
+     (currentlyTrue (tenure ?emp ?tenure))
+     (evaluate ?new-tenure (PlusFn 1 ?tenure)))
+     
+;;; Assume each training course is 1 month.
+(<== (synchronicEmployeeNext ?emp (training ?emp ?course))
+     (doesAction ?player (doHRMTrain ?emp ?course)))
+
+(<== (synchronicEmployeeNext ?emp (training ?emp ?course))
+     (currentlyTrue (training ?emp ?course)))
+
+;;; Skills:
+
+;;; Skills are cumulative and persistent.
+(<== (synchronicEmployeeNext ?emp (hasSkill ?emp ?skill))
+     (currentlyTrue (hasSkill ?emp ?skill)))
+
+(<== (diachronicEmployeeNext ?emp (hasSkill ?emp ?skill))
+     (currentlyTrue (training ?emp ?course))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (teachesSkill ?course ?skill)))))
+     
+(<== (diachronicEmployeeNext ?emp (hasSkill ?emp ?skill))
+     (currentlyTrue (hasSkill ?emp ?skill)))
+
+;;; Supervisory Attention
+
+;;; synchronic action on some other employee:
+(<== (synchronicEmployeeNext ?emp (lastAction ?emp ?months))
+     (currentlyTrue (lastAction ?emp ?months))
+     (doesAction ?player ?act)
+     ;; We *do* want to use uninferredSentence here, rather than 
+     ;; binding ?other-emp and checking different, because
+     ;; act might not have an arg1 and we don't want to fail in that case.
+     (uninferredSentence
+       (formulaArgument ?act 1 ?emp)))
+
+(<== (synchronicEmployeeNext ?emp (lastAction ?emp 0))
+     (doesAction ?player ?act)
+     (formulaArgument ?act 1 ?emp))
+
+(<== (diachronicEmployeeNext ?emp (lastAction ?emp ?months))
+     (currentlyTrue (lastAction ?emp ?old-months))
+     (evaluate ?months (PlusFn ?old-months 1)))
+     
+(<== (synchronicEmployeeNext ?emp (lastActionSign ?emp 1))
+     (doesAction ?player ?act)
+     (formulaArgument ?act 1 ?emp)
+     (operatorFormulas ?pred ?act)
+     (elementOf ?pred (TheSet doHRMHire doHRMTrain doHRMGiveRaise doHRMPromote doHRMRemoveProbation doHRMEvaluate)))
+
+;;; We don't have salary cuts or demotions:
+(<== (synchronicEmployeeNext ?emp (lastActionSign ?emp -1))
+     (doesAction ?player (doHRMSetProbation ?emp)))
+
+(<== (synchronicEmployeeNext ?emp (lastActionSign ?emp -1))
+     (doesAction ?player (doHRMFire ?emp)))
+
+;;; Acted on some other employee - maintain last action sign.
+(<== (synchronicEmployeeNext ?emp (lastActionSign ?emp ?sign))
+     (currentlyTrue (lastActionSign ?emp ?sign)) ; bind ?emp here
+     (doesAction ?player ?act)
+     (uninferredSentence
+       (formulaArgument ?act 1 ?emp)))
+
+(<== (diachronicEmployeeNext ?emp (lastActionSign ?emp ?sign))
+     (currentlyTrue (lastActionSign ?emp ?sign)))
+       
+;;; We don't need tenure-in-position if we model competence via a recurrence relation.
+
+(<== (synchronicEmployeeNext ?emp (competenceAsymptote ?emp 1.0))
+     (doesAction ?player (doHRMHire ?emp ?pos)))
+
+(<== (synchronicEmployeeNext ?emp (competenceAsymptote ?emp 1.0))
+     (doesAction ?player (doHRMPromote ?emp)))
+
+(<== (synchronicEmployeeNext ?emp (competenceAsymptote ?emp ?asymptote))
+     (currentlyTrue (competenceAsymptote ?emp ?asymptote))
+     (uninferredSentence
+       (doesAction ?player (doHRMHire ?emp ?pos)))
+     (uninferredSentence
+       (doesAction ?player (doHRMPromote ?emp))))
+
+(<== (diachronicEmployeeNext ?emp (competenceAsymptote ?emp ?asymptote))
+     (currentlyTrue (competenceAsymptote ?emp ?old-asymptote))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (aptitude ?emp ?apt))))
+     (evaluate ?asymptote
+       (TimesFn ?old-asymptote
+         (QuotientFn 1
+           (ExponentFn 2
+             (QuotientFn ?apt 5))))))
+
+;;; Employee Attitude
+
+;;; This should change such that if perception of fairness changes or emp is put on probation,
+;;; it has an immediate effect on attitude.  That should suffice to trigger some events immediately.
+(<== (synchronicEmployeeNext ?emp (attitude ?emp ?att))
+     (doesAction ?player ?act)
+     (not (unifies ?act (doHRMHire ?emp ?pos)))
+     (different ?act (doHRMFire ?emp))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (qualityOfWorklife ?emp ?qwl)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (dissatisfactionWithPay ?emp ?swp)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (qualityOfSupervision ?emp ?qos)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (quantityOfWork ?emp ?qow)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (selfEsteem ?emp ?se)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (perceptionOfFairness ?emp ?pof)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (effectOfProbation ?emp ?eop)))
+     ;(currentlyTrue (externalFactors ?emp ?exf))
+     (evaluate ?raw-attitude 
+       (RoundFn 
+        (DifferenceFn (PlusAll (TheSet ?qwl ?qos ?se ?pof ?eop) IdentityFn) (PlusFn ?swp ?qow))))
+     (evaluate ?att
+       (MinimumFn (TheSet 100 ?raw-attitude) IdentityFn)))
+     
+(<== (synchronicEmployeeNext ?emp (attitude ?emp 100))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (diachronicEmployeeNext ?emp (attitude ?emp ?att))
+     (currentlyTrue (attitude ?emp ?att)))
+
+(<== (synchronicEmployeeNext ?emp (qualityOfWorklife ?emp ?qual))
+     (currentlyTrue (qualityOfWorklife ?emp ?qual)))
+     
+(<== (synchronicEmployeeNext ?emp (qualityOfWorklife ?emp 100))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (diachronicEmployeeNext ?emp (qualityOfWorklife ?emp ?qual))
+     (discrepancy ?emp ?disc)
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (educationLevel ?emp ?level))))
+     (evaluate ?qual          ; k1
+       (RoundFn 
+        (DifferenceFn 100
+         (TimesFn 10 
+                  (QuotientFn ?disc ?level))))))
+
+;;; total discrepancy is formal education deficiency + current skill discrepancy.
+(<== (discrepancy ?emp ?num)
+     (numAnswers 1 (skillDiscrepancy ?emp ?skd))
+     (currentlyTrue (position ?emp ?pos))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (requiredEducation ?pos ?redu))))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (educationLevel ?emp ?level))))
+     (evaluate ?edudiff 
+       (DifferenceFn ?redu ?level))
+     (evaluate ?num (PlusFn ?skd (MaximumFn (TheSet 0 ?edudiff) IdentityFn))))
+
+;;; This one is tricky, because training takes time and doesn't immediately
+;;; give you a skill.  We can't look at currentlyTrue for hasSkill, because
+;;; that's really last month's skillset.
+(<== (skillDiscrepancy ?emp ?num-req-skills)
+     (currentlyTrue (position ?emp ?pos))
+     (evaluate ?num-req-skills
+       (CardinalityFn 
+         (TheClosedRetrievalSetOf ?skill
+           (and (allFactsAllowed 
+                  (contextEnvAllowed 
+                    (cacheComplete (requiredSkill ?pos ?skill))))
+                (uninferredSentence
+                  (diachronicEmployeeNext ?emp (hasSkill ?emp ?skill))))))))
+
+
+;;; Expected Salary:
+
+(<== (synchronicEmployeeNext ?emp (expectedSalary ?emp ?expected-salary))
+     (currentlyTrue (expectedSalary ?emp ?expected-salary)))
+
+(<== (diachronicEmployeeNext ?emp (expectedSalary ?emp ?expected-salary))
+     (currentlyTrue (salary ?emp ?salary))
+     (currentlyTrue (expectedSalary ?emp ?old-expected-salary))
+     (currentlyTrue (position ?emp ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMinSalary ?position ?min))))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (ambition ?emp ?ambition))))
+     (evaluate ?raised-salary 
+       (RoundFn (PlusFn ?salary (TimesFn (QuotientFn ?ambition 1200) ?old-expected-salary))))
+     (evaluate ?expected-salary
+       (MaximumFn (TheSet ?old-expected-salary ?min ?raised-salary) IdentityFn))
+     )
+
+;;; Satisfaction With Pay:
+
+(<== (synchronicEmployeeNext ?emp (dissatisfactionWithPay ?emp ?quant))
+     (uninferredSentence (doesAction ?player (doHRMHire ?emp ?position)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (salary ?emp ?current-salary)))
+     (currentlyTrue (expectedSalary ?emp ?expected-salary))
+     (evaluate ?raw-satisfaction
+       (RoundFn 
+         (TimesFn 
+           500
+           (QuotientFn (DifferenceFn ?expected-salary ?current-salary)
+           ?current-salary))))
+     ;; If this is supposed to be between -1 and 0, we have a problem:
+     (evaluate ?quant
+               (MaximumFn (TheSet 0 ?raw-satisfaction) IdentityFn)))
+          
+(<== (synchronicEmployeeNext ?emp (dissatisfactionWithPay ?emp 0))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (diachronicEmployeeNext ?emp (dissatisfactionWithPay ?emp ?quant))
+     (currentlyTrue (dissatisfactionWithPay ?emp ?quant)))
+
+;;; Quality Of Supervision:
+
+;;; Quality of supervision takes recency and valence of supervisory actions
+;;; into account, along with employee dedication.
+(<== (synchronicEmployeeNext ?emp (qualityOfSupervision ?emp ?qos))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (lastAction ?emp 0)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (lastActionSign ?emp ?sign)))
+     (evaluate ?qos (TimesFn ?sign 10)))
+
+(<== (synchronicEmployeeNext ?emp (qualityOfSupervision ?emp ?qos))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (lastAction ?emp ?months)))
+     (greaterThan ?months 0)
+     (currentlyTrue (qualityOfSupervision ?emp ?qos)))
+
+;;; Only compute the decay at the start of each month:
+(<== (diachronicEmployeeNext ?emp (qualityOfSupervision ?emp ?qos))
+     (numAnswers 1 (diachronicEmployeeNext ?emp (tenure ?emp ?tenure)))
+     (numAnswers 1 (attentionDecay ?tenure ?root))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1  (dedication ?emp ?dedication))))
+     (numAnswers 1 (diachronicEmployeeNext ?emp (lastAction ?emp ?last-action)))
+     (numAnswers 1 (diachronicEmployeeNext ?emp (lastActionSign ?emp ?sign)))
+     (numAnswers 1 (qos ?root ?last-action ?sign ?dedication ?qos)))
+
+(<== (attentionDecay ?tenure 3.0)
+     (lessThan ?tenure 9))
+     
+(<== (attentionDecay ?tenure 6.0)
+     (greaterThan ?tenure 8)
+     (lessThan ?tenure 12))
+     
+(<== (attentionDecay ?tenure 12.0)
+     (greaterThanOrEqualTo ?tenure 12))
+
+;;; recent supervision - valence has a decaying effect:
+(<== (qos ?root ?last-action ?sign ?dedication ?qos)
+     (lessThan ?last-action ?root)
+     (evaluate ?qos
+       ;; ready?
+       (TimesFn
+         10 
+         ?sign 
+         (ExponentFn 
+           (QuotientFn 1 
+             (ExponentFn 2
+               (QuotientFn 3 ?dedication)))
+           ?last-action))))
+
+;;; neglect is bad.
+(<== (qos ?root ?last-action ?sign ?dedication ?qos)
+     (greaterThanOrEqualTo ?last-action 12)
+     (evaluate ?qos
+       (TimesFn -1
+         (QuotientFn
+           (ExponentFn (DifferenceFn ?last-action ?root) 2)
+           (TimesFn 10 ?dedication)))))
+
+;;; neutral effect - adequate supervision:
+(<== (qos ?root ?last-action ?sign ?dedication 0)
+     (greaterThanOrEqualTo ?last-action ?root)
+     (lessThan ?last-action 12))
+
+;;; Quantity Of Work:
+
+;;; Let overtime be automatic as a function of under-staffing.
+;;; quantityOfWork measures satisfaction with the amount of work.
+;;; It should track overtime as the employeeHours - 40.
+(<== (synchronicEmployeeNext ?emp (quantityOfWork ?emp ?qow))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (employmentHours ?emp ?hours)))
+     (currentlyTrue (quantityOfWork ?emp ?old-qow))
+     (evaluate ?raw-overtime (DifferenceFn ?hours 40))
+     (numAnswers 1 (scaledOvertime ?raw-overtime ?scaled-overtime))
+     (evaluate ?qow-factor (PlusFn ?old-qow ?scaled-overtime))
+     (evaluate ?qow (MaximumFn (TheSet 0 ?qow-factor) IdentityFn)))
+
+(<== (synchronicEmployeeNext ?emp (quantityOfWork ?emp 0))     
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+(<== (diachronicEmployeeNext ?emp (quantityOfWork ?emp ?qow))
+     (currentlyTrue (quantityOfWork ?emp ?qow)))
+
+;;; if no overtime, reduce resentment by 10 each turn:
+(<== (scaledOvertime ?overtime -10)
+     (lessThanOrEqualTo ?overtime 0))
+
+;;; if overtime, increase resentment by 2 x overtime hours each turn:
+(<== (scaledOvertime ?overtime ?sot)
+     (greaterThan ?overtime 0)
+     (evaluate ?sot (TimesFn ?overtime 2)))
+
+;;; Self Esteem:
+
+(<== (synchronicEmployeeNext ?emp (selfEsteem ?emp ?se))
+     (currentlyTrue (selfEsteem ?emp ?se)))
+
+(<== (synchronicEmployeeNext ?emp (selfEsteem ?emp 0))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+;;; Self-esteem is a negative integer or zero:
+(<== (diachronicEmployeeNext ?emp (selfEsteem ?emp ?se))
+     (slowImprovement ?emp)
+     (currentlyTrue (selfEsteem ?emp ?prior-se))
+     (evaluate ?se (DifferenceFn ?prior-se 10)))
+
+(<== (diachronicEmployeeNext ?emp (selfEsteem ?emp ?se))
+     (uninferredSentence
+       (slowImprovement ?emp))
+     (currentlyTrue (selfEsteem ?emp ?prior-se))
+     (evaluate ?raw-se
+       (PlusFn ?prior-se 10))
+     (evaluate ?se
+       (MinimumFn (TheSet 0 ?raw-se) IdentityFn)))
+
+(<== (slowImprovement ?emp)
+     (currentlyTrue (competence ?emp ?prior-comp))
+     (numAnswers 1
+       (diachronicEmployeeNext ?emp (competence ?emp ?comp)))
+     (lessThan ?comp 50)
+     (evaluate ?diff (DifferenceFn ?comp ?prior-comp))
+     (lessThan ?diff 5))  ; k5
+
+
+;(<== (lowCompetence ?comp ?prior-comp)
+;     (lessThan ?comp 50)
+;     (evaluate ?diff (DifferenceFn ?comp ?prior-comp))
+;     (lessThan ?diff 10))  ; k5
+
+;;; Perception Of Fairness:
+
+;;; Make POF change instantaneously, so we can learn the effects of bad actions.
+;;; This is really complex, because we have to take the hit right away, but 
+;;; the decay has to happen over time.
+(<== (synchronicEmployeeNext ?emp (perceptionOfFairness ?emp ?pof))
+     (uninferredSentence (doesAction ?player (doHRMHire ?emp ?pos)))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (existsUnfairAction ?emp)))  ; This has to be a state variable, but it doesn't have to persist across turns.
+     (currentlyTrue (perceptionOfFairness ?emp ?prior-pof))
+     (numAnswers 1 (synchronicEmployeeNext ?emp (position ?emp ?pos)))
+     (evaluate ?pof (DifferenceFn ?prior-pof 10)))  ; a 1-shot hit to POF shows up right away
+
+;;; No unfair action -> no synchronic change:
+(<== (synchronicEmployeeNext ?emp (perceptionOfFairness ?emp ?pof))
+     (uninferredSentence (doesAction ?player (doHRMHire ?emp ?pos)))
+     (uninferredSentence (synchronicEmployeeNext ?emp (existsUnfairAction ?emp)))
+     (currentlyTrue (perceptionOfFairness ?emp ?pof)))
+
+;;; Initial perception is neutral:
+(<== (synchronicEmployeeNext ?emp (perceptionOfFairness ?emp 0))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+;;; Perception Of Fairness is an effect on everybody.
+;;; Unfair actions have to leave their breadcrumbs around in the state
+;;; until you press the next turn button.  
+;;; Maybe instead of querying for each employee, we should have 
+;;; just record the unfair actions with the victims and
+;;; query their existence globally.  That's a problem with promotion, though.
+
+;;; If there was an unfair action last turn, then we already took the hit:
+(<== (diachronicEmployeeNext ?emp (perceptionOfFairness ?emp ?pof))
+     (currentlyTrue (existsUnfairAction ?emp))
+     (currentlyTrue (perceptionOfFairness ?emp ?pof)))
+
+;;; Otherwise it decays over time:
+(<== (diachronicEmployeeNext ?emp (perceptionOfFairness ?emp ?pof))
+     (currentlyTrue (perceptionOfFairness ?emp ?prior-pof))
+     (evaluate ?raw-pof (PlusFn ?prior-pof 10))
+     (evaluate ?pof
+       (MinimumFn (TheSet 0 ?raw-pof) IdentityFn)))
+
+;;; If there is an unfair action within a turn, it persists throughout the turn:
+(<== (synchronicEmployeeNext ?emp (existsUnfairAction ?emp))
+     (currentlyTrue (existsUnfairAction ?emp)))   ; persist (if already set)
+
+(<== (synchronicEmployeeNext ?emp (existsUnfairAction ?emp))
+     (uninferredSentence
+       (currentlyTrue (existsUnfairAction ?emp)))
+     (existsUnfairPromotion ?emp))               ; someone else was promoted ahead of ?emp
+
+(<== (existsUnfairPromotion ?emp)
+     (currentlyTrue (position ?emp ?pos))        ; verify ?emp is an employee in good standing
+     (doesAction ?player (doHRMPromote ?other-emp))
+     (different ?emp ?other-emp)
+     (currentlyTrue (tenure ?emp ?tenure))
+     (currentlyTrue (tenure ?other-emp ?other-tenure))
+     (lessThan ?other-tenure ?tenure)
+     (exceedsSalaryOrPosition ?other-emp ?emp))
+
+(<== (exceedsSalaryOrPosition ?emp1 ?emp2)
+     (currentlyTrue (salary ?emp1 ?salary1))
+     (currentlyTrue (salary ?emp2 ?salary2))
+     (greaterThan ?salary1 ?salary2))
+
+(<== (exceedsSalaryOrPosition ?emp1 ?emp2)
+     (currentlyTrue (position ?emp1 ?position1))
+     (currentlyTrue (position ?emp2 ?position2))
+     (positionExceeds ?position1 ?position2))
+
+(<== (synchronicEmployeeNext ?emp (existsUnfairAction ?emp))
+     (uninferredSentence
+       (currentlyTrue (existsUnfairAction ?emp)))
+     (existsUnfairTermination ?emp))             ; someone was terminated without cause
+
+(<== (existsUnfairTermination ?emp)
+     (doesAction ?player (doHRMFire ?victim))
+     (different ?victim ?emp)
+     (undeservingOfTermination ?victim))
+     
+(<== (undeservingOfTermination ?victim)
+     (currentlyTrue (tenure ?victim ?tenure))
+     (lessThan ?tenure 6))
+     
+(<== (undeservingOfTermination ?victim)
+     (currentlyTrue (performance ?victim ?performance))
+     (greaterThan ?performance 50))
+
+(<== (synchronicEmployeeNext ?emp (existsUnfairAction ?emp))
+     (uninferredSentence
+       (currentlyTrue (existsUnfairAction ?emp)))
+     (doesAction ?player (doHRMFire ?victim))
+     (different ?victim ?emp)
+     (currentlyTrue (status ?victim Employee))) ; someone wasn't given a chance
+
+(<== (synchronicEmployeeNext ?emp (effectOfProbation ?emp ?eop))
+     (currentlyTrue (effectOfProbation ?emp ?eop)))
+
+(<== (synchronicEmployeeNext ?emp (effectOfProbation ?emp 0))
+     (doesAction ?player (doHRMHire ?emp ?position)))
+
+;;; Probation has a positive effect for dedicated and ambitious workers
+;;; but a negative effect for others:
+
+(<== (diachronicEmployeeNext ?emp (effectOfProbation ?emp 0))
+     (currentlyTrue (status ?emp ?status))
+     (different ?status Probation))
+
+(<== (diachronicEmployeeNext ?emp (effectOfProbation ?emp ?eop))
+     (currentlyTrue (status ?emp Probation))
+     (dedication ?emp ?dedication)
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (ambition ?emp ?ambition))))
+     (probationMagnitude ?dedication ?ambition ?eop))
+
+(<== (probationMagnitude ?dedication ?ambition 10)
+     (greaterThan ?dedication 3)
+     (greaterThan ?ambition 3))
+
+(<== (probationMagnitude ?dedication ?ambition -10)
+     (lessThan ?dedication 4))
+
+(<== (probationMagnitude ?dedication ?ambition -10)
+     (lessThan ?ambition 4))
+     
+;;; Events are mostly mistakes players make:
+;;; We may want to have a tell handler to fire companions events
+;;; when a knowledge-level event happens.
+;;; Filter event polling through eventOccurs to simplify debugging:
+
+(<== (diachronicCompanyNext ?company ?event)
+     (eventOccurs ?company Bankruptcy-HRMEvent)
+     (unifies ?event (eventOccurs ?company Bankruptcy-HRMEvent)))
+     
+(<== (eventOccurs ?company Bankruptcy-HRMEvent)
+     (diachronicCompanyNext ?company (capital ?company ?cap))
+     (lessThanOrEqualTo ?cap 0))
+     
+
+(<== (diachronicEmployeeNext ?emp ?event)
+     (eventOccurs ?emp EmployeeQuits-HRMEvent)
+     (unifies ?event (eventOccurs ?emp EmployeeQuits-HRMEvent)))
+     
+(<== (eventOccurs ?emp EmployeeQuits-HRMEvent)
+     (currentlyTrue (attitude ?emp ?attitude))
+     (lessThan ?attitude 20))
+
+
+;;; This can't work diachronically. Need to leave a breadcrumb.
+(<== (synchronicEmployeeNext ?emp ?event)
+     (eventOccurs ?emp ImproperTerminationLawsuit-HRMEvent)
+     (unifies ?event (eventOccurs ?emp ImproperTerminationLawsuit-HRMEvent)))
+
+;;; Not following procedures to place employee on probation before firing them:
+(<== (eventOccurs ?emp ImproperTerminationLawsuit-HRMEvent)
+     (doesAction ?player (doHRMFire ?emp))       ; don't care who the player is
+     (uninferredSentence
+       (currentlyTrue (status ?emp Probation)))) ; employee was not on probation
+     
+(<== (diachronicEmployeeNext ?emp ?event)
+     (eventOccurs ?emp OverpayingNotice-HRMEvent)
+     (unifies ?event (eventOccurs ?emp OverpayingNotice-HRMEvent)))
+     
+(<== (eventOccurs ?emp OverpayingNotice-HRMEvent)
+     (currentlyTrue (salary ?emp ?salary))
+     (actualWorth ?emp ?worth)
+     (evaluate ?frac (QuotientFn (DifferenceFn ?salary ?worth) ?worth))
+     (greaterThan ?frac 0.1))
+
+(<== (actualWorth ?emp ?worth)
+     (doesAction ?player (doNextTurn))
+     (currentlyTrue (position ?emp ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMinSalary ?position ?min))))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMaxSalary ?position ?max))))
+     (currentlyTrue (performance ?emp ?performance))
+     ;; minimum salary + salary range scaled by performance percentage:
+     (evaluate ?worth
+       (PlusFn ?min (TimesFn (QuotientFn ?performance 100) (DifferenceFn ?max ?min)))))
+
+(<== (diachronicEmployeeNext ?emp ?event)
+     (eventOccurs ?emp UndertrainingEvent-HRMEvent)
+     (unifies ?event (eventOccurs ?emp UndertrainingEvent-HRMEvent)))
+     
+(<== (eventOccurs ?emp UndertrainingEvent-HRMEvent)
+     (currentlyTrue (status ?emp Employee))
+     (currentlyTrue (tenure ?emp ?tenure))
+     (greaterThan ?tenure 6)
+     (currentlyTrue (competence ?emp ?comp))
+     (lessThan ?comp 50)
+     (skillDiscrepancy ?emp ?skd)
+     (greaterThan ?skd 0))
+
+(<== (synchronicEmployeeNext ?emp ?event)
+     (eventOccurs ?emp OvertrainingEvent-HRMEvent)
+     (unifies ?event (eventOccurs ?emp OvertrainingEvent-HRMEvent)))
+
+(<== (eventOccurs ?emp OvertrainingEvent-HRMEvent)  ; training for skills the emp already has
+     (doesAction ?player (doHRMTrain ?emp ?course))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (teachesSkill ?course ?skill))))
+     (currentlyTrue (hasSkill ?emp ?skill)))
+
+;;; ------------------------------------------------------------------------------------------
+
+;;; Company Model Rules
+;;; Since there are no company level actions, all company model rules
+;;; are simple summarizations, rather than next rules.  Nothing 
+;;; depends on prior turn's company rolllup. (except for capital?)
+;;;
+
+(<== (diachronicNext ?stmt)
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (companyName ?company ?name)))   ; just bind ?company to the only named company in the game.
+     (diachronicCompanyNext ?company ?stmt))
+
+(<== (synchronicNext ?stmt)
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (companyName ?company ?name)))
+     (synchronicCompanyNext ?company ?stmt))
+
+;;; We don't model capital expenses, so all changes to capital are diachronic:
+(<== (synchronicCompanyNext ?company (capital ?company ?cap))
+     (currentlyTrue (capital ?company ?cap)))
+
+(<== (diachronicCompanyNext ?company (capital ?company ?cap))
+     (currentlyTrue (capital ?company ?old-cap))
+     (currentlyTrue (profit ?company ?profits))
+     (evaluate ?unclipped-cap (PlusFn ?old-cap ?profits))
+     (evaluate ?cap (MaximumFn (TheSet 0 ?unclipped-cap) IdentityFn))) ; don't go negative, just to simplify termination check.
+
+;;; Profits are the difference between income and cost.
+;;; Profitability is the ratio
+(<== (synchronicCompanyNext ?company (profitability ?company ?profitability))
+     (currentlyTrue (profitability ?company ?profitability)))
+
+(<== (diachronicCompanyNext ?company (profitability ?company ?profitability))
+     (currentlyTrue (income ?company ?income))
+     (currentlyTrue (productionCost ?company ?cost))
+     (greaterThan ?cost 0)
+     (evaluate ?profitability (QuotientFn ?income ?cost)))
+     
+(<== (synchronicCompanyNext ?company (profit ?company ?profits))
+     (numAnswers 1 (synchronicCompanyNext ?company (income ?company ?income)))
+     (numAnswers 1 (synchronicCompanyNext ?company (productionCost ?company ?cost)))
+     (evaluate ?profits (DifferenceFn ?income ?cost)))
+
+(<== (diachronicCompanyNext ?company (profit ?company ?profits))
+     (currentlyTrue (income ?company ?income))
+     (currentlyTrue (productionCost ?company ?cost))
+     (evaluate ?profits (DifferenceFn ?income ?cost)))
+
+;;; Production is the value of goods produced in a month
+(<== (synchronicCompanyNext ?company (income ?company ?income))
+     (production ?company ?prod)
+     (marketFactors ?company ?mkt)  ; =1 for now,
+     (evaluate ?income (TimesFn ?prod ?mkt)))
+     
+(<== (diachronicCompanyNext ?company (income ?company ?income))
+     (currentlyTrue (income ?company ?income)))
+
+;;; Can't have a raw set of numbers, in case there are duplicates:
+;;; This must be called synchronically.
+(<== (production ?company ?production)
+     (evaluate ?production
+       (RoundFn 
+         (PlusAll
+           (TheClosedRetrievalSetOf (employeeProduction ?emp ?prod) (employeeProduction ?emp ?prod))
+           Arg2Fn))))
+
+;;; Employee Production:
+(<== (employeeProduction ?emp ?prod)
+     (synchronicEmployeeNext ?emp (position ?emp ?position))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMaxSalary ?position ?max))))
+     (allFactsAllowed 
+       (contextEnvAllowed
+         (numAnswers 1 (positionMinSalary ?position ?min))))
+     ;; by now, ?emp better be bound.
+     (numAnswers 1 (synchronicEmployeeNext ?emp (performance ?emp ?perf)))
+     (evaluate ?prod
+       (PlusFn 3000                               ; constant fudge factor
+         (TimesFn
+           (QuotientFn ?perf 100)                 ; fractional effectiveness
+           (QuotientFn (PlusFn ?max ?min) 24))))) ; ie, midpoint annual salary / 12 months
+
+(<== (marketFactors ?company 1.75))  ; for future refinement
+
+(<== (synchronicCompanyNext ?company (productionCost ?company ?cost))
+     (numAnswers 1 (fixedCosts ?company ?fixed))
+     (numAnswers 1 (laborCosts ?company ?labor))
+     (evaluate ?cost (PlusFn ?fixed ?labor)))
+
+(<== (diachronicCompanyNext ?company (productionCost ?company ?cost))
+     (currentlyTrue (productionCost ?company ?cost)))
+     
+(<== (fixedCosts ?company 20000))  ; for now, a constant. $20,000/month
+
+(<== (laborCosts ?company ?labor)
+     (numAnswers 1 (payrollCost ?company ?payroll))
+     (numAnswers 1 (trainingCost ?company ?training))
+     (evaluate ?labor (PlusFn ?payroll ?training)))
+
+(<== (payrollCost ?company ?payroll)
+     (evaluate ?payroll
+       (PlusAll
+         ;; We retrieve entire formulae here because different employees could have the
+         ;; same salary, which would be omitted because this produces a set.
+         ;; By retaining the employee, every employee is counted.  The Arg2Fn
+         ;; extracts the numeric argument to add.
+         (TheClosedRetrievalSetOf (salary ?emp ?salary)
+           (monthlySalary ?emp ?salary))
+         Arg2Fn)))
+
+;;; ToDo: add in 1.5 * overtime hours
+(<== (monthlySalary ?emp ?salary)
+     (synchronicEmployeeNext ?emp (salary ?emp ?annualSalary))
+     (evaluate ?salary (RoundFn (QuotientFn ?annualSalary 12))))
+
+;;; Sum over all courses being taken this month:
+(<== (trainingCost ?company ?training-cost)
+     (evaluate ?training-cost
+       (PlusAll
+         (TheClosedRetrievalSetOf (?emp ?t-cost)
+           (and (synchronicEmployeeNext ?emp  (training ?emp ?course))
+                (allFactsAllowed 
+                  (contextEnvAllowed
+                    (numAnswers 1 (courseCost ?course ?t-cost))))))
+        Arg1Fn)))
+
+(<== (synchronicCompanyNext ?company (productivity ?company ?productivity))
+     (numAnswers 1 (production ?company ?production))
+     (numAnswers 1 (laborCosts ?company ?labor-costs))
+     (greaterThan ?labor-costs 0)
+     (evaluate ?raw-productivity
+       (TimesFn 11.28    ; k12
+                (QuotientFn ?production ?labor-costs)))
+     ;; clip to range 0-100:
+     (evaluate ?max-prod
+       (MinimumFn (TheSet 100 ?raw-productivity) IdentityFn))
+     (evaluate ?productivity
+       (MaximumFn (TheSet 0 ?max-prod) IdentityFn)))
+
+
+;;; This doesn't seem right. If we fire or promote people, don't we want that 
+;;; reflected immediately?  No maybe not.
+(<== (diachronicCompanyNext ?company (productivity ?company ?productivity))
+     (numAnswers 1 (currentlyTrue (productivity ?company ?productivity))))
+
+;;; Morale is the average attitude of all employees:
+;;; *** Probably needs to accumulate the synchronic attitude of employees.
+(<== (synchronicCompanyNext ?company (morale ?company ?morale))
+     (evaluate ?morale
+       (RoundFn
+         (Average
+           (TheClosedRetrievalSetOf (attitude ?emp ?attitude) (synchronicEmployeeNext ?emp (attitude ?emp ?attitude)))
+           Arg2Fn))))
+
+(<== (diachronicCompanyNext ?company (morale ?company ?morale))
+     (numAnswers 1 (currentlyTrue (morale ?company ?morale))))
+
+;;; Helper for type-level influence relations:
+;(<== (employees McFeePress ?who)  ; there's only one company in the game
+;     (groundExpression ?who)
+;     (isa ?who HRMCharacter))  
+
+;;; Is this called synchronically?  Can't if ?who is unbound.
+(<== (employees McFeePress ?who)
+;     (variableExpression ?who)
+     (currentlyTrue (position ?who ?pos)))  ; enumerate current employees
+
+;;; Initial State:
+
+#||
+;;; Start with a roster:
+(isa WendyWinner HRMCharacter)
+(employeeName WendyWinner "Wendy Winner")
+(employeeAge WendyWinner 24)
+(init (status WendyWinner Employee))
+(init (position WendyWinner Trainee))
+(init (employmentHours WendyWinner 40))
+(init (tenure WendyWinner 1))        ; months at company
+(init (performance WendyWinner 50))  ; arbitrary
+(init (salary WendyWinner 15000))
+(init (expectedSalary WendyWinner 15000))
+(init (competence WendyWinner 50))
+(init (priorCompetence WendyWinner 50))
+(init (competenceAsymptote WendyWinner 1.0))
+(init (attitude WendyWinner 50))
+(init (qualityOfWorklife WendyWinner 75))
+(init (dissatisfactionWithPay WendyWinner 0))  ; 0 = nominal
+(init (qualityOfSupervision WendyWinner 0)) ; 0 = neutral
+(init (perceptionOfFairness WendyWinner 0))
+(init (quantityOfWork WendyWinner 50))
+(init (selfEsteem WendyWinner 0))
+(init (effectOfProbation WendyWinner 0))
+(init (lastAction WendyWinner 0))
+(init (lastActionSign WendyWinner 1))
+(ambition WendyWinner 3)             ; 1 = total loss, 5 = fast-tracker
+(dedication WendyWinner 3)           ; 1 = lazy, 5 = entusiastic
+(aptitude WendyWinner 3)             ; 1 = dull, 5 = brilliant
+(educationLevel WendyWinner 5)       ; BachelorsDegree
+
+(isa LarryLoser HRMCharacter)
+(employeeName LarryLoser "Larry Loser")
+(employeeAge LarryLoser 28)
+(init (status LarryLoser Employee))
+(init (position LarryLoser PressOperator))
+(init (employmentHours LarryLoser 40))
+(init (hasSkill LarryLoser McFeePressOperation))
+(init (tenure LarryLoser 3))
+(init (performance LarryLoser 50))  ; arbitrary
+(init (salary LarryLoser 22000))
+(init (expectedSalary LarryLoser 25000))
+(init (competence LarryLoser 50))
+(init (priorCompetence LarryLoser 50))
+(init (competenceAsymptote LarryLoser 1.0))
+(init (attitude LarryLoser 50))
+(init (qualityOfWorklife LarryLoser 30))
+(init (dissatisfactionWithPay LarryLoser 0))
+(init (qualityOfSupervision LarryLoser 0))
+(init (perceptionOfFairness LarryLoser 0))
+(init (quantityOfWork LarryLoser 50))
+(init (selfEsteem LarryLoser 0))
+(init (effectOfProbation LarryLoser 0))
+(init (lastAction LarryLoser 0))
+(init (lastActionSign LarryLoser 1))
+(ambition LarryLoser 3)
+(dedication LarryLoser 3)
+(aptitude LarryLoser 3)
+(educationLevel LarryLoser 1) ; GED
+
+(isa NerdyNed HRMCharacter)
+(employeeName NerdyNed "Nerdy Ned")
+(employeeAge NerdyNed 30)
+(init (status NerdyNed Employee))
+(init (position NerdyNed SrPressOperator))
+(init (employmentHours NerdyNed 40))
+(init (hasSkill NerdyNed McFeePressOperation))
+(init (tenure NerdyNed 6))
+(init (performance NerdyNed 50))
+(init (salary NerdyNed 36000))
+(init (expectedSalary NerdyNed 35000))
+(init (competence NerdyNed 50))
+(init (priorCompetence NerdyNed 50))
+(init (competenceAsymptote NerdyNed 1.0))
+(init (attitude NerdyNed 50))
+(init (qualityOfWorklife NerdyNed 50))
+(init (dissatisfactionWithPay NerdyNed 0))
+(init (qualityOfSupervision NerdyNed 0))
+(init (perceptionOfFairness NerdyNed 0))
+(init (quantityOfWork NerdyNed 50))
+(init (selfEsteem NerdyNed 0))
+(init (effectOfProbation NerdyNed 0))
+(init (lastAction NerdyNed 0))
+(init (lastActionSign NerdyNed 1))
+(ambition NerdyNed 3)
+(dedication NerdyNed 3)
+(aptitude NerdyNed 3)
+(educationLevel NerdyNed 2) ; HighSchoolDiploma
+
+(isa CleptoCarl HRMCharacter)
+(employeeName CleptoCarl "Clepto Carl")
+(employeeAge CleptoCarl 33)
+(init (status CleptoCarl Employee))
+(init (position CleptoCarl LineSupervisor))
+(init (employmentHours CleptoCarl 40))
+(init (hasSkill CleptoCarl McFeePressOperation))
+(init (hasSkill CleptoCarl SupervisorySkills))
+(init (tenure CleptoCarl 24))
+(init (performance CleptoCarl 50))
+(init (salary CleptoCarl 42000))
+(init (expectedSalary CleptoCarl 45000))
+(init (competence CleptoCarl 50))
+(init (priorCompetence CleptoCarl 50))
+(init (competenceAsymptote CleptoCarl 1.0))
+(init (attitude CleptoCarl 50))
+(init (qualityOfWorklife CleptoCarl 60))
+(init (dissatisfactionWithPay CleptoCarl 0))
+(init (qualityOfSupervision CleptoCarl 0))
+(init (perceptionOfFairness CleptoCarl 0))
+(init (quantityOfWork CleptoCarl 50))
+(init (selfEsteem CleptoCarl 0))
+(init (effectOfProbation CleptoCarl 0))
+(init (lastAction CleptoCarl 0))
+(init (lastActionSign CleptoCarl 1))
+(ambition CleptoCarl 3)
+(dedication CleptoCarl 3)
+(aptitude CleptoCarl 3)
+(educationLevel CleptoCarl 4) ; TwoYearsCollege
+
+(isa GeniusGus HRMCharacter)
+(employeeName GeniusGus "Genius Gus")
+(employeeAge GeniusGus 38)
+(init (status GeniusGus Employee))
+(init (position GeniusGus ShiftSupervisor))
+(init (employmentHours GeniusGus 40))
+(init (hasSkill GeniusGus SupervisorySkills))
+(init (tenure GeniusGus 48))
+(init (performance GeniusGus 50))
+(init (salary GeniusGus 70000))
+(init (expectedSalary GeniusGus 70000))
+(init (competence GeniusGus 75))
+(init (priorCompetence GeniusGus 75))
+(init (competenceAsymptote GeniusGus 1.0))
+(init (attitude GeniusGus 50))
+(init (qualityOfWorklife GeniusGus 60))
+(init (dissatisfactionWithPay GeniusGus 0))
+(init (qualityOfSupervision GeniusGus 0))
+(init (perceptionOfFairness GeniusGus 0))
+(init (quantityOfWork GeniusGus 50))
+(init (selfEsteem GeniusGus 0))
+(init (effectOfProbation GeniusGus 0))
+(init (lastAction GeniusGus 0))
+(init (lastActionSign GeniusGus 1))
+(ambition GeniusGus 3)
+(dedication GeniusGus 3)
+(aptitude GeniusGus 3)
+(educationLevel GeniusGus 5) ; BachelorsDegree
+
+(isa GuruBob HRMCharacter)
+(employeeName GuruBob "Guru Bob")
+(employeeAge GuruBob 52)
+(init (status GuruBob Employee))
+(init (position GuruBob Manager))
+(init (employmentHours GuruBob 40))
+(init (hasSkill GuruBob SupervisorySkills))
+(init (hasSkill GuruBob ComplianceKnowledge))
+(init (tenure GuruBob 120))
+(init (performance GuruBob 50))
+(init (salary GuruBob 85000))
+(init (expectedSalary GuruBob 85000))
+(init (competence GuruBob 85))
+(init (priorCompetence GuruBob 85))
+(init (competenceAsymptote GuruBob 1.0))
+(init (attitude GuruBob 50))
+(init (qualityOfWorklife GuruBob 80))
+(init (dissatisfactionWithPay GuruBob 0))
+(init (qualityOfSupervision GuruBob 0))
+(init (perceptionOfFairness GuruBob 0))
+(init (quantityOfWork GuruBob 50))
+(init (selfEsteem GuruBob 0))
+(init (effectOfProbation GuruBob 0))
+(init (lastAction GuruBob 0))
+(init (lastActionSign GuruBob 1))
+(ambition GuruBob 3)
+(dedication GuruBob 3)
+(aptitude GuruBob 3)
+(educationLevel GuruBob 5) ; BachelorsDegree
+
+||#
+
+(isa AmbitiousAlice HRMCharacter)
+(employeeName AmbitiousAlice "Ambitious Alice")
+(employeeAge AmbitiousAlice 26)
+(init (status AmbitiousAlice Applicant))
+(init (expectedSalary AmbitiousAlice 30000))
+(ambition AmbitiousAlice 5)
+(dedication AmbitiousAlice 5)
+(aptitude AmbitiousAlice 4)
+(educationLevel AmbitiousAlice 4) ; TwoYearsCollege
+
+(isa BillyBadSeed HRMCharacter)
+(employeeName BillyBadSeed "Billy BadSeed")
+(employeeAge BillyBadSeed 22)
+(init (status BillyBadSeed Applicant))
+(init (expectedSalary BillyBadSeed 25000))
+(ambition BillyBadSeed 2)
+(dedication BillyBadSeed 1)
+(aptitude BillyBadSeed 2)
+(educationLevel BillyBadSeed 3) ; TechCertificate
+
+
+
+(isa BillBixby HRMCharacter)
+(employeeName BillBixby "Bill Bixby")
+(init (status BillBixby Employee))
+(init (position BillBixby PressOperator))
+(init (employmentHours BillBixby 40))
+(init (salary BillBixby 22000))
+(init (expectedSalary BillBixby 22000))
+(init (competence BillBixby 33))
+(init (priorCompetence BillBixby 33))
+(init (competenceAsymptote BillBixby 1.0))
+(init (attitude BillBixby 100))
+(init (qualityOfWorklife BillBixby 100))
+(init (dissatisfactionWithPay BillBixby 0))
+(init (qualityOfSupervision BillBixby 0))
+(init (perceptionOfFairness BillBixby 0))
+(init (quantityOfWork BillBixby 0))
+(init (selfEsteem BillBixby 0))
+(init (effectOfProbation BillBixby 0))
+(init (lastAction BillBixby 0))
+(init (lastActionSign BillBixby 1))
+(init (performance BillBixby 40))
+(init (tenure BillBixby 10))
+(dedication BillBixby 3)
+(aptitude BillBixby 5)
+(ambition BillBixby 5)
+(educationLevel BillBixby 1) ; GED  (-1 formal edu)
+; discrepancy should be 2 (missing skills?)
+; cmax = 84.34
+; cmin = 33.34
+; performance = avrg(33, 100) * 3/5 = 40
+; employeeProduction = 5084
+
+
+(isa SylviaNasar HRMCharacter)
+(employeeName SylviaNasar "Sylvia Nasar")
+(init (status SylviaNasar Employee))
+(init (position SylviaNasar LineSupervisor))
+(init (employmentHours SylviaNasar 40))
+(init (salary SylviaNasar 38000))
+(init (expectedSalary SylviaNasar 38000))
+(init (competence SylviaNasar 39))
+(init (priorCompetence SylviaNasar 39))
+(init (competenceAsymptote SylviaNasar 1.0))
+(init (attitude SylviaNasar 98))
+(init (qualityOfWorklife SylviaNasar 100))
+(init (dissatisfactionWithPay SylviaNasar 0))
+(init (qualityOfSupervision SylviaNasar 0))
+(init (perceptionOfFairness SylviaNasar 0))
+(init (quantityOfWork SylviaNasar 0))
+(init (selfEsteem SylviaNasar 0))
+(init (effectOfProbation SylviaNasar 0))
+(init (lastAction SylviaNasar 0))
+(init (lastActionSign SylviaNasar 1))
+(init (performance SylviaNasar 41))
+(init (tenure SylviaNasar 20))
+(dedication SylviaNasar 3)
+(aptitude SylviaNasar 5)
+(ambition SylviaNasar 5)
+(educationLevel SylviaNasar 3) ; TechCertificate (-1 formal edu)
+; discrepancy should be 3 (missing skills?)
+; cmax = 89.29
+; cmin = 39.29
+; performance = avrg(39, 98) * 3/5 = 41
+; employeeProduction = 8209
+
+(isa BenjaminJoravsky HRMCharacter)
+(employeeName BenjaminJoravsky "Benjamin Joravsky")
+(init (status BenjaminJoravsky Employee))
+(init (position BenjaminJoravsky Manager))
+(init (employmentHours BenjaminJoravsky 40))
+(init (salary BenjaminJoravsky 70000))
+(init (expectedSalary BenjaminJoravsky 75000))
+(init (competence BenjaminJoravsky 42))
+(init (priorCompetence BenjaminJoravsky 42))
+(init (competenceAsymptote BenjaminJoravsky 1.0))
+(init (attitude BenjaminJoravsky 100))
+(init (hasSkill BenjaminJoravsky SupervisorySkills))
+(init (qualityOfWorklife BenjaminJoravsky 100))
+(init (dissatisfactionWithPay BenjaminJoravsky 0))
+(init (qualityOfSupervision BenjaminJoravsky 0))   ; nominal
+(init (perceptionOfFairness BenjaminJoravsky 0))
+(init (quantityOfWork BenjaminJoravsky 0))         ; nominal
+(init (selfEsteem BenjaminJoravsky 0))             ; nominal
+(init (effectOfProbation BenjaminJoravsky 0))
+(init (lastAction BenjaminJoravsky 0))
+(init (lastActionSign BenjaminJoravsky 1))
+(init (performance BenjaminJoravsky 71))
+(init (tenure BenjaminJoravsky 24))
+(dedication BenjaminJoravsky 5)
+(aptitude BenjaminJoravsky 5)
+(ambition BenjaminJoravsky 5)
+(educationLevel BenjaminJoravsky 4) ; TwoYearsCollege (-1 formal edu)
+; discrepancy should be 2 (missing skills?)
+; cmax = 92.32
+; cmin = 42.42
+; performance = avrg(42, 100) * 5/5 * 1 = 71
+; employeeProduction = 9667
+
+
+;;; Company:
+(isa McFeePress HRMCompany)
+(companyName McFeePress "McFee Press")
+(init (morale McFeePress 99))       ; average of attitudes
+(init (productivity McFeePress 28)) ; 11.28 * (production / labor-costs)
+(init (profit McFeePress 10209.854))  ; income - productionCost (ie, sum emp production - (sum monthly salaries + 3500))
+(init (productionCost McFeePress 29250))
+(init (income McFeePress 22960))
+(init (capital McFeePress 100000))  ; venture funding?
+(init (turn 1))                     ; Should this be handled via the agents' turn slot?
+(init (step 1))
+
+
+
+;;; Course Instances:
+
+(isa OperatingMcFeePresses TrainingCourse)
+(courseName OperatingMcFeePresses "McFee Press Operation")
+(courseHours OperatingMcFeePresses 20)
+(courseCost OperatingMcFeePresses 4000)
+(courseDescription OperatingMcFeePresses "Teaches basics of operating the McFee Printing Press")
+(teachesSkill OperatingMcFeePresses McFeePressOperation) 
+
+(isa BasicManagement TrainingCourse)
+(courseName BasicManagement "Basic Management")
+(courseHours BasicManagement 10)
+(courseCost BasicManagement 2000)
+(courseDescription BasicManagement "Teaches the basics of management.")
+(teachesSkill BasicManagement SupervisorySkills)
+
+(isa RegulatoryTraining TrainingCourse)
+(courseName RegulatoryTraining "Regulations and Compliance")
+(courseHours RegulatoryTraining 20)
+(courseCost RegulatoryTraining 3000)
+(courseDescription RegulatoryTraining "Teaches legal aspects of regulations and compliance.")
+(teachesSkill RegulatoryTraining ComplianceKnowledge)
+
+
+    
+#||
+
+(setupSimpleGameExecutionContext HRM Tom)
+(applyGameAction Tom (doHRMEvaluate SylivaNasar) HRM79)
+(applyGameAction Tom (doNextTurn) HRM79)
+
+
+(startAutonomousPlay HRM79) 
+
+||#

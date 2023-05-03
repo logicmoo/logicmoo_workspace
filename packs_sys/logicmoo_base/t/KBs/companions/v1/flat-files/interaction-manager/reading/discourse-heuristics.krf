@@ -1,0 +1,249 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: discourse-heuristics
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: September 5, 2010 16:02:22
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(in-microtheory LbrDisambiguationMt)
+(heuristicUsesPlan 
+ (smeAlignmentSuggestions ?reading-to-compare-to ?mt-of-reading-to-compare-to) 
+ (smeAlignmentSuggestionsPlan ?mt-of-reading-to-compare-to ?source-text-mt ?source-text-name ?reading-to-compare-to ?reading-name))
+
+;;;(heuristicUsesPlan 
+;;; (infoGainSuggestions) 
+;;; (infoGainSuggestionsPlan SOURCE-TEXT-MT SOURCE-TEXT-NAME CURRENT-READING))
+(heuristicUsesPlan 
+ (infoGainSuggestions) 
+ (infoGainSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (supportedReferenceSuggestions ?target-mt)
+ (supportedReferenceSuggestionsPlan ?target-mt ?source-text-mt ?source-text-name ?current-reading))
+
+(heuristicUsesPlan 
+ (preferPossessionSuggestions) 
+ (preferPossessionSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (preferVerbPreps) 
+ (preferVerbPrepsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (dispreferGapSuggestions) 
+ (dispreferGapSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (preferEarlierDictionarySenseSuggestions) 
+ (preferEarlierDictionarySenseSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (dispreferDenotationSuggestions) 
+ (dispreferDenotationSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (dispreferIntroducedVarSuggestions) 
+ (dispreferIntroducedVarSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (cycCanonSuggestions) 
+ (cycCanonSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (preferMWSSuggestions) 
+ (preferMWSSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+
+(heuristicUsesPlan 
+ (argIsaViolatorSuggestions) 
+ (argIsaViolatorSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan
+ (commonsenseSuggestions)
+ (commonsenseSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan
+ (nothingEvenVaguelySexual)
+ (nothingEvenVaguelySexualPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (argIsaSupporterSuggestions) 
+ (argIsaSupporterSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (argIsaViolatedSuggestions) 
+ (argIsaViolatedSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+
+
+(heuristicUsesPlan 
+ (argIsaSupportedSuggestions) 
+ (argIsaSupportedSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan
+  (favoredContextSuggestions ?favored-mt)
+  (favoredContextSuggestionsPlan ?favored-mt
+                                 ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (favorPredsInContextSuggestions ?favored-mt) 
+ (favorPredsInContextSuggestionsPlan ?favored-mt ?source-text-mt 
+                                     ?source-text-name ?reading-name))
+
+;;;(heuristicUsesPlan
+;;;  (analogicalRecallSuggestions ?favored-mt ?stub-mt)
+;;;  (analogicalRecallSuggestionsPlan ?favored-mt
+;;;                                   SOURCE-TEXT-MT SOURCE-TEXT-NAME CURRENT-READING ?stub-mt))
+;;;
+;;;(heuristicUsesPlan
+;;;  (analogicalRecallGenContextSuggestions ?gen-context-family ?stub-mt)
+;;;  (analogicalRecallGenContextSuggestionsPlan ?gen-context-family
+;;;    SOURCE-TEXT-MT SOURCE-TEXT-NAME CURRENT-READING ?stub-mt))
+
+(heuristicUsesPlan
+  (analogicalRecallSuggestions ?favored-mt ?stub-mt)
+  (analogicalRecallSuggestionsPlan ?favored-mt
+                                   ?source-text-mt ?source-text-name ?reading-name ?stub-mt))
+
+(heuristicUsesPlan
+  (analogicalRecallGenContextSuggestions ?gen-context-family ?stub-mt)
+  (analogicalRecallGenContextSuggestionsPlan ?gen-context-family
+    ?source-text-mt ?source-text-name ?reading-name ?stub-mt))
+
+(heuristicUsesPlan
+  (analogicalRecallParsingGenContextSuggestions ?case-library ?stub-mt)
+  (analogicalRecallParsingGenContextSuggestionsPlan ?case-library
+    ?source-text-mt ?source-text-name ?reading-name ?stub-mt))
+
+
+(heuristicUsesPlan
+  (mostPopularInFamilySuggestions ?gen-context-family)
+  (mostPopularInFamilySuggestionsPlan ?gen-context-family
+                                      ?source-text-mt ?source-text-name ?reading-name))
+
+(heuristicUsesPlan 
+ (selectedMentionsInCurrentReadingSuggestions) 
+ (selectedMentionsInCurrentReadingSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name ?sentence-id))
+
+
+;; (favorMentionsInSentenceSuggestionsPlan)
+(heuristicUsesPlan
+ (favorMentionsInSentenceSuggestions)
+ (favorMentionsInSentenceSuggestionsPlan ?source-text-mt ?source-text-name ?reading-name))
+
+
+;;;(favoredContextSuggestionsPlan ?favored-mt ?storage-mt ?source-text ?current-reading)
+
+(typeOfHeuristic smeAlignmentSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa smeAlignmentSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa smeAlignmentSuggestions Predicate)
+(arity smeAlignmentSuggestions 0)
+(comment smeAlignmentSuggestions "(smeAlignmentSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions for ?source-text based on previously selected choices, as stored in ?mt.
+ This is useful for, for example, disambiguating a sentence that was disambiguated earlier.
+ The suggestions are put into ?storage-mt with the reasons preserved.")
+
+
+;;; ***** Please move tests like these out of mainline files
+;;; ***** and into files that can be loaded seperately.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;(in-microtheory CrabSeesShroomDisambiguationMt)
+;;;
+;;;(smeAlignmentSuggestions ManualReading-0905-1741 CrabSeesShroomMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;;;(in-microtheory DogSeesCatDisambiguationMt)
+;;;
+;;;(smeAlignmentSuggestions ManualReading-0907-1245 DogSeesCatMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;;;(in-microtheory SUSD10DisambiguationMt)
+;;;
+;;;;;;(smeAlignmentSuggestions SUSD-10-GoldStandardReading SUSD10Mt)
+;;;(infoGainSuggestions)
+;;;(argIsaViolatorSuggestions)
+;;;(argIsaSupporterSuggestions)
+;;;(argIsaViolatedSuggestions)
+;;;(argIsaSupportedSuggestions)
+;;;;;;;;;;;;;;;;;;;;;;
+;;;(in-microtheory SUSD10FullDisambiguationMt)
+;;;
+;;;(smeAlignmentSuggestions SUSD-10-GoldStandardReading SUSD10FullMt)
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;(in-microtheory GBW-Page08DisambiguationMt)
+;;;
+;;;(smeAlignmentSuggestions GBW-Page08-GoldStandardReading GBW-Page08Mt)
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;(in-microtheory GBW08-FragmentDisambiguationMt)
+;;;
+;;;(smeAlignmentSuggestions GBW08-Fragment-GoldStandardReading GBW08-FragmentMt)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;(in-microtheory SUSDAnalogicalOnlyDisambiguationMt)
+;;;
+;;;(analogicalRecallSuggestions SUSDCaseLibe-Aug-2011 All-AD-CircumstancesMt)
+;;;
+;;;
+;;;(in-microtheory SUSDAug11AnalogicalOnlyDisambiguationMt)
+;;;(analogicalRecallSuggestions SUSDCaseLibe-Aug-2011 All-AD-CircumstancesMt)
+;;;
+;;;(in-microtheory SUSDSept2011AnalogicalGenContextOnlyDisambiguationMt)
+;;;(analogicalRecallGenContextSuggestions SUSDGenContextFamily-Sept-2011-01 All-AD-CircumstancesMt)
+;;;
+;;;(in-microtheory SUSDSept2011AnalogicalGenContextOnlySplitDisambiguationMt)
+;;;(analogicalRecallGenContextSuggestions SUSDCaseLibe-Family-Sept-2011-06 All-AD-CircumstancesMt)
+;;;
+;;;(in-microtheory SUSDOct2011AnalogicalGenContextOnlySplitDisambiguationMt)
+;;;(analogicalRecallGenContextSuggestions SUSDCaseLibe-Family-Oct-2011-08 All-AD-CircumstancesMt)
+;;;
+;;;Test-gen-context-family-0002
+;;;(in-microtheory Test-gen-context-family-0002AnalogicalGenContextOnlyDisambiguationMt)
+;;;(analogicalRecallGenContextSuggestions Test-gen-context-family-0002 All-AD-CircumstancesMt)
+;;;
+;;;(in-microtheory ChickenTestDisambiguationMt)
+;;;(analogicalRecallGenContextSuggestions ChickenCaseLibe-Family-Oct-2011-02 All-AD-CircumstancesMt)
+;;;
+;;;(in-microtheory PopularityTest00001Mt)
+;;;(mostPopularInFamilySuggestions SpidersCaseLibe-Family-Oct-2011-02)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Active Reading
+
+;;; Declare Heuristic Kit
+;;;(in-microtheory ARDisambiguationKitMt)
+;;;(infoGainSuggestions)
+;;;(argIsaViolatorSuggestions)
+;;;(argIsaSupporterSuggestions)
+;;;(argIsaViolatedSuggestions)
+;;;(argIsaSupportedSuggestions)
+
+;;; Initialize Heuristic Weights for AR
+(in-microtheory ARDefaultHeuristicWeightsMt)
+(weightOfDisambiguationMethodInRun (infoGainSuggestions) (evidenceWeightFn 0.5) AnyRun)
+(weightOfDisambiguationMethodInRun (argIsaViolatorSuggestions) (evidenceWeightFn 0.5) AnyRun)
+(weightOfDisambiguationMethodInRun (argIsaSupporterSuggestions) (evidenceWeightFn 0.5) AnyRun)
+(weightOfDisambiguationMethodInRun (argIsaViolatedSuggestions) (evidenceWeightFn 0.5) AnyRun)
+(weightOfDisambiguationMethodInRun (argIsaSupportedSuggestions) (evidenceWeightFn 0.5) AnyRun)
+
+(weightOfDisambiguationMethodInRun (selectedMentionsInCurrentReadingSuggestions) (evidenceWeightFn 0.5) AnyRun)
+
+;;;;;;;;;;;;;;;;;;;;;
+(in-microtheory ParsingAnalogicalOnlyDisambiguationMt)
+(analogicalRecallSuggestions ParsingExperimentsCaseLibe0001 All-AD-CircumstancesMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

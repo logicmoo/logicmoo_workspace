@@ -1,0 +1,494 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QP-NF-IndirectInfluences.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: December 5, 2014 14:39:49
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;Q-PROP RULES;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory QPInterpretationRulesMt :exclude-globals t)
+;;; 1/30/2014: CJM
+;;; I need to extend these to be able to refer to quantities outside of the ones in their sentence context
+;;; Approach 1: Create new rules specifically for this, and rely on a catch in quantity generation to stop
+;;;;  existng rules from triggering. This requires expanding the Qprop rules a fair bit. It's messy and could be
+;;;;  done better. Right now the more complicated quantity reference qprops only work for As X Change Y Change
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?qpframe
+                        IntroductionOfQPropEvent)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesQPropFrame
+       (PresentationEventFn ?sid ?narrative-event)
+       ?qpframe)))
+
+(<== (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid)
+     (drsForDiscourse ?ddrs-id)
+     (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)
+     (individualSatisfyingConditions 
+      ?iiframeid IndirectInfluenceFrame
+      (TheSet 
+       (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)))
+     (individualSatisfyingConditions 
+      ?nevent IBTGeneration
+      (TheSet 
+       (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?iiframeid IndirectInfluenceFrame)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?iiframeid ?qf2)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?iiframeid ?qf1)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?iiframeid ?sign)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid)))))
+
+;;
+;;  Assuming QuantityFrames are within the sentence
+;;  
+(<== (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     ;;;;(nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf2 QuantityFrame))))
+     (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid))
+;;;
+;;; Not within sentence
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(<== (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf2 QuantityFrame))))
+     (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid)
+     )
+
+(<== (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf2 QuantityFrame))))
+     (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid))
+
+(<== (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf2 QuantityFrame))))
+     (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rules for as X inc/dec Y inc/dec ;;;
+
+(<== (incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (qpropEvent ?ev1 ?ev2 ?sid)
+     (objectivePredicate ?ev1 ?qtvar1 ?pred ?sdrs-id)
+     (objectivePredicate ?ev2 ?qtvar2 ?pred2 ?sdrs-id)
+     (different ?qtvar1 ?qtvar2))
+
+     ;;;(ist-Information (DrsCaseFn ?sdrs-id) (objectActedOn ?ev1 ?qtvar1))
+     ;;;(ist-Information (DrsCaseFn ?sdrs-id) (objectActedOn ?ev2 ?qtvar2)))
+
+(<== (objectivePredicate ?ev ?qtvar ?pred ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (objectActedOn ?ev ?qtvar))
+     (unifies ?pred objectActedOn))
+(<== (objectivePredicate ?ev ?qtvar ?pred ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (objectOfStateChange ?ev ?qtvar))
+     (unifies ?pred objectOfStateChange))
+
+
+
+;;; We're running into problems with phrases like "amount of water"
+;;; The amount is what's being acted on etc., but 'water' is the actual qtypeVar
+;;; I believe this is handled through referentToQFrame. If it's not working, check there first.
+
+(<== (qpropEvent ?ev1 ?ev2 ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (temporallyIntersects ?ev1 ?ev2))
+     ;;;word order gives directionality
+     (ist-Information ?dcase (dvSpanInParseTree ?ev1 (SpanFn ?start ?fin) ?parse-tree))
+     (ist-Information ?dcase (dvSpanInParseTree ?ev2 (SpanFn ?start2 ?fin2) ?parse-tree))
+     (lessThan ?fin ?fin2)
+     (different ?ev1 ?ev2))
+
+;;; This could be the problem point for paragraph 10
+;;; Check here.
+;;; Checked 4/2/2014
+(<== (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid)
+     (numAnswers 1 (signOfDerivative ?qf1 ?sign1))
+     (numAnswers 1 (signOfDerivative ?qf2 ?sign2))
+     (signOf ?sign1 ?sign2 ?sign))
+
+(<== (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (signWord ?ev1 ?sign1 ?sdrs-id)
+     (signWord ?ev2 ?sign2 ?sdrs-id)
+     (signOf ?sign1 ?sign2 ?sign))
+
+(<== (signWord ?ev ?sign ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?ev IncreaseEvent))
+     (unifies ?sign 1))
+
+(<== (signWord ?ev ?sign ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?ev DecreaseEvent))
+     (unifies ?sign -1))
+     
+     
+     
+;;; Rules for X depends positively on ;;;
+;;; currently these are dependent on multiWordSemTranses
+;;; not sure yet if this is the right way to go.
+
+;;; Also, Sven's thesis notes that these have implicit quantity entities
+;;; Have to do those first.
+
+(<== (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid)
+     (drsForDiscourse ?ddrs-id)
+     (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (individualSatisfyingConditions 
+      ?iiframeid IndirectInfluenceFrame
+      (TheSet 
+       (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+       ))
+     (individualSatisfyingConditions 
+      ?nevent IBTGeneration
+      (TheSet 
+       (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?iiframeid IndirectInfluenceFrame)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?iiframeid ?qf2)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?iiframeid ?qf1)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?iiframeid ?sign)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid)))))
+
+
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (positivelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+
+;;; For referent Q Frames
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (positivelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?ddrs-id) (lookupOnly (isa ?qf1 QuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (positivelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (positivelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;relies on
+
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id)  (isa ?qf1 QuantityFrame))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+
+;;;;;;;;; For Referent Q Frames:
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (isa ?qf1 QuantityFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?qtvar1 ?qtvar2))
+     (unifies ?sign 1))
+
+;;;;;;Negative
+
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (relatesToQTypeVar ?qf2 ?qtvar2))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (lookupOnly (relatesToQTypeVar ?qf1 ?qtvar1))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (negativelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign -1))
+;;;For Referent Qs
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (relatesToQTypeVar ?qf2 ?qtvar2))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (negativelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign -1))
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (relatesToQTypeVar ?qf1 ?qtvar1))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (negativelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign -1))
+(<== (indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 QuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (negativelyDependsOn Quantity ?qtvar1 ?qtvar2))
+     (unifies ?sign -1))
+
+;;;
+;;; Rules for relative degree inferred QProps
+;;; ex: the bigger the X, the greater it's....
+;;;
+;;; The higher the pressure the higher the flow-rate
+;;; 4/4/2014 CJM:
+;;; I think our problem here is that there is no SID constraint
+;;; Thus if there are any qpropdegree frames in the entire drs it treats those
+;;; as being justified by choices in the current sentence
+;;; 4/14/2014 I think this was resolved
+
+(<== (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2 ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (comparativeDegrees ?thing1 ?thing2 ?polarity1 ?polarity2 ?sign))
+     (individualSatisfyingConditions 
+      ?iiframeid IndirectInfluenceFrame
+      (TheSet
+       (qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2)
+       (comparativeDegrees ?thing1 ?thing2 ?polarity1 ?polarity2 ?sign)))
+     (individualSatisfyingConditions 
+      ?nevent IBTGeneration
+      (TheSet
+       (qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2)
+       (comparativeDegrees ?thing1 ?thing2 ?polarity1 ?polarity2 ?sign)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?iiframeid IndirectInfluenceFrame)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?iiframeid ?qf2)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?iiframeid ?qf1)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?iiframeid ?sign)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (signOfDerivative ?qf1 ?polarity1)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (signOfDerivative ?qf2 ?polarity2)) (TheList (introducesQPropFrame (PresentationEventFn ?sid ?nevent) ?iiframeid)))))
+
+
+     
+(<== (qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2 ?sid)
+     (qpropEvent ?thing1 ?thing2 ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?thing1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?thing2)))
+     (different ?qf1 ?qf2))
+
+;;; Not in sentence
+;;; We should be getting this for the second to last sentence of example 6. Currently not present
+
+(<== (qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2 ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (qpropEvent ?thing1 ?thing2 ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?thing1)))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?thing2)))
+     (different ?qf1 ?qf2))
+(<== (qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2 ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (qpropEvent ?thing1 ?thing2 ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?thing2)))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?thing1)))
+     (different ?qf1 ?qf2))
+(<== (qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2 ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (qpropEvent ?thing1 ?thing2 ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?thing2)))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?thing1)))
+     (different ?qf1 ?qf2))
+
+
+
+(<== (comparativeDegrees ?quant1 ?quant2 ?polarity1 ?polarity2 ?sign)
+     (comparativeDirection ?quant1 ?compvar1)
+     (comparativeDirection ?quant2 ?compvar2)
+     
+     ;;; In previous itterations, we get the comp-rel (the word) through
+     ;;; a lifting mechanism in the syntax. This is not what we want. Ideally we
+     ;;; would have adverbSemTranses for these
+     ;;; Alternatively, I want to just assume the word version of ?rel is the comprel
+     ;;; I can do this in code...
+     (getWord ?compvar1 ?comprel1)
+     (getWord ?compvar2 ?comprel2)
+     (kbOnly (ist-Information QPInterpretationMt (polarityOfComparativeRelation ?comprel1 ?polarity1)))
+     (kbOnly (ist-Information QPInterpretationMt (polarityOfComparativeRelation ?comprel2 ?polarity2)))
+     (signOf ?polarity1 ?polarity2 ?sign))
+
+
+;;;; Need to put these somewhere else. Not sure yet.
+;;;; Also they may be wrong.
+(<== (signOf 1 1 1))
+(<==  (signOf 1 -1 unknown))
+(<== (signOf -1 1 unknown))
+(<== (signOf -1 -1 -1))
+;;;
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Signs of derivatives
+;;; implied by an IncreaseEvent, DecreaseEvent, or the use of words like
+;;; Constant and Steady as adjectives.
+;;; N.B. In the qp ontology (see FIRE flat files), the classic terms
+;;; for Ds values are used, i.e. 
+;;; 1 = increasing, 0 = constant, -1 = decreasing.
+;;;
+;;; CJ: Currently these only work for objectActedOn. I will add
+;;; hasSpecPredOf soon.
+;;;
+
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?nevent)
+                        ?quantity-frame ?sign
+                        IntroductionOfDsInformation)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesQPDsInfo ?sid ?quantity-frame ?sign))
+     (individualSatisfyingConditions ;; Make the narrative event
+      ?nevent IBTGeneration 
+      (TheSet (introducesQPDsInfo ?sid ?quantity-frame ?sign))))
+
+;;; 5/10/14 CJM: Currently this can't handle sentences like "The brick has mass." "The mass of the brick is increasing" because
+;;; mass resolves to itself in both cases. So it doesn't know to look for the new token for the old mass quantity.
+;;;
+(<== (introducesQPDsInfo ?sid ?qframe ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframe ?quantity))
+     ;;; For when the frame is in a prior sentence
+     ;;;;(lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (resolvedVar ?sid ?sid-quantity ?quantity)))
+     (seekDsInfoForQuantityFrame ?sdrs-id ?quantity ?sign)
+     (groundExpression ?sign) ;; Paranoid
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (signOfDerivative ?qframe ?sign)) (TheList (introducesQPDsInfo ?sid ?qframe ?sign)))))
+
+
+(<== (seekDsInfoForQuantityFrame ?sdrs-id ?quantity 1)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event IncreaseEvent))
+     (ist-Information (DrsCaseFn ?sdrs-id) (objectActedOn ?event ?quantity)))
+
+(<== (seekDsInfoForQuantityFrame ?sdrs-id ?quantity -1)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event DecreaseEvent))
+     (ist-Information (DrsCaseFn ?sdrs-id) (objectActedOn ?event ?quantity)))
+
+(<== (seekDsInfoForQuantityFrame ?sdrs-id ?quantity -1)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event FallingEvent))
+     (ist-Information (DrsCaseFn ?sdrs-id) (primaryObjectMoving ?event ?quantity)))
+
+(<== (seekDsInfoForQuantityFrame ?sdrs-id ?quantity 0)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity 
+                                                (ThingDescribableAsFn Constant-TheWord
+                                                                      Adjective))))
+
+(<== (seekDsInfoForQuantityFrame ?sdrs-id ?quantity 0)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity 
+                                                (ThingDescribableAsFn Steady-TheWord
+                                                                      Adjective))))
+
+(<== (seekDsInfoForQuantityFrame ?sdrs-id ?quantity -1)
+     (ist-Information (DrsCaseFn ?sdrs-id) (negativelyDependsOn Quantity ?quantity ?qtype2)))
+
+(<== (seekDsInfoForQuantityFrame ?sdrs-id ?quantity 1)
+     (ist-Information (DrsCaseFn ?sdrs-id) (positivelyDependsOn Quantity ?quantity ?qtype2)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

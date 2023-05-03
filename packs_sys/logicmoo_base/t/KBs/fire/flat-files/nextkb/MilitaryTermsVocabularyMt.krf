@@ -1,0 +1,81 @@
+(in-microtheory MilitaryTermsVocabularyMt)
+
+(isa (The AorticValve) OrganismPart)
+(isa TaskTypeBySide NonAbducibleCollection)
+(isa (SubcollectionOfWithRelationToTypeFn MilitaryEvent instrument-Generic RadarDevice) FirstOrderCollection)
+(requiredActorSlots ReinforcingAMilitaryForce reinforcedUnit)
+(negationPreds performedBy reinforcedUnit)
+(typedGenlPreds reinforcedUnit intendedBeneficiary)
+(typedGenlPreds reinforcedUnit objectActedOn)
+(typeGenls RedTask MilitaryAction)
+(typeGenls TaskTypeBySide MilitaryAction)
+(typeGenls BlueTask MilitaryAction)
+(typeGenls AssignedOperationType MilitaryOperation)
+(not (typeGenls MilitaryTaskedActionType MilitaryAction))
+(typeGenls MilitaryTaskedActionType PurposefulAction)
+(typeGenls MilitaryOperationType MilitaryOperation)
+(comment MissileAttack "Any #$AttackOnTangible wherein at least one of the devices used to
+
+make the attack is a missile.  The missile may be a ballistic missile
+
+or a missile capable of making significant in-flight alterations to
+
+its trajectory, eg, a heat-seeking missile or a #$CruiseMissile.")
+(comment Deploying-Military "The collection of all military deploying events: every
+instance consists of the embarking, transporting, disembarking,
+possible entrenchment, and arraying of personnel and equipment in a
+particular location in service to the strategy of a military
+campaign.")
+(comment NavalMilitaryOperation "The specialization of #$MilitaryOperation whose instances are performed on some body of water.")
+(comment MilitaryEngagement-Defensive "The Collection of combat actions that are primarily
+defensive.")
+(disjointWith ModernMilitaryOrganization-NonDeployable ModernMilitaryUnit-Deployable)
+(comment MilitaryInvasion "A specialization of #$MilitaryOperation.  Each instance of #$MilitaryInvasion is a planned military invasion of some territory; the territory invaded is related to the invasion by the predicate #$objectActedOn (q.v.).  See also the collection #$MilitaryOccupation.")
+(comment MilitaryOperation "A specialization of #$MilitaryEvent.  Each instance of #$MilitaryOperation is a planned military operation.  Instances of   #$MilitaryOperation usually require organization and coordination, and often are complex activities.  For large-scale military operations involving several groups of agents, see the specialization #$MilitaryOperation-Joint.  Examples of  #$MilitaryOperation include the attack on Pearl Harbor and the retaking of Bunker Hill.")
+(comment PreemptiveStrike "A specialization of #$MilitaryAttack.  In each instance of #$PreemptiveStrike, an agent deliberately attacks a second agent that has not committed any prior violence against the first agent.")
+(disjointWith HarvestingAPlant MilitaryOperation)
+(comment MilitaryAction "The collection of all military tasks such as might be assigned to deployable, modern military units.  A particular task is performed by one and only one unit, although other units may function in a support capacity, and subunits of the performing unit may be assigned tasks that figure as subtasks of the performing unit's assigned task.  In this case the tasks of the subordinate units should be related to the overarching task of the superior unit by the #$subTasks relation.  A single unit may be assigned more than one task.  Notice that this collection is a specialization of #$MilitaryEvent, not #$MilitaryOperation complex events take account of both primary tasks and their subtasks and also distinct support tasks.  Instances of #$MilitaryAction may properly figure as #$subEvents in an instance of #$MilitaryOperation.")
+(comment MilitaryTask-Offensive "The collection comprised of the closed class of offensive forms of #$MilitaryAction.  The collection is not a specialization of #$MilitaryAttack or #$AttackOnTangible, since not all forms of #$MilitaryTask-Offensive constitute outright attacks.  Some instances may be attacks, however.")
+(comment MilitaryAttack "The collection of all instances of #$MilitaryEvent that are also considered to be instances of #$AttackOnTangible. The characteristics that define a military 'attack' are somewhat loose: military units are involved, deadly force is involved, and the event in question is of an immediately 'offensive' character (although an attack can be a #$subEvents in the course of either a 'defensive' or 'offensive' #$MilitaryEvent). Instances may be complex events: that is, they may involve more than just physical attack events and may include a measure of planning and preparation.")
+(comment MilitaryTaskedActionType "The collection of all types of #$PurposefulAction that can be
+assigned as tasks (cf. #$unitAssignedToTask) to a military unit (cf.
+#$ModernMilitaryUnit-Deployable).  Examples of instances of
+#$MilitaryTaskedActionType are #$AttackOnObject and
+#$PhysicalDestructionEvent.  It is not assumed that any spec whatsoever
+of #$MilitaryAction is an instance of #$MilitaryTaskedActionType : e.g., the
+collection of tasks to be performed by UNIT003 by 3 pm on July 31 might
+well be a spec of #$MilitaryAction, but it shouldn't be a military task
+_type_ in its own right. (In other words: this collection does not include
+the powerset of #$MilitaryAction.)")
+(comment AssignedOperationType "Instances of this collection are the operations which are planned (cf. #$CourseOfAction and #$operationOfCOA) in some planning context.")
+(comment RetaliatoryStrike "A specialization of #$MilitaryAttack.  In each instance of #$PreemptiveStrike, an agent deliberately attacks a second agent that has committed prior violence against the first agent.")
+(comment BlueTask "The collection of all instances of #$AssignedTaskType that have been assigned (see #$unitAssignedToTask) to some #$BlueUnit in a #$CourseOfAction.")
+(comment TaskTypeBySide "A #$CollectionTypeType. Instances, of which there are exactly two (#$BlueTask and #$RedTask), are collections of tasks assigned to either the #$Blue-Side or to the #$Red-Side in some #$CourseOfAction.")
+(comment RedTask "The collection of all instances of #$AssignedTaskType that have been assigned (see #$unitAssignedToTask) to some #$RedUnit in a #$CourseOfAction.")
+(comment GroundForce "The collection of deployable military units operating
+primarily on the ground.  The force may travel to area of operation
+via air or sea routes, but their mission-related tasks are done on
+land.")
+(comment reinforcedUnit "An instance of #$ActorSlot.  (#$reinforcedUnit REINFORCE UNIT) says that the #$ModernMilitaryUnit-Deployable is reinforced by the performer of the #$ReinforcingAMilitaryForce REINFORCE.  This means that UNIT is the #$beneficiary, the #$intendedBeneficiary, and the #$objectActedOn.")
+(comment ShootingAttack-Gun "An instance of #$AttackType and a specialization of (#$AttackTypeByWeaponTypeFn #$Gun).  Each instance of #$ShootingAttack-Gun is an attack in which at least one agent shoots a #$Gun to inflict damage on someone or something.  #$ShootingAttack-Gun is a <i>proper</i> specialization of (#$AttackTypeByWeaponTypeFn #$Gun), since the latter collection includes attacks in which a gun is (e.g.) thrown or used as a club.")
+(comment MortarAttack "An instance of #$AttackType.  Each instance of #$MortarAttack is an #$AttackOnTangible in which at least one of the weapons used is a #$MortarLauncher.")
+(comment MilitaryTask-MayBeOffensiveOrDefensive "The collection comprised of the closed class of forms of #$MilitaryAction which may be performed as part of either offensive or defensive actions.")
+(comment PoisoningAttack "An instance of #$AttackType and a specialization of #$AttackOnTangible.  Each instance of #$PoisoningAttack is an attack in which an agent attempts to hurt or kill another agent by (somehow) getting that agent to ingest a #$ToxicSubstance.  For #$PoisoningAttacks in which an agent intends to kill another agent, use the more specialized collection #$AttemptingKillingThroughPoisoning.")
+(comment infoconLevelForOrg "A #$BinaryPredicate that relates a #$MilitaryOrganization to a #$MilitaryOrgTypeByInfoconLevel.  (#$infoconLevelForOrg ORG LEVEL) means that ORG's infocon level is LEVEL.")
+(comment DriveByShooting "An instance of #$AttackType and a specialization of #$ShootingAttack-Gun.  Each instance of #$DriveByShooting is an attack in which at least one agent shoots a #$Gun to inflict damage on someone or something while driving by in some sort of automobile or non-military vehicle.")
+(comment ModernMilitaryOrganization-NonDeployable "A specialization of #$ModernMilitaryOrganization.  Each instance of #$ModernMilitaryOrganization-NonDeployable is a stationary military unit that cannot as a matter of course be deployed to the field under combat
+conditions, or readily dispatched to far-away locations.  
+<p>
+An example of a #$ModernMilitaryOrganization-NonDeployable is the Pentagon support staff.  Cf. #$ModernMilitaryUnit-Deployable.")
+(comment ModernMilitaryUnit-Deployable "A specialization of #$ModernMilitaryOrganization.  Each instance of #$ModernMilitaryUnit-Deployable is a military unit capable of being deployed to the field for purposes of combat, combat support, or reconnaissance.  #$ModernMilitaryUnit-Deployable includes as instances any military units that are ordinarily equipped to be sent to far-away places on short notice.
+<p>
+Cf. #$ModernMilitaryOrganization-NonDeployable.")
+(comment GrenadeAttack "An instance of #$AttackTypeByWeaponType.  Each instance of #$GrenadeAttack is an attack in which at least one of the weapons used is an instance of #$Grenade.  #$GrenadeAttack is a rewrite of (#$AttackTypeByWeaponTypeFn #$Grenade).")
+(genls ControllingAnObjective MilitaryEvent)
+(genls (AttemptingFn MilitaryAttack) Attempting)
+(genls (AttemptingFn MissileAttack) Attempting)
+(genlPreds reinforcedUnit objectActedOn)
+(genlPreds reinforcedUnit intendedBeneficiary)
+(genlPreds reinforcedUnit beneficiary)
+(genls (AttemptingFn MissileAttack) (AttemptingFn MilitaryAttack))
+(genls (AttemptingFn ChemicalAttack) (AttemptingFn MilitaryAttack))

@@ -1,0 +1,170 @@
+(in-microtheory AnalogicalReasoningMt)
+
+(isa organizationName-Standard NotForAnalogyPredicate)
+(isa businessName-WithTickerSymbol NotForAnalogyPredicate)
+(isa nameString-Plural NotForAnalogyPredicate)
+(isa nor UbiquitousRelationForAnalogy)
+(isa nand UbiquitousRelationForAnalogy)
+(isa nameString NotForAnalogyPredicate)
+(isa currentMatcherTerm NotForAnalogyPredicate)
+(isa TheList UbiquitousRelationForAnalogy)
+(isa or UbiquitousRelationForAnalogy)
+(isa remapMatch NotForAnalogyPredicate)
+(isa organizationName-Official NotForAnalogyPredicate)
+(isa comment NotForAnalogyPredicate)
+(isa relevantComparison-SME NotForAnalogyPredicate)
+(isa extendAnalogyMatch NotForAnalogyPredicate)
+(isa TheSet UbiquitousRelationForAnalogy)
+(isa ist-Information NotForAnalogyPredicate)
+(isa and UbiquitousRelationForAnalogy)
+(comment candidateInferenceOfMapping "?candidateInference is a consequence of ?mapping.")
+(comment numberOfFACItems "Reminding ?reminding has ?n items in the FAC stage.")
+(comment matchHasConstraint "(matchHasConstraint MATCH CONSTRAINT) means that CONSTRAINT was operative when MATCH was being carried out.")
+(comment entitySimilarityOf-Mapping "?mh of ?mapping involves entities")
+(comment CiFn "Term denoting a CandidateInference .")
+(comment numberOfCaseFacts "(#$numberOfCaseFacts CASE NUMBER) indicates that CASE has NUMBER facts.")
+(comment ConceptualFactsOfCaseFn "(#$ConceptualFactsOfCaseFn CASE) denotes the subset of the facts in CASE that are purely conceptual, i.e., no nuSketch sketch information.")
+(comment analogyParameterUsed "(#$analogyParameterUsed ANALOGY PARAMETER VALUE) indicates that the value of PARAMETER was VALUE when computing ANALOGY.")
+(comment candidateInferenceSupportScore "The candidate inference ?ci has a support score of ?n")
+(comment remapMatch "(#$remapMatch OLD CONSTRAINTS NEW) carries out a remapping operation on OLD, under CONSTRAINTS, resulting in NEW.")
+(comment SMEParameter "SMEParameter is the collection of parameters used with the Structure-Mapping Engine.")
+(comment AnalogyCaseLibrary "A set of cases used in some variety of reasoning.")
+(comment RequiredTargetCorrespondenceForMappingFn "Any mappings must have ?base-item
+corresponding to something in the target.")
+(comment ComparativeCaseFn "(#$ComparativeCaseFn THING1 THING2) denotes the case defined by finding all the relations that are 
+common between THING1 and THING2.  Also includes all the 
+isa relations between the objects referenced in those 
+relations.")
+(comment mappingCorrespondenceBetween "?correspondence is the hypothesis that ?base-item matches 
+?target-item.  ?base-item and ?target-item can be entities, 
+functors, or expressions.")
+(comment baseOfMatch "(#$baseOfMatch MATCH CASE) indicates that case CASE is the base description in match MATCH.")
+(comment baseOfMapping "(#$baseOfMapping MAPPING CASE) indicates that case CASE is the base description in mapping MAPPING.")
+(comment currentMatcherTerm "(#$currentMatcherTerm OLD NEW) indicates that NEW is the current version of the match denoted by OLD.  This is a dynamic-update predicate.")
+(comment remindingFACContains "FAC stage of reminding ?reminding includes ?case.")
+(comment ExtendedCaseFn "Creates a Case by adding all facts of form 
+(ist-Information ?originalCase-name <fact>) which has 
+the justification label set to ?justification in the 
+reasoning session.")
+(comment SupportScoreFromMappingFn "Degree of structural support ?candidateInference 
+gets from its mapping.")
+(comment ComputerCodeFunction "An instance belonging to this collection is a ComputerCode
+that can be run with a single procedure call.")
+(comment AnalogyCaseLibraryFilteredCasesFn "Denotes the case library consisting of all of the cases in ?library, filtered via ?filter.")
+(comment numberOfCandidateInferencesForMapping "Number of candidate inferences in the mapping.")
+(comment ExplicitCaseFn "(#$ExplicitCaseFn THING) is the set of facts in the explicitly determined case THING.")
+(comment AgentInContextCaseFn "Creates a Case by finding all the relations that reference 
+?agent, that are within the scope of the event ?context 
+(context constrained by case-sub-event-predicate)")
+(comment analogyCaseLibraryOf "(#$caseLibraryOf LIB REM) indicates that LIBRARY is the case library of reminding REM.")
+(comment targetAlignableAbsenceOf "In ?mapping, ?exp from the target might apply to base.")
+(comment caseMentionsEntity "(#$caseMentionsEntity CASE ENTITY) indicates case CASE includes a fact in which ENTITY is an entity.")
+(comment AnalogyCaseLibraryMinusFn "Denotes the case library consisting of the contents of ?cl minus the cases ?set-of-cases.  Useful for going back to find more answers if earlier retrievals were unsatisfactory.")
+(comment correspondenceTargetItem "?target-item is the thing in the base connected via ?correspondence.")
+(comment AnalogyParameter "AnalogyParameter is the collection of parameters used in analogical reasoning.")
+(comment analogyCaseLibraryContains "?case is in the current construal of the contents of ?library.")
+(comment AnalogyCaseLibraryInstancesOfFn "Denotes the case library consisting of instances of ?col, using ?constructor to specify the cases.")
+(comment RequiredBaseCorrespondenceForMappingFn "Any mappings generated must have ?base-item
+corresponding to something in the target.")
+(comment Reminding-Analogy "A Reminding is an instance of the use of the MAC/FAC similarity-based retrieval algorithm.")
+(comment ExtrapolationScoreForMapping "Degree to which ?candidateInference introduces 
+new information.")
+(comment numberOfMACItems "Reminding ?reminding has ?n items in the MAC stage.")
+(comment requiredCorrespondenceForMapping "Any mappings generated must have ?base-item
+corresponding to ?target-item.  ?base-item and ?target-item
+are either entities or expressions.")
+(comment RequireWithinPartitionCorrespondencesFn "(#$RequireWithinPartitionCorrespondencesFn COLLECTION) constrains the entities which are known to be in <collection> in an SME match to only bind with other entities that are also known to be members of <collection>.  No type inference is done at the SME level, case construction must explicitly include it.")
+(comment numberOfCaseEntities "(#$numberOfCaseEntities CASE NUMBER) indicates that CASE has NUMBER entities.")
+(comment MinimalCaseFn "(#$MinimalCaseFn CASE) denotes the case consisting of all non-bookkeeping facts that reference CASE")
+(comment targetNewItemOf "(#$targetNewItemOf MATCH ITEM) indicates that ITEM was added to the target after MATCH.")
+(comment AnalogyMatcherFn "Term denoting a Match.")
+(comment targetOnlyNADOf "In ?mapping, nothing corresponds to ?exp in the target.")
+(comment correspondenceForTargetItem "?correspondence has ?target-item in ?sme as its base item.")
+(comment MACFACParameter "#$MACFACParameter is the collection of parameters used with the MAC/FAC similarity retrieval system.")
+(comment ExecutableFunctionFn "Term denoting a function in the computer code sense (not
+a function in the knowledge sense).  This function could
+actually be run with a procedure call.")
+(comment AnalogyCaseLibraryFunction "#$AnalogyCaseLibraryFunction is the collection of functions which can be used to denote case libraries.")
+(comment hasMappingCorrespondence "?correspondence is one of the correspondences
+that comprise ?mapping.  A correspondence can 
+be part of multiple mappings.")
+(comment MhFn "Term denoting a Correspondence.")
+(comment Reminding-AnalogyFn "(RemindingFn ID) denotes an instance of a reminding")
+(comment CaseConjunctionFn "Creates a Case by combining the information from the 
+?case1 and ?case2.")
+(comment EnhancedCaseFn "Creates a Case by finding all the relations that are used 
+to generate the answer to the query, with the query scoped 
+by the facts originally specified in ?case. Also includes 
+all the isa relations between the objects referenced in 
+those relations.")
+(comment remindingMACContains "MAC stage of reminding ?reminding includes ?case.")
+(comment numberOfMappingCorrespondences "Number of correspondences in SME or mapping.")
+(comment excludedCorrespondenceForMapping "In ?match, any mappings generated must not have ?base-item
+corresponding to ?target-item.  ?base-item and ?target-item
+are either entities or expressions.  Useful when the best 
+mapping so far looks unproductive, and one wants to force 
+alternatives.")
+(comment rootSimilarityOf "?mh of ?mapping is a top-level correspondence.")
+(comment atomicAnalogyNATFunctionFor "(#$atomicAnalogyNATFunctionFor FUNCTION APPLICATION) indicates that, in the context of analogical processing done by APPLICATION, FUNCTION should be treated as if it is an instance of AtomicAnalogyNATFunction, i.e., NATs constructed with it should be treated as atomic entities rather than being treated as expressions.")
+(comment probeOf-AnalogyMapping "?case is the probe of ?reminding.")
+(comment caseMentionsPredicate "(#$caseMentionsPredicate CASE RELATION) indicates case CASE includes a fact in which RELATION is a predicate.")
+(comment correspondenceBaseItem "?base-item is the thing in the base connected via ?correspondence.")
+(comment StructureMappingCorrespondence "Represents a correspondence between an item in the base
+and an item in the target, with respect to a given match.
+As such, it can appear in multiple mappings under the same 
+match.  However, its structural evaluation is the same for 
+every mapping.  See also correspondenceOf and 
+correspondence-between.")
+(comment candidateInferenceExtrapolationScore "The candidate inference ?ci has an extrapolation score of ?n.")
+(comment candidateInferenceContentForMapping "?prop is the propositional content of ?candidateInference")
+(comment baseAlignableAbsenceOf "In ?mapping, ?exp from the base might apply to target.")
+(comment mappingCorrespondenceOf "?correspondence is part of ?match.")
+(comment remindingCaseOnly "Given a description ?probe and a case library ?case-library, 
+remindingCaseOnly uses MAC/FAC to retrieve cases (typically one, but sometimes
+more than one) that are similar. This predicate does not provide the match itself,
+if one needs details they must be recomputed.  It does provide the score,
+for sorting and filtering purposes.")
+(comment targetOfMatch "(#$targetOfMatch MATCH CASE) indicates that case CASE is the base description in match MATCH.")
+(comment AnalogyCaseLibrarySansFn "Denotes the case library consisting of the case library ?cl minus the case ?case.  Useful for finding the most similar element to something within a set.")
+(comment AnalogySkolemFn "An arbitrary individual introduced during analogical 
+reasoning.")
+(comment AnalogyMappingIDFn "Term denoting a Mapping.")
+(comment AnalogyCaseLibrarySubcollectionsOfFn "Denotes the case library consisting of subcollections of ?col, using ?constructor to specify the cases.")
+(comment targetOfMapping "(#$targetOfMapping MAPPING CASE) indicates that case CASE is the base description in mapping MAPPING.")
+(comment AtomicAnalogyNATFunction "Instances of #$AtomicAnalogyNATFunction are functions used to build NATs that will be treated as atomic entities by default during analogical mapping.  That is in contrast to the default, which is to decompose NATs so that their arguments can also be aligned.  An example is GlyphFn.")
+(comment AnalogyCaseLibrarySatisfyingFn "Denotes the case library consisting of all bindings of ?var which satisfy ?constraint, using ?constructor to specify the case.")
+(comment relevantComparison-SME "(#$relevantComparison-SME SME TIME) indicates that SME is relevant.  The TIME is used to control updates.")
+(comment AgentCaseFn "Creates a Case by finding all the relations that reference 
+?agent, plus all relations between objects in that first 
+set of relations.  (Designed with ?agent being of type 
+agent.)")
+(comment ExcludedCross-PartitionCorrespondencesFn "(#$ExcludedCross-PartitionCorrespondencesFn SET) constrains an SME match to have no entity corresponences that are members of more than one of the set of collections given.  No type inference aside from lookup is done inside SME, so to use this constraint requires that case construction explicitly include this information.")
+(comment structuralEvaluationScoreOf "Mapping or correspondence ?thing has a structural evaluation of ?n")
+(comment AnalogyPlunkFn "(#$AnalogyPlunkFn ENTITY SME-ID) denotes an aribitrary individual intended to map to ENTITY in the base, in match SME-ID.")
+(comment CandidateInferenceForMapping "An analogical inference suggested by a mapping. 
+Candidate inferences are surmises; they must be 
+tested using other forms of reasoning.  A candidate 
+inference can be an entire piece of an argument, 
+e.g., an implication with its antecedents and conclusions 
+that appears in the base as a whole expression, or it can 
+be a proposition.")
+(comment WMCaseFn "(#$WMCaseFn CASE) denotes the version of CASE currently stored in working memory.")
+(comment bestReminding "(#$bestReminding PROBE CL R), given PROBE and case library CL, binds R to the case with the highest FAC score.  This assumes that remindingCaseOnly has been evaluated first.")
+(comment roleDifferenceOf "In ?mh of ?mapping, ?bisas is a set of ISA statements about items
+in the base that are different from the ISA statements about the corresponding
+target items in ?tisas")
+(comment contentVectorDotProduct "(#$contentVectorDotProduct CASE1 CASE2 N) indicates that the dot product of the content vectors for CASE1 and CASE2 is N")
+(comment correspondsInMapping "(#$correspondsInMapping MAPPING BASE TARGET) indicates that base item BASE and target item TARGET correspond in mapping MAPPING.")
+(comment baseOnlyNADOf "In ?mapping, nothing corresponds to ?exp in the base.")
+(comment extendAnalogyMatch "(#$extendAnalogyMatch OLD CONSTRAINTS NEW) extends the match OLD, based on changes in base and target, if any, and under CONSTRAINTS.  The result is denoted via NEW.")
+(comment correspondenceForBaseItem "?correspondence has ?base-item in ?sme as its base item.")
+(comment EventCaseFn "Creates a Case by finding all the relations that 
+reference ?event")
+(comment baseNewItemOf "(#$baseNewItemOf MATCH ITEM) indicates that ITEM was added to the base after MATCH.")
+(comment reminding-MACFAC "Given a description ?probe and a case library ?case-library, 
+(reminding ?probe ?case-library ?case ?match)
+uses MAC/FAC to retrieve cases (typically one, but sometimes
+more than one) that are similar.  ?match is the SME used
+by MAC/FAC, so that the results can be extracted as with
+other matches.")
+(comment analogyCaseLibraryContents "?set is the current construal of the contents of ?library.")

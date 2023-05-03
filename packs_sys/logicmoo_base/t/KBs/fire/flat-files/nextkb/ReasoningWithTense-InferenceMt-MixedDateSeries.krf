@@ -1,0 +1,156 @@
+
+ (in-microtheory ReasoningWithTense-InferenceMt-MixedDateSeries)
+ (genlPreds mtPrecedes-Metric mtPrecedes-SemiMetric-Forward)
+ (comment mtPrecedes-SemiMetric-Forward "For any instances MT1 and MT2 of
+#$ReasoningWithTenseMicrotheory-MixedDateSeries,
+(#$mtPrecedes-SemiMetric-Forward MT1 MT2 TYPE n) means that for some
+instances DATE-1 and TATE-2 of TYPE such that
+(#$reasoningWithTenseMtDate MT1 DATE-1) and
+(#$reasoningWithTenseMtTime MT2 DATE-2) hold (notice the difference
+between MtTime and MtDate), DATE-1 is entirely earlier than DATE-2
+with exactly n-1 distinct elements of TYPE between the two.  Note that
+if (#$reasoningWithTenseMtTime MT1 DATE) and (#$isa DATE TYPE) hold,
+then (#$mtPrecedes-SemiMetric-Forward MT1 MT2 TYPE n) implies
+(#$mtPrecedes-Metric MT1 MT2 TYPE n).  Note also that
+(#$mtPrecedes-SemiMetric-Forward MT1 MT2 TYPE n) implies (#$mtPrecedes MT1
+MT2).")
+ (arg4Format mtPrecedes-SemiMetric-Forward SingleEntry)
+ (arg3Format mtPrecedes-SemiMetric-Forward SingleEntry)
+ (arg2Format mtPrecedes-SemiMetric-Forward SingleEntry)
+ (argIsa mtPrecedes-SemiMetric-Forward 4 PositiveInteger)
+ (arg4Isa mtPrecedes-SemiMetric-Forward PositiveInteger)
+ (argIsa mtPrecedes-SemiMetric-Forward 2
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg2Isa mtPrecedes-SemiMetric-Forward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (argIsa mtPrecedes-SemiMetric-Forward 1
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg1Isa mtPrecedes-SemiMetric-Forward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (isa mtPrecedes-SemiMetric-Forward GeneralTenseReasoningConstant)
+ (argFormat mtPrecedes-SemiMetric-Backward 1 SingleEntry)
+ (argFormat mtPrecedes-SemiMetric-Backward 4 SingleEntry)
+ (argFormat mtPrecedes-SemiMetric-Backward 3 SingleEntry)
+ (strictlyFunctionalInArgs mtPrecedes-Metric 3)
+ (genlPreds mtPrecedes-Metric mtPrecedes-SemiMetric-Backward)
+ (comment mtPrecedes-SemiMetric-Backward
+ "For any instances MT1 and MT2 of
+#$ReasoningWithTenseMicrotheory-MixedDateSeries,
+(#$mtPrecedes-SemiMetric-Backward MT1 MT2 TYPE n) means that for some
+instances DATE-1 and TATE-2 of TYPE such that
+(#$reasoningWithTenseMtTime MT1 DATE-1) and
+(#$reasoningWithTenseMtDate MT2 DATE-2) hold (notice the difference
+between MtTime and MtDate), DATE-1 is entirely earlier than DATE-2
+with exactly n-1 distinct elements of TYPE between the two.  Note that
+if (#$reasoningWithTenseMtTime MT2 DATE) and (#$isa DATE TYPE) hold,
+then (#$mtPrecedes-SemiMetric-Backward MT1 MT2 TYPE n) implies
+(#$mtPrecedes-Metric MT1 MT2 TYPE n).  Note also that
+(#$mtPrecedes-SemiMetric-Backward MT1 MT2 TYPE n) implies (#$mtPrecedes
+MT1 MT2).")
+ (arg4Format mtPrecedes-SemiMetric-Backward SingleEntry)
+ (arg3Format mtPrecedes-SemiMetric-Backward SingleEntry)
+ (arg1Format mtPrecedes-SemiMetric-Backward SingleEntry)
+ (argIsa mtPrecedes-SemiMetric-Backward 4 PositiveInteger)
+ (arg4Isa mtPrecedes-SemiMetric-Backward PositiveInteger)
+ (argIsa mtPrecedes-SemiMetric-Backward 2
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg2Isa mtPrecedes-SemiMetric-Backward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (argIsa mtPrecedes-SemiMetric-Backward 1
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg1Isa mtPrecedes-SemiMetric-Backward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (isa mtPrecedes-SemiMetric-Backward GeneralTenseReasoningConstant)
+ (argFormat mtPrecedes-Metric 4 SingleEntry)
+ (strictlyFunctionalInArgs mtPrecedes-SemiMetric-Forward 2)
+ (arg4Format mtPrecedes-Metric SingleEntry)
+ (argFormat mtPrecedes-Metric 3 SingleEntry)
+ (arg3Format mtPrecedes-Metric SingleEntry)
+ (argFormat mtPrecedes-Metric 2 SingleEntry)
+ (arg1Format mtPrecedes-Metric SingleEntry)
+ (arg2Format mtPrecedes-Metric SingleEntry)
+ (argFormat mtPrecedes-Metric 1 SingleEntry)
+ (comment ReasoningWithTense-InferenceMt-MixedDateSeries
+ "This #$Microtheory contains rules about relations between
+instances of #$ReasoningWithTenseMicrotheory-MixedDateSeries.  Note 
+that rules in this microtheory amounts to semantic 
+interpretations of formulas in microtheories that are instances of
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and thus
+should not be present in those microtheories.")
+ (comment mtPrecedes-NthDate-Forward "For any instances MT1 and MT2 of
+#$ReasoningWithTenseMicrotheory-MixedDateSeries,
+(#$mtPrecedes-NthDate-Forward MT1 MT2 TYPE n) means that there is an
+instance CVR-TYPE of #$CalendarCoveringType such that (#$genls TYPE
+CVR-TYPE) holds, and there is an instance DATE-1 of CVR-TYPE and an
+instance DATE-2 of TYPE such that (#$reasoningWithTenseMtDate MT1
+DATE-1) and (#$reasoningWithTenseMtTime MT2 DATE-2) hold (notice the
+difference between MtDate and MtTime), and DATE-1 is entirely earlier
+than DATE-2 with exactly n-1 distinct dates of TYPE between the two.
+For example, let (#$mtPrecedes-NthDate-Forward MT1 MT2 #$Friday 1) hold.
+We know that #$CalendarDay is the only element of
+#$CalendarCoveringType of which #$Friday is a spec.  Thus there is a
+DAY1 in #$CalendarDay and a DAY2 in #$Friday such that
+(#$reasoningWithTenseMtDate MT1 DAY1) and (#$reasoningWithTenseMtDate
+MT2 DAY2) hold, and such that DAY1 is entirely earlier than DAY2, with
+no instance of #$Friday between the two.  It is easy to see that this
+means DAY2 is the first Friday after DAY1.  Note that
+(#$mtPrecedes-NthDate-Forward MT1 MT2 TYPE n) implies (#$mtPrecedes MT1
+MT2).")
+ (argIsa mtPrecedes-NthDate-Forward 2
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg2Isa mtPrecedes-NthDate-Forward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (argIsa mtPrecedes-NthDate-Forward 1
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg1Isa mtPrecedes-NthDate-Forward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (comment mtPrecedes-NthDate-Backward "For any instances MT1 and MT2 of
+#$ReasoningWithTenseMicrotheory-MixedDateSeries,
+(#$mtPrecedes-NthDate-Backward MT1 MT2 TYPE n) means that there is an
+instance CVR-TYPE of #$CalendarCoveringType such that (#$genls TYPE
+CVR-TYPE) holds, and there is an instance DATE-2 of CVR-TYPE and an
+instance DATE-1 of TYPE such that (#$reasoningWithTenseMtTime MT1
+DATE-1) and (#$reasoningWithTenseMtTime MT2 DATE-2) hold (notice here
+we use MtTime rather than MtDate), and DATE-1 is entirely earlier than
+DATE-2 with exactly n-1 distinct dates of TYPE between the two.  For
+example, let (#$mtPrecedes-NthDate-Backward MT1 MT2 #$Friday 1) hold.
+We know that #$CalendarDay is the only element of
+#$CalendarCoveringType of which #$Friday is a spec.  Thus there is a
+DAY2 in #$CalendarDay and a DAY1 in #$Friday such that
+(#$reasoningWithTenseMtTime MT1 DAY1) and (#$reasoningWithTenseMtTime
+MT2 DAY2) hold, and such that DAY1 is entirely earlier than DAY2, with
+no instance of #$Friday between the two.  It is easy to see that this
+means DAY1 is the last Friday before DAY2.  Note that
+(#$mtPrecedes-NthDate-Backward MT1 MT2 TYPE n) implies (#$mtPrecedes MT1
+MT2).")
+ (argIsa mtPrecedes-NthDate-Backward 2
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg2Isa mtPrecedes-NthDate-Backward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (argIsa mtPrecedes-NthDate-Backward 1
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg1Isa mtPrecedes-NthDate-Backward
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (argIsa mtPrecedes-Metric 2
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg2Isa mtPrecedes-Metric
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (argIsa mtPrecedes-Metric 1
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg1Isa mtPrecedes-Metric
+ ReasoningWithTenseMicrotheory-MixedDateSeries)
+ (arg3Isa mtPrecedes-SemiMetric-Forward
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (argIsa mtPrecedes-SemiMetric-Forward 3
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (arg3Isa mtPrecedes-SemiMetric-Backward
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (argIsa mtPrecedes-SemiMetric-Backward 3
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (strictlyFunctionalInArgs mtPrecedes-Metric 2)
+ (strictlyFunctionalInArgs mtPrecedes-Metric 4)
+ (strictlyFunctionalInArgs mtPrecedes-SemiMetric-Forward 4)
+ (strictlyFunctionalInArgs mtPrecedes-SemiMetric-Forward 3)
+ (argFormat mtPrecedes-SemiMetric-Forward 4 SingleEntry)
+ (argFormat mtPrecedes-SemiMetric-Forward 2 SingleEntry)
+ (argFormat mtPrecedes-SemiMetric-Forward 3 SingleEntry)

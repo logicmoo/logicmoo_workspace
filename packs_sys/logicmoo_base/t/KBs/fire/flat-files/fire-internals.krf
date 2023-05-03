@@ -1,0 +1,889 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: fire-internals
+;;;;    System: FIRE v1
+;;;;    Author: Ken Forbus
+;;;;   Created: February 2, 2004 12:52:06
+;;;;   Purpose: Predicates used for internal bookkeeping in FIRE
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-11-27 17:14:22 -0600 (Tue, 27 Nov 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;; CWAs
+
+(isa temporalCWA Predicate)
+(comment temporalCWA "(temporalCWA ?c ?t) indicates that conclusion ?c is justified based on a closed-world assumption made at time ?t.  For this relationships, ?t is a timestamp associated with the reasoner.")
+(arg1Isa temporalCWA CycLFormula)
+(arg2Isa temporalCWA TimePoint)
+(arity temporalCWA 2)
+
+(isa temporalCWA-UT Predicate)
+(comment temporalCWA-UT "(temporalCWA-UT ?c ?t) indicates that conclusion ?c is justified based on a closed-world assumption made at time ?t.  For this relationships, ?t is assumed to be universal time, since these timestamps are associated with CWAs made over KB contents.")
+(arg1Isa temporalCWA-UT CycLFormula)
+(arg2Isa temporalCWA-UT TimePoint)
+(arity temporalCWA-UT 2)
+
+;;; See evalfns support below for closedRetrievalSetCWA
+
+(isa closedRetrievalSetCWA-KB Predicate)
+(comment closedRetrievalSetCWA-KB "(closedRetrievalSetCWA-KB ?v ?s ?t) indicates that a closed world assumption was made over all bindings of the variable ?v in the pattern ?s retrieved from the KB, at time ?t.  ?t is assumed to be universal time.")
+(arg1Isa closedRetrievalSetCWA-KB CycLVariable)
+(arg2Isa closedRetrievalSetCWA-KB CycLOpenExpression)
+(arg3Isa closedRetrievalSetCWA TimePoint)
+(arity closedRetrievalSetCWA-KB 3)
+
+;;; Case library support
+
+(isa caseLibraryFileName Predicate)
+(comment caseLibraryFileName "(caseLibraryFileName <library term> <string>) indicates that <string> is the file name used for the persistent storage of case library <library term> in the resources directory for that KB.")
+(arg1Isa caseLibraryFileName CycLTerm)
+(arg2Isa caseLibraryFileName CharacterString)
+
+
+(isa UniversalTimeFn Function-Denotational)
+(arity UniversalTimeFn 1)
+(arg1Isa UniversalTimeFn Integer)
+(resultIsa UniversalTimeFn TimePoint)
+(comment UniversalTimeFn "(UniversalTimeFn <integer>) denotes the time point referred to by interpreting <integer> as a universal time coordinate.")
+
+(isa ReasonerTimeFn Function-Denotational)
+(arg1Isa ReasonerTimeFn Integer)
+(resultIsa ReasonerTimeFn TimePoint)
+(comment ReasonerTimeFn "(ReasonerTimeFn <integer>) denotes a unique relative time with respect to a reasoner.  It reifies the current value of the timestamp-counter on a reasoner.  This was added because the 1-second granularity of universal time was too coarse to distinguish some timestamped justifications.")
+
+
+;;; Solve support
+
+;;; The flatfile expansion for defSuggestion creates (isa <name> Suggestion),
+;;; so we define the collection here.
+(isa Suggestion Collection)
+(comment Suggestion "The collection of Solve suggestions.")
+
+(isa SuggestionsMt Microtheory)
+(isa SuggestionsMt Individual)
+(genlMt SuggestionsMt BaseKB)
+(comment SuggestionsMt "The default microtheory for suggestions.")
+
+(isa solveAll Relation)
+(arity solveAll 2)
+(arg1Isa solveAll CycLExpression)
+(arg2Isa solveAll CycLExpression)
+
+(isa solveSequentially Relation)
+(arity solveSequentially 3)
+(arg1Isa solveSequentially CycLTerm)
+(arg2Isa solveSequentially List)
+(arg3Isa solveSequentially CycLExpression)
+
+(isa solveOne Relation)
+(arity solveOne 2)
+(arg1Isa solveOne CycLExpression)
+(arg2Isa solveOne CycLExpression)
+
+(isa suggestFor Relation)
+(arity suggestFor 2)
+(arg1Isa suggestFor CycLExpression)
+(arg2Isa suggestFor Suggestion)
+
+(isa suggestionGoalForm Relation)
+(arity suggestionGoalForm 2)
+(arg1Isa suggestionGoalForm Suggestion)
+(arg2Isa suggestionGoalForm CycLExpression) 
+
+(isa suggestionSubgoals Relation)
+(arity suggestionSubgoals 2)
+(arg1Isa suggestionSubgoals Suggestion)
+(arg2Isa suggestionSubgoals List)
+
+(isa suggestionResultStep Relation)
+(arity suggestionResultStep 2)
+(arg1Isa suggestionResultStep Suggestion)
+(arg2Isa suggestionResultStep CycLExpression)
+
+(isa suggestionCostFunction Relation)
+(arity suggestionCostFunction 2)
+(arg1Isa suggestionCostFunction Suggestion)
+(arg2Isa suggestionCostFunction Integer)
+
+(isa searchBFS Predicate)
+(arity searchBFS 5)
+(arg1Isa searchBFS SearchState)
+(arg2Isa searchBFS ScalarInterval)
+(arg3Isa searchBFS List)
+(arg4Isa searchBFS ScalarInterval)
+(arg5Isa searchBFS List)
+(comment searchBFS "(searchBFS ?node ?cost ?path ?solution-cost ?solution-path) searches best-first for the least-cost path to a solution.")
+
+
+;;; Pragmas for backchaining
+
+(isa <== LogicalConnective)
+(comment "(<== ?c . ?a) indicates a Prolog-style rule, where ?c is inferred exactly when ?a hold.  The order of terms in ?a is used by the backchainer exactly as specified, with no changes.")
+(isa <== VariableArityRelation)
+(argsIsa <== CycLSentence-Assertible)
+
+(isa QuerySignature Collection)
+(comment "QuerySignature is the collection of signatures for a predicate.  Used in control knowledge statements.")
+
+(isa QuerySignatureFn Function-Denotational)
+(comment "(QuerySignatureFn . ?args) denotes a signature of arguments for some predicate.  Typically the elements are :known or :unknown.")
+(isa QuerySignatureFn VariableArityFunction)
+(resultIsa QuerySignatureFn QuerySignature)
+
+(isa forbiddenQuerySignature Predicate)
+(comment "(forbiddenQuerySignature ?pred ?signature) states that one cannot call QUERY with the pattern of known and unknown parameters indicated by signature.  This control knowledge is used by the clause optimizer.")
+(arity forbiddenQuerySignature 2)
+(arg1Isa forbiddenQuerySignature Predicate)
+(arg2Isa forbiddenQuerySignature QuerySignature)
+
+;; Intellectual reflexes, to keep the system from hurting itself
+;; when creating its own chainers.
+(forbiddenQuerySignature genls (QuerySignatureFn :unknown :unknown))
+(forbiddenQuerySignature isa (QuerySignatureFn :unknown :unknown))
+
+(isa forEffectOnly Predicate)
+(comment "(forEffectOnly ?query) indicates that ?query is being made only for effect, i.e., to cause the reasoner to do something, rather than caring about the value.  This kind of query always succeeds, whether or not ?query succeeded or failed.")
+(arity forEffectOnly 1)
+(arg1Isa forEffectOnly Thing)
+(isa forEffectOnly NotForAnalogyPredicate)
+
+(isa everySatisfies Predicate)
+(arity everySatisfies 3)
+(arg1Isa everySatisfies CycLFormula)
+(arg2Isa everySatisfies Set-Mathematical)
+(arg3Isa everySatisfies CycLFormula)
+(comment everySatisfies "(everySatisfies ?var ?item-set ?query) succeeds if ?query succeeds for all elements of ?item-set bound to ?var.")
+
+(isa someSatisfies Predicate)
+(arity someSatisfies 3)
+(arg1Isa someSatisfies CycLFormula)
+(arg2Isa someSatisfies Set-Mathematical)
+(arg3Isa someSatisfies CycLFormula)
+(comment someSatisfies "(someSatisfies ?var ?item-set ?query) succeeds if ?query succeeds for some element of ?item-set bound to ?var.")
+
+(isa tell Predicate)
+(arity tell 1)
+(arg1Isa tell CycLFormula)
+(comment tell "(tell <prop>) is supported directly in the query backchainer.")
+
+(isa untell Predicate)
+(arity untell 1)
+(arg1Isa untell CycLFormula)
+(comment untell "(untell <prop>) is supported directly in the query backchainer.")
+
+;;;; Support for eval subsystem
+
+(isa closedRetrievalSetCWA Predicate)
+(arg1Isa closedRetrievalSetCWA CycLVariable)
+(arg2Isa closedRetrievalSetCWA CycLOpenExpression)
+(arg3Isa closedRetrievalSetCWA TimePoint)
+(comment closedRetrievalSetCWA "(closedRetrievalSetCWA <var> <statement> <time>) indicates that a closed world assumption was made over the results of retrieving members of the set specified by the <var> in <statement> at <time>")
+(arity closedRetrievalSetCWA 3)
+
+(isa lispProcedureImplementing Relation)
+(comment lispProcedureImplementing "(lispProcedureImplementing <ef> <proc>) indicates that the EvaluatableFunction <ef> is implemented via Lisp procedure <proc>.")
+(arg1Isa lispProcedureImplementing EvaluatableFunction)
+(arg2Isa lispProcedureImplementing Thing) ;; Need something better here.
+
+;;; Why is this here?  Isn't this defined in evaluate-axioms?
+(isa TheClosedRetrievalSetOf Function-Denotational)
+(comment TheClosedRetrievalSetOf "(TheClosedRetrievalSetOf ?var ?expression) refers to the set of things that satisfy ?expression that can be derived by what is explicitly known to the system at some particular time.  This is an extensional definition, as distinct from TheSetOf, which refers to the entire set.")
+(arg1Isa TheClosedRetrievalSetOf ELVariable)
+(arg2Isa TheClosedRetrievalSetOf CycLSentence-Assertible)
+(resultIsa TheClosedRetrievalSetOf Set)
+(arity TheClosedRetrievalSetOf 2)
+
+
+;;; Flat-file bookkeeping facts
+
+(isa kbFlatFileLoaded Relation)
+(arity kbFlatFileLoaded 3)
+(arg1Isa kbFlatFileLoaded Pathname)
+(arg2Isa kbFlatFileLoaded TimePoint)
+(arg3Isa kbFlatFileLoaded KBFlatFileLanguage)
+(isa kbFlatFileLoaded NotForAnalogyPredicate)
+(comment kbFlatFileLoaded
+         "Declares that a given flat-file was loaded into the knowledge-base 
+          at the specified date/time.  Since this implicitly denotes that the 
+          flat-file was loaded into the knowledge-base, this is a handy fact
+          to look for when building a list of all the flat-files that went 
+          into the KB.")
+
+(isa KBFlatFileLanguage SiblingDisjointAttributeType)
+(genls KBFlatFileLanguage AttributeValue)
+(comment KBFlatFileLanguage
+         "Attribute used when describing the language used in a knowledge-base
+          flat-file.  See also #$kbFlatFileLoaded.")
+
+(isa KBLanguage-Meld KBFlatFileLanguage)
+(isa KBLanguage-KIF  KBFlatFileLanguage)
+
+(isa kbFlatFileSourceOf Relation)
+(arity kbFlatFileSourceOf 2)
+(arg1Isa kbFlatFileSourceOf Pathname)
+(arg2Isa kbFlatFileSourceOf CycLSentence-Assertible)
+(comment kbFlatFileSourceOf
+         "(kbFlatFileSourceOf <pathname> <sentence>) asserts that the flat file <pathname> is how <sentence> got into the KB.  This is used for metrics and tracking changes.")
+(isa kbFlatFileSourceOf NotForAnalogyPredicate)
+
+;;;; Reification of reasoning
+;;
+;; This is useful in analogical reasoning because we want to have partial
+;; descriptions of what went into a conclusion
+
+(isa antecedentOf AsymmetricBinaryPredicate)
+(genlPreds antecedentOf explains-Generic)
+(comment antecedentOf "(antecedentOf ?a ?c) means that ?a is one of the antecedents of ?c, that is, (implies (and ... ?a ....) ?c).  Useful for partial reification of argument structure for analogical reasoning.")
+(arg1Isa antecedentOf CycLSentence-Assertible)
+(arg2Isa antecedentOf CycLSentence-Assertible)
+(arity antecedentOf 2)
+
+;;;; Structural relationships
+;; Most of these were defined in some version of Cyc, but aren't in our flat files.
+;; They are implemented via structural.lsp.
+
+;;; FormulaArgument seems to have been replaced in Cyc with FormulaArgFn.
+;;; We still use it, so define it here:
+(isa formulaArgument Predicate)
+(arity formulaArgument 3)
+(arg1Isa formulaArgument CycLFormula)
+(arg2Isa formulaArgument NonNegativeInteger)
+(arg3Isa formulaArgument Thing)
+(comment formulaArgument "(formulaArgument FORMULA N TERM) means that TERM appears as the Nth argument in FORMULA.")
+
+(isa someArgumentHasPredicate Predicate)
+(arity someArgumentHasPredicate 2)
+(arg1Isa someArgumentHasPredicate CycLSentence-Assertible)
+(arg2Isa someArgumentHasPredicate ELRelation) ;; Check
+(comment someArgumentHasPredicate
+         "(someArgumentHasPredicate <sentence> <predicate>) indicates that some argument of <sentence> has <predicate> as its functor, at some depth in it.")
+
+(isa noArgumentHasPredicate Predicate)
+(arity noArgumentHasPredicate 2)
+(arg1Isa noArgumentHasPredicate CycLSentence-Assertible)
+(arg2Isa noArgumentHasPredicate ELRelation) ;; Check
+(comment noArgumentHasPredicate
+         "(noArgumentHasPredicate <sentence> <predicate>) indicates that no argument of <sentence> has <predicate> as its functor, at any depth in it.")
+
+(isa argumentHasPredicate Predicate)
+(arity argumentHasPredicate 3)
+(arg1Isa argumentHasPredicate CycLSentence-Assertible)
+(arg2Isa argumentHasPredicate ELRelation)
+(arg3Isa argumentHasPredicate CycLTerm)
+(comment argumentHasPredicate "(argumentHasPredicate ?stmt ?pred ?argument-with-predicate>)")
+
+
+(isa predicatePosition TernaryPredicate)
+(arity predicatePosition 3)
+(arg1Isa predicatePosition CycLFormula)
+(arg2Isa predicatePosition List-Extensional)
+(arg3Isa predicatePosition Integer)
+(comment predicatePosition "(predicatePosition ?stmt ?pred-list ?n) binds ?n to the first predicate in ?pred-list that appears somewhere in ?stmt.")
+
+(isa unifies Predicate)
+(arity unifies 2)
+(arg1Isa unifies CycLFormula)
+(arg2Isa unifies CycLFormula)
+(comment unifies "(unifies PAT1 PAT2) means PAT1 unifies with PAT2.  Bindings for variables in both arguments are added to the query environment.")
+
+(isa matches Predicate)
+(arity matches 2)
+(arg1Isa matches CycLFormula)
+(arg2Isa matches CycLFormula)
+(comment matches "(matches PAT1 PAT2) means PAT1 left-unifies with PAT2 and is at least as general as PAT2. Only bindings for variables in the left (first) argument are added to the query environment.")
+
+(isa containsPattern Predicate)
+(arity containsPattern 2)
+(arg1Isa containsPattern CycLFormula)
+(arg2Isa containsPattern CycLFormula)
+(comment containsPattern "(containsPattern  <pattern> <expression>) is true exactly when some subexpression of <expression> unifies with <pattern>.  It does not add bindings to the query environment.")
+
+(isa containsExpression Predicate)
+(arity containsExpression 2)
+(arg1Isa containsExpression CycLFormula)
+(arg2Isa containsExpression CycLFormula)
+(comment containsExpression "(containsExpression  <subexpression> <expression>) is true exactly when
+ <subexpression> is a member of <expression>.  This does *not* unify or bind variables.")
+
+(isa containsUnifyingArgument Predicate)
+(arity containsUnifyingArgument 3)
+(arg1Isa containsUnifyingArgument CycLFormula)
+(arg2Isa containsUnifyingArgument CycLFormula)
+(arg3Isa containsUnifyingArgument CycLFormula)
+(comment containsUnifyingArgument
+ "(containsUnifyingArgument ?exp ?pat ?r) returns bindings for ?r for any argument within ?exp, recursively, that unifies with ?pat.")
+
+(isa instantiationOf Predicate)
+(arity instantiationOf 3)
+(arg1Isa instantiationOf CycLFormula)
+(arg2Isa instantiationOf CycLFormula)
+(arg3Isa instantiationOf CycLFormula)
+(comment instantiationOf "(instantiationOf <pattern1> <pattern2> <instantiated-pattern>) is true exactly when
+ <instantiated-pattern> is the instantiated result of unifying pattern1 and pattern2.
+ The third argument can be a ground pattern, in which case this is a test,
+ or a simple output variable (the normal case) to which the instantiated result is bound,
+ or it can be a structure with variables, allowing the result to be destructured
+ in one step. This does not bindings from the unification to the query environment.")
+
+(isa subexpressionMatching Predicate)
+(arity subexpressionMatching 3)
+(arg1Isa subexpressionMatching CycLFormula)
+(arg2Isa subexpressionMatching CycLFormula)
+(arg3Isa subexpressionMatching CycLFormula)
+(comment subexpressionMatching "(subexpressionMatching ?pattern ?expression ?subexpression) means ?pattern unifies with some ?subexpression of ?expression.")
+
+(isa atomicTerm Predicate)
+(arity atomicTerm 1)
+(arg1Isa atomicTerm Thing)
+(comment atomicTerm "This is true if the one argument is atomp and false otherwise.")
+
+(isa groundExpression Predicate)
+(arity groundExpression 1)
+(arg1Isa groundExpression Thing)  ; really can't be more specific.
+(comment groundExpression "(groundExpression ?thing) is true if ?thing is bound to a non-variable constant or a ground formula.")
+
+(isa variableExpression Predicate)
+(arity variableExpression 1)
+(arg1Isa variableExpression Thing)  ; really can't be more specific.
+(comment variableExpression "(variableExpression ?thing) is true if ?thing is not bound (or bound to a variable).")
+
+(isa keywordExpression Predicate)
+(arity keywordExpression 1)
+(arg1Isa keywordExpression Thing)  ; really can't be more specific.
+(comment keywordExpression "(keywordExpression ?thing) is true if ?thing is keywordp.")
+
+(isa keywordFreeExpression Predicate)
+(arity keywordFreeExpression t)
+(arg1Isa keywordFreeExpression Thing)
+(comment keywordFreeExpression "(keywordFreeExpression ?thing) is true if there are no keywords in ?thing")
+
+(isa nonGroundExpression Predicate)
+(arity nonGroundExpression 1)
+(arg1Isa nonGroundExpression Thing)  ; really can't be more specific.
+(comment nonGroundExpression "(nonGroundExpression ?thing) is true if ?thing is bound to a formula containing variables.")
+
+(isa globalPredicate Predicate)
+(arity globalPredicate 1)
+(arg1Isa globalPredicate Predicate)
+(comment globalPredicate
+  "(globalPredicate ?p) indicates that ?p is a global predicate.  ?p must be bound when queried.
+ There is no list of global predicates maintained, or easily available, to make it worth
+ building that in.")
+
+(isa pseudoVarExpressionOf BinaryRelation)
+(arity pseudoVarExpressionOf 2)
+(arg1Isa pseudoVarExpressionOf CycLExpression)
+(arg2Isa pseudoVarExpressionOf CycLExpression)
+(comment pseudoVarExpressionOf "(pseudoVarExpressionOf ?exp-with-variables ?exp-with-keywords) maps or translates between an expression containing logic variables and an isomorphic expression with variables replaced by keywords (pseudo-variables).  Works in either direction.")
+
+(isa variableTransitiveClosure TernaryRelation)
+(arity variableTransitiveClosure 3)
+(arg1Isa variableTransitiveClosure Set-Mathematical)
+(arg2Isa variableTransitiveClosure CycLFormula)
+(arg3Isa variableTransitiveClosure Set-Mathematical)
+(comment variableTransitiveClosure "(variableTransitiveClosure ?variable-list ?formula ?argument-set) binds ?argument-set to an explicit set of arguments in ?formula accessible from the initial variables in ?var-set.")
+
+(isa unwrappedFormula BinaryPredicate)
+(arity unwrappedFormula 2)
+(arg1Isa unwrappedFormula CycLFormula)
+(arg2Isa unwrappedFormula CycLFormula)
+(comment unwrappedFormula "(unwrappedFormula ?wrapped ?unwrapped) binds ?unwrapped to the fully unwrapped variant of ?wrapped, with all advice predicates stripped out.  Useful for analyzing a body of rules.")
+
+(isa chooseN TernaryRelation)
+(arity chooseN 3)
+(arg1Isa chooseN Set-Mathematical)
+(arg2Isa chooseN Set-Mathematical)
+(arg3Isa chooseN Integer)
+(comment chooseN "(chooseN ?sub ?super ?n) If all are bound, check that every element of ?sub is a subset of ?super and ?sub has cardinality ?n If ?sub is unbound, enumerate the subsets of super of cardinality ?n.")
+
+(isa justificationForStatementIn Predicate)
+(arity justificationForStatementIn 3)
+(arg1Isa justificationForStatementIn CycLFormula)
+(arg2Isa justificationForStatementIn CycLFormula)
+(arg3Isa justificationForStatementIn CycLFormula)
+(comment justificationForStatementIn 
+"(justificationForStatementIn <statement> <expression> <antecedents>) is true
+ exactly when <expression> contains a justification for <statement>, indicating that
+ <statement> should be believed as a consequence of the set of statements <antecedents>.")
+
+(isa rationaleForOccurrenceIn Predicate)
+(arity rationaleForOccurrenceIn 4)
+(arg1Isa rationaleForOccurrenceIn CycLFormula)
+(arg2Isa rationaleForOccurrenceIn CycLFormula)
+(arg3Isa rationaleForOccurrenceIn CycLFormula)
+(arg4Isa rationaleForOccurrenceIn CycLFormula)
+(comment rationaleForOccurrenceIn 
+"(rationaleForOccurrenceIn <occurrence> <expression> <relation> <antecedents>) 
+ is true exactly when the event or situation type <occurrence> is connected to
+ enabling/disabling conditions <antecedents> by some subexpression of <expression>.
+ <relation> is the relationship that holds between them, this is needed to determine
+ the type of connection between the occurrence and the antecedents.")
+
+(isa inKB Predicate)
+(arity inKB 1)
+(arg1Isa inKB CycLSentence-Assertible)
+(comment inKB "(inKB <statement>) indicates that <statement> is explicitly in the knowledge base, or is derived straightforwardly from what is there, e.g., via inheritance or transitive reasoning.")
+
+(isa individualRepresenting Predicate)
+(arity individualRepresenting 3)
+(arg1Isa individualRepresenting Thing) ;; Could be anything
+(arg2Isa individualRepresenting SubLString)
+(arg3Isa individualRepresenting Thing) ;; Could be anything
+(comment individualRepresenting
+         "(individualRepresenting <set of conditions> <prefix> <individual>) finds the individual previously introduced to represent an entity implied by <set of conditions>, or creates a new one if there isn't one.  <prefix> is a string which is the start of the name, for debugging purposes.")
+(isa individualRepresenting NotForAnalogyPredicate)
+
+(isa queryContext Predicate)
+(arity queryContext 1)
+(arg1Isa queryContext Microtheory)
+(comment queryContext "(queryContext ?ctxt) is a dynamic predicate that binds ?ctxt to the actual context in which the query was performed.")
+
+(isa currentUniversalTime Predicate)
+(arity currentUniversalTime 1)
+(arg1Isa currentUniversalTime Integer)
+(comment currentUniversalTime
+         "(currentUniversalTime <integer>) indicates that the current universal time was <integer>.  This is a dynamic-update predicate.")
+
+(isa moreSpecificRelationSupporting Predicate)
+(comment moreSpecificRelationSupporting
+         "(moreSpecificRelationSupporting (?reln ?a1 ?a2) ?subform ?case) finds solutions for (?reln ?a1 ?a2) by looking at the specPreds of ?reln.")
+(arity moreSpecificRelationSupporting 3)
+(arg1Isa moreSpecificRelationSupporting CycLAssertion)
+(arg2Isa moreSpecificRelationSupporting CycLAssertion)
+(arg2Isa moreSpecificRelationSupporting Microtheory)
+
+(isa variableFromTerm Predicate)
+(arity variableFromTerm 2)
+(arg1Isa variableFromTerm CycLTerm)
+(arg2Isa variableFromTerm Thing)
+(comment variableFromTerm "(variableFromTerm ?term ?var) produces a variable from ?term which is bound to ?var.")
+
+(isa sameBindings Predicate)
+(arity sameBindings 2)
+(arg1Isa sameBindings SetOrList-Extensional)
+(arg2Isa sameBindings SetOrList-Extensional)
+
+(isa differentBindings Predicate)
+(arity differentBindings 2)
+(arg1Isa differentBindings SetOrList-Extensional)
+(arg2Isa differentBindings SetOrList-Extensional)
+
+(isa subsetOfBindings Predicate)
+(arity subsetOfBindings 2)
+(arg1Isa subsetOfBindings SetOrList-Extensional)
+(arg2Isa subsetOfBindings SetOrList-Extensional)
+
+(isa notIsa Predicate)
+(arity notIsa 2)
+(arg1Isa notIsa Thing)
+(arg2Isa notIsa Collection)
+(comment notIsa
+         "(notIsa ?e ?col) is true when entity ?e cannot be an instance of collection ?col.  See also #$couldBeA.")
+
+(isa couldBeA Predicate)
+(arity couldBeA 2)
+(arg1Isa couldBeA Thing)
+(arg2Isa couldBeA Collection)
+(comment couldBeA
+         "(couldBeA ?e ?col) is true when it is not impossible that entity ?e is an instance of collection ?col.  See also #$notIsa.")
+(negationPreds notIsa couldBeA)
+
+(isa disjointCollections Predicate)
+(arity disjointCollections 2)
+(arg1Isa disjointCollections Collection)
+(arg2Isa disjointCollections Collection)
+(comment disjointCollections
+         "(disjointCollections ?col1 ?col2) is true when ?col1 and ?col2 have no members in common.  This relationship is derived from multiple sources, including disjointWith statements and type-level disjointness predicates.  See also #$perhapsOverlappingCollections.")
+
+
+(isa perhapsOverlappingCollections Predicate)
+(arity perhapsOverlappingCollections 2)
+(arg1Isa perhapsOverlappingCollections Collection)
+(arg2Isa perhapsOverlappingCollections Collection)
+(comment perhapsOverlappingCollections
+         "(perhapsOverlappingCollections ?col1 ?col2) is true when it is not impossible that ?col1 and ?col2 have members in common.  This relationship is derived from multiple sources, including disjointWith statements and type-level disjointness predicates.  See also #$disjointCollections.")
+(negationPreds disjointCollections perhapsOverlappingCollections)
+
+;;; Advice for ask
+;;; (localOnly ?q): Only use the current context for solving ?q
+;;; (contextEnvAllowed ?q): The entire logical access entailed by the current context
+;;;    may be accessed in finding solutions for ?q
+;;; (lookupOnly ?q): Only look up explicitly known facts for solving ?q.  
+;;; (inferenceAllowed ?q): Any applicable reasoning techniques, in addition to retrieval,
+;;;   may be used to find solutions for ?q
+;;; (wmOnly ?q): Only look in the working memory, not the KB, to find solutions 
+;;;   for ?q
+;;; (kbAllowed ?q): both the working memory and the KB can be accessed to
+;;;   find solutions for ?q
+;; See ask-macros.lsp for more details
+
+
+(isa AskAdvicePredicate Collection)
+(genls AskAdvicePredicate Predicate)
+(comment AskAdvicePredicate
+         "Instances of AskAdvicePredicate are predicates used to provide advice to low-level reasoning routines.  They should never appear as top-level statements in the KB or in working memory.  They are allowed to appear in axioms used in explanations, since this information can be useful for systems that modify their own reasoning abilities.")
+
+(isa localOnly AskAdvicePredicate)
+(arity localOnly 1)
+(arg1Isa localOnly CycLAssertion)
+(comment localOnly "(localOnly ?q) means that ?q is to be solved only using the current context, not the full logical environment. See also contextEnvAllowed.")
+
+(isa contextEnvAllowed AskAdvicePredicate)
+(arity contextEnvAllowed 1)
+(arg1Isa contextEnvAllowed CycLAssertion)
+(comment contextEnvAllowed "(contextEnvAllowed ?q) means that ?q is to be solved using the entire logical environment.  See also localOnly.")
+
+(isa lookupOnly AskAdvicePredicate)
+(arity lookupOnly 1)
+(arg1Isa lookupOnly CycLAssertion)
+(comment lookupOnly "(lookupOnly ?q) means that ?q is to be solved only using retrievals, not inference.")
+
+(isa inferenceAllowed AskAdvicePredicate)
+(arity inferenceAllowed 1)
+(arg1Isa inferenceAllowed CycLAssertion)
+(comment inferenceAllowed "(inferenceAllowed ?q) means that ?q is to be solved by inference as well as retrieval.")
+
+(isa inferenceOnly AskAdvicePredicate)
+(arity inferenceOnly 1)
+(arg1Isa inferenceOnly CycLAssertion)
+(comment inferenceOnly "(inferenceOnly ?q) means that the immediate subquery ?q should be solved via backchaining only, without looking at the kb or working memory.  Subqueries of ?q will be performed with inferenceAllowed, unless otherwise restricted through additional ask-advice wrappers.")
+
+(isa useTransitiveInference AskAdvicePredicate)
+(arity useTransitiveInference 1)
+(arg1Isa useTransitiveInference CycLAssertion)
+(comment useTransitiveInferenc e"(useTransitiveInference ?q) means that transitive inference through structural relationships can be used to solve ?q if necessary.")
+
+(isa nonTransitiveInference AskAdvicePredicate)
+(arity nonTransitiveInference 1)
+(arg1Isa nonTransitiveInference CycLAssertion)
+(comment nonTransitiveInference "(nonTransitiveInference ?q) means that transitive inference through structural relations should not be used in solving ?q.")
+
+(isa wmOnly AskAdvicePredicate)
+(arity wmOnly 1)
+(arg1Isa wmOnly CycLAssertion)
+(comment wmOnly "(wmOnly ?q) means that ?q is to be solved only using facts retrieved from working memory.")
+
+(isa kbOnly AskAdvicePredicate)
+(arity kbOnly 1)
+(arg1Isa kbOnly CycLAssertion)
+(comment kbOnly "(kbOnly ?q) means that ?q is to be solved only using facts retrieved from the knowledge base.")
+
+(isa outsourcedOnly AskAdvicePredicate)
+(arity outsourcedOnly 1)
+(arg1Isa outsourcedOnly CycLAssertion)
+(comment outsourcedOnly "(outsourcedOnly ?q) means that ?q is to be solved using only outsourced predicate handlers.")
+
+(isa allFactsAllowed AskAdvicePredicate)
+(arity allFactsAllowed 1)
+(arg1Isa allFactsAllowed CycLAssertion)
+(comment allFactsAllowed "(allFactsAllowed ?q) means that ?q is to be solved using retrievals from the KB as well as from working memory.")
+
+(isa generalizationsAllowed AskAdvicePredicate)
+(arity generalizationsAllowed 1)
+(arg1Isa generalizationsAllowed CycLAssertion)
+(comment generalizationsAllowed "(generalizationsAllowed ?q) Allows retrievals of assertions that may contain variables.  This invokes the retrieve-general mechanism.")
+
+(isa ignoreTimestamps AskAdvicePredicate)
+(arity ignoreTimestamps 1)
+(arg1Isa ignoreTimestamps CycLAssertion)
+(comment ignoreTimestamps "(ignoreTimestamps ?q) means the backchainer should not check for stale timestamps.")
+
+(isa honorTimestamps AskAdvicePredicate)
+(arity honorTimestamps 1)
+(arg1Isa honorTimestamps CycLAssertion)
+(comment honorTimestamps "(honorTimestamps ?q) means the backchainer should re-infer antecedent expressions whose timestamps have expired.")
+
+(isa withAbduction AskAdvicePredicate)
+(arity withAbduction 1)
+(arg1Isa withAbduction CycLAssertion)
+(comment withAbduction "(withAbduction <query>) invokes abduction on <query> and (re-)binds *enable-abduction* to the more specific of :all or any previous binding.")
+
+(isa withAbductivePredicates AskAdvicePredicate)
+(arity withAbductivePredicates 2)
+(arg1Isa withAbductivePredicates CycLTerm)
+(arg2Isa withAbductivePredicates CycLAssertion)
+(comment arg2Isa withAbductivePredicates "(withAbductivePredicates (<pred>*) <query>) rebinds *enable-abduction* to the specified list of predicates on which to permit abduction, and invokes abduce.")
+
+(isa withAbductivePolicy AskAdvicePredicate)
+(arity withAbductivePolicy 2)
+(arg1Isa withAbductivePolicy AbductionPolicy)
+(arg2Isa withAbductivePolicy CycLAssertion)
+(comment withAbductivePolicy "(withAbductivePolicy <policy> <query>) binds *abductive-policy* to <policy> and invokes abduce.  <policy> may be one of MinimalAssumptions, AllAssumptions, NoAssumptions, or a function corresponding to a scoring policy to maximize (someday we'll ontologize these)") 
+
+(isa withCounterfactual AskAdvicePredicate)
+(arity withCounterfactual 2)
+(arg1Isa withCounterfactual CycLFormula)
+(arg2Isa withCounterfactual CycLFormula)
+(comment withCounterfactual "(withCounterfactual ?counterfactual ?query) invokes ?query with ?counterfactual temporarily assumed.  Justifications for the result are surgically altered so that they persist after the counterfactual is retracted.")
+
+(isa reverseCIsAllowed AskAdvicePredicate)
+(arity reverseCIsAllowed 1)
+(arg1Isa reverseCIsAllowed CycLAssertion)
+(comment reverseCIsAllowed "(reverseCIsAllowed ?q) means SME should compute reverse candidateInferences (as well as forward) in the scope of this wrapper.")
+
+(isa blockMostOutOfMappingSupport AskAdvicePredicate)
+(arity blockMostOutOfMappingSupport 1)
+(arg1Isa blockMostOutOfMappingSupport CycLAssertion)
+(comment blockMostOutOfMappingSupport "(blockMostOutOfMappingSupport ?q) means SME should block most out of mapping support in the scope of this wrapper.")
+
+(isa useLessGreedyGreedyMerge AskAdvicePredicate)
+(arity useLessGreedyGreedyMerge 1)
+(arg1Isa useLessGreedyGreedyMerge CycLAssertion)
+(comment useLessGreedyGreedyMerge "(useLessGreedyGreedyMerge ?q) means SME should use a less greedy greedy merge in the scope of this wrapper.")
+
+
+(isa numAnswers AskAdvicePredicate)
+(arity numAnswers 2)
+(arg1Isa numAnswers Integer)
+(arg2Isa numAnswers CycLAssertion)
+(comment numAnswers "(numAnswers ?num ?query) limits the number of solutions generated to ?num.")
+
+(isa cacheComplete AskAdvicePredicate)
+(arity cacheComplete 1)
+(arg1Isa cacheComplete CycLAssertion)
+(comment cacheComplete "(cacheComplete ?query) cuts off kb and backchaining inference if results are found in wm.")
+
+(isa withTimeout AskAdvicePredicate)
+(arity withTimeout 2)
+(arg1Isa withTimeout Number)
+(arg2Isa withTimeout CycLAssertion)
+(comment withTimeout "(withTimeout ?seconds ?query) means only allow ?query to be processed for ?seconds seconds.  Otherwise fail.")
+
+(isa withBackchainingDepth AskAdvicePredicate)
+(arity withBackchainingDepth 2)
+(arg1Isa withBackchainingDepth Integer)
+(arg2Isa withBackchainingDepth CycLAssertion)
+(comment withBackchainingDepth "(withBackchainingDepth ?depth ?query) Limits the depth of backchainer to ?depth subqueries.")
+
+(isa withCurrentTimestamp AskAdvicePredicate)
+(arity withCurrentTimestamp 1)
+(arg1Isa withCurrentTimestamp CycLAssertion)
+(comment withCurrentTimestamp "(withCurrentTimestamp ?query) binds *query-timestamp* to the current reasoner count, effectively preventing the planner from incrementing the count.")
+
+(isa withTrickleDownMultiplier AskAdvicePredicate)
+(arity withTrickleDownMultiplier 2)
+(arg1Isa withTrickleDownMultiplier RealNumber)
+(arg2Isa withTrickleDownMultiplier CycLAssertion)
+(comment withTrickleDownMultiplier "(withTrickleDownMultiplier ?multiplier ?query) performs query with SME's trickle-down multipler set to the specified value.")
+
+(isa useMinimalAscension AskAdvicePredicate)
+(arity useMinimalAscension 1)
+(arg1Isa useMinimalAscension CycLAssertion)
+(comment useMinimalAscension "(useMinimalAscension ?query) binds sme::*default-enforce-1to1-minimal-ascension* to t before performing query.")
+
+(isa holdsOnAgent AskAdvicePredicate)
+(arity holdsOnAgent 2)
+(arg2Isa holdsOnAgent CycLAssertion)
+(comment holdsOnAgent "(holdsOnAgent ?agent ?query) runs query on a remote agent if code is executing on an agent.")
+
+;;; Dynamic Update Predicates
+
+(isa DynamicUpdatePredicate Collection)
+(genls DynamicUpdatePredicate Predicate)
+(comment DynamicUpdatePredicate
+         "Instances of DynamicUpdatePredicate are predicates whose truth may change over time, and are therefore justified via timestamped assertions.")
+
+(isa wmAntecedentOf BinaryPredicate)
+(arity wmAntecedentOf 2)
+(arg1Isa wmAntecedentOf CycLSentence-Assertible)
+(arg2Isa wmAntecedentOf CycLSentence-Assertible)
+(comment wmAntecedentOf "(wmAntecedentOf ?consequent ?antecedent) consults the working memory justifications and either binds ?antecedent to antecedents of ?consequent, or vice versa, or checks if both arguments are bound.  At least one argument must be bound and bound arguments must be true.")
+
+(isa justify BinaryPredicate)
+(arity justify 2)
+(arg1Isa justify CycLSentence-Assertible)
+(arg2Isa justify List)
+(comment justify "(justify ?consequent ?antecedent-list) is a dynamic update predicate defined in fire/dynamic-update.lsp.  It is a side-effecting operation that asserts a rule to justify a conclusion based on antecedents.")
+
+(isa currentQueryTimestamp UnaryPredicate)
+(arity currentQueryTimestamp 1)
+(arg1Isa currentQueryTimestamp Integer)
+(comment currentQueryTimestamp "(currentQueryTimestamp ?ts) provides a way to reify the current query timestamp.  This is a DynamicUpdatePredicate.")
+
+(isa resourcesExceeded UnaryPredicate)
+(arity resourcesExceeded 1)
+(arg1Isa resourcesExceeded TruthValue)
+(comment resourcesExceeded "(resourcesExceeded ?truth-value) provides a way to determine if the immediately preceding subquery timed out or hit a depth bound.  It always succeeds unless you specify a value (True or False) which doesn't match.")
+
+(isa queryTimedOut UnaryPredicate)
+(genlPreds queryTimedOut resourcesExceeded)
+(arity queryTimedOut 1)
+(arg1Isa queryTimedOut TruthValue)
+(comment queryTimedOut "(queryTimedOut ?truth-value) provides a way to determine if the immediately preceding subquery timed out.  It always succeeds unless you specify a value (True or False) which doesn't match.")
+
+(isa depthLimitExceeded UnaryPredicate)
+(genlPreds depthLimitExceeded resourcesExceeded)
+(arity depthLimitExceeded 1)
+(arg1Isa depthLimitExceeded TruthValue)
+(comment depthLimitExceeded "(depthLimitExceeded ?truth-value) provides a way to determine if the immediately preceding subquery hit a depth bound.  It always succeeds unless you specify a value (True or False) which doesn't match.")
+
+;;; Reasoner Control-State Handling
+
+(isa StateDependentControlInfoPredicate Collection)
+(genls StateDependentControlInfoPredicate Predicate)
+(comment StateDependentControlInfoPredicate 
+         "A #$StateDependentControlInfoPredicate is a special kind of predicate 
+          that gives control-information to the reasoner that should only be in 
+          effect if the reasoner is in a certain #$ReasonerControlState.  For 
+          example, #$ubiquitousFor isa #$StateDependentControlInfoPredicate which 
+          tells the reasoner that a certain #$Predicate should be considered 
+          ubiquitous only under the given #$ReasonerControlState.")
+
+
+(isa ReasonerControlState Collection)
+(genls ReasonerControlState InferenceParameter)
+(comment ReasonerControlState 
+         "This is a collection of control-states that can be applied a reasoning
+          engine.  Often these will be used in conjunction with 
+          #$StateDependentControlInfoPredicate facts to determine what sorts of 
+          reasoner control info should be active while in the given
+          #$ReasonerControlState.")
+
+
+;;;
+;;; Misc preds not otherwise defined
+;;;
+
+(isa uninferredSentence Predicate)
+(arity uninferredSentence 1)
+(arg1Isa uninferredSentence CycLSentence)
+(notAssertible uninferredSentence)
+
+(isa falseSentence Predicate)
+(arity falseSentence 1)
+(arg1Isa falseSentence CycLSentence)
+(notAssertible falseSentence)
+
+(isa individualSatisfyingConditions  Predicate)
+(arity individualSatisfyingConditions 3)
+(arg1Isa individualSatisfyingConditions Individual)
+(arg2Isa individualSatisfyingConditions Collection)
+(arg3Isa individualSatisfyingConditions Set-Mathematical)
+(comment individualSatisfyingConditions 
+  "(individualSatisfyingConditions  <individual> <col> <set of conditions>) either binds or constructs an individual of type <col> subject to the <set of conditions>")
+
+
+;;; numberOfStatementsUsing
+(isa numberOfStatementsUsing Predicate)
+(arity numberOfStatementsUsing 3)
+(arg1Isa numberOfStatementsUsing Predicate)
+(arg2Isa numberOfStatementsUsing Microtheory)
+(arg3Isa numberOfStatementsUsing Integer)
+(comment numberOfStatementsUsing
+  "(numberOfStatementsUsing <reln> <mt> <n>) indicates that there are <n> top-level 
+ occurrences of relation <reln> in microtheory <mt> in the KB.  This looks only at <mt> itself, not
+ the logical environment entailed by it.")
+ 
+ ;;; Moved from companions agents-source to fire/metaknowledge.lsp
+(isa microtheoriesOf BinaryPredicate)
+(arity microtheoriesOf 2)
+(arg1Isa microtheoriesOf CycLSentence-Assertible)
+(arg2Isa microtheoriesOf Microtheory)
+(comment microtheoriesOf "(microtheoriesOf ?sentence ?mt) binds ?mt to each of the microtheories in which ?sentence is asserted.")
+
+(isa numberOfInstances BinaryPredicate)
+(arity numberOfInstances 2)
+(arg1Isa numberOfInstances Collection)
+(arg2Isa numberOfInstances Integer)
+(comment numberOfInstances "(numberOfInstances ?collection ?n) binds ?n to the number of instances of ?collection in the kb.  This honors the :transitive argument.")
+
+(isa contextCounter BinaryPredicate)
+(arity contextCounter 2)
+(arg1Isa contextCounter CycLTerm)  ; arbitrary symbol
+(arg2Isa contextCounter Integer)
+(comment contextCounter "(contextCounter ?prefix ?count) supports a microtheory gensym capability in the new-spec-mt utility.")
+
+ ;;; Testing
+ 
+ (isa busyWait UnaryPredicate)
+ (arity busyWait 1)
+ (arg1Isa busyWait Integer)
+ (comment busyWait
+ "(busyWait ?seconds) exists solely to test withTimeout functionality.
+ This is a dynamic update predicate.
+ Do not use this to represent knowledge!")
+ 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Extensions to primitives
+
+(isa NumericalValueWithUnits Collection)
+(genls NumericalValueWithUnits PhysicalQuantity)
+(comment NumericalValueWithUnits "NumericalValueWithUnits is the subcollection of PhysicalQuantity whose numerical aspect is a known numerical value that can be used in calculations.")
+
+
+(isa FIRELispTestPredicate Collection)
+(genls FIRELispTestPredicate Predicate)
+(comment FIRELispTestPredicate
+  "When used in queries to the FIRE reasoner, expressions using this kind of 
+   Predicate will be evaluated internally by direct calls to code.  This is
+   useful for fast testing of the truth of some basic statements.")
+
+(isa true Predicate)
+(isa true FIRELispTestPredicate)
+(arity true 0)
+(comment true "(true) always succeeds.  Often used in preconditions of htn methods.")
+
+(isa false Predicate)
+(isa false FIRELispTestPredicate)
+(arity false 0)
+(comment false "(false) always fails.  Typically used for debugging.")
+
+(isa equals FIRELispTestPredicate)
+
+(isa different FIRELispTestPredicate)
+
+(isa equalSymbols FIRELispTestPredicate)
+
+(isa differentSymbols FIRELispTestPredicate)
+
+(isa equalp FIRELispTestPredicate)
+(isa equalp VariableArityPredicate)
+(comment equalp
+  "Contrast this with equal -- equal uses the lisp equal function, whereas 
+   this compares the arguments using lisp's equalp function.  The primary 
+   difference is that equalp does case-insensitive string comparisons, but 
+   equal is case-sensitive.  Therefore, equalp is more useful when comparing
+   facts involving strings entered by application users.")
+
+(isa alphalessp FIRELispTestPredicate)
+(arity alphalessp 2)
+
+(isa isStatement UnaryPredicate)
+(comment isStatement
+  "(isStatement ?form) holds when ?form is a statement, as opposed to a term.")
+(arity isStatement 1)
+(arg1Isa isStatement Thing)
+
+(isa isTerm UnaryPredicate)
+(comment isTerm
+  "(isTerm ?form) holds when ?form is a term, as opposed to a statement.")
+(arity isTerm 1)
+(arg1Isa isTerm Thing)
+
+(isa isPredicate UnaryPredicate)
+(comment isPredicate
+  "(isPredicate ?form) holds when ?form is a predicate, as opposed to a function or collection.")
+(arity isPredicate 1)
+(arg1Isa isPredicate Thing)
+
+(isa isFunction UnaryPredicate)
+(comment isFunction
+  "(isFunction ?form) holds when ?form is a function, as opposed to a predicate or collection.")
+(arity isFunction 1)
+(arg1Isa isFunction Thing)
+
+
+(isa isCollection UnaryPredicate)
+(comment isCollection
+  "(isCollection ?form) holds when ?form is a collection, as opposed to a predicate or function.")
+(arity isCollection 1)
+(arg1Isa isCollection Thing)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

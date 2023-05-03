@@ -1,0 +1,1553 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: slp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+(EAHeadFeaturesForNodeType slp (TheList vform perfect progressive agr))
+;;; Note: we cannot have stype as a headfeature, because not all slps have sentence types.
+
+;;;
+;;; Sentence-Level Phrases
+;;;
+
+;;; Replaced by Sfin for simple declaratives
+(isa -slp->np-vp- EAGrammarRule)
+(comment -slp->np-vp- "normal, positive case")
+(probabilityEAGrammarRule -slp->np-vp- 1.0)
+(grammarRule -slp->np-vp-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (stype ?!st) (utterance ?u)
+   (:ACTION ?varvp) (:EVENT ?varvp) (:SUBJECT ?varnp)
+   (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn np
+   ;; The stype cannot be unbound. We want this to fire for just those wh-questions, but not declaratives.
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype (? !st -))))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (inv -) (link -)
+     (negated -) (agr ?a) (vform (? vform pres past future prespart pastpart)) (var ?varvp) (sem ?semvp)
+     (utterance ?u))))))
+
+(isa -slp->interjection- EAGrammarRule)
+(comment -slp->interjection- "interjection utterance")
+(probabilityEAGrammarRule -slp->interjection- 1.0)
+(grammarRule -slp->interjection-
+ (EATermFn slp (TheList (var ?vari) (:INTERJ ?vari) (sem ?semi)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Interjection (TheList (var ?vari) (sem ?semi))))))
+
+;;; We need to constrain this a bunch more.
+;;; For one thing, an imperative only makes sense in the 2nd person.
+(isa -slp->vp- EAGrammarRule)
+(comment -slp->vp- "imperative utterance. We'd like to prohibit the verb lex from being 'is' or 'was'. You can say 'Be a player.' but you can't say 'Is a player.'")
+(probabilityEAGrammarRule -slp->vp- 1.0)
+(grammarRule -slp->vp-
+ (EATermFn slp
+  (TheList (var ?varvp) (vform ?vform)
+   (stype ImperativeUtterance)
+   (:SUBJECT (GapFn :SUBJECT)) (sem ?semvp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (var ?varvp) (sem ?semvp) 
+     (vform (? vform pres)) ; also prespart? ;also base for be but we have be np as a separate rule
+     (agr (? a 2s 2p))
+     (aux -) (inv -) (link -))))))
+
+(isa -slp->adv-slp- EAGrammarRule)
+(comment -slp->adv-slp- "qualified imperative utterance, e.g., 'Please pass the salt.' or 'Slowly back away'")
+(probabilityEAGrammarRule -slp->adv-slp- 1.0)
+(grammarRule -slp->adv-slp-
+ (EATermFn slp
+  (TheList (var ?varslp) (stype ImperativeUtterance)
+   (adjunct-adv +) (sem ?semslp)))
+ (TheList (EATermFn Adverb (TheList (var ?varadv)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (var ?varslp) (sem ?semslp)
+     (stype ImperativeUtterance))))))
+
+
+;;Changed from np-vp to sbrst
+;;; Not actually guaranteed to be a question (e.g. 'may you live long and prosper')
+(isa -slp->modal-sbrst- EAGrammarRule)
+(comment -slp->modal-sbrst- "Could they eat (?)")
+(probabilityEAGrammarRule -slp->modal-sbrst- 1.0)
+(grammarRule -slp->modal-sbrst-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varsbrst) (stype YesOrNoQuestion-IBT) (utterance ?u)
+           (:ACTION ?varsbrst) (:EVENT ?varsbrst)
+           (aux +) (inv +)
+           (sem (possible ?sembrst))))
+ (TheList
+  (EATermFn AuxVerb
+   (TheList (modal +) (lex (? !l did do does will))
+            (var ?varaux) (vform (? vform pres past))))
+  (EAHeadFn 
+   (EAtermFn Sbrst
+     (TheList (agr ?a) (sem ?sembrst) (utterance ?u)
+              (var ?varsbrst) (vform ?vformbrst))))))
+
+(isa -slp->will-Sbrst- EAGrammarRule)
+(comment -slp->will-Sbrst- "Will they eat (?)")
+(probabilityEAGrammarRule -slp->will-Sbrst- 1.0)
+(grammarRule -slp->will-Sbrst-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varsbrst) (stype YesOrNoQuestion-IBT) (utterance ?u)
+     (:ACTION ?varsbrst) (:EVENT ?varsbrst)
+     (sem (willBe ?sembrst))))
+ (TheList
+  (EATermFn AuxVerb
+   (TheList (lex will)))
+  (EAHeadFn
+   (EATermFn Sbrst
+    (TheList (agr ?a) (sem ?sembrst) (utterance ?u)
+              (var ?varsbrst) (vform ?vformbrst))))))
+
+(isa -slp->np-vp-negaux- EAGrammarRule)
+(comment -slp->np-vp-negaux- "negated case requires an aux or a modal")
+(probabilityEAGrammarRule -slp->np-vp-negaux- 1.0)
+(grammarRule -slp->np-vp-negaux-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (stype ?st) (utterance ?u)
+   (:ACTION ?varvp) (:EVENT ?varvp) (:SUBJECT ?varnp)
+   (sem (not (and ?semvp ?semnp)))))   ; wrapped 'not' here instead of inside vp [trh]
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+  (EAHeadFn
+   (EATermFn vp
+     (TheList 
+       (inv -) (link -) (object-be -)
+       (vform (? vform pres past prespart pastpart))
+       (negated +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+       (utterance ?u))))))
+
+(isa -slp->np-vp-negmodal- EAGrammarRule)
+(probabilityEAGrammarRule -slp->np-vp-negmodal- 1.0)
+(grammarRule -slp->np-vp-negmodal-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (stype ?st) (utterance ?u)
+   (:ACTION ?varvp) (:EVENT ?varvp) (:SUBJECT ?varnp)
+   (sem (not (and ?semvp ?semnp)))))  ; wrapped 'not' here instead of inside vp [trh]
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (inv -) (link -) (object-be -)
+             (negated +) (aux -) (modal +) (agr ?a) (var ?varvp) (sem ?semvp)
+             (vform (? vform pres past prespart pastpart))
+             (utterance ?u))))))
+
+;;; What apples did the dog eat?
+;;; What apples is the dog eating?
+;;; What state is the river located in?
+;;; What state does the river flow through?
+;;; Seems like it can be an object or an oblique object? The river flows through the country.
+;;; Agreement can be so screwy here. The agreement of the np depends on matching the agreement of the embeded
+;;; vp not the agreement of the slp as a whole (though that must also match internally to something?)
+;;; But the final agreement must match the head's agreement... and we don't want the whnp to be the head...
+
+(isa -slp->np-slp-inv- EAGrammarRule)
+(comment -slp->np-slp-inv- "an inverted vp requires a wh-q np")
+(probabilityEAGrammarRule -slp->np-slp-inv- 1.0)
+(grammarRule -slp->np-slp-inv-
+ (EATermFn slp
+  (TheList (agr ?slpa) (var ?varvp) (stype ?st) (:ACTION ?varvp)
+   (:EVENT ?varvp) (:OBJECT ?varnp) (sem (and ?semvp ?semnp))))
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st) (lex (? !l what which where when who)))) ; These are handled by their own rules
+  (EAHeadFn
+   (EATermFn slp
+             (TheList (inv +) (aux +) (link -) (agr ?slpa)
+                      (vform ?vform)
+                      (var ?varvp) (sem ?semvp) (inv-subject ?subvp))))))
+
+;;; Bind oblique object when the verb phrase is a particle:
+;;; Actually no point in doing This. Oblique may be bound but it's an np and what we're looking for is actually
+;;; a connection to the pp. Sigh. "What states did the river flow through." states is filling the argument to through.
+;;;
+;;;
+;;;(isa -slp->np-slp-inv-part EAGrammarRule)
+;;;(comment -slp->np-slp-inv-part "an inverted vp requires a wh-q np. has a participle")
+;;;(probabilityEAGrammarRule -slp->np-slp-inv-part 1.0)
+;;;(grammarRule -slp->np-slp-inv-part
+;;; (EATermFn slp
+;;;  (TheList (agr ?slpa) (var ?varvp) (stype ?st) (:ACTION ?varvp)
+;;;   (:EVENT ?varvp) (:OBLIQUE-OBJECT ?varnp) (sem (and ?semvp ?semnp))))
+;;; (TheList
+;;;  (EATermFn np
+;;;   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+;;;  (EAHeadFn
+;;;   (EATermFn slp
+;;;             (TheList (inv +) (aux +) (link -) (part +) (agr ?slpa)
+;;;                      (vform ?vform)
+;;;                      (var ?varvp) (sem ?semvp) (inv-subject ?subvp))))))
+
+
+;;;Prep fronted questions: "Through which states does the Mississippi River flow?"
+;;; Should use percent mechanism to look into PP's NP for wh type
+(isa -slp->pp-slp-inv- EAGrammarRule)
+(comment -slp->pp-slp-inv- "an inverted vp requires a wh-q np")
+(probabilityEAGrammarRule -slp->pp-slp-inv- 1.0)
+(grammarRule -slp->pp-slp-inv-
+  (EATermFn slp
+     (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp)
+             (:EVENT ?varvp) (:NOUN ?subvp)
+             (sem (and ?semvp ?sempp))))
+  (TheList 
+   (EATermFn pp (TheList (sem ?sempp) (var ?varpp)))
+   (EAHeadFn
+     (EATermFn slp
+       (TheList (inv +) (aux +) (link -)
+                (object-be -)
+                (vform (? vform pres past prespart pastpart)) (agr ?a)
+                (var ?varvp) (sem ?semvp) (inv-subject ?subvp))))))
+
+
+;;; Should just be varvp for linking verbs. Not sure what the hell that means
+;;; For now, object-be gets turned into a link feature.
+;;; There should be other kinds of linking verbs, but it's context sensitive.
+(isa -slp->np-vp-link- EAGrammarRule)
+(comment -slp->np-vp-link- "special case for linking verbs. REM: why didn't I want action in there?  What does it break? how else can I get the scope? By definition, linking verbs have no action. (TRH)")
+(probabilityEAGrammarRule -slp->np-vp-link- 1.0)
+(grammarRule -slp->np-vp-link- 
+ (EATermFn slp 
+  (TheList (agr ?a) (var ?varvp) (stype ?st) (:SUBJECT ?varnp) 
+    (:OBJECT ?vobj)
+    (sem (and ?semnp ?semvp)))) 
+ (TheList 
+  (EATermFn np 
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st))) 
+  (EAHeadFn 
+   (EATermFn vp 
+    (TheList (inv -) (link (? !vlink -)) (agr ?a) (var ?varvp) 
+     (:OBJECT ?vobj)
+     (sem ?semvp))))))
+     
+;;; Why isn't this just np-vp- ?  6-26-18
+;(isa -slp->cnp-vp-link- EAGrammarRule)
+;(comment -slp->cnp-vp-link- "Experiment (9-9-13) TRH: We want to be able to say 'Black is a player.'  without blowing out every parse involving a cnp.")
+;(probabilityEAGrammarRule -slp->cnp-vp-link- 0.5)
+;(grammarRule -slp->cnp-vp-link-
+; (EATermFn slp
+;  (TheList (agr ?a) (var ?varvp) (stype ?st) (:SUBJECT ?varnp)
+;   (sem (and ?semnp ?semvp))))
+; (TheList
+;  (EATermFn cnp
+;   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+;  (EAHeadFn
+;   (EATermFn vp
+;    (TheList (inv -) (link (? !vlink -)) (agr ?a) (var ?varvp)
+;     (sem ?semvp))))))
+
+(isa -slp->slp-comma-vp- EAGrammarRule)
+(comment -slp->slp-comma-vp- "slp, vp-progressive. CONTROL: subject could be ?subslp as well.")
+(probabilityEAGrammarRule -slp->slp-comma-vp- 1.0)
+(grammarRule -slp->slp-comma-vp-
+ (EATermFn slp
+  (TheList (var ?varslp) (stype ?st) (:SUBJECT ?varslp)
+   (sem (and ?semslp ?semvp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (var ?varslp) (sem ?semslp) (agr ?a) (stype ?st)
+     (:SUBJECT ?subslp))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn vp (TheList (var ?varvp) (sem ?semvp) (vform prespart)))))
+
+(isa -slp->np-comma-vpprogressive-comma-vp- EAGrammarRule)
+(comment -slp->np-comma-vpprogressive-comma-vp- "progressive verb aside.")
+(probabilityEAGrammarRule -slp->np-comma-vpprogressive-comma-vp- 1.0)
+(grammarRule -slp->np-comma-vpprogressive-comma-vp-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp2) (stype ?st) (utterance ?u)
+   (aside ?varvp1) (:SUBJECT ?varnp)
+   (sem
+    (and ?semnp ?semvp1 ?semvp2
+         (temporallyIntersects ?varvp1 ?varvp2)))))
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn vp
+   (TheList (inv -) (link -) (vform prespart) (var ?varvp1)
+    (sem ?semvp1)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (inv -) (link -) (negated -) (agr ?a) (var ?varvp2)
+     (sem ?semvp2) (utterance ?u))))))
+
+(isa -slp->np-comma-vpperfect-comma-vp- EAGrammarRule)
+(comment -slp->np-comma-vpperfect-comma-vp- "progressive perfect verb aside")
+(probabilityEAGrammarRule -slp->np-comma-vpperfect-comma-vp- 1.0)
+(grammarRule -slp->np-comma-vpperfect-comma-vp-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp2) (stype ?st) (utterance ?u)
+   (aside ?varvp1) (:SUBJECT ?varnp)
+   (sem
+    (and ?semnp ?semvp1 ?semvp2
+         (after ?varvp2 ?varvp1)))))
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp) (var ?varnp) (stype ?st)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn vp
+   (TheList (inv -) (link -) (vform past) (perfect +) (var ?varvp1)
+    (sem ?semvp1)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (inv -) (link -) (negated -) (agr ?a) (var ?varvp2)
+     (sem ?semvp2) (utterance ?u))))))
+     
+;; CJM 11/17
+;; Why don't all slps pass up their subjects? Any modifier to the slp will need it.
+;; NP-VP-link does. np-vp does. I think the ones that don't are probably ones we made.
+(isa -slp->pp-comma-slp- EAGrammarRule)
+(comment -slp->pp-comma-slp- "preceeding pp: 'in his bed, he slept.'")
+(probabilityEAGrammarRule -slp->pp-comma-slp- 1.0)
+(grammarRule -slp->pp-comma-slp-
+ (EATermFn slp
+  (TheList (var ?varslp) (stype ?!stype) (:ACTION ?varslp) (:SUBJECT ?sub)
+   (sem (and ?semslp ?sempp))))
+ (TheList
+  (EATermFn pp (TheList (var ?varpp) (sem ?sempp) (prep-lex (? !lexp in))))  ; allow in-np-comma-slp- to fire when it can.
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn
+   (EATermFn Sfin
+    (TheList (var ?varslp) (sem ?semslp) (inv -) (:SUBJECT ?sub) 
+     (stype (? !stype ImperativeUtterance)))))))
+
+(isa -slp->in-np-comma-slp- EAGrammarRule)
+(comment -slp->in-np-comma-slp- "Textbook-specific pattern: 'In physics, energy is conserved.'")
+(probabilityEAGrammarRule -slp->in-np-comma-slp- 1.0)
+(grammarRule -slp->in-np-comma-slp-
+ (EATermFn Sfin
+  (TheList (var ?varnp)
+           (sem (implies-DrsDrs ?semnp ?semslp))))
+ (TheList (EATermFn Preposition (TheList (lex in)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn (EATermFn slp (TheList (var ?varslp) (sem ?semslp))))))
+  
+;;; cjm 7-19 removed (modif clausal-adv)
+;;; 6-20-18 TRH - prohibit wh words.  Catch them with Sinterrog
+(isa -slp->adjunct-adverbial-comma-slp- EAGrammarRule)
+(comment -slp->adjunct-adverbial-comma-slp- "leading clausal adverbs.  Meta-adv and temporal-adv seem connected here")
+(probabilityEAGrammarRule -slp->adjunct-adverbial-comma-slp- 1.0)
+(grammarRule -slp->adjunct-adverbial-comma-slp-
+ (EATermFn slp
+  (TheList (var ?varslp) (adjunct-adv ?lexa) (sem ?semslp)))
+ (TheList
+  (EATermFn Adverb
+   (TheList (var ?vara) (sem ?sema) (lex (? !l where how why)) (lex ?lexa)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (var ?varslp) (sem ?semslp) (inv -)
+     (stype (? !stype ImperativeUtterance)))))))
+     
+;;;cjm 7-19 removed (modif clausal-adv)
+(isa -slp->adjunct-adverbial-slp- EAGrammarRule)
+(probabilityEAGrammarRule -slp->adjunct-adverbial-slp- 0.8)
+(grammarRule -slp->adjunct-adverbial-slp-
+ (EATermFn slp
+  (TheList (var ?varslp) (adjunct-adv ?lexa) (sem ?semslp)))
+ (TheList
+  (EATermFn Adverb
+   (TheList (var ?vara) (sem ?sema) (lex ?lexa)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (var ?varslp) (sem ?semslp) (inv -)
+     (stype (? !stype ImperativeUtterance)))))))
+
+(isa -slp->leading-cconj-comma-slp- EAGrammarRule)
+(comment -slp->leading-cconj-comma-slp- "leading cconj")
+(probabilityEAGrammarRule -slp->leading-cconj-comma-slp- 1.0)
+(grammarRule -slp->leading-cconj-comma-slp-
+ (EATermFn slp
+  (TheList (var ?varslp) (adjunct-adv ?lexcconj) (sem ?semslp)))
+ (TheList
+  (EATermFn Conjunction
+   (TheList (var ?varcconj) (sem ?semcconj) (lex ?lexcconj)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (var ?varslp) (sem ?semslp) (inv -)
+     (stype (? !stype ImperativeUtterance)))))))
+
+;;;  SEF - changed sem from coreference-Underspecified
+(isa -slp->np-be-comma-slp- EAGrammarRule)
+(comment -slp->np-be-comma-slp- "leading coreference.")
+(probabilityEAGrammarRule -slp->np-be-comma-slp- 1.0)
+(grammarRule -slp->np-be-comma-slp-
+ (EATermFn slp
+  (TheList (var ?varnp) (adjunct-adv +)
+   (sem (and ?semnp ?semslp (denotes ?varnp ?varslp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn np (TheList (var ?varnp) (sem ?semnp) (agr ?a))))
+  (EATermFn Verb
+   (TheList (agr ?a) (vform ?vform) (var ?varv) (sem ?semv)
+    (object-be +)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn slp
+   (TheList (var ?varslp) (sem ?semslp) (inv -)
+    (stype (? !stype ImperativeUtterance))))))
+
+(isa -slp->ntime2-slp- EAGrammarRule)
+(comment -slp->ntime2-slp- "temporal noun phrase as sentence adjunct adverbial. ntime2 nouns may be used unadorned: 'yesterday', 'Friday', 'midday' etc...")
+(probabilityEAGrammarRule -slp->ntime2-slp- 1.0)
+(grammarRule -slp->ntime2-slp-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varslp)
+   (sem
+    (thereExists ?varn
+     (and (temporallySubsumes ?varn ?varslp) ?semn
+          ?semslp)))))
+ (TheList
+  (EATermFn Noun (TheList (var ?varn) (sem ?semn) (ntime2 +)))
+  (EAHeadFn (EATermFn slp (TheList (var ?varslp) (agr ?a) (sem ?semslp))))))
+
+(isa -slp->slp-ntime2- EAGrammarRule)
+(comment -slp->slp-ntime2- "E.g., 'I went to the matinee yesterday.'")
+(probabilityEAGrammarRule -slp->slp-ntime2- 1.0)
+(grammarRule -slp->slp-ntime2-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varslp)
+   (sem
+    (thereExists ?varn
+     (and (temporallySubsumes ?varn ?varslp) ?semn
+          ?semslp)))))
+ (TheList
+  (EAHeadFn (EATermFn slp (TheList (var ?varslp) (agr ?a) (sem ?semslp))))
+  (EATermFn Noun (TheList (var ?varn) (sem ?semn) (ntime2 +)))))
+
+;(isa -slp->ntime1-phrase-slp- EAGrammarRule)
+;(comment -slp->ntime1-phrase-slp- "ntime1 nouns require a timetag modifier.  REM: determiners, timetag/ntime2, timetag alone?")
+;(probabilityEAGrammarRule -slp->ntime1-phrase-slp- 1.0)
+;(grammarRule -slp->ntime1-phrase-slp-
+; (EATermFn slp
+;  (TheList (agr ?a) (var ?varslp)
+;   (sem
+;    (thereExists ?varnp
+;     (and (temporallySubsumes ?varnp ?varslp) ?semnp
+;          ?semslp)))))
+; (TheList
+;  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (ntime1 +)))
+;  (EAHeadFn
+;   (EATermFn slp (TheList (var ?varslp) (agr ?a) (sem ?semslp) (stype -))))))
+;
+;(isa -slp->slp-ntime1-phrase- EAGrammarRule)
+;(probabilityEAGrammarRule -slp->slp-ntime1-phrase- 1.0)
+;(grammarRule -slp->slp-ntime1-phrase-
+; (EATermFn slp
+;  (TheList (agr ?a) (var ?varslp)
+;   (sem
+;    (thereExists ?varnp
+;     (and (temporallySubsumes ?varnp ?varslp) ?semnp
+;          ?semslp)))))
+; (TheList
+;  (EAHeadFn (EATermFn slp (TheList (var ?varslp) (agr ?a) (sem ?semslp))))
+;  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (ntime1 +)))))
+
+
+;;; *** This needs to change.  There is no :CLAUSE feature in FrameNet semtranses.
+;(isa -Sfin->in-return-Sfin- EAGrammarRule)
+;(comment -Sfin->in-return-Sfin- "'In return, ...'")
+;(probabilityEAGrammarRule -Sfin->in-return-Sfin- 1.0)
+;(grammarRule -Sfin->in-return-Sfin-
+; (EATermFn Sfin
+;  (TheList (var (sconj ?varslp in ?varav)) (sem ?semslp)
+;   (:SUBJECT ?subslp) (:ACTION ?varav) (:CLAUSE ?semslp)
+;   (sem
+;    (thereExists (TheList ?subslp ?varav)
+;     ?semav))))
+; (TheList (EATermFn SubordinatingConjunction (TheList (lex in)))
+;  (EATermFn Verb
+;   (TheList (lex return) (vform (? vb base)) (var ?varav) (sem ?semav)))
+;  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+;  (EAHeadFn
+;   (EATermFn Sfin
+;    (TheList (var ?varslp) (sem ?semslp) (:SUBJECT ?subslp))))))
+
+(isa -Sfin->Sfin-dem-there- EAGrammarRule)
+(comment -Sfin->Sfin-dem-there- "Sfin + demonstrative reference adverbial 'she was able to conduct research there.'")
+(probabilityEAGrammarRule -Sfin->Sfin-dem-there- 0.9)
+(grammarRule -Sfin->Sfin-dem-there-
+ (EATermFn Sfin
+  (TheList (agr ?a) (var ?varslp) (sem (and ?semslp ?semnp))))
+ (TheList
+  (EAHeadFn 
+   (EATermFn Sfin 
+    (TheList (agr ?a) (var ?varslp) (sem ?semslp))))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (lex there)))))
+
+(isa -Sfin->Sfin-cconj-Sfin- EAGrammarRule)
+(comment -Sfin->Sfin-cconj-Sfin- "coordinating conjunctions (with and without comma)")
+(probabilityEAGrammarRule -Sfin->Sfin-cconj-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-cconj-Sfin-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?varslp1 ?varslp2))
+   (:ACTION ?varslp1) (sem (and ?semslp1 ?semslp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Sfin
+    (TheList (var ?varslp1) (sem ?semslp1) (adjunct-adv -))))
+  (EATermFn Conjunction (TheList (var ?varc) (sem ?semconj) (lex ?lexc)))
+  (EATermFn Sfin
+   (TheList (var ?varslp2) (sem ?semslp2)
+    (stype (? !stype ImperativeUtterance))))))
+
+(isa -Sfin->Sfin-comma-cconj-Sfin- EAGrammarRule)
+(probabilityEAGrammarRule -Sfin->Sfin-comma-cconj-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-comma-cconj-Sfin-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?varslp1 ?varslp2))
+   (:ACTION ?varslp1) (sem (and ?semslp1 ?semslp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Sfin
+    (TheList (var ?varslp1) (sem ?semslp1) (adjunct-adv -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Conjunction (TheList (var ?varc) (sem ?semconj) (lex ?lexc)))
+  (EATermFn Sfin
+   (TheList (var ?varslp2) (sem ?semslp2)
+    (stype (? !stype ImperativeUtterance))))))
+
+
+(isa -Sfin->Sfin-sconj-Sfin- EAGrammarRule)
+(comment -Sfin->Sfin-sconj-Sfin- "'Sleep when you are tired.', 'It pours when it rains.'")
+(probabilityEAGrammarRule -Sfin->Sfin-sconj-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-sconj-Sfin-
+ (EATermFn Sfin
+  (TheList (var (sconj ?varslp ?sconj-lex ?varslp2)) (stype ?stype)
+   (:OBLIQUE-OBJECT ?varslp2)
+   (sem (implies ?semslp2 ?semslp))))   ; too general, but better than nothing for now.
+ (TheList 
+  (EAHeadFn 
+   (EATermFn Sfin 
+    (TheList (var ?varslp) (sem ?semslp) (stype ?stype) (adjunct-adv -))))
+  (EATermFn SubordinatingConjunction 
+   (TheList (lex ?sconj-lex) (lex (? !l because)) (sem ?semconj) (var ?varconj)))
+  (EATermFn Sfin
+   (TheList (var ?varslp2) (sem ?semslp2)))))
+
+(isa -slp->slpperfect-sconj-slp- EAGrammarRule)
+(comment -slp->slpperfect-sconj-slp- "'They had proceeded a short distance when they met a lion.'")
+(probabilityEAGrammarRule -slp->slpperfect-sconj-slp- 1.0)
+(grammarRule -slp->slpperfect-sconj-slp-
+ (EATermFn slp
+  (TheList (var (sconj ?varslp1 when ?varslp2))
+   (sem
+    (and ?semslp1 ?semslp2 (after ?varslp2 ?varslp1)))))
+ (TheList
+  (EATermFn slp (TheList (var ?varslp1) (sem ?semslp1) (perfect +)))
+  (EATermFn SubordinatingConjunction (TheList (lex when)))
+  (EAHeadFn (EATermFn slp (TheList (var ?varslp2) (sem ?semslp2))))))
+
+(isa -Sfin->Sfin-so-that-Sfin- EAGrammarRule)
+(comment -Sfin->Sfin-so-that-Sfin- "Sfin + so + Sfin: 'he got money so that he can buy a house'")
+(probabilityEAGrammarRule -Sfin->Sfin-so-that-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-so-that-Sfin-
+ (EATermFn Sfin
+  (TheList
+   (var (sconj ?varslp so-that ?varslp2))
+   (stype ?stype)
+   (sem
+    (and ?semslp (enables-Generic ?varslp ?semslp2)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Sfin
+    (TheList (var ?varslp) (sem ?semslp) (stype ?stype)
+     (adjunct-adv -))))
+  (EATermFn SubordinatingConjunction (TheList (lex so)))
+  (EATermFn SubordinatingConjunction (TheList (lex that)))
+  (EATermFn Sfin
+   (TheList (var ?varslp2) (sem ?semslp2)
+    (stype (? !stype2 ImperativeUtterance))))))  ; it won't be in an Sfin.
+
+(isa -Sfin->Sfin-because-Sfin- EAGrammarRule)
+(comment -Sfin->Sfin-because-Sfin- "'The grass is wet because it is raining'")
+(probabilityEAGrammarRule -Sfin->Sfin-because-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-because-Sfin-
+ (EATermFn Sfin
+  (TheList (var ?varconj)
+   (sem
+    (and ?semslp1 ?semslp2
+         (causes-SitProp ?varslp2 ?varslp1)))))
+ (TheList (EATermFn slp (TheList (var ?varslp1) (sem ?semslp1)))
+  (EAHeadFn
+   (EATermFn SubordinatingConjunction
+    (TheList (sem ?semconj) (var ?varconj) (lex because))))
+  (EATermFn Sfin (TheList (var ?varslp2) (sem ?semslp2)))))
+
+(isa -Sfin->while-Sfin-comma-Sfin- EAGrammarRule)
+(comment -Sfin->while-Sfin-comma-Sfin- "'While you were sleeping, they went home.'")
+(probabilityEAGrammarRule -Sfin->while-Sfin-comma-Sfin- 1.0)
+(grammarRule -Sfin->while-Sfin-comma-Sfin-
+ (EATermFn Sfin
+  (TheList (var ?varslp2)
+   (sem
+    (and (startsDuring ?varslp2 ?varslp1) ?semslp1
+         ?semslp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn SubordinatingConjunction
+    (TheList (sem ?semconj) (var ?varconj) (lex while))))
+  (EATermFn Sfin (TheList (var ?varslp1) (sem ?semslp1)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Sfin (TheList (var ?varslp2) (sem ?semslp2)))))
+
+(isa -Sfin->because-of-np-comma-Sfin- EAGrammarRule)
+(comment -Sfin->because-of-np-comma-Sfin- "'Because of the rain, we stayed inside.'")
+(probabilityEAGrammarRule -Sfin->because-of-np-comma-Sfin- 1.0)
+(grammarRule -Sfin->because-of-np-comma-Sfin-
+ (EATermFn Sfin
+  (TheList (var ?varconj)
+   (sem
+    (and (causes-ThingSit ?varnp ?varslp2) ?semnp
+         ?semslp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn SubordinatingConjunction
+    (TheList (sem ?semconj) (var ?varconj) (lex because))))
+  (EATermFn Preposition (TheList (lex of)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Sfin
+   (TheList (var ?varslp2) (sem ?semslp2)
+    (vform (? !vform future))))))
+
+;;; Testing to see if -slp->because-of-np-comma-slp- makes this redundant. They're
+;;; very similar.
+;;;(isa -slp->because-of-this-comma-slp- EAGrammarRule)
+;;;(comment -slp->because-of-this-comma-slp- "Because of this, we stayed inside. (JLT)")
+;;;(probabilityEAGrammarRule -slp->because-of-this-comma-slp- 1.0)
+;;;(grammarRule -slp->because-of-this-comma-slp-
+;;; (EATermFn slp
+;;;  (TheList (var ?varconj)
+;;;   (sem
+;;;    (and (causes-ThingSit ?vardet ?varslp2) ?semdet
+;;;         ?semslp2))))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn SubordinatingConjunction
+;;;    (TheList (sem ?semconj) (var ?varconj) (lex because))))
+;;;  (EATermFn Preposition (TheList (lex of)))
+;;;  (EATermFn Determiner (TheList (lex this) (sem ?semdet) (var ?vardet)))
+;;;  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+;;;  (EATermFn slp
+;;;   (TheList (var ?varslp2) (sem ?semslp2)
+;;;    (vform (? !vform future))))))
+
+(isa -Sfin->because-of-np-comma-Sfin-future- EAGrammarRule)
+(comment -Sfin->because-of-np-comma-Sfin-future- "future consequence")
+(probabilityEAGrammarRule -Sfin->because-of-np-comma-Sfin-future- 1.0)
+(grammarRule -Sfin->because-of-np-comma-Sfin-future-
+ (EATermFn Sfin
+  (TheList (var ?varconj)
+   (sem (and ?semnp (causes-ThingProp ?varnp ?semslp2)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn SubordinatingConjunction
+    (TheList (sem ?semconj) (var ?varconj) (lex because))))
+  (EATermFn Preposition (TheList (lex of)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Sfin
+   (TheList (var ?varslp2) (sem ?semslp2) (vform future)))))
+
+(isa -Sfin->Sfin-because-of-np- EAGrammarRule)
+(comment -Sfin->Sfin-because-of-np- "'We cancelled the game because of the heat.'")
+(probabilityEAGrammarRule -Sfin->Sfin-because-of-np- 1.0)
+(grammarRule -Sfin->Sfin-because-of-np-
+ (EATermFn Sfin
+  (TheList (var ?varslp)
+   (sem
+    (and ?semslp ?semnp
+         (causes-ThingSit ?varnp ?varslp)))))
+ (TheList (EATermFn Sfin (TheList (var ?varslp) (sem ?semslp)))
+  (EAHeadFn
+   (EATermFn SubordinatingConjunction
+    (TheList (sem ?semconj) (var ?varconj) (lex because))))
+  (EATermFn Preposition (TheList (lex of)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))))
+
+(isa -Sfin->if-subordSfin-comma-Sfin- EAGrammarRule)
+(comment -Sfin->if-subordSfin-comma-Sfin- "'If he ate poison, he will die.'")
+(probabilityEAGrammarRule -Sfin->if-subordSfin-comma-Sfin- 1.0)
+(grammarRule -Sfin->if-subordSfin-comma-Sfin-
+ (EATermFn Sfin
+  (TheList (var ?varslp)
+           (sem 
+            (and
+                 (causes-EventEvent ?varsubord ?varslp)
+                 (implies-DrsDrs ?semsubord ?semslp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn SubordinatingConjunction (TheList (lex if) (sem ?semconj) (var ?varconj))))
+  (EATermFn Sfin (TheList (var ?varsubord) (sem ?semsubord)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Sfin (TheList (var ?varslp) (sem ?semslp)))))
+
+(isa -Sfin->after-subordSfin-comma-Sfin- EAGrammarRule)
+(comment -Sfin->after-subordSfin-comma-Sfin- "contiguous time intervals: 'After she finished her current project, ...'")
+(probabilityEAGrammarRule -Sfin->after-subordSfin-comma-Sfin- 1.0)
+(grammarRule -Sfin->after-subordSfin-comma-Sfin-
+ (EATermFn Sfin
+  (TheList (var ?varslp)
+   (sem
+    (thereExists ?varsubord
+     (and (after-Underspecified ?varslp ?varsubord)
+          ?semsubord ?semslp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn SubordinatingConjunction
+    (TheList (lex after) (sem ?semconj) (var ?varconj))))
+  (EATermFn Sfin (TheList (var ?varsubord) (sem ?semsubord)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Sfin (TheList (var ?varslp) (sem ?semslp)))))
+
+(isa -Sfin->np-would-cause-np-npinf- EAGrammarRule)
+(comment -Sfin->np-would-cause-np-npinf- "'The opening would cause a fish to die.' REM: move to MWP if this works out")
+(probabilityEAGrammarRule -Sfin->np-would-cause-np-npinf- 1.0)
+(grammarRule -Sfin->np-would-cause-np-npinf-
+ (EATermFn Sfin
+  (TheList (var ?varv)
+   (sem
+    (and ?semnp
+         (causes-Hypothetical ?varnp
+          (InterpretationOfClauseFn
+           (ConstitNameByPosFn 4)))
+         (constitSubClause
+          (ConstitNameByPosFn 4) ?semslp)
+         (discourseVarNLAttr ?varaux
+          Structural)
+         (discourseVarNLAttr ?varv
+          Structural)))))
+ (TheList
+  (EAHeadFn (EATermFn np (TheList (var ?varnp) (sem ?semnp))))
+  (EATermFn AuxVerb (TheList (lex would) (var ?varaux) (sem ?semaux)))
+  (EATermFn Verb
+   (TheList (lex cause) (var ?varv) (vform (? vb base)) (sem ?semv)))
+  (EATermFn Sfin
+   (TheList (var ?varslp) (gap ?g) (sem ?semslp) (inf +)))))
+
+(isa -Sfin->the-adj-np-comma-the-adj-np- EAGrammarRule)
+(comment -Sfin->the-adj-np-comma-the-adj-np- "'the higher the pressure, the greater the flow.'")
+(probabilityEAGrammarRule -Sfin->the-adj-np-comma-the-adj-np- 1.0)
+(grammarRule -Sfin->the-adj-np-comma-the-adj-np-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?varnp1 ?varnp2))
+   (sem
+    (and ?semnp1 ?semadj1 ?semnp2 ?semadj2
+         (comparativeDirection ?varnp1 ?varadj1)
+         (comparativeDirection ?varnp2 ?varadj2)
+         (temporallyIntersects ?varnp2 ?varnp1)))))
+ (TheList (EATermFn Adverb (TheList (lex the)))
+  (EATermFn Adjective
+   (TheList (comparative +) (var ?varadj1) (sem ?semadj1)))
+  (EAHeadFn (EATermFn np (TheList (var ?varnp1) (sem ?semnp1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Adverb (TheList (lex the)))
+  (EATermFn Adjective
+   (TheList (comparative +) (var ?varadj2) (sem ?semadj2)))
+  (EAHeadFn (EATermFn np (TheList (var ?varnp2) (sem ?semnp2))))))
+
+(isa -Sfin->the-adj-Sfin-comma-the-adj-Sfin- EAGrammarRule)
+(comment -Sfin->the-adj-Sfin-comma-the-adj-Sfin- "'the more the pressure rises, the greater the flow increases.'")
+(probabilityEAGrammarRule -Sfin->the-adj-Sfin-comma-the-adj-Sfin- 1.0)
+(grammarRule -Sfin->the-adj-Sfin-comma-the-adj-Sfin-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?varadj1 ?varadj2))
+   (sem
+    (and ?semslp1 ?semadj1 ?semslp2 ?semadj2
+         (comparativeDirection ?varslp1 ?varadj1)
+         (comparativeDirection ?varslp2 ?varadj2)
+         (temporallyIntersects ?varslp2 ?varslp1)))))
+ (TheList (EATermFn Adverb (TheList (lex the)))
+  (EATermFn Adjective
+   (TheList (comparative +) (var ?varadj1) (sem ?semadj1)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?varslp1) (sem ?semslp1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Adverb (TheList (lex the)))
+  (EATermFn Adjective
+   (TheList (comparative +) (var ?varadj2) (sem ?semadj2)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?varslp2) (sem ?semslp2))))))
+
+
+(isa -Sfin->the-adv-Sfin-comma-the-adj-Sfin- EAGrammarRule)
+(comment -Sfin->the-adv-Sfin-comma-the-adj-Sfin- "'the more the pressure rises, the greater the flow increases.'")
+(probabilityEAGrammarRule -Sfin->the-adv-Sfin-comma-the-adj-Sfin- 1.0)
+(grammarRule -Sfin->the-adv-Sfin-comma-the-adj-Sfin-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?varslp1 ?varslp2))
+   (sem
+    (and ?semslp1 ?semadj1 ?semslp2 ?semadj2
+         (comparativeDirection ?varslp1 ?varadj1)
+         (comparativeDirection ?varslp2 ?varadj2)
+         (temporallyIntersects ?varslp2 ?varslp1)))))
+ (TheList (EATermFn Adverb (TheList (lex the)))
+  (EATermFn Adverb
+   (TheList (comparative +) (var ?varadj1) (sem ?semadj1)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?varslp1) (sem ?semslp1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn Adverb (TheList (lex the)))
+  (EATermFn Adjective
+   (TheList (comparative +) (var ?varadj2) (sem ?semadj2)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?varslp2) (sem ?semslp2))))))
+
+(isa -Sfin->as-Sfin-comma-Sfin- EAGrammarRule)
+(comment -Sfin->as-Sfin-comma-Sfin- "The qpropEvent hardcoded here was be replaced with a temporal intersection relation, allowing us to infer a qpropEvent from that via abduction. (d::temporallyIntersects ?vars2 ?vars1) suggests that (d::qpropEvent ?vars2 ?vars1), but not always. This reasoning should be done elsewhere and not squirreled away in grammar rules. (JLT)")
+(probabilityEAGrammarRule -Sfin->as-Sfin-comma-Sfin- 1.0)
+(grammarRule -Sfin->as-Sfin-comma-Sfin-
+ (EATermFn Sfin
+  (TheList 
+   (var (ConjunctiveVar ?vars1 ?vars2))
+   (sem
+    (and ?sems1 ?sems2
+         (temporallyIntersects ?vars2 ?vars1)))))
+ (TheList (EATermFn SubordinatingConjunction (TheList (lex as)))
+  (EAHeadFn (EATermFn slp (TheList (var ?vars1) (sem ?sems1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars2) (sem ?sems2))))))
+
+(isa -Sfin->Sfin-comma-as-Sfin- EAGrammarRule)
+(probabilityEAGrammarRule -Sfin->Sfin-comma-as-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-comma-as-Sfin-
+ (EATermFn Sfin
+  (TheList 
+   (var (ConjunctiveVar ?vars1 ?vars2))
+   (sem
+    (and ?sems1 ?sems2
+         (temporallyIntersects ?vars1 ?vars2)))))
+ (TheList
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars1) (sem ?sems1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn SubordinatingConjunction (TheList (lex as)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars2) (sem ?sems2))))))
+
+(isa -Sfin->when-Sfin-comma-Sfin- EAGrammarRule)
+(comment -Sfin->when-Sfin-comma-Sfin- "E.g., When it rains, it pours.")
+(probabilityEAGrammarRule -Sfin->when-Sfin-comma-Sfin- 1.0)
+(grammarRule -Sfin->when-Sfin-comma-Sfin-
+ (EATermFn Sfin
+  (TheList (var ?vars1) (adjunct-adv when)
+   (sem
+    (and ?sems1 ?sems2
+         (temporallyIntersects ?vars2 ?vars1)))))
+ (TheList (EATermFn SubordinatingConjunction (TheList (lex when)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars1) (sem ?sems1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma) (required -)))  ; we'd like this to be optional
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars2) (sem ?sems2))))))
+
+(isa -Sfin->Sfin-comma-when-Sfin- EAGrammarRule)
+(probabilityEAGrammarRule -Sfin->Sfin-comma-when-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-comma-when-Sfin-
+ (EATermFn Sfin
+  (TheList (var ?vars1)
+   (sem
+    (and ?sems1 ?sems2
+         (temporallyIntersects ?vars1 ?vars2)))))
+ (TheList
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars1) (sem ?sems1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma) (required -)))  ; We'd like this to be optional
+  (EATermFn SubordinatingConjunction (TheList (lex when)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars2) (sem ?sems2))))))
+
+;;;(isa -slp->when-slp-comma-slp-exp- EAGrammarRule)
+;;;(comment -slp->when-slp-comma-slp-exp- "Experimental variant when for increases (DMB 5/5/11)")
+;;;(probabilityEAGrammarRule -slp->when-slp-comma-slp-exp- 1.0)
+;;;(grammarRule -slp->when-slp-comma-slp-exp-
+;;; (EATermFn slp
+;;;  (TheList (var ?vars1) (adjunct-adv when)
+;;;   (sem
+;;;    (and ?sems2 (caseAffectsQuantity ?sems1 ?subj2)))))
+;;; (TheList (EATermFn SubordinatingConjunction (TheList (lex when)))
+;;;  (EAHeadFn (EATermFn slp (TheList (var ?vars1) (sem ?sems1))))
+;;;  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+;;;  (EAHeadFn
+;;;   (EATermFn slp
+;;;    (TheList (var ?vars2) (sem ?sems2) (:SUBJECT ?subj2))))))
+;;;
+;;;(isa -slp->slp-comma-when-slp-exp EAGrammarRule)
+;;;(probabilityEAGrammarRule -slp->slp-comma-when-slp-exp 1.0)
+;;;(grammarRule -slp->slp-comma-when-slp-exp
+;;; (EATermFn slp
+;;;  (TheList (var ?vars)
+;;;   (sem
+;;;    (and ?sems1 (caseAffectsQuantity ?sems2 ?subj1)))))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn slp
+;;;    (TheList (var ?vars1) (sem ?sems1) (:SUBJECT ?subj1))))
+;;;  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+;;;  (EATermFn SubordinatingConjunction (TheList (lex when)))
+;;;  (EAHeadFn (EATermFn slp (TheList (var ?vars2) (sem ?sems2))))))
+
+(isa -Sfin->because-Sfin-comma-Sfin- EAGrammarRule)
+(comment -Sfin->because-Sfin-comma-Sfin- "'Because the temperature of the brick is greater than the temperture of the ground, the heat flows from the brick to the ground.'")
+(probabilityEAGrammarRule -Sfin->because-Sfin-comma-Sfin- 1.0)
+(grammarRule -Sfin->because-Sfin-comma-Sfin-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?vars2 ?vars2))
+   (sem
+    (and ?sems1 ?sems2
+         (causes-EventEvent ?vars1 ?vars2)))))
+ (TheList (EATermFn SubordinatingConjunction (TheList (lex because)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars1) (sem ?sems1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars2) (sem ?sems2))))))
+
+(isa -Sfin->Sfin-comma-because-Sfin- EAGrammarRule)
+(comment -Sfin->Sfin-comma-because-Sfin- "'The heat flows from the brick to the ground, because the temperature of the brick is greater than the temperture of the ground.'")
+(probabilityEAGrammarRule -Sfin->Sfin-comma-because-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-comma-because-Sfin-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?vars1 ?vars2))
+   (sem
+    (and ?sems1 ?sems2
+         (causes-EventEvent ?vars2 ?vars1)))))
+ (TheList
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars1) (sem ?sems1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn SubordinatingConjunction (TheList (lex because)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars2) (sem ?sems2))))))
+
+;;; Experimentally getting rid of -slp->if-slp-comma-slp-; -slp->if-subordslp-comma-slp- covers this case more correctly.
+;;;(isa -slp->if-slp-comma-slp- EAGrammarRule)
+;;;(comment -slp->if-slp-comma-slp- "'If the temperature of the brick is greater than the temperture of the ground, the heat flows from the brick to the ground.'")
+;;;(probabilityEAGrammarRule -slp->if-slp-comma-slp- 1.0)
+;;;(grammarRule -slp->if-slp-comma-slp-
+;;; (EATermFn slp
+;;;  (TheList (var ?varsconj)
+;;;   (sem
+;;;    (and ?sems1 ?sems2
+;;;         (causes-EventEvent ?vars1 ?vars2)))))
+;;; (TheList (EATermFn SubordinatingConjunction (TheList (lex if) (var ?varsconj)))
+;;;  (EAHeadFn (EATermFn slp (TheList (var ?vars1) (sem ?sems1))))
+;;;  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+;;;  (EAHeadFn (EATermFn slp (TheList (var ?vars2) (sem ?sems2))))))
+
+(isa -Sfin->Sfin-comma-if-Sfin- EAGrammarRule)
+(comment -Sfin->Sfin-comma-if-Sfin- "'The heat flows from the brick to the ground, if the temperature of the brick is greater than the temperture of the ground.'")
+(probabilityEAGrammarRule -Sfin->Sfin-comma-if-Sfin- 1.0)
+(grammarRule -Sfin->Sfin-comma-if-Sfin-
+ (EATermFn Sfin
+  (TheList (var (ConjunctiveVar ?vars1 ?vars2))
+   (sem
+    (and ?sems1 ?sems2
+         (causes-EventEvent ?vars2 ?vars1)))))
+ (TheList
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars1) (sem ?sems1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn SubordinatingConjunction (TheList (lex if)))
+  (EAHeadFn (EATermFn Sfin (TheList (var ?vars2) (sem ?sems2))))))
+
+;;; let the np-pp rule absorb any prepositional phrase:
+(isa -slp->aux-np- EAGrammarRule)
+(comment -slp->aux-np- "'Is Florida on the ocean?' or 'Are we?'")
+(probabilityEAGrammarRule -slp->aux-np- 1.0)
+(grammarRule -slp->aux-np-
+ (EATermFn slp
+  (TheList (inv +) (agr ?a) (var ?varnp) (:NOUN ?varnp)
+   (stype YesOrNoQuestion-IBT) (prep-lex ?lexp)
+   (sem ?semnp)))
+ (TheList 
+  (EAHeadFn (EATermFn AuxVerb (TheList (compform ?c) (agr ?a) (vform (? vform pres past)))))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (inf -) (prep-lex ?lexp)))))
+
+;;;CJM 10/26/2015
+;;; To really get the semantics right here for QA we need access to the entity from the NP in the VP
+;;; Modify did-VP to do so
+;(isa -slp->aux-vp-inv- EAGrammarRule)
+;(comment -slp->aux-vp-inv- "Does the temperature of the brick increase?")
+;(probabilityEAGrammarRule -slp->aux-vp-inv- 1.0)
+;(grammarRule -slp->aux-vp-inv-
+; (EATermFn slp
+;  (TheList (inv +) (agr ?a) (var ?varvp) (:ACTION ?varvp)
+;   (:EVENT ?varvp) (stype YesOrNoQuestion-IBT)
+;   (sem ?semvp)))  ; Do *not* put the stype inside the sem field!!!
+; (TheList
+;  (EAHeadFn
+;   (EATermFn vp
+;    (TheList (inv +) (aux +) (vform ?s) (agr ?a) (var ?varvp) (sem ?semvp)
+;     (inv-subject ?subvp) (:SUBJECT ?varnp))))))
+
+(isa -slp->be-np-np- EAGrammarRule)
+(comment -slp->be-np-np- "'Is a car a vehicle?'")
+(probabilityEAGrammarRule -slp->be-np-np- 1.0)
+(grammarRule -slp->be-np-np-
+ (EATermFn slp
+  (TheList (inv +) (agr ?a) (var ?varv) (:ACTION ?varv)
+   (:EVENT ?varv) (stype YesOrNoQuestion-IBT)
+   (sem
+    (and (varGenls ?varnp1 ?varnp2) ?semnp1 ?semnp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform) (sem ?semv) (var ?varv)
+     (object-be +))))
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp1) (var ?varnp1) (inf -)))
+  (EATermFn np
+   (TheList (agr ?a) (sem ?semnp2) (var ?varnp2) (inf -)))))
+
+;(isa -slp->be-pname-adj- EAGrammarRule)
+;(comment -slp->be-pname-adj- "'Is Bill Gates rich?'")
+;(probabilityEAGrammarRule -slp->be-pname-adj- 1.0)
+;(grammarRule -slp->be-pname-adj-
+; (EATermFn slp
+;  (TheList (inv +) (agr ?a) (var ?varv) (:NOUN ?semnp)
+;   (:SUBJECT ?semnp) (stype YesOrNoQuestion-IBT)
+;   (sem ?semadjp)))
+; (TheList
+;  (EAHeadFn
+;   (EATermFn Verb
+;    (TheList (agr ?a) (vform ?vform) (var ?varv) (sem ?semv)
+;     (object-be +))))
+;  (EATermFn pname (TheList (agr ?a) (sem ?semnp) (var ?varnp)))
+;  (EATermFn adjp (TheList (sem ?semadjp)))))
+
+(isa -slp->be-np-adj- EAGrammarRule)
+(comment -slp->be-np-adj- "'Is the tree green?'")
+(probabilityEAGrammarRule -slp->be-np-adj- 1.0)
+(grammarRule -slp->be-np-adj-
+ (EATermFn slp
+  (TheList (inv +) (agr ?a) (var ?varv) (:NOUN ?varnp)
+   (stype YesOrNoQuestion-IBT)
+   (sem (and ?semnp ?semadjp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform) (var ?varv) (sem ?semv)
+     (object-be +))))
+  (EATermFn np (TheList (agr ?a) (sem ?semnp) (var ?varnp) (inf -)))
+  (EATermFn adjp (TheList (sem ?semadjp)))))
+
+(isa -slp->np-be-adjp-supp- EAGrammarRule)
+(comment -slp->np-be-adjp-supp- "That tree is the largest.")
+(probabilityEAGrammarRule -slp->np-be-adjp-supp- 0.9)
+(grammarRule -slp->np-be-adjp-supp-
+             (EAtermFn slp (TheList (agr ?a) (vform ?vform) (var ?varv) (:REPLACE (ConceptForInstanceFn ?varnp ?semnp))
+                                    (:NOUN ?varnp) (sem (and ?semnp ?semrel))))
+             
+             (TheList
+              (EATermFn np (TheList (agr ?a) (sem ?semnp) (var ?varnp) (inf -)))
+              (EAHeadFn
+               (EATermFn Verb
+                         (TheList (agr ?a) (vform ?vform) (var ?varv) (sem ?semv)
+                                  (object-be +))))
+              (EATermFn np (TheList (var ?varadjp) (gerund -) (:NOUN (GapFn :NOUN))
+                                    (sem ?semadjp) (superlative +) (modlex ?mod)))
+              (EATermFn bind-superlative-relation
+                        (TheList (inp ?semadjp) (inp2 ?semnp) (inp3 ?mod) (sem ?semrel)))))
+
+
+;;;Need to change to be-verb not vp... but it's a weird rule so I'm leaving it out.
+(isa -slp->be-np-because-slp- EAGrammarRule)
+(comment -slp->be-np-because-slp- "'Is this because <slp>?' (JLT)")
+(probabilityEAGrammarRule -slp->be-np-because-slp- 1.0)
+(grammarRule -slp->be-np-because-slp-
+ (EATermFn slp
+  (TheList (inv +) (agr ?a) (var ?varvp) (:SUBJECT ?varnp)
+   (stype YesOrNoQuestion-IBT)
+   (sem
+    (and ?semnp ?semslp
+         (causes-EventEvent ?varslp ?varnp)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (agr ?a) (vform ?vform) (var ?varvp) (sem ?semvp)
+     (object-be +))))
+  (EATermFn np (TheList (agr ?a) (sem ?semnp) (var ?varnp) (inf -)))
+  (EATermFn SubordinatingConjunction (TheList (lex because)))
+  (EATermFn slp (TheList (var ?varslp) (sem ?semslp)))))
+
+(isa -slp->where-be-np- EAGrammarRule)
+(comment -slp->where-be-np- "'Where is Bill Gates?', 'Where is London?', 'Where is the box?'")
+(probabilityEAGrammarRule -slp->where-be-np- 1.0)
+(grammarRule -slp->where-be-np-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varv)
+   (:LOCATION (WhQuestionFn where))
+   (:OBJECT ?varnp)
+   (stype WhereQuestion-IBT)
+   (sem (and ?semadv ?semnp))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (lex where) (sem ?semadv) (var ?varadv)))
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform) (var ?varv) (sem ?semv)
+     (object-be +))))
+  (EATermFn np (TheList (agr ?a) (sem ?semnp) (var ?varnp) (inf -)))))
+
+
+;;;subj-aux-inversion
+(isa -slp->aux-np-vpinv EAGrammarRule)
+(comment -slp->aux-np-vpinv "Cases where subject is preposed by an auxiliary. 'Did he eat?' 'Has he read the paper'
+  Note that this is not always interrogative (e.g. 'May you live long and prosper')")
+(probabilityEAGrammarRule -slp->aux-np-vpinv 1.0)
+
+;;; Note, we're not restricting based on vform/auxform agreement here. 
+;;;  "Is the boy eat?"  is fine as is "Did the boy eating?"
+;;; That's actually complicated because they don't have to match identically right?
+
+;;; Why not do aux, slp? 
+;;; Glad you asked! An inverted np/vp combo isn't actually grammatical on it's own because of tense.
+
+;;;To see how these combine with WH-questions see extensions.meld for Sinterog.
+;;;
+;;;
+;;; Okay, there are different agreement combinations depending on what aux it is....
+;;; So we make separate rules
+;;;
+;;; Should these be SBrst?
+(isa -slp->do-np-vpinv- EAGrammarRule)
+(probabilityEAGrammarRule -slp->do-np-vpinv- 1.0)
+(grammarRule -slp->do-np-vpinv-
+  (EATermFn slp
+    (TheList (inv +) (aux +)
+      (inv-subject ?npvar)
+      (var ?varvp)
+      (sem (and ?semvp ?semnp))
+      (:SUBJECT ?npvar)
+      (agr ?a)
+      (vform ?auxform)
+      (part ?part)
+      ))
+  (TheList
+   (EAHeadFn (EATermFn AuxVerb
+     (TheList (agr ?a) (vform ?auxform) (vform (? !nb base))  ; prohibit the base of an auxverb
+       (sem ?semaux) (var ?varaux) (modal -)
+       (lex (? l did do does)))))
+   (EATermFn np
+     (TheList (var ?npvar) (agr ?a) (sem ?semnp)))
+   (EATermFn vp
+     (TheList (var ?varvp) (sem ?semvp) (part ?part)
+        (vform (? vform base pres))))))
+
+;;;Making vform be here because the pastpart has no agreement and so cannot be the head.
+;;;This actually suggests redoing the above, but I'm leaving for now.
+(isa -slp->be-np-vpinv EAGrammarRule)
+(probabilityEAGrammarRule -slp->be-np-vpinv 1.0)
+(grammarRule -slp->be-np-vpinv
+             (EATermFn slp
+                       (TheList (inv +) (aux +)
+                                (inv-subject ?npvar)
+                                (var ?varvp) (agr ?a)
+                                (sem (and ?semvp ?semnp))
+                                (:SUBJECT ?npvar)
+                                (vform ?auxform)
+                                (part ?part)
+                                ))
+             (TheList
+              (EAHeadFn (EATermFn AuxVerb
+                        (TheList (agr ?a) (vform ?auxform) (sem ?semaux) (var ?varaux) (modal -)
+                                 (lex (? l is are was were being been are am))
+                                 )))
+              (EATermFn np
+                        (TheList (var ?npvar) (agr ?a) (sem ?semnp)))
+               (EATermFn vp
+                         (TheList (part ?part) (var ?varvp) (vform (? vform prespart pastpart)) (sem ?semvp) (agr ?va)))))
+
+(isa -slp->have-np-vpinv EAGrammarRule)
+(probabilityEAGrammarRule -slp->have-np-vpinv 1.0)
+(grammarRule -slp->have-np-vpinv
+             (EATermFn slp
+                       (TheList (inv +) (aux +)
+                                (inv-subject ?npvar)
+                                (var ?varvp) (agr ?va)
+                                (sem (and ?semvp ?semnp))
+                                (:SUBJECT ?npvar)
+                                (vform ?vform)
+                                (auxform ?auxform)
+                                (part ?part)
+                                ))
+             (TheList
+              (EATermFn AuxVerb
+                        (TheList (agr ?a) (vform ?auxform) (sem ?semaux) (var ?varaux) (modal -)
+                                 (lex (? l has have had))
+                                 ))
+              (EATermFn np
+                        (TheList (var ?npvar) (agr ?a) (sem ?semnp)))
+              (EAHeadFn 
+               (EATermFn vp
+                         (TheList (part ?part) (var ?varvp) (vform ?vform) (sem ?semvp) (agr ?va))))))
+
+;;;(grammarRule -slp->aux-np-vpinv
+;;;             (EATermFn slp
+;;;                       (TheList (inv +) (aux +)
+;;;                                (inv-sub ?npvar)
+;;;                                (var ?varvp) (agr ?va)
+;;;                                (sem (and ?semvp ?semnp))
+;;;                                (:SUBJECT ?npvar)
+;;;                                (vform ?vform)
+;;;                                (auxform ?auxform)
+;;;                                ))
+;;;             (TheList
+;;;              (EATermFn AuxVerb
+;;;                        (TheList (agr ?a) (vform ?auxform) (sem ?semaux) (var ?varaux) (modal -)))
+;;;              (EATermFn np
+;;;                        (TheList (var ?npvar) (agr ?a) (sem ?semnp)))
+;;;              (EAHeadFn 
+;;;               (EATermFn vp
+;;;                         (TheList (var ?varvp) (vform ?vform) (sem ?semvp) (agr (? !va base)))))))
+;;; Covered by above
+;;;(isa -slp->did-np-vp- EAGrammarRule)
+;;;(comment -slp->did-np-vp- "'Did you sing (?)'")
+;;;(probabilityEAGrammarRule -slp->did-np-vp- 1.0)
+;;;(grammarRule -slp->did-np-vp-
+;;; (EATermFn slp
+;;;  (TheList (agr ?a) (var ?varv) (negated ?neg)
+;;;   (stype YesOrNoQuestion-IBT)
+;;;   (inv ?inv) (aux +) (sem ?semv) (:SUBJECT ?varnp)))
+;;; (TheList
+;;;  (EATermFn AuxVerb
+;;;   (TheList (modal +) (lex (? l did do does))
+;;;    (vform (? vform past pres)) (agr ?a)))
+;;;  (EATermFn np
+;;;   (TheList (agr ?a) (sem ?semnp) (var ?varnp)))
+;;;  (EAHeadFn
+;;;   (EATermFn vp
+;;;    (TheList (vform pres) (var ?varv) (sem ?semv) (modal -)
+;;;      (negated ?neg) (inv ?inv))))))
+
+;;;WH-Inversions (Matrix Questions)
+;;; Note that these are not Sinterrog. Sinterrogs are not full clauses by themselves
+;;; An example is "I like [where we are]". You can't do "*I like where did we go?" Hence slp.
+
+;;; adapted from -slp->where-vp-inv-
+;;; :LOCATION is bound in the semtrans for where.
+;;; Unlike what, it's not going to be a DO.
+
+;;; These can all be collapsed by making wh-adverbs/np their own phrase type.
+;;; Then we can just have rules for each wh-word to build a wh-phrase and have one rule that combines
+;;; an inversion with a wh-phrase.
+
+(isa -slp->where-slp-inv- EAGrammarRule)
+(comment -slp->where-slp-inv- "'Where are they eating?', 'Where did Osama bin Laden flee?'")
+(probabilityEAGrammarRule -slp->where-slp-inv- 1.0)
+(grammarRule -slp->where-slp-inv-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+   (:LOCATION (WhQuestionFn where))
+   (stype WhereQuestion-IBT) (sem (and ?semvp ?semp))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (lex where) (sem ?semp) (var ?varp)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+     (inv-subject ?subvp))))))
+
+(isa -slp->when-slp-inv- EAGrammarRule)
+(comment -slp->when-slp-inv- "'When did the boy sing?', 'When is the plane leaving?'")
+(probabilityEAGrammarRule -slp->when-slp-inv- 1.0)
+(grammarRule -slp->when-slp-inv-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+   (:DATE (WhQuestionFn when))
+   (stype WhenQuestion-IBT) (sem (and ?semvp ?semp))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (lex when) (sem ?semp) (var ?varp)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+     (inv-subject ?subvp))))))
+
+;;;
+;;; Pro inversion is actually a bit different (who/what) because it's actually replacing an argument.
+;;; Grammatically, when/where are adjuncts whereas who/what are objects. Cool!
+;;;
+(isa -slp->who-slp-inv- EAGrammarRule)
+(comment -slp->who-slp-inv- "'Who did the dog bite?', 'Who is the man leaving?'")
+(probabilityEAGrammarRule -slp->who-slp-inv- 1.0)
+(grammarRule -slp->who-slp-inv-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+   (:OBJECT ?varnp)
+   (stype WhoQuestion-IBT) (sem (and ?semvp ?semp))))
+ (TheList
+  (EATermFn Noun
+   (TheList (lex who) (sem ?semp) (var ?varnp) (pro ?pro)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+             (inv-subject ?subvp))))))
+
+;;;
+;;; Differences in allowable agreement between be aux and do aux. Did the man eat? Is/Was the man eat?
+(isa -slp->what-slp-inv- EAGrammarRule)
+(comment -slp->what-slp-inv- "'What did the dog eat?', 'What is the thing making that noise?'")
+(probabilityEAGrammarRule -slp->what-slp-inv- 1.0)
+(grammarRule -slp->what-slp-inv-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+   (:OBJECT ?varnp)
+   (stype WhatQuestion-IBT) (sem (and ?semvp ?semp))))
+ (TheList
+  (EATermFn np
+   (TheList (lex what) (sem ?semp) (var ?varnp) (pro ?pro)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+             (inv-subject ?subvp))))))
+             
+(isa -slp->how-slp-inv- EAGrammarRule)
+(comment -slp->how-slp-inv- "'How did you escape?', 'How are you feeling?'")
+(probabilityEAGrammarRule -slp->how-slp-inv- 1.0)
+(grammarRule -slp->how-slp-inv-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+   (:OBJECT ?varnp)
+   (stype HowQuestion-IBT) (sem (and ?semvp ?semp))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (lex how) (sem ?semp) (var ?varnp) (pro ?pro)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+             (inv-subject ?subvp))))))
+
+;;; subj-aux inversion with how/many, which, and what
+;;; "How many cities does Texas have?"
+;;; "Which candidate did he see?"
+;;; "What states did the man see?"
+;;;
+;;; Question here as to how to handle particles. Do we want to handle them as adjuncts at the slp level
+;;;  or is it better to have their semantics trickle up from a vp-advpart? A similar question emerges with
+;;;  preposition stranding (e.g. What state is Columbus the capital of?). FN deliberately avoids annotating
+;;;  sentences like these (they literally say that in the book...). So it's no help. See vp.meld
+;;;
+;;; Note that because how many/which/what are all nps, it's the same format as what did the dog eat.
+;;; That's actually pretty twisted. Not sure how I feel about that...
+;;;
+;;; No.  This is entirely subsumed by -slp->np-slp-inv-
+;(isa -slp->how-many-np-invslp EAGrammarRule)
+;(probabilityEAGrammarRule -slp->how-many-np-invslp 1.0)
+;(grammarRule -slp->how-many-np-invslp
+; (EATermFn slp
+;  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+;   (:OBJECT ?varnp)
+;   (stype HowManyQuestion-IBT) (sem (and ?semvp ?semp))))
+; (TheList
+;  (EATermFn np
+;   (TheList (sem ?semp) (var ?varnp) (stype HowManyQuestion-IBT)))
+;  (EAHeadFn
+;   (EATermFn slp
+;    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+;             (inv-subject ?subvp))))))
+;
+
+(isa -slp->which-np-invslp EAGrammarRule)
+(probabilityEAGrammarRule -slp->which-np-invslp 1.0)
+(grammarRule -slp->which-np-invslp
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+   (:OBJECT ?varnp)
+   (stype WhichQuestion-IBT) (sem (and ?semvp ?semp))))
+ (TheList
+  (EATermFn np
+   (TheList (sem ?semp) (var ?varnp) (stype WhichQuestion-IBT)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+             (inv-subject ?subvp))))))
+
+(isa -slp->when-be-np- EAGrammarRule)
+(comment -slp->when-be-np- "'When was World War 2?', 'When was the war between Iran and Iraq?'")
+(probabilityEAGrammarRule -slp->when-be-np- 1.0)
+(grammarRule -slp->when-be-np-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varv)
+   (:DATE (WhQuestionFn when)) (:OBJECT ?varnp)
+   (stype WhenQuestion-IBT) (sem (and ?semadv ?semnp))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (lex when) (sem ?semadv) (var ?varadv)))
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform) (var ?varv) (sem ?semv)
+     (object-be +))))
+  (EATermFn np (TheList (agr ?a) (sem ?semnp) (var ?varnp) (inf -)))))
+
+
+;;;(isa -slp->when-vp-inv- EAGrammarRule)
+;;;(comment -slp->when-vp-inv- "'When did they eat?'")
+;;;(probabilityEAGrammarRule -slp->when-vp-inv- 1.0)
+;;;(grammarRule -slp->when-vp-inv-
+;;; (EATermFn slp
+;;;  (TheList (agr ?a) (var ?varvp) (:ACTION ?varvp) (:EVENT ?varvp)
+;;;   (:DATE (WhQuestionFn when))
+;;;   (stype WhenQuestion-IBT) (sem (and ?semvp ?semp))))
+;;; (TheList
+;;;  (EATermFn Adverb
+;;;   (TheList (lex when) (sem ?semp) (var ?varp)))
+;;;  (EAHeadFn
+;;;   (EATermFn vp
+;;;    (TheList (inv +) (aux +) (agr ?a) (var ?varvp) (sem ?semvp)
+;;;     (inv-subject ?subvp))))))
+
+;;;
+;;; Needed to change for new compound how many. See new how many semtrans and other rules that use it as a quant.
+;;; Deprecated see above
+;;;(isa -slp->how-many-np-vp EAGrammarRule)
+;;;(comment -slp->how-many-np-vp "'How many <x> <vp>'.  REM: This should reject generic np constituents")
+;;;(probabilityEAGrammarRule -slp->how-many-np-vp 1.0)
+;;;(grammarRule -slp->how-many-np-vp
+;;; (EATermFn slp
+;;;  (TheList (arg ?a) (var ?varvp) (:SUBJECT ?varnp)
+;;;   (:ACTION ?varvp) (stype HowManyQuestion-IBT)
+;;;   (sem
+;;;    (and (quantityRequested ?varnp :VALUE) ?semvp
+;;;         ?semnp))))
+;;; (TheList
+;;;  (EATermFn Adverb
+;;;   (TheList (lex how) (sem ?semhow) (var ?varhow)))
+;;;  (EATermFn Quantifier-SP (TheList (lex many) (sem ?semmany) (var ?varmany)))
+;;;  (EATermFn np
+;;;   (TheList (agr ?a) (var ?varnp) (sem ?semnp) (inf -) (generic -)))
+;;;  (EAHeadFn
+;;;   (EATermFn vp (TheList (agr ?a) (var ?varvp) (vform (? vform pres past prespart pastpart)) (sem ?semvp))))))
+
+(isa -slp->how-much-np-vp EAGrammarRule)
+(comment -slp->how-much-np-vp "'How much <x> <vp>.'")
+(probabilityEAGrammarRule -slp->how-much-np-vp 1.0)
+(grammarRule -slp->how-much-np-vp
+ (EATermFn slp
+  (TheList (arg ?a) (var ?varvp) (:SUBJECT ?varnp)
+   (:ACTION ?varvp) (stype HowMuchQuestion-IBT)
+   (sem
+    (and (quantityRequested ?varnp :VALUE) ?semvp
+         ?semnp))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (lex how) (sem ?semhow) (var ?varhow)))
+  (EATermFn Adverb
+   (TheList (lex much) (sem ?semmany) (var ?varmany)))
+  (EATermFn np
+   (TheList (agr ?a) (var ?varnp) (sem ?semnp) (inf -) (generic -)))
+  (EAHeadFn
+   (EATermFn vp (TheList (agr ?a) (var ?varvp) (vform (? vform pres past prespart pastpart)) (sem ?semvp))))))
+
+(isa -slp->how-adj-tobe-np- EAGrammarRule)
+(comment -slp->how-adj-tobe-np- "'How fair is my love?'")
+(probabilityEAGrammarRule -slp->how-adj-tobe-np- 1.0)
+(grammarRule -slp->how-adj-tobe-np-
+ (EATermFn slp
+  (TheList (agr ?a) (var ?varsvp) (:NOUN ?varnp)
+   (stype GeneralHowQuestion-IBT)
+   (:MEASURE (WhQuestionFn amount))
+   (sem (and ?semap ?semnp))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (lex how) (sem ?semav) (var ?varav)))
+  (EATermFn adjp (TheList (sem ?semap)))
+  (EAHeadFn
+   (EATermFn Verb (TheList (agr ?a) (object-be +) (var ?varsvp))))
+  (EATermFn np (TheList (agr ?a) (sem ?semnp) (var ?varnp) (inf -)))))
+
+(isa -slp->for-np-comma-slp- EAGrammarRule)
+(comment -slp->for-np-comma-slp- "Textbook-specific pattern: 'For slugs, salt is lethal.'")
+(probabilityEAGrammarRule -slp->for-np-comma-slp- 1.0)
+(grammarRule -slp->for-np-comma-slp-
+ (EATermFn slp
+  (TheList (var ?varnp)
+   (sem (and ?semnp (ruleQualifier ?varnp ?semslp)))))
+ (TheList (EATermFn Preposition (TheList (lex for)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn (EATermFn slp (TheList (var ?varslp) (sem ?semslp))))))
+
+
+(isa -slp->np-comma-slp- EAGrammarRule)
+(comment -slp->np-comma-slp- "'75 percent of the time, elephants are gray.'")
+(probabilityEAGrammarRule -slp->np-comma-slp- 0.9)
+(grammarRule -slp->np-comma-slp-
+ (EATermFn slp
+  (TheList (var ?varnp) (agr ?a) (adjunct-adv +) (stype ?stype)
+   (sem (and ?semnp (ruleQualifier ?varnp ?semslp)))))
+ (TheList
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (ntime1 -)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (var ?varslp) (agr ?a) (sem ?semslp) (stype ?stype))))))
+
+
+(isa -slp->x-is-to-y-as-a-is-to-b EAGrammarRule)
+(comment -slp->x-is-to-y-as-a-is-to-b "Gold mine processing.")
+(probabilityEAGrammarRule -slp->x-is-to-y-as-a-is-to-b 1.0)
+(grammarRule -slp->x-is-to-y-as-a-is-to-b
+ (EATermFn slp
+  (TheList 
+   (var (ConjunctiveVar ?varnp-x ?varnp-y ?varnp-a ?varnp-b))
+   (sem
+    (and ?semnp-x ?semnp-y ?semnp-a ?semnp-b
+         (similarTo ?varnp-x ?varnp-a)
+         (similarTo ?varnp-y ?varnp-b)
+         (elementOfTargetDomain ?varnp-x)
+         (elementOfTargetDomain ?varnp-y)
+         (elementOfBaseDomain ?varnp-b)
+         (elementOfBaseDomain ?varnp-a)))))
+ (TheList (EATermFn np (TheList (var ?varnp-x) (sem ?semnp-x)))
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform1) (var ?varv1) (sem ?semv1)
+     (object-be +))))
+  (EATermFn Preposition (TheList (lex to)))
+  (EATermFn np (TheList (var ?varnp-y) (sem ?semnp-y)))
+  (EATermFn SubordinatingConjunction (TheList (lex as)))
+  (EATermFn np (TheList (var ?varnp-a) (sem ?semnp-a)))
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList (agr ?a) (vform ?vform2) (var ?varv2) (sem ?semv2)
+     (object-be +))))
+  (EATermFn Preposition (TheList (lex to)))
+  (EATermFn np (TheList (var ?varnp-b) (sem ?semnp-b)))))
+
+;(isa -slp->which-slp- EAGrammarRule)
+;(comment -slp->which-slp- "which one of the cats is brown?")
+;(probabilityEAGrammarRule -slp->which-slp- 1.0)
+;(grammarRule -slp->which-slp-
+; (EATermFn slp
+;  (TheList (var ?varslp)
+;        (wh r)
+;        (stype WhichQuestion-IBT)
+;        (agr (? a 3s 3p))
+;        (sem
+;         (thereExists ?varslp
+;          (and ?semslp
+;               (coreferent ?varslp
+;                 (WhQuestionFn which)))))))
+; (TheList 
+;  (EATermFn Determiner
+;   (TheList (lex which) (agr ?a)))
+;  (EAHeadFn
+;   (EATermFn slp
+;    (TheList (var ?varvpslp) 
+;      (sem ?semslp)
+;      (:SUBJECT ?varslp)
+;      (agr ?a))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

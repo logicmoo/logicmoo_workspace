@@ -1,0 +1,261 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ordinal-reasoning
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: December 29, 2010 09:22:59
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory OrdinalReasoningMt)
+
+(comment OrdinalReasoningMt
+  "OrdinalReasoningMt contains Horn clauses for ordinal reasoning.
+This implementation uses no specialized datastructures, doing everything via backchaining.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; transitivity over ordinals
+;;; Soft instead of strict are used as the bridge relationships when possible to
+;;; cover more cases.
+;;; The groundExpression antecedents are needed to prevent queries with too many open
+;;; constraints.
+
+
+;;; Restrict these to lookup, to avoid looping
+
+(<== (qGreaterThan ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThanOrEqualTo ?q1 ?q-middle))
+     (lookupOnly (qGreaterThan ?q-middle ?q2)))
+
+(<== (qGreaterThan ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qEqualTo ?q1 ?q-middle))
+     (lookupOnly (qGreaterThan ?q-middle ?q2)))
+
+(<== (qLessThan ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qLessThanOrEqualTo ?q1 ?q-middle))
+     (lookupOnly (qLessThan ?q-middle ?q2)))
+
+(<== (qLessThan ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qEqualTo ?q1 ?q-middle))
+     (lookupOnly (qLessThan ?q-middle ?q2)))
+
+(<== (qEqualTo ?q1 ?q2)
+     (groundExpression ?q1) 
+     (groundExpression ?q2)
+     (lookupOnly (qEqualTo ?q1 ?q-middle))
+     (lookupOnly (qEqualTo ?q-middle ?q2)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Inference of soft ordinals
+;;; N.B. Given back-chaining strategy, the transitivity
+;;; rules above should suffice for transitivity reasoning
+;;; about soft ordinals too.  
+
+(<== (qGreaterThanOrEqualTo ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThan ?q1 ?q2)))
+
+(<== (qGreaterThanOrEqualTo ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qEqualTo ?q1 ?q2)))
+
+(<== (qLessThanOrEqualTo ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qLessThan ?q1 ?q2)))
+
+(<== (qLessThanOrEqualTo ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qEqualTo ?q1 ?q2)))
+
+;;; Tightening and consistency checking
+
+(<== (qEqualTo ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThanOrEqualTo ?q1 ?q2))
+     (lookupOnly (qLessThanOrEqualTo ?q1 ?q2)))
+
+;; <, > antisymmetric
+(<== (qGreaterThan ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qLessThan ?q2 ?q1)))
+
+(<== (qLessThan ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThan ?q2 ?q1)))
+
+(<== (inconsistentOrdinals ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThan ?q1 ?q2))
+     (lookupOnly (qLessThan ?q1 ?q2)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Inference of negations of ordinals
+
+(<== (not (qGreaterThanOrEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qLessThan ?q1 ?q2)))
+
+(<== (not (qGreaterThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qEqualTo ?q1 ?q2)))
+
+(<== (not (qGreaterThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qLessThan ?q1 ?q2)))
+
+(<== (not (qEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qLessThan ?q1 ?q2)))
+
+(<== (not (qEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThan ?q1 ?q2)))
+
+(<== (not (qLessThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThan ?q1 ?q2)))
+
+(<== (not (qLessThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qEqualTo ?q1 ?q2)))
+
+(<== (not (qLessThanOrEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (lookupOnly (qGreaterThan ?q1 ?q2)))
+
+;;; Can also infer negation due to lack of existence of quantity.
+;;; Had lookupOnly around these, which may have been too confining.
+
+(<== (not (qGreaterThanOrEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q1 Zero)
+     (not (hasQuantity ?thing ?q1)))
+
+(<== (not (qGreaterThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q1 Zero)
+     (not (hasQuantity ?thing ?q1)))
+
+(<== (not (qGreaterThanOrEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q2 Zero)
+     (not (hasQuantity ?thing ?q2)))
+
+(<== (not (qGreaterThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q2 Zero)
+     (not (hasQuantity ?thing ?q2)))
+
+(<== (not (qLessThanOrEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q1 Zero)
+     (not (hasQuantity ?thing ?q1)))
+
+(<== (not (qLessThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q1 Zero)
+     (not (hasQuantity ?thing ?q1)))
+
+(<== (not (qLessThanOrEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q2 Zero)
+     (not (hasQuantity ?thing ?q2)))
+
+(<== (not (qLessThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q2 Zero)
+     (not (hasQuantity ?thing ?q2)))
+
+(<== (not (qEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q1 Zero)
+     (not (hasQuantity ?thing ?q1)))
+
+(<== (not (qEqualTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (different ?q2 Zero)
+     (not (hasQuantity ?thing ?q2)))
+
+;;; And negation by opposite ordinal already being known as true
+;;; N.B. If we had local forward chaining/instantiation rules, this
+;;; would be directly handled by the TMS, the way it was in Gizmo.
+;;; ****** Worth revisiting that.
+;;; ****** Having a disjunctive antecedent that didn't clog up
+;;; ****** the WM would also let us be more compact in expressing rules.
+(<== (not (qGreaterThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (qGreaterThan ?q2 ?q1))
+
+(<== (not (qGreaterThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (qLessThan ?q1 ?q2))
+
+(<== (not (qGreaterThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (qEqualTo ?q1 ?q2))
+
+(<== (not (qLessThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (qLessThan ?q2 ?q1))
+
+(<== (not (qLessThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (qGreaterThan ?q1 ?q2))
+
+(<== (not (qLessThan ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (qEqualTo ?q1 ?q2))
+
+(<== (not (qGreaterThan ?q1 ?q2)) (qUnrelatedTo ?q1 ?q2))
+(<== (not (qLessThan ?q1 ?q2)) (qUnrelatedTo ?q1 ?q2))
+(<== (not (qEqualTo ?q1 ?q2)) (qUnrelatedTo ?q1 ?q2))
+
+
+     
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

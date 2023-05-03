@@ -1,0 +1,36 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: visual-encoding-plans2.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: July 12, 2015 20:46:45
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-package :cl-user)
+
+(in-microtheory VisualEncodingPlansMt)
+
+(isa VisualEncodingPlansMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+
+(preconditionForMethod
+ (and (sameVisualEncodedObject ?object ?same-object)
+      ;;;;this may not be needed
+      (lookupOnly (wmOnly (ist-Information (EncodedCaseFn ?same-object SUB-EP-ID) ?fact)))) 
+  (methodForAction
+   (encodeVisually ?object)
+   (actionSequence
+    (TheList
+     (doAnnounce "There is a prior encoding availabled for object ~A" (?object))
+     ;;ontologize this and try justify if applicatble
+     (doTell (encodingForObject ?object (EncodedCaseFn ?same-object SUB-EP-ID)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

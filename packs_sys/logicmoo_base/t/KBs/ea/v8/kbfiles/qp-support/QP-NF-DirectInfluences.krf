@@ -1,0 +1,724 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QP-NF-DirectInfluences.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: December 5, 2014 14:35:36
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationRulesMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;; DIRECT INFLUENCE FRAMES;;;;;;;;;;;;;;;;;
+;;;
+
+
+;;;; Top level NF query
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?diframe 
+                        IntroductionOfDirectInfluenceEvent)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+      (ist-Information (NLPScratchPadFn ?ddrs-id)
+      (introducesDIFrame
+       (PresentationEventFn ?sid ?narrative-event)
+       ?diframe)))
+
+
+(<== (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (directInfluence- ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (individualSatisfyingConditions 
+      ?diframeid DirectInfluenceFrame
+      (TheSet 
+       (directInfluence- ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (directInfluence- ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))
+     (genOrFindRateFrame ?sid ?event-res ?diframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframeid DirectInfluenceFrame))
+                             (TheList (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframeid ?src-frame)) 
+                             (TheList (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?diframeid Negative)) 
+                             (TheList (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid))))
+    
+     )
+
+     
+
+(<== (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (directInfluence+ ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (individualSatisfyingConditions 
+      ?diframeid DirectInfluenceFrame
+      (TheSet 
+       (directInfluence+ ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))
+     (genOrFindRateFrame ?sid ?event-res ?diframeid)
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (directInfluence+ ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframeid DirectInfluenceFrame)) 
+                             (TheList (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframeid ?src-frame)) 
+                             (TheList (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?diframeid Positive)) 
+                             (TheList (introducesDIFrame (PresentationEventFn ?sid ?nevent) ?diframeid))))
+     (genOrFindRateFrame ?sid ?event-res ?diframeid))
+     
+
+
+
+;;;; Now we generate a rate frame regardless. The higher-level processes can combine
+;;;; Allows for sentences like "Heat flows from the hot coffee to the ice cubes and the cold cup surface.
+;;;;
+
+(<== (genOrFindRateFrame ?sid ?event-res ?diframeid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (individualSatisfyingConditions 
+      ?rateframeid QuantityFrame
+      (TheSet (isa ?diframeid DirectInfluenceFrame)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?rateframeid QuantityFrame))
+                             (TheList (genOrFindRateFrame ?sid ?event-res ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?rateframeid Rate))
+                             (TheList (genOrFindRateFrame ?sid ?event-res ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?rateframeid ?event-res))
+                             (TheList (genOrFindRateFrame ?sid ?event-res ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframeid ?rateframeid))
+                             (TheList (genOrFindRateFrame ?sid ?event-res ?diframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (rateOfTransfer ?diframeid ?rateframeid))
+                             (TheList (genOrFindRateFrame ?sid ?event-res ?diframeid)))))
+
+;;;
+;;; Target sentences: Working correctly.
+;;; "Heat flows from the brick to the ground"
+;;; "Heat flows from the brick"
+;;; "The heat flows to the ground"
+;;; "C1 contains pressure." "C2 contains pressure." "Pressure flows from C1 to C2."
+;;; "C1 contains pressure." "C2 contains pressure." "The Pressure flows from C1 to C2."
+
+;;;; Check Change 4/19/2014
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     ;;; nail down the event
+     (getAllPotentialIsas ?sid ?event PhysicalProcess ?event-type QPInterpretationMt ?ddrs-id)
+;;;       (localOnly
+;;;         (nonTransitiveInference
+     (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?event ?event-type))
+;;;     (kbOnly 
+;;;       (ist-Information QPInterpretationMt 
+;;;         (genls ?event-type PhysicalProcess)))
+     ;;; look for a transfer-pred
+     (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     ;;;(trueInDrs ?sdrs-id ?pred ?event ?obj)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     ;;; Crucial... This is what makes it work for heat flows...
+     ;;; Explodes if in ?ddrs so be careful here.
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?new-qtype ?entity))
+     (quantityInDrs ?quantity ?sid ?qtype)
+     (resolvedVar ?sid ?event ?event-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype))))
+     )
+;;;
+;;; CJM 1/31/2014 Just added this to wrap in numAnswers1. Otherwise just pop this code back into
+;;; diPredicate
+;;;
+;;; CJM 4/20/14 Aha! This is where we're getting random preds from
+;;; What we need is hasSpecPredOf. For now limit to explicitly a few predicates
+(<== (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     (ist-Information (DrsCaseFn ?sdrs-id) (primaryObjectMoving ?event ?quantity))
+     (unifies ?pred primaryObjectMoving))
+;;;     (allFactsAllowed
+;;;      (useTransitiveInference (genlPreds ?pred transferredObject))))
+
+(<== (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     (ist-Information (DrsCaseFn ?sdrs-id) (objectActedOn ?event ?quantity))
+     (unifies ?pred objectActedOn)
+;;;     (allFactsAllowed
+;;;      (useTransitiveInference (genlPreds ?pred objectActedOn)))
+     )
+(<== (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     (ist-Information (DrsCaseFn ?sdrs-id) (transferredObject ?event ?quantity))
+     (unifies ?pred transferredObject)
+;;;     (allFactsAllowed
+;;;      (useTransitiveInference (genlPreds ?pred objectActedOn)))
+     )
+;;; cjm probably don't need if I fix one-cnp?
+(<== (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     (ist-Information (DrsCaseFn ?sdrs-id) (inputsDestroyed ?event ?quantity))
+     (unifies ?pred inputsDestroyed))
+
+;;; NOT SPECIFIC QTYPE
+;;; With generic back-reference. Use the entities to identify the correct
+;;; quantity frames
+;;;
+;;; Target Sentences: 
+;;; "C1 contains water." "C2 contains water." "Water flows from C1 to C2."
+;;; I need to make sure genericQuantityReference accepts these new systems
+
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     ;;; nail down the event
+     (getAllPotentialIsas ?sid ?event PhysicalProcess ?event-type QPInterpretationMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id)
+         (isa ?event ?event-type))
+     (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     ;;;(trueInDrs ?sdrs-id ?pred ?event ?obj)
+     ;;; So in the above it's water...
+     ;;; This quantity can refer to many things
+     ;;; NOTE THIS IS THE UNRESOLVED QUANTITY
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?new-qtype ?substance)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (genericQuantityReference ?quantity ?sdrs-id ?qtype ?new-qtype ?substance))))
+     )
+
+;;;
+;;; This is for state-changes/ evaporation etc.
+;;; Target Sentences:
+;;;  .Energy turns into heat
+;;;
+
+
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     ;;; nail down the event
+     (getAllPotentialIsas ?sid ?event IntrinsicStateChangeEvent ?event-type QPInterpretationMt ?ddrs-id)
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?new-qtype ?substance))
+     (UndergoStateChangePred ?sdrs-id ?event ?pred ?src)
+     (ist-Information (DrsCaseFn ?sdrs-id) (?pred ?event ?quantity))
+     (quantityInDrs ?quantity ?sid ?qtype)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type? quantity ?quantity-res ?qtype)))))
+
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     ;;; nail down the event
+     (getAllPotentialIsas ?sid ?event IntrinsicStateChangeEvent ?event-type QPInterpretationMt ?ddrs-id)
+     (UndergoStateChangePred ?sdrs-id ?event ?pred ?src)
+     (ist-Information (DrsCaseFn ?sdrs-id) (?pred ?event ?quantity))
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?new-qtype ?substance)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type? quantity ?quantity-res ?qtype)))))
+
+(<== (UndergoStateChangePred ?sdrs-id ?event ?pred ?quantity)
+     (ist-Information (DrsCaseFn ?sdrs-id) (objectOfStateChange ?event ?quantity))
+     (unifies ?pred objectOfStateChange))
+
+(<== (UndergoStateChangePred ?sdrs-id ?event ?pred ?quantity)
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (objectOfStateChange ?event ?quantity)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (inputsDestroyed ?event ?quantity))
+     (unifies ?pred inputsDestroyed))
+
+
+;;; Transactions:
+;;; CJM 2/2/2014
+;;;
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event Buying))
+     (unifies ?event-type Buying)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id2)
+     (ist-Information (DrsCaseFn ?sdrs-id2) (objectPaidFor ?event ?quantity))
+     (quantityInDrs ?quantity ?sid ?qtype)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))))
+
+
+
+;;;; Generic Quantity Reference: For when you refer to water to mean the amount of it etc. 
+;;;;   Make sure the thing itself isn't a quantityType
+;;;;   Actually that doesn't really help. We need to make sure at the DI level that they aren't genericQuantityReferences
+;;; ?drs here is the sdrs. Querying from discourse case
+;;; ?dv here is water456 (doesn't match to anything)
+(<== (genericQuantityReference ?dv ?drs ?qtype ?new-qtype ?entity)
+     (drsForDiscourse ?ddrs-id)
+     (groundExpression ?drs)
+     (groundExpression ?dv)
+     ;;;(uninferredSentence (quantityInDrs ?dv ?drs ?qtype))
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qpframe ?qtype))))
+     ;;;cjm 8/31 For some reason this wasn't binding the quant-var to the entity of the QPFrame
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qpframe ?quant-var))))
+     ;;; What the hell is this? CJM 11/3
+     ;;; It's costing us a shit ton of time
+     (localOnly (nonTransitiveInference (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?quant-var ?quant))))))
+     (ist-Information (DrsCaseFn ?drs) (isa ?dv ?quant))
+     (groundExpression ?quant)
+     ;;;get all quantityTypes
+     ;;; First make sure we don't have a direct match...
+     (different ?dv ?quant-var)
+     ;;; They're the same type... say it's a quant and pass it on to diPredicate to deal with.
+     (unifies ?new-qtype ?qtype))
+
+
+
+;;; New for contained etc.
+;;; Qtype here is just going to be amount. It's the entity that's more important
+;;; This requires new to and from frame makers, not necessarily a new genQuantRef
+;;; Needs to be more entity specific, really should be a different predicate
+
+;;; So now we find a qtype with a contained entity
+;;; If the entity and the quantity of this phrase match, go for it
+;;; Now qtype and new-qtype should always be the same
+;;; ?entity is the entity it can resolve back to
+
+(<== (genericQuantityReference ?dv ?drs ?qtype ?new-qtype ?entity)
+     (groundExpression ?drs)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     ;;;(uninferredSentence (quantityInDrs ?dv ?drs ?qtype))
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qpframe ?qtype))))
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qpframe (ContainedStuffFn ?entity default ?container)))))
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?quant-var ?quant))))
+     (ist-Information (DrsCaseFn ?drs) (isa ?dv ?quant))
+     (groundExpression ?quant)
+     ;;;get all quantityTypes
+     ;;; First make sure we don't have a direct match...
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?entity ?quant))
+     (different ?dv ?quant-var)
+     (unifies ?new-qtype ?qtype))
+
+
+
+;;; generate a source frame based on a from-Generic
+;;; generate a rate frame
+(<== (directInfluence- ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))
+
+(<== (directInfluence+ ?sid ?event ?event-res ?quantity ?qtype ?to-frame)
+     (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))
+
+;;; For the generic
+;;; Currently this first finds the entity flow is coming from
+;;; ie. C1
+;;; looks up (entity ?sourceframeid
+(<== (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src))
+     (validQPEntity ?sid ?qtype ?src ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?src ?etype))
+     (resolvedVar ?sid ?src ?src-res)
+     ;;; src-res here may be 
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?sourceframeid ?src-res)))
+     ;;; 
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?sourceframeid ?existingQ)))
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2)
+     (unifies ?src-frame ?sourceframeid)
+     (forEffectOnly (justify 
+                     (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?src-frame (from-UnderspecifiedLocation ?event ?src-res)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))))
+
+
+;;; For packed entities
+(<== (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src))
+     (validQPEntity ?sid ?qtype ?src ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?src ?etype))
+     (resolvedVar ?sid ?src ?src-res)
+     ;;; src-res here may be 
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?sourceframeid (ContainedStuffFn ?quantity2 default ?src-res))))
+     ;;; 
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?sourceframeid ?existingQ)))
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2)
+     (unifies ?src-frame ?sourceframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?src-frame (from-UnderspecifiedLocation ?event ?src-res)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))))
+
+
+;;; This one should be making a new source-frame for the heat flow now it is
+;;; I'm worried about a potential case where there is another quant frame with the same qtype but not the correct entity.
+;;; ie. multiple unconnected flow statements. seems grammatically unlikely though plausible. If it breaks. look here!
+;;; -CJM
+
+(<== (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src))
+     (validQPEntity ?sid ?qtype ?src ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?src ?etype))
+     ;;; This may be too restrictive....
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?1sourceframeid ?qtype)))
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2))
+     (individualSatisfyingConditions 
+      ?sourceframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src))))
+     (resolvedVar ?sid ?src ?src-res)
+     (unifies ?src-frame ?sourceframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?sourceframeid ?src-res))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?sourceframeid ?qtype))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?sourceframeid QuantityFrame))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?sourceframeid ?quantity))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?src-frame (from-UnderspecifiedLocation ?event ?src-res)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))))
+
+
+
+;;; CJM: 8/25 added FromLocation
+(<== (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (fromLocation ?event ?src))
+     (validQPEntity ?sid ?qtype ?src ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?src ?etype))
+     ;;; This may be too restrictive....
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?1sourceframeid ?qtype)))
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2))
+     (individualSatisfyingConditions 
+      ?sourceframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (fromLocation ?event ?src))))
+     (resolvedVar ?sid ?src ?src-res)
+     (unifies ?src-frame ?sourceframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?sourceframeid ?src-res))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?sourceframeid ?qtype))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?sourceframeid QuantityFrame))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?sourceframeid ?quantity))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?src-frame (from-UnderspecifiedLocation ?event ?src-res)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))))
+
+
+;;; For State Changes
+(<== (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     ;;;(ist-Information (DrsCaseFn ?sdrs-id) (objectOfStateChange ?event ?quantity))
+     (ist-Information (DrsCaseFn ?sdrs-id) (UndergoStateChangePred ?sdrs-id ?event ?pred ?quantity))
+     ;;;Not sure what this was all about, especially now that we have the genericQRef
+     ;;;;(uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?1sourceframeid ?qtype)))
+     ;;; evaporation from a place is handled by motion.
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src)))
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2))
+     (individualSatisfyingConditions 
+      ?sourceframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id (UndergoStateChangePred ?sdrs-id ?event ?pred ?quantity)))))
+     (unifies ?src-frame ?sourceframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?sourceframeid ?quantity))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id)  (quantityType ?sourceframeid ?qtype))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?sourceframeid QuantityFrame))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?sourceframeid ?quantity))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?src-frame (?pred ?event ?quantity)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))))
+
+;;;for reference
+(<== (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (UndergoStateChangePred ?sdrs-id ?event ?pred ?quantity))
+     ;;; evaporation from a place is handled by motion.
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src)))
+      ;;;Not sure what this was all about, especially now that we have the genericQRef
+     ;;;(uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?1sourceframeid ?qtype)))
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2)
+     (individualSatisfyingConditions 
+      ?sourceframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2))))
+     (unifies ?src-frame ?sourceframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?src-frame (?pred ?event ?src-res)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))))
+
+;;;; For Transactions
+;;; You lose whatever you are giving
+(<== (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     ;;; The source frame in a buying relationship is the person
+     ;;; The quantity is money: This is implicit
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?1sourceframeid ?qtype)))
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event Buying))
+     (ist-Information (DrsCaseFn ?sdrs-id) (buyer ?event ?person))
+     (individualSatisfyingConditions 
+      ?sourceframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (buyer ?event ?person))))
+     (unifies ?src-frame ?sourceframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?sourceframeid (possessedStuffFn Money ?person)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?sourceframeid Ammount))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?sourceframeid QuantityFrame))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?sourceframeid ?quantity))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?src-frame (buyer ?event ?person)))
+                             (TheList (genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)))))
+     
+     
+     ;;; flow events
+;;; No coreferent
+(<== (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (PositiveMotionPred ?sdrs-id ?event ?pred ?dst)
+     (ist-Information (DrsCaseFn ?sdrs-id) (?pred ?event ?dst))
+     (validQPEntity ?sid ?qtype ?dst ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?dst ?etype))
+     (resolvedVar ?sid ?dst ?dst-res)
+     (buildOrMakeToFrame ?quantity ?sid ?sdrs-id ?qtype ?dst ?dst-res ?to-frame ?event ?event-res))
+
+
+(<== (buildOrMakeToFrame ?quantity ?sid ?sdrs-id ?qtype ?dst ?dst-res ?to-frame  ?event ?event-res)
+     (drsForDiscourse ?ddrs-id)
+     (PositiveMotionPred ?sdrs-id ?event ?pred ?dst)
+     (ist-Information (DrsCaseFn ?sdrs-id) (?pred ?event ?dst))
+     (validQPEntity ?sid ?qtype ?dst ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?dst ?etype))
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2))
+     (individualSatisfyingConditions 
+      ?toframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (to-UnderspecifiedLocation ?event ?dst))))
+     (unifies ?to-frame ?toframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id)(entity ?toframeid ?dst-res))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid ?qtype)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?toframeid QuantityFrame))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?toframeid ?quantity)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid ?qtype)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (to-UnderspecifiedLocation ?event ?dst-res)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     )
+
+(<== (PositiveMotionPred ?sdrs-id ?event ?pred ?entity)
+     (ist-Information (DrsCaseFn ?sdrs-id) (toLocation ?event ?entity))
+     (unifies ?pred toLocation))
+(<== (PositiveMotionPred ?sdrs-id ?event ?pred ?entity)
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (toLocation ?event ?entity)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (to-UnderspecifiedLocation ?event ?entity))
+     (unifies ?pred to-UnderspecifiedLocation))
+
+;;; Coreferent with a generic referent
+(<== (buildOrMakeToFrame ?quantity ?sid ?sdrs-id ?qtype ?dst ?dst-res ?to-frame ?event ?event-res)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?toframeid ?dst-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid ?existingQ)))
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2)
+     (unifies ?to-frame ?toframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (to-UnderspecifiedLocation ?event ?dst-res)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     )
+
+;;; with packed entity
+(<== (buildOrMakeToFrame ?quantity ?sid ?sdrs-id ?qtype ?dst ?dst-res ?to-frame ?event ?event-res)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?toframeid (ContainedStuffFn ?quantity2 default ?dst-res))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid ?existingQ)))
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ ?quantity2)
+     (unifies ?to-frame ?toframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (to-UnderspecifiedLocation ?event ?dst-res)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)))))
+
+
+
+
+;;;; State changes
+;;; Make a new DI Frame for state changes
+(<== (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (toState ?event ?quant2))
+     (quantityInDrs ?quant2 ?sid ?qtype2)
+     ;;; I could do a prefer here...
+     ;;; basically we want to say if we found a viable source don't make a new one
+     ;;; but we can't just look for past quantity types because there may be a reference to that
+     ;;; which is unusable ie. "
+     (uninferredSentence (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?1toframeid ?qtype2)))))
+     (uninferredSentence (genericQuantityReference ?quant2 ?sdrs-id ?qtype2 ?existingQ ?quantity2))
+     (individualSatisfyingConditions 
+      ?toframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (toState ?event ?quant2))))
+     (resolvedVar ?sid ?dst ?dst-res)
+     (unifies ?to-frame ?toframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?toframeid ?quant2))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid ?qtype2)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?toframeid QuantityFrame))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?toframeid ?quant2)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (toState ?event ?quant2)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     )
+
+
+;;;Existing DI Frame for state changes (anywhere in the ddrs?)
+(<== (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (to-UnderspecifiedLocation ?event ?dst))
+     (resolvedVar ?sid ?dst ?dst-res)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?toframeid ?dst-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid ?existingQ)))
+     (genericQuantityReference ?quantity ?sdrs-id ?qtype ?existingQ)
+     (unifies ?to-frame ?toframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (to-UnderspecifiedLocation ?event ?dst-res)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)))))
+
+
+;;;; Transaction
+;;;; Transactions to-frame. You get what they sell you. They get money
+(<== (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event Buying))
+     (ist-Information (DrsCaseFn ?sdrs-id) (toPossessor ?event ?person))
+     (uninferredSentence (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?1toframeid ?qtype)))))
+     (uninferredSentence (genericQuantityReference ?quant ?sdrs-id ?qtype ?existingQ ?quantity))
+     (individualSatisfyingConditions 
+      ?toframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (toPossessor ?event ?person))))
+     (resolvedVar ?sid ?dst ?dst-res)
+     (unifies ?to-frame ?toframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?toframeid (PossessedStuffFn Money ?person)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid Ammount)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?toframeid QuantityFrame))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?toframeid ?person))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (toPossessor ?event ?person)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)))))
+
+(<== (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event Buying))
+     (ist-Information (DrsCaseFn ?sdrs-id) (buyer ?event ?person))
+     (ist-Information (DrsCaseFn ?sdrs-id) (objectPaidFor ?event ?quantity))
+     (uninferredSentence (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id)  (quantityType ?1toframeid ?qtype)))))
+     (uninferredSentence (genericQuantityReference ?quant ?sdrs-id ?qtype ?existingQ ?quantity))
+     (individualSatisfyingConditions 
+      ?toframeid QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (objectPaidFor ?event ?quantity))))
+     (resolvedVar ?sid ?dst ?dst-res)
+     (unifies ?to-frame ?toframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?toframeid ?person))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?toframeid ?qtype)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?toframeid QuantityFrame))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?toframeid ?quantity))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (objectPaidFor ?event ?quantity)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)))))
+
+
+;;; Copied from the FCType-level queries
+
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (getAllPotentialIsas ?sid ?event CreationEvent ?event-type WorldLikeOursCollectorMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?event-type))
+     (ist-Information (DrsCaseFn ?sdrs-id) (outputsCreated ?event ?quantity))
+     (quantityInDrs ?quantity ?sid ?qtype)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))))
+     
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (getAllPotentialIsas ?sid ?event DestructionEvent ?event-type WorldLikeOursCollectorMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?event-type))
+     (ist-Information (DrsCaseFn ?sdrs-id) (inputsDestroyed ?event ?quantity))
+     (quantityInDrs ?quantity ?sid ?qtype)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     ;;; So this is only for FC amount quantities, change this in the future
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))))
+
+
+(<== (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?event-type))
+     (ist-Information WorldLikeOursCollectorMt (genls ?event-type CreationEvent))
+     (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?producer))
+     (ist-Information (DrsCaseFn ?sdrs-id) (outputsCreated ?event ?quantity))     
+     (validQPEntity ?sid ?qtype ?producer ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?producer ?etype))
+     (individualSatisfyingConditions 
+      ?to-frame QuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?producer))))
+     
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?to-frame QuantityFrame))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?to-frame ?etype))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?to-frame ?producer))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     ;;; NB: This should not necessarily be amount, I should change this
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?to-frame ?qtype)) 
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?to-frame ?quantity))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?to-frame ?producer))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diConsequence ?to-frame (doneBy ?event ?producer)))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?producer doneBy ?quantity outputsCreated ?event-res positive))
+                             (TheList (genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)))))
+
+;;;(<== (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+;;;     (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id ?sid))
+;;;     (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id2 ?sid))
+;;;     
+;;;     (ist-Information WorldLikeOursCollectorMt (genls ?event-type DestructionEvent))
+;;;     (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?consumer))
+;;;     ;;;; Note unlike production, the quantity doesn't belong to the consumer.
+;;;     (ist-Information (DrsCaseFn ?sdrs-id) (inputsDestroyed ?event ?quantity))
+;;;     
+;;;     (validQPEntity ?sid ?qtype ?consumer ?etype ?ddrs-id)
+;;;     (ist-Information (DrsCaseFn ?sdrs-id2) (isa ?consumer ?etype))
+;;;     (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?loc))
+;;;     (resolvedVar ?sid ?loc ?loc-res)
+;;;     (genericEntity ?sid ?consumer ?etype)
+;;;     (uninferredSentence (TypeLevelQuantityBackReference ?quantity ?sdrs-id ?qtype ?to-frame ?loc-res ?quantity-res))
+;;;     
+;;;     (individualSatisfyingConditions 
+;;;      ?to-frame TypeLevelQuantityFrame
+;;;      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?consumer))))
+;;;     
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?to-frame TypeLevelQuantityFrame))
+;;;                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?to-frame ?etype))
+;;;                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+;;;     ;;; NB: This should not necessarily be amount, I should change this
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?to-frame (AmountFn ?qtype))) 
+;;;                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?to-frame ?quantity))
+;;;                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?to-frame ?consumer))
+;;;                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?loc-res from-UnderspecifiedLocation ?quantity inputsDestroyed ?event-res negative))
+;;;                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (causer ?event-res ?consumer doneBy))
+;;;                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)))))
+;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

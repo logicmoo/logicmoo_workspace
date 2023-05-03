@@ -1,0 +1,12 @@
+(in-microtheory EqualityReasoningMt)
+
+(argFormat coextensionalSetOrCollections 1 coextensionalEntryFormatInArgs)
+(coextensionalEntryFormatInArgs coextensionalSetOrCollections 1)
+(argFormat coextensionalSetOrCollections 2 coextensionalEntryFormatInArgs)
+(coextensionalEntryFormatInArgs coextensionalSetOrCollections 2)
+(argFormat identityConditionsFor 2 SetTheFormat)
+(argFormat identityConditionsFor 1 SetTheFormat)
+(implies (and (equals ?THING1 ?THING2) (isa ?THING1 ?COL)) (isa ?THING2 ?COL))
+(implies (and (equals ?SUB1 ?SUB2) (genls ?SUB1 ?SUPER)) (genls ?SUB2 ?SUPER))
+(genlPreds asymmetricOn irreflexiveOn)
+(genlPreds asymmetricOn antisymmetricOn)

@@ -1,0 +1,185 @@
+
+ (in-microtheory ReasoningWithMultiFuture-LogicMt)
+ (comment necessary-Historical
+ "#$necessary-Historical is a unary modal operator in Cyc.
+For each instance PROP of #$ELSentence-Assertible, (#$necessary-Historical PROP)
+means that it is (historically) necessary (it is settled, it is bound 
+to be the case, or it is unavoidable) that PROP.  In
+#$ReasoningWithMultiFuture-LogicMt, the notion of historical 
+necessity is interpreted as follows.  Imagine at a moment m there are 
+a few possible futures.  Some sentences (such as the classical example 
+`there will be a sea battle tomorrow') are true at the moment m relative 
+some of those possible futures and false relative to others.  
+(#$necessary-Historical PROP) is true at m (relative to a possible future) 
+iff PROP is true at m relative to ALL possible futures.  Using the `sea 
+battle' example, one may want to say that although it is necessary that 
+either there will be a sea battle tomorrow or there won't, it is not 
+necessary that there will be a sea battle, nor is it necessary that there 
+won't.  Note that #$necessary-Historical has a #$dualOperator, 
+#$possible-Historical.  Note also that #$necessary-Historical should be an 
+S5 operator.")
+ (isa possible-Historical Gen-Univ-FactoringOutFrom-Conj)
+ (isa necessary-Historical Mod-HypotheticalSyllogism)
+ (isa necessary-Historical Gen-ModalScheme-T)
+ (isa possible-Historical Gen-Contraposition)
+ (isa possible-Historical Gen-Conj-Elimination)
+ (isa possible-Historical Mod-DistributingOver-FactoringOutFrom-Disj)
+ (isa possible-Historical Gen-Disj-Introduction)
+ (isa necessary-Historical Gen-Dilemma)
+ (isa possible-Historical Gen-EqualityReplacement)
+ (isa necessary-Historical ClosedUnderGeneralizations-RN)
+ (isa possible-Historical Mod-Exist-FactoringOutFrom-Disj)
+ (isa possible-Historical Mod-FactoringOutFrom-Disj)
+ (isa necessary-Historical Gen-Commutativity-Disj)
+ (isa necessary-Historical Mod-DisjunctiveSyllogism-Dual)
+ (isa necessary-Historical Gen-Univ-Exist-DistributingOver-Cond)
+ (isa necessary-Historical ExtensionOf-C-Regular)
+ (isa necessary-Historical ExtensionOf-S1)
+ (isa possible-Historical Gen-Univ-DistributingOver-Conj)
+ (isa necessary-Historical Gen-Univ-DistributingOver-Conj-1)
+ (isa necessary-Historical Gen-Contraposition)
+ (isa necessary-Historical Mod-Univ-DistributingOver-Conj)
+ (isa possible-Historical Gen-Conj-Introduction)
+ (isa possible-Historical Mod-Exist-Introduction)
+ (isa possible-Historical ModalScheme-4)
+ (isa necessary-Historical Gen-DoubleNegation)
+ (isa possible-Historical Mod-Exist-DistributingOver-Disj)
+ (isa necessary-Historical Gen-Commutativity-Conj)
+ (isa possible-Historical Gen-DoubleNegation)
+ (isa necessary-Historical ModalScheme-E-Inverse)
+ (isa necessary-Historical Gen-DeMorgan)
+ (isa necessary-Historical Mod-FactoringOutFrom-Disj)
+ (isa necessary-Historical Gen-ModalScheme-K)
+ (isa possible-Historical Mod-DistributingOver-Conj)
+ (isa possible-Historical Gen-Univ-DistributingOver-Conj-1)
+ (isa necessary-Historical ModalScheme-BF)
+ (isa necessary-Historical Gen-Conj-Elimination)
+ (isa necessary-Historical ModalScheme-K-Dual)
+ (isa necessary-Historical Gen-Equality)
+ (isa possible-Historical ClosedUnderGeneralizations-RN)
+ (isa necessary-Historical ModalScheme-D)
+ (isa possible-Historical CommonUnaryModalOperator)
+ (isa necessary-Historical ExtensionOf-S4-Normal)
+ (sharedNotes necessary-Historical NoteOnReasoningWithMultiFuture)
+ (isa necessary-Historical Gen-Truth-Constant)
+ (isa possible-Historical Gen-Commutativity-Disj)
+ (isa necessary-Historical ExtensionOf-B-Normal)
+ (isa possible-Historical ModalScheme-4-Inverse)
+ (isa necessary-Historical ClosedUnderReplacementOfGen-Eq)
+ (isa necessary-Historical Mod-Univ-FactoringOutFrom-Conj)
+ (isa necessary-Historical Mod-Univ-DistributingOver-Cond-Dual)
+ (isa possible-Historical Mod-DistributingOver-Disj)
+ (isa necessary-Historical Gen-Disj-Introduction)
+ (isa necessary-Historical Gen-Exist-DistributingOver-Disj)
+ (isa necessary-Historical Gen-Mod-HypotheticalSyllogism)
+ (isa necessary-Historical Mod-DisjunctiveSyllogism)
+ (isa necessary-Historical Gen-Exist-Introduction)
+ (isa necessary-Historical ClosedUnderEquivalents-RE)
+ (isa possible-Historical Gen-Dilemma)
+ (isa necessary-Historical Mod-Univ-Exist-DistributingOver-Cond)
+ (isa necessary-Historical Mod-EqualityReplacement)
+ (isa necessary-Historical Gen-Univ-DistributingOver-Conj)
+ (isa possible-Historical Gen-Equality)
+ (isa necessary-Historical Gen-Univ-Elimination)
+ (isa possible-Historical Gen-Univ-Exist-DistributingOver-Cond)
+ (isa possible-Historical Gen-Univ-Elimination)
+ (isa possible-Historical ModalScheme-B-Inverse)
+ (isa possible-Historical ModalScheme-BF-DualInverse)
+ (isa necessary-Historical ClosedUnderGeneralizations-Classical)
+ (isa necessary-Historical Gen-Univ-FactoringOutFrom-Conj)
+ (comment possible-Historical
+ "#$possible-Historical is a unary modal operator in Cyc.  For
+each instance PROP of #$ELSentence-Assertible, (#$possible-Historical PROP) means
+that it is (historically) possible (or it might be the case) that
+PROP.  In #$ReasoningWithMultiFuture-LogicMt, the notion of 
+historical possibility is interpreted as follows.  Imagine at a moment m 
+there are a few possible futures.  Some sentences (such as the classical 
+example `there will be a sea battle tomorrow') can be true at m relative 
+to some possible futures but false relative to others. 
+(#$possible-Historical PROP) is true at m (relative to a possible
+future) iff PROP is true at m relative to SOME possible future.   Using 
+the `sea battle' example, one may want to say that although it is 
+impossible that there will be a sea battle tomorrow and there won't, it is 
+possible that there will be a sea battle, and it also is possible that 
+there won't.  Note that #$possible-Historical has a #$dualOperator, i.e.,
+#$necessary-Historical.")
+ (isa possible-Historical ClosedUnderConsequences-RC)
+ (isa possible-Historical ModalScheme-E-Inverse)
+ (isa necessary-Historical ExtensionOf-KB-Normal)
+ (isa possible-Historical ClosedUnderEquivalents-RE)
+ (isa necessary-Historical Gen-Univ-DistributingOver-Cond)
+ (isa necessary-Historical ModalScheme-T)
+ (isa possible-Historical Mod-Exist-DistributingOver-Conj)
+ (isa necessary-Historical Gen-ConditionalExchange)
+ (isa necessary-Historical ModalScheme-K-DualContrap)
+ (isa necessary-Historical
+ Mod-Univ-DistributingOver-FactoringOutFrom-Conj)
+ (isa necessary-Historical ExtensionOf-T-Normal)
+ (isa necessary-Historical Mod-DistributingOver-Conj)
+ (isa necessary-Historical ExtensionOf-S5)
+ (isa possible-Historical Gen-Exist-DistributingOver-Disj)
+ (isa necessary-Historical Mod-DistributingOver-FactoringOutFrom-Conj)
+ (isa possible-Historical Gen-Commutativity-Conj)
+ (isa necessary-Historical ModalScheme-E)
+ (isa possible-Historical Gen-DeMorgan)
+ (isa possible-Historical Gen-ConditionalExchange)
+ (isa necessary-Historical Gen-Exist-FactoringOutFrom-Disj)
+ (isa necessary-Historical Mod-FactoringOutFrom-Conj)
+ (isa possible-Historical Gen-HypotheticalSyllogism)
+ (isa necessary-Historical Mod-Exist-DistributingOver-Conj)
+ (isa necessary-Historical ExtensionOf-S3)
+ (isa necessary-Historical ExtensionOf-S2)
+ (isa possible-Historical ModalScheme-T-Inverse)
+ (isa possible-Historical Gen-Truth-Constant)
+ (isa necessary-Historical Gen-Exist-FactoringOutFrom-Disj-1)
+ (isa necessary-Historical ClosedUnderConsequences-RC)
+ (isa necessary-Historical Mod-Dilemma)
+ (isa necessary-Historical ClosedUnderBeckersRule)
+ (genlPreds necessary-Historical possible-Historical)
+ (isa necessary-Historical Mod-Exist-Introduction)
+ (isa necessary-Historical Mod-Univ-Exist-DistributingOver-Cond-Dual)
+ (isa necessary-Historical Gen-Mod-BeckersRuleGeneralized)
+ (isa possible-Historical Gen-Univ-DistributingOver-Cond)
+ (isa possible-Historical
+ Mod-Exist-DistributingOver-FactoringOutFrom-Disj)
+ (isa necessary-Historical Gen-HypotheticalSyllogism)
+ (isa necessary-Historical CommonUnaryModalOperator)
+ (isa necessary-Historical ModalScheme-K)
+ (isa necessary-Historical Mod-Univ-DistributingOver-Cond)
+ (isa necessary-Historical Mod-Equality)
+ (isa possible-Historical Mod-Univ-Elimination)
+ (isa necessary-Historical Gen-Exist-DistributingOver-Conj)
+ (isa possible-Historical Gen-Exist-DistributingOver-Conj)
+ (isa necessary-Historical ExtensionOf-K-Normal)
+ (isa possible-Historical Mod-Univ-DistributingOver-Conj)
+ (isa possible-Historical Gen-Exist-Introduction)
+ (isa necessary-Historical ExtensionOf-D-Normal)
+ (isa possible-Historical Gen-Exist-FactoringOutFrom-Disj-1)
+ (comment currentDate
+ "Because of our assumption that instances of #$Date remain the 
+same across different histories, (#$currentDate DATE) is true in an 
+instance MT of #$ReasoningWithMultiFutureMicrotheory only if 
+(#$necessary-Historical (#$currentDate DATE)) is true in MT, i.e. 
+(semantically speaking), (#$currentDate DATE) is true in all instances 
+MT' of #$ReasoningWithTenseMicrotheory such that (#$mtAlternatives MT MT') 
+holds in #$ReasoningWithMultiFuture-InferenceMt.  See 
+#$NoteOnReasoningWithMultiFuture.")
+ (isa necessary-Historical ExtensionOf-K4-Normal)
+ (isa necessary-Historical Mod-Univ-Elimination)
+ (isa possible-Historical Gen-Exist-FactoringOutFrom-Disj)
+ (isa necessary-Historical Mod-FactoringOutFrom-Conj-Dual)
+ (isa necessary-Historical Gen-EqualityReplacement)
+ (isa necessary-Historical Mod-Exist-FactoringOutFrom-Disj)
+ (isa necessary-Historical ModalScheme-4)
+ (isa necessary-Historical Gen-Conj-Introduction)
+ (isa necessary-Historical ModalScheme-4-Inverse)
+ (isa necessary-Historical ClosedUnderConsequences-StrongVersion)
+ (isa possible-Historical ClosedUnderGeneralizations-Classical)
+ (isa possible-Historical ModalScheme-E)
+ (sharedNotes possible-Historical NoteOnReasoningWithMultiFuture)
+ (isa necessary-Historical Mod-SettledContingency)
+ (isa necessary-Historical Mod-Distinctness)
+ (isa possible-Historical Gen-Exportation)
+ (isa necessary-Historical ExtensionOf-KE-Normal)
+ (isa necessary-Historical ModalScheme-B)
+ (isa necessary-Historical Gen-Exportation)

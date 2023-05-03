@@ -1,0 +1,407 @@
+
+ (in-microtheory ReasoningWithTense-LogicMt)
+ (isa hasAlwaysBeen ExtensionOf-K-Normal)
+ (isa TensePredicate GeneralTenseReasoningConstant)
+ (isa hasAlwaysBeen Mod-HypotheticalSyllogism)
+ (isa since Bi-Mod-DoubleNegation-Antecedent)
+ (isa willAlwaysBe ClosedUnderGeneralizations-Classical)
+ (isa willAlwaysBe Mod-Univ-DistributingOver-Cond-Dual)
+ (isa willBe Mod-DistributingOver-FactoringOutFrom-Disj)
+ (isa hasAlwaysBeen Mod-Univ-DistributingOver-Conj)
+ (isa hasAlwaysBeen Mod-Univ-Exist-DistributingOver-Cond)
+ (isa hasAlwaysBeen Gen-Mod-HypotheticalSyllogism)
+ (isa willAlwaysBe Mod-Univ-Elimination)
+ (isa since Bi-Mod-Commutativity-Disj-Antecedent)
+ (isa willAlwaysBe Gen-Mod-HypotheticalSyllogism)
+ (isa since Bi-Mod-Conj-Elimination-Consequent)
+ (isa hasAlwaysBeen Gen-Univ-DistributingOver-Conj-1)
+ (isa willBe Mod-Exist-DistributingOver-Conj)
+ (isa was Mod-DistributingOver-FactoringOutFrom-Disj)
+ (isa was Mod-Exist-FactoringOutFrom-Disj)
+ (isa willAlwaysBe Gen-Univ-FactoringOutFrom-Conj)
+ (isa willAlwaysBe Gen-Conj-Introduction)
+ (arg1Isa willBe-Throughout Date)
+ (isa was-SometimeDuring TensePredicate)
+ (isa willBe CommonUnaryModalOperator)
+ (isa until Bi-ClosedUnderEquivalents-Antecedent)
+ (isa until Bi-Mod-Commutativity-Conj-Consequent)
+ (comment willBe
+ "#$willBe is a #$ModalOperator, commonly referred to as a `future-tense operator'.  For each #$ELSentence-Assertible PROP, (#$willBe PROP) means that it will be the case that PROP.  For example, (#$willBe `Amy and Bob are friends') means that Amy and Bob will be friends.  Note that (#$willBe PROP) does not imply that (#$not PROP).  #$willBe has a #$dualOperator: #$willAlwaysBe.  In #$ReasoningWithTense-LogicMt, rules involving #$willBe are those valid in all temporal frames, all transitive frames and all event orderings.  In other `ReasoningWithTense-...-LogicMts', the rules are those valid on the kind of orderings suggested by the name of the microtheory.  For related metric future-tense operators, see #$ReasoningWithTense-LogicMt-SingleDateSeries and #$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (isa hasAlwaysBeen ExtensionOf-C-Regular)
+ (arg2QuotedIsa willBe-Throughout CycLSentence-Assertible)
+ (isa hasAlwaysBeen Mod-Exist-Introduction)
+ (isa since Bi-Mod-Disj-Introduction-Consequent)
+ (arg1Isa willBe-SometimeDuring Date)
+ (isa was ClosedUnderEquivalents-RE)
+ (isa was Gen-Commutativity-Conj)
+ (isa hasAlwaysBeen ModalScheme-K)
+ (isa hasAlwaysBeen Gen-Exist-DistributingOver-Disj)
+ (isa willAlwaysBe Mod-Univ-Exist-DistributingOver-Cond-Dual)
+ (isa currentDate GeneralTenseReasoningConstant)
+ (isa willAlwaysBe ClosedUnderConsequences-RC)
+ (isa willBe ClosedUnderConsequences-RC)
+ (isa until Bi-Mod-DoubleNegation-Consequent)
+ (isa hasAlwaysBeen ClosedUnderEquivalents-RE)
+ (isa hasAlwaysBeen Mod-Dilemma)
+ (isa willAlwaysBe Gen-Commutativity-Disj)
+ (isa willAlwaysBe Gen-Commutativity-Conj)
+ (isa was Gen-DeMorgan)
+ (isa hasAlwaysBeen Mod-Univ-Exist-DistributingOver-Cond-Dual)
+ (isa hasAlwaysBeen ClosedUnderReplacementOfGen-Eq)
+ (arg2QuotedIsa willBe-SometimeDuring CycLSentence-Assertible)
+ (isa hasAlwaysBeen Gen-Exist-FactoringOutFrom-Disj)
+ (isa willAlwaysBe ModalScheme-K-Dual)
+ (quotedIsa SemanticAssumptionsForCombiningDatesAndTenses SharedNote)
+ (isa was Mod-Exist-Introduction)
+ (isa willAlwaysBe Mod-Exist-Introduction)
+ (isa willBe Gen-Commutativity-Conj)
+ (isa willAlwaysBe Mod-Univ-DistributingOver-FactoringOutFrom-Conj)
+ (argIsa willBe-SometimeDuring 1 Date)
+ (isa hasAlwaysBeen Gen-Conj-Elimination)
+ (isa willAlwaysBe Mod-Univ-Exist-DistributingOver-Cond)
+ (isa was Gen-Commutativity-Disj)
+ (isa was Mod-Exist-DistributingOver-FactoringOutFrom-Disj)
+ (isa until Bi-Mod-Commutativity-Disj-Antecedent)
+ (isa willBe Gen-DeMorgan)
+ (isa hasAlwaysBeen Mod-Univ-DistributingOver-FactoringOutFrom-Conj)
+ (argQuotedIsa willBe-Throughout 2 CycLSentence-Assertible)
+ (isa willBe Mod-Exist-FactoringOutFrom-Disj)
+ (isa was CommonUnaryModalOperator)
+ (isa hasAlwaysBeen Mod-Univ-FactoringOutFrom-Conj)
+ (isa willAlwaysBe ClosedUnderConsequences-StrongVersion)
+ (isa willAlwaysBe Gen-Univ-DistributingOver-Conj)
+ (isa hasAlwaysBeen Gen-Univ-Exist-DistributingOver-Cond)
+ (arg2QuotedIsa was-SometimeDuring CycLSentence-Assertible)
+ (isa willBe Mod-Exist-DistributingOver-FactoringOutFrom-Disj)
+ (isa hasAlwaysBeen Gen-DeMorgan)
+ (isa willBe ClosedUnderEquivalents-RE)
+ (isa hasAlwaysBeen Gen-Exist-DistributingOver-Conj)
+ (isa hasAlwaysBeen Mod-Univ-DistributingOver-Cond)
+ (argIsa willBe-Throughout 1 Date)
+ (isa until Bi-Mod-Conj-Elimination-Consequent)
+ (isa until Bi-ClosedUnderWeakening-Consequent)
+ (isa willAlwaysBe Gen-Exportation)
+ (isa willAlwaysBe Gen-Univ-Exist-DistributingOver-Cond)
+ (isa since Bi-Mod-DoubleNegation-Consequent)
+ (isa since TensePredicate)
+ (isa (ModalOpSetFn was-SometimeDuring Date)
+ (SetOfTypeFn UnaryModalOperator))
+ (isa until Bi-Mod-Commutativity-Disj-Consequent)
+ (isa until Bi-Mod-DeMorgan-Antecedent)
+ (isa hasAlwaysBeen Gen-Univ-DistributingOver-Cond)
+ (argIsa currentDate 1 Date)
+ (isa (ModalOpSetFn willBe-Throughout Date)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa willBe Mod-FactoringOutFrom-Disj)
+ (isa willBe Mod-Univ-Elimination)
+ (isa hasAlwaysBeen Gen-DoubleNegation)
+ (isa until Bi-ClosedUnderEquivalents-Consequent)
+ (isa willAlwaysBe Mod-Dilemma)
+ (comment since
+ "#$since is a binary #$ModalOperator, commonly referred to as
+a `past-tense operator'.  For any instances PROP-0 and PROP-1 of
+#$ELSentence-Assertible, (#$since PROP-0 PROP-1) means that it has been
+uninterruptedly the case that PROP-1 since PROP-0.  Note that (#$since
+PROP-0 PROP-1) does not exclude the possibility that PROP-1 was the
+case when or even before PROP-1 was the case, nor the possibility that
+PROP-1 has always been/is/will always be the case, nor the possibility
+that PROP-1 is never the case (when our temporal frame is discrete).
+But (#$since PROP-0 PROP-1) does rule out the possibility that PROP-0
+has never been the case.  So, e.g., if in some cases PROP-1 is desired
+not to be the case when or before PROP-0 was the case, one should use
+(#$since (#$and PROP-0 (#$not PROP-1)) PROP-1) or (#$since (#$and
+PROP-0 (#$not (#$was PROP-1))) PROP-1).  Note also that if PROP-1 is a
+tautology, (#$since PROP-0 PROP-1) is equivalent to (#$was PROP-0).
+Note finally that if one wants to say `Fritz has been out of his
+office since March 1st, 2000', s/he should use (#$since (#$currentDate
+`3/1/2000') `Fritz is out of his office'), and if one wants to say
+`Fritz has been out of his office since last month' or `Fritz will be
+out of his office since last Friday', s/he should use #$since-Metric
+or #$since-NthDate.  For a similar future tense operator, see
+#$until.")
+ (isa willAlwaysBe CommonUnaryModalOperator)
+ (isa willAlwaysBe Gen-Conj-Elimination)
+ (isa willAlwaysBe Gen-Exist-DistributingOver-Conj)
+ (isa (ModalOpSetFn was-Throughout Date)
+ (SetOfTypeFn UnaryModalOperator))
+ (isa hasAlwaysBeen ClosedUnderConsequences-RC)
+ (isa hasAlwaysBeen Mod-Univ-Elimination)
+ (isa hasAlwaysBeen Mod-DistributingOver-Conj)
+ (isa hasAlwaysBeen Gen-EqualityReplacement)
+ (isa hasAlwaysBeen Mod-Exist-DistributingOver-Conj)
+ (isa hasAlwaysBeen Gen-Univ-Elimination)
+ (argIsa was-SometimeDuring 1 Date)
+ (isa since Bi-ClosedUnderEquivalents-Antecedent)
+ (isa was-Throughout TensePredicate)
+ (isa willAlwaysBe Gen-Exist-Introduction)
+ (isa since Bi-ClosedUnderWeakening-Consequent)
+ (arg2QuotedIsa was-Throughout CycLSentence-Assertible)
+ (isa was Mod-FactoringOutFrom-Disj)
+ (isa (ModalOpSetFn willBe-SometimeDuring Date)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa willBe-Throughout TensePredicate)
+ (isa (ModalOpSetFn willBe-Throughout Date)
+ (SetOfTypeFn UnaryModalOperator))
+ (isa willAlwaysBe Gen-Contraposition)
+ (isa hasAlwaysBeen ModalScheme-K-Dual)
+ (comment hasAlwaysBeen
+ "#$hasAlwaysBeen is a #$ModalOperator, commonly referred to 
+as a `past-tense operator'.  For each #$ELSentence-Assertible PROP, 
+(#$hasAlwaysBeen PROP) means that it has always been the case that 
+PROP.  For example, (#$hasAlwaysBeen `Amy and Bob are friends') means 
+that Amy and Bob have always been friends.  Note that (#$hasAlwaysBeen 
+PROP) implies neither PROP nor (#$not PROP).  Note also that to 
+symbolize sentences like `Amy and Bob have never been friends', use 
+(#$hasAlwaysBeen (#$not `Amy and Bob are friends')).  #$hasAlwaysBeen 
+has a #$dualOperator: #$was.  In #$ReasoningWithTense-LogicMt, rules 
+involving #$hasAlwaysBeen are those valid in all temporal frames, all 
+transitive frames and all event orderings.  In other 
+`ReasoningWithTense-...-LogicMts', the rules are those valid on the 
+kind of orderings suggested by the name of the microtheory.  For 
+related metric past-tense operators, see 
+#$ReasoningWithTense-LogicMt-SingleDateSeries and 
+#$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (isa was Gen-Exportation)
+ (isa hasAlwaysBeen Gen-Exist-FactoringOutFrom-Disj-1)
+ (isa hasAlwaysBeen Gen-Exportation)
+ (arg1Isa was-SometimeDuring Date)
+ (isa since Bi-Mod-DeMorgan-Consequent)
+ (isa (ModalOpSetFn willBe-SometimeDuring Date)
+ (SetOfTypeFn UnaryModalOperator))
+ (comment was-Throughout
+ "(#$was-Throughout DATE PROP) means that PROP was true at 
+every moment `subsumed' by DATE, which is in the past relative to the 
+current time.  For example, (#$was-Throughout 74/1990 `the temporature 
+in Austin is above 50 degree') means that the temporature in Austin 
+was above 50 degree throughout July 4th, 1990, which presupposes that 
+July 4th, 1990 is in the past of TIME, where (#$reasoningWithTenseMtTime Mt TIME) 
+holds `outside' of the current microtheory Mt.")
+ (isa since Bi-ClosedUnderWeakening-Antecedent)
+ (isa since CommonBinaryModalOperator)
+ (isa willAlwaysBe Gen-HypotheticalSyllogism)
+ (isa hasAlwaysBeen Mod-DisjunctiveSyllogism-Dual)
+ (isa hasAlwaysBeen ExtensionOf-K4-Normal)
+ (isa until Bi-Mod-DoubleNegation-Antecedent)
+ (isa willAlwaysBe Mod-Exist-FactoringOutFrom-Disj)
+ (isa hasAlwaysBeen Gen-Contraposition)
+ (isa until Bi-Mod-DeMorgan-Consequent)
+ (isa willAlwaysBe ClosedUnderBeckersRule)
+ (isa willAlwaysBe ModalScheme-K-DualContrap)
+ (isa hasAlwaysBeen ClosedUnderGeneralizations-Classical)
+ (isa willAlwaysBe Mod-DistributingOver-Conj)
+ (isa willAlwaysBe Gen-Univ-DistributingOver-Cond)
+ (isa willAlwaysBe ClosedUnderGeneralizations-RN)
+ (isa hasAlwaysBeen Gen-Univ-DistributingOver-Conj)
+ (isa willAlwaysBe Gen-DoubleNegation)
+ (isa hasAlwaysBeen Gen-Truth-Constant)
+ (isa willAlwaysBe Gen-Equality)
+ (isa willAlwaysBe Mod-Univ-FactoringOutFrom-Conj)
+ (argQuotedIsa was-Throughout 2 CycLSentence-Assertible)
+ (comment willAlwaysBe
+ "#$willAlwaysBe is a #$ModalOperator, commonly referred to as a `future-tense operator'.  For each #$ELSentence-Assertible PROP, (#$willAlwaysBe PROP) means that it will always be the case that PROP. For example, (#$willAlwaysBe `Amy and Bob are friends') means that Amy and Bob will always be friends.  Note that (#$willAlwaysBe PROP) implies neither PROP nor (#$not PROP).  Note also that to symbolize sentences like `Amy and Bob will never be friends', use (#$willAlwaysBe (#$not `Amy and Bob are friends')).  #$willAlwaysBe has a #$dualOperator: #$willBe.  In #$ReasoningWithTense-LogicMt, rules involving #$willAlwaysBe are those valid in all temporal frames, all transitive frames and all event orderings.  In other `ReasoningWithTense-...-LogicMts', the rules are those valid on the kind of orderings suggested by the name of the microtheory.  For related metric future-tense operators, see #$ReasoningWithTense-LogicMt-SingleDateSeries and #$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (isa was Mod-DistributingOver-Disj)
+ (isa willBe ModalScheme-4-Inverse)
+ (argQuotedIsa was-SometimeDuring 2 CycLSentence-Assertible)
+ (isa was Gen-DoubleNegation)
+ (isa hasAlwaysBeen Mod-FactoringOutFrom-Disj)
+ (isa hasAlwaysBeen Gen-Commutativity-Conj)
+ (isa willBe Gen-ConditionalExchange)
+ (arg1Isa was-Throughout Date)
+ (isa willAlwaysBe ExtensionOf-K-Normal)
+ (isa willAlwaysBe ExtensionOf-C-Regular)
+ (isa willAlwaysBe Mod-Exist-DistributingOver-Conj)
+ (isa willAlwaysBe Gen-Exist-FactoringOutFrom-Disj-1)
+ (isa since Bi-Mod-Commutativity-Disj-Consequent)
+ (isa until TensePredicate)
+ (isa willAlwaysBe Mod-Univ-DistributingOver-Conj)
+ (isa willAlwaysBe Mod-FactoringOutFrom-Conj-Dual)
+ (comment TensePredicate
+ "This collection contains all instances of #$ModalPredicate that 
+are either tense operators or those out of which some tense operators are 
+formed.")
+ (isa hasAlwaysBeen Gen-Exist-Introduction)
+ (isa until Bi-Mod-Disj-Introduction-Consequent)
+ (isa willAlwaysBe Gen-ModalScheme-K)
+ (comment willBe-Throughout
+ "(#$willBe-Throughout DATE PROP) means that PROP will be true 
+at every moment `subsumed' by DATE, which is in the future relative to 
+the current time.  For example, (#$willBe-Throughout 7/4/2050 `the 
+temporature in Austin is above 50 degree') means that the temporature 
+in Austin will be above 50 degree throughout July 4th, 2050, which 
+presupposes that July 4th, 2050 is in the future of TIME, where 
+(#$reasoningWithTenseMtTime Mt TIME) holds `outside' of the current microtheory Mt.")
+ (isa hasAlwaysBeen ClosedUnderConsequences-StrongVersion)
+ (isa hasAlwaysBeen Mod-Exist-FactoringOutFrom-Disj)
+ (isa willAlwaysBe Mod-DisjunctiveSyllogism)
+ (isa was Gen-Contraposition)
+ (isa was Mod-Univ-Elimination)
+ (isa hasAlwaysBeen Gen-Commutativity-Disj)
+ (isa willBe Gen-Exportation)
+ (isa was Mod-Univ-DistributingOver-Conj)
+ (isa hasAlwaysBeen Gen-Equality)
+ (comment was
+ "#$was is a #$ModalOperator, commonly referred to as a `past-tense operator'.  For each #$ELSentence-Assertible PROP, (#$was PROP) means that it was the case that PROP.  For example, (#$was `Amy and Bob are friends') means that Amy and Bob were friends.  Note that (#$was PROP) does not imply that (#$not PROP).  #$was has a #$dualOperator: #$hasAlwaysBeen.  In #$ReasoningWithTense-LogicMt, rules involving #$was are those valid in all temporal frames, all transitive frames and all event orderings.  In other `ReasoningWithTense-...-LogicMts', the rules are those valid on the kind of orderings suggested by the name of the microtheory.  For related metric past-tense operators, see #$ReasoningWithTense-LogicMt-SingleDateSeries and #$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (isa willAlwaysBe ClosedUnderReplacementOfGen-Eq)
+ (isa hasAlwaysBeen Gen-Conj-Introduction)
+ (isa hasAlwaysBeen Gen-Disj-Introduction)
+ (isa hasAlwaysBeen Gen-ModalScheme-K)
+ (isa willAlwaysBe Mod-FactoringOutFrom-Conj)
+ (comment currentDate
+ "(#$currentDate DATE) can only be used inside of an instance 
+MT of #$ReasoningWithTenseMicrotheory, indicating inside of 
+MT the `current' date DATE, such as 1/18/2000.  Note that 
+(#$currentDate DATE) holds `inside' of MT iff 
+(#$reasoningWithTenseMtDate MT DATE) holds `outside' of MT (in, say, 
+#$ReasoningWithTense-InferenceMt or a specMt of it).  Note 
+that a necessary condition for (#$currentDate DATE) to hold in MT is 
+that DATE `subsumes' the #$reasoningWithTenseMtTime `outside' of MT.  Note also that 
+#$currentDate in MT can be at most as specific as #$reasoningWithTenseMtTime `outside' of MT.  For 
+example, suppose that (#$reasoningWithTenseMtTime MT `January 20th, 2000') holds. 
+Then in MT, we can have (#$currentDate `January, 2000') or even 
+(#$currentDate `Year 2000'), but we cannot have (#$currentDate  
+`9:00-10:00am, January 20th, 2000').")
+ (isa willBe Mod-DistributingOver-Conj)
+ (isa willAlwaysBe Gen-EqualityReplacement)
+ (isa hasAlwaysBeen Gen-HypotheticalSyllogism)
+ (isa since Bi-Mod-Commutativity-Conj-Consequent)
+ (isa willAlwaysBe Mod-DisjunctiveSyllogism-Dual)
+ (isa hasAlwaysBeen Mod-FactoringOutFrom-Conj-Dual)
+ (isa since Bi-Mod-DeMorgan-Antecedent)
+ (isa hasAlwaysBeen ModalScheme-K-DualContrap)
+ (isa willBe Mod-Exist-DistributingOver-Disj)
+ (isa until CommonBinaryModalOperator)
+ (isa willAlwaysBe Gen-Univ-Elimination)
+ (isa hasAlwaysBeen Mod-FactoringOutFrom-Conj)
+ (isa until Bi-Mod-Commutativity-Conj-Antecedent)
+ (isa willBe Mod-Exist-Introduction)
+ (isa until Bi-ClosedUnderEquivalents)
+ (isa willAlwaysBe Mod-DistributingOver-FactoringOutFrom-Conj)
+ (isa until Bi-ClosedUnderWeakening-Antecedent)
+ (isa willBe Gen-DoubleNegation)
+ (isa willBe Mod-Univ-DistributingOver-Conj)
+ (isa willAlwaysBe Gen-Disj-Introduction)
+ (comment SemanticAssumptionsForCombiningDatesAndTenses
+ "Based on what we said in 
+#$SemanticAssumptionsMadeForReasoningWithTenseMts, we further add 
+dates to our temporal frames, i.e., we will use frames like (T, <, 
+Date) to be our temporal structures, where Date is a set of what 
+cyclists call `dates'.  Each element D of which is a `solid interval' 
+of moments.  Note that a `moment' can itself be a `date' in (T, <, 
+Date), but a `date' does not have to be `moment'.  When dealing with 
+metric tense operators, we introduce another item DateType to our 
+temporal frames, i.e., we will use frames like (T, <, Date, DateType) 
+as our temporal structures, where DateType is a subset of the power 
+set of Date (intuitively, a set of date types).  A subset of DateType 
+is #$ConventionallyClassifiedSuccessiveTimeIntervalType.  When we deal with tense 
+predicates with `NthDate' parameter, another subset of DateType is 
+#$ConventionallyClassifiedDisjointTimeIntervalType.  So our temporal 
+models are (T, <, Date, DateType, V), where V includes our 
+interpretations of terms for time intervals, dates and date types.  We 
+will use V(x) as the interpretation of the term x under V.")
+ (arg1Isa currentDate Date)
+ (argIsa was-Throughout 1 Date)
+ (isa (ModalOpSetFn was-Throughout Date)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa willAlwaysBe ClosedUnderEquivalents-RE)
+ (isa willAlwaysBe ExtensionOf-K4-Normal)
+ (isa was Mod-Exist-DistributingOver-Disj)
+ (isa willAlwaysBe Gen-ConditionalExchange)
+ (isa hasAlwaysBeen Mod-DisjunctiveSyllogism)
+ (isa hasAlwaysBeen Gen-Mod-BeckersRuleGeneralized)
+ (isa was ModalScheme-4-Inverse)
+ (sharedNotes currentDate
+ SemanticAssumptionsMadeForReasoningWithTenseMts)
+ (isa willAlwaysBe Gen-Exist-DistributingOver-Disj)
+ (isa willAlwaysBe Gen-Univ-DistributingOver-Conj-1)
+ (isa willAlwaysBe Gen-DeMorgan)
+ (sharedNotes currentDate SemanticAssumptionsForCombiningDatesAndTenses)
+ (isa was Mod-Exist-DistributingOver-Conj)
+ (isa was Mod-DistributingOver-Conj)
+ (isa hasAlwaysBeen Gen-Univ-FactoringOutFrom-Conj)
+ (isa hasAlwaysBeen CommonUnaryModalOperator)
+ (isa willAlwaysBe Gen-Mod-BeckersRuleGeneralized)
+ (isa since Bi-Mod-Commutativity-Conj-Antecedent)
+ (isa willAlwaysBe Gen-Dilemma)
+ (isa SemanticAssumptionsForCombiningDatesAndTenses
+ GeneralTenseReasoningConstant)
+ (comment ReasoningWithTense-LogicMt
+ "This microtheory contains the definitional rules for some 
+simple notions such as #$currentDate, and some 
+simple tense operators such as #$was, #$willBe, #$hasAlwaysBeen, 
+#$willAlwaysBe, #$since, #$until, #$willBe-Throughout, 
+#$willBe-SometimeDuring, #$was-Throughout and #$was-SometimeDuring, 
+all of which are to be used in instances of 
+#$ReasoningWithTenseMicrotheory.  Microtheories more specific than 
+#$ReasoningWithTense-LogicMt include 
+#$ReasoningWithTense-LogicMt-LinearTime, 
+#$ReasoningWithTense-LogicMt-LinearDenseTime, 
+#$ReasoningWithTense-LogicMt-LinearDiscreteTime, 
+#$ReasoningWithTense-LogicMt-EndlessTime, 
+#$ReasoningWithTense-LogicMt-SingleDateSeries, 
+#$ReasoningWithTense-LogicMt-SingleDateSeries-EndlessTime, 
+#$ReasoningWithTense-LogicMt-MixedDateSeries, and 
+#$ReasoningWithTense-LogicMt-MixedDateSeries-EndlessTime, where we 
+assume different properties of time and define other tense operators.")
+ (isa willAlwaysBe Mod-Univ-DistributingOver-Cond)
+ (isa willAlwaysBe Mod-FactoringOutFrom-Disj)
+ (isa willAlwaysBe Gen-Exist-FactoringOutFrom-Disj)
+ (isa willBe Gen-Commutativity-Disj)
+ (isa willAlwaysBe Gen-Truth-Constant)
+ (isa hasAlwaysBeen Mod-Univ-DistributingOver-Cond-Dual)
+ (isa since Bi-ClosedUnderEquivalents-Consequent)
+ (isa willBe-SometimeDuring TensePredicate)
+ (isa hasAlwaysBeen Mod-DistributingOver-FactoringOutFrom-Conj)
+ (isa willAlwaysBe ModalScheme-4)
+ (comment willBe-SometimeDuring
+ "(#$willBe-SometimeDuring DATE PROP) means that PROP will be 
+true at some moment `subsumed' by DATE, which is in the future 
+relative to the current time.  For example, (#$willBe-SometimeDuring 
+7/4/2050 `the temporature in Austin is above 50 degree') means that 
+the temporature in Austin will be above 50 degree sometime during July 
+4th, 2050, which presupposes that July 4th, 2050 is in the future of 
+TIME, where (#$reasoningWithTenseMtTime Mt TIME) holds `outside' of the current microtheory Mt.")
+ (comment was-SometimeDuring
+ "(#$was-SometimeDuring DATE PROP) means that PROP was true at 
+some moment `subsumed' by DATE, which is in the past relative to the 
+current time.  For example, (#$was-SometimeDuring 7/4/1990 `the 
+temporature in Austin is above 50 degree') means that the temporature 
+in Austin was above 50 degree sometime during July 4th, 1990, which 
+presupposes that July 4th, 1990 is in the past of TIME, where 
+(#$reasoningWithTenseMtTime Mt TIME) holds `outside' of the current microtheory Mt.")
+ (isa since Bi-ClosedUnderEquivalents)
+ (isa hasAlwaysBeen ClosedUnderBeckersRule)
+ (isa was ClosedUnderConsequences-RC)
+ (isa (ModalOpSetFn was-SometimeDuring Date)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (argQuotedIsa willBe-SometimeDuring 2 CycLSentence-Assertible)
+ (comment until
+ "#$until is a binary #$ModalOperator, commonly referred to as
+a `future-tense operator'.  For any instances PROP-0 and PROP-1 of
+#$ELSentence-Assertible, (#$until PROP-0 PROP-1) means that it will be
+uninterruptedly the case that PROP-1 until PROP-0.  Note that (#$until
+PROP-0 PROP-1) does not exclude the possibility that PROP-1 will
+continue to be the case when or even after PROP-1 is the case, nor the
+possibility that PROP-1 has always been/is/will always be the case,
+nor the possibility that PROP-1 will never be the case (when our
+temporal frame is discrete).  But (#$until PROP-0 PROP-1) does rule
+out the possibility that PROP-0 will never be the case.  So, e.g., if
+in some cases PROP-1 is desired not to be the case when or after
+PROP-0 is the case, one should use (#$until (#$and PROP-0 (#$not
+PROP-1)) PROP-1) or (#$until (#$and PROP-0 (#$not (#$willBe PROP-1)))
+PROP-1).  Note also that if PROP-1 is a tautology, (#$until PROP-0
+PROP-1) is equivalent to (#$willBe PROP-0).  Note finally that if one
+wants to say `Fritz will be out of his office until March 1st, 2000',
+s/he should use (#$until (#$currentDate `3/1/2000') `Fritz is out of
+his office'), and if one wants to say `Fritz will be out of his office
+until next month' or `Fritz will be out of his office until next
+Friday', s/he should use #$until-Metric or #$until-NthDate.  For a
+similar past tense operator, see #$since.")
+ (isa hasAlwaysBeen ClosedUnderGeneralizations-RN)
+ (isa hasAlwaysBeen Gen-ConditionalExchange)
+ (isa hasAlwaysBeen Gen-Dilemma)
+ (isa willAlwaysBe Mod-HypotheticalSyllogism)
+ (isa willBe Gen-Contraposition)
+ (isa hasAlwaysBeen ModalScheme-4)
+ (isa willBe Mod-DistributingOver-Disj)
+ (isa was Gen-ConditionalExchange)
+ (isa willAlwaysBe ModalScheme-K)

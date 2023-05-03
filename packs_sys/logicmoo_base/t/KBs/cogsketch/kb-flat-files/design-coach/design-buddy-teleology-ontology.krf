@@ -1,0 +1,396 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: design-buddy-teleology-ontology.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: December 30, 2012 10:12:44
+;;;;   Purpose: Teleological Ontology for Design Coach
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEADBFactsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Teleological Functions
+
+(isa Attachment-TF TeleologicalFunction)
+(prettyString Attachment-TF "attachment")
+
+(isa Detachment-TF TeleologicalFunction)
+(prettyString Detachment-TF "detachment")
+
+(isa AdaptInSize-TF TeleologicalFunction)
+(prettyString AdaptInSize-TF "adapting in size")
+
+(isa Containment-TF TeleologicalFunction)
+(prettyString Containment-TF "containment")
+
+(isa Comfort-TF TeleologicalFunction)
+(prettyString Comfort-TF "increased comfort")
+
+(isa HoldsUp-TF TeleologicalFunction)  ;; UNUSED
+(prettyString HoldsUp-TF "holding up")
+
+;;(isa EaseofUse-TF TeleologicalFunction)  ;; implementation TBD
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Ways Of Achieving Functions
+
+(isa InterlockingPartsWay WayOfAchievingFunction)
+(prettyString InterlockingPartsWay "interlocking parts")
+
+(isa AdhesiveMaterialWay WayOfAchievingFunction)
+(prettyString AdhesiveMaterialWay "adhesive material")
+
+(isa TemporaryAdhesiveMaterialWay WayOfAchievingFunction)
+(prettyString TemporaryAdhesiveMaterialWay "temporary adhesive matetrial")
+
+(isa TyingStrappingWay WayOfAchievingFunction)
+(prettyString TyingStrappingWay "tying or strapping together")
+
+(isa AdjustablePartWay WayOfAchievingFunction)
+(prettyString AdjustablePartWay "making it adjustable")
+
+(isa AdditionalPartWay WayOfAchievingFunction)
+(prettyString AdditionalPartWay "adding another part")
+
+(isa EnclosureWay WayOfAchievingFunction)
+(prettyString EnclosureWay "fully enclosing it")
+
+(isa ProhibitDownwardMotionWay WayOfAchievingFunction)
+(prettyString ProhibitDownwardMotionWay "holding it")
+
+(isa ChangedShapeWay WayOfAchievingFunction)
+(prettyString ChangedShapeWay "changing its shape")
+
+(isa MoveWithinReachWay WayOfAchievingFunction)
+(prettyString MoveWithinReachWay "moving it")
+
+(isa PhysicalSuspensionWay WayOfAchievingFunction)
+(prettyString PhysicalSuspensionWay "physically suspending it")
+
+
+;;; this rule allows functions which are queried in multiple states from LLI
+;;; to still succeed one by one (instead of just failing cause the rules
+;;; all assume one state).
+
+;;; I don't think there's a case where this will lead to a false positive
+;;; but better double check TODO
+(<== (functionAchievedVia ?tf ?way ?objects ?states)
+     (queryContext ?dbState) ;; this should be a dbmt (design buddy mt)
+     (evaluate ?currentState
+       (FirstInListFn (SetToListFn (TheClosedRetrievalSetOf ?x 
+                                     (and (genlMt ?dbstate ?state)
+                                          (ListMemberFn ?states))))))
+     (functionAchivedVia ?tf ?way ?objects (TheList ?currentState)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Attachment-TF
+
+
+(<== (functionAchievedVia Attachment-TF InterlockingPartsWay 
+                          (TheList ?base ?attachment) 
+                          (TheList ?state))
+     ;; part touches the base
+     (ist-Information ?state (touchesDirectly ?base ?attachment))
+     
+     ;; TODO: improve this by:
+     ;; assume base is fixed, and then apply forces to the connected thing
+     ;; if it fails to translate because the base is fixed, it's fine
+     )
+
+(<== (functionAchievedVia Attachment-TF AdhesiveMaterialWay 
+                          ?parts-list
+                          (TheList ?state))
+     (evaluate ?base (FirstInListFn ?parts-list))
+     (evaluate ?attachment (SecondInListFn ?parts-list))
+     (ist-Information ?state (isa ?connector Connector))
+     (different ?connector (TheFn Connector))
+     (ist-Information ?state (touchesDirectly ?base ?connector))
+     (ist-Information ?state (touchesDirectly ?attachment ?connector))
+     )
+
+(<== (functionAchievedVia Attachment-TF TemporaryAdhesiveMaterialWay 
+                          ?parts-list
+                          (TheList ?state))
+     (evaluate ?base (FirstInListFn ?parts-list))
+     (evaluate ?attachment (SecondInListFn ?parts-list))
+     (ist-Information ?state (isa ?connector Connector))
+     (different ?connector (TheFn Connector))
+     (ist-Information ?state (touchesDirectly ?base ?connector))
+     (ist-Information ?state (touchesDirectly ?attachment ?connector))
+     )
+
+(<== (functionAchievedVia Attachment-TF TyingStrappingWay 
+                          (TheList ?base ?attachment) 
+                          (TheList ?state))
+     (connectedTo ?base ?connector)
+     (different ?connector (TheFn Connector))
+     (isa ?connector CordlikeArtifact)
+     (connectedTo ?attachment ?connector)
+     )
+
+(instructionsForAchievingFunction 
+ Attachment-TF InterlockingPartsWay 
+ (TheList "For this explanation to make sense, make sure:"
+          "The two objects are different glyphs in the same state"
+          "The two objects are at least touching each other"))
+
+(instructionsForAchievingFunction 
+ Attachment-TF AdhesiveMaterialWay 
+ (TheList "For this explanation to make sense, make sure:"
+          "The two objects are different glyphs in the same state"
+          "The two objects are both touching a third glyph which is an adhesive 
+           material."))
+
+(instructionsForAchievingFunction 
+ Attachment-TF TemporaryAdhesiveMaterialWay 
+ (TheList "For this explanation to make sense, make sure:"
+          "The two objects are different glyphs in the same state"
+          "The two objects are both touching a third glyph which is an adhesive 
+           material."))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Detachment-TF
+
+(<== (functionAchievedVia Detachment-TF InterlockingPartsWay 
+                          (TheList ?base ?attachment) 
+                          (TheList ?attached-state ?detatched-state))
+     (different ?detatched-state nil)
+     (lookupOnly (wmOnly (isa ?attached-state Case)))
+     (lookupOnly (wmOnly (isa ?detatched-state Case)))
+     (ist-Information ?attached-state (touchesDirectly ?base ?attachment))
+
+     (ist-Information ?detatched-state
+       (glyphRepresentsObject ?base-glyph ?base))
+     (ist-Information ?detatched-state
+       (glyphRepresentsObject ?attachment-glyph ?attachment))
+
+     (ist-Information ?detatched-state
+       (uninferredSentence (touchesDirectly ?attachment ?base))))
+
+(<== (functionAchievedVia Detachment-TF TemporaryAdhesiveMaterialWay 
+                          ?parts-list
+                          (TheList ?attached-state ?detatched-state))
+     (evaluate ?base (FirstInListFn ?parts-list))
+     (evaluate ?attachment (SecondInListFn ?parts-list))
+     (ist-Information ?attached-state (isa ?connector VelcroTheFastener))
+     (ist-Information ?attached-state (touchesDirectly ?base ?connector))
+     (ist-Information ?attached-state (touchesDirectly ?attachment ?connector))
+
+     (ist-Information ?detatched-state
+       (glyphRepresentsObject ?base-glyph ?base))
+     (ist-Information ?detatched-state
+       (glyphRepresentsObject ?attachment-glyph ?attachment))
+
+     (ist-Information ?detatched-state 
+       (uninferredSentence (touchesDirectly ?base ?attachment)))
+     (ist-Information ?detatched-state 
+       (uninferredSentence (and (touchesDirectly ?base ?connector)
+                                (touchesDirectly ?attachment ?connector))))
+     )
+
+;; one-state versions, using metalayer relation
+
+(<== (functionAchievedVia Detachment-TF ?way ?parts (TheList ?detatched-state))
+     (causes-SitSit ?attached-state ?detatched-state)
+     (functionAchievedVia Detachment-TF InterlockingPartsWay 
+                          (TheList ?base ?attachment) 
+                          (TheList ?attached-state ?detatched-state)))
+
+(<== (functionAchievedVia Detachment-TF ?way ?parts (TheList ?attached-state))
+     (causes-SitSit ?attached-state ?detatched-state)
+     (functionAchievedVia Detachment-TF InterlockingPartsWay 
+                          (TheList ?base ?attachment) 
+                          (TheList ?attached-state ?detatched-state)))
+
+(<== (functionAchievedVia Detachment-TF ?way 
+                          (TheList ?base ?attachment) 
+                          (TheList ?attached-state nil))
+     (functionAchievedVia Detachment-TF ?way ?parts (TheList ?attached-state)))
+
+(instructionsForAchievingFunction 
+ Detachment-TF InterlockingPartsWay 
+ (TheList "For this explanation to make sense, make sure:"
+          "The two objects must appear in two states, attached via interlocking 
+           in one, and detatched in the other." 
+          "The two states must either be connected by a \"causes\" relation or
+           BOTH be mentioned in the sentence."))
+
+(instructionsForAchievingFunction 
+ Detachment-TF TemporaryAdhesiveMaterialWay 
+ (TheList "For this explanation to make sense, make sure:"
+          "The two objects must appear in two states, attached via adhesive 
+           material in the first, and detatched in the second." 
+          "The two states must either be connected by a \"causes\" relation or
+           BOTH be mentioned in the sentence."))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; AdaptInSize-TF
+
+(<== (functionAchievedVia AdaptInSize-TF AdjustablePartWay 
+                          (TheList ?base ?sized-changed-part) 
+                          (TheList ?example-1 ?example-2))
+     ;; part is attached to base
+     (functionAchievedVia Attachment-TF ?way
+                         (TheList ?base ?sized-changed-part) 
+                          (TheList ?example-1))
+     (functionAchievedVia Attachment-TF ?way
+                         (TheList ?base ?sized-changed-part) 
+                          (TheList ?example-2))
+     ;; base is movable
+     (ist-Information ?example-2 (movable ?base))
+     )
+
+(<== (functionAchievedVia AdaptInSize-TF AdjustablePartWay 
+                          (TheList ?base ?sized-changed-part) 
+                          (TheList ?state))
+     ;; part is attached to base
+     (functionAchievedVia Attachment-TF ?way
+                         (TheList ?base ?sized-changed-part) 
+                          (TheList ?state))
+     ;; base is movable
+     (ist-Information ?state (movable ?base))
+     )
+     
+
+;; adapting in size is possible when:
+;;            changing the shape of the apdapting part
+;;            OR
+;;            having some subpart of the adapting part be movable
+;;      
+;;      also, sketch may or may not refer to some part that changes size
+;;      e.g. chair, cup
+;;
+
+(instructionsForAchievingFunction 
+  AdaptInSize-TF AdjustablePartWay  
+ (TheList "For this explanation to make sense, make sure:"
+          "The two objects are attached in some way." 
+          "The adjustable part can move."))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Containment-TF
+
+
+(<== (functionAchievedVia Containment-TF EnclosureWay 
+                          (TheList ?containedObj ?container)
+                          ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (rcc8-TPP 
+                              (GlyphFn ?container ?layer)
+                              (GlyphFn ?containedObj ?layer))))
+
+(<== (functionAchievedVia Containment-TF EnclosureWay 
+                          (TheList ?containedObj ?container)
+                          ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (rcc8-NTPP 
+                              (GlyphFn ?container ?layer)
+                              (GlyphFn ?containedObj ?layer))))
+
+(<== (functionAchievedVia Containment-TF ProhibitDownwardMotionWay 
+                          (TheList ?container ?containedObj)
+                          ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     ;; an object inside is constrained from moving except perhaps 
+     ;; quad1, up and quad2
+
+     ;; this doesn't work for non-rigid objects!
+     (ist-Information ?state (isa ?containedObj RigidOb))
+     (ist-Information ?state (transConstraint ?containedObj Down))
+     (ist-Information ?state (transConstraint ?containedObj Quad3))
+     (ist-Information ?state (transConstraint ?containedObj Quad4))
+     )
+
+;; prohibit is a special case due to gravity
+;; could hvae parent case for "natural motion" like gravity, pressure,
+;; floatation, etc.
+
+(instructionsForAchievingFunction 
+  Containment-TF EnclosureWay  
+ (TheList "For this explanation to make sense, make sure:"
+          "The contained object is completely inside the other."))
+
+(instructionsForAchievingFunction 
+  Containment-TF ProhibitDownwardMotionWay  
+ (TheList "For this explanation to make sense, make sure:"
+          "The contained object is prevented from moving downwards."))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Comfort-TF
+
+(<== (functionAchievedVia Comfort-TF ChangedShapeWay 
+                          (TheList ?changedPart)
+                          ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (sketchFor ?subsketch (SketchFn ?sketchCase)))
+     (ist-Information ?sketchCase (subSketchGroupRepresentsObject
+                                   ?otherSubsketch ?otherState))
+     (different ?state ?otherState)
+
+     ;; check that part exists
+     (ist-Information ?otherState (glyphRepresentsObject ?glyph ?changedPart))      
+
+     ;; and that part changed shape
+     (ist-Information ?sketchCase
+       (differentInk ?state ?changedPart ?otherState ?changedPart))
+     )
+
+#|
+(<== (functionAchievedVia Comfort-TF MoveWithinReachWay (TheList ?part) ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (transMotion ?part ZeroQVector))
+     (ist-Information ?state (rotMotion ?part ZeroRot))
+     (ist-Information ?state (movable ?part))
+     )
+|#
+
+(<== (functionAchievedVia Comfort-TF MoveWithinReachWay (TheList ?part) ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (transMotion ?part ?dir))
+     (ist-Information ?state (rotMotion ?part ZeroRot))
+     (isa ?dir 2DQDirection))
+
+(<== (functionAchievedVia Comfort-TF MoveWithinReachWay (TheList ?part) ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (rotMotion ?part ?rotdir))
+     (ist-Information ?state (transMotion ?part ZeroQVector))
+     (isa ?rotdir RotDirection)
+     )
+
+(<== (functionAchievedVia Comfort-TF MoveWithinReachWay (TheList ?part) ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (rotMotion ?part ?rotdir))
+     (isa ?rotdir RotDirection)
+     (ist-Information ?state (transMotion ?part ?dir))
+     (isa ?dir 2DQDirection))
+
+(instructionsForAchievingFunction 
+  Comfort-TF ChangedShapeWay  
+ (TheList "For this explanation to make sense, make sure:"
+          "The object is present in two states."
+          "The object is resized or has ink added/removed to change its shape in 
+           one of the states."))
+
+(instructionsForAchievingFunction 
+  Comfort-TF MoveWithinReachWay  
+ (TheList "For this explanation to make sense, make sure:"
+          "The object moves or rotates."))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; HoldsUp-TF
+
+(<== (functionAchievedVia HoldsUp-TF PhysicalSuspensionWay 
+                          (TheList ?heldPart ?holdingPart)
+                          ?states)
+     (evaluate ?state (FirstInListFn ?states))
+     (ist-Information ?state (hangsFrom ?heldPart ?holdingPart))
+     )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

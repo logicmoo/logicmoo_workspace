@@ -1,0 +1,168 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: strategy-learning.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: August 19, 2011 13:05:12
+;;;;   Purpose: learn strategies from demonstration
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; -------------------------------------------------------------------------
+;;;
+;;; Learn to recognize abstract strategies in concrete patterns of behavior.
+;;; Specifically: given a qualitative model of a domain, associate user 
+;;; actions with near and far-term quantity goals.
+;;; Which goals are emphasized over which others?
+;;; Which actions are tactical maneuvers to enable longer-term goals?
+;;; How is a strategy related to an adversary?  To current situation?
+;;; What are strengths and weaknesses of current situation?  In terms of
+;;; resources and configuations?
+
+(in-microtheory PerceptualAgentMt)
+
+;;; see experimentation.meld
+(preconditionForMethod
+  (and (ist-Information ?ctxt (performanceGoalForGame ?ctxt ?goal))
+       (ist-Information ?ctxt (experimentCase ?ctxt ?expt))
+       (experimentLearningGoal ?expt ?learning-goal)
+       (numAnswers 1 (currentDomain ?domain)))
+  (methodForAction
+    (runPostMortem ?ctxt)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%This is the post-mortem for ~s~%  whose performance goal is ~s~%  and learning goal is ~s"
+                    (?expt ?goal ?learning-goal))
+        (doEndGame)  ;; ToDo: migrate the knowledge definition to perceptualAgent
+        ;; Now assess the learning goal and decide whether to continue the experiment series or 
+        ;; design new experiments.
+        (designFollowupExperiments ?ctxt ?domain ?expt ?learning-goal)
+        ;; schedule followups?
+      ))))
+
+
+;;; ToDo: Make another version of runPostMortem that follows a demonstration.
+;;; Schedule a followup that does a compare and contrast against expert
+;;; performance.  Compare and contrast is either turn by turn, or via
+;;; time-warping to identify salient differences.
+
+
+;;; Given a decision task, identify the possible goals it could have been 
+;;; addressing.  Whereas the rational player decomposes goals to possible
+;;; subgoals and regresses actions, here, we may find a decision that does't
+;;; appear to be what we would have selected based on our naive algorithm.
+;;; Perhaps an item was put on the build queue that we don't understand.
+;;; What goal might it serve?  Is it a longer term goal?
+;;;
+;;; 2 approaches: search model for explanation, and examine actual effect
+;;; in the game.  Surprises in the latter can suggest incomplete model.
+;;; Try to recognize action as an operationalization of a general strategy.
+
+;;; Examples:
+;;; building a granary
+;;; investigating pottery
+;;; building a harbor
+;;; irrigating a tile
+;;; moving a worker.
+;;; changing government
+;;; exploring a region
+;;; founding a city on a special
+
+;;; create an on-demand strategy recognizer
+
+(isa explainStrategy ComplexActionPredicate)
+(arity explainStrategy 3)
+(arg1Isa explainStrategy Event)
+(arg2Isa explainStrategy CycLTerm)
+(arg3Isa explainStrategy TimeInterval)
+(comment explainStrategy "(explainStrategy ?event ?when) attempts to recognize strategies in user actions.")
+
+;;; What would trigger this?
+(preconditionForMethod 
+  (true)
+  (methodForAction
+    (explainStrategy ?event ?operator ?when)
+    (actionSequence
+      (TheList))))
+
+;;; Do we recognize a strategy from a post-mortem?
+;;; Do we poll known strategies and try to do a forced match?
+;;; Do we use analogy and generalization to induce strategies?
+
+;;; From a known goal and a sequence of actions, we probably want to lift 
+;;; decomposition strategies and sequencing strategies independently.
+
+;;; Decide whether we want to revise our current strategy parametrically
+;;; or structurally.
+
+;;; Abstract strategies
+;;;
+;;; recognize:
+;;;  opportunities for parallelization
+;;;  need for synchronization
+;;;  leaky flows
+;;;  weak links in a chain
+;;;  80/20 rule
+;;;  properties vs resources
+;;;  futility
+;;;  risk management
+
+;;; Parallelization:
+;;; Given an output quantity and a process involving entities not congruent
+;;; with the output quantities entity, is it possible to replicate the process
+;;; over multiple entities?  Is there a (nonlinear) cost to replication?
+;;; What resource is expended (and by how much) to increase production rate?
+
+;;; Need for synchronization:
+;;; Is there an operation that involves two or more entities in some
+;;; configuation?  Is this simultaneous configuration a logical necessity
+;;; or an efficiency multiplier?
+
+;;; Leaky flows:
+;;; Is a process degraded by a parasitic inefficiency?  A quantity sink
+;;; that goes nowhere (eg, corruption)?  What mitigates the magnitude
+;;; of the parasitic quantity?
+
+;;; Weak links:
+;;; Is there a particular process or conversion or action in a sequence 
+;;; that tends to fail or is inefficient?  Can it be circumvented or
+;;; supplemented?
+
+
+;;; There exists a Cyc concept RiskManagement, ako HumanActivity.
+;;; create a new concept, AbstractInvestmentStrategy.
+;;; There is a Cyc concept Strategy, ako PropositionalConceptualWork and NormativeSpecification. 
+;;; (genlStrategies REFINEMENT STRATEGY) relates child and parent strategies
+;;; ProblemSolvingStrategy is a Cyc strategy.
+
+;;; Efficiency is a Cyc concept, ako PerformanceLevelQuantity.
+;;; A goal would be to have a (HighAmountFn Efficiency)
+;;; See also Speediness and Safeness.
+;;; Dangerousness and Riskiness are also ActionAttributeLevelQuantities, but not
+;;; PerformanceLevelQuantities (ie, they're properties of the task, not the performance
+;;; of the task.)
+;;; RiskTaking is also a Cyc concept, ako PurposefulAction.
+;;; GoingForBroke is a kind of RiskTaking
+
+;;; We basically want to divide things into 
+;;; achievement strategies, efficiency strategies, and risk management strategies.
+;;; but note: risk at one level is inefficiency at another.
+
+;;; We want to use some kind of query for questions to identify possible
+;;; strategies in operation or the need for a strategy.
+
+
+;;; Extending Rational-Player
+
+(isa pursueDecompositionLearningGoal ComplexActionPredicate)
+(arity pursueDecompositionLearningGoal 5)
+(arg1Isa pursueDecompositionLearningGoal Microtheory)
+(arg2Isa pursueDecompositionLearningGoal Agent-Generic)
+(arg3Isa pursueDecompositionLearningGoal Goal)
+(arg4Isa pursueDecompositionLearningGoal List)
+(arg5Isa pursueDecompositionLearningGoal List)
+(comment pursueDecompositionLearningGoal "(pursueDecompositionLearningGoal ?mt ?actor ?goal (TheList) ?parent-goals) attempts to learn to pursue a goal by trying alternative decompositions.")
+
+
+
+;;; End of file

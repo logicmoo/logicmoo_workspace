@@ -1,0 +1,573 @@
+;;;
+;;; question-answering.meld
+;;;
+;;; This file contains plans for computing and recording answers to questions.
+;;; Sometimes (often?) generating answers involves dispatching
+;;; queries to other agents.  The simplest cases are just lookups.
+;;; Disengaging question answering from response generation is the
+;;; key to maintaining high interactivity.
+;;;
+;;; Also note that we don't necessarily arrive here with a unique 
+;;; sentence interpretation.  Differentially comparing answers is
+;;; part of disambiguation, and will be a major part of achieving 
+;;; robustness.  Note also, however, that declarative statements
+;;; can't use this technique.  We need a concise accurate interpretation
+;;; before storing a statement.
+;;;
+;;; 
+
+(in-microtheory Interaction-ManagerMt)
+
+(isa generateAnswers ComplexActionPredicate)
+(arity generateAnswers 3)
+(arg1Isa generateAnswers Microtheory)
+(arg2Isa generateAnswers CycLTerm)
+(arg3Isa generateAnswers Collection)
+(comment generateAnswers "(generateAnswers ?context ?sentence-id ?sentence-type)")
+
+(isa describeReferent ComplexActionPredicate)
+(arity describeReferent 4)
+(arg1Isa describeReferent Microtheory)
+(arg2Isa describeReferent CycLTerm)
+(arg3Isa describeReferent Collection)
+(arg4Isa describeReferent Individual)
+(comment describeReferent "(describeReferent ?context ?sentence-id ?sentence-type ?entity) characterizes a (ground) entity.")
+
+(isa defineConcept ComplexActionPredicate)
+(arity defineConcept 4)
+(arg1Isa defineConcept Microtheory)
+(arg2Isa defineConcept CycLTerm)
+(arg3Isa defineConcept Collection)
+(arg4Isa defineConcept Individual)
+(comment defineConcept "(defineConcept ?context ?sentence-id ?sentence-type ?concept) summarizes the description of a concept (collection).")
+
+;;; TBD
+(isa identifyReferent ComplexActionPredicate)
+(arity identifyReferent 4)
+(arg1Isa identifyReferent Microtheory)
+(arg2Isa identifyReferent CycLTerm)
+(arg3Isa identifyReferent Collection)
+(arg4Isa identifyReferent CycLFormula)
+(comment identifyReferent "(identifyReferent ?context ?sentence-id ?sentence-type ?query) binds an entity (or number) to a variable.")
+
+;;; TBD
+(isa enumerateReferents ComplexActionPredicate)
+(arity enumerateReferents 4)
+(arg1Isa enumerateReferents Microtheory)
+(arg2Isa enumerateReferents CycLTerm)
+(arg3Isa enumerateReferents Collection)
+(arg4Isa enumerateReferents CycLFormula)
+(comment enumerateReferents "(enumerateReferents ?context ?sentence-id ?sentence-type ?query) finds a set of referents for a variable.")
+
+(isa disambiguateQueryFromAnswer ComplexActionPredicate)
+(arity disambiguateQueryFromAnswer 4)
+(arg1Isa disambiguateQueryFromAnswer Microtheory)
+(arg2Isa disambiguateQueryFromAnswer CycLTerm)
+(arg3Isa disambiguateQueryFromAnswer CycLFormula)
+(arg4Isa disambiguateQueryFromAnswer CycLFormula)
+(comment disambiguateQueryFromAnswer "(disambiguateQueryFromAnswer ?context ?sentence-id ?raw-interpretation ?query) removes competing interpretations from the ?context.")
+
+(isa retractAlternativeInterpretations ComplexActionPredicate)
+(arity retractAlternativeInterpretations 3)
+(arg1Isa retractAlternativeInterpretations Microtheory)
+(arg2Isa retractAlternativeInterpretations CycLTerm)
+(arg3Isa retractAlternativeInterpretations Set-Mathematical)
+(comment retractAlternativeInterpretations "(retractAlternativeInterpretations ?context ?sentence-id ?other-queries) cleans up after a successful answer.")
+
+(isa recordCorrectInterpretation ComplexActionPredicate)
+(arity recordCorrectInterpretation 4)
+(arg1Isa recordCorrectInterpretation Microtheory)
+(arg2Isa recordCorrectInterpretation CycLTerm)
+(arg3Isa recordCorrectInterpretation ELSentence-Assertible)
+(arg4Isa recordCorrectInterpretation Set-Mathematical)
+(comment recordCorrectInterpretation "(recordCorrectInterpretation ?context ?sentence-id ?query ?other-queries) makes any remaining EA selections and writes out systemDisambiguatedChoice if appropriate.")
+
+(isa answerFromSessionReasoner UnaryPredicate)
+(arity answerFromSessionReasoner 1)
+(arg1Isa answerFromSessionReasoner CycLTerm)
+(comment answerFromSessionReasoner "(answerFromSessionReasoner ?sentence-id) is a bookkeeping predicate to help preference rules.")
+
+
+
+;;;prefer bote stuff CJM
+(<== (preferInContext (generateAnswers ?context ?sentence-id ?sentence-type) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 CountContained)
+     (noArgumentHasPredicate ?seq2 CountContained)
+     )
+
+(<== (preferInContext (generateAnswers ?context ?sentence-id ?sentence-type) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 unitsBoughtPerYear)
+     (noArgumentHasPredicate ?seq2 unitsBoughtPerYear)
+     )
+
+(<== (preferInContext (generateAnswers ?context ?sentence-id ?sentence-type) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 unitsSold)
+     (noArgumentHasPredicate ?seq2 unitsSold)
+     )
+
+;;;;
+
+(<== (preferInContext (generateAnswers ?context ?sentence-id ?sentence-type) ?seq1 ?seq2)
+     (different ?sentence-type YesOrNoQuestion-IBT)
+     (uninferredSentence (containsPattern (queryAnswer ?sentence-id False) ?seq1))
+     (someArgumentHasPredicate ?seq1 doRemoteAgentPlan)
+     (noArgumentHasPredicate ?seq2 doRemoteAgentPlan))
+
+;;; Implement closed-world semantics:
+(<== (preferInContext (generateAnswers ?context ?sentence-id YesOrNoQuestion-IBT) ?seq1 ?seq2)
+     (containsPattern (queryAnswer ?sentence-id False) ?seq2))
+     
+;;; DescribeReferent strategies
+
+;;; Collect the immediate isas of entity.
+;;; We have an opportunity here to write out this abstraction of a question type
+;;; in order to better perceive patterns of questioning.
+;;; Since these queries are structural, they never need to be sent to the 
+;;; SessionReasoner.
+(preconditionForMethod
+  (and (unifies ?query             ; support bookkeeping
+                (nonTransitiveInference
+                  (lookupOnly
+                    (isa ?entity ?type))))   ; answer the query by looking up the isas of <entity>
+       (ist-Information CurrentWorldDataCollectorMt-NonHomocentric  ; WorldLikeOursCollectorMt doesn't inherit PeopleDataMt
+         (evaluate ?types (TheClosedRetrievalSetOf ?type ?query)))
+       (different ?types (TheSet)))
+  (methodForAction
+    (describeReferent ?context ?sentence-id ?question-type ?entity)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (queryAnswer ?sentence-id ?types)))
+        (generateTypeListUtterance ?context ?sentence-id ?entity ?types)))))
+
+;;; DefineConcept strategies
+
+;;; Collect the immediate genls of collection.
+;;; This could be a lot better.
+(preconditionForMethod
+  (and (unifies ?query             ; support bookkeeping
+                (and (nonTransitiveInference
+                       (lookupOnly
+                         (genls ?collection ?type))) ; answer the query by looking up the genls of <collection>
+                     (different ?type ?collection))) ; remember, genls is reflexive.
+       (ist-Information CurrentWorldDataCollectorMt-NonHomocentric
+         (evaluate ?types (TheClosedRetrievalSetOf ?type ?query)))
+       (different ?types (TheSet)))
+  (methodForAction
+    (defineConcept ?context ?sentence-id ?question-type ?collection)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (queryAnswer ?sentence-id ?types)))
+        (generateTypeListUtterance ?context ?sentence-id ?collection ?types)))))
+
+;;; --------------------------------------------------------------------------
+;;; Yes/No Questions
+
+;;; Simple model: first to answer positively.
+;;; Since we implicitly have a closed-world assumption, this accepts the first 
+;;; non-fail answer.
+
+;;; Yes-No questions may have qualified answers.
+;;; This is what distinguishes questions from computer queries.
+;;; We want a system that can answer "yes, but..." or "in some cases",
+;;; or "it used to".  Relevant information that's not just true or false.
+
+;;; If there are multiple interpretations of the query, let the planner
+;;; backtrack through bindings of ?raw-query.
+;;; Make sure there is a default fallback method that handles the no-answer
+;;; condition.
+;;; **** Yes/No questions never (currently) dispatch to the session reasoner.
+(preconditionForMethod
+  (and (ist-Information ?context
+         (sentenceQuery ?sentence-id ?interpretation ?query))
+       (numAnswers 1
+         (allFactsAllowed
+           (contextEnvAllowed
+             (ist-Information CurrentWorldDataCollectorMt-NonHomocentric  ; Do this so the justifications don't disappear when planner state changes.
+               ?query)))))
+  (methodForAction
+    (generateAnswers ?context ?sentence-id YesOrNoQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Answer = ~s" (?query))
+        ;; write out the answer
+        (doRecord (ist-Information ?context (queryAnswer ?sentence-id True)))
+        (doRecord (ist-Information ?context (instantiatedAnswer ?sentence-id ?query)))
+        ;; Figure out which ambiguous interpretation yielded an answerable query:
+        (disambiguateQueryFromAnswer ?context ?sentence-id ?interpretation ?query) ; this may no longer work!
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateUtterance ?context ?sentence-id YesOrNoQuestion-IBT))))))))
+              
+
+;;; Default.  Fall through to this when no answer is found.
+;;; *** This should record the fact that this was an implicit CWA - failure as negation
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (generateAnswers ?context ?sentence-id YesOrNoQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?context (queryAnswer ?sentence-id False)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateUtterance ?context ?sentence-id YesOrNoQuestion-IBT))))))))
+
+;;; For now, prefer locally produced answers:
+(<== (preferInContext (generateAnswers ?context ?sentence-id YesOrNoQuestion-IBT) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 disambiguateQueryFromAnswer))
+     
+;;; We have a problem with ambiguous query interpretations, in that when
+;;; remote calls to solve fail, it doesn't roll over and try the next
+;;; query interpretation.  There may be a doAgentPlan somewhere acting
+;;; like a cut.
+
+
+;; Forget alternative interpretations and sentenceQueries:
+(preconditionForMethod
+  (evaluate ?other-query-stmts
+    (TheClosedRetrievalSetOf ?other-query-stmt
+      (and (ist-Information ?context
+              (sentenceQuery ?sentence-id ?raw-interpretation ?other-query))
+           (different ?raw-interpretation ?interpretation)
+           (different ?other-query ?query)
+           (unifies ?other-query-stmt
+             (ist-Information ?context
+               (sentenceQuery ?sentence-id ?raw-interpretation ?other-query))))))
+  (methodForAction
+    (disambiguateQueryFromAnswer ?context ?sentence-id ?interpretation ?query)
+    (actionSequence
+      (TheList
+        (retractAlternativeInterpretations ?context ?sentence-id ?other-query-stmts)
+        (recordCorrectInterpretation ?context ?sentence-id ?query ?other-query-stmts)))))
+
+
+(preconditionForMethod
+  (and (different ?sentence-queries (TheSet))
+       (evaluate ?sentence-interpretations
+         (TheClosedRetrievalSetOf ?interpretation-stmt
+           (and (elementOf ?sq ?sentence-queries)
+                (unifies (ist-Information ?context (sentenceQuery ?sentence-id ?interpretation ?query)) ?sq)
+                (unifies ?interpretation-stmt (ist-Information ?context (interpretationOf ?sentence-id ?interpretation)))))))
+  (methodForAction
+    (retractAlternativeInterpretations ?context ?sentence-id ?sentence-queries)
+    (actionSequence
+      (TheList
+        (doForgetMembers ?sentence-queries)
+        (doForgetMembers ?sentence-interpretations)
+        ))))
+        
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (retractAlternativeInterpretations ?context ?sentence-id (TheSet))
+    (actionSequence
+      (TheList
+        ))))
+        
+
+;;; We have a choice here.  We can retract unselected interpretations or add a
+;;; preferredInterpretation statement (see inferIntent)
+(preconditionForMethod
+  (and (different ?alternatives (TheSet))
+       (ist-Information ?context (sentenceQuery ?sentence-id ?interpretation ?query)) ;; look up the raw interpretation
+       (outsourcedOnly (currentDiscourseId ?discourse-id))
+       (unifies ?dcase (DiscourseCaseFn ?discourse-id))
+       (evaluate ?selection-stmts
+         (TheClosedRetrievalSetOf ?selection-stmt
+           (and (wmOnly
+                  (localOnly
+                    (ist-Information ?context 
+                      (selectionForInterpretation ?sentence-id ?interpretation ?csid ?cid ?choice))))
+                (unifies ?selection-stmt
+                  (ist-Information ?dcase
+                    (selectedChoice ?csid ?cid ?choice))))))
+       (evaluate ?disambiguation-stmts ; Wish we could just do a SubstituteFormulaFn, but the arity is different.
+         (TheClosedRetrievalSetOf ?disambiguation-stmt
+           (and (elementOf ?select-stmt ?selection-stmts)
+                (unifies (ist-Information ?dcase (selectedChoice ?csid ?cid ?choice)) ?select-stmt) ; destructure
+                (unifies ?disambiguation-stmt (ist-Information ?context (systemDisambiguatedChoice ?sentence-id ?csid ?cid ?choice)))))))
+  (methodForAction
+    (recordCorrectInterpretation ?context ?sentence-id ?query ?alternatives)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?context (preferredInterpretation ?sentence-id ?interpretation)))
+        (doTellMembers ?selection-stmts)
+        (doRecordMembers ?disambiguation-stmts)
+        (doUpdateDrs ?sentence-id ?dcase)))))
+
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (recordCorrectInterpretation ?context ?sentence-id ?query ?alternatives)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (recordCorrectInterpretation ?context ?sentence-id ?query ?alternatives) ?seq1 (actionSequence (TheList))))
+
+
+
+;;; --------------------------------------------------------------------------
+;;; Questions expecting a binding
+;;; (who, what, where, when, why, how)
+
+;;; Assume this is invoked from a respondToQuestion task.
+;;; For these questions, gather all the answers before generating a response:
+(preconditionForMethod
+  (and (different ?question-type YesOrNoQuestion-IBT)
+       (uninferredSentence
+         (currentSessionReasoner ?session-reasoner))
+       (ist-Information ?context
+         (sentenceQuery ?sentence-id ?interpretation ?query))  ;; lookup reified query interpretation
+       (withTimeout 30
+         (evaluate ?answers
+           (TheClosedRetrievalSetOf ?answer
+             (and (allFactsAllowed 
+                    (ist-Information CurrentWorldDataCollectorMt-NonHomocentric ?query))
+                  (unifies ?answer ?query)
+                  (groundExpression ?answer)))))  ; ?answer is a privileged variable in formulated ?query.
+       (different ?answers (TheSet)))
+  (methodForAction
+    (generateAnswers ?context ?sentence-id ?question-type)
+    (actionSequence
+      (TheList
+        ;(doAnnounce "~&Query = ~s" (?query))
+        ;; write out the answer
+        (doRecord (ist-Information ?context (queryAnswer ?sentence-id ?answers)))
+        (disambiguateQueryFromAnswer ?context ?sentence-id ?interpretation ?query)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateUtterance ?context ?sentence-id ?question-type))))))))
+
+#||
+;;; Delegate to the session-reasoner.
+;;; Do we want to bind a result in the preconditions (using holdsOnRemoteAgent)
+;;; or invoke a remote plan (via doSynchronousRemotePlan)?
+;;; We'll have to invoke remote planning to run solve on BOTE queries.
+;;;(preconditionForMethod
+;;;  (and (different ?question-type YesOrNoQuestion-IBT)
+;;;       (currentInteractionMgr ?im)
+;;;       (localAgent ?im)
+;;;       (currentSessionReasoner ?session-reasoner)
+;;;       (ist-Information ?context
+;;;         (sentenceQuery ?sentence-id ?interp ?query))
+;;;       (holdsOnRemoteAgent ?session-reasoner
+;;;         (withTimeout 30                                        ; Limit query duration to 30 seconds
+;;;           (honorTimestamps
+;;;             (ist-Information ?context  
+;;;               (evaluate ?answers   
+;;;                 (TheClosedRetrievalSetOf ?answer
+;;;                   (and (inferenceOnly (userQuery ?query))        ; consult shared focus
+;;;                        (groundExpression ?answer))))))))         ; non-yes/no questions bind ?answer
+;;;       (different ?answers (TheSet)))
+;;;  (methodForAction
+;;;    (generateAnswers ?context ?sentence-id ?question-type)
+;;;    (actionSequence
+;;;      (TheList
+;;;        (doRemoteAgentPlan  
+;;;          ?session-reasoner
+;;;          (actionSequence 
+;;;            (TheList
+;;;              (doNotifyPA ?query UserQueryEvent))))
+;;;        (doAnnounce "~%Answers from SessionReasoner: ~s" (?answers))
+;;;        (doRecord (ist-Information ?context (answerFromSessionReasoner ?sentence-id)))
+;;;        (doRecord (ist-Information ?context (queryAnswer ?sentence-id ?answers)))
+;;;        (disambiguateQueryFromAnswer ?context ?sentence-id ?interpretation ?query)
+;;;        (doAgentPlan
+;;;          (actionSequence
+;;;            (TheList
+;;;              (generateUtterance ?context ?sentence-id ?question-type))))))))
+||#
+
+;;; Default if no answer produced.
+(preconditionForMethod
+  (different ?question-type YesOrNoQuestion-IBT)  ; that's handled through failure-as-negation, above
+  (methodForAction
+    (generateAnswers ?context ?sentence-id ?question-type)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateUtterance ?context ?sentence-id ?question-type))))))))
+
+;;; this rule OKd way too many partial orders
+;;;(<== (preferInContext (generateAnswers ?context ?sentence-id ?query-type) ?seq1 ?seq2)
+;;;     (different ?query-type YesOrNoQuestion-IBT)
+;;;;    (noArgumentHasPredicate ?seq1 doAnnounce) ; careful here!
+;;;     (noArgumentHasPredicate ?seq2 doRecord))  ; failure condition
+
+(<== (preferInContext (generateAnswers ?context ?sentence-id ?query-type) ?seq1 ?seq2)
+     (different ?query-type YesOrNoQuestion-IBT)
+     (someArgumentHasPredicate ?seq1 answerFromSessionReasoner))
+
+(<== (preferInContext (generateAnswers ?context ?s-id ?q-type) ?seq1 ?seq2)
+     (containsExpression implies-DrsDrs ?seq2))
+
+
+;;; -------------------------------------------------------------------------
+;;; "Where is the Parthenon?" works, but "Where is Paris?" fails.
+;;; *** 5-8-14 Actually, "Where is the Parthenon?" fails now, due to no 
+;;; *** support for specpred search.
+;;; Partly, this is because Paris resolves to Paris, rather than 
+;;; CityOfParisFrance, but also because there just isn't an 
+;;; objectFoundInLocation statement. This is where we'd want to be
+;;; invoking solve with particular suggestions.
+;;; We'd want to look for (capitalCity France CityOfParisFrance)
+;;; or at least (countryOfCity France CityOfParisFrance)
+;;; Or even (geographicallySubsumes ContinentOfEurope CityOfParisFrance)
+              
+;;; To Do: Why questions (explanation), How questions (procedure), 
+;;; How much (measurement) How many (counting).
+
+
+(isa presentAnswersToUser ComplexActionPredicate)
+(arity presentAnswersToUser 5)
+(comment presentAnswersToUser "(presentAnswersToUser ?context ?sid ?query ?solution ?solve-id) presents the session reasoner's answer to the user.")
+
+(preconditionForMethod
+ (and 
+;;;      (ist-Information ?context
+;;;         (sentenceQuery ?sentence-id ?interpretation ?query))
+       (bindAnswersFromUserQuery ?solution ?answers)
+       (numAnswers 1
+         (mostSpecificUtteranceType ?sentence-id ?question-type)))
+  (methodForAction
+    (presentAnswersToUser ?context ?sentence-id ?query ?solution ?solve-id)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Answers from SessionReasoner solver: ~s" (?answers))
+        (doRecord (ist-Information ?context (answerFromSessionReasoner ?sentence-id)))
+        (doRecord (ist-Information ?context (queryAnswer ?sentence-id ?answers)))
+        (disambiguateQueryFromAnswer ?context ?sentence-id ?interpretation ?query)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateUtterance ?context ?sentence-id ?question-type))))))))
+
+(<== (preferInContext (presentAnswersToUser ?context ?sentence-id ?query ?solution ?solve-id) ?seq1 ?seq2)
+     (subexpressionMatching (doAnnounce ?str ?ans-bindings) ?seq2 ?r)
+     (containsExpression (?answers) ?r))
+
+
+(isa bindAnswersFromUserQuery BinaryPredicate)
+(arity bindAnswersFromUserQuery 2)
+(arg1Isa bindAnswersFromUserQuery CycLSentence-Assertible)
+(arg2Isa bindAnswersFromUserQuery Set-Mathematical)
+(comment bindAnswersFromUserQuery "(bindAnswersFromUserQuery ?prop ?answer-set) unwraps userQuer predicate if it exists and binds ?answer-set to a singleton set of answers.")
+
+;;;(<== (bindAnswersFromUserQuery ?solution ?answers)
+;;;     (not (matches (userQuery ?prop) ?solution))
+;;;     (unifies ?answers (TheSet ?solution)))
+;;;     
+;;;(<== (bindAnswersFromUserQuery (userQuery ?solution) ?answers)
+;;;     (unifies ?answers (TheSet ?solution)))
+     
+ 
+(isa presentQueryFailureToUser ComplexActionPredicate)
+(arity presentQueryFailureToUser 3)
+(comment presentQueryFailureToUser "(presentQueryFailureToUser ?context ?sid ?query) says Unknown.")
+
+(preconditionForMethod
+  (newReifiedUtterance ?system-utterance)
+  (methodForAction
+    (presentQueryFailureToUser ?context ?sid ?query)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance "Unknown.")))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; NEW GENERATE ANSWERS, TEAM REASONING CODE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;
+;;; Invoking Solve
+;;;
+
+;;;(preconditionForMethod
+;;;  (and (currentInteractionMgr ?im)
+;;;       (localAgent ?im)
+;;;       (currentSessionReasoner ?session-reasoner)
+;;;       (ist-Information ?context
+;;;         (sentenceQuery ?sentence-id ?interp ?query)))
+;;;  (methodForAction
+;;;    (generateAnswers ?context ?sentence-id ?question-type)
+;;;    (actionSequence
+;;;      (TheList
+;;;        (doRemoteAgentPlan ?session-reasoner
+;;;                           (answerUserQuery ?context ?sentence-id ?query))))))
+
+(preconditionForMethod
+  (and (currentInteractionMgr ?im)
+       (localAgent ?im)
+       (currentSessionReasoner ?session-reasoner)
+       (ist-Information ?context
+         (sentenceQuery ?sentence-id ?interp ?query)))
+  (methodForAction
+    (generateAnswers ?context ?sentence-id ?question-type)
+    (actionSequence
+      (TheList
+       (doRemoteAgentPlan 
+        ?session-reasoner
+        (userQueryStrategySelectorPlan ?context ?sentence-id ?query (InterpretationMtForSentenceFn ?sentence-id)))))))
+
+(<== (variablizeDiscourseVariables ?in ?d-vars ?out)
+     (atomicTerm ?in)
+     (elementOf ?in ?d-vars)
+     (evaluate ?out (SymbolConcatenateFn (TheList ? ?in))))
+
+;;;(<== (preferInContext (generateAnswers ?c ?s ?q) ?seq1 ?seq2)
+;;;     (someArgumentHasPredicate ?seq1 doRemoteAgentPlan))
+
+;;;(<== (variablizeDiscourseVariables ?in ?d-vars ?out)
+;;;     (atomicTerm ?in)
+;;;     (elementOf ?in ?d-vars)
+;;;     (checkSingularOrPlural ?in Plural)
+;;;     (evaluate ?out (SymbolConcatenateFn (TheList ? ?in))))
+
+(<== (variablizeDiscourseVariables ?in ?d-vars ?in)
+     (atomicTerm ?in)
+     (uninferredSentence (elementOf ?in ?d-vars)))
+
+(<== (variablizeDiscourseVariables ?in ?d-vars ?out)
+     (unifies ?in (WhQuestionFn ?whq))
+     (evaluate ?out ?target))
+
+(<== (variablizeDiscourseVariables ?in ?d-vars ?out)
+     (uninferredSentence (atomicTerm ?in))
+     (uninferredSentence (unifies ?in (WhQuestionFn ?whq)))
+     (operatorFormulas ?pred ?in)
+     (evaluate ?out (MakeFormulaFn ?pred
+                                   (MapFunctionOverList
+                                    (FunctionToArg 2 (Kappa (?arg ?new-arg)
+                                                            (variablizeDiscourseVariables ?arg ?d-vars ?new-arg)))
+                                    (FormulaArgListFn ?in)))))
+
+(in-microtheory CompanionsMt)
+
+(<== (preferInContext (generateAnswers ?context ?sentence-id WhatQuestion-IBT) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 WHFocus))
+
+(<== (preferInContext (answerUserQuery ?context ?sentence-id ?query) ?seq1 ?seq2)
+     (containsPattern (WHFocus ?x ?y) ?query)
+     (containsPattern (answerCompanionsQuery ?sentence-id ?context QAMetaDataMt ?ans) ?seq1))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

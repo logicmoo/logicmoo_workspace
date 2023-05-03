@@ -1,0 +1,135 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: force.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: July 7, 2008 14:47:36
+;;;;   Purpose: Axioms for describing forces and motion
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+
+;;; The basic idea for forces is a triangular relationship as follows:
+;;; forceAppliedX ==> netForce
+;;; netForce ==> forceAt
+;;; forceAt + surfaceContact ==> forceAppliedToSurf
+
+(comment forceAppliedToSurf "forceAppliedToSurf is true iff the agent (3rd arg) 
+ causes a force on the first argument (surface) in the second argument 
+ direction")
+(arity forceAppliedToSurf 3)
+(arg1Isa forceAppliedToSurf Surface)
+(arg2Isa forceAppliedToSurf QualitativeVector)
+(arg3Isa forceAppliedToSurf PartiallyTangible)
+
+(isa forceAppliedToObj TernaryPredicate)
+(comment forceAppliedToObj "forceAppliedToObj is true iff an agent
+ causes a force on the first argument <Physob> in the second argument 
+ direction")
+(arity forceApplied 3)
+(arg1Isa forceAppliedToObj Physob)
+(arg2Isa forceAppliedToObj QualitativeVector)
+(arg3Isa forceAppliedToObj Entity)
+
+(isa forceAt TernaryPredicate)
+(comment forceAt "forceAt is true iff there is a force from object (third 
+ arg) which is exerted in direction (2nd arg) through surface  (first arg)")
+(arity forceAt 3)
+(arg1Isa forceAt Surface)
+(arg2Isa forceAt QualitativeVector)
+(arg3Isa forceAt PartiallyTangible)
+
+(isa forceAssumed TernaryPredicate)
+(arity forceAssumed 3)
+(arg1Isa forceAssumed Physob)
+(arg2Isa forceAssumed QualitativeVector)
+(arg3Isa forceAssumed Entity)
+(comment forceAssumed "(forceAssumed ?object ?dir ?source) means that ?object is
+ assumed to experience a force in ?dir direction.  This is used when a force 
+ arrow is used to represnt a force of an object.")
+
+(isa netForce BinaryPredicate)
+(comment netForce "netForce is true iff the net force on <Physob> is in the
+ direction given.")
+(arg1Isa netForce Physob) 
+(arg2Isa netForce QualitativeVector)
+
+(isa netForceX BinaryPredicate)
+(comment netForceX "netForce is true iff the net horizontal force on <Physob> is in the
+ direction given.")
+(arg1Isa netForceX Physob) 
+(arg2Isa netForceX Sense)
+
+(isa netForceY BinaryPredicate)
+(comment netForceY "netForce is true iff the net vertical force on <Physob> is in the
+ direction given.")
+(arg1Isa netForceY Physob) 
+(arg2Isa netForceY Sense)
+
+(isa netForceComponents TernaryPredicate)
+(comment netForceComponents "(netForceComponents ?o ?x ?y) is true iff the net
+ vertical <Sense> on <Physob> ?o is ?y and the net horizontal <Sense> on ?o is ?x.
+ This predicate was introduced to increase the efficiency of net force computations.")
+(arg1Isa netForceComponents Physob)
+(arg2Isa netForceComponents Sense)
+(arg3Isa netForceComponents Sense)
+
+
+
+(isa netTorque BinaryPredicate)
+(comment netTorque "netTorque is true iff the net torque on <Physob> is in the
+ direction given.")
+(arg1Isa netTorque Physob) 
+(arg2Isa netTorque RotVector)
+
+(isa torqueAppliedToObj TernaryPredicate)
+(arity torqueAppliedToObj 3)
+(comment torqueAppliedToObj "torqueAppliedToObj is true iff an agent
+ causes a torque on the first argument in the second argument direction")
+(arg1Isa torqueAppliedToObj Physob)
+(arg2Isa torqueAppliedToObj RotDirection)
+(arg3Isa torqueAppliedToObj Entity)
+
+(isa possibleNetForce BinaryPredicate)
+(comment possibleNetForce "possibleNetForce indicates the netForce may be in the 
+ direction given.  (netForce <RigidOb> AmbigQVector) should be true.")
+(arg1Isa possibleNetForce Physob) 
+(arg2Isa possibleNetForce QualitativeVector)
+
+(isa torqueAssumed TernaryPredicate)
+(arity torqueAssumed 3)
+(arg1Isa torqueAssumed Physob)
+(arg2Isa torqueAssumed QualitativeVector)
+(arg3Isa torqueAssumed Entity)
+(comment torqueAssumed "(torqueAssumed ?object ?dir ?source) means that ?object 
+ is assumed to experience a torque in ?dir direction.  This is used when a 
+ rotational force arrow is used to represnt a torque of an object.")
+
+(isa forceLastModifiedTime BinaryPredicate)
+(arity forceLastModifiedTime 2)
+(arg1Isa forceLastModifiedTime PartiallyTangible)
+(arg2Isa forceLastModifiedTime TimePoint)
+(comment forceLastModifiedTime 
+  "A predicate for stating the last time the user added or removed a force to 
+   this object.")
+(notForAnalogy forceLastModifiedTime)
+
+
+(isa unconstrainedForceDir TernaryPredicate)
+(arity unconstrainedForceDir 3)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Velocity
+
+(isa velocityAssumed BinaryPredicate)
+(arity velocityAssumed 2)
+(arg1Isa velocityAssumed Physob)
+(arg2Isa velocityAssumed QualitativeVector)
+(comment velocityAssumed "(velocityAssumed ?object ?dir) means that ?object is assumed 
+ to have a velocity in ?dir direction.")
+
+

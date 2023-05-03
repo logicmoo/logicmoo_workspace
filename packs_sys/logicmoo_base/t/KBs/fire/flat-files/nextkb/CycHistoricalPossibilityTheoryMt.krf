@@ -1,0 +1,192 @@
+(in-microtheory CycHistoricalPossibilityTheoryMt)
+
+(isa (MakingFn (MobFn VibrioCholerae)) LearnedActivityType)
+(isa (MakingFn (MobFn SmallpoxVirus)) LearnedActivityType)
+(isa (ManufacturerFn AgriculturalImplement) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn ElectronicDevice) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn HydroPoweredTurbine) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn IntegratedCircuit) ManufacturerTypeByFocalProductType)
+(isa (AttackTypeByWeaponTypeFn (ChemicalWeaponFn Sarin)) AttackTypeByWeaponType)
+(isa (MakingFn (MobFn ChemicalWeapon)) LearnedActivityType)
+(isa (MakingFn (HardcopyOfIBTTypeFn Cartoon)) LearnedActivityType)
+(isa (ManufacturerFn ElectricalDevice) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn Airplane) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn ComputerMonitor-VideoKind) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn MachineTool) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn AirConditioner) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn BallBearing) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn ElectronicComponent) ManufacturerTypeByFocalProductType)
+(isa (ManufacturerFn AutoPart) ManufacturerTypeByFocalProductType)
+(isa (MakingFn (MobFn SalmonellaTyphi)) LearnedActivityType)
+(defnSufficient (SetOfTypeFn CycLTerm) (SubLQuoteFn CYC-SET-OF-TYPE-SUFFICIENT))
+(comment MtPossibleHistoryDimension "The slice of context space which factors out `historical'
+relevance.")
+(comment TemporalHistoricalMicrotheory "This collection is the intersection of #$TemporalMicrotheory
+and #$HistoricalPossibilityMicrotheory, i.e.,
+#$TemporalHistoricalMicrotheory is the same as
+(#$CollectionIntersection2Fn #$TemporalMicrotheory
+#$HistoricalPossibilityMicrotheory).")
+(comment genlMt-WLOFT "(#$genlMt-WLOFT MT_1 MT_0) holds iff for each instance A of
+#$ELSentence-AssertibleWithoutLongTimeOpenFutureTrace, A is provable
+in MT_0 only if it is provable in MT-1.")
+(comment possibleAlternatives "For all members MT and MT' of
+#$HistoricalPossibilityMicrotheory, (#$possibleAlternatives MT MT')
+means that MT and MT' are 'alternatives' to each other in the sense
+that whenever PROP holds in any of them, (#$possible-Historical PROP)
+holds in both of them, and whenever (#$necessary-Historical PROP')
+holds in any of them, PROP' holds in both of them.  When MT and MT'
+consist of values of dimensions other than the
+#$MtPossibleHistoryDimension, a necessary condition for
+(#$possibleAlternatives MT MT') to hold is that the corresponding
+values of each microtheory dimension (say, the 'monads', 'time
+indices' and 'time parameters' etc.) must be the same.  Suppose that
+we let MT be represented by (mt, (t,p), ...) and MT' by (mt', (t',p'),
+...), with mt and mt' to be 'monad microtheories, t and t' to be time
+indices and p and p' to be time parameters).  The condition above then
+requires that if (#$possibleAlternatives MT MT') holds, we must have
+mt = mt', t = t' and p = p' etc.  Another condition on the relation
+#$possibleAlternatives is a bit complicated, and is specified in a
+rule.")
+(comment MtPosHistDimFn "(#$MtPosHistDimFn HIST k), with HIST to be a member of
+#$PossibleHistory and k to be either 0 or 1, is a member of both
+#$HistoricalPossibilityMicrotheory and
+#$SingleFixedDimensionMicrotheory.  Such a function is used in
+specifying the value HIST of the microtheory dimension of historical
+possibility.  Note that the second argument, i.e., 0 or 1, is used to
+indicate whether the implementation takes the term to be a 'history'
+(unsettled) or a 'past' (settled).")
+(disjointWith Artifact (CollectionDifferenceFn (SubcollectionOfWithRelationFromTypeFn Basin-Topographical covers-Paintlike Asphalt) Artifact))
+(comment ELSentence-AssertibleWithoutOpenFutureTrace "A specialization of #$ELSentence-AssertibleWithoutLongTimeOpenFutureTrace, constaining all and only those formulas in which each occurrence of a member of #$RelationWithFutureTrace, if any, is inside of the scope of an occurrence of #$possible-Historical or #$necessary-Historical.")
+(comment HistoricalPossibilityMicrotheory "Each instance MT of #$HistoricalPossibilityMicrotheory is a
+microtheory in which inference about historical possibility/necessity
+is enabled, with truth condition for (#$necessary-Historical PROP) to
+be that PROP holds in every member MT' of
+#$HistoricalPossibilityMicrotheory such that (#$possibleAlternatives
+MT MT'), and with the truth condition for (#$possible-Historical PROP)
+to be that PROP holds in some member MT' of
+#$HistoricalPossibilityMicrotheory such that (#$possibleAlternatives
+MT MT').")
+(comment genlMt-WOFT "(#$genlMt-WOFT MT_1 MT_0) holds iff for each instance A of
+#$ELSentence-AssertibleWithoutOpenFutureTrace, A is provable in MT_0
+only if it is provable in MT-1.")
+(comment RelationWithFutureTrace "A specialization of #$Relation.  Each member of #$RelationWithFutureTrace is either a predicate PRED such that the truth value
+of (PRED ARG_1 ... ARG_n) is usually not settled at a time, or a function FUNC such that the denotation of (FUNC ARG_1 ... ARG_n) is not settled at a time.  What we mean by `not settled at a time' is that the truth values or denotations depend on future affairs relative to the time of evaluation.  For example, consider someone choosing to do something A at time t.  Her doing A at t is not settled, i.e., it is possible that she doesn't do A at t, and thus whether it is true at t that she does A depends on which possible future/history/world is taken as a factor when evaluating the sentence.  Similarly, `the only future-Nobel-Price-winner from Cycorp', a term (assuming that it denotes a single person), may denote one person in one possible future but another in another possible future.  Specializations of this collection include #$FutureTensePredicate and #$RelationWithFutureTrace-ImmediatelyClosed.")
+(genls (FemaleFn (CollectionIntersection2Fn HumanTeenager IsraeliPerson)) (CollectionIntersection2Fn HumanTeenager IsraeliPerson))
+(genls (UnsuccessfulFn (PlanningFn ShootingSomeoneExecutionStyle)) MentalSituation)
+(genls (CollectionIntersection2Fn Reservist (MemberFn (ArmedForcesFn Israel))) Reservist)
+(genls (SubcollectionOfWithRelationToTypeFn MassManufacturing outputsCreated (MobFn Token-Physical)) CreationEvent)
+(genls (CollectionIntersection2Fn OrganismVarietyBySize (SpecsFn Dog)) (SpecsFn Dog))
+(genls (CollectionIntersection2Fn OldHuman (CollectionIntersection2Fn Tourist FrenchPerson)) (CollectionIntersection2Fn Tourist FrenchPerson))
+(genls (SubcollectionOfWithRelationToTypeFn Investigation for-UnderspecifiedLocation (CancerFn Breast)) Investigation)
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn FuelingATransportationDevice objectTakenCareOf Ship) primaryObjectMoving Oil) eventOccursAt BodyOfWater) Event-Localized)
+(genls (SubcollectionOfWithRelationToFn CohabitationUnit groupMemberType CatholicPerson) CohabitationUnit)
+(genls (SubcollectionOfWithRelationToTypeFn (CollectionIntersection2Fn TransportationEvent Playing-Primate) performedBy HumanChild) (CollectionIntersection2Fn TransportationEvent Playing-Primate))
+(genls (CollectionIntersection2Fn Reservist (MemberFn (ArmedForcesFn Israel))) (MemberFn (ArmedForcesFn Israel)))
+(genls (SubcollectionOfWithRelationToTypeFn MassManufacturing outputsCreated (MobFn Token-Physical)) MassManufacturing)
+(genls (AdultFn (FemaleFn Mammal)) (FemaleFn Mammal))
+(genls (SubcollectionOfWithRelationToTypeFn ShapingByBlowing objectOfStateChange (PartTypeFn IntelligentAgent Nose)) IntrinsicStateChangeEvent)
+(genls (MaleFn (CollectionIntersection2Fn HumanTeenager IsraeliPerson)) MaleAnimal)
+(genls (UnsuccessfulFn (PlanningFn (SubcollectionOfWithRelationToTypeFn Murder deviceUsed Gun-Portable))) MentalSituation)
+(genls (SubcollectionByRegionFn (SubcollectionOfWithRelationToFn Animal residesInRegion (SomeFn GeographicalThing)) (SomeFn Island)) TemporalThing)
+(genls (CollectionIntersection2Fn BritishPerson (MaleFn BusinessPerson)) (MaleFn BusinessPerson))
+(genls (SubcollectionOfWithRelationToFn CohabitationUnit groupMemberType CatholicPerson) Group)
+(genls (SubcollectionOfWithRelationToTypeFn (CollectionUnionFn (TheSet DescendingEvent AscendingEvent)) primaryObjectMoving (GroupFn HomoSapiens)) MovementEvent)
+(genls (SubcollectionOfWithRelationFromFn Convoy possessiveRelation Israel) Convoy)
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn ContainingSomething containedObject LiquidTangibleThing) eventOccursAt Laboratory) Event-Localized)
+(genls (MaleFn (CollectionIntersection2Fn HumanTeenager IsraeliPerson)) (CollectionIntersection2Fn HumanTeenager IsraeliPerson))
+(genls (UnsuccessfulFn (PlanningFn (SubcollectionOfWithRelationToTypeFn Bombing deviceUsed CarBomb-VehicleDelivered))) MentalSituation)
+(genls TemporalHistoricalMicrotheory HistoricalPossibilityMicrotheory)
+(genls (MakingFn (MobFn SmallpoxVirus)) MakingSomething)
+(genls (SubcollectionByRegionFn (SubcollectionOfWithRelationToFn Animal residesInRegion (SomeFn GeographicalThing)) (SomeFn Island)) (SubcollectionOfWithRelationToFn Animal residesInRegion (SomeFn GeographicalThing)))
+(genls (CollectionIntersection2Fn Licensed-ProductType (SpecsFn (VaccineForAgainstFn HomoSapiens AnthraxInfection))) (SpecsFn (VaccineForAgainstFn HomoSapiens AnthraxInfection)))
+(genls (SubcollectionOfWithRelationFromTypeFn IntelligentAgent hasLeaders (GroupFn IntelligentAgent)) IntelligentAgent)
+(genls (CollectionIntersection2Fn BritishPerson (MaleFn BusinessPerson)) BritishPerson)
+(genls (SubcollectionOfWithRelationToTypeFn (ConveyFn (GroupFn PortableObject)) eventOccursAt Back-AnimalBodyPart) Event-Localized)
+(genls (SubcollectionOfWithRelationToTypeFn (CollectionIntersection2Fn TransportationEvent Playing-Primate) performedBy HumanChild) Action)
+(genls (MakingFn (MobFn VibrioCholerae)) MakingSomething)
+(genls (CollectionIntersection2Fn OrganismVarietyBySize (SpecsFn Dog)) OrganismVarietyBySize)
+(genls BuildingContractor-Organization ConstructionCompany)
+(genls (UnsuccessfulFn (PlanningFn (SubcollectionOfWithRelationToTypeFn Bombing deviceUsed (RemoteControlledDeviceFn Bomb)))) MentalSituation)
+(genls TemporalHistoricalMicrotheory TemporalMicrotheory)
+(genls (MakingFn (MobFn SalmonellaTyphi)) MakingSomething)
+(genls (SubcollectionOfWithRelationToTypeFn (PreventingFn CoolingProcess) objectOfStateChange Person) IntrinsicStateChangeEvent)
+(genls (MaleFn (AdultFn PotbelliedPig)) AdultAnimal)
+(genls (GaseousFn SubstanceP) GaseousTangibleThing)
+(genls (AdultFn (FemaleFn Cattle)) AdultAnimal)
+(genls (GaseousFn Propoxur) GaseousTangibleThing)
+(genls (AdultFn (FemaleFn PotbelliedPig)) (FemaleFn PotbelliedPig))
+(genls (SubcollectionOfWithRelationToTypeFn EncounteringSomething with-UnderspecifiedAgent (SubcollectionOfWithRelationFromTypeFn Person boss IntelligentAgent)) EncounteringSomething)
+(genls (SubcollectionOfWithRelationFromTypeFn ConstructionCompany contractor (ContractingFn ConstructingABuilding)) ConstructionCompany)
+(genlPreds genlMt-WOFT genlMt-WLOFT)
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn Accident damages WaterTransportationDevice) eventOccursAt BodyOfWater) (SubcollectionOfWithRelationToTypeFn Accident damages WaterTransportationDevice))
+(genls (UnsuccessfulFn (PlanningFn (SubcollectionOfWithRelationToTypeFn Murder deviceUsed HandGrenade))) MentalSituation)
+(genls (SubcollectionOfWithRelationToFn (AttemptingFn ChemicalAttack) eventOccursAt ContinentOfEurope) (AttemptingFn ChemicalAttack))
+(genls (CollectionIntersection2Fn Licensed-ProductType (SpecsFn (VaccineForAgainstFn HomoSapiens AnthraxInfection))) Licensed-ProductType)
+(genls (SubcollectionOfWithRelationToFn Convoy groupMemberType TransportationDevice-Vehicle) Convoy)
+(genls (AdultFn (FemaleFn Cattle)) (FemaleFn Cattle))
+(genls (CollectionIntersection2Fn Cleric (SubcollectionOfWithRelationToFn MuslimPerson hasBeliefSystems SunniIslam)) SunniMuslimPerson)
+(genls (FemaleFn (AdultFn PotbelliedPig)) (FemaleFn PotbelliedPig))
+(genls (SubcollectionOfWithRelationToTypeFn TouchingEvent with-UnderspecifiedAgent (SubcollectionOfWithRelationFromTypeFn Person boss IntelligentAgent)) TouchingEvent)
+(genls (CollectionDifferenceFn (SubcollectionOfWithRelationFromTypeFn Basin-Topographical covers-Paintlike Asphalt) Artifact) (SubcollectionOfWithRelationFromTypeFn Basin-Topographical covers-Paintlike Asphalt))
+(genls (SubcollectionOfWithRelationToTypeFn Murder deviceUsed (RemoteControlledDeviceFn Bomb)) (SubcollectionOfWithRelationToTypeFn AttackOnTangible deviceUsed (RemoteControlledDeviceFn Bomb)))
+(genls (SubcollectionOfWithRelationToTypeFn LiquidFlowAlongConduit primaryObjectMoving Rainwater) LiquidFlowAlongConduit)
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn Accident damages WaterTransportationDevice) eventOccursAt BodyOfWater) Event-Localized)
+(genls (UnsuccessfulFn (PlanningFn PhysicallyAttackingAnAgent)) MentalSituation)
+(genls (SubcollectionOfWithRelationToFn (AttemptingFn ChemicalAttack) eventOccursAt ContinentOfEurope) Event-Localized)
+(genls VaccineForHumans Vaccine)
+(genls (MakingFn (MobFn VibrioCholerae)) IntelligentAgentActivity)
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn FuelingATransportationDevice objectTakenCareOf Ship) primaryObjectMoving Oil) (SubcollectionOfWithRelationToTypeFn FuelingATransportationDevice objectTakenCareOf Ship))
+(genls (SubcollectionOfWithRelationToTypeFn Meeting-SocialGathering with-UnderspecifiedAgent (SubcollectionOfWithRelationFromTypeFn Person boss IntelligentAgent)) Meeting-SocialGathering)
+(genls (AdultFn (MaleFn PotbelliedPig)) AdultAnimal)
+(genls (SubcollectionOfWithRelationToTypeFn Bombing deviceUsed (RemoteControlledDeviceFn Bomb)) (SubcollectionOfWithRelationToTypeFn AttackOnTangible deviceUsed (RemoteControlledDeviceFn Bomb)))
+(genls (SubcollectionOfWithRelationToTypeFn LiquidFlowAlongConduit primaryObjectMoving Rainwater) MovementEvent)
+(genls (UnsuccessfulFn (PlanningFn (SubcollectionOfWithRelationToTypeFn Murder deviceUsed Pipe-Plumbing))) MentalSituation)
+(genls VaccineForHumans PartiallyTangible)
+(genls (UnsuccessfulFn (PlanningFn Torture)) MentalSituation)
+(genls (FemaleFn (CollectionIntersection2Fn HumanTeenager IsraeliPerson)) (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls (SubcollectionOfWithRelationToFn Convoy groupMemberType TransportationDevice-Vehicle) Group)
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn FuelingATransportationDevice objectTakenCareOf Ship) primaryObjectMoving Oil) MovementEvent)
+(genls (SubcollectionOfWithRelationToTypeFn Investigation possessiveRelation (CancerFn Breast)) Investigation)
+(genls (CollectionIntersection2Fn Cleric (SubcollectionOfWithRelationToFn MuslimPerson hasBeliefSystems SunniIslam)) (SubcollectionOfWithRelationToFn MuslimPerson hasBeliefSystems SunniIslam))
+(genls (SubcollectionOfWithRelationToFn (CollectionIntersection2Fn SaudiPerson Consul) in-UnderspecifiedContainer CityOfKarachiPakistan) (CollectionDifferenceFn HomoSapiens HumanInfant))
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn ContainingSomething containedObject LiquidTangibleThing) eventOccursAt Laboratory) (SubcollectionOfWithRelationToTypeFn ContainingSomething containedObject LiquidTangibleThing))
+(genls (MakingFn (MobFn SmallpoxVirus)) IntelligentAgentActivity)
+(genls (UnsuccessfulFn (PlanningFn Arson)) MentalSituation)
+(genls (AttemptingFn (BuyingFn RadioactiveStuff)) Attempting)
+(genls (SubcollectionOfUsedForEventTypeFn Vaccine (SubcollectionOfWithRelationToTypeFn VaccinationEvent beneficiary-Generic HomoSapiens)) PartiallyTangible)
+(genls (AdultFn (FemaleFn PotbelliedPig)) AdultAnimal)
+(genls (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn FuelingATransportationDevice objectTakenCareOf Ship) primaryObjectMoving Oil) eventOccursAt BodyOfWater) (SubcollectionOfWithRelationToTypeFn (SubcollectionOfWithRelationToTypeFn FuelingATransportationDevice objectTakenCareOf Ship) primaryObjectMoving Oil))
+(genlPreds genlMt genlMt-WOFT)
+(genls (AdultFn (MaleFn PotbelliedPig)) (MaleFn PotbelliedPig))
+(genls (CollectionIntersection2Fn DogTypeByBreed OrganismVarietyBySize) OrganismVarietyBySize)
+(genls (SubcollectionOfWithRelationToTypeFn (GroupFn IntelligentAgent) hasLeaders IntelligentAgent) (GroupFn IntelligentAgent))
+(genls (CollectionIntersection2Fn Cleric (SubcollectionOfWithRelationToFn MuslimPerson hasBeliefSystems SunniIslam)) Cleric)
+(genls (UnsuccessfulFn (PlanningFn ChokingSomeone)) MentalSituation)
+(genls (CollectionIntersection2Fn FrenchPerson (SubcollectionOfWithRelationToTypeFn Consultant affiliatedWith MilitaryOrganization)) (SubcollectionOfWithRelationToTypeFn Consultant affiliatedWith MilitaryOrganization))
+(genls (AttackTypeByWeaponTypeFn (ChemicalWeaponFn Sarin)) (UsingAForFn Weapon AttackOnTangible deviceUsed))
+(genls (UnsuccessfulFn (PlanningFn (SubcollectionOfWithRelationToTypeFn Murder deviceUsed Axe))) MentalSituation)
+(genls (MakingFn (MobFn ChemicalWeapon)) MakingSomething)
+(genls (SubcollectionOfUsedForEventTypeFn Vaccine (SubcollectionOfWithRelationToTypeFn VaccinationEvent beneficiary-Generic HomoSapiens)) Vaccine)
+(genls (RepairingFn CellularTelephone) SimpleRepairing)
+(genls (MaleFn (AdultFn PotbelliedPig)) (MaleFn PotbelliedPig))
+(genls (CollectionIntersection2Fn LebanesePerson (CollectionIntersection2Fn UnitedStatesPerson BusinessPerson)) LebanesePerson)
+(genls (CollectionIntersection2Fn DogTypeByBreed OrganismVarietyBySize) DogTypeByBreed)
+(genls (UnsuccessfulFn (PlanningFn StabbingSomeone)) MentalSituation)
+(genls (CollectionIntersection2Fn FrenchPerson (SubcollectionOfWithRelationToTypeFn Consultant affiliatedWith MilitaryOrganization)) FrenchPerson)
+(genls (MakingFn (HardcopyOfIBTTypeFn Cartoon)) IntelligentAgentActivity)
+(genls FutureTensePredicate RelationWithFutureTrace)
+(genls (FemaleFn (AdultFn PotbelliedPig)) AdultAnimal)
+(genls (AdultFn (FemaleFn Mammal)) AdultAnimal)
+(genls (SubcollectionOfWithRelationToFn (CollectionIntersection2Fn IraqiPerson Minister-Governmental) conceptuallyRelated PublicInformation) (CollectionIntersection2Fn IraqiPerson Minister-Governmental))
+(genls (FemaleFn (CollectionIntersection2Fn HumanTeenager IsraeliPerson)) FemaleAnimal)
+(genls (UnsuccessfulFn (PlanningFn SnipingAtSomeone)) MentalSituation)
+(genls (SubcollectionOfWithRelationToFn (CollectionIntersection2Fn SaudiPerson Consul) in-UnderspecifiedContainer CityOfKarachiPakistan) (CollectionIntersection2Fn SaudiPerson Consul))
+(genls (UnsuccessfulFn (PlanningFn SettingSomethingOnFire)) MentalSituation)
+(genls (SubcollectionOfWithRelationToTypeFn ShapingByBlowing objectOfStateChange (PartTypeFn IntelligentAgent Nose)) ShapingByBlowing)
+(genls (CollectionIntersection2Fn OldHuman (CollectionIntersection2Fn Tourist FrenchPerson)) OldHuman)
+(genls Leader IntelligentAgent)
+(genls (CollectionIntersection2Fn LebanesePerson (CollectionIntersection2Fn UnitedStatesPerson BusinessPerson)) (CollectionIntersection2Fn UnitedStatesPerson BusinessPerson))
+(genls (SubcollectionOfWithRelationToTypeFn (CollectionUnionFn (TheSet DescendingEvent AscendingEvent)) primaryObjectMoving (GroupFn HomoSapiens)) (CollectionUnionFn (TheSet DescendingEvent AscendingEvent)))
+(genls (MakingFn (MobFn ChemicalWeapon)) IntelligentAgentActivity)
+(genls (MakingFn (MobFn SalmonellaTyphi)) IntelligentAgentActivity)
+(genls (SubcollectionOfWithRelationToTypeFn (ConveyFn (GroupFn PortableObject)) eventOccursAt Back-AnimalBodyPart) (ConveyFn (GroupFn PortableObject)))

@@ -1,0 +1,22 @@
+
+ (in-microtheory ReasoningWithExpectationVocabularyMt)
+ (argGenl expectationPreds 1 Thing)
+ (argGenl expectationCapabilities 1 SomethingExisting)
+ (arg1Genl expectationCapabilities SomethingExisting)
+ (comment expectationCapabilities
+ "(#$expectationCapabilities COL ACTTYPE ROLE) means that if INST is an instance of COL, then it is expected to be the case that INST is #$behaviorCapable of playing ROLE in #$Events of type ACTTYPE.")
+ (argIsa expectationCapabilities 3 ActorSlot)
+ (arg3Isa expectationCapabilities ActorSlot)
+ (argGenl expectationCapabilities 2 Event)
+ (arg2Genl expectationCapabilities Event)
+ (argIsa expectationCapabilities 2 Collection)
+ (arg2Isa expectationCapabilities Collection)
+ (argIsa expectationCapabilities 1 Collection)
+ (arg1Isa expectationCapabilities Collection)
+ (comment expectationPreds
+ "(#$expectationPreds COL REL) means that if (#$isa INST COL), then it is expected that there is something that INST is related to via REL (#$expected-ToBe (#$thereExists ?THING (?REL ?INST ?THING))).")
+ (argIsa expectationPreds 2 BinaryPredicate)
+ (arg2Isa expectationPreds BinaryPredicate)
+ (arg1Genl expectationPreds Thing)
+ (argIsa expectationPreds 1 Collection)
+ (arg1Isa expectationPreds Collection)

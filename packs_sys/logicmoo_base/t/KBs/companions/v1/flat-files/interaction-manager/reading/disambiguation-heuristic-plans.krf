@@ -1,0 +1,1936 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: disambiguation-heuristic-plans
+;;;;    System: 
+;;;;    Author: your name here (apparently not)
+;;;;   Created: September 30, 2010 21:36:35
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-10-04 17:25:19 -0500 (Thu, 04 Oct 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; infoGainSuggestionsPlan
+(isa infoGainSuggestionsPlan ComplexActionPredicate)
+(isa infoGainSuggestionsPlan DisambiguationHeuristicPlan)
+(arity infoGainSuggestionsPlan 3)
+(arg1Isa infoGainSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa infoGainSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa infoGainSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment infoGainSuggestionsPlan "(infoGainSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets have the most new facts in them.")
+
+(isa DisambiguationHeuristicPlan Collection)
+(comment DisambiguationHeuristicPlan "A DisambiguationHeuristicPlan is a htn plan used by
+the a disambiguation heuristic in the disambiguation harness.")
+
+(typeOfHeuristic infoGainSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa infoGainSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa infoGainSuggestions Predicate)
+(arity infoGainSuggestions 0)
+(comment infoGainSuggestions "infoGainSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets have the most new facts in them.")
+
+(isa favorFromNumberOfFacts Predicate)
+(arity favorFromNumberOfFacts 2)
+(arg1Isa favorFromNumberOfFacts Thing)
+(arg2Isa favorFromNumberOfFacts ChoiceFavor)
+(comment favorFromNumberOfFacts "(favorFromNumberOfFacts ?choice ?favor-rating) relates a choice to a ChoiceFavor, based purely on the number
+of facts it contains.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+;;; To write: (favorFromNumberOfFacts ?choice ?favor-rating)
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (infoGainSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromNumberOfFacts ?choice ?favor-rating)  ;;; Is there an intelligent way to limit where this looks?
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (infoGainSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+;;;    (recordMembersInContext ?evidence-set-old ?source-text-mt)
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; supportedReferenceSuggestionsPlan
+(isa supportedReferenceSuggestionsPlan ComplexActionPredicate)
+(isa supportedReferenceSuggestionsPlan DisambiguationHeuristicPlan)
+(arity supportedReferenceSuggestionsPlan 3)
+(arg1Isa supportedReferenceSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa supportedReferenceSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa supportedReferenceSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(arg4Isa supportedReferenceSuggestionsPlan Microtheory) ;;; The target microtheory from which to count references from.
+(comment supportedReferenceSuggestionsPlan "(supportedReferenceSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets have the most new facts in them.")
+
+(isa DisambiguationHeuristicPlan Collection)
+(comment DisambiguationHeuristicPlan "A DisambiguationHeuristicPlan is a htn plan used by
+the a disambiguation heuristic in the disambiguation harness.")
+
+(typeOfHeuristic supportedReferenceSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa supportedReferenceSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa supportedReferenceSuggestions Predicate)
+(arity supportedReferenceSuggestions 1)
+(comment supportedReferenceSuggestions "supportedReferenceSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets have the most new facts in them.")
+
+(isa favorFromNumberOfReferences Predicate)
+(arity favorFromNumberOfReferences 3)
+(arg1Isa favorFromNumberOfReferences Thing)
+(arg2Isa favorFromNumberOfReferences Microtheory)
+(arg3Isa favorFromNumberOfReferences ChoiceFavor)
+(comment favorFromNumberOfReferences "(favorFromNumberOfReferences ?choice ?favor-rating ?ref-mt) relates a choice to a ChoiceFavor
+by the number of references in the specified microtheory.")
+
+(isa getNormalizationFactorForChoices Predicate)
+(arity getNormalizationFactorForChoices 3)
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (getNormalizationFactorForChoices ?current-discourse-id target-mt ?norm-factor)
+      ;(getNormalizationFactorForChoices ?current-discourse-id ?target-mt ?norm-factor)
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf
+            (evidenceForChoiceInSentence (supportedReferenceSuggestions ?target-mt) ?choice ?choice-id
+                                         ?favor-rating ?sentence)
+          (and (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choice ?choice-set-id ?choice-id ?choice))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSetFromSentence ?choice-set-id ?sentence))
+               (favorFromNumberOfReferences (choice ?choice-set-id ?choice-id ?choice)
+                                            target-mt
+                                            ;?target-mt
+                                            ?favor-rating-un-normed-w-cff)
+               (unifies ?favor-rating-un-normed-w-cff (ChoiceFavorFn ?favor-rating-un-normed))
+               (evaluate ?favor-rating-normed (QuotientFn ?favor-rating-un-normed ?norm-factor))
+               (unifies ?favor-rating (ChoiceFavorFn ?favor-rating-normed))
+               (different ?favor-rating (ChoiceFavorFn 0.0))
+               (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (supportedReferenceSuggestionsPlan target-mt ?source-text-mt ?source-text-name ?current-reading)
+  ;(supportedReferenceSuggestionsPlan ?target-mt ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence (TheList (recordMembersInContext ?evidence-set ?source-text-mt)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; argIsaViolatorSuggestionsPlan
+(isa argIsaViolatorSuggestionsPlan ComplexActionPredicate)
+(arity argIsaViolatorSuggestionsPlan 3)
+(arg1Isa argIsaViolatorSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa argIsaViolatorSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa argIsaViolatorSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment argIsaViolatorSuggestionsPlan "(argIsaViolatorSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets violate the argIsa of others.")
+
+(typeOfHeuristic argIsaViolatorSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaViolatorSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaViolatorSuggestions Predicate)
+(arity argIsaViolatorSuggestions 0)
+(comment argIsaViolatorSuggestions "argIsaViolatorSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets violate the argIsa of others.")
+
+
+(isa favorFromArgIsaViolator Predicate)
+(arity favorFromArgIsaViolator 2)
+(arg1Isa favorFromArgIsaViolator Thing)
+(arg2Isa favorFromArgIsaViolator Thing)
+(arg3Isa favorFromArgIsaViolator ChoiceFavor)
+(comment favorFromArgIsaViolator "(favorFromArgIsaViolator ?choice ?choice-set-id ?favor-rating) relates a choice to a ChoiceFavor, based purely on whether the choice
+violates another choice's argisa requirements.")
+
+;;; Write favorFromArgIsaViolator
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (argIsaViolatorSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+             ;;; We need to get favor-rating, choice pairs.
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+                 (favorFromArgIsaViolator ?choice ?choice-set-id ?favor-rating)
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (argIsaViolatorSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; argIsaViolatedSuggestionsPlan
+(isa argIsaViolatedSuggestionsPlan ComplexActionPredicate)
+(arity argIsaViolatedSuggestionsPlan 3)
+(arg1Isa argIsaViolatedSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa argIsaViolatedSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa argIsaViolatedSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment argIsaViolatedSuggestionsPlan "(argIsaViolatedSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets have their argisas violated by others.")
+
+(typeOfHeuristic argIsaViolatedSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaViolatedSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaViolatedSuggestions Predicate)
+(arity argIsaViolatedSuggestions 0)
+(comment argIsaViolatedSuggestions "argIsaViolatedSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets have their argisas violated by others.")
+
+
+(isa favorFromArgIsaViolated Predicate)
+(arity favorFromArgIsaViolated 3)
+(arg1Isa favorFromArgIsaViolated Thing)
+(arg2Isa favorFromArgIsaViolated Thing)
+(arg3Isa favorFromArgIsaViolated ChoiceFavor)
+(comment favorFromArgIsaViolated "(favorFromArgIsaViolated ?choice ?choice-set-id ?favor-rating) relates a choice to a ChoiceFavor, based purely on whether the choice
+is violated by another choice's argisa requirements.")
+
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (argIsaViolatedSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+          ;; We need to get favor-rating, choice pairs.
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+                 (favorFromArgIsaViolated ?choice ?choice-set-id ?favor-rating)
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (argIsaViolatedSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; argIsaSupporterSuggestionsPlan
+(isa argIsaSupporterSuggestionsPlan ComplexActionPredicate)
+(arity argIsaSupporterSuggestionsPlan 3)
+(arg1Isa argIsaSupporterSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa argIsaSupporterSuggestionsPlan InformationBearingThing) ;;; This is the source-text
+(arg3Isa argIsaSupporterSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment argIsaSupporterSuggestionsPlan "(argIsaSupporterSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets support the argIsa of others.")
+
+(typeOfHeuristic argIsaSupporterSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaSupporterSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaSupporterSuggestions Predicate)
+(arity argIsaSupporterSuggestions 0)
+(comment argIsaSupporterSuggestions "argIsaSupporterSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets support the argIsa of others.")
+
+
+(isa favorFromArgIsaSupporter Predicate)
+(arity favorFromArgIsaSupporter 3)
+(arg1Isa favorFromArgIsaSupporter Thing)
+(arg2Isa favorFromArgIsaSupporter Thing)
+(arg3Isa favorFromArgIsaSupporter ChoiceFavor)
+(comment favorFromArgIsaSupporter "(favorFromArgIsaSupporter ?choice ?choice-set-id ?favor-rating) relates a choice to a ChoiceFavor, based purely on whether the choice
+violates another choice's argisa requirements.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (argIsaSupporterSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+             ;;; We need to get favor-rating, choice pairs.
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+                 (favorFromArgIsaSupporter ?choice ?choice-set-id ?favor-rating)
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (argIsaSupporterSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; argIsaSupportedSuggestionsPlan
+(isa argIsaSupportedSuggestionsPlan ComplexActionPredicate)
+(arity argIsaSupportedSuggestionsPlan 3)
+(arg1Isa argIsaSupportedSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa argIsaSupportedSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa argIsaSupportedSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment argIsaSupportedSuggestionsPlan "(argIsaSupportedSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets have their argisas supported by others.")
+
+(typeOfHeuristic argIsaSupportedSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaSupportedSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa argIsaSupportedSuggestions Predicate)
+(arity argIsaSupportedSuggestions 0)
+(comment argIsaSupportedSuggestions "argIsaSupportedSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets support the argIsa of others.")
+
+
+(isa favorFromArgIsaSupported Predicate)
+(arity favorFromArgIsaSupported 3)
+(arg1Isa favorFromArgIsaSupported Thing)
+(arg2Isa favorFromArgIsaSupported Thing)
+(arg3Isa favorFromArgIsaSupported ChoiceFavor)
+(comment favorFromArgIsaSupported "(favorFromArgIsaSupported ?choice ?choice-set-id ?favor-rating) relates a choice to a ChoiceFavor, based purely on whether the choice
+is supported by another choice's argisa requirements.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (argIsaSupportedSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+             ;;; We need to get favor-rating, choice pairs.
+            (and                        
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (favorFromArgIsaSupported ?choice ?choice-set-id ?favor-rating)
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (argIsaSupportedSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; favoredContextSuggestionsPlan
+
+;;; (favoredContextSuggestionsPlan ?source-mt ?storage-mt ?source-text ?reading-to-compare-to ?current-reading)
+(isa favoredContextSuggestionsPlan ComplexActionPredicate)
+(arity favoredContextSuggestionsPlan 4)
+(arg1Isa favoredContextSuggestionsPlan Microtheory) ;;; This is the microtheory which is "favored" - choices that mention things mentioned in this microtheory get favor.
+(arg2Isa favoredContextSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg3Isa favoredContextSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa favoredContextSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment favoredContextSuggestionsPlan "(favoredContextSuggestionsPlan ?favored-mt ?storage-mt ?source-text ?current-reading)
+ makes disambiguation suggestions for ?source-text based on which choices mention things that appear in the favored microtheory.")
+
+(typeOfHeuristic favoredContextSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa favoredContextSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa favoredContextSuggestions Predicate)
+(arity favoredContextSuggestions 1)
+(comment favoredContextSuggestions "(favoredContextSuggestions ?favored-mt) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices mention things that appear in the favored microtheory.")
+
+
+(isa favorFromFavoredContext Predicate)
+(arity favorFromFavoredContext 4)
+(arg1Isa favorFromFavoredContext Thing)
+(arg2Isa favorFromFavoredContext Thing)
+(arg2Isa favorFromFavoredContext Microtheory)
+(arg3Isa favorFromFavoredContext ChoiceFavor)
+(comment favorFromFavoredContext "(favorFromFavoredContext ?choice ?choice-set-id ?favored-mt ?favor-rating) relates a choice to a ChoiceFavor, based on whether
+the choice contains collections and entities mentioned in ?favored-mt.")
+
+;;; (favoredContextSuggestionsPlan ?favored-mt ?storage-mt ?source-text ?current-reading)
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (favoredContextSuggestions ?favored-mt) ?choice ?choice-id ?favor-rating ?sentence)
+             ;;; We need to get favor-rating, choice pairs.
+          (and                 
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choice ?choice-set-id ?choice-id ?choice))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+               (favorFromFavoredContext ?choice ?choice-set-id ?favored-mt ?favor-rating)
+               (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+               (different ?favor-rating (ChoiceFavorFn 0.0))
+               (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (favoredContextSuggestionsPlan ?favored-mt ?storage-mt ?source-text ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?storage-mt)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; contextAggregationSuggestionsPlan
+;;; (contextAggregationSuggestionsPlan ?sentence-id ?source-text-mt ?source-text-name ?reading)
+(isa contextAggregationSuggestionsPlan ComplexActionPredicate)
+(arity contextAggregationSuggestionsPlan 4)
+(arg1Isa contextAggregationSuggestionsPlan Thing) ;;; The sentence for which suggestions will be generated
+(arg2Isa contextAggregationSuggestionsPlan Microtheory) ;;; The microtheory specific to the sentence's source discourse
+(arg3Isa contextAggregationSuggestionsPlan InformationBearingThing) ;;; The name of the sentence's source discourse
+(arg4Isa contextAggregationSuggestionsPlan AccessingAnIBT) ;;; The label for the given reading
+(comment contextAggregationSuggestionsPlan "(#$contextAggregationSuggestionsPlan ?sentence-id ?source-text-mt ?source-text-name ?reading) makes disambiguation suggestions for ?sentence-id by selecting the choices whose context cloud maximizes semantic overlap with the aggregate of context clouds from prior choices in sentences in the discourse. Context clouds are a collection of contexts, each weighted by the number of entities in a given set that are mentioned within them.")
+
+(typeOfHeuristic contextAggregationSuggestions SentenceLevelDisambiguationHeuristic)
+(isa contextAggregationSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa contextAggregationSuggestions Predicate)
+(arity contextAggregationSuggestions 0)
+(comment contextAggregationSuggestions "(contextAggregationSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on context aggregation. Jason was working on this, not sure if it works.")
+
+(isa favorFromContextAggregation Predicate)
+(arity favorFromContextAggregation 4)
+(arg1Isa favorFromContextAggregation Thing)
+(arg2Isa favorFromContextAggregation Thing)
+(arg3Isa favorFromContextAggregation Thing)
+(arg4Isa favorFromContextAggregation ChoiceFavor)
+(comment favorFromContextAggregation "(favorFromContextAggregation ?choice ?choice-set-id ?sentence-id ?favor-rating) relates a choice to a ChoiceFavor, based on the recommendations
+of the context aggregation algorithm.")
+
+;;; (cloudRatingForChoice ?rating ?choice)
+(isa cloudRatingForChoice Predicate)
+(arity cloudRatingForChoice 2)
+(arg1Isa cloudRatingForChoice RealNumber)
+(arg2Isa cloudRatingForChoice Thing)
+(comment cloudRatingForChoice "#$cloudRatingForChoice associates the semantic overlap rating of a choice's context cloud, with respect to the aggregate of prior choices, to that choice.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (contextAggregationSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+             ;;; We need to get favor-rating, choice pairs.
+            (and                 
+                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSetFromSentence ?choice-set-id ?sentence-id))
+                 (favorFromContextAggregation ?choice ?choice-set-id ?sentence-id ?favor-rating)
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (contextAggregationSuggestionsPlan ?sentence-id ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; mostPopularInFamilySuggestionsPlan
+(isa mostPopularInFamilySuggestionsPlan ComplexActionPredicate)
+(arity mostPopularInFamilySuggestionsPlan 4)
+(arg1Isa mostPopularInFamilySuggestionsPlan GeneralizationPoolDisambiguationFamily)
+(arg2Isa mostPopularInFamilySuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg3Isa mostPopularInFamilySuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa mostPopularInFamilySuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment mostPopularInFamilySuggestionsPlan "(mostPopularInFamilySuggestionsPlan ?gc-family ?storage-mt ?source-text ?current-reading)
+ makes disambiguation suggestions based on the popularity of the choice in the generalization context family ?gc-family.")
+
+(typeOfHeuristic mostPopularInFamilySuggestions DiscourseLevelDisambiguationHeuristic)
+(isa mostPopularInFamilySuggestions DiscourseLevelDisambiguationHeuristic)
+(isa mostPopularInFamilySuggestions Predicate)
+(arity mostPopularInFamilySuggestions 1)
+(comment mostPopularInFamilySuggestions "(favoredContextSuggestions ?gc-family) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on the popularity of the choice in the generalization context family ?gc-family.")
+
+
+(isa favorFromPopularityInFamily Predicate)
+(arity favorFromPopularityInFamily 4)
+(arg1Isa favorFromPopularityInFamily GeneralizationPoolDisambiguationFamily)
+(arg2Isa favorFromPopularityInFamily Thing)
+(arg3Isa favorFromPopularityInFamily Thing)
+(arg4Isa favorFromPopularityInFamily ChoiceFavor)
+(comment favorFromPopularityInFamily "(favorFromPopularityInFamily ?gc-family ?choice ?choice-set-id ?favor-rating) relates a choice to a ChoiceFavor, based purely on
+the choice's popularity in ?gc-family.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (mostPopularInFamilySuggestions ?gc-family) ?choice ?choice-id ?favor-rating ?sentence)
+
+             ;;; We need to get favor-rating, choice pairs.
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+                 (favorFromPopularityInFamily ?gc-family ?choice ?choice-set-id ?favor-rating)
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (mostPopularInFamilySuggestionsPlan ?gc-family ?storage-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?storage-mt)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; analogicalRecallSuggestionsPlan
+(isa analogicalRecallSuggestionsPlan ComplexActionPredicate)
+(arity analogicalRecallSuggestionsPlan 5)
+(arg1Isa analogicalRecallSuggestionsPlan CaseLibrary)
+(arg2Isa analogicalRecallSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg3Isa analogicalRecallSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa analogicalRecallSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(arg5Isa analogicalRecallSuggestionsPlan Microtheory) ;;; stubs-mt
+(comment analogicalRecallSuggestionsPlan "(analogicalRecallSuggestionsPlan ?case-libe ?storage-mt ?source-text ?current-reading ?stubs-mt)
+ makes disambiguation suggestions
+for ?source-text based on which choices have analogical support from cases in ?case-libe. ?stubs-mt is the microtheory that contains
+the stubs that determine what to include in the case.")
+
+(isa analogicalRecallGenContextSuggestionsPlan ComplexActionPredicate)
+(arity analogicalRecallGenContextSuggestionsPlan 5)
+(arg1Isa analogicalRecallGenContextSuggestionsPlan GeneralizationPoolDisambiguationFamily)
+(arg2Isa analogicalRecallGenContextSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg3Isa analogicalRecallGenContextSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa analogicalRecallGenContextSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(arg5Isa analogicalRecallGenContextSuggestionsPlan Microtheory) ;;; stubs-mt
+(comment analogicalRecallGenContextSuggestionsPlan "(analogicalRecallGenContextSuggestionsPlan ?gc-family ?storage-mt ?source-text ?current-reading ?stubs-mt) makes disambiguation suggestions
+for ?source-text based on which choices have analogical support from generalization contexts in ?gc-family.
+?stubs-mt is the microtheory that contains
+the stubs that determine what to include in the case.")
+
+(typeOfHeuristic analogicalRecallSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa analogicalRecallSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa analogicalRecallSuggestions Predicate)
+(arity analogicalRecallSuggestions 2)
+(comment analogicalRecallSuggestions "(analogicalRecallSuggestions ?favored-mt ?stubs-mt) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices have analogical support from cases in ?case-libe. ?stubs-mt is the microtheory that contains
+the stubs that determine what to include in the case.")
+
+(typeOfHeuristic analogicalRecallGenContextSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa analogicalRecallGenContextSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa analogicalRecallGenContextSuggestions Predicate)
+(arity analogicalRecallGenContextSuggestions 2)
+(comment analogicalRecallGenContextSuggestions "(analogicalRecallGenContextSuggestions ?gc-family ?stubs-mt) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text  based on which choices have analogical support from generalization contexts in ?gc-family.
+?stubs-mt is the microtheory that contains
+the stubs that determine what to include in the case.")
+
+
+
+
+;;; This should also store something that connects I guess the gen context family to the experiment name.
+;;; Why does this not have the experiment name? What calls this?
+;;; Make this one store off somewhere something relating the choice set to the type of thing retrieved and the actual thing retrieved.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (analogicalRecallGenContextSuggestions ?gen-context-family ?stubs-mt) ?choice ?choice-id ?favor-rating ?sentence)
+            
+          (and                 
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choice ?choice-set-id ?choice-id ?choice))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+               (favorFromAnalogicalRecallGenContext ?choice ?choice-set-id ?gen-context-family ?stubs-mt ?favor-rating)
+               (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+               (different ?favor-rating (ChoiceFavorFn 0.0))
+               (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (analogicalRecallGenContextSuggestionsPlan ?gen-context-family ?storage-mt ?source-text-name ?current-reading ?stubs-mt)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?storage-mt)))))
+
+(isa favorFromAnalogicalRecall Predicate)
+(arity favorFromAnalogicalRecall 5)
+(arg1Isa favorFromAnalogicalRecall Thing)
+(arg2Isa favorFromAnalogicalRecall Thing)
+(arg3Isa favorFromAnalogicalRecall CaseLibrary)
+(arg4Isa favorFromAnalogicalRecall Microtheory)
+(arg5Isa favorFromAnalogicalRecall ChoiceFavor)
+(comment favorFromAnalogicalRecall "(favorFromAnalogicalRecall ?choice ?choice-set-id ?case-library ?stubs-mt ?favor-rating) relates a choice to a ChoiceFavor, based on whether
+the choice is supported by analogical similarity to the cases in ?case-library")
+
+(isa favorFromAnalogicalRecallGenContext Predicate)
+(arity favorFromAnalogicalRecallGenContext 5)
+(arg1Isa favorFromAnalogicalRecallGenContext Thing)
+(arg2Isa favorFromAnalogicalRecallGenContext Thing)
+(arg3Isa favorFromAnalogicalRecallGenContext GeneralizationPoolDisambiguationFamily)
+(arg4Isa favorFromAnalogicalRecallGenContext Microtheory)
+(arg5Isa favorFromAnalogicalRecallGenContext ChoiceFavor)
+(comment favorFromAnalogicalRecallGenContext "(favorFromAnalogicalRecallGenContext ?choice ?choice-set-id ?gen-context-family ?stubs-mt ?favor-rating) relates a choice to a ChoiceFavor, based on whether
+the choice is supported by analogical similarity to the cases in ?gen-context-family")
+
+(isa favorFromAnalogicalParseRecallGenContext Predicate)
+(arity favorFromAnalogicalParseRecallGenContext 5)
+(arg1Isa favorFromAnalogicalParseRecallGenContext Thing)
+(arg2Isa favorFromAnalogicalParseRecallGenContext Thing)
+(arg3Isa favorFromAnalogicalParseRecallGenContext CaseLibrary)
+(arg4Isa favorFromAnalogicalParseRecallGenContext Microtheory)
+(arg5Isa favorFromAnalogicalParseRecallGenContext ChoiceFavor)
+(comment favorFromAnalogicalParseRecallGenContext "(favorFromAnalogicalParseRecallGenContext ?choice ?choice-set-id ?case-library ?stubs-mt ?favor-rating) relates a parse choice to a ChoiceFavor, based on whether
+the choice is supported by analogical similarity to the cases in ?case-library")
+
+(isa wordsForChoiceSet Predicate)
+(arity wordsForChoiceSet 1)
+
+(isa properNameReference Predicate)
+(arity properNameReference 1)
+
+(isa member Predicate)
+(arity member 2)
+(arg1Isa member Thing)
+(arg2Isa member Thing)
+(comment member "(member ?x ?y) indicates that ?x is a member of ?y in some sense.")
+
+(isa wordInSentence Predicate)
+(arity wordInSentence 1)
+
+(isa otherSentenceSelectedChoice Predicate)
+(arity otherSentenceSelectedChoice 1)
+
+(isa otherSentenceChoice Predicate)
+(arity otherSentenceChoice 1)
+
+(isa choiceSet VariableArityRelation)
+(arity choiceSet n-ary)
+
+(isa ConstitFn FunctionOrFunctionalPredicate)
+(arity ConstitFn 2)
+
+(isa PPCompFrameKeywordFn FunctionOrFunctionalPredicate)
+(arity PPCompFrameKeywordFn 2)
+
+(isa ConjunctiveVar Predicate)
+(arity ConjunctiveVar 2)
+(comment ConjunctiveVar
+  "ConjuctiveVar is a language predicate that handles conjunctions of things.")
+
+(isa ChoiceSetForPhraseFn Function-Denotational)
+(arity ChoiceSetForPhraseFn 1)
+(arg1Isa ChoiceSetForPhraseFn Thing)
+(comment ChoiceSetForPhraseFn
+  "(ChoiceSetForPhraseFn <thing>) denotes the collection of choice sets concerning <thing>.")
+
+(isa ChoiceSetForParseTreePathFn Function-Denotational)
+(arity ChoiceSetForParseTreePathFn 1)
+(arg1Isa ChoiceSetForParseTreePathFn Thing)
+(comment ChoiceSetForParseTreePathFn
+  "(ChoiceSetForParseTreePathFn <thing>) denotes the collection of choice sets for choices with the parse tree path described.")
+
+;;;d::wordInSentenceOfChoiceFn
+(isa wordInSentenceOfChoiceFn Function-Denotational)
+(arity wordInSentenceOfChoiceFn 1)
+(arg1Isa wordInSentenceOfChoiceFn Thing)
+(comment wordInSentenceOfChoiceFn
+  "(wordInSentenceOfChoiceFn <thing>) denotes the collection of choice sets in sentenes with the word <thing> in them.")
+
+;;;d::subjectOfSentenceOfChoiceSetFn
+(isa subjectOfSentenceOfChoiceSetFn Function-Denotational)
+(arity subjectOfSentenceOfChoiceSetFn 1)
+(arg1Isa subjectOfSentenceOfChoiceSetFn Thing)
+(comment subjectOfSentenceOfChoiceSetFn
+  "(subjectOfSentenceOfChoiceSetFn <thing>) denotes the collection of choice sets concerning <thing>.")
+
+;;;d::subjectOfSentenceOfChoiceSetFn
+(isa partOfSpeechOfChoiceSetFn Function-Denotational)
+(arity partOfSpeechOfChoiceSetFn 1)
+(arg1Isa partOfSpeechOfChoiceSetFn Thing)
+(comment partOfSpeechOfChoiceSetFn
+  "(partOfSpeechOfChoiceSetFn <pos>) denotes the collection of choice sets over words with part of speech <pos>.")
+
+(isa partOfSpeechOfChoiceSetFn Function-Denotational)
+(arity partOfSpeechOfChoiceSetFn 1)
+(arg1Isa partOfSpeechOfChoiceSetFn Thing)
+(comment partOfSpeechOfChoiceSetFn
+  "(partOfSpeechOfChoiceSetFn <pos>) denotes the collection of choice sets over words with part of speech <pos>.")
+
+(isa partnersInCNPWithFn Function-Denotational)
+(arity partnersInCNPWithFn 1)
+(arg1Isa partnersInCNPWithFn Thing)
+(comment partnersInCNPWithFn
+  "(partnersInCNPWithFn ?word) denotes the collection of choice sets over words that are partners in a CNP with ?word.")
+
+(isa hasPPWithLeadingPrepositionFn Function-Denotational)
+(arity hasPPWithLeadingPrepositionFn 1)
+(arg1Isa hasPPWithLeadingPrepositionFn Thing)
+(comment hasPPWithLeadingPrepositionFn
+  "(hasPPWithLeadingPrepositionFn ?prep) denotes the collection of choice sets over words with a preposition ?prep attached.")
+
+
+(isa inPPWithLeadingPrepositionFn Function-Denotational)
+(arity inPPWithLeadingPrepositionFn 1)
+(arg1Isa inPPWithLeadingPrepositionFn Thing)
+(comment inPPWithLeadingPrepositionFn
+  "(inPPWithLeadingPrepositionFn ?prep) denotes the collection of choice sets over words in a PP with ?prep leading.")
+
+(isa :INF-COMP Predicate)
+(arity :INF-COMP 1)
+
+(isa facilitates-SitProp Predicate)
+(arity facilitates-SitProp 2)
+
+(isa INF-COMP Predicate)
+(arity INF-COMP 1)
+
+(isa loser Predicate)
+(arity loser 2)
+(comment loser "Role relation for the one who lost.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Storing the cases we'll use later.
+
+(isa storeChoiceSetCasePlan ComplexActionPredicate)
+(arity storeChoiceSetCasePlan 4)
+(arg1Isa storeChoiceSetCasePlan Thing) ;;; This is the id of the choice set we are storing.
+(arg2Isa storeChoiceSetCasePlan Microtheory) ;;; This is the case-library which will hold to where we store it.
+(arg3Isa storeChoiceSetCasePlan InformationBearingThing) ;;; This is the source text
+(arg4Isa storeChoiceSetCasePlan Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(comment storeChoiceSetCasePlan "(storeChoiceSetCasePlan ?csid ?case-library ?source-text ?stubs-mt) stores
+some information about the choice set ?csid.")
+
+(isa storeChoiceSetCaseInGenContextPlan ComplexActionPredicate)
+(arity storeChoiceSetCaseInGenContextPlan 5)
+(arg1Isa storeChoiceSetCaseInGenContextPlan Thing) ;;; This is the id of the choice set we are storing.
+(arg2Isa storeChoiceSetCaseInGenContextPlan GeneralizationPoolDisambiguationFamily) ;;; This is the generalization context family where the generalization context we will use is or will be.
+(arg3Isa storeChoiceSetCaseInGenContextPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa storeChoiceSetCaseInGenContextPlan Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(arg5Isa storeChoiceSetCaseInGenContextPlan AccessingAnIBT)
+(comment storeChoiceSetCaseInGenContextPlan "(storeChoiceSetCaseInGenContextPlan ?csid ?gen-context-family ?source-text ?stubs-mt ?reading) stores
+some information about the choice set ?csid.")
+
+(isa GeneralizationPoolDisambiguationFamily Collection)
+(genls GeneralizationPoolDisambiguationFamily Set)
+(comment GeneralizationPoolDisambiguationFamily "A GeneralizationPoolDisambiguationFamily is a group of generalization contexts
+for disambiguation, each representing some phrase (typically a single word). They are tied together because they are all built using
+the same corpus. So, for example, there may be several GeneralizationPools for (TheList brick) built from different corpora.")
+
+(isa csFactsToStoreForAnalogicalRecall Predicate)
+(arity csFactsToStoreForAnalogicalRecall 3)
+(arg1Isa csFactsToStoreForAnalogicalRecall Thing) ;;; The CS ID
+(arg2Isa csFactsToStoreForAnalogicalRecall Microtheory) ;;; The stubs Mt to use
+(arg3Isa csFactsToStoreForAnalogicalRecall List) ;;; The list of facts to store
+(comment csFactsToStoreForAnalogicalRecall "(csFactsToStoreForAnalogicalRecall ?csid ?stubs-mt ?fact-list) 
+is intended to be used as an outsourced predicate with the third argument open. It creates a list of facts
+to store as a case, containing the relevant things for doing analogical retrieval disambiguation.")
+
+(isa generatedCSCaseName Predicate)
+(arity generatedCSCaseName 3)
+(arg1Isa generatedCSCaseName Thing) ;;; The CS ID
+(arg2Isa generatedCSCaseName Microtheory) ;;; The stubs Mt to use
+(arg3Isa generatedCSCaseName List) ;;; The list of facts to store
+(comment generatedCSCaseName "(generatedCSCaseName ?csid ?source-text ?new-name) 
+is intended to be used as an outsourced predicate with the third argument open. It generates a new case name.")
+
+(isa caseFromSourceText Predicate)
+(arity caseFromSourceText 2)
+(arg1Isa caseFromSourceText Case) 
+(arg2Isa caseFromSourceText InformationBearingThing) 
+(comment caseFromSourceText "(caseFromSourceText ?case ?source-text) 
+indicates that information in ?case came from ?source-text.")
+
+;;;(isa dumpReadCaseToFlatFile ComplexActionPredicate)
+;;;(arity dumpReadCaseToFlatFile 2)
+;;;(arg1Isa dumpReadCaseToFlatFile CaseLibrary) ;;; The name of the case library
+;;;(arg2Isa 
+;;;(comment dumpReadCaseToFlatFile
+;;;  "(dumpReadCaseToFlatFile ?case-libe ?st) dumps the reading to a flat file. It puts it in a default location.")
+
+(isa writeCaseToFilePlan ComplexActionPredicate)
+(arity writeCaseToFilePlan 2)
+(arg1Isa writeCaseToFilePlan Case) ;;; The name of the case library
+(arg2Isa writeCaseToFilePlan AccessingAnIBT)
+(comment writeCaseToFilePlan
+  "(writeCaseToFilePlan ?case ?reading) dumps a case to a flat file. It puts it in a default location.")
+
+(isa writeCaseToFileInLocationPlan ComplexActionPredicate)
+(arity writeCaseToFileInLocationPlan 4)
+(arg1Isa writeCaseToFileInLocationPlan Case) ;;; The name of the case library
+(arg2Isa writeCaseToFileInLocationPlan AccessingAnIBT)
+(arg3Isa writeCaseToFileInLocationPlan Thing)
+(arg4Isa writeCaseToFileInLocationPlan Thing)
+(comment writeCaseToFileInLocationPlan
+  "(writeCaseToFileInLocationPlan ?case ?reading ?case-location ?case-reading-location) dumps a case to a flat file. It puts it in a ?case-location and the knowledge of
+what reading it's part of in ?case-reading-location.")
+
+;;; This now needs the reading name.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; Get the facts to store
+      (outsourcedOnly (csFactsToStoreForAnalogicalRecall ?csid ?stubs-mt ?facts-to-store))
+      ;;; Generate a name for the case where they'll be stored.
+      (outsourcedOnly (generatedCSCaseName ?csid ?source-text ?new-case-mt)))
+ (methodForAction
+  (storeChoiceSetCasePlan ?csid ?case-library ?source-text ?stubs-mt)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?facts-to-store ?new-case-mt)
+    (doRecord (ist-Information AnalogicalRetrivalLibrariesMt (caseLibraryContains ?case-library ?new-case-mt)))
+    (doRecord (ist-Information AnalogicalRetrivalLibrariesMt (caseFromSourceText ?new-case-mt ?source-text)))
+    ))))
+
+(isa locationToStoreCase Predicate)
+(arity locationToStoreCase 3)
+(arg1Isa locationToStoreCase Case) ;;; The name of the reading.
+(arg2Isa locationToStoreCase AccessingAnIBT) ;;; The file location to put it.
+(arg3Isa locationToStoreCase Thing)
+(comment locationToStoreCase
+  "(locationToStoreCase ?case ?reading ?location) is an outsourced predicate that figures out a reasonable place to stash a case on disk.")
+
+(isa locationToStoreCaseInReadingInformation Predicate)
+(arity locationToStoreCaseInReadingInformation 3)
+(arg1Isa locationToStoreCaseInReadingInformation Case) ;;; The name of the reading.
+(arg2Isa locationToStoreCaseInReadingInformation AccessingAnIBT) ;;; The file location to put it.
+(arg3Isa locationToStoreCaseInReadingInformation Thing)
+(comment locationToStoreCaseInReadingInformation
+  "(locationToStoreCaseInReadingInformation ?case ?reading ?location) is an outsourced predicate that figures out a reasonable place to stash information about
+which cases were part of reading on disk.")
+
+;;;(writeCaseToFile ?case ?reading ?case-location ?case-in-reading-location)
+(isa writeCaseToFile Predicate)
+(arity writeCaseToFile 4)
+(arg1Isa writeCaseToFile Case) ;;; The name of the reading.
+(arg2Isa writeCaseToFile AccessingAnIBT) ;;; The file location to put it.
+(arg3Isa writeCaseToFile Thing)
+(arg3Isa writeCaseToFile Thing)
+(comment writeCaseToFile
+  "(writeCaseToFile ?case ?reading ?case-location ?case-in-reading-location) is an outsourced predicate - a tell handler one - that writes
+a case to a file in the location specified.")
+
+(isa anonymizedSelectedChoiceForARCase Predicate)
+(arg1Isa anonymizedSelectedChoiceForARCase Case)
+(arg2Isa anonymizedSelectedChoiceForARCase Thing)
+(arity anonymizedSelectedChoiceForARCase 2)
+(comment anonymizedSelectedChoiceForARCase "This is the anonymized version of the choice made for the case in the first argument.")
+
+(isa anonymizedChoiceCatalogMt Microtheory)
+(comment anonymizedChoiceCatalogMt "Microtheory that stores information about anonymized choices made for AR disambiguation.")
+
+
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; Get the facts to store
+      (outsourcedOnly (csFactsToStoreForAnalogicalRecall ?csid ?stubs-mt ?facts-to-store))
+      (outsourcedOnly (wordsInSpanOfChoiceSet ?csid ?span-words))
+      ;;; Generate a name for the case where they'll be stored.
+      (outsourcedOnly (generatedCSCaseName ?csid ?source-text ?new-case-mt))
+      ;;; Get the choice, anonymized, or the version of it that already exists if it already exists. (Good catch.)
+      (outsourcedOnly (anonymizedSelectedChoiceForChoiceSet ?csid ?gen-context-family ?anonymized-choice))
+      (outsourcedOnly (different nil ?anonymized-choice))
+      ;;; Get the span
+      (wmOnly (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                (choiceSet
+                 (ChoiceSetFn FrameSemantics
+                              (TokenFn ?sen-id ?actual-span))
+                 ?csid)))
+      ;;; Get the position of the sentence
+      (wmOnly (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                (sentenceInDiscourse ?sen-id ?sentence-position
+                                     ?sen-words)))
+      )
+ (methodForAction
+  (storeChoiceSetCaseInGenContextPlan ?csid ?gen-context-family ?source-text ?stubs-mt ?reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?facts-to-store ?new-case-mt) ;;; This is right.
+    (doRecord (ist-Information AnalogicalRetrivalLibrariesMt (caseFromSourceText ?new-case-mt ?source-text))) ;;; This one is fine too
+    (doAgentPlan
+        (actionSequence
+         (TheList
+          ;;; This needs to change to incorporate the choice, after it's anonymized
+          ;;; We also need to record somewhere that this bad boy is a context.
+          (doRecordMembersInContext (mtForDisambiguationGeneralizationPoolFn ?gen-context-family) 
+                                    (TheList 
+                                     (isa (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words ?anonymized-choice) DisambiguationGeneralizationPool)
+                                     
+                                     ))
+;;;          (doRecordMembersInContext BaseKB 
+;;;                                    (TheList 
+;;;                                     (gpoolSelectStrategy (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words ?anonymized-choice) :macfac)
+;;;                                     (gpoolAssimilationThreshold (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words ?anonymized-choice) 10.6)
+;;;                                     ))
+          ;;; Put the anonymized choice for the case somewhere special.
+          (doRecordMembersInContext anonymizedChoiceCatalogMt (TheList (anonymizedSelectedChoiceForARCase ?new-case-mt ?anonymized-choice)))
+          (doRecordMembersInContext caseSpanPositionInformationCatalogMt (TheList (spanPositionForARCase ?new-case-mt ?actual-span ?sentence-position ?source-text)))
+          (doTell (sageSelectAndGeneralize ?new-case-mt (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words ?anonymized-choice)))
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             ;;; Save this stuff to disk. This may need more information. In fact, it certainly does, like the name of the experiment, unless that can be figured out.
+             (writeCaseToFilePlan ?new-case-mt ?reading)
+             ))))))))))
+
+;;; This is the version that should happen if there's no selected choice.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; Get the facts to store
+      (outsourcedOnly (csFactsToStoreForAnalogicalRecall ?csid ?stubs-mt ?facts-to-store))
+      (outsourcedOnly (wordsInSpanOfChoiceSet ?csid ?span-words))
+      ;;; Generate a name for the case where they'll be stored.
+      (outsourcedOnly (generatedCSCaseName ?csid ?source-text ?new-case-mt))
+      ;;; Get the choice, anonymized, or the version of it that already exists if it already exists. (Good catch.)
+      (outsourcedOnly (anonymizedSelectedChoiceForChoiceSet ?csid ?gen-context-family ?anonymized-choice))
+      (outsourcedOnly (equals nil ?anonymized-choice))
+      ;;; Get the span
+      (wmOnly (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                (choiceSet
+                 (ChoiceSetFn FrameSemantics
+                              (TokenFn ?sen-id ?actual-span))
+                 ?csid)))
+      ;;; Get the position of the sentence
+      (wmOnly (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                (sentenceInDiscourse ?sen-id ?sentence-position
+                                     ?sen-words)))
+      )
+ (methodForAction
+  (storeChoiceSetCaseInGenContextPlan ?csid ?gen-context-family ?source-text ?stubs-mt ?reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?facts-to-store ?new-case-mt) ;;; This is right.
+    (doRecord (ist-Information AnalogicalRetrivalLibrariesMt (caseFromSourceText ?new-case-mt ?source-text))) ;;; This one is fine too
+    (doAgentPlan
+        (actionSequence
+         (TheList
+          ;;; This needs to change to incorporate the choice, after it's anonymized
+          ;;; We also need to record somewhere that this bad boy is a context.
+          (doRecordMembersInContext (mtForDisambiguationGeneralizationPoolFn ?gen-context-family) 
+                                    (TheList 
+                                     (isa (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words NoChoiceSelected) DisambiguationGeneralizationPool)
+                                     (gpoolSelectStrategy (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words NoChoiceSelected) :macfac)
+;;;                                     (sageMatchThreshold (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words NoChoiceSelected) 10.85)
+                                     ))
+          ;;; Put the anonymized choice for the case somewhere special.
+          (doRecordMembersInContext anonymizedChoiceCatalogMt (TheList (anonymizedSelectedChoiceForARCase ?new-case-mt NoChoiceSelected)))
+          (doRecordMembersInContext caseSpanPositionInformationCatalogMt (TheList (spanPositionForARCase ?new-case-mt ?actual-span ?sentence-position ?source-text)))
+          (doTell (sageSelectAndGeneralize ?new-case-mt (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words NoChoiceSelected)))
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             ;;; Save this stuff to disk. This may need more information. In fact, it certainly does, like the name of the experiment, unless that can be figured out.
+             (writeCaseToFilePlan ?new-case-mt ?reading)
+             ))))))))))
+
+
+;;; (spanPositionForARCase ?new-case-mt ?actual-span ?sentence-position ?source-text)
+(isa spanPositionForARCase Predicate)
+(arity spanPositionForARCase 4)
+(arg1Isa spanPositionForARCase Case)
+(arg2Isa spanPositionForARCase Thing)
+(arg3Isa spanPositionForARCase Thing)
+(arg4Isa spanPositionForARCase InformationBearingThing)
+(comment spanPositionForARCase "(spanPositionForARCase ?new-case-mt ?actual-span ?sentence-position ?source-text)")
+
+(preconditionForMethod
+ (and 
+      ;;; Get the default location to store it in
+      (locationToStoreCase ?case ?reading ?case-location)
+      (locationToStoreCaseInReadingInformation ?case ?reading ?case-in-reading-location))
+ (methodForAction
+  (writeCaseToFilePlan ?case ?reading)
+  (actionSequence
+   (TheList
+    ;;; Write this, using the tell handler we wrote.
+    (writeCaseToFileInLocationPlan ?case ?reading ?case-location ?case-in-reading-location)))))
+
+;; (writeCaseToFileInLocationPlan ?case ?reading ?case-location ?case-reading-location)
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (writeCaseToFileInLocationPlan ?case ?reading ?case-location ?case-in-reading-location)
+  (actionSequence
+   (TheList
+    ;;; Write this, using the tell handler we wrote.
+    (doRecordMembersInContext CaseReadingsMt (TheList (casePartOfReading ?case ?reading)))
+    (doTell (writeCaseToFile ?case ?reading ?case-location ?case-in-reading-location))))))
+
+(isa anonymizedSelectedChoiceForChoiceSet Predicate)
+(arity anonymizedSelectedChoiceForChoiceSet 3)
+(arg1Isa anonymizedSelectedChoiceForChoiceSet Thing) ;;; The CS ID
+(arg2Isa anonymizedSelectedChoiceForChoiceSet GeneralizationPoolDisambiguationFamily) ;;; The stubs Mt to use
+(arg3Isa anonymizedSelectedChoiceForChoiceSet Thing) ;;; The list of facts to store
+(comment anonymizedSelectedChoiceForChoiceSet "(anonymizedSelectedChoiceForChoiceSet ?csid ?gen-context-family ?choice-set-anonymized) 
+is intended to be used as an outsourced predicate with the third argument open. It generates an anonymized version of whatever's selected in ?csid, using the one that already exists
+in ?gen-context-family if one does.")
+
+(isa disambiguationGenContextForPhraseFn FunctionOrFunctionalPredicate)
+(arity disambiguationGenContextForPhraseFn 3)
+;;; We're not allowed to know this because we check for it.
+(resultIsa disambiguationGenContextForPhraseFn GeneralizationPool)
+(arg1Isa disambiguationGenContextForPhraseFn GeneralizationPoolDisambiguationFamily)
+(arg2Isa disambiguationGenContextForPhraseFn List)
+(arg3Isa disambiguationGenContextForPhraseFn Thing)
+(comment disambiguationGenContextForPhraseFn "(disambiguationGenContextForPhraseFn ?gen-context-family ?span-words ?anonymized-choice) is a generalization context for disambiguation.")
+
+
+;;;DisambiguationGeneralizationPool
+(isa DisambiguationGeneralizationPool Collection)
+(genls DisambiguationGeneralizationPool GeneralizationPool)
+(comment DisambiguationGeneralizationPool "A DisambiguationGeneralizationPool is a generalization context for disambiguation.")
+
+
+;;;; '(doForEach (?var1 ?var2) (TheSet (a 1) (b 2)) (doAnnounce "~s = ~s" (?var1 ?var2))))
+
+(isa storeChoiceSetCasePlansInGenContextForSentence ComplexActionPredicate)
+(arity storeChoiceSetCasePlansInGenContextForSentence 5)
+(arg1Isa storeChoiceSetCasePlansInGenContextForSentence Thing) ;;; This is the sentence of the choice sets we are storing.
+(arg2Isa storeChoiceSetCasePlansInGenContextForSentence GeneralizationPoolDisambiguationFamily) 
+(arg3Isa storeChoiceSetCasePlansInGenContextForSentence InformationBearingThing) ;;; This is the source text
+(arg4Isa storeChoiceSetCasePlansInGenContextForSentence Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(arg5Isa storeChoiceSetCasePlansInGenContextForSentence AccessingAnIBT) ;;; Reading name
+(comment storeChoiceSetCasePlansInGenContextForSentence "(storeChoiceSetCasePlansInGenContextForSentence ?sen-id ?gen-context-family ?source-text ?stubs-mt ?reading) stores
+some information about the lexical choice sets for ?sen-id.")
+
+(preconditionForMethod
+ ;;; What we need to do is either call storeChoiceSetCasePlan on each thing in there - which is annoying and will require
+ ;;; a seperate outsourced predicate - or just make this paralell to that one. Doing the former.
+ (and 
+      (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (currentSourceTextSCI ?k)
+      (evaluate ?csids-in-the-sentence
+        (TheClosedRetrievalSetOf 
+            ?choice-set-id
+          (and
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSetFromSentence ?choice-set-id ?sen-id))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSet
+                  (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))))))
+ (methodForAction
+  (storeChoiceSetCasePlansInGenContextForSentence ?sen-id ?gen-context-family ?source-text ?stubs-mt ?reading)
+  (actionSequence
+   (TheList
+    (doForEach ?csid ?csids-in-the-sentence ;;; We need to make that set, which is really just all the CSIDs in the sentence, which shouldn't be bad to get.
+           (storeChoiceSetCaseInGenContextPlan ?csid ?gen-context-family ?source-text ?stubs-mt ?reading))))))
+
+;;; Make this take the reading name, prop that down.
+(isa storeChoiceSetCasePlansInGenContextForCurrentDiscourse ComplexActionPredicate)
+(arity storeChoiceSetCasePlansInGenContextForCurrentDiscourse 4)
+(arg1Isa storeChoiceSetCasePlansInGenContextForCurrentDiscourse GeneralizationPoolDisambiguationFamily) ;;; This is the over-mt which will genl to where we store it.
+(arg2Isa storeChoiceSetCasePlansInGenContextForCurrentDiscourse InformationBearingThing) ;;; This is the source text
+(arg3Isa storeChoiceSetCasePlansInGenContextForCurrentDiscourse Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(arg4Isa storeChoiceSetCasePlansInGenContextForCurrentDiscourse AccessingAnIBT) ;;; Reading name
+(comment storeChoiceSetCasePlansInGenContextForCurrentDiscourse "(storeChoiceSetCasePlansInGenContextForCurrentDiscourse ?gen-context-family ?source-text ?stubs-mt ?reading) stores
+some information about the lexical choice sets for the current discourse.")
+
+(preconditionForMethod
+ (and 
+      (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?sids-in-the-sentence
+        (TheClosedRetrievalSetOf 
+            ?sen-id
+          (ist-Information (DiscourseCaseFn ?current-discourse-id)
+            (sentenceInDiscourse ?sen-id ?sen-pos ?sen-tokens)))))
+ (methodForAction
+  (storeChoiceSetCasePlansInGenContextForCurrentDiscourse ?gen-context-family ?source-text ?stubs-mt ?reading)
+  (actionSequence
+   (TheList
+    (doForEach ?sid ?sids-in-the-sentence ;;; We need to make that set, which is really just all the CSIDs in the sentence, which shouldn't be bad to get.
+               
+               (storeChoiceSetCasePlansInGenContextForSentence ?sid ?gen-context-family ?source-text ?stubs-mt ?reading))))))
+
+(isa storeChoiceSetCasePlansForSentence ComplexActionPredicate)
+(arity storeChoiceSetCasePlansForSentence 4)
+(arg1Isa storeChoiceSetCasePlansForSentence Thing) ;;; This is the sentence of the choice sets we are storing.
+(arg2Isa storeChoiceSetCasePlansForSentence Microtheory) ;;; This is the over-mt which will genl to where we store it.
+(arg3Isa storeChoiceSetCasePlansForSentence InformationBearingThing) ;;; This is the source text
+(arg4Isa storeChoiceSetCasePlansForSentence Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(comment storeChoiceSetCasePlansForSentence "(storeChoiceSetCasePlansForSentence ?sen-id ?case-library ?source-text ?stubs-mt) stores
+some information about the lexical choice sets for ?sen-id.")
+
+(isa plansForStoringCSInfoForSentence Predicate)
+(arity plansForStoringCSInfoForSentence 5)
+(arg1Isa plansForStoringCSInfoForSentence Thing) ;;; The sentence-id
+(arg2Isa plansForStoringCSInfoForSentence Microtheory) ;;; This is the over-mt which will genl to where we store it.
+(arg3Isa plansForStoringCSInfoForSentence InformationBearingThing) ;;; This is the source text
+(arg4Isa plansForStoringCSInfoForSentence Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(arg5Isa plansForStoringCSInfoForSentence List) ;;; The list of plans
+(comment plansForStoringCSInfoForSentence "(plansForStoringCSInfoForSentence ?sen-id ?case-library ?source-text ?stubs-mt ?plan-list) 
+is intended to be used as an outsourced predicate with the last argument open. It generates a list
+of plans for storing the choice set information for the sentence ?sen-id.")
+
+(isa wordsInSpanOfChoiceSet Predicate)
+(arity wordsInSpanOfChoiceSet 2)
+(arg1Isa wordsInSpanOfChoiceSet Thing) ;;; The sentence-id
+(arg2Isa wordsInSpanOfChoiceSet List) ;;; This is the over-mt which will genl to where we store it.
+(comment wordsInSpanOfChoiceSet "(wordsInSpanOfChoiceSet ?csid ?span-words) 
+is intended to be used as an outsourced predicate with the last argument open. ?span-words is the words covered by the span of ?csid.")
+
+(preconditionForMethod
+ ;;; What we need to do is either call storeChoiceSetCasePlan on each thing in there - which is annoying and will require
+ ;;; a seperate outsourced predicate - or just make this paralell to that one. Doing the former.
+ (and 
+      (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; Get all of the sentences in this, and then make an outsourced predicate (ugh) that
+      ;;; returns the list of plans to call.
+      (outsourcedOnly (plansForStoringCSInfoForSentence ?sen-id ?case-library ?source-text ?stubs-mt ?plans)))
+ (methodForAction
+  (storeChoiceSetCasePlansForSentence ?sen-id ?case-library ?source-text ?stubs-mt)
+  (actionSequence
+   ?plans)))
+
+(isa plansForStoringCSInfoForCurrentDiscourse Predicate)
+(arity plansForStoringCSInfoForCurrentDiscourse 4)
+(arg1Isa plansForStoringCSInfoForCurrentDiscourse Microtheory) ;;; This is the over-mt which will genl to where we store it.
+(arg2Isa plansForStoringCSInfoForCurrentDiscourse InformationBearingThing) ;;; This is the source text
+(arg3Isa plansForStoringCSInfoForCurrentDiscourse Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(arg4Isa plansForStoringCSInfoForCurrentDiscourse List) ;;; The list of plans
+(comment plansForStoringCSInfoForCurrentDiscourse "(plansForStoringCSInfoForCurrentDiscourse ?case-library ?source-text ?stubs-mt ?plan-list) 
+is intended to be used as an outsourced predicate with the last argument open. It generates a list
+of plans for storing the choice set information for the current discourse.")
+
+(isa storeChoiceSetCasePlansForCurrentDiscourse ComplexActionPredicate)
+(arity storeChoiceSetCasePlansForCurrentDiscourse 3)
+(arg1Isa storeChoiceSetCasePlansForCurrentDiscourse Microtheory) ;;; This is the over-mt which will genl to where we store it.
+(arg2Isa storeChoiceSetCasePlansForCurrentDiscourse InformationBearingThing) ;;; This is the source text
+(arg3Isa storeChoiceSetCasePlansForCurrentDiscourse Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(comment storeChoiceSetCasePlansForCurrentDiscourse "(storeChoiceSetCasePlansForCurrentDiscourse ?case-library ?source-text ?stubs-mt) stores
+some information about the lexical choice sets for the current discourse.")
+
+(preconditionForMethod
+ ;;; What we need to do is either call storeChoiceSetCasePlan on each thing in there - which is annoying and will require
+ ;;; a seperate outsourced predicate - or just make this paralell to that one. Doing the former.
+ (and 
+      (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; Get all of the sentences in this, and then make an outsourced predicate (ugh) that
+      ;;; returns the list of plans to call.
+      (outsourcedOnly (plansForStoringCSInfoForCurrentDiscourse ?case-library ?source-text ?stubs-mt ?plans)))
+ (methodForAction
+  (storeChoiceSetCasePlansForCurrentDiscourse ?case-library ?source-text ?stubs-mt)
+  (actionSequence
+   ?plans)))
+
+(arity variableInUniverseOrSelectedChoice 1)
+(isa variableInUniverseOrSelectedChoice Predicate)
+
+;;; Show that it's a variable in the universe, or just the result of a selected chioce.
+(<== (variableInUniverseOrSelectedChoice ?term)
+     (lookupOnly (drsForDiscourse ?drs-id))
+     (variableInUniverse ?term ?drs-id Discourse))
+
+(<== (variableInUniverseOrSelectedChoice ?term)
+     (lookupOnly (drsForDiscourse ?drs-id))
+     (wmOnly (lookupOnly  (discourseCaseForDrs ?discourseCase ?drs-id)))
+     (ist-Information ?discourseCase
+       (selectedChoice ?csid ?cid ?term))
+     (ist-Information ?discourseCase
+       (choiceSet
+        (ChoiceSetFn FrameSemantics
+                     ?span-token) ?csid)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; selectedMentionsInCurrentReadingSuggestionsPlan
+(isa selectedMentionsInCurrentReadingSuggestionsPlan ComplexActionPredicate)
+(arity selectedMentionsInCurrentReadingSuggestionsPlan 4)
+(arg1Isa selectedMentionsInCurrentReadingSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa selectedMentionsInCurrentReadingSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa selectedMentionsInCurrentReadingSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(arg4Isa selectedMentionsInCurrentReadingSuggestionsPlan Sentence)
+(comment selectedMentionsInCurrentReadingSuggestionsPlan "(selectedMentionsInCurrentReadingSuggestionsPlan ?storage-mt ?source-text ?current-reading ?sentence-id) makes disambiguation suggestions
+for ?source-text based on which selections resemble selections made earlier in the reading.")
+
+(typeOfHeuristic selectedMentionsInCurrentReadingSuggestions SentenceLevelDisambiguationHeuristic)
+(isa selectedMentionsInCurrentReadingSuggestions SentenceLevelDisambiguationHeuristic)
+(isa selectedMentionsInCurrentReadingSuggestions Predicate)
+(arity selectedMentionsInCurrentReadingSuggestions 0)
+(comment selectedMentionsInCurrentReadingSuggestions "(selectedMentionsInCurrentReadingSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text  based on which selections resemble selections made earlier in the reading.")
+
+
+(isa favorFromSelectedMentionsInCurrentReading Predicate)
+(arity favorFromSelectedMentionsInCurrentReading 4)
+(arg1Isa favorFromSelectedMentionsInCurrentReading Thing)
+(arg2Isa favorFromSelectedMentionsInCurrentReading Thing)
+(arg2Isa favorFromSelectedMentionsInCurrentReading AccessingAnIBT)
+(arg4Isa favorFromSelectedMentionsInCurrentReading ChoiceFavor)
+(comment favorFromSelectedMentionsInCurrentReading "(favorFromSelectedMentionsInCurrentReading ?choice ?choice-set-id ?current-reading ?favor-rating) relates a choice to a ChoiceFavor, based on 
+which selections resemble selections made earlier in the reading.")
+
+;;; This needs to get more sophisticated, and recognize common isas.
+;;; It also needs to actually care about the sentence...
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (selectedMentionsInCurrentReadingSuggestions) ?choice ?choice-id ?favor-rating ?sentence-id)
+          ;;; We need to get favor-rating, choice pairs.
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+                 (favorFromSelectedMentionsInCurrentReading ?choice ?choice-set-id ?current-reading ?favor-rating)
+                 (different ?favor-rating 0.0)
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (selectedMentionsInCurrentReadingSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading ?sentence-id)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)))))
+
+
+(isa previousVotesMtFn FunctionOrFunctionalPredicate)
+(arity previousVotesMtFn 1)
+(resultIsa previousVotesMtFn Microtheory)
+
+(isa previousCisForChoiceSet Predicate)
+(arity previousCisForChoiceSet 2)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; preferPossessionSuggestionsPlan
+(isa preferPossessionSuggestionsPlan ComplexActionPredicate)
+(arity preferPossessionSuggestionsPlan 3)
+(arg1Isa preferPossessionSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa preferPossessionSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa preferPossessionSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment preferPossessionSuggestionsPlan "(preferPossessionSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets have possession facts in them.")
+
+(typeOfHeuristic preferPossessionSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa preferPossessionSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa preferPossessionSuggestions Predicate)
+(arity preferPossessionSuggestions 0)
+(comment preferPossessionSuggestions "(preferPossessionSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text choice sets have possession facts in them.")
+
+(isa favorFromPossession Predicate)
+(arity favorFromPossession 2)
+(arg1Isa favorFromPossession Thing)
+(arg2Isa favorFromPossession ChoiceFavor)
+(comment favorFromPossession "(favorFromPossession ?choice ?favor-rating) relates a choice to a ChoiceFavor, based
+on whether there is possession in the choice.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+;;; To write: (favorFromNumberOfFacts ?choice ?favor-rating)
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (preferPossessionSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromPossession ?choice ?favor-rating)  ;;; Is there an intelligent way to limit where this looks?
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (preferPossessionSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; preferMWSSuggestionsPlan
+(isa preferMWSSuggestionsPlan ComplexActionPredicate)
+(arity preferMWSSuggestionsPlan 3)
+(arg1Isa preferMWSSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa preferMWSSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa preferMWSSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment preferMWSSuggestionsPlan "(preferMWSSuggestionsPlan ?storage-mt ?source-text ?current-reading)
+ makes disambiguation suggestions
+for ?source-text based on which choice sets cover the greatest span in the sentence.")
+
+(typeOfHeuristic preferMWSSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa preferMWSSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa preferMWSSuggestions Predicate)
+(arity preferMWSSuggestions 0)
+(comment preferMWSSuggestions "(preferMWSSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets cover the greatest span in the sentence.")
+
+(isa favorFromMWS Predicate)
+(arity favorFromMWS 2)
+(arg1Isa favorFromMWS Thing)
+(arg2Isa favorFromMWS ChoiceFavor)
+(comment favorFromMWS "(favorFromMWS ?choice ?favor-rating) relates a choice to a ChoiceFavor, based
+on whether choice covers an extended span or just one word.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+;;; To write: (favorFromMWS ?choice ?favor-rating)
+
+;;; This is repeating a lot of work.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (preferMWSSuggestions) ?choice ?choice-id (ChoiceFavorFn ?favor-rating) ?sentence)
+            (and                 
+                 ;;; Get all of the choices
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 ;;; Get all of the choice sets - this is done once for every choice, which is bad
+                 ;;; Never mind, it's fine. ?choice-set-id is bound by the time we're here. Right?
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics 
+                                 (TokenFn ?sentence-id (SpanFn ?start-span ?end-span)))
+                    
+                    ?choice-set-id))
+                 ;;; For each choice set, get the sentence it appears in.
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (evaluate ?raw-difference (DifferenceFn ?end-span ?start-span))
+                 (evaluate ?normed-difference (DifferenceFn ?raw-difference 1))
+                 (evaluate ?favor-rating (TimesFn ?normed-difference 3))
+                 (different ?favor-rating 0.0)
+                 (different ?favor-rating 0)))))
+ (methodForAction
+  (preferMWSSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dispreferDenotationSuggestionsPlan
+(isa dispreferDenotationSuggestionsPlan ComplexActionPredicate)
+(arity dispreferDenotationSuggestionsPlan 3)
+(arg1Isa dispreferDenotationSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa dispreferDenotationSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa dispreferDenotationSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment dispreferDenotationSuggestionsPlan "(dispreferDenotationSuggestionsPlan ?storage-mt
+ ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets are just denotation facts.")
+
+(typeOfHeuristic dispreferDenotationSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferDenotationSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferDenotationSuggestions Predicate)
+(arity dispreferDenotationSuggestions 0)
+(comment dispreferDenotationSuggestions "(dispreferDenotationSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choice sets are just denotation facts.")
+
+(isa favorFromDenotation Predicate)
+(arity favorFromDenotation 2)
+(arg1Isa favorFromDenotation Thing)
+(arg2Isa favorFromDenotation ChoiceFavor)
+(comment favorFromDenotation "(favorFromDenotation ?choice ?favor-rating) relates a choice to a ChoiceFavor, based
+on whether there is denotation in the choice.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+;;; To write: (favorFromNumberOfFacts ?choice ?favor-rating)
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (dispreferDenotationSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromDenotation ?choice ?favor-rating) 
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (dispreferDenotationSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dispreferIntroducedVarSuggestionsPlan
+(isa dispreferIntroducedVarSuggestionsPlan ComplexActionPredicate)
+(arity dispreferIntroducedVarSuggestionsPlan 3)
+(arg1Isa dispreferIntroducedVarSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa dispreferIntroducedVarSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa dispreferIntroducedVarSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment dispreferIntroducedVarSuggestionsPlan "(dispreferIntroducedVarSuggestionsPlan ?storage-mt
+ ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choices contain introduced variables.")
+
+(typeOfHeuristic dispreferIntroducedVarSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferIntroducedVarSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferIntroducedVarSuggestions Predicate)
+(arity dispreferIntroducedVarSuggestions 0)
+(comment dispreferIntroducedVarSuggestions "(dispreferIntroducedVarSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices contain introduced variables.")
+
+(isa favorFromIntroducedVars Predicate)
+(arity favorFromIntroducedVars 2)
+(arg1Isa favorFromIntroducedVars Thing)
+(arg2Isa favorFromIntroducedVars ChoiceFavor)
+(comment favorFromIntroducedVars "(favorFromIntroducedVars ?choice ?favor-rating) relates a choice to a ChoiceFavor, based
+on whether there are introduced variables in the choice.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+;;; To write: (favorFromNumberOfFacts ?choice ?favor-rating)
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (dispreferIntroducedVarSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromIntroducedVars ?choice ?favor-rating) 
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (dispreferIntroducedVarSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; cycCanonSuggestionsPlan
+(isa cycCanonSuggestionsPlan ComplexActionPredicate)
+(arity cycCanonSuggestionsPlan 3)
+(arg1Isa cycCanonSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa cycCanonSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa cycCanonSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment cycCanonSuggestionsPlan "(cycCanonSuggestionsPlan ?storage-mt
+ ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choices cyc thinks are canon.")
+
+(typeOfHeuristic cycCanonSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa cycCanonSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa cycCanonSuggestions Predicate)
+(arity cycCanonSuggestions 0)
+(comment cycCanonSuggestions "(cycCanonSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices cyc thinks are canon.")
+
+(isa favorFromCycCanon Predicate)
+(arity favorFromCycCanon 3)
+(arg1Isa favorFromCycCanon Thing)
+(arg2Isa favorFromCycCanon ChoiceSet)
+(arg2Isa favorFromCycCanon ChoiceFavor)
+(comment favorFromCycCanon "(favorFromCycCanon ?choice ?csid ?favor-rating) 
+relates a choice to a ChoiceFavor, based
+on whether there are introduced variables in the choice.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+;;; To write: (favorFromNumberOfFacts ?choice ?favor-rating)
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (cycCanonSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromCycCanon ?choice ?choice-set-id ?favor-rating) 
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (cycCanonSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dispreferGapSuggestionsPlan
+(isa dispreferGapSuggestionsPlan ComplexActionPredicate)
+(arity dispreferGapSuggestionsPlan 3)
+(arg1Isa dispreferGapSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa dispreferGapSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa dispreferGapSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment dispreferGapSuggestionsPlan "(dispreferGapSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets have gaps in them.")
+
+(typeOfHeuristic dispreferGapSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferGapSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferGapSuggestions Predicate)
+(arity dispreferGapSuggestions 0)
+(comment dispreferGapSuggestions "(dispreferGapSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices have gaps in them.")
+
+(isa favorFromGaps Predicate)
+(arity favorFromGaps 2)
+(arg1Isa favorFromGaps Thing)
+(arg2Isa favorFromGaps ChoiceFavor)
+(comment favorFromGaps "(favorFromGaps ?choice ?favor-rating) relates a choice to a ChoiceFavor, based
+on whether there is a gap in the choice.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (dispreferGapSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromGaps ?choice ?favor-rating)  ;;; Is there an intelligent way to limit where this looks?
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (dispreferGapSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dispreferNonPredPredSuggestionsPlan
+(isa dispreferNonPredPredSuggestionsPlan ComplexActionPredicate)
+(arity dispreferNonPredPredSuggestionsPlan 3)
+(arg1Isa dispreferNonPredPredSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa dispreferNonPredPredSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa dispreferNonPredPredSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment dispreferNonPredPredSuggestionsPlan "(dispreferNonPredPredSuggestionsPlan ?storage-mt ?source-text ?current-reading)
+ makes disambiguation suggestions
+for ?source-text based on which choice sets have non-predicates in a predicate position.")
+
+(typeOfHeuristic dispreferNonPredPredSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferNonPredPredSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa dispreferNonPredPredSuggestions Predicate)
+(arity dispreferNonPredPredSuggestions 0)
+(comment dispreferNonPredPredSuggestions "(dispreferNonPredPredSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices have non-predicates in a predicate position.")
+
+(isa favorFromNonPredPreds Predicate)
+(arity favorFromNonPredPreds 2)
+(arg1Isa favorFromNonPredPreds Thing)
+(arg2Isa favorFromNonPredPreds ChoiceFavor)
+(comment favorFromNonPredPreds "(favorFromNonPredPreds ?choice ?favor-rating) 
+relates a choice to a ChoiceFavor, based
+on whether there is a non-predicate in a predicate position.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (dispreferNonPredPredSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromNonPredPreds ?choice ?favor-rating)  ;;; Is there an intelligent way to limit where this looks?
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (dispreferNonPredPredSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; preferVerbPrepsPlan
+(isa preferVerbPrepsPlan ComplexActionPredicate)
+(arity preferVerbPrepsPlan 3)
+(arg1Isa preferVerbPrepsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa preferVerbPrepsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa preferVerbPrepsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment preferVerbPrepsPlan "(preferVerbPrepsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choice sets have prepositions attached to verbs in them.")
+
+(typeOfHeuristic preferVerbPreps DiscourseLevelDisambiguationHeuristic)
+(isa preferVerbPreps DiscourseLevelDisambiguationHeuristic)
+(isa preferVerbPreps Predicate)
+(arity preferVerbPreps 0)
+(comment preferVerbPreps "(preferVerbPreps) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices have prepositions attached to verbs in them.")
+
+(isa favorFromVerbPreps Predicate)
+(arity favorFromVerbPreps 2)
+(arg1Isa favorFromVerbPreps Thing)
+(arg2Isa favorFromVerbPreps ChoiceFavor)
+(comment favorFromVerbPreps "(favorFromVerbPreps ?choice ?favor-rating) relates a choice to a ChoiceFavor, based
+on whether there is possession in the choice.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (preferVerbPreps) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromVerbPreps ?choice ?favor-rating)  
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (preferVerbPrepsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; preferEarlierDictionarySenseSuggestionsPlan
+(isa preferEarlierDictionarySenseSuggestionsPlan ComplexActionPredicate)
+(arity preferEarlierDictionarySenseSuggestionsPlan 3)
+(arg1Isa preferEarlierDictionarySenseSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa preferEarlierDictionarySenseSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa preferEarlierDictionarySenseSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment preferEarlierDictionarySenseSuggestionsPlan "(preferEarlierDictionarySenseSuggestionsPlan
+?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on which choices were generated by
+semtranses associated with earlier senses.")
+
+(typeOfHeuristic preferEarlierDictionarySenseSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa preferEarlierDictionarySenseSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa preferEarlierDictionarySenseSuggestions Predicate)
+(arity preferEarlierDictionarySenseSuggestions 0)
+(comment preferEarlierDictionarySenseSuggestions "(preferEarlierDictionarySenseSuggestions) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text choices based on primacy of the sense.")
+
+(isa favorFromDictionarySense Predicate)
+(arity favorFromDictionarySense 2)
+(arg1Isa favorFromDictionarySense Thing)
+(arg2Isa favorFromDictionarySense ChoiceFavor)
+(comment favorFromDictionarySense "(favorFromDictionarySense ?choice ?favor-rating) relates a choice to a ChoiceFavor, based
+on how low its dictionary sense is.")
+
+;;; What this needs to do: it needs to make pairs that are a choice combined with the favor for that choice.
+;;; We'll do a complex TheClosedRetrievalSetOf that makes evidence statements.
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (preferEarlierDictionarySenseSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromDictionarySense ?choice ?favor-rating)  ;;; Is there an intelligent way to limit where this looks?
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (preferEarlierDictionarySenseSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; favorMentionsInSentenceSuggestionsPlan
+(isa favorMentionsInSentenceSuggestionsPlan ComplexActionPredicate)
+(isa favorMentionsInSentenceSuggestionsPlan DisambiguationHeuristicPlan)
+(arity favorMentionsInSentenceSuggestionsPlan 3)
+(arg1Isa favorMentionsInSentenceSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa favorMentionsInSentenceSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa favorMentionsInSentenceSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment favorMentionsInSentenceSuggestionsPlan
+  "(favorMentionsInSentenceSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation 
+suggestions for ?source-text based on which choice sets have discourse variables that are mentioned elsewhere
+in the same sentence.")
+
+(typeOfHeuristic favorMentionsInSentenceSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa favorMentionsInSentenceSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa favorMentionsInSentenceSuggestions Predicate)
+(arity favorMentionsInSentenceSuggestions 0)
+(comment favorMentionsInSentenceSuggestions "favorMentionsInSentenceSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions based on which choice sets have discourse variables that are mentioned elsewhere
+in the same sentence.")
+
+(isa favorFromNumberMentionsInSentence Predicate)
+(arity favorFromNumberMentionsInSentence 2)
+(arg1Isa favorFromNumberMentionsInSentence Thing)
+(arg2Isa favorFromNumberMentionsInSentence ChoiceFavor)
+(comment favorFromNumberMentionsInSentence "(favorFromNumberMentionsInSentence ?choice ?favor-rating) relates a choice to 
+a ChoiceFavor, based on the number of times variables in the choice are mentioned elsewhere in the same 
+sentence.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (favorMentionsInSentenceSuggestions) 
+                                         ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (favorFromNumberMentionsInSentence ?choice ?favor-rating) 
+                 ))))
+ (methodForAction
+  (favorMentionsInSentenceSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; favorPredsInContextSuggestionsPlan
+
+(isa favorPredsInContextSuggestionsPlan ComplexActionPredicate)
+(arity favorPredsInContextSuggestionsPlan 4)
+(arg1Isa favorPredsInContextSuggestionsPlan Microtheory) ;;; This is the microtheory which is "favored" - choices that mention things mentioned in this microtheory get favor.
+(arg2Isa favorPredsInContextSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg3Isa favorPredsInContextSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa favorPredsInContextSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment favorPredsInContextSuggestionsPlan "(favorPredsInContextSuggestionsPlan ?favored-mt ?storage-mt ?source-text ?current-reading)
+ makes disambiguation suggestions for ?source-text based on which choices mention things that appear in the favored microtheory.")
+
+(typeOfHeuristic favorPredsInContextSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa favorPredsInContextSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa favorPredsInContextSuggestions Predicate)
+(arity favorPredsInContextSuggestions 1)
+(comment favorPredsInContextSuggestions "(favorPredsInContextSuggestions ?favored-mt) is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-text based on which choices involve predicates that appear in the favored microtheory.  Note that this is
+very similar to #$favoredContextSuggestions but the difference is that #$favoredContextSuggestions looks at the entities and collections
+mentioned in a choice and favorPredsInContextSuggestions looks at predicates.")
+
+
+(isa favorFromPredsInContext Predicate)
+(arity favorFromPredsInContext 4)
+(arg1Isa favorFromPredsInContext Thing)
+(arg2Isa favorFromPredsInContext Thing)
+(arg2Isa favorFromPredsInContext Microtheory)
+(arg3Isa favorFromPredsInContext ChoiceFavor)
+(comment favorFromPredsInContext "(favorFromPredsInContext ?choice ?choice-set-id ?favored-mt ?favor-rating) relates a choice to a ChoiceFavor, based on whether
+the choice involves predicate(s) mentioned in ?favored-mt.")
+
+;;; (favorPredsInContextSuggestionsPlan ?favored-mt ?storage-mt ?source-text ?current-reading)
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (favorPredsInContextSuggestions ?favored-mt) ?choice ?choice-id ?favor-rating ?sentence)
+             ;;; We need to get favor-rating, choice pairs.
+          (and                 
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choice ?choice-set-id ?choice-id ?choice))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSet (ChoiceSetFn FrameSemantics ?span-token) ?choice-set-id))
+               (favorFromPredsInContext ?choice ?choice-set-id ?favored-mt ?favor-rating)
+               (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+               (different ?favor-rating (ChoiceFavorFn 0.0))
+               (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (favorPredsInContextSuggestionsPlan ?favored-mt ?storage-mt ?source-text ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?storage-mt)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; commonsenseSuggestionsPlan
+(isa commonsenseSuggestionsPlan ComplexActionPredicate)
+(isa commonsenseSuggestionsPlan DisambiguationHeuristicPlan)
+(arity commonsenseSuggestionsPlan 3)
+(arg1Isa commonsenseSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa commonsenseSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa commonsenseSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment commonsenseSuggestionsPlan "(commonsenseSuggestionsPlan ?storage-mt ?source-text ?current-reading) makes disambiguation suggestions
+for ?source-text based on whether choice sets have facts that follow/disobey commonsense.")
+
+(typeOfHeuristic commonsenseSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa commonsenseSuggestions DiscourseLevelDisambiguationHeuristic)
+(isa commonsenseSuggestions Predicate)
+(arity commonsenseSuggestions 0)
+(comment commonsenseSuggestions "commonsenseSuggestions is a disambiguation heuristic that 
+makes disambiguation suggestions
+for ?source-textbased on whether choice sets have facts that follow/disobey commonsense.")
+
+(isa favorCommonsense Predicate)
+(arity favorCommonsense 2)
+(arg1Isa favorCommonsense Thing)
+(arg2Isa favorCommonsense ChoiceFavor)
+(comment favorCommonsense "(favorCommonsense ?choice ?favor-rating) relates a choice to a ChoiceFavor, based on whether the choice violates or obeys commonsense.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (commonsenseSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (numAnswers 1 (favorCommonsense ?choice ?favor-rating))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (commonsenseSuggestionsPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+;;;    (recordMembersInContext ?evidence-set-old ?source-text-mt)
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; nothingEvenVaguelySexualPlan
+
+(isa nothingEvenVaguelySexualPlan ComplexActionPredicate)
+(isa nothingEvenVaguelySexualPlan DisambiguationHeuristicPlan)
+(arity nothingEvenVaguelySexualPlan 3)
+(arg1Isa nothingEvenVaguelySexualPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg2Isa nothingEvenVaguelySexualPlan InformationBearingThing) ;;; This is the source text
+(arg3Isa nothingEvenVaguelySexualPlan AccessingAnIBT) ;;; The name of the current reading.
+(comment nothingEvenVaguelySexualPlan "(nothingEvenVaguelySexualPlan ?storage-mt ?source-text ?current-reading) strongly disprefers language terms with sexual meanings.")
+
+(typeOfHeuristic nothingEvenVaguelySexual DiscourseLevelDisambiguationHeuristic)
+(isa nothingEvenVaguelySexual DiscourseLevelDisambiguationHeuristic)
+(isa nothingEvenVaguelySexual Predicate)
+(arity nothingEvenVaguelySexual 0)
+(comment nothingEvenVaguelySexual "nothingEvenVaguelySexual is a disambiguation heuristic that makes suggestions
+based on whether a choice is related to sex..")
+
+(isa favorG-Rated Predicate)
+(arity favorG-Rated 2)
+(arg1Isa favorG-Rated Thing)
+(arg2Isa favorG-Rated ChoiceFavor)
+(comment favorG-Rated "(favorG-Rated ?choice ?favor-rating) relates a choice to a ChoiceFavor, based on whether the choice is g-rated or not")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      ;;; New way
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (commonsenseSuggestions) ?choice ?choice-id ?favor-rating ?sentence)
+            (and                 
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choice ?choice-set-id ?choice-id ?choice))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                   (choiceSet
+                    (ChoiceSetFn FrameSemantics ?span-token)
+                    ?choice-set-id))
+                 (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+                 (numAnswers 1 (favorG-Rated ?choice ?favor-rating))
+                 (different ?favor-rating (ChoiceFavorFn 0.0))
+                 (different ?favor-rating (ChoiceFavorFn 0))))))
+ (methodForAction
+  (nothingEvenVaguelySexualPlan ?source-text-mt ?source-text-name ?current-reading)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?source-text-mt)
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,147 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: knowledge-segmentation-ontology.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: July 19, 2014 00:00:33
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(genls LocalReadingCase Microtheory)
+(isa LocalReadingCase Collection)
+(comment LocalReadingCase "A LocalReadingCase is a microtheory containing related 
+facts that were read together. Facts can be in any number
+of LocalReadingCases, including zero.")
+
+(isa localReadingCaseFromReading Predicate)
+(arity localReadingCaseFromReading 2)
+(arg1Isa localReadingCaseFromReading LocalReadingCase)
+(arg2Isa localReadingCaseFromReading AccessingAnIBT)
+(comment localReadingCaseFromReading "(localReadingCaseFromReading ?case ?reading)
+ means that ?case is a subset of the things learned during
+the reading ?reading.")
+
+(isa seedEntityOfLocalReadingCase Predicate)
+(arity seedEntityOfLocalReadingCase 2)
+(arg1Isa seedEntityOfLocalReadingCase Entity)
+(arg2Isa seedEntityOfLocalReadingCase LocalReadingCase)
+(comment seedEntityOfLocalReadingCase "(seedEntityOfLocalReadingCase ?entity ?case)
+ means that ?case was generated around ?entity using ?entity as a seed.")
+
+(isa elementOfConstructedCase Predicate)
+(arity elementOfConstructedCase 3)
+(arg1Isa elementOfConstructedCase Thing)
+(arg2Isa elementOfConstructedCase Case)
+(arg3Isa elementOfConstructedCase CaseDepth)
+(comment elementOfConstructedCase "(elementOfConstructedCase ?term ?case ?depth) means that 
+?term is part of the case ?case. ?depth is how deep it is from the seed.")
+
+(isa collectionInConstructedCase Predicate)
+(arity collectionInConstructedCase 4)
+(arg1Isa collectionInConstructedCase Thing)
+(arg2Isa collectionInConstructedCase Case)
+(arg3Isa collectionInConstructedCase CaseDepth)
+(arg4Isa collectionInConstructedCase Microtheory)
+(comment collectionInConstructedCase "(collectionInConstructedCase ?term ?case ?depth ?drs) means that 
+?term is part of the case ?case. ?depth is how deep it is from the seed.")
+
+(isa factInConstructedCase Predicate)
+(arity factInConstructedCase 4)
+(arg1Isa factInConstructedCase CycLSentence)
+(arg2Isa factInConstructedCase Case)
+(arg3Isa factInConstructedCase CaseDepth)
+(arg4Isa factInConstructedCase Microtheory)
+(comment factInConstructedCase "(factInConstructedCase ?fact ?case ?depth ?drs) means that 
+?fact is part of the case ?case. ?depth is how deep it is from the seed, and ?drs is the DRS it’s true in. (If it’s true in several DRSes, there are that many instances of this fact.)")
+
+(isa sentenceInConstructedCase Predicate)
+(arity sentenceInConstructedCase 3)
+(arg1Isa sentenceInConstructedCase Thing)
+(arg2Isa sentenceInConstructedCase Case)
+(arg3Isa sentenceInConstructedCase CaseDepth)
+(comment sentenceInConstructedCase "(sentenceInConstructedCase ?sentence ?case ?depth) means that 
+?sentence is part of the case ?case. ?depth is how deep it is from the seed.")
+
+(isa drsInConstructedCase Predicate)
+(arity drsInConstructedCase 3)
+(arg1Isa drsInConstructedCase Thing)
+(arg2Isa drsInConstructedCase Case)
+(arg3Isa drsInConstructedCase CaseDepth)
+(comment drsInConstructedCase "(drsInConstructedCase ?drs ?case ?depth) means that 
+?drs is part of the case ?case. ?depth is how deep it is from the seed.")
+
+(isa maxDepthOfConstructedCase Predicate)
+(arity maxDepthOfConstructedCase 2)
+(arg1Isa maxDepthOfConstructedCase Case)
+(arg2Isa maxDepthOfConstructedCase CaseDepth) 
+(comment maxDepthOfConstructedCase "(maxDepthOfConstructedCase ?case ?caseDepth) is how many degrees of separation something can have from the 
+seed before it won't be included in ?case.")
+
+(isa caseDepthFn FunctionOrFunctionalPredicate)
+(arity caseDepthFn 1)
+(arg1Isa caseDepthFn Integer)
+(resultIsa caseDepthFn CaseDepth)
+(comment caseDepthFn "(caseDepthFn ?x) indicates a degree of separation of ?x from the seed of a case.")
+
+(isa CaseDepth Collection)
+(comment CaseDepth "The degree of separation from the seed of a case, normally denoted (caseDepthFn 4).")
+
+(isa caseDepthProgressFn FunctionOrFunctionalPredicate)
+(arity caseDepthProgressFn 2)
+(arg1Isa caseDepthProgressFn Integer)
+(resultIsa caseDepthProgressFn CaseDepthProgress)
+(comment caseDepthProgressFn "(caseDepthProgressFn ?x ?y) indicates a degree of separation of ?x from the seed of a case
+with max depth ?y.")
+
+(isa CaseDepthProgress Collection)
+(comment CaseDepthProgress "The degree of separation from the seed of a case with a 
+certain maximum depth, normally denoted (caseDepthFn 2 4).")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Segmentation control predicates 
+
+(isa notForSegmentationPred Predicate)
+(arity notForSegmentationPred 1)
+(arg1Isa notForSegmentationPred Predicate)
+(comment notForSegmentationPred "(notForSegmentationPred ?predicate) indicates that facts
+that have ?pred as the top-level predicate should not be used when doing knowledge segmentation at all.")
+
+(isa notForSegmentationCollection Predicate)
+(arity notForSegmentationCollection 1)
+(arg1Isa notForSegmentationCollection Predicate)
+(comment notForSegmentationCollection "(notForSegmentationCollection ?collection) indicates that facts
+of the form (isa ?entity ?collection) should not be considered when doing knowledge segmentation at all.")
+
+(isa notForSegmentationChainingPred Predicate)
+(arity notForSegmentationChainingPred 1)
+(arg1Isa notForSegmentationChainingPred Predicate)
+(comment notForSegmentationChainingPred "(notForSegmentationChainingPred ?predicate) indicates that facts
+that have ?pred as the top-level predicate can be included when doing knowledge segmentation, but should
+not be used to further chain.")
+
+(isa notForSegmentationChainingCollection Predicate)
+(arity notForSegmentationChainingCollection 1)
+(arg1Isa notForSegmentationChainingCollection Predicate)
+(comment notForSegmentationChainingCollection "(notForSegmentationChainingCollection ?collection) indicates that facts
+of the form (isa ?entity ?collection) can be included when doing knowledge segmentation, but should
+not be used to further chain.")
+
+(isa DefaultKnowledgeSegmentationConstraintsMt Microtheory)
+(comment DefaultKnowledgeSegmentationConstraintsMt "This is the default microtheory for storing knowledge
+about constraints on knowledge segmenation. notForSegmentationPred statements, for example, should be here
+by default.")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

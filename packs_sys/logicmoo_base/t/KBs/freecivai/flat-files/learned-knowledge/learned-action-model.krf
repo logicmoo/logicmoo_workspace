@@ -1,0 +1,40 @@
+;;;
+;;; learned-action-model.meld
+;;;
+
+(in-microtheory (ActionModelMtFn Freeciv-TheGame) :exclude-globals t)
+
+(<== (complexTaskAchieves ?arg1 (PreconditionOfFn (doBuildCity ?arg1 ?arg2)) (achieve (PreconditionOfFn (doBuildCity ?arg1 ?arg2)))))
+
+
+;;; AggregateQuantityFn became a UnaryFunction awhile back (August?), but somehow
+;;; this didn't get updated until now (December!)  Oops.
+(<== (actionPositivelyAffectsQuantity
+      ((AggregateQuantityFn cityPopulation)
+       (CollectionSubsetFn FreeCiv-City 
+         (TheSetOf ?city
+           (and (currentPlayer ?player)
+                (cityOwner ?city ?player)))))
+      (doBuildCity ?settler2164 ?loc2162))
+     (numAnswers 1 (unitType ?settler2164 FC-Unit-Settlers))
+     (numAnswers 1 (currentPlayer ?player2163))
+     (numAnswers 1 (unitOwner ?settler2164 ?player2163))
+     (numAnswers 1 (fcObjectAt ?settler2164 ?loc2162)) 
+     (numAnswers 1 (knowsValue ?player2163 ?loc2162 terrainAt))
+     (numAnswers 1 (terrainAt ?loc2162 ?terrain2161)) 
+     (different ?terrain2161 FC-Terrain-Ocean) 
+     (different ?terrain2161 FC-Terrain-Lake)
+     (different ?terrain2161 FC-Terrain-DeepOcean) 
+     (potentialCityAt ?loc2162))
+     
+(actionEntailsDecision-TypeType doChangeProduction (DecisionFn currentlyBuilding))
+
+(actionEntailsDecision-TypeType doResearch (DecisionFn currentlyResearching))
+
+
+;;; This appears to be necessary.  Is it learned?
+;(<== (actionPositivelyAffectsQuantity ((MeasurableQuantityFn cardinalityOf) FreeCiv-City) 
+;                                      (doBuildCity ?settler2198 ?city2194)))
+;                                      
+; Shouldn't be needed. We learn a statement of the form 
+; actionPositivelyAffectsQuantityType and have a rule to infer the above.

@@ -1,0 +1,62 @@
+(in-microtheory WorldProductsMt)
+
+(isa SpaceShuttleEndeavour SpaceShuttle)
+(isa GLONASS SatelliteNavigationSystem-Global)
+(isa GlobalPositioningSystem SatelliteNavigationSystem-Global)
+(isa SpaceShuttleColumbia SpaceShuttle)
+(isa Apollo11 ApolloSpacecraft)
+(isa Galileo-Probe SpaceProbe)
+(isa Galileo-Probe Satellite-Device)
+(isa LunarProspector SpaceProbe)
+(isa Stardust-Probe SpaceProbe)
+(isa Cassini-Probe SpaceProbe)
+(isa Nozomi-Probe SpaceProbe)
+(isa MarsPathfinder SpaceProbe)
+(isa MarsPolarLander SpaceProbe)
+(isa Surveyor2001 SpaceProbe)
+(isa Ulysses-Probe SpaceProbe)
+(isa SpaceShuttleBURAN SpaceShuttle)
+(isa InternationalSpaceStation Custom-Made)
+(isa InternationalSpaceStation SpaceStation)
+(isa Clementine-Satellite Satellite-Device)
+(isa MarsClimateOrbiter AstronomicalSatellite)
+(isa MarsGlobalSurveyor AstronomicalSatellite)
+(isa Mir Custom-Made)
+(isa Skylab Custom-Made)
+(isa Magellan-TheSpacecraft Spacecraft)
+(isa Apollo13 ApolloSpacecraft)
+(isa Skylab SpaceStation)
+(isa Mir SpaceStation)
+(isa Sputnik Satellite-Device)
+(isa SpaceShuttleAtlantis SpaceShuttle)
+(isa SpaceShuttleChallenger SpaceShuttle)
+(isa SpaceShuttleChallenger HumanScaleObject)
+(isa SpaceShuttleEnterprise SpaceShuttle)
+(comment SpaceShuttleEnterprise "The space shuttle Enterprise")
+(comment SpaceShuttleAtlantis "The space shuttle Atlantis")
+(comment SpaceShuttleChallenger "The space shuttle Challenger, which was destroyed in an explosion in the mid-1980s.")
+(comment Sputnik "The first artificial satellite (#$Satellite-Device) launched by humankind.  It was launched in 1959 by the #$UnionOfSovietSocialistRepublics.")
+(comment Mir "A #$SpaceStation launched by the #$UnionOfSovietSocialistRepublics.  It was launched 20 February 1986.")
+(comment Skylab "The first #$SpaceStation launched by the #$UnitedStatesOfAmerica.  It was launched 14 May 1973.")
+(comment Apollo13 "The Apollo 13 spacecraft.")
+(comment MarsGlobalSurveyor "The Mars Global Surveyor (MGS) was launched in
+
+1996 and arrived at Mars in November of 1997. Its mission is to comprehensively
+
+map the entire Martian. It carries a laser altimeter which can measure the
+
+topography of Mars.")
+(comment MarsClimateOrbiter "A satellite sent by NASA to orbit Mars in order to
+
+gather meteorological data. It was lost due to an oversight involving conversion into
+
+metric units.")
+(comment Surveyor2001 "A probe scheduled to arrive in Martian orbit in 2001 and
+
+send a lander to the surface in 2003.")
+(comment InternationalSpaceStation "The International Space Station is a cooperative effort involving a number of countries including the U.S., Russia, and various European countries.")
+(comment Apollo11 "The Apollo 11 spacecraft.")
+(comment SpaceShuttleColumbia "The space shuttle Columbia, which was destroyed in an explosion in 2003.")
+(comment GLONASS "#$GLONASS (GPS) is a satellite navigation system           funded by and controlled by Russia.")
+(comment GlobalPositioningSystem "#$GlobalPositioningSystem (GPS) is a satellite navigation system funded by and controlled by the #$USDepartmentOfDefense. See also #$GPSReceiver and #$GPSSatellite.")
+(comment SpaceShuttleEndeavour "The space shuttle Endeavour")

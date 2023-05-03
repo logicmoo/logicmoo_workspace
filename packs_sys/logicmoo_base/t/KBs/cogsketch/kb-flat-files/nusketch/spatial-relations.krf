@@ -1,0 +1,831 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: spatial-relations.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: June 30, 2002 23:14:56
+;;;;   Purpose: Spatial reasoning predicates that use nuSketch capabilities
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; These spatial predicates are defined through the spatial-query-source in
+;;; spatial-queries.lsp in the nuSketch core.  The source uses nuSketch internals
+;;; to calculate answers to queries using these predicates, justifying the results
+;;; in the LTRE so that they can interoperate with any other FIRE-based reasoning.
+
+(isa compassPositionalRelationFor Predicate)
+(arity compassPositionalRelationFor 3)
+(comment compassPositionalRelationFor "compassPositionalRelationFor is specialized for battlespace,
+assuming a top-down geospatial view.")
+(arg1Isa compassPositionalRelationFor SpatialThing-Localized)
+(arg2Isa compassPositionalRelationFor SpatialThing-Localized)
+(arg3Isa compassPositionalRelationFor SpatialPredicate)
+
+(isa compassCentroidRelationFor Predicate)
+(arity compassCentroidRelationFor 3)
+(comment compassCentroidRelationFor "compass direction between centroids of glyphs for entities.")
+(arg1Isa compassCentroidRelationFor SpatialThing-Localized)
+(arg2Isa compassCentroidRelationFor SpatialThing-Localized)
+(arg3Isa compassCentroidRelationFor SpatialPredicate)
+
+(isa positionalRelationFor Predicate)
+(arity positionalRelationFor 3)
+(comment positionalRelationFor 
+  "positionalRelationFor is for glyphs; object relations computed by LTRE.")
+(arg1Isa positionalRelationFor SpatialThing-Localized)
+(arg2Isa positionalRelationFor SpatialThing-Localized)
+(arg3Isa positionalRelationFor SpatialPredicate)
+
+;; entityLocatedAt and entityLocatedInside may be reasonable for analogies,
+;; I'm leaving them in for now to see what happens. -- KDF 6/30/02
+(isa entityLocatedAt Predicate)
+(arity entityLocatedAt 2)
+(comment entityLocatedAt "Object is located at location, meaning inside or overlapping or touching.")
+(arg1Isa entityLocatedAt SpatialThing-Localized)
+(arg2Isa entityLocatedAt SpatialThing-Localized)
+
+(isa entityLocatedInside Predicate)
+(arity entityLocatedInside 2)
+(comment entityLocatedInside "Object is located inside location")
+(arg1Isa entityLocatedInside SpatialThing-Localized)
+(arg2Isa entityLocatedInside SpatialThing-Localized)
+
+;; (entityCentroidOnPath ?probe ?path)
+(isa entityCentroidOnPath Predicate)
+(arity entityCentroidOnPath 2)
+(comment entityCentroidOnPath "(entityCentroidOnPath ?probe ?path) is true exactly when ?probe is close enough to some point on ?path, as determined by ?path's width.")
+(arg1Isa entityCentroidOnPath SpatialThing-Localized)
+(arg2Isa entityCentroidOnPath Path-Spatial)
+
+;;; Path-relative position relations
+(isa PathRelativePositionRelation Collection)
+(genls PathRelativePositionRelation SpatialPredicate)
+
+(isa aheadAlongPath Predicate)
+(isa aheadAlongPath PathRelativePositionRelation)
+(comment aheadAlongPath "(aheadAlongPath ?probe ?ref ?path) means that ?probe is ahead of ?ref along ?path.  Neither ?probe nor ?ref need to be on ?path.")
+(arity aheadAlongPath 3)
+(arg1Isa aheadAlongPath SpatialThing-Localized)
+(arg2Isa aheadAlongPath SpatialThing-Localized)
+(arg3Isa aheadAlongPath Path-Spatial)
+
+(isa behindAlongPath Predicate)
+(isa behindAlongPath PathRelativePositionRelation)
+(comment behindAlongPath "(behindAlongPath ?probe ?ref ?path) means that ?probe is behind ?ref along ?path.  Neither ?probe nor ?ref need to be on ?path.")
+(arity behindAlongPath 3)
+(arg1Isa behindAlongPath SpatialThing-Localized)
+(arg2Isa behindAlongPath SpatialThing-Localized)
+(arg3Isa behindAlongPath Path-Spatial)
+
+(isa sameAlongPath Predicate)
+(isa sameAlongPath PathRelativePositionRelation)
+(comment sameAlongPath "(sameAlongPath ?probe ?ref ?path) means that ?probe is equally far along as ?ref along ?path.  Neither ?probe nor ?ref need to be on ?path.")
+(arity sameAlongPath 3)
+(arg1Isa sameAlongPath SpatialThing-Localized)
+(arg2Isa sameAlongPath SpatialThing-Localized)
+(arg3Isa sameAlongPath Path-Spatial)
+
+;; (relativePositionAlong ?path ?probe ?ref ?relation)
+;; with ?path, ?probe, ?ref all known, ?relation will be
+;; computed based on the position of ?probe with respect to
+;; ?ref along the frame of reference provided by ?path
+(isa relativePositionAlong Predicate)
+(arity relativePositionAlong 4)
+(comment relativePositionAlong "(relativePositionAlong ?path ?probe ?ref ?relation) states that ?relation holds for ?probe relative to ?ref along ?path")
+(arg1Isa relativePositionAlong Path-Spatial)
+(arg2Isa relativePositionAlong SpatialThing-Localized)
+(arg3Isa relativePositionAlong SpatialThing-Localized)
+(arg4Isa relativePositionAlong PathRelativePositionRelation)
+
+(isa occludes PositionalVisualRelation)
+(arity occludes 3)
+(comment occludes "(occludes ?obj-mid ?obj1 ?obj2) states that ?obj-mid occludes ?obj1 from ?obj2")
+(arg1Isa occludes SpatialThing-Localized)
+(arg2Isa occludes SpatialThing-Localized)
+(arg3Isa occludes SpatialThing-Localized)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Facing Direction
+;;;
+;;; Note that facing-direction is a higher-level concept than a glyph's 
+;;; orientation.  The orientation of a glyph simply expresses how the graphic 
+;;; is rotated on the display.   The facing-direction expresses which way the 
+;;; object represented by the glyph is facing.
+
+(isa facingDirMakesSenseFor Predicate)
+(arity facingDirMakesSenseFor 1)
+(arg1Isa facingDirMakesSenseFor Collection)
+(comment facingDirMakesSenseFor 
+         "Declares that it makes sense to talk about facingDirection for
+          members of the specified collection.")
+
+
+(isa facingDirection Predicate)
+(arity facingDirection 2)
+(arg1Isa facingDirection Thing)
+(arg2Isa facingDirection AngularDistance)
+(comment facingDirection 
+         "Expresses the direction an object is facing in the current
+          context's frame-of-reference.")
+
+
+(isa facingDirLastModifiedTime Predicate)
+(arity facingDirLastModifiedTime 2)
+
+
+(isa facingRelationSpecifier Collection)
+(genls facingRelationSpecifier SpatialPredicate)
+
+
+(isa onLeftFlank-Facing Predicate)
+(isa onLeftFlank-Facing facingRelationSpecifier)
+(arity onLeftFlank-Facing 2)
+(arg1Isa onLeftFlank-Facing Thing)
+(arg2Isa onLeftFlank-Facing Thing)
+(comment onLeftFlank-Facing 
+         "(onLeftFlank-Facing Obj1 Obj2) says that Obj1 is on Obj2's left 
+          flank when considering the direction that Obj2 is facing.")
+
+
+(isa onRightFlank-Facing Predicate)
+(isa onRightFlank-Facing facingRelationSpecifier)
+(arity onRightFlank-Facing 2)
+(arg1Isa onRightFlank-Facing Thing)
+(arg2Isa onRightFlank-Facing Thing)
+(comment onRightFlank-Facing 
+         "(onRightFlank-Facing Obj1 Obj2) says that Obj1 is on Obj2's right 
+          flank when considering the direction that Obj2 is facing.")
+
+
+(isa onRear-Facing Predicate)
+(isa onRear-Facing facingRelationSpecifier)
+(arity onRear-Facing 2)
+(arg1Isa onRear-Facing Thing)
+(arg2Isa onRear-Facing Thing)
+(comment onRear-Facing 
+         "(onRear-Facing Obj1 Obj2) says that Obj1 is on Obj2's rear 
+          when considering the direction that Obj2 is facing.")
+
+
+(isa onFront-Facing Predicate)
+(isa onFront-Facing facingRelationSpecifier)
+(arity onFront-Facing 2)
+(arg1Isa onFront-Facing Thing)
+(arg2Isa onFront-Facing Thing)
+(comment onFront-Facing 
+         "(onFront-Facing Obj1 Obj2) says that Obj1 is on Obj2's front 
+          when considering the direction that Obj2 is facing.")
+
+
+(isa facingRelation Predicate)
+(arity facingRelation 3)
+(arg1Isa facingRelation Thing)
+(arg2Isa facingRelation Thing)
+(arg3Isa facingRelation facingRelationSpecifier)
+(comment facingRelation
+         "(facingRelation Obj1 Obj2 <relation>) says that the specified
+          facingRelationSpecifier holds between Obj1 and Obj2.?")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; RCC-8 Spatial Relations
+;;; 
+;;; RCC-8 refers to the 8 primitive relations that make up Randell, Cui, and 
+;;; Cohn's Region Connection Calculus:
+;;; - DC            DisConnected
+;;; - EC            Externally Connected
+;;; - PO            Partial Overlap
+;;; - EQ            EQual
+;;; - TPP           Tangential Proper Part
+;;; - TPPi          inverse of :TPP
+;;; - NTPP          Non-Tangential Proper Part
+;;; - NTPPi         inverse of :NTPP
+;;; See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A spatial logic based 
+;;; on regions and connection.  In B. Nebel, W. Swartout, & C. Rich, editors, 
+;;; Principles of Knowledge Representation and Reasoning: Proceedings of the 
+;;; 6th International Conference, Trento, Italy, June 1998.'
+
+(comment VisualRelation
+ "Instances of this type of relation are used to describe
+  visual relations between spatial objects.")
+(genls VisualRelation Relationship)
+(isa VisualRelation Collection)
+
+
+(comment BinaryVisualRelation
+ "Instances of this type  are binary relations used to describe
+  visual relations between spatial objects.")
+(genls BinaryVisualRelation BinaryPredicate)
+(genls BinaryVisualRelation VisualRelation)
+(isa BinaryVisualRelation Collection)
+
+
+(comment RCC8-relation
+ "Instances of this type of predicate are used to describe
+                  RCC-8 relations between spatial objects.")
+(genls RCC8-relation BinaryVisualRelation)
+(isa RCC8-relation Collection)
+
+
+(comment rcc8-DC "Says that two spatial things are disconnected from one
+                  another per the RCC-8 spatial relations.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-DC 2)
+(isa rcc8-DC Predicate)
+(isa rcc8-DC RCC8-relation)
+(arg1Isa rcc8-DC SpatialThing)
+(arg2Isa rcc8-DC SpatialThing)
+
+
+(comment rcc8-EC "Says that two spatial things are externally connected to
+                  one another per the RCC-8 spatial relations.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-EC 2)
+(isa rcc8-EC Predicate)
+(isa rcc8-EC RCC8-relation)
+(arg1Isa rcc8-EC SpatialThing)
+(arg2Isa rcc8-EC SpatialThing)
+
+
+(comment rcc8-PO
+ "Says that two spatial things partially overlap one another 
+                  per the RCC-8 spatial relations.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-PO 2)
+(isa rcc8-PO Predicate)
+(isa rcc8-PO RCC8-relation)
+(arg1Isa rcc8-PO SpatialThing)
+(arg2Isa rcc8-PO SpatialThing)
+
+
+(comment rcc8-EQ
+ "Says that two spatial things overlap so completely as to be 
+                  considered equal to one another.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-EQ 2)
+(isa rcc8-EQ Predicate)
+(isa rcc8-EQ RCC8-relation)
+(arg1Isa rcc8-EQ SpatialThing)
+(arg2Isa rcc8-EQ SpatialThing)
+
+
+(comment rcc8-TPP
+ "Says that ?object-A is a tangential proper part of ?object-B
+                  per the RCC-8 spatial relations.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-TPP 2)
+(isa rcc8-TPP Predicate)
+(isa rcc8-TPP RCC8-relation)
+(arg1Isa rcc8-TPP SpatialThing)
+(arg2Isa rcc8-TPP SpatialThing)
+
+
+(comment rcc8-TPPi
+ "Says that ?object-B is a tangential proper part of ?object-A
+                  per the RCC-8 spatial relations.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-TPPi 2)
+(isa rcc8-TPPi Predicate)
+(isa rcc8-TPPi RCC8-relation)
+(arg1Isa rcc8-TPPi SpatialThing)
+(arg2Isa rcc8-TPPi SpatialThing)
+
+
+(comment rcc8-NTPP "Says that ?object-A is a non-tangential proper part of 
+                  ?object-B per the RCC-8 spatial relations.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-NTPP 2)
+(isa rcc8-NTPP Predicate)
+(isa rcc8-NTPP RCC8-relation)
+(arg1Isa rcc8-NTPP SpatialThing)
+(arg2Isa rcc8-NTPP SpatialThing)
+
+
+(comment rcc8-NTPPi
+ "Says that ?object-B is a non-tangential proper part of 
+                  ?object-A per the RCC-8 spatial relations.  
+                  See 'David A. Randell, Zhan Cui, & Anthony G. Cohn.  A 
+                  spatial logic based on regions and connection.  In B. Nebel, 
+                  W. Swartout, & C. Rich, editors, Principles of Knowledge 
+                  Representation and Reasoning: Proceedings of the 6th 
+                  International Conference, Trento, Italy, June 1998.'")
+(arity rcc8-NTPPi 2)
+(isa rcc8-NTPPi Predicate)
+(isa rcc8-NTPPi RCC8-relation)
+(arg1Isa rcc8-NTPPi SpatialThing)
+(arg2Isa rcc8-NTPPi SpatialThing)
+
+(comment hasRCC8Relation
+ "(hasRCC8Relation <#$SpatialThing> <#$SpatialThing> <#$RCC8-relation>)
+  says that the given #$RCC8-relation applies to the specified objects.")
+(arity hasRCC8Relation 3)
+(isa hasRCC8Relation Predicate)
+(isa hasRCC8Relation VisualRelation)
+(arg1Isa hasRCC8Relation SpatialThing)
+(arg2Isa hasRCC8Relation SpatialThing)
+(arg3Isa hasRCC8Relation RCC8-relation)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Visual Relations
+
+(comment hasVisualRelation
+ "Says that the specified visual relationship holds between
+                  ?obj1 and ?obj2.")
+(arity hasVisualRelation 3)
+(isa hasVisualRelation Predicate)
+(arg1Isa hasVisualRelation SpatialThing)
+(arg2Isa hasVisualRelation SpatialThing)
+(arg3Isa hasVisualRelation BinaryVisualRelation)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; qualitative degree predicates
+
+(isa DimensionOfQualitativeDegree Collection)
+(genls DimensionOfQualitativeDegree QuantityType)
+
+(isa QualitativeDegreePredicate Collection)
+(genls QualitativeDegreePredicate Predicate)
+(comment QualitativeDegreePredicate "An instance of QualitativeDegreePredicate
+         may be used to qualitatively specify some discrete subrange of a
+         quantitative dimension.")
+
+(isa VeryLowQualitativeDegreePredicate Collection)
+(genls VeryLowQualitativeDegreePredicate QualitativeDegreePredicate)
+(comment VeryLowQualitativeDegreePredicate "An instance of VeryLowQualitativeDegreePredicate
+         may be used to qualitatively specify the lowest of four qualitative regions.")
+
+(isa LowQualitativeDegreePredicate Collection)
+(genls LowQualitativeDegreePredicate QualitativeDegreePredicate)
+(comment LowQualitativeDegreePredicate "An instance of LowQualitativeDegreePredicate
+         may be used to qualitatively specify the second lowest of four qualitative regions.")
+
+(isa MediumQualitativeDegreePredicate Collection)
+(genls MediumQualitativeDegreePredicate QualitativeDegreePredicate)
+(comment MediumQualitativeDegreePredicate "An instance of MediumQualitativeDegreePredicate
+         may be used to qualitatively specify the second highest of four qualitative regions.")
+
+(isa HighQualitativeDegreePredicate Collection)
+(genls HighQualitativeDegreePredicate QualitativeDegreePredicate)
+(comment HighQualitativeDegreePredicate "An instance of HighQualitativeDegreePredicate
+         may be used to qualitatively specify the highest of four qualitative regions.")
+
+(isa denotesSubRange Predicate)
+(arg1Isa denotesSubRange QualitativeDegreePredicate)
+(arg2Isa denotesSubRange VariableArityFunction)
+(comment denotesSubRange "denotesSubRange relates some
+        QualitativeDegreePredicate (a specifier of a qualitative degree
+        (subrange) along some quantitative dimension) to a function
+        whose range lies along that dimension.")
+
+(isa measurableAlongDimension Predicate)
+(arity measurableAlongDimension 2)
+(arg1Isa measurableAlongDimension DimensionOfQualitativeDegree)
+(arg2Isa measurableAlongDimension Collection)
+(comment denotesSubRange "Says that instances of the collection may be measured
+                          along the dimension of qualitative degree")
+
+(isa describesQualitativeDegreeAlongDimension-Default Predicate)
+(arity describesQualitativeDegreeAlongDimension-Default 2)
+(arg1Isa describesQualitativeDegreeAlongDimension-Default DimensionOfQualitativeDegree)
+(arg2Isa describesQualitativeDegreeAlongDimension-Default Predicate)
+
+(isa describesQualitativeDegreeAlongDimension Predicate)
+(arity describesQualitativeDegreeAlongDimension 2)
+(arg1Isa describesQualitativeDegreeAlongDimension DimensionOfQualitativeDegree)
+(arg2Isa describesQualitativeDegreeAlongDimension Predicate)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Relative Size
+;;; 
+;;; Relative size relations assign qualitative size values (tiny, small, medium,
+;;; large, huge) for a glyph with respect to a group of glyphs.  That group may
+;;; be a connected, contained or user specified glyph group or an implicit group
+;;; like a layer, bundle or sketch.
+;;;
+
+(comment RelativeSizeRelation
+ "Instances of this type of predicate are used to describe
+            relative size relations between an object and a group of objects.")
+(genls RelativeSizeRelation BinaryVisualRelation)
+(genls RelativeSizeRelation QualitativeDegreePredicate)
+(isa RelativeSizeRelation Collection)
+(isa RelativeSize DimensionOfQualitativeDegree)
+(measurableAlongDimension RelativeSize SpatialThing)
+(describesQualitativeDegreeAlongDimension-Default RelativeSize relativeSize-Medium)
+
+(relationAllInstance denotesSubRange RelativeSizeRelation SizeFn)
+;;;;; writing a temporary rule as a proxy for
+;;;;; reasoning with this rule macro predicate
+;;;;; hopefully fire will support it someday
+(<== (denotesSubRange ?instance SizeFn)
+     (isa ?instance RelativeSizeRelation))
+
+;;this could also be achieved via reltionAllInstance
+(<== (describesQualitativeDegreeAlongDimension RelativeSize ?pred)
+     (isa ?pred RelativeSizeRelation))
+
+(comment relativeSize-Tiny
+ "States that object is tiny with respect to the items in group.")
+(arity relativeSize-Tiny 2)
+(isa relativeSize-Tiny Predicate)
+(isa relativeSize-Tiny RelativeSizeRelation)
+(arg1Isa relativeSize-Tiny SpatialThing)
+(arg2Isa relativeSize-Tiny Thing)
+
+
+(comment relativeSize-Small
+ "States that object is small with respect to the items in group.")
+(arity relativeSize-Small 2)
+(isa relativeSize-Small Predicate)
+(isa relativeSize-Small RelativeSizeRelation)
+(arg1Isa relativeSize-Small SpatialThing)
+(arg2Isa relativeSize-Small Thing)
+
+
+(comment relativeSize-Medium
+ "States that object is medium with respect to the items in group.")
+(arity relativeSize-Medium 2)
+(isa relativeSize-Medium Predicate)
+(isa relativeSize-Medium RelativeSizeRelation)
+(arg1Isa relativeSize-Medium SpatialThing)
+(arg2Isa relativeSize-Medium Thing)
+
+
+(comment relativeSize-Large
+ "States that object is large with respect to the items in group.")
+(arity relativeSize-Large 2)
+(isa relativeSize-Large Predicate)
+(isa relativeSize-Large RelativeSizeRelation)
+(arg1Isa relativeSize-Large SpatialThing)
+(arg2Isa relativeSize-Large Thing)
+
+
+(comment relativeSize-Huge
+ "States that object is huge with respect to the items in group.")
+(arity relativeSize-Huge 2)
+(isa relativeSize-Huge Predicate)
+(isa relativeSize-Huge RelativeSizeRelation)
+(arg1Isa relativeSize-Huge SpatialThing)
+(arg2Isa relativeSize-Huge Thing)
+
+
+(comment SizedNuSketchGlyphType
+ "The type of collections of all instances of NuSketchGlyph that
+                  have a qualitative size.")
+(genls SizedNuSketchGlyphType CollectionType)
+(isa SizedNuSketchGlyphType Collection)
+
+
+(comment TinySizeGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  are of size tiny.")
+(genls TinySizeGlyph NuSketchGlyph)
+(isa TinySizeGlyph Collection)
+(isa TinySizeGlyph SizedNuSketchGlyphType)
+
+
+(comment SmallSizeGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  are of size small.")
+(genls SmallSizeGlyph NuSketchGlyph)
+(isa SmallSizeGlyph Collection)
+(isa SmallSizeGlyph SizedNuSketchGlyphType)
+
+
+(comment MediumSizeGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  are of size medium.")
+(genls MediumSizeGlyph NuSketchGlyph)
+(isa MediumSizeGlyph Collection)
+(isa MediumSizeGlyph SizedNuSketchGlyphType)
+
+
+(comment LargeSizeGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  are of size large.")
+(genls LargeSizeGlyph NuSketchGlyph)
+(isa LargeSizeGlyph Collection)
+(isa LargeSizeGlyph SizedNuSketchGlyphType)
+
+
+(comment HugeSizeGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  are of size huge.")
+(genls HugeSizeGlyph NuSketchGlyph)
+(isa HugeSizeGlyph Collection)
+(isa HugeSizeGlyph SizedNuSketchGlyphType)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Relative Length
+
+(isa sameLength BinaryRelation)
+(arity sameLength 2)
+(arg1Isa sameLength NuSketchGlyph)
+(arg2Isa sameLength NuSketchGlyph)
+(comment sameLength 
+  "Says that two glyphs have roughly the same length along their major axes.
+   See also #$shorterThan #$longerThan.")
+
+(isa shorterThan BinaryRelation)
+(arity shorterThan 2)
+(arg1Isa shorterThan NuSketchGlyph)
+(arg2Isa shorterThan NuSketchGlyph)
+(comment shorterThan 
+  "Says that the first argument has a shorter major axis than the second argument.
+   See also #$sameLength #$longerThan.")
+
+(isa longerThan BinaryRelation)
+(arity longerThan 2)
+(arg1Isa longerThan NuSketchGlyph)
+(arg2Isa longerThan NuSketchGlyph)
+(comment longerThan 
+  "Says that the first argument has a longer major axis than the second argument.
+   See also #$sameLength #$shorterThan.")
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Ink Stuff
+
+(comment inkLastModifiedTime
+ "A proposition using this predicate states that the specified
+                  ink object was last modified at the specified time.  Such
+                  propositions are useful as justifications for other 
+                  propositions.  For example, one might want to assert that
+                  ink-25 and ink-32 overlap one another given that ink-25 was 
+                  last modified at time-21 and ink-32 was last modified at
+                  time-15.  Then if either of these ink objects is later
+                  modified, the assertion that they overlap would be
+                  retracted (and possibly re-evaluated).")
+(arity inkLastModifiedTime 2)
+(isa inkLastModifiedTime Predicate)
+
+
+(comment NuSketchSketchTimeFn
+ "Can be used to represent a timestamp for nuSketch sketches.
+                  Sketch-time is an integer that represents 1000 times the
+                  time value used within nuSketch.  This means that each
+                  unit of this time value represents one millisecond.")
+(isa NuSketchSketchTimeFn Function-Denotational)
+(arity NuSketchSketchTimeFn 1)
+(resultIsa NuSketchSketchTimeFn TimePoint)
+
+
+(comment q-2D-orientation
+ "A qualitative measure of ?obj's orientation in a 
+                  two-dimensional space.  The values of ?x-dir and ?y-dir
+                  can be -1, +1, or 0 indicating that the medial axis of
+                  the ?obj can be described by a line passing through the
+                  center of the object and then in a direction that is
+                  towards the positive, negative, or along the X and Y axes.")
+(arity q-2D-orientation 3)
+(isa q-2D-orientation Predicate)
+(arg1Isa q-2D-orientation SpatialThing)
+
+
+(comment OrientedNuSketchGlyphType
+ "The type of collections of all instances of NuSketchGlyph that
+                  have a qualitative size.")
+(genls OrientedNuSketchGlyphType CollectionType)
+(isa OrientedNuSketchGlyphType Collection)
+
+
+(comment QHorizontalGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  have a qualitatively horizontal orientation.")
+(genls QHorizontalGlyph NuSketchGlyph)
+(isa QHorizontalGlyph Collection)
+(isa QHorizontalGlyph OrientedNuSketchGlyphType)
+
+
+(comment QVerticalGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  have a qualitatively vertical orientation.")
+(genls QVerticalGlyph NuSketchGlyph)
+(isa QVerticalGlyph Collection)
+(isa QVerticalGlyph OrientedNuSketchGlyphType)
+
+
+(comment QDiagonalDownwardGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  have a qualitative orientation wherein the axis of the
+                  glyph slopes down from left to right.")
+(genls QDiagonalDownwardGlyph NuSketchGlyph)
+(isa QDiagonalDownwardGlyph Collection)
+(isa QDiagonalDownwardGlyph OrientedNuSketchGlyphType)
+
+
+(comment QDiagonalUpwardGlyph
+ "The collection of all instances of NuSketchGlyph that
+                  have a qualitative orientation wherein the axis of the
+                  glyph slopes up from left to right.")
+(genls QDiagonalUpwardGlyph NuSketchGlyph)
+(isa QDiagonalUpwardGlyph Collection)
+(isa QDiagonalUpwardGlyph OrientedNuSketchGlyphType)
+
+
+(comment roundnessVal
+ "Valid values for q-roundness belong to this collection.")
+(genls roundnessVal AttributeType)
+(isa roundnessVal Collection)
+
+
+(isa NotVeryRound roundnessVal)
+(isa SomewhatRound roundnessVal)
+(isa VeryRound roundnessVal)
+
+
+(comment q-roundness
+ "A qualitative measure of ?obj's roundness.  ?round can be
+                  one of NotVeryRound, SomewhatRound, or VeryRound.")
+(arity q-roundness 2)
+(isa q-roundness Predicate)
+(arg1Isa q-roundness SpatialThing)
+(arg2Isa q-roundness roundnessVal)
+
+
+(comment NotVeryRoundGlyph
+ "The collection of all instances of NuSketchGlyph that aren't very round.")
+(genls NotVeryRoundGlyph NuSketchGlyph)
+(isa NotVeryRoundGlyph Collection)
+(genFormat NotVeryRoundGlyph "~A is not very round" (1))
+(prettyString NotVeryRoundGlyph "not very round object")
+
+
+(comment SomewhatRoundGlyph
+ "The collection of all instances of NuSketchGlyph that 
+                  are sort of round.")
+(genls SomewhatRoundGlyph NuSketchGlyph)
+(isa SomewhatRoundGlyph Collection)
+(genFormat SomewhatRoundGlyph "~A is somewhat round" (1))
+(prettyString SomewhatRoundGlyph "somewhat round object")
+
+
+(comment VeryRoundGlyph
+ "The collection of all instances of NuSketchGlyph that are quite round.")
+(genls VeryRoundGlyph NuSketchGlyph)
+(isa VeryRoundGlyph Collection)
+(genFormat VeryRoundGlyph "~A is very round" (1))
+(prettyString VeryRoundGlyph "very round object")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Convex Hull relations
+
+(isa blobIntersectsConvexHull BinaryPredicate)
+(arity blobIntersectsConvexHull 2)
+(arg1Isa blobIntersectsConvexHull NuSketchGlyph)
+(arg2Isa blobIntersectsConvexHull NuSketchGlyph)
+(comment blobIntersectsConvexHull
+ "Says that ?glyph1's blob boundary intersects with the convex hull 
+  of ?glyph2.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Miscellaneous
+
+(comment closestGlyphOfType
+ "Says that ?closest-glyph is the glyph closest to ?loc
+                  that belongs to the collection specified by ?type.")
+(arity closestGlyphOfType 3)
+(isa closestGlyphOfType Predicate)
+(arg1Isa closestGlyphOfType SpatialThing)
+(arg2Isa closestGlyphOfType Collection)
+(arg3Isa closestGlyphOfType NuSketchGlyph)
+
+(isa differentInk Predicate)
+(arity differentInk 4)
+(comment differentInk "This is true whenever the glyphs have different edges OR
+ the same edges different scales. Used to detect if the user resized or
+ added/deleted ink to a glyph that was cloned/pasted into a different subsketch.
+ The first and third arguments are the subsketch casenames, and the second and 
+ fourth are the object names of the glyphs.")
+(arg1Isa differentInk NuSketchCase)
+(arg2Isa differentInk Thing)
+(arg3Isa differentInk NuSketchCase)
+(arg4Isa differentInk Thing)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;Shape relations between glyphs
+(isa computeShapeRelationsFor Predicate)
+(arity computeShapeRelationsFor 2)
+(comment  
+  "computeShapeRelations is for glyph objects; shape relations computed by tell
+  handler.")
+(arg1Isa computeShapeRelationsFor SpatialThing-Localized)
+(arg2Isa computeShapeRelationsFor SpatialThing-Localized)
+
+(isa computeShapeAttributesFor Predicate)
+(arity computeShapeAttributesFor 1)
+(comment  
+  "computeShapeAttributes is for glyph objects; shape attributes computed by tell
+  handler.")
+(arg1Isa computeShapeAttributesFor SpatialThing-Localized)
+
+;;Shape relations computed already
+(isa shapeRelationsComputed Predicate)
+(arity shapeRelationsComputed 2)
+(comment  
+  "(shapeRelationsComputed ?1 ?2) is for glyph objects; represents that shape
+   relations was already computed so no need to recompute")
+(arg1Isa shapeRelationsComputed SpatialThing-Localized)
+(arg2Isa shapeRelationsComputed SpatialThing-Localized)
+(isa shapeRelationsComputed SymmetricRelation)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;size, shape and color relations
+
+(isa darkerThan Relation)
+(isa darkerThan AsymmetricBinaryPredicate)
+(isa darkerThan ComparisonPredicate)
+(isa darkerThan OrderingPredicate)
+(negationInverse darkerThan darkerThan)
+(arity darkerThan 2)
+(arg1Isa darkerThan SpatialThing-Localized)
+(arg2Isa darkerThan SpatialThing-Localized)
+(comment darkerThan " (darkerThan HIGH LOW) says that the color saturation of HIGH is greaterThan the color saturation of LOW.")
+
+(isa biggerThan Relation)
+(isa biggerThan AsymmetricBinaryPredicate)
+(isa biggerThan ComparisonPredicate)
+(isa biggerThan OrderingPredicate)
+(negationInverse biggerThan biggerThan)
+(arity biggerThan 2)
+(arg1Isa biggerThan SpatialThing-Localized)
+(arg2Isa biggerThan SpatialThing-Localized)
+(comment biggerThan " (biggerThan BIG SMALL) says that the size of BIG is greaterThan the size of SMALL.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;Shape descriptor attributes - Need to add comment
+
+(isa LowEccentricity Collection)
+(isa MedEccentricity Collection)
+(isa HighEccentricity Collection)
+(isa LowCompactness Collection)
+(isa MedCompactness Collection)
+(isa HighCompactness Collection)
+(isa LowCircularVariance Collection)
+(isa MedCircularVariance Collection)
+(isa HighCircularVariance Collection)
+(isa LowEllipticVariance Collection)
+(isa MedEllipticVariance Collection)
+(isa HighEllipticVariance Collection)
+(isa LowRectangularity Collection)
+(isa MedRectangularity Collection)
+(isa HighRectangularity Collection)
+(isa LowConvexity Collection)
+(isa MedConvexity Collection)
+(isa HighConvexity Collection)
+(isa LowSolidity Collection)
+(isa MedSolidity Collection)
+(isa HighSolidity Collection)
+(isa HorizontallyOriented Collection)
+(isa AcutelyOriented Collection)
+(isa VerticallyOriented Collection)
+(isa ObtuselyOriented Collection)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

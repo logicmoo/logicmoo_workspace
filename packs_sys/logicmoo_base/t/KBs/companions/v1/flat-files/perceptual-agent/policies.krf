@@ -1,0 +1,68 @@
+;;;
+;;; policies.meld
+;;;
+;;; The ontology and rules defined here support reasoning with and using
+;;; policies.
+
+(in-microtheory PerceptualAgentMt)
+
+;;; A long term plan may be phrased in terms of establishing a policy such
+;;; that, in the absense of crises, the goal preferences laid out in the 
+;;; policy obtain.
+
+(isa Policy Collection)
+(genls Policy Situation)
+(comment Policy "a Policy is a collection of ordinal relations between goals.
+A many-many relation that defines tradeoffs.")
+
+;;; How can we specify this in a way that doesn't require concrete goals
+;;; for, eg, each city or unit.  E.g., we might want to say that ultimately
+;;; we care about maximizing science output more than citizen happiness 
+;;; (barring revolt), but we don't want to specify the cities (which might 
+;;; not even exist yet).  Have to coordinate horn clauses and NATs to make 
+;;; this work.  In other words, policyPrefersGoal may have to be defined in
+;;; terms of horn clauses & reified facts of the form policyPrefersGoalsOfType
+;;; along with some binding constraints.
+(isa policyPrefersGoal BinaryPredicate)
+(arity policyPrefersGoal 2)
+(arg1Isa policyPrefersGoal Policy)
+(arg2Isa policyPrefersGoal Goal)
+(comment policyPrefersGoal "(policyPrefersGoal ?policy ?goal) means ?goal is emphasized in ?policy.")
+
+(isa policyTradesOffGoal BinaryPredicate)
+(arity policyTradesOffGoal 2)
+(arg1Isa policyTradesOffGoal Policy)
+(arg2Isa policyTradesOffGoal Goal)
+(comment policyTradesOffGoal "(policyTradesOffGoal ?policy ?goal) means ?goal is de-emphasized in ?policy.")
+
+;;; Dealing with long term goals.  This relates instances of policies and goals.
+(isa policySupportsLongTermGoal BinaryPredicate)
+(arity policySupportsLongTermGoal 2)
+(arg1Isa policySupportsLongTermGoal Policy)
+(arg2Isa policySupportsLongTermGoal Goal)
+(comment policySupportsLongTermGoal "(policySupportsLongTermGoal ?policy ?goal) means the explicit (Davidsonian) ?policy eventually helps achieve ?goal.")
+
+(isa interruptionInvalidatesLongTermGoal BinaryPredicate)
+(arity interruptionInvalidatesLongTermGoal 2)
+(arg1Isa interruptionInvalidatesLongTermGoal Event)
+(arg2Isa interruptionInvalidatesLongTermGoal Goal)
+(comment interruptionInvalidatesLongTermGoal "(interruptionInvalidatesLongTermGoal ?event ?goal) means ?event renders ?goal pointless.")
+
+(isa interruptionPostponesLongTermGoal BinaryPredicate)
+(arity interruptionPostponesLongTermGoal 2)
+(arg1Isa interruptionPostponesLongTermGoal Event)
+(arg2Isa interruptionPostponesLongTermGoal Goal)
+(comment interruptionPostponesLongTermGoal "(interruptionPostponesLongTermGoal ?event ?goal) means ?event delays ?goal.")
+
+;;; If method X should be preferred over method Y under a certain policy,
+;;; then we'd want the preferInContext rules to explicitly check for the
+;;; policy. But we want to avoid manually constructing such rules and 
+;;; pre-defining all policies.
+;;; So: In the rational player, where it looks for taskAchieves, we might
+;;; want the decision between alternative tasks to be sensitive to policies.
+;;;
+;;; A policy is not unlike an experimental control.  
+
+;;;
+;;; Agent roles and default roles
+;;;

@@ -1,0 +1,2565 @@
+(in-microtheory FrameNetSemTransMt)
+(genlMt EANLU FrameNetSemTransMt)
+
+(FNAdvSemtrans (TheList "a" "little") Bit-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "a") Little-TheWord (and) (frame FN_Degree)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT ((PPFn like) fe_gradable_attribute))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList "a") Lot-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList (:NOUN (AJP fe_gradable_attribute))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Accurately-TheWord
+ (hasAccuracyLevel :ACTION (HighAmountFn Accuracy)) (frame FN_Accuracy)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Across-TheWord (and) (frame FN_Dimension)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Actively-TheWord (and) (frame FN_Being_active)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Adequately-TheWord (and) (frame FN_Sufficiency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Admiringly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Admiration))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Affectionately-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Affection))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Afterward-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP duration) (Sfin fe_event))
+   (:GAP (INC fe_direction) (INI duration) (DNI fe_landmark_event))
+   (:NOUN (Sfin fe_event) (VPbrst fe_event))))
+ (groupPatterns (TheSet ((2 0 0)) ((2 1 0) (2 1 0)) ((0 0 0) (0 1 0)))))
+
+(FNAdvSemtrans (TheList) Afterwards-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP fe_event))
+   (:GAP (-- fe_direction) (DNI fe_landmark_event))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Ahead-TheWord (and) (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (NP distanceTranslated focalSubject) ((PPFn of) fe_ground)
+    ((PPFn between) fe_ground) ((PPFn to) fe_ground)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile temporallyIntersects))
+   (:GAP (2nd fe_accessibility) (DNI focalSubject fe_ground))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 0 0) (1 4 5)) ((0 0 0) (1 1 0)) ((1 0 1) (1 1 0))
+   ((0 0 0) (1 4 3)) ((1 1 0) (1 4 3)) ((1 2 0) (1 4 3)) ((1 4 2) (3 0 0))
+   ((0 0 0) (1 4 2)) ((0 0 0) (1 1 0) (1 4 6)) ((0 0 0) (1 3 0) (1 4 5))
+   ((0 0 0) (1 1 0) (1 4 5)) ((0 0 0) (1 0 0) (1 1 0))
+   ((0 0 0) (1 1 0) (1 4 3)) ((0 0 0) (1 1 0) (1 4 2))
+   ((0 0 0) (1 1 0) (1 4 1)) ((0 0 0) (1 1 0) (1 4 0))
+   ((0 0 0) (1 1 0) (1 4 4)) ((0 0 0) (1 1 0) (1 4 0) (1 4 6)))))
+
+(FNAdvSemtrans (TheList) Ahead-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "all" "the") Time-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) All-TheWord (and) (frame FN_Emotion_directed)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) All-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Allegedly-TheWord (and)
+ (frame FN_Unattributed_information)
+ (bindingTemplate
+  (TheList
+   (:NOUN (Sfin fe_reported_fact) (Sub fe_reported_fact)
+    (VPing fe_reported_fact))))
+ (groupPatterns (TheSet ((0 2 0)) ((0 1 0) (0 1 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Alone-TheWord (isa :ACTION SingleDoerAction)
+ (frame FN_Collaboration) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Along-TheWord (and) (frame FN_Accompaniment)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Already-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_event) (VPfin fe_event))
+   (:OBLIQUE-OBJECT ((PPFn by) duration) ((PPFn in) fe_event)
+    (unknown fe_event) (NP fe_landmark_event) (Sfin fe_landmark_event)
+    ((PPFn before) fe_landmark_event))
+   (:GAP (-- fe_direction) (DNI fe_event fe_landmark_event))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((1 2 0)) ((1 4 0)) ((3 0 0) (3 0 0)) ((1 5 0) (3 0 0) (3 0 0))
+   ((1 0 0) (1 1 0) (1 3 0)) ((0 0 0) (0 1 0) (0 1 0) (0 1 0)))))
+
+(FNAdvSemtrans (TheList) Always-TheWord
+ (frequencyOfEventType :ACTION Continuously) (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP topicOfIndividual))
+   (:OBLIQUE-OBJECT (AJP fe_event) (Sfin fe_event) (VPfin fe_event)
+    ((PPFn from) temporallyIntersects) (Sub temporallyIntersects))
+   (:GAP (INI fe_attribute) (-- frequencyOfEvent))
+   (:NOUN (Sfin fe_event) (VPfin fe_event) (N topicOfIndividual))))
+ (groupPatterns
+  (TheSet ((3 1 0)) ((3 0 0)) ((0 0 0) (1 2 0)) ((3 0 0) (3 0 0))
+   ((1 1 0) (1 1 0)) ((1 0 0) (3 2 0)) ((1 4 0) (3 0 0) (3 0 0))
+   ((1 3 0) (3 0 0) (3 0 0)))))
+
+(FNAdvSemtrans (TheList) Always-TheWord
+ (obtainsDuring :ACTION Always-TimeInterval) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Angrily-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Anger)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Annually-TheWord (frequencyOfEventType :ACTION Yearly)
+ (frame FN_Frequency) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Anyhow-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_mitigating_situation))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Anyway-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_mitigating_situation))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Approximately-TheWord (and)
+ (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP fe_denoted_quantity fe_individuals))
+   (:GAP (-- fe_denoted_quantity) (2nd fe_denoted_quantity fe_individuals))
+   (:NOUN (N fe_individuals) (Num fe_reference_quantity))))
+ (groupPatterns (TheSet ((2 1 0)) ((0 0 0)) ((0 0 1)) ((2 0 0) (2 1 0)))))
+
+(FNAdvSemtrans (TheList) Approximately-TheWord (and)
+ (frame FN_Relational_quantity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Around-TheWord (and) (frame FN_Dimension)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Artfully-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn AestheticSense))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Artlessly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn AestheticSense))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "as") Hell-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "as" "of") Late-TheWord (and)
+ (frame FN_Temporal_collocation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "as" "of") Yet-TheWord (and)
+ (frame FN_Continued_state_of_affairs)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_state_of_affairs))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) As-TheWord (and) (frame FN_Continued_state_of_affairs)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) As-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sfin fe_landmark_occasion))
+   (:NOUN (Sfin fe_focal_occasion))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) As-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_trajector_event))
+   (:OBLIQUE-OBJECT (Sfin fe_landmark_event fe_trajector_event))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)) ((1 0 0) (1 0 1)))))
+
+(FNAdvSemtrans (TheList "as") Yet-TheWord (and)
+ (frame FN_Continued_state_of_affairs)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (AJP fe_state_of_affairs))
+   (:GAP (DNI fe_reference_occasion))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList "at" "a") Minimum-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_mitigating_situation))))
+ (groupPatterns (TheSet ((0 0 0) (0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList "at" "any") Rate-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_mitigating_situation))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 0 0)) ((0 0 0) (0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList "at") Least-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate
+  (TheList
+   (:NOUN (Sfin fe_mitigating_situation) (Sinterrog fe_mitigating_situation))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 1 0) (0 1 0)) ((0 0 0) (0 0 0))
+   ((0 0 0) (0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList "at") Least-TheWord (and)
+ (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_individuals)) (:OBJECT (NP fe_reference_quantity))
+   (:OBLIQUE-OBJECT (NP fe_individuals) (Num fe_reference_quantity))
+   (:GAP (-- fe_denoted_quantity) (2nd fe_denoted_quantity)
+    (DNI fe_individuals))
+   (:NOUN (N fe_individuals) (Sfin fe_individuals))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 0 0)) ((2 0 0)) ((4 0 0)) ((2 1 0) (4 0 0))
+   ((4 1 0) (4 1 0)))))
+
+(FNAdvSemtrans (TheList "at") Most-TheWord (and)
+ (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:GAP (-- fe_denoted_quantity)) (:NOUN (NP fe_individuals))))
+ (groupPatterns (TheSet ((1 0 0)))))
+
+(FNAdvSemtrans (TheList "at") Present-TheWord (holdsIn :ACTION Now)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_trajector_event) (Sfin fe_trajector_event))
+   (:GAP (-- fe_landmark_period) (DNI fe_landmark_period))
+   (:NOUN (AJP fe_trajector_event) (Sfin fe_trajector_event)
+    ((PPFn as) fe_trajector_event) (VPbrst fe_trajector_event)
+    (NP fe_trajector_event) (VPfin fe_trajector_event)
+    (VPing fe_trajector_event) (VPto fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((2 1 0)) ((0 1 0)) ((2 5 0) (2 7 0)) ((2 5 0) (2 6 0))
+   ((2 3 0) (2 4 0)) ((2 0 0) (2 1 0)) ((0 0 0) (2 2 0) (2 3 0)))))
+
+(FNAdvSemtrans (TheList "at" "the") Least-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_mitigating_situation))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 0 0)) ((0 0 0) (0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList "at" "the") Time-TheWord (and)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (Sfin fe_trajector_event))
+   (:NOUN (Sfin fe_trajector_event))))
+ (groupPatterns (TheSet ((2 0 0)) ((0 0 0) (0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList "at") Times-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Awhile-TheWord
+ (timeSpan :ACTION AnIndefiniteAmountOfTime) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Back-TheWord (isa :ACTION ReturningSomething)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Back-TheWord
+ (isa :ACTION (CollectionIntersection2Fn GoingSomewhere RepeatedEventType))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Backward-TheWord
+ (directionOfTranslation-Avg :ACTION (BackwardsFn :SUBJECT))
+ (frame FN_Direction) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Barely-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Barely-TheWord (and) (frame FN_Relational_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Beforehand-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:GAP (INC fe_direction) (INI duration) (DNI fe_landmark_event))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((1 0 0)))))
+
+(FNAdvSemtrans (TheList "behind") Bars-TheWord (and)
+ (frame FN_Being_incarcerated)
+ (bindingTemplate (TheList (:SUBJECT (NP captive))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Behind-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Belligerently-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Belligerence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Bitterly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Resentment))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Blandly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Enthusiasm))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Boringly-TheWord
+ (evokes :ACTION (HighAmountFn Boredom)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Calmly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Calmness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Carefully-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Safeness))
+ (frame FN_Mental_property)
+ (bindingTemplate
+  (TheList (:GAP (INI affectedAgent)) (:NOUN (A objectOfCritique))))
+ (groupPatterns (TheSet ((1 0 0)))))
+
+(FNAdvSemtrans (TheList) Carelessly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Safeness))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Certainly-TheWord
+ (likelihood :ACTION (HighAmountFn Likelihood-QuantityType))
+ (frame FN_Likelihood)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT ((PPFn in) situationConstituents)
+    ((PPFn as) (InverseBinaryPredicateFn explains-Generic))
+    (AVP temporallyIntersects))
+   (:NOUN (Sfin fe_hypothetical_event))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((1 0 0) (1 0 0))
+   ((0 0 0) (0 1 0) (0 2 0) (1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Charismatically-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Charisma)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Charmingly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Charisma)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Charmingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Charm)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Cheerfully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Cheer)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Circuitously-TheWord
+ (isa :ACTION (IndirectlyFn :REPLACE)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Clearly-TheWord (and) (frame FN_Obviousness)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_phenomenon))
+   (:OBLIQUE-OBJECT (Sfin fe_phenomenon) (AJP fe_phenomenon))
+   (:GAP (-- fe_attribute)) (:NOUN (A fe_attribute))))
+ (groupPatterns
+  (TheSet ((1 1 0)) ((1 0 0) (1 0 0)) ((0 0 0) (3 0 0))
+   ((1 0 0) (1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Cleverly-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (HighAmountFn Creativity))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Closely-TheWord (isa :ACTION WatchingSomething)
+ (frame FN_Attention) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Comfortably-TheWord
+ (possessiveRelation :ACTION (HighAmountFn ComfortLevel)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Compassionately-TheWord
+ (qualityOfAction :ACTION Compassion) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Condescendingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Disrespect))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Confidently-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Confidence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Confusedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Confusion-Generic))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Constantly-TheWord
+ (frequencyOfEventType :ACTION Continuously) (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (VPbrst fe_event)) (:NOUN (N fe_event))))
+ (groupPatterns (TheSet ((0 0 0)) ((1 0 0)))))
+
+(FNAdvSemtrans (TheList) Contemptuously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Contempt))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Contentedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Contentment))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Courageously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Courageousness-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Creatively-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (HighAmountFn Creativity))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Creatively-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Creativity))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Cruelly-TheWord
+ (holdsIn :ACTION (attitudeTowardsEvent :SUBJECT :OBJECT (NoAmountFn Concern)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Culturally-TheWord (and) (frame FN_Domain)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (AJP fe_predicate) (NP fe_predicate) (Sfin fe_predicate))
+   (:GAP (-- fe_domain)) (:NOUN (Sfin fe_predicate))))
+ (groupPatterns (TheSet ((2 0 0)) ((0 2 0)) ((0 1 0)) ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Currently-TheWord (holdsIn Now :ACTION)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectTranslating) (Sfin fe_trajector_event))
+   (:GAP (-- fe_landmark_period)) (:NOUN (Sfin fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 1 0) (0 1 0)) ((0 0 0) (0 0 0)) ((2 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Daily-TheWord (frequencyOfEventType :ACTION Daily)
+ (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP topicOfIndividual))
+   (:OBLIQUE-OBJECT (AJP fe_attribute) (VPfin fe_event)
+    ((PPFn in) groupMembers) (NP fe_time_span))
+   (:GAP (INI fe_attribute) (-- frequencyOfEvent) (DNI topicOfIndividual))
+   (:NOUN (AJP fe_event))))
+ (groupPatterns
+  (TheSet ((1 1 0)) ((3 0 0)) ((0 0 0) (1 2 0)) ((1 0 0) (1 3 0)))))
+
+(FNAdvSemtrans (TheList) Deeply-TheWord (eventOccursAtDepth :ACTION Deep)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Delightfully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Delight)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Diagonal-TheWord
+ (directionOfTranslation-Avg :ACTION Diagonal-Generally) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Disappointingly-TheWord
+ (evokes :ACTION (HighAmountFn Disappointment)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Disapprovingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Disapproval))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Discreetly-TheWord
+ (hasEvaluativeQuantity :ACTION (HighAmountFn PrivacyLevel)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Disgustingly-TheWord
+ (evokes :ACTION (HighAmountFn Disgust)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Doubtfully-TheWord
+ (evokes :ACTION (HighAmountFn Doubt)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "down" "the") Road-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP duration fe_event))
+   (:OBLIQUE-OBJECT ((PPFn in) duration) (Sfin fe_event) (NP duration fe_event)
+    (Sub fe_event))
+   (:GAP (-- fe_direction) (INI duration) (DNI fe_landmark_event))
+   (:NOUN (N duration))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 0 1)) ((1 0 0) (1 3 0)) ((0 0 0) (1 2 1))
+   ((0 0 1) (1 2 0)) ((1 1 0) (3 0 0)) ((0 0 1) (0 0 1)))))
+
+(FNAdvSemtrans (TheList) Down-TheWord
+ (directionOfTranslation-Avg :ACTION Down-Generally) (frame FN_Direction)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (AVP distanceTranslated)
+    ((PPFn about) fe_independent_variable) (NP alongObject))
+   (:GAP (DNI alongObject) (INI alongObject) (-- trajectory-Complete))))
+ (groupPatterns (TheSet ((0 1 0)) ((0 0 0) (0 2 0)))))
+
+(FNAdvSemtrans (TheList) Dully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Excitement))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Eagerly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Anticipation-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) East-TheWord
+ (directionOfTranslation-Avg :ACTION East-Generally) (frame FN_Direction)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT ((PPFn of) alongObject) ((PPFn on) trajectory-Complete))
+   (:GAP (INI alongObject) (-- trajectory-Complete))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 1 0)))))
+
+(FNAdvSemtrans (TheList) East-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (NP distanceTranslated) ((PPFn of) fe_ground)
+    (AVP fe_accessibility fe_direction fe_directness distanceTranslated
+     fe_temporal_profile temporallyIntersects)
+    ((PPFn on) temporallyIntersects))
+   (:GAP (DNI fe_ground)) (:NOUN (VPfin focalSubject) (Sfin focalSubject))
+   (:APPOSITIVE (NP focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0) (2 3 0)) ((0 0 0) (2 2 4)) ((2 2 1) (4 0 0))
+   ((0 0 0) (2 1 0) (2 2 5)) ((2 0 0) (2 1 0) (4 1 0))
+   ((1 0 0) (2 0 0) (2 1 0)) ((0 0 0) (2 0 0) (2 1 0))
+   ((0 0 0) (2 1 0) (2 2 2)) ((0 0 0) (2 1 0) (2 2 0))
+   ((0 0 0) (2 1 0) (2 2 3) (2 2 5)) ((0 0 0) (2 0 0) (2 1 0) (5 0 0))
+   ((0 0 0) (2 0 0) (2 1 0) (2 2 2))
+   ((0 0 0) (0 0 0) (2 0 0) (2 1 0) (2 2 2)))))
+
+(FNAdvSemtrans (TheList) Economically-TheWord (isa :ACTION FrugalAction)
+ (frame FN_Domain) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Elsewhere-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (NP objectFoundInLocation) (Sfin objectFoundInLocation)
+    ((PPFn in) fe_ground))
+   (:GAP (DNI objectFoundInLocation) (-- objectFoundInLocation fe_ground))))
+ (groupPatterns (TheSet ((1 1 0)) ((0 0 0)) ((1 0 0)) ((1 2 0)))))
+
+(FNAdvSemtrans (TheList) Embarrassingly-TheWord
+ (evokes :ACTION (HighAmountFn Embarrassment)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Emotionally-TheWord (and) (frame FN_Domain)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (AJP fe_predicate) (NP fe_predicate) (Sfin fe_predicate))
+   (:GAP (-- fe_domain))))
+ (groupPatterns (TheSet ((0 2 0)) ((0 1 0)) ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Enviously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Envy)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "en") Route-TheWord (and) (frame FN_Self_motion)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP performedBy))
+   (:OBLIQUE-OBJECT ((PPFn to) to-Generic) (VPto purposeOfEvent)
+    ((PPFn from) rateOfEvent))
+   (:GAP (2nd to-Generic))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (1 1 0))
+   ((0 0 0) (1 0 0) (1 2 0)))))
+
+(FNAdvSemtrans (TheList) Enough-TheWord (and) (frame FN_Sufficiency)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectOfStateChange))
+   (:OBLIQUE-OBJECT ((PPFn for) fe_enabled_situation)
+    (VPto fe_enabled_situation) (AVP fe_scale) (AJP fe_scale))
+   (:GAP (DNI fe_enabled_situation objectOfStateChange))))
+ (groupPatterns
+  (TheSet ((1 2 0)) ((1 1 0) (1 2 0)) ((0 0 0) (1 1 0) (1 3 0))
+   ((0 0 0) (1 0 0) (1 3 0)) ((0 0 0) (0 0 0) (1 1 0) (1 3 0)))))
+
+(FNAdvSemtrans (TheList) Enthusiastically-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Enthusiasm))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Eventually-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sfin fe_event))
+   (:GAP (-- fe_direction) (DNI fe_landmark_event)) (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((0 0 0)) ((2 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList "every" "once" "in" "a") While-TheWord
+ (frequencyOfEventType :ACTION Sometimes-GenericFrequency) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "every" "so") Often-TheWord
+ (frequencyOfEventType :ACTION Sometimes-GenericFrequency) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Everywhere-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (Sfin objectFoundInLocation)) (:GAP (-- fe_ground))))
+ (groupPatterns (TheSet ((1 0 0)) ((0 0 0)) ((1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Exactly-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Exactly-TheWord (and) (frame FN_Relational_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Excitedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Excitement))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Fair-TheWord (equitable :ACTION)
+ (frame FN_Fairness_evaluation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Fair-TheWord (mannerOfAction :ACTION Fairness)
+ (frame FN_Fairness_evaluation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Fairly-TheWord (and) (frame FN_Fairness_evaluation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Far-TheWord (and) (frame FN_Degree)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (AJP fe_gradable_attribute)
+    ((PPFn as) fe_gradable_attribute))
+   (:NOUN (A fe_gradable_attribute))))
+ (groupPatterns (TheSet ((0 0 0)) ((1 0 0)) ((0 1 0) (0 1 0)))))
+
+(FNAdvSemtrans (TheList) Fast-TheWord
+ (rateOfEvent :ACTION (HighToVeryHighAmountFn EventRate)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Fearfully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Fear)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Feverishly-TheWord (and) (frame FN_Experiencer_focus)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Finally-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT ((PPFn after) fe_landmark_event)
+    ((PPFn in) fe_landmark_event))
+   (:GAP (INI fe_landmark_event)) (:NOUN (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 1 0) (2 0 0)) ((2 0 0) (2 0 0))
+   ((0 1 0) (2 0 0) (2 0 0)) ((0 0 0) (2 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Financially-TheWord
+ (conceptuallyRelated :ACTION EconomicalQuantity) (frame FN_Domain)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sing fe_predicate)) (:GAP (-- fe_domain))))
+ (groupPatterns (TheSet ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) First-TheWord (and) (frame FN_First_experience)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_experience))
+   (:OBLIQUE-OBJECT ((PPFn in) fe_context) (Sfin fe_experience)
+    (VPfin fe_experience))
+   (:GAP (2nd fe_context))
+   (:NOUN (VPing fe_experience) (N fe_experience) (Sfin fe_experience)
+    (Sub fe_experience))))
+ (groupPatterns
+  (TheSet ((1 2 0)) ((3 2 0)) ((0 0 0)) ((3 1 0)) ((3 3 0) (3 3 0))
+   ((3 2 0) (3 2 0)) ((1 1 0) (1 1 0)) ((3 0 0) (3 0 0))
+   ((3 2 0) (3 2 0) (3 2 0)) ((1 0 0) (1 1 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Flexibly-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (HighAmountFn Flexibility))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Flexibly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Flexibility))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Flippantly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Flippancy))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Foolishly-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (LowAmountFn Wisdom))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Foolishly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Wisdom)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Formerly-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_event))
+   (:OBLIQUE-OBJECT ((PPFn in) fe_direction) (VPed fe_event))
+   (:GAP (-- fe_direction) (DNI duration)) (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((1 1 0)) ((3 0 0) (3 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Fortuitously-TheWord (and) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Fortunately-TheWord (and) (frame FN_Luck)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP affectedAgent))
+   (:OBLIQUE-OBJECT (VPfin fe_state_of_affairs))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Forward-TheWord
+ (directionOfTranslation-Avg :ACTION (ForwardsFn :SUBJECT))
+ (frame FN_Direction) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Frequently-TheWord
+ (frequencyOfEventType :ACTION Often) (frame FN_Frequency)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Frustratingly-TheWord
+ (evokes :ACTION (HighAmountFn Frustration)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Fully-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList (:NOUN (VPfin fe_gradable_attribute))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Generally-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sfin fe_event)) (:GAP (-- frequencyOfEvent))))
+ (groupPatterns (TheSet ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Geographically-TheWord (and) (frame FN_Domain)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_predicate))
+   (:OBLIQUE-OBJECT ((PPFn with) (InverseBinaryPredicateFn explains-Generic)))
+   (:GAP (-- fe_domain))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Gloomily-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Gloominess))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Gracefully-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Gracefulness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Gracelessly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn Gracefulness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Gradually-TheWord
+ (graduallyDevelopingVarietyOfType :ACTION :REPLACE) (frame FN_Taking_time)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP processTypeForAccomplishmentType))
+   (:OBLIQUE-OBJECT (VPed processTypeForAccomplishmentType))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Gratefully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Gratitude))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Guiltily-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Guilt)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Half-Heartedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn PrideOfAccomplishment))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Happily-TheWord
+ (holdsIn :ACTION (feelsEmotion :SUBJECT (PositiveAmountFn Happiness)))
+ (frame FN_Experiencer_focus)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectActedOn)) (:OBLIQUE-OBJECT (AVP fe_degree))
+   (:NOUN (VPfin fe_event))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Hard-TheWord (pressureApplied :ACTION HeavyPressure)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Hatefully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Hate)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Heartlessly-TheWord
+ (holdsIn :ACTION
+  (attitudeTowardsEvent :SUBJECT :OBJECT (NoAmountFn Sympathy)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Heavily-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList (:GAP (-- fe_gradable_attribute))))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Here-TheWord (eventOccursAt :ACTION Here)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (Sfin objectFoundInLocation) (Sinterrog objectFoundInLocation)
+    (NP objectFoundInLocation fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction) (Sfin objectFoundInLocation)
+    (VPed objectFoundInLocation) (VPto objectFoundInLocation))
+   (:GAP (INI objectFoundInLocation fe_ground)
+    (-- fe_direction objectFoundInLocation fe_ground)
+    (DNI objectFoundInLocation fe_ground))
+   (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns
+  (TheSet ((1 3 0)) ((0 1 0)) ((3 0 0)) ((0 0 0)) ((1 1 0)) ((0 2 0)) ((0 2 1))
+   ((1 0 0)) ((1 2 0) (1 2 0)) ((0 0 0) (0 0 0)) ((1 1 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Here-TheWord (and) (frame FN_Spatial_co-location)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT ((PPFn in) temporallyIntersects)
+    ((PPFn at) temporallyIntersects) ((PPFn by) temporallyIntersects)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     fe_temporal_profile temporallyIntersects)
+    ((PPFn on) temporallyIntersects) ((PPFn during) temporallyIntersects)
+    ((PPFn for) temporallyIntersects))
+   (:GAP (DNI focalSubject) (INC fe_ground))
+   (:NOUN (Sfin focalSubject) (Sto focalSubject) (VPbrst focalSubject)
+    (Sing focalSubject) (VPing focalSubject))))
+ (groupPatterns
+  (TheSet ((3 4 0)) ((3 0 0)) ((0 0 0)) ((1 3 3)) ((1 3 2)) ((1 6 0) (3 0 0))
+   ((1 5 0) (3 0 0)) ((1 3 5) (3 0 0)) ((0 0 0) (1 4 0)) ((0 0 0) (1 3 5))
+   ((1 3 4) (3 0 0)) ((1 3 3) (3 0 0)) ((0 0 0) (1 3 3)) ((1 3 2) (3 3 0))
+   ((1 3 2) (3 0 0)) ((0 0 0) (1 3 2)) ((1 3 1) (3 2 0)) ((1 3 1) (3 0 0))
+   ((0 0 0) (1 3 1)) ((1 3 0) (3 1 0)) ((1 3 0) (3 0 0)) ((0 0 0) (1 3 0))
+   ((0 0 0) (1 2 0) (1 3 4)) ((0 0 0) (1 1 0) (1 3 4))
+   ((1 1 0) (1 3 2) (3 3 0)) ((1 0 0) (1 3 2) (3 0 0)))))
+
+(FNAdvSemtrans (TheList) High-TheWord
+ (trajectory-Partial :ACTION
+  (SubcollectionOfWithRelationToFn Trajectory altitudeAboveGround
+   (HighAmountFn Distance)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Historically-TheWord (and) (frame FN_Domain)
+ (bindingTemplate (TheList (:GAP (-- fe_domain)) (:NOUN (Sfin fe_predicate))))
+ (groupPatterns (TheSet ((1 0 0)) ((1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Home-TheWord (eventOccursAt :ACTION (HomeFn :SUBJECT))
+ (frame FN_Spatial_co-location) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Horizontal-TheWord
+ (directionOfTranslation-Avg :ACTION Horizontal-Generally) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) How-TheWord (and) (frame FN_Means)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) However-TheWord (and) (frame FN_Concessive)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Humbly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Humility))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Hungrily-TheWord (hungerLevelOf Hungry :SUBJECT)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Hurtfully-TheWord
+ (holdsIn :ACTION (attitudeTowardsEvent :SUBJECT :OBJECT (NoAmountFn Concern)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Impatiently-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Impatience))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Imprecisely-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Precision)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "in" "a") Way-TheWord (and) (frame FN_Hedging)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "in" "any") Case-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_mitigating_situation))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList "in" "any") Event-TheWord (and)
+ (frame FN_Presentation_of_mitigation)
+ (bindingTemplate
+  (TheList
+   (:NOUN (Sfin fe_mitigating_situation) (Sinterrog fe_mitigating_situation))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 1 0)) ((0 0 0) (0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList "in") General-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "in") Order-TheWord (and) (frame FN_Purpose)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP performedBy by-Underspecified))
+   (:OBLIQUE-OBJECT (Sfin to-Generic by-Underspecified)
+    (VPing by-Underspecified) (VPbrst by-Underspecified)
+    (VPfin by-Underspecified) (VPto to-Generic by-Underspecified)
+    ((PPFn after) temporallyIntersects))
+   (:GAP (CNI performedBy) (INI performedBy)
+    (DNI performedBy by-Underspecified))))
+ (groupPatterns
+  (TheSet ((1 4 0)) ((1 4 0) (1 4 1)) ((0 0 1) (1 4 0)) ((0 0 1) (1 0 0))
+   ((1 1 0) (1 4 0)) ((1 0 1) (1 4 0)) ((0 0 0) (1 4 0))
+   ((1 0 1) (1 4 0) (1 5 0)) ((0 0 0) (1 4 0) (1 4 1))
+   ((0 0 0) (1 3 0) (1 4 0)) ((0 0 0) (1 2 0) (1 4 0)))))
+
+(FNAdvSemtrans (TheList "in") Part-TheWord (and) (frame FN_Degree)
+ (bindingTemplate
+  (TheList (:NOUN (VPed fe_gradable_attribute) (VPfin fe_gradable_attribute))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 1 0) (0 1 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList "in" "the") Cards-TheWord (and) (frame FN_Destiny)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "in") Time-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Inaccurately-TheWord
+ (hasAccuracyLevel :ACTION (LowAmountFn Accuracy)) (frame FN_Accuracy)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Inadequately-TheWord (and) (frame FN_Sufficiency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Inartfully-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn AestheticSense))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Increasingly-TheWord (and)
+ (frame FN_Change_position_on_a_scale)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (AJP fe_attribute))
+   (:GAP (INI fe_attribute fe_difference) (DNI fe_final_state)
+    (2nd objectOfStateChange))
+   (:NOUN (Sfin objectOfStateChange))))
+ (groupPatterns (TheSet ((0 0 0)) ((2 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Indifferently-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Indifference))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Indirectly-TheWord
+ (isa :ACTION (IndirectlyFn :REPLACE)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Indisputably-TheWord
+ (evokes :ACTION (NoAmountFn Doubt)) (frame FN_Likelihood)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Infrequently-TheWord
+ (frequencyOfEventType :ACTION Rarely) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Innocently-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Innocence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Insightfully-TheWord
+ (isa :ACTION (CollectionIntersection2Fn AnalyzingSomething SuccessfulAction))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Insufficiently-TheWord (and) (frame FN_Sufficiency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Intellectually-TheWord (isa :ACTION Thinking)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Intentionally-TheWord (intentionally :ACTION :REPLACE)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Interestingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Interest-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Internationally-TheWord (and)
+ (frame FN_Political_locales)
+ (bindingTemplate (TheList (:GAP (-- eventLocale)))) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Intriguingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Intrigue))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Inward-TheWord
+ (directionOfTranslation-Avg :ACTION InteriorDirection) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ironically-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Irony)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Jealously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Jealousy))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Jointly-TheWord (and) (frame FN_Collaboration)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "kind") Of-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "kind") Of-TheWord (and) (frame FN_Hedging)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Lately-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Later-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP fe_interval)) (:GAP (DNI fe_landmark_occasion))
+   (:NOUN (Sfin fe_focal_occasion))))
+ (groupPatterns (TheSet ((2 0 0)) ((0 0 0) (2 0 0)) ((2 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Later-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP duration) (Sfin fe_event)) (:OBJECT (NP fe_event))
+   (:OBLIQUE-OBJECT (NP duration) (Sfin fe_event fe_landmark_event))
+   (:GAP (-- fe_direction) (DNI fe_landmark_event)
+    (INI fe_direction duration fe_landmark_event))
+   (:NOUN (NP fe_event) (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((4 1 0)) ((4 0 0)) ((0 0 0) (4 1 0)) ((2 0 0) (2 1 0))
+   ((4 1 0) (4 1 0)) ((2 0 0) (4 1 0)) ((0 1 0) (2 0 0) (2 1 1)))))
+
+(FNAdvSemtrans (TheList) Laughingly-TheWord
+ (evokes :ACTION (HighAmountFn Entertained-Emotion)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Left-TheWord
+ (directionOfTranslation-Avg :ACTION Leftward) (frame FN_Direction)
+ (bindingTemplate (TheList (:GAP (DNI alongObject) (-- trajectory-Complete))))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Legally-TheWord
+ (permittedToDoSit-WRT (SomeFn LegalCode) :SUBJECT :ACTION) (frame FN_Domain)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "like" "taking" "candy" "from" "a") Baby-TheWord
+ (isa :ACTION Easy) (frame FN_Difficulty) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Like-TheWord (and) (frame FN_Hedging)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Likely-TheWord
+ (likelihood :ACTION (HighAmountFn Likelihood-QuantityType))
+ (frame FN_Likelihood)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_hypothetical_event))
+   (:OBLIQUE-OBJECT (AVP fe_degree (InverseBinaryPredicateFn explains-Generic))
+    (VPing fe_hypothetical_event) (VPfin fe_hypothetical_event)
+    (VPto fe_hypothetical_event))
+   (:NOUN (NP fe_hypothetical_event) (VPto fe_hypothetical_event)
+    (Sfin fe_hypothetical_event))))
+ (groupPatterns
+  (TheSet ((1 3 0)) ((2 2 0) (2 2 0)) ((2 0 0) (2 1 0)) ((1 0 1) (1 2 0))
+   ((0 0 0) (1 0 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Little-TheWord (and) (frame FN_Obscurity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Longingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Longing)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Loudly-TheWord
+ (loudnessOfEvent :ACTION (HighAmountFn AcousticNoiseLevel)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Lovingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Love)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Loyally-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Loyalty)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Luckily-TheWord (and) (frame FN_Luck)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Miserably-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Misery)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Modestly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Modesty)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Narrow-Mindedly-TheWord (and)
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Narrowly-TheWord (and)
+ (frame FN_Clarity_of_resolution) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Narrowly-TheWord (and) (frame FN_Margin_of_resolution)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Nearly-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT ((PPFn of) fe_individuals) (Num fe_reference_quantity)
+    (NP fe_individuals massOfObject fe_reference_quantity)
+    (AVP fe_reference_quantity))
+   (:GAP (-- fe_degree fe_denoted_quantity)
+    (2nd fe_denoted_quantity fe_individuals))
+   (:NOUN (N fe_individuals) (NP fe_denoted_quantity fe_individuals))))
+ (groupPatterns
+  (TheSet ((2 1 1)) ((0 2 0)) ((2 1 0)) ((0 2 1) (0 3 0)) ((0 0 0) (0 2 2))
+   ((0 1 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Nearly-TheWord (and) (frame FN_Relational_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Negatively-TheWord
+ (hasEvaluativeQuantity :ACTION (MediumToVeryHighAmountFn Badness-Generic))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Nervously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Nervousness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Never-TheWord (frequencyOfEventType :ACTION Never)
+ (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_event))
+   (:OBLIQUE-OBJECT (Sfin fe_event) (VPbrst fe_event) (VPing fe_event)
+    (VPto fe_event) ((PPFn in) fe_time_span))
+   (:GAP (DNI fe_event) (-- frequencyOfEvent))
+   (:NOUN (Sfin fe_event) (Sto fe_event))))
+ (groupPatterns
+  (TheSet ((1 3 0)) ((1 2 0)) ((1 0 0) (1 4 0)) ((3 1 0) (3 1 0))
+   ((3 0 0) (3 0 0)) ((0 0 0) (1 1 0)) ((1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Never-TheWord (and) (frame FN_Negation)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP fe_negated_proposition))
+   (:NOUN (NP fe_negated_proposition) (Sfin fe_negated_proposition)
+    (VPfin fe_negated_proposition))))
+ (groupPatterns
+  (TheSet ((1 2 0) (1 2 0)) ((1 1 0) (1 1 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Nevertheless-TheWord (and) (frame FN_Concessive)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Newly-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Next-TheWord (isa :ACTION BeingNext)
+ (frame FN_Locative_relation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "no") Longer-TheWord (and) (frame FN_Negation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "no") Longer-TheWord (and)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (NP objectTranslating) (Sfin fe_trajector_event)
+    (AVP fe_trajector_period))
+   (:GAP (DNI fe_landmark_event) (-- fe_landmark_period)
+    (CNI fe_trajector_event))
+   (:NOUN (NP objectTranslating) (Sfin fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((3 0 0)) ((1 0 0)) ((1 1 0) (1 1 0)) ((3 1 0) (3 1 0))
+   ((0 0 0) (1 2 0)))))
+
+(FNAdvSemtrans (TheList) Normally-TheWord
+ (normalityOfThing :ACTION :REPLACE Normal-Usual) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Normally-TheWord (frequencyOfEventType :ACTION Often)
+ (frame FN_Frequency) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) North-TheWord
+ (directionOfTranslation-Avg :ACTION North-Generally) (frame FN_Direction)
+ (bindingTemplate (TheList (:GAP (INI alongObject) (-- trajectory-Complete))))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) North-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP distanceTranslated focalSubject))
+   (:OBLIQUE-OBJECT (NP fe_accessibility distanceTranslated)
+    ((PPFn of) fe_ground)
+    (AVP fe_accessibility fe_directness distanceTranslated
+     temporallyIntersects))
+   (:GAP (CNI focalSubject) (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((1 2 3) (3 0 0)) ((0 0 1) (1 2 3)) ((0 0 1) (1 1 0))
+   ((1 0 1) (3 0 0)) ((1 1 0) (1 2 1)) ((0 0 1) (1 0 0))
+   ((0 0 0) (0 0 1) (1 1 0)) ((0 0 1) (1 0 1) (1 1 0))
+   ((0 0 1) (1 1 0) (1 2 2)) ((0 0 1) (1 1 0) (1 2 1))
+   ((0 0 1) (1 2 0) (1 2 3)) ((1 1 0) (1 2 0) (3 0 0))
+   ((0 0 1) (1 1 0) (1 2 0)) ((0 0 1) (1 0 1) (1 1 0) (1 2 0)))))
+
+(FNAdvSemtrans (TheList) Northeast-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (NP distanceTranslated) ((PPFn of) fe_ground))
+   (:APPOSITIVE (NP fe_ground))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 1 0)) ((0 0 0) (1 1 0) (2 0 0))
+   ((0 0 0) (1 0 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Northwest-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (AVP fe_accessibility) (NP distanceTranslated)
+    ((PPFn of) fe_ground))
+   (:GAP (DNI focalSubject)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 2 0)) ((1 1 0) (1 2 0)) ((0 0 0) (1 1 0) (1 2 0))
+   ((1 0 0) (1 2 0) (3 0 0)) ((0 0 0) (1 0 0) (1 2 0)))))
+
+(FNAdvSemtrans (TheList) Nostalgically-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Nostalgia))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Not-TheWord (and) (frame FN_Negation)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sfin fe_factual_situation))
+   (:GAP (2nd fe_factual_situation)) (:NOUN (Sfin fe_negated_proposition))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 0 0)) ((0 0 0) (2 0 0)) ((2 0 0) (2 0 0))
+   ((2 0 0) (2 0 0) (2 0 0)) ((0 0 0) (2 0 0) (2 0 0))
+   ((0 0 0) (2 0 0) (2 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Not-TheWord (and) (frame FN_Verdict)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "now" "and") Then-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Obviously-TheWord (and) (frame FN_Obviousness)
+ (bindingTemplate (TheList (:OBLIQUE-OBJECT (NP fe_phenomenon))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Occasionally-TheWord
+ (frequencyOfEventType :ACTION Sometimes-GenericFrequency) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "of") Late-TheWord (and)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (VPing fe_trajector_event))
+   (:GAP (INI fe_landmark_period)) (:NOUN (Sfin fe_trajector_event))))
+ (groupPatterns (TheSet ((0 0 0)) ((2 0 0)))))
+
+(FNAdvSemtrans (TheList "off" "and") On-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "off" "the" "beaten") Path-TheWord (and)
+ (frame FN_Isolated_places) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Often-TheWord (frequencyOfEventType :ACTION Often)
+ (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_event))
+   (:OBLIQUE-OBJECT (AVP fe_degree) (N fe_event) (Sfin fe_event) (AJP fe_event)
+    (VPfin fe_event))
+   (:GAP (-- fe_attribute fe_interval frequencyOfEvent) (INI fe_time_span))
+   (:NOUN (Sfin fe_event) (N topicOfIndividual))))
+ (groupPatterns
+  (TheSet ((1 4 0)) ((1 2 0)) ((1 1 0)) ((1 4 0) (3 1 0)) ((0 0 0) (1 3 0))
+   ((3 0 0) (3 0 0)) ((1 2 0) (1 2 0)) ((1 0 0) (1 2 0)) ((1 0 0) (3 0 0))
+   ((1 0 0) (3 0 0) (3 0 0)))))
+
+(FNAdvSemtrans (TheList "on" "and") Off-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on") Foot-TheWord (and)
+ (frame FN_Transportation_status)
+ (bindingTemplate (TheList (:SUBJECT (NP fe_rider))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) On-TheWord
+ (frequencyOfEventType :ACTION (EveryPerFn :OBLIQUE-OBJECT 1))
+ (frame FN_Frequency) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) On-TheWord (and) (frame FN_Process_continue)
+ (bindingTemplate (TheList (:SUBJECT (NP fe_event))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList "on") Time-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "once" "in" "a") While-TheWord (and)
+ (frame FN_Frequency) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Once-TheWord (and) (frame FN_Event_instance)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sfin fe_event)) (:GAP (-- fe_instance))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (0 0 0)) ((2 0 0) (2 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Once-TheWord
+ (frequencyOfEventType :ACTION OnceInALifetime) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "or") So-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ordinarily-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ostensibly-TheWord (and)
+ (frame FN_Unattributed_information)
+ (bindingTemplate
+  (TheList
+   (:NOUN (AJP fe_reported_fact) (NP fe_reported_fact)
+    ((PPFn about) fe_reported_fact) ((PPFn as) fe_reported_fact)
+    ((PPFn because of) fe_reported_fact) ((PPFn for) fe_reported_fact)
+    ((PPFn in) fe_reported_fact) ((PPFn on) fe_reported_fact)
+    ((PPFn to) fe_reported_fact) ((PPingFn for) fe_reported_fact)
+    (Sfin fe_reported_fact) (Sto fe_reported_fact) (Sub fe_reported_fact)
+    (VPfin fe_reported_fact) (VPing fe_reported_fact)
+    (VPto fe_reported_fact))))
+ (groupPatterns
+  (TheSet ((0 15 0)) ((0 14 0)) ((0 13 0)) ((0 12 0)) ((0 10 0)) ((0 9 0))
+   ((0 8 0)) ((0 7 0)) ((0 6 0)) ((0 5 0)) ((0 4 0)) ((0 3 0)) ((0 2 0))
+   ((0 1 0)) ((0 0 0)) ((0 11 0) (0 11 0)))))
+
+(FNAdvSemtrans (TheList) Otherwise-TheWord (and)
+ (frame FN_Negative_conditional) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Out-TheWord (and) (frame FN_Partitive)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "outside" "the") Wire-TheWord (and)
+ (frame FN_Interior_profile_relation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Outward-TheWord
+ (directionOfTranslation-Avg :ACTION ExteriorDirection) (frame FN_Direction)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Overnight-TheWord (and)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate (TheList (:NOUN (Sfin fe_trajector_event))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Passionately-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Passion)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Patriotically-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Patriotism))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Pensively-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Pensiveness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Perceptively-TheWord (and) (frame FN_Mental_property)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Persuasively-TheWord
+ (isa :ACTION Convincing-CommunicationAct) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Physically-TheWord (isa :ACTION PhysicalEvent)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Piously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Piety)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Piteously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Pity)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Plenty-TheWord (and) (frame FN_Sufficiency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Politically-TheWord
+ (conceptuallyRelated :ACTION Politics) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Possibly-TheWord (and) (frame FN_Likelihood)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sfin fe_hypothetical_event))
+   (:NOUN (Sfin fe_hypothetical_event) (VPing fe_hypothetical_event))))
+ (groupPatterns (TheSet ((1 1 0)) ((1 0 0) (1 0 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Precisely-TheWord (and)
+ (frame FN_Proportional_quantity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Precisely-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Precision))
+ (frame FN_Relational_quantity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Previously-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP fe_event) (Sfin fe_event) (VPbrst fe_event))
+   (:GAP (-- fe_direction) (DNI fe_landmark_event))
+   (:NOUN (A fe_event) (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 2 0)) ((2 1 0)) ((0 0 0)) ((0 1 0) (0 1 0)))))
+
+(FNAdvSemtrans (TheList) Prior-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT ((PPFn to) fe_landmark_event) (VPto fe_landmark_event))
+   (:GAP (-- fe_direction) (DNI duration) (INI duration))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((0 1 0) (2 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Pro-TheWord (and) (frame FN_Taking_sides)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Probably-TheWord (and) (frame FN_Likelihood)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_hypothetical_event))
+   (:OBLIQUE-OBJECT ((PPFn as) (InverseBinaryPredicateFn explains-Generic))
+    (Sfin fe_hypothetical_event) (VPbrst fe_hypothetical_event)
+    (VPfin fe_hypothetical_event))
+   (:NOUN (Sfin fe_hypothetical_event) (VPfin fe_hypothetical_event))))
+ (groupPatterns
+  (TheSet ((2 1 0)) ((2 0 0) (2 0 0)) ((1 1 0) (1 1 0)) ((0 0 0) (1 3 0))
+   ((0 0 0) (1 2 0)) ((2 0 0) (2 0 0) (2 0 0)) ((1 0 0) (1 1 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Proudly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Pride)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Psychologically-TheWord (and) (frame FN_Domain)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Publicly-TheWord (isa :ACTION PublicEvent)
+ (frame FN_Secrecy_status)
+ (bindingTemplate (TheList (:NOUN (VPed fe_phenomenon) (VPing fe_phenomenon))))
+ (groupPatterns (TheSet ((0 1 0)) ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Punctually-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Purportedly-TheWord (and)
+ (frame FN_Unattributed_information) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Quickly-TheWord
+ (rateOfEvent :ACTION (HighToVeryHighAmountFn EventRate))
+ (frame FN_Taking_time)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP processTypeForAccomplishmentType))
+   (:OBLIQUE-OBJECT (VPbrst processTypeForAccomplishmentType))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Randomly-TheWord
+ (frequencyOfEventType :ACTION RandomFrequency) (frame FN_Coincidence)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Randomly-TheWord (isa :ACTION RandomSelectionEvent)
+ (frame FN_Coincidence) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Rapidly-TheWord
+ (rateOfEvent :ACTION (HighToVeryHighAmountFn EventRate))
+ (frame FN_Rate_description)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_event)) (:OBLIQUE-OBJECT (AVP fe_degree))
+   (:GAP (-- rateOfEvent))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Rapidly-TheWord
+ (isa :ACTION (HighToVeryHighAmountFn Speed)) (frame FN_Speed_description)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Rather-TheWord (and) (frame FN_Hedging)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Rebelliously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Rebelliousness-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Recently-TheWord (holdsIn :ACTION (STIB Now))
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList
+   (:NOUN (NP fe_trajector_event) (VPfin fe_trajector_event)
+    (Sfin fe_trajector_event))))
+ (groupPatterns (TheSet ((0 2 0)) ((0 0 0) (0 0 0) (0 1 0)))))
+
+(FNAdvSemtrans (TheList) Regretfully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Regret)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Regularly-TheWord
+ (frequencyOfEventType :ACTION RegularFrequency) (frame FN_Frequency)
+ (bindingTemplate (TheList (:OBLIQUE-OBJECT (VPbrst fe_event))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Reluctantly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Reluctance))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Remorsefully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Remorse)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Remotely-TheWord (spatiallyDisjoint :SUBJECT :OBJECT)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Remotely-TheWord
+ (eventLocale :ACTION
+  (SubcollectionOfWithRelationFromFn GeographicalRegion spatiallyDisjoint
+   :SUBJECT))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Repeatedly-TheWord (and) (frame FN_Event_instance)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Reportedly-TheWord (and)
+ (frame FN_Unattributed_information)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_reported_fact))
+   (:OBLIQUE-OBJECT (NP fe_reported_fact) (Sfin fe_reported_fact)
+    (VPbrst fe_reported_fact) (VPing fe_reported_fact)
+    ((PPFn with) fe_reported_fact) (VPfin fe_reported_fact)
+    ((PPFn during) temporallyIntersects))
+   (:NOUN (N fe_reported_fact) (VPfin fe_reported_fact) (NP fe_reported_fact)
+    ((PPFn as) fe_reported_fact) ((PPFn for) fe_reported_fact)
+    (Sfin fe_reported_fact) (VPed fe_reported_fact) (VPing fe_reported_fact)
+    (VPto fe_reported_fact))))
+ (groupPatterns
+  (TheSet ((2 8 0)) ((2 7 0)) ((2 1 0)) ((1 5 0)) ((2 6 0)) ((2 5 0)) ((1 4 0))
+   ((2 4 0)) ((2 3 0)) ((2 2 0)) ((1 0 0)) ((2 5 0) (2 5 0)) ((1 1 0) (1 1 0))
+   ((0 0 0) (1 3 0)) ((0 0 0) (1 2 0)) ((2 0 0) (2 1 0))
+   ((1 6 0) (2 5 0) (2 5 0)) ((2 5 0) (2 5 0) (2 5 0))
+   ((0 0 0) (0 0 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Reproachfully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Reproach))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Reservedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Reservation-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Respectfully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Respect)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Reverently-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Reverence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Rhythmically-TheWord (and) (frame FN_Temporal_pattern)
+ (bindingTemplate (TheList (:NOUN (VPfin subEvents))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList "right") Away-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Right-TheWord
+ (directionOfTranslation-Avg :ACTION Rightward) (frame FN_Direction)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Right-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Rigidly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Flexibility))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Riskily-TheWord
+ (possessiveRelation :ACTION (HighAmountFn Riskiness))
+ (frame FN_Risky_situation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Romantically-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Love-Romantic))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Roughly-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Roughly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Precision))
+ (frame FN_Relational_quantity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Rudely-TheWord (isa :ACTION RudeAction)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sadly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Sadness)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Safely-TheWord
+ (and (levelOfSafeness :ACTION :SUBJECT performedBy (HighAmountFn Safeness))
+      (levelOfDangerousness :ACTION :SUBJECT performedBy
+       (LowAmountFn Dangerousness)))
+ (frame FN_Risky_situation)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP frequencyOfEvent) (VPbrst fe_situation))
+   (:GAP (DNI resourceInEvent) (INI fe_dangerous_entity))
+   (:NOUN (Sfin fe_situation))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 1 0)) ((2 0 0) (2 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Safely-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Safety))
+ (frame FN_Risky_situation)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP frequencyOfEvent) (VPbrst fe_situation))
+   (:GAP (DNI resourceInEvent) (INI fe_dangerous_entity))
+   (:NOUN (Sfin fe_situation))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 1 0)) ((2 0 0) (2 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Secretly-TheWord
+ (holdsIn :ACTION (secrecyOfOperations :SUBJECT highAmountOf))
+ (frame FN_Secrecy_status)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (VPed fe_phenomenon))
+   (:NOUN (VPed fe_phenomenon) (VPing fe_phenomenon))))
+ (groupPatterns (TheSet ((1 1 0)) ((1 0 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Seldom-TheWord (frequencyOfEventType :ACTION Rarely)
+ (frame FN_Frequency) (bindingTemplate (TheList (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Seriously-TheWord
+ (significanceOfSituation :ACTION highAmountOf) (frame FN_Importance)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_interested_party))
+   (:OBLIQUE-OBJECT (VPed fe_factor) (VPfin fe_undertaking))))
+ (groupPatterns (TheSet ((1 0 0)) ((0 0 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Seriously-TheWord
+ (possessiveRelation :ACTION (HighAmountFn Seriousness)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sexually-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn SexualGratification))
+ (frame FN_Rape) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Shamefully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Shame)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Simultaneously-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Simultaneously-TheWord (and) (frame FN_Simultaneity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Since-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP duration fe_event) (Sfin fe_event))
+   (:OBJECT (NP fe_landmark_event))
+   (:OBLIQUE-OBJECT (NP duration fe_landmark_event)
+    (Sfin fe_event fe_landmark_event) (AVP fe_direction fe_landmark_event))
+   (:GAP (-- fe_direction) (DNI duration) (INI duration))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((2 0 1) (2 1 0)) ((2 1 1) (4 0 0)) ((2 0 1) (4 0 0))
+   ((2 2 1) (4 0 0)) ((0 1 0) (2 0 1)) ((0 0 1) (2 1 1)) ((0 0 0) (2 1 1))
+   ((0 0 1) (2 0 1)) ((1 0 0) (4 0 0)) ((0 0 1) (2 0 0))
+   ((1 0 0) (2 1 0) (2 2 0)) ((1 0 0) (4 0 0) (4 0 0))
+   ((0 1 0) (0 1 0) (2 0 1)))))
+
+(FNAdvSemtrans (TheList) Sincerely-TheWord
+ (hasEvaluativeQuantity :ACTION (PositiveAmountFn Sincerity)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Singly-TheWord (and) (frame FN_Accompaniment)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Slow-TheWord
+ (rateOfEvent :ACTION (VeryLowToLowAmountFn EventRate)) (frame FN_Taking_time)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Slowly-TheWord
+ (rateOfEvent :ACTION (VeryLowToLowAmountFn EventRate)) (frame FN_Taking_time)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP doneBy))
+   (:OBLIQUE-OBJECT (Sfin processTypeForAccomplishmentType)
+    (VPing processTypeForAccomplishmentType) (AVP fe_degree))
+   (:GAP (CNI doneBy))))
+ (groupPatterns (TheSet ((1 1 0) (1 2 0)) ((0 0 0) (1 1 0)) ((1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList "so") Far-TheWord (and)
+ (frame FN_Continued_state_of_affairs)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (Sfin fe_state_of_affairs))
+   (:GAP (-- fe_reference_occasion) (DEN fe_reference_occasion))
+   (:NOUN (Sfin fe_reference_occasion fe_state_of_affairs))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((2 0 1)) ((2 0 1) (2 0 1)) ((2 0 0) (2 0 1))
+   ((2 0 1) (2 0 1) (2 0 1)))))
+
+(FNAdvSemtrans (TheList) So-TheWord (and) (frame FN_Continued_state_of_affairs)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) So-TheWord (and) (frame FN_Degree)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (A fe_gradable_attribute))
+   (:NOUN (A fe_gradable_attribute))))
+ (groupPatterns (TheSet ((1 0 0)) ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) So-TheWord (and) (frame FN_Sufficiency)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectOfStateChange)) (:OBLIQUE-OBJECT (AJP fe_scale))
+   (:GAP (INI fe_enabled_situation))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Socially-TheWord (and) (frame FN_Domain)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Softly-TheWord (pressureApplied :ACTION LightPressure)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Solemnly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Solemnity))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sometimes-TheWord
+ (frequencyOfEventType :ACTION Sometimes-GenericFrequency) (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_event))
+   (:OBLIQUE-OBJECT ((PPFn at) fe_event) (VPbrst fe_event))
+   (:GAP (-- fe_interval)) (:NOUN (Sfin fe_event) (VPbrst fe_event))))
+ (groupPatterns
+  (TheSet ((3 1 0)) ((1 1 0)) ((3 0 0)) ((1 0 0)) ((0 0 0) (0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Somewhat-TheWord (isa :ACTION (ModeratelyFn :REPLACE))
+ (frame FN_Degree)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (AJP fe_gradable_attribute))
+   (:GAP (CNI fe_gradable_attribute))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList "sooner" "rather" "than") Later-TheWord (and)
+ (frame FN_Relative_time) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "sooner" "rather" "than") Later-TheWord (and)
+ (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:GAP (-- fe_direction) (INI duration) (DNI fe_landmark_event))
+   (:NOUN (VPto fe_event) (Sbrst fe_event))))
+ (groupPatterns (TheSet ((1 1 0)) ((1 0 0)))))
+
+(FNAdvSemtrans (TheList) Sooner-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sooner-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "sort") Of-TheWord (and) (frame FN_Hedging)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sourly-TheWord
+ (actionExpressesFeeling :ACTION Resentment) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) South-TheWord
+ (directionOfTranslation-Avg :ACTION South-Generally) (frame FN_Direction)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT ((PPFn of) alongObject))
+   (:GAP (INI alongObject) (-- trajectory-Complete))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) South-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (NP distanceTranslated) ((PPFn of) fe_ground)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile))
+   (:GAP (CNI focalSubject) (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((1 2 5)) ((0 0 0) (1 2 3)) ((0 0 0) (1 2 2))
+   ((1 0 0) (1 1 0) (3 0 0)) ((0 0 0) (1 0 0) (1 1 0))
+   ((1 1 0) (1 2 4) (3 0 0)) ((0 0 0) (1 0 0) (1 2 3))
+   ((0 0 0) (1 2 2) (1 2 5)) ((0 0 0) (1 1 0) (1 2 1))
+   ((1 1 0) (1 2 0) (3 0 0)) ((0 0 0) (1 1 0) (1 2 0))
+   ((0 0 0) (1 2 0) (1 2 2)) ((0 0 0) (1 0 0) (1 1 0) (1 2 3)))))
+
+(FNAdvSemtrans (TheList) Southeast-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP distanceTranslated focalSubject))
+   (:OBLIQUE-OBJECT (NP distanceTranslated) ((PPFn of) fe_ground)
+    ((PPFn on) temporallyIntersects))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 1) (1 1 0)) ((0 0 1) (1 0 0)) ((1 1 0) (1 2 0) (3 0 0))
+   ((0 0 0) (0 0 1) (1 1 0)) ((0 0 1) (1 0 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Southwest-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (NP distanceTranslated) ((PPFn of) fe_ground))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList) Speedily-TheWord
+ (rateOfEvent :ACTION (HighToVeryHighAmountFn EventRate))
+ (frame FN_Speed_description) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sporadically-TheWord
+ (frequencyOfEventType :ACTION Sometimes-GenericFrequency) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Steadily-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Steadiness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Still-TheWord (holdsIn Now :ACTION)
+ (frame FN_Continued_state_of_affairs)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_state_of_affairs))
+   (:OBLIQUE-OBJECT ((PPFn on) situationConstituents)
+    (NP fe_reference_occasion) (AVP fe_reference_occasion)
+    (Sfin fe_state_of_affairs) (VPed fe_state_of_affairs)
+    (VPing fe_state_of_affairs) (VPfin fe_state_of_affairs)
+    ((PPFn in) fe_state_of_affairs) (Sun fe_state_of_affairs))
+   (:GAP (-- fe_reference_occasion) (DEN fe_reference_occasion)
+    (DNI fe_reference_occasion))
+   (:NOUN (Sfin fe_state_of_affairs) (VPfin fe_state_of_affairs))))
+ (groupPatterns
+  (TheSet ((1 6 0)) ((3 1 0)) ((1 5 0)) ((1 4 0)) ((3 0 0)) ((1 7 0) (1 8 0))
+   ((3 0 0) (3 0 0)) ((1 3 0) (1 3 0)) ((3 0 0) (3 0 0) (3 0 0))
+   ((0 0 0) (1 2 0) (3 1 0)) ((1 1 0) (3 0 0) (3 0 0))
+   ((1 0 0) (3 0 0) (3 0 0)))))
+
+(FNAdvSemtrans (TheList) Strenuously-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn PhysicalEffortLevel))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Strongly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Strength)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Studiously-TheWord
+ (levelOfMentalExertion :ACTION :SUBJECT performedBy
+  (HighAmountFn MentalEffortLevel))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Stupidly-TheWord
+ (levelOfMentalExertion :ACTION :SUBJECT performedBy
+  (LowAmountFn MentalEffortLevel))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Subsequently-TheWord (and) (frame FN_Relative_time)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_focal_participant))
+   (:OBLIQUE-OBJECT (Sfin fe_focal_occasion) (VPfin fe_focal_occasion))
+   (:GAP (DNI fe_landmark_occasion)) (:NOUN (Sfin fe_focal_occasion))))
+ (groupPatterns (TheSet ((1 1 0)) ((3 0 0) (3 0 0)) ((0 0 0) (1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Successfully-TheWord
+ (successfulForAgent :ACTION :SUBJECT) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sufficiently-TheWord (and) (frame FN_Sufficiency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Supposedly-TheWord (and)
+ (frame FN_Unattributed_information) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Surely-TheWord (and) (frame FN_Likelihood)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (NP fe_hypothetical_event) (VPfin fe_hypothetical_event))))
+ (groupPatterns (TheSet ((0 0 0) (0 1 0)))))
+
+(FNAdvSemtrans (TheList) Surprisingly-TheWord
+ (evokes :ACTION (HighAmountFn Surprise)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Suspiciously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Mistrust))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Surreptitiously-TheWord
+ (isa :ACTION (SurreptitiouslyFn :REPLACE)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sweetly-TheWord
+ (actionExpressesFeeling :ACTION Cheerfulness) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Swiftly-TheWord
+ (rateOfEvent :ACTION (HighToVeryHighAmountFn EventRate)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Swimmingly-TheWord (isa :ACTION SuccessfulAction)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sympathetically-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Sympathy))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Tastefully-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn AestheticSense))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) That-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Then-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (VPing fe_event_description))
+   (:NOUN (Sfin fe_trajector_event) (Sing fe_trajector_event)
+    (VPfin fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((1 2 0)) ((1 1 0)) ((1 0 0) (1 0 0)) ((0 0 0) (1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) There-TheWord (and) (frame FN_Existence)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) There-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin objectFoundInLocation) (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (AVP fe_direction)) (:GAP (-- fe_ground))
+   (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((3 0 0)) ((0 1 0)) ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) There-TheWord (and) (frame FN_Spatial_co-location)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT ((PPFn on) temporallyIntersects)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     fe_temporal_profile temporallyIntersects)
+    ((PPFn in) temporallyIntersects) ((PPFn at) temporallyIntersects))
+   (:NOUN (Sfin focalSubject) (VPing focalSubject) (VPbrst focalSubject))))
+ (groupPatterns
+  (TheSet ((2 1 0)) ((2 0 0)) ((0 0 0)) ((1 3 0) (2 1 0)) ((1 2 0) (2 2 0))
+   ((0 0 0) (1 0 0)) ((1 1 4) (2 0 0)) ((1 1 3) (2 0 0)) ((0 0 0) (1 1 3))
+   ((1 1 2) (2 1 0)) ((1 1 2) (2 0 0)) ((0 0 0) (1 1 2)) ((1 1 1) (2 1 0))
+   ((1 1 1) (2 0 0)) ((0 0 0) (1 1 1)) ((1 1 0) (2 0 0)) ((0 0 0) (1 1 0))
+   ((1 1 4) (1 1 5) (2 0 0)))))
+
+(FNAdvSemtrans (TheList) Thereabouts-TheWord (and)
+ (frame FN_Proportional_quantity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Thereabouts-TheWord (and)
+ (frame FN_Relational_quantity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Thereafter-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Thoughtfully-TheWord
+ (levelOfMentalExertion :ACTION :SUBJECT performedBy
+  (HighAmountFn MentalEffortLevel))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Thoughtlessly-TheWord
+ (levelOfMentalExertion :ACTION :SUBJECT performedBy
+  (LowAmountFn MentalEffortLevel))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Thrice-TheWord (and) (frame FN_Event_instance)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "through" "the") Roof-TheWord (and)
+ (frame FN_Position_on_a_scale) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "time" "to") Time-TheWord
+ (frequencyOfEventType :ACTION Sometimes-GenericFrequency) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "to" "a") Halt-TheWord (isa :ACTION (EndingFn Event))
+ (frame FN_Halt) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "to" "a") Stop-TheWord (isa :ACTION (EndingFn Event))
+ (frame FN_Halt) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "to") Date-TheWord (and)
+ (frame FN_Continued_state_of_affairs)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (Sfin fe_state_of_affairs) (VPed fe_state_of_affairs))
+   (:GAP (-- fe_reference_occasion))
+   (:NOUN (NP fe_state_of_affairs) (Sfin fe_state_of_affairs))))
+ (groupPatterns
+  (TheSet ((2 1 0)) ((2 0 0)) ((0 1 0) (0 1 0)) ((0 0 0) (0 0 0)))))
+
+(FNAdvSemtrans (TheList) Together-TheWord (and) (frame FN_Accompaniment)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Together-TheWord (isa :ACTION MultipleDoerAction)
+ (frame FN_Collaboration)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_partners))
+   (:OBLIQUE-OBJECT (VPbrst fe_undertaking) (VPed fe_undertaking)
+    (VPfin fe_undertaking))))
+ (groupPatterns (TheSet ((0 0 0) (1 2 0)) ((0 0 0) (1 1 0)) ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Totally-TheWord (and) (frame FN_Degree)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT ((PPFn of) fe_gradable_attribute))
+   (:NOUN (A fe_gradable_attribute) (AJP fe_gradable_attribute))))
+ (groupPatterns (TheSet ((0 0 0)) ((1 1 0)) ((1 0 0)))))
+
+(FNAdvSemtrans (TheList) Triumphantly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Triumph)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Tunelessly-TheWord
+ (isa :ACTION (CollectionDifferenceFn AudibleSoundOrSoundSequence Tune))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Twice-TheWord (and) (frame FN_Event_instance)
+ (bindingTemplate (TheList (:GAP (-- fe_instance)) (:NOUN (Sfin fe_event))))
+ (groupPatterns (TheSet ((1 0 0)))))
+
+(FNAdvSemtrans (TheList) Typically-TheWord (isa :ACTION Normal-Usual)
+ (frame FN_Typicality) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ultimately-TheWord (and)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (VPfin fe_trajector_event))
+   (:NOUN (Sfin fe_trajector_event) (VPfin fe_trajector_event))))
+ (groupPatterns (TheSet ((2 0 0) (2 1 0)) ((0 0 0) (0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Uncreatively-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (LowAmountFn Creativity))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Uncreatively-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Creativity)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Underground-TheWord
+ (eventOccursAt :ACTION Underground) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:GAP (-- fe_ground)) (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((1 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Undoubtedly-TheWord
+ (evokes :ACTION (NoAmountFn Doubt)) (frame FN_Likelihood)
+ (bindingTemplate
+  (TheList (:SUBJECT (VPfin fe_hypothetical_event))
+   (:OBLIQUE-OBJECT (NP fe_hypothetical_event))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNAdvSemtrans (TheList) Uneasily-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Uneasiness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Unexpectedly-TheWord
+ (evokes :ACTION (HighAmountFn Surprise)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Unfairly-TheWord (and) (frame FN_Fairness_evaluation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Unhappily-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Unhappiness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Unjustly-TheWord (and) (frame FN_Fairness_evaluation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Unsuccessfully-TheWord
+ (isa :ACTION UnsuccessfulAction) (frame FN_Misc) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Unwillingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Unwillingness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Up-TheWord (and) (frame FN_Being_up_to_it)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Up-TheWord
+ (directionOfTranslation-Avg :ACTION Up-Generally) (frame FN_Direction)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT ((PPFn from) alongObject) (NP trajectory-Complete))))
+ (groupPatterns (TheSet ((0 1 0)) ((0 0 0) (0 1 0)))))
+
+(FNAdvSemtrans (TheList) Upward-TheWord
+ (directionOfTranslation-Avg :ACTION Up-Generally) (frame FN_Direction)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Usually-TheWord (isa :ACTION Normal-Usual)
+ (frame FN_Frequency) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Vertical-TheWord
+ (directionOfTranslation-Avg :ACTION VerticalDirection) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Very-TheWord (and) (frame FN_Degree)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (A fe_gradable_attribute) (AJP fe_gradable_attribute)
+    (AVP fe_gradable_attribute))
+   (:NOUN (A fe_gradable_attribute) (AJP fe_gradable_attribute)
+    (N fe_gradable_attribute) (NP fe_gradable_attribute))))
+ (groupPatterns
+  (TheSet ((1 3 0)) ((1 2 0)) ((0 2 0)) ((1 1 0)) ((0 1 0)) ((1 0 0))
+   ((0 0 0)))))
+
+(FNAdvSemtrans (TheList) Very-TheWord (and) (frame FN_Similarity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Way-TheWord (and) (frame FN_Degree)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Weekly-TheWord (frequencyOfEventType :ACTION Weekly)
+ (frame FN_Frequency) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) West-TheWord
+ (directionOfTranslation-Avg :ACTION West-Generally) (frame FN_Direction)
+ (bindingTemplate (TheList (:GAP (DNI alongObject) (-- trajectory-Complete))))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) West-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (AVP fe_accessibility fe_direction fe_directness)
+    (NP distanceTranslated) ((PPFn of) fe_ground)
+    ((PPFn at) temporallyIntersects))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 2 0)) ((0 0 0) (1 1 0)) ((0 0 0) (1 0 1))
+   ((1 1 0) (1 2 0) (3 0 0)) ((0 0 0) (1 1 0) (1 2 0))
+   ((0 0 0) (1 0 2) (1 2 0)) ((0 0 0) (1 0 1) (1 2 0))
+   ((1 0 0) (1 2 0) (3 0 0)) ((0 0 0) (1 0 0) (1 2 0))
+   ((0 0 0) (1 0 2) (1 1 0) (1 2 0)) ((0 0 0) (1 0 1) (1 1 0) (1 2 0))
+   ((1 0 0) (1 2 0) (1 3 0) (3 0 0)))))
+
+(FNAdvSemtrans (TheList) When-TheWord (dateOfEvent :OBJECT :DATE)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_trajector_event) (NP fe_trajector_period))
+   (:OBJECT (Sfin fe_landmark_event))
+   (:OBLIQUE-OBJECT (NP fe_landmark_event) (VPbrst fe_landmark_event)
+    (VPed fe_landmark_event) (VPing fe_landmark_event)
+    ((PPFn between) fe_landmark_period)
+    (Sfin fe_landmark_event fe_trajector_event))
+   (:GAP (-- fe_landmark_period) (DNI fe_landmark_period fe_trajector_event)
+    (CNI fe_trajector_event))
+   (:NOUN (Sfin fe_landmark_event objectTranslating fe_trajector_event)
+    (VPing fe_trajector_event) (VPfin fe_trajector_event)
+    (NP fe_trajector_event fe_trajector_period))))
+ (groupPatterns
+  (TheSet ((4 0 2)) ((2 5 1)) ((2 5 0)) ((2 4 0) (2 5 1)) ((0 1 0) (4 0 0))
+   ((2 5 0) (4 3 1)) ((2 3 0) (4 0 2)) ((2 1 0) (4 0 2)) ((0 0 0) (1 0 0))
+   ((2 5 1) (4 0 0)) ((2 5 0) (4 1 0)) ((2 5 0) (4 0 2)) ((0 0 0) (2 5 0))
+   ((2 5 0) (2 5 1)) ((2 0 0) (4 0 1)) ((2 2 0) (4 2 0) (4 3 0)))))
+
+(FNAdvSemtrans (TheList) Where-TheWord (eventOccursAt :ACTION :LOCATION)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation fe_figures fe_ground))
+   (:OBLIQUE-OBJECT (Sfin objectFoundInLocation) (unknown fe_ground)
+    (NP objectFoundInLocation fe_ground) (Sinterrog fe_ground))
+   (:GAP (-- objectFoundInLocation fe_ground))
+   (:NOUN (Sfin objectFoundInLocation) (NP fe_ground))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 0 0)) ((1 2 0)) ((0 0 1) (1 3 0)) ((3 0 0) (3 1 0))
+   ((0 0 2) (1 0 0)) ((1 0 0) (1 2 1)) ((0 0 0) (1 1 0)) ((0 0 2) (1 2 0)))))
+
+(FNAdvSemtrans (TheList) Where-TheWord
+ (objectFoundInLocation :OBJECT :LOCATION) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation fe_figures fe_ground))
+   (:OBLIQUE-OBJECT (Sfin objectFoundInLocation) (unknown fe_ground)
+    (NP objectFoundInLocation fe_ground) (Sinterrog fe_ground))
+   (:GAP (-- objectFoundInLocation fe_ground))
+   (:NOUN (Sfin objectFoundInLocation) (NP fe_ground))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 0 0)) ((1 2 0)) ((0 0 1) (1 3 0)) ((3 0 0) (3 1 0))
+   ((0 0 2) (1 0 0)) ((1 0 0) (1 2 1)) ((0 0 0) (1 1 0)) ((0 0 2) (1 2 0)))))
+
+(FNAdvSemtrans (TheList "where") [Interrog]-TheWord (and)
+ (frame FN_Spatial_co-location)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (Srel focalSubject) (NP temporallyIntersects))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns (TheSet ((1 0 0)) ((2 0 0)) ((0 0 0)) ((0 0 0) (1 1 0)))))
+
+(FNAdvSemtrans (TheList "where") [Relativizer]-TheWord (and)
+ (frame FN_Spatial_co-location)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (VPto focalSubject)
+    (AVP fe_accessibility fe_deixis fe_directness fe_temporal_profile)
+    ((PPFn in) temporallyIntersects) ((PPFn until) temporallyIntersects)
+    ((PPFn on) temporallyIntersects))
+   (:NOUN (Sfin focalSubject) (Srel focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((2 1 0)) ((2 0 0)) ((1 4 0) (2 0 0)) ((1 2 0) (2 0 0))
+   ((1 1 3) (2 0 0)) ((1 1 2) (2 0 0)) ((1 1 1) (2 0 0)) ((1 1 0) (2 0 0))
+   ((1 1 2) (1 3 0) (2 0 0)) ((0 0 0) (1 1 2) (1 2 0)))))
+
+(FNAdvSemtrans (TheList) Willingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Willingness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Wisely-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (HighAmountFn Wisdom))
+ (frame FN_Mental_property) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Wisely-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Wisdom)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Wrongly-TheWord (isa :ACTION IllegalAction)
+ (frame FN_Legality) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Yearly-TheWord (frequencyOfEventType :ACTION Yearly)
+ (frame FN_Frequency) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ably-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Competence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Abroad-TheWord
+ (eventOccursAt :ACTION (CollectionIntersection2Fn Country Foreign))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Accidentally-TheWord (isa :ACTION Accident)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Aesthetically-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn AestheticSense))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Again-TheWord (isa :ACTION RepeatedEvent)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Agilely-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Agility)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Boorishly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn Charisma)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Chemically-TheWord (isa :ACTION ChemicalInteraction)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Chivalrously-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Charisma)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Chuffily-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn Charisma)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Churlishly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn Charisma)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Clumsily-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (LowAmountFn Agility))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Clumsily-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Agility)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Competently-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Competence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Completely-TheWord
+ (relationInstanceNotExists properParts :ACTION :REPLACE) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Dangerously-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Safety)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Defeatedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Defeatedness-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Deftly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Dexterity)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Dexterously-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Dexterity)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Diffidently-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (LowAmountFn SelfConfidence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Disarmingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Charm)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Disdainfully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Contempt))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Disgustedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Disgust)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Dismissively-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Interest-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Disparagingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Contempt))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Dispassionately-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Enthusiasm))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Dissolutely-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Shame)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Doggedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Willlingness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Effectively-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Effectiveness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Efficiently-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn Efficiency))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Effortfully-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (HighAmountFn PhysicalEffortLevel))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Effortlessly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn PhysicalEffortLevel))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Embarrassedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Embarrassment))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Emotionlessly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn EmotionalColdness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Firmly-TheWord
+ (hasPhysicalQuantity :ACTION (HighAmountFn Appliedforce)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Firmly-TheWord
+ (isa :ACTION Convincing-CommunicationAct) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Flauntingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Modestly)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Fruitlessly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn Effectiveness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Furiously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Anger)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Furtively-TheWord
+ (isa :ACTION (SurreptitiouslyFn :REPLACE)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Futilely-TheWord (failureForAgents :ACTION :SUBJECT)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Geologically-TheWord (isa :ACTION GeologicalProcess)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Illegally-TheWord (isa :ACTION IllegalAction)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Immediately-TheWord (startsNoLaterThan :ACTION Now)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Incompetently-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Competence)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ineffectively-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Effectiveness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Injudiciously-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (LowAmountFn Wisdom))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Irrationally-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION performedBy (LowAmountFn Reasonability))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Mindlessly-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (NoAmountFn MentalEffortLevel))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Momentarily-TheWord (timeSpan :ACTION ShortTime)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Necessarily-TheWord
+ (relationExistsInstance needs-Generic AgentGeneric :ACTION) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on" "his") Own-TheWord
+ (relationInstanceNotExists assistingAgent :ACTION Agent-Generic)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on" "her") Own-TheWord
+ (relationInstanceNotExists assistingAgent :ACTION Agent-Generic)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on" "its") Own-TheWord
+ (relationInstanceNotExists assistingAgent :ACTION Agent-Generic)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on" "my") Own-TheWord
+ (relationInstanceNotExists assistingAgent :ACTION Agent-Generic)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on" "our") Own-TheWord
+ (relationInstanceNotExists assistingAgent :ACTION Agent-Generic)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on" "their") Own-TheWord
+ (relationInstanceNotExists assistingAgent :ACTION Agent-Generic)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "on" "your") Own-TheWord
+ (relationInstanceNotExists assistingAgent :ACTION Agent-Generic)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Partly-TheWord
+ (relationInstanceExists properParts :ACTION :REPLACE) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Prettily-TheWord
+ (hasEvaluativeQuantity :ACTION (HighAmountFn AestheticQuality))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Privately-TheWord
+ (hasEvaluativeQuantity :ACTION (HighAmountFn PrivacyLevel)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Quarterly-TheWord
+ (frequencyOfEventType :ACTION Quarterly) (frame FN_Frequency)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Quietly-TheWord
+ (loudnessLevel :Action (LowAmountFn AcousticNoiseLevel)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Rabidly-TheWord
+ (feelsEmotion :SUBJECT (VeryHighAmountFn Eagerness)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Readily-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Willingness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Repentingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Remorse)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Resentingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Resentment))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Resignedly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Rebelliousness-Feeling))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Reverentially-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Reverence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList "right") Away-TheWord (startsNoLaterThan :ACTION Now)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Righteously-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (NoAmountFn Uncertainty))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ringingly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Enthusiasm))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Septically-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Doubt)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Shyly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (LowAmountFn SelfConfidence))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Skillfully-TheWord
+ (performanceLevel :SUBJECT :ACTION performedBy (HighAmountFn Effectiveness))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Skillfully-TheWord
+ (actionUsedQuantity :SUBJECT :ACTION (LowAmountFn Agility)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Sneeringly-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Contempt))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Suddenly-TheWord (isa :ACTION DevelopingSuddenly)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Suddenly-TheWord
+ (rapidlyDevelopingVarietyOfType :ACTION :REPLACE) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Tightly-TheWord
+ (hasPhysicalQuantity :ACTION (HighAmountFn Appliedforce)) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Ungratefully-TheWord
+ (attitudeTowardsEvent :SUBJECT :ACTION (HighAmountFn Ingratitude))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Unnecessarily-TheWord
+ (relationNotExistsInstance needs-Generic Agent-Generic :ACTION)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Wild-TheWord (isa :ACTION WildAction) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNAdvSemtrans (TheList) Wildly-TheWord (isa :ACTION WildAction)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))

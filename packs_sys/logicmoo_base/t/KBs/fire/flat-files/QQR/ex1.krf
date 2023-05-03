@@ -1,0 +1,121 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ex1
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: December 27, 2010 14:01:33
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2013-01-06 13:30:52 -0600 (Sun, 06 Jan 2013) $
+;;;;  $LastChangedBy: forbus $
+
+(in-microtheory QPExampleEx1Mt)
+
+(comment QPExampleEx1Mt
+  "QPExampleEx1Mt is a microtheory describing the classic two containers scenario, used in testing QP theory implementations.")
+
+(includeEntity F)
+(includeEntity G)
+(includeEntity P1)
+
+(includeEntity Liquid-StateOfMatter)
+(includeEntity Water)
+
+(isa F Container)
+(canContainSubstance F Water Liquid-StateOfMatter)
+(isa G Container)
+(canContainSubstance G Water Liquid-StateOfMatter)
+(isa P1 LiquidPath)
+(liquidConnection P1 F G)
+(liquidConnection P1 G F)
+(mfiName G-PossibleL
+ (ModelFragmentInstanceFn ContainedStuffPossibility
+                          (TheSet (TheList containerOf G)
+                                  (TheList phaseOf Liquid-StateOfMatter)
+                                  (TheList substanceOf Water))))
+
+(mfiName F-PossibleL
+ (ModelFragmentInstanceFn ContainedStuffPossibility
+                          (TheSet (TheList containerOf F)
+                                  (TheList phaseOf Liquid-StateOfMatter)
+                                  (TheList substanceOf Water))))
+(mfiName Wf
+ (ModelFragmentInstanceFn ContainedStuff
+                          (TheSet (TheList containerOf F)
+                                  (TheList mfParticipant F-PossibleL)
+                                  (TheList phaseOf Liquid-StateOfMatter)
+                                  (TheList substanceOf Water))))
+(mfiName Wg
+ (ModelFragmentInstanceFn ContainedStuff
+                          (TheSet (TheList containerOf G)
+                                  (TheList mfParticipant G-PossibleL)
+                                  (TheList phaseOf Liquid-StateOfMatter)
+                                  (TheList substanceOf Water))))
+(mfiName Wf-Props
+         (ModelFragmentInstanceFn ContainedLiquidProperties
+                                  (TheSet (TheList containerOf F)
+                                          (TheList liquidOf Wf)
+                                          (TheList substanceOf Water))))
+(mfiName F-L>G
+         (ModelFragmentInstanceFn LiquidFlowProcess
+                                  (TheSet (TheList destinationLiquid Wg) 
+                                          (TheList destinationOfLiquid G) 
+                                          (TheList pathOfLiquid P1)
+                                          (TheList sourceLiquid Wf) 
+                                          (TheList sourceOfLiquid F)
+                                          (TheList substanceOf Water))))
+(mfiName G-L>F
+         (ModelFragmentInstanceFn LiquidFlowProcess
+                                  (TheSet (TheList destinationLiquid Wf) 
+                                          (TheList destinationOfLiquid F) 
+                                          (TheList pathOfLiquid P1)
+                                          (TheList sourceLiquid Wg) 
+                                          (TheList sourceOfLiquid G)
+                                          (TheList substanceOf Water))))
+(mfiName Wg-Props
+         (ModelFragmentInstanceFn ContainedLiquidProperties
+                                  (TheSet (TheList containerOf G)
+                                          (TheList liquidOf Wf)
+                                          (TheList substanceOf Water))))
+
+
+
+          
+(in-microtheory QPExampleEx1-ic1Mt)
+(comment QPExampleEx1-ic1Mt
+ "QPExampleEx1-ic1Mt is the microtheory describing the initial conditions for two container liquid flow,
+ where water is flowing from F to G.")
+(genlMt QPExampleEx1-ic1Mt QPExampleEx1Mt)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter F) Zero)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter G) Zero)
+;;; Annoyingly, the decision that physical model fragment instances would be the entities
+;;; represented means that we can't refer to them in advance, unless we invent some interpreted
+;;; mechanism for finding the right mfi's to make the assertions about.  
+;;; ModelFragmentInstanceFn is a step toward a mechanism for this, but the rest needs designing.
+;;; in the meantime, here's a hack:
+(qGreaterThan ((QPQuantityFn Pressure) Wf) ((QPQuantityFn Pressure) Wg))
+(liquidAligned P1)
+
+(in-microtheory QPExampleEx1-ic0Mt)
+(comment QPExampleEx1-ic0Mt
+ "QPExampleEx1-ic0Mt is the microtheory describing the initial conditions for two container liquid flow,
+ where there is water in F but not water in G.")
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter F) Zero)
+(qEqualTo (AmountOfFn Water Liquid-StateOfMatter G) Zero)
+(liquidAligned P1)
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

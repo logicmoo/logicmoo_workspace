@@ -1,0 +1,250 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: language-learning.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 18, 2015 11:29:31
+;;;;   Purpose: Support for language games
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+;;;
+;;; This file contains htn plans for learning new natural language terms.
+;;; 
+;;; Realize that definitions entered while running the test-im agent
+;;; will not be persisted to the kb, so EA will not find them on 
+;;; subsequent sentences.
+;;;
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; Store new terms in LearnedVocabulary to more easily permit it to be measured and deleted:
+(isa LearnedVocabularyMt Microtheory)
+(genlMt CompanionsMt LearnedVocabularyMt)
+
+;;; -------------------------------------------------------------------------
+;;; Predicate Vocabulary
+;;;
+
+(isa nounTypeForConcept TernaryPredicate)
+(arity nounTypeForConcept 3)
+(arg1Isa nounTypeForConcept LexicalWord)
+(arg2Isa nounTypeForConcept Collection)
+(arg3Isa nounTypeForConcept SpeechPart)
+(comment nounTypeForConcept "(nounTypeForConcept ?lexical-word ?collection ?speech-part) binds ?speech-part to either CountNoun or MassNoun.")
+
+(isa nounTypeForWord BinaryPredicate)
+(arity nounTypeForWord 2)
+(arg1Isa nounTypeForWord LexicalWord)
+(arg2Isa nounTypeForWord SpeechPart)
+(comment nounTypeForWord "(nounTypeForWord ?lexical-word ?type) looks up the noun type from existing denotations.")
+
+(isa nounTypeForCollection BinaryPredicate)
+(arity nounTypeForCollection 2)
+(arg1Isa nounTypeForCollection Collection)
+(arg2Isa nounTypeForCollection SpeechPart)
+(comment nounTypeForCollection "For a given collection, determines whether the noun form would be a CountNoun or MassNoun.")
+
+(isa prefixWordString BinaryPredicate)
+(arity prefixWordString 2)
+(arg1Isa prefixWordString List-Extensional)
+(arg2Isa prefixWordString List-Extensional)
+(comment prefixWordString "(prefixWordString ?tokens ?prefix-list) maps a list of to a list of strings of all but the last of the tokens.")
+
+(isa lexicalWordFor BinaryPredicate)
+(arity lexicalWordFor 2)
+(arg1Isa lexicalWordFor CycLTerm)
+(arg2Isa lexicalWordFor LexicalWord)
+(comment lexicalWordFor "(lexicalWordFor ?token ?word-token) binds ?word-token to <Token>-TheWord.")
+
+(isa descriptiveCycName BinaryPredicate)
+(arity descriptiveCycName 2)
+(arg1Isa descriptiveCycName List-Extensional)
+(arg2Isa descriptiveCycName CycLTerm)
+(comment descriptiveCycName "(descriptiveCycName ?tokens ?concept) Mashes together a list of tokens into a brand spanking new Cyc term.")
+
+(isa ensureList BinaryPredicate)
+(arity ensureList 2)
+(arg1Isa ensureList CycLTerm)
+(arg2Isa ensureList List-Extensional)
+(comment ensureList "(ensureList ?arg ?lst) binds ?lst to ?arg if it is a list, otherwise binds it to TheList of ?arg.")
+
+;;; -------------------------------------------------------------------------
+;;; Action Vocabulary
+;;;
+
+(isa indexNewTerm ComplexActionPredicate)
+(arity indexNewTerm 2)
+(arg1Isa indexNewTerm Collection)
+(arg2Isa indexNewTerm CycLTerm)
+(comment indexNewTerm "(indexNewTerm ?concept ?tokens) adds either a denotation or a multi-word phrase to the lexicon.")
+
+
+(isa indexNewName ComplexActionPredicate)
+(arity indexNewName 2)
+(arg1Isa indexNewName Individual)
+(arg2Isa indexNewName CycLTerm)
+(comment indexNewName "(indexNewName ?individual ?name) adds the name to the proper names registry.")
+
+
+;;; -------------------------------------------------------------------------
+;;; Task Models
+;;;
+
+
+;;; Term introduction by definition:
+
+;;; "A chokepoint is a narrow region."
+;;; (interpretationOf Sentence-3504441336-4858
+;;;  (and (isa region4949 Region) (conceptuallyRelated region4949 (ThingDescribableAsFn Narrow-TheWord Adjective))
+;;;       (denotes chokepoint region4949)))
+
+;;; Explicit term introduction:
+
+;;; "There is a physical quantity called \"Food Points\"."
+;;; (interpretationOf Sentence-3504439455-3117
+;;;  (and (isa physical-quantity3167 PhysicalQuantity)
+;;;       (NameForConceptFn physical-quantity3167 (TheList food points))
+;;;       (denotes (DemonstrativeFn there) physical-quantity3167)))
+
+;;; Here, we actually have to create a new concept.  We don't really want to
+;;; map "food points" to "physical quantity".  It's a new *kind* of quantity.
+;;; We probably want to define the isa statement in CompanionsMt, since any 
+;;; companions session should inherit from that.  
+;;; This mechanism is only used to learn new nouns.  Verbs and adjectives will
+;;; have to be learned some other way.
+(preconditionForMethod
+  (and (isa ?tokens List-Extensional)  ; not a simple denotation
+       (evaluate ?len (LengthOfListFn ?tokens))
+       (greaterThan ?len 1)
+       (descriptiveCycName ?tokens ?concept)
+       (uninferredSentence (isa ?concept ?what))  ; creating something new here.
+       (prefixWordString ?tokens ?prefix-list)
+       (evaluate ?last-token (LastInListFn ?tokens))
+       (lexicalWordFor ?last-token ?word-token)
+       (nounTypeForConcept ?word-token ?parent-concept ?type))
+  (methodForAction
+    (indexNewTerm ?parent-concept ?tokens)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information LearnedVocabularyMt (isa ?concept Collection))
+            (ist-Information LearnedVocabularyMt (genls ?concept ?parent-concept))
+            (ist-Information LearnedVocabularyMt (multiWordString ?prefix-list ?word-token ?type ?concept))))))))
+
+;;; e.g., (multiWordString (TheList "sam") Battery-TheWord CountNoun FC-Building-SAMBattery)
+
+
+(preconditionForMethod
+  (and (uninferredSentence (isa ?token List-Extensional))  ; Would love it if notIsa worked here, but a raw token has no isa, so the query fails.
+       (descriptiveCycName ?tokens ?concept)
+       (uninferredSentence (isa ?concept ?what))  ; creating something new here.
+       (lexicalWordFor ?token ?word-token)
+       (nounTypeForConcept ?word-token ?parent-concept ?type))
+  (methodForAction
+    (indexNewTerm ?parent-concept ?token)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information LearnedVocabularyMt (isa ?concept Collection))
+            (ist-Information LearnedVocabularyMt (genls ?concept ?parent-concept))
+            ;; record the provenance?
+            (ist-Information LearnedVocabularyMt (denotation ?word-token ?type 0 ?concept))))))))
+
+;;; e.g., (denotation Worker-TheWord CountNoun 0 FC-Unit-Workers)
+
+
+(<== (prefixWordString ?token-list ?string-list)
+     (evaluate ?len (DifferenceFn (LengthOfListFn ?token-list) 1))
+     (evaluate ?prefix-tokens (SublistFromToFn ?token-list 1 ?len))
+     (evaluate ?string-list (MapFunctionOverList StringFn ?prefix-tokens)))
+
+
+;;; This is absurd.  "countable" is a feature of the lexical entry in ComLex!
+(<== (lexicalWordFor ?token ?word)
+     (evaluate ?word (SymbolConcatenateFn (TheList (StringCapitalizeFn ?token) "-TheWord"))))
+
+(<== (nounTypeForConcept ?word-token ?concept ?type)
+     (nounTypeForCollection ?concept ?type))
+     
+(<== (nounTypeForConcept ?word-token ?concept ?type)
+     (uninferredSentence
+       (nounTypeForCollection ?concept ?anything))
+     (numAnswers 1
+       (nounTypeForWord ?word-token ?type)))
+
+(<== (nounTypeForWord ?lexical-word CountNoun)
+     (ist-Information GeneralEnglishMt
+       (denotation ?lexical-word CountNoun ?word-sense ?denot)))  ; Hail Mary?
+
+(<== (nounTypeForWord ?lexical-word MassNoun)
+     (ist-Information GeneralEnglishMt
+       (denotation ?lexical-word MassNoun ?word-sense ?denot)))   ; Hail Mary?
+
+(<== (nounTypeForCollection ?concept CountNoun)
+     (genls ?concept ObjectType))  ; assuming transitive, kb, env all set
+     
+(<== (nounTypeForCollection ?concept CountNoun)
+     (genls ?concept ContinuousQuantity))    ; stopgap measure
+
+     
+(<== (nounTypeForCollection ?concept MassNoun)
+     (genls ?concept StuffType)
+     (uninferredSentence
+       (isa ?concept ObjectType)))  ; objectType is a spec of StuffType.
+
+;;; 
+(<== (descriptiveCycName ?tokens ?concept-name)
+     (isa ?tokens List-Extensional)
+     (evaluate ?concept-name 
+       (SymbolConcatenateFn 
+         (MapFunctionOverList StringCapitalizeFn ?tokens))))
+         
+(<== (descriptiveCycName ?token ?concept-name)
+     (groundExpression ?token)
+     (uninferredSentence
+       (isa ?token List-Extensional))
+     (evaluate ?concept-name
+       (SymbolConcatenateFn
+         (MapFunctionOverList StringCapitalizeFn (TheList ?token)))))
+
+;;; Here, we're introducing the name of a particular individual.
+;;; How do we distinguish this from the type-level case?
+;;; How about "There is an individual X called Y"?
+(preconditionForMethod
+ (and (ensureList ?tokens ?names)
+      (different ?names (TheList))
+      ;(evaluate ?first-name (FirstInListFn ?names))
+      ;(evaluate ?rest-names (RestOfListFn ?names))
+      (evaluate ?len (DifferenceFn (LengthOfListFn ?names) 1))
+      (evaluate ?first-names (SublistFromToFn ?names 0 ?len))
+      (evaluate ?last-name (LastInListFn ?names))
+      (descriptiveCycName ?names ?indiv))
+ (methodForAction
+   (indexNewName ?collection ?tokens)
+   (actionSequence
+     (TheList
+       (doRecordMembers
+         (TheSet
+           (ist-Information LearnedVocabularyMt (isa ?indiv Individual))
+           (ist-Information LearnedVocabularyMt (isa ?indiv ?collection))
+           ;(ist-Information LearnedVocabularyMt (indexedProperName ?first-name ?rest-names ?indiv))
+           ;; we changed the indexing of proper names:
+           (ist-Information LearnedVocabularyMt (indexedProperName ?first-names ?last-name ?indiv))
+           ))))))
+         
+;; e.g., (indexedProperName (TheList the cocos) islands CocosIslands)
+
+(<== (ensureList ?arg ?arg)
+     (isa ?arg List-Extensional))
+
+(<== (ensureList ?arg ?lst)
+     (uninferredSentence
+       (isa ?arg List-Extensional))
+     (unifies ?lst (TheList ?arg)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

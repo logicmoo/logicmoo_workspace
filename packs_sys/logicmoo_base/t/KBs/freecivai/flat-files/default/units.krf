@@ -1,0 +1,1682 @@
+(in-microtheory Freeciv-defaultMt)
+
+;; ------------------------
+;; FC-Unit-Settlers
+;; ------------------------
+(isa FC-Unit-Settlers FreeCiv-UnitType)
+(genls FC-Unit-Settlers FreeCiv-LandUnit)
+(genls FC-Unit-Settlers FreeCiv-NoncombatantUnit)
+(genls FC-Unit-Settlers Settler)  ; connect to background Cyc knowledge
+(objectProductionRequiresTech FC-Unit-Settlers FC-Tech-None)
+(objectTypeHasProductionCost FC-Unit-Settlers (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers doConnectBy performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityIrrigate performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityMine performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityRoad performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityRailroad performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityPollution performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityFallout performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers doPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Settlers FC-ActivityFortress performedBy)
+(unitTypeHasPopulationCost FC-Unit-Settlers (FreecivCitizenCountFn 1))
+(unitTypeHasAttackStrength FC-Unit-Settlers (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Settlers (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Settlers (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Settlers (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Settlers ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Settlers (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Settlers (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Settlers (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Settlers (FreecivCitizenCountFn 0)) ; How many citizens are made unhappy by presence of unit
+(objectTypeHasUpkeepShieldEffect FC-Unit-Settlers (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Settlers (FoodPoints 1))  ; This depends on the government!
+(objectTypeHasUpkeepGoldCost FC-Unit-Settlers (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Settlers Settlers)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Settlers NonMil)       ;; do we care about this?
+;;(unitHasFlag FC-Unit-Settlers AddToCity)    ;; do we care about this?
+;;(unitHasFlag FC-Unit-Settlers Cities)       ;; do we care about this?
+;;(unitHasFlag FC-Unit-Settlers NoVeteran)    ;; do we care about this?
+;;(unitHasRole FC-Unit-Settlers Cities)       ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Settlers...
+
+;;; CJM 11/3/2014
+;;; We need to be able to talk about individual citizens in the population in order to handle the FC manual
+;;;  This is tied to the term citizen, but shouldn't bother anything else.
+;;;;----------------------
+;; FC-Unit-Citizens
+;;;;
+;(isa FC-Unit-Citizens Freeciv-UnitType)
+;(genls FC-Unit-Citizens FreeCiv-NoncombatantUnit)
+;(objectTypeHasUpkeepFoodCost FC-Unit-Workers (FoodPoints 2))
+
+;; ------------------------
+;; FC-Unit-Workers
+;; ------------------------
+(isa FC-Unit-Workers FreeCiv-UnitType)
+(genls FC-Unit-Workers FreeCiv-LandUnit)
+(genls FC-Unit-Workers FreeCiv-NoncombatantUnit)
+(objectProductionRequiresTech FC-Unit-Workers FC-Tech-Pottery)
+(objectTypeObsoletes FC-Unit-Engineers FC-Unit-Workers)
+(objectTypeHasProductionCost FC-Unit-Workers (ProductionPoints 30))
+((TypeCapableFn behaviorCapable) FC-Unit-Workers doConnectBy performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityIrrigate performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityMine performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityRoad performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityRailroad performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityPollution performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityFallout performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers doPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityFortress performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Workers FC-ActivityAirbase performedBy)
+(unitTypeHasPopulationCost FC-Unit-Workers (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Workers (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Workers (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Workers (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Workers (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Workers ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Workers (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Workers (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Workers (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Workers (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Workers (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Workers (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Workers (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Workers Settlers)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Workers NonMil)       ;; do we care about this?
+;;(unitHasFlag FC-Unit-Workers Airbase)      ;; do we care about this?
+;;(unitHasFlag FC-Unit-Workers NoVeteran)    ;; do we care about this?
+;;(unitHasRole FC-Unit-Workers Settlers)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Workers...
+
+
+;; ------------------------
+;; FC-Unit-Engineers
+;; ------------------------
+(isa FC-Unit-Engineers FreeCiv-UnitType)
+(genls FC-Unit-Engineers FreeCiv-LandUnit)
+(genls FC-Unit-Engineers FreeCiv-NoncombatantUnit)
+(objectProductionRequiresTech FC-Unit-Engineers FC-Tech-Explosives)
+(objectTypeHasProductionCost FC-Unit-Engineers (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers doConnectBy performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityIrrigate performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityMine performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityRoad performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityRailroad performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityPollution performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityFallout performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers doPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityFortress performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityAirbase performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Engineers FC-ActivityTransform performedBy)
+(unitTypeHasPopulationCost FC-Unit-Engineers (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Engineers (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Engineers (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Engineers (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Engineers (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Engineers ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Engineers (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Engineers (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Engineers (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Engineers (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Engineers (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Engineers (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Engineers (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Engineers Settlers)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Engineers NonMil)       ;; do we care about this?
+;;(unitHasFlag FC-Unit-Engineers Transform)    ;; do we care about this?
+;;(unitHasFlag FC-Unit-Engineers Airbase)      ;; do we care about this?
+;;(unitHasFlag FC-Unit-Engineers NoVeteran)    ;; do we care about this?
+;;(unitHasRole FC-Unit-Engineers Settlers)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Engineers...
+
+
+;; ------------------------
+;; FC-Unit-Warriors
+;; ------------------------
+(isa FC-Unit-Warriors FreeCiv-UnitType)
+(genls FC-Unit-Warriors FreeCiv-LandUnit)
+(genls FC-Unit-Warriors FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Warriors FC-Tech-None)
+(objectTypeObsoletes FC-Unit-Pikemen FC-Unit-Warriors)
+(objectTypeHasProductionCost FC-Unit-Warriors (ProductionPoints 10))
+((TypeCapableFn behaviorCapable) FC-Unit-Warriors FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Warriors doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Warriors FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Warriors doPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Warriors doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Warriors (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Warriors (FreecivStrengthFn 1))
+(unitTypeHasDefendStrength FC-Unit-Warriors (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Warriors (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Warriors (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Warriors ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Warriors (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Warriors (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Warriors (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Warriors (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Warriors (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Warriors (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Warriors (GoldPoints 0))
+;;(unitHasRole FC-Unit-Warriors DefendOk)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Warriors FirstBuild)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Warriors...
+
+
+;; ------------------------
+;; FC-Unit-Phalanx
+;; ------------------------
+(isa FC-Unit-Phalanx FreeCiv-UnitType)
+(genls FC-Unit-Phalanx FreeCiv-LandUnit)
+(objectProductionRequiresTech FC-Unit-Phalanx FC-Tech-BronzeWorking)
+(objectTypeObsoletes FC-Unit-Pikemen FC-Unit-Phalanx)
+(objectTypeHasProductionCost FC-Unit-Phalanx (ProductionPoints 20))
+((TypeCapableFn behaviorCapable) FC-Unit-Phalanx doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Phalanx FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Phalanx doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Phalanx FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Phalanx doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Phalanx (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Phalanx (FreecivStrengthFn 1))
+(unitTypeHasDefendStrength FC-Unit-Phalanx (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Phalanx (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Phalanx (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Phalanx ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Phalanx (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Phalanx (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Phalanx (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Phalanx (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Phalanx (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Phalanx (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Phalanx (GoldPoints 0))
+;;(unitHasRole FC-Unit-Phalanx DefendGood)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Phalanx FirstBuild)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Phalanx...
+
+
+;; ------------------------
+;; FC-Unit-Archers
+;; ------------------------
+(isa FC-Unit-Archers FreeCiv-UnitType)
+(genls FC-Unit-Archers FreeCiv-LandUnit)
+(genls FC-Unit-Archers FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Archers FC-Tech-WarriorCode)
+(objectTypeObsoletes FC-Unit-Musketeers FC-Unit-Archers)
+(objectTypeHasProductionCost FC-Unit-Archers (ProductionPoints 30))
+((TypeCapableFn behaviorCapable) FC-Unit-Archers doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Archers FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Archers doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Archers FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Archers doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Archers (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Archers (FreecivStrengthFn 3))
+(unitTypeHasDefendStrength FC-Unit-Archers (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Archers (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Archers (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Archers ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Archers (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Archers (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Archers (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Archers (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Archers (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Archers (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Archers (GoldPoints 0))
+;;(unitHasRole FC-Unit-Archers DefendOk)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Archers...
+
+
+;; ------------------------
+;; FC-Unit-Legion
+;; ------------------------
+(isa FC-Unit-Legion FreeCiv-UnitType)
+(genls FC-Unit-Legion FreeCiv-LandUnit)
+(genls FC-Unit-Legion FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Legion FC-Tech-IronWorking)
+(objectTypeObsoletes FC-Unit-Musketeers FC-Unit-Legion)
+(objectTypeHasProductionCost FC-Unit-Legion (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Legion doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Legion FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Legion doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Legion FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Legion doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Legion (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Legion (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Legion (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Legion (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Legion (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Legion ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Legion (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Legion (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Legion (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Legion (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Legion (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Legion (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Legion (GoldPoints 0))
+;;(unitHasRole FC-Unit-Legion DefendOk)         ;; do we care about this?
+;;(unitHasRole FC-Unit-Legion Hut)              ;; do we care about this?
+;;(unitHasRole FC-Unit-Legion BarbarianBuild)   ;; do we care about this?
+;;(unitHasRole FC-Unit-Legion BarbarianSea)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Legion...
+
+
+;; ------------------------
+;; FC-Unit-Pikemen
+;; ------------------------
+(isa FC-Unit-Pikemen FreeCiv-UnitType)
+(genls FC-Unit-Pikemen FreeCiv-LandUnit)
+(genls FC-Unit-Pikemen FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Pikemen FC-Tech-Feudalism)
+(objectTypeObsoletes FC-Unit-Musketeers FC-Unit-Pikemen)
+(objectTypeHasProductionCost FC-Unit-Pikemen (ProductionPoints 20))
+((TypeCapableFn behaviorCapable) FC-Unit-Pikemen doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Pikemen FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Pikemen doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Pikemen FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Pikemen doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Pikemen (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Pikemen (FreecivStrengthFn 1))
+(unitTypeHasDefendStrength FC-Unit-Pikemen (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Pikemen (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Pikemen (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Pikemen ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Pikemen (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Pikemen (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Pikemen (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Pikemen (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Pikemen (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Pikemen (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Pikemen (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Pikemen Pikemen)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Pikemen DefendGood)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Pikemen FirstBuild)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Pikemen...
+
+
+;; ------------------------
+;; FC-Unit-Musketeers
+;; ------------------------
+(isa FC-Unit-Musketeers FreeCiv-UnitType)
+(genls FC-Unit-Musketeers FreeCiv-LandUnit)
+(genls FC-Unit-Musketeers FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Musketeers FC-Tech-Gunpowder)
+(objectTypeObsoletes FC-Unit-Riflemen FC-Unit-Musketeers)
+(objectTypeHasProductionCost FC-Unit-Musketeers (ProductionPoints 30))
+((TypeCapableFn behaviorCapable) FC-Unit-Musketeers doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Musketeers FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Musketeers doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Musketeers FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Musketeers doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Musketeers (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Musketeers (FreecivStrengthFn 3))
+(unitTypeHasDefendStrength FC-Unit-Musketeers (FreecivStrengthFn 3))
+(unitTypeHasHitpoints FC-Unit-Musketeers (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Musketeers (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Musketeers ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Musketeers (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Musketeers (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Musketeers (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Musketeers (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Musketeers (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Musketeers (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Musketeers (GoldPoints 0))
+;;(unitHasRole FC-Unit-Musketeers DefendGood)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Musketeers FirstBuild)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Musketeers HutTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Musketeers BarbarianTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Musketeers BarbarianBuildTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Musketeers BarbarianSeaTech)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Musketeers...
+
+
+;; ------------------------
+;; FC-Unit-Fanatics
+;; ------------------------
+;;; Can't build fanatics, but it's possible they can exist
+(isa FC-Unit-Fanatics FreeCiv-UnitType)
+(genls FC-Unit-Fanatics FreeCiv-LandUnit)
+(genls FC-Unit-Fanatics FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Fanatics Never)
+((TypeCapableFn behaviorCapable) FC-Unit-Fanatics doAttack performedBy)
+(objectTypeHasProductionCost FC-Unit-Fanatics (ProductionPoints 20))
+(unitTypeHasPopulationCost FC-Unit-Fanatics (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Fanatics (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Fanatics (FreecivStrengthFn 4))
+(unitTypeHasHitpoints FC-Unit-Fanatics (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Fanatics (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Fanatics ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Fanatics (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Fanatics (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Fanatics (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Fanatics (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Fanatics (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Fanatics (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Fanatics (GoldPoints 0))
+;;(unitHasRole FC-Unit-Fanatics DefendGood)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Fanatics...
+
+
+;; ------------------------
+;; FC-Unit-Partisan
+;; ------------------------
+(isa FC-Unit-Partisan FreeCiv-UnitType)
+(genls FC-Unit-Partisan FreeCiv-LandUnit)
+(genls FC-Unit-Partisan FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Partisan FC-Tech-GuerillaWarfare)
+(objectTypeHasProductionCost FC-Unit-Partisan (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Partisan doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Partisan FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Partisan doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Partisan FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Partisan doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Partisan (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Partisan (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Partisan (FreecivStrengthFn 4))
+(unitTypeHasHitpoints FC-Unit-Partisan (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Partisan (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Partisan ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Partisan (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Partisan (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Partisan (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Partisan (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Partisan (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Partisan (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Partisan (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Partisan IgTer)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Partisan IgZOC)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Partisan DefendGood)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Partisan Partisan)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Partisan BarbarianTech)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Partisan...
+
+
+;; ------------------------
+;; FC-Unit-AlpineTroops
+;; ------------------------
+(isa FC-Unit-AlpineTroops FreeCiv-UnitType)
+(genls FC-Unit-AlpineTroops FreeCiv-LandUnit)
+(genls FC-Unit-AlpineTroops FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-AlpineTroops FC-Tech-Tactics)
+(objectTypeHasProductionCost FC-Unit-AlpineTroops (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-AlpineTroops doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-AlpineTroops FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-AlpineTroops doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-AlpineTroops FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-AlpineTroops doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-AlpineTroops (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-AlpineTroops (FreecivStrengthFn 5))
+(unitTypeHasDefendStrength FC-Unit-AlpineTroops (FreecivStrengthFn 5))
+(unitTypeHasHitpoints FC-Unit-AlpineTroops (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-AlpineTroops (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-AlpineTroops ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-AlpineTroops (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-AlpineTroops (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-AlpineTroops (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-AlpineTroops (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-AlpineTroops (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-AlpineTroops (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-AlpineTroops (GoldPoints 0))
+;;(unitHasFlag FC-Unit-AlpineTroops IgTer)     ;; do we care about this?
+;;(unitHasRole FC-Unit-AlpineTroops DefendGood)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-AlpineTroops...
+
+
+;; ------------------------
+;; FC-Unit-Riflemen
+;; ------------------------
+(isa FC-Unit-Riflemen FreeCiv-UnitType)
+(genls FC-Unit-Riflemen FreeCiv-LandUnit)
+(genls FC-Unit-Riflemen FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Riflemen FC-Tech-Conscription)
+(objectTypeHasProductionCost FC-Unit-Riflemen (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Riflemen doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Riflemen FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Riflemen doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Riflemen FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Riflemen doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Riflemen (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Riflemen (FreecivStrengthFn 5))
+(unitTypeHasDefendStrength FC-Unit-Riflemen (FreecivStrengthFn 4))
+(unitTypeHasHitpoints FC-Unit-Riflemen (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Riflemen (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Riflemen ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Riflemen (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Riflemen (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Riflemen (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Riflemen (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Riflemen (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Riflemen (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Riflemen (GoldPoints 0))
+;;(unitHasRole FC-Unit-Riflemen DefendGood)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Riflemen FirstBuild)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Riflemen...
+
+
+;; ------------------------
+;; FC-Unit-Marines
+;; ------------------------
+(isa FC-Unit-Marines FreeCiv-UnitType)
+(genls FC-Unit-Marines FreeCiv-LandUnit)
+(genls FC-Unit-Marines FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Marines FC-Tech-AmphibiousWarfare)
+(objectTypeHasProductionCost FC-Unit-Marines (ProductionPoints 60))
+((TypeCapableFn behaviorCapable) FC-Unit-Marines doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Marines FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Marines doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Marines FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Marines doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Marines (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Marines (FreecivStrengthFn 8))
+(unitTypeHasDefendStrength FC-Unit-Marines (FreecivStrengthFn 5))
+(unitTypeHasHitpoints FC-Unit-Marines (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Marines (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Marines ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Marines (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Marines (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Marines (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Marines (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Marines (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Marines (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Marines (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Marines Marines)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Marines DefendOk)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Marines BarbarianSeaTech)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Marines...
+
+
+;; ------------------------
+;; FC-Unit-Paratroopers
+;; ------------------------
+(isa FC-Unit-Paratroopers FreeCiv-UnitType)
+(genls FC-Unit-Paratroopers FreeCiv-LandUnit)
+(genls FC-Unit-Paratroopers FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Paratroopers FC-Tech-CombinedArms)
+(objectTypeHasProductionCost FC-Unit-Paratroopers (ProductionPoints 60))
+((TypeCapableFn behaviorCapable) FC-Unit-Paratroopers doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Paratroopers FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Paratroopers doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Paratroopers FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Paratroopers doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Paratroopers (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Paratroopers (FreecivStrengthFn 6))
+(unitTypeHasDefendStrength FC-Unit-Paratroopers (FreecivStrengthFn 4))
+(unitTypeHasHitpoints FC-Unit-Paratroopers (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Paratroopers (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Paratroopers ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Paratroopers (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Paratroopers (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Paratroopers (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Paratroopers (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Paratroopers (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Paratroopers (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Paratroopers (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Paratroopers Paratroopers)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Paratroopers DefendOk)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Paratroopers...
+
+
+;; ------------------------
+;; FC-Unit-Mech.Inf.
+;; ------------------------
+(isa FC-Unit-Mech.Inf. FreeCiv-UnitType)
+(genls FC-Unit-Mech.Inf. FreeCiv-LandUnit)
+(genls FC-Unit-Mech.Inf. FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Mech.Inf. FC-Tech-LaborUnion)
+(objectTypeHasProductionCost FC-Unit-Mech.Inf. (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Mech.Inf. doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Mech.Inf. FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Mech.Inf. doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Mech.Inf. FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Mech.Inf. doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Mech.Inf. (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Mech.Inf. (FreecivStrengthFn 6))
+(unitTypeHasDefendStrength FC-Unit-Mech.Inf. (FreecivStrengthFn 6))
+(unitTypeHasHitpoints FC-Unit-Mech.Inf. (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Mech.Inf. (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Mech.Inf. ((PerFn FreecivTileDistance Turns) 3))
+(unitTypeHasVisionRange FC-Unit-Mech.Inf. (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Mech.Inf. (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Mech.Inf. (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Mech.Inf. (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Mech.Inf. (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Mech.Inf. (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Mech.Inf. (GoldPoints 0))
+;;(unitHasRole FC-Unit-Mech.Inf. DefendGood)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Mech.Inf....
+
+
+;; ------------------------
+;; FC-Unit-Horsemen
+;; ------------------------
+(isa FC-Unit-Horsemen FreeCiv-UnitType)
+(genls FC-Unit-Horsemen FreeCiv-LandUnit)
+(genls FC-Unit-Horsemen FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Horsemen FC-Tech-HorsebackRiding)
+(objectTypeObsoletes FC-Unit-Knights FC-Unit-Horsemen)
+(objectTypeHasProductionCost FC-Unit-Horsemen (ProductionPoints 20))
+((TypeCapableFn behaviorCapable) FC-Unit-Horsemen doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Horsemen FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Horsemen doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Horsemen FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Horsemen doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Horsemen (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Horsemen (FreecivStrengthFn 2))
+(unitTypeHasDefendStrength FC-Unit-Horsemen (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Horsemen (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Horsemen (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Horsemen ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Horsemen (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Horsemen (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Horsemen (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Horsemen (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Horsemen (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Horsemen (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Horsemen (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Horsemen Horse)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Horsemen AttackFast)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Horsemen Hut)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Horsemen Barbarian)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Horsemen...
+
+
+;; ------------------------
+;; FC-Unit-Chariot
+;; ------------------------
+(isa FC-Unit-Chariot FreeCiv-UnitType)
+(genls FC-Unit-Chariot FreeCiv-LandUnit)
+(genls FC-Unit-Chariot FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Chariot FC-Tech-TheWheel)
+(objectTypeObsoletes FC-Unit-Knights FC-Unit-Chariot)
+(objectTypeHasProductionCost FC-Unit-Chariot (ProductionPoints 30))
+((TypeCapableFn behaviorCapable) FC-Unit-Chariot doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Chariot FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Chariot doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Chariot FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Chariot doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Chariot (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Chariot (FreecivStrengthFn 3))
+(unitTypeHasDefendStrength FC-Unit-Chariot (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Chariot (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Chariot (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Chariot ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Chariot (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Chariot (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Chariot (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Chariot (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Chariot (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Chariot (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Chariot (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Chariot Horse)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Chariot AttackFast)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Chariot Hut)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Chariot...
+
+
+;; ------------------------
+;; FC-Unit-Elephants
+;; ------------------------
+;;; Can't build Elephants, but perhaps they can exist?
+(isa FC-Unit-Elephants FreeCiv-UnitType)
+(genls FC-Unit-Elephants FreeCiv-LandUnit)
+(genls FC-Unit-Elephants FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Elephants Never)
+(objectTypeObsoletes FC-Unit-Crusaders FC-Unit-Elephants)
+((TypeCapableFn behaviorCapable) FC-Unit-Elephants doAttack performedBy)
+(objectTypeHasProductionCost FC-Unit-Elephants (ProductionPoints 40))
+(unitTypeHasPopulationCost FC-Unit-Elephants (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Elephants (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Elephants (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Elephants (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Elephants (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Elephants ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Elephants (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Elephants (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Elephants (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Elephants (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Elephants (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Elephants (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Elephants (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Elephants Horse)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Elephants AttackFast)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Elephants...
+
+
+;; ------------------------
+;; FC-Unit-Crusaders
+;; ------------------------
+;;; Can't build Crusaders but perhaps they can exist?
+(isa FC-Unit-Crusaders FreeCiv-UnitType)
+(genls FC-Unit-Crusaders FreeCiv-LandUnit)
+(genls FC-Unit-Crusaders FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Crusaders Never)
+(objectTypeObsoletes FC-Unit-Dragoons FC-Unit-Crusaders)
+(objectTypeHasProductionCost FC-Unit-Crusaders (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Crusaders doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Crusaders (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Crusaders (FreecivStrengthFn 5))
+(unitTypeHasDefendStrength FC-Unit-Crusaders (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Crusaders (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Crusaders (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Crusaders ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Crusaders (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Crusaders (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Crusaders (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Crusaders (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Crusaders (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Crusaders (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Crusaders (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Crusaders Horse)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Crusaders AttackFast)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Crusaders...
+
+
+;; ------------------------
+;; FC-Unit-Knights
+;; ------------------------
+(isa FC-Unit-Knights FreeCiv-UnitType)
+(genls FC-Unit-Knights FreeCiv-LandUnit)
+(genls FC-Unit-Knights FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Knights FC-Tech-Chivalry)
+(objectTypeObsoletes FC-Unit-Dragoons FC-Unit-Knights)
+(objectTypeHasProductionCost FC-Unit-Knights (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Knights doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Knights FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Knights doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Knights FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Knights doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Knights (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Knights (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Knights (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Knights (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Knights (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Knights ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Knights (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Knights (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Knights (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Knights (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Knights (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Knights (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Knights (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Knights Horse)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Knights AttackFast)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Knights HutTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Knights BarbarianTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Knights BarbarianBuildTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Knights BarbarianSeaTech)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Knights...
+
+
+;; ------------------------
+;; FC-Unit-Dragoons
+;; ------------------------
+(isa FC-Unit-Dragoons FreeCiv-UnitType)
+(genls FC-Unit-Dragoons FreeCiv-LandUnit)
+(genls FC-Unit-Dragoons FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Dragoons FC-Tech-Leadership)
+(objectTypeObsoletes FC-Unit-Cavalry FC-Unit-Dragoons)
+(objectTypeHasProductionCost FC-Unit-Dragoons (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Dragoons doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Dragoons FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Dragoons doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Dragoons FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Dragoons doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Dragoons (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Dragoons (FreecivStrengthFn 5))
+(unitTypeHasDefendStrength FC-Unit-Dragoons (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Dragoons (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Dragoons (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Dragoons ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Dragoons (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Dragoons (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Dragoons (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Dragoons (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Dragoons (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Dragoons (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Dragoons (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Dragoons Horse)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Dragoons AttackFast)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Dragoons BarbarianBuildTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Dragoons BarbarianSeaTech)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Dragoons...
+
+
+;; ------------------------
+;; FC-Unit-Cavalry
+;; ------------------------
+(isa FC-Unit-Cavalry FreeCiv-UnitType)
+(genls FC-Unit-Cavalry FreeCiv-LandUnit)
+(genls FC-Unit-Cavalry FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Cavalry FC-Tech-Tactics)
+(objectTypeObsoletes FC-Unit-Armor FC-Unit-Cavalry)
+(objectTypeHasProductionCost FC-Unit-Cavalry (ProductionPoints 60))
+((TypeCapableFn behaviorCapable) FC-Unit-Cavalry doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cavalry FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cavalry doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cavalry FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cavalry doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Cavalry (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Cavalry (FreecivStrengthFn 8))
+(unitTypeHasDefendStrength FC-Unit-Cavalry (FreecivStrengthFn 3))
+(unitTypeHasHitpoints FC-Unit-Cavalry (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Cavalry (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Cavalry ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Cavalry (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Cavalry (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Cavalry (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Cavalry (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Cavalry (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Cavalry (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Cavalry (GoldPoints 0))
+;;(unitHasRole FC-Unit-Cavalry AttackFast)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Cavalry...
+
+
+;; ------------------------
+;; FC-Unit-Armor
+;; ------------------------
+(isa FC-Unit-Armor FreeCiv-UnitType)
+(genls FC-Unit-Armor FreeCiv-LandUnit)
+(genls FC-Unit-Armor FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Armor FC-Tech-MobileWarfare)
+(objectTypeHasProductionCost FC-Unit-Armor (ProductionPoints 80))
+((TypeCapableFn behaviorCapable) FC-Unit-Armor doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Armor FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Armor doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Armor FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Armor doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Armor (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Armor (FreecivStrengthFn 10))
+(unitTypeHasDefendStrength FC-Unit-Armor (FreecivStrengthFn 5))
+(unitTypeHasHitpoints FC-Unit-Armor (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Armor (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Armor ((PerFn FreecivTileDistance Turns) 3))
+(unitTypeHasVisionRange FC-Unit-Armor (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Armor (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Armor (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Armor (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Armor (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Armor (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Armor (GoldPoints 0))
+;;(unitHasRole FC-Unit-Armor AttackFast)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Armor...
+
+
+;; ------------------------
+;; FC-Unit-Catapult
+;; ------------------------
+(isa FC-Unit-Catapult FreeCiv-UnitType)
+(genls FC-Unit-Catapult FreeCiv-LandUnit)
+(genls FC-Unit-Catapult FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Catapult FC-Tech-Mathematics)
+(objectTypeObsoletes FC-Unit-Cannon FC-Unit-Catapult)
+(objectTypeHasProductionCost FC-Unit-Catapult (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Catapult doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Catapult FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Catapult doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Catapult FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Catapult doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Catapult (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Catapult (FreecivStrengthFn 6))
+(unitTypeHasDefendStrength FC-Unit-Catapult (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Catapult (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Catapult (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Catapult ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Catapult (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Catapult (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Catapult (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Catapult (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Catapult (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Catapult (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Catapult (GoldPoints 0))
+;;(unitHasRole FC-Unit-Catapult AttackStrong)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Catapult...
+
+
+;; ------------------------
+;; FC-Unit-Cannon
+;; ------------------------
+(isa FC-Unit-Cannon FreeCiv-UnitType)
+(genls FC-Unit-Cannon FreeCiv-LandUnit)
+(genls FC-Unit-Cannon FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Cannon FC-Tech-Metallurgy)
+(objectTypeObsoletes FC-Unit-Artillery FC-Unit-Cannon)
+(objectTypeHasProductionCost FC-Unit-Cannon (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Cannon doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cannon FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cannon doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cannon FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Cannon doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Cannon (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Cannon (FreecivStrengthFn 8))
+(unitTypeHasDefendStrength FC-Unit-Cannon (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Cannon (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Cannon (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Cannon ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Cannon (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Cannon (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Cannon (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Cannon (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Cannon (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Cannon (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Cannon (GoldPoints 0))
+;;(unitHasRole FC-Unit-Cannon AttackStrong)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Cannon BarbarianTech)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Cannon BarbarianBuildTech)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Cannon...
+
+
+;; ------------------------
+;; FC-Unit-Artillery
+;; ------------------------
+(isa FC-Unit-Artillery FreeCiv-UnitType)
+(genls FC-Unit-Artillery FreeCiv-LandUnit)
+(genls FC-Unit-Artillery FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Artillery FC-Tech-MachineTools)
+(objectTypeObsoletes FC-Unit-Howitzer FC-Unit-Artillery)
+(objectTypeHasProductionCost FC-Unit-Artillery (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Artillery doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Artillery FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Artillery doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Artillery FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Artillery doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Artillery (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Artillery (FreecivStrengthFn 10))
+(unitTypeHasDefendStrength FC-Unit-Artillery (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Artillery (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Artillery (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Artillery ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Artillery (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Artillery (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Artillery (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Artillery (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Artillery (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Artillery (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Artillery (GoldPoints 0))
+;;(unitHasRole FC-Unit-Artillery AttackStrong)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Artillery...
+
+
+;; ------------------------
+;; FC-Unit-Howitzer
+;; ------------------------
+(isa FC-Unit-Howitzer FreeCiv-UnitType)
+(genls FC-Unit-Howitzer FreeCiv-LandUnit)
+(genls FC-Unit-Howitzer FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Howitzer FC-Tech-Robotics)
+(objectTypeHasProductionCost FC-Unit-Howitzer (ProductionPoints 70))
+((TypeCapableFn behaviorCapable) FC-Unit-Howitzer doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Howitzer FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Howitzer doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Howitzer FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Howitzer doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Howitzer (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Howitzer (FreecivStrengthFn 12))
+(unitTypeHasDefendStrength FC-Unit-Howitzer (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Howitzer (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Howitzer (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Howitzer ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Howitzer (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Howitzer (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Howitzer (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Howitzer (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Howitzer (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Howitzer (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Howitzer (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Howitzer IgWall)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Howitzer AttackStrong)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Howitzer...
+
+
+;; ------------------------
+;; FC-Unit-Fighter
+;; ------------------------
+(isa FC-Unit-Fighter FreeCiv-UnitType)
+(genls FC-Unit-Fighter FreeCiv-AirUnit)
+(genls FC-Unit-Fighter FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Fighter FC-Tech-Flight)
+(objectTypeObsoletes FC-Unit-StealthFighter FC-Unit-Fighter)
+(objectTypeHasProductionCost FC-Unit-Fighter (ProductionPoints 60))
+((TypeCapableFn behaviorCapable) FC-Unit-Fighter doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Fighter (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Fighter (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Fighter (FreecivStrengthFn 3))
+(unitTypeHasHitpoints FC-Unit-Fighter (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Fighter (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Fighter ((PerFn FreecivTileDistance Turns) 10))
+(unitTypeHasVisionRange FC-Unit-Fighter (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Fighter (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Fighter (FreecivTileDistance 1))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Fighter (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Fighter (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Fighter (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Fighter (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Fighter Fighter)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Fighter...
+
+
+;; ------------------------
+;; FC-Unit-Bomber
+;; ------------------------
+(isa FC-Unit-Bomber FreeCiv-UnitType)
+(genls FC-Unit-Bomber FreeCiv-AirUnit)
+(genls FC-Unit-Bomber FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Bomber FC-Tech-AdvancedFlight)
+(objectTypeObsoletes FC-Unit-StealthBomber FC-Unit-Bomber)
+(objectTypeHasProductionCost FC-Unit-Bomber (ProductionPoints 120))
+((TypeCapableFn behaviorCapable) FC-Unit-Bomber doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Bomber (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Bomber (FreecivStrengthFn 12))
+(unitTypeHasDefendStrength FC-Unit-Bomber (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Bomber (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Bomber (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Bomber ((PerFn FreecivTileDistance Turns) 8))
+(unitTypeHasVisionRange FC-Unit-Bomber (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Bomber (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Bomber (FreecivTileDistance 2))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Bomber (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Bomber (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Bomber (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Bomber (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Bomber FieldUnit)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Bomber OneAttack)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Bomber...
+
+
+;; ------------------------
+;; FC-Unit-Helicopter
+;; ------------------------
+(isa FC-Unit-Helicopter FreeCiv-UnitType)
+(genls FC-Unit-Helicopter FreeCiv-HeliUnit)
+(genls FC-Unit-Helicopter FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Helicopter FC-Tech-CombinedArms)
+(objectTypeHasProductionCost FC-Unit-Helicopter (ProductionPoints 100))
+((TypeCapableFn behaviorCapable) FC-Unit-Helicopter doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Helicopter (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Helicopter (FreecivStrengthFn 10))
+(unitTypeHasDefendStrength FC-Unit-Helicopter (FreecivStrengthFn 3))
+(unitTypeHasHitpoints FC-Unit-Helicopter (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Helicopter (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Helicopter ((PerFn FreecivTileDistance Turns) 6))
+(unitTypeHasVisionRange FC-Unit-Helicopter (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Helicopter (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Helicopter (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Helicopter (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Helicopter (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Helicopter (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Helicopter (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Helicopter FieldUnit)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Helicopter OneAttack)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Helicopter...
+
+
+;; ------------------------
+;; FC-Unit-StealthFighter
+;; ------------------------
+(isa FC-Unit-StealthFighter FreeCiv-UnitType)
+(genls FC-Unit-StealthFighter FreeCiv-AirUnit)
+(genls FC-Unit-StealthFighter FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-StealthFighter FC-Tech-Stealth)
+(objectTypeHasProductionCost FC-Unit-StealthFighter (ProductionPoints 80))
+((TypeCapableFn behaviorCapable) FC-Unit-StealthFighter doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-StealthFighter (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-StealthFighter (FreecivStrengthFn 8))
+(unitTypeHasDefendStrength FC-Unit-StealthFighter (FreecivStrengthFn 4))
+(unitTypeHasHitpoints FC-Unit-StealthFighter (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-StealthFighter (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-StealthFighter ((PerFn FreecivTileDistance Turns) 14))
+(unitTypeHasVisionRange FC-Unit-StealthFighter (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-StealthFighter (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-StealthFighter (FreecivTileDistance 1))
+(objectTypeHasUpkeepHappyEffect FC-Unit-StealthFighter (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-StealthFighter (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-StealthFighter (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-StealthFighter (GoldPoints 0))
+;;(unitHasFlag FC-Unit-StealthFighter Partial_Invis)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-StealthFighter Fighter)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-StealthFighter...
+
+
+;; ------------------------
+;; FC-Unit-StealthBomber
+;; ------------------------
+(isa FC-Unit-StealthBomber FreeCiv-UnitType)
+(genls FC-Unit-StealthBomber FreeCiv-AirUnit)
+(genls FC-Unit-StealthBomber FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-StealthBomber FC-Tech-Stealth)
+(objectTypeHasProductionCost FC-Unit-StealthBomber (ProductionPoints 160))
+((TypeCapableFn behaviorCapable) FC-Unit-StealthBomber doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-StealthBomber (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-StealthBomber (FreecivStrengthFn 18))
+(unitTypeHasDefendStrength FC-Unit-StealthBomber (FreecivStrengthFn 5))
+(unitTypeHasHitpoints FC-Unit-StealthBomber (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-StealthBomber (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-StealthBomber ((PerFn FreecivTileDistance Turns) 12))
+(unitTypeHasVisionRange FC-Unit-StealthBomber (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-StealthBomber (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-StealthBomber (FreecivTileDistance 2))
+(objectTypeHasUpkeepHappyEffect FC-Unit-StealthBomber (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-StealthBomber (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-StealthBomber (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-StealthBomber (GoldPoints 0))
+;;(unitHasFlag FC-Unit-StealthBomber Partial_Invis)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-StealthBomber FieldUnit)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-StealthBomber OneAttack)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-StealthBomber...
+
+
+;; ------------------------
+;; FC-Unit-Trireme
+;; ------------------------
+(isa FC-Unit-Trireme FreeCiv-UnitType)
+(genls FC-Unit-Trireme FreeCiv-SeaUnit)
+(genls FC-Unit-Trireme FreeCiv-MilitaryUnit)
+(genls FC-Unit-Trireme TransportationDevice)
+(objectProductionRequiresTech FC-Unit-Trireme FC-Tech-MapMaking)
+(objectTypeObsoletes FC-Unit-Caravel FC-Unit-Trireme)
+(objectTypeHasProductionCost FC-Unit-Trireme (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Trireme doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Trireme (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Trireme (FreecivStrengthFn 1))
+(unitTypeHasDefendStrength FC-Unit-Trireme 1)
+(unitTypeHasHitpoints FC-Unit-Trireme (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Trireme (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Trireme ((PerFn FreecivTileDistance Turns) 3))
+(unitTypeHasVisionRange FC-Unit-Trireme (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Trireme (FreecivUnitCountFn 2))
+(unitTypeHasFuelCapacity FC-Unit-Trireme (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Trireme (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Trireme (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Trireme (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Trireme (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Trireme Trireme)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Trireme Ferryboat)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Trireme...
+
+
+;; ------------------------
+;; FC-Unit-Caravel
+;; ------------------------
+(isa FC-Unit-Caravel FreeCiv-UnitType)
+(genls FC-Unit-Caravel FreeCiv-SeaUnit)
+(genls FC-Unit-Caravel FreeCiv-MilitaryUnit)
+(genls FC-Unit-Caravel TransportationDevice)
+(objectProductionRequiresTech FC-Unit-Caravel FC-Tech-Navigation)
+(objectTypeObsoletes FC-Unit-Galleon FC-Unit-Caravel)
+(objectTypeHasProductionCost FC-Unit-Caravel (ProductionPoints 40))
+((TypeCapableFn behaviorCapable) FC-Unit-Caravel doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Caravel (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Caravel (FreecivStrengthFn 2))
+(unitTypeHasDefendStrength FC-Unit-Caravel (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Caravel (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Caravel (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Caravel ((PerFn FreecivTileDistance Turns) 3))
+(unitTypeHasVisionRange FC-Unit-Caravel (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Caravel (FreecivUnitCountFn 3))
+(unitTypeHasFuelCapacity FC-Unit-Caravel (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Caravel (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Caravel (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Caravel (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Caravel (GoldPoints 0))
+;;(unitHasRole FC-Unit-Caravel Ferryboat)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Caravel BarbarianBoat)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Caravel...
+
+
+;; ------------------------
+;; FC-Unit-Galleon
+;; ------------------------
+(isa FC-Unit-Galleon FreeCiv-UnitType)
+(genls FC-Unit-Galleon FreeCiv-SeaUnit)
+(genls FC-Unit-Galleon FreeCiv-MilitaryUnit)
+(genls FC-Unit-Galleon TransportationDevice)
+(objectProductionRequiresTech FC-Unit-Galleon FC-Tech-Magnetism)
+(objectTypeObsoletes FC-Unit-Transport FC-Unit-Galleon)
+(objectTypeHasProductionCost FC-Unit-Galleon (ProductionPoints 40))
+(unitTypeHasPopulationCost FC-Unit-Galleon (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Galleon (FreecivStrengthFn 0))   ; Is this right?  Apparently so.
+(unitTypeHasDefendStrength FC-Unit-Galleon (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Galleon (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Galleon (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Galleon ((PerFn FreecivTileDistance Turns) 4))
+(unitTypeHasVisionRange FC-Unit-Galleon (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Galleon (FreecivUnitCountFn 4))
+(unitTypeHasFuelCapacity FC-Unit-Galleon (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Galleon (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Galleon (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Galleon (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Galleon (GoldPoints 0))
+;;(unitHasRole FC-Unit-Galleon Ferryboat)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Galleon BarbarianBoat)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Galleon...
+
+
+;; ------------------------
+;; FC-Unit-Frigate
+;; ------------------------
+(isa FC-Unit-Frigate FreeCiv-UnitType)
+(genls FC-Unit-Frigate FreeCiv-SeaUnit)
+(genls FC-Unit-Frigate FreeCiv-MilitaryUnit)
+(genls FC-Unit-Frigate TransportationDevice)
+(objectProductionRequiresTech FC-Unit-Frigate FC-Tech-Magnetism)
+(objectTypeObsoletes FC-Unit-Ironclad FC-Unit-Frigate)
+(objectTypeHasProductionCost FC-Unit-Frigate (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Frigate doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Frigate (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Frigate (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Frigate (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Frigate (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-Frigate (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Frigate ((PerFn FreecivTileDistance Turns) 4))
+(unitTypeHasVisionRange FC-Unit-Frigate (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Frigate (FreecivUnitCountFn 2))
+(unitTypeHasFuelCapacity FC-Unit-Frigate (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Frigate (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Frigate (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Frigate (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Frigate (GoldPoints 0))
+;; not yet going to store facts about the helptext for FC-Unit-Frigate...
+
+
+;; ------------------------
+;; FC-Unit-Ironclad
+;; ------------------------
+(isa FC-Unit-Ironclad FreeCiv-UnitType)
+(genls FC-Unit-Ironclad FreeCiv-SeaUnit)
+(genls FC-Unit-Ironclad FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Ironclad FC-Tech-SteamEngine)
+(objectTypeObsoletes FC-Unit-Destroyer FC-Unit-Ironclad)
+(objectTypeHasProductionCost FC-Unit-Ironclad (ProductionPoints 60))
+((TypeCapableFn behaviorCapable) FC-Unit-Ironclad doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Ironclad (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Ironclad (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Ironclad (FreecivStrengthFn 4))
+(unitTypeHasHitpoints FC-Unit-Ironclad (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Ironclad (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Ironclad ((PerFn FreecivTileDistance Turns) 4))
+(unitTypeHasVisionRange FC-Unit-Ironclad (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Ironclad (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Ironclad (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Ironclad (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Ironclad (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Ironclad (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Ironclad (GoldPoints 0))
+;; not yet going to store facts about the helptext for FC-Unit-Ironclad...
+
+
+;; ------------------------
+;; FC-Unit-Destroyer
+;; ------------------------
+;;; TIP: A very fast unit, which is very useful for hunting down enemy Transports. 
+(isa FC-Unit-Destroyer FreeCiv-UnitType)
+(genls FC-Unit-Destroyer FreeCiv-SeaUnit)
+(genls FC-Unit-Destroyer FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Destroyer FC-Tech-Electricity)
+(objectTypeHasProductionCost FC-Unit-Destroyer (ProductionPoints 60))
+((TypeCapableFn behaviorCapable) FC-Unit-Destroyer doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Destroyer (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Destroyer (FreecivStrengthFn 4))
+(unitTypeHasDefendStrength FC-Unit-Destroyer (FreecivStrengthFn 4))
+(unitTypeHasHitpoints FC-Unit-Destroyer (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Destroyer (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Destroyer ((PerFn FreecivTileDistance Turns) 6))
+(unitTypeHasVisionRange FC-Unit-Destroyer (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Destroyer (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Destroyer (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Destroyer (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Destroyer (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Destroyer (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Destroyer (GoldPoints 0))
+;; not yet going to store facts about the helptext for FC-Unit-Destroyer...
+
+
+;; ------------------------
+;; FC-Unit-Cruiser
+;; ------------------------
+(isa FC-Unit-Cruiser FreeCiv-UnitType)
+(genls FC-Unit-Cruiser FreeCiv-SeaUnit)
+(genls FC-Unit-Cruiser FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Cruiser FC-Tech-Steel)
+(objectTypeObsoletes FC-Unit-AEGISCruiser FC-Unit-Cruiser)
+(objectTypeHasProductionCost FC-Unit-Cruiser (ProductionPoints 80))
+((TypeCapableFn behaviorCapable) FC-Unit-Cruiser doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Cruiser (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Cruiser (FreecivStrengthFn 6))
+(unitTypeHasDefendStrength FC-Unit-Cruiser (FreecivStrengthFn 6))
+(unitTypeHasHitpoints FC-Unit-Cruiser (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Cruiser (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Cruiser ((PerFn FreecivTileDistance Turns) 5))
+(unitTypeHasVisionRange FC-Unit-Cruiser (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Cruiser (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Cruiser (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Cruiser (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Cruiser (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Cruiser (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Cruiser (GoldPoints 0))
+;;(unitHasRole FC-Unit-Cruiser DefendGood)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Cruiser...
+
+
+;; ------------------------
+;; FC-Unit-AEGISCruiser
+;; ------------------------
+(isa FC-Unit-AEGISCruiser FreeCiv-UnitType)
+(genls FC-Unit-AEGISCruiser FreeCiv-SeaUnit)
+(genls FC-Unit-AEGISCruiser FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-AEGISCruiser FC-Tech-Rocketry)
+(objectTypeHasProductionCost FC-Unit-AEGISCruiser (ProductionPoints 100))
+((TypeCapableFn behaviorCapable) FC-Unit-AEGISCruiser doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-AEGISCruiser (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-AEGISCruiser (FreecivStrengthFn 8))
+(unitTypeHasDefendStrength FC-Unit-AEGISCruiser (FreecivStrengthFn 8))
+(unitTypeHasHitpoints FC-Unit-AEGISCruiser (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-AEGISCruiser (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-AEGISCruiser ((PerFn FreecivTileDistance Turns) 5))
+(unitTypeHasVisionRange FC-Unit-AEGISCruiser (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-AEGISCruiser (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-AEGISCruiser (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-AEGISCruiser (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-AEGISCruiser (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-AEGISCruiser (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-AEGISCruiser 0)
+;;(unitHasFlag FC-Unit-AEGISCruiser AEGIS)     ;; do we care about this?
+;;(unitHasRole FC-Unit-AEGISCruiser DefendGood)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-AEGISCruiser...
+
+
+;; ------------------------
+;; FC-Unit-Battleship
+;; ------------------------
+(isa FC-Unit-Battleship FreeCiv-UnitType)
+(genls FC-Unit-Battleship FreeCiv-SeaUnit)
+(genls FC-Unit-Battleship FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Battleship FC-Tech-Automobile)
+(objectTypeHasProductionCost FC-Unit-Battleship (ProductionPoints 160))
+((TypeCapableFn behaviorCapable) FC-Unit-Battleship doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Battleship (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Battleship (FreecivStrengthFn 12))
+(unitTypeHasDefendStrength FC-Unit-Battleship (FreecivStrengthFn 12))
+(unitTypeHasHitpoints FC-Unit-Battleship (HitPoints 40))
+(unitTypeHasFirepower FC-Unit-Battleship (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Battleship ((PerFn FreecivTileDistance Turns) 4))
+(unitTypeHasVisionRange FC-Unit-Battleship (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Battleship (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Battleship (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Battleship (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Battleship (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Battleship (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Battleship (GoldPoints 0))
+;; not yet going to store facts about the helptext for FC-Unit-Battleship...
+
+
+;; ------------------------
+;; FC-Unit-Submarine
+;; ------------------------
+(isa FC-Unit-Submarine FreeCiv-UnitType)
+(genls FC-Unit-Submarine FreeCiv-SeaUnit)
+(genls FC-Unit-Submarine FreeCiv-MilitaryUnit)
+(genls FC-Unit-Submarine TransportationDevice)
+(objectProductionRequiresTech FC-Unit-Submarine FC-Tech-Combustion)
+(objectTypeHasProductionCost FC-Unit-Submarine (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Submarine doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Submarine (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Submarine (FreecivStrengthFn 15))
+(unitTypeHasDefendStrength FC-Unit-Submarine (FreecivStrengthFn 2))
+(unitTypeHasHitpoints FC-Unit-Submarine (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Submarine (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Submarine ((PerFn FreecivTileDistance Turns) 5))
+(unitTypeHasVisionRange FC-Unit-Submarine (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Submarine (FreecivUnitCountFn 8))  ; But only missile units!
+(unitTypeHasFuelCapacity FC-Unit-Submarine (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Submarine (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Submarine (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Submarine (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Submarine (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Submarine Partial_Invis)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Submarine Missile_Carrier)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Submarine No_Land_Attack)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Submarine...
+
+
+;; ------------------------
+;; FC-Unit-Carrier
+;; ------------------------
+(isa FC-Unit-Carrier FreeCiv-UnitType)
+(genls FC-Unit-Carrier FreeCiv-SeaUnit)
+(genls FC-Unit-Carrier FreeCiv-MilitaryUnit)
+(genls FC-Unit-Carrier TransportationDevice)
+(objectProductionRequiresTech FC-Unit-Carrier FC-Tech-AdvancedFlight)
+(objectTypeHasProductionCost FC-Unit-Carrier (ProductionPoints 160))
+((TypeCapableFn behaviorCapable) FC-Unit-Carrier doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-Carrier (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Carrier (FreecivStrengthFn 1))
+(unitTypeHasDefendStrength FC-Unit-Carrier (FreecivStrengthFn 9))
+(unitTypeHasHitpoints FC-Unit-Carrier (HitPoints 40))
+(unitTypeHasFirepower FC-Unit-Carrier (HitPoints 2))
+(unitTypeHasMoveRate FC-Unit-Carrier ((PerFn FreecivTileDistance Turns) 5))
+(unitTypeHasVisionRange FC-Unit-Carrier (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Carrier (FreecivUnitCountFn 8))
+(unitTypeHasFuelCapacity FC-Unit-Carrier (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Carrier (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Carrier (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Carrier (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Carrier (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Carrier Carrier)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Carrier...
+
+
+;; ------------------------
+;; FC-Unit-Transport
+;; ------------------------
+(isa FC-Unit-Transport FreeCiv-UnitType)
+(genls FC-Unit-Transport FreeCiv-SeaUnit)
+(genls FC-Unit-Transport FreeCiv-MilitaryUnit)
+(genls FC-Unit-Transport TransportationDevice)
+(objectProductionRequiresTech FC-Unit-Transport FC-Tech-Industrialization)
+(objectTypeHasProductionCost FC-Unit-Transport (ProductionPoints 50))
+(unitTypeHasPopulationCost FC-Unit-Transport (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Transport (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Transport (FreecivStrengthFn 3))
+(unitTypeHasHitpoints FC-Unit-Transport (HitPoints 30))
+(unitTypeHasFirepower FC-Unit-Transport (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Transport ((PerFn FreecivTileDistance Turns) 5))
+(unitTypeHasVisionRange FC-Unit-Transport (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Transport (FreecivUnitCountFn 8))
+(unitTypeHasFuelCapacity FC-Unit-Transport (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Transport (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Transport (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Transport (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Transport (GoldPoints 0))
+;;(unitHasRole FC-Unit-Transport Ferryboat)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Transport...
+
+
+;; ------------------------
+;; FC-Unit-CruiseMissile
+;; ------------------------
+(isa FC-Unit-CruiseMissile FreeCiv-UnitType)
+(genls FC-Unit-CruiseMissile FreeCiv-AirUnit)
+(genls FC-Unit-CruiseMissile FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-CruiseMissile FC-Tech-Rocketry)
+(objectTypeHasProductionCost FC-Unit-CruiseMissile (ProductionPoints 60))
+((TypeCapableFn behaviorCapable) FC-Unit-CruiseMissile doAttack performedBy)
+(unitTypeHasPopulationCost FC-Unit-CruiseMissile (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-CruiseMissile (FreecivStrengthFn 18))
+(unitTypeHasDefendStrength FC-Unit-CruiseMissile (FreecivStrengthFn 0))
+(unitTypeHasHitpoints FC-Unit-CruiseMissile (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-CruiseMissile (HitPoints 3))
+(unitTypeHasMoveRate FC-Unit-CruiseMissile ((PerFn FreecivTileDistance Turns) 12))
+(unitTypeHasVisionRange FC-Unit-CruiseMissile (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-CruiseMissile (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-CruiseMissile (FreecivTileDistance 1))
+(objectTypeHasUpkeepHappyEffect FC-Unit-CruiseMissile (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-CruiseMissile (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-CruiseMissile (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-CruiseMissile (GoldPoints 0))
+;;(unitHasFlag FC-Unit-CruiseMissile FieldUnit)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-CruiseMissile OneAttack)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-CruiseMissile Missile)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-CruiseMissile...
+
+
+;; ------------------------
+;; FC-Unit-Nuclear
+;; ------------------------
+(isa FC-Unit-Nuclear FreeCiv-UnitType)
+(genls FC-Unit-Nuclear FreeCiv-AirUnit)
+(genls FC-Unit-Nuclear FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-Nuclear FC-Tech-Rocketry)
+(objectTypeHasProductionCost FC-Unit-Nuclear (ProductionPoints 160))
+((TypeCapableFn behaviorCapable) FC-Unit-Nuclear doAttack performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Nuclear doUnitNuke performedBy)
+(unitTypeHasPopulationCost FC-Unit-Nuclear (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Nuclear (FreecivStrengthFn 99))
+(unitTypeHasDefendStrength FC-Unit-Nuclear (FreecivStrengthFn 0))
+(unitTypeHasHitpoints FC-Unit-Nuclear (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Nuclear (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Nuclear ((PerFn FreecivTileDistance Turns) 16))
+(unitTypeHasVisionRange FC-Unit-Nuclear (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Nuclear (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Nuclear (FreecivTileDistance 1))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Nuclear (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Nuclear (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-Nuclear (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Nuclear (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Nuclear FieldUnit)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Nuclear OneAttack)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Nuclear Missile)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Nuclear Nuclear)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Nuclear...
+
+
+;; ------------------------
+;; FC-Unit-Diplomat
+;; ------------------------
+(isa FC-Unit-Diplomat FreeCiv-UnitType)
+(genls FC-Unit-Diplomat FreeCiv-LandUnit)
+(genls FC-Unit-Diplomat FreeCiv-DiplomaticUnit)
+(objectProductionRequiresTech FC-Unit-Diplomat FC-Tech-Writing)
+(objectTypeObsoletes FC-Unit-Spy FC-Unit-Diplomat)
+(objectTypeHasProductionCost FC-Unit-Diplomat (ProductionPoints 30))
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doInvestigateCity performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doMakeEmbassy performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doBribe performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doSabotageCity performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doStealAdvance performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Diplomat doInciteCityRebellion performedBy)
+(unitTypeHasPopulationCost FC-Unit-Diplomat (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Diplomat (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Diplomat (FreecivStrengthFn 0))
+(unitTypeHasHitpoints FC-Unit-Diplomat (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Diplomat (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Diplomat ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Diplomat (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Diplomat (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Diplomat (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Diplomat (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Diplomat (ProductionPoints 0))
+(objectTypeHasUpkeepFoodCost FC-Unit-Diplomat (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Diplomat (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Diplomat Diplomat)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Diplomat IgZOC)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Diplomat NonMil)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Diplomat Diplomat)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Diplomat...
+
+
+;; ------------------------
+;; FC-Unit-Spy
+;; ------------------------
+(isa FC-Unit-Spy FreeCiv-UnitType)
+(genls FC-Unit-Spy FreeCiv-LandUnit)
+(genls FC-Unit-Spy FreeCiv-DiplomaticUnit)
+(genls FC-Unit-Spy Spy)
+(objectProductionRequiresTech FC-Unit-Spy FC-Tech-Espionage)
+(objectTypeHasProductionCost FC-Unit-Spy (ProductionPoints 30))
+((TypeCapableFn behaviorCapable) FC-Unit-Spy FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doInvestigateCity performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doMakeEmbassy performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doBribe performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doSabotageCity performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doStealAdvance performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Spy doInciteCityRebellion performedBy)
+;((TypeCapableFn behaviorCapable) FC-Unit-Spy doPoisonCityWater performedBy) ; leave this out to avoid duplicate capability roles
+(unitTypeHasPopulationCost FC-Unit-Spy (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Spy (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Spy (FreecivStrengthFn 0))
+(unitTypeHasHitpoints FC-Unit-Spy (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Spy (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Spy ((PerFn FreecivTileDistance Turns) 3))
+(unitTypeHasVisionRange FC-Unit-Spy (FreecivTileDistance 2))
+(unitTypeHasTransportCapacity FC-Unit-Spy (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Spy (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Spy (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Spy (ProductionPoints 0))
+(objectTypeHasUpkeepFoodCost FC-Unit-Spy (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Spy (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Spy Diplomat)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Spy IgZOC)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Spy NonMil)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Spy Spy)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Spy Diplomat)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Spy...
+
+
+;; ------------------------
+;; FC-Unit-Caravan
+;; ------------------------
+(isa FC-Unit-Caravan FreeCiv-UnitType)
+(genls FC-Unit-Caravan FreeCiv-LandUnit)
+(genls FC-Unit-Caravan FreeCiv-TradingUnit)
+(objectProductionRequiresTech FC-Unit-Caravan FC-Tech-Trade)
+(objectTypeObsoletes FC-Unit-Freight FC-Unit-Caravan)
+(objectTypeHasProductionCost FC-Unit-Caravan (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Caravan FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Caravan doFortify performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Caravan FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Caravan doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Caravan (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Caravan (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Caravan (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Caravan (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Caravan (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Caravan ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Caravan (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Caravan (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Caravan (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Caravan (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Caravan (ProductionPoints 0))
+(objectTypeHasUpkeepFoodCost FC-Unit-Caravan (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Caravan (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Caravan TradeRoute)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Caravan HelpWonder)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Caravan IgZOC)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Caravan NonMil)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Caravan...
+
+
+;; ------------------------
+;; FC-Unit-Freight
+;; ------------------------
+(isa FC-Unit-Freight FreeCiv-UnitType)
+(genls FC-Unit-Freight FreeCiv-LandUnit)
+(genls FC-Unit-Freight FreeCiv-TradingUnit)
+(objectProductionRequiresTech FC-Unit-Freight FC-Tech-TheCorporation)
+(objectTypeHasProductionCost FC-Unit-Freight (ProductionPoints 50))
+((TypeCapableFn behaviorCapable) FC-Unit-Freight FC-ActivityFortifying performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Freight doFortify performedBy) ; Freight *can* fortify
+((TypeCapableFn behaviorCapable) FC-Unit-Freight FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Freight doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Freight (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Freight (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Freight (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Freight (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Freight (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Freight ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-Freight (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Freight (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Freight (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Freight (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Freight (ProductionPoints 0))
+(objectTypeHasUpkeepFoodCost FC-Unit-Freight (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Freight (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Freight TradeRoute)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Freight HelpWonder)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Freight IgZOC)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Freight NonMil)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Freight...
+
+
+;; ------------------------
+;; FC-Unit-Explorer
+;; ------------------------
+(isa FC-Unit-Explorer FreeCiv-UnitType)
+(genls FC-Unit-Explorer FreeCiv-LandUnit)
+(genls FC-Unit-Explorer FreeCiv-NoncombatantUnit)
+(genls FC-Unit-Explorer Explorer)                     ; Tie to real-world knowledge
+(objectProductionRequiresTech FC-Unit-Explorer FC-Tech-Seafaring)
+(objectTypeObsoletes FC-Unit-Partisan FC-Unit-Explorer)
+(objectTypeHasProductionCost FC-Unit-Explorer (ProductionPoints 30))
+;((TypeCapableFn behaviorCapable) FC-Unit-Explorer FC-ActivityFortifying performedBy)
+;((TypeCapableFn behaviorCapable) FC-Unit-Explorer doFortify performedBy) ; explorers *can* fortify
+((TypeCapableFn behaviorCapable) FC-Unit-Explorer FC-ActivityPillage performedBy)
+((TypeCapableFn behaviorCapable) FC-Unit-Explorer doPillage performedBy)
+(unitTypeHasPopulationCost FC-Unit-Explorer (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-Explorer (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-Explorer (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-Explorer (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-Explorer (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-Explorer ((PerFn FreecivTileDistance Turns) 1))
+(unitTypeHasVisionRange FC-Unit-Explorer (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-Explorer (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-Explorer (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-Explorer (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-Explorer (ProductionPoints 0))
+(objectTypeHasUpkeepFoodCost FC-Unit-Explorer (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-Explorer (GoldPoints 0))
+;;(unitHasFlag FC-Unit-Explorer IgTer)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Explorer IgZOC)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-Explorer NonMil)     ;; do we care about this?
+;;(unitHasRole FC-Unit-Explorer Explorer)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-Explorer...
+
+
+;; ------------------------
+;; FC-Unit-BarbarianLeader
+;; ------------------------
+(isa FC-Unit-BarbarianLeader FreeCiv-UnitType)
+(genls FC-Unit-BarbarianLeader FreeCiv-LandUnit)
+(objectTypeHasProductionCost FC-Unit-BarbarianLeader (ProductionPoints 40))
+(unitTypeHasPopulationCost FC-Unit-BarbarianLeader (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-BarbarianLeader (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-BarbarianLeader (FreecivStrengthFn 0))
+(unitTypeHasHitpoints FC-Unit-BarbarianLeader (HitPoints 10))
+(unitTypeHasFirepower FC-Unit-BarbarianLeader (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-BarbarianLeader ((PerFn FreecivTileDistance Turns) 2))
+(unitTypeHasVisionRange FC-Unit-BarbarianLeader (FreecivTileDistance 1))
+(unitTypeHasTransportCapacity FC-Unit-BarbarianLeader (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-BarbarianLeader (FreecivTileDistance 0))
+(objectTypeHasUpkeepHappyEffect FC-Unit-BarbarianLeader (FreecivCitizenCountFn 0))
+(objectTypeHasUpkeepShieldEffect FC-Unit-BarbarianLeader (ProductionPoints 0))
+(objectTypeHasUpkeepFoodCost FC-Unit-BarbarianLeader (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-BarbarianLeader (GoldPoints 0))
+;;(unitHasFlag FC-Unit-BarbarianLeader IgZOC)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-BarbarianLeader NonMil)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-BarbarianLeader Unbribable)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-BarbarianLeader Undisbandable)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-BarbarianLeader SuperSpy)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-BarbarianLeader NoHome)     ;; do we care about this?
+;;(unitHasFlag FC-Unit-BarbarianLeader NoBuild)     ;; do we care about this?
+;;(unitHasRole FC-Unit-BarbarianLeader BarbarianLeader)     ;; do we care about this?
+;; not yet going to store facts about the helptext for FC-Unit-BarbarianLeader...
+
+
+;; ------------------------
+;; FC-Unit-AWACS
+;; ------------------------
+(isa FC-Unit-AWACS FreeCiv-UnitType)
+(genls FC-Unit-AWACS FreeCiv-AirUnit)
+(genls FC-Unit-AWACS FreeCiv-MilitaryUnit)
+(objectProductionRequiresTech FC-Unit-AWACS FC-Tech-AdvancedFlight)
+(objectTypeHasProductionCost FC-Unit-AWACS (ProductionPoints 140))
+(unitTypeHasPopulationCost FC-Unit-AWACS (FreecivCitizenCountFn 0))
+(unitTypeHasAttackStrength FC-Unit-AWACS (FreecivStrengthFn 0))
+(unitTypeHasDefendStrength FC-Unit-AWACS (FreecivStrengthFn 1))
+(unitTypeHasHitpoints FC-Unit-AWACS (HitPoints 20))
+(unitTypeHasFirepower FC-Unit-AWACS (HitPoints 1))
+(unitTypeHasMoveRate FC-Unit-AWACS ((PerFn FreecivTileDistance Turns) 16))
+(unitTypeHasVisionRange FC-Unit-AWACS (FreecivTileDistance 5))
+(unitTypeHasTransportCapacity FC-Unit-AWACS (FreecivUnitCountFn 0))
+(unitTypeHasFuelCapacity FC-Unit-AWACS (FreecivTileDistance 2))
+(objectTypeHasUpkeepHappyEffect FC-Unit-AWACS (FreecivCitizenCountFn 1))
+(objectTypeHasUpkeepShieldEffect FC-Unit-AWACS (ProductionPoints 1))
+(objectTypeHasUpkeepFoodCost FC-Unit-AWACS (FoodPoints 0))
+(objectTypeHasUpkeepGoldCost FC-Unit-AWACS (GoldPoints 0))
+;; not yet going to store facts about the helptext for FC-Unit-AWACS...

@@ -1,0 +1,78 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: games-interpretation-queries.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: April 12, 2013 10:17:47
+;;;;   Purpose: Queries for Interpretation
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory (InterpretationMtFn Game) :exclude-globals t) ; pointless
+
+
+(genlMt (InterpretationMtFn Game) (InterpretationMtFn Instruction))
+(genlMt (InterpretationMtFn Game) GamesNarrativeRulesMt)
+
+;(structurallyExhaustiveQueries (InterpretationMtFn Game))
+;(exhaustiveQueriesForInterpretation (InterpretationMtFn Game)) ; unnecesssary
+;(queryInModel GamesInterpretationQueriesMt)                  ; definitely not
+(abductiveNLUScoringProcedure GamesScoringProcedure)         ; better be defined in cl-user
+
+(queryForInterpretation
+ 1 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      GameClassification))
+
+(queryForInterpretation
+ 2 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      RoleDefinition))
+                      
+(queryForInterpretation
+ 2 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      EntityIntroduction))
+
+(queryForInterpretation
+ 3 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      Configuration-Spatial))
+
+(queryForInterpretation
+ 3 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      Configuration-Temporal))
+
+;;; Recognize commands, as opposed to descriptions of a game.
+;;; One could imagine teaching a procedure by issuing a sequence
+;;; of commands.
+(queryForInterpretation
+ 4 (directiveFunction (DirectiveEventFn :REPLACE-SID ?event-id)
+                      Directive))
+                      
+(queryForInterpretation
+ 4 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      ActionElaboration))
+
+(queryForInterpretation
+ 5 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      WinCriteria))
+
+(queryForInterpretation
+ 3 (narrativeFunction (PresentationEventFn :REPLACE-SID ?event-id)
+                      GameStateDescription))
+
+
+;;; What kinds of high-level instructional events are there for teaching games?
+;;;
+;;; I'm going to say:
+;;; 1) Classifying the game
+;;; 2) Describing player role(s)
+;;; 3) Describing main actions
+;;; 4) Describing resources
+;;; 5) Describing constraints
+;;; 6) Describing state changes
+;;; 7) Describing initial state(s)
+;;; 8) Describing terminal state(s)
+;;; 9) Describing winning condition(s)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

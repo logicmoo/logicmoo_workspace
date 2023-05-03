@@ -1,0 +1,5 @@
+(in-microtheory ContainerGVocabularyMt)
+
+(isa TheExiting ExitingAContainer)
+(comment OpenPortal "The collection of instances of #$Portal in an open position.")
+(comment ClosedPortal "The collection of instances of #$Portal in a closed position.")

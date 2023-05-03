@@ -1,0 +1,3579 @@
+(in-microtheory UniversalVocabularyMt)
+
+(isa fe_abundant_entities BinaryRolePredicate)
+(arity fe_abundant_entities 2)
+
+(isa fe_abuser BinaryRolePredicate)
+(arity fe_abuser 2)
+
+(isa fe_accessibility BinaryRolePredicate)
+(arity fe_accessibility 2)
+
+(isa fe_accessory BinaryRolePredicate)
+(arity fe_accessory 2)
+
+(isa fe_accoutrement BinaryRolePredicate)
+(arity fe_accoutrement 2)
+
+(isa fe_accuracy BinaryRolePredicate)
+(arity fe_accuracy 2)
+
+(isa fe_accused BinaryRolePredicate)
+(arity fe_accused 2)
+
+(isa fe_act BinaryRolePredicate)
+(arity fe_act 2)
+
+(isa fe_action BinaryRolePredicate)
+(arity fe_action 2)
+
+(isa fe_activists BinaryRolePredicate)
+(arity fe_activists 2)
+
+(isa fe_activity BinaryRolePredicate)
+(arity fe_activity 2)
+
+(isa fe_actor BinaryRolePredicate)
+(arity fe_actor 2)
+
+(isa fe_added_set BinaryRolePredicate)
+(arity fe_added_set 2)
+
+(isa fe_addict BinaryRolePredicate)
+(arity fe_addict 2)
+
+(isa fe_addictant BinaryRolePredicate)
+(arity fe_addictant 2)
+
+(isa fe_address BinaryRolePredicate)
+(arity fe_address 2)
+
+(isa fe_address_term BinaryRolePredicate)
+(arity fe_address_term 2)
+
+(isa fe_addressee BinaryRolePredicate)
+(arity fe_addressee 2)
+
+(isa fe_adversity BinaryRolePredicate)
+(arity fe_adversity 2)
+
+(isa fe_affected BinaryRolePredicate)
+(arity fe_affected 2)
+
+(isa fe_affected_party BinaryRolePredicate)
+(arity fe_affected_party 2)
+
+(isa fe_affliction BinaryRolePredicate)
+(arity fe_affliction 2)
+
+(isa fe_age BinaryRolePredicate)
+(arity fe_age 2)
+
+(isa fe_agency BinaryRolePredicate)
+(arity fe_agency 2)
+
+(isa fe_agent BinaryRolePredicate)
+(arity fe_agent 2)
+
+(isa fe_aggregate BinaryRolePredicate)
+(arity fe_aggregate 2)
+
+(isa fe_aggregate_property BinaryRolePredicate)
+(arity fe_aggregate_property 2)
+
+(isa fe_aggressor BinaryRolePredicate)
+(arity fe_aggressor 2)
+
+(isa fe_aggressors BinaryRolePredicate)
+(arity fe_aggressors 2)
+
+(isa fe_agreement BinaryRolePredicate)
+(arity fe_agreement 2)
+
+(isa fe_agriculturist BinaryRolePredicate)
+(arity fe_agriculturist 2)
+
+(isa fe_ailment BinaryRolePredicate)
+(arity fe_ailment 2)
+
+(isa fe_air BinaryRolePredicate)
+(arity fe_air 2)
+
+(isa fe_alliance BinaryRolePredicate)
+(arity fe_alliance 2)
+
+(isa fe_alter BinaryRolePredicate)
+(arity fe_alter 2)
+
+(isa fe_alterant BinaryRolePredicate)
+(arity fe_alterant 2)
+
+(isa fe_amends BinaryRolePredicate)
+(arity fe_amends 2)
+
+(isa fe_ammunition BinaryRolePredicate)
+(arity fe_ammunition 2)
+
+(isa fe_amount BinaryRolePredicate)
+(arity fe_amount 2)
+
+(isa fe_amount_of_discussion BinaryRolePredicate)
+(arity fe_amount_of_discussion 2)
+
+(isa fe_amount_of_information BinaryRolePredicate)
+(arity fe_amount_of_information 2)
+
+(isa fe_amount_of_progress BinaryRolePredicate)
+(arity fe_amount_of_progress 2)
+
+(isa fe_anchor BinaryRolePredicate)
+(arity fe_anchor 2)
+
+(isa fe_angle BinaryRolePredicate)
+(arity fe_angle 2)
+
+(isa fe_animal BinaryRolePredicate)
+(arity fe_animal 2)
+
+(isa fe_anti_consequence BinaryRolePredicate)
+(arity fe_anti_consequence 2)
+
+(isa fe_apparatus BinaryRolePredicate)
+(arity fe_apparatus 2)
+
+(isa fe_appraisal BinaryRolePredicate)
+(arity fe_appraisal 2)
+
+(isa fe_area BinaryRolePredicate)
+(arity fe_area 2)
+
+(isa fe_arguer BinaryRolePredicate)
+(arity fe_arguer 2)
+
+(isa fe_arguer1 BinaryRolePredicate)
+(arity fe_arguer1 2)
+
+(isa fe_arguer2 BinaryRolePredicate)
+(arity fe_arguer2 2)
+
+(isa fe_arguers BinaryRolePredicate)
+(arity fe_arguers 2)
+
+(isa fe_armor BinaryRolePredicate)
+(arity fe_armor 2)
+
+(isa fe_arraign_authority BinaryRolePredicate)
+(arity fe_arraign_authority 2)
+
+(isa fe_artifact BinaryRolePredicate)
+(arity fe_artifact 2)
+
+(isa fe_artist BinaryRolePredicate)
+(arity fe_artist 2)
+
+(isa fe_artwork BinaryRolePredicate)
+(arity fe_artwork 2)
+
+(isa fe_assailant BinaryRolePredicate)
+(arity fe_assailant 2)
+
+(isa fe_assessor BinaryRolePredicate)
+(arity fe_assessor 2)
+
+(isa fe_asset BinaryRolePredicate)
+(arity fe_asset 2)
+
+(isa fe_assets BinaryRolePredicate)
+(arity fe_assets 2)
+
+(isa fe_astronomical_entity BinaryRolePredicate)
+(arity fe_astronomical_entity 2)
+
+(isa fe_attachment BinaryRolePredicate)
+(arity fe_attachment 2)
+
+(isa fe_attack BinaryRolePredicate)
+(arity fe_attack 2)
+
+(isa fe_attended_person BinaryRolePredicate)
+(arity fe_attended_person 2)
+
+(isa fe_attendee BinaryRolePredicate)
+(arity fe_attendee 2)
+
+(isa fe_attendees BinaryRolePredicate)
+(arity fe_attendees 2)
+
+(isa fe_attitude BinaryRolePredicate)
+(arity fe_attitude 2)
+
+(isa fe_attraction BinaryRolePredicate)
+(arity fe_attraction 2)
+
+(isa fe_attribute BinaryRolePredicate)
+(arity fe_attribute 2)
+
+(isa fe_audience BinaryRolePredicate)
+(arity fe_audience 2)
+
+(isa fe_authenticity BinaryRolePredicate)
+(arity fe_authenticity 2)
+
+(isa fe_author BinaryRolePredicate)
+(arity fe_author 2)
+
+(isa fe_authorities BinaryRolePredicate)
+(arity fe_authorities 2)
+
+(isa fe_authority BinaryRolePredicate)
+(arity fe_authority 2)
+
+(isa fe_avenger BinaryRolePredicate)
+(arity fe_avenger 2)
+
+(isa fe_back BinaryRolePredicate)
+(arity fe_back 2)
+
+(isa fe_bad_entity BinaryRolePredicate)
+(arity fe_bad_entity 2)
+
+(isa fe_bad_outcome BinaryRolePredicate)
+(arity fe_bad_outcome 2)
+
+(isa fe_baggage BinaryRolePredicate)
+(arity fe_baggage 2)
+
+(isa fe_barrier BinaryRolePredicate)
+(arity fe_barrier 2)
+
+(isa fe_basis BinaryRolePredicate)
+(arity fe_basis 2)
+
+(isa fe_basis_of_order BinaryRolePredicate)
+(arity fe_basis_of_order 2)
+
+(isa fe_beam BinaryRolePredicate)
+(arity fe_beam 2)
+
+(isa fe_bearer BinaryRolePredicate)
+(arity fe_bearer 2)
+
+(isa fe_bed BinaryRolePredicate)
+(arity fe_bed 2)
+
+(isa fe_behavior BinaryRolePredicate)
+(arity fe_behavior 2)
+
+(isa fe_behavior_product BinaryRolePredicate)
+(arity fe_behavior_product 2)
+
+(isa fe_believer BinaryRolePredicate)
+(arity fe_believer 2)
+
+(isa fe_benefactor BinaryRolePredicate)
+(arity fe_benefactor 2)
+
+(isa fe_beneficial_situation BinaryRolePredicate)
+(arity fe_beneficial_situation 2)
+
+(isa fe_beneficiary BinaryRolePredicate)
+(arity fe_beneficiary 2)
+
+(isa fe_benefit BinaryRolePredicate)
+(arity fe_benefit 2)
+
+(isa fe_benefited_party BinaryRolePredicate)
+(arity fe_benefited_party 2)
+
+(isa fe_benefiting_action BinaryRolePredicate)
+(arity fe_benefiting_action 2)
+
+(isa fe_binding_principle BinaryRolePredicate)
+(arity fe_binding_principle 2)
+
+(isa fe_body BinaryRolePredicate)
+(arity fe_body 2)
+
+(isa fe_body_location BinaryRolePredicate)
+(arity fe_body_location 2)
+
+(isa fe_body_mark BinaryRolePredicate)
+(arity fe_body_mark 2)
+
+(isa fe_body_part BinaryRolePredicate)
+(arity fe_body_part 2)
+
+(isa fe_bodypart_of_agent BinaryRolePredicate)
+(arity fe_bodypart_of_agent 2)
+
+(isa fe_bomb BinaryRolePredicate)
+(arity fe_bomb 2)
+
+(isa fe_booker BinaryRolePredicate)
+(arity fe_booker 2)
+
+(isa fe_borrower BinaryRolePredicate)
+(arity fe_borrower 2)
+
+(isa fe_boundary BinaryRolePredicate)
+(arity fe_boundary 2)
+
+(isa fe_branch BinaryRolePredicate)
+(arity fe_branch 2)
+
+(isa fe_brand BinaryRolePredicate)
+(arity fe_brand 2)
+
+(isa fe_building BinaryRolePredicate)
+(arity fe_building 2)
+
+(isa fe_building_part BinaryRolePredicate)
+(arity fe_building_part 2)
+
+(isa fe_business BinaryRolePredicate)
+(arity fe_business 2)
+
+(isa fe_business_name BinaryRolePredicate)
+(arity fe_business_name 2)
+
+(isa fe_buyer BinaryRolePredicate)
+(arity fe_buyer 2)
+
+(isa fe_cache BinaryRolePredicate)
+(arity fe_cache 2)
+
+(isa fe_capitulator BinaryRolePredicate)
+(arity fe_capitulator 2)
+
+(isa fe_captive BinaryRolePredicate)
+(arity fe_captive 2)
+
+(isa fe_captor BinaryRolePredicate)
+(arity fe_captor 2)
+
+(isa fe_capture BinaryRolePredicate)
+(arity fe_capture 2)
+
+(isa fe_cargo BinaryRolePredicate)
+(arity fe_cargo 2)
+
+(isa fe_carrier BinaryRolePredicate)
+(arity fe_carrier 2)
+
+(isa fe_case BinaryRolePredicate)
+(arity fe_case 2)
+
+(isa fe_category BinaryRolePredicate)
+(arity fe_category 2)
+
+(isa fe_cause BinaryRolePredicate)
+(arity fe_cause 2)
+
+(isa fe_cause_of_shine BinaryRolePredicate)
+(arity fe_cause_of_shine 2)
+
+(isa fe_change_agent BinaryRolePredicate)
+(arity fe_change_agent 2)
+
+(isa fe_character_of_end_state BinaryRolePredicate)
+(arity fe_character_of_end_state 2)
+
+(isa fe_characteristic BinaryRolePredicate)
+(arity fe_characteristic 2)
+
+(isa fe_characterization BinaryRolePredicate)
+(arity fe_characterization 2)
+
+(isa fe_charges BinaryRolePredicate)
+(arity fe_charges 2)
+
+(isa fe_chemical_entity BinaryRolePredicate)
+(arity fe_chemical_entity 2)
+
+(isa fe_child BinaryRolePredicate)
+(arity fe_child 2)
+
+(isa fe_chosen BinaryRolePredicate)
+(arity fe_chosen 2)
+
+(isa fe_circumstance BinaryRolePredicate)
+(arity fe_circumstance 2)
+
+(isa fe_circumstances BinaryRolePredicate)
+(arity fe_circumstances 2)
+
+(isa fe_claimant BinaryRolePredicate)
+(arity fe_claimant 2)
+
+(isa fe_class BinaryRolePredicate)
+(arity fe_class 2)
+
+(isa fe_client BinaryRolePredicate)
+(arity fe_client 2)
+
+(isa fe_clothing BinaryRolePredicate)
+(arity fe_clothing 2)
+
+(isa fe_co-participant BinaryRolePredicate)
+(arity fe_co-participant 2)
+
+(isa fe_co-timed_event BinaryRolePredicate)
+(arity fe_co-timed_event 2)
+
+(isa fe_co-variable BinaryRolePredicate)
+(arity fe_co-variable 2)
+
+(isa fe_co_resident BinaryRolePredicate)
+(arity fe_co_resident 2)
+
+(isa fe_code BinaryRolePredicate)
+(arity fe_code 2)
+
+(isa fe_cognate_event BinaryRolePredicate)
+(arity fe_cognate_event 2)
+
+(isa fe_cognizer BinaryRolePredicate)
+(arity fe_cognizer 2)
+
+(isa fe_cognizer_1 BinaryRolePredicate)
+(arity fe_cognizer_1 2)
+
+(isa fe_cognizer_2 BinaryRolePredicate)
+(arity fe_cognizer_2 2)
+
+(isa fe_cognizer_agent BinaryRolePredicate)
+(arity fe_cognizer_agent 2)
+
+(isa fe_cognizers BinaryRolePredicate)
+(arity fe_cognizers 2)
+
+(isa fe_collection BinaryRolePredicate)
+(arity fe_collection 2)
+
+(isa fe_collection_name BinaryRolePredicate)
+(arity fe_collection_name 2)
+
+(isa fe_colonists BinaryRolePredicate)
+(arity fe_colonists 2)
+
+(isa fe_color BinaryRolePredicate)
+(arity fe_color 2)
+
+(isa fe_color_qualifier BinaryRolePredicate)
+(arity fe_color_qualifier 2)
+
+(isa fe_combatant BinaryRolePredicate)
+(arity fe_combatant 2)
+
+(isa fe_combatants BinaryRolePredicate)
+(arity fe_combatants 2)
+
+(isa fe_commitment BinaryRolePredicate)
+(arity fe_commitment 2)
+
+(isa fe_commonality BinaryRolePredicate)
+(arity fe_commonality 2)
+
+(isa fe_communication BinaryRolePredicate)
+(arity fe_communication 2)
+
+(isa fe_communicative_act BinaryRolePredicate)
+(arity fe_communicative_act 2)
+
+(isa fe_communicative_force BinaryRolePredicate)
+(arity fe_communicative_force 2)
+
+(isa fe_communicator BinaryRolePredicate)
+(arity fe_communicator 2)
+
+(isa fe_company BinaryRolePredicate)
+(arity fe_company 2)
+
+(isa fe_comparand BinaryRolePredicate)
+(arity fe_comparand 2)
+
+(isa fe_comparison_activity BinaryRolePredicate)
+(arity fe_comparison_activity 2)
+
+(isa fe_comparison_event BinaryRolePredicate)
+(arity fe_comparison_event 2)
+
+(isa fe_comparison_set BinaryRolePredicate)
+(arity fe_comparison_set 2)
+
+(isa fe_compeller BinaryRolePredicate)
+(arity fe_compeller 2)
+
+(isa fe_compensation BinaryRolePredicate)
+(arity fe_compensation 2)
+
+(isa fe_competing_consideration BinaryRolePredicate)
+(arity fe_competing_consideration 2)
+
+(isa fe_competition BinaryRolePredicate)
+(arity fe_competition 2)
+
+(isa fe_competitor BinaryRolePredicate)
+(arity fe_competitor 2)
+
+(isa fe_competitors BinaryRolePredicate)
+(arity fe_competitors 2)
+
+(isa fe_complainer BinaryRolePredicate)
+(arity fe_complainer 2)
+
+(isa fe_complaint BinaryRolePredicate)
+(arity fe_complaint 2)
+
+(isa fe_completeness BinaryRolePredicate)
+(arity fe_completeness 2)
+
+(isa fe_complex BinaryRolePredicate)
+(arity fe_complex 2)
+
+(isa fe_component BinaryRolePredicate)
+(arity fe_component 2)
+
+(isa fe_component_entities BinaryRolePredicate)
+(arity fe_component_entities 2)
+
+(isa fe_component_sound BinaryRolePredicate)
+(arity fe_component_sound 2)
+
+(isa fe_components BinaryRolePredicate)
+(arity fe_components 2)
+
+(isa fe_composite_number BinaryRolePredicate)
+(arity fe_composite_number 2)
+
+(isa fe_conceded_state_of_affairs BinaryRolePredicate)
+(arity fe_conceded_state_of_affairs 2)
+
+(isa fe_concept_1 BinaryRolePredicate)
+(arity fe_concept_1 2)
+
+(isa fe_concept_2 BinaryRolePredicate)
+(arity fe_concept_2 2)
+
+(isa fe_concepts BinaryRolePredicate)
+(arity fe_concepts 2)
+
+(isa fe_concessive BinaryRolePredicate)
+(arity fe_concessive 2)
+
+(isa fe_condition BinaryRolePredicate)
+(arity fe_condition 2)
+
+(isa fe_configuration BinaryRolePredicate)
+(arity fe_configuration 2)
+
+(isa fe_conflict BinaryRolePredicate)
+(arity fe_conflict 2)
+
+(isa fe_connected_item BinaryRolePredicate)
+(arity fe_connected_item 2)
+
+(isa fe_connected_locations BinaryRolePredicate)
+(arity fe_connected_locations 2)
+
+(isa fe_connection BinaryRolePredicate)
+(arity fe_connection 2)
+
+(isa fe_connections BinaryRolePredicate)
+(arity fe_connections 2)
+
+(isa fe_connector BinaryRolePredicate)
+(arity fe_connector 2)
+
+(isa fe_conqueror BinaryRolePredicate)
+(arity fe_conqueror 2)
+
+(isa fe_consequence BinaryRolePredicate)
+(arity fe_consequence 2)
+
+(isa fe_consequences BinaryRolePredicate)
+(arity fe_consequences 2)
+
+(isa fe_consideration BinaryRolePredicate)
+(arity fe_consideration 2)
+
+(isa fe_constancy BinaryRolePredicate)
+(arity fe_constancy 2)
+
+(isa fe_constant_location BinaryRolePredicate)
+(arity fe_constant_location 2)
+
+(isa fe_constituent_parts BinaryRolePredicate)
+(arity fe_constituent_parts 2)
+
+(isa fe_constituents BinaryRolePredicate)
+(arity fe_constituents 2)
+
+(isa fe_construction BinaryRolePredicate)
+(arity fe_construction 2)
+
+(isa fe_consumer BinaryRolePredicate)
+(arity fe_consumer 2)
+
+(isa fe_container BinaryRolePredicate)
+(arity fe_container 2)
+
+(isa fe_container_portal BinaryRolePredicate)
+(arity fe_container_portal 2)
+
+(isa fe_container_possessor BinaryRolePredicate)
+(arity fe_container_possessor 2)
+
+(isa fe_containing_event BinaryRolePredicate)
+(arity fe_containing_event 2)
+
+(isa fe_containing_object BinaryRolePredicate)
+(arity fe_containing_object 2)
+
+(isa fe_containing_text BinaryRolePredicate)
+(arity fe_containing_text 2)
+
+(isa fe_content BinaryRolePredicate)
+(arity fe_content 2)
+
+(isa fe_contents BinaryRolePredicate)
+(arity fe_contents 2)
+
+(isa fe_context BinaryRolePredicate)
+(arity fe_context 2)
+
+(isa fe_context_of_acquaintance BinaryRolePredicate)
+(arity fe_context_of_acquaintance 2)
+
+(isa fe_contract_basis BinaryRolePredicate)
+(arity fe_contract_basis 2)
+
+(isa fe_contrast BinaryRolePredicate)
+(arity fe_contrast 2)
+
+(isa fe_contrast_set BinaryRolePredicate)
+(arity fe_contrast_set 2)
+
+(isa fe_control BinaryRolePredicate)
+(arity fe_control 2)
+
+(isa fe_control_group BinaryRolePredicate)
+(arity fe_control_group 2)
+
+(isa fe_control_group_member BinaryRolePredicate)
+(arity fe_control_group_member 2)
+
+(isa fe_controlled_entity BinaryRolePredicate)
+(arity fe_controlled_entity 2)
+
+(isa fe_controlling_act BinaryRolePredicate)
+(arity fe_controlling_act 2)
+
+(isa fe_controlling_entity BinaryRolePredicate)
+(arity fe_controlling_entity 2)
+
+(isa fe_conveyed_emotion BinaryRolePredicate)
+(arity fe_conveyed_emotion 2)
+
+(isa fe_convict BinaryRolePredicate)
+(arity fe_convict 2)
+
+(isa fe_conviction BinaryRolePredicate)
+(arity fe_conviction 2)
+
+(isa fe_convoy BinaryRolePredicate)
+(arity fe_convoy 2)
+
+(isa fe_cook BinaryRolePredicate)
+(arity fe_cook 2)
+
+(isa fe_coordinated_event BinaryRolePredicate)
+(arity fe_coordinated_event 2)
+
+(isa fe_copy BinaryRolePredicate)
+(arity fe_copy 2)
+
+(isa fe_correlated_variable BinaryRolePredicate)
+(arity fe_correlated_variable 2)
+
+(isa fe_cotheme BinaryRolePredicate)
+(arity fe_cotheme 2)
+
+(isa fe_count BinaryRolePredicate)
+(arity fe_count 2)
+
+(isa fe_counter_actor BinaryRolePredicate)
+(arity fe_counter_actor 2)
+
+(isa fe_countertransfer BinaryRolePredicate)
+(arity fe_countertransfer 2)
+
+(isa fe_country_of_origin BinaryRolePredicate)
+(arity fe_country_of_origin 2)
+
+(isa fe_course BinaryRolePredicate)
+(arity fe_course 2)
+
+(isa fe_court BinaryRolePredicate)
+(arity fe_court 2)
+
+(isa fe_created_entity BinaryRolePredicate)
+(arity fe_created_entity 2)
+
+(isa fe_creator BinaryRolePredicate)
+(arity fe_creator 2)
+
+(isa fe_crime BinaryRolePredicate)
+(arity fe_crime 2)
+
+(isa fe_crime_jurisdiction BinaryRolePredicate)
+(arity fe_crime_jurisdiction 2)
+
+(isa fe_criteria BinaryRolePredicate)
+(arity fe_criteria 2)
+
+(isa fe_criterion BinaryRolePredicate)
+(arity fe_criterion 2)
+
+(isa fe_crop BinaryRolePredicate)
+(arity fe_crop 2)
+
+(isa fe_culture BinaryRolePredicate)
+(arity fe_culture 2)
+
+(isa fe_current_country BinaryRolePredicate)
+(arity fe_current_country 2)
+
+(isa fe_current_instance BinaryRolePredicate)
+(arity fe_current_instance 2)
+
+(isa fe_current_jurisdiction BinaryRolePredicate)
+(arity fe_current_jurisdiction 2)
+
+(isa fe_current_leadership BinaryRolePredicate)
+(arity fe_current_leadership 2)
+
+(isa fe_customer BinaryRolePredicate)
+(arity fe_customer 2)
+
+(isa fe_danger BinaryRolePredicate)
+(arity fe_danger 2)
+
+(isa fe_dangerous_entity BinaryRolePredicate)
+(arity fe_dangerous_entity 2)
+
+(isa fe_dangerous_situation BinaryRolePredicate)
+(arity fe_dangerous_situation 2)
+
+(isa fe_data BinaryRolePredicate)
+(arity fe_data 2)
+
+(isa fe_deceased BinaryRolePredicate)
+(arity fe_deceased 2)
+
+(isa fe_decision BinaryRolePredicate)
+(arity fe_decision 2)
+
+(isa fe_decision_maker BinaryRolePredicate)
+(arity fe_decision_maker 2)
+
+(isa fe_decorated_individual BinaryRolePredicate)
+(arity fe_decorated_individual 2)
+
+(isa fe_decoration BinaryRolePredicate)
+(arity fe_decoration 2)
+
+(isa fe_decoration_descriptor BinaryRolePredicate)
+(arity fe_decoration_descriptor 2)
+
+(isa fe_dedicated_entity BinaryRolePredicate)
+(arity fe_dedicated_entity 2)
+
+(isa fe_dedicated_type BinaryRolePredicate)
+(arity fe_dedicated_type 2)
+
+(isa fe_defendant BinaryRolePredicate)
+(arity fe_defendant 2)
+
+(isa fe_defender BinaryRolePredicate)
+(arity fe_defender 2)
+
+(isa fe_defense BinaryRolePredicate)
+(arity fe_defense 2)
+
+(isa fe_defining_event BinaryRolePredicate)
+(arity fe_defining_event 2)
+
+(isa fe_deformer BinaryRolePredicate)
+(arity fe_deformer 2)
+
+(isa fe_degree BinaryRolePredicate)
+(arity fe_degree 2)
+
+(isa fe_degree_of_involvement BinaryRolePredicate)
+(arity fe_degree_of_involvement 2)
+
+(isa fe_deixis BinaryRolePredicate)
+(arity fe_deixis 2)
+
+(isa fe_deliverer BinaryRolePredicate)
+(arity fe_deliverer 2)
+
+(isa fe_delivery_device BinaryRolePredicate)
+(arity fe_delivery_device 2)
+
+(isa fe_demands BinaryRolePredicate)
+(arity fe_demands 2)
+
+(isa fe_denoted_quantity BinaryRolePredicate)
+(arity fe_denoted_quantity 2)
+
+(isa fe_dependent BinaryRolePredicate)
+(arity fe_dependent 2)
+
+(isa fe_dependent_entity BinaryRolePredicate)
+(arity fe_dependent_entity 2)
+
+(isa fe_dependent_individual BinaryRolePredicate)
+(arity fe_dependent_individual 2)
+
+(isa fe_dependent_situation BinaryRolePredicate)
+(arity fe_dependent_situation 2)
+
+(isa fe_dependent_state BinaryRolePredicate)
+(arity fe_dependent_state 2)
+
+(isa fe_dependent_variable BinaryRolePredicate)
+(arity fe_dependent_variable 2)
+
+(isa fe_depictive BinaryRolePredicate)
+(arity fe_depictive 2)
+
+(isa fe_depictive_of_represented BinaryRolePredicate)
+(arity fe_depictive_of_represented 2)
+
+(isa fe_described_entity BinaryRolePredicate)
+(arity fe_described_entity 2)
+
+(isa fe_descriptor BinaryRolePredicate)
+(arity fe_descriptor 2)
+
+(isa fe_designer BinaryRolePredicate)
+(arity fe_designer 2)
+
+(isa fe_desirability BinaryRolePredicate)
+(arity fe_desirability 2)
+
+(isa fe_desirable BinaryRolePredicate)
+(arity fe_desirable 2)
+
+(isa fe_desirable_action BinaryRolePredicate)
+(arity fe_desirable_action 2)
+
+(isa fe_desirable_situation BinaryRolePredicate)
+(arity fe_desirable_situation 2)
+
+(isa fe_desired_goal BinaryRolePredicate)
+(arity fe_desired_goal 2)
+
+(isa fe_desired_state_of_affairs BinaryRolePredicate)
+(arity fe_desired_state_of_affairs 2)
+
+(isa fe_destination_event BinaryRolePredicate)
+(arity fe_destination_event 2)
+
+(isa fe_destination_time BinaryRolePredicate)
+(arity fe_destination_time 2)
+
+(isa fe_destroyer BinaryRolePredicate)
+(arity fe_destroyer 2)
+
+(isa fe_determinant BinaryRolePredicate)
+(arity fe_determinant 2)
+
+(isa fe_developer BinaryRolePredicate)
+(arity fe_developer 2)
+
+(isa fe_deviation BinaryRolePredicate)
+(arity fe_deviation 2)
+
+(isa fe_device BinaryRolePredicate)
+(arity fe_device 2)
+
+(isa fe_difference BinaryRolePredicate)
+(arity fe_difference 2)
+
+(isa fe_differentiating_fact BinaryRolePredicate)
+(arity fe_differentiating_fact 2)
+
+(isa fe_dimension BinaryRolePredicate)
+(arity fe_dimension 2)
+
+(isa fe_direction BinaryRolePredicate)
+(arity fe_direction 2)
+
+(isa fe_directness BinaryRolePredicate)
+(arity fe_directness 2)
+
+(isa fe_discourse_salient_country BinaryRolePredicate)
+(arity fe_discourse_salient_country 2)
+
+(isa fe_disease BinaryRolePredicate)
+(arity fe_disease 2)
+
+(isa fe_display BinaryRolePredicate)
+(arity fe_display 2)
+
+(isa fe_dispute BinaryRolePredicate)
+(arity fe_dispute 2)
+
+(isa fe_distance BinaryRolePredicate)
+(arity fe_distance 2)
+
+(isa fe_distributor BinaryRolePredicate)
+(arity fe_distributor 2)
+
+(isa fe_document BinaryRolePredicate)
+(arity fe_document 2)
+
+(isa fe_documents BinaryRolePredicate)
+(arity fe_documents 2)
+
+(isa fe_dodger BinaryRolePredicate)
+(arity fe_dodger 2)
+
+(isa fe_domain BinaryRolePredicate)
+(arity fe_domain 2)
+
+(isa fe_domain_of_relevance BinaryRolePredicate)
+(arity fe_domain_of_relevance 2)
+
+(isa fe_donor BinaryRolePredicate)
+(arity fe_donor 2)
+
+(isa fe_driver BinaryRolePredicate)
+(arity fe_driver 2)
+
+(isa fe_dryee BinaryRolePredicate)
+(arity fe_dryee 2)
+
+(isa fe_duration BinaryRolePredicate)
+(arity fe_duration 2)
+
+(isa fe_duration_of_final_state BinaryRolePredicate)
+(arity fe_duration_of_final_state 2)
+
+(isa fe_duty BinaryRolePredicate)
+(arity fe_duty 2)
+
+(isa fe_earner BinaryRolePredicate)
+(arity fe_earner 2)
+
+(isa fe_earnings BinaryRolePredicate)
+(arity fe_earnings 2)
+
+(isa fe_eclipsed BinaryRolePredicate)
+(arity fe_eclipsed 2)
+
+(isa fe_economy BinaryRolePredicate)
+(arity fe_economy 2)
+
+(isa fe_effect BinaryRolePredicate)
+(arity fe_effect 2)
+
+(isa fe_effort BinaryRolePredicate)
+(arity fe_effort 2)
+
+(isa fe_egg BinaryRolePredicate)
+(arity fe_egg 2)
+
+(isa fe_ego BinaryRolePredicate)
+(arity fe_ego 2)
+
+(isa fe_elapsed_time BinaryRolePredicate)
+(arity fe_elapsed_time 2)
+
+(isa fe_electricity BinaryRolePredicate)
+(arity fe_electricity 2)
+
+(isa fe_element BinaryRolePredicate)
+(arity fe_element 2)
+
+(isa fe_emission BinaryRolePredicate)
+(arity fe_emission 2)
+
+(isa fe_emitter BinaryRolePredicate)
+(arity fe_emitter 2)
+
+(isa fe_emotion BinaryRolePredicate)
+(arity fe_emotion 2)
+
+(isa fe_emotional_state BinaryRolePredicate)
+(arity fe_emotional_state 2)
+
+(isa fe_empathy_target BinaryRolePredicate)
+(arity fe_empathy_target 2)
+
+(isa fe_employee BinaryRolePredicate)
+(arity fe_employee 2)
+
+(isa fe_employer BinaryRolePredicate)
+(arity fe_employer 2)
+
+(isa fe_employment BinaryRolePredicate)
+(arity fe_employment 2)
+
+(isa fe_enabled_action BinaryRolePredicate)
+(arity fe_enabled_action 2)
+
+(isa fe_enabled_situation BinaryRolePredicate)
+(arity fe_enabled_situation 2)
+
+(isa fe_enclosed_region BinaryRolePredicate)
+(arity fe_enclosed_region 2)
+
+(isa fe_end_point BinaryRolePredicate)
+(arity fe_end_point 2)
+
+(isa fe_end_time BinaryRolePredicate)
+(arity fe_end_time 2)
+
+(isa fe_endangering_act BinaryRolePredicate)
+(arity fe_endangering_act 2)
+
+(isa fe_endeavor BinaryRolePredicate)
+(arity fe_endeavor 2)
+
+(isa fe_endpoints BinaryRolePredicate)
+(arity fe_endpoints 2)
+
+(isa fe_enemy BinaryRolePredicate)
+(arity fe_enemy 2)
+
+(isa fe_entities BinaryRolePredicate)
+(arity fe_entities 2)
+
+(isa fe_entity BinaryRolePredicate)
+(arity fe_entity 2)
+
+(isa fe_entity_1 BinaryRolePredicate)
+(arity fe_entity_1 2)
+
+(isa fe_entity_2 BinaryRolePredicate)
+(arity fe_entity_2 2)
+
+(isa fe_entourage BinaryRolePredicate)
+(arity fe_entourage 2)
+
+(isa fe_entry_path BinaryRolePredicate)
+(arity fe_entry_path 2)
+
+(isa fe_escapee BinaryRolePredicate)
+(arity fe_escapee 2)
+
+(isa fe_estimation BinaryRolePredicate)
+(arity fe_estimation 2)
+
+(isa fe_ethnicity BinaryRolePredicate)
+(arity fe_ethnicity 2)
+
+(isa fe_evader BinaryRolePredicate)
+(arity fe_evader 2)
+
+(isa fe_evaluation BinaryRolePredicate)
+(arity fe_evaluation 2)
+
+(isa fe_evaluator BinaryRolePredicate)
+(arity fe_evaluator 2)
+
+(isa fe_evaluee BinaryRolePredicate)
+(arity fe_evaluee 2)
+
+(isa fe_event BinaryRolePredicate)
+(arity fe_event 2)
+
+(isa fe_event_description BinaryRolePredicate)
+(arity fe_event_description 2)
+
+(isa fe_events BinaryRolePredicate)
+(arity fe_events 2)
+
+(isa fe_eventuality BinaryRolePredicate)
+(arity fe_eventuality 2)
+
+(isa fe_evidence BinaryRolePredicate)
+(arity fe_evidence 2)
+
+(isa fe_examination BinaryRolePredicate)
+(arity fe_examination 2)
+
+(isa fe_examinee BinaryRolePredicate)
+(arity fe_examinee 2)
+
+(isa fe_examiner BinaryRolePredicate)
+(arity fe_examiner 2)
+
+(isa fe_excess BinaryRolePredicate)
+(arity fe_excess 2)
+
+(isa fe_exchange_rate BinaryRolePredicate)
+(arity fe_exchange_rate 2)
+
+(isa fe_exchange_service BinaryRolePredicate)
+(arity fe_exchange_service 2)
+
+(isa fe_exchanger_1 BinaryRolePredicate)
+(arity fe_exchanger_1 2)
+
+(isa fe_exchanger_2 BinaryRolePredicate)
+(arity fe_exchanger_2 2)
+
+(isa fe_exchangers BinaryRolePredicate)
+(arity fe_exchangers 2)
+
+(isa fe_excreta BinaryRolePredicate)
+(arity fe_excreta 2)
+
+(isa fe_excreter BinaryRolePredicate)
+(arity fe_excreter 2)
+
+(isa fe_executed BinaryRolePredicate)
+(arity fe_executed 2)
+
+(isa fe_execution BinaryRolePredicate)
+(arity fe_execution 2)
+
+(isa fe_executioner BinaryRolePredicate)
+(arity fe_executioner 2)
+
+(isa fe_executive_authority BinaryRolePredicate)
+(arity fe_executive_authority 2)
+
+(isa fe_exerter BinaryRolePredicate)
+(arity fe_exerter 2)
+
+(isa fe_existing_member BinaryRolePredicate)
+(arity fe_existing_member 2)
+
+(isa fe_expectation BinaryRolePredicate)
+(arity fe_expectation 2)
+
+(isa fe_expected_entity BinaryRolePredicate)
+(arity fe_expected_entity 2)
+
+(isa fe_expected_event BinaryRolePredicate)
+(arity fe_expected_event 2)
+
+(isa fe_experience BinaryRolePredicate)
+(arity fe_experience 2)
+
+(isa fe_experiencer BinaryRolePredicate)
+(arity fe_experiencer 2)
+
+(isa fe_experiment BinaryRolePredicate)
+(arity fe_experiment 2)
+
+(isa fe_experimenter BinaryRolePredicate)
+(arity fe_experimenter 2)
+
+(isa fe_explanation BinaryRolePredicate)
+(arity fe_explanation 2)
+
+(isa fe_explosive BinaryRolePredicate)
+(arity fe_explosive 2)
+
+(isa fe_exporter BinaryRolePredicate)
+(arity fe_exporter 2)
+
+(isa fe_exporting_area BinaryRolePredicate)
+(arity fe_exporting_area 2)
+
+(isa fe_expression BinaryRolePredicate)
+(arity fe_expression 2)
+
+(isa fe_expression_1 BinaryRolePredicate)
+(arity fe_expression_1 2)
+
+(isa fe_expression_2 BinaryRolePredicate)
+(arity fe_expression_2 2)
+
+(isa fe_expressor BinaryRolePredicate)
+(arity fe_expressor 2)
+
+(isa fe_extent BinaryRolePredicate)
+(arity fe_extent 2)
+
+(isa fe_extent_of_acclaim BinaryRolePredicate)
+(arity fe_extent_of_acclaim 2)
+
+(isa fe_external_cause BinaryRolePredicate)
+(arity fe_external_cause 2)
+
+(isa fe_facility BinaryRolePredicate)
+(arity fe_facility 2)
+
+(isa fe_fact BinaryRolePredicate)
+(arity fe_fact 2)
+
+(isa fe_factor BinaryRolePredicate)
+(arity fe_factor 2)
+
+(isa fe_factory BinaryRolePredicate)
+(arity fe_factory 2)
+
+(isa fe_factual_situation BinaryRolePredicate)
+(arity fe_factual_situation 2)
+
+(isa fe_faculty BinaryRolePredicate)
+(arity fe_faculty 2)
+
+(isa fe_fastener BinaryRolePredicate)
+(arity fe_fastener 2)
+
+(isa fe_father BinaryRolePredicate)
+(arity fe_father 2)
+
+(isa fe_feature BinaryRolePredicate)
+(arity fe_feature 2)
+
+(isa fe_fidelity BinaryRolePredicate)
+(arity fe_fidelity 2)
+
+(isa fe_field BinaryRolePredicate)
+(arity fe_field 2)
+
+(isa fe_fight BinaryRolePredicate)
+(arity fe_fight 2)
+
+(isa fe_figure BinaryRolePredicate)
+(arity fe_figure 2)
+
+(isa fe_figures BinaryRolePredicate)
+(arity fe_figures 2)
+
+(isa fe_final_category BinaryRolePredicate)
+(arity fe_final_category 2)
+
+(isa fe_final_correlate BinaryRolePredicate)
+(arity fe_final_correlate 2)
+
+(isa fe_final_element BinaryRolePredicate)
+(arity fe_final_element 2)
+
+(isa fe_final_number BinaryRolePredicate)
+(arity fe_final_number 2)
+
+(isa fe_final_quality BinaryRolePredicate)
+(arity fe_final_quality 2)
+
+(isa fe_final_situation BinaryRolePredicate)
+(arity fe_final_situation 2)
+
+(isa fe_final_state BinaryRolePredicate)
+(arity fe_final_state 2)
+
+(isa fe_final_subevent BinaryRolePredicate)
+(arity fe_final_subevent 2)
+
+(isa fe_final_temperature BinaryRolePredicate)
+(arity fe_final_temperature 2)
+
+(isa fe_final_value BinaryRolePredicate)
+(arity fe_final_value 2)
+
+(isa fe_financial_instrument BinaryRolePredicate)
+(arity fe_financial_instrument 2)
+
+(isa fe_finding BinaryRolePredicate)
+(arity fe_finding 2)
+
+(isa fe_fine BinaryRolePredicate)
+(arity fe_fine 2)
+
+(isa fe_fire BinaryRolePredicate)
+(arity fe_fire 2)
+
+(isa fe_firearm BinaryRolePredicate)
+(arity fe_firearm 2)
+
+(isa fe_firefighter BinaryRolePredicate)
+(arity fe_firefighter 2)
+
+(isa fe_fixed_location BinaryRolePredicate)
+(arity fe_fixed_location 2)
+
+(isa fe_flame BinaryRolePredicate)
+(arity fe_flame 2)
+
+(isa fe_flammables BinaryRolePredicate)
+(arity fe_flammables 2)
+
+(isa fe_fluid BinaryRolePredicate)
+(arity fe_fluid 2)
+
+(isa fe_focal_entity BinaryRolePredicate)
+(arity fe_focal_entity 2)
+
+(isa fe_focal_feature BinaryRolePredicate)
+(arity fe_focal_feature 2)
+
+(isa fe_focal_occasion BinaryRolePredicate)
+(arity fe_focal_occasion 2)
+
+(isa fe_focal_participant BinaryRolePredicate)
+(arity fe_focal_participant 2)
+
+(isa fe_focal_time BinaryRolePredicate)
+(arity fe_focal_time 2)
+
+(isa fe_following_distance BinaryRolePredicate)
+(arity fe_following_distance 2)
+
+(isa fe_food BinaryRolePredicate)
+(arity fe_food 2)
+
+(isa fe_forbidden BinaryRolePredicate)
+(arity fe_forbidden 2)
+
+(isa fe_force BinaryRolePredicate)
+(arity fe_force 2)
+
+(isa fe_foreground_event BinaryRolePredicate)
+(arity fe_foreground_event 2)
+
+(isa fe_forgery BinaryRolePredicate)
+(arity fe_forgery 2)
+
+(isa fe_forgoer BinaryRolePredicate)
+(arity fe_forgoer 2)
+
+(isa fe_form BinaryRolePredicate)
+(arity fe_form 2)
+
+(isa fe_formal_realization BinaryRolePredicate)
+(arity fe_formal_realization 2)
+
+(isa fe_formational_cause BinaryRolePredicate)
+(arity fe_formational_cause 2)
+
+(isa fe_frequency BinaryRolePredicate)
+(arity fe_frequency 2)
+
+(isa fe_frequency_of_use BinaryRolePredicate)
+(arity fe_frequency_of_use 2)
+
+(isa fe_front BinaryRolePredicate)
+(arity fe_front 2)
+
+(isa fe_fuel BinaryRolePredicate)
+(arity fe_fuel 2)
+
+(isa fe_fugitive BinaryRolePredicate)
+(arity fe_fugitive 2)
+
+(isa fe_function BinaryRolePredicate)
+(arity fe_function 2)
+
+(isa fe_future_phenomenon BinaryRolePredicate)
+(arity fe_future_phenomenon 2)
+
+(isa fe_gambler BinaryRolePredicate)
+(arity fe_gambler 2)
+
+(isa fe_game BinaryRolePredicate)
+(arity fe_game 2)
+
+(isa fe_garment BinaryRolePredicate)
+(arity fe_garment 2)
+
+(isa fe_gatherer BinaryRolePredicate)
+(arity fe_gatherer 2)
+
+(isa fe_genre BinaryRolePredicate)
+(arity fe_genre 2)
+
+(isa fe_gift BinaryRolePredicate)
+(arity fe_gift 2)
+
+(isa fe_gizmo BinaryRolePredicate)
+(arity fe_gizmo 2)
+
+(isa fe_goal BinaryRolePredicate)
+(arity fe_goal 2)
+
+(isa fe_goal_area BinaryRolePredicate)
+(arity fe_goal_area 2)
+
+(isa fe_goods BinaryRolePredicate)
+(arity fe_goods 2)
+
+(isa fe_governed BinaryRolePredicate)
+(arity fe_governed 2)
+
+(isa fe_governing_authority BinaryRolePredicate)
+(arity fe_governing_authority 2)
+
+(isa fe_gradable_attribute BinaryRolePredicate)
+(arity fe_gradable_attribute 2)
+
+(isa fe_graph BinaryRolePredicate)
+(arity fe_graph 2)
+
+(isa fe_grinder BinaryRolePredicate)
+(arity fe_grinder 2)
+
+(isa fe_grinding_cause BinaryRolePredicate)
+(arity fe_grinding_cause 2)
+
+(isa fe_ground BinaryRolePredicate)
+(arity fe_ground 2)
+
+(isa fe_grounds BinaryRolePredicate)
+(arity fe_grounds 2)
+
+(isa fe_group BinaryRolePredicate)
+(arity fe_group 2)
+
+(isa fe_grower BinaryRolePredicate)
+(arity fe_grower 2)
+
+(isa fe_guardian BinaryRolePredicate)
+(arity fe_guardian 2)
+
+(isa fe_guest BinaryRolePredicate)
+(arity fe_guest 2)
+
+(isa fe_hair BinaryRolePredicate)
+(arity fe_hair 2)
+
+(isa fe_hair_property BinaryRolePredicate)
+(arity fe_hair_property 2)
+
+(isa fe_handle BinaryRolePredicate)
+(arity fe_handle 2)
+
+(isa fe_harmful_event BinaryRolePredicate)
+(arity fe_harmful_event 2)
+
+(isa fe_harmful_situation BinaryRolePredicate)
+(arity fe_harmful_situation 2)
+
+(isa fe_healer BinaryRolePredicate)
+(arity fe_healer 2)
+
+(isa fe_hearer BinaryRolePredicate)
+(arity fe_hearer 2)
+
+(isa fe_heat_source BinaryRolePredicate)
+(arity fe_heat_source 2)
+
+(isa fe_heating_instrument BinaryRolePredicate)
+(arity fe_heating_instrument 2)
+
+(isa fe_helper BinaryRolePredicate)
+(arity fe_helper 2)
+
+(isa fe_hiatus BinaryRolePredicate)
+(arity fe_hiatus 2)
+
+(isa fe_hidden_object BinaryRolePredicate)
+(arity fe_hidden_object 2)
+
+(isa fe_hiding_place BinaryRolePredicate)
+(arity fe_hiding_place 2)
+
+(isa fe_hindrance BinaryRolePredicate)
+(arity fe_hindrance 2)
+
+(isa fe_holding_location BinaryRolePredicate)
+(arity fe_holding_location 2)
+
+(isa fe_homeland BinaryRolePredicate)
+(arity fe_homeland 2)
+
+(isa fe_honored_entity BinaryRolePredicate)
+(arity fe_honored_entity 2)
+
+(isa fe_host BinaryRolePredicate)
+(arity fe_host 2)
+
+(isa fe_host_location BinaryRolePredicate)
+(arity fe_host_location 2)
+
+(isa fe_hot_cold_source BinaryRolePredicate)
+(arity fe_hot_cold_source 2)
+
+(isa fe_hot_cold_source BinaryRolePredicate)
+(arity fe_hot_cold_source 2)
+
+(isa fe_hunter BinaryRolePredicate)
+(arity fe_hunter 2)
+
+(isa fe_hypothesis BinaryRolePredicate)
+(arity fe_hypothesis 2)
+
+(isa fe_hypothetical_event BinaryRolePredicate)
+(arity fe_hypothetical_event 2)
+
+(isa fe_idea BinaryRolePredicate)
+(arity fe_idea 2)
+
+(isa fe_idiosyncrasy BinaryRolePredicate)
+(arity fe_idiosyncrasy 2)
+
+(isa fe_illicit_activity BinaryRolePredicate)
+(arity fe_illicit_activity 2)
+
+(isa fe_illicit_organization BinaryRolePredicate)
+(arity fe_illicit_organization 2)
+
+(isa fe_impactee BinaryRolePredicate)
+(arity fe_impactee 2)
+
+(isa fe_impactor BinaryRolePredicate)
+(arity fe_impactor 2)
+
+(isa fe_impactors BinaryRolePredicate)
+(arity fe_impactors 2)
+
+(isa fe_importer BinaryRolePredicate)
+(arity fe_importer 2)
+
+(isa fe_importing_area BinaryRolePredicate)
+(arity fe_importing_area 2)
+
+(isa fe_imposed_purpose BinaryRolePredicate)
+(arity fe_imposed_purpose 2)
+
+(isa fe_impression BinaryRolePredicate)
+(arity fe_impression 2)
+
+(isa fe_incident BinaryRolePredicate)
+(arity fe_incident 2)
+
+(isa fe_increment BinaryRolePredicate)
+(arity fe_increment 2)
+
+(isa fe_independent_variable BinaryRolePredicate)
+(arity fe_independent_variable 2)
+
+(isa fe_indicated BinaryRolePredicate)
+(arity fe_indicated 2)
+
+(isa fe_indicated_entity BinaryRolePredicate)
+(arity fe_indicated_entity 2)
+
+(isa fe_indicated_resident BinaryRolePredicate)
+(arity fe_indicated_resident 2)
+
+(isa fe_indicator BinaryRolePredicate)
+(arity fe_indicator 2)
+
+(isa fe_individual BinaryRolePredicate)
+(arity fe_individual 2)
+
+(isa fe_individual_1 BinaryRolePredicate)
+(arity fe_individual_1 2)
+
+(isa fe_individual_2 BinaryRolePredicate)
+(arity fe_individual_2 2)
+
+(isa fe_individuals BinaryRolePredicate)
+(arity fe_individuals 2)
+
+(isa fe_inference BinaryRolePredicate)
+(arity fe_inference 2)
+
+(isa fe_influence BinaryRolePredicate)
+(arity fe_influence 2)
+
+(isa fe_influencing_entity BinaryRolePredicate)
+(arity fe_influencing_entity 2)
+
+(isa fe_influencing_situation BinaryRolePredicate)
+(arity fe_influencing_situation 2)
+
+(isa fe_influencing_variable BinaryRolePredicate)
+(arity fe_influencing_variable 2)
+
+(isa fe_information BinaryRolePredicate)
+(arity fe_information 2)
+
+(isa fe_information_source BinaryRolePredicate)
+(arity fe_information_source 2)
+
+(isa fe_informer BinaryRolePredicate)
+(arity fe_informer 2)
+
+(isa fe_infrastructure BinaryRolePredicate)
+(arity fe_infrastructure 2)
+
+(isa fe_ingestibles BinaryRolePredicate)
+(arity fe_ingestibles 2)
+
+(isa fe_ingestor BinaryRolePredicate)
+(arity fe_ingestor 2)
+
+(isa fe_ingredients BinaryRolePredicate)
+(arity fe_ingredients 2)
+
+(isa fe_inherent_purpose BinaryRolePredicate)
+(arity fe_inherent_purpose 2)
+
+(isa fe_initial_category BinaryRolePredicate)
+(arity fe_initial_category 2)
+
+(isa fe_initial_correlate BinaryRolePredicate)
+(arity fe_initial_correlate 2)
+
+(isa fe_initial_duration BinaryRolePredicate)
+(arity fe_initial_duration 2)
+
+(isa fe_initial_element BinaryRolePredicate)
+(arity fe_initial_element 2)
+
+(isa fe_initial_number BinaryRolePredicate)
+(arity fe_initial_number 2)
+
+(isa fe_initial_quality BinaryRolePredicate)
+(arity fe_initial_quality 2)
+
+(isa fe_initial_set BinaryRolePredicate)
+(arity fe_initial_set 2)
+
+(isa fe_initial_size BinaryRolePredicate)
+(arity fe_initial_size 2)
+
+(isa fe_initial_state BinaryRolePredicate)
+(arity fe_initial_state 2)
+
+(isa fe_initial_subevent BinaryRolePredicate)
+(arity fe_initial_subevent 2)
+
+(isa fe_initial_value BinaryRolePredicate)
+(arity fe_initial_value 2)
+
+(isa fe_injured_party BinaryRolePredicate)
+(arity fe_injured_party 2)
+
+(isa fe_injuring_entity BinaryRolePredicate)
+(arity fe_injuring_entity 2)
+
+(isa fe_injury BinaryRolePredicate)
+(arity fe_injury 2)
+
+(isa fe_inmates BinaryRolePredicate)
+(arity fe_inmates 2)
+
+(isa fe_input BinaryRolePredicate)
+(arity fe_input 2)
+
+(isa fe_inspector BinaryRolePredicate)
+(arity fe_inspector 2)
+
+(isa fe_instance BinaryRolePredicate)
+(arity fe_instance 2)
+
+(isa fe_instance_prop BinaryRolePredicate)
+(arity fe_instance_prop 2)
+
+(isa fe_institution BinaryRolePredicate)
+(arity fe_institution 2)
+
+(isa fe_instrument BinaryRolePredicate)
+(arity fe_instrument 2)
+
+(isa fe_insulator BinaryRolePredicate)
+(arity fe_insulator 2)
+
+(isa fe_intended_academic_credit BinaryRolePredicate)
+(arity fe_intended_academic_credit 2)
+
+(isa fe_intended_event BinaryRolePredicate)
+(arity fe_intended_event 2)
+
+(isa fe_intended_goal BinaryRolePredicate)
+(arity fe_intended_goal 2)
+
+(isa fe_intended_perceiver BinaryRolePredicate)
+(arity fe_intended_perceiver 2)
+
+(isa fe_intended_referent BinaryRolePredicate)
+(arity fe_intended_referent 2)
+
+(isa fe_intended_wearing_location BinaryRolePredicate)
+(arity fe_intended_wearing_location 2)
+
+(isa fe_interceptor BinaryRolePredicate)
+(arity fe_interceptor 2)
+
+(isa fe_interested_party BinaryRolePredicate)
+(arity fe_interested_party 2)
+
+(isa fe_interlocutor BinaryRolePredicate)
+(arity fe_interlocutor 2)
+
+(isa fe_interlocutor_1 BinaryRolePredicate)
+(arity fe_interlocutor_1 2)
+
+(isa fe_interlocutor_2 BinaryRolePredicate)
+(arity fe_interlocutor_2 2)
+
+(isa fe_interlocutors BinaryRolePredicate)
+(arity fe_interlocutors 2)
+
+(isa fe_intermediary BinaryRolePredicate)
+(arity fe_intermediary 2)
+
+(isa fe_internal_cause BinaryRolePredicate)
+(arity fe_internal_cause 2)
+
+(isa fe_interval BinaryRolePredicate)
+(arity fe_interval 2)
+
+(isa fe_intoxicant BinaryRolePredicate)
+(arity fe_intoxicant 2)
+
+(isa fe_invader BinaryRolePredicate)
+(arity fe_invader 2)
+
+(isa fe_invasion_act BinaryRolePredicate)
+(arity fe_invasion_act 2)
+
+(isa fe_investigator BinaryRolePredicate)
+(arity fe_investigator 2)
+
+(isa fe_issue BinaryRolePredicate)
+(arity fe_issue 2)
+
+(isa fe_issuer BinaryRolePredicate)
+(arity fe_issuer 2)
+
+(isa fe_item BinaryRolePredicate)
+(arity fe_item 2)
+
+(isa fe_item_1 BinaryRolePredicate)
+(arity fe_item_1 2)
+
+(isa fe_item_2 BinaryRolePredicate)
+(arity fe_item_2 2)
+
+(isa fe_item_property BinaryRolePredicate)
+(arity fe_item_property 2)
+
+(isa fe_items BinaryRolePredicate)
+(arity fe_items 2)
+
+(isa fe_iteration_count BinaryRolePredicate)
+(arity fe_iteration_count 2)
+
+(isa fe_iterations BinaryRolePredicate)
+(arity fe_iterations 2)
+
+(isa fe_itinerary BinaryRolePredicate)
+(arity fe_itinerary 2)
+
+(isa fe_journey BinaryRolePredicate)
+(arity fe_journey 2)
+
+(isa fe_judge BinaryRolePredicate)
+(arity fe_judge 2)
+
+(isa fe_judges BinaryRolePredicate)
+(arity fe_judges 2)
+
+(isa fe_judgment BinaryRolePredicate)
+(arity fe_judgment 2)
+
+(isa fe_judicial_body BinaryRolePredicate)
+(arity fe_judicial_body 2)
+
+(isa fe_jurisdiction BinaryRolePredicate)
+(arity fe_jurisdiction 2)
+
+(isa fe_jury BinaryRolePredicate)
+(arity fe_jury 2)
+
+(isa fe_key BinaryRolePredicate)
+(arity fe_key 2)
+
+(isa fe_killer BinaryRolePredicate)
+(arity fe_killer 2)
+
+(isa fe_kindler BinaryRolePredicate)
+(arity fe_kindler 2)
+
+(isa fe_knot BinaryRolePredicate)
+(arity fe_knot 2)
+
+(isa fe_knowledge BinaryRolePredicate)
+(arity fe_knowledge 2)
+
+(isa fe_known_resident BinaryRolePredicate)
+(arity fe_known_resident 2)
+
+(isa fe_label BinaryRolePredicate)
+(arity fe_label 2)
+
+(isa fe_land BinaryRolePredicate)
+(arity fe_land 2)
+
+(isa fe_landmark BinaryRolePredicate)
+(arity fe_landmark 2)
+
+(isa fe_landmark_entity BinaryRolePredicate)
+(arity fe_landmark_entity 2)
+
+(isa fe_landmark_event BinaryRolePredicate)
+(arity fe_landmark_event 2)
+
+(isa fe_landmark_feature BinaryRolePredicate)
+(arity fe_landmark_feature 2)
+
+(isa fe_landmark_occasion BinaryRolePredicate)
+(arity fe_landmark_occasion 2)
+
+(isa fe_landmark_period BinaryRolePredicate)
+(arity fe_landmark_period 2)
+
+(isa fe_landmark_time BinaryRolePredicate)
+(arity fe_landmark_time 2)
+
+(isa fe_language BinaryRolePredicate)
+(arity fe_language 2)
+
+(isa fe_larger_purpose BinaryRolePredicate)
+(arity fe_larger_purpose 2)
+
+(isa fe_law BinaryRolePredicate)
+(arity fe_law 2)
+
+(isa fe_leader BinaryRolePredicate)
+(arity fe_leader 2)
+
+(isa fe_legal_basis BinaryRolePredicate)
+(arity fe_legal_basis 2)
+
+(isa fe_lender BinaryRolePredicate)
+(arity fe_lender 2)
+
+(isa fe_length BinaryRolePredicate)
+(arity fe_length 2)
+
+(isa fe_lessee BinaryRolePredicate)
+(arity fe_lessee 2)
+
+(isa fe_lessor BinaryRolePredicate)
+(arity fe_lessor 2)
+
+(isa fe_level BinaryRolePredicate)
+(arity fe_level 2)
+
+(isa fe_lifestyle BinaryRolePredicate)
+(arity fe_lifestyle 2)
+
+(isa fe_light BinaryRolePredicate)
+(arity fe_light 2)
+
+(isa fe_limit1 BinaryRolePredicate)
+(arity fe_limit1 2)
+
+(isa fe_limit2 BinaryRolePredicate)
+(arity fe_limit2 2)
+
+(isa fe_limits BinaryRolePredicate)
+(arity fe_limits 2)
+
+(isa fe_limits_of_consideration BinaryRolePredicate)
+(arity fe_limits_of_consideration 2)
+
+(isa fe_liquid BinaryRolePredicate)
+(arity fe_liquid 2)
+
+(isa fe_locale BinaryRolePredicate)
+(arity fe_locale 2)
+
+(isa fe_location BinaryRolePredicate)
+(arity fe_location 2)
+
+(isa fe_location_of_appearance BinaryRolePredicate)
+(arity fe_location_of_appearance 2)
+
+(isa fe_location_of_assailant BinaryRolePredicate)
+(arity fe_location_of_assailant 2)
+
+(isa fe_location_of_confinement BinaryRolePredicate)
+(arity fe_location_of_confinement 2)
+
+(isa fe_location_of_event BinaryRolePredicate)
+(arity fe_location_of_event 2)
+
+(isa fe_location_of_protagonist BinaryRolePredicate)
+(arity fe_location_of_protagonist 2)
+
+(isa fe_location_of_representation BinaryRolePredicate)
+(arity fe_location_of_representation 2)
+
+(isa fe_location_of_sound_source BinaryRolePredicate)
+(arity fe_location_of_sound_source 2)
+
+(isa fe_locus BinaryRolePredicate)
+(arity fe_locus 2)
+
+(isa fe_lodger BinaryRolePredicate)
+(arity fe_lodger 2)
+
+(isa fe_loser BinaryRolePredicate)
+(arity fe_loser 2)
+
+(isa fe_loyal_side BinaryRolePredicate)
+(arity fe_loyal_side 2)
+
+(isa fe_main_assertion BinaryRolePredicate)
+(arity fe_main_assertion 2)
+
+(isa fe_manifestation_of_bias BinaryRolePredicate)
+(arity fe_manifestation_of_bias 2)
+
+(isa fe_manipulator BinaryRolePredicate)
+(arity fe_manipulator 2)
+
+(isa fe_manner BinaryRolePredicate)
+(arity fe_manner 2)
+
+(isa fe_manner_descriptor BinaryRolePredicate)
+(arity fe_manner_descriptor 2)
+
+(isa fe_margin BinaryRolePredicate)
+(arity fe_margin 2)
+
+(isa fe_marker BinaryRolePredicate)
+(arity fe_marker 2)
+
+(isa fe_market BinaryRolePredicate)
+(arity fe_market 2)
+
+(isa fe_market_type BinaryRolePredicate)
+(arity fe_market_type 2)
+
+(isa fe_mass BinaryRolePredicate)
+(arity fe_mass 2)
+
+(isa fe_mass_theme BinaryRolePredicate)
+(arity fe_mass_theme 2)
+
+(isa fe_material BinaryRolePredicate)
+(arity fe_material 2)
+
+(isa fe_meaning BinaryRolePredicate)
+(arity fe_meaning 2)
+
+(isa fe_means BinaryRolePredicate)
+(arity fe_means 2)
+
+(isa fe_means_of_communication BinaryRolePredicate)
+(arity fe_means_of_communication 2)
+
+(isa fe_means_of_gathering BinaryRolePredicate)
+(arity fe_means_of_gathering 2)
+
+(isa fe_means_of_motion BinaryRolePredicate)
+(arity fe_means_of_motion 2)
+
+(isa fe_measurement BinaryRolePredicate)
+(arity fe_measurement 2)
+
+(isa fe_medical_condition BinaryRolePredicate)
+(arity fe_medical_condition 2)
+
+(isa fe_medical_professional BinaryRolePredicate)
+(arity fe_medical_professional 2)
+
+(isa fe_medication BinaryRolePredicate)
+(arity fe_medication 2)
+
+(isa fe_medium BinaryRolePredicate)
+(arity fe_medium 2)
+
+(isa fe_member BinaryRolePredicate)
+(arity fe_member 2)
+
+(isa fe_member_1 BinaryRolePredicate)
+(arity fe_member_1 2)
+
+(isa fe_member_2 BinaryRolePredicate)
+(arity fe_member_2 2)
+
+(isa fe_members BinaryRolePredicate)
+(arity fe_members 2)
+
+(isa fe_mental_content BinaryRolePredicate)
+(arity fe_mental_content 2)
+
+(isa fe_message BinaryRolePredicate)
+(arity fe_message 2)
+
+(isa fe_method BinaryRolePredicate)
+(arity fe_method 2)
+
+(isa fe_military_organization BinaryRolePredicate)
+(arity fe_military_organization 2)
+
+(isa fe_miner BinaryRolePredicate)
+(arity fe_miner 2)
+
+(isa fe_misdeed BinaryRolePredicate)
+(arity fe_misdeed 2)
+
+(isa fe_mitigating_situation BinaryRolePredicate)
+(arity fe_mitigating_situation 2)
+
+(isa fe_mode_of_transfer BinaryRolePredicate)
+(arity fe_mode_of_transfer 2)
+
+(isa fe_mode_of_transportation BinaryRolePredicate)
+(arity fe_mode_of_transportation 2)
+
+(isa fe_money BinaryRolePredicate)
+(arity fe_money 2)
+
+(isa fe_money_owner BinaryRolePredicate)
+(arity fe_money_owner 2)
+
+(isa fe_mother BinaryRolePredicate)
+(arity fe_mother 2)
+
+(isa fe_multiplier BinaryRolePredicate)
+(arity fe_multiplier 2)
+
+(isa fe_name BinaryRolePredicate)
+(arity fe_name 2)
+
+(isa fe_name_source BinaryRolePredicate)
+(arity fe_name_source 2)
+
+(isa fe_namesake BinaryRolePredicate)
+(arity fe_namesake 2)
+
+(isa fe_nationality BinaryRolePredicate)
+(arity fe_nationality 2)
+
+(isa fe_negated_proposition BinaryRolePredicate)
+(arity fe_negated_proposition 2)
+
+(isa fe_negative_consequences BinaryRolePredicate)
+(arity fe_negative_consequences 2)
+
+(isa fe_network BinaryRolePredicate)
+(arity fe_network 2)
+
+(isa fe_new BinaryRolePredicate)
+(arity fe_new 2)
+
+(isa fe_new_area BinaryRolePredicate)
+(arity fe_new_area 2)
+
+(isa fe_new_duration BinaryRolePredicate)
+(arity fe_new_duration 2)
+
+(isa fe_new_idea BinaryRolePredicate)
+(arity fe_new_idea 2)
+
+(isa fe_new_leader BinaryRolePredicate)
+(arity fe_new_leader 2)
+
+(isa fe_new_member BinaryRolePredicate)
+(arity fe_new_member 2)
+
+(isa fe_new_punishment BinaryRolePredicate)
+(arity fe_new_punishment 2)
+
+(isa fe_new_situation BinaryRolePredicate)
+(arity fe_new_situation 2)
+
+(isa fe_new_status BinaryRolePredicate)
+(arity fe_new_status 2)
+
+(isa fe_new_tool BinaryRolePredicate)
+(arity fe_new_tool 2)
+
+(isa fe_nodes BinaryRolePredicate)
+(arity fe_nodes 2)
+
+(isa fe_noise_maker BinaryRolePredicate)
+(arity fe_noise_maker 2)
+
+(isa fe_noisy_event BinaryRolePredicate)
+(arity fe_noisy_event 2)
+
+(isa fe_norm BinaryRolePredicate)
+(arity fe_norm 2)
+
+(isa fe_number BinaryRolePredicate)
+(arity fe_number 2)
+
+(isa fe_number_of_possibilities BinaryRolePredicate)
+(arity fe_number_of_possibilities 2)
+
+(isa fe_numbers BinaryRolePredicate)
+(arity fe_numbers 2)
+
+(isa fe_object BinaryRolePredicate)
+(arity fe_object 2)
+
+(isa fe_obligated_party BinaryRolePredicate)
+(arity fe_obligated_party 2)
+
+(isa fe_obligation BinaryRolePredicate)
+(arity fe_obligation 2)
+
+(isa fe_obligator BinaryRolePredicate)
+(arity fe_obligator 2)
+
+(isa fe_obscuring_medium BinaryRolePredicate)
+(arity fe_obscuring_medium 2)
+
+(isa fe_obstruction BinaryRolePredicate)
+(arity fe_obstruction 2)
+
+(isa fe_occasion BinaryRolePredicate)
+(arity fe_occasion 2)
+
+(isa fe_occupant BinaryRolePredicate)
+(arity fe_occupant 2)
+
+(isa fe_odds BinaryRolePredicate)
+(arity fe_odds 2)
+
+(isa fe_offender BinaryRolePredicate)
+(arity fe_offender 2)
+
+(isa fe_offense BinaryRolePredicate)
+(arity fe_offense 2)
+
+(isa fe_offerer BinaryRolePredicate)
+(arity fe_offerer 2)
+
+(isa fe_official BinaryRolePredicate)
+(arity fe_official 2)
+
+(isa fe_old BinaryRolePredicate)
+(arity fe_old 2)
+
+(isa fe_old_leader BinaryRolePredicate)
+(arity fe_old_leader 2)
+
+(isa fe_old_order BinaryRolePredicate)
+(arity fe_old_order 2)
+
+(isa fe_old_tool BinaryRolePredicate)
+(arity fe_old_tool 2)
+
+(isa fe_operator BinaryRolePredicate)
+(arity fe_operator 2)
+
+(isa fe_opinion BinaryRolePredicate)
+(arity fe_opinion 2)
+
+(isa fe_opponent BinaryRolePredicate)
+(arity fe_opponent 2)
+
+(isa fe_opportunity BinaryRolePredicate)
+(arity fe_opportunity 2)
+
+(isa fe_opposing_force BinaryRolePredicate)
+(arity fe_opposing_force 2)
+
+(isa fe_options BinaryRolePredicate)
+(arity fe_options 2)
+
+(isa fe_ordinality BinaryRolePredicate)
+(arity fe_ordinality 2)
+
+(isa fe_organism BinaryRolePredicate)
+(arity fe_organism 2)
+
+(isa fe_organization BinaryRolePredicate)
+(arity fe_organization 2)
+
+(isa fe_orientation BinaryRolePredicate)
+(arity fe_orientation 2)
+
+(isa fe_orientational_location BinaryRolePredicate)
+(arity fe_orientational_location 2)
+
+(isa fe_origin BinaryRolePredicate)
+(arity fe_origin 2)
+
+(isa fe_original BinaryRolePredicate)
+(arity fe_original 2)
+
+(isa fe_original_body BinaryRolePredicate)
+(arity fe_original_body 2)
+
+(isa fe_original_context BinaryRolePredicate)
+(arity fe_original_context 2)
+
+(isa fe_original_owner BinaryRolePredicate)
+(arity fe_original_owner 2)
+
+(isa fe_original_path BinaryRolePredicate)
+(arity fe_original_path 2)
+
+(isa fe_original_punishment BinaryRolePredicate)
+(arity fe_original_punishment 2)
+
+(isa fe_other BinaryRolePredicate)
+(arity fe_other 2)
+
+(isa fe_outcome BinaryRolePredicate)
+(arity fe_outcome 2)
+
+(isa fe_output BinaryRolePredicate)
+(arity fe_output 2)
+
+(isa fe_owed_party BinaryRolePredicate)
+(arity fe_owed_party 2)
+
+(isa fe_owner BinaryRolePredicate)
+(arity fe_owner 2)
+
+(isa fe_paradigm BinaryRolePredicate)
+(arity fe_paradigm 2)
+
+(isa fe_parameter BinaryRolePredicate)
+(arity fe_parameter 2)
+
+(isa fe_parents BinaryRolePredicate)
+(arity fe_parents 2)
+
+(isa fe_part BinaryRolePredicate)
+(arity fe_part 2)
+
+(isa fe_part_1 BinaryRolePredicate)
+(arity fe_part_1 2)
+
+(isa fe_part_2 BinaryRolePredicate)
+(arity fe_part_2 2)
+
+(isa fe_part_of_form BinaryRolePredicate)
+(arity fe_part_of_form 2)
+
+(isa fe_part_prop BinaryRolePredicate)
+(arity fe_part_prop 2)
+
+(isa fe_participant BinaryRolePredicate)
+(arity fe_participant 2)
+
+(isa fe_participant1 BinaryRolePredicate)
+(arity fe_participant1 2)
+
+(isa fe_participant2 BinaryRolePredicate)
+(arity fe_participant2 2)
+
+(isa fe_participant_1 BinaryRolePredicate)
+(arity fe_participant_1 2)
+
+(isa fe_participant_2 BinaryRolePredicate)
+(arity fe_participant_2 2)
+
+(isa fe_participants BinaryRolePredicate)
+(arity fe_participants 2)
+
+(isa fe_particular_iteration BinaryRolePredicate)
+(arity fe_particular_iteration 2)
+
+(isa fe_parties BinaryRolePredicate)
+(arity fe_parties 2)
+
+(isa fe_partner_1 BinaryRolePredicate)
+(arity fe_partner_1 2)
+
+(isa fe_partner_2 BinaryRolePredicate)
+(arity fe_partner_2 2)
+
+(isa fe_partners BinaryRolePredicate)
+(arity fe_partners 2)
+
+(isa fe_parts BinaryRolePredicate)
+(arity fe_parts 2)
+
+(isa fe_party BinaryRolePredicate)
+(arity fe_party 2)
+
+(isa fe_party_1 BinaryRolePredicate)
+(arity fe_party_1 2)
+
+(isa fe_party_2 BinaryRolePredicate)
+(arity fe_party_2 2)
+
+(isa fe_path BinaryRolePredicate)
+(arity fe_path 2)
+
+(isa fe_path_of_gaze BinaryRolePredicate)
+(arity fe_path_of_gaze 2)
+
+(isa fe_path_shape BinaryRolePredicate)
+(arity fe_path_shape 2)
+
+(isa fe_patient BinaryRolePredicate)
+(arity fe_patient 2)
+
+(isa fe_patrol BinaryRolePredicate)
+(arity fe_patrol 2)
+
+(isa fe_pattern BinaryRolePredicate)
+(arity fe_pattern 2)
+
+(isa fe_payer BinaryRolePredicate)
+(arity fe_payer 2)
+
+(isa fe_payment BinaryRolePredicate)
+(arity fe_payment 2)
+
+(isa fe_payment_status BinaryRolePredicate)
+(arity fe_payment_status 2)
+
+(isa fe_penal_institution BinaryRolePredicate)
+(arity fe_penal_institution 2)
+
+(isa fe_perceiver BinaryRolePredicate)
+(arity fe_perceiver 2)
+
+(isa fe_perceiver_agentive BinaryRolePredicate)
+(arity fe_perceiver_agentive 2)
+
+(isa fe_perceiver_passive BinaryRolePredicate)
+(arity fe_perceiver_passive 2)
+
+(isa fe_percept BinaryRolePredicate)
+(arity fe_percept 2)
+
+(isa fe_perceptual_source BinaryRolePredicate)
+(arity fe_perceptual_source 2)
+
+(isa fe_performance BinaryRolePredicate)
+(arity fe_performance 2)
+
+(isa fe_performer BinaryRolePredicate)
+(arity fe_performer 2)
+
+(isa fe_performer1 BinaryRolePredicate)
+(arity fe_performer1 2)
+
+(isa fe_performer2 BinaryRolePredicate)
+(arity fe_performer2 2)
+
+(isa fe_period BinaryRolePredicate)
+(arity fe_period 2)
+
+(isa fe_period_of_existence BinaryRolePredicate)
+(arity fe_period_of_existence 2)
+
+(isa fe_period_of_iterations BinaryRolePredicate)
+(arity fe_period_of_iterations 2)
+
+(isa fe_periodicity BinaryRolePredicate)
+(arity fe_periodicity 2)
+
+(isa fe_perpetrator BinaryRolePredicate)
+(arity fe_perpetrator 2)
+
+(isa fe_persistent_characteristic BinaryRolePredicate)
+(arity fe_persistent_characteristic 2)
+
+(isa fe_person BinaryRolePredicate)
+(arity fe_person 2)
+
+(isa fe_phenomena BinaryRolePredicate)
+(arity fe_phenomena 2)
+
+(isa fe_phenomenon BinaryRolePredicate)
+(arity fe_phenomenon 2)
+
+(isa fe_phenomenon_1 BinaryRolePredicate)
+(arity fe_phenomenon_1 2)
+
+(isa fe_phenomenon_2 BinaryRolePredicate)
+(arity fe_phenomenon_2 2)
+
+(isa fe_picture BinaryRolePredicate)
+(arity fe_picture 2)
+
+(isa fe_piece BinaryRolePredicate)
+(arity fe_piece 2)
+
+(isa fe_piece_prop BinaryRolePredicate)
+(arity fe_piece_prop 2)
+
+(isa fe_pieces BinaryRolePredicate)
+(arity fe_pieces 2)
+
+(isa fe_place BinaryRolePredicate)
+(arity fe_place 2)
+
+(isa fe_place_of_employment BinaryRolePredicate)
+(arity fe_place_of_employment 2)
+
+(isa fe_plan BinaryRolePredicate)
+(arity fe_plan 2)
+
+(isa fe_plant BinaryRolePredicate)
+(arity fe_plant 2)
+
+(isa fe_player BinaryRolePredicate)
+(arity fe_player 2)
+
+(isa fe_plea BinaryRolePredicate)
+(arity fe_plea 2)
+
+(isa fe_point_of_contact BinaryRolePredicate)
+(arity fe_point_of_contact 2)
+
+(isa fe_point_of_view BinaryRolePredicate)
+(arity fe_point_of_view 2)
+
+(isa fe_political_region BinaryRolePredicate)
+(arity fe_political_region 2)
+
+(isa fe_population BinaryRolePredicate)
+(arity fe_population 2)
+
+(isa fe_portion BinaryRolePredicate)
+(arity fe_portion 2)
+
+(isa fe_position BinaryRolePredicate)
+(arity fe_position 2)
+
+(isa fe_possession BinaryRolePredicate)
+(arity fe_possession 2)
+
+(isa fe_possessor BinaryRolePredicate)
+(arity fe_possessor 2)
+
+(isa fe_possibilities BinaryRolePredicate)
+(arity fe_possibilities 2)
+
+(isa fe_possible_event BinaryRolePredicate)
+(arity fe_possible_event 2)
+
+(isa fe_possible_sentence BinaryRolePredicate)
+(arity fe_possible_sentence 2)
+
+(isa fe_post BinaryRolePredicate)
+(arity fe_post 2)
+
+(isa fe_post_state BinaryRolePredicate)
+(arity fe_post_state 2)
+
+(isa fe_potential_hindrance BinaryRolePredicate)
+(arity fe_potential_hindrance 2)
+
+(isa fe_potential_observer BinaryRolePredicate)
+(arity fe_potential_observer 2)
+
+(isa fe_potential_recipient BinaryRolePredicate)
+(arity fe_potential_recipient 2)
+
+(isa fe_power_source BinaryRolePredicate)
+(arity fe_power_source 2)
+
+(isa fe_practice BinaryRolePredicate)
+(arity fe_practice 2)
+
+(isa fe_practitioner BinaryRolePredicate)
+(arity fe_practitioner 2)
+
+(isa fe_pragmatic_marker BinaryRolePredicate)
+(arity fe_pragmatic_marker 2)
+
+(isa fe_precept BinaryRolePredicate)
+(arity fe_precept 2)
+
+(isa fe_precipitation BinaryRolePredicate)
+(arity fe_precipitation 2)
+
+(isa fe_precision BinaryRolePredicate)
+(arity fe_precision 2)
+
+(isa fe_predicate BinaryRolePredicate)
+(arity fe_predicate 2)
+
+(isa fe_predictive_phenomenon BinaryRolePredicate)
+(arity fe_predictive_phenomenon 2)
+
+(isa fe_preparatory_act BinaryRolePredicate)
+(arity fe_preparatory_act 2)
+
+(isa fe_preparatory_phase BinaryRolePredicate)
+(arity fe_preparatory_phase 2)
+
+(isa fe_presentation BinaryRolePredicate)
+(arity fe_presentation 2)
+
+(isa fe_preventing_cause BinaryRolePredicate)
+(arity fe_preventing_cause 2)
+
+(isa fe_previous_context BinaryRolePredicate)
+(arity fe_previous_context 2)
+
+(isa fe_previous_instance BinaryRolePredicate)
+(arity fe_previous_instance 2)
+
+(isa fe_price BinaryRolePredicate)
+(arity fe_price 2)
+
+(isa fe_principle BinaryRolePredicate)
+(arity fe_principle 2)
+
+(isa fe_prior_state BinaryRolePredicate)
+(arity fe_prior_state 2)
+
+(isa fe_prison BinaryRolePredicate)
+(arity fe_prison 2)
+
+(isa fe_prisoner BinaryRolePredicate)
+(arity fe_prisoner 2)
+
+(isa fe_prize BinaryRolePredicate)
+(arity fe_prize 2)
+
+(isa fe_problem BinaryRolePredicate)
+(arity fe_problem 2)
+
+(isa fe_process BinaryRolePredicate)
+(arity fe_process 2)
+
+(isa fe_produced_food BinaryRolePredicate)
+(arity fe_produced_food 2)
+
+(isa fe_producer BinaryRolePredicate)
+(arity fe_producer 2)
+
+(isa fe_product BinaryRolePredicate)
+(arity fe_product 2)
+
+(isa fe_production BinaryRolePredicate)
+(arity fe_production 2)
+
+(isa fe_products BinaryRolePredicate)
+(arity fe_products 2)
+
+(isa fe_professional BinaryRolePredicate)
+(arity fe_professional 2)
+
+(isa fe_profiled_attribute BinaryRolePredicate)
+(arity fe_profiled_attribute 2)
+
+(isa fe_profiled_event BinaryRolePredicate)
+(arity fe_profiled_event 2)
+
+(isa fe_profiled_item BinaryRolePredicate)
+(arity fe_profiled_item 2)
+
+(isa fe_profiled_possibility BinaryRolePredicate)
+(arity fe_profiled_possibility 2)
+
+(isa fe_profiled_region BinaryRolePredicate)
+(arity fe_profiled_region 2)
+
+(isa fe_project BinaryRolePredicate)
+(arity fe_project 2)
+
+(isa fe_projectile BinaryRolePredicate)
+(arity fe_projectile 2)
+
+(isa fe_property BinaryRolePredicate)
+(arity fe_property 2)
+
+(isa fe_proposal BinaryRolePredicate)
+(arity fe_proposal 2)
+
+(isa fe_proposed_action BinaryRolePredicate)
+(arity fe_proposed_action 2)
+
+(isa fe_proposition BinaryRolePredicate)
+(arity fe_proposition 2)
+
+(isa fe_proprietor BinaryRolePredicate)
+(arity fe_proprietor 2)
+
+(isa fe_prosecution BinaryRolePredicate)
+(arity fe_prosecution 2)
+
+(isa fe_protagonist BinaryRolePredicate)
+(arity fe_protagonist 2)
+
+(isa fe_protection BinaryRolePredicate)
+(arity fe_protection 2)
+
+(isa fe_protester BinaryRolePredicate)
+(arity fe_protester 2)
+
+(isa fe_punishment BinaryRolePredicate)
+(arity fe_punishment 2)
+
+(isa fe_purpose BinaryRolePredicate)
+(arity fe_purpose 2)
+
+(isa fe_purpose_of_event BinaryRolePredicate)
+(arity fe_purpose_of_event 2)
+
+(isa fe_purpose_of_theme BinaryRolePredicate)
+(arity fe_purpose_of_theme 2)
+
+(isa fe_pursuer BinaryRolePredicate)
+(arity fe_pursuer 2)
+
+(isa fe_q_prop BinaryRolePredicate)
+(arity fe_q_prop 2)
+
+(isa fe_qualification BinaryRolePredicate)
+(arity fe_qualification 2)
+
+(isa fe_quality BinaryRolePredicate)
+(arity fe_quality 2)
+
+(isa fe_quantity BinaryRolePredicate)
+(arity fe_quantity 2)
+
+(isa fe_question BinaryRolePredicate)
+(arity fe_question 2)
+
+(isa fe_questioner BinaryRolePredicate)
+(arity fe_questioner 2)
+
+(isa fe_quote BinaryRolePredicate)
+(arity fe_quote 2)
+
+(isa fe_range_of_options BinaryRolePredicate)
+(arity fe_range_of_options 2)
+
+(isa fe_rank BinaryRolePredicate)
+(arity fe_rank 2)
+
+(isa fe_rate BinaryRolePredicate)
+(arity fe_rate 2)
+
+(isa fe_ratifier BinaryRolePredicate)
+(arity fe_ratifier 2)
+
+(isa fe_ratio BinaryRolePredicate)
+(arity fe_ratio 2)
+
+(isa fe_re-encoding BinaryRolePredicate)
+(arity fe_re-encoding 2)
+
+(isa fe_reader BinaryRolePredicate)
+(arity fe_reader 2)
+
+(isa fe_reason BinaryRolePredicate)
+(arity fe_reason 2)
+
+(isa fe_rebel BinaryRolePredicate)
+(arity fe_rebel 2)
+
+(isa fe_recipient BinaryRolePredicate)
+(arity fe_recipient 2)
+
+(isa fe_recipients BinaryRolePredicate)
+(arity fe_recipients 2)
+
+(isa fe_reciprocation BinaryRolePredicate)
+(arity fe_reciprocation 2)
+
+(isa fe_record BinaryRolePredicate)
+(arity fe_record 2)
+
+(isa fe_recorder BinaryRolePredicate)
+(arity fe_recorder 2)
+
+(isa fe_reference_category BinaryRolePredicate)
+(arity fe_reference_category 2)
+
+(isa fe_reference_occasion BinaryRolePredicate)
+(arity fe_reference_occasion 2)
+
+(isa fe_reference_point BinaryRolePredicate)
+(arity fe_reference_point 2)
+
+(isa fe_reference_quantity BinaryRolePredicate)
+(arity fe_reference_quantity 2)
+
+(isa fe_referent BinaryRolePredicate)
+(arity fe_referent 2)
+
+(isa fe_refreshment BinaryRolePredicate)
+(arity fe_refreshment 2)
+
+(isa fe_region_quantification BinaryRolePredicate)
+(arity fe_region_quantification 2)
+
+(isa fe_regulated_entity BinaryRolePredicate)
+(arity fe_regulated_entity 2)
+
+(isa fe_related_event BinaryRolePredicate)
+(arity fe_related_event 2)
+
+(isa fe_relation_type BinaryRolePredicate)
+(arity fe_relation_type 2)
+
+(isa fe_relationship BinaryRolePredicate)
+(arity fe_relationship 2)
+
+(isa fe_relative_location BinaryRolePredicate)
+(arity fe_relative_location 2)
+
+(isa fe_relative_time BinaryRolePredicate)
+(arity fe_relative_time 2)
+
+(isa fe_relatives BinaryRolePredicate)
+(arity fe_relatives 2)
+
+(isa fe_relay BinaryRolePredicate)
+(arity fe_relay 2)
+
+(isa fe_relevant_feature BinaryRolePredicate)
+(arity fe_relevant_feature 2)
+
+(isa fe_reliability BinaryRolePredicate)
+(arity fe_reliability 2)
+
+(isa fe_religion BinaryRolePredicate)
+(arity fe_religion 2)
+
+(isa fe_remainder BinaryRolePredicate)
+(arity fe_remainder 2)
+
+(isa fe_reported_fact BinaryRolePredicate)
+(arity fe_reported_fact 2)
+
+(isa fe_representation BinaryRolePredicate)
+(arity fe_representation 2)
+
+(isa fe_representative BinaryRolePredicate)
+(arity fe_representative 2)
+
+(isa fe_represented BinaryRolePredicate)
+(arity fe_represented 2)
+
+(isa fe_required BinaryRolePredicate)
+(arity fe_required 2)
+
+(isa fe_required_entity BinaryRolePredicate)
+(arity fe_required_entity 2)
+
+(isa fe_required_situation BinaryRolePredicate)
+(arity fe_required_situation 2)
+
+(isa fe_requirement BinaryRolePredicate)
+(arity fe_requirement 2)
+
+(isa fe_requirements BinaryRolePredicate)
+(arity fe_requirements 2)
+
+(isa fe_researcher BinaryRolePredicate)
+(arity fe_researcher 2)
+
+(isa fe_residence BinaryRolePredicate)
+(arity fe_residence 2)
+
+(isa fe_resident BinaryRolePredicate)
+(arity fe_resident 2)
+
+(isa fe_residents BinaryRolePredicate)
+(arity fe_residents 2)
+
+(isa fe_resistant_surface BinaryRolePredicate)
+(arity fe_resistant_surface 2)
+
+(isa fe_resisting_entity BinaryRolePredicate)
+(arity fe_resisting_entity 2)
+
+(isa fe_resource BinaryRolePredicate)
+(arity fe_resource 2)
+
+(isa fe_resource_controller BinaryRolePredicate)
+(arity fe_resource_controller 2)
+
+(isa fe_responding_entity BinaryRolePredicate)
+(arity fe_responding_entity 2)
+
+(isa fe_response BinaryRolePredicate)
+(arity fe_response 2)
+
+(isa fe_response_action BinaryRolePredicate)
+(arity fe_response_action 2)
+
+(isa fe_responsible_party BinaryRolePredicate)
+(arity fe_responsible_party 2)
+
+(isa fe_rest BinaryRolePredicate)
+(arity fe_rest 2)
+
+(isa fe_restrictor BinaryRolePredicate)
+(arity fe_restrictor 2)
+
+(isa fe_result BinaryRolePredicate)
+(arity fe_result 2)
+
+(isa fe_result_size BinaryRolePredicate)
+(arity fe_result_size 2)
+
+(isa fe_resultant_action BinaryRolePredicate)
+(arity fe_resultant_action 2)
+
+(isa fe_resultant_configuration BinaryRolePredicate)
+(arity fe_resultant_configuration 2)
+
+(isa fe_resultant_situation BinaryRolePredicate)
+(arity fe_resultant_situation 2)
+
+(isa fe_resulting_action BinaryRolePredicate)
+(arity fe_resulting_action 2)
+
+(isa fe_rider BinaryRolePredicate)
+(arity fe_rider 2)
+
+(isa fe_right BinaryRolePredicate)
+(arity fe_right 2)
+
+(isa fe_road BinaryRolePredicate)
+(arity fe_road 2)
+
+(isa fe_roadway BinaryRolePredicate)
+(arity fe_roadway 2)
+
+(isa fe_role BinaryRolePredicate)
+(arity fe_role 2)
+
+(isa fe_role_of_focal_participant BinaryRolePredicate)
+(arity fe_role_of_focal_participant 2)
+
+(isa fe_rope BinaryRolePredicate)
+(arity fe_rope 2)
+
+(isa fe_rule BinaryRolePredicate)
+(arity fe_rule 2)
+
+(isa fe_salient_activity BinaryRolePredicate)
+(arity fe_salient_activity 2)
+
+(isa fe_salient_entity BinaryRolePredicate)
+(arity fe_salient_entity 2)
+
+(isa fe_salient_event BinaryRolePredicate)
+(arity fe_salient_event 2)
+
+(isa fe_scale BinaryRolePredicate)
+(arity fe_scale 2)
+
+(isa fe_scene BinaryRolePredicate)
+(arity fe_scene 2)
+
+(isa fe_scheduled_time BinaryRolePredicate)
+(arity fe_scheduled_time 2)
+
+(isa fe_score BinaryRolePredicate)
+(arity fe_score 2)
+
+(isa fe_script BinaryRolePredicate)
+(arity fe_script 2)
+
+(isa fe_searcher BinaryRolePredicate)
+(arity fe_searcher 2)
+
+(isa fe_seat_of_emotion BinaryRolePredicate)
+(arity fe_seat_of_emotion 2)
+
+(isa fe_security BinaryRolePredicate)
+(arity fe_security 2)
+
+(isa fe_selector BinaryRolePredicate)
+(arity fe_selector 2)
+
+(isa fe_self_mover BinaryRolePredicate)
+(arity fe_self_mover 2)
+
+(isa fe_seller BinaryRolePredicate)
+(arity fe_seller 2)
+
+(isa fe_sender BinaryRolePredicate)
+(arity fe_sender 2)
+
+(isa fe_sensory_attribute BinaryRolePredicate)
+(arity fe_sensory_attribute 2)
+
+(isa fe_sent_item BinaryRolePredicate)
+(arity fe_sent_item 2)
+
+(isa fe_sentence BinaryRolePredicate)
+(arity fe_sentence 2)
+
+(isa fe_service_action BinaryRolePredicate)
+(arity fe_service_action 2)
+
+(isa fe_service_provider BinaryRolePredicate)
+(arity fe_service_provider 2)
+
+(isa fe_services BinaryRolePredicate)
+(arity fe_services 2)
+
+(isa fe_set BinaryRolePredicate)
+(arity fe_set 2)
+
+(isa fe_set_of_instances BinaryRolePredicate)
+(arity fe_set_of_instances 2)
+
+(isa fe_severity BinaryRolePredicate)
+(arity fe_severity 2)
+
+(isa fe_shape BinaryRolePredicate)
+(arity fe_shape 2)
+
+(isa fe_shape_prop BinaryRolePredicate)
+(arity fe_shape_prop 2)
+
+(isa fe_shareholder BinaryRolePredicate)
+(arity fe_shareholder 2)
+
+(isa fe_shopper BinaryRolePredicate)
+(arity fe_shopper 2)
+
+(isa fe_side BinaryRolePredicate)
+(arity fe_side 2)
+
+(isa fe_side_1 BinaryRolePredicate)
+(arity fe_side_1 2)
+
+(isa fe_side_2 BinaryRolePredicate)
+(arity fe_side_2 2)
+
+(isa fe_sides BinaryRolePredicate)
+(arity fe_sides 2)
+
+(isa fe_sign BinaryRolePredicate)
+(arity fe_sign 2)
+
+(isa fe_sign_1 BinaryRolePredicate)
+(arity fe_sign_1 2)
+
+(isa fe_sign_2 BinaryRolePredicate)
+(arity fe_sign_2 2)
+
+(isa fe_signatory BinaryRolePredicate)
+(arity fe_signatory 2)
+
+(isa fe_signature BinaryRolePredicate)
+(arity fe_signature 2)
+
+(isa fe_signs BinaryRolePredicate)
+(arity fe_signs 2)
+
+(isa fe_simulated_entity BinaryRolePredicate)
+(arity fe_simulated_entity 2)
+
+(isa fe_situation BinaryRolePredicate)
+(arity fe_situation 2)
+
+(isa fe_size BinaryRolePredicate)
+(arity fe_size 2)
+
+(isa fe_size_change BinaryRolePredicate)
+(arity fe_size_change 2)
+
+(isa fe_skill BinaryRolePredicate)
+(arity fe_skill 2)
+
+(isa fe_sleep_state BinaryRolePredicate)
+(arity fe_sleep_state 2)
+
+(isa fe_sleeper BinaryRolePredicate)
+(arity fe_sleeper 2)
+
+(isa fe_social_actor BinaryRolePredicate)
+(arity fe_social_actor 2)
+
+(isa fe_social_event BinaryRolePredicate)
+(arity fe_social_event 2)
+
+(isa fe_society BinaryRolePredicate)
+(arity fe_society 2)
+
+(isa fe_sought_entity BinaryRolePredicate)
+(arity fe_sought_entity 2)
+
+(isa fe_sought_phenomenon BinaryRolePredicate)
+(arity fe_sought_phenomenon 2)
+
+(isa fe_sound BinaryRolePredicate)
+(arity fe_sound 2)
+
+(isa fe_sound_maker BinaryRolePredicate)
+(arity fe_sound_maker 2)
+
+(isa fe_sound_source BinaryRolePredicate)
+(arity fe_sound_source 2)
+
+(isa fe_source BinaryRolePredicate)
+(arity fe_source 2)
+
+(isa fe_source_currency BinaryRolePredicate)
+(arity fe_source_currency 2)
+
+(isa fe_source_emitter BinaryRolePredicate)
+(arity fe_source_emitter 2)
+
+(isa fe_source_material BinaryRolePredicate)
+(arity fe_source_material 2)
+
+(isa fe_source_of_information BinaryRolePredicate)
+(arity fe_source_of_information 2)
+
+(isa fe_source_of_legal_authority BinaryRolePredicate)
+(arity fe_source_of_legal_authority 2)
+
+(isa fe_source_of_relationship BinaryRolePredicate)
+(arity fe_source_of_relationship 2)
+
+(isa fe_source_representation BinaryRolePredicate)
+(arity fe_source_representation 2)
+
+(isa fe_source_symbol BinaryRolePredicate)
+(arity fe_source_symbol 2)
+
+(isa fe_speaker BinaryRolePredicate)
+(arity fe_speaker 2)
+
+(isa fe_specialty BinaryRolePredicate)
+(arity fe_specialty 2)
+
+(isa fe_specification BinaryRolePredicate)
+(arity fe_specification 2)
+
+(isa fe_specified_content BinaryRolePredicate)
+(arity fe_specified_content 2)
+
+(isa fe_specified_entity BinaryRolePredicate)
+(arity fe_specified_entity 2)
+
+(isa fe_speed BinaryRolePredicate)
+(arity fe_speed 2)
+
+(isa fe_standard BinaryRolePredicate)
+(arity fe_standard 2)
+
+(isa fe_standard_attribute BinaryRolePredicate)
+(arity fe_standard_attribute 2)
+
+(isa fe_standard_item BinaryRolePredicate)
+(arity fe_standard_item 2)
+
+(isa fe_standing BinaryRolePredicate)
+(arity fe_standing 2)
+
+(isa fe_start_time BinaryRolePredicate)
+(arity fe_start_time 2)
+
+(isa fe_starting_point BinaryRolePredicate)
+(arity fe_starting_point 2)
+
+(isa fe_state BinaryRolePredicate)
+(arity fe_state 2)
+
+(isa fe_state_of_affairs BinaryRolePredicate)
+(arity fe_state_of_affairs 2)
+
+(isa fe_state_of_represented BinaryRolePredicate)
+(arity fe_state_of_represented 2)
+
+(isa fe_static_object BinaryRolePredicate)
+(arity fe_static_object 2)
+
+(isa fe_station BinaryRolePredicate)
+(arity fe_station 2)
+
+(isa fe_status BinaryRolePredicate)
+(arity fe_status 2)
+
+(isa fe_stimulus BinaryRolePredicate)
+(arity fe_stimulus 2)
+
+(isa fe_stock BinaryRolePredicate)
+(arity fe_stock 2)
+
+(isa fe_student BinaryRolePredicate)
+(arity fe_student 2)
+
+(isa fe_studio BinaryRolePredicate)
+(arity fe_studio 2)
+
+(isa fe_stuff BinaryRolePredicate)
+(arity fe_stuff 2)
+
+(isa fe_style BinaryRolePredicate)
+(arity fe_style 2)
+
+(isa fe_sub-source BinaryRolePredicate)
+(arity fe_sub-source 2)
+
+(isa fe_subevent BinaryRolePredicate)
+(arity fe_subevent 2)
+
+(isa fe_subgroup BinaryRolePredicate)
+(arity fe_subgroup 2)
+
+(isa fe_subject BinaryRolePredicate)
+(arity fe_subject 2)
+
+(isa fe_subjects BinaryRolePredicate)
+(arity fe_subjects 2)
+
+(isa fe_submittor BinaryRolePredicate)
+(arity fe_submittor 2)
+
+(isa fe_subordinate BinaryRolePredicate)
+(arity fe_subordinate 2)
+
+(isa fe_subpart BinaryRolePredicate)
+(arity fe_subpart 2)
+
+(isa fe_subregion BinaryRolePredicate)
+(arity fe_subregion 2)
+
+(isa fe_subregion_bodypart BinaryRolePredicate)
+(arity fe_subregion_bodypart 2)
+
+(isa fe_subset BinaryRolePredicate)
+(arity fe_subset 2)
+
+(isa fe_substance BinaryRolePredicate)
+(arity fe_substance 2)
+
+(isa fe_subtype BinaryRolePredicate)
+(arity fe_subtype 2)
+
+(isa fe_sufferer BinaryRolePredicate)
+(arity fe_sufferer 2)
+
+(isa fe_sum_1 BinaryRolePredicate)
+(arity fe_sum_1 2)
+
+(isa fe_summary BinaryRolePredicate)
+(arity fe_summary 2)
+
+(isa fe_superior BinaryRolePredicate)
+(arity fe_superior 2)
+
+(isa fe_supplier BinaryRolePredicate)
+(arity fe_supplier 2)
+
+(isa fe_supply BinaryRolePredicate)
+(arity fe_supply 2)
+
+(isa fe_support BinaryRolePredicate)
+(arity fe_support 2)
+
+(isa fe_supported BinaryRolePredicate)
+(arity fe_supported 2)
+
+(isa fe_supporter BinaryRolePredicate)
+(arity fe_supporter 2)
+
+(isa fe_surrenderer BinaryRolePredicate)
+(arity fe_surrenderer 2)
+
+(isa fe_survivor BinaryRolePredicate)
+(arity fe_survivor 2)
+
+(isa fe_suspect BinaryRolePredicate)
+(arity fe_suspect 2)
+
+(isa fe_symptom BinaryRolePredicate)
+(arity fe_symptom 2)
+
+(isa fe_system BinaryRolePredicate)
+(arity fe_system 2)
+
+(isa fe_target BinaryRolePredicate)
+(arity fe_target 2)
+
+(isa fe_target_currency BinaryRolePredicate)
+(arity fe_target_currency 2)
+
+(isa fe_target_group BinaryRolePredicate)
+(arity fe_target_group 2)
+
+(isa fe_target_location BinaryRolePredicate)
+(arity fe_target_location 2)
+
+(isa fe_target_representation BinaryRolePredicate)
+(arity fe_target_representation 2)
+
+(isa fe_target_symbol BinaryRolePredicate)
+(arity fe_target_symbol 2)
+
+(isa fe_targeted BinaryRolePredicate)
+(arity fe_targeted 2)
+
+(isa fe_task BinaryRolePredicate)
+(arity fe_task 2)
+
+(isa fe_teacher BinaryRolePredicate)
+(arity fe_teacher 2)
+
+(isa fe_team BinaryRolePredicate)
+(arity fe_team 2)
+
+(isa fe_temperature BinaryRolePredicate)
+(arity fe_temperature 2)
+
+(isa fe_temperature_change BinaryRolePredicate)
+(arity fe_temperature_change 2)
+
+(isa fe_temperature_goal BinaryRolePredicate)
+(arity fe_temperature_goal 2)
+
+(isa fe_temperature_setting BinaryRolePredicate)
+(arity fe_temperature_setting 2)
+
+(isa fe_temporal_profile BinaryRolePredicate)
+(arity fe_temporal_profile 2)
+
+(isa fe_temporary_group BinaryRolePredicate)
+(arity fe_temporary_group 2)
+
+(isa fe_term BinaryRolePredicate)
+(arity fe_term 2)
+
+(isa fe_term_1 BinaryRolePredicate)
+(arity fe_term_1 2)
+
+(isa fe_term_2 BinaryRolePredicate)
+(arity fe_term_2 2)
+
+(isa fe_term_of_sentence BinaryRolePredicate)
+(arity fe_term_of_sentence 2)
+
+(isa fe_terrorist BinaryRolePredicate)
+(arity fe_terrorist 2)
+
+(isa fe_tested_property BinaryRolePredicate)
+(arity fe_tested_property 2)
+
+(isa fe_tester BinaryRolePredicate)
+(arity fe_tester 2)
+
+(isa fe_text BinaryRolePredicate)
+(arity fe_text 2)
+
+(isa fe_textual_location BinaryRolePredicate)
+(arity fe_textual_location 2)
+
+(isa fe_theme BinaryRolePredicate)
+(arity fe_theme 2)
+
+(isa fe_theme_1 BinaryRolePredicate)
+(arity fe_theme_1 2)
+
+(isa fe_theme_2 BinaryRolePredicate)
+(arity fe_theme_2 2)
+
+(isa fe_themes BinaryRolePredicate)
+(arity fe_themes 2)
+
+(isa fe_time BinaryRolePredicate)
+(arity fe_time 2)
+
+(isa fe_time_length BinaryRolePredicate)
+(arity fe_time_length 2)
+
+(isa fe_time_of_creation BinaryRolePredicate)
+(arity fe_time_of_creation 2)
+
+(isa fe_time_of_event BinaryRolePredicate)
+(arity fe_time_of_event 2)
+
+(isa fe_time_of_eventuality BinaryRolePredicate)
+(arity fe_time_of_eventuality 2)
+
+(isa fe_time_of_implementation BinaryRolePredicate)
+(arity fe_time_of_implementation 2)
+
+(isa fe_time_period BinaryRolePredicate)
+(arity fe_time_period 2)
+
+(isa fe_time_span BinaryRolePredicate)
+(arity fe_time_span 2)
+
+(isa fe_timetable BinaryRolePredicate)
+(arity fe_timetable 2)
+
+(isa fe_title BinaryRolePredicate)
+(arity fe_title 2)
+
+(isa fe_tool BinaryRolePredicate)
+(arity fe_tool 2)
+
+(isa fe_tools BinaryRolePredicate)
+(arity fe_tools 2)
+
+(isa fe_topic BinaryRolePredicate)
+(arity fe_topic 2)
+
+(isa fe_topical_entity BinaryRolePredicate)
+(arity fe_topical_entity 2)
+
+(isa fe_total BinaryRolePredicate)
+(arity fe_total 2)
+
+(isa fe_tourist BinaryRolePredicate)
+(arity fe_tourist 2)
+
+(isa fe_toxic_substance BinaryRolePredicate)
+(arity fe_toxic_substance 2)
+
+(isa fe_toxin_source BinaryRolePredicate)
+(arity fe_toxin_source 2)
+
+(isa fe_trajector BinaryRolePredicate)
+(arity fe_trajector 2)
+
+(isa fe_trajector_entity BinaryRolePredicate)
+(arity fe_trajector_entity 2)
+
+(isa fe_trajector_event BinaryRolePredicate)
+(arity fe_trajector_event 2)
+
+(isa fe_trajector_period BinaryRolePredicate)
+(arity fe_trajector_period 2)
+
+(isa fe_transferors BinaryRolePredicate)
+(arity fe_transferors 2)
+
+(isa fe_transitional_period BinaryRolePredicate)
+(arity fe_transitional_period 2)
+
+(isa fe_transport_means BinaryRolePredicate)
+(arity fe_transport_means 2)
+
+(isa fe_travel_means BinaryRolePredicate)
+(arity fe_travel_means 2)
+
+(isa fe_traveler BinaryRolePredicate)
+(arity fe_traveler 2)
+
+(isa fe_traveller BinaryRolePredicate)
+(arity fe_traveller 2)
+
+(isa fe_treated_individual BinaryRolePredicate)
+(arity fe_treated_individual 2)
+
+(isa fe_treatment BinaryRolePredicate)
+(arity fe_treatment 2)
+
+(isa fe_treatment_group BinaryRolePredicate)
+(arity fe_treatment_group 2)
+
+(isa fe_trigger BinaryRolePredicate)
+(arity fe_trigger 2)
+
+(isa fe_type BinaryRolePredicate)
+(arity fe_type 2)
+
+(isa fe_type_property BinaryRolePredicate)
+(arity fe_type_property 2)
+
+(isa fe_uncertain_situation BinaryRolePredicate)
+(arity fe_uncertain_situation 2)
+
+(isa fe_unconfirmed_content BinaryRolePredicate)
+(arity fe_unconfirmed_content 2)
+
+(isa fe_undertaking BinaryRolePredicate)
+(arity fe_undertaking 2)
+
+(isa fe_undesirable_event BinaryRolePredicate)
+(arity fe_undesirable_event 2)
+
+(isa fe_undesirable_location BinaryRolePredicate)
+(arity fe_undesirable_location 2)
+
+(isa fe_undesirable_situation BinaryRolePredicate)
+(arity fe_undesirable_situation 2)
+
+(isa fe_unit BinaryRolePredicate)
+(arity fe_unit 2)
+
+(isa fe_unresolved_referent BinaryRolePredicate)
+(arity fe_unresolved_referent 2)
+
+(isa fe_unwanted_characteristics BinaryRolePredicate)
+(arity fe_unwanted_characteristics 2)
+
+(isa fe_unwanted_entity BinaryRolePredicate)
+(arity fe_unwanted_entity 2)
+
+(isa fe_use BinaryRolePredicate)
+(arity fe_use 2)
+
+(isa fe_useful_location BinaryRolePredicate)
+(arity fe_useful_location 2)
+
+(isa fe_user BinaryRolePredicate)
+(arity fe_user 2)
+
+(isa fe_value BinaryRolePredicate)
+(arity fe_value 2)
+
+(isa fe_value_1 BinaryRolePredicate)
+(arity fe_value_1 2)
+
+(isa fe_value_2 BinaryRolePredicate)
+(arity fe_value_2 2)
+
+(isa fe_value_range BinaryRolePredicate)
+(arity fe_value_range 2)
+
+(isa fe_valued_entity BinaryRolePredicate)
+(arity fe_valued_entity 2)
+
+(isa fe_vantage_point BinaryRolePredicate)
+(arity fe_vantage_point 2)
+
+(isa fe_variable BinaryRolePredicate)
+(arity fe_variable 2)
+
+(isa fe_vehicle BinaryRolePredicate)
+(arity fe_vehicle 2)
+
+(isa fe_vehicles BinaryRolePredicate)
+(arity fe_vehicles 2)
+
+(isa fe_venue BinaryRolePredicate)
+(arity fe_venue 2)
+
+(isa fe_victim BinaryRolePredicate)
+(arity fe_victim 2)
+
+(isa fe_viewpoint BinaryRolePredicate)
+(arity fe_viewpoint 2)
+
+(isa fe_visitor BinaryRolePredicate)
+(arity fe_visitor 2)
+
+(isa fe_vividness BinaryRolePredicate)
+(arity fe_vividness 2)
+
+(isa fe_voice BinaryRolePredicate)
+(arity fe_voice 2)
+
+(isa fe_volume BinaryRolePredicate)
+(arity fe_volume 2)
+
+(isa fe_weapon BinaryRolePredicate)
+(arity fe_weapon 2)
+
+(isa fe_wearer BinaryRolePredicate)
+(arity fe_wearer 2)
+
+(isa fe_weather BinaryRolePredicate)
+(arity fe_weather 2)
+
+(isa fe_whole BinaryRolePredicate)
+(arity fe_whole 2)
+
+(isa fe_whole_patient BinaryRolePredicate)
+(arity fe_whole_patient 2)
+
+(isa fe_wielder BinaryRolePredicate)
+(arity fe_wielder 2)
+
+(isa fe_winner BinaryRolePredicate)
+(arity fe_winner 2)
+
+(isa fe_witness BinaryRolePredicate)
+(arity fe_witness 2)
+
+(isa fe_work BinaryRolePredicate)
+(arity fe_work 2)
+
+(isa fe_wrong BinaryRolePredicate)
+(arity fe_wrong 2)
+
+(isa fe_wrongdoer BinaryRolePredicate)
+(arity fe_wrongdoer 2)
+
+
+
+
+
+(isa (InverseBinaryPredicateFn areaOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn areaOfObject) 2)
+
+(isa (InverseBinaryPredicateFn circumferenceOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn circumferenceOfObject) 2)
+
+(isa (InverseBinaryPredicateFn citizens) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn citizens) 2)
+
+(isa (InverseBinaryPredicateFn controls) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn controls) 2)
+
+(isa (InverseBinaryPredicateFn depthOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn depthOfObject) 2)
+
+(isa (InverseBinaryPredicateFn diameterOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn diameterOfObject) 2)
+
+(isa (InverseBinaryPredicateFn hasMembers) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn hasMembers) 2)
+
+(isa (InverseBinaryPredicateFn heightOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn heightOfObject) 2)
+
+(isa (InverseBinaryPredicateFn ingredients) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn ingredients) 2)
+
+(isa (InverseBinaryPredicateFn lengthOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn lengthOfObject) 2)
+
+(isa (InverseBinaryPredicateFn massOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn massOfObject) 2)
+
+(isa (InverseBinaryPredicateFn nameString) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn nameString) 2)
+
+(isa (InverseBinaryPredicateFn objectOfMentalSituation) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn objectOfMentalSituation) 2)
+
+(isa (InverseBinaryPredicateFn outputsCreated) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn outputsCreated) 2)
+
+(isa (InverseBinaryPredicateFn parts) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn parts) 2)
+
+(isa (InverseBinaryPredicateFn systemComponents) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn systemComponents) 2)
+
+(isa (InverseBinaryPredicateFn teacherTypeOfField) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn teacherTypeOfField) 2)
+
+(isa (InverseBinaryPredicateFn teachingASkill) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn teachingASkill) 2)
+
+(isa (InverseBinaryPredicateFn textualPCWSubSections) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn textualPCWSubSections) 2)
+
+(isa (InverseBinaryPredicateFn topicOfPCW) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn topicOfPCW) 2)
+
+(isa (InverseBinaryPredicateFn visitingSite) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn visitingSite) 2)
+
+(isa (InverseBinaryPredicateFn volumeOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn volumeOfObject) 2)
+
+(isa (InverseBinaryPredicateFn widthOfObject) BinaryBinaryRolePredicdate)
+(arity (InverseBinaryPredicateFn widthOfObject) 2)
+

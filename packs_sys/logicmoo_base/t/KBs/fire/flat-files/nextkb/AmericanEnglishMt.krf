@@ -1,0 +1,3 @@
+(in-microtheory AmericanEnglishMt)
+
+(comment AmericanEnglishMt "The mt for semantic mappings between Cyc terms and english words or phrases peculiar to American English.  Example: (#$denotation #$Trash-TheWord #$MassNoun 0 #$Garbage-Generic). This mt also includes pos information peculiar to American English.  Example: (#$massNumber #$Color-TheWord \"color\"). See the comment on #$EnglishLexiconMt for more on this and on the other english national standards represented in our lexicon.")

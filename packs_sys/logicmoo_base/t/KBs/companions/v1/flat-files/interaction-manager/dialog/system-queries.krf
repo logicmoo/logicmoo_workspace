@@ -1,0 +1,75 @@
+;;;
+;;; system-queries.meld
+;;;
+;;; This file contains htn plans for presenting questions to the 
+;;; user from the session reasoner and passing the answers back.
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; How should the session reasoner ask a question to verify a hypotheis?
+;;; How should the IM ask the question?
+;;; How should the IM interpret the response?
+;;; How should the IM pass the answer on to the session reasoner?
+;;;  - use the doNotifyPA primitive
+
+(isa requestConfirmation ComplexActionPredicate)
+(arity requestConfirmation 2)
+(arg1Isa requestConfirmation Microtheory)
+(arg2Isa requestConfirmation CycLSentence-Assertible)
+(comment requestConfirmation "(requestConfirmation ?ctxt ?prop) asks the user to accept or deny ?prop with respect to context ?ctxt.")
+
+(isa requestedConfirmation BinaryPredicate)
+(arity requestedConfirmation 2)
+
+(isa verificationMessage BinaryRelation)
+(arity verificationMessage 2)
+
+(<== (verificationMessage ?hypothesis ?msg)
+     (outsourcedOnly
+       (formattedContentString "~&Is this true: ~s?" (TheList ?hypothesis) ?msg)))
+
+;;; Ask a yes/no question to verify a hypothesis.
+;;; This should call doRecordEvent remotely on the session manager.
+(preconditionForMethod
+  (wmOnly
+    (and (verificationMessage ?hypothesis ?system-question)
+         (newReifiedUtterance ?system-utterance)
+         (currentSessionReasoner ?sr)))
+  (methodForAction
+    (requestConfirmation ?context ?hypothesis)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance YesOrNoQuestion-IBT))  ; This is relying on local operation to write to context!
+            ;; Need to represent the fact that this query came from the session reasoner.
+            (ist-Information ?context (requestedConfirmation ?system-utterance ?hypothesis))
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+            ;; Not really in response to anything
+            ))
+        ;; This is problematic - How can we connect this to the system utterance instance?
+        (doSynchronousRemotePlan ?sr
+          (doRecordEvent SystemQueryEvent (TheList SelfToken-Indexical ?hypothesis)))
+        (doRespond ?system-utterance ?system-question)))))
+
+;;; interpretAsResponse needs to dispatch on the fragmentary user utterance
+;;; and pass the answer back to the session reasoner.
+
+#|
+;;; invoked from the other end (see lbd.meld):
+(preconditionForMethod 
+  (and (localAgent ?local-agent)
+       (currentSessionReasoner ?session-reasoner) ; outsourced handler doesn't support tests yet.
+       (equals ?session-reasoner ?local-agent)
+       (currentInteractionMgr ?im))
+  (methodForAction
+    (verifyViaUser ?context ?hypothesis)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan  
+          ?im
+          (actionSequence 
+            (TheList
+              (requestConfirmation ?context ?hypothesis))))
+        ))))
+|#

@@ -1,0 +1,46 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cross-modal-analogy-control.meld
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: January 25, 2014 19:05:20
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory KotovskyAnalogyControlMt1)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa KotovskyAnalogyControlMt1 
+     (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(notForAnalogy leftOf)
+(notForAnalogy areaOfObject)
+(notForAnalogy below)
+(notForAnalogy positionalRelationFor)
+
+(in-microtheory KotovskyAnalogyControlMt2)
+
+(isa KotovskyAnalogyControlMt2 
+     (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(notForAnalogy leftOf)
+(notForAnalogy areaOfObject)
+(notForAnalogy enclosesVertically)
+(notForAnalogy reflectedShapes-XAxis)
+(notForAnalogy reflectedShapes-YAxis)
+(notForAnalogy enclosedVerticallyBy)
+(notForAnalogy enclosedVerticallyBy)
+(notForAnalogy 2D-Shape-AxisAligned)
+(notForAnalogy WhiteColor)
+(notForAnalogy Circle)
+(notForAnalogy below)
+(notForAnalogy positionalRelationFor)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,459 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: visual-conceptual-relations.meld
+;;;;    System: sKEA
+;;;;    Author: Ken Forbus
+;;;;   Created: January 20, 2001 14:31:16
+;;;;   Purpose: Linking visual to conceptual relationships
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Establish the connection between glyph and object
+
+;;(defuniversalfact (isa glyphRepresentsObject ActorSlot))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Control assertions used during the visual/conceptual Q/A
+
+(comment askConceptualForBinaryVisualRelation
+ "Describes a question that should be asked about a binary visual relation.")
+(arity askConceptualForBinaryVisualRelation 7)
+(isa askConceptualForBinaryVisualRelation Predicate)
+(arg1Isa askConceptualForBinaryVisualRelation NuSketchCase)
+(arg2Isa askConceptualForBinaryVisualRelation NuSketchCase)
+(arg3Isa askConceptualForBinaryVisualRelation Entity)
+(arg4Isa askConceptualForBinaryVisualRelation Entity)
+(arg5Isa askConceptualForBinaryVisualRelation Relation)
+(arg6Isa askConceptualForBinaryVisualRelation SubSketchGenreCollection)
+(arg7Isa askConceptualForBinaryVisualRelation SubSketchPoseCollection)
+
+
+(comment userSpecifiedConceptualRelnForBinaryVisualRelation
+ "Answer provided by user for how to interpret binary visual relation between 
+  two entities conceptually.")
+(arity userSpecifiedConceptualRelnForBinaryVisualRelation 6)
+(isa userSpecifiedConceptualRelnForBinaryVisualRelation Predicate)
+(arg1Isa userSpecifiedConceptualRelnForBinaryVisualRelation Entity)
+(arg2Isa userSpecifiedConceptualRelnForBinaryVisualRelation Entity)
+(arg3Isa userSpecifiedConceptualRelnForBinaryVisualRelation Relation)
+(arg4Isa userSpecifiedConceptualRelnForBinaryVisualRelation Relation)
+(arg5Isa userSpecifiedConceptualRelnForBinaryVisualRelation SubSketchGenreCollection)
+(arg6Isa userSpecifiedConceptualRelnForBinaryVisualRelation SubSketchPoseCollection)
+
+
+(comment userRefusedAnswerFor
+ "Recording that the user refused to answer a question")
+(arity userRefusedAnswerFor 1)
+(isa userRefusedAnswerFor Predicate)
+(arg1Isa userRefusedAnswerFor CycLExpression)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; These axioms translate between topological and visual relationships
+;;; computed for the glyphs from the sketch to what they suggest regarding
+;;; the physical relationships between the entities represented by the glyphs.
+
+(comment visualToConceptualSuggestedRelation
+ "Used for translating from topological/visual relationships between glyphs on 
+  a sketch to physical relationships about the entities represented by the glyphs.")
+(arity visualToConceptualSuggestedRelation 4)
+(isa visualToConceptualSuggestedRelation Predicate)
+(arg1Isa visualToConceptualSuggestedRelation SubSketchGenreCollection)
+(arg2Isa visualToConceptualSuggestedRelation SubSketchPoseCollection)
+(arg1Isa visualToConceptualSuggestedRelation BinaryPredicate)
+(arg1Isa visualToConceptualSuggestedRelation BinaryPredicate)
+
+
+(comment conceptualRelationAskedForAlready
+ "Says that the conceptual relationship between ?obj1 and ?obj2 has already 
+  been asked for, so there is no need to re-compute it at this time.  Typically 
+  used for book-keeping in sketch-based understanding systems.")
+(arity conceptualRelationAskedForAlready 3)
+(isa conceptualRelationAskedForAlready Predicate)
+(arg1Isa conceptualRelationAskedForAlready SubSketch)
+(arg2Isa conceptualRelationAskedForAlready PartiallyTangible)
+(arg3Isa conceptualRelationAskedForAlready PartiallyTangible)
+
+
+(comment glyphInterpretationNotDone
+ "Says the the interpretation of the specified glyph is not yet finished.  Some 
+  of the interpretation may depend on items not yet added to the sketch, for example.")
+(arity glyphInterpretationNotDone 1)
+(isa glyphInterpretationNotDone Predicate)
+(arg1Isa glyphInterpretationNotDone NuSketchGlyph)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Facts about suggested relationships
+;; Suggested relationships based on the purely topological
+;; N.B. DC doesn't yield much by itself.  But it does provide a signal to
+;; compute other spatial relations, e.g., relative location as noted below.
+;; 9/29/04: Re-analyzed the options, and came up with the following:
+;;; rcc8-PO	connectedTo, touches, aligned
+;;; rcc8-EC	connectedTo, touches, aligned
+;;; rcc8-NTPP	inRegion, spatiallyIncludes
+;;; rcc8-TPP	inRegion, spatiallyIncludes
+;;; rcc8-EQ	nothing currently
+;;;
+;;;PO and EC have the same possibilities because there are noisy boundary conditions,
+;;;as do NTPP and TPP.  The EQ case is hard to imagine, why would someone draw literally
+;;;the same thing on top of something else?  
+;;;
+;;; Since we want to make a single hypothesis for a pair of entities, we introduce
+;;; new abstract relationships, atOrOverlapsInSketch and insideInSketch, to cover this
+;;; set of possibilities.
+
+(arg1Isa atOrOverlapsInSketch SpatialThing)
+(arg2Isa atOrOverlapsInSketch SpatialThing)
+(comment atOrOverlapsInSketch
+ "(atOrOverlapsInSketch ?o1 ?o2) indicates that the glyphs representing ?o1 and ?o2 
+  are rcc8-EC or rcc8-PO.  This suggests that there is some kind of relationship 
+  between ?o1 and ?o2 based on adjacency.")
+(arity atOrOverlapsInSketch 2)
+(isa atOrOverlapsInSketch Predicate)
+
+
+(genlPreds aligned atOrOverlapsInSketch)
+(genlPreds connectedTo atOrOverlapsInSketch)
+(genlPreds touches atOrOverlapsInSketch)
+
+
+(visualToConceptualSuggestedRelation SubSketchWithGenre SubSketchWithPose
+ rcc8-EC atOrOverlapsInSketch)
+
+(visualToConceptualSuggestedRelation SubSketchWithGenre SubSketchWithPose
+ rcc8-PO atOrOverlapsInSketch)
+
+
+(arg1Isa insideInSketch SpatialThing)
+(arg2Isa insideInSketch SpatialThing)
+(comment insideInSketch
+ "(insideInSketch ?o1 ?o2) indicates that the glyphs representing ?o1 and ?o2 
+  are rcc8-TPP or rcc8-NTPP.  This suggests that there is some kind of relationship 
+  between ?o1 and ?o2 based on ?o1 being inside ?o2.")
+(arity insideInSketch 2)
+(isa insideInSketch Predicate)
+
+
+(genlPreds inRegion insideInSketch)
+(genlPreds spatiallyIncludes insideInSketch)
+
+
+(visualToConceptualSuggestedRelation SubSketchWithGenre SubSketchWithPose
+ rcc8-TPP insideInSketch)
+
+
+(visualToConceptualSuggestedRelation SubSketchWithGenre SubSketchWithPose
+ rcc8-NTPP insideInSketch)
+
+;;; Old table of relationships.  
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-EC #$connectedTo))
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-PO #$connectedTo))
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-EC #$touches))
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-PO #$touches))
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-PO #$touchesDirectly))
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-TPP #$inRegion))
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-NTPP #$inRegion))
+;;;
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-EC #$surfaceContact))
+;;;(defuniversalfact (#$visualToConceptualSuggestedRelation 
+;;;                   #$SubSketchWithGenre #$SubSketchWithPose 
+;;;                   #$rcc8-EQ #$surfaceContact))
+;; Suggested relationships based on SideView
+;; These exploit the additional information provided by the relative location 
+;; of the glyphs to suggest something about the relative location of the 
+;; objects involved.
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch above-Higher above-Higher)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch above-Generally above-Generally)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch above-Overhead above-Overhead)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch above-Directly above-Directly)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch above-Touching above-Touching)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch rightOf-Higher rightOf-Higher)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch rightOf-Generally rightOf-Generally)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch rightOf-Overhead rightOf-Overhead)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch rightOf-Directly rightOf-Directly)
+
+
+(visualToConceptualSuggestedRelation PhysicalView-SubSketch
+ LookingFromSide-SubSketch rightOf-Touching rightOf-Touching)
+;; For standard geospatial view, north is up, east is right
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch above-Higher northOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch above-Generally northOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch above-Overhead northOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch above-Directly northOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch above-Touching northOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch rightOf-Higher eastOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch rightOf-Generally eastOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch rightOf-Overhead eastOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch rightOf-Directly eastOf)
+
+
+(visualToConceptualSuggestedRelation GeospatialView-SubSketch
+ LookingFromTop-SubSketch rightOf-Touching eastOf)
+
+;;; Need something a bit more complex if we're going to exploit directionBetween 
+;;; style predicates.
+;;;
+;;; Other things to think about:
+;;; adjacentTo -- touching with the region of contact being a line, not a
+;;; point, and arg1 is neither above nor below arg2.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Depicting visual relationships
+
+(comment glyphRepresentsRelation
+ "Says that the specified glyph represents the given type of relation.")
+(arity glyphRepresentsRelation 2)
+(isa glyphRepresentsRelation Predicate)
+(arg1Isa glyphRepresentsRelation NuSketchGlyph)
+(arg2Isa glyphRepresentsRelation Relation)
+
+
+(comment glyphRelation-arg
+ "Used for glyphs representing relations.  ?glyph is the glyph representing 
+  ?relation-name.  ?arg-position is a positive integer identifying which 
+  argument of the relation is being discussed (first argument is 1).  
+  ?arg-glyph is the glyph that represents the entity that should be used for 
+  the specified argument of the relation.")
+(arity glyphRelation-arg 4)
+(isa glyphRelation-arg Predicate)
+(arg1Isa glyphRelation-arg NuSketchGlyph)
+(arg2Isa glyphRelation-arg Relation)
+(arg3Isa glyphRelation-arg PositiveInteger)
+(arg4Isa glyphRelation-arg NuSketchGlyph)
+
+
+(comment glyphRelation-userArg
+ "Says that the given argument to a relation represented by a glyph was specified
+  by the user (instead of being inferred from the sketch's spatial layout).")
+(arity glyphRelation-userArg 4)
+(isa glyphRelation-userArg Predicate)
+(arg1Isa glyphRelation-userArg Relation)
+(arg2Isa glyphRelation-userArg Relation)
+(arg3Isa glyphRelation-userArg PositiveInteger)
+(arg4Isa glyphRelation-userArg Thing)
+
+
+(isa glyphRepresentsExpression Relation)
+(arity glyphRepresentsExpression 2)
+(arg1Isa glyphRepresentsExpression NuSketchGlyph)
+(arg2Isa glyphRepresentsExpression CycLSentence)
+(comment glyphRepresentsExpression
+  "(#$glyphRepresentsExpression <glyph> <exp>) says that the glyph represents
+   the given expression.  Thus far, this is only used with relation glyphs,
+   so an example might be 
+   (#$glyphRepresentsExpression (GlyphFn Object-60 User-Drawn-Sketch-Layer-1)
+                                (DoesBusinessWith Jane John)).")
+
+
+(isa relationDependsUponGlyphInk BinaryPredicate)
+(arity relationDependsUponGlyphInk 2)
+(arg1Isa relationDependsUponGlyphInk Relation)
+(arg2Isa relationDependsUponGlyphInk NuSketchGlyph)
+(comment relationDependsUponGlyphInk
+  "Says that a given relation (usually represented by a #$NuSketchGlyph) is only 
+   valid until the ink in the #$NuSketchGlyph mentioned is changed.  In other words, 
+   that ink was important in computing some of the facts inferred from the 
+   about the relation, so if any of that ink changes, those inferred facts might 
+   not be true anymore.")
+
+;;; Not needed anymore:
+;;;(isa glyphRelatesObjs Relation)
+;;;(arity glyphRelatesObjs 3)
+;;;(arg1Isa glyphRelatesObjs NuSketchGlyph)
+;;;(arg2Isa glyphRelatesObjs Thing)
+;;;(arg2Isa glyphRelatesObjs Thing)
+;;;(comment glyphRelatesObjs
+;;;  "(#$glyphRelatesObjs <glyph> <thing1> <thing2>) says that the glyph is used
+;;;   to relate thing1 and thing2.  See also #$glyphRepresentsRelation.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Depicting visual relationships via Arrows
+
+
+(isa userRelationArgsLastAssertionTime BinaryRelation)
+(arity userRelationArgsLastAssertionTime 2)
+(arg1Isa userRelationArgsLastAssertionTime Thing)
+(arg2Isa userRelationArgsLastAssertionTime TimePoint)
+
+
+(comment ArrowDrawnSymbol
+ "Instances of this type are drawn representations of arrows. For example, an 
+  #$ArrowDrawnSymbol might be used to point from a number on a graph to an annotation.")
+(genls ArrowDrawnSymbol VisualMark)
+(genls ArrowDrawnSymbol VisualImage)
+(isa ArrowDrawnSymbol Collection)
+
+
+(resultIsa ArrowHeadFn SpatialThing-Localized)
+(comment ArrowHeadFn "Creates a location representing the head of an #$ArrowDrawnSymbol.")
+(isa ArrowHeadFn Function-Denotational)
+(arity ArrowHeadFn 1)
+(arg1Isa ArrowHeadFn ArrowDrawnSymbol)
+
+
+(resultIsa ArrowTailFn SpatialThing-Localized)
+(comment ArrowTailFn "Creates a location representing the tail of an #$ArrowDrawnSymbol.")
+(isa ArrowTailFn Function-Denotational)
+(arity ArrowTailFn 1)
+(arg1Isa ArrowTailFn ArrowDrawnSymbol)
+
+
+(comment relationConventionallyDepictedBy
+  "Says that a given #$Relation is frequently depicted by the specified type 
+   of symbol in drawings.")
+(isa relationConventionallyDepictedBy BinaryRelation)
+(arity relationConventionallyDepictedBy 2)
+(arg1Isa relationConventionallyDepictedBy Relation)
+(arg2Isa relationConventionallyDepictedBy VisualMark)
+(notForAnalogy relationConventionallyDepictedBy)
+
+
+(comment collectionConventionallyDepictedBy
+  "Says that a given #$Collection is frequently depicted by the specified type 
+   of symbol in drawings.")
+(isa collectionConventionallyDepictedBy BinaryRelation)
+(arity collectionConventionallyDepictedBy 2)
+(arg1Isa collectionConventionallyDepictedBy Collection)
+(arg2Isa collectionConventionallyDepictedBy VisualMark)
+(notForAnalogy collectionConventionallyDepictedBy)
+
+
+(comment ArrowAttributeVal
+ "Declares something to be an acceptable value for an attribute of 
+  an #$ArrowDrawnSymbol.")
+(genls ArrowAttributeVal AttributeType)
+(isa ArrowAttributeVal Collection)
+
+
+(comment ArrowDirectionAttributeVal
+ "Declares something to be an acceptable value for a direction attribute of 
+  an #$ArrowDrawnSymbol.")
+(genls ArrowDirectionAttributeVal AttributeType)
+(isa ArrowDirectionAttributeVal Collection)
+
+
+(isa ForwardArrow ArrowDirectionAttribute)
+(isa ReverseArrow ArrowDirectionAttribute)
+
+
+(comment arrowDirectionForRelation
+ "States the ordering of the arguments of a relation depicted by an arrow.  
+  If the ?arrow-dir is #$ForwardArrow, then the first argument for the relation 
+  depicted by an arrow is the object at the tail of the arrow and the second 
+  argument is the object at the head.  If the ?arrow-dir is #$ReverseArrow,
+  then the first argument is at the head of the arrow and the second argument 
+  is at the tail.")
+(arity arrowDirectionForRelation 2)
+(isa arrowDirectionForRelation Predicate)
+(arg1Isa arrowDirectionForRelation Relationship)
+(arg2Isa arrowDirectionForRelation ArrowDirectionAttribute)
+
+
+(arrowDirectionForRelation inputs ReverseArrow)
+
+(relationConventionallyDepictedBy inputs ArrowDrawnSymbol)
+
+
+(arrowDirectionForRelation outputs ForwardArrow)
+
+(relationConventionallyDepictedBy outputs ArrowDrawnSymbol)
+
+
+(isa arrowLength BinaryRelation)
+(arity arrowLength 2)
+(arg1Isa arrowLength NuSketchGlyph)
+(arg2Isa arrowLength RationalNumber)
+(comment arrowLength
+  "(arrowLength ?arrow ?length) indicates that the length of ?arrow is ?length, 
+   where length is defined as the overall length of the body of ?arrow.
+   This is different than distance between the head and tail points
+   of the arrow.  If ?arrow is curved, then ?length will be greater than the
+   distance between the head and the tail.  
+   See also: #$distanceBetween #$ArrowTailPointFn #$ArrowHeadPointFn.")
+
+
+     
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

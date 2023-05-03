@@ -1,0 +1,177 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: topic-entities-dec-expts.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 14, 2014 20:56:19
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+#|
+(in-microtheory CaseRetrievalFactsMt :exclude-globals t)
+
+;;; Use interpretationOfWithRespectTo
+
+;;; (entitiesForPQComparisonQuestion ?evaluation-name ?subtask ?sim-or-diff ?entity-set)
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 5 (SpanFn 8 11))
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 6 (SpanFn 8 11))
+                           Chapter16Comparison-001)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-001 1 Similarity (TheSet fullnessOfContainer PartiallyFull))
+(entitiesForPQComparisonQuestion Chapter16Comparison-001 2 Similarity NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-001 3 Similarity NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-001 4 Similarity (TheSet at-UnderspecifiedLandmark))
+(entitiesForPQComparisonQuestion Chapter16Comparison-001 4 Similarity (TheSet possessiveRelation))
+
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 7 (SpanFn 7 8))
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 8 (SpanFn 15 16)) 
+                           Chapter16Comparison-002)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-002 1 Similarity NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-002 2 Similarity NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-002 3 Similarity NFI)
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 10 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 19 (SpanFn 1 2)) 
+                           Chapter16Comparison-003)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-003 1 Similarity (TheSet PreventingFromHappening))
+(entitiesForPQComparisonQuestion Chapter16Comparison-003 2 Similarity (TheSet performedBy))
+(entitiesForPQComparisonQuestion Chapter16Comparison-003 2 Similarity (TheSet doneBy))
+(entitiesForPQComparisonQuestion Chapter16Comparison-003 3 Similarity NFI)
+
+(topicPairIndicesInSpindle MiniTPIS 
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01-Miniature 10 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01-Miniature 19 (SpanFn 1 2)) 
+                           Mini-Chapter16Comparison-003)
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 25 (SpanFn 1 3))
+                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 47 (SpanFn 15 17)) Chapter16Comparison-004)
+
+;;;(topicPairIndicesInSpindle TestingParaLimits-00001-segs-spind (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 25 (SpanFn 1 3))
+;;;                           (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 47 (SpanFn 15 17)) Chapter16Comparison-004)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 1 Difference (TheSet LowAmountFn))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 2 Difference (TheSet onFront-Facing))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 3 Difference (TheSet FluidFlow-Translation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 4 Difference (TheSet primaryObjectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 4 Difference (TheSet objectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 4 Difference (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 5 Difference (TheSet causes-ThingSit))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 6 Difference (TheSet TemperatureDifference))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 6 Difference (TheSet Between-TheWord))
+(entitiesForPQComparisonQuestion Chapter16Comparison-004 7 Difference (TheSet Morning))
+
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 34 (SpanFn 0 1))
+  (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 25 (SpanFn 5 6)) Chapter16Comparison-005)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-005 1 Similarity NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-005 2 Similarity (TheSet primaryObjectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-005 2 Similarity (TheSet objectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-005 3 Similarity NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-005 4 Similarity (TheSet causes-ThingSit))
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 28 (SpanFn 21 22))
+  (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 51 (SpanFn 4 5)) Chapter16Comparison-006)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-006 1 Difference (TheSet not))
+(entitiesForPQComparisonQuestion Chapter16Comparison-006 2 Difference (TheSet FluidFlow-Translation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-006 3 Difference NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-006 4 Difference (TheSet causes-EventEvent))
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 40 (SpanFn 1 3))
+  (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 25 (SpanFn 1 3)) Chapter16Comparison-007)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-007 1 Similarity (TheSet lowAmountOf))
+(entitiesForPQComparisonQuestion Chapter16Comparison-007 1 Similarity (TheSet LowAmountFn))
+(entitiesForPQComparisonQuestion Chapter16Comparison-007 2 Similarity NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-007 3 Difference (TheSet cloudinessOfRegion))
+(entitiesForPQComparisonQuestion Chapter16Comparison-007 3 Difference (TheSet Cloudiness))
+(entitiesForPQComparisonQuestion Chapter16Comparison-007 4 Difference (TheSet onFront-Facing))
+
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 40 (SpanFn 1 3))
+  (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 47 (SpanFn 15 17)) Chapter16Comparison-008)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 1 Similarity (TheSet on-UnderspecifiedSurface))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 2 Similarity (TheSet greaterThan-Underspecified))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 3 Difference NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 4 Difference (TheSet Cloudiness))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 5 Difference (TheSet altitudeAboveGround LowAmountFn))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 6 Difference (TheSet objectActedOn))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 7 Difference NFI)
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 8 Difference (TheSet greaterThan-Underspecified))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 9 Difference (TheSet primaryObjectMoving ))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 9 Difference (TheSet objectMoving ))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 10 Difference (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 11 Difference (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 12 Difference (TheSet primaryObjectMoving ))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 12 Difference (TheSet objectMoving ))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 12 Difference (TheSet to-UnderspecifiedLocation ))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 13 Difference (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 14 Difference (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 15 Difference (TheSet not))
+(entitiesForPQComparisonQuestion Chapter16Comparison-008 15 Difference (TheSet objectActedOn))
+
+
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 65 (SpanFn 5 7))
+  (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 40 (SpanFn 1 3)) Chapter16Comparison-009)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 1 Similarity (TheSet lowAmountOf))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 1 Similarity (TheSet altitudeAboveGround ))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 2 Difference (TheSet FacingSomething))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 2 Difference (TheSet conceptuallyRelated Immediately))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 3 Difference (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 3 Difference (TheSet objectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 4 Difference (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 5 Difference (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 6 Difference (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 7 Difference (TheSet doneBy))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 8 Difference (TheSet objectActedOn))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 9 Difference (TheSet greaterThan-Underspecified))
+(entitiesForPQComparisonQuestion Chapter16Comparison-009 10 Difference (TheSet objectActedOn))
+
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 65 (SpanFn 5 7))
+  (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 25 (SpanFn 1 3)) Chapter16Comparison-010)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 1 Similarity (TheSet AbsorptionEvent))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 2 Difference (TheSet onFront-Facing))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 3 Difference (TheSet heightOfObject ))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 4 Difference (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 4 Difference (TheSet objectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 5 Difference (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 6 Difference (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 7 Difference (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 8 Difference (TheSet objectActedOn))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 9 Difference (TheSet greaterThan-Underspecified))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 10 Difference (TheSet objectActedOn))
+(entitiesForPQComparisonQuestion Chapter16Comparison-010 11 Difference NFI)
+
+(topicPairIndicesInSpindle AllJustCorefByChapterSUSD16-1227 (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 65 (SpanFn 5 7))
+  (ParagraphSentenceSpanFn SUSD-Simplified-Dec2014-01 47 (SpanFn 15 17)) Chapter16Comparison-011)
+
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 1 Similarity (TheSet primaryObjectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 1 Similarity (TheSet objectMoving))
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 2 Similarity (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 2 Similarity (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 3 Similarity (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 3 Similarity (TheSet from-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 4 Similarity (TheSet doneBy))
+(entitiesForPQComparisonQuestion Chapter16Comparison-011 5 Similarity (TheSet greaterThan-Underspecified))
+
+|#
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

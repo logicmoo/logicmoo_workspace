@@ -1,0 +1,12 @@
+(in-microtheory ComputerRunningDataMt)
+
+(isa Maximal-CycInferenceMode SpecifiedInferenceModeCluster)
+(isa Extended-CycInferenceMode SpecifiedInferenceModeCluster)
+(isa Shallow-CycInferenceMode SpecifiedInferenceModeCluster)
+(isa Minimal-CycInferenceMode SpecifiedInferenceModeCluster)
+(isa SpecifiedInferenceModeCluster NonAbducibleCollection)
+(isa Life-TheProgram RealTimeProgram)
+(isa SymbolicsDocumentExaminer ApplicationProgram)
+(isa DonkeyKong64-TheGame (GameForSystemFn Nintendo64-TheProduct))
+(isa ResidentEvil-TheGameSeries (GameForSystemFn SonyPlayStation-TheProduct))
+(comment DBase "A software package for pc databases.")

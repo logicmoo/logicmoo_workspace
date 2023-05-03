@@ -1,0 +1,56 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: nlgen.meld
+;;;;    System: FIRE
+;;;;    Author: Jon Wetzel
+;;;;   Created: November 3, 2011 13:35:56
+;;;;   Purpose: Extensions for natural langauge generation
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Outsourced predicates
+
+(isa vbFormOf BinaryPredicate)
+(arity vbFormOf 2)
+(arg1Isa vbFormOf CycLFormula)
+(arg2Isa vbFormOf StringObject) ; CharacterString? SubLString?
+(comment vbFormOf "(vbFormOf ?expression ?text) binds ?text to the chosen natural language form of ?expression, as produced by a call to verbalize.")
+
+(isa vbFactFor BinaryPredicate)
+(arity vbFactFor 2)
+(arg1Isa vbFactFor CycLFormula)
+;(arg2Isa vbFactFor ...)
+(comment vbFactFor "(vbFactFor ?expression ?fact) binds ?fact to the chosen fact containing the natural language form of ?expression, as produced by a call to verbalize.")
+
+(isa vbOptionFor BinaryPredicate)
+(arity vbOptionFor 2)
+(arg1Isa vbOptionFor CycLFormula)
+;(arg2Isa vbOptionFor ...)
+(comment vbOptionFor "(vbOptionFor ?expression ?option) binds ?option to the chosen triple containing the predicate, text, and fact for the natural language form of ?expression, as produced by a call to verbalize.")
+
+(isa vbFormsOf BinaryPredicate)
+(arity vbFormsOf 2)
+(arg1Isa vbFormsOf CycLFormula)
+(arg2Isa vbFormsOf StringObject)
+(comment vbFormsOf "(vbForsmOf ?expression ?text) binds ?text to each natural language form of ?expression, as produced by a call to verbalize.")
+
+(isa vbFactsFor BinaryPredicate)
+(arity vbFactsFor 2)
+(arg1Isa vbFactsFor CycLFormula)
+;(arg2Isa vbFactsFor ...)
+(comment vbFactsFor "(vbFactsFor ?expression ?fact) binds ?fact to each fact containing the natural language form of ?expression, as produced by a call to verbalize.")
+
+(isa vbOptionsFor BinaryPredicate)
+(arity vbOptionsFor 2)
+(arg1Isa vbOptionsFor CycLFormula)
+;(arg2Isa vbOptionsFor ...)
+(comment vbOptionsFor "(vbOptionsFor ?expression ?option) binds ?option to each triple containing the predicate, text, and fact for the natural language form of ?expression, as produced by a call to verbalize.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

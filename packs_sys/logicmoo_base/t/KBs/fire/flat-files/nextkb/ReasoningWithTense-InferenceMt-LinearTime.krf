@@ -1,0 +1,11 @@
+
+ (in-microtheory ReasoningWithTense-InferenceMt-LinearTime)
+ (comment ReasoningWithTense-InferenceMt-LinearTime
+ "This #$Microtheory contains rules about relations between
+instances of
+#$ReasoningWithTenseMicrotheory-LinearTime, which
+represent a linear ordering among moments.  Note that rules in this 
+microtheory amounts to semantic interpretations of formulas in 
+microtheories that are instances of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and 
+thus should not be present in those microtheories.")

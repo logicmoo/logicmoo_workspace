@@ -1,0 +1,9 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv nations
+;; -------------------
+
+(isa FreeCiv-Nation Collection)
+(genls FreeCiv-Nation FreeCiv-Object)
+(genls FreeCiv-Nation IndependentCountry)   ; just not real ones...

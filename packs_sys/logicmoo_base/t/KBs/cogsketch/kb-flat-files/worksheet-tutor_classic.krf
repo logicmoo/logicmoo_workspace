@@ -1,0 +1,1240 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_classic.meld
+;;;;    System: CogSketch
+;;;;    Author: Ken Forbus & Maria Chang
+;;;;   Created: February 3, 2012 14:02:24
+;;;;   Purpose: Worksheet Tutoring Suggestions via SOLVE
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+(isa ClassicWorksheetTutorSuggestionsMt Microtheory)
+(genlMt CogSketchReasoningCollectorMt ClassicWorksheetTutorSuggestionsMt)
+(genlMt ClassicWorksheetTutorSuggestionsMt CogSketchTutorSuggestionsMt)
+(comment ClassicWorksheetTutorSuggestionsMt
+  "ClassicWorksheetTutorSuggestionsMt provides the same functionality as the 
+   Lisp-based version of the CogSketch Worksheet Tutor")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Definitions & Horn Clauses
+
+(isa runQueryForQuestions Relation)
+(arity runQueryForQuestions 2)
+(arg1Isa runQueryForQuestions AbstractInformationalThing)
+(arg2Isa runQueryForQuestions Relation)
+(notForAnalogy runQueryForQuestions)
+(comment runQueryForQuestions
+  "(runQueryForQuestions ?sketch-or-bundle ?qfq-predicate) invokes
+   a tell-handler that kicks off query for questions.  This extends the knowledge
+   in the context for ?sketch-or-bundle using queries denoted by the ?qfq-predicate.
+   Facts of the form (?qfq-predicate <priority> <query>) will be retrieved
+   and every <query> will be run in the ?sketch-or-bundle context.")
+
+
+
+(isa classicWorksheetMatchConstraints Relation)
+(arity classicWorksheetMatchConstraints 3)
+(arg1Isa classicWorksheetMatchConstraints NuSketchBundle)
+(arg2Isa classicWorksheetMatchConstraints NuSketchBundle)
+(arg3Isa classicWorksheetMatchConstraints List)
+(comment classicWorksheetMatchConstraints
+  "(classicWorksheetMatchConstraints ?base ?target ?constraints) indicates that
+   when creating an analogy between ?base and ?target, the match constraints 
+   bound to ?constraints should be used.  These are the constraints that should
+   be used in the classic method for generating suggestions.")
+(notForAnalogy classicWorksheetMatchConstraints)
+
+
+
+(isa classicWorksheetCaseConstructor Relation)
+(notForAnalogy classicWorksheetCaseConstructor)
+(arity classicWorksheetCaseConstructor 2)
+(arg1Isa classicWorksheetCaseConstructor NuSketchBundle)
+(arg2Isa classicWorksheetCaseConstructor Case)
+(comment classicWorksheetCaseConstructor
+  "(classicWorksheetCaseConstructors ?bundle ?dgroup-name)
+   indicates that ?bundle has a dgroup name ?dgroup-name, which can be used for analogy.  In the classic
+   method for generating worksheet suggestions, the ?dgroup-name is used for input to #$matchBetween.")
+
+(<== (classicWorksheetCaseConstructor ?bundle ?dgroup-name)
+     (lookupOnly (subSketchGroupRepresentsObject ?bundle ?case-name))
+     (unifies ?dgroup-name (CogSketchTutorBundleCaseFn ?case-name ?bundle)))
+
+
+(isa classicMissingAdviceForGlyph TernaryRelation)
+(arity classicMissingAdviceForGlyph 3)
+(arg1Isa classicMissingAdviceForGlyph Case)
+(arg1Isa classicMissingAdviceForGlyph NuSketchGlyph)
+(arg2Isa classicMissingAdviceForGlyph TextString)
+(notForAnalogy classicMissingAdviceForGlyph)
+(comment classicMissingAdviceForGlyph
+  "(classicMissingAdviceForGlyph ?case ?teacher-glyph ?text) indicates that ?text should
+   be presented to the student when their sketch is missing something that maps to
+   ?teacher-glyph.  The variable ?case is bound to the dgroup name of the context where
+   ?teacher-glyph was created (i.e. the teacher's solution dgroup name).  
+   See #$classicWorksheetCaseConstructor.")
+
+
+(isa worksheetRelevantCollection BinaryRelation)
+(arity worksheetRelevantCollection 2)
+(arg1Isa worksheetRelevantCollection Thing)
+(arg2Isa worksheetRelevantCollection Collection)
+(notForAnalogy worksheetRelevantCollection)
+(comment worksheetRelevantCollection
+  "(worksheetRelevantCollection ?object ?collection) indicates that ?object 
+   should be considered an instance of ?collection when giving advice.  Objects 
+   in a sketch are often instances of many different collections and only one 
+   of those collections is relevant for giving tutoring advice.")
+
+
+(isa worksheetRelevantCollectionName BinaryRelation)
+(arity worksheetRelevantCollectionName 2)
+(arg1Isa worksheetRelevantCollectionName Collection)
+(arg2Isa worksheetRelevantCollectionName TextString)
+(notForAnalogy worksheetRelevantCollectionName)
+(comment worksheetRelevantCollectionName
+  "(worksheetRelevantCollectionName ?collection ?name) associates a collection with 
+   the name that should be used to refer to it when giving advice.  For example, the
+   collection #$GeologicalMarkerBed should be referred to as \"marker bed\" when giving
+   tutoring advice.")
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions
+
+(defSuggestion TutoringSuggestionsOverallPlan
+    (generateSubsketchTutorSuggestions ?student-subsketch ?suggestions
+                                       ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs-in-lattice
+               (TheClosedRetrievalSetOf ?student-glyph
+                 (latticeEntryContainsGlyph ?cell ?student-glyph)))
+             (unifies ?student-glyphs-in-lattice (TheSet))
+             (solutionCaseForWorksheetStudentWorkspace 
+              ?student-subsketch ?solution-case)
+             (evaluate ?solution-glyphs-in-lattice
+               (TheClosedRetrievalSetOf ?solution-glyph
+                 (ist-Information ?solution-case
+                   (latticeEntryContainsGlyph ?cell ?solution-glyph))))
+             (unifies ?solution-glyphs-in-lattice (TheSet))
+             
+             (evaluate ?student-glyphs-in-region
+               (TheClosedRetrievalSetOf ?student-glyph-2
+                 (wmOnly
+                  (lookupOnly
+                   (glyphCreatedByInkPartitionRegion 
+                    ?region ?student-subsketch ?student-glyph-2)))))
+             (unifies ?student-glyphs-in-region (TheSet))
+             (solutionForWorksheetStudentWorkspace
+              ?student-subsketch ?solution-subsketch)
+             (evaluate ?solution-glyphs-in-region
+               (TheClosedRetrievalSetOf ?solution-glyph-2
+                 (wmOnly
+                  (lookupOnly
+                   (ist-Information ?solution-case
+                     (glyphCreatedByInkPartitionRegion 
+                      ?region-2 ?solution-subsketch ?solution-glyph-2))))))
+             (unifies ?solution-glyphs-in-region (TheSet)))
+  :subgoals
+  ((lookupOnly (sketchFor ?student-subsketch ?sketch))
+   
+   ;; Run various queries to prep the student workspace:
+   (tell (computePositionalRelations ?student-subsketch))
+   (runQueryForQuestions ?student-subsketch queryForCogSketchWorksheetQuestions)
+   
+   (bestMatchForStudentSubSketch ?sketch ?student-subsketch ?match)
+   
+   (runQueryForQuestions ?student-subsketch
+                         queryForCogSketchPostComparisonWorksheetQuestions)
+   
+   (classicWorksheetExtendMatch ?match ?extended-match)
+   
+   (suggestionsForStudentMatch ?student-subsketch ?extended-match 
+                               ?suggestions1 ?glyph-correspondences)
+   (maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 
+    ?student-subsketch ?suggestions1 ?glyph-correspondences ?suggestions)))
+
+
+
+(defSuggestion SuggestionsForTutorAnalogy
+    (suggestionsForStudentMatch ?student-subsketch ?match 
+                                ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?mappings
+               (TheClosedRetrievalSetOf ?mapping 
+                 (bestMapping ?match ?mapping)))
+             (different ?mappings (TheSet)))
+  :subgoals
+  ((baseOfMatch ?match ?solution-dgroup)
+   (targetOfMatch ?match ?student-dgroup)
+   (gatherWorksheetGlyphCorrespondences 
+    ?match ?solution-dgroup ?student-dgroup ?glyph-correspondences) 
+   (classicTutorInitialSuggestions ?match ?solution-dgroup 
+                                   ?student-dgroup ?suggs1)
+   
+   (evaluate ?suggs2-set
+     (TheClosedRetrievalSetOf ?sugg2
+       (tutorSuggestionFromWorksheetExtenstions ?match 
+         ?student-subsketch ?sugg2)))
+   (evaluate ?suggs2 (SetToListFn ?suggs2-set))
+   
+   (evaluate ?suggs (JoinListsFn ?suggs1 ?suggs2))
+   
+   (sortAndFilterClassicWorksheetSuggestions ?suggs ?suggestions)))
+
+
+(defSuggestion SuggestionsForTutorAnalogy_NoMapping
+    (suggestionsForStudentMatch ?student-subsketch ?match 
+                                ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?mappings
+               (TheClosedRetrievalSetOf ?mapping 
+                 (bestMapping ?match ?mapping)))
+             (unifies ?mappings (TheSet)))
+  :subgoals
+  ((baseOfMatch ?match ?teacher-case)
+   (targetOfMatch ?match ?student-case)
+   (gatherMissingLabelSuggestions 
+    ?match ?teacher-case ?student-case ?no-label-suggs)
+   (noMappingsSuggestions ?match ?no-label-suggs ?suggestions)
+   (unifies ?glyph-correspondences (TheSet))))
+
+
+(isa noMappingsSuggestions Relation)
+(arity noMappingsSuggestions 3)
+(arg1Isa noMappingsSuggestions AnalogyMatch)
+(arg1Isa noMappingsSuggestions Match)
+(arg2Isa noMappingsSuggestions Set-Mathematical)  ;; missing label suggestions  
+(arg3Isa noMappingsSuggestions Set-Mathematical)  ;; suggestions
+(notForAnalogy noMappingsSuggestions)
+
+(<== (noMappingsSuggestions ?match ?missing-label-suggs ?suggestions)
+     (unifies ?missing-label-suggs (TheList))
+     (unifies ?suggestions
+       (TheList
+        (CogSketchSuggestionFn
+         "I couldn't find any similarity between your sketch and the solution at all.  Maybe your sketch is lacking all of the important glyphs?"
+         (TheSet)
+         (TheSet)))))
+
+(<== (noMappingsSuggestions ?match ?missing-label-suggs ?suggestions)
+     (different ?missing-label-suggs (TheList))
+     (unifies ?suggestions ?missing-label-suggs))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- Gathering Suggestions
+
+(defSuggestion GatherClassicWorksheetSuggestions
+    (classicTutorInitialSuggestions ?match ?teacher-case ?student-case
+                                    ?initial-suggestions)
+  :test (and (subsketchForWorksheetDGroup ?teacher-case ?base-bundle)
+             (honorTimestamps 
+              (uninferredSentence 
+               (isa ?base-bundle CogSketchMisconceptionBundle))))
+  :subgoals
+  ((gatherCISuggestions ?match ?teacher-case ?student-case ?ci-suggs)
+   (gatherMissingLabelSuggestions 
+    ?match ?teacher-case ?student-case ?no-label-suggs)
+   (gatherMissingEntitySuggestions
+    ?match ?teacher-case ?student-case ?missing-entity-suggs) 
+   (gatherExtraEntitySuggestions
+    ?match ?teacher-case ?student-case ?extra-entity-suggs) 
+   (gatherQuantitativeInkSuggestions 
+    ?match ?teacher-case ?student-case ?quant-ink-suggs) 
+   ;;(gatherQualitativeInkSuggestions ?match ?teacher-case ?student-case 
+   ;;                                 ?qual-ink-suggs)
+   (gatherQuantityValueSuggestions 
+    ?match ?teacher-case ?student-case ?quant-value-suggs)
+   
+   (subsketchForWorksheetDGroup ?teacher-case ?teacher-bundle)
+   (subsketchForWorksheetDGroup ?student-case ?student-bundle)
+   (gatherOrderedNumberSuggestions ?match ?teacher-bundle ?student-bundle
+                                   ?ordered-number-suggs)
+   
+   (evaluate ?initial-suggestions
+     (JoinListsFn 
+      ?no-label-suggs ?quant-ink-suggs ?ci-suggs ?quant-value-suggs ?ordered-number-suggs
+      ?missing-entity-suggs ?extra-entity-suggs))))
+
+
+(defSuggestion GatherMisconceptionSuggestions
+    (classicTutorInitialSuggestions ?match ?base-case ?student-case 
+                                    ?initial-suggestions)
+  :test (and (subsketchForWorksheetDGroup ?base-case ?base-bundle)
+             (subsketchContextForWorksheetDGroup ?base-case ?base-case-name)
+             (ist-Information ?base-case-name
+               (isa ?base-bundle CogSketchMisconceptionBundle)))
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (subsketchForWorksheetDGroup ?base-case ?misconception-bundle)
+   (subsketchContextForWorksheetDGroup ?base-case ?misconception-case-name)
+   (evaluate ?order-sugg-pairs
+     (TheClosedRetrievalSetOf
+         (TheList ?ordering 
+                  (CogSketchSuggestionFn ?text ?student-glyphs ?student-glyphs))
+       (and (ist-Information ?misconception-case-name
+              (suggestionForMisconception ?misconception-bundle ?ordering 
+                                          ?text ?misconception-glyphs))
+            (evaluate ?student-glyphs-list
+              (MapFunctionOverList
+               (FunctionToArg 2
+                 (Kappa (?misc-glyph ?student-glyph)
+                   (and (ist-Information
+                            ?misconception-case-name
+                          (glyphRepresentsObject ?misc-glyph ?misc-object))
+                        (correspondsInMapping ?mapping ?misc-object 
+                                              ?student-object)
+                        (glyphRepresentsObject ?student-glyph ?student-object))))
+               ?misconception-glyphs))
+            (evaluate ?student-glyphs (ListToSetFn ?student-glyphs-list)))))
+   ;; sorting converts a Set to a List
+   (evaluate ?sorted-sugg-pairs
+     (SortFn ?order-sugg-pairs
+             lessThan
+             (FunctionToArg 2
+               (Kappa (?order-sugg-pair ?order-number)
+                 (evaluate ?order-number (FirstInListFn ?order-sugg-pair))))))
+   (evaluate ?initial-suggestions
+     (MapFunctionOverList
+      (FunctionToArg 2
+        (Kappa (?pair ?sugg)
+          (evaluate ?sugg (SecondInListFn ?pair))))
+      ?sorted-sugg-pairs))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- candidate-inference suggestions
+
+(defSuggestion GatherClassicCISuggestions
+    (gatherCISuggestions ?match ?teacher-case ?student-case ?ci-suggs)
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (subsketchContextForWorksheetDGroup ?teacher-case ?teacher-case-name)
+   (evaluate ?ci-suggs-set
+     (TheClosedRetrievalSetOf (CogSketchCandidateInferenceSuggestionFn
+                               ?text ?items-to-highlight ?glyphs
+                               ?teacher-fact ?student-fact)
+       (and (ist-Information ?teacher-case-name
+              (localOnly 
+               (lookupOnly
+                (isa ?teacher-fact ImportantForCogSketchTutoringFact))))
+            (ist-Information ?teacher-case-name
+              (dGroupFactOf ?teacher-case ?teacher-dgroup-fact ?teacher-fact))
+            (unifies ?tutoring-ci-src-exp 
+              (isa ?teacher-fact ImportantForCogSketchTutoringFact))
+            (tutoringCandidateInference ?mapping 
+                                        ?tutoring-ci-src-exp ?tutoring-ci)
+            (unifies ?tutoring-ci 
+              (isa ?student-fact ImportantForCogSketchTutoringFact))
+            (ist-Information ?teacher-case-name 
+              (localOnly 
+               (lookupOnly (cogsketchAdviceString ?teacher-fact ?text))))
+            (studentItemsForCISuggestion ?student-case ?student-fact 
+                                         ?items-to-highlight
+                                         ?glyphs ?glyphs-from-shapes))))
+   (evaluate ?ci-suggs
+     (SetToListFn ?ci-suggs-set))
+   (assertEdgeDecompHighlightingForCISuggestions ?ci-suggs ?student-case)
+   ))
+
+
+
+(defSuggestion AssertEdgeDecompHighlightingForCISuggestions_NA
+    (assertEdgeDecompHighlightingForCISuggestions ?ci-suggs ?student-case)
+  :test (unifies (TheList) ?ci-suggs)
+  :subgoals
+  ;; Apparently you need at least one subgoal even if it really doesn't do
+  ;; anything.
+  ((unifies ?student-case ?student-case)))
+
+(defSuggestion AssertEdgeDecompHighlightingForCISuggestions
+    (assertEdgeDecompHighlightingForCISuggestions ?ci-suggs ?student-case)
+  :test (different (TheList) ?ci-suggs)
+  :subgoals
+  ((solveSequentially ?ci-sugg ?ci-suggs
+     (assertEdgeDecompHighlightingForCISuggestion ?ci-sugg ?student-case))))
+
+
+
+(defSuggestion AssertEdgeDecompHighlightingForCISuggestion
+    (assertEdgeDecompHighlightingForCISuggestion ?ci-sugg ?student-case)
+  :subgoals
+  ((unifies (CogSketchCandidateInferenceSuggestionFn
+             ?text ?glyphs-to-highlight ?glyphs-involved
+             ?teacher-fact ?student-fact)
+     ?ci-sugg)
+   (lookupOnly
+    (studentItemsForCISuggestion ?student-case ?student-fact 
+                                 ?items ?glyphs ?glyphs-from-shapes))
+   (assertEdgeDecompHighlightingForCISuggGlyphs ?ci-sugg ?glyphs-from-shapes)))
+
+
+
+(defSuggestion AssertEdgeDecompHighlightingForCISuggestionGlyphs_NA
+    (assertEdgeDecompHighlightingForCISuggGlyphs ?ci-sugg ?glyphs-from-shapes)
+  :test (unifies (TheSet) ?glyphs-from-shapes)
+  :subgoals
+  ;; Apparently you need at least one subgoal even if it really doesn't do
+  ;; anything.
+  ((unifies ?ci-sugg ?ci-sugg)))
+
+(defSuggestion AssertEdgeDecompHighlightingForCISuggestionGlyphs
+    (assertEdgeDecompHighlightingForCISuggGlyphs ?ci-sugg ?glyphs-from-shapes)
+  :test (different (TheSet) ?glyphs-from-shapes)
+  :subgoals
+  ((solveSequentially ?glyph ?glyphs-from-shapes
+     (tell (showEdgeDecompWithTutorAdvice ?ci-sugg ?glyph)))))
+
+
+
+(isa studentItemsForCISuggestion Relation)
+(arity studentItemsForCISuggestion 5)
+(arg1Isa studentItemsForCISuggestion Case)
+(arg2Isa studentItemsForCISuggestion CycLFormula)
+(arg3Isa studentItemsForCISuggestion Set-Mathematical)
+(arg4Isa studentItemsForCISuggestion Set-Mathematical)
+(arg5Isa studentItemsForCISuggestion Set-Mathematical)
+(notForAnalogy studentItemsForCISuggestion)
+
+(<== (studentItemsForCISuggestion ?student-case ?student-fact 
+                                  ?items ?glyphs ?glyphs-from-shapes)
+     (subsketchForWorksheetDGroup ?student-case ?student-subsketch)
+;;;     (lookupOnly (sketchFor ?student-subsketch ?sketch))
+     (lookupOnly (lastTutorRequestTime ?sketch ?timestamp))
+     
+;;;     (relationGlyphsForFact ?student-fact ?rel-glyphs)
+;;;     (unifies ?rel-glyphs (TheSet))
+     
+     (glyphsMentionedInFact ?student-fact ?glyphs1)
+     (glyphsFromShapesInFact ?student-fact ?glyphs-from-shapes)
+     (decompositionComponentsMentionedInFactBySubsketch 
+      ?student-subsketch ?student-fact ?decomp-items ?glyphs-for-decomp-items)
+     
+     (evaluate ?glyphs
+       (SetOfSetsUnionFn 
+        (TheSet ?glyphs1 ?glyphs-from-shapes ?glyphs-for-decomp-items)))
+     (evaluate ?items
+       (SetOfSetsUnionFn (TheSet ?glyphs1 ?glyphs-from-shapes ?decomp-items))))
+
+
+
+(isa glyphsFromShapesInFact Relation)
+(arity glyphsFromShapesInFact 2)
+(arg1Isa glyphsFromShapesInFact CycLFormula)
+(arg2Isa glyphsFromShapesInFact Set)
+(notForAnalogy glyphsFromShapesInFact)
+
+(<== (glyphsFromShapesInFact ?fact ?glyphs)
+     (evaluate ?glyphs-for-shapes
+       (TheClosedRetrievalSetOf ?glyph-for-shape
+         (and (shapeMentionedInFact ?fact ?shape)
+              (boundingShapeRepresentationsForGlyph ?glyph-for-shape ?t1 ?t2 
+                                                    ?shape-mt ?shape-set ?num)
+              (evaluate True (ListMemberFn ?shape ?shape-set)))))
+     ;; Sort so that they are in a canonical ordering and we won't 
+     ;; infer all possible orderings:
+     (evaluate ?sorted-glyphs
+       (SortFn ?glyphs-for-shapes 
+               (Kappa (?one ?two) (alphalessp ?one ?two))
+               IdentityFn))
+     (evaluate ?glyphs
+       (ListToSetFn ?sorted-glyphs)))
+
+
+(isa relationGlyphsForFact Relation)
+(arity relationGlyphsForFact 2)
+(arg1Isa relationGlyphsForFact CycLFormula)
+(arg2Isa relationGlyphsForFact Set-Mathematical)
+(notForAnalogy relationGlyphsForFact)
+
+(<== (relationGlyphsForFact ?fact ?glyphs)
+     (evaluate ?glyphs
+       (TheClosedRetrievalSetOf ?glyph
+         (glyphRepresentsExpression ?glyph ?fact))))
+
+
+(isa expContainsUnwantedSkolem Relation)
+(notForAnalogy expContainsUnwantedSkolem)
+(arity expContainsUnwantedSkolem 1)
+(arg1Isa expContainsUnwantedSkolem CycLFormula)
+(comment expContainsUnwantedSkolem
+  "(expContainsUnwantedSkolem <exp>) says that
+   the specified exp contains a skolem that makes it
+   inappropriate for use in worksheet tutor suggestions.")
+
+(<== (expContainsUnwantedSkolem ?ci-exp)
+     (and (subexpressionMatching (AnalogySkolemFn ?obj) ?ci-exp ?sub-expr)
+          (honorTimestamps
+           (uninferredSentence (isa ?obj QualitativeVector)))
+          (honorTimestamps
+           (uninferredSentence (isa ?obj GlyphGroup)))
+          (honorTimestamps
+           (uninferredSentence
+            (unifies (visualQuantityQuantitativeMeasurement ?q ?v) ?ci-exp)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- missing label
+
+(defSuggestion GatherClassicMissingLabelSuggs
+    (gatherMissingLabelSuggestions ?match ?teacher-case ?student-case 
+                                   ?no-label-suggs)
+  :subgoals
+  ((evaluate ?no-label-suggs-set
+     (TheClosedRetrievalSetOf (CogSketchMissingLabelSuggestionFn 
+                               ?text ?glyphs ?glyphs)
+       (and (glyphInWorksheetDGroup ?student-case ?glyph)
+            (localOnly (glyphRepresentsObject ?glyph ?object))
+            (evaluate ?cols
+              (TheClosedRetrievalSetOf ?col
+                (worksheetRelevantCollection ?object ?col)))
+            (unifies ?cols (TheSet))
+            (unifies ?glyphs (TheSet ?glyph))
+            (unifies ?text "Please label this glyph."))))
+   (evaluate ?no-label-suggs
+     (SetToListFn ?no-label-suggs-set))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- missing entities
+;;;
+
+;; The current/classic method for giving "wrong type" missing entity
+;; suggestions is problematic because you can't assign a genls search
+;; depth across domains and expect it to make sense.  I am postponing
+;; that implementation until we can resolve it. -MDC
+;;
+
+(defSuggestion GatherClassicMissingEntitySuggs_NA
+    (gatherMissingEntitySuggestions ?match ?teacher-case 
+                                    ?student-case ?missing-entity-suggs)
+  :test (and (subsketchForWorksheetDGroup ?teacher-case ?teacher-subsketch)
+             (subsketchContextForWorksheetDGroup ?teacher-case ?teacher-context)
+             (lookupOnly 
+              (ist-Information ?teacher-context
+                (sketchFor ?teacher-subsketch ?sketch)))
+             (lookupOnly (missingEntityAdviceDisabledForSketch ?sketch)))
+  :subgoals
+  ((unifies ?missing-entity-suggs (TheList))))
+
+
+(defSuggestion GatherClassicMissingEntitySuggs
+    (gatherMissingEntitySuggestions ?match ?teacher-case 
+                                    ?student-case ?missing-entity-suggs)
+  :test (and (subsketchForWorksheetDGroup ?teacher-case ?teacher-subsketch)
+             (subsketchContextForWorksheetDGroup ?teacher-case ?teacher-context)
+             (lookupOnly 
+              (ist-Information ?teacher-context
+                (sketchFor ?teacher-subsketch ?sketch)))
+             (lookupOnly 
+              (honorTimestamps
+               (uninferredSentence
+                (missingEntityAdviceDisabledForSketch ?sketch))))
+             (uninferredSentence
+              (unifies ?teacher-case 
+                (CogSketchTutorEdgeCyclesForECOCaseFn 
+                 ?teacher-eco ?teacher-glyph ?solution-case))))
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (lookupOnly 
+    (gatherWorksheetGlyphCorrespondences ?match ?teacher-case ?student-case 
+                                         ?corrs))
+   (unmappedTutoringGlyphs ?teacher-case ?corrs ?missing-glyphs)
+   (makeSuggestionsForWorksheetMissingEntitites
+    ?teacher-case ?student-case ?missing-glyphs ?missing-entity-suggs)))
+
+
+(defSuggestion GatherClassicMissingEntitySuggs_EdgeCycles
+    (gatherMissingEntitySuggestions ?match ?teacher-case 
+                                    ?student-case ?missing-entity-suggs)
+  :test (and (subsketchForWorksheetDGroup ?teacher-case ?teacher-subsketch)
+             (subsketchContextForWorksheetDGroup ?teacher-case ?teacher-context)
+             (lookupOnly 
+              (ist-Information ?teacher-context
+                (sketchFor ?teacher-subsketch ?sketch)))
+             (lookupOnly 
+              (honorTimestamps
+               (uninferredSentence
+                (missingEntityAdviceDisabledForSketch ?sketch))))
+             (unifies ?teacher-case 
+               (CogSketchTutorEdgeCyclesForECOCaseFn 
+                ?teacher-eco ?teacher-glyph ?solution-case)))
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (gatherWorksheetEdgeCycleCorrespondences 
+    ?match ?teacher-case ?student-case ?corrs)
+   (unmappedTutoringEdgeCycles ?teacher-case ?corrs ?missing-cycles)
+   (makeSuggestionsForWorksheetMissingEdgeCycles
+    ?teacher-case ?student-case ?missing-cycles ?missing-entity-suggs)))
+
+
+
+(defSuggestion MakeSuggestionsForWorksheetMissingEdgeCycles_NA
+    (makeSuggestionsForWorksheetMissingEdgeCycles 
+     ?teacher-case ?student-case ?missing-cycles ?missing-entity-suggs)
+  :test (unifies (TheSet) ?missing-cycles)
+  :subgoals
+  ((unifies ?missing-entity-suggs (TheList))))
+
+(defSuggestion MakeSuggestionsForWorksheetMissingEdgeCycles
+    (makeSuggestionsForWorksheetMissingEdgeCycles 
+     ?teacher-case ?student-case ?missing-cycles ?missing-entity-suggs)
+  :test (different (TheSet) ?missing-cycles)
+  :subgoals
+  ((unifies ?student-case 
+     (CogSketchTutorEdgeCyclesForECOCaseFn 
+      ?student-eco ?student-glyph ?workspace-case))
+   (glyphInWorksheetDGroup ?teacher-case ?teacher-glyph)
+   (subsketchContextForWorksheetDGroup ?teacher-case ?solution-context)
+   
+   (localOnly
+    (ist-Information ?solution-context
+      (glyphRepresentsObject ?teacher-glyph ?teacher-object)))
+   (ist-Information ?solution-context
+     (worksheetRelevantCollection ?teacher-object ?collection))
+   (worksheetRelevantCollectionName ?collection ?collection-name)
+   
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You are missing some of the interior detail for " ?collection-name "."))
+   (unifies ?missing-entity-suggs
+     (TheList
+      (CogSketchMissingEntitySuggestionFn
+       ?text 
+       (TheSet ?student-eco)
+       (TheSet ?student-glyph)
+       ?teacher-glyph)))))
+
+
+
+(isa gatherWorksheetGlyphCorrespondences Predicate)
+(arity gatherWorksheetGlyphCorrespondences 4)
+(notForAnalogy gatherWorksheetGlyphCorrespondences)
+
+
+(isa gatherWorksheetEdgeCycleCorrespondences Predicate)
+(arity gatherWorksheetEdgeCycleCorrespondences 4)
+(notForAnalogy gatherWorksheetEdgeCycleCorrespondences)
+
+
+
+(defSuggestion MakeSuggestionsForWorksheetMissingEntitites_NA
+    (makeSuggestionsForWorksheetMissingEntitites 
+     ?teacher-case ?student-case ?missing-glyphs ?missing-entity-suggs)
+  :test (unifies (TheSet) ?missing-glyphs)
+  :subgoals
+  ((unifies ?missing-entity-suggs (TheList))))
+
+(defSuggestion MakeSuggestionsForWorksheetMissingEntitites1
+    (makeSuggestionsForWorksheetMissingEntitites 
+     ?teacher-case ?student-case ?missing-glyphs ?missing-entity-suggs)
+  :test (different (TheSet) ?missing-glyphs)
+  :subgoals
+  ((solveSequentially ?teacher-glyph ?missing-glyphs
+     (classicMissingAdviceForGlyph ?teacher-case ?teacher-glyph ?temp-text))
+   (evaluate ?missing-suggs-set
+     (TheClosedRetrievalSetOf (CogSketchMissingEntitySuggestionFn
+                               ?text ?glyphs-to-highlight ?glyphs-involved
+                               ?teacher-glyph)
+       (and (lookupOnly
+             (classicMissingAdviceForGlyph ?teacher-case ?teacher-glyph ?text))
+            (unifies ?glyphs-involved (TheSet ?teacher-glyph))
+            (unifies ?glyphs-to-highlight (TheSet)))))
+   (evaluate ?missing-entity-suggs (SetToListFn ?missing-suggs-set))))
+
+
+
+(defSuggestion classicMissingAdviceForGlyphSugg_One_AdviceTextSpecified
+    (classicMissingAdviceForGlyph ?teacher-case ?teacher-glyph ?text)
+  :test (and (otherGlyphsOfTypeInWorksheetDGroup ?teacher-case ?teacher-glyph
+                                                 ?other-glyphs)
+             (unifies ?other-glyphs (TheSet))
+             (subsketchContextForWorksheetDGroup ?teacher-case ?context)
+             (localOnly
+              (wmOnly
+               (lookupOnly
+                (ist-Information ?context
+                  (missingEntityAdviceString ?teacher-glyph ?advice))))))
+  :subgoals
+  ((subsketchContextForWorksheetDGroup ?teacher-case ?context)
+   (localOnly
+    (wmOnly
+     (lookupOnly
+      (ist-Information ?context
+        (missingEntityAdviceString ?teacher-glyph ?text)))))))
+
+(defSuggestion classicMissingAdviceForGlyphSugg_One_NoAdviceTextSpecified
+    (classicMissingAdviceForGlyph ?teacher-case ?teacher-glyph ?text)
+  :test (and (otherGlyphsOfTypeInWorksheetDGroup ?teacher-case ?teacher-glyph
+                                                 ?other-glyphs)
+             (unifies ?other-glyphs (TheSet))
+             (subsketchContextForWorksheetDGroup ?teacher-case ?context)
+             (evaluate (TheSet)
+               (TheClosedRetrievalSetOf ?a
+                 (ist-Information ?context
+                   (missingEntityAdviceString ?teacher-glyph ?advice)))))
+  :subgoals
+  ((subsketchContextForWorksheetDGroup ?teacher-case ?context)
+   (localOnly
+    (ist-Information ?context
+      (glyphRepresentsObject ?teacher-glyph ?teacher-object)))
+   (ist-Information ?context
+     (worksheetRelevantCollection ?teacher-object ?collection))
+   (worksheetRelevantCollectionName ?collection ?collection-name)
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You might want to consider adding " ?collection-name "."))))
+
+(defSuggestion classicMissingAdviceForGlyphSugg_MoreThanOne
+    (classicMissingAdviceForGlyph ?teacher-case ?teacher-glyph ?text)
+  :test (and (otherGlyphsOfTypeInWorksheetDGroup ?teacher-case ?teacher-glyph
+                                                 ?other-glyphs)
+             (different ?other-glyphs (TheSet))
+             (subsketchContextForWorksheetDGroup ?teacher-case ?context)
+             (evaluate ?relations
+               (TheClosedRetrievalSetOf ?relation
+                 (ist-Information ?context
+                   (glyphRepresentsRelation ?teacher-glyph ?relation))))
+             (unifies ?relations (TheSet)))
+  :subgoals
+  ((subsketchContextForWorksheetDGroup ?teacher-case ?context)
+   (localOnly
+    (ist-Information ?context
+      (glyphRepresentsObject ?teacher-glyph ?teacher-object)))
+   (ist-Information ?context
+     (worksheetRelevantCollection ?teacher-object ?collection))
+   (worksheetRelevantCollectionName ?collection ?collection-name)
+   (evaluate ?plural-cols
+     (StringPluralFn ?collection-name))
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You should probably add more " ?plural-cols "."))))
+
+(defSuggestion classicMissingAdviceForGlyphSugg_MoreThanOne_GlyphIsRelation
+    (classicMissingAdviceForGlyph ?teacher-case ?teacher-glyph ?text)
+  :test (and (otherGlyphsOfTypeInWorksheetDGroup ?teacher-case ?teacher-glyph
+                                                 ?other-glyphs)
+             (different ?other-glyphs (TheSet))
+             (subsketchContextForWorksheetDGroup ?teacher-case ?context)
+             (evaluate ?relations
+               (TheClosedRetrievalSetOf ?relation
+                 (ist-Information ?context
+                   (glyphRepresentsRelation ?teacher-glyph ?relation))))
+             (different ?relations (TheSet)))
+
+  :subgoals
+  ((subsketchContextForWorksheetDGroup ?teacher-case ?context)
+   (localOnly
+    (ist-Information ?context
+      (glyphRepresentsObject ?teacher-glyph ?teacher-object)))
+   (ist-Information ?context
+     (worksheetRelevantCollection ?teacher-object ?collection))
+   (worksheetRelevantCollectionName ?collection ?collection-name)
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You should probably add more " ?collection-name " relations."))))
+
+
+
+(defSuggestion WorksheetRelevantCollectionName1
+    (worksheetRelevantCollectionName ?collection ?namestring)
+  :cost-function 1
+  :subgoals
+  ((unifies ?collection (CollectionDenotedByNLPhraseFn ?namestring))))
+
+(defSuggestion WorksheetRelevantCollectionName2
+    (worksheetRelevantCollectionName ?collection ?namestring)
+  :cost-function 2
+  :subgoals
+  ((sketchSpecificPrettystring ?collection ?namestring)))
+
+(defSuggestion WorksheetRelevantCollectionName3
+    (worksheetRelevantCollectionName ?collection ?namestring)
+  :cost-function 3
+  :subgoals
+  ((prettyString-Canonical ?collection ?namestring)))
+
+(defSuggestion WorksheetRelevantCollectionName4
+    (worksheetRelevantCollectionName ?collection ?namestring)
+  :cost-function 4
+  :subgoals
+  ((prettyString ?collection ?namestring)))
+
+;;;
+;;; prettyName is obsolete:
+;;;
+;;;(defSuggestion WorksheetRelevantCollectionName5
+;;;    (worksheetRelevantCollectionName ?collection ?namestring)
+;;;  :cost-function 5
+;;;  :subgoals
+;;;  ((prettyName ?collection ?namestring)))
+
+(defSuggestion WorksheetRelevantCollectionName6
+    (worksheetRelevantCollectionName ?collection ?namestring)
+  :cost-function 6
+  :subgoals
+  ((preferredNameString ?collection ?namestring)))
+
+(defSuggestion WorksheetRelevantCollectionName7
+    (worksheetRelevantCollectionName ?collection ?namestring)
+  :cost-function 7
+  :subgoals
+  ((nameString ?collection ?namestring)))
+
+(defSuggestion WorksheetRelevantCollectionName8
+    (worksheetRelevantCollectionName ?collection ?namestring)
+  :cost-function 8
+  :subgoals
+  ((evaluate ?namestring (ConcatenateStringsFn ?collection))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- extra entities
+
+(defSuggestion GatherClassicExtraEntitySuggestion
+    (gatherExtraEntitySuggestions ?match ?teacher-case ?student-case
+                                  ?extra-entity-suggs)
+  :test (uninferredSentence
+         (unifies ?teacher-case 
+           (CogSketchTutorEdgeCyclesForECOCaseFn 
+            ?teacher-eco ?teacher-glyph ?solution-case)))
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (subsketchContextForWorksheetDGroup ?teacher-case ?teacher-case-name)
+   (evaluate ?unmatched-student-objects
+     (TheClosedRetrievalSetOf ?student-object
+       (and (unmappedTargetEntity ?mapping ?student-object)
+            (localOnly
+             ;; not just a lookup because we might need to 
+             ;; infer this if the glyph is an annotation
+             (glyphRepresentsObject ?student-glyph ?student-object))
+            ;; need to exclude bundles!
+            (nonTransitiveInference
+             (honorTimestamps
+              (uninferredSentence
+               (isa ?student-object NuSketchBundle))))
+            (worksheetRelevantCollection ?student-object ?col)
+            (and (ist-Information ?teacher-case-name
+                   (honorTimestamps
+                    (uninferredSentence
+                     (cogSketchTutoringExtraGlyphsAllowedForCollection ?col))))
+                 (ist-Information ?teacher-case-name
+                   (honorTimestamps
+                    (uninferredSentence
+                     (cogSketchTutoringExtraGlyphsAllowedForRelation ?col))))))))
+   (makeSuggestionsForExtraEntities ?unmatched-student-objects 
+                                    ?extra-entity-suggs)))
+
+
+(defSuggestion MakeExtraEntitySuggs-NA
+    (makeSuggestionsForExtraEntities ?objects ?extra-suggs)
+  :test
+  (unifies ?objects (TheSet))
+  :subgoals
+  ((unifies ?extra-suggs (TheList))))
+
+(defSuggestion MakeExtraEntitySuggs
+    (makeSuggestionsForExtraEntities ?objects ?extra-suggs)
+  :test
+  (different ?objects (TheSet))
+  :subgoals
+  ((evaluate ?extra-collections
+     (TheClosedRetrievalSetOf ?extra-collection
+       (and (lookupOnly (worksheetRelevantCollection ?object ?extra-collection))
+            (evaluate ?check (ListMemberFn ?object ?objects))
+            (unifies ?check True))))
+   (solveSequentially ?extra-collection ?extra-collections
+     (worksheetRelevantCollectionName ?extra-collection ?extra-collection-name))
+   (evaluate ?extra-suggs-set
+     (TheClosedRetrievalSetOf (CogSketchExtraEntitySuggestionFn
+                               ?text (TheSet) (TheSet ?extra-glyph)
+                               ?extra-collection)
+       (and (lookupOnly
+             (worksheetRelevantCollection ?extra-object ?extra-collection))
+            (evaluate ?check (ListMemberFn ?extra-object ?objects))
+            (unifies ?check True)
+            (localOnly (glyphRepresentsObject ?extra-glyph ?extra-object))
+            (lookupOnly 
+             (worksheetRelevantCollectionName ?extra-collection 
+                                              ?extra-collection-name))
+            (evaluate ?text 
+              (ConcatenateStringsFn "You have too many glyphs of type \""
+                                    ?extra-collection-name
+                                    "\".")))))
+   (evaluate ?extra-suggs
+     (SetToListFn ?extra-suggs-set))))
+
+
+
+(defSuggestion GatherClassicExtraEntitySuggestions_EdgeCycles
+    (gatherExtraEntitySuggestions ?match ?teacher-case ?student-case
+                                  ?extra-entity-suggs)
+  :test (unifies ?student-case 
+          (CogSketchTutorEdgeCyclesForECOCaseFn 
+           ?student-eco ?student-glyph ?workspace-case))
+  :subgoals
+  ((unifies ?student-case 
+     (CogSketchTutorEdgeCyclesForECOCaseFn 
+      ?student-eco ?student-glyph ?workspace-case))
+   (bestMapping ?match ?mapping)
+   (evaluate ?unmatched-student-cycles
+     (TheClosedRetrievalSetOf ?student-object
+       (and (unmappedTargetEntity ?mapping ?student-object)
+            (ist-Information (EdgeCycleFactsMtFn ?student-eco)
+              (isa ?student-object PerceptualEdgeCycle)))))
+   (makeSuggestionsForExtraEdgeCycles 
+    ?student-case ?unmatched-student-cycles ?extra-entity-suggs)))
+
+
+(defSuggestion makeSuggestionsForExtraEdgeCycles_NA
+    (makeSuggestionsForExtraEdgeCycles ?student-case ?objects ?extra-suggs)
+  :test
+  (unifies ?objects (TheSet))
+  :subgoals
+  ((unifies ?extra-suggs (TheList))))
+
+(defSuggestion MakeSuggestionsForExtraEdgeCycles
+    (makeSuggestionsForExtraEdgeCycles ?student-case ?objects ?extra-suggs)
+  :test
+  (different ?objects (TheSet))
+  :subgoals
+  ((glyphInWorksheetDGroup ?student-case ?student-glyph)
+   (glyphRepresentsObject ?student-glyph ?student-object)
+   (worksheetRelevantCollection ?student-object ?collection)
+   (worksheetRelevantCollectionName ?collection ?collection-name)
+   
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "Some extra regions were found inside " ?collection-name 
+      ".  Maybe some of your lines went too far and are dividing regions "
+      "that shouldn't be divided?"))
+   
+   (unifies ?extra-suggs
+     (TheList
+      (CogSketchExtraEntitySuggestionFn
+       ?text ?objects (TheSet ?student-glyph) PerceptualEdgeCycle)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- quantity value
+
+(defSuggestion GatherQuantValSuggs-NA
+    (gatherQuantityValueSuggestions ?match ?teacher-case ?student-case 
+                                    ?quant-val-suggs)
+  :test (and (subsketchForWorksheetDGroup ?student-case ?student-bundle)
+             (lookupOnly (sketchFor ?student-bundle ?sketch))
+             (honorTimestamps
+              (uninferredSentence (quantValueAdviceEnabledForSketch ?sketch))))
+  :subgoals
+  ((unifies ?quant-val-suggs (TheList))))
+
+
+(defSuggestion GatherQuantValSuggs--NEW
+    (gatherQuantityValueSuggestions ?match ?teacher-case ?student-case 
+                                    ?quant-val-suggs)
+  :test (and (subsketchForWorksheetDGroup ?student-case ?student-bundle)
+             (lookupOnly (sketchFor ?student-bundle ?sketch))
+             (quantValueAdviceEnabledForSketch ?sketch))
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (solveAll
+    (and (importantQuantityFact ?teacher-case-name ?teacher-fact ?teacher-quantity)
+         ;; NOTE: ?teacher-fact needs to be converted to the appropriate dgroup fact
+         ;; (i.e. swap glyphs for objects) before correspondsInMapping can be used.
+         (ist-Information ?teacher-case-name
+           (dGroupFactOf ?teacher-case ?teacher-dgroup-fact ?teacher-fact))
+         (correspondsInMapping ?mapping ?teacher-dgroup-fact ?student-dgroup-fact)
+         (dGroupFactOf ?student-case ?student-dgroup-fact ?student-fact)
+         (quantityFromExpression ?student-fact ?student-quantity))
+    (applicableQuantValAdvice ?teacher-case-name ?teacher-fact ?student-fact
+                              ?teacher-quantity ?student-quantity ?max-val ?min-val ?advice))
+   (evaluate ?quant-val-suggs-set
+     (TheClosedRetrievalSetOf (CogSketchQuantityValueSuggestionFn
+                               ?final-advice ?glyphs ?glyphs ?final-teacher-fact ?final-student-fact 
+                               ?final-teacher-quantity ?final-student-quantity
+                               ?final-max-val ?final-min-val)
+       (and (lookupOnly 
+             (applicableQuantValAdvice ?teacher-case-name ?final-teacher-fact ?final-student-fact
+                                       ?final-teacher-quantity ?final-student-quantity 
+                                       ?final-max-val ?final-min-val ?final-advice))
+            (different ?final-advice :none)
+            (glyphsMentionedInFact ?final-student-fact ?glyphs))))
+   (evaluate ?quant-val-suggs
+     (SetToListFn ?quant-val-suggs-set))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Comparing values and fetching advice
+;; in the following two suggestions, it's assumed that
+;; all variables are bound except for ?min-val, ?max-val and ?advice
+
+
+;; We need special treatment for quantity statements about orientation,
+;; since orientation can cross the 0/360 degree boundary, which means
+;; that simple inequalities won't work.  Dealing with all the different possible
+;; degree intervals is confusing, so instead we'll offset all the orientations
+;; by the orientation of the teacher glyph, which means that the bounds for
+;; triggering minimum and maximum inclination suggestions will be fairly constant
+;; across scenarios.
+(defSuggestion RelativeInclinationAdvice-ExceedsMax
+  (applicableQuantValAdvice 
+     ?teacher-case-name ?teacher-fact ?student-fact
+   ?teacher-quantity ?student-quantity ?max-val ?min-val ?advice)
+  :cost-function 1  ;; we want to try this first
+  :test (and (unifies ?teacher-fact 
+               (visualQuantityMeasurement ?visual-quantity ?teacher-quantity))
+             (unifies ?visual-quantity (ArrowOrientationFn ?thing)))
+  :subgoals
+  ((ist-Information ?teacher-case-name
+     (cogSketchTutoringQuantityMaxVal ?teacher-fact ?teacher-quantity ?max-val))
+   (evaluate ?max-degrees
+     (ValueFromUnitsFn
+      (QuantityConversionFn Degree-UnitOfAngularMeasure ?max-val)))
+   (evaluate ?student-degrees
+     (ValueFromUnitsFn
+      (QuantityConversionFn Degree-UnitOfAngularMeasure ?student-quantity)))
+   (evaluate ?degree-offset
+     (ValueFromUnitsFn 
+      (QuantityConversionFn Degree-UnitOfAngularMeasure ?teacher-quantity)))
+   (evaluate ?max-degrees-offset
+     (DifferenceFn ?max-degrees ?degree-offset))
+   (evaluate ?student-degrees-offset
+     (ModuloFn (PlusFn (DifferenceFn ?student-degrees ?degree-offset) 360) 360))
+   (evaluate True (LessThan-UnitValuesFn (Degree-UnitOfAngularMeasure ?student-degrees-offset)
+                                         (Degree-UnitOfAngularMeasure 180.01)))
+   (evaluate True (GreaterThan-UnitValuesFn (Degree-UnitOfAngularMeasure ?student-degrees-offset)
+                                            (Degree-UnitOfAngularMeasure ?max-degrees-offset)))
+   (ist-Information ?teacher-case-name
+     (cogSketchTutoringMaxValString ?teacher-fact ?teacher-quantity ?advice))
+   (unifies ?min-val nil)))
+
+(defSuggestion RelativeInclinationAdvice-BelowMin
+  (applicableQuantValAdvice 
+     ?teacher-case-name ?teacher-fact ?student-fact
+   ?teacher-quantity ?student-quantity ?max-val ?min-val ?advice)
+  :cost-function 1  ;; we want to try this first
+  :test (and (unifies ?teacher-fact 
+               (visualQuantityMeasurement ?visual-quantity ?teacher-quantity))
+             (unifies ?visual-quantity (ArrowOrientationFn ?thing)))
+  :subgoals
+  ((ist-Information ?teacher-case-name
+     (cogSketchTutoringQuantityMinVal ?teacher-fact ?teacher-quantity ?min-val))
+   (evaluate ?min-degrees
+     (ValueFromUnitsFn
+      (QuantityConversionFn Degree-UnitOfAngularMeasure ?min-val)))
+   (evaluate ?student-degrees
+     (ValueFromUnitsFn
+      (QuantityConversionFn Degree-UnitOfAngularMeasure ?student-quantity)))
+   (evaluate ?degree-offset
+     (ValueFromUnitsFn 
+      (QuantityConversionFn Degree-UnitOfAngularMeasure ?teacher-quantity)))
+   ;; since we're offsetting, we know that this will cause the minimum value to be less than
+   ;; zero.  to convert this to the 0 to 360 scale, we just need to add the offset minimum to 360.
+   (evaluate ?min-degrees-offset
+     (PlusFn ?min-degrees (TimesFn ?degree-offset -1) 360))
+   (evaluate ?student-degrees-offset
+     (ModuloFn (PlusFn (DifferenceFn ?student-degrees ?degree-offset) 360) 360))
+   (evaluate True (GreaterThan-UnitValuesFn (Degree-UnitOfAngularMeasure ?student-degrees-offset)
+                                            (Degree-UnitOfAngularMeasure 180)))
+   (evaluate True (LessThan-UnitValuesFn (Degree-UnitOfAngularMeasure ?student-degrees-offset)
+                                         (Degree-UnitOfAngularMeasure ?min-degrees-offset)))
+   (ist-Information ?teacher-case-name
+     (cogSketchTutoringMinValString ?teacher-fact ?teacher-quantity ?advice))
+   (unifies ?max-val nil)))
+             
+     
+
+
+;; Then, these suggestions are tried.
+(defSuggestion GatherApplicableQuantValAdvice-Min
+    (applicableQuantValAdvice 
+     ?teacher-case-name ?teacher-fact ?student-fact
+     ?teacher-quantity ?student-quantity ?max-val ?min-val ?advice)
+  :cost-function 5
+  :test (and (uninferredSentence
+              (unifies ?teacher-fact 
+                (visualQuantityMeasurement ?visual-quantity ?teacher-quantity)))
+             (uninferredSentence
+              (isa ?teacher-quantity AngularDistance))
+             (ist-Information ?teacher-case-name
+               (cogSketchTutoringQuantityMinVal ?teacher-fact ?teacher-quantity ?min-val))
+             (unifies ?min-val
+               (?min-units ?min-number))
+             (evaluate ?student-num
+               (ValueFromUnitsFn (QuantityConversionFn ?min-units ?student-quantity)))
+             (lessThan ?student-num ?min-number))
+  :subgoals
+  ((ist-Information ?teacher-case-name
+     (cogSketchTutoringMinValString ?teacher-fact ?teacher-quantity ?advice))
+   (ist-Information ?teacher-case-name
+               (cogSketchTutoringQuantityMinVal ?teacher-fact ?teacher-quantity ?min-val))
+   (unifies ?max-val nil)))
+
+(defSuggestion GatherApplicableQuantValAdvice-Max
+    (applicableQuantValAdvice 
+     ?teacher-case-name ?teacher-fact ?student-fact
+     ?teacher-quantity ?student-quantity ?max-val ?min-val ?advice)
+  :cost-function 5
+  :test (and (uninferredSentence
+              (unifies ?teacher-fact 
+                (visualQuantityMeasurement ?visual-quantity ?teacher-quantity)))
+             (uninferredSentence
+              (isa ?teacher-quantity AngularDistance))
+             (ist-Information ?teacher-case-name
+               (cogSketchTutoringQuantityMaxVal ?teacher-fact ?teacher-quantity ?max-val))
+             (unifies ?max-val
+               (?max-units ?max-number))
+             (evaluate ?student-num
+               (ValueFromUnitsFn (QuantityConversionFn ?max-units ?student-quantity)))
+             (greaterThan ?student-num ?max-number))
+  :subgoals
+  ((ist-Information ?teacher-case-name
+     (cogSketchTutoringMaxValString ?teacher-fact ?teacher-quantity ?advice))
+   (ist-Information ?teacher-case-name
+     (cogSketchTutoringQuantityMaxVal ?teacher-fact ?teacher-quantity ?max-val))
+   (unifies ?min-val nil)
+   ))
+
+;; If none of the previous suggestions succeed, then there is no advice
+;; to give.
+(defSuggestion GatherApplicableQuantValAdvice-None
+    (applicableQuantValAdvice 
+     ?teacher-case-name ?teacher-fact ?student-fact
+     ?teacher-quantity ?student-quantity ?min-val ?max-val ?advice)
+  :cost-function 7
+  ;; :test -- not actually needed if this suggestion is processed
+  ;; after the min/max conditions
+  :subgoals
+  ((unifies ?advice :none)
+   (unifies ?min-val nil)
+   (unifies ?max-val nil)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Suggestions -- sorting/filtering
+
+(defSuggestion SortAndFilterClassicSuggestions
+    (sortAndFilterClassicWorksheetSuggestions ?initial-suggestions ?suggestions)
+  :subgoals
+  ((evaluate ?suggestions-with-no-duplicates
+     (RemoveDuplicatesFn 
+      ?initial-suggestions
+      equals
+      (FunctionToArg 2 
+        (Kappa (?exp ?text-and-glyphs) 
+          (and (formulaArgument ?exp 1 ?text)
+               (formulaArgument ?exp 2 ?glyphs-to-highlight)
+               (evaluate ?sorted-glyphs
+                 (SortFn ?glyphs-to-highlight
+                         (Kappa (?one ?two)
+                           (alphalessp ?one ?two))
+                         IdentityFn))
+               (evaluate ?text-and-glyphs
+                 (JoinListsFn (TheList ?text) ?sorted-glyphs)))))))
+   ;; remove redundant CI suggs
+   (evaluate ?ci-and-qv-suggs
+     (RemoveIfFn
+      ?suggestions-with-no-duplicates
+      (Kappa (?sugg)
+        (and (operatorFormulas ?sugg-type ?sugg)
+             (not (unifies ?sugg-type CogSketchCandidateInferenceSuggestionFn))
+             (not (unifies ?sugg-type CogSketchQuantityValueSuggestionFn))))
+      IdentityFn))
+   (evaluate ?teacher-facts
+     (MapFunctionOverList
+      (FunctionToArg 2
+        (Kappa (?sugg ?teacher-fact)
+          (formulaArgument ?sugg 4 ?teacher-fact)))
+      ?ci-and-qv-suggs))
+   (evaluate ?redundant-ci-and-qv-suggs
+     (RemoveIfFn
+      ?ci-and-qv-suggs
+      (Kappa (?fact)
+        (and (evaluate ?occurrences (CountFn ?fact ?teacher-facts))
+             (lessThan ?occurrences 2)))
+      (FunctionToArg 2
+        (Kappa (?sugg ?fact)
+          (formulaArgument ?sugg 4 ?fact)))))
+   (evaluate ?filtered-ci-suggs
+     (RemoveIfFn
+      ?suggestions-with-no-duplicates
+      (Kappa (?sugg)
+        (and (operatorFormulas ?sugg-type ?sugg)
+             (unifies ?sugg-type CogSketchCandidateInferenceSuggestionFn)
+             (evaluate True (ListMemberFn ?sugg ?redundant-ci-and-qv-suggs))))
+      IdentityFn))
+      
+      
+   (unifies ?suggestions ?filtered-ci-suggs)))
+      
+
+
+
+;;;
+;;; The following don't work.  It looks to me like recursive suggestions won't
+;;; work with SOLVE because of the way variables get rebound?  [Usher 3/15/2012]
+;;;
+;;;(defSuggestion FilterMissingEntitySuggsWhenMissingLabel_NoSuggestions
+;;;    (filterMissingEntitySuggsWhenMissingLabel ?suggestions-in ?suggestions-out)
+;;;  :test (unifies (TheList) ?suggestions-in)
+;;;  :subgoals
+;;;  ((unifies ?suggestions-out (TheList))))
+;;;
+;;;(defSuggestion FilterMissingEntitySuggsWhenMissingLabel_NoMissingLabels
+;;;    (filterMissingEntitySuggsWhenMissingLabel ?suggestions-in ?suggestions-out)
+;;;  :test (and (different (TheList) ?suggestions-in)
+;;;             (uninferredSentence
+;;;              (containsPattern
+;;;               (CogSketchMissingLabelSuggestionFn ?x ?y ?z)
+;;;               ?suggestions-in)))
+;;;  :subgoals
+;;;  ((unifies ?suggestions-out ?suggestions-in)))
+;;;
+;;;(defSuggestion FilterMissingEntitySuggsWhenMissingLabel_MissingLabels
+;;;    (filterMissingEntitySuggsWhenMissingLabel ?suggestions-in ?suggestions-out)
+;;;  :test (and (different (TheList) ?suggestions-in)
+;;;             (containsPattern
+;;;              (CogSketchMissingLabelSuggestionFn ?x ?y ?z)
+;;;              ?suggestions-in))
+;;;  :subgoals
+;;;  ((removeMissingEntitySuggs ?suggestions-in ?suggestions-out)))
+;;;
+;;;
+;;;
+;;;(defSuggestion RemoveMissingEntitySuggs_NoSuggestions
+;;;    (removeMissingEntitySuggs ?suggestions-in ?suggestions-out)
+;;;  :test (unifies (TheList) ?suggestions-in)
+;;;  :subgoals
+;;;  ((unifies ?suggestions-out (TheList))))
+;;;
+;;;(defSuggestion RemoveMissingEntitySuggs1
+;;;    (removeMissingEntitySuggs ?suggestions-in ?suggestions-out)
+;;;  :test (and (different (TheList) ?suggestions-in)
+;;;             (evaluate ?sugg0 (FirstInListFn ?suggestions-in))
+;;;             (operatorFormulas ?sugg0 CogSketchMissingEntitySuggestionFn))
+;;;  :subgoals
+;;;  ((evaluate ?suggs (RestOfListFn ?suggestions-in))
+;;;   (removeMissingEntitySuggs ?suggs ?suggestions-out)))
+;;;
+;;;(defSuggestion RemoveMissingEntitySuggs2
+;;;    (removeMissingEntitySuggs ?suggestions-in ?suggestions-out)
+;;;  :test (and (different (TheList) ?suggestions-in)
+;;;             (evaluate ?sugg0 (FirstInListFn ?suggestions-in))
+;;;             (uninferredSentence
+;;;              (operatorFormulas ?sugg0 CogSketchMissingEntitySuggestionFn)))
+;;;  :subgoals
+;;;  ((evaluate ?sugg0 (FirstInListFn ?suggestions-in))
+;;;   (evaluate ?suggs (RestOfListFn ?suggestions-in))
+;;;   (removeMissingEntitySuggs ?suggs ?suggs-out-rest)
+;;;   (evaluate ?suggestions-out 
+;;;     (JoinListsFn (TheList ?sugg0) ?suggs-out-rest))))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

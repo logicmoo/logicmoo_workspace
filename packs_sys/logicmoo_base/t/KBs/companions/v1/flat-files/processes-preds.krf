@@ -1,0 +1,643 @@
+;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;; -------------------------------------------------------------------------
+;;; File name: processes-preds.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: February 5, 2012 08:40:49
+;;;   Purpose: Definitions of higher-order process predicates
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;
+;;; To support higher-order qualitative reasoning, we need type-level
+;;; correlates of the QPT role relations for processes.
+;;; Starting with process types, we'll express limit points for process
+;;; instances, given particular entity arguments.
+;;; We'll conditionalize type-level influences based on process activation,
+;;; That may be all that needs to happen, provided it's possible to
+;;; compute the latter efficiently from the former.
+;;;
+;;; What operations do we want to support?
+;;; a) Find all the active processes in the current situation.
+;;;    Or more precisely, find all active influence instances.
+;;; b) For a pair of quantity instances, is a change consistent?
+;;; We can't really go directly from process-type to influence-type
+;;; because activation conditions differ on an instance-by-instance
+;;; basis.
+
+;;; Example:
+;;; There is a type of city growth that happens when building settlers that
+;;; has a limit point when the settler is produced.
+;;; One condition is that the production type is Settler.
+;;; The other is a limit point condtion that the %complete is < 100%.
+;;; So one relation is associating Settler with the currentlyBuilding of the 
+;;; city participant of the process.
+;;; The other would have to associate the value 100% with the percentComplete.
+;;; So: consider condition to be a binary predicate.  Then there would have 
+;;; to be two more arguments consisting of composite functional relations
+;;; that extract the argument.
+
+;;; This suggests that each process participant must have a unique
+;;; role-relation in order to unambiguously extract condition arguments.
+;;; E.g.: cityOf-PP (PP = Process Participant)
+
+(in-microtheory CompanionsMt)
+
+(isa participantType TernaryPredicate)
+(arity participantType 3)
+(arg1Isa participantType ModelFragmentType)
+(arg2Isa participantType BinaryRelation)
+(arg3Isa participantType Collection)
+(comment participantType "(participantType ?process-type ?role ?type) specifies a collection type for a process (type) participant.")
+;;; See also: roleTypeRestriction (a binary Cyc predicate) and the specs of sitTypeHasSpecification.
+
+(isa participantConstraint BinaryPredicate)
+(arity participantConstraint 2)
+(arg1Isa participantConstraint ModelFragmentType)
+(arg2Isa participantConstraint CycLExpression)
+(comment participantConstraint "(participantConstraint ?process-type ?expression) specifies (optional) relational constraints on participants.")
+
+(isa conditionOf-TypeType BinaryPredicate)
+(arity conditionOf-TypeType 2)
+(arg1Isa conditionOf-TypeType ModelFragmentType)
+(arg2Isa conditionOf-TypeType CycLExpression)
+(comment conditionOf-TypeType "(conditionOf-TypeType ?model-fragment-type ?qualitative-inequality) is a type-level on participants of a .")
+
+(isa consequenceOf-TypeType BinaryPredicate)
+(arity consequenceOf-TypeType 2)
+(arg1Isa consequenceOf-TypeType ModelFragmentType)
+(arg2Isa consequenceOf-TypeType CycLSentence-Assertible)
+(comment consequenceOf-TypeType "(consequenceOf-TypeType ?model-fragment-type ?influence-statement) relates an influence to a process, where the influence specifies roles rather than entities directly.")
+
+(isa associatedRoleList BinaryPredicate)
+(arity associatedRoleList 2)
+(arg1Isa associatedRoleList ModelFragmentType)
+(arg2Isa associatedRoleList List)
+(comment associatedRoleList "(associatedRoleList ?mf-type ?list-of-role-relations) assigns a canonical ordering of role relations to a process type, in a manner simliar to associatedActorSlotList, except that it applies to Davidsonian process representations that may or may not have associated event predicates.")
+
+;;; positiveDependence
+;;; negativeDependence
+
+(isa positiveDependence UnaryPredicate)
+(arity positiveDependence 1)
+(comment negativeDependence "(positiveDependence (<quantity-type> <entity-type>)) expresses a positive qualitative proportionality between the activation of the process type in which the expression is scoped and the specified type-level quantity.  PositiveDependence is always embedded in a consequenceOf-TypeType statement that specifies the model fragment type.")
+
+(isa negativeDependence UnaryPredicate)
+(arity negativeDependence 1)
+(comment negativeDependence "(negativeDependence (<quantity-type> <entity-type>)) expresses a negative qualitative proportionality between the activation of the process type in which the expression is scoped and the specified type-level quantity.  NegativeDependence is always embedded in a consequenceOf-TypeType statement that specifies the model fragment type.")
+
+;;; Note: activeMF is defined in QPTheoryMt
+;;; It applies to a model fragment instance.
+
+
+;;; -----------------------------------------------------
+;;; We need to be able to refer to model fragment instances via NATs
+;;; given an MF type and role bindings.
+;;; Something like: 
+;;; (MFInstanceFn <type> <binding-list>),
+;;; where <binding-list> is a true list of binding pairs, in canonical form.
+
+(isa MFInstanceFn BinaryFunction)
+(arity MFInstanceFn 2)
+(arg1Isa MFInstanceFn ModelFragmentType)
+(arg2Isa MFInstanceFn List)
+(resultIsa MFInstanceFn ModelFragment)
+(comment MFInstanceFn "(MFInstanceFn <mf-type> <arglist>) denotes the instance of model fragment or process type with role relations bound as per the implied binding list, based on the canonically ordered list of roles specified via associatedRoleList.")
+
+
+(isa QuantityConditionedExistence ModelFragmentType)
+(comment QuantityConditionedExistence "The generic model fragment type for quantity-conditioned existence.
+The particular quantity condition(s) must depend on the specialization of this.")
+(associatedRoleList QuantityConditionedExistence (TheList actors))
+(participantType QuantityConditionedExistence actors SomethingExisting)
+;;; See also: existentialActorType (cyc pred) and ExistenceDependentCollection.
+
+;;; -----------------------------------------------------
+;;; Process accessors and functions:
+
+(isa rateOf BinaryPredicate)
+(arg1Isa rateOf QPProcess)
+(arg2Isa rateOf ContinuousQuantity)
+
+;;; processEfficiency should be analogous to coaEfficiency in Cyc.
+(isa processEfficiency BinaryPredicate)
+(arg1Isa processEfficiency QPProcess)
+(arg2Isa processEfficiency ContinuousQuantity)
+(comment processEfficiency "(processEfficiency ?process ?efficency) relates a process to the efficiency of converting inputs to outputs.")
+
+(isa likelihoodOfEvent BinaryPredicate)
+(arg1Isa likelihoodOfEvent Event)
+(arg2Isa likelihoodOfEvent ContinuousQuantity)
+(comment likelihoodOfEvent "(likelihoodOfEvent ?event ?likelihood) relates an event to the likelihood (probability) of it occuring.")
+
+(<== (likelihoodOfEvent ?event ?probability)
+     (likelihood (OccursFn ?event) ?probability))  ; Don't really have a way to measure this, but this should denote it.
+     
+
+;;; -----------------------------------------------------
+;;; This should go away, but it can't yet (9-12-14):
+
+;;; I'm surprised I can't find anything like this in Cyc.
+(isa PredicateCompositionFn Function-Denotational)
+(isa PredicateCompositionFn BinaryFunction)
+(arity PredicateCompositionFn 2)
+(arg1Isa PredicateCompositionFn BinaryPredicate)
+(arg2Isa PredicateCompositionFn BinaryPredicate)
+(resultIsa PredicateCompositionFn BinaryPredicate)
+(comment PredicateCompositionFn "((PredicateCompositionFn ?binpred1 ?binpred2) ?arg1 ?arg2) binds ?arg2 to the arg2 of the predicate composed of binpred1 and binpred2 applied to ?arg1.  So, for example, grandmotherOf could be defined as (PredicateCompositionFn motherOf parentOf).")
+
+(isa composedArgValue TernaryPredicate)
+(arity composedArgValue 3)
+(arg1Isa composedArgValue BinaryPredicate)
+(arg2Isa composedArgValue BinaryPredicate)
+(arg3Isa composedArgValue Thing)
+(comment composedArgValue "(composedArgValue ?arg-designator ?input ?output) unpacks a possibly composed argument designator to bind ?output from ?input.")
+
+(<== (composedArgValue ?arg-designator ?input ?output)
+     (groundExpression ?arg-designator)
+     (atomicTerm ?arg-designator)
+     (useTransitiveInference (isa ?arg-designator BinaryRelation))  ; just to be safe
+     (?arg-designator ?input ?output))
+
+(<== (composedArgValue ?arg-designator ?input ?output)
+     (groundExpression ?arg-designator)
+     (atomicTerm ?arg-designator)
+     (uninferredSentence
+       (useTransitiveInference               ; just to be safe
+         (isa ?arg-designator BinaryRelation)))
+     (unifies ?output ?arg-designator))
+
+(<== (composedArgValue (PredicateCompositionFn ?p1 ?p2) ?input ?output)
+     (groundExpression ?p1)
+     (groundExpression ?p2)
+     (composedArgValue ?p2 ?input ?arg2)
+     (composedArgValue ?p1 ?arg2 ?output))
+
+;;;
+;;; Quantity-conditioned event types (from Kim's thesis, more or less)
+;;;
+
+(isa EventConsequence Collection)
+(comment EventConsequence "The collection of all one-shot quantity conditioned events.")
+
+(isa decrease EventConsequence)
+(isa increase EventConsequence)
+(isa decreaseBy EventConsequence)
+(isa increaseBy EventConsequence)
+
+(isa executeTask EventConsequence)
+
+;;; -----------------------------------------------------
+;;; Support for subgoaling with respect to process models:
+
+(isa positiveConsequenceOfProcessType TernaryPredicate)
+(arity positiveConsequenceOfProcessType 3)
+(arg1Isa positiveConsequenceOfProcessType ContinuousQuantity)
+(arg2Isa positiveConsequenceOfProcessType ModelFragmentType)
+(arg3Isa positiveConsequenceOfProcessType Set-Mathematical)
+(comment positiveConsequenceOfProcessType "(positiveConsequenceOfProcessType ?quantity ?process-type ?bindings) means ?quantity-type is positively influenced in ?process-type")
+
+(<== (positiveConsequenceOfProcessType (?quantity-type ?entity-spec) ?process-type ?bindings)
+     (lookupOnly
+       (consequenceOf-TypeType ?process-type
+         (?inf-type (?quantity-type ?role-reln) ?indep-quantity)))
+     (elementOf ?inf-type (TheSet i+ c+ qprop))
+     (numAnswers 1
+       (compatibleEntitySpec ?entity-spec ?role-reln ?process-type ?new-espec))
+     (unifies ?bindings (TheSet (?role-reln ?new-espec))))
+
+(<== (positiveConsequenceOfProcessType (?quantity-type ?entity-spec) ?process-type ?bindings)
+     (lookupOnly
+       (consequenceOf-TypeType ?process-type
+         (positiveDependence (?quantity-type ?role-reln))))
+     (numAnswers 1
+       (compatibleEntitySpec ?entity-spec ?role-reln ?process-type ?new-espec))
+     (unifies ?bindings (TheSet (?role-reln ?new-espec))))
+
+(isa negativeConsequenceOfProcessType TernaryPredicate)
+(arity negativeConsequenceOfProcessType 3)
+(arg1Isa negativeConsequenceOfProcessType ContinuousQuantity)
+(arg2Isa negativeConsequenceOfProcessType ModelFragmentType)
+(arg3Isa negativeConsequenceOfProcessType Set-Mathematical)
+(comment negativeConsequenceOfProcessType "(negativeConsequenceOfProcessType ?quantity ?process-type ?bindings) means ?quantity-type is negatively influenced in ?process-type")
+
+(<== (negativeConsequenceOfProcessType (?quantity-type ?entity-spec) ?process-type ?bindings)
+     (lookupOnly
+       (consequenceOf-TypeType ?process-type
+         (?inf-type (?quantity-type ?role-reln) ?indep-quantity)))
+     (elementOf ?inf-type (TheSet i- c- qprop-))
+     (numAnswers 1
+       (compatibleEntitySpec ?entity-spec ?role-reln ?process-type ?new-espec))
+     (unifies ?bindings (TheSet (?role-reln ?new-espec))))
+
+(<== (negativeConsequenceOfProcessType (?quantity-type ?entity-spec) ?process-type ?bindings)
+     (lookupOnly
+       (consequenceOf-TypeType ?process-type
+         (negativeDependence (?quantity-type ?role-reln))))
+     (numAnswers 1 
+       (compatibleEntitySpec ?entity-spec ?role-reln ?process-type ?new-espec))
+     (unifies ?bindings (TheSet (?role-reln ?new-espec))))
+
+(isa compatibleEntitySpec QuaternaryPredicate)
+(arity compatibleEntitySpec 4)
+(arg1Isa compatibleEntitySpec Collection)
+(arg2Isa compatibleEntitySpec BinaryRelation)
+(arg3Isa compatibleEntitySpec ModelFragmentType)
+(arg4Isa compatibleEntitySpec Collection)
+(comment compatibleEntitySpec "(compatibleEntitySpec ?entity-spec ?role ?model-fragment-type ?new-espec) binds ?new-espec to the more specific entity collection designator.")
+
+;;; entity-spec is more specific than the model-fragment role.
+(<== (compatibleEntitySpec ?entity-spec ?role ?model-fragment-type ?entity-spec)
+     (lookupOnly
+       (numAnswers 1
+         (participantType ?model-fragment-type ?role ?type)))
+     (collectionTypeOf ?entity-spec ?etype)
+     (genls ?etype ?type)) 
+
+(<== (compatibleEntitySpec ?entity-spec ?role ?model-fragment-type ?new-espec)
+     (lookupOnly
+       (numAnswers 1
+         (participantType ?model-fragment-type ?role ?type)))
+     (collectionTypeOf ?entity-spec ?etype)
+     (different ?type ?etype)
+     (genls ?type ?etype)
+     (evaluate ?new-espec
+       (SublisFn (TheSet (?etype ?type)) ?entity-spec)))
+
+(isa collectionTypeOf BinaryPredicate)
+(arity collectionTypeOf 2)
+(arg1Isa collectionTypeOf Collection)
+(arg2Isa collectionTypeOf Collection)
+(comment collectionTypeOf "(collectionTypeOf ?collection-spec ?type) binds ?type to the most specific collection subsuming ?collection-spec.")
+
+(<== (collectionTypeOf (GenericInstanceFn ?cspec) ?what)
+     (collectionTypeOf ?cspec ?what))
+
+(<== (collectionTypeOf (CollectionSubsetFn ?what ?specializer) ?what))
+
+(<== (collectionTypeOf ?col ?col)
+     (groundExpression ?col)
+     (atomicTerm ?col))
+
+
+(isa propositionEnablesProcessType TernaryPredicate)  ; may need another argument
+(arity propositionEnablesProcessType 3)
+(arg1Isa propositionEnablesProcessType ModelFragmentType)
+(arg2Isa propositionEnablesProcessType Set-Mathematical)
+(arg3Isa propositionEnablesProcessType CycLSentence-Assertible)
+(comment propositionEnablesProcessType "(propositionEnablesProcessType ?process-type ?bindings ?proposition) means achievable ?proposition (partially) activates ?process-type.")
+
+;;; This does *not* look at ordinal conditions, since those will result in 
+;;; quantitative subgoals, rather than propositional goals.
+(<== (propositionEnablesProcessType ?process-type ?bindings ?proposition)
+     (groundExpression ?process-type)
+     (groundExpression ?bindings)
+     (evaluate ?bound-roles
+       (ListToSetFn (MapFunctionOverList Arg0Fn ?bindings)))  ; apparently this will take a set too.
+     (evaluate ?open-bindings
+       (TheClosedRetrievalSetOf (?role ?free-var)
+         (and (participantType ?process-type ?role ?type)
+              (not (elementOf ?role ?bound-roles))
+              (evaluate ?free-var (SymbolConcatenateFn (TheList "?" ?role))))))
+     (numAnswers 1 
+        (conjunctifyParticipantConstraints ?process-type ?conj-prop))
+     ;; How do we do the equivalent of fact-mentions at the knowledge level?  termFormulas
+     (everySatisfies ?bound-role ?bound-roles (termFormulas ?conj-prop ?bound-role))
+     ;; What is this testing for?
+     ;(uninferredSentence
+     ;  (someSatisfies ?free-role ?roles (termFormulas ?conj-prop ?free-role)))
+     (instantiatePropositionWithParticipants ?process-type ?conj-prop ?bindings ?open-bindings ?conj-proposition)
+     (simplifiedConjunction ?conj-proposition ?proposition))
+     
+(isa conjunctifyParticipantConstraints BinaryPredicate)
+(arity conjunctifyParticipantConstraints 2)
+(arg1Isa conjunctifyParticipantConstraints ModelFragmentType)
+(arg2Isa conjunctifyParticipantConstraints CycLFormula)
+(comment conjunctifyParticipantConstraints "(conjunctifyParticipantConstraints ?model-fragment-type ?constraint) binds ?constraint to a single (flat) conjunction of participant constraints.")
+
+
+;;; How do we deal with disjuctions inside participant constraints?
+(<== (conjunctifyParticipantConstraints ?process-type ?conjunction)
+     (evaluate ?conjunction
+       (MakeFormulaFn and
+         (TheClosedRetrievalSetOf ?conj
+           (and (participantConstraint ?process-type ?constraint)
+                ;; flatten embedded conjuncts:
+                (enumeratedConjuncts ?constraint ?conj))))))
+                
+(isa enumeratedConjuncts BinaryPredicate)
+
+(<== (enumeratedConjuncts ?stmt ?conj)
+     (operatorFormulas and ?stmt)
+     (formulaArgument ?stmt ?n ?conj))
+     
+(<== (enumeratedConjuncts ?stmt ?stmt)
+     (operatorFormulas ?pred ?stmt)
+     (different ?pred and))
+     
+(isa instantiatePropositionWithParticipants Predicate)
+(arity instantiatePropositionWithParticipants 5)
+(comment instantiatePropositionWithParticipants "(instantiatePropositionWithParticipants ?process-type ?raw-prop ?bindings ?open-bindings ?proposition) intelligently applies substitutions to ?raw-prop.")
+
+(<== (instantiatePropositionWithParticipants ?process-type ?conj-prop ?bindings ?open-bindings ?proposition)
+     (someArgumentHasPredicate ?conj-prop activeMF)
+     (evaluate ?proposition (SublisFn ?bindings ?conj-prop)))
+
+(<== (instantiatePropositionWithParticipants ?process-type ?conj-prop ?external-bindings ?open-bindings ?proposition)
+     (noArgumentHasPredicate ?conj-prop activeMF)
+     (bindingsMentionedIn ?external-bindings ?conj-prop ?mentioned-bindings) ; filter bindings
+     (transformedBindings ?mentioned-bindings ?subs-to-variables)
+     (participantRoleIsas ?process-type ?open-bindings ?isas)
+     (evaluate ?lifted-bindings (SetOrCollectionUnion ?subs-to-variables ?open-bindings))
+     (evaluate ?clauses (FormulaArgListFn (SublisFn ?lifted-bindings ?conj-prop)))
+     (evaluate ?blist (SetToListFn ?external-bindings))
+     (transformedConjuncts ?blist ?conjunctions)  ; a flat list of conjuncts from parent goal
+     (evaluate ?proposition
+       (MakeFormulaFn and
+         (JoinListsFn ?conjunctions ?clauses ?isas))))
+
+(isa bindingsMentionedIn TernaryPredicate)
+(arity bindingsMentionedIn 3)
+
+;;; Filter all bindings not mentioned in ?prop:
+(<== (bindingsMentionedIn ?all-bindings ?prop ?bindings)
+     (evaluate ?bindings
+       (TheClosedRetrievalSetOf ?pair
+         (and (elementOf ?pair ?all-bindings)
+              (unifies (?role ?binding) ?pair)
+              (termFormulas ?prop ?role)))))  ; This is the wrong thing
+
+(isa participantRoleIsas TernaryPredicate)
+(arity participantRoleIsas 3)
+
+;;; Construct a list of isa statements corresponding to the
+;;; variables in the binding list.  E.g., (TheSet (doneBy ?doneBy))
+;;; would get lifted to something like (TheList (isa ?doneBy IntelligentAgent))
+;;; depending on the participant types for the given process type.
+(<== (participantRoleIsas ?process-type ?open-bindings ?isa-list)
+     (evaluate ?isa-list
+       (SetToListFn
+         (TheClosedRetrievalSetOf ?isa
+           (and (elementOf ?pair ?open-bindings)
+                (unifies (?role ?v) ?pair) ; destructure
+                (numAnswers 1
+                  (participantType ?process-type ?role ?type))
+                (unifies ?isa (isa ?v ?type)))))))
+
+(isa transformedBindings BinaryPredicate)
+(arity transformedBindings 2)
+
+;;; Horrible names.  Need to fix.
+(<== (transformedBindings ?bindings ?transformed)
+     (evaluate ?transformed
+       (TheClosedRetrievalSetOf ?transformed-binding
+         (and (elementOf ?pair ?bindings)
+              (unifies (?name ?binding) ?pair) ; destructure
+              (unifies (GenericInstanceFn      ; destructure some more
+                          (CollectionSubsetFn ?type
+                            (TheSetOf ?var% ?set-spec)))
+                       ?binding)
+              (unifies ?transformed-binding (?name ?var%)))))) ; construct new binding
+              
+(isa transformedConjuncts BinaryPredicate)
+
+;;; hunh?
+(<== (transformedConjuncts ?bindings ?transformed)
+     (evaluate ?first (FirstInListFn ?bindings))
+     (evaluate ?rest (RestOfListFn ?bindings))
+     (transformedConjunct ?first ?first-conjuncts)
+     (transformedConjuncts ?rest ?rest-conjuncts)
+     (evaluate ?transformed (JoinListsFn ?first-conjuncts ?rest-conjuncts)))
+     
+(<== (transformedConjuncts (TheList) (TheList)))
+
+(isa transformedConjunct BinaryPredicate)
+
+(<== (transformedConjunct ?pair ?list)
+     (unifies (?name ?binding) ?pair)
+     (unifies (GenericInstanceFn
+                (CollectionSubsetFn ?type
+                  (TheSetOf ?var% ?set-spec)))
+             ?binding)
+     (conjunction ?set-spec ?conj-set-spec)
+     (evaluate ?list (FormulaArgListFn ?conj-set-spec)))
+
+(isa subgoalConditionsProcessType TernaryPredicate)
+(arity subgoalConditionsProcessType 3)
+(arg1Isa subgoalConditionsProcessType ModelFragmentType)
+(arg2Isa subgoalConditionsProcessType Set-Mathematical)
+(arg3Isa subgoalConditionsProcessType Goal)
+(comment subgoalConditionsProcessType "(subgoalConditionsProcessType ?mf-type ?bindings ?subgoal) binds ?subgoal to quantity goal(s) that will enable a model instance to become active.")
+
+(<== (subgoalConditionsProcessType ?mf-type ?bindings ?subgoal)
+     (groundExpression ?mf-type)
+     (groundExpression ?bindings)
+     (conditionOf-TypeType ?mf-type ?quantity-condition)
+     (operatorFormulas ?binrel ?quantity-condition)
+     (formulaArgument ?quantity-condition ?n ?q-spec) ; the entity in q-spec will be a role relation.
+     (unifies ((?functor ?arg) ?e-spec) ?q-spec)
+     (elementOf ?functor (TheSet MeasurableQuantityFn QPQuantityFn)) ; filter
+     (liftQspecViaModelFragmentType ?mf-type ?e-spec ?ent)
+     (enablingSubgoalForQuantity ?binrel ?n ((?functor ?arg) ?ent) ?subgoal))
+     
+(isa liftQspecViaModelFragmentType TernaryPredicate)
+(arity liftQspecViaModelFragmentType 3)
+(arg1Isa liftQspecViaModelFragmentType ModelFragmentType)
+(arg2Isa liftQspecViaModelFragmentType BinaryRolePredicate)
+(arg3Isa liftQspecViaModelFragmentType CycLTerm)
+(comment liftQspecViaModelFragmentType "(liftQspecViaModelFragmentType ?mf-type ?role ?entity-specification) constructs a collection specifier out of the role and particpant constraints on ?model-fragment-type.")
+
+(<== (liftQspecViaModelFragmentType ?mf-type ?role ?espec)
+     (numAnswers 1
+       (participantType ?mf-type ?role ?type))
+     (liftedCollectionSpecifier ?mf-type ?role ?type ?collection-specifier)
+     (unifies ?espec (GenericInstanceFn ?collection-specifier)))
+
+(isa liftedCollectionSpecifier Predicate)
+(arity liftedCollectionSpecifier 4)
+(comment liftedCollectionSpecifier "(liftedCollectionSpecifier ?mf-type ?role ?type ?collection-specifier) lifts a type-level process model role into a CollectionSubsetFn with all the constraints from participantConstraints.")
+
+;;; degenerate case:  
+(<== (liftedCollectionSpecifier ?mf-type ?role ?type ?type)
+     (uninferredSentence 
+       (and (participantConstraint ?mf-type ?constraint)
+            (termFormulas ?constraint ?role))))
+
+(<== (liftedCollectionSpecifier ?mf-type ?role ?type ?c-spec)
+     (trueSentence
+       (and (participantConstraint ?mf-type ?constraint)
+            (termFormulas ?constraint ?role)))
+     (evaluate ?isa-stmts
+       (SetToListFn
+         (TheClosedRetrievalSetOf (?stmt)
+           (and (participantType ?mf-type ?any-role ?any-type)
+                (unifies ?stmt (isa ?any-role ?any-type))))))
+     (unifies ?varlist (TheList ?v1 ?v2 ?v3 ?v4 ?v5 ?v6 ?v7))
+     (evaluate ?bindings
+       (TheClosedRetrievalSetOf ?pair
+         (and (formulaArgument ?isa-stmts ?n ?isa)
+              (formulaArgument ?isa 1 ?role)
+              (formulaArgument ?varlist ?n ?var)
+              (unifies ?pair (?role ?var)))))
+     (evaluate ?reln-stmts
+       (SetToListFn
+         (TheClosedRetrievalSetOf ?stmt
+           (participantConstraint ?mf-type ?stmt))))
+     (evaluate ?body 
+       (MakeFormulaFn and 
+         (JoinListsFn ?isa-stmts ?relns-stmts)))
+     (unifies ?raw-spec
+       (CollectionSubsetFn ?type
+         (TheSetOf ?role
+           ?body)))
+     (evaluate ?c-spec
+       (SublisFn ?bindings ?raw-spec)))
+              
+
+(isa enablingSubgoalForQuantity Predicate)
+(arity enablingSubgoalForQuantity 4)
+(comment enablingSubgoalForQuantity "(enablingSubgoalForQuantity ?binrel ?argnum ?quantity ?subgoal) binds ?subgoal to the appropriate quantity goal to enable the condition.")
+
+(<== (enablingSubgoalForQuantity greaterThan 1 ?q (MaximizeFn ?q)))
+(<== (enablingSubgoalForQuantity lessThan    1 ?q (MinimizeFn ?q)))
+(<== (enablingSubgoalForQuantity greaterThan 2 ?q (MinimizeFn ?q)))
+(<== (enablingSubgoalForQuantity lessThan    2 ?q (MaximizeFn ?q)))   
+     
+     
+
+;(propositionEnablesProcessType CityGrowthProcess3
+; (TheSet
+;  (objectOfStateChange
+;   (GenericInstanceFn
+;    (CollectionSubsetFn FreeCiv-City
+;     (TheSetOf ?var1
+;      (and (isa ?var1 FreeCiv-City)
+;           (ownsCity (IndexicalFn currentRole) ?var1)))))))
+; ?prop)
+
+;(participantConstraint CityGrowthProcess3
+;  (not (activeMF (MFInstanceFn CityDisorderState (TheList objectOfStateChange)))))
+
+
+
+;;; -----------------------------------------------------
+;;; Support for subgoaling:
+
+(isa quantityConditionedExistence BinaryPredicate)
+(arity quantityConditionedExistence 2)
+(comment quantityConditionedExistence "(quantityConditionedExistence ?entity-type ?condition) binds a resolved ?condition that establishes existence of ?entity")
+
+;;; Entity type may be a (GenericInstanceFn (CollectionSubsetFn <type> (TheSetOf <var> ...)))
+;;; statement.
+;;; Look for a spec of QuantityConditionedExistence
+;;; where actors participant subsumes entity-type.
+;;; Then look up each of the conditions, and resolve actors with entity-spec.
+(<== (quantityConditionedExistence ?entity-spec ?condition)
+     (numAnswers 1
+       (entityType ?entity-spec ?entity-type))
+     (numAnswers 1
+       (entityTypeCollection ?entity-type ?coll))
+     (genls ?mf QuantityConditionedExistence)
+     (numAnswers 1
+       (participantType ?mf actors ?supercol))
+     (genls ?coll ?supercol)
+     (cacheComplete
+       (lookupOnly
+         (conditionOf-TypeType ?mf ?raw-cond)))
+     (numAnswers 1 
+       (mergedMFCondition ?entity-type ?raw-cond actors ?condition)))
+
+(isa entityType BinaryPredicate)
+(arg1Isa entityType Individual)
+(arg2Isa entityType Collection)
+
+(<== (entityType (GenericInstanceFn ?etype) ?etype))
+(<== (entityType ?etype ?etype)
+     (not (variableExpression ?etype))
+     (not (unifies ?etype (GenericInstanceFn ?type))))
+     
+
+(isa entityTypeCollection BinaryPredicate)
+(arg1Isa entityTypeCollection CycLTerm)
+(arg2Isa entityTypeCollection Collection)
+(comment entityTypeCollection "(entityTypeCollection ?entity-type ?collection) binds ?collection to the most-specific reified collection denoted by ?entity-type.")
+
+(<== (entityTypeCollection (CollectionSubsetFn ?collection ?set-spec) ?collection))
+
+(<== (entityTypeCollection ?coll ?coll)
+     (groundExpression ?coll)
+     (atomicTerm ?coll))
+
+(<== (entityTypeCollection ?coll ?coll)
+     (not (variableExpression ?coll))
+     (not (atomicTerm ?coll))
+     (natFunction ?coll ?function)
+     (different ?function CollectionSubsetFn)
+     (uninferredSentence
+       (isa ?function IndeterminateTermDenotingFunction)))  ; ie, GenericInstanceFn, SomeFn, EveryFn ...
+
+
+(isa mergedMFCondition QuaternaryPredicate)
+(arity mergedMFCondition 4)
+
+;;; Example: 
+;;; (CollectionSubsetFn FreeCiv-Player
+;;;    (TheSetOf ?opponent
+;;;      (opponentsInConflict (IndexicalFn currentRole) ?opponent)))
+;;; merged with:
+;;; (greaterThan ((MeasurableQuantityFn cardinalityOf)
+;;;                 (CollectionSubsetFn FreeCiv-City
+;;;                   (TheSetOf ?city
+;;;                     (cityOwner ?city ?opponent))))
+;;;                0)
+(<== (mergedMFCondition ?entity-type ?raw-condition ?role ?condition)
+     (unifies (?numeric-pred ((MeasurableQuantityFn cardinalityOf) ?arg-etype) ?value) ?raw-condition)
+     (unifies (CollectionSubsetFn ?coll1 (TheSetOf ?var1 ?prop1)) ?entity-type)
+     (evaluate ?lifted-etype (SublisFn (TheSet (?role ?var1)) ?arg-etype))
+     (unifies (CollectionSubsetFn ?coll2 (TheSetOf ?var2 ?prop2)) ?lifted-etype)
+     (numAnswers 1 (conjunctList ?prop1 ?proplist1))
+     (numAnswers 1 (conjunctList ?prop2 ?proplist2))
+     (evaluate ?unchecked-prop-list (JoinListsFn ?proplist2 ?proplist1))
+     (numAnswers 1
+       (ensureTypeFilter (isa ?var1 ?coll1) ?unchecked-prop-list ?typechecked-prop-list1))
+     (numAnswers 1
+       (ensureTypeFilter (isa ?var2 ?coll2) ?typechecked-prop-list1 ?typechecked-prop-list2))
+     (evaluate ?merged-prop (MakeFormulaFn and ?typechecked-prop-list2))
+     (unifies ?condition 
+              (?numeric-pred 
+               ((MeasurableQuantityFn cardinalityOf)
+                (CollectionSubsetFn ?coll2 (TheSetOf ?var2 ?merged-prop)))
+               ?value)))
+
+(<== (mergedMFCondition ?entity-type ?raw-condition ?role ?condition)
+     (unifies (?numeric-pred ((MeasurableQuantityFn cardinalityOf) ?arg-etype) ?value) ?raw-condition)
+     (unifies (IndexicalFn ?pred) ?entity-type)
+     (evaluate ?lifted-etype (SublisFn (TheSet (?role ?entity-type)) ?arg-etype))
+     (unifies ?condition
+              (?numeric-pred
+               ((MeasurableQuantityFn cardinalityOf) ?lifted-etype)
+               ?value)))
+     
+(isa counterQuantityGoal BinaryPredicate)
+(arg1Isa counterQuantityGoal CycLSentence-Assertible)
+(arg2Isa counterQuantityGoal Goal)
+
+;;; Given a numeric quantity condition, create a goal to prevent that condition.
+(<== (counterQuantityGoal (greaterThan ?quantity ?value) ?subgoal)
+     (unifies ?subgoal (MinimizeFn ?quantity)))
+
+(<== (counterQuantityGoal (greaterThanOrEqualTo ?quantity ?value) ?subgoal)
+     (unifies ?subgoal (MinimizeFn ?quantity)))
+     
+(<== (counterQuantityGoal (lessThan ?quantity ?value) ?subgoal)
+     (unifies ?subgoal (MaximizeFn ?quantity)))
+
+(<== (counterQuantityGoal (lessThanOrEqualTo ?quantity ?value) ?subgoal)
+     (unifies ?subgoal (MaximizeFn ?quantity)))
+     
+;;; Needs to borrow some ideas from combineEntityProp.
+
+;;;
+;;; End of File
+;;;

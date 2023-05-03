@@ -1,0 +1,65 @@
+;;;
+;;; diagnosis.meld
+;;;
+
+
+(in-microtheory DiagnosisMt)
+
+(isa observation BinaryPredicate)
+
+;;; The causal rules
+
+; Flu causes fever
+(<== (symptom ?patient Fever)
+     (disease ?patient Flu))
+
+;;; Measles cause spots
+(<== (symptom ?patient Spots)
+     (disease ?patient Measles))
+
+;;; Strep causes cough
+(<== (symptom ?patient Cough)
+     (disease ?patient Strep))
+
+;;; Flu causes cough
+(<== (symptom ?patient Cough)
+     (disease ?patient Flu))
+
+
+;;; The diagnosis rule
+
+;;; What's happening here is that we're
+;;; querying the observations so that we
+;;; can make ground queries for symptoms.
+;;; Although we know that the symptoms
+;;; hold in the world, the system doesn't,
+;;; so it tries to prove them by backchaining to 
+;;; diseases.
+;;; By restricting the abducible predicate 
+;;; to be disease, we prevent it from assuming
+;;; the symptom, so it derives the diseases 
+;;; that best explain the symptoms.
+       
+(<== (diagnosis ?patient ?disease)
+     (withAbductivePolicy MinimalAssumptions
+       (withAbductivePredicates (disease)
+         (abductiveDiagnosis ?patient ?symptom)))
+     (lookupOnly
+       (disease ?patient ?disease)))
+
+(<== (abductiveDiagnosis ?patient ?symptom)
+     (observation ?patient ?symptom)
+     (symptom ?patient ?symptom))
+
+
+(in-microtheory PatientStatsMt)
+(genlMt PatientStatsMt DiagnosisMt)
+
+(observation Tom Fever)
+(observation Tom Cough)
+
+;;;cl-user(54): (fire:query '(diagnosis Tom ?what) :context 'PatientStatsMt :response :all)
+;;;(((?what . Flu)))
+;;;((ist-Information PatientStatsMt (diagnosis Tom Flu)))
+
+

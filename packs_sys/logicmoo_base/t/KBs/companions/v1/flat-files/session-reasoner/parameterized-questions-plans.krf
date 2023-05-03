@@ -1,0 +1,541 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: parameterized-questions-plans.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: February 2, 2013 05:44:01
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Session-ReasonerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(isa askParameterizedQuestionsAboutFacts ComplexActionPredicate)
+(arity askParameterizedQuestionsAboutFacts 5)
+(arg1Isa askParameterizedQuestionsAboutFacts Microtheory)
+(arg2Isa askParameterizedQuestionsAboutFacts Microtheory)
+(arg3Isa askParameterizedQuestionsAboutFacts Microtheory)
+(arg4Isa askParameterizedQuestionsAboutFacts List)
+(arg5Isa askParameterizedQuestionsAboutFacts Thing)
+(comment askParameterizedQuestionsAboutFacts "(askParameterizedQuestionsAboutFacts ?ontology-mt ?storage-mt ?search-mt ?list-of-facts ?experiment-name) asks and stores the results
+of asking parameterized questions about the facts in ?list-of-facts. Its behavior is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+(isa askParameterizedQuestionsAboutMts ComplexActionPredicate)
+(arity askParameterizedQuestionsAboutMts 5)
+(arg1Isa askParameterizedQuestionsAboutMts Microtheory)
+(arg2Isa askParameterizedQuestionsAboutMts Microtheory)
+(arg3Isa askParameterizedQuestionsAboutMts Microtheory)
+(arg4Isa askParameterizedQuestionsAboutMts Microtheory)
+(arg5Isa askParameterizedQuestionsAboutMts Thing)
+(comment askParameterizedQuestionsAboutMts "(askParameterizedQuestionsAboutMts ?ontology-mt ?storage-mt ?search-mt ?mt-spindle ?experiment-name) asks and stores the results
+of asking parameterized questions about the contents of the microtheories in ?mt-spindle. Its behavior is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+(isa askBestPQsAboutMts ComplexActionPredicate)
+(arity askBestPQsAboutMts 7)
+(arg1Isa askBestPQsAboutMts Microtheory)
+(arg2Isa askBestPQsAboutMts Microtheory)
+(arg3Isa askBestPQsAboutMts Microtheory)
+(arg4Isa askBestPQsAboutMts Microtheory)
+(arg5Isa askBestPQsAboutMts Thing)
+(arg6Isa askBestPQsAboutMts Number)
+(arg7Isa askBestPQsAboutMts BooleanParameter)
+(comment askBestPQsAboutMts "(askBestPQsAboutMts ?ontology-mt ?storage-mt ?search-mt
+?mt-spindle ?experiment-name ?top-n ?use-specified) asks and stores the results
+of asking parameterized questions about the contents of the microtheories in ?mt-spindle. 
+Its behavior is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+(isa askParameterizedQuestionsAboutMtsForSegmentation ComplexActionPredicate)
+(arity askParameterizedQuestionsAboutMtsForSegmentation 6)
+(arg1Isa askParameterizedQuestionsAboutMtsForSegmentation Microtheory)
+(arg2Isa askParameterizedQuestionsAboutMtsForSegmentation Microtheory)
+(arg3Isa askParameterizedQuestionsAboutMtsForSegmentation Microtheory)
+(arg4Isa askParameterizedQuestionsAboutMtsForSegmentation Microtheory)
+(arg5Isa askParameterizedQuestionsAboutMtsForSegmentation Thing)
+(arg6Isa askParameterizedQuestionsAboutMtsForSegmentation Thing)
+(comment askParameterizedQuestionsAboutMtsForSegmentation "(askParameterizedQuestionsAboutMtsForSegmentation 
+?ontology-mt ?storage-mt ?search-mt ?mt-spindle ?current-experiment-name ?expt-that-generated-segs) sets
+some experimentation parameters, then asks and stores the results
+of asking parameterized questions about the contents of the microtheories in ?mt-spindle. 
+Its behavior is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+(isa askPQAboutBestOfMtsForSegmentation ComplexActionPredicate)
+(arity askPQAboutBestOfMtsForSegmentation 8)
+(arg1Isa askPQAboutBestOfMtsForSegmentation Microtheory)
+(arg2Isa askPQAboutBestOfMtsForSegmentation Microtheory)
+(arg3Isa askPQAboutBestOfMtsForSegmentation Microtheory)
+(arg4Isa askPQAboutBestOfMtsForSegmentation Microtheory)
+(arg5Isa askPQAboutBestOfMtsForSegmentation Thing)
+(arg6Isa askPQAboutBestOfMtsForSegmentation Thing)
+(arg7Isa askPQAboutBestOfMtsForSegmentation Number)
+(arg8Isa askPQAboutBestOfMtsForSegmentation BooleanParameter)
+(comment askPQAboutBestOfMtsForSegmentation "(askPQAboutBestOfMtsForSegmentation 
+?ontology-mt ?storage-mt ?search-mt ?mt-spindle ?current-experiment-name ?expt-that-generated-segs
+?top-n ?use-specified) sets some experimentation parameters, then asks and stores the results
+of asking parameterized questions about the contents of the microtheories in ?mt-spindle. Its behavior is
+dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt. If ?top-n isn't zero, it will ask about
+the most-mentioned N entities. If ?use-specified is true, it will also ask about the topicEntityInReading
+entities for the reading.")
+
+(isa askPQAboutBestOfMtListForSegmentation ComplexActionPredicate)
+(arity askPQAboutBestOfMtListForSegmentation 8)
+(arg1Isa askPQAboutBestOfMtListForSegmentation Microtheory)
+(arg2Isa askPQAboutBestOfMtListForSegmentation Microtheory)
+(arg3Isa askPQAboutBestOfMtListForSegmentation Microtheory)
+(arg4Isa askPQAboutBestOfMtListForSegmentation List)
+(arg5Isa askPQAboutBestOfMtListForSegmentation Thing)
+(arg6Isa askPQAboutBestOfMtListForSegmentation Thing)
+(arg7Isa askPQAboutBestOfMtListForSegmentation Number)
+(arg8Isa askPQAboutBestOfMtListForSegmentation BooleanParameter)
+(comment askPQAboutBestOfMtListForSegmentation "(askPQAboutBestOfMtListForSegmentation 
+?ontology-mt ?storage-mt ?search-mt ?mt-spindle-list ?current-experiment-name ?expt-that-generated-segs
+?top-n ?use-specified) sets some experimentation parameters, then asks and stores the results
+of asking parameterized questions about the contents of the microtheories in ?mt-spindle. Its behavior is
+dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt. If ?top-n isn't zero, it will ask about
+the most-mentioned N entities. If ?use-specified is true, it will also ask about the topicEntityInReading
+entities for the reading.")
+
+(isa entitiesMentionedInMts Predicate)
+(arity entitiesMentionedInMts 2)
+(arg1Isa entitiesMentionedInMts List)
+(arg2Isa entitiesMentionedInMts Thing)
+(comment entitiesMentionedInMts "(entitiesMentionedInMts ?list-of-mts ?entities) creates a list of entities that are mentioned in the list of 
+microtheories (the union of the mentioned entities, not the intersection). It is intended to be used as an outsourced predicate.")
+
+;;; To write
+(isa entitiesMentionedInSpindle Predicate)
+(arity entitiesMentionedInSpindle 2)
+(arg1Isa entitiesMentionedInSpindle Microtheory)
+(arg2Isa entitiesMentionedInSpindle Thing)
+(comment entitiesMentionedInSpindle "(entitiesMentionedInSpindle ?spindle ?entities) creates a list of entities that are mentioned in the spindle
+ (the union of the mentioned entities, not the intersection). It is intended to be used as an outsourced predicate.")
+
+;;;(preconditionForMethod
+;;; (outsourcedOnly (entitiesMentionedInSpindle ?spindle-mt ?entities))
+;;; (methodForAction
+;;;  (askParameterizedQuestionsAboutMts ?ontology-mt ?storage-mt ?search-mt ?spindle-mt ?experiment-name)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doForEach ?next-entity ?entities
+;;;               (askAllParameterizedQuestionsAboutEntity ?ontology-mt ?storage-mt ?search-mt ?next-entity ?entities ?experiment-name))))))
+
+(preconditionForMethod
+ (outsourcedOnly (entitiesMentionedInSpindle ?spindle-mt ?entities))
+ (methodForAction
+  (askParameterizedQuestionsAboutMts ?ontology-mt ?storage-mt ?search-mt ?spindle-mt ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?next-entity ?entities
+               (askAllParameterizedQuestionsAboutEntity ?ontology-mt ?storage-mt ?search-mt ?next-entity ?entities ?experiment-name))))))
+
+
+
+
+(isa askAllParameterizedQuestionsAboutEntity ComplexActionPredicate)
+(arity askAllParameterizedQuestionsAboutEntity 6)
+(arg1Isa askAllParameterizedQuestionsAboutEntity Microtheory)
+(arg2Isa askAllParameterizedQuestionsAboutEntity Microtheory)
+(arg3Isa askAllParameterizedQuestionsAboutEntity Microtheory)
+(arg4Isa askAllParameterizedQuestionsAboutEntity Thing)
+(arg5Isa askAllParameterizedQuestionsAboutEntity Thing)
+(arg6Isa askAllParameterizedQuestionsAboutEntity Thing)
+(comment askAllParameterizedQuestionsAboutEntity "(askAllParameterizedQuestionsAboutEntity ?ontology-mt ?storage-mt ?search-mt ?entity ?type-of-entity ?experiment-name) asks and stores the results
+of asking parameterized questions about ?entity. (This list is subject to change.) The behavior of this plan is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+(isa listOfApplicablePqsForEntity Predicate)
+(arity listOfApplicablePqsForEntity 3)
+(arg1Isa listOfApplicablePqsForEntity Microtheory)
+(arg2Isa listOfApplicablePqsForEntity Thing)
+(arg3Isa listOfApplicablePqsForEntity Thing)
+(comment listOfApplicablePqsForEntity "(listOfApplicablePqsForEntity ?ontology-mt ?entity ?list-of-pqs) creates a list of parameterized question classes that are 
+usable with ?entity when used as an outsourced predicate.")
+
+(isa listOfApplicableEntityPairPQsInListInContext Predicate)
+(arity listOfApplicableEntityPairPQsInListInContext 5)
+(arg1Isa listOfApplicableEntityPairPQsInListInContext Microtheory)
+(arg2Isa listOfApplicableEntityPairPQsInListInContext Thing)
+(arg3Isa listOfApplicableEntityPairPQsInListInContext Thing)
+(arg4Isa listOfApplicableEntityPairPQsInListInContext Microtheory)
+(arg5Isa listOfApplicableEntityPairPQsInListInContext Thing)
+(comment listOfApplicableEntityPairPQsInListInContext "(listOfApplicableEntityPairPQsInListInContext 
+?ontology-mt ?entity ?entities ?context ?list-of-pairs-and-pqs) creates a list of parameterized question classes that are 
+usable with pairs of entities from ?entities when used as an outsourced predicate. They look like
+(TheList ?entity ?onter-entity ?pq-class). The context is used to determine which ones are interesting to compare.")
+
+;;; This version uses solve
+(preconditionForMethod
+ (and
+      (listOfApplicablePqsForEntity ?ontology-mt ?entity ?list-of-pqs)
+      (listOfApplicableEntityPairPQsInListInContext 
+       ?ontology-mt ?entity ?all-entities ?search-mt ?list-of-pairs-and-pqs))
+ (methodForAction
+  (askAllParameterizedQuestionsAboutEntity ?ontology-mt ?storage-mt ?search-mt ?entity ?all-entities ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?parameterized-question ?list-of-pqs
+               (askNextParameterizedQuestionQueriesAboutEntity 
+                ?ontology-mt ?storage-mt ?search-mt ?entity ?parameterized-question ?experiment-name))
+    (doForEach ?pair-pq-triple ?list-of-pairs-and-pqs
+               (askNextBinaryParameterizedQuestionForTriple 
+                ?ontology-mt ?storage-mt ?search-mt ?pair-pq-triple ?experiment-name))
+    ))))
+
+(askNextBinaryParameterizedQuestionForTriple ?ontology-mt ?storage-mt ?search-mt ?entities ?experiment-name)
+(isa askNextBinaryParameterizedQuestionForTriple ComplexActionPredicate)
+(arity askNextBinaryParameterizedQuestionForTriple 5)
+(arg1Isa askNextBinaryParameterizedQuestionForTriple Microtheory)
+(arg2Isa askNextBinaryParameterizedQuestionForTriple Microtheory)
+(arg3Isa askNextBinaryParameterizedQuestionForTriple Microtheory)
+(arg4Isa askNextBinaryParameterizedQuestionForTriple List)
+(arg5Isa askNextBinaryParameterizedQuestionForTriple Thing)
+(comment askNextBinaryParameterizedQuestionForTriple "(askNextBinaryParameterizedQuestionForTriple 
+?ontology-mt ?storage-mt ?search-mt (TheList ?entity1 ?entity2 ?pqType) ?experiment-name) asks and stores the results
+of asking ?pqType about ?entity1 and ?entity2. The behavior 
+of this plan is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+(isa askNextParameterizedQuestionQueriesAboutEntity ComplexActionPredicate)
+(arity askNextParameterizedQuestionQueriesAboutEntity 6)
+(arg1Isa askNextParameterizedQuestionQueriesAboutEntity Microtheory)
+(arg2Isa askNextParameterizedQuestionQueriesAboutEntity Microtheory)
+(arg3Isa askNextParameterizedQuestionQueriesAboutEntity Microtheory)
+(arg4Isa askNextParameterizedQuestionQueriesAboutEntity Thing)
+(arg5Isa askNextParameterizedQuestionQueriesAboutEntity ParameterizedQuestionType)
+(arg6Isa askNextParameterizedQuestionQueriesAboutEntity Thing)
+(comment askNextParameterizedQuestionQueriesAboutEntity "(askNextParameterizedQuestionQueriesAboutEntity ?ontology-mt ?storage-mt ?search-mt ?entity ?parameterized-question ?experiment-name)
+asks all of the queries associated with ?parameterized-question about ?entity. The information about what questions to ask comes from ?ontology-mt. The results are stored in ?storage-mt.
+Answers are queried for in the context ?search-mt.")
+
+(isa generateParameterizedQuestionQueries Predicate)
+(arity generateParameterizedQuestionQueries 4)
+(arg1Isa generateParameterizedQuestionQueries Microtheory)
+(arg2Isa generateParameterizedQuestionQueries Thing)
+(arg3Isa generateParameterizedQuestionQueries ParameterizedQuestionType)
+(arg4Isa generateParameterizedQuestionQueries Set)
+(comment generateParameterizedQuestionQueries "(generateParameterizedQuestionQueries ?ontology-mt ?entity ?parameterized-question ?solve-formats) creates a list of actual
+solve questions to ask about ?entity. It is intended to be used as an outsourced predicate.")
+
+(isa generateParameterizedQuestionQueries Predicate)
+(arity generateParameterizedQuestionQueries 4)
+(arg1Isa generateParameterizedQuestionQueries Microtheory)
+(arg2Isa generateParameterizedQuestionQueries Thing)
+(arg3Isa generateParameterizedQuestionQueries ParameterizedQuestionType)
+(arg4Isa generateParameterizedQuestionQueries Set)
+(comment generateParameterizedQuestionQueries "(generateParameterizedQuestionQueries ?ontology-mt ?entity ?parameterized-question ?solve-formats) creates a list of actual
+solve questions to ask about ?entity. It is intended to be used as an outsourced predicate.")
+
+
+(preconditionForMethod
+ (outsourcedOnly (generateParameterizedQuestionQueries ?ontology-mt ?entity ?parameterized-question ?parameterized-question-solve-formats))
+ (methodForAction
+  (askNextParameterizedQuestionQueriesAboutEntity ?ontology-mt ?storage-mt ?search-mt ?entity ?parameterized-question ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?parameterized-question-solve-format ?parameterized-question-solve-formats
+               (doTell (solveAndRecordPPQ ?ontology-mt ?storage-mt ?search-mt 
+                                          ?entity ?parameterized-question 
+                                          ?parameterized-question-solve-format ?experiment-name)))))))
+
+
+(isa generateBinaryParameterizedQuestionQueries Predicate)
+(arity generateBinaryParameterizedQuestionQueries 5)
+(arg1Isa generateBinaryParameterizedQuestionQueries Microtheory)
+(arg2Isa generateBinaryParameterizedQuestionQueries Thing)
+(arg3Isa generateBinaryParameterizedQuestionQueries Thing)
+(arg4Isa generateBinaryParameterizedQuestionQueries ParameterizedQuestionType)
+(arg5Isa generateBinaryParameterizedQuestionQueries Set)
+(comment generateBinaryParameterizedQuestionQueries "(generateBinaryParameterizedQuestionQueries
+ ?ontology-mt ?entity1 ?entity2 ?parameterized-question ?solve-formats) creates a list of actual
+solve questions to ask about ?entity. It is intended to be used as an outsourced predicate.")
+
+(preconditionForMethod
+ (outsourcedOnly (generateBinaryParameterizedQuestionQueries ?ontology-mt 
+                   ?entity1 ?entity2 ?parameterized-question ?parameterized-question-solve-formats))
+ (methodForAction
+  (askNextBinaryParameterizedQuestionForTriple 
+   ?ontology-mt ?storage-mt ?search-mt (TheList ?entity1 ?entity2 ?parameterized-question) ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?parameterized-question-solve-format ?parameterized-question-solve-formats
+               (doTell (solveAndRecordPPQ ?ontology-mt ?storage-mt ?search-mt 
+                                          (TheList ?entity1 ?entity2) ?parameterized-question 
+                                          ?parameterized-question-solve-format ?experiment-name)))))))
+
+s
+;;;; We use solve now, so this is out of date.
+(isa askNextParameterizedQuestionQuery ComplexActionPredicate)
+(arity askNextParameterizedQuestionQuery 7)
+(arg1Isa askNextParameterizedQuestionQuery Microtheory)
+(arg2Isa askNextParameterizedQuestionQuery Microtheory)
+(arg3Isa askNextParameterizedQuestionQuery Microtheory)
+(arg4Isa askNextParameterizedQuestionQuery Thing)
+(arg5Isa askNextParameterizedQuestionQuery ParameterizedQuestionType)
+(arg6Isa askNextParameterizedQuestionQuery Expression-Underspecified)
+(arg7Isa askNextParameterizedQuestionQuery Thing)
+(comment askNextParameterizedQuestionQuery "(askNextParameterizedQuestionQuery ?ontology-mt ?storage-mt ?search-mt ?entity ?parameterized-question ?parameterized-question-query ?experiment-name) asks
+a single query generated by a parameterized question and stores information about the results.")
+
+;;; This is a placeholder for now.
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (askNextParameterizedQuestionQuery ?ontology-mt ?storage-mt ?search-mt ?entity ?parameterized-question ?parameterized-question-query ?experiment-name)
+  (actionSequence
+   (TheList
+    (doAnnounce "~&Asking (soon): ~s" (?parameterized-question-query))
+    (doTell (askAndRecordPPQ ?ontology-mt ?storage-mt ?search-mt ?entity ?parameterized-question ?parameterized-question-query ?experiment-name))
+    ))))
+
+;;; (solveAndRecordPPQ ?ontology-mt ?storage-mt ?search-mt ?entity ?parameterized-question ?experiment-name)
+(isa solveAndRecordPPQ Predicate)
+(arity solveAndRecordPPQ 7)
+(arg1Isa solveAndRecordPPQ Microtheory)
+(arg2Isa solveAndRecordPPQ Microtheory) ;;; Where the results are stored
+(arg3Isa solveAndRecordPPQ Microtheory) ;;; The place we look for answers
+(arg4Isa solveAndRecordPPQ Thing) ;;; The entity being asked about (or list of such)
+(arg5Isa solveAndRecordPPQ ParameterizedQuestionType) ;;; The type of parameterized question
+(arg6Isa solveAndRecordPPQ Expression-Underspecified) ;;; What is this?
+(arg7Isa solveAndRecordPPQ Thing) ;;; An experiment name
+(comment solveAndRecordPPQ "(solveAndRecordPPQ ?ontology-mt ?storage-mt ?search-mt
+?entity ?parameterized-question ?solve-format ?experiment-name) uses solve
+to answer a parameterized question and stores information about the results.
+It's to be used as a tell handler call. ?ontology-mt ")
+
+
+(isa answersToQueryOfQueryTypeInExperiment Predicate)
+(arity answersToQueryOfQueryTypeInExperiment 5)
+(arg1Isa answersToQueryOfQueryTypeInExperiment ParameterizedQuestionQueryName)
+(arg2Isa answersToQueryOfQueryTypeInExperiment List)
+(arg3Isa answersToQueryOfQueryTypeInExperiment Expression-Underspecified)
+(arg4Isa answersToQueryOfQueryTypeInExperiment ParameterizedQuestionType)
+(arg5Isa answersToQueryOfQueryTypeInExperiment Thing)
+(comment answersToQueryOfQueryTypeInExperiment "(answersToQueryOfQueryTypeInExperiment ?pqq-name 
+?answers ?query ?search-mt ?entity ?parameterized-question ?parameterized-question-query ?experiment-name) 
+records what answers were generated for a parameterized question query.")
+
+(isa ParameterizedQuestionQueryName Collection)
+(comment ParameterizedQuestionQueryName "This is a unique name given to an instance of a parameterized question query being asked. If it's asked again, even in similar circumstances,
+it gets a new name.")
+
+;;; (askParameterizedQuestionsAboutMtsForSegmentation 
+;;; ?ontology-mt ?storage-mt ?search-mt ?mt-spindle ?current-experiment-name ?expt-that-generated-segs)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (askParameterizedQuestionsAboutMtsForSegmentation 
+   ?ontology-mt ?storage-mt ?search-mt ?mt-spindle ?current-experiment-name ?expt-that-generated-segs)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information CaseRetrievalFactsMt
+                (segGenExptForTestExpt
+                 ?current-experiment-name
+                 ?expt-that-generated-segs)))
+    (doTell (setCurrentSegGenExpt ?expt-that-generated-segs))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (askParameterizedQuestionsAboutMts 
+        ?ontology-mt ?storage-mt
+        ?search-mt ?mt-spindle ?current-experiment-name))))))))
+
+
+;;;askPQAboutBestOfMtsForSegmentation
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (askPQAboutBestOfMtsForSegmentation 
+   ?ontology-mt ?storage-mt ?search-mt ?mt-spindle ?current-experiment-name ?expt-that-generated-segs
+   ?best-n ?use-specified)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information CaseRetrievalFactsMt
+                (segGenExptForTestExpt
+                 ?current-experiment-name
+                 ?expt-that-generated-segs)))
+    (doTell (setCurrentSegGenExpt ?expt-that-generated-segs))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (askBestPQsAboutMts 
+        ?ontology-mt ?storage-mt ?search-mt ?mt-spindle
+        ?current-experiment-name ?best-n ?use-specified))))))))
+
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (askPQAboutBestOfMtListForSegmentation 
+   ?ontology-mt ?storage-mt ?search-mt ?mt-spindle-list ?current-experiment-name ?expt-that-generated-segs
+   ?best-n ?use-specified)
+  (actionSequence
+   (TheList
+    (doForEach ?mt-spindle ?mt-spindle-list
+               (askPQAboutBestOfMtsForSegmentation
+                ?ontology-mt ?storage-mt ?search-mt ?mt-spindle ?current-experiment-name ?expt-that-generated-segs
+                ?best-n ?use-specified))))))
+                ;; ?search-mt should maybe be ?mt-spindle
+
+
+(isa bestNEntitiesMentionedInSpindle Predicate)
+(arity bestNEntitiesMentionedInSpindle 2)
+(arg1Isa bestNEntitiesMentionedInSpindle Microtheory)
+(arg2Isa bestNEntitiesMentionedInSpindle Thing)
+(comment bestNEntitiesMentionedInSpindle "(bestNEntitiesMentionedInSpindle ?spindle ?best-n ?use-specified ?entities)
+ creates a list of the best (most frequent) N entities that are mentioned in the spindle,
+ plus any specified by topicEntityInReading. It is intended to be used as an outsourced predicate.")
+
+;;; askBestPQsAboutMts
+(preconditionForMethod
+ (outsourcedOnly (bestNEntitiesMentionedInSpindle ?mt-spindle ?best-n ?use-specified ?entities))
+ (methodForAction
+  (askBestPQsAboutMts 
+        ?ontology-mt ?storage-mt ?search-mt ?mt-spindle
+        ?current-experiment-name ?best-n ?use-specified)
+  (actionSequence
+   (TheList
+    (doForEach ?next-entity ?entities
+               (askAllParameterizedQuestionsAboutEntity 
+                ?ontology-mt ?storage-mt ?search-mt ?next-entity ?entities ?current-experiment-name))))))
+
+
+(isa listOfApplicableTopicPairPQsInListInContext Predicate)
+(arity listOfApplicableTopicPairPQsInListInContext 4)
+(arg1Isa listOfApplicableTopicPairPQsInListInContext Microtheory)
+(arg2Isa listOfApplicableTopicPairPQsInListInContext Case)
+(arg3Isa listOfApplicableTopicPairPQsInListInContext Microtheory)
+(arg4Isa listOfApplicableTopicPairPQsInListInContext Thing)
+(comment listOfApplicableTopicPairPQsInListInContext "(listOfApplicableTopicPairPQsInListInContext 
+?ontology-mt ?spindle ?context ?list-of-pairs-and-pqs) creates a list of parameterized question classes that are 
+usable with pairs of entities from ?spindle when used as an outsourced predicate. They look like
+(TheList ?entity ?other-entity ?pq-class).")
+
+(preconditionForMethod
+ (and
+      (listOfApplicableTopicPairPQsInListInContext 
+       ?ontology-mt ?spindle ?search-mt ?list-of-pairs-and-pqs))
+ (methodForAction
+  (askAllBinaryPQAboutSpindle ?ontology-mt ?storage-mt ?search-mt ?spindle ?experiment-name)
+  (actionSequence
+   (TheList
+    (doForEach ?pair-pq-triple ?list-of-pairs-and-pqs
+               (askNextBinaryParameterizedQuestionForTriple 
+                ?ontology-mt ?storage-mt ?search-mt ?pair-pq-triple ?experiment-name))
+    ))))
+
+
+(isa askAllBinaryPQAboutSpindle ComplexActionPredicate)
+(arity askAllBinaryPQAboutSpindle 5)
+(arg1Isa askAllBinaryPQAboutSpindle Microtheory)
+(arg2Isa askAllBinaryPQAboutSpindle Microtheory)
+(arg3Isa askAllBinaryPQAboutSpindle Microtheory)
+(arg4Isa askAllBinaryPQAboutSpindle Case)
+(arg5Isa askAllBinaryPQAboutSpindle Thing)
+(comment askAllBinaryPQAboutSpindle "(askAllBinaryPQAboutSpindle ?ontology-mt ?storage-mt 
+?search-mt ?spindle ?experiment-name) asks and stores the results
+of asking binary ?pqType about the topicPairInSpindle fir the spindle. The behavior 
+of this plan is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+(isa askAllBinaryPQAboutSpindleExpt ComplexActionPredicate)
+(arity askAllBinaryPQAboutSpindleExpt 6)
+(arg1Isa askAllBinaryPQAboutSpindleExpt Microtheory)
+(arg2Isa askAllBinaryPQAboutSpindleExpt Microtheory)
+(arg3Isa askAllBinaryPQAboutSpindleExpt Microtheory)
+(arg4Isa askAllBinaryPQAboutSpindleExpt Case)
+(arg5Isa askAllBinaryPQAboutSpindleExpt Thing)
+(arg6Isa askAllBinaryPQAboutSpindleExpt Thing)
+(comment askAllBinaryPQAboutSpindleExpt "(askAllBinaryPQAboutSpindleExpt ?ontology-mt ?storage-mt 
+?search-mt ?spindle ?experiment-name ?expt-that-generated-segs) asks and stores the results
+of asking binary ?pqType about the topicPairInSpindle fir the spindle. The behavior 
+of this plan is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+
+;;;(doTell (setCurrentSegGenExpt ?expt-that-generated-segs))
+
+(preconditionForMethod
+ (and
+      (listOfApplicableTopicPairPQsInListInContext 
+       ?ontology-mt ?spindle ?search-mt ?list-of-pairs-and-pqs))
+ (methodForAction
+  (askAllBinaryPQAboutSpindleExpt ?ontology-mt ?storage-mt ?search-mt ?spindle ?current-experiment-name ?expt-that-generated-segs)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information CaseRetrievalFactsMt
+                (segGenExptForTestExpt
+                 ?current-experiment-name
+                 ?expt-that-generated-segs)))
+    (doTell (setCurrentSegGenExpt ?expt-that-generated-segs))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doForEach ?pair-pq-triple ?list-of-pairs-and-pqs
+                  (askNextBinaryParameterizedQuestionForTriple 
+                   ?ontology-mt ?storage-mt ?search-mt ?pair-pq-triple ?current-experiment-name))
+       )))))))
+
+
+(isa askAllBinaryPQAboutEvalQ ComplexActionPredicate)
+(arity askAllBinaryPQAboutEvalQ 6)
+(arg1Isa askAllBinaryPQAboutEvalQ Microtheory)
+(arg2Isa askAllBinaryPQAboutEvalQ Microtheory)
+(arg3Isa askAllBinaryPQAboutEvalQ Microtheory)
+(arg4Isa askAllBinaryPQAboutEvalQ Case)
+(arg5Isa askAllBinaryPQAboutEvalQ Thing)
+(arg6Isa askAllBinaryPQAboutEvalQ Thing)
+(comment askAllBinaryPQAboutEvalQ "(askAllBinaryPQAboutEvalQ ?ontology-mt ?storage-mt 
+?search-mt ?eval-q ?experiment-name ?expt-that-generated-segs) asks and stores the results
+of asking binary ?pqType about the topicPairInSpindle fir the spindle. The behavior 
+of this plan is dictated by the knowledge in ?ontology-mt. The results are stored in
+?storage-mt. The questions are asked in the context ?search-mt.")
+(preconditionForMethod
+ (and
+      (topicPairPQsForEvalQ 
+       ?ontology-mt ?eval-q ?search-mt ?list-of-pairs-and-pqs))
+ (methodForAction
+  (askAllBinaryPQAboutEvalQ ?ontology-mt ?storage-mt ?search-mt ?eval-q
+                            ?current-experiment-name ?expt-that-generated-segs)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information CaseRetrievalFactsMt
+                (segGenExptForTestExpt
+                 ?current-experiment-name
+                 ?expt-that-generated-segs)))
+    (doTell (setCurrentSegGenExpt ?expt-that-generated-segs))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doForEach ?pair-pq-triple ?list-of-pairs-and-pqs
+                  (askNextBinaryParameterizedQuestionForTriple 
+                   ?ontology-mt ?storage-mt ?search-mt ?pair-pq-triple ?current-experiment-name))
+       )))))))
+
+(isa topicPairPQsForEvalQ Predicate)
+(arity topicPairPQsForEvalQ 4)
+(arg1Isa topicPairPQsForEvalQ Microtheory)
+(arg2Isa topicPairPQsForEvalQ Case)
+(arg3Isa topicPairPQsForEvalQ Microtheory)
+(arg4Isa topicPairPQsForEvalQ Thing)
+(comment topicPairPQsForEvalQ "(topicPairPQsForEvalQ 
+?ontology-mt ?evalq ?context ?list-of-pairs-and-pqs)
+creates a list of parameterized question classes that are 
+usable with pairs of entities from ?evalq when used as 
+an outsourced predicate. They look like
+(TheList ?entity ?other-entity ?pq-class).")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

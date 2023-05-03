@@ -1,0 +1,12 @@
+(in-microtheory SpatialGMt)
+
+(isa GeometricShapeType KEClarifyingCollectionType)
+(transitiveViaArgInverse topologicallyInsideSpaceRegion insideSpaceRegion 1)
+(transitiveViaArgInverse topologicallyInsideSpaceRegion partOfSpaceRegion 1)
+(transitiveViaArgInverse insideSpaceRegion partOfSpaceRegion 1)
+(transitiveViaArgInverse disconnectedSpaceRegions nontangentialProperPartOfSpaceRegion 1)
+(argFormat objectShapeType 1 SetTheFormat)
+(typeGenls TwoDimensionalShapeType TwoDimensionalGeometricThing)
+(comment subPaths-Spatial "A #$PartPredicate that relates a #$Path-Spatial to a #$Path-Spatial.  (#$subPaths-Spatial PATH1 PATH2) means that PATH2 is a subpath of PATH1.")
+(comment subPaths-Generic "A #$PartPredicate that relates a #$Path-Generic to a #$Path-Generic.  (#$subPaths-Generic PATH1 PATH2) means that PATH2 is a subpath of PATH1.")
+(genls SemicircularRegion TwoDimensionalGeometricThing)

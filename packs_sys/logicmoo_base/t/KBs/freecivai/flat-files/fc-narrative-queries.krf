@@ -1,0 +1,54 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: fc-narrative-queries.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 14, 2013 10:49:34
+;;;;   Purpose: Freeciv narrative queries, for NLU SI
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2013-01-06 13:30:52 -0600 (Sun, 06 Jan 2013) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory FreecivNarrativeQueriesMt :exclude-globals t)
+
+(genlMt FreecivNarrativeQueriesMt FreecivNarrativeRulesMt)
+
+
+;;; 1/14/13, KDF: EXPERIMENTAL, PLEASE DO NOT LOAD BY DEFAULT
+;;;
+;;; We want to extract all of the higher-order relationships we can
+;;; from language. We're only going to associate narrative functions with
+;;; the highest levels of these.  
+
+;;; Letting EA NLU know about the right strategy for these rules
+
+
+(exhaustiveQueriesForInterpretation FreecivNarrativeQueriesMt)
+
+;;; The queries to perform.  Start out extracting higher-order relations
+;;; which capture domain implications of the relationships directly
+;;; entailed via language.  
+
+(queryForInterpretation 0
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfFCRelation))
+
+(queryForInterpretation 0
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroducesTypeDependence))
+
+
+;;; (queryForInterpretation 0 (relationHoldsInDrs :REPLACE-SID ?reln))
+
+                      
+                      
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

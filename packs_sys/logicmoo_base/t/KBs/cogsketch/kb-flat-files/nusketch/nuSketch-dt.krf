@@ -1,0 +1,425 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: nuSketch-dt.meld
+;;;;    System: nuSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: July 15, 1999 18:42:32
+;;;;   Purpose: Defines the various predicates used in nuSketch assertions.
+;;;;            This file is for mixed-case KBs and is going to replace
+;;;;            sketchpad\v2r00\ink\ink-vocabulary.lsp.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchMt)
+
+(comment NuSketchMt
+  "The NuSketchMt defines many of the basic terms used in nuSketch.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; General nuSketch predicates
+
+(comment NuSketchApplication "Names an application within nuSketch.")
+(genls NuSketchApplication ApplicationProgram)
+(isa NuSketchApplication Collection)
+
+
+(comment NuSketchCase
+ "A #$NuSketchCase is a case that was generated through nuSketch.")
+(genls NuSketchCase Case)
+(isa NuSketchCase Collection)
+
+
+(comment NuSketchSketch
+ "A #$NuSketchSketch is a sketch that was generated through nuSketch.")
+(genls NuSketchSketch Sketch-Drawing)
+(isa NuSketchSketch Collection)
+
+
+(comment NuSketchBundle
+ "Declares an item to be a bundle of #$NuSketchLayers of a 
+                  #$nuSketchSketch.")
+(genls NuSketchBundle SubSketchGroup)
+(isa NuSketchBundle Collection)
+
+
+(comment NuSketchLayer
+ "Declares an item to be a layer of a #$nuSketchSketch.")
+(genls NuSketchLayer SubSketch)
+(isa NuSketchLayer Collection)
+
+(comment NuSketchHiddenLayer
+ "Hidden layers are normally kept hidden from the user (though they can be
+  revealed in response to things like worksheet questions, etc.")
+(genls NuSketchHiddenLayer NuSketchLayer)
+(isa NuSketchHiddenLayer Collection)
+
+(comment NuSketchGhostLayer
+ "Declares an item to be a ghost layer of a #$nuSketchSketch.")
+(genls NuSketchGhostLayer NuSketchHiddenLayer)
+(isa NuSketchGhostLayer Collection)
+
+(comment NuSketchNonSpatialLayer
+  "These layers have no spatial reasoning performed on them by default.  You can
+   still make some kinds of spatial queries on them directly, though.  Any 
+   spatial query that does not use a voronoi diagram should work.")
+(genls NuSketchNonSpatialLayer NuSketchLayer)
+(isa NuSketchNonSpatialLayer Collection)
+
+
+
+(comment NuSketchGlyph
+ "A NuSketchGlyph is a group of sketch components that can be considered to 
+  have a coherent meaning.  An example would be a group of ink representing 
+  an armor battalion.")
+(genls NuSketchGlyph SpatialThing)
+(genls NuSketchGlyph SurfaceRegion-Underspecified)
+(isa NuSketchGlyph Collection)
+
+(comment NuSketchGhostGlyph
+ "A NuSketchGhostGlyph is a glyph created for a NuSketchGhostLayer.")
+(genls NuSketchGhostGlyph NuSketchGlyph)
+(isa NuSketchGhostGlyph Collection)
+
+
+(comment nuSketchCaseID "Associates a unique ID with the case.")
+(arity nuSketchCaseID 2)
+(isa nuSketchCaseID Predicate)
+
+
+(comment nuSketchCaseNotes
+ "Used to associate free-form text notes with a stored nuSketch sketch.  
+  ?notes should be a string.")
+(arity nuSketchCaseNotes 2)
+(isa nuSketchCaseNotes Predicate)
+(arg1Isa nuSketchCaseNotes NuSketchCase)
+(arg2Isa nuSketchCaseNotes CharacterString)
+
+
+(comment nuSketchFileForCase
+ "Associates the filename of the stored sketch with a case.")
+(arity nuSketchFileForCase 2)
+(isa nuSketchFileForCase Predicate)
+
+
+(comment nuSketchFileURL
+ "Gives the URL of the stored sketch.  Note that nuSketch applications also 
+  view kb-resource as an acceptable URL scheme, which means that the file is 
+  located in the  knowledge-base's resources directory.")
+(arity nuSketchFileURL 2)
+(isa nuSketchFileURL Predicate)
+
+
+(comment nuSketchCreator "Tells which user created this case.")
+(arity nuSketchCreator 2)
+(isa nuSketchCreator Predicate)
+
+
+(comment nuSketchCreationMachine
+ "Names the machine that was used to create this case.")
+(arity nuSketchCreationMachine 2)
+(isa nuSketchCreationMachine Predicate)
+
+
+(comment kbDateModified
+ "The date the item was last modified in the knowledge-base. The date is 
+  stored as a Universal-Time.")
+(arity kbDateModified 2)
+(isa kbDateModified Predicate)
+
+
+(comment notesFor "Associates free-form notes with an object.")
+(arity notesFor 2)
+(isa notesFor Predicate)
+
+
+(comment glyphRepresentsObject
+ "Says that the specified glyph represents the given object.
+                  As an example, this can be used to say that a hand-drawn
+                  symbol represents an arrow.")
+(arity glyphRepresentsObject 2)
+(isa glyphRepresentsObject Predicate)
+
+
+(comment glyphsRepresentSameObject
+  "Says that the two specified glyphs (which may be in different layers) 
+   represent the same object.")
+(arity glyphsRepresentSameObject 2)
+(isa glyphsRepresentSameObject SymmetricBinaryPredicate)
+(arg1Isa glyphsRepresentSameObject NuSketchGlyph)
+(arg2Isa glyphsRepresentSameObject NuSketchGlyph)
+
+
+(comment nuSketchDefaultFigureForApplication
+ "Declares fig-name to be the default reference figure for a given nuSketch 
+  application.  This is used in conjunction with reference-figure to determine 
+  a reference figure for a glyph.")
+(arity nuSketchDefaultFigureForApplication 2)
+(isa nuSketchDefaultFigureForApplication Predicate)
+
+
+(resultIsa NuSketchLayerCaseFn Case)
+(comment NuSketchLayerCaseFn
+ "Creates a case containing all the facts known about all the entities on the 
+  specified layer of a nuSketch sketch.  Only the facts in ?root-case are 
+  searched.")
+(isa NuSketchLayerCaseFn CaseFunctions)
+(arity NuSketchLayerCaseFn 2)
+
+
+(resultIsa NuSketchBundleCaseFn Case)
+(comment NuSketchBundleCaseFn
+ "Creates a case containing all the facts known about all the entities in the 
+  specified bundle of a nuSketch sketch.  Only the facts in ?root-case are 
+  searched.")
+(isa NuSketchBundleCaseFn CaseFunctions)
+(arity NuSketchBundleCaseFn 2)
+
+
+(isa NuSketchGlyphCaseFn CaseFunctions)
+(arity NuSketchGlyphCaseFn 1)
+(arg1Isa NuSketchGlyphCaseFn NuSketchGlyph)
+(resultIsa NuSketchGlyphCaseFn Case)
+(comment NuSketchGlyphCaseFn
+ "Creates a case containing all the facts known about a glyph.")
+
+
+(resultIsa GlyphFn NuSketchGlyph)
+(comment GlyphFn
+ "Creates a glyph that exists on the given layer of a sketch and represents the 
+  specified object.")
+(isa GlyphFn Function-Denotational)
+(arity GlyphFn 2)
+(genFormat GlyphFn "~a" (1))
+
+
+(resultIsa SketchFn NuSketchSketch)
+(comment SketchFn "Creates a sketch that represents the specified case.")
+(isa SketchFn Function-Denotational)
+(arity SketchFn 1)
+(genFormat SketchFn "sketch of ~a" (1))
+
+
+(isa activeSketchObject Predicate)
+(arity activeSketchObject 2)
+(arg1Isa activeSketchObject SpatialThing)
+(arg2Isa activeSketchObject Case)
+(comment activeSketchObject 
+  "Says that the specified sketch thing (glyph, layer, subsketch, etc.) 
+   currently exists in the given reasoning context.")
+
+
+(comment justifiedBy
+ "Packages up consequences of an object so they can easily be cloned.")
+(arity justifiedBy 4)
+(isa justifiedBy Predicate)
+
+
+(comment userAssertedRelation
+ "The user said ?object in ?state should be ?relation ")
+(arity userAssertedRelation 3)
+(isa userAssertedRelation Predicate)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Support for automatically inferring conceptual labels
+
+(isa autoConceptualLabel Relation)
+(arity autoConceptualLabel 2)
+(arg1Isa autoConceptualLabel Thing)
+(arg2Isa autoConceptualLabel Collection)
+(comment autoConceptualLabel
+  "States that the conceptual label for a given object (usually represented by
+   a #$NuSketchGlyph) was inferred automatically.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Application Versioning
+
+(comment nuSketchAppKBVersion
+ "Assigns a version number to the facts and rules relatining to the specified 
+  application.  ?version should be numeric and ?app should be the name of a 
+  nuSketch application.")
+(arity nuSketchAppKBVersion 2)
+(isa nuSketchAppKBVersion Predicate)
+
+
+(comment sketchCreatedWithVersion
+ "Tells what version of the specified application was used to *create* the 
+  sketch.  Also see sketchModifiedWithVersion that gives the version(s) used 
+  to edit the sketch.")
+(arity sketchCreatedWithVersion 2)
+(isa sketchCreatedWithVersion Predicate)
+(arg1Isa sketchCreatedWithVersion NuSketchApplication)
+
+
+(comment sketchModifiedWithVersion
+ "Tells what version of the specified application was used to edit the sketch.  
+  Note that there will usually be several of  these facts -- one for each 
+  different version that was used.  Also see sketchCreatedWithVersion that gives 
+  the version used  when the sketch was initially created.")
+(arity sketchModifiedWithVersion 2)
+(isa sketchModifiedWithVersion Predicate)
+(arg1Isa sketchModifiedWithVersion NuSketchApplication)
+
+
+(isa NuSketchCore NuSketchApplication)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Time-Stamp Relationships
+
+(resultIsa NuSketchSketchTimeFn TimePoint)
+(comment NuSketchSketchTimeFn
+ "Denotes a time, given a number representing the time that nuSketch uses 
+  internally.")
+(isa NuSketchSketchTimeFn Function-Denotational)
+(arity NuSketchSketchTimeFn 1)
+(arg1Isa NuSketchSketchTimeFn ScalarPointValue)
+
+
+(comment inkLastModifiedTime
+ "States when a specified #$NuSketchGlyph was last modified.  N.B. Originally 
+  we thought this would be used for ink and glyphs, but so far it's only been 
+  used for glyphs.  In the future we should probably change its name to 
+  glyphLastModifiedTime?")
+(arity inkLastModifiedTime 2)
+(isa inkLastModifiedTime Predicate)
+(arg1Isa inkLastModifiedTime NuSketchGlyph)
+(arg2Isa inkLastModifiedTime TimePoint)
+
+
+(comment bundleLastModifiedTime
+ "States when a specified #$NuSketchBundle was last modified.")
+(arity bundleLastModifiedTime 2)
+(isa bundleLastModifiedTime Predicate)
+(arg1Isa bundleLastModifiedTime NuSketchBundle)
+(arg2Isa bundleLastModifiedTime TimePoint)
+
+
+(comment bboxLastModifiedTime
+ "States when a specified object's bounding-box was 
+                  last modified.")
+(arity bboxLastModifiedTime 2)
+(isa bboxLastModifiedTime Predicate)
+(arg1Isa bboxLastModifiedTime Thing)
+(arg2Isa bboxLastModifiedTime TimePoint)
+
+
+(comment csysLastModifiedTime
+ "States when a specified #$NuSketchSketch coordinate system was last modified.")
+(arity csysLastModifiedTime 2)
+(isa csysLastModifiedTime Predicate)
+(arg1Isa csysLastModifiedTime NuSketchSketch)
+(arg2Isa csysLastModifiedTime TimePoint)
+
+
+(comment entityTypesLastModifiedTime
+ "States when the entity information about a specified #$NuSketchGlyph was 
+  last modified.")
+(arity entityTypesLastModifiedTime 2)
+(isa entityTypesLastModifiedTime Predicate)
+(arg1Isa entityTypesLastModifiedTime NuSketchGlyph)
+(arg2Isa entityTypesLastModifiedTime TimePoint)
+
+
+(comment nameStringLastModifiedTime
+ "States when a specified object's user-friendly namestring was last modified.")
+(arity nameStringLastModifiedTime 2)
+(isa nameStringLastModifiedTime Predicate)
+(arg1Isa nameStringLastModifiedTime Thing)
+(arg2Isa nameStringLastModifiedTime TimePoint)
+
+
+(comment caseTransferLastModifiedTime
+ "States when a specified #$Case was last modified.")
+(arity caseTransferLastModifiedTime 2)
+(isa caseTransferLastModifiedTime Predicate)
+(arg1Isa caseTransferLastModifiedTime Case)
+(arg2Isa caseTransferLastModifiedTime TimePoint)
+
+
+(comment fromExternalApp
+ "Similar to #$inKB, but this says that a fact came from some source outside 
+  the normal scope of the application.")
+(arity fromExternalApp 2)
+(isa fromExternalApp Predicate)
+
+
+(comment uninferredUntilInkModified
+ "Bundles an uninferredSentence fact with ink last modified time facts.")
+(arity uninferredUntilInkModified 2)
+(isa uninferredUntilInkModified BinaryPredicate)
+(arg1Isa uninferredUntilInkModified CycLExpression)
+(arg2Isa uninferredUntilInkModified List)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; NuSketchReasoningCollectorMt
+
+(isa NuSketchReasoningCollectorMt Microtheory)
+(isa NuSketchReasoningCollectorMt CollectorMicrotheory)
+
+(genlMt NuSketchReasoningCollectorMt BaseKB)
+(genlMt NuSketchReasoningCollectorMt UniversalVocabularyMt)
+(genlMt NuSketchReasoningCollectorMt NuSketchMt)
+(genlMt NuSketchReasoningCollectorMt ComposableFiguresMt)
+(genlMt NuSketchReasoningCollectorMt NuSketchAnalogyMt)
+(genlMt NuSketchReasoningCollectorMt NuSketchQMRulesMt)
+(genlMt NuSketchReasoningCollectorMt NuSketchTutorialsMt)
+(genlMt NuSketchReasoningCollectorMt NuSketchGeoscienceMt)
+(genlMt NuSketchReasoningCollectorMt PerceptionMt)
+(genlMt NuSketchReasoningCollectorMt TopographicalRulesMt)
+;;;(genlMt NuSketchReasoningCollectorMt AllEnglishLexicalMicrotheoryPSC)
+(genlMt NuSketchReasoningCollectorMt EnglishMt)
+
+(comment NuSketchReasoningCollectorMt 
+  "This #$CollectorMicrotheory includes all the microtheories needed for 
+   reasoning in nuSketch.  Each sketch and bundle created is a specMt of 
+   this.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Old Stuff
+;;;
+;;; These terms are no longer used but must still be defined in the KB in order
+;;; to do analogies with old sketches.
+;;;
+
+(isa nuSketchSketchForCase BinaryRelation)
+(quotedIsa nuSketchSketchForCase ObsoleteConstant)
+(arity nuSketchSketchForCase 2)
+(arg1Isa nuSketchSketchForCase NuSketchSketch)
+(arg2Isa nuSketchSketchForCase Case)
+(comment nuSketchSketchForCase
+  "DEPRECATED.  This definition is still needed, however, when performing
+   analogies with old sketches.")
+
+(isa nuSketchLayerForCase BinaryRelation)
+(quotedIsa nuSketchLayerForCase ObsoleteConstant)
+(arity nuSketchLayerForCase 2)
+(arg1Isa nuSketchLayerForCase NuSketchLayer)
+(arg2Isa nuSketchLayerForCase Case)
+(comment nuSketchLayerForCase
+  "DEPRECATED.  This definition is still needed, however, when performing
+   analogies with old sketches.")
+
+(isa defaultUnits BinaryRelation)
+(quotedIsa defaultUnits ObsoleteConstant)
+(arity defaultUnits 2)
+(comment defaultUnits
+  "DEPRECATED.  This definition is still needed, however, when performing
+   analogies with old sketches.")
+
+(isa nuSketchSketchOf BinaryRelation)
+(quotedIsa nuSketchSketchOf ObsoleteConstant)
+(arity nuSketchSketchOf 2)
+(comment nuSketchSketchOf
+  "DEPRECATED.  This definition is still needed, however, when performing
+   analogies with old sketches.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End Of Code

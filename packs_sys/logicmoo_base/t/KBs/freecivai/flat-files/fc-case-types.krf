@@ -1,0 +1,44 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: fc-case-types
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: October 27, 2016 15:49:30
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2015-07-15 16:44:47 -0500 (Wed, 15 Jul 2015) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory FreecivMt)
+
+;;; These notions may turn out to be more general, at the level of perceptual agent,
+;;; for instance, but let's be cautious for now.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa OutcomeExpectationFn Function-Denotational)
+(arity OutcomeExpectationFn 1)
+(arg1Isa OutcomeExpectationFn ActionPredicate)
+(comment OutcomeExpectationFn
+  "(OutcomeExpectationFn ?action) denotes a SAGE generaliztion pool which contains cases from
+ which models of what to expect as a result of taking ?action are constructed.")
+(resultIsa OutcomeExpectationFn GeneralizationPool)
+
+(isa FC-CommandOutcomeCaseFn Function-Denotational)
+(arity FC-CommandOutcomeCaseFn 2)
+(arg1Isa FC-CommandOutcomeCaseFn PerceptualAgentCommand)
+(arg2Isa FC-CommandOutcomeCaseFn Thing) ;; Should be some episodic structure
+
+(isa SecondOrderGpoolFn Function-Denotational)
+(arity SecondOrderGpoolFn 1)
+(arg1Isa SecondOrderGpoolFn GContext)
+(resultIsa SecondOrderGpoolFn GeneralizationPool)
+(comment SecondOrderGpoolFn
+  "(SecondOrderGpoolFn ?gpool) is the second-order generalization pool formed
+    by treating the generalizations and examples of generalization pool ?gpool
+    as examples themselves.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,285 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: reflection.meld
+;;;;    System: Fire
+;;;;    Author: Ken Forbus
+;;;;   Created: December 14, 2015 10:37:00
+;;;;   Purpose: Defines predicates for the Solve reflection.
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory  SolveMt)
+
+
+;;;; Reflecting on SOLVE activities
+
+(isa SolveActivity PurposefulMentalActivity)
+(comment SolveActivity
+ "SolveActivity is the work being done on some query by the SOLVE subsystem of a FIRE-based system.")
+
+(isa SolveActivityFn Function-Denotational)
+(resultIsa SolveActivityFn SolveActivity)
+(comment SolveActivityFn
+ "(SolveActivityFn ?id) denotes a solve activity being carried out by some agent.")
+(arity SolveActivityFn 1)
+(arg1Isa SolveActivityFn Thing)
+;; Actually, right now it's an integer, but why restrict?
+
+(isa AndOrNode ComputerDataStructure)
+(comment AndOrNode
+ "An AndOrNode is a node in an and/or tree or graph, used in reasoning.")
+
+(isa AO-NodeFn Function-Denotational)
+(resultIsa AO-NodeFn AndOrNode)
+(arity AO-NodeFn 2)
+(arg1Isa AO-NodeFn Thing)
+(arg2Isa AO-NodeFn SolveActivity)
+(comment AO-NodeFn
+         "(AO-NodeFn ?id ?s) is the ?id'th node of the solve activity ?s.")
+
+
+(isa SolveStatus FirstOrderCollection)
+(isa Open SolveStatus)
+(isa Closed SolveStatus)
+(isa Solved SolveStatus)
+(isa Failed SolveStatus)
+(isa AgendaEmpty SolveStatus)
+(isa ResourceLimit SolveStatus)
+(isa InPlaySolution SolveStatus)
+
+
+(isa hasSolveActivity Predicate)
+(isa hasSolveActivity DynamicUpdatePredicate)  ; Don't rely on wm cache, since ao-tree object may have been deleted.
+(arity hasSolveActivity 1)
+(arg1Isa hasSolveActivity SolveActivity)
+(comment hasSolveActivity
+         "(hasSolveActivity ?sa) means that there is some solve activity ?sa on the reasoner.")
+
+(isa currentSolutionOfSolve Predicate)
+(isa currentSolutionOfSolve DynamicUpdatePredicate)
+(arity currentSolutionOfSolve 2)
+(arg1Isa currentSolutionOfSolve SolveActivity)
+(arg2Isa currentSolutionOfSolve ELSentence-Assertible)
+(comment currentSolutionOfSolve
+ "(currentSolutionOfSolve ?s ?g) means that the current solution for solve activity ?s is the instantiated goal ?g.")
+
+(isa goalOfSolve Predicate)
+(isa goalOfSolve DynamicUpdatePredicate)  ; I know this seems weird, but it's possible to create new solve trees for the same goal.
+(arity goalOfSolve 2)
+(arg1Isa goalOfSolve SolveActivity)
+(arg2Isa goalOfSolve CycLExpression-Askable)
+(comment goalOfSolve
+ "(goalOfSolve ?s ?q) means that the goal of solve activity ?s is ?q.")
+ 
+(isa rootNodeOfSolve Predicate)
+(arity rootNodeOfSolve 2)
+(arg1Isa rootNodeOfSolve SolveActivity)
+(arg2Isa rootNodeOfSolve AndOrNode)
+(comment rootNodeOfSolve
+ "(rootNodeOfSolve ?s ?n) means that the and/or node ?n is the root node of solve activity ?s.")
+
+(isa getNextSolveStep Predicate)
+(isa getNextSolveStep DynamicUpdatePredicate)
+(arity getNextSolveStep 2)
+(arg1Isa getNextSolveStep SolveActivity)
+(arg2Isa getNextSolveStep AndOrNode)
+(comment getNextSolveStep
+ "(getNextSolveStep ?s ?n) means that the and/or node ?n is the next node to be processed for the solve activity ?s.")
+
+;; InferenceQuery needs to be ontologized
+
+(isa numberOfSolveNodes Predicate)
+(isa numberOfSolveNodes DynamicUpdatePredicate)
+(arity numberOfSolveNodes 2)
+(arg1Isa numberOfSolveNodes SolveActivity)
+(arg2Isa numberOfSolveNodes Integer)
+(comment numberOfSolveNodes
+ "(numberOfSolveNodes ?s ?n) means that solve activity ?s has ?n nodes.")
+
+(isa numberOfSolveSteps Predicate)
+(isa numberOfSolveSteps DynamicUpdatePredicate)
+(arity numberOfSolveSteps 2)
+(arg1Isa numberOfSolveSteps SolveActivity)
+(arg2Isa numberOfSolveSteps Integer)
+(comment numberOfSolveSteps
+ "(numberOfSolveSteps ?s ?n) means that solve activity ?s has executed ?n steps.")
+
+(isa agendaLengthOfSolve Predicate)
+(isa agendaLengthOfSolve DynamicUpdatePredicate)
+(arity agendaLengthOfSolve 2)
+(arg1Isa agendaLengthOfSolve SolveActivity)
+(arg2Isa agendaLengthOfSolve Integer)
+(comment agendaLengthOfSolve
+ "(agendaLengthOfSolve ?s ?n) means that solve activity ?s has ?n items in its agenda.")
+
+(isa agendaOfSolve Predicate)
+(isa agendaOfSolve DynamicUpdatePredicate)
+(arity agendaOfSolve 2)
+(arg1Isa agendaOfSolve SolveActivity)
+(arg2Isa agendaOfSolve SetOrList-Extensional)
+(comment agendaOfSolve
+ "(agendaOfSolve ?s ?a) means that solve activity ?s has items ?a in its agenda.")
+
+
+(isa agendaCostOfSolve Predicate)
+(isa agendaCostOfSolve DynamicUpdatePredicate)
+(arity agendaCostOfSolve 2)
+(arg1Isa agendaCostOfSolve SolveActivity)
+(arg2Isa agendaCostOfSolve Integer)
+(comment agendaCostOfSolve
+ "(agendaCostOfSolve ?s ?n) means that solve activity ?s has a total cost of ?n on its agenda.")
+
+(isa maxDepthOfSolve Predicate)
+(isa maxDepthOfSolve DynamicUpdatePredicate)
+(arity maxDepthOfSolve 2)
+(arg1Isa maxDepthOfSolve SolveActivity)
+(arg2Isa maxDepthOfSolve Integer)
+(comment maxDepthOfSolve
+ "(maxDepthOfSolve ?s ?n) means that solve activity ?s has a maximum depth of ?n.")
+
+(isa maxAgendaWorkOfSolve Predicate)
+(isa maxAgendaWorkOfSolve DynamicUpdatePredicate)
+(arity maxAgendaWorkOfSolve 2)
+(arg1Isa maxAgendaWorkOfSolve SolveActivity)
+(arg2Isa maxAgendaWorkOfSolve Integer)
+(comment maxAgendaWorkOfSolve
+ "(maxAgendaWorkOfSolve ?s ?n) means that solve activity ?s will process at most ?n agenda items.")
+
+(isa previousSolutionsCountOfSolve Predicate)
+(isa previousSolutionsCountOfSolve DynamicUpdatePredicate)
+(arity previousSolutionsCountOfSolve 2)
+(arg1Isa previousSolutionsCountOfSolve SolveActivity)
+(arg2Isa previousSolutionsCountOfSolve Integer)
+(comment previousSolutionsCountOfSolve
+ "(previousSolutionsCountOfSolve ?s ?n) means that solve activity ?s has ?n previous solutions.")
+ 
+(isa previousSolution Predicate)
+(arity previousSolution 2)
+(arg1Isa previousSolution SolveActivity)
+(arg2Isa previousSolution ELSentence-Assertible)
+(comment previousSolution
+ "(previousSolution ?s ?exp) means that ?exp is a previous solution of the solve ao-tree ?s")
+
+(isa paused Predicate)
+(isa paused DynamicUpdatePredicate)
+(arity paused 1)
+(arg1Isa paused SolveActivity)
+(comment paused "(paused ?s) means the solve activity ?s is currently paused.")
+
+(isa singleSolutionAssumedInSolve Predicate)
+(isa singleSolutionAssumedInSolve DynamicUpdatePredicate)
+(arity singleSolutionAssumedInSolve 1)
+(arg1Isa singleSolutionAssumedInSolve SolveActivity)
+(comment singleSolutionAssumedInSolve
+ "(singleSolutionAssumedInSolve ?s) means that in solve activity ?s it is assumed that only a single solution exists for each node.")
+
+(isa failDuplicatesAssumedInSolve Predicate)
+(isa failDuplicatesAssumedInSolve DynamicUpdatePredicate)
+(arity failDuplicatesAssumedInSolve 1)
+(arg1Isa failDuplicatesAssumedInSolve SolveActivity)
+(comment failDuplicatesAssumedInSolve
+ "(failDuplicatesAssumedInSolve ?s) means that in solve activity ?s it is assumed that if a subgoal fails once, it will always fail again.  N.B. This assumes that strategies such as indirect proof are not useful.")
+
+
+;;;;; Information about and/or nodes
+
+(isa aoNodeForm Predicate)
+(arity aoNodeForm 2)
+(arg1Isa aoNodeForm AndOrNode)
+(arg2Isa aoNodeForm CycLExpression)
+(comment aoNodeForm
+ "(aoNodeForm ?n ?f) means that the and/or node ?n has as its form ?f.")
+
+(isa aoNodeContext Predicate)
+(arity aoNodeContext 2)
+(arg1Isa aoNodeContext AndOrNode)
+(arg2Isa aoNodeContext Microtheory)
+(comment aoNodeContext
+ "(aoNodeContext ?n ?mt) means that the and/or node ?n has as its context ?mt.")
+
+(isa aoNodeControlStatus Predicate)
+(arity aoNodeControlStatus 2)
+(arg1Isa aoNodeControlStatus AndOrNode)
+(arg2Isa aoNodeControlStatus SolveStatus)
+(comment aoNodeControlStatus
+ "(aoNodeControlStatus ?n ?s) means that the and/or node ?n has as its control status ?s.")
+
+(isa aoNodeSolutionStatus Predicate)
+(arity aoNodeSolutionStatus 2)
+(arg1Isa aoNodeSolutionStatus AndOrNode)
+(arg2Isa aoNodeSolutionStatus SolveStatus)
+(comment aoNodeSolutionStatus
+ "(aoNodeSolutionStatus ?n ?s) means that the and/or node ?n has as its solution status ?s.")
+
+(isa aoNodeParent Predicate)
+(arity aoNodeParent 2)
+(arg1Isa aoNodeParent AndOrNode)
+(arg2Isa aoNodeParent AndOrNode)
+(comment aoNodeParent
+ "(aoNodeParent ?n ?p) means that the and/or node ?n has as ?p as its parent.")
+
+(isa aoNodeChildren Predicate)
+(arity aoNodeChildren 2)
+(arg1Isa aoNodeChildren AndOrNode)
+(arg2Isa aoNodeChildren SetOrList-Extensional)
+(comment aoNodeChildren
+ "(aoNodeChildren ?n ?c) means that the and/or node ?n has children ?c.")
+
+(isa aoNodeDepth Predicate)
+(arity aoNodeDepth 2)
+(arg1Isa aoNodeDepth AndOrNode)
+(arg2Isa aoNodeDepth Integer)
+(comment aoNodeDepth
+ "(aoNodeDepth ?n ?d) means that the and/or node ?n has depth ?d")
+
+(isa aoNodeCost Predicate)
+(isa aoNodeCost DynamicUpdatePredicate)
+(arity aoNodeCost 2)
+(arg1Isa aoNodeCost AndOrNode)
+(arg2Isa aoNodeCost Number)
+(comment aoNodeCost
+ "(aoNodeCost ?n ?c) means that the and/or node ?n has cost ?c.")
+
+(isa aoNodeSubtree Predicate)
+(arity aoNodeSubtree 2)
+(arg1Isa aoNodeSubtree AndOrNode)
+(arg2Isa aoNodeSubtree SetOrList-Extensional)
+(comment aoNodeSubtree
+ "(aoNodeSubtree ?n ?c) means that the and/or node ?n has nodes ?c below it.")
+
+(isa aoNodeCostUpdate Predicate)
+(arity aoNodeCostUpdate 2)
+(arg1Isa aoNodeCostUpdate AndOrNode)
+(arg2Isa aoNodeCostUpdate Number)
+(comment aoNodeCostUpdate
+  "(aoNodeCostUpdate ?n ?c) means that the cost of and/or node ?n is update to ?c.")
+
+
+(isa aoNodeEnqueue Predicate)
+(isa aoNodeEnqueue DynamicUpdatePredicate)
+(arg1Isa aoNodeEnqueue SolveActivity)
+(arg2Isa aoNodeEnqueue AndOrNode)
+(comment aoNodeEnqueue
+  "(aoNodeEnqueue ?s ?n) means that the node ?n is to be enqueued in the agenda for the solve activity ?s.")
+
+;;aoNodeDequeue
+(isa aoNodeDequeue Predicate)
+(isa aoNodeDequeue DynamicUpdatePredicate)
+(arity aoNodeDequeue 2)
+(arg1Isa aoNodeDequeue SolveActivity)
+(arg2Isa aoNodeDequeue AndOrNode)
+(comment aoNodeDequeue
+  "(aoNodeDequeue ?s ?n) means that the node ?n is being dequeued from the agenda for the solve activity ?s.")
+
+
+(isa aoNodeSubgoals Predicate)
+(isa aoNodeSubgoals DynamicUpdatePredicate)
+(arity aoNodeSubgoals 2)
+(arg1Isa aoNodeSubgoals SolveActivity)
+(arg2Isa aoNodeSubgoals List)
+(comment aoNodeSubgoals "(aoNodeSubgoals ?s ?g) binds the list of subgoals ?g of solve activity ?s.")
+
+;;;; -------------------------------------------------------------------------
+;;;; End of Code

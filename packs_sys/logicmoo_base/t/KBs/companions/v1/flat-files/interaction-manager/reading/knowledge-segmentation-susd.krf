@@ -1,0 +1,223 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: knowledge-segmentation-susd.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: July 18, 2014 23:57:26
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+(isa ReadAndStoreSUSD ComplexActionPredicate)
+(arity ReadAndStoreSUSD 1)
+(arg1Isa ReadAndStoreSUSD Thing)
+(comment ReadAndStoreSUSD "(ReadAndStoreSUSD ?experimental-trial-name)
+ reads SUSD and stores it in the KB.")
+
+(isa ReadAndStoreSUSDChapter ComplexActionPredicate)
+(arity ReadAndStoreSUSDChapter 2)
+(arg1Isa ReadAndStoreSUSDChapter Number)
+(arg2Isa ReadAndStoreSUSDChapter Thing)
+(comment ReadAndStoreSUSDChapter "(ReadAndStoreSUSDChapter ?chapter-number
+?experimental-trial-name) reads the specified chapter of SUSD and stores it
+ in the KB.")
+
+(isa ReadAndStoreFullSUSDChapter ComplexActionPredicate)
+(arity ReadAndStoreFullSUSDChapter 2)
+(arg1Isa ReadAndStoreFullSUSDChapter Number)
+(arg2Isa ReadAndStoreFullSUSDChapter Thing)
+(comment ReadAndStoreFullSUSDChapter "(ReadAndStoreFullSUSDChapter ?chapter-number 
+?experimental-trial-name)
+reads the specified chapter of SUSD as one big unit and stores it in the KB.")
+
+(isa ReadAndStoreParagraph-SUSD ComplexActionPredicate)
+(arity ReadAndStoreParagraph-SUSD 3)
+(arg1Isa ReadAndStoreParagraph-SUSD Number)
+(arg2Isa ReadAndStoreParagraph-SUSD Number)
+(arg3Isa ReadAndStoreParagraph-SUSD Thing)
+(comment ReadAndStoreParagraph-SUSD "(ReadAndStoreParagraph-SUSD ?chapter-number 
+?paragraph-number ?experimental-trial-name)
+reads the specified paragraph of SUSD and stores it in the KB.")
+
+
+
+(preconditionForMethod
+ (and
+      (evaluate ?chaps
+        (TheClosedRetrievalSetOf ?chapter-number
+          (ist-Information TextContentsOfSourceTextsCanonicalMt
+            (textContentsOfSourceText-Canonical 
+             (SourceTextChapterParagraphFn SUSD-Unsimplified ?chapter-number ?paragraph-number)
+             ?text))))        
+      )
+ (methodForAction
+    (ReadAndStoreSUSD ?experimental-trial-name)
+    (actionSequence
+     (TheList
+      (doForEach ?next-chap ?chaps
+           (ReadAndStoreSUSDChapter ?next-chap ?experimental-trial-name))))))
+
+(preconditionForMethod
+ (and
+      (evaluate ?paras
+        (TheClosedRetrievalSetOf ?paragraph-number
+          (ist-Information TextContentsOfSourceTextsCanonicalMt
+            (textContentsOfSourceText-Canonical 
+             (SourceTextChapterParagraphFn SUSD-Unsimplified ?chapter-number ?paragraph-number)
+             ?text))))        
+      )
+ (methodForAction
+    (ReadAndStoreSUSDChapter ?chapter-number ?experimental-trial-name)
+    (actionSequence
+     (TheList
+      (doClearWorkingMemory)
+      (doGarbageCollect)
+      (doForEach ?next-para ?paras
+                 (ReadAndStoreParagraph-SUSD ?chapter-number ?next-para ?experimental-trial-name))))))  
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly 
+       (generatedReadingName (SourceTextChapterFn SUSD-Unsimplified ?chapter-number) ?generated-reading-name))
+      (kbOnly 
+       (ist-Information TextContentsOfSourceTextsCanonicalMt
+         (textContentsOfSourceText-Canonical (SourceTextChapterFn SUSD-Unsimplified ?chapter-number) ?text))))
+ (methodForAction
+    (ReadAndStoreFullSUSDChapter ?chapter-number ?experimental-trial-name)
+    (actionSequence
+     (TheList
+      (doClearWorkingMemory)
+      (doGarbageCollect)
+      (doRecord 
+       (ist-Information (MtForSourceTextFn (SourceTextChapterFn SUSD-Unsimplified ?chapter-number))
+         (readingOfSourceText ?generated-reading-name 
+                              (SourceTextChapterFn SUSD-Unsimplified ?chapter-number))))
+      (learnByReadingStoredSourceText (SourceTextChapterFn SUSD-Unsimplified ?chapter-number)
+                                      ?generated-reading-name ?experimental-trial-name)))))
+
+;;;  (textContentsOfSourceText-Canonical (SourceTextChapterParagraphFn SUSD-Unsimplified 1 2) "text")
+(preconditionForMethod
+ (and
+      (outsourcedOnly (generatedReadingName (SourceTextChapterParagraphFn SUSD-Unsimplified ?chapter-number ?paragraph-number) ?generated-reading-name))
+      (kbOnly 
+       (ist-Information TextContentsOfSourceTextsCanonicalMt
+         (textContentsOfSourceText-Canonical (SourceTextChapterParagraphFn SUSD-Unsimplified ?chapter-number ?paragraph-number) ?text))))
+ (methodForAction
+    (ReadAndStoreParagraph-SUSD ?chapter-number ?paragraph-number ?experimental-trial-name)
+    (actionSequence
+     (TheList
+      (doRecord (ist-Information (MtForSourceTextFn (SourceTextChapterParagraphFn SUSD-Unsimplified ?chapter-number ?paragraph-number))
+                                                    (readingOfSourceText ?generated-reading-name (SourceTextChapterParagraphFn SUSD-Unsimplified ?chapter-number ?paragraph-number))))
+      (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Unsimplified ?chapter-number ?paragraph-number) ?generated-reading-name ?experimental-trial-name)))))
+
+
+(isa makeCaseFromStoredInterpretation ComplexActionPredicate)
+(arity makeCaseFromStoredInterpretation 2)
+(arg1Isa makeCaseFromStoredInterpretation Microtheory)
+(arg2Isa makeCaseFromStoredInterpretation Microtheory)
+(comment makeCaseFromStoredInterpretation "(makeCaseFromStoredInterpretation ?inter-mt ?storage-mt) takes the interpretation based in ?inter-mt
+and makes a case for doing analogy with, all in ?storage-mt.")
+
+(isa caseFromStoredInterpretation predicate)
+(arity caseFromStoredInterpretation 2)
+(arg1Isa caseFromStoredInterpretation Microtheory)
+(arg2Isa caseFromStoredInterpretation Microtheory)
+(comment caseFromStoredInterpretation "(caseFromStoredInterpretation ?inter-mt ?storage-mt) takes the interpretation based in ?inter-mt
+and makes a case for doing analogy with, all in ?storage-mt, when used as an outsourced predicate.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (caseFromStoredInterpretation ?inter-mt ?storage-mt)))
+ (methodForAction
+  (makeCaseFromStoredInterpretation ?inter-mt ?storage-mt)
+  (actionSequence
+   (TheList
+    (doForEach ?next-chap ?chaps
+               (ReadAndStoreSUSDChapter ?next-chap ?experimental-trial-name))))))
+;;;;;;;;;
+
+(isa lengthOfSource Predicate)
+(arity lengthOfSource 2)
+(arg1Isa lengthOfSource InformationBearingThing)
+(arg2Isa lengthOfSource Integer)
+(comment lengthOfSource "(lengthOfSource ?source ?length) indicates the ?length
+of the source text ?source in sentences. It can be used as an outsourced
+predicate.")
+
+
+;;;;;;;;;
+
+(isa SUSD-BatchCreator ComplexActionPredicate)
+(arity SUSD-BatchCreator 0)
+(comment SUSD-BatchCreator "(SUSD-BatchCreator")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (SUSD-BatchCreator)
+  (actionSequence
+   (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 1)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P1-121814-02-Auto SUSD-Nov2014-01-Ch16-P1-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 2)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P2-121814-02-Auto SUSD-Nov2014-01-Ch16-P2-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 3)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P3-121814-02-Auto SUSD-Nov2014-01-Ch16-P3-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 3.6)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P36-121814-02-Auto SUSD-Nov2014-01-Ch16-P36-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 4)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P4-121814-02-Auto SUSD-Nov2014-01-Ch16-P4-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 5)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P5-121814-02-Auto SUSD-Nov2014-01-Ch16-P5-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 5.5)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P55-121814-02-Auto SUSD-Nov2014-01-Ch16-P55-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 6)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P6-121814-02-Auto SUSD-Nov2014-01-Ch16-P6-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 7)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P7-121814-02-Auto SUSD-Nov2014-01-Ch16-P7-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 8)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P8-121814-02-Auto SUSD-Nov2014-01-Ch16-P8-121814-02-Auto-expt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    (learnByReadingStoredSourceText (SourceTextChapterParagraphFn SUSD-Simplified-Nov2014-01 16 9)
+                                    ReadingOf-SUSD-Nov2014-01-Ch16-P9-121814-02-Auto SUSD-Nov2014-01-Ch16-P9-121814-02-Auto-expt)))))
+      ))))))))))))))))))))))))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

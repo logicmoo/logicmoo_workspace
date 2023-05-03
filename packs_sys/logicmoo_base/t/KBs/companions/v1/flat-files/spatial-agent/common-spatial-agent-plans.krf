@@ -1,0 +1,51 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: common-spatial-agent-plans.meld
+;;;;    System: spatial agent
+;;;;    Author: Matt McLure
+;;;;   Created: June 26, 2011 22:13:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Spatial-AgentMt)
+
+(genlMt Spatial-AgentMt CompanionsMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa saveSketch ComplexActionPredicate)
+(arity saveSketch 1)
+(arg1Isa saveSketch SketchAgent-CA)
+(comment saveSketch "(saveSketch ?sketch-agent) saves the sketch for the open
+                      sketch agent at its current location.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(preconditionForMethod
+ (and (sessionContext ?session-ctxt)
+      (ist-Information ?session-ctxt
+        (sketchAgentFileURL ?sketch-agent ?url)))
+ (methodForAction
+  (saveSketch ?sketch-agent)
+  (actionSequence
+   (TheList
+    (doAnnounce "~% Saving sketch agent ~A~%   @URL: ~s" (?sketch-agent ?url))
+    (doSaveSketchAs ?sketch-agent ?url)))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (saveSketch ?sketch-agent)
+  (actionSequence
+   (TheList
+    (doAnnounce "~% saveSketch: Default save location unknown for ~A." (?sketch-agent))))))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

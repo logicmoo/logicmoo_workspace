@@ -1,0 +1,51 @@
+(in-microtheory NewtonianPhysicsMt)
+
+(isa WorkEnergyTheorem LawOfNature)
+(isa WorkEnergyTheorem Theorem-Proposition)
+(comment WorkQuantity "A #$DerivedMeasurableQuantityType and specialization of #$EnergyQuantity.  Each instance of #$WorkQuantity is a quantity of energy that represents the work done on an object by a #$ForceVector in an event.  (See #$workDoneOnObjectByForceIn.)  The relevant notion of \"work\" is that of classical mechanics, namely: <i>the magnitude of the displacement times the component of the force parallel to the displacement.</i>  A notable specialization is #$NetWorkQuantity.")
+(comment NetWorkQuantity "A specialization of #$WorkQuantity.  Each instance of #$NetWorkQuantity is a quantity of energy that represents the net work done on an object in an event, i.e., the sum of the quantities of work done by each force acting on the object in the event.  According to the #$WorkEnergyTheorem, this is equal to the change in the kinetic energy of the object in the event.")
+(comment (QPQuantityFn NetWorkQuantity) "An unreifiable #$BinaryFunction that takes a #$PartiallyTangible and a #$TemporalThing and returns a #$NetWorkQuantity.  <code>((#$QPQuantityFn #$NetWorkQuantity) OBJ TEMP-THING)</code> denotes the net quantity of work done on <code>OBJ</code> in <code>TEMP-THING</code>, i.e., the sum of the quantities of work done by each force acting on <code>OBJ</code> in <code>TEMP-THING</code>.
+<p>
+In classical mechanics, work is by definition the magnitude of force times the magnitude of displacement times the cosine of the angle between the force and the displacement.  In the special case where the force and the displacement are in the same direction, work is simply magnitude of force times magnitude of displacement.")
+(comment (QPQuantityFn WorkQuantity) "An unreifiable #$TernaryFunction that takes a #$PartiallyTangible, a #$ForceVector, and a #$TemporalThing, and returns a #$WorkQuantity.  <code>((#$QPQuantityFn #$WorkQuantity) OBJ FORCE TEMP-THING)</code> denotes the quantity of work done on <code>OBJECT</code> by <code>FORCE</code> in <code>TEMP-THING</code>.
+<p>
+In classical mechanics, work is by definition the magnitude of force times the magnitude of displacement times the cosine of the angle between the force and the displacement.  In the special case where the force and the displacement are in the same direction, work is simply magnitude of force times magnitude of displacement.")
+(comment WorkEnergyTheorem "An instance of #$LawOfNature (q.v.).  The work-energy theorem (or principle) states that the net work done on an object (in an event) is equal to the change in kinetic energy of that object (in that event). 
+<p>
+One formulation of the #$WorkEnergyTheorem in #$CycL is:
+<pre>
+(#$mathEquals
+  ((#$QPQuantityFn #$NetWorkQuantity) ?OBJ ?TEMP-THING)
+  (#$DifferenceFn
+    (#$MeasurementAtFn
+      ((#$QPQuantityFn #$KineticEnergyQuantity) ?OBJ)
+      (#$EndFn ?TEMP-THING))
+    (#$MeasurementAtFn
+      ((#$QPQuantityFn #$KineticEnergyQuantity) ?OBJ)
+      (#$StartFn ?TEMP-THING))))
+.</pre>")
+(comment KineticEnergyQuantity "A specialization of #$EnergyQuantity.  Each instance of #$KineticEnergyQuantity is a quantity of translational (as opposed to rotational) kinetic energy had by some object  This collection is simply a rewrite of:
+<pre>
+(#$SubcollectionOfWithRelationFromTypeFn #$EnergyQuantity #$kineticEnergyOfObject #$PartiallyTangible).
+</pre>
+In classical mechanics, the kinetic energy of an object is defined as (1/2)mv^2, i.e., 0.5 times the mass of the object times the square of the speed (i.e. magnitude of velocity) of the object.  One way of expressing this in #$CycL is:
+<pre>
+(#$mathEquals
+  (#$MeasurementAtFn
+    ((#$QPQuantityFn #$KineticEnergyQuantity) ?OBJ) ?TEMP-THING)
+  (#$TimesFn
+    0.5
+    (#$MeasurementAtFn
+      ((#$QPQuantityFn #$Mass) ?OBJ) ?TEMP-THING)
+    (#$SquaredFn
+      (#$MeasurementAtFn
+        ((#$QPQuantityFn #$Speed) ?OBJ) ?TEMP-THING)))).
+</pre>")
+(comment workDoneOnObjectByForceIn "A #$QuaternaryPredicate that relates a #$PartiallyTangible to a #$ForceVector to a #$TemporalThing to an #$EnergyQuantity.  <code>(#$workDoneOnObjectByForceIn OBJ FORCE TEMP-THING QUANT)</code> means that the quantity of work done on <code>OBJ</code> by <code>FORCE</code> during <code>TEMP-THING</code> is <code>QUANT</code>.  The relevant notion of \"work\" is that of classical mechanics, namely: <i>the magnitude of the displacement times the component of the force parallel to the displacement.</i>  This is the predicate corresponding to (#$QPQuantityFn #$WorkQuantity).  See also #$netWorkDoneOnObjectIn.")
+(comment netWorkDoneOnObjectIn "A #$TernaryPredicate that relates a #$PartiallyTangible to a #$TemporalThing to an #$EnergyQuantity.  <code>(#$netWorkDoneOnObjectIn OBJ TEMP-THING QUANT)</code> means that the net work done on <code>OBJ</code> in <code>TEMP-THING</code> is <code>QUANT</code>; that is, <code>QUANT</code> equals the kinetic energy of <code>OBJ</code> at the end of <code>TEMP-THING</code> minus the kinetic energy of <code>OBJ</code> at the beginning of <code>TEMP-THING</code>.  This is the predicate corresponding to (#$QPQuantityFn #$NetWorkQuantity).  See also #$workDoneOnObjectByForceIn.")
+(comment (QPQuantityFn KineticEnergyQuantity) "An unreifiable #$UnaryFunction that takes a #$PartiallyTangible and returns a #$KineticEnergyQuantity.  <code>((#$QPQuantityFn #$KineticEnergyQuantity) OBJ)</code> denotes the quantity of kinetic energy had by <code>OBJ</code>.  In classical mechanics, the kinetic energy of an object is defined as (1/2)mv^2, i.e. one half its mass times the square of its velocity.")
+(comment kineticEnergyOfObject "A #$FunctionalSlot and specialization of #$hasPhysicalQuantity that relates a #$PartiallyTangible to an #$EnergyQuantity.  <code>(#$kineticEnergyOfObject OBJ QUANT)</code> means that the quantity of (translational) kinetic energy had by <code>OBJ</code> is <code>QUANT</code>.  In general, assertions made with this predicate should be temporally qualified.
+<p>
+In classical mechanics, the kinetic energy of an object is defined as (1/2)<i>mv</i><sup>2</sup>, where <i>m</i> is the object's mass and <i>v</i> is its velocity.
+<p>
+This is the predicate corresponding to (#$QPQuantityFn #$KineticEnergyQuantity).")

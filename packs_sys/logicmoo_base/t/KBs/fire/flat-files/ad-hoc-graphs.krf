@@ -1,0 +1,83 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ad-hoc-graphs
+;;;;    System: 
+;;;;    Author: Scott Friedman
+;;;;   Created: November 14, 2011 13:52:36
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory AdHocGraphMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ontology.
+;;
+
+(isa adHocEdge Relation)
+(arity adHocEdge 9)
+(comment adHocEdge "(adHocEdge <graph-type> <origin-data> <terminus-data> <label> <data> <directed?> <color> <style> <width>)")
+
+(isa adHocVertex Relation)
+(arity adHocVertex 5)
+(comment adHocVertex "(adHocVertex <graph-type> <label> <data> <shape> <fill-color>)")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Nested relational graphs (i.e., relational graphs for SME cases).
+;;
+
+;; Helper methods.
+
+(<== (filteredFormula ?formula ?filtered)
+     (uninferredSentence (unifies ?formula (isa ?inst ?coll)))
+     (unifies ?filtered ?formula))
+
+(<== (filteredFormula ?formula ?filtered)
+     (unifies ?formula (isa ?inst ?coll))
+     (unifies ?filtered (?coll ?inst)))
+
+(<== (topLevelCaseFormula ?case-term ?formula)
+     (caseFact ?case-term ?fact)
+     (filteredFormula ?fact ?formula))
+
+(<== (subFormula ?formula ?sub-formula ?arg-num)
+     (evaluate ?arg-list (RestOfListFn (MakeListFn ?formula)))
+     (evaluate ?arg-set (ListToSetFn ?arg-list))
+     (elementOf ?arg ?arg-set)
+     (evaluate ?arg-num (PositionInListFn ?arg ?arg-list))
+     (filteredFormula ?arg ?sub-formula))
+
+(<== (formulaLabel ?formula ?label)
+     (evaluate ?label (FirstInListFn (MakeListFn ?formula))))
+
+(<== (nestedCaseFormula ?case-term ?formula)
+     (topLevelCaseFormula ?case-term ?top-level-formula)
+     (subFormula ?top-level-formula ?formula ?arg))
+
+(<== (nestedCaseFormula ?case-term ?formula)
+     (nestedCaseFormula ?case-term ?super-formula)
+     (subFormula ?super-formula ?formula ?arg))
+
+;; (adHocEdge <graph-type> <origin-data> <terminus-data> <label> <data> <directed?> <color> <style> <width>)
+(<== (adHocEdge (NestedRelationalGraph ?case-term) ?super-formula ?sub-formula ?arg ?arg True BlackColor :solid 1)
+     (lookupOnly (adHocVertex (NestedRelationalGraph ?case-term) ?label1 ?super-formula ?shape1 ?color1))
+     (lookupOnly (adHocVertex (NestedRelationalGraph ?case-term) ?label2 ?sub-formula ?shape2 ?color2))
+     (subFormula ?super-formula ?sub-formula ?arg))
+
+;; (adHocVertex <graph-type> <label> <data> <shape> <fill-color>)
+(<== (adHocVertex (NestedRelationalGraph ?case-term) ?label ?data :ellipse GreenColor)
+     (topLevelCaseFormula ?case-term ?data)
+     (formulaLabel ?data ?label))
+
+(<== (adHocVertex (NestedRelationalGraph ?case-term) ?label ?data :ellipse BlueColor)
+     (nestedCaseFormula ?case-term ?data)
+     (uninferredSentence (topLevelCaseFormula ?case-term ?data))
+     (formulaLabel ?data ?label))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

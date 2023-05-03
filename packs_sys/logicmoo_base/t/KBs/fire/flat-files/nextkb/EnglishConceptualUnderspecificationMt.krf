@@ -1,0 +1,7 @@
+(in-microtheory EnglishConceptualUnderspecificationMt)
+
+(isa eventOccursInCountry CotemporalPredicate)
+(isa eventOccursInPolity CotemporalPredicate)
+(typedGenlPreds molecularSubComponents constituents)
+(genlInverse subEvents at-UnderspecifiedLandmark)
+(genlPreds molecularSubComponents constituents)

@@ -1,0 +1,333 @@
+;;; File name: explain-quantity-changes.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: November 14, 2011 11:42:56
+;;;   Purpose: Explain changes to QP quantities to induce qualitative 
+;;;            relations
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;
+;;;  11-14-11 - Split off from lbd.meld.
+;;;  09-21-11 - recordActionEffects moved to action-effects.meld
+
+(in-microtheory PerceptualAgentMt)
+
+;;; -----------------------------------------------------------------
+;;; Explaining Quantity Changes
+
+;;; Ultimately invoked by pa-notification methods on changes to cities
+;;; and units.  It's probably too narrowly focused.  This is invoked 
+;;; asynchronously by changes to buffered quantities (but triggered
+;;; exclusively by unit and city packet changes in freeciv)
+;;; explainQuantityChanges cannot be recursive. 
+
+(isa explainQuantityChanges ComplexActionPredicate)
+(arity explainQuantityChanges 5)
+(arg1Isa explainQuantityChanges Microtheory)
+(arg2Isa explainQuantityChanges PerceptualAgentCommand)
+(arg3Isa explainQuantityChanges CycLExpression)
+(arg4Isa explainQuantityChanges Set-Mathematical)
+(arg5Isa explainQuantityChanges TimeInterval)
+(comment explainQuantityChanges "(explainQuantityChanges ?mt ?cmd ?operator ?quantity-changes ?year) attempts to explain changes in buffered quantities.")
+
+;;; Use this method when observing a demonstration or running a regression test
+;;; since we won't necessarily have learning goals yet.
+(preconditionForMethod 
+  (and (uninferredSentence
+         (currentActivityMode Experimentation))  ; fork this entire method if we're running in experimentation mode, so we don't screw the regression-test mechanism.
+       (unifies ?casename (IICaseFn ?mt ?when ?cmd))
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))
+       (unifies ?spindlename (SpindleMtFn ?domain IndirectInfluences)))
+  (methodForAction 
+    (explainQuantityChanges ?mt ?cmd ?operator ?changes ?when)
+    (actionSequence
+      (TheList
+        (doRecord 
+          (ist-Information ?casename
+            (infoTransferred ?cmd ?operator)))
+        (storeIICase ?mt ?casename ?changes)
+        (recordActionEffects ?mt ?operator ?changes ?casename ?spindlename)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (induceIIModel ?mt ?changes ?casename ?spindlename ?lkmt))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (elaborateActionCaseForActiveGoals ?mt ?cmd ?operator ?when)
+              (reportNumHypotheses ?casename "indirect influences"))))
+        ))))
+
+;;; For self-directed learning, make this more sensitive to active learning goals:
+(preconditionForMethod 
+  (and (currentActivityMode Experimentation)
+       (unifies ?casename (IICaseFn ?mt ?when ?cmd))
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))
+       (unifies ?spindlename (SpindleMtFn ?domain IndirectInfluences)))
+  (methodForAction 
+    (explainQuantityChanges ?mt ?cmd ?operator ?changes ?when)
+    (actionSequence
+      (TheList
+        (doRecord 
+          (ist-Information ?casename
+            (infoTransferred ?cmd ?operator)))
+        (storeIICase ?mt ?casename ?changes)
+        (recordActionEffects ?mt ?operator ?changes ?casename ?spindlename)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (induceIIModelForActiveGoals ?mt ?changes ?casename ?spindlename ?lkmt))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+            ;; This checks for an active optimality goal on the action pred:
+              (elaborateActionCaseForActiveGoals ?mt ?cmd ?operator ?when)
+              )))
+        ))))
+        
+
+
+
+(isa induceIIModelForActiveGoals ComplexActionPredicate)
+(arity induceIIModelForActiveGoals 5)
+(arg1Isa induceIIModelForActiveGoals Microtheory)
+(arg2Isa induceIIModelForActiveGoals Set-Mathematical)
+(arg3Isa induceIIModelForActiveGoals Microtheory)
+(arg4Isa induceIIModelForActiveGoals Microtheory)
+(arg5Isa induceIIModelForActiveGoals Microtheory)
+(comment induceIIModelForActiveGoals "(induceIIModelForActiveGoals ?mt ?changes ?casename ?ii-spindle ?lkmt) tries to explain quantity changes, but only on dependent quantities for which there is an active learning goal.")
+
+;;; Bail if we have a qualitative model (kind of severe!):
+(preconditionForMethod
+  (filterBy ?changes activeInfluenceGoalOn ?filtered-changes)
+  (methodForAction
+    (induceIIModelForActiveGoals ?mt ?changes ?casename ?ii-spindle ?lkmt)
+    (actionSequence
+      (TheList
+        (doForEach ?change ?filtered-changes
+          (actionSequence
+            (TheList
+              (induceIndirectInfluences ?mt ?change ?changes ?casename ?ii-spindle)
+              (validateInfluencesFrom ?mt ?change ?casename ?ii-spindle))))))))
+
+(isa activeInfluenceGoalOn UnaryPredicate)
+(arity activeInfluenceGoalOn 1)
+(arg1Isa activeInfluenceGoalOn CycLSentence-Assertible)  ; a 'change' is an uncontextualized quantityChange statement
+(comment activeInfluenceGoalOn "(activeInfluenceGoalOn ?changes) succeeds for just those quantity changes for which there is an active learning goal to learn influences on it.")
+
+(<== (activeInfluenceGoalOn (quantityChange (?qtype ?entity) ?change-magnitude))
+     (activeLearningGoal ?qtype (DetectPotentialQualitativeInfluence ?qtype)))  ; the result of postInfluenceLearningGoal.
+       
+(isa induceIIModel ComplexActionPredicate)
+(arity induceIIModel 5)
+(arg1Isa induceIIModel Microtheory)
+(arg2Isa induceIIModel Set-Mathematical)
+(arg3Isa induceIIModel Microtheory)
+(arg4Isa induceIIModel Microtheory)
+(arg5Isa induceIIModel Microtheory)
+(comment induceIIModel "(induceIIModel ?mt ?changes ?casename ?ii-spindle ?lkmt) tries to explain quantity changes, but only if there is no qualitative model stored in the learned knowledge microtheory.")
+
+;;; Bail if we have a qualitative model (kind of severe!):
+(preconditionForMethod
+  (uninferredSentence
+    (lookupOnly
+      (kbOnly
+        (ist-Information ?lkmt
+          (qprop+TypeType ?dep-qtype ?indep-qtype ?col1 ?col2 ?rel)))))
+  (methodForAction
+    (induceIIModel ?mt ?changes ?casename ?ii-spindle ?lkmt)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Induce indirect influences in ~s." (?casename))
+        (doForEach ?change ?changes
+          (actionSequence
+            (TheList
+              ;(doAnnounce "~&~a" (?change))
+              (induceIndirectInfluences ?mt ?change ?changes ?casename ?ii-spindle)
+              (validateInfluencesFrom ?mt ?change ?casename ?ii-spindle))))))))
+        
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceIIModel ?mt ?changes ?casename ?ii-spindle ?lkmt)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (induceIIModel ?mt ?changes ?casename ?ii-spindle ?lkmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; -----------------------------------------------------------------
+;;; Explaining Incremental Quantity Changes
+;;;
+;;; Changes that occur across turns must be due to processes.
+;;; Hypothesize Direct Influences (i+, i-).
+
+(isa explainIncrementalQuantityChanges ComplexActionPredicate)
+(arity explainIncrementalQuantityChanges 4)
+(arg1Isa explainIncrementalQuantityChanges Microtheory)
+(arg2Isa explainIncrementalQuantityChanges Set-Mathematical)
+(arg3Isa explainIncrementalQuantityChanges TimeInterval)
+(arg4Isa explainIncrementalQuantityChanges TimeInterval)
+(comment explainIncrementalQuantityChanges "(explainIncrementalQuantityChanges ?mt ?change-set ?before ?after) induces direct influences to account for diachronic changes.")
+
+(preconditionForMethod 
+  (and (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))
+       (uninferredSentence    ; once we've migrated hypotheses, stop looking.
+         (lookupOnly
+           (kbOnly
+             (ist-Information ?lkmt
+               (i+TypeType ?dep-qtype ?indep-qtype ?col1 ?col2 ?rel)))))
+       (unifies ?di-casename (DICaseFn ?mt ?before))  ; index by *before* time.
+       (unifies ?ii-casename (IICaseFn ?mt ?after (TurnFn ?after)))
+       (unifies ?di-spindle (SpindleMtFn ?domain DirectInfluences))
+       (unifies ?ii-spindle (SpindleMtFn ?domain IndirectInfluences)))
+  (methodForAction 
+    (explainIncrementalQuantityChanges ?mt ?changes ?before ?after)
+    (actionSequence
+      (TheList
+        (storeDICase ?mt ?di-casename ?changes)
+        (storeIICase ?mt ?ii-casename ?changes)  ; non-action-driven II case
+        (doAnnounce "~&Induce direct influences in ~s." (?di-casename))
+        (doForEach ?dep-change ?changes
+          (actionSequence
+            (TheList
+              ;(doAnnounce "~&Induce direct influences on ~s~% in ~s." (?dep-change ?di-casename))
+              (induceDirectInfluences ?mt ?dep-change ?di-casename ?di-spindle))))
+        (doAnnounce "~&Induce downstream indirect influences in ~s." (?ii-casename))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (induceDownstreamIndirectInfluences ?mt ?changes ?ii-casename ?ii-spindle ?di-casename ?di-spindle))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (reportNumHypotheses ?di-casename "direct influences")     ; give the user a clue
+              (reportNumHypotheses ?ii-casename "indirect influences"))))))))
+
+;; Default doesn't even store cases:
+(preconditionForMethod 
+  (true)
+  (methodForAction 
+    (explainIncrementalQuantityChanges ?mt ?changes ?before ?after)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (explainIncrementalQuantityChanges ?mt ?changes ?before ?after) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa numHypotheses BinaryPredicate)
+(arity numHypotheses 2)
+(arg1Isa numHypotheses Microtheory)
+(arg2Isa numHypotheses Integer)
+(comment numHypotheses "(numHypotheses ?casename ?num) binds ?num to the number of hypothesis statements in the case.")
+
+(<== (numHypotheses ?casename ?num)
+     (evaluate ?num
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?hyp
+           (lookupOnly
+             (kbOnly                      ; If we've done a forget on ambiguous cases, they hang around in wm
+               (ist-Information ?casename
+                 (hypothesis ?hyp))))))))
+
+(isa numAmbiguousDirection BinaryPredicate)
+(arity numAmbiguousDirection 2)
+(arg1Isa numAmbiguousDirection Microtheory)
+(arg2Isa numAmbiguousDirection Integer)
+(comment numAmbiguousDirection "(numAmbiguousDirection ?casename ?num) binds ?num to the number of ambiguous hypotheses in the case.")
+
+(<== (numAmbiguousDirection ?casename ?num)
+     (evaluate ?num
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?amb
+           (lookupOnly
+             (kbOnly
+               (ist-Information ?casename
+                 (ambiguousInfluenceDirection ?amb))))))))
+
+
+(isa reportNumHypotheses ComplexActionPredicate)
+(arity reportNumHypotheses 2)
+(arg1Isa reportNumHypotheses Microtheory)
+(arg2Isa reportNumHypotheses CycLTerm)
+
+(preconditionForMethod
+  (and (numHypotheses ?casename ?num-hyps)
+       (greaterThan ?num-hyps 0)
+       (numAmbiguousDirection ?casename ?num-ambiguous))
+  (methodForAction
+    (reportNumHypotheses ?casename ?type)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Induced ~a possible ~a~[~:; and ~:*~a ambiguous influences~]."
+          (?num-hyps ?type ?num-ambiguous))))))
+
+(preconditionForMethod
+  (and (numHypotheses ?casename 0)
+       (numAmbiguousDirection ?casename ?num-ambiguous)
+       (greaterThan ?num-ambiguous 0))
+  (methodForAction
+    (reportNumHypotheses ?casename ?type)
+    (actionSequence
+      (TheList
+        (doAnnounce "Induced ~a ambiguous ~a."
+          (?num-ambiguous ?type))))))
+          
+(preconditionForMethod
+  (and (numHypotheses ?casename 0)
+       (numAmbiguousDirection ?casename 0))
+  (methodForAction
+    (reportNumHypotheses ?casename ?type)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Induced no new ~a." (?type))))))
+
+;;; -----------------------------------------------------------------
+;;; Adopting Hypotheses
+;;;
+
+(isa buildQualitativeModel ComplexActionPredicate)
+(arity buildQualitativeModel 0)
+(comment buildQualitativeModel "(buildQualitativeModel) converts hypothesized influences in spindle cases to an actual, believed model in the domain's model microtheory.")
+
+(preconditionForMethod
+  (and (currentDomain ?domain)
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))
+       (unifies ?di-spindle-mt (SpindleMtFn ?domain DirectInfluences))
+       (unifies ?ii-spindle-mt (SpindleMtFn ?domain IndirectInfluences))
+       (evaluate ?dis
+         (TheClosedRetrievalSetOf ?hyp
+           (ist-Information ?di-spindle-mt
+             (hypothesis ?hyp))))
+       (evaluate ?iis
+         (TheClosedRetrievalSetOf ?hyp
+           (ist-Information ?ii-spindle-mt
+             (hypothesis ?hyp))))
+       (evaluate ?pos-acts
+         (TheClosedRetrievalSetOf (actionPositivelyAffectsQuantityType ?q ?p ?c ?n ?r)
+           (ist-Information ?ii-spindle-mt
+             (actionPositivelyAffectsQuantityType ?q ?p ?c ?n ?r))))
+       (evaluate ?neg-acts
+         (TheClosedRetrievalSetOf (actionNegativelyAffectsQuantityType ?q ?p ?c ?n ?r)
+           (ist-Information ?ii-spindle-mt
+             (actionNegativelyAffectsQuantityType ?q ?p ?c ?n ?r)))))
+  (methodForAction
+    (buildQualitativeModel) ; I hate 0-arity methods
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?lkmt ?dis)
+        (doRecordMembersInContext ?lkmt ?iis)
+        (doRecordMembersInContext ?lkmt ?pos-acts)
+        (doRecordMembersInContext ?lkmt ?neg-acts)))))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of File

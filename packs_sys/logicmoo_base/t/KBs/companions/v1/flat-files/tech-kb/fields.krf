@@ -1,0 +1,116 @@
+
+(in-microtheory MetaengineeringFieldsMt)
+
+;;; This should go away and be replaced by the Cyc-native FieldOfStudy, and
+;;; fieldWorks predicate,
+;;; (PCWInFieldFn Science)
+;;; (theoreticalField THEORY FIELD)
+;;; (FieldAppliedToFn (FieldConcerningFn Islam) Law) 
+;;; (FieldConcerningFn NewtonianPhysicsMt)
+;;; (fieldPrinciples FIELD PROPOSITION)
+;;; (Methodology-StudyOfFn FIELD)
+;;; (fieldFostersAdvancedProceduresOfType ComputerScience ProgrammingAComputer)
+;;; (FocalFieldOfStudyFn TYPE)
+
+;;; Classes
+(isa Field Collection)
+
+;;; Object Properties
+(isa subFieldOf BinaryPredicate)
+
+;;; Individuals
+(isa Acoustics Field)
+(isa Acoustics Individual)
+(prettyString-Canonical Acoustics "Acoustics")
+
+(isa AeronauticsAstronautics Field)
+(isa AeronauticsAstronautics Individual)
+(prettyString-Canonical AeronauticsAstronautics "Aeronautics/Astronautics")
+
+(isa Astronomy Field)
+(isa Astronomy Individual)
+(prettyString-Canonical Astronomy "Astronomy")
+
+(isa AtomicPhysics Field)
+(isa AtomicPhysics Individual)
+(prettyString-Canonical AtomicPhysics "Atomic Physics")
+
+(isa Chemisty Field)
+(isa Chemisty Individual)
+(prettyString-Canonical Chemisty "Chemisty")
+
+(isa Communications Field)
+(isa Communications Individual)
+(prettyString-Canonical Communications "Communications")
+
+(isa Computing Field)
+(isa Computing Individual)
+(prettyString-Canonical Computing "Computing")
+
+(isa ElectricityAndMagnetism Field)
+(isa ElectricityAndMagnetism Individual)
+(prettyString-Canonical ElectricityAndMagnetism "Electricity and Magnetism")
+
+(isa Electro-Chemistry Field)
+(isa Electro-Chemistry Individual)
+(prettyString-Canonical Electro-Chemistry "Electro-Chemistry")
+
+(isa FluidMechanics Field)
+(isa FluidMechanics Individual)
+(prettyString-Canonical FluidMechanics "Fluid Mechanics")
+
+(isa GeneralPhysics Field)
+(isa GeneralPhysics Individual)
+(prettyString-Canonical GeneralPhysics "General Physics")
+
+(isa MaterialsScience Field)
+(isa MaterialsScience Individual)
+(subFieldOf MaterialsScience Chemisty)
+(prettyString-Canonical MaterialsScience "Materials Science")
+
+(isa Mathematics Field)
+(isa Mathematics Individual)
+(prettyString-Canonical Mathematics "Mathematics")
+
+(isa Mechanics Field)
+(isa Mechanics Individual)
+(prettyString-Canonical Mechanics "Mechanics")
+
+(isa Metallurgy Field)
+(isa Metallurgy Individual)
+(subFieldOf Metallurgy MaterialsScience)
+(prettyString-Canonical Metallurgy "metallurgy")
+
+(isa Navigation Field)
+(isa Navigation Individual)
+(prettyString-Canonical Navigation "Navigation")
+
+(isa Optics Field)
+(isa Optics Individual)
+(prettyString-Canonical Optics "Optics")
+
+(isa Psychology Field)
+(isa Psychology Individual)
+(prettyString-Canonical Psychology "Psychology")
+
+(isa QuantumMechanics Field)
+(isa QuantumMechanics Individual)
+(subFieldOf QuantumMechanics GeneralPhysics)
+(prettyString-Canonical QuantumMechanics "Quantum Mechanics")
+
+(isa Surveying Field)
+(isa Surveying Individual)
+(prettyString-Canonical Surveying "Surveying")
+
+(isa Technology Field)
+(isa Technology Individual)
+(prettyString-Canonical Technology "Technology")
+
+(isa Thermodynamics Field)
+(isa Thermodynamics Individual)
+(prettyString-Canonical Thermodynamics "Thermodynamics")
+
+(isa Transportation Field)
+(isa Transportation Individual)
+(prettyString-Canonical Transportation "Transportation")
+

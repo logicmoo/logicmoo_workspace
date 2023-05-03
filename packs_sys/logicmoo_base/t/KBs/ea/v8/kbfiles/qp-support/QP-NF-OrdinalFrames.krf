@@ -1,0 +1,184 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QP-NF-OrdinalFrames.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: December 5, 2014 14:41:15
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationRulesMt :exclude-globals t)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; Ordinal Frames;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; 
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?ordframe
+                        IntroductionOfOrdinalEvent)
+      (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframe)))
+
+;;; 5/9/2014 CJM: I've moved Qvalue and Unit into the quantity frame generation process
+;;; this is really how it should be, as just giving a value doesn't imply an ordinal, and we should be able to 
+;;; find ordinals all across the paragraph. Thus ordinal relation holds is no longer needed.
+;;;
+
+;;; implicit ordinality as in hot brick and cold ground
+;;; 
+;;; This is working now but needs to be drasticlly improved
+;;; For example, in the C1 C2 water example we get no ordinal frame
+;;; An imediate focus after uprgrading to justify will be to add more
+;;; ordinalRelationHolds rules.
+
+(<== (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+      ?ordframeid)
+     (drsForDiscourse ?ddrs-id)
+     ;;;;(ordinalRelationHolds ?qf1 ?qf2 ?qvalue1 ?qvalue2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qf1 ?qvalue1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qf2 ?qvalue2)))
+     (different ?qf1 ?qf2)   
+     (numAnswers 1 (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation))
+     (individualSatisfyingConditions 
+      ?ordframeid OrdinalRelationFrame
+      (TheSet 
+       (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation)
+       ))
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation)
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (quantity1 ?ordframeid ?qf1)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (quantity2 ?ordframeid ?qf2)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (isa ?ordframeid OrdinalRelationFrame)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (relationBetweenQuantities ?ordframeid ?relation)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     )
+
+
+
+(<== (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation)
+     (allFactsAllowed
+       (useTransitiveInference
+         (ist-Information WorldLikeOursCollectorMt
+           (followingValue ?qvalue1 ?qvalue2))))
+     (unifies ?relation lessThan))
+
+
+(<== (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation)
+     (allFactsAllowed
+       (useTransitiveInference 
+         (ist-Information WorldLikeOursCollectorMt 
+           (followingValue ?qvalue2 ?qvalue1))))
+     (unifies ?relation greaterThan))
+
+
+(<== (followingValue ?lower ?higher)
+     (followingValue ?lower ?medium)
+     (followingValue ?medium ?higher))
+
+
+;;;
+;;;; CJM 1/31/2014 New stuff for direct comparison
+;;;;
+(<== (ordinalRelationFrameForEventPossessive ?qf1 ?qf2 ?compevent ?sid)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityFrameWithQuantityTypeEntity ?qf1 ?entity1 ?qtype1 ?ddrs-id)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityFrameWithQuantityTypeEntity ?qf2 ?entity2 ?qtype2 ?ddrs-id)))
+     (different ?qf1 ?qf2)
+     (equals ?qtype1 ?qtype2)
+     (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?qtvar1 ?entity1))
+     (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?qtvar2 ?entity2))
+     (ist-Information (DrsCaseFn ?sdrs-id) (comparer ?compevent ?qtvar1))
+     (ist-Information (DrsCaseFn ?sdrs-id) (comparee ?compevent ?qtvar2))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?compevent ComparisonEvent)))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?qtvar1 ?qtype1)))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?qtvar2 ?qtype2))))
+
+(<== (ordinalRelationFrameForEventPossessive ?qf1 ?qf2 ?compevent ?sid)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityFrameWithQuantityTypeEntity ?qf1 ?entity1 ?qtype1 ?ddrs-id)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityFrameWithQuantityTypeEntity ?qf2 ?entity2 ?qtype2 ?ddrs-id)))
+     (different ?qf1 ?qf2)
+     (equals ?qtype1 ?qtype2)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation  ?entity1 ?qtvar1))
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation  ?entity2 ?qtvar2))
+     (ist-Information (DrsCaseFn ?sdrs-id) (comparer ?compevent ?qtvar1))
+     (ist-Information (DrsCaseFn ?sdrs-id) (comparee ?compevent ?qtvar2))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?compevent ComparisonEvent)))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?qtvar1 ?qtype1)))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?qtvar2 ?qtype2))))
+
+(<== (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+      ?ordframeid)
+     (drsForDiscourse ?ddrs-id)
+     (ordinalRelationFrameForEventPossessive ?qf1 ?qf2 ?compevent ?sid)
+     (symbolicRelationForEvent ?compevent ?relation ?sid ?qf1 ?qf2)
+     (individualSatisfyingConditions 
+      ?ordframeid OrdinalRelationFrame
+      (TheSet 
+       (ordinalRelationFrameForEventPossessive ?qf1 ?qf2 ?compevent)
+       ))
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (ordinalRelationFrameForEventPossessive ?qf1 ?qf2 ?compevent)
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantity1 ?ordframeid ?qf1)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantity2 ?ordframeid ?qf2)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?ordframeid OrdinalRelationFrame)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relationBetweenQuantities ?ordframeid ?relation)) (TheList (introducesOrdinalComparison
+       (PresentationEventFn ?sid ?narrative-event)
+       ?ordframeid))))
+     )
+
+
+(<== (symbolicRelationForEvent ?compevent ?relation ?sid ?qtvar1 ?qtvar2)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (comparativeRelation ?compevent ?comprel))
+     (formulaArgument ?comprel 1 ?term)
+     (equalSymbols ?term  (?larger ?smaller))
+     (tell (?comprel ?qtvar1 ?qtvar2))
+     (unifies ?relation greaterThan))
+
+(<== (symbolicRelationForEvent ?compevent ?relation ?sid ?qtvar1 ?qtvar2)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (ist-Information (DrsCaseFn ?sdrs-id) (comparativeRelation ?compevent ?comprel))
+     (formulaArgument ?comprel 1 ?term)
+     (equalSymbols ?term  (?smaller ?larger))
+     (tell (?comprel ?qtvar1 ?qtvar2))
+     (unifies ?relation lessThan))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

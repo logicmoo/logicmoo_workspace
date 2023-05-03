@@ -1,0 +1,77 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: counters.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 3, 2012 16:27:12
+;;;;   Purpose: definitions of reified counter predicates
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 16:02:56 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+
+;;; These counts can show up in a dashboard or in a session metadata context.
+
+(isa objectiveValue BinaryPredicate)
+(arg1Isa objectiveValue CompanionsAgent)
+(arg2Isa objectiveValue RealNumber)    ; can't guarantee it's an integer
+
+(isa openLearningGoalsCount BinaryPredicate)
+(arg1Isa openLearningGoalsCount CompanionsDomain)
+(arg2Isa openLearningGoalsCount Integer)
+
+(isa userUtterances BinaryPredicate)
+(arg1Isa userUtterances CompanionsAgent)
+(arg2Isa userUtterances Integer)
+
+(isa totalAmbiguity BinaryPredicate)
+(arg1Isa totalAmbiguity CompanionsAgent)
+(arg2Isa totalAmbiguity Integer)
+
+(isa currentAmbiguity BinaryPredicate)
+(arg1Isa currentAmbiguity CompanionsAgent)
+(arg2Isa currentAmbiguity Integer)
+
+(isa successCount BinaryPredicate)
+(arg1Isa successCount CompanionsAgent)
+(arg2Isa successCount Integer)
+
+(isa failureCount BinaryPredicate)
+(arg1Isa failureCount CompanionsAgent)
+(arg2Isa failureCount Integer)
+
+(isa fragmentaryParses BinaryPredicate)
+(arg1Isa fragmentaryParses CompanionsAgent)
+(arg2Isa fragmentaryParses Integer)
+
+(isa syntacticAmbiguities BinaryPredicate)
+(arg1Isa syntacticAmbiguities CompanionsAgent)
+(arg2Isa syntacticAmbiguities Integer)
+
+(isa drsLiftingFailureCount BinaryPredicate)
+(arg1Isa drsLiftingFailureCount CompanionsAgent)
+(arg2Isa drsLiftingFailureCount Integer)
+
+(isa semanticAmbiguityCount BinaryPredicate)
+(arg1Isa semanticAmbiguityCount CompanionsAgent)
+(arg2Isa semanticAmbiguityCount Integer)
+
+(isa translationFailureCount BinaryPredicate)
+(arg1Isa translationFailureCount CompanionsAgent)
+(arg2Isa translationFailureCount Integer)
+
+(isa qaFailureCount BinaryPredicate)
+(arg1Isa qaFailureCount CompanionsAgent)
+(arg2Isa qaFailureCount Integer)
+
+(isa metonymyFailureCount BinaryPredicate)
+(arg1Isa metonymyFailureCount CompanionsAgent)
+(arg2Isa metonymyFailureCount Integer)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

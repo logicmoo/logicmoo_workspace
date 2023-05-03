@@ -1,0 +1,87 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qm-spring-rules.meld
+;;;;    System: Cogsketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: January 5, 2009 16:04:47
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchQMRulesMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(<== (connectedTo-Directly ?obj ?spring)
+     (lookupOnly (wmOnly (isa ?spring Spring-Device)))
+     (uninferredSentence (isa ?spring RigidOb))
+     (uninferredSentence (doesNotTouchDirectly ?spring ?obj)))
+
+;; Compressed springs push out
+(<== (forceAppliedToObj ?obj ?fdir ?spring)
+     (lookupOnly (wmOnly (isa ?spring Spring-Device)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?spring RigidOb))))
+     (connectedTo-Directly ?obj ?spring)
+     (lookupOnly (wmOnly (isa ?spring CompressedSubstance)))
+     (lookupOnly (wmOnly (glyphRepresentsObject ?obj-glyph ?obj)))
+     (lookupOnly (wmOnly (glyphRepresentsObject ?spring-glyph ?spring)))
+     (safeOverlappingParts ?obj-glyph ?obj-part ?spring-glyph ?spring-part)
+
+     (safeQualitativeVectorBetween (CentroidPointFn ?spring-glyph)
+                               ?obj-part
+                               ?fdir))
+
+;; Stretched springs pull in
+(<== (forceAppliedToObj ?obj ?fdir ?spring)
+     (lookupOnly (wmOnly (isa ?spring Spring-Device)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?spring RigidOb))))
+     (connectedTo-Directly ?obj ?spring)
+     (lookupOnly (wmOnly (isa ?spring Stretched)))
+     (lookupOnly (wmOnly (glyphRepresentsObject ?obj-glyph ?obj)))
+     (lookupOnly (wmOnly (glyphRepresentsObject ?spring-glyph ?spring)))
+     (safeOverlappingParts ?obj-glyph ?obj-part ?spring-glyph ?spring-part)
+     (safeQualitativeVectorBetween ?obj-part
+                               (CentroidPointFn ?spring-glyph)
+                               ?fdir))
+
+(<== (torqueAppliedToObj ?obj1 ?torqueDir ?spring)
+     (rotationalOrigin ?obj1 ?origin)
+     (lookupOnly (wmOnly (isa ?spring Spring-Device)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?spring RigidOb))))
+     (connectedTo-Directly ?obj1 ?spring)
+     (connectedTo-Directly ?obj2 ?spring)
+     (different ?obj1 ?obj2)
+     (forceAppliedToObj ?obj2 ?fdir ?source)
+     (safeOverlappingParts (GlyphFn ?obj1 ?layer) ?obj1Surf 
+                       (GlyphFn ?spring ?layer) ?springSurf)
+     (safeQualitativeVectorBetween ?obj1Surf
+                               (CentroidPointFn ?origin)
+                               ?dirToOrigin)
+     (lookupOnly (rotate90 ?fdir ?forceDir90 ?torqueDir))
+     (lookupOnly (openHalfPlane ?forceDir90 ?torqueDir))
+     (rotFreedom ?obj2 ?torqueDir)
+     )
+
+
+(<== (qLessThan (LengthFn ?spring) (RestLengthFn ?spring))
+     (lookupOnly (wmOnly (isa ?spring Spring-Device)))
+     (lookupOnly (wmOnly (isa ?spring CompressedSubstance))))
+
+(<== (qGreaterThan (LengthFn ?spring) (RestLengthFn ?spring))
+     (lookupOnly (wmOnly (isa ?spring Spring-Device)))
+     (lookupOnly (wmOnly (isa ?spring Stretched))))
+
+(<== (q= (LengthFn ?spring) (RestLengthFn ?spring))
+     (lookupOnly (wmOnly (isa ?spring Spring-Device)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?spring Stretched))))
+     (uninferredSentence (lookupOnly (wmOnly
+                                      (isa ?spring CompressedSubstance)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

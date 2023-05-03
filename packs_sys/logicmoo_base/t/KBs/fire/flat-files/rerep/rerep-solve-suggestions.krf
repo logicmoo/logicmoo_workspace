@@ -1,0 +1,100 @@
+(in-microtheory RerepresentationSolveSuggestionsMt)
+
+;;;Entry point for rerepresentation
+(defSuggestion ComparisonWithRerepresentation
+    (bestComparisonWith ?base ?target ?rerep-threshold ?normalization-strategy ?best-mapping ?best-score)
+  :cost-function 1
+  :subgoals ((outsourcedOnly 
+              (blockMostOutOfMappingSupport (matchBetween ?base ?target (TheSet) ?match)))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             (?normalization-strategy ?mapping ?score)
+             (lessThanOrEqualTo ?rerep-threshold ?score)
+             (exploreRerepresentations ?base ?target ?mapping ?score ?normalization-strategy ?best-mapping ?best-score ))
+  :documentation "ComparisonWithRerepresentation is the entry point for performing analogical comparison with
+rerepresentation enabled. This does the First comparison and attempts to see if the mapping can be improved
+via rerepresentation. It achieves this by delegating the work to rerepresentMapping." )
+
+(defSuggestion ComparisonWithNoRerepresentation
+    (bestComparisonWith ?base ?target ?rerep-threshold ?normalization-strategy ?best-mapping ?best-score)
+  :cost-function 2
+  :subgoals ((outsourcedOnly 
+              (blockMostOutOfMappingSupport (matchBetween ?base ?target (TheSet) ?match)))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             (?normalization-strategy ?mapping ?score)
+             (lessThan ?score ?rerep-threshold)
+             (unifies ?best-mapping ?mapping)
+             (unifies ?best-score ?score))
+  :documentation "ComparisonWithRerepresentation is the entry point for performing analogical comparison with
+rerepresentation enabled. This does the First comparison and attempts to see if the mapping can be improved
+via rerepresentation. It achieves this by delegating the work to rerepresentMapping." )
+
+;;;IF rerep suggestions are present, use it to rerepresent base and target
+;;;perform a mapping and pass on the results to 'evaluateRerepresentationProgress'
+(defSuggestion TryRerepresentationImproved
+    (exploreRerepresentations ?base ?target ?start-mapping ?start-score ?normalization-strategy ?final-mapping ?final-score)
+  :test (rerepSuggestionsFor ?start-mapping ?x ?y ?z)
+  :subgoals ((evaluate ?suggestions
+               (SetToListFn (TheClosedRetrievalSetOf 
+                                (TheList ?nac ?base-rewrite ?target-rewrite)
+                              (wmOnly (rerepSuggestionsFor ?start-mapping 
+                                                           ?nac	
+                                                           ?base-rewrite
+                                                           ?target-rewrite)))))
+             (outsourcedOnly
+              (blockMostOutOfMappingSupport			 
+               (matchBetween (RerepresentedCaseFn ?base ?suggestions) 
+                             (RerepresentedCaseFn ?target ?suggestions)
+                             (TheSet) ?match)))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             (?normalization-strategy ?mapping ?score)
+             (evaluateRerepresentationProgress ?score ?mapping 
+                                               ?start-mapping ?start-score
+                                               ?normalization-strategy
+                                               ?final-mapping ?final-score))
+  :documentation "The work is performed recursively.  First it is verified if there are rerep suggestions for
+the input mapping. If they exist they are utilized via the RerepresentedCaseFn case-constructor which takes as input
+a dgroup and rerep suggestions and provides as output the modified (Rerepresented) case. This case-sontructor
+is used to rerepresent base and target as necessary. The comparison of start-score and new score is done via 
+evaluateRerepresentationProgress" )
+
+;;;Test if the rerepresentation improved the score
+;;;If not just return the start-score and start-mapping
+(defSuggestion ExploreRerepresentationConditionalEndCase
+    (evaluateRerepresentationProgress ?candidate-score ?candidate-mapping
+                                      ?start-mapping ?start-score
+                                      ?normalization-strategy
+                                      ?final-mapping ?final-score)
+  :subgoals ((lessThanOrEqualTo ?candidate-score ?start-score)
+             (unifies ?final-mapping ?start-mapping)
+             (unifies ?final-score ?start-score))
+  :documentation "If candidate-score <= start-score that means that rerepresentation did not
+improve the score. So return the start-score and start-mapping as the final result")
+
+;;;Test if the rerepresentation improved the score
+;;;If it does then try if you can improve it further by delegating to 'exploreRerepresentations'
+(defSuggestion ExploreRerepresentationConditionalContinueCase
+    (evaluateRerepresentationProgress ?candidate-score ?candidate-mapping
+                                      ?start-mapping ?start-score
+                                      ?normalization-strategy
+                                      ?final-mapping ?final-score)
+  :subgoals ((greaterThan ?candidate-score ?start-score)
+             (baseOfMapping ?candidate-mapping ?new-start-base)
+             (targetOfMapping ?candidate-mapping ?new-start-target)
+             (exploreRerepresentations ?new-start-base ?new-start-target
+                                       ?candidate-mapping ?candidate-score
+                                       ?normalization-strategy
+                                       ?final-mapping ?final-score))
+  :documentation "If candidate-score > start-score that means that rerepresentation did 
+improve the score, so see if we can improveeven further by delegating to exploreRerepresentations")
+
+;;;IF rerep suggestions are NOT present
+;;;THEN there is nothing to do here just return
+(defSuggestion TryRerepresentationTerminate
+    (exploreRerepresentations ?base ?target ?start-mapping ?start-score ?normalization-strategy ?final-mapping ?final-score)
+  :test (uninferredSentence (rerepSuggestionsFor ?start-mapping ?x ?y ?z))	
+  :subgoals ((unifies ?start-score ?final-score)
+             (unifies ?start-mapping ?final-mapping))
+  :documentation "IF there are no rerep suggestions. the start-score is returned as the final-score" )
+
+
+

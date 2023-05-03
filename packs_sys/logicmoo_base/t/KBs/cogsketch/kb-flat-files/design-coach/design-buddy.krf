@@ -1,0 +1,95 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: design-buddy.meld
+;;;;    System: Skea
+;;;;    Author: Jon Wetzel
+;;;;   Created: September 17, 2009 17:06:40
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+(isa SKEADBFactsMt Microtheory)
+(comment SKEADBFactsMt "Axioms defining Design Buddy predicates.")
+
+(genlMt SKEAReasoningCollectorMt SKEADBFactsMt)
+
+(in-microtheory SKEADBFactsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa DesignBuddyPredicate Collection)
+(genls DesignBuddyPredicate InferenceRelatedBookkeepingPredicate)
+(comment DesignBuddyPredicate "Predicates used by Design Buddy to keep track of
+ and critique student input.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; StudentSays
+
+(isa dbStudentSays UrnaryPredicate)
+(isa dbStudentSays DesignBuddyPredicate)
+(comment dbStudentSays "(dbStudentSays A) is true if student asserted A through 
+ LLI.")
+(arg1Isa dbStudentSays CycLExpression)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Proven, Unproven, Contradiction
+
+(isa dbProven VariableArityRelation) ;; This should be made urnary or binary :(
+(isa dbProven DesignBuddyPredicate)  ;; That will require changing the code...
+(comment dbProven "(dbProven A) is true if Design Buddy has proved A")
+(arg1Isa dbProven CycLExpression)
+
+(isa dbUnproven BinaryRelation) ;; this should be unary also -8/2014 JWW
+(isa dbUnproven DesignBuddyPredicate)
+(comment dbProven "(dbUnproven A A') is true if Design Buddy has not proved A 
+ (and likely assumed it instead.)  A' may refer to part of A which was 
+ unproved.")
+(arg1Isa dbUnproven CycLExpression)
+(arg2Isa dbUnproven CycLExpression)
+
+(isa dbContradiction BinaryPredicate)
+(isa dbContradiction DesignBuddyPredicate)
+(comment dbContradiction "(dbContradiction A A') is true if Design Buddy has 
+ found fact A' contradicting A.)")
+(arg1Isa dbContradiction CycLExpression)
+(arg2Isa dbContradiction CycLExpression)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Causes, Prevents
+
+(prettyString-Canonical causes-PropProp "causes")
+(genFormat causes-PropProp "~A which causes ~A" (1 2))
+
+(isa prevents BinaryPredicate)
+(isa prevents DesignBuddyPredicate)
+(comment prevents "(dbPrevents A B) means that statement A causes B to be 
+ untrue.")
+(arg1Isa prevents CycLExpression)
+(arg2Isa prevents CycLExpression)
+(genFormat prevents "~A which prevents ~A" (1 2))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; StudentSays
+
+(isa dbStudentSays UrnaryPredicate)
+(isa dbStudentSays DesignBuddyPredicate)
+(comment dbStudentSays "(dbStudentSays fact) means that the student said fact
+ in the LLI.")
+(arg1Isa dbStudentSays CycLExpression)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Design Buddy mts
+
+(isa DesignBuddyMicrotheory Collection)
+(isa DesignBuddyMicrotheory MicrotheoryType)
+;;(genls DesignBuddyMicrotheory NuSketchCase)
+(comment DesignBuddyMicrotheory 
+ "DesignBuddyMicrotheory is the collection of design buddy microtheories. Each
+  dbMt genlMt's a subsketch case.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

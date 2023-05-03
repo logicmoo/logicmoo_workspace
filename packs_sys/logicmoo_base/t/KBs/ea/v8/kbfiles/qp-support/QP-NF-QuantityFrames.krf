@@ -1,0 +1,819 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QP-NF-QuantityFrames.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: December 5, 2014 14:30:07
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationRulesMt :exclude-globals t)
+
+
+(<== (trueInAnyDrs ?sid ?pred ?arg1 ?arg2)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (?sdrs-id) (?pred ?arg1 ?arg2)))
+
+;;; I'm splititng up the QP rules to make them easier to read and compare
+;;; This file contains all of the rules for QP Quantity Frames
+;;; It should also include definitions
+
+;;;; Top level Query for NF
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?qpframe
+                        IntroductionOfQuantityEvent)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id) 
+       (introducesQPQuantityFrame
+       (PresentationEventFn ?sid ?narrative-event)
+        ?qpframe)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; QUANTITY FRAMES;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;
+;;;; 1/25/2014 CJM: 
+;;;; I'm changing how we package up entities. Now, an entity for a contained substance
+;;;; (when referring to the subtance) will be (containedSubstance Substance-token Phase Container-token)
+;;;; This is meant to help for sentences like the following:
+;;;;    C1 contains water. The amount of water in C2 is influenced by ....
+;;;; Here the entity is really the water in C2 (hence relationship). The QType is just Amount.
+;;;;    C1 contains water. The water pressure in C1.....
+;;;; Qtype = Pressure. Entity = the water in C1 entity
+;;;
+;;;
+;;;In DiscourseCase
+(<== (introducesQPQuantityFrame (PresentationEventFn ?sid ?nevent) ?qframeid)
+     (drsForDiscourse ?ddrs-id)
+     (quantityTypeOfEntityFound ?sid ?qtype ?quantity ?entity ?etype ?pred)
+     (buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)
+     (buildQPValues ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)
+     )
+
+
+
+;;;;;;;;;; Building the base frame
+;;;
+;;; Justify an isaQuantityReference if it is one
+(<== (buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid)
+     (groundExpression ?qframeid)
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (groundExpression ?qframeid)))
+     (groundExpression ?qtype)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qframeid ?entity ?quantity))
+                             (TheList (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid)))))
+;;; Otherwise build a new frame
+(<== (buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)
+     (drsForDiscourse ?ddrs-id)
+     ;;; cjm 8/31 why on earth was this commented out
+     (uninferredSentence (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid))
+     (uninferredSentence (genericQuantityReference ?quantity ?sdrs-id ?qtype ?new-qtype ?substance))
+     (individualSatisfyingConditions 
+      ?qframeid QuantityFrame
+      (TheSet (groundExpression ?quantity)
+              (groundExpression ?entity)))
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (groundExpression ?quantity)
+                                             (groundExpression ?entity)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframeid ?entity))
+                             (TheList (buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframeid ?qtype))
+                             (TheList (buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qframeid QuantityFrame))
+                             (TheList (buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframeid ?quantity))
+                             
+                             (TheList (buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)))))
+
+;;;;;;;;;; Adding Values and Units
+(<== (buildQPValues ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid)))
+     (ist-Information (DrsCaseFn ?ddrs-id) (hasQuantityValue ?qframeid ?value ?sdrs-id)))
+
+;;;;;; If it is a referent
+;;;;;;
+(<== (buildQPValues ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?sdrs-id) (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid))))
+;;;;;;
+;;;;;; If they don't exist
+(<== (buildQPValues ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (uninferredSentence (lookupOnly (ist-Information (DrsCaseFn ?sdrs-id) (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid))))
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (hasQuantityValue ?qframeid ?value ?sdrs-id))))
+
+;;;X contains 5 liters
+;;;cjm 8/2/15: Changed hasAmmount to ?thing (?unit ?value). (hasAmount ?thing ((denotesFunction-Underspecified ?word ?unit) ?value)) was a bug
+(<== (hasQuantityValue ?qframe ?value ?sdrs-id)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (hasAmount ?thing (?unit ?value)))
+     (quantityFrameWithQuantityTypeEntity ?qframe ?thing ?qtype ?ddrs-id)
+     (kbOnly (ist-Information QPInterpretationMt (unitMeasuringThisQuantity ?qtype ?unit)))
+     (hasQuantityUnit ?qframe ?unit ?ddrs-id)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qframe ?value)) (TheList (ist-Information (DrsCaseFn ?ddrs-id) (hasQuantityValue ?qframe ?value ?sdrs-id)))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityUnit ?qframe ?unit)) (TheList (ist-Information (DrsCaseFn ?ddrs-id) (hasQuantityUnit ?qframe ?unit ?ddrs-id))))))
+
+
+
+(<== (hasQuantityValue ?qframe ?value ?sdrs-id)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id ?sid))))
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?any-sdrs-id)
+     (ist-Information (DrsCaseFn ?any-sdrs-id) (measureForAction ?resolved-ent ?unit1 ?denom))
+     (unifies ?unit1 (?unit ?val))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qframe ?val)) (TheList (ist-Information (DrsCaseFn ?ddrs-id) (hasQuantityValue ?qframe ?value ?sdrs-id)))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityUnit (PerFn ?unit ?val))) (TheList (ist-Information (DrsCaseFn ?ddrs-id) (hasQuantityValue ?qframe ?value ?sdrs-id))))))
+
+
+
+;;;;for symbolics with generic quantities like ModeratelyHot
+;;; CJM 11/1/2015 turns out generic is too restrictive because Cyc is really inconsistent with their isas so I'm broadening it to Physical Quantity.
+(<== (hasQuantityValue ?qframe ?value ?sdrs-id)
+     (drsForDiscourse ?ddrs-id)
+     (quantityFrameWithQuantityTypeEntity ?qframe ?thing ?qtype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframe ?value))
+     (allFactsAllowed (useTransitiveInference (ist-Information UniversalVocabularyMt (isa ?value Quantity))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qframe ?value)) (TheList (ist-Information (DrsCaseFn ?ddrs-id) (hasQuantityValue ?qframe ?value ?sdrs-id)))))
+     )
+;;;; Units "5 liters"
+(<== (hasQuantityUnit ?qframe ?unit ?ddrs-id)
+     (quantityFrameWithQuantityTypeEntity ?qframe ?thing ?qtype ?ddrs-id)
+     (kbOnly (ist-Information QPInterpretationMt (unitMeasuringThisQuantity ?qtype ?unit)))
+     )
+
+(<== (quantityFrameWithQuantityTypeEntity ?qframe ?thing ?qtype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe ?qtype))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe ?thing)))
+
+(<== (quantityFrameWithQuantityTypeEntity ?qframe ?thing ?qtype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe ?qtype))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe (ContainedStuffFn ?subst ?form ?thing))))
+
+;;; For MQSlotFn slot quantity types (type level stuff)
+(<== (isaOrDenotesInSid ?ent ?col-or-pred ?sid)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?ent ?col-or-pred))))
+(<== (isaOrDenotesInSid ?ent ?col-or-pred ?sid)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (denotes-Underspecified ?ent ?col-or-pred))))
+(<== (isaOrDenotesInSid ?ent ?col-or-pred ?sid)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (denotesFunction-Underspecified ?ent ?col-or-pred))))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; QuantityTypeOfEntityFound Rules;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; A handy tracer flag
+(<== (qlabel ?x)
+     (true))
+
+;;; "The temperature of the water"
+;;; "The temperature of the water in the boiler"
+;;; "The ammount of water in the boiler"
+;;; "Flow rate of the water"
+;;; 4/14/2014 CJM: Added the ist-Info World. Made isa nonTransitive instead of localOnly (it's not chosen yet)
+;;; COMMENT*
+;;; Well fuck. Since I don't force a choice for the entity type, both are possible and it ends up making two frames, one for each binding
+;;; AHA! it will generate a uniqe QFrame for each possible binding of whatever the individualSatisfying condition is. If entity isn't specified
+;;; as in Q1 then it will make one for each. The trick is we need something that is unique to each token regardless of any ambiguity. triggering on the quantity
+;;; itself should do that.
+;;; Still, the problem that we can get an effect from something when the choice isn't selected is problematic. To replicate this result change ?quantity in the introduces
+;;; pred to ?etype
+
+;;; Disambiguates polysymous qtypes
+
+(<== (fixPolysemy1 ?qtype)
+     (true))
+
+(<== (fixPolysemy2 ?qtype)
+     (unifies ?qtype (MeasurableQuantityFn cityFoodProduction)))
+
+     
+
+;;; All of this is is under the ddrs
+;;; Individual assertions about choices (like isa ?x ?y) are wrapped with ist-Info for the sdrs
+
+
+;;; 11/2/2015
+
+;;;(<== (wrapquantity1 ?sid ?quantity ?qtype ?new-type)
+;;;     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+;;;     (ist-Information (DrsCaseFn ?sdrs-id) (requires-Underspecified ?quantity ?entity))
+;;;     (unifies ?new-type (AmountRequiredFn ?quantity)))
+;;;
+;;;(<== (wrapquantity ?sid ?quantity ?qtype ?new-type)
+;;;     (wrapquantity1 ?sid ?quantity ?qtype ?new-type))
+
+
+(<== (wrapquantity ?sid ?quantity-res ?qtype ?new-type)
+     (unifies ?new-type ?qtype))
+
+  
+
+
+
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (requires-Underspecified ?quantity ?entity))
+     (unifies ?pred requires-Underspecified)
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (quantityInDrs ?quantity ?sid ?qtype1)
+     (unifies ?qtype (AmountRequiredFn ?qtype1))
+     (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?entity ?etype))))
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id)))
+
+;;;;;;;;;;;;;;;;; Q LABEL 1 ;;;;;;;;;;;;
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?entity ?quantity))
+     (unifies ?pred possessiveRelation)
+     (quantityInDrs ?quantity ?sid ?qtype1)
+     (fixPolysemy2 ?qtype1)
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (groundExpression ?entity-res)
+     (groundExpression ?quantity-res)
+     (validQPEntity ?sid ?qtype1 ?entity ?etype ?ddrs-id)
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?entity ?etype))))
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+     (wrapquantity ?sid ?quantity ?qtype1 ?qtype)
+     (uninferredSentence (stopUnboundQuantities ?sid ?entity ?etype ?qtype))
+     (ist-Information ?dcase (qlabel 1)))
+;;;cjm 11/16 to stop FC-citizens as owner of themselves
+;;; How very hegemonic of me.
+(<== (stopUnboundQuantities ?sid ?entity ?etype ?qtype)
+     (unifies ?qtype (AmountFn ?etype)))
+     
+     
+;;; CJM 11/4 hack here to handle plurals. Have to look in different MTs for definitions and the possessive.
+;;;   This is ridiculous
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?thing ?quantity))
+     (contraContain ?sid ?entity ?thing)
+     (unifies ?pred possessiveRelation)
+     (quantityInDrs ?quantity ?sid ?qtype1)
+     (uninferredSentence (fixPolysemy2 ?qtype1))
+     (fixPolysemy1 ?qtype1)
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (groundExpression ?entity-res)
+     (groundExpression ?quantity-res)
+     (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?any)
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?any) (isa ?entity ?etype))))
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+     (wrapquantity ?sid ?quantity ?qtype1 ?qtype)
+     (ist-Information ?dcase (qlabel 1)))
+
+(<== (contraContain ?sid ?cont ?entity)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id2)
+     (ist-Information (DrsCaseFn ?sdrs-id2) (in-UnderspecifiedContainer ?entity ?cont)))
+
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?entity ?quantity))
+     (uninferredSentence (contraContain ?sid ?cont ?entity))
+     (unifies ?pred possessiveRelation)
+     (quantityInDrs ?quantity ?sid ?qtype1)
+     (uninferredSentence (fixPolysemy2 ?qtype1))
+     (fixPolysemy1 ?qtype1)
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (groundExpression ?entity-res)
+     (groundExpression ?quantity-res)
+     (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?any)
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?any) (isa ?entity ?etype))))
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+     (wrapquantity ?sid ?quantity ?qtype1 ?qtype)
+     (uninferredSentence (stopUnboundQuantities ?sid ?entity ?etype ?qtype))
+     (ist-Information ?dcase (qlabel 1)))
+
+;;;;;;;;;;;;;;;;;; Q LABEL 2 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Water Pressure (substance + Quant)
+;;; Core Temperature
+;;;
+;;; 1/26/201 CJM
+;;; Works for default case, not for containment because we get no containment relation between
+;;; the substance and the container. This is a issue stemming from our grammar.
+;;; There may be a workaround using a relation between subtancce and qtype but I'm leaving that for later as it's not vital.
+;;;;;;
+
+;;; 5/12/14 CJM: Changed the getPotentialIsas to SomethingExisting to allow for sentences like
+;;; room temperature or body temperature. This may be too general ultimately, but for now it works.
+
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id) 
+     (findQuantityInDrs ?sid ?quantity ?sdrs-id ?qtype)
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity ?qtype)))
+     (ist-Information ?dcase 
+       (dvSpanInParseTree ?quantity (SpanFn ?num2 ?num3) ?parse-tree))
+     (ist-Information ?dcase 
+       (dvSpanInParseTree ?entity (SpanFn ?num1 ?num2) ?parse-tree))
+     (getPotentialIsas ?sid ?entity SomethingExisting ?etype WorldLikeOursCollectorMt ?ddrs-id)
+     (wmOnly (nonTransitiveInference 
+      (ist-Information (DrsCaseFn ?sdrs-id) (isa ?entity ?etype))))
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (groundExpression ?entity-res)
+     (groundExpression ?quantity-res)
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+     ;;; possession is implicit in compound
+     (unifies ?pred possessiveRelation)
+     )
+
+;;; possessive relation but for ammounts of contained substances (This is only for contained so add in the entity specific stuff).
+;;; "the water of the bucket" (note water needs to denote water for this. Not liquidFn)
+
+;;; Again chemicalSubstanceType doesn't work here... need something better
+;;; For now using LiquidTangibleThing
+;;;;;;;;;;;;;;;;;;;; Q LABEL 4 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?chem ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?entity ?quantity))
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (getPotentialIsas ?sid ?quantity LiquidTangibleThing ?chem WorldLikeOursCollectorMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity-res ?chem))
+     (unifies ?entity-wrapped (ContainedStuffFn ?quantity-res default ?entity-res)) 
+     (unifies ?qtype Amount)
+     (unifies ?pred possessiveRelation)
+     )
+
+;;; for food required in (WE NEED TO HANDLE COMPOUND SEMANTICS BETTER!)
+;;;
+(<== (contraIn ?sid ?entity2 ?quantity)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?entity2 ?quantity)))
+
+(<== (contraIn ?sid ?entity2 ?quantity)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (requires-Underspecified ?quantity ?entity2)))
+
+;;; "The pressure in the boiler"
+;;; (in-UnderspecifiedContainer ?quantity-res ?entity)
+;;; This should not trigger for ANY other construction type
+;;;;;;;;;;;;;;;;;;;; Q LABEL 5 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?quantity ?entity))
+     (groundExpression ?quantity)
+     (uninferredSentence (contraIn ?sid ?entity2 ?quantity))
+     (quantityInDrs ?quantity ?sid ?qtype1)
+     (isaOrDenotesInSid ?quantity ?qtype1 ?sid)
+     ;;;;(ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity ?qtype))
+     (groundExpression ?entity)
+     ;;;; 4/20/14
+     ;;; Sigh... if there are multiple things this entity could be it's going to assert both isn't it
+     (validQPEntity ?sid ?qtype1 ?entity ?etype ?ddrs-id)
+     (wmOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?entity ?etype))))
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (wrapquantity ?sid ?quantity ?qtype1 ?qtype)
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id)) (qlabel 5)
+     (unifies ?pred in-UnderspecifiedContainer)
+     )
+
+
+
+;;; Tub contains 5 liters of water
+;;;;;;;;;;;;;;;;;;;; Q LABEL 6 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-wrapped ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (contains-Underspecified ?entity ?quantity))
+     (groundExpression ?entity)
+     (groundExpression ?quantity)
+     (localOnly (ist-Information (DrsCaseFn ?sdrs-id) (hasAmount ?container ?amount)))
+     (getPotentialIsas ?sid ?quantity LiquidTangibleThing ?etype WorldLikeOursCollectorMt ?ddrs-id)
+     (wmOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity ?etype))))
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (unifies ?qtype Amount)
+     (unifies ?entity-wrapped
+              (ContainedStuffFn ?quantity-res default ?entity-res))
+     (unifies ?pred contains-Underspecified)
+     )
+
+;;;;; The hot brick or the cool ground
+;;;;; 10/23 CJM: There may be a bug here of making the relatesToQTypeVar the ModeratelyHot value. Not sure if this is okay or not.
+
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-res ?etype ?pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (getAllPotentialBinPreds ?sid ?entity QuantitySlot ?pred WorldLikeOursCollectorMt)
+     (different ?pred isa)
+     ;;; We don't want this meaning of per ever.
+     (different ?pred (HypothesizedPrepositionSenseFn Per-TheWord Preposition))
+     (ist-Information (DrsCaseFn ?sdrs-id)
+             (?pred ?entity ?quantity))
+     (groundExpression ?entity)
+     (groundExpression ?quantity)
+     ;;;To get the specific QType
+     (unifies ?qtype (resultingQTypeFn ?pred))
+     ;;;
+     (getPotentialIsas ?sid ?entity PartiallyTangible ?etype WorldLikeOursCollectorMt ?ddrs-id)
+     (wmOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id)
+       (isa ?entity ?etype))))      
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+     )
+
+
+
+;;; I think this was intended for things like "Surface Area" but it doesn't work there because of how the denotation is specified.
+;;; Find a clear use case for this. 4/20/2014 CJM
+
+;;;(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-res ?etype ?pred)
+;;;     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+;;;     (getAllPotentialBinPreds ?sid ?entity PhysicalAmountSlot ?pred WorldLikeOursCollectorMt)
+;;;     (different ?pred isa)
+;;;     (different ?pred (HypothesizedPrepositionSenseFn Per-TheWord Preposition))
+;;;     ;;;(localOnly (trueInDrs ?sdrs-id (?pred ?entity ?quantity)))
+;;;     (ist-Information (DrsCaseFn ?sdrs-id)
+;;;       (?pred ?entity ?quantity))
+;;;     (groundExpression ?entity)
+;;;     (groundExpression ?quantity)
+;;;;;;  (unifies ?qtype (resultingQTypeFn ?pred))
+;;;;;;     (kbOnly (ist-Information QPInterpretationMt (isa ?qtype QuantityType)))
+;;;;;;     (kbOnly (ist-Information UniversalVocabularyMt (isa ?quantity ?qtype)))
+;;;     (getPotentialIsas ?sid ?entity PartiallyTangible ?etype WorldLikeOursCollectorMt ?ddrs-id)
+;;;     (wmOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id)
+;;;       (isa ?entity ?etype))))
+;;;     (resolvedVar ?sid ?entity ?entity-res)
+;;;     (unifies ?qtype (AmountFn ?quantity-res))
+;;;     (resolvedVar ?sid ?quantity ?quantity-res)
+;;;     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+;;;     )
+
+;;;; Nominalized processes as rate quantities
+;;;; ex: "The flow from A to B increases"
+;;;(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-res ?entity-res ?etype)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (discourseCaseForDrs ?dcase ?ddrs-id)
+;;;     (ist-Information ?dcase (contextIndependentDrsFor ?sdrs-id ?sid))
+;;;     )
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; Helper Functions and Wrappers for quantities;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;; isaQuantityReference: Takes results of quantityTypeOfEntityFound and looks to see if they are consistent with
+;;;;;;;;;;   an already existing frame. If so, returns the ?qtframeid
+;;; Is there some Qtype in another sentence of which I am a genls
+;;; If so, does my entity refer to that entity?
+(<== (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qtframeid)
+     (ist-Information (DrsCaseFn ?ddrs-id) (contextIndependentDrsFor ?sdrs-id ?sid))
+     (lookupOnly (ist-Information ?sdrs2 (quantityType ?qtframeid ?qtype1)))
+     (different ?sdrs2 (DrsCaseFn ?sdrs-id))
+     (kbOnly (useTransitiveInference (ist-Information QPInterpretationMt (genls ?qtype ?qtype1))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qtframeid ?entity)))
+     )
+
+;;; Is there some qtype in another sentence of which I am a genls
+;;; If so, does my potential frame have a contained entity that matches the prior frame's entity
+;;;
+;;; This can't be a non-transitive/wmOnly look at why later
+
+(<== (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qtframeid)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (lookupOnly (ist-Information ?sdrs2 (quantityType ?qtframeid ?qtype1)))
+     (different ?sdrs2 (DrsCaseFn ?sdrs-id))
+     (kbOnly (useTransitiveInference (ist-Information QPInterpretationMt (genls ?qtype ?qtype1))))
+     (unifies ?entity (ContainedStuffFn ?subst default ?e1))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qtframeid (ContainedStuffFn ?subst2 default ?e1))))
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?subst2 ?etype))
+     (groundExpression ?quantity)
+     (groundExpression ?qtype)
+     )
+
+;;;; To unify flow-rate with entity water to rate with entity flow and objectMoving water
+;;;; The chalenge here was matching to the original sentence sdrs-id for the qtype
+;;; 3/6/2015 David's new reference Rules are to a DRS
+;;; CJM 9/10/2015: Getting rid of primaryObjectMoving should allow it to work for all rates....
+;;;  The entity QTypes should be enough restriction.
+(<== (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qtframeid)
+     ;;;;(qlabel "QReference")
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     ;;;  Get all current QTOE assertions
+     (lookupOnly (diPredicate ?sid2 ?event2 ?event-res2 ?event-type2 ?quantity2 ?quantity-res2 ?qtypedi))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qtframeid ?event-res2)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qtframeid ?qtype1)))
+     (contextIndependentDrsFor ?sdrs-id2 ?sid2)
+     (different ?sdrs-id2 ?sdrs-id)
+     (kbOnly (ist-Information QPInterpretationMt (genls ?qtype ?qtype1)))
+     (unifies ?qtype1 Rate)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qtframeid ?rate-event)))
+     (resolvedVar ?sid ?entity ?entity-res)
+     ;;;;;(ist-Information (DrsCaseFn ?sdrs-id2) (primaryObjectMoving ?rate-event ?entity))
+     (groundExpression ?quantity)
+     (groundExpression ?qtype)
+     )
+
+
+
+
+
+
+
+
+;;;;;;;;;; quantityInDrs & findQuantityInDrs: Gets the qtype of a known discourse-var in a drs. If the dv is unkown
+;;;;;;;;;;  and we just want to know if there are any quantities, use findQuantityInDrs.
+
+(<== (quantityInDrs ?dv ?sid ?qtype)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (getPotentialIsas ?sid ?dv PhysicalQuantity ?qtype WorldLikeOursCollectorMt ?ddrs-id)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?dv ?qtype))
+     (groundExpression ?qtype)
+     )
+
+;;;; 9/10/15 cjm: Added for rate denotations like evaporationRate
+
+;;;Cyc is MADDENINGLY INCONSISTENT on rate terms. Things that take rates should be MeasurableQuantitySlots but SO many of them 
+;;; are NumericIntervalSlots which just take a number. Most of them are rates, but not all. And the arg2isa is just a number (which the comment
+;;;;  helpfully says is a rate (gee thanks)). For now assume they work as rates.... the non-rate ones are rare.
+
+(<== (quantityInDrs ?dv ?drs ?qtype)
+     (groundExpression ?drs)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs ?sid))))
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotesRelation-Underspecified ?dv ?relation))
+     (allFactsAllowed (ist-Information UniversalVocabularyMt (isa ?relation MeasurableQuantitySlot)))
+     (allFactsAllowed (ist-Information UniversalVocabularyMt (arg2Isa ?relation Rate)))
+     (unifies ?qtype Rate)
+     (groundExpression ?qtype)
+     )
+
+;;; For FC relations like food points
+;;; No longer using UnitQType. Instead I've created resultingQTypeFn which returns the collection (measurableQuantity)
+;;; that the function is measuring. 
+(<== (quantityInDrs ?dv ?sid ?qtype)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     ;;; 2/25 The denotes gets wrapped in a measurement when possible.
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotesFunction-Underspecified ?dv ?pred))
+     (kbOnly (useTransitiveInference (ist-Information FreecivMt (isa ?pred UnaryFunction))))
+     ;;;;(kbOnly (useTransitiveInference (ist-Information (LanguageMtFn Freeciv-TheGame) (UnitQType ?pred ?qtype))))
+     (unifies ?qtype (resultingQTypeFn ?pred))
+     )
+
+
+;;;CJM 11/2
+;;; For finding the quantityTypes of MQSlots
+;;; The problem is that the type level models take functions rather than collections as quantity types
+;;; So individual words like population map to the MQFn not to some qtype. The qtype is compounded with the entity.
+;;; This is in conflict with the underlying approach and assumptions of the original QP Frame stuff. So what I'm doing here is allowing
+;;; The MQFn to actually be treated as a qtype for type level models. The entity itself is the entity, and then for a complete process model it would have to be
+;;; The MQFN of that entity.
+;;; 11/12 Of course this doesn't work with regular QToE becuase that's looking for an isa.
+;;;  (MeasurableQuantityFn cityPopulation)
+(<== (quantityInDrs ?dv ?sid ?qtype)
+     (groundExpression ?dv)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotes-Underspecified ?dv (MeasurableQuantityFn ?pred)))
+     (unifies ?qtype (MeasurableQuantityFn ?pred)))
+(<== (quantityInDrs ?dv ?drs ?qtype)
+     (groundExpression ?drs)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs ?sid))))
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotesFunction-Underspecified ?dv (MeasurableQuantityFn ?pred)))
+     (unifies ?qtype (MeasurableQuantityFn ?pred)))
+
+(<== (quantityInDrs ?dv ?sid ?qtype)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotesRelation-Underspecified ?dv ?relation))
+     (allFactsAllowed (ist-Information UniversalVocabularyMt (isa ?relation NumericIntervalSlot)))
+     ;;;;(ist-Information UniversalVocabularyMt (arg2isa ?relation Rate))
+     (unifies ?qtype Rate)
+     (groundExpression ?qtype)
+     )
+(<== (quantityInDrs ?dv ?drs ?qtype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotesRelation-Underspecified ?dv ?relation))
+     (allFactsAllowed (ist-Information UniversalVocabularyMt (isa ?relation ComplexQuantityPredicate)))
+     (allFactsAllowed (ist-Information UniversalVocabularyMt (arg3Isa ?relation Rate)))
+     (unifies ?qtype Rate)
+     (groundExpression ?qtype)
+     )
+
+;;; cjm 8/29. I want to be able to talk about amounts of tangible things as quantityTypes
+;;;; This is needed for a rabit produces fur. It's the amount of fur.
+;;;;  as well as many other real world descriptions where things are made by the process
+
+(<== (quantityInDrs ?dv ?drs ?qtype)
+     (groundExpression ?drs)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs ?sid))))
+     ;;;so as not to trigger the one above. May screw up mixed sentences but for now it should work
+     ;;; ditto FC
+     (uninferredSentence (getPotentialIsas ?sid ?dv PhysicalQuantity ?qtype WorldLikeOursCollectorMt ?ddrs-id))
+     (uninferredSentence (getPotentialIsas ?sid ?dv FreecivQtype ?qtype FreecivMt ?ddrs-id))
+     ;;;(contextIndependentDrsFor ?drs ?sid)
+     (validQPEntity ?sid ?qtype ?dv ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?drs) (isa ?dv ?etype))
+     (unifies ?qtype (AmountFn ?etype))
+     (groundExpression ?etype)
+     )
+;;; cjm 11/4/2015 (number of X)
+;;; Note the DRS wackiness. Plurals ruin everything.
+(<== (quantityInDrs ?dv ?drs ?qtype)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs ?sid))))
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?dv Number-General))
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id2)
+     (ist-Information (DrsCaseFn ?sdrs-id2) (possessiveRelation ?ent ?dv))
+     (validQPEntity ?sid Amount ?ent ?etype ?ddrs-id)
+     ;;; Number of units is a quantity with entity units
+     ;;; City's number of units is an (AmountFn units) belonging to city.
+     (unifies ?qtype (AmountFn ?etype)))
+
+
+(<== (findQuantityInDrs ?sid ?dv ?drs ?qtype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (getAllPotentialIsas ?sid ?dv PhysicalQuantity ?qtype WorldLikeOursCollectorMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?dv ?qtype))
+     (groundExpression ?qtype))
+
+
+;;;;;;;;;; wrapEntity: When something is contained, parcels up the entity to contain the quantity and container as well as phase.
+;;;;;;;;;;  phase is currently always default
+
+(<== (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?entity-res ?container))
+     ;;; Actually, do we care about locking down the ?ctype? It's not used anywhere here. It's a sanity check but given that there are some
+     ;;; scope problems with WorldLikeOurs it seems like it's uneccesary. Especially considering more abstract uses.
+     ;;;(getPotentialIsas ?sid ?container Container ?ctype WorldLikeOursCollectorMt)
+     ;;;(ist-Information (DrsCaseFn ?sdrs-id) (isa ?container ?ctype))
+     (unifies ?entity-wrapped (ContainedStuffFn ?entity-res default ?container)))
+
+;;;; default wrapper
+(<== (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id)     
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?entity-res ?container)))
+     (unifies ?entity-res ?entity-wrapped))
+
+;;;;;;;;;; ResolvedVar: Takes a sentence and a dv in sentence. Runs abductive reference resolution for the specific
+;;;;;;;;;;   dv and returns the resolved variable if one is found.
+
+(<== (resolvedVar ?sid ?orig-var ?discourse-var)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (ist-Information ?dcase
+       (filterByPreference (resolveReference 
+                            (ReferenceInSentenceFn ?orig-var
+                                                   ?sid) 
+                            (ReferentInDrsFn ?discourse-var ?ddrs-id))))
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (ContradictoryPossessives ?orig-var ?discourse-var))))
+
+;;;;; If there is no refferent
+(<== (resolvedVar ?sid ?orig-var ?discourse-var)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (ist-Information ?dcase (uninferredSentence 
+                                                (filterByPreference 
+                                                 (resolveReference 
+                                                  (ReferenceInSentenceFn ?orig-var
+                                                                         ?sid) 
+                                                  (ReferentInDrsFn ?discourse-var ?ddrs-id)))))
+     (unifies ?orig-var ?discourse-var))
+
+;;; Referent but wrong
+(<== (resolvedVar ?sid ?orig-var ?discourse-var2)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (ist-Information ?dcase
+       (filterByPreference (resolveReference 
+                            (ReferenceInSentenceFn ?orig-var
+                                                   ?sid) 
+                            (ReferentInDrsFn ?discourse-var ?ddrs-id))))
+     (ist-Information (DrsCaseFn ?ddrs-id) (ContradictoryPossessives ?orig-var ?discourse-var))
+     (unifies ?orig-var ?discourse-var2)
+     )
+
+(<== (ContradictoryPossessives ?orig-var ?discourse-var)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?thing ?orig-var))
+     (ist-Information (DrsCaseFn ?ddrs-id) (possessiveRelation ?thing2 ?discourse-var))
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?thing ?sub))))
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?thing2 ?sub2))))
+     (uninferredSentence (genls sub sub2)))
+
+(<== (ContradictoryPossessives ?orig-var ?discourse-var)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?thing ?orig-var))
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?thing2 ?discourse-var))
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?thing ?sub))))
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?thing2 ?sub2))))
+     (uninferredSentence (genls sub sub2)))
+
+;;;
+;;; Preference Ordering
+;;;  FC-QPEntity
+;;;  naturalArtifact-QPEntity
+;;;  organic-QPEntity
+;;;  conduit-QPEntity
+;;;  artifact-QPEntity
+;;;  realWorld-QPEntity
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (realWorld-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (artifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (naturalArtifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (organic-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+
+;; Pretty much for connectors only
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (unifies ?entity (GameUnitQuantityFn ?qtype))
+     (unifies ?etype GameUnit))
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (conduit-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (rateofQuantity-entiy ?sid ?qtype ?entity ?etype ?ddrs-id))
+
+(<== (rateofQuantity-entiy ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (getPotentialIsas ?sid ?entity PhysicalQuantity ?etype WorldLikeOursCollectorMt ?ddrs-id))
+
+
+
+
+(<== (naturalArtifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (uninferredSentence (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (getPotentialIsas ?sid ?entity InanimateObject-Natural ?etype WorldLikeOursCollectorMt ?ddrs-id))
+
+(<== (organic-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (uninferredSentence (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (naturalArtifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (getPotentialIsas ?sid ?entity NaturalTangibleStuff ?etype WorldLikeOursCollectorMt ?ddrs-id))
+
+(<== (conduit-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (uninferredSentence (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (naturalArtifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (organic-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (getPotentialIsas ?sid ?entity FluidConduit ?etype WorldLikeOursCollectorMt ?ddrs-id))
+
+(<== (artifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (uninferredSentence (naturalArtifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (organic-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (conduit-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (getPotentialIsas ?sid ?entity Artifact ?etype WorldLikeOursCollectorMt ?ddrs-id))
+     
+(<== (realWorld-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     ;;;(uninferredSentence (unifies ?qtype (MeasurableQuantityFn ?anything)))
+     (uninferredSentence (naturalArtifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (artifact-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (organic-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (uninferredSentence (conduit-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+     (getPotentialIsas ?sid ?entity PartiallyTangible ?etype WorldLikeOursCollectorMt ?ddrs-id))
+
+;;; CJM 11/12 should let it look in possible drsses
+;;;(<== (bindInfo ?sid ?ddrs-id ?dcase ?sdrs-id)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+;;;     (wmOnly (lookupOnly (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid)))))
+
+;;;Renamed and made faster:
+(<== (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (cacheComplete (lookupOnly (localOnly (wmOnly (drsForDiscourse ?ddrs-id)))))
+     (cacheComplete (lookupOnly (localOnly (wmOnly (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))))))
+     (cacheComplete (localOnly (wmOnly (lookupOnly (ist-Information ?dcase (isaPossibleCaseForSentence ?sdrs-id ?sid)))))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

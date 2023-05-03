@@ -1,0 +1,30 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: reference-rule-parameters.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 7, 2015 17:34:19
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory EAReferenceResolutionParametersMt)
+
+(isa EAReferenceResolutionParametersMt Microtheory)
+(comment EAReferenceResolutionParametersMt "A microtheory that stores the adjustable
+parameters for reference resolution.")
+
+(numberOfSentencesToLookBackForNounCoreference 7)
+(isa numberOfSentencesToLookBackForNounCoreference)
+(arity numberOfSentencesToLookBackForNounCoreference 1)
+(arg1Isa numberOfSentencesToLookBackForNounCoreference Integer)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

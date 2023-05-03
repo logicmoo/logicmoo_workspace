@@ -1,0 +1,221 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: learning-from-examples.meld
+;;;;    System: Companions
+;;;;    Author: Matt McLure
+;;;;   Created: April 25, 2011 17:02:25
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; Store examples of concepts - moved out of companions in general forop
+;;; (isa ExampleBasedLearningMt Microtheory)
+;;; (genlMt CompanionsMt ExampleBasedLearningMt)
+
+
+;;; --------------------------------------------------------------------------
+;;; Ontology
+;;;
+
+;;; --------------------------------------------------------------------------
+;;; Rules
+;;;
+
+;;; --------------------------------------------------------------------------
+;;; Plan definitions
+;;;
+
+(isa assimilateAsPositiveExampleOf ComplexActionPredicate)
+(arity assimilateAsPositiveExampleOf 5)
+(arg1Isa assimilateAsPositiveExampleOf Individual)
+(arg2Isa assimilateAsPositiveExampleOf Collection)
+(arg3Isa assimilateAsPositiveExampleOf Microtheory)
+(arg5Isa assimilateAsPositiveExampleOf Microtheory)
+(comment assimilateAsPositiveExampleOf "(assimilateAsPositiveExampleOf ?example ?concept ?discourse-ctxt ?sentence-id) attempts to assimilate the ?example as an instance of ?concept, either by explanation or learning, with the discourse context ?discourse-ctxt as a resource.")
+
+(isa assimilateAsNegativeExampleOf ComplexActionPredicate)
+(arity assimilateAsNegativeExampleOf 5)
+(arg1Isa assimilateAsNegativeExampleOf Individual)
+(arg2Isa assimilateAsNegativeExampleOf Collection)
+(arg3Isa assimilateAsNegativeExampleOf Microtheory)
+(arg5Isa assimilateAsNegativeExampleOf Microtheory)
+(comment assimilateAsNegativeExampleOf "(assimilateAsNegativeExampleOf ?negative-example ?concept ?discourse-ctxt ?sentence-id ?context) attempts to assimilate the ?negative-example as a negative example of ?concept, either by explanation or learning, with the discourse context ?discourse-ctxt as a resource.")
+
+(isa notifyUser-ExampleAssimilationFinished ComplexActionPredicate)
+(arity notifyUser-ExampleAssimilationFinished 4)
+(arg2Isa notifyUser-ExampleAssimilationFinished Collection)
+(arg4Isa notifyUser-ExampleAssimilationFinished Microtheory)
+
+(isa classifyInstance-Binary ComplexActionPredicate)
+(arity classifyInstance-Binary 5)
+(arg1Isa classifyInstance-Binary Individual)
+(arg2Isa classifyInstance-Binary Collection)
+(arg3Isa classifyInstance-Binary Microtheory)
+(arg5Isa classifyInstance-Binary Microtheory)
+(comment classifyInstance-Binary "(classifyInstance-Binary ?instance ?concept ?discourse-ctxt ?sentence-id ?context) attempts to classify ?instance as either a positive or a negative example of ?concept with the discourse context ?discourse-ctxt as a resource.")
+
+(isa conveyClassificationToUser-Binary ComplexActionPredicate)
+(arity conveyClassificationToUser-Binary 4)
+(arg1Isa conveyClassificationToUser-Binary Individual)
+(arg2Isa conveyClassificationToUser-Binary Collection)
+(arg4Isa conveyClassificationToUser-Binary Microtheory)
+(comment conveyClassificationToUser-Binary "(conveyClassificationToUser-Binary ?instance ?concept ?sentence-id ?context) conveys the classification of ?instance to the user.")
+
+(isa classifyInstance-MutuallyExclusive ComplexActionPredicate)
+(arity classifyInstance-MutuallyExclusive 4)
+(arg1Isa classifyInstance-MutuallyExclusive Individual)
+(arg2Isa classifyInstance-MutuallyExclusive Microtheory)
+(arg4Isa classifyInstance-MutuallyExclusive Microtheory)
+(comment classifyInstance-MutuallyExclusive "(classifyInstance-MutuallyExclusive ?instance ?discourse-ctxt ?sentence-id ?context) attempts to classify ?instance with the discourse context ?discourse-ctxt as a resource.")
+
+(isa conveyClassificationToUser-MutuallyExclusive ComplexActionPredicate)
+(arity conveyClassificationToUser-MutuallyExclusive 3)
+(arg1Isa conveyClassificationToUser-MutuallyExclusive Individual)
+(arg3Isa conveyClassificationToUser-MutuallyExclusive Microtheory)
+(comment conveyClassificationToUser-MutuallyExclusive "(conveyClassificationToUser-MutuallyExclusive ?instance ?sentence-id ?context) conveys the classification of ?instance to the user.")
+
+
+;;; --------------------------------------------------------------------------
+;;; Action Vocabulary
+;;;
+
+;;;;;;;;;;;;;
+;;; glyphs
+
+(preconditionForMethod
+ (and (unifies ?example (ReferentInPerceptualSourceFn ?item ?sketch))
+      (isa ?sketch NuSketchSketch)
+;;;      (genls ?concept SpatialThing)
+      (currentSessionReasoner ?sr))
+  (methodForAction
+    (assimilateAsPositiveExampleOf ?example ?concept ?discourse-ctxt ?sentence-id ?context)
+    (actionSequence
+     (TheList
+      (doAnnounce "~% Assimilating positive example (glyph)...~%  ~A ~A ~A" (?example ?concept ?sketch))
+      (doSynchronousRemotePlan ?sr (actionSequence (TheList (assimilatePositiveExampleFromSketch ?item ?concept ?sketch))))
+      (notifyUser-ExampleAssimilationFinished ?example ?concept ?sentence-id ?context)
+      (doAgentPlan (doTell (ist-Information ?context (processingComplete ?sentence-id))))))))
+
+
+(preconditionForMethod
+ (and (unifies ?example (ReferentInPerceptualSourceFn ?item ?sketch))
+      (isa ?sketch NuSketchSketch)
+;;;      (genls ?concept SpatialThing)
+      (currentSessionReasoner ?sr))
+  (methodForAction
+    (assimilateAsNegativeExampleOf ?example ?concept ?discourse-ctxt ?sentence-id ?context)
+    (actionSequence
+     (TheList
+      (doAnnounce "~% Assimilating negative example (glyph)...~%  ~A ~A ~A" (?example ?concept ?sketch))
+      (doSynchronousRemotePlan ?sr (actionSequence (TheList (assimilateNegativeExampleFromSketch ?item ?concept ?sketch))))
+      (notifyUser-ExampleAssimilationFinished ?example ?concept ?sentence-id ?context)
+      (doAgentPlan (doTell (ist-Information ?context (processingComplete ?sentence-id))))))))
+
+(preconditionForMethod
+ (and (unifies ?query-example (ReferentInPerceptualSourceFn ?item ?sketch))
+      (isa ?sketch NuSketchSketch)
+;;;      (genls ?concept SpatialThing)
+      (currentSessionReasoner ?sr))
+  (methodForAction
+    (classifyInstance-Binary ?query-example ?concept ?discourse-ctxt ?sentence-id ?context)
+    (actionSequence
+     (TheList
+      (doAnnounce "~% Classifying (binary) instance according to top-performing strategies...~%  ~A ~A" (?query-example ?concept))
+      (doRecord (ist-Information ?context
+                  (sentenceQuery ?sentence-id ?raw-interpretation
+                                 (aggregatedBinaryClassificationJudgement ?query-example ?concept ?answer ?confidence))))
+      (doSynchronousRemotePlan ?sr (actionSequence (TheList (classifyExampleFromSketch-Binary-Exploitation ?item ?concept ?sketch))))
+      (doAgentPlan (conveyClassificationToUser-Binary ?query-example ?concept ?sentence-id ?context))
+      ))))
+
+(preconditionForMethod
+ (and (unifies ?query-example (ReferentInPerceptualSourceFn ?item ?sketch))
+      (ist-Information ?discourse-ctxt (potentialDeicticReferentInSource ?query-example ?sketch))
+      (isa ?sketch NuSketchSketch)
+      (currentSessionReasoner ?sr))
+  (methodForAction
+    (classifyInstance-MutuallyExclusive ?query-example ?discourse-ctxt ?sentence-id ?context)
+    (actionSequence
+     (TheList
+      (doAnnounce "~% Classifying (open) instance according to top-performing strategies...~%  ~A ~A" (?query-example ?sketch))
+      (doRecord (ist-Information ?context
+                  (sentenceQuery ?sentence-id ?raw-interpretation
+                                 (aggregatedMutuallyExclusiveClassificationJudgement ?query-example ?concept ?confidence))))
+      (doSynchronousRemotePlan ?sr (actionSequence (TheList (classifyExampleFromSketch-Open-Exploitation ?item ?sketch))))
+      (doAgentPlan (conveyClassificationToUser-MutuallyExclusive ?query-example ?sentence-id ?context))
+      ))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; following up with the user
+
+(preconditionForMethod
+ (ist-Information ?context (isa ?sentence-id ProvidingAnExample))
+ (methodForAction
+  (notifyUser-ExampleAssimilationFinished ?instance ?concept ?sentence-id ?context)
+  (actionSequence
+   (TheList
+    (doAgentPlan (generateUtterance ?context ?sentence-id ProvidingAnExample))))))
+
+
+(preconditionForMethod
+ (and (ist-Information ?context (isa ?sentence-id ClassificationRequest-Binary))
+      (currentSessionReasoner ?sr)
+      (holdsOnRemoteAgent ?sr (ist-Information EncodingStrategyMetadataMt
+                                (aggregatedBinaryClassificationJudgement ?instance ?concept ?answer ?confidence))))
+ (methodForAction
+  (conveyClassificationToUser-Binary ?instance ?concept ?sentence-id ?context)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?context (queryAnswer ?sentence-id (aggregatedBinaryClassificationJudgement ?instance ?concept ?answer ?confidence))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (generateUtterance ?context ?sentence-id YesOrNoQuestion-IBT))))
+    (doAgentPlan (doTell (ist-Information ?context (processingComplete ?sentence-id))))))))
+
+
+(preconditionForMethod
+ (and (ist-Information ?context (isa ?sentence-id ClassificationRequest-Open))
+      (currentSessionReasoner ?sr)
+      (holdsOnRemoteAgent ?sr (ist-Information EncodingStrategyMetadataMt
+                                (aggregatedMutuallyExclusiveClassificationJudgement ?instance ?concept ?confidence))))
+ (methodForAction
+  (conveyClassificationToUser-MutuallyExclusive ?instance ?sentence-id ?context)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?context
+                (queryAnswer ?sentence-id
+                             (aggregatedMutuallyExclusiveClassificationJudgement ?instance ?concept ?confidence))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (generateUtterance ?context ?sentence-id WhatQuestion-IBT))))
+    (doAgentPlan (doTell (ist-Information ?context (processingComplete ?sentence-id))))))))
+
+(preconditionForMethod
+ (ist-Information ?context (isa ?sentence-id ClassificationRequest-Open))
+ (methodForAction
+  (conveyClassificationToUser-MutuallyExclusive ?instance ?sentence-id ?context)
+  (actionSequence
+   (TheList
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (generateUtterance ?context ?sentence-id WhatQuestion-IBT))))
+    (doAgentPlan (doTell (ist-Information ?context (processingComplete ?sentence-id))))))))
+
+(<== (preferInContext (conveyClassificationToUser-MutuallyExclusive ?instance ?sentence-id ?context) ?seq1 ?seq2)
+     (containsPattern (doRecord (ist-Information ?context
+                                  (queryAnswer ?sentence-id
+                                               (aggregatedMutuallyExclusiveClassificationJudgement ?instance ?concept ?confidence))))
+                      ?seq1))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

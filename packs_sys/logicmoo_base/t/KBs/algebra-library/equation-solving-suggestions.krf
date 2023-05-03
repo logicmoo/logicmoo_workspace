@@ -1,0 +1,76 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: equation-solving-suggestions.meld
+;;;;    System: FIRE Algebra library
+;;;;   Version: 2.0
+;;;;    Author: Kenneth D. Forbus
+;;;;   Created: March 4, 2006 22:31:56
+;;;;   Purpose: Methods for solving equations
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:01 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory AlgebraMt)
+(genlMt CompanionsMt AlgebraMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Equation
+
+(isa solveEquationForNumericalValue Predicate)
+(arity solveEquationForNumericalValue 4)
+
+;;;The ?equation-set is required for recursion here, for now I'm ignoring yet.
+(defSuggestion SolveEquationForNumericalValue
+    (solveEquationForNumericalValue ?equation ?parameter ?answer ?equation-set)
+  :test (containsAlgebraParameter ?parameter ?equation)
+  :subgoals ((otherParametersInEquation ?equation ?parameter ?others)
+             (solveAll
+              (elementOf ?other-parameter ?others)
+              (valueOf ?other-parameter ?value)) ;;;[MEK This could become recursive, but for now, nope 1/13/08]             
+	     (constructNumericalEquationViaSubstitutions
+              ?equation ?others ?final-equation ?equation-set)
+             (solveEquationFor ?final-equation ?parameter ?answer)))
+
+(isa solveForNumericalValue Predicate)
+(arity solveForNumericalValue 3)
+
+(defSuggestion SolveForNumericalValueViaValue
+    (solveForNumericalValue ?parameter ?value ?i-equation-set)
+  :subgoals ((valueOf ?parameter ?value)
+             (isa ?value NumericalValueWithUnits)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Solve Equation For Symbolic Values
+
+(defSuggestion SolveEquationForSymbolicValue
+    (solveEquationForSymbolicValue ?equation ?parameter ?answer ?equation-set)
+  :subgoals ((otherParametersInEquation ?equation ?parameter ?others)
+             (solveAll 
+              (elementOf ?other-parameter ?others)
+              (solveForSymbolicValue ?other-parameter ?value ?equation-set))
+             (constructSymbolicEquationViaSubstitutions
+              ?equation ?others ?final-equation ?equation-set)
+             (solveEquationFor ?final-equation ?parameter ?answer)))
+
+(defSuggestion SolveForSymbolicValueViaValue
+    (solveForSymbolicValue ?parameter ?value ?i-equation-set)
+  ;; Might have a known value
+  :subgoals ((valueOf ?parameter ?value)))
+
+(defSuggestion SolveForSymbolicValueViaSelf
+    (solveForSymbolicValue ?parameter ?value ?i-equation-set)
+  ;; The parameter itself might be acceptable!
+  :subgoals ((acceptableSymbolicTermInAnswerForQuestion ?parameter ?question)
+             (unifies ?parameter ?value)))
+
+(defSuggestion SolveForSymbolicValueViaEquation
+    (solveForSymbolicValue ?parameter ?value ?equation-set)
+  ;; May need to solve a different equation
+  :subgoals ((findIndependentEquationFor
+              ?parameter ?equation-set ?new-equation ?new-equation-set)
+             (solveEquationForSymbolicValue ?new-equation ?parameter ?value
+                                            ?new-equation-set)))
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

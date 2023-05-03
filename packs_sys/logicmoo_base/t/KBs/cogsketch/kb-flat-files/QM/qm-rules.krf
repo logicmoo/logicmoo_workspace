@@ -1,0 +1,852 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qm-rules.meld
+;;;;    System: NUSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: July 7, 2008 15:44:29
+;;;;   Purpose: Qualitative mechanics rules for Design Buddy.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;;; Important notes:
+;  * uninferredSentence is used.  Wrap query with honorTimestamps.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory NuSketchQMFactsMt :exclude-globals t)
+
+(isa NuSketchQMRulesMt Microtheory)
+(genlMt NuSketchQMRulesMt NuSketchQMFactsMt)
+(genlMt NuSketchReasoningCollectorMt NuSketchQMRulesMt)
+
+(in-microtheory NuSketchQMRulesMt :exclude-globals t)
+(comment NuSketchQMRulesMt 
+  "Contains the rule system for the NUSketch-specific implementation of 
+   qualitative mechanics.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; glyphRelevantToQM -- unused
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(<== (glyphRelevantToQM ?glyph)
+     (glyphAnnotatedBy 
+      (GlyphFn ?glyph ?layer)
+      (AnnotationGlyphFn ?annotation ?layer))
+     (isa ?annotation QualitativeMechanicsAnnotation))
+
+(<== (glyphRelevantToQM ?glyph)
+     (touchesDirectly ?glyph ?glyph2)
+     (glyphRelevantToQM ?glyph2))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Detect relations
+;;; some of the relation UI broke for old sketches, so this is a workaround
+
+
+(<== (causes-SitSit ?case1 ?case2)
+     (glyphRelation-arg ?rel-glyph causes-SitSit 1 (GlyphFn ?bundle1 ?metalyr))
+     (glyphRelation-arg ?rel-glyph causes-SitSit 2 (GlyphFn ?bundle2 ?metalyr))
+     (subSketchGroupRepresentsObject ?bundle1 ?case1)
+     (subSketchGroupRepresentsObject ?bundle2 ?case2))
+
+(<== (connectedTo-Directly ?obj1 ?obj2)
+     (glyphRelation-arg ?rel-glyph connectedTo-Directly 1 (GlyphFn ?obj1 ?l))
+     (glyphRelation-arg ?rel-glyph connectedTo-Directly 2 (GlyphFn ?obj2 ?l)))
+     
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; 2DQVectorSum
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; doesn't work for some reason.
+;;;(<== (2DQVectorSum ?a ?b ?sum)
+;;;     (lookupOnly (xSense ?sum ?sumx))
+;;;     (lookupOnly (ySense ?sum ?sumy))
+;;;     (lookupOnly (senseSum ?ax ?bx ?sumx))
+;;;     (lookupOnly (senseSum ?ay ?by ?sumy))
+;;;     (lookupOnly (xSense ?a ?ax))
+;;;     (lookupOnly (xSense ?b ?bx))
+;;;     (lookupOnly (ySense ?a ?ay))
+;;;     (lookupOnly (ySense ?b ?by)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Transforming a qvector from one pose of layer to another
+
+(<== (qvPoseVectorMapping ?pose1 ?pose2 ?qv1 ?qv2)
+     (qvAxisAlignedSense ?axis1 ?qv1 ?sense)
+     (qvPoseAxisMapping ?pose1 ?pose2 ?axis1 ?axis2)
+     (qvAxisAlignedSense ?axis2 ?qv2 ?sense))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; closed half plane
+
+(<== (closedHalfPlane ?dir1 ?dir2)
+     (lookupOnly (openHalfPlane ?dir1 ?dir2)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Translating axioms from nusketch
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; CogSketch gives us:
+;;  hasRCC8Relation
+;;  forceAppliedAssumed
+;;  forceAssumed
+;;  velocityAssumed
+
+;; but forceAssumed goes away when the glyph is edited, and maintaining it 
+;; through code looks, on second thought, to be cumbersome
+(<== (forceAssumed ?obj ?dir ?annotation)
+     (lookupOnly (glyphAnnotatedBy 
+                  (GlyphFn ?obj ?layer)
+                  (AnnotationGlyphFn ?annotation ?layer)))
+     (lookupOnly (isa ?annotation ForceArrow))
+     (safeQualitativeVectorBetween (ArrowTailPointFn ?annotation) 
+                                   (ArrowHeadPointFn ?annotation)
+                                   ?dir))
+
+(<== (velocityAssumed ?obj ?dir)
+     (glyphAnnotatedBy 
+      (GlyphFn ?obj ?layer)
+      (AnnotationGlyphFn ?annotation ?layer))
+     (lookupOnly (wmOnly (isa ?annotation VelocityArrow)))
+     (safeQualitativeVectorBetween (ArrowTailPointFn ?annotation) 
+                                   (ArrowHeadPointFn ?annotation)
+                                   ?dir))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; torqueAssumed
+
+(<== (torqueAssumed ?obj CW ?annotation)
+     (glyphAnnotatedBy 
+      (GlyphFn ?obj ?layer)
+      (AnnotationGlyphFn ?annotation ?layer))
+     (lookupOnly (wmOnly (isa ?annotation RotationalForceArrow)))
+     (rotationalOrigin ?obj ?origin)
+     (glyphRepresentsObject ?origin-glyph-fn ?origin)
+     (safeToTheRightOf ?origin-glyph-fn
+                   (AnnotationGlyphFn ?annotation ?layer))
+     (rotationalModifiedTimes ?layer ?obj ?annotation ?origin))
+
+(<== (torqueAssumed ?obj CCW ?annotation)
+     (glyphAnnotatedBy 
+      (GlyphFn ?obj ?layer)
+      (AnnotationGlyphFn ?annotation ?layer))
+     (lookupOnly (wmOnly (isa ?annotation RotationalForceArrow)))
+     (rotationalOrigin ?obj ?origin)
+     (glyphRepresentsObject ?origin-glyph-fn ?origin)
+     (safeToTheLeftOf ?origin-glyph-fn
+                  (AnnotationGlyphFn ?annotation ?layer))
+     (rotationalModifiedTimes ?layer ?obj ?annotation ?origin))
+
+
+
+(<== (rotationalModifiedTimes ?layer ?obj ?annotation ?origin)
+     (different ?obj ?origin)
+     (groundExpression (?layer ?obj ?annotation ?origin))
+     (inkLastModifiedTime (GlyphFn ?obj ?layer) (NuSketchSketchTimeFn ?time1))
+     (inkLastModifiedTime (AnnotationGlyphFn ?annotation ?layer)
+                          (NuSketchSketchTimeFn ?time2))
+     (inkLastModifiedTime (AnnotationGlyphFn ?origin ?layer)
+                          (NuSketchSketchTimeFn ?time3)))
+
+(<== (rotationalModifiedTimes ?layer ?obj ?annotation ?origin)
+     (groundExpression (?layer ?obj ?annotation ?origin))
+     (unifies ?origin ?obj)
+     (inkLastModifiedTime (GlyphFn ?obj ?layer) (NuSketchSketchTimeFn ?time1))
+     (inkLastModifiedTime (AnnotationGlyphFn ?annotation ?layer) 
+                          (NuSketchSketchTimeFn ?time2)))
+
+;; TODO: test if this is redundant with genls facts     
+(<== (isa ?obj FixedRigidObject)
+     (lookupOnly (wmOnly (isa ?obj FixedObject)))
+     (lookupOnly (wmOnly (isa ?obj RigidOb))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; RCC8->touchesDirectly
+
+;; note: doesNotTouchDirectly is available as a relation arrow, so it will be
+;;       true apriori, or not at all
+
+(<== (touchesDirectly ?obj1 ?obj2)
+     (wmOnly (hasRCC8Relation (GlyphFn ?obj1 ?sketch-layer)
+			      (GlyphFn ?obj2 ?sketch-layer)
+			      rcc8-EC))
+     (unknownSentence (doesNotTouchDirectly ?obj1 ?obj2))
+     (unknownSentence (doesNotTouchDirectly ?obj2 ?obj1)))
+
+(<== (touchesDirectly ?obj1 ?obj2)
+     (wmOnly (hasRCC8Relation (GlyphFn ?obj1 ?sketch-layer)
+			      (GlyphFn ?obj2 ?sketch-layer)
+			      rcc8-PO))
+     (unknownSentence (doesNotTouchDirectly ?obj1 ?obj2))
+     (unknownSentence (doesNotTouchDirectly ?obj2 ?obj1)))
+
+(<== (touchesDirectly ?obj1 ?obj2)
+     (wmOnly (hasRCC8Relation (GlyphFn ?obj1 ?sketch-layer)
+			      (GlyphFn ?obj2 ?sketch-layer)
+			      rcc8-TPP))
+     (unknownSentence (doesNotTouchDirectly ?obj1 ?obj2))
+     (unknownSentence (doesNotTouchDirectly ?obj2 ?obj1)))
+
+(<== (touchesDirectly ?obj1 ?obj2)     
+     (wmOnly (hasRCC8Relation (GlyphFn ?obj1 ?sketch-layer)
+			      (GlyphFn ?obj2 ?sketch-layer)
+			      rcc8-TPPi))
+     (unknownSentence (doesNotTouchDirectly ?obj1 ?obj2))
+     (unknownSentence (doesNotTouchDirectly ?obj2 ?obj1)))
+
+(<== (doesNotTouchDirectly ?obj1 ?obj2)
+     (uninferredSentence (touchesDirectly ?obj1 ?obj2))
+     (inkLastModifiedTime (GlyphFn ?obj1 ?layer) (NuSketchSketchTimeFn ?time1))
+     (inkLastModifiedTime (GlyphFn ?obj2 ?layer) (NuSketchSketchTimeFn ?time2)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Forces
+
+;; a force applied to a surface should generate a translational force 
+;; according to Nielsen's law of force distribution (page 30)
+;; It has been split into two rules since it doesn't seem right to have
+;; additional components of a force in extra directions when it is free
+;; to act in the desired direction
+
+;;; ForceAssumed -> forceAppliedToObj
+(<== (forceAppliedToObj ?obj ?fdir ?source)
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj FixedObject))))
+     (forceAssumed ?obj ?fdir ?source))
+     ;;(uninferredSentence (transConstraint ?obj ?fdir)))  ;; this is correct
+                                                           ;; but removes 
+                                                           ;; explanatory power
+
+(<== (forceAppliedToObj ?obj ?fdir ?source)
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj FixedObject))))
+     (forceAssumed ?obj ?aDir ?source)
+     (transConstraint ?obj ?aDir)
+     (lookupOnly (openHalfPlane ?aDir ?fdir))
+     (transFreedom ?obj ?fdir))
+
+;;; forceAppliedToObj -> ForceAt
+(<== (forceAt ?objSurf ?fAtdir ?obj)
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj FixedObject))))
+     (lookupOnly (hasContactSurface ?obj ?forcee ?objSurf))
+     
+;;;     (forEffectOnly 
+;;;      (uninferredSentence (forceAppliedToObj ?obj ?fdir ?source)))
+;;;     (lookupOnly (forceAppliedToObj ?obj ?fdir ?source))
+     
+     (forceAppliedToObj ?obj ?fdir ?source)
+     
+     (surfaceNormal ?objSurf ?fAtdir)
+     (lookupOnly (openHalfPlane ?fAtdir ?fdir)))
+
+(<== (forceAt ?objSurf ZeroQVector ?obj)
+     (lookupOnly (wmOnly (isa ?obj FixedObject))))
+
+(<== (forceAt ?objSurf ZeroQVector ?obj)
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj FixedObject))))
+     (evaluate (TheSet)
+       (TheClosedRetrievalSetOf ?fdir 
+         (forceAppliedToObj ?obj ?fdir ?source))))
+
+;;; ForceAt + surfaceContact -> forceAppliedToSurf
+(<== (forceAppliedToSurf ?forceeSurf ?fdir ?forcer)
+     (lookupOnly (hasContactSurface ?forcer ?forcee ?forcerSurf))
+     (surfaceContact ?forcerSurf ?forceeSurf)
+     (numAnswers 1 (forceAt ?forcerSurf ?fdir ?forcer))
+     (different ?fdir ZeroQVector))
+
+;;; forceAppliedToSurf -> forceAppliedToObj
+(<== (forceAppliedToObj ?obj ?fdir ?source)
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj FixedObject))))
+     (hasContactSurface ?obj ?source ?objSurf)
+     (forceAppliedToSurf ?objSurf ?sfdir ?source)
+     (unconstrainedForceDir ?obj ?sfdir ?fdir))
+     
+
+(<== (unconstrainedForceDir ?obj ?sfdir ?fdir)
+     (transFreedom ?obj ?sfdir)
+     (unifies ?sfdir ?fdir))
+
+(<== (unconstrainedForceDir ?obj ?sfdir ?fdir)
+     (transConstraint ?obj ?sfdir)
+     (openHalfPlane ?sfdir ?fdir)
+     (transFreedom ?obj ?fdir))
+
+;; Zero net force if possible if force is ambig or zero in all directions
+#|
+(<== (netForceX ?obj ?sense)
+     (evaluate ?sense 
+       (SensePlusFn 
+        (TheClosedRetrievalSetOf ?x 
+          (and (forceAppliedToObj ?obj ?fdir ?source)
+                 (xSense ?fdir ?x)))))
+     (forceLastModifiedTime (GlyphFn ?obj ?layer) ?time))
+
+(<== (netForceY ?obj ?sense)
+     (evaluate ?sense 
+       (SensePlusFn 
+        (TheClosedRetrievalSetOf ?y
+          (and (forceAppliedToObj ?obj ?fdir ?source)
+                                          (ySense ?fdir ?y)))))
+     (forceLastModifiedTime (GlyphFn ?obj ?layer) ?time))
+|#
+
+(<== (netForce ?obj ?fdir)
+     (numAnswers 1 (netForceX ?obj ?xSense))
+     (numAnswers 1 (netForceY ?obj ?ySense))
+     (lookupOnly (xSense ?fdir ?xSense))
+     (lookupOnly (ySense ?fdir ?ySense)))
+
+(<== (netForceComponents ?obj ?xSense ?ySense)
+     (forEffectOnly (forceAppliedToObj ?obj ?dir ?source))
+     (evaluate ?xSense 
+       (SensePlusFn 
+        (TheClosedRetrievalSetOf ?x 
+          (and (lookupOnly (forceAppliedToObj ?obj ?fdir ?source))
+               (xSense ?fdir ?x)))))
+     (evaluate ?ySense 
+       (SensePlusFn 
+        (TheClosedRetrievalSetOf ?y
+          (and (lookupOnly (forceAppliedToObj ?obj ?fdir ?source))
+               (ySense ?fdir ?y)))))
+     (forceLastModifiedTime (GlyphFn ?obj ?layer) ?time))
+
+(<== (netForceX ?obj ?sense)
+     (numAnswers 1 (netForceComponents ?obj ?xSense ?ySense))
+     (unifies ?sense ?xSense)) 
+;; by using unifies instead of directly binding ?xsense and ?sense to the same
+;; var,  we prevent the wasteful case where ?sense is ground which forces a 
+;; would force a complete recomputation of netForceComponents
+
+(<== (netForceY ?obj ?sense)
+     (numAnswers 1 (netForceComponents ?obj ?xSense ?ySense))
+     (unifies ?sense ?ySense))
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; NetForce Ambiguity
+
+(<== (netForce ?obj AmbigQVector)
+     (numAnswers 1 (netForceX ?obj ?xSense))
+     (unifies ?xSense Ambig))
+
+(<== (netForce ?obj AmbigQVector)
+     (numAnswers 1 (netForceY ?obj ?ySense))
+     (unifies ?ySense Ambig))
+
+(<== (possibleNetForce ?obj ?dir)
+     (numAnswers 1 (netForce ?obj AmbigQVector))
+     (numAnswers 1 (netForceX ?obj Ambig))
+     (numAnswers 1 (netForceY ?obj ?y))
+     (different ?y Ambig)
+     (ySense ?dir ?y))
+
+(<== (possibleNetForce ?obj ?fdir)
+     (numAnswers 1 (netForce ?obj AmbigQVector))
+     (numAnswers 1 (netForceY ?obj Ambig))
+     (numAnswers 1 (netForceX ?obj ?x))
+     (different ?x Ambig)
+     (xSense ?fdir ?x))
+
+(<== (possibleNetForce ?obj ?fdir)
+     (numAnswers 1 (netForce ?obj AmbigQVector))
+     (numAnswers 1 (netForceY ?obj Ambig))
+     (numAnswers 1 (netForceX ?obj Ambig))
+     (lookupOnly (isa ?fdir 2DQDirection)))
+
+(<== (possibleNetForce ?obj ZeroQVector)
+     (numAnswers 1 (netForce ?obj AmbigQVector))
+     (numAnswers 1 (netForceY ?obj Ambig))
+     (numAnswers 1 (netForceX ?obj Ambig)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rotation Origin
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(<== (rotationalOrigin ?obj ?ori)
+     (rotationalOriginByAnnotation ?obj ?ori))
+
+(<== (rotationalOrigin ?obj ?ori)
+     (rotationalOriginByConnection ?obj ?ori))
+
+(<== (rotationalOrigin ?obj ?ori)
+     (qmUseDefaultRotOrigin ?obj)
+     (unifies ?obj ?ori)
+     (forceLastModifiedTime (GlyphFn ?obj ?layer) ?time)
+     )
+
+;; TODO: reverse this for backwards compatibility--make an origin pred that
+;;       is true when an alternate origin is available, and use uninferred
+;;       on that one to prove that we should use the default rot origin.
+(<== (qmUseDefaultRotOrigin ?obj)
+     (uninferredSentence (rotationalOriginByAnnotation ?obj ?ori))
+     (uninferredSentence (rotationalOriginByConnection ?obj ?ori))
+     (uninferredSentence (rotationalOriginByGear ?obj ?ori))
+     (uninferredSentence (rotationalOriginByCordConnection ?obj ?ori)))
+
+(<== (rotationalOriginByAnnotation ?obj ?annotation)
+     (glyphAnnotatedBy 
+      (GlyphFn ?obj ?layer)
+      (AnnotationGlyphFn ?annotation ?layer))
+     (lookupOnly (wmOnly (isa ?annotation RotOrigin))))
+
+(<== (rotationalOriginByConnection ?obj1 ?ori)
+     (connectedTo-Directly ?obj1 ?obj2)
+     (different ?obj1 ?obj2)
+     (numAnswers 1 (rotationalOrigin ?obj2 ?ori2))
+     (unifies ?ori2 ?ori))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Torque
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(<== (torqueAppliedToObj ?forcee ?rotDir ?source)
+     (torqueAssumed ?forcee ?rotDir ?source))
+
+;;; forceAt -> torqueAppliedToObj
+(<== (torqueAppliedToObj ?forcee ?rotDir ?forcer)
+     (uninferredSentence (lookupOnly (wmOnly (isa ?forcee Gear))))
+
+     (hasContactSurface ?forcee ?forcer ?forceeSurf)
+     (hasContactSurface ?forcer ?forcee ?forcerSurf)
+     (surfaceContact ?forcerSurf ?forceeSurf)
+     (numAnswers 1 (forceAt ?forcerSurf ?dir ?forcer))
+     (different ?dir ZeroQVector)
+     (numAnswers 1 (rotationalOrigin ?forcee ?origin))
+     (safeQualitativeVectorBetween ?forceeSurf 
+                                   (CentroidPointFn ?origin)
+                                   ?oriDir)
+     (surfaceNormal ?forcerSurf ?sn)
+     (openHalfPlane ?x ?oriDir)
+     (rotate90 ?sn ?x ?rotDir))
+
+;;; forceAssumed --> Torque for fixed axis objects
+(<== (torqueAppliedToObj ?forcee ?rotDir ?source)
+     (forceAssumed ?forcee ?fDir ?source)
+     (isa ?forcee FixedAxisObject)
+     (numAnswers 1 (rotationalOrigin ?forcee ?origin))
+     (safeQualitativeVectorBetween (CentroidPointFn ?forcee)
+                                   (CentroidPointFn ?origin)
+                                   ?oriDir)
+     (openHalfPlane ?x ?oriDir)
+     (rotate90 ?fDir ?x ?rotDir))
+
+;;; Torque on a gear from a forced connected object?
+(<== (torqueAppliedToObj ?forcee ?rotDir ?forcer)
+     (uninferredSentence (lookupOnly (wmOnly (isa ?forcee Gear))))
+     
+     (lookupOnly (wmOnly (isa ?forcee FixedAxisObject)))
+     (numAnswers 1 (rotationalOrigin ?forcee ?origin))
+     (connectedTo-Directly ?forcee ?forcer)
+     (different ?forcee ?forcer)
+     (forceAppliedToObj ?forcer ?forceDir ?source)
+     (notSufficientlyConstrained ?forcer ?forceDir)
+
+     
+     (safeQualitativeVectorBetween (CentroidPointFn ?forcer)
+                                   (CentroidPointFn ?origin)
+                                   ?oriDir)    
+     (openHalfPlane ?x ?oriDir)
+     (rotate90 ?forceDir ?x ?rotDir))
+
+(<== (netTorque ?obj ?rDir)
+     (evaluate ?sense
+       (SensePlusFn
+        (TheClosedRetrievalSetOf ?s
+          (and (torqueAppliedToObj ?obj ?rotDir ?source)
+                 (rotSense ?rotDir ?s)))))
+     (rotSense ?rDir ?sense)
+     (forceLastModifiedTime (GlyphFn ?obj ?layer) ?time))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Freedom
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(<== (rotFreedom ?obj ?rotDir)
+     (glyphRepresentsObject ?glyphfn ?obj)
+     (numAnswers 1 (rotationalOrigin ?obj ?origin))
+     (lookupOnly (isa ?rotDir RotDirection))
+     (evaluate ?x (CardinalityFn (TheClosedRetrievalSetOf 
+                                     ?rotDir (rotConstraint ?obj ?rotDir))))
+     (equals ?x 0)
+     (inkLastModifiedTime (GlyphFn ?obj ?layer) (NuSketchSketchTimeFn ?time1)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Constraint
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(<== (transFreedom ?obj ?dir)
+     (uninferredSentence (transConstraint ?obj ?dir)))
+
+
+
+;;; FixedRigidObj are constrained in all directions
+(<== (transConstraint ?obj ?dir)
+     (unknownSentence (transFreedom ?obj ?dir))
+     (wmOnly (isa ?obj FixedRigidObject))
+     (lookupOnly (isa ?dir 2DQDirection)))
+
+(<== (transConstraint ?obj ?dir)
+     (unknownSentence (transFreedom ?obj ?dir))
+     (lookupOnly (wmOnly (isa ?obj FixedAxisObject)))
+     (lookupOnly (isa ?dir 2DQDirection)))
+
+
+(<== (rotConstraint ?obj ?rotDir)
+     (lookupOnly (isa ?rotDir RotDirection))
+     (different ?rotDir ZeroRot)
+     (wmOnly (isa ?obj FixedRigidObject)))
+
+#|
+From Neilsen, 1989
+That is, an obstacle is sufficiently constrained if it is unable to move in any
+of the following directions:
+* Translational motion into the open half plane centered on the object's 
+  surface normal at the point of contact.
+
+* Rotational motion clockwise about any point which lies in the open half plane
+  centered ninety degrees clockwise from the object's surface normal at the 
+  point of contact.
+
+* Rotational motion counter-clockwise about any point which lies in the open 
+  half plane centered ninety degrees counter-clockwise from the object's 
+  surface normal at the point of contact.
+|#
+;; This is the translational component of sufficiently constrained.
+;; The rotational parts require knowing about the point of contact, so 
+;; they are in the rules about those.
+(<== (sufficientlyConstrained ?obj ?dir1)
+     (unknownSentence (notSufficientlyConstrained ?obj ?dir1))
+     (lookupOnly (isa ?dir1 2DQDirection))
+     (lookupOnly (rotate45 ?dir1 ?dir2 CW))
+     (lookupOnly (rotate45 ?dir1 ?dir3 CCW))
+     (cacheComplete (transConstraint ?obj ?dir1))
+     (cacheComplete (transConstraint ?obj ?dir2))
+     (cacheComplete (transConstraint ?obj ?dir3)))
+
+
+(<== (notSufficientlyConstrained ?obj ?dir)
+     (honorTimestamps (uninferredSentence (sufficientlyConstrained ?obj ?dir)))
+     (inkLastModifiedTime (GlyphFn ?obj ?layer) (NuSketchSketchTimeFn ?time)))
+
+
+;; Next two rules cover the rotational parts.  Use in conjunction with above.
+;; These use groundExpression to trip up misuses which would cause
+;; false-positives.
+
+;; Case 1: Rot origin is not on the axis of the normal
+(<== (rotationallyConstrainedAtSurface ?obj ?contactingSurface)
+     (groundExpression ?obj)
+     (groundExpression ?contactingSurface)
+     (uninferredSentence (isa ?obj FixedObject))
+     (surfaceNormal ?contactingSurface ?normal)
+     (rotationalOrigin ?obj ?ori)
+     (safeQualitativeVectorBetween ?contactingSurface
+                                   (CentroidPointFn ?ori) ?dirToOri)
+     (rotate90 ?normal ?90offNormal ?rotDir)
+     (openHalfPlane ?90offNormal ?dirToOri)
+     (rotConstraint ?obj2 ?rotDir))
+
+;; Case 2: Rot origin is on the axis of the normal ==> constrained!
+(<== (rotationallyConstrainedAtSurface ?obj ?contactingSurface)
+     (groundExpression ?obj)
+     (groundExpression ?contactingSurface)
+     (uninferredSentence (isa ?obj FixedObject))
+     (surfaceNormal ?contactingSurface ?normal)
+     (rotationalOrigin ?obj ?ori)
+     (safeQualitativeVectorBetween ?contactingSurface 
+                                   (CentroidPointFn ?ori) ?dirToOri)
+     (qvAxisAligned ?normal ?axis)
+     (qvAxisAligned ?dirToOri ?axis))
+
+;; Case 3: object is fixed
+(<== (rotationallyConstrainedAtSurface ?obj ?contactingSurface)
+     (lookupOnly (isa ?obj FixedObject)))
+
+;; Case 4: no origin
+(<== (rotationallyConstrainedAtSurface ?obj ?contactingSurface)
+     (evaluate (TheSet)
+       (TheClosedRetrievalSetOf ?ori
+         (rotationalOrigin ?obj ?ori))))
+
+
+(<== (movable ?obj)
+     (groundExpression ?obj)
+     (lookupOnly (wmOnly (isa ?obj Physob)))
+     (isa ?dir 2DQDirection)
+     (notSufficientlyConstrained ?obj ?dir))
+
+(<== (movable ?obj)
+     (groundExpression ?obj)
+     (lookupOnly (wmOnly (isa ?obj Physob)))
+     (rotFreedom ?obj ?dir))
+
+(<== (rotatable ?obj)
+     (groundExpression ?obj)
+     (lookupOnly (wmOnly (isa ?obj Physob)))
+     (rotFreedom ?obj ?dir))
+
+#|
+From Neilsen, 1989
+The motion constraints which may be imposed when two objects are in contact are
+given in Figure 3.1. This says that if an obstacle is "sufficiently" constrained
+it will prevent the following motions of an object in contact:
+* Translational motion into the open half plane centered on the object's surface
+  normal at the point of contact.
+
+* Rotational motion clockwise about any point which lies in the open half plane 
+  centered ninety degrees clockwise from the object's surface normal at the 
+  point of contact.
+
+* Rotational motion counter-clockwise about any point which lies in the open 
+  half plane centered ninety degrees counter-clockwise from the object's surface
+  normal at the point of contact.
+|#
+(<== (transConstraint ?obj1 ?dir)
+     (unknownSentence (transFreedom ?obj1 ?dir))
+     (touchesDirectly ?obj1 ?obj2)
+     (lookupOnly (wmOnly (isa ?obj2 RigidOb)))
+     (hasContactSurface ?obj1 ?obj2 ?obj1Surf)
+     (surfaceNormal ?obj1Surf ?normal)
+     (allFactsAllowed (lookupOnly (openHalfPlane ?normal ?dir)))
+     (sufficientlyConstrained ?obj2 ?normal)
+     (rotationallyConstrainedAtSurface ?obj2 ?obj1Surf)
+     (inkLastModifiedTime (GlyphFn ?obj1 ?layer) (NuSketchSketchTimeFn ?time1))
+     (inkLastModifiedTime (GlyphFn ?obj2 ?layer) (NuSketchSketchTimeFn ?time2)))
+
+;; TODO: make this use the endpoints of the edge of the surface instead of center
+;;       before doing that: must make sure that the endpoints are correct
+;;       for inside-facing egdes (fix in code qm.lsp)
+(<== (rotConstraint ?obj1 ?rotDir)
+     (numAnswers 1 (rotationalOrigin ?obj1 ?origin))
+     (hasContactSurface ?obj1 ?obj2 ?surface)
+     (surfaceNormal ?surface ?surfNormal)
+     (inkLastModifiedTime (GlyphFn ?obj1 ?layer) (NuSketchSketchTimeFn ?time1))
+     (inkLastModifiedTime (GlyphFn ?obj2 ?layer) (NuSketchSketchTimeFn ?time2))
+     (uninferredSentence (enmeshed ?obj1 ?obj2)) ;; gears shouldn't get stopped
+     (sufficientlyConstrained ?obj2 ?surfNormal)
+     (rotationallyConstrainedAtSurface ?obj2 ?surface)
+     (safeQualitativeVectorBetween ?surface
+                                   (CentroidPointFn ?origin)
+                                   ?dirToOrigin)
+     (rotate90 ?surfNormal ?surfNormalR90 ?rotDir)
+     (openHalfPlane ?surfNormalR90 ?dirToOrigin))
+;; redundant?
+;;(inkLastModifiedTime (GlyphFn ?obj1 ?layer) (NuSketchSketchTimeFn ?time1))
+;;(inkLastModifiedTime (GlyphFn ?obj2 ?layer) (NuSketchSketchTimeFn ?time2))
+
+;; if we're an edge-edge contact and the dir to origin is aimed back along 
+;; the normal we're constrained in both directions
+
+(<== (rotConstraint ?obj1 ?rotDir)
+     (numAnswers 1 (rotationalOrigin ?obj1 ?origin))
+     (hasContactSurface ?obj1 ?obj2 ?surface1)
+     (uninferredSentence (enmeshed ?obj1 ?obj2)) ;; gears shouldn't get stopped
+     (surfaceContact ?surface1 ?surface2)
+     (isa ?surface1 Perceptual-Edge)
+     (isa ?surface2 Perceptual-Edge)
+     (inkLastModifiedTime (GlyphFn ?obj1 ?layer) (NuSketchSketchTimeFn ?time1))
+     (inkLastModifiedTime (GlyphFn ?obj2 ?layer) (NuSketchSketchTimeFn ?time2))     
+     (sufficientlyConstrained ?obj2 ?surfNormal)
+     (rotationallyConstrainedAtSurface ?obj2 ?surface)
+     (safeQualitativeVectorBetween ?surface1
+                                   (CentroidPointFn ?origin)
+                                   ?dirToOrigin)
+     (surfaceNormal ?surface1 ?normal)
+     (inverseVector ?dirToOrigin ?normal)
+     (isa ?rotDir RotDirection)) ;; constrained from both directions
+
+         
+
+     
+     
+;; jww - removed to prevent cycles. 
+;; cogsketch gives us transConstraint, not sufficientlyConstrained
+;; so we should work this in the other direction
+;;If an object is suff. const. in one halfplane it is trans-const.
+;;in all directions of that halfplane
+;(chainerContains (ChainerFn CQMChainer)
+;                 (<== (transConstraint ?obj ?dir1)                  
+;                      (sufficientlyConstrained ?obj ?dir)
+;                      (openHalfPlane ?dir ?dir1))) 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Connected Objects
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; force applied to one is applied to the other
+(<== (forceAppliedToObj ?obj2 ?fdir ?obj1)
+     (connectedTo-Directly ?obj1 ?obj2)
+     (different ?obj1 ?obj2)
+     (lookupOnly (wmOnly (isa ?obj1 RigidOb)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj1 Spring))))
+     (lookupOnly (wmOnly (isa ?obj2 RigidOb)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj2 Spring))))
+     (forceAppliedToObj ?obj1 ?fdir ?source)
+     (different ?obj2 ?source))
+
+(<== (torqueAppliedToObj ?obj2 ?rotDir ?obj1)
+     (connectedTo-Directly ?obj1 ?obj2)
+     (different ?obj1 ?obj2)
+     (lookupOnly (wmOnly (isa ?obj1 RigidOb)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj1 Spring))))
+     (lookupOnly (wmOnly (isa ?obj2 RigidOb)))
+     (uninferredSentence (lookupOnly (wmOnly (isa ?obj2 Spring))))
+     (torqueAppliedToObj ?obj1 ?rotDir ?source)
+     (different ?obj2 ?source))
+
+;; constraining one constrains the other
+(<== (transConstraint ?obj2 ?dir)
+     (unknownSentence (transFreedom ?obj2 ?dir))
+     (connectedTo-Directly ?obj1 ?obj2)
+     (different ?obj1 ?obj2)
+     (lookupOnly (wmOnly (isa ?obj1 RigidOb)))
+     (lookupOnly (wmOnly (isa ?obj2 RigidOb)))
+     (lookupOnly (isa ?dir 2DQDirection))
+     (transConstraint ?obj1 ?dir))
+
+(<== (rotConstraint ?obj2 ?dir)
+     (connectedTo-Directly ?obj1 ?obj2)
+     (different ?obj1 ?obj2)
+     (lookupOnly (wmOnly (isa ?obj1 RigidOb)))
+     (lookupOnly (wmOnly (isa ?obj2 RigidOb)))
+     (rotConstraint ?obj1 ?dir))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Motion
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;If an object is forced in a direction in which it is free, it moves.
+(<== (transMotion ?obj ?dir)
+     (numAnswers 1 (netForce ?obj ?dir))
+     (lookupOnly (isa ?dir 2DQDirection))
+     (transFreedom ?obj ?dir))
+
+(<== (transMotion ?obj ?dir2)
+     (numAnswers 1 (netForce ?obj ?dir1))
+     (lookupOnly (isa ?dir1 2DQDirection))
+     (transConstraint ?obj ?dir1)
+     (lookupOnly (openHalfPlane ?dir1 ?dir2))
+     (transFreedom ?obj ?dir2))
+
+;;Explicit velocity annotated in sketch
+(<== (transMotion ?obj ?dir)
+     (velocityAssumed ?obj ?dir)
+     (different ?dir ZeroQVector)
+     (transFreedom ?obj ?dir))
+
+(<== (transMotion ?obj ZeroQVector)
+     (numAnswers 1 (netForce ?obj ZeroQVector))
+     (evaluate (TheSet)
+       (TheClosedRetrievalSetOf ?dir
+         (velocityAssumed ?obj ?dir)))
+     (inkLastModifiedTime (GlyphFn ?obj ?layer) (NuSketchSketchTimeFn ?time)))
+
+;; When an object has a net force in a direction but it is sufficiently
+;; constrained, there is zero motion. 
+(<== (transMotion ?obj ZeroQVector)
+     (numAnswers 1 (netForce ?obj ?dir))
+     (lookupOnly (isa ?dir 2DQDirection))
+     (sufficientlyConstrained ?obj ?dir)
+     (inkLastModifiedTime (GlyphFn ?obj ?layer) (NuSketchSketchTimeFn ?time)))
+
+(<== (transMotion ?obj AmbigQVector)
+     (numAnswers 1 (netForceX ?obj ?nfs))
+     (unifies ?nfs Ambig)
+     (lookupOnly (isa ?dir 2DQDirection))
+     (lookupOnly (ySense ?dir Zero)) ;; Left or Right
+     (notSufficientlyConstrained ?obj ?dir))
+
+(<== (transMotion ?obj AmbigQVector)
+     (numAnswers 1 (netForceY ?obj ?nfs))
+     (unifies ?nfs Ambig)
+     (lookupOnly (isa ?dir 2DQDirection))
+     (lookupOnly (xSense ?dir Zero)) ;; Up or Down
+     (notSufficientlyConstrained ?obj ?dir))
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rotation
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(<== (rotMotion ?obj ?rotDir)
+     (numAnswers 1 (netTorque ?obj ?rotDir))
+     (lookupOnly (isa ?rotDir RotDirection))
+     (rotFreedom ?obj ?rotDir))
+
+(<== (rotMotion ?obj ZeroRot)
+     (rotConstraint ?obj CW)
+     (rotConstraint ?obj CCW))
+
+(<== (rotMotion ?obj ZeroRot)
+     (netTorque ?obj ZeroRot))
+
+(<== (rotMotion ?obj ZeroRot)
+     (numAnswers 1 (netTorque ?obj ?rotDir))
+     (rotConstraint ?obj ?rotDir))
+
+(<== (rotMotion ?obj AmbigRot)
+     (netTorque ?obj AmbigRot)
+     (lookupOnly (isa ?rotDir RotDirection))
+     (rotFreedom ?obj ?rotDir))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; safe versions of outside forces
+
+(<== (safeOverlappingParts ?objA ?objA-part ?objB ?objB-part)
+     (queryContext ?context)
+     (lookupOnly (wmOnly (isa ?context NuSketchCase)))
+     (overlappingParts ?objA ?objA-part ?objB ?objB-part))
+
+(<== (safeOverlappingParts ?objA ?objA-part ?objB ?objB-part)
+     (queryContext ?context)
+     (uninferredSentence (isa ?context NuSketchCase))
+     (wmOnly (genlMt ?context ?parentContext))
+     (ist-Information ?parentContext (safeOverlappingParts ?objA ?objA-part 
+                                                           ?objB ?objB-part)))
+(<== (safeQualitativeVectorBetween ?ptA ?ptB ?dir)
+     (queryContext ?context)    
+     (lookupOnly (wmOnly (isa ?context NuSketchCase)))
+     (qualitativeVectorBetween ?ptA ?ptB ?dir))
+
+(<== (safeQualitativeVectorBetween ?ptA ?ptB ?dir)
+     (queryContext ?context)
+     (uninferredSentence (isa ?context NuSketchCase))
+     (wmOnly (genlMt ?context ?parentContext))
+     (ist-Information ?parentContext (qualitativeVectorBetween ?ptA ?ptB ?dir)))
+
+(<== (safeToTheLeftOf ?glyph1 ?glyph2)
+     (queryContext ?context)
+     (lookupOnly (wmOnly (isa ?context NuSketchCase)))
+     (toTheLeftOf ?glyph1 ?glyph2))
+
+(<== (safeToTheLeftOf ?glyph1 ?glyph2)
+     (queryContext ?context)
+     (uninferredSentence (isa ?context NuSketchCase))
+     (wmOnly (genlMt ?context ?parentContext))
+     (ist-Information ?parentContext (toTheLeftOf ?glyph1 ?glyph2)))
+
+(<== (safeToTheRightOf ?glyph1 ?glyph2)
+     (queryContext ?context) 
+     (lookupOnly (wmOnly (isa ?context NuSketchCase)))
+     (toTheRightOf ?glyph1 ?glyph2))
+
+(<== (safeToTheRightOf ?glyph1 ?glyph2)
+     (queryContext ?context)
+     (uninferredSentence (isa ?context NuSketchCase))
+     (wmOnly (genlMt ?context ?parentContext))
+     (ist-Information ?parentContext (toTheRightOf ?glyph1 ?glyph2)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

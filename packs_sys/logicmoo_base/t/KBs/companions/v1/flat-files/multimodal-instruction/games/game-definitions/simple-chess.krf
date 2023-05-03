@@ -1,0 +1,464 @@
+(in-microtheory (GameRulesMtFn SimpleChess))
+
+(gameDomain SimpleChess)
+
+(isa SimpleChess TwoPersonGame)
+(isa SimpleChess PieceMovingGame)
+
+
+(isa move GamePredicate)
+(arity move 5)
+
+(isa step GamePredicate)
+(arity step 1)
+
+(isa control GamePredicate)
+(arity control 1)
+
+(isa cell GamePredicate)
+(arity cell 3)
+
+(isa white GameRole)
+(isa black GameRole)
+(opponent white black)
+(opponent black white)
+
+(isa wk GamePiece)
+(isa wq GamePiece)
+(isa wr GamePiece)
+(isa wb GamePiece)
+(isa wn GamePiece)
+(isa wp GamePiece)
+(isa bk GamePiece)
+(isa bq GamePiece)
+(isa br GamePiece)
+(isa bb GamePiece)
+(isa bn GamePiece)
+(isa bp GamePiece)
+
+(pieceOwnerType wk white king)
+(pieceOwnerType wq white queen)
+(pieceOwnerType wr white rook)
+(pieceOwnerType wb white bishop)
+(pieceOwnerType wn white knight)
+(pieceOwnerType wp white pawn)
+(pieceOwnerType bk black king)
+(pieceOwnerType bq black queen)
+(pieceOwnerType br black rook)
+(pieceOwnerType bb black bishop)
+(pieceOwnerType bn black knight)
+(pieceOwnerType bp black pawn)
+
+(<== (pieceType ?type)
+     (pieceOwnerType ?piece ?player ?type))
+
+(maxCoordX SimpleChess 8)
+(maxCoordY SimpleChess 8)
+
+(init (cell 1 1 wr))
+(init (cell 1 2 wp))
+(init (cell 1 3 Empty))
+(init (cell 1 4 Empty))
+(init (cell 1 5 Empty))
+(init (cell 1 6 Empty))
+(init (cell 1 7 bp))
+(init (cell 1 8 br))
+(init (cell 2 1 wn))
+(init (cell 2 2 wp))
+(init (cell 2 3 Empty))
+(init (cell 2 4 Empty))
+(init (cell 2 5 Empty))
+(init (cell 2 6 Empty))
+(init (cell 2 7 bp))
+(init (cell 2 8 bn))
+(init (cell 3 1 wb))
+(init (cell 3 2 wp))
+(init (cell 3 3 Empty))
+(init (cell 3 4 Empty))
+(init (cell 3 5 Empty))
+(init (cell 3 6 Empty))
+(init (cell 3 7 bp))
+(init (cell 3 8 bb))
+(init (cell 4 1 wk))
+(init (cell 4 2 wp))
+(init (cell 4 3 Empty))
+(init (cell 4 4 Empty))
+(init (cell 4 5 Empty))
+(init (cell 4 6 Empty))
+(init (cell 4 7 bp))
+(init (cell 4 8 bk))
+(init (cell 5 1 wq))
+(init (cell 5 2 wp))
+(init (cell 5 3 Empty))
+(init (cell 5 4 Empty))
+(init (cell 5 5 Empty))
+(init (cell 5 6 Empty))
+(init (cell 5 7 bp))
+(init (cell 5 8 bq))
+(init (cell 6 1 wb))
+(init (cell 6 2 wp))
+(init (cell 6 3 Empty))
+(init (cell 6 4 Empty))
+(init (cell 6 5 Empty))
+(init (cell 6 6 Empty))
+(init (cell 6 7 bp))
+(init (cell 6 8 bb))
+(init (cell 7 1 wn))
+(init (cell 7 2 wp))
+(init (cell 7 3 Empty))
+(init (cell 7 4 Empty))
+(init (cell 7 5 Empty))
+(init (cell 7 6 Empty))
+(init (cell 7 7 bp))
+(init (cell 7 8 bn))
+(init (cell 8 1 wr))
+(init (cell 8 2 wp))
+(init (cell 8 3 Empty))
+(init (cell 8 4 Empty))
+(init (cell 8 5 Empty))
+(init (cell 8 6 Empty))
+(init (cell 8 7 bp))
+(init (cell 8 8 br))
+(init (control white))
+(init (step 1))
+
+(<== (maxCoords ?x ?y)
+     (numAnswers 1 (gameDomain ?domain))
+     (numAnswers 1 (maxCoordX ?domain ?x))
+     (numAnswers 1 (maxCoordY ?domain ?y)))
+
+;;; Legal rules
+
+(moveRange pawn 1)
+(moveRange king 1)
+(moveRange rook 7)
+(moveRange bishop 7)
+(moveRange queen 7)
+
+(moveDirection pawn white down)
+(moveDirection pawn black up)
+;; If we're going to have a don't-care like ?player, then these
+;; need to be rules (unless we specify coverage explcicitly)
+(<== (moveDirection king ?player all))
+(<== (moveDirection queen ?player all))
+(<== (moveDirection rook ?player cartesian))
+(<== (moveDirection bishop ?player diagonal))
+
+(<== (normalMoveBlockedByOpponentPiece pawn))
+
+(deltaXY knight 2 1)
+(deltaXY knight 2 -1)
+(deltaXY knight 1 2)
+(deltaXY knight 1 -2)
+(deltaXY knight -2 1)
+(deltaXY knight -2 -1)
+(deltaXY knight -1 2)
+(deltaXY knight -1 -2)
+
+;;; Map from actual coordinate pairs to primitive directions
+;;; to simplify legal move checking
+(<== (primitiveDir ?x ?start-y ?x ?end-y up)
+     (lessThan ?end-y ?start-y))
+(<== (primitiveDir  ?x ?start-y ?x ?end-y down)
+     (greaterThan ?end-y ?start-y))
+(<== (primitiveDir ?start-x ?y ?end-x ?y left)
+     (lessThan ?end-x ?start-x))
+(<== (primitiveDir ?start-x ?y ?end-x ?y right)
+     (greaterThan ?end-x ?start-x))
+(<== (primitiveDir ?start-x ?start-y ?end-x ?end-y ur)
+     (greaterThan ?end-x ?start-x)
+     (lessThan ?end-y ?start-y))
+(<== (primitiveDir  ?start-x ?start-y ?end-x ?end-y dl)
+     (lessThan ?end-x ?start-x)
+     (greaterThan ?end-y ?start-y))
+(<== (primitiveDir ?start-x ?start-y ?end-x ?end-y ul)
+     (lessThan ?end-x ?start-x)
+     (lessThan ?end-y ?start-y))
+(<== (primitiveDir ?start-x ?start-y ?end-x ?end-y dr)
+     (greaterThan ?end-x ?start-x)
+     (greaterThan ?end-y ?start-y))
+
+(enumerateDirections down down)
+(enumerateDirections up up)
+(enumerateDirections left left)
+(enumerateDirections right right)
+(enumerateDirections cartesian up)
+(enumerateDirections cartesian down)
+(enumerateDirections cartesian left)
+(enumerateDirections cartesian right)
+(enumerateDirections diagonal ur)
+(enumerateDirections diagonal dl)
+(enumerateDirections diagonal ul)
+(enumerateDirections diagonal dr)
+(enumerateDirections diagonal ur)
+(<== (enumerateDirections all ?dir)
+     (enumerateDirections cartesian ?dir))
+(<== (enumerateDirections all ?dir)
+     (enumerateDirections diagonal ?dir))
+
+(<== (specialMove knight ?player ?piece (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (allFactsAllowed
+       (lookupOnly
+         (deltaXY knight ?delta-x ?delta-y)))
+     (evaluate ?end-x (PlusFn ?start-x ?delta-x))
+     (evaluate ?end-y (PlusFn ?start-y ?delta-y))
+     (numAnswers 1 (maxCoords ?max-x ?max-y))
+     (integerBetween 1 ?end-x ?max-x)
+     (integerBetween 1 ?end-y ?max-y)
+     (uninferredSentence
+       (ownPieceAt ?player ?end-x ?end-y)))
+
+;;; pawn captures in the forward diagonal direction
+;;; diagonal is defined in game-vocabulary.meld
+;;; How should we say "forward diagonal"?
+;;; If we asssume forward is the standard move direction, then forward diagonal 
+;;; would be "down" (in the case of white) + "diagonal"
+(<== (specialMove pawn ?player ?piece (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (currentlyTrue (cell ?start-x ?start-y ?piece))
+     (diagonal (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (evaluate ?y (DifferenceFn ?v 1))
+     (currentlyTrue (cell ?x ?y ?victim))
+     (pieceOwner black ?victim))
+       
+;; A pawn can initially move two spaces forward.
+;; ?player and ?start-x, ?start-y are bound:.
+;;; *** WTF? Nothing binds ?end-x or ?end-y!!
+;;; We need to parametrically move this with a range of 2
+(<== (specialMove pawn ?player ?piece (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (allFactsAllowed
+       (numAnswers 1
+         (lookupOnly
+           (init (cell ?start-x ?start-y ?piece)))))
+     (uninferredSentence
+       (pieceHasMoved ?piece ?start-x ?start-y)))
+
+(<== (ownPieceAt ?player ?x ?y)
+     (wmOnly
+       (lookupOnly
+         (currentlyTrue (cell ?x ?y ?piece))))
+     (allFactsAllowed
+       (pieceOwnerType ?piece ?player ?piece-type)))
+
+
+(<== (legal ?player (move ?piece ?u ?v ?x ?y))
+     (currentlyTrue (control ?player))
+     (legalMove ?player ?piece (LocFn ?u ?v) (LocFn ?x ?y))
+     ;; It is illegal to move into check.
+     (uninferredSentence
+       (trueInNextState
+         (doesAction ?player (move ?p ?u ?v ?x ?y))
+         (check ?player ?how))))
+
+;;; There exists some piece belonging to ?player that can move to ?x y.
+;;; This is a problem, because it's a future state in which ?player *would* 
+;;; have control.  So we're not going to query legal directly, 
+;;; since I don't want to have to deal with the counterfactual of control.
+;;; To conserve arguments, we may want to package locations as
+;;; (LocFn ?start-x ?start-y) etc.
+
+;;; Assume only ?player is bound, generate possible legal moves:
+(<== (legalMove ?player ?piece  (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (variableExpression ?end-x)
+     (variableExpression ?end-y)
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))
+     ;(numAnswers 1 (allFactsAllowed (jumps ?piece-type ?jumps)))
+     (numAnswers 1 (allFactsAllowed (moveRange ?piece-type ?range)))
+     (numAnswers 1 (allFactsAllowed (moveDirection ?piece-type ?player ?dir)))
+     (allFactsAllowed (enumerateDirections ?dir ?constituent-dir))
+     (currentlyTrue (cell ?start-x ?start-y ?piece))
+     (generateMoves ?piece-type ?constituent-dir ?player ?range (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y)))
+
+;;; All args are ground, check move for legality:
+(<== (legalMove ?player ?piece  (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (groundExpression (TheSet ?start-x ?start-y ?end-x ?end-y))
+     (currentlyTrue (cell ?start-x ?start-y ?piece))
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))
+     ;(numAnswers 1 (allFactsAllowed (jumps ?piece-type ?jumps)))
+     (numAnswers 1 (allFactsAllowed (moveRange ?piece-type ?range)))
+     (numAnswers 1 (allFactsAllowed (moveDirection ?piece-type ?player ?dir)))
+     (numAnswers 1 (primitiveDir ?start-x ?start-y ?end-x ?end-y ?actual-dir))
+     (allFactsAllowed (enumerateDirections ?dir ?actual-dir))
+     (generateMoves ?piece-type ?actual-dir ?player ?range (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y)))
+
+;;; Dest is bound, source is not.  For testing check.
+(<== (legalMove ?player ?piece  (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (variableExpression ?start-x)
+     (variableExpression ?start-y)
+     (groundExpression ?end-x)
+     (groundExpression ?end-y)
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))  ; enumerate pieces
+     (currentlyTrue (cell ?start-x ?start-y ?piece))                     ; bind starting locations
+     (numAnswers 1 (allFactsAllowed (moveRange ?piece-type ?range)))
+     (numAnswers 1 (allFactsAllowed (moveDirection ?piece-type ?player ?dir)))
+     (numAnswers 1 (primitiveDir ?start-x ?start-y ?end-x ?end-y ?actual-dir))
+     (allFactsAllowed (enumerateDirections ?dir ?actual-dir))        ; is translation in legal dir?
+     (generateMoves ?piece-type ?actual-dir ?player ?range (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))) ; could it get there?
+
+;; special moves
+;;; Assume only ?player is bound, generate possible legal moves:
+(<== (legalMove ?player ?piece  (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (variableExpression ?end-x)
+     (variableExpression ?end-y)
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))
+     (currentlyTrue (cell ?start-x ?start-y ?piece))
+     (specialMove ?piece-type ?player ?piece (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y)))
+
+;;; Given a bound starting point, direction and range limit, enumerate possible end points.
+;;; This is parametric move generation, distainct from extensional move generation (special moves)
+(<== (generateMoves ?piece-type ?dir ?player ?range (LocFn ?start-x ?start-y) (LocFn ?end-x ?end-y))
+     (numAnswers 1 (incrementCoord ?dir ?start-x ?start-y ?x ?y))
+     (numAnswers 1 (maxCoords ?max-x ?max-y))
+     (integerBetween 1 ?x ?max-x)
+     (integerBetween 1 ?y ?max-y)           ; on the board
+     (currentlyTrue (cell ?x ?y ?content))
+     (uninferredSentence
+       (blockedBy ?piece-type ?player ?content))
+     (generateMove ?piece-type ?dir ?player ?range (LocFn ?x ?y) (LocFn ?end-x ?end-y)))
+
+
+;;; Include current destination in possible destinations
+(<== (generateMove ?piece-type ?dir ?player ?range (LocFn ?x ?y) (LocFn ?x ?y)))
+
+;;; Recursively generate more distant destinations if not capturing a piece
+(<== (generateMove ?piece-type ?dir ?player ?range (LocFn ?x ?y) (LocFn ?end-x ?end-y))
+     (greaterThan ?range 1)
+     (currentlyTrue (cell ?x ?y Empty))
+     (evaluate ?new-range (DifferenceFn ?range 1))
+     (generateMoves ?piece-type ?dir ?player ?new-range (LocFn ?x ?y) (LocFn ?end-x ?end-y)))
+
+(<== (incrementCoord up ?x ?start-y ?x ?y)
+     (evaluate ?y (DifferenceFn ?start-y 1)))
+
+(<== (incrementCoord down ?x ?start-y ?x ?y)
+     (evaluate ?y (PlusFn ?start-y 1)))
+
+(<== (incrementCoord left ?start-x ?y ?x ?y)
+     (evaluate ?x (DifferenceFn ?start-x 1)))
+
+(<== (incrementCoord right ?start-x ?y ?x ?y)
+     (evaluate ?x (PlusFn ?start-x 1)))
+
+(<== (incrementCoord ur ?start-x ?start-y ?x ?y)
+     (evaluate ?x (PlusFn ?start-x 1))
+     (evaluate ?y (DifferenceFn ?start-y 1)))
+
+(<== (incrementCoord dl ?start-x ?start-y ?x ?y)
+     (evaluate ?x (DifferenceFn ?start-x 1))
+     (evaluate ?y (PlusFn ?start-y 1)))
+
+(<== (incrementCoord ul ?start-x ?start-y ?x ?y)
+     (evaluate ?x (DifferenceFn ?start-x 1))
+     (evaluate ?y (DifferenceFn ?start-y 1)))
+
+(<== (incrementCoord dr ?start-x ?start-y ?x ?y)
+     (evaluate ?x (PlusFn ?start-x 1))
+     (evaluate ?y (PlusFn ?start-y 1)))
+
+;;; This could be made more sophisticated, e.g., to allow for 
+;;; pieces to be blocked only by certain types of pieces, as opposed to owners.
+(<== (blockedBy ?piece-type ?player ?piece)
+     (different ?piece Empty)  ; just to shortcut some lookups
+     (allFactsAllowed
+       (pieceOwnerType ?content ?player ?piece))) ; assumes all parametric moves blocked by pieces of same owner.
+
+(<== (blockedBy ?piece-type ?player ?piece)
+     (different ?piece Empty)  ; just to shortcut some lookups
+     (normalMoveBlockedByOppenentPiece ?piece-type))
+
+(<== (check ?player ?move)
+     (numAnswers 1
+       (localOnly
+         (ist-Information (GameRulesMtFn SimpleChess)
+           (pieceOwnerType ?king ?player king))))
+     (numAnswers 1 (currentlyTrue (cell ?king-x ?king-y ?king)))
+     (numAnswers 1 (opponent ?player ?opponent))
+     (numAnswers 1 (legalMove ?opponent ?some-piece ?start-x ?start-y ?king-x ?king-y))
+     (unifies ?move (move ?some-piece ?start-x ?start-y ?king-x ?king-y)))
+
+
+;;; TwoPerson Game:
+(<== (next (control ?next-player)) 
+     (currentlyTrue (control ?player))
+     (lookupOnly
+       (allFactsAllowed
+         (numAnswers 1
+           (ist-Information (GameRulesMtFn SimpleChess)
+             (opponent ?player ?next-player))))))
+
+;;; Turn-bounded game:
+(<== (next (step ?y))
+     (currentlyTrue (step ?x))
+     (evaluate ?y (PlusFn ?x 1)))
+
+;;; Piece-moving game:
+(<== (next (cell ?x ?y ?p))
+     (doesAction ?player (move ?p ?u ?v ?x ?y)))
+
+;;; Piece-moving game:
+(<== (next (cell ?u ?v Empty))
+     (doesAction ?player (move ?p ?u ?v ?x ?y)))
+
+;;; Cells don't change except by movement:
+(<== (next (cell ?w ?z ?content))
+     (doesAction ?player (move ?p ?u ?v ?x ?y))
+     (currentlyTrue (cell ?w ?z ?content))
+     (different (LocFn ?u ?v) (LocFn ?w ?z))
+     (different (LocFn ?x ?y) (LocFn ?w ?z)))
+
+;;; Keep track of pieces moved from their initial locations:
+(<== (next (pieceHasMoved ?piece ?u ?v))
+     (doesAction ?player (move ?piece ?u ?v ?x ?y))
+     (lookupOnly
+       (allFactsAllowed
+         (init (cell ?u ?v ?piece)))))
+
+;;; Once moved, forever after:
+(<== (next (pieceHasMoved ?piece ?x ?y))
+     (currentlyTrue (pieceHasMoved ?piece ?x ?y)))
+
+(<== (checkmate ?player)
+     (currentlyTrue (control ?player))
+     (check ?player ?how)
+     (uninferredSentence
+       (legal ?player ?any-move)))
+
+(<== (goalState ?player 100)
+     (opponent ?player ?opponent)
+     (checkmate ?opponent))
+
+(<== (terminalState) (goalState ?player 100))    
+(<== (terminalState) (currentlyTrue (step 201)))  ; stop after 200 turns.
+
+;;; Assume queried in current game mt:
+(<== (trueInNextState ?action ?query)
+     (not (variableExpression ?query))  ; sanity check.
+     (lookupOnly 
+       (currentlyTrue (step ?step)))
+     (queryContext ?gameinst)
+     (unifies ?scratchpad-mt (FutureStateFn ?gameinst))
+     (lookupOnly
+       (gameDomain ?domain))
+     (tell (genlMt ?scratchpad-mt (GameRulesMtFn ?domain)))
+     ;; Compute the counterfactual state
+     (withCounterfactual ?action ; (doesAction player move)
+       (and (inferenceOnly
+              (computeNextState ?scratchpad-mt ?action))
+            (ist-Information ?scratchpad-mt ?query)
+            (tell (trueAfterAction ?step ?action ?query))))
+     (lookupOnly
+       (trueAfterAction ?step ?action ?query))
+     (justify (trueInNextState ?action ?query)
+       (TheList (trueAfterAction ?step ?action ?query))))
+
+;;; Temporarily justify the next state in the next-state mt
+;;; based on taking the action in the current state:
+(<== (computeNextState ?next-state-mt ?action)
+     (inferenceOnly (next ?stmt))
+     (justify (ist-Information ?next-state-mt (currentlyTrue ?stmt))
+       (TheList ?action)))
+       
+;cl-user(31): (fire:query '(trueInNextState
+;               (doesAction black (move bk 8 1 7 1)) 
+;               (check black ?how)) 
+;             :context 'stalemate)
+;(((?how move wr 7 2 7 1)))

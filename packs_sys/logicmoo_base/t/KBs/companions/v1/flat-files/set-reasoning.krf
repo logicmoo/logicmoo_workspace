@@ -1,0 +1,183 @@
+;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;; -------------------------------------------------------------------------
+;;; File name: set-reasoning.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: November 6, 2011 09:27:42
+;;;   Purpose: Generic horn clauses for reasoning about sets
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+;;;
+;;; ElementOf
+;;;
+
+;;; For explicitly reified sets, elementOf is handled as a structural predicate.
+;;; For unreified nats (NUARTS), we define backchaining rules here.
+
+;;; A binary SubcollectionDenotingFunction that takes a Collection and a 
+;;; Set-Mathematical to the largest subcollection of the former that is a
+;;; subsetOf the latter. (CollectionSubsetFn COL SET) is, by definition,
+;;; the collection of all and only those instances of COL that are also
+;;; elements of SET. 
+(<== (elementOf ?const ?subset-fn)
+     (matches (CollectionSubsetFn ?type% ?set%) ?subset-fn)
+     (groundExpression ?type%)
+     (isa ?const ?type%)
+     (elementOf ?const ?set%))
+           
+(<== (elementOf ?const% ?set-fn)
+     (matches (TheSetOf ?var% ?prop%) ?set-fn)
+     (variableExpression ?var%)
+     (evaluate ?new-stmt% (SubstituteFormulaFn ?const% ?var% ?prop%))
+     ;; We can't use TrueSentence here, because that only binds a single answer.
+     ;; Consequently, we have to innoculate against variable name clashes
+     ;; and do this inline in the current horn clause:
+     ?new-stmt%)
+     
+(<== (elementOf ?const% ?col-fn)
+     (matches (TheCollectionOf ?var% ?prop%) ?col-fn)
+     (not (variableExpression ?prop%))
+     (variableExpression ?var%)
+     (evaluate ?new-stmt% (SubstituteFormulaFn ?const% ?var% ?prop%))
+     ?new-stmt%)
+
+;;; (SubcollectionOfWithRelationFromFn COLLECTION PREDICATE THING) specifies
+;;; the collection of all instances INSTANCE of COLLECTION for which
+;;; (PREDICATE THING INSTANCE) holds. For example, 
+;;; (SubcollectionOfWithRelationFromFn Laboratory owns DepartmentOfEnergy-US)
+;;; refers to the collection of laboratories owned by the DOE.
+(<== (elementOf ?inst ?subcol-fn)
+     (matches (SubcollectionOfWithRelationFromFn ?coll ?binpred ?thing) ?subcol-fn)
+     (not (variableExpression ?coll))
+     (not (variableExpression ?binpred))
+     (not (variableExpression ?thing))
+     (?binpred ?thing ?inst)  ; hard to know which order to do these, 
+     (isa ?inst ?coll))       ; relation-filtering or type-filtering?
+     
+;;; (SubcollectionOfWithRelationFromTypeFn COLLECTION PREDICATE TYPE)
+;;; specifies the collection of all instances INSTANCE of COLLECTION
+;;; for which (PREDICATE THING INSTANCE) holds for some instance THING
+;;; of TYPE. For example, (SubcollectionOfWithRelationFromTypeFn Author
+;;; createdBy Biography) refers to the collection of biographers.
+(<== (elementOf ?inst ?subcol-fn)
+     (matches (SubcollectionOfWithRelationFromTypeFn ?coll ?binpred ?type) ?subcol-fn)
+     (not (variableExpression ?coll))
+     (not (variableExpression ?binpred))
+     (not (variableExpression ?type))
+     (isa ?inst ?coll)
+     (relationExistsInstance ?binpred ?type ?inst))
+
+;;; (SubcollectionOfWithRelationToFn COLLECTION PREDICATE THING) specifies the
+;;; collection of all instances INSTANCE of COLLECTION for which
+;;; (PREDICATE INSTANCE THING) holds. For example, 
+;;; (SubcollectionOfWithRelationToFn MoonOfAPlanet orbits PlanetMars) refers
+;;; to the collection of the moons of Mars.
+(<== (elementOf ?inst ?subcol-fn)
+     (matches (SubcollectionOfWithRelationToFn ?coll ?binpred ?thing) ?subcol-fn)
+     (not (variableExpression ?coll))
+     (not (variableExpression ?binpred))
+     (not (variableExpression ?thing))
+     (?binpred ?inst ?thing)  ; hard to know which order to do these, 
+     (isa ?inst ?coll))       ; relation-filtering or type-filtering?
+
+;;; (SubcollectionOfWithRelationToTypeFn COLLECTION PREDICATE TYPE) specifies
+;;; the collection of all instances INSTANCE of COLLECTION for which
+;;; (PREDICATE INSTANCE THING) holds for some instance (THING) of TYPE.
+;;; For example, (SubcollectionOfWithRelationToTypeFn VehicleAccident damages
+;;; Airplane) refers to airplane accidents.
+(<== (elementOf ?inst ?subcol-fn)
+     (matches (SubcollectionOfWithRelationToTypeFn ?coll ?binpred ?type) ?subcol-fn)
+     (not (variableExpression ?coll))
+     (not (variableExpression ?binpred))
+     (not (variableExpression ?type))
+     (isa ?inst ?coll)                 ; here we have to enumerate ?coll first.
+     (relationInstanceExists ?binpred ?inst ?type))
+
+
+;;; To make the type-level enumerations efficient, we need to fix the rule-macro 
+;;; implementations to call kb:n-instances-of and kb:n-stateuemts-using
+;;; to quickly determine which order to search in.  Not today.
+
+;;; extent is a Cyc predicate that maps a set-or-collection to a reified set (its extent).
+;;; I would love to make this a dynamicUpdatePredicate, but really, it's more of a
+;;; MetaKnowledge predicate.
+(<== (extent ?set ?reified-set)
+     (not (variableExpression ?set))
+     (not (atomicTerm ?set))
+     (natFunction ?set TheSet)
+     (unifies ?reified-set ?set))
+
+;;; Compute the extent based on elementOf for NUARTs,
+;;; (eg, CollectionSubsetFn)
+(<== (extent ?intensional-set ?extensional-set)
+     (not (variableExpression ?intensional-set))
+     (not (atomicTerm ?intensional-set))
+     (not (natFunction ?intensional-set TheSet))
+     (evaluate ?extensional-set
+       (TheClosedRetrievalSetOf ?item
+         (elementOf ?item ?intensional-set))))
+
+;;; Enumerate and collect members of a reified collection:
+(<== (extent ?coll ?reified-set)
+     (groundExpression ?coll)
+     (atomicTerm ?coll)
+     (isa ?coll Collection)
+     (evaluate ?reified-set
+       (TheClosedRetrievalSetOf ?elem
+         (isa ?elem ?coll))))
+
+
+;;; (subcollectionOfWithRelationTo SUPER-COL PREDICATE THING SUB-COL) means
+;;; that SUB-COL is the collection of all instances INSTANCE of SUPER-COL for 
+;;; which (PREDICATE INSTANCE THING) holds. See the function that corresponds
+;;; to this predicate, SubcollectionOfWithRelationToFn." 
+;; (functionCorrespondingPredicate-Canonical SubcollectionOfWithRelationToFn subcollectionOfWithRelationTo 4)
+
+;;; broaderTerm is a Cyc predicate.
+(isa broaderTerm BinaryPredicate)
+(arity broaderTerm 2)
+(arg1Isa broaderTerm Thing)
+(arg2Isa broaderTerm Collection)
+
+
+;;; We want it to succeed or fail, but not to enumerate bindings.
+(<== (broaderTerm ?arg ?coll)
+     (not (variableExpression ?arg))
+     (not (variableExpression ?coll))
+     (genls ?arg ?coll))
+
+(<== (broaderTerm ?arg ?coll)
+     (not (variableExpression ?arg))
+     (not (variableExpression ?coll))
+     (isa ?arg ?coll))
+
+(<== (broaderTerm ?arg ?coll)
+     (variableExpression ?arg))
+
+(<== (broaderTerm ?arg ?coll)
+     (variableExpression ?coll))
+
+(isa setSpecCollection BinaryPredicate)
+(arity setSpecCollection 2)
+(arg1Isa setSpecCollection Collection)
+(arg2Isa setSpecCollection Collection)
+(comment setSpecCollection "(setSpecCollection ?collection-specialization ?collection-type) binds ?collection-type to the most known type of elements of ?collection-specialization.  May extract it from a CollectionSubsetFn expression.")
+
+(<== (setSpecCollection ?spec ?coll)
+     (not (variableExpression ?spec))
+     (unifies (CollectionSubsetFn ?coll ?specialization) ?spec))
+
+(<== (setSpecCollection ?coll ?coll)
+     (groundExpression ?coll)
+     (atomicTerm ?coll)
+     (isa ?coll Collection))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

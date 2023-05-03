@@ -1,0 +1,12 @@
+(in-microtheory IntegratedCircuitPhysicsMt)
+
+(isa gateVoltageToSource (SlotCollectionForFormulaFn SaturationModeCurrent-Transistor))
+(isa transistorSaturationCurrent (SlotCollectionForFormulaFn SaturationModeCurrent-Transistor))
+(isa transistorSourceToDrainCurrent (SlotCollectionForFormulaFn SaturationModeCurrent-Transistor))
+(isa drainVoltageToSource (SlotCollectionForFormulaFn SaturationModeCurrent-Transistor))
+(isa capacitance VectorOrQuantitySlot)
+(isa gateVoltageToSource (SlotCollectionForFormulaFn TransconductanceOfTransistor-QBF))
+(isa transistorThresholdVoltage (SlotCollectionForFormulaFn TransconductanceOfTransistor-QBF))
+(isa transistorSourceToDrainCurrent (SlotCollectionForFormulaFn TransconductanceOfTransistor-QBF))
+(isa transconductanceOfTransistorAtPointOnCurve (SlotCollectionForFormulaFn TransconductanceOfTransistor-QBF))
+(genls (SubcollectionOfWithRelationToFn SingleGateTransistor transistorGateStatus ClosedGate-Transistor) ElectricalConductor)

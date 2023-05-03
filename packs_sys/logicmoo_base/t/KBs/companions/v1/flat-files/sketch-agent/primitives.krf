@@ -1,0 +1,219 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: primitives.meld
+;;;;    System: nuSketch hookup
+;;;;    Author: Matt McLure
+;;;;   Created: June 26, 2011 22:13:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Sketch-AgentMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa doCreateSubsketch SimpleActionPredicate)
+(arity doCreateSubsketch 1)
+(arg1Isa doCreateSubsketch CharacterString)
+(comment doCreateSubsketch "(doCreateSubsketch ?namestring) creates a new Subsketch (subsketch) in the sketch of the specified sketch-agent, sets its namestring and switches to it.")
+
+;;; Deprecated:
+(isa doCreateBundle SimpleActionPredicate)
+(arity doCreateBundle 1)
+(arg1Isa doCreateBundle CharacterString)
+(comment doCreateBundle "(doCreateBundle ?namestring) creates a new bundle (subsketch) in the sketch of the specified sketch-agent, sets its namestring and switches to it.")
+
+(isa doSetActiveSubsketch SimpleActionPredicate)
+(arity doSetActiveSubsketch 1)
+(arg1Isa doSetActiveSubsketch NuSketchSubsketch)
+(comment doSetActiveSubsketch "(doSetActiveSubsketch ?Subsketch) Sets the active Subsketch of the sketch to ?Subsketch")
+
+;;; Deprecated:
+(isa doSetActiveBundle SimpleActionPredicate)
+(arity doSetActiveBundle 1)
+(arg1Isa doSetActiveBundle NuSketchBundle)
+(comment doSetActiveBundle "(doSetActiveBundle ?bundle) Sets the active bundle of the sketch to ?bundle")
+
+(isa doCreateLayer SimpleActionPredicate)
+(arity doCreateLayer 2)
+(arg1Isa doCreateLayer NuSketchBundle)
+(arg2Isa doCreateLayer CharacterString)
+(comment doCreateLayer "(doCreateLayer ?bundle ?namestring) creates a new layer in the sketch of the specified sketch-agent, sets its namestring and switches to it.")
+
+;;;define doSetActiveLayer primitive
+(isa doSetActiveLayer SimpleActionPredicate)
+(arity doSetActiveLayer 1)
+(arg1Isa doSetActiveLayer NuSketchLayer)
+(comment doSetActiveLayer "(doSetActiveLayer ?layer) Sets the active layer of the sketch to ?layer.")
+
+;;;define doDeleteGlyph primitive
+(isa doDeleteGlyph SimpleActionPredicate)
+(arity doDeleteGlyph 1)
+(arg1Isa doDeleteGlyph NuSketchGlyph)
+(comment doDeleteGlyph "(doDeleteGlyph ?glyph) deletes the glyph ?glyph from the sketch associated with the sketch agent on which this is executing.")
+
+;;;define doSetNamestring primitive
+(isa doSetNamestring SimpleActionPredicate)
+(arity doSetNamestring 2)
+(arg1Isa doSetNamestring Thing)   ; Ick.  We want to support bundles, layers and glyphs.
+(arg2Isa doSetNamestring CharacterString)
+(comment doSetNamestring "(doSetNamestring ?nusketch-thing ?new-namestring) sets the namestring of ?nusketch-thing.")
+
+;;;define doSelectGlyph primitive
+(isa doSelectGlyph SimpleActionPredicate)
+(arity doSelectGlyph 1)
+(arg1Isa doSelectGlyph NuSketchGlyph)
+(comment doSelectGlyph "(doSelectGlyph ?glyph) selects the glyph ?glyph from the sketch associated with the sketch agent on which this is executing.")
+
+;;;define doDeselectGlyph primitive
+(isa doDeselectGlyph SimpleActionPredicate)
+(arity doDeselectGlyph 1)
+(arg1Isa doDeselectGlyph NuSketchGlyph)
+(comment doDeselectGlyph "(doDeselectGlyph ?glyph) de-selects the glyph ?glyph from the sketch associated with the sketch agent on which this is executing.")
+
+;;;define doHighlightGlyph primitive
+(isa doHighlightGlyph SimpleActionPredicate)
+(arity doHighlightGlyph 1)
+(arg1Isa doHighlightGlyph NuSketchGlyph)
+(comment doHighlightGlyph "(doHighlightGlyph ?glyph) highlights the glyph ?glyph from the sketch associated with the sketch agent on which this is executing.")
+
+;;;define doUnhighlightGlyph primitive
+(isa doUnhighlightGlyph SimpleActionPredicate)
+(arity doUnhighlightGlyph 1)
+(arg1Isa doUnhighlightGlyph NuSketchGlyph)
+(comment doUnhighlightGlyph "(doUnhighlightGlyph ?glyph) unhighlights the glyph ?glyph from the sketch associated with the sketch agent on which this is executing.")
+
+;;;define doZoomToFitGlyphs primitive
+(isa doZoomToFitGlyphs SimpleActionPredicate)
+(arity doZoomToFitGlyphs 1)
+(arg1Isa doZoomToFitGlyphs Set-Mathematical)
+(comment doZoomToFitGlyphs "(doZoomToFitGlyphs ?set-of-glyphs) zooms the camera of the sketch to fit in all of the glyphs in ?set-of-glyphs.")
+
+;;;define doZoom primitive
+(isa doZoom SimpleActionPredicate)
+(arity doZoom 1)
+(arg1Isa doZoom Number)
+(comment doZoom "(doZoom ?factor) zooms the camera of the sketch by a factor of ?factor.  ?factor must be positive.  Anything under 1.0 zooms out, anything over 1.0 zooms in.")
+
+;;;define doSetInkColor primitive
+(isa doSetInkColor SimpleActionPredicate)
+(arity doSetInkColor 2)
+(arg1Isa doSetInkColor SpatialThing)
+(arg2Isa doSetInkColor Color)
+(comment doSetInkColor "(doSetInkColor <ink-component> <color>) Sets the color of <ink-component> to <color>")
+
+;;;Deprecated: define doSetNSStatBarMsg primitive
+(isa doSetNSStatBarMsg SimpleActionPredicate)
+(arity doSetNSStatBarMsg 1)
+(arg1Isa doSetNSStatBarMsg CharacterString)
+(comment doSetNSStatBarMsg "(doSetNSStatBarMsg ?msg) sets the NuSketch statbar message.")
+
+(isa doSetStatBarMsg SimpleActionPredicate)
+(arity doSetStatBarMsg 1)
+(arg1Isa doSetStatBarMsg CharacterString)
+(comment doSetStatBarMsg "(doSetStatBarMsg ?msg) sets the sketch statbar message.")
+
+(isa doSetLayerVisibility SimpleActionPredicate)
+(arity doSetLayerVisibility 2)
+(arg1Isa doSetLayerVisibility NuSketchLayer)
+(arg2Isa doSetLayerVisibility TruthValue)
+(comment doSetLayerVisibility "(doSetLayerVisibility ?layer-name ?truth-value) turns layer visibility on or off.")
+
+(isa doSetLayerTextVisibility SimpleActionPredicate)
+(arity doSetLayerTextVisibility 2)
+(arg1Isa doSetLayerTextVisibility NuSketchLayer)
+(arg2Isa doSetLayerTextVisibility TruthValue)
+(comment doSetLayerTextVisibility "(doSetLayerTextVisibility ?layer-name ?truth-value) turns layer text visibility on or off.")
+
+(isa doSetLayerGraying SimpleActionPredicate)
+(arity doSetLayerGraying 2)
+(arg1Isa doSetLayerGraying NuSketchLayer)
+(arg2Isa doSetLayerGraying TruthValue)
+(comment doSetLayerGraying "(doSetLayerGraying ?layer-name ?truth-value) turns layer graying on or off.")
+
+(isa doSetLayerFacingDirVisibility SimpleActionPredicate)
+(arity doSetLayerFacingDirVisibility 2)
+(arg1Isa doSetLayerFacingDirVisibility NuSketchLayer)
+(arg2Isa doSetLayerFacingDirVisibility TruthValue)
+(comment doSetLayerFacingDirVisibility "(doSetLayerFacingDirVisibility ?layer-name ?truth-value) turns layer facingdir visibility on or off.")
+
+(isa SketchInteractionMode Collection)
+(isa TapSelect NSInteractionMode)
+(isa Draw NSInteractionMode)
+(isa NoInput NSInteractionMode)
+(isa SelectBox NSInteractionMode)
+
+(isa doSetSketchInteractionMode SimpleActionPredicate)
+(arity doSetSketchInteractionMode 1)
+(arg1Isa doSetSketchInteractionMode SketchInteractionMode)
+(comment doSetSketchInteractionMode "(doSetSketchInteractionMode ?mode) sets the interaction mode to one of TapSelect NoInput, or SelectBox.")
+
+;;; Deprecated;
+(isa doSetNSInteractionMode SimpleActionPredicate)
+(arity doSetNSInteractionMode 1)
+(arg1Isa doSetNSInteractionMode SketchInteractionMode)
+(comment doSetNSInteractionMode "(doSetNSInteractionMode ?mode) sets the interaction mode to one of TapSelect NoInput, or SelectBox.")
+
+(isa doInstantiateGlyph SimpleActionPredicate)
+(arity doInstantiateGlyph 2)
+(arg1Isa doInstantiateGlyph SpatialThing)
+(arg2Isa doInstantiateGlyph NuSketchLayer)
+(comment doInstantiateGlyph "(doInstantiateGlyph <proto-glyph-name> <dest-layer-name>) instantiates a prototype glyph and places the result on layer.")
+
+(isa doSetAutoSpatialReasoning SimpleActionPredicate)
+(arity doSetAutoSpatialReasoning 2)
+(arg1Isa doSetAutoSpatialReasoning NuSketchBundle)
+(arg2Isa doSetAutoSpatialReasoning TruthValue)
+(comment doSetAutoSpatialReasoning "(doSetAutoSpatialReasoning ?bundle ?value) turns spontaneous spatial reasoning on or off for the designated bundle.")
+
+(isa doClearSubsketch SimpleActionPredicate)
+(arity doClearSubsketch 1)
+(arg1Isa doClearSubsketch NuSketchBundle)
+(comment doClearSubsketch "(doClearSubsketch <bundle>) clears all layers in bundle.")
+
+(isa doMoveGlyph SimpleActionPredicate)
+(arity doMoveGlyph 2)
+(arg1Isa doMoveGlyph NuSketchGlyph)
+(arg2Isa doMoveGlyph SurfaceRegion-Underspecified)
+(comment doMoveGlyph "(doMoveGlyph GLYPH REGION) moves and scales GLYPH to fit in REGION.  REGION might be designated via (CoordinateSubregionFn SUPER X Y MAX-X MAX-Y) to indicate a Cartesian subregion of some other glyph.")
+
+;;; doComputePositionalRelations
+(isa doComputePositionalRelations SimpleActionPredicate)
+(arity doComputePositionalRelations 1)
+(arg1Isa doComputePositionalRelations NuSketchSketch)
+(comment doComputePositionalRelations "(doComputePositionalRelations ?sketch) will compute positional relations of ?sketch.
+The ?sketch argument can be a sketch, but it can also be a layer or bundle.")
+
+;;; doComputeAllPositionalRelations
+(isa doComputeAllPositionalRelations SimpleActionPredicate)
+(arity doComputeAllPositionalRelations 1)
+(arg1Isa doComputeAllPositionalRelations NuSketchSketch)
+(comment doComputeAllPositionalRelations "(doComputeAllPositionalRelations ?sketch) will compute positional relations between each and every glyph pairs in the ?sketch.
+The ?sketch argument can be a sketch, but it can also be a layer or bundle. It is an exhaustive version of doComputePositionalRelations which only computes the positional-relations
+between voronoi adjacent glyphs")
+
+;;; doComputeShapeRelations
+(isa doComputeShapeRelations SimpleActionPredicate)
+(arity doComputeShapeRelations 1)
+(arg1Isa doComputeShapeRelations NuSketchSketch)
+(comment doComputeShapeRelations "(doComputeShapeRelations ?sketch) will compute shape relations between the glyphs in the ?sketch.
+The ?sketch argument can be a sketch, but it can also be a layer or bundle.")
+
+;;; doComputeShapeAttributes
+(isa doComputeShapeAttributes SimpleActionPredicate)
+(arity doComputeShapeAttributes 1)
+(arg1Isa doComputeShapeAttributes NuSketchSketch)
+(comment doComputeShapeAttributes "(doComputeShapeAttributes ?sketch) will compute shape attributes of glyphs in the ?sketch.
+The ?sketch argument can be a sketch, but it can also be a layer or bundle.")
+
+;;; doUpdateDecomposition
+(isa doUpdateDecomposition SimpleActionPredicate)
+(arity doUpdateDecomposition 1)
+(arg1Isa doUpdateDecomposition NuSketchGlyph)
+(comment doUpdateDecomposition "(doUpdateDecomposition ?glyph) Will recompute the edge decomposition of ?glyph.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

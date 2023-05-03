@@ -1,0 +1,16 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv player
+;; -------------------
+
+(isa FreeCiv-Player Collection)
+(genls FreeCiv-Player GameRole)
+(genls FreeCiv-Player FreeCiv-Actor)      ; Players can take actions.
+(genls FreeCiv-Player GeopoliticalEntity) ; means they can have a government
+
+;;; For all intents and purposes, a player is a Country:
+((TypeCapableFn behaviorCapable) FreeCiv-Player MilitaryAttack directingAgent)
+
+
+;;; The FreeCiv-Player represents an entire civilization.

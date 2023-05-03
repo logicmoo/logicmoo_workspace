@@ -1,0 +1,133 @@
+
+ (in-microtheory ReasoningWithTense-LogicMt-SingleDateSeries)
+ (comment was-NthDate "In addition to the comment made in 
+#$ReasoningWithTense-LogicMt-NeutralPlainMetricOperator, we need the 
+following extra condition.  In each instance MT of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, there is only one 
+calendar covering type, say CCT, of dates that are taken as moments in 
+our semantic structures (see 
+ReasoningWithTense-SingleDateSeries-LogicMt, 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries and #$reasoningWithTenseMtCCType). 
+(#$was-NthDate TYPE n PROP) is true in such an MT only if 
+(#$reasoningWithTenseMtCCType CCT) is true in MT and TYPE is a spec of CCT.  For 
+example, if CCT is #$CalendarDay (and thus #$reasoningWithTenseMtTime must be a 
+day), TYPE must be one of those collections of days such as #$Friday, 
+(#$DayOfYearFn #$October 1) or the like, and cannot be 
+#$CalendarAutumn or #$TimeOfDay-NoonHour etc.")
+ (comment was-Metric
+ "(#$was-Metric TYPE NUM PROP) means that it was the case NUM 
+`steps' backward that PROP, where the interpretation of `step' is 
+determined by TYPE.  For example, (#$was-Metric #$CalendarDay 2 `Fritz 
+is sick') means that Fritz was sick the day before yesterday, and 
+(#$was-Metric #$CalendarYear 1 `Cyc goes public') means that Cyc went 
+public last year.  Note that this predicate should be used only when 
+ 
+(#$reasoningWithTenseMtCCType Mt TYPE) holds `outside' of the current microtheory Mt 
+ 
+(and thus the #$reasoningWithTenseMtTime is of type TYPE), and hence there should 
+be no two types TYPE-0 and TYPE-1 such that (#$was-Metric TYPE-0 k 
+PROP-0) and (#$was-Metric TYPE-1 n PROP) are both true in an instance 
+MT of #$ReasoningWithTenseMicrotheory-SingleDateSeries.")
+ (comment ReasoningWithTense-LogicMt-SingleDateSeries
+ "In this microtheory we define metric tense operators 
+#$was-Metric and #$willBe-Metric against a background of temporal 
+structures consisting of a single type of #$ConventionallyClassifiedSuccessiveTimeIntervalType. 
+That is to say, our background temporal strutures are always discrete 
+linear orderings, each of which takes an instance of 
+#$ConventionallyClassifiedSuccessiveTimeIntervalType as the set of `moments'.  Note that instances 
+of #$ReasoningWithTenseMicrotheory that take this 
+microtheory as #$genlMt are exactly the instances of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and that 
+for each such microtheory, the microtheory time must be a date.  Note 
+also that NO instance of #$ReasoningWithTenseMicrotheory 
+should be a specMt of both 
+#$ReasoningWithTense-LogicMt-SingleDateSeries and 
+#$ReasoningWithTense-LogicMt-MixedDateSeries.")
+ (comment willBe-NthDate "In addition to the comment made in 
+#$ReasoningWithTense-LogicMt-NeutralPlainMetricOperator, we need the 
+following extra condition.  In each instance MT of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, there is only one 
+calendar covering type, say CCT, of dates that are taken as moments in 
+our semantic structures (see 
+ReasoningWithTense-SingleDateSeries-LogicMt, 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries and #$reasoningWithTenseMtCCType). 
+(#$willBe-NthDate TYPE n PROP) is true in such an MT only if 
+(#$reasoningWithTenseMtCCType MT CCT) is true `outside' of MT and TYPE is a spec of CCT.  For 
+example, if CCT is #$CalendarDay (and thus #$reasoningWithTenseMtTime must be a 
+day), TYPE must be one of those collections of days such as #$Friday, 
+(#$DayOfYearFn #$October 1) or the like, and cannot be 
+#$CalendarAutumn or #$TimeOfDay-NoonHour etc.")
+ (comment willBe-Metric
+ "(#$willBe-Metric TYPE n PROP) means that it will be the case n `steps' forward that PROP, where the interpretation of `step' is determined by TYPE.  For example, (#$willBe-Metric #$CalendarDay 2 `Fritz drives to work') means that Fritz will drive to work the day after tomorrow, and (#$willBe-Metric #$CalendarYear 1 `Cyc goes public') means that Cyc will go public next year.  Note that this predicate should be used only when (#$reasoningWithTenseMtCCType Mt TYPE) holds `outside' of the current microtheory Mt (and thus the #$reasoningWithTenseMtTime is of type TYPE), and hence there should be no two types TYPE-0 and TYPE-1 such that (#$willBe-Metric TYPE-0 k PROP-0) and (#$willBe-Metric TYPE-1 n PROP) are both true in an instance MT of #$ReasoningWithTenseMicrotheory-SingleDateSeries.")
+ (comment was-Throughout
+ "Because the temporal structure used in interpreting notions 
+in #$ReasoningWithTense-LogicMt-SingleDateSeries is a single calendar 
+covering type, we have some restrictions on the use of 
+#$was-Throughout.  Let Mt be any instance of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and let 
+(#$reasoningWithTenseMtCCType Mt TYPE) holds `outside' of Mt (i.e., 
+the interpretation of TYPE is the temporal structure we are 
+considering).  (#$was-Throughout DATE PROP) is true in Mt if and only 
+if (from the `outside' of Mt) DATE is in the past of 
+#$reasoningWithTenseMtTime and is an `interval' of elements of TYPE, 
+and PROP is the case at every instance of TYPE temporally subsumed by 
+DATE.  For example, if TYPE is #$CalendarDay, days are identified with 
+`moments' in our (semantic) temporal structure, and DATE must be an 
+interval of days (which can be a day/weak/month/year etc., but can 
+never be an hour or a day `plus' an hour or any proper fraction of a 
+day etc.), and (#$was-Throughout DATE PROP) means that PROP was the 
+case on every day temporally subsumed by DATE.")
+ (comment willBe-Throughout
+ "Because the temporal structure used in interpreting notions 
+in #$ReasoningWithTense-LogicMt-SingleDateSeries is a single calendar 
+covering type, we have some restrictions on the use of 
+#$willBe-Throughout.  Let Mt be any instance of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries with 
+(#$reasoningWithTenseMtCCType Mt TYPE) holds `outside' of Mt (i.e., 
+the interpretation of TYPE is the temporal structure we are 
+considering).  (#$willBe-Throughout DATE PROP) is true in Mt if and 
+only if (from the `outside' of Mt) DATE is in the future of 
+#$reasoningWithTenseMtTime and is an `interval' of elements of TYPE, 
+and PROP is true at every instance of TYPE temporally subsumed by 
+DATE.  For example, if TYPE is #$CalendarDay, days are identified with 
+`moments' in our (semantic) temporal structure, and DATE must be an 
+interval of days (which can be a day/weak/month/year etc., but can 
+never be an hour or a day `plus' an hour or any proper fraction of a 
+day etc.), and thus (#$willBe-Throughout DATE PROP) means that PROP 
+will be the case on every day temporally subsumed by DATE.")
+ (comment was-SometimeDuring
+ "Because the temporal structure used in interpreting notions 
+in #$ReasoningWithTense-LogicMt-SingleDateSeries is a single calendar 
+covering type, we have some restrictions on the use of 
+#$was-SometimeDuring.  Let Mt be any instance of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and let 
+(#$reasoningWithTenseMtCCType Mt TYPE) holds `outside' of Mt (i.e., 
+the interpretation of TYPE is the temporal structure we are 
+considering).  (#$willBe-SometimeDuring DATE PROP) is true in Mt if 
+and only if (from the `outside' of Mt) DATE is in the past of 
+#$reasoningWithTenseMtTime and is an `interval' of elements of TYPE, 
+and PROP is true at some instance of TYPE temporally subsumed by DATE. 
+For example, if TYPE is #$CalendarDay, days are identified with 
+`moments' in our (semantic) temporal structure, and DATE must be an 
+interval of days (which can be a day/weak/month/year etc., but can 
+never be an hour or a day `plus' an hour or any proper fraction of a 
+day etc.), and (#$was-SometimeDuring DATE PROP) means that PROP was 
+the case on some day temporally subsumed by DATE.")
+ (comment willBe-SometimeDuring
+ "Because the temporal structure used in interpreting notions 
+in #$ReasoningWithTense-LogicMt-SingleDateSeries is a single calendar 
+covering type, we have some restrictions on the use of 
+#$willBe-SometimeDuring.  Let Mt be any instance of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and let 
+(#$reasoningWithTenseMtCCType Mt TYPE) holds `outside' of Mt (i.e., 
+the interpretation of TYPE is the temporal structure we are 
+considering).  (#$willBe-SometimeDuring DATE PROP) is true in Mt if 
+and only if (from the `outside' of Mt) DATE is in the future of 
+#$reasoningWithTenseMtTime and is an `interval' of elements of TYPE, 
+and PROP is true at some instance of TYPE temporally subsumed by DATE. 
+For example, if TYPE is #$CalendarDay, days are identified with 
+`moments' in our (semantic) temporal structure, and DATE must be an 
+interval of days (which can be a day/weak/month/year etc., but can 
+never be an hour or a day `plus' an hour or any proper fraction of a 
+day etc.), and (#$willBe-SometimeDuring DATE PROP) means that PROP 
+will be the case on some day temporally subsumed by DATE.")

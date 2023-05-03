@@ -1,0 +1,1425 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qp-ontology
+;;;;    System: Fire
+;;;;    Author: Ken Forbus
+;;;;   Created: June 20, 2004 19:03:22
+;;;;   Purpose: Ontology for QP theory
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+
+(in-microtheory QPTheoryMt) 
+
+(genlMt QPTheoryMt OrdinalReasoningMt)
+
+;;--------------------------------
+;;  QP theory Ontology
+;;--------------------------------
+
+;;; Every QP modeling language includes implementation-specific representation
+;;; conventions, since QP theory itself is quite general.  Integrating with the
+;;; Cyc ontology provides some new opportunities to simplify the modeling language
+;;; and implement reasoning for model formulation in a more general, declarative way.
+
+
+;;----------------------------------------------
+;; Interface to quantities in the Cyc ontology
+;;----------------------------------------------
+
+;;; What Cyc calls a quantity are specific values, i.e. 4 kg of water.
+;;; It doesn't incorporate the idea of a fluent.  We use ContinuousQuantity
+;;; to introduce the fluent, and QPQuantityFn to ground fluents in
+;;; Cyc's ScalarInterval, which gives us access to what is already in the KB
+;;; about continuous parameters.
+;;; N.B. Not all quantities in a QP domain theory need to be defined using
+;;; QPQuantityFn.  It only makes sense to do this if we want to leverage
+;;; Cyc knowledge about quantities.
+;;; ***** Add another relationship for linking fluents to collections that denote
+;;; ***** their values, such that if R is that relation, 
+;;; ***** (R (QPQuantityFn ?C) ?C) is true.
+
+;;; ContinuousQuantity 
+(isa ContinuousQuantity Collection)
+(comment ContinuousQuantity "Continuous parameters are fluents representing 
+properties such as temperature, heat, price, etc.  Typically they 
+are tied to some particular entity or situation.  Depending on their type, 
+they could have temporal or spatial derivatives.  Continuity applies to them, 
+and they are dense. N.B. this is not a spec of Quantity, which is a collection
+ of specific values that these fluents can take on.")
+(genls ContinuousQuantity Thing)
+;;; ***** Thing is too vague, but it isn't clear what the right place to hook into is.
+;;; ***** We are talking about fluents, not specific values, which are what collections
+;;; ***** like Quantity are about.
+
+;;;ContinuousQuantityType
+(comment ContinuousQuantityType "Something is a ContinuousQuantityType if instances of it are 
+continuous quantities.")
+(isa ContinuousQuantityType CollectionType)
+(genls ContinuousQuantityType Collection)
+
+;;; QPQuantityFn
+(comment QPQuantityFn "(QPQuantityFn ?q) denotes a function which, when applied to particular
+entities, denotes a QP theory quantity of type ?q.  ?q is spec of ScalarInterval,
+which includes physical quantities but also more abstract ones, like Morale. 
+Examples include (QPQuantityFn Temperature), (QPQuantityFn Morale).
+In QP theory, quantities are essentially fluents, since they are terms
+whose values are situation-specific.")
+(isa QPQuantityFn UnaryFunction)
+(arity QPQuantityFn 1)
+(arg1Isa QPQuantityFn ScalarInterval) 
+(resultIsa QPQuantityFn VariableArityFunction)
+(resultResultIsa QPQuantityFn ContinuousQuantity)
+
+(isa hasQuantity BinaryPredicate)
+(arity hasQuantity 2)
+(arg1Isa hasQuantity Thing)
+(arg2Isa hasQuantity ContinuousQuantity)
+(comment hasQuantity
+"(hasQuantity ?o ?q) means that entity ?o has the quantity ?q.  Typically ?q is a NAT
+that denotes a continuous quantity.")
+
+(comment qpBasisQPair
+  "(qpBasisQPair ?q1 ?q2) indicates that, in the scenario model this statement
+ appears in, that the ordinal relationship between ?q1 and ?q2 should be tracked
+ as part of the basis set for qualitative states.")
+(isa qpBasisQPair BinaryPredicate)
+(arity qpBasisQPair 2)
+(arg1Isa qpBasisQPair ContinuousQuantity)
+(arg2Isa qpBasisQPair ContinuousQuantity)
+
+;;; ----------------------------------------------------
+;;; Continuous Quantity Arithmetic
+;;; ----------------------------------------------------
+(isa qPlusFn VariableArityFunction)
+(comment QPlusFn "QPlusFn is a PlusFn for continuous quantities, such as those
+ used in QP theory.")
+(argsIsa QPlusFn ContinuousQuantity)
+(resultIsa QPlusFn ContinuousQuantity)
+
+(isa QDifferenceFn BinaryFunction)
+(comment QDifferenceFn "QDifferenceFn is a DifferenceFn for continuous
+ quantities, such as those used in QP theory. Used by inference rules for q= to infer qprops.")
+(arg1Isa QDifferenceFn ContinuousQuantity)
+(arg2Isa QDifferenceFn ContinuousQuantity)
+(resultIsa QDifferenceFn ContinuousQuantity)
+
+(isa QMinusFn UnaryFunction)
+(comment QMinusFn "QMinusFn is a MinusFn for continuous quantities, such as 
+ those used in QP theory, used in q= expressions to infer qprops.")
+(arg1Isa QMinusFn ContinuousQuantity)
+(resultIsa QMinusFn ContinuousQuantity)
+
+;;; ----------------------------------------------------
+;;; Model fragments
+;;; ----------------------------------------------------
+
+;;; Ontologically, model fragment instances are conceptual entities that may or may not
+;;;  denote physical entities.  
+;;; N.B. Terminology mismatch: In the compositional modeling literature, "model fragment"
+;;;  refers to the types, and instances are marked (i.e., "model fragment instance"), 
+;;;  whereas in the Cyc KB, they tend to refer to instances, and types are marked (e.g.,
+;;;  "situation" is a specific situation, whereas "situation type" is used for categories
+;;;  of situations.)  This ontology uses the Cyc way of talking about them.
+
+;;; Instance-level descriptions
+
+(isa ModelFragment Collection)
+(genls ModelFragment TemporallyExtendedThing)
+(comment ModelFragment "Instances of ModelFragment represent instances of model fragments,
+in the sense of compositional modeling (Falkenhainer & Forbus, 1991).
+A model fragment is active whenever its participants exist and its conditions hold.
+When it is active, its consequences are believed to be true.")
+;;; ***** Need right genls for ModelFragment
+
+(isa PhysicalModelFragment Collection)
+(genls PhysicalModelFragment ModelFragment)
+(genls PhysicalModelFragment PartiallyTangible) ;;PartiallyTangible?/SomethingExisting?
+(comment PhysicalModelFragment
+  "PhysicalModelFragments represent things for which physical existence is a concern.
+Examples include physical processes and contained fluids, the latter having existence
+predicated on an ordinal relationship and hence something which can be predicted within
+QP theory.")
+
+(isa ConceptualModelFragment Collection)
+(genls ConceptualModelFragment ModelFragment)
+(comment ConceptualModelFragment
+"Instances of ConceptualModelFragment represent model fragments that do not entail
+physical existence, such as air being saturated or a container being full.  Otherwise
+they have the same properties as other model fragments.")
+
+(disjointWith PhysicalModelFragment ConceptualModelFragment)
+
+(isa QPProcess Collection)
+(genls QPProcess PhysicalModelFragment)
+(comment QPProcess
+"Instances of QPProcess represent QP theory's notion of continuous process.
+They serve as the mechanism of change in the continuous world.  
+They are a spec of PhysicalModelFragment, because they are held to exist, e.g., their
+quantities do not exist except when it is active.
+Only continuous processes can have direct influences.")
+
+;;; Properties of model fragments
+
+(isa activeMF UnaryPredicate)
+(arity activeMF 1)
+(comment activeMF "(activeMF ?mf) means that ?mf is active.  This occurs only when
+its participants all exist, the configurational constraints hold, and
+the conditions are true.  When a QPProcess is active, its consequences
+hold.  These tend to be direct influences, and the changes they cause
+directly and indirectly constitute the causal effects of the process.")
+(arg1Isa activeMF ModelFragment)
+  
+(isa existsMF UnaryPredicate)
+(arity existsMF 1)
+(comment existsMF "(existsMF ?mf) means that ?mf exists. This occurs only when
+its participants all exist, and their configurational constraints hold.")
+(arg1Isa existsMF ModelFragment)
+
+;;; -----------------------------------------------------------
+;;; Inferring activation
+;;; -----------------------------------------------------------
+
+;;; One possible way of handling closed world assumptions is to iterate over the set of model
+;;; fragments in a scenario and attempt to prove them active (or not active).  The
+;;; negation case is simpler because it is disjunctive, and hence a single rule can handle it.
+
+(<== (not (activeMF ?mfi))
+     (wmOnly (lookupOnly (localOnly (mfiConditionOf ?mfi ?c))))
+     (not ?c))
+
+(<== (activeMF ?mfi)
+     (wmOnly (lookupOnly (localOnly (isa ?mfi ModelFragment))))
+     (evaluate ?conditions
+       (TheClosedRetrievalSetOf ?c
+         (mfiConditionOf ?mfi ?c)))
+     (everySatisfies ?c ?conditions ?c))
+
+;;; Relations involving model fragments
+
+(isa mfCondition BinaryPredicate)
+(arity mfCondition 2)
+(arg1Isa mfCondition ModelFragment)
+(arg2Isa mfCondition CycLSentence-Assertible)
+(comment mfCondition 
+"(mfCondition ?mf ?c) indicates that the statement ?c is a conjunct in the conditions
+under which model fragment instance ?mf is active.  We decompose the conjunction into
+individual statements to support more flexible reasoning about them.")
+
+(isa mfConsequence BinaryPredicate)
+(arity mfConsequence 2)
+(arg1Isa mfConsequence ModelFragment)
+(arg2Isa mfConsequence CycLSentence-Assertible)
+(comment mfConsequence 
+"(mfConsequence ?mf ?c) indicates that the statement ?c is a consequence which is entailed
+whenever model fragment instance ?mf is active.")
+
+;; N.B. At the instance level, role relations specific to the model fragment type
+;; will be used to relate participants to a model fragment.  The type level information
+;; contains what is needed for instantiation.
+
+(isa mfParticipant BinaryRelation)
+(arity mfParticipant 2)
+(arg1Isa mfParticipant ModelFragment)
+(arg2Isa mfParticipant Thing)
+(comment mfParticipant
+"(mfParticipant ?mfi ?e) indicates that model fragment instance ?mf1 has entity ?e
+as one of its participants.  This is intended for queries, the specific participant
+relations are defined to be specPreds of this relationships.")
+
+;;; Type-level descriptions of model fragments
+
+(isa ModelFragmentType Collection)
+(comment ModelFragmentType
+ "Instances of ModelFragmentTypes are types of model fragments,
+in the compositional modeling methodology of Falkenhainer and Forbus (1991).
+Their instantiations are instances of ModelFragment.")
+;; ***** Need right genls for ModelFragmentType
+
+(isa PhysicalModelFragmentType Collection)
+(genls PhysicalModelFragmentType ModelFragmentType)
+(comment PhysicalModelFragmentType
+"Instances of PhysicalModelFragmentType are are types of model fragments whose
+instantiations in a model will be instances of PhysicalModelFragment.")
+
+(isa ConceptualModelFragmentType Collection)
+(genls ConceptualModelFragmentType ModelFragmentType)
+(comment ConceptualModelFragmentType
+ "An instance of ConceptualModelFragmentType is a type of model fragment whose
+instantiations in a model are instances of ConceptualModelFragment.")
+
+(disjointWith PhysicalModelFragmentType ConceptualModelFragmentType)
+
+(isa QPProcessType Collection)
+(genls QPProcessType PhysicalModelFragmentType)
+(comment QPProcessType
+"An instance of QPProcessType is a type of model fragment whose
+instantiations in a model are instances of QPProcess.")
+
+;;; ----------------------------------------------------
+;;; Relationships involving model fragment types
+;;; ----------------------------------------------------
+;;; These assertions are the "ground truth" defining types of
+;;; model fragments.
+;;; ****** Should we introduce a friendlier syntax for humans,
+;;; ******    as used in Gizmo and other QP implementations?
+;;; ****** Should we make a viewer that would produce friendlier
+;;; ******    syntax from the KB assertions, as a visualization aid?
+
+(isa mfTypeCondition Predicate)
+(arity mfTypeCondition 2)
+(arg1Isa mfTypeCondition ModelFragmentType)
+(arg2Isa mfTypeCondition CycLSentence-Assertible)
+(comment mfTypeCondition 
+"(mfTypeCondition ?mft ?s) indicates that the non-ground statement ?s is one of the
+conjuncts defining the conditions under which instances of model fragment type ?mft
+is active.")
+
+(isa mfTypeConsequence Predicate)
+(arity mfTypeConsequence 2)
+(arg1Isa mfTypeConsequence ModelFragmentType)
+(arg2Isa mfTypeConsequence CycLSentence-Assertible)
+(comment mfTypeConsequence 
+"(mfTypeConsequence ?mft ?s) indicates that the non-ground statement ?s is one of the
+consequences of instances of model fragment type ?mft being active.")
+
+(isa mfTypeBiconditionalConsequence Predicate)
+(arity mfTypeBiconditionalConsequence 2)
+(arg1Isa mfTypeBiconditionalConsequence ModelFragmentType)
+(arg2Isa mfTypeBiconditionalConsequence CycLSentence-Assertible)
+(comment mfTypeBiconditionalConsequence 
+"(mfTypeBiconditionalConsequence ?mft ?s) indicates that, for every instance I of 
+model fragment type ?mft, (substitute I ?self ?s) holds iff I is active, i.e., (activeMF I) is true.")
+
+(isa MFParticipantSlot Collection)
+;; ***** Genls for MFParticipantSlot?  Not ActorSlot, but maybe some genl of it
+(comment MFParticipantSlot
+"Instances of MFParticipantSlot are essentially role relations for model fragment
+instances.  They are all specPreds of mfParticipant.")
+
+(isa mfTypeParticipant Predicate)
+(arity mfTypeParticipant 4)
+(arg1Isa mfTypeParticipant ModelFragmentType)
+(arg2Isa mfTypeParticipant CycLVariable)
+(arg3Isa mfTypeParticipant Collection)
+(arg4Isa mfTypeParticipant QPParticipantSlot)
+(comment mfTypeParticipant
+"(mfTypeParticipant ?mft ?v ?col ?rel) indicates that model fragments of type ?mft have as
+one of their participants an instance of ?col, and that the relationship ?rel is used
+to indicate the particular role that bindings of ?v have in instances of ?mft.")
+
+(isa mfTypeParticipantConstraint BinaryPredicate)
+(arity mfTypeParticipantConstraint 2)
+(arg1Isa mfTypeParticipantConstraint ModelFragmentType)
+(arg2Isa mfTypeParticipantConstraint CycLSentence-Assertible)
+(comment mfTypeParticipantConstraint
+"(mfTypeParticipantConstraint ?mft ?c) indicates that ?c is one of the constraints must
+hold when instantiating a model fragment of type ?mft.")
+
+(isa mfTypeParticipants BinaryPredicate)
+(arity mfTypeParticipants 2)
+(arg1Isa mfTypeParticipants ModelFragmentType)
+(arg2Isa mfTypeParticipants Set-Mathematical)
+(comment mfTypeParticipants
+"(mfTypeParticipants ?mft ?set) indicates that the set of variables used to represent
+participants in model fragments of type ?mft is ?set.  This statement is computed from the
+individual mfTypeParticipant statements.")
+
+;;; ----------------------------------------------------
+;;; Predicates involving model fragment instances
+;;; ----------------------------------------------------
+;;; In model formulation, some model fragments depend upon others.  Since we have to
+;;; reason about what might be possible, these relationships support doing that.
+;;; They are derived for each model fragment instance and are always true, since they
+;;; are structural properties of that instance.
+
+(isa mfiParticipantOf Predicate)
+(arity mfiParticipantOf 3)
+(arg1Isa mfiParticipantOf ModelFragment)
+(arg2Isa mfiParticipantOf CycLTerm)
+(arg3Isa mfiParticipantOf QPParticipantSlot)
+(comment mfiParticipantOf 
+  "(mfiParticipantOf ?mfi ?t ?slot) indicates that when model fragment instance ?mfi uses entity term ?t as slot ?slot.")
+
+(isa mfiConsequenceOf BinaryPredicate)
+(arity mfiConsequenceOf 2)
+(arg1Isa mfiConsequenceOf ModelFragment)
+(arg2Isa mfiConsequenceOf CycLAssertion)
+(comment mfiConsequenceOf 
+"(mfiConsequenceOf ?mfi ?c) indicates that when model fragment instance ?mfi is active, ?c holds.")
+
+(isa mfiReverseConsequenceOf BinaryPredicate)
+(arity mfiReverseConsequenceOf 2)
+(arg1Isa mfiReverseConsequenceOf ModelFragment)
+(arg2Isa mfiReverseConsequenceOf CycLAssertion)
+(comment mfiReverseConsequenceOf 
+"(mfiReverseConsequenceOf ?mfi ?c) indicates that when ?c holds, ?mfi is active.
+This is instantiated as the other half of the implication of an mfTypeBiconditionalConsequence,
+as an optimization for model formulation algorithms.")
+
+(isa mfiConditionOf BinaryPredicate)
+(arity mfiConditionOf 2)
+(arg1Isa mfiConditionOf ModelFragment)
+(arg2Isa mfiConditionOf CycLAssertion) 
+(comment mfiConditionOf
+ "(mfiConditionOf ?mfi ?c) indicates that ?c is a condition for model fragment instance ?mfi to be active.
+These statements are combined conjunctively during model formulation to compute the appropriate full condition.")
+
+(isa mfiType BinaryPredicate)
+(arity mfiType 2)
+(arg1Isa mfiType ModelFragment)
+(arg2Isa mfiType ModelFragmentType) 
+(comment mfiType
+  "(mfiType ?mfi ?type) indicates that ?mfi was instantiated with type ?type.")
+
+(isa mfiAntecedents BinaryPredicate)
+(arity mfiAntecedents 2)
+(arg1Isa mfiAntecedents ModelFragment)
+(arg2Isa mfiAntecedents Set-Extensional) 
+(comment mfiAntecedents
+  "(mfiAntecedents ?mfi ?set) indicates that ?mfi was instantiated based on the
+ set of assertions ?set.")
+
+(isa mfiBindings BinaryPredicate)
+(arity mfiBindings 2)
+(arg1Isa mfiBindings ModelFragment)
+(arg2Isa mfiBindings Set-Extensional) 
+(comment mfiBindings
+  "(mfiBindings ?mfi ?set) indicates that the bindings used to instantiate ?mfi were ?set.")
+
+;;; ----------------------------------------------------
+;;; Model formulation
+;;; ----------------------------------------------------
+
+;;; The information required for model formulation consists of
+;;; A domain theory, represented by a microtheory.  All model fragments within
+;;;   the logical environment of that microtheory are available for formulating models.
+;;; A scenario description, also represented by a microtheory.  This declares the types
+;;;   of entities that are involved in what are potentially a class of analyses, depending
+;;;   on what scenario model is constructed from this description.
+;;; The result of model formulation is the population of information in a scenario model
+;;;   microtheory, which always genlMt's from the input microtheories.  
+
+(isa qpUniversalFact UnaryPredicate)
+(arity qpUniversalFact 1)
+(arg1Isa qpUniversalFact CycLExpression-Assertible)
+(comment qpUniversalFact
+ "The relationship (qpUniversalFact ?f) holds iff ?f is assumed to hold without change
+ over an entire analysis, independent of qualitative state.
+  For example, (qpUniversalFact (isa F Container)).")
+
+(isa DomainTheoryMicrotheory Collection)
+(genls DomainTheoryMicrotheory Microtheory)
+(comment DomainTheoryMicrotheory
+  "A DomainTheoryMicrotheory is a microtheory that contains a domain theory.  An analysis might
+ rely on several domain theories, to support compositionality.")
+
+(isa ScenarioModelMicrotheory Collection)
+(genls ScenarioModelMicrotheory Microtheory)
+(comment ScenarioModelMicrotheory
+  "A ScenarioModelMicrotheory is a microtheory that holds the scenario model constructed for 
+ a QP analysis.")
+
+(isa domainTheoryOf BinaryPredicate)
+(arity domainTheoryOf 2)
+(arg1Isa domainTheoryOf DomainTheoryMicrotheory) ;; Can specialize later
+(arg2Isa domainTheoryOf ScenarioModelMicrotheory) ;; Can specialize later
+(comment domainTheoryOf
+  "(domainTheoryOf ?sm ?dt) indicates that scenario model ?sm was constructed using
+ domain theory ?dt.  Often ?dt will be a spindle microtheory.  Being able to trace back
+ what was used in building a scenario will be important for learning QP models.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Qualitative analysis and state definitions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; There are two distinct notions expressed here.  There is the general idea of a 
+;; qualitative analysis and qualitaitve state, represented by a microtheory structure,
+;; and some terms for reification of Gizmo results, which of course assume a particular
+;; qualitative simulator.
+
+(isa QPAnalysisMts Collection)
+(genls QPAnalysisMts Microtheory)
+(comment QPAnalysisMts
+"An instance of QPAnalysisMts is a microtheory representing the background information
+and facts that hold throughout a qualitative analysis.  
+SpecMts of Mts of this type represent specific qualitative states.")
+
+;;; N.B. QualitativeState, something that we defined for Cycorp back in HPKB/RKF days!
+;;; Unfortunately, they have made it a specialization of Event, which is incorrect.
+;;; ****** Need to fix that.
+
+(isa QPState Collection)
+(genls QPState Microtheory)
+(comment QPState
+  "An instance of QPState is a qualitative state, part of some analysis. 
+ These can be partial, with multiple elaborations to form complete states.")
+
+(isa scenarioModelOf BinaryPredicate)
+(arity scenarioModelOf 2)
+(arg1Isa scenarioModelOf QPState) ;; Can specialize later
+(arg2Isa scenarioModelOf ScenarioModelMicrotheory) ;; Can specialize later
+(comment scenarioModelOf
+  "(scenarioModelOf ?state ?sm) indicates that state ?state is based on scenario model ?sm.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Ordinals for fluents
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; ***** N.B. Thing is used in the argIsas here as a placeholder.  Most of the time the
+;;; ***** args are fluents, but sometimes they can be integers.  Need to look up the semantics
+;;; ***** of multiple argIsa statements, if they are disjunctive, we can simply duplicate.
+
+(isa FluentOrdinalPredicate Collection)
+(genls FluentOrdinalPredicate BinaryPredicate)
+(comment FluentOrdinalPredicate
+  "FluentOrdinalPredicate is the collection of ordinal relationships that can be
+ applied to fluents for reasoning about relative magnitudes and transitivity.
+ This distinction is useful in predicates used for implementing qualitative reasoning")
+
+;;; N.B. The arg1Isa and arg2Isa of Thing below are lazy, and should be fixed to be
+;;; the appropriate collection of fluents.  Note that the special value Zero must be
+;;; a member of whatever collection is used.
+
+;;;qGreaterThan
+(isa qGreaterThan FluentOrdinalPredicate)
+(isa qGreaterThan AntiSymmetricBinaryPredicate)
+(arg1Isa qGreaterThan Thing)
+(arg2Isa qGreaterThan Thing)
+(comment qGreaterThan "(qGreaterThan ?q1 ?q2) means that the value of ?q1 is greater than the value of ?q2.")
+
+;;;qLessThan
+(isa qLessThan FluentOrdinalPredicate)
+(isa qLessThan AntiSymmetricBinaryPredicate)
+(arg1Isa qLessThan Thing)
+(arg2Isa qLessThan Thing)
+(comment qLessThan "(qLessThan ?q1 ?q2) means that the value of ?q1 is less than the value of ?q2.")
+
+;;;qEqualTo
+(isa qEqualTo FluentOrdinalPredicate)
+(isa qEqualTo ReflexiveBinaryPredicate)
+(isa qEqualTo SymmetricBinaryPredicate)
+(arg1Isa qEqualTo Thing) 
+(arg2Isa qEqualTo Thing)
+(comment qEqualTo "(qEqualTo ?q1 ?q2) means that the value of ?q1 is equal to the value of ?q2.")
+
+;;;qLessThanOrEqualTo
+(isa qLessThanOrEqualTo FluentOrdinalPredicate)
+(isa qLessThanOrEqualTo AntiSymmetricBinaryPredicate)
+(arg1Isa qLessThanOrEqualTo Thing)
+(arg2Isa qLessThanOrEqualTo Thing)
+(comment qLessThanOrEqualTo "(qLessThanOrEqualTo ?q1 ?q2) means that the value of ?q1 is less than or equal to the value of ?q2.")
+
+;;;qGreaterThanOrEqualTo
+(isa qGreaterThanOrEqualTo FluentOrdinalPredicate)
+(isa qGreaterThanOrEqualTo AntiSymmetricBinaryPredicate)
+(arg1Isa qGreaterThanOrEqualTo Thing)
+(arg2Isa qGreaterThanOrEqualTo Thing)
+(comment qGreaterThanOrEqualTo "(qGreaterThanOrEqualTo ?q1 ?q2) means that the value of ?q1 is greater than or equal to the value of ?q2.")
+
+;;;qUnrelatedTo
+(isa qUnrelatedTo FluentOrdinalPredicate)
+(isa qUnrelatedTo SymmetricBinaryPredicate)
+(arg1Isa qUnrelatedTo Thing)
+(arg2Isa qUnrelatedTo Thing)
+(comment qUnrelatedTo 
+  "(qUnrelatedTo ?q1 ?q2) means that no ordinal relation between ?q1 and ?q2 is appropriate, because either (or both)
+   of ?q1 or ?q2 does not exist. This is to prevent anomalies like conjecturing ordinals involving pressures of entities
+   that don't actually exist in a qualitative state.  It provides one of the mutually exclusive and collectively
+   exhaustive alternatives to qGreaterThan, qLessThan, and qEqualTo in dependency-directed searches involved in 
+   constructing new qualitative states.")
+
+;;;; Doing the constraints between these relationships via backchaining instead of 
+;;;; whomping the clauses into the LTMS when an ordinal relationship is first introduced
+;;;; is an experiment, not clear this will actually work out.
+
+(<== (qUnrelatedTo ?q1 ?q2) (not (hasQuantity ?e ?q1)))
+(<== (qUnrelatedTo ?q1 ?q2) (not (hasQuantity ?e ?q1)))
+
+;; N.B. not using wmOnly below because there could be ordinals true in the 
+;; KB within the logical environment that are relevant
+(<== (not (qUnrelatedTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (LookupOnly (qGreaterThan ?q1 ?q2)))
+(<== (not (qUnrelatedTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (LookupOnly (qGreaterThan ?q1 ?q2)))
+(<== (not (qUnrelatedTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (LookupOnly (qGreaterThan ?q1 ?q2)))
+(<== (not (qUnrelatedTo ?q1 ?q2))
+     (groundExpression ?q1)
+     (hasQuantity ?e ?q1))
+(<== (not (qUnrelatedTo ?q1 ?q2))
+     (groundExpression ?q2)
+     (hasQuantity ?e ?q2))
+
+(isa oppositeQPOrdinal BinaryPredicate)
+(arity oppositeQPOrdinal 2)
+(arg1Isa oppositeQPOrdinal FluentOrdinalPredicate)
+(arg2Isa oppositeQPOrdinal FluentOrdinalPredicate)
+(comment oppositeQPOrdinal "(oppositeQPOrdinal ?o1 ?o2) indicates that ?o1 and ?o2 are the opposite of each other.
+ This is useful for detecting redundancy in ordinal descriptions.")
+(oppositeQPOrdinal qGreaterThan qLessThan)
+(oppositeQPOrdinal qLessThan qGreaterThan)
+(oppositeQPOrdinal qEqualTo qEqualTo)
+(oppositeQPOrdinal qGreaterThanOrEqualTo qLessThanOrEqualTo)
+(oppositeQPOrdinal qLessThanOrEqualTo qGreaterThanOrEqualTo)
+
+;;;q=
+(isa q= BinaryPredicate)
+(arity q= 2)
+(arg1Isa q= ContinuousQuantity)
+(arg2Isa q= ContinuousQuantity)
+(comment q= "(q= ?A ?B) states that A is causally equal to B.")
+
+;;;QPDerivativeFn
+(isa QPDerivativeFn UnaryFunction)
+(arity QPDerivativeFn 1)
+(arg1Isa QPDerivativeFn ContinuousQuantity)
+(resultIsa QPDerivativeFn ContinuousQuantity)
+(comment QPDerivativeFn
+ "(QPDerivativeFn ?q) is the term denoting the temporal derivative of ?q.")
+
+;;; Rules for q=
+;; Special case of the expression of a total functional dependency on a 
+;; single quantity.
+(<== (qEqualTo ?A Zero)
+     (groundExpression ?A)
+     (different ?A Zero)
+     (wmOnly (sourceOfInfluence (q= ?A Zero)
+                                ?source)))
+
+(<== (qEqualTo (QPDerivativeFn ?A) Zero)
+     (groundExpression ?A)
+     (different ?A Zero)
+     (wmOnly (sourceOfInfluence (q= ?A Zero) ?source)))
+
+(<== (qprop ?A ?B)
+     (wmOnly (sourceOfInfluence (q= ?A ?B) ?source))
+     (noArgumentHasPredicate (q= ?A ?B) QDifferenceFn)
+     (different ?A Zero)
+     (different ?B Zero))
+
+(<== (qEqualTo ?A ?B)
+     (wmOnly (q= ?A ?B))
+     (noArgumentHasPredicate (q= ?A ?B) QDifferenceFn)
+     (different ?A Zero)
+     (different ?B Zero))
+
+(<== (qEqualTo (QPDerivativeFn ?A) (QPDerivativeFn ?B))
+     (wmOnly (q= ?A ?B))
+     (different ?A Zero)
+     (different ?B Zero))
+
+(<== (qpCorrespondence ?A Zero ?B Zero)
+     (wmOnly (q= ?A ?B))
+     (different ?A Zero)
+     (different ?B Zero))
+
+;;;; Subtraction implemented as a qualitative expression
+;; ?out, ?in1, and ?in2 are assumed to be quantities
+
+(<== (qprop ?out ?in1)
+     (wmOnly (sourceOfInfluence
+              (q= ?out (QDifferenceFn ?in1 ?in2))
+              ?source)))
+
+(<== (qprop- ?out ?in2)
+     (wmOnly (sourceOfInfluence
+              (q= ?out (QDifferenceFn ?in1 ?in2))
+              ?source)))
+
+(<== (qpCorrespondence ?out Zero ?in1 ?in2)
+     (wmOnly (q= ?out (QDifferenceFn ?in1 ?in2))))
+
+(<== (qprop ?out ?in)
+     (wmOnly (sourceOfInfluence (q= ?out ?in) ?source))
+     (noArgumentHasPredicate (q= ?out ?in) QDifferenceFn))
+
+(<== (qpCorrespondence ?out Zero ?in Zero)
+     (wmOnly (sourceOfInfluence (q= ?out ?in) ?source))
+     (noArgumentHasPredicate (q= ?out ?in) QDifferenceFn))
+
+(<== (qpCorrespondence ?out Zero ?in1 ?in2)
+     (wmOnly (sourceOfInfluence (q= ?out (QDifferenceFn ?in1 ?in2))
+                                ?source)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Influences
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; qprop
+(isa qprop Predicate) 
+(arity qprop 2)
+(arg1Isa qprop ContinuousQuantity)
+(arg2Isa qprop ContinuousQuantity)
+(comment qprop "(qprop ?A ?B) means that there exists a function which determines ?A, 
+depends at least on ?B, and is increasing monotonic in its dependence on ?B.  
+Note that ?A may depend on other parameters as well, 
+hence closed-world assumptions are needed to reason about parameter changes.  
+This is the weakest information that suffices to say, if ?B is going up then, 
+all else being equal, ?A will go up, and if ?B goes down, then ?A will go down. See also qprop-.")
+
+;;; qprop-
+(isa qprop- Predicate)
+(arity qprop- 2)
+(arg1Isa qprop- ContinuousQuantity)
+(arg2Isa qprop- ContinuousQuantity)
+(comment qprop- "(qprop- ?A ?B) means that there exists a function which determines ?A,
+ depends at least on ?B, and is decreasing monotonic in its dependence on ?B.
+Note that ?A may depend on other parameters as well, hence closed-world assumptions
+are needed to reason about parameter changes.  This is the weakest information that
+suffices to say, if ?B is going up then, all else being equal, 
+?A will go up, and if ?B goes down, then ?A will go down. See also qprop.")
+
+;;; c+
+(isa c+ Predicate)
+(arity c+ 2)
+(arg1Isa c+ ContinuousQuantity)
+(arg2Isa c+ ContinuousQuantity)
+(comment c+ "(c+ ?A ?B) means there is a linear, increasing monotonic functional dependence
+of ?A on ?B.  Hence ?A is the summation of its additive proportionalities.  It is a more 
+precise influence than qprop.")
+
+;;; c-
+(isa c- Predicate)
+(arity c- 2)
+(arg1Isa c- ContinuousQuantity)
+(arg2Isa c- ContinuousQuantity)
+(comment c- "(c- ?A ?B) means there is a linear, decreasing monotonic functional dependence
+of ?A on ?B. See also c+.")
+
+;;;We go back to i+, i- instead of directInfluencePositive and directInfluenceNegative, since
+;;;these are really well known notations at this point, and it will make debugging a lot easier.
+
+;;; i+
+(isa i+ Predicate)
+(arity i+ 2)
+(arg1Isa i+ ContinuousQuantity)
+(arg2Isa i+ ContinuousQuantity)
+(comment i+ "i+ is QP theory's I+.  (I+ ?c ?r) means that D[?c] 
+= ... + ?r + ...., with a non-zero value for ?r causing changes in ?c.
+This is a derivative operator, and the use of addition instead of an unspecified
+function for combining effects makes it possible to reason about dynamic 
+equilibria.")
+
+;;; i-
+(isa i- Predicate)
+(arity i- 2)
+(arg1Isa i- ContinuousQuantity)
+(arg2Isa i- ContinuousQuantity)
+(comment i- "i+ is QP theory's I-.  (I- ?c ?r) means that D[?c] 
+= ... - ?r + ...., with a non-zero value for ?r causing changes in ?c.
+This is a derivative operator, and the use of subtraction instead of an unspecified
+function for combining effects makes it possible to reason about dynamic 
+equilibria.")
+
+;;; sourceOfInfluence 
+(isa sourceOfInfluence BinaryPredicate)
+(arity sourceOfInfluence 2)
+(arg1Isa sourceOfInfluence CyclAssertion)
+(arg2Isa sourceOfInfluence Thing)
+(comment sourceOfInfluence
+"(sourceOfInfluence ?inf ?source) indicates that ?source is the model fragment, entity or
+other thing from which the influence ?inf came.  This is crucial information for combining
+influences.  In Gizmo, this information is packaged into a third argument on influences,
+but since it is logically distinct when using QP theory more broadly (e.g., we might not
+have made a committment to the source yet), in this ontology it is broken out as a
+separate relationship.")
+
+(<== (sourceOfInfluence (qprop ?q1 ?q2) ?source)
+     (wmOnly (mfiConsequenceOf ?source (q= ?q1 ?q2)))
+     (wmOnly (isa ?q2 ContinuousQuantity)))
+
+(<== (sourceOfInfluence (qprop ?qout ?qin1) ?source)
+     (wmOnly (sourceOfInfluence (q= ?qout (QDifferenceFn ?qin1 ?qin2)) ?source))
+     (wmOnly (isa ?qin1 ContinuousQuantity)))
+
+(<== (sourceOfInfluence (qprop- ?qout ?qin2) ?source)
+     (wmOnly (sourceOfInfluence (q= ?qout (QDifferenceFn ?qin1 ?qin2)) ?source))
+     (wmOnly (isa ?qin2 ContinuousQuantity)))
+
+;;; qpExplicitFunction
+(isa qpExplicitFunction Predicate)
+(arity qpExplicitFunction 4)
+(arg1Isa qpExplicitFunction Thing)
+(arg2Isa qpExplicitFunction ContinuousQuantity)
+(arg3Isa qpExplicitFunction CycLAssertion)
+(arg4Isa qpExplicitFunction Thing)
+(comment qpExplicitFunction
+  "(qpExplicitFunction ?fn ?q ?ins+ ?ins-) indicates that ?q is determined
+ by the function ?f, whose inputs ?ins+ are qprop contributions and ?ins- are
+ qprop- contributions.")
+
+(<== (sourceOfInfluence (qprop ?q ?in) ?source)
+     (wmOnly (mfiConsequenceOf ?source
+                               (qpExplicitFunction ?fn ?q ?ins+ ?ins-)))
+     (elementOf ?in ?ins+))
+
+(<== (sourceOfInfluence (qprop- ?q ?in) ?source)
+     (wmOnly (mfiConsequenceOf ?source
+                       (qpExplicitFunction ?fn ?q ?ins+ ?ins-)))
+     (elementOf ?in ?ins-))
+
+(<== (qpCorrespondence ?q1 ?q2 ?r1 ?r2)
+     (different ?q1 Zero)
+     (wmOnly (qpExplicitFunction ?fn ?q1 (TheSet ?r1)(TheSet)))
+     (wmOnly (qpExplicitFunction ?fn ?q2 (TheSet ?r2)(TheSet)))
+     (different ?q1 ?q2))
+
+(<== (qpCorrespondence ?q1 ?q2 ?r1 ?r2)
+     (different ?q1 Zero)
+     (wmOnly (qpExplicitFunction ?fn ?q1 (TheSet) (TheSet ?r1)))
+     (wmOnly (qpExplicitFunction ?fn ?q2 (TheSet) (TheSet ?r2)))
+     (different ?q1 ?q2))
+
+(<== (qprop ?q1 ?q2)
+     (wmOnly (qpExplicitFunction ?fn ?q1 (TheSet ?q2)(TheSet))))
+
+(<== (qprop- ?q1 ?q2)
+     (wmOnly (qpExplicitFunction ?fn ?q1 (TheSet)(TheSet ?q2))))
+
+;;;qpCorrespondence
+(isa qpCorrespondence Predicate) ;;VariableArityFunction?
+(arity qpCorrespondence 4)
+;;;The arity of 4 is a strong simplification.  Might be okay for a lot of
+;;;domain theories, but in the long run we will want to move beyond that,
+;;;because it's too useful for accumulating information about functions.
+
+(arg1Isa qpCorrespondence ContinuousQuantity)
+(arg2Isa qpCorrespondence ScalarInterval)
+(arg3Isa qpCorrespondence ContinuousQuantity)
+(arg4Isa qpCorrespondence ScalarInterval)
+
+(<== (qGreaterThan ?q1 ?q2)
+     (different ?q1 Zero)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (wmOnly (qpCorrespondence ?q1 ?q2 ?r1 ?r2))
+     (wmOnly (qprop ?q1 ?r1))
+     (wmOnly (qGreaterThan ?r1 ?r2)))
+
+(<== (qLessThan ?q1 ?q2)
+     (different ?q1 Zero)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (wmOnly (qpCorrespondence ?q1 ?q2 ?r1 ?r2))
+     (wmOnly (qprop ?q1 ?r1))
+     (wmOnly (qLessThan ?r1 ?r2)))
+
+(<== (qGreaterThan ?q1 ?q2)
+     (different ?q1 Zero)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (wmOnly (qpCorrespondence ?q1 ?q2 ?r1 ?r2))
+     (wmOnly (qprop- ?q1 ?r1))
+     (wmOnly (qLessThan ?r1 ?r2)))
+
+(<== (qLessThan ?q1 ?q2)
+     (different ?q1 Zero)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (wmOnly (qpCorrespondence ?q1 ?q2 ?r1 ?r2))
+     (wmOnly (qprop- ?q1 ?r1))
+     (wmOnly (qGreaterThan ?r1 ?r2)))
+
+(<== (qEqualTo ?q1 ?q2)
+     (different ?q1 Zero)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (wmOnly (qpCorrespondence ?q1 ?q2 ?r1 ?r2))
+     (wmOnly (qprop ?q1 ?r1))
+     (wmOnly (qEqualTo ?r1 ?r2)))
+
+(<== (qEqualTo ?q1 ?q2)
+     (different ?q1 Zero)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (wmOnly (qpCorrespondence ?q1 ?q2 ?r1 ?r2))
+     (wmOnly (qprop- ?q1 ?r1))
+     (wmOnly (qEqualTo ?r1 ?r2)))
+
+;;;Quantities
+(isa hasQPQuantityOfType BinaryPredicate)
+(arg1Isa hasQPQuantityOfType SomethingExisting) ;;for both QPEntity and ModelFragment
+(arg2Isa hasQPQuantityOfType ContinuousQuantity)
+(comment hasQPQuantityOfType
+ "(hasQPQuantityOfType ?mte ?qt) indicates that every instance of model fragment or entity
+ type ?mte has a quantity of type ?qt.  
+ For example, (hasQPQuantityOfType LiquidFlow LiquidFlowRate).")
+
+
+(isa qpQuantityDimensionOfType TernaryPredicate)
+(arg1Isa qpQuantityDimensionOfType SomethingExisting) 
+(arg2Isa qpQuantityDimensionOfType ContinuousQuantity)
+(arg3Isa qpQuantityDimensionOfType UnitOfMeasure)
+(comment qpQuantityDimensionOfType
+ "(qpQuantityDimentionOfType ?et ?qt ?ut) indicates that instances of entity type ?et
+ have instances of quantity type ?qt with units ?ut.")
+
+(isa dsValue BinaryPredicate)
+(arity dsValue 2)
+(arg1Isa dsValue ContinuousQuantity)
+(arg2Isa dsValue PossibleDsValue)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Expressing the known unknowns
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; For reasoning from partial state descriptions, being able to express what we
+;; currently do not know is important.  
+
+(isa unknownMF BinaryPredicate)
+(comment unknownMF
+ "(unknownMF <state> <mfi>) indicates that in <state>, it is not known whether or not
+ model fragment instance <mfi> is active.")
+(arg1Isa unknownMF QualitativeState)
+(arg2Isa unknownMF ModelFragment)
+
+(isa unknownMFsIn BinaryPredicate)
+(comment unknownMFsIn
+ "(unknownMFsIn <state> <set of mfis>) indicates that in <state>, the set of model fragment
+ instances whose status is unknown is <set of mfis>.")
+(arg1Isa unknownMFsIn QualitativeState)
+(arg2Isa unknownMFsIn Set-Extensional)
+
+(<== (unknownMF ?state ?mfi)
+     (uninferredSentence (wmOnly (ist-Information ?state (activeMF ?mfi))))
+     (uninferredSentence (wmOnly (ist-Information ?state (not (activeMF ?mfi))))))
+
+(<== (unknownMFsIn ?state ?set)
+     (wmOnly 
+      (evaluate ?set
+        (TheClosedRetrievalSetOf ?mfi
+          (and (ist-Information ?state (scenarioHasMFI ?state ?mfi))
+               (unknownMF ?state ?mfi))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Influence resolution
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+
+(isa quantitiesInQPState BinaryPredicate)
+(comment quantitiesInQPState
+ "(quantitiesInQPState ?state ?qset) indicates that in state ?state, the set of quantities ?qset
+ are all the quantities known to exist in that state.")
+(arg1Isa quantitiesInQPState QualitativeState)
+(arg2Isa quantitiesInQPState Set-Extensional)
+
+(<== (quantitiesInQPState ?state ?qset)
+     (wmOnly (evaluate ?qset ;; Sort needed to uniquify
+               (SortFn (TheClosedRetrievalSetOf ?q
+                         (and (considerEntity ?e) (hasQuantity ?e ?q)))
+                       (Kappa (?one ?two) (alphalessp ?one ?two)) IdentityFn))))
+
+(isa directInfluencesOn TernaryPredicate)
+(comment directInfluencesOn
+ "(directInfluencesOn ?q ?+s ?-s) indicates that the direct influences on quantity ?q consist of
+ a (possibly empty) positive set ?+s and a (possibly empty) negative set ?-s.  The sets consist of
+ lists, where the first element is the rate parameter and the second element is the source of that
+ influence.  Note that the sign of the rate parameters must be determined in order to determine
+ what the actual impact of any specific influence must be.")
+(arg1Isa directInfluencesOn ContinuousQuantity)
+(arg2Isa directInfluencesOn Set-Extensional)
+(arg3Isa directInfluencesOn Set-Extensional)
+
+(<== (directInfluencesOn ?q ?+s ?-s)
+     (wmOnly (evaluate ?+s
+               (TheClosedRetrievalSetOf ?+
+                 (and (sourceOfInfluence 
+                       (i+ ?q ?rate) ?source)
+                      (unifies ?+ (TheList ?rate ?source))))))
+     (wmOnly (evaluate ?-s
+               (TheClosedRetrievalSetOf ?-
+                 (and (sourceOfInfluence
+                       (i- ?q ?rate) ?source)
+                      (unifies ?- (TheList ?rate ?source)))))))
+
+(isa indirectInfluencesOn TernaryPredicate)
+(comment indirectInfluencesOn
+ "(indirectInfluencesOn ?q ?+s ?-s) indicates that the indirect influences on quantity ?q consist of
+ a (possibly empty) positive set ?+s and a (possibly empty) negative set ?-s.  The sets consist of
+ lists, where the first element is the rate parameter and the second element is the source of that
+ influence.  Note that the sign of the constraining parameters must be determined in order to determine
+ what the actual impact of any specific influence must be.")
+(arg1Isa indirectInfluencesOn ContinuousQuantity)
+(arg2Isa indirectInfluencesOn Set-Extensional)
+(arg3Isa indirectInfluencesOn Set-Extensional)
+
+(<== (indirectInfluencesOn ?q ?+s ?-s)
+     (wmOnly (evaluate ?+s
+               (TheClosedRetrievalSetOf ?+
+                 (and (sourceOfInfluence 
+                       (qprop ?q ?constrainer) ?source)
+                      (unifies ?+ (TheList ?constrainer ?source))))))
+     (wmOnly (evaluate ?-s
+               (TheClosedRetrievalSetOf ?-
+                 (and (sourceOfInfluence
+                       (qprop- ?q ?constrainer) ?source)
+                      (unifies ?- (TheList ?constrainer ?source)))))))
+
+(isa uninfluencedQuantity UnaryPredicate)
+(arity uninfluencedQuantity 1)
+(comment uninfluencedQuantity
+ "(uninfluencedQuantity ?q) indicates that quantity ?q has neither direct nor indirect influences constraining it.
+ In QP theory, this means Ds[?q]=0.")
+(arg1Isa uninfluencedQuantity ContinuousQuantity)
+
+(<== (uninfluencedQuantity ?q)
+     (lookupOnly (wmOnly (directInfluencesOn ?q (TheSet) (TheSet))))
+     (lookupOnly (wmOnly (indirectInfluencesOn ?q (TheSet) (TheSet)))))
+
+(isa PossibleDsValue Collection)
+(genls PossibleDsValue Thing) ;; ***** Need to strengthen, to discrete value of some kind
+(comment PossibleDsValue 
+  "PossibleDsValue is the set of the known Ds values + Ambig")
+(isa Ambig PossibleDsValue)
+
+(isa KnownDsValue Collection)
+(genls KnownDsValue PossibleDsValue)
+(comment KnownDsValue
+  "KnownDsValue are the set of Ds values that are clear, unambiguous outcomes, i.e. one of {-1, 0, 1}.")
+(isa 1 KnownDsValue)
+(isa 0 KnownDsValue)
+(isa -1 KnownDsValue)
+
+(isa oppositeDsValue SymmetricBinaryPredicate)
+(comment oppositeDsValue "(oppositeDsValue ?x ?y) is true when Ds
+ values ?x and ?y are opposite.")
+(arg1Isa oppositeDsValue KnownDsValue)
+(arg2Isa oppositeDsValue KnownDsValue)
+(oppositeDsValue 1 -1)
+(oppositeDsValue -1 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Outsourced predicates
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa performQPAnalysis QuintaryPredicate)
+(arity performQPAnalysis 5)
+(comment performQPAnalysis "(performQPAnalysis ?state ?sm ?dt ?scenario ?asns) uses QP theory to analyze scenario
+ ?scenario, with respect to domain theory ?dt under modeling assumptions ?asns, using ?state for the results.  Everything
+ except for ?state can be in the KB or WM, but ?state will always be in WM.")
+(arg1Isa performQPAnalysis Microtheory)
+(arg2Isa performQPAnalysis Microtheory)
+(arg3Isa performQPAnalysis Microtheory)
+(arg4Isa performQPAnalysis Microtheory)
+(arg5Isa performQPAnalysis Microtheory)
+
+(isa formulateQPModel QuintaryPredicate)
+(arity formulateQPModel 5)
+(arg1Isa formulateQPModel Microtheory)
+(arg2Isa formulateQPModel Microtheory)
+(arg3Isa formulateQPModel Microtheory)
+(arg4Isa formulateQPModel Microtheory)
+(arg5Isa formulateQPModel Set-Mathematical)
+(comment formulateQPModel "(formulateQPModel ?sm ?dt ?sc ?asn ?mfis) collects model fragment instances into the set ?mfis given a scenario microtheory (?sm), domain theory microtheory (?dt), scenario context (?sc), and assumption microtheory (?asn)")
+
+;;; The comment in qp-support doesn't agree with the implementation.
+;;; The comment suggests the signature is (resolveDsValue ?q ?state ?value)
+;;; but it doesn't actually take a state argument.
+(isa resolveDsValue BinaryPredicate)
+(arity resolveDsValue 2)
+(arg1Isa resolveDsValue Quantity)
+(arg2Isa resolveDsValue PossibleDsValue)  ; {Ambig, 0, 1, -1}
+(comment resolveDsValue "(resolveDsValue ?q ?value)")
+
+;;; The comment at the top of qp-support disagrees with the actual
+;;; argument order.  The arguments as implemented are ?state, ?quantities.
+(isa findInfluencesInState BinaryPredicate)
+(arity findInfluencesInState 2)
+(arg1Isa findInfluencesInState QualitativeState)
+(arg2Isa findInfluencesInState List-Extensional)
+(comment findInfluencesInState "(findInfluencesInState ?state ?quantities) binds ?quantities to a list representing the influence resolution ordering.")
+
+(isa formulateEntityModel QuintaryPredicate)
+(arity formulateEntityModel 5)
+(arg1Isa formulateEntityModel Thing)
+(arg2Isa formulateEntityModel Microtheory)
+(arg3Isa formulateEntityModel Microtheory)
+(arg4Isa formulateEntityModel Microtheory)
+(arg5Isa formulateEntityModel Microtheory)
+(comment formulateEntityModel"(formulateEntityModel ?entity ?sm ?dt ?sc ?asn) is an outsourced tell-handler to support goal-directed and incremental model formulation.")
+
+(isa formulateQuantityModel QuintaryPredicate)
+(arity formulateQuantityModel 5)
+(arg1Isa formulateQuantityModel Quantity)
+(arg2Isa formulateQuantityModel Microtheory)
+(arg3Isa formulateQuantityModel Microtheory)
+(arg4Isa formulateQuantityModel Microtheory)
+(arg5Isa formulateQuantityModel Microtheory)
+(comment formulateQuantityModel "(formulateQuantityModel ?quantity ?sm ?dt ?sc ?asn) is an outsourced tell-handler to support goal-directed and incremental model formulation.")
+
+(isa resolveInfluencesIn UnaryPredicate)
+(arity resolveInfluencesIn 1)
+(comment resolveInfluencesIn "(resolveInfluencesIn ?state) is a predicate used to invoke influence resolution on ?state, via SOLVE.")
+(arg1Isa resolveInfluencesIn Microtheory)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Plans that run QP analyses and inferences
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory QPTheoryMt)
+
+(defSuggestion FirstPrinciplesQPAnalysis
+    (performQPAnalysis ?state ?scenario-model ?domain-theory
+                       ?scenario ?asns-mt)
+  :subgoals ((formulateQPModel ?scenario-model ?domain-theory
+                               ?scenario ?asns-mt ?mfis)
+             (forEffectOnly (tell (scenarioModelOf ?state ?scenario-model)))
+             (forEffectOnly (ist-Information ?state (activeMF ?mf)))
+             (forEffectOnly (ist-Information ?state (not (activeMF ?mf))))
+             (resolveInfluencesIn ?state)))
+
+(comment FirstPrinciplesQPAnalysis
+  "FirstPrinciplesQPAnalysis is a suggestion for performQPAnalysis,
+ which works by doing model formulation followed by influence resolution. 
+ Queries about what model fragments are active or not are used to establish
+ the process and view structure via backchaining, before IR.")
+
+(defSuggestion ResolveInfluences-Main
+    (resolveInfluencesIn ?state)
+  :subgoals
+  ((findInfluencesInState ?state ?quantities)
+   (solveSequentially ?q ?quantities
+                      (dsValue ?q ?value))))
+
+(comment ResolveInfluences-Main
+  "ResolveInfluences-Main is the backbone for resolving influences.
+ It uses an outsourced predicate, findInfluencesInState, to get a list
+ of relevant quantities in sorted order, then solves dsValue for each in turn.
+ Ambiguity handling is controlled via inheritance.  See IR-BranchOnAmbiguityStrategyMt
+ and IR-Propagate-AmbibguityStrategyMt for details.")
+
+;;; Resolving influences on individual quantities
+;;; The various assertions about the constituents of the influence
+;;; sets have been computed already.
+
+(defSuggestion SolveDsViaModel
+    (dsValue ?q ?value)
+  :subgoals ((resolveDsValue ?q ?value)
+             (different ?value Ambig)
+             (different ?value Unknown)))
+
+;;; When resolveDsValue fails, there are multiple strategies one
+;;; might try.  We can control which of these get considered via the
+;;; logical environment.  Branching is implemented below.  Two others
+;;; that come to mind are using observation and using experience, 
+;;; by mining analogies to the current situation.  
+
+(in-microtheory QPTheoryMt)
+(isa IR-BranchOnAmbiguityStrategyMt Microtheory)
+(comment IR-BranchOnAmbiguityStrategyMt
+  "IR-BranchOnAmbiguityStrategyMt contains the strategy of branching
+   on all possible values in response to ambiguous influences on a quantity.")
+
+(in-microtheory IR-BranchOnAmbiguityStrategyMt)
+
+(defSuggestion SolveDsViaGuessing-1
+    (dsValue ?q ?value)
+  :subgoals ((resolveDsValue ?q ?result)
+             (unifies ?result Ambig)
+             (unifies ?value -1)))
+
+(defSuggestion SolveDsViaGuessing0
+    (dsValue ?q ?value)
+  :subgoals ((resolveDsValue ?q ?result)
+             (unifies ?result Ambig)
+             (unifies ?value 0)))
+
+(defSuggestion SolveDsViaGuessing1
+    (dsValue ?q ?value)
+  :subgoals ((resolveDsValue ?q ?result)
+             (unifies ?result Ambig)
+             (unifies ?value 1)))
+
+(in-microtheory BaseKB)
+(isa IR-PropagateAmbiguityStrategyMt Microtheory)
+(comment IR-PropagateAmbiguityStrategyMt
+  "IR-PropagateAmbiguityStrategyMt contains the strategy of passing along a value
+ representing that a value is ambiguous in response to ambiguous influences
+ on a quantity.")
+
+(in-microtheory IR-PropagateAmbiguityStrategyMt)
+
+(defSuggestion SolveDsViaAmbiguityPropagation
+    (dsValue ?q ?value)
+  :test ()
+  :subgoals ((resolveDsValue ?q ?result)
+             (unifies ?result Ambig)
+             (unifies ?value Ambig)))
+
+(in-microtheory QPTheoryMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Limit analysis
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa LimitHypothesis Collection)
+(genls LimitHypothesis CycLSentence-Assertible)
+(comment LimitHypothesis
+  "Instances of LimitHypothesis are possible changes in ordinal relationships
+ with a qualitative model of a dynamical system that indicate potential changes
+ in qualitative state.  Generally there can be several possible changes, and
+ sometimes multiple changes can occur at once.  These hypotheses only represent
+ possible change(s) in ordinal relationships; finding what state(s) result when
+ they occur is performed via limit analysis, one of the basic operations of 
+ qualitative process theory.  Limit hypotheses can also be specified within
+ situation-specific explanations, as found in textbooks.")
+(isa SingleLimitHypothesis Collection)
+(genls SingleLimitHypothesis LimitHypothesis)
+(comment SingleLimitHypothesis
+  "A SingleLimitHypothesis is the hypothesis that exactly one ordinal relationship
+ is changing.  Single limit hypotheses are specified as NATs, using LhFn.")
+
+(isa applicableLh BinaryPredicate)
+(arity applicableLh 2)
+(arg1Isa applicableLh QualitativeState)
+(arg2Isa applicableLh LimitHypothesis)
+(comment applicableLh
+  "(applicableLh <state> <lh>) indicates that the limit hypothesis <lh>
+ is applicable to qualitatve state <state>).  Single change LHs are found via
+ rules, multiple-change LHs are introduced dynamically by code as needed.")
+
+(isa ordinalLimitCondition BinaryPredicate)
+(arity ordinalLimitCondition 2)
+(arg2Isa ordinalLimitCondition ContinuousQuantity)
+(arg3Isa ordinalLimitCondition ContinuousQuantity)
+(comment ordinalLimitCondition
+  "(ordinalLimitCondition <q1> <q2>) indicates that <q1> and <q2>
+ is one of the ordinals that defines the current qualitative
+ state.  This implies that changes in their relationship can lead to
+ qualitative state changes.")
+
+(isa possibleOrdinalChange QuaternaryPredicate)
+(arity possibleOrdinalChange 4)
+(arg1Isa possibleOrdinalChange FluentOrdinalPredicate)
+(arg2Isa possibleOrdinalChange KnownDsValue)
+(arg3Isa possibleOrdinalChange KnownDsValue)
+(arg4Isa possibleOrdinalChange FluentOrdinalPredicate)
+;; 4 out of five for qGreaterThan lead to no change possible
+;; May want to capture the further assumption of relative rate
+;; difference for those cases that need it.  We can make that
+;; a separate query
+(possibleOrdinalChange qGreaterThan -1 -1 qEqualTo)
+(possibleOrdinalChange qGreaterThan -1 0 qEqualTo)
+(possibleOrdinalChange qGreaterThan -1 1 qEqualTo)
+(possibleOrdinalChange qGreaterThan 0 1 qEqualTo)
+(possibleOrdinalChange qGreaterThan 1 1 qEqualTo)
+;; qEqualTo can lead to ambiguity in changes due to relative
+;; rates, 10 entries (one no change, plus two ambiguous)
+(possibleOrdinalChange qEqualTo -1 -1 qGreaterThan)
+(possibleOrdinalChange qEqualTo -1 -1 qLessThan)
+(possibleOrdinalChange qEqualTo -1 0 qLessThan)
+(possibleOrdinalChange qEqualTo -1 1 qLessThan)
+(possibleOrdinalChange qEqualTo 0 -1 qGreaterThan)
+(possibleOrdinalChange qEqualTo 0 1 qLessThan)
+(possibleOrdinalChange qEqualTo 1 -1 qGreaterThan)
+(possibleOrdinalChange qEqualTo 1 0 qGreaterThan)
+(possibleOrdinalChange qEqualTo 1 1 qGreaterThan)
+(possibleOrdinalChange qEqualTo 1 1 qLessThan)
+;; qLessThan symmetric with qGreaterThan
+(possibleOrdinalChange qLessThan -1 -1 qEqualTo)
+(possibleOrdinalChange qLessThan 0 -1 qEqualTo)
+(possibleOrdinalChange qLessThan 1 -1 qEqualTo)
+(possibleOrdinalChange qLessThan 1 0 qEqualTo)
+(possibleOrdinalChange qLessThan 1 1 qEqualTo)
+;;; need to include soft ordinals as well, since
+;;; some quantity conditions are expressed in terms of
+;;; them.
+;;;(possibleOrdinalChange qGreaterThanOrEqualTo -1 -1 qLessThan)
+;;;(possibleOrdinalChange qGreaterThanOrEqualTo -1 0 qLessThan)
+;;;(possibleOrdinalChange qGreaterThanOrEqualTo -1 1 qLessThan)
+
+;;; A basic fact
+(dsValue Zero 0)
+
+(isa ConjunctiveLimitHypothesis Collection)
+(genls ConjunctiveLimitHypothesis LimitHypothesis)
+(comment ConjunctiveLimitHypothesis
+  "A ConjunctiveLimitHypothesis is the hypothesis that set of ordinal relationships
+ is changing at the same time.  Such conjunctive changes are often mandated by the
+ qualitative mathematics of a situation, or as coincidences in independently changing
+ parts of the system being modeled.  Conjunctive limit hypotheses are specified
+ as NATs, using ClhFn.")
+
+(isa LhFn Function-Denotational)
+(arity LhFn 4)
+(arg1Isa LhFn ContinuousQuantity)
+(arg2Isa LhFn ContinuousQuantity)
+(arg3Isa LhFn FluentOrdinalPredicate)
+(arg4Isa LhFn FluentOrdinalPredicate)
+(resultIsa LhFn LimitHypothesis)
+(comment LhFn
+  "(LhFn <q1> <q2> <before> <after>) denotes the limit hypothesis that the
+ ordinal relationship between <q1> and <q2> changes from <before> to <after>).
+ Limit hypotheses are defined in qualitative process theory.  <q1> and <q2> are
+ not arbitrary, they are quantity conditions upon which aspects of dynamical
+ state depend.  Hence changes in them correspond to changes in qualitative state.")
+
+(isa lhsForQState BinaryRelation)
+(arity lhsForQstate 2)
+(arg1Isa lhsForQstate QualitativeState)
+(arg2Isa lhsForQstate Set-Extensional)
+(comment lhsForQstate
+  "(lhsForQstate <Qs> <lhs>) indicates that the non-redundant set of lhs potentially
+  applicable to <Qs> is the set <lhs>.")
+
+(isa ClhFn VariableArityFunction)
+(arityMin ClhFn 2) ;; We don't reason with arityMin yet.
+(argsIsa ClhFn SingleLimitHypothesis)
+(resultIsa ConjunctiveLimitHypothesis)
+(comment ClhFn
+  "(ClhFn . <single LH's>) denotes the limit hypothesis that the conjunction of
+ changes represented by <single LH's> all occur at the same time.")
+
+(isa possibleQstateTransition TernaryRelation)
+(arity possibleQstateTransition 3)
+(arg1Isa possibleQstateTransition QualitativeState)
+(arg2Isa possibleQstateTransition LimitHypothesis)
+(arg3Isa possibleQstateTransition QualitativeState)
+(comment possibleQstateTransition
+  "(possibleQstateTransition <qs1> <lh> <qs2>) indicates that a transition
+ to <qs2> is possible from <qs1>, with <lh> as the explanation.")
+
+(isa filteredQstateTransition TernaryRelation)
+(arity filteredQstateTransition 3)
+(arg1Isa filteredQstateTransition QualitativeState)
+(arg2Isa filteredQstateTransition LimitHypothesis)
+(arg3Isa filteredQstateTransition QualitativeState)
+(comment filteredQstateTransition
+  "(filteredQstateTransition <qs1> <lh> <qs2>) indicates that a transition
+ to <qs2> is not possible from <qs1> via <lh>, since there is a closer state.")
+
+(isa IntervalDurationEvent Collection)
+(genls IntervalDurationEvent Event)
+(comment IntervalDurationEvent
+  "An instance of IntervalDurationEvent is an event that last an interval
+ of time, longer than an instant.")
+(disjointWith InstantaneousEvent IntervalDurationEvent)
+
+(isa contradictoryOrdinals BinaryRelation)
+(arity contradictoryOrdinals 2)
+(arg1Isa contradictoryOrdinals ContinuousQuantity)
+(arg2Isa contradictoryOrdinals ContinuousQuantity)
+(comment contradictoryOrdinals
+  "(contradictoryOrdinals ?q1 ?q2) indicates that, in the current logical
+ enviornment, the assumptions imply a contradiction involving the ordinal relationships
+ between ?q1 and ?q2.  Intended for checking consistentcy of proposed qualitative states.")
+
+(<== (contradictoryOrdinals ?q1 ?q2)
+     (wmOnly (lookupOnly (localOnly (qGreaterThan ?q1 ?q2))))
+     (wmOnly (qLessThan ?q1 ?q2)))
+
+(<== (contradictoryOrdinals ?q1 ?q2)
+     (wmOnly (lookupOnly (localOnly (qGreaterThan ?q1 ?q2))))
+     (wmOnly (qEqualTo ?q1 ?q2)))
+
+(<== (contradictoryOrdinals ?q1 ?q2)
+     (wmOnly (lookupOnly (localOnly (qLessThan ?q1 ?q2))))
+     (wmOnly (qEqualTo ?q1 ?q2)))
+
+(<== (contradictoryOrdinals ?q1 Zero)
+     (wmOnly (lookupOnly (localOnly (qGreaterThan ?q1 Zero))))
+     (wmOnly (qLessThan ?q1 Zero)))
+
+(<== (contradictoryOrdinals ?q1 Zero)
+     (wmOnly (lookupOnly (localOnly (qGreaterThan ?q1 Zero))))
+     (wmOnly (qEqualTo ?q1 Zero)))
+     
+;;; Rules for limit analysis
+
+(<== (applicableLh ?state ?lh)
+     (ist-Information ?state 
+       (ordinalLimitCondition ?q1 ?q2))
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (ist-Information ?state
+       (ordinalRelationFor ?qrel-b ?q1 ?q2))
+     (lookupOnly
+      (ist-Information ?state (dsValue ?q1 ?ds1)))
+     (lookupOnly
+      (ist-Information ?state (dsValue ?q2 ?ds2)))
+     (possibleOrdinalChange ?qrel-b ?ds1 ?ds2 ?qrel-a)
+     (different ?qrel-a ?qrel-b)
+     (unifies ?lh (LhFn ?q1 ?q2 ?qrel-b ?qrel-a)))
+
+(<== (applicableLh ?state ?lh)
+     (ist-Information ?state 
+       (ordinalLimitCondition ?q2 ?q1))
+     ;; N.B. Above flipped argument needed for coverage.
+     ;; There's code to filter redundancies in any case.
+     ;; The alternative is to canonicalize order, which might be
+     ;; worth doing.
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (ist-Information ?state
+       (ordinalRelationFor ?qrel-b ?q1 ?q2))
+     (lookupOnly
+      (ist-Information ?state (dsValue ?q1 ?ds1)))
+     (lookupOnly
+      (ist-Information ?state (dsValue ?q2 ?ds2)))
+     (possibleOrdinalChange ?qrel-b ?ds1 ?ds2 ?qrel-a)
+     (different ?qrel-a ?qrel-b)
+     (unifies ?lh (LhFn ?q1 ?q2 ?qrel-b ?qrel-a)))
+
+;;; ***** Only looking at quantity conditions currently,
+;;; ***** but also need to take into account ordinals
+;;; ***** assumed as part of influence resolution
+;;; ***** and that implement correspondences and other
+;;; ***** parts of QPT's qualitative mathematics
+
+(<== (ordinalLimitCondition ?q1 ?q2)
+     (wmOnly (lookupOnly
+              (mfiConditionOf ?mfi (?qrel ?q1 ?q2))))
+     (alphalessp ?q1 ?q2)
+     (isa ?qrel FluentOrdinalPredicate))
+
+(<== (ordinalLimitCondition ?q1 ?q2)
+     (wmOnly (lookupOnly
+              (mfiConditionOf ?mfi (?qrel ?q2 ?q1))))
+     (alphalessp ?q1 ?q2)
+     (isa ?qrel FluentOrdinalPredicate))
+     
+(isa ordinalRelationFor TernaryPredicate)
+
+;; Want to avoid queries with open functors
+(<== (ordinalRelationFor qLessThan ?q1 ?q2)
+     (lookupOnly (wmOnly (qLessThan ?q1 ?q2))))
+(<== (ordinalRelationFor qEqualTo ?q1 ?q2)
+     (lookupOnly (wmOnly (qEqualTo ?q1 ?q2))))
+(<== (ordinalRelationFor qGreaterThan ?q1 ?q2)
+     (lookupOnly (wmOnly (qGreaterThan ?q1 ?q2))))
+(<== (ordinalRelationFor qLessThanOrEqualTo ?q1 ?q2)
+     (lookupOnly (wmOnly (qLessThanOrEqualTo ?q1 ?q2))))
+(<== (ordinalRelationFor qGreaterThanOrEqualTo ?q1 ?q2)
+     (lookupOnly (wmOnly (qGreaterThanOrEqualTo ?q1 ?q2))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Logic of Occurrence
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; 
+;;; This is based on the 1987 IJCAI paper of the same name.
+;;; 
+;;; ***** Needs a lot of fleshing out
+
+(isa attainableFrom BinaryPredicate)
+(arity attainableFrom 2)
+(arg1Isa attainableFrom QualitativeState)
+(arg2Isa attainableFrom QualitativeState)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+
+

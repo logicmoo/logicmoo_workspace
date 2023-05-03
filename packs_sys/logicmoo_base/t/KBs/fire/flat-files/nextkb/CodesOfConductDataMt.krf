@@ -1,0 +1,5 @@
+(in-microtheory CodesOfConductDataMt)
+
+(isa TheForestServiceDirectiveSystem TemporalThing)
+(isa ForestServiceManual TemporalThing)
+(isa UnitedStatesCodeTitle NonAbducibleCollection)

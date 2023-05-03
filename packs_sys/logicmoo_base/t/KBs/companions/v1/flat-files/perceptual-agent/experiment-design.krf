@@ -1,0 +1,336 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: experiment-design.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: September 10, 2012 14:28:15
+;;;;   Purpose: Design experiments to address learning goals
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; HOW DOES THIS RELATE TO EXECUTIVE/LEARNING-STRATEGIES.MELD?
+;;;   What does pursueLearningGoal mean viz. experimental design?
+;;; Still not clear if this should run in a perceptual agent or the exec.
+;;; 
+;;; Basic idea:
+;;; 1) Pick a learning goal
+;;; 2) Determine dependent variable
+;;; 3) Determine an independent variable
+;;; 4) Choose an epistemic form
+;;; 5) Decide what to vary, what to control.
+;;; 6) Decide which scenario to start with
+;;; 7) Decide whether to create a new scenario to focus on a particular
+;;;    skill by saving out just prior to a decision.
+;;; 8) Build a measure of merit
+;;; 9) Create an experiment series to fill out epistemic form
+;;; 10) Associate individual experiments with the series
+;;; 11) Schedule the series.
+
+;;; Choosing a learning goal to focus on
+;;; Everything else being equal, we want to work bottom-up from action level
+;;; to strategic, from leaf quantities to higher-level quantities, 
+;;; from concrete ground facts to inferences and policies.
+;;; But overriding that should be the notion that some pieces of knowledge
+;;; lock into place and complete a system.  C.f. Scott's work.
+;;; So we want to look at our epistemic form(s) and see what's on the
+;;; verge of being completed.  Be aware of diminishing returns, though.
+
+;;; Use (learningGoalFor ?performance-goal ?learning-goal) to scope learning goals
+;;; For this to work, we need to be able to determine when we're in the scope of
+;;; a particular performance goal.
+
+;;; Associating an epistemic for with a learning goal
+;;; An epistemic form implies a closed category somewhere.  Learning goals
+;;; like 'LearnFacts' are totally open and not amenable.
+;;; But qualitative model learning is (relatively) closed with respect to
+;;; the set of quantities.  (until you layer in process activation...)
+
+;;; Learning Goals
+;;; --------------
+;;;  StrategicModelLearningGoal
+;;;  QualitativeModelLearningGoal
+;;;  ActionModelLearningGoal
+;;;  FactLearningGoal
+;;;  InferenceLearningGoal
+;;;  ProcedureLearningGoal
+;;;  DecisionLearningGoal
+;;;  AssimilateKnowledgeLearningGoal
+;;;  EffectOfActionLearningGoal
+;;;  AffordancesOfEntityLearningGoal
+;;;  CaseEncodingLearningGoal
+;;;  GoalOfVerifyingHypothesizedInfluence
+;;;  GoalOfDetectingPotentialQualitativeInfluence
+;;;  ClassificationLearningGoal
+;;;  DecompositionLearningGoal
+;;;  RefinementLearningGoal
+;;;  SpatialClassificationLearningGoal
+;;;  EfficiencyLearningGoal
+;;;  RobustnessLearningGoal
+;;;  OptimalityLearningGoal
+;;;  SelfKnowledgeLearningGoal
+;;;  UserModelLearningGoal
+
+(isa ExperimentMt Microtheory)
+(comment ExperimentMt "ExperimentMt is the abstract microtheory from which experiment execution traces inherit.")
+
+;;; Introduced for experimental learning of HRM game:
+(isa controlCondition Predicate)
+(arity controlCondition 3)
+(arg1Isa controlCondition LearningGoal)
+(arg2Isa controlCondition ModelFragmentType)
+(arg3Isa controlCondition CycLExpression)
+(comment controlCondition "(controlCondition ?learning-goal ?qualitative-state ?action-control) allows an experiment microtheory to constrain actions based on qualitative states.
+?actionControl is either (ruleIn <action-specification>) or (ruleOut <action-specification>)")
+
+(isa ruleIn UnaryPredicate)
+(isa ruleOut UnaryPredicate)
+(isa setTradeoff UnaryPredicate)
+(arity setTradeoff 1)
+(comment setTradeoff "(setTradeoff ?set-of-goal-allocations) is a control condition that enforces an experimental tradeoff proportion.")
+(isa tradeoffAllocation BinaryPredicate)
+(arity tradeoffAllocation 2)
+(arg1Isa tradeoffAllocation Goal)
+(arg2Isa tradeoffAllocation MeasurableQuantity) ; a Percentage
+(comment tradeoffAllocation "(tradeoffAllocation ?goal (Percent ?num)) reifies the proportional allocation of ?goal with respect to other goals with which it trades off.")
+
+(isa tradeoffQuantity BinaryPredicate)
+(arg1Isa tradeoffQuantity InformationBearingThing)  ; a Domain
+(arg2Isa tradeoffQuantity MeasurableQuantity)
+(comment tradeoffQuantity "(tradeoffQuantity ?domain ?quantity) means ?quantity participates in a tradeoff in ?domain.")
+
+(isa quantityChange BinaryPredicate)
+(arg1Isa quantityChange CycLExpression)
+(arg2Isa quantityChange CycLSentence-Assertible )
+(comment quantityChange "(quantityChange ?action ?change-stmt) means that ?action caused the change in quantity expressed by ?change-stmt.")
+
+(isa designFollowupExperiments ComplexActionPredicate)
+(arity designFollowupExperiments 4)
+(arg1Isa designFollowupExperiments Microtheory)
+(arg2Isa designFollowupExperiments CompanionsDomain)
+(arg3Isa designFollowupExperiments CompanionsExperiment)
+(arg4Isa designFollowupExperiments LearningGoal)
+(comment designFollowupExperiments "(designFollowupExperiments ?ctxt ?domain ?expt ?learning-goal) ")
+
+;;; Case where we're in the middle of an active sequence of experiments.
+;;; Let this just be the default so that failure to design next LG doesn't
+;;; halt everything.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (designFollowupExperiments ?ctxt ?domain ?expt ?learning-goal)
+    (actionSequence
+      (TheList))))
+      
+;;; Case where we're not.  
+;;; Design a new experiment series.
+;;; *** Actually, if ?expt was the *last* experiment in a series, we'd want to
+;;; *** assess whether the learning goal is still active.  Was the question 
+;;; *** adequately answered? We punt for now.
+(preconditionForMethod
+  (and (uninferredSentence
+         (activeExperimentSeries ?domain ?expt ?series))
+       ;; Now bind things to design new series
+       (mostCriticalLearningGoal ?next-learning-goal)) ; Assume LearnedKnowledgeMts accessible from query context
+  (methodForAction
+    (designFollowupExperiments ?ctxt ?domain ?expt ?learning-goal)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information (LearnedKnowledgeMtFn ?domain) (inactiveGoal ?learning-goal)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (designLearningExperimentSeriesFor ?domain ?next-learning-goal))))
+        ))))
+
+;;; 
+(<== (preferInContext (designFollowupExperiments ?ctxt ?domain ?expt ?learning-goal) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+     
+(isa activeExperimentSeries TernaryPredicate)
+(arity activeExperimentSeries 3)
+(arg1Isa activeExperimentSeries CompanionsDomain)
+(arg2Isa activeExperimentSeries CompanionsExperiment)
+(arg3Isa activeExperimentSeries ExperimentSeries)
+(comment activeExperimentSeries "(activeExperimentSeries ?domain ?expt ?series) ")
+
+
+;;; One way to do this would be to see if there are experiments scheduled on
+;;; the executive.  At the moment, though, we'll simply see if there are 
+;;; unexecuted experiments in the series.  
+;;; Every experimentInSeries must have a (experimentCase ?ctxt ?expt).
+(<== (activeExperimentSeries ?domain ?expt ?series)
+     (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+     (ist-Information ?lkmt (experimentInSeries ?expt ?series))  ; bind ?series
+     (numAnswers 1
+       (unExecutedExperiment ?lkmt ?some-experiment ?series)))
+
+(isa unExecutedExperiment TernaryPredicate)
+(isa unExecutedExperiment DynamicUpdatePredicate)
+(arity unExecutedExperiment 3)
+(arg1Isa unExecutedExperiment Microtheory)
+(arg2Isa unExecutedExperiment CompanionsExperiment)
+(arg3Isa unExecutedExperiment ExperimentSeries)
+(comment unExecutedExperiment "(unExecutedExperiment ?lkmt ?expt ?series) finds an ?expt in ?series that has not been executed.")
+
+(<== (unExecutedExperiment ?lkmt ?some-experiment ?series)
+     (lookupOnly
+       (ist-Information ?lkmt
+         (experimentInSeries ?unexecuted-expt ?series)))
+     (uninferredSentence
+       (lookupOnly
+         (ist-Information ?ctxt
+           (experimentCase ?ctxt ?unexecuted-expt)))))
+
+(isa mostCriticalLearningGoal UnaryPredicate)
+(arity mostCriticalLearningGoal 1)
+(arg1Isa mostCriticalLearningGoal LearningGoal)
+(comment mostCriticalLearningGoal "(mostCriticalLearningGoal ?learning-goal) binds ?learning-goal to the next goal to pursue.")
+
+
+;;; There's a real art here to deciding whether to work bottom-up or top-down 
+;;; and how to compare goals.
+;;; Criteria: specificity, instrumentality, sequentiality, operationality
+;;; ie, does the knowledge fill out a well-specified epistemic form,
+;;; is the goal a precondition for other learning goals,
+;;; does it extend in a coherent sequence what we've been doing,
+;;; can it be easily be turned into a low-cost experiment?
+(<== (mostCriticalLearningGoal ?learning-goal)
+     (evaluate ?learning-goals
+       (TheClosedRetrievalSetOf ?goal
+         (activeGoal ?goal)))
+     (lowestLevelLearningGoal ?learning-goals ?learning-goal))
+
+;;; This is almost entirely useless!!
+(isa lowestLevelLearningGoal BinaryPredicate)
+(arity lowestLevelLearningGoal 2)
+(arg1Isa lowestLevelLearningGoal Set-Mathematical)
+(arg2Isa lowestLevelLearningGoal LearningGoal)
+
+(<== (lowestLevelLearningGoal ?lg-set ?goal)
+     (evaluate ?sorted-goals
+       (SortFn ?lg-set
+         (Kappa (?child ?parent)
+           (transitiveExplicitSubgoal ?parent ?child)) ; succeed if ?child is a transitive subgoal of ?parent
+         IdentityFn))
+     (evaluate ?goal (FirstInListFn ?sorted-goals)))
+
+(isa transitiveExplicitSubgoal BinaryPredicate)
+(arity transitiveExplicitSubgoal 2)
+(arg1Isa transitiveExplicitSubgoal LearningGoal)
+(arg2Isa transitiveExplicitSubgoal LearningGoal)
+
+(<== (transitiveExplicitSubgoal ?parent ?child)
+     (lookupOnly
+       (subgoalFor ?parent ?child)))
+
+(<== (transitiveExplicitSubgoal ?parent ?child)
+     (lookupOnly
+       (numAnswers 1       ; Assume a tree, not a DAG
+         (subgoalFor ?intermediate-goal ?child)))
+     (different ?intermediate-goal ?parent)
+     (transitiveExplicitSubgoal ?parent ?intermediate-goal))
+             
+
+(isa designLearningExperimentSeriesFor ComplexActionPredicate)
+(arity designLearningExperimentSeriesFor 2)
+(arg1Isa designLearningExperimentSeriesFor CompanionsDomain)
+(arg2Isa designLearningExperimentSeriesFor LearningGoal)
+(comment designLearningExperimentSeriesFor "(designFollowupExperiments ?domain ?learning-goal) ")
+
+;;; *** TBD
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (designLearningExperimentSeriesFor ?domain ?learning-goal)
+    (actionSequence
+      (TheList))))
+      
+
+
+;;; Types of experiment strategies
+
+;;; incomplete dtree coverage -> set up conditions to fill out the ep. form.
+;;; incomplete qmodel
+;;;  quantities with no influences
+;;;  active disambiguation goals
+;;;  discontinuities
+
+;;; diminishing returns
+;;;  identify breakeven points
+;;; sub-optimal quantity goals
+;;;  -> use max-flow to identify balances/tradeoffs
+
+;;; Affordances of Entity
+;;; 1) do a cost-benefit analysis by:
+;;;    - replaying game exactly up to point where decision was made
+;;;    - wait till item actually produced
+;;;    - compare quantity values and legal actions across diff. situations
+;;; 2) Identify one-time cost and ongoing resource consumption due to entity
+;;; 3) Identify resource enhancement (production) due to entity
+;;;
+;;; EffectOfAction
+;;; 1) Identify eventual effect of actions
+;;; 2) Quantify how long it takes, and resources consumed
+;;; 3) 
+
+
+;;;
+;;; Design of experiments
+;;;
+
+;;; Explain phenomenon
+;;; Generate Hypotheses
+;;;   Gather Data
+;;;     Design experiments to gather data
+;;; Design experiments to distinguish
+
+;;; alternative goals: maximize variance, minimize variance
+;;;  to minimize variance, control independent variable(s), control range of independent variable(s)
+
+;;; Gathering data:
+;;;  - is it currently being monitored?
+;;;  - available from expert trace?
+;;;  - available from prior cases?
+
+;;; Try to flush out hidden variables and improve quantitative predication.
+
+
+
+
+(isa designStructuralExperiments ComplexActionPredicate)
+(arity designStructuralExperiments 5)
+(comment designStructuralExperiments "(designStructuralExperiments ?mt ?lkmt ?goal ?task ?prefix-addition) ")
+
+
+;;; Structural experimentation for a goal-task pair should treat
+;;; presence or absence of ?prefix actions as independent variable.
+;;; Dependent variable is success or failure of goal and robustness
+;;; of conditions.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (designStructuralExperiments ?mt ?lkmt ?goal ?task ?prefix)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (designStructuralExperiments ?mt ?lkmt ?goal ?task ?prefix) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+     
+;;; If we're running an experiment, we want to execute a task on the
+;;; executive's agenda that schedules trials on the session reasoner.
+
+;;; If the trials are independent, then they don't need to be explicit
+;;; tasks for each one with sequencing constraints on them.  We merely
+;;; need to check that one game is running at a time and instantiate it
+;;; with the correct independent variables.
+
+;;; (scheduleExperimentTrials <expt-schema> <how-to-instantiate-ind-vars>)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

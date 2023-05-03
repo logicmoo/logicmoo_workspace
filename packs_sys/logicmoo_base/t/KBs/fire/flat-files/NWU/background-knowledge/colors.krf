@@ -1,0 +1,93 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: colors.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: August 7, 2017 19:18:41
+;;;;   Purpose: Specify some colors of common objects
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-11-19 21:37:22 -0600 (Mon, 19 Nov 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;; typicalColorOfType
+
+(relationMostInstance mainColorOfObject Grass-Plant GreenColor)
+(colorOfType Grass-Plant GreenColor)
+
+(relationAllInstance mainColorOfObject Blood RedColor)
+(colorOfType Blood RedColor)
+(colorOfType Mud BrownColor)
+(colorOfType Leaf GreenColor)  ; assuming not deceased
+(colorOfType Grass-Plant GreenColor)
+(colorOfType Urine YellowColor)
+(colorOfType Feces BrownColor)
+(colorOfType Ash GrayColor)
+(colorOfType Coal BlackColor)
+(colorOfType Iron GrayColor)
+(colorOfType Rust OrangeColor) ; actually genls from that
+(colorOfType SnowMob WhiteColor)
+(colorOfType Snowflake WhiteColor)
+(colorOfType Lava OrangeColor) ; Reddish?
+(colorOfType (WoodFn EbonyTree) EbonyColor)
+(colorOfType Grasshopper GreenColor)
+(colorOfType Cricket-Insect BrownColor)
+(colorOfType Pavement GrayColor)
+(colorOfType Concrete GrayColor)
+(colorOfType Coffee-Beverage DarkBrown-Color)
+(colorOfType Toast LightBrown-Color)
+(colorOfType Parsley GreenColor)
+(colorOfType PineTree GreenColor)
+
+(genls Saliva ColorlessThing)
+(genls Saliva Transparent)
+(genls Teardrop Transparent)
+
+
+;;; except at night, or at sunset:
+(relationMostInstance color (SubcollectionOfWithRelationFromTypeFn PieceOfSky temporallySubsumes DaytimeHours) BlueColor)
+(relationMostInstance mainColorOfObject (SubcollectionOfWithRelationFromTypeFn PieceOfSky temporallySubsumes Sunset) OrangeColor)
+(colorOfType (SubcollectionOfWithRelationFromTypeFn PieceOfSky temporallySubsumes Night) BlackColor)
+
+(relationMostInstance color Sea VeryLightGreenishBlue-Color)
+
+(typeCommonColors FireTruck RedColor)
+(typeCommonColors FireTruck YellowColor)
+(typeCommonColors (FruitFn Apple) RedColor)
+(typeCommonColors (FruitFn Apple) GreenColor)
+(typeCommonColors (FruitFn Apple) YellowColor)
+(typeCommonColors (FruitFn GrapeVine) GreenColor)
+(typeCommonColors (FruitFn GrapeVine) PurpleColor)
+(typeCommonColors (FruitFn TomatoPlant) RedColor)
+(typeCommonColors (FruitFn StrawberryPlant) RedColor)
+(typeCommonColors (FruitFn RaspberryPlant) RedColor)
+(typeCommonColors (FruitFn BlueberryBush) BlueColor)
+(typeCommonColors (FruitFn OrangeTree) OrangeColor)
+(typeCommonColors (FruitFn LemonTree) YellowColor)
+(typeCommonColors (FruitFn LimeTree) GreenColor)
+(typeCommonColors Raisin PurpleColor)
+(typeCommonColors Raisin DeepYellowGreen-Color)
+(typeCommonColors Ketchup RedColor)
+(typeCommonColors Nut-TheFruit LightBrown-Color)
+(typeCommonColors Rice-Foodstuff WhiteColor)
+(typeCommonColors CreamOfWheat WhiteColor)
+(typeCommonColors Corn-SingleGrain YellowColor)
+(typeCommonColors (JuiceFn (FruitFn GrapeVine)) PurpleColor)
+(typeCommonColors (JuiceFn (FruitFn OrangeTree)) OrangeColor)
+(typeCommonColors (JuiceFn (FruitFn LemonTree)) YellowColor)
+(typeCommonColors Lemonade YellowColor)
+(typeCommonColors (JuiceFn (FruitFn LimeTree)) GreenColor)
+(typeCommonColors Brick RedColor) ; not always
+(typeCommonColors Bread WhiteColor)
+(typeCommonColors Bread-Wheat LightBrown-Color)
+(typeCommonColors PumpernickelBread DarkBrown-Color)
+(typeCommonColors PestoSauce GreenColor)
+(typeCommonColors Noodle LightBrown-Color)
+(typeCommonColors Chocolate BrownColor)
+(typeCommonColors PieceOfSky BlueColor)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

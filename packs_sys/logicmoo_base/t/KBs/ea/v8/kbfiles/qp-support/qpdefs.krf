@@ -1,0 +1,143 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qpdefs.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: February 26, 2004 20:03:57
+;;;;   Purpose: General QP-related definitions
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPInterpretationMt :exclude-globals t)
+
+;;; Outsourced predicate definitions
+
+(isa namedEntity UnaryPredicate)
+(arity namedEntity 1)
+(arg1Isa namedEntity Thing)
+(comment namedEntity "(namedEntity ?thing)")
+
+(isa compatibleUnitQtype BinaryPredicate)
+(arity compatibleUnitQtype 2)
+(arg1Isa compatibleUnitQtype QPUnit)
+(arg2Isa compatibleUnitQtype QuantityType)  ; don't really care if it's physical or not.  bits-per-second?
+
+(isa isQuantityOrRelatedType UnaryPredicate)
+(arg1Isa isQuantityOrRelatedType Thing)
+(comment isQuantityOrRelatedType "(isQuantityOrRelatedType ?thing) ")
+
+(isa comparativeRelationFor BinaryPredicate)
+(arg1Isa comparativeRelationFor Thing)
+(arg2Isa comparativeRelationFor ComparisonPredicate)
+(comment comparativeRelationFor "(comparativeRelationFor ?degree ?relation) ")
+
+(isa comparativeRelation BinaryPredicate)
+(arity comparativeRelation 2)
+(arg1Isa comparativeRelation Thing)
+(arg2Isa comparativeRelation ComparisonPredicate)
+(comment comparativeRelation "(comparativeRelation ?something ?relation) where ?something is whatever gets bound to a noun or verb.")
+
+(isa symbolicRelationBetween TernaryPredicate)
+(arity symbolicRelationBetween 3)
+(arg1Isa symbolicRelationBetween Quantity) ; not a fluent?
+(arg2Isa symbolicRelationBetween Quantity)
+(arg3Isa symbolicRelationBetween Relation)
+(comment symbolicRelationBetween "(symbolicRelationBetween ?qvalue1 ?qvalue2 ?relation) ")
+
+(isa sameDimension BinaryPredicate)
+(arity sameDimension 2)
+(arg1Isa sameDimension QuantityType)
+(arg2Isa sameDimension QuantityType)
+(comment sameDimension "(sameDimension ?qtype1 ?qtype2) ")
+
+(isa isSymbolicValue UnaryPredicate)
+(arity isSymbolicValue 1)
+(arg1Isa isSymbolicValue Thing)
+(comment isSymbolicValue "(isSymbolicValue ?thing) ")
+
+(isa polarityOfComparativeRelation Predicate)
+(arity polarityOfComparativeRelation 2)
+(arg1Isa polarityOfComparativeRelation Relation)
+(arg2Isa polarityOfComparativeRelation Polarity)
+(comment polarityOfComparativeRelation "(polarityOfComparativeRelation ?comprel ?polarity) ")
+
+(isa signFor TernaryPredicate)  ; This could be handled better as 4 assertions in the kb.
+(arity signFor 3)
+(arg1Isa signFor Polarity)
+(arg2Isa signFor Polarity)
+(arg3Isa signFor Polarity)
+(comment signFor "(signFor ?x ?y ?sign) The rules of multiplication for signs. 
+Arg1 is the sign of the constrained quantity.
+Arg2 is the sign of the constraining quantity.")
+
+;;; 3-9-16 [trh] Now explicitly enumerated rather than being a ridiculous outsourced predicate.
+(signFor Positive Positive Positive)
+(signFor Negative Positive Negative)
+(signFor Positive Negative Negative)
+(signFor Negative Negative Positive)
+
+(isa isEvent UnaryPredicate)
+(arity isEvent 1)
+(arg1Isa isEvent Event)
+(comment isEvent "(isEvent ?entity) ")
+
+(isa isQuantityType UnaryPredicate)
+(arity isQuantityType 1)
+(arg1Isa isQuantityType Thing)
+(comment isQuantityType "(isQuantityType ?entity) ")
+
+(isa mostSpecificQTypeFn BinaryPredicate)  ;; This is not a Function.  Poorly named.
+(arity mostSpecificQTypeFn 2)
+(arg1Isa mostSpecificQTypeFn Thing)
+(arg2Isa mostSpecificQTypeFn QuantityType)
+(comment mostSpecificQTypeFn "(mostSpecificQTypeFn ?cols ?qtype) ")
+
+(isa argumentsCanRefer TernaryPredicate)
+(arity argumentsCanRefer 3)
+(arg1Isa argumentsCanRefer Thing)
+(arg2Isa argumentsCanRefer Thing)
+(arg3Isa argumentsCanRefer Thing) ; List-Extensional?
+(comment argumentsCanRefer "(argumentsCanRefer ?referring-var ?referent ?referring-var-args) ")
+
+
+;;; AmountFn
+
+(isa AmountFn UnaryFunction)
+(arg1Isa AmountFn PartiallyTangible)
+(resultIsa AmountFn ScalarInterval)
+
+
+;;; PositionFn
+
+(isa PositionFn UnaryFunction)
+(arg1Isa PositionFn PartiallyTangible)
+(resultIsa PositionFn PositionVector)
+
+;;; ******* KDF 2/4/09: Do we still use hasAttribues in v7?  
+;;; ******* it's mentioned in a couple of files, but it should be 
+;;; ******* dead at this point, since it's only used for some old
+;;; ******* nuSketch Battlespace stuff -- plus three of our rules,
+;;; ******* which is worrying.
+;;; JLT 1/22/10: hasAttributes and related statements in the
+;;; QP frame rules meld have been deprecated. I have left references
+;;; to them, commented out, as a failsafe. 
+
+(arity comparativeDirection 2)
+(arity hasAmount            2)
+;;; (arity hasAttributes        2)
+(arity measure              2)
+(arity qpropEvent           2)
+(arity relatesToQTypeVar    2)
+(arity transferredStuff     2)
+
+(isa ComparisonEvent Collection)
+(genls ComparisonEvent TemporalThing)
+(comment ComparisonEvent "ComparisonEvent is a QP concept introduced in the grammar.")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

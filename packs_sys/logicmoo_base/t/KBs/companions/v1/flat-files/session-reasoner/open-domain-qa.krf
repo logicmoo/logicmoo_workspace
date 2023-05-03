@@ -1,0 +1,135 @@
+;;;
+;;; open-domain-qa.meld
+;;;
+;;; This file contains solve suggestions for answering open-domain
+;;; questions from user interaction dialogs.  
+;;; Consider this a direct assault on parameterized questions.
+
+(in-microtheory CompanionsMt)
+
+;;; Handle user queries.
+;;; We want to determine if there's a shared focus
+;;; in order to figure out the best context to try.
+;;; The question might be answerable from a sketch, 
+;;; from background knowledge, from dialog history,
+;;; from current task & epistemic state, etc.
+
+;;; Typically, executionContext will be the shared focus, in 
+;;; game playing scenarios at least.
+;(defSuggestion QueryInExecutionContext
+;    (userQuery ?qry)
+;  :subgoals ((executionContext ?exe-ctxt)
+;             (ist-Information ?exe-ctxt ?qry)))
+
+;;; We want to prefer the most active, recent, and salient contexts.
+
+;;; Try to answer a user query with respect to a shared focus,
+;;; which could be a game, a sketch, or a narrative:
+(defSuggestion SharedFocusQuery
+    (userQuery ?query)
+  :cost-function 1
+  :subgoals ((sessionContext ?sess-ctxt)
+             (ist-Information ?sess-ctxt 
+               (localOnly (sharedFocus ?sess-ctxt ?ctxt)))
+             (focalQuery ?ctxt ?query)))
+
+(defSuggestion QueryInSessionContext
+    (userQuery ?qry)
+  :cost-function 2
+  :subgoals ((sessionContext ?sess-ctxt)
+             (ist-Information ?sess-ctxt ?qry)))
+
+
+(defSuggestion BackgroundKnowledgeQuery
+    (userQuery ?query)
+  :cost-function 3
+  :subgoals ((ist-Information CurrentWorldDataCollectorMt-NonHomocentric ?query)))
+
+
+(defSuggestion RoleIndependentQuery
+    (focalQuery ?ctxt ?query)
+  :subgoals ((ist-Information ?ctxt ?query)))
+
+(defSuggestion RoleRelativeQuery
+    (focalQuery ?ctxt ?query)
+  :test (containsPattern SelfToken-Indexical ?query)
+  :subgoals ((introspectiveQuery ?ctxt ?query)))
+
+;;; Try to answer queries about the state of the in its current
+;;; role wrt the current focus (e.g., a game role):
+(defSuggestion FocalIntrospection
+    (introspectiveQuery ?ctxt ?query)
+  :subgoals ((ist-Information ?ctxt
+                (playsRole ?ctxt SelfToken-Indexical ?role))
+             (evaluate ?new-query
+                (SublisFn (TheSet (SelfToken-Indexical ?role)) ?query))
+             (ist-Information ?ctxt ?new-query)))
+
+;;; Try to answer queries about the current state of the system itself
+;;; using the SelfModelMt
+(defSuggestion GenericIntrospection
+    (introspectiveQuery ?ctxt ?query)
+  :subgoals ((ist-Information SelfModelMt ?query)))
+
+
+;;; --------------------------------------------------------------
+
+;;; Where questions:
+;;objectFoundInLocation
+
+
+;;(groundsOfBuilding Parthenon Acropolis)
+;;(structureInUrbanArea Parthenon (TerritoryFn CityOfAthensGreece))
+;;(placeInCity Parthenon CityOfAthensGreece)
+
+
+(defSuggestion SpecpredCountryOfCity
+    (objectFoundInLocation ?city ?loc)
+  :test (and (variableExpression ?loc) (isa ?city City))
+  :subgoals ((countryOfCity ?country ?city))
+  :result-step (unifies ?loc (TerritoryFn ?country)))
+
+(defSuggestion SpecpredCityInState
+    (objectFoundInLocation ?city ?loc)
+  :test (and (variableExpression ?loc) (isa ?city City))
+  :subgoals ((cityInState ?state ?city))
+  :result-step (unifies ?loc (TerritoryFn ?state)))
+
+(defSuggestion SpecpredPlaceInCity
+    (objectFoundInLocation ?obj ?loc)
+  :test (variableExpression ?loc)
+  :subgoals ((placeInCity ?obj ?city))
+  :result-step (unifies ?loc (TerritoryFn ?city)))
+
+
+(defSuggestion TransitivityGeographicalSubRegions
+    (objectFoundInLocation ?obj ?loc)
+  :test (and (groundExpression ?obj) (groundExpression ?loc))
+  :cost-function 2
+  :subgoals ((objectFoundInLocation ?obj ?where)
+             (geographicalSubRegions ?loc ?where)))
+
+(defSuggestion SpecpredGeographicalSubRegionsOfContinent
+    (objectFoundInLocation ?obj ?loc)
+  :test (variableExpression ?loc)
+  :subgoals ((geographicalSubRegionsOfContinent ?loc (TerritoryFn ?obj))))
+
+;; eventOccursAt
+
+(defSuggestion SpecpredEventOccursInCountry
+    (eventOccursAt ?evt ?loc) ; no ground instances of this?
+  :test (variableExpression ?loc)
+  :subgoals ((eventOccursInCountry ?evt ?country))
+  :result-step (unifies ?loc (TerritoryFn ?country)))
+
+(defSuggestion SpecpredMotionPathway-Complete
+    (eventOccursAt ?evt ?loc) ; no ground instances of this?
+  :test (variableExpression ?loc)
+  :subgoals ((motionPathway-Complete ?evt ?loc)))
+
+
+;;; Time
+;;;
+;;; e.g., When was the Civil War?
+
+

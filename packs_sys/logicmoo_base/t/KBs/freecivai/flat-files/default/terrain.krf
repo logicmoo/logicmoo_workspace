@@ -1,0 +1,166 @@
+(in-microtheory Freeciv-defaultMt)
+
+;;; How do we tie these to their Real-world counterparts?
+;;; There are CYC concepts for Desert, Forest, Glacier, 
+;;; Grassland, Ocean, Swamp, and Tundra, etc.
+
+(isa FC-Terrain-Desert FreeCiv-LandTile)
+(isa FC-Terrain-Desert Collection)
+(genls FC-Terrain-Desert SandyDesert)         ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Desert (FoodPoints 0))
+(terrainBaseShieldProduction FC-Terrain-Desert (ProductionPoints 1))
+(terrainBaseTradeProduction FC-Terrain-Desert (TradePoints 0))
+(moveCost FC-Terrain-Desert 1)
+(defenseBonus FC-Terrain-Desert 0)
+(possibleToIrrigate FC-Terrain-Desert)
+(possibleToMine FC-Terrain-Desert)
+(possibleToRoad FC-Terrain-Desert)
+(terrainTransformsTo FC-Terrain-Desert FC-Terrain-Plains)
+
+(isa FC-Terrain-Forest FreeCiv-LandTile)
+(isa FC-Terrain-Forest Collection)
+(genls FC-Terrain-Forest Forest)  ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Forest (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Forest (ProductionPoints 2))
+(terrainBaseTradeProduction FC-Terrain-Forest (TradePoints 0))
+(moveCost FC-Terrain-Forest 2)
+(defenseBonus FC-Terrain-Forest 50)
+(possibleToIrrigate FC-Terrain-Forest)
+(possibleToMine FC-Terrain-Forest)
+(possibleToRoad FC-Terrain-Forest)  ; but no trade bonus
+(terrainTransformsTo FC-Terrain-Forest FC-Terrain-Grassland)
+
+(isa FC-Terrain-Glacier FreeCiv-LandTile)
+(isa FC-Terrain-Glacier Collection)
+(genls FC-Terrain-Glacier SnowCoveredArea)  ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Glacier (FoodPoints 0))
+(terrainBaseShieldProduction FC-Terrain-Glacier (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Glacier (TradePoints 0))
+(moveCost FC-Terrain-Glacier 2)
+(defenseBonus FC-Terrain-Glacier 0)
+(possibleToMine FC-Terrain-Glacier)
+(possibleToRoad FC-Terrain-Glacier) ; but no trade bonus
+(terrainTransformsTo FC-Terrain-Glacier FC-Terrain-Tundra)
+
+(isa FC-Terrain-Grassland FreeCiv-LandTile)
+(isa FC-Terrain-Grassland Collection)
+(genls FC-Terrain-Grassland RollingGrassland)  ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Grassland (FoodPoints 2))
+(terrainBaseShieldProduction FC-Terrain-Grassland (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Grassland (TradePoints 0))
+(moveCost FC-Terrain-Grassland 1)
+(defenseBonus FC-Terrain-Grassland 0)
+(possibleToIrrigate FC-Terrain-Grassland)
+(possibleToMine FC-Terrain-Grassland)
+(possibleToRoad FC-Terrain-Grassland)
+(terrainTransformsTo FC-Terrain-Grassland FC-Terrain-Hills)
+
+(isa FC-Terrain-Hills FreeCiv-LandTile)
+(isa FC-Terrain-Hills Collection)
+(genls FC-Terrain-Hills HillyRegion)    ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Hills (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Hills (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Hills (TradePoints 0))
+(moveCost FC-Terrain-Hills 2)
+(defenseBonus FC-Terrain-Hills 100)
+(possibleToIrrigate FC-Terrain-Hills)
+(possibleToMine FC-Terrain-Hills)
+(possibleToRoad FC-Terrain-Hills)   ; but no trade bonus
+(terrainTransformsTo FC-Terrain-Hills FC-Terrain-Plains)
+
+(isa FC-Terrain-Jungle FreeCiv-LandTile)
+(isa FC-Terrain-Jungle Collection)
+(genls FC-Terrain-Jungle TropicalRainForest)  ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Jungle (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Jungle (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Jungle (TradePoints 0))
+(moveCost FC-Terrain-Jungle 2)
+(defenseBonus FC-Terrain-Jungle 50)
+(possibleToIrrigate FC-Terrain-Jungle)
+(possibleToMine FC-Terrain-Jungle)
+(possibleToRoad FC-Terrain-Jungle)   ; but no trade bonus
+(terrainTransformsTo FC-Terrain-Jungle FC-Terrain-Plains)
+
+(isa FC-Terrain-Mountains FreeCiv-LandTile)
+(isa FC-Terrain-Mountains Collection)
+(genls FC-Terrain-Mountains HighMountainousRegion)  ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Mountains (FoodPoints 0))
+(terrainBaseShieldProduction FC-Terrain-Mountains (ProductionPoints 1))
+(terrainBaseTradeProduction FC-Terrain-Mountains (TradePoints 0))
+(moveCost FC-Terrain-Mountains 3)
+(defenseBonus FC-Terrain-Mountains 200)
+(possibleToMine FC-Terrain-Mountains)
+(possibleToRoad FC-Terrain-Mountains)  ; but no trade bonus
+(terrainTransformsTo FC-Terrain-Mountains FC-Terrain-Hills)
+
+(isa FC-Terrain-Ocean FreeCiv-WaterTile)
+(isa FC-Terrain-Ocean Collection)
+(genls FC-Terrain-Ocean Sea)          ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Ocean (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Ocean (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Ocean (TradePoints 2))
+(moveCost FC-Terrain-Ocean 1)
+(defenseBonus FC-Terrain-Ocean 0)
+(terrainTransformsTo FC-Terrain-Ocean FC-Terrain-Swamp)
+
+(isa FC-Terrain-Plains FreeCiv-LandTile)
+(isa FC-Terrain-Plains Collection)
+(genls FC-Terrain-Plains FlatRegion)  ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Plains (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Plains (ProductionPoints 1))
+(terrainBaseTradeProduction FC-Terrain-Plains (TradePoints 0))
+(moveCost FC-Terrain-Plains 1)
+(defenseBonus FC-Terrain-Plains 0)
+(possibleToIrrigate FC-Terrain-Plains)
+(possibleToMine FC-Terrain-Plains)
+(possibleToRoad FC-Terrain-Plains)
+(terrainTransformsTo FC-Terrain-Plains FC-Terrain-Grassland)
+
+(isa FC-Terrain-Swamp FreeCiv-LandTile)
+(isa FC-Terrain-Swamp Collection)
+(genls FC-Terrain-Swamp WetlandType)   ; connect to Cyc terrain
+(genls FC-Terrain-Swamp Swamp)
+(terrainBaseFoodProduction FC-Terrain-Swamp (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Swamp (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Swamp (TradePoints 0))
+(moveCost FC-Terrain-Swamp 2)
+(defenseBonus FC-Terrain-Swamp 50)
+(possibleToIrrigate FC-Terrain-Swamp)
+(possibleToMine FC-Terrain-Swamp)
+(possibleToRoad FC-Terrain-Swamp)  ; but no trade bonus
+(terrainTransformsTo FC-Terrain-Swamp FC-Terrain-Ocean)
+
+(isa FC-Terrain-Tundra FreeCiv-LandTile)
+(isa FC-Terrain-Tundra Collection)
+(genls FC-Terrain-Tundra PermaFrostRegion) ; connect to Cyc terrain  Would RubbleStrewnArea be better? Maybe both
+(genls FC-Terrain-Tundra RubbleStrewnArea)
+(genls FC-Terrain-Tundra Tundra)           ; Bingo
+(terrainBaseFoodProduction FC-Terrain-Tundra (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Tundra (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Tundra (TradePoints 0))
+(moveCost FC-Terrain-Tundra 1)
+(defenseBonus FC-Terrain-Tundra 0)
+(possibleToIrrigate FC-Terrain-Tundra)
+(possibleToRoad FC-Terrain-Tundra)   ; but no trade bonus
+(terrainTransformsTo FC-Terrain-Tundra FC-Terrain-Desert)
+
+;; New in 2.2:
+(isa FC-Terrain-DeepOcean FreeCiv-WaterTile)
+(isa FC-Terrain-DeepOcean Collection)
+(genls FC-Terrrain-DeepOcean Ocean)   ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-DeepOcean (FoodPoints 1))  ; probably moot.  Too far from shore to work.
+(terrainBaseShieldProduction FC-Terrain-DeepOcean (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-DeepOcean (TradePoints 0))
+(moveCost FC-Terrain-DeepOcean 1)
+(defenseBonus FC-Terrain-DeepOcean 0)
+
+;; New in 2.2:
+(isa FC-Terrain-Lake FreeCiv-WaterTile)
+(isa FC-Terrain-Lake Collection)
+(genls FC-Terrain-Lake Lake)   ; connect to Cyc terrain
+(terrainBaseFoodProduction FC-Terrain-Lake (FoodPoints 1))
+(terrainBaseShieldProduction FC-Terrain-Lake (ProductionPoints 0))
+(terrainBaseTradeProduction FC-Terrain-Lake (TradePoints 0))
+(moveCost FC-Terrain-Lake 1)
+(defenseBonus FC-Terrain-Lake 0)
+(terrainTransformsTo FC-Terrain-Lake FC-Terrain-Swamp)

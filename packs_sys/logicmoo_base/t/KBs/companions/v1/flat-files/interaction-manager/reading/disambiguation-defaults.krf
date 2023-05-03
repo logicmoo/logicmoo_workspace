@@ -1,0 +1,86 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: disambiguation-defaults
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: March 15, 2011 21:02:20
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(in-microtheory GenericDefaultDisambiguationMt)
+
+(argIsaSupportedSuggestions)
+(argIsaSupporterSuggestions)
+(argIsaViolatedSuggestions)
+(argIsaViolatorSuggestions)
+(infoGainSuggestions)
+
+(in-microtheory DefaultDisambiguationWeightsMt)
+
+(in-microtheory FreecivDefaultDisambiguationMt)
+(favoredContextSuggestions FreecivNLU)
+(argIsaSupportedSuggestions)
+(argIsaSupporterSuggestions)
+(argIsaViolatedSuggestions)
+(argIsaViolatorSuggestions)
+
+(in-microtheory RecentlySelectedChoicesMt)
+(selectedMentionsInCurrentReadingSuggestions)
+
+(in-microtheory BarbellaThesisDisambiguationMt)
+(comment BarbellaThesisDisambiguationMt "The set of disambiguation strategies used in
+Barbella's thesis. Set aside for replicability.")
+(infoGainSuggestions)
+(selectedMentionsInCurrentReadingSuggestions)
+(preferPossessionSuggestions)
+(preferVerbPreps)
+(dispreferGapSuggestions)
+(dispreferNonPredPredSuggestions)
+(preferMWSSuggestions)
+(dispreferDenotationSuggestions)
+(dispreferIntroducedVarSuggestions)
+(cycCanonSuggestions)
+(preferEarlierDictionarySenseSuggestions)
+(argIsaSupportedSuggestions)
+(argIsaSupporterSuggestions)
+
+(in-microtheory ExperimentalDisambiguationMt)
+(infoGainSuggestions)
+(selectedMentionsInCurrentReadingSuggestions)
+(preferPossessionSuggestions)
+(preferVerbPreps)
+(dispreferGapSuggestions)
+(dispreferNonPredPredSuggestions)
+(preferMWSSuggestions)
+(dispreferDenotationSuggestions)
+(dispreferIntroducedVarSuggestions)
+(cycCanonSuggestions)
+(preferEarlierDictionarySenseSuggestions)
+(commonsenseSuggestions)
+(argIsaSupportedSuggestions)
+(argIsaSupporterSuggestions)
+
+(in-microtheory ExperimentalDisambiguationMt2)
+(infoGainSuggestions)
+(selectedMentionsInCurrentReadingSuggestions)
+(preferPossessionSuggestions)
+(preferVerbPreps)
+(dispreferGapSuggestions)
+(dispreferNonPredPredSuggestions)
+(preferMWSSuggestions)
+(dispreferDenotationSuggestions)
+(dispreferIntroducedVarSuggestions)
+(cycCanonSuggestions)
+(commonsenseSuggestions)
+;;;(argIsaSupportedSuggestions)
+;;;(argIsaSupporterSuggestions)
+;;;(argIsaViolatedSuggestions)
+;;;(argIsaViolatorSuggestions)
+(nothingEvenVaguelySexual)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

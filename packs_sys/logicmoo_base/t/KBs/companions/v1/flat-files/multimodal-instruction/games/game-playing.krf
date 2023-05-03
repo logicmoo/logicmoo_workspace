@@ -1,0 +1,621 @@
+;;;
+;;; game-playing.meld
+;;;
+;;; HTN plans for playing simple games.
+;;; Given a game representation (in pseudo GDL), these plans should
+;;; enable us to play a (random?) game to completion.
+;;; These plans should run on the session reasoner, as opposed to the
+;;; sketch agent.
+
+(in-microtheory BaseKB)
+(isa FmiGamesMt Microtheory)
+(genlMt FmiGamesMt GamesMt)
+(genlMt FmiGamesMt PerceptualAgentMt)
+(genlMt FmiGamesMt Sketch-AgentMt)  ; simplifies erasing and reloading
+
+(in-microtheory FmiGamesMt)
+
+
+;;; Initialization needs to 
+;;; 1) create the name of the game instance
+;;; 2) set up the appropriate genlMts
+;;; 3) set the state counter to zero
+;;; 4) justify the initial state facts from the state
+
+;;; The controlPredicate for TicTacToe is control.  
+;;; This tells us whose turn it is.  
+;;; Let's standardize on this, since we're not beholden to GGP for anything.
+
+;;; setupGameDomain should set up the LearnedKnowedgeMt microtheories for 
+;;; the game domain, as opposed to the companions domain.
+
+
+(isa sketchAgent UnaryPredicate)
+(arity sketchAgent 1)
+(comment sketchAgent "(sketchAgent ?agent) reifies the agent name corresponding to the sketch of the game being played.")
+
+(isa sketchName UnaryPredicate)
+(arity sketchName 1)
+(comment sketchName "(sketchName ?name) reifies the symbolic name of the sketch used in the current game instance.")
+
+;;; see perceptual-agent/games.meld for definition of currentRole
+
+;;;
+;;; In determining whether or not to initialize the game, we used to have an
+;;; explicit firstTurn statement written out by code.  Instead, we probably
+;;; want the opposite: Write out an initialized statement after game has
+;;; been initialized.
+
+(isa setupGameExecutionContext ComplexActionPredicate)
+(arity setupGameExecutionContext 2)
+(arg1Isa setupGameExecutionContext Game)
+(arg2Isa setupGameExecutionContext GameRole)
+(comment setupGameExecutionContext "(setupGameExecutionContext ?game-domain ?role) sets the game execution context and initializes the initial state.")
+
+(preconditionForMethod
+  (and (groundExpression ?game-domain)
+       (atomicTerm ?game-domain)
+       (unifies ?rules-mt (GameRulesMtFn ?game-domain))
+       (newPersistableSymbol ?game-domain ?gameinst)
+       (currentSketchAgent ?sketch-agent)
+       (holdsOnRemoteAgent ?sketch-agent
+         (lookupOnly
+           (wmOnly
+             (ist-Information EverythingPSC
+               (sketchRepresentsObject ?sketch ?sketch-case))))))
+  (methodForAction
+    (setupGameExecutionContext ?game-domain ?role)
+    (actionSequence
+      (TheList
+        (doSetCounter state 0)  ; exploit the arbitrarily accessible counters
+        (doRecord (ist-Information BaseKB (isa ?gameinst Individual)))
+        (doRecord (ist-Information BaseKB (isa ?gameinst Microtheory)))
+        ;; Do we need (isa ?gameinst (PlayingFn ?game-domain))?
+        (doRecord (ist-Information BaseKB (genlMt ?gameinst (GameRulesMtFn ?game-domain))))
+        (doSetExecutionContext ?gameinst)
+        (doRecord (ist-Information ?gameinst (gameDomain ?game-domain)))
+        (doRecord (ist-Information ?gameinst (sketchAgent ?sketch-agent)))
+        (doRecord (ist-Information ?gameinst (sketchName ?sketch)))
+        (doRecord (ist-Information ?gameinst (sketchCase ?sketch-case)))
+        (doSynchronousRemotePlan ?sketch-agent
+          (setupAgentDomain FmiGamesMt))  ; Sketch agent doesn't need to know about the particular game.
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (initializeGameInstance ?rules-mt ?gameinst ?role ?sketch-agent ?sketch ?sketch-case))))
+        ))))
+
+;;; Should this make sure that the appropriate sketch is open?
+(isa initializeGameInstance ComplexActionPredicate)
+(arity initializeGameInstance 6)
+(arg1Isa initializeGameInstance Microtheory)
+(arg2Isa initializeGameInstance Microtheory)
+(arg3Isa initializeGameInstance GameRole)
+(arg4Isa initializeGameInstance CompanionsAgent)
+(arg5Isa initializeGameInstance NuSketchSketch)
+(arg6Isa initializeGameInstance Microtheory)
+(comment initializeGameInstance "(initializeGameInstance ?game-rules-mt ?game-instance ?role ?sketch-agent ?sketch ?sketch-case) sets up the initial state of the game.")
+
+      
+;;; If this is the first turn of the match, add it to the library.
+;;; Also, identify the overarching strategy for this game instance.
+;;; The rules-mt is going to be (GameRulesMtFn TicTacToe).  Should this be
+;;; the agentContext?
+(preconditionForMethod
+  (and (unifies ?just (ist-Information ?gameinst (StateFn 0)))
+       (evaluate ?stmts 
+         (TheClosedRetrievalSetOf ?stmt
+           (and (kbOnly
+                  (lookupOnly
+                    (localOnly
+                      (ist-Information ?rules-mt (init ?init))))) ; this has to be the rules mt of the domain.
+                (unifies ?stmt
+                  (ist-Information ?gameinst
+                    (currentlyTrue ?init))))))
+       (localAgent ?agent))
+  (methodForAction
+    (initializeGameInstance ?rules-mt ?gameinst ?role ?sketch-agent ?sketch ?sketch-case)
+    (actionSequence
+      (TheList
+        (resetGame ?sketch-agent)
+        (doRecord (ist-Information ?gameinst (currentRole ?role)))  ; the AI player's role in this game.
+        (doAnnounce "~%First turn in game: ~a" (?gameinst))
+        (doTell ?just)    ; justification for beliefs
+        (doJustifyMembersBy ?just ?stmts)  ; set up the initial state
+        (setupGameBoard ?rules-mt ?role ?sketch-agent ?sketch)
+        (doEnqueue ?agent (TaskFn (NextTurnFn ?gameinst)) (planTurn ?gameinst ?role)) ; throw it in the hopper
+        ))))
+
+
+(isa resetGame ComplexActionPredicate)
+(arity resetGame 1)
+(arg1Isa resetGame CompanionsAgent)
+(comment resetGame "(resetGame ?sketch-agent) resets gamestate layer of the sketch.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (resetGame ?sketch-agent)
+    (actionSequence
+      (TheList
+        (doSynchronousRemotePlan  ; make sure to update the state before letting next turn start
+       ?sketch-agent
+        (actionSequence 
+              (TheList (resetGameSketch))))))))
+
+
+(isa setupGameBoard ComplexActionPredicate)
+(arity setupGameBoard 4)
+(arg1Isa setupGameBoard Microtheory)
+(arg2Isa setupGameBoard GameRole)
+(arg3Isa setupGameBoard CompanionsAgent)
+(arg4Isa setupGameBoard NuSketchSketch)
+(comment setupGameBoard "(setupGameBoard ?rules-mt ?role ?sketch-agent ?sketch) either draws or accepts a drawing of a game board.")
+
+
+;;; Who draws the board depends on who has control initially.
+;;; We look in the game rules, rather than in the current game state.
+;;; We now only wait for the user to draw a board if this is a marking game
+;;; and the user is going first.
+;;; We also pass in the initial non-blank board contents.
+(preconditionForMethod
+  (and (evaluate ?initial-contents
+         (TheClosedRetrievalSetOf ?cell
+           (and (lookupOnly
+                  (localOnly
+                    (allFactsAllowed
+                      (ist-Information ?rules-mt
+                        (init (cell ?x ?y ?content))))))
+                (different ?content Empty)
+                (unifies ?cell (cell ?x ?y ?content)))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-mt
+             (maxCoordX ?domain ?max-x))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-mt
+             (maxCoordY ?domain ?max-y))))
+       )
+  (methodForAction
+    (setupGameBoard ?rules-mt ?role ?sketch-agent ?sketch)
+    (actionSequence
+      (TheList
+        (doSynchronousRemotePlan ?sketch-agent
+          (drawBoard ?sketch ?initial-contents ?max-x ?max-y))
+        ))))
+
+(preconditionForMethod
+  (and (lookupOnly
+         (allFactsAllowed
+           (localOnly
+             (ist-Information ?rules-mt
+               (gameDomain ?game)))))
+       (lookupOnly
+         (allFactsAllowed
+           (localOnly
+             (ist-Information ?rules-mt
+               (isa ?game MarkingGame)))))
+       (lookupOnly
+         (wmOnly
+           (numAnswers 1
+             (ist-Information ?rules-mt
+               (init (control ?other-role))))))
+       (different ?other-role ?role)
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-mt
+             (maxCoordX ?domain ?max-x))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-mt
+             (maxCoordY ?domain ?max-y)))))
+  (methodForAction
+    (setupGameBoard ?rules-mt ?role ?sketch-agent ?sketch)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?sketch-agent
+          (doAsynchronousTask
+            (acceptBoardGlyph ?sketch (TheSet) ?max-x ?max-y)))))))
+            
+(<== (preferInContext (setupGameBoard ?rules-mt ?role ?sketch-agent ?sketch) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 drawBoard))
+
+
+;;; see perceptual-agent/games.meld for predicate definitions of planTurn & planGameAction.
+
+;;; Flip this around from before, such that the game initialization is done
+;;; explicitly.  When game is initialized, then toss a plan turns task on the
+;;; agenda and watch it go.
+
+;;; System's turn:
+
+(preconditionForMethod
+  (and (lookupOnly
+         (wmOnly
+           (ist-Information ?gameinst
+             (currentlyTrue (control ?role))))) ; check that it's system's turn
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst 
+             (gameDomain ?domain))))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?domain)
+           (isa ?domain TwoPersonGame))))
+  (methodForAction
+    (planTurn ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doAgentPlan   ; defer planning until after we've reified currentlyTrue statements
+          (planGameAction ?gameinst ?role))))))
+
+
+
+;;; Opponent's (ie, human's) turn:
+
+;;; Marking Game version:
+(preconditionForMethod
+  (and (lookupOnly
+         (numAnswers 1
+           (wmOnly
+             (ist-Information ?gameinst
+               (currentlyTrue (control ?other-role)))))) ; opponent (human) role's turn
+       (different ?role ?other-role)
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst 
+             (gameDomain ?domain))))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?domain)
+           (isa ?domain MarkingGame)))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information (GameRulesMtFn ?domain)
+             (maxCoordX ?domain ?max-x))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information (GameRulesMtFn ?domain)
+             (maxCoordY ?domain ?max-y))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst
+             (sketchAgent ?sketch-agent))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst
+             (sketchName ?sketch))))
+       (evaluate ?allowed-marks
+         (TheClosedRetrievalSetOf ?mark
+           (lookupOnly
+             (localOnly
+               (ist-Information (GameRulesMtFn ?domain)
+                 (entityLabel ?other-role ?mark))))))  ; a singleton for tic-tac-toe
+       )
+  (methodForAction
+    (planTurn ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?sketch-agent 
+          (doAsynchronousTask ; Wait for human to make a mark:
+            (acceptMark ?other-role ?allowed-marks ?sketch ?max-x ?max-y)))
+        ))))
+
+;;; PieceMoving Game version:
+(preconditionForMethod
+  (and (lookupOnly
+         (numAnswers 1
+           (wmOnly
+             (ist-Information ?gameinst
+               (currentlyTrue (control ?other-role)))))) ; opponent (human) role's turn
+       (different ?role ?other-role)
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst 
+             (gameDomain ?domain))))
+       (lookupOnly
+         (ist-Information (GameRulesMtFn ?domain)
+           (isa ?domain PieceMovingGame)))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information (GameRulesMtFn ?domain)
+             (maxCoordX ?domain ?max-x))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information (GameRulesMtFn ?domain)
+             (maxCoordY ?domain ?max-y))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst
+             (sketchAgent ?sketch-agent))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst
+             (sketchName ?sketch))))
+       )
+  (methodForAction
+    (planTurn ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?sketch-agent 
+          (doAsynchronousTask ; Wait for human to make a mark:
+            (acceptMove ?other-role ?sketch ?max-x ?max-y)))
+        ))))
+
+;;;
+;;; Plan Game Actions
+;;;
+
+
+;;; The default "legal move" turn planner.
+;;; Precondition should be that we are selecting blind legal moves
+;;; at each turn.
+;;; We need to change this so that we compute the legal actions once, 
+;;; rather than once per strategy.
+;(preconditionForMethod
+;  (true)
+;  (methodForAction
+;    (planGameAction ?game-instance ?role)
+;    (actionSequence
+;      (TheList 
+;        (decideRandomly ?game-instance ?role)))))
+
+;;; Commenting this out to work on Chess, since it conflicts with 'check' determination.
+;(preconditionForMethod
+;  (true)
+;  (methodForAction
+;    (planGameAction ?game-instance ?role)
+;    (actionSequence
+;      (TheList
+;        (decideViaMinimax ?game-instance ?role)))))
+
+
+(<== (preferInContext (planGameAction ?gameinstance ?role) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 decideViaMinimax))
+
+     
+(isa decideViaMinimax ComplexActionPredicate)
+(arity decideViaMinimax 2)
+(arg1Isa decideViaMinimax Microtheory)
+(arg2Isa decideViaMinimax GameRole)
+(comment decideViaMinimax "(decideViaMinimax ?game-instance ?role) applies 1-ply lookahead to avoid being stupid.")
+
+;;; More strategic play:
+
+(preconditionForMethod
+  (and (numAnswers 1 (opponentRole ?game-instance ?opponent))
+       (evaluate ?stmts
+         (TheClosedRetrievalSetOf (currentlyTrue ?stmt)
+           (lookupOnly
+             (localOnly
+               (wmOnly
+                 (ist-Information ?game-instance
+                   (currentlyTrue ?stmt))))))))
+  (methodForAction
+    (decideViaMinimax ?game-instance ?role)
+    (actionSequence
+      (TheList
+        ;; initialize-scratchpad planning context
+        (doAssertMembers ?stmts)  ; asserts facts at planning time into planning context
+        (minimax ?game-instance ?role ?opponent 1 (TheList)) ; 1-turn lookahead
+        ))))
+
+
+
+;;; Since we're working almost exclusively at the knowledge level, we need to
+;;; wrap the game actions in plans that handle more of the bookkeeping.
+;;; We need to check legality, update the sketch, update the state counter,
+;;; check for win/loss/game over. etc.
+
+
+(isa applyOwnGameAction ComplexActionPredicate)
+(arity applyOwnGameAction 3)
+(arg1Isa applyOwnGameAction Microtheory)
+(arg2Isa applyOwnGameAction GameRole)
+(arg3Isa applyOwnGameAction CycLExpression)
+(comment applyOwnGameAction "(applyOwnGameAction ?game-instance ?role ?move) updates the presentation and model of the game based on systems's move.")
+
+(preconditionForMethod
+  (and ;(operatorFormulas mark ?move)          ; dispatch this on ?move being a mark action.
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance
+             (currentRole ?role))))           ; double-check
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance 
+             (gameDomain ?domain))))
+       (unifies ?rules-context (GameRulesMtFn ?domain))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-context
+             (maxCoordX ?domain ?max-x))))    ; specific to 2D cartesian board games
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-context
+             (maxCoordY ?domain ?max-y))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance
+             (sketchAgent ?sketch-agent))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance
+             (sketchName ?sketch)))))
+  (methodForAction
+    (applyOwnGameAction ?game-instance ?role ?move)  
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?sketch-agent
+          (actionSequence
+            (TheList
+              (updateSketch ?role ?sketch ?move ?max-x ?max-y)))) ; specific to marking games (as opposed to movePiece)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (applyGameAction ?game-instance ?role ?move))))      ; something like (mark x y)
+        ))))
+
+;;; This needs to succeed with a noop when applied to human opponent,
+;;; since it's passed in to minimax.
+(preconditionForMethod
+  (and (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance
+             (currentRole ?other-role))))           ; double-check
+       (different ?role ?other-role))               ; can't take opponent's action for him.
+  (methodForAction
+    (applyOwnGameAction ?game-instance ?role ?move)  
+    (actionSequence
+      (TheList))))
+
+
+(isa applyOpponentGameAction ComplexActionPredicate)
+(arity applyOpponentGameAction 1)
+(arg1Isa applyOpponentGameAction Action)
+(comment applyOpponentGameAction "(applyOpponentGameAction ACTION) checks legality of opponent's move before applying it to gamestate.")
+
+(preconditionForMethod
+  (and (executionContext ?gameinst)
+       (inferenceOnly
+         (ist-Information ?gameinst
+           (legal ?role ?move))))                  ; check legality
+  (methodForAction
+    (applyOpponentGameAction ?role ?move)
+    (actionSequence
+      (TheList
+        (applyGameAction ?gameinst ?role ?move)))))
+
+(preconditionForMethod
+  (and (executionContext ?gameinst)
+       (uninferredSentence
+         (inferenceOnly
+           (ist-Information ?gameinst
+             (legal ?role ?move)))))               ; check legality
+  (methodForAction
+    (applyOpponentGameAction ?role ?move)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Are you cheating? ~/fire::BEEP*/" (t))
+        (applyGameAction ?gameinst ?role ?move)))))
+
+;;; ToDo: Handle illegal moves, undo perceptual changes, bomb, something.
+    
+
+
+;;; Use (doWaitForEvent <event-type><num-seconds>)  to wait for new glyphs.
+;;; Not clear what event should accompany moving a piece.
+;;; Some kind of end_drag event?
+
+(isa announceWinner ComplexActionPredicate)
+(arity announceWinner 2)
+(arg1Isa announceWinner Microtheory)
+(arg2Isa announceWinner GameRole)
+(comment announceWinner "(announceWinner ?gameinst ?role) announces who won.")
+
+(preconditionForMethod
+  (and (ist-Information ?gameinst (goalState ?other-role 100))
+       (different ?other-role ?role)
+       (currentInteractionMgr ?im))
+  (methodForAction
+    (announceWinner ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?im (interject "You win :-("))
+        ;(doAnnounce "You win :-(" ())
+        (doRecord (ist-Information ?gameinst (winner ?other-role)))
+        ;; Can we set the color to red on the three marks?
+        (highlightWinningMarks ?gameinst ?other-role)
+        ))))
+
+(preconditionForMethod
+  (and (ist-Information ?gameinst (goalState ?role 100))
+       (currentInteractionMgr ?im))
+  (methodForAction
+    (announceWinner ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?im (interject "I win!"))
+        ;(doAnnounce "I win!  Ha Ha!" ())
+        (doRecord (ist-Information ?gameinst (winner ?role)))
+        ;; Can we set the color to red on the three marks?
+        (highlightWinningMarks ?gameinst ?role)
+        ))))
+        
+(preconditionForMethod
+  (and (uninferredSentence
+         (ist-Information ?gameinst (goalState ?somebody 100)))
+       (currentInteractionMgr ?im))
+  (methodForAction
+    (announceWinner ?gameinst ?role)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?im (interject "A draw."))
+        ;(doAnnounce "A draw." ())
+        ))))
+
+
+(isa highlightWinningMarks ComplexActionPredicate)
+(arity highlightWinningMarks 2)
+(arg1Isa highlightWinningMarks Microtheory)
+(arg2Isa highlightWinningMarks GameRole)
+(comment highlightWinningMarks "(highlightWinningMarks ?gameinst ?role) selects the glyphs that comprise the winning configuration.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (highlightWinningMarks ?gameinst ?role)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (highlightWinningMarks ?gameinst ?role) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;; We want to pass in a set of (cell ?x ?y ?mark) statements to
+;;; the sketch agent to highlight.
+(preconditionForMethod
+  (and (winningCells ?game-instance ?role ?cells) ; bind the instantiated cell statements in the current state that justify the win.
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance 
+             (gameDomain ?domain))))
+       (unifies ?rules-context (GameRulesMtFn ?domain))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-context
+             (maxCoordX ?domain ?max-x))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?rules-context
+             (maxCoordY ?domain ?max-y))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance
+             (sketchAgent ?sketch-agent))))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?game-instance
+             (sketchName ?sketch)))))
+  (methodForAction
+    (highlightWinningMarks ?game-instance ?role)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?sketch-agent
+          (actionSequence
+            (TheList
+              (doAsynchronousTask
+                (highlightCells ?sketch ?cells ?max-x ?max-y)))))  ; assume gamestate bundle?
+       ))))
+
+(isa winningCells TernaryPredicate)
+
+;;; Return the spatial antecedents of the believed goal:
+(<== (winningCells ?gameinst ?role ?cells)
+     (ist-Information ?gameinst (goalState ?role 100))
+     (evaluate ?cells
+       (TheClosedRetrievalSetOf ?cell
+         (and (wmAntecedentOf (ist-Information ?gameinst (goalState ?role 100)) ?ante)
+              (unifies (ist-Information ?gameinst (currentlyTrue ?cell)) ?ante)
+              (operatorFormulas cell ?cell)))))
+
+;;; End of file

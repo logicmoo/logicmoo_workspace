@@ -1,0 +1,11 @@
+(in-microtheory GeometryGVocabularyMt)
+
+(isa PolygonTypeByNumberOfSides CollectionType)
+(typedGenlPreds undirectedLine parallelLines)
+(arityMin TheVertexList 3)
+(not (isa clockwise PartiallyCommutativeRelation))
+(not (isa clockwise CommutativeRelation))
+(not (isa counterClockwise CommutativeRelation))
+(not (isa counterClockwise PartiallyCommutativeRelation))
+(comment hypotenuse "(#$hypotenuse TRIANGLE EDGE) means that EDGE is the hypotenuse of TRIANGLE.")
+(genlPreds undirectedLine parallelLines)

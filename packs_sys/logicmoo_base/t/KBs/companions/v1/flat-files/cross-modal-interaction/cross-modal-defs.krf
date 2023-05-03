@@ -1,0 +1,67 @@
+
+
+;;;COMPANIONS EXPERIMENT INFRASTRUCTURE RELATED
+(in-microtheory CrossModalInteractionDefsMt)
+
+(isa CrossModalInteractionDefsMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+
+;;;Useful for Updating and makes life easier and code cleaner
+
+(isa ExperimentInfraStructureFn CollectionDenotingFunction)
+(arity ExperimentInfraStructureFn 1)
+(arg1Isa ExperimentInfraStructureFn SubLString)
+(resultIsa ExperimentInfraStructureFn Collection)
+(resultGenl ExperimentInfraStructureFn Microtheory)
+
+(isa currentEncodingWithRemindingStrategy Relation)
+(arity currentEncodingWithRemindingStrategy 1)
+(arg1Isa currentEncodingWithRemindingStrategy Thing)
+
+(isa currentDefaultEncodingStrategy Relation)
+(arity currentDefaultEncodingStrategy 1)
+(arg1Isa currentDefaultEncodingStrategy Thing)
+
+(isa IntersectionCaseFn Function-Denotational)
+(arity IntersectionCaseFn 2)
+(arg1Isa IntersectionCaseFn CycLTerm)
+(arg2Isa IntersectionCaseFn CycLTerm)
+(resultIsa IntersectionCaseFn GeneralizationPool)
+
+(isa EncodedCaseFn Function-Denotational)
+(arity EncodedCaseFn 1)
+(arg1Isa EncodedCaseFn CycLTerm)
+(resultIsa IntersectionCaseFn MicroTheory)
+
+(isa ResultGenFn Function-Denotational)
+(arity ResultGenFn 1)
+(arg1Isa EncodedCaseFn CycLTerm)
+(resultIsa ResultGenFn Microtheory)
+
+(isa GenLabeledAbstractionContextFn Function-Denotational)
+(arity GenLabeledAbstractionContextFn 1)
+(arg1Isa GenLabeledAbstractionContextFn CycLTerm)
+(resultIsa GenLabeledAbstractionContextFn Microtheory)
+
+(isa LearnedLexiconMtFn Function-Denotational)
+(arity LearnedLexiconMtFn 1)
+(arg1Isa LearnedLexiconMtFn CompanionsDomain)
+(resultIsa LearnedLexiconMtFn Microtheory)
+
+(isa LearnedSemanticsMtFn Function-Denotational)
+(arity LearnedSemanticsMtFn 1)
+(arg1Isa LearnedSemanticsMtFn CompanionsDomain)
+(resultIsa LearnedSemanticsMtFn Microtheory)
+
+
+
+
+
+
+
+
+
+
+
+
+

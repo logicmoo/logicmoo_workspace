@@ -1,0 +1,165 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: BOTE-narrative-rules.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: July 22, 2013 14:47:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;; Quantity Frames;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;
+;;;
+;;; Rule for premptively handling co-ref
+;;; Doesn't merge
+;;;
+
+
+(in-microtheory BOTERulesMt :exclude-globals t)
+(genlMt BOTEMt BOTERulesMt)
+(genlMt BOTEMt EAStructuralRulesMt)
+(genlMt BOTERulesMt QPInterpretationRulesMt)
+
+
+
+;;;; So far this lets us identify quantity frames
+;;;; An example would be for the question what is the pressure in the boiler?
+
+;;;; We will need special handeling and added predicates for things like Mass of human population
+;;;;
+;;;;
+
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?question-frame
+                        IntroductionOfRequestForInformation)
+      (introducesQuestion
+       (PresentationEventFn ?sid ?narrative-event)
+       ?question-frame))
+
+
+(<== (introducesQuestion (PresentationEventFn ?sid ?narrative-event) ?question-frame)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (trueInDrs ?sdrs-id (quantityRequested ?quantity ?value))
+     (individualSatisfyingConditions 
+      ?quest-frame-id QuantityQuestionFrame
+      (TheSet 
+       (trueInDrs ?sdrs-id (quantityRequested ?quantity ?value))))
+     (tell (isa ?quest-frame-id QuantityQuestionFrame))
+     (tell (QuestionFor ?quest-frame-id ?quantity)))
+
+(<== (introducesQuestion (PresentationEventFn ?sid ?narrative-event) ?question-frame)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (trueInDrs ?sdrs-id (denotes (WhQuestionFn what) ?quantity))
+     (individualSatisfyingConditions 
+      ?quest-frame-id QuantityQuestionFrame
+      (TheSet 
+       (trueInDrs ?sdrs-id (denotes (WhQuestionFn what) ?quantity))))
+     (tell (isa ?quest-frame-id QuantityQuestionFrame))
+     (tell (QuestionFor ?quest-frame-id ?quantity)))
+
+;;;
+;;; Each of the rest are question subtypes....
+;;;
+;;;
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?quest-type IntroductionOfQuestType)
+     (introducesQuestType
+      (PresentationEventFn ?sid ?narrative-event)
+       ?quest-type))
+
+;;;;
+;;;; Physical Part questions
+;;;; How many of X are in Y or how many X make up Y?
+;;;;
+
+(<== (introducesQuestType
+      (PresentationEventFn ?sid ?narrative-event)
+      ?quest-type)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (discourseCaseForDrs ?dcase ?ddrs-id)
+;;;Is it a how many question?
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qframeid QuantityQuestionFrame)))
+     (lookupOnly (trueInDrs ?sdrs-id (quantityRequested ?quantity ?value)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (QuestionFor ?qframeid ?quantity)))
+;;;What is the container and what is the quantity?
+;;;(ist-Information ?dcase (member ?quant-lex ?quantity))
+     (trueInDrs ?sdrs-id (in-UnderspecifiedContainer ?quantity ?container))
+     (trueInDrs ?sdrs-id (isa ?container ?contain-ent))    
+;;;; a special version of isaOrGroupOf that uses true instead of isa for abduction
+     (isaInDrs ?var ?sdrs-id Set-Mathematical)
+     (trueInDrs ?sdrs-id
+                (implies-DrsDrs (DrsCaseFn ?ante-drs-id) (DrsCaseFn ?cons-drs-id)))
+     (trueInDrs ?ante-drs-id (member ?elt ?var))
+     (trueInDrs ?cons-drs-id (isa ?elt ?quant-ent))
+;;;Can they be constituents?
+;;;Ideally we want a way of determining this aside from the manual assertion
+     (possiblePart ?contain-ent ?quant-ent ?qtype)
+     (tell (quantityTypePred ?qframeid hasPhysicalPartCount))
+     (tell (wholeEntity ?qframeid ?container))
+     (tell (partEntity ?qframeid ?elt)))
+
+;;;;;;
+;;;; Physical Parts for Named Entities (pronouns)
+;;;;;;
+
+(<== (introducesQuestType
+      (PresentationEventFn ?sid ?narrative-event)
+      ?quest-type)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (discourseCaseForDrs ?dcase ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qframeid QuantityQuestionFrame)))
+     (lookupOnly (trueInDrs ?sdrs-id (quantityRequested ?quantity ?value)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (QuestionFor ?qframeid ?quantity)))
+     (trueInDrs ?sdrs-id (in-UnderspecifiedContainer ?quantity ?container))
+     (isaInDrs ?var ?sdrs-id Set-Mathematical)
+     (trueInDrs ?sdrs-id
+                (implies-DrsDrs (DrsCaseFn ?ante-drs-id) (DrsCaseFn ?cons-drs-id)))
+     (trueInDrs ?ante-drs-id (member ?elt ?var))
+     (trueInDrs ?cons-drs-id (isa ?elt ?quant-ent))
+     (possiblePart ?container ?quant-ent ?qtype)
+     (tell (quantityTypePred ?qframeid hasPhysicalPartCount))
+     (tell (wholeEntity ?qframeid ?container))
+     (tell (partEntity ?qframeid ?elt)))
+
+
+(<== (possiblePart ?contain-ent ?quant-ent ?qtype)
+     (kbOnly (ist-Information BOTEMt (constituentPhysicalQuantity ?contain-ent ?quant-ent ?qtype))))
+
+(<== (possiblePart ?contain-ent ?quant-ent ?qtype)
+     (groundExpression ?quant-ent)
+     (groundExpression ?contain-ent)
+     (kbOnly (useTransitiveInference (ist-Information EverythingPSC (genls ?quant-ent ChemicalObject))))
+     (kbOnly (ist-Information EverythingPSC (isa ?contain-ent Individual)))
+     (unifies ?qtype volumeOfObject))
+
+(<== (possiblePart ?contain-ent ?quant-ent ?qtype)
+     (groundExpression ?quant-ent)
+     (groundExpression ?contain-ent)
+     (kbOnly (ist-Information EverythingPSC (isa ?quant-ent  OrganismConstituentType)))
+     (kbOnly (ist-Information EverythingPSC (isa ?contain-ent Individual)))
+     (unifies ?qtype volumeOfObject))
+
+
+;;;;;;;;;;
+;;;;;;;;;;
+;;;;;;;;;; chemicalEnergyContent ;;;;;;;;;;;
+;;;;ie. How many calories are in the moon
+;;;; How many joules of energy are in a liter of gasoline
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+      

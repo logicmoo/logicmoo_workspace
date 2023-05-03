@@ -1,0 +1,276 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: language-games
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 18, 2015 11:29:31
+;;;;   Purpose: Support for language games
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+;;; 
+;;; These are finite state machine games (like GGP), except that they
+;;; keep track of the state of a conversation.  They run on the Interaction
+;;; Manager and define communication moves in much the way board games 
+;;; support actions.  The FSM predicates have been lifed from GDL so they are
+;;; more reminiscent of Cyc predicates.
+;;; We want the state of a conversation to provide context to constrain
+;;; abductive interpretation, so for example, if a new concept has just been
+;;; introduced, we might look for statements that provide examples, or 
+;;; refine definitions, etc.
+;;;
+;;; Note: For conversational games, the statenumber can just be the turn
+;;; number as maintained in the currentTurn outsourced pred.
+
+(in-microtheory LanguageGamesMt)
+
+
+(isa initializeConversationInstance ComplexActionPredicate)
+(comment initializeConversationInstance "(initializeConversationInstance ?game-rules-mt ?game-instance ?role) sets up the initial state of the conversation and kicks off planning.")
+
+;;; initialize currentRole to SelfToken-Indexical in session case.
+
+(isa saveGameStateKeyframe ComplexActionPredicate)
+(comment saveGameStateKeyframe "(saveGameStateKeyframe mt) saves out all the current values of quantities so that working memory can be wiped and re-initialized.")
+
+(isa planConversationalTurn ComplexActionPredicate)
+(arity planConversationalTurn 1)
+(arg1Isa planConversationalTurn Microtheory)
+(comment planConversationalTurn "(planConversationalTurn ?inst) is the top-level task for each conversational turn.")
+
+(preconditionForMethod
+  (and (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst
+             (currentRole ?role))))
+       (lookupOnly
+         (wmOnly
+           (ist-Information ?gameinst
+             (currentlyTrue (control ?role)))))) ; check that it's system's turn
+  (methodForAction
+    (planConversationalTurn ?gameinst)
+    (actionSequence
+      (TheList
+        (doAgentPlan   ; defer planning until after we've reified currentlyTrue statements
+          (planConversationalActions ?gameinst ?role))))))
+
+
+(preconditionForMethod
+  (and (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst
+             (currentRole ?role))))    ; the 'bots role
+       (lookupOnly
+         (numAnswers 1
+           (wmOnly
+             (ist-Information ?gameinst
+               (currentlyTrue (control ?other-role)))))) ; opponent (human) role's turn
+       (different ?role ?other-role))  ; Probably want to look up current topic in conversational state.
+  (methodForAction
+    (planConversationalTurn ?gameinst)
+    (actionSequence
+      (TheList
+        (doAgentPlan 
+          (doAsynchronousTask ; Wait for human to make a mark:
+            (acceptUtterance ?other-role ?gameinst)))  ; invokes doWaitForEvent with a timeout
+        ))))
+
+;;; acceptUtterance is just going to set up interpretation context if necessary 
+;;; and set up a timeout before settling in to wait for user utterance.
+;;; On timeout, it should prod for response or start asking its own questions.
+
+(isa acceptUtterance ComplexActionPredicate)
+(arity acceptUtterance 2)
+
+(preconditionForMethod
+  (and)
+  (methodForAction
+    (acceptUtterance ?role ?gameinst)
+    (actionSequence
+      (TheList
+        (doWaitForEvent new-utterance-entity-added 30) ; Actually, the event could be thrown by utterance handling
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (updateGameState ?role ?allowed-moves))))))))
+    
+
+;;; planConversationalActions should be more than just respond.  It should
+;;; consult its own stack of outstanding questions and decide if it should
+;;; probe.  Generating an NL question from a knowledge gap is a big issue.
+
+(isa planConversationalActions ComplexActionPredicate)
+(arity planConversationalActions 2)
+(arg1Isa planConversationalActions Microtheory)
+(arg2Isa planConversationalActions GameRole)
+(comment planConversationalActions "(planConversationalActions ?game-instance ?role) invokes conversational turn planning.")
+
+;;; TBD
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planConversationalActions ?gameinst ?role)
+    (actionSequence
+      (TheList))))
+
+(isa applyGameAction ComplexActionPredicate)
+(arity applyGameAction 1)
+(arg1Isa applyGameAction Action)
+(comment applyGameAction "(applyGameAction ACTION)  justifies the action in wm and stores it persistently in the kb in the temporal context of ?state before computing the next state.")
+
+(preconditionForMethod
+  (and (executionContext ?gameinst)
+       (counterValue state ?statenum)
+       (formulaArgument ?action 1 ?role)
+       (unifies ?state (StateFn ?statenum)))
+  (methodForAction
+    (applyGameAction ?action)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?gameinst (holdsIn ?state ?action)))
+        ;; The current doesAction action must exist in the current state
+        ;; in order to compute the next state.
+        (doJustifyMembersBy 
+          (ist-Information ?gameinst ?state)
+          (TheSet ?action))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (computeNextState ?gameinst ?state))))))))
+
+(isa computeNextState ComplexActionPredicate)
+(arity computeNextState 2)
+(arg1Isa computeNextState Microtheory)
+(arg2Isa computeNextState Situation)
+(comment computeNextState "(computeNextState ?gameinst ?prior-state ?next-role) computes and justifies the next game state.")
+
+(preconditionForMethod
+  (and (evaluate ?next-beliefs
+         (TheClosedRetrievalSetOf ?new-stmt
+           (and (wmOnly
+                  (inferenceOnly
+                    (ist-Information ?gameinst (next ?stmt))))
+                (unifies ?new-stmt
+                  (ist-Information ?gameinst (currentlyTrue ?stmt))))))
+       (nextCounterValue state ?new-state-num)  ; side-effects and binds
+       (unifies ?state (StateFn ?new-state-num)))
+  (methodForAction
+    (computeNextState ?gameinst ?prior-state)
+    (actionSequence
+      (TheList
+        (doUntell (ist-Information ?gameinst ?prior-state))  ; retract old state
+        (doTell (ist-Information ?gameinst ?state))
+        (doJustifyMembersBy (ist-Information ?gameinst ?state) ?next-beliefs)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (enqueueNextTurn ?gameinst))))))))
+
+(isa enqueueNextTurn ComplexActionPredicate)
+(arity enqueueNextTurn 1)
+(arg1Isa enqueueNextTurn Microtheory)
+(comment enqueueNextTurn "(enqueueNextTurn ?gameinst) places a planTurn task on the agenda.")
+
+(preconditionForMethod
+  (and (ist-Information ?gameinst (terminalState))
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?gameinst (currentRole ?role)))))
+  (methodForAction
+    (enqueueNextTurn ?gameinst)
+    (actionSequence
+      (TheList
+        ))))  ; maybe say goodbye.
+
+(preconditionForMethod
+  (and (uninferredSentence
+         (ist-Information ?gameinst (terminalState)))
+       (localAgent ?agent))
+  (methodForAction
+    (enqueueNextTurn ?gameinst)
+    (actionSequence
+      (TheList
+        (doEnqueue ?agent (TaskFn (NextTurnFn ?gameinst)) (planTurn ?gameinst))))))
+        
+
+;;; Answer a question
+
+;;; ... create a description
+;;; ... identify a referent
+;;; ... calculate an answer
+;;; ... play a what-if game
+
+;;; Generate a question
+
+;;; ... an open-ended question
+;;;  .. seeking recognition rule, casual influence, inference step, etc
+;;;  .. who, what, when, where, why, how (much) question
+;;; ... a yes/no question
+;;; ... 
+
+;;; Announce a noticed fact
+
+;;; ... describe a scene
+;;; ... anticipate an action
+
+;;; Request an action.
+
+
+;;; Alternation
+
+(<== (next (control SelfToken-Indexical))
+     (currentlyTrue (control ?other-player))
+     (different ?other-player SelfToken-Indexical))
+      
+(<== (next (control ?user))
+     (currentlyTrue (control SelfToken-Indexical))
+     (currentUser ?user))
+      
+;;; register conversational actions in the form of 
+;;; (doesAction ?player <conversational action>)
+;;; The action is not the utterance, but the recognized conversational move.
+
+;;; Actions are defined in terms of 'legal' rules and references
+;;; inside 'next' rules, as opposed to defining simple action predicates
+;;; with their encapsulated preconditionFor-Props and 
+;;; effectOfAction-Props statements.
+
+(<== (legal ?role (respondToQuestion))
+     (currentlyTrue (control ?role))
+     ;; and prior utterance was a question
+     )
+     
+(<== (legal ?role (askAQuestion))
+     (currentlyTrue (control ?role))
+     ;; and either the answer is needed to respond to a prior question, or to assimilate knowledge
+     ;; ie, has highest priority
+     )
+
+
+#||
+
+(isa associateDescription cGameMove)
+(isa refineDefinition cGameMove)
+(isa refineExplanation cGameMove)
+(isa presentCounterfactual cGameMove)
+(isa introduceGenericTerm cGameMove)
+(isa introduceSynonym cGameMove)
+(isa introduceAntonym cGameMove)
+(isa presentAnalogy cGameMove)
+(isa presentVariant cGameMove)
+(isa testUnderstanding cGameMove)
+(isa explainMetaphor cGameMove)
+(isa presentExample cGameMove)
+(isa extendScript cGameMove)
+(isa demonstrateInference cGameMove)
+(isa generalizeExample cGameMove)
+(isa changeTopic cGameMove)
+
+
+||#
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

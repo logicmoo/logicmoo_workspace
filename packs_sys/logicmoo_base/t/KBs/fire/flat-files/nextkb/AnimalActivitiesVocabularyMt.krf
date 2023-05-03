@@ -1,0 +1,8 @@
+(in-microtheory AnimalActivitiesVocabularyMt)
+
+(isa (SubcollectionOfWithRelationToTypeFn Climbing eventOccursAt (SolidFn Water)) FirstOrderCollection)
+(isa (SubcollectionOfWithRelationToTypeFn CapturingAnAnimal objectActedOn HumanChild) FirstOrderCollection)
+(isa (NonDavidsonianPredFn CapturingAnAnimal (TheList doneBy objectActedOn)) SituationPredicate)
+(comment StandingOnAllLegsPosture "The subcollection of #$Animal whose instances are in an upright posture such that all legs are supporting body weight.  Usually animals are standing still when they are in this posture.  However, the important exceptions are those moments during walking  when all feet are on the ground.  Incidentally, there are no such moments during running.")
+(genls ConcealingFromSight DisappearingFromSight)
+(genls CumulativeEventType KEClarifyingCollectionType)

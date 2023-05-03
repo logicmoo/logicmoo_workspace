@@ -1,0 +1,411 @@
+;;;
+;;; task-models.meld
+;;;
+;;; This file contains definitions of task models for Companions 
+;;; natural language interaction.
+;;;
+;;; $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;; $LastChangedBy: hinrichs $
+
+(in-microtheory Interaction-ManagerMt)
+
+(genlMt Interaction-ManagerPlanMt Interaction-ManagerMt) ; No matter what, this should hold.
+
+;;; --------------------------------------------------------------------------
+;;; Action Vocabulary
+;;;
+
+(isa setupIMSessionCase ComplexActionPredicate)
+(arity setupIMSessionCase 1)
+(arg1Isa setupIMSessionCase CycLTerm)
+(comment setupIMSessionCase "(setupIMSessionCase ?session-id) reifies the interaction-manager session context.")
+
+(isa processUserUtterance ComplexActionPredicate)
+(arity processUserUtterance 2)
+(arg1Isa processUserUtterance Microtheory)
+(arg2Isa processUserUtterance CharacterString)
+(comment processUserUtterance "(processUserUtterance ?context ?string) kicks off NLU processing in the Companion Interaction Manager,
+ handling the bookkeeping and using textInterpretation and checkUnderstanding to do the heavy lifting.")
+
+(isa processUpdatedInterpretation ComplexActionPredicate)
+(arity processUpdatedInterpretation 3)
+(arg1Isa processUpdatedInterpretation Microtheory)
+(arg2Isa processUpdatedInterpretation CycLTerm)
+(arg3Isa processUpdatedInterpretation Microtheory)
+(comment processUpdatedInterpretation "(processUpdatedInterpretation ?context ?sentence-id ?discourse-ctxt) re-constructs interpretations from choices, writes out the interpretation and continues processing.")
+
+(isa checkUnderstanding ComplexActionPredicate)
+(arity checkUnderstanding 3)
+(arg1Isa checkUnderstanding Microtheory)
+(arg2Isa checkUnderstanding CycLTerm)
+(arg3Isa checkUnderstanding Microtheory)
+(comment checkUnderstanding "(checkUnderstanding ?context ?sentence-id ?discourse-context) detects ambiguities in input.")
+
+
+;;; --------------------------------------------------------------------------
+;;; Bookkeeping tasks:
+
+(preconditionForMethod
+  (and (kbOnly (contentVersion Interaction-ManagerMt ?contentver))
+       (outsourcedOnly (codeVersion Interaction-ManagerMt ?codever))
+       (different ?contentver ?codever)
+       (versionMismatchMsg ?contentver ?codever ?msg))
+  (methodForAction
+    (setupIMSessionCase ?session-id)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&~a" (?msg))))))
+
+;;; If context is (ContextFn <id>), then the case constructor starts to look like
+;;; (CaseFn (ContextFn <id>)) which gets a bit unwieldy.  What to do?
+;;; Moreover, should it be ExplicitCaseFn?
+;;; This initial session setup involves greeting the user and asking an open-ended question.
+;;; We should represent the intent of that utterance so that we have some expectations
+;;; for a response.  E.g., we are performing an Addressing-GreetingSomeone, and 
+;;; asking a question.  If someone replies with "Call me Joe", we can relate it to what was
+;;; said.
+(preconditionForMethod
+  (and (kbOnly (contentVersion Interaction-ManagerMt ?ver))
+       (outsourcedOnly (codeVersion Interaction-ManagerMt ?ver))
+       (currentTime ?time)         ; outsourced predicates on generic agents-source
+       (currentDate ?date)
+       (sessionContext ?context)
+       (currentDomain ?domain)
+       (evaluate ?ictxt-stmts
+         (TheClosedRetrievalSetOf ?stmt
+           (and (interpretationContextForDomain ?domain ?im-context)
+                (unifies ?stmt (interpretationContext ?im-context)))))
+       (currentUser ?user)
+       (nickname ?user ?name)
+       (newReifiedUtterance ?system-utterance) ; Make a unique symbol
+       (formattedContentString   ; poor man's generation
+           "Interaction initiated by user ~a at ~a, ~a. " (TheList ?name ?time ?date) ?utterance-string))
+  (methodForAction
+    (setupIMSessionCase ?session-id)
+    (actionSequence
+      (TheList
+        ;; This won't work until the parser is changed to check wm:
+        ;(doTell (ist-Information ?context (denotation Me-TheWord ProperNoun 0 ?user)))  ; Locally, for the duration of the session.
+        (doRecordMembers
+          (TheSet
+            (ist-Information BaseKB (isa ?context Microtheory))  ; was Case
+            (ist-Information BaseKB (isa ?context Individual))
+            ;; We record this information because it helps disambiguate user replies:
+            (ist-Information ?context (isa ?system-utterance Addressing-GreetingSomeone))
+            (ist-Information ?context (senderOfInfo ?system-utterance SelfToken-Indexical))
+            (ist-Information ?context (recipientOfInfo ?system-utterance ?user))
+            ;(ist-Information ?context (topicOfInfoTransfer ?system-utterance ?context))  ; what will the session be about?
+            ;; If answered, the topic could tell us what our session context should inherit from.
+            ))
+        (doRecordMembersInContext ?context ?ictxt-stmts)
+        (doRespond ?system-utterance ?utterance-string)))))  ; be more clever eventually.
+
+
+(isa interpretationContextForDomain BinaryPredicate)
+(comment interpretationContextForDomain "(interpretationContextForDomain ?domain ?interpretationContext) associates an interpretation context with a domain.  Optional.")
+
+;;; This could be anywhere:
+(interpretationContextForDomain EPR QPInterpretationQueriesMt)
+
+;;; If the overall session is an instance of Teaching, and the user replies with a topic,
+;;; then the topicOfInfoTransfer of the Teaching is ?topic.
+
+
+
+
+;;; Need to be able to identify the first utterance in a session,
+;;; and to navigate back and forth in the conversation.
+;;; Need to be able to identify unparsed or ambigously parsed phrases,
+;;; tokens without semantic translations, etc.
+
+;;; We want to build up a model of the user's goal structure to help
+;;; with tracking intent and common tasks.
+
+;;; We want to be able to tutor the companion both at the level of the 
+;;; domain and at the linguistic level.
+
+;;; Start by recapitulating the EA Listener in htn tasks and chainer rules.
+
+;;; 1) extract intent from history and interpretation
+;;; 2) formulate actual query or assertion from intent + interpretation
+;;; 3) pass task off to executive and maintain conversational flow as needed
+;;; 4) upon response from executive, formulate NL response
+;;; 5) pass NL response back to session manager.
+;;; 6) record interaction in permanent case
+;;;
+
+;;; deprecated disambiguation/coref-free plan
+(preconditionForMethod
+  (and (different ?string "nil")
+       (currentDomain ?domain)
+       (different ?domain Kiosk)
+       (currentUser ?user)
+       (evaluate ?interpretation-stmts                                 ; This now holds alternative interpretations
+         (TheClosedRetrievalSetOf ?prop
+           (and (outsourcedOnly (textInterpretation ?string ?sid ?interpretation))
+                (unifies ?prop (interpretationOf ?sid ?interpretation)))))
+       (evaluate ?s-ids
+         (TheClosedRetrievalSetOf ?sid
+           (and (elementOf ?interp ?interpretation-stmts)
+                (formulaArgument ?interp 1 ?sid))))
+       (outsourcedOnly (currentSentenceId ?sentence-id))  ; of the form Sentence-3434192505-1834
+       (outsourcedOnly (currentTurn ?turn))
+       (outsourcedOnly (currentTime ?time))  ; This is bad.  If it backtracks to here it loops forever!
+       (outsourcedOnly (currentDiscourseId ?discourse-id)))
+  (methodForAction
+    (processUserUtterance ?context ?string)         ; ?context is the session-context
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?context
+          (TheSet
+            (userUtteranceAt ?time ?sentence-id ?string)
+            (isa ?sentence-id CommunicationAct-Single)  ; might be Multiple if multiple sentences passed in
+            (senderOfInfo ?sentence-id ?user)
+            (turnUtterance ?turn ?sentence-id)
+            (lastSentenceForStatements ?sentence-id ?s-ids)
+           ))
+       (doRecordMembersInContext ?context ?interpretation-stmts)
+       (doAnnounce "~&(userUtteranceAt ~a ~a ~s)" (?time ?sentence-id ?string))
+       ;; Discourse Interpretation is now done in the textInterpretation outsourced predicate handler.
+       (doAgentPlan
+        (actionSequence
+         (TheList (checkUnderstanding ?context ?sentence-id (DiscourseCaseFn ?discourse-id)))))))))
+
+(preconditionForMethod
+  (and (currentUser ?user)
+       (nickname ?user ?name)
+       (formattedContentString "Quit screwing around, ~a." (TheList ?name) ?utterance-string)
+       (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (processUserUtterance ?context "nil")
+    (actionSequence
+      (TheList
+       (doRespond ?system-utterance ?utterance-string)))))
+
+;;; specialized processUserUtterances for when a user response is expected for a specific purpose and we want to short circuit interpretation
+(preconditionForMethod
+ (and (equals ?string "Yes.")
+      (userResponseExpected ?context StopOrKeepThinking))
+ (methodForAction
+  (processUserUtterance ?context ?string)         ; ?context is the session-context
+  (actionSequence
+   (TheList
+    (doUntell (ist-Information ?context (keepChaining)))
+    ;; we're done! She said yes.
+    ))))
+
+(preconditionForMethod
+ (and (equals ?string "No.") ;; uh oh, no in response 
+      (userResponseExpected ?context StopOrKeepThinking)
+      (ist-Information ?context (caseForConsideration ?case)) ;;; specialized for Blass
+      (newUUIDSymbol ?microstoryForCase ?microstoryID))
+ (methodForAction
+  (processUserUtterance ?context ?string)         ; ?context is the session-context
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?context (keepChaining)))
+    (doSolicitInputForSAGE (MtForMicrostoryForCaseFn ?case ?sym) MicrostoryGContext)
+    ))))
+    
+
+;;; This is invoked after we're reasoned about and made choices to nail down an interpretation.
+;;; We assume we *don't* need to relax arg-isa violations here.  If there is still no interpretation
+;;; produced, then check-understanding will resort to interpreting as metonymy.
+(preconditionForMethod
+  (evaluate ?interpretation-stmts
+    (TheClosedRetrievalSetOf ?prop
+      (and (outsourcedOnly (interpretationFromDrs ?sentence-id ?discourse-ctxt ?interpretation)) ; don't re-invoke ea
+           (unifies ?prop (ist-Information ?context (interpretationOf ?sentence-id ?interpretation))))))
+  (methodForAction
+    (processUpdatedInterpretation ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+       (doRecordMembers ?interpretation-stmts)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (checkUnderstanding ?context ?sentence-id ?discourse-ctxt))))))))
+
+;;; disambiguation strategy handler
+
+;(isa disambiguationSpecializationHandler ComplexActionPredicate)
+;(arity disambiguationSpecializationHandler 4)
+;(arg1Isa disambiguationSpecializationHandler Set-Mathematical)
+;(arg2Isa disambiguationSpecializationHandler Set-Mathematical)
+;(Arg3Isa disambiguationSpecializationHandler Thing)
+;(arg4Isa disambiguationSpecializationHandler Thing)
+;(comment disambiguationSpecializationHandler
+;  "(disambiguationSpecializationHandler ?s-ids ?interps ?discourse-id ?strategy)
+;calls a disambiguation plan according to ?strategy.  As of now the only plan installed 
+;reads from the discourse so the other variables are not used, but they are 
+;provided in case others want to write other disambiguation plans.")
+;
+;(preconditionForMethod
+; (and (newUUIDSymbol readingOfUserUtterance ?fauxReadingName)
+;      (newUUIDSymbol userUtterance ?fauxSourceName)) 
+; ;; the default as of 6/16: use a reading plan with a made-up name
+; ;; doesn't even use the input variables. Shameful.
+; (methodForAction
+;  (disambiguationSpecializationHandler ?s-ids ?interps ?discourse-id ReadingStrategy)
+;  (actionSequence
+;   (TheList
+;    (disambiguateSourceTextWithHeuristicContext ?fauxSourceName ?fauxReadingName ExperimentalDisambiguationMt2 DefaultDisambiguationWeightsMt)
+;    (doAgentPlan
+;     (actionSequence
+;      (TheList
+;       (useDiscourseCoreferenceResolution))))))))
+;
+;(<== (preferInContext (disambiguationSpecializationHandler ?s-ids ?interps ?discourse-id ?strat) 
+;                      ?seq1 
+;                      (disambiguationSpecializationHandler ?s-ids ?interps ?discourse-id ReadingStrategy)))
+
+;;;
+;;; Checking basic linguistic understanding
+;;;
+;;; We've changed the way this works so that it doesn't try to resolve ambiguities
+;;; unless it really needs to.  If the parse tree is fragmentary or there are no
+;;; interpretations, then it must remediate that right away.  Otherwise, it will
+;;; attempt to answer questions as best it can, heuristically preferring question
+;;; interpretations that can be answered and answers that make sense.  It will prefer
+;;; interpretations of declarative statements that answer open questions.  This will
+;;; save a lot of nattering about low-level ambiguities.
+;;;
+;;; Note: Even a fragmentary parse may not be a problem if there is a strong expectation
+;;; (due to, for instance, an immediately prior yes-no question)
+
+;;; Case 1: Proceed with caution
+(preconditionForMethod
+ (and
+      (ist-Information ?context (lastSentenceForStatements ?sentence-id ?sentenceSet))
+      (evaluate ?interpretations
+        (TheClosedRetrievalSetOf ?interpretation
+          (wmOnly
+           (and (elementOf ?sent ?sentenceSet)
+                (ist-Information ?context
+                  (interpretationOf ?sent ?interpretation))))))
+      (different ?interpretations (TheSet))                                 ; at least one
+      (acceptableAmbiguity ?sentence-id ?discourse-ctxt ?interpretations))  ; depends on type of utterance
+  (methodForAction
+    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (inferIntent ?context ?sentence-id ?discourse-ctxt)))))
+
+
+;;; Case 2: missing lexical information (likely to cause syntactic ambiguity)
+;;;         This means there's no entry in NuLex or the proper names table
+(preconditionForMethod
+  (wmOnly
+    (inferenceOnly (unknownTokens ?sentence-id ?token-set ?discourse-ctxt)))
+  (methodForAction
+    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Resolving unknown words: ~s" (?token-set))
+        (resolveUnknownWords ?context ?sentence-id ?discourse-ctxt ?token-set)))))
+
+;;; Case 3: fragmentary parses
+;;; Handle fragmentary followup questions such as "why?" or "how?"
+;;; EA doesn't handle fragments or one-word answers well so we do this semi-abductively:
+(preconditionForMethod
+  (wmOnly
+    (and
+      (uninferredSentence
+        (ist-Information ?context
+          (interpretationOf ?sentence-id ?interpretation)))
+      (inferenceOnly
+        (fragmentaryParse ?sentence-id ?discourse-ctxt))
+      (fragmentaryQuestionType ?sentence-id ?discourse-ctxt ?qtype)))
+  (methodForAction
+    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (handleFragmentaryQuestion ?context ?sentence-id ?discourse-ctxt ?qtype)))))
+
+
+;;; Case 4: missing semtrans
+;;; This means there either is no concept corresponding to the word, or no
+;;; denotation mapping.  Ideally, we'd like to be able to search for possible
+;;; denotations by applying string-completion and possibly verifying against
+;;; namestring values.
+;;; This natters at us far too much.  We only care if it prevents us from 
+;;; generating interpretations.  Dive down to this level only when we can't
+;;; answer a question.
+;(preconditionForMethod
+;  (wmOnly (unknownConcepts ?sentence-id ?word-set ?discourse-ctxt))
+;  (methodForAction
+;    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+;    (actionSequence
+;      (TheList
+;        (resolveUnknownMeaning ?context ?sentence-id ?discourse-ctxt ?word-set)))))
+
+;;; Case 5: syntactic ambiguity (multiple parse trees)
+;;; Likewise, we only care about this if it prevents us from answering 
+;;; a question or if we're trying to assimilate a new proposition.
+(preconditionForMethod
+  (syntacticallyAmbiguous ?sentence-id ?csid ?discourse-ctxt)
+  (methodForAction
+    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (resolveCompetingParses ?context ?sentence-id ?discourse-ctxt ?csid)))))
+
+
+;;; *** This just isn't right anymore.  The initial interpretation pass
+;;; *** doesn't filter based on arg-isas anymore, so the ability to pull
+;;; *** something out doesn't mean it was inconsistent. 
+;;; Case 6: interpretation filtered out by semantic-choice-heuristics.
+;;; This happens when discourse variables don't satisfy the arg-isas or there
+;;; are just multiple isa statements in the interpretation.  This is a clue
+;;; that the statement involves metonymy and we need to explicitly reason 
+;;; about and re-represent the interpretation.
+;(preconditionForMethod
+;  (and (uninferredSentence
+;        (wmOnly
+;         (ist-Information ?context
+;           (interpretationOf ?sentence-id ?interpretation))))
+;       (outsourcedOnly
+;         (inconsistentInterpretation ?sentence-id ?discourse-ctxt ?formula)))
+;  (methodForAction
+;    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+;    (actionSequence
+;     (TheList
+;       (interpretAsMetonymy ?context ?sentence-id ?discourse-ctxt ?formula)))))
+ 
+;;; Case 7: semantic ambiguity (single complete parse tree, unresolved 
+;;; FrameSemantics choice sets) Semantic ambiguity shouldn't be a problem for
+;;; (non yes-no) questions - answer the ones you can.
+;;; This is a problem if we're trying to enter new declarative statements or
+;;; take an action.
+(preconditionForMethod
+  (wmOnly
+    (semanticallyAmbiguous ?sentence-id ?csid ?discourse-ctxt))
+  (methodForAction
+    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (resolveAmbiguousSemantics ?context ?sentence-id ?discourse-ctxt ?csid)))))
+        
+;;; Case 8: Utter failure.
+(preconditionForMethod
+  (newReifiedUtterance ?system-utterance) ; Make a unique symbol
+  (methodForAction
+    (checkUnderstanding ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance NotUnderstanding-CommunicationAct))
+            (ist-Information ?context (isa ?system-utterance AnnouncingSomething))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance "I don't understand.")))))
+        
+(<== (preferInContext (checkUnderstanding ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (unifies ?lst (TheList inferIntent resolveUnknownWords handleFragmentaryQuestion resolveUnknownMeaning
+                            resolveCompetingParses disambiguateAndReRepresent resolveAmbiguousSemantics doRespond))
+     (numAnswers 1 (predicatePosition ?seq1 ?lst ?pos1))
+     (numAnswers 1 (predicatePosition ?seq2 ?lst ?pos2))
+     (lessThan ?pos1 ?pos2))
+        
+
+;;; End of file

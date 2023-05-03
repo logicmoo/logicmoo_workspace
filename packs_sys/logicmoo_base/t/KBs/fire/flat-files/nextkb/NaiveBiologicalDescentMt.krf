@@ -1,0 +1,8 @@
+(in-microtheory NaiveBiologicalDescentMt)
+
+(isa biologicalMother InterExistingObjectPredicate)
+(isa mother InterExistingObjectPredicate)
+(isa father InterExistingObjectPredicate)
+(isa biologicalFather InterExistingObjectPredicate)
+(argFormat grandfathers 2 SetTheFormat)
+(argFormat grandmothers 2 SetTheFormat)

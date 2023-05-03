@@ -1,0 +1,132 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: whpreds.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: August 18, 2004 12:45:40
+;;;;   Purpose: Additional semantic information for WH predicates
+;;;; -------------------------------------------------------------------------
+;;;;  Modified: Thursday, July 03, 2008 at 16:43:00 by etomai
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory EANLU :exclude-globals t)
+
+;;; Define Cyc frame and semtrans information
+
+;;; If we want to encode semtrans information for pronouns we need a proper
+;;; subcategorization frame. I'm not sure what possible subcategorizations
+;;; for pronouns are, though.
+;;;
+(isa FrameForPronouns SubcategorizationFrame)
+(isa FrameForDeterminers SubcategorizationFrame)
+                       
+(isa GenericWHAdverbFrame FrameForAdverbs)
+(isa GenericWHPronounFrame FrameForPronouns)
+;(isa GenericWHDeterminerFrame FrameForDeterminers)
+
+;;; Definitions for pronoun semtrans information
+(isa pronounSemTrans NLSemanticPredicate)
+(isa pronounSemTrans QuaternaryPredicate)
+(arity pronounSemTrans 4)
+(arg1Isa pronounSemTrans LexicalWord)
+(arg2Isa pronounSemTrans Integer)
+(arg3Isa pronounSemTrans FrameForPronouns)
+(arg4Isa pronounSemTrans NLTemplateExpression)
+
+;;; Definitions for determiner semtrans information
+;(isa detSemTrans NLSemanticPredicate)
+;(isa detSemTrans QuaternaryPredicate)
+;(arity detSemTrans 4)
+;(arg1Isa detSemTrans LexicalWord)
+;(arg2Isa detSemTrans Integer)
+;(arg3Isa detSemTrans FrameForDeterminers)
+;(arg4Isa detSemTrans NLTemplateExpression)
+
+;;; Recognize semtrans information for part of speech
+(semTransPredForPOS WHAdverb adverbSemTrans)
+(semTransPredForPOS WHPronoun pronounSemTrans)
+(semTransPredForPOS WHPronoun-Subject pronounSemTrans)
+;(semTransPredForPOS WHDeterminer detSemTrans)
+
+
+;;; The whole semTransPredForPOS never did anything because WHDeterminer was
+;;; never indexed in lexcats.meld!
+
+
+;;; SemTrans information for WH words
+
+;;; WHAT
+;;;
+
+;;;(pronounSemTrans What-TheWord 0 FrameForPronouns
+;;;                                   )
+
+
+;;; Adverbial usage, references to events etc.
+;;; "What is slow?"
+(adverbSemTrans What-TheWord 0 FrameForAdverbs
+                (mannerOfEvent :MANNER :THING))
+
+
+;;; WHEN
+;;; Note: A lot of temporal predicates are potentially applicable to WHEN
+;;; questions.
+;;; How can we find the appropriate predicate without including semTrans 
+;;; information for each of these predicates? -sek, 8/30/04
+;;;
+(adverbSemTrans When-TheWord 0 FrameForAdverbs
+                (startsDuring :ACTION :DATE))
+(adverbSemTrans When-TheWord 1 FrameForAdverbs
+                (endsDuring :ACTION :DATE))
+(adverbSemTrans When-TheWord 2 FrameForAdverbs
+                (dateOfEvent :ACTION :DATE))
+;;; more ... see note above
+
+
+
+;;; WHERE
+;;; "Where is the car?"
+(adverbSemTrans Where-TheWord 0 FrameForAdverbs 
+                (objectFoundInLocation :THING :LOCATION))
+
+;;; "Where does the man run?" 
+(adverbSemTrans Where-TheWord 1 FrameForAdverbs 
+                (eventOccursAt :ACTION :LOCATION))
+
+
+;;; WHICH
+;;; Note: :OBJECT is the syntactic object in the query sentence, not a (semantic) 'object'
+;;;
+;;; "Which coat belongs to the man?"
+;(detSemTrans Which-TheWord 0 FrameForDeterminers
+;             (possessiveRelation :THING :POSSESSOR))
+
+;;; "Which car is in the yard?"
+;(detSemTrans Which-TheWord 1 FrameForDeterminers
+;             (objectFoundInLocation :POSSESSOR :THING))
+
+
+
+;;; WHO
+;;; "Who is the actor?"
+;(pronounSemTrans Who-TheWord 0 FrameForPronouns
+;                 (isa :AGENT :THING))
+
+;;; "Who is painting the wall?"
+;(pronounSemTrans Who-TheWord 1 FrameForPronouns
+;                 (doneBy :ACTION :AGENT))
+
+;(pronounSemTrans Who-TheWord 1 FrameForPronouns
+;                 (performedBy :ACTION :AGENT))
+
+
+
+;;; WHOSE
+;;; "Whose key is on the desk?"
+;(pronounSemTrans Whose-TheWord 0 FrameForPronouns
+;                 (possessiveRelation :THING :POSSESSOR))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

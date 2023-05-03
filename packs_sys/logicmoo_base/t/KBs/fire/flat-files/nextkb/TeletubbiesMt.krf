@@ -1,0 +1,19 @@
+(in-microtheory TeletubbiesMt)
+
+(isa Teletubby-FictionalCharacter NonAbducibleCollection)
+(isa TinkyWinky PurpleColor)
+(isa Po Teletubby-FictionalCharacter)
+(isa LaaLaa Teletubby-FictionalCharacter)
+(isa Dipsy Teletubby-FictionalCharacter)
+(isa TinkyWinky Teletubby-FictionalCharacter)
+(isa TinkyWinky IntelligentAgent)
+(isa Teletubbies Group)
+(comment LaaLaa "One of the four #$Teletubbies.  #$LaaLaa is the most outwardly 
+
+happy of the group.")
+(comment Po "#$Po is one of the #$Teletubbies.  She is the smallest of
+
+the four.")
+(comment TinkyWinky "#$TinkyWinky is the biggest of the four #$Teletubbies.")
+(genls Teletubby-FictionalCharacter SentientAnimal)
+(genls Teletubby-FictionalCharacter IntelligentAgent)

@@ -1,0 +1,44 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cluster-reading.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: March 13, 2015 20:40:04
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ExecutiveMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;(delegateToNextAvailableWorker (runCVTestRound ?test ?round-number) 3)
+
+;;; A test to see if we can get code loaded on worker agents.
+
+(isa testReadingWorkerAgents ComplexActionPredicate)
+(arity testReadingWorkerAgents 1)
+(comment testReadingWorkerAgents "(testReadingWorkerAgents) is used to test
+things on the cluster. It's not really for anything.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (testReadingWorkerAgents ?fact-to-store)
+  (actionSequence
+   (TheList
+    (delegateToNextAvailableWorker (doTell ?fact-to-store) 3)
+    ))))
+
+#|
+
+(do-tasks
+    (testReadingWorkerAgents (testFactStoringit Okay4)))
+
+|#
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

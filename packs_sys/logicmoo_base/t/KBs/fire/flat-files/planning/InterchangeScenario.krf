@@ -1,0 +1,17 @@
+(in-microtheory InterchangeScenario :exclude-globals t)
+
+(isa BlockA1 Block)
+(isa BlockA2 Block)
+(onTable BlockA2)
+(clear BlockA1)
+(on-Physical BlockA1 BlockA2)
+
+(isa BlockB1 Block)
+(isa BlockB2 Block)
+(onTable BlockB2)
+(clear BlockB1)
+(on-Physical BlockB1 BlockB2)
+
+
+(goal (on-Physical BlockA1 BlockB2))
+(goal (on-Physical BlockB1 BlockA2))

@@ -1,0 +1,162 @@
+(in-microtheory BFSMt)
+(genlMt CompanionsMt BFSMt)
+
+(isa searchBFS Predicate)
+(arity searchBFS 5)
+(arg1Isa searchBFS SearchState)
+(arg2Isa searchBFS ScalarInterval)
+(arg3Isa searchBFS List)
+(arg4Isa searchBFS ScalarInterval)
+(arg5Isa searchBFS List)
+(comment searchBFS "(searchBFS ?node ?cost ?path ?solution-cost ?solution-path) searches best-first for the least-cost path to a solution.")
+
+(defSuggestion TerminateSearch
+    (searchBFS ?node ?cost ?path ?solution-cost ?solution-path)
+  :cost-function 0
+  :test (goalState ?node)
+  :subgoals ((unifies (?solution-path ?solution-cost) (?path ?cost))))
+
+(defSuggestion ExpandNode
+    (searchBFS ?node ?cost ?path ?solution-cost ?solution-path)
+  :cost-function 1
+  :test (uninferredSentence (goalState ?node))
+  :subgoals ((solveOne (childBindings ?node ?cost ?path ?child ?child-cost ?child-path)
+                       (searchBFS ?child ?child-cost ?child-path ?solution-cost ?solution-path))))
+
+;;; Gather together all the bindings in one query.
+;;; Use solveOne to instantiate or-node subgoals in parallel
+(<== (childBindings ?node ?cost ?path ?child ?child-cost ?child-path)
+     (edgeCost ?node ?child ?edge-cost)
+     (evaluate ?child-cost (PlusFn ?cost ?edge-cost))
+     (evaluate ?child-path (JoinListsFn ?path (TheList ?child))))
+
+;;; (edgeCost ?n ?m ?c) defines a successor function where ?m is a successor
+;;; node of ?n in the state space; ?c is the cost of the arc from ?n to ?m
+
+(isa edgeCost TernaryPredicate)
+(arity edgeCost 3)
+(arg1Isa edgeCost CycLTerm) ; a node
+(arg2Isa edgeCost CycLTerm) ; a node
+(arg3Isa edgeCost Integer)
+(comment edgeCost "(edgeCost ?from ?to ?cost) represents the traversal cost of the graph edge ?from -> ?to.")
+
+(isa h BinaryPredicate)
+(arity h 2)
+(arg1Isa h SearchNode)
+(arg2Isa h ScalarInterval)
+(comment h "(h ?node ?estimated-cost) represents the heuristic estimate of the cost from ?node to the goal.")
+
+;;; Example problem:
+
+; Our path costs
+(edgeCost s a 2)
+(edgeCost a b 2)
+(edgeCost b c 2)
+(edgeCost c d 3)
+(edgeCost d t 3)
+(edgeCost s e 2)
+(edgeCost e f 5)
+(edgeCost f g 2)
+(edgeCost g t 2)
+
+;;; (h ?n ?h) is a heuristic estimate of the cost of the best path from node
+;;; ? to a goal node.  For path planning on a graph, it might be the 
+;;; Euclidean distance.
+
+;;; Straight line distances
+
+(h a 5)
+(h b 4)
+(h c 4)
+(h d 3)
+(h e 7)
+(h f 4)
+(h g 2)
+(h t 0)  ; need this one, silly as it may seem.
+
+(goalState t)
+
+#||
+(fire::setup-solve-aotree '(searchBFS s 0 (TheList) ?solution-cost  ?solution-path)
+ :context 'BFSMt
+ :max-depth 20
+ :and-node-type 'fire::bfs-goal-node
+ :or-node-type 'fire::bfs-suggestion-node) ; specialize these to override cost estimation.
+
+ (fire::get-solution fire::*ao-tree*)
+ 
+ (fire::get-solution fire::*ao-tree*)
+ 
+ (display-aotree fire::*ao-tree*)
+||#
+
+(genlMt BFSMt CompanionsMt)
+
+
+(isa testSolveBFS ComplexActionPredicate)
+(arity testSolveBFS 3)
+
+(preconditionForMethod
+  (ist-Information BFSMt
+    (goalOfSolve ?solve (searchBFS ?start 0 (TheList) ?solution-cost  ?solution-path)))
+  (methodForAction
+    (testSolveBFS ?start ?depth ?num-answers)
+    (actionSequence
+      (TheList
+        (doChangeSolveMaxDepth ?solve ?depth)
+        (doRunToSolution ?solve)
+        (doAgentPlan (evaluateSolveBFS ?solve 1 ?num-answers (TheSet)))))))
+        
+(isa evaluateSolveBFS ComplexActionPredicate)
+(arity evaluateSolveBFS 4)
+
+;;; By driving problem solving from action, we have to go to extreme lengths
+;;; to find out what the newest answer is (if any):
+(preconditionForMethod
+  (and (evaluate ?all-answers
+         (TheClosedRetrievalSetOf (?solution-cost ?solution-path)
+           (lookupOnly
+             (wmOnly
+               (searchBFS ?start 0 (TheList) ?solution-cost ?solution-path)))))
+       (evaluate ?new-answers (SetDifferenceFn ?all-answers ?answers-so-far))
+       (unifies (TheSet (?new-cost ?new-path)) ?new-answers) ; Did we get a single new answer?
+       (evaluate ?remaining-answers (DifferenceFn ?num-answers 1))
+       (evaluate ?next-answer (PlusFn ?answer-num 1)))
+  (methodForAction
+    (evaluateSolveBFS ?solve ?answer-num ?num-answers ?answers-so-far)
+    (actionSequence
+      (TheList
+        (doAnnounce "solution ~s = ~s with cost ~s" (?answer-num ?new-path ?new-cost))
+        (doAgentPlan (nextSolveBFS ?solve ?next-answer ?remaining-answers ?all-answers))))))
+
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (evaluateSolveBFS ?solve ?answer-num ?num-answers ?answers-so-far)
+    (actionSequence
+      (TheList
+        (doAnnounce "no more answers" ())))))
+        
+(<== (preferInContext (evaluateSolveBFS ?solve ?answer-num ?num-answers ?answers-so-far) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 doAgentPlan))
+
+(isa nextSolveBFS ComplexActionPredicate)
+(arity nextSolveBFS 4)
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (nextSolveBFS ?solve ?answer-num 0 ?all-answers)
+    (actionSequence
+      (TheList
+        (doAnnounce "That's all requested answers." ())))))
+
+(preconditionForMethod
+  (greaterThan ?num-answers 0)
+  (methodForAction
+    (nextSolveBFS ?solve ?answer-num ?num-answers ?all-answers)
+    (actionSequence
+      (TheList
+        (doRunToSolution ?solve)
+        (doAgentPlan (evaluateSolveBFS ?solve ?answer-num ?num-answers ?all-answers))))))

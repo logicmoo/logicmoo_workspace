@@ -1,0 +1,232 @@
+;;;
+;;; agenda.krf
+;;;
+;;; This file contains predicate definitions for agent agendas.
+
+(in-microtheory CompanionsMt)
+
+;;; See tasks.krf for replacement concepts Task, methodForTask, taskImportance, etc.
+
+(isa currentAgendaItem UnaryPredicate)
+(isa currentAgendaItem DynamicUpdatePredicate)
+(arity currentAgendaItem 1)
+(arg1Isa currentAgendaItem Task)  ; AgendaItem is deprecated
+(comment currentAgendaItem "(currentAgendaItem ?task) binds ?task to the current (Davidsonian) task on the agenda.")
+
+(isa currentAgendaLength UnaryPredicate)
+(isa currentAgendaLength DynamicUpdatePredicate)
+(arg1Isa currentAgendaLength Integer)
+(comment currentAgendaLength "(currentAgendaLength ?count) binds the number of pending events on agent's agenda.")
+
+(isa pendingTask UnaryPredicate)
+(isa pendingTask DynamicUpdatePredicate)
+(arity pendingTask 1)
+(arg1Isa pendingTask Task)
+(comment pendingTask "(pendingTask ?task) binds ?task to each pending task on the agenda.")
+
+(isa unblockedDelegateableTask UnaryPredicate)
+(isa unblockedDelegateableTask DynamicUpdatePredicate)
+(arity unblockedDelegateableTask 1)
+(arg1Isa unblockedDelegateableTask Task)
+(comment unblockedDelegateableTask "(pendingTask ?task) binds ?task to each pending delegateable task on the agenda.")
+
+(isa taskSource BinaryPredicate)
+(isa taskSource DynamicUpdatePredicate)
+(arity taskSource 2)
+(arg1Isa taskSource Task)
+(arg2Isa taskSource CompanionsAgent)
+(comment taskSource "(taskSource ?task-name ?source-agent) Says that the task ?task was sent from agent ?source-agent.")
+
+(isa agendaItemNamed BinaryPredicate)
+(arity agendaItemNamed 2)
+(arg1Isa agendaItemNamed Task)
+(arg2Isa agendaItemNamed CycLExpression)
+(comment agendaItemNamed "(agendaItemNamed ?task-name ?task-obj) binds ?task-obj to the expanded (plist) representation of the task.")
+
+(isa taskStatus BinaryPredicate)
+(isa taskStatus DynamicUpdatePredicate)
+(arg1Isa taskStatus Task)
+(arg2Isa taskStatus TaskStatus)
+(comment taskStatus "(tasksStatus ?task-name ?status) binds ?status to the current status of ?task-name")
+
+(isa taskBlockedOn BinaryPredicate)
+(isa taskBlockedOn DynamicUpdatePredicate)
+(arity taskBlockedOn 2)
+(arg1Isa taskBlockedOn Task)
+(arg2Isa taskBlockedOn Task)
+(comment taskBlockedOn "(taskBlockedOn ?task-name ?blocking-task-name) enumerates incomplete tasks that block ?task-name.")
+
+;;; agendaItemActionSequence cannot be replaced by methodForTask, because 
+;;; the latter may be stored persistently as part of a scenario, but
+;;; this may need to be re-written on the agenda to support deferred
+;;; execution of partial plans.  So we initialize it from methodForTask
+;;; but schedule execution on the agendaItemActionSequence.
+(isa agendaItemActionSequence BinaryPredicate)
+(arity agendaItemActionSequence 2)
+(arg1Isa agendaItemActionSequence AgendaItem)
+(arg2Isa agendaItemActionSequence CycLExpression)
+(comment agendaItemActionSequence
+         "Describes the actions the should be taken to perform the agenda-item")
+
+(isa agendaItemRequestedBy BinaryPredicate)
+(arity agendaItemRequestedBy 2)
+(arg1Isa agendaItemRequestedBy Task)
+(arg2Isa agendaItemRequestedBy Agent-Underspecified)
+(comment agendaItemRequestedBy
+         "Declares which agent requested a given  Task.")
+
+(isa agendaItemReplyWith Relation)
+(arity agendaItemReplyWith 3)
+(arg1Isa agendaItemReplyWith Task)
+(arg2Isa agendaItemReplyWith SoftwareAgent)
+(arg3Isa agendaItemReplyWith CycLExpression)
+(comment agendaItemReplyWith
+         "(agendaItemReplyWith ?agenda-item ?agent ?msg-id) says that, upon 
+          completion of the agenda item, a reply should be sent to the specified
+          agent and it should be sent in response to the specified message.")
+
+;;; As we migrate to a queue-based agenda, consider replacing this with an
+;;; outsourced dynamic pred: scheduled.
+(isa onAgenda BinaryPredicate)
+(arity onAgenda 2)
+(arg1Isa onAgenda Agent-Underspecified)
+(arg2Isa onAgenda Task)
+(comment onAgenda 
+         "(onAgenda ?agent ?task) says that a given Task is currently on an agent's list of 
+          things to do.")
+
+          
+(isa deferred BinaryPredicate)
+(arity deferred 2)
+(arg1Isa deferred Agent-Underspecified)
+(arg2Isa deferred Task)
+(comment deferred 
+         "(deferred ?agent ?task) says that a given Task is currently waiting for a temporal event before being re-scheduled.")
+
+(isa agendaItemComplete BinaryPredicate)
+(arity agendaItemComplete 2)
+(arg1Isa agendaItemComplete Agent-Underspecified)
+(arg2Isa agendaItemComplete Task)
+(comment agendaItemComplete
+         "Says that an agent has finished the specified Task.")
+
+(isa agendaItemFailed BinaryPredicate)
+(arity agendaItemFailed 2)
+(arg1Isa agendaItemFailed Agent-Underspecified)
+(arg2Isa agendaItemFailed Task)
+(comment agendaItemFailed
+         "Says that an agent's Task failed to execute.")
+
+(isa agendaItemInterrupted BinaryPredicate)
+(arity agendaItemInterrupted 2)
+(arg1Isa agendaItemInterrupted Agent-Underspecified)
+(arg2Isa agendaItemInterrupted Task)
+(comment agendaItemInterrupted
+         "Says that an agent's Task was interrupted during execution.")
+
+(isa agendaItemForFact BinaryPredicate)
+(arity agendaItemForFact 2)
+(arg1Isa agendaItemForFact CycLSentence)
+(arg2Isa agendaItemForFact Task)
+(comment agendaItemForFact
+         "Says that when an agent receives a particular fact (via subscription)
+          from another agent, the appropriate Task should be placed on
+          the receiving agent's agenda.")
+
+
+;;;
+;;; New persistable symbols on a remote agent.
+;;;
+
+
+(isa newPersistableSymbolOnAgent Predicate)
+(arity newPersistableSymbolOnAgent 3)
+
+(<== (newPersistableSymbolOnAgent ?agent-name ?prefix ?id)
+     (groundExpression ?agent-name)
+     (groundExpression ?prefix)
+     (holdsOnRemoteAgent ?agent-name (newPersistableSymbol ?prefix ?id)))
+
+
+;;;
+;;; Relating agenda items.
+;;;
+
+(isa subTasks BinaryRelation)
+(comment subTasks "(subTasks TASK1 TASK2) states that Task TASK2 is a subordinate task of Task TASK1, such that TASK1 is comprised of TASK2 and, optionally, other tasks.")
+(arity subTasks 2)
+(arg1Isa subTasks Task)
+(arg2Isa subTasks Task)
+
+;;; Use startsAfterEndingOf instead of precedingTasks
+;(isa precedingTasks BinaryRelation)
+;(comment precedingTasks "(precedingTasks TASK1 TASK2) states that TASK2 is a preceding task for TASK1.  So, TASK1 cannot commence until TASK2 is completed.")
+;(arity precedingTasks 2)
+;(arg1Isa precedingTasks Task)
+;(arg2Isa precedingTasks Task)
+
+(isa TaskFn Function-Denotational)
+(arity TaskFn 1)
+(resultIsa TaskFn Task)
+(arg1Isa TaskFn CycLTerm)
+(comment TaskFn "(TaskFn <unique-id>) denotes a Task that may be scheduled on an agenda.  It forms a name of a task given a unique identifier.")
+
+(isa DispatchTaskFn Function-Denotational)
+(arity DispatchTaskFn 1)
+(arg1Isa DispatchTaskFn Task)
+(resultIsa DispatchTaskFn Task)
+(comment DispatchTaskFn "(DispatchTaskFn <task>) denotes a task that does nothing but schedule another task.  It exists to give a name to the intermediate task to permit scheduling constraints.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; graphing the agenda using ad hoc graphs
+;;; This needs to be expanded, or (more likely) replaced with a custom graph type.
+;;; To use this, call something like:
+;;; (fire::display-adhoc-graph 'Agenda-Graph 'Session-ReasonerAgendaMt)
+
+(isa agendaItemVertexColor Predicate)
+(arity agendaItemVertexColor 2)
+(arg1Isa agendaItemVertexColor Task)
+(arg2Isa agendaItemVertexColor Color)
+
+;; (adHocVertex <graph-type> <label> <data> <shape> <fill-color>)
+(<== (adHocVertex Agenda-Graph ?label ?data :ellipse ?color)
+     (lookupOnly (localOnly (isa ?task Task)))
+     (numAnswers 1 (agendaItemVertexColor ?task ?color))
+     (unifies ?task (TaskFn ?label))
+     (unifies ?data ?task))
+
+(<== (adHocVertex Agenda-Graph ?label ?data :ellipse BlackColor)
+     (lookupOnly (localOnly (isa ?task Task)))
+     (uninferredSentence (agendaItemVertexColor ?task ?color))
+     (unifies ?task (TaskFn ?label))
+     (unifies ?data ?task))
+
+(<== (agendaItemVertexColor ?task DarkBlue-Color)
+     (lookupOnly (localOnly (agendaItemComplete ?agent ?task))))
+
+(<== (agendaItemVertexColor ?task RedColor)
+     (lookupOnly (localOnly (agendaItemFailed ?agent ?task))))
+
+(<== (agendaItemVertexColor ?task GreenColor)
+     (currentAgendaItem ?agent ?task))
+
+(<== (agendaItemVertexColor ?task YellowColor)
+     (lookupOnly (localOnly (onAgenda ?agent ?task)))
+     (uninferredSentence (agendaItemVertexColor ?task GreenColor)))
+     
+
+;; (adHocEdge <graph-type> <origin-data> <terminus-data> <label> <data> <directed?> <color> <style> <width>)
+(<== (adHocEdge Agenda-Graph ?p-task ?c-task "" "" True BlackColor :dashed 1)
+     (lookupOnly (localOnly (subTasks ?p-task ?c-task)))
+     (numAnswers 1 (adHocVertex Agenda-Graph ?p-label ?p-task :ellipse ?p-color))
+     (numAnswers 1 (adHocVertex Agenda-Graph ?c-label ?c-task :ellipse ?c-color)))
+
+(<== (adHocEdge Agenda-Graph ?p-task ?n-task "" "" True BlackColor :solid 1)
+     (lookupOnly (localOnly (startsAfterEndingOf ?n-task ?p-task)))
+     (numAnswers 1 (adHocVertex Agenda-Graph ?p-label ?p-task :ellipse ?p-color))
+     (numAnswers 1 (adHocVertex Agenda-Graph ?n-label ?n-task :ellipse ?n-color)))
+
+;;;
+;;; End of File
+;;;

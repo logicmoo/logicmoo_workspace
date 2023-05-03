@@ -1,0 +1,98 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: untitled
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: December 16, 2018 11:50:19
+;;;;   Purpose: 
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2016-10-24 17:08:27 -0500 (Mon, 24 Oct 2016) $
+;;;;  $LastChangedBy: Hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+(clothingTypeFormality Tuxedo VeryFormalClothing)
+(clothingTypeFormality TuxedoShirt VeryFormalClothing)
+(clothingTypeFormality BridalWear VeryFormalClothing)
+(clothingTypeFormality BusinessSuit SemiFormal)
+(clothingTypeFormality ButtonDownShirt SemiFormal)
+(clothingTypeFormality DressShirt SemiFormal)
+(clothingTypeFormality Sandal Casual)
+(clothingTypeFormality ShortPants Casual)
+(clothingTypeFormality AthleticShoe Casual)
+(clothingTypeFormality T-Shirt Casual)
+(clothingTypeFormality TankTop Casual)
+(clothingTypeFormality SportsShirt Casual)
+(clothingTypeFormality Sweatshirt Casual)
+(clothingTypeFormality Undershirt-Sleeveless Casual)
+
+(wornOn-TypeType Wristwatch Wrist)
+(wornOn-TypeType Hat TopOfHead)
+(wornOn-TypeType Clothing-Top UpperBody-Human)
+(wornOn-TypeType Clothing-Bottom LowerBody-Human)
+(wornOn-TypeType Glove (OrganismPartTypeFn HomoSapiens Hand))
+(wornOn-TypeType Eyeglasses (OrganismPartTypeFn HomoSapiens FaceOfAnimal))
+(wornOn-TypeType Shoe (OrganismPartTypeFn HomoSapiens Foot-AnimalBodyPart))
+(wornOn-TypeType Sock (OrganismPartTypeFn HomoSapiens Foot-AnimalBodyPart))
+(wornOn-TypeType RidingBoot (OrganismPartTypeFn HomoSapiens Foot-AnimalBodyPart))
+(wornOn-TypeType RidingPants LowerBody-Human)
+(wornOn-TypeType SwimmingTrunks LowerBody-Human)
+(wornOn-TypeType Mask (OrganismPartTypeFn HomoSapiens FaceOfAnimal))
+(wornOn-TypeType Ring-Jewelry (OrganismPartTypeFn HomoSapiens Finger))
+(wornOn-TypeType WeddingRing (LeftObjectOfPairFn RingFinger))
+(wornOn-TypeType NeckTie (OrganismPartTypeFn HomoSapiens Neck-AnimalBodyPart))
+(wornOn-TypeType Earring-Jewelry (OrganismPartTypefn HomoSapiens Ear))  ; pretty much anywhere on the ear, nowadays.
+(wornOn-TypeType Earmuffs (OrganismPartTypeFn HomoSapiens Ear))
+(wornOn-TypeType SwimmingCap TopOfHead)
+(wornOn-TypeType SwimmingGoggles (OrganismPartTypeFn HomoSapiens FaceOfAnimal))
+(wornOn-TypeType SnowGoggles (OrganismPartTypeFn HomoSapiens FaceOfAnimal))
+(wornOn-TypeType RunningShorts LowerBody-Human)
+(wornOn-TypeType SwimmingTrunks LowerBody-Human)
+(wornOn-TypeType AthleticShoe Foot-AnimalBodyPart)
+(wornOn-TypeType RunningShoe Foot-AnimalBodyPart)
+(wornOn-TypeType RidingBoot Foot-AnimalBodyPart)
+(wornOn-TypeType RollerSkate Foot-AnimalBodyPart)
+(wornOn-TypeType InLineSkate Foot-AnimalBodyPart)
+(wornOn-TypeType Fin-Artifact Foot-AnimalBodyPart)
+(wornOn-TypeType SkiBoot Foot-AnimalBodyPart)
+(wornOn-TypeType Backpack Back-AnimalBodyPart)
+(wornOn-TypeType FireHelmet Head-AnimalBodyPart)
+(wornOn-TypeType NeckBrace Neck-AnimalBodyPart)
+(wornOn-TypeType Diaper LowerBody-Human)  ; (isa Diaper Clothing-Bottom)?
+;; How do we say that Diapers are for Infants?
+
+
+;;; spec of agentTypeUsesArtifactType:
+(personTypeAssociatedClothingType Actor Costume)
+(personTypeAssociatedClothingType FoodWorker Apron)
+(personTypeAssociatedClothingType (FemaleFn Supermodel) Bikini)
+(personTypeAssociatedClothingType Firefighter FirefighterUniform)
+(personTypeAssociatedClothingType Firefighter FirefightersCoat)
+(personTypeAssociatedClothingType Firefighter FireHelmet)
+(personTypeAssociatedClothingType MilitaryPerson MilitaryUniform)
+(personTypeAssociatedClothingType PoliceOfficer-Municipal PoliceUniform)
+(personTypeAssociatedClothingType (ProfessionalFn Athlete) SportsUniform)
+(personTypeAssociatedClothingType Waitperson RestaurantUniform)
+(personTypeAssociatedClothingType Medic MedicalUniform)
+(personTypeAssociatedClothingType Num NumsHabit)
+(personTypeAssociatedClothingType Judge Robe)
+(personTypeAssociatedClothingType BusinessPerson BusinessSuit)
+(personTypeAssociatedClothingType ConstructionWorker SafetyHelmet)
+(personTypeAssociatedClothingType Cyclist-Athlete BicycleHelmet)
+(personTypeAssociatedClothingType Celebrity-Entertainment Sunglasses)
+(personTypeAssociatedClothingType (SubcollectionOfWithRelationFromTypeFn Person doneBy GraduationCeremony) CapAndGown)
+(personTypeAssociatedClothingType (SubcollectionOfWithRelationFromTypeFn Applicant interviewee JobInterview) Suit)
+
+(uniformTypeComponentType FirefighterUniform FirefightersCoat)
+(uniformTypeComponentType FirefighterUniform FireHelmet)
+
+
+(isa PoliceUniform ExistingObjectType)
+(isa PoliceUniform SomethingToWearTypeByGenericCategory)
+(genls PoliceUniform Uniform)
+(genls PoliceUniform (ArtifactTypeForUserTypeFn Uniform PoliceOfficer-Municipal))
+(comment PoliceUniform "#$PoliceUniform is the collection of uniforms used by municipal police officers.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

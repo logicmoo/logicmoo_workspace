@@ -1,0 +1,10 @@
+(in-microtheory AcidsAndBases-ChemistryDomainMt)
+
+(isa (ChemicalSubstanceFn PotassiumIon) AcidType-Negligible)
+(isa (ChemicalSubstanceFn StrontiumIon) AcidType-Negligible)
+(isa (ChemicalSubstanceFn BariumIon) AcidType-Negligible)
+(isa (ChemicalSubstanceFn LithiumIon) AcidType-Negligible)
+(isa (ChemicalSubstanceFn CesiumIon) AcidType-Negligible)
+(isa (ChemicalSubstanceFn SodiumIon) AcidType-Negligible)
+(isa (ChemicalSubstanceFn RubidiumIon) AcidType-Negligible)
+(isa (ChemicalSubstanceFn CalciumIon) AcidType-Negligible)

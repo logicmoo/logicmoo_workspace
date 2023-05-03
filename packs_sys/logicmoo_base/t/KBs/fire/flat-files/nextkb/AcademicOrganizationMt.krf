@@ -1,0 +1,7 @@
+(in-microtheory AcademicOrganizationMt)
+
+(isa University QAClarifyingCollectionType)
+(argFormat hasAlumni 2 SetTheFormat)
+(argFormat attendedSchoolAt 1 SetTheFormat)
+(disjointWith CollegeBasketballTeam KindergartenInstitution)
+(disjointWith KindergartenInstitution (SubcollectionOfWithRelationFromTypeFn BasketballTeam schoolSportsTeams College))

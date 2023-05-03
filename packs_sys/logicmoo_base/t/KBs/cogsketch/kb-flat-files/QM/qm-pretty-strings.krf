@@ -1,0 +1,97 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qm-pretty-strings.meld
+;;;;    System: Cogsketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: September 14, 2009 16:58:56
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Directions
+;;; transMotion
+(prettyString Right "to the right")
+(prettyString Quad1 "up and to the right")
+(prettyString Up "upwards")
+(prettyString Quad2 "up and to the left")
+(prettyString Left "to the left")
+(prettyString Quad3 "down and to the left")
+(prettyString Down "downwards")
+(prettyString Quad4 "down and to the right")
+(prettyString ZeroQVector "nowhere")
+(prettyString AmbigQVector "in an ambiguous direction")
+
+;;; rotMotion
+(prettyString CW "clockwise")
+(prettyString CCW "counterclockwise")
+(prettyString ZeroRot "not at all")
+(prettyString AmbigRot "in an ambiguous direction")
+
+;;; Types of objects
+(prettyString RigidOb "rigid object")
+(prettyString FixedRigidObject "fixed rigid object")
+(prettyString FixedObject "fixed object")
+
+(prettyString ForceArrow "force arrow")
+(prettyString RotationalForceArrow "rotational force arrow")
+(prettyString RotOrigin "rotational origin")
+
+(prettyString Strap "strap")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ist-information
+
+(genFormat ist-Information "~a" (2))
+
+(genFormat isa "~a is ~a" (1 (2 A-THE-WORD)))
+
+(genFormat transMotion "~a moves ~a" (1 2))
+
+(genFormat rotMotion "~a rotates ~a" (1 2))
+
+(genFormat netForce "The direction of the net force on ~a is ~a" (1 2))
+
+(genFormat netTorque "The direction of the net torque on ~a is ~a" (1 2))
+
+(genFormat forceAppliedToObj 
+           "~a is being forced ~a by ~a" (1 2 3))
+(genFormat forceAppliedToObj 
+           "~a is being forced ~a" (1 2))
+
+(genFormat torqueAppliedToObj 
+           "A torque is applied to ~a ~a by ~a" (1 2 3))
+(genFormat torqueAppliedToObj 
+           "A torque is applied to ~a ~a" (1 2))
+
+
+(genFormat transConstraint "~a cannot move ~a" (1 2))
+
+(genFormat movable "~a is movable" (1))
+
+(genFormat rotConstraint "~a cannot rotate ~a" (1 2))
+
+(genFormat rotFreedom "~a is free to rotate ~a" (1 2))
+
+(genFormat rotatable "~a is rotatable" (1))
+
+(genFormat connectedTo-Directly "~a is directly conntected to ~a" (1 2))
+
+(genFormat causes-SitSit "~a causes ~a" (1 2))
+
+(genFormat enmeshed "~a and ~a are enmeshed" (1 2))
+
+(genFormat touchesDirectly "~a touches ~a" (1 2))
+
+(genFormat hasContactSurface "~a touches ~a" (1 2))
+
+(genFormat sufficientlyConstrained "~a cannot move anywhere ~a" (1 2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

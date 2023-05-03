@@ -1,0 +1,183 @@
+
+ (in-microtheory ReasoningWithTense-InferenceMt-SingleDateSeries)
+ (arg2Isa reasoningWithTenseMtCCType
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (argIsa reasoningWithTenseMtCCType 2
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (strictlyFunctionalInArgs reasoningWithTenseMtCCType 2)
+ (argFormat reasoningWithTenseMtCCType 2 SingleEntry)
+ (comment reasoningWithTenseMtCCType "For each instance Mt of
+#$ReasoningWithTenseMicrotheory-SingleDateSeries,
+(#$reasoningWithTenseMtCCType Mt TYPE) means that TYPE is the type of
+dates that determines (1) #$reasoningWithTenseMtTime (i.e.,
+(#$reasoningWithTenseMtTime TIME) only if TIME is an instance of
+TYPE), (2) the arg3 to #$mtPrecedes-Metric (i.e., (#$mtPrecedes-Metric Mt
+Mt-1 TYPE-0 n) only if TYPE-0 = TYPE), ")
+ (arg2Format reasoningWithTenseMtCCType SingleEntry)
+ (argIsa reasoningWithTenseMtCCType 1
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg1Isa reasoningWithTenseMtCCType
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (isa reasoningWithTenseMtCCType GeneralTenseReasoningConstant)
+ (argFormat mtPrecedes-NthDate-Forward 1 SingleEntry)
+ (argFormat mtPrecedes-NthDate-Backward 1 SingleEntry)
+ (comment ReasoningWithTense-InferenceMt-SingleDateSeries
+ "This #$Microtheory contains rules about relations between
+instances of
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, which
+represent dates of a single #$CalendarCoveringType.  At the present
+(Jan/2000), the notions involved in such rules are
+#$reasoningWithTenseMtTime, #$reasoningWithTenseMtDate and
+#$mtPrecedes-Metric etc.  Note that rules in this microtheory amounts to
+semantic interpretations of formulas in microtheories that are
+instances of
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and thus
+should not be present in those microtheories.")
+ (comment mtPrecedes-NthDate-Forward "For any instances MT1 and MT2 of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, 
+(#$mtPrecedes-NthDate-Forward MT1 MT2 TYPE n) means that there is an 
+instance CVR-TYPE of #$CalendarCoveringType (the current calendar 
+covering type, see #$reasoningWithTenseMtCCType, the same as the type used in 
+#$mtPrecedes-Metric assertions in the same microtheory) such that 
+(#$genls TYPE CVR-TYPE) holds, and there is an instance DATE-1 of 
+CVR-TYPE and an instance DATE-2 of TYPE such that 
+(#$reasoningWithTenseMtTime MT1 DATE-1) and 
+(#$reasoningWithTenseMtTime MT2 DATE-2) hold (notice here we use 
+MtTime rather than MtDate), and DATE-1 is entirely earlier than DATE-2 
+with exactly n-1 distinct dates of TYPE between the two. 
+ 
+For example, let MT1 and MT2 be members of a microtheory set SET (see 
+#$ReasoningWithTenseMicrotheorySet), and let 
+(#$mtPrecedes-NthDate-Forward MT1 MT2 #$Friday 1) hold in an microtheory 
+MT-A, which is a specMt of 
+#$ReasoningWithTense-InferenceMt-SingleDateSeries.  We know that 
+#$CalendarDay is the only element of #$CalendarCoveringType of which 
+#$Friday is a spec.  Actually #$CalendarDay must be the only type 
+whose instances can be the MtTime's for members of SET (see 
+#$reasoningWithTenseMtTime and #$mtPrecedes-Metric).   
+ 
+Thus there is a DAY1 in #$CalendarDay and a DAY2 in #$Friday such that 
+(#$reasoningWithTenseMtTime MT1 DAY1) and (#$reasoningWithTenseMtTime 
+MT2 DAY2) hold, and such that DAY1 is entirely earlier than DAY2, with 
+no instance of #$Friday between the two.  It is easy to see that this 
+means DAY2 is the first Friday after DAY1.  Note that 
+(#$mtPrecedes-NthDate-Forward MT1 MT2 TYPE n) implies (#$mtPrecedes MT1 
+MT2). 
+ 
+Because there is only a single date series in the temporal structures, 
+we must also have the following.  Let SET be any instance of 
+#$ReasoningWithTenseMicrotheorySet such that SET is a subset of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and let MT0, MT1, 
+MT2 and MT3 be any elements of SET.   
+ 
+If there is any formula (#$mtPrecedes-Metric MT0 MT1 TYPE k) true in a 
+specMt MT-A of #$ReasoningWithTense-InferenceMt-SingleDateSeries, then 
+in order for any formula (#$mtPrecedes-NthDate-Forward MT2 MT3 TYPE-1 n) 
+to be true in MT-A, TYPE-1 must be a spec of TYPE.")
+ (arg1Format mtPrecedes-NthDate-Forward SingleEntry)
+ (argIsa mtPrecedes-NthDate-Forward 2
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg2Isa mtPrecedes-NthDate-Forward
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (argIsa mtPrecedes-NthDate-Forward 1
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg1Isa mtPrecedes-NthDate-Forward
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (comment mtPrecedes-NthDate-Backward "For any instances MT1 and MT2 of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, 
+(#$mtPrecedes-NthDate-Backward MT1 MT2 TYPE n) means that there is an 
+instance CVR-TYPE of #$CalendarCoveringType (i.e., the type used in 
+#$mtPrecedes-Metric assertions in the same microtheory) such that 
+(#$genls TYPE CVR-TYPE) holds, and there is an instance DATE-2 of 
+CVR-TYPE and an instance DATE-1 of TYPE such that 
+(#$reasoningWithTenseMtTime MT1 DATE-1) and 
+(#$reasoningWithTenseMtTime MT2 DATE-2) hold (notice here we use 
+MtTime rather than MtDate), and DATE-1 is entirely earlier than DATE-2 
+with exactly n-1 distinct dates of TYPE between the two.   
+ 
+For example, let MT1 and MT2 be members of a microtheory set SET (see 
+#$ReasoningWithTenseMicrotheorySet), and let 
+(#$mtPrecedes-NthDate-Backward MT1 MT2 #$Friday 1) hold in an microtheory 
+MT-A, which is a specMt of 
+#$ReasoningWithTense-InferenceMt-SingleDateSeries.  We know that 
+#$CalendarDay is the only element of #$CalendarCoveringType of which 
+#$Friday is a spec.  Actually #$CalendarDay must be the only type 
+whose instances can be the MtTime's for members of SET (see 
+#$reasoningWithTenseMtTime and #$mtPrecedes-Metric).   
+ 
+Thus there is a DAY2 in #$CalendarDay and a DAY1 in #$Friday such that 
+(#$reasoningWithTenseMtTime MT1 DAY1) and (#$reasoningWithTenseMtTime 
+MT2 DAY2) hold, and such that DAY1 is entirely earlier than DAY2, with 
+no instance of #$Friday between the two.  It is easy to see that this 
+means DAY1 is the first Friday before DAY2.  Note that 
+(#$mtPrecedes-NthDate-Backward MT1 MT2 TYPE n) implies (#$mtPrecedes MT1 
+MT2). 
+ 
+Because there is only a single date series in the temporal structures, 
+we must also have the following.  Let SET be any instance of 
+#$ReasoningWithTenseMicrotheorySet such that SET is a subset of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, and let MT0, MT1, 
+MT2 and MT3 be elements of SET.   
+ 
+If there is any formula (#$mtPrecedes-Metric MT0 MT1 TYPE k) true in a 
+specMt MT-A of #$ReasoningWithTense-InferenceMt-SingleDateSeries, then 
+in order for any formula (#$mtPrecedes-NthDate-Backward MT2 MT3 TYPE-1 
+n) to be true in MT-A, each TYPE-1 must be a spec of TYPE.")
+ (arg1Format mtPrecedes-NthDate-Backward SingleEntry)
+ (argIsa mtPrecedes-NthDate-Backward 2
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg2Isa mtPrecedes-NthDate-Backward
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (argIsa mtPrecedes-NthDate-Backward 1
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg1Isa mtPrecedes-NthDate-Backward
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (argIsa reasoningWithTenseMtTime 2 Date)
+ (arg2Isa reasoningWithTenseMtTime Date)
+ (argIsa mtPrecedes-Metric 2
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg2Isa mtPrecedes-Metric
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (argIsa mtPrecedes-Metric 1
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg1Isa mtPrecedes-Metric
+ ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (argIsa mtPrecedes 2 ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg2Isa mtPrecedes ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (argIsa mtPrecedes 1 ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (arg1Isa mtPrecedes ReasoningWithTenseMicrotheory-SingleDateSeries)
+ (comment mtPrecedes-Metric "For any instances MT1 and MT2 of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries, (#$mtPrecedes-Metric 
+MT1 MT2 TYPE n) means that for some instances DATE-1 and DATE-2 of 
+TYPE such that (#$reasoningWithTenseMtTime MT1 DATE-1) and 
+(#$reasoningWithTenseMtTime MT2 DATE-2) hold, DATE-1 is entirely 
+earlier than DATE-2 with exactly n-1 distinct elements of TYPE between 
+the two.  Note that (#$mtPrecedes-Metric MT1 MT2 TYPE n) implies 
+(#$mtPrecedes MT1 MT2).  Note also that in practise we should always 
+have an instance SET of #$ReasoningWithTenseMicrotheorySet to take MT1 
+and MT2 as members, and in the case of a single date series, all 
+members of SET must have the same type TYPE-0 for their MtTime's, and 
+thus TYPE above must be the same as TYPE-0.  Note, finally, that in 
+#$ReasoningWithTense-InferenceMt-SingleDateSeries, #$mtPrecedes-Metric 
+correponds semantically to #$willBe-Metric and #$was-Metric (in 
+#$ReasoningWithTense-LogicMt-SingleDateSeries), while in 
+#$ReasoningWithTense-InferenceMt-MixedDateSeries, what corresponds 
+semantically to #$willBe-Metric (in 
+#$ReasoningWithTense-LogicMt-MixedDateSeries) is not 
+#$mtPrecedes-Metric but #$mtPrecedes-SemiMetric-Forward.  Similarly, 
+in #$ReasoningWithTense-InferenceMt-MixedDateSeries, what corresponds 
+semantically to #$was-Metric (in 
+#$ReasoningWithTense-LogicMt-MixedDateSeries) is not 
+#$mtPrecedes-Metric but #$mtPrecedes-SemiMetric-Backward. 
+(#$mtPrecedes-SemiMetric-Forward or #$mtPrecedes-SemiMetric-Backward 
+becomes the same as #$mtPrecedes-Metric only in special cases.)")
+ (comment mtPrecedes "Because in 
+#$ReasoningWithTense-InferenceMt-SingleDateSeries our 
+background temporal structures are always (discrete) linear orderings, 
+there are more conditions on #$mtPrecedes, i.e., the relation between 
+instances of 
+#$ReasoningWithTenseMicrotheory-SingleDateSeries.  For 
+example, if MT-0 and MT-1 are such instances belonging to the same  
+instance SET of #$ReasoningWithTenseMicrotheorySet, and if  
+(#$mtPrecedes MT-0 MT-1) holds, the microtheory time for MT-0 and that  
+for MT-1 must be instances of #$Date and must be of the same type.")

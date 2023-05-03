@@ -1,0 +1,878 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ----------------------------------------------------------------------------
+;;;; File name: structural.krf
+;;;;    System: EA
+;;;;    Author: Emmett Tomai
+;;;;   Created: June 12, 2007 10:08:56
+;;;;   Purpose: knowledge additions coordinating with the grammar
+;;;; ----------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-10-04 15:12:29 -0500 (Thu, 04 Oct 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ----------------------------------------------------------------------------
+
+(in-microtheory EANLU)
+
+;;; Inherit semtranses and denotations from this Cyc Mt (which is primarily
+;;; a collector mt of English)
+
+(genlMt EANLU AllEnglishValidatedLexicalMicrotheoryPSC) 
+(genlMt EANLU TemporaryLexicalAssertions-WordNetImportMt) ; include WordNet imports
+
+
+(isa LanguageMtFn Function-Denotational)
+(arity LanguageMtFn 1)
+(arg1Isa LanguageMtFn CycLTerm)  ; could be a domain, could be a collection or goal, basically any concept
+(resultIsa LanguageMtFn Microtheory)
+(comment LanguageMtFn "(LanguageMtFn ?domain) denotes a microtheory to be used for maintaining domain-specific linguistic mappings, such as semtranses and denotations.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; processing directives
+
+(isa ConceptForInstanceFn Function-Denotational)
+(arity ConceptForInstanceFn 2)
+(comment ConceptForInstanceFn "(ConceptForInstanceFn ?var ?sem) is not really a representational term, but instead is a processing directive.
+It is used in grammar rules to tell the parser to bind to the concept (ie, collection) rather than the discourse variable directly. 
+The concept is generally found in the semantics via an (isa ?var ?concept) statement.")
+
+(isa outscopes Relation)
+(arity outscopes 2)
+(comment outscopes "(outscopes ?quantity-NAT1 ?quantity-Nat2) is not really a representational term, but instead is a processing directive.
+It is a temporary indicator added by the parser to indicate that the scope of one quantity properly includes the other in a nested quantfier statement.")
+
+(isa ReplaceFn BinaryFunction)
+(arity ReplaceFn 2)
+(comment ReplaceFn "(ReplaceFn ?expression ?bindings) is used in obscure adjectiveSemTranses.  Processed in semprocess.")
+
+(isa FrameRoleFn BinaryFunction)
+(arity FrameRoleFn 2)
+(comment FrameRoleFn "(FrameRoleFn ?keyword ?name) is an intermediate representation inserted (and replaced) by semantic processing.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; cases
+
+(isa EANLUDiscourseCase Collection)
+(genls EANLUDiscourseCase Microtheory)
+
+(isa DiscourseCaseFn Function-Denotational)
+(arity DiscourseCaseFn 1)
+(arg1Isa DiscourseCaseFn CycLTerm)
+(resultIsa DiscourseCaseFn EANLUDiscourseCase)
+
+(isa DrsCase Collection)
+(genls DrsCase Microtheory)
+
+(isa DrsCaseFn Function-Denotational)
+(arity DrsCaseFn 1)
+(arg1Isa DrsCaseFn CycLTerm)
+(resultIsa DrsCaseFn DrsCase)
+(atomicAnalogyNat DrsCaseFn) ;; Needs to be scoped to where it is defined
+
+(isa discourseCase UnaryPredicate)
+(isa discourseCase DynamicUpdatePredicate)
+(arity discourseCase 1)
+(arg1Isa discourseCase EANLUDiscourseCase)
+(comment discourseCase "(discourseCase ?mt) binds the current discourse case (as stored on ea::*discourse*).")
+
+
+;; by analogy to Clause:
+;; (This can be the value of a variableQuantifiedFor statement)
+(isa Discourse Collection)
+(genls Discourse NormativeSpecification)
+
+;;; (This is only used inside followsInProgression statements)
+(isa DiscourseFn UnaryFunction)
+(resultIsa DiscourseFn Discourse)
+(comment DiscourseFn "(DiscourseFn ?discourse-id) denotes a discourse.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; discourse management
+
+;;; ****** Argument isa constraints missing below, need to backfill.
+
+(isa sourceTextForDiscourse BinaryPredicate)
+(arity sourceTextForDiscourse 2)
+(comment sourceTextForDiscourse
+  "(sourceTextForDiscourse ?st ?d) indicates that discourse ?d is an analysis of source text ?st.")
+
+(isa paragraphInDiscourseFn Function-Denotational)
+(arity paragraphInDiscourseFn 2)
+;;;; ******* (arg1Isa paragraphInDiscourseFn ????)
+;;;; ******* (arg2Isa paragraphInDiscourseFn ????)
+(comment paragraphInDiscourseFn
+  "(paragraphInDiscourseFn ?d ?n) denotes the ?nth paragraph of discourse ?d.")
+
+
+;;; Written to wm by code in discourse.lsp:
+(isa sentenceInDiscourse TernaryPredicate)
+(arity sentenceInDiscourse 3)
+
+;;; Written to wm by code in discourse.lsp:
+(isa sentenceInParagraph BinaryPredicate)
+(arity sentenceInParagraph 2)
+(comment sentenceInParagraph  "(sentenceInParagraph ?sid ?pid) associates a sentence id with the paragraph
+ in a discourse that sentence appears in.")
+
+;;; Written to wm by code in skim-reading.lsp
+(isa firstParagraphInDiscourse BinaryPredicate)
+(arity firstParagraphInDiscourse 2)
+(comment firstParagraphInDiscourse
+  "(firstParagraphInDiscourse ?pid ?d) indicates that paragraph ?pid is the first paragraph in discourse ?d.
+ Used as markers in reading processes, to modularize out tokenization and file reading processes.")
+
+;;; Written to wm by code in skim-reading.lsp
+(isa lastParagraphInDiscourse BinaryPredicate)
+(arity lastParagraphInDiscourse 2)
+(comment lastParagraphInDiscourse
+  "(lastParagraphInDiscourse ?pid ?d) indicates that paragraph ?pid is the first paragraph in discourse ?d.
+ Used as markers in reading processes, to modularize out tokenization and file reading processes.")
+
+;;; Written to wm by code in skim-reading.lsp
+(isa firstSentenceInParagraph BinaryPredicate)
+(arity firstSentenceInParagraph 2)
+(comment firstSentenceInParagraph
+  "(firstSentenceInParagraph ?sid ?pid) indicates that sentence ?sid is the first sentence in paragraph ?pid.
+ Used as markers in reading processes, to modularize out tokenization and file reading processes.")
+
+;;; Written to wm by code in skim-reading.lsp
+(isa lastSentenceInParagraph BinaryPredicate)
+(arity lastSentenceInParagraph 2)
+(comment lastSentenceInParagraph
+  "(lastSentenceInParagraph ?sid ?pid) indicates that sentence ?sid is the first sentence in paragraph ?pid.
+ Used as markers in reading processes, to modularize out tokenization and file reading processes.")
+
+;;; Written to wm by code in discourse.lsp:
+(isa contextIndependentDrsFor BinaryPredicate)
+(arity contextIndependentDrsFor 2)
+(comment contextIndependentDrsFor
+  "(contextIndependentDrsFor ?drs-id ?sid) indicates that ?drs-id is the root-level discourse representation structure
+for the sentence ?sid.")
+
+;;; Written to wm by code in si.lsp:
+(isa discourseCaseForDrs BinaryPredicate)
+(arity discourseCaseForDrs  2)
+(comment discourseCaseForDrs  "(discourseCaseForDrs ?dcase ?ddrs-id) associates the bookkeeping (discourse) case with drs representation structures (ddrs-id).")
+
+;;; Written to wm by code in si.lsp:
+(isa drsEntailedBySentence BinaryPredicate)
+(arity drsEntailedBySentence 2)
+(comment drsEntailedBySentence "(drsEntailedBySentence ?drs-id ?sid) associates a drs with the sentence it is entailed by.")
+
+;;; Written to wm by code in si.lsp:
+(isa drsForDiscourse UnaryPredicate)
+(arity drsForDiscourse 1)
+(comment drsForDiscourse "(drsForDiscourse ?drs-id) means ?drs-id is the id of the drs case for the overall (multi-sentence) discourse.
+N.B. For some kinds of processing, it is assumed that there is only one such overall discourse in the current
+logical environment.")
+
+;;; Written to wm by code in si.lsp:
+(isa drsForSentence BinaryPredicate)
+(arity drsForSentence 2)
+(comment drsForSentence "(drsForSentence ?drs-id ?sid) associates a drs-id with the sentence-id whose content it represents.")
+
+;;; Written to wm by code in irules.lsp:
+(isa drsForSemExpr BinaryPredicate)
+(arity drsForSemExpr 2)
+(comment drsForSemExpr "(drsForSemExpr ?drs-id ?expression) is written to wm by code in irules.lsp")
+
+;;; Written to wm by code in irules.lsp:
+(isa parseTreeIdForDrs BinaryPredicate)
+(arity parseTreeIdForDrs 2)
+(comment parseTreeIdForDrs "(parseTreeIdForDrs ?drs-id ?ptid) is written to wm by code in irules.lsp")
+
+;;; Written to wm by code in si.lsp:
+(isa headVarForDrs BinaryPredicate)
+(arity headVarForDrs 2)
+(comment headVarForDrs "(headVarForDrs ?head-var ?drs-id) is written to wm by code in si.lsp")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa abductiveNLPredicateScore Predicate)
+(arity abductiveNLPredicateScore 2)
+(comment abductiveNLPredicateScore
+  "(abductiveNLPredicateScore ?p ?n) indicates that statements using the predicate ?p should receive
+    a score of ?n when evaluating abductive explanations in natural language.  This is used by the
+    FIRE abductive reasoning mechanism.")
+(arg1Isa abductiveNLPredicateScore Predicate)
+(arg2Isa abductiveNLPredicateScore Number)
+ 
+(isa abductiveNLCollectionScore Predicate)
+(arity abductiveNLCollectionScore 2)
+(comment abductiveNLCollectionScore 
+  "(abductiveNLCollectionScore ?c ?n) indicates that isa statements/attribute statements involving
+   the collection ?c should receive a score of ?n when evaluating abductive explanations in natural
+   language.")
+(arg1Isa abductiveNLCollectionScore Collection)
+(arg2Isa abductiveNLCollectionScore Number)
+
+(isa abductiveNLUScoringProcedure Predicate)
+(arity abductiveNLUScoringProcedure 1)
+(comment abductiveNLUScoringProcedure
+  "(abductiveNLUScoringProcedure ?code) indicates that ?code is the name of a Lisp procedure, in the cl-user package, that should
+   be executed when evaluating abductive inferences during language interpretation.  This procedure is assumed to use statements
+   of abductiveNLPredicateScore and abductiveNLCollectionScore to calculate a context-specific evaluation.")
+(arg1Isa abductiveNLUScoringProcedure EvaluatableFunction)
+
+
+
+;;; Need ontologizing!
+
+;;; *** Deprecated ***
+(isa abductiveAssumption Predicate)
+(arity abductiveAssumption 1)
+(arg1Isa abductiveAssumption CycLExpression)
+(comment abductiveAssumption
+  "(abductiveAssumption ?foo) is a dynamic update predicate defined in fire/abduction.lsp.  Controlled abductive inferences are entailed by rules of the form:
+   (<== <consequent fact>
+        ...other antes...
+        (abductiveAssumption <antecedent fact>))
+ there can be more than one abductiveAssumption antecedent in such a rule")
+
+;;; Doesn't exist in v8 (cache is automatic):
+;(isa withAbductiveCache Predicate)
+;(arity withAbductiveCache 1)
+;(comment withAbductiveCache
+;  "(withAbductiveCache ?foo) is a dynamic update predicate defined in fire/abduction.lsp.  Abduction can't tell if things have already been proven from the ltms since no actual assumptions are made during the process.  This allows you to wrap certain queries for caching")
+
+(isa verbFormInParseTree Predicate)
+(arity verbFormInParseTree 5)
+(comment verbFormInParseTree
+  "(verbFormInParseTree ?verb-dv ?tense ?perfect ?progressive (ParseTreeFn ?sid ?ptid)) is a relationship that needs to be better ontologized!")
+
+(isa nn-pp Predicate)
+(arity nn-pp 1)
+(comment nn-pp
+  "(nn-pp ?foo) is a relationship that needs to be better ontologized!")
+
+(isa originDrsId Predicate)
+(arity originDrsId 2)
+(comment originDrsId
+  "(originDrsId ?foo ?bar) is a relationship that needs to be better ontologized!")
+
+;;; :DEPSYM is a processing directive in the grammar.  Semprocess uses it to create a new symbol by concatenation.
+;(isa DEPSYM Predicate)
+;(arity DEPSYM 1)
+;(comment DEPSYM
+;  "DEPSYM is a relationship that needs to be better ontologized!")
+
+
+;;; part-np is a subcategorization used in the grammar, not a predicate.
+;(isa part-np Predicate)
+;(arity part-np 1)
+;(comment part-np
+;  "(part-np ?foo) is a relationship that needs to be better ontologized!")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; presentation
+
+(isa PresentationEventFn BinaryFunction)
+(arg1Isa PresentationEventFn CycLTerm)
+(arg2Isa PresentationEventFn CycLTerm)
+(resultIsa PresentationEventFn IBTGeneration)
+(comment PresentationEventFn "(PresentationEventFn ?sentence-id ?narrative-event) denotes a high-level narrative event.")
+
+(isa narrativeFunction BinaryPredicate)
+(arity narrativeFunction 2)
+(arg1Isa narrativeFunction IBTGeneration)
+(arg2Isa narrativeFunction CycLTerm)
+(comment narrativeFunction "(narrativeFunction <PresentationEventFn NAT> <type>) associates an individual narrative function with its type.")
+
+(isa DirectiveEventFn BinaryFunction)
+(arg1Isa DirectiveEventFn CycLTerm)
+(arg2Isa DirectiveEventFn CycLTerm)
+(resultIsa DirectiveEventFn Ordering-CommunicationAct)
+(comment DirectiveEventFn "(DirectiveEventFn ?sentence-id ?directive-event) denotes a high-level command or directive.")
+
+(isa directiveFunction BinaryPredicate)
+(arity directiveFunction 2)
+(arg1Isa directiveFunction IBTGeneration)
+(arg2Isa directiveFunction CycLTerm)
+(comment directiveFunction "(directiveFunction <DirectiveEventFn NAT> <type>) associates an individual directive function with its type.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; support for narrativeFunction interpretation
+
+(isa requiredRole Predicate)
+(arity requiredRole 5)
+(arg1Isa requiredRole CycLTerm)
+(arg2Isa requiredRole CycLTerm)
+(arg3Isa requiredRole CycLTerm)
+(arg4Isa requiredRole BinaryPredicate)
+(arg5Isa requiredRole CycLTerm)
+(comment requiredRole "(requiredRole ?sid ?drs-id ?event-dv ?parent-role-pred ?role-dv) means some role relation that is a specpred of ?parent-role-pred must be bound in some drs compatible with ?drs-id.")
+
+;;; Still thinking about how to do optionalRole and forbiddenRole.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; parsing
+
+(isa ParseTree Collection)
+
+(isa ParseTreeFn BinaryFunction)
+(arity ParseTreeFn 2)
+(arg1Isa ParseTreeFn CycLTerm)  
+(arg2Isa ParseTreeFn CycLTerm)
+(comment ParseTreeFn "(ParseTreeFn ?sid ?ptid) denotes the parse tree ?ptid of sentence id ?sid.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; functions
+
+
+(isa ReferencePointFn UnaryFunction)
+(arity ReferencePointFn 1)
+(resultIsa ReferencePointFn Thing)
+(comment ReferencePointFn "(ReferencePointFn ?sid) ")  ;; What does this denote?
+
+(isa TokenFn BinaryFunction)
+(arity TokenFn 2)
+(comment TokenFn "(TokenFn ?sentence-id ?span) denotes the tokens in the ?span in the specified sentence.")
+
+(isa SpanFn BinaryFunction)
+(arity SpanFn 2)
+(arg1Isa SpanFn Integer)
+(arg2Isa SpanFn Integer)
+(resultIsa SpanFn ParseTreeSpan)
+(comment SpanFn "(SpanFn ?s ?e) denotes the span of some element in a parse tree.")
+
+(isa ParseTreeSpan Collection)
+(comment ParseTreeSpan "A ParseTreeSpan is a span of some element in a parse tree. It is 
+represented with (SpanFn ?s ?e).")
+
+(isa SentenceSpanFn BinaryFunction)
+(arity SentenceSpanFn 2)
+(comment SentenceSpanFn "(SentenceSpanFn ?sentence-id ?span-NAT) denotes a particular span in a particular sentence.")
+
+(isa DemonstrativeFn UnaryFunction)
+(arity DemonstrativeFn 1)
+(comment DemonstrativeFn "(DemonstrativeFn ?token) is introduced in grammar rules to indicate that ?token is a demonstrative.")
+
+(isa ChoiceSetFn TernaryFunction)
+(arity ChoiceSetFn  3)
+(comment ChoiceSetFn  "(ChoiceSetFn  ?type ?var ?type-NAT) denotes a particular choice set.")
+
+(isa PronounMappingFn BinaryFunction)
+(arity PronounMappingFn 2)
+(comment PronounMappingFn "(PronounMappingFn ?entity ?pronoun) defines a mapping from an entity to a pronoun.")
+
+(isa RelativeQualityInGroupFn BinaryFunction)
+(arity RelativeQualityInGroupFn 2)
+(resultIsa RelativeQualityInGroupFn ScalarInterval)  ; apparently
+(comment RelativeQualityInGroupFn "(RelativeQualityInGroupFn ?noun ?expr) is used in obscure adjectiveSemTranses.")
+
+(isa ReferenceFn UnaryFunction)
+(arity ReferenceFn 1)
+;; (resultIsa ReferenceFn ???)
+(comment ReferenceFn "(ReferenceFn ?nl-attribute) is added by reference resolution.  Typically serves as the type-NAT in a ChoiceSet expression.")
+
+(isa ReferenceInSentenceFn BinaryFunction)
+(arity ReferenceInSentenceFn 2)
+(comment ReferenceInSentenceFn "(ReferenceInSentenceFn ?discourse-var ?sentence-id) denotes a particular reference.")
+
+(isa ReferentInDrsFn BinaryFunction)
+(arity ReferentInDrsFn 2)
+(comment ReferentInDrsFn "(ReferentInDrsFn ?role ?ddrs-id) denotes a pariticular role in a drs.")
+
+(isa ReferentInPerceptualSourceFn BinaryFunction)
+(arity ReferentInPerceptualSourceFn 2)
+(arg1Isa ReferentInPerceptualSourceFn Thing)
+(arg2Isa ReferentInPerceptualSourceFn AbstractInformationalThing)
+(resultIsa ReferentInPerceptualSourceFn Thing)
+(comment ReferentInPerceptualSourceFn "(ReferentInPerceptualSourceFn ?referent ?perceptual-source) denotes a pariticular item in a perceptual source.")
+
+
+(isa WhQuestionFn UnaryFunction)
+(arity WhQuestionFn 1)
+(comment WhQuestionFn "(WhQuestionFn ?question-focus) denotes the type of question being asked, e.g. where or who.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; predicates
+
+(isa coreferent BinaryPredicate)
+(arity coreferent 2)
+
+(isa parseAttempt BinaryPredicate)
+(arity parseAttempt 2)
+
+(isa ptEntry BinaryPredicate)
+(comment ptEntry "(ptEntry ?constit ?parse-tree) denotes an entry in a parse tree.")
+
+(isa ptConstitFeat TernaryPredicate)
+(comment ptConstitFeat "(ptConstitFeat ?entry-name ?feature ?value) ")
+
+(isa ptConstitLexCat BinaryPredicate)
+(comment ptConstitLexCat "(ptConstitLexCat ?entry-name ?lexical-category) ")
+
+(isa ptEntryChild TernaryPredicate)
+(comment ptEntryChild "(ptEntryChild ?parent ?child ?position) ")
+
+(isa ptEntryRuleId BinaryPredicate)
+(comment ptEntryRuleId "(ptEntryRuleId ?entry ?rule-id) ")
+
+(isa ptEntrySpan BinaryPredicate)
+(comment ptEntrySpan "(ptEntrySpan ?entry ?span-NAT) ")
+
+(isa ptRoot BinaryPredicate)
+(comment ptRoot "(ptRoot ?parse-tree-NAT ?entry) denotes the root constituent of the specified parse tree.")
+
+(isa sentenceTypeFeat BinaryPredicate)
+(arity sentenceTypeFeat 2)
+(arg1Isa sentenceTypeFeat ParseTree)
+(arg2Isa sentenceTypeFeat AnimalUtterance-IBT)
+
+(isa indexedProperName TernaryPredicate)
+(arity indexedProperName 3)
+(arg1Isa indexedProperName List)
+(arg2Isa indexedProperName Thing)
+(arg3Isa indexedProperName Individual)
+(comment indexedProperName
+ "(indexedProperName (TheList . <prefix>) <last> <Constant>) indicates that the string
+    <prefix + last> is a proper name for the internal entity <Constant>.")
+    
+(isa sentenceText BinaryPredicate)
+(arg2Isa sentenceText CharacterString)
+(comment sentenceText "(sentenceText ?sid ?sentence-string) associates a sentence-id with the input string.")
+
+(isa sentenceTokens BinaryPredicate)
+(arity sentenceTokens 2)
+(arg1Isa sentenceTokens CycLTerm)
+(arg2Isa sentenceTokens List-Extensional)
+(comment sentenceTokens
+  "(sentence-tokens ?sid ?token-list) associates a sentence-id with a list
+ of lower-case symbolic tokens representing the lexical words of the input sentence.")
+
+(isa subjectOfSentence BinaryPredicate)
+(comment subjectOfSentence
+  "(subjectOfSentence ?constit-id ?parse-tree) associates the parse-tree entry
+ representing the subject of the sentence with the corresponding parse-tree.")
+
+(isa variableInUniverse TernaryPredicate)
+(arity variableInUniverse 3)
+(arg1Isa variableInUniverse CycLTerm)
+(arg2Isa variableInUniverse CycLTerm)
+(arg3Isa variableInUniverse NormativeSpecification)
+(comment variableInUniverse 
+  "(variableInUniverse ?dv ?drs-id ?scope) means ?dv is a discourse variable
+  in the drs case specified by ?drs-id. NB. if a variable is anaphora to a previous variable, the new variable
+  will not return true for variableInUniverse.")
+
+(isa NLExpressionFn UnaryFunction)
+(isa NLExpressionFn UnreifiableFunction)
+(resultIsa NLExpressionFn Thing)
+(arity NLExpressionFn 1)
+(arg1Isa NLExpressionFn Thing)
+(comment NLExpressionFn "(NLExpressionFn ?thing) denotes the linguistic expression of ?thing.
+  This is used primarily for interjections that are not necessarily responses, 
+ and avoids the argIsa requirement for an NLAttribute.")
+
+(isa choiceSetFromSentenceAll BinaryPredicate)
+(comment choiceSetFromSentenceAll "(choiceSetFromSentenceAll ?csid ?sid) needs to be documented.")
+
+(isa choiceSetFromSentence BinaryPredicate)
+(comment choiceSetFromSentence "(choiceSetFromSentence ?csid ?sid)  needs to be documented.")
+
+(isa selectedChoice TernaryPredicate)
+(arity selectedChoice 3)
+(arg1Isa selectedChoice Thing)
+(arg2Isa selectedChoice Thing)
+(arg3Isa selectedChoice Thing)
+(comment selectedChoice "(selectedChoice ?choiceset-id ?choice-id ?choice) indicates that in the
+choice set ?choiceset-id, ?choice-id was selected. ?choice is the actual choice, like 
+(isa cat2187 DomesticCat) or ParseTree-3595783976-2213.")
+
+(isa potentialChoice TernaryPredicate)
+(arity potentialChoice 3)
+(arg1Isa potentialChoice Thing)
+(arg2Isa potentialChoice Thing)
+(arg3Isa potentialChoice Thing)
+(comment potentialChoice "(potentialChoice ?choiceset-id ?choice-id ?choice) indicates that in the
+choice set ?choiceset-id, ?choice-id hasn't been ruled out, but also hasn't been selected. It's the
+default status of a choice set. ?choice is the actual choice, like (isa cat2187 DomesticCat)
+or ParseTree-3595783976-2213.")
+
+(isa ruledOutChoice TernaryPredicate)
+(arity ruledOutChoice 3)
+(arg1Isa ruledOutChoice Thing)
+(arg2Isa ruledOutChoice Thing)
+(arg3Isa ruledOutChoice Thing)
+(comment ruledOutChoice "(ruledOutChoice ?choiceset-id ?choice-id ?choice) indicates that in the
+choice set ?choiceset-id, ?choice-id has been ruled out. ?choice is the actual choice, 
+like (isa cat2187 DomesticCat )or ParseTree-3595783976-2213. The reasons for ruling it out 
+should be justifications for this fact, so we can stop believing it if things change.")
+
+(isa openOrLookupSelectedChoice TernaryPredicate)
+(arity openOrLookupSelectedChoice 3)
+(arg1Isa openOrLookupSelectedChoice Thing)
+(arg2Isa openOrLookupSelectedChoice Thing)
+(arg3Isa openOrLookupSelectedChoice Thing)
+(comment openOrLookupSelectedChoice "(openOrLookupSelectedChoice ?choiceset-id ?choice-id ?choice) indicates that in the
+choice set ?choiceset-id, either ?choice-id was selected or nothing is selected. ?choice is the actual choice, like 
+(isa cat2187 DomesticCat) or ParseTree-3595783976-2213. It only looks up whether selectedChoice is already selected, it
+should not try to abduce it.")
+
+(isa enablesChoice BinaryPredicate)
+(arg1Isa enablesChoice ELSentence-Assertible)
+(arg2Isa enablesChoice ELSentence-Assertible)
+(comment enablesChoice "(enablesChoice ?selection-stmt ?choice-stmt) means the selection
+ indicated by ?selection-stmt being true enables the choice indicated by ?choice-stmt.")
+
+(isa choice TernaryPredicate)
+(arity choice 3)
+(comment choice "(choice ?csid ?choice-id ?choice) relates an expression ?choice with a choice id and with respect to a particular choice-set id ?cs-id.")
+
+;;; These are silly.  Nothing ever asserts (isa ?id EAChoiceID).  They're just unique tokens.
+(isa EAChoice Collection)
+(comment EAChoice "A choice in a choice set, like (isa cat1452 DomesticCat). For choice ids, like Choice-3602131090-8107, see EAChoiceID.")
+
+(isa EAChoiceID Collection)
+(comment EAChoiceID "A choice id, like Choice-3602131090-8107. For choices themselves, like (isa cat1452 DomesticCat), see EAChoice.")
+
+(isa EASentenceID Collection)
+(comment EASentenceID "A sentence id in EA, like Sentence-3602131085-7785. This isn't the actual tokens in the sentence, just its
+identifier.")
+
+(isa missingLexItem BinaryPredicate)
+(arity missingLexItem 2)
+(comment missingLexItem "(missingLexItem ?sid ?lex) means ?lex is an unknown lexical item in sentence id ?sid.")
+
+(isa missingSemTrans TernaryPredicate)
+(arity missingSemTrans 3)
+(comment missingSemTrans
+  "(missingSemTrans ?dvar ?pos ?lexitem) means discourse-var ?dvar
+ has no semtrans for part of speech ?pos and ?lexitem.")
+
+(isa implies-DrsDrs BinaryPredicate)
+(arity implies-DrsDrs 2)
+(comment implies-DrsDrs "(implies-DrsDrs ?drs-case1 ?drs-case2) means that the contents of the discourse representation structure ?drs-case1 (a microtheory) implies the contentents of ?drs-case2")
+
+(isa prepAttachment BinaryPredicate)
+(arity prepAttachment 2)
+(comment prepAttachment "(prepAttachment ?prep-dv ?dv-2) is a reified statement that means that the preposition denoted by the discourse variable ?prep-dv attaches to the discourse variable ?dv-2.")
+
+(isa discourseVarResolvesTo TernaryPredicate)
+(arity discourseVarResolvesTo 3)
+(comment discourseVarResolvesTo "(discourseVarResolvesTo var sid referent) invokes (code-based) reference resolution to find referents for var (if supplied) or all vars in sentence-id sid.")
+
+(isa varGenls BinaryPredicate)
+(arity varGenls 2)
+(arg1Isa varGenls CycLTerm)
+(arg2Isa varGenls CycLTerm)
+(comment varGenls "(varGenls ?dv1 ?dv2) means that discourseVariable ?dv1 denotes a collection that genls from discourseVariable ?dv2.")
+
+;;; rule-defined predicates:
+
+(isa drsPriorInDiscourse BinaryPredicate)
+(arity drsPriorInDiscourse 2)
+(comment drsPriorInDiscourse "(drsPriorInDiscourse ?drs-id ?sid) ")
+
+(isa priorDrsInDiscourse BinaryPredicate)
+(arity priorDrsInDiscourse 2)
+(comment priorDrsInDiscourse "(priorDrsInDiscourse ?drs-id ?sid) ")
+
+(isa sameSentence BinaryPredicate)
+(arity sameSentence 2)
+(comment sameSentence "(sameSentence ?drs-id1 ?drs-id2) ")
+
+(isa priorSentenceInDiscourse BinaryPredicate)
+(comment priorSentenceInDiscourse "(priorSentenceInDiscourse ?sid ?prior-sid) ")
+
+(isa sentencePriorInDiscourse BinaryPredicate)
+(comment sentencePriorInDiscourse "(sentencePriorInDiscourse ?sid ?prior-sid) ")
+
+(isa priorInHeadVar BinaryPredicate)
+(comment priorInHeadVar "(priorInHeadVar ?conj ?prior) ")
+
+(isa laterInHeadVar BinaryPredicate)
+(comment laterInHeadVar "(laterInHeadVar ?cconj ?later) ")
+
+(isa elementInHeadVar BinaryPredicate)
+(comment elementInHeadVar "(elementInHeadVar ?hv ?elt) ")
+
+(isa topicOfDrs BinaryPredicate)
+(comment topicOfDrs "(topicOfDrs ?event ?drs-id) ")
+
+(isa pointOfActionInDrs BinaryPredicate)
+(comment pointOfActionInDrs "(pointOfActionInDrs ?event ?drs-id) ")
+
+(isa variableQuantifiedFor TernaryPredicate)
+(comment variableQuantifiedFor "(variableQuantifiedFor ?var ?drs-id ?scope) ")
+
+(isa drsEmbeddedInDrs BinaryPredicate)
+(comment drsEmbeddedInDrs "(drsEmbeddedInDrs ?sub ?super) ")
+
+(isa drsEmbeddedInOrEqualToDrs BinaryPredicate)
+(comment drsEmbeddedInOrEqualToDrs "(drsEmbeddedInOrEqualToDrs ?sub ?super) ")
+
+(isa nonModalEmbedding BinaryPredicate)
+(comment nonModalEmbedding "(nonModalEmbedding ?grp-drs-id ?member-drs-id) ")
+
+(isa causalEmbedding TernaryPredicate)
+(comment causalEmbedding "(causalEmbedding ?drs-id ?thing ?emb-drs-id) ")
+
+(isa modalEmbedding BinaryPredicate)
+(comment modalEmbedding "(modalEmbedding ?drs-id ?emb-drs-id) ")
+
+(isa isaInDrs TernaryPredicate)
+(comment isaInDrs "(isaInDrs ?dv ?drs ?col) means ?dv is an instance of ?col in ?drs.")
+
+(isa trueInDrs BinaryPredicate)
+(arity trueInDrs 2)
+(arg1Isa trueInDrs DrsCase)
+(arg2Isa trueInDrs ELSentence-Assertible)
+(comment trueInDrs "(trueInDrs ?drs-case ?sent) means ?sent holds in the ?drs-case microtheory.")
+
+(isa lookupTrueInDrs BinaryPredicate)
+(comment lookupTrueInDrs
+  "(lookupTrueInDrs ?drs ?fact) means that ?fact is explicitly known in ?drs.")
+
+(isa properNameReference UnaryPredicate)
+(comment properNameReference "(properNameReference ?pname) ")
+
+(isa properNameReferenceInParseTree BinaryPredicate)
+(comment properNameReferenceInParseTree "(properNameReferenceInParseTree ?pname ?parse-tree) ")
+
+(isa cconj Predicate)
+(arity cconj 2)
+(comment cconj "EA coordinating conjunction predicate?")
+
+(isa compoundNoun Predicate)
+(arity compoundNoun 2)
+(comment compoundNoun "Role relation for two terms in a compound noun.")
+
+(isa validParseTree UnaryPredicate)
+(arity validParseTree 1)
+(comment validParseTree "(validParseTree ?ptid) means the specified parse tree is not ruled out.  It either is selected or could be abductively selected.")
+
+(isa verbAside BinaryPredicate)
+(comment verbAside "(verbAside ?verb ?head) ")
+
+(isa verbForm QuaternaryPredicate)
+(comment verbForm "(verbForm ?prior ?tense ?perfect ?progressive) ")
+
+(isa choiceSetFromSentenceAll BinaryPredicate)
+(comment choiceSetFromSentenceAll "(choiceSetFromSentenceAll ?csid ?sid) succeeds if ?csid is a choice set in sentence ?sid or one of its sub-sentences.")
+
+(isa parentSentenceId BinaryPredicate)
+(comment parentSentenceId "(parentSentenceId ?parent-sid ?sid) ")
+
+(isa leadsTo BinaryPredicate)
+(comment leadsTo "(leadsTo ?prior ?later) ")
+
+(isa placedAfter BinaryPredicate)
+(comment placedAfter "(placedAfter ?reference-point ?prior)")
+
+(isa placedDuring BinaryPredicate)
+(comment placedDuring "(placedDuring ?reference-point ?activity) ")
+
+(isa genlsOrUnifies BinaryPredicate)
+(comment genlsOrUnifies "(genlsOrUnifies ?dv-col ?col)")
+
+(isa resolveToGlobalForm Predicate)
+(arity resolveToGlobalForm 4)
+(comment resolveToGlobalForm "(resolveToGlobalForm ?ddrs-id ?global-form ?sid ?local-form) ")
+
+(isa resolveToLocalForm Predicate)
+(arity resolveToLocalForm 4)
+(comment resolveToLocalForm "(resolveToLocalForm ?ddrs-id ?global-form ?sid ?local-form) ")
+
+(isa trueViaSpecPred Predicate)
+(arity trueViaSpecPred 4)
+(comment trueViaSpecPred "(trueViaSpecPred ?context ?pred ?arg1 ?arg2)")
+
+(isa isaInOrLiftToDrs QuaternaryPredicate)
+(comment isaInOrLiftToDrs "(isaInOrLiftToDrs ?sid ?var ?drs-id ?col) ")
+
+(isa isaOrGroupOfInDrs QuaternaryPredicate)
+(comment isaOrGroupOfInDrs "(isaOrGroupOfInDrs ?sid ?var ?drs-id ?col) ")
+
+(isa trueInOrLiftToDrs BinaryPredicate)
+(comment trueInOrLiftToDrs "(trueInOrLiftToDrs ?drs-id ?fact) ")
+
+(isa sourceDrsForDrs TernaryPredicate)
+(comment sourceDrsForDrs "(sourceDrsForDrs ?sdrs-id ?ddrs-id ?emb-expr) ")
+
+(isa spanAfterInSentence BinaryPredicate)
+(comment spanAfterInSentence "(spanAfterInSentence ?dv1 ?dv2) ")
+
+(isa dvSpan BinaryPredicate)
+(comment dvSpan "(dvSpan ?dv ?span) ")
+
+(isa dvSpanInParseTree TernaryPredicate)
+(comment dvSpanInParseTree "(dvSpanInParseTree ?elt ?span ?parse-tree) ")
+
+(isa sentenceAdjunct BinaryPredicate)
+(comment sentenceAdjunct "(sentenceAdjunct ?sid ?adjunct) ")
+
+(isa atLeastAmount BinaryPredicate)
+(comment atLeastAmount "(atLeastAmount ?x ?x) ")
+
+(isa elementOfConjunction BinaryPredicate)
+(comment elementOfConjunction "(elementOfConjunction ?elt ?elt) ")
+
+(isa nameForConcept BinaryPredicate)
+(arity nameForConcept  2)
+(arg1Isa nameForConcept Collection)
+(arg2Isa nameForConcept CycLTerm)
+(comment nameForConcept "(nameForConcept ?concept ?term) means that ?term
+ is a token or token list that refers to ?concept.")
+
+(isa qualitativeExtent BinaryPredicate)  ; hardwired in the grammar
+(arity qualitativeExtent 2)
+(arg1Isa qualitativeExtent Set-Mathematical)
+(arg2Isa qualitativeExtent ScalarInterval)
+(comment qualitativeExtent 
+  "(qualitativeExtent ?set ?extent) represents the qualitative magnitude
+ of the extent of the set, e.g., Many-Quant, AFew-Quant.")
+ 
+(isa eventInDrs TernaryPredicate)
+(arity eventInDrs 3)
+(arg1Isa eventInDrs CycLTerm)
+(arg2Isa eventInDrs Event)
+(arg3Isa eventInDrs Collection)
+(comment eventInDrs "(eventInDrs ?drs-id ?event ?event-type)")
+
+
+(isa relationHoldsInDrs BinaryPredicate)
+(arg1Isa relationHoldsInDrs CycLTerm)
+(arg2Isa relationHoldsInDrs CycLSentence-Assertible)
+(comment relationHoldsInDrs "(relationHoldsInDrs ?drs-id ?proposition)")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; grammar-level keywords
+
+(subcatFrameKeywords QRGCEGrammar :RELATION)
+(subcatFrameKeywords QRGCEGrammar :CONSTITUENT1)
+(subcatFrameKeywords QRGCEGrammar :CONSTITUENT2)
+(subcatFrameKeywords QRGCEGrammar :MEASURE)
+(subcatFrameKeywords QRGCEGrammar :LOCATION)
+(subcatFrameKeywords QRGCEGrammar :DATE)
+(subcatFrameKeywords QRGCEGrammar :THING)
+(subcatFrameKeywords QRGCEGrammar :GENERIC-VALUE-FN)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; generalizes
+
+;;; genls statements are global in the reasoner, generalizes is placed
+;;;  into specific cases to indicate that it is communicated in the text
+
+(isa generalizes BinaryPredicate)
+(arity generalizes 2)
+(arg1Isa generalizes Collection)
+(arg2Isa generalizes Collection)
+(comment generalizes "(generalizes ?col1 ?col2) ")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; interpretation predicates
+
+(isa InterpretationMtFn Function-Denotational)
+(arity InterpretationMtFn 1)
+(arg1Isa InterpretationMtFn CycLTerm)  ; could be a domain, could be a collection or goal, basically any concept
+(resultIsa InterpretationMtFn Microtheory)
+(comment InterpretationMtFn "(InterpretationMtFn ?domain) is one way to denote a microtheory to hold queryForInterpretation queries.  It impicitly associates an interpretation microtheory with a domain.")
+
+
+;;; ***** What should the specpreds for these be?
+;;; ***** Tempting to make them not for analogy, but not clear yet.
+
+(isa queryInModel UnaryPredicate)
+(arity queryInModel 1)
+(arg1Isa queryInModel Microtheory)
+(comment queryInModel
+  "(queryInModel ?mt) indicates that ?mt should be part of the logical environment for
+ semantic interpretation.")
+
+(isa exhaustiveQueriesForInterpretation UnaryPredicate)
+(arity exhaustiveQueriesForInterpretation 1)
+(arg1Isa exhaustiveQueriesForInterpretation Microtheory)
+(comment exhaustiveQueriesForInterpretation
+  "(exhaustiveQueriesForInterpretation ?mt) indicates that queries for questions during semantic
+ interpretation should be done to exhaustion.")
+ 
+ (isa structurallyExhaustiveQueries UnaryPredicate)
+ (arity structurallyExhaustiveQueries 1)
+ (arg1Isa structurallyExhaustiveQueries Microtheory)
+ (comment structurallyExhaustiveQueries
+   "(structurallyExhaustiveQueries ?mt) indicates that queries for questions during semantic
+ interpretation should be repeated whenever a new sub-drs is created.")
+
+(isa queryForInterpretation BinaryPredicate)
+(arity queryForInterpretation 2)
+(arg1Isa queryForInterpretation Integer)
+(arg2Isa queryForInterpretation CycLFormula)
+(comment queryForInterpretation
+  "(queryForInterpretation ?order ?query) indicates that ?query should be performed when
+ doing semantic interpretation, with order ?order.  The order integer is to ensure that
+ dependent information is computed correctly, with low order queries being computed before
+ high order queries.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; denotation predicates
+
+(isa sameObject BinaryRelation)
+(arity sameObject 2)
+(arg1Isa sameObject Thing)
+(arg2Isa sameObject Thing)
+
+(isa differentObjects BinaryRelation)
+(isa differentObjects SymmetricBinaryPredicate)
+(genlPreds differentObjects different)
+(arity differentObjects 2)
+(arg1Isa differentObjects Thing)
+(arg2Isa differentObjects Thing)
+(comment differentObjects "inverse of #$sameObject. (differentObjects ?thing1 ?thing2) says that ?thing1 and ?thing2 have
+been determined to be different items")
+
+(isa denotes-Underspecified Predicate)
+(arity denotes-Underspecified 2)
+(comment denotes-Underspecified "(denotes-Underspecified ?term ?concept) indicates that ?term denotes the concept ?concept.")
+
+(isa denotesRelation-Underspecified Predicate)
+(arity denotesRelation-Underspecified 2)
+(comment denotesRelation-Underspecified
+  "(denotesRelation-Underspecified ?term ?relation) indicates that
+ ?term denotes the relation ?relation")
+
+(isa denotesFunction-Underspecified Predicate)
+(arity denotesFunction-Underspecified 2)
+(comment denotesFunction-Underspecified 
+  "(denotesFunction-Underspecified ?term ?function) indicates that
+ ?term denotes the function ?function")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; deictic reference preds - MDM
+
+(isa potentialDeicticReferentInSource BinaryRelation)
+(arity potentialDeicticReferentInSource 2)
+(arg1Isa potentialDeicticReferentInSource Thing)
+(arg2Isa potentialDeicticReferentInSource AbstractInformationalThing)
+
+;;;;;;;;;
+(isa SyntacticGapFn FunctionOrFunctionalPredicate)
+(isa SyntacticGapFn UnaryFunction)
+(arity SyntacticGapFn 1)
+(comment SyntacticGapFn "Used to indicate a syntactic gap.")
+
+(isa GapFn FunctionOrFunctionalPredicate)
+(isa GapFn UnaryFunction)
+(isa GapFn Function-Denotational)
+(arity GapFn 1)
+(comment GapFn "Used to indicate a syntactic gap.")
+
+(isa comparer Predicate)
+(arity comparer 2)
+
+(isa comparee Predicate)
+(arity comparee 2)
+
+;;;(isa parser::implies Predicate)
+;;;(arity parser::implies 2)
+;;;(comment parser::implies "Testing.")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+

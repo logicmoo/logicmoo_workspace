@@ -1,0 +1,195 @@
+;;;
+;;; static-analysis.meld
+;;;
+
+;;; Start with the trivial static analysis to reify the planning graph
+;;; in order to support reachability heuristics for progression search
+;;; in the state space for enablement conditions.
+
+(in-microtheory PerceptualAgentMt)
+
+(isa performStaticAnalysis ComplexActionPredicate)
+(arity performStaticAnalysis 1)
+(arg1Isa performStaticAnalysis CompanionsDomain)
+(comment performStaticAnalysis "(performStaticAnalysis ?domain) analyzes the domain using the domain action preconditions and effects, and reifies the results.")
+
+;;; Currently invoked from initialize-fap routine in freecivai:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (performStaticAnalysis ?domain)
+    (actionSequence
+      (TheList
+        (reifyFunctionalRoles ?domain)   ; do this first so we can use the role info in the planning graph
+        (doAgentPlan
+          (reifyDomainPlanningGraph ?domain))))))
+
+(isa reifyDomainPlanningGraph ComplexActionPredicate)
+(arity reifyDomainPlanningGraph 1)
+(arg1Isa reifyDomainPlanningGraph CompanionsDomain)
+(comment reifyDomainPlanningGraph "(reifyDomainPlanningGraph ?domain) analyzes the domain using the domain action preconditions and effects, and reifies the results.")
+
+
+(preconditionForMethod
+  (and (unifies ?context (ActionModelMtFn ?domain))
+       (uninferredSentence
+         (lookupOnly
+           (kbOnly
+             (ist-Information ?context
+               (enablementRelation ?p1 ?prop ?p2)))))
+       (evaluate ?planning-graph
+         (TheClosedRetrievalSetOf ?stmt
+           (and (outsourcedOnly
+                  (enablementRelation ?pred1 ?prop ?pred2))  ; an outsourced predicate in agents-source.lsp
+                (unifies ?stmt
+                  (ist-Information ?context
+                    (enablementRelation ?pred1 ?prop ?pred2)))))))
+  (methodForAction
+    (reifyDomainPlanningGraph ?domain) ; we're going to ignore the execution context ?mt and use the learned action model.
+    (actionSequence
+      (TheList
+       (doAnnounce "~%Reifying planning-graph in ~a" (?context))
+       (doRecordMembers ?planning-graph)))))  ; reify the planning graph up-front.
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (reifyDomainPlanningGraph ?domain)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (reifyDomainPlanningGraph ?domain) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa reifyFunctionalRoles ComplexActionPredicate)
+(arity reifyFunctionalRoles 1)
+(arg1Isa reifyFunctionalRoles CompanionsDomain)
+(comment reifyFunctionalRoles "(reifyFunctionalRoles ?domain) analyzes the domain w.r.t. type-level capabilities and reifies functional roles on that basis.")
+
+
+(preconditionForMethod
+  (and (unifies ?context (StrategyModelMtFn ?domain))
+       (uninferredSentence
+         (lookupOnly
+           (kbOnly
+             (ist-Information ?context
+               (capabilityRole ?r)))))
+       (domainActorType ?domain ?parent-type)
+       (evaluate ?groups
+         (TheClosedRetrievalSetOf (?subtypes ?capabilities)
+           (capabilityGroup ?parent-type ?subtypes ?capabilities)))  ; outsourced
+       (evaluate ?type-groups
+         (TheClosedRetrievalSetOf (?subtypes ?capabilities)
+           (typePartitionedGroups ?subtypes ?capabilities)))
+       ;; These can't be variablized, but we also don't want to fail if 
+       ;; there aren't any:
+       ;(evaluate ?stmts-to-forget
+       ;  (TheClosedRetrievalSetOf ?stmt-to-forget
+       ;    (and (persistentCounterValue CapabilityRole ?count)
+       ;         (unifies ?stmt-to-forget 
+       ;           (ist-Information BaseKB
+       ;             (persistentCounter CapabilityRole ?count))))))
+       )
+  (methodForAction
+    (reifyFunctionalRoles ?domain)
+    (actionSequence
+      (TheList
+        ;(doForgetMembers ?stmts-to-forget)  ; reset counter
+        (doForEach (?subtypes ?capabilities) ?groups (reifyFunctionalRole ?context ?subtypes ?capabilities))
+        (doForEach (?subtypes ?capabilities) ?type-groups (reifyFunctionalRole ?context ?subtypes ?capabilities))
+        ))))
+        
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (reifyFunctionalRoles ?domain)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (reifyFunctionalRoles ?domain) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa reifyFunctionalRole ComplexActionPredicate)
+(arity reifyFunctionalRole 3)
+(arg1Isa reifyFunctionalRole Microtheory)
+(arg2Isa reifyFunctionalRole Set-Mathematical)
+(arg3Isa reifyFunctionalRole Set-Mathematical)
+(comment reifyFunctionalRole "(reifyFunctionalRole ?context ?subtypes ?capabilities) reifies an individual capability role.")
+
+(preconditionForMethod
+  ;(newPersistableSymbol CapabilityRole ?role)   ; don't use this.  It should go away.
+  (and (outsourcedOnly
+         (nextPersistentCounterValue CapabilityRole ?r))
+       (evaluate ?role
+         (SymbolConcatenateFn (TheList CapabilityRole ?r))))
+  (methodForAction
+    (reifyFunctionalRole ?context ?subtypes ?capabilities)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?context (isa ?role CapabilityRole)))
+        (doRecord (ist-Information ?context (capabilityRole ?role)))
+        (doForEach ?subtype ?subtypes (doRecord (ist-Information ?context (roleMemberType ?subtype ?role))))
+        (doForEach ?capability ?capabilities (doRecord (ist-Information ?context (roleEntailsCapability ?role ?capability))))))))
+
+(isa uniqueActionCapabilities BinaryPredicate)
+(arity uniqueActionCapabilities 2)
+(arg1Isa uniqueActionCapabilities Set-Mathematical)
+(arg2Isa uniqueActionCapabilities Set-Mathematical)
+(comment uniqueActionCapabilities "(uniqueActionCapabilities ?subtypes ?capabilities) means actor types ?subtypes are uniquely capable of performing primitive actions in the set ?capabilities.")
+
+(<== (uniqueActionCapabilities ?subtypes ?capabilities)
+     (evaluate ?actor-types
+       (TheClosedRetrievalSetOf ?actor-type
+         (and (actionPrimitive ?pred)
+              (arg1Isa ?pred ?actor-type))))
+     (lookupOnly (elementOf ?subtype ?actor-types))
+     (uninferredSentence
+       (someSatisfies ?child ?actor-types (properSpecOf ?child ?subtype)))
+     (someSatisfies ?parent ?actor-types (properSpecOf ?subtype ?parent))
+     (evaluate ?capabilities
+       (TheClosedRetrievalSetOf ?pred
+          (and (actionPrimitive ?pred)
+               (arg1Isa ?pred ?subtype))))
+     (evaluate ?subtypes
+       (TheClosedRetrievalSetOf ?spec
+         (genls ?spec ?subtype))))  ; blow out the subtypes, even if only reflexively
+
+(isa properSpecOf BinaryPredicate)
+(arity properSpecOf 2)
+(arg1Isa properSpecOf Collection)
+(arg2Isa properSpecOf Collection)
+(comment properSpecOf "(properSpecOf ?col1 ?col2) is the irreflexive version of genls.")
+
+(<== (properSpecOf ?child ?parent) ; assume both bound
+     (genls ?child ?parent)
+     (different ?child ?parent))
+
+(isa typePartitionedGroups BinaryPredicate)
+(arity typePartitionedGroups 2)
+(arg1Isa typePartitionedGroups Set-Mathematical)
+(arg2Isa typePartitionedGroups Set-Mathematical)
+(comment typePartitionedGroups "(typePartitionedGroups ?subtypes ?capabilities) means actor types ?subtypes are a faceted partition of a parent collection.")
+
+(<== (typePartitionedGroups ?subtypes ?capabilities)
+     (evaluate ?actor-types
+       (TheClosedRetrievalSetOf ?actor-type
+         (and (actionPrimitive ?pred)
+              (arg1Isa ?pred ?actor-type)
+              (partitionedInto ?actor-type ?subtypes))))
+     (lookupOnly (elementOf ?actor-type ?actor-types))      ; e.g., FreeCiv-Unit
+     (partitionedInto ?actor-type ?intermediate-types)
+     (evaluate ?partition-list (FormulaArgListFn ?intermediate-types))
+     (memberOfList ?intermediate-type ?partition-list)    ; e.g., FreeCiv-SeaUnit
+     (evaluate ?subtypes
+       (TheClosedRetrievalSetOf ?spec
+         (properSpecOf ?spec ?intermediate-type)))
+     (evaluate ?capabilities
+       (TheClosedRetrievalSetOf ?pred
+          (and (actionPrimitive ?pred)
+               (arg1Isa ?pred ?type)
+               (lookupOnly (elementOf ?type (TheSet ?actor-type ?intermediate-type)))
+               (everySatisfies ?subtype ?subtypes (performableByType ?pred ?subtype)) ; check for typeCapable restrictions
+               ))))
+
+;;; performableByType is now outsourced.
+     

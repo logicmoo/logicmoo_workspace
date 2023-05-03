@@ -1,0 +1,42 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: Handmade-Semtranses.meld
+;;;;    System: 
+;;;;    Author: YOUR NAME HERE
+;;;;   Created: November 2, 2017 14:16:23
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2015-11-19 15:44:07 -0600 (Thu, 19 Nov 2015) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory FrameNetSemTransMt)
+
+(FNQuantSemtrans (TheList "how") Many-TheWord  (and (WHFocus (WHQuestionFn how_many) :NOUN))
+                 (frame Quantified_mass) (bindingTemplate) (groupPatterns (TheList)))
+
+
+;;FE-Roles assume actor slot formalism... Problematic for things like possessiveRelation where the possessor
+;;comes first and the oblique-object binding comes second.
+;(FNNounSemtrans (TheList) Size-TheWord (and (isa :NOUN Size))
+;                (frame Measurable_attributes)
+;                (bindingTemplate 
+;                 (:OBLIQUE-OBJECT ((PPFn of) fe_entity)))
+;                (groupPatterns (TheList ((0 0 0)))))
+
+;; Same problem as above. See fe_entity for noun attributes.
+;(FNNounSemtrans (TheList "population") Density-TheWord (and (isa :NOUN DensityOfPopulation))
+;                (frame Measurable_attributes)
+;                (bindingTemplate 
+;                 (:OBLIQUE-OBJECT ((PPFn of) fe_entity)))
+;                (groupPatterns (TheList ((0 0 0)))))
+
+
+;(FNNounSemtrans (TheList) Heat-TheWord (and (isa :NOUN ThermalEnergy))
+;                (frame Measurable_attributes)
+;                (bindingTemplate 
+;                 (:OBLIQUE-OBJECT ((PPFn of) fe_entity)))
+;                (groupPatterns (TheList ((0 0 0)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

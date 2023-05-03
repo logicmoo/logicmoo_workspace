@@ -1,0 +1,48 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: im-primitives.meld
+;;;;    System: Interaction-manager
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 25, 2011 09:26:07
+;;;;   Purpose: definitions of im primitives
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+(isa doRespond SimpleActionPredicate)
+(arity doRespond 2)
+(arg1Isa doRespond CommunicationAct-Single)
+(arg2Isa doRespond CharacterString)
+(comment doRespond "(doRespond <communication-act> <surface-form>) sends a conversational message to the user and keeps track of sequencing.")
+
+(isa doClearLexItem SimpleActionPredicate)
+(arity doClearLexItem 1)
+(arg1Isa doClearLexItem CycLTerm)
+(comment doClearLexItem "(doClearLexItem ?token) clears the lexical item ?token from the parser's cache.")
+
+(isa doUpdateDrs SimpleActionPredicate)
+(arity doUpdateDrs 2)
+(arg1Isa doUpdateDrs CycLTerm)
+(arg2Isa doUpdateDrs Microtheory)
+(comment doUpdateDrs "(doUpdateDrs <sentence-id> <discourse-case>) invokes forward chaining rules to process choice-set selections.")
+
+(isa doReparse SimpleActionPredicate)
+(arity doReparse 2)
+(arg1Isa doReparse CycLTerm)
+(arg2Isa doReparse Microtheory)
+(comment doReparse "(doReparse ?sxentence-id ?discourse-case) causes EA to re-process the specified sentence.")
+
+(isa doGarbageCollect SimpleActionPredicate)
+(arity doGarbageCollect 0)
+(comment doGarbageCollect "(doGarbageCollect) does a simple garbage collect.")
+
+(isa doFullGarbageCollect SimpleActionPredicate)
+(arity doFullGarbageCollect 0)
+(comment doFullGarbageCollect "(doFullGarbageCollect) does a full garbage collect.")
+
+
+;;; End of file

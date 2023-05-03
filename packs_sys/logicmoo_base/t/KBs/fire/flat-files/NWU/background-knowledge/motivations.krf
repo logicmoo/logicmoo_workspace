@@ -1,0 +1,272 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: motivations.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: August 8, 2017 09:24:23
+;;;;   Purpose: Representations of common motivations for actions
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-28 12:49:44 -0600 (Fri, 28 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory HumanActivitiesMt)
+
+;;; eventTypeFostersFeelingType 
+;;; actionConnotesFeeling, actionExpressesFeelingToward
+;;; *** Not in OCyc: emotionExperiencedInEventType, emotionExperiencedToDegreeInEventType
+;;; analogousFeelings, contraryFeelings, contrastedFeelings 
+;;; ExpressingEmotionFn, ExperiencingEmotionToDegreeFn, expressingEmotion-Pred
+;;; feelsTowardsEvent, feelsTowardsObjectToDegree 
+;;; (attitudeTowardsObject AGT OBJ QUANT) 
+;;; postureConnotesFeeling
+;;; actionTypeExpressesFeelingType
+;;; commonMotiveFor, providesMotiveFor
+;;; agentTypeDislikesType, dislikesType
+;;; agentTypeLikesType, likesType
+
+;;; purposeInEvent, purposeInEvent-GoalType
+;;; purposeOfEvent, purposeOfEvent-GoalType
+;;; purposeOfSocialEvent
+;;; purposeOf-Generic
+;;; purposeOf-EventTypeSitType
+
+;;; (doesntDislike-SitType AGENT SITTYPE)
+;;; (favors-SitType AGENT SITTYPE)
+;;; (intends-SitType AGENT SITTYPE)
+
+;;; hasEmotionAbout (dislikes-Generic, hasEmotionAboutExistingThing, hasEmotionAboutProposition, hasEmotionAboutType, likes-Generic, mournsOver) 
+;;; hasEmotionAboutExistingThing (likesObject, dislikesObject) 
+;;; hasEmotionAboutProposition (desires, hasEpistemicEmotion, hasFactiveEmotion ) 
+;;; hasEmotionAboutType (likesType) 
+;;; hasEpistemicEmotion (hopes, surmises, worries)
+;;; hasFactiveEmotion (embarrassedm knows, regrets) 
+
+;;; (statusWithAgent-Gradient BillClinton HillaryClinton (HighAmountFn Loyalty))
+;;; (statusWithAgent-Gradient Iran OPEC (LowAmountFn Prestige)
+;;; (desiresSitRole :NOUN RevengeAction doneBy) ; vindictive
+
+
+(isa Pain-Feeling EmotionalQuantityType)  ; Isn't this more of a feelingAttribute?
+
+(agentTypeDislikesType Animal Pain-Feeling)
+(agentTypeLikesType Animal Pleasure-Feeling)
+
+(agentTypeDislikesType Animal Punishment)
+(agentTypeLikesType Animal Reward)
+
+;;; Typical goals for humans:
+;;; BeingAttractive, BeingHealthy, BeingStrong
+
+;;; Situational Goal: BeingSomewhere (on time)
+;;; An appointment is an obligation to be somewhere at a particular time.
+;;; Most modern jobs have a requirement to be somewhere at a particular time on a regular basis
+;;; Some events are punctual and lose their value if attended late (eg, a movie)
+
+;;; A desire to impress is a goal to evoke respect and/or desire
+
+(relationMostInstance likesType HumanChild Candy)
+(relationMostInstance likesType HumanChild IceCream)
+(relationMostInstance likesType HumanChild DessertFood)
+(relationMostInstance likesEventsOfType HumanChild DessertCourse)
+(relationMostInstance likesEventsOfType (CollectionIntersection2Fn Student HumanChild) Recess) ; School kids like recess.
+(relationMostInstance likesType HumanAdult MonetaryValue)  ; awkward.  Adults like money.
+(relationMostInstance likesEventsOfType Person RecreationalActivity) ; including Entertainment.
+(relationMostInstance likesType Dog Bone-BodyPart)                   ; Dogs like bones.
+(relationMostInstance likesType Elephant (SeedFn PeanutPlant))       ; Elephants like peanuts
+(agentTypeLikesType HumanChild Toy)
+(agentTypeLikesType Dog DogTreat)
+(agentTypeLikesType Dog DogToy)
+(agentTypeLikesType DomesticCat CatTreat)
+(agentTypeLikesType DomesticCat CatToy)
+
+;(dislikesRoleInEventType Person objectActedOn Prank) ; ** Wrong.  arg1 must be an individual, not a collection
+;;; someone with acrophobia dislikes being in a high place
+;;; Nobody likes a lumpy pillow or mattress:
+(agentTypeDislikesType Person (SubcollectionOfWithRelationToFn Pillow physicalStructuralFeatures Lumpy))
+(agentTypeDislikesType Person (SubcollectionOfWithRelationToFn Mattress physicalStructuralFeatures Lumpy))
+
+(sensoryResponse (SubcollectionOfWithRelationToTypeFn TouchingSomethingBriefly objectsInContact (SubcollectionOfWithRelationToFn PartiallyTangible temperatureOfObject TooHotToTouch))  doneBy (PositiveAmountFn LevelOfPain))
+
+;;; Most teenagers like rock music:
+(relationMostInstance likesType HumanTeenager RockMusic)
+(relationExistsManyInstance likesType HumanTeenager HipHopMusic)
+;;; Many teenagers like expensive sneakers:
+(relationExistsManyInstance likesType HumanTeenager (SubcollectionOfWithRelationToFn AthleticShoe cost Expensive))
+;;; Many teenagers like to sleep late:
+(relationExistsManyInstance likesEventsOfType HumanTeenager SleepingLate)
+
+(actionTypeExpressesFeelingType HoldingHands Love) ; parental or romantic
+(actionTypeExpressesFeelingType Kissing Love-Romantic)
+(actionTypeExpressesFeelingType Gasping Surprise)
+(actionTypeExpressesFeelingType Blushing Embarrassment)
+(actionTypeExpressesFeelingType Sighing Wonder-Admiration)
+(actionTypeExpressesFeelingType BeingStill Fear)
+(actionTypeExpressesFeelingType Screaming Anger)
+(actionTypeExpressesFeelingType TolerationEvent Suffering)
+(actionTypeExpressesFeelingType Screaming (CollectionIntersection2Fn Fear Excitement)) ; as on a rollercoaster
+;;; stammering -> nervousness
+
+(postureConnotesFeeling SittingPosture-Slouching Humility) ; kind of?
+(postureConnotesFeeling BeingStill Calmness)
+
+;;; (purposeOf-EventTypeSitType BakeSale RaisingRevenue)
+(relationMostExists purposeOfEvent Bathing (PreventingFn BodyOdor))
+(relationMostExists purposeOfEvent BrushingOnesTeeth (PreventingFn Halitosis))
+(relationMostInstance purposeOfEvent-GoalType BrushingOnesTeeth BodilyGoal)
+(relationMostInstance purposeOfEvent-GoalType Grooming BeingAttractive)
+(relationMostInstance purposeOfEvent-GoalType Grooming BodilyGoal)
+(relationMostInstance purposeOfEvent-GoalType GoingToTheBathroom BiologicalGoal)
+(relationMostInstance purposeOfEvent-GoalType GoingToSleep BiologicalGoal)
+(relationMostInstance purposeOfEvent-GoalType Exercising BeingHealthy)
+(relationMostInstance purposeOfEvent-GoalType Exercising BeingStrong)
+(relationMostInstance purposeOfEvent-GoalType GettingAJob EconomicGoal)
+(relationMostInstance purposeOfEvent-GoalType GoingToWork EconomicGoal)
+(relationMostInstance purposeOfEvent-GoalType KeepingMoneyInAnAccount EconomicGoal)
+(relationMostInstance purposeOfEvent-GoalType Investing EconomicGoal)
+(relationMostInstance purposeOfEvent-GoalType PlantingACrop FoodSupplyGoal)
+(relationMostInstance purposeOfEvent-GoalType Research KnowledgeAcquisitionGoal)
+(relationMostInstance purposeOfEvent-GoalType (MakingFn IrrigationSystem) DomesticAgricultureGoal)
+(relationMostInstance purposeOfEvent-GoalType MarketingActivity BusinessGoal)
+(relationMostInstance purposeOfEvent-GoalType SalesActivity ToIncreaseProfits)
+(relationMostInstance purposeOfEvent-GoalType GraduatingEvent MilestoneGoal)
+(relationMostInstance purposeOfEvent-GoalType Flirting AttractingAMate)
+
+(purposeOf-EventTypeSitType CanningFood (PreventingFn (SubcollectionOfWithRelationToTypeFn Spoiling damages Food)))
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa (ExperiencingEmotionFn Abhorrence) Collection)
+(isa (ExperiencingEmotionFn Adulation) Collection)
+(isa (ExperiencingEmotionFn Agony) Collection)
+(isa (ExperiencingEmotionFn Anger) Collection)
+(isa (ExperiencingEmotionFn Approval) Collection)
+(isa (ExperiencingEmotionFn Awe) Collection)
+(isa (ExperiencingEmotionFn Boredom) Collection)
+(isa (ExperiencingEmotionFn Calmness) Collection)
+(isa (ExperiencingEmotionFn Charm) Collection)
+(isa (ExperiencingEmotionFn Cheerfulness) Collection)
+(isa (ExperiencingEmotionFn Concern) Collection)
+(isa (ExperiencingEmotionFn Confidence) Collection)
+(isa (ExperiencingEmotionFn Confusion-Generic) Collection)
+(isa (ExperiencingEmotionFn Contempt) Collection)
+(isa (ExperiencingEmotionFn Contentment) Collection)
+(isa (ExperiencingEmotionFn Defeatedness-Feeling) Collection)
+(isa (ExperiencingEmotionFn Delight) Collection)
+(isa (ExperiencingEmotionFn Depression-Feeling) Collection)
+(isa (ExperiencingEmotionFn Desire) Collection)
+(isa (ExperiencingEmotionFn Despair) Collection)
+(isa (ExperiencingEmotionFn Disappointment) Collection)
+(isa (ExperiencingEmotionFn Disgust) Collection)
+(isa (ExperiencingEmotionFn Dislike) Collection)
+(isa (ExperiencingEmotionFn Displeasure) Collection)
+(isa (ExperiencingEmotionFn Distress) Collection)
+(isa (ExperiencingEmotionFn Doubt) Collection)
+(isa (ExperiencingEmotionFn Dread) Collection)
+(isa (ExperiencingEmotionFn Eagerness) Collection)
+(isa (ExperiencingEmotionFn Embarrassment) Collection)
+(isa (ExperiencingEmotionFn Enjoyment) Collection)
+(isa (ExperiencingEmotionFn Entertained-Emotion) Collection)
+(isa (ExperiencingEmotionFn Enthusiasm) Collection)
+(isa (ExperiencingEmotionFn Envy) Collection)
+(isa (ExperiencingEmotionFn Excitement) Collection)
+(isa (ExperiencingEmotionFn Fear) Collection)
+(isa (ExperiencingEmotionFn Friendliness) Collection)
+(isa (ExperiencingEmotionFn Frustration) Collection)
+(isa (ExperiencingEmotionFn Gratitude) Collection)
+(isa (ExperiencingEmotionFn Grief) Collection)
+(isa (ExperiencingEmotionFn Happiness) Collection)
+(isa (ExperiencingEmotionFn Hate) Collection)
+(isa (ExperiencingEmotionFn Hope) Collection)
+(isa (ExperiencingEmotionFn Humility) Collection)
+(isa (ExperiencingEmotionFn Impatience) Collection)
+(isa (ExperiencingEmotionFn Indecision) Collection)
+(isa (ExperiencingEmotionFn Indifference) Collection)
+(isa (ExperiencingEmotionFn Insecurity) Collection)
+(isa (ExperiencingEmotionFn Inspiration-Emotion) Collection)
+(isa (ExperiencingEmotionFn Interest-Feeling) Collection)
+(isa (ExperiencingEmotionFn Irritation) Collection)
+(isa (ExperiencingEmotionFn Like) Collection)
+(isa (ExperiencingEmotionFn Love) Collection)
+(isa (ExperiencingEmotionFn Love-Romantic) Collection)
+(isa (ExperiencingEmotionFn Offendedness-Feeling) Collection)
+(isa (ExperiencingEmotionFn Pain-Feeling) Collection)
+(isa (ExperiencingEmotionFn Panic) Collection)
+(isa (ExperiencingEmotionFn Pity) Collection)
+(isa (ExperiencingEmotionFn Pleasure-Feeling) Collection)
+(isa (ExperiencingEmotionFn Rage) Collection)
+(isa (ExperiencingEmotionFn Regret) Collection)
+(isa (ExperiencingEmotionFn Remorse) Collection)
+(isa (ExperiencingEmotionFn Resentment) Collection)
+(isa (ExperiencingEmotionFn Respect) Collection)
+(isa (ExperiencingEmotionFn Reverence) Collection)
+(isa (ExperiencingEmotionFn Satisfaction) Collection)
+(isa (ExperiencingEmotionFn Shame) Collection)
+(isa (ExperiencingEmotionFn Shock) Collection)
+(isa (ExperiencingEmotionFn Solemnity) Collection)
+(isa (ExperiencingEmotionFn Stress-Feeling) Collection)
+(isa (ExperiencingEmotionFn Surprise) Collection)
+(isa (ExperiencingEmotionFn Sympathy) Collection)
+(isa (ExperiencingEmotionFn TrappedFeeling) Collection)
+(isa (ExperiencingEmotionFn Uncertainty) Collection)
+(isa (ExperiencingEmotionFn Uneasiness) Collection)
+(isa (ExperiencingEmotionFn Unhappiness) Collection)
+(isa (ExperiencingEmotionFn Wonder-Admiration) Collection)
+
+;;; We trust Banks to keep our PersonalInformation secret.
+;;; (KeepingTypeSecretFn PersonalInformation)
+;;; They must be Trustworthy.
+;;; They are charged with ProtectingSomething (our money)
+
+;;; From openCyc comments:
+(eventTypeFostersFeelingType  WatchingTelevision  Entertained-Emotion)
+(eventTypeFostersFeelingType  SexualCopulation  Pleasure-Feeling)
+(eventTypeFostersFeelingType  Resting-Relaxing  Relaxation)
+
+(contraryFeelings Pain-Feeling Pleasure-Feeling)
+(contraryFeelings Displeasure Pleasure-Feeling)
+(contraryFeelings Anger Cheerfulness)
+(contraryFeelings Abhorrence Delight)
+(contraryFeelings Happiness Sadness)
+(contraryFeelings Happiness Unhappiness)
+(contraryFeelings Pride Shame)
+(contraryFeelings Vanity Humility)
+(contraryFeelings Freedom-Emotion TrappedFeeling)
+(contraryFeelings Disgust Desire)
+(contraryFeelings Concern Indifference)
+(contraryFeelings Affection Dislike)
+(contraryFeelings Like Dislike)
+(contraryFeelings Triumph Defeatedness-Feeling)
+(contraryFeelings Hope Despair)
+(contraryFeelings Confidence Uncertainty)
+(contraryFeelings Confidence Doubt)
+(contraryFeelings Respect Disrespect)
+(contraryFeelings Respect Contempt)
+(contraryFeelings Passion Diffidence)
+(contraryFeelings Guilt Innocence)
+(contraryFeelings Love Hate)
+(contraryFeelings Disappointment Relief)
+(contraryFeelings Dread Anticipation-Feeling)
+(contraryFeelings Satisfaction Dissatisfaction)
+(contraryFeelings Panic Calmness)
+(contraryFeelings Envy Pity)
+(contraryFeelings Gratitude Ingratitude)
+(contraryFeelings Patience Impatience)
+(contraryFeelings Security Insecurity)
+(contraryFeelings Friendliness Belligerence)
+(contraryFeelings Excitement Boredom)
+(contraryFeelings Companionship-Feeling EmotionalColdness)
+(contraryFeelings Flippancy Solemnity)
+(contraryFeelings Enjoyment Reluctance)
+(contraryFeelings Willingness Reservation-Feeling)
+(contraryFeelings Contentment Disappointment)
+(contraryFeelings Frustration Resolution-Emotion)
+(contraryFeelings Touched-Feeling Offendedness-Feeling)
+(contraryFeelings Approval Disapproval)
+(contraryFeelings Enthusiasm Ambivalence)
+(contraryFeelings PrideOfMembership Rebelliousness-Feeling)
+(contraryFeelings Reproach Admiration)
+(contraryFeelings Stress-Feeling LevelOfRelaxationFeeling)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

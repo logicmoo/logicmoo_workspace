@@ -1,0 +1,361 @@
+(in-microtheory Companions-ObsoleteMt)
+(genlMt Companions-ObsoleteMt EAPqSuggestionsMt)
+(comment EAPqSuggestionsMt "Contains solveSuggestion versions of parameterized questions designed to work with the sort of outputs produced by EA.")
+(comment prettyPQName "(prettyPQName <pqtype> <string>) indicates a pretty version of a parameterized question type.")
+(isa prettyPQName BinaryPredicate)
+
+(in-microtheory EAPqSuggestionsMt)
+
+;;; What is responsible for <event>?
+(solveTemplateForPQType responsibleForEvent-001EAPQType WhatQuestion-IBT ((solvePredicateFn responsibleForEvent-001EAPQType) :EVENT))
+(pqTemplateSubstitution responsibleForEvent-001EAPQType :EVENT "responsibleForEvent-001EAPQType")
+(pqExpectedAnswerType responsibleForEvent-001EAPQType :OBJECT Thing)
+(pqParameterType responsibleForEvent-001EAPQType :EVENT Event)
+(pqParameterIndividual responsibleForEvent-001EAPQType :EVENT)
+(pqParameterOf :EVENT responsibleForEvent-001EAPQType)
+(pqParameterOf :OBJECT responsibleForEvent-001EAPQType)
+(prettyPQName responsibleForEvent-001EAPQType "What is responsible for <event>?")
+
+(comment responsibleForEvent-001EAPQType "Parameterized question for: What is responsible for <event>?")
+
+;;;;;; BEGIN SUGGESTIONS FOR responsibleForEvent-001EAPQType
+
+;;;(doneBy warm2516 box2417)
+(suggestionForPQQType responsibleForEvent-001EAPQType PQ-Suggestion-responsibleForEvent-001EAPQType-doneBy)
+(defSuggestion PQ-Suggestion-responsibleForEvent-001EAPQType-doneBy ((solvePredicateFn responsibleForEvent-001EAPQType) ?EVENT) 
+  :subgoals ((doneBy ?EVENT ?OBJECT)))
+
+;;;;;;(performedBy warm2516 box2417)
+(suggestionForPQQType responsibleForEvent-001EAPQType PQ-Suggestion-responsibleForEvent-001EAPQType-performedBy)
+(defSuggestion PQ-Suggestion-responsibleForEvent-001EAPQType-performedBy ((solvePredicateFn responsibleForEvent-001EAPQType) ?EVENT) 
+  :subgoals ((performedBy ?EVENT ?OBJECT)))
+
+;;;(suggestionForPQQType responsibleForEvent-001EAPQType PQ-Suggestion-responsibleForEvent-001EAPQType-chainTest)
+;;;(defSuggestion PQ-Suggestion-responsibleForEvent-001EAPQType-chainTest ((solvePredicateFn responsibleForEvent-001EAPQType) ?EVENT) 
+;;;  :subgoals (((solvePredicateFn responsibleForEvent-001EAPQType-chained-to-x) ?EVENT)))
+;;;
+;;;(defSuggestion PQ-Suggestion-responsibleForEvent-001EAPQType-chained-to ((solvePredicateFn responsibleForEvent-001EAPQType-chained-to-x) ?EVENT) 
+;;;  :subgoals ((performedBy ?EVENT ?OBJECT)))
+
+;;;-----------------------------------------------------------
+
+(in-microtheory EAPqSuggestionsMt)
+
+;;; How is <thing1> like <thing2>? (With segmentations)
+(isa compareTwoThings-seg-001EAPQType BinaryPQType)
+(solveTemplateForPQType compareTwoThings-seg-001EAPQType HowQuestion-IBT ((solvePredicateFn compareTwoThings-seg-001EAPQType) :ENTITY1 :ENTITY2 ?match ?mapping))
+(binaryPqParameterType 1 compareTwoThings-seg-001EAPQType :ENTITY1 Thing)
+(binaryPqParameterType 2 compareTwoThings-seg-001EAPQType :ENTITY2 Thing)
+(prettyPQName compareTwoThings-seg-001EAPQType "How is <entity1> like <entity2>? Using segmentations.")
+
+(comment compareTwoThings-seg-001EAPQType "Binary parameterized question for: How is <thing1> like <thing2>?")
+
+;;;;;; BEGIN SUGGESTIONS FOR compareTwoThings-seg-001EAPQType
+
+;;; This is a good start, but right now it's only storing some basic stuff. I think this almost needs its own
+;;; framework for storing things. We'll get back to that after we figure out how to filter.
+;;; This needs to actually dehydrate. Let's do that now.
+(suggestionForPQQType compareTwoThings-seg-001EAPQType PQ-Suggestion-compareTwoThings-seg-001EAPQType-001EAPQType-matchbetween)
+(defSuggestion PQ-Suggestion-compareTwoThings-seg-001EAPQType-001EAPQType-matchbetween
+    ((solvePredicateFn compareTwoThings-seg-001EAPQType) ?ENTITY1 ?ENTITY2 ?match ?mapping) ;;; added ?match ?mapping here
+  :subgoals ((outResolvedEntityInDiscourse ?ENTITY1-r ?ENTITY1)
+             (outResolvedEntityInDiscourse ?ENTITY2-r ?ENTITY2)
+             (outsourcedOnly (storedSegmentationForEntity ?ENTITY1-r ?E1Segmentation))
+             (outsourcedOnly (storedSegmentationForEntity ?ENTITY2-r ?E2Segmentation))
+             (reverseCIsAllowed (matchBetween (SegFactsCaseFn ?E1Segmentation) (SegFactsCaseFn ?E2Segmentation) 
+                                              (TheSet 
+                                               (requiredCorrespondence ?ENTITY1-r ?ENTITY2-r))
+                                              ?match))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             ))
+
+;;;-----------------------------------------------------------
+
+;;; How is <thing1> like <thing2>? (With sentences)
+(isa compareTwoThings-sen-001EAPQType BinaryPQType)
+(solveTemplateForPQType compareTwoThings-sen-001EAPQType HowQuestion-IBT ((solvePredicateFn compareTwoThings-sen-001EAPQType) :ENTITY1 :ENTITY2 ?match ?mapping))
+(binaryPqParameterType 1 compareTwoThings-sen-001EAPQType :ENTITY1 Thing)
+(binaryPqParameterType 2 compareTwoThings-sen-001EAPQType :ENTITY2 Thing)
+(prettyPQName compareTwoThings-sen-001EAPQType "How is <entity1> like <entity2>? Using sentences.")
+
+(comment compareTwoThings-sen-001EAPQType "Binary parameterized question for: How is <thing1> like <thing2>? (Using sentences
+as the reference.)")
+
+;;;;;; BEGIN SUGGESTIONS FOR compareTwoThings-sen-001EAPQType
+
+
+;;; This is a good start, but right now it's only storing some basic stuff. I think this almost needs its own
+;;; framework for storing things. We'll get back to that after we figure out how to filter.
+;;; This needs to actually dehydrate. Let's do that now.
+(suggestionForPQQType compareTwoThings-sen-001EAPQType PQ-Suggestion-compareTwoThings-sen-001EAPQType-001EAPQType-matchbetween)
+(defSuggestion PQ-Suggestion-compareTwoThings-sen-001EAPQType-001EAPQType-matchbetween
+    ((solvePredicateFn compareTwoThings-sen-001EAPQType) ?ENTITY1 ?ENTITY2 ?match ?mapping) ;;; added ?match ?mapping here
+  ;;; This needs to get the facts that are in the sentence, and the subfacts?
+  ;;; This needs to be a pseudo-segmentation.
+  ;;; We need to specify which sentence we're looking at.
+  :subgoals (
+;;;             (ist-Information CaseRetrievalFactsMt (sourceSentenceForEntity ?sentence1 ?ENTITY1))
+             ;;;             (ist-Information CaseRetrievalFactsMt (sourceSentenceForEntity ?sentence2 ?ENTITY2))
+             ;;; Do we have the actual reading? That would be better.
+             (ist-Information KnowledgeSegmentationBookkeepingMt 
+               (entityFromSpanInSentenceInReading ?ENTITY1 ?span-1 ?sen-pos-1 ?reading-1))
+             (ist-Information KnowledgeSegmentationBookkeepingMt 
+               (sentencePositionInReading 
+                (sentenceDRSFn 
+                 (FactsFromReadingMtFn ?reading-1) ?sentence1)
+                ?sen-pos-1 ?reading-1 ?source-1))
+             (ist-Information KnowledgeSegmentationBookkeepingMt 
+               (entityFromSpanInSentenceInReading ?ENTITY2 ?span-2 ?sen-pos-2 ?reading-2))
+             (ist-Information KnowledgeSegmentationBookkeepingMt 
+               (sentencePositionInReading 
+                (sentenceDRSFn 
+                 (FactsFromReadingMtFn ?reading-2) ?sentence2)
+                ?sen-pos-2 ?reading-2 ?source-2))
+             (reverseCIsAllowed (matchBetween (SenFactsCaseFn ?sentence1) (SenFactsCaseFn ?sentence2) 
+                                              (TheSet 
+                                               (requiredCorrespondence ?ENTITY1 ?ENTITY2))
+                                              ?match))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             ))
+
+
+;;;-----------------------------------------------------------
+
+;;; How is <thing1> like <thing2>? (With all mentions)
+(isa compareTwoThings-mentions-001EAPQType BinaryPQType)
+(solveTemplateForPQType compareTwoThings-mentions-001EAPQType HowQuestion-IBT
+                        ((solvePredicateFn compareTwoThings-mentions-001EAPQType)
+                         :ENTITY1 :ENTITY2 ?match ?mapping))
+(binaryPqParameterType 1 compareTwoThings-mentions-001EAPQType :ENTITY1 Thing)
+(binaryPqParameterType 2 compareTwoThings-mentions-001EAPQType :ENTITY2 Thing)
+(prettyPQName compareTwoThings-sen-001EAPQType "How is <entity1> like <entity2>? Using mentions.")
+
+(comment compareTwoThings-mentions-001EAPQType "Binary parameterized question for: How is <thing1> like <thing2>? (Using mentions
+as the reference.)")
+
+;;;;;; BEGIN SUGGESTIONS FOR compareTwoThings-mentions-001EAPQType
+
+
+;;; This needs to:
+;;; Find the mentions of the entity in the current reading
+;;; Get the sentences those are in
+;;; Get all the facts that ORIGINATED in those sentences.
+;;; How do we know what paragraph to look in? Is just getting the'
+;;; references good enough?
+(suggestionForPQQType compareTwoThings-mentions-001EAPQType 
+                      PQ-Suggestion-compareTwoThings-mentions-001EAPQType-001EAPQType-matchbetween)
+(defSuggestion PQ-Suggestion-compareTwoThings-mentions-001EAPQType-001EAPQType-matchbetween
+    ((solvePredicateFn compareTwoThings-mentions-001EAPQType) ?ENTITY1 ?ENTITY2 ?match ?mapping) ;;; added ?match ?mapping here
+  :subgoals ((outResolvedEntityInDiscourse ?ENTITY1-r ?ENTITY1)
+             (outResolvedEntityInDiscourse ?ENTITY2-r ?ENTITY2)
+             (outsourcedOnly (storedSegmentationForEntity ?ENTITY1-r ?E1Segmentation))
+             (outsourcedOnly (storedSegmentationForEntity ?ENTITY2-r ?E2Segmentation))
+             (unifies ?E1Segmentation 
+                        (metaInfoForMtFn 
+                                   (caseSegmentedAroundFn ?ENTITY1-r 
+                                                          ?reading-spindle-1 ?full-spindle-1)))
+             (unifies ?E2Segmentation 
+                        (metaInfoForMtFn 
+                                   (caseSegmentedAroundFn ?ENTITY2-r 
+                                                          ?reading-spindle-2 ?full-spindle-2)))
+             (reverseCIsAllowed (matchBetween (MentionsFactsCaseFn ?ENTITY1-r ?reading-spindle-1) 
+                                              (MentionsFactsCaseFn ?ENTITY2-r ?reading-spindle-2) 
+                                              (TheSet 
+                                               (requiredCorrespondence ?ENTITY1-r ?ENTITY2-r)) ?match))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             ))
+
+
+;;;-----------------------------------------------------------
+
+;;; How is <thing1> like <thing2>? (With paragraphs)
+(isa compareTwoThings-para-001EAPQType BinaryPQType)
+(solveTemplateForPQType compareTwoThings-para-001EAPQType HowQuestion-IBT ((solvePredicateFn compareTwoThings-para-001EAPQType) :ENTITY1 :ENTITY2 ?match ?mapping))
+(binaryPqParameterType 1 compareTwoThings-para-001EAPQType :ENTITY1 Thing)
+(binaryPqParameterType 2 compareTwoThings-para-001EAPQType :ENTITY2 Thing)
+(prettyPQName compareTwoThings-sen-001EAPQType "How is <entity1> like <entity2>? Using paragraphs.")
+
+(comment compareTwoThings-sen-001EAPQType "Binary parameterized question for: How is <thing1> like <thing2>? (Using sentences
+as the reference.)")
+
+;;;;;; BEGIN SUGGESTIONS FOR compareTwoThings-para-001EAPQType
+
+
+;;; This is a good start, but right now it's only storing some basic stuff. I think this almost needs its own
+;;; framework for storing things. We'll get back to that after we figure out how to filter.
+;;; This needs to actually dehydrate. Let's do that now.
+
+(suggestionForPQQType compareTwoThings-para-001EAPQType PQ-Suggestion-compareTwoThings-para-001EAPQType-001EAPQType-matchbetween)
+(defSuggestion PQ-Suggestion-compareTwoThings-para-001EAPQType-001EAPQType-matchbetween
+    ((solvePredicateFn compareTwoThings-para-001EAPQType) ?ENTITY1 ?ENTITY2 ?match ?mapping) ;;; added ?match ?mapping here
+  :subgoals ((outResolvedEntityInDiscourse ?ENTITY1-r ?ENTITY1)
+             (outResolvedEntityInDiscourse ?ENTITY2-r ?ENTITY2)
+             (outsourcedOnly (storedSegmentationForEntity ?ENTITY1-r ?E1Segmentation))
+             (outsourcedOnly (storedSegmentationForEntity ?ENTITY2-r ?E2Segmentation))
+             (unifies ?E1Segmentation 
+                        (metaInfoForMtFn 
+                                   (caseSegmentedAroundFn ?ENTITY1-r 
+                                                          ?reading-spindle-1 ?full-spindle-1)))
+             (unifies ?E2Segmentation 
+                        (metaInfoForMtFn 
+                                   (caseSegmentedAroundFn ?ENTITY2-r 
+                                                          ?reading-spindle-2 ?full-spindle-2)))
+             (reverseCIsAllowed (matchBetween (ParaFactsCaseFn ?ENTITY1-r ?reading-spindle-1) 
+                                              (ParaFactsCaseFn ?ENTITY2-r ?reading-spindle-2) 
+                                              (TheSet 
+                                               (requiredCorrespondence ?ENTITY1-r ?ENTITY2-r))
+                                              ?match))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             ))
+
+
+;;;------------------------------------------------------------
+
+;;; What events affected <object>?
+;;;(solveTemplateForPQType whatEventsAffected-001EAPQType WhatQuestion-IBT ((solvePredicateFn whatEventsAffected-001EAPQType) :OBJECT))
+(solveTemplateForPQType whatEventsAffected-001EAPQType WhatQuestion-IBT ((solvePredicateFn whatEventsAffected-001EAPQType) :OBJECT :EVENT))
+(pqTemplateSubstitution whatEventsAffected-001EAPQType :OBJECT "whatEventsAffected-001EAPQType")
+(pqExpectedAnswerType whatEventsAffected-001EAPQType :EVENT Location-Underspecified)
+(pqParameterType whatEventsAffected-001EAPQType :OBJECT SpatialThing)
+(pqParameterIndividual whatEventsAffected-001EAPQType :OBJECT)
+(pqParameterOf :OBJECT whatEventsAffected-001EAPQType)
+(pqParameterOf :EVENT whatEventsAffected-001EAPQType)
+(prettyPQName whatEventsAffected-001EAPQType "What events affected <object>?")
+
+(comment whatEventsAffected-001EAPQType "Parameterized question for: What events affected <object>?")
+
+;;; BEGIN SUGGESTIONS FOR whatEventsAffected-001EAPQType
+
+;;;(objectOfStateChange warm2516 planet2417)
+(suggestionForPQQType whatEventsAffected-001EAPQType PQ-Suggestion-whatEventsAffected-001EAPQType-objectOfStateChange)
+;;;(defSuggestion PQ-Suggestion-whatEventsAffected-001EAPQType-objectOfStateChange ((solvePredicateFn whatEventsAffected-001EAPQType) ?OBJECT) 
+;;;  :subgoals ((objectOfStateChange ?EVENT ?OBJECT))
+;;;  :result-step (objectOfStateChange ?EVENT ?OBJECT))
+(defSuggestion PQ-Suggestion-whatEventsAffected-001EAPQType-objectOfStateChange ((solvePredicateFn whatEventsAffected-001EAPQType) ?OBJECT ?EVENT) 
+  :subgoals ((objectOfStateChange ?EVENT ?OBJECT)))
+
+;;;;;; What did what to <object>?
+;;;(solveTemplateForPQType whatDidWhatTo-001EAPQType WhatQuestion-IBT ((solvePredicateFn whatDidWhatTo-001EAPQType) :OBJECT))
+;;;(solveTemplateForPQType whatDidWhatTo-001EAPQType WhatQuestion-IBT ((solvePredicateFn whatDidWhatTo-001EAPQType) :OBJECT :EVENT :AGENT))
+;;;(pqTemplateSubstitution whatDidWhatTo-001EAPQType :OBJECT "whatDidWhatTo-001EAPQType")
+;;;(pqExpectedAnswerType whatDidWhatTo-001EAPQType :EVENT Location-Underspecified)
+;;;(pqExpectedAnswerType whatDidWhatTo-001EAPQType :AGENT SpatialThing)
+;;;(pqParameterType whatDidWhatTo-001EAPQType :OBJECT SpatialThing)
+;;;(pqParameterIndividual whatDidWhatTo-001EAPQType :OBJECT)
+;;;(pqParameterOf :OBJECT whatDidWhatTo-001EAPQType)
+;;;(pqParameterOf :EVENT whatDidWhatTo-001EAPQType)
+;;;(pqParameterOf :AGENT whatDidWhatTo-001EAPQType)
+;;;
+;;;(comment whatDidWhatTo-001EAPQType "Parameterized question for: What did what to <object>?")
+
+;;; BEGIN SUGGESTIONS FOR whatDidWhatTo-001EAPQType
+
+;;;(objectOfStateChange warm2516 planet2417)
+(suggestionForPQQType whatEventsAffected-001EAPQType PQ-Suggestion-whatEventsAffected-001EAPQType-objectOfStateChange)
+;;;(defSuggestion PQ-Suggestion-whatEventsAffected-001EAPQType-objectOfStateChange ((solvePredicateFn whatEventsAffected-001EAPQType) ?OBJECT) 
+;;;  :subgoals ((objectOfStateChange ?EVENT ?OBJECT))
+;;;  :result-step (objectOfStateChange ?EVENT ?OBJECT))
+(defSuggestion PQ-Suggestion-whatEventsAffected-001EAPQType-objectOfStateChange ((solvePredicateFn whatEventsAffected-001EAPQType) ?OBJECT ?EVENT) 
+  :subgoals ((objectOfStateChange ?EVENT ?OBJECT)))
+
+;;;(in-microtheory OldPqSuggestionsMt)
+;;;
+;;;;;; Where is <object>?
+;;;(solveTemplateForPQType where-001EAPQType WhereQuestion-IBT ((solvePredicateFn where-001EAPQType) :OBJECT))
+;;;(pqTemplateSubstitution where-001EAPQType :OBJECT "where-001concept")
+;;;(pqExpectedAnswerType where-001EAPQType :LOCATION Location-Underspecified)
+;;;(pqExpectedAnswerType where-001EAPQType :LOCATION SpatialThing-Localized)
+;;;(pqParameterType where-001EAPQType :OBJECT Person)
+;;;(pqParameterIndividual where-001EAPQType :OBJECT)
+;;;(pqParameterOf :OBJECT where-001EAPQType)
+;;;(pqParameterOf :LOCATION where-001EAPQType)
+;;;(pqParameterOf :X where-001EAPQType)
+;;;
+;;;(comment where-001EAPQType "Parameterized question for: Where is <object>?")
+;;;
+;;;;;; BEGIN SUGGESTIONS FOR where-001EAPQType
+;;;;;;
+;;;;;;;;; (in-UnderspecifiedContainer cat2346 box2417)
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-001EAPQType-in-UnderspecifiedContainer)
+;;;;;;(defSuggestion PQ-Suggestion-where-001EAPQType-in-UnderspecifiedContainer ((solvePredicateFn where-001EAPQType) ?OBJECT) 
+;;;;;;  :subgoals ((in-UnderspecifiedContainer ?OBJECT ?LOCATION)))
+;;;;;;
+;;;;;;;;;(objectFoundInLocation ?OBJECT ?LOCATION)
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-001EAPQType-objectFoundInLocation)
+;;;;;;(defSuggestion PQ-Suggestion-where-001EAPQType-objectFoundInLocation ((solvePredicateFn where-001EAPQType) ?OBJECT) 
+;;;;;;  :subgoals ((objectFoundInLocation ?OBJECT ?LOCATION)))
+;;;;;;
+;;;;;;;;;(objectFound ?finding-event ?OBJECT)
+;;;;;;;;;(in-UnderspecifiedContainer ?finding-event ?LOCATION)
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-001EAPQType-objectFound)
+;;;;;;(defSuggestion PQ-Suggestion-where-001EAPQType-objectFound ((solvePredicateFn where-001EAPQType) ?OBJECT) 
+;;;;;;  :subgoals ((doneBy ?finding-event ?finder)
+;;;;;;             (in-UnderspecifiedContainer ?finding-event ?LOCATION)
+;;;;;;             (objectFound ?finding-event ?OBJECT)
+;;;;;;             (isa ?finding-event FindingSomething)))
+;;;;;;
+;;;;;;;;; Where did/does <event> occur?
+;;;;;;(solveTemplateForPQType where-002EAPQType WhereQuestion-IBT ((solvePredicateFn where-002EAPQType) :EVENT))
+;;;;;;(pqTemplateSubstitution where-002EAPQType :EVENT "where-002concept")
+;;;;;;(pqExpectedAnswerType where-002EAPQType :LOCATION Location-Underspecified)
+;;;;;;(pqExpectedAnswerType where-002EAPQType :LOCATION SpatialThing-Localized)
+;;;;;;(pqParameterType where-002EAPQType :EVENT Event)
+;;;;;;(pqParameterIndividual where-002EAPQType :EVENT)
+;;;;;;(pqParameterOf :EVENT where-002EAPQType)
+;;;;;;(pqParameterOf :LOCATION where-002EAPQType)
+;;;;;;(pqParameterTypeOf where-002EAPQType :EVENT Event)
+;;;;;;
+;;;;;;(comment where-002EAPQType "Parameterized question for: Where did/does <event> occur?")
+;;;;;;
+;;;;;;;;; BEGIN SUGGESTIONS FOR where-002EAPQType
+;;;;;;;;; He ate breakfast in his bed.
+;;;;;;;;; (in-UnderspecifiedContainer eat2346 bed2417)
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-002EAPQType-in-UnderspecifiedContainer)
+;;;;;;(defSuggestion PQ-Suggestion-where-001EAPQType-in-UnderspecifiedContainer ((solvePredicateFn where-002EAPQType) ?EVENT) 
+;;;;;;  :subgoals ((in-UnderspecifiedContainer ?EVENT ?LOCATION)))
+;;;;;;
+;;;;;;;;; The general surrendered at the courthouse.
+;;;;;;;;; (at-UnderspecifiedLandmark surrender2888 courthouse2925)
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-002EAPQType-at-UnderspecifiedLandmark)
+;;;;;;(defSuggestion PQ-Suggestion-where-002EAPQType-at-UnderspecifiedLandmark ((solvePredicateFn where-002EAPQType) ?EVENT) 
+;;;;;;  :subgoals ((at-UnderspecifiedLandmark ?EVENT ?LOCATION)))
+;;;;;;
+;;;;;;;;; The general surrendered at the courthouse.
+;;;;;;;;; (eventOccursAt surrender2888 courthouse2925)
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-002EAPQType-eventOccursAt)
+;;;;;;(defSuggestion PQ-Suggestion-where-002EAPQType-eventOccursAt ((solvePredicateFn where-002EAPQType) ?EVENT) 
+;;;;;;  :subgoals ((eventOccursAt ?EVENT ?LOCATION)))
+;;;;;;
+;;;;;;;;; The surrender occurred near the courthouse. 
+;;;;;;;;; (eventOccursNear surrender2985 courthouse3069)
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-002EAPQType-eventOccursNear)
+;;;;;;(defSuggestion PQ-Suggestion-where-002EAPQType-eventOccursNear ((solvePredicateFn where-002EAPQType) ?EVENT) 
+;;;;;;  :subgoals ((eventOccursNear ?EVENT ?LOCATION)))
+;;;;;;
+;;;;;;
+;;;;;;;;; Where is <place> near, or what does it border on?
+;;;;;;(solveTemplateForPQType where-003EAPQType WhereQuestion-IBT ((solvePredicateFn where-003EAPQType) :OBJECT))
+;;;;;;(pqTemplateSubstitution where-003EAPQType :OBJECT "where-004bconcept")
+;;;;;;(pqExpectedAnswerType where-003EAPQType :LOCATION Location-Underspecified)
+;;;;;;(pqExpectedAnswerType where-003EAPQType :LOCATION SpatialThing-Localized)
+;;;;;;(pqParameterType where-003EAPQType :OBJECT SpatialThing)
+;;;;;;(pqParameterIndividual where-003EAPQType :OBJECT)
+;;;;;;(pqParameterOf :OBJECT where-003EAPQType)
+;;;;;;(pqParameterOf :LOCATION where-003EAPQType)
+;;;;;;(pqParameterOf :BORDER where-003EAPQType)
+;;;;;;(pqParameterOf :DISTANCE where-003EAPQType)
+;;;;;;(pqParameterOf :DIRECTION where-003EAPQType)
+;;;;;;(pqParameterOf :PATH where-003EAPQType)
+;;;;;;(pqParameterTypeOf where-003EAPQType :OBJECT GeographicalRegion)
+;;;;;;
+;;;;;;(comment where-003EAPQType "Parameterized question for: Where is <place> near, or what does it border on?")
+;;;;;;
+;;;;;;(suggestionForPQQType where-001EAPQType PQ-Suggestion-where-002EAPQType-in-UnderspecifiedContainer)
+;;;;;;(defSuggestion PQ-Suggestion-where-001EAPQType-in-UnderspecifiedContainer ((solvePredicateFn where-002EAPQType) ?EVENT) 
+;;;;;;  :subgoals ((in-UnderspecifiedContainer ?EVENT ?LOCATION)))
+;;;
+;;;
+;;;
+;;;
+;;;
+;;;

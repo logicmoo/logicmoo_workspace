@@ -1,0 +1,1805 @@
+;;;
+;;; freeciv.meld
+;;;
+
+(in-microtheory FreecivMt)
+(genlMt FreecivMt PerceptualAgentMt) ; Pull in Qualitative Modeling, resource reasoning, event reasoning, etc.
+(genlMt FreecivMt StrategyGameMt)
+
+(isa freecivServerHost UnaryPredicate)
+(arity freecivServerHost 1)
+(arg1Isa freecivServerHost CharacterString)
+(comment freecivServerHost "(freecivServerHost <host address>) is reified in the execution context and tells the gui where to find the server.")
+
+(isa freecivServerPort UnaryPredicate)
+(arity freecivServerPort 1)
+(arg1Isa freecivServerPort Integer)
+(comment freecivServerPort "(freecivServerPort <port> is reified in the execution context and tells the gui where to find the server.")
+
+;;;
+;;; Define basic predicate vocabulary for Freeciv.
+;;;
+
+;;; Freeciv-TheGame is defined in Cyc, but it's very sketchy.  Flesh it out here.
+(isa Freeciv-TheGame StrategyGameProgram)
+(isa Freeciv-TheGame Game)              ; utterly stupid that ComputerGameProgram doesn't genl from Game.
+(isa Freeciv-TheGame TurnTakingGame)    ; as opposed to, say, soccer
+(instantiationsOfGameAre Freeciv-TheGame (GameFn Freeciv-TheGame))
+(genls (GameFn Freeciv-TheGame) ComputerGameEvent)
+(genls (GameFn Freeciv-TheGame) Competition)
+(genls (PlayingFn Freeciv-TheGame) ComputerGameEvent)
+(genls (PlayingFn Freeciv-TheGame) Competition)
+;;;(genls (IndexicalFn currentRole) FreeCiv-Player)  ; No! The indexical is an instance, not a collection.
+(isa (IndexicalFn currentRole) FreeCiv-Player)
+
+(completeExtentEnumerable FreeCiv-Player)
+(completeExtentEnumerable FreeCiv-City)
+(completeExtentEnumerable FreeCiv-Unit) ; this may not help.  They're not recorded that way.
+;;; but definitely not for locations.
+
+;;; Given that there are two ways to win the game, they really need to be subgoals of winning.
+;;; (they are now.  GoalFn 0 = (AchieveFn (winner-First (IndexicalFn executionContext) (IndexicalFn currentPlayer)))
+
+
+;;; This needs to be re-represented such that we can translate from 
+;;; the propositional goal to a quantity goal.  I.e., reduce the number
+;;; of players that aren't you.
+;(gameObjective Freeciv-TheGame  
+;  (AchieveFn 
+;    (soleRemainingPlayer (IndexicalFn currentPlayer))))
+
+;;; We want to be able to infer that driving the set of opponents to zero is
+;;; equivalent to minimizing it.
+(gameObjective Freeciv-TheGame  
+  (AchieveFn 
+    (cardinalityOf
+      (CollectionSubsetFn FreeCiv-Player
+         (TheSetOf ?opponent
+          (opponentsInConflict (IndexicalFn currentRole) ?opponent (IndexicalFn executionContext))))
+     0)))
+     
+
+(gameObjective Freeciv-TheGame 
+  (AchieveFn 
+    (spaceshipStatus (IndexicalFn currentRole) FC-SpaceshipArrived))) ; changed from currentPlayer
+
+
+
+;;; A subgoal of these objectives is a SelfPreservationGoal and a ResourceAccumulationGoal.
+;;; And perhaps a HarmingEnemiesGoal for the former.
+
+;;; This perhaps should be promoted to PerceptualAgentMt:
+
+(isa initialPlayers BinaryPredicate)
+(arity initialPlayers 2)
+(arg1Isa initialPlayers Microtheory)
+(arg2Isa initialPlayers Integer)
+(comment initialPlayers "(initialPlayers ?game ?num) records how many players were created initially in game instance ?game.")
+
+(isa soleRemainingPlayer UnaryPredicate)
+(isa soleRemainingPlayer DynamicUpdatePredicate)
+(arity soleRemainingPlayer 1)
+
+;;; Lose:
+(gameTerminalState Freeciv-TheGame
+  (uninferredSentence
+    (currentPlayer ?who)))   ; This isn't great.  It's really opaque how this could come about.
+
+;;; Time out:
+(gameTerminalState Freeciv-TheGame
+  (currentYear 5000))   ; a server option
+
+;;; Someone Escapes:
+(gameTerminalState Freeciv-TheGame
+  (and (isa ?player FreeCiv-Player)
+       (spaceshipStatus ?player FC-SpaceshipArrived)))
+
+;;; We need to be able to specify the initial number of civilizations,
+;;; in order for soleRemainingPlayer to make sense.
+    
+
+;;; We also want to maximize the extent of the territoriesControlled.  This is an intermediate goal.
+
+;;; Rationale for FreeCiv-ObjectType:
+;;; As we make type-level predicates, we'll need argIsas, and we want something
+;;; more concrete than simply 'Collection'.
+(isa FreeCiv-ObjectType SecondOrderCollection)
+(genls FreeCiv-ObjectType FirstOrderCollection)
+(comment FreeCiv-ObjectType "A collection of collections.  Each instance of FreeCiv-objectType is a specialization of FreeCiv-Object")
+
+(isa FreeCiv-Object Collection)
+(genls FreeCiv-Object SomethingExisting)       ; FreeCiv-Objects are able to fill the arg2 of a doneBy relation.
+(typeGenls FreeCiv-ObjectType FreeCiv-Object)  ; Every instance of FreeCiv-ObjectType is a spec of FreeCiv-Object
+
+(isa FreeCiv-Actor Collection)
+(genls FreeCiv-Actor FreeCiv-Object)
+(genls FreeCiv-Actor Agent-Generic)
+(comment FreeCiv-Actor "FreeCiv-Actor is the collection of object types that can be planned for and take actions.")
+
+(domainActorType Freeciv-TheGame FreeCiv-Actor)
+(partitionedInto FreeCiv-Actor (ThePartition FreeCiv-Player FreeCiv-City FreeCiv-Unit))
+(movingActorSubtype FreeCiv-Actor FreeCiv-Unit)
+
+(isa FreeCiv-BuildableThing-Type SecondOrderCollection)
+(genls FreeCiv-BuildableThing-Type FreeCiv-ObjectType)
+(comment FreeCiv-BuildableThing-Type "The collection of collections of buildable things.")
+
+(isa FreeCiv-BuildableThing FreeCiv-BuildableThing-Type)
+(genls FreeCiv-BuildableThing FreeCiv-Object)
+(typeGenls FreeCiv-BuildableThing-Type FreeCiv-BuildableThing)
+(comment FreeCiv-BuildableThing "(FreeCiv-BuildableThing is the collection of instances of things that can be produced in a city, such as buildings, units, coinage and Wonders.")
+
+(isa playerNationality BinaryPredicate)
+(arg1Isa playerNationality FreeCiv-Player)
+(arg2Isa playerNationality FreeCiv-Nation)
+(comment playerNationality "(playerNationality ?player ?nation) associates a player with his civilization's nationality.")
+
+(isa CivilizationFn Function-Denotational)
+(arity CivilizationFn 1)
+(arg1Isa CivilizationFn FreeCiv-Player)
+(resultIsa CivilizationFn FreeCiv-Nation)
+(comment CivilizationFn "(CivilizationFn ?player) denotes the nation that the ?player character rules.")
+
+(functionCorrespondingPredicate-Canonical CivilizationFn playerNationality 2)
+
+
+;;; Keep a count of contexts we generate, so we don't have to scan through
+;;; old contexts to find a new symbol
+
+(isa freecivContextCounter UnaryPredicate)
+(isa freecivContextCounter FunctionalPredicate)
+(functionalInArgs freecivContextCounter 1)
+(arg1Isa freecivContextCounter Integer)
+(arity freecivContextCounter 1)
+
+;; This should probably tie into a concept above the
+;; FreeCiv level...
+; (genls FreeCiv-Object ComputerGame-Strategy-Object)
+
+(isa MonetaryQuantity QuantityType)
+(genls MonetaryQuantity ContinuousMeasurableQuantity)
+(genls MonetaryQuantity MonetaryValue)
+(comment MonetaryQuantity "MonetaryQuantity is a convenience collection that combines MonetaryValue and ContinuousMeasurableQuantity.")
+
+(isa FreecivLocation Collection)
+(genls FreecivLocation GeographicalRegion)
+
+(isa Freeciv-Hut Collection)
+(genls Freeciv-Hut EnduringThing-Localized)
+
+;; -------------------
+;; Non-Atomic Terms
+;; -------------------
+
+;;; Within Freeciv, TheSet and TheList should be considered
+;;; as atomicAnalogyNats.
+
+(atomicAnalogyNat TheSet)
+(atomicAnalogyNat TheList)
+
+(isa FreecivLocationFn BinaryFunction)
+(isa FreecivLocationFn AtomicAnalogyNAT-Function)
+(arity FreecivLocationFn 2)
+(arg1Isa FreecivLocationFn Integer)
+(arg2Isa FreecivLocationFn Integer)
+(resultIsa FreecivLocationFn FreecivLocation)  ; a spec of SpatialThing-Localized
+(comment FreecivLocationFn "Denotes a location in FreeCiv coordinates.")
+(atomicAnalogyNat FreecivLocationFn)
+
+(isa BuildingInstanceFn BinaryFunction)
+(isa BuildingInstanceFn AtomicAnalogyNAT-Function) ; it's just a name
+(arity BuildingInstanceFn 2)
+(arg1Isa BuildingInstanceFn FreeCiv-City)
+(arg2Isa BuildingInstanceFn FreeCiv-Building-Type)
+(resultIsa BuildingInstanceFn FreeCiv-Building)
+(comment BuildingInstanceFn "(BuildingInstanceFn ?city ?building-type) denotes an individual building in a particular city.")
+
+(isa CitySkolemFn UnaryFunction)
+(isa CitySkolemFn AtomicAnalogyNAT-Function)
+(arity CitySkolemFn 1)
+(arg1Isa CitySkolemFn FreecivLocation)
+(resultIsa CitySkolemFn FreeCiv-City)
+(comment CitySkolemFn "(CitySkolemFn ?loc) is a way to refer to a city without knowing its name.")
+
+
+;;; How will we learn to connect this concept to the special?
+(isa HutAtFn BinaryFunction)
+(isa HutAtFn AtomicAnalogyNAT-Function)
+(arity HutAtFn 2)
+(arg1Isa HutAtFn Integer)
+(arg2Isa HutAtFn Integer)
+(resultIsa HutAtFn Freeciv-Hut)
+(comment HutAtFn "(HutAtFn <x> <y>) denotes a particular hut at the location.")
+
+(isa FreeCivPopulationFn UnaryFunction)
+(isa FreeCivPopulationFn AtomicAnalogyNAT-Function)
+(arity FreeCivPopulationFn 1)
+(arg1Isa FreeCivPopulationFn Integer)
+(resultIsa FreeCivPopulationFn MeasurableQuantity)
+(comment FreeCivPopulationFn "A measure of number of citizens (in 10,000s?)")
+
+(isa FreecivTileArea Function-Denotational)
+(isa FreecivTileArea UnitOfMeasure)
+(isa FreecivTileArea Individual)
+(isa FreecivTileArea UnitOfArea)
+(isa FreecivTileArea UnitOfMeasureNoPrefix)
+(isa FreecivTileArea AtomicAnalogyNAT-Function)
+(resultIsa FreecivTileArea Area)
+(arityMin FreecivTileArea 1)   ; allow it to express a range, as in (SquareMile 2 5).
+(arityMax FreecivTileArea 2)
+(argsIsa FreecivTileArea NumericInterval)
+(comment FreecivTileArea "The measurement function used in FreeCiv to represent the tile used as a unit of measure of area.")
+(interArgReln FreecivTileArea 2 1 greaterThanOrEqualTo)
+
+(isa FreecivTileDistance Function-Denotational)
+(isa FreecivTileDistance UnitOfMeasure)
+(isa FreecivTileDistance Individual)
+(isa FreecivTileDistance UnitOfDistance)
+(isa FreecivTileDistance UnitOfMeasureNoPrefix)
+(isa FreecivTileDistance AtomicAnalogyNAT-Function)
+(resultIsa FreecivTileDistance Distance-Absolute)
+(arityMin FreecivTileDistance 1)   ; allow it to express a range, as in (SquareMile 2 5).
+(arityMax FreecivTileDistance 2)
+(argsIsa FreecivTileDistance NumericInterval)
+(comment FreecivTileDistance "The measurement function used in FreeCiv to represent the tile used as a unit of measure of distance.  (Not to be confused with FreeCivDistanceFn, which is a measurement in terms of the number of moves.)")
+(interArgReln FreecivTileDistance 2 1 greaterThanOrEqualTo)
+
+;;; city size is really a "citizenCount".  It equals the number of laborers and specialists available.
+;(isa FreeCivCitySizeFn UnaryFunction)
+;(isa FreeCivCitySizeFn AtomicAnalogyNAT-Function)
+;(arity FreeCivCitySizeFn 1)
+;(arg1Isa FreeCivCitySizeFn Integer)
+;(resultIsa FreeCivCitySizeFn ContinuousMeasurableQuantity)
+;(comment FreeCivCitySizeFn "A measure of the size of a city (not linear with population)")
+
+(isa FreecivCitizenCountFn UnaryFunction)
+(isa FreecivCitizenCountFn AtomicAnalogyNAT-Function)
+(arity FreecivCitizenCountFn 1)
+(arg1Isa FreecivCitizenCountFn Integer)
+(resultIsa FreecivCitizenCountFn MeasurableQuantity)
+(comment FreecivCitizenCountFn "A quantity representing a count of city citizens.  A unit of measure for city size or a number of specialists.")
+
+(isa FreecivUnitCountFn UnaryFunction)
+(isa FreecivUnitCountFn AtomicAnalogyNAT-Function)
+(arity FreecivUnitCountFn 1)
+(arg1Isa FreecivUnitCountFn Integer)
+(resultIsa FreecivUnitCountFn MeasurableQuantity)
+(comment FreecivUnitCountFn "A reified number of units (not citizens, but reified units).")
+
+(isa FoodPoints UnaryFunction)
+(isa FoodPoints AtomicAnalogyNAT-Function)
+(arity FoodPoints 1)
+(arg1Isa FoodPoints ScalarInterval)
+(resultIsa FoodPoints MeasurableQuantity)
+(comment FoodPoints "An amount of food produced, surplus, or in reserve.")
+
+(isa ProductionPoints UnaryFunction)
+(isa ProductionPoints AtomicAnalogyNAT-Function)
+(arity ProductionPoints 1)
+(arg1Isa ProductionPoints ScalarInterval)
+(resultIsa ProductionPoints MeasurableQuantity)
+(comment ProductionPoints "An amount of labor expended towards creating whatever is on a city's worklist.")
+
+(isa TradePoints UnaryFunction)
+(isa TradePoints AtomicAnalogyNAT-Function)
+(arity TradePoints 1)
+(arg1Isa TradePoints ScalarInterval)
+(resultIsa TradePoints MeasurableQuantity)
+(comment TradePoints "An amount of trade revenue, which is allocated civilization-wide to taxes, scientific research, and luxuries.")
+
+(isa LuxuryPoints UnaryFunction)
+(isa LuxuryPoints AtomicAnalogyNAT-Function)
+(arity LuxuryPoints 1)
+(arg1Isa LuxuryPoints ScalarInterval)
+(resultIsa LuxuryPoints MeasurableQuantity)
+(comment FreeCivLuxuryQuantityFn "An amount of trade points applied to improving morale in a city.")
+
+(isa SciencePoints UnaryFunction)
+(isa SciencePoints AtomicAnalogyNAT-Function)
+(arity SciencePoints 1)
+(arg1Isa SciencePoints Integer)
+(resultIsa SciencePoints MeasurableQuantity)
+(comment SciencePoints "A unit of science produced by a city per turn.")
+
+(isa GoldPoints UnitOfMoney)  ; This conflicts with arity 1.
+(isa GoldPoints AtomicAnalogyNAT-Function)
+;(arity GoldPoints 1)
+(arg1Isa GoldPoints Integer)
+(resultIsa GoldPoints MonetaryQuantity) ; This is the unit, not the fluent.  That would be Capital.
+(comment GoldPoints "Denotes a quantity of Gold in FreeCiv.")
+
+(isa FreeCivMoodFn UnaryFunction)
+(isa FreeCivMoodFn AtomicAnalogyNAT-Function)
+(arity FreeCivMoodFn 1)
+(arg1Isa FreeCivMoodFn ScalarInterval)
+(resultIsa FreeCivMoodFn MeasurableQuantity)
+(comment FreeCivMoodFn "Denotes the average happiness of a city on a scale of 4 (happy) to 1 (angry).")
+
+(isa FreecivStrengthFn UnaryFunction)
+(isa FreecivStrengthFn AtomicAnalogyNAT-Function)
+(arity FreecivStrengthFn 1)
+(arg1Isa FreecivStrengthFn ScalarInterval)
+(resultIsa FreecivStrengthFn MeasurableQuantity)
+(comment FreecivStrengthFn "FreecivStrengthFn Denotes a fluent representing aggregate military strength.")
+
+(isa HitPoints UnaryFunction)
+(isa HitPoints AtomicAnalogyNAT-Function)
+(arity HitPoints 1)
+(arg1Isa HitPoints ScalarInterval)
+(resultIsa HitPoints MeasurableQuantity)
+(comment HitPoints "A unit denoting the health of a unit.")
+
+;;; A movement range
+(isa MovePoints UnaryFunction)
+(isa MovePoints AtomicAnalogyNAT-Function)
+(arity MovePoints 1)
+(arg1Isa MovePoints ScalarInterval)
+(resultIsa MovePoints MeasurableQuantity)
+(comment MovePoints "A unit denoting a number of move actions.")
+
+(isa VeteranLevel UnaryFunction)
+(isa VeteranLevel AtomicAnalogyNAT-Function)
+(arity VeteranLevel 1)
+(arg1Isa VeteranLevel ScalarInterval)
+(resultIsa VeteranLevel MeasurableQuantity)
+(comment VeteranLevel "A unit denoting a level (0-3) of veteran status.")
+
+(isa PollutionPoints UnaryFunction)
+(isa PollutionPoints AtomicAnalogyNAT-Function)
+(arity PollutionPoints 1)
+(arg1Isa PollutionPoints Integer)
+(resultIsa PollutionPoints MeasurableQuantity)
+(comment PollutionPoints "A unit of pollution produced by a city.")
+
+;; -------------------
+;; Object Properties
+;; -------------------
+
+
+
+;; Tech requirements
+
+(isa researchRequiresTech TransitiveBinaryPredicate)
+(arity researchRequiresTech 2)
+(arg1Isa researchRequiresTech FreeCiv-Tech) 
+(arg2Isa researchRequiresTech FreeCiv-Tech)
+(comment researchRequiresTech "(researchRequiresTech ?later ?prior) Indicates that the ?later technology cannot be researched until the ?prior tech has been researched.")
+
+(isa objectProductionRequiresTech BinaryPredicate)
+(arity objectProductionRequiresTech 2)
+(arg1Isa objectProductionRequiresTech FreeCiv-ObjectType) 
+(arg2Isa objectProductionRequiresTech FreeCiv-Tech)
+(comment objectProductionRequiresTech "Indicates that the object type cannot be produced until the technology has been researched.")
+
+(isa objectProductionRequiresBuilding TransitiveBinaryPredicate)
+(arity objectProductionRequiresBuilding 2)
+(arg1Isa objectProductionRequiresBuilding FreeCiv-BuildableThing-Type)
+(arg2Isa objectProductionRequiresBuilding FreeCiv-BuildableThing-Type)
+(comment objectProductionRequiresBuilding "(objectProductionRequiresBuilding ?obj ?building) means a city must have the improvement ?building in order to produce ?object.")
+
+;; Obsoletes relations
+(isa objectTypeObsoletes BinaryPredicate)
+(arity objectTypeObsoletes 2)
+(arg1Isa objectTypeObsoletes FreeCiv-BuildableThing-Type)    
+(arg2Isa objectTypeObsoletes FreeCiv-BuildableThing-Type)
+(comment objectTypeObsoletes "A binary predicate (objectTypeObsoletes OBJTYPE1 OBJTYPE2) which states that OBJTYPE2 may no longer be produced once OBJTYPE1 has been discovered.")
+
+(isa technologyObsoletes BinaryPredicate)
+(arity technologyObsoletes 2)
+(arg2Isa technologyObsoletes FreeCiv-BuildableThing-Type)
+(arg1Isa technologyObsoletes FreeCiv-ObjectType)            ; a building type, unit type, or tech.
+(comment technologyObsoletes "A binary predicate (technologyObsoletes TECH OBJTYPE) which states that OBJTYPE may no longer be produced once TECH has been discovered.")
+
+
+;; Build cost applies to units, buildings, wonders, etc.
+;;
+;; TODO--cost in terms of units of what? (e.g. "it costs 10 gold", vs.
+;;       another game like AOE where "it costs 10 wood and 5 gold")
+;;
+(isa objectTypeHasProductionCost BinaryPredicate)
+(isa objectTypeHasProductionCost MeasurableQuantitySlot)
+(isa objectTypeHasProductionCost FunctionalPredicate)
+(functionalInArgs objectTypeHasProductionCost 2)
+(arity objectTypeHasProductionCost 2)
+(arg1Isa objectTypeHasProductionCost FreeCiv-BuildableThing-Type)
+(arg2Isa objectTypeHasProductionCost ContinuousMeasurableQuantity)
+(comment objectTypeHasProductionCost "The cost to produce an object of specified type.  This is measured in accumulated production points, *not* gold.")
+
+
+;; upkeep-happy 
+(isa objectTypeHasUpkeepHappyEffect BinaryPredicate)
+(isa objectTypeHasUpkeepHappyEffect MeasurableQuantitySlot)
+(isa objectTypeHasUpkeepHappyEffect FunctionalPredicate)
+(functionalInArgs objectTypeHasUpkeepHappyEffect 2)
+(arity objectTypeHasUpkeepHappyEffect 2)
+(arg1Isa objectTypeHasUpkeepHappyEffect FreeCiv-BuildableThing-Type)
+(arg2Isa objectTypeHasUpkeepHappyEffect MeasurableQuantity)
+(comment objectTypeHasUpkeepHappyEffect "The number of citizens made unhappy in the city that supports the object.") 
+
+;; upkeep-shield 
+;; Production points taken from shield surplus each turn.
+(isa objectTypeHasUpkeepShieldEffect BinaryPredicate)
+(isa objectTypeHasUpkeepShieldEffect MeasurableQuantitySlot)
+(isa objectTypeHasUpkeepShieldEffect FunctionalPredicate)
+(functionalInArgs objectTypeHasUpkeepShieldEffect 2)
+(arity objectTypeHasUpkeepShieldEffect 2)
+(arg1Isa objectTypeHasUpkeepShieldEffect FreeCiv-BuildableThing-Type)
+(arg2Isa objectTypeHasUpkeepShieldEffect MeasurableQuantity)
+(comment objectTypeHasUpkeepShieldEffect "Production points allocated to maintaining the object.")
+
+;; upkeep-food 
+(isa objectTypeHasUpkeepFoodCost BinaryPredicate)
+(isa objectTypeHasUpkeepFoodCost MeasurableQuantitySlot)
+(isa objectTypeHasUpkeepFoodCost FunctionalPredicate)
+(functionalInArgs objectTypeHasUpkeepFoodCost 2)
+(arity objectTypeHasUpkeepFoodCost 2)
+(arg1Isa objectTypeHasUpkeepFoodCost FreeCiv-BuildableThing-Type)
+(arg2Isa objectTypeHasUpkeepFoodCost MeasurableQuantity)
+(comment objectTypeHasUpkeepFoodCost "The amount of food taken from the supporting city to maintain an object of specified type.")
+
+;; upkeep-gold 
+(isa objectTypeHasUpkeepGoldCost BinaryPredicate)
+(isa objectTypeHasUpkeepGoldCost MeasurableQuantitySlot)
+(isa objectTypeHasUpkeepGoldCost FunctionalPredicate)
+(functionalInArgs objectTypeHasUpkeepGoldCost 2)
+(arity objectTypeHasUpkeepGoldCost 2)
+(arg1Isa objectTypeHasUpkeepGoldCost FreeCiv-BuildableThing-Type)
+(arg2Isa objectTypeHasUpkeepGoldCost MeasurableQuantity)
+(comment objectTypeHasUpkeepGoldCost "The amount of gold taken from the treasury to maintain an object of specified type.  Measured in GoldPoints.")
+
+(isa improvementSpecialFor BinaryPredicate)
+(arity improvementSpecialFor 2)
+(arg1Isa improvementSpecialFor MeasurableQuantitySlot)
+(arg2Isa improvementSpecialFor FreeCiv-Special)
+(comment improvementSpecialFor "(improvementSpecialFor ?slot ?special) associates a terrain improvement special with the quantity dimension it improves")
+
+;;;
+;;; Outsourced Predicates
+;;;
+
+;; This may need to be dynamic.  Units can change type occasionally.
+;; for example, triremes get upgraded when some technology is acquired.
+(isa unitType BinaryPredicate)
+(isa unitType FunctionalPredicate)
+(arity unitType 2)
+(functionalInArgs unitType 2)   ; a unit can only be one type at a time.
+(arg1Isa unitType FreeCiv-Unit)
+(arg2Isa unitType Collection)
+(comment unitType "(unitType ?unit ?type) means ?unit isa ?type.")
+
+(isa fcExecutionContext UnaryPredicate)
+(arity fcExecutionContext 1)
+(arg1Isa fcExecutionContext Microtheory)
+(comment fcExecutionContext "(fcExecutionContext ?mt) means the current state of the game is represented in ?mt.")
+
+(isa currentYear UnaryPredicate)
+(isa currentYear FunctionalPredicate)
+;(isa currentYear DynamicUpdatePredicate)
+(functionalInArgs currentYear 1)  ; There better be only one current year.
+(arity currentYear 1)
+(arg1Isa currentYear CalendarYear)
+(comment currentYear "(currentYear ?year) indicates the simulated year in the game, where ?year is of the form (YearFn <integer>).")
+
+(isa mostRecentSitYear-Before TernaryPredicate)
+(isa mostRecentSitYear-Before FunctionalPredicate)
+(arity mostRecentSitYear-Before 3)
+(functionalInArgs mostRecentSitYear-Before 3) ; there can only be one most recent year that ?pred holds.
+(arg1Isa mostRecentSitYear-Before UnaryPredicate)
+(arg2Isa mostRecentSitYear-Before CalendarYear)
+(comment mostRecentSitYear-Before "(mostRecentSitYear-Before ?pred ?start ?year) is a 2nd-order predicate that binds year to the most recent year (starting from ?start) in which the UnaryPredicate ?predicate succeeds.  This will almost always be a Kappa form.  Note that this is *not* diectic, because we need to reason about temporally related events in saved cases.")
+
+(isa soonestSitYear-After TernaryPredicate)
+(isa soonestSitYear-After FunctionalPredicate)
+(arity soonestSitYear-After 3)
+(arg1Isa soonestSitYear-After UnaryPredicate)
+(arg2Isa soonestSitYear-After CalendarYear)
+(arg3Isa soonestSitYear-After CalendarYear)
+(comment soonestSitYear-After "(soonestSitYear-After ?pred ?start ?year) means ?year is the first year after ?start in which ?pred holds.")
+
+(isa player UnaryPredicate)
+(arity player 1)
+(arg1Isa player FreeCiv-Player)
+(comment player "(player ?player) tests or binds ?player to the players of the game.")
+
+;;; This is outsourced in Freeciv
+(isa currentPlayer UnaryPredicate)
+(arity currentPlayer 1)
+(arg1Isa currentPlayer FreeCiv-Player)
+(comment currentPlayer "(currentPlayer ?player) binds ?player to the current AI player.")
+
+(isa inCityRegion BinaryPredicate)
+(arity inCityRegion 2)
+(arg1Isa inCityRegion FreeCiv-City)
+(arg2Isa inCityRegion GeographicalRegion)  ; keep this from being reverse indexed.  Do we want to limit reverse indexing to functional preds?
+(comment inCityRegion "(inCityRegion ?city (FreecivLocationFn ?x ?y)) means ?x ?y is within the 21-tile region of ?city.")
+
+
+(isa canBuild BinaryPredicate)
+(arity canBuild 2)
+(arg1Isa canBuild FreeCiv-Player)  ; Maybe this should be a city-level thing.  Eg, cities can only build banks if they have markets first...
+(arg2Isa canBuild FreeCiv-BuildableThing-Type)  ; Harbors only make sense for coastal cities.
+(comment canBuild "(canBuild ?player ?objType) means ?player can add ?objType to a city's production worklist.")
+
+;;(isa currentGovernment DynamicUpdatePredicate)
+(isa currentGovernment BinaryPredicate)
+(isa currentGovernment FunctionalSlot)
+(functionalInArgs currentGovernment 2)
+(arity currentGovernment 2)
+(arg1Isa currentGovernment FreeCiv-Player)
+(arg2Isa currentGovernment FreeCiv-Government)
+(comment currentGovernment "(currentGovernment ?player ?govt) means ?govt is the current government style of the civilization of ?player.")
+
+;;; Was: currentTaxRate
+(isa currentTaxPercent BinaryPredicate)
+(isa currentTaxPercent FunctionalPredicate)  ;; FunctionalSlot?
+(isa currentTaxPercent MeasurableQuantitySlot)
+;(isa currentTaxPercent DynamicUpdatePredicate)
+(arity currentTaxPercent 2)
+(functionalInArgs currentTaxPercent 2)
+(arg1Isa currentTaxPercent FreeCiv-Player)
+(arg2Isa currentTaxPercent IntervalOnNumberLine )
+(comment currentTaxPercent "(currentTaxPercent ?player (Percent num)) reflects the percentage of revenue converted to gold.")
+
+;;; Was: currentScienceRate
+(isa currentSciencePercent BinaryPredicate)
+(isa currentSciencePercent FunctionalPredicate)
+(isa currentSciencePercent MeasurableQuantitySlot)
+;(isa currentSciencePercent DynamicUpdatePredicate)
+(arity currentSciencePercent 2)
+(functionalInArgs currentSciencePercent 2)
+(arg1Isa currentSciencePercent FreeCiv-Player)
+(arg2Isa currentSciencePercent IntervalOnNumberLine )
+(comment currentSciencePercent "(currentSciencePercent ?player (Percent num)) reflects the percentage of revenue allocated to scientific research.")
+
+;;; Was: currentLuxuryRate
+(isa currentLuxuryPercent BinaryPredicate)
+(isa currentLuxuryPercent FunctionalPredicate)
+(isa currentLuxuryPercent MeasurableQuantitySlot)
+;(isa currentLuxuryPercent DynamicUpdatePredicate)
+(arity currentLuxuryPercent 2)
+(functionalInArgs currentLuxuryPercent 2)
+(arg1Isa currentLuxuryPercent FreeCiv-Player)
+(arg2Isa currentLuxuryPercent IntervalOnNumberLine )
+(comment currentLuxuryPercent "(currentLuxuryPercent ?player (Percent num)) reflects the percentage of revenue allocated to providing luxuries.")
+
+(isa currentGold BinaryPredicate)
+(isa currentGold FunctionalPredicate)
+(isa currentGold MeasurableQuantitySlot)
+;(isa currentGold DynamicUpdatePredicate)
+(functionalInArgs currentGold 2)
+(arity currentGold 2)
+(arg1Isa currentGold FreeCiv-Player)
+(arg2Isa currentGold MonetaryValue)
+(comment currentGold "(currentGold ?player (GoldPoints ?num)) indicates how much gold is in the player's treasury.")
+
+;;; Replaces civScienceTotal:
+(isa civBulbsPerTurn BinaryPredicate)
+(isa civBulbsPerTurn MeasurableQuantitySlot)
+(isa civBulbsPerTurn FunctionalPredicate)
+(functionalInArgs civBulbsPerTurn 2)
+(arity civBulbsPerTurn 2)
+(arg1Isa civBulbsPerTurn FreeCiv-Player)
+(arg2Isa civBulbsPerTurn ContinuousMeasurableQuantity) 
+(comment civBulbsPerTurn "(civBulbsPerTurn ?player ?science-points) is the civilization-wide science production of the current player's civilization.")
+
+(isa currentlyResearchable BinaryPredicate)
+(isa currentlyResearchable DynamicUpdatePredicate)
+(arity currentlyResearchable 2)
+(arg1Isa currentlyResearchable FreeCiv-Player)
+(arg2Isa currentlyResearchable FreeCiv-Tech)
+(comment currentlyResearchable "(currentlyResearchable ?player ?tech) means ?tech can be researched directly.")
+
+(isa currentBulbsResearched BinaryPredicate)
+(isa currentBulbsResearched FunctionalPredicate)
+(isa currentBulbsResearched MeasurableQuantitySlot)
+;(isa currentBulbsResearched DynamicUpdatePredicate)
+(functionalInArgs currentBulbsResearched 2)
+(arity currentBulbsResearched 2)
+(arg1Isa currentBulbsResearched FreeCiv-Player)
+(arg2Isa currentBulbsResearched ContinuousMeasurableQuantity)
+(comment currentBulbsResearched "(currentBulbsResearched ?player ?science-points) indicates the cumulative research expenditure on the current tech")
+
+(isa currentTechsResearched BinaryPredicate)
+(isa currentTechsResearched FunctionalPredicate)
+(isa currentTechsResearched MeasurableQuantitySlot)
+;(isa currentTechsResearched DynamicUpdatePredicate)
+(functionalInArgs currentTechsResearched 2)
+(arity currentTechsResearched 2)
+(arg1Isa currentTechsResearched FreeCiv-Player)
+(arg2Isa currentTechsResearched Integer)
+(comment currentTechsResearched "(currentTechsResearched ?player ?techs) indicates the total number of technologies learned so far.")
+
+(isa currentlyResearching BinaryPredicate)
+(isa currentlyResearching FunctionalSlot)
+;(isa currentlyResearching DynamicUpdatePredicate)
+(functionalInArgs currentlyResearching 2)
+(arity currentlyResearching 2)
+(arg1Isa currentlyResearching FreeCiv-Player)
+(arg2Isa currentlyResearching FreeCiv-Tech)
+(comment currentlyResearching "(currentlyResearching ?player ?tech) means the civilization belonging to ?player is currently researching ?tech.")
+
+(isa techGoal BinaryPredicate)
+(isa techGoal FunctionalSlot)
+(functionalInArgs techGoal 2)
+(arity techGoal 2)
+(arg1Isa techGoal FreeCiv-Player)
+(arg2Isa techGoal FreeCiv-Tech)
+(comment techGoal "(techGoal ?player ?tech) means the civilization belonging to ?player has long term goal to achieve ?tech.")
+
+(isa canSetGovernment BinaryPredicate)
+(arity canSetGovernment 2)
+(arg1Isa canSetGovernment FreeCiv-Player)
+(arg2Isa canSetGovernment FreeCiv-Government)
+(comment canSetGovernment "(canSetGovernment ?player ?gov) means the civilization belonging to ?player has the tech preconditions to set government to ?gov.")
+
+(isa playerKnowsTech BinaryPredicate)
+(arity playerKnowsTech 2)
+(arg1Isa playerKnowsTech FreeCiv-Player)
+(arg2Isa playerKnowsTech FreeCiv-Tech)
+(comment playerKnowsTech "(playerKnowsTech ?player ?tech) means the civilization belonging to ?player has achieved ?tech.")
+
+(isa locationInTerritory BinaryPredicate)
+(isa locationInTerritory FunctionalSlot)
+(functionalInArgs locationInTerritory 2)
+(arity locationInTerritory 2)
+(arg1Isa locationInTerritory FreecivLocation)
+(arg2Isa locationInTerritory GeographicalRegion)
+(comment locationInTerritory "(locationInTerritory ?loc ?player) means location is owned by player.")
+
+(isa nationalTerritory BinaryPredicate)
+(arity nationalTerritory 2)
+(arg1Isa nationalTerritory FreeCiv-Player)
+(arg2Isa nationalTerritory Area)
+(comment nationalTerritory "(nationalTerritory ?player ?area) binds ?area to the area measurement of ?player's national territory, in the form (FreecivTileArea <num>). Due to incomplete knowledge, this is only truly valid for current player.")
+
+(isa knownTerritory BinaryPredicate)
+(arity knownTerritory 2)
+(arg1Isa knownTerritory FreeCiv-Player)
+(arg2Isa knownTerritory Area)
+(comment knownTerritory "(knownTerritory ?player ?area) binds ?area to the area measurement that ?player knowns, in the form (FreecivTileArea <num>).  Only valid for current player.")
+
+(isa capitolCity BinaryPredicate)
+(isa capitolCity FunctionalSlot)
+(functionalInArgs capitolCity 2)
+(arity capitolCity 2)
+(arg1Isa capitolCity FreeCiv-Player)
+(arg2Isa capitolCity FreeCiv-City)
+(comment capitolCity "(capitolCity ?player ?city) means ?city is ?player's capitol.")
+
+(isa citySize BinaryPredicate)
+(isa citySize FunctionalPredicate)
+(isa citySize MeasurableQuantitySlot)
+(functionalInArgs citySize 2)
+(arity citySize 2)
+(arg1Isa citySize FreeCiv-City)
+(arg2Isa citySize ContinuousMeasurableQuantity)
+(comment citySize "(citySize ?city (FreecivCitizenCountFn ?size)) means ?city has size ?size.")
+
+(isa currentlyBuilding BinaryPredicate)
+(isa currentlyBuilding FunctionalSlot)
+;(isa currentlyBuilding DynamicUpdatePredicate)
+(functionalInArgs currentlyBuilding 2)
+(arity currentlyBuilding 2)
+(arg1Isa currentlyBuilding FreeCiv-City)
+(arg2Isa currentlyBuilding FreeCiv-BuildableThing-Type)  ; arg2Genl would be FreeCiv-BuildableThing.
+(comment currentlyBuilding "(currentlyBuilding ?city ?obj) means ?city is currently building ?obj.")
+
+(isa cityBuyCost BinaryPredicate)
+(isa cityBuyCost FunctionalPredicate)
+(isa cityBuyCost MeasurableQuantitySlot)
+(functionalInArgs cityBuyCost 2)
+(arity cityBuyCost 2)
+(arg1Isa cityBuyCost FreeCiv-City)
+(arg2Isa cityBuyCost MonetaryValue)
+(comment cityBuyCost "(cityBuyCost ?city ?cost) means it will require ?cost to purchase the item currently being built.  ?cost is of the form (FreeCivCapitalFn <number>).")
+
+(isa cityWorklist BinaryPredicate)
+(isa cityWorklist FunctionalSlot)
+(functionalInArgs cityWorklist 2)
+(arity cityWorklist 2)
+(arg1Isa cityWorklist FreeCiv-City)
+(arg2Isa cityWorklist List)
+(comment cityWorklist "(cityWorklist ?city ?list) means ?list represents the current worklist of ?city.")
+
+;;; This is now a type-level statement:
+(isa cityHasImprovement BinaryPredicate)
+(arity cityHasImprovement 2)
+(arg1Isa cityHasImprovement FreeCiv-City)
+(arg2Isa cityHasImprovement FreeCiv-Building-Type)    ; typeGenls cityHasImprovement FreeCiv-Building)
+(arg2Genl cityHasImprovement FreeCiv-Building)
+(comment cityHasImprovement "(cityHasImprovement ?city ?improvement) means ?city has improvement ?improvement.")
+
+
+;;; These 3 outsourced preds are only used in the scanning routine for finding good city locations.
+;;; And there, it's only in canned strategies.
+;;; I'm going to say that this is not a primitive quantity.
+;;; Moreover, if we were to change city siting to be more learnable, 
+;;; this would go away.
+(isa potentialTileFoodProduction BinaryPredicate)
+(arity potentialTileFoodProduction 2)
+(isa potentialTileFoodProduction FunctionalPredicate)
+(isa potentialTileFoodProduction MeasurableQuantitySlot)
+(functionalInArgs potentialTileFoodProduction 2)
+(arg1Isa potentialTileFoodProduction FreecivLocation)
+(arg2Isa potentialTileFoodProduction ContinuousMeasurableQuantity)
+(comment potentialTileFoodProduction "(potentialTileFoodProduction ?locFn ?foodFn) binds ?foodFn to the amount of food that could be produced by that tile for some city.")
+
+(isa potentialTileShieldProduction BinaryPredicate)
+(arity potentialTileShieldProduction 2)
+(isa potentialTileShieldProduction FunctionalPredicate)
+(isa potentialTileShieldProduction MeasurableQuantitySlot)
+(functionalInArgs potentialTileShieldProduction 2)
+(arg1Isa potentialTileShieldProduction FreecivLocation)
+(arg2Isa potentialTileShieldProduction ContinuousMeasurableQuantity)
+(comment potentialTileShieldProduction "(potentialTileShieldProduction ?locFn ?shieldFn) binds ?shieldFn to the amount of shields that could be produced by that tile for some city.")
+
+(isa potentialTileTradeProduction BinaryPredicate)
+(arity potentialTileTradeProduction 2)
+(isa potentialTileTradeProduction FunctionalPredicate)
+(isa potentialTileTradeProduction MeasurableQuantitySlot)
+(functionalInArgs potentialTileTradeProduction 2)
+(arg1Isa potentialTileTradeProduction FreecivLocation)
+(arg2Isa potentialTileTradeProduction ContinuousMeasurableQuantity)
+(comment potentialTileTradeProduction "(potentialTileTradeProduction ?locFn ?tradeFn) binds ?tradeFn to the amount of trade that could be produced by that tile for some city.")
+
+(isa tileFoodProduction BinaryPredicate)
+(arity tileFoodProduction 2)
+(isa tileFoodProduction FunctionalPredicate)
+(isa tileFoodProduction MeasurableQuantitySlot)
+(functionalInArgs tileFoodProduction 2)
+(arg1Isa tileFoodProduction FreecivLocation)
+(arg2Isa tileFoodProduction ContinuousMeasurableQuantity)
+(comment tileFoodProduction "(tileFoodProduction ?locFn ?foodFn) binds ?foodFn to the amount of food produced by that tile for some city.")
+(improvementSpecialFor tileFoodProduction FC-Special-Irrigation)
+
+(isa tileShieldProduction BinaryPredicate)
+(arity tileShieldProduction 2)
+(isa tileShieldProduction FunctionalPredicate)
+(isa tileShieldProduction MeasurableQuantitySlot)
+(functionalInArgs tileShieldProduction 2)
+(arg1Isa tileShieldProduction FreecivLocation)
+(arg2Isa tileShieldProduction ContinuousMeasurableQuantity)
+(comment tileShieldProduction "(tileShieldProduction ?locFn ?shieldFn) binds ?shieldFn to the amount of shields produced by that tile for some city.")
+(improvementSpecialFor tileShieldProduction FC-Special-Mine)
+
+(isa tileTradeProduction BinaryPredicate)
+(arity tileTradeProduction 2)
+(isa tileTradeProduction FunctionalPredicate)
+(isa tileTradeProduction MeasurableQuantitySlot)
+(functionalInArgs tileTradeProduction 2)
+(arg1Isa tileTradeProduction FreecivLocation)
+(arg2Isa tileTradeProduction ContinuousMeasurableQuantity)
+(comment tileTradeProduction "(tileTradeProduction ?locFn ?tradeFn) binds ?tradeFn to the amount of trade produced by that tile for some city.")
+(improvementSpecialFor tileTradeProduction FC-Special-Road)
+
+(isa cityFoodProduction BinaryPredicate)
+(isa cityFoodProduction FunctionalPredicate)
+(isa cityFoodProduction MeasurableQuantitySlot)
+(functionalInArgs cityFoodProduction 2)
+(arity cityFoodProduction 2)
+(arg1Isa cityFoodProduction FreeCiv-City)
+(arg2Isa cityFoodProduction ContinuousMeasurableQuantity)
+(comment cityFoodProduction "(cityFoodProduction ?city ?food) denotes the current production rate of food in the city.")
+
+(isa cityShieldProduction BinaryPredicate)
+(isa cityShieldProduction FunctionalPredicate)
+(isa cityShieldProduction MeasurableQuantitySlot)
+(functionalInArgs cityShieldProduction 2)
+(arity cityShieldProduction 2)
+(arg1Isa cityShieldProduction FreeCiv-City)
+(arg2Isa cityShieldProduction ContinuousMeasurableQuantity)
+(comment cityShieldProduction "(cityShieldProduction ?city ?shields) denotes the current shield production in the city.")
+
+(isa cityTradeProduction BinaryPredicate)
+(isa cityTradeProduction FunctionalPredicate)
+(isa cityTradeProduction MeasurableQuantitySlot)
+(functionalInArgs cityTradeProduction 2)
+(arity cityTradeProduction 2)
+(arg1Isa cityTradeProduction FreeCiv-City)
+(arg2Isa cityTradeProduction ContinuousMeasurableQuantity)
+(comment cityTradeProduction "(cityTradeProduction ?city ?trade) denotes the current trade production in the city.")
+
+(isa cityFoodSurplus BinaryPredicate)
+(isa cityFoodSurplus FunctionalPredicate)
+(isa cityFoodSurplus MeasurableQuantitySlot)
+(functionalInArgs cityFoodSurplus 2)
+(arity cityFoodSurplus 2)
+(arg1Isa cityFoodSurplus FreeCiv-City)
+(arg2Isa cityFoodSurplus ContinuousMeasurableQuantity)
+(comment cityFoodSurplus "(cityFoodSurplus ?city ?food) denotes the current food production surplus in the city.")
+
+(isa cityShieldSurplus BinaryPredicate)
+(isa cityShieldSurplus FunctionalPredicate)
+(isa cityShieldSurplus MeasurableQuantitySlot)
+(functionalInArgs cityShieldSurplus 2)
+(arity cityShieldSurplus 2)
+(arg1Isa cityShieldSurplus FreeCiv-City)
+(arg2Isa cityShieldSurplus ContinuousMeasurableQuantity)
+(comment cityShieldSurplus "(cityShieldSurplus ?city ?shields) denotes the current shield production surplus in the city.")
+
+(isa cityTradeSurplus BinaryPredicate)
+(isa cityTradeSurplus FunctionalPredicate)
+(isa cityTradeSurplus MeasurableQuantitySlot)
+(functionalInArgs cityTradeSurplus 2)
+(arity cityTradeSurplus 2)
+(arg1Isa cityTradeSurplus FreeCiv-City)
+(arg2Isa cityTradeSurplus ContinuousMeasurableQuantity)
+(comment cityTradeSurplus "(cityTradeSurplus ?city ?trade) denotes the current trade surplus in the city.")
+
+(isa cityFoodReserves BinaryPredicate)
+(isa cityFoodReserves FunctionalPredicate)
+(isa cityFoodReserves MeasurableQuantitySlot)
+(functionalInArgs cityFoodReserves 2)
+(arity cityFoodReserves 2)
+(arg1Isa cityFoodReserves FreeCiv-City)
+(arg2Isa cityFoodReserves ContinuousMeasurableQuantity)
+(comment cityFoodReserves "(cityFoodReserves ?city ?food) denotes the current food reserves in the city.")
+
+(isa cityShieldReserves BinaryPredicate)
+(isa cityShieldReserves FunctionalPredicate)
+(isa cityShieldReserves MeasurableQuantitySlot)
+(functionalInArgs cityShieldReserves 2)
+(arity cityShieldReserves 2)
+(arg1Isa cityShieldReserves FreeCiv-City)
+(arg2Isa cityShieldReserves ContinuousMeasurableQuantity)
+(comment cityShieldReserves "(cityShieldReserves ?city ?shields) denotes the current defensive reserves in the city.")
+
+(isa cityGoldProduction BinaryPredicate)
+(isa cityGoldProduction FunctionalPredicate)
+(isa cityGoldProduction MeasurableQuantitySlot)
+(functionalInArgs cityGoldProduction 2)
+(arity cityGoldProduction 2)
+(arg1Isa cityGoldProduction FreeCiv-City)
+(arg2Isa cityGoldProduction ContinuousMeasurableQuantity)
+(comment cityGoldProduction "(cityGoldProduction ?city ?gold) denotes the tax rate * trade surplus + 1 point trade bonus for Republic or Democracy.")
+
+;;; cityGoldSurplus *replaces* cityTaxTotal in v2.2.
+;;; They are the same thing.
+(isa cityGoldSurplus BinaryPredicate)
+(isa cityGoldSurplus FunctionalPredicate)
+(isa cityGoldSurplus MeasurableQuantitySlot)
+(functionalInArgs cityGoldSurplus 2)
+(arity cityGoldSurplus 2)
+(arg1Isa cityGoldSurplus FreeCiv-City)
+(arg2Isa cityGoldSurplus ContinuousMeasurableQuantity)
+(comment cityGoldSurplus "(cityGoldSurplus ?city ?gold) denotes the taxes collected after paying improvement upkeep.")
+
+(isa cityCoinageProduction BinaryPredicate)
+(isa cityCoinageProduction FunctionalPredicate)
+(isa cityCoinageProduction MeasurableQuantitySlot)
+(functionalInArgs cityCoinageProduction 2)
+(arity cityCoinageProduction 2)
+(arg1Isa cityCoinageProduction FreeCiv-City)
+(arg2Isa cityCoinageProduction ContinuousMeasurableQuantity)  ; *not* a MonetaryValue, because it's a rate, not an amount.
+(comment cityCoinageProduction "(cityCoinageProduction ?city ?gold) denotes the total gold generated by the city when it is producing coinage.")
+
+(isa cityScienceTotal BinaryPredicate)
+(isa cityScienceTotal FunctionalPredicate)
+(isa cityScienceTotal MeasurableQuantitySlot)
+(functionalInArgs cityScienceTotal 2)
+(arity cityScienceTotal 2)
+(arg1Isa cityScienceTotal FreeCiv-City)
+(arg2Isa cityScienceTotal ContinuousMeasurableQuantity)  ; *not* a MonetaryValue, because it's a rate, not an amount.
+(comment cityScienceTotal "(cityScienceTotal ?city ?science) denotes the total science output (per turn) generated by the city.")
+
+(isa cityLuxuryTotal BinaryPredicate)
+(isa cityLuxuryTotal FunctionalPredicate)
+(isa cityLuxuryTotal MeasurableQuantitySlot)
+(functionalInArgs cityLuxuryTotal 2)
+(arity cityLuxuryTotal 2)
+(arg1Isa cityLuxuryTotal FreeCiv-City)
+(arg2Isa cityLuxuryTotal ContinuousMeasurableQuantity)  ; *not* a MonetaryValue, because it's a rate, not an amount.
+(comment cityLuxuryTotal "(cityLuxuryTotal ?city ?luxury) denotes the total amount the city spends (per turn) providing luxury for its citizens.")
+
+(isa cityPollution BinaryPredicate)
+(isa cityPollution FunctionalPredicate)
+(isa cityPollution MeasurableQuantitySlot)
+(functionalInArgs cityPollution 2)
+(arity cityPollution 2)
+(arg1Isa cityPollution FreeCiv-City)
+(arg2Isa cityPollution ContinuousMeasurableQuantity)
+(comment cityPollution "(cityPollution ?city ?pollution) denotes the total pollution produced by ?city represented as the NAT (PollutionPoints <integer>).")
+
+(isa cityOwner BinaryPredicate)
+(isa cityOwner FunctionalSlot)
+(functionalInArgs cityOwner 2)
+(arity cityOwner 2)
+(arg1Isa cityOwner FreeCiv-City)
+(arg2Isa cityOwner FreeCiv-Player)
+(comment cityOwner "(cityOwner ?city ?player) means ?player owns ?city.")
+(inverseBinaryPredicateOf cityOwner ownsCity)
+(cityOwner ?city (UniqueOwnerFn-Individual ?city))
+
+(isa cityIsOccupied UnaryPredicate)
+(isa cityIsOccupied FunctionalPredicate)
+(functionalInArgs cityIsOccupied 1)
+(arity cityIsOccupied 1)
+(arg1Isa cityIsOccupied FreeCiv-City)
+(comment cityIsOccupied "(cityIsOccupied ?city) is true iff city is currently cccupied.  Can be queried for any player's cities.")
+
+(isa cityIsHappy UnaryPredicate)
+(isa cityIsHappy FunctionalPredicate)
+(functionalInArgs cityIsHappy 1)
+(arity cityIsHappy 1)
+(arg1Isa cityIsHappy FreeCiv-City)
+(comment cityIsHappy "(cityIsHappy ?city) is true iff city is currently happy.")
+
+(isa cityIsUnhappy UnaryPredicate)
+(isa cityIsUnhappy FunctionalPredicate)
+(functionalInArgs cityIsUnhappy 1)
+(arity cityIsUnhappy 1)
+(arg1Isa cityIsUnhappy FreeCiv-City)
+(comment cityIsUnhappy "(cityIsUnhappy ?city) is true iff city is currently unhappy.")
+
+(isa happyCitizens BinaryPredicate)
+(isa happyCitizens MeasurableQuantitySlot)
+(isa happyCitizens FunctionalPredicate)
+(functionalInArgs happyCitizens 2)
+(arity happyCitizens 2)
+(arg1Isa happyCitizens FreeCiv-City)
+(arg2Isa happyCitizens ContinuousMeasurableQuantity)  ; A FreecivCitizenCountFn NAT
+(comment happyCitizens "(happyCitizens ?city ?population) denotes the number of citizens who are currently happy in ?city.  ?population is a NAT of the form (FreecivCitizenCountFn <integer>)")
+
+(isa contentCitizens BinaryPredicate)
+(isa contentCitizens MeasurableQuantitySlot)
+(isa contentCitizens FunctionalPredicate)
+(functionalInArgs contentCitizens 2)
+(arity contentCitizens 2)
+(arg1Isa contentCitizens FreeCiv-City)
+(arg2Isa contentCitizens ContinuousMeasurableQuantity)  ; A FreecivCitizenCountFn NAT
+(comment contentCitizens "(contentCitizens ?city ?population) denotes the number of citizens who are currently content in ?city.  ?population is a NAT of the form (FreecivCitizenCountFn <integer>)")
+
+(isa unhappyCitizens BinaryPredicate)
+(isa unhappyCitizens MeasurableQuantitySlot)
+(isa unhappyCitizens FunctionalPredicate)
+(functionalInArgs unhappyCitizens 2)
+(arity unhappyCitizens 2)
+(arg1Isa unhappyCitizens FreeCiv-City)
+(arg2Isa unhappyCitizens ContinuousMeasurableQuantity)  ; A FreecivCitizenCountFn NAT
+(comment unhappyCitizens "(unhappyCitizens ?city ?population) denotes the number of citizens who are currently unhappy in ?city.  ?population is a NAT of the form (FreecivCitizenCountFn <integer>)")
+
+(isa angryCitizens BinaryPredicate)
+(isa angryCitizens MeasurableQuantitySlot)
+(isa angryCitizens FunctionalPredicate)
+(functionalInArgs angryCitizens 2)
+(arity angryCitizens 2)
+(arg1Isa angryCitizens FreeCiv-City)
+(arg2Isa angryCitizens ContinuousMeasurableQuantity)  ; A FreecivCitizenCountFn NAT
+(comment angryCitizens "(angryCitizens ?city ?population) denotes the number of citizens who are currently angry in ?city.  ?population is a NAT of the form (FreecivCitizenCountFn <integer>)")
+
+(isa cityCorruption BinaryPredicate)
+(isa cityCorruption MeasurableQuantitySlot)
+(isa cityCorruption FunctionalPredicate)
+(functionalInArgs cityCorruption 2)
+(arity cityCorruption 2)
+(arg1Isa cityCorruption FreeCiv-City)
+(arg2Isa cityCorruption ContinuousMeasurableQuantity)  ; A FreeCivTradeQuantityFn NAT
+(comment cityCorruption "(cityCorruption ?city ?corruption) means ?city loses ?corruption trade points to corruption.  ?corruption is a NAT of the form (FreeCivTradeQuantityFn <integer>")
+
+(isa cityShieldWaste BinaryPredicate)
+(isa cityShieldWaste MeasurableQuantitySlot)
+(isa cityShieldWaste FunctionalPredicate)
+(functionalInArgs cityShieldWaste 2)
+(arity cityShieldWaste 2)
+(arg1Isa cityShieldWaste FreeCiv-City)
+(arg2Isa cityShieldWaste ContinuousMeasurableQuantity)  ; A FreeCivTradeQuantityFn NAT
+(comment cityShieldWaste "(cityShieldWaste ?city ?corruption) means ?city loses ?corruption trade points to corruption.  ?corruption is a NAT of the form (FreeCivTradeQuantityFn <integer>")
+
+(isa cityWorkingTileAt BinaryPredicate)
+(isa cityWorkingTileAt FunctionalPredicate)
+(functionalInArgs cityWorkingTileAt 1)  ; location determine who's working it
+(arity cityWorkingTileAt 2)
+(arg1Isa cityWorkingTileAt FreeCiv-City)
+(arg2Isa cityWorkingTileAt FreecivLocation)
+(comment cityWorkingTileAt "(cityWorkingTileAt ?city (FreecivLocationFn ?x ?y)) means ?city is currently working the tile at ?x ?y.")
+(inverseBinaryPredicateOf cityWorkingTileAt tileWorkedByCity)
+
+(isa tileWorkedByCity BinaryPredicate)
+(isa tileWorkedByCity FunctionalSlot)
+(functionalInArgs tileWorkedByCity 2)
+(arity tileWorkedByCity 2)
+(arg1Isa tileWorkedByCity FreecivLocation)
+(arg2Isa tileWorkedByCity FreeCiv-City)
+(comment tileWorkedByCity "(tileWorkedByCity ?location ?city) means ?city is currently working the tile at ?loc.  This is the inverse of cityWorkingTileAt.")
+(inverseBinaryPredicateOf tileWorkedByCity cityWorkingTileAt)
+
+(isa cityTileWorkableAt BinaryPredicate)
+;;; This is not a functional predicate
+(arity cityTileWorkableAt 2)
+(arg1Isa cityTileWorkableAt FreeCiv-City)
+(arg2Isa cityTileWorkableAt GeographicalRegion)  ; Cheat!  I don't want this to show up in indexedDomainRels.
+(comment cityTileWorkableAt "(cityTileWorkableAt ?city (FreecivLocationFn ?x ?y)) means ?city can work tile at ?x, ?y.")
+
+(isa numSpecialists TernaryPredicate)
+(isa numSpecialists FunctionalPredicate)
+(functionalInArgs numSpecialists 3)
+(arity numSpecialists 3)
+(arg1Isa numSpecialists FreeCiv-City)
+(arg2Isa numSpecialists FreeCiv-Specialist)
+(arg3Isa numSpecialists ContinuousMeasurableQuantity)  ; A FreecivCitizenCountFn NAT
+(comment numSpecialists "(numSpecialists ?city ?type (FreecivCitizenCountFn ?num)) means ?city has ?num specialists of type ?type.")
+
+(isa numWorkers BinaryPredicate)
+(isa numWorkers FunctionalPredicate)
+(arity numWorkers 2)
+(arg1Isa numWorkers FreeCiv-City)
+(arg2Isa numWorkers ContinuousMeasurableQuantity)  ; A FreecivCitizenCountFn NAT
+(comment numWorkers "(numWorkers ?city (FreecivCitizenCountFn ?num)) means ?city has ?num workers in the fields.")
+
+(isa numPresentMilitaryUnits BinaryPredicate)
+(isa numPresentMilitaryUnits FunctionalPredicate)
+(isa numPresentMilitaryUnits DynamicUpdatePredicate)  ;; Appropriate or not?
+(arity numPresentMilitaryUnits 2)
+(arg1Isa numPresentMilitaryUnits FreeCiv-City)
+(arg2Isa numPresentMilitaryUnits ContinuousMeasurableQuantity)  ; A FreecivUnitCountFn NAT
+(comment numPresentMilitaryUnits "(numPresentMilitaryUnits ?city (FreecivUnitCountFn ?num)) means ?city has ?num military units present.")
+
+(isa numDeployedMilitaryUnits BinaryPredicate)
+(isa numDeployedMilitaryUnits FunctionalPredicate)
+(isa numDeployedMilitaryUnits DynamicUpdatePredicate)  ;; Approprioate or not?
+(arity numDeployedMilitaryUnits 2)
+(arg1Isa numDeployedMilitaryUnits FreeCiv-City)
+(arg2Isa numDeployedMilitaryUnits ContinuousMeasurableQuantity)  ; A FreecivUnitCountFn NAT
+(comment numDeployedMilitaryUnits "(numDeployedMilitaryUnits ?city (FreecivUnitCountFn ?num)) means ?city is supporting ?num military units outside the city.")
+
+(isa cityGranarySize BinaryPredicate)
+(isa cityGranarySize MeasurableQuantitySlot)
+(isa cityGranarySize FunctionalPredicate)
+(functionalInArgs cityGranarySize 2)
+(arity cityGranarySize 2)
+(arg1Isa cityGranarySize FreeCiv-City)
+(arg2Isa cityGranarySize ContinuousMeasurableQuantity)
+(comment cityGranarySize "(cityGranarySize ?city ?food-quantity) denotes the capacity of the granary in ?city.")
+
+(isa cityGrowthRate BinaryPredicate)
+(isa cityGrowthRateFunctionalPredicate)
+(isa cityGrowthRate MeasurableQuantitySlot)
+(functionalInArgs cityGrowthRate 2)
+(arity cityGrowthRate 2)
+(arg1Isa cityGrowthRate FreeCiv-City)
+(arg2Isa cityGrowthRate ScalarInterval)
+(comment cityGrowthRate "(cityGrowthRate ?city ?rate) means ?city grows its population by fraction ?rate each turn.  ?rate is in the form (Percent #).")
+
+(isa tradeRoute TernaryPredicate)
+(arity tradeRoute 3)
+(arg1Isa tradeRoute FreeCiv-City)
+(arg2Isa tradeRoute FreeCiv-City)
+(arg3Isa tradeRoute MonetaryValue)
+(comment tradeRoute "(tradeRoute ?from-city ?to-city ?revenue) binds ?revenue to the the NAT (FreeCivCapitalFn <amount>) denoting the amount of gold accrued to ?from-city from trade with ?to-city.")
+
+(isa numTurnsToGrow BinaryPredicate)
+(isa numTurnsToGrow FunctionalPredicate)
+(isa numTurnsToGrow MeasurableQuantitySlot)
+(functionalInArgs numTurnsToGrow 2)
+(arity numTurnsToGrow 2)
+(arg1Isa numTurnsToGrow FreeCiv-City)
+(arg2Isa numTurnsToGrow Time-Quantity)
+(comment numTurnsToGrow "(numTurnsToGrow ?city ?turns) means ?city will grow in size after ?turns turns.  Value is a NAT: (Turns ?integer)")
+
+(isa numTurnsToBuild BinaryPredicate)
+(isa numTurnsToBuild FunctionalPredicate)
+(isa numTurnsToBuild MeasurableQuantitySlot)
+(functionalInArgs numTurnsToBuild 2)
+(arity numTurnsToBuild 2)
+(arg1Isa numTurnsToBuild FreeCiv-City)
+(arg2Isa numTurnsToBuild Time-Quantity)
+(comment numTurnsToBuild "(numTurnsToBuild ?city ?turns) means ?city will finishing building the object it is currently producing after ?turns turns.  Value is a NAT: (Turns ?integer)")
+
+(isa numTurnsToComplete BinaryPredicate)
+(isa numTurnsToComplete FunctionalPredicate)
+(isa numTurnsToComplete MeasurableQuantitySlot)
+(functionalInArgs numTurnsToComplete 2)
+(arity numTurnsToComplete 2)
+(arg1Isa numTurnsToComplete FreeCiv-Unit)
+(arg2Isa numTurnsToComplete Time-Quantity)
+(comment numTurnsToComplete "(numTurnsToComplete ?unit ?turns) means ?unit will finish its activity (eg, irrigating, mining) after ?turns turns.  Value is a NAT: (Turns ?integer)")
+
+(isa unitOwner BinaryPredicate)
+(isa unitOwner FunctionalSlot)
+(functionalInArgs unitOwner 2)
+(arity unitOwner 2)
+(arg1Isa unitOwner FreeCiv-Unit)
+(arg2Isa unitOwner FreeCiv-Player)
+(comment unitOwner "(unitOwner ?unit ?player) means ?player owns ?unit.")
+(inverseBinaryPredicateOf unitOwner ownsUnit)
+(unitOwner ?unit (UniqueOwnerFn-Individual ?unit))
+
+(isa unitHomeCity BinaryPredicate)
+(isa unitHomeCity FunctionalSlot)
+(functionalInArgs unitHomeCity 2)
+(arity unitHomeCity 2)
+(arg1Isa unitHomeCity FreeCiv-Unit)
+(arg2Isa unitHomeCity FreeCiv-City)
+(comment unitHomeCity "(unitHomeCity ?unit ?city) means ?city is the home-city of (i.e. supports) ?unit.")
+(inverseBinaryPredicateOf unitHomeCity homeCityOf)
+
+(isa currentHitpoints BinaryPredicate)
+(isa currentHitpoints FunctionalSlot)
+(isa currentHitpoints DynamicUpdatePredicate)  ; This will make it impossible to project in a future planned state, but it isn't in the effects of any action right now.
+(arity currentHitpoints 2)
+(arg1Isa currentHitpoints FreeCiv-Unit)
+(arg2Isa currentHitpoints MeasurableQuantity)  ; a HitPoints NAT
+(comment currentHitpoints "(currentHitpoints ?unit ?hitpoints) binds ?hitpoints to current hitpoints.  Value is a NAT of the form (HitPoints ?num)  This counts down from the unit type's initial Hitpoints")
+
+(isa currentMovepoints BinaryPredicate)
+(isa currentMovepoints FunctionalSlot)
+(isa currentMovepoints DynamicUpdatePredicate)  ; This will make it impossible to project in a future planned state, but it isn't in the effects of any action right now.
+(arity currentMovepoints 2)
+(arg1Isa currentMovepoints FreeCiv-Unit)
+(arg2Isa currentMovepoints MeasurableQuantity)  ; a MovePoints NAT
+(comment currentMovepoints "(currentMovepoints ?unit ?hitpoints) binds ?hitpoints to current hitpoints.  Value is a NAT of the form (MovePoints ?num)  This counts down from the unit type's initial Hitpoints")
+
+(isa currentHealth BinaryPredicate)
+(isa currentHealth FunctionalSlot)
+(isa currentHealth DynamicUpdatePredicate)
+(arity currentHealth 2)
+(arg1Isa currentHealth FreeCiv-Unit)
+(arg2Isa currentHealth ScalarInterval)
+(comment currentHealth "(currentHealth ?unit ?percent) returns the current health of the unit as a percentage of the total hitpoints it could have.")
+
+(isa healingRate BinaryPredicate)
+(isa healingRate FunctionalSlot)
+(arity healingRate 2)
+(arg1Isa healingRate FreeCiv-Unit)
+(arg2Isa healingRate ScalarInterval)
+(comment healingRate "(healingRate ?unit ?rate) reifies the rate at which a Freeciv unit regains its currentHealth.")
+
+(isa veteranStatus BinaryPredicate)
+(isa veteranStatus FunctionalSlot)
+(functionalInArgs veteranStatus 2)
+(arity veteranStatus 2)
+(arg1Isa veteranStatus FreeCiv-Unit)
+(arg2Isa veteranStatus MeasurableQuantity)
+(comment veteranStatus "(veteranStatus ?unit ?level) means unit has veteran status ?level. Level is a NAT of the form (FreeCivVeteralLevel ?num)")
+
+;;; This is just the freeciv-specific outsourced predicate that implements
+;;; the more general does predicate.
+(isa currentActivity BinaryPredicate)
+(isa currentActivity FunctionalSlot)
+(functionalInArgs currentActivity 2)
+(arity currentActivity 2)
+(arg1Isa currentActivity FreeCiv-Unit)
+(arg2Isa currentActivity Collection)
+(arg2Genl currentActivity FreeCiv-Activity)
+(comment currentActivity "(currentActivity ?unit ?activity) means ?unit has orders ?activity.")
+
+;; Ken's version:
+;(isa currentActivity BinaryPredicate)
+;(arity currentActivity 2)
+;(arg1Isa currentActivity Agent-Generic) ;; More general than freeciv, really should be PA
+;(arg2Isa currentActivity PurposefulAction) ;; Again, should be PA
+;(comment "(currentActivity ?a ?act) indicates that agent ?a is engaging in the activity ?act.")
+
+(isa hasOrders UnaryPredicate)
+(isa hasOrders DynamicUpdatePredicate)
+(arity hasOrders 1)
+(arg1Isa hasOrders FreeCiv-Unit)
+(comment hasOrders "(hasOrders ?unit) means ?unit is pursuing multi-turn orders.")
+
+(isa doneMoving UnaryPredicate)
+(isa doneMoving DynamicUpdatePredicate)
+(arity doneMoving 1)
+(arg1Isa doneMoving FreeCiv-Unit)
+(comment doneMoving "(doneMoving ?unit) means ?unit cannot move anymore this turn.")
+
+;;; transportedBy is really the same as aboardTransporter, except that it's outsourced.
+(isa transportedBy BinaryPredicate)
+(isa transportedBy FunctionalSlot)  ; This can't be transitive, can it?
+(genlPreds transportedBy aboardTransporter)
+(functionalInArgs transportedBy 2)
+(arity transportedBy 2)
+(arg1Isa transportedBy FreeCiv-Unit)
+(arg2Isa transportedBy FreeCiv-Unit)
+(comment transportedBy "(transportedBy ?unit ?transporter) means ?unit is currently inside ?transporter, such as a ship.")
+(nonDavidsonianPredReln TransportationEvent (TheList transportees transporter) transportedBy)
+
+;; Objects can (and do) move
+;;(isa fcObjectAt DynamicUpdatePredicate)
+;;; This is just the freeciv-specfic outsourced predicate that implements
+;;; the more general objectFoundInLocation predicate.
+(isa fcObjectAt BinaryPredicate)
+(isa fcObjectAt FunctionalSlot)
+(functionalInArgs fcObjectAt 2)
+(arity fcObjectAt 2)
+(arg1Isa fcObjectAt FreeCiv-Object)               ; Not applicable to aggregate objects like Blobs.
+(arg2Isa fcObjectAt FreecivLocation)
+(comment fcObjectAt "(fcObjectAt ?obj (FreecivLocationFn ?x ?y)) means ?obj is at coordinates ?x ?y.")
+
+;; Terrain can change through improvements (eg, turn grassland into hills)
+;;(isa terrainAt DynamicUpdatePredicate)
+(isa terrainAt BinaryPredicate)
+(isa terrainAt FunctionalSlot)
+(functionalInArgs terrainAt 2)
+(arity terrainAt 2)
+(arg1Isa terrainAt FreecivLocation)
+(arg2Isa terrainAt FreeCiv-TerrainTile)
+(comment terrainAt "(terrainAt (FreecivLocationFn ?x ?y) ?terrain) means coordinates ?x ?y have terrain ?terrain.")
+
+;; Specials come and go, such as huts, road, irrigation...
+;;; This is *not* functional, because there can be multiple co-located specials (river, road, irrigation, fortress, etc)
+(isa specialAt BinaryPredicate)
+(arity specialAt 2)
+(arg1Isa specialAt FreecivLocation)
+(arg2Isa specialAt FreeCiv-Special)
+(comment specialAt "(specialAt (FreecivLocationFn ?x ?y) ?special) means there is a special ?special at coordinates ?x ?y.")
+
+;;; Resources are things like Wheat, Pheasant.  This was a new distinction in fc 2.2
+;;; This is functional, since there's at most one resource in a location.
+(isa resourceAt BinaryPredicate)
+(isa resourceAt FunctionalSlot)
+(functionalInArgs resourceAt 2)
+(arity resourceAt 2)
+(arg1Isa resourceAt FreecivLocation)
+(arg2Isa resourceAt FreeCiv-Resource)
+(comment resourceAt "(resourceAt (FreecivLocationFn ?x ?y) ?resource) means there is a resource ?resource at coordinates ?x ?y.")
+
+(isa adjacentToPos BinaryPredicate)
+(arity adjacentToPos 2)
+(arg1Isa adjacentToPos Thing)  ; either a terrain-tile or special (or unit?)  Use generic Thing to keep this from reverse indexing.
+(arg2Isa adjacentToPos FreecivLocation)
+(comment adjacentToPos "(adjacentToPos ?terrain-or-special (FreecivLocationFn ?x ?y)) means some location adjacent (incl. diagonally) to x,y has the indicated terrain or special.")
+
+(isa fcDistance TernaryPredicate)
+(arity fcDistance 3)
+(arg1Isa fcDistance FreecivLocation)
+(arg2Isa fcDistance FreecivLocation)
+(arg3Isa fcDistance Integer)
+(comment fcDistance "(fcDistance ?loc ?loc ?dist) returns move distance in FreeCiv world, accounting for coordinate wraparound.")
+
+(isa sameContinent BinaryPredicate)
+(arity sameContinent 2)
+(arg1Isa sameContinent FreecivLocation)
+(arg2Isa sameContinent FreecivLocation)
+(comment sameContinent "(sameContinent (FreecivLocationFn ?x1 ?y1) (FreecivLocationFn ?x2 ?y2)) is true iff the locations are on the same continent.")
+
+(isa cardinallyAdjacentToPos BinaryPredicate)
+(arity cardinallyAdjacentToPos 2)
+(arg1Isa cardinallyAdjacentToPos Thing)  ; either a terrain-tile or special (or unit?)  Use generic Thing to keep this from reverse indexing.
+(arg2Isa cardinallyAdjacentToPos FreecivLocation)
+(comment cardinallyAdjacentToPos "(cardinallyAdjacentToPos ?terrain-or-special (FreecivLocationFn ?x ?y)) means some location adjacent (not diagonally) to x,y has the indicated terrain or special.")
+
+;;; This version is a higher-order predicate that binds the neighboring location.
+(isa cardinallyAdjacentTo TernaryPredicate)
+(arity cardinallyAdjacentTo 3)
+(arg1Isa cardinallyAdjacentTo FreecivLocation)
+(arg2Isa cardinallyAdjacentTo FreecivLocation)
+(arg3Isa cardinallyAdjacentTo UnaryPredicate)
+(comment cardinallyAdjacentTo "(cardinallyAdjacentTo ?loc1 ?loc2 ?pred) means ?loc2 is cardinally adjacent to ?loc1 and satisfies ?pred, a unary predicate defined on a location.")
+
+;;; Caching could be a problem here if we re-query after moving the unit.
+(isa pathFromTo TernaryPredicate)
+(arity pathFromTo 3)
+(arg1Isa pathFromTo FreeCiv-Unit)
+(arg2Isa pathFromTo FreecivLocation)
+(arg3Isa pathFromTo List)
+(comment pathFromTo "(pathFromTo ?unit (FreecivLocationFn ?dest-x ?dest-y) ?plan) means ?plan is a list of actions that move ?unit from its current location to the destination at ?x, ?y.")
+
+;;; Test the validity of a path plan
+;;;   1. The unit must be able to move into each tile
+;;;   2. The destination must be the last move in the plan
+;;;   3. Each step of the plan must be 1 tile away
+(isa validPathPlan TernaryPredicate)
+(arity validPathPlan 3)
+(arg1Isa validPathPlan FreeCiv-Unit)
+(arg2Isa validPathPlan FreecivLocation)
+(arg3Isa validPathPlan List)
+(comment validPathPlan "(validPathPlan ?unit (FreecivLocationFn ?dest-x ?dest-y) ?plan) means ?plan is a valid plan to move ?unit to ?dest-x, ?dest-y.")
+
+(isa closestLocationSatisfying QuintaryPredicate)
+(arity closestLocationSatisfying 5)
+(arg1Isa closestLocationSatisfying FreecivLocation)
+(arg2Isa closestLocationSatisfying Integer)
+(arg3Isa closestLocationSatisfying Integer)
+(arg4Isa closestLocationSatisfying CycLSentence-Askable)
+(arg5Isa closestLocationSatisfying FreecivLocation)
+(comment closestLocationSatisfying "(closestLocationSatisfying ?start-loc ?min-dist ?max-dist ?condition ?target-loc) scans space from ?start-loc looking for a location that satisfies ?condition, no more than ?max-dist away.")
+
+;;; Caching could be a problem here if we re-query after moving the unit.
+(isa closestAcceptableCitySite TernaryPredicate)
+(arity closestAcceptableCitySite 3)
+(arg1Isa closestAcceptableCitySite FreeCiv-Unit)
+(arg2Isa closestAcceptableCitySite Integer)
+(arg3Isa closestAcceptableCitySite FreecivLocation)
+(comment closestAcceptableCitySite "(closestAcceptableCitySite ?settler ?max-dist (FreecivLocationFn ?x ?y)) means (?x, ?y) is the nearest acceptable city location to ?settler within a maximum distance of ?max-dist.")
+
+(isa closestUnknownLoc TernaryPredicate)
+(arity closestUnknownLoc 3)
+(arg1Isa closestUnknownLoc FreeCiv-Unit)
+(arg2Isa closestUnknownLoc Integer)
+(arg3Isa closestUnknownLoc FreecivLocation)
+(comment closestUnknownLoc "(closestUnknownLoc ?explorer ?max-dist (FreecivLocationFn ?x ?y)) means (?x, ?y) is the nearest unknown location to ?explorer within a maximum distance of ?max-dist.")
+
+(isa preferredExplorationDirection BinaryPredicate)
+(isa preferredExplorationDirection FunctionalPredicate)
+(functionalInArgs preferredExplorationDirection 2)
+(arity preferredExplorationDirection 2)
+(arg1Isa preferredExplorationDirection FreeCiv-Unit)
+(arg2Isa preferredExplorationDirection RotDir)
+(comment preferredExplorationDirection "(preferredExplorationDirection ?unit ?num) means unit will travel clockwise (CW) or counterclockwise (CCW) when exploring a perimeter.")
+
+(isa nextCoastlinePos TernaryPredicate)
+(isa nextCoastlinePos FunctionalPredicate)
+(functionalInArgs nextCoastlinePos 3)
+(arity nextCoastlinePos 3)
+(arg1Isa nextCoastlinePos FreeCiv-Unit)
+(arg2Isa nextCoastlinePos RotDir)
+(arg3Isa nextCoastlinePos FreecivLocation)
+(comment nextCoastlinePos "(nextCoastlinePos ?unit ?dir (FreecivLocationFn ?x ?y)) binds ?x and ?y to the next position along the coastline if ?landunit were to travel in direction ?dir (CW = clockwise, ccw = counterclockwise).")
+
+(isa lastTurnIndex BinaryPredicate)
+(isa lastTurnIndex FunctionalPredicate)
+(arity lastTurnIndex 2)
+(functionalInArgs lastTurnIndex 2)
+(arg1Isa lastTurnIndex FreeCiv-Unit)
+(arg2Isa lastTurnIndex Integer)
+(comment lastTurnIndex "(lastTurnIndex ?unit ?int) keeps track of the last direction ?unit turned while following the coast.")
+
+;(isa nextShorelinePos TernaryPredicate)
+;(arity nextShorelinePos 3)
+;(arg1Isa nextShorelinePos FreeCiv-SeaUnit)
+;(arg2Isa nextShorelinePos Integer)
+;(arg3Isa nextShorelinePos FreecivLocation)
+;(comment nextShorelinePos "(nextShorelinePos ?seaunit ?dir (FreecivLocationFn ?x ?y)) binds ?x and ?y to the next position along the shoreline (in the Ocean) if ?seaunit were to travel in direction ?dir (0 = clockwise, 1 = ccw).")
+
+(isa resolvedSkolemsOf Predicate)
+(arity resolvedSkolemsOf 5)
+(arg1Isa resolvedSkolemsOf CycLFormula)
+(arg2Isa resolvedSkolemsOf Mapping)
+(arg3Isa resolvedSkolemsOf Case)
+(arg4Isa resolvedSkolemsOf Case)
+(arg5Isa resolvedSkolemsOf CycLFormula)
+(comment resolvedSkolemsOf "(resolvedSkolemsOf ?expression ?mapping ?base ?target ?skolem-free-expr) binds ?skolem-free-expr to a variant of ?expression with skolems resolve to the extent possible.")
+
+(isa hasEmbassy BinaryPredicate)
+(arity hasEmbassy 2)
+(arg1Isa hasEmbassy FreeCiv-Player)
+(arg2Isa hasEmbassy FreeCiv-Player)
+(comment hasEmbassy "(hasEmbassy ?player ?other-player) means ?player has an embassy in ?other-player's civ.")
+
+(isa diplomacyPossible BinaryPredicate)
+(isa diplomacyPossible DynamicUpdatePredicate)
+(arity diplomacyPossible 2)
+(arg1Isa diplomacyPossible FreeCiv-Player)
+(arg2Isa diplomacyPossible FreeCiv-Player)
+(comment diplomacyPossible "(diplomacyPossible ?player ?other-player) means it's possible for current player to establish diplomacy with ?other-player.")
+
+(isa couldMeetWith BinaryPredicate)
+(isa couldMeetWith DynamicUpdatePredicate)
+(arity couldMeetWith 2)
+(arg1Isa couldMeetWith FreeCiv-Player)
+(arg2Isa couldMeetWith FreeCiv-Player)
+(comment couldMeetWith "(couldMeetWith ?player ?other-player) means it's possible for current player to meet with ?other-player.")
+
+(isa currentlyMeetingWith BinaryPredicate)
+(isa currentlyMeetingWith DynamicUpdatePredicate)
+(arity currentlyMeetingWith 2)
+(arg1Isa currentlyMeetingWith FreeCiv-Player)
+(arg2Isa currentlyMeetingWith FreeCiv-Player)
+(comment currentlyMeetingWith "(currentlyMeetingWith ?player ?other-player) means that player is currently negotiating with ?other-player for a treaty.")
+
+(isa intelPossible BinaryPredicate)
+(isa intelPossible DynamicUpdatePredicate)
+(arity intelPossible 2)
+(arg1Isa intelPossible FreeCiv-Player)
+(arg2Isa intelPossible FreeCiv-Player)
+(comment intelPossible "(intelPossible ?player ?other-player) means it is possible for the current player to gather intel on ?other-player.")
+
+;;; This is now defined in combat.meld.  We outsource it in Freeciv to get the latest info.
+;;;(isa diplomaticState TernaryPredicate)
+;;;(arity diplomaticState 3)
+;;;(arg1Isa diplomaticState FreeCiv-Player)
+;;;(arg2Isa diplomaticState FreeCiv-Player)
+;;;(arg3Isa diplomaticState Freeciv-DiplomaticState)
+;;;(comment diplomaticState "(diplomaticState ?player ?other-player ?diplomatic-state) expresses the relationship between player's civilizations.")
+
+(isa proposedDiplomaticState TernaryPredicate)
+(isa proposedDiplomaticState DynamicUpdatePredicate)
+(arity proposedDiplomaticState 3)
+(arg1Isa proposedDiplomaticState FreeCiv-Player)
+(arg2Isa proposedDiplomaticState FreeCiv-Player)
+(arg3Isa proposedDiplomaticState Freeciv-DiplomaticState)
+(comment proposedDiplomaticState "(proposedDiplomaticState ?player ?other-player ?diplomatic-state) binds the target diplomatic state in a treaty. Outsourced.")
+
+(isa relativeAttitude BinaryPredicate)
+(arity relativeAttitude 2)
+(arg1Isa relativeAttitude FreeCiv-Player)
+(arg2Isa relativeAttitude Freeciv-OpponentAttitude)
+(comment relativeAttitude "(relativeAttitude ?opposing-player ?attitude) binds ?attitude to FC-Genocidal, FC-Hostile, FC-Helpful, etc, if the opposing player is a bot.")
+
+(isa spaceshipStatus BinaryPredicate)
+(isa spaceshipStatus FunctionalSlot)
+(arity spaceshipStatus 2)
+(arg1Isa spaceshipStatus FreeCiv-Player)
+(arg2Isa spaceshipStatus FreeCiv-SpaceStatus)
+(comment spaceshipStatus "(spaceshipStatus ?player ?status) returns the status of the spaceship (if any) of player ?player.")
+
+;;;
+;;; Backchaining Predicates:
+;;;
+
+(isa wonderExists UnaryPredicate)
+(arity wonderExists 1)
+(arg1Isa wonderExists Collection)  ; typegenls wonderExists FreeCiv-Wonder)
+(comment wonderExists "(wonderExists ?wonder) is true iff some player has already achieved the specified wonder.")
+
+(isa civPopulation BinaryPredicate)
+(isa civPopulation MeasurableQuantitySlot)
+(isa civPopulation FunctionalPredicate)
+(isa civPopulation DynamicUpdatePredicate)
+(functionalInArgs civPopulation 2)
+(arity civPopulation 2)
+(arg1Isa civPopulation FreeCiv-Player)
+(arg2Isa civPopulation Integer)
+(comment civPopulation "(civPopulation ?player ?population) is the population of the civilization (in thousands).")
+
+(isa civFoodSurplusTotal BinaryPredicate)
+(isa civFoodSurplusTotal MeasurableQuantitySlot)
+(isa civFoodSurplusTotal FunctionalPredicate)
+(isa civFoodSurplusTotal DynamicUpdatePredicate)
+(functionalInArgs civFoodSurplusTotal 2)
+(arity civFoodSurplusTotal 2)
+(arg1Isa civFoodSurplusTotal FreeCiv-Player)
+(arg2Isa civFoodSurplusTotal ContinuousMeasurableQuantity) ; This is a rate.  It should be FoodQuantityFn per turn.
+(comment civFoodSurplusTotal "(civFoodSurplusTotal ?player ?total) is the civilization-wide food surplus of the current player's civilization.")
+
+
+(isa civGoldProduction BinaryPredicate)
+(isa civGoldProduction MeasurableQuantitySlot)
+(isa civGoldProduction FunctionalPredicate)
+(isa civGoldProduction DynamicUpdatePredicate)
+(functionalInArgs civGoldProduction 2)
+(arity civGoldProduction 2)
+(arg1Isa civGoldProduction FreeCiv-Player)
+(arg2Isa civGoldProduction ContinuousMeasurableQuantity)  ; *not* a MonetaryValue, because it's a rate, not an amount.
+(comment civGoldProduction "(civGoldProduction ?player ?total) is the rate of gold entering the treasury each turn.")
+
+
+(isa civProductionTotal BinaryPredicate)
+(isa civProductionTotal MeasurableQuantitySlot)
+(isa civProductionTotal FunctionalPredicate)
+(isa civProductionTotal DynamicUpdatePredicate)
+(functionalInArgs civProductionTotal 2)
+(arity civProductionTotal 2)
+(arg1Isa civProductionTotal FreeCiv-Player)
+(arg2Isa civProductionTotal ContinuousMeasurableQuantity)  ; The cumulative shield surplus.
+(comment civProductionTotal "(civProductionTotal ?player ?total) is the civilization-wide shield production of the current player's civilization.")
+
+
+;;; We need these to support relation induction.
+;;; Otherwise we could just use owns in the type-level qualitative model.
+(isa ownsCity BinaryPredicate)
+(genlPreds ownsCity owns)
+(arity ownsCity 2)
+(arg1Isa ownsCity FreeCiv-Player)
+(arg2Isa ownsCity FreeCiv-City)
+(comment ownsCity "(ownsCity ?player ?city) means ?player owns ?city.")
+(inverseBinaryPredicateOf ownsCity cityOwner)
+
+(isa ownsUnit BinaryPredicate)
+(genlPreds ownsUnit owns)
+(arity ownsUnit 2)
+(arg1Isa ownsUnit FreeCiv-Player)
+(arg2Isa ownsUnit FreeCiv-Unit)
+(comment ownsUnit "(ownsUnit ?player ?unit) means ?player owns ?unit.")
+(inverseBinaryPredicateOf ownsUnit unitOwner)
+
+;;; arg-inverse of unitHomeCity, to support type-level influence statements.
+(isa homeCityOf BinaryPredicate)
+(arity homeCityOf 2)
+(arg1Isa homeCityOf FreeCiv-City)
+(arg2Isa homeCityOf FreeCiv-Unit)
+(comment homeCityOf "(homeCityOf ?city ?unit) means the unitHomeCity of ?unit is ?city.  Ie, the city supports the unit.")
+(inverseBinaryPredicateOf homeCityOf unitHomeCity)
+
+(isa canTravelOn BinaryPredicate)
+(arity canTravelOn 2)
+(arg1Isa canTravelOn FreeCiv-Unit)
+(arg2Isa canTravelOn FreeCiv-TerrainTile)
+(comment canTravelOn "(canTravelOn ?unit ?terrain-type) means ?unit can travel directly on the terrain-type ?terrain")
+
+(isa inFriendlyCity BinaryPredicate)
+(arity inFriendlyCity 2)
+(arg1Isa inFriendlyCity FreeCiv-Unit)
+(arg2Isa inFriendlyCity FreeCiv-City)
+(comment inFriendlyCity "(inFriendlyCity ?unit ?city) is true when ?unit is in a city with the same owner.")
+
+(isa mostNeededImprovementType BinaryPredicate)
+(arity mostNeededImprovementType 2)
+(arg1Isa mostNeededImprovementType FreeCiv-City)
+(arg2Isa mostNeededImprovementType FreeCiv-CityImprovementDimension)
+(comment mostNeededImprovementType "(mostNeededImprovementType ?city ?dimension) means ?city is in most dire need of improving along ?dimension, eg, ImproveFood, ImproveProduction, or ImproveTrade.")
+
+(isa minimumSurplusType QuaternaryPredicate)
+(arity minimumSurplusType 4)
+(arg1Isa minimumSurplusType Integer)
+(arg2Isa minimumSurplusType Integer)
+(arg3Isa minimumSurplusType Integer)
+(arg4Isa minimumSurplusType FreeCiv-CityImprovementDimension)
+(comment minimumSurplusType "(minimumSurplusType ?f ?p ?t ?dimension) is a helper predicate for mostNeededImprovementType.")
+
+(isa coastalCity UnaryPredicate)
+(arity coastalCity 1)
+(arg1Isa coastalCity FreeCiv-City)
+(comment coastalCity "A city is coastal if it is directly adjacent to the ocean.")
+
+(isa idleUnitOfType BinaryPredicate)
+(arity idleUnitOfType 2)
+(arg1Isa idleUnitOfType Collection)
+(arg2Isa idleUnitOfType FreeCiv-Unit)
+(comment idleUnitOfType "(idleUnitOfType ?type ?unit) means ?unit isa ?type and is currently idle.")
+
+(isa idleUnit UnaryPredicate)
+(arity idleUnit 1)
+(arg1Isa idleUnit FreeCiv-Unit)
+(comment idleUnit "(idleUnit ?unit) means ?unit is currently idle")
+
+
+(isa idleUnitSet UnaryPredicate)
+(arity idleUnitSet 1)
+(arg1Isa idleUnitSet Set-Mathematical)
+(comment idleUnitSet "(idleUnitSet ?unitSet) denotes the set of currently idle units belonging to the currentPlayer.")
+
+(isa potentialCityAt UnaryPredicate)
+(arity potentialCityAt 1)
+(arg1Isa potentialCityAt FreecivLocation)
+(comment potentialCityAt "(potentialCityAt ?loc) is true if ?loc is a reasonable place to put a Freeciv city.  This takes into account spacing constraints with other cities.")
+
+(isa cityPopulation BinaryPredicate)
+(isa cityPopulation DynamicUpdatePredicate)
+(isa cityPopulation MeasurableQuantitySlot)
+(isa cityPopulation FunctionalPredicate)
+(arity cityPopulation 2)
+(arg1Isa cityPopulation FreeCiv-City)
+(arg2Isa cityPopulation ContinuousMeasurableQuantity)
+(comment cityPopulation "(cityPopulation ?city ?pop) returns the population (in thousands) of the city.  Not linear with citySize.")
+
+(isa currentCitySet BinaryPredicate)
+(isa currentCitySet DynamicUpdatePredicate)
+(arity currentCitySet 2)
+(arg1Isa currentCitySet FreeCiv-Player)
+(arg2Isa currentCitySet Set-Mathematical)
+(comment currentCitySet "(currentCitySet ?player ?citySet) denotes the set of cities belonging to the ?player.")
+
+(isa numberOfCities BinaryPredicate)
+(isa numberOfCities FunctionalPredicate)
+(isa numberOfCities MeasurableQuantitySlot)
+(functionalInArgs numberOfCities 2)
+(arity numberOfCities 2)
+(arg1Isa numberOfCities FreeCiv-Player)
+(arg2Isa numberOfCities ContinuousMeasurableQuantity)
+(comment numberOfCities "(numberOfCities ?player ?count) means ?player has ?count cities.")
+
+(isa cityCanBuild BinaryPredicate)
+(isa cityCanBuild DynamicUpdatePredicate)  ; now outsourced
+(arity cityCanBuild 2)
+(arg1Isa cityCanBuild FreeCiv-City)
+(arg2Isa cityCanBuild FreeCiv-ObjectType)
+(comment cityCanBuild "(cityCanBuild ?city ?objType) means ?city has the technology, improvements, and trade surplus to build and keep ?objType")
+
+;(isa canAfford BinaryPredicate)
+;(arity canAfford 2)
+;(arg1Isa canAfford FreeCiv-City)
+;(arg2Isa canAfford FreeCiv-ObjectType)
+;(comment canAfford "(canAfford ?city ?objectType) means ?city can afford the upkeep on ?objectType.")
+
+(isa cityImprovementsUpkeep BinaryPredicate)
+(isa cityImprovementsUpkeep MeasurableQuantitySlot)
+(isa cityImprovementsUpkeep FunctionalPredicate)
+(functionalInArgs cityImprovementsUpkeep 2)
+(arity cityImprovementsUpkeep 2)
+(arg1Isa cityImprovementsUpkeep FreeCiv-City)
+(arg2Isa cityImprovementsUpkeep MonetaryValue)
+(comment cityImprovementsUpkeep "(cityImprovementsUpkeep ?city ?cost) binds the total upkeep cost of all the improvements in ?city")
+
+(isa totalImprovementsUpkeep BinaryPredicate)
+(arity totalImprovementsUpkeep 2)
+(arg1Isa totalImprovementsUpkeep Set-Mathematical)
+(arg2Isa totalImprovementsUpkeep MonetaryValue)
+(comment totalImprovementsUpkeep "(totalImprovementsUpkeep ?improvementSet ?cost) is a helper predicate that binds the upkeep cost of all the improvements in ?improvementSet")
+
+(isa requiresImprovement TernaryPredicate)
+(arity requiresImprovement 3)
+(arg1Isa requiresImprovement FreeCiv-City)
+(arg2Isa requiresImprovement FreeCiv-ObjectType)
+(arg3Isa requiresImprovement FreeCiv-Building-Type)
+(comment requiresImprovement "(requiresImprovement ?city ?objectType ?improvementType) means ?city can't build ?objectType because it needs ?improvementType.")
+
+(isa isObsolete UnaryPredicate)
+(arity isObsolete 1)
+(arg1Isa isObsolete FreeCiv-Object)
+(comment isObsolete "(isObsolete ?tech) means the currentPlayer possesses some other technology that makes ?tech obsolete.")
+
+(isa roadBlockedByRiver BinaryPredicate)
+(arity roadBlockedByRiver 2)
+(arg1Isa roadBlockedByRiver FreeCiv-Player)
+(arg2Isa roadBlockedByRiver FreecivLocation)
+(comment roadBlockedByRiver "(roadBlockedByRiver ?player ?loc) means ?player cannot build a road at ?loc until bridge technology is achieved.")
+
+(isa plansConstruction BinaryPredicate)
+(arity plansConstruction 2)
+(arg1Isa plansConstruction FreeCiv-City)
+(arg2Isa plansConstruction FreeCiv-BuildableThing-Type)
+(comment plansConstruction "(plansConstruction ?city ?item) means ?city is currently producing ?item.")
+
+(isa hasHut UnaryPredicate)
+(arity hasHut 1)
+(arg1Isa hasHut FreecivLocation)
+(comment hasHut "(hasHut (FreecivLocationFn ?x ?y)) is true when there is currently a hut at location ?x ?y.")
+
+(isa cityAt BinaryPredicate)
+(arity cityAt 2)
+(arg1Isa cityAt FreeCiv-City)
+(arg2Isa cityAt FreecivLocation)
+(comment cityAt "(cityAt ?city ?loc) is a convenience predicate that means there's a ?city at location ?loc.")
+
+(isa citySpecialAt TernaryPredicate)
+(arity citySpecialAt 3)
+(arg1Isa citySpecialAt FreeCiv-City)
+(arg2Isa citySpecialAt FreeCiv-Special)
+(arg3Isa citySpecialAt FreecivLocation)
+(comment citySpecialAt "(citySpecialAt ?city ?special ?loc) means there is a ?special at workable tile location ?loc in ?city")
+
+(isa cityTerrainAt TernaryPredicate)
+(arity cityTerrainAt 3)
+(arg1Isa cityTerrainAt FreeCiv-City)
+(arg2Isa cityTerrainAt FreeCiv-TerrainTile)
+(arg3Isa cityTerrainAt FreecivLocation)
+(comment cityTerrainAt "(cityTerrainAt ?city ?terrain ?loc) means ?city is working ?loc with terrain ?terrain.")
+
+(isa cityHappiness BinaryPredicate)
+(isa cityHappiness MeasurableQuantitySlot)
+(isa cityHappiness FunctionalPredicate)
+(functionalInArgs cityHappiness 2)
+(arity cityHappiness 2)
+(arg1Isa cityHappiness FreeCiv-City)
+(arg2Isa cityHappiness ContinuousMeasurableQuantity)
+(comment cityHappiness "(cityHappiness ?city ?mood) binds mood to (FreeCivMoodFn #) where # is on a scale of 4 (happy) to 1 (angry), representing the average happiness of citizens.")
+
+(isa cityCannotGrow UnaryPredicate)
+(arity cityCannotGrow 1)
+(arg1Isa cityCannotGrow FreeCiv-City)
+(comment cityCannotGrow "(cityCannotGrow ?city) means city needs an improvement in order to grow its population.")
+
+(isa numCities BinaryPredicate)
+(arity numCities 2)
+(arg1Isa numCities FreeCiv-Player)
+(arg2Isa numCities Integer)
+(comment numCities "(numCities ?player ?num) binds ?num to the number of cities owned by ?player.")
+
+(isa hasFleet BinaryPredicate)
+(arity hasFleet 2)
+(arg1Isa hasFleet FreeCiv-Player)
+(arg2Isa hasFleet Integer)
+(comment hasFleet "(hasFleet ?player ?size) is true if ?player owns ?size SeaUnits.")
+
+(isa citySupportsUnitOfType TernaryPredicate)
+(arity citySupportsUnitOfType 3)
+(arg1Isa citySupportsUnitOfType FreeCiv-City)
+(arg2Isa citySupportsUnitOfType Collection)
+(arg3Isa citySupportsUnitOfType FreeCiv-Unit)
+(comment citySupportsUnitOfType "(citySupportsUnitOfType ?unitType ?unit) means there is a unit of type ?unitType whose homecity is ?city.")
+
+(isa numSupportedUnits BinaryPredicate)
+(isa numSupportedUnits MeasurableQuantitySlot)
+(isa numSupportedUnits FunctionalPredicate)
+(functionalInArgs numSupportedUnits 2)
+(arity numSupportedUnits 2)
+(arg1Isa numSupportedUnits FreeCiv-City)
+(arg2Isa numSupportedUnits ContinuousMeasurableQuantity)
+(comment numSupportedUnits "(numSupportedUnits ?city ?unit-count) means ?city is supporting ?unit-count units, where ?population is a NAT of the form (FreecivUnitCountFn <number>)")
+
+(isa supportedUnitsShieldUpkeep BinaryPredicate)
+(isa supportedUnitsShieldUpkeep MeasurableQuantitySlot)
+(isa supportedUnitsShieldUpkeep FunctionalPredicate)
+(functionalInArgs supportedUnitsShieldUpkeep 2)
+(arity supportedUnitsShieldUpkeep 2)
+(arg1Isa supportedUnitsShieldUpkeep FreeCiv-City)
+(arg2Isa supportedUnitsShieldUpkeep ContinuousMeasurableQuantity)
+(comment supportedUnitsShieldUpkeep "(supportedUnitsShieldUpkeep ?city ?upkeep) binds ?upkeep to total shield production quantity allocated to supporting units in ?city")
+
+(isa unitSetShieldUpkeep BinaryPredicate)
+(isa unitSetShieldUpkeep MeasurableQuantitySlot)
+(arity unitSetShieldUpkeep 2)
+(arg1Isa unitSetShieldUpkeep Set-Mathematical)
+(arg2Isa unitSetShieldUpkeep ContinuousMeasurableQuantity)
+(comment unitSetShieldUpkeep "(unitSetShieldUpkeep ?unitSet ?productionQuantity) binds ?productionQuantity to the shields required to support the units in ?unitSet.")
+
+(isa supportedUnitsFoodUpkeep BinaryPredicate)
+(isa supportedUnitsFoodUpkeep MeasurableQuantitySlot)
+(isa supportedUnitsFoodUpkeep FunctionalPredicate)
+(functionalInArgs supportedUnitsFoodUpkeep 2)
+(arity supportedUnitsFoodUpkeep 2)
+(arg1Isa supportedUnitsFoodUpkeep FreeCiv-City)
+(arg2Isa supportedUnitsFoodUpkeep ContinuousMeasurableQuantity)
+(comment supportedUnitsFoodUpkeep "(supportedUnitsFoodUpkeep ?city ?upkeep) binds ?upkeep to total food production quantity allocated to supporting units in ?city")
+
+(isa unitSetFoodUpkeep BinaryPredicate)
+(isa unitSetFoodUpkeep MeasurableQuantitySlot)
+(arity unitSetFoodUpkeep 2)
+(arg1Isa unitSetFoodUpkeep Set-Mathematical)
+(arg2Isa unitSetFoodUpkeep ContinuousMeasurableQuantity)
+(comment unitSetFoodUpkeep "(unitSetFoodUpkeep ?unitSet ?foodQuantity) binds ?foodQuantity to the food required to support the units in ?unitSet.")
+
+(isa unitHasShieldUpkeep BinaryPredicate)
+(isa unitHasShieldUpkeep MeasurableQuantitySlot)
+(arity unitHasShieldUpkeep 2)
+(arg1Isa unitHasShieldUpkeep FreeCiv-Unit)
+(arg2Isa unitHasShieldUpkeep ContinuousMeasurableQuantity)
+(comment unitHasShieldUpkeep "(unitHasShieldUpkeep ?unit ?upkeep) binds ?upkeep to shield quantity allocated to maintaining ?unit")
+
+(isa unitHasFoodUpkeep BinaryPredicate)
+(isa unitHasFoodUpkeep MeasurableQuantitySlot)
+(arity unitHasFoodUpkeep 2)
+(arg1Isa unitHasFoodUpkeep FreeCiv-Unit)
+(arg2Isa unitHasFoodUpkeep ContinuousMeasurableQuantity)
+(comment unitHasFoodUpkeep "(unitHasFoodUpkeep ?unit ?upkeep) binds ?upkeep to food quantity allocated to maintaining ?unit")
+
+(isa tradeRouteIncome BinaryPredicate)
+(isa tradeRouteIncome MeasurableQuantitySlot)
+(arity tradeRouteIncome 2)
+(arg1Isa tradeRouteIncome FreeCiv-City)
+(arg2Isa tradeRouteIncome MonetaryValue)
+(comment tradeRouteIncome "(tradeRouteIncome ?city ?totalRevenue) binds ?totalRevenue to the total income from all of ?city's trade routes.")
+
+;;; *** Not defined yet!
+(isa incomeFromTradePartners TernaryPredicate)
+(arity incomeFromTradePartners 3)
+(arg1Isa incomeFromTradePartners FreeCiv-City)
+(arg2Isa incomeFromTradePartners Set-Mathematical)
+(arg3Isa incomeFromTradePartners MonetaryValue)
+(comment incomeFromTradePartners "(incomeFromTradePartners ?city ?trade-route-set ?income) binds ?income to the NAT (FreeCivCapitalFn <amount>) representing the total revenue from trade routes with cities in ?trad-route-set.")
+
+(isa distanceToCapitol BinaryPredicate)
+(isa distanceToCapitol MeasurableQuantitySlot)
+(arity distanceToCapitol 2)
+(arg1Isa distanceToCapitol FreeCiv-City)
+(arg2Isa distanceToCapitol ContinuousMeasurableQuantity)
+(comment distanceToCapitol "(distanceToCapitol ?city ?distance) binds ?distance to the NAT (FreecivTileDistance <amount>) representing the distance from ?city to the capitol.")
+
+(isa freecivGamePhase UnaryPredicate)
+(isa freecivGamePhase FunctionalPredicate)
+(functionalInArgs freecivGamePhase 1)
+(arg1Isa freecivGamePhase FreeCiv-GamePhaseType)
+(arity freecivGamePhase 1)
+(comment freecivGamePhase "(freecivGamePhase ?phase) identifies the current phase of the game as, for example, exploration, expansion, conquest")
+
+(isa numTaxCollectors BinaryPredicate)
+(isa numTaxCollectors MeasurableQuantitySlot)
+(arity numTaxCollectors 2)
+(arg1Isa numTaxCollectors FreeCiv-City)
+(arg2Isa numTaxCollectors ContinuousMeasurableQuantity)
+(comment numTaxCollectors "(numTaxCollectors ?city ?population) binds ?population to the (FreecivCitizenCountFn <num>) NAT representing the number of Tax collector specialists.")
+
+(isa numScientists BinaryPredicate)
+(isa numScientists MeasurableQuantitySlot)
+(arity numScientists 2)
+(arg1Isa numScientists FreeCiv-City)
+(arg2Isa numScientists ContinuousMeasurableQuantity)
+(comment numScientists "(numScientists ?city ?population) binds ?population to the (FreecivCitizenCountFn <num>) NAT representing the number of Scientist specialists.")
+
+(isa numEntertainers BinaryPredicate)
+(isa numEntertainers MeasurableQuantitySlot)
+(arity numEntertainers 2)
+(arg1Isa numEntertainers FreeCiv-City)
+(arg2Isa numEntertainers ContinuousMeasurableQuantity)
+(comment numEntertainers "(numEntertainers ?city ?population) binds ?population to the (FreecivCitizenCountFn <num>) NAT representing the number of Elvis specialists.")
+
+(isa unitProducedThisTurn BinaryPredicate)
+(arity unitProducedThisTurn 2)
+(arg1Isa unitProducedThisTurn FreeCiv-City)
+(arg2Isa unitProducedThisTurn FreeCiv-Unit)
+(comment unitProducedThisTurn "(unitProducedThisTurn ?city ?unit) binds ?unit to a unit built in the current turn in ?city in the current game.")
+
+
+
+;;; Not sure if this is the right place for this.  i just thought it should move out of
+;;; skea/v2/kb-flat-files/skea-freeciv.lsp, where it was the only thing present.
+
+(isa FreeCivAI-WorldMap Collection)
+(genls FreeCivAI-WorldMap Map)
+(comment FreeCivAI-WorldMap "A map of the world as seen by a FreeCivAI player.")
+
+
+;;;
+;;; End of File
+;;;

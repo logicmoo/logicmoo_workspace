@@ -1,0 +1,244 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: geo-process.meld
+;;;;    System: 
+;;;;    Author: Panrong(Penny) Yin
+;;;;   Created: May 22, 2009 12:55:12
+;;;;   Purpose: This is a flat-file to define geological processes and relations
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Friday, May 7, 2010 at 14:22:09 by Penny
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory GeoscienceFactsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(isa problemsForPossibleGPT Predicate)
+(comment problemsForPossibleGPT 
+  "problemsForPossibleGPT takes three arguments: the first and
+   the second arguments indicate situations before and after the
+   geological process, and the third argument indicates the
+   happened geological process. It is true iff the geological process 
+   happens and leads situation before to situation after.")
+(arity problemsForPossibleGPT 3)
+(arg1Isa problemsForPossibleGPT Situation)
+(arg2Isa problemsForPossibleGPT Situation)
+(arg3Isa problemsForPossibleGPT Predicate)
+
+(isa geologicalProcessLeadingTo Predicate)
+(comment geologicalProcessLeadingTo 
+  "geologicalProcessLeadingTo is true iff the geological process
+   possibly happened before, which leads to current situation.")
+(arity geologicalProcessLeadingTo 2)
+(arg1Isa geologicalProcessLeadingTo Situation)
+(arg2Isa geologicalProcessLeadingTo GeologicalProcess)
+
+(isa geologicalProcessCausing Predicate)
+(comment geologicalProcessCausing 
+  "(geologicalProcessCausing <before> <after> <process instance>) is true 
+   iff this geological process possibly happened before, which causes the 
+   before situation transfer to the current situation.")
+(arity geologicalProcessLeadingTo 3)
+(arg1Isa geologicalProcessLeadingTo Situation)
+(arg2Isa geologicalProcessLeadingTo Situation)
+(arg3Isa geologicalProcessLeadingTo Function-Denotational)
+
+(isa StateBeforeFn Function-Denotational)
+(comment StateBeforeFn
+  "The #StateBeforeFn returns an instance of Situation, which indicates a
+   state before a geological process happens that leads to the current state.")
+(arity StateBeforeFn 2)
+(arg1Isa StateBeforeFn Situation)
+(arg1Isa StateBeforeFn Microtheory)
+(arg2Isa StateBeforeFn GeologicalProcess)
+(resultIsa StateBeforeFn Situation)
+(resultIsa StateBeforeFn Microtheory)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Geological process collections
+
+(isa GeologicalProcess Collection)
+(genls GeologicalProcess PhysicalEvent)
+(comment GeologicalProcess
+  "The #$GeologicalProcess is a collection of geological processes involved with 
+   surface changes of geological units.")
+
+(isa Deposition-GeoProcessFn Function-Denotational)
+(comment Deposition-GeoProcessFn
+  "The #$Deposition-GeoProcessFn returns an instance of GeologicalProcess: 
+   based on the given context. For example,
+   (Deposition-GeoProcessFn rock1 rock2) denotes the geological deposition process
+   happened between rock1 and rock2.")
+(arity Deposition-GeoProcessFn 2)
+(arg1Isa Deposition-GeoProcessFn SedimentaryRock)
+(arg2Isa Deposition-GeoProcessFn Set)
+(resultIsa Deposition-GeoProcessFn GeologicalProcess)
+(resultGenl Deposition-GeoProcessFn PhysicalEvent)
+
+(isa Faulting-GeoProcessFn Function-Denotational)
+(comment Faulting-GeoProcessFn
+  "The #$Faulting-GeoProcessFn returns an instance of GeologicalProcess 
+   based on the given context. For example,
+   (Faulting-GeoProcessFn <fault> <set>) denotes the geological faulting process
+   causing a fault splitting a set of relevant rocks into pairs of separate rocks and relative movement.")
+(arity Faulting-GeoProcessFn 2)
+(arg1Isa Faulting-GeoProcessFn Fault-Topographical)
+(arg2Isa Faulting-GeoProcessFn Set)
+(resultIsa Faulting-GeoProcessFn GeologicalProcess)
+(resultGenl Faulting-GeoProcessFn PhysicalEvent)
+
+(isa Tilting-GeoProcessFn Function-Denotational)
+(comment Tilting-GeoProcessFn
+  "The #$Tilting-GeoProcessFn returns an instance of GeologicalProcess 
+   based on the given context. For example,
+   (Tilting-GeoProcessFn <rock> <x> <y>) denotes the geological tilting process
+   causing at least one layer of rock to tilt.")
+(arity Tilting-GeoProcessFn 3)
+(arg1Isa Tilting-GeoProcessFn SedimentaryRock)
+(arg2Isa Tilting-GeoProcessFn (IntegerFromToFn -1 1))
+(arg3Isa Tilting-GeoProcessFn (IntegerFromToFn -1 1))
+(resultIsa Tilting-GeoProcessFn GeologicalProcess)
+(resultGenl Tilting-GeoProcessFn PhysicalEvent)
+
+(isa Intrusion-GeoProcessFn Function-Denotational)
+(comment Intrusion-GeoProcessFn
+  "The #$Intrusion-GeoProcessFn returns an instance of GeologicalProcess 
+   based on the given context. For example,
+   (Intrusion-GeoProcessFn <rock1> <set>) denotes the geological intrusion process
+   causing the intrusive rock1 enter a set of other rocks.")
+(arity Intrusion-GeoProcessFn 2)
+(arg1Isa Intrusion-GeoProcessFn IgneousRock)
+(arg2Isa Intrusion-GeoProcessFn Set)
+(resultIsa Intrusion-GeoProcessFn GeologicalProcess)
+(resultGenl Intrusion-GeoProcessFn PhysicalEvent)
+
+(isa Erosion-GeoProcessFn Function-Denotational)
+(comment Erosion-GeoProcessFn
+  "The #$Erosion-GeoProcessFn returns an instance of GeologicalProcess 
+   based on the given context. For example,
+   (Erosion-GeoProcessFn rock) denotes the geological erosion process
+   causing the toppest layer of rock decreases.")
+(arity Erosion-GeoProcessFn 1)
+(arg1Isa Erosion-GeoProcessFn SedimentaryRock)
+(resultIsa Erosion-GeoProcessFn GeologicalProcess)
+(resultGenl Erosion-GeoProcessFn PhysicalEvent)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa deposition-GeologicalProcess Predicate)
+(comment deposition-GeologicalProcess 
+  "deposition-GeologicalProcess is true iff there appears an extra 
+   layer of rock above the original state.
+   Causes: fluids(e.g. wind, water) slow.
+   Concepts involved: sedimentary rocks(e.g. sandstone). 
+   Spatial relations: the sediments are on top of other existing layers.")
+(arity deposition-GeologicalProcess 2)
+(arg1Isa deposition-GeologicalProcess Situation)
+(arg2Isa deposition-GeologicalProcess Situation)
+
+(isa faulting-GeologicalProcess Predicate)
+(comment faulting-GeologicalProcess 
+  "faulting-GeologicalProcess is true iff a new fault split rocks into two parts.
+   Causes: slip or sliding occurs.
+   Concepts involved: fault scarp, displacement, fault line.
+   Spatial relations: the original whole part of rock is separated by the fault line 
+   into two parts at its left and right sides with displacement exists between those two parts.")
+(arity faulting-GeologicalProcess 2)
+(arg1Isa faulting-GeologicalProcess Situation)
+(arg2Isa faulting-GeologicalProcess Situation)
+
+(isa separatedRocksByFault Predicate)
+(comment separatedRocksByFault 
+  "faulting-GeologicalProcess is true iff a fault split rocks into two parts and these two parts
+   are not on the same height.
+   Causes: slip or sliding occurs.
+   Concepts involved: fault scarp, displacement, fault line.
+   Spatial relations: the original whole part of rock is separated by the fault line 
+   into two parts at its left and right sides with displacement exists between those two parts.")
+(arity separatedRocksByFault 4)
+(arg1Isa separatedRocksByFault Situation)
+(arg2Isa separatedRocksByFault SedimentaryRock)
+(arg3Isa separatedRocksByFault SedimentaryRock)
+(arg4Isa separatedRocksByFault Fault-Topographical)
+
+;;;(isa existFaultIn Predicate)
+;;;(comment existFaultIn 
+;;;  "existFaultIn is true iff a fault exists in the situation.")
+;;;(arity existFaultIn 2)
+;;;(arg1Isa existFaultIn Fault-Topographical)
+;;;(arg2Isa existFaultIn Situation)
+
+(isa tilting-GeologicalProcess Predicate)
+(comment tilting-GeologicalProcess 
+  "tilting-GeologicalProcess is true iff the 2D orientation of existing geological 
+   parts rotates from its original state.")
+(arity tilting-GeologicalProcess 2)
+(arg1Isa tilting-GeologicalProcess Situation)
+(arg2Isa tilting-GeologicalProcess Situation)
+
+(isa existTiltingBetween Predicate)
+(comment existTiltingBetween 
+  "existTiltingBetween is true iff a tilting process involves a rock unit causing
+   situation to convert into another situation.")
+(arity existTiltingBetween 3)
+(arg1Isa existTiltingBetween GeologicalRockUnit)
+(arg2Isa existTiltingBetween Situation)
+(arg3Isa existTiltingBetween Situation)
+
+(isa erosion-GeologicalProcess Predicate)
+(comment erosion-GeologicalProcess 
+  "erosion-GeologicalProcess is true iff there exists a geologic feature whose physical size
+   decreases.
+   Causes: air, water, or ice.
+   Spatial relations: a part of rock is carried away which makes the volume of the rock on top 
+   or at bottom is reduced.")
+(arity erosion-GeologicalProcess 2)
+(arg1Isa erosion-GeologicalProcess Situation)
+(arg2Isa erosion-GeologicalProcess Situation)
+
+(isa relativeSizeDecrease Predicate)
+(comment relativeSizeDecrease 
+  "relativeSizeDecrease is true iff the 2D area of an object decreases in size from one situation
+   to another.")
+(arity relativeSizeChange 3)
+(arg1Isa relativeSizeDecrease Situation)
+(arg2Isa relativeSizeDecrease Situation)
+(arg3Isa relativeSizeDecrease GeologicalRockUnit)
+
+(isa intrusion-GeologicalProcess Predicate)
+(comment intrusion-GeologicalProcess 
+  "intrusion-GeologicalProcess is true iff the igneous rock made by the freezing of magma underground
+   has been pushed its way into preexisting rock of the crust of Earth.
+   Causes: rock made by freezing magma pushed its way to preexisting rock.
+   Concepts involved: intrusive igneous rock
+   Spatial relations: the original whole part of rock is separated by the igneous rock 
+   into two parts at its left and right sides.")
+(arity intrusion-GeologicalProcess 2)
+(arg1Isa intrusion-GeologicalProcess Situation)
+(arg2Isa intrusion-GeologicalProcess Situation)
+
+(isa existIntrusionIn Predicate)
+(comment existIntrusionIn 
+  "existIntrusionIn is true iff an ingneours rock intruded into another rock in this situation.")
+(arity existIntrusionIn 2)
+(arg1Isa existIntrusionIn IgneousRock)
+(arg2Isa existIntrusionIn Situation)
+
+(isa folding-GeologicalProcess Predicate)
+(comment folding-GeologicalProcess 
+  "folding-GeologicalProcess Folding is a geologic process that occurs when compression 
+   or shear stress deform rocks, producing folds.")
+(arity folding-GeologicalProcess 2)
+(arg1Isa folding-GeologicalProcess Situation)
+(arg2Isa folding-GeologicalProcess Situation)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utilities
+(isa setEmpty Predicate)
+(comment setEmpty 
+  "setEmpty is true iff the set is empty.")
+(arity setEmpty 1)
+(arg1Isa setEmpty Set)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

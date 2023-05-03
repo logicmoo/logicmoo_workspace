@@ -1,0 +1,141 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: general-knowledge.lsp
+;;;;    System: 
+;;;;   Version: 1.0
+;;;;    Author: MEK
+;;;;   Created: January 21, 2006 10:45:15
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory PhysicsBackgroundMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;physics stuff
+
+(genls FixedPhysicalObject RigidOb)
+(isa RigidOb Collection)
+(comment RigidOb
+         "RigidOb is the collection of rigid objects.")
+(genls RigidOb PartiallyTangible)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;math stuff
+
+(isa openHalfPlane BinaryPredicate)
+(arity openHalfPlane 2)
+(comment openHalfPlane "openHalfPlane is true iff the sign vector dot product of the first argument and the second argument is +.")
+(arg1Isa openHalfPlane Direction)
+(arg2Isa openHalfPlane Direction)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Missing Cyc Stuff
+(isa simultaneousWith SymmetricBinaryPredicate)
+(genls Falling-Freefall FallingEvent)
+(genls DroppingAnObject-Purposeful Dropping)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; undefined predicates
+
+(arity attainableFrom 2)
+(comment attainableFrom "attainableFrom says that its first argument is a qualitative state that is attainable from its second argument")
+(arity mfiConsequenceOf 2)
+(comment mfiConsequenceOf "relates a specific instance of a model fragment to its bound consequences")
+(arity valueOf 2)
+(comment valueOf "Arg1 is a quantity and Arg2 is its value")
+(arity c+ 3)
+(comment c+ "Arg1 is a quantity and Arg2 is part of the quantity Arg3 is often debated")
+(arity VectorFn 2)
+(comment VectorFn "VectorFn is a NAT that can define a vector.  Arg2 is the vectors direction and Arg1 is its magnitude")
+(isa VectorFn AtomicAnalogyNAT-Function)
+
+
+(arity querySentenceOfQuery 2)
+(arity MagnitudeFn 1)
+(comment MagnitudeFn "MagnitudeFn takes vector as its argument and its result is the magnitude of the vector")
+(arity MeasurementAtFn 2)
+(comment MeasurementAtFn "MeasurementAtFn is basically to m from QP theory. This is used to denote a continuous quantity at a time")
+(arity problemConstraint 2)
+(comment problemConstraint "problemConstraint relates a specific instance of a problem to its constraint")
+(arity uninferredSentence 1)
+(arity subexpressionMatching 3)
+
+
+(arity mathEquals 2)
+
+(isa unknownSentence NotForAnalogyPredicate)
+(isa ist NotForAnalogyPredicate)
+
+
+(isa MovingObjectSystem Collection)
+(isa members Predicate)
+(arity members 2)
+(arg1Isa members System)
+(arg2Isa members Set-Mathematical)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Worked Solution Facts
+
+(isa PointMass Collection)
+(arity hasSolutionStep 2)(isa hasSolutionStep Predicate)
+(arity priorSolutionStep 2)(isa priorSolutionStep Predicate)
+(arity solutionStepUses 2)(isa solutionStepUses Predicate)
+(arity priorSolutionStep 2)(isa priorSolutionStep Predicate)
+(arity equationFormFor 2)(isa equationFormFor Predicate)
+(arity solutionStepResult 2)(isa solutionStepResult Predicate)
+(arity objectStationary 2)(isa objectStationary Predicate)
+(arity solutionStepOperation 2)(isa solutionStepOperation Predicate)
+
+
+(isa MetersPerSecondPerSecond AtomicAnalogyNAT-Function)
+(arity Meters 1)
+
+(isa EquationInstantiationStep Collection)
+(comment EquationInstantiationStep "This is the collection of all physics problem solving steps that result in new bound equations")
+
+(genls SubstitutingBindingsForVariables EquationInstantiationStep)
+(genls IdentifyingAWholeWithTheSumOfItsParts EquationInstantiationStep)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Unit Expressions should be NAT Functions
+(isa Meter AtomicAnalogyNAT-Function)
+(isa MetersPerSecond AtomicAnalogyNAT-Function)
+
+(isa simultaneousWith SymmetricRelation)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; linking units with quantities
+
+(arity unitForQuantity 2)
+(comment unitForQuantity "(unitForQuantity <quantity-type> <unit>)")
+
+(unitForQuantity DistanceTravelled Meter)
+(unitForQuantity AccelerationDueToGravity MetersPerSecondPerSecond)
+(unitForQuantity Acceleration MetersPerSecondPerSecond)
+(unitForQuantity Speed MetersPerSecond)
+(unitForQuantity WorkQuantity Joule)
+(unitForQuantity KineticEnergyQuantity Joule)
+
+(arity timeInvariantQuantity 1)
+(comment timeInvariantQuantity "This predicate is true when its argument should not appear in a MeasurementAtFn statement")
+(arg1Isa timeInvariantQuantity ContinuousQuantityType)
+
+(timeInvariantQuantity (QPQuantityFn AccelerationDueToGravity))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;Worked Solution Ontology
+
+(isa multipleChoiceSingleOptionList NotForAnalogyPredicate)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; misc facts
+
+(arity reverseBinding 2)
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

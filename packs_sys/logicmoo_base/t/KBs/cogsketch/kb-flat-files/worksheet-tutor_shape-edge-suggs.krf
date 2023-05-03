@@ -1,0 +1,779 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_shape-edge-suggs.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: February 25, 2013 16:25:41
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences
+
+(isa maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences Relation)
+(arity maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 4)
+(arg1Isa maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences NuSketchBundle)
+(arg2Isa maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences List)
+(arg3Isa maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences Set-Mathematical)
+(arg4Isa maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences List)
+(notForAnalogy maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences)
+
+
+
+(defSuggestion maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences_FoundSuggestionsAlready
+    (maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 
+     ?student-subsketch ?found-suggestions ?glyph-correspondences ?suggestions)
+  :test (different ?found-suggestions (TheList))
+  :subgoals
+  (;; Found some suggestions -- stop here so we don't inundate the student with
+   ;; lower-level suggestions.
+   (unifies ?suggestions ?found-suggestions)))
+
+(defSuggestion maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences_NoGlyphCorrespondences
+    (maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 
+     ?student-subsketch ?found-suggestions ?glyph-correspondences ?suggestions)
+  :test (unifies ?glyph-correspondences (TheSet))
+  :subgoals 
+  (;; There aren't any glyph correspondences, so we can't delve into 
+   ;; the lower levels.
+   (unifies ?suggestions ?found-suggestions)))
+
+(defSuggestion maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences_DelveDeeper
+    (maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 
+     ?student-subsketch ?found-suggestions ?glyph-correspondences ?suggestions)
+  :test (and (unifies ?found-suggestions (TheList))
+             (different ?glyph-correspondences (TheSet)))
+  :subgoals
+  (;; Didn't find any suggestions yet.  Keep going ...
+   (shapeAndEdgeRepSuggestionsForGlyphCorrespondences ?student-subsketch
+     ?glyph-correspondences ?suggestions)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; shapeAndEdgeRepSuggestionsForGlyphCorrespondences
+
+(isa shapeAndEdgeRepSuggestionsForGlyphCorrespondences Relation)
+(arity shapeAndEdgeRepSuggestionsForGlyphCorrespondences 3)
+(arg1Isa shapeAndEdgeRepSuggestionsForGlyphCorrespondences CogSketchWorkspaceBundle)
+(arg2Isa shapeAndEdgeRepSuggestionsForGlyphCorrespondences Set-Mathematical)
+(arg3Isa shapeAndEdgeRepSuggestionsForGlyphCorrespondences List)
+(notForAnalogy shapeAndEdgeRepSuggestionsForGlyphCorrespondences)
+
+
+(defSuggestion ShapeAndEdgeRepSuggestionsForGlyphCorrespondences_NA
+    (shapeAndEdgeRepSuggestionsForGlyphCorrespondences ?student-subsketch
+      ?glyph-correspondences ?suggestions)
+  :test (unifies ?glyph-correspondences (TheSet))
+  :subgoals ((unifies ?suggestions (TheList))))
+
+
+(defSuggestion ShapeAndEdgeRepSuggestionsForGlyphCorrespondences
+    (shapeAndEdgeRepSuggestionsForGlyphCorrespondences ?student-subsketch
+      ?glyph-correspondences ?suggestions)
+  :test (different ?glyph-correspondences (TheSet))
+  :subgoals ((solveSequentially ?glyph-corr1 ?glyph-correspondences
+               (shapeAndEdgeRepSuggestionsForGlyphCorrespondence
+                ?student-subsketch ?glyph-corr1 ?glyph-corr-suggs1))
+             (evaluate ?glyph-corr-suggs-sets
+               (TheClosedRetrievalSetOf ?glyph-corr-suggs-set1
+                 (and (elementOf ?glyph-corr2 ?glyph-correspondences)
+                      (lookupOnly
+                       (shapeAndEdgeRepSuggestionsForGlyphCorrespondence
+                        ?student-subsketch ?glyph-corr2 ?glyph-corr-suggs2))
+                      (evaluate ?glyph-corr-suggs-set1 
+                        (ListToSetFn ?glyph-corr-suggs2)))))
+             (evaluate ?glyph-corr-suggs-set2 
+               (SetOfSetsUnionFn ?glyph-corr-suggs-sets))
+             (evaluate ?suggestions
+               (SetToListFn ?glyph-corr-suggs-set2))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; shapeAndEdgeRepSuggestionsForGlyphCorrespondence
+;;;
+;;; glyph correspondences look like the following:
+;;;   (correspondenceBetween (MhFn 1 (MatcherFn 18 0)) Object-7793 Object-7798)
+;;;   (correspondenceBetween <mh> <teacher-obj> <student-obj>)
+
+(isa shapeAndEdgeRepSuggestionsForGlyphCorrespondence Relation)
+(arity shapeAndEdgeRepSuggestionsForGlyphCorrespondence 3)
+(arg1Isa shapeAndEdgeRepSuggestionsForGlyphCorrespondence CogSketchWorkspaceBundle)
+(arg2Isa shapeAndEdgeRepSuggestionsForGlyphCorrespondence AnalogyCorrespondence)
+(arg3Isa shapeAndEdgeRepSuggestionsForGlyphCorrespondence List)
+(notForAnalogy shapeAndEdgeRepSuggestionsForGlyphCorrespondence)
+
+
+(defSuggestion ShapeAndEdgeRepSuggestionsForGlyphCorrespondence_NA
+    (shapeAndEdgeRepSuggestionsForGlyphCorrespondence ?student-subsketch
+      ?glyph-correspondence ?suggestions)
+  :subgoals ((unifies (correspondenceBetween ?mh ?teacher-obj ?student-obj)
+               ?glyph-correspondence)
+             (glyphRepresentsObject ?student-glyph ?student-obj)
+             (computeApplicableECOFactsForGlyph ?student-glyph ?ecos)
+             (unifies ?ecos (TheSet))
+             (unifies ?suggestions (TheList))))
+
+
+(defSuggestion ShapeAndEdgeRepSuggestionsForGlyphCorrespondence
+    (shapeAndEdgeRepSuggestionsForGlyphCorrespondence ?student-subsketch
+      ?glyph-correspondence ?suggestions)
+  :subgoals ((unifies (correspondenceBetween ?mh ?teacher-obj ?student-obj)
+               ?glyph-correspondence)
+             (glyphRepresentsObject ?student-glyph ?student-obj)
+             (computeApplicableECOFactsForGlyph ?student-glyph ?ecos)
+             (different ?ecos (TheSet))
+             (solutionForWorksheetStudentWorkspace ?student-subsketch 
+                                                   ?solution-subsketch)
+             (subSketchGroupRepresentsObject ?solution-subsketch ?solution-case)
+             
+             (ist-Information ?solution-case
+               (glyphRepresentsObject ?teacher-glyph ?teacher-obj))
+             (bestMatchForECOsForGlyph ?student-subsketch ?solution-subsketch
+                                       ?student-glyph ?teacher-glyph
+                                       ?match ?eco-correspondences)
+             (suggestionsForStudentMatch ?student-subsketch ?match 
+                                         ?suggestions1 ?glyph-correspondences)
+             (maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs
+              ?student-subsketch ?solution-subsketch 
+              ?student-glyph ?teacher-glyph ?suggestions1 
+              ?eco-correspondences ?suggestions)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForECOsForGlyph
+
+(isa bestMatchForECOsForGlyph Relation)
+(arity bestMatchForECOsForGlyph 6)
+(arg1Isa bestMatchForECOsForGlyph CogSketchWorkspaceBundle) ;; student workspace
+(arg2Isa bestMatchForECOsForGlyph CogSketchWorkspaceBundle) ;; solution
+(arg3Isa bestMatchForECOsForGlyph NuSketchGlyph)
+(arg4Isa bestMatchForECOsForGlyph NuSketchGlyph)
+(arg5Isa bestMatchForECOsForGlyph AnalogyMatch)
+(arg5Isa bestMatchForECOsForGlyph Match)
+(arg6Isa bestMatchForECOsForGlyph Set-Mathematical)
+(notForAnalogy bestMatchForECOsForGlyph)
+
+
+(defSuggestion BestMatchForECOsForGlyph
+    (bestMatchForECOsForGlyph ?student-subsketch ?solution-subsketch
+                              ?student-glyph ?teacher-glyph
+                              ?match ?eco-correspondences)
+  :subgoals
+  ((glyphRepresentsObject ?student-glyph ?student-obj)
+   (evaluate ?student-glyph-namestrings-1
+     (TheClosedRetrievalSetOf ?namestring
+       (nameString ?student-obj ?namestring)))
+   (evaluate ?student-glyph-namestrings-2
+     (SetToListFn ?student-glyph-namestrings-1))
+   (evaluate ?student-glyph-namestrings-3
+     (JoinListsFn ?student-glyph-namestrings-2 (TheList ?student-obj)))
+   (evaluate ?student-glyph-namestring
+     (FirstInListFn ?student-glyph-namestrings-3))
+   (forEffectOnly 
+    (tell (cogSketchBusyMsg "Comparing ~A to solution (edge-connected objects) ..."
+            (TheList ?student-glyph-namestring))))
+   
+   (subSketchGroupRepresentsObject ?solution-subsketch ?solution-case)
+   (subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (unifies ?base 
+     (CogSketchTutorECOsForGlyphCaseFn ?teacher-glyph ?solution-case))
+   (unifies ?target
+     (CogSketchTutorECOsForGlyphCaseFn ?student-glyph ?student-case))
+   (tell (retractAnalogyResults ?base ?target))
+   (matchBetween ?base ?target (TheList) ?match1)
+   (quantitativelyConstrainedMatch ?match1 ?match)
+   (ecoCorrespondencesForGlyph ?match ?teacher-glyph ?student-glyph
+                               ?base ?target ?eco-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ecoCorrespondencesForGlyph
+
+(isa ecoCorrespondencesForGlyph Relation)
+(arity ecoCorrespondencesForGlyph 6)
+(arg1Isa ecoCorrespondencesForGlyph AnalogyMatch)
+(arg1Isa ecoCorrespondencesForGlyph Match)
+(arg2Isa ecoCorrespondencesForGlyph NuSketchGlyph)
+(arg3Isa ecoCorrespondencesForGlyph NuSketchGlyph)
+(arg4Isa ecoCorrespondencesForGlyph Case)
+(arg5Isa ecoCorrespondencesForGlyph Case)
+(arg6Isa ecoCorrespondencesForGlyph Set-Mathematical)
+(notForAnalogy ecoCorrespondencesForGlyph)
+
+
+(defSuggestion ECOCorrespondencesForGlyph
+    (ecoCorrespondencesForGlyph ?match ?teacher-glyph ?student-glyph
+                                ?base ?target ?eco-correspondences)
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (subsketchContextForWorksheetDGroup ?base ?solution-case)
+   (subsketchContextForWorksheetDGroup ?target ?student-case)
+   (evaluate ?eco-correspondences
+     (TheClosedRetrievalSetOf ?correspondence
+       (and (ist-Information (ECOFactsMtFn ?teacher-glyph)
+              (isa ?base-item PerceptualEdgeConnectedObject))
+            (correspondsInMapping ?mapping ?base-item ?target-item)
+            (ist-Information (ECOFactsMtFn ?student-glyph)
+              (isa ?target-item PerceptualEdgeConnectedObject))
+            (unifies ?correspondence
+              (correspondenceBetween ?mapping ?base-item ?target-item)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs
+
+(isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs Relation)
+(arity maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs 7)
+(arg1Isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs NuSketchBundle)  ;; student
+(arg2Isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs NuSketchBundle)  ;;solution
+(arg3Isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs NuSketchGlyph)  ;; student
+(arg4Isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs NuSketchGlyph)  ;; solution
+(arg5Isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs List)
+(arg6Isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs Set-Mathematical)
+(arg7Isa maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs List)
+(notForAnalogy maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs)
+
+
+(defSuggestion MaybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs_FoundSuggestionsAlready
+    (maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph
+     ?found-suggestions ?eco-correspondences ?suggestions)
+  :test (different ?found-suggestions (TheList))
+  :subgoals
+  (;; Found some suggestions -- stop here so we don't inundate the student with
+   ;; lower-level suggestions.
+   (unifies ?suggestions ?found-suggestions)))
+
+
+(defSuggestion MaybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs_NoECOCorrespondences
+    (maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph
+     ?found-suggestions ?eco-correspondences ?suggestions)
+  :test (unifies ?eco-correspondences (TheSet))
+  :subgoals 
+  (;; There aren't any ECO correspondences, so we can't delve into 
+   ;; the lower levels.
+   (unifies ?suggestions ?found-suggestions)))
+
+
+(defSuggestion MaybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs_DelveDeeper
+    (maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph
+     ?found-suggestions ?eco-correspondences ?suggestions)
+  :test (and (unifies ?found-suggestions (TheList))
+             (different ?eco-correspondences (TheSet)))
+  :subgoals
+  (;; Didn't find any suggestions yet.  Keep going ...
+   (edgeCycleAndEdgeSuggestionsForECOCorrespondences
+    ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+    ?eco-correspondences ?suggestions)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; edgeCycleAndEdgeSuggestionsForECOCorrespondences
+
+(isa edgeCycleAndEdgeSuggestionsForECOCorrespondences Relation)
+(arity edgeCycleAndEdgeSuggestionsForECOCorrespondences 6)
+(arg1Isa edgeCycleAndEdgeSuggestionsForECOCorrespondences NuSketchBundle) ;; student
+(arg2Isa edgeCycleAndEdgeSuggestionsForECOCorrespondences NuSketchBundle) ;; solution
+(arg3Isa edgeCycleAndEdgeSuggestionsForECOCorrespondences NuSketchGlyph)  ;; student
+(arg4Isa edgeCycleAndEdgeSuggestionsForECOCorrespondences NuSketchGlyph)  ;; solution
+(arg5Isa edgeCycleAndEdgeSuggestionsForECOCorrespondences Set-Mathematical)
+(arg6Isa edgeCycleAndEdgeSuggestionsForECOCorrespondences List)
+(notForAnalogy edgeCycleAndEdgeSuggestionsForECOCorrespondences)
+
+
+(defSuggestion EdgeCycleAndEdgeSuggestionsForECOCorrespondences_NA
+    (edgeCycleAndEdgeSuggestionsForECOCorrespondences
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+     ?eco-correspondences ?suggestions)
+  :test (unifies ?eco-correspondences (TheSet))
+  :subgoals ((unifies ?suggestions (TheList))))
+
+
+(defSuggestion EdgeCycleAndEdgeSuggestionsForECOCorrespondences
+    (edgeCycleAndEdgeSuggestionsForECOCorrespondences
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+     ?eco-correspondences ?suggestions)
+  :test (different ?eco-correspondences (TheSet))
+  :subgoals ((solveSequentially ?eco-corr1 ?eco-correspondences
+               (edgeCycleAndEdgeSuggestionsForECOCorrespondence
+                ?student-subsketch ?solution-subsketch
+                ?student-glyph ?teacher-glyph 
+                ?eco-corr1 ?eco-corr-suggs1))
+             (evaluate ?eco-corr-suggs-sets
+               (TheClosedRetrievalSetOf ?eco-corr-suggs-set1
+                 (and (elementOf ?eco-corr2 ?eco-correspondences)
+                      (lookupOnly
+                       (edgeCycleAndEdgeSuggestionsForECOCorrespondence
+                        ?student-subsketch ?solution-subsketch
+                        ?student-glyph ?teacher-glyph 
+                        ?eco-corr2 ?eco-corr-suggs2))
+                      (evaluate ?eco-corr-suggs-set1 
+                        (ListToSetFn ?eco-corr-suggs2)))))
+             (evaluate ?eco-corr-suggs-set2 
+               (SetOfSetsUnionFn ?eco-corr-suggs-sets))
+             (evaluate ?suggestions
+               (SetToListFn ?eco-corr-suggs-set2))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; edgeCycleAndEdgeSuggestionsForECOCorrespondence
+;;;
+;;; correspondences look like the following:
+;;;   (correspondenceBetween (MhFn 1 (MatcherFn 18 0)) Object-7793 Object-7798)
+;;;   (correspondenceBetween <mh> <teacher-obj> <student-obj>)
+
+(isa edgeCycleAndEdgeSuggestionsForECOCorrespondence Relation)
+(arity edgeCycleAndEdgeSuggestionsForECOCorrespondence 6)
+(arg1Isa edgeCycleAndEdgeSuggestionsForECOCorrespondence NuSketchBundle) ;; student
+(arg2Isa edgeCycleAndEdgeSuggestionsForECOCorrespondence NuSketchBundle) ;; solution
+(arg3Isa edgeCycleAndEdgeSuggestionsForECOCorrespondence NuSketchGlyph)  ;; student
+(arg4Isa edgeCycleAndEdgeSuggestionsForECOCorrespondence NuSketchGlyph)  ;; solution
+(arg5Isa edgeCycleAndEdgeSuggestionsForECOCorrespondence AnalogyCorrespondence)
+(arg6Isa edgeCycleAndEdgeSuggestionsForECOCorrespondence List)
+(notForAnalogy edgeCycleAndEdgeSuggestionsForECOCorrespondence)
+
+
+(defSuggestion EdgeCycleAndEdgeSuggestionsForECOCorrespondence_NA
+    (edgeCycleAndEdgeSuggestionsForECOCorrespondence
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+     ?eco-correspondence ?suggestions)
+  :subgoals ((unifies (correspondenceBetween ?mh ?teacher-eco ?student-eco)
+               ?eco-correspondence)
+             (computeApplicableEdgeCycleFactsForECO 
+              ?student-glyph ?student-eco ?edge-cycles)
+             (unifies ?edge-cycles (TheSet))
+             (unifies ?suggestions (TheList))))
+
+
+(defSuggestion EdgeCycleAndEdgeSuggestionsForECOCorrespondence
+    (edgeCycleAndEdgeSuggestionsForECOCorrespondence
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+     ?eco-correspondence ?suggestions)
+  :subgoals ((unifies (correspondenceBetween ?mh ?teacher-eco ?student-eco)
+               ?eco-correspondence)
+             (computeApplicableEdgeCycleFactsForECO 
+              ?student-glyph ?student-eco ?edge-cycles)
+             (different ?edge-cycles (TheSet))
+             
+             (elaborateEdgeAlignmentUsingPerimeters
+              ?student-subsketch ?solution-subsketch
+              ?student-glyph ?teacher-glyph
+              ?student-eco ?teacher-eco
+              ?student-perim ?teacher-perim)
+                          
+             (bestMatchForEdgeCyclesInECO ?student-subsketch ?solution-subsketch
+                                          ?student-glyph ?teacher-glyph
+                                          ?student-eco ?teacher-eco
+                                          ?match ?edge-cycle-correspondences)
+             (suggestionsForStudentMatch ?student-subsketch ?match 
+                                         ?suggestions1 ?glyph-correspondences)
+             (maybeAddEdgeSuggestionsForStudentEdgeCycles
+              ?student-subsketch ?solution-subsketch
+              ?student-glyph ?teacher-glyph
+              ?student-eco ?teacher-eco
+              ?suggestions1 ?edge-cycle-correspondences ?suggestions)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; elaborateEdgeAlignmentUsingPerimeters
+
+(isa elaborateEdgeAlignmentUsingPerimeters Relation)
+(arity elaborateEdgeAlignmentUsingPerimeters 8)
+(notForAnalogy elaborateEdgeAlignmentUsingPerimeters)
+
+
+(defSuggestion ElaborateEdgeAlignmentUsingPerimeters
+    (elaborateEdgeAlignmentUsingPerimeters
+     ?student-subsketch ?solution-subsketch
+     ?student-glyph ?teacher-glyph
+     ?student-eco ?teacher-eco
+     ?student-perim ?teacher-perim)
+  
+  :subgoals 
+  ((lookupOnly
+    (ist-Information (EdgeCycleFactsMtFn ?teacher-eco)
+      (isa ?teacher-perim PerceptualEdgeCycle-Perimeter)))
+   (lookupOnly
+    (ist-Information (EdgeCycleFactsMtFn ?student-eco)
+      (isa ?student-perim PerceptualEdgeCycle-Perimeter)))
+   
+   (computeApplicableEdgeFactsForEdgeCycle 
+    ?student-glyph ?student-perim ?edges)
+   (different ?edges (TheSet))
+   (bestMatchForEdgesInEdgeCycle
+    ?student-subsketch ?solution-subsketch
+    ?student-glyph ?teacher-glyph
+    ?student-eco ?teacher-eco
+    ?student-perim ?teacher-perim
+    ?match ?edge-correspondences)
+   
+   (elaborateEdgeAlignmentUsingPerimeterEdgeCorrespondences
+    ?student-subsketch ?solution-subsketch
+    ?student-eco ?teacher-eco
+    ?edge-correspondences ?aligned-edge-facts)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; elaborateEdgeAlignmentUsingPerimeterEdgeCorrespondences
+;;;
+;;; This is now an outsourced predicate since doing it via SOLVE was too slow.
+;;;
+
+(isa elaborateEdgeAlignmentUsingPerimeterEdgeCorrespondences Relation)
+(arity elaborateEdgeAlignmentUsingPerimeterEdgeCorrespondences 6)
+(notForAnalogy elaborateEdgeAlignmentUsingPerimeterEdgeCorrespondences)
+
+
+(isa alignedEdgePairFn Function-Denotational)
+(resultIsa alignedEdgePairFn Predicate)
+(resultArity alignedEdgePairFn 1)
+(arity alignedEdgePairFn 2)
+(arg1Isa alignedEdgePairFn PerceptualEdge)
+(arg2Isa alignedEdgePairFn PerceptualEdge)
+(comment alignedEdgePairFn
+  "((alignedEdgePairFn <base-edge> <target-edge>) <edge-cycle>) denotes that a
+   pair of edges should probably be mapped to each other.  It provides some
+   extra information when attempting to perform an analogy to determine which 
+   edge cycles map to each other.  In other words, it's a way of using some
+   bottom up information from the lower edge level representations to help
+   the edge cycle mappings.")
+
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForEdgeCyclesInECO
+
+(isa bestMatchForEdgeCyclesInECO Relation)
+(arity bestMatchForEdgeCyclesInECO 8)
+(arg1Isa bestMatchForEdgeCyclesInECO CogSketchWorkspaceBundle) ;; student workspace
+(arg2Isa bestMatchForEdgeCyclesInECO CogSketchWorkspaceBundle) ;; solution
+(arg3Isa bestMatchForEdgeCyclesInECO NuSketchGlyph)  ;; student
+(arg4Isa bestMatchForEdgeCyclesInECO NuSketchGlyph)  ;; solution
+(arg5Isa bestMatchForEdgeCyclesInECO PerceptualEdgeConnectedObject)  ;; student
+(arg6Isa bestMatchForEdgeCyclesInECO PerceptualEdgeConnectedObject)  ;; solution
+(arg7Isa bestMatchForEdgeCyclesInECO AnalogyMatch)
+(arg7Isa bestMatchForEdgeCyclesInECO Match)
+(arg8Isa bestMatchForEdgeCyclesInECO Set-Mathematical)
+(notForAnalogy bestMatchForEdgeCyclesInECO)
+
+
+(defSuggestion BestMatchForEdgeCyclesInECO
+    (bestMatchForEdgeCyclesInECO ?student-subsketch ?solution-subsketch
+                                 ?student-glyph ?teacher-glyph
+                                 ?student-eco ?teacher-eco
+                                 ?match ?edge-cycle-correspondences)
+  :subgoals
+  ((forEffectOnly 
+    (tell (cogSketchBusyMsg "Comparing ~A to solution (edge cycles) ..."
+            (TheList ?student-eco))))
+   (subSketchGroupRepresentsObject ?solution-subsketch ?solution-case)
+   (subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (unifies ?base 
+     (CogSketchTutorEdgeCyclesForECOCaseFn 
+      ?teacher-eco ?teacher-glyph ?solution-case))
+   (unifies ?target
+     (CogSketchTutorEdgeCyclesForECOCaseFn
+      ?student-eco ?student-glyph ?student-case))
+   (tell (retractAnalogyResults ?base ?target))
+   
+   (ist-Information (EdgeCycleFactsMtFn ?teacher-eco)
+     (isa ?base-perimeter PerceptualEdgeCycle-Perimeter))
+   (ist-Information (EdgeCycleFactsMtFn ?student-eco)
+     (isa ?target-perimeter PerceptualEdgeCycle-Perimeter))
+   
+   (matchBetween ?base ?target 
+                 (TheSet (requiredCorrespondence ?base-perimeter ?target-perimeter))
+                 ?match1)
+   
+   (quantitativelyConstrainedMatch ?match1 ?match)
+   (edgeCycleCorrespondencesForECO ?match ?teacher-eco ?student-eco
+                                   ?base ?target ?edge-cycle-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; edgeCycleCorrespondencesForECO
+
+(isa edgeCycleCorrespondencesForECO Relation)
+(arity edgeCycleCorrespondencesForECO 6)
+(arg1Isa edgeCycleCorrespondencesForECO AnalogyMatch)
+(arg1Isa edgeCycleCorrespondencesForECO Match)
+(arg2Isa edgeCycleCorrespondencesForECO PerceptualEdgeConnectedObject)
+(arg3Isa edgeCycleCorrespondencesForECO PerceptualEdgeConnectedObject)
+(arg4Isa edgeCycleCorrespondencesForECO Case)
+(arg5Isa edgeCycleCorrespondencesForECO Case)
+(arg6Isa edgeCycleCorrespondencesForECO Set-Mathematical)
+(notForAnalogy edgeCycleCorrespondencesForECO)
+
+
+(defSuggestion EdgeCycleCorrespondencesForECO
+    (edgeCycleCorrespondencesForECO ?match ?teacher-eco ?student-eco
+                                    ?base ?target ?edge-cycle-correspondences)
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (subsketchContextForWorksheetDGroup ?base ?solution-case)
+   (subsketchContextForWorksheetDGroup ?target ?student-case)
+   (evaluate ?edge-cycle-correspondences
+     (TheClosedRetrievalSetOf ?correspondence
+       (and (ist-Information (EdgeCycleFactsMtFn ?teacher-eco)
+              (isa ?base-item PerceptualEdgeCycle))
+            (correspondsInMapping ?mapping ?base-item ?target-item)
+            (ist-Information (EdgeCycleFactsMtFn ?student-eco)
+              (isa ?target-item PerceptualEdgeCycle))
+            (unifies ?correspondence
+              (correspondenceBetween ?mapping ?base-item ?target-item)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; maybeAddEdgeCycleAndEdgeSuggestionsForStudentECOs
+
+(isa maybeAddEdgeSuggestionsForStudentEdgeCycles Relation)
+(arity maybeAddEdgeSuggestionsForStudentEdgeCycles 9)
+(arg1Isa maybeAddEdgeSuggestionsForStudentEdgeCycles NuSketchBundle)  ;; student
+(arg2Isa maybeAddEdgeSuggestionsForStudentEdgeCycles NuSketchBundle)  ;;solution
+(arg3Isa maybeAddEdgeSuggestionsForStudentEdgeCycles NuSketchGlyph)  ;; student
+(arg4Isa maybeAddEdgeSuggestionsForStudentEdgeCycles NuSketchGlyph)  ;; solution
+(arg5Isa maybeAddEdgeSuggestionsForStudentEdgeCycles PerceptualEdgeConnectedObject)
+(arg6Isa maybeAddEdgeSuggestionsForStudentEdgeCycles PerceptualEdgeConnectedObject)
+(arg7Isa maybeAddEdgeSuggestionsForStudentEdgeCycles List)
+(arg8Isa maybeAddEdgeSuggestionsForStudentEdgeCycles Set-Mathematical)
+(arg9Isa maybeAddEdgeSuggestionsForStudentEdgeCycles List)
+(notForAnalogy maybeAddEdgeSuggestionsForStudentEdgeCycles)
+
+
+(defSuggestion MaybeAddEdgeSuggestionsForStudentEdgeCycles_FoundSuggestionsAlready
+    (maybeAddEdgeSuggestionsForStudentEdgeCycles
+     ?student-subsketch ?solution-subsketch
+     ?student-glyph ?teacher-glyph
+     ?student-eco ?teacher-eco
+     ?found-suggestions ?edge-cycle-correspondences ?suggestions)
+  :test (different ?found-suggestions (TheList))
+  :subgoals
+  (;; Found some suggestions -- stop here so we don't inundate the student with
+   ;; lower-level suggestions.
+   (unifies ?suggestions ?found-suggestions)))
+
+
+(defSuggestion MaybeAddEdgeSuggestionsForStudentEdgeCycles_NoEdgeCycleCorrespondences
+    (maybeAddEdgeSuggestionsForStudentEdgeCycles
+     ?student-subsketch ?solution-subsketch
+     ?student-glyph ?teacher-glyph
+     ?student-eco ?teacher-eco
+     ?found-suggestions ?edge-cycle-correspondences ?suggestions)
+  :test (unifies ?edge-cycle-correspondences (TheSet))
+  :subgoals 
+  (;; There aren't any edge-cycle correspondences, so we can't delve into 
+   ;; the lower levels.
+   (unifies ?suggestions ?found-suggestions)))
+
+
+(defSuggestion maybeAddEdgeSuggestionsForStudentEdgeCycles_DelveDeeper
+    (maybeAddEdgeSuggestionsForStudentEdgeCycles
+     ?student-subsketch ?solution-subsketch
+     ?student-glyph ?teacher-glyph
+     ?student-eco ?teacher-eco
+     ?found-suggestions ?edge-cycle-correspondences ?suggestions)
+  :test (and (unifies ?found-suggestions (TheList))
+             (different ?edge-cycle-correspondences (TheSet)))
+  :subgoals
+  (;; Didn't find any suggestions yet.  Keep going ...
+   (edgeSuggestionsForEdgeCycleCorrespondences
+    ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+    ?student-eco ?teacher-eco ?edge-cycle-correspondences ?suggestions)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; edgeSuggestionsForEdgeCycleCorrespondences
+
+(isa edgeSuggestionsForEdgeCycleCorrespondences Relation)
+(arity edgeSuggestionsForEdgeCycleCorrespondences 8)
+(arg1Isa edgeSuggestionsForEdgeCycleCorrespondences NuSketchBundle) ;; student
+(arg2Isa edgeSuggestionsForEdgeCycleCorrespondences NuSketchBundle) ;; solution
+(arg3Isa edgeSuggestionsForEdgeCycleCorrespondences NuSketchGlyph)  ;; student
+(arg4Isa edgeSuggestionsForEdgeCycleCorrespondences NuSketchGlyph)  ;; solution
+(arg5Isa edgeSuggestionsForEdgeCycleCorrespondences PerceptualEdgeConnectedObject)
+(arg6Isa edgeSuggestionsForEdgeCycleCorrespondences PerceptualEdgeConnectedObject)
+(arg7Isa edgeSuggestionsForEdgeCycleCorrespondences Set-Mathematical)
+(arg8Isa edgeSuggestionsForEdgeCycleCorrespondences List)
+(notForAnalogy edgeSuggestionsForEdgeCycleCorrespondences)
+
+
+(defSuggestion EdgeSuggestionsForEdgeCycleCorrespondences_NA
+    (edgeSuggestionsForEdgeCycleCorrespondences
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+     ?student-eco ?teacher-eco ?edge-cycle-correspondences ?suggestions)
+  :test (unifies ?edge-cycle-correspondences (TheSet))
+  :subgoals ((unifies ?suggestions (TheList))))
+
+
+(defSuggestion EdgeSuggestionsForEdgeCycleCorrespondences
+    (edgeSuggestionsForEdgeCycleCorrespondences
+     ?student-subsketch ?solution-subsketch ?student-glyph ?teacher-glyph 
+     ?student-eco ?teacher-eco ?edge-cycle-correspondences ?suggestions)
+  :test (different ?edge-cycle-correspondences (TheSet))
+  :subgoals ((solveSequentially ?cycle-corr1 ?edge-cycle-correspondences
+               (edgeSuggestionsForEdgeCycleCorrespondence
+                ?student-subsketch ?solution-subsketch
+                ?student-glyph ?teacher-glyph 
+                ?student-eco ?teacher-eco
+                ?cycle-corr1 ?cycle-corr-suggs1))
+             (evaluate ?cycle-corr-suggs-sets
+               (TheClosedRetrievalSetOf ?cycle-corr-suggs-set1
+                 (and (elementOf ?cycle-corr2 ?edge-cycle-correspondences)
+                      (lookupOnly
+                       (edgeSuggestionsForEdgeCycleCorrespondence
+                        ?student-subsketch ?solution-subsketch
+                        ?student-glyph ?teacher-glyph 
+                        ?student-eco ?teacher-eco
+                        ?cycle-corr2 ?cycle-corr-suggs2))
+                      (evaluate ?cycle-corr-suggs-set1 
+                        (ListToSetFn ?cycle-corr-suggs2)))))
+             (evaluate ?cycle-corr-suggs-set2 
+               (SetOfSetsUnionFn ?cycle-corr-suggs-sets))
+             (evaluate ?suggestions
+               (SetToListFn ?cycle-corr-suggs-set2))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; edgeSuggestionsForEdgeCycleCorrespondence
+;;;
+;;; correspondences look like the following:
+;;;   (correspondenceBetween (MhFn 1 (MatcherFn 18 0)) Object-7793 Object-7798)
+;;;   (correspondenceBetween <mh> <teacher-obj> <student-obj>)
+
+(isa edgeSuggestionsForEdgeCycleCorrespondence Relation)
+(arity edgeSuggestionsForEdgeCycleCorrespondence 8)
+(arg1Isa edgeSuggestionsForEdgeCycleCorrespondence NuSketchBundle) ;; student
+(arg2Isa edgeSuggestionsForEdgeCycleCorrespondence NuSketchBundle) ;; solution
+(arg3Isa edgeSuggestionsForEdgeCycleCorrespondence NuSketchGlyph)  ;; student
+(arg4Isa edgeSuggestionsForEdgeCycleCorrespondence NuSketchGlyph)  ;; solution
+(arg5Isa edgeSuggestionsForEdgeCycleCorrespondence PerceptualEdgeConnectedObject)
+(arg6Isa edgeSuggestionsForEdgeCycleCorrespondence PerceptualEdgeConnectedObject)
+(arg7Isa edgeSuggestionsForEdgeCycleCorrespondence AnalogyCorrespondence)
+(arg8Isa edgeSuggestionsForEdgeCycleCorrespondence List)
+(notForAnalogy edgeSuggestionsForEdgeCycleCorrespondence)
+
+
+(defSuggestion EdgeSuggestionsForEdgeCycleCorrespondence_NA
+    (edgeSuggestionsForEdgeCycleCorrespondence
+     ?student-subsketch ?solution-subsketch
+     ?student-glyph ?teacher-glyph 
+     ?student-eco ?teacher-eco
+     ?cycle-correspondence ?suggestions)
+  :subgoals ((unifies (correspondenceBetween ?mh ?teacher-cycle ?student-cycle)
+               ?cycle-correspondence)
+             (computeApplicableEdgeFactsForEdgeCycle 
+              ?student-glyph ?student-cycle ?edges)
+             (unifies ?edges (TheSet))
+             (unifies ?suggestions (TheList))))
+
+
+(defSuggestion EdgeSuggestionsForEdgeCycleCorrespondence
+    (edgeSuggestionsForEdgeCycleCorrespondence
+     ?student-subsketch ?solution-subsketch
+     ?student-glyph ?teacher-glyph 
+     ?student-eco ?teacher-eco
+     ?cycle-correspondence ?suggestions)
+  :subgoals ((unifies (correspondenceBetween ?mh ?teacher-cycle ?student-cycle)
+               ?cycle-correspondence)
+             (computeApplicableEdgeFactsForEdgeCycle 
+              ?student-glyph ?student-cycle ?edges)
+             (different ?edges (TheSet))
+                          
+             (bestMatchForEdgesInEdgeCycle
+              ?student-subsketch ?solution-subsketch
+              ?student-glyph ?teacher-glyph
+              ?student-eco ?teacher-eco
+              ?student-cycle ?teacher-cycle
+              ?match ?edge-correspondences)
+             (suggestionsForStudentMatch ?student-subsketch ?match 
+                                         ?suggestions ?glyph-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForEdgesInEdgeCycle
+
+(isa bestMatchForEdgesInEdgeCycle Relation)
+(arity bestMatchForEdgesInEdgeCycle 10)
+(arg1Isa bestMatchForEdgesInEdgeCycle CogSketchWorkspaceBundle) ;; student workspace
+(arg2Isa bestMatchForEdgesInEdgeCycle CogSketchWorkspaceBundle) ;; solution
+(arg3Isa bestMatchForEdgesInEdgeCycle NuSketchGlyph)  ;; student
+(arg4Isa bestMatchForEdgesInEdgeCycle NuSketchGlyph)  ;; solution
+(arg5Isa bestMatchForEdgesInEdgeCycle PerceptualEdgeConnectedObject)  ;; student
+(arg6Isa bestMatchForEdgesInEdgeCycle PerceptualEdgeConnectedObject)  ;; solution
+(arg7Isa bestMatchForEdgesInEdgeCycle PerceptualEdgeCycle)
+(arg8Isa bestMatchForEdgesInEdgeCycle PerceptualEdgeCycle)
+(arg9Isa bestMatchForEdgesInEdgeCycle AnalogyMatch)
+(arg9Isa bestMatchForEdgesInEdgeCycle Match)
+(arg10Isa bestMatchForEdgesInEdgeCycle Set-Mathematical)
+(notForAnalogy bestMatchForEdgesInEdgeCycle)
+
+
+(defSuggestion BestMatchForEdgesInEdgeCycle
+    (bestMatchForEdgesInEdgeCycle ?student-subsketch ?solution-subsketch
+                                  ?student-glyph ?teacher-glyph
+                                  ?student-eco ?teacher-eco
+                                  ?student-cycle ?teacher-cycle
+                                  ?match ?edge-correspondences)
+  :subgoals
+  ((forEffectOnly 
+    (tell (cogSketchBusyMsg "Comparing ~A to solution (edges) ..."
+            (TheList ?student-cycle))))
+   (subSketchGroupRepresentsObject ?solution-subsketch ?solution-case)
+   (subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (unifies ?base 
+     (CogSketchTutorEdgesForEdgeCycleCaseFn 
+      ?teacher-cycle ?teacher-eco ?teacher-glyph ?solution-case))
+   (unifies ?target
+     (CogSketchTutorEdgesForEdgeCycleCaseFn
+      ?student-cycle ?student-eco ?student-glyph ?student-case))
+   (tell (retractAnalogyResults ?base ?target))
+   (matchBetween ?base ?target (TheList) ?match1)
+   (quantitativelyConstrainedMatch ?match1 ?match)
+   (edgeCorrespondencesForEdgeCycle ?match 
+                                    ?teacher-cycle ?student-cycle
+                                    ?base ?target ?edge-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; edgeCorrespondencesForEdgeCycle
+
+(isa edgeCorrespondencesForEdgeCycle Relation)
+(arity edgeCorrespondencesForEdgeCycle 6)
+(arg1Isa edgeCorrespondencesForEdgeCycle AnalogyMatch)
+(arg1Isa edgeCorrespondencesForEdgeCycle Match)
+(arg2Isa edgeCorrespondencesForEdgeCycle PerceptualEdgeCycle)
+(arg3Isa edgeCorrespondencesForEdgeCycle PerceptualEdgeCycle)
+(arg4Isa edgeCorrespondencesForEdgeCycle Case)
+(arg5Isa edgeCorrespondencesForEdgeCycle Case)
+(arg6Isa edgeCorrespondencesForEdgeCycle Set-Mathematical)
+(notForAnalogy edgeCorrespondencesForEdgeCycle)
+
+
+(defSuggestion EdgeCorrespondencesForEdgeCycle
+    (edgeCorrespondencesForEdgeCycle ?match 
+                                     ?teacher-cycle ?student-cycle
+                                     ?base ?target ?edge-correspondences)
+  :subgoals
+  ((bestMapping ?match ?mapping)
+   (subsketchContextForWorksheetDGroup ?base ?solution-case)
+   (subsketchContextForWorksheetDGroup ?target ?student-case)
+   (evaluate ?edge-correspondences
+     (TheClosedRetrievalSetOf ?correspondence
+       (and (ist-Information (BoundingEdgeFactsMtFn ?teacher-cycle)
+              (isa ?base-item PerceptualEdge))
+            (correspondsInMapping ?mapping ?base-item ?target-item)
+            (ist-Information (BoundingEdgeFactsMtFn ?student-cycle)
+              (isa ?target-item PerceptualEdge))
+            (unifies ?correspondence
+              (correspondenceBetween ?mapping ?base-item ?target-item)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

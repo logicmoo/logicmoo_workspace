@@ -1,0 +1,701 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: learning-reading-full
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: October 16, 2012 00:35:43
+;;;;   Purpose: Get end-to-end learning by reading running
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa learnByReading ComplexActionPredicate)
+(arity learnByReading 3)
+(arg1Isa learnByReading InformationBearingThing) ;;; The name of the source text.
+(arg2Isa learnByReading AccessingAnIBT)
+(arg3Isa learnByReading Thing)
+(comment learnByReading
+         "(learnByReading ?source-text-name ?reading-name ?experiment-name) is the highest-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking. Its parameters are all stored as knowledge, which is modified with other plans.")
+
+(isa learnByReadingFile ComplexActionPredicate)
+(arity learnByReadingFile 4)
+(arg1Isa learnByReadingFile InformationBearingThing) ;;; The name of the source text.
+(arg2Isa learnByReadingFile AccessingAnIBT)
+(arg3Isa learnByReadingFile Thing)
+(arg4Isa learnByReadingFile Thing)
+(comment learnByReadingFile
+         "(learnByReadingFile ?source-text-name ?reading-name ?experiment-name ?file-location) is the highest-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking. Its parameters are all stored as knowledge, which is modified with other plans.")
+
+(isa learnByReadingStoredSourceText ComplexActionPredicate)
+(arity learnByReadingStoredSourceText 3)
+(arg1Isa learnByReadingStoredSourceText InformationBearingThing) ;;; The name of the source text.
+(arg2Isa learnByReadingStoredSourceText AccessingAnIBT)
+(arg3Isa learnByReadingStoredSourceText Thing)
+(comment learnByReadingStoredSourceText
+         "(learnByReadingStoredSourceText ?source-text-name ?reading-name ?experiment-name) is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking. Its parameters are all stored as knowledge, which is modified with other plans.")
+
+(isa learnFromFile ComplexActionPredicate)
+(arity learnFromFile 1)
+(arg4Isa learnFromFile Thing)
+(comment learnFromFile
+  "(learnFromFile ?file-location) can kick off the highest-level learning by reading plans. It generates an experiment name,
+a reading name, and a source text name, requiring only the file.")
+
+(isa ExperimentForReadingFn FunctionOrFunctionalPredicate)
+(arity ExperimentForReadingFn 1)
+(arg1Isa ExperimentForReadingFn AccessingAnIBT)
+(comment ExperimentForReadingFn "(ExperimentForReadingFn ?reading) is an experiment covering ?reading.")
+
+(preconditionForMethod 
+ (and
+      (generatedSourceTextName ?file-location ?generated-st-name)
+      (generatedReadingName ?generated-st-name ?generated-reading-name))
+ (methodForAction
+  (learnFromFile ?file-location)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Preparing to read from file at ~a" (?file-location))
+    (doRecord (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?file-location ?source-text-name)))
+    (learnByReadingFile ?generated-st-name ?generated-reading-name (ExperimentForReadingFn ?generated-reading-name) ?file-location)))))
+
+;;; This is the case where we don't know the file associated
+;;; with the source text, but do know the disambiguation context to use for the source-text. (Probably pretty rare)
+(preconditionForMethod 
+ (and 
+      (disambiguationContextForScenario ?source-text-name ?context-to-use))
+ (methodForAction
+  (learnByReadingFile ?source-text-name ?reading-name ?experiment-name ?file-location)
+  (actionSequence
+   (TheList
+    ;;; "The reading"
+    (doRecord (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?file-location ?source-text-name)))
+    (recordReadingStartTime ?reading-name ?experiment-name)
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+    ;;; "The disambiguation"
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSourceTextWithHeuristicContext
+        ?source-text-name ?reading-name ?context-to-use DefaultDisambiguationWeightsMt)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          ;;; "Interpretation" (Placeholder)
+          (useDiscourseCoreferenceResolution)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                      ?reading-name ?source-text-name)
+             ;;; "Call out to a separate plan for rumination and checking
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (ruminateCheckCycle ?reading-name ?source-text-name ?experiment-name))))
+             )))))))))))))
+
+
+;;;; learnByReadingStoredSourceText
+(preconditionForMethod 
+ (and
+      (kbOnly 
+       (ist-Information TextContentsOfSourceTextsCanonicalMt
+         (textContentsOfSourceText-Canonical ?source-text-name ?text)))
+      (outsourcedOnly (concatenatedList (TheList ?reading-name ".meld") ?file-name))
+      (disambiguationDefaultOrKnown ?source-text-name ?heuristic-mt)
+      )
+ (methodForAction
+  (learnByReadingStoredSourceText ?source-text-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    ;;; "The reading"
+    (doRecord 
+     (ist-Information 
+         (MtForSourceTextFn ?source-text-name)
+       (readingOfSourceText ?reading-name ?source-text-name)))
+    (recordReadingStartTime ?reading-name ?experiment-name)
+    (doEAProcess ?text)
+    
+    ;;; "The disambiguation"
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+       (recordDisambiguationStartTime ?reading-name ?experiment-name)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (disambiguateSourceTextWithHeuristicContext
+           ?source-text-name ?reading-name ?heuristic-mt DefaultDisambiguationWeightsMt)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             ;;; "Interpretation" (Placeholder)
+             (recordDisambiguationEndTime ?reading-name ?experiment-name)
+             (recordCoreferenceStartTime ?reading-name ?experiment-name)
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (useDiscourseCoreferenceResolution)
+                (doAgentPlan
+                 (actionSequence
+                  (TheList
+                   (recordCoreferenceEndTime ?reading-name ?experiment-name)
+                   (doAgentPlan
+                    (actionSequence
+                     (TheList
+                      (doRecord (ist-Information LbrSourceTextsMt (factsForReadingAreIn ?reading-name (FactsFromReadingMtFn ?reading-name))))
+                      (doRecord (ist-Information LbrSourceTextsMt (errorsForReadingAreIn ?reading-name (ErrorsFromReadingMtFn ?reading-name))))
+                      (evaluateAndStoreParseErrorsForReading (ErrorsFromReadingMtFn ?reading-name) ?source-text-name ?reading-name)
+                      (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                               ?reading-name ?source-text-name)
+                      (doAgentPlan
+                       (actionSequence
+                        (TheList
+                         (doEmailIMLogToUser ?file-name "Reading of ~A" (?reading-name) 
+                                                      "See attached message"
+                                                      ())
+                         ))))))))))))))))))))))))))))
+
+(isa learnByReadingStoredSourceTextList ComplexActionPredicate)
+(arity learnByReadingStoredSourceTextList 4)
+(arg1Isa learnByReadingStoredSourceTextList List) ;;; The name of the source text.
+(arg2Isa learnByReadingStoredSourceTextList AccessingAnIBT)
+(arg3Isa learnByReadingStoredSourceTextList Thing)
+(arg4Isa learnByReadingStoredSourceTextList InformationBearingThing)
+(comment learnByReadingStoredSourceTextList
+  "(learnByReadingStoredSourceText ?list-of-source-text-names ?reading-name ?experiment-name ?source-text-name)
+ is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking.
+ Its parameters are all stored as knowledge, which is modified with other plans.")
+
+(isa parseErrorsOnlyStoredSourceTextList ComplexActionPredicate)
+(arity parseErrorsOnlyStoredSourceTextList 4)
+(arg1Isa parseErrorsOnlyStoredSourceTextList List) ;;; The name of the source text.
+(arg2Isa parseErrorsOnlyStoredSourceTextList AccessingAnIBT)
+(arg3Isa parseErrorsOnlyStoredSourceTextList Thing)
+(arg4Isa parseErrorsOnlyStoredSourceTextList InformationBearingThing)
+(comment parseErrorsOnlyStoredSourceTextList
+  "(parseErrorsOnlyStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?source-text-name)
+ is a high-level learning by reading plan. It parses the text and generates the error record.")
+
+
+
+;;;(preconditionForMethod 
+;;; (and (unifies ?initial-state (StartOfDiscourseFn ?d))
+;;;      (currentInteractionMgr ?im)
+;;;      (newUUIDSymbol IterateOverDiscourse ?iterate-id)
+;;;      (localAgent ?im))
+;;; (methodForAction
+;;;  (iterateOverDiscourse ?d ?action)
+;;;  (actionSequence 
+;;;   (TheList
+;;;    (doAnnounce "Starting iteration of ~A over ~A" (?action ?d))
+;;;    (doEnqueue ?im ?iterate-id (doDiscourseIterationStep ?initial-state ?d ?action))))))
+
+(preconditionForMethod 
+ (and
+      ;;; This needs to be an outsourced thing that gets a concatenation
+      ;;; of the text.
+      (outsourcedOnly 
+       (unifiedTextOfSourceTexts ?list-of-source-text-names ?text))
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (outsourcedOnly (concatenatedList (TheList ?reading-name ".meld") ?file-name))
+      ;;; Does it need to generate a single name for this? I think it does.
+      ;;; Call that unified-source-text-name
+      ;;; Wrap that in a specific functional predicate so we can ID it.
+      ;;; It's ugly, but it's name is just going to be ConjoinedSourceTextFn of the
+      ;;; list. That way it's consistent.
+      ;;; Nevermind, pass something in.
+      ;;;      (unifies ?source-text-name (ConjoinedSourceTextFn ?list-of-source-text-names))
+      (disambiguationDefaultOrKnown ?source-text-name ?heuristic-mt)
+      (currentInteractionMgr ?im)
+      (newUUIDSymbol DisambiguateDiscourse ?disambiguate-id)
+      (agendaContext ?mt)
+      )
+ (methodForAction
+  (learnByReadingStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?source-text-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    ;;; "The reading"
+       (doRecord 
+        (ist-Information 
+            (MtForSourceTextFn ?source-text-name)
+          (readingOfSourceText ?reading-name ?source-text-name)))
+       (doAnnounce "Recording sourceTextForDiscourse..." ())
+       (doTell
+        (ist-Information 
+            (DiscourseCaseFn ?discourse-id)
+          (sourceTextForDiscourse ?source-text-name ?discourse-id)))
+       
+       (recordReadingStartTime ?reading-name ?experiment-name)
+       ;;; We may need another cut in here.
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (doEAProcessParagraphs ?text ?source-text-name)
+          (iterateOverDiscourse ?discourse-id OnlyReading)
+          ))))))))))
+
+(preconditionForMethod 
+ (and
+      ;;; This needs to be an outsourced thing that gets a concatenation
+      ;;; of the text.
+      (outsourcedOnly 
+       (unifiedTextOfSourceTexts ?list-of-source-text-names ?text))
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (outsourcedOnly (concatenatedList (TheList ?reading-name ".meld") ?file-name))
+      ;;; Does it need to generate a single name for this? I think it does.
+      ;;; Call that unified-source-text-name
+      ;;; Wrap that in a specific functional predicate so we can ID it.
+      ;;; It's ugly, but it's name is just going to be ConjoinedSourceTextFn of the
+      ;;; list. That way it's consistent.
+      ;;; Nevermind, pass something in.
+      ;;;      (unifies ?source-text-name (ConjoinedSourceTextFn ?list-of-source-text-names))
+      (disambiguationDefaultOrKnown ?source-text-name ?heuristic-mt)
+      (currentInteractionMgr ?im)
+      (newUUIDSymbol DisambiguateDiscourse ?disambiguate-id)
+      (agendaContext ?mt)
+      )
+ (methodForAction
+  (parseErrorsOnlyStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?source-text-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+    ;;; "The reading"
+       (doRecord 
+        (ist-Information 
+            (MtForSourceTextFn ?source-text-name)
+          (readingOfSourceText ?reading-name ?source-text-name)))
+       (doAnnounce "Recording sourceTextForDiscourse..." ())
+       (doTell
+        (ist-Information 
+            (DiscourseCaseFn ?discourse-id)
+          (sourceTextForDiscourse ?source-text-name ?discourse-id)))
+       
+       (recordReadingStartTime ?reading-name ?experiment-name)
+       ;;; We may need another cut in here.
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          ;;;
+          ;;; Replace this with something incremental.
+          ;;;
+          ;;;    (doEAProcess ?text)
+          ;;; We don't want exactly this, because we have the text already.
+          (doEAProcessParagraphs ?text ?source-text-name)
+          (iterateOverDiscourse ?discourse-id OnlyParseErrors)
+          ))))))))))
+
+
+#|
+;;;       ;;; I think this needs to go on the agenda?
+;;;       ;;; This doesn't work because it makes its own things. Ugggggggggh.
+;;;       ;;; And of course the skim reading system doesn't have a concept of a
+;;;       ;;; reading name or anything.
+;;;       (doTell (ist-Information ?mt (startsAfterEndingOf ?disambiguate-id ?task1)))
+;;;       (doEnqueue ?im ?disambiguate-id 
+;;;    ;;; "The disambiguation"
+;;;    (doAgentPlan
+;;;     (actionSequence
+;;;      (TheList
+;;;       (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+;;;       (recordDisambiguationStartTime ?reading-name ?experiment-name)
+;;;      
+;;;          (disambiguateSourceTextWithHeuristicContext
+;;;           ?source-text-name ?reading-name ?heuristic-mt DefaultDisambiguationWeightsMt)
+;;;          (doAgentPlan
+;;;           (actionSequence
+;;;            (TheList
+;;;             ;;; "Interpretation" (Placeholder)
+;;;             (recordDisambiguationEndTime ?reading-name ?experiment-name)
+;;;             (recordCoreferenceStartTime ?reading-name ?experiment-name)
+;;;             (doAgentPlan
+;;;              (actionSequence
+;;;               (TheList
+;;;                (useDiscourseCoreferenceResolution)
+;;;                (doAgentPlan
+;;;                 (actionSequence
+;;;                  (TheList
+;;;                   (recordCoreferenceEndTime ?reading-name ?experiment-name)
+;;;                   (doAgentPlan
+;;;                 (actionSequence
+;;;                  (TheList
+;;;                   (runADAIfEnabled ?experiment-name ?reading-name)
+;;;                   (doAgentPlan
+;;;                    (actionSequence
+;;;                     (TheList
+;;;                      (doRecord (ist-Information LbrSourceTextsMt 
+;;;                                  (factsForReadingAreIn ?reading-name (FactsFromReadingMtFn ?reading-name))))
+;;;                      (doRecord (ist-Information LbrSourceTextsMt 
+;;;                                  (errorsForReadingAreIn ?reading-name (ErrorsFromReadingMtFn ?reading-name))))
+;;;                      (evaluateAndStoreParseErrorsForReading (ErrorsFromReadingMtFn ?reading-name) ?source-text-name ?reading-name)
+;;;                      (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+;;;                                               ?reading-name ?source-text-name)
+;;;                      (doAgentPlan
+;;;                       (actionSequence
+;;;                        (TheList
+;;;                         (doEmailIMLogToUser ?file-name "Reading of ~A" (?reading-name) 
+;;;                                                      "See attached message"
+;;;                                                      ())))))))))))))))))))))))))))))))))
+
+|#
+
+
+(isa disambiguationDefaultOrKnown Predicate)
+(arity disambiguationDefaultOrKnown 2)
+(arg1Isa disambiguationDefaultOrKnown InformationBearingThing)
+(arg2Isa disambiguationDefaultOrKnown Microtheory)
+(comment disambiguationDefaultOrKnown "(disambiguationDefaultOrKnown
+?source-text-name ?heuristic-mt) looks to see if there is a known
+heuristic microtheory that should be used to disambiguate ?source-text-name.
+If there isn't, it uses the default.")
+
+(<== (disambiguationDefaultOrKnown ?source-text-name ?heuristic-mt)
+     (lookupOnly (ist-Information TextContentsOfSourceTextsCanonicalMt (disambiguationMtOfSourceText ?heuristic-mt ?source-text-name))))
+
+(<== (disambiguationDefaultOrKnown ?source-text-name ?heuristic-mt)
+     (lookupOnly (ist-Information SourceTextFileLocationsMt (disambiguationMtOfSourceText ?heuristic-mt ?source-text-name))))
+
+(<== (disambiguationDefaultOrKnown ?source-text-name ?heuristic-mt)
+     (uninferredSentence (lookupOnly (ist-Information TextContentsOfSourceTextsCanonicalMt (disambiguationMtOfSourceText ?heuristic-mt ?source-text-name))))
+     (uninferredSentence (lookupOnly (ist-Information SourceTextFileLocationsMt (disambiguationMtOfSourceText ?heuristic-mt ?source-text-name))))
+     (unifies ?heuristic-mt ExperimentalDisambiguationMt))
+ 
+(isa learnByReadingStoredChapter ComplexActionPredicate)
+(arity learnByReadingStoredChapter 3)
+(arg1Isa learnByReadingStoredChapter List) ;;; The name of the source text.
+(arg2Isa learnByReadingStoredChapter AccessingAnIBT)
+(arg3Isa learnByReadingStoredChapter Thing)
+(comment learnByReadingStoredChapter
+  "(learnByReadingStoredChapter ?chapter-name ?reading-name ?experiment-name)
+ is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking.
+ Its parameters are all stored as knowledge, which is modified with other plans.")
+
+(preconditionForMethod 
+ (and
+      (lookupOnly (ist-Information TextContentsOfSourceTextsCanonicalMt 
+                    (listOfParasInChapter ?chapter-name ?list-of-source-text-names)))
+      )
+ (methodForAction
+  (learnByReadingStoredChapter ?chapter-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (learnByReadingStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?chapter-name)
+    ))))
+
+(isa parseErrorsOnlyStoredChapter ComplexActionPredicate)
+(arity parseErrorsOnlyStoredChapter 3)
+(arg1Isa parseErrorsOnlyStoredChapter List) ;;; The name of the source text.
+(arg2Isa parseErrorsOnlyStoredChapter AccessingAnIBT)
+(arg3Isa parseErrorsOnlyStoredChapter Thing)
+(comment parseErrorsOnlyStoredChapter
+  "(parseErrorsOnlyStoredChapter ?chapter-name ?reading-name ?experiment-name)
+ is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking.
+ Its parameters are all stored as knowledge, which is modified with other plans.")
+
+(preconditionForMethod 
+ (and
+      (lookupOnly (ist-Information TextContentsOfSourceTextsCanonicalMt 
+                    (listOfParasInChapter ?chapter-name ?list-of-source-text-names)))
+      )
+ (methodForAction
+  (parseErrorsOnlyStoredChapter ?chapter-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (parseErrorsOnlyStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?chapter-name)
+    ))))
+
+
+
+(isa learnByADAStoredChapter ComplexActionPredicate)
+(arity learnByADAStoredChapter 3)
+(arg1Isa learnByADAStoredChapter List) ;;; The name of the source text.
+(arg2Isa learnByADAStoredChapter AccessingAnIBT)
+(arg3Isa learnByADAStoredChapter Thing)
+(comment learnByADAStoredChapter
+  "(learnByADAStoredChapter ?chapter-name ?reading-name ?experiment-name)
+ is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking.
+ Its parameters are all stored as knowledge, which is modified with other plans.
+It also runs ADA.")
+
+(preconditionForMethod 
+ (and
+      (lookupOnly (ist-Information TextContentsOfSourceTextsCanonicalMt 
+                    (listOfParasInChapter ?chapter-name ?list-of-source-text-names)))
+      )
+ (methodForAction
+  (learnByADAStoredChapter ?chapter-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doRecord (ist-Information ADARunForExptsMt
+                (ADARunForExpt ?experiment-name)))
+    (learnByReadingStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?chapter-name)
+    ))))
+
+
+(isa learnByADABackgroundStoredChapter ComplexActionPredicate)
+(arity learnByADABackgroundStoredChapter 3)
+(arg1Isa learnByADABackgroundStoredChapter List) ;;; The name of the source text.
+(arg2Isa learnByADABackgroundStoredChapter AccessingAnIBT)
+(arg3Isa learnByADABackgroundStoredChapter Thing)
+(comment learnByADABackgroundStoredChapter
+  "(learnByADABackgroundStoredChapter ?chapter-name ?reading-name ?experiment-name)
+ is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking.
+ Its parameters are all stored as knowledge, which is modified with other plans.
+It also runs ADA, with background information")
+
+(isa learnByADALocalBackgroundStoredChapter ComplexActionPredicate)
+(arity learnByADALocalBackgroundStoredChapter 4)
+(arg1Isa learnByADALocalBackgroundStoredChapter List) ;;; The name of the source text.
+(arg2Isa learnByADALocalBackgroundStoredChapter AccessingAnIBT)
+(arg3Isa learnByADALocalBackgroundStoredChapter Thing)
+(arg4Isa learnByADALocalBackgroundStoredChapter Microtheory)
+(comment learnByADALocalBackgroundStoredChapter
+  "(learnByADALocalBackgroundStoredChapter ?chapter-name ?reading-name ?experiment-name ?local-background-mt)
+ is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking.
+ Its parameters are all stored as knowledge, which is modified with other plans.
+It also runs ADA, with background information from ?local-background-mt.")
+
+(preconditionForMethod 
+ (and
+      (lookupOnly (ist-Information TextContentsOfSourceTextsCanonicalMt 
+                    (listOfParasInChapter ?chapter-name ?list-of-source-text-names)))
+      )
+ (methodForAction
+  (learnByADABackgroundStoredChapter ?chapter-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doRecord (ist-Information ADARunForExptsMt
+                (ADARunForExpt ?experiment-name)))
+    (doRecord (ist-Information ADARunForExptsMt
+                (ADABackgroundForExpt ?experiment-name)))
+    (learnByReadingStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?chapter-name)
+    ))))
+
+(preconditionForMethod 
+ (and
+      (lookupOnly (ist-Information TextContentsOfSourceTextsCanonicalMt 
+                    (listOfParasInChapter ?chapter-name ?list-of-source-text-names)))
+      )
+ (methodForAction
+  (learnByADALocalBackgroundStoredChapter ?chapter-name ?reading-name ?experiment-name ?local-background-mt)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doRecord (ist-Information ADARunForExptsMt
+                (ADARunForExpt ?experiment-name)))
+    (doRecord (ist-Information ADARunForExptsMt
+                (ADABackgroundForExpt ?experiment-name)))
+    (doRecord (ist-Information ADARunForExptsMt
+                (ADABackgroundMtForExperiment ?experiment-name ?local-background-mt)))
+    (learnByReadingStoredSourceTextList ?list-of-source-text-names ?reading-name ?experiment-name ?chapter-name)
+    ))))
+
+(isa ADARunForExptsMt Microtheory)
+(comment ADARunForExptsMt "Stores information about which experimental readings ADA was run for.")
+
+(isa ADARunForExpt Predicate)
+(arity ADARunForExpt 1)
+(comment ADARunForExpt "(ADARunForExpt ?experiment-name) indicates that ADA will be run for the things read
+as part of the experiment ?experiment-name")
+
+(isa ErrorsFromReadingMtFn FunctionOrFunctionalPredicate)
+(arity ErrorsFromReadingMtFn 1)
+(resultIsa ErrorsFromReadingMtFn Microtheory)
+(arg1Isa ErrorsFromReadingMtFn AccessingAnIBT)
+(comment ErrorsFromReadingMtFn "(ErrorsFromReadingMtFn ?reading-name) is a microtheory where the errors from ?reading-name
+are stored. It not existing for a reading doesn't mean that there were no errors, just that nothing called evaluateAndStoreParseErrors.")
+
+(isa factsForReadingAreIn Predicate)
+(arity factsForReadingAreIn 2)
+(arg1Isa factsForReadingAreIn AccessingAnIBT)
+(arg2Isa factsForReadingAreIn Microtheory)
+(comment factsForReadingAreIn "(factsForReadingAreIn ?reading-name ?mt) means that the facts learned from reading ?reading-name are in ?mt. 
+FactsFromReadingMtFn is a good thing to use to name that microtheory.")
+
+(isa errorsForReadingAreIn Predicate)
+(arity errorsForReadingAreIn 2)
+(arg1Isa errorsForReadingAreIn AccessingAnIBT)
+(arg2Isa errorsForReadingAreIn Microtheory)
+(comment errorsForReadingAreIn "(errorsForReadingAreIn ?reading-name ?mt) means that the errors generated while reading ?reading-name are in ?mt. 
+ErrorsFromReadingMtFn is a good thing to use to name that microtheory. It not existing for a reading doesn't mean that there were no errors, 
+just that nothing called evaluateAndStoreParseErrors.")
+
+(isa defaultDisambiguationHeuristicContext Predicate)
+(arity defaultDisambiguationHeuristicContext 1)
+(comment defaultDisambiguationHeuristicContext "(defaultDisambiguationHeuristicContext ?x) indicates that ?x
+should be the disambiguation context used when no other one is known or specified.")
+
+;;; This is the case where we don't know the file and don't know the disambiguation context to use.
+(preconditionForMethod 
+ (and 
+      (uninferredSentence (disambiguationContextForScenario ?source-text-name ?any-context))
+      (defaultDisambiguationHeuristicContext ?context-to-use)
+      )
+ (methodForAction
+  (learnByReadingFile ?source-text-name ?reading-name ?experiment-name ?file-location)
+  (actionSequence
+   (TheList
+    ;;; "The reading"
+    (doRecord (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?file-location ?source-text-name)))
+    (recordReadingStartTime ?reading-name ?experiment-name)
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+    ;;; "The disambiguation"
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSourceTextWithHeuristicContext
+        ?source-text-name ?reading-name ?context-to-use DefaultDisambiguationWeightsMt)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          ;;; "Interpretation" (Placeholder)
+          (useDiscourseCoreferenceResolution)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                      ?reading-name ?source-text-name)
+             ;;; "Call out to a separate plan for rumination and checking
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (ruminateCheckCycle ?reading-name ?source-text-name ?experiment-name))))
+             )))))))))))))
+
+;;; This is the case where we know the file and we know the disambiguation context to use. They're both in knowledge.
+(preconditionForMethod 
+ (and (ist-Information SourceTextFileLocationsMt
+        (fileLocationOfSourceText ?file-location ?source-text-name))
+      (disambiguationContextForScenario ?source-text-name ?context-to-use))
+ (methodForAction
+  (learnByReading ?source-text-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    ;;; "The reading"
+    (recordReadingStartTime ?reading-name ?experiment-name)
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+    ;;; "The disambiguation"
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSourceTextWithHeuristicContext
+        ?source-text-name ?reading-name ?context-to-use DefaultDisambiguationWeightsMt)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          ;;; "Interpretation" (Placeholder)
+          (useDiscourseCoreferenceResolution)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                      ?reading-name ?source-text-name)
+             ;;; "Call out to a separate plan for rumination and checking
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (ruminateCheckCycle ?reading-name ?source-text-name ?experiment-name))))
+             )))))))))))))
+
+;;; This is the case where we know the file, but don't have a default disambiguation context available for it.
+(preconditionForMethod 
+ (and (ist-Information SourceTextFileLocationsMt
+        (fileLocationOfSourceText ?file-location ?source-text-name))
+      (uninferredSentence (disambiguationContextForScenario ?source-text-name ?any-context))
+      (defaultDisambiguationHeuristicContext ?context-to-use)
+      )
+ (methodForAction
+  (learnByReading ?source-text-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList
+    ;;; "The reading"
+    (recordReadingStartTime ?reading-name ?experiment-name)
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+    ;;; "The disambiguation"
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSourceTextWithHeuristicContext
+        ?source-text-name ?reading-name ?context-to-use DefaultDisambiguationWeightsMt)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          ;;; "Interpretation" (Placeholder)
+          (useDiscourseCoreferenceResolution)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                      ?reading-name ?source-text-name)
+             ;;; "Call out to a separate plan for rumination and checking
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (ruminateCheckCycle ?reading-name ?source-text-name ?experiment-name))))
+             )))))))))))))
+
+
+;;; ruminateCheckCycle
+(isa ruminateCheckCycle ComplexActionPredicate)
+(arity ruminateCheckCycle 2)
+(arg1Isa ruminateCheckCycle InformationBearingThing) ;;; The name of the source text.
+(arg2Isa ruminateCheckCycle AccessingAnIBT)
+(arg3Isa ruminateCheckCycle Thing)
+(comment ruminateCheckCycle
+         "(ruminateCheckCycle ?source-text-name ?reading-name ?experiment-name) starts the cycle of rumination and checking, or at least it will once it is implemented.")
+
+
+;;; This needs to know the names of microtheories to look in.
+;;; This is largely a placeholder method.
+;;; We don't want this go ask questions about the facts, because that's not implemented. We want to ask questions abou the microtheory
+(preconditionForMethod 
+ (outsourcedOnly (currentSessionReasoner ?session-reasoner))
+ (methodForAction
+  (ruminateCheckCycle ?source-text-name ?reading-name ?experiment-name) 
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?session-reasoner
+                       (actionSequence
+                        (TheList
+                         (askParameterizedQuestionsAboutMts Companions-ObsoleteMt (RuminationStorageMtFn ?reading-name) 
+                                                              (FactsFromReadingMtFn ?reading-name) (FactsFromReadingMtFn ?reading-name)
+                                                              ?experiment-name)
+                         )))))))
+   
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;; End of Code

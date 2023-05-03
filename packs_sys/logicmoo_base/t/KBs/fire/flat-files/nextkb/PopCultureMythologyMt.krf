@@ -1,0 +1,13 @@
+(in-microtheory PopCultureMythologyMt)
+
+(isa Tarzan MaleHuman)
+(isa Tarzan Superhero)
+(isa Tarzan HumanAdult)
+(isa LaraCroft-FictionalCharacter FemaleHuman)
+(isa KingArthur King-HeadOfState)
+(isa KingArthur HistoricFigure)
+(comment Tarzan "The feral #$Superhero created by Edgar Rice Burroughs. #$Tarzan is a white male stranded in the rain forest since birth and raised by #$Apes. Consequently, he is frequently referred to as an 'ape man' or 'lord of the apes'. #$Tarzan's given birthname is Lord Greystoke, born as he was into an aristocratic English family. His female mate is lady Jane Porter. In the books of Edgar Rice Burroughs, #$Tarzan was an eloquent hero in the #$Nietzschean-Superman mold. In the movies of the 1950s and 1960s he is instead portrayed as a monosyllabic brute. (Asserted by Veale 5/12/99.)")
+(genls Superhero IndividualAgent)
+(genls Superhero IntelligentAgent)
+(genls Superhero SentientAnimal)
+(genls Superhero Agent-NonGeographical)

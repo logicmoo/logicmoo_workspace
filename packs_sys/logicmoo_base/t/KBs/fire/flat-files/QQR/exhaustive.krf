@@ -1,0 +1,30 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: exhaustive.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 4, 2010 08:52:35
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Thursday, May 13, 2010 at 11:15:23 by forbus
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ExhaustiveModelingStrategyMt)
+
+(comment ExhaustiveModelingStrategyMt
+  "The rules in the ExhaustiveModelingStrategyMt define a simple strategy for
+model formulation, i.e. consider all types of model fragments that one knows about,
+unless they are supposed to be ignored.")
+
+(<== (considerMF ?mf)
+     (groundExpression ?mf)
+     (uninferredSentence (ignoreMF ?mf)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

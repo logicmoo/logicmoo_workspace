@@ -1,0 +1,47 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: test-saint.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 14, 2015 09:30:47
+;;;;   Purpose: Plan-based demo of Saint integration
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory TestPlanMt)  
+(genlMt CompanionsMt TestPlanMt)
+(genlMt TestPlanMt SaintMt)
+
+(isa testSaint ComplexActionPredicate)
+(arity testSaint 1)
+
+(preconditionForMethod
+  (goalOfSolve ?solve ?query)
+  (methodForAction
+    (testSaint ?query)  ; query = (integral ?integrand ?var ?int) or (simplify ?exp ?result)
+    (actionSequence
+      (TheList
+        (doRunToSolution ?solve)
+        (doAgentPlan (evaluateSaint ?solve ?query))))))
+
+(isa evaluateSaint ComplexActionPredicate)
+(arity evaluateSaint 2)
+
+(preconditionForMethod
+  (and (queryContext ?mt)
+       (evaluate ?response (LastInListFn (FormulaArgListFn ?query)))
+       (evaluate ?answers
+         (TheClosedRetrievalSetOf ?response
+           (lookupOnly
+             (wmOnly
+               (ist-Information ?mt ?query))))))
+  (methodForAction
+    (evaluateSaint ?solve ?query)
+    (actionSequence
+      (TheList
+        (doForEach ?ans ?answers (doAnnounce "answer = ~a" (?ans)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

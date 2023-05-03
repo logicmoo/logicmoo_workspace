@@ -1,0 +1,28 @@
+(in-microtheory EarthObservationalAstronomyMt)
+
+(isa ZodiacConstellation NonAbducibleCollection)
+(isa AndromedaGalaxy CelestialRegion)
+(isa MilkyWayRegion-Celestial CelestialRegion)
+(isa ZodiacRegion-Celestial CelestialRegion)
+(isa Ecliptic CelestialRegion)
+(comment Aquarius-Constellation "The constellation Aquarius, the Water Bearer, one of the 12 constellations of the zodiac.")
+(comment Aries-Constellation "The constellation Aries, the Ram, one of the 12 constellations of the zodiac.")
+(comment Andromeda-Constellation "The constellation Andromeda, which depicts Andromeda, the daughter of King Cepheus and Queen Cassiopeia.")
+(comment Cancer-Constellation "The constellation Cancer, the Crab, one of the 12 constellations of the zodiac.")
+(comment Capricornus-Constellation "The constellation Capricornus, the Sea-Goat, one of the 12 constellations of the zodiac.")
+(comment Delphinus-Constellation "The constellation Delphinus, the Dolphin.")
+(comment Gemini-Constellation "The constellation Gemini, the Twins, one of the 12 constellations of the zodiac.")
+(comment Leo-Constellation "The constellation Leo, the Lion, one of the 12 constellations of the zodiac.")
+(comment Libra-Constellation "The constellation Libra, the Scales, one of the 12 constellations of the zodiac.")
+(comment Pisces-Constellation "The constellation Pisces, the Fish, which is one of the 12 constellations of the zodiac.")
+(comment Sagittarius-Constellation "The constellation Sagittarius, the Archer, one of the 12 constellations of the zodiac.")
+(comment Scorpius-Constellation "The constellation Scorpius, the Scorpion, one of the 12 constellations of the zodiac.")
+(comment Taurus-Constellation "The constellation Taurus, the Bull, one of the 12 constellations of the zodiac.")
+(comment Virgo-Constellation "The constellation Virgo, the Virgin, one of the 12 constellations of the zodiac.")
+(comment Ecliptic "The #$Ecliptic is a relatively narrow band encircling the celestial sphere in which the planets always appear to reside as they move in their orbits about the #$Sun.")
+(comment ZodiacRegion-Celestial "The region of the celestial sphere in which all the #$ZodiacConstellations can be found, along with the #$Ecliptic.")
+(comment MilkyWayRegion-Celestial "The region of the celestial sphere referred to as the Milky Way; these are the regions which intersect
+
+the thickest and densest portions of the #$MilkyWay-Galaxy when seen from
+
+an observer's frame of reference immersed within it.")

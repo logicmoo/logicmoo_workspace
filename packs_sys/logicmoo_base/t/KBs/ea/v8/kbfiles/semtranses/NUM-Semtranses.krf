@@ -1,0 +1,122 @@
+(in-microtheory FrameNetSemTransMt)
+(genlMt EANLU FrameNetSemTransMt)
+
+(FNNumSemtrans (TheList) Zero-TheWord 0 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) One-TheWord 1 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Two-TheWord 2 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Three-TheWord 3 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Four-TheWord 4 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Five-TheWord 5 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Six-TheWord 6 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Seven-TheWord 7 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Eight-TheWord 8 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Nine-TheWord 9 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Ten-TheWord 10 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Eleven-TheWord 11 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Twelve-TheWord 12 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Thirteen-TheWord 13 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Fourteen-TheWord 14 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Fifteen-TheWord 15 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Sixteen-TheWord 16 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Seventeen-TheWord 17 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Eighteen-TheWord 18 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Nineteen-TheWord 19 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Twenty-TheWord 20 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Thirty-TheWord 30 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Forty-TheWord 40 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Fifty-TheWord 50 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Sixty-TheWord 60 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Seventy-TheWord 70 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Eighty-TheWord 80 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Ninety-TheWord 90 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Hundred-TheWord 100 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Thousand-TheWord 1000 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Million-TheWord 1000000 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Billion-TheWord 1000000000 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Tenth-TheWord 0.1 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Hundredth-TheWord 0.01 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Thousandth-TheWord 0.001 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Millionth-TheWord 1.0e-6 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Billionth-TheWord 1.0e-9 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Half-TheWord 0.5 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Quarter-TheWord 0.25 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNNumSemtrans (TheList) Third-TheWord 0.333 (frame FN_Numbers)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))

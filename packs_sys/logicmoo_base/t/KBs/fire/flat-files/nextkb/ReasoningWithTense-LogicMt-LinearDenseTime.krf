@@ -1,0 +1,9 @@
+
+ (in-microtheory ReasoningWithTense-LogicMt-LinearDenseTime)
+ (comment ReasoningWithTense-LogicMt-LinearDenseTime
+ "This microtheory contains rules involving tense operators
+for linear and dense time.  That is to say, this microtheory assumes
+that moments in temporal structures are ordered into not only a strict
+linear ordering, but also a dense ordering.")
+ (sharedNotes ReasoningWithTense-LogicMt-LinearDenseTime
+ SemanticAssumptionsMadeForReasoningWithTenseMts)

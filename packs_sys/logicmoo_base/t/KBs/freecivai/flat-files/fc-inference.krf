@@ -1,0 +1,1115 @@
+;;;
+;;; fc-inference.meld
+;;;
+
+(in-microtheory FreecivMt)
+
+;;; Generic inferences that should be accessible to all microtheories in Freeciv
+;;; One purpose here is to try to translate between the kinds of queries
+;;; produced by EA/interaction-manager and the freeciv-specific predicates 
+;;; supported by the outsourced handlers.
+
+(<== (executionContext ?mt)     ;; When running standalone, use a backchaining
+     (fcExecutionContext ?mt))  ;; rule to convert generic agent predicate
+
+;;; This needs to check that there was more than one player initially:
+;(<== (soleRemainingPlayer ?current-player)
+;     (fcExecutionContext ?game)
+;     (localOnly
+;       (ist-Information ?game
+;         (initialPlayers ?game ?n)))  ; This doesn't work!  reification in the execution context fails
+;     (greaterThan ?n 1)               ; because players arrive piecemeal.  Use opponentsInConflict instead.
+;     (evaluate (TheSet ?current-player)
+;       (TheClosedRetrievalSetOf ?player
+;         (player ?player))))
+
+(<== (soleRemainingPlayer ?current-player)
+     (fcExecutionContext ?game)
+     (numAnswers 1    ; was there at least one opponent originally?
+       (localOnly
+         (ist-Information ?game
+           (opponentsInConflict ?current-player ?adversary ?game))))
+     (evaluate (TheSet ?current-player) ; Now we're alone.
+       (TheClosedRetrievalSetOf ?player
+         (player ?player))))
+
+;(<== (domainLevelActor ?entity)  ; This is much more efficient than enumerating FreeCivObjects and Agent-Generics.
+;     (numAnswers 1 (currentPlayer ?player))
+;     (outsourcedOnly (unitOwner ?entity ?player)))
+     
+;(<== (domainLevelActor ?entity)
+;     (numAnswers 1 (currentPlayer ?player))
+;     (outsourcedOnly (cityOwner ?entity ?player)))
+     
+;(<== (domainLevelActor ?entity)
+;     (outsourcedOnly (numAnswers 1 (currentPlayer ?entity))))
+     
+(<== (assignableActorOfType ?entity ?type)  ; This is much more efficient than enumerating FreeCivObjects and Agent-Generics.
+     (numAnswers 1 (currentPlayer ?player))
+     (outsourcedOnly (unitOwner ?entity ?player))
+     (outsourcedOnly (unitType ?entity ?type)))
+     
+;(<== (assignableActorOfType ?entity FreeCiv-City)
+;     (numAnswers 1 (currentPlayer ?player))
+;     (outsourcedOnly (cityOwner ?entity ?player)))
+     
+;(<== (assignableActorOfType ?entity FreeCiv-Player)
+;     (outsourcedOnly (numAnswers 1 (currentPlayer ?entity))))
+
+(<== (adversarialActorOfType ?entity ?type)
+     (numAnswers 1 (currentPlayer ?player))
+     (outsourcedOnly (unitOwner ?entity ?other-player))
+     (different ?other-player ?player)
+     (outsourcedOnly (unitType ?entity ?type)))
+
+;(<== (adversarialActorOfType ?entity FreeCiv-City)
+;     (numAnswers 1 (currentPlayer ?player))
+;     (outsourcedOnly (cityOwner ?entity ?other-player))
+;     (different ?other-player ?player))
+
+;(<== (adversarialActorOfType ?entity FreeCiv-Player)
+;     (numAnswers 1 (currentPlayer ?player))
+;     (outsourcedOnly (player ?entity))
+;     (different ?entity ?player))
+
+;;; We want to allow default activities to be overridden.
+(<== (busyActor ?entity)
+     (outsourcedOnly
+       (currentActivity ?entity ?activity))
+     (isa ?activity AccomplishmentType)
+     (executionContext ?mt)   ; requires companions. otherwise use fcExecutionContext
+     (uninferredSentence  ; default activity means not too busy for redirection.
+       (ist-Information ?mt (holdsIn ?when (defaultActivity ?entity ?activity)))))
+
+;;; In the middle of going somewhere:
+(<== (busyActor ?entity) 
+     (outsourcedOnly 
+       (hasOrders ?entity)))
+
+;;; Can't do anything more this turn anyway:
+(<== (busyActor ?entity)
+     (outsourcedOnly
+       (doneMoving ?entity))
+     (outsourcedOnly
+       (currentActivity ?entity ?activity))
+     (uninferredSentence
+       (ist-Information ?mt (holdsIn ?when (defaultActivity ?entity ?activity)))))
+
+;;; Executing a prior plan
+;(<== (busyActor ?entity) 
+;     (outsourcedOnly
+;       (currentPlan ?entity ?plan))) ; This is a circularity.  It never resumes a plan if the actor is busy.
+
+
+(<== (planningDate ?mt ?date)
+     (currentYear ?date))
+
+;;; Dead - don't assign
+(<== (agentsExistentialStatus ?unit AgentNowTerminated)
+     (uninferredSentence
+       (outsourcedOnly
+         (unitType ?unit ?anything))))
+
+;;; predicate defined in PerceptualAgentMt.  Operationalized here.
+(<== (mapActivityToOperator ?actor ?activity ?operator)
+     (indexedEffect (currentActivity ?var ?activity) (?pred ?var))  ; from planning graph
+     (unifies ?operator (?pred ?actor)))
+
+(<== (mapActivityToOperator ?actor ?activity ?operator)
+     (indexedEffect (currentActivity ?var ?activity) ?gen-operator)
+     (not (matches (?p ?v) ?gen-operator))
+     (operatorFormulas ?pred ?gen-operator)
+     (evaluate ?operator 
+       (MakeFormulaFn ?pred 
+         (JoinListsFn 
+           (TheList ?actor)
+           (RestOfListFn 
+             (FormulaArgListFn ?gen-operator))))))
+
+;;; Basically owns, but reflexive:
+(<== (subActorOf ?player ?player))
+(<== (subActorOf ?city ?player)
+     (cityOwner ?city ?player))
+(<== (subActorOf ?unit ?player)
+     (unitOwner ?unit ?player))
+
+(<== (owns ?player ?obj)                ; owns is a built-in cyc predicate
+     (cityOwner ?obj ?player))
+
+(<== (owns ?player ?obj)
+     (unitOwner ?obj ?player))
+
+(<== (ownsCity ?player ?city)
+     (cityOwner ?city ?player))
+
+(<== (ownsUnit ?player ?unit)    ; not clear why this is necessary, unless it's in learned type-level influences...
+     (unitOwner ?unit ?player))
+     
+(<== (isa ?thing ?type)
+     (outsourcedOnly
+       (unitType ?thing ?subtype))
+     (genls ?subtype ?type))
+
+(<== (isa ?thing FreeCiv-City)
+     (outsourcedOnly
+       (cityOwner ?thing ?someone)))
+       
+(<== (isa ?thing FreeCiv-Player)
+     (outsourcedOnly
+       (player ?thing)))
+       
+(<== (homeCityOf ?city ?unit)
+     (unitHomeCity ?unit ?city))
+
+(<== (playerKnowsTech ?player FC-Tech-None)  ; make sure this never bites us.
+     (currentPlayer ?player))  ; needed?
+
+;;; Translation from the generic concept in learning by demonstration to 
+;;; freeciv-specific outsourced predicate:
+(<== (userRole ?player)
+     (currentPlayer ?player))
+
+;;; All units can move:
+(<== (behaviorCapable ?unit doMove)
+     (unitType ?unit ?type))
+     
+(<== (activeProcessTypeAssertion (currentActivity ?unit ?process-type) ?process-type))
+
+
+(isa objectProductionRequiresImprovement BinaryPredicate)
+(arity objectProductionRequiresImprovement 2)
+(arg1Isa objectProductionRequiresImprovement FreeCiv-BuildableThing-Type)
+(arg2Isa objectProductionRequiresImprovement FreeCiv-BuildableThing-Type)
+(comment objectProductionRequiresImprovement "(objectProductionRequiresImprovment ?obj ?improvement) means a city must have the improvement ?improvement in order to produce ?object.  This inference may bind to FC-Improvement-None.")
+
+(<== (objectProductionRequiresImprovement ?obj ?building)
+     (numAnswers 1
+       (lookupOnly
+         (objectProductionRequiresBuilding ?obj ?building))))
+
+(<== (objectProductionRequiresImprovement ?obj FC-Improvement-None)
+     (uninferredSentence
+       (lookupOnly
+         (objectProductionRequiresBuilding ?obj ?building))))
+
+;;; cityHasImprovement is oursourced, so this doesn't work.  
+;;; Instead, just hack the outsource handler:
+;;; (<== (cityHasImprovement ?city FC-Improvement-None))  ; make sure this never bites us.
+
+;;; We always want to reify the goal quantity of the game if there is one.
+(<== (reifyQuantity ?mt ?quantity)
+     (performanceGoalForGame ?mt ?goal)
+     (goalQuantity ?goal ?quantity))
+     
+(<== (reifyQuantity ?mt ?quantity)
+     (lookupOnly
+       (ist-Information ?mt 
+         (reifyQuantities ?mt ?quantity-set)))
+     ;; assume ?quantity-set is of the form (QuantitySetFn (CollectionSubsetFn ...))
+     (elementOf ?quantity ?quantity-set))
+
+(isa freecivCityNameFor BinaryPredicate)
+(arity freecivCityNameFor 2)
+(arg1Isa freecivCityNameFor CycLTerm)
+(arg2Isa freecivCityNameFor FreeCiv-City)
+(commment freecivCityNameFor "(freecivCityNameFor ?raw-name ?fc-name) binds ?fc-name to the internal game-name of the city ?raw-name.  So, for example (freecivCityNameFor Babylon FC-City-Babylon)")
+
+(isa currentCivTaxPercent UnaryPredicate)
+(arity currentCivTaxPercent 1)
+(comment currentCivTaxPercent "(currentCivTaxPercent ?percent) exists to be embedded in a semtrans.  It curries the currentPlayer.")
+
+(<== (currentCivTaxPercent ?pct)
+     (currentPlayer ?player)
+     (currentTaxPercent ?player ?pct))
+     
+(isa currentCivSciencePercent UnaryPredicate)
+(arity currentCivSciencePercent 1)
+(comment currentCivSciencePercent "(currentCivSciencePercent ?percent) exists to be embedded in a semtrans.  It curries the currentPlayer.")
+
+(<== (currentCivSciencePercent ?pct)
+     (currentPlayer ?player)
+     (currentSciencePercent ?player ?pct))
+
+(isa currentCivLuxuryPercent UnaryPredicate)
+(arity currentCivLuxuryPercent 1)
+(comment currentCivLuxuryPercent "(currentCivLuxuryPercent ?percent) exists to be embedded in a semtrans.  It curries the currentPlayer.")
+
+(<== (currentCivLuxuryPercent ?pct)
+     (currentPlayer ?player)
+     (currentLuxuryPercent ?player ?pct))
+
+(isa currentCivGold UnaryPredicate)
+(arity currentCivGold 1)
+(comment currentCivGold "(currentCivGold ?gold) exists to be embedded in a semtrans.  It curries the currentPlayer.")
+
+(<== (currentCivGold ?gold)
+     (currentPlayer ?player)
+     (currentGold ?player ?gold))
+     
+(<== (tradeRouteIncome ?city ?amt)
+     (evaluate ?revenue-pairs
+       (TheClosedRetrievalSetOf (?partner ?revenue)
+         (outsourcedOnly
+           (tradeRoute ?city ?partner ?revenue))))
+     (totalTradeRevenue ?revenue-pairs ?amt))
+     
+(isa totalTradeRevenue BinaryPredicate)
+(isa totalTradeRevenue FunctionalPredicate)
+(arity totalTradeRevenue 2)
+(arg1Isa totalTradeRevenue Set-Mathematical)
+(arg2Isa totalTradeRevenue MeasurableQuantity)
+
+(<== (totalTradeRevenue (TheSet) (TradePoints 0)))
+
+(<== (totalTradeRevenue ?pairs ?revenue)
+     (different ?pairs (TheSet))
+     (evaluate ?revenue (PlusAll ?pairs cadr)))
+
+(<== (playsRole ?ctxt SelfToken-Indexical ?role)
+     (fcExecutionContext ?ctxt)
+     (currentPlayer ?role))
+
+;;; We're going to short-circuit the possessiveRelation conjuncts in this domain,
+;;; just because they're not going to tell us anything and there may be multiple
+;;; outsourced predicates that measure the same kinds of quantities
+;;; (eg, a surplus or a deficit)
+(<== (possessiveRelation ?player ?quantity)
+     (groundExpression ?player)
+     (groundExpression ?quantity))
+
+;;; Extend this to strip off -State at the end.
+(<== (freecivCityNameFor ?obj ?city)
+     (evaluate ?city
+       (SymbolConcatenateFn (TheList "FC-City-" ?obj)))
+     (nonTransitiveInference
+       (isa ?city FreeCiv-City)))
+       
+;;; Path Prefix
+
+(<== (pathPrefix ?path-list ?remove-from-end ?truncated-path)
+     (groundExpression ?path-list)
+     (groundExpression ?remove-from-end)
+     (evaluate ?len (LengthOfListFn ?path-list))
+     (evaluate ?new-end (DifferenceFn ?len ?remove-from-end))
+     (greaterThan ?new-end 0)
+     (evaluate ?truncated-path (SublistFromToFn ?path-list 0 ?new-end)))
+
+;;;
+;;; Define Cyc preds in terms of freeciv-specific outsourced preds
+;;;
+(<== (objectFoundInLocation ?obj (FreecivLocationFn ?x ?y))
+     (groundExpression (FreecivLocationFn ?x ?y))
+     (not (matches (FreecivLocationFn ?a ?b) ?obj))
+     (outsourcedOnly (fcObjectAt ?obj (FreecivLocationFn ?x ?y))))  ; no stale values!
+
+(<== (objectFoundInLocation ?obj ?where)
+     (groundExpression ?obj)
+     (variableExpression ?where)
+     (outsourcedOnly (fcObjectAt ?obj ?where))   ; can't pass a partially instantiated template to an outsourced handler
+     (unifies (FreecivLocationFn ?x ?y) ?where)) ; destructure
+
+(<== (objectFoundInLocation ?obj ?where)
+     (groundExpression ?where)
+     (not (matches (FreecivLocationFn ?x ?y) ?where))
+     (not (matches (FreecivLocationFn ?x ?y) ?obj))
+     (isa ?where Place)
+     (outsourcedOnly (fcObjectAt ?where ?loc))
+     (outsourcedOnly (fcObjectAt ?obj ?loc))
+     (different ?obj ?where))
+     
+(<== (objectFoundInLocation (FreecivLocationFn ?x ?y) (FreecivLocationFn ?x ?y)))
+     
+;;; This should let us say "Where is Boston?" and get something reasonable (within the game)
+(<== (objectFoundInLocation ?obj ?where)
+     (not (matches (FreecivLocationFn ?x ?y) ?obj))
+     (groundExpression ?obj)
+     (uninferredSentence
+       (nonTransitiveInference
+         (isa ?obj ?type)))   ; unknown concept in game
+     (freecivCityNameFor ?obj ?city)
+     (objectFoundInLocation ?city ?where))
+
+(<== (objectFoundInLocation ?obj ?region)
+     (groundExpression ?obj)
+     (groundExpression ?region)
+     (different ?obj ?region)
+     (not (matches (FreecivLocationFn ?x ?y) ?obj))
+     (not (matches (FreecivLocationFn ?x ?y) ?region))
+     (fcObjectAt ?obj ?loc)
+     (fcObjectAt ?region ?loc))
+     
+;;; If objectFoundInLocation isn't functional (and I don't believe it is)
+;;; then we should be able to ask (objectFoundInLocation Unit-101 ?where)
+;;; and get not only the location coordinates, but also FC-City-Boston
+;;; (if it's literally at that city) and perhaps (TerritoryFn FC-City-Boston)
+;;; if it's in the city region.
+
+;;; Blow this out more.  We should be able to ask what a city is doing and enumerate
+;;; reifiable processes, like growing, building things, generating revenue, etc.
+(<== (does ?activity ?actor)  ; The correct form is (does <event-type> <doer>)
+     (outsourcedOnly
+       (currentActivity ?agent ?activity)))
+       
+(<== (knowsAbout ?player ?tech)
+     (outsourcedOnly
+       (playerKnowsTech ?player ?tech)))
+       
+(<== (researches ?player ?tech)
+     (outsourcedOnly
+       (currentlyResearching ?player ?tech)))
+       
+(<== (governmentType ?player ?gov-type)
+     (outsourcedOnly
+       (currentGovernment ?player ?gov-type)))
+
+(<== (governmentType ?player ?gov-type)
+     (outsourcedOnly
+       (currentGovernment ?player ?what))
+     (isa ?what ?gov-type))  ; *** ToDo: fold this into outsourced pred
+
+(<== (terrainType ?loc ?terrain-type)
+     (outsourcedOnly
+       (terrainAt ?loc ?terrain-type)))
+       
+(<== (areaOfRegion (TerritoryFn ?player) ?area)
+     (player ?player)   ; can't count on isa for player other than currentPlayer.
+     (nationalTerritory ?player ?area))    ; outsourced
+     
+(<== (inRegion ?object (TerritoryFn ?player))
+     (groundExpression ?object)
+     (groundExpression ?player)
+     (player ?player)
+     (fcObjectAt ?object ?location)
+     (locationInTerritory ?location (TerritoryFn ?player)))  ; outsourced
+     
+(<== (inRegion ?object (TerritoryFn ?city))
+     (groundExpression ?object)
+     (groundExpression ?city)
+     (cityOwner ?city)                ; outsourced
+     (fcObjectAt ?object ?location)   ; outsourced
+     (inCityRegion ?city ?location))  ; outsourced
+     
+;(<== (inRegion ?object ?territory)
+;     (groundExpression ?object)
+;     (variableExpression ?territory)
+;     (fcObjectAt ?object ?location)
+;     (locationInRegion ?location ?territory))  ; not defined
+
+;;; This should be measured in FreecivTileDistance.
+(<== (distanceBetween ?from ?to ?distance)
+     (numAnswers 1 (objectFoundInLocation ?from ?loc1))
+     (numAnswers 1 (objectFoundInLocation ?to ?loc2))
+     (numAnswers 1 (fcDistance ?loc1 ?loc2 ?num))
+     (unifies ?distance (FreecivTileDistance ?num)))
+
+
+;(unitTypeHasAttackStrength FC-Unit-Warriors (FreeCivStrengthFn 1))
+;(unitTypeHasDefendStrength FC-Unit-Warriors (FreeCivStrengthFn 1))
+     
+(proximityConstraints-Type AttackOnTangible performedBy intendedMaleficiary (FreecivTileDistance 1))
+
+;;; Connect freeciv-specific predicate to commonsense Cyc knowledge.
+(<== (sovereignAllegianceOfOrg ?unit ?player)  ; stretch this a bit to associate player with country.
+     (groundExpression ?unit)
+     (unitOwner ?unit ?player))
+     
+(<== (sovereignAllegianceOfOrg ?unit ?player)  ; stretch this a bit to associate player with country.
+     (groundExpression ?player)
+     (unitOwner ?unit ?player))
+     
+(<== (sovereignAllegianceOfOrg ?city ?player)  ; stretch this a bit to associate player with country.
+     (groundExpression ?city)
+     (cityOwner ?city ?player))
+     
+(<== (sovereignAllegianceOfOrg ?city ?player)  ; stretch this a bit to associate player with country.
+     (groundExpression ?player)
+     (cityOwner ?city ?player))
+
+(<== (sovereignAllegianceOfOrg ?player ?player)
+     (groundExpression ?player)
+     (player ?player))   ; outsourced
+
+;;; Should this really be the year or the turn?
+(<== (gameTurn ?what)
+     (outsourcedOnly (currentYear ?what)))
+
+;;; In freeciv, everything we can infer through backchaining and outsourced
+;;; predicates is known to the current player.  Can't say the same about 
+;;; other player's knowledge.
+
+(<== (knowsValue ?player ?obj ?binpred)
+     (groundExpression ?binpred)         ; sanity check
+     (outsourcedOnly
+       (currentPlayer ?player))
+     (cacheComplete
+       (?binpred ?obj ?value)))
+
+;;; knowsAbout
+;;;  occupiedWith
+;;;   researches
+
+;;;"(productionCostForAgent AGENT PRODUCT-TYPE UNIT COST) means that in the 
+;;; context of the assertion, the cost in resources to agent of producing one UNIT of PRODUCT-TYPE is COST." 
+
+;;; cost, basicPrice, costTo
+;;; (maintenanceCost ?individual ?monetaryValue)
+
+
+;;; We don't need this because the isas are stored directly in the game case.
+;(<== (isa ?unit ?type)
+;     (groundExpression ?type)
+;     (lookupOnly (isa ?type FreeCiv-ObjectType))
+;     (unitType ?unit ?type))  ; outsourced
+     
+     
+;;; We're going to get queries like:
+;;; (and (isa explorer5280 FC-Unit-Explorer)
+;;;      (objectFoundInLocation explorer5280 ?answer))
+;;; ie, "Where is the explorer?"
+
+
+;;; "Build a city near the whale."
+;;; (and (near ?city4038 ?whale4156)
+;;;      (isa ?build4011 Constructing) 
+;;;      (isa ?city4038 City) 
+;;;      (products ?build4011 ?city4038)
+;;;      (isa ?whale4156 Whale)
+;;;      (doneBy ?build4011 SelfToken-Indexical))
+
+;;; Ideally, this should follow from
+;;; (inverseBinaryPredicateOf tileWorkedByCity cityWorkingTileAt)
+;;; but I don't want to screw with that now.
+(<== (tileWorkedByCity ?loc ?city)
+     (cityWorkingTileAt ?city ?loc))
+
+;;; --------------------------------------------------------------------------
+;;; Civilization-wide inferences
+
+;;; Computing quantityValue of aggregateQuantity when the
+;;; set is empty just returns 0, rather than a dimensional zero.
+;;; Fix this for the special case of civ population here.
+
+(<== (currentQuantityValue ((AggregateQuantityFn cityPopulation) ?set-or-coll) ?value)
+     (inferenceOnly (extent ?set-or-coll (TheSet)))
+     (unifies ?value (FreeCivPopulationFn 0)))
+
+;;; Population is computed weirdly in Freeciv:
+;;; pcity->size * (pcity->size + 1) * 5;
+(<== (civPopulation ?player ?population)
+     (currentCitySet ?player ?citySet)
+     (different ?citySet (TheSet))
+     (evaluate ?population
+       (PlusAll ?citySet 
+         (FunctionToArg 2 cityPopulation))))
+
+(<== (civPopulation ?player (FreeCivPopulationFn 0))
+     (currentCitySet ?player (TheSet)))
+
+(<== (civFoodSurplusTotal ?player ?total)
+     (currentCitySet ?player ?citySet)
+     (different ?citySet (TheSet))
+     (evaluate ?total  ; ?revenueFn should be a NAT (FoodPoints #)
+       (PlusAll ?citySet 
+         (FunctionToArg 2 cityFoodSurplus))))
+
+;;; What's the total science output per turn over the player's whole civilization?
+;;; Note: This has been replace by civBulbsPerTurn
+;(<== (civScienceTotal ?player ?total)
+;     (currentCitySet ?player ?citySet)
+;     (different ?citySet (TheSet))
+;     (evaluate ?total  ; ?revenueFn should be a NAT (SciencePoints #)
+;       (PlusAll ?citySet 
+;         (FunctionToArg 2 cityScienceTotal)))) ; ?trade is a NAT but PlusAll should add ok. 
+
+;;; This is necessary because PlusAll bombs if given no args.
+;;; More precisely, it will return 0, but not (FreeCivCapitalFn 0).
+;(<== (civScienceTotal ?player (SciencePoints 0))
+;     (currentCitySet ?player (TheSet)))
+
+;;; This needs to be the sum of tax revenue and coinage revenue.
+;;; Now outsourced to handle coinage revenue.
+;(<== (civGoldProduction ?player ?total)
+;     (currentCitySet ?player ?city-set)
+;     (different ?city-set (TheSet))
+;     (evaluate ?total
+;       (PlusAll ?city-set
+;         (FunctionToArg 2 cityGoldSurplus))))
+;
+;(<== (civGoldProduction ?player (GoldPoints 0))
+;     (currentCitySet ?player (TheSet)))
+     
+(<== (civProductionTotal ?player ?total)
+     (currentCitySet ?player ?city-set)
+     (different ?city-set (TheSet))
+     (evaluate ?total
+       (PlusAll ?city-set
+         (FunctionToArg 2 cityShieldSurplus))))
+         
+(<== (civProductionTotal ?player (ProductionPoints 0))
+     (currentCitySet ?player (TheSet)))
+
+(<== (wonderExists ?obj)
+     (genls ?obj FreeCiv-Wonder)
+     (cityHasImprovement ?anycity ?obj))
+
+;;; The set of cities belonging to the currentPlayer
+(<== (currentCitySet ?player ?citySet)
+     (currentPlayer ?player)
+     (evaluate ?citySet
+       (TheClosedRetrievalSetOf ?city
+         (cityOwner ?city ?player))))
+
+;; N.B. This won't be accurate if we don't know the extent of
+;; that player's civilization.  Hmmm.
+(<== (numberOfCities ?player ?count)
+     (evaluate ?citySet
+       (TheClosedRetrievalSetOf ?city
+         (cityOwner ?city ?player)))
+     (evaluate ?count
+       (CardinalityFn ?citySet)))
+
+;;; How many cities do we have?
+(<== (numCities ?player ?num)
+     (currentPlayer ?player)
+     (evaluate ?num
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?city
+           (cityOwner ?city ?player)))))
+           
+;;; Have we achieved a fleet of size ?size:
+(<== (hasFleet ?player ?size)
+     (currentPlayer ?player)
+     (evaluate ?boatSet 
+       (TheClosedRetrievalSetOf ?unit
+         (and (unitOwner ?unit ?player)
+              (unitType ?unit ?type)
+              (genls ?type FreeCiv-SeaUnit))))
+     (evaluate ?size (CardinalityFn ?boatSet)))
+
+;;; For testing justifications and dynamic predicates
+(<== (hasHut ?loc)
+     (specialAt ?loc FC-Special-Hut))
+
+;;; Unit accessors
+
+(isa unitIsa BinaryPredicate)
+(arg1Isa unitIsa Individual)
+(arg2Isa unitIsa Collection)
+(comment unitIsa "(unitIsa ?unit ?unit-type) falls back on isa if there is no outsourced unitType predicate available.")
+
+
+(<== (unitIsa ?unit ?type)
+     (outsourcedOnly
+       (unitType ?unit ?type)))
+
+(<== (unitIsa ?unit ?type)
+     (uninferredSentence
+       (outsourcedOnly
+         (unitType ?unit ?type)))
+     (nonTransitiveInference
+       (isa ?unit ?type)))
+
+(<== (unitHasPopulationCost ?unit ?cost)
+     (numAnswers 1 (unitIsa ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasPopulationCost ?type ?cost))))
+
+;;; This is the potential upkeep.  If the unit doesn't have a homecity, 
+;;; then nobody's paying for them.  Should this be conditionalized on
+;;; unitHomeCity?
+(<== (unitHasFoodUpkeep ?unit ?food-upkeep)
+     (numAnswers 1 (unitHomeCity ?unit ?somewhere))
+     (numAnswers 1 (unitIsa ?unit ?unittype))
+     (numAnswers 1
+       (lookupOnly
+         (objectTypeHasUpkeepFoodCost ?unittype ?food-upkeep))))
+         
+(<== (unitHasFoodUpkeep ?unit (FoodPoints 0))
+     (uninferredSentence
+       (unitHomeCity ?unit ?where)))
+
+(<== (unitHasShieldUpkeep ?unit ?shield-upkeep)
+     (numAnswers 1 (unitHomeCity ?unit ?somewhere))
+     (numAnswers 1 (unitType ?unit ?unittype))
+     (ist-Information Freeciv-defaultMt
+       (objectTypeHasUpkeepShieldEffect ?unittype ?shield-upkeep)))
+
+(<== (unitHasShieldUpkeep ?unit (ProductionPoints 0))
+     (uninferredSentence
+       (unitHomeCity ?unit ?where)))
+
+;;; The unmodified value:
+(<== (unitHasAttackStrength ?unit ?strength)
+     (numAnswers 1 (unitType ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasAttackStrength ?type ?strength))))
+
+;;; The unmodified value (ignoring terrain factors, etc.)
+(<== (unitHasDefendStrength ?unit ?strength)
+     (numAnswers 1 (unitIsa ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasDefendStrength ?type ?strength))))
+
+;;; This is the initial, undegraded hitpoints.
+(<== (unitHasHitpoints ?unit ?hitpoints)
+     (numAnswers 1 (unitIsa ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasHitpoints ?type ?hitpoints))))
+
+(<== (unitHasFirepower ?unit ?firepower)
+     (numAnswers 1 (unitIsa ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasFirepower ?type ?firepower))))
+
+;; This is the base rate per turn.
+(<== (unitHasMoveRate ?unit ?rate)
+     (numAnswers 1 (unitIsa ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasMoveRate ?type ?rate))))
+
+;;; This is the total capacity, not necessarily the current available capacity.
+(<== (unitHasTransportCapacity ?unit ?capacity)
+     (numAnswers 1 (unitIsa ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasTransportCapacity ?type ?capacity))))
+
+(<== (unitHasFuelCapacity ?unit ?capacity)
+     (numAnswers 1 (unitIsa ?unit ?type))
+     (numAnswers 1
+       (lookupOnly
+         (unitTypeHasFuelCapacity ?type ?capacity))))
+
+;;; What units of given type are currently idle?
+(<== (idleUnitOfType ?type ?unit)
+     (idleUnit ?unit)
+     (numAnswers 1 (unitType ?unit ?type)))
+
+
+(<== (idleUnitOfType ?type ?unit)
+     (idleUnit ?unit)
+     (numAnswers 1 (unitType ?unit ?subtype))
+     (genls ?subtype ?type)) ; This is more general than unitType, since we may
+                                   ; want to know, e.g., all idle FreeCiv-SeaUnits.
+
+(<== (behaviorCapable ?agent ?activity-type ?role)
+     (numAnswers 1 (unitType ?agent ?type))
+     (numAnswers 1
+       (lookupOnly
+         ((TypeCapableFn behaviorCapable) ?type ?activity-type ?role))))
+         
+(<== ((TypeCapableFn behaviorCapable) ?type AttackOnTangible performedBy)
+     (lookupOnly
+       ((TypeCapableFn behaviorCapable) ?type doAttack performedBy)))
+
+;;; Land units can only travel on land (unless transported)
+(<== (canTravelOn ?unit ?terrain)
+     (numAnswers 1
+       (unitType ?unit ?unitType))
+     (lookupOnly 
+       (genls ?unitType FreeCiv-LandUnit))
+     (lookupOnly 
+       (isa ?terrain FreeCiv-LandTile)))
+
+;;; Sea units can only travel on the sea:
+(<== (canTravelOn ?unit ?terrain)
+     (numAnswers 1
+       (unitType ?unit ?unitType))
+     (lookupOnly
+       (genls ?unitType  FreeCiv-SeaUnit))
+     (lookupOnly
+       (isa ?terrain FreeCiv-WaterTile)))
+
+;;; Air units can travel over anything
+(<== (canTravelOn ?unit ?terrain)
+     (unitType ?unit ?unitType)
+     (genls ?unitType  FreeCiv-AirUnit))
+
+;;; Heli units can travel over anything
+(<== (canTravelOn ?unit ?terrain)
+     (numAnswers 1 (unitType ?unit ?unitType))
+     (lookupOnly
+       (genls ?unitType  FreeCiv-HeliUnit)))
+
+;;; Is our unit in one of our cities?
+(<== (inFriendlyCity ?unit ?city)  ; assume ?unit is bound
+     (numAnswers 1 (currentPlayer ?player))
+     (numAnswers 1 (unitOwner ?unit ?player))
+     (fcObjectAt ?unit ?loc)
+     (fcObjectAt ?city ?loc)
+     (numAnswers 1 (cityOwner ?city ?player)))
+
+(<== (idleUnit ?unit)
+     (numAnswers 1 (fcExecutionContext ?mt))
+     (numAnswers 1 (currentPlayer ?player))
+     ;; This needs to generate units.  
+     (unitOwner ?unit ?player) ; don't need to check isa, since this guarantees it's a unit.
+     (outsourcedOnly
+       (currentActivity ?unit FC-ActivityIdle))
+     (uninferredSentence 
+       (outsourcedOnly 
+         (hasOrders ?unit)))
+     (uninferredSentence
+       (outsourcedOnly
+         (doneMoving ?unit)))
+     (uninferredSentence 
+       (outsourcedOnly
+         (currentPlan ?unit ?plan)))  ;; This now has to be implemented as an outsourced predicate
+     (uninferredSentence
+       (allFactsAllowed
+         (ist-Information ?mt (unitPlansCityAt ?unit ?loc)))))  ; In some cases, we're getting multiple orders.
+
+;;; The set of idle units belonging to the current player
+(<== (idleUnitSet ?unitSet)
+     (evaluate ?unitSet
+        (TheClosedRetrievalSetOf ?unit
+           (wmOnly (idleUnit ?unit)))))
+
+;;; -------------------------------------------------------------------------
+;;; City accessors
+;;;
+
+;;; Population is computed weirdly in Freeciv:
+;;; pcity->size * (pcity->size + 1) * 5;
+(<== (cityPopulation ?city ?population)
+     (numAnswers 1 (citySize ?city ?sz))
+     (unifies (?functor ?sz-int) ?sz) ; destructure the size NAT
+     (evaluate ?pop-int (TimesFn ?sz-int (PlusFn ?sz-int 1) 5000))
+     (unifies ?population (FreeCivPopulationFn ?pop-int)))
+
+;;; Now that we distinguish addToCity from buildCity, we
+;;; must refine potentialCityAt to omit existing cities.
+;(<== (potentialCityAt ?city ?loc)
+;     (groundExpression ?loc)
+;     (isa ?loc FreecivLocation)
+;     (cityAt ?city ?loc))
+     
+(<== (potentialCityAt ?loc)
+     (groundExpression ?loc)
+     (matches (FreecivLocationFn ?x ?y) ?loc)  ; 6x faster than isa.
+     (currentPlayer ?current-player)
+     (uninferredSentence 
+       (enemyTerritory ?loc ?current-player))
+     (uninferredSentence
+       (outsourcedOnly (violatesCitySpacing ?loc))))
+
+;(<== (potentialCityAt ?loc)
+;     (groundExpression ?loc)
+;     (not (matches (FreecivLocationFn ?x ?y) ?loc))
+;     (break))  ; I want to know why, dammit!
+       
+
+(isa enemyTerritory BinaryPredicate)
+(arity enemyTerritory 2)
+(arg1Isa enemyTerritory FreecivLocation)
+(arg2Isa enemyTerritory FreeCiv-Player)
+     
+(<== (enemyTerritory ?loc ?current-player)
+     (locationInTerritory ?loc ?territory)
+     (unifies (TerritoryFn ?player) ?territory)
+     (different ?player ?current-player))
+
+(isa violatesCitySpacing UnaryPredicate)
+(arity violatesCitySpacing 1)
+(arg1Isa violatesCitySpacing FreecivLocation)
+(comment violatesCitySpacing "(violatesCitySpacing ?loc) means there is a city withing 3 tiles of ?loc.")
+
+;(<== (violatesCitySpacing ?loc)
+;     (groundExpression ?loc)
+;     (fcExecutionContext ?mt)
+;     (ist-Information ?mt
+;       (cityOwner ?city ?owner))    ; any owner
+;     (ist-Information ?mt
+;       (fcObjectAt ?city ?city-loc))  
+;     (ist-Information ?mt
+;       (fcDistance ?city-loc ?loc ?dist))
+;     (lessThan ?dist 3))
+
+
+;;; City can build an object iff:
+;;; it has the technology, 
+;;; it has sufficient tradeSurplus to afford it, 
+;;; it isn't missing any required improvement preconditions and
+;;; it doesn't already have the object (if it's a building)
+;(<== (cityCanBuild ?city ?objType)
+;     (numAnswers 1 (cityOwner ?city ?player))
+;     (ist-Information Freeciv-defaultMt
+;       (isa ?objType FreeCiv-Building))
+;     (canBuild ?player ?objType) ; covers obsolete check
+;     (canAfford ?city ?objType)
+;     (different ?objType FC-Building-Palace)  ; Handle moving the capitol in some other way
+;     (localOnly (uninferredSentence (requiresImprovement ?city ?objType ?improvement)))
+;     (localOnly (uninferredSentence (cityHasImprovement ?city ?objType))))
+
+;;; Wonders have no upkeep cost and no building requirements
+;;; but only one can exist per game.
+;(<== (cityCanBuild ?city ?objType)
+;     (cityOwner ?city ?player)
+;     (ist-Information Freeciv-defaultMt
+;       (lookupOnly
+;         (genls ?objType FreeCiv-Wonder)))
+;     (canBuild ?player ?objType)
+;     (localOnly (uninferredSentence (cityHasImprovement ?anyCity ?objType)))
+;     (localOnly (uninferredSentence (currentlyBuilding ?someCity ?objType)))
+;     (localOnly (uninferredSentence (plansConstruction ?someOtherCity ?objType))))
+       
+;;; We won't worry about upkeep costs of units yet, since they
+;;; have the ability to change homecity.
+;(<== (cityCanBuild ?city ?objType)
+;     (numAnswers 1 (cityOwner ?city ?player))
+;     (ist-Information Freeciv-defaultMt
+;       (genls ?intermediateType FreeCiv-Unit))
+;     (ist-Information Freeciv-defaultMt
+;       (genls ?objType ?intermediateType))
+;     (canBuild ?player ?objType))
+       
+;;; Every city can build coinage
+;(<== (cityCanBuild ?city FC-Coinage))
+  
+;(<== (canAfford ?city ?objType)
+;     (cityTradeSurplus ?city ?trade)                     ; a FreeCivTradeQuantityFn
+;     (ist-Information Freeciv-defaultMt
+;       (objectTypeHasUpkeepGoldCost ?objType ?gold-points)) ; (GoldPoints ?cost)
+;     (natArgument ?trade 1 ?surplus)
+;     (natArgument ?gold-points 1 ?cost)
+;     (lessThanOrEqualTo ?cost ?surplus))
+
+;;; Fortunately, we are guaranteed that each building is unique in a city,
+;;; so the set representation works.
+(<== (cityImprovementsUpkeep ?city ?upkeep)
+     (evaluate ?improvements-set
+       (TheClosedRetrievalSetOf ?improvement
+            (cityHasImprovement ?city ?improvement)))
+     (totalImprovementsUpkeep ?improvements-set ?upkeep))
+       
+(<== (totalImprovementsUpkeep ?improvements-set ?upkeep)
+     (different ?improvements-set (TheSet))
+     (evaluate ?upkeep
+       (PlusAll
+           ?improvements-set
+         (FunctionToArg 2 objectTypeHasUpkeepGoldCost))))
+
+;;; HandleCase where there are no improvements:
+(<== (totalImprovementsUpkeep (TheSet) (GoldPoints 0)))
+
+;;; Bind ?improvement to any building that city must have (and doesn't) before it can build ?objType
+(<== (requiresImprovement ?city ?objType ?improvement)
+     (objectProductionRequiresBuilding ?objType ?improvement)
+     (uninferredSentence (cityHasImprovement ?city ?improvement)))
+       
+(<== (isObsolete ?objType)
+     (lookupOnly
+       (objectTypeObsoletes ?otherType ?objType))
+     (numAnswers 1 (currentPlayer ?player))
+     (canBuild ?player ?otherType))
+
+;;; Can't build a road across a river until player acquires BridgeBuilding.
+(<== (roadBlockedByRiver ?player ?loc)
+     (specialAt ?loc FC-Special-River)
+     (localOnly 
+       (uninferredSentence
+         (playerKnowsTech ?player FC-Tech-BridgeBuilding))))
+
+(isa nextToWater UnaryPredicate)
+(arity nextToWater 1)
+(arg1Isa nextToWater FreecivLocation)
+(comment nextToWater "(nextToWater (FreecivLocationFn ?x ?y)) means location ?x ?y is cardinally adjacent to water, either the ocean, a river, or irrigation.")
+
+(<== (nextToWater ?loc)
+     (cardinallyAdjacentToPos FreeCiv-WaterTile ?loc))
+
+(<== (nextToWater ?loc)
+     (cardinallyAdjacentToPos FC-Special-River ?loc))
+
+(<== (nextToWater ?loc)
+     (specialAt ?loc FC-Special-River))  ; For the purposes of irrigation, this is right.
+
+(<== (nextToWater ?loc)
+     (cardinallyAdjacentToPos FC-Special-Irrigation ?loc))
+
+;;; Return every city with ?item on its worklist:
+(<== (plansConstruction ?who ?item)
+     (currentPlayer ?player)
+     (numAnswers 1 (cityOwner ?who ?player))
+     (cityWorklist ?who ?worklist)
+     (formulaArgument ?worklist ?n ?item))  ; is ?item somewhere on the worklist?
+
+
+;;; A costal city is adjacent to the ocean:
+(<== (coastalCity ?city)
+     (fcObjectAt ?city ?loc)
+     (adjacentToPos FC-Terrain-Ocean ?loc))
+
+(<== (cityAt ?city ?loc)
+     (fcObjectAt ?city ?loc)
+     (numAnswers 1 (cityOwner ?city ?owner)))  ; more certain than an isa check
+
+
+;;; Which specials are in the locations currently worked by city?
+;;; This is going to include things like rivers and irrigation
+(<== (citySpecialAt ?city ?special ?special-loc)
+     (cityAt ?city ?city-loc)
+     (different ?special-loc ?city-loc)
+     (cityWorkingTileAt ?city ?special-loc)
+     (specialAt ?special-loc ?special))
+
+;;; Resources are things like Wheat, as opposed to Irrigation.
+(<== (citySpecialAt ?city ?special ?special-loc)
+     (cityAt ?city ?city-loc)
+     (different ?special-loc ?city-loc)
+     (cityWorkingTileAt ?city ?special-loc)
+     (resourceAt ?special-loc ?special))
+
+;;; What terrains are in the locations currently worked by city?
+;;; (Really don't want to reify all 21 tile terrains)
+(<== (cityTerrainAt ?city ?terrain ?terrain-loc)
+     (cityAt ?city ?city-loc)
+     (different ?terrain-loc ?city-loc)
+     (cityWorkingTileAt ?city ?terrain-loc)
+     (terrainAt ?terrain-loc ?terrain))
+
+       
+
+ ; if this is too expensive, it could be outsourced
+(<== (cityHappiness ?city ?avg-happiness)
+     (happyCitizens ?city ?happy)
+     (formulaArgument ?happy 1 ?happy-val)
+     (contentCitizens ?city ?content)
+     (formulaArgument ?content 1 ?content-val)
+     (unhappyCitizens ?city ?unhappy)
+     (formulaArgument ?unhappy 1 ?unhappy-val)
+     (angryCitizens ?city ?angry)
+     (formulaArgument ?angry 1 ?angry-val)
+     (evaluate ?average-val
+        (QuotientFn
+             (PlusFn (TimesFn ?happy-val 4)
+                     (TimesFn ?content-val 3)
+                     (TimesFn ?unhappy-val 2)
+                     (TimesFn ?angry-val 1))
+               ;; Can't use citySize here, because we don't want to factor in specialists:
+             (PlusFn ?happy-val ?content-val ?unhappy-val ?angry-val)))
+     (unifies ?avg-happiness (FreeCivMoodFn ?average-val)))
+
+
+;;; These need to bind quantities, not numbers:
+(<== (numEntertainers ?city (FreecivCitizenCountFn ?num))
+     (numSpecialists ?city FC-Specialist-Elvis (FreecivCitizenCountFn ?num)))
+
+(<== (numScientists ?city (FreecivCitizenCountFn ?num))
+     (numSpecialists ?city FC-Specialist-Scientist (FreecivCitizenCountFn ?num)))
+
+(<== (numTaxCollectors ?city (FreecivCitizenCountFn ?num))
+     (numSpecialists ?city FC-Specialist-Taxman (FreecivCitizenCountFn ?num)))
+
+;;; To be used as a doCallback condition:
+;;; The other way to do this would be to look for a UnitBuiltEvent 
+;;; and look for the associated outputsCreated statement.
+(<== (unitProducedThisTurn ?city ?unit)
+     (fcExecutionContext ?mt)
+     (currentYear ?year)
+     (unitHomeCity ?unit ?city)
+     (startingDate ?unit ?year))
+
+;;; Assessing needed improvement dimensions
+
+(<== (mostNeededImprovementType ?city ?type)
+     (cityFoodSurplus ?city ?foodFn)
+     (natArgument ?foodFn 1 ?food)
+     (cityShieldSurplus ?city ?shieldsFn)
+     (natArgument ?shieldsFn 1 ?shields)
+     (cityTradeSurplus ?city ?tradeFn)
+     (natArgument ?tradeFn 1 ?trade)
+     (minimumSurplusType ?food ?shields ?trade ?type))
+
+(<== (minimumSurplusType ?f ?p ?t ImproveFood)
+     (lessThanOrEqualTo ?f ?p)
+     (lessThanOrEqualTo ?f ?t))
+
+(<== (minimumSurplusType ?f ?p ?t ImproveProduction)
+     (greaterThan ?f ?p)
+     (lessThanOrEqualTo ?p ?t))
+
+(<== (minimumSurplusType ?f ?p ?t ImproveTrade)
+     (greaterThan ?f ?t)
+     (greaterThan ?p ?t))
+
+
+;;; Cities need an aqueduct to grow larger than size 8 (requires construction)
+;;; and a sewer system to grow larget than size 12 (requires sanitation)
+(<== (cityCannotGrow ?city)
+     (citySize ?city (FreecivCitizenCountFn 8))
+     (uninferredSentence (cityHasImprovement ?city FC-Building-Aqueduct))
+       )
+
+(<== (cityCannotGrow ?city)
+     (citySize ?city (FreecivCitizenCountFn 12))
+     (uninferredSentence (cityHasImprovement ?city FC-Building-SewerSystem)))
+
+;;; Everything else being equal, it's ok to move a worker from one tile
+;;; to another if a) you can't convert an elvis, or b) doing so would
+;;; send the city into revolt.
+(isa moveWorkerPermitted UnaryPredicate)
+(arity moveWorkerPermitted 1)
+(arg1Isa moveWorkerPermitted FreeCiv-City)
+(comment moveWorkerPermitted "(moveWorkerPermitted ?city) succeeds if it's ok to move a worker from one tile to another.")
+
+(<== (moveWorkerPermitted ?city)
+     (numSpecialists ?city FC-Specialist-Elvis ?elvii)
+     (lessThan ?elvii 1))
+
+(<== (moveWorkerPermitted ?city)
+     (cityIsUnhappy ?city))
+       
+(<== (citySupportsUnitOfType ?city ?unitType ?unit)
+     (unitHomeCity ?unit ?city)
+     (unitType ?unit ?unitType))
+       
+(<== (numSupportedUnits ?city (FreecivUnitCountFn ?num))
+     (evaluate ?num 
+       (CardinalityFn 
+         (TheClosedRetrievalSetOf ?unit
+           (unitHomeCity ?unit ?city)))))
+
+
+(<== (supportedUnitsShieldUpkeep ?city ?upkeep)
+     (evaluate ?unit-set
+       (TheClosedRetrievalSetOf ?unit
+           (unitHomeCity ?unit ?city)))
+     (unitSetShieldUpkeep ?unit-set ?upkeep))
+
+(<== (unitSetShieldUpkeep ?unit-set ?shield-upkeep)
+     (different ?unit-set (TheSet))
+     (evaluate ?shield-upkeep
+       (PlusAll ?unit-set
+         (FunctionToArg 2 unitHasShieldUpkeep))))
+
+;;; HandleCase where there are no units.
+;;; Although PlusAll will return 0, we want to ensure the
+;;; number has the units of ProductionPoints.
+(<== (unitSetShieldUpkeep (TheSet) (ProductionPoints 0)))
+
+(<== (supportedUnitsFoodUpkeep ?city ?upkeep)
+     (evaluate ?unit-set
+       (TheClosedRetrievalSetOf ?unit
+           (unitHomeCity ?unit ?city)))
+     (unitSetFoodUpkeep ?unit-set ?upkeep))
+
+(<== (unitSetFoodUpkeep ?unit-set ?food-upkeep)
+     (different ?unit-set (TheSet))
+     (evaluate ?food-upkeep
+       (PlusAll ?unit-set
+         (FunctionToArg 2 unitHasFoodUpkeep))))
+
+;;; HandleCase where there are no units:
+(<== (unitSetFoodUpkeep (TheSet) (FoodPoints 0)))
+
+
+;;;     
+;;; End of file
+;;;

@@ -1,0 +1,229 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: taking-in-info.meld
+;;;;    System: 
+;;;;    Author: Blass
+;;;;   Created: April 25, 2016 16:21:42
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(isa absorbNewInformation ComplexActionPredicate)
+(arity absorbNewInformation 4)
+(arg1Isa absorbNewInformation CycLExpression-Assertible)
+(arg2Isa absorbNewInformation Microtheory)
+(arg4Isa absorbNewInformation Microtheory)
+(comment absorbNewInformation "(assimilateNewInformation ?info ?discourse-ctxt ?sentence-id ?context) attempts to absorb the information ?info, either by explanation or learning, with the discourse context ?discourse-ctxt as a resource, in the session reasoning ?context.")
+
+
+;;; just tell the fact into the working memory, BaseKB for now since it disappears with wm
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr))
+  (methodForAction
+    (absorbNewInformation ?info ?discourse-ctxt ?sentence-id ?context)
+    (actionSequence
+     (TheList
+      (doAnnounce "~% Asserting that )...~%  ~A " (?info))
+      (doTell (ist-Information BaseKB ?info))
+      (doTell (ist-Information ?context (processingComplete ?sentence-id)))))))
+
+;;; asking for input to go into a particular microtheory
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (sessionContext ?context)
+      (newReifiedUtterance ?system-utterance))
+ (methodForAction
+  (doSolicitInputIntoWM ?teachingMt)
+  (actionSequence
+   (TheList
+    (doRefreshStoryInputMt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doRecordMembers
+        (TheSet
+         (ist-Information ?context (isa ?system-utterance RequestForStory))
+         (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+         (ist-Information ?context (StoreInWMOrKB ?context WM))
+         (ist-Information ?context (mtForStoryInput ?context ?teachingMt))))
+       (doRespond ?system-utterance "Please provide a short illustrative story."))))))))
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (sessionContext ?context)
+      (newReifiedUtterance ?system-utterance))
+ (methodForAction
+  (doSolicitInputIntoKB ?teachingMt)
+  (actionSequence
+   (TheList
+    (doRefreshStoryInputMt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doRecordMembers
+        (TheSet
+         (ist-Information ?context (isa ?system-utterance RequestForStory))
+         (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+         (ist-Information ?context (StoreInWMOrKB ?context KB))
+         (ist-Information ?context (mtForStoryInput ?context ?teachingMt))))
+       (doRespond ?system-utterance "Please provide a short illustrative story."))))))))
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (sessionContext ?context)
+      (newReifiedUtterance ?system-utterance))
+ (methodForAction
+  (doSolicitInputForSAGE ?teachingMt ?gContext)
+  (actionSequence
+   (TheList
+    (doRefreshStoryInputMt)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doRecordMembers
+        (TheSet
+         (ist-Information ?context (isa ?system-utterance RequestForStory))
+         (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+         (ist-Information ?context (StoreInWMOrKB ?context SAGE))
+         (ist-Information ?context (mtForStoryInput ?context ?teachingMt))
+         (ist-Information ?context (generalizeUserInputFromMt ?teachingMt ?gContext))))
+       (doRespond ?system-utterance "Please provide a short illustrative story."))))))))
+
+(isa doSolicitInputIntoKB ComplexActionPredicate)
+(arity doSolicitInputIntoKB 1)
+(arg1Isa doSolicitInputIntoKB Microtheory)
+(comment doSolicitInputIntoKB
+  "(doSolicitInputIntoKB <microtheory>) prompts the user for input and asserts 
+facts such that the interpretation of the next user utterance will be stored in <microtheory> in the KB")
+
+(isa doSolicitInputIntoWM ComplexActionPredicate)
+(arity doSolicitInputIntoWM 1)
+(arg1Isa doSolicitInputIntoWM Microtheory)
+(comment doSolicitInputIntoWM
+  "(doSolicitInputIntoWM <microtheory>) prompts the user for input and asserts 
+facts such that the interpretation of the next user utterance will be stored in <microtheory> in WM.")
+
+(isa doSolicitInputForSAGE ComplexActionPredicate)
+(arity doSolicitInputForSAGE 2)
+(arg1Isa doSolicitInputForSAGE Microtheory)
+(arg1Isa doSolicitInputForSAGE CaseLibrary)
+(comment doSolicitInputForSAGE
+  "(doSolicitInputForSAGE <microtheory> <gPool>) prompts the user for input and asserts 
+facts such that the interpretation of the next user utterance will be stored in <microtheory> in the KB, which will then 
+be fed into <gPool> with SAGE.")
+
+(isa doRefreshStoryInputMt ComplexActionPredicate)
+(arity doRefreshStoryInputMt 0)
+
+
+;; either there's at least one fact to retract
+(preconditionForMethod 
+ (and (sessionContext ?context)
+      (or (StoreInWMOrKB ?context ?where)
+          (mtForStoryInput ?context ?teachingMt)
+          (generalizeUserInputFromMt ?teachingMt1 ?gContext)))
+ (methodForAction
+  (doRefreshStoryInputMt)
+  (actionSequence
+   (TheList
+    ;;; better overly thorough than underspecified
+    (doForget (ist-Information ?context (StoreInWMOrKB ?context ?where)))
+    (doForget (ist-Information ?context (mtForStoryInput ?context ?teachingMt)))
+    (doForget (ist-Information ?context (generalizeUserInputFromMt ?teachingMt1 ?gContext)))
+    (doRetract (ist-Information ?context (StoreInWMOrKB ?context ?where)))
+    (doRetract (ist-Information ?context (mtForStoryInput ?context ?teachingMt)))
+    (doRetract (ist-Information ?context (generalizeUserInputFromMt ?teachingMt1 ?gContext)))))))
+     
+     ;;; or there isn't
+(preconditionForMethod 
+ (true)
+ (methodForAction
+  (doRefreshStoryInputMt)
+  (actionSequence
+   (TheList))))
+
+(<== (preferInContext (doRefreshStoryInputMt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 doRetract))
+                       
+
+(in-microtheory Session-ReasonerMt)
+
+(isa doSolicitInput ComplexActionPredicate)
+(arity doSolicitInput 1)
+(arg1Isa doSolicitInput Microtheory)
+(comment doSolicitInput
+  "(doSolicitInput <microtheory>) calls the IM version of the plan.")
+
+(preconditionForMethod
+ (and (currentInteractionMgr ?im))
+  (methodForAction
+    (doSolicitInput ?teachingMt)
+    (actionSequence
+     (TheList
+      (doRemoteAgentPlan ?im (actionSequence (TheList (doSolicitInput ?teachingMt))))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;session reasoner kickoffs
+
+
+(in-microtheory Session-ReasonerMt)
+
+;;; 
+(preconditionForMethod
+ (currentInteractionMgr ?im)
+ (methodForAction
+  (doSolicitInputIntoWM ?teachingMt)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?im (doSolicitInputIntoWM ?teachingMt))))))
+
+(preconditionForMethod
+ (currentInteractionMgr ?im)
+ (methodForAction
+  (doSolicitInputIntoKB ?teachingMt)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?im (doSolicitInputIntoKB ?teachingMt))))))
+
+(preconditionForMethod
+ (currentInteractionMgr ?im)
+ (methodForAction
+  (doSolicitInputForSAGE ?teachingMt ?gContext)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?im (doSolicitInputForSAGE ?teachingMt ?gContext))))))
+
+(isa doSolicitInputIntoKB ComplexActionPredicate)
+(arity doSolicitInputIntoKB 1)
+(arg1Isa doSolicitInputIntoKB Microtheory)
+(comment doSolicitInputIntoKB
+  "(doSolicitInputIntoKB <microtheory>) prompts the user for input and asserts 
+facts such that the interpretation of the next user utterance will be stored in <microtheory> in the KB")
+
+(isa doSolicitInputIntoWM ComplexActionPredicate)
+(arity doSolicitInputIntoWM 1)
+(arg1Isa doSolicitInputIntoWM Microtheory)
+(comment doSolicitInputIntoWM
+  "(doSolicitInputIntoWM <microtheory>) prompts the user for input and asserts 
+facts such that the interpretation of the next user utterance will be stored in <microtheory> in WM.")
+
+(isa doSolicitInputForSAGE ComplexActionPredicate)
+(arity doSolicitInputForSAGE 2)
+(arg1Isa doSolicitInputForSAGE Microtheory)
+(arg1Isa doSolicitInputForSAGE CaseLibrary)
+(comment doSolicitInputForSAGE
+  "(doSolicitInputForSAGE <microtheory> <gPool>) prompts the user for input and asserts 
+facts such that the interpretation of the next user utterance will be stored in <microtheory> in the KB, which will then 
+be fed into <gPool> with SAGE.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

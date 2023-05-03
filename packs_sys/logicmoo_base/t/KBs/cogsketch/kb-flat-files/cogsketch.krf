@@ -1,0 +1,309 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cogsketch.krf
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: November 2, 2005 20:21:28
+;;;;   Purpose: Basic KB defs for CogSketch.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-10-29 18:18:31 -0500 (Mon, 29 Oct 2018) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchMt)
+
+(genlMt CogSketchMt SKEAMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa CogSketch NuSketchApplication)
+(isa CogSketch ReasonerControlState)
+
+(isa CogSketchTutorControlPredicate Collection)
+(genls CogSketchTutorControlPredicate Predicate)
+(comment CogSketchTutorControlPredicate
+  "This is the #$Collection of all predicates that can be used by a worksheet 
+   author to control the CogSketch tutor.  This does not include predicates
+   used internally when generating the tutor advice, only those that can be
+   specified by a worksheet author.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa copyOfGlyph Relation)
+(arity copyOfGlyph 2)
+(arg1Isa copyOfGlyph NuSketchGlyph)
+(arg2Isa copyOfGlyph NuSketchGlyph)
+(comment "Outsourced predicate causes a glyph to be copied.  The second 
+          argument receives the name of the copy.")
+(notForAnalogy copyOfGlyph)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa copySequentialSubsketch Relation)
+(arity copySequentialSubsketch 2)
+(arg1Isa copySequentialSubsketch SubSketchGroup)
+(arg2Isa copySequentialSubsketch SubSketchGroup)
+(comment "Outsourced predicate causes a subsketch to be copied.  The second 
+          argument receives the name of the copy.")
+(notForAnalogy copySequentialSubsketch)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutoring Advice - Suggestions from Candidate Inferences
+
+(isa ImportantForCogSketchTutoringFact Collection)
+(genls ImportantForCogSketchTutoringFact CycLSentence)
+(comment ImportantForCogSketchTutoringFact 
+         "The collection of all facts that will most likely prove important
+          when tutoring students in CogSketch.")
+
+(isa cogsketchAdviceString Relation)
+(isa cogsketchAdviceString CogSketchTutorControlPredicate)
+(arity cogsketchAdviceString 2)
+(arg1Isa cogsketchAdviceString ImportantForCogSketchTutoringFact)
+(arg2Isa cogsketchAdviceString TextString)
+(comment cogsketchAdviceString
+  "Associates tutoring advice text with a fact.  The fact must be a
+   #$ImportantForCogSketchTutoringFact.")
+
+(isa importanceOrderFor Relation)
+(isa importanceOrderFor CogSketchTutorControlPredicate)
+(arity importanceOrderFor 2)
+(arg1Isa importanceOrderFor ImportantForCogSketchTutoringFact)
+(arg2Isa importanceOrderFor NonNegativeInteger)
+(comment importanceOrderFor
+  "Indicates an ordering for the importance of a #$ImportantForCogSketchTutoringFact.
+   Useful when displaying critiques to students in order of importance.  1 is the
+   most important; higher numbers are progressively less important.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutoring Advice - Quantitative Values
+
+(isa cogSketchTutoringQuantityMinVal Relation)
+(isa cogSketchTutoringQuantityMinVal CogSketchTutorControlPredicate)
+(arity cogSketchTutoringQuantityMinVal 3)
+(arg1Isa cogSketchTutoringQuantityMinVal ImportantForCogSketchTutoringFact)
+(arg2Isa cogSketchTutoringQuantityMinVal ScalarQuantity)
+(arg3Isa cogSketchTutoringQuantityMinVal ScalarInterval)
+(comment cogSketchTutoringQuantityMinVal
+  "Specifies the minimum allowed value for a quantity mentioned within a 
+   #$ImportantForCogSketchTutoringFact.  See also #$cogSketchTutoringMinValString.")
+
+(isa cogSketchTutoringMinValString Relation)
+(isa cogSketchTutoringMinValString CogSketchTutorControlPredicate)
+(arity cogSketchTutoringMinValString 3)
+(arg1Isa cogSketchTutoringMinValString ImportantForCogSketchTutoringFact)
+(arg2Isa cogSketchTutoringMinValString ScalarQuantity)
+(arg3Isa cogSketchTutoringMinValString TextString)
+(comment cogSketchTutoringMinValString
+  "Works with #$cogSketchTutoringQuantityMinVal.  If the student's quantity is
+   less than the minimum allowed value, this tutoring advice will be given.")
+
+
+
+(isa cogSketchTutoringQuantityMaxVal Relation)
+(isa cogSketchTutoringQuantityMaxVal CogSketchTutorControlPredicate)
+(arity cogSketchTutoringQuantityMaxVal 3)
+(arg1Isa cogSketchTutoringQuantityMaxVal ImportantForCogSketchTutoringFact)
+(arg2Isa cogSketchTutoringQuantityMaxVal ScalarQuantity)
+(arg3Isa cogSketchTutoringQuantityMaxVal ScalarInterval)
+(comment cogSketchTutoringQuantityMaxVal
+  "Specifies the maximum allowed value for a quantity mentioned within a 
+   #$ImportantForCogSketchTutoringFact.  See also #$cogSketchTutoringMaxValString.")
+
+(isa cogSketchTutoringMaxValString Relation)
+(isa cogSketchTutoringMaxValString CogSketchTutorControlPredicate)
+(arity cogSketchTutoringMaxValString 3)
+(arg1Isa cogSketchTutoringMaxValString ImportantForCogSketchTutoringFact)
+(arg2Isa cogSketchTutoringMaxValString ScalarQuantity)
+(arg3Isa cogSketchTutoringMaxValString TextString)
+(comment cogSketchTutoringMaxValString
+  "Works with #$cogSketchTutoringQuantityMaxVal.  If the student's quantity is
+   greater than the maximum allowed value, this tutoring advice will be given.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutoring Advice - Missing Entities
+
+(isa missingEntityAdviceDisabledForSketch  Relation)
+(isa missingEntityAdviceDisabledForSketch  CogSketchTutorControlPredicate)
+(arity missingEntityAdviceDisabledForSketch  1)
+(arg1Isa missingEntityAdviceDisabledForSketch  NuSketchSketch)
+(comment missingEntityAdviceDisabledForSketch 
+  "Says that advice about missing entities is NOT enabledfor the specified 
+   sketch.")
+(notForAnalogy missingEntityAdviceDisabledForSketch )
+
+
+(isa missingEntityAdviceString Relation)
+(isa missingEntityAdviceString CogSketchTutorControlPredicate)
+(arity missingEntityAdviceString 2)
+(arg1Isa missingEntityAdviceString NuSketchGlyph)
+(arg2Isa missingEntityAdviceString TextString)
+(comment missingEntityAdviceString
+  "Associates quantitative ink tutoring advice text with a glyph.")
+(notForAnalogy missingEntityAdviceString)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutoring Advice - Extra Entities
+
+(isa cogSketchTutoringExtraGlyphsAllowedForCollection UnaryPredicate)
+(isa cogSketchTutoringExtraGlyphsAllowedForCollection CogSketchTutorControlPredicate)
+(arity cogSketchTutoringExtraGlyphsAllowedForCollection 1)
+(arg1Isa cogSketchTutoringExtraGlyphsAllowedForCollection Collection)
+(comment cogSketchTutoringExtraGlyphsAllowedForCollection
+  "Says that the tutor will allow student solutions to contain extra glyphs 
+   representing objects of the specified #$Collection.")
+
+(isa cogSketchTutoringExtraGlyphsAllowedForRelation UnaryPredicate)
+(isa cogSketchTutoringExtraGlyphsAllowedForRelation CogSketchTutorControlPredicate)
+(arity cogSketchTutoringExtraGlyphsAllowedForRelation 1)
+(arg1Isa cogSketchTutoringExtraGlyphsAllowedForRelation Collection)
+(comment cogSketchTutoringExtraGlyphsAllowedForRelation
+  "Says that the tutor will allow student solutions to contain extra glyphs 
+   representing objects of the specified #$Relation.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutoring Advice - Quantitative Ink
+
+(isa quantInkAdviceEnabledForSketch Relation)
+(isa quantInkAdviceEnabledForSketch CogSketchTutorControlPredicate)
+(arity quantInkAdviceEnabledForSketch 1)
+(arg1Isa quantInkAdviceEnabledForSketch NuSketchSketch)
+(comment quantInkAdviceEnabledForSketch
+  "Says that quantitative ink advice is enabled for the specified sketch.")
+(notForAnalogy quantInkAdviceEnabledForSketch)
+
+(isa quantInkAdviceEnabledForGlyph Relation)
+(isa quantInkAdviceEnabledForGlyph CogSketchTutorControlPredicate)
+(arity quantInkAdviceEnabledForGlyph 1)
+(arg1Isa quantInkAdviceEnabledForGlyph NuSketchGlyph)
+(comment quantInkAdviceEnabledForGlyph
+  "Says that quantitative ink advice is enabled for the specified #$NuSketchGlyph.")
+(notForAnalogy quantInkAdviceEnabledForGlyph)
+
+(isa quantInkAdviceEnabledForPerceptualElement Relation)
+(isa quantInkAdviceEnabledForPerceptualElement CogSketchTutorControlPredicate)
+(arity quantInkAdviceEnabledForPerceptualElement 1)
+(arg1Isa quantInkAdviceEnabledForPerceptualElement PerceptualElement)
+(comment quantInkAdviceEnabledForPerceptualElement
+  "Says that quantitative ink advice is enabled for the specified 
+   #$PerceptualElement.")
+(notForAnalogy quantInkAdviceEnabledForPerceptualElement)
+
+(isa lengthDoesNotMatterForQuantInkAdvice Relation)
+(isa lengthDoesNotMatterForQuantInkAdvice CogSketchTutorControlPredicate)
+(arity lengthDoesNotMatterForQuantInkAdvice 1)
+(arg1Isa lengthDoesNotMatterForQuantInkAdvice NuSketchGlyph)
+(comment lengthDoesNotMatterForQuantInkAdvice
+  "Says that the length of the glyph is irrelevant when generating quantitative 
+   ink advice for the specified #$NuSketchGlyph.  At present, this only has
+   meaning if the glyph's edge decomposition is a single straight line-segment.")
+(notForAnalogy lengthDoesNotMatterForQuantInkAdvice)
+
+(isa quantInkAdviceString Relation)
+(isa quantInkAdviceString CogSketchTutorControlPredicate)
+(arity quantInkAdviceString 2)
+(arg1Isa quantInkAdviceString NuSketchGlyph)
+(arg2Isa quantInkAdviceString TextString)
+(comment quantInkAdviceString
+  "Associates quantitative ink tutoring advice text with a glyph.")
+(notForAnalogy quantInkAdviceString)
+
+(isa quantInkAdvice-positionDependent Relation)
+(isa quantInkAdvice-positionDependent CogSketchTutorControlPredicate)
+(arity quantInkAdvice-positionDependent 3)
+(arg1Isa quantInkAdvice-positionDependent NuSketchGlyph)
+(arg2Isa quantInkAdvice-positionDependent PositionalVisualRelation)
+(arg3Isa quantInkAdvice-positionDependent TextString)
+(notForAnalogy quantInkAdvice-positionDependent)
+(comment quantInkAdvice-positionDependent
+  "Indicates what tutoring advice should be given when a student's glyph has some
+positional relationship with the teacher glyph.  
+For example, (quantInkAdvice-positionDependent (GlyphFn Object-1 User-Drawn-Sketch-Layer-1) leftOf \"It's too far left.\")
+means that the student should be told \"It's too far left.\" if (positionalRelationFor <student-glyph> (GlyphFn Object-1 User-Drawn-Sketch-Layer-1) leftOf) is true.")
+
+(isa quantInkAdviceEnabledForGlyph-positionDependent Relation)
+(isa quantInkAdviceEnabledForGlyph-positionDependent CogSketchTutorControlPredicate)
+(arity quantInkAdviceEnabledForGlyph-positionDependent 2)
+(arg1Isa quantInkAdviceEnabledForGlyph-positionDependent NuSketchGlyph)
+(arg2Isa quantInkAdviceEnabledForGlyph-positionDependent PositionalVisualRelation)
+(notForAnalogy quantInkAdviceEnabledForGlyph-positionDependent) 
+(comment quantInkAdviceEnabledForGlyph-positionDependent
+  "Indicates that a #$NuSketchGlyph has been flagged for advice that depends on 
+   positional relations between the student glyph and the teacher glyph.  
+   See #$quantInkAdvice-positionDependent.")
+
+(isa quantInkAdviceEnabledForPerceptualElement-positionDependent Relation)
+(isa quantInkAdviceEnabledForPerceptualElement-positionDependent CogSketchTutorControlPredicate)
+(arity quantInkAdviceEnabledForPerceptualElement-positionDependent 2)
+(arg1Isa quantInkAdviceEnabledForPerceptualElement-positionDependent PerceptualElement)
+(arg2Isa quantInkAdviceEnabledForPerceptualElement-positionDependent PositionalVisualRelation)
+(notForAnalogy quantInkAdviceEnabledForPerceptualElement-positionDependent) 
+(comment quantInkAdviceEnabledForPerceptualElement-positionDependent
+  "Indicates that a #$PerceptualElement has been flagged for advice that depends 
+   on positional relations between the student glyph and the teacher glyph.
+   See #$quantInkAdvice-positionDependent.")
+
+(isa quantInkTolerance Relation)
+(isa quantInkTolerance CogSketchTutorControlPredicate)
+(arity quantInkTolerance 2)
+(arg1Isa quantInkTolerance NuSketchGlyph)
+(arg2Isa quantInkTolerance NonNegativeNumber)
+(comment quantInkTolerance
+  "Specifies the tolerance for a quantitative ink suggestion.")
+(notForAnalogy quantInkTolerance)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tutoring Advice - facts that trigger certain behaviors when showing advice
+;;; to the user
+
+(isa showEdgeDecompWithTutorAdvice Relation)
+(isa showEdgeDecompWithTutorAdvice CogSketchTutorControlPredicate)
+(arity showEdgeDecompWithTutorAdvice 2)
+(arg1Isa showEdgeDecompWithTutorAdvice NuSketchTutoringSuggestion)
+(arg2Isa showEdgeDecompWithTutorAdvice NuSketchGlyph)
+(comment showEdgeDecompWithTutorAdvice
+  "This fact says that the user should also be shown the edge decomposition
+   when viewing the specified tutor advice for a given glyph.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Miscellaneous prettyStrings for terms used in CogSketch
+;;;
+;;; Cyc is moving to PrettyString instead of PrettyName I think, so this is
+;;; becoming obsolete.  Fixing that would involve updating FIRE's piginization
+;;; code and nusketch:get-prettyname.
+
+(prettyString CellMembrane "cell membrane")
+(prettyString-Canonical Meter "meter")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchReasoningCollectorMt
+
+(isa CogSketchReasoningCollectorMt Microtheory)
+(isa CogSketchReasoningCollectorMt CollectorMicrotheory)
+
+(genlMt CogSketchReasoningCollectorMt CogSketchMt)
+(genlMt CogSketchReasoningCollectorMt SKEAReasoningCollectorMt)
+(genlMt CogSketchReasoningCollectorMt CogSketchAnalogyMt)
+(genlMt CogSketchReasoningCollectorMt CogSketchTutoring)
+(genlMt CogSketchReasoningCollectorMt GeoscienceFactsMt)
+
+(comment CogSketchReasoningCollectorMt 
+  "This #$CollectorMicrotheory includes all the microtheories needed for 
+   reasoning in CogSketch.  Each sketch and bundle created is a specMt of 
+   this.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

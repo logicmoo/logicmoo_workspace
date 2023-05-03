@@ -1,0 +1,19 @@
+(in-microtheory NulexMt :exclude-globals t)
+
+;;; Punctuation-SP
+(definitionInDictionary Nulex punc-comma Comma-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-period Period-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-colon Colon-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-semicolon Semicolon-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-question-mark QuestionMark-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-exclamation-mark ExclamationPoint-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-dash EmDash-TheSymbol Punctuation-SP (TheSet))  ; Hyphen-TheSymbol?
+(definitionInDictionary Nulex punc-double-quote QuotationMark-Double Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-single-quote QuotationMark-Single Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-left-paren OpenParen-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex punc-right-paren CloseParen-TheSymbol Punctuation-SP (TheSet))
+;; This one is problematic:
+(definitionInDictionary Nulex ^s Apostrophe-TheSymbol Punctuation-SP (TheSet))
+(definitionInDictionary Nulex ^ Apostrophe-TheSymbol Punctuation-SP (TheSet))
+
+

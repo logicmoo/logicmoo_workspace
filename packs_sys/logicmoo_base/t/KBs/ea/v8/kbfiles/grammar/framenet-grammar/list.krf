@@ -1,0 +1,290 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: list.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+;;; Noun Phrase lists
+
+(isa -np->list-comma-cconj-np- EAGrammarRule)
+(comment -np->list-comma-cconj-np- "'A, B, and C'")
+(probabilityEAGrammarRule -np->list-comma-cconj-np- 1.0)
+(grammarRule -np->list-comma-cconj-np-
+ (EATermFn np
+  (TheList
+   (var (ConjunctiveVar ?varprefix ?varnp)) 
+   (agr 3p)
+   (lexcconj ?lexcconj) ; pass it up to the semantics of the list
+   (list +)
+   (sem 
+     (thereExists
+       (TheList (ConjunctiveVar ?varprefix ?varnp))
+          (AppendFn ?semprefix (?semnp))))))
+ (TheList
+  (EATermFn nplist (TheList (var ?varprefix) (sem ?semprefix) (agr ?a)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma) (required -)))  ; optional comma
+  (EATermFn Conjunction (TheList (var ?varcconj) (lex (? lexcconj and or nor)) (sem ?semconj)))
+  (EAHeadFn
+   (EATermFn np (TheList (var ?varnp) (sem ?semnp))))
+  ))
+  
+(isa -list->np-comma-np- EAGrammarRule)
+(comment -list->np-comma-np- "'A, B, and C'")
+(probabilityEAGrammarRule -list->np-comma-np- 1.0)
+(grammarRule -list->np-comma-np-
+ (EATermFn nplist
+  (TheList
+   (var (ConjunctiveVar ?varnp1 ?varnp2))
+   (agr ?a)
+   (sem (TheList ?semnp1 ?semnp2))))  ; order may matter, so collect with TheList
+ (TheList
+  (EAHeadFn
+   (EATermFn np (TheList (var ?varnp1) (sem ?semnp1) (agr ?a) (conj -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn np (TheList (var ?varnp2) (sem ?semnp2) (list -) (conj -)))
+  ))
+
+(isa -list->list-comma-np- EAGrammarRule)
+(comment -list->list-comma-np- "'A, B, and C'")
+(probabilityEAGrammarRule -list->list-comma-np- 1.0)
+(grammarRule -list->list-comma-np-
+ (EATermFn nplist
+  (TheList
+   (var (ConjunctiveVar ?varlist1 ?varnp2))
+   (agr ?a)
+   (sem (AppendFn ?semlist1 (?semnp2)))))  ; append
+ (TheList
+  (EAHeadFn
+   (EATermFn nplist (TheList (var ?varlist1) (sem ?semlist1) (agr ?a))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn np (TheList (var ?varnp2) (sem ?semnp2) (list -) (conj -)))
+  ))
+  
+;;; Verb Phrase lists
+
+(isa -vp->list-comma-cconj-vp- EAGrammarRule)
+(comment -vp->list-comma-cconj-vp- "'Slip, slide, and fall'")
+(probabilityEAGrammarRule -vp->list-comma-cconj-vp- 1.0)
+(grammarRule -vp->list-comma-cconj-vp-
+ (EATermFn vp
+  (TheList
+   (var (ConjunctiveVar ?varprefix ?varvp)) 
+   (agr 3p)
+   (lexcconj ?lexcconj) ; pass it up to the semantics of the list
+   (list +)
+   (sem 
+     (thereExists
+       (TheList (ConjunctiveVar ?varprefix ?varvp))
+          (AppendFn ?semprefix (?semvp))))))
+ (TheList
+  (EATermFn vplist (TheList (var ?varprefix) (sem ?semprefix) (agr ?a)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma) (required -)))  ; optional comma
+  (EATermFn Conjunction (TheList (var ?varcconj) (lex (? lexcconj and or nor)) (sem ?semconj)))
+  (EAHeadFn
+   (EATermFn vp (TheList (var ?varvp) (sem ?semvp))))
+  ))
+  
+(isa -list->vp-comma-vp- EAGrammarRule)
+(comment -list->vp-comma-vp- "'Slip, slide, and fall'")
+(probabilityEAGrammarRule -list->vp-comma-vp- 1.0)
+(grammarRule -list->vp-comma-vp-
+ (EATermFn vplist
+  (TheList
+   (var (ConjunctiveVar ?varvp1 ?varvp2))
+   (agr ?a)
+   (sem (TheList ?semvp1 ?semvp2))))  ; order may matter, so collect with TheList
+ (TheList
+  (EAHeadFn
+   (EATermFn np (TheList (var ?varvp1) (sem ?semvp1) (agr ?a) (conj -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn np (TheList (var ?varvp2) (sem ?semvp2) (list -) (conj -)))
+  ))
+
+(isa -list->list-comma-vp- EAGrammarRule)
+(comment -list->list-comma-vp- "'Slip, slide, and fall'")
+(probabilityEAGrammarRule -list->list-comma-vp- 1.0)
+(grammarRule -list->list-comma-vp-
+ (EATermFn vplist
+  (TheList
+   (var (ConjunctiveVar ?varlist1 ?varvp2))
+   (agr ?a)
+   (sem (AppendFn ?semlist1 (?semvp2)))))  ; append
+ (TheList
+  (EAHeadFn
+   (EATermFn vplist (TheList (var ?varlist1) (sem ?semlist1) (agr ?a))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn vp (TheList (var ?varvp2) (sem ?semvp2) (list -) (conj -)))
+  ))
+  
+;;; Adjective lists
+
+(isa -adjp->list-comma-cconj-adjp- EAGrammarRule)
+(comment -adjp->list-comma-cconj-adjp- "'hot, dry, and slow'")
+(probabilityEAGrammarRule -adjp->list-comma-cconj-adjp- 1.0)
+(grammarRule -adjp->list-comma-cconj-adjp-
+ (EATermFn adjp
+  (TheList
+   (var (ConjunctiveVar ?varprefix ?varadj)) 
+   (lexcconj ?lexcconj) ; pass it up to the semantics of the list
+   (list +)
+   (sem 
+     (thereExists
+       (TheList (ConjunctiveVar ?varprefix ?varadj))
+          (AppendFn ?semprefix (?semadj))))))
+ (TheList
+  (EATermFn adjlist (TheList (var ?varprefix) (sem ?semprefix)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma) (required -)))  ; optional comma
+  (EATermFn Conjunction (TheList (var ?varcconj) (lex (? lexcconj and or nor)) (sem ?semconj)))
+  (EAHeadFn
+   (EATermFn adjp (TheList (var ?varadj) (sem ?semadj))))
+  ))
+  
+
+(isa -list->adjp-comma-adjp- EAGrammarRule)
+(comment -list->adjp-comma-adjp- "'hot, dry, and slow'")
+(probabilityEAGrammarRule -list->adjp-comma-adjp- 1.0)
+(grammarRule -list->adjp-comma-adjp-
+ (EATermFn adjlist
+  (TheList
+   (var (ConjunctiveVar ?varadj1 ?varadj2))
+   (sem (TheList ?semadj1 ?semadj2))))  ; order may matter, so collect with TheList
+ (TheList
+  (EAHeadFn
+   (EATermFn adjp (TheList (var ?varadj1) (sem ?semadj1) (conj -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn adjp (TheList (var ?varadj2) (sem ?semadj2) (list -) (conj -)))
+  ))
+
+(isa -list->list-comma-adjp- EAGrammarRule)
+(comment -list->list-comma-adjp- "'hot, dry, and slow'")
+(probabilityEAGrammarRule -list->list-comma-adjp- 1.0)
+(grammarRule -list->list-comma-adjp-
+ (EATermFn adjlist
+  (TheList
+   (var (ConjunctiveVar ?varlist1 ?varadj2))
+   (sem (AppendFn ?semlist1 (?semadj2)))))  ; append
+ (TheList
+  (EAHeadFn
+   (EATermFn adjlist (TheList (var ?varlist1) (sem ?semlist1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn adjp (TheList (var ?varadj2) (sem ?semadj2) (list -) (conj -)))
+  ))
+  
+  
+;;; Adverb lists
+
+(isa -advp->list-comma-cconj-advp- EAGrammarRule)
+(comment -advp->list-comma-cconj-advp- "'vertically, diagonally, and horizontally'")
+(probabilityEAGrammarRule -advp->list-comma-cconj-advp- 1.0)
+(grammarRule -advp->list-comma-cconj-advp-
+ (EATermFn advp
+  (TheList
+   (var (ConjunctiveVar ?varprefix ?varadv)) 
+   (lexcconj ?lexcconj) ; pass it up to the semantics of the list
+   (list +)
+   (sem 
+     (thereExists
+       (TheList (ConjunctiveVar ?varprefix ?varadv))
+          (AppendFn ?semprefix (?semadv))))))
+ (TheList
+  (EATermFn advlist (TheList (var ?varprefix) (sem ?semprefix)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma) (required -)))
+  (EATermFn Conjunction (TheList (var ?varcconj) (lex (? lexcconj and or nor)) (sem ?semconj)))
+  (EAHeadFn
+   (EATermFn advp (TheList (var ?varadv) (sem ?semadv))))
+  ))
+  
+(isa -list->advp-comma-advp- EAGrammarRule)
+(comment -list->advp-comma-advp- "'vertically, diagonally, and horizontally'")
+(probabilityEAGrammarRule -list->advp-comma-advp- 1.0)
+(grammarRule -list->advp-comma-advp-
+ (EATermFn advlist
+  (TheList
+   (var (ConjunctiveVar ?varadv1 ?varadv2))
+   (sem (TheList ?semadv1 ?semadv2))))  ; order may matter, so collect with TheList
+ (TheList
+  (EAHeadFn
+   (EATermFn advp (TheList (var ?varadv1) (sem ?semadv1) (conj -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn advp (TheList (var ?varadv2) (sem ?semadv2) (list -) (conj -)))
+  ))
+
+(isa -list->list-comma-advp- EAGrammarRule)
+(comment -list->list-comma-advp- "'vertically, diagonally, and horizontally'")
+(probabilityEAGrammarRule -list->list-comma-advp- 1.0)
+(grammarRule -list->list-comma-advp-
+ (EATermFn advlist
+  (TheList
+   (var (ConjunctiveVar ?varlist1 ?varadv2))
+   (sem (AppendFn ?semlist1 (?semadv2)))))  ; append
+ (TheList
+  (EAHeadFn
+   (EATermFn advlist (TheList (var ?varlist1) (sem ?semlist1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn advp (TheList (var ?varadv2) (sem ?semadv2) (list -) (conj -)))
+  ))
+
+
+;;; Prepositional Phrase lists
+
+(isa -pp->list-comma-cconj-pp- EAGrammarRule)
+(comment -pp->list-comma-cconj-pp- "'over, under, and through'")
+(probabilityEAGrammarRule -pp->list-comma-cconj-pp- 1.0)
+(grammarRule -pp->list-comma-cconj-pp-
+ (EATermFn pp
+  (TheList
+   (var (ConjunctiveVar ?varprefix ?varpp)) 
+   (lexcconj ?lexcconj) ; pass it up to the semantics of the list
+   (list +)
+   (sem 
+     (thereExists
+       (TheList (ConjunctiveVar ?varprefix ?varpp))
+          (AppendFn ?semprefix (?sempp))))))
+ (TheList
+  (EATermFn pplist (TheList (var ?varprefix) (sem ?semprefix)))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma) (required -)))
+  (EATermFn Conjunction (TheList (var ?varcconj) (lex (? lexcconj and or nor)) (sem ?semconj)))
+  (EAHeadFn
+   (EATermFn pp (TheList (var ?varpp) (sem ?sempp))))
+  ))
+
+(isa -list->pp-comma-pp- EAGrammarRule)
+(comment -list->pp-comma-pp- "'over, under, and through'")
+(probabilityEAGrammarRule -list->pp-comma-pp- 1.0)
+(grammarRule -list->pp-comma-pp-
+ (EATermFn pplist
+  (TheList
+   (var (ConjunctiveVar ?varpp1 ?varpp2))
+   (sem (TheList ?sempp1 ?sempp2))))  ; order may matter, so collect with TheList
+ (TheList
+  (EAHeadFn
+   (EATermFn pp (TheList (var ?varpp1) (sem ?sempp1) (conj -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn pp (TheList (var ?varpp2) (sem ?sempp2) (list -) (conj -)))
+  ))
+
+(isa -list->list-comma-pp- EAGrammarRule)
+(comment -list->list-comma-pp- "'over, under, and through'")
+(probabilityEAGrammarRule -list->list-comma-pp- 1.0)
+(grammarRule -list->list-comma-pp-
+ (EATermFn pplist
+  (TheList
+   (var (ConjunctiveVar ?varlist1 ?varpp2))
+   (sem (AppendFn ?semlist1 (?sempp2)))))  ; append
+ (TheList
+  (EAHeadFn
+   (EATermFn pplist (TheList (var ?varlist1) (sem ?semlist1))))
+  (EATermFn Punctuation-SP (TheList (lex punc-comma)))
+  (EATermFn pp (TheList (var ?varpp2) (sem ?sempp2) (list -) (conj -)))
+  ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

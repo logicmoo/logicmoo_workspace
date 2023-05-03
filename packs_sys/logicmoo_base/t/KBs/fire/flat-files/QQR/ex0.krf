@@ -1,0 +1,69 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ex0
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 4, 2010 09:02:28
+;;;;   Purpose: Two heat flows scenario
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-20 18:07:09 -0600 (Thu, 20 Dec 2018) $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPExampleEx0Mt)
+
+(comment QPExampleEx0Mt
+  "QPExampleEx0Mt is a microtheory describing the scenario for the classic two heat flows
+scenario used in testing QP theory implementations.")
+;;; Control information, focusing the model formulation algorithm.
+(includeEntity F)
+(includeEntity G)
+(includeEntity P1)
+;;; The physical setup of the scenario.
+(isa F FiniteThermalPhysob)
+(isa G FiniteThermalPhysob)
+(isa P1 HeatPath)
+(heatConnection P1 F G)
+(heatConnection P1 G F)
+(mfiName F-H>G
+         (ModelFragmentInstanceFn 
+          HeatFlowProcess
+          (TheSet (TheList destinationOfHeat G)
+                  (TheList pathOfHeat P1)
+                  (TheList sourceOfHeat F))))
+(mfiName G-H>F
+         (ModelFragmentInstanceFn 
+          HeatFlowProcess
+          (TheSet (TheList destinationOfHeat F)
+                  (TheList pathOfHeat P1)
+                  (TheList sourceOfHeat G))))
+         
+(in-microtheory QPExampleEx0-ic1Mt)
+(comment QPExampleEx0-ic1Mt
+  "QPExampleEx0-ic1Mt is a microtheory describing the initial condition that F is
+   hotter than G and that P1 can conduct heat in Ex0.  For testing the QP theory implementation.")
+(genlMt QPExampleEx0-ic1Mt QPExampleEx0Mt)
+(qGreaterThan (TemperatureFn F) (TemperatureFn G))
+(heatAligned P1)
+
+(in-microtheory QPExampleEx0-ic2Mt)
+(comment QPExampleEx0-ic2Mt
+  "QPExampleEx0-ic2Mt is a microtheory describing the initial condition that F is
+   hotter than G and that P1 cannot conduct heat in Ex0.  For testing the QP theory implementation.")
+(genlMt QPExampleEx0-ic2Mt QPExampleEx0Mt)
+(qGreaterThan (TemperatureFn F) (TemperatureFn G))
+(not (heatAligned P1))
+
+(in-microtheory QPExampleEx0-ic3Mt)
+(comment QPExampleEx0-ic3Mt
+  "QPExampleEx0-ic3Mt is a microtheory describing the initial condition that G is
+   hotter than F and that P1 can conduct heat in Ex0.  For testing the QP theory implementation.")
+(genlMt QPExampleEx0-ic3Mt QPExampleEx0Mt)
+(qGreaterThan (TemperatureFn G) (TemperatureFn F))
+(heatAligned P1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,81 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: process-activation.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: January 17, 2012 14:50:02
+;;;;   Purpose: Process activation routines for behavioral stack
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+;;; Nothing currently depends on this
+
+;;; vocabulary defined in processes-preds.meld
+;;; including increase, decrease, executeTask.
+
+(in-microtheory PerceptualAgentMt)
+
+(isa updateQuantities ComplexActionPredicate)
+(comment updateQuantities "")
+
+(isa updateActivation ComplexActionPredicate)
+(arity updateActivation 1)
+(comment updateActivation "")
+
+(isa takeActions ComplexActionPredicate)
+(comment takeActions "")
+
+(isa updateProcessStructure ComplexActionPredicate)
+(comment updateProcessStructure "")
+
+
+(isa satisfiedCondition TernaryPredicate)
+(arity satisfiedCondition 3)
+(arg1Isa satisfiedCondition BinaryPredicate)
+(arg2Isa satisfiedCondition MeasurableQuantity)
+(arg3Isa satisfiedCondition MeasurableQuantity)
+(comment satisfiedCondition "(satisfiedCondition ?binrel ?arg1 ?arg2) succeeds if the binrel holds.  It strives to support unit-qualified comparisons.")
+
+;;; Astoundingly, (isa (Inch 5) Number-General) succeeds,
+;;; even though Distance does not inherit from Number-General.
+;;; This is due to the way primitive datatypes are handled in Fire.
+
+(<== (satisfiedCondition ?binrel ?val1 ?val2)
+     (groundExpression ?val1)
+     (groundExpression ?val2)
+     (atomicTerm ?val1)
+     (atomicTerm ?val2)
+     (?binrel ?val1 ?val2))
+
+(<== (satisfiedCondition ?binrel 0 ?arg2)
+     (groundExpression ?arg2)
+     (uninferredSentence (atomicTerm ?arg2))
+     (evaluate ?val2 (ValueFromUnitsFn ?arg2))
+     (?binrel 0 ?val2))
+
+(<== (satisfiedCondition ?binrel ?arg1 0)
+     (groundExpression ?arg1)
+     (uninferredSentence (atomicTerm ?arg1))
+     (evaluate ?val1 (ValueFromUnitsFn ?arg1))
+     (?binrel ?val1 0))
+
+(<== (satisfiedCondition ?binrel ?arg1 ?arg2)
+     (groundExpression ?arg1)
+     (groundExpression ?arg2)
+     (uninferredSentence (atomicTerm ?arg1))
+     (uninferredSentence (atomicTerm ?arg2))
+     (evalfnCorrelate ?binrel ?evalfn)
+     (evaluate True (?evalfn ?arg1 ?arg2)))
+
+(isa evalfnCorrelate BinaryRelation)
+(comment evalfnCorrelate "(evalfnCorrelate translates between raw numeric comparisons and unit-savvy evalfn comparators.")
+
+;;; ToDo: support lessThanOrEqualTo, etc.
+(evalfnCorrelate lessThan LessThan-UnitValuesFn)
+(evalfnCorrelate greaterThan GreaterThan-UnitValuesFn)
+(evalfnCorrelate equals EqualTo-UnitValuesFn)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

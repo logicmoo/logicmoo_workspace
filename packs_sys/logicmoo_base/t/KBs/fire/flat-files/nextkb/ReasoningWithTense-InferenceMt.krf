@@ -1,0 +1,126 @@
+
+ (in-microtheory ReasoningWithTense-InferenceMt)
+ (strictlyFunctionalInArgs reasoningWithTenseMtTime 2)
+ (comment mtPrecedes "For any elements MT1 and MT2 of an instance SET of
+#$ReasoningWithTenseMicrotheorySet, where 
+(#$reasoningWithTenseMtTime MT1 TIME-1) and 
+(#$reasoningWithTenseMtTime MT2 TIME-2) hold, 
+(#$mtPrecedes MT1 MT2) means that TIME-1 is entirely earlier than TIME-2 
+(i.e., (#$startsAfterEndingOf TIME-2 TIME-1)).  Given 
+(#$mtPrecedes MT1 MT2), for each #$CycLSentence-Assertible PROP, PROP holds in MT1 
+only if (#$was PROP) holds in MT2, PROP holds in MT2 only if 
+(#$willBe PROP) holds in MT1, (#$hasAlwaysBeen PROP) holds in MT2 only 
+if PROP holds in MT1, and (#$willAlwaysBe PROP) holds in MT1 only if 
+PROP holds in MT2.  Note that when (#$reasoningWithTenseMtTime MT1 t) 
+and (#$reasoningWithTenseMtTime MT2 t') hold with MT1 and MT2 to be 
+elements of an instance SET of #$ReasoningWithTenseMicrotheorySet, t < t' 
+corresponds to (#$mtPrecedes MT1 MT2).  Thus #$mtPrecedes is an event-ordering 
+(or an interval ordering, which is irreflexive and satisfies the Wiener
+axiom).")
+ (argIsa mtConverts-RWT-Aux 1 ReasoningWithTenseAuxiliaryMicrotheory)
+ (arg1Isa mtConverts-RWT-Aux ReasoningWithTenseAuxiliaryMicrotheory)
+ (comment mtConverts-RWT-Aux
+ "#$mtConverts-RWT-Aux is a predicate used to assert a certain
+relation between microtheories in reasoning with tense via
+microtheories.  #$mtConverts-RWT-Aux is like #$genlMt, but used for
+the following two purposes.  (1) It is used for connecting elements Mt
+of a particular subset of #$ReasoningWithTenseMicrotheory to a
+particular instance Mt-AUX of #$ReasoningWithTenseAuxiliaryMicrotheory
+so that these Mt can be `separated' from the others.  (2) When
+(#$mtConverts-RWT-Aux Mt-AUX Mt) holds, all assertions in Mt-AUX are
+inherited as well as `converted' into Mt.  To be precise,
+(#$mtConverts-RWT-Aux Mt-0 Mt-1) implies (#$genlMt Mt-1 Mt-0),
+(#$mtConverts-PlainOp Mt-0 Mt-1 #$willAlwaysBe) and
+(#$mtConverts-PlainOp Mt-0 Mt-1 #$hasAlwaysBeen), and thus for each
+PROP, PROP holds in Mt-AUX only if PROP, (#$willAlwaysBe PROP) and
+(#$hasAlwaysBeen PROP) hold in Mt.  For an example of how this
+predicate and microtheories are used in reasoning with tense via
+microtheories, see #$NoteOnModalReasoningViaMicrotheories.")
+ (argIsa mtConverts-RWT-Aux 2 ReasoningWithTenseMicrotheory)
+ (arg2Isa mtConverts-RWT-Aux ReasoningWithTenseMicrotheory)
+ (comment ReasoningWithTenseMicrotheory "Each instance MT of 
+#$ReasoningWithTenseMicrotheory is a microtheory that has 
+the following characteristics.  (i) MT is assigned a piece of time 
+TIME (see #$reasoningWithTenseMtTime), be it a time point, or an hour, 
+or a day, or a stage in a plan or in a scenerio, or any other amount 
+except the empty interval and `gappy' intervals.  It is best to 
+consider it as a moment or an instant, whose temporal details can only 
+be meaningfully talked about outside of this microtheory.  (ii) Each 
+statement PROP in MT (either asserted or inferred) is understood, on 
+the semantic level, as true _at_ TIME.  Each PROP in MT is true `now' 
+where `now' is TIME (see #$reasoningWithTenseMtTime).  Note that it doesn't in 
+general make sense to talk about, in MT, whether PROP is true 
+throughout the entire TIME or only a part of it.  Note also that 
+connectives #$and, #$or, #$not, #$implies and #$equiv etc. are really 
+truth-functional in this kind of microtheories.  Therefore, unlike 
+other microtheories, formulas in MT should never be considered as 
+abbreviations of #$holdsIn statements or #$holdsSometimeDuring 
+statements or the like because they require a quite different kind of 
+semantics.  (iii) MT can be related to another MT' in 
+#$ReasoningWithTenseMicrotheory by way of #$mtPrecedes  
+(or #$mtPrecedes-Metric), provided that they are elements of the same  
+instance of #$ReasoningWithTenseMicrotheorySet, and the relation  
+between statements in MT and those in MT' is determined by the rules  
+in #$ReasoningWithTense-InferenceMt.  See also  
+#$ReasoningWithTenseMicrotheorySet.")
+ (argIsa mtPrecedes 2 ReasoningWithTenseMicrotheory)
+ (arg2Isa mtPrecedes ReasoningWithTenseMicrotheory)
+ (argIsa mtPrecedes 1 ReasoningWithTenseMicrotheory)
+ (arg1Isa mtPrecedes ReasoningWithTenseMicrotheory)
+ (argIsa reasoningWithTenseMtDate 1 ReasoningWithTenseMicrotheory)
+ (arg1Isa reasoningWithTenseMtDate ReasoningWithTenseMicrotheory)
+ (argIsa reasoningWithTenseMtTime 1 ReasoningWithTenseMicrotheory)
+ (arg1Isa reasoningWithTenseMtTime ReasoningWithTenseMicrotheory)
+ (argFormat reasoningWithTenseMtTime 2 SingleEntry)
+ (comment ReasoningWithTense-InferenceMt
+ "This #$Microtheory contains rules about relations between 
+instances of #$ReasoningWithTenseMicrotheory.  At the present 
+(Dec/1999), the notions involved in such rules are 
+#$reasoningWithTenseMtTime, #$reasoningWithTenseMtDate and 
+#$mtPrecedes etc.  Note that rules in this microtheory amount to 
+semantic interpretations of formulas in microtheories that are 
+instances of #$ReasoningWithTenseMicrotheory, and thus should not be 
+present in those microtheories.  Note also that although this 
+microtheory is made a spec mt of #$ReasoningWithTense-LogicMt, it is 
+done only because we need to mention #$willBe, #$was, #$willAlwaysBe 
+and #$hasAlwaysBeen etc. in certain rules in this microtheory.  In 
+each spec mt of this microtheory, tense operators/predicates should 
+only occur inside of certain `meta language' predicates like #$ist, 
+#$mtConverts-PlainOp and #$mtConverts-OpPlain etc., and no spec mt of this 
+microtheory should be a genl mt of any instance of 
+#$ReasoningWithTenseMicrotheory.")
+ (genls ReasoningWithTenseMicrotheorySet
+ (SetOfTypeFn ReasoningWithTenseMicrotheory))
+ (sharedNotes mtPrecedes SemanticAssumptionsMadeForReasoningWithTenseMts)
+ (sharedNotes reasoningWithTenseMtDate
+ SemanticAssumptionsMadeForReasoningWithTenseMts)
+ (sharedNotes reasoningWithTenseMtTime
+ SemanticAssumptionsMadeForReasoningWithTenseMts)
+ (comment reasoningWithTenseMtTime
+ "(#$reasoningWithTenseMtTime MT TIME) means that each formula
+in MT, asserted or inferred, is true _at_ TIME.  When such a formula
+is asserted, TIME is considered the most specific time of MT, i.e.,
+inside of MT, the detailed temporal structure of TIME is ignored, and
+TIME is treated in such a way as if it is a time point.  Thus inside
+of MT, it doesn't make sense to talk about whether a formula in MT is
+true throughout or true sometime during TIME, though it may make sense
+to talk about that outside of MT.  Note that less specific time of MT
+can be inferred by using #$reasoningWithTenseMtDate.")
+ (arg2Format reasoningWithTenseMtTime SingleEntry)
+ (argIsa reasoningWithTenseMtTime 2 TimeInterval)
+ (arg2Isa reasoningWithTenseMtTime TimeInterval)
+ (isa reasoningWithTenseMtTime GeneralTenseReasoningConstant)
+ (comment reasoningWithTenseMtDate
+ "(#$reasoningWithTenseMtDate MT DATE) means that DATE, an
+instance of #$Date, `subsumes' TIME, where
+(#$reasoningWithTenseMtTime MT TIME) holds.  Note that 
+#$reasoningWithTenseMtDate can be at most as specific as 
+#$reasoningWithTenseMtTime.  For example, suppose that 
+(#$reasoningWithTenseMtTime MT `January 20th, 2000') holds.  
+Then we can have (#$reasoningWithTenseMtDate MT `January, 2000') or 
+even (#$reasoningWithTenseMtDate MT `Year 2000'), but we cannot have 
+(#$reasoningWithTenseMtDate MT `9:00-10:00am, January 20th, 2000').")
+ (argIsa reasoningWithTenseMtDate 2 Date)
+ (arg2Isa reasoningWithTenseMtDate Date)
+ (isa reasoningWithTenseMtDate GeneralTenseReasoningConstant)
+ (isa mtPrecedes GeneralTenseReasoningConstant)

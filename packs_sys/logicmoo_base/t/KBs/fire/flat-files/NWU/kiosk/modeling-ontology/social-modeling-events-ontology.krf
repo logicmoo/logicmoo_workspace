@@ -1,0 +1,125 @@
+(in-microtheory EventsForSocialModelingMt)
+(genlMt EventsForSocialModelingMt SocialModelingMt)
+(genlMt SocialModelingMt EventsForSocialModelingMt)
+
+;;; //\\//\\//\\// Collections \\//\\//\\//\\
+
+(isa NUEvent Collection)
+(genls NUEvent Event-Organized) 
+(genls NUEvent SocialGathering) 
+(comment NUEvent "NUEvent is an event at Northwestern University")
+
+(isa EventWithFreeFood Collection)
+(genls EventWithFreeFood (MakingAvailableFn Food))
+(genls EventWithFreeFood Event-Organized)
+(comment EventWithFreeFood "the collection of events where free food is provided for attendees")
+
+
+;;; //\\//\\//\\// Predicates \\//\\//\\//\\
+
+;;; *** Predicates that we can use verbatim *** 
+;;; NOTE: we need to check the argisas on these
+;;; (eventLocale)
+;;; (dateOfEvent)
+;;; (interestedInVisiting Agent-Generic Thing GenericValuePredicate)
+;;; (interests Agent-Generic Thing GenericValuePredicate)
+;;; (temporallyDisjoint TemporalThing TemporalThing)
+;;; (organizerOfEvent ?Event-Organized ?IntelligentAgent)
+;;; eventOverlaps
+;;; attendees
+;;; weeklyReoccurringEvent
+
+;;; new
+(isa eventName Predicate)
+(genlPreds eventName nameString)
+(arity eventName 2)
+(arg1Isa eventName  Event-Organized)
+(arg2Isa eventName  ProperNameString)
+(comment eventName  "(eventName ?Event ?ProperNameString) says that ?Event has name ?Name")
+
+;;; New, but sorta a duplicate of weeklyReoccuringEvent
+;;; (isa reoccurEvent Predicate)
+;;; (genlPreds reocurrEvent XXX)
+;;; (arity reocurrEvent 3)
+;;; (arg1Isa reoccurrEvent Event-Organized)
+;;; (arg2Isa reoccurrEvent DayOfWeekType)
+
+
+;;; (attendingEvent ?person ?event ?date)
+;;; NOTE: may want to rename this one; too close to existing scheduledEvents predicate
+(isa attendingEvent Predicate)
+(arity attendingEvent 3)
+(arg1Isa attendingEvent Agent-Generic)
+(arg2Isa attendingEvent NUEvent)
+(arg3Isa attendingEvent Date)
+(comment attendingEvent "(attendingEvent ?person ?event ?date) says that ?person is scheduled to attend ?event at ?date")
+
+(isa eventTopic Predicate)
+(genlPreds eventTopic topicOf)
+(arity eventTopic 2)
+(arg1Isa eventTopic Event-Organized)
+(arg2Isa eventTopic Thing) ;;; TODO: we can probably do better than this
+(comment eventTopic "(eventTopic Event Thing) storing information on the topic of event to match events with person interests")
+
+(isa freeFoodTypeAtEvent BinaryPredicate)
+;;; (isa freeFoodTypeAtEvent transferredThing) ;;; argIsas are slightly off
+(comment freeFoodTypeAtEvent "(freeFoodTypeAtEvent ?event ?food) states that ?food is the type of free food that is available at ?event")
+(arity freeFoodTypeAtEvent 2)
+(arg1Isa freeFoodTypeAtEvent EventWithFreeFood)
+(arg2Isa freeFoodTypeAtEvent Food-Topic) ;;; oddly, Food-Topic is the genl of all FoodTypeByX collections
+
+;;; NOTE: need this for *future* events, where the URL is not accessible yet
+(isa eventRecorded BinaryPredicate)
+(arity eventRecorded 2)
+(arg1Isa eventRecorded NUEvent)
+(arg2Isa eventRecorded TruthValue)
+(comment eventRecorded "(eventRecorded ?Event ?TruthValue)")
+
+(isa eventRecordingLink Predicate)
+(genlPreds eventRecordingLink urlOfCW)
+(arity eventRecordingLink 2)
+(arg1Isa eventRecordingLink NUEvent)
+(arg2Isa eventRecordingLink UniformResourceLocator)
+(comment eventRecordingLink 
+  "(eventRecordingLink ?Event ?URL)")
+
+;;; NOTE: need to think this one through a bit more.
+;;;(isa sendLinkToEmail Predicate)
+;;;(isa sendLinkToEmail TernaryPredicate)
+;;;(arity sendLinkToRecording 3)
+;;;(arg2Isa sendLinkToRecording CharacterString)
+;;;(arg3Isa sendLinkToRecording CharacterString)
+;;;(comment sendLinkToRecording "(sendLinkToEmail ?Link ?Email) Sends links to emails. For use sharing event recordings i.e. US5")
+
+(isa eventHost Predicate)
+(genlPreds eventHost presenter)
+(arity eventHost 2)
+(arg1Isa eventHost Event-Organized)
+(arg2Isa eventHost Agent-Generic)
+(comment eventHost "(eventHost ?Event ?Person)")
+
+;;; NOTE: can just used before-Underspecified or calculate on the fly based on date/time
+;;;(isa eventsEarlier Predicate)
+;;;(genlPreds eventsEarlier temporallyDisjoint)
+;;;(arity eventsEarlier 2)
+;;;(arg1Isa eventsEarlier Event-Organized)
+;;;(arg2Isa eventsEarlier Event-Organized)
+;;;(comment eventsEarlier "(eventsEarlier ?Event1 ?Event2) states that Event1 is before Event2")
+
+;; Scraped but not (previously) ontologized.
+(isa eventAudience Predicate)
+(arity eventAudience 2)
+(arg1Isa eventAudience NUEvent)
+(arg2Isa eventAudience Collection)
+(arg2Genl eventAudience Agent-Generic)
+(comment eventAudience "(eventAudience ?event ?col) indicates that NUEvent ?event is intended for
+	an audience who are members of collection ?col, which must be a spec of Agent-Generic.")
+
+(isa eventCategory Predicate)
+(arity eventCategory 2)
+(arg1Isa eventCategory NUEvent)
+(arg2Isa eventCategory StringObject)
+(comment eventCategory "(eventCategory ?event ?str) indicates that NUEvent ?event is of category
+	?str.  For example, \"Academic\" or \"Lectures & Meetings\".")
+
+

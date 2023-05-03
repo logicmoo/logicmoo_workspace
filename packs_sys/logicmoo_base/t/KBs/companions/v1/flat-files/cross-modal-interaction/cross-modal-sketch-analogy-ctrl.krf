@@ -1,0 +1,77 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cross-modal-sketch-analogy-ctrl.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: July 23, 2015 19:41:28
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CrossModalSketchAnalogyControlMt)
+
+(isa CrossModalSketchAnalogyControlMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(genlMt SKEAReasoningCollectorMt CrossModalSketchAnalogyControlMt)
+
+;; The following are the list of facts determined to be unncessary while extracting facts from 
+;; a subsketch. We use 'CrossModalSketchAnalogyControlMt' as the context while extracting the facts 
+;; from a subsketch using the outsourced predicate 'caseFact'. The 'caseFact' predicate is designed 
+;; to filter out the notForAnalogy facts.
+
+(notForAnalogy bboxLastModifiedTime)
+(notForAnalogy computeShapeAttributesFor)
+(notForAnalogy computeShapeRelationsFor)
+(notForAnalogy entityTypesLastModifiedTime)
+(notForAnalogy forceLastModifiedTime)
+(notForAnalogy inkLastModifiedTime)
+(notForAnalogy nameStringLastModifiedTime)
+(notForAnalogy nuSketchCaseID)
+(notForAnalogy sketchFor)
+(notForAnalogy subSketchFor)
+(notForAnalogy subSketchGroupFor)
+(notForAnalogy subSketchHasPose)
+(notForAnalogy subSketchHasGenre)
+(notForAnalogy voronoiFor)
+(notForAnalogy areaOfObject)
+(notForAnalogy csysLastModifiedTime)
+(notForAnalogy needVisualPositionalRelation)
+(notForAnalogy shapeRelationsComputed)
+(notForAnalogy directionalSignature)
+(notForAnalogy rcc8-DC)
+(notForAnalogy rcc8-EQ)
+(notForAnalogy uninferredSentence)
+(notForAnalogy q-2D-orientation)
+(notForAnalogy glyphRepresentsObject)
+(notForAnalogy genlMt)
+(notForAnalogy activeSketchObject)
+(notForAnalogy hasRCC8Relation)
+(notForAnalogy nameString)
+
+
+;;;Glyph Attributes which are not used
+(notForAnalogy HugeSizeGlyph)
+(notForAnalogy LargeSizeGlyph)
+(notForAnalogy MediumSizeGlyph)
+(notForAnalogy NotVeryRoundGlyph)
+(notForAnalogy q-roundness)
+(notForAnalogy QDiagonalDownwardGlyph)
+(notForAnalogy QDiagonalUpwardGlyph)
+(notForAnalogy QHorizontalGlyph)
+(notForAnalogy QVerticalGlyph)
+(notForAnalogy rcc8-EQ)
+(notForAnalogy SmallSizeGlyph)
+(notForAnalogy SomewhatRoundGlyph)
+(notForAnalogy TinySizeGlyph)
+(notForAnalogy VeryRoundGlyph)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

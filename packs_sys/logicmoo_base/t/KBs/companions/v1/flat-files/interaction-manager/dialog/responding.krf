@@ -1,0 +1,1095 @@
+;;;
+;;; responding.meld
+;;;
+;;; This file contains high-level plans for responding to an utterance.
+;;; A response may involve answering a straightforward question,
+;;; taking some action, acceping a new fact, or posting new goals.
+;;; 
+;;; Concretely, the plans in this flat-file implement the respondToUtterance
+;;; task.  This has been extracted from the generation file to allow 
+;;; more indirection and variation in response strategies.
+;;;
+;;; This should involve reasoning about obligations and promises, etc.
+;;;
+;;; $LastChangedDate: 2018-10-09 14:10:34 -0500 (Tue, 09 Oct 2018) $
+;;; $LastChangedBy: hinrichs $
+
+(in-microtheory Interaction-ManagerMt)
+
+(isa respondToUtterance ComplexActionPredicate)
+(arity respondToUtterance 3)
+(arg1Isa respondToUtterance Microtheory)
+(arg2Isa respondToUtterance CycLTerm)
+(arg3Isa respondToUtterance Collection)
+(comment respondToUtterance "(respondToUtterance ?context ?sentence-id ?sentence-type) implements the methods by which the companion does something in response to a user utterance.")
+
+(isa respondToQuestion ComplexActionPredicate)
+(arity respondToQuestion 3)
+(arg1Isa respondToQuestion Microtheory)
+(arg2Isa respondToQuestion CycLTerm)
+(arg3Isa respondToQuestion Collection)
+(comment respondToQuestion "(respondToQuestion ?context ?sentence-id ?sentence-type) implements the methods by which the companion answers a user Question.")
+
+(isa iteIllocutionaryForce BinaryPredicate)
+
+(isa queryFormForInterpretation QuaternaryPredicate)
+(arity queryFormForInterpretation 4)
+(arg1Isa queryFormForInterpretation Collection)
+(arg2Isa queryFormForInterpretation CycLTerm)
+(arg3Isa queryFormForInterpretation CycLFormula)
+(arg4Isa queryFormForInterpretation CycLFormula)
+(comment queryFormForInterpretation "(queryFormForInterpretation ?sentence-type ?sentence-id ?interp ?query) binds ?query to a re-formulation of the EA interpretation ?interp.")
+
+(isa BOTEMeasureQueryFor BinaryPredicate)
+(arity BOTEMeasureQueryFor 2)
+(arg1Isa BOTEMeasureQueryFor CycLSentence-Assertible)
+(arg2Isa BOTEMeasureQueryFor CycLSentence-Assertible)
+(comment BOTEMeasureQueryFor "(BOTEMeasureQueryFor ?interpretation ?bote-query) translates ?interpretation into a form that can be answered by BackOfTheEnvelope solve suggestions.")
+
+(isa BOTECountQueryFor BinaryPredicate)
+(arity BOTECountQueryFor 2)
+(arg1Isa BOTECountQueryFor CycLSentence-Assertible)
+(arg2Isa BOTECountQueryFor CycLSentence-Assertible)
+(comment BOTECountQueryFor "(BOTECountQueryFor ?interpretation ?bote-query) translates ?interpretation into a form that can be answered by BackOfTheEnvelope solve suggestions.")
+
+
+;;; Query Construction
+;;; Replace the (WhQuestionFn <term>) statements with a query variable and optimize.
+;;; Part of query construction involves removing the purely structural glue statements
+;;; such as 'denotes' or 'coreferent' terms and replacing them with a well-specified 
+;;; ?answer variable, so that we can use a common plan to answer questions.
+
+
+;;; Yes/No questions have no particular format, but we still need to lift 
+;;; discourse variables to logic variables and optimize the query clauses:
+(<== (queryFormForInterpretation YesOrNoQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (outsourcedOnly (optimizedQuery ?lifted-interpretation ?query)))
+
+;;;; CJM 10/30
+;;;; Yes/No questions using qframes and qp reasoning
+;;;; form = influencePathExists ?modelMt ?dep-q ?indep-q ?spindle-mt
+;;;;
+;;; Who questions that seek a well-specified co-referent
+;;; E.g., "Who is the president of the United States?"
+;;; (and (isa ?president-of-the-united-states3946 UnitedStatesPresident)
+;;;      (denotes (WhQuestionFn who) ?president-of-the-united-states3946))
+(<== (queryFormForInterpretation WhoQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (subexpressionMatching (denotes (WhQuestionFn who) ?term) ?lifted-interpretation ?subexpr)
+     (formulaArgument ?subexpr 2 ?var)  ; bind ?var
+     (variableExpression ?var)
+     (conjunctSet ?lifted-interpretation ?stmt-set)
+     (evaluate ?arglist (SetToListFn (SetMinusFn ?stmt-set ?subexpr)))
+     (logicalStatement and ?arglist ?orig-query)
+     (different ?orig-query (and))
+     (evaluate ?query
+       (SubstituteFormulaFn ?answer ?var ?orig-query)))
+
+;;; Who owns Microsoft?  => (owns (WhQuestionFn who) MicrosoftInc)
+(<== (queryFormForInterpretation WhoQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (noArgumentHasPredicate ?lifted-interpretation denotes)
+     (noArgumentHasPredicate ?lifted-interpretation coreferent)
+     (containsPattern (WhQuestionFn who) ?lifted-interpretation)
+     (evaluate ?raw-query (SubstituteFormulaFn ?answer (WhQuestionFn who) ?lifted-interpretation))
+     (outsourcedOnly (optimizedQuery ?raw-query ?query)))
+
+;;; What is the capital of the United States? =>
+;;; (and (denotes (WhQuestionFn what) capital5781)
+;;;      (capitalCity UnitedStatesOfAmerica capital5781)
+;;;      (possessiveRelation UnitedStatesOfAmerica capital5781))
+(<== (queryFormForInterpretation WhatQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     ;; ***
+     (subexpressionMatching (?pred (WhQuestionFn what) ?term) ?lifted-interpretation ?subexpr)
+     (operatorFormulas ?inst-pred ?subexpr)
+     (elementOf ?inst-pred (TheSet denotes isa))
+     (formulaArgument ?subexpr 2 ?var)  ; bind ?var
+     (variableExpression ?var)
+     (conjunctSet ?lifted-interpretation ?stmt-set)
+     (evaluate ?arglist (SetToListFn (SetMinusFn ?stmt-set ?subexpr)))
+     (logicalStatement and ?arglist ?orig-query)
+     (different ?orig-query (and))
+     (evaluate ?query
+       (SubstituteFormulaFn ?answer ?var ?orig-query)))
+
+(<== (queryFormForInterpretation WhatQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (unifies (?pred (WhQuestionFn what) ?term) ?lifted-interpretation)
+     (elementOf ?pred (TheSet denotes isa))
+     (groundExpression ?term)
+     ;; we want ?term to be a proper name!
+     (unifies ?query (denotes (WhQuestionFn what) ?term)))
+       
+;;; What time is it? =>
+;;; (and (isa ?time Time-Quantity)
+;;;      (coreferent ?time (WhQuestionFn what)))
+(<== (queryFormForInterpretation WhatQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (subexpressionMatching (coreferent (WhQuestionFn what) ?term) ?lifted-interpretation ?subexpr)
+     (formulaArgument ?subexpr 2 ?var)  ; bind ?var
+     (variableExpression ?var)
+     (conjunctSet ?lifted-interpretation ?stmt-set)
+     (evaluate ?arglist (SetToListFn (SetMinusFn ?stmt-set ?subexpr)))
+     (logicalStatement and ?arglist ?orig-query)
+     (different ?orig-query (and))
+     (evaluate ?query
+       (SubstituteFormulaFn ?answer ?var ?orig-query)))
+
+;;; What runs faster than a jaguar? =>
+;;; (and (isa run5223 Running)
+;;;      (doneBy run5223 (WhQuestionFn what))
+;;;      (isa jaguar5311 JaguarCat)
+;;;      (isa run5223 ComparisonEvent)
+;;;      (comparer run5223 (WhQuestionFn what))
+;;;      (comparee run5223 jaguar5311))
+(<== (queryFormForInterpretation WhatQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (uninferredSentence (or (unifies ?lifted-interpretation (denotes ?a ?b))
+                             (unifies ?lifted-interpretation (coreference ?c ?d))))
+     (noArgumentHasPredicate ?lifted-interpretation denotes)
+     (noArgumentHasPredicate ?lifted-interpretation coreferent)
+     (containsPattern (WhQuestionFn what) ?lifted-interpretation)
+     (evaluate ?raw-query (SubstituteFormulaFn ?answer (WhQuestionFn what) ?lifted-interpretation))
+     (outsourcedOnly (optimizedQuery ?raw-query ?query)))
+
+
+;;; When did Christopher Columbus discover North America? =>
+;;; (and (nonDeliberateActors discover6883 ChristopherColumbus-HistoricPerson)
+;;;      (isa discover6883 DiscoveringSomething)
+;;;      (finds ChristopherColumbus-HistoricPerson ContinentOfNorthAmerica)
+;;;      (dateOfEvent discover6883 (WhQuestionFn when)))
+(<== (queryFormForInterpretation WhenQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (noArgumentHasPredicate ?lifted-interpretation denotes)
+     (noArgumentHasPredicate ?lifted-interpretation coreferent)
+     (containsPattern (WhQuestionFn when) ?lifted-interpretation)
+     (evaluate ?raw-query (SubstituteFormulaFn ?answer (WhQuestionFn when) ?lifted-interpretation))
+     (outsourcedOnly (optimizedQuery ?raw-query ?query)))
+
+
+;;; Where have I seen that? =>
+;;; (and (performedBy see7917 i7906)
+;;;      (isa see7917 VisualPerception)
+;;;      (perceivedThings see7917 that7950)
+;;;      (eventOccursAt see7917 (WhQuestionFn where)))
+(<== (queryFormForInterpretation WhereQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (not (containsPattern (denotes (WhQuestionFn where) ?term) ?lifted-interpretation))  ; Does this ever happen?
+     (containsPattern (WhQuestionFn where) ?lifted-interpretation)
+     (evaluate ?raw-query (SubstituteFormulaFn ?answer (WhQuestionFn where) ?lifted-interpretation))
+     (outsourcedOnly (optimizedQuery ?raw-query ?query)))
+
+
+;;; Which rivers flow through China? =>
+;;; (and (trajectoryPassesThrough ?flow5850 China-PeoplesRepublic)
+;;;      (isa ?flow5850 FluidFlow-Translation)
+;;;      (primaryObjectMoving ?flow5850 ?river5831)
+;;;      (isa ?river5831 River)
+;;;      (coreferent ?river5831 (WhQuestionFn which)))))
+(<== (queryFormForInterpretation WhichQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (subexpressionMatching (coreferent ?term (WhQuestionFn which)) ?lifted-interpretation ?subexpr)
+     (formulaArgument ?subexpr 1 ?answer)
+     (variableExpression ?answer)
+     (conjunctSet ?lifted-interpretation ?stmt-set)
+     (evaluate ?arglist (SetToListFn (SetMinusFn ?stmt-set ?subexpr)))
+     (logicalStatement and ?arglist ?raw-query)
+     (different ?raw-query (and))
+     (outsourcedOnly (optimizedQuery ?raw-query ?query)))
+
+
+;;; "How long is the Amazon River?" =>
+;;; (lengthOfObject AmazonRiver (WhQuestionFn amount))
+(<== (queryFormForInterpretation GeneralHowQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (noArgumentHasPredicate ?lifted-interpretation denotes)
+     (noArgumentHasPredicate ?lifted-interpretation coreferent)
+     (containsPattern (WhQuestionFn amount) ?lifted-interpretation)
+     (evaluate ?raw-query (SubstituteFormulaFn ?answer (WhQuestionFn amount) ?lifted-interpretation))
+     (outsourcedOnly (optimizedQuery ?raw-query ?query)))
+
+
+;;; "How much energy is there in 5 liters of gasoline?" =
+;;; (and (quantityRequested energy3314 :VALUE)
+;;;      (measure of3509 (Liter 5))                  ; of3509???
+;;;      (isa gasoline3544 GasolineFuel)
+;;;      (possessiveRelation gasoline3544 energy3314)
+;;;      (isa energy3314 EnergyQuantity))
+;;; Turning a general query into a BOTE query requires a kind of partial evaluation.
+;;; We want something that includes:
+;;; (valueOf ((QPQuantityFn chemicalEnergyContent) ?gasoline3544) ?answer)
+(<== (queryFormForInterpretation HowMuchQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (containsPattern (quantityRequested ?term :VALUE) ?lifted-interpretation)
+     (BOTEMeasureQueryFor ?lifted-interpretation ?query))   ;; TBD
+
+;;; The typical form expected of a BOTE is something like:
+;;; (valueOf ((QPQuantityFn ?slot) ?obj) ?answer)
+;;; 
+
+;;; "How many bricks are in London?" = 
+;;; (and (relationExistsInstance quantityRequested :VALUE Brick)
+;;;      (in-UnderspecifiedContainer ?group-of-brick2144 GreaterLondon-EnglandRegion))
+;;; *** This is problematic.  The drs-lifting replaces references to the set 
+;;; *** with the existentially-quantified rule-macro.  But the query
+;;; *** is explicitly for the cardinality of the set.  We'll need 
+;;; *** to go into translate-drs to fix this.  Otherwise we'll have to
+;;; *** spelunk the DRS directly here.
+(<== (queryFormForInterpretation HowManyQuestion-IBT ?sentence-id ?interpretation ?query)
+     (variablizedInterpretation ?sentence-id ?interpretation ?lifted-interpretation)
+     (containsPattern (quantityRequested ?term :VALUE) ?lifted-interpretation)
+     (BOTECountQueryFor ?lifted-interpretation ?query))   ;; TBD
+
+(<== (queryFormForInterpretation HowManyQuestion-IBT ?sentence-id ?interpretation ?query)
+     (currentDiscourseId ?ddrs)
+     (ist-Information BOTEQueryFormulationMt (findBOTEQuery ?sentence-id ?ddrs ?query)))
+
+;;; For how-many questions, the form is:
+;;; (valueOf ((QPQuantityFn countContained) ?item ?container) ?answer)
+
+;;; --------------------------------------------------------------------------
+;;; Case 1: unparseable sentence
+;;; InferIntent needs to handle this better.  It's really a fragment.
+;;; If the original query were a choice among alternatives, check for
+;;; a number to denote the answer.
+;;; If it were a quantitative question, the number *is* the answer.
+;;; Note: This can be just the difference between punctuation.
+;;; E.g., "Yes." parses fine, but "Yes" winds up here.
+
+;;; default
+(preconditionForMethod
+  (and 
+    (cantClassifyMessage ?sentence-id ?msg)
+    (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id UnclassifiedUtterance)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance NotUnderstanding-CommunicationAct))
+            (ist-Information ?context (isa ?system-utterance AnnouncingSomething))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?msg)))))
+        
+        
+;;; --------------------------------------------------------------------------
+;;; Case 1a: Interjection
+
+;;; These are of course, really bogus:
+
+(preconditionForMethod
+  (and (uniqueInterpretation ?context ?sentence-id ?interpretation)
+       (someArgumentHasPredicate ?interpretation NLExpressionFn)  ; skip interjections
+       ) 
+  (methodForAction
+    (respondToUtterance ?context ?sentence-id ?sentence-type)
+    (actionSequence
+      (TheList
+        (respondToInterjection ?context ?sentence-id ?sentence-type ?interpretation)
+        ))))
+        
+(isa respondToInterjection ComplexActionPredicate)
+(arity respondToInterjection 4)
+
+;;; Issue: can we disambiguate ciao and aloha based on the utterance number?
+;;; They're hello at the beginning, goodbye at the end.
+(preconditionForMethod
+  (and (currentUniversalTime ?time)
+       (formattedContentString "Good ~/fire::AM-PM*/." (TheList ?time) ?good-day)
+       (evaluate ?ans (RandomMemberFn (TheSet "Hello." "Greetings human!"  "Hey." ?good-day "Felicitous salutations!" "Can I help you?" "Good morning." "'Sup?")))
+       (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (respondToInterjection ?context ?sentence-id ?sentence-type (isa ?dvar (NLExpressionFn GreetingSomeone)))
+    (actionSequence
+      (TheList
+        (doRespond ?system-utterance ?ans)))))
+        
+(preconditionForMethod
+  (and (evaluate ?ans (RandomMemberFn (TheSet "Goodbye." "Farewell." "Have a nice day." "See you later." "Later!" "Arrivederci." "Adios." "Adieu.")))
+       (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (respondToInterjection ?context ?sentence-id ?sentence-type (isa ?dvar (NLExpressionFn SayingGoodbyeToSomeone)))
+    (actionSequence
+      (TheList
+        (doRespond ?system-utterance ?ans)))))
+
+;;; Other interjections are things like ahem, lol, incredible, woah, whew.
+(preconditionForMethod
+  (and (not (unifies ?interp (isa ?dvar (NLExpressionFn GreetingSomeone))))
+       (not (unifies ?interp (isa ?dvar (NLExpressionFn SayingGoodbyeToSomeone))))
+       (unifies ?ans (RandomMemberFn (TheSet "Yes?" "Okay?" "I hear you.")))
+       (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (respondToInterjection ?context ?sentence-id ?sentence-type ?interp)
+    (actionSequence
+      (TheList
+        (doRespond ?system-utterance ?ans)))))
+
+;;; --------------------------------------------------------------------------
+;;; Case 2: Respond to a simple declarative utterance.
+;;; The textInterpretation Statements should be the meaning of the utterance.
+;;; If they answer a prior question, we want to know that.
+;;; This response is an Acknowledging-CommunicationAct
+;;; Relevant predicates are acknowledgementOf and acknowledgedAct
+(preconditionForMethod
+  (and (uniqueInterpretation ?context ?sentence-id ?interpretation)
+       (noArgumentHasPredicate ?interpretation NLExpressionFn)  ; skip interjections
+       ;(groundExpression ?interpretation)      ; To be safe (for now) ; This was filtering out CollectionSubsetFn stmts.
+       (propositionalContent ?interpretation)  ; Not a response-only utterance
+       (conjunctiveStatementSet ?context ?interpretation ?stmts)
+       (currentSessionReasoner ?session-reasoner)  ; This will no longer fire in a test-im.
+       (newReifiedUtterance ?system-utterance)) 
+  (methodForAction
+    (respondToUtterance ?context ?sentence-id DeclarativeUtterance)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance AcceptingConstative-CommunicationAct))  ; a kind of explicit Acknowledgement
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))   
+        ;; Write out the declarative interpretation:
+        (doRecordMembers ?stmts)
+        (assimilateNewTerms ?context ?sentence-id ?interpretation)
+        (doRemoteAgentPlan  
+          ?session-reasoner
+          (actionSequence 
+            (TheList
+              (doNotifyPA ?interpretation UserStatementEvent))))
+        (doRespond ?system-utterance "Ok.")  ; about the most annoying response we can generate.
+        ))))
+
+;;; Some interpretations will make it through that cannot be stored directly
+;;; in the kb.  E.g., (NLResponseFn Negative-NLResponse).  
+;;; NLResponseFn is a function, not a relation, so it chokes up planB to the
+;;; point where you can't get anything out of that context.  This filters 
+;;; those declarations:
+
+(isa propositionalContent UnaryPredicate)
+(arity propositionalContent 1)
+(arg1Isa propositionalContent CycLSentence-Assertible)
+(comment propositionalContent "(propositionalContent ?content) fails unless ?content really is a CycLSentence-Assertible.")
+
+(<== (propositionalContent ?content)
+     (not (variableExpression ?content))
+     (not (atomicTerm ?content))
+     (operatorFormulas ?pred ?content)
+     (allFactsAllowed
+       (isa ?pred Relation)))
+
+
+;;; Handle the case where the declarative statement is semantically ambiguous:
+(preconditionForMethod
+  (uninferredSentence
+    (uniqueInterpretation ?context ?sentence-id ?interpretation))
+  (methodForAction
+    (respondToUtterance ?context ?sentence-id DeclarativeUtterance)
+    (actionSequence
+      (TheList
+        (resolveAmbiguousInterpretation ?context ?sentence-id)  ; ask the user to pick
+        ))))
+
+
+(isa assimilateNewTerms ComplexActionPredicate)
+(arity assimiliateNewTerms 3)
+(arg1Isa assimilateNewTerms Microtheory)
+(arg2Isa assimilateNewTerms CycLTerm)
+(arg3Isa assimilateNewTerms CycLFormula)
+(comment assimilateNewTerms "(assimilateNewTerms ?context ?sentence-id ?interpretation) looks for new terms introduced in the sentence and records their structural information.")
+
+
+(preconditionForMethod
+  (uninferredSentence
+    (introducesIntermediateCollection ?interpretation ?intermediate-type ?parent-type))
+  (methodForAction
+    (assimilateNewTerms ?context ?sentence-id ?interpretation)
+    (actionSequence
+      (TheList))))
+
+(preconditionForMethod
+  (and (introducesIntermediateCollection ?interpretation ?intermediate-type ?parent-type)
+       (termDefinitionContext ?parent-type ?mt))
+  (methodForAction
+    (assimilateNewTerms ?context ?sentence-id ?interpretation)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?mt (isa ?intermediate-type Collection)))
+        (doRecord (ist-Information ?mt (genls ?intermediate-type ?parent-type)))
+        ))))
+
+(isa termDefinitionContext BinaryPredicate)
+
+(<== (termDefinitionContext ?term ?mt)
+     (definitionalMt ?term ?mt))
+
+(<== (termDefinitionalContext ?term UniversalVocabularyMt)
+     (uninferredSentence 
+       (defnitionalMt ?term ?mt)))
+       
+(isa definitionalMt BinaryPredicate)
+
+(<== (definitionalMt ?term ?mt)
+     (lookupOnly
+       (kbOnly
+         (numAnswers 1
+           (ist-Information ?mt (genls ?term ?what))))))
+
+(<== (definitionalMt ?term ?mt)
+     (lookupOnly
+       (kbOnly
+         (numAnswers 1
+           (ist-Information ?mt (isa ?term ?what))))))
+
+;;; --------------------------------------------------------------------------
+;;; Case 2: Imperatives
+;;; This answer is an Acknowledgement with the IllocutionaryForce of a Promise
+;;; see actAccededTo and accedingTo.
+;;; Q: What kinds of things can a Companion commit to do?
+;;;    spawn off a learning goal, monitor for facts, send email when something is detected?
+;;; See imperatives for implementation of respondToCommand.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (respondToUtterance ?context ?sentence-id ImperativeUtterance)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (iteIllocutionaryForce ?sentence-id Request)))
+        (doRecord
+          (ist-Information ?context (isa ?sentence-id RequestingAction)))
+        (respondToCommand ?context ?sentence-id ImperativeUtterance)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Responding to Questions
+;;;
+
+;;; **** This should do a lot more.  
+;;; ****   Optimize the query
+;;; ****   Figure out if more than one answer is expected.
+;;; ****   etc.
+(preconditionForMethod
+  (and (genls ?sentence-type InformationRequest-IBT )
+       (evaluate ?stmts
+         (TheClosedRetrievalSetOf ?stmt
+           (and (honorTimestamps (wmOnly (ist-Information ?context
+                                           (interpretationOf ?sentence-id ?interpretation))))
+                (noArgumentHasPredicate ?interpretation NLExpressionFn)
+                (queryFormForInterpretation ?sentence-type ?sentence-id ?interpretation ?query)
+                (unifies ?stmt
+                         (ist-Information ?context (sentenceQuery ?sentence-id ?interpretation ?query)))))))
+  (methodForAction
+    (respondToUtterance ?context ?sentence-id ?sentence-type)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (iteIllocutionaryForce ?sentence-id Query)))
+        (doRecord
+          (ist-Information ?context (isa ?sentence-id RequestingInformation)))
+        (doRecordMembers ?stmts)
+        ;;; The following action completely alters the course of execution. 
+        ;;; Now we are redirecting all the question to QA via EEs. 
+        ;;; Previously the following action was executed
+        ;;; Nope, nope, nope.  Still need to invoke knowledge-based question answering.
+        (respondToQuestion ?context ?sentence-id ?sentence-type)
+        ;;; Since it is not called anymore, most of the methods below are not
+        ;;; going to be triggered.
+        ;(answerQuestionViaEEs ?sentence-id) 
+        ))))
+        
+
+(preconditionForMethod
+ (and (newReifiedUtterance ?system-utterance)
+      ; (currentFacilitator ?facilitator)
+      (generateMostAppropriateQuery ?dcase ?response)
+      (unifies ?message (data::achieve :receiver data::psi :content ?response))
+      )
+    (methodForAction
+        (answerQuestionViaEEs ?dcase)
+        (actionSequence 
+            (TheList 
+             (doRespond ?system-utterance ?response)
+             (doSend psi ?message)
+             (doClearWorkingMemory)
+             ))))
+
+(isa answerQuestionViaEEs ComplexActionPredicate)
+(arity answerQuestionViaEEs 1)
+                
+(isa generateMostAppropriateQuery Predicate)
+(arity generateMostAppropriateQuery 2)
+        
+;;; Default:
+(preconditionForMethod
+  (newReifiedUtterance ?system-utterance)
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id ?type)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion))
+            (ist-Information ?context (isa ?system-utterance ReplyingWithUnknown))  ; just made this up.
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance "I don't know.")))))
+
+
+;;; --------------------------------------------------------------------------
+;;; Case 3: an open-ended question.  (TBD)
+;;; failureForAgents??
+(preconditionForMethod
+  (outsourcedOnly (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id InformationRequest-IBT )
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance Replying-Noncommittal))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance "Don't ask me.  I have no idea.")))))
+
+
+;;; --------------------------------------------------------------------------
+;;; Case 4: a yes-no question
+;;; When it can't be turned into a valid query, this is an implicit request for clarification
+;;; A helpful reply to this would be a RespondingToARequestForClarification
+(preconditionForMethod
+  (wmOnly
+    (and (uninferredSentence
+           (ist-Information ?context (interpretationOf ?sentence-id ?interpretation)))
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id YesOrNoQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?sentence-id AskingAYesOrNoQuestion))
+            (ist-Information ?context (isa ?system-utterance RequestingClarification))
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Request))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance "I'm not able to turn that into a proper query.")))))
+
+
+;;; If there are valid query interpretations, write them out before trying them.
+;;; Then invoke question answering to try to identify valid answers.
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))  ; fail if there was no query produced
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id YesOrNoQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (isa ?sentence-id AskingAYesOrNoQuestion)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id YesOrNoQuestion-IBT))))))))
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id YesOrNoQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance RequestingClarification) ?seq1)))
+
+;;; Binary (Yes/no) Instance Classication Inquiry
+
+(preconditionForMethod
+ (and (wmOnly (ist-Information ?context
+                (interpretationOf ?sentence-id ?interpretation)))
+      (wmOnly (subexpressionMatching (isa ?dv ?concept) ?interpretation ?isa-stmt))
+      (wmOnly (subexpressionMatching (varGenls ?instance ?dv) ?interpretation ?denotes-stmt))
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (unifies ?discourse-ctxt (DiscourseCaseFn ?discourse-id))
+      (ist-Information ?discourse-ctxt (potentialDeicticReferentInSource ?instance ?perceptual-source))
+      (prettyString ?instance ?instance-string)
+      (formattedContentString "~&Deciding whether ~a is an example of ~a..." (TheList ?instance-string ?concept) ?msg))
+ (methodForAction
+  (respondToQuestion ?context ?sentence-id YesOrNoQuestion-IBT)
+  (actionSequence
+   (TheList
+    (doRecordMembers
+     (TheSet
+      (ist-Information ?context (isa ?sentence-id ClassificationRequest-Binary))
+      (ist-Information ?context (isa ?system-utterance BuyTimeForPondering))
+      (ist-Information ?context (iteIllocutionaryForce ?system-utterance Promise)) ;;best fit I can come up with.  A promise of more information to come. -mdm
+      (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+    (doRespond ?system-utterance ?msg)
+    (doAgentPlan  ;; we need to be able to see the recorded fact above
+     (actionSequence
+      (TheList
+       (classifyInstance-Binary ?instance ?concept ?discourse-ctxt ?sentence-id ?context))))))))
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id YesOrNoQuestion-IBT) ?seq1 ?seq2)
+     (containsPattern (isa ?system-utterance classifyInstance-Binary) ?seq1))
+
+;;; --------------------------------------------------------------------------
+;;; Case 5: Who questions
+
+
+;;; Who 1: describe the entity
+
+;;; Who is <person> questions
+;;; E.g., "Who is Bill Gates?"
+;;; If this were a central question, we'd want a better means of computing vital statistics.
+(preconditionForMethod
+  (and (lookupOnly
+         (localOnly
+           (wmOnly
+             (ist-Information ?context 
+               (interpretationOf ?sentence-id (denotes (WhQuestionFn who) ?person))))))
+       (groundExpression ?person))
+ (methodForAction
+  (respondToQuestion ?context ?sentence-id WhoQuestion-IBT)
+  (actionSequence
+   (TheList
+     (describeReferent ?context ?sentence-id WhoQuestion-IBT ?person)))))
+
+
+
+;;; Who 2: Identify the referent(s)
+
+;;; Who questions that seek an underspecified referent
+;;; E.g., "Who is the president of the United States?"
+;;; (and (isa ?president-of-the-united-states3946 UnitedStatesPresident)
+;;;      (denotes (WhQuestionFn who) ?president-of-the-united-states3946))
+;;; Or: "Who owns Microsoft?"
+;;; should return (owns (WhQuestionFn who) MicrosoftInc)
+;;; When you seek a referent, the query should look for the properties first.
+;;; When you're looking for a property of an object, identify the referent first.
+;;;
+;;; Note: We collect the (possibly multiple) sentence queries and write them
+;;; out before executing a doAgentPlan to generate answers.  This is because
+;;; generating answers may involve shipping the query off to the session reasoner
+;;; thereby making backtracking impossible.  We have to defer further planning
+;;; of the response until we have actual answers.
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))  ; fail if there was no query produced
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id WhoQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (isa ?sentence-id RequestingInformation)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id WhoQuestion-IBT))))))))
+
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhoQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance ReplyingWithUnknown) ?seq1))
+     (noArgumentHasPredicate ?seq2 describeReferent))
+     
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhoQuestion-IBT) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 describeReferent))
+
+
+;;; What 1:
+        
+;;; What is the <thing>?
+;;; E.g., "What is the Parthenon?"
+;;; The idea is that we're given a name of an individual and we want a description,
+;;; as if we had asked "Tell me about <individual>."
+(preconditionForMethod
+  (and (lookupOnly
+         (localOnly
+           (wmOnly
+             (ist-Information ?context 
+               (sentenceQuery ?sentence-id ?interpretation (denotes (WhQuestionFn what) ?thing))))))
+       (groundExpression ?thing)
+       (uninferredSentence
+         (ist-Information EverythingPSC (isa ?thing Collection))))     ; We're talking about named individual things here, not collections.
+ (methodForAction
+  (respondToQuestion ?context ?sentence-id WhatQuestion-IBT)
+  (actionSequence
+   (TheList
+     (describeReferent ?context ?sentence-id ?question-type ?thing)))))
+
+(preconditionForMethod
+  (and (lookupOnly
+         (localOnly
+           (wmOnly
+             (ist-Information ?context 
+               (sentenceQuery ?sentence-id ?interpretation ?query)))))
+       (queryTarget ?query ?thing)
+       (ist-Information EverythingPSC (isa ?thing Collection)))     ; We're talking about collections here, not named individuals.
+ (methodForAction
+  (respondToQuestion ?context ?sentence-id WhatQuestion-IBT)
+  (actionSequence
+   (TheList
+     (defineConcept ?context ?sentence-id ?question-type ?thing)))))
+     
+(isa queryTarget BinaryPredicate)
+(arity queryTarget 2)
+(arg1Isa queryTarget CycLSentence-Askable)
+(arg2Isa queryTarget Thing)
+(comment queryTarget "(queryTarget ?query ?thing) binds ?thing to the thing being asked about in ?query.")
+
+(<== (queryTarget ?query ?target)
+     (matches (and ?a ?b) ?query)
+     (subexpressionMatching (denotes (WhQuestionFn what) ?dv) ?query ?subexp1)
+     (subexpressionMatching (isa ?dv ?thing) ?query ?subexp2)
+     (groundExpression ?thing))
+     
+(<== (queryTarget ?query ?target)
+     (unifies (denotes (WhQuestionFn what) ?target) ?query)
+     (groundExpression ?target))
+
+;;; What 2: Enumerate the (possibly multiple) referents
+
+;;; What questions that seek an underspecified referent
+;;; E.g., "What are the four major oceans on Earth?"
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))  ; fail if there was no query produced
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id WhatQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id WhatQuestion-IBT))))))))
+
+;;; What 3: Classifying a perceptual stimulus
+
+;;; E.g., "What is this?"
+;;; Here,  the companion is given a deictic referent of some kind and we want 
+;;; it to classify it.
+(preconditionForMethod
+ (and (lookupOnly
+         (localOnly
+           (wmOnly
+             (ist-Information ?context 
+               (interpretationOf ?sentence-id (denotes (WhQuestionFn what) ?thing))))))
+      (groundExpression ?thing)
+      (uninferredSentence
+       (ist-Information EverythingPSC (isa ?thing Collection)))
+      ;;;need to bind ?discourse-ctxt here
+      (ist-Information ?discourse-ctxt (potentialDeicticReferentInSource ?thing ?perceptual-source))
+      (prettyString ?thing ?thing-string)
+      (formattedContentString "~&Classifying ~a..." (TheList ?thing-string) ?msg))
+ (methodForAction
+  (respondToQuestion ?context ?sentence-id WhatQuestion-IBT)
+  (actionSequence
+   (TheList
+    (doRecordMembers
+     (TheSet
+      (ist-Information ?context (isa ?sentence-id ClassificationRequest-Open))
+      (ist-Information ?context (isa ?system-utterance BuyTimeForPondering))
+      (ist-Information ?context (iteIllocutionaryForce ?system-utterance Promise)) ;;best fit I can come up with.  A promise of more information to come. -mdm
+      (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+    (doRespond ?system-utterance ?msg)
+    (doAgentPlan  ;; we need to be able to see the recorded fact above
+       (classifyInstance-MutuallyExclusive ?thing ?discourse-ctxt ?sentence-id ?context))))))
+
+;;; What 4: Failure
+
+;;; What questions that seek a well-specified co-referent
+;;; E.g., "What is the longest river on Earth?"
+;;; The idea is that we're given a description and we want a name.
+
+
+;;; Bias against the default:
+
+;;; If we can legitimately answer with describeReferent, we should
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhatQuestion-IBT) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 describeReferent))
+     
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhatQuestion-IBT) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 defineConcept)
+     (noArgumentHasPredicate ?seq2 classifyInstance-MutuallyExclusive))
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhatQuestion-IBT) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 classifyInstance-MutuallyExclusive))
+     
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhatQuestion-IBT) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 generateAnswers)
+     (noArgumentHasPredicate ?seq2 describeReferent)
+     (noArgumentHasPredicate ?seq2 defineConcept))
+     
+
+;;; Which 1: Select from 1 of N ground choices
+
+;;; e.g., Which river is longer, the Amazon or the Nile?
+;;; This permits a strategy of ruling out all but one.
+;;; 
+(preconditionForMethod
+  (and (lookupOnly
+         (localOnly
+           (wmOnly
+             (ist-Information ?context 
+               (sentenceQuery ?sentence-id ?interpretation (coreferent ?term (WhQuestionFn which)))))))
+       (groundExpression ?term))
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id WhichQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&I can't handle ground Which-type questions yet." ())))))
+        
+
+;;; Which 2: Supply a referent from among a Collection
+
+
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))   ; fail if no query found
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id WhichQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id WhichQuestion-IBT))))))))
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhichQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance ReplyingWithUnknown) ?seq1)))
+
+;;; When was Hurricane Katrina?" =>
+;;; (dateOfEvent HurricaneKatrina (WhQuestionFn when))
+
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))   ; fail if no query found
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id WhenQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id WhenQuestion-IBT))))))))
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhenQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance ReplyingWithUnknown) ?seq1)))
+
+;;; Where 1:
+
+;;; Where is <entity>?
+;;; Handle questions such as "Where's Waldo?", as opposed to 
+;;; "Where would be a good site for an ambush?"
+;;; or "Where do I-94 and I-80 intersect?"
+;;; Is this like "Where is London?"
+;;; Where is the Parthenon? =>
+;;; (objectFoundInLocation Parthenon (WhQuestionFn where))
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))   ; fail if no query found
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id WhereQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id WhereQuestion-IBT))))))))
+
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id WhereQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance ReplyingWithUnknown) ?seq1)))
+
+;;; How Many 1:
+
+;;; "How many popcorn kernels would it take to fill the classroom in 1890 Maple?"
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))   ; fail if no query found
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id HowManyQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id HowManyQuestion-IBT))))))))
+
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id HowManyQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance ReplyingWithUnknown) ?seq1)))
+        
+;;; How 1:
+
+;;; E.g.,: "How does an antimatter drive work?"
+;;; or "How do I defeat the Mongol Hordes?"
+;;; Look for (WhQuestionFn amount)
+;(preconditionForMethod
+;  (true)
+;  (methodForAction
+;    (respondToQuestion ?context ?sentence-id GeneralHowQuestion-IBT)
+;    (actionSequence
+;      (TheList
+;        (doAnnounce "~&I can't handle general How-type questions yet." ())))))
+        
+;;; "How long is the Amazon River?"
+;;; (lengthOfObject AmazonRiver (WhQuestionFn amount))
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))   ; fail if no query found
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id GeneralHowQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id GeneralHowQuestion-IBT))))))))
+
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id GeneralHowQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance ReplyingWithUnknown) ?seq1)))
+
+
+;;; How Much 1:
+;;;  "How much energy is there in a teaspoon of gasoline?" =
+;;;  ((and (possessiveRelation ?gasoline6179 ?energy5921) (isa ?energy5921 EnergyStuff) (isa ?gasoline6179 GasolineFuel)
+;;;        (quantityRequested ?energy5921 :VALUE))
+;;;   (and (isa ?energy5921 EnergyQuantity) (possessiveRelation ?gasoline6179 ?energy5921) (isa ?gasoline6179 GasolineFuel)
+;;;        (quantityRequested ?energy5921 :VALUE)))
+
+;;; We'd like to invoke BOTE (BackOfTheEnvelope) estimation for queries that include forms like:
+;;; (valueOf ((QPQuantityFn massOfObject) AirOverLakeSuperior) ?x)
+(preconditionForMethod
+  (lookupOnly
+    (localOnly
+      (wmOnly
+        (ist-Information ?context 
+          (sentenceQuery ?sentence-id ?interpretation ?query)))))   ; fail if no query found
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id HowMuchQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (generateAnswers ?context ?sentence-id HowMuchQuestion-IBT))))))))
+
+
+(<== (preferInContext (respondToQuestion ?context ?sentence-id HowMuchQuestion-IBT) ?seq1 ?seq2)
+     (not (containsPattern (isa ?system-utterance ReplyingWithUnknown) ?seq1)))
+
+
+;;; Why 1:
+;;; Why do fools fall in love?
+;;; Why does hot air rise? 
+;;; Why is there air? 
+;;; Why are you mad?
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (respondToQuestion ?context ?sentence-id WhyQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Why questions not handled yet." ())))))
+
+;;; --------------------------------------------------------------------------
+;;;
+;;; Unsolicited output
+;;;
+
+(isa interject ComplexActionPredicate)
+(arity interject 1)
+(arg1Isa interject CharacterString)
+(comment interject "(interject <surface-form>) inserts a message into the utterance stream.")
+
+(preconditionForMethod
+  (and (sessionContext ?context)
+       (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (interject ?msg-string)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (isa ?system-utterance CommunicationAct-Single)))
+        (doRespond ?system-utterance ?msg-string)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Added for Companions Studio Course
+
+(in-microtheory CompanionsQAMt)
+(genlMt Interaction-ManagerMt CompanionsQAMt)
+
+(isa notAFactTypeWeDontWantForDrsFactCollecting Predicate)
+(arity notAFactTypeWeDontWantForDrsFactCollecting 1)
+(arg1Isa notAFactTypeWeDontWantForDrsFactCollecting Predicate)
+(comment notAFactTypeWeDontWantForDrsFactCollecting
+  "(notAFactTypeWeDontWantForDrsFactCollecting ?pred) checks that ?pred is of the type that we are actually interested in gathering when we are collecting drs facts")
+
+(<== (notAFactWeDontWantForDrsFactCollecting ?fact)
+     (uninferredSentence (unifies ?fact (isa ?whatever SystemUtterance)))
+     (evaluate ?pred (FirstInListFn (MakeListFn ?fact)))
+     (different ?pred <==)
+     (different ?pred discourseCaseForDrs)
+     (different ?pred missingSemTrans)
+     (different ?pred inReplyTo))
+
+(<== (queryFormForInterpretation ?qType ?sentence-id ?interpretation ?query)
+     (genls ?qType InformationRequest-IBT )
+     (wmOnly (lookupOnly (ist-Information EverythingPSC (drsForDiscourse ?ddrs-id))))
+     (variablizedInterpretation ?sentence-id ?interpretation ?vars-substituted)
+;;;     (evaluate ?varsInUniverse
+;;;       (TheClosedRetrievalSetOf ?variable
+;;;         (ist-Information (DiscourseCaseFn ?ddrs-id) (variableInUniverse ?variable ?sentence-id ?weDontCare))))
+;;;     (variablizeDiscourseVariables ?interpretation ?varsInUniverse ?vars-substituted)
+     (testContainsAndOrSet ?vars-substituted)
+     (evaluate ?filtered (RemoveIfFn
+                          ?vars-substituted
+                          (Kappa (?x)
+                                 (or (containsExpression discourseCaseForDrs ?x)
+                                     (containsExpression WHFocus ?x)
+                                     (containsExpression denotes ?x)
+                                     (containsExpression ReplyingToAQuestion ?x)))
+                          IdentityFn))
+     (evaluate ?out (MakeFormulaFn and ?filtered))
+     (optimizedQuery ?out ?query)
+     (lexicalAnswerNumber ?sentence-id ?number)
+     (lexicalAnswerType ?sentence-id ?type)
+     (tell (ist-Information QAMetaDataMt (varsInUniverse ?sentence-id ?varsInUniverse)))
+     (tell (ist-Information QAMetaDataMt (lexicalAnswerNumber ?sentence-id ?number)))
+     (tell (ist-Information QAMetaDataMt (lexicalAnswerType ?sentence-id ?type))))
+
+(<== (testContainsAndOrSet ?vars-substituted)
+     (containsExpression and ?vars-substituted))
+
+(<== (testContainsAndOrSet ?vars-substituted)
+     (containsExpression TheSet ?vars-substituted))
+
+
+(<== (lexicalAnswerNumber ?sId ?number)
+     (ist-Information (DrsCaseFn ?sId) (WHFocus (?qStatement ?qType) ?focus))
+     (checkSingularOrPlural ?focus ?number))
+
+(<== (lexicalAnswerType ?sId ?type)
+     (unifies ?type Quantity))
+
+
+;;; End Of File

@@ -1,0 +1,83 @@
+;;;
+;;; domain-learning-mts.meld
+;;;
+
+(in-microtheory BaseKB)
+
+(isa FreecivMt  Microtheory)                     ; These definitions should be in BaseKB
+
+(isa (LanguageMtFn Freeciv-TheGame) Microtheory)
+;;; (genlMt FreecivMt (LanguageMtFn Freeciv-TheGame))  ; Don't do this!
+
+(isa Freeciv-defaultMt Microtheory)
+(genlMt Freeciv-defaultMt FreecivMt)
+
+(isa FreecivPlanningDomain Microtheory)
+(genlMt FreecivPlanningDomain Freeciv-defaultMt) ; May want to re-think this one.
+(genlMt FreecivPlanningDomain HTNPlanner)      ; Use the plan selection rules in Fire.
+(genlMt FreecivPlanningDomain QPTheoryMt)      ; Inherit the common modeling vocabulary
+(genlMt FreecivPlanningDomain CompanionsMt)    ; Should this be Session-ReasonerMt?
+(genlMt FreecivPlanningDomain (LearnedKnowledgeMtFn Freeciv-TheGame))
+
+(isa FreecivPlanMt Microtheory)                ; This is the scratchpad microtheory the planner uses.
+(genlMt FreecivPlanMt FreecivPlanningDomain)   ; We no longer create a new one for each game.
+
+
+
+;;; Note: The companions domain for Freeciv is now the
+;;; reified Cyc concept Freeciv-TheGame, rather than just FreeCiv.
+;;; This lets us construct case library names, etc, in a domain-independent way
+;;; using the outsourced predicate (currentDomain ?dom).
+
+;;; We'll further break the learned knowledge microtheory down.
+;;; We want, in effect, a prism that takes a domain and a type of goal and
+;;; defines a microtheory for storing that kind of learned knowledge.
+;;;
+;;; In other words, there isn't just one learned knowledge microtheory for a
+;;; domain, but different mts for different kinds of knowledge.
+
+
+;;; Where learned knowledge is stored (a spindle that inherits from more specific mts):
+(genlMt (LearnedKnowledgeMtFn Freeciv-TheGame) (ActionModelMtFn Freeciv-TheGame))
+(genlMt (LearnedKnowledgeMtFn Freeciv-TheGame) (QualitativeModelMtFn Freeciv-TheGame))
+(genlMt (LearnedKnowledgeMtFn Freeciv-TheGame) (StrategyModelMtFn Freeciv-TheGame))
+
+(isa (SpindleMtFn Freeciv-TheGame (PlayingFn Freeciv-TheGame)) Microtheory)  ; all execution traces
+(isa (SpindleMtFn Freeciv-TheGame DirectInfluences) Microtheory)
+(isa (SpindleMtFn Freeciv-TheGame IndirectInfluences) Microtheory)
+(isa (SpindleMtFn Freeciv-TheGame ExecutionTraces) Microtheory)
+
+;;; A spindle for all influence hypotheses:
+(isa (SpindleMtFn Freeciv-TheGame Influences) Microtheory)
+(genlMt (SpindleMtFn Freeciv-TheGame Influences) (SpindleMtFn Freeciv-TheGame DirectInfluences))
+(genlMt (SpindleMtFn Freeciv-TheGame Influences) (SpindleMtFn Freeciv-TheGame IndirectInfluences))
+
+;;; Preload the three over-arching learning goals:
+
+(in-microtheory (StrategyModelMtFn Freeciv-TheGame) :exclude-globals t)
+(learningGoalForCompanion
+  (LearnStrategicModelFn Freeciv-TheGame))
+  
+;(goalName (GoalFn 0)
+; (AchieveFn (winner-First (IndexicalFn executionContext) (IndexicalFn currentRole))))
+;(subgoal (GoalFn 0) (GoalFn 1))  ; To Do: Make this less of a hack.
+;(subgoal (GoalFn 0) (GoalFn 2))
+
+(in-microtheory (QualitativeModelMtFn Freeciv-TheGame) :exclude-globals t)
+(learningGoalForCompanion
+  (LearnQualitativeModelFn Freeciv-TheGame))
+
+(in-microtheory (ActionModelMtFn Freeciv-TheGame) :exclude-globals t)
+(learningGoalForCompanion
+  (LearnActionModelFn Freeciv-TheGame))
+
+;;; Organize the topmost learning goals into a hierarchy:
+
+(in-microtheory (LearnedKnowledgeMtFn Freeciv-TheGame) :exclude-globals t)
+
+(subgoalFor (LearnQualitativeModelFn Freeciv-TheGame) (LearnActionModelFn Freeciv-TheGame))
+(subgoalFor (LearnStrategicModelFn Freeciv-TheGame) (LearnQualitativeModelFn Freeciv-TheGame))
+
+(in-microtheory FreecivMt)
+
+(learnedKnowledgeMicrotheory Freeciv-TheGame (LearnedKnowledgeMtFn Freeciv-TheGame))

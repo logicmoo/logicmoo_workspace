@@ -1,0 +1,1467 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: games-narrative-rules.meld
+;;;;    System: FMI
+;;;;    Author: Tom Hinrichs
+;;;;   Created: April 12, 2013 09:05:04
+;;;;   Purpose: Narrative Rules for talking about board games
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+;;; This is the version for EA v8.
+
+(in-microtheory GamesNarrativeRulesMt) ; no point in excluding globals here.
+
+(genlMt GamesNarrativeRulesMt FmiGamesMt)
+(genlMt GamesNarrativeRulesMt EAStructuralRulesMt)
+(genlMt GamesNarrativeRulesMt EAReferenceResolutionMt)
+(genlMt GamesNarrativeRulesMt InstructionNarrativeRulesMt)
+(genlMt GamesNarrativeRulesMt CompanionsMt)          ; Pull in preference filtering
+;(genlMt GamesNarrativeRulesMt EADialogueRulesMt)    ; This can't be necessary
+;(genlMt GamesNarrativeRulesMt EATemporalRulesMt)    ; and these rules don't work at all
+
+
+
+;;; These are the rules that the interpretation queries should invoke to 
+;;; elaborate and recognize higher-level concepts.
+
+
+;;; Types of Presentation Events:
+;;;  TopicIntroduction
+;;;  GameClassification
+;;;  RoleDefinition
+;;;  EntityIntroduction
+;;;  Configuration-Spatial
+;;;  Configuration-Temporal
+;;;  Directive
+;;;  ActionElaboration
+;;;  WinCriteria
+;;;  GameStateDescription
+
+
+;;; This is currently binding ?game-type to the discourse-variable (eg, marking-game2662).
+;;; Is that right, or do we want to bind the actual type (eg, MarkingGame)?
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id) GameClassification)
+     (classifiesGame (PresentationEventFn ?sid ?event-id) ?game ?type))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) RoleDefinition)
+     (definesRole (PresentationEventFn ?sid ?narrative-event) ?role-type))
+     
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) EntityIntroduction)
+     (introducesEntity (PresentationEventFn ?sid ?narrative-event) ?entity))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) Configuration-Spatial)
+     (introducesSpatialConfiguration (PresentationEventFn ?sid ?narrative-event) ?config))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) Configuration-Temporal)
+     (introducesTemporalConfiguration (PresentationEventFn ?sid ?narrative-event) ?config))
+
+(<== (directiveFunction (DirectiveEventFn ?sid ?event-id) Directive)
+     (specifiesCommand (DirectiveEventFn ?sid ?event-id) ?command))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) ActionElaboration)
+     (definesActionType (PresentationEventFn ?sid ?narrative-event) ?action-type))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) WinCriteria)
+     (definesGoal (PresentationEventFn ?sid ?narrative-event) ?role ?goal))
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event) GameStateDescription)
+     (gameStateDescription (PresentationEventFn ?sid ?narrative-event) ?current-game ?actor ?state))
+
+;;; We want to look for spatial coordinate terms,
+;;; player role terms,
+;;; turn sequencing terms
+;;; action terms.
+
+;;; If we know that the topic is a game, look for known game classifications.
+;;; If we know that the game is a marking game, look for names of marks and 
+;;; associations to players and glyphs.
+;;; (Marks aren't always associated with a player)
+;;; If we know that something is a two-person game, look for properties of
+;;; the players, ways of referring to them.
+;;; Marking should be di-transitive.  An agent marks a target (location or
+;;; object) with a mark.
+
+;;; Experiment:
+(<== (referent (ReferenceInSentenceFn ?var1 ?sid) (ReferentInDrsFn ?var2 ?drs-id))
+     (different ?var1 ?var2) ; do the cheapest test first.
+     (groundExpression ?var1)
+     (groundExpression ?var2)
+     (variableInUniverse ?var1 ?sdrs-id Clause)
+     (drsEntailedBySentence ?sdrs-id ?sid)
+     ;;; We could check for properNameReference in the sdrs, or
+     ;;; assumedProperName in the discourse case,
+     ;;; for but now just take any denotes statement.
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (denotes ?var2 ?var1)))))  ; e.g., TicTacToe is a game, X is a player.
+
+;;; Address metonymy through reference resolution
+
+;;; Plurals should be considered as implicit indefinite references:
+;;; *** This is causing a problem with repeated sentences.
+;;; *** We get a reference to a discourse-level dv *and* a self reference.
+;;; *** perhaps a check for uninferredSentence (referent ...)
+(<== (resolveReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?drs-var ?drs-id))
+     (groundExpression ?drs-id)
+     (groundExpression ?var)
+     (uninferredSentence
+       (definiteReference ?var ?sid))
+     (uninferredSentence
+       (listenerReference ?sid ?var))
+     (uninferredSentence
+       (speakerReference ?sid ?var))
+     (uninferredSentence
+       (referent (ReferenceInSentenceFn ?var ?sid) 
+                 (ReferentInDrsFn ?drs-var ?drs-id)))
+     (unifies ?drs-var ?var))  ; check and bind
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Commands
+
+(isa specifiesCommand BinaryPredicate)
+(arity specifiesCommand 2)
+(arg1Isa specifiesCommand IBTGeneration)
+(arg2Isa specifiesCommand CycLSentence-Assertible)
+
+(<== (specifiesCommand (DirectiveEventFn ?sid ?event-id) ?command)
+     (groundExpression ?sid)
+     (sentenceTypeFeat (ParseTreeFn ?sid ?ptid) ImperativeUtterance)
+     (specifiesCommand-IP ?sid ?command ?arglist)
+     (individualSatisfyingConditions ?event-id Command 
+       (TheSet (specifiesCommand-IP ?sid ?command ?arglist))))
+
+(isa specifiesCommand-IP TernaryPredicate)
+(arity specifiesCommand-IP 3)
+(arg1Isa specifiesCommand-IP CycLTerm)
+(arg2Isa specifiesCommand-IP CycLSentence-Assertible)
+(arg3Isa specifiesCommand-IP List)
+
+;;; Commands are special in that they are ultimately executed by a positional
+;;; eventPredicate task.  The conversion to that non-Davidsonian form specifies
+;;; precisely what role relations must be known (via nonDavidsonianPredReln).
+;;; Therefore we shouldn't need a different rule for each type of command.
+(<== (specifiesCommand-IP ?sid ?action ?arglist)
+     (drsForDiscourse ?ddrs-id)
+     (numAnswers 1
+       (queryContext ?dcase))  ; bind the dcase.
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (performedBy ?select (GapFn :SUBJECT)))))
+     (localOnly
+       (lookupOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?sdrs-id)
+             (isa ?action ?action-type)))))
+     (allFactsAllowed 
+       (useTransitiveInference
+         (ist-Information WorldLikeOursCollectorMt
+           (genls ?action-type Action))))
+     (allFactsAllowed 
+       (ist-Information WorldLikeOursCollectorMt ; often BaseKB seeems to suffice here.
+         (nonDavidsonianPredReln ?action-type ?role-preds ?event-pred)))
+     (evaluate ?arglist
+       (MapFunctionOverList   ; we *want* this to fail if any role-pred fails
+         (FunctionToArg 2 
+           (Kappa (?role-pred ?role-relation)
+             (roleRelationBindingFor ?ddrs-id ?sdrs-id ?sid ?role-pred ?action ?role-relation)))
+         ?role-preds)))
+
+(<== (roleRelationBindingFor ?ddrs-id ?sdrs-id ?sid ?role-pred ?arg1 ?arg2)
+     (groundExpression ?role-pred)  ; sanity check
+     (groundExpression ?arg1)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (?role-pred ?arg1 ?entity))))  ; abduce this binding in sentence drs
+     (referent
+       (ReferenceInSentenceFn ?entity ?sid)
+       (ReferentInDrsFn ?arg2 ?ddrs-id))) ; lift to discourse (or sketch)
+
+;;; "Start a game"
+;;;
+(<== (specifiesCommand-IP ?sid ?start (TheList ?topic))
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?start BeginningAnActivity))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?action Game))))
+     ;;; We're trying to infer that it's TicTacToe here,
+     ;;; but we lose the topic if we clear working memory.
+     (numAnswers 1
+       (allFactsAllowed
+         (currentGameDomain ?topic))))
+
+(isa currentGameDomain UnaryPredicate)
+(arg1Isa currentGameDomain Game)
+
+(<== (currentGameDomain ?game)
+     (lookupOnly
+       (teachTopic ?some-sid ?some-teach-dv ?game)))
+
+(<== (currentGameDomain ?game)
+     (currentSessionReasoner ?sr)
+     (localAgent ?im)
+     (different ?im ?sr)
+     (allFactsAllowed
+       (holdsOnRemoteAgent ?sr
+         (currentGameDomain ?game))))
+         
+(isa teachTopic TernaryPredicate)
+(arity teachTopic 3)
+(comment teachTopic "(teachTopic ?sentence-id ?teach-dv ?topic)")
+
+(isa currentGameInstance UnaryPredicate)
+(isa currentGameInstance DynamicUpdatePredicate)
+(arg1Isa currentGameInstance Microtheory)
+
+(<== (currentGameInstance ?execution-mt)
+     (currentSessionReasoner ?sr)
+     (localAgent ?im)
+     (different ?im ?sr)
+     (allFactsAllowed
+       (holdsOnRemoteAgent ?sr
+         (executionContext ?execution-mt))))
+
+
+;;;Universe: play2560 game2588 
+;;;(isa play2560 PlayingAGame)
+;;;(isa game2588 Game)
+;;;(gamePlayed play2560 game2588)
+;;;(doneBy play2560 (GAP SUBJECT))
+
+;;; "You go first."
+;;;Universe: you2853 go2861 SERIES2905 
+;;;(nthInSeries go2861 SERIES2905 1)
+;;;(objectMoving go2861 you2853)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Topic Introduction
+
+;;; Moved to interaction-manager, InstructionNarrativeRulesMt.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Game Classification
+
+(isa classifiesGame TernaryPredicate)
+(arg1Isa classifiesGame IBTGeneration)
+(arg2Isa classifiesGame CycLTerm)
+(arg3Isa classifiesGame Collection)
+
+(<== (classifiesGame (PresentationEventFn ?sid ?event-id) ?game ?type)
+     (groundExpression ?sid)
+     (classifiesGame-IP ?sid ?game ?type)
+     (individualSatisfyingConditions ?event-id IBTGeneration (TheSet (classifiesGame-IP ?sid ?game ?type))))
+
+(isa classifiesGame-IP TernaryPredicate)
+(arg1Isa classifiesGame-IP CycLTerm)
+(arg2Isa classifiesGame-IP CycLTerm)
+(arg3Isa classifiesGame-IP Collection)
+
+(<== (classifiesGame-IP ?sid ?game ?type)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (variableInUniverse ?game-dv ?sdrs-id Clause)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?game-dv ?type))))     ; Don't use isaInDrs, cause that inherits junk.
+     (different ?type Game)   ; if we just say "TicTacToe is a game", we're not really classifying it.
+     (allFactsAllowed
+       (useTransitiveInference
+         (ist-Information WorldLikeOursCollectorMt 
+           (genls ?type Game))))
+     (trueInDrs ?sdrs-id (denotes ?game ?game-dv))
+     (withBackchainingDepth 4
+       (referent 
+         (ReferenceInSentenceFn ?game-dv ?sid) ; e.g., two-person-game2215
+         (ReferentInDrsFn ?game ?ddrs-id))))   ; e.g., TicTacToe
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Role Definition
+
+;;; Look for something like this:
+;;;   (denotes o player15073)
+;;;   (isa player15073 GameRole)
+
+(isa definesRole BinaryPredicate)
+(arg1Isa definesRole IBTGeneration)
+(arg2Isa definesRole GameRole)
+
+(<== (definesRole (PresentationEventFn ?sid ?narrative-event) ?role)
+     (groundExpression ?sid)
+     (definesRole-IP ?sid ?role)
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (definesRole-IP ?sid ?role))))
+
+(<== (definesRole-IP ?sid ?role)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (variableInUniverse ?role-dv ?sdrs-id Clause)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?role-dv GameRole))))              ; ?role is a discourse variable
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (denotes ?inst-dv ?role-dv))))             ; ?role is what we call it ("X" or "Fred")
+     (instRole ?sid ?sdrs-id ?ddrs-id ?inst-dv ?role-dv ?role))
+
+         
+;;; We need to create (RoleFn <token>)
+;;; and a locally indexedProperName <token> (RoleFn <token>)
+
+;;;; ******* instRole and dvRole need to be ontologized.
+
+
+(<== (instRole ?sid ?sdrs-id ?ddrs-id ?dv ?role-dv ?role)
+     (dvRole ?sid ?sdrs-id ?ddrs-id ?dv ?role-dv ?role))
+
+(<== (dvRole ?sid ?sdrs-id ?ddrs-id ?dv ?role-dv ?role)
+     (dvToken ?sid ?dv ?token)
+     (unifies ?role (GameRoleFn ?token)) ; A role is a temporary functional relationship
+     (numAnswers 1 (queryContext ?dcase))  ; bind the dcase.
+     ;; Cache a proper name locally for this discourse:
+     (tell (ist-Information ?dcase (indexedProperName (TheList) ?token ?role)))
+     ;; Lift the dv-free reference to the discourse drs:
+     (justify
+       (ist-Information (DrsCaseFn ?ddrs-id) (isa ?role GameRole))
+       (TheList
+         (ist-Information (DrsCaseFn ?sdrs-id) (isa ?role-dv GameRole))))
+     ;; Make it possible for drs translation to scrape this fact:
+     (tell (ist-Information ?dcase (originDrsId (isa ?role GameRole) ?sdrs-id))))
+
+(<== (instRole ?sid ?sdrs-id ?ddrs-id ?inst-dv ?role-dv ?inst-dv)
+     (uninferredSentence 
+       (dvRole ?sid ?sdrs-id ?ddrs-id ?inst-dv ?role-dv ?role))
+     (withBackchainingDepth 4
+       (referent 
+         (ReferenceInSentenceFn ?role-dv ?sid)
+         (ReferentInDrsFn ?inst-dv ?ddrs-id))))
+
+;;; Bind the lexical token associated with the discourse variable ?dv in sentence ?sid.
+(<== (dvToken ?sid ?dv ?token)
+     (numAnswers 1
+       (dvSpanInParseTree ?dv (SpanFn ?from ?to) 
+          (ParseTreeFn ?sid ?ptid)))
+     (sentenceInDiscourse ?sid ?n ?token-list)
+     (evaluate ?tokens (SublistFromToFn ?token-list (PlusFn ?from 1) ?to))
+     (unifies (TheList ?token) ?tokens))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Entity introduction
+
+(isa introducesEntity BinaryPredicate)
+(arg1Isa introducesEntity IBTGeneration)
+(arg2Isa introducesEntity Thing)
+
+(<== (introducesEntity (PresentationEventFn ?sid ?narrative-event) ?entity)
+     (groundExpression ?sid)
+     (numAnswers 1 (introducesEntity-IP ?sid ?entity))
+     (individualSatisfyingConditions ?narrative-event IBTGeneration
+       (TheSet (introducesEntity-IP ?sid ?entity))))
+
+;;; Reference to a game entity:
+(<== (introducesEntity-IP ?sid ?entity)
+     (drsForDiscourse ?ddrs-id)
+     (drsEntailedBySentence ?implied-drs-id ?sid)
+     (allFactsAllowed 
+       (ist-Information WorldLikeOursCollectorMt
+         (gameEntityType ?entity-type)))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implied-drs-id)
+           (isa ?entity-dv ?entity-type))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implied-drs-id)
+           (denotes ?inst-dv ?entity-dv))))
+     (possibleDescriptiveRestriction ?implied-drs-id ?sid ?inst-dv)
+     (withBackchainingDepth 4
+       (resolveReference    ; Don't simply use referent here, since it's an indefinite reference. 
+         (ReferenceInSentenceFn ?inst-dv ?sid)
+         (ReferentInDrsFn ?entity ?ddrs-id))))
+
+;;; Table lookup is more efficient than:
+;     (contextEnvAllowed
+;       (allFactsAllowed
+;         (lookupOnly
+;           (genls ?entity-type GameEntity))))
+
+
+;;; Introducing subtypes of game entities
+;;; (e.g., "A knight is a type of piece.")
+(<== (introducesEntity-IP ?sid ?entity)
+     (drsForDiscourse ?ddrs-id)
+     (drsEntailedBySentence ?implied-drs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implied-drs-id)
+           (refersToTypeOf ?type-dv ?parent-type))))
+     (allFactsAllowed 
+       (ist-Information WorldLikeOursCollectorMt ;; Could this ever be limited to our specific game?
+         (gameEntityType ?parent-type)))
+     (numAnswers 1
+       (localOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?implied-drs-id)
+             (denotes ?entity-dv ?type-dv)))))
+     ;;(localOnly
+     ;;  (wmOnly
+     ;;  (ist-Information (DrsCaseFn ?implied-drs-id)
+     ;;      (isa ?entity-dv ?entity-type))))
+     (numAnswers 1
+       (entailedSubtype ?sid ?implied-drs-id ?entity-dv ?entity-type ?parent-type))
+     ;;; Do we really want to say (genls Knight GamePiece)?  For now, we do.
+     ;;; Uh oh, we're not resolving the interpretation of knight (FC-Knight or Knight)
+     ;;; We either need to find uniquely one that is already known to be a spec of GamePiece,
+     ;;; or create one on the fly, adding a new denotation.
+     (unifies ?justs
+       (TheList (ist-Information (DrsCaseFn ?implied-drs-id)
+                   (refersToTypeOf ?type-dv ?parent-type))
+                (ist-Information (DrsCaseFn ?implied-drs-id)
+                   (denotes ?entity-dv ?type-dv))
+                (entailedSubtype ?sid ?implied-drs-id ?entity-dv ?entity-type ?parent-type)))
+     (justify
+       (ist-Information (DrsCaseFn ?implied-drs-id)
+         (genls ?entity-type ?parent-type))
+       ?justs)
+     (justify
+       (ist-Information (DrsCaseFn ?implied-drs-id)
+         (isa ?entity-dv ?entity-type))
+       ?justs)
+     (withBackchainingDepth 4
+       (resolveReference    ; Don't simply use referent here, since it's an indefinite reference. 
+         (ReferenceInSentenceFn ?entity-dv ?sid)
+         (ReferentInDrsFn ?entity ?ddrs-id))))
+
+
+;;; We want to find-or-make an intermediate type that can be the isa of the 
+;;; entity-dv.
+(<== (entailedExistingSubtype ?drs-id ?entity-dv ?entity-type ?parent-type)
+     (localOnly
+       (lookupOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?implied-drs-id)
+             (isa ?entity-dv ?entity-type)))))
+     (allFactsAllowed
+       (ist-Information WorldLikeOursCollectorMt
+         (genls ?entity-type ?parent-type))))
+
+(<== (entailedSubtype ?sid ?drs-id ?entity-dv ?entity-type ?parent-type)
+     (numAnswers 1
+       (entailedExistingSubtype ?drs-id ?entity-dv ?entity-type ?parent-type)))
+
+;;; Create something like Knight-TheGamePiece that's a spec of GamePiece.
+(<== (entailedSubtype ?sid ?drs-id ?entity-dv ?entity-type ?parent-type)
+     (uninferredSentence
+       (entailedExistingSubtype ?drs-id ?entity-dv ?subtype ?parent-type))
+     (dvToken ?sid ?entity-dv ?token)
+     (numAnswers 1 (queryContext ?dcase))  ; bind the dcase.
+     (evaluate ?the-word 
+       (SymbolConcatenateFn (TheList (StringCapitalizeFn ?token) "-TheWord")))
+     (evaluate ?entity-type
+       (SymbolConcatenateFn (TheList (StringCapitalizeFn ?token) "-The" ?parent-type)))
+     (tell (ist-Information BaseKB (isa ?entity-type Collection)))
+     (numAnswers 1
+       (newDenotationNum ?the-word CountNoun ?n))
+     (unifies ?stmt (denotation ?the-word CountNoun ?n ?entity-type))
+     ;; Should this be lifting into the ddrs?
+     (tell (ist-Information ?dcase ?stmt)))
+     
+(<== (newDenotationNum ?the-word ?type ?num)
+     (evaluate ?num
+       (PlusFn 1
+         (MaximumFn
+           (SetAdjoinFn 
+             (TheClosedRetrievalSetOf ?n
+               (lookupOnly
+                 (allFactsAllowed
+                   (ist-Information WorldLikeOursCollectorMt  ;; Might want an English CollectorMt of some kind.
+                     (denotation ?the-word ?type ?n ?denotation)))))
+           -1)
+          IdentityFn))))
+
+
+(<== (possibleDescriptiveRestriction ?drs-id ?sid ?inst-dv)
+     (descriptiveRestrictionFor ?drs-id ?sid ?inst-dv ?stmt)
+     ;; Track the name in some reasonable way (to extract entityLabel info):
+;     (dvSpanInParseTree ?inst-dv (SpanFn ?from ?to) (ParseTreeFn ?sid ?ptid))
+;     (sentenceInDiscourse ?sid ?n ?token-list)
+;     (evaluate ?tokens (SublistFromToFn ?token-list ?from ?to))
+;     ;; omit determiner from front if necessary
+;     (justify
+;       (ist-Information (DrsCaseFn ?ddrs-id) (isa ?role GameRole))
+;       (TheList
+;         (ist-Information (DrsCaseFn ?drs-id) (isa ?role-dv GameRole))))
+;     ;; Make it possible for drs translation to scrape this fact:
+;     (tell (ist-Information ?dcase (originDrsId (isa ?role GameRole) ?drs-id)))
+     )
+     
+(<== (possibleDescriptiveRestriction ?drs-id ?sid ?inst-dv)
+     (uninferredSentence
+       (descriptiveRestrictionFor ?drs-id ?sid ?inst-dv ?stmt)))
+
+
+;;; Handle things like "the green square"
+;;; Note: we *don't* want Circle, but rather CircularRegion. Picky Picky.
+(<== (introducesEntity-IP ?sid ?entity)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (numAnswers 1 (queryContext ?dcase))  ; bind the dcase.  (*** why?)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?shape-dv ?shape))))
+     (allFactsAllowed 
+       (lookupOnly                     ; Stop backchaining on isa! (or do we need this to fire irules?)
+         (useTransitiveInference
+           (ist-Information WorldLikeOursCollectorMt  ; This is ok.  They're almost all defined in UniversalVocabulary
+             (isa ?shape TwoDimensionalShapeType)))))  ; You'd think there'd be a genls we could use...
+     (descriptiveRestrictionFor ?sdrs-id ?sid ?shape-dv ?stmt)
+     (withBackchainingDepth 4
+       (referent 
+         (ReferenceInSentenceFn ?shape-dv ?sid)
+         (ReferentInDrsFn ?entity ?ddrs-id))))
+         
+(<== (descriptiveRestrictionFor ?sdrs-id ?sid ?entity-dv ?stmt)
+     (groundExpression ?entity-dv)  ; sanity check
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (sizeParameterOfObject ?entity-dv ?size-desc))))
+     (unifies ?stmt
+       (sizeParameterOfObject ?entity-dv ?size-desc)))
+       
+(<== (descriptiveRestrictionFor ?sdrs-id ?sid ?entity-dv ?stmt)
+     (groundExpression ?entity-dv)  ; sanity check
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (mainColorOfObject ?entity-dv ?color))))
+     (uninferredSentence
+       (useTransitiveInference
+         (allFactsAllowed
+           (ist-Information WorldLikeOursCollectorMt ; UniversalVocabulary would suffice
+             (genls ?color Hair-Stuff)))))
+     (unifies ?stmt
+       (mainColorOfObject ?entity-dv ?color)))
+       
+;;; To Do: Handle spatial relations like "in the top left", etc.
+
+;;; In Process:
+;(<== (resolveSketchReference (ReferenceInSentenceFn ?var ?sid) (ReferentInDrsFn ?referent ?drs-id))
+;     (groundExpression ?drs-id)
+;     (groundExpression ?var)
+;     (referent 
+;       (ReferenceInSentenceFn ?var ?sid)
+;       (ReferentInDrsFn ?referent ?drs-id))
+     
+       
+;;; For now, don't support definite plural references.
+;;; (in order to avoid the isaOrGroupOfInDrs complexity)
+;;; ***** candidateReferent's comment is wry but accurate
+(<== (candidateReferent ?var (ReferenceFn Definite-NLAttr) ?sid ?referent)
+     (currentSketchAgent ?sketch-agent) ; now outsourced
+     (currentBundleCase ?sketch-agent ?bcase) ; now outsourced
+     (variableInUniverse ?var ?var-drs-id Clause)  ; as opposed to Discourse
+     (isaInDrs ?var ?var-drs-id ?col)
+     ;; Gather descriptive properties of ?var into a query that can be applied to the Glyph of ?referent.
+     (descriptiveConditions ?var-drs-id ?sid ?var ?query)
+     (referentInSketch ?sketch-agent ?bcase ?col ?var ?query ?referent))
+     
+(<== (descriptiveConditions ?drs-id ?sid ?var ?query)
+     (groundExpression ?drs-id)
+     (groundExpression ?var)  ; a discourse variable
+     (evaluate ?query
+       (MakeFormulaFn and
+         (TheClosedRetrievalSetOf ?conj
+           (and (descriptiveRestrictionFor ?drs-id ?sid ?var ?stmt)
+                (unifies (?pred ?var ?val) ?stmt)
+                (groundExpression ?pred)
+                (different ?pred isa)
+                (different ?pred performedBy)
+                (not (variableExpression ?val))
+                (unifies ?conj (?pred ?var ?val)))))))
+
+
+;;; Find all objects in the sketch of type ?collection, look up its 
+;;; glyph and filter by descriptor:
+(<== (referentInSketch ?agent ?context ?collection ?var ?query ?obj)
+     (allFactsAllowed
+       (holdsOnRemoteAgent ?agent
+         (useTransitiveInference
+           (wmOnly
+             (ist-Information ?context
+               (isa ?obj ?collection))))))
+     (allFactsAllowed
+       (holdsOnRemoteAgent ?agent
+         (lookupOnly
+           (wmOnly
+             (localOnly
+               (ist-Information ?context
+                 (glyphRepresentsObject ?glyph ?obj)))))))
+     ;; To Do: preprocess to handle relative quantities like large and small
+     (evaluate ?translated-query
+       (SubstituteFormulaFn ?glyph ?var ?query))
+     (allFactsAllowed
+       (holdsOnRemoteAgent ?agent
+         (allFactsAllowed
+           (ist-Information ?context
+             (trueSentence ?translated-query))))))
+           
+;;; This currently fails:
+;;;(referentInSketch sk-Case-3577347766 BCase-3577347766 Square square3098
+;;; (and (sizeParameterOfObject square3098
+;;;       (RelativeGenericValueFn sizeParameterOfObject Square
+;;;        highAmountOf))
+;;;      (mainColorOfObject square3098 BlueColor))
+;;; ?referent)
+;;;
+;;; We need to sort the squares in the sketch by glyph-area and pick the 
+;;; largest (in this case).  Assume for now we aren't designating the
+;;; "fifth largest", or "middle sized", etc.
+;;;
+;;; What other ordinal predicates are there?
+;;; Also: incorporate label names.  The glyph namestring is like a 
+;;; proper name.  This can be as discriminable as the object isa type.
+             
+
+(<== (variableQuantifiedFor ?referent ?drs-id Discourse)
+     (lookupOnly
+       (wmOnly
+         (referentInSketch ?sketch-agent ?bcase ?col ?var ?query ?referent))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Configuration-Spatial
+
+;;; Track nouns referring to spatial configurations (e.g., grid, row, the diagonal, etc):
+;;; Look for coordinate grids as instances of CoordinateGrid
+;;; Look for instance of GameBoard
+;;; Look for the output of marking to be (isa mark24840 VisualMark)
+
+(isa introducesSpatialConfiguration BinaryPredicate)
+(arg1Isa introducesSpatialConfiguration IBTGeneration)
+
+(<== (introducesSpatialConfiguration (PresentationEventFn ?sid ?narrative-event) ?config)
+     (groundExpression ?sid)
+     (introducesSpatialConfiguration-IP ?sid ?config) ; bind an instance of a reified configuration
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (introducesSpatialConfiguration-IP ?sid ?config))))
+       
+(<== (introducesSpatialConfiguration-IP ?sid ?config)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?config GameBoard))))
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?config ?sid)
+         (ReferentInDrsFn ?config ?ddrs-id))))
+           
+;;; "a 3x3 grid of squares"
+
+(<== (introducesSpatialConfiguration-IP ?sid ?config)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?config CoordinateGrid))))
+     (drsEntailedBySentence ?implied-drs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implied-drs-id)
+           (isa ?cell-dv Square))))
+     (withBackchainingDepth 4
+       (resolveReference    ; Don't simply use referent here, since it's an indefinite reference. 
+         (ReferenceInSentenceFn ?config ?sid)
+         (ReferentInDrsFn ?config ?ddrs-id))))
+
+
+(<== (introducesSpatialConfiguration (PresentationEventFn ?sid ?narrative-event) ?prop)
+     (groundExpression ?sid)
+     (definesSpatialRelation-IP ?sid ?prop) ; bind a spatial relation proposition
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (definesSpatialRelation-IP ?sid ?prop))))
+
+;;; "is played on"
+;;; Note:: CoordinateGrid has no genls.  It's just an instance of ObjectType.
+;;; On the other hand, we might just say a 3x3 square board.
+;;; What to do?
+(isa definesSpatialRelation-IP BinaryPredicate)
+(arg2Isa definesSpatialRelation-IP CycLSentence-Assertible)
+
+(<== (definesSpatialRelation-IP ?sid (on-UnderspecifiedSurface ?play ?surface))
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?play-dv PlayingAGame))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (on-UnderspecifiedSurface ?play-dv ?surface-dv))))
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?play-dv ?sid)
+         (ReferentInDrsFn ?play ?ddrs-id)))
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?surface-dv ?sid)
+         (ReferentInDrsFn ?surface ?ddrs-id))))
+
+;;; "empty squares"
+(isa definesSpatialRelation-IP BinaryPredicate)
+(arg2Isa definesSpatialRelation-IP CycLSentence-Assertible)
+
+(<== (definesSpatialRelation-IP ?sid (fullnessOfContainer ?container Empty))
+     (emptySquare ?sid ?container-dv)
+     (drsForDiscourse ?ddrs-id)
+     (withBackchainingDepth 4
+       (resolveReference
+         (ReferenceInSentenceFn ?container-dv ?sid)
+         (ReferentInDrsFn ?container ?ddrs-id))))
+
+(isa emptySquare BinaryPredicate)
+
+;;; Wow.  Just wow.
+;;; If we don't break this out, we resolve references 4 times with
+;;; the same args.
+(<== (emptySquare ?sid ?container-dv)
+     (drsEntailedBySentence ?implies-drs-id ?sid)   
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implies-drs-id)
+           (fullnessOfContainer ?container-dv Empty))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implies-drs-id)
+           (isa ?container-dv Square)))))  ; a bit of a cheat.  Should be any game-related container.
+
+(isa definesSpatialRelation-IP Predicate)
+(arity definesSpatialRelation-IP 2)
+(arg2Isa definesSpatialRelation-IP CycLSentence-Assertible)
+
+(<== (definesSpatialRelation-IP ?sid (objectFoundInLocation ?piece ?location))
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (occupyingAConfiguration ?sid ?sdrs-id ?piece-dv ?location-dv)
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?piece-dv ?sid)
+         (ReferentInDrsFn ?piece ?ddrs-id)))
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?location-dv ?sid)
+         (ReferentInDrsFn ?location ?ddrs-id))))
+         
+(isa occupyingAConfiguration Predicate)
+(arity occupyingAConfiguration 4)
+
+;;; "occupies the <bottom | top> row"
+(<== (occupyingAConfiguration ?sid ?sdrs-id ?piece ?location)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (objectFoundInLocation ?piece ?location))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?location RowOfObjects))))
+     (locationOfRow ?sid ?sdrs-id ?location ?where))
+
+(<== (locationOfRow ?sid ?sdrs-id ?row ?where)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?row (ThingDescribableAsFn Top-TheWord Adjective)))))
+     (unifies ?where (ThingDescribableAsFn Top-TheWord Adjective)))
+
+(isa locationOfRow Predicate)
+(arity locationOfRow 4)
+
+(<== (locationOfRow ?sid ?sdrs-id ?row ?where)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?row (ThingDescribableAsFn Bottom-TheWord Adjective)))))
+     (unifies ?where (ThingDescribableAsFn Bottom-TheWord Adjective)))
+
+;;; Colors: We want to say that anything that could be a Color, *is* mainColorOfObject
+;;; Shapes: We want to say that anything that could be a Shape *is* a shape
+;;; Spatial relations: We want to say that anything that could be a spatial relation *is* one.
+
+;;; Apply metonymy here.  If we have already identified Black as a role, then 
+;;; any color interpretation belongs to the pieces or marks, not the role.
+;;; This can't be referenced via a functional NAT, since there may be many
+;;; pieces.  We would have to use a 2nd order pred, e.g. relationAllInstance.
+;;; (relationAllInstance mainColorOfObject
+;;;                      (CollectionSubsetFn <Coll>  ; glyph?
+;;;                        (TheSetOf ?piece 
+;;;                          (entityLabel ?role ?piece)))  ; *** arg2 of entityLabel is a character string!
+;;;                      BlackColor)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Configuration-Temporal
+
+;;; "X goes first"
+;;; "X makes the first mark"
+
+;;; Look for (nthInSeries mark24840 SERIES24834 1) to represent turns
+;;; (objectMoving go6888 x)
+
+(<== (introducesTemporalConfiguration (PresentationEventFn ?sid ?narrative-event) ?config)
+     (groundExpression ?sid)
+     (introducesTemporalConfiguration-IP ?sid ?config) ; bind an instance of a reified configuration
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (introducesTemporalConfiguration-IP ?sid ?config))))
+
+(<== (introducesTemporalConfiguration-IP ?sid (initialTurn ?player))
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (initialTurnStatement ?sid ?player-dv)
+     (drsForDiscourse ?ddrs-id)
+     (resolveReference 
+       (ReferenceInSentenceFn ?player-dv ?sid)
+       (ReferentInDrsFn ?player ?ddrs-id)))
+       
+(isa initialTurnStatement Predicate)
+(arity initialTurnStatement 2)
+         
+(<== (initialTurnStatement ?sid ?player-dv)
+     (drsEntailedBySentence ?implies-drs-id ?sid)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implies-drs-id)
+           (nthInSeries ?action ?series 1))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?implies-drs-id)
+           (objectMoving ?action-dv ?player-dv))))   ; do we need to check for player-dv being a player?  Nah!
+     (keywordFreeExpression (objectMoving ?action-dv ?player-dv)))  ; Omit :GERUND &etc.
+
+;;; "initially"
+(<== (introducesTemporalConfiguration-IP ?sid (holdsDuring ?start ?situation))
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (gameInitialSituation ?sid ?sdrs-id ?start-dv ?situation-dv)
+     (drsForDiscourse ?ddrs-id)
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?start-dv ?sid)
+         (ReferentInDrsFn ?start ?ddrs-id)))
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?situation-dv ?sid)
+         (ReferentInDrsFn ?situation ?ddrs-id))))
+
+;;; It appears there's some vestigal MicrotheoryRelatingPredicate in Cyc that 
+;;; interferes with this.
+(isa gameInitialSituation QuaternaryPredicate)
+(arity gameInitialSituation 4)
+
+(<== (gameInitialSituation ?sid ?sdrs-id ?start-dv ?situation-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (isa ?start-dv BeginningAnActivity))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sdrs-id)
+           (holdsDuring ?start-dv ?situation-dv)))))
+         
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Action Elaboration
+
+;;; Game actions are performed by players.
+
+;;; In the context of a marking game, look for MarkingOnASurface to be an action.
+;;; else MovementEvent?
+
+;;; We're looking for declaratives here, not commands.
+
+(isa definesActionType BinaryPredicate)
+(arg1Isa definesActionType IBTGeneration)
+
+(<== (definesActionType (PresentationEventFn ?sid ?narrative-event) ?action)
+     (groundExpression ?sid)
+     (uninferredSentence
+       (sentenceTypeFeat (ParseTreeFn ?sid ?ptid) ImperativeUtterance))
+     (numAnswers 1 (definesActionType-IP ?sid ?action))
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (definesActionType-IP ?sid ?action))))
+
+;;; Primitive action reference
+(<== (definesActionType-IP ?sid ?action)
+     (uninferredSentence
+       (takingTurns ?sid ?alternation-dv ?action-dv))
+     (drsForDiscourse ?ddrs-id)
+     (drsEntailedBySentence ?drs-id ?sid)  
+     (primitiveAction ?sid (DrsCaseFn ?drs-id) ?action-dv ?object-dv)
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?action-dv ?sid)
+         (ReferentInDrsFn ?action ?ddrs-id)))
+     (withBackchainingDepth 4
+       (resolveReference
+         (ReferenceInSentenceFn ?object-dv ?sid)
+         (ReferentInDrsFn ?object ?ddrs-id))))
+         
+(isa primitiveAction QuaternaryPredicate)
+(arg2Isa primitiveAction Microtheory)
+
+;;; *** These fail if the sentence is plural (due to embedded drses)
+;;; *** so "White moves white pieces" can't find an action.
+       
+;;; Marking
+(<== (primitiveAction ?sid ?drs-case ?action-dv ?object-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (isa ?action-dv MarkingOnASurface))))
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (doneBy ?action-dv ?who))))
+     (different ?who ?action-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (objectMarked ?action-dv ?object-dv))))
+     (different ?object-dv ?who)
+     (different ?object-dv ?action-dv)
+     (uninferredSentence
+       (wmOnly
+         (ist-Information ?drs-case
+           (outputsCreated ?action-dv ?something))))
+     ;; Huh?  Ok, we're justifying the abduction by the narrative rule that fired.
+     (justify
+       (ist-Information ?drs-case
+         (objectMarked ?action-dv ?object-dv))
+       (TheList (primitiveAction ?sid ?drs-case ?action-dv ?object-dv))))
+
+;;; Moving
+;;; *** This succeeds in finding the ?action-dv in a sub-drs, but
+;;; *** then fails to find the ?who (doneBy) in that same sub-drs.
+;;; *** It needs to look in all compatible drses.
+(<== (primitiveAction ?sid ?drs-case ?action-dv ?object-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (isa ?action-dv CausingAnotherObjectsTranslationalMotion))))
+      (localOnly
+        (wmOnly
+          (ist-Information ?drs-case
+            (objectActedOn ?action-dv ?object-dv))))
+     (different ?object-dv ?action-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (doneBy ?action-dv ?who))))
+      (different ?who ?action-dv)
+      (different ?who ?object-dv)
+      ;; Now try to abduce the type to force a choice
+      (unifies (DrsCaseFn ?action-drs-id) ?drs-case)
+      (instGamePiece ?sid ?action-drs-id ?object-dv)
+      (actionDirection ?sid ?action-drs-id ?action-dv))
+
+;(<== (instPlayer ?sid ?action-drs-id ?player)
+;     (numAnswers 1
+;       (isPlayer ?sid ?action-drs-id ?player)))
+
+;;; Express optionality of doneBy
+;(<== (instPlayer ?sid ?action-drs-id :no-actor)
+;     (uninferredSentence
+;       (isPlayer ?sid ?action-drs-id ?player)))
+
+(isa instGamePiece Predicate)
+(arity instGamePiece 3)
+
+(<== (instGamePiece ?sid ?action-drs-id ?object-dv)
+     (numAnswers 1
+       (isGamePiece ?sid ?action-drs-id ?object-dv)))
+
+;;; We can't allow this to fail if we say something like "White moves white pawns."
+;;; since there won't be an isa GamePiece in any sub-drs of that sentence.
+;;; *** This is inefficient and lets ?object-dv bind to turn4321.  Not optimal.
+(<== (instGamePiece ?sid ?action-drs-id ?object-dv)
+     (uninferredSentence
+       (isGamePiece ?sid ?action-drs-id ?object-dv))
+     (uninferredSentence
+       (isAction ?sid ?action-drs-id ?object-dv)))  ; This doesn't help, since the isa isn't reified yet.
+
+(isa isGamePiece Predicate)
+(arity isGamePiece 3)
+
+(<== (isGamePiece ?sid ?action-drs-id ?object-dv)
+     ;; Only consider the sub-drses compatible with the same parse tree:
+     (allCompatibleDrses ?sid ?type-drs-id ?action-drs-id)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?type-drs-id)
+            (isa ?object-dv GamePiece)))))
+
+(isa isAction Predicate)
+(arity isAction 3)
+
+;;; Something that's an action can't be the object of an action in our domain at least.
+(<== (isAction ?sid ?action-drs-id ?object-dv)
+     ;; Only consider the sub-drses compatible with the same parse tree:
+     (allCompatibleDrses ?sid ?type-drs-id ?action-drs-id)
+     (localOnly
+       (lookupOnly
+         (wmOnly
+           (ist-Information (DrsCaseFn ?type-drs-id)
+              (isa ?object-dv ?type)))))
+     (allFactsAllowed
+       (lookupOnly
+         (useTransitiveInference
+           (ist-Information WorldLikeOursCollectorMt
+             (genls ?type Action))))))
+
+(isa actionDirection Predicate)
+(arity actionDirection 3)
+
+;;; Direction is optional.  Abduce if if you can.
+(<== (actionDirection ?sid ?action-drs-id ?action-dv)
+     (uninferredSentence
+       (orientationOfAction ?sid ?action-drs-id ?action-dv ?orientation)))
+
+;;; Case of an adverb
+(<== (actionDirection ?sid ?action-drs-id ?action-dv)
+     (elementOf ?orientation (TheSet UpMovement DownMovement LeftMovement RightMovement DiagonalMovement))
+     (orientationOfAction ?sid ?action-drs-id ?action-dv ?orientation))
+
+(isa orientationOfAction Predicate)
+(arity orientationOfAction 4)
+
+;;; Case of an adjective
+(<== (orientationOfAction ?sid ?action-drs-id ?action-dv ?orientation)
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?action-drs-id)
+           (doneBy ?action-dv ?role))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?action-drs-id)
+           (isa ?board GameBoard))))
+     (elementOf ?wd (TheSet Up-TheWord Down-TheWord Left-TheWord Right-TheWord))
+     ;; in order to abduce this, it must be a ground query.
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?action-drs-id)
+           ((HypothesizedPrepositionSenseFn ?wd Preposition) ?role ?board)))))
+
+;;; Selecting
+(<== (primitiveAction ?sid ?drs-case ?action-dv ?object-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (isa ?action-dv SelectingSomething))))
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (performedBy ?action-dv ?who))))
+     (different ?who ?action-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (objectSelected ?action-dv ?object-dv))))
+     (different ?object-dv ?action-dv)
+     (different ?object-dv ?who))
+
+(isa definedActionType-IP BinaryPredicate)
+
+;;; Compound action reference
+(<== (definesActionType-IP ?sid ?action)
+     (takingTurns ?sid ?alternation-dv ?action-dv)
+     (drsForDiscourse ?ddrs-id)
+     (withBackchainingDepth 4
+       (resolveReference 
+         (ReferenceInSentenceFn ?alternation-dv ?sid)
+         (ReferentInDrsFn ?alternation ?ddrs-id)))
+     (withBackchainingDepth 4   ; note: abductiveQuery resets the depth to 14.  prune here.
+       (resolveReference 
+         (ReferenceInSentenceFn ?action-dv ?sid)
+         (ReferentInDrsFn ?action ?ddrs-id))))
+
+(isa takingTurns Predicate)
+(arity takingTurns 3)
+
+;;; Taking turns
+(<== (takingTurns ?sid ?alternation-dv ?action-dv)
+     (drsEntailedBySentence ?implied-drs-id ?sid)
+     (unifies ?drs-case (DrsCaseFn ?implied-drs-id))
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (isa ?alternation-dv SomeSituationAlternating))))  ; turn taking
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (objectOfStateChange ?alternation-dv ?action-dv))))
+     (different ?action-dv ?alternation-dv)
+     ;; This is responsible for ruling in a particular parse tree:
+     (verbForm ?action-dv prespart Non-Perfect Non-Progressive) ; e.g., marking
+     (primitiveAction ?sid ?drs-case ?action-dv ?object-dv)
+     (different ?object-dv ?alternation-dv))  ; taking turns is not the object of marking
+
+           
+;;; Let's say that selectingSomething, in the context of a sketch, means 
+;;; selecting a glyph, provided that the referent could be an entity
+;;; (as opposed to selecting a course of action)
+     
+;;; If this is a TurnTaking game, look for Turn-GameEvent &
+;;; SomeSituationAlternating.
+;;; If this is a PieceMovingGame, look for MovementEvent
+;;; If this is a MarkingGame, look for a MarkingOnASurface event.
+
+;;; (denotation Alternate-TheWord Verb 1 SomeSituationAlternating)
+
+;;; Spatial and Temporal configurations are intermediate concepts in the 
+;;; definitions of legal conditions, next states, initial conditions, 
+;;; terminal and win conditions.
+
+;;; We want "move the rook." to contain CausingAnotherObjectsTranslationalMotion
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Win Criteria
+
+;;; Look for a relationship between a player and a configuration to indicate winning
+;;; (winner-First ?context ?who)
+;;; The universe in which this occurs defines the win condition.  It will contain
+;;; both spatial and temporal conditions (and possibly quantity conditions, like a 
+;;; score)
+;;; If we have (nthInSeries ?who SERIESXXX 1), that tells us that the state of 
+;;; achieving the condition signifies a win and the end of the game.
+
+;;; On the other hand, there could be an ongoing score and a fixed termination
+;;; turn, in which case, the win condition is an inequality between quantitative
+;;; properties of players.
+
+(isa definesGoal TernaryPredicate)
+(arg1Isa definesGoal IBTGeneration)
+(arg2Isa definesGoal GameRole)
+(arg3Isa definesGoal Goal)
+
+;;; This is different from a simple statement of fact, like "I win."
+(<== (definesGoal (PresentationEventFn ?sid ?narrative-event) ?role ?goal)
+     (groundExpression ?sid)
+     (definesGoal-IP ?sid ?role ?goal)
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (definesGoal-IP ?sid ?role ?goal))))
+
+(isa definesGoal-IP Predicate)
+(arity definesGoal-IP 3)
+
+;;; A goal associates a role with a state.
+;;; The role is usually a variable, not a particular role.
+(<== (definesGoal-IP ?sid ?role ?goal)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (unifies ?drs-case (DrsCaseFn ?sdrs-id))
+     (winning ?drs-case ?win-dv ?role-dv)
+     (winningAction ?drs-case ?win-dv ?role-dv ?action-dv ?action-type)
+     (winningState ?drs-case ?role-dv ?action-dv ?action-type ?goal)
+     ;; Is it necessary to resolve references in order to lift to drs?
+     (withBackchainingDepth 4
+       (resolveReference
+         (ReferenceInSentenceFn ?role-dv ?sid)
+         (ReferentInDrsFn ?role ?ddrs-id))))
+
+(isa winning Predicate)
+(arity winning 3)
+
+(<== (winning ?drs-case ?win-dv ?role-dv)
+      (localOnly
+        (wmOnly
+          (ist-Information ?drs-case
+            (isa ?win-dv Winning))))
+      (localOnly
+        (wmOnly
+          (ist-Information ?drs-case
+            (performedBy ?win-dv ?role-dv))))
+      (groundExpression ?win-dv)
+      (groundExpression ?role-dv)
+      (different ?role-dv ?win-dv)
+      (localOnly
+        (wmOnly
+          (ist-Information ?drs-case
+            (isa ?role-dv GameRole))))
+      (roleSpecifier ?drs-case ?role-dv ?specification))
+
+
+(isa roleSpecifier Predicate)
+(arity roleSpecifier 3)
+
+;;; First to perform some action:
+(<== (roleSpecifier ?drs-case ?role-dv ?specification)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (nthInSeries ?role-dv ?series 1)))) ; the thereExists is in the choice, but not the interpretation.
+     (unifies ?specification
+       (nthInSeries ?role-dv ?series 1)))
+       
+;;; That's a temporal specification.  Might also want last in series,
+;;; or some spatial or other property specification.
+
+;;; Specified by name:
+(<== (roleSpecifier ?drs-case ?role-dv ?specification)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (denotes ?role ?role-dv))))
+     (unifies ?specification
+       (denotes ?role ?role-dv)))
+
+(isa winningAction Predicate)
+(arity winningAction 5)
+
+(<== (winningAction ?drs-case ?win-dv ?role-dv ?action-dv ?action-type)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (doneBy ?action-dv ?role-dv))))
+     (different ?action-dv ?win-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (isa ?action-dv ?action-type))))
+     (allFactsAllowed
+       (useTransitiveInference
+         (ist-Information WorldLikeOursCollectorMt
+           (genls ?action-type Action)))))  ; probably can assume this given doneBy
+
+(isa winningState Predicate)
+(arity winningState 5)
+
+;;; Find the outputs created by action and interpret it as a state to achieve:
+(<== (winningState ?drs-case ?role-dv ?action-dv ?action-type ?goal)
+     (impliesResultingState ?drs-case ?action-dv ?action-type ?output-dv)
+     (goalStateConfiguration ?drs-case ?sid ?output-dv ?config)
+     (unifies ?goal (achieve ?output-dv)))
+
+(isa impliesResultingState Predicate)
+(arity impliesResultingState 4)
+
+(<== (impliesResultingState ?drs-case ?action-dv ?action-type ?output-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (outputsCreated ?action-dv ?output-dv)))))
+
+(<== (impliesResultingState ?drs-case ?action-dv ?action-type ?output-dv)
+     (uninferredSentence
+       (localOnly
+         (wmOnly
+           (ist-Information ?drs-case
+             (outputsCreated ?action-dv ?output-dv)))))
+     (lookupOnly
+       (allFactsAllowed
+         (ist-Information WorldLikeOursCollectorMt
+           (rolesForEventType ?action-type ?role-relation))))
+     (lookupOnly
+       (useTransitiveInference
+         (allFactsAllowed
+           (ist-Information WorldLikeOursCollectorMt
+             (genlPreds ?role-relation objectActedOn)))))  ; eg, objectMarked
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (?role-relation ?action-dv ?output-dv)))))
+
+(<== (winningState ?drs-case ?role-dv ?action-dv ?action-type ?goal)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (objectActedOn ?action-dv ?object-dv))))
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           ((HypothesizedPrepositionSenseFn Across-TheWord Preposition) ?object-dv ?board-dv))))
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (isa ?board-dv GameBoard))))
+     (unifies ?goal (achieve (traverses-Complete ?object-dv ?board-dv)))) ; kinda bogus, but harmless.
+
+(isa goalStateConfiguration Predicate)
+(arity goalStateConfiguration 4)
+
+(<== (goalStateConfiguration ?sdrs-case ?sid ?output-dv ?config)
+     (localOnly
+       (wmOnly
+         (ist-Information ?sdrs-case
+           (isa ?output-dv Set-Mathematical))))
+     (localOnly
+       (wmOnly
+         (ist-Information ?sdrs-case
+           (cardinality ?output-dv ?n))))
+     (numAnswers 1
+       (outputElement ?sid ?output-dv ?element-dv))
+     (outputConfiguration ?sid ?element-dv ?config))
+
+(isa outputElement Predicate)
+(arity outputElement 3)
+
+;;; Membership is in a different sub-drs than description:
+(<== (outputElement ?sid ?output-dv ?element-dv)
+     (drsEntailedBySentence ?sub-drs-id ?sid)   
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sub-drs-id)
+           (member ?element-dv ?output-dv)))))
+
+(isa outputConfiguration Predicate)
+(arity outputConfiguration 3)
+
+(<== (outputConfiguration ?sid ?element-dv ?config-dv)
+     (drsEntailedBySentence ?sub-drs-id ?sid)
+     (localOnly
+        (wmOnly
+         (ist-Information (DrsCaseFn ?sub-drs-id)
+           (isa ?element-dv Square))))     ; Bite it on this one.  For now, we're dealing with a board.
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sub-drs-id)
+           (in-UnderspecifiedContainer ?element-dv ?config-dv))))
+     (localOnly
+       (wmOnly
+         (ist-Information (DrsCaseFn ?sub-drs-id)
+           (isa ?config-dv RowOfObjects)))))   ; Likewise.  We can get fancy and look for other configurations later.
+      
+
+;(isa group-of-square2640 Set-Mathematical)
+;(isa win2763 Winning)
+;(isa mark2607 MarkingOnASurface)
+;(isa player2597 GameRole)
+;(nthInSeries player2597 SERIES2593 1)
+;(doneBy mark2607 player2597)
+;(objectMarked mark2607 group-of-square2640)
+;(cardinality group-of-square2640 3)
+;(performedBy player2597)  ; <== fixme! Unary!
+;   missing 
+; (isa square3000 Square)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Concrete interpretations:
+;;;
+
+;;; When an utterance refes to "I" and "You", rather than game roles, 
+;;; it's probably referring to the current state of an ongoing game,
+;;; rather than defining the rules.  If there's an ongoing game,
+;;; then the rules are probably being defined by indirect speech acts.
+
+;;; When subject of sentence is 1st or 2nd pronoun, and there's a game on,
+;;; extract the game state description.
+
+;;; On the other hand, if we say "This is the initial state." or "Set up the board like this."
+;;; or "The game starts out with all 32 pieces on the board like this." then you're 
+;;; defining the initial state (rather than a final state)
+
+;;; We need a multiWordString for "initial state"
+
+(isa gameStateDescription Predicate)
+(arity gameStateDescription 4)
+
+(<== (gameStateDescription (PresentationEventFn ?sid ?narrative-event) ?current-game ?actor ?state)
+     (groundExpression ?sid)
+     ;; First check with session reasoner for an ongoing game:
+     (numAnswers 1 (currentGameInstance ?current-game))
+     (definesGameState-IP ?sid ?current-game ?actor ?state)
+     (individualSatisfyingConditions ?narrative-event IBTGeneration 
+       (TheSet (definesGameState-IP ?sid ?current-game ?actor ?state))))
+
+(isa definesGameState-IP Predicate)
+(arity definesGameState-IP 4)
+
+(<== (definesGameState-IP ?sid ?current-game ?actor ?state-dv)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (unifies ?drs-case (DrsCaseFn ?sdrs-id))
+     (numAnswers 1 (winning-DiecticReference ?sid ?drs-case ?current-game ?actor-dv ?state-dv))
+     ;; All references to "I" or "you" should be the same in the discourse drs:
+     (withBackchainingDepth 4
+       (resolveReference
+         (ReferenceInSentenceFn ?actor-dv ?sid)
+         (ReferentInDrsFn ?actor ?ddrs-id)))
+     )
+
+(isa winning-DiecticReference Predicate)
+(arity winning-DiecticReference 5)
+
+(<== (winning-DiecticReference ?sid ?drs-case ?current-game ?who-dv ?win-dv)
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (isa ?win-dv Winning))))
+     (localOnly
+       (wmOnly
+         (ist-Information ?drs-case
+           (performedBy ?win-dv ?who-dv))))
+     (groundExpression ?win-dv)
+     (groundExpression ?who-dv)
+     (different ?who-dv ?win-dv)
+     (pronounReference ?sid ?who-dv)
+     (justify
+       (ist-Information ?drs-case
+         (winner-First ?current-game ?who-dv))
+       (TheList (winning-DiecticReference ?sid ?drs-case ?current-game ?who-dv ?win-dv))))
+
+(isa pronounReference Predicate)
+(arity pronounReference 2)
+
+(<== (pronounReference ?sid ?who-dv)
+     (firstPerson ?sid ?who-dv))
+
+(<== (pronounReference ?sid ?who-dv)
+     (secondPerson ?sid ?who-dv))
+
+(isa firstPerson Predicate)
+(arity firstPerson 2)
+
+;;; Note that this abduces a parse tree choice:
+;;; *** Do this easier with (validParseTree ?ptid)
+(<== (firstPerson ?sid ?var)
+     (ptConstitFeat 
+      ?entry pro 
+      (PronounMappingFn ?var (PronounFn FirstPerson-NLAttr ?number ?gender ?type)))
+     (ptEntry ?entry (ParseTreeFn ?sid ?ptid))
+     (choice ?pt-csid ?pt-cid ?ptid)
+     (selectedChoice ?pt-csid ?pt-cid ?ptid))
+
+(isa secondPerson Predicate)
+(arity secondPerson 2)
+
+;;; This is basically listenerReference in reference-rules.meld, but I don't 
+;;; trust it not to change.
+(<== (secondPerson ?sid ?var)
+     (ptConstitFeat 
+      ?entry pro 
+      (PronounMappingFn ?var (PronounFn SecondPerson-NLAttr ?number ?gender ?type)))
+     (ptEntry ?entry (ParseTreeFn ?sid ?ptid))
+     (choice ?pt-csid ?pt-cid ?ptid)
+     (selectedChoice ?pt-csid ?pt-cid ?ptid))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

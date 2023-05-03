@@ -1,0 +1,55 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: gen-formats
+;;;;    System: FIRE
+;;;;    Author: Unknown
+;;;;   Created: June 30, 2004 21:58:02
+;;;;   Purpose: QRG genFormat statements for various relations
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-12 10:54:08 -0600 (Wed, 12 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+
+
+(in-microtheory UniversalVocabularyMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(genFormat eatsWillingly "~a willingly eats ~a" (1 2))
+(genFormat researches "~a researches ~a" (1 2))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Misc
+
+(genFormat :skolem "(something like ~A)" (1))
+(genFormat exteriorTo "The region ~A is exterior to the region ~A"
+	   (1 2))
+(genFormat holdsBefore 
+	   "Before ~A occurs, the following holds: ~A ~A ~A"
+	   (1 2 3 4))
+(genFormat holdsAfter
+	   "After ~A occurs, the following holds: ~A ~A ~A"
+	   (1 2 3 4))
+(genFormat alignedCylinderWithin "~a is inside and aligned along the axis of ~a" (1 2))
+(genFormat sticksInto "~a sticks into ~a" (1 2))
+(genFormat connected-AbutsSurface "an end of ~a connects it to ~a by abutting its surface" (1 2))
+(genFormat connectedAlongSurface "the surface of ~a is connected over a significant extent of ~a" (1 2))
+(genFormat holderFor "~a serves as a holder for ~a" (1 2))
+(genFormat connectedAtContact "~a and ~a are connected at a point of contact" (1 2))
+(genFormat connectedAtSpot "~a and ~a are connected by a fastener of some kind" (1 2))
+(genFormat touchesAtEnd "an end of ~a touches ~a" (1 2))
+(genFormat alignedAlongSurface "~a touches ~a over a significant extent of its surface" (1 2))
+;;(genFormat connectedTo-Directly
+;;	 "~a and ~a are directly connected, allowing constrained relative motion" (1 2))
+(genFormat connectedViaConnector "~a is connected to ~a via a connector" (1 2))
+(genFormat connectedPerpendicularlyTo 
+	"~a is connected to ~a perpendicularly" (1 2))
+(genFormat connectedToInside "~a is connected to the inside of ~a" (1 2))
+(genFormat hangsAttached "~a is attached to, and hanging from, ~a" (1 2))
+(genFormat connectedAround "~a is connected in a circle around ~a"  (1 2))
+(genFormat bondedTo "~a is bonded to ~a via some bonding substance" (1 2))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of File

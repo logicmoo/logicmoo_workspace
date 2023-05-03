@@ -1,0 +1,144 @@
+
+(in-microtheory MetaengineeringStrategyTypesMt)
+
+(isa ActiveProcess DesignStrategy)
+(comment ActiveProcess "Achieve a state through actively countering all disturbances")
+
+(isa Amortization DesignStrategy)
+(comment Amortization "Offset fixed costs through scaling up")
+
+(isa AnalogRepresentation DesignStrategy)
+(comment AnalogRepresentation "Represent continuous phenomena in continuous form")
+
+(isa AsymmetricDesign DesignStrategy)
+(comment AsymmetricDesign "Use an anti-symmetric design to increase order")
+
+(isa Bootstrap DesignStrategy)
+(comment Bootstrap "Start a process with a smaller process that is simpler to initiate")
+
+(isa Buffering DesignStrategy)
+(comment Buffering "Decouple interdependent systems via an intermediate temporary storage buffer")
+
+(isa Cancellation DesignStrategy)
+(comment Cancellation "Eliminate sources of error by systematically subtracting them (see feedback)")
+
+(isa Cascade DesignStrategy)
+(comment Cascade "Like staging, except it exploits an automatic branching effect, like dominoes or chain reaction.")
+
+(isa ChangeConfiguration DesignStrategy)
+(comment ChangeConfiguration "Employ a new or different topology")
+
+(isa ChangeUnitOfReplacement DesignStrategy)
+(comment ChangeUnitOfReplacement "Eliminate a durability requirement by making something disposable")
+
+(isa ConstrainCreationProcess DesignStrategy)
+(comment ConstrainCreationProcess "Constrain an end-result by constraining the process by which it is derived")
+
+(isa DiscreteRepresentation DesignStrategy)
+(comment DiscreteRepresentation "Represent continuous system in discrete form")
+
+(isa Equilibrium DesignStrategy)
+(comment Equilibrium "Maintain a state through balancing processes in equilibrium")
+
+(isa ExploitDifferentNewMaterial DesignStrategy)
+(comment ExploitDifferentNewMaterial "Exploit a previously unknown substance")
+
+(isa ExploitDifferentNewPrinciple DesignStrategy)
+(comment ExploitDifferentNewPrinciple "Exploit a previously unknown scientific principle or effect")
+
+(isa ExploitGeometry DesignStrategy)
+(comment ExploitGeometry "Employ geometry to achieve advantageous force or precision ratios")
+
+(isa ExploitPhaseDifference DesignStrategy)
+(comment ExploitPhaseDifference "Distinguish materials on the basis of their phase (solid, liquid, or gas)")
+
+(isa ExploitStructuralSymmetry DesignStrategy)
+(comment ExploitStructuralSymmetry "Allow rotational (or other) symmetry to substitute for replicated (or infinite) states")
+
+(isa FailSafe DesignStrategy)
+(comment FailSafe "Anticipate and mitigate error mode")
+
+(isa Feedback DesignStrategy)
+(comment Feedback "Employ positive or negative feedback to control a process or create oscillation")
+
+(isa Figure-groundReversal DesignStrategy)
+(comment Figure-groundReversal "Manipulate the environment of a process, not immediate location")
+
+(isa FunctionSharing DesignStrategy)
+(comment FunctionSharing "Achieve efficient use of structure by sharing structures across different functions")
+
+(isa GenerateAndTest DesignStrategy)
+(comment GenerateAndTest "A blind search process")
+
+(isa Idealizations DesignStrategy)
+(comment Idealizations "Make problems tractable by idealizing the situation")
+
+(isa ImpedanceMatching DesignStrategy)
+(comment ImpedanceMatching "Reduce losses due to mismatched flow capacities")
+
+(isa Indirection DesignStrategy)
+(comment Indirection "Increase degrees of freedom to achieve flexibility")
+
+(isa Interlock DesignStrategy)
+(comment Interlock "Use structures that mutually constrain themselves")
+
+(isa LandmarkCalibration DesignStrategy)
+(comment LandmarkCalibration "Measure indirectly by comparison to known standard")
+
+(isa LimitingElement DesignStrategy)
+(comment LimitingElement "A device for preventing a quantity from exceeding a limiting threshold.  Eg, shunt, fuse, limit-stop")
+
+(isa ManipulateIntegralOfQuantity DesignStrategy)
+(comment ManipulateIntegralOfQuantity "Manipulating or measuring the derivative of a quantity magnifies error")
+
+(isa Miniaturization DesignStrategy)
+(comment Miniaturization "Reduce resource consumption through scaling down")
+
+(isa Modularity DesignStrategy)
+(comment Modularity "Make functions independent of each other (see function sharing)")
+
+(isa Modulation DesignStrategy)
+(comment Modulation "Encode a signal in another signal")
+
+(isa Multiplexing DesignStrategy)
+(comment Multiplexing "Share a channel across multiple signals at different times")
+
+(isa OperatingConditions DesignStrategy)
+(comment OperatingConditions "Design only for intended operating conditions, not all conditions")
+
+(isa Parallelism DesignStrategy)
+(comment Parallelism "Achieve economies of scale through replication")
+
+(isa PreAndOrPost-processor DesignStrategy)
+(comment PreAndOrPost-processor "Compose designs in series")
+
+(isa ProgressiveDilution DesignStrategy)
+(comment ProgressiveDilution "Dilute or concentrate a substance through repeated application of an imperfect process")
+
+(isa Race DesignStrategy)
+(comment Race "Exploit a temporal threshold + winner-take-all outcome strategy")
+
+(isa TradeOffMobilityForEfficiency DesignStrategy)
+(comment TradeOffMobilityForEfficiency "eg, ferrites to reduce domain movement/eddy currents")
+
+(isa Redundancy DesignStrategy)
+(comment Redundancy "Replicate for reliability or power")
+
+(isa SacrificialElement DesignStrategy)
+(comment SacrificialElement "Treat part of a device as a consumable resource")
+
+(isa Staging DesignStrategy)
+(comment Staging "Compose multiple designs in series")
+
+(isa Surrogacy DesignStrategy)
+(comment Surrogacy "Employ indirect action at a distance as a surrogate for direct manipulation")
+
+(isa TimeAveraging DesignStrategy)
+(comment TimeAveraging "Achieve process uniformity by averaging over time")
+
+(isa TradeoffCriteria DesignStrategy)
+(comment TradeoffCriteria "Improve one design dimension at the expense of another")
+
+(isa TradOffSpaceForTime DesignStrategy)
+(comment TradOffSpaceForTime "Any delaying tactic that uses a spatial buffer to gain time.")
+

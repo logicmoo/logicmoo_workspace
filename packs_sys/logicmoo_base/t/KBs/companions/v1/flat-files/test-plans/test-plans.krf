@@ -1,0 +1,100 @@
+;;;
+;; Test plans
+;;;
+;;; This is a unit test for the plan generation facility.
+;;; A bogus subtask generates plans that announce pairs of 
+;;; numbers that sum to 10 and testPlanGenerator stores them.
+;;; A later task criticizes these plans and selects the one
+;;; that best balances the two numbers.  It should announce the
+;;; numbers 4 and 6.
+;;;
+;;; This has to run in the context of a companion, because the
+;;; primitives and execution system are specific to companions.
+
+(in-microtheory TestPlanMt)        ; make it easy to blow away the  contents
+(genlMt TestPlanMt CompanionsMt)   ; inherit the primitives
+(genlMt CompanionsMt TestPlanMt)
+
+;;; Does doRecordPlans require the actionSequence wrapper?  It shouldn't.
+
+(isa testPlanGenerator ComplexActionPredicate)
+(arity testPlanGenerator 0)
+
+;;; This is the harness that generates and stores (up to) 5 plans.
+;;; The chooseBestTradeoff plan critic selects the "best" one
+;;; and executes it.
+(preconditionForMethod
+  (sessionContext ?ctxt)
+  (methodForAction
+    (testPlanGenerator)
+    (actionSequence
+      (TheList
+      ;; Do *not* try to record plan in planning context, since that gets wiped on each call to plan.
+        (doRecordPlans ?ctxt (false) (numbersThatSumTo10) 5)  ;; if this is wrapped in actionSequence (TheList ), then 
+        (doAgentPlan                                  ;; so must the argument to chooseBestTradeoff.
+          (chooseBestTradeoff ?ctxt (numbersThatSumTo10)))))))
+
+(isa numbersThatSumTo10 ComplexActionPredicate)
+(arity numbersThatSumTo10 0)
+
+;;; This is the subtask:
+(preconditionForMethod
+  (and (integerBetween 1 ?c1 5)
+       (integerBetween 6 ?c2 9)
+       (evaluate 10 (PlusFn ?c1 ?c2)))
+  (methodForAction
+    (numbersThatSumTo10)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%The numbers are: ~s and ~s" (?c1 ?c2))))))
+
+(isa chooseBestTradeoff ComplexActionPredicate)
+(arity chooseBestTradeoff 2)
+
+;;; This is the plan critic:
+(preconditionForMethod
+  (closestArguments ?mt ?task ?best-plan) ;;  Need to say how - wrt slot
+  (methodForAction
+    (chooseBestTradeoff ?mt ?task)
+    (actionSequence
+      (TheList
+        (doAgentPlan ?best-plan)))))
+
+(isa closestArguments TernaryPredicate)
+(arity closestArguments 3)
+
+(<== (closestArguments ?mt ?task ?best-plan)
+     (evaluate ?plans
+       (TheClosedRetrievalSetOf ?plan
+         (and
+           (wmOnly
+             (lookupOnly
+               (ist-Information ?mt
+                 (planForTask ?task ?plan)))))))
+     (evaluate ?best-plan
+       (FirstInListFn
+         (SortFn ?plans lessThan
+	   (FunctionToArg 2 resourceImbalance)))))
+               
+(isa resourceImbalance BinaryPredicate)
+(arity resourceImbalance 2)
+
+(<== (resourceImbalance ?plan ?val)
+     (unifies (actionSequence (TheList (doAnnounce ?msg (?arg1 ?arg2)))) ?plan)
+     (groundExpression ?arg1)
+     (groundExpression ?arg2)
+     (evaluate ?val (AbsoluteValueFn (DifferenceFn ?arg2 ?arg1))))
+
+(isa generateNSamples QuaternaryPredicate)
+(arity generateNSamples 4)
+
+;;; like integerBetween but subdivides evenly.
+;;; e.g., (generateNSamples 5 20 30 ?val) -> 22, 24, 26, 28, 30.
+(<== (generateNSamples ?n ?from ?to ?val)
+     (evaluate ?factor (QuotientFn (DifferenceFn ?to ?from) ?n))
+     (integerBetween 1 ?c ?n)
+     (evaluate ?val (PlusFn ?from (TimesFn ?c ?factor))))
+
+
+
+;; End of Code

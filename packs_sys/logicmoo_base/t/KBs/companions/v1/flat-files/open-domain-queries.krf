@@ -1,0 +1,270 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: open-domain-queries.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 22, 2010 10:30:03
+;;;;   Purpose: Queries for factual content with under-specified microtheories.
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+;;;
+;;; These predicates and rules have been moved from the interaction manager
+;;; microtheory because they need to be accessible from the session reasoner
+;;; as well.  They're not especially tied to language, except that the queries
+;;; are typically constructed from EA input.
+
+;;; The idea behind querying for an answer in a "descriptive" context is to 
+;;; query with a variablized context and then filter answers based on the 
+;;; microtheory in which they're found.  Of course, most such queries are
+;;; conjunctions that contain, among other things, type constraints on bindings.
+;;; These type constraints are structural sub-queries (ie, isa or genls stmts).
+;;; Structural information is *almost*, but not quite, global.
+;;; Contextual type information is a problem, though, because it's usually not
+;;; in the same microtheory as the other conjunts, and sometimes (often) it's 
+;;; in BaseKB, so we won't get anything to unify.
+
+;;; So we make the heuristic approximation: preprocess structural conjuncts
+;;; and wrap them in (ist-Information EverythingPSC <clause>).  For the kinds
+;;; of factual queries we're trying to support, this works well.
+
+;;; If we actually had a spindle for descriptive, factual microtheories, 
+;;; none of this would be necessary.  For now, though, the ability to bind the
+;;; microtheory is useful both for filtering and for the possibility of 
+;;; discovering relevant topic microtheories.  You have to bootstrap somehow.
+
+;;; Consider using CurrentWorldDataCollectorMt-NonHomocentric for the query context.
+;;; *** Yes.  This should all go away. ***
+
+
+(in-microtheory CompanionsMt)
+
+(isa trueInSomeDescriptiveContext BinaryPredicate)
+(arity trueInSomeDescriptiveContext 2)
+(arg1Isa trueInSomeDescriptiveContext CycLTerm)
+(arg2Isa trueInSomeDescriptiveContext ELSentence-Assertible)
+(comment trueInSomeDescriptiveContext "(trueInSomeDescriptiveContext ?sentence-id ?query) means ?query can be satisfied in some non-hypothetical microtheory.")
+
+(isa trueInDescriptiveContext TernaryPredicate)
+(arity trueInDescriptiveContext 3)
+(arg1Isa trueInDescriptiveContext CycLTerm)
+(arg2Isa trueInDescriptiveContext Microtheory)
+(arg3Isa trueInDescriptiveContext ELSentence-Assertible)
+(comment trueInDescriptiveContext "(trueInDescriptiveContext ?sentence-id ?some-context ?query) succeeds iff ?query holds in some context describing a state of the world.")
+
+(isa possibleTopicMicrotheory UnaryPredicate)
+(arity possibleTopicMicrotheory 1)
+(arg1Isa possibleTopicMicrotheory Microtheory)
+(comment possibleTopicMicrotheory "(possibleTopicMicrotheory ?ctxt) succeeds just in case ?ctxt is a microtheory describing the world as we know it (as opposed to mythological or hypothetical scenarios).")
+
+(isa specializedMicrotheoryType UnaryPredicate)
+(arity specializedMicrotheoryType 1)
+(arg1Isa specializedMicrotheoryType Microtheory)
+(comment specializedMicrotheoryType "(specializedMicrotheoryType ?ctxt) succeeds if ?ctxt is an instance of a proper specialization of Microtheory.")
+
+(isa contingentMicrotheoryType UnaryPredicate)
+(arity contingentMicrotheoryType 1)
+(arg1Isa contingentMicrotheoryType Microtheory)
+(comment contingentMicrotheoryType "(contingentMicrotheoryType ?ctxt) succeeds if ?ctxt describes a hypothetical or otherwise contingent scenario.")
+
+(isa microtheoryContainingStmt BinaryPredicatate)
+(arity microtheoryContainingStmt 2)
+(arg1Isa microtheoryContainingStmt ELSentence-Assertible)
+(arg2Isa microtheoryContainingStmt Microtheory)
+(comment microtheoryContainingStmt "(microtheoryContainingStmt ?stmt ?mt) binds ?mt to the microtheory(ies) in which ?mt is explicitly recorded.")
+
+(isa decontextualizeGroundStructuralQueries BinaryPredicate)
+(arity decontextualizeGroundStructuralQueries 2)
+(arg1Isa decontextualizeGroundStructuralQueries CycLFormula)
+(arg2Isa decontextualizeGroundStructuralQueries CycLFormula)
+(comment decontextualizeGroundStructuralQueries "(decontextualizeGroundStructuralQueries ?query ?rewritten-query) rewrites all internal isa and genls clauses to be wrapped in (ist-Information EverythingPSC <clause>).")
+
+(isa decontextualizeStructuralQueries BinaryPredicate)
+(arity decontextualizeStructuralQueries 2)
+(arg1Isa decontextualizeStructuralQueries CycLFormula)
+(arg2Isa decontextualizeStructuralQueries CycLFormula)
+(comment decontextualizeStructuralQueries "(decontextualizeStructuralQueries ?query ?rewritten-query) rewrites all internal isa and genls clauses to be wrapped in (ist-Information EverythingPSC <clause>).")
+
+
+
+;;; We want the sentence-id so that we can retrieve the fully-instantiated answer from
+;;; working memory later in order to explain the belief.  If we're not running on the
+;;; interaction-manager, it doesn't matter.
+(<== (trueInSomeDescriptiveContext ?sentence-id ?query)
+     (decontextualizeGroundStructuralQueries ?query ?rewritten-query)
+     (trueInDescriptiveContext ?sentence-id ?some-context ?rewritten-query))
+
+;;; **** Assume queries are rewritten such that isa and genls subclauses are wrapped in 
+;;; **** ist-Information EverythingPSC.  That way, type-checking is not contextualized.
+;;; **** The way around this is to do some PlanB diving and find the contexts that
+;;; **** reference a concept.
+(<== (trueInDescriptiveContext ?sentence-id ?some-context ?query)
+     (ist-Information ?some-context (lookupOnly ?query))  ;; There's no way we can perform backchaining inference with a variablized context.
+     (groundExpression ?some-context) ; it better be bound by now
+     (possibleTopicMicrotheory ?some-context))
+     
+(<== (trueInDescriptiveContext ?sentence-id ?some-context ?query)
+     (ist-Information ?some-context
+       (holdsIn (TimeIntervalInclusiveFn ?start Now) ?query))
+     (groundExpression ?some-context)
+     (possibleTopicMicrotheory ?some-context))
+
+;;; They encoded Bill Gates being rich using TimeIntervalBetweenFn, rather than TimeIntervalInclusiveFn.
+;;; Unfortunate.
+(<== (trueInDescriptiveContext ?sentence-id ?some-context ?query)
+     (ist-Information ?some-context
+       (holdsIn (TimeIntervalBetweenFn ?start Now) ?query))
+     (groundExpression ?some-context)
+     (possibleTopicMicrotheory ?some-context))
+     
+(<== (trueInDescriptiveContext ?sentence-id ?some-context (isa ?indiv ?coll))
+     (groundExpression ?coll)
+     (numAnswers 1 
+       (ist-Information EverythingPSC
+         (relationInstanceAll ?pred ?indiv1 ?coll)))
+     (unifies ?subquery (?pred ?indiv1 ?indiv))
+     (trueInDescriptiveContext ?sentence-id ?some-context ?subquery))
+     
+     
+(<== (trueInDescriptiveContext ?sentence-id ?ctxt ?query)
+     (outsourcedOnly (sessionContext ?ctxt))
+     (ist-Information ?ctxt ?query))             ; If user just said it, believe it.
+
+;;; Descend the genlPreds hierarchy to look for special cases
+(<== (trueInDescriptiveContext ?sentence-id ?some-context ?query)
+     (operatorFormulas ?pred ?query)
+     (different ?pred and)
+     (different ?pred isa)
+     (different ?pred genls)
+     (genlPreds ?specpred ?pred)
+     (different ?specpred ?pred)
+     (evaluate ?new-query (MakeFormulaFn ?specpred (FormulaArgListFn ?query)))
+     (trueInDescriptiveContext ?sentence-id ?some-context ?new-query))
+     
+;;; This really doesn't handle conjunctions well.  Probably want to call Solve on 
+;;; the session reasoner to handle this.
+
+;;; ToDo: include all previous sessionContexts with the same user.
+(<== (possibleTopicMicrotheory ?ctxt)
+     (outsourcedOnly (sessionContext ?ctxt)))
+
+(<== (possibleTopicMicrotheory ?ctxt)
+     (different ?ctxt EverythingPSC)
+     (not (matches (DrsCaseFn ?id) ?ctxt))
+     (not (matches (DiscourseCaseFn ?id) ?ctxt))
+     (isa ?ctxt Microtheory)  ; make sure it's an actual microtheory
+     (uninferredSentence
+      (specializedMicrotheoryType ?ctxt)))
+
+(<== (possibleTopicMicrotheory ?ctxt)
+     (different ?ctxt EverythingPSC)
+     (not (matches (DrsCaseFn ?id) ?ctxt))
+     (not (matches (DiscourseCaseFn ?id) ?ctxt))
+     (isa ?ctxt Microtheory)  ; make sure it's an actual microtheory
+     (specializedMicrotheoryType ?ctxt)
+     (uninferredSentence 
+      (contingentMicrotheoryType ?ctxt)))
+
+(<== (specializedMicrotheoryType ?ctxt)         ; some proper spec of Microtheory
+     (isa ?ctxt ?microtheory-type)
+     (different ?microtheory-type Microtheory)
+     (genls ?microtheory-type Microtheory))
+
+;;; The unfiltered dialog DrsCase is never a place to look for answers
+;;; (Because the query itself may look like a statement)
+(<== (specializedMicrotheoryType ?ctxt)
+     (operatorFormulas DrsCaseFn ?ctxt))
+
+(<== (contingentMicrotheoryType (DrsCaseFn ?id))
+     (true))
+
+(<== (contingentMicrotheoryType (DiscourseCaseFn ?id))
+     (true))
+     
+(<== (contingentMicrotheoryType ?ctxt)
+     (genlMt ?ctxt EAStructuralRulesMt))
+
+;;; No wishful thinking
+(<== (contingentMicrotheoryType ?ctxt)
+     (isa ?ctxt SupposedToBeMicrotheory))
+
+;;; No strawmen:
+(<== (contingentMicrotheoryType ?ctxt)
+     (isa ?ctxt HypotheticalContext))
+
+;;; No Hobbits or superheroes:
+(<== (contingentMicrotheoryType ?ctxt)
+     (isa ?ctxt FictionalOrMythologicalContext))
+
+(<== (contingentMicrotheoryType ?ctxt)
+     (isa ?ctxt SpindleMicrotheory))
+
+(<== (contingentMicrotheoryType ?ctxt)
+     (isa ?ctxt BIOS-Microtheory))
+
+(<== (contingentMicrotheoryType ?ctxt)
+     (isa ?ctxt TestQuestionOrTemplateMicrotheory))
+     
+
+;;; Bind ?mt to the microtheory(ies) in which ?stmt is explicitly recorded.
+(<== (microtheoryContainingStmt ?stmt ?mt)
+     (lookupOnly
+       (kbOnly
+         (ist-Information ?mt ?stmt))))
+
+
+;;;
+;;; Decontextualizing structual subqueries
+;;;
+
+;;; Only decontextualize structural queries if they're ground:
+(<== (decontextualizeGroundStructuralQueries ?query ?rewritten-query)
+     (not (groundExpression ?query))
+     (unifies ?rewritten-query ?query))
+     
+(<== (decontextualizeGroundStructuralQueries ?query ?rewritten-query)
+     (groundExpression ?query)
+     (decontextualizeStructuralQueries ?query ?rewritten-query))
+
+
+;;; Contextualize isa and genls statements to EverythingPSC, rather than querying them with
+;;; a variablized context.  Not ideal, obviously, but type statements are seldom in the
+;;; same context as propositions, and we want to bind the context of the proposition, not
+;;; all the referenced contexts.
+(<== (decontextualizeStructuralQueries ?query ?rewritten-query)
+     (operatorFormulas isa ?query)
+     (unifies ?rewritten-query (allFactsAllowed (lookupOnly (ist-Information EverythingPSC ?query)))))
+
+(<== (decontextualizeStructuralQueries ?query ?rewritten-query)
+     (operatorFormulas genls ?query)
+     (unifies ?rewritten-query (allFactsAllowed (lookupOnly (ist-Information EverythingPSC ?query)))))
+
+(<== (decontextualizeStructuralQueries ?query ?rewritten-query)
+     (operatorFormulas and ?query)
+     (evaluate ?rewritten-query
+       (MakeFormulaFn and
+         (MapFunctionOverList 
+           (FunctionToArg 2 decontextualizeStructuralQueries)
+           (FormulaArgListFn ?query)))))
+     
+(<== (decontextualizeStructuralQueries ?query ?query)
+     (operatorFormulas ?pred ?query)
+     (different ?pred and)
+     (different ?pred isa)
+     (different ?pred genls)
+     (different ?pred ist-Information))
+
+(<== (decontextualizeStructuralQueries ?query ?query)
+     (operatorFormulas ist-Information ?query)
+     (formulaArgument ?query 2 ?prop)
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and)
+     (different ?pred isa)
+     (different ?pred genls))
+
+(<== (decontextualizeStructuralQueries ?query ?rewritten-query)
+     (unifies (ist-Information ?ctxt ?prop) ?query)
+     (operatorFormulas and ?prop)
+     (decontextualizeStructuralQueries ?prop ?rewritten-conjunction)
+     (unifies ?rewritten-query (ist-Information ?ctxt ?rewritten-conjunction)))

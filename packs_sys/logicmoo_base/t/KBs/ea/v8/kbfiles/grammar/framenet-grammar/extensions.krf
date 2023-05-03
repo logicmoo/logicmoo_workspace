@@ -1,0 +1,664 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: extensions.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 10, 2017 14:51:04
+;;;;   Purpose: Grammar extension for FrameNet/NuLex
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+;;; FrameNet phrase types:
+;;;  VPfin      ; finite verb phrase
+;;;             ; "Who did she believe [had left]?"
+;;;             ; "Who do you think [ate the sandwich]" N.B. These differ from VPbrst because they
+;;;             ; are tensed. Though we currently just use the non-3s pres tense of a verb as the base to 
+;;;             ; save writing more rules (see VPbrst). This does NOT include sub-clauses.
+;;;
+;;;  VPbrst     ; bare stem infinitives
+;;;             ; "We made him [go to the store again]."
+;;;             ; "We let the employees [take naps every hour]"
+;;;             ; Not marked with to. Diff from VPfin though similar in apperance. They combine with an NP
+;;;             ; To form an Sbrst. Isolated VPbrsts really only occur following modals. Unfortunately modals are
+;;;             ; analyzed as verbs in FN. The alternative is when the subject NP and VPbrst are attributed as arguments to a verb?
+;;;             ; e,g, "render the information subject to fabrication.."
+;;;             ; 
+;;;             ;
+;;;  VPto       ; to marked infinitives (e.g., 'seem to')
+;;;             ; "What should she do [to test her hypothesis]?"
+;;;             ;
+;;;  VPtorel    ; verb phrase relatives
+;;;  VPed       ; past participial phrases
+;;;             ; "The twist it included in the storyline had me [tickled]."
+;;;  VPing      ; gerunds     
+;;;             ; "Visitors don’t enjoy [filling out HTML forms]."
+;;;  Sfin       ; declarative finite complement clauses
+;;;             ; "Last night I learned [that surrealism isn't just a Salvador Dali thing]."
+;;;             ; Doesn't actually need 'that'. Essentially replaces basic slps
+;;;  Sinterrog  ; Wh-interrogative clauses
+;;;             ; "Could you tell me [how the Hawaiian Islands formed]?"
+;;;  SWhether   ; Whether-if interrogative clauses
+;;;             ; "She told the BBC she did not know [whether the man who survived 7.2 parts per thousand had set a world record]."
+;;;  Sing       ; Gerundive clauses
+;;;             ; "My mom doesn’t like [me being a vegetarian]!"
+;;;  Srel       ; finite relative clauses
+;;;
+;;;  Sto        ; to marked clauses
+;;;             ; "I’d like [you to say hi to my sister]."  NP + VPto
+;;;  Sforto     ;  (e.g., 'for you to meet my mother')
+;;;             ; "In 1937, a friend arranged [for Reagan to take a screen test]."
+;;;  Sbrst      ; bare stem clauses
+;;;             ; "Deborah requests [that she be allowed to live in a town nearby]."
+;;;             ; "Deborah requests [that she drive the blue car].
+;;;             ; "Deborah made [employees take naps every hour]."
+;;;             ; Complete clauses as arguments to the verb with or without that. Note the contained
+;;;             ; VP has to be a vpbrst. So we want this to triger for a full clause. From what I can tell, the classic VPBrst
+;;;             ; 
+;;;  Sub        ; subordinate clauses
+;;;  Sabs       ; small clauses that modify NPs 
+;;;  PPing      ; prepositional phrases with gerundial objects, rather than nominal ones
+;;;             ; "Peter thought [about going home]."
+;;;  PPinterrog ; prepositions that govern finite or non-finite wh-clauses and verb phrases
+;;;             ; "He taught me not to think [about where I had been and what I had done]."
+;;;  QUO        ; quotes
+;;;  DNI        ; Definite Null Instantiation
+;;;  INI        ; Indefinite Null Instantiation
+;;;  CNI        ; Constructional Null Instantiation
+
+
+(EAHeadFeaturesForNodeType VPfin (TheList subcat inf lex))
+(EAHeadFeaturesForNodeType VPbrst (TheList subcat inf lex))
+(EAHeadFeaturesForNodeType VPto (TheList subcat inf lex))
+(EAHeadFeaturesForNodeType VPtorel (TheList subcat inf lex))
+(EAHeadFeaturesForNodeType VPed (TheList subcat inf lex))
+(EAHeadFeaturesForNodeType VPing (TheList subcat inf lex))
+
+(EAHeadFeaturesForNodeType Sfin (TheList vform perfect progressive agr))
+(EAHeadFeaturesForNodeType Sbrst (TheList vform perfect progressive agr))
+(EAHeadFeaturesForNodeType Sinterrog (TheList vform perfect progressive agr))
+(EAHeadFeaturesForNodeType SWhether (TheList vform perfect progressive agr))
+(EAHeadFeaturesForNodeType Sing (TheList vform perfect progressive agr))
+
+
+
+;;; Finite Verb Phrases: VPfin
+;;; Any VP containing a verb (including auxiliaries) which 
+;;; (1) expresses information about tense and 
+;;; (2) is not in a separate embedded clause is tagged as a finite VP.
+;;; Who do you think [ate the sandwich]?
+;;; What did you say [fell on your hat]?
+;;; This is not an infinitive, gerund, past or present participle
+
+(isa -VPfin->vp- EAGrammarRule)
+(comment -VPfin->vp- "finite verb phrase, e.g., 'fell on your hat', ie, not an infinitive or participle.")
+(probabilityEAGrammarRule -VPfin->vp- 1.0)
+(grammarRule -VPfin->vp-
+ (EATermFn VPfin
+  (TheList 
+   (var ?varv)
+   (vform ?!vform) 
+   (agr ?a) 
+   (dir-obj ?dir-obj)
+   (:ACTION ?varv)
+   (vptype VPfin)
+   (sem ?semv)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList
+     ;(subcat (? s pp np np-pp part-pp pp-pp it-pp)) ; what should the subcat be?
+     (vform (? !vform base pastpart prespart))
+     (var ?varv) (agr ?a) 
+     (dir-obj ?dir-obj)
+     (sem ?semv)
+     ;(aux -)    ; VPfin should *not* rule out auxiliaries, per FrameNet book p61.
+     ;(modal -)   ; if we forbid modal, what verb phrase will catch them?
+     ;(negated -)
+     (inv -) (vpinf -))))))
+
+(isa -VPfin->VPfin-Sinterrog- EAGrammarRule)
+(comment -VPfin->VPfin-Sinterrog- "finite verb phrase, with Sinterrog object: e.g., 'asked who she was', 'knows why you quit'")
+(probabilityEAGrammarRule -VPfin->VPfin-Sinterrog- 1.0)
+(grammarRule -VPfin->VPfin-Sinterrog-
+ (EATermFn VPfin
+  (TheList 
+   (var ?varv)
+   (vform ?vform) 
+   (agr ?a) 
+   (dir-obj ?dir-obj)
+   (:ACTION ?varv)
+   (vptype VPfin)
+   (sem (and ?semv ?semint)))
+ (TheList
+  (EAHeadFn
+   (EATermFn VPfin ; is there a subcat frame that admits Sinterrog objects?
+    (TheList
+     (vform ?vform)
+     (var ?varv) (agr ?a)
+     (sem ?semv) (aux -) 
+     ;(modal -) (negated -)
+     (inv -) (vpinf -))))
+  (EATermFn Sinterrog
+   (TheList
+    (var ?dir-obj)
+    (sem ?semint)
+     )))))
+
+;;; Non-finite Verb Phrases:
+;;; VPbrst, VPto, VPtorel, VPed, & VPing
+
+;;; VPbrst (Bare Stem Infinitives)
+;;; We made the children [take naps].
+;;; Management let the employees [set their own hours].
+;;; the vform is going to be base.
+;;;
+;;; Well shoot, if it's just a vp it fails because vps don't take a base form. They're tensed.
+;;; If they did, they still wouldn't work because base forms have no agreement.
+;;; The problem is that that means we get things like "He be" or "He run to the store" as valid sentences
+;;; Furthermore, we don't want to accept pres. I made him is... or worse I made the boy runs.
+;;; So what I'll do is allow vps to take base but make anything that combines with a vp take something other than base.
+;;; Well no...because base has no agr features so it won't form any vps.
+;;; That assumption was false. They are still forming vps...
+;;; So I guess what I want to do is make a base form with super low weight?
+;;;
+;;; Screw it. Make a case for non-intrans base. The rest are just non-3s pres.
+;;; No no no! A bare stem is the form which, when prefixed with "to" becomes the infinitive.
+;;; It cannot be the present tense of a particular agreement.
+;;; and if it over-accepts some wacky constructions, so be it.
+;;; If someone tells us "he be good", then by golly, we can parse it.
+;;;
+(isa -VPbrst->vp- EAGrammarRule)
+(comment -VPbrst->vp- "'I made him [run a mile].'")
+(probabilityEAGrammarRule -VPbrst->vp- 1.0)
+(grammarRule -VPbrst->vp-
+ (EATermFn VPbrst
+  (TheList
+   (var ?varv)
+   (sem ?semv)
+   (agr (? a 1s 1p 2s 2p 3s 3p))  ; no constraint
+   (vptype VPbrst)
+   (:ACTION ?varv)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList
+     (var ?varv)
+     (vform (? vform base))
+;     (agr (? !agr 3s)) ; base has no agreement
+     (gerund -)
+     (modal -)
+     (intrans -) ; as a usage, not a property of a verb
+     (inv -)
+     (aux -)
+     (sem ?semv))))))
+
+;;;
+;;; Interesting. We allow "You eat an apple." because it's imperative. But is it an slp or a Sbrst in: Could you eat an apple?
+;;; It is in Could he eat an apple.
+(isa -VPbrst->base- EAGrammarRule)
+(comment -VPbrst->base- "'I made him [run].'")  ; "I let him be."?
+(probabilityEAGrammarRule -VPbrst->base- 1.0)
+(grammarRule -VPbrst->base-
+ (EATermFn VPbrst
+  (TheList
+   (var ?varv)
+   (sem ?semv)
+   (agr (? a 1s 1p 2s 2p 3s 3p))  ; anything goes
+   (vptype VPbrst)
+   (:ACTION ?varv)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Verb
+    (TheList
+     (var ?varv)
+     (vform (? vform base))
+;     (agr (? !agr 3s))  ; base forms have no agreement
+     (sem ?semv))))))
+
+
+
+;;; VPto  (To-marked Infinitives)  (== "to" + VPbrst)
+;;; The cat wants [to go outside].
+;;; The mayors persuaded the President [to support the cities].
+;;; It is hard for children [to tie their own shoes].
+;;; I wish John Edward all the luck in the world and hope there is some element of truth in his claim [to be able to speak to the dead].
+
+(isa -VPto->to-VPbrst- EAGrammarRule)
+(comment -VPto->to-VPbrst- "'I like [to run fast].'")
+(probabilityEAGrammarRule -VPto->to-VPbrst- 1.0)
+(grammarRule -VPto->to-VPbrst-
+ (EATermFn VPto
+  (TheList
+   (var ?varv)
+   (sem ?semv)
+   (vptype VPto)
+   (:ACTION ?varv)))
+ (TheList
+  (EATermFn Preposition
+   (TheList (lex to)))
+  (EAHeadFn
+   (EATermFn VPbrst
+    (TheList
+     (var ?varv)
+     (sem ?semv))))))
+
+
+;;; VPtorel (Verb Phrase Relatives)
+;;; Noun-modifying non-finite relative clauses headed by a to-marked VP:
+;;; Towels [to dry yourself with] can be found in the closet on the left.
+;;; Nietzsche insists that there are no rules for human life, no absolute values, no certainties [on which to rely].
+
+;;; VPed (Participial Verb Phrases)
+;;; VPs that begin with a past participle, typically ending in -ed.
+;;; The witness believes that the man [shown on the photograph] is the bank robber.
+;;; By discussing the events [covered in the news], parents can help their children gain a better understanding of the world in which they live.
+;;; The pastor interrupted the service in the middle of his sermon and had the man [forcibly removed].
+;;; (this last is a complement of a control-verb target, have, rather than a noun modifier)
+
+(isa -VPed->vp- EAGrammarRule)
+(comment -VPed->vp- "'The seed [planted in the garden] grew quickly.'")
+(probabilityEAGrammarRule -VPed->vp- 1.0)
+(grammarRule -VPed->vp-
+ (EATermFn VPed
+  (TheList (var ?varv)
+           (sem ?semv)
+           (vptype VPed)
+           (dir-obj ?dir-obj)
+           (agr (? a 1s 2s 3s 1p 2p 3p))))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform (? vform pastpart))
+             (var ?varv)
+             (sem ?semv)
+             (dir-obj ?dir-obj)
+             (aux -)
+             (inv -)
+             (modal -))))))
+           
+
+;;; VPing (Gerundive Verb Phrases)
+;;; VPs headed by verbs in the -ing form.
+;;; My friend likes [running barefoot].
+;;; [Inhaling pepper] makes most people sneeze. 
+;;; We watched the dogs [playing].
+
+(isa -VPing->vp- EAGrammarRule)
+(comment -VPing->vp- "'[Going to Disneyland] makes me happy.'")
+(probabilityEAGrammarRule -VPing->vp- 1.0)
+(grammarRule -VPing->vp-
+ (EATermFn VPing
+  (TheList 
+   (var ?varv)
+   (sem ?semv)
+   (agr (? a 1s 2s 3s 1p 2p 3p)) 
+   (gerund +)
+   (gerund-dir-obj ?dir-obj)
+   (:OBJECT :OBLIQUE-OBJECT)
+   (:SUBJECT UnspecifiedPassive)  ; should this be relabeled as DNI or something?
+   (:ACTION ?varv)
+   (vptype VPing)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList ; do we need to pass :OBLIQUE-OBJECT up explicitly?
+     (vform (? vf prespart))
+     (var ?varv) 
+     (sem ?semv) 
+     (aux -)
+     (inv -)
+     (modal -) 
+     (dir-obj ?dir-obj))))))
+
+;;; Is there any way to make this infer a simple verb with a set of properties?
+;;; That way, normal vp rules could still fire and bind arguments before
+;;; clasifying as VPing.
+;;; Here, we introduce a new phrase type, possible-v, that can be
+;;; incorporated into the standard rules for vps.  The features we set
+;;; here can then be used to recognize types of verb phrases, e.g., VPing, VPed.
+(isa -possible-v->unknown-gerund EAGrammarRule)
+(comment -possible-v->unknown-gerund "Use 'ing' suffix to infer unknown as gerund")
+(probabilityEAGrammarRule -possible-v->unknown-gerund 0.9)
+(grammarRule -possible-v->unknown-gerund
+ (EATermFn possible-v
+  (TheList (var ?varu) (vform prespart) (agr ?a) (gerund +)))
+ (TheList
+  (EAHeadFn
+   (EATermFn unknown 
+    (TheList (var ?varu) (lex ?vlex) (agr ?a) (sem ?semu))))
+  (EATermFn morph-ing (TheList (var ?varu) (lex ?vlex)))))
+
+
+(isa -possible-v->unknown-past EAGrammarRule)
+(comment -VPed->unknown-past "")
+(probabilityEAGrammarRule -VPed->unknown-past 0.9)
+(grammarRule -VPed->unknown-past
+ (EATermFn possible-v
+  (TheList (var ?varu) (vform past) (agr ?a)))
+ (TheList
+  (EAHeadFn
+   (EATermFn unknown 
+    (TheList (var ?varu) (lex ?vlex) (agr ?a) (sem ?semu))))
+  (EATermFn morph-ed (TheList (var ?varu) (lex ?vlex)))))
+
+;;; To handle unknown verb in an infinitive construction, 
+;;; we have to detect it at the phrase level.
+
+
+;;;
+;;; Clauses
+;;;
+
+;;;  Sfin       ; declarative finite complement clauses
+;;;             ; "Last night I learned [that surrealism isn't just a Salvador Dali thing]."
+;;; Note: there shouldn't be embedded utterances or stypes within a declarative finite complement clause.
+
+(isa -Sfin->that-np-VPfin- EAGrammarRule)
+(comment -Sfin->that-np-VPfin- "Last night I learned [that surrealism isn't just a Salvador Dali thing].")
+(probabilityEAGrammarRule -Sfin->that-np-VPfin- 1.0)
+(grammarRule -Sfin->that-np-VPfin-
+ (EATermFn Sfin
+  (TheList 
+    (var ?varvp)
+    (agr ?a)
+    (:ACTION ?varvp)
+    (:EVENT ?varvp)
+    (:SUBJECT ?varnp)
+    (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn SubordinatingConjunction (TheList (lex that)))
+  (EATermFn np
+   (TheList 
+    (agr ?a) (sem ?semnp) (var ?varnp)))
+  (EAHeadFn
+   (EATermFn VPfin
+    (TheList (var ?varvp) (lex ?vlex) (agr ?a) (sem ?semvp))))))
+
+(isa -Sfin->np-VPfin- EAGrammarRule)
+(comment -Sfin->np-VPfin- "Last night I learned [surrealism isn't just a Salvador Dali thing].")
+(probabilityEAGrammarRule -Sfin->np-VPfin- 1.0)
+(grammarRule -Sfin->np-VPfin-
+ (EATermFn Sfin
+  (TheList
+    (var ?varvp) 
+    (agr ?a)
+    (:ACTION ?varvp)
+    (:EVENT ?varvp)
+    (:SUBJECT ?varnp)
+    (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn np
+   ;; The (stype -) rules out "what snake bit you?"
+   (TheList (agr ?a) (stype -) (var ?varnp) (sem ?semnp) (lex (? !nlex him her me us them)))) ; filter object pronouns?
+  (EAHeadFn
+   (EATermFn VPfin
+    (TheList (var ?varvp)  (agr ?a) (negated -) (vform (? !vform base)) (sem ?semvp) (utterance -))))))
+
+
+(isa -Sfin->Sfin-Swhether- EAGrammarRule)
+(comment -Sfin->Sfin-Swhether- "[I don't care whether I win], [I don't know whether to laugh]")
+(probabilityEAGrammarRule Sfin-Swhether->np-vp- 1.0)
+(grammarRule -Sfin->Sfin-Swhether-
+ (EATermFn Sfin
+  (TheList
+    (var ?v) 
+    (agr ?a)
+    (:ACTION ?v)
+    (:EVENT ?v)
+    (:SUBJECT ?v)
+    (sem (and ?sem1 ?sem2))))
+ (TheList
+  (EATermFn Sfin
+   (TheList (var ?v) (agr ?a) (sem ?sem1)))
+  (EAHeadFn
+   (EATermFn Swhether
+    (TheList (sem ?sem2))))))
+
+(isa -Sfin->Sfin-Sing- EAGrammarRule)
+(comment -Sfin->Sfin-Sing- "[mother doesn't like me being a vegetarian]")
+(probabilityEAGrammarRule Sfin-Sing->np-vp- 1.0)
+(grammarRule -Sfin->Sfin-Sing-
+ (EATermFn Sfin
+  (TheList
+    (var ?v) 
+    (agr ?a)
+    (:ACTION ?v)
+    (:EVENT ?v)
+    (:SUBJECT ?v)
+    (sem (and ?sem1 ?sem2))))
+ (TheList
+  (EATermFn Sfin
+   (TheList (var ?v) (agr ?a) (sem ?sem1)))
+  (EAHeadFn
+   (EATermFn Sing
+    (TheList (sem ?sem2))))))
+
+(isa -Sfin->adv-Sfin- EAGrammarRule)
+(comment -Sfin->adv-Sfin- "[Sometimes he walks.]")
+(probabilityEAGrammarRule -Sfin->adv-Sfin- 1.0)
+(grammarRule -Sfin->adv-Sfin-
+ (EATermFn Sfin
+  (TheList
+    (var ?v) 
+    (agr ?a)
+    (adjunct-adv +)
+    (:ACTION ?v)
+    (:EVENT ?v)
+    (:SUBJECT ?subSfin)
+    (sem (and ?sem1 ?sem2))))
+ (TheList
+  (EATermFn Adverb
+   (TheList (var ?vadv) (sem ?sem1)))
+  (EAHeadFn
+   (EATermFn Sfin
+    (TheList (var ?v) (agr ?a) (sem ?sem2) (:SUBJECT ?subSfin))))))
+
+;;;  Sbrst      ; bare stem clauses
+;;;             ; "Deborah requests [that she be allowed to live in a town nearby]."
+;;;             ; "Deborah made [the dog fetch the ball]".
+
+(isa -Sbrst->np-vpbrst EAGrammarRule)
+(comment -Sbrst->np-vpbrst "The boy made [the dog fetch the ball]. Note that sbrst and np-vpbrst annotations are 
+inconsistent in FrameNet")
+(probabilityEAGrammarRule -Sbrst->np-vpbrst 1.0)
+(grammarRule -Sbrst->np-vpbrst
+ (EATermFn Sbrst
+  (TheList (var ?varv) (:SUBJECT ?varnp) (vform ?vform) (agr ?a) 
+           (sem (and ?semv ?semnp))))
+  (TheList
+   (EATermFn np
+    (TheList (agr ?a) (sem ?semnp) (var ?varnp)))
+   (EAHeadFn
+    (EATermFn VPbrst 
+     (TheList (var ?varv) (vform ?vform) (sem ?semv) (vptype VPbrst))))))
+
+
+;;;  Sinterrog  ; Wh-interrogative clauses
+;;;             ; "Could you tell me [how the Hawaiian Islands formed]?"
+;;; Should also hold for "what", "why", "who", "where", "how"?
+;;; Nulex doesn't have a wh feature. We could add it, but these are all
+;;; diverse parts of speech.  some are determiners, some adverbs, etc.
+;;;
+;;; What about do e.g. did the man eat? For now, no. Not Sinterrog
+;;;
+;;; Which of these are Sinterrog:
+;;; "I don't know...
+;;;   [why the Hawaiian Islands formed]
+;;;   [how to get there]
+;;;   [who the president is]
+;;;   [where you went]
+;;;   [when to stop]
+;;;   [whose side you're on]"
+;;;
+;;; how about "[When did the islands form]?" (inversions)
+;;;   In these cases, combine a WH-NP/Adj/Adv with an inverted vp.
+;;;   They don't actually combine with anything as an argument. e.g. *I know when did the islands form?
+;;;
+;;; 'what you ate', 'who you saw', 'when you left', 'whose this is', 'which you prefer'
+(isa -Sinterrog->whpro-slpinv- EAGrammarRule)
+(comment -Sinterrog->whpro-slpinv- "")
+(probabilityEAGrammarRule -Sinterrog->whpro-slpinv- 1.0)
+(grammarRule -Sinterrog->whpro-slpinv-
+ (EATermFn Sinterrog
+  (TheList (var ?var) (vform ?vform) (agr ?a) (sem ?sem)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Pronoun 
+    (TheList (var ?var) (lex (? lex what who when whose which)) (agr ?a) (sem ?sem))))
+  (EATermFn Sfin
+    (TheList (var ?vars) (vform ?vform)))))
+
+;;; 'whose sweater this is'
+(isa -Sinterrog->whose-np-slpinv- EAGrammarRule)
+(comment -Sinterrog->whose-np-slpinv- "")
+(probabilityEAGrammarRule -Sinterrog->whose-np-slpinv- 1.0)
+(grammarRule -Sinterrog->whose-np-slpinv-
+ (EATermFn Sinterrog
+  (TheList (var ?var) (vform ?vform) (agr ?a) (sem ?sem)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Pronoun 
+    (TheList (var ?var) (lex (? lex whose)) (agr ?a) (sem ?sem))))
+  (EATermFn Sfin
+    (TheList (var ?vars) (vform ?vform)))))
+
+;;; 'where you went', 'how you escaped', 'why you quit'
+(isa -Sinterrog->whadv-slpinv- EAGrammarRule)
+(comment -Sinterrog->whadv-slpinv- "")
+(probabilityEAGrammarRule -Sinterrog->whadv-slpinv- 1.0)
+(grammarRule -Sinterrog->whadv-slpinv-
+ (EATermFn Sinterrog
+  (TheList (var ?var) (vform ?vform) (agr ?a) (sem ?sem)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Adverb 
+    (TheList (var ?var) (lex (? lex where how why)) (agr ?a) (sem ?sem))))
+  (EATermFn Sfin
+    (TheList (var ?vars) (vform ?vform)))))
+
+
+;;;  SWhether   ; Whether-if interrogative clauses
+;;;             ; "She did not know [whether the man survived]."
+;;; Kind of need to support a disjunction here. "whether or not", "whether he did or didn't"
+(isa -SWhether->whether-Sfin- EAGrammarRule)
+(comment -SWhether->whether-Sfin- "'She did not know [whether the man survived].'")
+(probabilityEAGrammarRule -SWhether->whether-Sfin- 1.0)
+(grammarRule -SWhether->whether-Sfin-
+ (EATermFn SWhether
+  (TheList (var ?var) (vform ?vform) (sem ?sem)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Conjunction 
+    (TheList (var ?var) (lex whether))))
+  (EATermFn Sfin
+    (TheList (vform ?vform)  (sem ?sem)))))
+    
+(isa -SWhether->whether-VPto- EAGrammarRule)
+(comment -SWhether->whether-VPto- "'She did not know [whether to go].'")
+(probabilityEAGrammarRule -SWhether->whether-VPto- 1.0)
+(grammarRule -SWhether->whether-VPto-
+ (EATermFn SWhether
+  (TheList (var ?var) (vform ?vform) (sem ?sem)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Conjunction 
+    (TheList (var ?var) (lex whether))))
+  (EATermFn VPto
+    (TheList (vform ?vform)  (sem ?sem)))))
+
+
+;;;  Sing       ; Gerundive clauses
+;;;             ; "My mom doesn’t like [me being a vegetarian]!"
+(isa -Sing->np-VPing- EAGrammarRule)
+(comment -Sing->np-VPing- "")
+(probabilityEAGrammarRule -Sing->np-VPing- 1.0)
+(grammarRule -Sing->np-VPing-
+ (EATermFn Sing
+  (TheList                   
+    (var ?varvp) 
+    (agr ?a)
+    (:ACTION ?varvp)
+    (:EVENT ?varvp)
+    (:SUBJECT ?varnp)
+    (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn np
+   (TheList (agr ?a) (var ?varnp) (sem ?semnp)))
+  (EAHeadFn
+   (EATermFn VPing
+    (TheList (var ?varvp) (lex ?vlex) (agr ?a) (vform ?vform) (sem ?semvp) (utterance -))))))
+    
+;;; possessive + Sing = NP
+
+#||
+
+;;;  Srel       ; finite relative clauses
+(isa -Srel->- EAGrammarRule)
+(comment -Srel->- "")
+(probabilityEAGrammarRule -Srel->- 1.0)
+(grammarRule -Srel->-
+ (EATermFn Srel
+  (TheList (var ?var) (vform past) (agr ?a) (sem ?sem)))
+ (TheList
+  (EAHeadFn
+   (EATermFn #### 
+    (TheList (var ?var) (lex ?vlex) (agr ?a) (sem ?sem))))
+  (EATermFn ####
+    (TheList (var ?varu)))))
+
+||#
+
+;;;  Sto        ; to marked clauses
+;;;             ; "I’d like [you to say hi to my sister]."  NP + VPto
+(isa -Sto->np-VPto- EAGrammarRule)
+(comment -Sto->np-VPto- "To-marked clauses: 'I’d like [you to say hi to my sister].'")
+(probabilityEAGrammarRule -Sto->np-VPto- 1.0)
+(grammarRule -Sto->np-VPto-
+ (EATermFn Sto
+  (TheList
+    (var ?varvp) 
+    (agr ?a)
+    (:ACTION ?varvp)
+    (:EVENT ?varvp)
+    (:SUBJECT ?varnp)
+    (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn np 
+   (TheList (var ?varnp)  (agr ?a) (sem ?semnp)))
+  (EAHeadFn
+   (EATermFn VPto
+     (TheList (var ?varvp) (agr ?a) (vform ?vform) (sem ?semvp) (utterance -))))))
+
+;;;  Sforto     ;  (e.g., 'for you to meet my mother')
+;;;             ; "In 1937, a friend arranged [for Reagan to take a screen test]."
+(isa -Sforto->for-np-VPto- EAGrammarRule)
+(comment -Sforto->for-np-VPto- "")
+(probabilityEAGrammarRule -Sforto->for-np-VPto- 1.0)
+(grammarRule -Sforto->for-np-VPto-
+ (EATermFn Sforto
+  (TheList
+    (var ?varvp) 
+    (agr ?a)
+    (:ACTION ?varvp)
+    (:EVENT ?varvp)
+    (:SUBJECT ?varnp)
+    (sem (and ?semnp ?semvp))))
+ (TheList
+  (EATermFn Preposition
+   (TheList (lex for)))
+  (EATermFn np 
+   (TheList (var ?varnp)  (agr ?a) (sem ?semnp)))
+  (EAHeadFn
+   (EATermFn VPto
+     (TheList (var ?varvp) (agr ?a) (vform ?vform) (sem ?semvp) (utterance -))))))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

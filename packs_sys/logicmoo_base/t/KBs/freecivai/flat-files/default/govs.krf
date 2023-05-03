@@ -1,0 +1,54 @@
+(in-microtheory Freeciv-defaultMt)
+
+;;; Since government types are properties in Freeciv, we ontologize them
+;;; as instances of both the local concept, FreeCiv-Government, and of
+;;; the more general type of government in the KB, thereby linking the game
+;;; world to the broader world.
+
+
+(comment FC-Anarchy 
+  "FC-Anarchy, in the 2nd argument of currentGovernment,
+ indicates that the civilization of the player is anarchy.")
+(isa FC-Anarchy FreeCiv-Government)
+(isa FC-Anarchy Anarchy)
+(objectProductionRequiresTech FC-Anarchy FC-Tech-None)
+
+(comment FC-Despotism 
+  "FC-Despotism, in the 2nd argument of currentGovernment,
+ indicates that the civilization of the player is in despotism.")
+(isa FC-Despotism FreeCiv-Government)
+(isa FC-Despotism AuthoritarianGovernment)
+(isa FC-Despotism CentralizedGovernment)
+(objectProductionRequiresTech FC-Despotism FC-Tech-None)
+
+(comment FC-Monarchy 
+  "FC-Monarchy, in the 2nd argument of currentGovernment,
+ indicates that the civilization of the player is a monarchy.")
+(isa FC-Monarchy FreeCiv-Government)
+(isa FC-Monarchy Monarchy)
+(isa FC-Monarchy CentralizedGovernment)
+(objectProductionRequiresTech FC-Monarchy FC-Tech-Monarchy)
+
+(comment FC-Communist 
+  "FC-Communist, in the 2nd argument of currentGovernment,
+ indicates that the civilization of the player is communist.")
+(isa FC-Communist FreeCiv-Government)
+(isa FC-Communist CentralizedGovernment)
+(isa FC-Communist CommunistGovernment)
+(objectProductionRequiresTech FC-Communist FC-Tech-Communism)
+
+(comment FC-Republic 
+  "FC-Republic, in the 2nd argument of currentGovernment,
+ indicates that the civilization of the player is a republic.")
+(isa FC-Republic FreeCiv-Government)
+(isa FC-Republic Republic)
+(isa FC-Republic RepresentativeGovernment)
+(objectProductionRequiresTech FC-Republic FC-Tech-TheRepublic)
+
+(comment  FC-Democracy 
+  " FC-Democracy, in the 2nd argument of currentGovernment,
+ indicates that the civilization of the player is a democracy.")
+(isa FC-Democracy FreeCiv-Government)
+(isa FC-Democracy DemocraticGeopoliticalEntity)
+(isa FC-Democracy RepresentativeGovernment) 
+(objectProductionRequiresTech FC-Democracy FC-Tech-Democracy)

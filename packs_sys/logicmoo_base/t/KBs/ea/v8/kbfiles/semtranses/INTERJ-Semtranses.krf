@@ -1,0 +1,263 @@
+(in-microtheory FrameNetSemTransMt)
+(genlMt EANLU FrameNetSemTransMt)
+
+(FNInterjSemtrans (TheList) Adieu-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Adios-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ah-TheWord
+ (and (isa :INTERJ (NLExpressionFn UnderstandingSomething))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Aha-TheWord
+ (and (isa :INTERJ (NLExpressionFn UnderstandingSomething))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ahem-TheWord
+ (and (isa :INTERJ
+       (NLExpressionFn
+        (SubcollectionOfWithRelationToFn RequestingAction typeOfThingRequested
+         Perceiving-Voluntary))))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ahey-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ahoy-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Alas-TheWord
+ (and (isa :INTERJ (NLExpressionFn Disappointment))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Amen-TheWord
+ (and (isa :INTERJ (NLExpressionFn Relief-Feeling))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Arrivederci-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Au-Revoir-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Bah-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Begone-TheWord
+ (and (isa :INTERJ
+       (NLExpressionFn
+        (SubcollectionOfWithRelationToFn RequestingAction typeOfThingRequested
+         LeavingAPlace))))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Bonjour-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Bravo-TheWord
+ (and (isa :INTERJ (NLExpressionFn Cheering))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ciao-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ciao-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Egad-TheWord
+ (and (isa :INTERJ (NLExpressionFn Surprise))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Encore-TheWord
+ (and (isa :INTERJ (NLExpressionFn Cheering))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList "excuse") Me-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone)))
+ (frame FN_Attention_getting) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Farewell-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Faugh-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Goodbye-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ha-TheWord
+ (and (isa :INTERJ (NLExpressionFn Laughing))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Hah-TheWord
+ (and (isa :INTERJ (NLExpressionFn Laughing))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Hail-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Halleluiah-TheWord
+ (and (isa :INTERJ (NLExpressionFn Relief-Feeling))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Heigh-Ho-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Hello-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList "hello") There-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone)))
+ (frame FN_Attention_getting) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Hey-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone)))
+ (frame FN_Attention_getting) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList "hi") There-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ho-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Holloa-TheWord (and (isa :INTERJ Misc))
+ (frame FN_Interj) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Humph-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Hurrah-TheWord
+ (and (isa :INTERJ (NLExpressionFn Cheering))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Incredible-TheWord
+ (and (isa :INTERJ (NLExpressionFn Wonder-Admiration))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Lol-TheWord
+ (and (isa :INTERJ (NLExpressionFn Laughing))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) No-TheWord
+ (and (isa :INTERJ (NLResponseFn Negative-NLResponse))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Okay-TheWord
+ (and (isa :INTERJ (NLResponseFn Affirmative-NLResponse))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Out-TheWord
+ (and (isa :INTERJ
+       (NLExpressionFn
+        (SubcollectionOfWithRelationToFn RequestingAction typeOfThingRequested
+         LeavingAPlace))))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Pah-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Pish-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Poh-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Pooh-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Pshaw-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Rofl-TheWord
+ (and (isa :INTERJ (NLExpressionFn Laughing))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Scat-TheWord
+ (and (isa :INTERJ
+       (NLExpressionFn
+        (SubcollectionOfWithRelationToFn RequestingAction typeOfThingRequested
+         LeavingAPlace))))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Shh-TheWord
+ (and (isa :INTERJ (NLExpressionFn (BecomingFn (NoAmountFn NoiseLevel)))))
+ (frame FN_Becoming_silent) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Silence-TheWord
+ (and (isa :INTERJ
+       (NLExpressionFn (BecomingFn (NoAmountFn AcousticNoiseLevel)))))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Tallyho-TheWord
+ (and (isa :INTERJ (NLExpressionFn SayingGoodbyeToSomeone))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Te-Hee-TheWord
+ (and (isa :INTERJ (NLExpressionFn Laughing))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Tush-TheWord
+ (and (isa :INTERJ (NLExpressionFn Rejecting-CommunicationAct)))
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Ugh-TheWord
+ (and (isa :INTERJ (NLExpressionFn Disgust))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Whew-TheWord
+ (and (isa :INTERJ (NLExpressionFn Relief-Feeling))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Whoa-TheWord
+ (and (isa :INTERJ (NLExpressionFn Surprise))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Wow-TheWord
+ (and (isa :INTERJ (NLExpressionFn Wonder-Admiration))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Yes-TheWord
+ (and (isa :INTERJ (NLResponseFn Affirmative-NLResponse))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Yoicks-TheWord
+ (and (isa :INTERJ (NLExpressionFn Surprise))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Yoohoo-TheWord
+ (and (isa :INTERJ (NLExpressionFn GreetingSomeone)))
+ (frame FN_Attention_getting) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNInterjSemtrans (TheList) Zounds-TheWord
+ (and (isa :INTERJ (NLExpressionFn Shock))) (frame FN_Misc)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))

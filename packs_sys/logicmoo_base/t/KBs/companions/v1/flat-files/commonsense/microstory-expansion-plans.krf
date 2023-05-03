@@ -1,0 +1,697 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: microstory-expansion-plans.meld
+;;;;    System: Companions
+;;;;    Author: Joe Blass
+;;;;   Created: September 1, 2015 13:55:39
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory MicrostoryMt)
+(genlMt Interaction-ManagerMt MicrostoryMt)
+(genlMt MicrostoryMt MoralReasoningMt)
+
+(genlMt MoralStoriesMt MoralReasoningMt)
+
+
+;;;These plans have gotten somewhat garbled, so a note on how they are designed (9/1/16)
+;;;As of now analogical chaining is only being done for multiple choice tests.  There are other
+;;;general- purpose plans but they're not being used now. These exist in microstory-expansion-plans.meld.
+;;;The main loop is microstoryExpansionForQARecursive (or microstoryExpansionRecursive for non MC tests)
+;;;these do a reminding, grab candidate inferences to justify, and justify them.
+;;;Justifications need both what the fact(s) you justify (consequent), and the justifications for them (antecedants).
+;;;ALL of these are bundled up in a SINGLE VARIABLE by gatherJustifyArgs (in justifying-cis.meld). They are
+;;;justified using doJustifyCIWithSourceFact (also in justifying-cis.meld), which is currently specialized for
+;;;analogical chaining.  The single variable wrapping it all together is of the form
+;;;(TheList <currentInferencecontext> (TheList <consequent> <antecedents>)). For our purposes, the antecedents are of the form
+;;;(TheList <fact in base> <justifying conjuncts in target> <correspondences>). So the whole variable is
+;;;(TheList <currentInferencecontext> (TheList <consequent> (TheList <ant1> <ant2> ...)).
+;;;Finally, the context that the inferences go into is also determined by gatherJustifyArgs. 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; original microstory expansion plans for solving multiple choice questions
+
+(isa microstoryExpansionForQA ComplexActionPredicate)
+(arity microstoryExpansionForQA 1)
+(arg1Isa microstoryExpansionForQA Microtheory)
+(comment microstoryExpansionForQA "(microstoryExpansionForQA <case>) does remindings over generalizations of
+microstories to make common-sense inferences about a case. It is, for example, designed to be able to bring
+across an inference such as 'when you stab something, there is a hole in that thing.' It calls itself recursively 
+until the reminding has a low enough baseNormalizedScoreOf.  As of 9/1/15 this
+technique stupidly assumes that every CI from microstories is valid and sticks it in the KB. USE WITH CAUTION.")
+
+(isa microstoryExpansionForQARecursive ComplexActionPredicate)
+(arity microstoryExpansionForQARecursive 1)
+(arg1Isa microstoryExpansionForQARecursive Microtheory)
+(comment microstoryExpansionForQARecursive "(microstoryExpansionForQARecursive <case>) is the recursive call
+for microstoryExpansionForQA. The only difference is that it calls the reminding with 
+(CaseUnionFn (KBCaseFn ?case) <inferenceMt>), instead of just (KBCaseFn ?case). <inferenceMt> is retrieved on the fly.
+This case will include inferences from previous microstory expansion.  As of 9/1/15 this
+technique stupidly assumes that every CI from microstories is valid and sticks it in the KB. USE WITH CAUTION.")
+
+(isa microstoryExpansionForQA-bestMappingOnly ComplexActionPredicate)
+(arity microstoryExpansionForQA-bestMappingOnly 1)
+(arg1Isa microstoryExpansionForQA-bestMappingOnly Microtheory)
+(comment microstoryExpansionForQA-bestMappingOnly "(microstoryExpansionForQA-bestMappingOnly <case>) does remindings over generalizations of
+microstories to make common-sense inferences about a case. It is, for example, designed to be able to bring
+across an inference such as 'when you stab something, there is a hole in that thing.' It only takes the bestMapping and 
+doesn't call itself recursively. Slightly less stupid than baseline microstoryExpansionForQA.")
+
+(isa correctAnswer Predicate)
+(arity correctAnswer 2)
+(arg1Isa correctAnswer Thing)
+(arg2Isa correctAnswer Thing)
+(comment correctAnswer "(correctAnswer <answer> <text>) indicates that the question being asked has been answered, the answer identifier is <answer>, and its text is <text>. This should probably be amended to represent the question as well.")
+
+;;; deprecated in favor of inference MTs made on the fly. These MTs have unique identifiers. It may make sense
+;;; to go back to a predicate representation of these MTs, in which case the arity should be 2: the ?case and
+;;; the unique identifier.
+;;;
+;;;(isa microstoryInferenceMt FunctionalPredicate)
+;;;(arity microstoryInferenceMt 1)
+;;;(arg1Isa microstoryInferenceMt Thing)
+;;;(resultIsa microstoryInferenceMt Microtheory)
+;;;(comment microstoryInferenceMt "(microstoryInferenceMt ?case) includes inferences drawn about that case from microstories")
+
+(isa copaMicrostoryExpansion ComplexActionPredicate)
+(arity copaMicrostoryExpansion 1)
+(arg1Isa copaMicrostoryExpansion Thing)
+(comment copaMicrostoryExpansion
+  "(copaMicrostoryExpansion <question>) gathers the facts from the previously ingested
+reading of <question>, then performs repeated analogical chaining over the microstory
+KB to gain a clear picture of the scenario until it infers facts found in one of the answers.
+ <question> should just be the NUMBER of the question.")
+
+(isa copaQAReadingMtFn FunctionalPredicate)
+(arity copaQAReadingMtFn 2)
+(arg1Isa copaQAReadingMtFn Thing)
+(arg2Isa copaQAReadingMtFn Thing)
+(comment copaQAReadingMtFn "(copaQAReadingMtFn <question> <answer>) is a place to store all the facts extracted 
+from a reading of a COPA question/answer pair, without a lot of the discourse information which can clutter up 
+the reading MT. The raw facts, including choice sets, DRS information, etc., is found in (FactsFromReadingCopaQAMtFn <question> <answer>)")
+
+(isa previouslyUsedCSUforCase Relation)
+(arity previouslyUsedCSUforCase 2)
+(arg1Isa previouslyUsedCSUforCase Microtheory)
+(arg2Isa previouslyUsedCSUforCase Microtheory)
+(comment previouslyUsedCSUforCase
+  "(previouslyUsedCSUforCase <case> <commonSenseUnit>) indicates that <commonSenseUnit> has already been used
+to expand <case> and should be excluded from further remindings.")
+
+(isa clearMicrostoryInferencesWhenYouCallCopaMicrostoryExpansion Predicate)
+(arity clearMicrostoryInferencesWhenYouCallCopaMicrostoryExpansion 0)
+(comment clearMicrostoryInferencesWhenYouCallCopaMicrostoryExpansion "(clearMicrostoryInferencesWhenYouCallCopaMicrostoryExpansion) is a flag to indicate that when that plan is called, clear out previous inferences.")
+(clearMicrostoryInferencesWhenYouCallCopaMicrostoryExpansion)
+
+(preconditionForMethod
+ (and (questionText (CopaQFn ?question) ?text)
+      (questionType (CopaQFn ?question) ?type)
+      (mcTestOption (CopaAnsFn (CopaQFn ?question) A) ?textA)
+      (mcTestOption (CopaAnsFn (CopaQFn ?question) B) ?textB)
+      (unknownSentence (ist-Information MicrostoryMt (clearMicrostoryInferencesWhenYouCallCopaMicrostoryExpansion))))
+ (methodForAction
+  (copaMicrostoryExpansion ?question)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)
+    (doClearSMEs)
+    (doClearDGroupCaches)
+    (doAnnounce "Considering the following situation: ~a~% Searching for the ~a among the following options: ~%Option A: ~a~%Option B: ~a~%" (?text ?type ?textA ?textB))
+    (microstoryExpansionForQA
+     (ReadingCopaQMtFn (CopaQFn ?question)))))))
+
+(preconditionForMethod
+ (and (questionText (CopaQFn ?question) ?text)
+      (questionType (CopaQFn ?question) ?type)
+      (mcTestOption (CopaAnsFn (CopaQFn ?question) A) ?textA)
+      (mcTestOption (CopaAnsFn (CopaQFn ?question) B) ?textB)
+      (ist-Information MicrostoryMt (clearMicrostoryInferencesWhenYouCallCopaMicrostoryExpansion))
+      (evaluate ?inferenceMts
+        (SetToListFn
+         (TheClosedRetrievalSetOf ?inferenceMt
+           (and (ist-Information MicrostoryMt (microstoryInferenceContextForCase 
+                                               (ReadingCopaQMtFn (CopaQFn ?question)) 
+                                               ?inferenceMt))
+                (different (ReadingCopaQMtFn (CopaQFn ?question)) ?inferenceMt)))))
+      (evaluate ?leafFacts
+        (SetToListFn
+         (TheClosedRetrievalSetOf ?inferenceMt
+           (and (ist-Information MicrostoryMt (mtTreeLeafNodesForCase 
+                                               (ReadingCopaQMtFn (CopaQFn ?question)) 
+                                               ?inferenceMt))
+                (different (ReadingCopaQMtFn (CopaQFn ?question)) ?inferenceMt))))))
+ (methodForAction
+  (copaMicrostoryExpansion ?question)
+  (actionSequence
+   (TheList
+    (doForEach ?mt ?inferenceMts 
+               (actionSequence
+                (TheList  
+                 (doForgetKBMt ?mt)
+                 (doClearWMContext ?mt))))
+    (doForEach ?mt2 ?leafFacts 
+               (actionSequence
+                (TheList  
+                 (doForgetKBMt ?mt2)
+                 (doClearWMContext ?mt2))))
+    (doClearWorkingMemory)
+    (doClearSMEs)
+    (doClearDGroupCaches)
+    (doAnnounce "Considering the following: ~a Searching for the ~a among the following options:~% Option A: ~a~% Option B: ~a~%" (?text ?type ?textA ?textB))
+    (doAgentPlan
+     (actionSequence
+      (TheList (microstoryExpansionForQA (ReadingCopaQMtFn (CopaQFn ?question))))))))))
+
+(atomicAnalogyNat AnalogySkolemFn)
+
+;;; this technique for now assumes that EVERY CI from ALL remindings from microstories is valid. 
+;;; it keeps going back to the well until it has "found an answer" according to the definition of finding a definition
+;;; USE WITH CAUTION
+
+(preconditionForMethod
+ (and (ist-Information ?case ?fact) ;;; get it into working memory
+      (newUUIDSymbol id ?id))
+ (methodForAction
+  (microstoryExpansionForQA ?case)
+  (actionSequence
+   (TheList
+    ;(doBreak Execution "~&Ready for inspection" (?case))
+    ;(doRecord (genlMt (microstoryInferenceMt ?case ?id) ?case))
+    (doTell (ist-Information MicrostoryMt (mtTreeLeafNodesForCase ?case ?case))) ;;; cases start as their own leaf node
+    (doAgentPlan (actionSequence (TheList (microstoryExpansionForQARecursive ?case))))))))
+
+;;;;;;;;;; Recursive Versions
+
+;;; found an answer
+(preconditionForMethod
+ (and (foundSolutionForMicrostoryExpansion ?case ?leafMt ?answer)
+      (unifies ?case (ReadingCopaQMtFn (CopaQFn ?num)))
+      (mcTestOption (CopaAnsFn (CopaQFn ?num) ?answer) ?text))
+ (methodForAction
+  (microstoryExpansionForQARecursive ?case)
+  (actionSequence
+   (TheList
+    ;(doRecord (genlMt (microstoryInferenceMt ?case) ?case))
+    (doAnnounce "the likelier answer is ~a: ~a" (?answer ?text))
+    (doCopyWMCaseToKB ?leafMt)))))
+
+;;; retrieved a usable CSU
+(preconditionForMethod
+ (and (uninferredSentence (foundSolutionForMicrostoryExpansion ?case ?leafMt ?answer))
+      ;;; this goes through all the known leaf nodes of the inference tree and performs remindings on them, grabs match
+      ;;; constraints, does another mapping with constraints, and returns those mappings. 
+      (cacheComplete (gatherBestMappingArgsFromCase ?case ?bestMappingArgs)) ;;; sort arguments
+      (unifies ?bestMappingArgs (TheList ?mapping ?score ?retrievedCSU Use)) ;; bind those variables again, and also make sure there IS a mapping
+      ;;; make sure there's at least one inference
+      (candidateInferenceOf ?ci ?mapping)
+      (evaluate ?tossedCSUs (TheClosedRetrievalSetOf ?xCSU (previouslyEliminatedCSUforCase ?case ?xCSU))))
+ (methodForAction
+  (microstoryExpansionForQARecursive ?case)
+  (actionSequence
+   (TheList
+    ;(doBreak Execution "~&Ready for inspection" (?case))
+    (doForEach
+     ?prevElim ?tossedCSUs
+     (actionSequence
+      (TheList
+       (doUntell (previouslyEliminatedCSUforCase ?case ?prevElim))
+	   (doUntell (gatherBestMappingArgsFromCase ?case ?bestMappingArgs))
+       (doUntell (previouslyUsedCSUforCase ?case ?prevElim))))) ;;; reset the previously rejected ones so we can try'em again if they're relevant now.
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doTell (previouslyUsedCSUforCase ?case ?retrievedCSU))
+       (doResolveInferenceMtAndJustifyForChaining ?case ?mapping ?retrievedCSU)
+       (doClearDGroupCaches);; so that we don't keep the cached dgroup
+       (doAgentPlan 
+        (actionSequence 
+         (TheList 
+          (microstoryExpansionForQARecursive ?case)))))))))))
+
+;;; retrieved an unusable CSU
+(preconditionForMethod
+ (and (uninferredSentence (foundSolutionForMicrostoryExpansion ?case ?leafMt ?answer))
+      ;;; this goes through all the known leaf nodes of the inference tree and performs remindings on them, grabs match
+      ;;; constraints, does another mapping with constraints, and returns those mappings. 
+      (cacheComplete (gatherBestMappingArgsFromCase ?case ?bestMappingArgs)) ;;; gather sorted arguments
+      ;;; Either there's no mapping, or there are no inferences.
+      (unifies ?bestMappingArgs (TheList ?mapping ?score ?retrievedCSU RejectCSU)))
+ (methodForAction
+  (microstoryExpansionForQARecursive ?case)
+  (actionSequence
+   (TheList
+    ;(doBreak Execution "~&Ready for inspection" (?case))
+    (doTell (previouslyEliminatedCSUforCase ?case ?retrievedCSU))
+    (doTell (previouslyUsedCSUforCase ?case ?retrievedCSU))
+	(doUntell (gatherBestMappingArgsFromCase ?case ?bestMappingArgs))
+    (doAnnounce "rejecting retrieved case ~a: no mappings found with mapping constraints" (?retrievedCSU))
+    (doAgentPlan (actionSequence (TheList (microstoryExpansionForQARecursive ?case))))))))
+
+;;; no retrieval at all: solicit a new story
+(preconditionForMethod
+ (and (uninferredSentence (foundSolutionForMicrostoryExpansion ?case ?leafMt ?answer))
+      (uninferredSentence (cacheComplete (gatherBestMappingArgsFromCase ?case ?bestMappingArgs))))
+ (methodForAction
+  (microstoryExpansionForQARecursive ?case)
+  (actionSequence
+   (TheList
+    ;(doBreak Execution "~&Ready for inspection" (?case))
+    (doSolicitMicrostoryForCase ?case))))) ;;; as of now this will just stop...
+
+(<== (gatherBestMappingArgsFromCase ?case ?bestMappingArgs)
+     (evaluate ?usedCSUs (TheClosedRetrievalSetOf ?CSU (previouslyUsedCSUforCase ?case ?CSU)))
+     (evaluate ?mappings
+       (TheClosedRetrievalSetOf (TheList ?mapping ?score ?retrievedCSU ?decision)
+         (and (evaluate ?inferenceCaseMts 
+                (TheClosedRetrievalSetOf (WMCaseFn ?genlMt)
+                  (and (wmOnly (ist-Information MicrostoryMt (mtTreeLeafNodesForCase ?case ?leafMt)))
+                       (useTransitiveInference (genlMt ?leafMt ?genlMt)))))
+              (evaluate ?remindingCase (MakeFormulaFn CaseUnionFn ?inferenceCaseMts))
+              (outsourcedOnly (reminding ?remindingCase
+                                         (CaseLibraryMinusFn MicrostoryGContext ?usedCSUs)
+                                         (TheSet) 
+                                         ?reminding ?match))
+              (baseOfMatch ?match ?caseifiedRetrievedCSU)
+              (caseFromCaseifiedCase ?caseifiedRetrievedCSU ?retrievedCSU)
+              (evaluate ?matchConstraints 
+                (TheClosedRetrievalSetOf ?constraint
+                  (ist-Information MatchConstraintStorageMt (matchConstraintsFor ?retrievedCSU ?constraint))))
+              (outsourcedOnly (matchBetween ?caseifiedRetrievedCSU 
+                                            ?remindingCase
+                                            ?matchConstraints ?match2))
+              (evaluateCSUMapping ?match2 ?mapping ?score ?decision))))
+     (evaluate ?bestMappingArgs ;;; sort the set and take the best one
+       (FirstInListFn (SortFn ?mappings greaterThan SecondInListFn))))
+
+(<== (caseFromCaseifiedCase ?caseifiedRetrievedCSU ?retrievedCSU)
+     (unifies ?caseifiedRetrievedCSU (?caseConstructor ?retrievedCSU)))
+
+(<== (caseFromCaseifiedCase ?caseifiedRetrievedCSU ?retrievedCSU)
+     (unifies ?caseifiedRetrievedCSU (?sageConstructor ?retrievedCSU ?prob)))
+
+(<== (caseFromCaseifiedCase ?caseifiedRetrievedCSU ?caseifiedRetrievedCSU)
+     (uninferredSentence (unifies ?caseifiedRetrievedCSU (?sageConstructor ?retrievedCSU ?prob)))
+     (uninferredSentence (unifies ?caseifiedRetrievedCSU (?caseConstructor ?retrievedCSU))))
+
+(<== (evaluateCSUMapping ?match2 ?mapping ?score Use) ;;; for when we have a mapping we want
+     (bestMapping ?match2 ?mapping)
+     (baseNormalizedScoreOf ?mapping ?score)
+     (candidateInferenceOf ?ci ?mapping)
+     (candidateInferenceCorrespondences ?ci ?corrs)
+     (subexpressionMatching (MhFn ?mhn (MatcherFn ?m ?n)) ?corrs ?mh)
+     (correspondenceForTargetItem (MatcherFn ?m ?n) ?fact ?mh)
+     (uninferredSentence (atomicTerm ?fact)) 
+     (uninferredSentence (unifies ?fact (AnalogySkolemFn ?smth))))
+
+(<== (evaluateCSUMapping ?match2 0 0 RejectCSU) ;;; for when we have no mapping
+     (uninferredSentence (bestMapping ?match2 ?mapping)))
+
+(<== (evaluateCSUMapping ?match2 ?mapping 0 RejectCSU) ;;; for when the mapping is useless
+     (bestMapping ?match2 ?mapping)
+     (uninferredSentence (candidateInferenceOf ?ci ?mapping)))
+
+;;; extract analogy skolems from CIs
+(<== (findAnalogySkolemsFromCIs ?skolems ?props)
+     (evaluate ?skolems
+       (TheClosedRetrievalSetOf ?clause
+         (subexpressionMatching (AnalogySkolemFn ?x) ?props ?clause))))
+
+;;; predicate to check whether we can stop doing microstory expansions
+(<== (foundSolutionForMicrostoryExpansion ?case ?leafMt ?answer)
+     (foundSolutionForCopa ?case ?leafMt ?answer))
+
+;;; is the answer perfectly represented in the case?
+(<== (foundSolutionForCopa ?case ?leafMt ?answer)
+     (wmOnly (ist-Information MicrostoryMt (mtTreeLeafNodesForCase ?case ?leafMt)))
+     (unifies ?case (ReadingCopaQMtFn (CopaQFn ?qnum)))
+     (evaluate ?inferenceCaseMts 
+                (TheClosedRetrievalSetOf (WMCaseFn ?genlMt)
+                  (useTransitiveInference (genlMt ?leafMt ?genlMt))))
+     (evaluate ?inferenceCase (MakeFormulaFn CaseUnionFn ?inferenceCaseMts))
+     (matchBetween (KBCaseFn (ReadingOfCopaQAMtFn (CopaQFn ?qnum) A))
+                   ?inferenceCase
+                   (TheSet)
+                   ?match)
+     (bestMapping ?match ?map)
+     (baseNormalizedScoreOf ?map ?score)
+     (baseOfMapping ?map ?base)
+     (greaterThanOrEqualTo ?score 0.9999)
+     (evaluate ?tis
+       (TheClosedRetrievalSetOf ?ti
+         (and (correspondsInMapping ?map ?bi ?ti)
+              (ist-Information ?leafMt ?ti))))
+     (evaluate ?answerFacts (MakeFormulaFn and (SetToListFn ?tis)))
+     (evaluate ?answer A)
+     (evaluate ?bis
+       (TheClosedRetrievalSetOf ?bi
+         (and (correspondsInMapping ?map ?bi ?ti)
+              (ist-Information (ReadingOfCopaQAMtFn (CopaQFn ?qnum) A) ?bi))))
+     (evaluate ?baseFacts (MakeFormulaFn and (SetToListFn ?bis)))
+     (ist-Information ?leafMt ?answerFacts) 
+     (ist-Information (ReadingOfCopaQAMtFn (CopaQFn ?qnum) A) ?baseFacts)
+     (mcTestOption (CopaAnsFn (CopaQFn ?qnum) ?answer) ?text)
+     (ist-Information (InferenceTraceMtFn ?case)
+       (justify (ist-Information ?leafMt 
+                  (correctAnswer ?answer ?text))
+                (TheList (ist-Information (ReadingOfCopaQAMtFn (CopaQFn ?qnum) A) ?baseFacts)
+                         (ist-Information ?leafMt ?answerFacts))))
+       )
+
+(<== (foundSolutionForCopa ?case ?leafMt ?answer)
+     (wmOnly (ist-Information MicrostoryMt (mtTreeLeafNodesForCase ?case ?leafMt)))
+     (evaluate ?inferenceCaseMts 
+                (TheClosedRetrievalSetOf (WMCaseFn ?genlMt)
+                  (useTransitiveInference (genlMt ?leafMt ?genlMt))))
+     (evaluate ?inferenceCase (MakeFormulaFn CaseUnionFn ?inferenceCaseMts))
+     (unifies ?case (ReadingCopaQMtFn (CopaQFn ?qnum)))
+     (matchBetween (KBCaseFn (ReadingOfCopaQAMtFn (CopaQFn ?qnum) B))
+                   ?inferenceCase
+                   (TheSet)
+                   ?match)
+     (bestMapping ?match ?map)
+     (baseNormalizedScoreOf ?map ?score)
+     (baseOfMapping ?map ?base)
+     (greaterThanOrEqualTo ?score 0.9999)
+     (evaluate ?tis
+       (TheClosedRetrievalSetOf ?ti
+         (and (correspondsInMapping ?map ?bi ?ti)
+              (ist-Information ?leafMt ?ti))))
+     (evaluate ?answerFacts (MakeFormulaFn and (SetToListFn ?tis)))
+     (evaluate ?answer B)
+     (evaluate ?bis
+       (TheClosedRetrievalSetOf ?bi
+         (and (correspondsInMapping ?map ?bi ?ti)
+              (ist-Information (ReadingOfCopaQAMtFn (CopaQFn ?qnum) B) ?bi))))
+     (evaluate ?baseFacts (MakeFormulaFn and (SetToListFn ?bis)))
+     (ist-Information ?leafMt ?answerFacts) 
+     (ist-Information (ReadingOfCopaQAMtFn (CopaQFn ?qnum) B) ?baseFacts)
+     (mcTestOption (CopaAnsFn (CopaQFn ?qnum) ?answer) ?text)
+     (ist-Information (InferenceTraceMtFn ?case)
+       (justify (ist-Information ?leafMt 
+                  (correctAnswer ?answer ?text))
+                (TheList (ist-Information (ReadingOfCopaQAMtFn (CopaQFn ?qnum) B) ?baseFacts)
+                         (ist-Information ?leafMt ?answerFacts))))
+       )
+     
+     
+
+;;;;;;;;;;;;;;;;; Kickoff versions
+(in-microtheory Session-ReasonerMt)
+
+(isa copaMicrostoryExpansion ComplexActionPredicate)
+(arity copaMicrostoryExpansion 1)
+(arg1Isa copaMicrostoryExpansion Thing)
+(comment copaMicrostoryExpansion
+  "(copaMicrostoryExpansion <question>) kicks off the IM version of the same plan.")
+
+(preconditionForMethod
+ (currentInteractionMgr ?im)
+ (methodForAction
+  (copaMicrostoryExpansion ?num)
+  (actionSequence (TheList (doRemoteAgentPlan ?im (copaMicrostoryExpansion ?num))))))
+
+
+(<== (preferInContext (copaMicrostoryExpansion ?num) ?seq1 (actionSequence (TheList (doRemoteAgentPlan ?im (copaMicrostoryExpansion ?num))))))
+
+
+
+ 
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; general microstory expansion plans
+
+;;; ALL THESE PLANS STILL USE (microstoryInferenceMt ?case).  THAT MUST CHANGE BEFORE THEY CAN BE UNCOMMENTED
+;;;
+;;;(isa microstoryExpansion ComplexActionPredicate)
+;;;(arity microstoryExpansion 1)
+;;;(arg1Isa microstoryExpansion Microtheory)
+;;;(comment microstoryExpansion "(microstoryExpansion <case>) does remindings over generalizations of
+;;;microstories to make common-sense inferences about a case. It is, for example, designed to be able to bring
+;;;across an inference such as 'when you stab something, there is a hole in that thing.' It calls itself recursively 
+;;;until the reminding has a low enough baseNormalizedScoreOf.  As of 9/1/15 this
+;;;technique stupidly assumes that every CI from microstories is valid and sticks it in the KB. USE WITH CAUTION.")
+;;;
+;;;(isa microstoryExpansionRecursive ComplexActionPredicate)
+;;;(arity microstoryExpansionRecursive 1)
+;;;(arg1Isa microstoryExpansionRecursive Microtheory)
+;;;(comment microstoryExpansionRecursive "(microstoryExpansionRecursive <case>) is the recursive call
+;;;for microstoryExpansionRecursive The only difference is that it calls the reminding with 
+;;;(CaseUnionFn (KBCaseFn ?case) (WMCaseFn <inferenceMt>)), instead of just (KBCaseFn ?case).
+;;;This case will include inferences from previous microstory expansion.  As of 9/1/15 this
+;;;technique stupidly assumes that every CI from microstories is valid and sticks it in the KB. USE WITH CAUTION.")
+;;;
+;;;(isa numRetrievalsPerformed Predicate)
+;;;(arity numRetrievalsPerformed 2)
+;;;(arg1Isa numRetrievalsPerformed Microtheory)
+;;;(arg2Isa numRetrievalsPerformed Integer)
+;;;(comment numRetrievalsPerformed
+;;;  "(numRetrievalsPerformed ?case ?num) indicates that microstory expansion/analogical chaining has performed ?num
+;;;retrievals over the microstory case library, without previously eliminated cases in the case library.  This number 
+;;;is reset every time candidate inferences are brought over.")
+;;;
+;;;;;; this technique very stupidly assumes that EVERY CI from ALL remindings from microstories is valid. 
+;;;;;; USE WITH CAUTION
+;;;
+;;;
+;;;(preconditionForMethod
+;;; (true)
+;;; (methodForAction
+;;;  (microstoryExpansion ?case)
+;;;  (actionSequence
+;;;   (TheList
+;;;    ;(doBreak Execution "~&Ready for inspection" (?case))
+;;;    (doRecord (genlMt (microstoryInferenceMt ?case) ?case))
+;;;    (doAgentPlan 
+;;;     (actionSequence 
+;;;      (TheList 
+;;;       (microstoryExpansionRecursive ?case))))))))
+;;;
+;;;
+;;;;;;;;;;;;; Recursive Versions
+;;;
+;;;;;; maxed out retrievals
+;;;
+;;;(preconditionForMethod
+;;; (numRetrievalsPerformed ?case 5)
+;;; (methodForAction
+;;;  (microstoryExpansionRecursive ?case)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doUntell (numRetrievalsPerformed 5))
+;;;    (doSolicitMicrostoryForCase ?case)
+;;;    ;;; after that microstory is added, can we do it? 
+;;;    ;;; the check loop is not called again here; whatever plan called microstoryExpansion is responsible for calling it again, 
+;;;    ;;; because otherwise this will hit an infinite loop
+;;;    ))))
+;;;
+;;;;;; retrieved a good CSU
+;;;(preconditionForMethod
+;;; (and (wmOnly (numRetrievalsPerformed ?case ?r))
+;;;      (lessThan ?r 5)
+;;;      (evaluate ?usedCSUs (TheClosedRetrievalSetOf ?CSU (previouslyUsedCSUforCase ?case ?CSU)))
+;;;      (outsourcedOnly (reminding (CaseUnionFn (KBCaseFn ?case)
+;;;                                              (WMCaseFn (microstoryInferenceMt ?case)))
+;;;                                 (CaseLibraryMinusFn MicrostoryGContext ?usedCSUs)
+;;;                                 (TheSet) 
+;;;                                 ?reminding ?match))
+;;;      (baseOfMatch ?match ?caseifiedRetrievedCSU)
+;;;      (unifies ?caseifiedRetrievedCSU (?caseConstructor ?retrievedCSU))
+;;;      (evaluate ?matchConstraints 
+;;;        (TheClosedRetrievalSetOf ?constraint
+;;;          (ist-Information MatchConstraintStorageMt (matchConstraintsFor ?retrievedCSU ?constraint))))
+;;;      (outsourcedOnly (matchBetween ?caseifiedRetrievedCSU 
+;;;                                    (CaseUnionFn (KBCaseFn ?case)
+;;;                                                 (WMCaseFn (microstoryInferenceMt ?case)))
+;;;                                    ?matchConstraints ?match2))
+;;;      (bestMapping ?match2 ?mapping)
+;;;;;;      (mappingOf ?mapping ?match) ;;; toggle between this and several lines above to switch match constraints on/off
+;;;      (baseNormalizedScoreOf ?mapping ?score)
+;;;      (greaterThanOrEqualTo ?score 0.7) ;;; make sure that the mapping between the microstory and the case is very high
+;;;      (evaluate ?justifyArgs
+;;;        (TheClosedRetrievalSetOf (TheList (ist-Information (microstoryInferenceMt ?case) ?fact)
+;;;                                          (TheList (ist-Information ?retrievedCSU ?source) ?targTerms (candidateInferenceOf ?ci ?mapping)))
+;;;          (and (candidateInferenceOf ?ci ?mapping)
+;;;               (candidateInferenceContent ?ci ?fact)
+;;;               (sourceOfCandidateInference ?ci ?source)
+;;;               (ist-Information ?retrievedCSU ?source)
+;;;               (candidateInferenceCorrespondences ?ci ?corrs)
+;;;               (targTermsFromCorrs ?corrs ?targTerms ?case)
+;;;               ;;; avoid restating things we know already through genls
+;;;               (uninferredSentence
+;;;                (and (unifies ?fact (isa ?ent ?coll))
+;;;                     (ist-Information ?case ?fact)))
+;;;               (uninferredSentence
+;;;                (and (ist-Information ?case ?caseFact)
+;;;                     (disjointWith ?fact ?caseFact))))))
+;;;      (evaluate ?tossedCSUs (TheClosedRetrievalSetOf ?xCSU (previouslyEliminatedCSUforCase ?case ?xCSU))))
+;;; (methodForAction
+;;;  (microstoryExpansionRecursive ?case)
+;;;  (actionSequence
+;;;   (TheList
+;;;   ; (doBreak Execution "~&Ready for inspection" (?case))
+;;;    (doUntell (numRetrievalsPerformed ?case ?r))
+;;;    (doForEach
+;;;     ?prevElim ?tossedCSUs
+;;;     (actionSequence
+;;;      (TheList
+;;;       (doUntell (previouslyEliminatedCSUforCase ?case ?prevElim))
+;;;       (doUntell (previouslyUsedCSUforCase ?case ?prevElim))))) ;;; reset the previously rejected ones so we can try'em again if they're relevant now.
+;;;    ;;; PROBLEM: HOW TO RESET PREVIOUSLY USED ONES FOR REUSE WITHOUT HITTING INFINITE LOOPS?
+;;;    (doAgentPlan
+;;;     (actionSequence
+;;;      (TheList
+;;;       (doTell (previouslyUsedCSUforCase ?case ?retrievedCSU))
+;;;       (doTell (numRetrievalsPerformed ?case 1))
+;;;       (doForEach ?prop3 ?justifyArgs (doJustifyCIWithSourceFact ?prop3))       
+;;;       (doClearDGroupCaches);; so that we don't keep the cached dgroup
+;;;       (doAgentPlan 
+;;;        (actionSequence 
+;;;         (TheList 
+;;;          (microstoryExpansionRecursive ?case)))))))))))
+;;;
+;;;;;; for cases where the retrieved case no longer produces mappings, or it's not good enough, once the match constraints are put in place.
+;;;(preconditionForMethod
+;;; (and (wmOnly (numRetrievalsPerformed ?case ?r))
+;;;      (lessThan ?r 5)
+;;;      (evaluate ?r1 (PlusFn ?r 1))
+;;;      (evaluate ?usedCSUs (TheClosedRetrievalSetOf ?CSU (previouslyUsedCSUforCase ?case ?CSU)))
+;;;      (outsourcedOnly (reminding (CaseUnionFn (KBCaseFn ?case)
+;;;                                              (WMCaseFn (microstoryInferenceMt ?case))) 
+;;;                                 (CaseLibraryMinusFn MicrostoryGContext ?usedCSUs) 
+;;;                                 (TheSet) 
+;;;                                 ?reminding ?match))
+;;;      (baseOfMatch ?match ?caseifiedRetrievedCSU)
+;;;      (unifies ?caseifiedRetrievedCSU (?caseConstructor ?retrievedCSU))
+;;;      (evaluate ?matchConstraints 
+;;;        (TheClosedRetrievalSetOf ?constraint
+;;;          (ist-Information MatchConstraintStorageMt (matchConstraintsFor ?retrievedCSU ?constraint))))
+;;;      (outsourcedOnly (matchBetween ?caseifiedRetrievedCSU 
+;;;                                    (CaseUnionFn (KBCaseFn ?case)
+;;;                                                 (WMCaseFn (microstoryInferenceMt ?case)))
+;;;                                    ?matchConstraints ?match2))
+;;;      (or (uninferredSentence (bestMapping ?match2 ?mapping))
+;;;          (and (bestMapping ?match2 ?mapping)
+;;;               (baseNormalizedScoreOf ?mapping ?score)
+;;;               (lessThan ?score 0.7))))
+;;; (methodForAction
+;;;  (microstoryExpansionRecursive ?case)
+;;;  (actionSequence
+;;;   (TheList
+;;;    ;(doBreak Execution "~&Ready for inspection" (?case))
+;;;    (doUntell (numRetrievalsPerformed ?case ?r))
+;;;    (doTell (numRetrievalsPerformed ?case ?r1))
+;;;    (doTell (previouslyEliminatedCSUforCase ?case ?retrievedCSU))
+;;;    (doTell (previouslyUsedCSUforCase ?case ?retrievedCSU)) ;; to bind things properly in caseLibraryMinusFn
+;;;    (doAnnounce "rejecting retrieved case ~a: no mappings found with mapping constraints" (?retrievedCSU))
+;;;    (doAgentPlan (actionSequence (TheList (microstoryExpansionRecursive ?case))))))))
+
+;;; retrieved a bad CSU. Taken out for now since all retrieved CSUs are seen as trustworthy (ew)
+;;;(preconditionForMethod
+;;; (and (uninferredSentence (foundSolutionForCopa ?case ?answer))
+;;;      (evaluate ?usedCSUs (TheClosedRetrievalSetOf ?CSU (previouslyUsedCSUforCase ?case ?CSU)))
+;;;      (outsourcedOnly (reminding (CaseUnionFn (KBCaseFn ?case)
+;;;                                              (WMCaseFn (microstoryInferenceMt ?case)))
+;;;                                 (CaseLibraryMinusFn MicrostoryGContext ?usedCSUs)
+;;;                                 (TheSet) 
+;;;                                 ?reminding ?match))
+;;;      (mappingOf ?mapping ?match)
+;;;      (baseNormalizedScoreOf ?mapping ?score)
+;;;      (lessThan ?score 0.4)) ;;; make sure that the mapping between the microstory and the case is very high
+;;; (methodForAction
+;;;  (microstoryExpansionRecursive ?case)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doAnnounce "no inferences from microstories")))))
+
+;;; only takes the CIs from the best mapping.  Still dangerous.
+;;;(preconditionForMethod
+;;; (and (outsourcedOnly (reminding (KBCaseFn ?case) 
+;;;                                 MicrostoryGContext 
+;;;                                 (TheSet) 
+;;;                                 ?reminding ?match))
+;;;      (baseOfMatch ?match ?caseifiedRetrievedCSU)
+;;;      (unifies ?caseifiedRetrievedCSU (?caseConstructor ?retrievedCSU))
+;;;      (bestMapping ?match ?bestMap)
+;;;      (candidateInferenceOf ?ci ?bestMap)
+;;;      (candidateInferenceContent ?ci ?fact))
+;;; (methodForAction
+;;;  (microstoryExpansionForQA-bestMappingOnly ?case)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doTell (genlMt (microstoryInferenceMt ?case) ?case))
+;;;    (doTell (previouslyUsedCSUforCase ?case ?retrievedCSU))
+;;;    (doTell (ist-Information (microstoryInferenceMt ?case) ?fact))))))
+
+
+;;; old COPA plans
+;;; retrieved one or more good CSUs
+;;;(preconditionForMethod
+;;; (and (uninferredSentence (foundSolutionForMicrostoryExpansion ?case ?leafMt ?answer))
+;;;      (evaluate ?usedCSUs (TheClosedRetrievalSetOf ?CSU (previouslyUsedCSUforCase ?case ?CSU)))
+;;;      ;;; this goes through all the known leaf nodes of the inference tree and performs remindings on them, grabs match
+;;;      ;;; constraints, does another mapping with constraints, and returns those mappings. 
+;;;;      (evaluate ?justifications
+;;;;        (TheClosedRetrievalSetOf (TheList ?justifyArgs ?leafMt)
+;;;;          (and 
+;;;      (wmOnly (ist-Information MicrostoryMt 
+;;;                (mtTreeLeafNodesForCase ?case ?leafMt)))
+;;;      (evaluate ?inferenceCaseMts 
+;;;        (TheClosedRetrievalSetOf (WMCaseFn ?genlMt)
+;;;          (useTransitiveInference (genlMt ?leafMt ?genlMt))))
+;;;      (evaluate ?remindingCase (MakeFormulaFn CaseUnionFn ?inferenceCaseMts))
+;;;      (outsourcedOnly (reminding ?remindingCase
+;;;                                 (CaseLibraryMinusFn MicrostoryGContext ?usedCSUs)
+;;;                                 (TheSet) 
+;;;                                 ?reminding ?match))
+;;;      (baseOfMatch ?match ?caseifiedRetrievedCSU)
+;;;      (unifies ?caseifiedRetrievedCSU (?caseConstructor ?retrievedCSU))
+;;;      (evaluate ?matchConstraints 
+;;;        (TheClosedRetrievalSetOf ?constraint
+;;;          (ist-Information MatchConstraintStorageMt (matchConstraintsFor ?retrievedCSU ?constraint))))
+;;;      (outsourcedOnly (matchBetween ?caseifiedRetrievedCSU 
+;;;                                    ?remindingCase
+;;;                                    ?matchConstraints ?match2))
+;;;      (bestMapping ?match2 ?mapping)
+;;;      (gatherJustifyArgs ?case ?mapping ?leafMt ?justifyArgs)
+;;;      ;               )))
+;;;      (unpackInferenceFromJustify ?justifyArgs ?inferenceMt ?inferenceGenls)
+;;;      (uninferredSentence (unifies ?justifyArgs (TheSet)))
+;;;      (evaluate ?tossedCSUs (TheClosedRetrievalSetOf ?xCSU (previouslyEliminatedCSUforCase ?case ?xCSU))))
+;;; (methodForAction
+;;;  (microstoryExpansionForQARecursive ?case)
+;;;  (actionSequence
+;;;   (TheList
+;;;    ;(doBreak Execution "~&Ready for inspection" (?case))
+;;;    (doForEach
+;;;     ?prevElim ?tossedCSUs
+;;;     (actionSequence
+;;;      (TheList
+;;;       (doUntell (previouslyEliminatedCSUforCase ?case ?prevElim))
+;;;       (doUntell (previouslyUsedCSUforCase ?case ?prevElim))))) ;;; reset the previously rejected ones so we can try'em again if they're relevant now.
+;;;    (doForEach ?genl ?inferenceGenls
+;;;               (actionSequence (TheList
+;;;                                (doRecord (genlMt ?inferenceMt ?genl)))))
+;;;    ;;; PROBLEM: HOW TO RESET PREVIOUSLY USED ONES FOR REUSE WITHOUT HITTING INFINITE LOOPS?
+;;;    (doAgentPlan
+;;;     (actionSequence
+;;;      (TheList
+;;;       (doTell (previouslyUsedCSUforCase ?case ?retrievedCSU))
+;;;;       (doForEach ?justifiable ?justifications
+;;;       (doJustifyCIWithSourceFact (TheList ?justifyArgs ?leafMt))
+;;;;       )
+;;;       (doClearDGroupCaches);; so that we don't keep the cached dgroup
+;;;       (doAgentPlan 
+;;;        (actionSequence 
+;;;         (TheList 
+;;;          (microstoryExpansionForQARecursive ?case)))))))))))
+   
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,52 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: compp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+;;;
+;;;
+;;; CJM 10-19 Move comparison event semantics to the comparative rule.
+;;;    Why? Because we want to be able to handle things like "the larger man entered the room."
+;;;    and "larger man than me" and have the comparison
+;;;
+;;; Which states have a larger capital than Illinois? comparison is what? capital v Illinois?
+;;; State vs Illinois where the adjective pred is pred applied to capital? WTF?
+;;;
+;;; What if we made compps the whole phrase. be + compp (larger than the dog)
+;;;                                          be + compp-np (a larger dog than the lab)
+;;;                                          verb + compp (ran a longer race than I.)
+(isa -compp->than-np- EAGrammarRule)
+(comment -compp->than-np- "'than the car', 'than a dog'")
+(probabilityEAGrammarRule -compp->than-np- 1.0)
+(grammarRule -compp->than-np-
+ (EATermFn compp
+  (TheList (var ?varnp)
+   (sem
+    (and ?semnp (isa :ACTION ComparisonEvent)
+         (comparer :ACTION :CONSTITUENT1)
+         (comparee :ACTION :CONSTITUENT2)
+         (comparativeRelation :ACTION :RELATION)))))
+ (TheList (EATermFn Conjunction (TheList (lex than)))
+  (EAHeadFn (EATermFn np (TheList (var ?varnp) (sem ?semnp))))))
+
+(isa -compp->than-vpinv- EAGrammarRule)
+(comment -compp->than-vpinv- "'than the box holds'")
+(probabilityEAGrammarRule -compp->than-vpinv- 1.0)
+(grammarRule -compp->than-vpinv-
+ (EATermFn compp (TheList (var ?varvp) (sem ?semvp)))
+ (TheList (EATermFn Conjunction (TheList (lex than)))
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (inv +) (link -) (agr ?a) (var ?varvp) (sem ?semvp)
+     (inv-subject ?subvp))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

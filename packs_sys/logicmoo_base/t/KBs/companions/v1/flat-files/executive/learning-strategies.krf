@@ -1,0 +1,278 @@
+;;;
+;;; learning-strategies.meld
+;;;
+;;; This file contains the definitions for different learning strategies
+
+;;;
+;;; I have commented out the stubs because these are now preferred over the
+;;; catch-all message, "If I had any strategies, I'd be pursuing ... blah 
+;;; blah blah", and I think we'd rather have that message than no message.
+;;; I think it will be appropriate to uncomment these stubs if we can provide
+;;; learning-goal-specific information about why there are no applicable 
+;;; strategies (or better yet, provide them along with actual strategies!).
+;;; For an example of what I mean, check out my default plan for
+;;; (pursueLearningGoal 
+;;;    (SpatialBinaryClassificationGoalFn ?example ?info-source ?concept))
+;;; -MDM
+
+(in-microtheory ExecutiveMt)
+
+;;;
+;;; Learning new facts.
+;;; For the most part, this means facts that are not derivable from the
+;;; current KB.  Consequently, such facts must be elicited from experience
+;;; or a user.  Formulate questions to be expressed.
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (LearnFactsGoalFn ?concept))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+
+;;; Find a path from query to answer (possibly using connection graph)
+;;; Record paths as possible inferences.
+;;; Basically, the goal specifies a concrete inference with overly specific 
+;;; antecedent and consequent.  It may not be generalizable without expanding
+;;; intermediate steps.  In the case of Florida borders the Atlantic Ocean,
+;;; the thing to be learned here is the antecedent.  Apparently, we should
+;;; have been able to deduce the antecedent from things we knew.  How?  
+;;; That's where finding a possible inference path would halp.  The path from
+;;; Florida to the Atlantic Ocean should be detectable.
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (LearnInferenceRuleFn ?query ?answer))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+
+
+;;; Define a new HTN procedure, either by generalizing/lifting an execution 
+;;; trace or by planning and searching for ways to achieve ?end-state
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (LearnProcedureFn ?task ?end-state))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+
+;;; Discover how a new learned belief fits with the existing belief system.
+;;; What are the implications?  Invoke some kind of rumination to run
+;;; pseudo-forward-driven rules and to retrieve newly accessible similar cases.
+;;; Identify and consider the new reverse candidate-inferences.
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (AssimilateKnowledgeGoalFn ?learned-fact))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+
+
+;;; Discover shortcuts and other ways to achieve the goals of ?task more 
+;;; efficiently.  This may involve explicit optimization, or looking for 
+;;; shortcuts, or identifying unnecessary or redundant steps, or finding
+;;; ways to regularize the environment.  Improvements can range from 
+;;; reordering steps, changing priorities, adding steps, or conditionalizing
+;;; activities.
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (ImproveEfficiencyFn ?task))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+
+;;; Discover ways to improve the robustness of achieving a task.  This may
+;;; involve identifying exogenous factors and creating contingencies, or 
+;;; putting limits on tradeoffs, or better anticipating and preparing for
+;;; stochastic events.
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (ImproveRobustnessFn ?task))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+ 
+;;; Reify health statistics to identify trends, precursors to heap blowouts
+;;; and system crashes.  Develop a qualitative model of self behavior.
+;;; Learn how to tune and optimize relative goal priorities
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (LearnSelfModelFn SelfToken-Indexical))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+
+;;; Discover the preferences and communication patterns of the user.
+;;; Learn how to communicate more effectively.
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (LearnUserModelFn ?user))
+;;;    (actionSequence
+;;;      (TheList
+;;;        ))))
+
+
+;;; A guess:
+;;; First, store away the example with whatever viable encoding strategies 
+;;; exist for it (probably want to constrain this further later).
+;;; If there are multiple viable classifiers, or classification strategies, 
+;;; maybe we can treat this as an opportunity to learn about them.  Maybe
+;;; kick off some kind of LearnSelfModel goal.  Similarly, if we have 
+;;; multiple representation strategies we could do the same for those.
+;;; To actually learn the encodings - maybe we just do it immediately, or 
+;;; perhaps we create a new learning goal for that (AssimilateExampleCase 
+;;; or something).
+
+;;;(preconditionForMethod
+;;;  (true)
+;;;  (methodForAction
+;;;    (pursueLearningGoal (ClassificationGoalFn ?example ?concept))
+;;;    (actionSequence
+;;;     (TheList
+;;;       ))))
+
+
+;;;
+;;; Spatial Concept Learning
+;;;
+
+;;; Learning from a positive example of a spatial concept... a flagship learning goal strategy!! -mdm
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (pursuePendingGoal (AssimilatePositiveSpatialExampleGoalFn ?example ?info-source ?concept))
+    (actionSequence
+     (TheList
+      (doAnnounce "~%I cannot pursue learning goal ~a~%   Because the information source ~a is not available in the current session"
+                  ((AssimilatePositiveSpatialExampleGoalFn ?example ?info-source ?concept) ?info-source))
+      ))))
+
+(preconditionForMethod
+ (and (agentForOpenSketch ?info-source ?agent) ;;is there an agent that has access to the info source?
+      (currentSessionReasoner ?sr)
+      (currentTickler ?tickler)
+      (unifies ?learning-goal (AssimilatePositiveSpatialExampleGoalFn ?example ?info-source ?concept))  ;; just to ensure we have access to the source in this session
+      (unifies ?encoding-goal (PerceptualEncodingGoalFn ?example ?info-source ?concept))
+      ;;(unifies ?self-model-goal (EncodingProductivityLearningGoalFn-Positive ?example ?info-source ?concept))  ;; will this then be decomposed to classification and productivity update?
+      (unifies ?al-classify-goal (AlignmentLearningClassificationGoalFn-Binary ?example ?info-source ?concept))
+      (unifies ?assimilate-goal (AlignmentLearningGoalFn-Positive ?example ?info-source ?concept)))
+ (methodForAction
+  (pursuePendingGoal (AssimilatePositiveSpatialExampleGoalFn ?example ?info-source ?concept))
+  (actionSequence
+   (TheList
+    (setGoalStatus ?learning-goal AwaitingSubordinates)
+    (postGoalForAgent ?encoding-goal ?sr)
+    ;;(postGoalForAgent ?self-model-goal ?sr)
+    (postGoalForAgent ?al-classify-goal ?tickler)  ;; try classifying every example before you learn from it (to assess the encoding strategy)
+    (postGoalForAgent ?assimilate-goal ?tickler)
+    (addSupportingGoals ?learning-goal (TheList ?encoding-goal
+                                                ?al-classify-goal
+                                                ?assimilate-goal))  ;;probably too aggressive long-term
+    (addPrecedingGoal ?al-classify-goal ?encoding-goal)
+    (addPrecedingGoal ?assimilate-goal ?al-classify-goal)
+    (doAgentPlan (processGoals))
+    ))))
+ 
+(<== (preferInContext (pursuePendingGoal (AssimilatePositiveSpatialExampleGoalFn ?example ?info-source ?concept)) ?seq1 ?seq2) 
+     (subexpressionMatching (setGoalStatus ?learning-goal AwaitingSubordinates)
+                            ?seq1 ?subex))
+
+
+;; Learning from a negative example of a spatial concept
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (pursuePendingGoal (AssimilateNegativeSpatialExampleGoalFn ?example ?info-source ?concept))
+    (actionSequence
+     (TheList
+      (doAnnounce "~%I cannot pursue learning goal ~a~%   Because the information source ~a is not available in the current session"
+                  ((AssimilateNegativeSpatialExampleGoalFn ?example ?info-source ?concept) ?info-source))
+      ))))
+
+(preconditionForMethod
+ (and (agentForOpenSketch ?info-source ?agent) ;;is there an agent that has access to the info source?
+      (currentSessionReasoner ?sr)
+      (currentTickler ?tickler)
+      (unifies ?learning-goal (AssimilateNegativeSpatialExampleGoalFn ?example ?info-source ?concept))  ;; just to ensure we have access to the source in this session
+      (unifies ?encoding-goal (PerceptualEncodingGoalFn ?example ?info-source ?concept))
+      ;;(unifies ?self-model-goal (EncodingProductivityLearningGoalFn-Negative ?negative-example ?info-source ?concept))  ;; will this then be decomposed to classification and productivity update?
+      (unifies ?al-classify-goal (AlignmentLearningClassificationGoalFn-Binary ?example ?info-source ?concept))
+      (unifies ?assimilate-goal (AlignmentLearningGoalFn-Negative ?example ?info-source ?concept)))
+ (methodForAction
+  (pursuePendingGoal (AssimilateNegativeSpatialExampleGoalFn ?example ?info-source ?concept))
+  (actionSequence
+   (TheList
+    (setGoalStatus ?learning-goal AwaitingSubordinates)
+    (postGoalForAgent ?encoding-goal ?sr)
+    ;;(postGoalForAgent ?self-model-goal ?sr)
+    (postGoalForAgent ?al-classify-goal ?tickler)  ;; try classifying every example before you learn from it (to assess the encoding strategy)
+    (postGoalForAgent ?assimilate-goal ?tickler)
+    (addSupportingGoals ?learning-goal (TheList ?encoding-goal
+                                                ?al-classify-goal
+                                                ?assimilate-goal))  ;;probably too aggressive long-term
+    (addPrecedingGoal ?al-classify-goal ?encoding-goal)
+    (addPrecedingGoal ?assimilate-goal ?al-classify-goal)
+    (doAgentPlan (processGoals))
+    ))))
+ 
+(<== (preferInContext (pursuePendingGoal (AssimilateNegativeSpatialExampleGoalFn ?example ?info-source ?concept)) ?seq1 ?seq2) 
+     (subexpressionMatching (setGoalStatus ?learning-goal AwaitingSubordinates)
+                            ?seq1 ?subex))
+
+;; classifying an example as a spatial concept (binary)
+;; SpatialBinaryClassificationGoalFn
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (pursuePendingGoal (SpatialBinaryClassificationGoalFn ?example ?info-source ?concept))
+    (actionSequence
+     (TheList
+      (doAnnounce "~%I cannot pursue learning goal ~a~%   Because the information source ~a is not available in the current session"
+                  ((AssimilateNegativeSpatialExampleGoalFn ?example ?info-source ?concept) ?info-source))
+      ))))
+
+(preconditionForMethod
+ (and (agentForOpenSketch ?info-source ?agent) ;;is there an agent that has access to the info source?
+      (currentSessionReasoner ?sr)
+      (currentTickler ?tickler)
+      (unifies ?classify-goal (SpatialBinaryClassificationGoalFn ?example ?info-source ?concept))  ;; just to ensure we have access to the source in this session
+      (unifies ?encoding-goal (PerceptualEncodingGoal-BestGuessFn ?example ?info-source ?concept))
+      (unifies ?al-classify-goal (AlignmentLearningClassificationGoalFn-Binary ?example ?info-source ?concept)))
+ (methodForAction
+  (pursuePendingGoal (SpatialBinaryClassificationGoalFn ?example ?info-source ?concept))
+  (actionSequence
+   (TheList
+    (setGoalStatus ?classify-goal AwaitingSubordinates)
+    (postGoalForAgent ?encoding-goal ?sr)
+    (postGoalForAgent ?al-classify-goal ?tickler)
+    (addSupportingGoals ?classify-goal (TheList ?encoding-goal
+                                                ?al-classify-goal))  ;;probably too aggressive long-term
+    (addPrecedingGoal ?al-classify-goal ?encoding-goal)
+    (doAgentPlan (processGoals))
+    ))))
+ 
+(<== (preferInContext (pursuePendingGoal (SpatialBinaryClassificationGoalFn ?example ?info-source ?concept)) ?seq1 ?seq2) 
+     (subexpressionMatching (setGoalStatus ?learning-goal AwaitingSubordinates)
+                            ?seq1 ?subex))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

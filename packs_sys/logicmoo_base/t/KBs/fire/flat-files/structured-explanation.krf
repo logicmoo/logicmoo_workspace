@@ -1,0 +1,59 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: structured-explanation.meld
+;;;;    System: FIRE
+;;;;    Author: Jon Wetzel
+;;;;   Created: July 22, 2011 16:38:31
+;;;;   Purpose: Structured Explanation System (implemented in knowledge)
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(isa StructuredExplanationMt Microtheory)
+
+(in-microtheory StructuredExplanationMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(isa StrExType Collection)
+(comment StrExType "StrExType is the collection of types of explanations.")
+(genls StrExType Thing)
+
+(isa Inexplicable StrExType)
+(comment Inexplicable 
+  "The instance of StrExType representing the absense of an explanation.  If
+   (strExTypeFor <expression> Inexplicable) then no explanation exists for 
+   <expression>.")
+
+(isa strExFor TernaryPredicate)
+(comment strExFor 
+  "(strExFor <expression> <type> <supporting-expressions>) is true when the 
+   <type> of explanation for <statement> consists of the list of statements
+   given.")
+(arg1Isa strExFor CycLExpression)
+(arg2Isa strExFor StrExType)
+(arg3Isa strExFor List) ;; list of CycLExpressions 
+
+(isa strExTypeFor BinaryPredicate)
+(comment strExTypeFor 
+  "(strExTypeFor <expression> <type>) is true when explanation type <type>
+   applies to the expression given.  Systems should specify which types apply.
+   By default, none are given.  When none is found, Inexplicable is returned.")
+
+(<== (strExTypeFor ?statement Inexplicable)
+     (groundExpression ?statement)
+     (variableExpression ?type)
+     (honorTimestamps (uninferredSentence ?statement ?type)))
+
+(isa strExTypeForPred BinaryPredicate)
+(comment strExTypeForPred 
+  "(strExTypeFor <predicate> <type>) is true when explanation type <type>
+   applies to the predicate given.  Note: if there is some type of statement 
+   with the given predicate that is not explainable, this should not be true.")
+(arg1Isa strExTypeForPred Predicate)
+(arg2Isa strExTypeForPred StrExType)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,52 @@
+
+(in-microtheory TestMt)
+(genlMt TestPlanMt CompanionsMt)   ; inherit the primitives
+(genlMt CompanionsMt TestMt)
+
+(isa countDownFrom ComplexActionPredicate)
+(arity countDownFrom 1)
+
+(preconditionForMethod
+  (true)
+  (methodForAction 
+    (countDownFrom 0)
+    (actionSequence
+      (TheList))))
+
+(preconditionForMethod
+  (and (greaterThan ?num 0)
+       (evaluate ?n-1 (DifferenceFn ?num 1)))
+  (methodForAction
+    (countDownFrom ?num)
+    (actionSequence
+      (TheList
+        (countDownFrom ?n-1)))))
+
+
+(isa testAsyncPlanning ComplexActionPredicate)
+(arity testAsyncPlanning 0)
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (testAsyncPlanning)
+    (actionSequence
+      (TheList
+        (doAnnounce "in parent process" ())
+        (doAsynchronousTask
+          (actionSequence
+            (TheList
+              (doAnnounce "starting child 1" ())
+              (countDownFrom 40)
+              (doAnnounce "ending child 1" ()))))
+        (doAsynchronousTask
+          (actionSequence
+            (TheList
+              (doAnnounce "starting child 2" ())
+              (countDownFrom 10)
+              (doAnnounce "ending child 2" ()))))
+        (doAnnounce "suspending parent task" ())
+        (doSuspend)
+        (doAnnounce "resuming parent task" ())))))
+
+        

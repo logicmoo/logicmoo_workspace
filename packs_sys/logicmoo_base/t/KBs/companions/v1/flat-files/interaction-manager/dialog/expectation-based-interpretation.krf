@@ -1,0 +1,375 @@
+;;;
+;;; expectation-based-interpretation.meld
+;;;
+;;; This file contains definitions of methods for interpreting 
+;;; user utterances in light of expectations.
+;;; Right now, it only handles the simplest case, which is where
+;;; the system has asked a disambiguation question and expects a
+;;; numbered response.
+;;;
+;;; Ultimately, it should be possible to bias interpretation based on 
+;;; expectation.
+;;;
+
+(in-microtheory Interaction-ManagerMt)  ; This is the agent context.  Don't change it!
+
+(isa interpretAsResponse ComplexActionPredicate)
+(arity interpretAsResponse 4)
+(arg1Isa interpretAsResponse Microtheory)
+(arg2Isa interpretAsResponse CycLTerm)
+(arg3Isa interpretAsResponse Microtheory)
+(arg4Isa interpretAsResponse TemporalObjectType)
+(comment interpretAsResponse "(interpretAsResponse ?context ?sentence-id ?discourse-context ?question-type) interprets a user utterance in the context of an expected reply to an utterance.")
+
+(isa reinterpretSentence ComplexActionPredicate)
+(arity reinterpretSentence 3)
+(arg1Isa reinterpretSentence Microtheory)
+(arg2Isa reinterpretSentence CycLTerm)
+(arg3Isa reinterpretSentence Microtheory)
+(comment reinterpretSentence "(reinterpretSentence ?context ?sentence-id ?discourse-ctxt) re-writes the interpretation in light of a revised interpretation. It works for discourses too!")
+
+;;;
+;;; Direct Answers
+;;;
+
+
+;;; Numeric choices:
+;;; Note that this looks directly at the input string and doesn't rely on EA to do the right thing at all.
+;;; This method allows the user to select a particular enabled choice in a choice set.
+(preconditionForMethod
+  (wmOnly
+    (localOnly  ; <- this only works because none of the preconditions are rule-defined
+      (and (ist-Information ?context
+             (interpretationOf ?sentence-id ?choice-integer))
+           (isa ?choice-integer Integer)
+           (outsourcedOnly (currentSystemUtterance ?system-utterance))
+           (lookupOnly
+             (ist-Information ?context
+               (queryChoices ?system-utterance ?choice-list)))
+           (evaluate ?choice
+             (NthInListFn ?choice-integer ?choice-list))
+           ;; Now figure out which choice-set, select the choice and resume processing the original question.
+           (lookupOnly
+             (ist-Information ?context
+               (inReplyTo ?system-utterance ?original-sentence-id)))
+           (lookupOnly
+             (ist-Information ?discourse-ctxt
+               (choice ?csid ?choiceid ?choice)))  ; only holds when choice is an EA choiceset choice
+           (lookupOnly
+             (ist-Information ?discourse-ctxt
+               (choiceSetFromSentence ?csid ?original-sentence-id)))
+           ;; make sure it's legal to select it:
+           (contextEnvAllowed
+             (enabledChoice ?discourse-ctxt ?csid ?choiceid ?choice)))))  ; This *is* rule-defined!
+  (methodForAction
+    (interpretAsResponse ?context ?sentence-id ?discourse-ctxt WhichQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?context (inReplyTo ?sentence-id ?system-utterance)))
+        ;; If we're going to have at least short-term learning, we need to record the user-disambiguations
+        ;; so that we can apply them again in the same session.
+        ;; Issue: Do we need to record all the unchosen alternatives as well?
+        (doRecord
+          (ist-Information ?context 
+            (userDisambiguatedChoice ?sentence-id ?csid ?choiceid ?choice)))
+        (doTell (ist-Information ?discourse-ctxt
+                  (selectedChoice ?csid ?choiceid ?choice)))
+        (doUpdateDrs ?original-sentence-id ?discourse-ctxt)
+        (doAnnounce "~&Ok.~%" ())
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (reinterpretSentence ?context ?original-sentence-id ?discourse-ctxt))))
+         ))))
+
+;;; Parse trees are always enabled:
+(<== (enabledChoice ?discourse-ctxt ?csid ?choiceid ?choice)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (choiceSet
+             (ChoiceSetFn ParseTree ?span)
+             ?csid)))))
+
+;;; The following only works for frameSemantics choices:
+(<== (enabledChoice ?discourse-ctxt ?csid ?choiceid ?choice)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (enablesChoice ?selection (choice ?csid ?choiceid ?choice)))))
+     (ist-Information ?discourse-ctxt
+       (trueSentence ?selection)))
+
+;;; Numeric choices denoting a particular interpretation.
+;;; This is slightly different from the above.  Because we can now write out multiple possible interpretations,
+;;; we have to be able to go back and rule out some of those interpretations later.  Here, the choices are
+;;; not arbitrary system-generated lists, but the recorded interpretations of a previous input sentence.
+(preconditionForMethod
+  (wmOnly
+    (localOnly  ; <- this only works because none of the preconditions are rule-defined
+      (and (ist-Information ?context
+             (interpretationOf ?sentence-id ?choice-integer))
+           (isa ?choice-integer Integer)
+           (outsourcedOnly (currentSystemUtterance ?system-utterance))
+           (lookupOnly
+             (ist-Information ?context
+               (queryChoices ?system-utterance ?choice-list)))
+           (evaluate ?menu-choice
+             (NthInListFn ?choice-integer ?choice-list))
+           ;; Now figure out which choice-set, select the choice and resume processing the original question.
+           (lookupOnly
+             (ist-Information ?context
+               (inReplyTo ?system-utterance ?original-sentence-id)))
+           (lookupOnly
+             (ist-Information ?context
+               (interpretationOf ?original-sentence-id ?menu-choice)))  ; only holds when choice is an IM interpretation
+           (evaluate ?selection-stmts
+             (TheClosedRetrievalSetOf ?selection-stmt
+               (and (ist-Information ?context 
+                      (selectionForInterpretation ?original-sentence-id ?menu-choice ?csid ?choiceid ?choice))
+                    (unifies ?selection-stmt
+                      (ist-Information ?discourse-ctxt
+                        (selectedChoice ?csid ?choiceid ?choice))))))
+           (evaluate ?alternatives-to-retract
+             (TheClosedRetrievalSetOf ?stmt
+               (and (allFactsAllowed
+                      (ist-Information ?context
+                        (interpretationOf ?original-sentence-id ?interp)))
+                    (different ?interp ?menu-choice)
+                    (unifies ?stmt
+                      (ist-Information ?context
+                        (interpretationOf ?original-sentence-id ?interp))))))
+           (mostSpecificUtteranceType ?original-sentence-id ?type))))
+  (methodForAction
+    (interpretAsResponse ?context ?sentence-id ?discourse-ctxt WhichQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doForgetMembers ?alternatives-to-retract)
+        (doTellMembers ?selection-stmts)
+        (doUpdateDrs ?original-sentence-id ?discourse-ctxt)
+        (doAnnounce "~&Ok.~%" ())
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (inferIntent ?context ?original-sentence-id ?discourse-ctxt)
+              ;(respondToUtterance ?context ?original-sentence-id ?type)
+              )))
+         ))))
+
+
+
+(preconditionForMethod
+ (and (ist-Information ?context (lastSentenceForStatements ?sentence-id ?s-ids))
+      (evaluate ?old-interpretations
+        (TheClosedRetrievalSetOf ?stmt
+          (and (elementOf ?sent-id ?s-ids)
+               (allFactsAllowed
+                (ist-Information ?context (interpretationOf ?sent-id ?interpretation)))
+               (unifies ?stmt (ist-Information ?context (interpretationOf ?sent-id ?interpretation)))))))
+ (methodForAction
+  (reinterpretSentence ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doForgetMembers ?old-interpretations)
+    (doUntellMembers ?old-interpretations)
+    ;;; this is where it's breaking now: doForEach isn't doing it for us.
+    (doForEach ?s-id ?s-ids
+               (reinterpretSentenceIterator ?context ?s-id ?discourse-ctxt))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (checkUnderstanding ?context ?sentence-id ?discourse-ctxt))))))))
+ 
+ (preconditionForMethod
+  (evaluate ?new-interpretations
+        (TheClosedRetrievalSetOf ?stmt
+          (and (outsourcedOnly
+                (interpretationFromDrs ?sentence-id ?discourse-ctxt ?interpretation))
+               (unifies ?stmt (ist-Information ?context
+                                (interpretationOf ?sentence-id ?interpretation))))))
+  (methodForAction
+   (reinterpretSentenceIterator ?context ?sentence-id ?discourse-ctxt)
+   (doRecordMembers ?new-interpretations)))
+
+(isa reinterpretSentenceIterator ComplexActionPredicate)
+(arity reinterpretSentenceIterator 3)
+(arg1Isa reinterpretSentenceIterator Microtheory)
+(arg2Isa reinterpretSentenceIterator InformationBearingThing)
+(arg3Isa reinterpretSentenceIterator Microtheory)
+(comment reinterpretSentenceIterator 
+  "(reinterpretSentenceIterator ?context ?sentence-id ?discourse-ctxt) regenerates the interpretation of sentence ?sentence-id, in session ?context and discourse ?discourse-ctxt.")
+  
+
+;;; We want to handle a variety of ways of responding to yes/no questions,
+;;; including "Yes", "It does.", "Certainly.", etc.
+;;; **** Can't do it for now.  EA doesn't seem to populate the drs case if we skip the period.
+;;; For now, just assume "Yes."  and "No." answers.
+(preconditionForMethod
+  (wmOnly 
+    (and (ist-Information ?context
+             (interpretationOf ?sentence-id (NLResponseFn ?response)))
+         (outsourcedOnly (currentSystemUtterance ?system-utterance))
+         (ist-Information ?context (requestedConfirmation ?system-utterance ?hypothesis))
+         (responseToTruthValue ?hypothesis ?response ?verification-stmt)
+         (localAgent ?local-agent)
+         (currentInteractionMgr ?im)  ; outsourced handler doesn't support tests yet.
+         (equals ?im ?local-agent)
+         (currentSessionReasoner ?session-reasoner)))
+  (methodForAction
+    (interpretAsResponse ?context ?sentence-id ?discourse-id YesOrNoQuestion-IBT)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan
+          ?session-reasoner
+          (actionSequence
+            (TheList
+              (doNotifyPA ?verification-stmt UserStatementEvent))))))))
+
+(isa responseToTruthValue TernaryPredicate)
+(arity responseToTruthValue 3)
+
+(<== (responseToTruthValue ?query Negative-NLResponse ?response-stmt)
+     (unifies ?response-stmt (disconfirmed ?query))
+     )
+
+(<== (responseToTruthValue ?query Affirmative-NLResponse ?response-stmt)
+     (unifies ?response-stmt (confirmed ?query)))
+     
+;;;
+;;; Indirect Answers
+;;;
+
+(isa ProvidingInformation DeclarativeUtterance)
+
+;;;; providing a story in response to a prompt
+
+(preconditionForMethod
+ (and (wmOnly (mostSpecificUtteranceType ?sentence-id DeclarativeUtterance))
+      (wmOnly (ist-Information ?context
+                (interpretationOf ?sentence-id ?new-information)))
+      (uninferredSentence (subexpressionMatching (isa ?dv ?t) ?new-information ?isa-stmt)) ;; we are not introducing a new concept
+      (uninferredSentence (subexpressionMatching (denotes ?dv ?t2) ?new-information ?denotes-stmt))
+      (uninferredSentence (ist-Information ?context ?new-information)) ;; to make sure the information isn't known already, at least in the current context
+      )
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?context (isa ?sentence-id ProvidingInformation)))
+    (doRecord (ist-Information ?context (informationProvidedInUtterance ?sentence-id ?new-information)))
+    (doAgentPlan  ; give an early response before embarking on processing, to let the user know the utterance is acknowledged
+     (actionSequence
+      (TheList
+       (respondToUtterance ?context ?sentence-id DeclarativeUtterance))))
+    (doAgentPlan  ;; we need to be able to see the recorded fact above
+     (actionSequence
+      (TheList
+       (absorbNewInformation ?new-information ?discourse-ctxt ?sentence-id ?context))))
+    ))))
+
+(preconditionForMethod
+ (and (userResponseExpected ?context StoryInput)
+      (uninferredSentence (wmOnly (ist-Information ?context (keepChaining))))
+      (ist-Information ?context (mtForStoryInput ?context ?teachingMt))
+      (ist-Information ?context (lastSentenceForStatements ?sentence-id ?sentenceSet))
+      (evaluate ?interpretations
+        (TheClosedRetrievalSetOf ?interpretation
+          (wmOnly
+           (and (elementOf ?sent ?sentenceSet)
+                (ist-Information ?context
+                  (interpretationOf ?sent ?interpretation))))))
+      (different ?interpretations (TheSet))
+      (newReifiedUtterance ?system-utterance))
+ (methodForAction
+  (interpretAsResponse ?context ?sentence-id ?discourse-ctxt StoryInput)
+  (actionSequence
+   (TheList
+    (doStoreInputAppropriately ?context ?teachingMt ?interpretations)
+    (doRespond ?system-utterance "Ok.")))))
+
+(preconditionForMethod
+ (and (userResponseExpected ?context StoryInput)
+      (wmOnly (ist-Information ?context (keepChaining)))
+      (ist-Information ?context (caseForConsideration ?case))
+      (ist-Information ?context (mtForStoryInput ?context ?teachingMt))
+      (ist-Information ?context (lastSentenceForStatements ?sentence-id ?sentenceSet))
+      (evaluate ?interpretations
+        (TheClosedRetrievalSetOf ?interpretation
+          (wmOnly
+           (and (elementOf ?sent ?sentenceSet)
+                (ist-Information ?context
+                  (interpretationOf ?sent ?interpretation))))))
+      (different ?interpretations (TheSet))
+
+      (newReifiedUtterance ?system-utterance))
+ (methodForAction
+  (interpretAsResponse ?context ?sentence-id ?discourse-ctxt StoryInput)
+  (actionSequence
+   (TheList
+    (doStoreInputAppropriately ?context ?teachingMt ?interpretations)
+    (doRespond ?system-utterance "Ok. Chaining some more.")
+    (doAgentPlan 
+     (actionSequence 
+      (TheList 
+       (microstoryExpansionRecursive ?case))))))))
+
+(<== (preferInContext (interpretAsResponse ?context ?sentence-id ?discourse-ctxt ?type) 
+                      (interpretAsResponse ?context ?sentence-id ?discourse-ctxt StoryInput) 
+                      ?seq2)) ;; prefer interpretAsResponse plans that take a StoryInput
+
+;;;(preconditionForMethod
+;;; (and (userResponseExpected ?context StopOrKeepThinking)
+;;;      (newReifiedUtterance ?system-utterance)
+;;;      (ist-Information ?context (caseForConsideration ?case)))
+;;; (methodForAction
+;;;  (interpretAsResponse ?context ?sentence-id ?discourse-ctxt StopOrKeepThinking)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doRespond ?system-utterance "Ok.")))))
+
+(isa doStoreInputAppropriately ComplexActionPredicate)
+(arity doStoreInputAppropriately 3)
+(arg1Isa doStoreInputAppropriately Microtheory)
+(arg2Isa doStoreInputAppropriately Microtheory)
+(arg3Isa doStoreInputAppropriately Thing)
+(comment doStoreInputAppropriately
+  "(doStoreInputAppropriately <mt> <facts>) stroes facts <facts>, taken from natural language input by a user, 
+into the microtheory <mt>.  Whether it stores it in KB or WM, with or without clearing the microtheory first, etc.,
+is dependent on how the input was acquired.")
+
+(preconditionForMethod
+ (and (ist-Information ?context (StoreInWMOrKB ?context KB))
+      (deconjunctifySet ?interps ?interps2))
+ (methodForAction
+  (doStoreInputAppropriately ?context ?teachingMt ?interps)
+  (actionSequence
+   (TheList
+    (doForEach ?interp ?interps2
+               (doRecord
+                (ist-Information ?teachingMt ?interp)))))))
+
+(preconditionForMethod
+ (and (ist-Information ?context (StoreInWMOrKB ?context WM))
+      (deconjunctifySet ?interps ?interps2))
+ (methodForAction
+  (doStoreInputAppropriately ?context ?teachingMt ?interps)
+  (actionSequence
+   (TheList
+    (doForEach ?interp ?interps2
+               (doTell
+                (ist-Information ?teachingMt ?interp)))))))
+
+
+(preconditionForMethod
+ (and (ist-Information ?context (StoreInWMOrKB ?context SAGE))
+      (ist-Information ?context (generalizeUserInputFromMt ?teachingMt ?gContext))
+      (deconjunctifySet ?interps ?interps2))
+ (methodForAction
+  (doStoreInputAppropriately ?context ?teachingMt ?interps)
+  (actionSequence
+   (TheList
+    (doForEach ?interp ?interps2
+               (doRecord
+                (ist-Information ?teachingMt ?interp)))
+    (doTell (sageSelectAndGeneralize ?teachingMt ?gContext))))))

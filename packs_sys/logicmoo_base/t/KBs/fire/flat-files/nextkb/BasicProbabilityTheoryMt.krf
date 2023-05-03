@@ -1,0 +1,186 @@
+(in-microtheory BasicProbabilityTheoryMt)
+
+(isa BayesTheorem Theorem-Proposition)
+(isa probabilisticallyCertain ModalScheme-K-DualContrap)
+(isa probabilisticallyCertain ModalScheme-K)
+(comment CycLProbabilityConstant-Deprecated "The collection of #$CycLProbabilityConstants that are intended to be phased out, and eventually killed.  Please avoid using these constants in new assertions.")
+(comment moreLikelyThan "An asymmetric #$TransitiveBinaryPredicate and specialization of #$atLeastAsLikelyAs that relates two quoted instances of #$CycLPropositionalSentence.  <code>(#$moreLikelyThan PROP1 PROP2)</code> means that <code>PROP1</code> is more likely (to be true) than <code>PROP2</code>.  For example,
+<pre>
+(#$moreLikelyThan
+  (#$likesAsFriend #$GeorgeWBush #$TonyBlair)
+  (#$likesAsFriend #$JacquesChirac #$TonyBlair))
+</pre>
+means that it is more likely that Bush likes Blair than it is that Chirac likes Blair.")
+(comment atLeastAsLikelyAs "A reflexive #$TransitiveBinaryPredicate that relates two quoted instances of #$CycLPropositionalSentence.  <code>(#$atLeastAsLikelyAs PROP1 PROP2)</code> means that <code>PROP1</code> is at least as likely (to be true) as <code>PROP2</code>.  For example,
+<pre>
+(#$atLeastAsLikelyAs
+  (#$likesAsFriend #$GeorgeWBush #$TonyBlair)
+  (#$likesAsFriend #$JacquesChirac #$TonyBlair))
+</pre>
+means that it is at least as likely that Bush likes Blair as it is that Chirac likes Blair.
+<p>
+A notable specialization of this predicate is #$moreLikelyThan (q.v.).")
+(comment ProbabilityFn "An unreifiable #$UnaryFunction that takes a quoted instance of #$CycLPropositionalSentence and returns a #$Real0-1.  <code>(#$ProbabilityFn PROP)</code> denotes the probability of <code>PROP</code> (in the current context).  See also this function's corresponding predicate, #$probability.")
+(comment probabilityForAgent "A #$TernaryPredicate that relates an #$Agent-Generic to a quoted instance of #$CycLPropositionalSentence to a #$Real0-1.  <code>(#$probabilityForAgent AGT PROP N)</code> means that the (subjective) probability of <code>PROP</code> for <code>AGT</code> is <code>N</code>.")
+(comment conditionalProbabilityForAgent "A #$QuaternaryPredicate that relates an #$Agent-Generic to a quoted instance of #$CycLPropositionalSentence to a quoted instance of #$CycLPropositionalSentence to an #$Real0-1.  <code>(#$conditionalProbabilityForAgent AGT EVIDENCE HYPOTHESIS N)</code> means that the (subjective) probability of <code>HYPOTHESIS</code> for <code>AGT</code>, given <i>only</i> the knowledge that <code>EVIDENCE</code> holds, is <code>N</code>.")
+(comment ProbabilityOfSetFn "An unreifiable #$ProbabilityDistributionFunction that takes a #$Set-Mathematical and returns a #$Real0-1.  (#$ProbabilityOfSetFn <b>SET</b>) denotes the probability of <b>SET</b> with respect to the #$sampleSpace of the current context.  (It is undefined in any context with no #$sampleSpace and when <b>SET</b> is not a subset of the #$sampleSpace of the current context.)
+<p>
+Note that the probability of a set is the sum of the probabilities of all its single-membered subsets.  That is,
+<pre>
+(#$probabilityOfSet ?SET
+  (#$PlusAll
+    (#$TheSetOf ?SINGLETON
+      (#$and
+        (#$cardinality ?SINGLETON 1)
+        (#$subsetOf ?SINGLETON ?SET))) #$ProbabilityOfSetFn)).</pre>")
+(comment MarkovLogicNetwork "A Markov logic network (or MLN) is a set of first-order formulas with real numbers (weights) associated with each formula.  An MLN can be thought of as a template for creating #$MarkovNetworks.")
+(comment MarkovNetwork "A Markov network consists of an undirected graph and a set of potential functions--one for each clique in the graph.  The nodes in the graph represent random variables and the edges represent dependencies between those variables.  A potential function maps states of the corresponding clique to non-negative real numbers.  Compare #$BayesianNetwork.")
+(comment ContentOfMarkovLogicNetworkFn "A unary #$ReifiableFunction that takes a #$MarkovLogicNetwork MLN and returns the #$Microtheory representing the content of      MLN.")
+(comment markovLogicNetworkRepresentedByMicrotheory "A #$StrictlyFunctionalSlot that relates a #$MarkovLogicNetwork to the #$Microtheory representing its content.  This is the predicate corresponding to #$ContentOfMarkovLogicNetworkFn.")
+(comment markovLogicNetworkDataFilePathname "A #$BinaryPredicate that relates a #$MarkovLogicNetwork to a #$Pathname.  (#$markovLogicNetworkDataFilePathname MLN PATHNAME) means that MLN was generated using the data (.db) file found at PATHNAME.")
+(comment markovLogicNetworkRuleFilePathname "A #$BinaryPredicate that relates a #$MarkovLogicNetwork to a #$Pathname.  (#$markovLogicNetworkRuleFilePathname MLN PATHNAME) means that MLN was generated using the rule (.mln) file found at PATHNAME.")
+(comment markovLogicNetworkTypeConstantDeclarationFilePathname "A #$BinaryPredicate that relates a #$MarkovLogicNetwork to a #$Pathname.  (#$markovLogicNetworkTypeConstantDeclarationFilePathname MLN PATHNAME) means that MLN was generated using the type/constant declaration (.mln) file found at PATHNAME.")
+(comment DiscriminativeWeightLearning "A specialization of #$MachineLearning.  Each instance of #$DiscriminativeWeightLearning is an event in which a computer program learns weights for formulas using a discriminative (as opposed to generative) algorithm.  (\"Discriminative,\" as it is being used here, is a technical term which we will not attempt to define in this comment.)  See also #$GenerativeWeightLearning.")
+(comment GenerativeWeightLearning "A specialization of #$MachineLearning.  Each instance of #$GenerativeWeightLearning is an event in which a computer program learns weights for formulas using a generative (as opposed to discriminative) algorithm.  (\"Generative,\" as it is being used here, is a technical term which we will not attempt to define in this comment.)  See also #$DiscriminativeWeightLearning.")
+(comment markovLogicNetworkGeneratedUsingLearningType "A #$BinaryPredicate that relates a #$MarkovLogicNetwork to a type of #$MachineLearning (e.g. #$GenerativeWeightLearning, #$DiscriminativeWeightLearning) that was used in its generation.")
+(comment markovLogicNetworkFilePathname "A #$BinaryPredicate that relates a #$MarkovLogicNetwork to a #$Pathname.  (#$markovLogicNetworkFilePathname MLN PATHNAME) means that the content of MLN is in the (.mln) file found at PATHNAME.  The file at PATHNAME contains first-order formulas with weights assigned to each formulas.  (It may also contain predicate declarations.)")
+(comment markovLogicNetworkGeneratedUsingCommandString "A #$BinaryPredicate that relates a #$MarkovLogicNetwork to the #$CharacterString that was entered in order to generate it.  This information may be useful for tracing back the exact parameters that were used in the generation.")
+(comment BayesTheorem "A #$Theorem-Proposition attributed to #$ReverendThomasBayes that states an important relation between conditional and marginal probability distributions of random variables.  It is formalized in CycL as:
+<pre>
+(#$implies
+  (#$and
+    (#$probability ?EVIDENCE ?E)
+    (#$probability ?HYPOTHESIS ?H)
+    (#$conditionalProbability ?HYPOTHESIS ?EVIDENCE ?E-GIVEN-H)
+    (#$conditionalProbability ?EVIDENCE ?HYPOTHESIS ?H-GIVEN-E))
+  (#$mathEquals ?H-GIVEN-E
+    (#$QuotientFn
+      (#$TimesFn ?E-GIVEN-H ?H) ?E))).</pre>")
+(comment moreLikelyThanGivenThat "A #$TernaryPredicate that relates three quoted instances of #$CycLPropositionalSentence.  <code>(#$moreLikelyThanGivenThat MORE LESS CONDITION)</code> means that <code>MORE</code> is more likely to be true than <code>LESS</code>, given <i>only</i> the information that <code>CONDITION</code> holds.  See also the unconditional version of this predicate, #$moreLikelyThan.")
+(comment ConditionalProbabilityFn "An unreifiable, binary #$TermMacroFunction that takes two quoted instances of #$CycLPropositionalSentence and returns a #$Real0-1.  Intuitively, <code>(#$ConditionalProbabilityFn HYPOTHESIS EVIDENCE)</code> denotes the probability (in the current context) that <code>HYPOTHESIS</code> holds, given <i>only</i> the information that <code>EVIDENCE</code> holds.  Formally, it is shorthand for:
+<pre>
+(#$QuotientFn
+  (#$ProbabilityFn
+    (#$and HYPOTHESIS EVIDENCE))
+  (#$ProbabilityFn EVIDENCE)).
+</pre>
+Note that this is undefined when <code>(#$ProbabilityFn EVIDENCE)</code> = 0.  
+<p>
+Consider, e.g., the following #$CycLNonAtomicTerm:
+<pre>
+(#$ConditionalProbabilityFn
+  (#$fanOf #$GeorgeWBush #$WillieNelson)
+  (#$originallyFromRegion #$GeorgeWBush #$Texas-State)).
+</pre>
+Intuitively, this denotes the probability that Bush is a Willie Nelson fan, given <i>only</i> the information that he (Bush) is originally from Texas.  Formally, it is shorthand for:
+<pre>
+(#$QuotientFn
+  (#$ProbabilityFn
+    (#$and
+      (#$fanOf #$GeorgeWBush #$WillieNelson)
+      (#$originallyFromRegion #$GeorgeWBush #$Texas-State)))
+  (#$ProbabilityFn
+    (#$originallyFromRegion #$GeorgeWBush #$Texas-State))).
+</pre>
+
+See also this function's corresponding predicate, #$conditionalProbability.")
+(comment probabilisticallyCertain "A #$CommonUnaryModalOperator that applies to a quoted instance of #$CycLSentence-Assertible.  <code>(#$probabilisticallyCertain PROP)</code> means that <code>PROP</code> holds in every element of the sample space (see #$sampleSpace) that is relevant in the current context. Loosely speaking, <code>(#$probabilisticallyCertain PROP)</code> means that <code>PROP</code> is assumed to be true no matter how things turn out, i.e. no matter which of the specific scenarios considered relevant (in the current context) is ultimately realized.")
+(comment sampleSpace "A #$UnaryPredicate that applies to a #$Set-Mathematical.  <code>(#$sampleSpace SET)</code> means that, for the purposes of probabilistic reasoning, <code>SET</code> is the relevant sample space in the current context.  Intuitively, <code>SET</code> is the set of possible worlds (or completely specified outcomes -- see #$PossibleWorld-Specification) that are considered possible with respect to the current context.
+<p>
+Suppose, for example, that we want to reason about a single roll of a die.  We would want to consider just six possible worlds, corresponding to the six possible outcomes.  Thus our sample space might be <code>(#$TheSet 1 2 3 4 5 6)</code>, with 1 representing the world in which 1 is rolled, etc.
+<p>
+See also #$mtSampleSpace.")
+(comment mtSampleSpace "A #$StrictlyFunctionalSlot that relates a #$Microtheory to a #$Set-Mathematical.  <code>(#$mtSampleSpace MT SET)</code> means that the relevant sample space (see #$sampleSpace) for <code>MT</code> is <code>SET</code>.  This predicate is intended to facilitate probabilistic reasoning with #$probabilityOfSet and related vocabulary.")
+(comment probabilityOfSetGivenSet "A #$TernaryPredicate that relates a #$Set-Mathematical to a #$Set-Mathematical to a #$Real0-1.  <code>(#$probabilityOfSetGivenSet SET1 SET2 N)</code> means that the probability of <code>SET1</code> given only the information that <code>SET2</code> is <code>N</code>.  <code>SET1</code> and <code>SET2</code> are subsets of the relevant sample space (see #$sampleSpace).  
+<p>
+Suppose, for example, that the sample space is <code>(#$TheSet 1 2 3 4 5 6)</code>, representing the possible outcomes of rolling a die.  Then <code>(#$TheSet 1)</code> would correspond to the event or proposition that a 1 is rolled, <code>(#$TheSet 2 4 6)</code> would correspond to the event or proposition that an even number is rolled, etc.  Thus, e.g., in this context
+<pre>
+(#$probabilityOfSetGivenSet (#$TheSet 2) (#$TheSet 2 4 6) (#$QuotientFn 1 3))
+</pre>
+says that the probability of a 2 being rolled given only the information that an even number is rolled is 1/3.
+<p>
+Note that the conditional probability of H given E, usually written P(H|E), is by definition, the (unconditional) probability of the intersection of H and E divided by the (unconditional) probability of E.  Note also that this is undefined when the (unconditional) probability of E is 0.
+<p>
+See also #$conditionalProbability, which relates CycL sentences instead of sets.")
+(comment eventSet "A #$UnaryPredicate that applies to a #$Set-Mathematical.  <code>(#$sampleSpace SET)</code> means that, for the purposes of probabilistic reasoning, <code>SET</code> is the set of subsets of the sample space (see #$sampleSpace) that are being reasoned with.  Intuitively, the elements of the event set are the \"events\" or \"propositions\" that are assigned probabilities.
+<p>
+Suppose, for example, that we want to reason about a single roll of a die.  We would want to consider just six possible worlds, corresponding to the six possible outcomes.  Thus our sample space might be <code>(#$TheSet 1 2 3 4 5 6)</code>, with 1 representing the world in which 1 is rolled, etc.  Our event set, then, might simply be the powerset of <code>(#$TheSet 1 2 3 4 5 6)</code>.  Thus we would assert:
+<pre>
+(#$eventSet (#$PowerSetFn (#$TheSet 1 2 3 4 5 6))).
+</pre>
+The event set, F, is required to be an algebra over the sample space, W; that is, F must be a set of subsets of W that contains W itself and is closed under union and complementation.")
+(comment conditionallyIndependentSentences "A #$TernaryPredicate that relates three #$CycLSentences.  <code>(#$conditionallyIndependentSentences SENT1 SENT2 CONDITION)</code> means that given the information that <code>CONDITION</code> holds, <code>SENT1</code> is independent of <code>SENT2</code> (in the sense of #$independentSentences, q.v.).")
+(comment NumericLikelihoodFn "A unary #$ScalarDenotingFunction that maps a given numeric interval between 0 and 1 inclusive (see #$ProbabilityInterval) to the corresponding instance of #$Likelihood-QuantityType (q.v.).  For example, (#$NumericLikelihoodFn 0) is the likelihood of a statement that is <i>certainly false</i>, (#$NumericLikelihoodFn 1) the likelihood of a statement that is <i>certainly true</i>, and (#$NumericLikelihoodFn 0.5) the likelihood of a statement that is as likely to be true as it is to be false.")
+(comment conditionalProbability "A #$TernaryPredicate and #$MacroRelation that relates two quoted instances of #$CycLPropositionalSentence to a #$Real0-1. Intuitively, <code>(#$conditionalProbability HYPOTHESIS EVIDENCE N)</code> means that the probability (in the current context) that <code>HYPOTHESIS</code> holds given <i>only</i> the information that <code>EVIDENCE</code> holds is <code>N</code>.  Formally, it is shorthand for:
+<pre>
+(#$equals N
+  (#$QuotientFn
+    (#$ProbabilityFn (#$and HYPOTHESIS EVIDENCE))
+    (#$ProbabilityFn EVIDENCE)))
+</pre>
+For example,
+<pre>
+(#$conditionalProbability
+  (#$fanOf #$GeorgeWBush #$WillieNelson)
+  (#$originallyFromRegion #$GeorgeWBush #$Texas-State)
+  0.7215)
+</pre>
+means that the probability that George W. Bush is a fan of Willie Nelson, given only the information that he (Bush) is originally from Texas, is 0.7215, or 72.15%.  Formally, it is shorthand for:
+<pre>
+(#$equals 0.7215
+  (#$QuotientFn
+    (#$ProbabilityFn
+      (#$and 
+        (#$fanOf #$GeorgeWBush #$WillieNelson)
+        (#$originallyFromRegion #$GeorgeWBush #$Texas-State)))
+    (#$ProbabilityFn
+      (#$originallyFromRegion #$GeorgeWBush #$Texas-State))))
+</pre>
+This is the predicate corresponding to #$ConditionalProbabilityFn.  See also #$conditionalLikelihood.")
+(comment Likelihood-QuantityType "A specialization of #$ScalarQuantity. Each instance of #$Likelihood-QuantityType is a degree (or range) of likelihood(s) that can be attributed to a statement with respect to the likelihood of its being or becoming true.  Although not #$MeasurableQuantity(ies) (q.v.) in the strict sense of that term, probabilities are often characterized and compared numerically, along a scale from 0 to 1.  (#$NumericLikelihoodFn 0) is <i>certain falsity</i> and (#$NumericLikelihoodFn 1) is <i>certain truth</i>.
+<p>
+See also #$ProbabilityInterval, the collection of all real number intervals between 0 and 1 inclusive, and thus of all possible arguments for #$NumericLikelihoodFn.")
+(comment conditionalLikelihood "A #$TernaryPredicate that relates two quoted instances of #$CycLPropositionalSentence to an instance of #$Likelihood-QuantityType. <code>(#$conditionalLikelihood HYPOTHESIS EVIDENCE LIKELIHOOD)</code> means that the likelihood (in the current context) that <code>HYPOTHESIS</code> holds given <i>only</i> the information that <code>EVIDENCE</code> holds is <code>LIKELIHOOD</code>.
+<p>
+For example,
+<pre>
+(#$conditionalLikelihood
+  (#$fanOf #$GeorgeWBush #$WillieNelson)
+  (#$originallyFromRegion #$GeorgeWBush #$Texas-State)
+  (#$MediumToVeryHighAmountFn #$Likelihood-QuantityType))
+</pre>
+means that the likelihood that George W. Bush is a fan of Willie Nelson, given only the information that he (Bush) is originally from Texas, is medium to very high,
+<p>
+This predicate is good for expressing vague or \"generic\" probabilities (though precise probabilities <i>can</i> be expressed with it, using #$NumericLikelihoodFn).  To express precise (numeric) probabilities, it is better to use #$conditionalProbability.")
+(comment probability "A strictly functional #$NumericIntervalSlot and specialization of #$probability-Generic that relates a quoted instance of #$CycLPropositionalSentence to a #$Real0-1. <code>(#$probability PROP N)</code> means that the probability of <code>PROP</code> (with respect to the current context) is <code>N</code>.  The closer <code>N</code> is to 1 (0), the more probable it is that <code>PROP</code> is true (false).  If <code>N = 1</code>, <code>PROP</code> is certainly true; if <code>N = 0</code>, <code>PROP</code> is certainly false.
+<p>
+#$probability is the predicate corresponding to #$ProbabilityFn.  See also #$likelihood and #$conditionalProbability.")
+(comment independentSentences "A #$SymmetricBinaryPredicate and #$MacroRelation that relates two #$CycLPropositionalSentences. Intuitively, <code>(#$independentSentences A B)</code> means that (1) neither <code>A</code> nor <code>B</code> is completely improbable; and (2) <code>A</code>'s being true makes it no more or less likely that <code>B</code> is true (and vice versa).  Formally, it is shorthand for:
+<pre>
+(#$equals
+  (#$ProbabilityFn A)
+  (#$ConditionalProbabilityFn A B))
+</pre>
+Consider, e.g., the following #$CycLSentence:
+<pre>
+(#$independentSentences
+  (#$likesAsFriend #$GeorgeWBush #$JohnKerry)
+  (#$physicalBuild #$JohnKerry #$TallPhysicalBuild)).
+</pre>
+Intuitively, this means that (1) Bush's liking Kerry and Kerry's being tall each have non-zero probability; and (2) Bush's liking Kerry makes it no more or less likely that Kerry is tall (and vice versa).  Formally, it is shorthand for:
+<pre>
+(#$equals
+  (#$ProbabilityFn (#$likesAsFriend #$GeorgeWBush #$JohnKerry))
+  (#$ConditionalProbabilityFn
+    (#$likesAsFriend #$GeorgeWBush #$JohnKerry)
+    (#$physicalBuild #$JohnKerry #$TallPhysicalBuild))).
+</pre>
+")
+(comment probability-Generic "A #$ScalarIntervalSlot that relates a quoted instance of #$CycLPropositionalSentence to a #$ScalarInterval (either a #$Real0-1 or a #$Likelihood-QuantityType) that represents its probability (in the current context).  Two important specializations are #$probability and #$probability-Quantitative (currently called #$likelihood).")
+(comment probabilityOfInsBeingIns "A #$TernaryPredicate that relates a #$SetOrCollection to a #$SetOrCollection to a #$Real0-1.  (#$probabilityOfInsBeingIns SOC1 SOC2 N) means that the probability that something is an instance of SOC2, given <i>only</i> the information that it is an instance of SOC1, is N.  See also #$likelihoodOfInsBeingIns.")
+(comment likelihoodOfInsBeingIns "A #$TernaryPredicate that relates a #$SetOrCollection to a #$SetOrCollection to a #$Likelihood-QuantityType.  (#$probabilityOfInsBeingIns SOC1 SOC2 QUANT) means that the probability that something is an instance of SOC2, given <i>only</i> the information that it is an instance of SOC1, is QUANT.  See also #$probabilityOfInsBeingIns.")
+(comment moreLikelyThanNot-Conditional "A #$BinaryPredicate and #$MacroRelation that relates two quoted instances of #$CycLPropositionalSentence.  (#$moreLikelyThanNot-Conditional EVIDENCE HYPOTHESIS), means that given only the information that EVIDENCE holds, HYPOTHESIS is more likely to be true than its negation, (#$not HYPOTHESIS).  In other words, (#$moreLikelyThanNot-Conditional EVIDENCE HYPOTHESIS) is shorthand for
+<pre>
+(#$moreLikelyThanGivenThat EVIDENCE HYPOTHESIS (#$not HYPOTHESIS)).
+</pre>")
+(comment likelihood "A #$QuantitySlot and specialization of #$probability-Generic that relates a (\"quoted\") instance of #$CycLSentence-Assertible to a #$Likelihood-QuantityType.  <code>(#$likelihood PROP QUANT)</code> means that the probability of <code>PROP</code> (in the current context) is <code>QUANT</code>.  See also #$probability and #$conditionalLikelihood.")

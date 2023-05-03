@@ -1,0 +1,323 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: annotations.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: September 4, 2008 19:27:17
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory NuSketchQMFactsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;---------------------------------------
+;;; representations for sketch annotations
+;;;---------------------------------------
+
+(isa SketchAnnotation Collection)
+(comment SketchAnnotation "Each member of SketchAnnotation is a type of sketch annotation made in skea.
+This is a generalization of RotOrigin , ForceArrow , SolidPart and LengthIndicator .")
+(genls SketchAnnotation AbstractInformationalThing)
+(genls SketchAnnotation SomethingExisting)
+
+
+(isa QualitativeMechanicsAnnotation Collection)
+(genls QualitativeMechanicsAnnotation SketchAnnotation)
+(comment QualitativeMechanicsAnnotation 
+  "This is the collection of sketch annotations used by qualitative mechanics 
+   (design buddy).")
+
+
+(isa DirectionAnnotation Collection)
+(genls DirectionAnnotation SketchAnnotation)
+(comment DirectionAnnotation 
+  "This kind of #$SketchAnnotation indicates a direction.")
+
+
+(isa VectorAnnotation Collection)
+(genls VectorAnnotation DirectionAnnotation)
+(comment VectorAnnotation 
+  "VectorAnnotation is the collection of all sketch annotations that can be used 
+   to represent vectors.  These have both direction and magnitude.")
+(annotationRepresentsQuantity VectorAnnotation VectorInterval)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Force Arrows
+
+(isa ForceArrow Collection)
+(comment ForceArrow "Used primarily in free-body diagrams: ForceArrow  is the collection of all Force Arrows, but use more specific when possible. 
+                     All Whenever a force arrow annotation is made, a dialog will appear that will offer the 
+                     user the option of establishing its magnitude, its direction will automagically be computed")
+(annotationRepresentsQuantity ForceArrow ForceVector) ;; 
+(genls ForceArrow VectorAnnotation)
+(genls ForceArrow QualitativeMechanicsAnnotation)
+
+(isa RotationalForceArrow Collection)
+(annotationRepresentsQuantity RotationalForceArrow ForceVector)
+(genls RotationalForceArrow QualitativeMechanicsAnnotation)
+
+(isa FrictionalForceArrow Collection)
+(comment FrictionalForceArrow "Used primarily in free-body diagrams: FrictionalForceArrow is the collection of all frictional force arrow annotations in nusketch")
+(annotationRepresentsQuantity FrictionalForceArrow FrictionalForceVector)  
+(genls FrictionalForceArrow ForceArrow)
+
+(isa GravitationalForceArrow Collection)
+(comment GravitationalForceArrow "Used primarily in free-body diagrams: GravitationalForceArrow is the collection of all GravitationalForceArrow annotations in nusketch")
+(annotationRepresentsQuantity GravitationalForceArrow GravitationalForceVector)
+(genls GravitationalForceArrow ForceArrow)
+
+(isa TensileForceArrow Collection)
+(comment TensileForceArrow "Used primarily in free-body diagrams: TensileForceArrow is the collection of all TensileForceArrow annotations in nusketch")
+(annotationRepresentsQuantity TensileForceArrow TensileForceVector) 
+(genls TensileForceArrow ForceArrow)
+
+(isa NormalForceArrow Collection)
+(comment NormalForceArrow  "Used primarily in free-body diagrams: NormalForceArrow is the collection of all NormalForceArrow annotations in nusketch")
+(annotationRepresentsQuantity NormalForceArrow NormalForceVector) 
+(genls NormalForceArrow  ForceArrow)
+
+(isa NetForceArrow Collection)
+(comment NetForceArrow "Used primarily in free-body diagrams: NetForceArrow is the collection of all NetForceArrow annotations in nusketch")
+(annotationRepresentsQuantity NetForceArrow NetForceVector) 
+(genls NetForceArrow ForceArrow)
+
+(isa AppliedForceArrow Collection)
+(comment AppliedForceArrow
+         "THIS IS A SPECIAL ANNOTATION REQUIRING TWO OBJECTS TO BE ANNOTATED
+          AppliedForceArrow is the collection of sketch annotations used to indicate a RigidOb applying
+          a force on a Surface.  The qualitative vector of this arrow is the direction of this force
+          The magnitude of this vector is not used currently, but should be implemented in the future.
+          This is drawn as an nusketch arrow.")
+(annotationRepresentsQuantity AppliedForceArrow ForceVector) 
+(genls AppliedForceArrow ForceArrow)
+
+(isa AssumedForceArrow Collection)
+(comment AssumedForceArrow
+         "AssumedForceArrow is the collection of sketch annotations used to indicate an Assumed Force
+          on an object.  The qualitative vector of this arrow is the direction of this force.  Computation
+          is done automatically to add the (isa ?x Surface) and the (hasSurface Object ?x).  rotOrigin is
+          still an open question.  This should annotate just one glyph with the exact surface that the
+          assumed force is on.
+          The magnitude of this vector is not used currently, but should be implemented in the future.
+          This is drawn as an nusketch arrow.")
+(annotationRepresentsQuantity AssumedForceArrow AssumedForceVector) 
+(genls AssumedForceArrow ForceArrow)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Momentum Arrows
+
+(isa MomentumArrow Collection)
+(comment MomentumArrow 
+  "MomentumArrow indicates the direction and possibly the magnitude of the momentum
+   of an object.")
+(annotationRepresentsQuantity MomentumArrow MomentumVector)
+(genls MomentumArrow VectorAnnotation)
+
+(isa AngularMomentumArrow Collection)
+(comment AngularMomentumArrow
+  "AngularMomentumArrow indicates the direction and possible the magnitude of the
+   angular momentum of an object.")
+(annotationRepresentsQuantity AngularMomentumArrow AngularMomentumVector)
+(genls AngularMomentumArrow MomentumArrow)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Other Arrows
+
+(isa AccelerationArrow Collection)
+(comment AccelerationArrow "AccelerationArrow indicates the direction and possibly the magnitude of the acceleration of an object. A statement of the form (valueOf ((VectorQuantityOfFn Tension) Objcet-1) (VectorFn (Newton 5) Up))")
+(annotationRepresentsQuantity AccelerationArrow LinearAccelerationVector) 
+(genls AccelerationArrow VectorAnnotation)
+
+(isa VelocityArrow Collection)
+(comment VelocityArrow "VelocityArrow indicates the direction and possibly the magnitude of the Velocity of an object")
+(annotationRepresentsQuantity VelocityArrow LinearVelocityVector)
+(genls VelocityArrow VectorAnnotation)
+(genls VelocityArrow QualitativeMechanicsAnnotation)
+
+(isa InitialVelocityArrow Collection)
+(comment InitialVelocityArrow "InitialVelocityArrow indicates the direction and possibly the magnitude of the Initial Velocity of an object.")
+(annotationRepresentsQuantity InitialVelocityArrow LinearVelocityVector)
+(genls InitialVelocityArrow VelocityArrow)
+
+(isa CWRotationDirectionArrow Collection)
+(comment CWRotationDirectionArrow
+         "CWRotationDirectionArrow is the collection of sketch annotations used to indicate the
+         Clockwise Rotational direction of an object.")
+(genls CWRotationDirectionArrow SketchAnnotation)
+
+(isa CCWRotationDirectionArrow Collection)
+(comment CCWRotationDirectionArrow
+         "CCWRotationDirectionArrow is the collection of sketch annotations used to indicate the
+         Counter Clockwise Rotational direction of an object.")
+(genls CCWRotationDirectionArrow SketchAnnotation)
+
+
+(isa PossibleSolutionIndicator Collection)
+(comment PossibleSolutionIndicator
+         "PossibleSolutionIndicator....yeah this needs to be flushed out some more...but something like
+         this will be used for solving multiple choice problems.")
+(genls PossibleSolutionIndicator SketchAnnotation)
+
+(isa RotOrigin Collection)
+(comment RotOrigin
+         "RotOrigin is the collection of sketch annotations used to mark the 
+          point about which an object rotates--its Rotational Origin.  They are
+          often drawn as an X or a small circle.")
+(genls RotOrigin SketchAnnotation)
+(genls RotOrigin QualitativeMechanicsAnnotation)
+
+
+(isa SolidPart Collection)
+(comment SolidPart
+         "SolidPart is the collection of sketch annotations used to indicate the solid part of a
+          RigidOb or the solid side of a Surface, such as the ground.  This can be shading.")
+(genls SolidPart SketchAnnotation)
+
+
+(isa DirectionOfMovement Collection)
+(genls DirectionOfMovement DirectionAnnotation)
+(prettyString-Canonical DirectionOfMovement "direction of movement")
+(comment DirectionOfMovement
+  "This #$SketchAnnotation indicates in which direction some movement happened.")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Distance Indicators
+
+(isa VisualQuantityIndicator Collection)
+(comment VisualQuantityIndicator "VisualQuantityIndicator is a collection of all
+ the visual quantity indicators, while these be used to represent other values, 
+ such as a LengthIndicator while usually just indicating a visual quantity could
+ also be used to represent QuantitativeMeasurement using the relation
+ visualQuantityQuantitativeMeasurement")
+(genls VisualQuantityIndicator SketchAnnotation)
+
+(isa LengthIndicator Collection)
+(comment LengthIndicator
+         "LengthIndicator is the collection of sketch annotations used to indicate
+          the length between two points should be calculated.")
+(genls LengthIndicator VisualQuantityIndicator)
+
+(isa HorizontalDistanceIndicator Collection)
+(comment HorizontalDistanceIndicator
+         "HorizontalDistanceIndicator is the collection of SketchAnnotation used to indicate the importance of the X axis measurement between two points.")
+(genls HorizontalDistanceIndicator VisualQuantityIndicator)
+
+(isa VerticalDistanceIndicator Collection)
+(comment VerticalDistanceIndicator
+         "VerticalDistanceIndicator is the collection of SketchAnnotation used to indicate the importance of the Y axis measurement between two points.")
+(genls VerticalDistanceIndicator VisualQuantityIndicator)
+
+(isa AngleIndicator Collection)
+(comment AngleIndicator "AngleIndicator is a sketch annotations that indicates the importance of an angle. It also allows the user to describe the size of the angle. MEK 3/18/06 There is no visual processing done on this annotation, just anchor points, at some point hooking up with Andrew's stuff would be cool")
+(genls AngleIndicator VisualQuantityIndicator)
+
+(isa PathIndicator Collection)
+(comment PathIndicator "PathIndicator is a sketch annotation that indicates the path traveled by the annotated object through space.  It's a single polyline (not an arrow) that starts where the ink starts and ends where the ink ends.")
+(genls PathIndicator SketchAnnotation)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Axis annotations
+
+(isa AxisAnnotation Collection)
+(comment AxisAnnotation 
+         "AxisAnnotation is the collection of all axis annotations. An Axis annotation indicates 
+          that a particular axis is important. It annotates the object whose understanding is enhanced 
+          by having an annotation. For example, a pendulum is hanging off to the side from vertical. 
+          A VerticalAxisAnnotation would annotate the Cord of the pendulum and then an angle annotation 
+          could annotate the VericalAxisAnnotation and Cord.")
+(genls AxisAnnotation SketchAnnotation)
+
+(isa HorizontalAxisAnnotation Collection)
+(comment HorizontalAxisAnnotation "same as Axis Annotation, but only for Horizontal ones")
+(genls HorizontalAxisAnnotation AxisAnnotation)
+
+(isa VerticalAxisAnnotation Collection)
+(comment VerticalAxisAnnotation "same as Axis Annotation, but only for Vertical ones")
+(genls VerticalAxisAnnotation AxisAnnotation)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Below are predicates dealing with the various annotations
+
+(isa annotationRepresentsQuantity BinaryPredicate)
+(arity annotationRepresentsQuantity 2)
+(comment annotationRepresentsQuantity "annotationRepresentsQuantity links a collection of sketch annotation with a quantity")
+(arg1Isa annotationRepresentsQuantity SketchAnnotation)
+(arg2Isa annotationRepresentsQuantity Quantity)
+
+(isa NuSketchCoordinateDistanceFn Function-Denotational)
+(isa NuSketchCoordinateDistanceFn UnitOfMeasureNoPrefix)
+(comment NuSketchCoordinateDistanceFn "This takes a number (floating point) and converts it intoa measurment.")
+(arity NuSketchCoordinateDistanceFn n-ary)
+(arg1Isa NuSketchCoordinateDistanceFn Number)
+(resultIsa NuSketchCoordinateDistanceFn MeasurableQuantity)
+
+(isa startPointOf BinaryPredicate)
+(comment startPointOf "The first argument is an annotation glyph and the second predicate
+is the location of the annotation glyph's start point.")
+(arity startPointOf 2)
+(arg1Isa startPointOf NuSketchGlyph)
+(arg2Isa startPointOf NuSketchPoint)
+
+(isa endPointOf BinaryPredicate)
+(comment endPointOf "The first argument is an annotation glyph and the second predicate
+is the location of the annotation glyph's end point.")
+(arity endPointOf 2)
+(arg1Isa endPointOf NuSketchGlyph)
+(arg2Isa endPointOf NuSketchPoint)
+
+(isa annotationCentriodNear BinaryPredicate)
+(comment annotationCentriodNear "annotationCentriodNear links an annotation to a close anchor point [currently just the closest one MEK 3/19] on a referent glyph")
+(arity annotationCentriodNear 2)
+(arg1Isa annotationCentriodNear NuSketchGlyph)
+(arg2Isa annotationCentriodNear NuSketchPoint)
+
+(isa visualRepresentationOfQuantity BinaryPredicate)
+(comment visualRepresentationOfQuantity "This connects an annotation glyph to a visual quantity.")
+(arity visualRepresentationOfQuantity 2)
+(arg1Isa visualRepresentationOfQuantity ContinuousQuantity)
+(arg2Isa visualRepresentationOfQuantity NuSketchGlyph)
+
+(isa conceptualGroupGlyph BinaryPredicate)
+(arity conceptualGroupGlyph 2)
+(comment conceptualGroupGlyph "This predicate is used to define hierarchical realtionships between glyphs, currently Ubiquitous...but maybe change later.")
+(arg1Isa conceptualGroupGlyph Thing)
+(arg2Isa conceptualGroupGlyph Thing)
+
+(isa glyphAnnotatedBy BinaryPredicate)
+(arity glyphAnnotatedBy  2)
+(comment glyphAnnotatedBy "This predicate relates an object to its annotation.")
+(arg1Isa glyphAnnotatedBy NuSketchGlyph)
+(arg2Isa glyphAnnotatedBy NuSketchGlyph)
+
+;;;(isa measureVisualQuantity Predicate)
+;;;(arity measureVisualQuantity 6)
+;;;(comment measureVisualQuantity "(measureVisualQuantity ?quantity ?target-case ?mapping ?skolem ?base-case ?measurement).")
+;;;
+;;;;;;(isa generateModelForCase Predicate)
+;;;;;;(arity generateModelForCase 3)
+;;;;;;(comment generateModelForCase "This predicate is used as an entry point to generate a causal model via analogy.")
+;;;;;;(arg1Isa generateModelForCase CountinousQuantity)
+;;;;;;(arg2Isa generateModelForCase Case)
+;;;;;;(arg3Isa generateModelForCase Mapping)
+;;;
+;;;(isa modelConstructionMatcher Predicate)
+;;;(arity modelConstructionMatcher 3)
+;;;
+;;;(isa compareMeasurement Predicate)
+;;;(arity compareMeasurement 3)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

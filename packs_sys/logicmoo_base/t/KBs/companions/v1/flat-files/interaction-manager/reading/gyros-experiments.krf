@@ -1,0 +1,191 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: gyros-experiments.meld
+;;;;    System: 
+;;;;    Author: your name here
+;;;;   Created: September 30, 2010 21:36:35
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2011-11-16 18:38:00 -0600 (Wed, 16 Nov 2011) $
+;;;;  $LastChangedBy: Barbella $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; This plan takes in a list of readings. It then does n-fold cross validation to see how well
+;;; we internally match.
+
+(isa checkCorrespondencesInSet ComplexActionPredicate)
+(arity checkCorrespondencesInSet 2)
+(arg1Isa checkCorrespondencesInSet Set) 
+(arg2Isa checkCorrespondencesInSet Thing) 
+(comment checkCorrespondencesInSet "(checkCorrespondencesInSet ?set-of-correspondences ?trial-name) takes in a set of correspondences, and asks the user about each one, checking for validity.")
+
+
+(isa questionUserAboutEntityCorrespondence ComplexActionPredicate)
+(arity questionUserAboutEntityCorrespondence 1)
+(arg1Isa questionUserAboutEntityCorrespondence Set) 
+(comment questionUserAboutEntityCorrespondence "(questionUserAboutEntityCorrespondence ?entity-correspondence) 
+asks the user if ?entity-correspondence is a valid correspondence in the analogy.")
+
+;;;(TheSet
+;;; (EntityCorrespondenceFn mf-KBGlobal-Mt-11 mf-KBGlobal-Mt-6 "the cooking side rotating away from the fire" "the sun entering the earth" 0.0 False) 
+;;; (EntityCorrespondenceFn Gyros PlanetEarth "gyros" "the earth" 0.0 False)
+;;; (EntityCorrespondenceFn GyroSide-Resting OtherSideOfEarth "the resting side of the gyros" "the other side of the earth" 0.0 False) 
+;;; (EntityCorrespondenceFn Resting-State Night-State "resting state" "nighttime" 0.0 False)
+;;; (EntityCorrespondenceFn mf-KBGlobal-Mt-8 sunTranslates "the rotation of the gyros" "the translation of the sun" 0.0 False) 
+;;; (EntityCorrespondenceFn Fire TheSun "fire" "the sun" 0.0 False) 
+;;; (EntityCorrespondenceFn GyroSide-Cooking Chicago "the cooking side of the gyros" "Chicago" 0.0 False)
+;;; (EntityCorrespondenceFn mf-KBGlobal-Mt-7 mf-KBGlobal-Mt-0 "the occlusion of the cooking side" "the occlusion of Chicago" 0.0 False) 
+;;; (EntityCorrespondenceFn Cooking-State Day-State "cooking state" "daytime" 0.0 False)
+;;; (EntityCorrespondenceFn mf-KBGlobal-Mt-9 mf-KBGlobal-Mt-5 "the heating by the fire" "the lighting by the sun" 0.0 False))
+
+(isa currentMatchCheckTrial Predicate)
+(arity currentMatchCheckTrial 1)
+(comment currentMatchCheckTrial "(currentMatchCheckTrial ?x) indicates that ?x is the matching check trial we're currently working through.")
+
+(preconditionForMethod
+ (ist-Information MappingChoicesMt (currentMatchCheckTrial ?old-trial-name))
+ (methodForAction
+  (checkCorrespondencesInSet ?set-of-correspondences ?trial-name)
+  (actionSequence
+   (TheList
+    (doUntell (ist-Information MappingChoicesMt (currentMatchCheckTrial ?old-trial-name)))
+    (doTell (ist-Information MappingChoicesMt (currentMatchCheckTrial ?trial-name)))
+    (doTell (ist-Information MappingChoicesMt (currentMatchCheckSet ?set-of-correspondences)))
+    (doTell (ist-Information MappingChoicesMt (currentMatchCheckIndex 1)))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (fireNextMatchCheck))))
+    ))))
+
+(preconditionForMethod
+ (outsourcedOnly (wmOnly (uninferredSentence (ist-Information MappingChoicesMt (currentMatchCheckTrial ?old-trial-name)))))
+ (methodForAction
+  (checkCorrespondencesInSet ?set-of-correspondences ?trial-name)
+  (actionSequence
+   (TheList
+    
+    (doTell (ist-Information MappingChoicesMt (currentMatchCheckTrial ?trial-name)))
+    (doTell (ist-Information MappingChoicesMt (currentMatchCheckSet ?set-of-correspondences)))
+    (doTell (ist-Information MappingChoicesMt (currentMatchCheckIndex 1)))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (fireNextMatchCheck))))
+    ))))
+
+
+(isa fireNextMatchCheck ComplexActionPredicate)
+(arity fireNextMatchCheck 0)
+(comment fireNextMatchCheck "(fireNextMatchCheck) triggers the next match check question.")
+
+(preconditionForMethod
+ (and (lookupOnly (ist-Information MappingChoicesMt (currentMatchCheckIndex ?cmi)))
+      (ist-Information MappingChoicesMt (currentMatchCheckSet ?set-of-correspondences))
+      (evaluate ?next-match (NthInListFn ?cmi ?set-of-correspondences))
+      (evaluate ?next-cmi (PlusFn ?cmi 1))
+      (newReifiedUtterance ?system-utterance)
+      )
+ (methodForAction
+  (fireNextMatchCheck)
+  (actionSequence
+   (TheList
+    (doUntell (ist-Information MappingChoicesMt (currentMatchCheckIndex ?cmi)))
+    (doTell (ist-Information MappingChoicesMt (currentMatchCheckIndex ?next-cmi)))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (questionUserAboutEntityCorrespondence ?next-match))))
+    ))))
+
+(isa listOfWordsToString Predicate)
+(arity listOfWordsToString 2)
+
+(<== (listOfWordsToString ?list ?string)
+     (formattedContentString "~@{~a~^ ~}" ?list ?string))
+     
+     
+(preconditionForMethod
+ (and
+      (newReifiedUtterance ?system-utterance)
+      (selectionMsgFromListForMatching ?base-string ?target-string ?msg)) 
+ (methodForAction
+  (questionUserAboutEntityCorrespondence (EntityCorrespondenceFn ?base ?target ?base-string ?target-string ?score ?is-required-corrspondence))
+  (actionSequence
+   (TheList
+    (doTell (ist-Information MappingChoicesMt (queryChoices ?system-utterance (TheList (true)
+                                                                                       (excludedCorrespondence ?base ?target) 
+                                                                                       (excludedBaseCorrespondence ?base)
+                                                                                       (excludedTargetCorrespondence ?target)
+                                                                                       (and (excludedBaseCorrespondence ?base)
+                                                                                            (excludedTargetCorrespondence ?target))))))
+    (doTell (ist-Information MappingChoicesMt (isa ?system-utterance MatchCheckQuestion-IBT)))
+    (doTell (ist-Information MappingChoicesMt (iteIllocutionaryForce ?system-utterance Query)))
+    (doRespond ?system-utterance ?msg)))))
+
+(isa MatchCheckQuestion-IBT Collection)
+(genls MatchCheckQuestion-IBT Question-IBT)
+
+(<== (selectionMsgFromListForMatching ?base-string-raw ?target-string-raw ?msg)
+     (listOfWordsToString ?base-string-raw ?base-string)
+     (listOfWordsToString ?target-string-raw ?target-string)
+     (formattedContentString "~%I think that ~s should match to ~s.~%1) That is correct.~%2) Those don't match, but they each do match with something else.~%3) No, and ~s has no correspondence in the mapping at all.~%4) No, and ~s has no correspondence in the mapping at all.~%5) No, and neither has any correspondence in the mapping at all.~%" (TheList ?base-string ?target-string ?base-string ?target-string) 
+                             ?msg))
+
+(<== (userResponseExpected ?context ?question-type)
+     (outsourcedOnly (currentSystemUtterance ?system-utterance))
+     (ist-Information MappingChoicesMt (iteIllocutionaryForce ?system-utterance Query))
+     (ist-Information MappingChoicesMt 
+       (nonTransitiveInference (isa ?system-utterance ?question-type)))
+     (allFactsAllowed (genls ?question-type Question-IBT)))
+
+(isa mappingConfirmationTask Predicate)
+(arity mappingConfirmationTask 1)
+(arg1Isa mappingConfirmationTask Thing)
+
+;
+;;;(queryChoices SystemUtterance3135
+;;;    (TheList (isa book3098 Book-CW) (isa book3098 BookCopy)))
+;
+;;; Numeric choices:
+;;; Note that this looks directly at the input string and doesn't rely on EA to do the right thing at all.
+;;; This method allows the user to select a particular enabled choice in a choice set.
+;;; Don't just make up our own context. See what gets passed into here.
+;;; Okay, so we have to have that signature, but how do we know what the response even was?
+(preconditionForMethod
+  (wmOnly
+    (localOnly
+     (and 
+          (ist-Information MappingChoicesMt (currentMatchCheckTrial ?trial-name))
+          (ist-Information ?context
+            (interpretationOf ?sentence-id ?choice-integer))
+          (isa ?choice-integer Integer)
+          (outsourcedOnly (currentSystemUtterance ?system-utterance))
+          (lookupOnly
+           (ist-Information MappingChoicesMt
+             (queryChoices ?system-utterance ?choice-list)))
+          (evaluate ?choice
+            (NthInListFn ?choice-integer ?choice-list))
+          )))
+ (methodForAction
+  (interpretAsResponse ?context ?sentence-id ?discourse-ctxt MatchCheckQuestion-IBT)
+  (actionSequence
+   (TheList
+    (doRecord
+     (ist-Information ?context (inReplyTo ?sentence-id ?system-utterance)))
+    (doRecord
+     (ist-Information PlaceholderMatchEvaluation001Mt ?choice))
+    (doUpdateDrs ?original-sentence-id ?discourse-ctxt)
+    (doAnnounce "~&Ok.~%" ())
+    ;;; This might need to turn into "trigger the next one to fire"
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (fireNextMatchCheck))))
+    ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

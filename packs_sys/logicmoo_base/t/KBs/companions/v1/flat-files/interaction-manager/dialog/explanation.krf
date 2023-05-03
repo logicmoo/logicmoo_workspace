@@ -1,0 +1,95 @@
+;;;
+;;; explanation.meld
+;;;
+;;; This file contains HTN methods for explaining ambiguities and beliefs
+;;; 
+;;; Explaining a belief is different from pedagagically explaining a
+;;; mental model.  It's about why rather than how.
+;;;
+;;; Note: We need to be able to explain someone else's actions, which
+;;; is vastly different from tracing antecedents.  Explanation needs
+;;; to go in both directions.
+;;;
+;;; We need to be able to explain motivation (how an action addresses a goal),
+;;; explain causality (how an outcome derived from a causal model) and
+;;; explain an inference (in terms of assumptions made as well as justification
+;;; trace) and explain a similarity assessment (by summarizing a mapping)
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; --------------------------------------------------------------------------
+;;; Action Vocabulary
+;;;
+
+(isa explainBelief ComplexActionPredicate)
+(arity explainBelief 4)
+(arg1Isa explainBelief Microtheory)
+(arg2Isa explainBelief CycLTerm)
+(arg3Isa explainBelief ELSentence-Assertible)  ;; probably not most of the time!
+(arg4Isa explainBelief Microtheory)
+(comment explainBelief "(explainBelief ?context ?sentence-id ?system-stmt ?discourse-ctxt) is a task to explain justifications for the question answer associated with ?system-stmt")
+
+
+;;;--------------------------------------------------------------------------------
+;;; Explaining belief in prior answers:
+
+;;; **** We need to turn the prior question and answer into something for which we 
+;;; **** can invoke wmAntecedentOf and walk the justification tree.
+;;; **** Easier said than done.
+;;; **** Somehow, trueInDescriptiveContext doesn't justify results in any traversable way.
+(preconditionForMethod
+  (and (ist-Information ?context (systemUtteranceAt ?time ?system-stmt ?prior-answer))  ; ?prior-answer is a string
+       (ist-Information ?context (inReplyTo ?system-stmt ?question-id))
+       (uninferredSentence
+         (inferenceOnly
+           (justificationForBelief ?context ?question-id ?reasons)))
+       (formattedContentString "~%Cannot explain belief in : ~s" (TheList ?prior-answer) ?utterance-string)
+       (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (explainBelief ?context ?sentence-id ?system-stmt ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (doRespond ?system-utterance ?utterance-string)))))
+
+;;; Explain why the previous user input was syntactically ambiguous:
+(preconditionForMethod
+  (and (ist-Information ?context (inReplyTo ?system-stmt ?previous-user-sentence-id))
+       (wmOnly (syntacticallyAmbiguous ?previous-user-sentence-id ?csid ?discourse-ctxt))
+       (syntaxDifferentialGloss ?discourse-ctxt ?previous-user-sentence-id ?utterance-string)
+       (newReifiedUtterance ?system-utterance))
+  (methodForAction
+    (explainBelief ?context ?sentence-id ?system-stmt ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion)) ; a spec of ReplyingToAYesOrNoQuestion 
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?utterance-string)))))
+
+
+(preconditionForMethod
+  (and (ist-Information ?context (systemUtteranceAt ?time ?system-stmt ?prior-answer))
+       (ist-Information ?context (inReplyTo ?system-stmt ?question-id))
+       (inferenceOnly (justificationForBelief ?context ?question-id ?reasons))
+       (newReifiedUtterance ?system-utterance)
+       (listReasons ?reasons ?utterance-string))
+  (methodForAction
+    (explainBelief ?context ?sentence-id ?system-stmt ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance ReplyingToAQuestion)) ; a spec of ReplyingToAYesOrNoQuestion 
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))
+            (ist-Information ?context (queryAnswer ?sentence-id ?reasons))))
+        (doRespond ?system-utterance ?utterance-string)))))
+
+
+;;; We need to distinguish these cases better.  The first case, inability to explain, needs
+;;; some kind of failure statement associated with it.  It's not a NotUnderstanding-CommunicationAct,
+;;; but some other kind of failure to comply.
+(<== (preferInContext (explainBelief ?context ?sentence-id ?system-stmt ?discourse-ctxt) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq2 doRecordMembers))   ; Avoid the apology if possible
+
+;;; End of file

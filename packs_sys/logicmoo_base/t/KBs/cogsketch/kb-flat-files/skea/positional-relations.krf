@@ -1,0 +1,149 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: positional-relations.meld
+;;;;    System: sKEA
+;;;;   Version: 1.0
+;;;;    Author: Ken Forbus
+;;;;   Created: January 19, 2001 20:19:54
+;;;;   Purpose: Visual relationships between glyphs
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+(isa needVisualPositionalRelation Predicate)
+;; ***** Is there a collection for control predicates already?  Really should
+;; ***** be.  This would be one of them.
+(comment needVisualPositionalRelation
+           "A pair of glyphs or entities whose visual positional relationship 
+            is worth computing when possible.")
+(arity needVisualPositionalRelation 3)
+(arg1Isa needVisualPositionalRelation Thing)
+(arg2Isa needVisualPositionalRelation Thing)
+(arg3Isa needVisualPositionalRelation Sketch)
+
+(genls Sketch Thing)
+
+(isa directionalSignature Relation)
+(arity directionalSignature 3)
+;; Reason for thing is that the entities can be anything.
+;; Could be purely intangible, for instance!
+(arg1Isa directionalSignature Thing)
+(arg2Isa directionalSignature Thing)
+(arg3Isa directionalSignature Set)
+
+(genls PositionalVisualRelation Relation)
+(genls PositionalVisualRelation QualitativeVisualRelation)
+(comment PositionalVisualRelation 
+           "Relationships used to indicate relative positions within a sketch 
+            or what is depicted.")
+
+(isa rightOf PositionalVisualRelation)
+(arity rightOf 2)
+(arg1Isa rightOf Thing)
+(arg2Isa rightOf Thing)
+
+(isa rightOfDirectly PositionalVisualRelation)
+(arity rightOfDirectly 2)
+(arg1Isa rightOfDirectly Thing)
+(arg2Isa rightOfDirectly Thing)
+
+(isa leftOf PositionalVisualRelation)
+(arity leftOf 2)
+(arg1Isa leftOf Thing)
+(arg2Isa leftOf Thing)
+
+(isa leftOfDirectly PositionalVisualRelation)
+(arity leftOfDirectly 2)
+(arg1Isa leftOfDirectly Thing)
+(arg2Isa leftOfDirectly Thing)
+
+(isa above PositionalVisualRelation)
+(arity above 2)
+(arg1Isa above Thing)
+(arg2Isa above Thing)
+
+(isa aboveDirectly PositionalVisualRelation)
+(arity aboveDirectly 2)
+(arg1Isa aboveDirectly Thing)
+(arg2Isa aboveDirectly Thing)
+
+(isa below PositionalVisualRelation)
+(arity below 2)
+(arg1Isa below Thing)
+(arg2Isa below Thing)
+
+(isa belowDirectly PositionalVisualRelation)
+(arity belowDirectly 2)
+(arg1Isa belowDirectly Thing)
+(arg2Isa belowDirectly Thing)
+
+
+(isa enclosesHorizontally PositionalVisualRelation)
+(arity enclosesHorizontally 2)
+(arg1Isa enclosesHorizontally Thing)
+(arg2Isa enclosesHorizontally Thing)
+
+(isa enclosesVertically PositionalVisualRelation)
+(arity enclosesVertically 2)
+(arg1Isa enclosesVertically Thing)
+(arg2Isa enclosesVertically Thing)
+
+(isa enclosedHorizontallyBy PositionalVisualRelation)
+(arity enclosedHorizontallyBy 2)
+(arg1Isa enclosedHorizontallyBy Thing)
+(arg2Isa enclosedHorizontallyBy Thing)
+
+(isa enclosedVerticallyBy PositionalVisualRelation)
+(arity enclosedVerticallyBy 2)
+(arg1Isa enclosedVerticallyBy Thing)
+(arg2Isa enclosedVerticallyBy Thing)
+
+(isa enclosesSpatially PositionalVisualRelation)
+(arity enclosesSpatially 2)
+(arg1Isa enclosesSpatially Thing)
+(arg2Isa enclosesSpatially Thing)
+
+
+(isa northOf PositionalVisualRelation)
+(arity northOf 2)
+(arg1Isa northOf Thing)
+(arg2Isa northOf Thing)
+
+(isa southOf PositionalVisualRelation)
+(arity southOf 2)
+(arg1Isa southOf Thing)
+(arg2Isa southOf Thing)
+
+(isa eastOf PositionalVisualRelation)
+(arity eastOf 2)
+(arg1Isa eastOf Thing)
+(arg2Isa eastOf Thing)
+
+(isa westOf PositionalVisualRelation)
+(arity westOf 2)
+(arg1Isa westOf Thing)
+(arg2Isa westOf Thing)
+
+(isa northWestOf PositionalVisualRelation)
+(arity northWestOf 2)
+(arg1Isa northWestOf Thing)
+(arg2Isa northWestOf Thing)
+
+(isa southWestOf PositionalVisualRelation)
+(arity southWestOf 2)
+(arg1Isa southWestOf Thing)
+(arg2Isa southWestOf Thing)
+
+(isa southEastOf PositionalVisualRelation)
+(arity southEastOf 2)
+(arg1Isa southEastOf Thing)
+(arg2Isa southEastOf Thing)
+
+(isa northEastOf PositionalVisualRelation)
+(arity northEastOf 2)
+(arg1Isa northEastOf Thing)
+(arg2Isa northEastOf Thing)
+

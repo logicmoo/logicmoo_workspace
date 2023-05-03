@@ -1,0 +1,117 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: kick-start-plan.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: July 30, 2015 15:35:14
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory KickStartPlanMt)
+
+(isa KickStartPlanMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+;;;PLANS USED ONLY FOR TESTING
+;;; these plans will later be changed into regression tests
+
+
+(isa doForcedChoice ComplexActionPredicate)
+(arity doForcedChoice 0)
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (unifies ?standard (LabeledAbstractionFn toma
+                                               (TheSet (GlyphFn Subsketch-01 Metalayer-2)
+                                                       (GlyphFn Subsketch-02 Metalayer-2))))
+      (unifies ?choices (TheList
+                         (EncodedCaseFn
+                          (PerceptualReferentCaseFn (PossibleLabelFn toma)
+                                                    these2475 (GlyphFn Subsketch-03 Metalayer-2))
+                          SUB-EP-ID)
+                         (EncodedCaseFn
+                          (PerceptualReferentCaseFn (PossibleLabelFn toma)
+                                                    these2475 (GlyphFn Subsketch-04 Metalayer-2))
+                          SUB-EP-ID))))
+ (methodForAction
+  (doForcedChoice)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?sr
+                       (chooseBestChoice ?standard ?choices))))))
+
+
+(isa doForcedChoice1 ComplexActionPredicate)
+(arity doForcedChoice1 0)
+
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (unifies ?standard (EncodedCaseFn
+                          (PerceptualReferentCaseFn toma this2278
+                                                    (GlyphFn Subsketch-01 Metalayer-2))
+                          SUB-EP-ID))
+      (unifies ?choices (TheList
+                         (EncodedCaseFn
+                          (PerceptualReferentCaseFn (PossibleLabelFn toma)
+                                                    these2475 (GlyphFn Subsketch-03 Metalayer-2))
+                          SUB-EP-ID)
+                         (EncodedCaseFn
+                          (PerceptualReferentCaseFn (PossibleLabelFn toma)
+                                                    these2475 (GlyphFn Subsketch-04 Metalayer-2))
+                          SUB-EP-ID))))
+ (methodForAction
+  (doForcedChoice1)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?sr
+                       (chooseBestChoice ?standard ?choices))))))
+
+;; a debugging utility
+;;can be used to test a small piece of plan
+(isa justTest ComplexActionPredicate)
+(arity justTest 0)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (justTest)
+  (actionSequence
+   (TheList
+    (doMap (?choice-encoding)
+           (doAnnounce "choice-encoding : ~A" ?choice-encoding)
+           (TheList
+            (EncodedCaseFn
+             (PerceptualReferentCaseFn (PossibleLabelFn toma) these2474
+                                       (GlyphFn Subsketch-03 Metalayer-2))
+             SUB-EP-ID)
+            (EncodedCaseFn
+             (PerceptualReferentCaseFn (PossibleLabelFn toma) these2474
+                                       (GlyphFn Subsketch-04 Metalayer-2))
+             SUB-EP-ID)))))))
+
+
+
+
+
+(isa testGlyphSelection ComplexActionPredicate)
+(arity testGlyphSelection 0)
+
+(preconditionForMethod
+ (currentNuSketchHookup ?nusketch-hookup-agent)
+ (methodForAction
+  (testGlyphSelection)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?nusketch-hookup-agent 
+                       (selectWinningGlyph 
+                        (EncodedCaseFn
+                         (PerceptualReferentCaseFn (PossibleLabelFn toma) these2477 (GlyphFn Subsketch-03 Metalayer-2))
+                         SUB-EP-ID)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

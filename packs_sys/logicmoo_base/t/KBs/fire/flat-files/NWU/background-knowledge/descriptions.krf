@@ -1,0 +1,417 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: descriptions.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: August 12, 2017 14:54:10
+;;;;   Purpose: descriptive properaties of things
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-12-28 12:49:44 -0600 (Fri, 28 Dec 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+
+;;; What things smell like
+(typicalOdorOfType Feces (OdorFn Feces)) ; doesn't tell us much
+(typicalOdorOfType Garbage-Domestic RottenOdor)
+(typicalOdorOfType SulfurDioxide RottonOdor)
+(typicalOdorOfType Perfume PleasantOdor)  ; in fact, (OdorFn Perfume) genls from PleasantOdor
+(typicalOdorOfType Deodorant PleasantOdor)
+(typicalOdorOfType Cigar FoulOdor)  ; actually, just the smoke.  (is there no SmokeFn?)
+(typicalOdorOfType Smoke FoulOdor)
+(typicalOdorOfType Skunk SkunkOdor) ; genls from FoulOdor
+(typicalOdorOfType (DeadPhysicalRemainsFn Animal) RottonOdor)
+(typicalOdorOfType Sweat IrritatingOdor) ; Take a bath!
+;; (holdsIn STIF TakingABath (equals (OdorFn <bather>) NoOdor))
+
+
+;;; What things taste like
+(typicalTasteOfType Salt-NaCl SaltyFood)
+(typicalTasteOfType Chip-Snack SaltyFood)
+(typicalTasteOfType Candy SweetTastingFood)
+(typicalTasteOfType Chocolate SweetTastingFood)
+(typicalTasteOfType IceCream SweetTastingFood)
+(typicalTasteOfType Fruit SweetTastingFood)
+(typicalTasteOfType Pizza CheesyFood)
+(typicalTasteOfType CreamOfWheat BlandFood)
+(typicalTasteOfType Chili-Dish Hot-SpicyFood)
+(typicalTasteOfType (JuiceFn (FruitFn LemonTree)) BitterTaste)
+(typicalTasteOfType Sugar SweetTaste)
+(typicalTasteOfType Honey SweetTaste)
+(typicalTasteOfType Milkshake SweetTaste)
+(typicalTasteOfType PancakeBatter SweetTaste)
+
+(isa Anchovy CommonlyAvoidedFood)
+(isa (MeatFn Liver) CommonlyAvoidedFood)
+
+;;;BlandFood
+;;;CheesyFood
+;;;Hot-SpicyFood
+;;;SaltyFood
+;;;SavoryFood
+;;;SpicyFood
+;;;SweetTastingFood
+
+(typicalIngredientTypes TomatoBasedSauce (FruitFn TomatoPlant))
+(typicalIngredientTypes Lemonade (JuiceFn (FruitFn LemonTree)))
+
+(essentialPartTypes Sushi (CollectionIntersection2Fn Seafood RawFood))
+(essentialPartTypes Sushi WhiteRice-Foodstuff)
+(commonFoodTypeOfCuisine Sushi JapaneseCuisine)
+
+(commonFoodTypeOfCuisine Pizza ItalianCuisine)
+(commonFoodTypeOfCuisine PastaDish ItalianCuisine)
+
+(commonFoodTypeOfCuisine HamburgerSandwich AmericanStyleFastFoodCuisine)
+(commonFoodTypeOfCuisine ApplePie DistinctivelyUnitedStatesCuisine)
+
+;;; edibleStuffTypesCommonlyServedTogether
+;;; keyIngredientTypes
+;;; conceptuallyCoRelated
+
+(shapeTypeOfType Bagel Torus)
+(shapeTypeOfType Doughnut Torus)
+(shapeTypeOfType IceCreamCone Cone)
+(shapeTypeOfType Sandwich RectangularParallelepiped)
+(shapeTypeOfType Bacon Beam)
+(shapeTypeOfType Pancake Disc)
+(shapeTypeOfType Tablet-Ingestible RoundObject)
+(shapeTypeOfType Jellybean EllipsoidalSolid)
+(shapeTypeOfType BookCopy RectangularParallelepiped)
+(shapeTypeOfType Basketball-Ball SphericalSolid)
+(shapeTypeOfType Marble-Ball SphericalSolid)
+(shapeTypeOfType PinballBall SphericalSolid)
+(shapeTypeOfType PingPongBall SphericalSolid)
+(shapeTypeOfType PoolBall SphericalSolid)
+(shapeTypeOfType RubberBall SphericalSolid)
+(shapeTypeOfType ShotPutShot SphericalSolid)
+(shapeTypeOfType SoccerBall SphericalSolid)
+(shapeTypeOfType TennisBall SphericalSolid)
+(shapeTypeOfType VolleyballBall SphericalSolid)
+(shapeTypeOfType WaterPoloBall SphericalSolid)
+(shapeTypeOfType Baseball-Ball SphericalSolid)
+(shapeTypeOfType Basketball-Ball SphericalSolid)
+(shapeTypeOfType BowlingBall SphericalSolid)
+(shapeTypeOfType GolfBall SphericalSolid)
+(shapeTypeOfType HandballBall SphericalSolid)
+(shapeTypeOfType LacrosseBall SphericalSolid)
+(shapeTypeOfType SoftballBall  SphericalSolid)
+(shapeTypeOfType Die-TheCube Cube)
+(shapeTypeOfType CompactDisc Disc)
+(shapeTypeOfType Mast-Device RodShapedObject)
+(shapeTypeOfType DNAMolecule DoubleHelix)
+(shapeTypeOfType Cat CatShaped)
+(shapeTypeOfType Bird BirdShaped)
+(shapeTypeOfType Beetle BeetleShaped)
+(shapeTypeOfType Ape ApeShaped)
+(shapeTypeOfType Clam ClamShaped)
+(shapeTypeOfType Fly-Insect FlyShaped)
+(shapeTypeOfType Fish FishShaped)
+(shapeTypeOfType HomoSapiens HumanShaped)
+
+(mainConstituent-TypeType Marble-Ball Glass)
+(mainConstituent-TypeType PinballBall Steel)
+(mainConstituent-TypeType RubberBall Rubber)
+
+(typeBehaviorCapable-DeviceUsed RubberBall BouncingAnObject)
+(typeBehaviorCapable-PerformedBy RubberBall BouncingProcess)
+
+;(shapeTypeOfType RugbyBall SphericalSolid) ; no, it's more like a football
+
+
+;;; Appearance
+
+(relationMostInstance hasEvaluativeQuantity FashionModel (HighAmountFn PhysicalAttractiveness))
+(relationMostInstance hasEvaluativeQuantity (JuvenileFn Dog) (HighAmountFn Cuteness-EmotionalResponse))
+(relationMostInstance hasEvaluativeQuantity (JuvenileFn Cat) (HighAmountFn Cuteness-EmotionalResponse))
+(relationMostInstance hasEvaluativeQuantity HumanInfant (HighAmountFn Cuteness-EmotionalResponse))
+;;; Most sunsets are beautiful:
+(relationMostInstance hasEvaluativeQuantity (SubcollectionOfWithRelationFromTypeFn PieceOfSky temporallySubsumes Sunset) (HighAmountFn Beauty))
+
+;;; Barefoot people have bare feet:
+(relationAllInstance dressState (OrganismPartTypeFn BarefootPerson Foot-AnimalBodyPart) Nude)
+
+;;; JumpRopes are between 4-12 feet long:
+(relationMostInstance lengthOfObject JumpRope (Foot-UnitOfMeasure 4 12))
+
+;;; Corpses are gross:
+(typeEvokes (DeadPhysicalRemainsFn Animal) (PositiveAmountFn Disgust))
+
+;;; "Pillows are soft"
+(relationAllInstance hardnessOfObject Pillow Soft)
+;;; "Sidewalks are hard"
+(relationAllInstance hardnessOfObject Sidewalk Hard)
+
+;;; Feel
+
+(isa Fleecy ObjectTypeBySurfaceFeature)
+(isa Fluffy ObjectTypeBySurfaceFeature)
+
+(typicalTextureOfType Sandpaper Abrasive)
+(typicalTextureOfType Glass Smooth)
+(typicalTextureOfType Marble Smooth)
+(typicalTextureOfType Eel Slimy)
+(typicalTextureOfType Oyster Slimy)  ; not the shell, just the insides
+(typicalTextureOfType Oil Greasy)
+;; What about soap? That's slippery, but not slimy.  That's an objectTypeBySurfaceFeature
+;; (surfaceFeatureOfObject (SomeFn Soap) Slippery)  ; but Wet soap only.
+
+;;;We'd like to say that silk and linen are soft, but burlap is coarse.
+(typicalTextureOfType SilkCloth Smooth)
+(typicalTextureOfType Burlap Abrasive)
+(tensileStrengthOfSubstance Silk (HighAmountFn TensileStrength))
+(tensilsStrengthOfSubstance Burlap (HighAmountFn TensileStrength))
+(hasEvaluativeQuantity Silk Expensive)
+(hasEvaluativeQuantity Burlap Inexpensive)
+
+;;; Abrasive
+;;; Greasy
+;;; Rough
+;;; Slimy
+;;; Smooth
+;;; WireyTextured
+
+;;; Viscosity
+;;; viscosityOfSubstance
+
+;;; hot and cold
+
+
+;;; typicalColorOfType (see colors.meld)
+
+
+(rewriteOf Depth (SubcollectionOfWithRelationFromTypeFn Distance depthOfObject PolyDimensionalThing))
+
+;;; Personalities
+
+(isa Lazy ExistingObjectType)
+(isa Lazy PersonTypeByPersonalityTrait)
+(isa Lazy SpatiallyDisjointObjectType)
+(disjointCollections Diligent Lazy)
+(comment "Lazy people tend to avoid tasks.")  ; (prefersToMinimize <IntelligentAgent> <Thing> <ScalarIntervalSlot>)
+
+;;; Truth and Belief
+
+(isa Mistake FirstOrderCollection)
+(genls Mistake (CollectionSubsetFn BelievingThat
+                  (TheSetOf ?believing
+                    (and (isa ?believing BelievingThat)
+                         (believedProp ?believing ?prop)
+                         (falseSentence ?prop)))))
+                         
+;;; Most of the time, (MakingFn Mistake) == MakingAMistake, more or less.
+
+
+;;; Sound Types
+
+(isa RattlingSound TemporalStuffType)
+(genls RattlingSound AudibleSound)
+(genls RattlingSound (GroupFn RattlingSound))
+
+(genls Concussion (InjuryConditionToTypeFn Brain))
+
+(isa AkimboPosture AnimalTypeByPosture)
+(genls AkimboPosture Animal)
+
+;;; Food ingredients
+
+(typicalMainConstituent-TypeType HamburgerSandwich GroundBeef)
+(typicalMainConstituent-TypeType Cheeseburger Cheese)
+(typicalIngredientTypes Hamburger Bun)
+(typicalMainConstituent-TypeType HotDogSandwich HotDog)
+(typicalIngredientTypes HotDogSandwich Bun)
+(relationAllExists sandwichFillings HamburgerSandwich GroundBeef)
+(relationAllExists sandwichFillings HotDogSandwich HotDot)
+(relationAllExists sandwichFillings (SandwichFn IceCream) IceCream)
+(relationAllExists sandwichFillings IceCreamCone IceCream)
+(typicalIngredientTypes IceCream Sugar)
+(typicalIngredientTypes Candy Sugar)
+(typicalMainConstituent-TypeType CandyBar ChocolateCandy)
+(typicalIngredientTypes CandyBar ChocolateCandy)
+;;; How would we say chocolate bars melt above ~ 80 degrees F?
+(relationMostInstance meltingPointAtOneATM ChocolateCandy (DegreeFahrenheight 75 85))
+
+(isa meltingPointAtOneATM BinaryPredicate)
+(arg1Isa meltingPointAtOneATM PartiallyTangible)
+(arg2Isa meltingPointAtOneATM Temperature)
+(<== (meltingPointAtOneATM ?thing ?temp)
+     (meltingPoint-TemperatureAtPressure ?thing ?temp (Atmosphere-UnitOfPressure 1)))
+
+;;; cf, ambientDewpoint
+(isa dewPointAtOneATM BinaryPredicate)
+(arg1Isa dewPointAtOneATM PartiallyTangible)
+(arg2Isa dewPointAtOneATM Temperature)
+(<== (dewPointAtOneATM ?thing ?temp)
+     (dewPoint-TemperatureAtPressure ?thing ?temp (Atmosphere-UnitOfPressure 1)))
+
+(isa boilingPointAtOneATM BinaryPredicate)
+(arg1Isa boilingPointAtOneATM PartiallyTangible)
+(arg2Isa boilingPointAtOneATM Temperature)
+(<== (boilingPointAtOneATM ?thing ?temp)
+     (boilingPoint-TemperatureAtPressure ?thing ?temp (Atmosphere-UnitOfPressure 1)))
+
+(intendedForConsumptionByType DogFood Dog)
+(intendedForConsumptionByType CatFood DomesticCat)
+(intendedForConsumptionByType BabyFood HumanInfant)
+(intendedForConsumptionByType Fish FishFood)
+(intendedForConsumptionByType DietSoftDrink (SubcollectionOfWithRelationFromTypeFn HomoSapiens performedBy DietingForWeightLoss))
+(intendedForConsumptionByType Vegetarian VegetarianCuisine)
+(intendedForConsumptionByType Vegan VeganCuisine)
+(intendedForConsumptionByType MilitaryPerson Meal-ReadyToEat)
+
+;(shelfLife <PartiallyTangible> <Time-Quantity>)
+
+(isa IceCreamCone ExistingObjectType)
+(isa IceCreamCone SpatiallyDisjointObjectType)
+(isa IceCreamCone SpecifiedFoodDishType )
+(genls IceCreamCone FoodOrDrink-Chilled)
+
+
+;;; Sounds
+
+
+(relationAllInstance waveEmitted Neighing NeighingSound)
+(relationMostExists doneBy Neighing Horse)
+(relationMostExists doneBy Trumpeting-ElephantNoise Elephant)
+(relationAllInstance waveEmitted Growling GrowlingSound)
+(relationAllInstance waveEmitted Speaking HumanSpeechSound)
+(relationAllInstance waveEmitted Laughing Laugh)
+(relationAllInstance waveEmitted Howling HowlingSound)
+(relationAllInstance waveEmitted HonkingSomething-EmittingSound HonkingSound)
+(relationExistsMost waveEmitted (SubcollectionOfWithRelationToTypeFn MakingAnOralSound doneBy DomesticCat) MeowingSound) ; When cats make sounds, they're usually meowing
+(relationMostExists doneBy (SubcollectionOfWithRelationToTypeFn MakingAnOralSound waveEmitted MeowingSound) DomesticCat) ; Most meowing sounds come from cats
+(relationExistsMost waveEmitted (SubcollectionOfWithRelationToTypeFn MakingAnOralSound doneBy Dog) BarkingSound) ; When dogs make sounds, they're usually barking
+(relationMostExists doneBy (SubcollectionOfWithRelationToTypeFn MakingAnOralSound waveEmitted BarkingSound) Dog) ; Most barking is done by dogs.
+
+
+;;; Shapes
+
+(isa L-Shaped (ShapedAsFn (SingletonCollectionFn L-TheLetter)))
+
+
+;;; Ages
+; olderThan
+; longerDurationThan
+
+
+; cardinalityGreaterThan
+
+(relationAllExistsCount anatomicalParts Dog Leg 4) ; from OCyc comment
+(relationAllExistsCount anatomicalParts Quadruped Leg 4) ; generalization
+(relationAllExistsCount anatomicalParts Biped Leg 2)
+(relationAllExistsCount anatomicalParts Insect Leg 6)
+(relationAllExistsCount anatomicalParts Arachnid Leg 8)
+(relationAllExistsCount anatomicalParts Octopus Tentacle 8)
+(relationAllExistsCount anatomicalParts Biped Foot-AnimalBodyPart 2)
+(relationAllExistsCount anatomicalParts EquineAnimal Hoof 4)
+(relationAllExistsCount anatomicalParts FelidaeFamily Paw 4)
+(relationAllExistsCount anatomicalParts CanineAnimal Paw 4)
+(relationAllExistsCount anatomicalParts EquineAnimal Tail-BodyPart 1)
+(relationAllExistsCount anatomicalParts FelidaeFamily Tail-BodyPart 1)
+(relationAllExistsCount anatomicalParts CanineAnimal Tail-BodyPart 1)'
+(relationAllExistsCount anatomicalParts Biped Shoulder 2)
+(relationAllExistsCount anatomicalParts Primate Arm 2)
+(relationAllExistsCount anatomicalParts Primate Hand 2)
+(relationAllExistsCount anatomicalParts Bird Wing-AnimalBodyPart 2)
+(relationAllExistsCount anatomicalParts Vertebrate Head 1) ; of course, snakes and fish do too
+(relationAllExistsCount anatomicalParts Vertebrate FaceOfAnimal 1)
+(relationAllExistsCount anatomicalParts Vertebrate Neck-AnimalBodyPart 1)
+(relationAllExistsCount anatomicalParts Vertebrate Eye 2)
+(relationAllExistsCount anatomicalParts Vertebrate Ear 2)
+(relationAllExistsCount anatomicalParts Vertebrate Nose 1)
+(relationAllExistsCount anatomicalParts Vertebrate Mouth 1)
+(relationAllExistsCount anatomicalParts Vertebrate VertebrateSkeleton 1)
+(relationAllExistsCount anatomicalParts HomoSapiens Torso 1)
+(properPhysicalPartTypes Head FaceOfAnimal)
+(properPhysicalPartTypes FaceOfAnimal Eye)
+(properPhysicalPartTypes FaceOfAnimal Nose)
+(properPhysicalPartTypes FaceOfAnimal Mouth)
+(properPhysicalPartTypes FaceOfAnimal Eyebrow)
+(properPhysicalPartTypes FaceOfAnimal Eyelash)
+(properPhysicalPartTypes FaceOfAnimal Eyelid)
+(properPhysicalPartTypes FaceOfAnimal Chin)
+(properPhysicalPartTypes Nose Nostril)
+(properPhysicalPartTypes Mouth-Mammal Lip-Anim)alBodyPart
+(properPhysicalPartTypes Mouth Tooth)
+(properPhysicalPartTypes Mouth Tongue)
+(properPhysicalPartTypes Mouth Gum-AnimalBodyPart)
+(properPhysicalPartTypes Foot-AnimalBodyPart Toe)
+(properPhysicalPartTypes Toe Toenail)
+(properPhysicalPartTypes Arm UpperArm)
+(properPhysicalPartTypes Arm Forearm)
+(properPhysicalPartTypes Arm Hand)
+(properPhyscialPartTypes Arm Elbow)
+(properPhysicalPartTypes Hand Finger)
+(properPhysicalPartTypes Finger Fingernail)
+(properPhysicalPartTypes Finger Knuckle)
+(properPhysicalPartTypes Ear Earlobe)
+(properPhysicalPartTypes Knee Kneecap)
+(properPhysicalPartTypes Leg Knee)
+(properPhysicalPartTypes Leg Foot-AnimalBodyPart)
+(properPhysicalPartTypes Biped Hip)
+(properPhysicalPartTypes Abdomen Navel)
+
+(relationExistsCountAll anatomicalParts Animal Head-AnimalBodyPart 1) ; from OCyc comment
+;;(relationAllExistsCount anatomicalParts Organism-Whole UniqueAnatomicalPartType 1) 
+
+(isa Busy WorkloadStatus)
+(isa Unoccupied WorkloadStatus)
+
+(typicalMainConstituent-TypeType PotteryArtifact (DriedFn Clay-Wet))
+(relationMostInstance hasPreparationStyle PotteryArtifact Baked)  ; some pottery is air-dried
+(relationAllInstance inputsDestroyed (MakingFn PotteryArtifact) Clay-Wet)
+
+(typicalMainConstituent-TypeType Ceramic (DriedFn Clay-Wet)) ; but also SiliconNitride and TitaniumNitride
+
+;;; Rates
+
+(relationMostInstance breathingRate (AdultFn HomoSapiens) (EveryPerFn CalendarSecond 3.3 5))  ; 12-18 times a minute (at rest)
+(relationMostInstance breathingRate (InfantFn HomoSapiens) (EveryPerFn CalendarSecond 1.5 3)) ; 20-40 times a minute
+(relationMostInstance breathingRate (OldFn HomoSapiens) (EveryPerFn CalendarSecond 2 6))   ; 10-30 times a minute
+
+(relationMostInstance breathingRate Hummingbird (EveryPerFn CalendarSecond 0.24  0.6))   ; 100-250 times a minute
+
+;;; Masses
+
+(relationAllInstance massOfObject Feather (LowAmountFn Mass))
+(relationAllInstance massOfObject ShotPutShot (HighAmountFn Mass))  ; obviously relative.
+
+;;; Viscosity
+
+(viscosityOfSubstance Molasses (HighToVeryHighAmountFn Viscosity))
+(viscosityOfSubstance Honey (HighAmountFn Viscosity))
+(viscosityOfSubstance Syrup (HighAmountFn Viscosity))
+(viscosityOfSubstance Juice (LowAmountFn Viscosity))
+(viscosityOfSubstance (LiquidFn Water) (LowAmountFn Viscosity))
+(viscosityOfSubstance HouseholdPaint (MediumAmountFn Viscosity))
+(viscosityOfSubstance ArtistsOilPaint (VeryHighAmountFn Viscosity))
+(viscosityOfSubstance DishwashingSoap (MediumToHighAmountFn Viscosity))
+(viscosityOfSubstance Blood (MediumAmountFn Viscosity))
+(viscosityOfSubstance Urine (LowAmountFn Viscosity))
+(viscosityOfSubstance Sweat (LowAmountFn Viscosity))
+(viscosityOfSubstance Mucus (HighAmountFn Viscosity))
+(viscosityOfSubstance Lava (MediumToVeryHighAmountFn Viscosity))  ; there are different kinds of lava with different properties
+(viscosityOfSubstance (LiquidFn Mercury) (VeryLowAmountFn Viscosity))
+(viscosityOfSubstance TreeSap (HighAmountFn Viscosity))
+
+(relationAllInstance surfaceFeatureOfObject TreeSap Sticky)
+(relationAllInstance surfaceFeatureOfObject Honey Sticky)
+(relationAllInstance surfaceFeatureOfObject Syrup Sticky)
+(relationAllInstance surfaceFeatureOfObject DishwashingSoap Slippery)
+
+;;; Transparency  (most of these are already there as isas in particular microtheories)
+
+(relationAllInstance transparencyOfObject PlasticWrap Transparent)
+(relationAllInstance transparencyOfObject WindowPane Transparent)  ; except stained glass?
+(relationAllInstance transparencyOfObject StainedGlassWindow Translucent) ; a mosaic of colored glass
+(relationMostInstance transparencyOfObject DrinkingGlass Transparent)
+(relationAllInstance transparencyOfObject GiftWrap Opaque)  ; the whole point
+(relationAllInstance transparencyOfObject Wood Opaque)
+(relationAllInstance transparencyOfObject Concrete Opaque)
+(relationAllInstance transparencyOfObject Metal Opaque)
+; water? air?  has a range of transparency
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,1330 @@
+;;; File name: lbd.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Purpose: Learning By Demonstration
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;
+;;; To Do:
+;;;  identify limit points, quantity conditions
+;;;  identify hidden variables (quantities)  (done for city siting)
+;;;  learn optimality conditions  (done)
+;;;  conditionalize inferences on active learning goals (mostly done)
+;;;  accept advice and explanations
+;;;  determine when not to reify & save cases
+;;;  posit higher-level goals
+;;;  recognize & reify trends & patterns  (mostly done)
+;;;  save out high-water marks & refine cost estimates (done for city siting)
+;;;  identify operationalizations of abstract strategies
+;;;  learn salience information for case encoding  (mostly done)
+;;;  discriminate alternative strategies based on what quantity goal is pursued.
+
+
+(in-microtheory PerceptualAgentMt)
+
+;;;
+;;; Explanation
+;;;
+
+(isa explainAction ComplexActionPredicate)
+(arity explainAction 4)
+(arg1Isa explainAction Microtheory)
+(arg2Isa explainAction Event)
+(arg3Isa explainAction CycLTerm)
+(arg4Isa explainAction TimeInterval)
+(comment explainAction "(explainAction ?mt ?cmd-event ?operator ?when) attempts to explain the effects and motivation behind an action.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (explainAction ?mt ?event ?operator ?when)
+    (actionSequence
+      (TheList
+        (validateActionPredictions ?mt ?event ?operator ?when)
+        (explainUserAction ?mt ?event ?operator ?when)
+        ))))
+
+(isa explainUserAction ComplexActionPredicate)
+(arity explainUserAction 4)
+(arg1Isa explainUserAction Microtheory)
+(arg2Isa explainUserAction Event)
+(arg3Isa explainUserAction CycLTerm)
+(arg4Isa explainUserAction TimeInterval)
+(comment explainUserAction "(explainUserAction ?mt ?cmd-event ?operator ?when) attempts to explain a user action with respect to a higher-level goal.")
+
+
+;;; These tasks are invoked by the lbd code in freeciv-agent.
+
+;;; These are event-driven plans that seek to explain or propose a hypothesis
+;;; for the event.  Some of these events are actions by the trainer, others 
+;;; are envionmental responses. Assume that we don't initially know what
+;;; actions  immediately or eventually cause events.  Learning this would help 
+;;; us build up our qualitative model.
+
+;;; Since these tasks now get the explicit reified event, they probably shouldn't
+;;; take a ?when arg.  Events are temporal objects themselves and the fact that
+;;; we have metric time is game-specific.
+
+;;; OMG. ?when is being passed in as an integer, but reified dates are all (YearFn <integer>).
+;;; Causes big problems with validating decision triggers.
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (explainUserAction ?mt ?event ?operator ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "Failure to explain action ~a in ~a" (?operator ?when)))))) ; Temporary!
+
+
+;;; 1) Lift decision tasks - (property invariant from action)
+;;; 2) Lift scope/quantifier of decision tasks
+;;; 3) Identify/verify choices considered
+;;; 4) Lift order of decisions made
+;;; 5) Lift event trigger for decisions
+
+;;; ---------------------------------------------------------------
+;;; Induce Decision Task
+;;;
+;;; We want to determine if an action should be thought of as a recurring 
+;;; decision task, and if so, what events trigger it, what scope its arguments
+;;; range over, and the basis on which to make that decision.  This may 
+;;; involve creating a case library for that task.  We may be able to infer
+;;; qualitative influences based on these decisions.
+;;;
+;;; Questions:
+;;;   How do we infer a "decide currentPlan" decision?
+;;;   How do we represent actions in need of explanation?
+;;;   How do we express the need to do X in order to do Y in order to do Z?
+;;;   How do we posit an intermediate goal that's not yet connected to the top goal?
+;;;   How do we capture a snapshot of values before taking an action?
+;;;   How can we enumerate possible quantities to track?
+;;;   How can the rational player exploit a partial model?
+
+(isa nonDecisionSlot UnaryPredicate)
+(arity nonDecisionSlot 1)
+(arg1Isa nonDecisionSlot BinaryPredicate)
+
+(preconditionForMethod
+  (and (operatorFormulas ?prim ?operator)
+       (determinesFunctionalSlot ?prim ?slot)  ; now outsourced
+       (uninferredSentence
+         (nonDecisionSlot ?slot))  ; A reified statement                  ; the agents version
+       (liftDomainLevelActor ?mt ?operator ?actor-type))
+  (methodForAction
+    (explainUserAction ?mt ?cmd ?operator ?when)  ; ?event is the reified command
+    (actionSequence
+      (TheList
+        (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)))))
+
+(<== (preferInContext (explainUserAction ?mt ?event ?operator ?when) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 induceDecisionTask))
+
+(isa induceDecisionTask ComplexActionPredicate)
+(arity induceDecisionTask 6)
+(arg1Isa induceDecisionTask Microtheory)
+(arg2Isa induceDecisionTask PerceptualAgentCommand)  ; passing this on will save work later.
+(arg3Isa induceDecisionTask CycLExpression)
+(arg4Isa induceDecisionTask Collection)
+(arg5Isa induceDecisionTask FunctionalSlot)
+(arg6Isa induceDecisionTask Date)
+(comment induceDecisionTask "(induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)")
+
+;;; Case 1: Don't know whether this is or isn't a decision task:
+(preconditionForMethod
+  (and (uninferredSentence
+         (knownDecisionTaskStatus ?actor-type ?slot))          ; Static learned knowledge
+       (uninferredSentence
+         (validatedDecisionTaskStatus ?mt ?actor-type ?slot))) ; Haven't already asked the user in this game
+  (methodForAction
+    (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&~a decides functional slot ~a" (?operator ?slot))
+        (verifyViaUser ?mt (decisionTask ?actor-type ?slot))
+      ))))
+
+
+;;; Case 2: Known decision task, but unknown trigger:
+(preconditionForMethod
+  (and (contextEnvAllowed
+         (allFactsAllowed
+           (lookupOnly
+             (decisionTask ?any-actor ?slot))))
+       (formulaArgument ?operator 1 ?actor)
+       (uninferredSentence
+         (knownEventTriggerFor ?mt ?when (decide ?mt ?actor ?slot))))
+  (methodForAction
+    (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList
+       (inferDecisionTrigger ?mt ?cmd ?operator (decisionTask ?actor-type ?slot) ?when)
+       (doAgentPlan
+         (actionSequence
+           (TheList
+             (explainDecision ?mt ?cmd ?operator ?actor-type ?slot ?when))))
+       ))))
+
+;;; Case 3: User confirmed, but not yet recorded in learned knowledge:
+(preconditionForMethod
+  (and (uninferredSentence
+         (knownDecisionTaskStatus ?actor-type ?slot))
+       (ist-Information ?mt
+         (infoTransferred (UserStatementFn ?mt ?some-num)
+           (confirmed (decisionTask ?actor-type ?slot))))
+       (operatorFormulas ?action-pred ?operator)
+       (evaluate ?action-args (ListToSetFn (FormulaArgListFn ?operator)))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain)))
+  (methodForAction
+    (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList
+        ;; Store generic statement in learned knowledge mt, so it doesn't ask again next game:
+        (doRecord
+          (ist-Information ?lkmt
+            (decisionTask ?actor-type ?slot)))
+        ;; Record the relationship between action pred and decision:
+        (doRecord 
+          (ist-Information ?lkmt
+            (actionEntailsDecision-TypeType ?action-pred (DecisionFn ?slot))))
+        (postDecisionLearningGoal ?lkmt (DecisionFn ?slot))
+        (postEncodingLearningGoalForDecision ?lkmt (DecisionFn ?slot))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (inferDecisionTrigger ?mt ?cmd ?operator (decisionTask ?actor-type ?slot) ?when))))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (explainDecision ?mt ?cmd ?operator ?actor-type ?slot ?when))))
+        ))))
+
+;;; Case 4: User disconfirmed, but not yet recorded in learned knowledge:
+(preconditionForMethod
+  (and (uninferredSentence
+         (knownDecisionTaskStatus ?actor-type ?slot))
+       (ist-Information ?mt
+         (infoTransferred (UserStatementFn ?mt ?some-num)
+           (disconfirmed (decisionTask ?actor-type ?slot))))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain)))
+  (methodForAction
+    (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList
+        ;; Store generic statement in learned knowledge mt, so it doesn't ask again next game:
+        (doRecord
+          (ist-Information ?lkmt
+            (nonDecisionSlot ?slot)))
+        (explainPlan ?mt ?cmd ?operator ?when) ; better not fail
+        ))))
+
+;;; Case 5: Try to explain why that particular decision was made.
+(preconditionForMethod
+  (and (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (numAnswers 1
+         (allFactsAllowed
+           (lookupOnly
+             (ist-Information ?lkmt
+               (decisionTask ?actor-type ?slot)))))
+       (formulaArgument ?operator 1 ?actor)
+       (numAnswers 1
+         (knownEventTriggerFor ?mt ?when (decide ?mt ?actor ?slot)))
+       (operatorFormulas ?action-pred ?operator)
+       (activeGoal (LearnDecisionFn (DecisionFn ?slot))))
+  (methodForAction
+    (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList
+        (explainDecision ?mt ?cmd ?operator ?actor-type ?slot ?when)))))
+
+
+;;; Case 6 Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when)
+    (actionSequence
+      (TheList))))
+      
+;;; *** ToDo: Handle case where known decisionTriggers don't apply.  Find a new trigger.
+
+(<== (preferInContext (induceDecisionTask ?mt ?cmd ?operator ?actor-type ?slot ?when) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; Try making a new plan to do pretty much the same thing, but triggered 
+;;; directly off the receipt of the user's confirmation.
+;;; This gets called from assimilate-decision-task when the user confirms 
+;;; the existence of a decision task.  However it can fail to capture the
+;;; decision trigger if it's ambiguous.  We need to re-invoke it if necessary.
+
+(isa recordNewDecisionTask ComplexActionPredicate)
+(arity recordNewDecisionTask 5)
+(arg1Isa recordNewDecisionTask Microtheory)
+(arg2Isa recordNewDecisionTask PerceptualAgentCommand)
+(arg3Isa recordNewDecisionTask CycLExpression)
+(arg4Isa recordNewDecisionTask CycLExpression)
+(arg5Isa recordNewDecisionTask TimeInterval)
+(comment recordNewDecisionTask "(recordNewDecisionTask ?mt ?cmd ?operator ?decision-task ?when) records the user-verified status of ?decision-task in the learned knowledge microtheory.")
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (unifies (decisionTask ?actor-type ?slot) ?decision-task)  ; destructure
+       (operatorFormulas ?action-pred ?operator)
+       (evaluate ?action-args (ListToSetFn (FormulaArgListFn ?operator)))
+;       (unifies ?libname (CaseLibraryFn (DecisionFn ?slot)))
+       )
+  (methodForAction
+    (recordNewDecisionTask ?mt ?cmd ?operator ?decision-task ?when)
+    (actionSequence
+      (TheList
+        ;; Store generic statement in learned knowledge mt, so it doesn't ask again next game:
+        (doRecord
+          (ist-Information ?lkmt ?decision-task))
+        (doAnnounce "~&Learned new decision task: ~a" (?decision-task))
+        ;; Record the relationship between action pred and decision:
+        (doRecord 
+          (ist-Information ?lkmt
+            (actionEntailsDecision-TypeType ?action-pred (DecisionFn ?slot))))
+        (postDecisionLearningGoal ?lkmt (DecisionFn ?slot))
+        (postEncodingLearningGoalForDecision ?lkmt (DecisionFn ?slot))
+        ;; Now we want to elaborate the facts in that case and store them in the above microtheory
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (inferDecisionTrigger ?mt ?cmd ?operator ?decision-task ?when))))
+       (doAgentPlan
+         (actionSequence
+           (TheList
+             (explainDecision ?mt ?cmd ?operator ?actor-type ?slot ?when))))
+        ))))
+
+;;; What does the generic learned fact look like?
+;;; How do we store that on an event-driven basis?
+;;; How do we refer to the learned knowledge mt for a given domain?
+
+
+(isa knownDecisionTaskStatus BinaryPredicate)
+(arity knownDecisionTaskStatus 2)
+(arg1Isa knownDecisionTaskStatus Collection)
+(arg2Isa knownDecisionTaskStatus FunctionalSlot)
+(comment knownDecisionTaskStatus "(knownDecisionTaskStatus ?actor-type ?slot) succeeds if it is known whether the collection and slot form a repeatable decision task.")
+
+(<== (knownDecisionTaskStatus ?coll ?slot)
+     (contextEnvAllowed
+       (allFactsAllowed
+         (lookupOnly
+           (decisionTask ?coll ?slot)))))
+             
+(<== (knownDecisionTaskStatus ?coll ?slot)
+     (contextEnvAllowed
+       (allFactsAllowed
+         (lookupOnly
+           (nonDecisionSlot ?slot)))))
+
+(isa nonDecisionTaskOperator BinaryPredicate)
+(arity nonDecisionTaskOperator 2)
+(arg1Isa nonDecisionTaskOperator Microtheory)
+(arg2Isa nonDecisionTaskOperator CycLFormula) ; operator
+(comment nonDecisionTaskOperator "(nonDecisionTaskOperator ?mt ?operator) means ?operator is not a recurrent decision task.")
+     
+(<== (nonDecisionTaskOperator ?mt ?operator)
+     (operatorFormulas ?prim ?operator)
+     (determinesFunctionalSlot ?prim ?slot)
+     (nonDecisionSlot ?slot))
+     
+(<== (nonDecisionTaskOperator ?mt ?operator)
+     (operatorFormulas ?prim ?operator)
+     (uninferredSentence
+       (determinesFunctionalSlot ?prim ?slot)))
+
+
+(isa validatedDecisionTaskStatus TernaryPredicate)
+(arity validatedDecisionTaskStatus 3)
+(arg1Isa validatedDecisionTaskStatus Microtheory)
+(arg2Isa validatedDecisionTaskStatus Collection)
+(arg3Isa validatedDecisionTaskStatus FunctionalSlot)
+(comment validatedDecisionTaskStatus "(validatedDecisionTaskStatus ?mt ?actor-type ?slot) succeeds if user has verified or denied ?coll and ?slot as being a decision task in ?mt.")
+
+(<== (validatedDecisionTaskStatus ?mt ?coll ?slot)
+     (ist-Information ?mt
+        (infoTransferred (UserStatementFn ?mt ?some-num)
+          (disconfirmed (decisionTask ?actor-type ?slot)))))
+
+(<== (validatedDecisionTaskStatus ?mt ?coll ?slot)
+     (ist-Information ?mt
+        (infoTransferred (UserStatementFn ?mt ?some-num)
+          (confirmed (decisionTask ?actor-type ?slot)))))
+
+
+(isa inferDecisionTrigger ComplexActionPredicate)
+(arity inferDecisionTrigger 5)
+(arg1Isa inferDecisionTrigger Microtheory)
+(arg2Isa inferDecisionTrigger PerceptualAgentCommand)
+(arg3Isa inferDecisionTrigger CycLFormula)
+(arg4Isa inferDecisionTrigger CycLTerm)
+(arg5Isa inferDecisionTrigger TimeInterval)
+(comment inferDecisionTrigger "(inferDecisionTrigger ?mt ?cmd ?operator ?decision-task ?when) ")
+
+(preconditionForMethod
+  (and (not (variableExpression ?decision-task))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (unifies (decisionTask ?actor-type ?slot) ?decision-task) ; destructure
+       (formulaArgument ?operator 1 ?actor)
+       (uninferredSentence
+         (knownEventTriggerFor ?mt ?when (decide ?mt ?actor ?slot)))   ; avoid the problem of querying for n-ary rules
+       ;; Relate the actor to the current player:
+       (numAnswers 1
+         (ist-Information ?mt
+           (currentRole ?player)))
+       (domainRelationBetween ?actor-relation ?actor ?player)  ; assume max 1-degree of separation between actor and player
+       (evaluate ?raw-trigger-pairs
+         (TheClosedRetrievalSetOf (?trigger ?relation)  ; e.g., (CityBuiltEvent outputsCreated)
+           (possibleEventTriggerFor ?mt ?cmd ?operator ?trigger ?when ?relation)))
+       (filterDegenerateTriggers ?raw-trigger-pairs ?event-type ?relation)   ; avoid ambiguity
+       (hornClauseForEventTrigger ?decision-task ?event-type ?relation ?actor-relation ?horn-clause))
+  (methodForAction
+    (inferDecisionTrigger ?mt ?cmd ?operator ?decision-task ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Learned new horn clause: ~s" (?horn-clause))
+        (doRecord (ist-Information ?lkmt ?horn-clause))
+        ))))
+
+;;; Default fail-safe
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (inferDecisionTrigger ?mt ?cmd ?operator ?decision-task ?when)
+    (actionSequence
+      (TheList))))  ; It would be nice to announce a warning here
+      
+(<== (preferInContext (inferDecisionTrigger ?mt ?cmd ?operator ?decision-task ?when) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa knownEventTriggerFor TernaryPredicate)
+(arity knownEventTriggerFor 3)
+(comment knownEventTriggerFor "(knownEventTriggerFor ?mt ?turn ?decision) determines whether a type of event in the current turn that could trigger ?decision-task.")
+
+(<== (knownEventTriggerFor ?mt ?turn ?decision)
+     (currentDomainEvent ?mt ?turn ?event)
+     (eventTriggersDecision ?event ?decision))  ; a horn clause in lkmt
+     
+
+(isa currentDomainEvent TernaryPredicate)
+(arity currentDomainEvent 3)
+(arg1Isa currentDomainEvent Microtheory)
+(arg2Isa currentDomainEvent TemporalThing)
+(arg3Isa currentDomainEvent Event)
+
+;;; bind all domain events that happened in the current turn:
+(<== (currentDomainEvent ?mt ?when ?event)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (dateOfEvent ?event ?when))))
+     (domainEvent ?mt ?event))
+
+
+(isa possibleEventTriggerFor Predicate)
+(arity possibleEventTriggerFor 6)
+(arg1Isa possibleEventTriggerFor Microtheory)
+(arg2Isa possibleEventTriggerFor PerceptualAgentCommand)
+(arg3Isa possibleEventTriggerFor CycLExpression)
+(arg4Isa possibleEventTriggerFor Collection)
+(arg5Isa possibleEventTriggerFor TimeInterval)
+(arg6Isa possibleEventTriggerFor BinaryRelation)
+(comment possibleEventTriggerFor "(possibleEventTriggerFor ?mt ?cmd ?operator ?trigger ?when ?relation) means ?trigger unambiguously precedes ?operator in the same turn, where ?trigger is a type, and the doer of ?operator holds ?relation to the concrete event.")
+
+;;; Returns the event type, not the concrete event.
+;;; *** What will this do if the correct trigger is itself a command?
+(<== (possibleEventTriggerFor ?mt ?command ?operator ?trigger-type ?when ?relation)
+     (not (variableExpression ?operator))
+     (priorDomainEvent ?mt ?command ?event)
+     ;; Just collect all the domain events in the current turn that are related.
+     (precededByRelatedEvent ?mt ?operator ?event ?trigger-event ?when ?relation) ; iterates thru domain-indep. role-relation bdgs of event
+     (eventTypeOf ?mt ?trigger-event ?trigger-type))
+
+
+(isa eventTypeOf TernaryPredicate)
+(arity eventTypeOf 3)
+(arg1Isa eventTypeOf Microtheory)
+(arg2Isa eventTypeOf Event)
+(arg3Isa eventTypeOf Collection)
+(comment eventTypeOf "(eventTypeOf ?mt ?event ?type) binds the domain-level event type of ?event.")
+
+(<== (eventTypeOf ?mt ?event ?type)
+     (ist-Information ?mt
+       (nonTransitiveInference            ; want most specific event-type
+         (kbOnly                          ; can't guarantee that some intermediate type won't have been cached.
+           (isa ?event ?type))))          ; want a proper spec of it.
+     (different ?type PerceptualAgentEvent))
+
+(isa filterDegenerateTriggers TernaryPredicate)
+(arity filterDegenerateTriggers 3)
+(arg1Isa filterDegenerateTriggers Set-Mathematical)
+(arg2Isa filterDegenerateTriggers Event)
+(arg3Isa filterDegenerateTriggers BinaryRelation)
+(comment filterDegenerateTriggers "(filterDegenerateTriggers ?raw-triggers ?trigger ?relation) reduces the set of raw event triggers to a singleton by eliminating GameStartedEvent if necessary.")
+
+;;; Prefer other trigger events over GameStartedEvent, but accept that if
+;;; it's unambiguous.
+;;; *** Also, we'd like to rule-out events that are known not to be triggers. (learned nogoods)
+(<== (filterDegenerateTriggers (TheSet (?event-type ?relation)) ?event-type ?relation))
+
+(<== (filterDegenerateTriggers ?raw-triggers ?event-type ?relation)
+     (different ?raw-triggers (TheSet))
+     (different ?raw-triggers (TheSet ?pair))
+     (inferenceOnly (filterBy ?raw-triggers preferredEventTriggerType ?filtered-pairs))
+     (unifies (TheSet (?event-type ?relation)) ?filtered-pairs))
+
+(isa preferredEventTriggerType UnaryPredicate)
+(arity preferredEventTriggerType 1)
+
+(<== (preferredEventTriggerType (?type ?rel))
+     (different ?type GameStartedEvent))
+
+;;; Given (decisionTask <actor-type> <slot>), how do we compile out the rule?
+;;; 1) must be able to map from a type to a good way to enumerate it.  
+;;;    'isa' only kind of works
+;;; 2) lift the microtheory
+;;; 3) lift the event.
+(isa hornClauseForEventTrigger QuintaryRelation)
+(arity hornClauseForEventTrigger 5)
+(arg1Isa hornClauseForEventTrigger CycLExpression)
+(arg2Isa hornClauseForEventTrigger Collection)
+(arg3Isa hornClauseForEventTrigger BinaryRelation)
+(arg4Isa hornClauseForEventTrigger BinaryRelation)
+(arg5Isa hornClauseForEventTrigger CycLExpression)
+(comment hornClauseForEventTrigger "(hornClauseForEventTrigger ?decision-task ?event-type ?relation ?actor-relation ?horn-clause) compiles out a horn clause.")
+
+;;; This could be more elegant, but I'm just going to blow it out with 4 rules:
+
+;;; The relation can be bound to true by relatedEvent to indicate an underspecified relation.
+;;; this happens, for example, with the primordial event, GameStartedEvent.
+(<== (hornClauseForEventTrigger ?decision-task ?event-type true equals ?horn-clause)
+     (unifies (decisionTask ?actor-type ?slot) ?decision-task) ; destructure
+     (evaluate ?event-var (SymbolConcatenateFn (TheList "?" ?event-type)))
+     (evaluate ?actor-var (SymbolConcatenateFn (TheList "?" ?actor-type)))
+     (unifies ?conse (eventTriggersDecision ?event-var (decide ?mt ?actor-var ?slot)))
+     (unifies ?ante1 (executionContext ?mt))
+     (unifies ?ante2 (ist-Information ?mt (lookupOnly (isa ?event-var ?event-type)))) ; Don't backchain on isa!
+     (unifies ?ante3 (numAnswers 1 (ist-Information ?mt (currentRole ?actor-var))))
+     (evaluate ?horn-clause
+       (MakeFormulaFn <== (TheList ?conse ?ante1 ?ante2 ?ante3))))
+
+(<== (hornClauseForEventTrigger ?decision-task ?event-type true ?actor-relation ?horn-clause)
+     (different ?actor-relation equals)
+     (unifies (decisionTask ?actor-type ?slot) ?decision-task) ; destructure
+     (evaluate ?event-var (SymbolConcatenateFn (TheList "?" ?event-type)))
+     (evaluate ?actor-var (SymbolConcatenateFn (TheList "?" ?actor-type)))
+     (unifies ?conse (eventTriggersDecision ?event-var (decide ?mt ?actor-var ?slot)))
+     (unifies ?ante1 (executionContext ?mt))
+     (unifies ?ante2 (ist-Information ?mt (lookupOnly (isa ?event-var ?event-type))))
+     (unifies ?ante3 (ist-Information ?mt (lookupOnly (isa ?actor-var ?actor-type))))           ; you may have to backchain here...
+     (unifies ?ante4 (numAnswers 1 (ist-Information ?mt (currentRole ?player-var))))
+     (unifies ?ante5 (ist-Information ?mt (?actor-relation ?player-var ?actor-var)))
+     (evaluate ?horn-clause
+       (MakeFormulaFn <== (TheList ?conse ?ante1 ?ante2 ?ante3 ?ante4 ?ante5))))
+
+;;; case where ?relation is a role relation such as outputsCreated:
+(<== (hornClauseForEventTrigger ?decision-task ?event-type ?relation equals ?horn-clause)
+     (different ?relation true)
+     (unifies (decisionTask ?actor-type ?slot) ?decision-task) ; destructure
+     (evaluate ?event-var (SymbolConcatenateFn (TheList "?" ?event-type)))
+     (evaluate ?actor-var (SymbolConcatenateFn (TheList "?" ?actor-type)))
+     (unifies ?conse (eventTriggersDecision ?event-var (decide ?mt ?actor-var ?slot)))
+     (unifies ?ante1 (executionContext ?mt))
+     (unifies ?ante2 (ist-Information ?mt (lookupOnly (isa ?event-var ?event-type))))
+     (unifies ?ante3 (numAnswers 1 (ist-Information ?mt (currentRole ?actor-var))))
+     (unifies ?ante4 (ist-Information ?mt (?relation ?event-var ?actor-var)))
+     (evaluate ?horn-clause
+       (MakeFormulaFn <== (TheList ?conse ?ante1 ?ante2 ?ante3 ?ante4))))
+
+(<== (hornClauseForEventTrigger ?decision-task ?event-type ?relation ?actor-relation ?horn-clause)
+     (different ?relation true)
+     (different ?actor-relation equals)
+     (unifies (decisionTask ?actor-type ?slot) ?decision-task) ; destructure
+     (evaluate ?event-var (SymbolConcatenateFn (TheList "?" ?event-type)))
+     (evaluate ?actor-var (SymbolConcatenateFn (TheList "?" ?actor-type)))
+     (unifies ?conse (eventTriggersDecision ?event-var (decide ?mt ?actor-var ?slot)))
+     (unifies ?ante1 (executionContext ?mt))
+     (unifies ?ante2 (ist-Information ?mt (lookupOnly (isa ?event-var ?event-type))))
+     (unifies ?ante3 (ist-Information ?mt (lookupOnly (isa ?actor-var ?actor-type))))
+     (unifies ?ante4 (ist-Information ?mt (?relation ?event-var ?actor-var)))
+     ;; Limit decisions to your own actors:
+     (unifies ?ante5 (numAnswers 1 (ist-Information ?mt (currentRole ?player-var))))  ; How could we connect this to SelfToken-Indexical?
+     (unifies ?ante6 (ist-Information ?mt (?actor-relation ?player-var ?actor-var)))
+     (evaluate ?horn-clause
+       (MakeFormulaFn <== (TheList ?conse ?ante1 ?ante2 ?ante3 ?ante4 ?ante5 ?ante6))))
+
+;;; ---------------------------------------------------------------
+;;; Infer Agent Plans
+;;;
+;;; We want to see if the action involved assigning an Agent-Generic or not.
+;;; If so, is that a mutually-exclusive assignment?
+;;; Is there anything about that particular entity that suggests a unique 
+;;; likely goal? (eg, only settlers can build cities)
+;;; If not, then did it expend or otherwise transform a resource?
+;;; Did it start a process or end a process?
+;;; 
+
+;;; Ok, when the user performs an action on an entity and it's *not*
+;;; a decision task (eg, moving the unit), we can assume the user is
+;;; following some plan.  So really it's a decision task to choose a 
+;;; plan for the object.  We want to make a decisionQuantifier for that
+;;; kind of thing.  That looks something like this:
+;;; (decisionQuantifier (CollectionSubsetFn FreeCiv-Unit
+;;;                      (TheSetOf ?unit% (and (currentRole ?player)
+;;;                                            (unitOwner ?unit% ?player))))
+;;;                     (DecisionFn currentPlan))
+;;; We can achieve that by looking at the type of thing being planned for
+;;; (a FreeCiv-Unit) and making a specialization using the domain-neutral
+;;; predicate (assignableActorOfType ?entity ?type).  The semantics of this are
+;;; that ?entity is something we can plan for, which in this case
+;;; caches out as a unit owned by the current player.  No lifting
+;;; required.  Later, we can deal with refining learned tasks with
+;;; more subtle collection specializers.
+
+(preconditionForMethod
+  (nonDecisionTaskOperator ?mt ?operator)
+  (methodForAction
+    (explainUserAction ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (explainPlan ?mt ?cmd ?operator ?when)
+        (doAnnounce "~&Ok." ())))))
+            
+(<== (preferInContext (explainUserAction ?mt ?event ?operator ?when) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 explainPlan))
+
+;;; Alternative entry point.  Invoked from assimilateUserStatement in instruction.meld.
+;;; *** I hate the notion of decisionQuantifier.  It's left from when everything
+;;; *** was treated as some kind of decision.  It treats "currentPlan" as a
+;;; *** slot on an actor so that plans can be treated as decisions.
+(isa rejectDecisionTask ComplexActionPredicate)
+(arity rejectDecisionTask 5)
+(arg1Isa rejectDecisionTask Microtheory)
+(arg2Isa rejectDecisionTask PerceptualAgentCommand)
+(arg3Isa rejectDecisionTask CycLExpression)
+(arg4Isa rejectDecisionTask CycLExpression)
+(arg5Isa rejectDecisionTask TimeInterval)
+(comment rejectDecisionTask "(recordNewDecisionQuantifier ?mt ?cmd ?operator ?decision-task ?year) records a new quantifier scope for the putative decision task.")
+
+
+;;; This is explicitly making a decsionQuantifier as an alternative to decisionTask.  
+;;; Why?
+(preconditionForMethod
+ (and (unifies (decisionTask ?entity-type ?slot) ?decision-task)
+      (numAnswers 1 (currentDomain ?domain))
+      (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+;      (unifies ?quantifier-stmt
+;        (decisionQuantifier 
+;          (CollectionSubsetFn ?entity-type
+;            (TheSetOf ?entity% (assignableActorOfType ?entity% ?type%)))
+;          (DecisionFn currentPlan)))
+      )
+ (methodForAction
+   (rejectDecisionTask ?mt ?cmd ?operator ?decision-task ?when)
+   (actionSequence
+     (TheList
+;       (doAnnounce "~&Learned decision quantifier: ~a" (?quantifier-stmt))
+;       (doRecord (ist-Information ?lkmt ?quantifier-stmt))
+       (doRecord (ist-Information ?lkmt (nonDecisionSlot ?slot)))
+       ;; predict plan?
+       (doAgentPlan
+         (actionSequence
+           (TheList
+             (explainPlan ?mt ?cmd ?operator ?when))))))))
+
+
+;;; -------------------------------------------------------------------------
+
+;;; If the precondition has internal variables in it, are they fixed by
+;;; the state of actor? (eg, location)
+
+;;; Learn an explicit (achieve (PreconditionOfFn <generalized operator>)) 
+;;; task from the expert trace.
+;;; Look at the precondition to see if prior hypothesized goals could
+;;; have contributed to precond.
+;;; 
+
+(isa inferPlansFor ComplexActionPredicate)
+(arity inferPlansFor 4)
+(arg1Isa inferPlansFor Microtheory)
+(arg2Isa inferPlansFor PerceptualAgentCommand)
+(arg3Isa inferPlansFor CycLExpression)
+(arg4Isa inferPlansFor TimeInterval)
+(comment inferPlansFor "(inferPlansFor ?mt ?cmd ?operator ?when) compiles out
+an htn method for either achieving an explicit propositional goal or achieving
+the precondition of a primitive task.")
+
+;;; If action can be shown to achieve an active goal, lift it into an 
+;;; htn method for achieving that goal.
+(preconditionForMethod
+  (and (formulaArgument ?operator 1 ?actor)
+       (uninferredSentence
+         (consecutiveActionFor ?mt ?actor ?cmd ?operator))
+       (lookupOnly
+         (ist-Information ?mt
+            (hypothesizedGoal ?actor ?cmd ?operator ?current-goal)))
+       (unifies (?goal-nat ?goal-arg) ?current-goal)
+       ;; Don't need to lift here, since rule retrieval will do that:
+       ;(uninferredSentence 
+       ;  (complexTaskAchieves ?actor ?current-goal (achieve ?goal-arg)))  ; encoded as a horn-clause, not a proposition
+       (uninferredSentence
+         (complexTaskAchieves ?actor ?current-goal ?method)))  ; (achieveBy ?actor ?goal-arg))))
+  (methodForAction
+    (inferPlansFor ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (compileAchievementTask ?mt ?cmd ?operator ?current-goal)
+        (indexActionCase ?mt ?cmd ?operator ?when)  ; we know there's an active optimality learning goal now.
+        ))))
+
+;;; If the prior action contributed to the preconditions of the current action
+;;; and you don't know why the current action was taken
+;;; and you don't have a precondition task for the current action yet,
+;;; then compile such a plan using the desired effect of the prior action
+;;; to lift the execution trace to the plan level.
+(preconditionForMethod
+  (and (formulaArgument ?operator 1 ?actor)
+       (uninferredSentence 
+         (ist-Information ?mt
+            (hypothesizedGoal ?actor ?cmd ?operator ?current-goal)))
+       (uninferredSentence 
+         (complexTaskAchieves ?actor (PreconditionOfFn ?operator) (achieve (PreconditionOfFn ?operator))))
+       (latestHypothesizedGoalFor ?mt ?actor ?cmd ?prior-operator ?pgoal)
+       (operatorFormulas ?current-pred ?operator)
+       (operatorFormulas ?prior-pred ?prior-operator)
+       (different ?current-pred ?prior-pred))    ; If we're doing the same consecutive action, don't make infinitely recursive preconditions.
+  (methodForAction
+    (inferPlansFor ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "Partial precondition of ~a is ~a" (?operator ?pgoal))
+        (compileScanningPreconditionTask ?mt ?cmd ?operator ?pgoal)
+        (indexActionCase ?mt ?cmd ?operator ?when)  ; we know there's an active optimality learning goal now.
+        ))))
+
+
+;;; default fallback:  
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (inferPlansFor ?mt ?cmd ?operator ?when)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (inferPlansFor ?mt ?cmd ?operator ?when) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa compileAchievementTask ComplexActionPredicate)
+(arity compileAchievementTask 4)
+(arg1Isa compileAchievementTask Microtheory)
+(arg2Isa compileAchievementTask PerceptualAgentCommand)
+(arg3Isa compileAchievementTask CycLSentence-Assertible)
+(arg4Isa compileAchievementTask PerformanceGoal)
+(comment compileAchievementTask "(compileAchievementTask ?mt ?cmd ?operator ?goal) constructs an htn to achieve preconditions for achieving performance-goal ?pgoal.")
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (formulaArgument ?operator 1 ?actor)              ; concrete actor to be lifted
+       ;; Not clear that this must be predicated on prior actions, but for now, ok.
+       (latestHypothesizedGoalFor ?mt ?actor ?cmd ?prior-operator ?pgoal)
+       (numAnswers 1 (goalProposition ?pgoal ?pprop))
+       (operatorInstantiatedPrecondition ?operator ?prec-stmt)
+       (subexpressionMatching ?pprop ?prec-stmt ?achievable-precondition)
+       ;; Find the most concise statement of the goal we can.
+       (operatorInstantiatedEventualEffect ?operator ?effect-stmt)
+       (formulaArgument ?effect-stmt 2 ?effect)
+       (effectMatchesSubgoal ?effect ?cgoal)
+       (preconditionFiltersFor ?prec-stmt ?achievable-precondition ?binding-filter-condition ?action-filter-condition)
+       ;; Unbound variable in ?effect had better be the only remaining unbound vars.
+       (evaluate ?learned-precond 
+         (MakeFormulaFn and 
+           (JoinListsFn ?binding-filter-condition ?action-filter-condition)))
+       (numAnswers 1                                     ; avoid variants
+         (complexTaskAchieves ?actor ?pgoal ?precond-task))
+       (unifies ?instantiated-htn
+         (preconditionForMethod ?learned-precond
+           (methodForAction (achieveBy ?actor ?effect)
+             (actionSequence
+               (TheList ?precond-task (doAgentPlan (actionSequence (TheList ?operator))))))))
+       (liftingBlist ?operator ?lifting-blist ?varlist)
+       (evaluate ?htn (SublisFn ?lifting-blist ?instantiated-htn))
+       ;; Horn clause makes it easier to retrieve more general stmts:
+       (evaluate ?task-indexing
+         (SublisFn ?lifting-blist
+           (MakeFormulaFn <==
+             (JoinListsFn (TheList (complexTaskAchieves ?actor (AchieveFn ?effect)
+                                                 (achieveBy ?actor ?effect)))
+                        ?action-filter-condition)))))
+  (methodForAction
+    (compileAchievementTask ?mt ?cmd ?operator ?cgoal)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?lkmt ?htn))
+        (doRecord (ist-Information ?lkmt ?task-indexing))
+        (doAnnounce "Learned HTN: ~s" (?htn))
+        (doRecord (ist-Information ?lkmt (sourceForLearnedPlan (achieveBy ?actor ?effect) ?cmd)))  ; learning audit-trail
+        ))))
+
+(isa effectMatchesSubgoal BinaryPredicate)
+(arity effectMatchesSubgoal 2)
+
+
+;;; containsPattern doesn't unify variants and subexpressionMatching flows bindings
+;;; in a way we don't want, so localize that problem here:
+(<== (effectMatchesSubgoal ?effect ?goal)
+     (uninferredSentence (not (subexpressionMatching ?effect ?goal ?conjunct))))
+
+(isa compileScanningPreconditionTask ComplexActionPredicate)
+(arity compileScanningPreconditionTask 4)
+(arg1Isa compileScanningPreconditionTask Microtheory)
+(arg2Isa compileScanningPreconditionTask PerceptualAgentCommand)
+(arg3Isa compileScanningPreconditionTask CycLSentence-Assertible)
+(arg4Isa compileScanningPreconditionTask PerformanceGoal)
+(comment compileScanningPreconditionTask "(compileScanningPreconditionTask ?mt ?cmd ?operator ?pgoal) constructs an htn to using spatial scanning to achieve preconditions for achieving performance-goal ?pgoal.")
+
+;;; Compiling a preconditiontask.
+;;; Case 1: where an open variable is implicitly bound.
+;;; Decide on a binding by scanning for legal (and later, good) values.
+;;; Eventually, this should probably explicitly reify the decision task
+;;; as some kind of generator that can be learned - by improving 
+;;; criteria and amortizing generation.
+;;; Make one big instantiated structure, then lift vars, destructure, and record.
+;;; *** ToDo: update the plan-references-table dynamically.
+(preconditionForMethod
+  (and (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       (numAnswers 1 (goalProposition ?pgoal ?prop))
+       (operatorFormulas ?pred ?prop)
+       (different ?pred and)
+       (operatorInstantiatedPrecondition ?operator ?prec-stmt)
+       (subexpressionMatching ?prop ?prec-stmt ?achievable-precondition)
+       (preconditionFiltersFor ?prec-stmt ?achievable-precondition ?binding-filter-condition ?action-filter-condition)
+       (different ?binding-filter-condition (TheList))   ; We have an open variable to bind (maybe...)
+       (operatorFormulas ?op-pred ?operator)             ; The action pred for which we'll be scanning for independent vars
+       (evaluate ?pgoal-vlist                            ; The open, indendent variable
+         (FormulaVariableListFn ?pgoal))
+       (unifies (TheList ?var) ?pgoal-vlist)             ; This will be the input argument to the condition predicate
+       (evaluate ?binding-conj 
+         (MakeFormulaFn and ?binding-filter-condition))
+       (simplifiedConjunction ?binding-conj ?kappa-cond) ; omit unnecessary ands
+       (unifies ?filter-definition   
+         (Kappa (?var ?score) ?kappa-cond))
+       (evaluate ?initial-binding-stmt
+         (SublisFn (TheSet (?var ?start-binding)) ?achievable-precondition))
+       (formulaArgument ?operator 1 ?actor)              ; concrete actor to be lifted
+       (numAnswers 1                                     ; avoid variants
+         (complexTaskAchieves ?actor ?pgoal ?precond-task))     ; lookup body of the method we're writing
+       ;; ?achievable-precondition is something like (fcObjectAt Unit-102 ?loc)
+       (evaluate ?argnum (PositionInListFn ?var (FormulaArgListFn ?achievable-precondition)))
+       (evaluate ?variablized-prop (UniquifyVariablesFn ?prop))
+       (mostRecentBindingOf ?mt ?argnum ?variablized-prop ?var-binding)
+       (argIsa ?pred ?argnum ?argisa)                    ; still needed as breadcrumb??
+       (liftingBlist ?operator ?lifting-blist ?varlist)
+       (evaluate ?learned-precond
+         (MakeFormulaFn and
+           (JoinListsFn
+             ?action-filter-condition
+             (TheList (instantiatedScanningConditionFor ?op-pred ?varlist ?condition)
+                      ?initial-binding-stmt
+                      (closestLocationSatisfying ?start-binding 0 8 ?condition ?var)))))
+       (unifies ?instantiated-htn
+         (preconditionForMethod ?learned-precond
+           (methodForAction (achieve (PreconditionOfFn ?operator))
+             (actionSequence
+               (TheList ?precond-task)))))
+       
+       (evaluate ?lifted-filter-definition (SublisFn ?lifting-blist ?filter-definition))
+       (evaluate ?lifted-htn (SublisFn ?lifting-blist ?instantiated-htn))
+       (unifies ?task-indexing 
+         (<== (complexTaskAchieves ?actor                      ; horn clause makes it easier to
+                (PreconditionOfFn ?operator)            ; look up something more general than the query.
+                (achieve (PreconditionOfFn ?operator)))))
+       (evaluate ?lifted-task-indexing (SublisFn ?lifting-blist ?task-indexing))
+       )
+  (methodForAction
+    (compileScanningPreconditionTask ?mt ?cmd ?operator ?pgoal)
+    (actionSequence
+      (TheList
+        ;(doRecord (ist-Information ?lkmt (isa ?filter-pred BinaryPredicate)))
+        ;(doRecord (ist-Information ?lkmt (arg1Isa ?filter-pred ?argisa)))   ; a breadcrumb for later optimization ;; *** Argh! Do we need that??
+        ;(doRecord (ist-Information ?lkmt (arity ?filter-pred 2)))  ; this actually doesn't show up in learned knowledge 'cause it's in BaseKB
+        ;(doRecord (ist-Information ?lkmt ?lifted-filter-definition))
+        ;(doRecord (ist-Information ?lkmt (legalityConditionFor ?op-pred ?filter-pred)))  ; filter-pred should be binary
+        (doRecord (ist-Information ?lkmt (legalityConditionFor ?op-pred ?lifted-filter-definition))) ; a binary Kappa relation.
+        (doRecord (ist-Information ?lkmt ?lifted-htn))
+        (doRecord (ist-Information ?lkmt ?lifted-task-indexing))
+        (doRecord (ist-Information ?mt (indVarChosen ?cmd ?operator ?var-binding)))  ; predicate associated with closestLocationSatisfying
+        (postOptimalityLearningGoal ?lkmt ?op-pred)
+        (doAnnounce "Learned HTN: ~s" (?lifted-htn))
+        (doRecord (ist-Information ?lkmt (sourceForLearnedPlan (achieve (PreconditionOfFn ?operator)) ?cmd)))  ; learning audit-trail
+        ))))
+
+;;; (scanningConditionFor ?op-pred ?condition)
+;;; (closestLocationSatisfying ?start-loc 0 8 ?condition ?dest-loc))
+
+;;; Now if the precondition is not ground, look at the arg-isa info on it
+;;; and determine if it's a location.  If so, we know that determining
+;;; location is critical to enabling the precondition.
+
+(isa mostRecentBindingOf QuaternaryPredicate)
+(arity mostRecentBindingOf 4)
+
+(<== (mostRecentBindingOf ?mt ?argnum ?achievable-precondition ?var-binding)
+     (ist-Information ?mt ?achievable-precondition)
+     (formulaArgument ?achievable-precondition ?argnum ?var-binding))
+     
+(<== (mostRecentBindingOf ?mt ?argnum ?achievable-precondition ?var-binding)
+     (uninferredSentence
+       (ist-Information ?mt ?achievable-precondition))
+     (cacheComplete
+       (addedBinding ?argnum ?achievable-precondition ?var-binding)))
+
+(<== (mostRecentBindingOf ?mt ?argnum ?achievable-precondition ?var-binding)
+     (uninferredSentence
+       (ist-Information ?mt ?achievable-precondition))
+     (uninferredSentence
+       (addedBinding ?argnum ?achievable-precondition ?var-binding))
+     (cacheComplete
+       (deletedBinding ?argnum ?achievable-precondition ?var-binding)))
+
+(isa addedBinding TernaryPredicate)
+(arity addedBinding 3)
+
+(<== (addedBinding ?argnum ?achievable-precondition ?var-binding)
+     (currentAddList ?add-list)
+     (lookupOnly (elementOf ?add-prop ?add-list))
+     (matches ?achievable-precondition ?add-prop)
+     (formulaArgument ?add-prop ?argnum ?var-binding))
+
+(isa deletedBinding TernaryPredicate)
+
+(<== (deletedBinding ?argnum ?achievable-precondition ?var-binding)
+     (currentDeleteList ?delete-list)
+     (lookupOnly (elementOf ?delete-prop ?delete-list))
+     (matches ?achievable-precondition ?delete-prop)
+     (formulaArgument ?delete-prop ?argnum ?var-binding))
+     
+(isa indVarChosen TernaryPredicate)
+(arity indVarChosen 3)
+(arg1Isa indVarChosen PerceptualAgentCommand)
+(arg2Isa indVarChosen CycLSentence-Assertible)
+(arg3Isa indVarChosen Thing)
+(comment indVarChosen "(indVarChosen ?cmd ?operator ?value) is a reifiable statement indicating that ?value is the binding of the independent variable chosen as the closestLocationSatisfying the condition.")
+
+;;; If we can determine that the doBuildCity involved binding a location
+;;; somehow, then going to it and building the city, *then* we can look 
+;;; at the filter conditions on the precondition itself, and construct a 
+;;; rudimentary location evaluation function.  Use the generic location
+;;; scanner to build a precondition htn.
+
+;;; (pseudoVarExpressionOf ?what (foo a :b))
+
+
+(isa liftingBlist TernaryRelation)
+(arity liftingBlist 3)
+(arg1Isa liftingBlist CycLExpression)
+(arg2Isa liftingBlist Set-Mathematical)
+(arg3Isa liftingBlist List)
+
+(<== (liftingBlist ?operator ?blist ?varlist)
+     (evaluate ?arglist (FormulaArgListFn ?operator))
+     (evaluate ?len (LengthOfListFn ?arglist))
+     (evaluate ?varlist (SublistFromToFn (TheList ?arg1 ?arg2 ?arg3 ?arg4 ?arg5 ?arg6 ?arg7) 1 ?len))
+     (evaluate ?blist
+       (TheClosedRetrievalSetOf ?binding
+         (and (integerBetween 1 ?n ?len)
+              (evaluate ?item (NthInListFn ?n ?arglist))
+              ;(evaluate ?var (SymbolConcatenateFn (TheList "?arg" ?n))) ; Don't do this dynamically.
+              (evaluate ?var (NthInListFn ?n ?varlist))
+              (unifies ?binding (?item ?var))))))
+
+
+(isa preconditionFiltersFor QuaternaryRelation)
+(arity preconditionFiltersFor 4)
+(arg1Isa preconditionFiltersFor CycLFormula)
+(arg2Isa preconditionFiltersFor CycLFormula)
+(arg3Isa preconditionFiltersFor List)
+(arg4Isa preconditionFiltersFor List)
+(comment preconditionFiltersFor "(preconditionFiltersFor  ?precondition-stmt ?achievable-precondition  ?filter-precondition ?action-precondition) partitions the conjuncts in a precondition into filters and achievable conditions.")
+
+;;; This will produce the legality condition for potential bindings of location.
+;;; Expect args 1 & 2 to be non-variable, 3 & 4 to be variable.
+(<== (preconditionFiltersFor ?precondition-stmt ?achievable-precondition  ?filter-precondition ?action-precondition)
+     (not (variableExpression ?precondition-stmt))
+     (not (variableExpression ?achievable-precondition))
+     (unifies (preconditionFor-Props ?prec ?operator) ?precondition-stmt) ; destructure
+     (conjunctList ?prec ?conj)
+     (evaluate ?conj-set (ListToSetFn ?conj))
+     (evaluate ?vars 
+       (ListToSetFn
+         (FormulaVariableListFn ?achievable-precondition)))
+     (unifies (TheSet ?var) ?vars) ; just checking
+     (variableTransitiveClosure ?vars ?conj-set ?constrainers) ; outsourced Yay!
+     ;; Now get rid of the precondition we know how to achieve
+     ;; Since it may be embedded in advice wrappers, we can't just subtract it.
+     (evaluate ?filter-precondition-set
+       (TheClosedRetrievalSetOf ?conjunct
+         (and (lookupOnly (elementOf ?conjunct ?constrainers))
+              (different ?achievable-precondition ?conjunct)
+              (not (containsPattern ?achievable-precondition ?conjunct)))))
+     (filterListComplement ?conj ?filter-precondition-set ?filter-precondition)
+     (filterList ?conj ?constrainers ?action-precondition))
+
+
+(isa latestHypothesizedGoalFor Predicate)
+(arity latestHypothesizedGoalFor 5)
+(arg1Isa latestHypothesizedGoalFor Microtheory)
+(arg2Isa latestHypothesizedGoalFor Agent-Generic)
+(arg3Isa latestHypothesizedGoalFor PerceptualAgentCommand)
+(arg4Isa latestHypothesizedGoalFor CycLSentence-Assertible)
+(arg5Isa latestHypothesizedGoalFor Goal)
+(comment latestHypothesizedGoalFor "(latestHypothesizedGoalFor ?mt ?actor ?current-cmd ?prior-operator ?pgoal) binds ?prior-operator and ?pgoal to ?actors most recent hypothesized goal before the current cmd.")
+
+(<== (latestHypothesizedGoalFor ?mt ?actor ?current-cmd ?prior-operator ?pgoal)
+     (not (variableExpression ?current-cmd))
+     (unifies (CommandFn ?mt ?current-num) ?current-cmd)
+     (evaluate ?cmd-nums
+       (TheClosedRetrievalSetOf ?num
+         (and (localOnly
+                (ist-Information ?mt
+                  (hypothesizedGoal ?actor (CommandFn ?mt ?num) ?op ?pg)))
+              (lessThan ?num ?current-num))))
+     (evaluate ?cmd-num
+       (FirstInListFn (SortFn ?cmd-nums greaterThan IdentityFn)))
+     (numAnswers 1
+       (ist-Information ?mt
+         (hypothesizedGoal ?actor (CommandFn ?mt ?cmd-num) ?prior-operator ?pgoal))))
+
+(isa consecutiveActionFor QuaternaryPredicate)
+(arity consecutiveActionFor 4)
+(arg1Isa consecutiveActionFor Microtheory)
+(arg2Isa consecutiveActionFor Agent-Generic)
+(arg3Isa consecutiveActionFor PerceptualAgentCommand)
+(arg4Isa consecutiveActionFor CycLExpression)
+(comment consecutiveActionFor "(consecutiveActionFor ?mt ?actor ?cmd ?operator) suceeds if the ?operator associated with ?cmd is an isomorphic repetition of the immediately prior action by ?actor.")
+
+;;; There isn't an efficient way to simply retrieve the latest action of ?actor.
+;;; This will tell us if current action repeats action-pred of most recent prior action.
+;;; Chaining back thru the execution trace can be arbitrarily expensive if ?actor was created late in the game.
+(<== (consecutiveActionFor ?mt ?actor ?current-cmd ?current-operator)
+     (not (variableExpression ?current-cmd))
+     (unifies (CommandFn ?mt ?current-num) ?current-cmd)
+     (variablizeNonActorArgs ?current-operator ?op-query)
+     (evaluate ?cmd-nums  ; cmd-nums of isomorphic actions by same actor
+       (TheClosedRetrievalSetOf ?num
+         (and (lookupOnly
+                (localOnly
+                  (numAnswers 1
+                    (ist-Information ?mt
+                      (infoTransferred (CommandFn ?mt ?num) ?op-query)))))
+              (lessThan ?num ?current-num))))
+     (evaluate ?latest
+       (PlusFn 1 (FirstInListFn (SortFn ?cmd-nums greaterThan IdentityFn))))
+     (nextActionByActor ?mt ?actor ?latest ?current-num))
+     
+(isa variablizeNonActorArgs BinaryPredicate)
+(arity variablizeNonActorArgs 2)
+(arg1Isa variablizeNonActorArgs CycLSentence-Assertible)
+(arg2Isa variablizeNonActorArgs CycLSentence-Askable)
+(comment variablizeNonActorArgs "(variablizeNonActorArgs ?operator ?variablized-operator) ")
+
+(<== (variablizeNonActorArgs ?input ?output)
+     (operatorFormulas ?pred ?input)
+     (formulaArgument ?input 1 ?actor)
+     (evaluate ?len (LengthOfListFn (FormulaArgListFn ?input)))
+     (evaluate ?var-args
+       (SublistFromToFn (TheList ?1 ?2 ?3 ?4 ?5 ?6 ?7) 2 ?len))
+     (evaluate ?output (MakeFormulaFn ?pred (JoinListsFn (TheList ?actor) ?var-args))))
+
+
+(isa nextActionByActor QuaternaryPredicate)
+(arity nextActionByActor 4)
+(arg1Isa nextActionByActor Microtheory)
+(arg2Isa nextActionByActor Agent-Generic)
+(arg3Isa nextActionByActor Integer)
+(arg4Isa nextActionByActor Integer)
+(comment nextActionByActor "(nextActionByActor ?mt ?actor ?start ?end) succeeds iff the next action by actor after cmd ?start is the cmd ?end.")
+
+(<== (nextActionByActor ?mt ?actor ?num ?num))
+
+(<== (nextActionByActor ?mt ?actor ?start ?end)
+     (lessThan ?start ?end)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?mt
+             (infoTransferred (CommandFn ?mt ?start) ?action)))))
+     (formulaArgument ?action 1 ?doer)
+     (different ?doer ?actor)
+     (evaluate ?next (PlusFn ?start 1))
+     (nextActionByActor ?mt ?actor ?next ?end))
+
+
+;;; Do we need a ProcessResultingFromFn?
+
+
+;;; -------------------------------------------------------------------------
+;;;
+;;; vocabulary
+;;;
+
+
+(isa liftDomainLevelActor TernaryRelation)
+(arity liftDomainLevelActor 3)
+(arg1Isa liftDomainLevelActor Microtheory)
+(arg2Isa liftDomainLevelActor CycLExpression)
+(arg3Isa liftDomainLevelActor CycLExpression)
+(comment liftDomainLevelActor "(liftDomainLevelActor ?mt ?operator ?actor-type) attempts to generalize the doer of the instantiated operator.")
+
+;;; This needs to bind the most specific isa that satisfies the arg-isas of ?operator.
+;;; In other words, for Freeciv, it should bind FC-Unit-Settlers, rather than
+;;; FC-LandUnit or FC-Unit.
+(<== (liftDomainLevelActor ?mt ?operator ?actor-type)
+     (operatorFormulas ?pred ?operator)
+     (formulaArgument ?operator 1 ?actor)
+     (arg1Isa ?pred ?arg-type)
+     (ist-Information ?mt 
+        (genls ?arg-type Agent-Generic))
+     (ist-Information ?mt
+       (nonTransitiveInference
+         (isa ?actor ?actor-type)))
+     (ist-Information ?mt
+       (genls ?actor-type ?arg-type))
+     (different ?actor-type Agent-Generic))
+
+
+(isa domainEntityType TernaryPredicate)
+(arity domainEntityType 3)
+(arg1Isa domainEntityType Microtheory)
+(arg2Isa domainEntityType Individual)
+(arg3Isa domainEntityType Collection)
+(comment domainEntityType "(domainEntityType ?mt ?indiv ?coll) binds ?coll to the most specific isa in microtheory ?mt")
+
+;;; Refine this at some point:
+(<== (domainEntityType ?mt ?instance ?type)  ; hoping there's only one for now
+     (nonTransitiveInference
+       (lookupOnly
+         (ist-Information ?mt
+           (isa ?instance ?type))))
+     (different ?type Agent-Generic))  ; *** bletcherous but needed for now.
+
+
+;;; --------------------------------
+;;; precededByRelatedEvent ?action ?event
+;;;   related either as doer, objectActedOn, outputsCreated
+
+;;; How do we want to do this?  Iterating back over turns is game-specific.
+;;; Assume this is operationalized in the particular domain.
+;;; So Freeciv would have a notion of what it means for an event to be preceded
+;;; by a related event. For this to work, it either has to assume the action
+;;; happened in the indexical Now, or the action needs to be a (CommandFn ) NAT.
+;;; We'd like to be able to support analysis of prior offline games, which 
+;;; argues for the CommandFn representation, since that embeds the microtheory.
+(isa precededByRelatedEvent Predicate)
+(arity precededByRelatedEvent 6)
+(arg1Isa precededByRelatedEvent Microtheory)
+(arg2Isa precededByRelatedEvent CycLExpression)
+(arg3Isa precededByRelatedEvent PerceptualAgentEvent)
+(arg4Isa precededByRelatedEvent PerceptualAgentEvent)
+(arg5Isa precededByRelatedEvent TimeInterval)
+(arg6Isa precededByRelatedEvent BinaryRelation)
+(comment precededByRelatedEvent "(precededByRelatedEvent ?mt ?action ?later-event ?earlier-event ?when ?role-relation)")
+
+;;; When we're looking for triggers, we don't want to stop at the first
+;;; possible event.  There may be several related events that happen in 
+;;; arbitrary order.
+;;; Really, we want this to continue to gather up related events until
+;;; it reaches a non-domain event or the beginning of the turn.  Ugh!
+
+(<== (precededByRelatedEvent ?mt ?action ?event ?event ?when ?relation)
+     (cacheComplete (relatedEvent ?mt ?action ?event ?relation)))
+
+(<== (precededByRelatedEvent ?mt ?action ?later-event ?earlier-event ?when ?relation)
+     (uninferredSentence
+       (relatedEvent ?mt ?action ?later-event ?relation))
+     (cacheComplete (priorDomainEvent ?mt ?later-event ?event))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent ?event ?when)))))  ; constrain to same turn
+     (precededByRelatedEvent ?mt ?action ?event ?earlier-event ?when ?relation))
+
+(<== (precededByRelatedEvent ?mt ?action ?event ?earlier-event ?when ?relation)
+     (cacheComplete (relatedEvent ?mt ?action ?event ?some-relation))
+     (directlyPrecededByDomainEvent ?mt ?action ?event ?earlier-event ?when ?relation))
+
+(isa directlyPrecededByDomainEvent Predicate)
+(arity directlyPrecededByDomainEvent 6)
+(arg1Isa directlyPrecededByDomainEvent Microtheory)
+(arg2Isa directlyPrecededByDomainEvent CycLExpression)
+(arg3Isa directlyPrecededByDomainEvent PerceptualAgentEvent)
+(arg4Isa directlyPrecededByDomainEvent PerceptualAgentEvent)
+(arg5Isa directlyPrecededByDomainEvent TimeInterval)
+(arg6Isa directlyPrecededByDomainEvent BinaryRelation)
+(comment directlyPrecededByDomainEvent "(directlyPrecededByDomainEvent ?mt ?action ?later-event ?earlier-event ?when ?relation)")
+
+;;; Walk back over consecutive events collecting related events and 
+;;; stopping as soon as we hit either a command or the start of the turn.
+(<== (directlyPrecededByDomainEvent ?mt ?action ?later-event ?related-event ?when ?relation)
+     (variableExpression ?earlier-event)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (followsInProgression ?later-event ?earlier-event ?mt)))))
+     (domainEvent ?mt ?earlier-event)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?mt
+             (dateOfEvent ?earlier-event ?when)))))
+     (directlyPrecededByRelatedEvent ?mt ?action ?earlier-event ?related-event ?when ?relation))
+     
+(isa directlyPrecededByRelatedEvent Predicate)
+(arity directlyPrecededByRelatedEvent 6)
+(arg1Isa directlyPrecededByRelatedEvent Microtheory)
+(arg2Isa directlyPrecededByRelatedEvent CycLExpression)
+(arg3Isa directlyPrecededByRelatedEvent PerceptualAgentEvent)
+(arg4Isa directlyPrecededByRelatedEvent PerceptualAgentEvent)
+(arg5Isa directlyPrecededByRelatedEvent TimeInterval)
+(arg6Isa directlyPrecededByRelatedEvent BinaryRelation)
+(comment directlyPrecededByRelatedEvent "(directlyPrecededByRelatedEvent ?mt ?action ?event ?related-event ?when ?relation)")
+
+(<== (directlyPrecededByRelatedEvent ?mt ?action ?related-event ?related-event ?when ?relation)
+     (relatedEvent ?mt ?action ?related-event ?relation))
+
+(<== (directlyPrecededByRelatedEvent ?mt ?action ?event ?related-event ?when ?relation)
+     (directlyPrecededByDomainEvent ?mt ?action ?event ?related-event ?when ?relation))  ; recurse
+
+;;; We assume that ?action is a positional operator, whereas ?event is a 
+;;; Davidsonian event representation.  We want to know if the two are related.
+
+(isa relatedEvent QuaternaryPredicate)
+(arity relatedEvent 4)
+(arg1Isa relatedEvent Microtheory)
+(arg2Isa relatedEvent CycLFormula)
+(arg3Isa relatedEvent PerceptualAgentEvent)
+(comment relatedEvent "(relatedEvent ?mt ?action ?event ?relation) means ?event could be a trigger for ?action if it immediately precedes it and the doer of ?action holds ?relation to ?event.")
+
+;;; We use the predicate 'true' for all completely underspecified role relations.
+(<== (relatedEvent ?mt ?action ?event true)
+     (not (variableExpression ?action))
+     (not (variableExpression ?event))
+     (ist-Information ?mt (isa ?event GameStartedEvent)))  ; degenerate case
+
+;;; Does the event pertain to the doer or object of the action?
+(<== (relatedEvent ?mt ?action ?event ?role)
+     (not (variableExpression ?action))
+     (not (variableExpression ?event))
+     (ist-Information ?mt (isa ?event PerceptualAgentEvent))
+     (not (matches (CommandFn ?mt ?num) ?event))
+     (not (matches (UserStatementFn ?mt ?num) ?event))
+     (not (matches (UserRequestFn ?mt ?num) ?event))
+     (not (matches (UserQueryFn ?mt ?num) ?event))
+     (ist-Information ?mt (hasRoleRelationBinding ?mt ?event ?thing ?role))
+     (containsPattern ?thing ?action))  ; assume ?action is a positional operator.
+
+
+(isa priorDomainEvent TernaryPredicate)
+(arity priorDomainEvent 3)
+(arg1Isa priorDomainEvent Microtheory)
+(arg2Isa priorDomainEvent PerceptualAgentEvent)
+(arg3Isa priorDomainEvent PerceptualAgentEvent)
+(comment priorDomainEvent "(priorDomainEvent ?mt ?later ?earlier) binds ?earlier to the prior domain event (ie, not a command or linguistic utterance).")
+
+;;; This will skip over commands and whatnot:
+(<== (priorDomainEvent ?mt ?later ?prior-event)
+     (numAnswers 1 
+       (localOnly
+         (ist-Information ?mt
+           (followsInProgression ?later ?prior-event ?mt))))
+     (domainEvent ?mt ?prior-event))
+
+(<== (priorDomainEvent ?mt ?later ?prior-event)
+     (numAnswers 1 
+       (localOnly
+         (ist-Information ?mt
+           (followsInProgression ?later ?prior ?mt))))
+     (uninferredSentence (domainEvent ?mt ?prior))
+     (numAnswers 1 (priorDomainEvent ?mt ?prior ?prior-event)))
+
+(isa domainEvent BinaryPredicate)
+(arity domainEvent 2)
+(arg1Isa domainEvent Microtheory)
+(arg2Isa domainEvent PercetualAgentEvent)
+(comment domainEvent "(domainEvent ?mt ?event) succeeds if ?event is a domain-level event in ?mt.")
+
+(<== (domainEvent ?mt ?evt)
+     (not (atomicTerm ?evt))
+     (operatorFormulas ?pred ?evt)
+     (not (elementOf ?pred (TheSet CommandFn UserStatementFn UserRequestFn UserQueryFn)))
+     (ist-Information ?mt (isa ?evt PerceptualAgentEvent)))
+
+(<== (domainEvent ?mt ?evt)
+     (atomicTerm ?evt)
+     (ist-Information ?mt (isa ?evt PerceptualAgentEvent)))
+
+;;; We should be using rolesForEventType (built-in Cyc pred)
+;;; and/or roleTypesForEventType
+
+
+(isa hasRoleRelationBinding QuaternaryPredicate)
+(arity hasRoleRelationBinding 4)
+(arg1Isa hasRoleRelationBinding Microtheory)
+(arg2Isa hasRoleRelationBinding Event)
+(arg3Isa hasRoleRelationBinding Thing)
+(arg4Isa hasRoleRelationBinding BinaryRolePredicate)
+(comment hasRoleRelationBinding "(hasRoleRelationBinding ?mt ?evt ?entity ?role) binds ?entity to the the value of ?role for  the event.")
+
+(<== (hasRoleRelationBinding ?mt ?evt ?thing doneBy)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt 
+           (doneBy ?evt ?thing)))))
+
+(<== (hasRoleRelationBinding ?mt ?evt ?thing objectActedOn)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt 
+           (objectActedOn ?evt ?thing)))))
+
+(<== (hasRoleRelationBinding ?mt ?evt ?thing outputsCreated)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt 
+           (outputsCreated ?evt ?thing)))))
+
+(<== (hasRoleRelationBinding ?mt ?evt ?thing inputsDestroyed)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt 
+           (inputsDestroyed ?evt ?thing)))))
+
+(<== (hasRoleRelationBinding ?mt ?evt ?thing ?role)
+     (eventTypeOf ?mt ?evt ?evt-type)
+     (rolesForEventType ?evt-type ?role)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (?role ?evt ?thing)))))
+             
+
+;;; Be prepared to deal with outputsCreated-TypeType, etc.
+
+;;; End of file
+
+

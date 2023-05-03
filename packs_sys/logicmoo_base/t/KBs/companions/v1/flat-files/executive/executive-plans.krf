@@ -1,0 +1,882 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: executive-plans.meld
+;;;;    System: Companions
+;;;;    Author: Jeff Usher
+;;;;   Created: July 20, 2007 16:20:43
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;
+;;; Note: shakedown plans moved to companions-shakedown.meld.
+;;;
+
+(in-microtheory ExecutiveMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Timeout Counter, mechanism originally written by Ken Forbus
+;;;
+;;; Note: This could be useful to all systems using the HTN Planner, however,
+;;; at this time FIRE's genlMt handling is way too slow.  So I'll follow the 
+;;; pattern set by other HTN Planner users and just copy the counter mechanism
+;;; into each planning context as needed.  Kind of annoying.  Maybe the new 
+;;; version of FIRE built on top of the "Plan B" KB will handle this better.
+;;;
+;;;
+;;; General-purpose timeout mechanism for plans, for doing something only 
+;;; X times.  
+;;;
+;;; Assumptions:
+;;; - ?task is an iterative task.
+;;; - ?value, ?next, ?limit are all integers
+;;; - Will always do at least two interations.
+;;;
+;;; The (determineIntegerTimeout ?task) task is used after one attempt to
+;;; do the task.
+;;; The subsequent plans trigger on either (timedOutInteger ?task) or that
+;;; being an uninferred sentence.
+;;; The threshold is set by (counterLimit ?task <integer>), which needs to be 
+;;; set up in advance of hitting the loop itself.
+;;;
+;;; Also note that unless the expressions you use for ?task are guaranteed to 
+;;; be unique, then be sure to (resetIntegerTimeoutCounter ?task) before 
+;;; starting your task.  This could also cause problems if you have an execution
+;;; system that permits multiple tasks to be run in parallel.  If it's
+;;; performing two identical tasks, the counters will get confused.  So for
+;;; such execution systems, you will probably need to generate some sort of
+;;; task ID that's guaranteed to be unique.
+;;;
+
+(isa determineIntegerTimeout ComplexActionPredicate)
+(arity determineIntegerTimeout 1)
+(arg1Isa determineIntegerTimeout CycLTerm)
+(comment determineIntegerTimeout
+  "(determineIntegerTimeout ?task) ascertains whether ?task has been done so 
+   many times that one should just punt.")
+
+ 
+ ;;; *** Aack!  I just overwrote this predicate with an outsourced version.
+ ;;; *** Must get back to this!
+;(isa counterValue Predicate)
+;(arity counterValue 2)
+;(arg1Isa counterValue CyclTerm)
+;(arg2Isa counterValue Integer)
+;(comment counterValue 
+;  "(counterValue ?E ?I) indicates that the counter for ?E is ?I.")
+
+(isa counterLimit Predicate)
+(arity counterLimit 2)
+(arg1Isa counterLimit CyclTerm)
+(arg2Isa counterLimit Integer)
+(comment counterLimit 
+  "(counterLimit ?E ?I) indicates that the limit for the counter for ?E is ?I.")
+
+ 
+
+(preconditionForMethod 
+ ;; Handles the setup of the counter.  
+ ;; The limit assertion is assumed to already have been made elsewhere
+ ;; Assume check is after execution, hence the startup of 1
+ (wmOnly 
+  (uninferredSentence 
+   (ist-Information BaseKB (counterValue ?task ?value))))
+ (methodForAction
+  (determineIntegerTimeout ?task)
+  (actionSequence
+   (TheList
+    (doSetCounter ?task 1)))))
+
+(preconditionForMethod 
+ ;; The timed out case.  Records an assertion which should
+ ;; be used to detect this particular condition, either
+ ;; as a positive term in a query or as a negative term,
+ ;; via uninterpretedSentence
+ (and (counterValue ?task ?value)   ; Now outsourced
+      (ist-Information BaseKB (counterLimit ?task ?limit))
+      (evaluate ?next (PlusFn ?value 1))
+      (greaterThanOrEqualTo ?next ?limit))
+ (methodForAction
+  (determineIntegerTimeout ?task)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Counter exceeded max value for ~A at ~A" (?task ?next))
+    (doTell (ist-Information BaseKB (timedOutInteger ?task)))))))
+
+(preconditionForMethod
+ ;; The increment case.  Not at threshold yet, so keep
+ ;; incrementing the counter.  
+ (and (counterValue ?task ?value)   ; Now outsourced
+      (ist-Information BaseKB (counterLimit ?task ?limit))
+      (evaluate ?next (PlusFn ?value 1))
+      (uninferredSentence (greaterThanOrEqualTo ?next ?limit)))
+ (methodForAction 
+  (determineIntegerTimeout ?task)
+  (actionSequence 
+   (TheList
+    (doAnnounce "~A not yet exceeded max attempts: ~A (max =  ~A)." 
+                (?task ?next ?limit))
+    (doIncrementCount ?task)))))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Goal-based Executive heartbeat, and supporting
+;; complex actions.
+
+;;
+;; Post goals
+;;
+
+;; Default post
+(preconditionForMethod
+ (and (sessionContext ?session-ctxt)
+      (currentTime ?cyc-time)
+      (unifies ?time-point (TimePointFn ?cyc-time))
+      (uninferredSentence
+       (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))))
+ (methodForAction
+  (postGoal ?goal)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SelfModelMt (isa ?goal Goal)))
+    (doRecord (ist-Information ?session-ctxt (startingPoint ?goal ?time-point)))
+    (doAgentPlan
+     (actionSequence (TheList (setGoalStatus ?goal PendingStatus))))))))
+
+;; Duplicate post
+(preconditionForMethod
+ (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))
+ (methodForAction
+  (postGoal ?goal)
+  (actionSequence
+   (TheList
+    (doAnnounce "Attempted to re-post goal ~a" (?goal))))))
+
+;; Default agent-specific post.
+(preconditionForMethod
+ (uninferredSentence
+  (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal)))))
+ (methodForAction
+  (postGoalForAgent ?goal ?agent)
+  (actionSequence
+   (TheList
+    (postGoal ?goal)
+    (doRecord (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?agent)))))))
+
+;; Duplicate agent-specific post.
+(preconditionForMethod
+ (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))
+ (methodForAction
+  (postGoalForAgent ?goal ?agent)
+  (actionSequence
+   (TheList
+    (doAnnounce "Attempted to re-post goal ~a for agent ~a" (?goal ?agent))))))
+
+;; Post a list of goals
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (postGoals ?goals)
+  (actionSequence
+   (TheList
+     (doForEach ?goal ?goals (postGoal ?goal))))))
+
+;;
+;; Forget goals
+;;
+
+(preconditionForMethod
+ (and (currentExecutive ?exec)
+      (localAgent ?exec)
+      (evaluate ?goal-statuses (TheClosedRetrievalSetOf
+                                   (goalStatus ?goal ?status)
+                                 (ist-Information SelfModelMt (goalStatus ?goal ?status))))
+      (evaluate ?predecessors (TheClosedRetrievalSetOf
+                                  (goalPrecedesGoal ?pred ?goal)
+                                (ist-Information SelfModelMt (goalPrecedesGoal ?pred ?goal))))
+      (evaluate ?successors (TheClosedRetrievalSetOf
+                                  (goalPrecedesGoal ?goal ?succ)
+                                (ist-Information SelfModelMt (goalPrecedesGoal ?goal ?succ))))
+      (evaluate ?children (TheClosedRetrievalSetOf
+                              (goalSupportsGoal ?child ?goal)
+                            (ist-Information SelfModelMt (goalSupportsGoal ?child ?goal))))
+      (evaluate ?parents (TheClosedRetrievalSetOf
+                             (goalSupportsGoal ?parent ?goal)
+                           (ist-Information SelfModelMt (goalSupportsGoal ?parent ?goal))))
+      (evaluate ?agents (TheClosedRetrievalSetOf
+                             (goalPertainsToAgent ?goal ?agent)
+                           (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?agent))))
+      (evaluate ?facts
+        (SetOfSetsUnionFn (TheSet ?goal-statuses ?predecessors ?successors ?children ?parents ?agents))))
+ (methodForAction
+  (forgetGoal ?goal)
+  (actionSequence
+   (TheList
+    (doForget (ist-Information SelfModelMt (isa ?goal Goal)))
+    (doAnnounce "Forgetting goal: ~a" (?goal))
+    (doForEach ?f ?facts (doForget (ist-Information SelfModelMt ?f)))))))
+
+(preconditionForMethod
+ (and (currentExecutive ?exec)
+      (localAgent ?exec)
+      (evaluate ?goals (TheClosedRetrievalSetOf ?goal
+                         (ist-Information SelfModelMt (goalStatus ?goal ?status)))))
+ (methodForAction
+  (forgetGoals)
+  (actionSequence
+   (TheList
+    (doForEach ?g ?goal (forgetGoal ?g))))))
+
+;;
+;; Process goals 
+;;
+
+;; There's nothing to do right now.
+;(preconditionForMethod
+; (true)
+; (methodForAction
+;  (processGoals)
+;  (actionSequence
+;   (TheList
+;    (doAnnounce "~%No goals to process at present." ())))))
+
+;; We can mark a goal completed.
+;(preconditionForMethod
+; (and (kbOnly (ist-Information SelfModelMt (goalStatus ?goal AwaitingSubordinates)))
+;      (uninferredSentence 
+;       (inferenceOnly 
+;        (awaitingSupportingGoal ?goal ?supporting-goal))))
+; (methodForAction
+;  (processGoals)
+;  (actionSequence
+;   (TheList
+;    (doAnnounce "~%Marking goal completed: ~a" (?goal))
+;    (setGoalStatus ?goal CompletedStatus)
+;    (doAgentPlan (actionSequence (TheList (processGoals))))
+;    ))))
+
+;; There's a pending goal right now.
+;(preconditionForMethod
+; (and (kbOnly (ist-Information SelfModelMt (goalStatus ?goal PendingStatus)))
+;      (uninferredSentence 
+;       (inferenceOnly 
+;        (awaitingPrecedingGoal ?goal ?preceding-goal))))
+; (methodForAction
+;  (processGoals)
+;  (actionSequence
+;   (TheList
+;    (doAnnounce "~%Found pending goal: ~a" (?goal))
+;    (processGoal ?goal)
+;    (doAgentPlan (actionSequence (TheList (processGoals))))
+;    ))))
+
+
+;;
+;; Process goals - set them up for planning on the designated agent.
+;;
+
+;; If the goal must be addressed by the local (or an unspecified) agent...
+;(preconditionForMethod
+; (and (localAgent ?agent)
+;      (uninferredSentence
+;       (and (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?goal-agent))
+;            (different ?agent ?goal-agent))))
+; (methodForAction
+;  (processGoal ?goal)
+;  (actionSequence
+;   (TheList
+;    (setGoalStatus ?goal PlanningStatus)
+;    (doAgentPlan 
+;     (actionSequence 
+;      (TheList (pursuePendingGoal ?goal))))))))
+
+;; If the goal must be addressed by another agent...
+;(preconditionForMethod
+; (and (localAgent ?agent)
+;      (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?goal-agent))
+;      (different ?agent ?goal-agent))
+; (methodForAction
+;  (processGoal ?goal)
+;  (actionSequence
+;   (TheList
+;    (setGoalStatus ?goal PlanningStatus)
+;    (doRemoteAgentPlan 
+;     ?goal-agent
+;     (actionSequence 
+;      (TheList (pursuePendingGoal ?goal))))))))
+
+;; Pursue this goal, in the default case.
+;(preconditionForMethod
+; (true)
+; (methodForAction
+;  (pursuePendingGoal ?goal)
+;  (actionSequence
+;   (TheList
+;    (doAnnounce "No other method for handling ~a - Cancelling." (?goal))
+;    (cancelGoal ?goal)))))
+
+;(<== (preferInContext (pursuePendingGoal ?goal) ?seq1 ?seq2) 
+;     (subexpressionMatching (cancelGoal ?goal2) ?seq2 ?subex2)
+;     (uninferredSentence (subexpressionMatching (cancelGoal ?goal1) ?seq1 ?subex1)))
+
+;(<== (preferInContext (processGoals) ?seq1 ?seq2)
+;     (unifies ?lst (TheList processGoal setGoalStatus doAnnounce))
+;     (numAnswers 1 (predicatePosition ?seq1 ?lst ?pos1))
+;     (numAnswers 1 (predicatePosition ?seq2 ?lst ?pos2))
+;     (lessThan ?pos1 ?pos2))
+
+;;
+;; Setting goal status. 
+;;
+
+(preconditionForMethod
+ (ist-Information SelfModelMt (lookupOnly (kbOnly (goalStatus ?goal ?old-status))))
+ (methodForAction
+  (setGoalStatus ?goal ?status)
+  (actionSequence
+   (TheList
+    (doForget (ist-Information SelfModelMt (goalStatus ?goal ?old-status)))
+    (doRecord (ist-Information SelfModelMt (goalStatus ?goal ?status)))))))
+
+(preconditionForMethod
+ (and (ist-Information SelfModelMt (lookupOnly (kbOnly (isa ?goal Goal))))
+      (uninferredSentence
+       (ist-Information SelfModelMt (lookupOnly (kbOnly (goalStatus ?goal ?old-status))))))
+ (methodForAction
+  (setGoalStatus ?goal ?status)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SelfModelMt (goalStatus ?goal ?status)))))))
+
+(preconditionForMethod
+ (uninferredSentence 
+  (ist-Information SelfModelMt (lookupOnly (kbOnly (isa ?goal Goal)))))
+ (methodForAction
+  (setGoalStatus ?goal ?status)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Attempted to set ~a status on non-existent goal ~a" (?status ?goal))))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (cancelGoal ?goal)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Cancelling goal ~a" (?goal))
+    (setGoalStatus ?goal CancelledStatus)))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (markGoalCompleted ?goal)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Completed goal ~a" (?goal))
+    (setGoalStatus ?goal CompletedStatus)
+    (doAgentPlan (actionSequence (TheList (processGoals))))
+    ))))
+
+;(<== (preferInContext (setGoalStatus ?goal ?status) ?seq1 ?seq2) 
+;     (subexpressionMatching (doRecord (ist-Information SelfModelMt (goalStatus ?goal ?status))) ?seq1 ?subex)
+;     (uninferredSentence
+;      (subexpressionMatching (doRecord (ist-Information SelfModelMt (goalStatus ?goal ?status))) ?seq2 ?subex2)))
+
+;;
+;; Setting goal relationships.
+;;
+
+;; Later, we might want to check for cycles and duplicates.
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (addPrecedingGoal ?goal ?precedent)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SelfModelMt (goalPrecedesGoal ?precedent ?goal)))))))
+
+;; Later, we might want to check for cycles and duplicates.
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (addSupportingGoal ?goal ?supporter)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SelfModelMt (goalSupportsGoal ?supporter ?goal)))))))
+
+;; Add a series of supporting goals
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (addSupportingGoals ?goal ?supporters)
+  (actionSequence
+   (TheList
+    (doForEach ?supporter ?supporters (addSupportingGoal ?goal ?supporter))))))
+
+;;
+;; Testing goal relationships
+;;
+
+;; Determine whether a goal is waiting a subordinate.
+(arity awaitingSupportingGoal 2)
+(<== (awaitingSupportingGoal ?goal ?supporting-goal)
+     (ist-Information SelfModelMt (goalSupportsGoal ?supporting-goal ?goal))
+     (uninferredSentence (kbOnly (ist-Information SelfModelMt (goalStatus ?supporting-goal CompletedStatus)))))
+
+;; Determine whether a goal is awaiting a predecessor.
+(arity awaitingPrecedingGoal 2)
+(<== (awaitingPrecedingGoal ?goal ?preceding-goal)
+     (ist-Information SelfModelMt (goalPrecedesGoal ?preceding-goal ?goal))
+     (uninferredSentence (kbOnly (ist-Information SelfModelMt (goalStatus ?preceding-goal CompletedStatus)))))
+
+
+;;
+;; Graphing goal structures.
+;;
+
+;; (adHocVertex <graph-type> <label> <data> <shape> <fill-color>)
+(<== (adHocVertex Goal-Graph ?goal ?data :ellipse YellowColor)
+     (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))
+     (kbOnly (ist-Information SelfModelMt (goalStatus ?goal PendingStatus)))
+     (evaluate ?agents
+       (TheClosedRetrievalSetOf ?agent 
+         (kbOnly (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?agent)))))
+     (unifies ?data (?goal PendingStatus ?agents)))
+
+(<== (adHocVertex Goal-Graph ?goal ?data :ellipse RedColor)
+     (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))
+     (kbOnly (ist-Information SelfModelMt (goalStatus ?goal CancelledStatus)))
+     (evaluate ?agents
+       (TheClosedRetrievalSetOf ?agent 
+         (kbOnly (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?agent)))))
+     (unifies ?data (?goal CancelledStatus ?agents)))
+
+(<== (adHocVertex Goal-Graph ?goal ?data :ellipse BlackColor)
+     (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))
+     (kbOnly (ist-Information SelfModelMt (goalStatus ?goal PlanningStatus)))
+     (evaluate ?agents
+       (TheClosedRetrievalSetOf ?agent 
+         (kbOnly (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?agent)))))
+     (unifies ?data (?goal PlanningStatus ?agents)))
+
+(<== (adHocVertex Goal-Graph ?goal ?data :ellipse GreenColor)
+     (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))
+     (kbOnly (ist-Information SelfModelMt (goalStatus ?goal CompletedStatus)))
+     (evaluate ?agents
+       (TheClosedRetrievalSetOf ?agent 
+         (kbOnly (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?agent)))))
+     (unifies ?data (?goal CompletedStatus ?agents)))
+
+(<== (adHocVertex Goal-Graph ?goal ?data :ellipse CyanColor)
+     (knownSentence (kbOnly (ist-Information SelfModelMt (isa ?goal Goal))))
+     (kbOnly (ist-Information SelfModelMt (goalStatus ?goal AwaitingSubordinates)))
+     (evaluate ?agents
+       (TheClosedRetrievalSetOf ?agent 
+         (kbOnly (ist-Information SelfModelMt (goalPertainsToAgent ?goal ?agent)))))
+     (unifies ?data (?goal AwaitingSubordinates ?agents)))
+
+;; (adHocEdge <graph-type> <origin-data> <terminus-data> <label> <data> <directed?> <color> <style> <width>)
+(<== (adHocEdge Goal-Graph ?data1 ?data2 Pre Precedes True BlackColor :solid 1)
+     (lookupOnly (adHocVertex Goal-Graph ?goal1 ?data1 ?shape1 ?color1))
+     (lookupOnly (adHocVertex Goal-Graph ?goal2 ?data2 ?shape2 ?color2))
+     (kbOnly (ist-Information SelfModelMt (goalPrecedesGoal ?goal1 ?goal2))))
+
+(<== (adHocEdge Goal-Graph ?data1 ?data2 Sub Subordinate True BlackColor :solid 1)
+     (lookupOnly (adHocVertex Goal-Graph ?goal1 ?data1 ?shape1 ?color1))
+     (lookupOnly (adHocVertex Goal-Graph ?goal2 ?data2 ?shape2 ?color2))
+     (kbOnly (ist-Information SelfModelMt (goalSupportsGoal ?goal1 ?goal2))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Worker agents
+;;; [MDM 9/15] Moved here from executive-strategies.meld. In retrospect, that
+;;; location probably never made sense...
+
+(isa runOnAllVacantNodes ComplexActionPredicate)
+(arity runOnAllVacantNodes 1)
+(arg1Isa runOnAllVacantNodes CycLExpression)
+(comment runOnAllVacantNodes "(runOnAllVacantNodes ?plan) starts workers on all vacant nodes, enqueues ?plan to run on each in parallel, then kills the workers.")
+
+(isa delegateToNextAvailableWorker ComplexActionPredicate)
+(arity delegateToNextAvailableWorker 2)
+(arg1QuotedIsa delegateToNextAvailableWorker CycLExpression)
+(arg2Isa delegateToNextAvailableWorker Number)
+(comment delegateToNextAvailableWorker "(delegateToNextAvailableWorker ?action-sequence ?task-importance) looks for a vacant machine on which to run ?action-sequence, and starts a worker and assigns the task if it finds one.  If there are no prospects for a fututre available worker, then it delegates that task back to its source.  If it has no vacant nodes but does have prospects for future agents, it marks the task as delegateable and waits to delegate it.  ?task-importance is a number that indicates priority.")
+
+(isa delegateDelegateableTasks ComplexActionPredicate)
+(arity delegateDelegateableTasks 0)
+(comment delegateDelegateableTasks "(delegateDelegateableTasks) looks for delegateable tasks, looks for free or potentially free worker agents, and assigns tasks to workers accoring to some stategy (currently the knobs are facts in the session context).")
+
+(isa terminateAllWorkerAgents ComplexActionPredicate)
+(arity terminateAllWorkerAgents 0)
+(comment terminateAllWorkerAgents "(terminateAllWorkerAgents) terminates all the worker agents in the session.")
+
+(isa terminateIdleWorkerAgents ComplexActionPredicate)
+(arity terminateIdleWorkerAgents 0)
+(comment terminateIdleWorkerAgents "(terminateIdleWorkerAgents) terminates all the idle worker agents in the session.")
+
+
+;;; runOnAllVacantNodes:
+;;; run a plan on all vacant nodes in parallel by starting workers to do it, then killing
+;;; them when they're done.
+
+(preconditionForMethod
+ (and (currentExecutive ?ex)
+      (sessionContext ?sctx)
+      (agendaContext ?actx)
+      ;; figure out how many unused machines there are to fire up new workers on
+      (numVacantMachines ?num-vacant-machines)
+      (greaterThan ?num-vacant-machines 0)
+      (evaluate ?new-workers
+        (TheClosedRetrievalSetOf ?new-worker
+          ;; this outsourced pred is what spawns the workers
+          (numAnswers ?num-vacant-machines
+                      (newWorkerAgent ?new-worker)))))
+ (methodForAction
+  (runOnAllVacantNodes ?plan)
+  (actionSequence
+   (TheList
+    (doAnnounce "Running plan on ~A vacant nodes: ~A" (?num-vacant-machines ?plan))
+    (doForEach ?worker ?new-workers
+               (ifThen (and (newUniqueTask RunOnVacantNode ?task)
+                            (newUniqueTask Terminate ?terminate-task))
+                       (actionSequence
+                        (TheList
+                         ;; if there's a current agenda item that isn't volatile, assume these are subtasks
+                         (ifThen (and (currentAgendaItem ?parent-task)
+                                      (uninferredSentence (volatileTask ?parent-task)))
+                                 (actionSequence
+                                  (TheList
+                                   (doTell (ist-Information ?actx
+                                             (subTasks ?parent-task ?task)))
+                                   (doTell (ist-Information ?actx
+                                             (subTasks ?parent-task ?terminate-task))))))
+                         (doTell (ist-Information ?actx (startsAfterEndingOf ?terminate-task ?task)))
+                         (doTell (ist-Information ?actx (assignedTo ?task ?worker)))
+                         (doTell (ist-Information ?actx (assignedTo ?terminate-task ?ex)))
+                         (doEnqueue ?worker ?task ?plan)
+                         (doEnqueue ?ex ?terminate-task
+                                    (doTerminateAgent ?worker))))))))))
+
+(preconditionForMethod
+ (and (currentExecutive ?ex)
+      (sessionContext ?sctx)
+      (agendaContext ?actx)
+      ;; figure out how many unused machines there are to fire up new workers on
+      (numVacantMachines ?num-vacant-machines)
+      (equals ?num-vacant-machines 0))
+ (methodForAction
+  (runOnAllVacantNodes ?plan)
+  (actionSequence
+   (TheList
+    (doAnnounce "No vacant machines to run on." ())))))
+
+;;; delegateToNextAvailableWorker:
+;;; Hand an action sequence to the executive to delegate to the next available worker.
+;;; Also pass along its importance so that the executive can prioritize.
+
+;;; Case 1: There is a fresh worker agent available.  Delegate to it
+;;; by spawning a subtask.  Schedule tasks to terminate the worker and
+;;; redelegate, to take place after the worker has finished its work.
+(preconditionForMethod
+ (and (newWorkerAgent ?worker)
+      (currentExecutive ?ex)
+      (agendaContext ?actx)
+      (newUniqueTask DelegatedToWorker ?del-task)
+      (newUniqueTask Terminate ?terminate-task)
+      (currentAgendaItem ?parent-task))
+ (methodForAction
+  (delegateToNextAvailableWorker ?action-seq ?importance)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?actx (startsAfterEndingOf ?terminate-task ?del-task)))
+    (doTell (ist-Information ?actx (subTasks ?parent-task ?del-task)))
+    (doTell (ist-Information ?actx (subTasks ?parent-task ?terminate-task)))
+    (doTell (ist-Information ?actx (assignedTo ?del-task ?worker)))
+    (doTell (ist-Information ?actx (taskImportance ?del-task ?importance)))
+    (doTell (ist-Information ?actx (assignedTo ?terminate-task ?ex)))
+    (doEnqueue ?worker ?del-task ?action-seq)
+    (doEnqueue ?ex ?terminate-task
+               (actionSequence
+                (TheList
+                 (doTerminateAgent ?worker)
+                 (doSleep 10)
+                 (doAgentPlan (delegateDelegateableTasks)))))
+    ))))
+
+;;; Case 2: there are no vacant nodes and no current workers,
+;;; so there is no hope to eventually delegate.  In this case,
+;;; bounce it back to the sender (still via a subtask).
+(preconditionForMethod
+ (and (sessionContext ?sctx)
+      (ist-Information ?sctx
+        (numVacantMachines 0))
+      (evaluate (TheSet)
+        (TheClosedRetrievalSetOf ?current-worker
+          (ist-Information ?sctx (workerAgent ?current-worker))))
+      (agendaContext ?actx)
+      (newUniqueTask DelegatedToSource ?del-task)
+      (currentAgendaItem ?parent-task)
+      (taskSource ?parent-task ?source-agent))
+ (methodForAction
+  (delegateToNextAvailableWorker ?action-seq ?importance)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?actx (subTasks ?parent-task ?del-task)))
+    (doTell (ist-Information ?actx (assignedTo ?del-task ?source-agent)))
+    (doTell (ist-Information ?actx (taskImportance ?del-task ?importance)))
+    (doEnqueue ?source-agent ?del-task ?action-seq)))))
+
+;;; Case 3: There are current (busy) workers but no vacant nodes.  In this case,
+;;; the executive punts by rescheduling the task and marking it delegateable.
+;;; As such, the delegateable task won't be undertaken by the executive, but
+;;; the executive does take temporary ownership of the task because worker agents
+;;; currently only take on one delegateable task at a time before being terminated,
+;;; so we can't leave the pending task with them.  The tasks marked as
+;;; deletgateable will be revisited by calls to delegateDelegateableTasks, which 
+;;; are scheduled to follow each time a worker agent is terminated (clearing up
+;;; node(s)).  You can see this task structure in Case 1 above.
+(preconditionForMethod
+ (and (sessionContext ?sctx)
+      (ist-Information ?sctx
+        (numVacantMachines 0))
+      (uninferredSentence
+       (evaluate (TheSet)
+         (TheClosedRetrievalSetOf ?current-worker
+           (ist-Information ?sctx (workerAgent ?current-worker)))))
+      (currentExecutive ?ex)
+      (agendaContext ?actx)
+      (newUniqueTask DelegatedToWorker-Delayed ?reschedule-task)
+      (currentAgendaItem ?parent-task))
+ (methodForAction
+  (delegateToNextAvailableWorker ?action-seq ?importance)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?actx (subTasks ?parent-task ?reschedule-task)))
+    (doTell (ist-Information ?actx (assignedTo ?reschedule-task ?ex)))
+    (doTell (ist-Information ?actx (taskImportance ?reschedule-task ?importance)))
+    (doTell (ist-Information ?actx (delegateableTask ?reschedule-task)))
+    (doEnqueue ?ex ?reschedule-task ?action-seq)))))
+
+;;; delegateDelegateableTasks:
+;;; delegateDelegateableTasks looks for delegateable tasks accross all agents,
+;;; looks for free or potentially free worker agents, assigns delegateable
+;;; tasks to workers,
+
+;;; [MDM 9/14] Simplifying this plan to only try to spawn new worker agents
+;;; for delegateable tasks.  It used to be that we'd look for existing workers
+;;; with empty agendas and resort to those first, but there were issues with
+;;; synchronously detecting idle agents.  Now we just schedule every worker to
+;;; be terminated when it's done with its assignment, and always spawn a new
+;;; worker as we delegate each new assignment in turn.
+
+;;; prefer the non-default
+(<== (preferInContext (delegateDelegateableTasks) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; Default:    
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (delegateDelegateableTasks)
+    (actionSequence
+      (TheList))))
+
+(preconditionForMethod
+ (and (currentExecutive ?ex)
+      ;;figure out how many unused machines there are to fire up new workers on
+      (numVacantMachines ?num-vacant-machines)
+      (greaterThan ?num-vacant-machines 0)
+      (evaluate ?delegateable-tasks
+        (SetToListFn
+         (TheClosedRetrievalSetOf ?task
+           (unblockedDelegateableTask ?task))))
+      (uninferredSentence (unifies ?delegateable-tasks (TheList)))
+      (agendaContext ?ctx)
+      ;;the number of new agents depends on how many we need and how many we can launch
+      (evaluate ?n-delegateable-tasks
+        (LengthOfListFn ?delegateable-tasks))
+      (evaluate ?num-new-agents
+        (MinimumFn (TheSet ?n-delegateable-tasks ?num-vacant-machines) IdentityFn))
+      ;;this launches the new workers
+      (evaluate ?new-workers
+        (SetToListFn
+         (TheClosedRetrievalSetOf ?new-worker
+           (numAnswers ?num-new-agents (newWorkerAgent ?new-worker)))))
+      ;;now we just need to assign tasks to workers... for now we 
+      (evaluate ?wt-tuples
+        (TheClosedRetrievalSetOf (TheList ?worker ?task ?terminate-task ?parent-task)
+          (and (memberOfList ?task ?delegateable-tasks)
+               (evaluate ?n (PositionInListFn ?task ?delegateable-tasks))
+               (evaluate ?worker (NthInListFn ?n ?new-workers))
+               (newUniqueTask TerminateWorker ?terminate-task)
+               (ist-Information ?ctx (subTasks ?parent-task ?task))))))
+  (methodForAction
+    (delegateDelegateableTasks)
+    (actionSequence
+      (TheList
+       (doAnnounce "Assigning workers tasks: ~a" (?wt-tuples))
+       (doForEach (TheList ?worker ?task ?terminate-task ?parent-task) ?wt-tuples
+                  (actionSequence
+                   (TheList
+                    (doTell (ist-Information ?ctx (assignedTo ?terminate-task ?ex)))
+                    (doTell (ist-Information ?ctx (subTasks ?parent-task ?terminate-task)))
+                    (doTell (ist-Information ?ctx (startsAfterEndingOf ?terminate-task ?task)))
+                    (doEnqueue ?ex ?terminate-task
+                               (actionSequence
+                                (TheList
+                                 (doTerminateAgent ?worker)
+                                 (doSleep 10)
+                                 (doAgentPlan (delegateDelegateableTasks)))))
+                    (doDelegate ?worker ?task))))))))
+
+;;; terminateAllWorkerAgents:
+;;; terminates all the worker agents in the session
+
+(preconditionForMethod
+ (and (sessionContext ?sctx)
+      (evaluate ?workers
+        (TheClosedRetrievalSetOf ?worker
+          (ist-Information ?sctx (workerAgent ?worker)))))
+ (methodForAction
+  (terminateAllWorkerAgents)
+  (actionSequence
+   (TheList
+    (doForEach ?worker ?workers
+               (doTerminateAgent ?worker))))))
+
+;;; terminateIdleWorkerAgents:
+;;; terminates the idle worker agents in the session
+
+(preconditionForMethod
+ (and (sessionContext ?sctx)
+      (evaluate ?idle-workers
+        (TheClosedRetrievalSetOf ?worker
+          (and (ist-Information ?sctx (workerAgent ?worker))
+               (holdsOnRemoteAgent ?worker
+                 (and (uninferredSentence (currentAgendaItem ?current))
+                      (uninferredSentence (pendingTask ?pending))))))))
+ (methodForAction
+  (terminateIdleWorkerAgents)
+  (actionSequence
+   (TheList
+    (doForEach ?worker ?idle-workers
+               (doTerminateAgent ?worker))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Automatic Reboots
+;;; (these have only been tested on worker agents)
+
+;;; reboots the agent's lisp 
+(isa rebootWithHandoff ComplexActionPredicate)
+(arity rebootWithHandoff 1)
+(arg1Isa rebootWithHandoff CompanionsAgent)
+(comment rebootWithHandoff "(rebootWithHandoff ?agent) Reboots an agent and its lisp, but first writes a handoff microtheory so that the agent and any other agents that were in the lisp may pick up where they left off.")
+
+(isa rebootUnresponsive ComplexActionPredicate)
+(arity rebootUnresponsive 1)
+(arg1Isa rebootUnresponsive CompanionsAgent)
+(comment rebootUnresponsive "(rebootUnresponsive ?agent) Reboots an agent and its lisp assuming that the agent is unresponsive.  This assumes that a handoff microtheory was previously written in the current session.")
+
+
+;; rebootWithHandoff:
+;; Asynchronously reboot the agent's lisp and the agent itself, but first have
+;; it checkpoint its current agenda state in a hand-off microtheory. After
+;; rebooting, load the hand-off microtheory into the agenda.
+
+(preconditionForMethod
+ (and (currentExecutive ?ex)
+      (agendaContext ?ctx)
+      (sessionContext ?sctx)
+      (currentSession ?session)
+      (holdsOnRemoteAgent ?agent
+        (ist-Information ?sctx
+          (agentsInProcess ?lisp-agents)))
+      (evaluate ?handoff-agents
+        (TheClosedRetrievalSetOf ?handoff-agent
+          (and (elementOf ?handoff-agent ?lisp-agents)
+               ;;a hack?  well, yes...
+               (uninferredSentence
+                (unifies ?handoff-agent
+                         (SketchAgentFn ?spatial ?sk-name ?count)))))))
+ (methodForAction
+  (rebootWithHandoff ?agent)
+  (actionSequence
+   (TheList
+    (doEnterState "reboot-handoff-~A" (?agent))
+    (doForEach ?handoff-agent ?handoff-agents
+       (actionSequence
+        (TheList
+         (doSynchronousRemotePlan ?handoff-agent
+           (doWriteHandoffMt (HandoffMtFn ?session ?handoff-agent))))))
+    ;;;not sure if this is worth it
+    ;;;    (doSynchronousRemotePlan ?agent
+    ;;;                             (doCompressKB))
+    (doRebootAgentsInProcess ?agent)
+    (doAnnounce "Agents rebooted: ~A" (?lisp-agents))
+    (doForEach ?handoff-agent ?handoff-agents
+       (actionSequence
+        (TheList
+         (doSynchronousRemotePlan ?handoff-agent
+            (doLoadHandoffMt (HandoffMtFn ?session ?handoff-agent))))))
+    (doForEach ?handoff-agent ?handoff-agents
+       (actionSequence
+        (TheList
+         (doSynchronousRemotePlan ?handoff-agent
+            (doResumeAgenda)))))
+    (doAnnounce "Handoff complete." ())
+    (doExitState "reboot-handoff-~A" (?agent))))))
+
+;; rebootUnresponsive:
+;; Asynchronously reboot the agent's lisp and the agent itself.  This version
+;; assumes that at least one of the agents in the lisp is unresponsive, and
+;; thus skips the step where it writes the hand-off and tells the facilitator
+;; not to expect the agents to participate in their own reboot. Note that it still
+;; tries to load a hand-off microtheory after rebooting, which means that you 
+;; can strategically place calls to (writeHandoffCheckpoint) in your plans to
+;; checkpoint your agenda at points that you can safely relaunch from.
+
+(preconditionForMethod
+ (and (currentExecutive ?ex)
+      (agendaContext ?ctx)
+      (sessionContext ?sctx)
+      (currentSession ?session)
+      (agentsInSameProcess ?agent ?lisp-agents)
+      (evaluate ?handoff-agents
+        (TheClosedRetrievalSetOf ?handoff-agent
+          (and (elementOf ?handoff-agent ?lisp-agents)
+               ;;a hack?  well, yes...
+               (uninferredSentence
+                (unifies ?handoff-agent
+                         (SketchAgentFn ?spatial ?sk-name ?count)))))))
+ (methodForAction
+  (rebootUnresponsive ?agent)
+  (actionSequence
+   (TheList
+    (doEnterState "reboot-unresp-~A" (?agent))
+    (doRebootAgentsInProcess-Unresponsive ?agent)
+    (doAnnounce "Unresponsive agents rebooted: ~A" (?lisp-agents))
+    (doForEach ?handoff-agent ?handoff-agents
+       (actionSequence
+        (TheList
+         (doSynchronousRemotePlan ?handoff-agent
+            (doLoadHandoffMt (HandoffMtFn ?session ?handoff-agent))))))
+    (doForEach ?handoff-agent ?handoff-agents
+       (actionSequence
+        (TheList
+         (doSynchronousRemotePlan ?handoff-agent
+            (doResumeAgenda)))))
+    (doAnnounce "Handoff complete." ())
+    (doExitState "reboot-unresp-~A" (?agent))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

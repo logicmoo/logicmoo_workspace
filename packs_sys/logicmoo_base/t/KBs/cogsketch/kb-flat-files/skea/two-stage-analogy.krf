@@ -1,0 +1,77 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: two-stage-analogy.meld
+;;;;    System: sKEA (Sketch-based Knowledge Entry Associate)
+;;;;    Author: Emmett Tomai
+;;;;   Created: April 11, 2004 16:32:18
+;;;;   Purpose: Knowledge for building input cases for second stage analogy
+;;;;            (that is, an analogy of analogies)
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; two-stage analogy stuff
+
+(comment entityMatch
+  "States that base entity matches with the target entity")
+(arity entityMatch 2)
+(isa entityMatch Predicate)
+(arg1Isa entityMatch CycLExpression)
+(arg2Isa entityMatch CycLExpression)
+
+
+(comment expressionMatch
+ "States that base expression matches with the target expression")
+(arity expressionMatch 2)
+(isa expressionMatch Predicate)
+(arg1Isa expressionMatch CycLExpression)
+(arg2Isa expressionMatch CycLExpression)
+
+
+(comment candidateInference "States that formula is a candidate inference")
+(arity candidateInference 1)
+(isa candidateInference Predicate)
+(arg1Isa candidateInference CycLFormula)
+
+
+(comment reverseCandidateInference
+ "States that the formula is a reverse candidate inference")
+(arity reverseCandidateInference 1)
+(isa reverseCandidateInference Predicate)
+(arg1Isa reverseCandidateInference CycLFormula)
+
+
+(comment aIsa
+ "Used to indicate relevant isa relations in a second stage analogy")
+(arity aIsa 2)
+(isa aIsa Predicate)
+(arg1Isa aIsa Thing)
+(arg2Isa aIsa Collection)
+
+
+(comment aGenls
+ "Used to indicate relevant genls relations in a second stage analogy")
+(arity aGenls 2)
+(isa aGenls Predicate)
+(arg1Isa aGenls Collection)
+(arg2Isa aGenls Collection)
+
+
+;; miller knowledge (should go in spatial once it's settled down)
+
+(resultIsa QRotationFn MovementRotation)
+(comment QRotationFn
+ "Used to express a qualitative rotation between two orientations")
+(isa QRotationFn Function-Denotational)
+(arity QRotationFn 2)
+(arg1Isa QRotationFn OrientedNuSketchGlyphType)
+(arg2Isa QRotationFn OrientedNuSketchGlyphType)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,378 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_lattice.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: September 27, 2012 16:49:44
+;;;;   Purpose: Worksheet tutoring suggestions for sketches using lattices.  For
+;;;;            now this is in the ClassicWorksheetTutorSuggestionsMt since it
+;;;;            seemed silly to replicate all the suggestions therein.  This
+;;;;            may need to change, though.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Basic Definitions
+
+(isa correspondingLatticeCell Relation)
+(arity correspondingLatticeCell 6)
+(arg1Isa correspondingLatticeCell NuSketchCase)
+(arg2Isa correspondingLatticeCell NuSketchLattice)
+(arg3Isa correspondingLatticeCell NuSketchLatticeEntry)
+(arg4Isa correspondingLatticeCell NuSketchCase)
+(arg5Isa correspondingLatticeCell NuSketchLattice)
+(arg6Isa correspondingLatticeCell NuSketchLatticeEntry)
+(comment correspondingLatticeCell
+  "Associates lattice cells between two #$NuSketchCases.  Usually used to find
+   corresponding lattice cells between student and solution subsketches.")
+(notForAnalogy correspondingLatticeCell)
+
+(<== (correspondingLatticeCell ?case1 ?lattice1 ?cell1 ?case2 ?lattice2 ?cell2)
+     ;; Note: This assumes that there is only one lattice per subsketch!  This
+     ;; works for now, but be aware of this assumption.
+     (ist-Information ?case1
+       (entryForLattice ?cell1 ?lattice1))
+     (unifies (NuSketchLatticeEntryFn ?lattice1 ?row ?col) ?cell1)
+     (ist-Information ?case2
+       (entryForLattice ?cell2 ?lattice2))
+     (different ?lattice1 ?lattice2)
+     (unifies (NuSketchLatticeEntryFn ?lattice2 ?row ?col) ?cell2))
+
+
+
+(isa latticeWorksheetMatchConstraints Relation)
+(arity latticeWorksheetMatchConstraints 3)
+(arg1Isa latticeWorksheetMatchConstraints NuSketchLatticeEntry)
+(arg2Isa latticeWorksheetMatchConstraints NuSketchLatticeEntry)
+(arg3Isa latticeWorksheetMatchConstraints List)
+(comment latticeWorksheetMatchConstraints
+  "(latticeWorksheetMatchConstraints ?base-lattice-cell ?target-lattice-cell 
+   ?constraints) indicates that when creating an analogy between the facts about
+   the glyphs in the base and target lattice entries (see #$NuSketchLatticeEntry),
+   the match constraints bound to ?constraints should be used.")
+(notForAnalogy latticeWorksheetMatchConstraints)
+
+
+
+(isa latticeEntryForWorksheetDGroup Relation)
+(arity latticeEntryForWorksheetDGroup 2)
+(arg1Isa latticeEntryForWorksheetDGroup Case)
+(arg2Isa latticeEntryForWorksheetDGroup NuSketchLatticeEntry)
+(comment latticeEntryForWorksheetDGroup
+  "This provides an easy way to figure out the lattice entry from a given
+   CogSketchTutorLatticeEntryCaseFn expression.")
+(notForAnalogy latticeEntryForWorksheetDGroup)
+
+(<== (latticeEntryForWorksheetDGroup ?dgroup ?lattice-cell)
+     (unifies ?dgroup 
+       (CogSketchTutorLatticeEntryCaseFn ?subsketch-casename ?lattice-cell)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; generateSubsketchTutorSuggestions
+;;;
+;;; For now this assumes that there is one lattice each on the student and
+;;; solution subsketches.  The SOLVE suggestions below make no attempt to 
+;;; determine which lattice corresponds to which in the event of multiple
+;;; lattices per subsketch.
+
+(defSuggestion TutoringSuggestionsOverallPlan-Lattice-1
+    (generateSubsketchTutorSuggestions ?student-subsketch ?suggestions
+                                       ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs-in-region
+               (TheClosedRetrievalSetOf ?student-glyph-1
+                 (wmOnly
+                  (lookupOnly
+                   (glyphCreatedByInkPartitionRegion 
+                    ?region ?student-subsketch ?student-glyph-1)))))
+             (unifies ?student-glyphs-in-region (TheSet))
+             
+             (evaluate ?student-glyphs-in-lattice
+               (TheClosedRetrievalSetOf ?student-glyph-2
+                 (latticeEntryContainsGlyph ?cell ?student-glyph-2)))
+             (different ?student-glyphs-in-lattice (TheSet))
+             
+             (solutionCaseForWorksheetStudentWorkspace 
+              ?student-subsketch ?solution-case)
+             (evaluate ?solution-glyphs-in-lattice
+               (TheClosedRetrievalSetOf ?solution-glyph-2
+                 (ist-Information ?solution-case
+                   (latticeEntryContainsGlyph ?cell ?solution-glyph-2))))
+             (different ?solution-glyphs-in-lattice (TheSet)))
+  :subgoals
+  ((sketchFor ?student-subsketch ?sketch)
+   (tell (retractAllAnalogyResults ?sketch))
+   (tell (computePositionalRelations ?student-subsketch))
+   (runQueryForQuestions ?student-subsketch queryForCogSketchWorksheetQuestions)
+   (suggestionsForStudentLatticeCells ?student-subsketch ?suggs1 ?glyph-corrs1)
+   (suggestionsForNonLatticeLayers ?student-subsketch ?suggs2 ?glyph-corrs2)
+   (evaluate ?suggestions (JoinListsFn ?suggs2 ?suggs1))
+   (evaluate ?glyph-correspondences 
+     (SetOrCollectionUnion ?glyph-corrs1 ?glyph-corrs2))))
+
+(defSuggestion TutoringSuggestionsOverallPlan-Lattice-2
+    (generateSubsketchTutorSuggestions ?student-subsketch ?suggestions
+                                       ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs-in-region
+               (TheClosedRetrievalSetOf ?student-glyph-1
+                 (wmOnly
+                  (lookupOnly
+                   (glyphCreatedByInkPartitionRegion 
+                    ?region ?student-subsketch ?student-glyph-1)))))
+             (unifies ?student-glyphs-in-region (TheSet))
+             
+             (evaluate ?student-glyphs-in-lattice
+               (TheClosedRetrievalSetOf ?student-glyph-2
+                 (latticeEntryContainsGlyph ?cell ?student-glyph-2)))
+             (unifies ?student-glyphs-in-lattice (TheSet))
+             
+             (solutionCaseForWorksheetStudentWorkspace 
+              ?student-subsketch ?solution-case)
+             (evaluate ?solution-glyphs-in-lattice
+               (TheClosedRetrievalSetOf ?solution-glyph-2
+                 (ist-Information ?solution-case
+                   (latticeEntryContainsGlyph ?cell ?solution-glyph-2))))
+             (different ?solution-glyphs-in-lattice (TheSet)))
+  :subgoals
+  ((sketchFor ?student-subsketch ?sketch)
+   (tell (retractAllAnalogyResults ?sketch))
+   (tell (computePositionalRelations ?student-subsketch))
+   (runQueryForQuestions ?student-subsketch queryForCogSketchWorksheetQuestions)
+   (suggestionsForStudentLatticeCells ?student-subsketch ?suggs1 ?glyph-corrs1)
+   (suggestionsForNonLatticeLayers ?student-subsketch ?suggs2 ?glyph-corrs2)
+   (evaluate ?suggestions (JoinListsFn ?suggs2 ?suggs1))
+   (evaluate ?glyph-correspondences 
+     (SetOrCollectionUnion ?glyph-corrs1 ?glyph-corrs2))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsForStudentLatticeCells
+
+(isa suggestionsForStudentLatticeCells Relation)
+(arity suggestionsForStudentLatticeCells 3)
+(arg1Isa suggestionsForStudentLatticeCells NuSketchBundle)
+(arg2Isa suggestionsForStudentLatticeCells List)
+(arg3Isa suggestionsForStudentLatticeCells Set-Mathematical)
+(notForAnalogy suggestionsForStudentLatticeCells)
+
+
+(defSuggestion SuggestionsForStudentLatticeCells
+    (suggestionsForStudentLatticeCells ?student-subsketch 
+                                       ?suggestions ?glyph-correspondences)
+  :subgoals
+  ((subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (solutionCaseForWorksheetStudentWorkspace ?student-subsketch ?solution-case)
+   (evaluate ?student-lattice-cells
+     (TheClosedRetrievalSetOf ?student-cell
+       (and (ist-Information ?solution-case
+              (latticeEntryContainsGlyph ?solution-cell ?glyph-in-lattice))
+            (correspondingLatticeCell 
+             ?student-case ?student-lattice ?student-cell
+             ?solution-case ?solution-lattice ?solution-cell))))
+   (solveSequentially ?cell2 ?student-lattice-cells
+     (suggestionsForStudentLatticeCell ?student-subsketch ?cell2  
+                                       ?suggs2 ?glyph-corrs2))
+   (consolidateLatticeCellSuggestions ?student-subsketch 
+                                       ?suggestions ?glyph-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; consolidateLatticeCellSuggestions
+
+(isa consolidateLatticeCellSuggestions Relation)
+(arity consolidateLatticeCellSuggestions 3)
+(arg1Isa consolidateLatticeCellSuggestions NuSketchBundle)
+(arg2Isa consolidateLatticeCellSuggestions List)
+(arg3Isa consolidateLatticeCellSuggestions Set-Mathematical)
+(notForAnalogy consolidateLatticeCellSuggestions)
+
+
+(defSuggestion ConsolidateLatticeCellSuggestions
+    (consolidateLatticeCellSuggestions ?student-subsketch 
+                                       ?suggestions ?glyph-correspondences)
+  :subgoals
+  ((evaluate ?suggs-sets
+     (TheClosedRetrievalSetOf ?suggs
+       (and (lookupOnly
+             (suggestionsForStudentLatticeCell ?student-subsketch ?cell1
+                                               ?suggs-list1 ?glyph-corrs1))
+            (evaluate ?suggs (ListToSetFn ?suggs-list1)))))
+   (evaluate ?suggs-set (SetOfSetsUnionFn ?suggs-sets))
+   (evaluate ?suggestions (SetToListFn ?suggs-set))
+   
+   (evaluate ?corrs-sets
+     (TheClosedRetrievalSetOf ?glyph-corrs2
+       (lookupOnly
+        (suggestionsForStudentLatticeCell ?student-subsketch ?cell2
+                                          ?suggs-list2 ?glyph-corrs2))))
+   (evaluate ?glyph-correspondences (SetOfSetsUnionFn ?corrs-sets))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsForStudentLatticeCell
+
+(isa suggestionsForStudentLatticeCell Relation)
+(arity suggestionsForStudentLatticeCell 4)
+(arg1Isa suggestionsForStudentLatticeCell NuSketchBundle)
+(arg2Isa suggestionsForStudentLatticeCell NuSketchLatticeEntry)
+(arg3Isa suggestionsForStudentLatticeCell List)
+(arg4Isa suggestionsForStudentLatticeCell Set-Mathematical)
+(notForAnalogy suggestionsForStudentLatticeCell)
+
+
+(defSuggestion SuggestionsForStudentLatticeCell
+    (suggestionsForStudentLatticeCell 
+     ?student-subsketch ?student-lattice-cell 
+     ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs
+               (TheClosedRetrievalSetOf ?glyph
+                 (latticeEntryContainsGlyph ?student-lattice-cell ?glyph)))
+             (different ?student-glyphs (TheSet)))
+  :subgoals
+  ((bestMatchForStudentLatticeEntry ?student-subsketch ?student-lattice-cell
+                                    ?match)
+   (suggestionsForStudentMatch ?student-subsketch ?match 
+                               ?suggestions1 ?glyph-correspondences)
+   (maybeAddShapeAndEdgeRepSuggestionsForGlyphCorrespondences 
+    ?student-subsketch ?suggestions1 ?glyph-correspondences ?suggestions)))
+
+
+(defSuggestion SuggestionsForStudentLatticeCell_NoGlyphs
+    (suggestionsForStudentLatticeCell 
+     ?student-subsketch ?student-lattice-cell 
+     ?suggestions ?glyph-correspondences)
+  :test (and (evaluate ?student-glyphs
+               (TheClosedRetrievalSetOf ?glyph
+                 (latticeEntryContainsGlyph ?student-lattice-cell ?glyph)))
+             (unifies ?student-glyphs (TheSet)))
+  :subgoals
+  ((suggestionsTextForMissingGlyphsInLatticeCell ?student-lattice-cell ?text)
+   (unifies ?suggestions
+     (TheList
+      (CogSketchSuggestionFn ?text (TheSet ?student-lattice-cell) (TheSet))))
+   (unifies ?glyph-correspondences (TheSet))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsTextForMissingGlyphsInLatticeCell
+
+(isa suggestionsTextForMissingGlyphsInLatticeCell BinaryRelation)
+(arity suggestionsTextForMissingGlyphsInLatticeCell 2)
+(arg1Isa suggestionsTextForMissingGlyphsInLatticeCell NuSketchLatticeEntry)
+(arg2Isa suggestionsTextForMissingGlyphsInLatticeCell TextString)
+(notForAnalogy suggestionsTextForMissingGlyphsInLatticeCell)
+
+
+(defSuggestion SuggestionsTextForMissingGlyphsInLatticeCell_noNamestring
+    (suggestionsTextForMissingGlyphsInLatticeCell ?student-lattice-cell ?text)
+  :test (and (evaluate ?namestrings
+               (TheClosedRetrievalSetOf ?namestring
+                 (nameString ?student-lattice-cell ?namestring)))
+             (unifies ?namestrings (TheSet)))
+  :subgoals
+  ((unifies (NuSketchLatticeEntryFn ?student-lattice ?row ?col) 
+     ?student-lattice-cell)
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You haven't drawn any glyphs in this lattice cell yet: {" 
+      ?col ", " ?row "}."))))
+
+
+(defSuggestion SuggestionsTextForMissingGlyphsInLatticeCell_namestring
+    (suggestionsTextForMissingGlyphsInLatticeCell ?student-lattice-cell ?text)
+  :test (and (evaluate ?namestrings
+               (TheClosedRetrievalSetOf ?namestring
+                 (nameString ?student-lattice-cell ?namestring)))
+             (different ?namestrings (TheSet)))
+  :subgoals
+  ((nameString ?student-lattice-cell ?namestring)
+   (evaluate ?text
+     (ConcatenateStringsFn
+      "You haven't drawn any glyphs in " ?namestring " yet."))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForStudentLatticeEntry
+
+(isa bestMatchForStudentLatticeEntry Relation)
+(arity bestMatchForStudentLatticeEntry 3)
+(arg1Isa bestMatchForStudentLatticeEntry CogSketchWorkspaceBundle)
+(arg2Isa bestMatchForStudentLatticeEntry NuSketchLatticeEntry)
+(arg3Isa bestMatchForStudentLatticeEntry AnalogyMatch)
+(arg3Isa bestMatchForStudentLatticeEntry Match)
+(comment bestMatchForStudentLatticeEntry
+  "(bestMatchForStudentLatticeEntry ?student-subsketch ?lattice-entry ?match-id) 
+   means that ?match-id is the best analogical match between the facts about
+   the glyphs in the student's #$NuSketchLatticeEntry and those in the 
+   corresponding #$NuSketchLatticeEntry in the solution.")
+(notForAnalogy bestMatchForStudentLatticeEntry)
+
+
+(defSuggestion BestMatchForStudentLatticeEntry
+    (bestMatchForStudentLatticeEntry ?student-subsketch ?student-lattice-cell
+                                     ?match)
+  :subgoals
+  ((unifies (NuSketchLatticeEntryFn ?student-lattice ?row ?col) 
+     ?student-lattice-cell)
+   (forEffectOnly 
+    (tell (cogSketchBusyMsg "Comparing lattice cell {~A, ~A} to solution ..."
+            (TheList ?col ?row))))
+   
+   (subSketchGroupRepresentsObject ?student-subsketch ?student-case)
+   (solutionCaseForWorksheetStudentWorkspace ?student-subsketch ?solution-case)
+   (correspondingLatticeCell ?student-case ?student-lattice ?student-lattice-cell
+                             ?solution-case ?solution-lattice 
+                             ?solution-lattice-cell)
+   
+   (unifies ?base 
+     (CogSketchTutorLatticeEntryCaseFn ?solution-case ?solution-lattice-cell))
+   (unifies ?target
+     (CogSketchTutorLatticeEntryCaseFn ?student-case ?student-lattice-cell))
+   
+   (latticeWorksheetMatchConstraints ?solution-lattice-cell ?student-lattice-cell
+                                     ?constraints)
+   (tell (retractAnalogyResults ?base ?target))
+   (matchBetween ?base ?target ?constraints ?match1)
+   (quantitativelyConstrainedMatch ?match1 ?match)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; suggestionsForNonLatticeLayers
+
+(isa suggestionsForNonLatticeLayers Relation)
+(arity suggestionsForNonLatticeLayers 3)
+(arg1Isa suggestionsForNonLatticeLayers NuSketchBundle)
+(arg2Isa suggestionsForNonLatticeLayers List)
+(arg3Isa suggestionsForNonLatticeLayers Set-Mathematical)
+(notForAnalogy suggestionsForNonLatticeLayers)
+
+
+(defSuggestion SuggestionsForNonLatticeLayers
+    (suggestionsForNonLatticeLayers ?student-subsketch 
+                                    ?suggestions ?glyph-correspondences)
+  
+  :subgoals
+  ((solutionForWorksheetStudentWorkspace ?student-subsketch ?solution-subsketch)
+   (subSketchGroupRepresentsObject ?solution-subsketch ?solution-case)
+   (ist-Information ?solution-case
+     (evaluate ?solution-layers
+       (TheClosedRetrievalSetOf ?layer1
+         (and (subSketchGroupFor ?layer1 ?solution-subsketch)
+              (evaluate ?lattices
+                (TheClosedRetrievalSetOf ?lattice
+                  (and (nonTransitiveInference (isa ?lattice NuSketchLattice))
+                       (subSketchFor ?lattice ?layer1))))
+              (unifies ?lattices (TheSet))
+              (importantForTutoringGlyphs ?layer1 ?glyphs)
+              (different ?glyphs (TheSet))))))
+   (suggestionsForWorksheetLayers ?student-subsketch ?solution-layers
+                                  ?suggestions ?glyph-correspondences)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

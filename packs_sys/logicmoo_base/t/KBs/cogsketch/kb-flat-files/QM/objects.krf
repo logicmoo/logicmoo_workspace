@@ -1,0 +1,327 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: objects.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: July 7, 2008 15:44:29
+;;;;   Purpose: Qualitative mechanics rules for Design Buddy.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+;;;------------------------
+;;; Point Representation
+;;;------------------------
+
+(isa QMPoint Collection)
+(comment QMPoint
+  "QMPoint is the collection of points of interest to QM, such as rotational
+   origins.")
+(genls QMPoint Entity)
+
+(isa QMCorner Collection)
+(genls QMCorner QMPoint)
+
+(genls RotOrigin QMPoint)
+
+;;;------------------------
+;;; Surface Representation
+;;;------------------------
+
+;; Adding a temporary layer of abstraction here for safety and ease of use.
+;; If things work out QMSurface can be replaced with SurfaceRegion-Tangible
+(isa QMSurface Collection)
+(comment QMSurface
+  "QMSurface is the collection of surfaces of interest to QM.")
+(genls QMSurface SurfaceRegion-Tangible)
+
+
+(isa surfaceNormal BinaryPredicate)
+(arity surfaceNormal 2)
+(comment surfaceNormal
+ "surfaceNormal is true iff the second argument is the direction of
+  surface normal at the first argument surface.")
+(arg1Isa surfaceNormal QMSurface)
+(arg2Isa surfaceNormal QualitativeVector)
+
+(isa surfaceOverlapDirToPoint QuaternaryPredicate)
+(arity surfaceOverlapDirToPoint 4)
+(comment surfaceOverlapDirToPoint 
+  "surfaceOverlapDirToPoint is true iff the qvector is the direction from the
+   midpoint of the overlap of the two surfaces to the qpoint")
+(arg1Isa surfaceOverlapDirToPoint QMSurface)
+(arg2Isa surfaceOverlapDirToPoint QMSurface)
+(arg3Isa surfaceOverlapDirToPoint QMPoint)
+(arg4Isa surfaceOverlapDirToPoint QualitativeVector)
+
+(isa surfaceContact SymmetricBinaryPredicate)
+(comment surfaceContact
+ "surfaceContact is true iff the first argument touches the second argument.")
+(arity surfaceContact 2)
+(arg1Isa surfaceContact QMSurface)
+(arg2Isa surfaceContact QMSurface)
+
+(isa surfaceCorner TernaryPredicate)
+(comment surfaceCorner
+  "surfaceCorner is true iff QMCorner is a shared corner of the two QMSurfaces.")
+(arity surfaceCorner 3)
+(arg1Isa surfaceCorner QMSurface)
+(arg2Isa surfaceCorner QMSurface)
+(arg3Isa surfaceCorner QMCorner)
+
+;; TODO: add clockwiseEndpoint and sibling 
+
+;;;------------------------
+;;; object representations
+;;;------------------------
+
+(isa RigidOb Collection)
+(comment RigidOb
+ "RigidOb is the collection of rigid objects.")
+(genls RigidOb SolidTangibleThing)
+(genls RigidOb Physob)
+(prettyString-Canonical RigidOb "rigid object")
+
+(isa FixedObject Collection)
+(genls FixedObject Place-NonAgent)
+(genls FixedObject TangibleThing)
+(comment FixedObject
+ "FixedObject is the collection of objects which do not translate or rotate in a
+  given reference frame.")
+(prettyString-Canonical FixedObject "fixed object")
+
+
+(isa FixedRigidObject Collection)
+(genls FixedRigidObject RigidOb)
+(genls FixedRigidObject FixedObject)
+(prettyString-Canonical FixedRigidObject "fixed rigid object")
+
+(isa FixedAxisObject Collection)
+(genls FixedAxisObject SolidTangibleThing)
+(comment FixedAxisObject 
+  "FixedAxisObjects have a fixed rotation of origin.  They do not translate in
+   the reference frame, but may rotate.")
+(prettyString-Canonical FixedAxisObject "fixed axis object")
+
+(isa hasSurface BinaryPredicate) ;; Currently unused by QM, see hasContactSurface
+(arity hasSurface 2)
+(comment hasSurface
+"hasSurface is true iff the second argument is a surface of the first argument.")
+(arg1Isa hasSurface RigidOb)
+(arg2Isa hasSurface QMSurface)
+
+(isa hasContactSurface TernaryPredicate)
+(arity hasContactSurface 3)
+(comment hasContactSurface
+ "hasSurface is true iff the third argument is a surface of the first argument
+  which touches the second object.")
+(arg1Isa hasContactSurface RigidOb)
+(arg2Isa hasContactSurface RigidOb)
+(arg3Isa hasContactSurface QMSurface)
+
+(isa touchesDirectly SymmetricBinaryPredicate)
+(arity touchesDirectly 2)
+(comment touchesDirectly 
+ "touchesDirectly is true iff the two objects are in direct contact")
+(arg1Isa touchesDirectly PartiallyTangible)
+(arg2Isa touchesDirectly PartiallyTangible)
+(prettyString-Canonical touchesDirectly "directly touches")
+
+(isa doesNotTouchDirectly SymmetricBinaryPredicate)
+(arity doesNotTouchDirectly 2)
+(comment doesNotTouchDirectly 
+ "doesNotTouchDirectly is true when touchesDirectly is not true")
+(arg1Isa doesNotTouchDirectly PartiallyTangible)
+(arg2Isa doesNotTouchDirectly PartiallyTangible)
+(prettyString-Canonical doesNotTouchDirectly "does not directly touch")
+(negationInverse doesNotTouchDirectly touchesDirectly)
+
+(isa rotationalOrigin BinaryPredicate)
+(arity rotationalOrigin 2)
+(arg1Isa rotationalOrigin Physob)
+(arg2Isa rotationalOrigin QMPoint)
+
+(isa rotationalOriginByConnection BinaryPredicate)
+(comment rotationalOriginByConnection 
+  "rotationalOriginByGear is true iff obj has ori as rotational origin because
+   obj is directly connected to some other object with rotational origin ori")
+(arg1Isa rotationalOriginByGear Physob)
+(arg2Isa rotationalOriginByGear QMPoint)
+(genlPreds rotationalOriginByGear rotationalOrigin)
+
+(isa rotationalOriginByAnnotation BinaryPredicate)
+(comment rotationalOriginByAnnotation 
+  "rotationalOriginByAnnotation is true iff obj has ori as rotational origin
+   because ori is designated by an annotation glyph")
+(arg1Isa rotationalOriginByAnnotation Physob)
+(arg2Isa rotationalOriginByAnnotation QMPoint)
+(genlPreds rotationalOriginByAnnotation rotationalOrigin)
+
+
+;;;
+;;; Constraint
+;;; 
+
+(isa transConstraint BinaryPredicate)
+(arity transConstraint 2)
+(arg1Isa transConstraint RigidOb)
+(arg2Isa transConstraint QualitativeVector)
+(comment transConstraint 
+  "(transConstraint ?obj ?qv) means that ?obj cannot translate in the
+   direction of ?qv")
+
+(isa rotConstraint BinaryPredicate)
+(arity rotConstraint 2)
+(arg1Isa rotConstraint RigidOb)
+(arg2Isa rotConstraint RotDirection)  
+(comment rotConstraint 
+  "(transConstraint ?obj ?qv) means that ?obj cannot rotate in the
+   direction of ?qv")
+
+(isa sufficientlyConstrained BinaryPredicate) ;; somewhat of a misnomer
+(arity sufficientlyConstrained 2)
+(arg1Isa sufficientlyConstrained RigidOb)
+(arg2Isa sufficientlyConstrained QualitativeVector)
+(comment sufficientlyConstrained 
+  "(sufficientlyConstrained ?obj ?qv) means that ?obj is constrained 
+    translationally to the extent that it won't translate anywhere in the
+   halfplane of ?qv")
+
+(isa rotationallyConstrainedAtSurface BinaryPredicate)
+(arity rotationallyConstrainedAtSurface 2)
+(arg1Isa rotationallyConstrainedAtSurface RigidOb)
+(arg2Isa rotationallyConstrainedAtSurface QMSurface)
+(comment rotationallyConstrainedAtSurface 
+  "(rotationallyConstrainedAtSurface ?obj ?contactSurface) means that ?obj
+   cannot rotate around its rotational origin when pushed by surface.")
+
+;;;
+;;; Freedom
+;;; 
+
+(isa transFreedom BinaryPredicate) ;;unused
+(arity transFreedom 2)
+(comment transFreedom 
+ "transFreedom is true iff object of the first argument 
+ is not prevented from moving in diretion of the second argument.")
+(arg1Isa transFreedom RigidOb)
+(arg2Isa transFreedom QualitativeVector)   
+
+(isa rotFreedom BinaryPredicate)
+(arity rotFreedom 2)
+(arg1Isa rotFreedom RigidOb)
+(arg2Isa rotFreedom RotDirection)   
+
+(isa xTransFreedom BinaryPredicate) ;; unused
+(arity xTransFreedom 2)
+(comment xTransFreedom 
+ "xTransFreedom is true iff object of the first argument 
+ is not prevented from moving in x-diretion of the second argument.")
+(arg1Isa xTransFreedom RigidOb)
+(arg2Isa xTransFreedom Sense)   
+
+(isa yTransFreedom BinaryPredicate) ;;unused
+(comment yTransFreedom 
+ "yTransFreedom is true iff object of the first argument 
+ is not prevented from moving in y-diretion of the second argument.")
+(arity yTransFreedom 2)
+(arg1Isa yTransFreedom RigidOb)
+(arg2Isa yTransFreedom Sense)
+
+(isa movable UrnaryPredicate)
+(comment movable 
+  "movable is true iff object is free to translate or rotate 
+   in some direction")
+(arity movable 1)
+(arg1Isa movable Physob)
+
+(isa rotatable UrnaryPredicate)
+(comment rotatable 
+  "rotatable is true iff object is free to rotate in some direction")
+(arity rotatable 1)
+(arg1Isa rotatable Physob)
+
+
+;;;-------------------
+;;; mechanical motion
+
+(isa transMotion BinaryPredicate)
+(arg1Isa transMotion RigidOb)
+(arg2Isa transMotion QualitativeVector)  
+
+(isa rotMotion BinaryPredicate)
+(comment rotMotion "(rotMotion ?obj ?rot) indicates the instantaneous rotational
+ motion of ?obj is in direction ?rot")
+(arg1Isa rotMotion RigidOb)
+(arg2Isa rotMotion RotDirection)
+
+(isa fixedAxisRotation QuaternaryPredicate) ;; unused
+(comment fixedAxisRotation "(fixedAxisRotation ?b1 ?b2 ?obj ?origin) indicates
+ that ?obj rotated about ?origin without translating.")
+(arg1Isa fixedAxisRotation NuSketchCase)
+(arg2Isa fixedAxisRotation NuSketchCase)
+(arg3Isa fixedAxisRotation TangibleThing)
+(arg4Isa fixedAxisRotation Thing)
+
+
+;;; springs
+(isa EquilibiriumLengthSpring Collection)
+(genls EquilibiriumLengthSpring Spring-Device)
+(comment EquilibiriumLengthSpring 
+  "The collection of Springs (devices) which are at equilibrium length.")
+
+;; We use the collections Spring-Device, CompressedSubstance, and Stretched 
+;; to reperesent springs.  Springs will not be considered rigid objects for now.
+;; In the future we can have axes of rigidity.
+
+(disjointWith Spring-Device RigidOb)
+(genls Spring-Device Physob)
+
+(disjointWith CompressedSubstance Stretched)
+(disjointWith CompressedSubstance EquilibiriumLengthSpring)
+(disjointWith Stretched EquilibiriumLengthSpring)
+
+;;;; Pretty strings
+
+(prettyString-Canonical causes-SitSit "causes")
+(prettyString-Canonical connectedTo-Directly "directly connected to")
+
+
+
+;;;
+;;; NUSketch
+
+(in-microtheory NuSketchQMFactsMt :exclude-globals t)
+
+(genlMt NuSketchQMFactsMt QualitativeMechanicsMt)
+
+(comment NuSketchQMFactsMt 
+  "Contains the NUSketch-specific axioms for qualitative mechanics.")
+
+(isa glyphRelevantToQM UnaryPredicate)
+(arity glyphRelevantToQM 1)
+(comment glyphRelevantToQM "This is true of a glyph if that glyph represents an
+ object that is part of a QM system (design buddy).")
+(arg1Isa glyphRelevantToQM Glyph)
+
+(isa safeOverlappingParts TernaryPredicate)
+(comment safeOverlappingParts 
+  "Rules written for this wrapper for overlappingParts allows the query
+   to take place in contexts genlMt from the nusketch bundle case.")
+(genlPreds safeOverlappingParts overlappingParts)
+
+(isa safeToTheLeftOf TernaryPredicate)
+(comment safeToTheLeftOf 
+  "Rules written for this wrapper for toTheLeftOf allows the query
+   to take place in contexts genlMt from the nusketch bundle case.")
+(genlPreds safeToTheLeftOf overlappingParts)
+
+(isa safeToTheRightOf TernaryPredicate)
+(comment safeToTheRightOf 
+  "Rules written for this wrapper for toTheRightOf allows the query
+   to take place in contexts genlMt from the nusketch bundle case.")
+(genlPreds safeToTheRightOf overlappingParts)

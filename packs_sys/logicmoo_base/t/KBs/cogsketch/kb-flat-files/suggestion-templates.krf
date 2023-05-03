@@ -1,0 +1,41 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: suggestion-templates.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: November 21, 2005 16:57:56
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchTutoring)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; cogsketchAdviceTemplate
+;;;
+;;; Example:
+;;;
+;;;   (cogsketchAdviceTemplate (containedGlyphGroupInsider ?insider ?container)
+;;;     (and (isa ?insider NuSketchGlyph)
+;;;          (isa ?container AnalogySkolem))
+;;;     (TheList "You might want to reconsider the location of the" 
+;;;              ?insider "."))
+;;;
+
+(isa cogsketchAdviceTemplate Relation)
+(arity cogsketchAdviceTemplate 4)
+(arg1Isa cogsketchAdviceTemplate CycLTerm)
+(arg2Isa cogsketchAdviceTemplate CycLTerm)
+(arg3Isa cogsketchAdviceTemplate CycLTerm)
+(arg4Isa cogsketchAdviceTemplate List)
+(comment cogsketchAdviceTemplate
+         "This is now obsolete -- I'm keeping the arity definition, etc. for 
+          those systems that might be using old stored knowledge, but don't
+          use this relation for future work.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

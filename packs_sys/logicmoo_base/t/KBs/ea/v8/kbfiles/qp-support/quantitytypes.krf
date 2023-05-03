@@ -1,0 +1,160 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: quantitytypes.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: February 26, 2003 16:40:01
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QPInterpretationMt :exclude-globals t)
+
+;;; Additional quantity type information
+
+;;; rather than asserting isa QuantityType on PhysicalQuantity or anything else
+;; up in the ontology, Cyc chooses to assert it on the specific leaf types.  we
+;; follow their convention.  some of these are already in the KB, but this makes
+;; certain that we have the ones we need.
+
+
+
+                         
+(denotation Stability-TheWord MassNoun 0 Stability)
+(posForms Stability-TheWord MassNoun)
+(isa Stability QuantityType)
+(genls Stability PhysicalQuantity)
+
+(denotation Width-TheWord MassNoun 0 Width)
+(posForms Width-TheWord MassNoun)
+
+(isa ThermalEnergy QuantityType)
+(genls ThermalEnergy PhysicalQuantity)
+
+(isa Temperature QuantityType)
+(genls Temperature PhysicalQuantity)
+
+(isa Depth QuantityType)
+(genls Depth PhysicalQuantity)
+(denotation Depth-TheWord MassNoun 1 Depth)
+(isa Deep Depth)
+(isa Shallow Depth)
+
+(isa Width QuantityType)
+(genls Width PhysicalQuantity)
+(isa Width-TheWord EnglishWord)
+(denotation Width-TheWord MassNoun 0 Width) 
+(isa Wide Width)
+(isa Narrow Width)
+
+(isa Height QuantityType)
+(genls Height PhysicalQuantity)
+(denotation Height-TheWord MassNoun 1 Height)
+(denotation Tall-TheWord Adjective 0 Tall)
+(isa Tall NonNumericSizeAttribute)
+(isa Tall PhysicalAttribute)
+(isa Tall Height)
+(isa Flat Height)
+
+(isa Length QuantityType)
+(genls Length PhysicalQuantity)
+(denotation Length-TheWord MassNoun 1 Length)
+(isa Long Length)
+(isa Short Length)
+
+(isa Size QuantityType)
+(genls Size PhysicalQuantity)
+(denotation Size-TheWord MassNoun 1 Size)
+(denotation Big-TheWord Adjective 3 Big)
+(isa Big NonNumericSizeAttribute)
+(isa Big PhysicalAttribute)
+(isa Big Size)
+(denotation Small-TheWord Adjective 1 Small)
+(isa Small NonNumericSizeAttribute)
+(isa Small PhysicalAttribute)
+(isa Small Size)
+
+(isa Density QuantityType)
+(genls Density PhysicalQuantity)
+(isa Dense-TheWord EnglishWord)
+(denotation Dense-TheWord Adjective 0 Dense)
+(isa Dense NonNumericSizeAttribute)
+(isa Dense PhysicalAttribute)
+(isa Dense Density)
+
+(isa Mass QuantityType)
+(genls Mass PhysicalQuantity)
+
+(isa Weight QuantityType)
+(genls Weight PhysicalQuantity)
+(denotation Weight-TheWord MassNoun 0 Weight)
+(posForms Weight-TheWord MassNoun)
+(posForms Weight-TheWord CountNoun)
+(isa Heavy-TheWord EnglishWord)
+(denotation Heavy-TheWord Adjective 0 Heavy)
+(isa Heavy NonNumericSizeAttribute)
+(isa Heavy PhysicalAttribute)
+(isa Heavy Weight)
+(isa Light-TheWord EnglishWord)
+(denotation Light-TheWord Adjective 0 Lightweight)
+(isa Lightweight NonNumericSizeAttribute)
+(isa Lightweight PhysicalAttribute)
+(isa Lightweight Weight)
+
+(isa Pressure QuantityType)
+(genls Pressure PhysicalQuantity)
+
+(isa Velocity QuantityType)
+(genls Velocity PhysicalQuantity)
+(denotation Velocity-TheWord MassNoun 1 Velocity)
+(posForms Velocity-TheWord MassNoun)
+;;; CAUTION: posForms need to be present, or denotation for this speech part will not be found!
+
+(isa Speed QuantityType)
+(genls Speed PhysicalQuantity)
+(denotation Speed-TheWord MassNoun 1 Speed)
+(denotation Fast-TheWord Adjective 0 Fast)
+(isa Fast NonNumericSizeAttribute)
+(isa Fast PhysicalAttribute)
+(isa Fast Speed)
+(denotation Slow-TheWord Adjective 1 Slow)
+(isa Slow NonNumericSizeAttribute)
+(isa Slow PhysicalAttribute)
+(isa Slow Speed)
+
+(isa Level QuantityType)
+(genls Level PhysicalQuantity)
+(denotation Level-TheWord MassNoun 0 Level)
+(posForms Level-TheWord MassNoun)
+(posForms Level-TheWord CountNoun)
+
+;;;CJM4/3/2014
+(denotation Amount-TheWord MassNoun 0 Amount)
+(posForms Amount-TheWord MassNoun)
+(isa Amount QuantityType)
+(genls Amount PhysicalQuantity)
+
+;;; Ensure that Boiler-TheWord has a posForms and denotation, as one of Sven's
+;;; examples relies on it.
+(posForms Boiler-TheWord CountNoun)
+(denotation Boiler-TheWord CountNoun 0 Boiler-Device)
+
+
+
+
+(in-microtheory GeneralEnglishMt)
+
+(posForms Stability-TheWord MassNoun)
+(isa Stability-TheWord LexicalWord)
+(denotation Stability-TheWord MassNoun 0 Stability)
+
+(denotation Length-TheWord CountNoun 1 Length)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,458 @@
+;;;
+;;; perceptual-agent.meld
+;;;
+;;; This file contains PerceptualAgentMt, a microtheory that captures reified 
+;;; properties of perceptual agents.  
+;;; A companion by itself is not a perceptual agent, but a companion that 
+;;; acts or reacts on the basis of asynchronous events is.
+;;; For an example, consider the Freeciv AI Player (FAP).  It supports 
+;;; a perceptual agent interface that allows the player to observe the
+;;; simulated game world via events and outsourced predicates.
+;;;
+;;; We would like to develop high-level behaviors that leverage the abstract
+;;; properties of perceptual agents without being hardwired to a particular
+;;; game, simulation, or vehicle.  This is a start.
+
+(in-microtheory PerceptualAgentMt)
+(genlMt PerceptualAgentMt CompanionsMt)
+(genlMt PerceptualAgentMt QPTheoryMt)
+
+
+;;; Events are central to the definition of a perceptual agent:
+(isa PerceptualAgentEvent Collection)
+(genls PerceptualAgentEvent Event)
+(comment PerceptualAgentEvent "The collection of events detectable by a perceptual agent.")
+
+;;; This is the type, the collection of modes:
+(isa InteractionMode Collection)
+(genls InteractionMode Thing)
+(isa LearnByDemonstration InteractionMode)
+(isa AdviseTask InteractionMode)
+(isa Collaboration InteractionMode)  ; isa CooperationEvent?
+(isa Experimentation InteractionMode)
+(isa PerformTask InteractionMode)
+
+;;; This is intended to be the reifiable predicate that lets us record what the mode was:
+(isa interactionMode BinaryPredicate)
+(arity interactionMode 2)
+(arg1Isa interactionMode Microtheory)
+(arg2Isa interactionMode InteractionMode)
+(comment interactionMode "(interactionMode <game> <InteractionMode>) designates the type of agent autonomy in the execution context session.")
+
+;;; This is an outsourced predicate that can detect what the mode is:
+(isa currentActivityMode UnaryPredicate)
+(isa currentActivityMode DynamicUpdatePredicate)
+(arity currentActivityMode 1)
+(arg1Isa currentActivityMode InteractionMode)
+(comment currentActivityMode "(currentActivityMode ?mode) is a dynamic update predicate that binds ?mode to one of LearnByDemonstration, AdviseTask, Experimentation, or PerformTask.")
+
+(isa sourceForLearnedPlan BinaryPredicate)
+(arity sourceForLearnedPlan 2)
+(arg1Isa sourceForLearnedPlan Task)
+(arg2Isa sourceForLearnedPlan PerceptualAgentCommand)
+(comment sourceForLearnedPlan "(sourceForLearnedPlan ?task ?cmd) reifies the learning audit trail of ?task to the training scenario and command number in which it was taught.")
+
+;;; Is this meant to be a fluent or a concrete duration?
+;;; I.e., should the resultIsa be a Time-Quantity?  I'm betting yes.
+(isa Turns Function-Denotational)
+(isa Turns Individual)
+(isa Turns UnitOfTime)
+(isa Turns UnitOfMeasureNoPrefix)
+(isa Turns AtomicAnalogyNAT-Function)
+(arityMin Turns 1)
+(arityMax Turns 2)
+(argsIsa Turns NumericInterval)
+(resultIsa Turns Time-Quantity)
+(comment Turns "Denotes a duration measured as number of turns.")
+
+
+;;; Eventually, I'd like to change YearFn to TurnFn in Freeciv.  Not today.
+(isa TurnFn UnaryFunction)
+(isa TurnFn AtomicAnalogyNAT-Function)
+(arity TurnFn 1)
+(arg1Isa TurnFn CycLTerm)
+(resultIsa TurnFn Turn-GameEvent)  ; Does it have to be a GameEvent?  What about utterance turns?
+(comment TurnFn "(TurnFn ?something) is a NART wrapper that allows us to turn an id or a year into a reified turn.")
+
+;;; This may provide some relational structure to temporal sequences, and will
+;;; allow us to chain backwards and forwards through time.  This is important
+;;; because turn duration is non-linear.
+(isa followingTurn BinaryPredicate)
+(isa followingTurn FunctionalPredicate)
+(functionalInArgs followingTurn 2)
+(arity followingTurn 2)
+(arg1Isa followingTurn TimeInterval)  ; a Turn-GameEvent?
+(arg2Isa followingTurn TimeInterval)  ; a Turn-GameEvent?
+(comment followingTurn "(followingTurn ?earlier ?later) means ?later is the year of the next successive turn after ?earlier.")
+
+;;; This may be defined withing a domain with a rule that defers to a 
+;;; domain-specific outsourced predicate.  Alternatively, as in GGP,
+;;; it may be entirely rule-defined.
+(isa turnsRemaining BinaryPredicate)
+(isa turnsRemaining DynamicUpdatePredicate)
+(isa turnsRemaining FunctionalPredicate)
+(arity turnsRemaining 2)
+(arg1Isa turnsRemaining Microtheory)  ; Really, should be (PlayingFn <game type>)
+(arg2Isa turnsRemaining Integer)
+(comment turnsRemaining "(turnsRemaining ?game-execution-mt ?num) binds the number of turns remaining in game (if known)")
+
+;;; This should be stored in the execution trace.
+;;; An outsourced tell-handler may then optionally cache it in a convenient slot.
+(isa terminationCondition BinaryPredicate)
+(arity terminationCondition 2)
+(arg1Isa terminationCondition Microtheory)
+(arg2Isa terminationCondition CycLSentence-Askable)
+(comment terminationCondition "(terminationCondition ?execution-mt ?query) denotes the condition which, upon success, signifies the end of the game.")
+
+(isa maxTurns BinaryRelation)
+(arity maxTurns 2)
+(arg1Isa maxTurns Microtheory)
+(arg2Isa maxTurns Integer)
+(comment maxTurns "(maxTurns ?mt ?max-turns) places a bound on the number of turns to execute in context ?mt.")
+
+(isa noTurnBound UnaryRelation)
+(arity noTurnBound 1)
+(arg1Isa noTurnBound Microtheory)
+(comment noTurnBound "(noTurnBound ?mt) places a no bound on the number of turns to execute in context ?mt.")
+
+;;; The concept "Command" is a Cyc collection representing the illocutionary
+;;; force of an Ordering-CommunicationAct.  It's not by itself an 
+;;; information transfer event.
+(isa PerceptualAgentCommand Collection)
+(genls PerceptualAgentCommand Ordering-CommunicationAct)
+(genls PerceptualAgentCommand PerceptualAgentEvent)
+(comment PerceptualAgentCommand "PerceptualAgentCommand is the collection of primitive actions that can be applied by some perceptual agent.  They're defeasible, hence communicative.")
+
+;;; A non-atomic term to refer to user actions in a reified case
+;;; See also the Cyc builtin commandStatement.
+(isa CommandFn BinaryFunction)
+(isa CommandFn AtomicAnalogyNAT-Function)
+(arity CommandFn 2)
+(arg1Isa CommandFn Microtheory)
+(arg2Isa CommandFn Integer)
+(resultIsa CommandFn PerceptualAgentCommand)
+(comment CommandFn "(CommandFn ?mt ?n) denotes the nth primitive action in ?mt")
+(atomicAnalogyNat CommandFn)
+
+(isa EventFn BinaryFunction)
+(arity EventFn 2)
+(arg1Isa EventFn Microtheory)
+(arg2Isa EventFn Integer)
+(resultIsa EventFn Event)
+(comment EventFn
+  "(EventFn ?mt ?n) denotes the ?nth event in ?mt")
+(atomicAnalogyNat EventFn)
+
+(isa DomainEventFn BinaryFunction)
+(isa DomainEventFn AtomicAnalogyNAT-Function)
+(arity DomainEventFn 2)
+(arg1Isa DomainEventFn Microtheory)
+(arg2Isa DomainEventFn Integer)
+(resultIsa DomainEventFn PerceptualAgentEvent)
+(comment DomainEventFn "(DomainEventFn ?mt ?n) denotes the nth exogenous domain event in ?mt")
+
+;;; Formerly ReflectiveEvent, but that's wrong.
+(isa isReflexiveEvent BinaryPredicate)
+(arity isReflexiveEvent 2)
+(arg1Isa isReflexiveEvent Microtheory)
+(arg2Isa isReflexiveEvent Event)
+(comment isReflexiveEvent "(isReflexiveEvent ?mt ?event) succeeds when the doneBy and objectActedOn are the same.")
+
+(<== (isReflexiveEvent ?mt ?event)
+     (ist-Information ?mt (doneBy ?event ?doer))
+     (ist-Information ?mt (objectActedOn ?event ?doer)))
+     
+;;; Alternative formulation:
+;(<== (isReflexiveEvent ?mt ?event)
+;     (eventTypeOf ?mt ?event ?type)
+;     (lookupOnly (rolesForEventType ?type doneBy)))  ; can't guarantee this info is available for all event types.
+
+
+;;; Should we specify intendedMaleficiary as a (possible) role relation?
+;;; Is doneBy necessarily the intendedMaleficiary?
+;;; For now, we reify doneBy, objectFound, and eventOccursAt.
+
+(isa rootDomainGoal BinaryPredicate)
+(arity rootDomainGoal 2)
+(arg1Isa rootDomainGoal CompanionsDomain)
+(arg2Isa rootDomainGoal Goal)
+(comment rootDomainGoal "(rootDomainGoal ?domain ?goal) binds the root goal for the domain (if any).  For a game domain, this is (winner-First <game-inst> (IndexicalFn currentRole)).")
+
+(isa impliedSubgoal BinaryPredicate)
+(arity impliedSubgoal 2)
+(arg1Isa impliedSubgoal CompanionsDomain)
+(arg2Isa impliedSubgoal Goal)
+(comment impliedSubgoal "(impliedSubgoal ?domain ?goal) binds ?goal to domain-specific subgoals of the rootDomainGoal.  These are likely to be meta-goals or constraints rather than direct objectives.")
+
+;;; Domain-specific, non-inferential, non-bookkeeping action predicates are  
+;;; actions that execute in some real or simulated world and cannot be taken
+;;; back.  Still debating about whether this should take a microtheory. 
+;;; It's problematic because it means we'll have rules that build in a 
+;;; microtheory or need a lookup to find the right microtheory level.  
+;;; For domains like Freeciv, there might be a hierarchy of microtheories that
+;;; represent the basic game, the particular ruleset, etc.  Naming the mt 
+;;; seems wrong, but we need to be able to distinguish domain-level from 
+;;; meta-level actions somehow.  It's a holdover
+
+(isa actionPrimitive UnaryPredicate)
+(arity actionPrimitive 1)
+(arg1Isa actionPrimitive SimpleActionPredicate)
+(comment actionPrimitive "(actionPrimitive ?predicate) enables listing domain-specific executable action primitives.")
+
+;;; A deferrable action is one that may not be immediately available for some
+;;; particular binding of the operator. (e.g., move points may be exhausted.)
+;;; If the execution grinder defers execution, we'll want to queue it up 
+;;; for a later re-try.  If it's deferred too long, we may decide there's
+;;; something better to be doing.
+(isa deferrableAction UnaryPredicate)
+(arity deferrableAction 1)
+(arg1Isa deferrableAction SimpleActionPredicate)
+(comment deferrableAction "(deferrableAction ?predicate) means operators involving ?predicate can be deferred by the execution context on the basis of the value of ?arg-num. E.g., a movement command that cannot be executed immediately for a particular unit.")
+
+;;; Example: irrigating or going to a distant destination are durative actions
+;;; in Freeciv.  Losing orders is the event that they're done (or aborted)
+;;; Instead of polling for completion (which assumes a turn-based environment), 
+;;; we can invoke a callback plan on the event.
+(isa durativeAction UnaryPredicate)
+(arity durativeAction 1)
+(arg1Isa durativeAction SimpleActionPredicate)
+(comment durativeAction "(durativeAction ?predicate) means the primitive action ?predicate does not execute instantaneously.  It may unfold over many turns or over some measureable amount of time.")
+
+(isa activeProcessTypeAssertion BinaryPredicate)
+(arity activeProcessTypeAssertion 2)
+(arg1Isa activeProcessTypeAssertion CycLExpression)
+(arg2Isa activeProcessTypeAssertion Collection) ; a process type
+(comment activeProcessTypeAssertion "(activeProcessTypeAssertion ?stmt ?process-type) binds ?process-type to the process in ?stmt.")
+
+(<== (activeProcessTypeAssertion (activeMF (MFInstanceFn ?process-type ?args)) ?process-type))
+
+;;; We can communicate this through language, but it's really hard to clarify.
+;;; Does doMove have a stochastic effect?  It does if you're moving into a hut!
+;;; It does if the move is an attack.
+;;; It does if the move is a ship in deep ocean.
+;;; So we'll probably need stochasticOutcome to label particular outcomes of particular actions.
+(isa stochasticEffect UnaryPredicate)
+(arity stochasticEffect 1)
+(arg1Isa stochasticEffect ActionPredicate)
+(comment stochasticEffect "(stochasticEffect ?action-pred) means ?action-pred has a non-deterministic outcome.")
+
+;;; A propositional relation:
+(isa stochasticOutcome BinaryPredicate)
+(arity stochasticOutcome 2)
+(arg1Isa stochasticOutcome PerceptualAgentCommand)
+(arg2Isa stochasticOutcome PerceptualAgentEvent)
+(comment stochasticOutcome "(stochasticOutcome ?cmd ?evt) labels a concrete event as a stochastic outcome of the execution of a concrete command.")
+
+;;; See also GoalOutcomeType w/instances PositiveOutcome. NegativeOutcome, NeutralOutcome
+;;; from performance-goals.meld.
+
+(isa positiveOutcomeForActor BinaryPredicate)
+(arity positiveOutcomeForActor 2)
+(arg1Isa positiveOutcomeForActor PerceptualAgentEvent)
+(arg2Isa positiveOutcomeForActor Agent-Generic)
+(comment positiveOutcomeForActor "(positiveOutcomeForActor ?event ?actor) means ?event was a good thing.")
+
+(isa negativeOutcomeForActor BinaryPredicate)
+(arity negativeOutcomeForActor 2)
+(arg1Isa negativeOutcomeForActor PerceptualAgentEvent)
+(arg2Isa negativeOutcomeForActor Agent-Generic)
+(comment negativeOutcomeForActor "(negativeOutcomeForActor ?event ?actor) means ?event was a bad thing.")
+
+(isa threatToActor TernaryPredicate)
+(arity threatToActor 3)
+(arg1Isa threatToActor Agent-Generic)
+(arg2Isa threatToActor Agent-Generic)
+(arg3Isa threatToActor Goal)    ; What should this be? a SelfPreservationGoal?  Probably a NAT (SelfPreservationFn ?maleficiary)
+(comment threatToActor "(threatToActor ?maleficiary ?threatener ?goal) means ?threatener intends (and is capable of) thwarting ?maleficiary's ?goal.")
+
+(isa eventualEffectOfAction-Props BinaryPredicate)
+(arity eventualEffectOfAction-Props 2)
+(arg1Isa eventualEffectOfAction-Props CycLSentence-Assertible)
+(arg2Isa eventualEffectOfAction-Props CycLSentence-Assertible)
+(comment eventualEffectOfAction-Props "Part of an action model that indicates long-term effects that will hold if action is successful.  This is always defeasible, both because processes may be interrupted and because some effects are conditional on types or arguments.")
+
+(isa eventualEffectOfActionIf-Props TernaryPredicate)
+(arity eventualEffectOfActionIf-Props 3)
+(arg1Isa eventualEffectOfActionIf-Props CycLSentence-Assertible)
+(arg2Isa eventualEffectOfActionIf-Props CycLSentence-Assertible)
+(comment eventualEffectOfActionIf-Props "Part of an action model that indicates long-term effects that will hold if action is successful and conditions are met.  This is always defeasible, both because processes may be interrupted and because some effects are conditional on types or arguments.")
+
+
+;;; Make use of the built-in Cyc predictae: effectOfActionIf-Props
+;;; (effectOfActionIf-Props ACTION COND EFFECT)
+
+
+;;; We need to pass in the execution context because that's where the isa
+;;; information is about the entities.  If we insist on querying in that 
+;;; microtheory, it will quickly clog up with junk.
+
+
+;;; Used in rational player:
+(isa actionInfluencesQuantity QuaternaryPredicate)
+(arity actionInfluencesQuantity 4)
+(arg1Isa actionInfluencesQuantity Microtheory)
+(arg2Isa actionInfluencesQuantity CycLFormula)
+(arg3Isa actionInfluencesQuantity ContinuousQuantity)
+(arg4Isa actionInfluencesQuantity LevelOfChange)  ; ie, PositiveChange, NegativeChange or NoChange
+(comment actionInfluencesQuantity "(actionInfluencesQuantity ?mt ?action ?quantity ?direction)")
+
+(<== (actionInfluencesQuantity ?mt ?action ?quantity PositiveChange)
+     (ist-Information ?mt
+       (actionPositivelyAffectsQuantity ?quantity ?action)))
+
+(<== (actionInfluencesQuantity ?mt ?action ?quantity NegativeChange)
+     (ist-Information ?mt
+       (actionNegativelyAffectsQuantity ?quantity ?action)))
+
+(isa quantitativeGoalAction TernaryPredicate)
+(arity quantitativeGoalAction 3)
+(arg1Isa quantitativeGoalAction Microtheory)
+(arg2Isa quantitativeGoalAction Goal)
+(arg3Isa quantitativeGoalAction CycLSentence-Assertible)
+(comment quantitativeGoalAction "(quantitativeGoalAction ?mt ?goal ?action) binds ?actions that affect leaf quantity goal ?goal.")
+
+(<== (quantitativeGoalAction ?mt ?goal ?action)
+     (quantitativeGoalNat ?goal)
+     (goalQuantity ?goal ?quantity)
+     (changeInGoalDirection ?goal ?direction)
+     (actionInfluencesQuantity ?mt ?action ?quantity ?direction))
+
+
+;;; Kind of inverted args of subOrgs-Direct.
+(isa subActorOf BinaryPredicate)
+(arity subActorOf 2)
+(arg1Isa subActorOf Agent-Generic)
+(arg2Isa subActorOf Agent-Generic)
+(comment subActorOf "(subActorOf ?child ?parent) means ?child can be planned for by the same agent as ?parent.")
+
+;;; a role relation for events:
+(isa textMessageFor BinaryPredicate)
+(arity textMessageFor 2)
+(arg1Isa textMessageFor PerceptualAgentEvent)
+(arg2Isa textMessageFor CharacterString)
+(comment textMessageFor "(textMessageFor ?event ?string) is a reifiable predicate that associates a string message with a typed event instance.")
+
+;;;
+;;; Quantities
+;;;
+
+;;; quantityPrimitive is mentioned in code (in caching accessors for
+;;; quantityMentions and units lookup in influence checking)
+(isa quantityPrimitive TernaryPredicate)
+(arity quantityPrimitive 3)
+(arg1Isa quantityPrimitive ContinuousMeasurableQuantity)  ; ** This is wrong! It's a variable arity function that returns a ContinuousMeasurableQuantity.
+(arg2Isa quantityPrimitive Collection)
+(arg3Isa quantityPrimitive Function)
+(comment quantityPrimitive "(quantityPrimitive ?quantity-type ?arg-type ?units) enables listing domain-specific quantity primitives.")
+
+(<== (typeInstancesHaveQuantity ?col ?quantity-type)  ; built-in cyc pred
+     (quantityPrimitive ?quantity-type ?col ?units))
+
+;;; Assuming we'll use knowledge of quantityPrimitives to learn case encodings.
+
+(isa priorQuantityValue BinaryPredicate)
+(isa priorQuantityValue DynamicUpdatePredicate)
+(arity priorQuantityValue 2)
+(arg1Isa priorQuantityValue ContinuousMeasurableQuantity)
+(arg2Isa priorQuantityValue MeasurableQuantity)  ; a value
+(comment priorQuantityValue "(priorQuantityValue ?quantity-fluent ?value) binds a diectic reference representing the prior value of ?quantity-fluent.")
+
+(isa bufferedQuantitiesMentioning BinaryPredicate)
+(isa bufferedQuantitiesMentioning DynamicUpdatePredicate)
+(arity bufferedQuantitiesMentioning 2)
+(arg1Isa bufferedQuantitiesMentioning Set-Mathematical)
+(arg2Isa bufferedQuantitiesMentioning ContinuousQuantity)  ; a QP Fluent
+(comment bufferedQuantitiesMentioning "(bufferedQuantitiesMentioning ?args ?quantity) binds ?quantity to buffered ContinuousQuantity fluents that mention one of the ?args.")
+
+(isa bufferedValue BinaryPredicate)
+(isa bufferedValue DynamicUpdatePredicate)
+(arity bufferedValue 2)
+(arg1Isa bufferedValue Quantity)           ; fluent
+(arg2Isa bufferedValue ContinuousQuantity) ; value of fluent
+(comment bufferedValue "(bufferedValue ?quantity ?value) binds ?value to prior value of ?quantity.")
+
+;;;
+;;; Processes
+;;;
+
+;;; To the extent that we can talk about non-physical systems such as
+;;; economics in terms of differential equantions, then we want to be
+;;; able to represent them in terms of processes with direct influences.
+;;; They may not be strictly causal, but there are certainly rates that
+;;; drive change.  Rather than usurp QPProcess, we create an abstraction
+;;; QualitativeProcess so as not to conflate them with physical processes.
+
+;;; Do we need this or can we just use ModelFragments?
+(isa QualitativeProcessType Collection)
+(genls QualitativeProcessType ConceptualModelFragmentType)
+(comment QualitativeProcessType
+"An instance of QualitativeProcessType is a type of model fragment whose
+instantiations in a model are instances of QualitativeProcess.")
+
+;(isa QualitativeProcess Collection)
+;(genls QualitativeProcess ConceptualModelFragment)
+;(comment QualitativeProcess
+;"Continuous Qualitative Processes that aren't necessarily physical.  We want to allow direct influences, but not demand that ")
+
+;;; ProcessFn already exists in Cyc!
+;(isa ProcessFn BinaryFunction)
+;(isa ProcessFn AtomicAnalogyNAT-Function)  ; Is it?  Or do we want to be able to swap out agents?
+;(arity ProcessFn 2)
+;(arg1Isa ProcessFn Agent)
+;(arg2Isa ProcessFn Activity)
+;(resultIsa ProcessFn ModelFragment) ; not a QPProcess, because it isn't necessarily tangible.
+;(comment ProcessFn "(ProcessFn ?agent ?activity) denotes the qualitative process of ?agent performing ?activity.  It's just an anonymous name of a process.")
+
+(isa ActiveProcessFn BinaryFunction)
+(isa ActiveProcessFn AtomicAnalogyNAT-Function)  
+(arity ActiveProcessFn 2)
+(arg1Isa ActiveProcessFn ModelFragmentType)
+(arg2Isa ActiveProcessFn Set-Mathematical)
+(resultIsa ActiveProcessFn ModelFragment) ; not a QPProcess, because it isn't necessarily tangible.
+(comment ActiveProcessFn "(ActiveProcessFn ?process-type ?binding-list) denotes the qualitative process that is the instantiation of ?process-type with ?binding-list. The binding-list is a set of (role-name  entity) pairs.")
+
+
+
+;;; Many Events (reified asynchronous signals) are in fact process limit
+;;; points, or warnings of impending process limit points.  We may want a
+;;; way to connect them to processes.
+
+;;; The problem with evaluating plans is that they often (read: almost 
+;;; always) involve deferred planning.  That means you really can only
+;;; critique policies and individual decisions.  Maybe individual expansions.
+;;; We might be able to trace back from an execution trace to individual
+;;; decisions that in combination were a bad idea.  Credit assignment is hard,
+;;; though.
+
+;;; We use outputsCreated and inputsDestroyed to reify the effects of events.
+;;; (also, objectActedOn, doneBy, objectSelected, infoTransferred)
+;;; We should have something like: (outputsCreated FC-City-BostonBuilt529932 Unit-111) 
+;;; We'd want to explain that kind of event in terms of processes and actions.
+;;; If the only thing on the queue is Settlers, then we're not going to have a 
+;;; unique action that initiated it (or rather, it keeps producing)
+
+
+(isa reifyQuantity BinaryRelation)
+(arity reifyQuantity 2)
+(arg1Isa reifyQuantity Microtheory)
+(arg2Isa reifyQuantity MeasurableQuantity)
+
+(isa reifyQuantities BinaryRelation)
+(arity reifyQuantities 2)
+(arg1Isa reifyQuantities Microtheory)
+(arg2Isa reifyQuantities Set-Mathematical)
+
+(<== (reifyQuantity ?mt ?quantity)
+     (reifyQuantities ?mt ?quantity-set)
+     (lookupOnly (elementOf ?quantity ?quantity-set)))
+
+
+;;; See EA/v7 qpframes.meld:
+(<== (quantityType ?quantity ?type)
+     (unifies (?fn ?val) ?quantity)
+     (resultIsa ?fn ?type))
+
+
+;;;
+;;; End Of File
+;;;

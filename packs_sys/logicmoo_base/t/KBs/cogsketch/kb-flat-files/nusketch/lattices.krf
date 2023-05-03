@@ -1,0 +1,76 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: lattices.meld
+;;;;    System: nusketch
+;;;;    Author: Madeline Usher
+;;;;   Created: September 25, 2012 14:44:07
+;;;;   Purpose: Knowledge about the lattices used in perceptual sketches to 
+;;;;            divide a layer into grid entries.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa NuSketchLattice Collection)
+(genls NuSketchLattice SpatialThing)
+(comment NuSketchLattice 
+  "A two-dimensional grid that is used to divide a #$NuSketchLayer into regions.
+   This is usually used when it's useful to talk about the glyphs contained in
+   each grid entry,  (Also see #$NuSketchGlyph.)")
+
+
+(isa NuSketchLatticeEntry Collection)
+(genls NuSketchLatticeEntry SpatialThing)
+(comment NuSketchLatticeEntry
+  "A NuSketchLatticeEntry is one cell in the grid made by a #$NuSketchLattice.
+   See also #$NuSketchLatticeEntryFn.")
+
+
+(isa NuSketchLatticeEntryFn Function-Denotational)
+(arity NuSketchLatticeEntryFn 3)
+(arg1Isa NuSketchLatticeEntryFn NuSketchLattice)
+(arg2Isa NuSketchLatticeEntryFn PositiveInteger)
+(arg3Isa NuSketchLatticeEntryFn PositiveInteger)
+(resultIsa NuSketchLatticeEntryFn NuSketchLatticeEntry)
+(comment NuSketchLatticeEntryFn
+  "(NuSketchLatticeEntryFn <#$NuSketchLattice> <row> <col>) is the 
+   #$NuSketchLatticeEntry that exists in #$NuSketchLattice in the given row
+   and column.  Rows are numbered from top to bottom (starting with 1) and 
+   columns are numbered from left to right (starting with 1).")
+(atomicAnalogyNat NuSketchLatticeEntryFn)
+
+
+(isa entryForLattice BinaryRelation)
+(arity entryForLattice 2)
+(arg1Isa entryForLattice NuSketchLatticeEntry)
+(arg2Isa entryForLattice NuSketchLattice)
+(comment entryForLattice
+  "Says that the given #$NuSketchLatticeEntry is one of the cells making up
+   the grid in a #$NuSketchLattice.")
+
+
+(isa latticeEntryContainsGlyph BinaryRelation)
+(genlPreds latticeEntryContainsGlyph objectContains)
+(arity latticeEntryContainsGlyph 2)
+(arg1Isa latticeEntryContainsGlyph NuSketchLatticeEntry)
+(arg2Isa latticeEntryContainsGlyph NuSketchGlyph)
+(comment latticeEntryContainsGlyph
+  "Says that a given #$NuSketchLatticeEntry contains the specified 
+   #$NuSketchGlyph.")
+
+
+(arity latticeLastModifiedTime 2)
+(isa latticeLastModifiedTime BinaryRelation)
+(arg1Isa latticeLastModifiedTime NuSketchLattice)
+(arg2Isa latticeLastModifiedTime TimePoint)
+(comment latticeLastModifiedTime
+ "States when a specified #$NuSketchLattice was last modified.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

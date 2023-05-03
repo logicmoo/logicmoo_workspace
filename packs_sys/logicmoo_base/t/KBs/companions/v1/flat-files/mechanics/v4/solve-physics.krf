@@ -1,0 +1,294 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: solve-physics.lsp
+;;;;    System: 
+;;;;   Version: 1.0
+;;;;    Author: MEK
+;;;;   Created: December 14, 2005 09:41:47
+;;;;   Purpose: Solve Suggestions For Solving Physics Problems
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+(isa workOnPhysicsProblem TernaryPredicate)
+
+(defSuggestion SolvePhysicsProblemInMt
+    (workOnPhysicsProblem ?problem ?letter)
+  :subgoals ((analogForProblem ?problem ?matcher)
+             (forEffectOnly 
+              (multipleChoiceSingleOptionList ?foo ?bar))
+             (deriveAnswerForProblem ?problem ?answer)
+             (selectMultipleChoiceAnswer ?problem ?answer ?letter)))
+
+
+(isa deriveAnswerForProblem TernaryPredicate)
+
+(defSuggestion UseAnalogyToCalculateQuantitativeAnswer
+    (deriveAnswerForProblem ?problem ?answer)
+  :subgoals ((quantityForProblem ?problem ?quantity) 
+             (solvePhysicsProblemForQuantity ?problem
+                                             ?quantity ?answer)))
+
+(defSuggestion UseAnalogyToDeriveQualitativeAnswer
+    (deriveAnswerForProblem ?problem ?answer)
+  :subgoals ((qualitativeProblem ?problem)
+             (solveQualitativePhysicsProblem ?problem ?answer)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Handling numerical problems
+
+(isa solvePhysicsProblemForQuantity Predicate)
+(arity solvePhysicsProblemForQuantity 3)
+
+(defSuggestion SolvePhysicsProblem-Numeric
+    (solvePhysicsProblemForQuantity ?problem ?quantity ?answer) 
+  :subgoals ((numericProblem ?problem) 
+             (solveForNumericalValue ?quantity ?answer (TheSet))))
+
+(defSuggestion SolveRelatedQuantityForNumericalValue
+    (solveRelatedQuantityForNumericalValue (MeasurementAtFn ?q ?e)
+                                           (MeasurementAtFn ?q ?other-e)
+                                           ?value ?equation-set)
+  :subgoals ((evaluate ?new-equation-set
+                       (SetAdjoinFn ?equation-set
+                                    (mathEquals (MeasurementAtFn ?q ?e)
+                                                (MeasurementAtFn ?q ?other-e))))
+             (solveForNumericalValue (MeasurementAtFn ?q ?other-e)
+                                     ?other-answer ?new-equation-set)
+             (unifies ?other-answer ?value)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Symbolic Specific
+
+(defSuggestion SolvePhysicsProblem-Symbolic
+    (solvePhysicsProblemForQuantity ?problem ?quantity ?answer)
+  :subgoals
+  ((symbolicProblem ?problem) 
+   (solveForSymbolicValue ?quantity ?answer (TheSet))))
+
+;;; The simplest kind of qualitative problem is elaboration of a single
+;;; qualitative state, given partial information about it.  For example,
+;;; in problem 11, we have a pulling occurring, but whether or not that leads
+;;; to motion is an essential question that has to be answered.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Dispatch on types of qualitative problems
+;;;
+;;; stateElaborationProblem: Answers represent particular elaborations of a state.
+;;; numericalAssumptionConsistencyProblem: Answers represent values that may or may not be
+;;;    consistent with the state of affairs described in the problem statement.  
+
+
+(isa solveQualitativePhysicsProblem Predicate)
+(arity solveQualitativePhysicsProblem 3)
+
+(defSuggestion DealingWithStateElaborationProblem
+    (solveQualitativePhysicsProblem ?problem ?answer)
+  :subgoals ((stateElaborationProblem ?problem)
+             (solveStateElaborationProblem ?problem ?answer)))
+
+(defSuggestion DealingWithNumericalAssumptionConsistencyProblem
+    (solveQualitativePhysicsProblem ?problem ?answer)
+  :subgoals ((numericalAssumptionConsistencyProblem ?problem)
+             (solveNumericalAssumptionConsistencyProblem ?problem ?answer)))
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Solving qualitative state elaboration questions
+;;;
+;;; Our approach to this kind of problem is
+;;; 1. Create microtheories for each answer choice, inheriting from the Mt of the problem.
+;;; 2. Determine what criticial information must be found to distinguish between them.
+;;; 3. Solve for that information in the original problem Mt.
+;;; 4. Determine which answer choice Mt is consistent with what has been found.
+;;; N.B. if none are consistent, then conclusions that are too strong have been reached.
+;;;      if more than one are consistent, then the conclusions drawn are too weak.
+;;; SolveStateElaborationProblem figures out what quantity to solve for.
+;;; N.B. We are assuming there is only one right now.  
+
+(isa solveStateElaborationProblem Predicate)
+(arity solveStateElaborationProblem 2)
+
+(defSuggestion SolveStateElaborationProblemQuantity
+    (solveStateElaborationProblem ?problem ?answer)
+  :subgoals ((hypotheticalMicrotheoryOfTest ?problem ?baseMt)
+             (microtheoryForAnswerChoice ?problem ?baseMt ?alternateMt)
+             (solveRelevantQuantityForAnswerChoices ?problem ?quantity ?answer)
+             ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Finding quantities to solve for
+;;;
+;;; This is subtle, because the quantities that show up in events introduced by
+;;; answer choices may be different from the events that show up in the original
+;;; context.  Yet it is events from the original context that will tell us how to
+;;; solve things here.
+;;; For example, in Problem 11, the quantity found in the answer choices was
+;;; (MeasurementAtFn ((QPQuantityFn Acceleration) Box-11-0) Translation-11-0)
+;;; but the relevant equations were in terms of the pulling, i.e.,
+;;; (mathEquals
+;;;  (MeasurementAtFn ((QPQuantityFn Acceleration) Box-11-0) Pulling-11-0)
+;;;  (QuotientFn (MeasurementAtFn (# Box-11-0) Pulling-11-0)
+;;;   (MeasurementAtFn (# Box-11-0) Pulling-11-0))))
+
+(isa solveRelevantQuantityForAnswerChoices Predicate)
+(arity solveRelevantQuantityForAnswerChoices 3)
+
+(defSuggestion FindQuantitiesToSolveFor
+    (solveRelevantQuantityForAnswerChoices ?problem ?quantity ?answer)
+  :subgoals ((multipleChoiceSingleOptionList ?problem (TheList ?value ?choice))
+             (quantitySuggestedByAnswerChoice ?choice ?problem ?q ?e ?e-original)
+             ;; Solve it, and trust that the result information can be propagated
+             (solveForNumericalValue (MeasurementAtFn ?q ?e-original) ?answer (TheSet))
+             (unifies (MeasurementAtFn ?q ?e-original) ?quantity)))
+
+;; We've computed some amount of information at this point.
+;; need to see, for each choice, if qualitative information about it is consistent
+;; or inconsistent with what is known.  This is slightly complicated because we have
+;; to distinguish between the known inconsistent, the known consistent, and the unknowns.
+
+(defSuggestion EvaluateAnswerChoiceConsistency
+    (evaluateConsistencyOfAnswerChoices ?problem ?i-quantity ?choice)
+  :subgoals ((wmOnly
+              (multipleChoiceSingleOptionList ?problem
+                                              (TheList ?prop ?choice)))
+             (uninferredSentence (inconsistentChoice ?problem ?choice))
+             (knownConsistentChoice ?problem ?choice)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Numerical consistency problems
+;;; Option a) We need to solve for the limit point and then we need to compare answers?
+;;; Option b) Instead we need the with possible world thing Tom wrote
+;;; We use withCounterfactual to assert the value and then we
+;;; do exactly what we do with the numeric solving, but this is painful
+
+(isa solveNumericalAssumptionConsistencyProblem Predicate)
+(arity solveNumericalAssumptionConsistencyProblem 2)
+
+;;; This assumes that we are looking for a quantity, a value, and a direction
+(defSuggestion SolveNumericalAssumptionConsistencyProblem
+    (solveNumericalAssumptionConsistencyProblem ?problem ?answer)
+  :subgoals ((quantityRelevantForNumericalConsistency ?problem ?quantity ?value)
+	     (tell (valueOf ?quantity ?value))
+	     (solveForAnswerChoiceQuantity ?problem ?ans-quantity ?ans-value)
+	     (selectMultipleChoiceAnswer-NumericConsistency
+	      ?problem ?quantity ?ans-quantity ?ans-value ?answer)))
+
+(defSuggestion SolveForAnswerChoiceQuantity
+    (solveForAnswerChoiceQuantity ?problem ?quantity ?answer-value)
+  :subgoals ((termToSolveFor (TestQueryFn ?problem)
+			     (consistent (valueOf ?quantity ?value)) ?value)
+	     (solveForNumericalValue ?quantity ?answer-value (TheSet))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; General Problem Solving
+
+(defSuggestion ValueOf-By-Assumption-Step
+    (valueOf ?quantity ?value)
+  :subgoals ((assumedQuantityStepForQuantity ?step ?step-preconditions ?value ?quantity)
+	     (applicableValueForQuantity ?quantity ?value)
+             (allPreconditionsSatisfied ?step-preconditions)))
+
+(defSuggestion ValueOf-By-Solve
+    (valueOf ?quantity ?value)
+  :subgoals ((solveForNumericalValue ?quantity ?value (TheSet))))
+
+
+(defSuggestion SolveForNumericalValue-Debug
+    (gatherAndSolveForNumericalValue ?parameter ?value)
+  :subgoals (
+             ;; For batch gathering of equations
+             (forEffectOnly (availableEquation ?eqn))
+             (solveForNumericalValue ?parameter ?value (TheSet))))
+
+(defSuggestion SolveForNumericalValue-ViaTimeInvariantValue
+    (solveForNumericalValue (MeasurementAtFn ?parameter ?i-event) ?value ?equation-set)
+  :test (and (operatorFormulas ?quantity-type ?parameter)
+	     (ist-Information PhysicsBackgroundMt (timeInvariantQuantity ?quantity-type)))
+  :subgoals ((uninferredSentence (valueOf ?parameter ?temp-value))	     
+	     (findIndependentEquationFor ?parameter ?equation-set ?new-equation ?new-equation-set)
+	     (solveEquationForNumericalValue ?new-equation ?parameter ?value ?new-equation-set)))
+
+(isa solveForSymbolicValue Predicate)
+(arity solveForSymbolicValue 3)
+
+(defSuggestion SolveForSymbolicValue-ViaTimeInvariantValue
+    (solveForSymbolicValue (MeasurementAtFn ?parameter ?i-event) ?value ?equation-set)
+  :test (and (operatorFormulas ?quantity-type ?parameter)
+	     (ist-Information PhysicsBackgroundMt (timeInvariantQuantity ?quantity-type)))
+  :subgoals ((uninferredSentence (valueOf ?parameter ?temp-value))	     
+	     (findIndependentEquationFor ?parameter ?equation-set ?new-equation ?new-equation-set)
+	     (solveEquationForSymbolicValue ?new-equation ?parameter ?value ?new-equation-set)))
+
+(defSuggestion SolveForNumericalValue-ViaEquation
+    (solveForNumericalValue ?parameter ?value ?equation-set)
+  :subgoals
+  ((uninferredSentence (valueOf ?parameter ?temp-value))
+   (findIndependentEquationFor ?parameter ?equation-set ?new-equation ?new-equation-set)
+   (solveEquationForNumericalValue ?new-equation ?parameter ?value ?new-equation-set)))
+
+
+;;; Not the issue right now
+;;;(defSuggestion FindValueOfByCommonQuantityInIndependantEquations
+;;;    (paramterValueForEquationByEquation ?parameter ?equation ?value)
+;;;  :subgoals
+;;;  ((instantiatedEquationStepForQuantity ?step ?step-preconditions ?new-equation1 ?parameter ?equation)
+;;;   (quantityInEquation ?quantity ?new-equation1)
+;;;   (different ?quantity ?parameter)
+;;;   (instantiatedEquationStepForQuantity ?step ?step-preconditions ?new-equation2 ?quantity ?equation)
+;;;   (independentEquations ?new-equation1 ?new-equation2)
+;;;   (solveEquationFor ?new-equation1 ?quantity ?rhs-equation1)
+;;;   (solveEquationFor ?new-equation2 ?quantity ?rhs-equation2)
+;;;   (solveEquationFor (mathEquals ?rhs-equation1 ?rhs-equation2) ?parameter ?value)
+;;;   ))
+;;;   
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Selecting multiple choice answers
+
+(isa selectMultipleChoiceAnswer Predicate)
+(arity selectMultipleChoiceAnswer 3)
+
+(defSuggestion SelectingNumericMutlipleChoiceAnswer
+    (selectMultipleChoiceAnswer ?problem ?calculated-answer ?answer-choice)
+  :subgoals ((numericProblem ?problem)
+             (unknownSentence (numericalAssumptionConsistencyProblem ?problem))
+	     (sanityCheckAnswer ?calculated-answer ?problem ?sane-answer)
+	     (evaluate ?answer-choices (TheClosedRetrievalSetOf
+					(TheList ?letter ?value ?score)
+					(scoreForNumericalChoice ?letter ?value ?sane-answer ?score)))
+	     (evaluate ?answer-choice
+		       (FirstInListFn
+			(FirstInListFn
+			 (SortFn (QuoteFn ?answer-choices) lessThan ThirdInListFn))))))
+
+(defSuggestion SelectingNumericMutlipleChoiceAnswer-NumericalAssumption
+    (selectMultipleChoiceAnswer ?problem ?calculated-answer ?answer-choice)
+  :subgoals ((numericalAssumptionConsistencyProblem ?problem)
+	     (unifies ?calculated-answer ?answer-choice)))
+
+(defSuggestion SelectingSymbolicMultipleChoiceAnswer
+    (selectMultipleChoiceAnswer ?problem ?calculated-answer ?answer-choice)
+  :subgoals ((symbolicProblem ?problem)
+	     (evaluate ?answer-choices (TheClosedRetrievalSetOf
+					(TheList ?letter ?value ?score)
+					(scoreForSymbolicChoice ?letter ?value ?calculated-answer ?score)))
+             (evaluate ?answer-choice 
+		       (FirstInListFn 
+			(FirstInListFn 
+			 (SortFn (QuoteFn ?answer-choices) lessThan ThirdInListFn))))))
+
+;;; Stub
+(defSuggestion SelectingStateElaborationChoiceAnswer
+    (selectMultipleChoiceAnswer ?problem ?calculated-answer ?answer-choice)
+  :subgoals ((stateElaborationProblem ?problem)
+	     (sanityCheckAnswer ?calculated-answer ?problem ?sane-answer)
+             (multipleChoiceSingleOptionList ?problem (TheList ?value ?letter))
+             (uninferredSentence (inconsistentChoice ?problem ?letter))
+             (unifies ?letter ?answer-choice)))
+
+
+

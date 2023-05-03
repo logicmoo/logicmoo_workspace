@@ -1,0 +1,704 @@
+
+(in-microtheory MetaengineeringQuantityTypesMt)
+
+(genlMt MetaengineeringQuantityTypesMt MetaengineeringDimensionsMt)
+
+
+;;; Binrels
+(isa hasDimension BinaryPredicate)
+
+(isa hasQuantityDatatype BinaryPredicate)
+(isa hasSymbol BinaryPredicate)
+
+
+;;; Individuals
+
+(isa Absorption QuantityType)
+(hasDimension Absorption Dimensionless)
+(prettyString Absorption "absorption")
+(hasQuantityDatatype Absorption ScalarQuantity)
+
+(isa Acceleration QuantityType)
+(hasDimension Acceleration Acceleration-dimension)
+(prettyString Acceleration "acceleration")
+(hasQuantityDatatype Acceleration VectorQuantity)
+
+(isa Amplitude QuantityType)
+(hasDimension Amplitude Dimensionless)
+(prettyString Amplitude "amplitude")
+(hasQuantityDatatype Amplitude ScalarQuantity)
+
+(isa Angle QuantityType)
+(hasDimension Angle Angle-dimension)
+(prettyString Angle "angle")
+(hasQuantityDatatype Angle ScalarQuantity)
+
+(isa AngularAcceleration QuantityType)
+(hasDimension AngularAcceleration Angular-acceleration-dimension)
+(prettyString AngularAcceleration "angular acceleration")
+(hasQuantityDatatype AngularAcceleration VectorQuantity)
+(comment AngularAcceleration "A vector quantity denoting the time rate of change of angular velocity.")
+
+(isa AngularDisplacement QuantityType)
+(hasDimension AngularDisplacement Angle-dimension)
+(prettyString AngularDisplacement "angular displacement")
+(hasQuantityDatatype AngularDisplacement VectorQuantity)
+(comment AngularDisplacement "A vector quantity denoting change in angular position (angle), and measured in radians.")
+
+(isa AngularMomentumVector QuantityType)
+(hasDimension AngularMomentumVector Angular-momentum-dimension)
+(prettyString AngularMomentumVector "angular momentum")
+(hasQuantityDatatype AngularMomentumVector VectorQuantity)
+
+(isa AngularVelocityVector QuantityType)
+(hasDimension AngularVelocityVector Angular-velocity-dimension)
+(prettyString AngularVelocityVector "angular velocity")
+(hasQuantityDatatype AngularVelocityVector VectorQuantity)
+(comment AngularVelocityVector "A vector quantity denoting the time-rate of angular displacement.")
+
+(isa Area QuantityType)
+(hasDimension Area Area-dimension)
+(prettyString Area "area")
+(hasQuantityDatatype Area ScalarQuantity)
+
+(isa AtomicMass QuantityType) ; cf, atomicWeight
+(genls AtomicMass Mass)
+(hasDimension AtomicMass Mass-dimension)
+(prettyString AtomicMass "atomic mass")
+(hasQuantityDatatype AtomicMass ScalarQuantity)
+(comment AtomicMass "The total rest mass of the constituents of an atomic nucleous.")
+
+(isa Bandwidth QuantityType)
+(hasDimension Bandwidth Information-flow-rate-dimension)
+(prettyString Bandwidth "bandwidth")
+(hasQuantityDatatype Bandwidth ScalarQuantity)
+
+(isa BindingEnergy QuantityType)
+(hasDimension BindingEnergy Energy-dimension)
+(prettyString BindingEnergy "binding energy")
+(hasQuantityDatatype BindingEnergy ScalarQuantity)
+(comment BindingEnergy "The energy required to remove a particle from a system, or to decompose a system to its constituents.
+Defined as the sum of the resultant masses minus the initial nuclear mass.")
+
+(isa BoilingPoint QuantityType)  ; cf, boilingPoint
+(genls BoilingPoint Temperature)
+(hasDimension BoilingPoint Temperature-dimension)
+(prettyString BoilingPoint "boiling-point")
+(hasQuantityDatatype BoilingPoint ScalarQuantity)
+(comment BoilingPoint "The temperature at which a liquid boils at a specified pressure.")
+
+(isa ElectricalCapacitance QuantityType)
+(hasDimension ElectricalCapacitance Electric-capacity-dimension)
+(prettyString ElectricalCapacitance "capacitance")
+(hasQuantityDatatype ElectricalCapacitance ScalarQuantity)
+
+(isa ElectricCharge QuantityType)
+(hasDimension ElectricCharge Charge-dimension)
+(prettyString ElectricCharge "charge")
+(hasQuantityDatatype ElectricCharge ScalarQuantity)
+
+(isa ChargeDensity QuantityType)  ; s.b. (PerFn Charge Volume)
+(hasDimension ChargeDensity Charge-density-dimension)
+(prettyString ChargeDensity "charge density")
+(hasQuantityDatatype ChargeDensity ScalarQuantity)
+
+(isa ChemicalComposition QuantityType)  ; s.b. ChemicalSubstanceType
+(genls ChemicalComposition ChemicalSubstanceType)
+(prettyString ChemicalComposition "chemical composition")
+(hasQuantityDatatype ChemicalComposition ScalarQuantity)
+
+(isa ChemicalPotentialEnergy QuantityType)
+(hasDimension ChemicalPotentialEnergy Energy-dimension)
+(prettyString ChemicalPotentialEnergy "chemical potential energy")
+(hasQuantityDatatype ChemicalPotentialEnergy ScalarQuantity)
+
+(isa CoefficientOfExpansion QuantityType)
+(hasDimension CoefficientOfExpansion Dimensionless)
+(prettyString CoefficientOfExpansion "coefficient-of-expansion")
+(hasQuantityDatatype CoefficientOfExpansion ScalarQuantity)
+
+(isa Color QuantityType)
+(hasDimension Color Frequency-dimension)
+(prettyString Color "color")
+(hasQuantityDatatype Color ScalarQuantity)
+
+(isa Compression QuantityType)
+(genls Compression ForceVector)
+(hasDimension Compression Force-dimension)
+(prettyString Compression "compression")
+(hasQuantityDatatype Compression VectorQuantity)
+(comment Compression "A \"pushing together\" force")
+
+(isa ConcentrationStrength QuantityType)
+(hasDimension ConcentrationStrength Dimensionless)
+(prettyString ConcentrationStrength "concentration")
+(hasQuantityDatatype ConcentrationStrength ScalarQuantity)
+
+(isa Conductivity QuantityType) ; inverse of Resistivity
+(hasDimension Conductivity Electrical-conductivity-dimension)
+(prettyString Conductivity "conductivity")
+(hasQuantityDatatype Conductivity ScalarQuantity)
+
+(isa Couple QuantityType)
+(prettyString Couple "couple")
+(hasQuantityDatatype Couple VectorQuantity)
+(comment Couple "Two equal and opposite forces separated by a distance.")
+
+(isa ElectricalCurrentLevel QuantityType)
+(hasDimension ElectricalCurrentLevel Electric-current-dimension)
+(prettyString ElectricalCurrentLevel "current")
+(hasQuantityDatatype ElectricalCurrentLevel ScalarQuantity)
+
+(isa CurrentDensity QuantityType)
+(hasDimension CurrentDensity Current-density-dimension)
+(prettyString CurrentDensity "current density")
+(hasQuantityDatatype CurrentDensity VectorQuantity)
+
+(isa Delay QuantityType)
+(genls Delay Time-Quantity)
+(hasDimension Delay Time-dimension)
+(prettyString Delay "delay")
+(hasQuantityDatatype Delay ScalarQuantity)
+
+(isa DielectricConstant QuantityType)
+(prettyString DielectricConstant "dielectric-constant")
+(hasQuantityDatatype DielectricConstant ScalarQuantity)
+
+(isa Diffraction QuantityType)
+(prettyString Diffraction "diffraction")
+(hasQuantityDatatype Diffraction ScalarQuantity)
+
+(isa DioptricPower QuantityType)
+(hasDimension DioptricPower Dimensionless)
+(prettyString DioptricPower "dioptric power")
+(hasQuantityDatatype DioptricPower ScalarQuantity)
+
+(isa Direction QuantityType)
+(hasDimension Direction Angle-dimension)
+(prettyString Direction "direction")
+(hasQuantityDatatype Direction ScalarQuantity)
+
+(isa Dispersion QuantityType)
+(hasDimension Dispersion Dimensionless)
+(prettyString Dispersion "dispersion")
+(hasQuantityDatatype Dispersion ScalarQuantity)
+
+(isa Displacement QuantityType)
+(hasDimension Displacement Length-dimension)
+(prettyString Displacement "displacement")
+(hasQuantityDatatype Displacement VectorQuantity)
+(comment Displacement "A vector quantity denoting change in position.")
+
+(isa DragForce QuantityType)
+(genls DragForce ForceVector)  ; Is DragForce really a scalar?
+(hasDimension DragForce Force-dimension)
+(prettyString DragForce "drag - force")
+(hasQuantityDatatype DragForce VectorQuantity)
+(comment DragForce "The quantity of force resisting motion through a fluid")
+
+(isa Ductility QuantityType)
+(prettyString Ductility "ductility")
+(hasQuantityDatatype Ductility ScalarQuantity)
+(comment Ductility "A material property (especially of metals) - the ability to be plastically deformed by elongation, without fracture.")
+
+(isa ElasticPotentialEnergy QuantityType)
+(hasDimension ElasticPotentialEnergy Energy-dimension)
+(prettyString ElasticPotentialEnergy "elastic potential energy")
+(hasQuantityDatatype ElasticPotentialEnergy ScalarQuantity)
+
+(isa Electric-flux QuantityType)
+(hasDimension Electric-flux Charge-flow-rate-dimension)
+(prettyString Electric-flux "electric-flux")
+(hasQuantityDatatype Electric-flux ScalarQuantity)
+
+(isa Emissivity QuantityType)
+(prettyString Emissivity "emissivity")
+(hasQuantityDatatype Emissivity ScalarQuantity)
+
+(isa EnergyQuantity QuantityType)
+(hasDimension EnergyQuantity Energy-dimension)
+(prettyString EnergyQuantity "energy")
+(hasQuantityDatatype EnergyQuantity ScalarQuantity)
+(comment EnergyQuantity "The capacity to do work.
+Along with matter and information, one of the fundamental constituents of the universe.")
+
+(isa Enthalpy QuantityType)  ; cf, enthalpyOfSystem
+(genls Enthalpy EnergyQuantity)
+(hasDimension Enthalpy Enthalpy-dimension)
+(prettyString Enthalpy "enthalpy")
+(hasQuantityDatatype Enthalpy ScalarQuantity)
+
+(isa Entropy-Quantity QuantityType)  ; cf, entropyOfSystem
+(hasDimension Entropy-Quantity Entropy-dimension)
+(prettyString Entropy-Quantity "entropy")
+(hasQuantityDatatype Entropy-Quantity ScalarQuantity)
+
+(isa FilmCoefficient QuantityType)
+(prettyString FilmCoefficient "film-coefficient")
+(hasQuantityDatatype FilmCoefficient ScalarQuantity)
+
+(isa FlowRate QuantityType)
+(hasDimension FlowRate Volumetric-flow-rate)
+(prettyString FlowRate "flow")
+(hasQuantityDatatype FlowRate VectorQuantity)
+
+(isa FocalLength QuantityType)  ; relate to Focus-Geometric
+(genls FocalLength Length)
+(hasDimension FocalLength Length-dimension)
+(prettyString FocalLength "focal length")
+(hasQuantityDatatype FocalLength ScalarQuantity)
+
+(isa ForceVector QuantityType)  ; s.b. ForceVector
+(hasDimension ForceVector Force-dimension)
+(prettyString ForceVector "force")
+(hasQuantityDatatype ForceVector VectorQuantity)
+
+(isa FreeEnergy QuantityType)  ; cf, gibbsFreeEnergyOfSystem
+(genls FreeEnergy EnergyQuantity)
+(hasDimension FreeEnergy Energy-dimension)
+(prettyString FreeEnergy "free energy")
+(hasQuantityDatatype FreeEnergy ScalarQuantity)
+(comment FreeEnergy "The Gibbs free energy.")
+
+(isa FreezingPoint QuantityType)  ;  cf, freezingPoint
+(genls FreezingPoint Temperature)
+(hasDimension FreezingPoint Temperature-dimension)
+(prettyString FreezingPoint "freezing-point")
+(hasQuantityDatatype FreezingPoint ScalarQuantity)
+(comment FreezingPoint "The temperature at which a liquid solidifies.
+See Berry, R.Stephen, \"When the Melting and Freezing Points Are Not the Same\", Scientific American, August 1990, p. 68-74.")
+
+(isa Frequency QuantityType)
+(hasDimension Frequency Frequency-dimension)
+(prettyString Frequency "frequency")
+(hasQuantityDatatype Frequency ScalarQuantity)
+(comment Frequency "The rate of a cyclical signal")
+
+(isa Friction QuantityType) ; cf, coefficientOfFriction, coefficientOfFriction-Kinetic, coefficientOfFriction-Static
+;(genls Friction ForceVector)
+(hasDimension Friction Force-dimension)
+(prettyString Friction "friction")
+(hasQuantityDatatype Friction ScalarQuantity)
+(comment Friction "The frictional force is the resistance which opposes an effort to slide or roll one body over another.")
+
+(isa Gain QuantityType)  ; s.b. Gain-Electronics
+(hasDimension Gain Dimensionless)
+(prettyString Gain "gain")
+(hasQuantityDatatype Gain ScalarQuantity)
+(comment Gain "A ratio of amplitudes or intensities, therefore a dimensionless quantity.")
+
+(isa Gas QuantityType)
+(prettyString Gas "gas")
+(hasQuantityDatatype Gas ScalarQuantity)
+
+(isa GravitationalForceQuantity QuantityType)
+(prettyString GravitationalForceQuantity "gravitational force")
+(comment GravitationalForceQuantity "The force of gravity")
+
+(isa GravitationalPotentialEnergy QuantityType)
+(hasDimension GravitationalPotentialEnergy Energy-dimension)
+(prettyString GravitationalPotentialEnergy "gravitational potential energy")
+(hasQuantityDatatype GravitationalPotentialEnergy ScalarQuantity)
+
+(isa GroupVelocity QuantityType)
+(hasDimension GroupVelocity Velocity-dimension)
+(prettyString GroupVelocity "group velocity")
+(hasQuantityDatatype GroupVelocity VectorQuantity)
+(comment GroupVelocity "The group velocity of a wave describes the propagation of the envelope of a wave packet.")
+
+(isa H-PlancksConstant QuantityType)
+(hasDimension H-PlancksConstant Dimensionless)
+(prettyString H-PlancksConstant "h - Planck's Constant")
+(hasQuantityDatatype H-PlancksConstant ScalarQuantity)
+(comment H-PlancksConstant "\"The physical dimension of the quantum constant h is a product of energy and time, or /erg * /sec in c.g.s. units, and is known in classical mechanics as 'action'; action appears in many important considerations, such as Hamilton's Principle of Least Action.\" - Gammow, \"Thirty Years that Shook Physics\",  p. 31.")
+
+(isa Hardness QuantityType)
+(hasDimension Hardness Dimensionless)
+(prettyString Hardness "hardness")
+(hasQuantityDatatype Hardness ScalarQuantity)
+
+(isa HeatFlux QuantityType)  ; HeatFlowRateFn of a process
+(hasDimension HeatFlux Heat-flow-rate-dimension)
+(prettyString HeatFlux "heat-flux")
+(hasQuantityDatatype HeatFlux ScalarQuantity)
+(comment HeatFlux "The flow of heat, generally from a hot to a cold substance.")
+
+(isa Image QuantityType) ; a Document in OpenCyc
+(prettyString Image "image")
+(comment Image "A generalized notion of two-dimensional information.")
+
+(isa Impedance QuantityType)
+(prettyString Impedance "impedance")
+(hasQuantityDatatype Impedance VectorQuantity)
+(comment Impedance "The total opposition to the flow of current in an electrical circuit.")
+
+(isa IndexOfRefraction QuantityType)
+(hasDimension IndexOfRefraction Dimensionless)
+(prettyString IndexOfRefraction "index of refraction")
+(hasQuantityDatatype IndexOfRefraction ScalarQuantity)
+(comment IndexOfRefraction "A measure of the speed of light in the medium")
+
+(isa ElectricalInductance QuantityType)
+(hasDimension ElectricalInductance Inductance-dimension)
+(prettyString ElectricalInductance "inductance")
+(hasQuantityDatatype ElectricalInductance ScalarQuantity)
+
+(isa Information QuantityType)
+(hasDimension Information Information-dimension)
+(prettyString Information "information")
+(hasQuantityDatatype Information ScalarQuantity)
+(comment Information "Along with energy, matter, space and time, one of the fundamental constituents of the universe.")
+
+(isa InformationDensity QuantityType)
+(hasDimension InformationDensity Information-density-dimension)
+(prettyString InformationDensity "information density")
+(hasQuantityDatatype InformationDensity ScalarQuantity)
+(comment InformationDensity "Typically in bits per square inch or bits pre cubic centimeter.")
+
+(isa InformationFlowRate QuantityType)
+(hasDimension InformationFlowRate Information-flow-rate-dimension)
+(prettyString InformationFlowRate "information flow rate")
+(hasQuantityDatatype InformationFlowRate ScalarQuantity)
+(comment InformationFlowRate "Typically in bits per second.")
+
+(isa InstantaneousCenterOfVelocity QuantityType)
+(prettyString InstantaneousCenterOfVelocity "instantaneous center of velocity")
+(comment InstantaneousCenterOfVelocity "A quantity in planar kinematics")
+
+(isa Intensity QuantityType)  ; cf, amplitudeOfWave
+(hasDimension Intensity Luminous-intensity-dimension)
+(prettyString Intensity "intensity")
+(hasQuantityDatatype Intensity ScalarQuantity)
+(comment Intensity "The intensity of illumination is the quantity of light received on a unit of surface.")
+
+(isa K-BoltzmannsConstant QuantityType)
+(prettyString K-BoltzmannsConstant "k - Boltzmann's Constant")
+(comment K-BoltzmannsConstant "k = 1.380 x 10^-23 joules/degree Kelvin")
+
+(isa KineticEnergy-Quantity QuantityType)
+(hasDimension KineticEnergy-Quantity Energy-dimension)
+(prettyString KineticEnergy-Quantity "kinetic-energy")
+(hasQuantityDatatype KineticEnergy-Quantity ScalarQuantity)
+
+(isa Length QuantityType)  ; cf, lengthOfObject
+(hasDimension Length Length-dimension)
+(prettyString Length "length")
+(hasQuantityDatatype Length ScalarQuantity)
+
+(isa Lift QuantityType)
+(genls Lift ForceVector)
+(hasDimension Lift Force-dimension)
+(prettyString Lift "lift")
+(hasQuantityDatatype Lift VectorQuantity)
+(comment Lift "The upward force against gravity.")
+
+(isa Lift-to-drag-ratio QuantityType) ; should have genls = PerFn 
+(hasDimension Lift-to-drag-ratio Dimensionless)
+(prettyString Lift-to-drag-ratio "lift-to-drag-ratio")
+(hasQuantityDatatype Lift-to-drag-ratio ScalarQuantity)
+(comment Lift-to-drag-ratio "The ratio of lift-to-drag for a given airfoil shape")
+
+(isa Light QuantityType)
+(prettyString Light "light")
+(hasQuantityDatatype Light ScalarQuantity)
+
+(isa Liquid QuantityType)
+(prettyString Liquid "liquid")
+(hasQuantityDatatype Liquid ScalarQuantity)
+
+(isa MachNumber QuantityType)
+(hasDimension MachNumber Dimensionless)
+(hasQuantityDatatype MachNumber ScalarQuantity)
+(prettyString MachNumber "Mach number")
+
+(isa Magnetic-flux QuantityType)  ; s.b. rate of change of MagneticField?
+(hasDimension Magnetic-flux Magnetic-flux-dimension)
+(prettyString Magnetic-flux "magnetic-flux")
+(hasQuantityDatatype Magnetic-flux ScalarQuantity)
+
+(isa Magnification QuantityType)
+(hasDimension Magnification Dimensionless)
+(prettyString Magnification "magnification")
+(hasQuantityDatatype Magnification ScalarQuantity)
+
+(isa Mass QuantityType)  ; cf, massOfObject
+(hasDimension Mass Mass-dimension)
+(prettyString Mass "mass")
+(hasQuantityDatatype Mass ScalarQuantity)
+
+(isa MassDefect QuantityType)
+(genls MassDefect Mass)
+(prettyString MassDefect "mass defect")
+(hasQuantityDatatype MassDefect ScalarQuantity)
+(comment MassDefect "Mass defect is the difference between the mass of an atom and the sum of the masses of its constituents in their unbound states.  It is accounted for by the mass-energy equivalence of the binding energy.
+Aston's precision study of isotopic masses leads to his mass-defect curve.")
+
+(isa Density QuantityType)
+(hasDimension Density Density-dimension)
+(prettyString Density "mass density")
+(hasQuantityDatatype Density ScalarQuantity)
+
+(isa Matter QuantityType)
+(prettyString Matter "matter")
+(hasQuantityDatatype Matter ScalarQuantity)
+(comment Matter "Along with energy and information, one of the fundamental constituents of the universe.")
+
+(isa MeanFreePathOfAMoleculeInAGas QuantityType)
+(genls MeanFreePathOfAMoleculeInAGas Distance)
+(hasDimension MeanFreePathOfAMoleculeInAGas Length-dimension)
+(hasQuantityDatatype MeanFreePathOfAMoleculeInAGas ScalarQuantity)
+(prettyString MeanFreePathOfAMoleculeInAGas "Mean Free Path of a molecule in a gas")
+(comment MeanFreePathOfAMoleculeInAGas "Calculated by Maxwell.  This was only the second molecular magnitude determined.
+Published in Phil. Mag., XIX (1860; 4th series).")
+
+(isa MolecularWeight QuantityType)  ; cf, molecularWeight
+(genls MolecularWeight Mass)
+(hasDimension MolecularWeight Mass-dimension)
+(prettyString MolecularWeight "molecular-weight")
+(hasQuantityDatatype MolecularWeight ScalarQuantity)
+
+(isa MomentumVector QuantityType)
+(hasDimension MomentumVector Force-dimension)
+(prettyString MomentumVector "momentum")
+(hasQuantityDatatype MomentumVector VectorQuantity)
+
+(isa Opaqueness QuantityType)  ; cf, Opaque and transparencyOfObject
+(hasDimension Opaqueness Dimensionless)
+(prettyString Opaqueness "opaqueness")
+(hasQuantityDatatype Opaqueness ScalarQuantity)
+
+(isa Permeability QuantityType)
+(hasDimension Permeability Dimensionless)
+(prettyString Permeability "permeability")
+(hasQuantityDatatype Permeability ScalarQuantity)
+
+(isa Phase-Angle QuantityType)
+(hasDimension Phase-Angle Angle-dimension)
+(prettyString Phase-Angle "phase - angle")
+(hasQuantityDatatype Phase-Angle ScalarQuantity)
+
+(isa Plasma QuantityType)
+(prettyString Plasma "plasma")
+(hasQuantityDatatype Plasma ScalarQuantity)
+(comment Plasma "The state of matter consisting of an ionized gas.  Usually, but not always at high temperature")
+
+(isa Polarization QuantityType)
+(hasDimension Polarization Angle-dimension)
+(prettyString Polarization "polarization")
+(hasQuantityDatatype Polarization VectorQuantity)
+
+(isa Position QuantityType)  ; cf, Point
+(hasDimension Position Length-dimension)
+(prettyString Position "position")
+(hasQuantityDatatype Position ScalarQuantity)
+
+(isa Potential QuantityType)  ; cf, ElectricalPotentialDifference
+(hasDimension Potential Electromotive-force-dimension)
+(prettyString Potential "potential")
+(hasQuantityDatatype Potential ScalarQuantity)
+
+(isa PotentialEnergy QuantityType)  ; cf, potentialEnergyOfObject
+(genls PotentialEnergy EnergyQuantity)
+(hasDimension PotentialEnergy Energy-dimension)
+(prettyString PotentialEnergy "potential-energy")
+(hasQuantityDatatype PotentialEnergy ScalarQuantity)
+(comment PotentialEnergy "energy of position.")
+
+(isa Power QuantityType)
+(hasDimension Power Power-dimension)
+(prettyString Power "power")
+(hasQuantityDatatype Power ScalarQuantity)
+(comment Power "The time-rate at which work is done.")
+
+(isa Pressure QuantityType)
+(hasDimension Pressure Pressure-dimension)
+(prettyString Pressure "pressure")
+(hasQuantityDatatype Pressure ScalarQuantity)
+
+(isa Propagation QuantityType)
+(prettyString Propagation "propagation")
+(hasQuantityDatatype Propagation VectorQuantity)
+
+(isa QuantumSpin QuantityType)
+(prettyString QuantumSpin "quantum spin")
+(hasQuantityDatatype QuantumSpin ScalarQuantity)
+
+(isa Radiation QuantityType)  ; cf, RadiationDose
+(prettyString Radiation "radiation")
+(hasQuantityDatatype Radiation VectorQuantity)
+
+(isa Reflection-Visual QuantityType)
+(hasDimension Reflection-Visual Dimensionless)
+(prettyString Reflection-Visual "reflection")
+(hasQuantityDatatype Reflection-Visual VectorQuantity)
+
+(isa ElectricalResistance QuantityType)
+(hasDimension ElectricalResistance Electrical-resistance-dimension)
+(prettyString ElectricalResistance "resistance")
+(hasQuantityDatatype ElectricalResistance ScalarQuantity)
+
+(isa Resistivity QuantityType)
+(hasDimension Resistivity Electrical-resistivity-dimension)
+(prettyString Resistivity "resistivity")
+(hasQuantityDatatype Resistivity ScalarQuantity)
+
+(isa Resonance QuantityType)  ; cf, ResonanceEnergyTransfer
+(prettyString Resonance "resonance")
+(hasQuantityDatatype Resonance ScalarQuantity)
+(comment Resonance "The reinforcement of a wave by the union of direct and reflected waves.")
+
+(isa ReynoldsNumber-Quantity QuantityType)
+(hasQuantityDatatype ReynoldsNumber-Quantity ScalarQuantity)
+(prettyString ReynoldsNumber-Quantity "Reynolds number")
+
+(isa Shape QuantityType)  ; cf, objectShapeType, SpatialThingTypeByShape
+(prettyString Shape "shape")
+(comment Shape "Actually a rather generalized notion of quantity.")
+
+(isa ShearStress QuantityType)
+(hasDimension ShearStress Force-dimension)
+(prettyString ShearStress "shear force")
+(hasQuantityDatatype ShearStress VectorQuantity)
+
+(isa Signal-to-noiseRatio QuantityType)  ; s.b. a ratio  of InformationBearingWavePropagation to (CollectionDifferenceFn WavePropagation InformationBearingWavePropagation), aka Noise
+(hasDimension Signal-to-noiseRatio Information-ratio-dimension)
+(prettyString Signal-to-noiseRatio "signal-to-noise ratio")
+(hasQuantityDatatype Signal-to-noiseRatio ScalarQuantity)
+(comment Signal-to-noiseRatio "A dimensionless ratio of the strength of an information signal to random noise on a communication channel.")
+
+(isa Solid QuantityType)
+(prettyString Solid "solid")
+(hasQuantityDatatype Solid ScalarQuantity)
+
+(isa Sound QuantityType)
+(prettyString Sound "sound")
+(hasQuantityDatatype Sound ScalarQuantity)
+
+(isa SpecificGravity QuantityType)
+(genls SpecificGravity MultiDimensionalQuantity)
+(genls SpecificGravity TangiblePhysicalQuantity)
+(hasDimension SpecificGravity Dimensionless)
+(prettyString SpecificGravity "specific-gravity")
+(hasQuantityDatatype SpecificGravity ScalarQuantity)
+(comment SpecificGravity "aka relative density.  A ratio of densities.  Dimensionless.")
+
+(isa SpecificHeat QuantityType)  ; cf, specificHeatCapacity in BOTE
+(hasDimension SpecificHeat Specific-heat-dimension)
+(prettyString SpecificHeat "specific heat")
+(hasQuantityDatatype SpecificHeat ScalarQuantity)
+(comment SpecificHeat "see also latent heat of melting")
+
+(isa SpecificImpulse QuantityType)
+;;; genls = MultiDimensionalQuantity?
+(prettyString SpecificImpulse "specific impulse")
+(hasQuantityDatatype SpecificImpulse ScalarQuantity)
+(comment SpecificImpulse "Typically used as a measure of instantaneous power of a rocket.")
+
+(isa SpeedOfLight QuantityType)    ; Isn't this a constant?
+(hasDimension SpeedOfLight Velocity-dimension)
+(prettyString SpeedOfLight "speed-of-light")
+(hasQuantityDatatype SpeedOfLight ScalarQuantity)
+
+(isa StateOfMatter QuantityType)
+(prettyString StateOfMatter "state of matter")
+(comment StateOfMatter "The abstract category of states of matter, ie, solid, liquid, gas, plasma.")
+
+(isa Strain QuantityType)       ; cf, CoefficientOfElasticity?
+(hasDimension Strain Dimensionless)
+(prettyString Strain "strain")
+(hasQuantityDatatype Strain TensorQuantity)
+(comment Strain "relative change in length in some direction due to applied stress.")
+
+(isa StressVector QuantityType)
+(hasDimension StressVector Force-dimension)
+(prettyString StressVector "stress")
+(hasQuantityDatatype StressVector TensorQuantity)
+
+(isa SurfaceTension QuantityType)  ; cf, surfaceTensionAtTemperature
+(hasDimension SurfaceTension Force-dimension)
+(prettyString SurfaceTension "surface tension")
+(hasQuantityDatatype SurfaceTension ScalarQuantity)
+
+(isa Temperature QuantityType)
+(hasDimension Temperature Temperature-dimension)
+(prettyString Temperature "temperature")
+(hasQuantityDatatype Temperature ScalarQuantity)
+
+(isa Tension QuantityType)  ; s.b. TensionForceFunction.  cf, ExertedTension and InternalTension
+(genls Tension ForceVector)
+(hasDimension Tension Force-dimension)
+(prettyString Tension "tension")
+(hasQuantityDatatype Tension VectorQuantity)
+(comment Tension "A \"pulling apart\" force.")
+
+(isa Time-Quantity QuantityType)
+(hasDimension Time-Quantity Time-dimension)
+(prettyString Time-Quantity "time")
+(hasQuantityDatatype Time-Quantity ScalarQuantity)
+
+(isa Torque QuantityType)
+(genls Torque ForceVector)
+(hasDimension Torque Force-dimension)
+(prettyString Torque "torque")
+(hasQuantityDatatype Torque VectorQuantity)
+(comment Torque "moment of force, or rotation moment.
+The product of a force times its lever arm")
+
+(isa Torsion QuantityType)
+(genls Torsion ForceVector)
+(hasDimension Torsion Force-dimension)
+(prettyString Torsion "torsion")
+(hasQuantityDatatype Torsion VectorQuantity)
+(comment Torsion "The state of strain set up in a part by twisting.  The rotational analogue of tension.")
+
+(isa Translucence QuantityType)  ; cf, Translucent, an ObjectTypeByTransparency
+(hasDimension Translucence Dimensionless)
+(prettyString Translucence "translucence")
+(hasQuantityDatatype Translucence ScalarQuantity)
+
+(isa Transmission QuantityType)
+(hasDimension Transmission Dimensionless)
+(prettyString Transmission "transmission")
+(hasQuantityDatatype Transmission ScalarQuantity)
+
+(isa Transparency QuantityType)  ; cf, transparencyOfObject, ObjectTypeByTransparency
+(hasDimension Transparency Dimensionless)
+(prettyString Transparency "transparency")
+(hasQuantityDatatype Transparency ScalarQuantity)
+
+(isa Vapor-pressure QuantityType)
+(hasDimension Vapor-pressure Pressure-dimension)
+(prettyString Vapor-pressure "vapor-pressure")
+(hasQuantityDatatype Vapor-pressure ScalarQuantity)
+
+(isa Velocity QuantityType)
+(hasDimension Velocity Velocity-dimension)
+(prettyString Velocity "velocity")
+(hasQuantityDatatype Velocity VectorQuantity)
+
+(isa Viscosity QuantityType)
+(hasDimension Viscosity Mass-flow-rate-dimension)
+(prettyString Viscosity "viscosity")
+(hasQuantityDatatype Viscosity ScalarQuantity)
+(comment Viscosity "The resistance of a fluid to flowing under stress.")
+
+(isa Volume QuantityType)
+(hasDimension Volume Volume-dimension)
+(prettyString Volume "volume")
+(hasQuantityDatatype Volume ScalarQuantity)
+
+(isa WorkQuantity QuantityType)
+(hasDimension WorkQuantity Energy-dimension)
+(prettyString WorkQuantity "work")
+(hasQuantityDatatype WorkQuantity ScalarQuantity)
+(comment WorkQuantity "The product of applied force and displacement in the direction of the force is defined as the work done on the body.")
+
+(isa WorkFunction QuantityType)
+(prettyString WorkFunction "work function")
+(hasQuantityDatatype WorkFunction ScalarQuantity)
+(comment WorkFunction "The minimum energy required to move an electron from the Fermi level of a metal to infinity.  May be thought of as analogous to latent heat of evaporation.
+A material property.")
+
+(isa Yield-point QuantityType)
+(prettyString Yield-point "yield-point")
+(hasQuantityDatatype Yield-point ScalarQuantity)

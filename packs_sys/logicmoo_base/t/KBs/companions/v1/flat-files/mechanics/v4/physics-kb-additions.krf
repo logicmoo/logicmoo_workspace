@@ -1,0 +1,28 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: physics-kb-additions.lsp
+;;;;    System: Companions
+;;;;   Version: 1.0
+;;;;    Author: Kenneth D. Forbus
+;;;;   Created: June 18, 2006 08:38:55
+;;;;   Purpose: Additions to the KB for solving physics problems
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+;;; Collection and predicate definitions for AP physics experiments
+
+(isa ProblemOptionMtFn Function-Denotational)
+(resultIsa ProblemOptionMtFn Microtheory)
+(arity ProblemOptionMtFn 2)
+(arg1Isa ProblemOptionMtFn Thing)
+(arg2Isa ProblemOptionMtFn Thing) ;; Don't have right genl for physics problems
+(comment ProblemOptionMtFn "(ProblemOptionMtFn ?choice ?problem) refers to the microtheory for choice ?choice of multiple-choice problem ?problem.  This microtheory represents the state of affairs that would hold if the particular choice were true.")
+
+
+(isa G-AccelerationDueToEarthsGravity MathematicalObject)
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

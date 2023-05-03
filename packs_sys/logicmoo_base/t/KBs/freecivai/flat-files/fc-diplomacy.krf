@@ -1,0 +1,28 @@
+;;;
+;;; fc-diplomacy.meld
+;;;
+
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic Freeciv treaty & diplomatic collections
+;; -------------------
+
+(isa Freeciv-TreatyClause Collection)
+(genls Freeciv-TreatyClause FreeCiv-Object)
+;(genls Freeciv-TreatyClause PurposefulAction)
+
+(isa Freeciv-DiplomaticState Collection)
+(genls Freeciv-DiplomaticState FreeCiv-Object)
+(genls Freeciv-DiplomaticState TemporalObjectType)
+(genls Freeciv-DiplomaticState InterAgentStateType) ; defined in combat.meld, background knowledge extensions.
+
+(isa Freeciv-DiplomatAction Collection)
+(genls Freeciv-DiplomatAction FreeCiv-Object)
+(genls Freeciv-DiplomatAction PurposefulAction)
+
+;;; These are attitudes like Genocidal, Belligerant, Hostile, etc.
+(isa Freeciv-OpponentAttitude Collection)
+(genls Freeciv-OpponentAttitude FreeCiv-Object)
+(genls Freeciv-OpponentAttitude TemporalObjectType)
+(genls Freeciv-OpponentAttitude InterAgentStateType)

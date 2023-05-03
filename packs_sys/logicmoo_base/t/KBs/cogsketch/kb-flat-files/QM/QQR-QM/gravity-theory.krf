@@ -1,0 +1,168 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: gravity-theory.meld
+;;;;    System: sKEA
+;;;;    Author: Jon Wetzel
+;;;;   Created: March 15,  11:48:08
+;;;;   Purpose: Theory of gravity for 2d-mechanics MT (ranking problems)
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory GravityTheoryMt)
+
+(isa GravityTheoryMt Microtheory)
+(genlMt GravityTheoryMt QPTheoryMt)
+(genlMt GravityTheoryMt CompositionalModelingMt)
+(genlMt ConceptualPhysicsDomainTheoryCollectorMt GravityTheoryMt)
+
+(genlMt GravityTheoryMt 2D-MechanicsTheoryMt)
+
+;; requires 2d-mechanics-theory.meld
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Inclusion
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(<== (includeEntity ?x)
+     (wmOnly (isa ?x PlanetaryBody)))
+
+(<== (includeEntity ?x)
+     (wmOnly (isa ?x Star)))
+
+(<== (considerMF ObjectUnderStandardGravity)
+     (wmOnly (enableGravity)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Interface with QM
+
+(isa Gravity SomethingExisting)
+(isa Gravity GravitationalForceVector)
+
+(considerEntity Gravity)
+
+(<== (forceAppliedToObj ?obj Down Gravity)
+     (wmOnly (isa ?obj Physob))
+     (uninferredSentence (isa ?obj FixedObject))
+     (wmOnly (enableGravity)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Quantities
+
+(<== (hasQuantity ?obj (MassFn ?obj))
+     (wmOnly (isa ?obj PlanetaryBody)))
+
+(<== (hasQuantity ?obj (MassFn ?obj))
+     (wmOnly (isa ?obj Star)))
+
+(isa WeightFn Function-Denotational)
+(comment WeightFn 
+"(WeightFn ?x) refers to the weight of ?x.")
+(arity WeightFn 1)
+(arg1Isa WeightFn Physob)
+(resultIsa WeightFn ContinuousQuantity)
+
+(isa NormalForceFn Function-Denotational)
+(comment NormalForceFn 
+"(NormalForceFn ?o) refers to the normal force on ?o.")
+(arity NormalForceFn 1)
+(arg1Isa NormalForceFn Physob)
+(resultIsa NormalForceFn ContinuousQuantity)
+
+
+(isa contactSurface MFParticipantSlot)
+(arity contactSurface 2)
+(genlPreds contactSurface mfParticipant)
+(comment contactSurface
+"(contactSurface ?mfi ?s) indicates that the surface touched in ?mfi is ?s.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model Fragments
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ObjectUnderStandardGravity
+
+(isa ObjectUnderStandardGravity PhysicalModelFragmentType)
+(comment ObjectUnderStandardGravity
+"An instance of ObjectUnderStandardGravity is an object being acted on by the
+ force of gravity--standard earth gravity.  This mf should not activate if we 
+ are in an astronomical context, i.e. if there are Planets or Stars in the 
+ context.")
+(mfTypeParticipant ObjectUnderStandardGravity ?obj Physob objectOf)
+(mfTypeParticipantConstraint ObjectUnderStandardGravity
+                             (and (forceAppliedToObj ?obj Down Gravity)
+                                  (uninferredSentence (isa ?obj CordlikeArtifact)))) ;; for simplicity
+(mfTypeCondition ObjectUnderStandardGravity (wmOnly (enableGravity)))
+(mfTypeBiconditionalConsequence ObjectUnderStandardGravity
+                                (hasQuantity ?obj (WeightFn ?obj)))
+(mfTypeConsequence ObjectUnderStandardGravity
+                   (qprop (WeightFn ?obj) (MassFn ?obj)))
+;; Vector magnitude is always greater than zero, so this holds.
+(mfTypeConsequence ObjectUnderStandardGravity
+                   (q= ((QPQuantityFn VectorMagnitude) (ForceAppliedFn ?obj Down Gravity))
+                       (WeightFn ?obj)))
+;; The vector itself can be negative, and in this case it is because it is a downward force.
+;; So, this is a qprop- instead of a qprop.
+(mfTypeConsequence ObjectUnderStandardGravity
+                   (qprop- (ForceAppliedFn ?obj Down Gravity)
+                           (WeightFn ?obj)))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; AstroGravForceApplication
+
+(isa AstroGravForceApplication PhysicalModelFragmentType)
+(comment AstroGravForceApplication
+" An instance of AstroGravForceApplication is a gravitational force acting
+ on an object in an astronomical context.")
+(mfTypeParticipant AstroGravForceApplication ?obj Physob objectOf)
+(mfTypeParticipant AstroGravForceApplication 
+                   ?source AstronomicalBody gravitySourceOf)
+(mfTypeParticipantConstraint AstroGravForceApplication 
+                             (isa ?obj Physob))
+
+(mfTypeBiconditionalConsequence AstroGravForceApplication
+                                (hasQuantity ?self (WeightFn ?obj)))
+(mfTypeConsequence AstroGravForceApplication (qprop (WeightFn ?obj)
+                                                    (MassFn ?source)))
+(mfTypeConsequence AstroGravForceApplication (qprop (WeightFn ?obj)
+                                                    (MassFn ?obj)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ObjectOnLevelSurface ;; should be "level" not flat
+
+
+(isa ObjectOnLevelSurface PhysicalModelFragmentType)
+(comment ObjectOnLevelSurface
+"An instance of ObjectOnLevelSurface is an object being forced into a flat
+ surface by gravity (and no other vertical force).")
+(mfTypeParticipant ObjectOnLevelSurface ?obj Physob objectOf)
+(mfTypeParticipant ObjectOnLevelSurface ?surfaceObj Physob levelSurfaceOf)
+
+(mfTypeParticipantConstraint ObjectOnLevelSurface 
+                             (and (hasContactSurface ?surfaceObj ?obj ?surface)
+                                  (surfaceNormal ?surface Up)))
+
+(mfTypeCondition ObjectOnLevelSurface 
+                 (wmOnly (enableGravity)))
+(mfTypeBiconditionalConsequence ObjectOnLevelSurface
+                                (hasQuantity ?self (NormalForceFn ?obj)))               
+(mfTypeConsequence ObjectOnLevelSurface (q= (NormalForceFn ?obj)
+                                            (WeightFn ?obj)))
+
+
+
+
+;;;TODO: add an inclined surface model
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,870 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: learning-reading-v2.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: May 14, 2010 14:57:04
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Basic Tools
+
+(isa getUniversalTime Predicate)
+(arity getUniversalTime 1)
+(arg1Isa getUniversalTime TimePoint)
+(comment getUniversalTime "(getUniversalTime (universalTimeFn ?universalTime)) indicates that ?universalTime was the time. Definitely only use this one outsourcedOnly.")
+
+(isa conjunctionOfContentsOfCase Predicate)
+(arity conjunctionOfContentsOfCase 2)
+(arg1Isa conjunctionOfContentsOfCase Microtheory)
+(arg2Isa conjunctionOfContentsOfCase Thing)
+(comment conjunctionOfContentsOfCase "(conjunctionOfContentsOfCase ?case ?contents) indicates that ?contents is a conjuction of the contents of ?case.")
+
+(isa doTellAllInContext SimpleActionPredicate)
+(arity doTellAllInContext 2)
+(arg1Isa doTellAllInContext Set)
+(arg2Isa doTellAllInContext Microtheory)
+(comment doTellAllInContext "(doTellAllInContext ?set ?context) tells all the facts in the set ?set, which takes the form (TheSet Fact1 Fact2 ...) into the context ?context in working memory.")
+
+(isa fetchSourceText ComplexActionPredicate)
+(arity fetchSourceText 2)
+(arg1Isa fetchSourceText CharacterString)
+(arg2Isa fetchSourceText Microtheory)
+(comment fetchSourceText "(fetchSourceText ?location ?context) gets a source text from ?location and stores information about in ?context. Currently, location must be a .txt file on your machine.")
+
+(isa fileAtLocationContents Predicate)
+(arity fileAtLocationContents 2)
+(arg1Isa fileAtLocationContents CharacterString)
+(arg2Isa fileAtLocationContents CharacterString)
+(comment fileAtLocationContents
+  "(fileAtLocationContents ?location ?contents) indicates that the file at the location ?location has ?contents.
+N.B. This version does not preserve paragraph boundaries -- see fileAtLocationContentsWithParagraphs
+ for a version that does.  Todo: replace this with the version that handles paragraphs correctly.")
+
+
+(isa fileAtLocationContentsWithParagraphs Predicate)
+(arity fileAtLocationContentsWithParagraphs 2)
+(arg1Isa fileAtLocationContentsWithParagraphs CharacterString)
+(arg2Isa fileAtLocationContentsWithParagraphs CharacterString)
+(comment fileAtLocationContentsWithParagraphs
+  "(fileAtLocationContentsWithParagraphs ?location ?contents) indicates that the file at the location
+ ?location has ?contents.")
+
+
+(isa tokenizeBySentence ComplexActionPredicate)
+(arity tokenizeBySentence 2)
+(arg1Isa tokenizeBySentence CharacterString)
+(arg2Isa tokenizeBySentence Microtheory)
+(comment tokenizeBySentence "(fetchSourceText ?text-string ?context) tokenizes the string text-string at the sentence level and stores information about the tokenization in ?context.")
+
+(isa tokenizedBySentence Predicate)
+(arity tokenizedBySentence 2)
+(arg1Isa tokenizedBySentence CharacterString)
+(arg2Isa tokenizedBySentence List)
+(comment tokenizedBySentence "(tokenizedBySentence ?string ?list) relates a string ?string to a list of strings ?list (introduced with TheList). The list of strings represents a sentence-level tokenization of ?string. This predicate does not define the method used for tokenization; for example, some NLU applications may wish to treat semicolons as sentence boundaries.")
+
+(isa recordReadingStartTime ComplexActionPredicate)
+(arity recordReadingStartTime 2)
+(arg1Isa recordReadingStartTime AccessingAnIBT)
+(arg1Isa recordReadingStartTime Thing)
+(comment recordReadingStartTime "(recordReadingStartTime ?reading ?experiment-name) records a reading's start time.")
+
+(isa recordReadingEndProcessingTime ComplexActionPredicate)
+(arity recordReadingEndProcessingTime 2)
+(arg1Isa recordReadingEndProcessingTime AccessingAnIBT)
+(arg2Isa recordReadingEndProcessingTime Thing)
+(comment recordReadingEndProcessingTime "(recordReadingEndProcessingTime ?reading ?experiment-name) records a reading's done processing the text in.")
+
+
+(isa processFromFileAtLocation ComplexActionPredicate)
+(arity processFromFileAtLocation 2)
+(arg1Isa processFromFileAtLocation CharacterString)
+(arg2Isa processFromFileAtLocation Microtheory)
+(comment processFromFileAtLocation "(processFromFileAtLocation ?location ?context) reads the file at location ?location and stores information about the process in ?context. It calls ea::process on each sentence in turn.")
+
+
+;;; (processSourceTextFromFileAtLocation ?file-loc ?context ?source-text-name)
+(isa processSourceTextFromFileAtLocation ComplexActionPredicate)
+(arity processSourceTextFromFileAtLocation 3)
+(arg1Isa processSourceTextFromFileAtLocation CharacterString)
+(arg2Isa processSourceTextFromFileAtLocation Microtheory)
+(arg3Isa processSourceTextFromFileAtLocation InformationBearingThing)
+(comment processSourceTextFromFileAtLocation "(processSourceTextFromFileAtLocation ?location ?context ?source-text-name) reads the file at location ?location and stores information about the process in ?context.")
+
+(isa doEAReadTextFromFile SimpleActionPredicate)
+(arity doEAReadTextFromFile 2)
+(arg1Isa doEAReadTextFromFile CharacterString)
+(arg2Isa doEAReadTextFromFile InformationBearingThing)
+(comment doEAReadTextFromFile
+  "(doEAReadTextFromFile ?file ?source-name ?source-name) reads the contents of ?file into WM, 
+ breaking it up into paragraphs and sentences, into the current discourse.")
+
+(isa executeEAProcessing ComplexActionPredicate)
+(arity executeEAProcessing 3)
+(arg1Isa executeEAProcessing CharacterString)
+(arg2Isa executeEAProcessing InformationBearingObject)
+(arg3Isa executeEAProcessing AccessingAnIBT)
+(comment executeEAProcessing "(executeEAProcessing ?text ?source-text-name ?reading-name)")
+
+
+(isa doEAProcess SimpleActionPredicate)
+(arity doEAProcess 1)
+(arg1Isa doEAProcess CharacterString)
+(comment doEAProcess "(doEAProcess ?text) causes EA to process the text string ?text using ea process. Note that this does -not- currently sidestep the ea sentence tokenizer, so you may end up with multiple sentences.")
+
+
+
+(isa doEAProcessParagraphs SimpleActionPredicate)
+(arity doEAProcessParagraphs 2)
+(arg1Isa doEAProcessParagraphs CharacterString)
+(arg2Isa doEAProcessParagraphs InformationBearingThing)
+(comment doEAProcessParagraphs "(doEAProcessParagraphs ?text ?source-text-name) causes EA to process the text string ?text using ea's process. Note that this does -not- currently sidestep ea's sentence tokenizer, so you may end up with multiple sentences.")
+
+
+(isa doEAProcessAll SimpleActionPredicate)
+(arity doEAProcessAll 1)
+(arg1Isa doEAProcessAll List)
+(comment doEAProcessAll "(doEAProcessAll (TheList ... ?textStrings ...)) 
+causes EA to process the text strings in the list one at a time using ea's process. Note that 
+EA will chunk up anything that it believes is two sentences, even if they're the same string in the list. 
+Until we install a more sophisticated tokenizer for sentences, this isn't a big deal.")
+
+(isa doEAMakeChoice-Lexical SimpleActionPredicate)
+(arity doEAMakeChoice-Lexical 1)
+(arg1Isa doEAMakeChoice-Lexical CycLSentence)
+(comment doEAMakeChoice-Lexical "(doEAMakeChoice-Lexical ?choice-expr) causes EA to select the option as described in ?choice-expr, in the agent's discourse")
+
+;;; KDF 12/18/12: This predicate may be useful, but the current
+;;; implementation of the primitive doesn't actually do this.
+;;;(isa doEASentenceInterpretation SimpleActionPredicate)
+;;;(arity doEASentenceInterpretation 1)
+;;;(arg1Isa doEASentenceInterpretation Thing) ;;; Sentence ID 
+;;;(comment doEASentenceInterpretation "(doEASentenceInterpretation ?sent-id) causes EA to do sentence-level interpretation on ?sent-id, in the agent's discourse.")
+
+;;;;;;;;; Discourse Interpretation
+
+(isa doEADiscourseInterpretation SimpleActionPredicate)
+(arity doEADiscourseInterpretation 3)
+(arg1Isa doEADiscourseInterpretation Microtheory)
+(arg1Isa doEADiscourseInterpretation Thing)
+(arg1Isa doEADiscourseInterpretation Thing)
+(comment doEADiscourseInterpretation "(doEADiscourseInterpretation ?interpretationQueriesMt ?from-location ?to-location) causes EA to fire off discourse-level interpretation using the queries in ?interpretationQueriesMt. If you want the whole discourse, use 0 for the from-position and nil for the end-position.")
+
+(isa useDiscourseCoreferenceResolution ComplexActionPredicate)
+(arity useDiscourseCoreferenceResolution 0)
+(comment useDiscourseCoreferenceResolution "(useDiscourseCoreferenceResolution) attempts to use EA's discourse-level interpretation to resolve coreference.")
+
+(isa useDiscourseCoreferenceResolutionForSentence ComplexActionPredicate)
+(arity useDiscourseCoreferenceResolutionForSentence 1)
+(arg1Isa useDiscourseCoreferenceResolutionForSentence Thing)
+(comment useDiscourseCoreferenceResolutionForSentence "(useDiscourseCoreferenceResolutionForSentence ?sen-id) attempts to use EA's discourse-level interpretation to resolve coreference for ?sen-id.")
+
+(isa useQPInterpretation ComplexActionPredicate)
+(arity useQPInterpretation 0)
+(comment useQPInterpretation 
+  "(useQPInterpretation) attempts to use EA's discourse-level interpretation to do QP analysis.")
+
+(isa doARPreprocessing ComplexActionPredicate)
+(arity doARPreprocessing 0)
+(comment doARPreprocessing 
+  "(doARPreprocessing) attempts to use EA's discourse-level interpretation to identify Active Reading cues.")
+
+;;; Very high level
+
+(isa readAndInterpret ComplexActionPredicate)
+(arity readAndInterpret 2)
+(arg1Isa readAndInterpret InformationBearingThing) ;;; The name of the source text.
+(arg2Isa readAndInterpret AccessingAnIBT)
+(comment readAndInterpret
+  "(readAndInterpret ?source-text-name ?reading-name) looks in the KB to see if there's a file location associated with ?source-text-name. If there is,
+it reads it in using EA, calling the reading ?reading-name, then attempts to do disambiguation and reference resolution. It needs all the facts that relate
+the source text name to the disambiguation and file information to be present to work. If there's no information to disambiguate
+with, it pops up the EA browser.")
+
+(isa readInLocation ComplexActionPredicate)
+(arity readInLocation 1)
+(arg1Isa readInLocation Thing) ;;; The URI to read in.
+(comment readInLocation
+  "(readInLocation ?location) tries to read in whatever is at the location ?location, whether that is a local .txt file or a URL. If it can't
+find anything, it doesn't read anything. If there is an existing source text for it, it will use that; otherwise it will make a new one.")
+
+(isa readAndQPInterpret ComplexActionPredicate)
+(arity readAndQPInterpret 2)
+(arg1Isa readAndQPInterpret InformationBearingThing) ;;; The name of the source text.
+(arg2Isa readAndQPInterpret AccessingAnIBT)
+(comment readAndQPInterpret
+  "(readAndQPInterpret ?source-text-name ?reading-name) looks in the KB to see if there's a file location associated with ?source-text-name. If there is,
+it reads it in using EA, calling the reading ?reading-name, then attempts to do disambiguation and reference resolution. It needs all the facts that relate
+the source text name to the disambiguation and file information to be present to work.
+It uses abductive inference, looking for ways to interpret the text as statements from QP theory.")
+
+(isa readQPFile ComplexActionPredicate)
+(arity readQPFile 1)
+(arg1Isa readQPFile Thing) ;;; The URI to read in.
+(comment readQPFile
+  "(readQPFile ?location) tries to read in whatever is at the location ?location, whether that is a local .txt file or a URL. If it can't
+find anything, it doesn't read anything. If there is an existing source text for it, it will use that; otherwise it will make a new one.
+It uses abduction during semantic interpretation to look for QP theory concepts in the txt.")
+
+(isa readActively ComplexActionPredicate)
+(arity readActively 2)
+(arg1Isa readActively InformationBearingThing) ;;; The name of the source text.
+(arg2Isa readActively AccessingAnIBT)
+(comment readActively
+  "(readActively ?source-text-name ?reading-name) looks in the KB to see if there's a file location associated with ?source-text-name. If there is,
+it reads it in using EA, calling the reading ?reading-name, then attempts to do disambiguation and reference resolution. It needs all the facts that relate
+the source text name to the disambiguation and file information to be present to work.
+It uses abductive inference, looking for ways to interpret the text as statements from QP theory.")
+
+(isa readARFile ComplexActionPredicate)
+(arity readARFile 1)
+(arg1Isa readARFile Thing) ;;; The URI to read in.
+(comment readARFile
+  "(readARFile ?location) tries to read in whatever is at the location ?location, whether that is a local .txt file or a URL. If it can't
+find anything, it doesn't read anything. If there is an existing source text for it, it will use that; otherwise it will make a new one.
+It uses abduction during semantic interpretation to look for QP theory concepts in the txt.")
+
+;;; Higher-level hooks into SME
+
+;;; Tracking what we did.
+
+(isa lbrProcessMt Microtheory)
+(comment lbrProcessMt "This microtheory contains information about choices made during learning-by-reading examples.")
+
+;;; Storing it away
+
+;;; NYI
+(isa storeWMMtinKBMt ComplexActionPredicate)
+(arity storeWMMtinKBMt 2)
+(arg1Isa storeWMMtinKBMt Microtheory)
+(arg2Isa storeWMMtinKBMt Microtheory)
+(comment storeWMMtinKBMt "(storeWMMtinKBMt ?mt-in-wm ?mt-in-kb) takes the information in ?mt-in-wm, a microtheory in working memory, and stores it in ?mt-in-kb, a microtheory in the KB.")
+
+
+(isa FactsFromReadingMtFn FunctionOrFunctionalPredicate)
+(arity FactsFromReadingMtFn 1)
+(arg1Isa FactsFromReadingMtFn AccessingAnIBT)
+(resultIsa FactsFromReadingMtFn Microtheory)
+(comment FactsFromReadingMtFn "(FactsFromReadingMtFn ?reading) is a microtheory that contains the facts learned in the reading ?reading")
+;;; Looking into the KB
+
+(isa factsInMtAboutConcepts Predicate)
+(arity factsInMtAboutConcepts 3)
+(arg1Isa factsInMtAboutConcepts List)
+(arg2Isa factsInMtAboutConcepts List)
+(arg3Isa factsInMtAboutConcepts Microtheory)
+(comment factsInMtAboutConcepts "In (factsInMtAboutConcepts ?concepts ?facts ?mt), list of facts ?facts is all the facts about the concepts in the list of concepts ?concepts in the microtheory ?mt.")
+
+;;;Unimplemented
+(isa factsInMtAboutQueryInDiscourse Predicate)
+(arity factsInMtAboutQueryInDiscourse 4)
+(arg1Isa factsInMtAboutQueryInDiscourse Thing)
+(arg2Isa factsInMtAboutQueryInDiscourse List)
+(arg3Isa factsInMtAboutQueryInDiscourse Microtheory)
+(arg4Isa factsInMtAboutQueryInDiscourse Thing)
+(comment factsInMtAboutQueryInDiscourse "In (factsInMtAboutQueryInDiscourse ?query ?facts ?mt ?discourse-id), list of facts ?facts is all the facts about the concepts retrieved by doing ?query in the discourse interpretation of the discourse ?discourse-id and the collections they belong to. ?mt is the microtheory in the KB where we look for the information.")
+
+;;; Storing things away
+;;; (storeInterpretationInKB ?storage-mt)
+(isa storeInterpretationInKB ComplexActionPredicate)
+(arity storeInterpretationInKB 3)
+(arg1Isa storeInterpretationInKB Microtheory)
+(arg2Isa storeInterpretationInKB AccessingAnIBT)
+(arg3Isa storeInterpretationInKB InformationBearingThing)
+(comment storeInterpretationInKB "(storeInterpretationInKB ?storage-mt ?reading-name ?source-text-name) stores everything in the discourse interpretation into the
+specified Mt. It's stored keeping track of the reading it was learned in.")
+
+(isa storeSentenceInterpretationsInKB ComplexActionPredicate)
+(arity storeSentenceInterpretationsInKB 3)
+(arg1Isa storeSentenceInterpretationsInKB Microtheory)
+(arg2Isa storeSentenceInterpretationsInKB AccessingAnIBT)
+(arg3Isa storeSentenceInterpretationsInKB InformationBearingThing)
+(comment storeSentenceInterpretationsInKB "(storeSentenceInterpretationsInKB ?storage-mt ?reading-name 
+?source-text-name) stores everything in the discourse interpretation into the
+specified Mt, at the sentence level. It's stored keeping track of the reading it was learned in.")
+
+;;; (storeNextSentenceInterpretationInKB ?kb-microtheory ?reading ?source-text ?sentence-drs)
+(isa storeNextSentenceInterpretationInKB ComplexActionPredicate)
+(arity storeNextSentenceInterpretationInKB 3)
+(arg1Isa storeNextSentenceInterpretationInKB Microtheory)
+(arg2Isa storeNextSentenceInterpretationInKB AccessingAnIBT)
+(arg3Isa storeNextSentenceInterpretationInKB InformationBearingThing)
+(arg4Isa storeNextSentenceInterpretationInKB Case)
+(comment storeNextSentenceInterpretationInKB "(storeNextSentenceInterpretationInKB ?storage-mt ?reading-name 
+?source-text-name ?sentence-drs) stores everything in the sentence interpretation into the
+specified Mt, at the sentence level. It's stored keeping track of the reading it was learned in.")
+
+(isa doStoreLiftedInterpretationInfo SimpleActionPredicate)
+(arity doStoreLiftedInterpretationInfo 1)
+(arg1Isa doStoreLiftedInterpretationInfo Microtheory)
+(comment doStoreLiftedInterpretationInfo
+  "(doStoreLiftedInterpretationInfo ?mt) stores everything from the the lifted interpretation for
+  the current discourse of the Interaction Manager in the KB microtheory ?mt.  This uses im::translate-drs.")
+(preconditionFor-Props (true) (doStoreLiftedInterpretationInfo ?mt))
+
+;;;(factLearnedInReadingOfSourceText ?reading ?source-text ?fact)
+(isa factLearnedInReadingOfSourceText Predicate)
+(arity factLearnedInReadingOfSourceText 3)
+(arg1Isa factLearnedInReadingOfSourceText AccessingAnIBT)
+(arg2Isa factLearnedInReadingOfSourceText InformationBearingThing)
+(arg3Isa factLearnedInReadingOfSourceText Thing)
+(comment factLearnedInReadingOfSourceText "(factLearnedInReadingOfSourceText ?reading ?source-text ?fact) means that we learned ?fact during
+the reading ?reading of the source text ?source-text.")
+ 
+;;; This is make-choice
+;;; The call from the api doesn't use the optional argument, so we won't either.
+;;; That cuts us down to five arguments
+;;; We may not need a seperate do for each one.
+;;; Additionally, ours is going to call our "generic finished function". (Nevermind, that's on interpret.)
+;;; If we cut in higher up, can we cut down on the number of arguments?
+;;; Also, how do we handle objects as arguments?
+;;; If we go up one, then we only need the choice-expr and the disc.
+;;;(make-choice (choice-expr-id choice-expr) (choice-expr-choice choice-expr) 
+;;;                           (discourse-case disc) (reasoner disc) :user)
+;;;
+;;;(defun make-choice (csid choice dcase reasoner reason &optional choice-id)
+;;;  (let ((sel-stmt (selected-choice-stmt csid dcase reasoner)))
+;;;    (unless (null sel-stmt)
+;;;      (retract-from-dcase `(d::selectedChoice ,csid ?choice-id ?choice)
+;;;                          (ltre:informant-of sel-stmt (fire:ltre reasoner)))))
+;;;  (let ((choice-id (or choice-id
+;;;                       (choice-expr-choice-id (fire:decontextualize-statement
+;;;                                               (choice-stmt csid choice dcase reasoner))))))
+;;;    (assume-in-dcase `(d::selectedChoice ,csid ,choice-id ,choice) reason)))
+
+;;; Sucking in text from a file. Currently only does local files.
+(preconditionForMethod
+ (and (fileAtLocationContents ?location ?contents))
+ (methodForAction
+  (fetchSourceText ?location ?context)
+  (actionSequence
+   (TheList
+    (doRecord
+     (ist-Information ?context (fileContents (FileFn ?location) ?contents)))
+    (doAnnounce "~%fetchSourceText worked for the text at ~A." (?location))))))
+
+
+;;; Slices the text in a string into sentences. Currently uses the ea sentence tokenizer.
+(preconditionForMethod
+ (tokenizedBySentence ?string ?list-of-sentences)
+ (methodForAction
+  (tokenizeBySentence ?string ?context)
+  (actionSequence
+   (TheList
+    (doRecord
+     (ist-Information ?context (tokenizedBySentence ?string ?list-of-sentences)))))))
+
+;;; Reads from a file, ships what it reads to ea::process
+;;; Note that ea:process tokenizes on its own, but this calls a seperate tokenizer (currently the one ea uses
+;;; anyway) for greater control over that process.
+;;; Currently ?file-loc must me a local file.
+;;; UPDATE - No reason to have a serperate tokenizer, that just gets in the way of better preprocessing steps.
+(preconditionForMethod
+ (and (fileAtLocationContents ?file-loc ?contents)
+      ;;;(tokenizedBySentence ?contents ?list-of-sentences)
+      )
+ (methodForAction
+  (processFromFileAtLocation ?file-loc ?context)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Retrieved file ~A. Now reading..." (?file-loc))
+    (doEAProcess ?contents)
+    (doRecord
+     (ist-Information ?context (fileContents (FileFn ?location) ?contents)))
+;;;    (doRecord
+;;;     (ist-information ?context (tokenizedBySentence ?contents ?list-of-sentences)))
+    (doAnnounce "~%processFromFileAtLocation completed for file at ~A." (?file-loc))))))
+
+
+
+(preconditionForMethod
+ (and (fileAtLocationContents ?file-loc ?contents))
+ (methodForAction
+  (processSourceTextFromFileAtLocation ?file-loc ?context ?source-text)
+  (actionSequence
+   (TheList
+    (doEAProcessParagraphs ?contents ?source-text)
+    (doRecord
+     (ist-Information ?context (fileContents (FileFn ?file-loc) ?contents)))
+    (doAnnounce "~%processSourceTextFromFileAtLocation completed for the text ~A." (?source-text))))))
+
+;;; Uses ea discourse interpretation on the current discourse to attempt coreference resolution. 
+;;; It works best if as much stuff as possible is disambiguated already.
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (useDiscourseCoreferenceResolution)
+  (actionSequence
+   (TheList
+    (doEADiscourseInterpretation EAGeneralQueriesMt 0 nil)
+    (doAnnounce "~%Discourse coreference resolution complete." ())))))
+
+
+;;; NFI
+(preconditionForMethod
+ (and 
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (ist-Information
+          (DiscourseCaseFn ?discourse-id)
+        (sentenceInDiscourse ?sen-id ?sen-index ?wordslist))
+      (evaluate ?nex-index (PlusFn 1 ?sen-index))
+      )
+ (methodForAction
+  (useDiscourseCoreferenceResolutionForSentence ?sen-id)
+  (actionSequence
+   (TheList
+    (doEADiscourseInterpretation EAGeneralQueriesMt ?sen-index ?nex-index)
+    (doAnnounce "~%useDiscourseCoreferenceResolutionForSentence completed." ())))))
+
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (useQPInterpretation)
+  (actionSequence
+   (TheList
+    (doEADiscourseInterpretation QPInterpretationQueriesMt 0 nil)
+    (doAnnounce "~%useQPInterpretation completed." ())))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (doARPreprocessing)
+  (actionSequence
+   (TheList
+    (doEADiscourseInterpretation ARInterpretationQueriesMt 0 nil)
+    (doAnnounce "~%doARPreprocessing completed." ())))))
+
+
+(isa lengthOfCurrentDiscourse Predicate)
+(arity lengthOfCurrentDiscourse 1)
+(comment lengthOfCurrentDiscourse "(lengthOfCurrentDiscourse ?length)
+gets the length of the current discourse when used as an outsourced
+predicate. It actually returns the highest sentence-pos, so it's
+off by one.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; (readAndInterpret ?source-text-name ?reading-name)
+
+;;; This is the one we use if we don't have a disambiguationMtOfSourceText known.
+;;; Try to see if we can determine which special context to use. This might just take over for the previous method, too.
+;;; For now we are going with a slowish strategy - attempting coreference resolution after each sentence.
+;;; June - Time for this to get more complicated. Now, instead of just using DefaultDisambiguationMt, it'll try to figure out which DefaultDisambiguationMt to use.
+;;; DefaultDisambiguationMt is now GenericDefaultDisambiguationMt
+;;; See the lower method for one that really gets the generic when we've got nothing.
+;;; This is just going to be all one method that has a smart disambiguationContextForScenario that's first strategy is looking for disambiguationMtOfSourceText
+;;; Another question: is this the right place for this?
+;;; IN EDITING.
+;;; NOTE: This needs to eventually reincorporate the weights. The current way we do this is flexible in a pretty useless way; should be reexamined anyway.
+(preconditionForMethod 
+ (and (ist-Information SourceTextFileLocationsMt
+        (fileLocationOfSourceText ?file-location ?source-text-name))
+      (disambiguationContextForScenario ?source-text-name ?context-to-use))
+ (methodForAction
+  (readAndInterpret ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (recordReadingStartTime ?reading-name ReadingExperiment)
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (recordReadingEndProcessingTime ?reading-name ReadingExperiment)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (disambiguateSourceTextWithHeuristicContext
+        ?source-text-name ?reading-name ?context-to-use DefaultDisambiguationWeightsMt)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (useDiscourseCoreferenceResolution)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                      ?reading-name ?source-text-name))))))))))))))
+
+
+;;; Variant for QP texts: (readAndQPInterpret ?source-text-name ?reading-name)
+(preconditionForMethod 
+ (ist-Information SourceTextFileLocationsMt
+   (fileLocationOfSourceText ?file-location ?source-text-name))
+ (methodForAction
+  (readAndQPInterpret ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (useDiscourseCoreferenceResolution)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (useQPInterpretation)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                      ?reading-name ?source-text-name))))))))))))))
+
+;;;;; Entry point for simple QP reading: (readQPFile ?file-location)
+(preconditionForMethod
+ (and
+      (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?location ?source-text-name))
+      (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name)))
+ (methodForAction
+  (readQPFile ?location)
+  (actionSequence
+   (TheList (readAndQPInterpret ?source-text-name ?generated-reading-name)))))
+
+(preconditionForMethod 
+ (and (uninferredSentence (ist-Information SourceTextFileLocationsMt
+                            (fileLocationOfSourceText ?location ?source-text-name)))
+      (outsourcedOnly (generatedSourceTextName ?location ?newSourceTextName))
+      (outsourcedOnly (generatedReadingName ?newSourceTextName ?generated-reading-name)))
+ (methodForAction
+  (readQPFile ?location)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SourceTextFileLocationsMt
+                (fileLocationOfSourceText ?location ?newSourceTextName)))
+    (doAgentPlan
+     (actionSequence
+   (TheList (readAndQPInterpret ?newSourceTextName ?generated-reading-name))))
+    ))))
+
+
+;;; Variant for Active Reading: (readActively ?source-text-name ?reading-name)
+;;; Performs AR preprocessing, then kicks off coreference resolution, then
+;;; kicks off QP interpretation. Stores the results in the kb.
+(preconditionForMethod 
+ (ist-Information SourceTextFileLocationsMt
+   (fileLocationOfSourceText ?file-location ?source-text-name))
+ (methodForAction
+  (readActively ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (processSourceTextFromFileAtLocation ?file-location lbrProcessMt ?source-text-name)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (doARPreprocessing)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (useDiscourseCoreferenceResolution)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (useQPInterpretation)
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                  ?reading-name ?source-text-name)
+                (doAnnounce "~%readActively completed for ~A." (?source-text-name))))))))))))))))))
+
+;;;;; Entry point for Active Reading: (readARFile ?location)
+(preconditionForMethod
+ (and
+  (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?location ?source-text-name))
+  (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name)))
+ (methodForAction
+  (readARFile ?location)
+  (actionSequence
+   (TheList (readActively ?source-text-name ?generated-reading-name)))))
+
+(preconditionForMethod 
+ (and 
+  (uninferredSentence (ist-Information SourceTextFileLocationsMt
+                        (fileLocationOfSourceText ?location ?source-text-name)))
+  (outsourcedOnly (generatedSourceTextName ?location ?newSourceTextName))
+  (outsourcedOnly (generatedReadingName ?newSourceTextName ?generated-reading-name)))
+ (methodForAction
+  (readARFile ?location)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SourceTextFileLocationsMt
+                (fileLocationOfSourceText ?location ?newSourceTextName)))
+    (doAgentPlan
+     (actionSequence
+      (TheList (readActively ?newSourceTextName ?generated-reading-name))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (readInLocation ?location)
+;;; This is the one for if there already is a source text for the given location.
+;;; What this actually wants is the "read and interpret" command.
+;;; That needs a reading name, which we generate. V-generate.
+(preconditionForMethod 
+ (and
+      (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?location ?source-text-name))
+      (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name)))
+ (methodForAction
+  (readInLocation ?location)
+  (actionSequence
+   (TheList
+    (readAndInterpret ?source-text-name ?generated-reading-name)))))
+
+;;; (readInLocation ?location)
+;;; This is the one for if there is not already a source text for the given location.
+(preconditionForMethod 
+ (and
+      (uninferredSentence (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?location ?source-text-name)))
+      (outsourcedOnly (generatedSourceTextName ?location ?newSourceTextName))
+      (outsourcedOnly (generatedReadingName ?newSourceTextName ?generated-reading-name)))
+ (methodForAction
+  (readInLocation ?location)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information SourceTextFileLocationsMt (fileLocationOfSourceText ?location ?newSourceTextName)))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (readAndInterpret ?newSourceTextName ?generated-reading-name))))
+    ))))
+
+
+;;; This can also stash things in flat-files, because we need that.
+;;; This should also store the sentence order information so we
+;;; don't have to reconstruct that from names. Also store relationships
+;;; between 
+(preconditionForMethod
+ (and
+      ;;; Get the discourse id
+      (wmOnly (currentDiscourseId ?discourse-id))
+      ;;; Get the primary discourse interpretation
+      (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id) (drsForDiscourse ?main-interpretation-drs)))
+      ;;; Get all of the sub-discourses - there might be zero of these, which is 100% okay.
+      ;;; This maybe should be drsEntailedBySentence?
+      (evaluate ?sub-drses
+        (TheClosedRetrievalSetOf ?sub-drs
+          (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id) (drsEmbeddedInDrs ?sub-drs ?some-sentence-drs)))))
+      (evaluate ?refs
+        (TheClosedRetrievalSetOf 
+            (ist-Information
+                resolvedReferencesInReadingsMt
+                (resolvedReferenceInReading ?referent ?reference ?kb-microtheory))
+          (validLocalReferent ?referent ?reference ?discourse-id)
+          ))
+      (evaluate ?spans
+        (TheClosedRetrievalSetOf
+            (ist-Information
+                KnowledgeSegmentationBookkeepingMt
+              (entityFromSpanInSentenceInReading ?entity ?span ?sen-pos ?reading))
+          (and
+               (ist-Information (DiscourseCaseFn ?main-interpretation-drs) 
+                 (dvSpanInParseTree ?entity ?span 
+                                    (ParseTreeFn ?sen-id ?pt-id)))
+               (ist-Information (DiscourseCaseFn ?main-interpretation-drs) 
+                 (selectedChoice ?cs-id ?cid ?pt-id))
+               (ist-Information (DiscourseCaseFn ?main-interpretation-drs) 
+                 (sentenceInDiscourse ?sen-id ?sen-pos ?sen-tokens)))))
+      )
+ (methodForAction
+  (storeInterpretationInKB ?kb-microtheory ?reading ?source-text)
+    (actionSequence
+      (TheList
+       (promoteWMMtToKBMt (DrsCaseFn ?main-interpretation-drs) ?kb-microtheory)
+       (doForEach ?next-ref ?refs
+                  (doRecord ?next-ref))
+       (doForEach ?next-span ?spans
+                  (doRecord ?next-span))
+       (doForEach ?next-sub-drs ?sub-drses
+                  (promoteWMMtToKBMt (DrsCaseFn ?next-sub-drs) (DrsCaseFn ?next-sub-drs)))
+       (doForEach ?next-sub-drs ?sub-drses
+                  (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt (storedDrsHasSubDrs ?kb-microtheory (DrsCaseFn ?next-sub-drs)))))
+       (doForEach ?next-sub-drs ?sub-drses
+                  (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt (genlMt (SpindleWithSubDrsesFn ?kb-microtheory) (DrsCaseFn ?next-sub-drs)))))
+       (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt (genlMt (SpindleWithSubDrsesFn ?kb-microtheory) ?kb-microtheory)))
+       (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt (spindleForDrs (SpindleWithSubDrsesFn ?kb-microtheory) ?kb-microtheory)))
+       (storeSentenceInterpretationsInKB ?kb-microtheory ?reading ?source-text)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (dumpInterpretationToFlatFile ?main-interpretation-drs ?sub-drses ?reading ?kb-microtheory))))
+       
+       ))))
+
+(isa entityFromSpanInSentenceInReading Predicate)
+(arity entityFromSpanInSentenceInReading 4)
+(comment entityFromSpanInSentenceInReading "(entityFromSpanInSentenceInReading ?entity ?span ?sen-pos ?reading)")
+
+(isa validLocalReferent Predicate)
+(arity validLocalReferent 3)
+(arg1Isa validLocalReferent Thing)
+(arg2Isa validLocalReferent Thing)
+(arg3Isa validLocalReferent Thing)
+(comment validLocalReferent "(validLocalReferent ?referent ?reference ?discourse-id)
+means that ?referent is a valid referent of ?reference in ?discourse-id.")
+     
+
+(<== (validLocalReferent ?referent ?reference ?discourse-id)
+                     (wmOnly (lookupOnly (nonTransitiveInference
+                                          (ignoreTimestamps
+                      (ist-Information (DiscourseCaseFn ?discourse-id)             
+                        (referent 
+                         (ReferenceInSentenceFn ?reference ?any-sen) 
+                         (ReferentInDrsFn ?referent ?discourse))))))))
+
+(preconditionForMethod
+ (and
+      ;;; Get the discourse id - this needs to get the sentence IDs instead
+      (wmOnly (currentDiscourseId ?discourse-id))
+      ;;; Get the sentence DRSes
+      (evaluate ?sentence-drses
+        (TheClosedRetrievalSetOf ?sentence-drs
+          (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id) 
+                (drsForSentence ?sentence-drs ?sentence-id))))))
+ (methodForAction
+  (storeSentenceInterpretationsInKB ?kb-microtheory ?reading ?source-text)
+    (actionSequence
+      (TheList
+       (doForEach ?next-sentence-drs ?sentence-drses
+                  (storeNextSentenceInterpretationInKB ?kb-microtheory 
+                                                       ?reading ?source-text ?next-sentence-drs))))))
+
+;;; This also wants to store the sentence's ordinality and the relationship between the sentence and its
+;;; DRSs.
+(preconditionForMethod
+ (and
+      ;;; Get the discourse id - this needs to get the sentence IDs instead
+      (wmOnly (currentDiscourseId ?discourse-id))
+      ;;; Get all of the sub-discourses - there might be zero of these, which is 100% okay.
+      (evaluate ?sub-drses
+        (TheClosedRetrievalSetOf ?sub-drs
+          (and
+               (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id) (drsEntailedBySentence ?sub-drs ?sentence-drs)))
+               (different ?sub-drs ?sentence-drs))
+          ))
+      (ist-Information (DiscourseCaseFn ?discourse-id) 
+        (sentenceInDiscourse ?sentence-drs ?position ?text-tokens))
+      )
+ (methodForAction
+  (storeNextSentenceInterpretationInKB ?kb-microtheory ?reading ?source-text ?sentence-drs)
+    (actionSequence
+      (TheList
+       (promoteWMMtToKBMt (DrsCaseFn ?sentence-drs) (sentenceDRSFn ?kb-microtheory ?sentence-drs))
+       (doForEach ?next-sub-drs ?sub-drses
+                  (promoteWMMtToKBMt (DrsCaseFn ?next-sub-drs) (DrsCaseFn ?next-sub-drs)))
+       (doForEach ?next-sub-drs ?sub-drses
+                  (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt 
+                              (storedDrsHasSubDrs (sentenceDRSFn ?kb-microtheory ?sentence-drs) (DrsCaseFn ?next-sub-drs)))))
+       (doForEach ?next-sub-drs ?sub-drses
+                  (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt 
+                              (genlMt (SpindleWithSubDrsesFn (sentenceDRSFn ?kb-microtheory ?sentence-drs)) (DrsCaseFn ?next-sub-drs)))))
+       (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt 
+                   (genlMt (SpindleWithSubDrsesFn (sentenceDRSFn ?kb-microtheory ?sentence-drs)) (sentenceDRSFn ?kb-microtheory ?sentence-drs))))
+       (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt 
+                   (spindleForDrs (SpindleWithSubDrsesFn (sentenceDRSFn ?kb-microtheory ?sentence-drs)) (sentenceDRSFn ?kb-microtheory ?sentence-drs))))
+       (doRecord (ist-Information KnowledgeSegmentationBookkeepingMt 
+                   (sentencePositionInReading (sentenceDRSFn ?kb-microtheory ?sentence-drs) ?position ?reading ?source-text)))
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (dumpInterpretationToFlatFile ?sentence-drs ?sub-drses ?reading (sentenceDRSFn ?kb-microtheory ?sentence-drs)))))))))
+ 
+(isa sentencePositionInReading Predicate)
+(arity sentencePositionInReading 4)
+(comment sentencePositionInReading "(sentencePositionInReading ?sentence-drs ?position ?reading ?source-text)")
+
+(isa SpindleWithSubDrsesFn FunctionOrFunctionalPredicate)
+(arity SpindleWithSubDrsesFn 1)
+(arg1Isa SpindleWithSubDrsesFn Microtheory)
+(resultIsa SpindleWithSubDrsesFn Microtheory)
+(comment SpindleWithSubDrsesFn "(SpindleWithSubDrsesFn ?DRS) is a spindle of that drs and its sub-drses.")
+
+(isa spindleForDrs Predicate)
+(arity spindleForDrs 2)
+(arg1Isa spindleForDrs Microtheory)
+(arg2Isa spindleForDrs Microtheory)
+(comment spindleForDrs "(spindleForDrs ?spindle ?drs) indicates that ?spindle is a spindle
+of ?drs and its relevant microtheories.")
+
+(isa dumpInterpretationToFlatFile ComplexActionPredicate)
+(arity dumpInterpretationToFlatFile 4)
+(arg1Isa dumpInterpretationToFlatFile Microtheory)
+(arg2Isa dumpInterpretationToFlatFile List)
+(arg3Isa dumpInterpretationToFlatFile AccessingAnIBT)
+(arg4Isa dumpInterpretationToFlatFile Microtheory)
+(comment dumpInterpretationToFlatFile "(dumpInterpretationToFlatFile ?main-interpretation-drs ?sub-drses ?reading-name ?kb-microtheory) stores an
+interpretation FROM THE KB into a flat file.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (interpretationStored ?main-interpretation-drs ?sub-drses ?reading-name ?kb-microtheory))
+;;;      (outsourcedOnly (concatenatedList (TheList ?reading-name ".meld") ?file-name))
+      )
+ (methodForAction
+  (dumpInterpretationToFlatFile ?main-interpretation-drs ?sub-drses ?reading-name ?kb-microtheory)
+  (actionSequence
+   (TheList
+    ;;; This needs to be a string that is ?reading-name.meld
+    ;;; Let's not call this here.
+;;;    (doEmailIMLogToUser ?file-name "Reading of ~A" (?reading-name) 
+;;;                                                      "See attached message"
+;;;                                                      ())
+    (doAnnounce "~%dumpInterpretationToFlatFile completed for ~A." (?main-interpretation-drs))))))
+
+(isa interpretationStored Predicate)
+(arity interpretationStored 4)
+(arg1Isa interpretationStored Microtheory)
+(arg2Isa interpretationStored List)
+(arg3Isa interpretationStored AccessingAnIBT)
+(arg4Isa interpretationStored Microtheory)
+(comment interpretationStored "(interpretationStored ?main-interpretation-drs ?sub-drses ?reading-name ?kb-microtheory) stores an
+interpretation FROM THE KB into a flat file.")
+
+(isa textSplitIntoParagraphs Predicate)
+(arity textSplitIntoParagraphs 2)
+(arg1Isa textSplitIntoParagraphs CharacterString)
+(arg2Isa textSplitIntoParagraphs List)
+(comment textSplitIntoParagraphs "(textSplitIntoParagraphs ?text ?paragraphized-text) splits ?text into paragraphs when used
+as an outsourced predicate.")
+
+;;; Fission the text into paragraphs, then doForEach each of them into its own thing.
+;;; What's our current fissioning process? EA does this now, let's move it up. Or down, depending on your spatial metaphor. Whichever direction is
+;;; 'towards companions'.
+;;; (parser::paragraph-split text) does what we want. First make sure we haven't already written this.
+(preconditionForMethod 
+ (and
+      (textSplitIntoParagraphs ?text ?paragraphized-text))
+ (methodForAction
+  (executeEAProcessing ?text ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (doForEach ?paragraph ?paragraphized-text
+               (executeEAParagraphProcessing ?paragraph ?paragraphized-text ?source-text-name ?reading-name))))))
+
+(isa executeEAParagraphProcessing ComplexActionPredicate)
+(arity executeEAParagraphProcessing 4)
+(arg1Isa executeEAParagraphProcessing CharacterString)
+(arg2Isa executeEAParagraphProcessing List)
+(arg3Isa executeEAParagraphProcessing InformationBearingThing)
+(arg4Isa executeEAParagraphProcessing AccessingAnIBT)
+(comment executeEAParagraphProcessing "(executeEAParagraphProcessing ?paragraph ?paragraphized-text ?source-text-name ?reading-name) 
+processes the paragraph, one sentence at at time, and puts some bookkeeping information about the sentences in working memory.")
+
+(preconditionForMethod 
+ (and
+      (evaluate ?position-of-paragraph (PositionInListFn  ?paragraph ?paragraphized-text)))
+ (methodForAction
+  (executeEAParagraphProcessing ?paragraph ?paragraphized-text ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (doForEach ?sentence ?sentence-tokenized-text
+               (executeEASentenceProcessing ?sentence ?sentence-tokenized-text ?paragraph ?source-text-name ?reading-name))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

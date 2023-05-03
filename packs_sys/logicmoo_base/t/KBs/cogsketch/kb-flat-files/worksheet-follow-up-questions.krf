@@ -1,0 +1,150 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-follow-up-questions.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: December 1, 2010 15:04:42
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa MultipleChoiceQuestion Collection)
+(isa MultipleChoiceQuestion QuestionTypeByAnswerTypeRequested)
+(isa MultipleChoiceQuestion ObjectType)
+(genls MultipleChoiceQuestion Question-PCW)
+(comment MultipleChoiceQuestion
+  "Each instance of a #$MultipleChoiceQuestion is a #$Question-PCW which 
+   requests that one choose from one or more of a set of choices.")
+
+
+(isa cogSketchFollowUpQuestion Collection)
+(genls cogSketchFollowUpQuestion Question-PCW)
+(comment cogSketchFollowUpQuestion
+  "Instances of #$cogSketchFollowUpQuestion are used after a student has 
+   completed a worksheet or an experiment subject has completed an
+   experment.  These are questions that can be used, for example, as an 
+   after-action review or to test what the student may have learned.")
+
+(isa cogSketchFollowUpQuestion-MultipleChoice Collection)
+(genls cogSketchFollowUpQuestion-MultipleChoice MultipleChoiceQuestion)
+(genls cogSketchFollowUpQuestion-MultipleChoice cogSketchFollowUpQuestion)
+(comment cogSketchFollowUpQuestion-MultipleChoice
+  "Instances of #$cogSketchFollowUpQuestion-MultipleChoice are used after 
+   a student has completed a worksheet or an experiment subject has completed 
+   an experment.  These are multiple-choice questions that can be used, for 
+   example, as an after-action review or to test what the student may have 
+   learned.")
+
+
+(isa cogsketchQuestionText BinaryRelation)
+(arity cogsketchQuestionText 2)
+(arg1Isa cogsketchQuestionText cogSketchFollowUpQuestion)
+(arg2Isa cogsketchQuestionText TextString)
+(comment cogsketchQuestionText
+  "Human-readable string that is asked of users to present them with a 
+   #$cogSketchFollowUpQuestion.  If desired, this can be a rich-text string.")
+(notForAnalogy cogsketchQuestionText)
+
+
+(isa cogsketchQuestionOrder BinaryRelation)
+(arity cogsketchQuestionOrder 2)
+(arg1Isa cogsketchQuestionOrder cogSketchFollowUpQuestion)
+(arg2Isa cogsketchQuestionOrder NonNegativeInteger)
+(comment cogsketchQuestionOrder
+  "Specifies the order in which this #$cogSketchFollowUpQuestion will be given
+   to the user.  Questions with lower numbers will be presented before those
+   with higher numbers.")
+(notForAnalogy cogsketchQuestionOrder)
+
+
+(isa cogsketchQuestionChoices BinaryRelation)
+(arity cogsketchQuestionChoices 2)
+(arg1Isa cogsketchQuestionChoices cogSketchFollowUpQuestion)
+(arg2Isa cogsketchQuestionChoices List)
+(comment cogsketchQuestionChoices
+  "Ordered list of choices available for answering a given 
+   #$cogSketchFollowUpQuestion.")
+(notForAnalogy cogsketchQuestionChoices)
+
+
+(isa cogsketchQuestionCorrectAnswer BinaryRelation)
+(arity cogsketchQuestionCorrectAnswer 2)
+(arg1Isa cogsketchQuestionCorrectAnswer cogSketchFollowUpQuestion)
+(arg2Isa cogsketchQuestionCorrectAnswer NonNegativeInteger)
+(comment cogsketchQuestionCorrectAnswer
+  "Given the ordered list of answers in an associated #$cogsketchQuestionChoices
+   fact, (#$cogsketchQuestionCorrectAnswer <question> <num>) specifies which of
+   these is the correct answer.  The first choice in the list is 0, the next is
+   1, etc.  In other words, question choices are zero-indexed.  Note that this
+   is optional; some questions do not have a given correct answer.  (e.g.
+   survey questions)")
+(notForAnalogy cogsketchQuestionCorrectAnswer)
+
+
+(isa cogsketchQuestionUserAnswer BinaryRelation)
+(arity cogsketchQuestionUserAnswer 2)
+(arg1Isa cogsketchQuestionUserAnswer cogSketchFollowUpQuestion)
+(arg2Isa cogsketchQuestionUserAnswer NonNegativeInteger)
+(comment cogsketchQuestionUserAnswer
+  "Given the ordered list of answers in an associated #$cogsketchQuestionChoices
+   fact, (#$cogsketchQuestionUserAnswer <question> <num>) specifies which of
+   these was chosen by the user.  The first choice in the list is 0, the next is
+   1, etc.  In other words, question choices are zero-indexed.")
+(notForAnalogy cogsketchQuestionUserAnswer)
+
+
+(isa cogsketchQuestionCannotProgressWithoutAnswering UnaryRelation)
+(arity cogsketchQuestionCannotProgressWithoutAnswering 1)
+(arg1Isa cogsketchQuestionCannotProgressWithoutAnswering cogSketchFollowUpQuestion)
+(comment cogsketchQuestionCannotProgressWithoutAnswering
+  "Says that a given question must be answered before continuing on to the next
+   question.")
+(notForAnalogy cogsketchQuestionCannotProgressWithoutAnswering)
+
+
+
+(isa showLayerDuringCogsketchQuestion BinaryRelation)
+(arity showLayerDuringCogsketchQuestion 2)
+(arg1Isa showLayerDuringCogsketchQuestion cogSketchFollowUpQuestion)
+(arg2Isa showLayerDuringCogsketchQuestion NuSketchLayer)
+(comment showLayerDuringCogsketchQuestion
+  "Specifies a layer that should be made visible while presenting a 
+   #$cogSketchFollowUpQuestion")
+(notForAnalogy showLayerDuringCogsketchQuestion)
+
+
+(isa showLayerAfterCogsketchQuestion TernaryRelation)
+(arity showLayerAfterCogsketchQuestion 3)
+(arg1Isa showLayerAfterCogsketchQuestion cogSketchFollowUpQuestion)
+(arg2Isa showTextAfterCogsketchQuestion NonNegativeInteger)
+(arg3Isa showLayerAfterCogsketchQuestion NuSketchLayer)
+(comment showLayerAfterCogsketchQuestion
+  "Specifies a layer that should be made visible after the user has chosen an
+   answer for a #$cogSketchFollowUpQuestion.  The second argument specifies which
+   answer was chosen by the user; the first choice in the list is 0, the next 
+   is 1, etc. (In other words, question choices are zero-indexed).")
+(notForAnalogy showLayerAfterCogsketchQuestion)
+
+
+(isa showTextAfterCogsketchQuestion TernaryRelation)
+(arity showTextAfterCogsketchQuestion 3)
+(arg1Isa showTextAfterCogsketchQuestion cogSketchFollowUpQuestion)
+(arg2Isa showTextAfterCogsketchQuestion NonNegativeInteger)
+(arg3Isa showTextAfterCogsketchQuestion TextString)
+(comment showTextAfterCogsketchQuestion
+  "Specifies text that should be shown after the user has chosen an answer 
+   for a #$cogSketchFollowUpQuestion.  The second argument specifies which
+   answer was chosen by the user; the first choice in the list is 0, the next 
+   is 1, etc. (In other words, question choices are zero-indexed).")
+(notForAnalogy showTextAfterCogsketchQuestion)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

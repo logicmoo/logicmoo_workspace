@@ -1,0 +1,296 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: analogical-parsing-experiments
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: January 10, 2013 15:00:17
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; To write:
+
+;;; These both use case libraries, not GCFs
+;;;      (in-microtheory SUSDSept2011AnalogicalGenContextOnlySplitDisambiguationMt)
+;;;      (analogicalRecallGenContextSuggestions SUSDCaseLibe-Family-Sept-2011-06 All-AD-CircumstancesMt)
+
+;;; We're getting all the cases that are part of readings. Where is that generated? (d::casePartOfReading d::?case ,next-reading)
+;;; Something based on (checkAdvancedAccuracyForARNFoldTestPly ?trial ?source-text-name ?current-reading-name ?experiment-name ?GCF-name)
+
+;;; Written:
+;;; internalARNFoldParsingTestPly - based on internalARNFoldTestPly (Not tested)
+;;; internalARNFoldParsingTestOnSourceTexts - based on internalARNFoldTestOnSourceTexts
+;;; checkAdvancedAccuracyForARNFoldParsingTestPly - based on checkAdvancedAccuracyForARNFoldTestPly
+;;; favor-from-analogical-parse-recall-gen-context - based on favor-from-analogical-recall-gen-context
+;;; get-favor-rating-from-APR - based on get-favor-rating-from-AR and -gen-context (get-favor-rating-from-APR choice probes case-library)
+;;;          Doesn't currently punish wrongness, and may need to evolve a little for how the probes look.
+;;; make-probes-for-APR - based on make-probe-for-AR (make-probes-for-APR stubs-mt choice choice-set-id)
+;;; (gather-choice-set-circumstances-APR stubs-mt choice-set our-choice next-choice) - based on gather-choice-set-circumstances
+;;; populateNewGCforARParsingNFoldPly - based on populateNewGCFforARNFoldPly
+;;;      This doesn't use a GCF, just a GC
+;;;      populate-new-GC-for-AR-Parsing-NFold-Ply (source context fact plied-reading list-of-readings experimental-trial-name case-library)
+;;; analogicalRecallParsingGenContextSuggestions - based on analogicalRecallGenContextSuggestions
+;;; analogicalRecallParsingGenContextSuggestionsPlan - based on analogicalRecallGenContextSuggestionsPlan
+;;; parseSelectedInSourceTextInReading - should be used in our accuracy things
+;;; recordCurrentParseChoices - based on recordCurrentDiscourseChoices
+;;; condensedSelectedParsesFromCurrentDiscourse
+;;; dumpCurrentParsesAsGoldStandard - based on dumpCurrentDiscourseAsGoldStandard - Verified
+
+;;; Writing:
+;;;      This still needs work.
+;;; accuracyOfCurrentParsesComparedToGoldStandardAR - based on accuracyOfCurrentDiscourseComparedToGoldStandardAR
+;;; storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse - based on storeChoiceSetCasePlansInGenContextForCurrentDiscourse
+;;; gather-choice-set-circumstances-APR - This still needs actual things to store.
+;;; (gather-choice-set-circumstances-APR circumstances-mt next-choice-set-id our-choice next-choice) 
+
+
+
+;;; Circumstances:
+;;; (d::factToRecordFn d::cfWordsInSentence)
+;;; (d::factToRecordFn d::cfSubjectOfSentence)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(isa internalARNFoldParsingTestOnSourceTexts ComplexActionPredicate)
+(arity internalARNFoldParsingTestOnSourceTexts 2)
+(arg1Isa internalARNFoldParsingTestOnSourceTexts List) ;;; This is the list of source text names to use, in order.
+(arg2Isa internalARNFoldParsingTestOnSourceTexts Thing) ;;; The name of the experimental trial
+(comment internalARNFoldParsingTestOnSourceTexts "(internalARNFoldParsingTestOnSourceTexts  ?list-of-st-names ?experimental-trial-name) takes in a list of readings. It then does n-fold cross
+validation to see how well we internally match.")
+
+(preconditionForMethod
+ (and 
+      (textsOfSourceTexts ?list-of-st-names ?list-of-texts)
+      (goldStandardsOfSourceTexts ?list-of-st-names ?list-of-gs-readings))
+ (methodForAction
+  (internalARNFoldParsingTestOnSourceTexts ?list-of-st-names ?experimental-trial-name)
+  (actionSequence
+   (TheList
+    (doForEach ?reading ?list-of-gs-readings
+               (internalARNFoldParsingTestPly ?reading ?list-of-gs-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name))))))
+
+(isa internalARNFoldParsingTestPly ComplexActionPredicate)
+(arity internalARNFoldParsingTestPly 5)
+(arg1Isa internalARNFoldParsingTestPly AccessingAnIBT) ;;; This is the reading
+(arg2Isa internalARNFoldParsingTestPly List) ;;; This is the list of readings to use, in order.
+(arg3Isa internalARNFoldParsingTestPly List) ;;; this is the list of texts that correspond to the readings.
+(arg4Isa internalARNFoldParsingTestPly List) ;;; this is the list of source text names that correspond to the readings.
+(arg5Isa internalARNFoldParsingTestPly Thing) ;;; The name of the experimental trial
+(comment internalARNFoldParsingTestPly "(internalARNFoldParsingTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name) 
+does one ply for internalARNFoldParsingTest.")
+
+;;; Can I write this to be a general parsing test that doesn't reference the specifics? Probably not.
+(preconditionForMethod
+ (and
+      (textForReadingInListOfReadings ?reading ?list-of-readings ?list-of-texts ?text)
+      (textForReadingInListOfReadings ?reading ?list-of-readings ?list-of-st-names ?current-st-name)
+      (newCaseLibraryName ?reading ?experimental-trial-name ?case-library)
+      (generatedSourceTextName ?experimental-trial-name ?generated-st-name)
+      (generatedReadingName ?generated-st-name ?generated-reading-name)
+      )
+ ;;; What on earth is the list of readings for? What even is it?
+ ;;; It's actually the list of gold standard readings.
+ ;;; It's used to make a new GCF name, I guess. Why is that not just the source text name with the experimental trial name?
+ ;;; Where do we populate the new GCF name?
+ (methodForAction
+  (internalARNFoldParsingTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)    
+    (doTell (populateNewGCforARParsingNFoldPly ?reading ?list-of-readings ?experimental-trial-name ?case-library))
+    (doRecordMembersInContext ARExperimentsLogisticsMt (TheList (GCFUsedInExperiment ?new-GCF-name ?experimental-trial-name)))
+    (doEAProcess ?text)
+    (doAgentPlan
+           (actionSequence
+            (TheList
+             (disambiguateSourceText ?generated-st-name ?generated-reading-name 
+                                     (TheSet (analogicalRecallParsingGenContextSuggestions ?case-library All-APD-CircumstancesMt)) LbrDisambiguationMt)
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                ;;; When we store that something is a gold standard, do we store anywhere that it's a gold standard?
+                ;;; Looks like we really need the names of the source texts after all.
+                (checkAdvancedAccuracyForARNFoldParsingTestPly ?experimental-trial-name ?current-st-name ?generated-reading-name ?experimental-trial-name ?case-library)
+                (doAnnounce "internalARNFoldParsingTestPly completed for ~A." (?reading)) 
+                ))))))))))
+
+(isa checkAdvancedAccuracyForARNFoldParsingTestPly ComplexActionPredicate)
+(arity checkAdvancedAccuracyForARNFoldParsingTestPly 5)
+(arg1Isa checkAdvancedAccuracyForARNFoldParsingTestPly Thing) ;;; The trial name
+(arg2Isa checkAdvancedAccuracyForARNFoldParsingTestPly InformationBearingThing)
+(arg3Isa checkAdvancedAccuracyForARNFoldParsingTestPly AccessingAnIBT)
+(arg4Isa checkAdvancedAccuracyForARNFoldParsingTestPly Thing)
+(arg5Isa checkAdvancedAccuracyForARNFoldParsingTestPly GeneralizationPoolDisambiguationFamily)
+(comment checkAdvancedAccuracyForARNFoldParsingTestPly 
+  "(checkAdvancedAccuracyForARNFoldParsingTestPly ?trial ?source-text-name ?current-reading-name ?experiment-name ?library-name) checks the accurracy of the source text being
+disambiguated and puts it in the trial's mt.")
+
+(preconditionForMethod
+ (and
+      ;;; Have to get the GSR at some point.
+      (ist-Information LbrSourceTextsMt (goldStandardReadingOfSourceText ?gs-reading-name ?source-text-name))
+      (outsourcedOnly (accuracyOfCurrentParsesComparedToGoldStandardAR ?gs-reading-name ?trial ?current-reading-name ?experiment-name ?GCF-name ?acc))
+      )
+ (methodForAction
+  (checkAdvancedAccuracyForARNFoldParsingTestPly ?trial ?source-text-name ?current-reading-name ?experiment-name ?GCF-name)
+  (actionSequence
+   (TheList
+    ;;; Store that in the KB, and maybe in a flat-file I guess.
+    (doRecord (ist-Information ExperimentalResults (accuracyOfCurrentDiscourseComparedToGoldStandard ?gs-reading-name ?trial ?current-reading-name ?acc )))
+    ))))
+
+
+(isa analogicalRecallParsingGenContextSuggestionsPlan ComplexActionPredicate)
+(arity analogicalRecallParsingGenContextSuggestionsPlan 5)
+(arg1Isa analogicalRecallParsingGenContextSuggestionsPlan CaseLibrary)
+(arg2Isa analogicalRecallParsingGenContextSuggestionsPlan Microtheory) ;;; This is where the suggestions will be stored.
+(arg3Isa analogicalRecallParsingGenContextSuggestionsPlan InformationBearingThing) ;;; This is the source text
+(arg4Isa analogicalRecallParsingGenContextSuggestionsPlan AccessingAnIBT) ;;; The name of the current reading.
+(arg5Isa analogicalRecallParsingGenContextSuggestionsPlan Microtheory) ;;; stubs-mt
+(comment analogicalRecallParsingGenContextSuggestionsPlan "(analogicalRecallParsingGenContextSuggestionsPlan ?case-library ?storage-mt ?source-text ?current-reading ?stubs-mt) makes disambiguation suggestions
+for ?source-text based on which choices have analogical support from generalization contexts in ?gc-family.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?evidence-set
+        (TheClosedRetrievalSetOf 
+            (evidenceForChoiceInSentence (analogicalRecallParsingGenContextSuggestions ?case-library ?stubs-mt) ?choice ?choice-id ?favor-rating ?sentence)
+          (and                 
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choice ?choice-set-id ?choice-id ?choice))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSet (ChoiceSetFn ParseTree ?span-token)
+                            ?choice-set-id))
+               (favorFromAnalogicalParseRecallGenContext ?choice ?choice-set-id ?gen-context-family ?stubs-mt ?favor-rating)
+               (ist-Information (DiscourseCaseFn ?current-discourse-id) 
+                   (choiceSetFromSentence ?choice-set-id ?sentence))
+               (different ?favor-rating (ChoiceFavorFn 0.0))))))
+ (methodForAction
+  (analogicalRecallParsingGenContextSuggestionsPlan ?case-library ?storage-mt ?source-text-name ?current-reading ?stubs-mt)
+  (actionSequence
+   (TheList
+    (recordMembersInContext ?evidence-set ?storage-mt)))))
+
+(isa dumpCurrentParsesAsGoldStandard ComplexActionPredicate)
+(arity dumpCurrentParsesAsGoldStandard 1)
+(arg1Isa dumpCurrentParsesAsGoldStandard InformationBearingThing)
+(comment dumpCurrentParsesAsGoldStandard "(dumpCurrentParsesAsGoldStandard ?source-text-name) attempts to record the
+ currently selected parse for the discourse currently in working memory into the KB in a generated mt as a gold standard. 
+This is a perminent record.")
+
+(preconditionForMethod
+ (generatedGoldStandardReadingName ?source-text-name ?gs-reading-name)
+ (methodForAction
+  (dumpCurrentParsesAsGoldStandard ?source-text-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information LbrSourceTextsMt (microtheoryForSourceText (MtForSourceTextFn ?source-text-name) ?source-text-name)))
+    (doRecord (ist-Information LbrSourceTextsMt (goldStandardReadingOfSourceText ?gs-reading-name ?source-text-name)))
+    (recordCurrentParseChoices (MtForSourceTextFn ?source-text-name) ?source-text-name ?gs-reading-name)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (dumpReadingToFlatFile ?gs-reading-name)
+       (doTell (dumpFactToExperimentalDataFile (ist-Information LbrSourceTextsMt (goldStandardReadingOfSourceText ?gs-reading-name ?source-text-name)) "gold-standards.meld"))
+       )))))))
+
+(isa recordCurrentParseChoices ComplexActionPredicate)
+(arity recordCurrentParseChoices 3)
+(arg1Isa recordCurrentParseChoices Microtheory)
+(arg2Isa recordCurrentParseChoices InformationBearingThing)
+(arg3Isa recordCurrentParseChoices AccessingAnIBT)
+(comment recordCurrentParseChoices "(recordCurrentParseChoices ?microtheory ?source-text-name ?reading-name) attempts to record the
+ currently selected parse choices for the discourse currently in working memory into the KB in ?microtheory. This is a persistant record.")
+
+(isa parseSelectedInSourceTextInReading Predicate)
+(arity parseSelectedInSourceTextInReading 4)
+(comment parseSelectedInSourceTextInReading "(parseSelectedInSourceTextInReading ?selected-parse ?source-text-name ?reading-name ?sen-number) means that
+?selected-parse was selected in ?reading-name.")
+
+(isa condensedSelectedParsesFromCurrentDiscourse Predicate)
+(arity condensedSelectedParsesFromCurrentDiscourse 3)
+(comment condensedSelectedParsesFromCurrentDiscourse "Intended to be used as an outsourced predicate with the third argument open, 
+(condensedSelectedParsesFromCurrentDiscourse ?source-text-name ?reading-name ?condensedSelectedParses) produces a set of facts of the form 
+(parseSelectedInSourceTextInReading ?selected-parse ?source-text-name ?reading-name ?sen-number).")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentDiscourseId ?discourse-id))      
+      (condensedSelectedParsesFromCurrentDiscourse ?source-text-name ?reading-name ?condensedSelectedParses)) ;;; The selected choices
+ (methodForAction
+  (recordCurrentParseChoices ?microtheory ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?microtheory (readingOfSourceText ?reading-name ?source-text-name)))
+    (doAnnounce "Recording parse choices for the reading ~A." (?reading-name))
+    (recordMembersInContext ?condensedSelectedParses ?microtheory)))))
+
+(isa storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse ComplexActionPredicate)
+(arity storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse 4)
+(arg1Isa storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse CaseLibrary) ;;; This is the over-mt which will genl to where we store it.
+(arg2Isa storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse InformationBearingThing) ;;; This is the source text
+(arg3Isa storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse Microtheory) ;;; This microtheory contains the stubs that let us know what to store.
+(arg4Isa storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse AccessingAnIBT) ;;; Reading name
+(comment storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse "(storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse ?case-library ?source-text ?stubs-mt ?reading) stores
+some information about the lexical choice sets for the current discourse.")
+
+
+;;; This is tricky, because what we really want to do is store a whole bunch of pairs
+;;; This should probably just be a tell handler. Have we already written something like this?
+;;; make-probes-for-APR? (make-probes-for-APR stubs-mt our-choice choice-set)
+;;; is a method that does this.
+;;; Our tell handler will take the stubs-mt, the selected parse tree, and the name of the case library
+;;; What does this actually do with the gold standard reading? Nothing, appearantly?
+(preconditionForMethod
+ (and 
+      (outsourcedOnly (currentDiscourseId ?current-discourse-id))
+      (evaluate ?selected-parses-in-discourse
+        (TheClosedRetrievalSetOf 
+            ?ptid
+          (and
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (choiceSet
+                  (ChoiceSetFn ParseTree ?span-token) ?choice-set-id))
+               (ist-Information (DiscourseCaseFn ?current-discourse-id)
+                 (selectedChoice ?choice-set-id ?choice-id ?ptid))))))
+ (methodForAction
+  (storeParseChoiceSetCasePlansInGenContextForCurrentDiscourse ?case-library ?source-text ?stubs-mt ?reading)
+  (actionSequence
+   (TheList
+    (doForEach ?selected-tree ?selected-parses-in-discourse
+;;;               (TheList 
+;;;                (doAnnounce "Recording parse choices in ~A." (?case-library))
+                (doTell (storeParsesInGenContext ?stubs-mt ?selected-tree ?case-library)))))))
+
+(isa storeParsesInGenContext Predicate)
+(arity storeParsesInGenContext 3)
+(arg1Isa storeParsesInGenContext Microtheory) 
+(arg2Isa storeParsesInGenContext ParseTree) 
+(arg3Isa storeParsesInGenContext Microtheory)
+(comment storeParsesInGenContext
+  "(storeParsesInGenContext ?stubs-mt ?selected-tree ?case-library) is an outsourced predicate - a tell handler one - that writes
+stores parse information in ?case-library.")
+
+
+(isa ParseTreeNodeTypeFn FunctionOrFunctionalPredicate)
+(arity ParseTreeNodeTypeFn 1)
+(arg1Isa ParseTreeNodeTypeFn Thing)
+(resultIsa ParseTreeNodeTypeFn Thing)
+
+(isa rootOfSelectedParse Predicate)
+(arity rootOfSelectedParse 1)
+(comment rootOfSelectedParse "(rootOfSelectedParse ?x) means that ?x was the root of the selected parse in this case.")
+
+(isa rootOfOurParse Predicate)
+(arity rootOfOurParse 1)
+(comment rootOfOurParse "(rootOfOurParse ?x) means that ?x was the root of the parse under consideration in this case.")
+
+(isa rootOfOtherParse Predicate)
+(arity rootOfOtherParse 1)
+(comment rootOfOtherParse "(rootOfOtherParse ?x) means that ?x was the root of the parse not under consideration in this case.")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

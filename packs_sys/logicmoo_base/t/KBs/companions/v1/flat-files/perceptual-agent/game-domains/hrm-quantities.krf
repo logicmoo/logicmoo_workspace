@@ -1,0 +1,70 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: hrm-quantities.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: September 10, 2017 15:27:35
+;;;;   Purpose: Enumerate quantity fluents in the game.
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory (QualitativeModelMtFn HRM) :exclude-globals t)
+
+;;; Fluents in HRM don't really have units.  Or entities for that matter.
+;;; Probably need to fix that.
+
+;;; In hrm, quantities are a subset of those things computed in next rules.
+
+(quantityPrimitive (MeasurableQuantityFn attitude) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn competence) HRMCharacter Number-General)
+;(quantityPrimitive (MeasurableQuantityFn competenceAsymptote) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn effectOfProbation) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn employmentHours) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn expectedSalary) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn lastAction) HRMCharacter Number-General)  ; number of months
+(quantityPrimitive (MeasurableQuantityFn lastActionSign) HRMCharacter Number-General) ; +/- 1
+(quantityPrimitive (MeasurableQuantityFn perceptionOfFairness) HRMCharacter Number-General)
+;(quantityPrimitive (MeasurableQuantityFn employeeProduction) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn performance) HRMCharacter Number-General)  ; really a Percentage
+(quantityPrimitive (MeasurableQuantityFn priorCompetence) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn qualityOfSupervision) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn qualityOfWorklife) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn quantityOfWork) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn salary) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn dissatisfactionWithPay) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn selfEsteem) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn tenure) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn experience) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn trainingHours) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn skillDiscrepancy) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn discrepancy) HRMCharacter Number-General)
+
+
+
+;;; Constant parameters:
+(quantityPrimitive (MeasurableQuantityFn aptitude) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn dedication) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn ambition) HRMCharacter Number-General)
+(quantityPrimitive (MeasurableQuantityFn educationLevel) HRMCharacter Number-General)
+
+;;; Company parameters
+
+(quantityPrimitive (MeasurableQuantityFn capital) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn profitability) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn income) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn production) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn marketFactors) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn productionCost) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn laborCosts) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn fixedCosts) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn payrollCost) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn trainingCost) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn productivity) HRMCompany Number-General)
+(quantityPrimitive (MeasurableQuantityFn morale) HRMCompany Number-General)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

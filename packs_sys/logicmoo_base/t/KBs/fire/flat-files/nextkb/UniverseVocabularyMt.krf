@@ -1,0 +1,6 @@
+(in-microtheory UniverseVocabularyMt)
+
+(isa TheBigBang Explosion)
+(isa TheBigBang CreationEvent)
+(isa TheBigBang CelestialEvent)
+

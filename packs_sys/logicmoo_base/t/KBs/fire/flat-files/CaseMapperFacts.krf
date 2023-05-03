@@ -1,0 +1,22 @@
+
+;;;Case Mapper Related facts
+
+(in-microtheory UniversalVocabularyMt) 
+
+(isa CaseMapperAnalogyControlMt Microtheory)
+(isa CaseMapperMt Microtheory)
+
+(genlMt CaseMapperAnalogyControlMt UniversalVocabularyMt)
+(genlMt CaseMapperMt CaseMapperAnalogyControlMt)
+
+(in-microtheory CaseMapperAnalogyControlMt)
+(notForAnalogy prettyString)
+(notForAnalogy comment)
+(notForAnalogy StringObject)
+(notForAnalogy prettyString-Canonical)
+(notForAnalogy synonymousExternalConcept)
+(notForAnalogy quotedIsa)
+(notForAnalogy CycLExpressionType)
+ 
+
+

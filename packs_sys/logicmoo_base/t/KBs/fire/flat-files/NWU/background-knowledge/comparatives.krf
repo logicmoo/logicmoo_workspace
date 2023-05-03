@@ -1,0 +1,93 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: comparatives.meld
+;;;;    System: Companions
+;;;;    Author: C.J. McFate
+;;;;   Created: October 12, 2017 18:10:47
+;;;;   Purpose: Ontologizing functions for comparatives and superlatives
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa ConstrainedSlotFn PredicateDenotingFunction)
+(isa ConstrainedSlotFn BinaryFunction)
+(arg2Isa ConstrainedSlotFn QuantityType)
+(arg1Isa ConstrainedSlotFn QuantitySlot)
+(resultIsa ConstrainedSlotFn QuantitySlot)
+(comment ConstrainedSlotFn "This predicate takes a quantity slot that can quantify over intervals of different types
+ and returns one that quantifys only over intervals of the first argument. An example is feelsEmotion.
+ Thus (ConstrainedSlotFn Anger feelsEmotion) would return a predicate that is a spec of feelsEmotion and that specifically
+ quantifies the amount of anger an agent has. Most quantity slots do this implicitly (e.g. temperatureOfObject).")
+
+(isa SlotForPredWithArgTypeFn PredicateDenotingFunction)
+(isa SlotForPredWithArgTypeFn BinaryFunction)
+(arg1Isa SlotForPredWithArgTypeFn BinaryPredicate)
+(arg2Isa SlotForPredWithArgTypeFn FacetInstanceCollection)
+(resultIsa SlotForPredWithArgTypeFn QuantitySlot)
+(comment SlotForPredWithArgTypeFn "This function takes a binary predicate which has some instance of a FacetInstanceCollection
+ as it's arg2 (e.g. hasState, hasMentalFeatures, hasPersonality). It returns a QuantitySlot that attaches an entity to the quantity type
+ that results from interpreting the degree to which an example is a member of the type indicated by the instance of the
+ FacetInstanceCollection. For example (SlotForPredWithArgTypeFn hasMentalFeatures Vicious) is a QuantitySlot for the scale measuring
+ how strongly the statement (hasMentalFeatures ?x Vicious) applies.")
+
+
+(isa ScaleOfAbnormalityFn CollectionDenotingFunction)
+(isa ScaleOfAbnormalityFn UnaryFunction)
+(arg1Isa ScaleOfAbnormalityFn FunctionalSlot)
+(resultIsa ScaleOfAbnormalityFn QuantityType)
+(comment ScaleOfAbnormalityFn "This predicate takes a Functional Slot that relates a collection of some type to a collection
+ of instances of that type that are abnormal in some way. It returns the QuantityType that is the scale along which the abnormality
+ is measured. For example (ScaleOfAbnormalityFn largeVarietyOfType) would return the QuantityType that is the type along which
+ (LargeFn X) is abnormal (e.g. size). We need this because while subcollection functions like LargeFn do connect to their relevant
+ abnormalVarietyOfType spec, there is no connection at all to the dimension along which something is abnormal.")
+
+(isa QuantitySlotFn PredicateDenotingFunction)
+(isa QuantitySlotFn UnaryFunction)
+(arg1Isa QuantitySlotFn QuantityType)
+(resultIsa QuantitySlotFn QuantitySlot)
+(comment QuantitySlotFn "Given a quantity type, QuantitySlotFn creates a QuantitySlot whose arg2 is restricted to scalars of
+ that type. For example (QuantitySlotFn Temperature) gives a quantity slot for an object's temperature. Of corse that one
+ already exists (temperatureOfObject) but one may need to be created for quantity types that are created on the fly.")
+
+(isa greatestQuantityWRTEventFn SetDenotingFunction)
+(arity greatestQuantityWRTEventFn 2)
+(arg1Isa greatestQuantityWRTEventFn Collection)
+(arg2Isa greatestQuantityWRTEventFn Thing)
+(comment greatestQuantityWRTEventFn "refers to the group of type arg1 that has the greatest cardinality when that group is an argument
+ to some event arg2. For 'What city has the most dogs' we get (greatestQuantityWRTEventFn Dog have123). The variable dog123 denotes
+ the set denoted by the function.This is a work in progress.")
+
+(isa lowestQuantityWRTRoleInEvent SetDenotingFunction)
+(arity lowestQuantityWRTRoleInEvent 2)
+(arg1Isa lowestQuantityWRTRoleInEvent Collection)
+(arg2Isa lowestQuantityWRTRoleInEvent Thing)
+(comment lowestQuantityWRTRoleInEvent "Reverse of greatestQuantityWRTEventFn. See comment.")
+
+(isa dimensionOfAbnormalityForPredicate Predicate)
+(arity dimensionOfAbnormalityForPredicate 3)
+(arg1Isa dimensionOfAbnormalityForPredicate FunctionalSlot)
+(arg2Isa dimensionOfAbnormalityForPredicate QuantitySlot)
+(arg3Isa dimensionOfAbnormalityForPredicate Quantity)
+(comment dimensionOfAbnormalityForPredicate "This relates an abnormalVarietyOfType spec to the MeasurableQuantitySlot
+ which measures the dimension along which the abnormal predicate is abnormal. It then includes a generic value for the dimesnion.
+ smallVarietyOfType would match to volumeOfObject and (LowAmountFn volume) etc.")
+
+(dimensionOfAbnormalityForPredicate heavyVarietyOfType massOfObject (HighAmountFn Mass))
+(dimensionOfAbnormalityForPredicate lightVarietyOfType massOfObject (LowAmountFn Mass))
+(dimensionOfAbnormalityForPredicate oldVarietyOfType age (HighAmountFn Time-Quantity))
+(dimensionOfAbnormalityForPredicate youngVarietyOfType age (LowAmountFn Time-Quantity))
+(dimensionOfAbnormalityForPredicate smallVarietyOfType sizeParameterOfObject (LowAmountFn Size))
+(dimensionOfAbnormalityForPredicate largeVarietyOfType sizeParameterOfObject (HighAmountFn Size))
+(dimensionOfAbnormalityForPredicate shortVarietyOfType heightOfObject (LowAmountFn Height))
+(dimensionOfAbnormalityForPredicate tallVarietyOfType heightOfObject (HighAmountFn Height))
+(dimensionOfAbnormalityForPredicate thinVarietyOfType widthOfObject (LowAmountFn Width))
+(dimensionOfAbnormalityForPredicate thickVarietyOfType widthOfObject (HighAmountFn Width))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,28 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: symmetric-relation.lsp
+;;;;    System: FIRE
+;;;;    Author: Andrew Lovett
+;;;;   Created: September 28, 2005 17:16:38
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Wednesday, July 2, 2008 at 15:51:40 by usher
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa SymmetricRelation Collection)
+(isa SymmetricRelation RelationTypeByLogicalFeature)
+(genls SymmetricRelation Relation)
+(comment SymmetricRelation 
+  "A symmetric relation is a relation whose arguments can be flipped.  That is, 
+   R(a,b,c) => R(c, b, a).")
+
+(genls SymmetricBinaryPredicate SymmetricRelation)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

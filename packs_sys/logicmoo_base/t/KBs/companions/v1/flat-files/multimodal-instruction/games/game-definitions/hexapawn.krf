@@ -1,0 +1,146 @@
+;;; hexapawn.meld
+
+(in-microtheory (GameRulesMtFn Hexapawn))
+
+(gameDomain Hexapawn)
+
+(isa Hexapawn TwoPersonGame)
+(isa Hexapawn PieceMovingGame)
+
+;;; Design choice: 
+;;; 1 action or two?  move and capture or just move?  - just move
+;;; Coordinates are all integers, so we shouldn't need to reify successor.
+;;; Let nextTo be cartesian next to, and diagonal be diagonal.
+;;; Then the only other relation that should matter is whether a 
+;;; given piece can get there in one move.
+
+(isa move GamePredicate)
+(arity move 5)
+
+(isa cell GamePredicate)
+(arity cell 3)
+
+(isa control GamePredicate)
+(arity control 1)
+
+(isa white GameRole)
+(isa black GameRole)
+(isa wp GamePiece)
+(isa bp GamePiece)
+(pieceOwner white wp)
+(pieceOwner black bp)
+
+(maxCoordX Hexapawn 3)
+(maxCoordY Hexapawn 3)
+
+(entityLabel wp wp)
+(entityLabel bp bp)
+
+;;; 1,1 is top-left
+(init (cell 1 1 bp))
+(init (cell 2 1 bp))
+(init (cell 3 1 bp))
+(init (cell 1 2 Empty))
+(init (cell 2 2 Empty))
+(init (cell 3 2 Empty))
+(init (cell 1 3 wp))
+(init (cell 2 3 wp))
+(init (cell 3 3 wp))
+(init (control white))
+
+
+
+;;; Next Rules:
+
+
+;;; When you move into a cell, you occupy it:
+(<== (next (cell ?x ?y ?p))
+     (doesAction ?player (move ?p ?u ?v ?x ?y)))
+
+;;; When you move out of a cell, it becomes blank:
+(<== (next (cell ?u ?v Empty))
+     (doesAction ?player (move ?p ?u ?v ?x ?y)))
+
+;;; Cells don't change except by movement:
+(<== (next (cell ?w ?z ?content))
+     (doesAction ?player (move ?p ?u ?v ?x ?y))
+     (currentlyTrue (cell ?w ?z ?content))
+     (different (LocFn ?u ?v) (LocFn ?w ?z))
+     (different (LocFn ?x ?y) (LocFn ?w ?z)))
+
+
+;;; Two-player turn-taking:     
+(<== (next (control ?player))
+     (currentlyTrue (control ?other-player))
+     (numAnswers 1 (gameDomain ?domain))
+     (allFactsAllowed
+      (lookupOnly
+       (localOnly
+        (nonTransitiveInference
+         (ist-Information (GameRulesMtFn ?domain)
+          (isa ?player GameRole))))))
+     (different ?player ?other-player))
+
+
+
+;;; Legal Rules:
+
+
+;;; White moves up one empty square:
+(<== (legal white (move ?piece ?x ?v ?x ?y)) 
+     (currentlyTrue (control white))
+     (pieceOwner white ?piece)
+     (currentlyTrue (cell ?x ?v ?piece))
+     (evaluate ?y (DifferenceFn ?v 1))
+     (currentlyTrue (cell ?x ?y Empty))) ; Dont need to check maxCoorY, since if we're out of range, this won't succeed.
+     
+;;; Black moves down one empty square:
+(<== (legal black (move ?piece ?x ?v ?x ?y)) 
+     (currentlyTrue (control black))
+     (pieceOwner black ?piece)
+     (currentlyTrue (cell ?x ?v ?piece))
+     (evaluate ?y (PlusFn ?v 1))
+     (currentlyTrue (cell ?x ?y Empty)))
+
+;;; White captures:  
+(<== (legal white (move ?piece ?u ?v ?x ?y))
+     (currentlyTrue (control white))
+     (pieceOwner white ?piece)
+     (currentlyTrue (cell ?u ?v ?piece))
+     (diagonal (LocFn ?u ?v) (LocFn ?x ?y))
+     (evaluate ?y (DifferenceFn ?v 1))
+     (currentlyTrue (cell ?x ?y ?victim))
+     (pieceOwner black ?victim))
+     
+;;; Black captures:  
+(<== (legal black (move ?piece ?u ?v ?x ?y))
+     (currentlyTrue (control black))
+     (pieceOwner black ?piece)
+     (currentlyTrue (cell ?u ?v ?piece))
+     (diagonal (LocFn ?u ?v) (LocFn ?x ?y))
+     (evaluate ?y (PlusFn ?v 1))
+     (currentlyTrue (cell ?x ?y ?victim))
+     (pieceOwner white ?victim))  ; Implicitly no longer the content of ?x ?y
+
+;;; Terminal Rules
+
+(<== (terminalState) 
+     (currentlyTrue (control ?who))
+     (uninferredSentence
+       (legal ?who (move ?u ?v ?x ?y ?piece))))
+     
+(<== (terminalState) (goalState ?player 100))
+
+;;; Goal Rules
+
+(<== (goalState black 100)
+     (pieceOwner black ?piece)
+     (currentlyTrue (cell ?x 3 ?piece)))
+     
+(<== (goalState white 100)
+     (pieceOwner white ?piece)
+     (currentlyTrue (cell ?x 1 ?piece)))
+
+
+ ;;; End of Code
+ 

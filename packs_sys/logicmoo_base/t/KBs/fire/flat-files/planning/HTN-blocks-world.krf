@@ -1,0 +1,327 @@
+(in-microtheory BlocksWorldMt) 
+(genlMt BlocksWorldMt HTNPlanner)
+(genlMt CompanionsMt BlocksWorldMt)
+
+;;; HTN blocks world ontology
+
+(isa doPickup SimpleActionPredicate)
+(arity doPickup 1)
+(arg1Isa doPickup Block)
+(comment doPickup "(doPickup ?OBJ) is the classic pickup a block operator.")
+
+(isa doPutdown SimpleActionPredicate)
+(arity doPutdown 1)
+(arg1Isa doPutdown Block)
+(comment doPutdown "(doPutdown ?OBJ) is the classic putdown a block operator.")
+
+(isa doStack SimpleActionPredicate)
+(arity doStack 2)
+(arg1Isa doStack Block)
+(arg2Isa doStack Block)
+(comment doStack "(doStack ?OBJ) is the classic stack two blocks operator.")
+
+(isa doUnstack SimpleActionPredicate)
+(arity doUnstack 2)
+(arg1Isa doUnstack Block)
+(arg2Isa doUnstack Block)
+(comment doUnstack "(doUnstack ?OBJ) is the classic unstack two blocks operator.")
+
+
+(isa doAssert SimpleActionPredicate)
+(isa doAssert BookKeepingTask)
+(arity doAssert 1)
+(comment doAssert "(doAssert ?fact) simply adds ?fact to the current planning context.")
+
+(isa moveBlock ComplexActionPredicate)
+(arity moveBlock 1)
+(arg1Isa moveBlock Set-Mathematical)
+(comment moveBlock "(moveBlock ?noMoveSet) moves some block.
+                    The argument is a set of blocks that should not be moved
+                    (to avoid infinite loops).")
+
+(isa achieveGoals ComplexActionPredicate)
+(isa achieveGoals BookKeepingTask)
+(arity achieveGoals 1)
+(arg1Isa achieveGoals Set-Mathematical)
+(comment achieveGoals "(achieveGoals ?goalSet) is a bookkeeping mechanism for
+                       asserting members of ?goalSet into the current planning
+                       context.")
+
+;;; Axiom Vocabulary
+
+(isa onTable UnaryPredicate)
+(arity onTable 1)
+(arg1Isa onTable Block)
+(comment onTable "(onTable ?x) means ?x is on the table.")
+
+(isa clear UnaryPredicate)
+(arity clear 1)
+(arg1Isa clear Block)
+(comment clear "(clear ?x) means nothing is on ?x.")
+
+;;; define isHolding, since holding is already defined as a binary predicate
+(isa isHolding UnaryPredicate)
+(arity isHolding 1)
+(arg1Isa isHolding Block)
+(comment isHolding "(isHolding ?x) means robot is holding block ?x")
+
+(isa needToMove UnaryPredicate)
+(arity needToMove 1)
+(arg1Isa needToMove Block)
+(comment needToMove "(needToMove ?x) means ?x must be moved to achieve goal")
+
+(isa atGoalPos UnaryPredicate)
+(arity atGoalPos 1)
+(arg1Isa atGoalPos Block)
+(comment atGoalPos "(atGoalPos ?x) means ?x is in its final location.")
+
+(isa moveableToGoal UnaryPredicate)
+(arity moveableToGoal 1)
+(arg1Isa moveableToGoal Block)
+(comment moveableToGoal "(moveableToGoal ?x) means ?x can be directly moved to achieve goal.")
+
+;;; need to move x if x needs to go from one block to another 
+(<== (needToMove ?x)
+     (on-Physical ?x ?y)
+     (goal (on-Physical ?x ?z))
+     (different ?y ?z))
+
+;;; need to move x if x needs to go from table to block 
+(<== (needToMove ?x)
+     (onTable ?x)
+     (goal (on-Physical ?x ?z)))
+
+;;; need to move x if x needs to go from block to table
+(<== (needToMove ?x)
+     (on-Physical ?x ?y)
+     (goal (onTable ?x)))
+
+;;; need to move x if x is on y and y needs to be clear
+(<== (needToMove ?x)
+     (on-Physical ?x ?y)
+     (goal (clear ?y)))
+
+;;; need to move x if x is on z and something else needs to be on z
+(<== (needToMove ?x)
+     (on-Physical ?x ?z)
+     (goal (on-Physical ?y ?z))
+     (different ?x ?y))
+
+;;; need to move x if x is on something else that needs to be moved
+(<== (needToMove ?x)
+     (on-Physical ?x ?y)
+     (needToMove ?y))
+            
+;;; x doesn't need to move if it is not part of a goal and not blocking another:
+(<== (atGoalPos ?x)
+     (onTable ?x)
+     (localOnly (uninferredSentence (goal (on-Physical ?x ?z)))))
+
+;;; x doesn't need to move if it's achieved its goal and not blocking another:
+(<== (atGoalPos ?x)
+     (goal (on-Physical ?x ?y))
+     (on-Physical ?x ?y)
+     (atGoalPos ?y))
+
+(<== (moveableToGoal ?x)
+     (goal (on-Physical ?x ?z))
+     (on-Physical ?x ?y)
+     (clear ?x)
+     (different ?x ?z)
+     (clear ?z)
+     (atGoalPos ?z))
+
+(<== (moveableToGoal ?x)
+     (goal (onTable ?x))
+     (clear ?x)
+     (on-Physical ?x ?y))
+
+(<== (moveableToGoal ?x)
+     (goal (on-Physical ?x ?y))
+     (clear ?x)
+     (onTable ?x)
+     (clear ?y)
+     (needToMove ?z)
+     (different ?z ?x)
+     (different ?z ?y))
+
+;;; Preference rules:
+
+;;; Prefer seq1 over seq2 if seq1 doesn't touch any block that will need to 
+;;; be moved later, but seq2 does:
+(<== (preferInContext (moveBlock ?noMove) ?seq1 ?seq2)
+     (uninferredSentence (clobbersGoal ?seq1))
+     (clobbersGoal ?seq2))
+
+;;; *** Evil heuristic to force backtracking ***
+;(<== (preferInContext (moveBlock ?noMove) ?seq2 ?seq1)
+;     (uninferredSentence (clobbersGoal ?seq1))
+;     (clobbersGoal ?seq2))
+
+;;; A proposed sequence for moving a block will clobber a goal if it 
+;;; includes an action to stack something on ?Y while there's an 
+;;; unachieved goal to stack ?Y on something else:
+(<== (clobbersGoal ?seq)
+     (subexpressionMatching (doStack ?X ?Y) ?seq ?action)
+     (goal (on-Physical ?Y ?Z))
+     (localOnly (uninferredSentence (on-Physical ?Y ?Z))))
+
+;;; Preconditions for primitive actions
+
+(preconditionFor-Props
+   (and (onTable ?x)
+        (clear ?x)
+        (isa ?x Block))
+   (doPickup ?x))
+
+(preconditionFor-Props
+   (isHolding ?x)
+   (doPutdown ?x))
+   
+(preconditionFor-Props
+   (and (isHolding ?x)
+        (clear ?y)
+        (isa ?x Block)
+        (isa ?y Block)
+        (different ?x ?y))
+   (doStack ?x ?y))
+
+(preconditionFor-Props
+   (and (clear ?x)
+        (on-Physical ?x ?y)
+        (isa ?x Block)
+        (isa ?y Block))
+   (doUnstack ?x ?y))
+   
+   
+;;; Effects of primitive actions
+
+;;; bookkeeping - for asserting goals into WM.
+(effectOfAction-Props
+   (doAssert ?fact)
+   ?fact)
+
+(effectOfAction-Props
+   (doPickup ?x)
+   (and (isHolding ?x)
+        (not (onTable ?x))))
+
+(effectOfAction-Props
+   (doPutdown ?x)
+   (and (not (isHolding ?x))
+        (onTable ?x)))
+   
+(effectOfAction-Props
+   (doStack ?x ?y)
+   (and (on-Physical ?x ?y)
+        (not (isHolding ?x))
+        (not (clear ?y))))
+
+(effectOfAction-Props
+   (doUnstack ?x ?y)
+   (and (not (on-Physical ?x ?y))
+        (isHolding ?x)
+        (clear ?y)))
+
+;;; HTN methods:
+
+;;; method for moving x from y to z
+(preconditionForMethod
+  (and (clear ?x)
+       (not (elementOf ?x ?nomove))
+       (on-Physical ?x ?y)
+       (goal (on-Physical ?x ?z))
+       (different ?x ?z)
+       (clear ?z) 
+       (atGoalPos ?z)
+       (evaluate ?newSet
+          (SetAdjoinFn ?nomove ?x)))
+  (methodForAction
+    (moveBlock ?nomove)
+    (actionSequence
+      (TheList
+        (doUnstack ?x ?y)
+        (doStack ?x ?z)
+        (moveBlock ?newSet)))))
+
+;;; method for moving x from y to table
+(preconditionForMethod
+  (and (clear ?x)
+       (not (elementOf ?x ?nomove))
+       (on-Physical ?x ?y)
+       (goal (onTable ?x))
+       (evaluate ?newSet
+          (SetAdjoinFn ?nomove ?x)))
+  (methodForAction
+    (moveBlock ?nomove)
+    (actionSequence
+      (TheList
+        (doUnstack ?x ?y)
+        (doPutdown ?x) 
+        (moveBlock ?newSet)))))
+
+;;; method for moving x from table to y
+(preconditionForMethod
+  (and (isa ?x Block)
+       (clear ?x)
+       (onTable ?x)
+       (not (elementOf ?x ?nomove))
+       (isa ?y Block)
+       (goal (on-Physical ?x ?y))
+       (clear ?y)
+       (atGoalPos ?y)
+       (evaluate ?newSet
+          (SetAdjoinFn ?nomove ?x)))
+  (methodForAction
+    (moveBlock ?nomove)
+    (actionSequence
+      (TheList
+        (doPickup ?x)
+        (doStack ?x ?y)
+        (moveBlock ?newSet)))))
+
+;;; method for moving x out of the way
+(preconditionForMethod
+  (and (on-Physical ?x ?y)
+       (clear ?x)
+       (not (elementOf ?x  ?nomove))
+       (needToMove ?x))
+  (methodForAction
+    (moveBlock ?nomove)
+    (actionSequence
+      (TheList
+        (doUnstack ?x ?y)
+        (doPutdown ?x)
+        (moveBlock ?nomove)))))
+
+;;; No-op: If all goals are satisfied, do nothing
+(preconditionForMethod
+   (and (evaluate ?goal-set (TheClosedRetrievalSetOf ?stmt (goal ?stmt)))
+        (everySatisfies ?goal-stmt ?goal-set (trueSentence ?goal-stmt)))
+   (methodForAction
+     (moveBlock ?nomove)
+     (actionSequence
+       (TheList))))
+
+;;; Bookkeeping: Take an explicit set of goals and recursively assert them  
+;;; into the current planning context:
+(preconditionForMethod
+  (and (different ?goals (TheSet)) ; stop recursion when set is empty
+       (operatorFormulas TheSet ?goals)
+       (formulaArgument ?goals 1 ?goal)
+       (evaluate ?rest-goals (SetMinusFn ?goals ?goal)))
+  (methodForAction
+    (achieveGoals ?goals)
+    (actionSequence
+      (TheList
+        (doAssert ?goal)
+        (achieveGoals ?rest-goals)))))
+
+;;; Start solving when goals have all been asserted into context:
+(preconditionForMethod
+  (true)                         ; The null precondition
+  (methodForAction
+    (achieveGoals (TheSet))
+    (actionSequence
+      (TheList
+        (moveBlock (TheSet))))))

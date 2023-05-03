@@ -1,0 +1,29 @@
+(in-microtheory DomesticBreedsMt)
+
+(isa DomesticatedAnimal KEClarifyingCollectionType)
+(isa PotatoPlant DevelopedOrganismType)
+(isa CornPlant DevelopedOrganismType)
+(isa AngoraRabbit DevelopedOrganismType)
+(comment DogTypeByBreedMixFn "A collection-denoting function. (#$DogTypeByBreedMixFn
+?SET-OF-DOG-TYPES) denotes a collection of #$Dogs whose ancestry
+includes some of each of dog types in ?SET-OF-DOG-TYPES. The set may
+include some specific instances of #$DogTypeByBreed,
+DogTypeByPhysicialVariety, DogTypeByFunctionalGroup, or even
+#$DogTypeByBreed-Mix.  The latter is possible because breed mixes may
+be specified only by approximation, referring only to the functional
+type whose traits a particular #$Dog appears to have inheritied, as
+when we say that some specific #$Dog must have some #$Hound in him.
+For example, (#$DogTypeByBreedMixFn #$LabradorRetriever #$Poodle)
+denotes the collection of dogs with mixed Lab x Poodle ancestry,
+sometimes referred to as Labradoodles.  (#$DogTypeByBreedMixFn
+#$HerdingDog-FunctionalGroup denotes the collection of dogs with mixed
+ancestry consisting all or partly of herding dogs.")
+(genls GoldenRetriever BeigeColor)
+(genls DogTypeByBreed-Pure DevelopedOrganismType)
+(genls CatTypeByBreed DevelopedOrganismType)
+(genls Horse-DomesticatedTypeByBreed DevelopedOrganismType)
+(genls Cattle-DomesticatedTypeByBreed DevelopedOrganismType)
+(genls Pig-DomesticatedTypeByBreed DevelopedOrganismType)
+(genls ArabianHorse SlightPhysicalBuild)
+(genls ThoroughbredHorse SlightPhysicalBuild)
+(genls Horse-ColdBlood StockyPhysicalBuild)

@@ -1,0 +1,13 @@
+(in-microtheory RomanMythologyMt)
+
+(isa Venus-TheGoddess God)
+(isa Venus-TheGoddess AdultFemaleHuman)
+(isa Cupid MaleChild)
+(isa Cupid God)
+(isa Janus-TheGod God)
+(isa Janus-TheGod MaleHuman)
+(isa Augustus-EmperorOfRome God)
+(isa Trajan-RomanEmperor God)
+(isa Cupid Nude)
+(comment Janus-TheGod "The Roman god of beginnings and doorways and archways. Usually depicted as a head with two faces facing opposite directions.")
+(comment Cupid "The Ancient Roman god of love, son of #$Venus-TheGoddess and either Mars or Mercury. Counterpart of Greek Eros.")

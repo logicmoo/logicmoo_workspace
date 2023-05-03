@@ -1,0 +1,6 @@
+(in-microtheory WorldNaturalGeologyMt)
+
+(isa McMurrayFormation GeologicalFormation)
+(isa ClearwaterFormation GeologicalFormation)
+(isa BurgessShaleFormation GeologicalFormation)
+(comment ClearwaterFormation "A #$GeologicalFormation in Alberta, Canada.  The Clearwater formation contains the oil deposits of the #$ColdLakeOilSands.")

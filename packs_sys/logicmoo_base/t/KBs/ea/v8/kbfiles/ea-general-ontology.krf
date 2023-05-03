@@ -1,0 +1,153 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ea-general-ontology.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: July 20, 2014 20:46:05
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory EANLU)
+
+(isa caseAffectsQuantity Predicate)
+(arity caseAffectsQuantity 2)
+(comment "(caseAffectsQuantity ?case ?quantity) means that the case ?case
+affects the quantity ?quantity, I believe.")
+
+
+(isa causes-ThingSit Predicate)
+(arity causes-ThingSit 2)
+(comment "(caseAffectsQuantity ?thing ?situation) means that ?thing causes
+?situation.")
+
+(isa ruleQualifier Predicate)
+(arity ruleQualifier 2)
+
+(isa accessibleDrs Predicate)
+(arity accessibleDrs 2)
+(comment accessibleDrs "(accessibleDrs ?drs-id ?sid) checks if
+?drs-id is accessible from ?sid.")
+
+(isa sentenceAttachment Predicate)
+(arity sentenceAttachment 2)
+(comment sentenceAttachment "(sentenceAttachment ?sid ?attach-to-sid) checks if
+?sid is one sentence after ?attach-to-sid.")
+
+(isa resolveReference Predicate)
+(arity resolveReference 2)
+(comment resolveReference "(resolveReference ?referent ?reference) finds
+a reference for ?referent.")
+
+(isa matchPronounFeatures Predicate)
+(arity matchPronounFeatures 5)
+(comment "(matchPronounFeatures ?referring-sid ?referent ?referent-drs-id ?number ?gender)
+ensures that pronoun features (number and gender) match.")
+
+(isa intraReference Predicate)
+(arity intraReference 3)
+(comment intraReference "(intraReference ?reference ?referent ?referent-drs-id)
+looks within ?referent-drs-id to find a ?reference for ?referent.")
+
+(isa pronounReference Predicate)
+(arity pronounReference 2)
+(comment pronounReference "(pronounReference ?var 
+(PronounFn ?person ?number ?gender ?pronoun-col))
+tries to find a referent for ?var.")
+
+(isa listenerReference Predicate)
+(arity listenerReference 2)
+(comment listenerReference "(listenerReference ?sid ?var)
+maps second-person pronouns to the :LISTENER token.")
+
+(isa indefiniteReference Predicate)
+(arity indefiniteReference 2)
+(comment indefiniteReference "(indefiniteReference ?var ?sid)
+maps indefinites to themselves.")
+
+(isa resolveOtherReference Predicate)
+(arity resolveOtherReference 2)
+(comment resolveOtherReference "(resolveOtherReference (ReferenceInSentenceFn ?var ?sid)
+ (ReferentInDrsFn ?ref ?ddrs-id)) checks to see if ?var refers to
+something else(?)")
+
+
+(isa resolveIntraReference Predicate)
+(arity resolveIntraReference 2)
+(comment resolveIntraReference "(resolveIntraReference (ReferenceInSentenceFn ?reference ?sid)
+                            (ReferentInDrsFn ?referent ?referent-drs-id))
+attempts intra-sentential reference.")
+
+
+(isa variableInOrLiftToUniverse Predicate)
+(arity variableInOrLiftToUniverse 2)
+(comment variableInOrLiftToUniverse "(variableInOrLiftToUniverse ?var ?drs-id)
+checks to see if one of two things is true: If (variableInUniverse ?var ?drs-id Discourse),
+or if ?var refers to something that is a variableInUniverse for ?drs-id.")
+
+(isa partReference Predicate)
+(arity partReference 2)
+(comment partReference "(partReference ?var ?sid)
+is used to handle the <var> of <whole> construction.")
+
+(isa accessibleProReferentForSentence Predicate)
+(arity accessibleProReferentForSentence 5)
+(comment accessibleProReferentForSentence "(accessibleProReferentForSentence 
+?referring-sid ?referent ?referent-sid ?sdrs-id ?referent-ddrs-id)
+means that ?referent is accessible to pronominal reference from ?referring-sid.")
+
+(isa accessibleProReferentInSentence Predicate)
+(arity accessibleProReferentInSentence 4)
+(comment accessibleProReferentInSentence "(accessibleProReferentInSentence 
+?reference ?sid ?referent ?referent-drs-id)
+means that ?referent is accessible to pronominal reference from ?reference.")
+
+(isa interpretationOfWithRespectTo Predicate)
+(arity interpretationOfWithRespectTo 3)
+(comment interpretationOfWithRespectTo "(interpretationOfWithRespectTo 
+?source ?qfq-list ?reading-microtheory) indicates that ?reading-microtheory contains
+an interpretation of ?source-text with the discourse interpretation queries in ?qfq-list
+applied to it. For example, (interpretationOfWithRespectTo Dolphins-Feb-05-2015-01 
+  (TheList EAGeneralQueriesMt) 
+  (FactsFromReadingMtFn Reading-of-Dolphins-Feb-05-2015-01-020914-01))")
+
+(isa resolveUnresolvedReferences Predicate)
+(arity resolveUnresolvedReferences 2)
+(comment resolveUnresolvedReferences "(resolveUnresolvedReferences ?sid ?var)
+tries to resolve all of the unresolved references in ?sid.")
+
+(isa referenceNumber Predicate)
+(arity referenceNumber 3)
+(comment referenceNumber "(referenceNumber ?referent ?col ?number)
+ensures that referents match in number.")
+
+(isa invalidGender Predicate)
+(arity invalidGender 2)
+(comment invalidGender "(invalidGender ?var ?gender)
+means that ?var can't be ?gender.")
+
+(isa possibleReferenceGender Predicate)
+(arity possibleReferenceGender 2)
+(comment possibleReferenceGender "(possibleReferenceGender ?ref ?col ?gender)
+means that ?ref could maybe be ?gender.")
+
+(isa referenceGender Predicate)
+(arity referenceGender 2)
+(comment referenceGender "(referenceGender ?ref ?col ?gender)
+means that ?ref is ?gender.")
+
+
+(in-microtheory BaseKB)
+
+(isa LearnedLexiconMt Microtheory)
+(genlMt LexiconSpindleMt LearnedLexiconMt)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

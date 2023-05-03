@@ -1,0 +1,201 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: geoscience-facts.meld
+;;;;    System: CogSketch
+;;;;    Author: Maria Chang
+;;;;   Created: February 2, 2011 21:26:29
+;;;;   Purpose: Facts for geoscience worksheets
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory GeoscienceFactsMt)
+
+;; correspondence over time
+(isa Correspondence-OverTime Collection)
+(genls Correspondence-OverTime AbstractInformationalThing)
+(comment Correspondence-OverTime
+         "Represents a correspondence between two things over time, e.g.
+          the correspondence between some material at time t=0 and that
+          same material at time t=1.")
+
+;; mid ocean ridge
+(isa RidgeLine-MidOcean Collection)
+(genls RidgeLine-MidOcean RidgeLine-Topographical)
+(comment RidgeLine-MidOcean
+  "A mid ocean ridge line is the top edge of a ridge that occurs underwater 
+   and is part of an oceanic spreading center.")
+(prettyString RidgeLine-MidOcean "mid ocean ridge")
+
+;; interval boundaries
+(isa Interval-Boundary Collection)
+(genls Interval-Boundary GeologicalBoundary)
+(comment Interval-Boundary
+  "The collection of all boundaries that separate geological rock units
+   that differ in some way.  For example, an Interval-Boundary can separate
+   areas of crust that record variations in the Earth's magnetic field, like
+   those formed in a mid ocean ridge in an oceanic spreading center.")
+
+;; transform faults
+(isa Fault-Transform Collection)
+(genls Fault-Transform Fault-Topographical_StrikeSlip)
+(comment Fault-Transform
+  "The collection of faults where two tectonic plates meet and move in
+   opposite directions.  The two plates do not move toward or away from
+   each other.  They move side by side, rubbing against each other.")
+
+;; active regions of faults
+(isa Fault-ActiveRegion Collection)
+(genls Fault-ActiveRegion Fault-Topographical)
+(comment Fault-ActiveRegion
+         "Represents the region along a fault that is active.  For example, a
+          transform fault may have a certain length, but only part of
+          that fault length may be active because only part of that fault
+          is in between plates that move in opposite directions.")
+
+;; Relations that describe movement along faults
+(isa movementRelativeToFault Relation)
+(arity movementRelativeToFault 3)
+(arg1Isa movementRelativeToFault Fault-Topographical)
+(arg2Isa movementRelativeToFault PositionalVisualRelation)
+(arg3Isa movementRelativeToFault QualitativeVector)
+(comment movementRelativeToFault
+  "(movementRelativeToFault ?fault ?region-indicator ?direction) means that
+   the region indicated by the positional relation ?region-indicator moves in
+   the qualitative direction ?direction relative to the fault ?fault.  For
+   example (movementRelativeToFault Fault-1 above Quad1) means that the region
+   above Fault-1 moves in the direction of Quad1 relative to Fault-1.")
+
+(isa movementOfRegionAboveFault Relation)
+(arity movementOfRegionAboveFault 2)
+(arg1Isa movementOfRegionAboveFault Fault-Topographical)
+(arg2Isa movementOfRegionAboveFault QualitativeVector)
+(comment movementOfRegionAboveFault 
+  "(movementOfRegionAboveFault ?fault ?direction) means that the region above
+   ?fault moves in ?direction with respect to ?fault.  #$movementRelativeToFault
+   is an antecedent of this relation.  For example, (movementOfRegionAboveFault Fault-1 Quad1)
+   means that the region above Fault-1 moves in direction Quad1 relative to the fault.")
+
+(isa movementOfRegionBelowFault Relation)
+(arity movementOfRegionBelowFault 2)
+(arg1Isa movementOfRegionBelowFault Fault-Topographical)
+(arg2Isa movementOfRegionBelowFault QualitativeVector)
+(comment movementOfRegionBelowFault 
+  "(movementOfRegionBelowFault ?fault ?direction) means that the region below
+   ?fault moves in ?direction with respect to ?fault.  #$movementRelativeToFault
+   is an antecedent of this relation.  For example, (movementOfRegionBelowFault Fault-1 Quad1)
+   means that the region below Fault-1 moves in direction Quad1 relative to the fault.")
+
+(isa movementOfRegionLeftOfFault Relation)
+(arity movementOfRegionLeftOfFault 2)
+(arg1Isa movementOfRegionLeftOfFault Fault-Topographical)
+(arg2Isa movementOfRegionLeftOfFault QualitativeVector)
+(comment movementOfRegionLeftOfFault 
+  "(movementOfRegionLeftOfFault ?fault ?direction) means that the region left of
+   ?fault moves in ?direction with respect to ?fault.  #$movementRelativeToFault
+   is an antecedent of this relation.  For example, (movementOfRegionLeftOfFault Fault-1 Quad1)
+   means that the region left of Fault-1 moves in direction Quad1 relative to the fault.")
+
+(isa movementOfRegionRightOfFault Relation)
+(arity movementOfRegionRightOfFault 2)
+(arg1Isa movementOfRegionRightOfFault Fault-Topographical)
+(arg2Isa movementOfRegionRightOfFault QualitativeVector)
+(comment movementOfRegionRightOfFault 
+  "(movementOfRegionRightOfFault ?fault ?direction) means that the region right of
+   ?fault moves in ?direction with respect to ?fault.  #$movementRelativeToFault
+   is an antecedent of this relation.  For example, (movementOfRegionRightOfFault Fault-1 Quad1)
+   means that the region right of Fault-1 moves in direction Quad1 relative to the fault.")
+
+
+;; The relation definitions below are a bit wordy and may seem awkwardly defined.
+;; But, they need to be defined in terms of sketched arrows.  They need to be defined
+;; so that it makes sense when the first argument is at the tail of the arrow and
+;; the second argument is at the head.  They also need to be specific enough to 
+;; be able to represent a specific relationship with just two arguments.  Usually
+;; this is done with Events and Role Relations, but since that representation
+;; doesn't quite work with sketches (it would be weird to draw an Event glyph separate
+;; from its participants), I am using the relations defined below. [MDC 6/10/2012]
+
+;; Emission -- general
+(isa emitsElectroMagneticRadiationTo AsymmetricBinaryPredicate)
+(arity emitsElectroMagneticRadiationTo 2)
+(arg1Isa emitsElectroMagneticRadiationTo PartiallyTangible)
+(arg2Isa emitsElectroMagneticRadiationTo PartiallyTangible)
+(comment emitsElectroMagneticRadiationTo 
+  "(emitsElectroMagneticRadiationTo A B)
+Indicates that electro magnetic radiation is emitted from A to B")
+(genFormat emitsElectroMagneticRadiationTo
+           "~A emits electromagnetic radiation to ~A."
+           (1 2))
+
+(isa emitsShortWaveRadiationTo AsymmetricBinaryPredicate)
+(arity emitsShortWaveRadiationTo 2)
+(arg1Isa emitsShortWaveRadiationTo PartiallyTangible)
+(arg2Isa emitsShortWaveRadiationTo PartiallyTangible)
+(genlPreds emitsShortWaveRadiationTo emitsElectroMagneticRadiationTo)
+(comment emitsShortWaveRadiationTo 
+  "(emitsShortWaveRadiationTo A B)
+Indicates that short wavelength (i.e. visible and UV) electro 
+magnetic radiation is emitted from A to B")
+(genFormat emitsShortWaveRadiationTo
+           "~A emits short wave radiation to ~A."
+           (1 2))
+
+(isa emitsLongWaveRadiationTo AsymmetricBinaryPredicate)
+(arity emitsLongWaveRadiationTo 2)
+(arg1Isa emitsLongWaveRadiationTo PartiallyTangible)
+(arg2Isa emitsLongWaveRadiationTo PartiallyTangible)
+(genlPreds emitsLongWaveRadiationTo emitsElectroMagneticRadiationTo)
+(comment emitsLongWaveRadiationTo 
+  "(emitsLongWaveRadiationTo A B)
+Indicates that long wavelength (i.e. infrared) electro 
+magnetic radiation is emitted from A to B")
+(genFormat emitsLongWaveRadiationTo
+           "~A emits long wave radiation to ~A."
+           (1 2))
+
+;; Emission and absorption
+(isa emitsShortWaveRadiation-absorbedBy AsymmetricBinaryPredicate)
+(arity emitsShortWaveRadiation-absorbedBy 2)
+(arg1Isa emitsShortWaveRadiation-absorbedBy PartiallyTangible)
+(arg2Isa emitsShortWaveRadiation-absorbedBy PartiallyTangible)
+(genlPreds emitsShortWaveRadiation-absorbedBy emitsShortWaveRadiationTo)
+(comment emitsShortWaveRadiation-absorbedBy 
+  "(emitsShortWaveRadiation-absorbedBy A B)
+Indicates that short wavelength (i.e. visible and UV) electro 
+magnetic radiation is emitted from A to B and that the radiation
+is absorbed by B.")
+(genFormat emitsShortWaveRadiation-absorbedBy
+           "~A emits short wave radiation to ~A. ~A absorbs the radiation."
+           (1 2 2))
+
+(isa emitsLongWaveRadiation-absorbedBy AsymmetricBinaryPredicate)
+(arity emitsLongWaveRadiation-absorbedBy 2)
+(arg1Isa emitsLongWaveRadiation-absorbedBy PartiallyTangible)
+(arg2Isa emitsLongWaveRadiation-absorbedBy PartiallyTangible)
+(genlPreds emitsLongWaveRadiation-absorbedBy emitsLongWaveRadiationTo)
+(comment emitsLongWaveRadiation-absorbedBy 
+  "(emitsLongWaveRadiation-absorbedBy A B)
+Indicates that long wavelength (i.e. infrared) electro 
+magnetic radiation is emitted from A to B and that the radiation
+is absorbed by B.")
+(genFormat emitsLongWaveRadiation-absorbedBy
+           "~A emits long wave radiation to ~A. ~A absorbs the radiation."
+           (1 2 2))
+
+;; Rules for inferring genlPreds.  This will ensure that a student doesn't
+;; get advice if the relation they have is a specPred of the relation in the
+;; solution
+(<== (emitsLongWaveRadiationTo ?a ?b)
+     (emitsLongWaveRadiation-absorbedBy ?a ?b))
+
+(<== (emitsShortWaveRadiationTo ?a ?b)
+     (emitsShortWaveRadiation-absorbedBy ?a ?b))   
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

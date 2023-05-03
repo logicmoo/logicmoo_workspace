@@ -1,0 +1,8 @@
+(in-microtheory BuyingMt)
+
+(isa TheBuying Buying)
+(isa TheSellingAgent IntelligentAgent)
+(isa TheBuyingAgent LegalAgent)
+(isa TheSeller Agent-PartiallyTangible)
+(isa TheSelectingAVendor SelectingSomething)
+(comment TheBuying "A TheTerm to represent an event in which TheBuyer purchases something (either an object or a service) from TheSeller.")

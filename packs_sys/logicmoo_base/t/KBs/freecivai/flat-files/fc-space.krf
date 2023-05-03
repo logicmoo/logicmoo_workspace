@@ -1,0 +1,13 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; FreeCiv spaceflight collections & predicates
+;; -------------------
+
+(isa FreeCiv-SpaceStatus Collection)
+(genls FreeCiv-SpaceStatus FreeCiv-Object)
+
+(isa FC-NoSpaceship FreeCiv-SpaceStatus)
+(isa FC-SpaceshipStarted FreeCiv-SpaceStatus)
+(isa FC-SpaceshipLaunched FreeCiv-SpaceStatus)
+(isa FC-SpaceshipArrived FreeCiv-SpaceStatus)

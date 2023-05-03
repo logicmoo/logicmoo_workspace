@@ -1,0 +1,81 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: more-physics-vocabulary.meld
+;;;;    System: Cmmpanions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:32:34
+;;;;   Purpose: More vocabulary for physics problem solving
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-11 14:48:00 -0500 (Sat, 11 Sep 2010) $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+;;; Analogy control predicates
+
+(ubiquitousForAnalogy multipleChoiceSingleOptionList)
+(ubiquitousForAnalogy testAnswers-SingleCorrectMultipleChoice)
+;;; These notForAnalogy statements are to keep case construction on-track
+(notForAnalogy forEffectOnly)
+(notForAnalogy evaluate)
+(notForAnalogy solveAll)
+(notForAnalogy uninferredSentence)
+(notForAnalogy cyclistNotes)
+;;; All instances of MathematicalFunctionOnScalars, which Matt used before
+(ubiquitousForAnalogy TruncateFn)
+(ubiquitousForAnalogy ExponentFn)
+(ubiquitousForAnalogy AbsoluteValueFn)
+(ubiquitousForAnalogy ArcTangent2Fn)
+(ubiquitousForAnalogy QuadraticSolution-NegativeFn)
+(ubiquitousForAnalogy SquareRootFn)
+(ubiquitousForAnalogy QuadraticSolution-PositiveFn)
+(ubiquitousForAnalogy ReciprocalFn)
+(ubiquitousForAnalogy Percent)
+(ubiquitousForAnalogy ExpFn)
+(ubiquitousForAnalogy RoundDownFn)
+(ubiquitousForAnalogy SquaredFn)
+(ubiquitousForAnalogy LogFn)
+(ubiquitousForAnalogy MinusFn)
+(ubiquitousForAnalogy InvLog-10Fn)
+(ubiquitousForAnalogy RoundUpFn)
+(ubiquitousForAnalogy Log-10Fn)
+(ubiquitousForAnalogy TimesFn)
+(ubiquitousForAnalogy LeastCommonMultipleFn)
+(ubiquitousForAnalogy QuotientFn)
+(ubiquitousForAnalogy LogarithmFn)
+(ubiquitousForAnalogy RoundClosestFn)
+(ubiquitousForAnalogy DifferenceFn)
+(ubiquitousForAnalogy GreatestCommonDivisorFn)
+(ubiquitousForAnalogy PlusFn)
+(ubiquitousForAnalogy ScalarExponentFn)
+
+;;;; ********************************************************************
+;;;; This is not helpful.  Most of the predicates that were here were
+;;;; already defined in cycorp-kb-patches and in UniversalVocabulary.
+;;;; ********************************************************************
+
+
+;;;; ****** FIX ME ****** contextOfProblem 
+(isa contextOfProblem Predicate)
+(arity contextOfProblem 2)
+;(comment contextOfProblem "")
+(arg1Isa contextOfProblem Thing)
+(arg2Isa contextOfProblem Thing)
+
+;;;; ****** FIX ME ****** solvePhysicsProblem 
+(isa solvePhysicsProblem Predicate)
+(arity solvePhysicsProblem 2)
+;(comment solvePhysicsProblem "")
+(arg1Isa solvePhysicsProblem Thing)
+(arg2Isa solvePhysicsProblem Thing)
+
+
+;;;; ****** FIX ME ****** retainTerm 
+(isa retainTerm Predicate)
+(arity retainTerm 1)
+;(comment retainTerm "")
+(arg1Isa retainTerm Thing)
+

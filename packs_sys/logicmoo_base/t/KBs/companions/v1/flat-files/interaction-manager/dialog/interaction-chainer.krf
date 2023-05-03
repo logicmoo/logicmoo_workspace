@@ -1,0 +1,1140 @@
+;;;
+;;; interaction-chainer.meld
+;;;
+;;; Horn clause definitions of predicates for Companions interaction.
+
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;; -------------------
+;;; Accessors
+;;; -------------------
+
+;;; Lookup the current interpretation context in the session context:
+(<== (interpretationContext ?mt)
+     (sessionContext ?session-ctxt)
+     (lookupOnly
+       (ist-Information ?session-ctxt
+         (interpretationContext ?mt))))
+
+;;; Otherwise default to EAGeneralQueriesMt:
+(<== (interpretationContext EAGeneralQueriesMt)
+     (sessionContext ?session-ctxt)
+     (uninferredSentence
+       (lookupOnly
+         (ist-Information ?session-ctxt
+           (interpretationContext ?mt)))))
+     
+
+(<== (nickname ?user ?name)
+     (kbOnly
+       (lookupOnly
+         (ist-Information EverythingPSC (nickname ?user ?name)))))
+           
+
+;;; If there's no nickname for the user, then use the symbolic user name.
+(<== (nickname ?user ?user)  ;; Ideally, we would have StringFn and bind a character string.
+     (uninferredSentence
+       (kbOnly
+         (lookupOnly
+           (ist-Information EverythingPSC (nickname ?user ?nickname))))))
+
+
+;;; We might want this to bind the parse tree, since the mose specific sentence
+;;; type probably indicates the best parse.
+(<== (mostSpecificUtteranceType ?sentence-id ?sentence-type)
+     (outsourcedOnly (currentDiscourseId ?discourse-id))
+     (evaluate ?types
+       (TheClosedRetrievalSetOf ?stype
+         (lookupOnly
+          (localOnly
+           (ist-Information (DiscourseCaseFn ?discourse-id)
+             (sentenceTypeFeat (ParseTreeFn ?sentence-id ?parse-tree) ?stype))))))
+     (evaluate ?sentence-type
+       (FirstInListFn
+        (SortFn ?types
+                (Kappa (?t1 ?t2) (genls ?t1 ?t2))
+                IdentityFn))))
+
+(<== (mostSpecificUtteranceType ?sentence-id UnclassifiedUtterance)
+     (outsourcedOnly (currentDiscourseId ?discourse-id))
+     (uninferredSentence
+       (lookupOnly
+         (localOnly
+           (ist-Information (DiscourseCaseFn ?discourse-id)
+             (sentenceTypeFeat (ParseTreeFn ?sentence-id ?parse-tree) ?stype))))))
+
+;;; This should fail if there are no unknown tokens
+(<== (unknownTokens ?sentence-id ?token-set ?discourse-ctxt)
+     (evaluate ?token-set
+       (TheClosedRetrievalSetOf ?token
+         (missingLexInfo ?sentence-id ?token ?discourse-ctxt)))
+     (different ?token-set (TheSet)))
+
+(<== (unknownConcepts ?sentence-id ?word-set ?discourse-ctxt)
+     (selectedParseTreeRoot ?sentence-id ?parse-tree ?discourse-ctxt)
+     (evaluate ?word-set
+       (TheClosedRetrievalSetOf ?word
+         (missingSemInfo ?sentence-id ?word ?discourse-ctxt ?parse-tree)))
+     (different ?word-set (TheSet)))
+
+(<== (unknownConcepts ?sentence-id ?word-set ?discourse-ctxt)
+     (uninferredSentence
+       (selectedParseTreeRoot ?sentence-id ?parse-tree ?discourse-ctxt))
+     (evaluate ?word-set
+       (TheClosedRetrievalSetOf ?word
+         (missingSemInfo ?sentence-id ?word ?discourse-ctxt ?parse-tree-id)))
+     (different ?word-set (TheSet)))
+     
+(<== (likelyNameToken ?sentence-id ?token ?discourse-ctxt ?term)
+     (cycTermForString ?token ?term))  ;; simple case: the word is directly there in the kb.
+
+;;; Determine the sentence id of the previous *interpreted* sentence
+(<== (previousSentenceId ?sid ?previous-id)
+     (groundExpression ?sid)
+     (outsourcedOnly (currentDiscourseId ?discourse-id))
+     (lookupOnly
+       (wmOnly
+        (ist-Information (DiscourseCaseFn ?discourse-id)
+          (sentenceInDiscourse ?sid ?snum ?i-token-list1))))
+     (evaluate ?pnum (DifferenceFn ?snum 1))
+     (lookupOnly
+       (wmOnly
+        (ist-Information (DiscourseCaseFn ?discourse-id)
+          (sentenceInDiscourse ?previous-id ?pnum ?i-token-list2)))))
+
+;;; determine the next sentence if it exists
+(<== (previousSentenceId ?sid ?previous-id)
+     (groundExpression ?previous-id)
+     (outsourcedOnly (currentDiscourseId ?discourse-id))
+     (lookupOnly
+       (wmOnly
+        (ist-Information (DiscourseCaseFn ?discourse-id)
+          (sentenceInDiscourse ?previous-id ?pnum ?i-token-list1))))
+     (evaluate ?snum (PlusFn ?pnum 1))
+     (lookupOnly
+       (wmOnly
+        (ist-Information (DiscourseCaseFn ?discourse-id)
+          (sentenceInDiscourse ?sid ?snum ?i-token-list2)))))
+
+
+;;; Missing lexical items are directly stored as:
+;;; (ist-Information ?discourse-case (missingLexItem ?sentence-id ?lex))
+;;; This should fail if there are no unknown tokens
+(<== (missingLexInfo ?sentence-id ?token ?discourse-ctxt)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (missingLexItem ?sentence-id ?token))))))
+             
+;;; missingLexInfo needs to be smarter.  Parthenon-TheWord now exists, but has no
+;;; denotation.  So it's not actually missing at the lexical level.  So why is it 
+;;; considered a variableInUniverse?
+
+;(<== (missingLexInfo ?sentence-id ?token ?discourse-ctxt)
+;     (lookupOnly
+;       (localOnly
+;         (wmOnly
+;           (ist-Information ?discourse-ctxt
+;             (assumedProperName (ParseTreeFn ?sentence-id ?parse-tree) ?token))))))
+
+;;; Collecting missing semantic frames is more complicated:
+;;; *** This is terrible!  It starts off retrieving every token that's missing sem info 
+;;; *** since the dawn of time, then proceeds to complain about it if it's from the
+;;; *** specified sentence, whether or not it comes from the selected parse tree.
+;;; *** At least now it can filter by parse-tree
+(<== (missingSemInfo ?sentence-id ?token ?discourse-ctxt ?parse-tree-id)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (ptConstitFeat ?constit sem (missingSemTrans ?dv ?pos ?token))))))
+     (different ?token Be-TheWord)  ; this is just silly.
+     (different ?token What-TheWord)
+     (different ?token Which-TheWord)
+     (different ?token Many-TheWord)
+     (different ?token Much-TheWord)
+     (different ?pos punc)
+     (different ?pos aux)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (ptConstitFeat ?constit input ?val)))))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (ptEntry ?constit (ParseTreeFn ?sentence-id ?parse-tree-id)))))))
+             
+
+
+;;; Collect all the parser lexical categories for the specified span:
+(<== (spanLexCat ?sentence-id ?span ?cat ?discourse-ctxt)
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (ptRoot (ParseTreeFn ?sentence-id ?parse-tree-id) ?i-root)))))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (ptEntry ?entry (ParseTreeFn ?sentence-id ?parse-tree-id))))))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (ptEntrySpan ?entry ?span)))))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (ptConstitLexCat ?entry ?cat))))))
+
+
+(<== (choiceSetCat ?sentence-id ?csid ?cat ?discourse-ctxt)
+     (ist-Information ?discourse-ctxt
+       (choiceSet
+        (ChoiceSetFn FrameSemantics (TokenFn ?sentence-id ?span)) ?csid))
+     (spanLexCat ?sentence-id ?span ?cat ?discourse-ctxt))
+     
+
+;;; -------------------
+;;; Ambiguity Detection
+;;; -------------------
+
+(isa acceptableAmbiguity TernaryPredicate)
+(arity acceptableAmbiguity 3)
+
+;;; The existence of a single interpretation no longer means it was fully understood.
+;;; It must be the case that 
+
+;;; Unique interpretation is always ok.
+(<== (acceptableAmbiguity ?sentence-id ?discourse-ctxt ?interpretations)
+     (matches (TheSet ?interp) ?interpretations)
+     (uninferredSentence
+       (partialQueryInterpretation ?sentence-id ?discourse-ctxt)))
+       
+(<== (acceptableAmbiguity ?sentence-id ?discourse-ctxt ?interpretations)
+     (elementOf ?num ?interpretations)
+     (isa ?num Integer))  ; menu selection
+       
+(isa partialQueryInterpretation BinaryPredicate)
+       
+(<== (partialQueryInterpretation ?sentence-id ?discourse-ctxt)
+     (semanticallyAmbiguous ?sentence-id ?csid ?discourse-ctxt)  ; there's at least on open choice-set
+     (lookupOnly
+        (localOnly
+          (ist-Information (DiscourseCaseFn ?discourse-id)
+            (sentenceTypeFeat (ParseTreeFn ?sentence-id ?parse-tree) ?sentence-type))))
+     (genls ?sentence-type InformationRequest-IBT))
+
+;;; for multiple-sentences, check that each sentence has acceptable ambiguity
+;;; the way we do this is we bind the set of all sentences that are elements of
+;;; the set of sentences for which there is acceptable ambiguity, then we check 
+;;; that it's the same as the original sentence set
+(<== (acceptableAmbiguity ?sentence-id ?discourse-ctxt ?interpretations)
+     (not (matches (TheSet ?interp) ?interpretations))
+     (sessionContext ?context)
+     (ist-Information ?context (lastSentenceForStatements ?sentence-id ?sentence-set))
+     (evaluate ?acceptableSentences
+       (TheClosedRetrievalSetOf ?sentence
+         (and (elementOf ?sentence ?sentence-set)
+              (ist-Information ?context (interpretationOf ?sentence ?interpretation))
+              (acceptableAmbiguity ?sentence-id ?discourse-ctxt (TheSet ?interpretation)))))
+     (evaluate ?setDiff (SetDifferenceFn ?sentence-set ?acceptableSentences))
+     (unifies ?setDiff (TheSet)))
+
+;;; We may be able to resolve ambiguous questions by trying to answer them.
+;(<== (acceptableAmbiguity ?sentence-id ?discourse-ctxt ?interpretations)
+;     (not (matches (TheSet ?interp) ?interpretations))
+;     (lookupOnly
+;        (localOnly
+;          (ist-Information (DiscourseCaseFn ?discourse-id)
+;            (sentenceTypeFeat (ParseTreeFn ?sentence-id ?parse-tree) ?sentence-type))))
+;     (genls ?sentence-type InformationRequest-IBT ))
+
+;;; Verify that there is exactly one interpretation of sentence, and bind it:
+(<== (uniqueInterpretation ?context ?sentence-id ?interpretation)
+     (evaluate ?formulae
+       (TheClosedRetrievalSetOf ?formula
+         (wmOnly (ist-Information ?context (interpretationOf ?sentence-id ?formula)))))
+     (unifies (TheSet ?interpretation) ?formulae))  ; only 1 interpretation
+     
+(<== (uniqueInterpretation ?context ?sentence-id ?interpretation)
+     (lookupOnly
+       (ist-Information ?context
+         (preferredInterpretation ?sentence-id ?interpretation))))
+     
+(<== (fragmentaryParse ?sentence-id ?discourse-ctxt)
+     (ist-Information ?discourse-ctxt
+       (ptRoot (ParseTreeFn ?sentence-id ?pt) ?i-root-node))
+     (ist-Information ?discourse-ctxt 
+       (ptConstitLexCat ?i-root-node ?cat))
+     (different ?cat s))
+
+
+(<== (fragmentaryQuestionType ?sentence-id ?discourse-ctxt WhyQuestion-IBT)
+     (ist-Information ?discourse-ctxt 
+       (sentenceTokens ?sentence-id (TheList why punc-question-mark))))
+       
+(<== (fragmentaryQuestionType ?sentence-id ?discourse-ctxt WhoQuestion-IBT)
+     (ist-Information ?discourse-ctxt 
+       (sentenceTokens ?sentence-id (TheList who punc-question-mark))))
+
+(<== (fragmentaryQuestionType ?sentence-id ?discourse-ctxt GeneralHowQuestion-IBT)
+     (ist-Information ?discourse-ctxt 
+       (sentenceTokens ?sentence-id (TheList how punc-question-mark))))
+
+(<== (fragmentaryQuestionType ?sentence-id ?discourse-ctxt HowMuchQuestion-IBT)
+     (ist-Information ?discourse-ctxt 
+       (sentenceTokens ?sentence-id (TheList how much punc-question-mark))))
+
+(<== (fragmentaryQuestionType ?sentence-id ?discourse-ctxt HowManyQuestion-IBT)
+     (ist-Information ?discourse-ctxt 
+       (sentenceTokens ?sentence-id (TheList how many punc-question-mark))))
+
+(<== (fragmentaryQuestionType ?sentence-id ?discourse-ctxt WhereQuestion-IBT)
+     (ist-Information ?discourse-ctxt 
+       (sentenceTokens ?sentence-id (TheList where punc-question-mark))))
+
+(<== (fragmentaryQuestionType ?sentence-id ?discourse-ctxt WhenQuestion-IBT)
+     (ist-Information ?discourse-ctxt 
+       (sentenceTokens ?sentence-id (TheList when punc-question-mark))))
+
+
+;;; An utterance is syntactically ambiguous if there is an open parse tree choice set.     
+(<== (syntacticallyAmbiguous ?sentence-id ?csid ?discourse-ctxt)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (choiceSetFromSentence ?csid ?sentence-id))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (choiceSet (ChoiceSetFn ParseTree ?extent) ?csid))))
+     (uninferredSentence
+       (lookupOnly
+         (wmOnly
+           (ist-Information ?discourse-ctxt
+             (selectedChoice ?csid ?choice-id ?choice)))))
+     (parseTreeRootChoiceSet ?csid ?discourse-ctxt))
+
+;;; Verify that the choice set corresponds to root parse trees, not
+;;; constituents:
+(<== (parseTreeRootChoiceSet ?csid ?discourse-ctxt)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (choice ?csid ?cid ?ptid))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (ptRoot (ParseTreeFn ?sid ?ptid) ?i-root-node)))))
+
+(<== (selectedParseTreeRoot ?sentence-id ?parse-tree ?discourse-ctxt)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (ptRoot (ParseTreeFn ?sentence-id ?parse-tree) ?i-root-node))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (selectedChoice ?csid  ?choice ?parse-tree)))))
+
+;;; Is there a choice set associated with sentence that has no selected choice?
+(<== (semanticallyAmbiguous ?sentence-id ?csid ?discourse-ctxt)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (choiceSetFromSentence ?csid ?sentence-id))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-ctxt
+           (choiceSet (ChoiceSetFn FrameSemantics ?extent) ?csid))))
+     (uninferredSentence
+      (ist-Information ?discourse-ctxt
+        (selectedChoice ?csid ?choice-id ?choice)))
+     ;; it's not ambiguous if there's nothing to choose from:
+     (numAnswers 1
+       (ist-Information ?discourse-ctxt
+         (choice ?csid ?choice-id ?choice))))
+
+;;; Characterize competing parses
+
+(<== (terminatingPunctuation ?sentence-id  ?punc)
+     (outsourcedOnly (currentDiscourseId ?discourse-id))
+     (lookupOnly
+       (localOnly
+         (wmOnly
+           (ist-Information (DiscourseCaseFn ?discourse-id)
+             (sentenceTokens ?sentence-id ?tokens)))))
+     (evaluate ?punc (LastInListFn ?tokens))
+     (elementOf ?punc (TheSet punc-period punc-question-mark punc-exclamation-mark)))
+
+(isa attachmentAmbiguity Predicate)
+(arity attachmentAmbiguity 6)
+     
+(<== (attachmentAmbiguity ?sentence-id ?discourse-case ?pt-id1 ?pt-id2 ?spanlst1 ?spanlst2)
+     (parseTreeDifferences ?sentence-id ?differences-set)
+     (unifies (TheSet ?s1 ?s2) ?differences-set)
+     (orderAttachmentAmbiguity ?discourse-case ?s1 ?s2 ?vp-set ?np-pp-set)
+     (ambiguitySpans ?discourse-case ?vp-set ?np-pp-set ?pt1 ?pt2 ?spanlst1 ?spanlst2)
+     (unifies (ParseTreeFn ?sentence-id ?pt-id1) ?pt1)
+     (unifies (ParseTreeFn ?sentence-id ?pt-id2) ?pt2))
+     
+(isa orderAttachmentAmbiguity Predicate)
+(arity orderAttachmentAmbiguity 5)
+     
+(<== (orderAttachmentAmbiguity ?discourse-case ?s1 ?s2 ?vp-set ?np-pp-set)
+     (unifies (TheSet (ptEntry ?vp1 ?pt1) (ptEntry ?vp2 ?pt2)) ?s1)
+     (verbPhrase ?discourse-case ?vp1)
+     (verbPhrase ?discourse-case ?vp2)
+     (unifies (TheSet (ptEntry ?p1 ?pt1) (ptEntry ?p2 ?pt2)) ?s2)
+     (np-pp-phrases ?discourse-case ?p1 ?p2)
+     (unifies ?vp-set ?s1)
+     (unifies ?np-pp-set ?s2))
+
+(<== (orderAttachmentAmbiguity ?discourse-case ?s2 ?s1 ?vp-set ?np-pp-set)
+     (unifies (TheSet (ptEntry ?vp1 ?pt1) (ptEntry ?vp2 ?pt2)) ?s1)
+     (verbPhrase ?discourse-case ?vp1)
+     (verbPhrase ?discourse-case ?vp2)
+     (unifies (TheSet (ptEntry ?p1 ?pt1) (ptEntry ?p2 ?pt2)) ?s2)
+     (np-pp-phrases ?discourse-case ?p1 ?p2)
+     (unifies ?vp-set ?s1)
+     (unifies ?np-pp-set ?s2))
+     
+(<== (ambiguitySpans ?discourse-case ?vp-set ?np-pp-set ?pt1 ?pt2 ?spanlst1 ?spanlst2)
+     (unifies (TheSet (ptEntry ?vp1 ?pt1) (ptEntry ?vp2 ?pt2)) ?vp-set)
+     (span ?discourse-case ?vp1 ?span1a)
+     (span ?discourse-case ?vp2 ?span2a)
+     (attachmentSpan ?discourse-case ?pt1 ?np-pp-set ?span1b)
+     (attachmentSpan ?discourse-case ?pt2 ?np-pp-set ?span2b)
+     (unifies ?spanlst1 (TheList ?span1a ?span1b))
+     (unifies ?spanlst2 (TheList ?span2a ?span2b)))
+     
+(<== (np-pp-phrases ?discourse-case ?constit1 ?constit2)
+     (nounPhrase ?discourse-case ?constit1)
+     (prepPhrase ?discourse-case ?constit2))
+
+(<== (np-pp-phrase ?discourse-case ?constit1 ?constit2)
+     (prepPhrase ?discourse-case ?constit1)
+     (nounPhrase ?discourse-case ?constit2))
+
+(isa verbPhrase BinaryPredicate)
+
+(<== (verbPhrase ?discourse-case ?constit)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case 
+           (ptConstitLexCat ?constit vp)))))
+
+(isa prepPhrase BinaryPredicate)
+
+(<== (prepPhrase ?discourse-case ?constit)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case 
+           (ptConstitLexCat ?constit pp)))))
+
+(isa nounPhrase BinaryPredicate)
+
+(<== (nounPhrase ?discourse-case ?constit)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptConstitLexCat ?constit np)))))  ; What about cnp?  This may bite when we hit plurals
+
+(isa span TernaryPredicate)
+
+(<== (span ?discourse-case ?constit ?span)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptEntrySpan ?constit ?span)))))
+           
+(isa attachmentSpan Predicate)
+(arity attachmentSpan 4)
+(arg1Isa attachmentSpan Microtheory)
+
+           
+(<== (attachmentSpan ?discourse-case ?pt ?set ?span)
+     (unifies (TheSet (ptEntry ?constit ?pt) ?entry2) ?set)
+     (span ?discourse-case ?constit ?span))
+     
+(<== (attachmentSpan ?discourse-case ?pt ?set ?span)
+     (unifies (TheSet ?entry1 (ptEntry ?constit ?pt)) ?set)
+     (span ?discourse-case ?constit ?span))
+
+     
+;;; A common syntactic ambiguity is an implied "all" vs "some" quantification.
+;;; If we can detect that, we can ask explicitly.
+;;; Note Bene:  Don't try to destructure differences-set directly in the call to parseTreeDifferences
+;;;             because that's an outsourced predicate and it won't match the handler signature.
+(<== (quantificationAmbiguity ?sentence-id ?discourse-case ?universal-pt-id ?existential-pt-id)
+     (parseTreeDifferences ?sentence-id ?differences-set)
+     (unifies (TheSet (TheSet (ptEntry ?constit1 ?pt1) (ptEntry ?constit2 ?pt2))) ?differences-set)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptConstitLexCat ?constit1 ?lexcat))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptConstitLexCat ?constit2 ?lexcat))))  ;; same lexical category
+     (bindGeneralSpecificConstituents ?forAll-constit ?exists-constit ?constit1 ?constit2)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptEntry ?forAll-constit
+             (ParseTreeFn ?sentence-id ?universal-pt-id)))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptEntry ?exists-constit
+             (ParseTreeFn ?sentence-id ?existential-pt-id)))))
+     (different ?universal-pt-id ?existential-pt-id)
+     )
+     
+(<== (bindGeneralSpecificConstituents ?constit1 ?constit2 ?constit1 ?constit2)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptConstitFeat ?constit1 sem ?sem1))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptConstitFeat ?constit2 sem ?sem2))))
+     (operatorFormulas forAll ?sem1)
+     (operatorFormulas thereExists ?sem2))
+
+(<== (bindGeneralSpecificConstituents ?constit2 ?constit1 ?constit1 ?constit2)
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptConstitFeat ?constit1 sem ?sem1))))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?discourse-case
+           (ptConstitFeat ?constit2 sem ?sem2))))
+     (operatorFormulas thereExists ?sem1)
+     (operatorFormulas forAll ?sem2))
+
+(<== (preferParseTree ?sentence-id ?discourse-context ?parse-tree-id)
+     (parseTreeDifferences ?sentence-id ?diffs)
+     (equals ?diffs (TheSet))  ; the trees are isomorphic
+     (ist-Information ?discourse-context 
+       (ptRoot 
+         (ParseTreeFn sentence-id ?parse-tree-id) ?i-node)))  ; pick one, it doesn't matter
+
+(<== (preferParseTree ?sentence-id ?discourse-context ?parse-tree-id)
+     (parseTreeDifferences ?sentence-id ?diffs)
+     (matches (TheSet ?singleton-diff) ?diffs ) ; cardinality = 1
+     (evaluate ?nodelst (SetToListFn ?singleton-diff))
+     (evaluate ?first-entry (FirstInListFn  ?nodelst))
+     (evaluate ?rest-entries (RestOfListFn ?nodelst))
+     (smallestBranchingPtEntry ?discourse-context ?rest-entries ?first-entry ?pt-entry)
+     (unifies (ptEntry ?i-node (ParseTreeFn ?sentence-id ?parse-tree-id)) ?pt-entry))
+     
+(<== (smallestBranchingPtEntry ?discourse-context ?differing-lst ?smallest-so-far ?smallest-so-far)
+     (equals ?differing-lst (TheList)))
+     
+(<== (smallestBranchingPtEntry ?discourse-context ?differing-lst ?smallest-so-far ?pt-entry)
+     (different ?differing-lst (TheList))
+     (evaluate ?first (FirstInListFn ?differing-lst))
+     (fewerParseNodeChildren ?discourse-context ?first ?smallest-so-far ?new-smallest)
+     (evaluate ?rest (RestOfListFn ?differing-lst))
+     (smallestBranchingPtEntry ?discourse-context ?rest ?new-smallest ?pt-entry))
+
+(<== (fewerParseNodeChildren ?discourse-context ?entry1 ?entry2 ?fewer)
+     (matches (ptEntry ?node1 ?pt1) ?entry1)
+     (matches (ptEntry ?node2 ?pt2) ?entry2)
+     (evaluate ?num-children1
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?child1
+           (lookupOnly
+             (wmOnly
+               (ist-Information ?discourse-context
+                 (ptEntryChild ?node1 ?child1 ?num1)))))))
+     (evaluate ?num-children2
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?child2
+           (lookupOnly
+             (wmOnly
+               (ist-Information ?discourse-context
+                 (ptEntryChild ?node2 ?child2 ?num1)))))))
+     (fewerEntryChildren ?entry1 ?num-children1 ?entry2 ?num-children2 ?fewer))
+     
+;;; fail if they're equal:
+(<== (fewerEntryChildren ?entry1 ?num1 ?entry2 ?num2 ?entry1)
+     (lessThan ?num1 ?num2))
+
+(<== (fewerEntryChildren ?entry1 ?num1 ?entry2 ?num2 ?entry2)
+     (greaterThan ?num1 ?num2))
+     
+;;; Collect competing semantic choices
+
+(<== (competingSemanticChoiceList ?discourse-ctxt ?csid ?choice-list)
+     (evaluate ?choice-list
+       (SetToListFn
+         (TheClosedRetrievalSetOf ?choice
+           (and (ist-Information ?discourse-ctxt
+                    (choice ?csid ?choiceid ?choice))
+                (evaluate ?cleaned-choice
+                  (SublisFn 
+                     (TheSet ((GapFn :SUBJECT) SelfToken-Indexical))
+                     ?raw-choice))
+                (keywordFreeExpression ?cleaned-choice)
+                (ist-Information ?discourse-ctxt
+                    (enablesChoice ?selection (choice ?csid ?choiceid ?choice)))
+                (trueSentence 
+                    (ist-Information ?discourse-ctxt
+                      ?selection)))))))
+
+
+;;; Consult learned knowledge.
+;;; In the simplest case, re-use disambiguations the user has made in the current session.
+;;; Here, we expect all but the last argument to be bound.
+(<== (preferSemanticChoice ?sentence-id ?discourse-ctxt ?choice-set-id ?choice-list ?choice)
+     (sessionContext ?context)
+     (lookupOnly
+       (ist-Information ?context 
+         (userDisambiguatedChoice ?prior-sentence-id ?prior-csid ?choiceid ?choice)))
+     (memberOfList ?choice ?choice-list))
+
+;;; Singleton choices are easy:
+(<== (preferSemanticChoice ?sentence-id ?discourse-ctxt ?choice-set-id ?choice-list ?choice)
+     (evaluate 1 (LengthOfListFn ?choice-list))
+     (evaluate ?choice (FirstInListFn ?choice-list)))
+       
+;;; Avoid infinite loops
+;;; (ie, did we already ask the user for the exact same choice?)
+(<== (previouslyResolved ?context ?sentence-id ?choice-list)
+     (localOnly
+       (lookupOnly
+         (ist-Information ?context 
+           (inReplyTo ?system-utterance ?sentence-id))))
+     (localOnly
+       (lookupOnly
+         (ist-Information ?context
+           (queryChoices ?system-utterance ?choice-list)))))
+
+
+;;; Consult domain preference
+(<== (preferSemanticChoice ?sentence-id ?discourse-ctxt ?choice-set-id ?choice-list ?choice)
+     (currentDomain ?domain)
+     (currentSessionReasoner ?sr)
+     (holdsOnRemoteAgent ?sr (agentContext ?planDomain))
+     (allFactsAllowed
+       (ist-Information ?planDomain (preferredDenotation ?domain ?x-TheWord ?concept)))     ; this is a really blind preference.  Fix this later.
+     (memberOfList ?choice ?choice-list)
+     (subexpressionMatching (isa ?term ?concept) ?choice ?choice-expr))
+
+
+
+;;; -------------------
+;;; Intent Recognition
+;;; -------------------
+
+;;; succeed if question2 is a followup question to some prior question in the discourse.
+;;; **** This will be a problem.  The subject of "Do hurricanes occur in Florida?" is 
+;;; **** group-of-hurricane4779.
+(<== (followupQuestion ?question1-id ?question2-id)
+     (variableExpression ?question1-id)
+     (groundExpression ?question2-id)
+     (outsourcedOnly (currentDiscourseId ?discourse-id))
+     (ist-Information (DiscourseCaseFn ?discourse-id)
+       (lookupOnly
+         (wmOnly
+           (sentenceTypeFeat (ParseTreeFn ?question2-id ?parse-tree) ?sentence-type))))
+     (genls ?sentence-type InformationRequest-IBT )
+     (sentenceSubject ?question2-id ?subject)
+     ;; Now look back in time for a prior question that mentions ?subject.
+     )
+     
+(<== (comprehensionCheck ?declarative-id ?question-id)
+     )
+     
+(<== (descriptiveElaboration ?declarative1-id ?declarative2-id)
+     )
+
+(<== (correctiveStatement ?question-id ?declarative-id)
+     )
+
+;;; -------------------
+;;; Query Optimization
+;;; -------------------
+
+;;; Conjunctive queries generated from Natural Language will be in no particular order.
+;;; They need to be ordered dynamically to avoid open, unsafe queries.
+
+;;; Need arg-isa checking
+;;; clause optimization
+;;; context detection
+;;; safety re-writing (re-write type-checking isa statements as safe-isa queries)
+;;; 
+;;; For each non-type relation,
+;;; check each dialog-var argument to see if its type statement satisfies the arg-isa.
+
+
+;;; -------------------
+;;; Metonymy
+;;; -------------------
+
+;;; Rewrite ?formula if necessary to resolve a menonymic reference.
+(<== (metonymicReference ?formula ?new-formula)
+     (operatorFormulas and ?formula)
+     (conjunctSet ?formula ?conjuncts)
+     (evaluate ?relations
+       (TheClosedRetrievalSetOf ?clause
+         (and (elementOf ?clause ?conjuncts)
+              (not (operatorFormulas isa ?clause)))))
+     (evaluate ?type-statements
+       (TheClosedRetrievalSetOf ?clause
+         (and (elementOf ?clause ?conjuncts)
+              (operatorFormulas isa ?clause))))
+     (rewriteMetonymicReferences ?relations ?type-statements ?new-type-stmts ?new-relations)
+     (evaluate ?new-formula
+       (MakeFormulaFn and
+                      (JoinListsFn
+                       (SetToListFn ?new-type-stmts)
+                       (SetToListFn ?new-relations))))
+     )
+
+
+
+;;; Given a particular formula and a set of type statements, identify
+;;; problematic type statements and rewrite.
+(<== (rewriteMetonymicReferences ?relations ?type-stmts ?new-type-stmts ?descriptive-formulae)
+     ;; collect a set here
+     (evaluate ?set-of-triples
+       (TheClosedRetrievalSetOf ?triple
+         (and (elementOf ?formula ?relations)
+              (operatorFormulas ?pred ?formula)
+              (arity ?pred ?n)
+              (integerBetween 1 ?i ?n)
+              (formulaArgument ?formula ?i ?arg)  ; ?arg might be a variable(?)  Assume not for now.
+              (collectionOf ?arg ?type-stmts ?collection)
+              (rewriteArgIsaViolations ?formula ?i ?arg ?collection ?triple))))
+     (evaluate ?removed-type-stmts
+       (TheClosedRetrievalSetOf ?removed
+         (and (elementOf ?triple ?set-of-triples)  ; a triple has the form (TheList removed added descriptive)
+              (formulaArgument ?triple 1 ?removed))))
+     (evaluate ?added-type-stmts
+       (TheClosedRetrievalSetOf ?added
+         (and (elementOf ?triple ?set-of-triples)
+              (formulaArgument ?triple 2 ?added))))
+     (evaluate ?descriptive-formulae
+       (SetOrCollectionUnion ?relations
+                             (TheClosedRetrievalSetOf ?descriptive
+                               (and (elementOf ?triple ?set-of-triples)
+                                    (formulaArgument ?triple 3 ?descriptive)))))
+     (evaluate ?new-type-stmts
+       (SetOrCollectionUnion ?added-type-stmts
+                             (SetDifferenceFn ?type-stmts ?removed-type-stmts))))
+
+
+;;; Bind a ?triple to capture the added and removed type statement plus new descriptive formula:
+(<== (rewriteArgIsaViolations ?formula ?i ?arg ?collection ?triple)
+     (argIsaViolation ?formula ?i ?arg ?arg-isa)
+     (typeToDescription ?arg ?collection ?descriptive-formula)
+     ;; possibly should double-check that new type also satisfies arg-isa of descriptive-formula
+     (unifies ?triple (TheList (isa ?arg ?collection) (isa ?arg ?arg-isa) ?descriptive-formula)))
+       
+
+
+;;; We're going to assume that these type statements come from natural language, and
+;;; therefore there's only one per item initially.
+(<== (collectionOf ?arg ?type-stmts ?collection)
+     (elementOf ?type-stmt ?type-stmts)     ; enumerate isa stmts
+     (formulaArgument ?type-stmt 1 ?inst)
+     (equalSymbols ?arg ?inst)
+     (formulaArgument ?type-stmt 2 ?collection))
+
+
+;;; pass back violated isas one at a time:
+(<== (argIsaViolation ?formula ?arg-num ?arg ?arg-isa)
+     (groundExpression ?formula)
+     (groundExpression ?arg-num)
+     (groundExpression ?arg)         ; pass in the resolved referent
+     (operatorFormulas ?pred ?formula)
+     (argIsa ?pred ?arg-num ?arg-isa)
+     (uninferredSentence
+      (useTransitiveInference
+       (isa ?arg ?arg-isa))))
+
+;;; If this succeeds, then ?formula will be a descriptive proposition to 
+;;; replace the type statement.
+(<== (typeToDescription ?instance ?collection ?formula)
+     (groundExpression ?instance)
+     (groundExpression ?collection)
+     (ist-Information GeneralEnglishMt
+       (denotation ?word Adjective ?ws-noun ?collection))   ; do we care what kind of frame?
+     (ist-Information GeneralEnglishMt
+       (adjSemTrans ?word ?ws-adj ?frame ?stmt))
+     (evaluate ?sub-formula
+       (SubstituteFormulaFn ?instance :NOUN ?stmt)))
+
+
+;;; -------------------
+;;; Failure As Negation
+;;; -------------------
+
+;;; In which a generated query fails and the system must infer whether the answer is truly no.
+;;; * Is the answer collextion completely enumerable?
+;;; * Could query be answered approximately? (via analogy)
+;;; * Is query numeric?
+;;; * for yes/no query - is there evidence in either direction?
+;;; * shoud we ask for an answering strategy?
+
+;;; -------------------
+;;; Learning reasoning strategies by example
+;;; -------------------
+;;;
+;;; Given a query we failed to answer (either by getting the wrong answer or giving up:
+;;; * get an answer from the user
+;;; * get a reason/explanation in some form
+;;; * construct a strategy by lifting the explanation into a sequence of steps (a variablized trace)
+;;; * identify branch points for later elaboration
+
+;;; -------------------
+;;; Interpretation
+;;; -------------------
+;;;
+;;; Interpret an utterance in a pragmatic context
+;;;
+
+(<== (userResponseExpected ?context ?question-type)
+     (outsourcedOnly (currentSystemUtterance ?system-utterance))
+     (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+     (ist-Information ?context 
+       (nonTransitiveInference (isa ?system-utterance ?question-type)))
+     (allFactsAllowed (genls ?question-type Question-IBT)))
+
+(<== (userResponseExpected ?context StoryInput)
+     (outsourcedOnly (currentSystemUtterance ?system-utterance))
+     (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+     (ist-Information ?context 
+       (nonTransitiveInference (isa ?system-utterance RequestForStory))))
+
+(<== (userResponseExpected ?context StopOrKeepThinking)
+     (outsourcedOnly (currentSystemUtterance ?system-utterance))
+     (ist-Information ?context 
+       (nonTransitiveInference (isa ?system-utterance CheckingIfWeAreDone))))
+
+     
+
+;;; How can a statement answer a question?
+;;; 1) by providing bindings                                 (e.g., (bordersOn Florida-State AtlanticOcean)
+;;; 2) by explicitly negating the query                      (e.g., (not (madeOf moon greenCheese)))
+;;; 3) by indirectly agreeing or disagreeing with the query. (e.g., "Yes", or "It does." -> True)
+;;; **** This only handles case 1:
+
+(<== (answersPriorQuestion ?context ?sentence-id ?interpretation ?question-id ?query)
+     (previousSentenceId ?sentence-id ?prior-id)
+     (answersPriorQuestionRec ?context ?sentence-id ?prior-id ?interpretation ?question-id ?query))
+
+(<== (answersPriorQuestionRec ?context ?sentence-id ?prior-id ?interpretation ?prior-id ?query)
+     (answersQuery ?context ?sentence-id ?prior-id ?interpretation ?query))
+
+(<== (answersPriorQuestionRec ?context ?sentence-id ?prior-id ?interpretation ?question-id ?query)
+     (uninferredSentence
+       (answersQuery ?context ?sentence-id ?prior-id ?interp ?qry))
+     (previousSentenceId ?prior-id ?earlier-id)
+     (answersPriorQuestionRec ?context ?sentence-id ?earlier-id ?interpretation ?question-id ?query))
+     
+(<== (answersQuery ?context ?sentence-id ?question-id ?interpretation ?query)
+     (lookupOnly
+       (ist-Information ?context                   ; sentenceQuery is recorded in the session context
+         (sentenceQuery ?question-id ?question-interpretation ?query)))     ; ?query may be a conjunction
+     (lookupOnly 
+       (ist-Information ?context 
+         (interpretationOf ?sentence-id ?interpretation))) ; Possibly multiple alternative bindings of ?interpretation
+     (statementAnswersQuery ?context ?interpretation ?query))
+     
+;;; Here's where you might want to use abduction.
+;;; In effect, we want to putatively conjecture each interpretation in turn and
+;;; then query for each query.  As it is, we're just doing pattern matching and can't
+;;; invoke inference to determine if or how a statement answers a question.
+
+(<== (statementAnswersQuery ?context ?prop ?query)           ; might work for non-conjunctive queries
+     (unifies ?prop ?query))
+
+(<== (statementAnswersQuery ?context ?prop ?query)
+     (operatorFormulas and ?query)
+     (containsPattern ?prop ?query)                 ; quick check to see we're in the right query !!! That doesn't work for conjunctions with different orders!!!
+     (conjunctSet ?query ?conjuncts)
+     (inferenceOnly (patternContained ?prop ?conjuncts ?conjunct))
+     (unifies ?prop ?conjunct)                      ; generate bindings for query variables
+     (evaluate ?type-stmts
+       (SetMinusFn ?conjuncts ?conjunct))
+     (allFactsAllowed
+       (contextEnvAllowed
+         (everySatisfies
+           ?type-stmt ?type-stmts (ist-Information WorldLikeOursCollectorMt ?type-stmt)))))
+
+
+;;; (containsPattern  <pattern> <expression>) is true exactly when some subexpression
+;;; of <expression> unifies with <pattern>.
+
+;;; You could say that syntactically, each conjunct in ?prop should be contained in the query,
+;;; but the containsPattern will filter us out 
+(<== (patternContained ?prop ?conjuncts ?pattern)
+     (evaluate ?filtered-conjuncts
+       (TheClosedRetrievalSetOf ?conjunct
+         (and (elementOf ?conjunct ?conjuncts)
+              (matches ?conjunct ?prop ))))
+     (unifies ?filtered-conjuncts (TheSet ?pattern)))  ; singleton set
+
+;;; We need a different scratchpad mt for each interpretation ?prop
+(<== (statementAnswersQuery ?context ?prop ?query)
+     (operatorFormulas and ?query)
+     (conjunctSet ?prop ?conjuncts)
+     (evaluate ?proplist (SetToListFn ?conjuncts))
+     (inferenceOnly (gensym "ScratchpadMt" ?scratchpad-mt))  ; Don't extract stale cached values!
+     (tell (isa ?scratchpad-mt Microtheory))
+     (tell (genlMt ?scratchpad-mt ?context))
+     (populateScratchpad ?scratchpad-mt ?proplist)
+     ;; Here we have to open up structural queries to all contexts:
+     (decontextualizeStructuralQueries ?query ?rewritten-query)
+     (ist-Information ?scratchpad-mt ?rewritten-query))
+     
+(<== (populateScratchpad ?scratch-mt (TheList)))
+
+(<== (populateScratchpad ?scratch-mt ?props)
+     (different ?props (TheList))
+     (evaluate ?prop (FirstInListFn ?props))
+     (evaluate ?rest-props (RestOfListFn ?props))
+     (tell (ist-Information ?scratch-mt ?prop))
+     (populateScratchpad ?scratch-mt ?rest-props))
+     
+
+;;; Given a user statement that answers a prior question, how does the 
+;;; statement relate to the system's answer to that question?
+(<== (relationToAnswer ?context ?sentence-id ?question-id ?relation)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?context 
+           (utteranceType ?question-id YesOrNoQuestion-IBT))))  ;; maybe too specific.  For now, limit to yes/no questions
+     (lookupOnly
+       (localOnly
+         (ist-Information ?context 
+           (sentenceQuery ?question-id ?interpretation ?query))))
+     (lookupOnly
+       (localOnly
+         (ist-Information ?context 
+           (queryAnswer ?question-id ?answer))))
+     (lookupOnly
+       (localOnly
+         (ist-Information ?context 
+           (interpretationOf ?sentence-id ?prop))))
+     (inferenceOnly
+       (relationBetweenPropositions ?query ?prop ?answer ?relation)))
+
+;;; We'd kind of want to see if user stmts and answer unify, but that winds
+;;; up being set-matching.  This will become an issue when we start answering
+;;; yes-no questions with additional voluntary information.
+
+;;; **** Fix this to use Cyc-native representations of agreement and disagreement
+;;; **** such as Affirming-Replying and Denying-Replying, etc
+
+(<== (relationToAnswer ?context ?sentence-id ?question-id Relation)  ;catch-all
+     (uninferredSentence
+      (utteranceType ?question-id ?type)))
+
+(<== (relationToAnswer ?context ?sentence-id ?question-id Relation)  ;catch-all
+     (utteranceType ?question-id ?type)
+     (different ?type YesOrNoQuestion-IBT))
+
+;;; Since there may be multiple potential interpretations of the prior question,
+;;; we ideally should find one that corresponds to the formula.
+(<== (relationToAnswer ?context ?sentence-id ?question-id Relation)  ;catch-all
+     (interpretationOf ?sentence-id ?formula)
+     (sentenceQuery ?question-id ?interpretation ?query)
+     (queryAnswer ?question-id ?answer)
+     (uninferredSentence
+      (relationBetweenPropositions ?query ?formula ?answer ?relation)))
+
+;;; If user just said something that system previously declared as false, then
+;;; the user is correcting the system.
+(<== (relationBetweenPropositions ?stmt ?stmt False Correction))
+
+;;; Given that query might never have been disambiguated, a difference 
+;;; between query and stmt may not mean anything. 
+;(<== (relationBetweenPropositions ?query ?formula False Correction)
+;     (operatorFormulas ?pred1 ?query)
+;     (operatorFormulas ?pred2 ?formula)
+;     (different ?pred1 ?pred2))
+
+(<== (relationBetweenPropositions ?query ?formula False Correction)
+     (operatorFormulas and ?query)
+     (noArgumentHasPredicate ?query not)
+     (operatorFormulas ?pred ?formula)
+     (different ?pred and)
+     (someArgumentHasPredicate ?query ?pred))
+
+(<== (relationBetweenPropositions ?query ?formula True Correction)
+     (operatorFormulas and ?query)
+     (operatorFormulas and ?formula)
+     (noArgumentHasPredicate ?query not)
+     (someArgumentHasPredicate ?formula not))
+     
+(<== (relationBetweenPropositions ?query ?formula True Correction)
+     (operatorFormulas and ?query)
+     (operatorFormulas and ?formula)
+     (someArgumentHasPredicate ?query not)
+     (noArgumentHasPredicate ?formula not))
+
+(<== (relationBetweenPropositions ?query ?formula True Agreement)
+     (operatorFormulas ?pred1 ?query)
+     (operatorFormulas ?pred2 ?formula)
+     (equals ?pred1 ?pred2)
+     (noArgumentHasPredicate ?query not)
+     (noArgumentHasPredicate ?stmts not))
+
+;;; For question types other than yes-no, we need to handle uniqueness assumption 
+;;; properly.  Ie, if the user/tutor gives a different answer, it it really a contradiction
+;;; or extension of the answer set?
+
+
+
+;;;
+;;; Uniqueness Assumption
+;;;
+
+;;; Synecdoche  - part or instance used to refer to whole or collection
+;;; Metonymy - general use of one word in place of another
+;;; Figures of Speech
+;;; Metonymy works by the contiguity (association) between two concepts, whereas metaphor
+;;; works by the similarity between them. 
+;;; ie, metonymy is about identifying the referent, not about transferring properties.
+
+
+;;; This needs to produce a goal statement that factors out linguistic references.
+;;; It should be something the executive can work with to produce an inference rule.
+;;; The learning process may entail further dialog.
+(<== (goalStatementForContradiction ?context ?query ?correct-answer ?goal-stmt)
+     (unifies ?goal-stmt
+       (learningGoalForCompanion                       ; see executive-predicates.meld
+         (LearnInferenceRuleFn ?query ?correct-answer)))
+     (uninferredSentence
+       (localOnly 
+         (ist-Information ?context ?goal-stmt))))
+
+
+(<== (conjunctiveStatementSet ?context ?prop ?stmts)
+     (operatorFormulas and ?prop)
+     (evaluate ?set (MakeFormulaFn TheSet ?prop))
+     (evaluate ?stmts
+       (TheClosedRetrievalSetOf ?stmt
+         (and (elementOf ?p ?set)
+              (unifies ?stmt (ist-Information ?context ?p))))))
+
+(<== (conjunctiveStatementSet ?context ?prop ?stmts)
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and)
+     (unifies ?stmts (TheSet (ist-Information ?context ?prop))))
+
+
+;;; -------------------
+;;; Belief Justification
+;;; -------------------
+
+;;;
+;;; The case of a simple set of answer terms is hard to justify because we don't 
+;;; know the exact predicate (most likely a specpred of the query pred) and
+;;; there are no ltre antecedents of an answer statement.
+;;; We're going to query in wm for statements that match the query except for
+;;; the predicate and whose query term is filled in with each answer.
+
+(<== (justificationForBelief ?context ?question-id ?reasons)
+     (lookupOnly
+       (ist-Information ?context
+         (queryAnswer ?question-id ?answers)))
+     (operatorFormulas TheSet ?answers)                         ; case of answer = set of bindings
+     (lookupOnly
+       (ist-Information ?context
+         (sentenceQuery ?question-id ?interpretation ?query)))
+     (evaluate ?vars (FormulaVariableListFn ?query))
+     (unifies (TheList ?query-var) ?vars)  ; destructure
+     (operatorFormulas ?query-pred ?query)
+     (evaluate ?new-query (MakeFormulaFn ?dummy ?query))
+     (evaluate ?reasons
+       (TheClosedRetrievalSetOf ?stmt
+         (and (elementOf ?answer ?answers)
+              (translateAndQueryWM ?new-query ?query-pred ?query-var ?answer ?stmt))))
+     (different ?reasons (TheSet)))
+
+
+;;; Handle case of "Yes" answer:
+(<== (justificationForBelief ?context ?question-id ?reasons)
+     (lookupOnly
+       (ist-Information ?context
+         (queryAnswer ?question-id True)))
+     (lookupOnly
+       (ist-Information ?context 
+         (sentenceQuery ?question-id ?interpretation ?query)))
+     (evaluate ?reasons
+       (TheClosedRetrievalSetOf ?stmt
+         (and (firstOrderReasonsFor 
+                (ist-Information Interaction-ManagerMt
+                   (trueInDescriptiveContext ?question-id ?ctxt ?query)) ?stmt)
+               (explanatoryAntecedent ?stmt))))
+     (different ?reasons (TheSet)))
+
+;;; Can't handle the case of queryAnswer being simply GeorgeWBush.
+;;; We need the answer to be a proposition, essentially the instantiated
+;;; query.  Alternatively, do this:
+
+(<== (justificationForBelief ?context ?question-id ?reasons)
+     (lookupOnly
+       (ist-Information ?context
+         (queryAnswer ?question-id ?answer)))
+     (atomicTerm ?answer)
+     (different ?answer True)
+     (different ?answer False)
+     (lookupOnly
+       (ist-Information ?context 
+         (sentenceQuery ?question-id ?interpretation ?query)))
+     (evaluate ?varlist (FormulaVariableListFn ?query))
+     (unifies (TheList ?var) (TheList ?answer))
+     (evaluate ?reasons
+       (TheClosedRetrievalSetOf ?stmt
+         (and (firstOrderReasonsFor 
+                (ist-Information Interaction-ManagerMt
+                   (trueInDescriptiveContext ?question-id ?ctxt ?query)) ?stmt)
+               (explanatoryAntecedent ?stmt))))
+     (different ?reasons (TheSet)))
+     
+
+
+(<== (firstOrderReasonsFor ?query ?reasons)
+     (ignoreTimestamps (wmOnly (lookupOnly ?query))) ; instantiate the bindings in the query
+     (groundExpression ?query)
+     (wmAntecedentOf ?query ?reasons)) ; return the justifications
+
+(<== (explanatoryAntecedent ?stmt)
+     (operatorFormulas ?pred ?stmt)
+     (different ?pred groundExpression)
+     (different ?pred possibleTopicMicrotheory)
+     (noArgumentHasPredicate ?stmt groundExpression)
+     (noArgumentHasPredicate ?stmt possibleTopicMicrotheory))
+
+;;; Search through specpreds to find a successful query:
+(<== (translateAndQueryWM ?lifted-query ?genlpred ?query-var ?bdg ?stmt)
+     (evaluate ?query (SubstituteFormulaFn ?bdg ?query-var ?lifted-query))
+     (lookupOnly
+       (wmOnly
+         (ist-Information ?answer-context ?query)))
+     (possibleTopicMicrotheory ?answer-context)
+     (operatorFormulas ?specpred ?query)
+     (genlPreds ?specpred ?genlpred)
+     (unifies ?stmt (ist-Information ?answer-context ?query)))
+
+
+
+;;; End of file
+

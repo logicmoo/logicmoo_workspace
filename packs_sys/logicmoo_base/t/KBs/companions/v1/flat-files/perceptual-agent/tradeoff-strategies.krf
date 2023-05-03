@@ -1,0 +1,570 @@
+;;;
+;;; tradeoff-strategies.meld
+;;;
+;;; Ontology and rules to support reasoning with and using policies.
+;;;
+
+(in-microtheory PerceptualAgentMt)
+
+
+;;; We classify tradeoff types along two dimensions:
+;;; partial/total indicates whether every instance of the goal is affected 
+;;; or only some progressive/abrupt indicates whether the tradeoff happens
+;;; gradually or instantaneously.  So a total-abrupt tradeoff would just 
+;;; shut down the less preferred goal, but a total-progressive would 
+;;; gradually change a global partition (like changing tax rates over time)
+;;; partial-abrupt would instantaneously switch goals for some entities and
+;;; not others (like suddenly putting all coastal cities on a defensive war
+;;; footing), whereas partial-progressive would gradually change emphasis
+;;; over time and for different entities.  Really, we describing how a 
+;;; tradeoff could be addressed.
+(isa TradeoffType Collection)
+(isa InitialPartialProgressiveTradeoff TradeoffType)
+(isa DeferredPartialProgressiveTradeoff TradeoffType)
+(isa TotalAbruptTradeoff TradeoffType)
+(isa PartialAbruptTradeoff TradeoffType)  ; e.g., globally starve the pipeline
+
+(isa goalTradeoff TernaryPredicate)
+(arity goalTradeoff 3)
+(arg1Isa goalTradeoff Goal)
+(arg2Isa goalTradeoff Goal)
+(arg3Isa goalTradeoff TradeoffType)
+
+;;; 
+;;; Detecting Tradeoffs
+;;;
+;;; Unlike the old operationalizer mechanism, this does not walk depth-first
+;;; through subgoals and pairwise compare siblings of a common parent.
+;;; Instead, it queries the entire goal network for particular patterns
+;;; of goal interactions.
+
+;;; 1) build-grow tradeoff
+;;; This is a special case of a discrete tradeoff. This is a fractal growth 
+;;; pattern, in which there is a tradeoff between increasing the number of
+;;; constituent elements and increasing their individual size.  There is no
+;;; intrinsic tradeoff (cf, bacteria in a petri dish) but in the context of
+;;; this game, building more settlers vs building granaries is a tradeoff.
+
+;;; 2) percentages
+;;; A percentage is a continuous allocation.  If some parent goal tries to
+;;; maximize more than one allocation, there is a continuous tradeoff.
+
+;;; 3) partitions
+;;; If a goal allocates a resource which is mutually exclusive with other
+;;; resources in the same scope, and those resources are also needed for
+;;; some common parent goal, then there is a (discrete) tradeoff.
+
+;;; 4) competing influences
+;;; If a quantity has influences that drive it both up and down and some
+;;; common parent goal leads to paths along both influences, there is a 
+;;; (possibly concurrent continuous) tradeoff
+
+;;; 5) influence loops/knots
+;;; This is a variant of #4, where there's more indirection.  If a goal
+;;; participates in an extended (mobius) loop, then it's part of a tradeoff.
+;;; E.g., Building a Bank enhances trade, but also incurs an upkeep penalty.  
+
+;;; Assume goals are reified in wm.
+;;; Assume first three args bound:
+(isa goalContradiction Predicate)
+(arity goalContradiction 5)
+
+(<== (goalContradiction ?mt ?g1 (?functor ?arg) ?g2 (?other-functor ?arg))
+     (ist-Information ?mt (goalName ?g2 (?other-functor ?arg)))
+     (different ?other-other-functor ?functor))
+     
+;;; The parent goals of contradictions are immediate total tradeoffs.
+
+(isa elaborateTradeoffs ComplexActionPredicate)
+(arity elaborateTradeoffs 1)
+(arg1Isa elaborateTradeoffs Microtheory)
+(comment elaborateTradeoffs "(elaborateTradeoffs ?mt) searches for more subtle tradeoffs than the operationalizer can dynamically.")
+
+
+;;; This should write out partitionsInto for c+ influences and percentages
+(preconditionForMethod
+  (ignoreTimestamps  ; Static information - don't check timestamps at all.
+    (and (uninferredSentence
+           (lookupOnly
+             (localOnly
+               (kbOnly
+                 (ist-Information ?smmt
+                   (goalTradeoffs ?set ?type))))))  ; Don't do this if it already exists (for now!)
+         (evaluate ?build-grow-tradeoffs
+           (TheClosedRetrievalSetOf ?build-grow-tradeoff
+             (and (buildGrowTradeoff ?cardinality-goal ?deferred-goal)
+                  (unifies ?build-grow-tradeoff
+                    (goalTradeoff ?cardinality-goal ?deferred-goal InitialPartialProgressiveTradeoff)))))
+         (evaluate ?percentage-tradeoffs
+           (TheClosedRetrievalSetOf ?tradeoff-statement
+             (and (partitionedByPercentage ?percentage-tradeoff)
+                  (unifies ?tradeoff-statement 
+                    (goalTradeoffs ?percentage-tradeoff PartialAbruptTradeoff)))))
+         (evaluate ?ov-pairs
+           (TheClosedRetrievalSetOf (?g1 ?g2)
+             (symmetricOppositeValenceGoals ?g1 ?g2)))
+         (evaluate ?opposite-valence-tradeoffs  ; quantity goals driven in opposite direction
+           (TheClosedRetrievalSetOf ?tradeoff
+             (and (lookupOnly (elementOf ?pair ?ov-pairs))
+                  (unifies (?ovg1 ?ovg2) ?pair)  ; destructure
+                  (unifies ?tradeoff (goalTradeoff ?ovg1 ?ovg2 TotalAbruptTradeoff))))) ; These need to be partial if quantity goals, total if propositional.
+         ;; siblings of inconsistent cardinality goals:
+         (evaluate ?implied-cardinality-tradeoffs
+           (TheClosedRetrievalSetOf ?tradeoff  ; cardinality goals entailed by opposite valence tradeoffs
+             (and (lookupOnly (elementOf ?pair ?ov-pairs))
+                  (unifies (?ovg1 ?ovg2) ?pair)
+                  (impliedPairedTradeoff ?ovg1 ?ovg2 ?paired-goal1 ?paired-goal2)
+                  (unifies ?tradeoff (goalTradeoff ?paired-goal1 ?paired-goal2 PartialAbruptTradeoff)))))
+         ;; parents of inconsistent propositional goals:
+         (evaluate ?implied-achievement-tradeoff
+           (TheClosedRetrievalSetOf ?tradeoff
+             (and (lookupOnly (elementOf ?pair ?ov-pairs))
+                  (unifies (?ovg1 ?ovg2) ?pair)
+                  (parentGoalTradeoff ?ovg1 ?ovg2 ?p1 ?p2)
+                  (unifies ?tradeoff (goalTradeoff ?p1 ?p2 PartialAbruptTradeoff)))))
+         (evaluate ?implied-resource-tradeoffs
+           (TheClosedRetrievalSetOf ?implied-resource-tradeoff
+             (and (implicitResourceTradeoffs ?tradeoff-goals)
+                  (unifies ?implied-resource-tradeoff 
+                    (goalTradeoffs ?tradeoff-goals TotalAbruptTradeoff)))))))
+  (methodForAction
+    (elaborateTradeoffs ?smmt)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?smmt ?build-grow-tradeoffs)
+        (doRecordMembersInContext ?smmt ?percentage-tradeoffs)
+        (doRecordMembersInContext ?smmt ?opposite-valence-tradeoffs)
+        (doRecordMembersInContext ?smmt ?implied-cardinality-tradeoffs)
+        (doRecordMembersInContext ?smmt ?implied-achievement-tradeoff)
+        (doRecordMembersInContext ?smmt ?implied-resource-tradeoffs)
+        ))))
+        
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (elaborateTradeoffs ?smmt)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (elaborateTradeoffs ?lkmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;; This will tradeoff explicit achievement goals that conflict with building entities (eg, cities)
+;;; but it won't handle coinage or tradeoffs with building other units.
+;;; Of course, without explict goals for them, it's not clear how it could possibly 
+;;; pursue them.  How would it ever make a new worker?  A warrior?  A diplomat?  Coinage?
+
+(isa buildGrowTradeoff BinaryPredicate)
+(arity buildGrowTradeoff 2)
+
+(<== (buildGrowTradeoff ?cardinalityGoal ?propertyGoal)
+;     (cacheComplete
+       (lookupOnly
+         (goalName ?cardinalityGoal (MaximizeFn ((MeasurableQuantityFn cardinalityOf) ?col-spec))));)
+     (numAnswers 1 (entityTypeCollection ?col-spec ?collection))
+     (uninfluenced (MeasurableQuantityFn cardinalityOf) ?collection)
+;     (cacheComplete
+       (actionPositivelyAffectsQuantityType
+         (MeasurableQuantityFn cardinalityOf) ?event-pred ?collection 1 true);) ; the way to make more of the entity type
+     (cacheComplete
+       (enablementRelation ?resource-production (resourceTypeAvailable ?actor ?resource-type) ?event-pred))
+     ;; We'll assume for now that the resource is consumed by the event-pred.
+     (enablementRelation ?resource-production ?state-prop ?other-enabled-action) ; may not suffice for terminal propositions.
+     (operatorFormulas ?pred ?state-prop)
+     (different ?pred resourceTypeAvailable)
+     (decisionTask ?coll ?pred)     ; we'll bind, e.g., FreeCiv-City and currentlyBuilding
+     (cacheComplete (propertyGoalFor ?coll ?pred ?propertyGoal)))
+
+(isa propertyGoalFor TernaryPredicate)
+(arity propertyGoalFor 3)
+(arg1Isa propertyGoalFor Collection)
+(arg2Isa propertyGoalFor Predicate)
+(arg3Isa propertyGoalFor CycLExpression)
+
+(<== (propertyGoalFor ?collection ?pred ?goal)
+     (candidateGoals ?collection ?pred ?goal ?stmt))
+     
+(<== (propertyGoalFor ?collection ?pred ?goal)
+     (eventualDecisionEffect ?coll ?pred ?eventual-pred)
+     (candidateGoals ?collection ?eventual-pred ?goal ?stmt))
+
+(isa uninfluenced BinaryPredicate)
+(arity uninfluenced 2)
+(comment uninfluenced "(uninfluenced ?qtype ?collection) means there's no qualitative influence on the quantity type applied to instances of the collection.")
+
+(<== (uninfluenced ?qtype ?collection)
+     (uninferredSentence 
+       (positivelyInfluencedBy-TypeType ?qtype ?indep-quantity-type ?collection ?type2 ?relation))
+     (uninferredSentence
+       (negativelyInfluencedBy-TypeType ?qtype ?indep-quantity-type ?collection ?type2 ?relation))
+     ;; How about dependsOn?
+     )
+
+
+
+;;;TotalAbruptTradeoff
+;(isa elaboratePercentageTradeoffs ComplexActionPredicate)
+;(arity elaboratePercentageTradeoffs 2)
+;(arg1Isa elaboratePercentageTradeoffs Microtheory)
+;(arg2Isa elaboratePercentageTradeoffs Goal)
+;(comment elaboratePercentageTradeoffs "(elaboratePercentageTradeoffs ?mt ?root-goal) searches for more subtle tradeoffs than the operationalizer can dynamically.")
+
+
+;;; Find quantity primitives that are measured in percentages.
+;;; This can be found in the third argument of the quantityPrimitrive
+;;; statement, as stored in the domain ontology.
+;;; These are direct tradeoffs, ie, they don't share a common parent goal.
+
+;;; This is hard.  Percentage quantities don't have a common parent goal.
+;;; Their supergoals share a common source, from which the percentages divert
+;;; different fractions.
+
+;;; Gather quantities measured as Percentages
+;;; Group together via intersected sibling quantities.
+;;; Agglomerate pairwise intersections
+;;;   Do we need an outsourced pred to do this?
+;;; Percentages directly trade off & the goals they modulate also trade off.
+;;; (e.g., city science total, city luxury total, city tax total)
+
+(isa percentageGoals UnaryPredicate)
+(arity percentageGoals 1)
+
+(<== (percentageGoals ?goal)
+     (lookupOnly
+       (quantityPrimitive ?qtype ?coll Percent))
+     (lookupOnly
+       (numAnswers 1
+         (goalName ?goal (?functor (?qtype ?entity))))))
+
+
+(isa siblingGoals BinaryPredicate)
+
+(<== (siblingGoals ?goal ?goals)
+     (numAnswers 1                  ; Really? This is a DAG, not a tree! (but seems ok for Percentage goals and Cardinality goals.)
+       (lookupOnly
+         (subgoal ?parent ?goal)))  ; lookup the parent
+     (evaluate ?goals
+       (TheClosedRetrievalSetOf ?sibling
+         (and (lookupOnly
+                (subgoal ?parent ?sibling))
+              (different ?sibling ?goal)))))
+
+(isa partitionedByPercentage UnaryPredicate)
+(arity partitionedByPercentage 1)
+(arg1Isa partitionedByPercentage Set-Mathematical)
+
+;;; Change this from a set of sets to multiple returned sets.
+(<== (partitionedByPercentage ?tradeoffs)
+     (evaluate ?labeled-sets
+       (TheClosedRetrievalSetOf ?pair
+         (and (percentageGoals ?goal)
+              (cacheComplete (siblingGoals ?goal ?goals))
+              (unifies ?pair (?goal ?goals)))))
+     (numAnswers 1 (labeledIntersections ?labeled-sets ?percentage-goals ?shared-sibling-goal))
+     (different ?percentage-goals (TheSet))
+     (cacheComplete (percentageTradeoffs ?percentage-goals ?tradeoffs)))
+
+(isa percentageTradeoffs BinaryPredicate)
+
+(<== (percentageTradeoffs ?percentage-goals ?percentage-goals))
+
+(<== (percentageTradeoffs ?percentage-goals ?parent-goal-tradeoffs)
+     (parentTradeoffs ?percentage-goals ?parent-goal-tradeoffs))
+
+(isa parentTradeoffs BinaryPredicate)
+
+(<== (parentTradeoffs ?goal-set ?parent-goal-set)
+     (evaluate ?parent-goal-set
+       (TheClosedRetrievalSetOf ?parent-goal
+         (and (lookupOnly (elementOf ?goal ?goal-set))
+              (lookupOnly
+                (numAnswers 1
+                  (subgoal ?parent-goal ?goal)))))))
+
+
+;;; Opposite Valence Goals
+;;;
+;;; This should not query for quantityPrimitives, since these 
+;;; might be composite quantites.  Issue is how to efficiently
+;;; search for opposites.  We'll assume there are fewer 
+;;; minimize and prevent goals and search for them first.
+;;; Assume strategy model is visible from query mt.
+
+(isa oppositeValenceGoals BinaryPredicate)
+
+(<== (oppositeValenceGoals ?g1 ?g2)
+     (numAnswers 1
+       (lookupOnly
+         (goalName ?g1 (MinimizeFn ?q1))))
+     (numAnswers 1
+       (lookupOnly
+         (goalName ?g2 (MaximizeFn ?q1)))))
+       
+(<== (oppositeValenceGoals ?g1 ?g2)
+     (numAnswers 1
+       (lookupOnly
+         (goalName ?g1 (PreventFn ?stmt1))))
+     (numAnswers 1
+       (lookupOnly
+         (goalName ?g2 (AchieveFn ?stmt1)))))  ; Might be a variant. Should still retrieve it.
+
+(isa symmetricOppositeValenceGoals BinaryPredicate)
+
+(<== (symmetricOppositeValenceGoals ?g1 ?g2)
+     (oppositeValenceGoals ?g1 ?g2))
+
+(<== (symmetricOppositeValenceGoals ?g2 ?g1)
+     (oppositeValenceGoals ?g1 ?g2))
+
+;;; Given two goal names, see if they are cardinality goals
+;;; and look for sibling goals of same valence that reference the
+;;; same entity type.  ?g1 and ?g2 should be bound.
+;;; Example: (impliedPairedTradeoff (GoalFn 5) (GoalFn 7) ?pg1 ?pg2)
+;;; -> (?pg1 GoalFn 4) (?pg2 GoalFn 6)
+;;; because Max #cities + Min #cities ==> Max cityTaxTotal + Min cityImprovementsUpkeep
+
+(isa impliedPairedTradeoff QuaternaryPredicate)
+
+(<== (impliedPairedTradeoff ?g1 ?g2 ?paired-goal1 ?paired-goal2)
+     (lookupOnly
+       (numAnswers 1
+         (goalName ?g1 (?functor1 ((MeasurableQuantityFn cardinalityOf) ?col-spec)))))
+     (lookupOnly
+       (numAnswers 1
+         (goalName ?g2 (?functor2 ((MeasurableQuantityFn cardinalityOf) ?col-spec)))))
+     (cacheComplete (siblingGoals ?g1 ?siblings))
+     ;; Find another Maximize (or Minimize) goal that mentions ?col-spec, but isn't a cardinality goal:
+     (numAnswers 1 (pairedGoal ?g1 ?functor1 ?siblings ?col-spec ?paired-goal1))
+     (numAnswers 1 (pairedGoal ?g2 ?functor2 ?siblings ?col-spec ?paired-goal2))
+     (different ?paired-goal1 ?paired-goal2)
+     )
+
+(isa pairedGoal Predicate)
+(arity pairedGoal 5)
+
+(<== (pairedGoal ?name ?functor ?siblings ?col-spec ?paired-goal)
+     (lookupOnly (elementOf ?sibling ?siblings))
+     (different ?sibling ?name)
+     (lookupOnly
+       (numAnswers 1
+         (goalName ?sibling (?functor (?qtype (GenericInstanceFn ?col-spec))))))
+     (different ?qtype (MeasurableQuantityFn cardinalityOf))
+     (unifies ?paired-goal ?sibling))
+
+
+(isa parentGoalTradeoff QuaternaryPredicate)
+
+(<== (parentGoalTradeoff ?g1 ?g2 ?p1 ?p2)
+     (numAnswers 1
+       (lookupOnly
+         (goalName ?g1 (?functor ?stmt1))))
+     (lookupOnly (elementOf ?functor (TheSet AchieveFn PreventFn)))
+     (cacheComplete
+       (lookupOnly
+         (subgoal ?p1 ?g1)))
+     (cacheComplete
+       (lookupOnly
+         (subgoal ?p2 ?g2)))
+     (different ?p1 ?p2)) ; not really strong enough (they shouldn't be shared parent goals), but will do for now.
+
+;;; Exploiting Decision Tasks to identify implicit resources:
+
+;cl-user(53): (fire:query '(decisionEffect ?coll ?pred) 
+;                         :context 'FreecivPlanningDomain)
+; ((?coll . FreeCiv-Player) (?pred . playerKnowsTech))
+; ((?coll . FreeCiv-City) (?pred . cityHasImprovement))
+; ((?coll . FreeCiv-City) (?pred . currentlyBuilding))
+; ((?coll . FreeCiv-Player) (?pred . currentlyResearching))
+; ((?coll . FreeCiv-Player) (?pred . currentGovernment))
+; ((?coll . FreeCiv-Player) (?pred . currentLuxuryPercent))
+; ((?coll . FreeCiv-Player) (?pred . currentSciencePercent))
+; ((?coll . FreeCiv-Player) (?pred . currentTaxPercent))
+
+(isa decisionEffect BinaryPredicate)
+
+(<== (decisionEffect ?coll ?pred)
+     (decisionTask ?coll ?pred))
+
+(<== (decisionEffect ?coll ?eventual-pred)
+     (decisionTask ?coll ?pred)
+     (eventualDecisionEffect ?coll ?pred ?eventual-pred))
+
+(isa eventualDecisionEffect TernaryPredicate)
+
+(<== (eventualDecisionEffect ?coll ?pred ?eventual-pred)
+     (enablementRelation ?action-pred (?pred ?a1 ?a2) ?next-action-pred)
+     (enablementRelation ?action-pred (?eventual-pred ?b1 ?b2) ?some-other-pred)
+     (different ?pred ?eventual-pred))
+
+;;; For those cases where action doesn't enable another action:
+;;; *** This only works if queried in the planning (agent) domain, not the execution context. ***
+(<== (eventualDecisionEffect ?coll ?pred ?eventual-pred)
+     (cacheComplete (effectOfAction-Props ?action (?pred ?a1 ?a2)))
+     (cacheComplete (eventualEffectOfAction-Props ?action (?eventual-pred ?b1 ?b2))))
+
+;;; Although we might want to say that a particular city having the goal of
+;;; achieving one improvement trades off with its goal of achieving a 
+;;; different improvement, we can't really say the same about a player doing
+;;; research, since one tech may be a precondition of another.  And tax rates
+;;; trade off by virtue of being  percentages, not because of a singleton 
+;;; resource.  But Governments,  although not achieved by a durative process,
+;;; are in fact singleton resources.
+
+(isa candidateGoals QuaternaryPredicate)
+
+(<== (candidateGoals ?coll ?pred ?gname ?stmt)
+     (goalName ?gname (AchieveFn ?stmt))
+     (someArgumentHasPredicate ?stmt ?pred)
+     (subexpressionMatching (isa ?v ?coll) ?stmt ?ignore))
+
+;;; This identifies the "build queue" in Freeciv as an implicit resource, because
+;;; currentlyBuilding is a decisionTask (the slot is functional), and
+;;; currentlyBuilding ultimately results in having the thing, for which
+;;; there are numerous goals (the entailed goals resulting from eventual decision effects)
+(isa implicitResourceTradeoffs UnaryPredicate)
+(arity implicitResourceTradeoffs 1)
+
+(<== (implicitResourceTradeoffs ?tradeoff-set)
+     (decisionTask ?coll ?pred)  ; This identifies the functional slot
+     (evaluate ?tradeoff-set
+       (TheClosedRetrievalSetOf ?gname
+         (entailedGoal ?coll ?pred ?gname)))
+     (different ?tradeoff-set (TheSet)))
+     
+(isa entailedGoal TernaryPredicate)
+(arity entailedGoal 3)
+(arg1Isa entailedGoal Collection)
+(arg2Isa entailedGoal BinaryRelation)
+(arg3Isa entailedGoal Goal)
+(comment entailedGoal "(entailedGoal ?collection ?binpred ?goalname) binds all the goals that achieve binpred on members of ?collection, either immediately or eventually.")
+
+(<== (entailedGoal ?coll ?pred ?gname)
+     (cacheComplete (candidateGoals ?coll ?pred ?gname ?stmt)))
+
+(<== (entailedGoal ?coll ?pred ?gname)
+     (cacheComplete (eventualDecisionEffect ?coll ?pred ?eventual-pred))
+     (cacheComplete (candidateGoals ?coll ?eventual-pred ?gname ?stmt)))
+
+;;;
+;;; Exploiting Tradeoffs
+;;;
+
+
+;; Do we need to reify StrategyInstanceFn, applicationOfStrategy... etc?
+(isa Tradeoff Situation)  ; some state that holds for a period of time?
+
+(isa TradeoffFn Function-Denotational)
+(arity TradeoffFn 2)
+(arg1Isa TradeoffFn Goal)
+(arg2Isa TradeoffFn Goal)
+(resultIsa TradeoffFn Tradeoff)
+(comment TradeoffFn "(TradeoffFn ?goal1 ?goal2) denotes the Situation in which the goals have some degree of conflict.")
+
+(isa tradeoffNat UnaryPredicate)
+(arity tradeoffNat 1)
+(arg1Isa tradeoffNat Tradeoff)
+
+(<== (tradeoffNat (TradeoffFn ?g1 ?g2)))
+
+(isa TradeoffStrategyType SecondOrderCollection)
+
+(isa TradeoffStrategy Collection)
+(isa TradeoffStrategy TradeoffStrategyType)
+(genls TradeoffStrategy Strategy)
+
+;;; Types of strategies:
+;;; 1) sequence goals consecutively (assumes total independence except for
+;;;    some mutex problem)
+;;; 2) interleave
+;;; 3) pick one
+;;; 5) choose a proportion and allocate
+(genls SequenceNonConcurrentGoals TradeoffStrategy)
+(genls InterleaveGoalPursuit TradeoffStrategy)
+(genls PickWinnerGoal TradeoffStrategy)
+(genls AllocateGoalsProportionally TradeoffStrategy)
+
+(isa applyTradeoffStrategy ComplexActionPredicate)
+(arity applyTradeoffStrategy 4)
+(arg1Isa applyTradeoffStrategy Microtheory)
+(arg2Isa applyTradeoffStrategy Goal)
+(arg3Isa applyTradeoffStrategy Goal)
+(arg4Isa applyTradeoffStrategy TradeoffStrategyType)
+(comment applyTradeoffStrategy "(applyTradeoffStrategy ?mt ?goal1 ?goal2 ?strategy-type) applies the ?strategy-type in producing a strategy instance.")
+
+(preconditionForMethod 
+  (true)
+  (methodForAction
+    (applyTradeoffStrategy ?mt ?goal1 ?goal2 ?strategy-type)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (applyTradeoffStrategy ?mt ?goal1 ?goal2 ?strategy-type) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+
+;;; Canonical tradeoff:
+;;; cardinality vs apportionment
+;;; How do we detect?  resolve?  allocateRelativeEffort??
+;;; How do we apportion and record relative goal importance?
+;;; How do we look back at the recent history of a goal tradeoff to decide if it's time to adjust?
+
+(isa preferredTradeoff TernaryPredicate)
+(arity preferredTradeoff 3)
+(arg1Isa preferredTradeoff Microtheory)
+(arg2Isa preferredTradeoff Tradeoff)
+(arg3Isa preferredTradeoff Goal)
+(comment preferredTradeoff "(preferredTradeoff ?mt ?tradeoff ?goal) binds ?goal to the best way to achieve the tradeoff.")
+
+;;; Conceivably, this could expand out to a conjunction of revised goals.
+(<== (preferredTradeoff ?mt (TradeoffFn ?g1 ?g2) ?quantity-goal)
+     (unifies  (MaximizeFn ((MeasurableQuantityFn cardinalityOf) ?set-spec)) ?g1)
+     ;; Is g2 even operational?
+     ;; Is cardinality of ?set-spec greater than some threshold?
+     (numAnswers 1           ; cache complete (so long as it's not stale)
+       (ist-Information ?mt
+         (extent ?set-spec ?elements)))
+     (evaluate ?num (CardinalityFn ?elements))
+     (selectFromBoolean ?quantity-goal ?g1 ?g2 (lessThan ?num 6)))  ; make it 6 normally.
+
+
+(isa selectFromBoolean QuaternaryPredicate)
+(arity selectFromBoolean 4)
+(arg1Isa selectFromBoolean Thing)
+(arg2Isa selectFromBoolean Thing)
+(arg3Isa selectFromBoolean Thing)
+(arg4Isa selectFromBoolean CycLSentence-Askable)
+(comment selectFromBoolean "(selectFromBoolean ?output ?true-binding ?false-binding ?query) binds ?output to ?true-binding if ?query succeeds, else ?false-binding.")
+
+(<== (selectFromBoolean ?true ?true ?false ?qry)
+     (trueSentence ?qry))
+
+(<== (selectFromBoolean ?false ?true ?false ?qry)
+     (uninferredSentence ?qry))
+     
+
+(isa revisedHierarchyTradeoff QuaternaryPredicate)
+(arity revisedHierarchyTradeoff 4)
+(arg1Isa revisedHierarchyTradeoff Goal)
+(arg2Isa revisedHierarchyTradeoff Tradeoff)
+(arg3Isa revisedHierarchyTradeoff List)
+(arg4Isa revisedHierarchyTradeoff List)
+(comment revisedHierarchyTradeoff "(revisedHierarchyTradeoff ?goal ?tradeoff ?hierarchy ?new-hierarchy) binds a new hierarchy where ?tradeoff is resolved to ?goal.  ?hierarchy will be unchanged if this is already true.")
+
+(<== (revisedHierarchyTradeoff ?goal ?tradeoff ?hierarchy ?hierarchy)
+     (memberOfList ?goal ?hierarchy))
+
+(<== (revisedHierarchyTradeoff ?goal ?tradeoff ?hierarchy ?new-hierarchy)
+     (not (memberOfList ?goal ?hierarchy))
+     (evaluate ?pos (PositionInListFn ?tradeoff ?hierarchy))
+     (evaluate ?len (LengthOfListFn ?hierarchy))
+     (evaluate ?new-hierarchy
+       (JoinListsFn 
+          (TheList ?goal)
+          (SublistFromToFn ?hierarchy ?pos ?len))))
+
+;;; BuildGrow is one kind of tradeoff strategy that addresses a maximize 
+;;; goal(where quantity is aggregate over many entities) by first maximizing
+;;; the number of entities (the cardinality of the set), and then seeking 
+;;; other substrategies to maximize the output of each entity.
+

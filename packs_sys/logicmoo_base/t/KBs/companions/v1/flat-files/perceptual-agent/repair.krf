@@ -1,0 +1,806 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: repair.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: December 17, 2013 14:07:17
+;;;;   Purpose: Repair plans whose goals fail.
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+(isa invokePlanRepair ComplexActionPredicate)
+(arity invokePlanRepair 5)
+(arg1Isa invokePlanRepair Microtheory)
+(arg2Isa invokePlanRepair Microtheory)
+(arg3Isa invokePlanRepair PerceptualAgentEvent)
+(arg4Isa invokePlanRepair Agent-Generic)
+(arg5Isa invokePlanRepair Goal)
+(comment invokePlanRepair "(invokePlanRepair ?mt ?lkmt ?evt ?actor ?prevent-goal) invokes plan repair immediately after being told an event was bad.")
+
+(preconditionForMethod
+  (reifiedGoalName ?lkmt ?goal ?goal-rep ?goal-rep) ; look up the name of the goal
+  (methodForAction
+    (invokePlanRepair ?mt ?lkmt ?event ?actor ?goal-rep)
+    (actionSequence
+      (TheList
+        (repairPlanWRTGoalFailure ?mt ?actor ?event ?goal)))))
+
+(isa repairPlanWRTGoalFailure ComplexActionPredicate)
+(arity repairPlanWRTGoalFailure 4)
+(argIsa repairPlanWRTGoalFailure Microtheory)
+(arg2Isa repairPlanWRTGoalFailure Agent-Generic)
+(arg3Isa repairPlanWRTGoalFailure PerceptualAgentEvent)
+(arg4Isa repairPlanWRTGoalFailure Goal)
+(comment repairPlanWRTGoalFailure "(repairPlanWRTGoalFailure ?mt ?actor ?event ?failed-goal) identifies the goal and task ?actor was pursuing at time of failure, and tries to repair the plan.")
+
+(preconditionForMethod
+  (and (numAnswers 1
+         (lookupOnly
+           (localOnly
+             (ist-Information ?mt 
+               (dateOfEvent ?event ?end))))) ; should be better than (gameTurn ?now).
+       (failureForAgent ?mt ?event ?sub-actor) ; Ultimately should check that ?sub-actor is a sub-actor of ?actor.
+       (mostRecentGoalAssignment ?mt ?sub-actor ?end ?start ?goal ?task)) ; bind start, goal & task.
+  (methodForAction
+    (repairPlanWRTGoalFailure ?mt ?actor ?event ?failed-goal)
+    (actionSequence
+      (TheList
+        (repairPlan ?mt ?sub-actor ?event ?goal ?task ?start ?end)))))
+        
+;;; fallback on failure:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (repairPlanWRTGoalFailure ?mt ?actor ?event ?failed-goal)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (repairPlanWRTGoalFailure ?mt ?actor ?event ?failed-goal) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+        
+(isa failureForAgent TernaryPredicate)
+(arity failureForAgent 3)
+(arg1Isa failureForAgent Microtheory)
+(arg2Isa failureForAgent Event)
+(arg3Isa failureForAgent Agent-Generic)
+(comment failureForAgent "(failureForAgent ?mt ?event ?agent) means ?agent died.") ; obviously, I'm tired.
+
+
+(<== (failureForAgent ?mt ?event ?actor)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (maleficiary ?event ?actor))))
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (doneBy ?event ?actor)))))  ; oops.
+     
+
+;;; We need to determine if failure was endogenous or exogenous.
+;;; In other words, were we following a faulty plan, or did a completely
+;;; external agent swoop in and interfere?
+
+(isa mostRecentGoalAssignment Predicate)
+(arity mostRecentGoalAssignment 6)
+(comment mostRecentGoalAssignment "(mostRecentGoalAssignment ?mt ?actor ?end ?start ?goal ?task) means that, given an actor that experienced a failureForAgent at time ?end, identify the goal and task it was pursuing when the failure occurred.")
+
+;;; For now, assume start < end
+;;; ARRGH! ?actor is the actor whose goal failed, which for the case of a defender destroyed event,
+;;; is the player.  We need to get to the goals and tasks of the *unit* that was destroyed!
+(<== (mostRecentGoalAssignment ?mt ?actor ?end ?start ?goal ?task)
+     (evaluate ?triple
+        (FirstInListFn  ; most recent assignment
+          (SortFn
+            (TheClosedRetrievalSetOf ?triple
+              (and (lookupOnly
+                     (localOnly
+                       (ist-Information ?mt
+                         (holdsIn ?start-asst
+                           (assignedToGoal ?goal-asst ?actor ?task-asst)))))  ; goal-asst is a goal name.
+                   (unifies ?triple (?start-asst ?goal-asst ?task-asst))))
+            greaterThan         ; test
+            (FunctionToArg 2    ; key
+              (Kappa (?in ?out)
+                (and (operatorFormulas ?start-asst ?in)
+                     (natArgument ?start-asst 1 ?out)))))))
+     (unifies (?start ?goal ?task) ?triple))
+
+;;; If goal failure was due to an improvised plan, 
+;;; look at the source of the precondition learning knowledge to
+;;; see if we can spot a critical difference.
+
+;;; We need the task in order to look up the training scenario
+;;; (to find an example of performing the task successfully)
+;;; This is moot if we were passive and died doing nothing.
+
+(isa repairPlan ComplexActionPredicate)
+(arity repairPlan 7)
+(arg1Isa repairPlan Microtheory)
+(arg2Isa repairPlan Agent-Generic)
+(arg3Isa repairPlan PerceptualAgentEvent)
+(arg4Isa repairPlan Goal)
+(arg5Isa repairPlan Task)
+(arg6Isa repairPlan TimeInterval)
+(arg7Isa repairPlan TimeInterval)
+(comment repairPlan "(repairPlan ?mt ?actor ?event ?goal ?task ?start-time ?end-time) attempts to repair the failed plan that led to ?goal failure, or create a new plan.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (repairPlan ?mt ?actor ?event ?goal ?task ?start ?end)
+    (actionSequence
+      (TheList))))
+
+;;; (sourceForLearnedPlan (CommandFn fc-attack-scenario 5) 
+;;;   (achieve (PreconditionOfFn (doAttack ?arg1 ?arg2))))
+
+;;; (sourceForLearnedPlan (CommandFn <mt> <num>)
+;;;  (achieveBy ?actor ?effect))  ; kind of like (does ?actor (achieve ?effect))
+
+;;; Plan Rationale is now scoped wrt YearFn, not TurnFn or Command.
+;;; We're just going to look for threat responses right now, since I'm bogging dowm.
+(preconditionForMethod 
+  (and (operatorFormulas ?action-pred ?task)
+       (allFactsAllowed 
+         (useTransitiveInference                  ; probably not necessary
+           (isa ?action-pred SimpleActionPredicate)))
+       (evaluate ?gen-task
+         (GeneralizeFormulaFn ?task))
+       (lookupOnly
+         (contextEnvAllowed  ; just inherit, don't worry about lkmt
+           (allFactsAllowed
+             (sourceForLearnedPlan ?source 
+               (achieve (PreconditionOfFn ?gen-task)))))))
+  (methodForAction
+    (repairPlan ?mt ?actor ?event ?goal ?task ?start ?end)
+    (actionSequence
+      (TheList
+        (identifyCriticalDifferenceWRTGoal ?mt ?actor ?goal ?task ?source ?start ?end) ; no event or failed goal.
+        ))))
+
+(<== (preferInContext (repairPlan ?mt ?actor ?event ?goal ?task ?start ?end) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+
+;;; We have no good translation or way to convert it to a command event.
+(isa improvisedPlan QuaternaryPredicate)
+(arity improvisedPlan 4)
+(arg1Isa improvisedPlan Microtheory)
+(arg2Isa improvisedPlan Goal)
+(arg3Isa improvisedPlan Task)
+(arg4Isa improvisedPlan TimeInterval)
+(comment improvisedPlan "(improvisedPlan ?mt ?goal-name ?task ?when) binds ?task and ?when if ?task was constructed from regression planning on the expected effects of the operator.")
+
+;;; Doesn't work!  The goal that's passed in is the Prevent DefenderLost goal, not the
+;;; Terminate Threat goal.
+
+(<== (improvisedPlan ?mt ?goal-name ?task ?when)
+     (groundExpression ?goal-name)
+     (uninferredSentence   ; check that goal-name is not local to scenario
+       (lookupOnly
+         (localOnly
+           (kbOnly
+             (ist-Information ?mt
+               (goalName ?goal-name ?goal-rep))))))
+     (numAnswers 1
+       (lookupOnly
+         (contextEnvAllowed
+           (allFactsAllowed
+             (ist-Information ?mt
+               (goalName ?goal-name ?goal-rep)))))) ; lookup rep in static goal lattice
+     (uninferredSentence
+       (contextEnvAllowed   ; This can't be lookupOnly, since the indexing is a rule.
+         (allFactsAllowed
+           (ist-Information ?mt
+             (complexTaskAchieves ?actor ?goal ?action)))))
+     (lookupOnly
+       (localOnly
+         (allFactsAllowed
+           (ist-Information ?mt
+             (holdsIn ?when
+               (reasonForTask ?task ?goal-name)))))))  ; no.  The goal that failed is the generic prevention goal, not the terminate threat goal.
+
+(<== (improvisedPlan ?mt ?goal-name ?task ?when)
+     (groundExpression ?goal-name)
+     (numAnswers 1
+       (liftedGoalRep ?mt ?goal-name ?goal))  ; should fail if ?goal-name is reified in lkmt.
+     (uninferredSentence
+       (contextEnvAllowed
+         (allFactsAllowed
+           (ist-Information ?mt
+             (complexTaskAchieves ?actor ?goal ?action)))))
+     (lookupOnly
+       (localOnly
+         (allFactsAllowed
+           (ist-Information ?mt
+             (holdsIn ?when
+               (reasonForTask ?task ?goal-name)))))))
+
+(isa liftedGoalRep TernaryPredicate)
+
+;;; For goals in execution-context, we must generalize scenario-specific goal args:
+(<== (liftedGoalRep ?mt ?goal-name ?lifted-goal-rep)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (kbOnly
+             (ist-Information ?mt
+               (goalName ?goal-name ?goal-rep))))))
+     ;; Now we need to walk the structure and variablize locally defined terms.
+     (localTermBindingList ?mt ?goal-rep ?blist)
+     (evaluate ?lifted-goal-rep
+       (SublisFn ?blist ?goal-rep)))
+
+
+(isa localTermBindingList TernaryPredicate)
+
+(<== (localTermBindingList ?mt ?goal-rep ?blist)
+     (evaluate ?blist 
+       (TheClosedRetrievalSetOf ?binding
+         (localTermBinding ?mt ?goal-rep ?binding))))
+
+(isa localTermBinding TernaryPredicate)
+
+;;; Walk the goal-rep structure, constructing a blist to translate
+;;; each scenario-local term to a variable.
+(<== (localTermBinding ?mt ?goal-rep ?binding)
+     (not (variableExpression ?goal-rep))
+     (not (atomicTerm ?goal-rep))
+     (formulaArgument ?goal-rep ?n ?term)
+     (localTermBinding ?mt ?term ?binding))
+
+(<== (localTermBinding ?mt ?goal-rep ?binding)
+     (not (variableExpression ?goal-rep))
+     (atomicTerm ?goal-rep)
+     (numAnswers 1 
+       (variablizeIfLocal ?mt ?goal-rep ?binding)))
+
+(isa variablizeIfLocal TernaryPredicate)
+
+;;; don't worry about preserving identicality of references,
+;;; it doesn't matter for our purposes.
+(<== (variablizeIfLocal ?mt ?term (?term ?new-term))
+     (localTerm ?mt ?term)
+     (nextCounterValue var ?n)
+     (evaluate ?new-term
+       (SymbolConcatenateFn (TheList "?var" ?n))))
+
+
+(isa localTerm BinaryPredicate)
+
+;;; Is ?term defined locally with respect to scenario microtheory mt?
+(<== (localTerm ?mt ?term)
+     (numAnswers 1
+       (localOnly
+         (lookupOnly
+           (ist-Information ?mt
+             (isa ?term ?something))))))
+
+
+;;; -------------------------------------------------------------------------
+;;; Do the repair
+
+;(identifyCriticalDifferenceWRTGoal ?mt ?cmd-num ?scenario ?source-cmd-num ?event ?goal)
+
+(isa identifyCriticalDifferenceWRTGoal ComplexActionPredicate)
+(arity identifyCriticalDifferenceWRTGoal 7)
+(arg1Isa identifyCriticalDifferenceWRTGoal Microtheory)
+(arg2Isa identifyCriticalDifferenceWRTGoal Agent-Generic)
+(arg3Isa identifyCriticalDifferenceWRTGoal Goal)
+(arg4Isa identifyCriticalDifferenceWRTGoal Task)
+(arg5Isa identifyCriticalDifferenceWRTGoal PerceptualAgentCommand)
+(arg6Isa identifyCriticalDifferenceWRTGoal TimeInterval)
+(arg7Isa identifyCriticalDifferenceWRTGoal TimeInterval)
+(comment identifyCriticalDifferenceWRTGoal "(identifyCriticalDifferenceWRTGoal ?mt ?actor ?goal ?task ?source ?start ?end) ")
+
+
+;;; STUB
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (identifyCriticalDifferenceWRTGoal ?mt ?actor ?goal ?task ?source ?start ?end)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (identifyCriticalDifferenceWRTGoal ?mt ?actor ?goal ?task ?source ?start ?end) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+     
+(preconditionForMethod
+  (and (unifies (CommandFn ?scenario ?source-cmd-num) ?source-cmd)
+       (lookupOnly
+         (localOnly
+           (allFactsAllowed
+             (ist-Information ?scenario
+               (infoTransferred ?source-cmd ?successful-action))))))
+  (methodForAction
+    (identifyCriticalDifferenceWRTGoal ?mt ?actor ?goal ?task ?source-cmd ?start ?end)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%identifyCriticalDifferenceWRTGoal ~s ~s ~s from ~s to ~s" 
+                    (?goal ?task ?source-cmd ?start ?end))
+        (proposeStructuralRepairExperiments ?mt ?actor ?goal ?task ?source-cmd ?start ?end) ; could be a noop if no structural difference detected.
+        
+        ))))
+
+;;; What do we want to do here?
+;;; Walk back and see what else could plausibly contribute to success in
+;;; training scenario.
+;;; Either spatial, temporal, type, or partonomic.
+;;; It would be nice if we could use analogy here, but I don't see how.
+
+
+#||
+
+same initial start scenario?
+same initial state?
+same individual assignments?
+same types?
+same locations? relative locations?
+temporal topology?
+metric temporal relations?
+extrinsic differences?
+
+||#
+
+(isa sameInitialScenario BinaryPredicate)
+
+(<== (sameInitialScenario ?mt ?scenario)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (objectOfStateChange GameStartedEvent1 ?saved-game)))))
+     (numAnswers 1
+      (lookupOnly
+        (localOnly
+          (ist-Information ?scenario
+             (objectOfStateChange GameStartedEvent1 ?saved-game))))))
+
+(isa sameInitialState BinaryPredicate)
+
+(<== (sameInitialState ?mt ?scenario)
+     (sameInitialScenario ?mt ?scenario)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent GameStartedEvent1 ?start-date)))))
+     (numAnswers 1
+      (lookupOnly
+        (localOnly
+          (ist-Information ?scenario
+             (dateOfEvent GameStartedEvent1 ?start-date))))))  ; This is pretty much a given if we're starting from the same scenario.
+
+(isa sameAssignments QuaternaryPredicate)
+(arity sameAssignments 4)
+             
+(<== (sameAssignments ?mt ?scenario ?actor ?scenario-cmd)
+     (sameInitialState ?mt ?scenario)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?scenario
+             (infoTransferred ?scenario-cmd ?action)))))
+     (formulaArgument ?action 1 ?actor))
+
+(isa sameActorType QuaternaryPredicate)
+(arity sameActorType 4)
+
+(<== (sameActorType ?mt ?scenario ?actor ?scenario-cmd)
+     (sameAssignments ?mt ?scenario ?actor ?scenario-cmd))
+
+(<== (sameActorType ?mt ?scenario ?actor ?scenario-cmd)
+     (uninferredSentence
+       (sameAssignments ?mt ?scenario ?actor ?scenario-cmd))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?scenario
+             (infoTransferred ?scenario-cmd ?action)))))
+     (formulaArgument ?action 1 ?scenario-actor)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (nonTransitiveInference
+             (ist-Information ?scenario
+               (isa ?scenario-actor ?type))))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (nonTransitiveInference
+             (ist-Information ?mt
+               (isa ?actor ?type)))))))
+
+
+;;; We want to repair the plan to make it more robust
+;;;  a) What are the actual diferences in execution?
+;;;  b) What information do we need to gather?
+;;;  c) What experiments would gather that data?
+;;;  d) What do the experiments tell us?
+;;;  e) How should the plan(s) be repaired?
+
+;;; To infer extrinsic property differences, we need to be able to
+;;; 1) enumerate possible quantities,
+;;; 2) gather those values over time in the scenarios
+;;; 3) replay the training scenario exactly, in order to sample and record
+;;; 4) attribute behavioral differences to quantity differences
+;;; 5) do this even for quantities that are not properties of a single entity
+;;;    (like distance to target, or elapsed simulated time)
+
+(isa summarizedActionDifferences Predicate)
+(arity summarizedActionDifferences 6)
+
+;;; What form do we want diffs to take?
+;;; Suppose we were to take two lists of (relevant) actions as input.
+(<== (summarizedActionDifferences ?mt ?start ?end ?task ?scenario-cmd ?diffs)
+     (scenarioSequence ?scenario-cmd ?referemce-sequence)
+     (executionSequence ?mt ?start ?end ?task ?executed-sequence)
+     ;; Figure out any offset: did we finish the task but it failed, or didn't it complete?
+     ;; Enumerate structural differences, propose experiments.
+     
+     )
+
+
+(isa scenarioSequence BinaryPredicate)
+(arity scenarioSequence 2)
+(arg1Isa scenarioSequence PerceptualAgentCommand)
+(arg2Isa scenarioSequence List)
+(comment scenarioSequence "(scenarioSequence ?cmd ?sequence) binds ?sequence to a list of primitive actions that led to achieving ?cmd.")
+
+;;; Collect the sequence of actions that contributed to the doing of ?scenario-cmd
+(<== (scenarioSequence ?scenario-cmd ?sequence)
+     (unifies (CommandFn ?scenario ?num) ?scenario-cmd)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?scenario
+             (infoTransferred ?scenario-cmd ?action)))))
+     (formulaArgument ?action 1 ?actor)
+     ;; How far back do we want to go?  This won't branch.
+     (withBackchainingDepth 100
+       (numAnswers 1 (filteredActionSequence ?scenario ?actor ?scenario-cmd ?partial-sequence)))
+     (evaluate ?sequence (JoinListsFn ?partial-sequence (TheList ?action))))
+     
+(isa filteredActionSequence QuaternaryPredicate)
+
+(<== (filteredActionSequence ?mt ?actor ?cmd ?sequence)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (followsInProgression ?cmd ?earlier-evt ?mt)))))
+     (unifies (CommandFn ?mt ?num) ?earlier-evt)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (infoTransferred ?earlier-evt ?action)))))
+     (formulaArgument ?action 1 ?actor)
+     (numAnswers 1 (filteredActionSequence ?mt ?actor ?earlier-evt ?partial-sequence))
+     (evaluate ?sequence (JoinListsFn ?partial-sequence (TheList ?action))))
+     
+;;; No prior event:
+(<== (filteredActionSequence ?mt ?actor ?cmd (TheList))
+     (uninferredSentence
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (followsInProgression ?cmd ?earlier-evt ?mt))))))
+
+;;; Not a command:
+(<== (filteredActionSequence ?mt ?actor ?cmd ?sequence)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (followsInProgression ?cmd ?earlier-evt ?mt)))))
+     (uninferredSentence
+       (commandByActor ?mt ?earlier-evt ?actor))
+     (numAnswers 1 (filteredActionSequence ?mt ?actor ?earlier-evt ?sequence)))
+
+
+(isa commandByActor TernaryPredicate)
+(arity commandByActor 3)
+(arg1Isa commandByActor Microtheory)
+(arg2Isa commandByActor PerceptualAgentCommand)
+(arg3Isa commandByActor Agent-Generic)
+
+;;; prior event is a command done by actor:
+(<== (commandByActor ?mt ?cmd ?actor)
+     (unifies (CommandFn ?mt ?num) ?cmd)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (infoTransferred ?cmd ?action)))))
+     (formulaArgument ?action 1 ?actor))
+     
+;;; ---------------------------------------------
+
+;;; What was agent doing when it failed/died?
+
+;;; This is a different entry point from scenarioSequence, since
+;;; we don't have a concrete command at the end.
+;;; ?task is like (doAttack Unit-273 Unit-264)
+;;; Here, we don't know that the actor did anything at the end time,
+;;; other than fail some goal.  So we work forwards in time
+;;; from the start.
+
+(isa executionSequence Predicate)
+(arity executionSequence 5)
+(arg1Isa executionSequence Microtheory)
+(arg2Isa executionSequence PerceptualAgentCommand)
+(arg3Isa executionSequence PerceptualAgentCommand)
+(arg4Isa executionSequence CycLFormula)
+(arg5Isa executionSequence List)
+
+(<== (executionSequence ?mt ?start ?end ?task ?sequence)
+     (firstCommandBetween ?mt ?start ?end ?start-cmd)
+     (lastCommandBetween ?mt ?start ?end ?end-cmd)
+     (formulaArgument ?task 1 ?actor)
+     (numAnswers 1 (commandSequenceByFromTo ?mt ?actor ?start-cmd ?end-cmd ?cmd-sequence))
+     ;; translate command sequence to task sequence:
+     (evaluate ?sequence
+       (MapFunctionOverList
+         (FunctionToArg 2
+           (Kappa (?in ?out)
+             (numAnswers 1
+               (lookupOnly
+                 (localOnly
+                   (ist-Information ?mt
+                     (infoTransferred ?in ?out)))))))
+         ?cmd-sequence)))
+         
+(isa commandSequenceByFromTo Predicate)
+(arity commandSequenceByFromTo 5)
+
+(<== (commandSequenceByFromTo ?mt ?actor ?start-cmd ?end-cmd ?sequence)
+     (unifies (CommandFn ?mt ?startnum) ?start-cmd)
+     (unifies (CommandFn ?mt ?endnum) ?end-cmd)
+     (evaluate ?sequence
+       (SortFn
+         (TheClosedRetrievalSetOf ?cmd
+           (and (integerBetween ?startnum ?i ?endnum)
+                ;; Question: When is it better to retrieve once and filter
+                ;; vs retrieve N times?
+                (numAnswers 1
+                  (lookupOnly
+                    (localOnly
+                      (ist-Information ?mt
+                        (infoTransferred (CommandFn ?mt ?i) ?action)))))
+                  (formulaArgument ?action 1 ?actor)
+                  (unifies ?cmd (CommandFn ?mt ?i))))
+          lessThan
+          (FunctionToArg 2
+            (Kappa (?in ?out)
+              (formulaArgument ?in 2 ?out))))))   ; sort by command number.
+
+;(<== (earliestCommandInBy ?mt ?when ?actor ?cmd)
+;     (evaluate ?cmd
+;       (FirstInListFn
+;         (SortFn 
+;           (TheClosedRetrievalSetOf ?cmd-at-time
+;             (and (lookupOnly
+;                    (localOnly
+;                      (ist-Information ?mt
+;                        (dateOfEvent (CommandFn ?mt ?num) ?when))))
+;                  (lookupOnly
+;                    (localOnly
+;                      (ist-Information ?mt
+;                        (infoTransferred (CommandFn ?mt ?num) ?action))))
+;                  (formulaArgument ?action 1 ?actor)))
+;           lessThan
+;           (FunctionToArg 2 
+;             (Kappa (?in ?out)
+;               (formulaArgument ?in 2 ?out)))))))
+
+;;; This will fail if ?actor did nothing but die in turn ?when.
+;(<== (latestCommandInBy ?mt ?when ?actor ?cmd)
+;     (evaluate ?cmd
+;       (FirstInListFn
+;         (SortFn 
+;           (TheClosedRetrievalSetOf ?cmd-at-time
+;             (and (lookupOnly
+;                    (localOnly
+;                      (ist-Information ?mt
+;                        (dateOfEvent (CommandFn ?mt ?num) ?when))))
+;                  (lookupOnly
+;                    (localOnly
+;                      (ist-Information ?mt
+;                        (infoTransferred (CommandFn ?mt ?num) ?action))))
+;                  (formulaArgument ?action 1 ?actor)))
+;           greaterThan
+;           (FunctionToArg 2 
+;             (Kappa (?in ?out)
+;               (formulaArgument ?in 2 ?out)))))))
+
+
+;;; --------------------------------------------
+
+(isa firstCommandBetween QuaternaryPredicate)
+
+     
+(<== (firstCommandBetween ?mt ?start ?end ?cmd)
+     (evaluate ?cmd
+       (FirstInListFn
+         (SortFn 
+           (TheClosedRetrievalSetOf ?cmd-at-time
+             (and (lookupOnly
+                    (localOnly
+                      (ist-Information ?mt
+                        (dateOfEvent (CommandFn ?mt ?num) ?start))))
+                  (unifies ?cmd-at-time (CommandFn ?mt ?num))))
+           lessThan
+           (FunctionToArg 2 
+             (Kappa (?in ?out)
+               (formulaArgument ?in 2 ?out))))))) ; sort by command number.
+
+;;; Case of no command at time ?start:
+(<== (firstCommandBetween ?mt ?start ?end ?cmd)
+     (uninferredSentence 
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent (CommandFn ?mt ?num) ?start)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (followingTurn ?start ?next)))))
+     (unifies (?unit ?next-num) ?next)
+     (unifies (?unit ?end-num) ?end)
+     (lessThanOrEqualTo ?next-num ?end-num)  ; years in freeciv, turn nums elsewhere
+     ;; Recurse to earlier turn
+     (numAnswers 1 (firstCommandBetween ?mt ?next ?end ?cmd)))
+
+
+(isa lastCommandBetween QuaternaryPredicate)
+
+(<== (lastCommandBetween ?mt ?start ?end ?cmd)
+     (evaluate ?cmd
+       (FirstInListFn
+         (SortFn 
+           (TheClosedRetrievalSetOf ?cmd-at-time
+             (and (lookupOnly
+                    (localOnly
+                      (ist-Information ?mt
+                        (dateOfEvent (CommandFn ?mt ?num) ?end))))
+                  (unifies ?cmd-at-time (CommandFn ?mt ?num))))
+           greaterThan
+           (FunctionToArg 2 
+             (Kappa (?in ?out)
+               (formulaArgument ?in 2 ?out)))))))
+
+;;; Case of no command at time ?end:
+(<== (lastCommandBetween ?mt ?start ?end ?cmd)
+     (uninferredSentence 
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent (CommandFn ?mt ?num) ?end)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (followingTurn ?prior ?end)))))
+     (unifies (?unit ?start-num) ?start)
+     (unifies (?unit ?end-num) ?prior)
+     (lessThanOrEqualTo ?start-num ?end-num)
+     ;; Recurse to earlier turn
+     (numAnswers 1 (lastCommandBetween ?mt ?start ?prior ?cmd)))
+
+
+;;; --------------------------------------------
+
+(isa proposeStructuralRepairExperiments ComplexActionPredicate)
+(arity proposeStructuralRepairExperiments 7)
+
+;;; Figure out missing subtasks
+;;; post learning goals to better understand their effect
+;;; propose an experiment series to replay the scenario with different combinations of the prefix tasks included
+;;; Do we want a PurposeOfActionLearningGoal instead of actionEffect?
+;;; How about a ProcedureLearningGoal?
+(preconditionForMethod 
+  (and (unifies (CommandFn ?scen-mt ?source-cmd-num) ?source-cmd)
+       (numAnswers 1 (executionSequence ?mt ?start ?end ?task ?sequence))
+       (numAnswers 1 (scenarioSequence ?scenario-cmd ?sequence))
+       (numAnswers 1 (enumerateStructuralTaskDifferences ?mt ?ex-seq ?scen-mt ?scen-seq ?prefix-addition))
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain))
+       )
+  (methodForAction
+    (proposeStructuralRepairExperiments ?mt ?actor ?goal ?task ?source-cmd ?start ?end)
+    (actionSequence
+      (TheList
+        (doForEach ?operator ?prefix-addition (postOperatorEffectLearningGoal ?lkmt ?operator))
+        ;; What should it look like to suggest an experiment (series)?
+        (designStructuralExperiments ?mt ?lkmt ?goal ?task ?prefix-addition)  ; go design and run experiments
+        ))))
+
+(preconditionForMethod 
+  (true)
+  (methodForAction
+    (proposeStructuralRepairExperiments ?mt ?actor ?goal ?task ?source-cmd ?start ?end)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (proposeStructuralRepairExperiments ?mt ?actor ?goal ?task ?source-cmd ?start ?end) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa enumerateStructuralTaskDifferences Predicate)
+(arity enumerateStructuralTaskDifferences 5)
+
+(<== (enumerateStructuralTaskDifferences ?mt ?executed-sequence ?scenario-mt ?scenario-sequence ?prefix-difference)
+     (evaluate ?full-rev-scen (ReverseListFn ?scenario-sequence))
+     (evaluate ?rev-seq (ReverseListFn ?executed-sequence))
+     (evaluate ?task (FirstInListFn ?rev-seq))
+     (operatorFormulas ?pred ?task)
+     (commonListTailByPred ?pred ?full-rev-scen ?rev-scen)
+     (mismatchTail ?rev-seq ?rev-scen ?ex-tail ?scen-tail)
+     (different ?scen-tail (TheList))
+     (equals ?ex-tail (TheList))
+     (evaluate ?prefix-difference (ReverseListFn ?scen-tail))  ; Put it back in temporal order
+     )
+
+(isa commonListTailByPred TernaryPredicate)
+
+(<== (commonListTailByPred ?pred ?list ?list)
+     (evaluate ?task (FirstInListFn ?list))
+     (operatorFormulas ?pred ?task))
+
+(<== (commonListTailByPred ?pred ?list ?tail)
+     (evaluate ?task (FirstInListFn ?list))
+     (operatorFormulas ?other-pred ?task)
+     (different ?pred ?other-pred)
+     (evaluate ?rest (RestOfListFn ?list))
+     (numAnswers 1 (commonListTailByPred ?pred ?rest ?tail)))
+     
+(isa mismatchTail QuaternaryPredicate)
+     
+(<== (mismatchTail ?l1 ?l2 ?tail1 ?tail2)
+     (evaluate ?task1 (FirstInListFn ?l1)) ; fails on (TheList), which is what we want.
+     (evaluate ?task2 (FirstInListFn ?l2))
+     (operatorFormulas ?pred ?task1)
+     (operatorFormulas ?pred ?task2)
+     (numAnswers 1 (nextDistinctTask ?pred ?l1 ?rest1))   ; keep popping until there's a new pred
+     (numAnswers 1 (nextDistinctTask ?pred ?l2 ?rest2))
+     (numAnswers 1 (mismatchTail ?rest1 ?rest2 ?tail1 ?tail2)))
+     
+(<== (mismatchTail ?l1 ?l2 ?l1 ?l2)
+     (evaluate ?task1 (FirstInListFn ?l1)) ; fails on (TheList), which is what we want.
+     (evaluate ?task2 (FirstInListFn ?l2))
+     (operatorFormulas ?p1 ?task1)
+     (operatorFormulas ?p2 ?task2)
+     (different ?p1 ?p2))
+
+(<== (mismatchTail (TheList) ?l2 (TheList) ?l2))
+(<== (mismatchTail ?l1 (TheList) ?l1 (TheList)))
+
+(isa nextDistinctTask TernaryPredicate)
+
+(<== (nextDistinctTask ?pred (TheList) (TheList)))
+
+(<== (nextDistinctTask ?pred ?lst (TheList))
+     (evaluate ?rest (RestOfListFn ?lst))
+     (equals ?rest (TheList)))
+     
+(<== (nextDistinctTask ?pred ?lst ?remainder)
+     (evaluate ?rest (RestOfListFn ?lst))
+     (evaluate ?task (FirstInListFn ?rest))
+     (operatorFormulas ?pred ?task)
+     (numAnswers 1 (nextDistinctTask ?pred ?rest ?remainder)))
+
+(<== (nextDistinctTask ?pred ?lst ?rest)
+     (evaluate ?rest (RestOfListFn ?lst))
+     (evaluate ?task (FirstInListFn ?rest))
+     (operatorFormulas ?next-pred ?task)
+     (different ?next-pred ?pred))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

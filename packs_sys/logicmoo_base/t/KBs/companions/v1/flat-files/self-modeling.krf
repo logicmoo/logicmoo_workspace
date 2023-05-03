@@ -1,0 +1,245 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: self-modeling
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 3, 2012 11:04:55
+;;;;   Purpose: Plans for self-modeling
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+;;; In theory, setupSessionCase and sessionPostMortem are invoked by methods
+;;; on the initialization and stop-agent of the executive.  
+;;; It doesn't look like either of these are working however. Perhaps the KB
+;;; is closed prematurely?  Perhaps the session is not available as the 
+;;; agent object is being initialized?
+
+;;; Session-initialization
+
+(isa setupSessionCase ComplexActionPredicate)
+(arity setupSessionCase 1)
+(arg1Isa setupSessionCase CycLTerm)
+(comment setupSessionCase "(setupSessionCase ?session-id) reifies the session context and does initial bookkeeping.")
+
+(preconditionForMethod
+  (and (currentTime ?time)         ; outsourced predicates on generic agents-source
+       (currentDate ?date)
+       (sessionContext ?context)
+       (unifies (ContextFn ?session-id) ?context)  ; destructure the session context
+       (unifies ?metadata-context (MetadataContextFn ?session-id))
+       (currentDomain ?domain)
+       (currentUser ?user)
+       (userModelMtName ?user ?user-mt)
+       ;; Do we want to segregate session libraries by user?
+       (unifies ?session-lib (CaseLibraryFn CompanionsSessions)))
+  (methodForAction
+    (setupSessionCase ?session-id)
+    (actionSequence
+      (TheList
+        (recordSelfHealth ?metadata-context (StartFn ?context))
+        (ensureUserModelExists ?user)
+        (connectSequentialSessions ?context)
+        (doRecordMembers
+          (TheSet
+            ;(ist-Information BaseKB (isa ?context Microtheory))  ; These are handled automatically by the slot accessor
+            ;(ist-Information BaseKB (isa ?context Individual))   ; on simple agent.
+            (ist-Information ?context (sessionDate ?date))
+            (ist-Information ?context (sessionTime ?time))
+            (ist-Information ?context (sessionUser ?session-id ?user))
+            (ist-Information ?context (sessionDomain ?session-id ?domain))
+            (ist-Information BaseKB (caseLibraryContains ?session-lib ?context)) ; was elementOf
+            ))))))
+
+
+;;; Post-Mortem
+
+(isa sessionPostMortem ComplexActionPredicate)
+(arity sessionPostMortem 1)
+(arg1Isa sessionPostMortem Microtheory)
+(comment sessionPostMortem "(sessionPostMortem ?session-context) summarizes the session and sets new learning goals.")
+
+;;; For now, this does nothing but record how long the session lasted.
+;;; We want to record the change in health over the course of the session
+(preconditionForMethod
+  (and (lookupOnly
+         (ist-Information ?session-context (sessionTime ?start-time)))
+       (lookupOnly
+         (ist-Information ?session-context (sessionDate ?start-date)))
+       (currentTime ?end-time)
+       (currentDate ?end-date)
+       (intervalDuration-Minutes ?start-date ?start-time ?end-date ?end-time ?duration)
+       (unifies (ContextFn ?session-id) ?session-context)
+       (unifies ?metadata-context (MetadataContextFn ?session-id)))
+  (methodForAction
+    (sessionPostMortem ?session-context)
+    (actionSequence
+      (TheList
+        (doAnnounce "session duration = ~a" (?duration))
+        (doRecord (ist-Information ?session-context (sessionDuration ?duration)))
+        (recordSelfHealth ?metadata-context (EndFn ?session-context))
+        ;; record # elapsed turns, # goals posted, rolled up averages, etc.
+        ;; We want the stuff that would normally be in the dashboard.
+        ))))
+
+
+;;; User Modeling
+
+(isa ensureUserModelExists ComplexActionPredicate)
+(arity ensureUserModelExists 1)
+(arg1Isa ensureUserModelExists HumanCyclist)
+(comment ensureUserModelExists "(ensureUserModelExists ?HumanCyclist) creates a microtheory to hold the user model for ?HumanCyclist if necessary.")
+
+(preconditionForMethod
+  (and (userModelMtName ?user ?mt)
+       (genlMt ?mt UserModelMt))  
+  (methodForAction
+    (ensureUserModelExists ?user)
+    (actionSequence
+      (TheList))))
+
+
+;;; Can't query for existence using isa, since the NAT resultIsa guarantees
+;;; it will be a Microtheory.  Instead, check the genlMt statement.
+(preconditionForMethod
+  (and (userModelMtName ?user ?mt)      ; a purely syntactic transformation
+       (uninferredSentence (genlMt ?mt UserModelMt)))
+  (methodForAction
+    (ensureUserModelExists ?user)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information CyclistsMt (isa ?user HumanCyclist))
+            (ist-Information BaseKB (isa ?mt Microtheory))
+            (ist-Information BaseKB (isa ?mt Individual))
+            (ist-Information BaseKB (genlMt ?mt UserModelMt))
+            (ist-Information BaseKB (modelMtOfUser ?mt ?user))
+            (ist-Information ?mt (learnedModelTopic ?mt ?user))))))))
+            
+;;; This really should be a reified fact of the form
+;;; (modelMtOfUser (UserModelMtFn ?user) ?user) - a built-in Cyc pred
+(<== (userModelMtName ?user ?user-mt)
+     (groundExpression ?user)
+     (unifies ?user-mt (UserModelMtFn ?user))) ; also reified as modelMtOfUser
+
+;;; Session History
+
+(isa latestSession UnaryPredicate)
+(arity latestSession 1)
+(arg1Isa latestSession Microtheory)
+(comment latestSession "(latestSession ?session-context) reifies the most recent session context in SelfModelMt")
+
+(isa nextSession BinaryPredicate)
+(arity nextSession 2)
+(arg1Isa nextSession Microtheory)
+(arg2Isa nextSession Microtheory)
+(comment nextSession "(nextSession ?earlier-session ?later-session) reifies the sequence of sessions.")
+
+(isa connectSequentialSessions ComplexActionPredicate)
+(arity connectSequentialSessions 1)
+(arg1Isa connectSequentialSessions Microtheory)
+(comment connectSequentialSessions "(connectSequentialSessions ?session-context) records a (nextSession ?previous ?next) statement in the self model context.")
+
+(preconditionForMethod
+  (kbOnly
+    (uninferredSentence
+      (ist-Information SelfModelMt
+        (latestSession ?prior-session))))
+  (methodForAction
+    (connectSequentialSessions ?context)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information SelfModelMt
+            (latestSession ?context)))))))
+
+(preconditionForMethod
+  (kbOnly
+    (ist-Information SelfModelMt
+      (latestSession ?prior-session)))
+  (methodForAction
+    (connectSequentialSessions ?context)
+    (actionSequence
+      (TheList
+        (doForget
+          (ist-Information SelfModelMt
+            (latestSession ?prior-session)))
+        (doRecord
+          (ist-Information SelfModelMt
+            (latestSession ?context)))
+        (doRecord 
+          (ist-Information SelfModelMt
+            (nextSession ?prior-session ?context)))))))
+        
+;;; Companion Health
+
+(isa recordSelfHealth ComplexActionPredicate)
+(arity recordSelfHealth 2)
+(arg1Isa recordSelfHealth Microtheory)
+(arg2Isa recordSelfHealth TimePoint)
+
+(preconditionForMethod
+  (currentAgents ?agents)
+  (methodForAction
+    (recordSelfHealth ?context ?when)
+    (actionSequence
+      (TheList
+        (doForEach ?agent ?agents (recordAgentHealth ?context ?agent ?when))))))
+
+(isa recordAgentHealth ComplexActionPredicate)
+(arity recordAgentHealth 3)
+(arg1Isa recordAgentHealth Microtheory)
+(arg2Isa recordAgentHealth CompanionsAgent)
+(arg3Isa recordAgentHealth TimePoint)
+(comment recordAgentHealth "(recordAgentHealth ?context ?agent ?when) records stats about heap usage, uptime, etc. at time ?when, where ?when may profitably be (StartFn <session-context>) or (EndFn <session-context>) or the current-time.")
+
+(preconditionForMethod
+  (and (currentHeapSpace ?agent ?used ?avail)
+       (numTMSNodes ?agent ?nodes ?clauses)
+       (numSMEs ?agent ?num-smes)
+       (agentUptime ?agent ?uptime)
+       (agentState ?agent ?state ?how-long))
+  (methodForAction
+    (recordAgentHealth ?context ?agent ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Reifying health of ~a in context ~a" (?agent ?context))
+        (doRecord 
+          (ist-Information ?context
+            (holdsIn ?when
+              (currentHeapSpace ?agent ?used ?avail))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?when
+              (numTMSNodes ?agent ?nodes ?clauses))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?when
+              (numSMEs ?agent ?num-smes))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?when
+              (agentUptime ?agent ?uptime))))
+        (doRecord
+          (ist-Information ?context
+            (holdsIn ?when
+              (agentState ?agent ?state ?how-long))))
+        ))))
+
+;;; Default, for when ?agent is the session-manager:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (recordAgentHealth ?context ?agent ?when)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (recordAgentHealth ?context ?agent ?when) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

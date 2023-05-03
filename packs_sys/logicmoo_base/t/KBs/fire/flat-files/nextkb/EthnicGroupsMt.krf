@@ -1,0 +1,10 @@
+(in-microtheory EthnicGroupsMt)
+
+(isa EthnicGroupOfWhitesOfTheUS PersonTypeByEthnicity)
+(comment EthnicGroupOfBodo "An ethnic group based in the nortwestern region of #$Assam-StateIndia.  Not to be confused with #$EthnicGroupOfBobo.")
+(comment ethnicOrigin "A #$BinaryPredicate that relates a specialization of #$Artifact-Generic to a #$PersonTypeByEthnicity.  (#$ethnicOrigin ARTIFACT-TYPE PERSON-TYPE) means that ARTIFACT-TYPE is associated with and was originally produced by instances of PERSON-TYPE.")
+(genls EthnicGroupOfMuhajir EthnicGroupOfPakistanis)
+(genls EthnicGroupOfBodo Person)
+(genls AcehnesePerson EasternHemispherePerson)
+(genls EthnicGroupOfSaxons Person)
+(genls EthnicGroupOfGoths-Defunct Person)

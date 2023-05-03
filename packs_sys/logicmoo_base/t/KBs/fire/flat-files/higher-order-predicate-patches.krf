@@ -1,0 +1,186 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: higher-order-predicate-patches.meld
+;;;;    System: FIRE Cyc compatability
+;;;;   Version: 1.0
+;;;;    Author: Kenneth D. Forbus
+;;;;   Created: August 20, 2005 09:13:26
+;;;;   Purpose: structural relations for predicates defined via NATs
+;;;; ---------------------------------------------------------------------------
+;;;;  Modified: Sunday, July 8, 2007 at 14:13:14 by forbus
+;;;; ---------------------------------------------------------------------------
+
+
+;; Definitions courtesy Ben Rode, Cycorp
+(in-microtheory UniversalVocabularyMt)
+(isa RelationDenotingFunction FunctionTypeByRangeType)
+(genls RelationDenotingFunction IndividualDenotingFunction)
+(disjointWith RelationDenotingFunction ScalarDenotingFunction)
+(disjointWith RelationDenotingFunction DerivedWordFormingFunction)
+(comment RelationDenotingFunction 
+         "A specialization of #$IndividualDenotingFunction.  #$RelationDenotingFunction is the collection of all functions (instances of #$Function-Denoatational) that, when applied to appropriate arguments, return instances of #$Relation.  It includes all #$PredicateDenotingFunctions, e.g. #$Kappa, and also all #$FunctionDenotingFunctions, e.g. #$FunctionToArg.")
+(relationAllInstance resultIsa RelationDenotingFunction Relation)
+(salientAssertions RelationDenotingFunction 
+                   (relationAllInstance resultIsa RelationDenotingFunction Relation))
+(genls PredicateDenotingFunction RelationDenotingFunction)
+(genls FunctionDenotingFunction RelationDenotingFunction)
+(implies (and (isa ?FN IndividualDenotingFunction)
+              (resultIsa ?FN Relation))
+         (isa ?FN RelationDenotingFunction))
+;; Bookkeeping
+(in-microtheory BookkeepingMt)
+(quotedIsa RelationDenotingFunction LinkDiscoveryConstant)
+(quotedIsa RelationDenotingFunction PublicConstant)
+
+(in-microtheory UniversalVocabularyMt)
+(isa resultArity BinaryPredicate)
+(isa resultArity DefaultMonotonicPredicate)
+(isa resultArity MetaFunction)
+(isa resultArity RuleMacroPredicate)
+(isa resultArity NonAbduciblePredicate)
+(arg1Isa resultArity RelationDenotingFunction)
+(arg2Isa resultArity PositiveInteger)
+(comment resultArity
+         "Where FN is a #$RelationDenotingFunction, (#$resultArity FN N) means that every #$Relation-denoting CycL term that is generated with the CycL term denoting FN in the arg 0 position denotes a #$Relation with #$arity N.  For example, (#$resultArity #$OfDateFn 2) means that every CycL predicate reified via a term that uses #$OfDateFn as the main operator, e.g. (#$OfDateFn #$CalendarDay), has arity 2.")
+(keStrongSuggestionPreds RelationDenotingFunction resultArity)
+(requiredArg1Pred (SubcollectionOfWithRelationToFn RelationDenotingFunction
+                                                   resultIsa FixedArityFunction)
+                  resultArity)
+(implies (and (isa ?RDF RelationDenotingFunction)
+              (resultArity ?RDF ?ARITY)
+              (isa ?N PositiveInteger)
+              (greaterThanOrEqualTo ?ARITY ?N))
+         (keStrongSuggestion ?RDF
+                             (thereExists ?COL
+                                          (resultArgIsa ?RDF ?N ?COL))))
+(equiv (resultIsa ?RLN UnaryRelation)
+       (resultArity ?RLN 1))
+(equiv (resultIsa ?RLN BinaryRelation)
+       (resultArity ?RLN 2))
+(equiv (resultIsa ?RLN TernaryRelation)
+       (resultArity ?RLN 3))
+(equiv (resultIsa ?RLN QuaternaryRelation)
+       (resultArity ?RLN 4))
+(equiv (resultIsa ?RLN QuintaryRelation)
+       (resultArity ?RLN 5))
+
+(implies (and (resultArity ?RDF ?N)
+              (operatorFormulas ?RDF ?TERM))
+         (arity ?TERM N))
+
+(pragmaticRequirement (isa ?RDF RelationDenotingFunction)
+                      (implies (and (resultArity ?RDF ?N)
+                                    (operatorFormulas ?RDF ?TERM))
+                               (arity ?TERM ?N)))
+(pragmaticRequirement (isa ?TERM Relation)
+                      (implies (and (resultArity ?RDF ?N)
+                                    (operatorFormulas ?RDF ?TERM))
+                               (arity ?TERM ?N)))
+(quotedIsa resultArity LinkDiscoveryConstant)
+
+(isa resultResultIsa BinaryPredicate)
+(isa resultResultIsa DefaultMonotonicPredicate)
+(isa resultResultIsa MetaFunction)
+(isa resultResultIsa RuleMacroPredicate)
+(isa resultResultIsa NonAbduciblePredicate)
+(arg1Isa resultResultIsa FunctionDenotingFunction)
+(arg2Isa resultResultIsa Collection)
+(comment resultResultIsa
+         "Where FDF is a #$FunctionDenotingFunction, e.g. #$FunctionToArg, (#$resultResultIsa FDF COL) means that the #$resultIsa of an function reified with a non-atomic term using FDF as the #$natFunction has COL as a #$resultIsa.")
+(implies (and (resultResultIsa ?FDF ?COL)
+              (natFunction ?TERM ?FDF))
+         (resultIsa ?TERM ?COL))
+(pragmaticRequirement (isa ?FDF FunctionDenotingFunction)
+                      (implies (and (resultResultIsa ?FDF ?COL)
+                                    (natFunction ?TERM ?FDF))
+                               (resultIsa ?TERM ?COL)))
+(pragmaticRequirement (isa ?TERM Function-Denotational)
+                      (implies (and (resultResultIsa ?FDF ?COL)
+                                    (natFunction ?TERM ?FDF))
+                               (resultIsa ?TERM ?COL)))
+(quotedIsa resultResultIsa LinkDiscoveryConstant)
+
+(isa resultArgIsa TernaryPredicate)
+(isa resultArgIsa DefaultMonotonicPredicate)
+(isa resultArgIsa MetaFunction)
+(isa resultArgIsa NonAbduciblePredicate)
+(arg1Isa resultArgIsa FunctionDenotingFunction)
+(arg2Isa resultArgIsa PositiveInteger)
+(arg3Isa resultArgIsa Collection)
+(comment resultArgIsa 
+         "(resultArgIsa FN N COL) indicates that the Nth argument to the function denoted by a term whose operator is FN is of type COL." )
+
+
+
+;; Looks like some example
+;; (resultArity OfDateFn 2)
+
+(implies (and (resultArity ?RDF ?N)
+              (evaluate ?RDF (FormulaOperatorFn ?TERM)))
+         (arity ?TERM ?N))
+(pragmaticRequirement (isa ?RDF RelationDenotingFunction)
+                      (implies (and (resultArity ?RDF ?N)
+                                    (evaluate ?RDF (FormulaOperatorFn ?TERM)))
+                               (arity ?TERM ?N)))
+(pragmaticRequirement (isa ?TERM Relation)
+                      (implies (and (resultArity ?RDF ?N)
+                                    (evaluate ?RDF (FormulaOperatorFn ?TERM)))
+                               (arity ?TERM ?N)))
+
+
+(isa NthEventOfTypeInOnFn ReifiableFunction)
+(isa NthEventOfTypeInOnFn PartialFunction)
+(isa NthEventOfTypeInOnFn IndividualDenotingFunction)
+(arity NthEventOfTypeInOnFn 4)
+(isa NthEventOfTypeInOnFn QuaternaryFunction)
+(resultIsaArg NthEventOfTypeInOnFn 1)
+(argGenl NthEventOfTypeInOnFn 1 Event)
+(argIsa NthEventOfTypeInOnFn 2 GeographicalAgent)
+(comment NthEventOfTypeInOnFn
+         "An event-denoting function.  Each instance of (#$NthEventOfTypeInOnFn EVENT-TYPE REGION DATE NUM) denotes an instance of EVENT-TYPE that occurs in REGION on or during DATE.  For example, (#$NthEventOfTypeInOnFn #$TerroristAttack #$CityOfBeirutLebanon (#$DayFn 5 (#$MonthFn #$May (#$YearFn 1998))) 1) denotes a #$TerroristAttack that occurs in #$CityOfBeirutLebanon on May 5, 1998.  The fourth, integer, argument serves as subscript, to ensure that distinct events which satisfy the other argument constraints receive different names.")
+(resultIsa NthEventOfTypeInOnFn Event)
+(argIsa NthEventOfTypeInOnFn 3 TimeInterval)
+(implies (isa ?DATE Date)
+ (dateOfEvent (NthEventOfTypeInOnFn ?EVENT-TYPE ?REGION ?DATE ?NUM) ?DATE))
+(arg2Isa NthEventOfTypeInOnFn GeographicalAgent)
+(argIsa NthEventOfTypeInOnFn 4 PositiveInteger)
+(arg4Isa NthEventOfTypeInOnFn PositiveInteger)
+(arg3Isa NthEventOfTypeInOnFn TimeInterval)
+(arg1Genl NthEventOfTypeInOnFn Event)
+(arg1Isa NthEventOfTypeInOnFn FirstOrderCollection)
+(argIsa NthEventOfTypeInOnFn 1 FirstOrderCollection)
+(cyclistNotes NthEventOfTypeInOnFn "Please begin numbering with 1.")
+(termTemplate-Reln NPTemplate NthEventOfTypeInOnFn
+ (NLPatternList (NLPattern-Exact "the") (NLPattern-Template NPTemplate :ARG4)
+  (NLPattern-Template NPTemplate :ARG1) (NLPattern-Exact "in")
+  (NLPattern-Template NPTemplate :ARG2) (NLPattern-Exact "in")
+  (NLPattern-Template NPTemplate :ARG3))
+ (NthEventOfTypeInOnFn :ARG1 :ARG2 :ARG3 :ARG4))
+(genTemplate NthEventOfTypeInOnFn-
+ (GenTemplateRecipeOmitsArgFn :ARG4
+  (BestDetNbarFn-Indefinite
+   (ConcatenatePhrasesFn
+    (HeadWordOfPhraseFn (TermParaphraseFn-Constrained singular-Generic :ARG1))
+    (BestPPFn In-TheWord (TermParaphraseFn :ARG2))
+    (TermParaphraseFn-TemporalLocation :ARG3)))))
+
+
+(isa natArgumentProvidesSlotInfo TernaryPredicate)
+(arity natArgumentProvidesSlotInfo 3)
+(comment natArgumentProvidesSlotInfo
+         "(natArgumentProvidesSlotInfo FN N SLOT) indicates that the Nth argument of any NAT whose operator is FN will provide the value of SLOT."
+         )
+(arg1Isa natArgumentProvidesSlotInfo ReifiableFunction)
+(arg2Isa natArgumentProvidesSlotInfo PositiveInteger)
+(arg3Isa natArgumentProvidesSlotInfo BinaryPredicate)
+
+(natArgumentProvidesSlotInfo NthEventOfTypeInOnFn 2 eventOccursAt)
+(natArgumentProvidesSlotInfo NthEventOfTypeInOnFn 3 dateOfEvent)
+
+
+       
+
+
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

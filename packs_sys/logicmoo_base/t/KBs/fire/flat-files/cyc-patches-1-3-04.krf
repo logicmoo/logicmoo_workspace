@@ -1,0 +1,50 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cyc-patches-1-3-04.lsp
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 3, 2004 23:42:32
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  Modified: Sunday, January 4, 2004 at 18:10:30 by Kenneth Forbus
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+
+;;; These seem to be real KB errors.
+
+(isa productionCapacity Predicate)
+(arity productionCapacity 3)
+(isa doOutputFunctionArgs Predicate)
+
+(isa doOutputFunctionArgs Predicate)
+(isa doProgramStepSequence Predicate)
+(isa doCloseLocalVariablesScope Predicate)
+(isa doInitializeLocalVariables Predicate)
+(isa doDeclareFunctionParameters Predicate)
+
+(isa cloudinessOfRegion Predicate)
+(arity cloudinessOfRegion 2)
+
+(arity RemnantOfTangibleTypeFn 1)
+
+(arity Year-JulianFn 1)
+(arity MedicalCareFn 1)
+(arity marketShareForPrescriptionsByDoc 6)
+;; (arity incomeTaxDeduction 1)
+
+;; ****** Hard to know what to do with the NAT's from NonDavidsonianPredFn.
+;; ****** What is the arity of the resulting predicate?
+;; ****** Same problem with CorrespondingGenQuantFn, ProfessionallyProducedProductFn
+
+;; timeWithPresentEmployer -- here are the axioms:
+
+
+;;;;;;;;;;;;;;;;;;;;; Things to remove
+;; (argIsa termTemplate 4 ELTemplate) -- the arity is declared to be three, and
+;; all of the statements using it are, too.
+;; (isa typePlaysFunctionalRoleInType-Expect BinaryPredicate) it has three args.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

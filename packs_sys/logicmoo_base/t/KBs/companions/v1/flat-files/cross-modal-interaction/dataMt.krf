@@ -1,0 +1,34 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: dataMt.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: May 12, 2015 16:08:18
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CyclistDefinitionalMt)
+
+(isa SubuKandaswamy HumanCyclist)
+(nameString Kandaswamy "Subu")
+
+(in-microtheory PeopleDataMt)
+
+(isa SubuKandaswamy AdultMaleHuman)
+(isa SubuKandaswamy ArtificialIntelligenceResearcher)
+(isa SubuKandaswamy ComputerScientist)
+(isa SubuKandaswamy MaleHuman)
+(firstName SubuKandaswamy "Subu")
+(lastName SubuKandaswamy "Kandaswamy")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

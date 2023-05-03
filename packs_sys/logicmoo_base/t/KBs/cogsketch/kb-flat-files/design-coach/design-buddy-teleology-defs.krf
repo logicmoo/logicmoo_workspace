@@ -1,0 +1,88 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: design-buddy-teleology-defs.krf
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: January 7, 2012 17:57:43
+;;;;   Purpose: Definitions for the teleological ontology for Design Coach
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-10-01 15:53:52 -0500 (Mon, 01 Oct 2018) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+;; Inspired by Kitamura, Koji & Mizoguchi (Applied Ontology, 2006)
+
+(in-microtheory SKEADBFactsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa TeleologicalFunction Collection)
+(comment TeleologicalFunction 
+  "TeleologicalFunction is the set of purposes a design may accomplish or seek
+   to accomplish.")
+
+(isa WayOfAchievingFunction Collection)
+(comment WayOfAchievingFunction 
+  "Describes a way of achieving some TeleologicalFunction")
+
+(isa instructionsForAchievingFunction Predicate)  ;; These facts will be system specific
+(arg1Isa instructionsForAchievingFunction TeleologicalFunction)
+(arg2Isa instructionsForAchievingFunction WayOfAchievingFunction)
+(arg3Isa instructionsForAchievingFunction List)
+(comment WayOfAchievingFunction 
+  "List of strings explaining to a user how to complete the teleolgical
+   explanation.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; relations
+
+(isa functionAchievedVia QuaternaryPredicate)
+(arity functionAchievedVia 4)
+(arg1Isa functionAchievedVia TeleologicalFunction)
+(arg2Isa functionAchievedVia WayOfAchievingFunction)
+(arg3Isa functionAchievedVia List)
+(arg4Isa functionAchievedVia List)
+(comment functionAchievedVia 
+  "(functionAchievedVia <function> <way> <parts> <contexts>) is true when the 
+   <parts> in <contexts> operate or exist in <way> to cause <function>")
+(genFormat functionAchievedVia "~a achieve ~a via ~a" (3 1 2))
+
+(isa subfunctionOf BinaryPredicate)  ;;; --UNUSED
+(arity subfunctionOf 2)
+(arg1Isa subfunctionOf WayOfAchievingFunction)
+(arg2Isa subfunctionOf TeleologicalFunction)
+(comment subfunctionOf 
+  "(subfunctionOf <way> <function>) is true when <function> is entailed by 
+   <way>")
+(genFormat subfunctionOf "~a must be achieved for ~a" (2 1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; designRefinement   --UNUSED
+
+(isa designRefinement BinaryPredicatate)
+(arg1Isa designRefinement Situation)
+(arg2Isa designRefinement Situation)
+(comment designRefinement 
+  "(designRefinement state1 state2) is true if the design described in state2 is
+   a refinement of the design in state1.")
+(genFormat designRefinement 
+           "The design in ~A is a refinement of the design in ~A" (2 1))
+(prettyString designRefinement "design refined into")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; designAlternative  --UNUSED
+
+(isa designAlternative SymmetricBinaryPredicate)
+(arg1Isa designAlternative Situation)
+(arg2Isa designAlternative Situation)
+(comment designAlternative 
+  "(designAlternative state1 state2) is true if the designs described in state1 
+   and state 2 are alternatives to each other.")
+(genFormat designAlternative 
+           "The design in ~A is an alternative to the design in ~A" (2 1))
+(prettyString designAlternative "design alternative")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

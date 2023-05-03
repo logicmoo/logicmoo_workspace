@@ -1,0 +1,126 @@
+(in-microtheory (LearnedKnowledgeMtFn Freeciv-TheGame) :exclude-globals t)
+
+;;; Learned by demonstration from fc-game21 ("attack-scenario") 11/5/13
+
+(learningGoalForCompanion (LearnEffectOfActionFn doIdle))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame)
+ (LearnEffectOfActionFn doIdle))
+(learningGoalForCompanion (LearnPurposeOfActionFn doIdle))
+(subgoalFor (LearnStrategicModelFn Freeciv-TheGame)
+ (LearnPurposeOfActionFn doIdle))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doAttack))
+(learningGoalForCompanion (LearnOptimalConditionFn doAttack))
+(learningGoalForCompanion (LearnPurposeOfActionFn doAttack))
+
+(subgoalFor (LearnActionModelFn Freeciv-TheGame)
+ (LearnEffectOfActionFn doAttack))
+
+(subgoalFor (LearnStrategicModelFn Freeciv-TheGame)
+ (LearnPurposeOfActionFn doAttack))
+ 
+;;; Non scanning version:
+;;; Really, what we'd like to do is plan a route to the target, then 
+;;; stop one tile before we get there and then do an attack.
+;;; I suppose the bots merely plan the full route and try to go there.
+;;; That's why ramming == attacking.
+
+(preconditionForMethod
+  (and (groundExpression (doAttack ?unit ?target))
+       (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?unit ?player))
+       (fcObjectAt ?target ?loc2)
+       (pathFromTo ?unit ?loc2 ?fullpath)
+       (pathPrefix ?fullpath 1 ?butlast-path)
+       (evaluate ?last-move (LastInListFn ?butlast-path))
+       (formulaArgument ?last-move 2 ?dest))
+  (methodForAction (achieve (PreconditionOfFn (doAttack ?unit ?target)))
+   (actionSequence
+    (TheList 
+      (doRecordIntent ?unit (doAttack ?unit ?target))
+      (doGoToDest ?unit ?dest ?butlast-path)
+      (doWait ?unit (fcObjectAt ?unit ?dest)) ; stop planning until we get adjacent to target.
+      ))))
+
+;;; Bumer.  ?arg2 is instantiated by the planner before we ever query the precondition.
+;;; We have to bind it at query time using instantiatedScanningConditionFor.
+(legalityConditionFor doAttack
+ (Kappa (?loc1 ?score)
+  (and (numAnswers 1 (fcObjectAt ?arg2 ?loc2))
+       (distanceBetween ?loc1 ?loc2 (FreecivTileDistance 1)))))
+
+
+;;; So we have a concrete attacker and a concrete target. Yet we
+;;; still have to scan locations, because we're not actually going to the
+;;; target.  We're going to within one tile of the target, then attacking.
+;;; That's what the precondition of doAttack specifies.
+;;; It looks like this was learned with the doAttack precondition as of
+;;; svn check-in 2103, Nov 16, 2013.
+;;; Commented out, 5/13/18.  This was chewing up gobs of time and RAM,
+;;; looking at over 70 possible targets each turn, taking up to three
+;;; seconds per target to fail.  The extra antecedents below were an
+;;; attempted workaround, but Tom's right, this whole method needs to be rethought
+;;; and hence we're cliping it out. 
+;;;(preconditionForMethod
+;;; (and (not (groundExpression (doAttack ?arg1 ?arg2)))
+;;;      (numAnswers 1 (currentPlayer ?player))
+;;;      (outsourcedOnly (unitOwner ?arg1 ?player))
+;;;      (behaviorCapable ?arg1 doAttack performedBy)
+;;;      (outsourcedOnly (player ?other-player))
+;;;      (different ?player ?other-player)
+;;;      (owns ?other-player ?arg2)
+;;;      (instantiatedScanningConditionFor doAttack (TheList ?arg1 ?arg2) ?condition)
+;;;      (fcObjectAt ?arg1 ?start-binding)
+;;;      (fcObjectAt ?arg2 ?end-position) ;; Added KDF 5/13/18
+;;;      (fcDistance ?arg1 ?arg2 ?distance) ;; Look at distance to target
+;;;      (lessThan ?distance 3) ;; Punt if not really, really close
+;;;      (closestLocationSatisfying ?start-binding 0 3 ?condition ?loc1)) ;; Was 8
+;;; (methodForAction (achieve (PreconditionOfFn (doAttack ?arg1 ?arg2)))
+;;;  (actionSequence
+;;;    (TheList
+;;;      (doRecordIntent ?arg1 (doAttack ?arg1 ?arg2))
+;;;      (simplestTravelPlan ?arg1 ?loc1)))))
+
+;;; Why are we scanning for targets at all?
+;;; 
+
+;(<== (instantiatedScanningConditionForSet ?pred ?bindings ?cond)
+;     (scanningConditionFor ?pred ?raw-cond)
+;     (formulaArgument ?bindings 1 ?arg1)
+;     (formulaArgument ?bindings 2 ?arg2-bindings)
+;     
+;     (unifies ?translated-cond ?raw-cond)
+;     (evaluate ?cond (UniquifyVariablesFn ?translated-cond)))
+
+;(preconditionForMethod
+; (and (evaluate ?a2-bindings
+;        (TheClosedRetrievalSetOf ?a2
+;          (and (differentSymbols ?a1 ?a2)
+;		       (numAnswers 1 (currentPlayer ?player))
+;		       (numAnswers 1 (unitOwner ?a1 ?player))
+;               (behaviorCapable ?a1 doAttack performedBy)
+;               (outsourcedOnly (player ?other-player))
+;               (different ?player ?other-player)
+;               (owns ?other-player ?a2))))
+;      (instantiatedScanningConditionForSet doAttack (TheList ?a1 ?a2-bindings) ?condition)
+;      (fcObjectAt ?a1 ?start-binding)
+;      (closestLocationSatisfying ?start-binding 0 8 ?condition ?loc1))
+; (methodForAction (achieve (PreconditionOfFn (doAttack ?a1 ?a2)))
+;  (actionSequence
+;    (TheList
+;      (doRecordIntent ?a1 (doAttack ?a1 ?a2))
+;      (simplestTravelPlan ?a1 ?loc1)))))
+ 
+(<== (complexTaskAchieves ?arg1 (PreconditionOfFn (doAttack ?arg1 ?arg2))
+     (achieve (PreconditionOfFn (doAttack ?arg1 ?arg2)))))
+
+(sourceForLearnedPlan (CommandFn fc-attack-scenario 5) 
+     (achieve (PreconditionOfFn (doAttack ?arg1 ?arg2))))
+
+;(isa doAttackFilter BinaryPredicate)
+
+;(<== (doAttackFilter ?loc1 True) 
+;     (fcObjectAt ?arg2 ?loc2)
+;     (fcDistance ?loc1 ?loc2 1))
+
+;(legalityConditionFor doAttack doAttackFilter)

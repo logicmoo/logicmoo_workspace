@@ -1,0 +1,109 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: miscellaneous.lsp
+;;;;    System: FIRE
+;;;;    Author: Jeff Usher
+;;;;   Created: November 1, 2004 17:14:36
+;;;;   Purpose: Some knowledge definitions truly are just plain miscellaneous.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa thumbnailImageURL Predicate)
+(arity thumbnailImageURL 2)
+(arg1Isa thumbnailImageURL AbstractInformationalThing)
+(arg2Isa thumbnailImageURL CharacterString)
+(comment thumbnailImageURL
+         "Gives the URL of something's #$ThumbnailImage.")
+(isa thumbnailImageURL NotForAnalogyPredicate)
+
+
+(isa ThingDenotedByNLPhraseFn Function-Denotational)
+(isa ThingDenotedByNLPhraseFn ReifiableFunction)
+(isa ThingDenotedByNLPhraseFn UnaryFunction)
+(arity ThingDenotedByNLPhraseFn 1)
+(arg1Isa ThingDenotedByNLPhraseFn SubLString)
+(resultIsa ThingDenotedByNLPhraseFn Thing)
+(comment ThingDenotedByNLPhraseFn
+  "(ThingDenotedByNLPhraseFn <string>) represents the entity denoted by some 
+   natural-language string.  This is basically a very generic wrapper for NL 
+   phrases that allows facts to be asserted about the entity denoted by the phrase 
+   before any parsing is applied to the phrase.  
+   Example: (LeftOf (NLPhraseFn \"Diane's dress\") Dresser-27)")
+
+(isa CollectionDenotedByNLPhraseFn Function-Denotational)
+(isa CollectionDenotedByNLPhraseFn CollectionDenotingFunction)
+(isa CollectionDenotedByNLPhraseFn ReifiableFunction)
+(isa CollectionDenotedByNLPhraseFn UnaryFunction)
+(arity CollectionDenotedByNLPhraseFn 1)
+(arg1Isa CollectionDenotedByNLPhraseFn SubLString)
+(resultIsa CollectionDenotedByNLPhraseFn Collection)
+(comment CollectionDenotedByNLPhraseFn
+  "(CollectionDenotedByNLPhraseFn <string>) represents the #$Collection denoted by 
+   some natural-language string.  This is basically a very generic wrapper for 
+   NL phrases that allows facts to be asserted about the collection denoted by the 
+   phrase before any parsing is applied to the phrase.  
+   Example: (isa Object-27 (CollectionDenotedByNLPhraseFn \"frogs\"))")
+
+(isa RelationDenotedByNLPhraseFn Function-Denotational)
+(isa RelationDenotedByNLPhraseFn RelationDenotingFunction)
+(isa RelationDenotedByNLPhraseFn ReifiableFunction)
+(isa RelationDenotedByNLPhraseFn UnaryFunction)
+(arity RelationDenotedByNLPhraseFn 1)
+(arg1Isa RelationDenotedByNLPhraseFn SubLString)
+(resultIsa RelationDenotedByNLPhraseFn Relation)
+(comment RelationDenotedByNLPhraseFn
+  "(RelationDenotedByNLPhraseFn <string>) represents the #$Relation denoted by 
+   some natural-language string.  This is basically a very generic wrapper for 
+   NL phrases that allows facts to be asserted about the relation denoted by the 
+   phrase before any parsing is applied to the phrase.  
+   Example: ((RelationDenotedByNLPhraseFn \"loves\") Jack Diane)")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Users
+
+(isa UserIDFn Function-Denotational)
+(arity UserIDFn 1)
+(arg1Isa UserIDFn IDString)
+(atomicAnalogyNat UserIDFn)
+(resultIsa UserIDFn IntelligentAgent)
+(comment UserIDFn
+  "(UserIDFn <string>) refers to a user by name.
+   See also #$AnonUserIDFn which is a bit more specific and is used with
+   anonymized user names.")
+
+
+(isa AnonUserIDFn Function-Denotational)
+(arity AnonUserIDFn 1)
+(arg1Isa AnonUserIDFn IDString)
+(atomicAnalogyNat AnonUserIDFn)
+(resultIsa AnonUserIDFn IntelligentAgent)
+(comment AnonUserIDFn
+  "(AnonUserIDFn <string>) refers to a user whose name has been anonymized.
+   See also #$UserIDFn which is a bit more generic and can refer to user
+   names that have not been anonymized.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; The following collector microtheory is useful when you want to refer to all
+;;; the global knowledge.
+
+(isa GlobalMtCollectorMt Microtheory)
+(isa GlobalMtCollectorMt CollectorMicrotheory)
+(genlMt GlobalMtCollectorMt BaseKB)
+(genlMt GlobalMtCollectorMt UniversalVocabularyMt)
+(comment GlobalMtCollectorMt 
+  "This #$CollectorMicrotheory includes all the global microtheories.  This just
+   provides a convenient way to refer to all the globals without having to 
+   specify them individually.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

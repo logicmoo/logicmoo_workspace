@@ -1,0 +1,101 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: abstract-quantities.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: November 19, 2015 10:19:21
+;;;;   Purpose: Abstract quantity definitions
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+
+(isa abstractQuantity UnaryPredicate)
+(comment abstractQuantity "(abstractQuantity ?collection) identifies ?collection as an abstract quantity type, as opposed to a MeasurableQuantity that can be sampled.  See also quantityPrimitive for measurable quantity specifications.")
+
+(abstractQuantity Mobility)                ; system = Transportation
+(abstractQuantity ConflictLevel)           ; system = DiplomaticSystem
+(abstractQuantity SituationalAwareness)    ; system = limits on visibility, type of game (incomplete info)
+(abstractQuantity TechnologyLevel)         ; system = TechnologicalResearch
+(abstractQuantity MilitaryPreparedness)    ; system = MilitarySystem
+(abstractQuantity DefensiveStrength)
+(abstractQuantity OffensiveStrength)
+(abstractQuantity ForceProjection)
+(abstractQuantity CivilUnrest)  ; Political leeway?
+(abstractQuantity ResourceUsageEfficiency)
+(abstractQuantity Vulnerability)
+(abstractQuantity InvestmentHorizon)
+(abstractQuantity ConversionCost) ; Fungibility?
+(abstractQuantity HostilityLevel)
+(abstractQuantity FreedomOfAction)
+(abstractQuantity Reserves)  ; Economic Strength? or reserves of less fungible assets?
+
+(isa Mobility QuantityType)
+(genls Mobility AbstractQuantity)
+(comment Mobility "Mobility is the abstract quantity type that denotes the ease with which entities in a domain can move about.")
+
+(isa ConflictLevel QuantityType)
+(genls ConflictLevel AbstractQuantity)
+(comment ConflictLevel "ConflictLevel is the abstract quantity type that represents the intensity of ongoing conflicts.")
+
+(isa SituationalAwareness QuantityType)
+(genls SituationalAwareness AbstractQuantity)
+(comment SituationalAwareness "SituationalAwareness is the abstract quantity type that represents the degree to which an agent is aware of the dynamic events going on around it.")
+
+(isa TechnologyLevel QuantityType)
+(genls TechnologyLevel AbstractQuantity)
+(comment TechnologyLevel "TechnologyLevel is the abstract quantity type that represents the sophistication of technology available to an agent.")
+
+(isa MilitaryPreparedness QuantityType)
+(genls MilitaryPreparedness AbstractQuantity)
+(comment MilitaryPreparedness "MilitaryPreparedness is the abstract quantity type that represents the degree to which an agent's military sub-agents and infrastructure exist and are in effective tactical position and condition.")
+
+(isa DefensiveStrength QuantityType)
+(genls DefensiveStrength AbstractQuantity)
+
+(isa OffensiveStrength QuantityType)
+(genls OffensiveStrength AbstractQuantity)
+
+(isa ForceProjection QuantityType)
+(genls ForceProjection AbstractQuantity)
+
+(isa CivilContentment QuantityType)
+(genls CivilContentment AbstractQuantity)
+
+(isa ResourceUsageEfficiency QuantityType)
+(genls ResourceUsageEfficiency AbstractQuantity)
+
+(isa Vulnerability QuantityType)
+(genls Vulnerability AbstractQuantity)
+
+(isa InvestmentHorizon QuantityType)
+(genls InvestmentHorizon AbstractQuantity)
+(comment InvestmentHorizon "InvestmentHorizon is a quantityType that measures the expected delay between the commitment of resources to a goal and the eventual payout.")
+
+(isa ConversionCost QuantityType)
+(genls ConversionCost AbstractQuantity)
+(comment ConversionCost "ConversionCost is a quantityType that measures the waste or inefficiency incurred when converting one resource to another.")
+
+(isa HostilityLevel QuantityType)
+(genls HostilityLevel AbstractQuantity)
+(comment HostilityLevel "HostilityLevel is a measure of how 'hot' a conflict is, how aggressive adversaries will be.")
+
+;;; *** This is colliding with the PerformanceLevelQuantity in UniversalVocabularyMt:
+(isa FreedomOfAction QuantityType)
+(genls FreedomOfAction AbstractQuantity)
+(comment FreedomOfAction "FreedomOfAction is an abstract quantity type loosely measuring how many different actions may be pursued.")
+
+(isa Reserves QuantityType)
+(genls Reserves AbstractQuantity)
+(comment Reserves "Reserves is an abstract quantity type that measures how much of an unallocated resource is available.")
+
+(qprop+TypeType (QPQuantityFn FreedomOfAction) (QPQuantityFn Mobility) Agent-Generic Agent-Generic equals)
+(qprop+TypeType (QPQuantityFn FreedomOfAction) (QPQuantityFn Reserves) Agent-Generic Agent-Generic equals)
+(qprop-TypeType (QPQuantityFn FreedomOfAction) (QPQuantityFn CivilUnrest) Agent-Generic Agent-Generic equals)
+(qprop+TypeType (QPQuantityFn Mobility)        (QPQuantityFn Speed) Agent-Generic Agent-Generic equals)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

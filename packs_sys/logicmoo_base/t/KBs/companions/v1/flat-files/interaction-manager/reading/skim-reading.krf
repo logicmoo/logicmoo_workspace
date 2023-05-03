@@ -1,0 +1,1358 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: skim-reading.krf
+;;;;    System: NL Companions
+;;;;    Author: Ken Forbus
+;;;;   Created: January 5, 2012 09:25:20
+;;;;   Purpose: Skim reading and corpus analysis
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 16:02:56 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Discourse-level iteration
+;;;
+;;; These predicates and plans implement a process of doing tasks for each
+;;; component of a discourse. They rely on the reification of the discourse
+;;; components by the file reading process, into start/end markers at the
+;;; level of discourse, paragraph, and sentence.  These markers are implemented
+;;; as NATs, as ontologized below.
+
+;;;CJM because of the way start/end were passed in this didn't work.
+;;;(isa doFullEADiscourseInterpretation SimpleActionPredicate)
+;;;(arity doFullEADiscourseInterpretation 1)
+;;;(comment doFullEADiscourseInterpretation "It's like doEADiscourseInterpretation except it does the whole discourse (no specific start/end point)")
+
+(isa iterateOverDiscourse ComplexActionPredicate)
+(arity iterateOverDiscourse 2)
+(arg1Isa iterateOverDiscourse Microtheory)
+(arg2Isa iterateOverDiscourse CycLSentence-Assertible) ;; the assertion describing the action
+(comment iterateOverDiscourse
+  "(iterateOverDiscourse ?dcase ?action) performs task ?action over each 
+ paragraph in the discourse case ?dcase.
+This includes executing start/end of paragraph/discourse operations.")
+
+(isa doEAReadSingleSentence SimpleActionPredicate)
+(arity doEAReadSingleSentence 2)
+(arg1Isa doEAReadSingleSentence Thing) ;; Need to reify sentence as something
+(arg2Isa doEAReadSingleSentence Microtheory)
+(comment doEAReadSingleSentence
+  "(doEAReadSingleSentence ?sid ?dcase) calls EA NLU on the sentence denoted by ?sid,
+ in the context of discourse case ?dcase.")
+
+;;; Start/End of discourse
+(isa StartOfDiscourseFn Function-Denotational)
+(arity StartOfDiscourseFn 1)
+(comment StartOfDiscourseFn
+  "(StartOfDiscourseFn ?dcase) denotes the start of the discourse.  This is used as a pointer
+ in the discourse iterator, to kick off processing the discourse.  Any context being set up needs to
+ happen via assertions that add appropriate genlMt statements or other assertions that provide the right
+ context for processing.")
+(isa EndOfDiscourseFn Function-Denotational)
+(arity EndOfDiscourseFn 1)
+(comment EndOfDiscourseFn
+  "(EndOfDiscourseFn ?dcase) denotes the end of the discourse.  This is used as a pointer
+ in the discourse iterator, to finish processing the discourse.")
+
+;;; Start/End of paragraph
+(isa StartOfParagraphFn Function-Denotational)
+(arity StartOfParagraphFn 1)
+(comment StartOfParagraphFn
+  "(StartOfParagraphFn ?dcase) denotes the start of the oaragraph.  This is used as a pointer
+ in the discourse iterator, to kick off processing the paragraph.  Any context being set up needs to
+ happen via assertions that add appropriate genlMt statements or other assertions that provide the right
+ context for processing.")
+(isa EndOfParagraphFn Function-Denotational)
+(arity EndOfParagraphFn 1)
+(comment EndOfParagraphFn
+  "(EndOfParagraphFn ?dcase) denotes the End of the oaragraph.  This is used as a pointer
+ in the discourse iterator, to finish processing the paragraph.")
+
+(isa readDomainTextWithRecordedResults ComplexActionPredicate)
+(arity readDomainTextWithRecordedResults 3)
+(comment readDomainTextWithRecordedResults
+ "(readDomainTextWithRecordedResults ?reader ?file ?reading) uses the skim
+ reading plan ?reader on the file ?file to produce a reading ?reading,
+ along with dumped microtheories of the results of reading plus
+ some statistics about it.")
+
+;;;; The basic loop of the discourse iterator is
+;;;;  (doDiscourseIterationStep ?current ?discourse ?action)
+;;;;  (moveToNextDiscourseStep ?current ?discourse ?action)
+;;;; These tasks and their implementations are described here.
+
+(isa doDiscourseIterationStep ComplexActionPredicate)
+(arity doDiscourseIterationStep 3)
+(comment doDiscourseIterationStep
+  "(doDiscourseIterationStep ?state ?d ?action) executes ?action on ?state, and queues up a continuation,
+ if there is any. ?d is the discourse.")
+
+(isa moveToNextDiscourseStep ComplexActionPredicate)
+(arity moveToNextDiscourseStep 3)
+(comment moveToNextDiscourseStep
+  "(moveToNextDiscourseStep ?state ?d ?action) produces a task to process the next state from ?state with
+ ?action, if there is one. ?d is the current discourse")
+
+(preconditionForMethod 
+ (and (unifies ?initial-state (StartOfDiscourseFn ?d))
+      (currentInteractionMgr ?im)
+      (agendaContext ?actx)
+      (currentAgendaItem ?parentTask)
+      (newUUIDSymbol IterateOverDiscourse ?iterate-id)
+      (localAgent ?im))
+ (methodForAction
+  (iterateOverDiscourse ?d ?action)
+  (actionSequence 
+   (TheList
+    (doTell (ist-Information ?actx (subTasks ?parentTask ?iterate-id)))
+    (doTell (ist-Information ?actx (assignedTo ?iterate-id ?im)))
+    (doAnnounce "Starting iteration of ~A over ~A" (?action ?d))
+    (doEnqueue ?im ?iterate-id (doDiscourseIterationStep ?initial-state ?d ?action))))))
+
+(isa nullUnaryAction ComplexActionPredicate)
+(arity nullUnaryAction 1)
+(comment nullUnaryAction
+  "(nullUnaryAction ?state) produces a bit of debug printout, and that's it.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (nullUnaryAction ?arg)
+  (actionSequence
+   (TheList
+    (doAnnounce "Doing nothing on ~A" (?arg))))))
+
+(isa nullBinaryAction ComplexActionPredicate)
+(arity nullBinaryAction 2)
+(comment nullBinaryAction
+  "(nullBinaryAction ?arg1 ?arg2) produces a bit of debug printout, and that's it.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (nullBinaryAction ?arg1 ?arg2)
+  (actionSequence
+   (TheList
+    (doAnnounce "Doing nothing on ~A and ~D" (?arg1 ?arg2))))))
+
+(preconditionForMethod
+ (and (agendaContext ?mt)
+      (newUUIDSymbol doCurrent ?init-id)
+      (newUUIDSymbol moveToNextDiscourseStep ?next-step)
+      (currentAgendaItem ?parentTask)
+      (localAgent ?im))
+ (methodForAction
+  (doDiscourseIterationStep ?state ?d ?action)
+  (actionSequence
+   (TheList
+    ;; (doAnnounce "Doing ~A on ~A" (?action ?state ?d))
+    (doTell (ist-Information ?mt (subTasks ?parentTask ?next-step))) 
+    (doRecord (ist-Information ?mt (startsAfterEndingOf ?next-step ?init-id)))
+    (doEnqueue ?im ?init-id (?action ?state ?d))
+    (doEnqueue ?im ?next-step (moveToNextDiscourseStep ?state ?d ?action))))))
+
+;;; A lot of cases for moveToNextDiscourseStep
+(preconditionForMethod
+ (and (unifies ?state (StartOfDiscourseFn ?d)) ;; Very first
+      (ist-Information (DiscourseCaseFn ?d)
+        (firstParagraphInDiscourse ?first-paragraph ?d))
+      (ist-Information (DiscourseCaseFn ?d)
+        (firstSentenceInParagraph ?first-sentence ?first-paragraph))
+      (newUUIDSymbol doNext ?next-id)
+      (localAgent ?im)
+      (currentAgendaItem ?parentTask)
+      (agendaContext ?mt))
+ (methodForAction
+  (moveToNextDiscourseStep ?state ?d ?action)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (subTasks ?parentTask ?next-id)))
+    (doEnqueue ?im ?next-id
+               (doDiscourseIterationStep ?first-sentence ?d ?action))))))
+
+(preconditionForMethod 
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInParagraph ?state ?paragraph))
+      (ist-Information (DiscourseCaseFn ?d)
+        (lastSentenceInParagraph ?state ?paragraph))
+      (newUUIDSymbol doEndOfParagraph ?next-id)
+      (localAgent ?im)
+      (currentAgendaItem ?parentTask)
+      (agendaContext ?mt))
+ (methodForAction
+  (moveToNextDiscourseStep ?state ?d ?action)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (subTasks ?parentTask ?next-id)))
+    (doEnqueue ?im ?next-id 
+               (doDiscourseIterationStep
+                (EndOfParagraphFn ?paragraph) ?d ?action))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInParagraph ?state ?paragraph))
+      (uninferredSentence 
+       (ist-Information (DiscourseCaseFn ?d)
+         (lastSentenceInParagraph ?state ?paragraph)))
+      (ist-Information (DiscourseCaseFn ?d)
+        (followsInProgression (SentenceFn ?next-sentence)
+                              (SentenceFn ?state)
+                              ?dd))
+      (newUUIDSymbol doNextSentenceInParagraph ?next-id)
+      (localAgent ?im)
+      (currentAgendaItem ?parentTask)
+      (agendaContext ?mt))
+ (methodForAction
+  (moveToNextDiscourseStep ?state ?d ?action)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (subTasks ?parentTask ?next-id)))
+    (doEnqueue ?im ?next-id 
+               (doDiscourseIterationStep ?next-sentence ?d ?action))))))
+
+(preconditionForMethod
+ (and (unifies ?state (EndOfParagraphFn ?paragraph))
+      (ist-Information (DiscourseCaseFn ?d)
+        (paragraphInDiscourse ?paragraph ?d))
+      (ist-Information (DiscourseCaseFn ?d)
+        (lastParagraphInDiscourse ?paragraph ?discourse))
+      (newUUIDSymbol doDiscourseCleanup ?final-step)
+      (localAgent ?im)
+      (currentAgendaItem ?parentTask)
+      (agendaContext ?mt))
+ (methodForAction
+  (moveToNextDiscourseStep ?state ?d ?action)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (subTasks ?parentTask ?final-step)))
+    (doEnqueue ?im ?final-step
+               (doDiscourseIterationStep (EndOfDiscourseFn ?discourse)
+                                         ?d ?action))))))
+
+(preconditionForMethod
+ (and (unifies ?state (EndOfParagraphFn ?paragraph))
+      (uninferredSentence 
+       (ist-Information (DiscourseCaseFn ?d)
+         (lastParagraphInDiscourse ?paragraph ?d))) ;; Go to next
+      (ist-Information (DiscourseCaseFn ?d)
+        (lastSentenceInParagraph ?last-sentence ?paragraph))
+      (ist-Information (DiscourseCaseFn ?d)
+        (followsInProgression (SentenceFn ?next-sentence)
+                              (SentenceFn ?last-sentence)
+                              (DiscourseFn ?d)))
+      (newUUIDSymbol StartNextParagraph ?next-step)
+      (localAgent ?im)
+      (currentAgendaItem ?parentTask)
+      (agendaContext ?mt))
+ (methodForAction
+  (moveToNextDiscourseStep ?state ?d ?action)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (subTasks ?parentTask ?next-step)))
+    (doEnqueue ?im ?next-step
+               (doDiscourseIterationStep ?next-sentence ?d ?action))))))
+
+(preconditionForMethod
+ (and (agendaContext ?mt) (unifies ?state (EndOfDiscourseFn ?d))
+      (currentAgendaItem ?parentTask)
+      (agendaContext ?mt))
+ (methodForAction
+  (moveToNextDiscourseStep ?state ?d ?action)
+  (actionSequence
+   (TheList
+    (doAnnounce "Finished ~A on ~A in ~A" (?action ?state ?d))))))
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Simple analysis example: Parse and interpret everything, looking for QP frames
+;;;; at the end
+;;; Each analysis is defined as an HTN task of two arguments, the first of which
+;;; is the state of the iteration, and the second which is the discourse.
+;;; The state of the iteration is either
+;;; 0. A (StartOfDiscourseFn ?d) NAT, where ?d is the discourse.
+;;; 1. A sentence
+;;; 2. An (EndOfParagraphFn ?p) NAT, where ?p is the paragraph.
+;;; 3. An (EndOfDiscourseFn ?d) NAT, where ?d is the discourse.
+;;; Adding a new analysis requires that you implement methods for the task
+;;; that handles these cases, and ontologize the method as below.
+
+(isa ExtractQPInformationFromDiscourse ComplexActionPredicate)
+(arity ExtractQPInformationFromDiscourse 2)
+(comment ExtractQPInformationFromDiscourse
+  "(ExtractQPInformationFromDiscourse ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.
+ If ?state is the start of the discourse, it weaves in the QP Mts needed for interpretation
+ If ?state is a sentence, it parses it and looks for QP frames.
+ If ?state is the end, it removes the additional genlMt statements used in analysis.")
+
+;;;; Task defns for ExtractQPInformationFromDiscourse
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQPInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Looking for QP information in ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (ExtractQPInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doEAReadSingleSentence ?state ?d)
+    ;;;(useDiscourseCoreferenceResolutionForSentence ?state)
+    (doEADiscourseInterpretation QPInterpretationQueriesMt ?counter ?next)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractQPInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQPInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAnnounce "End of looking for QP info in ~A." (?d))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Parse a question into a Form BOTE
+
+(isa ExtractBOTEQuestionFromDiscourse ComplexActionPredicate)
+(arity ExtractBOTEQuestionFromDiscourse 2)
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractBOTEQuestionFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Looking for BOTE question in ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (ExtractBOTEQuestionFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doEAReadSingleSentence ?state ?d)
+    (useDiscourseCoreferenceResolutionForSentence ?state)
+    (doEADiscourseInterpretation BOTENarrativeQueriesMt ?counter ?next)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractBOTEQuestionFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractBOTEQuestionFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAnnounce "End of looking for BOTE info in ~A." (?d))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Extracting Freeciv information
+
+(isa ExtractFCInformationFromDiscourse ComplexActionPredicate)
+(arity ExtractFCInformationFromDiscourse 2)
+(comment ExtractFCInformationFromDiscourse
+  "(ExtractFCInformationFromDiscourse ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.
+ If ?state is the start of the discourse, it weaves in the Freeciv Mts needed for interpretation
+ If ?state is a sentence, it parses it and looks for relevant Freeciv relationships.
+ If ?state is the end, it removes the additional genlMt statements used in analysis.")
+
+;;;; Task defns for ExtractFCInformationFromDiscourse
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractFCInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Looking for FC information in ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (ExtractFCInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Reading sentence ~A: ~A" (?counter ?tokens))
+    (doEAReadSingleSentence ?state ?d)
+    ;; Leave out coreference for the moment
+    (doEADiscourseInterpretation FreecivNarrativeQueriesMt ?counter ?next)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractFCInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractFCInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAnnounce "End of looking for Freeciv info in ~A." (?d))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Extracting QPType information
+
+
+(isa ExtractQPTypeInformationFromDiscourse ComplexActionPredicate)
+(arity ExtractQPTypeInformationFromDiscourse 2)
+(comment ExtractQPTypeInformationFromDiscourse
+  "(ExtractQPTypeInformationFromDiscourse ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.
+ If ?state is the start of the discourse, it weaves in the Freeciv Mts needed for interpretation
+ If ?state is a sentence, it parses it and looks for relevant Freeciv relationships.
+ If ?state is the end, it removes the additional genlMt statements used in analysis.")
+
+;;;; Task defns for ExtractQPTypeInformationFromDiscourse
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Looking for QPT information in ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (ExtractQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Reading sentence ~A: ~A" (?counter ?tokens))
+    (doEAReadSingleSentence ?state ?d)
+    ;; Leave out coreference for the moment
+     (doEADiscourseInterpretation QP-DomainTypeQueriesMt ?counter ?next)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAnnounce "End of looking for QPT info in ~A." (?d))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Extracting Freeciv QPType information
+
+
+(isa ExtractFCQPTypeInformationFromDiscourse ComplexActionPredicate)
+(arity ExtractFCQPTypeInformationFromDiscourse 2)
+(comment ExtractFCQPTypeInformationFromDiscourse
+  "(ExtractFCQPTypeInformationFromDiscourse ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.
+ If ?state is the start of the discourse, it weaves in the Freeciv Mts needed for interpretation
+ If ?state is a sentence, it parses it and looks for relevant Freeciv relationships.
+ If ?state is the end, it removes the additional genlMt statements used in analysis.")
+
+;;;; Task defns for ExtractQPTypeInformationFromDiscourse
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractFCQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    ;; Ensure abductive preferences are available
+    (doTell (genlMt (DiscourseCaseFn ?d) FreecivNarrativeRulesMt))
+    (doAnnounce "Looking for FCQPT information in ~A" (?d))))))
+
+
+
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (ExtractFCQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Reading sentence ~A: ~A" (?counter ?tokens))
+    (doEAReadSingleSentence ?state ?d)
+    ;; Leave out coreference for the moment
+    (doEADiscourseInterpretation FC-DomainTypeQueriesMt ?counter ?next)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractFCQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "End of paragraph ~A in ~A." (?p ?d))
+    ;;After each paragraph extract MFInfo
+    (doEADiscourseInterpretation QPMFQueriesMt 0 1)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractFCQPTypeInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAnnounce "End of looking for FCQPT info in ~A." (?d))))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Extracting ADA information
+
+(isa ExtractADAInformationFromDiscourse ComplexActionPredicate)
+(arity ExtractADAInformationFromDiscourse 2)
+(comment ExtractADAInformationFromDiscourse
+  "(ExtractADAInformationFromDiscourse ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.")
+;;; If ?state is the start of the discourse, it weaves in the Freeciv Mts needed for interpretation
+;;; If ?state is a sentence, it parses it and looks for relevant Freeciv relationships.
+;;; If ?state is the end, it removes the additional genlMt statements used in analysis.
+
+;;;; Task defns for ExtractQPInformationFromDiscourse
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractADAInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Looking for ADA information in ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (ExtractADAInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doEAReadSingleSentence ?state ?d)
+    ;; Leave out coreference for the moment
+;;;    (doEADiscourseInterpretation FreecivNarrativeQueriesMt ?counter ?next)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractADAInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+
+;;; Make this the one for when we don't know how to disambiguate it.
+(preconditionForMethod
+ (and
+      (unifies ?state (EndOfDiscourseFn ?d))
+      (wmOnly (sourceTextForDiscourse ?st-name ?d))
+      (uninferredSentence (ist-Information SourceTextFileLocationsMt 
+         (disambiguationMtOfSourceText ?st-disambiguation-mt
+                                       ?st-name)))
+      )
+ (methodForAction
+  (ExtractADAInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList 
+    (useDiscourseCoreferenceResolution)
+    (analyzeAndEvaluateADA)
+    (doAnnounce "End of looking for ADA info in ~A." (?d))))))
+
+
+;;; This is if we do know how to disambiguate it.
+(preconditionForMethod
+ (and
+      (unifies ?state (EndOfDiscourseFn ?d))
+      (ist-Information (DiscourseCaseFn ?d) 
+        (sourceTextForDiscourse ?st-name ?d))
+      (ist-Information SourceTextFileLocationsMt 
+        (disambiguationMtOfSourceText ?st-disambiguation-mt ?st-name))
+      ;;; Problem: We're generating more than one reading name, apperantly.
+      (lookupOnly (wmOnly (generatedReadingName ?st-name ?reading-name)))
+      )
+ (methodForAction
+  (ExtractADAInformationFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList 
+    (doClearAllAnalogyCaches)
+    (disambiguateSourceTextWithHeuristicContext ?st-name ?reading-name
+      ?st-disambiguation-mt LbrDisambiguationMt)    
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (useDiscourseCoreferenceResolution)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (analyzeAndEvaluateADA)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             (doAnnounce "End of looking for ADA info in ~A." (?d))
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name) ?reading-name ?st-name)
+             )))
+             ))))))
+       )))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Only Reading
+
+(isa OnlyReading ComplexActionPredicate)
+(arity OnlyReading 2)
+(comment OnlyReading
+  "(OnlyReading ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.")
+
+
+;;;; Task defns for OnlyReading
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (OnlyReading ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Currently reading ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (OnlyReading ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce " Reading the sentence ~A." (?tokens))
+    (doEAReadSingleSentence ?state ?d)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (OnlyReading ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+
+;;; Make this the one for when we don't know how to disambiguate it.
+;;; What is this missing?
+;;; ?reading-name - passed in
+;;; ?experiment-name - passed in
+;;; ?source-text-name - Check
+;;; ?heuristic-mt - Check
+(preconditionForMethod
+ (and
+      (unifies ?state (EndOfDiscourseFn ?d))
+      (wmOnly (ist-Information (DiscourseCaseFn ?d) (sourceTextForDiscourse ?source-text-name ?d)))
+      (disambiguationDefaultOrKnown ?source-text-name ?heuristic-mt)
+      (wmOnly
+       (ist-Information lbrProcessMt 
+        (readingStartedAt ?reading-name 
+                          ?experiment-name 
+                          ?start-time)))
+      (outsourcedOnly (concatenatedList (TheList ?reading-name ".krf") ?file-name))
+      )
+ (methodForAction
+  (OnlyReading ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+       (recordDisambiguationStartTime ?reading-name ?experiment-name)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (disambiguateSourceTextWithHeuristicContext
+           ?source-text-name ?reading-name ?heuristic-mt DefaultDisambiguationWeightsMt)
+          (doAgentPlan
+           (actionSequence
+            (TheList
+             ;;; "Interpretation" (Placeholder)
+             (recordDisambiguationEndTime ?reading-name ?experiment-name)
+             (recordCoreferenceStartTime ?reading-name ?experiment-name)
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (useDiscourseCoreferenceResolution)
+                (doAgentPlan
+                 (actionSequence
+                  (TheList
+                   (recordCoreferenceEndTime ?reading-name ?experiment-name)
+                   (doAgentPlan
+                 (actionSequence
+                  (TheList
+                   (runADAIfEnabled ?experiment-name ?reading-name)
+                   (doAgentPlan
+                    (actionSequence
+                     (TheList
+                      (doRecord (ist-Information LbrSourceTextsMt 
+                                  (factsForReadingAreIn ?reading-name (FactsFromReadingMtFn ?reading-name))))
+                      (doRecord (ist-Information LbrSourceTextsMt 
+                                  (errorsForReadingAreIn ?reading-name (ErrorsFromReadingMtFn ?reading-name))))
+                      (evaluateAndStoreParseErrorsForReading (ErrorsFromReadingMtFn ?reading-name) ?source-text-name ?reading-name)
+                      (storeInterpretationInKB (FactsFromReadingMtFn ?reading-name)
+                                               ?reading-name ?source-text-name)
+                      (doAgentPlan
+                       (actionSequence
+                        (TheList
+                         ;;; This needs the actual file name.
+                         (doEmailIMLogToUser ?file-name "Reading of ~A" (?reading-name) 
+                                                      "See attached message"
+                                             ())
+                         (doAnnounce "End of reading info in ~A." (?d))
+                         ))))))))))))))))))))))))
+    
+    ))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Only Parse Errors
+
+(isa OnlyParseErrors ComplexActionPredicate)
+(arity OnlyParseErrors 2)
+(comment OnlyParseErrors
+  "(OnlyParseErrors ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.")
+
+
+;;;; Task defns for OnlyReading
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (OnlyParseErrors ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Currently reading ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (OnlyParseErrors ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce " Reading the sentence ~A." (?tokens))
+    (doEAReadSingleSentence ?state ?d)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (OnlyParseErrors ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+
+
+(preconditionForMethod
+ (and
+      (unifies ?state (EndOfDiscourseFn ?d))
+      (wmOnly (ist-Information (DiscourseCaseFn ?d) (sourceTextForDiscourse ?source-text-name ?d)))
+      (wmOnly
+       (ist-Information lbrProcessMt 
+         (readingStartedAt ?reading-name 
+                           ?experiment-name 
+                           ?start-time)))
+      (outsourcedOnly (concatenatedList (TheList ?reading-name ".krf") ?file-name))
+      )
+ (methodForAction
+  (OnlyParseErrors ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (recordReadingEndProcessingTime ?reading-name ?experiment-name)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (doRecord (ist-Information LbrSourceTextsMt 
+                      (errorsForReadingAreIn ?reading-name (ErrorsFromReadingMtFn ?reading-name))))
+          (evaluateAndStoreParseErrorsForReading (ErrorsFromReadingMtFn ?reading-name) ?source-text-name ?reading-name)
+          ))))))))))
+
+;;;; Question Frames
+(isa SkimReadForQuestions ComplexActionPredicate)
+(arity SkimReadForQuestions 2)
+ (preconditionForMethod
+ (and (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name))
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (newUUIDSymbol iterateOverDiscourse ?iterator-id)
+      (agendaContext ?actx)
+      (currentAgendaItem ?parent-task)
+      (currentInteractionMgr ?im)
+      )
+ (methodForAction
+  (SkimReadForQuestions ?location ?source-text-name)
+    (actionSequence
+     (TheList
+      (doTell (ist-Information ?actx (assignedTo ?iterator-id ?im)))
+      (doTell (ist-Information ?actx (subTasks ?parent-task ?iterator-id)))
+      (doEAReadTextFromFile ?location ?source-text-name)
+      (doEnqueue ?im ?iterator-id
+                 (iterateOverDiscourse ?discourse-id
+                                       ExtractQuestions))))))
+
+(isa ExtractQuestions ComplexActionPredicate)
+(arity ExtractQuestions 2)
+
+(preconditionForMethod ;; Start of discourse
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQuestions ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Looking for QA information in ~A" (?d))))))
+
+(preconditionForMethod
+ (and (ist-Information (DiscourseCaseFn ?d)
+        (sentenceInDiscourse ?state ?counter ?tokens))
+      (evaluate ?next (PlusFn ?counter 1)))
+ (methodForAction
+  (ExtractQuestions ?state ?d)
+  (actionSequence
+   (TheList
+    (doEAReadSingleSentence ?state ?d)
+    ;;;(useDiscourseCoreferenceResolutionForSentence ?state)
+    (doEADiscourseInterpretation QuestionQueriesMt ?counter ?next)
+    ))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractQuestions ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "  End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQuestions ?state ?d)
+  (actionSequence
+   (TheList 
+    (doAnnounce "End of looking for QA info in ~A." (?d))))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Kicking it all off
+;;;; These executive-level plans simply kick off the work on the interaction
+;;;; manager.
+
+(in-microtheory ExecutiveMt)
+
+(isa readDomainTextWithRecordedResults ComplexActionPredicate)
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (readDomainTextWithRecordedResults ?reader ?file ?reading)
+  (actionSequence
+   (TheList (doRemoteAgentPlan
+         ?im
+         (actionSequence
+          (TheList (readDomainTextWithRecordedResults
+            ?reader ?file ?reading))))))))
+
+;;; cjm 10/29
+;;; kicking off QA with type level models
+(isa SkimReadAndAnswerFCQuestions ComplexActionPredicate)
+(arity SkimReadAndAnswerFCQuestions 2)
+(comment SkimReadAndAnswerFCQuestions
+  "(SkimReadAndAnswerFCQuestions ?file ?source-text-name) uses the skim reading plans to read the given text
+into the current discourse and extract QA frames from it. It then evaluates and answers questions.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im))
+      (agendaContext ?actx)
+      (newUUIDSymbol skimReadAndAnswer ?skim-read))
+ (methodForAction
+  (SkimReadAndAnswerFCQuestions ?file ?source-text-name)
+  (actionSequence
+   (TheList (doTell (ist-Information ?actx (assignedTo ?skim-read ?im)))
+            (doEnqueue ?im ?skim-read (SkimReadForQuestions ?file ?source-text-name))))))
+
+(isa SkimReadForBOTEInfo ComplexActionPredicate)
+(arity SkimReadForBOTEInfo 2)
+(comment SkimReadForBOTEInfo
+  "(SkimReadForBOTEInfo ?file ?source-text-name) uses the skim reading plans to read the given text
+into the current discourse and extract BOTE QA relationships from it.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (SkimReadForBOTEInfo ?file ?source-text-name)
+  (actionSequence
+   (TheList (doRemoteAgentPlan 
+             ?im
+             (actionSequence
+              (TheList (SkimReadForBOTEInfo ?file ?source-text-name))))))))
+
+
+
+(isa SkimReadForQPInfo ComplexActionPredicate)
+(arity SkimReadForQPInfo 2)
+(comment SkimReadForQPInfo
+  "(SkimReadForQPInfo ?file ?source-text-name) uses the skim reading plans to read the given text
+into the current discourse and extract QP frames from it.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (SkimReadForQPInfo ?file ?source-text-name)
+  (actionSequence
+   (TheList (doRemoteAgentPlan 
+             ?im
+             (actionSequence
+              (TheList (SkimReadForQPInfo ?file ?source-text-name))))))))
+
+
+(isa SkimReadForFCInfo ComplexActionPredicate)
+(arity SkimReadForFCInfo 2)
+(comment SkimReadForFCInfo
+  "(SkimReadForFCInfo ?file ?source-text-name) uses the skim reading plans to read the given text
+into the current discourse and extract freeciv-relevant relationships from it.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (SkimReadForFCInfo ?file ?source-text-name)
+  (actionSequence
+   (TheList (doRemoteAgentPlan 
+             ?im
+             (actionSequence
+              (TheList (SkimReadForFCInfo ?file ?source-text-name))))))))
+
+(isa learnByReadingStoredChapter ComplexActionPredicate)
+(arity learnByReadingStoredChapter 3)
+(arg1Isa learnByReadingStoredChapter List) ;;; The name of the source text.
+(arg2Isa learnByReadingStoredChapter AccessingAnIBT)
+(arg3Isa learnByReadingStoredChapter Thing)
+(comment learnByReadingStoredChapter
+  "(learnByReadingStoredChapter ?chapter-name ?reading-name ?experiment-name)
+ is a high-level learning by reading plan. It reads, disambiguates,
+interprets, and sets off a cycle of rumination and checking.
+ Its parameters are all stored as knowledge, which is modified with other plans.
+This is the executive version.")
+
+(preconditionForMethod 
+ (outsourcedOnly (currentInteractionMgr ?im))
+ (methodForAction
+  (learnByReadingStoredChapter ?chapter-name ?reading-name ?experiment-name)
+  (actionSequence
+   (TheList (doRemoteAgentPlan 
+             ?im
+             (actionSequence
+              (TheList (learnByReadingStoredChapter ?chapter-name ?reading-name ?experiment-name))))))))
+
+(isa ReadFreecivText ComplexActionPredicate)
+(arity ReadFreecivText 2)
+(comment ReadFreecivText 
+  "(ReadFreecivText ?file ?readingMt) kicks off the reading process on the interaction
+ manager, extracting QP instance and type level information.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (ReadFreecivText ?file ?reading-mt)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan 
+     ?im
+     (readDomainTextWithRecordedResults SkimReadForFCQPTInfo ?file ?reading-mt))))))     
+
+(isa SkimReadForADAInfo ComplexActionPredicate)
+(arity SkimReadForADAInfo 2)
+(comment SkimReadForADAInfo
+  "(SkimReadForADAInfo ?file ?source-text-name) uses the skim reading plans to read the given text
+into the current discourse and extract analogical dialogue acts from it.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (SkimReadForADAInfo ?file ?source-text-name)
+  (actionSequence
+   (TheList (doRemoteAgentPlan 
+             ?im
+             (actionSequence
+              (TheList (SkimReadForADAInfo ?file ?source-text-name))))))))
+
+(isa SkimReadForQPTInfo ComplexActionPredicate)
+(arity SkimReadForQPTInfo 2)
+(comment SkimReadForQPTInfo
+  "(SkimReadForQPTInfo ?file ?source-text-name) is the entry point for skim reading of texts to extract
+ QPT information.")
+
+;;; Implementation of SkimReadForQPTInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (SkimReadForQPTInfo ?file ?source-text-name)
+  (actionSequence
+   (TheList (doRemoteAgentPlan 
+             ?im
+             (actionSequence
+              (TheList (SkimReadForQPTInfo ?file ?source-text-name))))))))
+
+
+(isa SkimReadForFCQPTInfo ComplexActionPredicate)
+(arity SkimReadForFCQPTInfo 2)
+(comment SkimReadForFCQPTInfo
+  "(SkimReadForFCQPTInfo ?file ?source-text-name) is the entry point for skim reading of texts to extract
+ QPT information.")
+
+;;; Implementation of SkimReadForFCQPTInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentInteractionMgr ?im)))
+ (methodForAction
+  (SkimReadForFCQPTInfo ?file ?source-text-name)
+  (actionSequence
+   (TheList (doRemoteAgentPlan 
+             ?im
+             (actionSequence
+              (TheList (SkimReadForFCQPTInfo ?file ?source-text-name))))))))
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; The IM versions of the plans actually do the work
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; Tom's suggestion:
+(preconditionForMethod
+ (and (outsourcedOnly (currentUniversalTime ?start-time))
+      (agendaContext ?mt)
+      (currentInteractionMgr ?im)
+      (newUniqueTask Initialize ?initialize)
+      (newUniqueTask DoIt ?read)
+      (newUniqueTask Cleanup ?cleanup))      
+ (methodForAction
+  (readDomainTextWithRecordedResults ?reader ?file ?reading)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?mt (startsAfterEndingOf ?read ?initialize)))
+    (doRecord (ist-Information ?mt (startsAfterEndingOf ?cleanup ?read)))
+    (doEnqueue ?im ?initialize (recordDomainReadingStartingInformation
+                                ?file ?reader ?reading))
+    (doEnqueue ?im ?read (?reader ?file ?reading))
+    (doEnqueue ?im ?cleanup 
+               (recordDomainReadingEndingInformation
+                ?file ?reader ?reading))))))
+
+(isa recordDomainReadingStartingInformation ComplexActionPredicate)
+(arity recordDomainReadingStartingInformation 3)
+(comment recordDomainReadingStartingInformation
+  "(recordDomainReadingStartingInformation ?file ?reader ?reading) records bookkeeping
+ information about using the reading action ?reader on the file ?file to produce
+ the reading ?reading.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentUniversalTime ?time)))
+ (methodForAction
+  (recordDomainReadingStartingInformation ?file ?reader ?reading)
+  (actionSequence
+   (TheList
+    (doForgetKBMt (ReadingMetadataMtFn ?reading))
+    (doForgetKBMt (ReadingResultsMtFn ?reading))
+    ;; KDF: This was wrapped in a doAgentPlan, and was never happening.
+    (doRecord (ist-Information (ReadingMetadataMtFn ?reading)
+                (readingStartTime ?time)))))))
+
+(isa recordDomainReadingEndingInformation ComplexActionPredicate)
+(arity recordDomainReadingEndingInformation 3)
+(comment recordDomainReadingEndingInformation
+  "(recordDomainReadingStartingInformation ?file ?reader ?reading) records bookkeeping
+ information about using the reading action ?reader on the file ?file to produce
+ the reading ?reading.")
+
+(preconditionForMethod
+ (and (outsourcedOnly (currentUniversalTime ?time))
+      (evaluate ?metadata-filename (ConcatenateStringsFn
+                                    "data-file://" (StringFn ?reading) "-metadata.krf"))
+      (evaluate ?results-filename (ConcatenateStringsFn 
+                                   "data-file://" (StringFn ?reading) "-results.krf"))
+      (evaluate ?csv-filename (ConcatenateStringsFn 
+                               "data-file://" (StringFn ?reading)
+                               "-parse-errors.csv")))
+ (methodForAction
+  (recordDomainReadingEndingInformation ?file ?reader ?reading)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information (ReadingMetadataMtFn ?reading) (readingEndTime ?reading ?time)))
+    (doStoreLiftedInterpretationInfo (ReadingResultsMtFn ?reading))
+    (evaluateAndStoreParseErrorsForReading (ReadingMetadataMtFn ?reading) ?file ?reading)
+    (doEval (cl-user::export-current-reading-errors-as-csv-to-file
+             '(ReadingMetadataMtFn ?reading) 
+             (data-file-url->path ?csv-filename)))
+    (doWriteKBMtToFlatFile (ReadingMetadataMtFn ?reading) ?metadata-filename)
+    (doWriteKBMtToFlatFile (ReadingResultsMtFn ?reading) ?results-filename)))))
+    ;; YOU ARE HERE
+    ;; It would also be nice to automatically ship
+    ;; the results files to the session manager.
+
+(isa ReadingMetadataMtFn Function-Denotational)
+(arity ReadingMetadataMtFn 1)
+(resultIsa ReadingMetadataMtFn Microtheory)
+(comment ReadingMetadataMtFn
+  "(ReadingMetadataMtFn ?reading) denotes the microtheory for storing
+   metadata associated with reading ?reading.")
+
+(isa ReadingResultsMtFn Function-Denotational)
+(arity ReadingResultsMtFn 1)
+(resultIsa ReadingResultsMtFn Microtheory)
+(comment ReadingResultsMtFn
+  "(ReadingResultsMtFn ?reading) denotes the microtheory for storing
+   the final results derived via EA NLU during reading ?reading.")
+
+(isa readingStartTime Predicate)
+(arity readingStartTime 2)
+(comment readingStartTime
+  "(readingStartTime ?reading ?time) indicates that the reading ?reading
+ began at universal time ?time.")
+
+(isa readingEndTime Predicate)
+(arity readingEndTime 2)
+(comment readingEndTime
+  "(readingEndTime ?reading ?time) indicates that the reading ?reading
+ ended at universal time ?time.")
+
+(isa SkimReadForQPInfo ComplexActionPredicate)
+(arity SkimReadForQPInfo 2)
+(comment SkimReadForQPInfo
+  "(SkimReadForQPInfo ?file ?source-text-name) is the entry point for skim reading of texts to extract
+ QP frames.")
+
+;;; Implementation of SkimReadForQPInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name))
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (newUUIDSymbol iterateOverDiscourse ?iterator-id)
+      (agendaContext ?actx)
+      (currentAgendaItem ?parent-task)
+      (currentInteractionMgr ?im)
+      )
+ (methodForAction
+  (SkimReadForQPInfo ?location ?source-text-name)
+    (actionSequence
+     (TheList
+      (doTell (ist-Information ?actx (assignedTo ?iterator-id ?im)))
+      (doTell (ist-Information ?actx (subTasks ?parent-task ?iterator-id)))
+      (doEAReadTextFromFile ?location ?source-text-name)
+      (doEnqueue ?im ?iterator-id
+                 (iterateOverDiscourse ?discourse-id
+                                       ExtractQPInformationFromDiscourse))))))
+
+(isa SkimReadForFCInfo ComplexActionPredicate)
+(arity SkimReadForFCInfo 2)
+(comment SkimReadForFCInfo
+  "(SkimReadForFCInfo ?file ?source-text-name) is the entry point for skim reading of texts to extract
+ Freeciv-relevant information.")
+
+;;; Implementation of SkimReadForFCInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name))
+      (outsourcedOnly (currentDiscourseId ?discourse-id)))
+ (methodForAction
+  (SkimReadForFCInfo ?location ?source-text-name)
+    (actionSequence
+   (TheList
+    (doEAReadTextFromFile ?location ?source-text-name)
+    (iterateOverDiscourse ?discourse-id
+                          ExtractFCInformationFromDiscourse)))))
+
+(isa SkimReadForQPTInfo ComplexActionPredicate)
+(arity SkimReadForQPTInfo 2)
+(comment SkimReadForQPTInfo
+  "(SkimReadForQPTInfo ?file ?source-text-name) is the entry point for skim reading of texts to extract
+ Freeciv-relevant information.")
+
+;;; Implementation of SkimReadForQPTInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name))
+      (outsourcedOnly (currentDiscourseId ?discourse-id)))
+ (methodForAction
+  (SkimReadForQPTInfo ?location ?source-text-name)
+    (actionSequence
+   (TheList
+    (doEAReadTextFromFile ?location ?source-text-name)
+    (iterateOverDiscourse ?discourse-id
+                          ExtractQPTypeInformationFromDiscourse)))))
+
+
+(isa SkimReadForFCQPTInfo ComplexActionPredicate)
+(arity SkimReadForFCQPTInfo 2)
+(comment SkimReadForFCQPTInfo
+  "(SkimReadForQPTInfo ?file ?source-text-name) is the entry point for skim reading of texts to extract
+ Freeciv-relevant information.")
+
+;;; Implementation of SkimReadForFCQPTInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name))
+      (outsourcedOnly (currentDiscourseId ?discourse-id)))
+ (methodForAction
+  (SkimReadForFCQPTInfo ?location ?source-text-name)
+    (actionSequence
+   (TheList
+    (doEAReadTextFromFile ?location ?source-text-name)
+    (iterateOverDiscourse ?discourse-id
+                          ExtractFCQPTypeInformationFromDiscourse)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;
+(isa SkimReadForADAInfo ComplexActionPredicate)
+(arity SkimReadForADAInfo 2)
+(comment SkimReadForADAInfo
+  "(SkimReadForADAInfo ?file ?source-text-name) is the entry point for skim reading of texts to extract
+ analogical dialogue acts.")
+
+;;; Implementation of SkimReadForADAInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name))
+      (outsourcedOnly (currentDiscourseId ?discourse-id)))
+ (methodForAction
+  (SkimReadForADAInfo ?location ?source-text-name)
+    (actionSequence
+   (TheList
+    (doEAReadTextFromFile ?location ?source-text-name)
+    (iterateOverDiscourse ?discourse-id
+                          ExtractADAInformationFromDiscourse)))))
+
+
+(isa SkimReadForBOTEInfo ComplexActionPredicate)
+(arity SkimReadForBOTEInfo 2)
+(comment SkimReadForBOTEInfo
+  "(SkimReadForBOTEInfo ?file ?source-text-name) uses the skim reading plans to read the given text
+into the current discourse and extract BOTE QA relationships from it.")
+
+
+;;; Implementation of SkimReadForBOTEInfo
+
+(preconditionForMethod
+ (and (outsourcedOnly (generatedReadingName ?source-text-name ?generated-reading-name))
+      (outsourcedOnly (currentDiscourseId ?discourse-id)))
+ (methodForAction
+  (SkimReadForBOTEInfo ?location ?source-text-name)
+    (actionSequence
+   (TheList
+    (doEAReadTextFromFile ?location ?source-text-name)
+    (iterateOverDiscourse ?discourse-id
+                          ExtractBOTEQuestionFromDiscourse)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;just skim read and parse/ don't look for qp info
+
+(isa BasicParse ComplexActionPredicate)
+(arity BasicParse 2)
+(comment BasicParse
+  "(BasicParse ?state ?d) analyzes element ?state of discourse ?d,
+ as part of an iteration over all elements in the discourse.
+ If ?state is a sentence, it parses it and does basic semantic interpretation.
+ If ?state is the end, it does coreference resolution.")
+
+
+(preconditionForMethod
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (BasicParse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Start of processing discourse ~A" (?d))))))
+
+(preconditionForMethod
+ (ist-Information (DiscourseCaseFn ?d)
+   (sentenceInDiscourse ?state ?counter ?tokens))
+ (methodForAction
+  (BasicParse ?state ?d)
+  (actionSequence
+   (TheList
+    (doEAReadSingleSentence ?state ?d)))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (BasicParse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (BasicParse ?state ?d)
+  (actionSequence
+   (TheList (useDiscourseCoreferenceResolution)
+            ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;  End of code

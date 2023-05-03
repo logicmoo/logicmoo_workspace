@@ -1,0 +1,243 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: tasks.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 12, 2012 13:43:25
+;;;;   Purpose: Davidsonian representations of tasks.  Not necessarily HTNs.
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+
+(isa Task Collection)
+(genls Task PurposefulAction)
+;(genls Task AgendaItem)  ; that should be gone now
+(comment Task "A task is a persistent Davidsonian representation of a concrete
+ intended action.  It may have an associated action sequence, in which case it
+ may be scheduled on an agenda.  A fully fleshed-out task should specify the
+ goal(s) it is intended to serve, the means by which it will be achieved, a
+ mechanism for evaluating its success, an assignment to an agent, restrictions 
+ on how and when it may be pursued, any decompositions to subtasks that may be
+ possible.  The ability to partially specify any or all of these enables
+ strategic knowledge to be learnable, communicable, and incrementally refined.
+ Tasks are much like military tasks, but not limited to military units.")
+
+
+(isa newUniqueTask BinaryPredicate)
+(isa newUniqueTask DynamicUpdatePredicate)
+(arity newUniqueTask 2)
+(arg1Isa newUniqueTask Thing)
+(arg2Isa newUniqueTask Task)
+(comment newUniqueTask "(newUniqueTask ?prefix ?task) generates a new guid symbol
+from ?prefix and wraps it in (TaskFn <id>).")
+
+(<== (newUniqueTask ?prefix ?task)
+     (newUUIDSymbol ?prefix ?id)
+     (unifies ?task (TaskFn ?id)))
+     
+(isa newVolatileTask UnaryPredicate)
+(isa newVolatileTask DynamicUpdatePredicate)
+(arity newVolatileTask 1)
+(arg1Isa newVolatileTask Task)
+(comment newVolatileTask "(newVolatileTask ?task) incrementally generates
+a new id from the agenda-item counter and wraps it in (TaskFn <id>).")
+
+(<== (newVolatileTask (TaskFn ?id))
+     (nextCounterValue agendaItemId ?id))
+
+(isa volatileTask UnaryPredicate)
+(arity volatileTask 1)
+(arg1Isa volatileTask Task)
+(comment volatileTask "(volatileTask ?task) holds if ?task is volatile.")
+
+(<== (volatileTask ?task)
+     (groundExpression ?task)
+     (unifies ?task (TaskFn ?token))
+     (isa ?token Integer))
+
+;;; Relate the positional form of a task with its unique, Davidsonian representation
+;;; (the item scheduled on an agenda).
+;;; The method may be an action sequence, or it may be any ground task,
+;;; whether primitive or complex.
+;;; This is the persistent version of agendaItemActionSequence.
+;;; We still need the latter in the mechanism of the agenda, since we may re-write
+;;; an action sequence dynamically when part of it is deferred for later execution.
+;;; This is the predicate to use for representing knowledge about, say, a scenario.
+(isa methodForTask  BinaryPredicate)
+(genlPreds methodForTask agendaItemActionSequence)
+(arity methodForTask 2)
+(arg1Isa methodForTask Task)
+(arg2Isa methodForTask CycLExpression)
+(comment methodForTask
+         "Describes the actions the should be taken to perform the task")
+
+
+(isa alternativeActionChoices BinaryPredicate)
+(arity alternativeActionChoices 2)
+(arg1Isa alternativeActionChoices CycLTerm)
+(arg2Isa alternativeActionChoices Set-Mathematical)
+(comment alternativeActionChoices "(alternativeActionChoices ?name ?set) means
+ that ?set is a (possibly singleton) set of mutually-exclusive, optional tasks.
+ This information is used by the temporal scheduler to set up environment labels
+ to maintain constraions on disptach.  The name can be an arbitrary symbol or
+ a readable decision point name from a COA.")
+
+
+
+;;; Consider: ((ComplexActionFn 
+;;;              (NonDavidsonianPredFn ?EVENT ?LIST)) . ?ARGS) 
+
+
+;;;
+;;; Assignment
+;;;
+
+;;; There is a fairly subtle difference between a task (which is a type
+;;; of PurposefulAction) and an assignment (which is a normative specification)
+;;; Cyc predicates like taskStatus pertain to Assignment-Specification, not
+;;; to purposeful actions.
+
+;;; performerInSpec is the CYC-native way to express an assignment.
+;;; We should use AssignmentOfTaskFn to convert between PurposefulActions and
+;;; Assignment-Specifications. (or the assignmentOfTask predicate).
+
+(isa assignedTo BinaryPredicate)
+(arity assignedTo 2)
+(arg1Isa assignedTo Task)
+(arg2Isa assignedTo Agent-Generic)
+(comment assignedTo "(assignedTo ?task ?performer) relates a task responsibility to a performer, which may or may not be a companions agent.")
+
+;;;"A UnaryFunction and IndividualDenotingFunction, AssignmentOfTaskFn is used to convert between 
+;;; two ontologies for the representation of what can alternatively be called 'tasks' and 'assignments'.
+;;; This function converts from a task (which is a sub-collection of PurposefulAction) to an instance
+;;; of Assignment-Specification."  
+;;;(functionCorrespondingPredicate-Canonical AssignmentOfTaskFn assignmentOfTask 1)
+
+
+(isa taskImportance BinaryPredicate)
+(arity taskImportance 2)
+(arg1Isa taskImportance Task)
+(arg2Isa taskImportance ScalarInterval)
+(comment taskImportance "(taskImportance ?task ?importance) is the knowledge-level way of reifying the priority of a task.")
+
+
+(isa TaskStatus FirstOrderCollection)  ; see also SolveStatus
+(isa Failed TaskStatus)
+(isa Completed TaskStatus)
+(isa Pending TaskStatus)
+(isa Executing TaskStatus)
+(isa Interrupted TaskStatus)
+(isa Deferred TaskStatus)
+
+
+;;;
+;;; Decompositions
+;;;
+
+;;; see the subTasks predicate in companions-predicates.meld for the
+;;; decomposition.
+
+;;; *** Aack!  This collides with the definition in perceptualAgent/strategies.meld,
+;;; *** where it's defined as ternary!
+;(isa decompositionStrategyFor BinaryPredicate)
+;(arity decompositionStrategyFor 2)
+;(arg1Isa decompositionStrategyFor Task)
+;(arg2Isa decompositionStrategyFor DecompositionStrategy)
+;(comment decompositionStrategyFor "(decompositionStrategyFor ?task ?strategy) records the decomposition strategy used to break down the concrete propositional task ?task.")
+
+
+;;;
+;;; Goal Relations
+;;;
+
+;;; (taskToAchieve ?task ?goal-mt)  ; goal-mt is a TaskState (ako microtheory)
+;;; (purposeOfEvent ?event ?goal-sentence)   ; built-in CYC pred
+;;; (pusposeOfPlan ?plan-mt ?goal-sentence)  ; built-in CYC pred
+;;; (purposeInEvent ?agent ?event ?goal-sentence) ; built-in CYC pred
+;;; (goals ?agent ?sentence)
+;;; (purposeOf-EventSit ?event ?situation)
+;;; (purposeOfEvent-GoalType ?action ?goaltype)
+;;; (purposeInEvent-GoalType ?agent ?event ?goaltype)
+;;; (taskHasPurpose ?task ?goal-sentence)    ; Not limited to military tasks.  
+
+
+
+
+
+
+;;;
+;;; Scheduling
+;;;
+
+;;; Use the STN predicates to capture partial knowledge about sequencing.
+;;; Simple HTNs cannot capture overlapping and concurrent tasks, but
+;;; given multiple companions agents and simulated game agents, we need
+;;; that flexibility.
+
+;;; TimePoint vocabulary
+;;; --------------------
+;;; (startMeetsEndOf POST ANTE)
+;;; (simultaneousWith TP1 TP2)
+;;; (cotemporal TEMP1 TEMP2)               ; temporally continuous and same start and end (mentioned in code)
+;;; (temporallyCooriginating TEMP1 TEMP2)  ; simultaneous starting points (mentioned in code)
+;;; (temporallyCoterminal TEMP1 TEMP2)     ; simultaneous ending points   (mentioned in code)
+;;; (startingPoint TEMP TP)
+;;; (endingPoint TEMP TP)
+;;; (endsRelativeToStartOf ENDED-LATER TIME STARTED-EARLIER)
+;;; (after LATER-TP EARLIER-TP)
+
+;;; Interval vocabulary
+;;; -------------------
+;;; (startsDurationAfterEndingOf AFTER TIME BEFORE)
+;;; (startsDurationAfterStartingOf AFTER TIME BEFORE)
+;;; (endsRelativeToStartOf ENDED-LATER TIME STARTED-EARLIER)
+;;; (endsRelativeToEndOf ENDED-LATER TIME ENDED-EARLIER)
+;;; (duration TEMP-THING TIME)             ; cumultative time (possibly non-contiguous)
+;;; (timeSpan TEMP-THING TIME)             ; start-to-end time
+
+
+(isa temporallyDisjointWRTAgent SymmetricBinaryPredicate)
+(isa temporallyDisjointWRTAgent IrreflexiveBinaryPredicate)
+(isa temporallyDisjointWRTAgent ComplexTemporalPredicate)
+(arity temporallyDisjointWRTAgent 2)
+(arg1Isa temporallyDisjointWRTAgent TemporalThing)
+(arg2Isa temporallyDisjointWRTAgent TemporalThing)
+(genlPreds temporallyDisjointWRTAgent different)
+(genlPreds temporallyDisjointWRTAgent temporallyRelated)
+(genlPreds temporallyDisjoint temporallyDisjointWRTAgent)
+(comment temporallyDisjointWRTAgent
+  "(temporallyDisjointWRTAgent THING1 THING2) Means that THING1 and THING2 are temporallyDisjoint with respect to the agent that is performing each.  In other words, there exists no time point at which a single agent is performing THING1 and THING2 simultaneously.")
+
+;;;
+;;; Resources
+;;;
+
+;;; One of the ways we distinguish tasks that can operate concurrently from
+;;; those that cannot is via unique resources that ensure mutual exclusion.
+
+;;; Built-in Cyc preds:
+;;;
+
+;(resourceCapableOf AGENT SIT-TYPE ROLE)
+;(resourceAvailable AGENT RESOURCE)
+;(consumerOfResourceTypeInSystem AGENT RESOURCE-TYPE SYSTEM) ; System is a FunctionalSystem (qqv).
+;(producerOfResourceTypeInSystem AGENT RESOURCE-TYPE SYSTEM)
+;(resourceTypeTransferred ACTION TYPE)
+;(resourceInEvent EVENT RESOURCE)
+;(resourceInSystem SYSTEM THING)
+;resourceAllocationSpecificationOfTask  /  AllotmentOfTaskFn
+;PurposefulAction-ResourceDriven
+;PurposefulAction-ResourceDrivenWithTransfer
+;AcquiringResourcesEvent
+;ResourceRequest vs Allotment
+
+;;; resourceInEvent means the performer of event must control resource.
+;(controls AGENT THING)
+;(objectControlled EVENT OBJ)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

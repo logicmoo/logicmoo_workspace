@@ -1,0 +1,27 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: new-relations.meld
+;;;;    System: 
+;;;;    Author: Subu Kandaswamy
+;;;;   Created: September 8, 2012 21:07:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;;;move this to fire????
+(in-microtheory ShapeRerepresentationContext)
+
+;;;shape rerepresentation Equiv transformation Predicates used for 
+
+(equiv
+ (greaterThan ((QPQuantityFn Area) ?LARGER) 
+              ((QPQuantityFn Area) ?SMALLER))
+ (biggerThan ?LARGER ?SMALLER))
+
+(equiv
+ (greaterThan ((QPQuantityFn MunsellChroma) ?LARGER) 
+              ((QPQuantityFn MunsellChroma) ?SMALLER))
+ (darkerThan ?LARGER ?SMALLER))
+

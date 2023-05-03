@@ -1,0 +1,517 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: design-buddy-explanations.meld
+;;;;    System: sKEA
+;;;;    Author: Jon Wetzel
+;;;;   Created: March 16, 2010 12:57:01
+;;;;   Purpose: Structured explanations for design coach
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; --------------------------------------------------------------------------
+
+(isa DesignBuddyExplanationsMt Microtheory)
+(genlMt DesignBuddyExplanationsMt StructuredExplanationMt)
+
+(genlMt SKEAReasoningCollectorMt DesignBuddyExplanationsMt)
+
+(in-microtheory DesignBuddyExplanationsMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Explanation types
+
+(isa DesignCoachDebugging StrExType) ;; for students
+(comment DesignCoachDebugging 
+  "Structured explanation for debugging design coach.")
+
+(isa DesignStudentFeedback StrExType)
+(comment DesignStudentFeedback "Structured explanation for design students.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; metaknowledge extension
+
+(isa uninferredBecause Predicate)
+(arity uninferredBecause 2)
+(arg1Isa uninferredBecause CycLSentence)
+(arg1Isa uninferredBecause CycLSentence)
+(comment uninferredBecause "JWW 1/2013 Experimental metaknowledge predicate:  
+  uninferredBecause ?x ?y is true when ?x isn't wasn't proven in a previous 
+  for reasons ?y.  ?y could be an uninferredSentence statement")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; pretty strings
+(genFormat strExFor "~a because: ~a" (1 3))
+
+(genFormat uninferredSentence "It is not the case that ~a" (1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Debugging version
+
+(<== (strExFor ?fact DesignCoachDebugging ?results)
+     (evaluate ?results
+                (SetToListFn
+                 (TheClosedRetrievalSetOf ?antes
+                   (and (wmAntecedentOf ?fact ?antes)
+                        (noArgumentHasPredicate ?antes isa)
+                        (noArgumentHasPredicate ?antes inKB)
+                        (noArgumentHasPredicate ?antes <==))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Inferring what we can explain
+
+;; fall through ist-information
+(<== (strExTypeFor (ist-Information ?mt ?expr) DesignStudentFeedback)
+     (strExTypeFor ?expr DesignStudentFeedback))
+
+(<== (strExTypeFor ?expr DesignStudentFeedback)
+     (groundExpression ?expr)
+     (operatorFormulas ?predicate ?expr)
+     (strExTypeForPred ?predicate DesignStudentFeedback))
+
+(<== (strExTypeFor (uninferredSentence ?expr) DesignStudentFeedback)
+     (strExTypeFor ?expr DesignStudentFeedback))
+
+(<== (strExTypeFor (dbContradiction ?falseFact ?reason) DesignStudentFeedback)
+     (strExTypeFor ?reason DesignStudentFeedback))
+
+(<== (strExTypeFor (dbContradiction ?falseFact nil) DesignStudentFeedback)
+     (uninferredBecause ?falseFact ?reason)
+     (strExTypeFor ?reason DesignStudentFeedback))
+
+(<== (strExTypeFor (dbContradiction ?falseFact (dbProven ?reason))
+                   DesignStudentFeedback)
+     (strExTypeFor ?reason DesignStudentFeedback))
+
+(<== (strExTypeFor (dbContradiction ?falseFact
+                                    (dbContradiction ?falseFact ?reason)) 
+                   DesignStudentFeedback)
+     (strExTypeFor ?reason DesignStudentFeedback))
+
+(<== (strExTypeFor 
+      (dbContradiction 
+       (ist-Information ?context 
+         (functionAchievedVia ?function ?way ?obj-list ?state-list)) ?reason)
+      DesignStudentFeedback)
+     (strExTypeFor ?reason DesignStudentFeedback))
+
+(<== (strExTypeFor 
+      (dbContradiction 
+       (ist-Information ?context 
+         (functionAchievedVia ?function ?way ?obj-list ?state-list)) ?reason)
+      DesignStudentFeedback)
+     (unifies ?reason nil)
+     ;; in this case, use hard-coded instructions
+     (instructionsForAchievingFunction ?function ?way ?results))
+
+
+(strExTypeForPred transMotion DesignStudentFeedback)
+(strExTypeForPred transConstraint DesignStudentFeedback)
+(strExTypeForPred movable DesignStudentFeedback)
+
+(strExTypeForPred rotMotion DesignStudentFeedback)
+(strExTypeForPred rotConstraint DesignStudentFeedback)
+(strExTypeForPred rotFreedom DesignStudentFeedback)
+(strExTypeForPred rotatable DesignStudentFeedback)
+
+(strExTypeForPred netForce DesignStudentFeedback)
+(strExTypeForPred forceAppliedToObj DesignStudentFeedback)
+
+(strExTypeForPred netTorque DesignStudentFeedback)
+(strExTypeForPred torqueAppliedToObj DesignStudentFeedback)
+
+(strExTypeForPred connectedTo-Directly DesignStudentFeedback)
+(strExTypeForPred enmeshed DesignStudentFeedback)
+
+(strExTypeForPred sufficientlyConstrained DesignStudentFeedback)
+
+;;(strExTypeForPred hasContactSurface DesignStudentFeedback) ;; strexes itself
+;;(strExTypeForPred forceAt DesignStudentFeedback)
+
+(strExTypeForPred functionAchievedVia DesignStudentFeedback)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rules (explanations)
+
+;;; Basic rule
+(<== (strExFor ?fact DesignStudentFeedback ?results)
+     (strExTypeFor ?fact DesignStudentFeedback)
+     (useBasicStrExFor ?fact)     
+     (evaluate ?results
+       (TheClosedRetrievalSetOf ?antecedent
+         (and (wmAntecedentOf ?fact ?antecedent)
+              (strExTypeFor ?antecedent DesignStudentFeedback)
+              (noArgumentHasPredicate ?antecedent isa)
+              (noArgumentHasPredicate ?antecedent inKB)
+              (noArgumentHasPredicate ?antecedent <==))))
+     (different ?results (TheSet)))
+
+(<== (useBasicStrExFor ?fact)
+     ;; true if we should use the basic rule for this fact
+     ;;    (if not, some other rule probably handles this case)
+     (operatorFormulas ?predicate ?fact)
+     (different ?predicate dbContradiction)
+     (different ?predicate dbUnproven)
+     (different ?predicate dbProven)
+     (different ?predicate ist-Information)
+     (different ?predicate netForce)
+     (different ?predicate netTorque)
+     (different ?predicate transConstraint)
+     (different ?predicate transMotion)
+     (different ?predicate rotConstraint)
+     (different ?predicate sufficientlyConstrained))
+
+(<== (useBasicStrExFor (ist-Information ?mt ?fact))
+     (useBasicStrExFor ?fact))
+
+;; TODO-MAYBE: If this approach generalizes, make the basic rule part of strEx
+;;             and change useBasicStrExFor to take in the strExType as well
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dbContradictions --> their reasons
+
+;; fall through ist-information
+(<== (strExFor (ist-Information ?dbmt (dbContradiction ?falseFact ?reason))
+               DesignStudentFeedback ?results)
+     (strExFor (dbContradiction ?falseFact ?reason) DesignStudentFeedback
+               ?results))
+
+(<== (strExFor (dbContradiction ?falseFact ?reason)
+               DesignStudentFeedback ?results)
+     (strExTypeFor ?reason DesignStudentFeedback)
+     (operatorFormulas ?predicate ?reason)
+     (different ?predicate dbContradiction)
+     (unifies ?results (TheList ?reason)))
+
+(<== (strExFor (dbContradiction ?falseCompoundFact 
+                                (dbContradiction ?falseFact ?reason))
+               DesignStudentFeedback ?results)
+     (strExTypeFor ?reason DesignStudentFeedback)
+     (strExFor (dbContradiction ?falseFact ?reason)
+               DesignStudentFeedback ?results))
+
+(<== (strExFor (dbContradiction ?falseCompoundFact (dbProven ?provenFact))
+               DesignStudentFeedback ?results)
+     (strExTypeFor ?provenFact DesignStudentFeedback)
+     (unifies ?results (TheList ?provenFact)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dbUnprovens --> their reasons
+
+
+
+;; choose every antecedent that we could explain
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; trans motion: 3 cases
+
+;;; No motion; No Net Force
+
+(<== (strExFor (ist-Information ?mt (transMotion ?obj1 ZeroQVector))
+               DesignStudentFeedback ?results)
+     (lookupOnly
+      (ist-Information ?mt (netForce ?obj1 ZeroQVector)))
+     (unifies ?results
+       (TheList
+        (ist-Information ?mt (netForce ?obj1 ZeroQVector)))))
+
+
+;;; No motion; Some Net Force
+
+(<== (strExFor (ist-Information ?mt (transMotion ?obj1 ZeroQVector))
+               DesignStudentFeedback ?results)
+     (lookupOnly
+      (ist-Information ?mt (netForce ?obj1 ?dir)))
+     (different ?dir ZeroQVector)     
+     (and 
+          (wmAntecedentOf 
+           (ist-Information ?mt (transMotion ?obj1 ZeroQVector)) ?antes)
+          (unifies ?antes 
+            (ist-Information ?mt (uninferredSentence 
+                                  (notSufficientlyConstrained ?obj1 ?dir)))))
+     (unifies ?results
+       (TheList
+        (ist-Information ?mt (sufficientlyConstrained ?obj1 ?dir))
+        (ist-Information ?mt (netForce ?obj1 ?dir)))))
+
+
+;;; Some motion; Net Force same direction as motion
+
+(<== (strExFor (ist-Information ?mt (transMotion ?obj1 ?dir))
+               DesignStudentFeedback ?results)
+     (different ?dir ZeroQVector)
+     (and 
+          (wmAntecedentOf 
+           (ist-Information ?mt (transMotion ?obj1 ?dir)) ?antes)
+          (unifies ?antes 
+            (ist-Information ?mt (netForce ?obj1 ?dir))))
+     (unifies ?results
+       (TheList
+        (ist-Information ?mt (netForce ?obj1 ?dir)))))
+
+;;; Some motion; Net Force different direction from motion
+
+(<== (strExFor (ist-Information ?mt (transMotion ?obj1 ?dir1))
+               DesignStudentFeedback ?results)
+     (different ?dir1 ZeroQVector)
+     (and 
+          (wmAntecedentOf 
+           (ist-Information ?mt (transMotion ?obj1 ?dir1)) ?antes)
+          (unifies ?antes 
+            (ist-Information ?mt (netForce ?obj1 ?dir2)))
+          (different ?dir1 ?dir2))
+     (unifies ?results
+       (TheList
+        (ist-Information ?mt (netForce ?obj1 ?dir2))
+        (ist-Information ?mt (transConstraint ?obj1 ?dir2)))))
+
+(<== (strExFor (ist-Information ?mt (transMotion ?obj AmbigQVector))
+               DesignStudentFeedback ?results)
+     (evaluate ?results
+       (SetToListFn
+        (TheClosedRetrievalSetOf ?force
+          (and (lookupOnly
+                (ist-Information ?mt (forceAppliedToObj ?obj ?dir ?source)))
+               (unifies (ist-Information ?mt 
+                          (forceAppliedToObj ?obj ?dir ?source)) ?force))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rot motion
+
+;;TODO: make it so it only explains why it can't rotate in the given dir.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Net force
+
+;; Net force = something -> forces applied to the object
+(<== (strExFor (ist-Information ?mt (netForce ?obj ?netDir))
+               DesignStudentFeedback ?results)
+     (different ?netDir ZeroQVector)
+     (evaluate ?results
+       (SetToListFn
+        (TheClosedRetrievalSetOf ?force
+          (and (lookupOnly
+                (ist-Information ?mt (forceAppliedToObj ?obj ?dir ?source)))
+               (unifies (ist-Information ?mt 
+                          (forceAppliedToObj ?obj ?dir ?source)) ?force))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Net torque
+
+;;; NT = 0; no torques on object
+
+#|  ;; But we don't know how to SAY this...
+(<== (strExFor (ist-Information ?mt (netTorque ?obj ZeroRot))
+               DesignStudentFeedback ?results)
+     (ist-Information ?mt 
+       (uninferredSentence (torqueAppliedToObj ?obj ?rotdir ?source)))
+     (unifies 
+      (TheList (ist-Information ?mt 
+                 (uninferredSentence 
+                  (torqueAppliedToObj ?obj ?rotdir ?source))))
+      ?results))
+|#
+
+;;; NT != 0
+(<== (strExFor (ist-Information ?mt (netTorque ?obj ?netDir))
+               DesignStudentFeedback ?results)
+     (different ?netDir ZeroRot)
+     (evaluate ?results
+       (SetToListFn
+        (TheClosedRetrievalSetOf ?torque
+          (and (lookupOnly 
+                (ist-Information ?mt (torqueAppliedToObj ?obj ?rotdir ?source)))
+               (unifies (ist-Information ?mt 
+                          (torqueAppliedToObj ?obj ?rotdir ?source)) 
+                        ?torque))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; torque applied to object
+
+;;(<== (strExFor (torqueAppliedToObj ?obj ?rotdir ?source)
+;;               DesignStudentFeedback ?results)
+     
+     ;; if the antecedents include force at, replace them with their 
+     ;; forceappliedtoobj
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; force applied to object from another object
+
+(<== (strExFor (ist-Information ?mt (forceAppliedToObj ?obj ?dir ?source))
+               DesignStudentFeedback ?results)
+     (wmAntecedentOf 
+      (ist-Information ?mt 
+        (forceAppliedToObj ?obj ?dir ?source)) ?ante1)
+     (unifies ?ante1
+       (ist-Information ?mt (hasContactSurface ?obj ?source ?surf)))
+
+     (wmAntecedentOf 
+      (ist-Information ?mt
+        (forceAppliedToObj ?obj ?dir ?source)) ?ante2)
+     (unifies ?ante2
+       (ist-Information ?mt (forceAppliedToSurf ?surf ?fAtDir ?source)))
+
+     (wmAntecedentOf
+      (ist-Information ?mt
+        (forceAppliedToSurf ?surf ?fAtDir ?source)) ?ante3)
+     (unifies ?ante3 
+       (ist-Information ?mt (forceAt ?surf2 ?fAtDir ?source)))
+
+     (wmAntecedentOf
+      (ist-Information ?mt
+        (forceAt ?surf2 ?fAtDir ?source)) ?ante4)
+     (unifies ?ante4
+       (ist-Information ?mt (forceAppliedToObj ?source ?fdir ?source2)))
+     
+     (unifies ?results
+       (TheList (ist-Information ?mt (hasContactSurface ?obj ?source ?surf))
+                (ist-Information ?mt (forceAppliedToObj 
+                                      ?source ?fdir ?source2)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; torque applied to object from another object
+
+(<== (strExFor (ist-Information ?mt (torqueAppliedToObj ?obj ?dir ?source))
+               DesignStudentFeedback ?results)
+     (wmAntecedentOf 
+      (ist-Information ?mt 
+        (torqueAppliedToObj ?obj ?dir ?source)) ?ante1)
+     (unifies ?ante1
+       (ist-Information ?mt (hasContactSurface ?source ?obj ?surf)))
+
+     (wmAntecedentOf 
+      (ist-Information ?mt
+        (torqueAppliedToObj ?obj ?dir ?source)) ?ante2)
+     (unifies ?ante2
+       (ist-Information ?mt (forceAt ?surf ?fAtDir ?source)))
+
+     (wmAntecedentOf
+      (ist-Information ?mt
+        (forceAt ?surf ?fAtDir ?source)) ?ante3)
+     (unifies ?ante3
+       (ist-Information ?mt (forceAppliedToObj ?source ?fdir ?source2)))
+     
+     (unifies ?results
+       (TheList (ist-Information ?mt (hasContactSurface ?source ?obj ?surf))
+                (ist-Information ?mt (forceAppliedToObj 
+                                      ?source ?fdir ?source2)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; transConstraint
+
+
+(<== (strExFor (ist-Information ?mt (transConstraint ?obj ?dir1))
+               DesignStudentFeedback ?results)
+     (lookupOnly (ist-Information ?mt (isa ?obj FixedObject)))
+     (unifies ?results
+       (TheList (ist-Information ?mt (isa ?obj FixedObject)))))
+
+(<== (strExFor (ist-Information ?mt (transConstraint ?obj ?dir1))
+               DesignStudentFeedback ?results)
+     (lookupOnly (ist-Information ?mt (isa ?obj FixedAxisObject)))
+     (unifies ?results
+       (TheList (ist-Information ?mt (isa ?obj FixedAxisObject)))))
+
+
+(<== (strExFor (ist-Information ?mt (transConstraint ?obj1 ?dir1))
+               DesignStudentFeedback ?results)
+     (lookupOnly
+      (ist-Information ?mt (uninferredSentence (isa ?obj1 FixedObject))))
+     (and 
+          (wmAntecedentOf 
+           (ist-Information ?mt (transConstraint ?obj1 ?dir1)) ?antes)
+          (unifies ?antes 
+            (ist-Information ?mt (uninferredSentence 
+                                  (notSufficientlyConstrained ?obj2 ?dir)))))
+     (lookupOnly (ist-Information ?mt (hasContactSurface ?obj1 ?obj2 ?surf)))
+     (unifies ?results
+       (TheList
+        (ist-Information ?mt (hasContactSurface ?obj1 ?obj2 ?surf))
+        (ist-Information ?mt (sufficientlyConstrained ?obj2 ?dir)))))
+
+(<== (strExFor (ist-Information ?mt (transConstraint ?obj1 ?dir1))
+               DesignStudentFeedback ?results)
+     (lookupOnly
+      (ist-Information ?mt (uninferredSentence (isa ?obj1 FixedObject))))
+     (and 
+          (wmAntecedentOf 
+           (ist-Information ?mt (transConstraint ?obj1 ?dir1)) ?antes)
+          (unifies ?antes 
+            (ist-Information ?mt (connectedTo-Directly ?obj2 ?obj1))
+            (ist-Information ?mt (transConstraint ?obj2 ?dir1)))
+     (unifies ?results
+       (TheList  ;; don't need to bother pointing out that the objects are rigid
+        (ist-Information ?mt (connectedTo-Directly ?obj2 ?obj1))
+        (ist-Information ?mt (transConstraint ?obj2 ?dir1))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rotConstraint
+
+(<== (strExFor (ist-Information ?mt (rotConstraint ?obj ?rotdir))
+               DesignStudentFeedback ?results)
+     (lookupOnly (ist-Information ?mt (isa ?obj FixedObject)))
+     (unifies ?results
+       (TheList (ist-Information ?mt (isa ?obj FixedObject)))))
+
+(<== (strExFor (ist-Information ?mt (rotConstraint ?obj1 ?rotdir))
+               DesignStudentFeedback ?results)
+     (lookupOnly 
+      (ist-Information ?mt (uninferredSentence (isa ?obj1 FixedObject))))
+     (and 
+          (wmAntecedentOf 
+           (ist-Information ?mt (rotConstraint ?obj1 ?rotdir)) ?antes)
+          (unifies ?antes 
+            (ist-Information ?mt (uninferredSentence 
+                                  (notSufficientlyConstrained ?obj2 ?dir)))))
+     (lookupOnly 
+      (ist-Information ?mt (hasContactSurface ?obj1 ?obj2 ?surf)))
+     (unifies ?results
+       (TheList
+        (ist-Information ?mt (hasContactSurface ?obj1 ?obj2 ?surf))
+        (ist-Information ?mt (sufficientlyConstrained ?obj2 ?dir)))))
+
+
+(<== (strExFor (ist-Information ?mt (rotConstraint ?obj1 ?rotdir))
+               DesignStudentFeedback ?results)
+     (lookupOnly (ist-Information ?mt (connectedTo-Directly ?obj1 ?obj2)))
+     (lookupOnly (ist-Information ?mt (rotConstraint ?obj2 ?rotdir)))
+     (unifies ?results
+       (TheList (ist-Information ?mt (connectedTo-Directly ?obj1 ?obj2))
+                (ist-Information ?mt (rotConstraint ?obj2 ?rotdir)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;     
+;;; sufficientlyConstrained
+
+(<== (strExFor (ist-Information ?mt (sufficientlyConstrained ?obj ?dir))
+               DesignStudentFeedback ?results)
+     (lookupOnly
+      (ist-Information ?mt (isa ?obj FixedObject)))
+     (unifies ?results
+       (TheList (ist-Information ?mt (isa ?obj FixedObject)))))
+
+(<== (strExFor (ist-Information ?mt (sufficientlyConstrained ?obj ?dir))
+               DesignStudentFeedback ?results)
+     (ist-Information ?mt (uninferredSentence (isa ?obj FixedObject)))
+     (evaluate ?results
+       (TheClosedRetrievalSetOf ?antecedent
+         (and (wmAntecedentOf  
+               (ist-Information ?mt (sufficientlyConstrained ?obj ?dir))
+               ?antecedent)
+              (strExTypeFor ?antecedent DesignStudentFeedback)
+              (noArgumentHasPredicate ?antecedent isa)
+              (noArgumentHasPredicate ?antecedent inKB)
+              (noArgumentHasPredicate ?antecedent <==)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; functionAchievedVia (with nil contradiction)
+
+;; use generic instructions
+(<== (strExFor 
+      (dbContradiction 
+       (ist-Information ?context 
+         (functionAchievedVia ?function ?way ?obj-list ?state-list))
+       nil) DesignStudentFeedback ?results)
+     (instructionsForAchievingFunction ?function ?way ?results))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

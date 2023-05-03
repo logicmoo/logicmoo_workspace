@@ -1,0 +1,145 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ir-plans.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 28, 2011 22:43:09
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Monday, January 31, 2011 at 16:04:58 by forbus
+;;;; ---------------------------------------------------------------------------
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Material below is the start of an implementation that avoided using a reasoning
+;;; source.  It has lost out to a source-based implementation, but I'm leaving it around
+;;; just in case.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Resolving direct influences
+;;;
+
+;; Finding out whether a quantity is directly influenced
+;;;(<== (directlyInfluencedQuantity ?q ?state)
+;;;     (wmOnly (lookupOnly
+;;;              (directInfluencesOn ?q ?state ?+s ?-s)))
+;;;     (wmOnly (lookupOnly
+;;;              (indirectInfluencesOn ?q ?state (TheSet) (TheSet))))
+;;;     (different ?+s (TheSet)))
+;;;
+;;;(<== (directlyInfluencedQuantity ?q ?state)
+;;;     (wmOnly (lookupOnly
+;;;              (directInfluencesOn ?q ?state ?+s ?-s)))
+;;;     (wmOnly (lookupOnly
+;;;              (indirectInfluencesOn ?q ?state (TheSet) (TheSet))))
+;;;     (different ?-s (TheSet)))
+;;;
+;;;(<== (resolvedDsValue ?q ?state ?value)
+;;;     (wmOnly (directlyInfluencedQuantity ?q ?state))
+;;;     (directInfluencesOn ?q ?state ?+s ?-s)
+;;;     (evaluate ?+inputs (MapFunctionOverList SecondInListFn ?+s))
+;;;     (evaluate ?-inputs (MapFunctionOverList SecondInListFn ?-s))
+;;;     (evaluate ?+simplified (SubtractListElementsFromList ?+inputs ?-inputs))
+;;;     (evaluate ?-simplified (SubtractListElementsFromList ?-inputs ?+inputs))
+;;;     (determineDirectInfluenceOutcomeOn
+;;;      ?q ?state ?+simplified ?-simplified ?value))
+;;;
+;;;(<== (determineDirectInfluenceOutcomeOn ?q ?state ?+s ?-s 1)
+;;;     (evaluate True (NonEmptySetOrListFn ?+s))
+;;;     (evaluate True (EmptySetOrListFn ?-s)))
+;;;     
+;;;(<== (determineDirectInfluenceOutcomeOn ?q ?state ?+s ?-s -1)
+;;;     (evaluate True (EmptySetOrListFn ?+s))
+;;;     (evaluate True (NonEmptySetOrListFn ?-s))) 
+;;;
+;;;(<== (determineDirectInfluenceOutcomeOn ?q ?state ?+s ?-s 0)
+;;;     (evaluate True (EmptySetOrListFn ?+s))
+;;;     (evaluate True (EmptySetOrListFn ?-s)))
+;;;
+;;;(<== (determineDirectInfluenceOutcomeOn ?q ?state ?+s ?-s Ambig)
+;;;     (evaluate True (NonEmptySetOrListFn ?+s))
+;;;     (evaluate True (NonEmptySetOrListFn ?-s)))
+;;;
+;;;
+;;;;;;; Intermediate results needed for resolving indirect influences
+;;;
+;;;(<== (positiveIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop ?q ?constrainer) ?source))
+;;;     (wmOnly (dsValue ?constrainer 1)))
+;;;
+;;;(<== (positiveIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop- ?q ?constrainer) ?source))
+;;;     (wmOnly (dsValue ?constrainer -1)))
+;;;
+;;;(<== (negativeIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop ?q ?constrainer) ?source))
+;;;     (wmOnly (dsValue ?constrainer -1)))
+;;;
+;;;(<== (negativeIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop ?q ?constrainer) ?source))
+;;;     (wmOnly (dsValue ?constrainer -1)))
+;;;
+;;;(<== (ambiguousIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop ?q ?constrainer) ?source))
+;;;     (wmOnly (dsValue ?constrainer Ambig)))
+;;;
+;;;(<== (ambiguousIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop- ?q ?constrainer) ?source))
+;;;     (wmOnly (dsValue ?constrainer Ambig)))
+;;;
+;;;(<== (unknownIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop ?q ?constrainer) ?source))
+;;;     (wmOnly (uninferredSentence (dsValue ?constrainer ?v))))
+;;;
+;;;(<== (unknownIndirectInfluenceOn ?q ?constrainer)
+;;;     (wmOnly (sourceOfInfluence
+;;;              (qprop- ?q ?constrainer) ?source))
+;;;     (wmOnly (uninferredSentence (dsValue ?constrainer ?v))))
+;;;
+;;;(<== (allIndirectInfluencesOnKnown ?q)
+;;;     (uninferredSentence 
+;;;      (wmOnly (unknownIndirectinfluenceOn ?q ?constrainer))))
+;;;
+;;;(<== (unambiguousIndirectInfluenceInputsOn ?q)
+;;;     (wmOnly (allIndirectInfluencesOnKnown ?q))
+;;;     (uninferredSentence 
+;;;      (wmOnly (ambiguousIndirectInfluenceOn ?q ?constrainer))))
+
+   
+;;; Indirect influences
+
+;;;(defSuggestion ResolvedDsValue
+;;;    (resolvedDsValue ?q ?state 1)
+;;;  :subgoals ((indirectInfluencesOn ?q ?+s (TheSet))
+;;;             (different ?+s (TheSet))
+;;;             (directInfluencesOn ?q (TheSet) (TheSet))))
+;;;
+;;;(defSuggestion ResolvedDsValueNegativeindirect
+;;;    (resolvedDsValue ?q ?state -1)
+;;;  :subgoals ((indirectInfluencesOn ?q (TheSet) ?-s)
+;;;             (different ?-s (TheSet))
+;;;             (directInfluencesOn ?q (TheSet) (TheSet))))
+;;;
+;;;(<== (resolvedDsValue ?q ?state ?value)
+;;;     (indirectInfluencesOn ?q ?+s ?-s)
+;;;     ;; Need to find the signs for the inputs.
+;;;     ;; Doing this without leaving intermediate assertions
+;;;     ;; -- a lot of intermediate assertions -- would seem to
+;;;     ;; require going procedural.
+     
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

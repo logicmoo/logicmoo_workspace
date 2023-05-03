@@ -1,0 +1,117 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: numeric-consistency.lsp
+;;;;    System: Cmmpanions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK 
+;;;;   Created: July 17, 2007 
+;;;;   Purpose: Inferences about numerical consistency problems
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory EquationSolvingRulesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Before solving
+
+
+(isa numericalAssumptionConsistencyProblem Predicate)
+(arity numericalAssumptionConsistencyProblem 1)
+
+(<== (qualitativeProblem ?problem)
+     (wmOnly (termToSolveFor 
+              (TestQueryFn ?problem)
+              (consistent (valueOf ?quantity ?value)) ?value))
+     (tell (numericalAssumptionConsistencyProblem ?problem))
+     (forEffectOnly 
+      (elaborateBasicProblemInformation ?problem)))
+
+;;; elaborateBasicProblemInformation works around odd encodings by Cycorp.
+;;; Right now, the key case is
+;;; (causes-SitProp Pulling-11-3 (and <good stuff>))
+;;; where <good stuff> needs to be believed in the current problem-solving
+;;; microtheory.  
+
+(<== (elaborateBasicProblemInformation ?i-problem)
+     (causes-SitProp ?event ?maybe-stuff)
+     (believeInCurrentMt ?maybe-stuff))
+
+;;; This is simplistic in several ways. 
+;;; 1. We assume no nested ands.
+;;; 2. We ignore other connectives.
+;;; 3. We don't try to check the antecedents of the causal statement,
+;;;       one could imagine nasty problems with explicit conditionals,
+;;;       for example.
+
+(<== (believeInCurrentMt ?maybe-stuff)
+     (operatorFormulas and ?maybe-stuff)
+     (evaluate ?the-list
+       (RestOfListFn (ConsFn TheList ?maybe-stuff)))
+     (everySatisfies ?fact ?the-list
+                     (tell ?fact)))
+
+(<== (believeInCurrentMt ?maybe-stuff)
+     (uninferredSentence (operatorFormulas and ?maybe-stuff))
+     (tell ?fact))
+
+(<== (quantityRelevantForNumericalConsistency 
+      ?problem (MeasurementAtFn ((QPQuantityFn Acceleration) ?obj) ?q-e) (MetersPerSecondPerSecond 0))
+     (quantityMentionedInProblem 
+      ?problem (MeasurementAtFn ((QPQuantityFn Speed) ?obj) ?q-e) Increasing)
+     (quantityMentionedInProblem 
+      ?problem (MeasurementAtFn ((QPQuantityFn Acceleration) ?obj) ?q-e) Constant))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Finding quantities to solve based on the problem statement itself
+;;;
+;;; Information from the answer choices is handled below, 
+;;;   see quantitySuggestedByAnswerChoice.  This is information from
+;;;   the rest of the problem.
+
+(<== (quantityMentionedInProblem ?i-problem (MeasurementAtFn ?q ?e) Increasing)
+     (wmOnly (lookupOnly (increasesThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInProblem ?i-problem (MeasurementAtFn ?q ?e) Decreasing)
+     (wmOnly (lookupOnly (decreasesThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInProblem ?i-problem (MeasurementAtFn ?q ?e) Constant)
+     (wmOnly (lookupOnly (constantThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInProblem ?i-problem (MeasurementAtFn ?q ?e) Zero)
+     (wmOnly (lookupOnly (zeroThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInProblem ?i-problem (MeasurementAtFn ?q ?e) Positive)
+     (wmOnly (lookupOnly (positiveThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInProblem ?i-problem (MeasurementAtFn ?q ?e) Negative)
+     (wmOnly (lookupOnly (negativeThroughoutEvent-Fluent ?q ?e))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; after solving
+
+(<== (selectMultipleChoiceAnswer-NumericConsistency
+      ?problem ?quantity ?ans-quantity ?ans-value ?choice)
+     (qprop ?quantity ?ans-quantity ?problem)
+     (multipleChoiceSingleOptionList ?problem (TheList ?value ?choice))
+     (evaluate True (GreaterThan-UnitValuesFn ?value ?ans-value)))
+
+(<== (selectMultipleChoiceAnswer-NumericConsistency
+      ?problem ?quantity ?ans-quantity ?ans-value ?choice)
+     (qprop- ?quantity ?ans-quantity ?problem)
+     ;;;We need something about which way this is going
+     (multipleChoiceSingleOptionList ?problem (TheList ?value ?choice))
+     (evaluate True (LessThan-UnitValuesFn ?value ?ans-value)))
+
+(<== (qprop- ?q1 ?q2 ?i-problem)
+     (evaluate ?equ-tuples
+       (TheClosedRetrievalSetOf 
+           (?equ ?q ?val ?set) (solveEquationForNumericalValue ?equ ?q ?val ?set)))
+     (qprop-InEquations ?q1 ?q2 ?equ-tuples))
+
+(<== (qprop ?q1 ?q2 ?i-problem)
+     (evaluate ?equ-tuples
+       (TheClosedRetrievalSetOf 
+           (?equ ?q ?val ?set) (solveEquationForNumericalValue ?equ ?q ?val ?set)))
+     (qpropInEquations ?q1 ?q2 ?equ-tuples))
+
+
+      

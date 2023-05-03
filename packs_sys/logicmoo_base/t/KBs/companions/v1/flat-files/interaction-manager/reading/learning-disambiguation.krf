@@ -1,0 +1,418 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: learning-disambiguation.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: November 1, 2010 22:07:47
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(in-microtheory Interaction-ManagerMt)
+
+(isa DisambiguationLearningRun Collection)
+(comment DisambiguationLearningRun "")
+
+(isa disambiguationLearningRunFn Function-Denotational)
+(arity disambiguationLearningRunFn 2)
+(arg1Isa disambiguationLearningRunFn AccessingAnIBT)
+(arg2Isa disambiguationLearningRunFn Integer)
+(resultIsa disambiguationLearningRunFn DisambiguationLearningRun)
+(comment disambiguationLearningRunFn "(disambiguationLearningRunFn ?reading ?num) is the ?num-th DisambiguationLearningRun for the 
+reading ?reading.")
+
+(isa HeuristicWeight Collection)
+(comment HeuristicWeight "An HeuristicWeight is the weight to be given to a heuristic")
+
+(isa heuristicWeightFn FunctionOrFunctionalPredicate)
+(resultIsa heuristicWeightFn EvidenceWeight)
+(arg1Isa heuristicWeightFn RationalNumber)
+(arity heuristicWeightFn 1)
+(comment heuristicWeightFn "heuristicWeightFn casts a rational number to an evidence weight.")
+
+;;; (weightOfDisambiguationMethod Reason Weight)
+;;;(isa weightOfDisambiguationMethod Predicate)
+;;;(arity weightOfDisambiguationMethod 2)
+;;;(arg1Isa weightOfDisambiguationMethod Thing)
+;;;(arg2Isa weightOfDisambiguationMethod heuristicWeightFn)
+;;;(comment weightOfDisambiguationMethod "(weightOfDisambiguationMethod ?reason ?weight)")
+
+;;; (weightOfDisambiguationMethodInRun Reason Weight Run)
+(isa weightOfDisambiguationMethodInRun Predicate)
+(arity weightOfDisambiguationMethodInRun 3)
+(arg1Isa weightOfDisambiguationMethodInRun Thing)
+(arg2Isa weightOfDisambiguationMethodInRun HeuristicWeight)
+(arg3Isa weightOfDisambiguationMethodInRun DisambiguationLearningRun)
+(comment weightOfDisambiguationMethodInRun "(weightOfDisambiguationMethodInRun ?reason ?weight ?run-name)")
+
+(isa temporaryDisambiguationMt Microtheory)
+(comment temporaryDisambiguationMt "temporaryDisambiguationMt is a microtheory sometimes used in working memory to create temporary sets
+of disambiguation heuristics.")
+
+(isa selectedChoiceIndicesFn Function-Denotational)
+(arity selectedChoiceIndicesFn 1)
+(arg1Isa selectedChoiceIndicesFn List)
+(resultIsa selectedChoiceIndicesFn SelectedChoiceIndices)
+
+(isa SelectedChoiceIndices Collection)
+(comment SelectedChoiceIndices "A SelectedChoiceIndices is a representation of the choices that were selected in an EANLU
+disambiguation.")
+
+(isa HeuristicWeightsReinforcementLearningMicrotheory Collection)
+(genls HeuristicWeightsReinforcementLearningMicrotheory Microtheory)
+(comment HeuristicWeightsReinforcementLearningMicrotheory "HeuristicWeightsReinforcementLearningMicrotheory is the collection of microtheories
+uses for disambiguation heuristic weights reinforcement learning.")
+
+(isa latestGeneration Predicate)
+(arity latestGeneration 2)
+(arg1Isa latestGeneration HeuristicWeightsReinforcementLearningMicrotheory)
+(arg2Isa latestGeneration Integer)
+(comment latestGeneration "(latestGeneration ?mt ?int) indicates that the latest generation of reinforcement learning updates for ?mt is ?int.")
+
+;;; This is going to need
+;;; - (or generate) the answer key
+;;; - the list of heuristics to consider
+;;; - file location
+;;; - source-text name
+(isa learnHeuristicWeights ComplexActionPredicate)
+(arity learnHeuristicWeights 6)
+(arg1Isa learnHeuristicWeights InformationBearingThing) ;;; The source text name
+(arg2Isa learnHeuristicWeights Thing) ;;; The file location
+(arg3Isa learnHeuristicWeights SelectedChoiceIndices) ;;; The gold standard answers
+(arg4Isa learnHeuristicWeights AccessingAnIBT) ;;; A reading name
+(arg5Isa learnHeuristicWeights Microtheory) ;;; The microtheory with the list of things to consider
+(arg6Isa learnHeuristicWeights Microtheory) ;;; The microtheory where the weight change information will be stored.
+(comment learnHeuristicWeights "(learnHeuristicWeights ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-mt ?weights-mt)
+attempts to learn heuristic weights and then stores them (and a record of the learning) in ?weights-mt.")
+
+
+;;; (updateHeuristicWeights ?source-text-name ?reading-name ?selected-choice-indices ?heuristic-mt ?weights-mt)
+(isa updateHeuristicWeights ComplexActionPredicate)
+(arity updateHeuristicWeights 5)
+(arg1Isa updateHeuristicWeights InformationBearingThing) ;;; The source text name
+(arg2Isa updateHeuristicWeights AccessingAnIBT)  ;;; A reading name
+(arg3Isa updateHeuristicWeights SelectedChoiceIndices) ;;; The gold standard answers
+(arg4Isa updateHeuristicWeights Microtheory) ;;; The microtheory with the list of heuristics to consider
+(arg5Isa updateHeuristicWeights Microtheory) ;;; The microtheory where the weight change information will be stored.
+(comment updateHeuristicWeights
+  "(updateHeuristicWeights ?source-text-name ?reading-name ?selected-choice-indices ?heuristic-mt ?weights-mt)
+attempts to learn heuristic weights and then stores them (and a record of the learning) in ?weights-mt.")
+
+(isa updateWeightOfEachHeuristic ComplexActionPredicate)
+(arity updateWeightOfEachHeuristic 6)
+(arg1Isa updateWeightOfEachHeuristic InformationBearingThing) ;;; The source text name
+(arg2Isa updateWeightOfEachHeuristic Thing)  ;;; File location
+(arg3Isa updateWeightOfEachHeuristic SelectedChoiceIndices) ;;; The gold standard answers
+(arg4Isa updateWeightOfEachHeuristic AccessingAnIBT) ;;; The reading name
+(arg5Isa updateWeightOfEachHeuristic Microtheory) ;;; The microtheory with the list of heuristics to consider
+(arg6Isa updateWeightOfEachHeuristic Microtheory) ;;; The microtheory where the weight change information will be stored.
+(comment updateWeightOfEachHeuristic
+  "(updateWeightOfEachHeuristic ?source-text-name ?file-location ?gold-selected-choice-indices ?reading-name ?heuristic-mt ?weights-mt)
+updates the weight of each heuristic in ?weights-mt.")
+
+
+;;;(updateWeightOfNextHeuristic ?source-text-name ?heuristic ?gold-selected-choice-indices ?reading-name ?heuristic-mt ?heuristic-weight-mt ?generation)
+(isa updateWeightOfNextHeuristic ComplexActionPredicate)
+(arity updateWeightOfNextHeuristic 7)
+(arg1Isa updateWeightOfNextHeuristic InformationBearingThing) ;;; The source text name
+(arg2Isa updateWeightOfNextHeuristic Thing)  ;;; An expression of a DisambiguationHeuristic
+(arg3Isa updateWeightOfNextHeuristic SelectedChoiceIndices) ;;; The gold standard answers
+(arg4Isa updateWeightOfNextHeuristic AccessingAnIBT) ;;; The reading name
+(arg5Isa updateWeightOfNextHeuristic Microtheory) ;;; The microtheory with the list of heuristics to consider
+(arg6Isa updateWeightOfNextHeuristic Microtheory) ;;; The microtheory where the weight change information will be stored.
+(arg7Isa updateWeightOfNextHeuristic Integer) ;;; The generation
+(comment updateWeightOfNextHeuristic
+  "(updateWeightOfNextHeuristic ?source-text-name ?heuristic ?gold-selected-choice-indices ?reading-name ?heuristic-mt ?heuristic-weight-mt ?generation)
+updates the weight of the heuristic ?heuristic.")
+
+
+;;; (makeAllCSSelections ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+;;; Implemented
+(isa makeAllCSSelections ComplexActionPredicate)
+(arity makeAllCSSelections 4)
+(arg1Isa makeAllCSSelections InformationBearingThing) ;;; The source text name
+(arg2Isa makeAllCSSelections AccessingAnIBT)  ;;; A reading name
+(arg3Isa makeAllCSSelections Microtheory) ;;; The microtheory with the list of heuristics to consider
+(arg4Isa makeAllCSSelections Microtheory) ;;; The microtheory where the weight change information will be stored.
+(comment makeAllCSSelections
+  "(makeAllCSSelections ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+makes all the choice set selections using the already-existing evidences for the reading.")
+
+
+;;; (recordDisambiguationAccuracy ?reading-name ?selected-choice-indices ?heuristic-mt ?generation)
+(isa recordDisambiguationAccuracy ComplexActionPredicate)
+(arity recordDisambiguationAccuracy 4)
+(arg1Isa recordDisambiguationAccuracy AccessingAnIBT) ;;; The microtheory where the weight change information will be stored.
+(arg2Isa recordDisambiguationAccuracy SelectedChoiceIndices)
+(arg3Isa recordDisambiguationAccuracy Microtheory)
+(arg4Isa recordDisambiguationAccuracy Integer)
+(comment recordDisambiguationAccuracy
+  "(recordDisambiguationAccuracy ?reading-name ?selected-choice-indices ?heuristic-weight-mt ?generation)
+records the accuracy of the disambiguation for the round.")
+
+;;;(getDisambiguationAccuracy ?selected-choice-indices ?accuracy)
+(isa getDisambiguationAccuracy Predicate)
+(arity getDisambiguationAccuracy 2)
+(arg1Isa getDisambiguationAccuracy SelectedChoiceIndices)
+(arg2Isa getDisambiguationAccuracy Number)
+(comment getDisambiguationAccuracy "(getDisambiguationAccuracy ?selected-choice-indices ?accuracy) compares ?selected-choice-indices
+to the currently selected choices to get an accuracy rating, from 0 to 1.")
+
+;;;(disambiguationAccuracy ?reading-name ?generation ?accuracy)
+(isa disambiguationAccuracy Predicate)
+(arity disambiguationAccuracy 3)
+(arg1Isa disambiguationAccuracy AccessingAnIBT)
+(arg2Isa disambiguationAccuracy Integer)
+(arg3Isa disambiguationAccuracy Number)
+(comment disambiguationAccuracy "(disambiguationAccuracy ?reading-name ?generation ?accuracy) indicates that before the updates made in the
+?generation generation, accuracy was ?accuracy.")
+
+(isa incrementGeneration ComplexActionPredicate)
+(arity incrementGeneration 1)
+(arg1Isa incrementGeneration Microtheory) ;;; The microtheory where the weight change information will be stored.
+(comment incrementGeneration
+  "(incrementGeneration ?mt) attempts to increment the current generation of learning in ?mt by forgetting our current generation and telling a new fact with the next generation.")
+
+;;; (plansForUpdatingHeuristicWeights ?source-text-name ?source-text-mt ?reading-name ?heuristic-mt ?heuristic-weight-mt ?generation ?selected-choice-indices ?plans)
+(isa plansForUpdatingHeuristicWeights Predicate)
+(arity plansForUpdatingHeuristicWeights 8)
+(arg1Isa plansForUpdatingHeuristicWeights InformationBearingThing)
+(arg2Isa plansForUpdatingHeuristicWeights Microtheory)
+(arg3Isa plansForUpdatingHeuristicWeights AccessingAnIBT)
+(arg4Isa plansForUpdatingHeuristicWeights Microtheory) ;;; The mt with the set of heuristics
+(arg5Isa plansForUpdatingHeuristicWeights Microtheory) ;;; The mt with the set of heuristic weights
+(arg6Isa plansForUpdatingHeuristicWeights Integer)
+(arg7Isa plansForUpdatingHeuristicWeights SelectedChoiceIndices)
+(arg8Isa plansForUpdatingHeuristicWeights Set)
+(comment plansForUpdatingHeuristicWeights "Intended to be used as an outsourced predicate with the last argument open, (plansForUpdatingHeuristicWeights
+?source-text-name ?source-text-mt ?reading-name ?heuristic-mt ?heuristic-weight-mt ?generation ?selected-choice-indices ?plan-list)
+indicates that ?sentence-plan-list is a list that can be used as an executable actionSequence for a plan. The list take the form
+(TheList (updateHeuristicWeights... ) (updateHeuristicWeights...) ...).") 
+
+
+;;;(genNewHeuristicWeight ?source-text-name ?heuristic ?gold-selected-choice-indices ?current-selected-choice-indices ?reading-name (TheList ?heuristic-mt ?heuristic-weight-mt ?generation) ?new-weight)
+(isa genNewHeuristicWeight Predicate)
+(arity genNewHeuristicWeight 7)
+(arg1Isa genNewHeuristicWeight InformationBearingThing)
+(arg2Isa genNewHeuristicWeight Thing) ;;; The heuristic
+(arg3Isa genNewHeuristicWeight SelectedChoiceIndices) ;;; Gold standard's choices
+(arg4Isa genNewHeuristicWeight SelectedChoiceIndices) ;;; This run's choices
+(arg5Isa genNewHeuristicWeight AccessingAnIBT) ;;; The reading
+(arg6Isa genNewHeuristicWeight List)
+(arg7Isa genNewHeuristicWeight HeuristicWeight)
+(comment genNewHeuristicWeight "Intended to be used as an outsourced predicate with the last argument open, (genNewHeuristicWeight
+?source-text-name ?heuristic ?gold-selected-choice-indices ?current-selected-choice-indices 
+(TheList ?heuristic-mt ?heuristic-weight-mt ?generation) ?generation ?new-weight)
+indicates that ?new-weight should be the new weight given to the heuristic in the next generation.") 
+
+(isa currentSourceTextSCI Predicate)
+(arity currentSourceTextSCI 1)
+(arg1Isa currentSourceTextSCI SelectedChoiceIndices)
+(comment currentSourceTextSCI "Intended to be used as an outsourced predicate with the last argument open, (currentSourceTextSCI
+?selected-choice-indices) indicates that ?selected-choice-indices is a representation of the selected choices in the current source text.")
+
+
+;;;(makeSentenceChoices ?source-text-name ?source-text-mt ?reading-name ?sentence-id ?heuristic-set ?heuristic-weight-mt)
+(preconditionForMethod
+ (and
+      (lookupOnly (ist-Information LbrSourceTextsMt (microtheoryForSourceText ?source-text-mt ?source-text-name)))
+      (evaluate ?heuristic-set
+        (TheClosedRetrievalSetOf ?heuristic
+          (ist-Information ?heuristic-mt ?heuristic)))
+      (outsourcedOnly (plansForSentenceCSSelection ?source-text-name ?source-text-mt ?reading-name ?heuristic-set ?heuristic-weight-mt ?sentence-plan-list)))
+ (methodForAction
+  (makeAllCSSelections ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    (doAgentPlan (actionSequence ?sentence-plan-list))))))
+
+;;; This gets called once in each iteration.
+(preconditionForMethod
+ (and
+      ;;; Get the generation
+      (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?generation)))
+ (methodForAction
+  (updateHeuristicWeights ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    ;;; Clear working memory
+    ;;; Process the file
+    ;;; Between these two, they need to read in the file and make all the choices. Why not processSourceTextFromFile? Does that not honor latestGeneration?
+    (doClearWorkingMemory)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (processSourceTextFromFile ?file-loc ?source-text-name ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+       )))
+    (doAgentPlan
+        (actionSequence
+         (TheList
+          (recordDisambiguationAccuracy ?reading-name ?selected-choice-indices ?heuristic-weight-mt ?generation))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (updateWeightOfEachHeuristic ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-mt ?heuristic-weight-mt))))
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (incrementGeneration ?heuristic-weight-mt)
+       )))))))
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (getDisambiguationAccuracy ?selected-choice-indices ?accuracy-rates)))
+ (methodForAction
+  (recordDisambiguationAccuracy ?reading-name ?selected-choice-indices ?heuristic-weight-mt ?generation)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Recording new accuracy measure for a reading of ~A." (?reading-name))
+    (doRecord (ist-Information ?heuristic-weight-mt (disambiguationAccuracy ?reading-name ?generation ?accuracy-rates)))))))
+
+
+;;; (recordDisambiguationAccuracy ?reading-name ?selected-choice-indices ?heuristic-mt ?generation)
+(isa recordAdvancedDisambiguationAccuracy ComplexActionPredicate)
+(arity recordAdvancedDisambiguationAccuracy 4)
+(arg1Isa recordAdvancedDisambiguationAccuracy AccessingAnIBT) ;;; The microtheory where the weight change information will be stored.
+(arg2Isa recordAdvancedDisambiguationAccuracy SelectedChoiceIndices)
+(arg3Isa recordAdvancedDisambiguationAccuracy Microtheory)
+(arg4Isa recordAdvancedDisambiguationAccuracy Integer)
+(comment recordAdvancedDisambiguationAccuracy
+  "(recordAdvancedDisambiguationAccuracy ?reading-name ?selected-choice-indices ?heuristic-weight-mt ?generation)
+records the accuracy of the disambiguation for the round.")
+
+;;;(getAdvancedDisambiguationAccuracy ?selected-choice-indices ?accuracy)
+(isa getAdvancedDisambiguationAccuracy Predicate)
+(arity getAdvancedDisambiguationAccuracy 2)
+(arg1Isa getAdvancedDisambiguationAccuracy AccessingAnIBT)
+(arg2Isa getAdvancedDisambiguationAccuracy SelectedChoiceIndices)
+(arg3Isa getAdvancedDisambiguationAccuracy Microtheory)
+(arg4Isa getAdvancedDisambiguationAccuracy List)
+(comment getAdvancedDisambiguationAccuracy "(getAdvancedDisambiguationAccuracy ?reading-name ?selected-choice-indices ?storage-mt ?accuracy-rates) compares ?selected-choice-indices
+to the currently selected choices to get an accuracy rating, from 0 to 1. This is deprecated, don't use it.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (getAdvancedDisambiguationAccuracy ?reading-name ?selected-choice-indices ?storage-mt ?accuracy-rates)))
+ (methodForAction
+  (recordAdvancedDisambiguationAccuracy ?reading-name ?selected-choice-indices ?storage-mt ?generation)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Recording new accuracy measure for a reading of ~A." (?reading-name))
+    (doRecord (ist-Information ?storage-mt (disambiguationAccuracy ?reading-name ?generation ?accuracy-rates)))))))
+
+;;; Done
+(preconditionForMethod
+ (and
+      (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?generation))
+      (ist-Information LbrSourceTextsMt (microtheoryForSourceText ?source-text-mt ?source-text-name))
+      ;;; For each heuristic, calculate how it should be updated (actually just calculate a new weight for it).
+      ;;; This gets a list of plans to call on each heuristic
+      (plansForUpdatingHeuristicWeights ?source-text-name ?source-text-mt ?reading-name ?heuristic-mt ?heuristic-weight-mt ?generation ?selected-choice-indices ?plans))
+ (methodForAction
+  (updateWeightOfEachHeuristic ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-mt ?heuristic-weight-mt)
+  (actionSequence
+   ?plans)))
+
+;;; Works
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentSourceTextSCI ?current-selected-choice-indices))
+      ;;; For each heuristic, calculate how it should be updated (actually just calculate a new weight for it).
+      (outsourcedOnly (genNewHeuristicWeight ?source-text-name ?heuristic ?gold-selected-choice-indices ?current-selected-choice-indices ?reading-name (TheList ?heuristic-mt ?heuristic-weight-mt ?generation) ?new-weight))
+      (evaluate ?next-generation (PlusFn 1 ?generation))
+      
+      )
+ (methodForAction
+  (updateWeightOfNextHeuristic ?source-text-name ?heuristic ?gold-selected-choice-indices ?reading-name ?heuristic-mt ?heuristic-weight-mt ?generation)
+  (actionSequence
+   (TheList
+    ;;; Tell it the new heuristic weight
+    (doRecord (ist-Information ?heuristic-weight-mt
+                (d::weightOfDisambiguationMethodInRun ?heuristic ?new-weight (d::disambiguationLearningRunFn ?reading-name ?next-generation))))
+    ))))
+
+(preconditionForMethod
+ (and
+      (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?generation))
+      (evaluate ?next-generation (PlusFn 1 ?generation)))
+ (methodForAction
+  (incrementGeneration ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    ;;; Tell it the new generation
+    (doRecord (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?next-generation)))
+    ;;; Forget the old
+    (doForget (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?generation)))
+    ;;; Talking about my generation
+    (doAnnounce "~%Generation incremented - now ~A." (next-generation))
+    
+    
+    ))))
+
+
+
+;;; This gets called once at the beginning.
+;;; It needs to make a gold standard reading if it isn't given one.
+(preconditionForMethod
+ (and
+      (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?old-generation))
+      (evaluate ?initial-weights
+        (TheClosedRetrievalSetOf
+            (ist-Information ?heuristic-weight-mt (weightOfDisambiguationMethodInRun
+                                                   ?heuristic-name
+                                                   (heuristicWeightFn 0.7)
+                                                   (disambiguationLearningRunFn ?reading-name 0)))
+          (ist-Information ?heuristic-disambiguation-mt ?heuristic-name))))
+ (methodForAction
+  (learnHeuristicWeights ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-disambiguation-mt ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    ;;; Seed the initial values we need in order to start
+    ;;; This needs to first forget whatever the current one is.
+    (doForget (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?old-generation)))
+    (doRecord (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt 0)))
+    (doRecordMembers ?initial-weights)
+    
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (updateHeuristicWeights
+        ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-disambiguation-mt ?heuristic-weight-mt))))))))
+
+;;; This is just the version that is used if there isn't any existing generation
+(preconditionForMethod
+ (and
+      (uninferredSentence
+       (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt ?old-generation)))
+      (evaluate ?initial-weights
+        (TheClosedRetrievalSetOf
+            (ist-Information ?heuristic-weight-mt (weightOfDisambiguationMethodInRun
+                                                   ?heuristic-name
+                                                   (heuristicWeightFn 0.7)
+                                                   (disambiguationLearningRunFn ?reading-name 0)))
+          (ist-Information ?heuristic-disambiguation-mt ?heuristic-name))))
+ (methodForAction
+  (learnHeuristicWeights ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-disambiguation-mt ?heuristic-weight-mt)
+  (actionSequence
+   (TheList
+    ;;; Seed the initial values we need in order to start
+    ;;; This needs to first forget whatever the current one is.
+    (doRecord (ist-Information ?heuristic-weight-mt (latestGeneration ?heuristic-weight-mt 0)))
+    (doRecordMembers ?initial-weights)
+    
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (updateHeuristicWeights
+        ?source-text-name ?file-loc ?selected-choice-indices ?reading-name ?heuristic-disambiguation-mt ?heuristic-weight-mt))))))))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

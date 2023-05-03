@@ -1,0 +1,284 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: dq-rules.meld
+;;;;    System: CogSketch
+;;;;    Author: Maria Chang
+;;;;   Created: March 17, 2011 11:05:46
+;;;;   Purpose: Rules for inferring dqValue from visual quantities
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory NuSketchMt :exclude-globals t)
+(isa NuSketchDQA Microtheory)
+(comment NuSketchDQA
+  "Rules for handling NuSketch-specific differential qualitative analyses.")
+(genlMt NuSketchReasoningCollectorMt NuSketchDQA)
+(genlMt NuSketchDQA ConceptualPS-QQRMt)
+
+(in-microtheory NuSketchDQA :exclude-globals t)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Rules for calculating DQ values via visual comparison
+;;
+;; The general framework for DQ analysis is now in the DQAnalysisMt, see QQR\dq-analysis.meld
+;; for more information.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Entry Point: Strategies for figuring out DQ values
+
+
+;;;; This rule makes it possible to use the SetupDQSolutionAnalysis suggestion
+;;;; defined in fire\...\dq-analysis.meld for ranking problems
+(<== (contextForCase ?case ?qp-state-mt)
+     (unifies ?case (AskCaseFn (TheSetOf ?x (ist-Information ?bundle-mt ?x))))
+     (lookupOnly (stateForRankingProblem ?qp-state-mt ?bundle-mt)))
+
+(<== (contextForCase ?case ?bundle-mt)
+     (unifies ?case (AskCaseFn (TheSetOf ?x (ist-Information ?bundle-mt ?x))))
+     (evaluate (TheSet)
+       (TheClosedRetrievalSetOf ?qp-state-mt
+         (lookupOnly (stateForRankingProblem ?qp-state-mt ?case)))))
+       
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; SolveDQviaVisualQuantities     
+;;;; MDC: In addition to the general strategies defined in dq-analysis.meld, we need
+;;;; ways to calculate DQ values between quantities that are measured visually.
+
+(defSuggestion SolveDQviaVisualQuantities
+    (solveDQValue ?quantity ?target-q ?base-mt ?target-mt ?m ?value)
+  :subgoals ((ist-Information ?base-mt (visuallyDerivedValueOf ?quantity ?v1))
+             (ist-Information ?target-mt (visuallyDerivedValueOf ?target-q ?v2))
+             (deriveDQValueFromNumbers ?v1 ?v2 ?value))
+  :documentation "SolveDQViaVisualQuantities looks for things that can be
+calculated visually, either by fetching the information from sketched annotations
+or by doing some ink processing.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; visuallyDerivedValueOf
+;;;; this is a specialization of valueOf
+
+(isa visuallyDerivedValueOf BinaryPredicate)
+(genlPreds visuallyDerivedValueOf valueOf)
+(arity visuallyDerivedValueOf 2)
+(arg1Isa visuallyDerivedValueOf ContinuousQuantity)
+(arg2Isa visuallyDerivedValueOf ScalarOrVectorInterval)
+(comment visuallyDerivedValueOf
+  "A binary predicate that says that the value of the first argument
+is equal to the second.  The equality is derived visually, either
+by using information from a #$VisualQuantity or some other visual
+computation.  visuallyDerivedValueOf is specialization of #$valueOf .")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; visuallyDerivedValueOf -- rules for visual quantity annotations
+
+;; If the quantity is represented using QuantityDenotedByAnnotation 
+;; and visualQuantityQuantitativeMeasurement, then this rule applies.
+(<== (visuallyDerivedValueOf ?visual-quantity ?value)
+     (unifies ?visual-quantity 
+       (QuantityDenotedByAnnotation ?annotation-object ?quantity-indicator ?annotated-objects))
+     (lookupOnly (visualQuantityQuantitativeMeasurement ?existing-visual-quantity ?value))
+     (unifies ?existing-visual-quantity
+       (QuantityDenotedByAnnotation ?existing-annotation-object ?quantity-indicator ?existing-annotated-objects))
+     (subsetOf ?annotated-objects ?existing-annotated-objects))
+
+;; If the quantity is represented using QuantityDenotedByAnnotation 
+;; and visualQuantityMeasurement, then this rule applies.
+(<== (visuallyDerivedValueOf ?visual-quantity ?value)
+     (unifies ?visual-quantity 
+       (QuantityDenotedByAnnotation ?annotation-object ?quantity-indicator ?annotated-objects))
+     (lookupOnly (visualQuantityMeasurement ?existing-visual-quantity ?value))
+     (unifies ?existing-visual-quantity
+       (QuantityDenotedByAnnotation ?existing-annotation-object ?quantity-indicator ?existing-annotated-objects))
+     (subsetOf ?annotated-objects ?existing-annotated-objects))
+
+;; If the quantity is some other quantity type (e.g. MassFn), and its corresponding
+;; visual quantity is measured with visualQuantityQuantitativeMeasurement, then this
+;; rule applies
+(<== (visuallyDerivedValueOf ?qp-quantity ?value)
+     (operatorFormulas ?qp-q-fn ?qp-quantity)  ;; e.g. MassFn
+     (formulaArgument ?qp-quantity 1 ?object)  ;; e.g. block
+     (visualQuantityIndicatorForQPQuantityFn ?vqi ?qp-q-fn)
+     (lookupOnly
+      (visualQuantityQuantitativeMeasurement
+       (QuantityDenotedByAnnotation
+        ?annotation-obj ?vqi ?annotated-objs)
+      ?value))
+     (subsetOf (TheSet ?object) ?annotated-objs))
+
+;; If the quantity is some other quantity type (e.g. MassFn), and its corresponding
+;; visual quantity is measured with visualQuantityMeasurement, then this
+;; rule applies
+(<== (visuallyDerivedValueOf ?qp-quantity ?value)
+     (operatorFormulas ?qp-q-fn ?qp-quantity)  ;; e.g. MassFn
+     (formulaArgument ?qp-quantity 1 ?object)  ;; e.g. block
+     (visualQuantityIndicatorForQPQuantityFn ?vqi ?qp-q-fn)
+     (lookupOnly
+      (visualQuantityMeasurement
+       (QuantityDenotedByAnnotation
+        ?annotation-obj ?vqi ?annotated-objs)
+      ?value))
+     (subsetOf (TheSet ?object) ?annotated-objs))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; visuallyDerivedValueOf -- rules for vector quantity annotations
+
+(<== (visuallyDerivedValueOf (2DNetForceFn ?object ?axis) ?value)
+     (groundExpression ?axis)
+     (combinedVectorsAlongAxis ((VectorQuantityOfFn ForceVector) ?object) ?axis ?value))
+
+(<== (visuallyDerivedValueOf (2DNetVelocityFn ?object ?axis) ?value)
+     (groundExpression ?axis)
+     (combinedVectorsAlongAxis ((VectorQuantityOfFn LinearVelocityVector) ?object) ?axis ?value))
+
+(<== (visuallyDerivedValueOf (2DNetAccelerationFn ?object ?axis) ?value)
+     (groundExpression ?axis)
+     (combinedVectorsAlongAxis ((VectorQuantityOfFn LinearAccelerationVector) ?object) ?axis ?value))
+
+;; This rule was my attempt to fix the bug where 2.2,3.1,4.1 don't work 
+;; because ?axis is used with 2DNetForceFn when it shouldn't.  That fix
+;; doesn't seem to have worked, however.  I think this part needs
+;; more significant changes to adapt to removal of ?axis as an arg
+;; to the NetForce/Accel/Velocity functions.  --JWW 6/6/2014
+(<== (visuallyDerivedValueOf (1DNetForceFn ?object ?axis) ?value)
+     (groundExpression ?axis)
+     (combinedVectorsAlongAxis 
+      ((VectorQuantityOfFn ForceVector) ?object) ?axis ?value))
+
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; visuallyDerivedValueOf -- rules for other visual computations, like
+;;;; geo distance and angle measurement .. would prefer to not have to
+;;;; make new rules for each new one.
+
+;; AngularDistanceBetween
+(<== (visuallyDerivedValueOf ((QPQuantityFn AngleBetweenVectors) ?v1 ?v2) ?value)
+     (angleBetweenVectors ?v1 ?v2 ?value))
+
+;; Distance between thing and list of things
+(<== (visuallyDerivedValueOf (DistanceFn ?object (CenterOfMassFn ?list)) ?value)
+     (groundExpression ?object)
+     (queryContext ?state)
+     (lookupOnly (stateForScenarioModel ?sm ?state))
+     (lookupOnly (scenarioModelForScenario ?bundle-context ?sm))
+     (ist-Information ?bundle-context
+       (distanceBetween (CentroidPointFn ?object)
+                        (AverageCentroidPointFn ?list)
+                        ?value)))
+
+(<== (visuallyDerivedValueOf ((QPQuantityFn Area) ?obj) ?value)
+     (groundExpression ?obj)
+     (queryContext ?state)
+     (ist-Information ?state (areaOfObject ?obj ?value)))
+
+(<== (visuallyDerivedValueOf ((QPQuantityFn Length) ?obj) ?value)
+     (lookupOnly (localOnly (isa ?obj ArrowDrawnSymbol)))
+     (lookupOnly (glyphRepresentsObject ?g ?obj))
+     (arrowLength ?g ?value))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; combinedVectorsAlongAxis
+
+(isa combinedVectorsAlongAxis TernaryPredicate)
+(arity combinedVectorsAlongAxis 3)
+(arg1Isa combinedVectorsAlongAxis ScalarOrVectorInterval)
+(arg2Isa combinedVectorsAlongAxis QVAxis)
+(arg3Isa combinedVectorsAlongAxis ScalarOrVectorInterval)
+(comment combinedVectorsAlongAxis
+  "combinedVectorsAlongAxis combines a vector quantity across a particular axis.  For example,
+   if there is a block with two forces acting on it, a 20 Newton force pointing right and 
+   a 10 Newton force pointing left, then 
+   (combinedVectorsAlongAxis ((VectorQuantityOfFn ForceVector) block) LeftRightAxis (Newton 10))
+   is true.  See also #$valueOf #$qvAxisAlignedSense.")
+
+(<== (combinedVectorsAlongAxis (?quantity-fn ?object) ?axis ?value)
+     (evaluate ?all-vectors-along-axis
+       (TheClosedRetrievalSetOf ?v
+         (and (valueOf (?quantity-fn ?object) (VectorFn ?mag ?dir))
+              (qvAxisAligned ?dir ?axis))))
+     (different ?all-vectors-along-axis (TheSet))
+     (evaluate ?positives
+       (TheClosedRetrievalSetOf ?mag
+         (and (qvAxisAlignedSense ?axis ?dir Plus)
+              (valueOf (?quantity-fn ?object) (VectorFn ?mag ?dir)))))
+     (evaluate ?negatives 
+       (TheClosedRetrievalSetOf ?mag
+         (and (qvAxisAlignedSense ?axis ?dir Minus)
+              (valueOf (?quantity-fn ?object) (VectorFn ?mag ?dir)))))
+     (evaluate ?value (DifferenceFn (PlusAll ?positives IdentityFn)
+                                    (PlusAll ?negatives IdentityFn))))
+
+
+;; A rule for handling other velocity vectors that are applicable
+;; because one object moves with another.  If more cases like this
+;; arise, I need to think of a more general way to handle this.
+
+(<== (valueOf ((VectorQuantityOfFn LinearVelocityVector) ?object) (VectorFn ?mag ?dir))
+     (lookupOnly (movesWith ?object ?reference-object))
+     (lookupOnly (valueOf ((VectorQuantityOfFn LinearVelocityVector) ?reference-object)
+                          (VectorFn ?mag ?dir))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Below these semicolons live secrets of an ancient past...
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;; Extracting DQ values from sketches requires using information supplied either
+;;;; via annotations or computed directly from the sketch.  For example,
+;;;(visualQuantityMeasurement 
+;;;  (QuantityDenotedByAnnotation Object-284 LengthIndicator 
+;;;    (TheSet Object-282)) (NuSketchCoordinateDistanceFn 2.8836112))
+;;; QuantityDenotedByAnnnotation is a function whose range is VisualQuantity,
+;;; with the assertion above providing a numerical value.  
+
+
+;; force annotations
+;;;(<== (qEqualTo (ForceArrowMagFn ?arrow) ?q)
+;;;     (isa ?arrow ForceArrow)
+;;;     (visualQuantityQuantitativeMeasurement
+;;;      (QuantityDenotedByAnnotation ?arrow ?type ?objs)
+;;;      (?units ?q)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rules for inferring NetTensionFn based on horizontal and vertical tension
+
+;;;(<== (qEqualTo (NetTensionFn ?o1) (NetTensionFn ?o2))
+;;;     (qEqualTo (XTensionFn ?o1) (XTensionFn ?o2))
+;;;     (qEqualTo (YTensionFn ?o1) (YTensionFn ?o2)))
+;;;
+;;;(<== (qGreaterThan (NetTensionFn ?o1) (NetTensionFn ?o2))
+;;;     (qEqualTo (XTensionFn ?o1) (XTensionFn ?o2))
+;;;     (qGreaterThan (YTensionFn ?o1) (YTensionFn ?o2)))
+;;;
+;;;(<== (qLessThan (NetTensionFn ?o1) (NetTensionFn ?o2))
+;;;     (qEqualTo (XTensionFn ?o1) (XTensionFn ?o2))
+;;;     (qLessThan (YTensionFn ?o1) (YTensionFn ?o2)))
+;;;
+;;;(<== (qGreaterThan (NetTensionFn ?o1) (NetTensionFn ?o2))
+;;;     (qGreaterThan (XTensionFn ?o1) (XTensionFn ?o2))
+;;;     (qEqualTo (YTensionFn ?o1) (YTensionFn ?o2)))
+;;;
+;;;(<== (qLessThan (NetTensionFn ?o1) (NetTensionFn ?o2))
+;;;     (qLessThan (XTensionFn ?o1) (XTensionFn ?o2))
+;;;     (qEqualTo (YTensionFn ?o1) (YTensionFn ?o2)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

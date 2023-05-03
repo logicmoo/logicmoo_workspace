@@ -1,0 +1,1680 @@
+(in-microtheory ModernMilitaryTacticsMt)
+
+(isa UnitedStatesMarineCorps ModernMilitaryOrganization)
+(isa DelayingAnAgent MilitaryTaskedActionType)
+(isa LayingMines MilitaryEventType-Fundamental)
+(isa ContainingAnEnemy MilitaryTaskedActionType)
+(isa CanalizingAnEnemyForce MilitaryTaskedActionType)
+(isa BlueUnit NonAbducibleCollection)
+(isa CounteringEnemyReconnaissance MilitaryTaskedActionType)
+(isa Halting-Military MilitaryEventType-Fundamental)
+(isa DefensivelyAdvantageousTerrain TerrainTypeByTacticalPotential-SideAdvantage)
+(isa Patrolling-Military MilitaryEventType-Fundamental)
+(isa coaRedUnit NonAbduciblePredicate)
+(isa CombinedArmsAttack MilitaryTaskedActionType)
+(isa TerrainFlight MilitaryTaskedActionType)
+(isa CausingAttritionOfAnEnemyForce MilitaryTaskedActionType)
+(isa PassageOfLines-Forward MilitaryTaskedActionType)
+(isa ReserveUnitSpecification COASpecificationDimension)
+(isa MilitaryControlMeasure KEClarifyingCollectionType)
+(isa TroopAssessment-METT-TC METT-TC-EvaluationType)
+(isa PassageOfLines MilitaryTaskedActionType)
+(isa Moving-OnRoadIrregFormation-Military MilitaryEventType-Fundamental)
+(isa TakeUpPositions MilitaryTaskedActionType)
+(isa greaterEffectForSitType-ThanSitType OrderedDifferenceWRTPredicate)
+(isa AmbushingAnEnemy MilitaryTaskedActionType)
+(isa Demonstration-MilitaryOperation MilitaryOperationType)
+(isa MovementToContact-MilitaryOperation MilitaryOperationType)
+(isa COASpecificationDimension NonAbducibleCollection)
+(isa Digging-Trench MilitaryEventType-Fundamental)
+(isa DefeatingAnOpponent MilitaryTaskedActionType)
+(isa evaluatableAlongSubDimensions NonAbduciblePredicate)
+(isa Moving-OverlandIrregFormation-Military MilitaryEventType-Fundamental)
+(isa OccupyingAnObjective MilitaryEventType-Fundamental)
+(isa EnvelopingAnEnemy MilitaryTaskedActionType)
+(isa Rupture-MilitaryTask MilitaryTaskedActionType)
+(isa TimeAssessment-METT-TC METT-TC-EvaluationType)
+(isa SupportingAUnit MilitaryTaskedActionType)
+(isa MilitaryOffensiveOperation MilitaryOperationType)
+(isa SupportingByFire MilitaryTaskedActionType)
+(isa TerrainSeverelyRestricted TerrainTypeByTrafficabilityLevel)
+(isa RearwardPassageOfLines-MilitaryOperation MilitaryOperationType)
+(isa MilitaryDecisionMakingActionType NonAbducibleCollection)
+(isa SearchAndClear-Building-Military MilitaryEventType-Fundamental)
+(isa Moving-OverlandInColumn-Military MilitaryEventType-Fundamental)
+(isa ActingAsADecoy MilitaryTaskedActionType)
+(isa EliminatingABridgehead MilitaryTaskedActionType)
+(isa CombinedArmsAttack AttackTypeByWeaponType)
+(isa IneffectiveForPurpose COAEvaluationEffectivenessPredicate)
+(isa EncirclingAnEnemy MilitaryTaskedActionType)
+(isa typeAuxiliaryFunction-Military CapabilityPredicate-TypeLevel)
+(isa RiverCrossing-MilitaryTask MilitaryTaskedActionType)
+(isa auxiliaryFunction-Military CapabilityPredicate-InstanceLevel)
+(isa MissionAssessment-METT-TC METT-TC-EvaluationType)
+(isa MissionSpecification COASpecificationDimension)
+(isa MovementToContact-MilitaryOperation MilitaryTaskedActionType)
+(isa ClearingAnEnemy MilitaryTaskedActionType)
+(isa BabElMandeb-Strait Path-Customary)
+(isa ScreeningAFriendlyForce MilitaryTaskedActionType)
+(isa TerrainRestricted TerrainTypeByTrafficabilityLevel)
+(isa ModernMilitaryUnit-Deployable DefaultTacticalTargetType-Recon)
+(isa ForwardPassageOfLines-MilitaryOperation MilitaryOperationType)
+(isa METT-TC-EvaluationType NonAbducibleCollection)
+(isa Digging-VehiclePosition MilitaryEventType-Fundamental)
+(isa DisengagingFromCombat MilitaryTaskedActionType)
+(isa ArtilleryFire MilitaryTaskedActionType)
+(isa PreemptiveStrike MilitaryTaskedActionType)
+(isa TravelingOverwatch MilitaryTaskedActionType)
+(isa EffectiveForPurpose COAEvaluationEffectivenessPredicate)
+(isa NeutralizingAnEnemyForce MilitaryTaskedActionType)
+(isa UnblockingTraffic-Military MilitaryEventType-Fundamental)
+(isa Attack-MilitaryOperation MilitaryOperationType)
+(isa RiverCrossing-Retrograde MilitaryTaskedActionType)
+(isa TerrainAssessment-METT-TC METT-TC-EvaluationType)
+(isa RetaliatoryStrike MilitaryTaskedActionType)
+(isa Deceiving MilitaryTaskedActionType)
+(isa FollowAndAssume MilitaryTaskedActionType)
+(isa MissileSilo HighPayoffTacticalTargetType)
+(isa Counterattack-MilitaryOperation MilitaryOperationType)
+(isa BabElMandeb-Strait TacticalPoint)
+(isa SearchAndClear-Woods-Military MilitaryEventType-Fundamental)
+(isa BreachingAnEnemyDefense MilitaryTaskedActionType)
+(isa ExfiltrationFromEnemyTerritory MilitaryTaskedActionType)
+(isa PassageOfLines-MilitaryOperation MilitaryOperationType)
+(isa AerialAttackOnGroundForces LearnedActivityType)
+(isa StraitOfHormuz Path-Customary)
+(isa AttackingByFire-Indirect MilitaryTaskedActionType)
+(isa AreaDefense-MilitaryOperation MilitaryOperationType)
+(isa DisruptingEnemyPlans MilitaryTaskedActionType)
+(isa BlockingTraffic-Military MilitaryEventType-Fundamental)
+(isa FireSupportSpecification COASpecificationDimension)
+(isa RiverCrossing-Hasty MilitaryTaskedActionType)
+(isa coaForceRatioBalanceInSupportingAttacks-BluePerspective COAEvaluationDimension)
+(isa EnemyAssessment-METT-TC METT-TC-EvaluationType)
+(isa Red-Side ModernMilitaryOrganization)
+(isa FeintingAttack MilitaryTaskedActionType)
+(isa SearchAndClear MilitaryTaskedActionType)
+(isa typePrimaryFunction-Military CapabilityPredicate-TypeLevel)
+(isa MobileDefense-MilitaryOperation MilitaryOperationType)
+(isa FixingAnEnemy MilitaryTaskedActionType)
+(isa primaryFunction-Military CapabilityPredicate-InstanceLevel)
+(isa GuardOperation MilitaryTaskedActionType)
+(isa Pacification-MilitaryOperation MilitaryOperationType)
+(isa DefaultTacticalTargetType-Recon CollectionType)
+(isa StraitOfHormuz TacticalPoint)
+(isa DestroyingAnEnemyForce MilitaryTaskedActionType)
+(isa acceptableLosses EvaluativeCasualtyLevelPredicate)
+(isa Digging-FightingHole MilitaryEventType-Fundamental)
+(isa AttackingByFire-Direct MilitaryTaskedActionType)
+(isa traversalConstraintOfTask PlanActionRestrictionPredicate)
+(isa Relief-MilitaryTask MilitaryTaskedActionType)
+(isa RiverCrossing-Deliberate MilitaryTaskedActionType)
+(isa coaSynchronicity COAEvaluationDimension)
+(isa Penetration-MilitaryManeuver AssignedOperationType)
+(isa TacticalTerrainTypeByGeometry FacetingCollectionType)
+(isa BasicTaskSpecification COASpecificationDimension)
+(isa Interdiction MilitaryTaskedActionType)
+(isa RaidingAnObjective MilitaryTaskedActionType)
+(isa CounterFire MilitaryTaskedActionType)
+(isa ApproachMarch-MilitaryOperation MilitaryOperationType)
+(isa Retirement-MilitaryOperation MilitaryOperationType)
+(isa RedTask NonAbducibleCollection)
+(isa PenetratingADefense MilitaryTaskedActionType)
+(isa DefaultTacticalTargetType-Arty CollectionType)
+(isa coaBlueUnit NonAbduciblePredicate)
+(isa SeizingAnObjective MilitaryTaskedActionType)
+(isa MilitaryExercise MilitaryEventType-Fundamental)
+(isa Dardanelles-Strait Path-Customary)
+(isa AerialAttack MilitaryTaskedActionType)
+(isa unacceptableLosses EvaluativeCasualtyLevelPredicate)
+(isa ReliefInPlace-MilitaryTask MilitaryTaskedActionType)
+(isa attritionConstraintOfAction PlanActionRestrictionPredicate)
+(isa SupportingAUnit KEClarifyingCollectionType)
+(isa SurpriseAttack MilitaryTaskedActionType)
+(isa Retain-MilitaryTask MilitaryTaskedActionType)
+(isa InfiltratingAnArea MilitaryTaskedActionType)
+(isa Demolition-Military MilitaryEventType-Fundamental)
+(isa IsolatingAnEnemy MilitaryTaskedActionType)
+(isa Dardanelles-Strait TacticalPoint)
+(isa MilitaryDefensiveOperation MilitaryOperationType)
+(isa BlueTask NonAbducibleCollection)
+(isa BypassingAnEnemy MilitaryTaskedActionType)
+(isa MountONeal SpatialThing-Localized)
+(isa GuardOperation MilitaryOperationType)
+(isa (RemovalFn Mine-Weapon) MilitaryEventType-Fundamental)
+(isa AttackingByFire MilitaryTaskedActionType)
+(isa BombingMission-Aerial MilitaryTaskedActionType)
+(isa PreparingPosition-MilitaryTask MilitaryTaskedActionType)
+(isa ModernMilitaryUnit-Deployable HighPayoffTacticalTargetType)
+(isa Bunker HighPayoffTacticalTargetType)
+(isa Moving-OnRoadInColumn-Military MilitaryEventType-Fundamental)
+(isa depthConstraintOfTask PlanActionRestrictionPredicate)
+(isa Linkup-MilitaryTask MilitaryTaskedActionType)
+(isa FollowAndSupport MilitaryTaskedActionType)
+(isa Blue-Side ModernMilitaryOrganization)
+(isa OffensivelyAdvantageousTerrain TerrainTypeByTacticalPotential-SideAdvantage)
+(isa Security-MilitaryOperation MilitaryOperationType)
+(isa ProvidingGeneralSupport MilitaryTaskedActionType)
+(isa ReconnaissanceInForce-MilitaryOperation MilitaryOperationType)
+(isa RedCompany1 ModernMilitaryUnit-Deployable)
+(isa RedUnit NonAbducibleCollection)
+(isa Constructing-Military MilitaryEventType-Fundamental)
+(isa RetrogradeDefense-MilitaryOperation MilitaryOperationType)
+(isa AerialAttackOnGroundForces MilitaryTaskedActionType)
+(isa BoundingOverwatch MilitaryTaskedActionType)
+(isa CommandPost HighPayoffTacticalTargetType)
+(isa RedCompany1 Company-MilitaryEchelon)
+(isa MiscellaneousTaskSpecification COASpecificationDimension)
+(isa SupportingAttackSpecification COASpecificationDimension)
+(isa PassageOfLines-Rearward MilitaryTaskedActionType)
+(isa Enabling-MilitaryEvent MilitaryTaskedActionType)
+(isa unitHasPurpose PropositionPredicate)
+(isa MainAttackSpecification COASpecificationDimension)
+(isa SecuringAnObjective MilitaryTaskedActionType)
+(isa ProvidingDirectSupport MilitaryTaskedActionType)
+(isa TerrainUnrestricted TerrainTypeByTrafficabilityLevel)
+(isa SearchAndAttack-MilitaryOperation MilitaryOperationType)
+(isa TurningAnEnemyForce MilitaryTaskedActionType)
+(arg3Format postingForTemp-Military SingleEntry)
+(argGenl obstacleSystemSupportsTaskType 2 MilitaryAction)
+(arg3Format typeAuxiliaryFunction-Military SetTheFormat)
+(typeGenls HighPayoffTacticalTargetType SpatialThing-Localized)
+(argGenl preferredBasisForWeaponType 1 Weapon)
+(transitiveViaArgInverse militaryAlertStatus quantitySubsumes 2)
+(arg2Genl marchSpeedOfVehicleTypeOnTerrain MilitaryVehicle)
+(argGenl notEquipmentOfUnitType 2 Artifact)
+(argGenl standardEquipmentOfUnitType 1 ModernMilitaryUnit-Deployable)
+(arg2Genl obstacleSystemSupportsTaskType MilitaryAction)
+(argQuotedIsa unitHasPurpose 2 CycLSentence-Assertible)
+(arg2Genl greaterEffectForSitType-ThanSitType Situation)
+(typeGenls MilitaryEventType-Doctrinal MilitaryEvent)
+(requiredArg1Pred BlueTask unitAssignedToTask)
+(minimizeExtent predAssociatedWithMETT-TCPrinciple)
+(argGenl terrainRestrictionForUnitSpecialty 2 ModernMilitaryUnit-Deployable)
+(arg2Genl standardEquipmentOfUnitType Artifact)
+(minimizeExtent taskTypeCommensurateWithOpType)
+(typeGenls TerrainTypeByTrafficabilityLevel OutdoorLocation)
+(arg1Genl expectedAttritionForActionType MilitaryEvent)
+(facets-Generic TacticalTerrainObject TacticalTerrainTypeByGeometry)
+(transitiveViaArgInverse preferredBasisForWeaponType genls 1)
+(functionCorrespondingPredicate-Canonical FriendlyUnitFn friendlyUnitType 2)
+(arg3Format typePrimaryFunction-Military SetTheFormat)
+(typedGenlPreds unitAssignedToTask performerInSpec)
+(argQuotedIsa propPendingVerification 1 CycLSentence-Assertible)
+(arg1Genl greaterEffectForSitType-ThanSitType Situation)
+(arg3Format primaryFunction-Military SetTheFormat)
+(arg2Genl notEquipmentOfUnitType Artifact)
+(strictlyFunctionalInArgs posting-Military 2)
+(typeGenls MilitaryEventType-Fundamental MilitaryEvent)
+(argGenl opTypeRequiresResourceType 2 PartiallyTangible)
+(arg1Genl standardEquipmentOfUnitType ModernMilitaryUnit-Deployable)
+(argGenl specializedEquipmentOfUnitType 2 Artifact)
+(functionalInArgs temporalStage 2)
+(requiredArg1Pred RedTask unitAssignedToTask)
+(typeGenls TacticalTerrainTypeByGeometry TacticalTerrainObject)
+(argFormat marchSpeedOfVehicleTypeOnTerrain 3 SingleEntry)
+(transitiveViaArgInverse preferredBasisForWeaponType specs 2)
+(arg2QuotedIsa unitHasPurpose CycLSentence-Assertible)
+(argGenl expectedAttritionForActionType 1 MilitaryEvent)
+(argQuotedIsa propPendingFalsification 1 CycLSentence-Assertible)
+(arg1Genl notEquipmentOfUnitType ModernMilitaryUnit-Deployable)
+(typeGenls DefaultTacticalTargetType SpatialThing-Localized)
+(argFormat auxiliaryFunction-Military 3 SetTheFormat)
+(argFormat typeAuxiliaryFunction-Military 3 SetTheFormat)
+(rewriteOf BlueUnit (SubcollectionOfWithRelationFromTypeFn ModernMilitaryUnit-Deployable coaBlueUnit CourseOfAction))
+(argGenl taskTypeRequiresResourceType 2 PartiallyTangible)
+(strictlyFunctionalInArgs marchSpeedOfVehicleTypeOnTerrain 3)
+(typeGenls MilitaryDecisionMakingActionType Evaluating)
+(arg2Genl specializedEquipmentOfUnitType Artifact)
+(arg1Genl potentialDutyOfAgentType ModernMilitaryUnit-Deployable)
+(strictlyFunctionalInArgs postingForTemp-Military 3)
+(minimizeExtent coaSubTasks)
+(transitiveViaArg positionStatusOfArea genls 2)
+(argFormat marchSpeedOfVehicleTypeOnTerrain 1 SingleEntry)
+(genlInverse supportsForce-General positiveVestedInterest)
+(arg1QuotedIsa propPendingVerification CycLSentence-Assertible)
+(argGenl potentialDutyOfAgentType 1 ModernMilitaryUnit-Deployable)
+(argQuotedIsa operationHasPurpose 2 CycLSentence-Assertible)
+(argFormat typeAuxiliaryFunction-Military 2 SetTheFormat)
+(argGenl choiceOfManeuverInAction 2 MilitaryManeuver)
+(argFormat posting-Military 1 SingleEntry)
+(argFormat auxiliaryFunction-Military 2 SetTheFormat)
+(arg1Genl specializedEquipmentOfUnitType ModernMilitaryUnit-Deployable)
+(argGenl vehicleConeIndex 1 LandTransportationDevice)
+(argFormat marchSpeedOfVehicleTypeOnTerrain 2 SetTheFormat)
+(argGenl preferredBasisForWeaponType 2 PartiallyTangible)
+(arg1QuotedIsa propPendingFalsification CycLSentence-Assertible)
+(argFormat taskTypeCommensurateWithOpType 2 SetTheFormat)
+(arg2Genl taskTypeRequiresResourceType PartiallyTangible)
+(typeGenls COASpecificationDimension Informing)
+(functionCorrespondingPredicate-Canonical HostileUnitFn hostileUnitType 2)
+(typeGenls TacticalTerrainType HexalateralObject)
+(argFormat postingForTemp-Military 3 SingleEntry)
+(typeGenls TacticalTerrainType GeographicalThing)
+(argFormat posting-Military 2 SingleEntry)
+(transitiveViaArg auxiliaryFunction-Military genlPreds 3)
+(arg1Genl vehicleConeIndex LandTransportationDevice)
+(argFormat typePrimaryFunction-Military 3 SetTheFormat)
+(arg3Format marchSpeedOfVehicleTypeOnTerrain SingleEntry)
+(arg2Genl preferredBasisForWeaponType PartiallyTangible)
+(arg2QuotedIsa operationHasPurpose CycLSentence-Assertible)
+(argFormat primaryFunction-Military 3 SetTheFormat)
+(argFormat militaryOrgDoctrineIncludesEventType 1 SetTheFormat)
+(negationPreds unacceptableLosses acceptableLosses)
+(arg1Genl taskTypeRequiresResourceType MilitaryAction)
+(functionalInArgs postingForTemp-Military 3)
+(transitiveViaArg typeAuxiliaryFunction-Military genlPreds 3)
+(argGenl terrainRestrictionForUnitSpecialty 3 MilitaryOperation)
+(rewriteOf RedUnit (SubcollectionOfWithRelationFromTypeFn ModernMilitaryUnit-Deployable coaRedUnit CourseOfAction))
+(minimizeExtent startsAfterStartingOf)
+(transitiveViaArg auxiliaryFunction-Military genls 2)
+(argGenl correspondingMilitaryTaskType 2 PurposefulAction)
+(argFormat typePrimaryFunction-Military 2 SetTheFormat)
+(arg1Genl preferredBasisForWeaponType Weapon)
+(argGenl MilitaryTaskObstacleFn 1 MilitaryAction)
+(argFormat primaryFunction-Military 2 SetTheFormat)
+(argGenl greaterEffectForSitType-ThanSitType 2 Situation)
+(minimizeExtent reserveUnitForTask)
+(argFormat militaryOrgDoctrineIncludesEventType 2 SetTheFormat)
+(typeGenls ApproachCorridorType Path-Spatial)
+(typedGenlPreds criticalEventInCoa criticalToPlan-Generic)
+(transitiveViaArg postingForTemp-Military temporallySubsumes 2)
+(resultGenl MilitarySpecialtyObstacleFn ObstacleSystem-Military)
+(transitiveViaArg typeAuxiliaryFunction-Military genls 2)
+(minimizeExtent contiguousAfter)
+(functionalInArgs posting-Military 1)
+(arg3Genl terrainRestrictionForUnitSpecialty MilitaryOperation)
+(arg2Genl correspondingMilitaryTaskType PurposefulAction)
+(transitiveViaArg typePrimaryFunction-Military genlPreds 3)
+(argGenl taskTypeRequiresResourceType 1 MilitaryAction)
+(transitiveViaArg primaryFunction-Military genlPreds 3)
+(negationPreds coaRedUnit coaBlueUnit)
+(argGenl notEquipmentOfUnitType 1 ModernMilitaryUnit-Deployable)
+(typedGenlPreds degreeOfTrafficability isa)
+(arg2Genl opTypeRequiresResourceType PartiallyTangible)
+(minimizeExtent unitAssignedToTask)
+(arg2Genl choiceOfManeuverInAction MilitaryManeuver)
+(typeGenls COAStage StaticSituation)
+(transitiveViaArg typePrimaryFunction-Military genls 2)
+(argGenl standardEquipmentOfUnitType 2 Artifact)
+(arg1Genl MilitaryTaskObstacleFn MilitaryAction)
+(argGenl specializedEquipmentOfUnitType 1 ModernMilitaryUnit-Deployable)
+(functionalInArgs posting-Military 2)
+(arg3Format auxiliaryFunction-Military SetTheFormat)
+(genlInverse pathForUnit usesObject)
+(typeGenls METT-TC-EvaluationType Evaluating)
+(arg2Genl terrainRestrictionForUnitSpecialty ModernMilitaryUnit-Deployable)
+(argGenl marchSpeedOfVehicleTypeOnTerrain 2 MilitaryVehicle)
+(argGenl greaterEffectForSitType-ThanSitType 1 Situation)
+(negationPreds advanceGuardSupport advanceGuardReserve)
+(transitiveViaArg primaryFunction-Military genls 2)
+(typeGenls (TypeOfMilitaryTaskFn TurningAnEnemyForce) MilitaryAction)
+(typeGenls (TypeOfMilitaryTaskFn TurningAnEnemyForce) TurningAnEnemyForce)
+(comment TurningAnEnemyForce "This is a type of action taken to turn an advancing enemy from his intended path.")
+(comment limitsObservationOfFrom "(#$limitsObservationOfFrom STHG REG1 REG2) means that STHG conceals or in some manner limits the observation powers
+possible from REG2 when trying to observe REG1. This predicate
+embodies two aspects of the OCOKA principles, namely those of
+Concealment and of Observation. (#$limitsObservationOfFrom
+SmokeScreen001 GarnerValley GumbyHill) says that any object in
+GarnerValley has good concealment from observation from GumbyHill,
+since SmokeScreen001 prevents observation of those objects from
+GumbyHill. So this predicate can be used to describe both Concealment
+(in this case, from the perspective of objects in GarnerValley -- cf. also #$providesConcealmentInCOA) and
+Observation (here, from the perspective of prospective observers on
+GumbyHill). Whether a unit seeks to maximize concealment or
+observation is based on an interaction between the METT-TC principles.
+Note that if RedUnit001 occupied a position in GarnerValley and
+BlueUnit001 occupies GumbyHill, it is possible to use this predicate
+for something like 'SmokeScreen001 currently limits the observation of
+RedUnit001 by BlueUnit001.'")
+(comment ExfiltrationFromEnemyTerritory "To exfiltrate is to remove personnel or units from areas under enemy control by stealth, deception, surprise, or clandestine means. Exfiltration is conducted by friendly forces that have been encircled by enemy forces and cannot conduct a breakout or be relieved by other friendly forces. Forces returning from a raid, an infiltration, or a patrol behind enemy lines can also conduct an exfiltration. Exfiltration by an encircled force is used only as a last resort to preserve a portion of the force. It is preferable to the capture of the force. The exfiltrating force conducts it after destroying or incapacitating all equipment (less medical) not accompanying the force. The exfiltrating force may have to leave casualties in place with supplies, chaplain support, and medical attendants.")
+(comment notEquipmentOfUnitType "(notEquipmentOfUnitType ?UNITTYPE 
+
+?THINGTYPE) means that under 'ordinary' or 'normal' circumstances we should
+
+ not expect to find any instances of?UNITTYPE equipped with one or more
+
+ instances of ?THINGTYPE.  Compare this to #$standardEquipmentOfUnitType,
+
+ which basically states the opposite.")
+(comment NoFireArea "Areas with this attribute in a COA context are areas in
+which no fires or effects of fires are allowed. Two exceptions are (1)
+when establishing headquarters approves fires temporarily within the
+NFA on a mission basis, and (2) when the enemy force within the NFA
+engages a friendly force, the commander may engage the enemy to defend
+his force.")
+(comment fullStrengthEquivalentForUnits "Use this predicate to express the average unit strength of a set of military units")
+(comment Enabling-MilitaryEvent "The collection of military operations conducted to facilitate other types of military operations. As such, enabling operations are not ends unto themselves.")
+(comment NeutralizingAnEnemyForce "A specialization of ConflictEvent. In events of this type, an agent. renders an enemy force incapable of interfering with some particular operation.")
+(comment obstacleSystemSupportsTaskType "(#$obstacleSystemSupportsTaskType OBSYS TASKTYPE) means that the #$ObstacleSystem-Military OBSYS is structured with the design and intent of supporting a task of type TASKTYPE.")
+(comment obstacleImpedes "(#$obstacleImpedes AGT OBS) means that the instance OBS is
+an impediment for AGT. In the accomplishment of some task, OBS will
+make the task more difficult, time-consuming, or in some other manner
+delays the success of task for AGT. If AGT is unable to overcome the
+difficulties OBS poses, it is likely that AGT will not successfully
+accomplish the task.")
+(comment issuingOrder-Military "'(#$issuingOrder-Military ORDERING PERSON) <MT TIME PAR>' means that PERSON is the author and issuing authority in ORDERING and is performing that issuing during TIME to granularity PAR in MT.  So this holds just during the time that the person is actively giving the order.")
+(comment Blue-Side "The good guys.")
+(comment Penetration-MilitaryManeuver "This is the collection of instances of MilitaryManeuver-Offensive which are used when enemy flanks are not assailable. In a penetration, commanders mass sufficient combat power at the point of penetration to overwhelm the enemy and gain the advantage. FM 100-5.")
+(comment TerrainHighGround "A military term and an instance of #$TerrainTypeBySurfaceLevel. The central feature point of high ground terrain (e.g. the hilltop of a hill) is typically higher in altitude than the surrounding terrain. This need not always be true, however, because a hill next to a larger hill would still be considered high ground. Instances of #$TerrainHighGround are #$Places that require one to traverse a positive slope in order to reach the central feature point. From a tactical standpoint, it is typically assumed that instances of #$TerrainHighGround enhance observation.")
+(comment Rupture-MilitaryTask "To rupture is to create a gap in enemy defensive positions quickly. Rupture is directed against an enemy defensive force. Breach is the term used in conjunction with an obstacle.")
+(comment ObservationOfFn "(#$ObservationOfFn THG) denoted the collection of
+#$Observing events in which THG is the #$thingsObserved.")
+(comment AerialAttackOnGroundForces "The collection of all #$AerialAttacks in which the force
+targeted (the #$intendedMaleficiary) is a 'ground unit', i.e., a unit
+constitutionally suited for ground combat (see
+#$intendedTheaterOfOperations).")
+(comment militaryAlertStatus "(#$militaryAlertStatus ORG LEVEL) means that the #$militaryAlertStatus of the #$MilitaryOrganization ORG is at LEVEL. Having a #$militaryAlertStatus at a certain level--#$highAmountOf, #$lowAmountOf, etc.--translates to a number of associated actions and behaviors depending on the organization type.  If (#$militaryAlertStatus ORG #$highAmountOf), for example, this might translate to a number of security and defense precautions being taken: increased patrols and security checks in the case of a deployed unit, for example.")
+(comment terrainRestrictionForUnitSpecialty "(#$terrainRestrictionForUnitSpecialty REGION SPECIALTY OP LEVEL)
+means that REGION has #$TerrainTypeByTrafficabilityLevel LEVEL for a unit of any
+echelon level and of military specialty SPECIALTY undertaking military
+operation type OP.")
+(comment positionStatusOfArea "(#$positionStatusOfArea AREA TACT) means that the #$GeographicalRegion AREA has the functional features associated with the #$TacticalTerrainType TACT in the context of the assertion.")
+(comment DirectAvenueOfApproach "The collection of regions that are direct avenues of
+approach in a particular context.")
+(comment ReliefInPlace-MilitaryTask "A relief in place is an enabling operation in which ... all or part of a unit is replaced in an area by an incoming unit. ... Normally, the unit relieved is defending. However, a relief may set the stage for a resumption of offensive operations. A relief may also serve to free the relieved unit for other tasks, such as decontamination, reconstitution, routine rest, resupply, maintenance, or specialized training. Sometimes, as part of a larger operation, a commander wants the enemy to discover the relief because it will cause the enemy to do something in response that is prejudicial to his interest, such as move reserves from an area where the friendly commander wants to conduct a penetration. FM100-40, p18- 14,15.")
+(comment ObservationFacilitatingTerrain "The collection of regions that facilitate #$Observing events
+into another region in a particular context.")
+(comment PlanActionRestrictionPredicate "A collection of predicates.  Instances are used to express
+durationalconstraints, constraints relating to temporal ordering, and
+subeventual commitments relating to reified #$PurposefulActions that
+are represented in the deontic contexts of #$Plans.")
+(comment propPendingVerification "CycFormula is to be enabled, i.e. become true, in the goal context.")
+(comment terrainAdvantage-DimensionDegree "(#$terrainAdvantage-DimensionDegree LOC TAC-DIM ADV-AMT)
+means that the location LOC has the tactical potential to provide some
+advantage along the tactical dimension TAC-DIM, to the degree ADV-AMT.
+TAC-DIM must be some recognized tactical aspect of a military
+situation, such as a dimension of the UnitedStatesArmy's OCOKA terrain
+analysis or METT-T situation analysis.  For example,
+(#$terrainAdvantage-SideDegree Hill28 #$ObservationFacilitatingTerrain
+(#$HighAmountFn #$TacticalAdvantage)) means that Hill28 has the
+potential to facilitate observation, and so offer a high degree of
+#$TacticalAdvantage. Note that #$TacticalAdvantages depend not just on
+terrain characteristics, but also on force and situation
+characteristics, and therefore belong to agents in fairly specific
+classes of real or potential military operations. For this reason,
+assertions stating the terrainAdvantage-DimensionDegree for some piece
+of terrain should be made only within appropriately scenario-specific
+contexts.")
+(comment criticalEventInCoa "(#$criticalEventInCoa COA-MT EVENT) means that EVENT is a critical event in the context of a particular course of action as specified in COA-MT EVENT. Critical events and their temporal ordering are required information for calculating the #$forceRatioOfUnits of opposing units as the course of action unfolds.")
+(comment LocationBasedSurpriseAttack "The collection of #$SurpriseAttacks whose element of
+surprise depends on the attacker using a place to stage the attack the
+#$objectAttacked did not expect.")
+(comment MilitaryTask-Complex "A collection of military tasks which require special coordination efforts in order to be effective.")
+(comment ViabilityForOperationFn "(#$ViabilityForOperationFn OP_TYPE) returns a linearly ordered collection of instances of #$AttributeValue: in this case, regional viability levels that a particular region may have for a particular kind of military operation.  E.G., in order to say that Region01 is 'excellent for offensive operations' we would assert (#$terrainType Region01 (#$VeryHighAmountFn (#$ViabilityForOperationFn #$MilitaryOffensiveOperation))).")
+(comment Checkpoint-Military "A predetermined point on the surface of the Earth used by military organizations as a means of controlling movement, a registration target for fire adjustment, or reference for location.")
+(comment unitHasPurpose "(#$unitHasPurpose UNIT PROP) means that PROP is the purpose assigned to UNIT in the context of the Course of Action representation of which the assertion is a part.  This means that PROP is a proposition which UNIT is explicitly ordered to make true.")
+(comment typeAuxiliaryFunction-Military "A predicate relating a collection, such as a specialization
+of #$MilitaryAgent or a type of equipment, to military functions it
+can serve, beyond its primary functions.  For example,
+(#$typeAuxillaryFunction-Military #$InfantryUnit-MilitarySpecialty
+#$Reconnaissance-MilitaryFundamental #$performedBy) means that
+Infantry units have some reconnaissance capabilities, though that is
+not their primary function.  Reconnaissance is a possible use, but not
+the most probable use, of such units when they appear in military
+operations.")
+(comment GroundApproach "Characteristic attribute of an approach corridor employed by ground forces.")
+(comment coaBlueUnit "(#$coaBlueUnit COA UNIT) says that in the course of action COA (see #$CourseOfAction), UNIT is considered a friendly force. ")
+(comment TerrainTypeByTacticalPotential-Dimension "A collection of collections. Each instance of
+#$TerrainTypeByTacticalPotential-Dimension is a collection of pieces
+of terrain, according to whether they limit or enhance some recognized
+tactical aspect of a military situation, such as a dimension of the
+#$UnitedStatesArmy's OCOKA terrain analysis or METT-T situation analysis. Note
+that such limiting or enhancing effects are fairly specific to some
+class of real or potential military operations.  Assertions making a
+specific terrain object an instance of some
+#$TerrainTypeByTacticalPotential-Dimension should therefore be made
+only within appropriately scenario-specific contexts.")
+(comment TacticalAdvantage "Each instance of #$TacticalAdvantage denotes some degree to
+which one agent may have advantage over another with respect to various
+aspects of a tactical situation (see, e.g.,
+#$TerrainTypeByTacticalPotential-Dimension). Each instance of
+#$TacticalAdvantage, e.g., (#$HighAmountFn #$TacticalAdvantage), is an
+individual level or degree of tactical advantage that some agent may
+have. Note that #$TacticalAdvantages belong to agents in fairly
+specific classes of real or potential military operations.  Assertions
+representing the #$TacticalAdvantage an agent has should be made,
+therefore, only within appropriately scenario-specific contexts.")
+(comment AssemblyAreaPlanned "Attribute of a #$GeographicalRegion in a military Course of Action that has been targeted as a potential assembly area.")
+(comment EnvelopingAnEnemy "This task is assigned to a unit which is an enveloping force in an envelopment operation: see FM100-40, pp3-18 - 3-22. The unit may be designated as the main effort or a supporting effort, for a double envelopment or encirclement operation only.")
+(comment MobilityLimitingTerrain "The collection of geographical regions that are relatively difficult for an agent to traverse within a specific context.")
+(comment EnemyAssessment-METT-TC "The collection of all instances of #$Evaluating where enemy troop dispositions are under consideration.")
+(comment Suppress-MilitaryEngagement "A military action employing direct or indirect fires , electronic attack, or smoke on enemy personnel, weapons or equipment to prevent or degrade enemy fires and observation of the friendly forces.")
+(comment postingForTemp-Military "(#$postingForTemp-Military UNIT TEMP LOC) means that the #$posting-Military of
+UNIT is LOC for the duration of TEMP.")
+(comment ReconnaissanceInForce-MilitaryOperation "ReconnaissanceInForce is a focused collection effort in a geographic area with a force large enough to engage the enemy if detected.  It is performed before, during, and after other operations to provide information used by the commander to confirm or modify his course of action. FM100-40, p15-1.")
+(comment phaseLineBetweenRegions "(#$phaseLineBoundsRegion LINE REGION1 REGION2) means that
+LINE is part of the boundary between REGION2 and REGION1.")
+(comment MilitaryEventType "A collection of collections.  Each instance of #$MilitaryEventType is a collection of instances of #$MilitaryEvent.")
+(comment BattlePositionPrepared "The battle position which units have been ordered to occupy. See #$BattlePositionOccupied.")
+(comment METT-TC-Ordering "The 'standard,' or 'expected' ordering of METT-TC principles.")
+(comment tacticalArea-FromGIS "(#$tacticalArea-FromGIS TAREA) means that TAREA is an
+instance of #$TacticalArea, according to some
+#$GeographicInformationSystem to which Cyc has access.")
+(comment DelayingAnAgent "Instances are actions which one agent takes to hinder another agent's progress towards completeing some other action.  See also #$delayUntilTime.")
+(comment degreeOfTrafficability "(#$degreeOfTrafficability REGION TTL) means that the
+
+#$TerrainTypeByTrafficabilityLevel of REGION is, generally speaking, TTL for
+
+agents or more specifically military units attempting to cross it.
+
+This predicate is used for making fairly sweeping, generic statements
+
+about terrain trafficability and should not be employed in situations
+
+where it is necessary to talk about variant trafficability for
+
+different kinds of unit.  For this purpose, see
+
+#$trafficableForUnitTypeInRole and #$trafficabilityLevelForUnitType.")
+(comment HostileRegion "Distinguishing attribute of regions that are considered 'hostile' in a COA planning context.")
+(comment TerrainUnrestricted "TerrainUnrestricted is defined in FM 34-130 as terrain free
+of any restriction to movement.")
+(comment terrainAdvantage-SideDimensionDegree "(#$terrainAdvantage-SideDimensionDegree LOC SIDE ADV-DIM ADV-AMT) means
+that the location LOC has the potential to provide some #$TacticalAdvantage, where SIDE indicates whether the advantage is offensive or defensive, ADV-DIM indicates the tactical dimension of the advantage, and ADV-AMT indicates the degree of the advantage. For example, (#$terrainAdvantage-SideDimensionDegree Hill37 #$OffendingForce #$ConcealmentLimitingTerrain (#$MediumAmountFn #$TacticalAdvantage)) means that Hill37 has the potential to give the #$OffendingForce a medium level of #$TacticalAdvantage by limiting concealment. Note that #$TacticalAdvantages depend not just on terrain characteristics, but also on force and situation characteristics, and therefore belong to agents in fairly specific classes of real or potential military operations. For this reason, assertions stating the #$terrainAdvantage-SideDimensionDegree for some piece of terrain should be made only within appropriately scenario-specific contexts.")
+(comment supportRegionForUnit "(#$supportRegionForUnit ?AREA ?UNIT) means that ?AREA has been designated for combat service support elements and some staff elements to locate to support a unit.")
+(comment advanceGuardReserve "(#$advanceGuardReserve SUPPORT UNIT) says that UNIT plays the role of reserve advance guard in the #$SupportingAUnit event SUPPORT.  Specifically, there is a larger unit of which UNIT is a part, the larger unit has been assigned a task, and UNIT has been sent out ahead of the larger unit to ensure its ability to advance and carry out its task.  During the instantiation of the task, UNIT gives direct support to the larger unit.")
+(disjointWith CausingAnotherObjectsTranslationalMotion CausingAttritionOfAnEnemyForce)
+(comment PursuingAnEnemy "A specialization of #$PursuingSomething. Instances of this collection are actions in which one agent pursues another.")
+(comment objectiveOfTaskIns "(#$objectiveOfTaskIns TASK-INS OBJECTIVE) means that OBJECTIVE plays the role of 'task objective' during the execution TASK-INS of some task.  See also #$objectiveOfTask.")
+(comment MilitaryControlMeasure "Instances of #$SpatialThing-Localized which are accorded this attribute in a particular COA development scenario gain the status ofcoordination features which aid in that particular COA development process.  Instances are used in order to to assign responsibilities, coordinate fires and maneuver, and control combat operations. Each control measure can be portrayed graphically. In general, all control measures should be easily identifiable on the ground. Examples of control measures include boundaries, objectives, coordinating points, contact point, and direction of attack. From FM 101-5-1.")
+(disjointWith SecuringAnObjective ControllingAnObjective)
+(comment BasicTaskSpecification "A specialization of #$Reporting in which the basic tasks of a COA are specified but not otherwise described.")
+(comment Maintenance-CSSAction "The instances of this collection are actions undertaken to
+preserve supplies and material in serviceable conditions or to restore them
+to serviceability. More generally, the collection may include all supply
+and repair action taken to keep a force in mission-effective conditions. FM
+101-5-1.")
+(comment orderIssuedOnDate "(#$orderIssuedOnDate ORDER DATE) means that DATE is the date on which the #$MilitaryOrder-IBO ORDER is issued.  We interpret this to mean that the #$Ordering-MilitaryCommunicationAct of which ORDER is the #$iboCreated #$startsDuring DATE.")
+(comment areaToControl "a MilitarilySignificantArea is to be controlled in the goal
+context.")
+(comment METT-TC-EvaluationType "The collection of all specializations of #$Evaluating that are considered by the (U.S.) military to be the components of any METT-TC analysis.")
+(comment SurpriseAttack "The collection of events in which an attack aims at
+maintaining the element of surprise to disarm the #$objectAttacked.")
+(comment MobileDefense-MilitaryOperation "The mobile defense operation focuses on defeating or destroying the enemy force by allowing him to advance to a point where he is exposed to a decisive counterattack by the striking force. The commander organizes his force into two principal groups: the fixing force and the striking force. The primary defeat mechanism, the counterattack, is supplemented by the fires of the fixing force. The mobile defense is normally conducted by brigades, divisions and corps. Battalions and smaller units do not conduct a mobile defense because they are incapable of conducting operations in depth and fighting multiple engagements while resourcing the striking force, the fixing force, and a reserve.  FM100- 40, Ch12.")
+(comment MilitaryEventType-Fundamental "A collection of collections. Each instance of
+
+#$MilitaryEventType-Fundamental is a specialization of
+
+#$MilitaryEvent, applicable across variations in doctrine.  For
+
+example, #$Reconnaissance-MilitaryFundamental is an instance of
+
+#$MilitaryEventType-Fundamental, because it denotes a type of action
+
+widely regarded by military experts as fundamental; some kind of
+
+reconnaissance is basic to military operations of most sorts.  One can
+
+classify an unknown forces actions as instances of
+
+#$Reconnaissance-MilitaryFundamental without assuming shared doctrine. In
+
+contrast, #$ClearingAnEnemy is an instance of
+
+#$MilitaryEventType-Doctrinal, because it denotes an activity
+
+specifically defined by #UnitedStatesArmy doctrine. Because they are
+
+relatively free of association with doctrinal procedures and
+
+constraints, instances of #$MilitaryEventType-Fundamental are of
+
+greatest use in analysis of the actions of another force.  In such
+
+analysis, applying instances of #$MilitaryEventType-Doctrinal requires
+
+making assumptions about the doctrinal procedures and constraints the
+
+other force is observing.  For the same reasons, instances of
+
+#$MilitaryEventType-Doctrinal are of the greatest use in the
+
+communication of plans and orders.  A plan or order specified using
+
+these concepts contains those procedures and constraints implicitly.")
+(comment auxiliaryFunction-Military "A predicate relating an individual thing, such as a
+#$ModernMilitaryUnit-Deployable or a piece of equipment, to military
+functions it can serve, beyond its primary function.  For example,
+(#$auxillaryFunction-Military MORTARUNIT01
+#$Reconnaissance-MilitaryFundamental #$performedBy) means that the
+individual unit MORTARUNIT001 has some reconnaissance capabilities,
+though that is not its primary function.  Reconnaissance is a possible
+use, but not the most probable use, of the unit when it appears in
+military operations.")
+(comment COAStage "The collection of salient COA stages. A COA stage is a type of
+#$StaticSituation representing the circumstances holding at some fixed
+point in time in the development of a #$CourseOfAction. Instances of
+#$COAStage bear to COAs, i.e., instances of #$CourseOfAction, roughly the
+same relation that scenes bear to a particular #$ScriptedEventType
+(q.v.): this relation is expressed by #$subSituationTypes. Think of a COA
+stage as a `photograph' of the COA at a certain time. Note that we don't
+impose any specific requirement on the `#$COAStage structure' of a COA:
+no assumption is made as to whether #$COAStages are continuous or
+discrete, or any such. #$COAStages are reified for representational
+convenience. There are only two standard #$COAStages that can be
+identified for any given COA, corresponding to the initial and final
+conditions (cf. #$InitialStageOfCOAFn and #$EndStageOfCOAFn).")
+(comment securityUnitInMission "(#$securityUnitInMission MISSION  UNIT) means that UNIT 
+is a security unit during MISSION.")
+(comment MiscellaneousTaskSpecification "A specialization of #$Reporting in which various miscellaneous facts about component tasks of a COA (cf. componentTaskOfCOA) are described.")
+(comment sustainsAttritionDuringEvent "(#$sustainsAttritionDuringEvent EVENT UNIT N-PERCENT) means that during EVENT UNIT is attrited to N-PERCENT of its original combat force value.")
+(comment PassageOfLines-MilitaryOperation "A passage of lines is an generally an operation in which one unit moves through another unit's positions with the intent of moving into or out of enemy contact. It involves the transfer of responsibility for fighting an enemy force from one unit to another in close operations.  The commander's reasons for conducting a passage of lines are to sustain the tempo of an offensive operation with fresh forces forces to a defense task. FM100-40, p18-2.")
+(comment Relief-MilitaryTask "Instances are instances of #$MilitaryAction such that the assigned unitrelieves another specified friendly unit.")
+(comment RedUnit "The collection of hostile forces assigned to the red forces
+in a given #$CourseOfAction.  These units are hostile toward the
+#$BlueUnits and their allies and are typically the opposing force in a
+COA.")
+(comment supportingAttackOfOperation "This predicate relates an instance of #$MilitaryOperation to an instance of #AssignedTaskType which is a specialization of #$AttackOnTangible.  (#$mainAttackOfOperation OP ATTACK) means that ATTACK is considered to be the supporting attack of the #$MilitaryOperation OP within the plan specification context in which the assertion is made.  This entails (#$subTasks-Military OP TASK).")
+(disjointWith MobilityFacilitatingTerrain MobilityLimitingTerrain)
+(comment EngagementArea "An area along an enemy avenue of approach where the commander intends to contain and destroy an enemy force with the massed fires of all available weapons. The size and shape of the engagement area is determined by the relatively unobstructed intervisibility from the weapon systems in their firing positions and the maximum range of those weapons. Sectors of fire are usually assigned to subordinates to prevent fratricide. See FMs 1-111, 1-112, 7-10, 7-20, 7-30, 17-95, 71-100, 71-123, 100-5, and 100-15.")
+(comment Exploitation-MilitaryOperation "The purpose of exploitation is to destroy the opposing enemy unit. FM 100-40, p6-1.")
+(comment EstablishingABridgehead "the collection of events in which a force establishes a
+bridgehead.")
+(comment unitHasExtendedFrontage "(#$unitHasExtendedFrontage COA UNIT) means that during the course of action  COA the front line of UNIT is more spread out than is usually the case. This is a potential vulnerability for UNIT.")
+(comment combatZoneOfOperation "(#$combatZoneOfOperation OP REGION) means that REGION is a demarcated #$GeographicalRegion where combat occurs in the idealized planning context of a #$COASpecificationMicrotheory.")
+(comment RetrogradeDefense-MilitaryOperation "The collection of those defensive operations in which there is an organized movement to the rear or away from the enemy. FM 100-40.")
+(comment ContainingAnEnemy "Containing an enemy involves restricting his freedom of movement,e.g. by surrounding him.  In contexts involving a military force (see #$ModernMilitaryUnit-Deployable), containment of enemy forces can also involve causing them to center activity on a given front and prevent them from withdrawing any part of their forces for use elsewhere. The limits of the containment may be expressed in terms of geography or time. Containment allows an enemy to reposition himself within the designated geographic area, whereas fixing (see #$FixingAnEnemy) an enemy does not.")
+(comment ManeuverLimitingTerrain "The collection of geographical regions that offer relatively poor grounds for maneuvering within a specific context.")
+(comment Extraction-MilitaryActivity "The collection of activities in which an individual or small group is evacuated from a location that precludes a landing.")
+(comment unacceptableLosses "(#$unacceptableLosses AGT ACTION) states that AGT's considered opinion is that performing action would result in unacceptable losses.  This predicate will most often be used as an argument for other predicates such as #$costOfAction and #$coaLikelyCasualtyLevel.")
+(comment ForwardEdgeOfBattleArea "The foremost limits of a series of areas in which ground combat units are deployed, excluding the areas in which the covering or screening forces are operating, designated to coordinate fire support, the positioning of (MBA). See FMs 1-111, 6-20 series, 7-20, 7-30, 71-100, 71-123, 100-5, and 100-15.")
+(comment choiceOfManeuverInAction "(#$choiceOfManeuverInAction ACT MANEUVERTYPE) means that in the plannning context there exists a requirement such that the #$MilitaryEvent ACT incorporate a #$MilitaryManeuver of type MANEUVERTYPE.")
+(comment PhaseLineBoundedArea "Instances are instances of #$GeographicalRegion represented
+as being bounded on at least some of its sides by #$PhaseLines in a
+military Course Of Action Sketch.  #$PhaseLineBoundedAreas ordinarily
+are of high military significance within the planning context, and are
+typically assigned to individual units as areas of responsibility (see
+also #$sectorOfResponsibility).")
+(comment unitAssignedNthSuppEffort "(unitAssignedNthSuppEffort MISSION UNIT N) means that           UNIT is the Nth supporting effort during MISSION.")
+(comment FixingAnEnemy "This is a type of action taken to prevent an enemy from moving any part of his forces from a specific location or repositioning them in that location. See also #$ContainingAnEnemy.")
+(comment TacticalPoint "A collection of point-like #$GeographicalThings. Each
+instance of #$TacticalPoint is an geographical point with
+tactical significance in the context of some (actual or hypothetical)
+military operations. As a rule, any particular #$TacticalPoint should
+be asserted to be an instance of a specialization of this collection,
+such as #$ControlPoint or #$Checkpoint-Military. Note that a
+#$TacticalPoint need not be truly zero-dimensional, only smaller than
+the granularity of geographical coordinates used in the tactical
+context. See also #$TacticalArea and #$TacticalLine.")
+(comment opTypeRequiresResourceType "(#$opTypeRequiresResourceType OP_TYPE RES_TYPE) means that,
+in the context of the assertion, a #$MilitaryOperation OP of type
+OP_TYPE requires a #$PartiallyTangible of type RES_TYPE as a resource,
+in the sense that an instance INST of RES_TYPE in the context will be
+(#$resourceInEvent OP INST) in the context.")
+(comment acceptableLosses "(#$acceptableLosses AGT ACTION) states that AGT's considered opinion is that performing action would result in acceptable losses.  This predicate will most often be used as an argument for other predicates such as #$costOfAction and #$coaLikelyCasualtyLevel.")
+(comment InfiltrationLane "Region through which forces may be infiltrated, in small
+groups or individually, at extended or irredular intervals, avoiding
+contact with the enemy.  FM 101-5-1.")
+(comment COAEvaluationDimension "A bundle of predicates and relations corresponding to key
+evaluative measures of the soundness and effectiveness of a COA
+specification. See also #$COASpecificationMicrotheory and #$CourseOfAction.")
+(disjointWith ManeuverFacilitatingTerrain ManeuverLimitingTerrain)
+(comment trafficableForUnitSize-Max "(#$trafficableForUnitSize-Max AOA ECHELON) means that ECHELON is the highest military echelon such that a unit of the size typical for the type ECHELON can successfully traverse the  #$AvenueOfApproach AOA.")
+(comment taskCFL "(#$taskCFL TASK CFL) means that CFL is the #$CoordinatedFireLine for the offensive task TASK.")
+(comment AxisOfAdvance "A line of advance assigned for purposes of control; often a road or a group of roads, or a designated series of locations, extending in the direction of the enemy. (Army) - A general route of advance, assigned for purposes of control, which extends toward the enemy. An axis of advance symbol graphically portrays a commander's intention, such as avoidance of built-up areas or envelopment of an enemy force. It follows terrain suitable for the size of the force assigned the axis and is often a road, a group of roads, or a designated series of locations. A commander may maneuver his forces and supporting fires to either side of an axis of advance provided the unit remain oriented on the axis and the objective. Deviations from an assigned axis of advance must not interfere with the maneuver of adjacent units without prior approval of the higher commander. Enemy forces that do not threaten security or jeopardize mission accomplishment may be bypassed. An axis of advance is not used to direct the control of terrain or the clearance of enemy forces from specific locations. Intermediate objectives normally are assigned for these purposes.")
+(comment FollowAndAssume "Follow and assume is a task in which a committed force follows a force conducting an offensive operation. The committed force is prepared to continue the mission of the force it is following when that force is fixed, attrited, or unable to continue. The follow and assume force is not a reserve but is committed to accomplish specific tasks.")
+(comment ControlPoint "A position along a route of march at which men are stationed to give
+
+information and instructions for the regulation of supply or traffic..")
+(comment ReconnaissanceInForce-MilitaryOperation "The collection of instances of MovementToContact in which a considerable military force locates the enemy and test its dispositions, strengths and reactions. Its purpose is to discover enemy weaknesses.")
+(comment Security-MilitaryOperation "The collection of all military operations conducted to protect the friendly force by providing early and accurate warning of enemy operations, to provide the force being protected with time and maneuver space within which to react to the enemy, and to develop the situation to allow the commander to effectively use the protected force. Security operations orient on the force or facility to be protected, rather than on the enemy. FM 100-40.")
+(comment marchSpeedOfUnitTypeOnTerrain "This predicate relates a military unit type to its typical march speed over unrestricted, restricted, or severely restricted terrain.  More precisely, (#$marchSpeedOfUnitTypeOnTerrain SPEED UNIT_TYPE TERRAIN_RESTRICTION) means that military vehicle of type UNIT_TYPE typically move at rate SPEED over terrain with movement restriction TERRAIN_RESTRICTION.  See also #$TerrainTypeByTrafficabilityLevel.")
+(comment OccupyingAnObjective "To occupy is to move onto an objective, key terrain, or other man-made or natural terrain area without opposition and to control that entire area. (See #$ControllingAnObjective.) Occupation of territory normally requires that the territory be under the authority and effective control of an armed force. To control the territory, the armed force conducts area security operations supported by information operations. This is not applicable to territory being administered in accordance with peace terms, treaty, or other agreement, express or implied, with civil authority of the territory.")
+(comment MainAttackSpecification "A specialization of #$Reporting in which the main attack of some COA is described.")
+(comment Red-Side "Placeholder term employed in the military decision-making process to designate generalized affiliation of 'hostile' or opposed units.")
+(comment vehicleConeIndex "(vehicleConeIndex VEHICLE NR-OF-PASS VCI-VALUE) indicates the VCI  value for both the type of vehicle and their number of passes over the same  path .  The VCI value is necessary for determining whether a vehicle is able  to traverse a soil, especially if the soil is wet or damp.  For a particular  soil type, compare the #$ratingConeIndex to the vehicle's #$vehicleConeIndex. The military usually calculates with one pass, VCI-1, and fifty passes,  VCI-50.  For example, one #$M1A1AbramsTank (VCI-1 = 25) can traverse wet  clay (RCI=40).  However, 50 #$M1A1AbramsTank (VCI-50 = 58) will not be able  to traverse the same wet clay.")
+(comment SecuringAnObjective "To secure is to gain possession of a position or terrain feature with or without force and try to prevent its destruction or loss by enemy action. A unit does not have to physically occupy a geographical location to secure it if the unit can prevent the enemy from occupying or firing at that location by other means. The subordinate tasks associated with secure are to prevent enemy direct and observed indirect fire from impacting on the secured area and to prevent any enemy forces from occupying or using the secured area.")
+(comment obstacleDiverts "(#$obstacleDiverts ?AGT ?OBS) means the instance of obstacle
+OBS diverts the agent AGT along some path. So, for example, if
+RedwoodForest001 lies between TankUnit001 and its objective. In order
+to achieve the objective, TankUnit001 must avoid and travel around
+RedwoodForest001. This is represented as (#$obstacleDiverts
+TankUnit001 RedwoodForest001).")
+(comment forwardCommandPostOfUnit "(#$forwardCommandPostOfUnit POST UNIT)  means that POST has           the status of being the forward #$CommandPost of UNIT in the           context in which the assertion is made.")
+(comment Resupply-CSSAction "This is the operation of replenishing stocks in order to maintain
+required levels of supply. FM 101-5-1.")
+(comment AttackingByFire "To attack by fire is to engage offensively the enemy with direct and indirect fire: to fix, destroy, suppress, or deceive him. The friendly force does not close with the enemy or occupy the objective. An attack by fire is usually a supporting effort during offensive operations and a counterattack by fire option for the reserve during defensive  operations. It is not done in conjunction with another maneuvering force. The force conducting an attack by fire may be assigned a battle position with either a sector of fire or an engagement area, or it may be assigned an axis of advance and a force-oriented objective.  The enemy may be stationary or moving. An attack by fire closely resembles the task of support by fire. The chief difference is that support by fire is conducted to support another force so that force can maneuver against the enemy.")
+(comment areaToProtect "(areaToProtect ?ENTITY) means that ?ENTITY is being protected. This
+predicate is used in the context of goals and causes. ")
+(comment Envelopment-MilitaryManeuver "In an envelopment, the main attack focuses on seizing an objective in the enemy rear that cuts his escape routes and subjects him to destruction in his current positions. In an envelopment operation, the commander seeks to strike an assailable flank. It avoids the enemy's strength - his front - where the effects of his fires and obstacles are the greatest. FM100-40, p3-18. ")
+(disjointWith ObservationLimitingTerrain ObservationFacilitatingTerrain)
+(comment SupportingAttackSpecification "A specialization of #$Reporting in which the supporting attack of some COA is described.")
+(comment fireSupportTaskOfOperation "(#$fireSupportTaskOfOperation OP TASK)  means that TASK is an assigned fire support task (see #$SupportingByFire) which is part of the operation OP.  Normally, this measns that TASK is a #$coaSupportingTask of a main task of OP (see #$mainTaskOfOperation).")
+(comment ConcealmentLimitingTerrain "The collection of geographical regions that provide little or no concealment to an agent within a specific context.")
+(comment ArtilleryBrigade "The collection of all #$ArtilleryUnit-MilitarySpecialty with
+an echelon at the brigade level.")
+(comment posting-Military "(#$posting-Military ORG PLACE) relates the
+
+#$ModernMilitaryOrganization ORG to the #$Place PLACE that is the
+
+location/facility to which ORG is posted.")
+(comment AttackPositionOrdered "Characteristic attribute of a #$GeographicalRegion in a military Course of Action where troops have been ordered to take up attack position.")
+(comment PassageOfLines-MilitaryOperation "The collection of all military operations in which one unit moves through another unit's position with the intent of moving into or out of enemy contact. FM 100-40.")
+(comment ObservationLimitingTerrain "The collection of regions that may be said to limit
+observation in some context.  Instances of this collection hinder the
+ability of an #$Agent-PartiallyTangible to perform instances of #$Observing.")
+(comment obstacleToFrom-Place "(#$obstacleToFrom-Place ?TANG ?AGT ?AREA) relates the
+instance of an obstacle ?TANG to the instance of agent ?AGT and
+instance of place ?AREA such that ?TANG prevents ?AGT from moving into
+?AREA. In some cases, ?TANG may be the same as ?AREA: consider the
+case in which DenseForest prevents TankUnit001 from moving into the
+area the forest occupies.")
+(comment BreachingAnEnemyDefense "A Breach is both a tactical task and an enabling operation in which any means available are employed to break through or secure a passage through an enemy defense, obstacle, minefield, or fortification.  To maintain his tempo and momentum, a commander attempts to bypass and avoid obstacles to the maximum extent possible. Breaching enemy obstacle systems is normally his last choice. When they occur, they are a synchronized combined arms operation under the control of the maneuver commander. There are three types of breaching operations: hasty, deliberate, or assault. The type of breach conducted depends on the nature of the obstacle and the capabilities of the enemy force covering the obstacle.")
+(comment moveCrossesPath "(#$moveCrossesPath MOVE PATH) is true iff MOVE is an instance of
+Movement-TranslationEvent that goes across PATH. For this to be the case,
+the following conditions must be satisfied: first, MOVE traverses a point
+that is on PATH; second, MOVE's traversal begins at point START, ends at
+point END, and START and END are located in distinct regions both of which
+have PATH as common boundary.")
+(comment Exploitation-MilitaryOperation "The purpose of exploitation is to destroy the opposing enemy unit when an attack has left it disorganized and vulnerable.")
+(comment containmentConstraint-Spatial "(#$containmentConstraint-Spatial TASK FEATURE) means that FEATURE is a topographical feature used for identifying and demarcating the #$ContainmentZone that plays the role of #$taskContainmentZone in TASK.")
+(comment MilitarySupplyPoint "The collection of intangible geographical locations where supplies, services and materials are located and issued. These locations are temporary and mobile, normally being occupied for up to 72 hours. FM 101-5-1.")
+(comment tacticalLine-FromGIS "(#$tacticalLine-FromGIS TLINE) means that TLINE is an
+instance of #$TacticalLine, according to some
+#$GeographicInformationSystem to which Cyc has access.")
+(comment ForwardLineOfOwnTroops "A line which indicates the most forward positions of friendly forces in any kind of military operation at a specific time. The FLOT normally identifies the forward location of covering and screening forces. (Army) - The FLOT may be at, beyond, or short of the FEBA. An enemy FLOT indicates the forward most position of hostile forces. (See also #$LineOfContact (LC).)  See FMs 1-111, 6-20 series, 7-20, 7-30, 71-100, 71-123, 100-5, and 100-15.")
+(comment Insertion-MilitaryActivity "The collection of activities in which a small group of troops is unobtrusively placed into enemy territory.")
+(comment TargetReferencePoint "An easily recognizable point on the ground (either natural or man-made) used to initiate, distribute, and control fires. TRPs are designated by maneuver leaders from platoon through battalion to define battalion, company, platoon, section, squad, or individual sectors of fire and observation usually within an engagement area. TRPs can also designate the center of an area where the commander plans to distribute or converge the fires of all his weapons rapidly. TRPs are designated using the standard target symbol and numbers issued by maneuver commanders. Once approved by the battalion fire support officer, TRPs can be designated as indirect fire targets using the standard target symbol with letters and numbers issued by the fire support officer. (See also #$EngagementArea). See FMs 6-series, 7-7, 7-8, 7-10, 7-20, 7-90, 7-91, 17-12, 17-15, 17-9 and 23-1.")
+(comment CommandPost "An instance of #$CommandPost is a physical and 
+
+engineered location that is intended to serve the purposes of a unit 
+
+functioning as #$headQuartersOfUnit with respect to the larger unit of which it 
+
+is a part.  Units as a rule have four #$CommandPosts, which are: the 
+
+#$mainCommandPostOfUnit, the #$tacticalCommandPostOfUnit, the #$forwardCommandPostOfUnit, and the
+
+ #$rearCommandPostOfUnit.")
+(comment LinesOfCommunications "The collection of all routes, land, water, air, which
+connect an operating military force with a base of operations and
+along which supplies and military forces move.")
+(comment ReConstitute-MilitaryTask "This is the task to add personnel to an attrited force.")
+(comment phaseLineBoundsRegion "(#$phaseLineBoundsRegion LINE REGION) means that LINE is
+used in part for the purpose of demarcating REGION.")
+(comment COAFireSupportGuidanceMicrotheory "A collection of microtheories.  The information in each
+instance will inherit to some instance of
+#$COASpecificationMicrotheory, and in some cases, to multiple
+instances.  Each instance of #$COAFireSupportGuidanceMicrotheory is
+used to specify the commander's fire support guidance for the COAs
+that appear among the #$genlMt dependents.")
+(comment ApproachCorridorType "A collection of #$CombatTheaterSiteAttributes properly applicable to approach corridors such as instances of #$AvenueOfApproach, instances of #$MobilityCorridor, and so on.")
+(comment COAForFriendlyForce "Characteristic attribute of a COA that has been devised for
+a force that is considered 'friendly' (#$Blue-Side) in the planning
+context.")
+(comment MobilityCorridor "Areas where a mobile military force will be effectively canalized due to terrain constructions and outlay (see #$canalizingTerrain). The mobility corridor is relatively free of obstacles and allows military forces to capitalize on the principles of mass and speed.  From FM 101-5-1, p.1-104.")
+(comment GuardOperation "(from DOD): A form of security operation whose primary task is to protect the main force by fighting to gain time while also
+observing and reporting information, and to prevent enemy ground observation of and direct fire against the main body by
+reconnoitering, attacking, defending, and delaying.")
+(comment ProvidingDirectSupport "The collection of events in which a
+#$ModernMilitaryUnit-Deployable is tasked with the support of a
+another unit.  The supporting unit is to answer calls for assisstance
+from the supported unit.")
+(comment taskContainmentZone "(#$taskContainmentZone TASK ZONE) means that ZONE is the designated #$ContainmentZone for TASK.")
+(comment defensivePositionForAOA "(#$defensivePositionForAOA POS AOA) means that in the given
+military planning context POS is an instance of #$TacticalArea suitable as
+a defensive position against hostile forces expected to use the instance
+AOA of #$AvenueOfApproach. See also #$DefensivePosition. There are
+criterial conditions for defensive positions, and some necessary conditions
+are indicated in the rules, but it is very difficult to formulate a set of
+sufficient conditions.")
+(comment reserveUnitForTask "(#$reserveUnitForTask TASK UNIT) means that UNIT 
+is a reserve unit for the task TASK.")
+(comment FollowAndSupport "In this type of action, a committed force follows and supports the mission accomplishment of a force conducting an offensive operation. The follow and support force is not a reserve but is a force committed to specific tasks.")
+(comment KnownHostileActivity "A region with this attribute in a military planning context is a region where the enemy is known to be active.")
+(comment Counterattack-MilitaryOperation "The collection of instances of #$MilitaryOffensiveOperation and #$MilitaryAttack which are conducted in response to an attack initiated by an enemy force.")
+(comment TargetedForMining "Characteristic attribute of a #$GeographicalRegion such that either a friendly force or a threat force has targeted it for emplacement of a #$MineField.")
+(comment supportsForce-General "(#$supportsForce-General UNIT FORCE) means that UNIT is assigned to general support for FORCE during the operations FORCE will be conducting.")
+(comment Red-Side "The bad guys.")
+(comment mainAttackOfOperation "This predicate relates an instance of #$MilitaryOperation to an instance of #AssignedTaskType which is a specialization of #$AttackOnTangible.  (#$mainAttackOfOperation OP ATTACK) means that ATTACK is considered to be the main attack of the #$MilitaryOperation OP within the plan specification context in which the assertion is made.  This entails (#$subTasks-Military OP TASK).")
+(comment inaccessibleToUnitAfterTaskIns "(#$inaccessibleToUnitAfterTaskIns REGION UNIT TASK) means UNIT cannot move to, or along, REGION as a result of being the #$objectActedOn of TASK in a particular course of action.")
+(comment Column-ManeuverFormation "This attribute applies to units which are moving in a
+column-like formation.  In such formation, the unit's length is
+aligned roughly along its axis of movement.")
+(comment FireSupportSpecification "A specialization of #$Reporting in which the supporting fires of some COA are described.")
+(comment finalRedPosDesiredByBlueMt "(#$finalRedPosDesiredByBlueMt FRIENDMT ENEMYMT) means
+that ENEMYMT represents the final position that the friendly force
+whose position is detailed in FRIENDMT desires its opponent force to
+be in at the end of the COA represented in FRIENDMT.")
+(comment FrontalAttack-MilitaryManeuver "The frontal attack is a military operation employed either to overrun or destroy a weaker enemy force or as a supporting or secondary force in conjunction with other choices of maneuver. ... It is also used by a friendly force that has overwhelming combat power to maintain momentum. ... Whereas the penetration is designed as a sharp attack to rupture the enemy position, the frontal attack is designed to maintain continuous pressure along the entire front until either a breach occurs or forces succeed in pushing the enemy back. FM100-40, p3-16.")
+(comment obstacleBlocks "(#$obstacleBlocks AGT OBS) means that the obstacle OBS
+blocks AGT in some manner, and that AGT is not able to overcome OBS by
+circumventing OBS. For instance, if (obstacleBlocks TankCompany001
+AlpMountainRange) is true, then TankCompany001 is not able to pass
+through AlpsMountainRange and also it is not possible to go around in
+an effective manner.")
+(comment tacticalCombatForceInMission "(#$tacticalCombatForceInMission MISSION  UNIT) means that UNIT 
+
+plays the role of tactical combat force during MISSION.")
+(comment AttackingByFire-Direct "Instances of this collection are instances of #$AttackingByFire carried out using instances of #$DirectFireWeapon --i.e., projectile weapons such as guns which are aimed directly at the target.")
+(comment taskTypeRequiresAgentType "(#$taskTypeRequiresAgentType TASK_TYPE AGENT_TYPE) means that,
+in the context of the assertion, a #$MilitaryAction TASK of type
+TASK_TYPE requires an #$Agent-PartiallyTangible of type AGENT_TYPE as an 'agent resource',
+in the sense that an instance AGENT of AGENT_TYPE in the context will
+be (#$agentResourceInEvent TASK AGENT).")
+(comment movesFromToInTask "(#$movesFromToInTask TASK ITEM FROM_LOC TO_LOC) is true iff TASK
+is an assigned military task during the execution of which ITEM (a military
+unit or other mobile asset) moves, in the sense of
+#$Movement-TranslationEvent (q.v.), from the location FROM_LOC to the destination
+TO_LOC. Note that this predicate applies only if TASK itself is a type of
+#$Movement-TranslationEvent.")
+(comment TimingBasedSurpriseAttack "The collection of #$SurpriseAttacks in which the element of
+surprise hinges on the unexpected timing to the attack.")
+(disjointWith MediumArmored LightlyArmored)
+(comment forcewiseContinuous "Suppose that REG is a #$LineOfMilitaryForces; then intuitively
+
+REG is #$forcewiseContinuous if it has no gaps through which an opposing
+
+force could pass without encountering significant resistance. More
+
+precisely, (#$forcewiseContinuous REG) is true iff there is a
+
+#$ModernMilitaryUnit-Deployable UNIT whose #$taskAreaOfOperations includes
+
+REG and for any two greater-than-granule-size points X and Y, there is a
+
+path PATH connecting X and Y such that PATH is physically in REG and any
+
+hostile action through PATH can be prevented by UNIT. Thus the purpose of a
+
+defensive operation aimed at controlling a certain area, for instance, will
+
+be among other things that of establishing a #$forcewiseContinuous line of
+
+defense. By contrast, offensive operations against established defensive
+
+positions will need to create and exploit non-forcewiseContinuous regions
+
+in the opposing forces, i.e., gaps in their defense. However, applications
+
+of this concept need not be restricted to defensive operations.")
+(disjointWith ConcealmentLimitingTerrain ConcealmentProvidingTerrain)
+(comment termAssociatedWithMETT-TCPrinciple "(termAssociatedWithMETT-TCPrinciple TERM PRIN) says that (object-level) knowledge about TERM is knowledge that falls under the METT-TC category, PRIN.  Assertions in which TERM is used should thus be displayed to the user as falling under PRIN.")
+(comment AvenueOfApproach-Water "A specialization of #$AvenueOfApproach for water-transported forces.  An
+#$AvenueOfApproach-Water is a route through one or more #$BodyOfWater that leads a force to its
+objective, or to key terrain on its path.")
+(comment mainCommandPostOfUnit "(#$mainCommandPostOfUnit POST UNIT) means that POST has the status of being the main #$CommandPost of UNIT in the context in which the assertion is made.  This does NOT mean that UNIT is necessarily a headquarters unit, rather the SUBUNIT such that (#$headQuartersOfUnit UNIT SUBUNIT) operates out of POST as its main command center.")
+(comment ArtilleryFire "An important specialization of #$AttackingByFire, all instances of which are performed by some instance #$ArtilleryUnit-MilitarySpecialty.")
+(comment MilitaryOperation-Joint "A subset of #$MilitaryOperation, in which elements are planned military operations carried out by 2 or more parties working together.  These parties are often different branches of a country's military, or the militaries of several countries.  Examples include TheAlliedInvasionOfNormandy.")
+(comment terrainAdvantage-SideDegree "(#$terrainAdvantage-SideDegree LOC SIDE ADV-AMT) means
+that the location LOC has the tactical potential to provide the degree of 
+#$TacticalAdvantage ADV-AMT to SIDE. For example, (#$terrainAdvantage-SideDegree Hill28 #$OffendingForce (#$HighAmountFn #$TacticalAdvantage))
+means that Hill28 has the potential to offer the #$OffendingForce a
+high degree of #$TacticalAdvantage. Note that #$TacticalAdvantages
+depend not just on terrain characteristics, but also on force and
+situation characteristics, and therefore belong to agents in fairly
+specific classes of real or potential military operations. For this
+reason, assertions stating the #$terrainAdvantage-SideDegree for some
+piece of terrain should be made only within appropriately
+scenario-specific contexts.")
+(comment TroopMovement "The collection of #$Translation-LocationChange    events in which military troops move or are transported from one place to another by any available means. Troop movements are either administrative or tactical (see FM100-40, p.17-1).")
+(comment FeintingAttack "A #$FeintingAttack attemps to draw an enemy's attention and resources away from some main attack by promoting a misapprehension about the degree of threat posed by the feint. In a military conflict, this could be acheived by inducing an enemy to position his forces, commit his reserves or shift his fire support in reaction to the feint in ways which allow the main attack to be more effective.")
+(comment obstacleToFrom-Path "(#$obstacleToFrom-Path OBS AGT PATH) means that OBS is an
+obstacle on the path PATH and provides AGT with some difficulty. OBS
+either blocks AGT from PATH completely, impedes AGT while AGT passes
+through it, or diverts AGT to some other path.")
+(comment ExercisingCommandAndControl "A collection of complex #$Events in which a commander in the Military Service exercises his authority over           subordinates that are assigned to a mission in order to carry out the mission.  The #$subEvents of any           instance of #$ExercisingCommandAndControl will most likely include making use of any available resources required for the mission (e.g. personnel and equipment) and then planning, organizing, directing, coordinating,           or controlling these resources, as well as any units assigned to the mission, in such a way that the           mission is successfully carried out.  Note that most of this comment is a near paraphrase of the definitions           of 'command' (JP 1-02) and 'command and control' (C2) (JP 1-02) from chapter 1 of the Army field           manual FM 101-5-1.  See http://www-cgsc.army.mil/cdd/F545/F545.htm.")
+(comment ReinforcingAMilitaryForce "A specialization of both #$MilitaryEvent and #$HelpingAnAgent.  Each instance of #$ReinforcingAMilitaryForce is an event in which some military force reinforces another military force.  The two military forces may be part of the same military organization, or they may come from cooperative, autonomous military organizations.")
+(comment ObservationPost "An instance of #$ObservationPost is a physical and 
+
+engineered location that is intended to serve the purposes of a military unit, providing that 
+
+unit with the ability to observe activities within an area of interest.")
+(comment MilitarySupplyPoint-ClassI "The collection of instances of #$MilitarySupplyPoint at which subsistence items such as ready-to-eat meals, T-rations, fresh fruits and vegetables, and health and comfort items are located and issued. FM 101-5-1.")
+(comment LineOfContact "A general trace delineating the location where two opposing forces are engaged.  (See also #$ForwardEdgeOfBattleArea (FEBA), #$ForwardLineOfOwnTroops (FLOT) and #$LineOfDeparture (LD).) See FMs 1-112, 7-7, 7-8, 7-10, 7-20, 7-30, 17-15, 17-95, and 71-123.")
+(comment DefensivelyAdvantageousTerrain "The collection of geographical regions that are useful for defensive actions. Note that it is possible for a geographical region to be both offensive and defensive. See #$OffensivelyAdvantageousTerrain.")
+(comment ProbableLineOfDeployment "A line selected on the ground, usually in the region of the
+last covered and concealed position prior to the objective and forward
+of the line of departure, where attacking units deploy prior to
+beginning an assault; it is generally used under conditions of limited
+visibility.  From FM101-5-1.")
+(comment DefendingForce "A collection of individual military units. Each instance of
+#$DefendingForce is a military force in an defensive role in some real
+or potential military operations. Note that the same unit may be an
+#$DefendingForce in some situations and a #$OffendingForce in
+others. For this reason, assertions making a specific unit an instance
+of #$DefendingForce should be made only within appropriately
+scenario-specific contexts. For the related collection of military
+units that are specially optimized to conduct defensive operations,
+see #$DefensiveOperationsUnit-MilitarySpecialty")
+(comment COAMissionEssentialsMicrotheory "A collection of microtheories.  The information in each
+instance will inherit to some instance of
+#$COASpecificationMicrotheory, and in some cases, to multiple
+instances.  Each instance of #$COAMissionEssentialsMicrotheory is used
+to specify the 'mission essential features' of the COAs that appear
+among the #$genlMt dependents, as a specified by the commander during
+the mission analysis process.")
+(comment ForwardPassageOfLines-MilitaryOperation "A forward passage of lines occurs when a unit passes through a unit's positions while moving toward the enemy. FM100-40, p18-2. The purpose of a forward passage of lines is to conduct operations, such as an attack, reconnaissance, or security. This operation is designed to ensure maintenance of enemy contact. FM100-40, p18-8.")
+(comment Retirement-MilitaryOperation "A retirement is a task in a retrograde operation in which a force out of contact with the enemy moves away from the enemy, usually to the rear. A retiring unit organizes for combat but does not anticipate interference by enemy ground forces. FM100-40, p13-29.")
+(comment delayUntilTime "(delayUntilTime OP TEMP UNIT) means that in the instance of #$MilitaryOperation, OP, UNIT has been tasked with delaying enemy movement until the time interval started by TEMP.")
+(comment pointsOfBorder "(#$pointsOfBorder BOUND (ITEM1,...,ITEMN)) means that the #$Border BOUND passes through the geographical reference points ITEM1 through ITEMN.")
+(comment TerrainRestricted "Restricted terrain is defined in FM 34-130 as terrain that
+hinders movement to some degree.  Little effort is needed to enhance
+mobility, but units have difficulty maintaining preferred speeds.  For
+armored and mech forces, this is typically characterized b moderate to
+steep slopes or moderate to densely spaced obstacles such as trees,
+rocks, or buildings.")
+(comment taskFCL "(#$taskFCL TASK FCL) means that FCL is the #$FinalCoordinationLine for the offensive task TASK.")
+(disjointWith Insertion-MilitaryActivity MilitaryInvasion)
+(comment Interdiction "To interdict is to prevent, hinder, or delay the enemy's use of an area or route. Interdiction is conducted to complement and reinforce other ongoing offensive or defensive operations. An interdiction tasking must specify the enemy force to be interdicted. It must also specify the area or route to be interdicted, how long the interdiction is to be in effect, defined either as a length of time or some event that must occur before the interdiction is lifted or the exact effect desired from the interdiction.")
+(comment Airhead "1. A designated area in a hostile or threatened territory which, when seized and held, ensures the continuous air landing of troops and material and provides maneuver space necessary for projected operations. Normally it is the area seized in the assault phase of an airborne operation. 2. A designated location in an area of operations used as a base for supply and evacuation by air.  (Army) - The airhead contains enough #$DropZones (DZs), #$LandingZones (LZs), and extraction zones (EZs) to ensure mass, interior lines of communication, and defense in depth. See FMs 71-100-2, 90-4, and JP 3-18.1.")
+(comment complexityOfSituationTypeforPurpose "(#$complexityOfSituationTypeforPurpose PLAN COMPLEXITY) holds just in case PLAN has the stated evaluatory COMPLEXITY.  For instance,  if (#$complexityOfSituationTypeforPurpose PLAN #$TooSimple) holds then attempts at carrying out the series of events depicted by PLAN  will likely be unsuccessful.")
+(comment MissionSpecification "A specialization of #$Reporting in which the mission for some COA is described.")
+(comment ApproachMarch-MilitaryOperation "#$ApproachMarch-MilitaryOperation is the collection of instances of #$MilitaryOperation that are conducted in order to close the distance between the unit(s) in question and the enemy, whose location is relatively certain. FM 100-5.")
+(comment CounterattackByFire "A specialization of #$Counterattack-MilitaryOperation.  Each instance is a #$MilitaryOperation and an offensive response to a #$MilitaryAttack, and is carried out by means of direct or indirect fires.")
+(comment Retain-MilitaryTask "To retain is to occupy and hold a terrain 18 feature so that the enemy can not occupy or use it. The commander assigning this task must specify the area to be retained and the duration of the retention, which is time- or event-driven. While a unit is conducting this task, decisive engagement can occur.")
+(comment SupportingByFire "An instance of #$SupportingByFire closely resembles the task of #$AttackingByFire, but a fire support action need not be an attack at all (i.e., #$AttackOnTangible). Support by fire is artillery fire conducted to support another force so that force can maneuver against the enemy.")
+(comment TacticalTerrainObject "A collection of #$GeographicalThings.  Each instance of
+#$TacticalTerrainObject is a geographically located object, specified
+and given tactical status in the context of some real or hypothetical
+military operations. #$TacticalTerrainObjects are generally named as
+part of the process of military planning.  They may or may not
+correspond to recognizable features of the underlying terrain.")
+(comment attritionConstraintOfAction "(#$attritionConstraintOfAction ACT QUANT) means that an
+expected attrition level in excess of QUANT is not considered acceptable for
+the military action ACT>.  The attrition constraint is generally given as a percentage or decimal fraction of the whole.")
+(comment PassageOfLines-Forward "Forward passage of lines occurs when a unit passes through another (friendly) unit's positions while moving toward the enemy.")
+(comment coaSubTasks "(#$coaSubTasks TASK SUBTASK) means that SUBTASK is considered a proper #$subEventTypes of TASK and presupposes that any unit assigned to perform SUBTASK is a #$subOrganizations of the unit assigned to perform TASK.  This relation is used to express the relationship between a task assigned to a particular military unit at one level of planning in the MDMP and the task assigned to a subunit of that unit at a lower level of planning.--Rode, Nov. 4, 1998")
+(comment coaSynchronicity "(#$coaSynchronicity COA ATTR) evaluates as ATTR, some
+#$SynchronicityOfComplexAction, the synchronicity of the attack plan outlined
+in COA.  The phases of a #$Synchronous attack are timed to complement
+each other.  For example, an attack just prior to a COA's main attack,
+and in a different location, can mislead the enemy about the main
+thrust of the attack, and fix a part of its force away from the
+decision point.  #$An Asynchronous attack might be targeting enemy forces with artillery while
+also attacking with helicopters, as this jeopardizes the friendly helicopters.")
+(comment issuerOfOrder-Military "(#$issuerOfOrder-Military ORDERING PERSON) means that PERSON is the author and issuing authority in ORDERING.  In such a case, it is assumed that ORDERING will have as an #$outputsCreated an instance of #$MilitaryOrder-IBO of which the #$issuerOfOrder-Military will be the #$informationArtifactAuthor.")
+(comment HostileUnitFn "(#$HostileUnitFn ORG) denotes the collection of instances of #$ModernMilitaryUnit-Deployable that are hostile to ORG.  More precisely, something, FOE, is an instance of 
+(#$HostileUnitFn ORG) just in case there is a #$Organization, MIL, such that 
+(#$hasMembers MIL FOE) and there is a #$ConflictEvent, CON, such that 
+(opponentsInConflict ORG MIL CON).  Often this function will be used within a COA planning context.  In such contexts (#$HostileUnitFn #$Red-Side) denotes the collection of forces hostile to the #$Red-Side, i.e. all the members of the #$Blue-Side.")
+(comment Attack-MilitaryOperation "A specialization of #$MilitaryOffensiveOperation.  Instances
+are offensive operations characterized by actual instances of
+#$Engagement-Military, a requirement that does not extend to instances
+of #$MilitaryOffensiveOperation in general.")
+(comment finalRedPosDesiredByRedMt "(#$finalRedPosDesiredByRedMt FRIENDMT ENEMYMT) means
+that ENEMYMT represents the final position that it is anticipated the
+threat force desires to attain, relative to the friendly force
+position detailed in FRIENDMT.")
+(comment unitHasInsufficientCombatPower "(#$unitHasInsufficientCombatPower COA UNIT) means that UNIT has insufficient combat power for the task(s) assigned to it in the course of action COA.")
+(comment fireSupportToOperation "(#$fireSupportToOperation MISSION  UNIT) means that UNIT 
+
+provides fire support during MISSION.")
+(comment traversalConstraintOfTask "(#$traversalConstraintOfTask TASK DISTANCE) means that any
+unit assigned to TASK will be required to traverse a distance of at
+least DISTANCE along the #$AxisOfAdvance, in executing TASK.")
+(comment KeyFeatureArea "Characteristic attribute of terrain that is considered to be 'key' for the execution of a military Course of Action, insofar as controlling it enables the realization of some critical feature of the COA.")
+(comment SingleEnvelopment-MilitaryManeuver "A military operation which primarily consists of a single enveloping force (main effort) and a fixing force (supporting effort).")
+(comment taskTypeRequiresResourceType "(#$taskTypeRequiresResourceType TASK_TYPE RES_TYPE) means that,
+in the context of the assertion, a #$MilitaryAction TASK of type
+TASK_TYPE requires a #$PartiallyTangible of type RES_TYPE as a resource,
+in the sense that an instance INST of RES_TYPE in the context will be
+(#$resourceInEvent TASK INST).")
+(comment FightingHole "A collection of artifacts.  Each instance of #$FightingHole
+is a hole that has been dug for the purpose of providing protection
+during a military firefight.")
+(comment FortifiedArea "Attribute of combat theatre sites which have been fortified with defensive emplacements to guard against hostile offensive operations.")
+(comment ActingAsADecoy "A specialization of #$Deceiving. In events of this type, some agent acts as a decoy to misdirect the attention of some opposing agent.")
+(comment CircuitousAvenueOfApproach "A collection that is a specialization of avenues of
+approach.  These are paths leading to an objective that are not
+direct.")
+(comment TerrainAssessment-METT-TC "The collection of all instances of #$Evaluating where terrain features are under consideration in some military context.")
+(comment OneWayBombingMission "A subcollection of #$BombingMissions in which the aim is not to return to base, but to look for a place to land near the #$target of the mission, or to sacrifice the plane and pilot.")
+(comment TacticalTerrainType "A collection of collections.  Instances are
+collections of geographical areas that may be specifically vested in a
+the context of a theater of combat operations.  Examples include
+#$MilitaryControlMeasure, #$NoFireArea, etc.")
+(comment tacticalPoint-FromGIS "(#$tacticalPoint-FromGIS TPOINT) means that TPOINT is an
+instance of #$TacticalPoint, according to some
+#$GeographicalInformationSystem to which Cyc has access.")
+(comment BypassingAnEnemy "To bypass an enemy force is to maneuver around it so as to avoid a confrontation.  When conducting a bypass, the commander deliberately avoids combat with an enemy force so that all of his combat power is directed toward mission accomplishment. For a more general notion of bypassing something, see #$BypassingSomething.")
+(disjointWith HeavilyArmored MediumArmored)
+(comment InfiltratingAnArea "An infiltration is the covert movement through or into an area occupied by enemy forces to occupy a position of advantage in the enemy's rear while exposing only small elements to enemy defensive fires. ... To successfully infiltrate, the force must avoid detection and engagement. Since this requirement limits the size of the infiltrating force, infiltration is normally used in conjunction with, and in support of, the other choices of maneuver. Infiltration is also a movement technique used within friendly territory to move forces in small groups at extended or irregular intervals. FM100-40, p3-27,28.")
+(comment RetreatingFromAnArea "A specialization of #$LeavingAPlace.  Each instance of #$RetreatingFromAnArea is an event in which some military force retreats from an area. The retreating force need not have been in previous contact with enemy forces; for this narrower notion, see #$WithdrawingFromCombat.")
+(comment CoordinatedFireLine "A line beyond which conventional surface fire support means (mortars, field artillery, naval gunfire ships) may fire at any time within the zone of the establishing headquarters without additional coordination. It is usually established by brigade or division but may be established by a maneuver battalion.")
+(comment MilitarySupplyPoint-ClassII "The collection of instances of #$MilitarySupplyPoint at which clothing, individual equipment, tents, organizational tool sets and kit, hand tools, maps and adminstrative and housekeeping supplies and equipment are located and issues. FM 101-5-1.")
+(comment ControllingAnObjective "To control the enemy is to maintain physical influence over him by occupying an area or dominating the area through the use of direct fire weapon systems. The tactical task of control differs from that of secure because secure does not allow enemy fires to impact on the area being secured. In control, the enemy can engage targets within the controlled area but cannot move his ground forces through the area at will.")
+(comment LineOfDeparture "1. In land warfare, a line designated to coordinate the departure of attack elements. 2. In amphibious warfare, a suitably marked offshore coordinating line to assist assault craft to land on designated beaches at scheduled times. (See also #$LineOfContact (LC)). See FMs 1-111, 7-7, 7-8, 7-10, 7-20, 7-30, 17-15, 17-95, 31-12, and 71-123. 3-15.")
+(comment hostileUnitType "(#$hostileUnitType ORG UNIT-COLL) holds just in case UNIT-COLL is the collection of
+instances of #$ModernMilitaryUnit-Deployable that are hostile to ORG.  The is the corresponding predicate to #$HostileUnitFn.")
+(comment ForwardArmingAndRefuelingPoint "A temporary facility that is organized, equipped, and deployed by an aviation commander, and is normally located in the main battle area closer to the area of operations than the aviation unit's combat service support area. It provides fuel and ammunition necessary for the employment of aviation maneuver units in combat. It permits combat aircraft to rapidly refuel and rearm simultaneously. See FMs 1-111, 7-30, 71-100, 100-15, and 100-103.")
+(comment specsAssociatedWithMETT-TCPrinciple "(#$specsAssociatedWithMETT-TCPrinciple COLL METT-TC) says that for any specialization SPEC of COLL, (#$termAssociatedWithMETT-TCPrinciple SPEC METT-TC) holds.")
+(comment SearchAndAttack-MilitaryOperation "This is the collection of instances of #$MilitaryOperation that are performed by smaller, light maneuver units, and air cavalry or air assault units in large areas. It is used when the enemy disperses in an area of close terrain that is unsuited for heavy forces, when enemy weaknesses cannot be found, or to deny the enemy movement in an area. FM 100-5.")
+(comment AssemblyAreaOccupied "1. An area in which a command is assembled preparatory to further action. 2. In a supply installation, the gross area used for collecting and combining components into complete units, kits, or assemblies. See FMs 7-20, 7-30, and 71-123.")
+(comment restrictiveFireAreaOfOperation "(#$restrictiveFireAreaOfOperation OP AREA) means that AREA is
+
+designated a #$RestrictiveFireArea for #$MilitaryOperation OP.")
+(comment PenetratingADefense "A type of action in which an agent breaks through an adversary's defense, usually with the intent of disrupting the defensive system. Instances of this sort of event include military units penetrating enemy lines as well as sports teams penetrating an opponent's defense.")
+(comment DefaultTacticalTargetType-Recon "A collection of collections, each instance COL of
+#$DefaultTacticalTargetType-Recon is a collection
+(a specification of #$SpatialThing-Localized)
+of objects that, by default, will be candidates
+for reconnaissance activity by
+enemy units before or during a battle.
+Examples include military units as well
+as instances of #$CommandPost and many terrain
+features such as instances of #$Bridge or
+#$RoadwayJunction.")
+(comment CoverLimitingTerrain "The collection of geographical regions that provide little or no cover for an agent within a specific context.")
+(comment DestroyingAnEnemyForce "To destroy an enemy force is to physically render it combat-ineffective until it is reconstituted. The amount of damage needed to render a unit combat-ineffective depends on the unit's type, discipline, and morale. It normally requires greater than percent personnel or equipment casualties. Destroying armored or dug-in targets with area fire weapons requires a large amount of ammunition and  considerable time, so forces do not normally attempt it unless they have terminally guided munitions.")
+(comment pointsOfCenterLineTraversal "(#$pointsOfCenterLineTraversal PATH (ITEM1,...,ITEMN)) means that the centerline of the #$Path-Spatial PATH, considered as a traversal, traverses the geographic reference points ITEM1 through ITEMN in the order listed.")
+(comment TacticalLine "A collection of line-like #$GeographicalThings.  Each
+instance of #$TacticalLine is a geographical line with
+tactical significance in the context of some (actual or hypothetical)
+military operations. As a rule, any particular #$TacticalLine should
+be asserted to be an instance of a specialization of this collection,
+such as #$PhaseLine or ForwardLineOfOwnTroops. Note that a
+#$TacticalLine need not be truly one-dimensional, as long as its size
+in all but one dimension is smaller than the granularity of
+geographical coordinates used in the tactical context. See also
+#$TacticalPoint and #$TacticalArea.")
+(comment TerrainSeverelyRestricted "Severely restricted terrain defined in FM 34-130 as terrain
+that severely hinders or slows movement formations unless some effort
+is made to enhance mobility.  For armored and mechanized forces, this
+is typically characterized by steep slopes and large or densely spaced
+obstacles with little or no supporting roads.")
+(comment FriendlyUnitFn "(#$FriendlyUnitFn ORG) denotes the collection of instances of #$ModernMilitaryUnit-Deployable that are Friendly to ORG.  Often this function will be used within a COA planning context.  In such contexts (#$FriendlyUnitFn #$Red-Side) denotes the collection of forces friendly to the #$Red-Side, i.e. the members of #$Red-Side.  For a similar but opposite function see #$HostileUnitFn.")
+(disjointWith COAForFriendlyForce COAForHostileForce)
+(comment ManeuverFacilitatingTerrain "The collection of geographical regions that offer relatively good grounds for maneuvering within a specific context.")
+(comment coaAddressesMissionEssentialTaskSet "(#$coaAddressesMissionEssentialTaskSet  COAMT SET) means that the course of action specified by  COAMT addresses the mission essential task as specified by SET.")
+(comment ZoneOfFire "The offensive operational area assigned to
+a unit or commander that is defined by a forward boundary, rear
+boundary, lateral boundaries, and a coordinating altitude.  From FM
+101-5-1.")
+(comment IsolatingAnEnemy "A specialization of ContainingAnEnemy. To isolate an enemy force is to seal it off physically and psychologically from sources of support. As with containment, isolation involves denying an enemy freedom of movement and contact with other enemy forces.")
+(comment SuspectedHostileActivity "A region with this attribute in a military planning context is a region where the enemy is suspected but not known to be active.")
+(comment supportsUnit-Direct "(#$supportsUnit-Direct UNIT1 UNIT2) means that UNIT1 is tasked with the direct support of UNIT2.  This means that UNIT1 will respond to any requests from UNIT2 for help specifically.")
+(comment AttackPositionProposed "Characteristic attribute of a #$GeographicalRegion in a military Course of Action which has been targeted as a potential staging area in which troops may take up attack position.")
+(comment BattlePositionProposed "Attribute of a #$GeographicalRegion in a military Course of Action context that has been targeted as a potential battle position.")
+(comment MilitaryOrder-IBO "A collection of #$InformationBearingObjects.  Each instance is a written text conveying an order issued by one #$MilitaryPerson to another of inferior rank or to an instance of #$MilitaryOrganization that the issuer of the order is entitled to command.")
+(comment tenureInUnitPosition "(#$tenureInUnitPosition POSITION MMO AGENT DURATION) means that, in the context of the assertion, AGENT holds POSITION in MMO, and has held that position for DURATION.  More specifically, if it #$holdsIn
+time interval TEMP that (#$tenureInUnitPosition POSITION MMO AGENT) and INT is any time interval of #$duration DURATION that is #$temporallyFinishedBy TEMP, then (POSITION MMO AGENT) #$holdsIn
+INT.")
+(comment RiverCrossing-MilitaryTask "A river crossing is an operation required before ground combat power can be projected and sustained across a water obstacle. It is a centrally planned and controlled operation that requires the allocation of external crossing means and a force dedicated to the security of the bridgehead. River crossings require specific  procedures for success because the water obstacle prevents normal ground maneuver. There are three basic types of river crossings: hasty, deliberate, and retrograde. A hasty river crossing is a task conducted as part of a larger operation, typically an attack, with no intentional pause at the water line. When a hasty river crossing is not feasible such as when the enemy or terrain situations prevent it, a hasty crossing attempt fails, or friendly offensive operations resume at a river line after a pause, the force conducts a deliberate river crossing operation. A retrograde river crossing is a movement to the rear across a water obstacle while in contact with the enemy.  A river crossing is both a tactical task and an enabling operation. Field Manual 90-13, River Crossing Operations, gives detailed information concerning the conduct of a river crossing.")
+(comment unitFormation "(#$unitFormation UNIT FORMATION) means that unit is
+conducting maneuvers in the FORMATION formation.")
+(comment tenureInRank "(#$tenureInRank RANK MMO AGENT DURATION) means that,
+in the context of the assertion, AGENT holds the rank RANK in MMO, and has
+held that RANK for DURATION.  More specifically, if it #$holdsIn
+time interval TEMP that (#$tenureInUnitPosition POSITION MMO AGENT) and
+INT is any time interval of #$duration DURATION that is
+#$temporallyFinishedBy TEMP, then (RANK MMO AGENT) #$holdsIn
+INT.")
+(comment preferredBasisForWeaponType "(preferredBasisType WEAPONTYPE BASISTYPE) means that
+BASISTYPE is the preferred choice for use in weapons of type
+WEAPONTYPE.  More specifically, if EVENT is #$MilitaryEvent which some
+#$IntelligentAgent AGENT is supposed to perform, and such that it is
+expected that a weapon of type WEAPONTYPE will be the #$deviceUsed in
+EVENT, then AGENT desires that any weapon of type WEAPONTYPE used in
+EVENT be based on BASISTYPE.")
+(comment PickupZone "A geographic area used to pick up troops or equipment by helicopter.")
+(comment coaForceRatioBalanceInSupportingAttacks-BluePerspective "(coaForceRatioBalanceInSupportingAttacks-BluePerspective COA ATTR) evaluates the
+efficiency of a #$CourseOfAction in terms of the balance of force in any supporting attacks.  The balance of force is viewed from the 
+blue perspective.  A well-balanced ratio is evaluated as #$EffectiveForPurpose")
+(comment CausingAttritionOfAnEnemyForce "A specialization of #$PurposefulAction. An agent performing this type of action endeavors to reduce the number of combatants in a specified hostile force, either by outright killing or by rendering them combat-ineffective by other means, physical and/or psychological.")
+(comment AvenueOfApproach "The collection of air or ground routes for an attacking
+force that leads to the objective or key terrain on its path.")
+(comment depthConstraintOfTask "(#$depthConstraintOfTask TASK DIST) means that the distance between the #$unitAssignedToTask of TASK and any opposing unit which is the target of TASK should be less than DIST.")
+(disjointWith RedTask BlueTask)
+(comment AmbushingAnEnemy "A collection of instances of #$MilitaryAction, characterized by the assigned unit's mounting a surprise offensive against a designated hostile unit.")
+(comment initialRedPosMt "(#$initialRedPosMt FRIENDMT ENEMYMT) means that ENEMYMT
+represents the initial position of a threat force with respect to the
+position of a friendly force detailed in FRIENDMT.")
+(comment eventToOccur "an event which is already specified in the COA context is to be
+enabled in the goal context, for example, its preconditions could be achieved
+or maintained.")
+(comment thingToProtect "SomethingExisting is to be protected in the goal context.")
+(comment assertionAssociatedWithMETT-TCPrinciple "This predicate is used to organize SME and system-authored assertions under METT-TC principles.")
+(comment DoubleEnvelopment-MilitaryManeuver "Consists of a frontal attack (supporting effort) and two enveloping forces (main effort and supporting effort). FM100-40.")
+(comment AttackingByFire-Indirect "Instances of this collection are instances of #$AttackingByFire carried out using instances of #$IndirectFireWeapon --i.e., projectile weapons such as guns which deliver projectiles to the target area via ballistic trajectories.")
+(comment equipmentOfUnit "(#$equipmentOfUnit ?UNIT ?DEVICE) means that ?DEVICE is part of the equipment possessed by unit.  This is an instance-level predicate, relating a particular unit to a particular piece of equipment.")
+(comment DefaultTacticalTargetType-Arty "A collection of collections, each instance COL of
+#$DefaultTacticalTargetType-Arty is a collection
+(a specification of #$SpatialThing-Localized)
+of objects that, by default, will be candidates
+for artillery fire during a battle.  Examples include
+certain types of military units, such as
+instances of #$ArtilleryUnit-MilitarySpecialty or
+#$NuclearBiologicalOrChemicalWeaponsUnit as well
+as instances of #$CommandPost and many terrain
+features such as instances of #$Bridge or
+#$RoadwayJunction.")
+(disjointWith Photosynthesis-Generic Menopause)
+(comment AreaDefense-MilitaryOperation "The collection of those defensive operations which concentrate on denying enemy access to designated terrain for a specified period of time rather than on the outright destruction of the enemy. FM 100-40.")
+(disjointWith RoundTripBombingMission OneWayBombingMission)
+(comment CanalizingAnEnemyForce "To canalize is to restrict enemy movement to a narrow zone by exploiting terrain coupled with the use of obstacles, fires, or friendly maneuver. Successful canalization results in moving the enemy formation into a predetermined position where it is vulnerable to piecemeal destruction by direct and indirect fires. The same effect occurs when an enemy force is taken under fire and individual enemy soldiers and combat systems seek positions that are masked from the effects of friendly fires. When this occurs, further enemy movements are usually canalized into areas outside of the 'beaten zone' established by the effects of the friendly force's fire, and thus can be fairly easy to predict.")
+(comment tacticalCommandPostOfUnit "(#$tacticalCommandPostOfUnit POST UNIT) means that POST has the status of being the tactical #$CommandPost of UNIT in the context in which the assertion is made.  This does NOT mean that UNIT is necessarily a headquarters unit, rather the SUBUNIT such that (#$headQuartersOfUnit UNIT SUBUNIT) operates out of POST as its tactical command center.")
+(disjointWith CoverLimitingTerrain CoverProvidingTerrain)
+(disjointWith EnemyAssessment-METT-TC WeatherTesting)
+(comment MilitaryPostingForTempFn "(#$MilitaryPostingForTempFn ORG TEMP) returns the #$Place that is
+the #$posting-Military of ORG for the duration of TEMP.  This is the functional
+analog of the predicate #$postingForTemp-Military.")
+(comment MovementToContact-MilitaryOperation "A movement to contact is an attack to gain or reestablish contact with the enemy. A properly executed movement to contact develops the combat situation and maintains the commander's freedom of action after contact is gained.  This flexibility is essential in maintaining the initiative. Enemy forces (other than the final objective) within the assigned area will be put at a disadvantage by being disrupted, fixed or defeated. The movement to contact terminates when it reaches its final objective or limit of advance, or must conduct a deliberate attack, a hasty defense, or retrograde. FM100-40, Ch4.")
+(comment PhaseLine "A line used for control and coordination of military operations, usually a terrain feature extending across the zone of action. (Army) - It is usually along a recognizable terrain feature extending across the sector or zone of action. Units normally report crossing PLs, but do not halt unless specifically directed. From FM 101-5-1.")
+(comment FinalCoordinationLine "A line close to the enemy position used to coordinate the
+lifting or shifting of supporting fires with the final deployment of
+maneuver elements. It should be recognizable on the ground. It is not
+a fire support coordination measure.")
+(comment MilitaryPost "An instance of #$MilitaryPost is a physical and 
+engineered location that is intended to serve the purposes of a military unit.
+Specializations include #$CommandPost and #$ObservationPost. A #$MilitaryPost need not be a building or obviously constructed area, but may be a position that has been modified for military suitability by other mean, such as digging and levelling.")
+(comment MilitarySupplyPoint-ClassIII "The collection of instances of #$MilitarySupplyPoint at which fules, lubricants, hydraulic and insulating oils, preservatives, liquids and gasses, bulk chemical products, coolants, de-icer and anti-freze compounds, components and additives of petroluem and chemical producats and coal are located and issued. FM 101-5-1.")
+(comment CombatEventPredicate "The collection of predicates used to relate a combat unit to a particlar 
+combat event.")
+(comment MilitaryInterferenceAction "Any type of action that a military force undertakes to interfere with operations of an enemy military force.")
+(comment CounteringEnemyReconnaissance "Counterreconnaissance is all measures taken to counter enemy reconnaissance and surveillance efforts throughout the depth of the area of operations (AO). Counterreconnaissance is not a distinct mission, but a component of security operations. It prevents hostile observation of a force, area, or place. Counterreconnaissance is  an element of all security operations and most local security measures. It involves both active and passive elements and includes combat action to destroy or repel enemy reconnaissance units. Stripping away enemy ground reconnaissance while denying the enemy information through other collection systems allows friendly force commanders to operate against an enemy who is operating blindly. The enemy commander's inability to see the battlefield will eventually desynchronize his actions and render his command vulnerable to aggressive action by friendly forces.")
+(comment AirheadLine "The limit of the objective area, assault objectives determine the size and shape of the #$Airhead and the trace of the airhead line. See FMs 7-30, 71-100-2, and JP 3-18.1.")
+(comment SupportingAUnit "#$SupportingAUnit is the collection of all instances of #$HelpingAnAgent in
+which one military unit provides some type of support to another.")
+(comment SpoilingAttack-MilitaryOperation "Denies enemy use of assembly areas or positions during enemy attack preparations (i.e. in advance of the main battle in the engagement area).")
+(comment RestrictiveFireLine " A line established between converging friendly forces (one or both may be moving) that prohibits fires or effects from fires across the line without coordination with the affected force. It is established by the next higher common commander of the converging forces.")
+(comment SeizingAnObjective "A type of #$TakingSomething in which an agent (e.g. a military force) obtains control of a region or other tangible objective through the use (or threat) of force. In general, when an objective is seized, this suggests that the seizing agent has taken steps to retain control of the objective. For example, when a military unit seizes an objective, this normally entails that the unit has both obtained control of the objective (#$ControllingAnObjective) and cleared the area of enemy forces (#$ClearingAnEnemy).")
+(comment criterialForTerrainTacticalRole-Positive "(#$criterialForTerrainTacticalRole-Positive TERRAIN-TYPE
+SET-TERM) means that membership in SET-TERM constitutes a positive criteria
+for effectively serving the tactical role associated with
+TERRAIN-TYPE. SET-TERM is a term constructed with #$TheSetOf plus a
+sentence. So: if an instance X of #$GeographicalThing satisfies that
+sentence, hence belongs to SET-TERM, that counts in favor of using X
+tactically as a TERRAIN-TYPE in the given planning context.  Contrast with
+#$criterialForTerrainTacticalRole-Negative.")
+(comment AirApproach "Characteristic attribute of an approach corridor employed by air traffic.")
+(comment advanceGuardSupport "(#$advanceGuardSupport SUPPORT UNIT) says that UNIT plays the role of 'support' advance guard in the #$SupportingAUnit event SUPPORT.  Specifically, there is a larger unit of which UNIT is a part, the larger unit has been assigned a task, and UNIT has been sent out ahead of the larger unit to ensure its ability to advance and carry out its task.  During SUPPORT, UNIT gives direct support to the unit that acts as #$advanceGuardReserve.")
+(comment ContactPoint "In land warfare, the point at which 2 or more units are required to make contact. In air operations the position at which a mission leader makes radio contact with an air control agency.")
+(comment MassCombatPower "The collection of military events in which some military force masses combat power to a particular area.")
+(comment greaterEffectForSitType-ThanSitType "(#$greaterEffectForSitType-ThanSitType COLL1 COLL2) means that instances of COLL1 and COLL2 have an effect of the same type but the effect of instances of COLL1 is more extreme than the effect of instances of COLL2.")
+(comment MilitaryOperationType "A collection of collections: every element of MilitaryOperationType is a collection of instances of MilitaryOperation.")
+(comment targetOfFireInTask "(#$targetOfFireInTask TASK OBJ) means that OBJ is the intended
+target of fires in the military task TASK. This is not the same as
+#$targetInAttackTask because fires, for instance #$SupportingByFire tasks,
+need not all be attacks.")
+(comment BattlePositionProposed "The proposed #$BattlePositionOccupied.")
+(disjointWith MilitaryOrder-IBO Form-StandardizedIBO)
+(comment CoverProvidingTerrain "The collection of regions that provide some measure of cover
+to forces in a particular context.")
+(comment RiverCrossing-Deliberate "There are three basic types of river crossings: hasty, deliberate, and retrograde. A hasty river crossing is a task conducted as part of a larger operation, typically an attack, with no intentional pause at the water line. When a hasty river crossing is not feasible such as when the enemy or terrain situations prevent it, a hasty crossing attempt fails, or friendly offensive operations resume at a river line after a pause, the force conducts a deliberate river crossing operation. A retrograde river crossing is a movement to the rear across a water obstacle while in contact with the enemy.  A river crossing is both a tactical task and an enabling operation. Field Manual 90-13, River Crossing Operations, gives detailed information concerning the conduct of a river crossing.")
+(comment taskTypeCommensurateWithOpType "(#$taskTypeCommensurateWithOpType TASK_TYPE OP_TYPE) means
+that in normal circumstances, we would expect to find a #$MilitaryAction
+of type TASK_TYPE associated with a #$MilitaryOperation of type
+OP_TYPE, probably via the #$taskOfOperation relation.  This may be
+said to hold to the extent that, if a task and operation are
+associated via #$taskOfOperation in a COA and it is not the case that
+the asserted task type is #$taskTypeCommensurateWithOpType with the
+asserted operation type, it may be indicative of a flaw in the COA.")
+(comment Irregular-ManeuverFormation "This attribute applies to units which are moving in an
+irregularly-shaped, hard-to-describe formation, rather than a line or
+column formation.")
+(comment ConcealmentProvidingTerrain "The collection of regions that conceal an agent to some
+degree within a specific context.")
+(comment expectedAttritionForAction "(#$expectedAttritionForAction ACTION QUANT) means that
+expected losses of personnel in ACTION will be approximately QUANT.
+Besidest encompassing personnel being killed or seriously wounded as
+the result of enemy action, 'losses' in this context also may refer to
+combat-ineffectiveness resulting from fatigue and other factors.  In
+general, expected attrition is given as a percentage or decimal
+fraction of the whole.")
+(comment PassageOfLines "In this type of action, a military unit moves through another (friendly) unit's position with the intent of moving into or out of enemy contact. It involves the transfer of responsibility for fighting an enemy force from one unit to another in close operations.")
+(comment MilitaryThreat "A collection of attributes: a unit with an attribute value
+from this collection is a hostile force which presents a friendly
+force with a threat of some degree in the context of a Course of
+Action representation.")
+(comment CapabilityBasedSurpriseAttack "The collection of #$SurpriseAttacks whose element of
+surprise depend on the the attacker's use of capabilities
+the enemy did not expect.")
+(comment Encirclement-MilitaryManeuver "Encirclements are intended to enclose and capture or defeat large enemy forces. Typically, encirclements either result from penetrations and envelopments or are an extension of exploitation and pursuit operations. .. They may be planned sequels or result from the exploitation of an unforeseen opportunity. They usually result from the linkup of two forces conducting a double envelopment. However, they can occur in situations where a major obstacle such as a shoreline can be used as the second encircling wing by the attacking commander. Although terrain objectives may be designated in an encirclement, isolation and defeat of enemy forces are the primary goals. FM100-40, p9-7.")
+(comment militaryOrgDoctrineIncludesEventType "A predicate relating a #$MilitaryOrganization to the
+doctrinal event (e.g., task and operation) classifications to which it
+subscribes.  For example, (#$militaryOrgDoctrineIncludesEventType
+#$UnitedStatesArmy #$ClearingAnEnemy), since #$ClearingAnEnemy
+denotes a type of task defined by U.S. Army doctrine.")
+(comment MilitaryDecisionMakingActionType "This is a collection of specializations of #$PurposefulAction.  Instances of this collection represent the different types of action which make up the military decision-making process. Specializations of this collection include #$METT-TC-EvaluationType and COASpecificationDimension.")
+(comment BlockingAnEnemy "To block is to deny the enemy access to a given area or prevent his advance in a given direction or along an avenue of approach. A blocking task normally requires the friendly force to block the enemy force for a certain time period or until a specific event has occurred. A blocking unit may have to hold terrain and accept decisive engagement. A block differs from a fix because a blocked enemy force can move in any direction other than the obstructed one while a fixed enemy force cannot move in any direction.")
+(comment AreaSecurity-MilitaryOperation "Area security operations are conducted to protect friendly forces, installations, and actions in a specific area. ... They focus on the force, installation, or area to be protected. ... During conventional operations, area security operations are normally an economy of force measure designed to ensure the continued sustainment of the main effort.")
+(comment opTypeRequiresAgentType "(#$opTypeRequiresAgentType OP_TYPE AGENT_TYPE) means that,
+in the context of the assertion, a #$MilitaryOperation OP of type
+OP_TYPE requires an #$Agent-PartiallyTangible of type AGENT_TYPE as an 'agent resource',
+in the sense that an instance AGENT of AGENT_TYPE in the context will
+be (#$agentResourceInEvent OP AGENT).")
+(comment ContainmentZone "An operational area in which a hostile force is to be
+contained in the execution of an instance of #$Contain-MilitaryTask.")
+(comment MobilityFacilitatingTerrain "The collection of geographical regions that are relatively easy for an agent to traverse within a specific context.")
+(comment DefenseInDepth-MilitaryManeuver "The collection of those defensive military maneuvers in which units are positioned in depth along likely enemy avenues of approach.")
+(comment Reconnaissance-MilitaryOperation "The collection of all military missions whose purpose is to survey
+
+terrain for the purpose of gaining information.")
+(comment rearCommandPostOfUnit "(#$rearCommandPostOfUnit POST UNIT) means that POST has the status of being the rear #$CommandPost of UNIT in the context in which the assertion is made.  This does NOT mean that UNIT is necessarily a headquarters unit, rather the SUBUNIT such that (#$headQuartersOfUnit UNIT SUBUNIT) operates out of POST as its rear command center.")
+(disjointWith EnemyAssessment-METT-TC Divination)
+(comment CoordinatingPoint "A designated point at which adjacent units/formations must make contact for purposes of control and coordination. (Army) A control measure that indicates a specific location for the coordination of fires and maneuver between adjacent units. They usually are indicated whenever a boundary crosses the forward edge of the battle area (FEBA) and may be indicated when a boundary corsses phase lines (PLs) used to control security forces. (In NATO, physical contact between adjacent units is required.) (See also #$ContactPoint.)")
+(comment noFireAreaOfOperation "(#$noFireAreaOfOperation OP AREA) means that AREA is designated a #$NoFireArea for #$MilitaryOperation OP.")
+(comment MilitarySupplyPoint-ClassIV "The collection of instances of #$MilitarySupplyPoint at which construction materials including installed equipment, and all fortification and obstcle materials are located and issued. FM 101-5-1.")
+(comment criterialForTerrainTacticalRole-Negative "(#$criterialForTerrainTacticalRole-Negative TERRAIN-TYPE
+SET-TERM) means that membership in SET-TERM constitutes a negative criteria
+for playing the tactical role associated with TERRAIN-TYPE. SET-TERM is a
+set-denoting term constructed with #$TheSetOf plus a sentence. So: if an
+instance X of #$GeographicalThing satisfies that sentence, hence belongs to
+SET-TERM, that counts in favor of using X tactically as a TERRAIN-TYPE in
+the given planning context.  Contrast with
+#$criterialForTerrainTacticalRole-Positive.")
+(comment FireSupportCoordinationLine "A line established by the appropriate land or amphibious force commander to ensure coordination of fire not under the commander s control but which may affect current tactical operations. The FSCL is used to coordinate fires of air, ground, or sea weapons systems using any type of ammunition against surface targets. The FSCL should follow well-defined terrain features. The establishment of the FSCL must be coordinated with the appropriate tactical air commander and other supporting elements. Supporting elements may attack targets forward of the FSCL without prior coordination with the land or amphibious force commander provided the attack will not produce adverse surface effects on or to the rear of the line. Attacks against surface targets behind this line must be coordinated with the appropriate land or amphibious force commander. (Army) - A permissive fire control measure established and adjusted by the ground commander in consultation with superior, subordinate, supporting, and other affected commanders. It is not a boundary the responsibility of the establishing commander out to the limits of the land component forward boundary. It applies to all fires of air, land, and sea weapon systems using any type of ammunition against surface targets. Forces attacking targets beyond the FSCL must inform all affected commanders to allow necessary coordination to avoid fratricide. (See also #$CoordinatedFireLine (CFL).) See FMs 6-20 series, 7-20, 7-30, 17-95, 71-100, 71-123, 100-5, 100-15, and JP 3-0.")
+(comment DefaultTacticalTargetType "A collection of collections.  Each instance of
+
+          #$DefaultTacticalTargetType is a collection 
+
+          (a specification of #$SpatialThing-Localized)
+
+          of objects that will, by default, be
+
+          of tactical interest on a battlefield and therefore
+
+          candidates for reconnaissance or fire either in
+
+          battle or in preparation
+
+          for a battle.  Examples include military units,
+
+          instances of #$MilitaryPost and #$RoadwayJunction as
+
+          well as certain terrain features
+
+          such as some wooded areas and instances of #$Bridge,
+
+          #$Hill.")
+(comment predAssociatedWithMETT-TCPrinciple "A predicate used to associate predicates that are used to express assertions that, in military contexts, can be organized in accordance with METT-TC principles.")
+(comment MilitaryDefensiveOperation "The collection of all instances of #$MilitaryOperation where the primary purpose or goal is defensive in nature.  This collection is inclusive of concerted operations carried out by multiple units. For individual #$MilitaryActions carried out by particular units, see #$MilitaryTask-Defensive.  #$MilitaryDefensiveOperation is the 'defensive' analog of #$MilitaryOffensiveOperation.")
+(comment coaAddressesMissionEssentialTask "(#$coaAddressesMissionEssentialTask COAMT PROP) means that the course of action specified by  COAMT addresses the mission essential task as specified by PROP.")
+(comment WithdrawingFromCombat "Instances of this event type involve planned, voluntary disengagements from an enemy.")
+(comment rFLForUnits "(#$rFLForUnits UNIT1 UNIT2 RFL) means that RFL is the designated #$RestrictiveFireLine for the units. A #$RestrictiveFireLine line established between converging friendly forces (one or both may be moving) that
+
+prohibits fires or effects from fires across the line without coordination with the affected force. It is established by the
+
+next higher common commander of the converging forces. From FM101-5-1.")
+(comment DisruptingEnemyPlans "A specialization of #$Interfering.  In actions of this type, an agent neutralizes an opponent's ability to achieve some end in a timely manner.")
+(comment missionEssentialCriterion "(#$missionEssentialCriterion PROP COA-MT) means that PROP specifies one of the mission essential tasks in the products of mission analysis associated with the course of action specified in  COA-MT.")
+(comment COAUnitByOrientation "Collection of military unit attributes pertaining to unit orientation within a planning context.")
+(comment ProvidingGeneralSupport "The collection of events in which a #$ModernMilitaryUnit-Deployable is tasked to provide support to the entire force performing an operation.")
+(comment RestrictiveFireArea "An area in which specific restrictions are imposed and into
+which fires that exceed those restrictions may not be delivered
+without prior coordination with the establishing headquarters. ")
+(comment taskInsLimitOfAdvance "(#$taskInsLimitOfAdvance TASKINS LOA) means that LOA is an easily recognized terrain feature beyond which the attacking element does not advance, in the plan specification context in which the assertion is made.  From FM 101-5-1.")
+(comment COAForHostileForce "Characteristic attribute of a COA that has been devised for
+a force that is considered 'hostile' (#$Red-Side) in the planning
+context.")
+(comment withinAreaOfResponsibilityForUnit "(#$withinAreaOfResponsibilityForUnit REGION UNIT) says that
+ REGION falls within the total area that UNIT is responsible for.  (See #$sectorOfResponsibility.)")
+(comment Linkup-MilitaryTask "A linkup is a meeting of friendly ground forces and occurs in a variety of circumstances. It happens when an advancing force reaches an objective area previously seized by an airborne or air assault when an encircled element breaks out to rejoin friendly forces or a force comes to the relief of an encircled force maneuver forces meet. Both forces may be moving toward each other or one may be stationary. Whenever possible, joining forces exchange as much information as possible prior to the start of an operation.")
+(comment directionOfAttack "(#$directionOfAttack ?ATTACK ?VECTOR) means that ?VECTOR is the direction in which the main force of the #$MilitaryAttack ?ATTACK is directed.")
+(comment TerrainLowGround "A military term and an instance of #$TerrainTypeBySurfaceLevel. The central feature point of low ground terrain is typically (though not necessarily) lower in altitude than the surrounding terrain. Instances of #$TerrainLowGround are #$Places that require one to traverse a negative slope in order to reach the central feature point. From a tactical standpoint, it is typically assumed that instances of #$TerrainLowGround impede observation.")
+(comment MilitaryManeuver "The collection of events in which a military force moves relative to the enemy in an effort to achieve positionaladvantage over him and to achieve tactical, operational or strategic objectives. FM 100-5 pp. 2-13.")
+(comment TroopMovementAlongFn "A collection denoting function.  #$TroopMovementAlongFn takes an instance of #$Path-Spatial and returns the collection of all instances of #$TroopMovement for which the path is the #$motionPathway-Complete.")
+(comment MilitaryOrderContent-PIT "A collection of microtheories.  Each instance has asserted in it the Cyclified propositional content of an #$MilitaryOrder-IBO of which it is the #$containsInformation.")
+(comment candidateBattlePositionForUnitType "(#$candidateBattlePositionForUnitType REGION UNIT-TYPE ECHELON)
+means that REGION is a suitable battle position for a unit of echelon level up
+to ECHELON and of type 
+UNIT-TYPE.")
+(comment terrainRestrictionForEchelon "(#$terrainRestrictionForEchelon REGION ECHELON OP LEVEL)
+means that REGION has #$TerrainTypeByTrafficabilityLevel LEVEL for a unit of any
+specialty and of echelon level up to ECHELON undertaking military operation
+type OP.")
+(comment RiverCrossing-Hasty "There are three basic types of river crossings: hasty, deliberate, and retrograde. A hasty river crossing is a task conducted as part of a larger operation, typically an attack, with no intentional pause at the water line. When a hasty river crossing is not feasible such as when the enemy or terrain situations prevent it, a hasty crossing attempt fails, or friendly offensive operations resume at a river line after a pause, the force conducts a deliberate river crossing operation. A retrograde river crossing is a movement to the rear across a water obstacle while in contact with the enemy.  A river crossing is both a tactical task and an enabling operation. Field Manual 90-13, River Crossing Operations, gives detailed information concerning the conduct of a river crossing.")
+(comment structureOfUnitUnspecified "In the context of a particular COA, (#$structureOfUnitUnspecified UNIT) means that the number and type of the subunits of UNIT are not specified.  UNIT is represented in the sketch of the COA as a non-TOGG (Task Organized Combination Graphics) unit and its #$combatForceValueOfUnit can be derived directly from its #$MilitaryUnitSpecialtyType  and #$MilitaryEchelon level.")
+(comment MilitaryEventType-Doctrinal "A collection of collections. Each instance of
+#$MilitaryEventType-Doctrinal is a specialization of #$MilitaryEvent,
+specific to the doctrine of some particular instance(s) of
+#$MilitaryAgent.  For example, #$ClearingAnEnemy is an
+instance of #$MilitaryEventType-Doctrinal, because it denotes an
+activity specifically defined by #UnitedStatesArmy doctrine.  Because
+doctrinal classifications are associated with doctrinal procedures and
+constraints, instances of #$MilitaryEventType-Doctrinal are of the
+greatest use in the communication of plans and orders.  A plan or
+order specified using these concepts contains those procedures and
+constraints implicitly.  For the same reason, fundamental
+classifications (see #$MilitaryEventType-Fundamental) are of the
+greatest use in the analysis of the actions of another force.  In such
+analysis, applying instances of #$MilitaryEventType-Doctrinal requires
+making assumptions about the doctrinal procedures and constraints the
+other force is observing.")
+(comment ScreeningAFriendlyForce "In a screening action, an agent (typically a military unit) provides early warning (to some other, friendly agent) about enemy actions it observes.")
+(comment CombatZone "The area in the Course of Action representation that is
+required by combat forces for the conduct of operations has the
+attribute #$CombatZone.")
+(comment outsideAreaOfResponsibilityForUnit "(#$outsideAreaOfResponsibilityForUnit REGION UNIT) says that
+ REGION falls outside the area that UNIT is responsible for.  (See #$sectorOfResponsibility.)")
+(comment operationHasPurpose "Occasionally in a COA statement a purpose is associated with an 
+operation rather than a task. This predicate is reserved for those cases.")
+(comment ReserveUnitSpecification "A specialization of #$Reporting in which the allotment of reserve units for some COA is described.")
+(comment MechanizedInfantryDivision "The collection of all
+#$MechanizedInfantryUnit-MilitarySpecialty at the echelon level of
+division.")
+(comment TurningMovement-MilitaryManeuver "In a turning movement, an attacking force seeks to pass around and avoid the enemy's main force, then secure an objective deep in the hostile rear area that causes the enemy to move out of its current positions or divert major forces to meet the threat. A commander uses this choice of maneuver when the opportunity exists to seize vital areas in the hostile rear before the main enemy force can withdraw or receive support or reinforcements. A supporting effort may be required to fix the enemy, such as an envelopment. However, a turning movement is not always accompanied by a supporting effort. A turning movement differs from an envelopment because the force conducting a turning movement is normally out of supporting range of the main body but is within supporting distance. This choice of maneuver frequently transitions from the attack into an exploitation or pursuit. Although the turning force is frequently the main force, it may not always be. FM100-40.")
+(comment taskBeatenZone "(#$taskBeatenZone TASK AREA) means that AREA is circumscribed by the cone of fire generated by the offensive task TASK.  This predicate is generally used for specifying the beaten zone of an #$AttackingByFire-Indirect.")
+(comment HighPayoffTacticalTargetType "A collection of collections, each instance COL of
+#$HighPayoffTacticalTargetType is a collection of objects
+that by default will be a target by opposing
+forces during or in preparation for a battle. 
+In other words, we assume
+that a threat to a particular military force
+will target with artillery, reconnaissance, or other
+of their unit-types, when feasible, instances of COL
+unless we have information to the contrary.")
+(comment unitAssignedMainOpEffort "(unitAssignedMainOpEffort MISSION UNIT) means that UNIT
+undertakes the main effort in carrying through MISSION.")
+(comment instancesAssociatedWithMETT-TCPrinciple "(#$instancesAssociatedWithMETT-TCPrinciple COLL METT-TC) says that for any instance INS of COLL, (#$termAssociatedWithMETT-TCPrinciple INS METT-TC) holds.")
+(comment temporalStage "(#$temporalStage WHOLE MT SUB) means that SUB is the           temporal subastraction of WHOLE that is picked out by           the #$mtTime of the #$Microtheory, MT. This presupposes           that WHOLE #$temporallySubsumes the specified #$mtTime           of MT. In general, assertions of the form (#$temporalStage           WHOLE MT SUB) will be made in contexts to which MT           itself has access.")
+(comment BlueUnit "The collection of friendly forces assigned to the blue force
+in a given #$CourseOfAction.  Those units assigned to the blue force
+will typically have a common country of alliegence, and friendly
+forces with other alligences will be assigned a difference color (i.e.
+green).")
+(comment FlanksOfUnitFn "#$FlanksOfUnitFn is a function which applied to UNIT, an instance of #$ModernMilitaryUnit-Deployable, yields the #$GeographicalThing-Intangible-MovableLocation that constitutes the 'flanks' of UNIT.")
+(comment MilitarySpecialtyObstacleFn "(#$MilitarySpecialtyObstacleFn SPECIALTY) returns the collection of all instances of #$ObstacleSystem-Military specifically designed to impede movements of military units of specialty type SPECIALTY.")
+(comment COAEvaluationEffectivenessPredicate "A collection of predicates.  #$COAEvaluationEffectivenessPredicate has exactly two members: #$effectiveForPurpose and #$ineffectiveForPurpose; these are used to form the basis of a COA evaluation matrix.  (See #$CourseOfAction).")
+(comment Demonstration-MilitaryOperation "A demonstration is a show of force in a location where the commander does not seek to conduct decisive operations.  Its aim is to deceive the enemy. It is similar to a feint, except that contact with the enemy is not sought. FM100-40, p3-8.")
+(comment EliminatingABridgehead "A specialization of #$DestroyingAnEnemyForce in a particular defensive positioning.  Here, the enemy forces have formed a #$Bridgehead to protect one or more bridges.")
+(comment ForwardDefense-MilitaryManeuver "The collection of those defensive military maneuvers which are used to prevent significant enemy penetration into the defensive sector. The majority of the unit's combat power deploys into forward defensive positions near the forward edge of the battle area.")
+(comment CombinedArmsAttack "The collection of #$AttackingByFire that uses a combination
+of military weapons.")
+(comment MilitaryPostingFn "(#$MilitaryPostingFn ORG) returns the #$Place that in the reasoning
+context is the #$posting-Military of the military unit ORG.")
+(comment engagementAreaForUnit "(#$engagementAreaForUnit AREA UNIT) is true iff UNIT is engaged
+in a defensive military task for which AREA is the #$EngagementArea in the
+sense of #$candidateEngagementArea.")
+(comment Raid-MilitaryOperation "A raid is usually a limited objective, small-scale operation involving swift penetration of enemy territory. It is designed to secure information, confuse the enemy, or destroy his installations. FM100-40, p3-7.")
+(comment EvaluationDimension "A bundle of predicates and relations corresponding to key
+evaluative measures of the soundness and effectiveness of a COA
+specification. See also #$COASpecificationMicrotheory and #$CourseOfAction.")
+(comment TerrainAdvantagePredicate "The collection of predicates that relate a key-terrain region in a COA to the reason that the region is key.")
+(comment NoFireLine "A line short of which artillery or ships do not fire except
+on request or approval of the supported commander, but beyond which
+they may fire at any time without danger to friendly troops.")
+(comment TerrainTypeByTacticalPotential-SideAdvantage "A collection of collections. Each instance of
+#$TerrainTypeByTacticalPotential-SideAdvantage is a collection of
+pieces of terrain, according to whether they offer advantage to an
+#$OffendingForce or #$DefendingForce. Note that such advantages hold only
+within the context of some real or potential military
+operations. Assertions making a specific terrain object an instance of
+some #$TerrainTypeByTacticalPotential-SideAdvantage should therefore
+be made only within appropriately scenario-specific contexts.")
+(comment intentOfCommanderForAction "(#$intentOfCommanderForAction COMMANDER ACTION PROP) means
+
+that the proposition PROP is part of the intent of the individual
+
+serving as the #$commanderForCOA in the COA development context for the
+
+#$MilitaryEvent ACTION. In the associated
+
+#$COACommandIntentMicrotheory, ACTION will have PROP as its
+
+#$taskHasPurpose in the relevant #$COACommandIntentMicrotheory")
+(comment posting-Military-Generic "(#$posting-Military-Generic UNIT REG) means that UNIT is posted to
+
+REG in the time frame of the assertion, and moreover has the
+
+entailment that if (#$geographicalSubRegions SUPER-REG REG), then
+
+(#$posting-Military-Generic UNIT SUPER-REG), provided SUPER-REG is itself known
+
+to be #$geographicalSubRegions of an instance of #$IndependentCountry.
+
+Thus, for example, a unit whose #$posting-Military-Generic is Camp Mabry also
+
+has the #$CityOfAustinTX as a #$posting-Military-Generic, as well as Travis
+
+County, #$Texas-State, and the #$UnitedStatesOfAmerica.")
+(comment DefeatingAnOpponent "Instances of this collection are events in which an agent effectively nullifies an adversary's ability to persue opposing goals in a conflict. In general, this means that the adversary has either become unwilling or unable to further pursue his intended course of action. See also #$ConflictEvent.")
+(comment MilitarySupplyPoint-ClassV "The collection of instances of #$MilitarySupplyPoint at which ammunition of all types including chemical, bombs, explosives, mines, fuzes, detonators, pyrotechnics, missiles, rockets, propellants, and other associated items are located and issues. FM 101-5-1.")
+(comment WithdrawingUnderPressure "This is a planned, voluntary disengagement from the enemy which is performed under enemy pressure.")
+(comment BattlePositionOccupied "1. A defensive location oriented on the most likely enemy #$AvenueOfApproach from which a unit may defend. Such units can be as large as battalion task forces and as small as platoons.  A unit assigned a BP is located within the general outline of the BP. A battle position graphic #$ControlMeasure may be used independently or in combination with sectors. Security, combat support, and combat service support forces may operate outside a BP. 2. For attack helicopters, an area designated in which they can maneuver and fire into a designated #$EngagementArea or engage targets of opportunity. (See also defend.) See FMs 1-112, 7-8, 7-20, 7-30, and 71-123.")
+(comment taskInsAreaOfOperations "(#$taskInsAreaOfOperations TASK AO) means that AO is designated the #$AreaOfOperations of the unit assigned to perform TASK and, by extension, that unit's #$sectorOfResponsibility.")
+(comment OffendingForce "A collection of individual military units. Each instance of
+#$OffendingForce is a military force in an offensive role in some real
+or potential military operations. Note that the same unit may be an
+#$OffendingForce in some situations and a #$DefendingForce in
+others. For this reason, assertions making a specific unit an instance
+of #$OffendingForce should be made only within appropriately
+scenario-specific contexts. For the related collection of military
+units that are specially optimized to conduct offensive operations,
+see #$OffensiveOperationsUnit-MilitarySpecialty")
+(comment AttackPositionOccupied "The last position occupied by the assault echelon before crossing the #$LineOfDeparture. See FMs 7-8, 7-20, 7-30, and 71-123.")
+(comment forceElement-FromGIS "(#$forceElement-FromGIS MIL-AGT) means that MIL-AGENT is an
+instance of #$MilitaryAgent, according to some
+#$GeographicInformationSystem to which Cyc has access.")
+(comment FriendlyRegion "Distinguishing attribute of regions that are considered 'friendly' in a COA planning context.")
+(comment MilitaryTask-Defensive "The collection comprised of all defensive forms of Task. This collection is *not* a specialization of #$MilitaryDefensiveOperation since #$MilitaryDefensiveOperation is a specialization of #$MilitaryOperation: instances are carried out by several units acting in concert to implement primary and support tasks.  An instance of #$MilitaryDefensiveOperation will be comprised of one or more instances of #$MilitaryTask-Defensive figuring as #$subEvents.")
+(comment TerrainTypeByTrafficabilityLevel "A collection of collections: instances are collections that
+
+describe the general trafficability of a particular instance of
+
+#$AvenueOfApproach or #$MobilityCorridor without being particularly
+
+specific as to the nature and character of the terrain, or the nature
+
+and character of the agents for whom the terrain is trafficable.  Such
+
+collections will often be referenced with the instances of
+
+#$GenericValueFunction.  In addition, there are three instances
+
+explicitly reified: #$TerrainUnrestricted, #$TerrainRestricted, and
+
+#$TerrainSeverelyRestricted.")
+(comment coaRedUnit "(#$coaRedUnit COA UNIT) says that in the course of action COA (see #$CourseOfAction), UNIT is considered to be an enemy force. ")
+(comment primaryFunction-Military "A predicate relating an individual thing, such as a
+#$ModernMilitaryUnit-Deployable or a piece of equipment, to the
+primary military role it is intended to play.  For example,
+(#$primaryFunction-Military MORTARUNIT01
+#$IndirectFire-MilitaryFundamental #$performedBy) means that the
+individual unit MORTARUNIT001 is primarily intended to provide fire
+support.  Although MORTARUNIT01 may also be able to engage in other
+activities, those for which primaryFunction-Military assertions appear
+are those for which it is most optimized, and are the most probable
+uses of the unit when it appears in military operations.")
+(comment terrainTypeOfAvenue "A #$BinaryPredicate that holds between individual paths and the type of
+terrain found over the majority of their
+extent. (#$terrainTypeOfAvenue PATH TERRAIN-TYPE) means that the
+majority of #$Path-Spatial PATH covers terrain of TERRAIN-TYPE, which
+is some instance #$RegionTypeByTerrain.  Since terrain characteristics
+will vary depending on local meteorological conditions, time of
+year, etc., assertions involving #$terrainTypeOfAvenue should ordinarily
+be asserted within a temporally constrained context, preferably within
+an instance of #$COASpecificationMicrotheory. PATH will also be an
+avenue of approach within some instance of
+#$COASpecificationMicrotheory.")
+(comment taskPLD "(#$taskPLD TASK PLD) means that PLD is the #$ProbableLineOfDeployment for the military unit that is #$unitAssignedToTask TASK.")
+(comment BeatenZone "The area on the ground upon which the cone of fire falls.")
+(comment preferredChoiceInWeaponType "(#$preferredChoiceInWeaponType AGENTTYPE BASISTYPE WEAPONTYPE
+
+ACTIONTYPE) means that under ordinary circumstances, if an instance of
+
+AGENTTYPE is expectedto perform an instance of ACTIONTYPE, that agent will prefer having an
+
+instance of WEAPONTYPE based on BASISTYPE be the #$deviceUsed in the
+
+action to having an instance of WEAPONTYPE based on anything else be
+
+the #$deviceUsed in the action.")
+(comment typePrimaryFunction-Military "A predicate relating a collection, such as a specialization
+of #$MilitaryAgent or a type of equipment, to the primary military
+role it is intended to play.  For example,
+(#$typePrimaryFunction-Military #$PathfinderUnit-MilitarySpecialty
+#$Reconnaissance-MilitaryFundamental #$performedBy) means that
+Pathfinder units are primarily intended to engage in reconnaissance.
+While such units may have other capabilities, those asserted to be
+primary are those for which it is most optimized, and are the most
+probable uses of such units when they appear in military operations.")
+(comment ObstaclePredicate "A specialization of #$BinaryRolePredicate dealing with the
+nature and kinds of obstacles delineated in the U.S. military
+doctrine.")
+(comment Blue-Side "Placeholder term employed in the military decision-making process to designate generalized affiliation of 'friendly' or allied units.")
+(comment MilitaryManeuver-Offensive "The collection of instances of #$MilitaryManeuver which are used in offensive actions.")
+(comment AssemblyAreaOrdered "Attribute of #$GeographicalRegion in a military Course of Action at which troops have been ordered to assemble.")
+(comment AreaOfOperations "An operational area defined by the joint force commander for
+land and naval forces. Areas of operation do not typically encompass
+the entire operational area of the joint force commander, but should
+be large enough for component commanders to accomplish their missions
+and protect their forces. (Army) - A geographical area, usually
+defined by lateral, forward, and rear boundaries assigned to a
+commander, by a higher commander, in which he has responsibility and
+the authority to conduct military operations. ")
+(comment Ordering-MilitaryCommunicationAct "A collection of instances of #$Ordering-CommunicationAct. Each instance is an instance of a #$MilitaryPerson issuing an order to another #$MilitaryPerson of inferior rank or to a subordinate #$ModernMilitaryOrganization that the #$issuerOfOrder-Military is entitled to command.")
+(comment friendlyUnitType "(#$friendlyUnitType ORG UNIT-COLL) holds just in case UNIT-COLL is the collection of
+instances of #$ModernMilitaryUnit-Deployable that are friendly to ORG.  The is the corresponding predicate to #$FriendlyUnitFn.")
+(comment Engagement-Military "A limited tactical conflict, usually between opposing
+maneuver force,such as might occur between opposing units in a course
+of action.")
+(comment DemolitionTeam "The collection of #$ModernMilitaryUnit-Deployable that are
+equipped to perform instances of #$Demolition-Military.")
+(comment RiverCrossing-Retrograde "There are three basic types of river crossings: hasty, deliberate, and retrograde. A hasty river crossing is a task conducted as part of a larger operation, typically an attack, with no intentional pause at the water line. When a hasty river crossing is not feasible such as when the enemy or terrain situations prevent it, a hasty crossing attempt fails, or friendly offensive operations resume at a river line after a pause, the force conducts a deliberate river crossing operation. A retrograde river crossing is a movement to the rear across a water obstacle while in contact with the enemy.  A river crossing is both a tactical task and an enabling operation. Field Manual 90-13, River Crossing Operations, gives detailed information concerning the conduct of a river crossing.")
+(comment FighterMission "The collection of all instances of #$MilitaryAircraftMission
+in which one or more instances of #$FighterPlane are the primary
+vehicles employed in the mission.")
+(comment potentialDutyOfAgentType "#$potentialDutyOfAgentType is a variant of #$potentialDutyOfAgent whose first argument is a type of #$ModernMilitaryUnit-Deployable rather than an instance of #$Agent-PartiallyTangible.")
+(comment TacticalTerrainTypeByGeometry "A collection of collections.  Each instance is a
+#$TacticalTerrainType that groups tactical terrain features by their
+geometry, e.g, whether they are point-like, line-like, or area-like.
+These collections are useful primarily in predicting data type when
+exchanging information about tactical terrain with external sources
+such as a GIS.")
+(comment ArtilleryBattalion "The collection of #$ArtilleryUnit-MilitarySpecialty at the
+battalion echelon level.")
+(comment expectedAttritionForActionType "(#$expectedAttritionForActionType ACT_TYPE QUANT) means that
+in the context, the expected attrition-level of a military action ACT
+that is of ACT_TYPE is QUANT. See also #$expectedAttritionForAction.")
+(comment successfulForTaskMt "(#$successfulForTaskMt TASK MT1 MT2 means that MT1 is a context in which TASK, as specified in the course of action MT2, is assumed to be successfully carried out.")
+(comment PassageOfLines-Rearward "Rearward passage of lines occurs when a unit passes through another unit while moving away from the enemy.")
+(comment propPendingFalsification "CycFormula is to be prevented in the goal context, typically, 
+some types of enemy actions are to be prevented.")
+(comment TacticalArea "A collection of area-like #$GeographicalThings.  Each
+instance of #$TacticalArea is a geographcial area with
+tactical significance in the context of some (actual or hypothetical)
+military operations. As a rule, any particular #$TacticalArea should
+be asserted to be an instance of a specialization of this collection,
+such as #$RestrictiveFireArea or #$LandingZone. See also
+#$TacticalPoint and #$TacticalLine.")
+(comment pathForUnit "(#$pathForUnit PATH UNIT) means that in the context of a particular course of action UNIT will move along PATH.")
+(comment MilitaryCSSAction "A collection of tasks normally executed by Combat Service Support units. In this case, we are considering COA Logistics functions.")
+(comment MovementAgainstResistance-Military "Collection of all instances of #$MilitaryAction that involve a significant troop movement by the friendly force in the face of anticipated fires and other offensive resistance on the part of the hostile force.")
+(comment SupportingAttack "An offensive operation carried out in conjunction with a main attack and designed to achieve one or more of the following: a. deceive the enemy; b. destroy or pin down enemy forces which could interfere with the main attack; c. control ground whose occupation by the enemy will hinder the main attack; or d. force the enemy to commit reserves prematurely or in an indecisive area.")
+(comment unitAssignedSuppOpEffort "(unitAssignedSuppOpEffort MISSION UNIT) means that UNIT
+undertakes one of the supporting efforts in carrying through MISSION.")
+(comment specializedEquipmentOfUnitType "(#$specializedEquipmentOfUnitType UNITTYPE THINGTYPE) means that, within a military context, instances of THINGTYPE are supplied specially for use by units of type UNITTYPE, and under  'ordinary' or 'normal' circumstances instances of THINGTYPE will not be found with units that are not an instance of UNITTYPE.")
+(comment AvenueOfApproach-Air "A specialization of #$AvenueOfApproach for air forces.  An
+#$AvenueOfApproach-Air is an aerial route that leads a force to its
+objective, or to key terrain on its path. Note that in contrast to an
+#$AvenueOfApproach-Ground, an #$AvenueOfApproach-Air must be specified
+by altitude as well as lat-long or other earth surface coordinates.")
+(comment MilitaryTaskObstacleFn "(#$MilitaryTaskObstacleFn TASKTYPE) returns the collection of all instances of #$ObstacleSystem-Military specifically designed to interfere with or prevent the performance of tasks of type TASKTYPE.")
+(comment standardEquipmentOfUnitType "(#$standardEquipmentOfUnitType ?UNITTYPE ?THINGTYPE) means that under 'ordinary' or 'normal' circumstances we should expect to find any instances of?UNITTYPE equipped with one or more instances of ?THINGTYPE.")
+(comment Line-ManeuverFormation "This attribute applies to units which are moving in a
+broad, line-like formation.  In such formation, the unit's length is
+aligned roughly perpendicular to its axis of movement.")
+(comment EncirclingAnEnemy "This task is assigned to a unit which is an encircling force in an encirclement operation (see FM100-40, pp 9-7 - 9-16). The unit may be designated as the main effort or a supporting effort (if a major obstacle, such as a shoreline, cannot serve as a second encircling wing). Although terrain objectives may be designated in an encirclement, isolation and defeat of enemy forces are the primary goals.")
+(comment TerrainFlatGround "An instance of #$TerrainTypeBySurfaceLevel. Flat ground terrain is the terrain that is neither #$TerrainHighGround nor #$TerrainLowGround. When traversing #$TerrainFlatGround, one will not encounter any significant positive or negative slope.")
+(comment coaControlMeasure "(#$coaControlMeasure COAMT SPATIALTHING) means that in the
+special Course of Action context represented by COAMT, SPATIALTHING
+has the special status of 'Control Measure'.  This means that
+SPATIALTHING is a coordination feature which aids in the development
+process of that particular COA.  Instances are used in order to to
+assign responsibilities, coordinate fires and maneuver, and control
+combat operations. Each control measure can be portrayed
+graphically.  In general, all control measures should be easily
+identifiable on the ground. Examples of control measures include
+boundaries, objectives, coordinating points, contact point, and
+direction of attack. From FM 101-5-1.")
+(comment MilitaryManeuver-Defensive "The collection of instances of #$MilitaryManeuver that are used in defensive actions.")
+(comment ClearingAnEnemy "To clear an enemy from an area means to remove all enemy forces and eliminate organized resistance in the area. This may be accomplished by destroying, capturing, or forcing the withdrawal of the enemy from the area.")
+(comment DropZone "A specific area upon which airborne troops, equipment, or supplies are airdropped. See FMs 7-8, 7-20, 7-30, 71-100, and 90-26.")
+(comment providesCoverToFrom "(#$providesCoverToFrom OBJ REGION1 REGION2) means that
+the OBJ provides some measure of Cover at REGION1 from the direct or
+indirect fires from REGION2. Cover is an OCOKA principle that
+focuses on maximizing the protection troops have from direct and
+indirect fires. Its contrasting principle is that of Fields of Fire.
+Units with good cover limit the Fields of Fire for opposing units, and
+units with good fields of Fire have limited the Cover for opposing
+units. Although it is usually important to maintain good Cover, this
+may not always be desirable. For example, if an operation is
+speed-dependant, Cover may impede a force's ability to move quickily.
+This principle must be balanced with the other OCOKA principles, as
+well as those of METT-TC.")
+(comment LandingZone "Any specified zone used for the landing of aircraft. See FMs 1-111, 7-8, 7-10, 7-20, 7-30, 31-12, 71-100-2, 71-100-3, 90-4, and 90-26.")
+(comment RearwardPassageOfLines-MilitaryOperation "A rearward passage of lines occurs when a unit passes through another unit while moving away from the enemy. FM100-40, p18- 2. A rearward passage of lines is similar in concept to a forward passage of lines. It continues the defense or retrograde operation. It maintains enemy contact while allowing for the recovery of the security force or the replacement of a unit that is combat-ineffective.")
+(comment OffensivelyAdvantageousTerrain "The collection of geographical regions that are useful for offensive actions. Note that it is possible for a geographical region to be instances of both #$OffensivelyAdvantageousTerrain and #$DefensivelyAdvantageousTerrain. For example, one such case might be a region that is both a #$CoverProvidingTerrain and a #$ObservationFacilitatingTerrain.")
+(comment unitAssignedToTask "(unitAssignedToTask TASK UNIT) means that UNIT is the instance of #$ModernMilitaryUnit-Deployable that is charged with primary responsibility for implementing TASK in accordance with a course of action (COA).")
+(comment widthOfAOA-Average "(#$widthOfAOA-Average PATH WIDTH) means that WIDTH is the average width of the #$Path-Spatial PATH and that PATH is an avenue of approach for some COA.")
+(comment advanceGuard "(#$advanceGuard SUPPORT UNIT) says that UNIT plays the role of advance guard in the #$SupportingAUnit event SUPPORT.  Specifically, there is a larger unit of which UNIT is a part, the larger unit has been assigned a task, and UNIT has been sent out ahead of the larger unit to ensure its ability to advance and carry out its task.  SUPPORT is the event during which UNIT acts in this capacity, and temporally subsumes the instantiation of the larger unit's task (if there is such an instantiation).  Note that it is incorrect to say that UNIT *supports* the larger unit directly; UNIT is either an #$advanceGuardSupport or an #$advanceGuardReserve, and the former class directly supports the latter class.")
+(comment GeneralPoint "Characteristic attribute of a human construction or a terrain feature used as a reference point in a military Course of Action.")
+(comment Terrain-NoGo "Terrain that is considered practically impassable for a
+particular unit type. This does not mean the terrain is impossible to
+traverse, however.")
+(comment missionCasualtyLevel "(#$missionCasualtyLevel MIL-OP LEVEL) holds just in case the performance of
+MIL-OP resulted in casualties of LEVEL.")
+(genls TurningAnEnemyForce MilitaryAction)
+(genls TurningAnEnemyForce MilitaryEvent)
+(genlPreds taskInsAreaOfOperations eventOccursAt)
+(genls AttackPositionOccupied HexalateralObject)
+(genls FriendlyRegion HexalateralObject)
+(genls BeatenZone HexalateralObject)
+(genlPreds mainAttackOfOperation subEventTypes)
+(genls AreaOfOperations HexalateralObject)
+(genls AssemblyAreaOrdered HexalateralObject)
+(genls ReserveUnitSpecification Evaluating)
+(genls CoverFromIndirectFire-Good GeographicalRegion)
+(genls PassageOfLines-Rearward MilitaryEvent)
+(genls SearchAndClear MilitaryEvent)
+(genls AxisOfAdvance MilitaryControlMeasure)
+(genls Bridgehead HexalateralObject)
+(genlPreds taskCFL topicOfIndividual)
+(genlPreds combatZoneOfOperation eventOccursAt)
+(genls BlueUnit ModernMilitaryUnit-Deployable)
+(genls DropZone HexalateralObject)
+(genls TerrainFlight MilitaryEvent)
+(genls LandingZone HexalateralObject)
+(genls TacticalTerrainTypeByGeometry FacetInstanceCollection)
+(genls ReinforcingObstacle HexalateralObject)
+(genls AerialAttack MilitaryEvent)
+(genls GeneralPoint HexalateralObject)
+(genls TacticalArea TacticalTerrainObject)
+(genlPreds taskBeatenZone actors)
+(genls NoFireArea HexalateralObject)
+(genls ExfiltrationFromEnemyTerritory MilitaryEvent)
+(genlPreds supportingAttackOfOperation supports-Underspecified)
+(genls NeutralizingAnEnemyForce MilitaryEvent)
+(genls AerialAttackOnGroundForces MilitaryEvent)
+(genls ObservationFacilitatingTerrain HexalateralObject)
+(genls (AttemptingFn (KillingByMeansOfFn HandGrenade)) Attempting)
+(genls PhaseLine MilitaryControlMeasure)
+(genls (HostileUnitFn Blue-Side) ModernMilitaryUnit-Deployable)
+(genlPreds unitHasPurpose goals)
+(genls GroundApproach Path-Spatial)
+(genls AssemblyAreaPlanned HexalateralObject)
+(genlPreds standardVehicleOfUnitType standardEquipmentOfUnitType)
+(genls BombingMission-Aerial MilitaryEvent)
+(genlPreds obstacleToFrom-Path obstacleToFrom-Place)
+(genls BattlePositionPrepared HexalateralObject)
+(genls DelayingAnAgent MilitaryEvent)
+(genls HostileRegion HexalateralObject)
+(genlPreds advanceGuardSupport advanceGuard)
+(genlPreds fireSupportTaskOfOperation supports-Underspecified)
+(genlPreds supportRegionForUnit temporallyIntersects)
+(genlPreds taskCFL spatiallyRelated)
+(genlPreds supportingAttackOfOperation subEventTypes)
+(genls DirectAvenueOfApproach HexalateralObject)
+(genls DeadSpace HexalateralObject)
+(genls AmbushSite HexalateralObject)
+(genlPreds terrainTypeOfAvenue terrainType)
+(genlPreds securityUnitInMission actors)
+(genls MiscellaneousTaskSpecification Evaluating)
+(genls EngagementArea HexalateralObject)
+(genls GroundApproach HexalateralObject)
+(genls TacticalPoint TacticalTerrainObject)
+(genls Obstacle HexalateralObject)
+(genls ContainingAnEnemy MilitaryEvent)
+(genlPreds fireSupportTaskOfOperation subEventTypes)
+(genls FixingAnEnemy MilitaryEvent)
+(genls RedUnit ModernMilitaryUnit-Deployable)
+(genls ControlPoint HexalateralObject)
+(genls OccupyingAnObjective MilitaryEvent)
+(genls AssailableFlank HexalateralObject)
+(genls MainAttackSpecification Evaluating)
+(genlPreds rearCommandPostOfUnit spatiallyRelated)
+(genls SecuringAnObjective MilitaryEvent)
+(genls TacticalTerrainObject HexalateralObject)
+(genlPreds fireSupportToOperation actors)
+(genls FlankingPosition HexalateralObject)
+(genls Checkpoint-Military HexalateralObject)
+(genlPreds forwardCommandPostOfUnit temporallyIntersects)
+(genls SupportingAttackSpecification Evaluating)
+(genls RedUnit (HostileUnitFn Blue-Side))
+(genls AttackPositionOrdered HexalateralObject)
+(genls BreachingAnEnemyDefense MilitaryEvent)
+(genlPreds containmentConstraint-Spatial temporallyIntersects)
+(genlPreds criticalEventInCoa criticalToPlan-Generic)
+(genls EstablishingABridgehead MilitaryEvent)
+(genlPreds typeAuxiliaryFunction-Military (TypeCapableFn behaviorCapable))
+(genls TargetReferencePoint HexalateralObject)
+(genls TacticalLine TacticalTerrainObject)
+(genls KnownHostileActivity HexalateralObject)
+(genlPreds issuerOfOrder-Military senderOfInfo)
+(genls TargetedForMining HexalateralObject)
+(genlPreds supportsForce-General positiveVestedInterest)
+(genls ObservationLimitingTerrain HexalateralObject)
+(genls BasicTaskSpecification Evaluating)
+(genls CoordinatedFireLine MilitaryControlMeasure)
+(genlPreds equipmentOfUnit possesses)
+(genlPreds tacticalCombatForceInMission actors)
+(genls DominantTerrain HexalateralObject)
+(genlPreds mainCommandPostOfUnit temporallyIntersects)
+(genls MilitaryPost Place)
+(genls Strongpoint-Military HexalateralObject)
+(genls DefiladeFightingPosition HexalateralObject)
+(genlPreds primaryFunction-Military intendedPrimaryFunction)
+(genls OccupyingAnObjective IntelligentAgentActivity)
+(genlPreds taskInsLimitOfAdvance temporallyIntersects)
+(genlPreds typePrimaryFunction-Military typePrimaryFunction)
+(genls Airhead HexalateralObject)
+(genls ExistingObstacle HexalateralObject)
+(genlPreds targetOfFireInTask objectiveOfTask)
+(genls ApproachMarch-MilitaryOperation MilitaryOperation)
+(genls PassageOfLines-Forward MilitaryEvent)
+(genls FinalCoordinationLine MilitaryControlMeasure)
+(genls KeyFeatureArea HexalateralObject)
+(genls FortifiedArea HexalateralObject)
+(genls ActingAsADecoy MilitaryEvent)
+(genls CircuitousAvenueOfApproach HexalateralObject)
+(genls AssemblyAreaOccupied HexalateralObject)
+(genls ForwardArmingAndRefuelingPoint HexalateralObject)
+(genls HullDownFightingPosition HexalateralObject)
+(genls DisengagingFromCombat MilitaryEvent)
+(genls FieldOfFire HexalateralObject)
+(genls ZoneOfFire HexalateralObject)
+(genls IsolatingAnEnemy MilitaryEvent)
+(genls SuspectedHostileActivity HexalateralObject)
+(genls (RemovalFn Mine-Weapon) IntelligentAgentActivity)
+(genlPreds taskInsLimitOfAdvance nonDeliberateActors)
+(genls (FriendlyUnitFn Blue-Side) ModernMilitaryUnit-Deployable)
+(genls AttackPositionProposed HexalateralObject)
+(genls PickupZone HexalateralObject)
+(genls CausingAttritionOfAnEnemyForce MilitaryEvent)
+(genls FireSupportSpecification Evaluating)
+(genls NoFireLine MilitaryControlMeasure)
+(genlPreds areaToProtect thingToProtect)
+(genls CanalizingAnEnemyForce MilitaryEvent)
+(genls MovementToContact-MilitaryOperation MilitaryOperation)
+(genlPreds intentOfCommanderForAction purposeInEvent)
+(genlPreds posting-Military posting-Military-Generic)
+(genls CounteringEnemyReconnaissance MilitaryEvent)
+(genlPreds advanceGuard performedBy)
+(genls ContactPoint HexalateralObject)
+(genls Moving-OnRoadIrregFormation-Military IntelligentAgentActivity)
+(genls TakeUpPositions MilitaryTask-Defensive)
+(genls BattlePositionProposed HexalateralObject)
+(genls CoverProvidingTerrain HexalateralObject)
+(genls MissionSpecification Evaluating)
+(genls ConcealmentProvidingTerrain HexalateralObject)
+(genlPreds auxiliaryFunction-Military behaviorCapable)
+(genls PassageOfLines MilitaryEvent)
+(genls ProbableLineOfDeployment MilitaryControlMeasure)
+(genlPreds specializedEquipmentOfUnitType standardEquipmentOfUnitType)
+(genlPreds providesCoverToFrom limitsObservationOfFrom)
+(genlPreds taskFCL spatiallyRelated)
+(genls ContainmentZone HexalateralObject)
+(genls AerialAttackOnGroundForces AerialAttack)
+(genlPreds rearCommandPostOfUnit temporallyIntersects)
+(genls CoordinatingPoint HexalateralObject)
+(genls DisruptingEnemyPlans MilitaryEvent)
+(genls BlueUnit (FriendlyUnitFn Blue-Side))
+(genls RestrictiveFireArea HexalateralObject)
+(genlPreds unitAssignedToTask performerInSpec)
+(genls Linkup-MilitaryTask MilitaryEvent)
+(genls Digging-Trench IntelligentAgentActivity)
+(genlPreds advanceGuardReserve advanceGuard)
+(genls AerialAttackOnGroundForces IntelligentAgentActivity)
+(genlPreds taskInsLimitOfAdvance spatiallyRelated)
+(genls ScreeningAFriendlyForce MilitaryEvent)
+(genls CombatZone HexalateralObject)
+(genls RestrictiveFireLine MilitaryControlMeasure)
+(genlPreds taskFCL topicOfIndividual)
+(genlPreds posting-Military-Generic objectFoundInLocation)
+(genlPreds phaseLineBetweenRegions formsBorderBetween)
+(genls DefeatingAnOpponent MilitaryEvent)
+(genlPreds degreeOfTrafficability isa)
+(genls BattlePositionOccupied HexalateralObject)

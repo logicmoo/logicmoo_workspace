@@ -1,0 +1,118 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: rerep.meld
+;;;;    System: Companions
+;;;;   Version: 1.0
+;;;;    Author: Tom Hinrichs
+;;;;   Created: August 18, 2006 17:36:31
+;;;;   Purpose: Predicate definitions for re-representation
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;; mappingToAlist is used for transfer learning
+
+(isa mappingToAlist Predicate)
+(arity mappingToAlist 2)
+(arg1Isa mappingToAlist Mapping)
+(arg2Isa mappingToAlist Set-Extensional)
+(comment mappingToAlist "(mappingToAlist ?m ?a) means that the correspondences of analogical mapping ?m are captured by the set of bindings in ?a.")
+(functionalInArgs mappingToAlist 2)
+
+;;; nonalignableArgument
+(isa nonalignableArgument TernaryPredicate)
+(arity nonalignableArgument 3)
+(arg1Isa nonalignableArgument Match)
+(arg2Isa nonalignableArgument CycLExpression)
+(arg3Isa nonalignableArgument CycLExpression)
+(comment nonalignableArgument "(nonalignableArgument ?base-item ?target-item) means the proposed correspondence violates identicality.")
+
+;;; nonalignableComponent
+(isa nonalignableComponent Predicate)
+(arity nonalignableComponent 6)
+(arg1Isa nonalignableComponent Match)
+(arg2Isa nonalignableComponent Mapping)
+(arg3Isa nonalignableComponent CycLExpression)
+(arg4Isa nonalignableComponent CycLExpression)
+(arg5Isa nonalignableComponent CycLExpression)
+(arg6Isa nonalignableComponent CycLExpression)
+(comment nonalignableComponent "(nonalignableComponent ?match ?mapping ?base-item ?candidate-inference ?target-item ?opportunity-type) means the proposed correspondence violates identicality. 
+which leads to candidate-inference? generated as a result.")
+
+
+;;; inconsistentMhs
+(isa inconsistentMhs TernaryPredicate)
+(arity inconsistentMhs 3)
+(arg1Isa inconsistentMhs Match)
+(arg2Isa inconsistentMhs CycLExpression)
+(arg3Isa inconsistentMhs CycLExpression)
+(comment inconsistentMhs "(inconsistentMhs ?match (?bi1 ?ti1) (?bi2 ?ti2)) means the two correspondences violate the 1:1 constraint.")
+
+;;; leftoversOpportunities
+(isa leftoversOpportunities Predicate)
+(arity leftoversOpportunities 4)
+(arg1Isa leftoversOpportunities Mapping)
+(arg2Isa leftoversOpportunities Case)
+(arg3Isa leftoversOpportunities Set-Mathematical)
+(arg4Isa leftoversOpportunities CycLFormula)
+(comment leftoversOpportunities "(leftoversOpportunities ?mapping ?domain ?entitySet ?pattern)
+Leftovers are kernels that are left out of a mapping because they have 
+one or more entity correspondences that are inconsistent with the mapping.")
+
+;;; suggestionFor - replace this with Solve suggestions?
+(isa suggestionFor TernaryPredicate)
+(arity suggestionFor 3)
+(arg1Isa suggestionFor Correspondence)
+(arg2Isa suggestionFor CycLExpression)
+(arg3Isa suggestionFor CycLExpression)
+
+
+;;; rewrite   - the transformation strategy
+(isa rewrite BinaryPredicate)
+(arity rewrite 2)
+(arg1Isa rewrite CycLExpression)
+(arg2Isa rewrite CycLExpression)
+
+
+;;; remain    - what does this mean?
+
+;;; hasFunctionalAspect
+;;; (hasFunctionalAspect sensor1 SenseDimension)
+(isa hasFunctionalAspect BinaryPredicate)
+
+;;; substitutablePredicates
+;;; (substitutablePredicates causes-PropProp implies)
+;;; (substitutablePredicates heatAligned aligned)
+(isa substitutablePredicates BinaryRelation)  ;; symmetric?
+
+
+;;; decompositionOf - the decomposition strategy
+;;; E.g.:
+;;; (decompositionOf (run ?x ?y)  (moveTo ?x ?y))
+;;; (decompositionOf (run ?x ?y)  (movementPace ?x Fast))
+
+;;; relationOf
+;;; (relationOf hotterThan greaterThan)
+;;; (relationOf higherThan greaterThan)
+;;; (relationOf colderThan lessThan)
+;;; (relationOf higherPressure greaterThan)
+
+;;; dimensionOf
+;;; (dimensionOf hotterThan TemperatureFn)
+;;; (dimensionOf higherThan HeightFn)
+
+;;; splittableConcept
+;;; E.g.:
+;;; (splittableConcept Thermostat)
+(isa splittableConcept UnaryPredicate)
+
+;;; couldSplitInto
+;;; E.g.:
+;;; (could-split-into Thermostat SenseDimension (CurvatureFn BimetalStrip))
+;;; (could-split-into Thermostat CompareDimension (AngleFn BimetalStrip))
+;;; (could-split-into Thermostat ControlDimension MercurySwitch)
+
+;;; splitInto

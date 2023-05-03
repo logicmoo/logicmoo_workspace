@@ -1,0 +1,70 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: physicalprocess.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: June 5, 2003 17:11:14
+;;;;   Purpose: Physical Process definitions
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Tuesday, January 12, 2010 at 13:59:13 by taylor
+;;;; ---------------------------------------------------------------------------
+
+
+;;; Events, actions and processes we recognize as a PhysicalProcess
+;;; Some of these are debatable, other might have not been included.
+
+;;; Note: Including GeneralizedTransfer in this list is problematic,
+;;;       because some events associated with GeneralizedTransfer
+;;;       are *not* physical events.
+
+(in-microtheory QPInterpretationMt :exclude-globals t)
+
+(genls PhysicalProcess Event-Localized)
+
+(genls ConfiguringEvent PhysicalProcess)
+(genls MovementOrShapeChangeEvent PhysicalProcess)
+(genls CompostingProcess PhysicalProcess)
+(genls Erosion PhysicalProcess)
+(genls Malfunction PhysicalProcess)
+(genls CelestialEvent PhysicalProcess)
+(genls FloatingInASubstance PhysicalProcess)
+(genls WeightChangingProcess PhysicalProcess)
+(genls NaturalHazard PhysicalProcess)
+(genls ReducingASlope PhysicalProcess)
+(genls ActionOnObject PhysicalProcess)
+(genls ReleaseOfSupport PhysicalProcess)
+(genls Dropping PhysicalProcess)
+(genls Lying-Physical PhysicalProcess)
+(genls ReversibleProcess PhysicalProcess)
+(genls HumidifyingAir PhysicalProcess)
+(genls IncurringDamage PhysicalProcess)
+(genls Tempering PhysicalProcess)
+(genls HoleMakingProcess PhysicalProcess)
+(genls ApplyingAForce PhysicalProcess)
+(genls Weathering PhysicalProcess)
+(genls GenerationOrConversionEvent PhysicalProcess)
+(genls MechanicalEvent PhysicalProcess)
+(genls MicroPhysicalEvent PhysicalProcess)
+(genls NuclearEvent PhysicalProcess)
+(genls ElectricalEvent PhysicalProcess)
+(genls WeatherEvent PhysicalProcess)
+(genls PhysicalCreationOrDestructionEvent PhysicalProcess)
+(genls Growth-Physical PhysicalProcess)
+(genls ExposureToSubstance PhysicalProcess)
+(genls Drying PhysicalProcess)
+(genls SeparationEvent PhysicalProcess)
+(genls Ambulation PhysicalProcess)
+(genls LocomotionProcess PhysicalProcess)
+(genls LocomotionEvent PhysicalProcess)
+(genls LeavingAPlace PhysicalProcess)
+(genls MovementEvent PhysicalProcess)
+(genls Movement-TranslationEvent PhysicalProcess)
+(genls FluidFlowEvent PhysicalProcess)
+(genls Running PhysicalProcess)
+(genls FluidFlow-Translation PhysicalProcess)
+
+
+;;; (genls GeneralizedTransfer PhysicalProcess)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

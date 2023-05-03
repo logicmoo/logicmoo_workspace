@@ -1,0 +1,98 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-elaboration.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: March 20, 2011 15:46:35
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2011-03-08 22:12:45 -0600 (Tue, 08 Mar 2011) $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Support for worksheet-specific queries, to elaborate the sketches in 
+;;;   domain-specific and problem-specific ways.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa queryForCogSketchWorksheetQuestions BinaryPredicate)
+(arity queryForCogSketchWorksheetQuestions 2)
+(arg1Isa queryForCogSketchWorksheetQuestions Integer)
+(arg2Isa queryForCogSketchWorksheetQuestions CycLExpression)
+(comment queryForCogSketchWorksheetQuestions
+  "(queryForCogSketchWorksheetQuestions <priority> <pattern>) is used to query for questions
+ that should be queried in order to flesh out the current CogSketch worksheet. <pattern> is
+ the query that should be asked in the sketch microtheory, with <priority> being an integer,
+ such that lower-numbered questions are asked before higher-numbered.")
+(notForAnalogy queryForCogSketchWorksheetQuestions)
+
+(isa queryForCogSketchPostComparisonWorksheetQuestions BinaryPredicate)
+(arity queryForCogSketchPostComparisonWorksheetQuestions 2)
+(arg1Isa queryForCogSketchPostComparisonWorksheetQuestions Integer)
+(arg2Isa queryForCogSketchPostComparisonWorksheetQuestions CycLExpression-Askable)
+(comment queryForCogSketchPostComparisonWorksheetQuestions
+  "(queryForCogSketchPostComparisonWorksheetQuestions <priority> <pattern>) is used to query for questions
+ that should be queried in order to flesh out the current CogSketch worksheet. <pattern> is
+ the query that should be asked in the sketch microtheory, with <priority> being an integer,
+ such that lower-numbered questions are asked before higher-numbered.")
+(notForAnalogy queryForCogSketchWorksheetQuestions)
+
+(isa KBExtensionsForWorksheetFn Function-Denotational)
+(arity KBExtensionsForWorksheetFn 1)
+(arg1Isa KBExtensionsForWorksheetFn Microtheory)
+(resultIsa KBExtensionsForWorksheetFn Microtheory)
+(comment KBExtensionsForWorksheetFn
+  "(KBExtensionsForWorksheetFn <sketch>) denotes the facts and rules which are specific to
+ the sketch worksheet <sketch>.  This enables worksheet authors to add facts, rules, and advice
+ that is domain-specific and problem-specific, including changing the encoding processes via
+ providing advice using the queryForCogSketchWorksheetQuestions relationship.")
+(notForAnalogy KBExtensionsForWorksheetFn)
+
+
+
+(isa QfQRegressionMt Microtheory)
+(comment QfQRegressionMt
+  "QfQRegressionMt is a microtheory for regression testing of query-for-questions
+ implementations.")
+(in-microtheory QfQRegressionMt)
+(queryForCogSketchWorksheetQuestions 0 (tell (foo a b)))
+(queryForCogSketchWorksheetQuestions 0 (tell (foo a 2)))
+(queryForCogSketchWorksheetQuestions 0 (tell (foo 3 b)))
+(queryForCogSketchWorksheetQuestions 1 (evaluate ?set1 
+                                         (TheClosedRetrievalSetOf ?2nd
+                                           (foo a ?2nd))))
+(queryForCogSketchWorksheetQuestions 1 (evaluate ?set2
+                                         (TheClosedRetrievalSetOf ?1st
+                                           (foo ?1st b))))
+
+
+;;; I don't think I will actually end up needing this.  Commenting out for now.
+;;;   [MMU 3/21/2011]
+;;;(isa CacheForKBExtensionsForWorksheetFn Function-Denotational)
+;;;(arity CacheForKBExtensionsForWorksheetFn 1)
+;;;(arg1Isa CacheForKBExtensionsForWorksheetFn Microtheory)
+;;;(resultIsa CacheForKBExtensionsForWorksheetFn Microtheory)
+;;;(comment CacheForKBExtensionsForWorksheetFn
+;;;  "(CacheForKBExtensionsForWorksheetFn <sketch>) denotes the facts and rules which are specific to
+;;; the sketch worksheet <sketch>, which is stored in the WM of <sketch>.  When the sketch is loaded,
+;;; (KBExtensionsForWorksheetFn <sketch>) is nuked, and rebuilt with the facts in
+;;; (CacheForKBExtensionsForWorksheetFn <sketch>), to ensure that the correct set is used.")
+;;;(notForAnalogy CacheForKBExtensionsForWorksheetFn)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa cogSketchWorksheetSolutionExtensionQuery UnaryPredicate)
+(arity cogSketchWorksheetSolutionExtensionQuery 1)
+(arg1Isa cogSketchWorksheetSolutionExtensionQuery CycLExpression-Askable)
+(comment cogSketchWorksheetSolutionExtensionQuery
+  "Records that a query has been made by a worksheet author to extend the facts 
+   available for use in a CogSketch worksheet.")
+(notForAnalogy cogSketchWorksheetSolutionExtensionQuery)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

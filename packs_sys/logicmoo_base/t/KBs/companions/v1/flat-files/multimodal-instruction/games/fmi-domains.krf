@@ -1,0 +1,101 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: fmi-domains.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 7, 2014 11:55:38
+;;;;   Purpose: extending language through dialog
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+;;; For background, see:
+;;; http://qrgwiki.qrg.northwestern.edu/index.php/Companions/Language_Learning
+
+(in-microtheory BaseKB)
+(isa FmiDomainsMt Microtheory)
+(genlMt FmiGamesMt FmiDomainsMt)
+
+(genlMt (InterpretationMtFn FMI) (InterpretationMtFn Instruction))
+(genlMt (InterpretationMtFn Game) (InterpretationMtFn FMI))
+
+;;; This should be the meta-level equivalent of fmi-games, except that the
+;;; plans should be taking FOPC statements and constructing interpretation
+;;; rules instead of game-playing rules.  If this is running on the session-reasoner,
+;;; then the output needs to be sent and inserted into the interpretation manager
+;;; kb ultimately.  Actually shared everywhere, since we have no idea 
+;;; what nodes agents will launch on next session.  We should probably create 
+;;; flatfiles for learned knowledge.
+
+(in-microtheory FmiDomainsMt)
+
+;;; Use dialog to acquire new abductive interpretaiton rules.
+;;; No sketch input, so in some ways, this should be simpler.
+
+;;; functional concepts:
+;;;
+;;; interpretation-elaboration (add a proposition to lifted interpretation)
+;;; recognize embedded pattern
+;;; conditionalize on sentence type (imperative, declartive, interrogative)
+;;; support cross-modal reference
+;;; contextualize with background information
+;;; davidsonian conversion
+;;;
+
+;;; Make this kind of like a parser generator
+
+
+#||
+
+;;; We want to learn from instruction, failure, demonstration, corpus sampling.
+;;; instruction may be direct ("skip is a transitive verb"), though paraphrase
+;;; ("to skip" means to locomote in a playful, bouncy manner.) or more
+;;; indirectly ("sally skipped to the store.  She bobbed and giggled all the way
+;;; there with a big smile on her face.")
+
+(preconditionForMethod
+  (and ;(operatorFormulas willBe ?statement)
+       ;(subexpressionMatching (isa ?teach Teaching) ?statement ?expr1)
+       ;(subexpressionMatching (topicOfInfoTransfer ?teach ?topic) ?statement ?expr2)
+       ;(groundExpression ?topic)  ; be safe
+       ;(numAnswers 1 (currentSession ?session-id))
+       )
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList
+        ))))
+
+
+;;; We want to be able to take paraphrases and construct
+;;; direct representations.
+
+(isa assimilateNewDenotation ComplexActionPredicate)
+
+(isa assimilateNewSemtrans ComplexActionPredicate)
+
+(isa assimilateNewGrammarRule ComplexActionPredicate)
+
+(isa assimilateNewWordsense ComplexActionPredicate)
+
+(isa assimilateNewLex ComplexActionPredicate)
+;;; we want to write something like this out in NulexMt:
+;;; (definitionInDictionary WordNet "amidst" (amidst (prep (orth "amidst")))) 
+
+(isa assimilateNewIntermediatePredicate ComplexActionPredicate)
+;;; We're introducing a notational shorthand (predicate) for a 
+;;; complex, repeatable inference.
+
+
+(isa constructNewDomain ComplexActionPredicate)
+
+(isa constructNarrativeFunction ComplexActionPredicate)
+
+
+
+
+||#
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

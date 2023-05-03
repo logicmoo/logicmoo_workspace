@@ -1,0 +1,205 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: visual-encoding-plans
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: January 6, 2014 20:06:30
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory VisualEncodingPlansMt)
+
+(isa VisualEncodingPlansMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(isa encodeVisually ComplexActionPredicate)
+(arity encodeVisually 1)
+
+;;;If the object to be encoded is a microtheory (we will replace this with direct hookup to sketch agent)
+(preconditionForMethod
+ (and (isa ?object PerceptualReferentWMMicrotheory) ;;MAY NOT BE NEEDED ANYMORE
+      (evaluate ?object-facts (TheClosedRetrievalSetOf 
+                               ?object-fact 
+                               (wmOnly (lookupOnly (ist-Information ?object ?object-fact))))))
+ (methodForAction
+  (encodeVisually ?object)
+  (actionSequence
+   (TheList
+    (doSolve (remindedOf ?object Visual-Buffer ?reminding ?mapping SUB-EP-ID) CrossModalInteractionSpindleMt)
+    (doAgentPlan (encodeObjectbyStrategy ?object))))))
+
+(isa encodeObjectbyStrategy ComplexActionPredicate)
+(arity encodeObjectbyStrategy 1)
+
+(preconditionForMethod
+ (and (wmOnly 
+       (ist-Information CrossModalInteractionSpindleMt
+         (remindedOf ?object Visual-Buffer ?object-reminding ?case-mapping SUB-EP-ID)))
+      (different ?object ?object-reminding)
+      (kbOnly (currentEncodingWithRemindingStrategy ?strategy))
+      (defaultNormalizationStrategy Rerepresentation ?normalization-strategy))
+ (methodForAction
+  (encodeObjectbyStrategy ?object)
+  (actionSequence
+   (TheList
+    (doAgentPlan 
+     (doSolve (bestComparisonWith (WMCaseFn ?object) 
+                                  (WMCaseFn ?object-reminding)
+                                  0.6
+                                  ?normalization-strategy													 
+                                  ?mapping ?score)
+              CrossModalInteractionSpindleMt))
+    (doAgentPlan (encodeCase ?object ?strategy))))))
+
+(preconditionForMethod
+ (and (wmOnly 
+       (ist-Information CrossModalInteractionSpindleMt
+         (remindedOf ?object Visual-Buffer ?object-reminding ?case-mapping SUB-EP-ID)))
+      (uninferredSentence (different ?object ?object-reminding))
+      (kbOnly (currentDefaultEncodingStrategy ?strategy)))
+ (methodForAction
+  (encodeObjectbyStrategy ?object)
+  (actionSequence
+   (TheList
+    (doAgentPlan (encodeCase ?object ?strategy))))))
+
+(isa encodeCase ComplexActionPredicate)
+(arity encodeCase 2)
+
+(preconditionForMethod
+ ;;;;if the case has any reminding
+ (and (wmOnly 
+       (ist-Information CrossModalInteractionSpindleMt 
+       (remindedOf ?case Visual-Buffer ?case-reminding ?case-mapping SUB-EP-ID)))
+      (defaultNormalizationStrategy Reminding ?normalization-strategy)
+      (?normalization-strategy ?case-mapping ?score))
+ (methodForAction
+  (encodeCase ?case IntersectionBasedEncoding)
+  (actionSequence
+   (TheList
+    (doAnnounce "~A has reminding ~A for encoding with score ~A and mapping ~A" (?case ?case-reminding ?score ?case-mapping))
+    (doLog (remindingForSubEpisode SUB-EP-ID ?case ?case-reminding ?score))
+    ;;;;create a local context for getting the intersection of the ForcedChoiceStimulus and the reminded generalization (intersection is acchieved via sagewm generalization)
+    (doAgentPlan (doTell (ist-Information (IntersectionCaseFn ?case ?case-reminding)
+                           (sageWMGeneralizeWithMapping ?case (IntersectionCaseFn ?case ?case-reminding) ?case-reminding ?case-mapping))))
+    ;;;Copy the resultant facts into the encodeCaseFn  which is WM microtheory which will hold the final encoding
+    (doAgentPlan (doTell (copyWMCase (SageGenFn 0 (IntersectionCaseFn ?case ?case-reminding)) (EncodedCaseFn ?case SUB-EP-ID))))))))
+
+(preconditionForMethod
+ ;;;;if the case has a generalization as a reminding and when strategy is 'Frequency' based intersection
+ (and (wmOnly 
+       (ist-Information CrossModalInteractionSpindleMt
+       (remindedOf ?case Visual-Buffer ?case-reminding ?case-mapping SUB-EP-ID)))
+      (wmOnly
+       (ist-Information Visual-Buffer (wmGpoolGeneralization Visual-Buffer ?case-reminding ?seq)))
+      (wmOnly
+       (bestComparisonWith (WMCaseFn ?case) 
+                           (WMCaseFn ?case-reminding)
+                           ?rerep-threshold
+                           ?rerep-normalization-strategy													 
+                           ?rerep-mapping ?rerep-score))
+      (defaultNormalizationStrategy Reminding ?normalization-strategy)
+      (?normalization-strategy ?rerep-mapping ?score))
+ (methodForAction
+  (encodeCase ?case FreqIntersectionBasedEncoding)
+  (actionSequence
+   (TheList
+    (doAnnounce "~A has reminding ~A for encoding with score ~A and mapping ~A" (?case ?case-reminding ?score ?rerep-mapping))
+    (doLog (remindingForSubEpisode SUB-EP-ID ?case ?case-reminding ?score))
+    ;;;;create a local context for getting the intersection of the ForcedChoiceStimulus and the reminded generalization (intersection is acchieved via sagewm generalization)
+    (doAgentPlan (doTell (ist-Information (IntersectionCaseFn ?case ?case-reminding)
+                           (sageWMGeneralizeWithMapping ?case (IntersectionCaseFn ?case ?case-reminding) ?case-reminding ?rerep-mapping))))
+    ;;;Copy the resultant facts into the encodeCaseFn  which is WM microtheory which will hold the final encoding
+    (doAgentPlan (doTell (copyWMCase (SageGenFn 0 (IntersectionCaseFn ?case ?case-reminding)) (EncodedCaseFn ?case SUB-EP-ID))))))))
+
+(preconditionForMethod
+ ;;;;if the case does not have a generalization as a reminding and when strategy is 'Frequency' based intersection
+ (and (wmOnly 
+       (ist-Information CrossModalInteractionSpindleMt
+       (remindedOf ?case Visual-Buffer ?case-reminding ?case-mapping SUB-EP-ID)))
+      (wmOnly
+       (ist-Information Visual-Buffer (wmGpoolExample Visual-Buffer ?case-reminding ?seq)))
+      (defaultNormalizationStrategy Reminding ?normalization-strategy)
+      (?normalization-strategy ?case-mapping ?score))
+ (methodForAction
+  (encodeCase ?case FreqIntersectionBasedEncoding)
+  (actionSequence
+   (TheList
+    (encodeCase ?case DirectVisualEncoding)))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (encodeCase ?case DirectVisualEncoding)
+  (actionSequence
+   (TheList
+    (doAnnounce "No remindings for ~A, using default encoding" (?case))
+    ;;;copy the base visual encoding of the case into the Encoded Case fn area
+    ;;;AREA WHERE WE NEED TO THINK CLEARLY
+    ;;;1. whats the nature of the visual buffer
+    ;;; are just examples stored (or) mappings like in case of Kot&Gentner studies (or) both
+    ;;; if so how?
+    ;;;For now lets store examples for a start.
+    (doTell (copyWMCase ?case (EncodedCaseFn ?case SUB-EP-ID)))))))
+
+;;;it is better to merge the two plans below
+;;;leaving it for now 
+
+
+
+;;;(preconditionForMethod
+;;; (true)
+;;; (methodForAction
+;;;  (addExampleToGenlContext ?example ?genl-context)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doAnnounce "Adding ~A to generalization context ~A" (?example ?genl-context))
+;;;    (doTell (sageWMSelectAndGeneralize ?example ?genl-context))
+;;;    (doAgentPlan (printGcontextDetails ?genl-context))))))
+
+(isa addExampleToVisualBuffer ComplexActionPredicate)
+(arity addExampleToVisualBuffer 1)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (addExampleToVisualBuffer ?example)
+  (actionSequence
+   (TheList
+    (doAgentPlan (addExampleToGenlContext ?example Visual-Buffer))
+    (doTell (ist-Information Visual-Buffer (setWMGpoolAssimilationThreshold Visual-Buffer 0.5)))
+    (doTell (ist-Information Visual-Buffer (setWMGpoolMaxSize Visual-Buffer 4)))))))
+
+(isa addMappingToVisualBuffer ComplexActionPredicate)
+(arity addMappingToVisualBuffer 1)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (addMappingToVisualBuffer ?mapping)
+  (actionSequence
+   (TheList
+    (addMappingToGenlContext ?mapping Visual-Buffer)))))
+
+
+;;;(preconditionForMethod
+;;; (true)
+;;; (methodForAction
+;;;  (addMappingToGenlContext ?mapping ?visual-buffer)
+;;;  (actionSequence
+;;;   (TheList
+;;;    (doAnnounce "Adding mapping ~A to generalization" (?mapping))
+;;;    (doTell (sageWMGeneralizeWithMapping ?mapping ?genl-context ?mapping ?mapping))
+;;;    (doAgentPlan (printGcontextDetails ?genl-context))))))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,133 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: htn-chainer.meld
+;;;;    System: Fire
+;;;;   Version: 2.0
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 19, 2006 10:53:23
+;;;;   Purpose: General chainer for HTN planning
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory  HTNPlanner) 
+
+;;; Generic Planning chainer rules
+
+
+;;; Note: bestMethodFor gets invoked with the :facts argument that was passed
+;;; in to fire::plan, unless it was :kb, in which case it is converted to :all
+;;; Any subquery where the kb should definitely not be consulted is wrapped in
+;;; wmOnly below.
+
+;;; Note also: trailing percent signs in variable names are intended to reduce
+;;; the liklihood of name clashes.  The methods below are one of the few
+;;; places where bindings flow backwards to instantiate retrieved queries.
+;;; This means that using ?task in the methods below is dangerous and likely
+;;; to lead to subtle bugs.
+
+(<== (bestMethodFor ?bmf-task% ?best-method%)
+     (evaluate ?method-set% 
+       (TheClosedRetrievalSetOf ?method2%
+            (and (inferenceOnly (acceptableMethodFor ?bmf-task% ?method2%))
+                 (wmOnly (currentState ?state%))
+                 (wmOnly (uninferredSentence 
+                             (previouslyAttempted ?bmf-task% ?method2% ?state%))))))
+     (evaluate ?best-method%
+               (FirstInListFn
+                (SortFn ?method-set%
+                        (Kappa (?seq1% ?seq2%) 
+                               (inferenceOnly
+                                (preferInContext ?bmf-task% ?seq1% ?seq2%)))
+                        IdentityFn))))
+
+
+
+;;; Find methods for a task that satisfy their preconditions
+
+(<== (acceptableMethodFor ?amf-task% ?amf-method%)
+     (generalMethodFor ?amf-task% (preconditionForMethod ?gen-prec% (methodForAction ?gen-task% ?gen-method%)))
+     ;; Don't rely on retrieval to instantiate in both directions:
+     (instantiationOf 
+         (?amf-task% ?p% ?m%) (?gen-task% ?gen-prec% ?gen-method%)
+         (?instantiated-task% ?instantiated-prec% ?instantiated-method%))
+     ; Can't check previouslyAttempted here because the method isn't fully bound.
+     ; Now check the precondition:
+     (contextEnvAllowed ?instantiated-prec%)  ; was trueSentence ...
+     ; Finally instantiate the method with the successful bindings from
+     ; checking the precondition:
+     (instantiationOf ?instantiated-method% ?instantiated-method% ?amf-method%)
+     ;; Modified 7/29/07 to avoid infinite expansions:
+     (differentSymbols ?amf-method% (actionSequence (TheList ?amf-task%)))
+     )
+
+;;; Retrieve the stored method pattern for a given task.
+;;; We cannot use retrieve-general for this because we only want to generalize
+;;; the task pattern, not the entire precondition statement (which would retrieve
+;;; far too much).
+;;; Modified 6/20/07 to bind ?result to exactly what is in the kb.  This corrects
+;;; some instantiation deficiencies inside acceptableMethodFor.
+;;; 9-20-10: The planDomain optimization was biting us, so it's being removed.
+;;; It's really not necessary with planB anyway.
+
+;(<== (generalMethodFor ?inst-task% ?result%)
+;     (contextEnvAllowed (planDomain ?mt%))  ; inherit from the domain containing plans
+;     (evaluate ?variablized-task% (GeneralizeFormulaFn ?inst-task%))
+;     (localOnly        ; then retrieve plans exclusively from that (those?) domain(s)
+;       (ist-Information ?mt%
+;         (preconditionForMethod ?gmf-prec% (methodForAction ?variablized-task% ?gmf-method%))))
+;     (matches ?variablized-task% ?inst-task%) ; ensure that ?generalized-task subsumes ?task
+;     (unifies ?result% (preconditionForMethod ?gmf-prec% 
+;       (methodForAction ?variablized-task% ?gmf-method%)))
+;     )
+
+;;; If we don't know where our plans are stored, we'll have to inherit from
+;;; the current query context:
+(<== (generalMethodFor ?inst-task% ?result%)
+     (evaluate ?variablized-task% (GeneralizeFormulaFn ?inst-task%))
+     (contextEnvAllowed
+       (preconditionForMethod ?gmf-prec% (methodForAction ?variablized-task% ?gmf-method%)))
+     (matches ?variablized-task% ?inst-task%) ; ensure that ?generalized-task subsumes ?task
+     (unifies ?result% (preconditionForMethod ?gmf-prec% 
+       (methodForAction ?variablized-task% ?gmf-method%)))
+     )
+
+  
+;;; preferInContext is a way of specifying advice.
+;;; A rule to conclude preferInContext will look at the particular
+;;; facts and choices in the current context, and possibly the
+;;; task hierarchy.  Some contextual facts might be statements that
+;;; reify history, such as what phase of a scenario you're in.
+
+
+;;; Blocks World example:
+
+;(chainerContains (ChainerFn BlocksWorld)
+;  (<== (preferInContext (moveBlock ?noMove) ?seq1 ?seq2)
+;       (uninferredSentence (clobbersGoal ?seq1))
+;       (clobbersGoal ?seq2)))
+
+
+;;; Plan Debugging
+
+(breakOnEmptySet (TheSet) Planning)          ; degenerate rule
+
+(<== (breakOnEmptySet ?set Never)
+     (differentSymbols ?set (TheSet)))
+
+(<== (breakOnZeroValue ?nat Planning)
+     (natArgument ?nat 1 ?0))
+
+(<== (breakOnZeroValue ?nat Never)
+     (natArgument ?nat 1 ?val)
+     (differentSymbols ?val 0))
+       
+(<== (breakOnCondition ?condition Planning)
+     (trueSentence ?condition))
+
+(<== (breakOnCondition ?condition Never)
+     (uninferredSentence ?condition))
+
+(<== (breakUnless ?condition Never)
+     (trueSentence ?condition))
+
+(<== (breakUnless ?condition Planning)
+     (uninferredSentence ?condition))

@@ -1,0 +1,180 @@
+(in-microtheory ComputerNetworkMt)
+
+(isa 802-11WirelessLANProtocol InternetStandard)
+(isa OpenSystemInterconnectionReferenceModel ISOStandard)
+(isa HypertextTransferProtocol NetworkProtocol)
+(isa 802-11-gWLANCommunicationStandard ProductStandard)
+(isa LightweightDirectoryAccessProtocol InternetStandard)
+(isa NetBIOS TransportLayerProtocol)
+(isa InternetProtocol NetworkLayerProtocol)
+(isa AsynchronousTransferMode NetworkProtocol)
+(isa 802-11WirelessLANProtocol MediumAccessControlSublayerProtocol)
+(isa POP3Protocol PlaintextProtocol)
+(isa LightweightDirectoryAccessProtocol CommunicationProtocol)
+(isa NetBEUI TransportLayerProtocol)
+(isa InternetMessageAccessProtocol PlaintextProtocol)
+(isa CiscoDiscoveryProtocol NetworkProtocol)
+(isa InternetPacketExchange NetworkLayerProtocol)
+(isa 802-11-gWLANCommunicationStandard CommunicationProtocol)
+(isa AsynchronousTransferMode CommunicationProtocol)
+(isa 802-11WirelessLANProtocol PhysicalLayerProtocol)
+(isa NetBIOS NetworkProtocol)
+(isa SimpleMailTransferProtocol PlaintextProtocol)
+(isa TransmissionControlProtocol TransportLayerProtocol)
+(isa XDisplayManagerControlProtocol CommunicationProtocol)
+(isa 802-11-nWLANCommunicationStandard ProductStandard)
+(isa SequencedPacketExchange TransportLayerProtocol)
+(isa POP2Protocol PlaintextProtocol)
+(isa NetBEUI NetworkProtocol)
+(isa Gopher-InternetProtocol InternetStandard)
+(isa PostOfficeProtocol PlaintextProtocol)
+(isa InternetProtocol InternetStandard)
+(isa 802-11-nWLANCommunicationStandard CommunicationProtocol)
+(isa InternetGroupManagementProtocol NetworkProtocol)
+(isa UserDatagramProtocol InternetStandard)
+(isa FileTransferProtocol NetworkProtocol)
+(isa 802-11-aWLANCommunicationStandard CommunicationProtocol)
+(isa 802-11-aWLANCommunicationStandard ProductStandard)
+(isa NetworkTimeProtocol NetworkProtocol)
+(isa AddressResolutionProtocol NetworkProtocol)
+(isa TrivialFileTransferProtocol NetworkProtocol)
+(isa SimpleNetworkManagementProtocol NetworkProtocol)
+(isa NetworkTimeProtocol InternetStandard)
+(isa UserDatagramProtocol TransportLayerProtocol)
+(isa TCP-IP (GroupFn NetworkProtocol))
+(isa Gopher-InternetProtocol NetworkProtocol)
+(isa TrivialFileTransferProtocol InternetStandard)
+(isa Packet-TCP InternetPacketTypeByTransportLayerProtocol)
+(isa KermitFileTransferProtocol NetworkProtocol)
+(isa TrivialFileTransferProtocol CommunicationProtocol)
+(isa 3GTelecommunicationStandard TelecommunicationHardwareStandard)
+(isa BootstrapProtocol NetworkProtocol)
+(isa Packet-UDP InternetPacketTypeByTransportLayerProtocol)
+(isa TCP-IP InternetStandard)
+(isa InternetProtocol-v6 NetworkLayerProtocol)
+(isa InternetControlMessageProtocol InternetStandard)
+(isa ServerMessageBlockProtocol NetworkProtocol)
+(isa (TransportLayerProtocolFn UserDatagramProtocol) InternetPacketTypeByTransportLayerProtocol)
+(isa FileTransferProtocol CommunicationProtocol)
+(isa InternetProtocol-v6 InternetStandard)
+(isa NetworkProtocol QAClarifyingCollectionType)
+(isa InternetControlMessageProtocol NetworkLayerProtocol)
+(isa WinSock ApplicationProgrammingInterface)
+(isa IPX-SPX (GroupFn NetworkProtocol))
+(isa DHCPProtocol NetworkProtocol)
+(isa NetBIOS SessionLayerProtocol)
+(isa LocalAreaTransportProtocol NetworkProtocol)
+(isa NetworkNewsTransferProtocol InternetStandard)
+(isa ServerMessageBlockProtocol ApplicationLayerProtocol)
+(isa IPX-SPX InternetStandard)
+(isa 802-11-bWLANCommunicationStandard CommunicationProtocol)
+(isa 802-11-bWLANCommunicationStandard ProductStandard)
+(isa (TransportLayerProtocolFn TransmissionControlProtocol) InternetPacketTypeByTransportLayerProtocol)
+(isa HypertextTransferProtocol InternetStandard)
+(isa TelnetProtocol NetworkProtocol)
+(isa TransmissionControlProtocol InternetStandard)
+(isa DomainNameSystemProtocol ApplicationLayerProtocol)
+(isa NetBEUI NetworkLayerProtocol)
+(isa NetworkNewsTransferProtocol NetworkProtocol)
+(argFormat computerMACAddress 2 SetTheFormat)
+(argFormat nodeOfTypeInLAN 1 SetTheFormat)
+(argFormat smtpServer 2 SingleEntry)
+(argFormat meansOfInfoTransfer-ComputerProgram 2 SetTheFormat)
+(argFormat computerIP 1 singleEntryFormatInArgs)
+(strictlyFunctionalInArgs smtpServer 2)
+(strictlyFunctionalInArgs popServer 2)
+(argFormat meansOfInfoTransfer-ComputerProgram 1 SetTheFormat)
+(argFormat subNetwork 1 partsEntryFormatInArgs)
+(argFormat subNetwork 2 SetTheFormat)
+(strictlyFunctionalInArgs imapServer 2)
+(argFormat chatServerProgram 2 SingleEntry)
+(strictlyFunctionalInArgs computerIP 1)
+(argFormat computerIP 2 SingleEntry)
+(argFormat peerWRTSuperPeer 2 SingleEntry)
+(functionalInArgs groupForAccount 1)
+(arg3Format openPorts SetTheFormat)
+(argFormat nodeOfTypeInNetwork 2 SetTheFormat)
+(argFormat openPorts 2 SetTheFormat)
+(strictlyFunctionalInArgs peerWRTSuperPeer 2)
+(argFormat popServer 2 SingleEntry)
+(partsEntryFormatInArgs subNetwork 1)
+(argFormat openPorts 3 SetTheFormat)
+(quotedIsa nodeInLAN PathSystemCycLConstant)
+(argFormat nodeOfTypeInNetwork 1 SetTheFormat)
+(argFormat openPorts 1 SetTheFormat)
+(argFormat eMailCompositionProgram 2 SingleEntry)
+(argFormat imapServer 2 SingleEntry)
+(strictlyFunctionalInArgs chatServerProgram 2)
+(strictlyFunctionalInArgs computerIP 2)
+(strictlyFunctionalInArgs eMailCompositionProgram 2)
+(argFormat nodeOfTypeInLAN 2 SetTheFormat)
+(comment WinSock "#$WinSock is short for (\"Windows Sockets\"). It is used as the interface between TCP/IP (Transmission Control Protocol/Internet Protocol --     see #$TCP-IP), and Windows. Today's most popular #$Internet applications for Microsoft Windows (see #$MSWindows) and IBM OS/2 are developed according to the #$WinSock standard.")
+(comment ServerMessageBlockProtocol "#$ServerMessageBlockProtocol (\"SMB\") is an application layer resource-sharing protocol. SMB clients connect to SMB servers using TCP/IP, NetBEUI, or IPX/SPX.  Clients establish connections over SMB to request access to shares, files, printers, mailslots, API's, etc.")
+(comment NetworkNewsTransferProtocol "The #$InternetStandard that governs the distribution of #$Usenet news postings on the internet.")
+(comment InternetControlMessageProtocol "The Internet Control Message Protocol, which is an extension of the original #$InternetProtocol that provides  error and congestion control.")
+(comment FileTransferProtocol "A client-server communication protocol which allows a user on one computer to transfer files to and from another computer over a TCP/IP network.")
+(comment TrivialFileTransferProtocol "The Trivial File Transfer 
+
+protocol (\"TFTP\") is a simple protocol to transfer files. It is designed to 
+
+be small and easy to implement, so its implementations lack most of the 
+
+features of regular #$FileTransferProtocol implementations. It uses the #$UserDatagramProtocol (UDP) and can only 
+
+read or write files from remote servers -- it cannot list directories, and 
+
+currently has no provisions for user authentication. It is often used by servers 
+
+to boot diskless workstations, X-terminals, and routers.")
+(comment NetBEUI "#$NetBEUI, #$NetBIOS Enhanced User Interface, is a combined 
+#$NetworkLayerProtocol and #$TransportLayerProtocol that is an enhancement of the 
+	#$NetBIOS protocol used by various IBM and Microsoft network operating
+	systems such as LAN Manager, LAN Server, etc. NetBEUI does not provide
+routing, so it can only transport data between machines in the same LAN. Two
+LANs that run NetBEUI can be connected with a bridge, but another 
+NetworkLayerProtocol must be used in addition to NetBEUI in order to access
+the #$Internet. ")
+(comment SequencedPacketExchange "#$SequencedPacketExchange is a #$TransportLayerProtocol which
+is commonly used in Novell NetWare")
+(comment NetBIOS "#$NetBIOS, Network Basic Input/Output System, is a combined 
+#$SessionLayerProtocol and #$TransportLayerProtocol developed by IBM for 
+PC networks. It facillitates communication between applications on different
+computers in a #$LocalAreaNetwork.")
+(comment networkTrafficLevel "(#$networkTrafficLevel NETWORK TRAFFIC-LEVEL) holds just in case
+NETWORK has the traffic level TRAFFIC-LEVEL.")
+(comment UserDatagramProtocol "#$UserDatagramProtocol is a #$TransportLayerProtocol. 
+It is commonly used in #$TCP-IP and therefore
+in network communications on the #$Internet.")
+(comment SimpleNetworkManagementProtocol "The #$NetworkProtocol implemented by instances of #$SNMPServerProgram.")
+(comment BootstrapProtocol "A protocol used for booting diskless workstations.")
+(comment InternetPacketExchange "#$InternetPacketExchange is a #$NetworkProtocol which is
+a #$NetworkLayerProtocol protocol.")
+(comment InternetGroupManagementProtocol "The Internet Group Management Protocol (IGMP) is used between IP hosts and their immediate neighbour multicast
+agents to support the allocation of temporary group addresses and the addition and deletion of members of a group.  Like ICMP, IGMP is a integral part of IP. It is required to be implemented in full by all hosts conforming to level 2 of the
+IP multicasting specification. IGMP messages are encapsulated in IP datagrams, with an IP protocol number of 2.")
+(comment PostOfficeProtocol "The #$NetworkProtocol implemented by instances of #$POPServerProgram and #$POPClientProgram. The Post Office Protocol (POP) was designed to support offline mail processing. That is, the client connects to the server to download mail that the server is holding for the client. The mail is deleted from the server and is handled offline (locally) on the client machine.  #$POP3Protocol and #$POP2Protocol are subsumed by #$PostOfficeProtocol.")
+(comment Gopher-InternetProtocol "A once-popular distributed document retrieval system which started as a Campus Wide Information System at the #$UnivOfMinnesota. Gopher servers provide a menu of documents, which may be plain text files, sound or image files, submenus, or other Gopher object types. They may be stored on other hosts, and may provide the ability to search through certain files for a given string. #$Gopher-InternetProtocol has been largely superceded by the #$WorldWideWeb-DynamicIndexedInfoSource, which includes access to Gopher documents as one of its access schemes, but also includes html, which has the ability to combine images, sound, and text on a single page.")
+(comment POP2Protocol "The #$NetworkProtocol implemented by instances of #$POP2ServerPrograms. POP2 daemons by default listen on TCP port 109, whereas #$POP3ServerProgram daemons run on port 110.")
+(disjointWith NetworkPropagation NetworkPacketTransfer)
+(comment SimpleMailTransferProtocol "The #$NetworkProtocol implemented by instances of #$SMTPServerProgram.")
+(comment AsynchronousTransferMode "A data #$CommunicationProtocol that uses high-speed switching technology that can transmit packets requiring a high rate of data tranfer.  Links using #$AsynchronousTransferMode technology
+
+can transmit data as well as multimedia communications.")
+(comment POP3Protocol "The #$NetworkProtocol implemented by instances of #$POP3ServerProgram. The Post Office Protocol (POP) was designed to support offline mail processing. That is, the client connects to the server to download mail that the server is holding for the client. The mail is deleted from the server and is handled offline (locally) on the client machine.  #$POP3Protocol and #$POP2Protocol are subsumed by #$PostOfficeProtocol.")
+(comment InternetMessageAccessProtocol "The Internet Message Access Protocol (IMAP) supports both online and offline operation,
+
+permitting manipulation of remote message folders. It provides access
+
+to multiple mailboxes (possibly on multiple servers), and supports
+
+nested mailboxes as well as resynchronization with the server.")
+(comment LightweightDirectoryAccessProtocol "A protocol for updating and searching on-line directory services over #$TCP-IP. LDAP defines a directory format that arranges entries containing email addresses, photographs, and other information about individuals (whether they are in stand-alone directory servers or in X.500 directories) in a hierarchical tree structure. These directories can be accessed over the Internet to retrieve information or edit information that the user has access to. Large organizations such as universities use LDAP for online 'phone books' containing publicly available information about students and staff.")
+(comment HypertextTransferProtocol "#$HypertextTransferProtocol is the common protocol used by the  #$WorldWideWeb-DynamicIndexedInfoSource in communications between client and server via a browser.")
+(comment TelnetProtocol "The #$TelnetProtocol requires an application, also called telnet,  that logs on to other computers over the internet. Both computers must  support the telnet protocol in order for telnet to work.  It is like two computers using modems to connect via phone lines  with a phone number, but instead, the computers use telnet  to connect via the internet with a telnet address.")
+(comment DomainNameSystemProtocol "#$DomainNameSystemProtocol (DNS) is the #$Internet's standard for host names, and for resolving them into #$IPAddresses. DNS delegates control of domain name hierarchies among zones, each managed by a group of name servers.")
+(genls (TransportLayerProtocolFn TransmissionControlProtocol) Packet-Internet)
+(genls Packet-TCP Packet-Internet)
+(genls WebRing (GroupFn WebSite))
+(genls (GroupFn ProtocolStackLayer) (GroupFn NetworkProtocol))
+(genls Packet-UDP Packet-Internet)
+(genls (TransportLayerProtocolFn UserDatagramProtocol) Packet-Internet)

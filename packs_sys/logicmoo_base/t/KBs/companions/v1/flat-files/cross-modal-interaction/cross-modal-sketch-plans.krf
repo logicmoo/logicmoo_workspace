@@ -1,0 +1,148 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cross-modal-sketch-plans.meld
+;;;;    System: 
+;;;;    Author: subu
+;;;;   Created: April 25, 2015 19:38:43
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CrossModalSketchPlansMt)
+
+(isa CrossModalSketchPlansMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(genlMt Sketch-AgentMt CrossModalSketchPlansMt)
+
+(<== (caseForSubsketchItem ?subsketch-glyph ?bcase)
+     (wmOnly (lookupOnly (ist-Information ?_context1 
+                           (glyphRepresentsObject ?subsketch-glyph ?subsketch))))
+     (wmOnly (lookupOnly (ist-Information ?_context2 
+                           (isa ?subsketch NuSketchBundle))))
+     (wmOnly (lookupOnly (ist-Information ?_context3 
+                           (subSketchGroupRepresentsObject ?subsketch ?bcase)))))
+
+(<== (filterByCaseConstructor ?mt ?case-constructor ?facts-list)
+     (evaluate ?facts-list 
+       (SetToListFn 
+        (TheClosedRetrievalSetOf ?fact
+          (outsourcedOnly (caseFact (?case-constructor ?mt) ?fact))))))
+
+(<== (isaNuSketchBookKeepingFact ?fact)
+     (evaluate ?pred (Arg0Fn ?fact))
+     (ist-Information NuSketchFilterInfoMt (isa ?pred NuSketchBookKeepingPredicate)))
+
+(<== (filterNuSketchBookkeepingFacts ?facts ?filtered-facts)
+     (evaluate ?filtered-facts
+       (TheClosedRetrievalSetOf ?fact
+         (and (elementOf ?fact ?facts)
+              (uninferredSentence (isaNuSketchBookKeepingFact ?fact))))))
+
+
+(isa processVisualInput ComplexActionPredicate)
+(arity processVisualInput 3)
+
+(preconditionForMethod
+ (and (currentlyActiveSketch ?sketch)
+      (agentForOpenSketch ?sketch ?sketch-agent)
+      (holdsOnRemoteAgent ?sketch-agent (caseForSubsketchItem ?item ?subsketch-case))
+      (localAgent ?nusketch-hookup-agent))
+ (methodForAction
+  (processVisualInput ?label ?dem-var ?item)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information BaseKB (caseForSubsketchItem ?item ?subsketch-case)))
+    (enqueueSerialSubTasks
+     (TheList 
+      (TheList (computeVisuoSpatialRelations ?subsketch-case) ?sketch-agent)
+      (TheList (extractFilteredFacts ?label ?dem-var ?item ?subsketch-case) ?nusketch-hookup-agent)))))))
+
+(isa computeVisuoSpatialRelations ComplexActionPredicate)
+(arity computeVisuoSpatialRelations 1)
+
+(preconditionForMethod
+ (uninferredSentence (ist-Information ?subsketch-case (visuoSpatialRelationsComputed ?subsketch-case)))
+ (methodForAction
+  (computeVisuoSpatialRelations ?subsketch-case)
+  (actionSequence
+   (TheList
+    (doAnnounce "computing visuo spatial relations for subsketch ~A" (?subsketch-case))
+    (doComputeAllPositionalRelations ?subsketch-case)
+    (doComputeShapeRelations ?subsketch-case)
+    (doComputeShapeAttributes ?subsketch-case)
+    ;;;should use justify instead of tell, so this gets retracted if there is a change in the sketch
+    (doTell (ist-Information ?subsketch-case (visuoSpatialRelationsComputed ?subsketch-case)))))))
+
+(preconditionForMethod
+ (ist-Information ?subsketch-case (visuoSpatialRelationsComputed ?subsketch-case))
+ (methodForAction
+  (computeVisuoSpatialRelations ?subsketch-case)
+  (actionSequence
+   (TheList
+    (doAnnounce "Visuo spatial relations for ~A computed already" (?subsketch-case))))))
+
+
+(isa extractFilteredFacts ComplexActionPredicate)
+(arity extractFilteredFacts 4)
+
+(preconditionForMethod
+ (and (uninferredSentence  (isa (FilteredFactsForItemMt ?label ?_ignore ?item ?subsketch-case) FilteredWMMicrotheory))
+      (currentlyActiveSketch ?sketch)
+      (unifies (GlyphFn ?subsketch-item ?_metalayer) ?item) 
+      (agentForOpenSketch ?sketch ?sketch-agent)
+      (holdsOnRemoteAgent ?sketch-agent (evaluate ?facts-list 
+                                          (SetToListFn 
+                                           (TheClosedRetrievalSetOf ?fact
+                                             (outsourcedOnly 
+                                              (ist-Information CrossModalSketchAnalogyControlMt 
+                                                (caseFact (SubSketchCaseFn ?subsketch-case ?subsketch-item) ?fact))))))))
+ (methodForAction
+  (extractFilteredFacts ?label ?dem-var ?item ?subsketch-case)
+  (actionSequence
+   (TheList
+    (doAnnounce "Filtering bookkeeping preds and extracting relevant facts for ~A" (?subsketch-case))
+    (doTell 
+     (isa (FilteredFactsForItemMt ?label ?dem-var ?item ?subsketch-case) FilteredWMMicrotheory))
+    (doMap (?fact)
+           (doTell 
+            (ist-Information (FilteredFactsForItemMt ?label ?dem-var ?item ?subsketch-case) ?fact))
+           ?facts-list)
+    ;;once extraction is complete lets deselect the glyph
+     (doRemoteAgentPlan ?sketch-agent (doDeselectGlyph ?item))))))
+
+
+(preconditionForMethod
+ (and (isa (FilteredFactsForItemMt ?label ?_ignore ?item ?subsketch-case) FilteredWMMicrotheory)
+            (agentForOpenSketch ?sketch ?sketch-agent))
+ (methodForAction
+  (extractFilteredFacts ?label ?dem-var ?item ?subsketch-case)
+  (actionSequence
+   (TheList
+    (doAnnounce "Filtered facts for ~A exists already" (?subsketch-case))
+    ;;the unselection is a way of indicating fact extraction completion
+     (doRemoteAgentPlan ?sketch-agent (doDeselectGlyph ?item))))))
+
+
+(isa selectWinningGlyph ComplexActionPredicate)
+(arity selectWinningGlyph 1)
+
+(preconditionForMethod
+ (and (unifies ?winning-choice (EncodedCaseFn (PerceptualReferentCaseFn ?_label ?_var ?glyph-name) SUB-EP-ID))
+      (currentlyActiveSketch ?sketch)
+      (agentForOpenSketch ?sketch ?sketch-agent)
+      (currentNuSketchHookup ?nusketch-hookup-agent))
+ (methodForAction
+  (selectWinningGlyph ?winning-choice)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?sketch-agent (unhighlightAllHighlightedGlyphs))
+    (doRemoteAgentPlan ?sketch-agent (doHighlightGlyph ?glyph-name))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

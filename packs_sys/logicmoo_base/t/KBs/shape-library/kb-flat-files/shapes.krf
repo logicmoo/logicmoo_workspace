@@ -1,0 +1,941 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: shapes.lsp
+;;;;    System: CogSketch
+;;;;    Author: Andrew Lovett
+;;;;   Created: July 8, 2008 14:35:59
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:35:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-package :data)
+
+(in-microtheory PerceptionMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;Various predicates below will be marked as orientation-invariant
+
+(genls Orientation-Specific-Term Thing)
+(genls Orientation-Invariant-Term Thing)
+(genls Orientation-Related-Term Thing)
+(genls Size-Specific-Term Thing)
+(genls Shape-Specific-Term Thing)
+
+(isa rightOf Orientation-Specific-Term)
+(isa above Orientation-Specific-Term)
+
+(isa onRightHalfOf Orientation-Specific-Term)
+(isa onLeftHalfOf Orientation-Specific-Term)
+(isa onTopHalfOf Orientation-Specific-Term)
+(isa onBottomHalfOf Orientation-Specific-Term)
+
+(isa enclosesHorizontally Orientation-Specific-Term)
+(isa enclosesVertically Orientation-Specific-Term)
+(isa enclosesSpatially Orientation-Invariant-Term)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;Generic versions of some other relations
+;;;;;;;;;;;;;;;;;;;;(and other stuff added for two-stage sm
+
+(isa rcc8-Generic RCC8-relation)
+(isa rcc8-Generic SymmetricRelation)
+(arity rcc8-Generic 2)
+(arg1Isa rcc8-Generic SpatialThing)
+(arg2Isa rcc8-Generic SpatialThing)
+
+(isa positional-Generic Relation)
+(isa positional-Generic PositionalVisualRelation)
+(isa positional-Generic SymmetricRelation)
+(arity positional-Generic 2)
+(arg1Isa positional-Generic SpatialThing)
+(arg2Isa positional-Generic SpatialThing)
+
+(isa inferenceReversal Predicate)
+(arity inferenceReversal 1)
+(arg1Isa inferenceReversal CYC-Formula)
+
+ 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;Special attribute for marking an element as important
+
+(isa Element-MarkedImportant Collection)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;Basic 2D Shape Attributes
+
+(isa 2D-Shape-Generic PerceptualElement)
+
+(isa 2D-Shape-Closedness Collection)
+(isa 2D-Shape-Curvedness Collection) 
+(isa 2D-Shape-Concavity Collection)
+(isa 2D-Shape-Alignment Collection)
+(isa 2D-Shape-JunctionType Collection)
+(isa Shape-Reality Collection)
+(isa ShapeType Collection)
+(isa ObjectFill Collection)
+
+(isa 2D-Shape-Closed 2D-Shape-Closedness)
+(isa 2D-Shape-PartiallyClosed 2D-Shape-Closedness)
+(isa 2D-Shape-Open 2D-Shape-Closedness)
+(isa 2D-Shape-Closed Orientation-Invariant-Term)
+(isa 2D-Shape-PartiallyClosed Orientation-Invariant-Term)
+(isa 2D-Shape-Open Orientation-Invariant-Term)
+(isa 2D-Shape-Closed Shape-Specific-Term)
+(isa 2D-Shape-PartiallyClosed Shape-Specific-Term)
+(isa 2D-Shape-Open Shape-Specific-Term)
+(genls 2D-Shape-Closed 2D-Shape-Generic)
+(genls 2D-Shape-PartiallyClosed 2D-Shape-Generic)
+(genls 2D-Shape-Open 2D-Shape-Generic)
+
+(isa 2D-Shape-Forked 2D-Shape-JunctionType)
+(isa 2D-Shape-Forked Orientation-Invariant-Term)
+(isa 2D-Shape-Forked Shape-Specific-Term)
+(genls 2D-Shape-Forked 2D-Shape-Generic) 
+
+(isa Implicit-Shape Collection)
+(isa Implicit-Shape 2D-Shape-Reality)
+(isa 2D-Shape-Generic 2D-Shape Reality)
+
+
+
+(genls Circle-Shape 2D-Shape-Generic)
+(genls Dot-Shape 2D-Shape-Generic)
+(isa Circle-Shape ShapeType)
+(isa Dot-Shape ShapeType)
+(isa Circle-Shape Orientation-Invariant-Term)
+(isa Dot-Shape Orientation-Invariant-Term)
+(isa Circle-Shape Shape-Specific-Term)
+
+(genls Filled-Shape 2D-Shape-Generic)
+(genls Empty-Shape 2D-Shape-Generic)
+(isa Filled-Shape ObjectFill)
+(isa Empty-Shape ObjectFill)
+(isa Filled-Shape Orientation-Invariant-Term)
+(isa Empty-Shape Orientation-Invariant-Term)
+
+(isa TinySizeShape Collection)
+(isa SmallSizeShape Collection)
+(isa MediumSizeShape Collection)
+(isa LargeSizeShape Collection)
+
+(isa TinySizeShape Orientation-Invariant-Term)
+(isa SmallSizeShape Orientation-Invariant-Term)
+(isa MediumSizeShape Orientation-Invariant-Term)
+(isa LargeSizeShape Orientation-Invariant-Term)
+
+(isa TinySizeShape Size-Specific-Term)
+(isa SmallSizeShape Size-Specific-Term)
+(isa MediumSizeShape Size-Specific-Term)
+(isa LargeSizeShape Size-Specific-Term)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; the predicate version of relative shape size, to match the edge paradigm
+
+(genls RelativeSizePredicate ShapeInfoPredicate)
+(genls RelativeSizePredicate QualitativeDegreePredicate)
+(genls TinyToSmallSizePredicate RelativeSizePredicate)
+(genls SmallToMediumSizePredicate RelativeSizePredicate)
+(genls MediumToLongSizePredicate RelativeSizePredicate)
+
+;;RelativeSize is defined in spatial-relations.meld in nusketch.  In fact,
+;;this whole section seems pretty redundant to me. -MDM
+(<== (describesQualitativeDegreeAlongDimension RelativeSize ?pred)
+     (isa ?pred RelativeSizePredicate))
+
+(relationAllInstance denotesSubRange RelativeSizePredicate SizeFn)
+;;; writing a temporary rule as a proxy for
+;;; reasoning with this rule macro predicate
+;;; hopefully fire will support it someday
+(<== (denotesSubRange ?instance SizeFn)
+     (isa ?instance RelativeSizePredicate))
+
+(isa sizeLarge MediumToLongSizePredicate)
+(isa sizeLarge HighQualitativeDegreePredicate)
+(isa sizeLarge RelativeSizePredicate)
+(isa sizeLarge Orientation-Invariant-Term)
+(arity sizeLarge 1)
+(arg1Isa sizeLarge PerceptualElement)
+
+(isa sizeMedium SmallToMediumSizePredicate)
+(isa sizeMedium MediumToLongSizePredicate)
+(isa sizeMedium MediumQualitativeDegreePredicate)
+(isa sizeMedium RelativeSizePredicate)
+(isa sizeMedium Orientation-Invariant-Term)
+(arity sizeMedium 1)
+(arg1Isa sizeMedium PerceptualElement)
+
+(isa sizeSmall TinyToSmallSizePredicate)
+(isa sizeSmall SmallToMediumSizePredicate)
+(isa sizeSmall LowQualitativeDegreePredicate)
+(isa sizeSmall RelativeSizePredicate)
+(isa sizeSmall Orientation-Invariant-Term)
+(arity sizeSmall 1)
+(arg1Isa sizeSmall PerceptualElement)
+
+(isa sizeTiny TinyToSmallSizePredicate)
+(isa sizeTiny VeryLowQualitativeDegreePredicate)
+(isa sizeTiny RelativeSizePredicate)
+(isa sizeTiny Orientation-Invariant-Term)
+(arity sizeTiny 1)
+(arg1Isa sizeTiny PerceptualElement)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;Basic 2D Shape Attributes based on edges
+
+(isa shapeAttributeForEdgeFeature Predicate)
+(arity shapeAttributeForEdgeFeature 2)
+(arg1Isa shapeAttributeForEdgeFeature Collection)
+(arg2Isa shapeAttributeForEdgeFeature Thing)
+
+(genls 2D-Shape-Curved 2D-Shape-Generic)
+(genls 2D-Shape-Straight 2D-Shape-Generic)
+(isa 2D-Shape-Curved 2D-Shape-Curvedness)
+(isa 2D-Shape-Straight 2D-Shape-Curvedness)
+(isa 2D-Shape-Curved Orientation-Invariant-Term)
+(isa 2D-Shape-Straight Orientation-Invariant-Term)
+(isa 2D-Shape-Curved Shape-Specific-Term)
+(isa 2D-Shape-Straight Shape-Specific-Term)
+
+;;More here for Raven's?
+(genls 2D-Shape-Ellipse 2D-Shape-Generic)
+(isa 2D-Shape-Ellipse Orientation-Invariant-Term)
+(isa 2D-Shape-Ellipse Shape-Specific-Term)
+
+(genls 2D-Shape-Concave 2D-Shape-Generic)
+(genls 2D-Shape-Convex 2D-Shape-Generic)
+(isa 2D-Shape-Concave 2D-Shape-Concavity)
+(isa 2D-Shape-Convex 2D-Shape-Concavity)
+(isa 2D-Shape-Concave Orientation-Invariant-Term)
+(isa 2D-Shape-Convex Orientation-Invariant-Term)
+(isa 2D-Shape-Concave Shape-Specific-Term)
+(isa 2D-Shape-Convex Shape-Specific-Term)
+
+(genls 2D-Shape-AxisAligned 2D-Shape-Generic)
+(genls 2D-Shape-Oblique 2D-Shape-Generic)
+(isa 2D-Shape-AxisAligned 2D-Shape-Alignment)
+(isa 2D-Shape-Oblique 2D-Shape-Alignment)
+(isa 2D-Shape-AxisAligned Orientation-Specific-Term)
+(isa 2D-Shape-Oblique Orientation-Specific-Term)
+
+(genls 2D-Shape-Perpendicular 2D-Shape-Generic)
+(genls 2D-Shape-Perpendicular 2D-Shape-Angles)
+(isa 2D-Shape-Perpendicular Orientation-Invariant-Term)
+(isa 2D-Shape-Perpendicular Shape-Specific-Term)
+
+(genls 2D-Shape-Horizontal 2D-Shape-Generic)
+(genls 2D-Shape-Vertical 2D-Shape-Generic)
+(isa 2D-Shape-Horizontal 2D-Shape-Orientation)
+(isa 2D-Shape-Vertical 2D-Shape-Orientation)
+(isa 2D-Shape-Horizontal Orientation-Specific-Term)
+(isa 2D-Shape-Vertical Orientation-Specific-Term)
+
+(genls 2D-Shape-HorizontalMajorAxis ElongatedShape)
+(isa 2D-Shape-HorizontalMajorAxis 2D-Shape-Orientation)
+(isa 2D-Shape-HorizontalMajorAxis Orientation-Specific-Term)
+
+(genls 2D-Shape-VerticalMajorAxis ElongatedShape)
+(isa 2D-Shape-VerticalMajorAxis 2D-Shape-Orientation)
+(isa 2D-Shape-VerticalMajorAxis Orientation-Specific-Term)
+
+(genls 2D-Shape-ObliqueMajorAxis ElongatedShape)
+(isa 2D-Shape-ObliqueMajorAxis 2D-Shape-Orientation)
+(isa 2D-Shape-ObliqueMajorAxis Orientation-Specific-Term)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;Shape/Texture Type skolems
+
+(genls TypeSkolem-Texture ObjectType)
+
+(isa TypeSkolem-Texture-Generic TypeSkolem-Texture)
+(isa TypeSkolem-Texture0 TypeSkolem-Texture)
+(isa TypeSkolem-Texture1 TypeSkolem-Texture)
+(isa TypeSkolem-Texture2 TypeSkolem-Texture)
+(isa TypeSkolem-Texture3 TypeSkolem-Texture)
+(isa TypeSkolem-Texture4 TypeSkolem-Texture)
+(isa TypeSkolem-Texture5 TypeSkolem-Texture)
+(isa TypeSkolem-Texture6 TypeSkolem-Texture)
+(isa TypeSkolem-Texture7 TypeSkolem-Texture)
+(isa TypeSkolem-Texture8 TypeSkolem-Texture)
+(isa TypeSkolem-Texture9 TypeSkolem-Texture)
+
+(isa TextureTypeFn Function-Denotational)
+(atomicAnalogyNat TextureTypeFn)
+(arity TextureTypeFn 1)
+(arg1Isa TextureTypeFn Number)
+(resultIsa TextureTypeFn Collection)
+(resultIsa TextureTypeFn TypeSkolem-Texture)
+(resultIsa TextureTypeFn Orientation-Invariant-Term)
+(comment TextureTypeFn "(TextureTypeFn ?id) denotes the collection of all objects 
+                      whose texture is of type ?id, where ?id is simply some unique integer.")
+
+(genls TypeSkolem-Shape ObjectType)
+(genls TypeSkolem-Shape ShapeType)
+
+(isa TypeSkolem-Shape-Generic TypeSkolem-Shape)
+(isa TypeSkolem-Shape0 TypeSkolem-Shape)
+(isa TypeSkolem-Shape1 TypeSkolem-Shape)
+(isa TypeSkolem-Shape2 TypeSkolem-Shape)
+(isa TypeSkolem-Shape3 TypeSkolem-Shape)
+(isa TypeSkolem-Shape4 TypeSkolem-Shape)
+(isa TypeSkolem-Shape5 TypeSkolem-Shape)
+(isa TypeSkolem-Shape6 TypeSkolem-Shape)
+(isa TypeSkolem-Shape7 TypeSkolem-Shape)
+(isa TypeSkolem-Shape8 TypeSkolem-Shape)
+(isa TypeSkolem-Shape9 TypeSkolem-Shape)
+
+(isa ShapeTypeFn Function-Denotational)
+(isa ShapeTypeFn CollectionDenotingFunction)
+(atomicAnalogyNat ShapeTypeFn)
+(arity ShapeTypeFn 1)
+(arg1Isa ShapeTypeFn Number)
+(resultIsa ShapeTypeFn Collection)
+(resultIsa ShapeTypeFn TypeSkolem-Shape)
+(resultIsa ShapeTypeFn Orientation-Related-Term)
+(resultIsa ShapeTypeFn Shape-Specific-Term)
+(comment ShapeTypeFn "(ShapeTypeFn ?id) denotes the collection of all objects 
+                      whose shape is of type ?id, where ?id is simply some unique integer.")
+
+(isa StrictShapeTypeFn Function-Denotational)
+(isa StrictShapeTypeFn CollectionDenotingFunction)
+(atomicAnalogyNat StrictShapeTypeFn)
+(arity StrictShapeTypeFn 2)
+(arg1Isa StrictShapeTypeFn Number)
+(arg2Isa StrictShapeTypeFn Number)
+(resultIsa StrictShapeTypeFn Collection)
+(resultIsa StrictShapeTypeFn TypeSkolem-Shape)
+(resultIsa StrictShapeTypeFn Orientation-Related-Term)
+(resultIsa StrictShapeTypeFn Shape-Specific-Term)
+(comment ShapeTypeFn "(ShapeTypeFn ?id0 ?id1) denotes the collection of all objects 
+                      whose shape is of type ?id0, where ?id0 is simply some unique integer.
+                      ?id1 specifies a stricter equivalence class within that type.")
+
+(isa ShapeTransFn Function-Denotational)
+(atomicAnalogyNat ShapeTransFn)
+(arity ShapeTransFn 3)
+(arg1Isa ShapeTransFn TypeSkolem-Shape)
+(arg2Isa ShapeTransFn ShapeTransformation)
+(arg3Isa ShapeTransFn ShapeTransformation)
+(resultIsa ShapeTransFn Collection)
+(resultIsa ShapeTransFn TypeSkolem-Shape)
+(resultIsa ShapeTransFn Orientation-Related-Term)
+(resultIsa ShapeTransFn Shape-Specific-Term)
+(comment ShapeTransFn "(ShapeTransFn ?type ?trans ?scale-trans) denotes the collection of objects of
+                       type ?type that have been made by applying the transformation
+                       trans and the scaling scale-trans. Either the second or third
+                       argument may be nil.") 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;Attribute describing relative position
+
+(isa Rightmost-Element Collection)
+(isa Leftmost-Element Collection)
+(isa Topmost-Element Collection)
+(isa Bottommost-Element Collection)
+
+(isa Centered-Element Collection)
+(isa OnTop-Element Collection)
+(isa OnBottom-Element Collection)
+(isa OnLeft-Element Collection)
+(isa OnRight-Element Collection)
+
+(isa Rightmost-Element Orientation-Specific-Term)
+(isa Leftmost-Element Orientation-Specific-Term)
+(isa Topmost-Element Orientation-Specific-Term)
+(isa Bottommost-Element Orientation-Specific-Term)
+
+(isa Centered-Element Orientation-Specific-Term)
+(isa OnTop-Element Orientation-Specific-Term)
+(isa OnBottom-Element Orientation-Specific-Term)
+(isa OnLeft-Element Orientation-Specific-Term)
+(isa OnRight-Element Orientation-Specific-Term)
+
+(comment Rightmost-Element "The collection of elements that have nothing right of them.
+                            Useful for disambiguating ambiguous spatial mappings.")
+(comment Leftmost-Element "The collection of elements that have nothing left of them.
+                           Useful for disambiguating ambiguous spatial mappings.")
+(comment Topmost-Element "The collection of elements that have nothing above them.
+                           Useful for disambiguating ambiguous spatial mappings.")
+(comment Bottommost-Element "The collection of elements that have nothing below them.
+                           Useful for disambiguating ambiguous spatial mappings.")
+
+(comment Centered-Element "The collection of elements appearing at the center of an image.")
+(comment OnTop-Element "The collection of elements appearing on the top half of an image.")
+(comment OnBottom-Element "The collection of elements appearing on the bottom half 
+                           of an image.")
+(comment OnLeft-Element "The collection of elements appearing on the left half of an image.")
+(comment OnRight-Element "The collection of elements appearing on the right half of an image.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;relation describing relative part
+;;;;;;;;;;;;;;;;;;;position WRT some whole
+
+(isa topmostPart BinaryRelation)
+(arity topmostPart 2)
+(arg1Isa topmostPart SpatialThing)
+(arg2Isa topmostPart Perceptual-Element)
+(comment topmostPart "(topmostPart ?whole ?part) Says that ?part is the topmost element of its
+                            kind in ?whole.")
+
+(isa rightmostPart BinaryRelation)
+(arity rightmostPart 2)
+(arg1Isa rightmostPart SpatialThing)
+(arg2Isa rightmostPart Perceptual-Element)
+(comment rightmostPart "(rightmostPart ?whole ?part) Says that ?part is the rightmost element of its
+                            kind in ?whole.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;Attributes for describing shape transformations (relative to some standard)
+;;;;;;;;;;;;;;;;;;;(Note that there are also relations to do this)
+
+(genls ShapeTransformation Collection)
+(genls ShapeRotation ShapeTransformation)
+(genls ShapeReflection ShapeTransformation)
+(genls ShapeScaling ShapeTransformation)
+(genls ShapeDeformation ShapeTransformation)
+
+(isa RotatedShape ShapeRotation)
+(isa RotatedShape-None ShapeRotation)
+(isa RotatedShape-45 ShapeRotation)
+(isa RotatedShape-90 ShapeRotation)
+(isa RotatedShape-135 ShapeRotation)
+(isa RotatedShape-180 ShapeRotation)
+(isa RotatedShape-225 ShapeRotation)
+(isa RotatedShape-270 ShapeRotation)
+(isa RotatedShape-315 ShapeRotation)
+
+(isa RotatedShape Orientation-Specific-Term)
+(isa RotatedShape-None Orientation-Specific-Term)
+(isa RotatedShape-45 Orientation-Specific-Term)
+(isa RotatedShape-90 Orientation-Specific-Term)
+(isa RotatedShape-135 Orientation-Specific-Term)
+(isa RotatedShape-180 Orientation-Specific-Term)
+(isa RotatedShape-225 Orientation-Specific-Term)
+(isa RotatedShape-270 Orientation-Specific-Term)
+(isa RotatedShape-315 Orientation-Specific-Term)
+
+(isa ReflectedShape ShapeReflection)
+(isa ReflectedShape-None ShapeReflection)
+(isa ReflectedShape-XAxis ShapeReflection)
+(isa ReflectedShape-YAxis ShapeReflection)
+(isa ReflectedShape-Diag-Axis ShapeReflection)
+(isa ReflectedShape-Other ShapeReflection)
+
+(isa ReflectedShape Orientation-Specific-Term)
+(isa ReflectedShape-None Orientation-Specific-Term)
+(isa ReflectedShape-XAxis Orientation-Specific-Term)
+(isa ReflectedShape-YAxis Orientation-Specific-Term)
+(isa ReflectedShape-Diag-Axis Orientation-Specific-Term)
+(isa ReflectedShape-Other Orientation-Specific-Term)
+
+(isa ScaledShape-Bigger ShapeScaling)
+(isa ScaledShape-Smaller ShapeScaling)
+
+(isa ScaledShape-Bigger Orientation-Invariant-Term)
+(isa ScaledShape-Smaller Orientation-Invariant-Term)
+(isa ScaledShape-Bigger Size-Specific-Term)
+(isa ScaledShape-Smaller Size-Specific-Term)
+
+(isa DeformedShape-AddedPart ShapeDeformation)
+(isa DeformedShape-RemovedPart ShapeDeformation)
+(isa DeformedShape-Longer ShapeDeformation)
+(isa DeformedShape-Shorter ShapeDeformation)
+(isa DeformedShape-LongerPart ShapeDeformation)
+(isa DeformedShape-ShorterPart ShapeDeformation)
+
+(isa DeformedShape-AddedPart Orientation-Invariant-Term)
+(isa DeformedShape-RemovedPart Orientation-Invariant-Term)
+(isa DeformedShape-Longer Orientation-Invariant-Term)
+(isa DeformedShape-Shorter Orientation-Invariant-Term)
+(isa DeformedShape-LongerPart Orientation-Invariant-Term)
+(isa DeformedShape-ShorterPart Orientation-Invariant-Term)
+
+(isa DeformedShape-AddedPart Size-Specific-Term)
+(isa DeformedShape-RemovedPart Size-Specific-Term)
+(isa DeformedShape-Longer Size-Specific-Term)
+(isa DeformedShape-Shorter Size-Specific-Term)
+(isa DeformedShape-LongerPart Size-Specific-Term)
+(isa DeformedShape-ShorterPart Size-Specific-Term)
+
+(isa DeformedShape-AddedPart Shape-Specific-Term)
+(isa DeformedShape-RemovedPart Shape-Specific-Term)
+
+(comment RotatedShape "A shape which has been rotated in space.")
+(comment RotatedShape-None "A shape which has undergone a null rotation,
+                            i.e., it has not been rotated.")
+(comment RotatedShape-45 "A shape which has been rotated 45 degrees in space.")
+(comment RotatedShape-90 "A shape which has been rotated 90 degrees in space.")
+(comment RotatedShape-135 "A shape which has been rotated 135 degrees in space.")
+(comment RotatedShape-180 "A shape which has been rotated 180 degrees in space.")
+(comment RotatedShape-225 "A shape which has been rotated 225 degrees in space.")
+(comment RotatedShape-270 "A shape which has been rotated 270 degrees in space.")
+(comment RotatedShape-315 "A shape which has been rotated 315 degrees in space.")
+
+(comment ReflectedShape "A shape which has been reflected over an axis in the 2D plane.")
+(comment ReflectedShape-None "A shape which has undergone the null reflection,
+                              i.e., it has not been reflected.")
+(comment ReflectedShape-XAxis "A shape which has been reflected over the x-axis.")
+(comment ReflectedShape-YAxis "A shape which has been reflected over the y-axis.")
+(comment ReflectedShape-Diag-Axis "A shape which has been reflected over a diagonal axis.")
+(comment ReflectedShape-Other "A shape which has been reflected over some axis in the 2D
+                               plane other than the canonical axes.")
+
+(comment ScaledShape-Bigger "A shape which has undergone a scaling transformation, 
+                             becoming bigger.")
+(comment ScaledShape-Smaller "A shape which has undergone a scaling transformation, 
+                             becoming smaller.")
+
+
+(comment DeformedShape-AddedPart "A shape which has undergone a deformation in which a part
+                                  has been added to it.")
+(comment DeformedShape-RemovedPart "A shape which has undergone a deformation in which a part
+                                   has been removed from it.")
+(comment DeformedShape-Longer "A shape which has undergone a deformation in which it has
+                               become longer along some axis.")
+(comment DeformedShape-Shorter "A shape which has undergone a deformation in which it has
+                               become shorter along some axis.")
+(comment DeformedShape-LongerPart "A shape which has undergone a deformation in which it a part
+                                  of it has become longer along some axis.")
+(comment DeformedShape-ShorterPart "A shape which has undergone a deformation in which it a part
+                                  of it has become shorter along some axis.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;Attribute for shape addition/removal
+
+(genls SpatialTransformation Collection)
+
+(isa AddedShape SpatialTransformation)
+(isa RemovedShape SpatialTransformation) 
+(isa ConstantShape SpatialTransformation)
+
+(isa AddedShape Orientation-Invariant-Term)
+(isa RemovedShape Orientation-Invariant-Term) 
+(isa ConstantShape Orientation-Invariant-Term)
+
+
+(comment AddedShape "A shape which has undergone an addition transformation, i.e., it
+                     has been added to an image.")
+(comment RemovedShape "A shape which has undergone a removal transformation, i.e., it
+                     has been removed from an image.")
+(comment ConstantShape "A shape which has undergone the null transformation, i.e., it
+                        remains unchanged.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;Experimental for detailed attribute for shape addition
+
+(isa AddedShapeTypeFn Function-Denotational)
+(isa AddedShapeTypeFn CollectionDenotingFunction)
+(atomicAnalogyNat AddedShapeTypeFn)
+(arity AddedShapeTypeFn 1)
+(arg1Isa AddedShapeTypeFn Number)
+(resultIsa AddedShapeTypeFn Collection)
+(resultIsa AddedShapeTypeFn TypeSkolem-Shape)
+(resultIsa AddedShapeTypeFn Orientation-Invariant-Term)
+(resultIsa AddedShapeTypeFn Shape-Specific-Term)
+(comment AddedShapeTypeFn "(AddedShapeTypeFn ?id) denotes the collection of all objects 
+                      whose shape is of type ?id and who have been added as a transformation.")
+
+(isa ConstantShapeTypeFn Function-Denotational)
+(isa ConstantShapeTypeFn CollectionDenotingFunction)
+(atomicAnalogyNat ConstantShapeTypeFn)
+(arity ConstantShapeTypeFn 1)
+(arg1Isa ConstantShapeTypeFn Number)
+(resultIsa ConstantShapeTypeFn Collection)
+(resultIsa ConstantShapeTypeFn TypeSkolem-Shape)
+(resultIsa ConstantShapeTypeFn Orientation-Invariant-Term)
+(resultIsa ConstantShapeTypeFn Shape-Specific-Term)
+(comment ConstantShapeTypeFn "(ConstantShapeTypeFn ?id) denotes the collection of all objects 
+                      whose shape is of type ?id and who have stayed constant between images.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;Attributes for describing shape sizes (relative to some standard)
+
+(genls ElementRelativeSize ObjectType)
+
+(isa ScaledElement-Generic ElementRelativeSize)
+(isa LargerElement ElementRelativeSize)
+(isa SmallerElement ElementRelativeSize)
+(isa SameSizeElement ElementRelativeSize)
+(isa TallerElement ElementRelativeSize)
+(isa ShorterElement ElementRelativeSize)
+(isa SameHeightElement ElementRelativeSize)
+(isa LongerElement ElementRelativeSize)
+(isa ShorterElement ElementRelativeSize)
+(isa SameLengthElement ElementRelativeSize)
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;Binary symmetric relations between elements
+
+(isa colinearElements Predicate)
+(isa colinearElements SymmetricRelation)
+(isa colinearElements Orientation-Invariant-Term)
+(arity colinearElements 2)
+(comment colinearElements "This relation tells us that two perceptual elements are colinear.")
+(arg1Isa colinearElements PerceptualElement)
+(arg2Isa colinearElements PerceptualElement)
+
+(isa parallelElements Predicate)
+(isa parallelElements SymmetricRelation)
+(isa parallelElements Orientation-Invariant-Term)
+(arity parallelElements 2)
+(comment parallelElements "This relation tells us that two perceptual elements are parallel.")
+(arg1Isa parallelElements PerceptualElement)
+(arg2Isa parallelElements PerceptualElement)
+
+(isa perpendicularElements Predicate)
+(isa perpendicularElements SymmetricRelation)
+(isa perpendicularElements Orientation-Invariant-Term)
+(arity perpendicularElements 2)
+(comment perpendicularElements "This relation tells us that two perceptual elements are perpendicular.")
+(arg1Isa perpendicularElements PerceptualElement)
+(arg2Isa perpendicularElements PerceptualElement)
+
+(isa elementsIntersect Predicate)
+(isa elementsIntersect SymmetricRelation)
+(isa elementsIntersect Orientation-Invariant-Term)
+(arity elementsIntersect 2)
+(comment elementsIntersect "This relation tells us two perceptual elements intersect.")
+(arg1Isa elementsIntersect PerceptualElement)
+(arg2Isa elementsIntersect PerceptualElement)
+
+(isa elementsOverlap Predicate)
+(isa elementsOverlap SymmetricRelation)
+(isa elementsOverlap Orientation-Invariant-Term)
+(arity elementsOverlap 2)
+(comment elementsOverlap "This relation tells us two perceptual elements overlap.")
+(arg1Isa elementsOverlap PerceptualElement)
+(arg2Isa elementsOverlap PerceptualElement)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;Other binary relations between elements
+
+(isa elementContains Predicate)
+(isa elementContains Orientation-Invariant-Term)
+(arity elementContains 2)
+(arg1Isa elementContains PerceptualElement)
+(arg2Isa elementContains PerceptualElement)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;Relations describing shape transformations
+
+(isa sameShapes Predicate)
+(isa sameShapes SymmetricRelation)
+(isa sameShapes Orientation-Invariant-Term)
+(arity sameShapes 2)
+(arg1Isa sameShapes 2D-Shape-Generic)
+(arg2Isa sameShapes 2D-Shape-Generic)
+
+(isa rotatedShapes Predicate)
+(isa rotatedShapes SymmetricRelation)
+(isa rotatedShapes Orientation-Specific-Term)
+(arity rotatedShapes 2)
+(arg1Isa rotatedShapes 2D-Shape-Generic)
+(arg2Isa rotatedShapes 2D-Shape-Generic)
+
+(isa sameOrientationShapes Predicate)
+(isa sameOrientationShapes SymmetricRelation)
+(isa sameOrientationShapes Orientation-Specific-Term)
+(arity sameOrientationShapes 2)
+(arg1Isa sameOrientationShapes 2D-Shape-Generic)
+(arg2Isa sameOrientationShapes 2D-Shape-Generic)
+
+(isa reflectedShapes Predicate)
+(isa reflectedShapes SymmetricRelation)
+(isa reflectedShapes Orientation-Specific-Term)
+(arity reflectedShapes 2)
+(arg1Isa reflectedShapes 2D-Shape-Generic)
+(arg2Isa reflectedShapes 2D-Shape-Generic)
+
+(isa rotatedShapes-90 Predicate)
+(isa rotatedShapes-90 SymmetricRelation)
+(isa rotatedShapes-90 Orientation-Specific-Term)
+(arity rotatedShapes-90 2)
+(arg1Isa rotatedShapes-90 2D-Shape-Generic)
+(arg2Isa rotatedShapes-90 2D-Shape-Generic)
+
+(isa rotatedShapes-180 Predicate)
+(isa rotatedShapes-180 SymmetricRelation)
+(isa rotatedShapes-180 Orientation-Specific-Term)
+(arity rotatedShapes-180 2)
+(arg1Isa rotatedShapes-180 2D-Shape-Generic)
+(arg2Isa rotatedShapes-180 2D-Shape-Generic)
+
+(isa reflectedShapes-XAxis Predicate)
+(isa reflectedShapes-XAxis SymmetricRelation)
+(isa reflectedShapes-XAxis Orientation-Specific-Term)
+(arity reflectedShapes-XAxis 2)
+(arg1Isa reflectedShapes-XAxis 2D-Shape-Generic)
+(arg2Isa reflectedShapes-XAxis 2D-Shape-Generic)
+
+(isa reflectedShapes-YAxis Predicate)
+(isa reflectedShapes-YAxis SymmetricRelation)
+(isa reflectedShapes-YAxis Orientation-Specific-Term)
+(arity reflectedShapes-YAxis 2)
+(arg1Isa reflectedShapes-YAxis 2D-Shape-Generic)
+(arg2Isa reflectedShapes-YAxis 2D-Shape-Generic)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;Now higher-order attributes that wrap around the above relations
+
+(isa X-Axis-Reflection Predicate)
+(isa X-Axis-Reflection Orientation-Specific-Term)
+(arity X-Axis-Reflection 1)
+(arg1Isa X-Axis-Reflection Predicate)
+
+(isa Y-Axis-Reflection Predicate)
+(isa Y-Axis-Reflection Orientation-Specific-Term)
+(arity Y-Axis-Reflection 1)
+(arg1Isa Y-Axis-Reflection Predicate)
+
+(isa Oblique-Axis-Reflection Predicate)
+(isa Oblique-Axis-Reflection Orientation-Specific-Term)
+(arity Oblique-Axis-Reflection 1)
+(arg1Isa Oblique-Axis-Reflection Predicate)
+
+(isa Rotation-Type-180 Predicate)
+(isa Rotation-Type-180 Orientation-Specific-Term)
+(arity Rotation-Type-180 1)
+(arg1Isa Rotation-Type-180 Predicate)
+
+(isa Rotation-Type-Other Predicate)
+(isa Rotation-Type-Other Orientation-Specific-Term)
+(arity Rotation-Type-Other 1)
+(arg1Isa Rotation-Type-Other Predicate)
+
+(isa Identicality Predicate)
+(isa Identicality Orientation-Specific-Term)
+(arity Identicality 1)
+(arg1Isa Identicality Predicate)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;Special-purpose binary relations
+
+(isa verticallyAlignedWith Predicate)
+(isa verticallyAlignedWith Orientation-Specific-Term)
+(arity verticallyAlignedWith 2)
+(arg1Isa verticallyAlignedWith 2D-Shape-Generic)
+(arg2Isa verticallyAlignedWith 2D-Shape-Generic)
+
+(isa horizontallyAlignedWith Predicate)
+(isa horizontallyAlignedWith Orientation-Specific-Term)
+(arity horizontallyAlignedWith 2)
+(arg1Isa horizontallyAlignedWith 2D-Shape-Generic)
+(arg2Isa horizontallyAlignedWith 2D-Shape-Generic)
+
+(isa centeredOnEdge Predicate)
+(isa centeredOnEdge Orientation-Invariant-Term)
+(arity centeredOnEdge 2)
+(arg1Isa centeredOnEdge 2D-Shape-Generic)
+(arg2Isa centeredOnEdge 2D-Shape-Generic)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;Element Colors
+
+
+
+(isa ObjectColor Collection)
+(isa ObjectColor ObjectFill)
+
+
+(isa ObjectsColoredFn Function-Denotational)
+(atomicAnalogyNat ObjectsColoredFn)
+(arity ObjectsColoredFn 1)
+(arg1Isa ObjectsColoredFn Color)
+(resultIsa ObjectsColoredFn Collection)
+(resultIsa ObjectsColoredFn ObjectColor)
+(resultIsa ObjectsColoredFn ObjectFill)
+(resultIsa ObjectsColoredFn Orientation-Invariant-Term)
+(comment ObjectsColoredFn "(ObjectsColoredFn ?color) denotes the collection of all objects 
+whose main color is ?color.  This is useful for modeling color as an attribute.")
+
+
+(isa ObjectBorderColor Collection)
+
+(isa ObjectsBorderColoredFn Function-Denotational)
+(atomicAnalogyNat ObjectsBorderColoredFn)
+(arity ObjectsBorderColoredFn 1)
+(arg1Isa ObjectsBorderColoredFn Color)
+(resultIsa ObjectsBorderColoredFn Collection)
+(resultIsa ObjectsBorderColoredFn ObjectBorderColor)
+(resultIsa ObjectsBorderColoredFn Orientation-Invariant-Term)
+(comment ObjectsBorderColoredFn "(ObjectsBorderColoredFn ?color) denotes the collection of all objects 
+whose border's color is ?color.  This is useful for modeling color as an attribute.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;Line thicknesses
+
+(isa wideEdged Relation)
+(isa wideEdged Orientation-Invariant-Term)
+(arity wideEdged 1)
+      
+(isa narrowEdged Relation)
+(isa narrowEdged Orientation-Invariant-Term)
+(arity narrowEdged 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;Stuff for axes of symmetry
+
+
+(isa Shape-Axis Collection)
+(genls Shape-Symmetric-Axis Shape-Axis)
+      
+(isa hasAxis Predicate)
+(arity hasAxis 2)
+(arg1Isa hasAxis 2D-Shape-Generic)
+(arg2Isa hasAxis Shape-Axis)
+      
+(isa hasSymmetricAxis Predicate)
+(arity hasSymmetricAxis 2)
+(arg1Isa hasSymmetricAxis 2D-Shape-Generic)
+(arg2Isa hasSymmetricAxis Shape-Axis)
+      
+(isa hasHorizontalAxis Predicate)
+(arity hasHorizontalAxis 2)
+(arg1Isa hasHorizontalAxis 2D-Shape-Generic)
+(arg2Isa hasHorizontalAxis Shape-Axis)
+
+(isa hasVerticalAxis Predicate)
+(arity hasVerticalAxis 2)
+(arg1Isa hasVerticalAxis 2D-Shape-Generic)
+(arg2Isa hasVerticalAxis Shape-Axis)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;Alternate approach for representing symmetry
+
+(isa ShapeSymmetry Collection)
+
+(isa Symmetric-Shape ShapeSymmetry)
+(isa Symmetric-Shape Orientation-Invariant-Term)
+(genls Symmetric-Shape 2D-Shape-Generic)
+
+(isa Singly-Symmetric-Shape ShapeSymmetry)
+(isa Singly-Symmetric-Shape Orientation-Invariant-Term)
+(genls Singly-Symmetric-Shape 2D-Shape-Generic)
+
+
+(isa Doubly-Symmetric-Shape ShapeSymmetry)
+(isa Doubly-Symmetric-Shape Orientation-Invariant-Term)
+(genls Doubly-Symmetric-Shape 2D-Shape-Generic)
+
+(isa Perpendicular-Symmetric-Shape ShapeSymmetry)
+(isa Perpendicular-Symmetric-Shape Orientation-Invariant-Term)
+(genls Perpendicular-Symmetric-Shape 2D-Shape-Generic)
+
+(isa Multiply-Symmetric-Shape ShapeSymmetry)
+(isa Multiply-Symmetric-Shape Orientation-Invariant-Term)
+(genls Multiply-Symmetric-Shape 2D-Shape-Generic)
+
+(isa Square-Symmetric-Shape ShapeSymmetry)
+(isa Square-Symmetric-Shape Orientation-Invariant-Term)
+(genls Square-Symmetric-Shape 2D-Shape-Generic)
+
+(isa Blob-Symmetric-Shape ShapeSymmetry)
+(isa Blob-Symmetric-Shape Orientation-Invariant-Term)
+(genls Blob-Symmetric-Shape 2D-Shape-Generic)
+
+(isa Fully-Symmetric-Shape ShapeSymmetry)
+(isa Fully-Symmetric-Shape Orientation-Invariant-Term)
+(genls Fully-Symmetric-Shape 2D-Shape-Generic)
+
+(isa Asymmetric-Shape ShapeSymmetry)
+(isa Asymmetric-Shape Orientation-Invariant-Term)
+(genls Asymmetric-Shape 2D-Shape-Generic)
+
+(isa BlobSymmetry Collection)
+
+(isa Symmetric-Blob BlobSymmetry)
+(isa Symmetric-Blob Orientation-Invariant-Term)
+(genls Symmetric-Blob 2D-Shape-Generic)
+
+
+
+(isa ShapeElongationAttribute SiblingDisjointCollectionType)
+
+(isa NonElongatedShape Collection)
+(isa NonElongatedShape ShapeElongationAttribute)
+(genls NonElongatedShape 2D-Shape-Generic)
+(comment NonElongatedShape "")
+
+(isa ElongatedShape Collection)
+(isa ElongatedShape ShapeElongationAttribute)
+(genls ElongatedShape 2D-Shape-Generic)
+(comment ElongatedShape "")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;More texture stuff
+
+(isa TexturedObject Collection)
+(isa TexturedObject ObjectFill)
+(isa TexturedObject Orientation-Invariant-Term)
+
+(isa DoublyTexturedObject Collection)
+(isa DoublyTexturedObject ObjectFill)
+(isa DoublyTexturedObject Orientation-Invariant-Term)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;This microtheory is used solely for minimal ascension during spatial
+;;;;;;problem-solving.
+
+
+(in-microtheory SPS-Ontology :exclude-globals t)
+
+(genls RotatedShape-45 RotatedShape)
+(genls RotatedShape-90 RotatedShape)
+(genls RotatedShape-135 RotatedShape)
+(genls RotatedShape-180 RotatedShape)
+(genls RotatedShape-225 RotatedShape)
+(genls RotatedShape-270 RotatedShape)
+(genls RotatedShape-315 RotatedShape)
+
+(genls ReflectedShape-XAxis ReflectedShape)
+(genls ReflectedShape-YAxis ReflectedShape)
+(genls ReflectedShape-Diag-Axis ReflectedShape)
+(genls ReflectedShape-Other ReflectedShape)
+
+(genlPreds rotatedShapes-90 rotatedShapes)
+(genlPreds rotatedShapes-180 rotatedShapes)
+(genlPreds reflectedShapes-XAxis reflectedShapes)
+(genlPreds reflectedShapes-YAxis reflectedShapes)
+
+
+(genls ScaledShape-Smaller TransformedShape-Smaller)
+(genls DeformedShape-RemovedPart TransformedShape-Smaller)
+(genls DeformedShape-Shorter TransformedShape-Smaller)
+(genls DeformedShape-ShorterPart TransformedShape-Smaller)
+
+
+(genls ScaledShape-Bigger TransformedShape-Larger)
+(genls DeformedShape-AddedPart TransformedShape-Larger)
+(genls DeformedShape-Longer TransformedShape-Larger)
+(genls DeformedShape-LongerPart TransformedShape-Larger)
+
+
+(genlPreds rightOf positional-Generic)
+(genlPreds above positional-Generic)
+
+(genls OnTop-Element AtLocation-Element)
+(genls OnBottom-Element AtLocation-Element)
+(genls OnRight-Element AtLocation-Element)
+(genls OnLeft-Element AtLocation-Element)
+
+;;;(resultGenl ShapeTypeFn ShapeType)
+;;;(resultGenl ShapeTransFn ShapeType)
+(resultGenl AddedShapeTypeFn AddedShape)
+(resultGenl ConstantShapeTypeFn ConstantShape)
+
+(genls TypeSkolem-Shape ShapeType)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

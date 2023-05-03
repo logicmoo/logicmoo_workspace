@@ -1,0 +1,88 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv terrain tile
+;; -------------------
+;;;  Would this be better as terrainType?
+
+(isa FreeCiv-TerrainTile SecondOrderCollection)  ; What's the difference between this and a CollectionType?
+(genls FreeCiv-TerrainTile FreeCiv-ObjectType)
+(genls FreeCiv-TerrainTile RegionTypeByTerrain)  ; general Cyc concept
+
+(isa FreeCiv-LandTile SecondOrderCollection)
+(genls FreeCiv-LandTile FreeCiv-TerrainTile)
+
+(isa FreeCiv-WaterTile SecondOrderCollection)
+(genls FreeCiv-WaterTile FreeCiv-TerrainTile)
+
+;; This should probably tie into a concept above the
+;; FreeCiv level...
+; (genls FreeCiv-TerrainTile ComputerGame-Strategy-TerrainTile)
+
+(isa possibilityPredicateFor BinaryPredicate)
+(isa possibilityPredicateFor FunctionalPredicate)
+(functionalInArgs possibilityPredicateFor 2)
+(arity possibilityPredicateFor 2)
+(arg1Isa possibilityPredicateFor FreeCiv-Special)
+(arg2Isa possibilityPredicateFor Predicate)
+(comment possibilityPredicateFor "(possibilityPredicateFor ?special ?predicate) binds ?predicate to the unary terrain predicate that indicates whether the special is possible for the given terrain.")
+
+(isa possibleToIrrigate Predicate)
+(arity possibleToIrrigate 1)
+(arg1Isa possibleToIrrigate FreeCiv-TerrainTile)
+(comment possibleToIrrigate "(possibleToIrrigate ?terrain) means given adjacent water, it is eventually possible to irrigate such terrain, possibly by transforming it first.")
+
+(possibilityPredicateFor FC-Special-Irrigation possibleToIrrigate)
+
+(isa possibleToMine Predicate)
+(arity possibleToMine 1)
+(arg1Isa possibleToMine FreeCiv-TerrainTile)
+(comment possibleToMine "(possibleToMine ?terrain) means it is possible to mine the terrain, possibly by transforming it first.")
+
+(possibilityPredicateFor FC-Special-Mine possibleToMine)
+
+(isa possibleToRoad Predicate)
+(arity possibleToRoad 1)
+(arg1Isa possibleToRoad FreeCiv-TerrainTile)
+(comment possibleToRoad "(possibleToRoad ?terrain) means it is both possible and beneficial to build roads on this terrain.")
+
+(possibilityPredicateFor FC-Special-Road possibleToRoad)
+
+(isa terrainTransformsTo BinaryPredicate)
+(arity terrainTransformsTo 2)
+(arg1Isa terrainTransformsTo FreeCiv-TerrainTile)
+(arg2Isa terrainTransformsTo FreeCiv-TerrainTile)
+(comment terrainTransformsTo "(terrainTransformsTo ?oldterrain ?newterrain) means engineers can transform the old terrain into the new terrain (eventually).")
+
+;;; Irrigating and Mining can also transform terrain, even by non-engineers.
+;;; Need to capture this somehow.
+
+(isa terrainBaseFoodProduction BinaryPredicate)
+(arity terrainBaseFoodProduction 2)
+(arg1Isa terrainBaseFoodProduction FreeCiv-TerrainTile)
+(arg2Isa terrainBaseFoodProduction ContinuousMeasurableQuantity)  ; but static, not a fluent
+(comment terrainBaseFoodProduction "(terrainBaseFoodProduction ?terrain-type ?food-quantity) The base food production offered by the terrain (in FoodPoints).")
+
+(isa terrainBaseShieldProduction BinaryPredicate)
+(arity terrainBaseShieldProduction 2)
+(arg1Isa terrainBaseShieldProduction FreeCiv-TerrainTile)
+(arg2Isa terrainBaseShieldProduction ContinuousMeasurableQuantity)  ; but static, not a fluent
+(comment terrainBaseShieldProduction "(terrainBaseShieldProduction ?terrain-type ?production-quantity) The base shield production offered by the terrain (in ProductionPoints).")
+
+(isa terrainBaseTradeProduction BinaryPredicate)
+(arity terrainBaseTradeProduction 2)
+(arg1Isa terrainBaseTradeProduction FreeCiv-TerrainTile)
+(arg2Isa terrainBaseTradeProduction ContinuousMeasurableQuantity)  ; but static, not a fluent
+(comment terrainBaseTradeProduction "(terrainBaseTradeProduction ?terrain-type ?trade-quantity) The base trade production offered by the terrain (in TradePoints).")
+
+(isa moveCost BinaryPredicate)
+(arity moveCost 2)
+(arg1Isa moveCost FreeCiv-TerrainTile)
+(arg2Isa moveCost Integer)
+(comment moveCost "The number of move points it takes a unit to traverse, unless there's a road or river.  Explorers, partisans and alpine troops are exempt.")
+
+(isa defenseBonus BinaryPredicate)
+(arity defenseBonus 2)
+(arg1Isa defenseBonus FreeCiv-TerrainTile)
+(arg2Isa defenseBonus Integer)
+(comment defenseBonus "The percent added to defense for this terrain - typically 0% to 200%")

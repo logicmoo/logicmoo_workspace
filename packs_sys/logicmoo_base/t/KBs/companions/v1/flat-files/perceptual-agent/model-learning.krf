@@ -1,0 +1,2066 @@
+;;; -------------------------------------------------------------------------
+;;; File name: model-learning.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: August 18, 2011 09:23:01
+;;;   Purpose: A knowledge-level API for learning strategies that detect
+;;;            influences and refine hypotheses.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2019-01-04 11:09:47 -0600 (Fri, 04 Jan 2019) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Define inferences that are invoked when a case is constructed.
+;;; First, determine whether there are enough cases and variation among cases
+;;; to conclude anything.  Of course, even one case can be sufficient to 
+;;; rule out a hypothesis.  But there may not be any new information.
+;;; problem 1: how to associate a case name with learning goals?
+;;; problem 2: how to determine if there's new information?
+;;; problem 3: how to determine what the new information implies about the
+;;;            evolving qualitative model?
+;;; scenario 1 - decision case created when a decision task is performed
+;;; scenario 2 - when lbd infers actionPositivelyAffectsQuantity (or
+;;; negatively), then we want to refine this to the extent possible.
+;;; Does it really directly affect the quantity?  What other quantities
+;;; change?  Does it happen over time?
+;;; exploit (currentAddlist ?lst)
+;;; and (currentDeleteList ?lst)
+;;;
+;;; *** To Do: Support reasoning about units for rates in terms of PerFn.
+;;; *** e.g., (PerFn FoodPoints Turns)
+
+(isa hypothesis UnaryPredicate)
+(arity hypothesis 1)
+(comment hypothesis "(hypothesis <prop>) labels <prop> as something to verify or rule out.")
+
+;;; ---------------------------------------------------------------
+;;; Induce Indirect Influences
+;;;
+;;; Given examples of qualitative proportionalities, induce something
+;;; of the form:
+;;; (qprop+TypeType (MeasurableQuantityFn cityShieldProduction)
+;;;                 (MeasurableQuantityFn tileShieldProduction)
+;;;                 FreeCiv-City
+;;;                 SpatialThing-Localized
+;;;                 cityWorkingTileAt)
+;;; by inducing the most specific common ancestor of the quantity args
+;;; (possibly informed by the argisas of relevant preds) and identifying
+;;; the relevant relation between them.  This isn't a role-relation,
+;;; because a city is not an event.  How can we look for generalizable
+;;; binpreds?  Most common case is equals.  That's easy.  Can we 
+;;; examine all our cases over which we're inducing and look for
+;;; reified relations?  Can we ask the user?
+;;;
+;;; We're going to have learning goals of the form:
+;;; (DetectPotentialQualitativeInfluence ?quantity-type)
+;;; whenever we fail to break a quantity goal down to an action.
+
+;;; Although qprops are synchronic, we're going to trigger them in response
+;;; to changes due to actions.  That should help focus the search by giving
+;;; us pairs of states to compare across.
+
+
+(isa induceIndirectInfluences ComplexActionPredicate)
+(arity induceIndirectInfluences 5)
+(arg1Isa induceIndirectInfluences Microtheory)
+(arg2Isa induceIndirectInfluences CycLSentence-Assertible)
+(arg3Isa induceIndirectInfluences Set-Mathematical)
+(arg4Isa induceIndirectInfluences Microtheory)
+(arg5Isa induceIndirectInfluences Microtheory)
+(comment induceIndirectInfluences "(induceIndirectInfluences ?mt ?change ?all-changes ?casename ?spindlename) is the task of inducing and refining possible indirect influences on a quantity, given a synchronic change to its value.")
+
+;;; If: (increases X) & (increases Y) OR (decreases X) & (decreases Y)
+;;; Then hypothesize qprop+
+;;; Else hypothesize qprop-
+;;; If this violates a prior hypothesis, then either there is no influence
+;;; or we have both + and - influences.
+;;; Constraints: no mixed (direct & indirect) influences and no qprop loops.
+;;; Check for ?quantity not being a leaf quantity
+;;; We know ?quantity can't be directly influenced (it changes instantaneously)
+;;; We need to filter potential influencers that are known to directly influence something else.
+
+;;; SEEK NEW INFLUENCES
+(preconditionForMethod
+  (and (unifies (quantityChange ?quantity ?change-magnitude) ?change)
+       (unifies (?qtype ?entity) ?quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))  ; Don't infer influences on AggregateQuantities.
+       (infSpindleFor ?ii-spindle ?inf-spindle)
+       (uninferredSentence
+         (kbOnly (unambiguousInfluenceHypothesesOn ?mt ?inf-spindle ?quantity ?influence)))  ; No prior hypothesized influences on quantity
+       (uninferredSentence
+         (kbOnly
+           (lookupOnly
+             (ist-Information ?inf-spindle
+               (directlyInfluenced ?qtype)))))
+       (uninferredSentence
+         (ist-Information ?ii-spindle
+           (leafQuantity (?qtype ?any-entity))))  ; don't look for influencers on leaf quantities.
+       (evaluate ?changes (SetMinusFn ?all-changes ?change)))
+  (methodForAction
+    (induceIndirectInfluences ?mt ?change ?all-changes ?casename ?ii-spindle)
+    (actionSequence
+      (TheList
+        (induceIndirectInfluencesOn ?mt ?change ?changes ?casename ?ii-spindle)))))
+
+
+;;; VIOLATES PRIOR INFLUENCE HYPOTHESES
+;;; Identify and label counterexamples to prior ii hypotheses.
+;;; We need to detect counterexamples in the other direction as well.
+;;; *** For now, we'll assume this is only relevant on synchronic changes.
+;;; *** This is not ideal, since in pure causal systems, there are no
+;;; *** synchronic changes.  But here, we're going to assume that violations
+;;; *** that only happen diachronically are due to process limits.  Punt!
+(preconditionForMethod
+  (and (synchronicChange ?casename)
+       (unifies (quantityChange ?dep-quantity ?change-magnitude) ?change-stmt)
+       (unifies (?qtype ?dep-entity) ?dep-quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))
+       (diSpindleFor ?ii-spindle ?di-spindle)
+       (uninferredSentence
+         (influenceHypothesisOn ?mt ?di-spindle ?dep-quantity ?influence)) ; no prior DI hypotheses
+       (uninferredSentence
+         (kbOnly
+           (lookupOnly
+             (ist-Inormation ?di-spindle
+               (directlyInfluenced ?qtype)))))  ; no prior ambiguous DI hypotheses
+       (evaluate ?type-level-influences
+         (TheClosedRetrievalSetOf ?influence
+           ;; scarf ambiguous influences here as well, since we desperately want to rule them out:
+           (kbOnly (influenceHypothesisOn ?mt ?ii-spindle ?dep-quantity ?influence))))
+       (different ?type-level-influences (TheSet))
+       ;; invalidated II hypotheses:
+       (uninferredSentence
+         ;(satisfiesHypothesizedTypeLevelInfluences ?mt ?dep-quantity ?change-magnitude ?type-level-influences ?casename)
+         (satisfiesTypeLevelInfluences ?dep-quantity ?change-magnitude ?casename ?type-level-influences)  ; code accelerated
+         ))
+  (methodForAction
+    (induceIndirectInfluences ?mt ?change-stmt ?all-changes ?casename ?ii-spindle)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Counterexample found: ~s" (?type-level-influences))
+        (doForEach ?inf ?type-level-influences
+          (actionSequence
+            (TheList
+              (doRecord 
+                (ist-Information ?casename
+                  (counterExample ?inf 1 ?dep-quantity)))
+              ;; *** Really want to retract ambiguous direction influences on first strike!
+              (retractOnThreeStrikesRule ?mt ?inf ?casename ?ii-spindle))))))))
+
+
+;;; VIOLATES MIXED INFLUENCES
+;;; Identify and remove hypothesized direct influences on ?dep-quantity,
+;;; since this is invoked in response to a synchronic change.
+;;; This really assumes that there are *no* actions that immediately 
+;;; manipulate directly influenced quantities.  That seems to be true in 
+;;; Freeciv, where even the act of "buying" the item on the production
+;;; queue doesn't take place until the next turn.  There may be a discontinuity
+;;; in the influence, but it's not a mixed influence.
+(preconditionForMethod
+  (and (synchronicChange ?casename)
+       (unifies (quantityChange ?dep-quantity ?change-magnitude) ?change-stmt)
+       (unifies (?qtype ?dep-entity) ?dep-quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))
+       (diSpindleFor ?ii-spindle ?di-spindle)
+       (evaluate ?type-level-influences
+         (TheClosedRetrievalSetOf ?influence
+           (kbOnly 
+             (influenceHypothesisOn ?mt ?di-spindle ?dep-quantity ?influence))))
+       (different ?type-level-influences (TheSet)))
+  (methodForAction
+    (induceIndirectInfluences ?mt ?change-stmt ?all-changes ?casename ?ii-spindle)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Retracting impossible (synchronic) DIs: ~s" (?type-level-influences))
+        (doForEach ?inf ?type-level-influences
+          (actionSequence
+            (TheList
+              (doRecord 
+                (ist-Information ?casename
+                  (counterExample ?inf 1 ?dep-quantity))) ; record the existence of the counterexample
+              (doForgetInheritedFacts ?di-spindle
+                (hypothesis ?inf)))))       ; eliminate from consideration
+        (doAgentPlan                       ; proceed to induce indirect influencers
+          (actionSequence
+            (TheList
+              (induceIndirectInfluences ?mt ?change-stmt ?all-changes ?casename ?ii-spindle))))))))
+
+
+;;; We know the ?dep-quantity can't be directly influenced because
+;;; if we're here, then it changed synchronically - ie, not via a process.
+;;; This is problematic because it rejects direct influences on numTurnsToBuild and numTurnsToGrow.
+;;; Still trying to figure out how they should be represented.
+(preconditionForMethod
+  (and (synchronicChange ?casename)
+       (unifies (quantityChange ?dep-quantity ?change-magnitude) ?change-stmt)
+       (unifies (?qtype ?dep-entity) ?dep-quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))
+       (diSpindleFor ?ii-spindle ?di-spindle)
+       (kbOnly
+         (lookupOnly
+           (ist-Information ?di-spindle
+             (directlyInfluenced ?qtype)))))  ; some ambiguous influencer recorded earlier must be wrong
+  (methodForAction
+    (induceIndirectInfluences ?mt ?change-stmt ?all-changes ?casename ?ii-spindle)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Retracting impossible (synchronic) ambiguous DI on: ~s" (?qtype))
+        (doForgetInheritedFacts ?di-spindle
+          (directlyInfluenced ?qtype))      ; eliminate from consideration
+        (doAgentPlan                       ; proceed to induce indirect influencers
+          (actionSequence
+            (TheList
+              (induceIndirectInfluences ?mt ?change-stmt ?all-changes ?casename ?ii-spindle))))))))
+              
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceIndirectInfluences ?mt ?change ?all-changes ?casename ?spindlename)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (induceIndirectInfluences ?mt ?change ?all-changes ?casename ?spindlename) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa induceIndirectInfluencesOn ComplexActionPredicate)
+(arity induceIndirectInfluencesOn 5)
+(arg1Isa induceIndirectInfluencesOn Microtheory)
+(arg2Isa induceIndirectInfluencesOn CycLSentence-Assertible)
+(arg3Isa induceIndirectInfluencesOn Set-Mathematical)
+(arg4Isa induceIndirectInfluencesOn Microtheory)
+(arg5Isa induceIndirectInfluencesOn Microtheory)
+(comment induceIndirectInfluencesOn "(induceIndirectInfluencesOn ?mt ?change ?changes ?casename ?spindlename) is the task of inferring indirect influences on a particular known dependent quantity, or spawing a learning goal upon failure.")
+
+;;; IDENTIFY LIKELY CANDIDATES FOR INFLUENCERS
+(preconditionForMethod
+  (and (unifies (quantityChange ?quantity ?change-magnitude) ?change)
+       (inferenceOnly (filterPotentialIndirectInfluencers ?mt ?change ?changes ?spindlename ?filtered-changes))
+       (numAnswers 1 (wmOnly (priorValue ?mt ?quantity ?prior-value)))
+       (infSpindleFor ?spindlename ?inf-spindle))
+  (methodForAction
+    (induceIndirectInfluencesOn ?mt ?change ?changes ?casename ?spindlename)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?casename (quantityValue ?quantity ?prior-value)))
+        (doForEach ?indep-change ?filtered-changes 
+          (induceIndirectInfluenceBetween ?mt ?change ?indep-change ?casename ?inf-spindle))))))
+
+;;; Default (on failure to identify influence)
+;;; We (should) try harder to look for influences on dependent quantity
+;;; by first posting a learning goal signaling a special interest.
+;;; 
+(preconditionForMethod
+  (and (unifies (quantityChange ?quantity ?change-magnitude) ?change)
+       (unifies (?qtype ?entity) ?quantity)
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain)))
+  (methodForAction
+    (induceIndirectInfluencesOn ?mt ?change ?changes ?casename ?spindle-name)
+    (actionSequence
+      (TheList
+        (postInfluenceLearningGoal ?lkmt ?qtype)
+        (doRecord (ist-Information ?lkmt (iiCaseForGoal (DetectPotentialQualitativeInfluence ?qtype) ?casename))) ; index case
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (induceNonLinearIndirectInfluences ?casename ?quantity ?change ?spindle-name))))))))
+
+(<== (preferInContext (induceIndirectInfluencesOn ?mt ?change ?all-changes ?casename ?spindlename) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 induceIndirectInfluenceBetween))
+
+(isa induceNonLinearIndirectInfluences ComplexActionPredicate)
+(arity induceNonLinearIndirectInfluences 4)
+(arg1Isa induceNonLinearIndirectInfluences Microtheory)
+(arg2Isa induceNonLinearIndirectInfluences Quantity)
+(arg3Isa induceNonLinearIndirectInfluences CycLSentence-Assertible)
+(arg4Isa induceNonLinearIndirectInfluences Microtheory)
+(comment induceNonLinearIndirectInfluences "(induceNonLinearIndirectInfluences ?casename ?quantity ?change ?spindle) uses coincidences of changes to disambiguate influencers.")
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceNonLinearIndirectInfluences ?casename ?quantity ?change ?spindle)
+    (actionSequence
+      (TheList))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceNonLinearIndirectInfluences ?casename ?quantity ?change ?spindle)
+    (actionSequence
+      (TheList
+        (induceIndirectInfluencesFromZeroValues ?casename ?quantity))))) ; when this fails, it will backtrack
+
+;;; If this turns up influencers from prior games, there should still be a corresponding quantity in the
+;;; current game.  But ensuring that the domain relation holds will be tough...
+(preconditionForMethod
+  (and (unifies (?qtype ?entity) ?quantity)
+       (evaluate ?cases
+         (TheClosedRetrievalSetOf ?case
+           (iiCaseForGoal (DetectPotentialQualitativeInfluence ?qtype) ?case)))
+       (evaluate ?num (CardinalityFn ?cases))
+       (greaterThan ?num 1)
+       (uniqueInfluencer ?casename ?quantity ?cases ?indep-change)
+       (formulaArgument ?casename 1 ?mt))
+  (methodForAction
+    (induceNonLinearIndirectInfluences ?casename ?quantity ?dep-change ?spindle)
+    (actionSequence
+      (TheList
+        (induceIndirectInfluenceBetween ?mt ?dep-change ?indep-change ?casename ?spindle)))))
+
+;;; This would be one way to determine that a quantity is important:
+;      (ist-Information ?mt
+;        (performanceGoalForGame ?mt ?goal))
+;      (goalQuantity ?goal ?dep-quantity)
+;      (influencePathExists ?mt ?dep-quantity ?quantity ?spindle)
+        
+(<== (preferInContext (induceNonLinearIndirectInfluences ?casename ?quantity) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 induceIndirectInfluencesFromZeroValues))
+
+(<== (preferInContext (induceNonLinearIndirectInfluences ?casename ?quantity) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+(isa uniqueInfluencer QuaternaryPredicate)
+(arity uniqueInfluencer 4)
+(arg1Isa uniqueInfluencer Microtheory)
+(arg2Isa uniqueInfluencer Quantity)
+(arg3Isa uniqueInfluencer Set-Mathematical)
+(arg4Isa uniqueInfluencer CycLSentence-Assertible)
+(comment uniqueInfluencer "(uniqueInfluencer ?casename ?quantity ?cases ?indep-change)")
+
+(<== (uniqueInfluencer ?casename ?quantity ?cases ?indep-change)
+     (unifies (?qtype ?entity) ?quantity) ; destructure
+     (evaluate ?type-sets
+       (TheClosedRetrievalSetOf ?type-set ; collect pairs that include sign of change as well.
+         (and (lookupOnly (elementOf ?case ?cases))
+              (changedQuantityTypesExcluding ?case ?qtype ?type-set))))
+     (uniqueIntersection ?type-sets ?unique-element)
+     ;; destructure ?unique-element to extract indep quantity-type:
+     (unifies (?indep-qtype ?sign) ?unique-element)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?casename
+           (quantityChange (?indep-qtype ?arg) ?indep-change)))))  ; hope there's only one...
+
+(isa changedQuantityTypesExcluding TernaryPredicate)
+
+(<== (changedQuantityTypesExcluding ?case ?qtype ?type-set)
+     (evaluate ?type-set
+        (TheClosedRetrievalSetOf ?type-pair
+          (and (lookupOnly
+                 (localOnly
+                   (ist-Information ?case
+                     (quantityChange ?quantity ?change))))
+                (unifies (?indep-qtype ?arg) ?quantity)
+                (different ?indep-qtype ?qtype)
+                (signDirectionPred ?change ?sign-pred)
+                (unifies ?type-pair (?indep-qtype ?sign-pred))))))
+
+(isa uniqueIntersection BinaryPredicate)
+
+;;; *** Problem here:
+;;; *** cityGrowthRate is influenced ambiguously by numTurnsToGrow and causally by foodSurplus. ie, never uniquely.
+(<== (uniqueIntersection ?set-of-sets ?unique-element)
+     (evaluate ?intersection (SetOfSetsIntersectionFn ?set-of-sets)) ; <- never used that before, but it sure is useful!
+     (unifies (TheSet ?unique-element) ?intersection))
+
+ 
+
+;;; Preference filtering of hypotheses:
+
+(isa filterPotentialIndirectInfluencers QuintaryPredicate)
+(arity filterPotentialIndirectInfluencers 5)
+(arg1Isa filterPotentialIndirectInfluencers Microtheory)
+(arg2Isa filterPotentialIndirectInfluencers CycLSentence-Assertible)
+(arg3Isa filterPotentialIndirectInfluencers Set-Mathematical)
+(arg4Isa filterPotentialIndirectInfluencers Microtheory)
+(arg5Isa filterPotentialIndirectInfluencers Set-Mathematical)
+(comment filterPotentialIndirectInfluencers "(filterPotentialIndirectInfluencers ?mt ?dep-change ?changes ?spindlename ?filtered-changes)")
+
+(<== (filterPotentialIndirectInfluencers ?mt ?dep-change ?changes ?ii-spindle ?filtered-changes)
+     (unifies (quantityChange ?dep-q ?magnitude) ?dep-change)
+     (unifies (?qtype ?entity) ?dep-q)
+     (evaluate ?num-prior-changes 
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?change-case
+           (microtheoriesOf (quantityChange (?qtype ?some-entity) ?some-mag) ?change-case))))
+     (diSpindleFor ?ii-spindle ?di-spindle)
+     (numAnswers 1 (quantityPrimitive ?qtype ?colltype ?units))     ; assumes primitive
+     ;(unifies ?notPreviouslyViolated (Kappa (?indep-change) (inferenceOnly (uninferredSentence (violatedByPriorCounterexample ?mt ?dep-change ?indep-change ?ii-spindle)))))
+     (unifies ?consistentChanges (Kappa (?indep-change) (inferenceOnly (consistentChangeStmt ?mt ?dep-change ?indep-change ?num-prior-changes ?ii-spindle))))
+     (unifies ?sameUnits (Kappa (?indep-change) (inferenceOnly (changeStmtUnits ?indep-change ?units))))
+     (unifies ?sameEntities (Kappa (?indep-change) (inferenceOnly (changeStmtEntity ?indep-change ?entity))))
+     (unifies ?sameMagnitude (Kappa (?indep-change) (inferenceOnly (changeStmtMagnitude ?indep-change ?magnitude))))
+     ;(inferenceOnly (filterBy ?changes ?notPreviouslyViolated ?unviolated-changes))
+     (inferenceOnly (filterBy ?changes ?consistentChanges ?consistent-change-stmts))
+     (inferenceOnly (preferenceFilterBy ?consistent-change-stmts ?sameMagnitude ?same-magnitude-changes))
+     (inferenceOnly (preferenceFilterBy ?same-magnitude-changes ?sameUnits ?consistent-unit-stmts))
+     (inferenceOnly (preferenceFilterBy ?consistent-unit-stmts   ?sameEntities ?filtered-changes)))
+
+(isa consistentChangeStmt Predicate)
+(arity consistentChangeStmt 5)
+(comment consistentChangeStmt "(consistentChangeStmt ?mt ?dep-change ?indep-change ?num-dep-change-cases ?ii-spindle)")
+
+(<== (consistentChangeStmt ?mt ?dep-change ?indep-change ?num-dep-change-cases ?ii-spindle)
+     (unifies (quantityChange ?dep-quantity ?dep-magnitude) ?dep-change)
+     (unifies (quantityChange ?indep-quantity ?indep-magnitude) ?indep-change)
+     (unifies (?dep-qtype ?dep-entity) ?dep-quantity)
+     (unifies (?indep-qtype ?indep-entity) ?indep-quantity)
+     (uninferredSentence
+       (lookupOnly
+         (ist-Information ?ii-spindle
+           (hypothesis (?pred ?dep-qtype ?indep-qtype ?coll ?coll equals))))) ; already known (presumably via ambiguous causality)
+     (uninferredSentence
+       (violatedByPriorCounterexample ?mt ?dep-quantity ?indep-quantity ?ii-spindle))
+     (consistentQuantityChange ?dep-change ?indep-change ?num-dep-change-cases ?ii-spindle))
+
+(isa violatedByPriorCounterexample QuaternaryPredicate)
+
+;;; If there are known counterexamples, then don't try to induce the same bad
+;;; influence all over again.
+;;; **** This isn't quite sufficient!
+;;; **** A proposed influence may violate historical data but never have had
+;;; **** an explicit counterExample flagged.  E.g., if the dep quantity was
+;;; **** until now believed to be directly influenced.
+;;; **** Consider numTurnsToGrow.  We'd like to reject the influence from
+;;; **** cityTradeProduction, etc.  Moreover, to do that, we may need to
+;;; **** examine DI cases (or diachronic II cases?)
+(<== (violatedByPriorCounterexample ?mt (?dep-qtype ?dep-entity) (?indep-qtype ?indep-entity) ?ii-spindle)
+     (lookupOnly
+       (kbOnly
+         (contextEnvAllowed
+           (ist-Information ?ii-spindle
+             (counterExample (?inf-pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?n ?q)))))
+     (cacheComplete
+       (ist-Information ?mt     ; assumed indexical reference
+         (?rel ?dep-entity ?indep-entity))))
+
+
+;;; Re-purposing this predicate to say that every time the independent quantity
+;;; changed in the past, the dependent quantity also changed.  A cheap filter.
+(isa consistentQuantityChange QuaternaryPredicate)
+(arity consistentQuantityChange 4)
+
+;;; We can do better than this.  Make sure there's no case where 
+;;; ?indep-quantity changes and ?dep-quantity did not, and that they always
+;;; changed in a consistent direction relative to each other.
+(<== (consistentQuantityChange ?dep-change ?indep-change ?num-dep-change-cases ?ii-spindle)
+     (uninferredSentence
+       (inconsistentQuantityChange ?dep-change ?indep-change ?num-dep-change-cases)))
+
+;;; We have a problem with certain leaf quantities like tileFoodProduction, 
+;;; because they're reified when a city is first founded, whereas
+;;; cityFoodProduction is not.  (They need to be in order to recognize them
+;;; as leaf quantities by  virtue of relationship switching).  This screws up
+;;; the change incidence counting filter.
+(<== (consistentQuantityChange ?dep-change ?indep-change ?num-dep-change-cases ?ii-spindle)
+     (unifies (quantityChange (?indep-qtype ?entity) ?indep-magnitude) ?indep-change) ; destructure
+     (ist-Information ?ii-spindle
+       (leafQuantity (?indep-qtype ?any-entity))))
+
+(isa inconsistentQuantityChange TernaryPredicate)
+(arity inconsistentQuantityChange 3)
+
+;;; case of same entity
+(<== (inconsistentQuantityChange ?dep-change ?indep-change ?num-dep-change-cases)
+     (unifies (quantityChange (?dep-qtype ?entity) ?dep-magnitude) ?dep-change)
+     (unifies (quantityChange (?indep-qtype ?entity) ?indep-magnitude) ?indep-change)
+     (indirectInfluenceTypeFromMagnitudes ?dep-magnitude ?indep-magnitude ?influence-type)
+     (microtheoriesOf (quantityChange (?indep-qtype ?some-entity) ?some-mag) ?change-case)
+     (uninferredSentence
+       (consistentDependentChange ?change-case ?dep-qtype ?some-entity ?some-mag ?influence-type)))
+
+(isa consistentDependentChange QuintaryPredicate)
+(arity consistentDependentChange 5)
+
+;;; inconsistent if dependent-quant doesn't change or changes in the wrong direction.
+(<== (consistentDependentChange ?case ?dep-qtype ?entity ?indep-magnitude ?influence-type)
+     (ist-Information ?case (quantityChange (?dep-qtype ?entity) ?dep-magnitude))
+     (indirectInfluenceTypeFromMagnitudes ?dep-magnitude ?indep-magnitude ?influence-type))
+       
+;;; case of different entity:
+(<== (inconsistentQuantityChange ?dep-change ?indep-change ?num-dep-change-cases)
+     (unifies (quantityChange (?dep-qtype ?dep-entity) ?dep-magnitude) ?dep-change)
+     (unifies (quantityChange (?indep-qtype ?indep-entity) ?indep-magnitude) ?indep-change)
+     (different ?dep-entity ?indep-entity)
+     (evaluate ?num-indep-change-cases 
+       (CardinalityFn
+         (TheClosedRetrievalSetOf ?change-case
+           (microtheoriesOf (quantityChange (?indep-qtype ?some-entity) ?some-mag) ?change-case))))
+     (greaterThan ?num-indep-change-cases ?num-dep-change-cases))  ; inconsistent if indep-q changes but dep-q doesn't
+
+
+
+(isa changeStmtUnits BinaryPredicate)
+(<== (changeStmtUnits ?change ?units)                                           ; prefer same units
+     (unifies (quantityChange (?qtype ?entity) ?magnitude) ?change)
+     (numAnswers 1
+       (quantityPrimitive ?qtype ?colltype ?units)))     ; assumes primitive
+
+(isa changeStmtEntity BinaryPredicate)
+(<== (changeStmtEntity (quantityChange (?qtype ?entity) ?magnitude) ?entity))   ; prefer same entity
+
+(isa changeStmtMagnitude BinaryPredicate)
+(<== (changeStmtMagnitude (quantityChange ?quantity ?magnitude) ?magnitude))    ; prefer c+, c-
+(<== (changeStmtMagnitude (quantityChange ?quantity ?neg-magnitude) ?magnitude) ; case of c-
+     (different ?magnitude ?neg-magnitude)
+     (evaluate ?abs (AbsoluteValueFn ?magnitude))
+     (evaluate ?abs (AbsoluteValueFn ?neg-magnitude)))
+
+;;; What we really want to know is whether the quantity type is always a constant
+;;; or zero for any argument.  But that's going to have to be within a given
+;;; game.  
+
+
+;;; ---------------------------------------------------------------
+;;; Given a proposed indirect influenced between two quantities,
+;;; we want to flag those cases where the direction of influence is ambiguous.
+;;; There are three ways to eiminate such ambiguity:
+;;; 1) If one quantity is known to directly influence another (no mixed influences)
+;;; 2) If one quantity is known to be a leaf quantity manipulated by an action
+;;; 3) If there is actually more than one influencing quantity, such that we can look 
+;;;    for subsets that total (or multiply to) the dependent quantity.
+;;; For now, mark ambiguous directionality as an ambiguousHypothesis of two possibilities.
+;;; Here, ?spindle is the global spindle that inherits from both ii-cases and di-cases.
+;;; That's needed to normalize the influence graph.
+
+(isa induceIndirectInfluenceBetween ComplexActionPredicate)
+(arity induceIndirectInfluenceBetween 5)
+(arg1Isa induceIndirectInfluenceBetween Microtheory)
+(arg2Isa induceIndirectInfluenceBetween ContinuousQuantity)
+(arg3Isa induceIndirectInfluenceBetween MeasurableQuantity)
+(arg4Isa induceIndirectInfluenceBetween Microtheory)
+(arg5Isa induceIndirectInfluenceBetween Microtheory)
+(comment induceIndirectInfluenceBetween "(induceIndirectInfluenceBetween ?mt ?dep-change ?indep-change ?casename ?spindle)")
+
+(preconditionForMethod
+  (and (different ?dep-change ?indep-change)
+       (unifies (quantityChange ?dep-quantity ?dep-change-magnitude) ?dep-change)
+       (unifies (quantityChange ?indep-quantity ?indep-change-magnitude) ?indep-change)
+       (unifies (?dep-qtype ?dep-entity) ?dep-quantity)
+       (unifies (?indep-qtype ?indep-entity) ?indep-quantity)
+       (cacheComplete 
+         (indirectInfluenceTypeFromMagnitudes ?dep-change-magnitude ?indep-change-magnitude ?type))
+       (evaluate ?rels
+         (TheClosedRetrievalSetOf ?rel
+           (domainRelationHoldsBetween ?casename ?rel ?dep-entity ?indep-entity)))
+       )
+  (methodForAction
+    (induceIndirectInfluenceBetween ?mt ?dep-change ?indep-change ?casename ?spindle)
+    (actionSequence
+      (TheList
+        (doForEach ?rel ?rels
+          (hypothesizeInfluence ?mt ?type ?dep-quantity ?dep-change-magnitude ?indep-quantity ?rel ?casename))
+        ;(doForgetInheritedFacts ?spindle ?redundant-influences)
+        ))))
+
+  
+(preconditionForMethod
+  (true)
+  (methodForAction 
+    (induceIndirectInfluenceBetween ?mt ?dep-change ?indep-change ?casename ?spindle)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (induceIndirectInfluenceBetween ?mt ?dep-change ?indep-change ?casename ?spindle) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+             
+;;; Changed from domainRelationInitiallyBetween, which was too restrictive.
+(isa domainRelationHoldsBetween QuaternaryPredicate)
+(arity domainRelationHoldsBetween 4)
+(arg1Isa domainRelationHoldsBetween Microtheory)
+(arg2Isa domainRelationHoldsBetween BinaryRelation)
+(arg3Isa domainRelationHoldsBetween Thing)
+(arg4Isa domainRelationHoldsBetween Thing)
+
+(<== (domainRelationHoldsBetween ?casename ?rel ?dep-entity ?indep-entity)
+     (domainRelationBetween ?rel ?dep-entity ?indep-entity))
+
+(<== (domainRelationHoldsBetween ?casename ?rel ?dep-entity ?indep-entity)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?casename
+           (deletedStatement (?rel ?dep-entity ?indep-entity)))))
+     (numAnswers 1 (indexedDomainRel (?rel ?type1 ?type2))))
+
+(<== (domainRelationHoldsBetween ?casename ?rel ?dep-entity ?indep-entity)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?casename
+           (addedStatement (?rel ?dep-entity ?indep-entity)))))
+     (numAnswers 1 (indexedDomainRel (?rel ?type1 ?type2))))
+
+
+(isa indirectInfluenceTypeFromMagnitudes TernaryPredicate)
+(arity indirectInfluenceTypeFromMagnitudes 3)
+(arg1Isa indirectInfluenceTypeFromMagnitudes Number-General)
+(arg2Isa indirectInfluenceTypeFromMagnitudes Number-General)
+(arg3Isa indirectInfluenceTypeFromMagnitudes Predicate)
+(comment indirectInfluenceTypeFromMagnitudes "(indirectInfluenceTypeFromMagnitudes ?dep-mag ?indep-mag qprop+TypeType) ")
+   
+(<== (indirectInfluenceTypeFromMagnitudes ?dep-mag ?indep-mag qprop)
+     (numAnswers 1 (qualitativeDSValue ?dep-mag ?ds))
+     (numAnswers 1 (qualitativeDSValue ?indep-mag ?ds)))
+     
+(<== (indirectInfluenceTypeFromMagnitudes ?dep-mag ?indep-mag qprop-)
+     (numAnswers 1 (qualitativeDSValue ?dep-mag ?ds1))
+     (numAnswers 1 (qualitativeDSValue ?indep-mag ?ds2))
+     (different ?ds1 ?ds2))
+
+
+;;; ---------------------------------------------------------------
+;;; Handle the special case where the dependent quantity is either going to zero
+;;; or leaving zero.  We can find potential influencers based on whether they
+;;; went to zero or left zero, without looking at the magnitudes of their changes
+;;; or the magnitudes of their non-zero values.
+
+(isa induceIndirectInfluencesFromZeroValues ComplexActionPredicate)
+(arity induceIndirectInfluencesFromZeroValues 2)
+(arg1Isa induceIndirectInfluencesFromZeroValues Microtheory)
+(arg2Isa induceIndirectInfluencesFromZeroValues Quantity) ; actual quantity, not the quantity type
+(comment induceIndirectInfluencesFromZeroValues "(induceIndirectInfluencesFromZeroValues ?casename ?quantity) ")
+
+;;; No Default.  Let this fail and backtrack
+;(preconditionForMethod
+;  (true)
+;  (methodForAction
+;    (induceIndirectInfluencesFromZeroValues ?casename ?quantity)
+;    (actionSequence
+;      (TheList))))
+
+(preconditionForMethod
+  (and (numAnswers 1
+         (changesFromZeroValue ?casename ?quantity))
+       (evaluate ?indep-quantities
+         (TheClosedRetrievalSetOf ?indep-quantity
+           (and (changesFromZeroValue ?casename ?indep-quantity)
+                (different ?indep-quantity ?quantity)))))
+  (methodForAction
+    (induceIndirectInfluencesFromZeroValues ?casename ?quantity)
+    (actionSequence
+      (TheList
+        (doForEach ?indep-q ?indep-quantities
+          (induceIndirectInfluenceToFrom ?quantity ?indep-q ?casename))
+        ))))
+
+
+(preconditionForMethod
+  (and (numAnswers 1
+         (changesToZeroValue ?casename ?quantity))
+       (evaluate ?indep-quantities
+         (TheClosedRetrievalSetOf ?indep-quantity
+           (and (changesToZeroValue ?casename ?indep-quantity)
+                (different ?indep-quantity ?quantity)))))
+  (methodForAction
+    (induceIndirectInfluencesFromZeroValues ?casename ?quantity)
+    (actionSequence
+      (TheList
+        (doForEach ?indep-q ?indep-quantities
+          (induceIndirectInfluenceToFrom ?quantity ?indep-q ?casename))
+        ))))
+
+(<== (preferInContext (induceIndirectInfluencesFromZeroValues ?casename ?quantity) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa changesFromZeroValue BinaryPredicate)
+(arity changesFromZeroValue 2)
+
+(isa changesToZeroValue BinaryPredicate)
+(arity changesToZeroValue 2)
+
+(<== (changesFromZeroValue ?case ?quantity)
+     (priorCaseValue ?case ?quantity ?value)
+     (isZeroQuantity ?value))
+
+(<== (changesToZeroValue ?case ?quantity)
+     (afterCaseValue ?case ?quantity ?value)
+     (isZeroQuantity ?value))
+
+
+(isa induceIndirectInfluenceToFrom ComplexActionPredicate)
+(arity induceIndirectInfluenceToFrom 3)
+(arg1Isa induceIndirectInfluenceToFrom Quantity)
+(arg2Isa induceIndirectInfluenceToFrom Quantity)
+(arg3Isa induceIndirectInfluenceToFrom Microtheory)
+(comment induceIndirectInfluenceToFrom "(induceIndirectInfluenceToFrom ?dep-q ?indep-q ?ii-case) lifts a concrete instance of an influence to the type level (possibly multiple influences, depending on the relations between entities) and record the hypotheses.")
+
+(preconditionForMethod
+  (and (lookupOnly
+         (localOnly
+           (numAnswers 1
+             (ist-Information ?casename
+               (quantityChange ?dep-quantity ?dep-change-magnitude)))))
+       (lookupOnly
+         (localOnly
+           (numAnswers 1
+             (ist-Information ?casename
+               (quantityChange ?indep-quantity ?indep-change-magnitude)))))
+       (numAnswers 1 
+         (indirectInfluenceTypeFromMagnitudes ?dep-change-magnitude ?indep-change-magnitude ?type))
+       (unifies (dep-qtype ?dep-entity) ?dep-quantity)
+       (unifies (indep-qtype ?indep-entity) ?indep-quantity)
+       (evaluate ?rels
+         (TheClosedRetrievalSetOf ?rel
+           (domainRelationHoldsBetween ?casename ?rel ?dep-entity ?indep-entity))))  ; outsourced in Freeciv.
+  (methodForAction
+    (induceIndirectInfluenceToFrom ?dep-quantity ?indep-quantity ?casename)
+    (actionSequence
+      (TheList
+        (doForEach ?rel ?rels
+          (hypothesizeInfluence ?mt ?type ?dep-quantity ?dep-change-magnitude ?indep-quantity ?rel ?casename))))))
+
+;;; ---------------------------------------------------------------
+;;; Validate Indirect Influences
+
+;;; Although it's conceivably possible for two influences to exactly
+;;; cancel each other out, it's extremely unlikely.  So if we see a
+;;; hypothesized influencer change but the influenced quantity doesn't
+;;; change, that calls the influence into question.
+;;; The tricky part here is that the binary relationship between independent
+;;; and dependent entities may have been deleted.
+
+(isa validateInfluencesFrom ComplexActionPredicate)
+(arity validateInfluencesFrom 4)
+(arg1Isa validateInfluencesFrom Microtheory)
+(arg2Isa validateInfluencesFrom CycLSentence-Assertible)
+(arg3Isa validateInfluencesFrom Microtheory)
+(arg4Isa validateInfluencesFrom Microtheory)
+(comment validateInfluencesFrom "(validateInfluencesFrom ?mt ?indep-change ?casename ?spindle) is the task to rule out previous hypotheses that do not hold up.  Specifically, it checks for situations where an independent quantity changes but the dependent quantity does not.")
+
+
+;;; Find concrete quantities that should have changed but didn't, and retract
+;;; those violated influences.
+(preconditionForMethod
+  (and (unifies (quantityChange ?indep-quantity ?change-magnitude) ?indep-change)
+       (unifies (?qtype ?indep-entity) ?indep-quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))
+       (evaluate ?type-level-influences
+         (TheClosedRetrievalSetOf ?influence
+           (violatedIndirectTypeLevelInfluenceFrom ?mt ?indep-quantity ?casename ?ii-spindle ?influence)))
+       (different ?type-level-influences (TheSet)))
+  (methodForAction
+    (validateInfluencesFrom ?mt ?indep-change ?casename ?ii-spindle)
+    (actionSequence
+      (TheList
+        (doForEach ?inf ?type-level-influences
+          (retractCounterExample ?casename ?ii-spindle ?inf ?indep-quantity))))))
+
+
+;;; default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (validateInfluencesFrom ?mt ?indep-change ?casename ?ii-spindle)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (validateInfluencesFrom ?mt ?indep-change ?casename ?ii-spindle) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa violatedIndirectTypeLevelInfluenceFrom QuintaryPredicate)
+(arity violatedIndirectTypeLevelInfluenceFrom 5)
+(arg1Isa violatedIndirectTypeLevelInfluenceFrom Microtheory)
+(arg2Isa violatedIndirectTypeLevelInfluenceFrom Quantity)
+(arg3Isa violatedIndirectTypeLevelInfluenceFrom Microtheory)
+(arg4Isa violatedIndirectTypeLevelInfluenceFrom Microtheory)
+(arg5Isa violatedIndirectTypeLevelInfluenceFrom CycLSentence-Assertible)
+(comment violatedIndirectTypeLevelInfluenceFrom "(violatedIndirectTypeLevelInfluenceFrom ?mt ?indep-quantity ?casename ?ii-spindle ?influence) ")
+
+;;; Not clear whether it's more efficient to pass ?changes around or hit the KB
+;;; looking it up again.  Where's the breakeven point?
+;;; **** priorChangeHypothesis doesn't recognize ambiguousInfluenceDirection violations. 
+(<== (violatedIndirectTypeLevelInfluenceFrom ?mt ?indep-quantity ?casename ?ii-spindle ?influence)
+     (kbOnly (influenceHypothesisFrom ?mt ?ii-spindle ?indep-quantity ?influence))
+     (unifies (?type-inf-pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?influence)
+     (unifies (?indep-qtype ?indep-entity) ?indep-quantity)  ; destructure to bind entity.
+     (numAnswers 1 (violatesPropositionalInfluenceFrom  ?mt ?casename ?rel ?dep-qtype ?coll1 ?indep-entity))
+     ;; Now let it go if this is the only hypothesis we have:
+;     (evaluate ?inf-set
+;       (TheClosedRetrievalSetOf ?hyp
+;         (lookupOnly
+;           (ist-Information ?ii-spindle
+;             (hypothesis (?pred ?dep-qtype ?other-indep-qtype ?coll1 ?other-coll2 ?other-rel))))))
+;     (not (matches (TheSet ?hyp) ?inf-set))  ; not a singleton
+     )
+
+(isa violatesPropositionalInfluenceFrom Predicate)
+(arity violatesPropositionalInfluenceFrom 6)
+(arg1Isa violatesPropositionalInfluenceFrom Microtheory)
+(arg2Isa violatesPropositionalInfluenceFrom Microtheory)
+(arg3Isa violatesPropositionalInfluenceFrom BinaryRelation)
+(arg4Isa violatesPropositionalInfluenceFrom QuantityType)
+(arg5Isa violatesPropositionalInfluenceFrom Collection)
+(arg6Isa violatesPropositionalInfluenceFrom Thing)
+(comment violatesPropositionalInfluenceFrom "(violatesPropositionalInfluenceFrom ?mt ?casename ?rel ?dep-qtype ?coll1 ?indep-entity)")
+
+;;; This is a particular way an influence can be violated: indep-q changes, dep-q does not.
+(<== (violatesPropositionalInfluenceFrom ?mt ?casename ?rel ?dep-qtype ?coll1 ?indep-entity)
+     (invariantBinrel ?mt ?casename ?rel ?dep-entity ?indep-entity) ; lookup possible dep-entities
+     (ist-Information ?mt (isa ?dep-entity ?coll1))
+     (uninferredSentence
+       (localOnly
+         (lookupOnly
+           (ist-Information ?casename
+             ;; can't lookup currentQuantityChange, because that's a DynamicUpdatePredicate.
+             (quantityChange (?dep-qtype ?dep-entity) ?change-magnitude))))))
+
+
+
+(isa retractCounterExample ComplexActionPredicate)
+(arity retractCounterExample 4)
+(arg1Isa retractCounterExample Microtheory)
+(arg2Isa retractCounterExample Microtheory)
+(arg3Isa retractCounterExample CycLSentence-Assertible)
+(arg4Isa retractCounterExample Quantity)
+(comment retractCounterExample "(retractCounterExample ?casename ?ii-spindle ?influence ?indep-quantity) retracts a prior influence hypotheses and/or ambiguous direction hypothesis, given a quantity that cannot be a independent variable in the influence.")
+
+;;; Make this a complex htn to retract appropriately, based on whether indep
+;;; is 2nd arg of inf. The argnum ?n is usually 2 for hypotheses, but in 
+;;; ambiguousInfluenceDirection statements, the statement may have been
+;;; represented in the opposite order.
+;;; *** No longer true.  There is no ambiguousInfluenceDirection statement
+;;; *** anymore.  ?n should always be 2.
+(preconditionForMethod
+  (and (unifies (?indep-qtype ?indep-entity) ?indep-quantity)
+       (unifies (?type-inf-pred ?dep-qtype ?indep-qtype ?coll1 ?coll2 ?rel) ?inf)
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain)))
+  (methodForAction
+    (retractCounterExample ?casename ?ii-spindle ?inf ?indep-quantity)
+    (actionSequence
+      (TheList
+        (doRecord 
+          (ist-Information ?casename
+            (counterExample ?inf 2 ?indep-quantity))) ; record the existence of the counterexample
+        (doRecord
+          (ist-Information ?lkmt
+            (counterExample ?inf 2 ?indep-quantity))) ; for long-term recording
+        (postInfluenceLearningGoal ?lkmt ?dep-qtype)  ; Now we *really* want to know what influences ?dep-qtype.
+        (doAnnounce "~&Retracting invalid II: ~s" (?inf))
+        (doForgetInheritedFacts ?ii-spindle
+          (hypothesis ?inf))         ; eliminate from consideration
+        ))))
+
+
+;;; ---------------------------------------------
+;;; 
+;;; Induce indirect influences on quantities from directly influenced quantities
+;;; across turns.  (eg, cityPopulation from citySize).
+
+
+(isa induceDownstreamIndirectInfluences ComplexActionPredicate)
+(arity induceDownstreamIndirectInfluences 6)
+
+(preconditionForMethod
+  (and (filterBySoleMechanismAssumption ?mt ?all-changes ?di-casename ?ii-spindle ?indep-changes)
+       (evaluate ?possible-dep-changes
+         (SetDifferenceFn ?all-changes ?indep-changes)))
+  (methodForAction
+    (induceDownstreamIndirectInfluences ?mt ?all-changes ?ii-casename ?ii-spindle ?di-casename ?di-spindle)
+    (actionSequence
+      (TheList
+        (doForEach ?dep-change ?possible-dep-changes
+          (actionSequence
+            (TheList
+              (induceIndirectInfluencesOnUninfluencedChanges ?mt ?dep-change ?indep-changes ?ii-casename ?ii-spindle ?di-spindle)
+              (validateInfluencesFrom ?mt ?dep-change ?ii-casename ?ii-spindle))))))))
+
+(isa filterBySoleMechanismAssumption QuintaryPredicate)
+(arity filterBySoleMechanismAssumption 5)
+(arg1Isa filterBySoleMechanismAssumption Microtheory)
+(arg2Isa filterBySoleMechanismAssumption Set-Mathematical)
+(arg3Isa filterBySoleMechanismAssumption Microtheory)
+(arg4Isa filterBySoleMechanismAssumption Microtheory)
+(arg5Isa filterBySoleMechanismAssumption Set-Mathematical)
+(comment filterBySoleMechanismAssumption "Filter just those changes that were either directly influenced in the di-case or for which an audit-trail can be constructed to one of those quantities.")
+
+;;; Filter just those changes that were either directly influenced in the
+;;; di-case or for which an audit-trail can be constructed to one of those
+;;; quantities.
+;;; *** For now, screw the audit trail.  Just limit to independent quantity changes
+;;; *** influenced by just-learned dis, even if the influence is ambiguous.
+(<== (filterBySoleMechanismAssumption ?mt ?all-changes ?di-casename ?ii-spindle ?changes)
+     (evaluate ?changes
+       (TheClosedRetrievalSetOf ?indep-change
+         (and (lookupOnly (elementOf ?indep-change ?all-changes))
+              (unifies (quantityChange (?qtype ?entity) ?indep-magnitude) ?indep-change)
+              (isDirectlyInfluenced ?di-casename ?qtype)))))
+
+
+(isa induceIndirectInfluencesOnUninfluencedChanges ComplexActionPredicate)
+(arity induceIndirectInfluencesOnUninfluencedChanges 6)
+(arg1Isa induceIndirectInfluencesOnUninfluencedChanges Microtheory)
+(arg2Isa induceIndirectInfluencesOnUninfluencedChanges CycLSentence-Assertible)
+(arg3Isa induceIndirectInfluencesOnUninfluencedChanges Set-Mathematical)
+(arg4Isa induceIndirectInfluencesOnUninfluencedChanges Microtheory)
+(arg5Isa induceIndirectInfluencesOnUninfluencedChanges Microtheory)
+(arg6Isa induceIndirectInfluencesOnUninfluencedChanges Microtheory)
+(comment induceIndirectInfluencesOnUninfluencedChanges "(induceIndirectInfluencesOnUninfluencedChanges ?mt ?dep-change ?changes ?ii-casename ?ii-spindlename ?di-spindlename)")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceIndirectInfluencesOnUninfluencedChanges ?mt ?dep-change ?changes ?ii-casename ?ii-spindlename ?di-spindlename)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (induceIndirectInfluencesOnUninfluencedChanges ?mt ?dep-change ?changes ?ii-casename ?ii-spindlename ?di-spindlename) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; Only invoke induceIndirectInfluences on changes that were not explained by a di.
+(preconditionForMethod
+  (and (unifies (quantityChange ?quantity ?change-magnitude) ?change)
+       (uninferredSentence
+         (kbOnly (influenceHypothesisOn ?mt ?di-spindlename ?quantity ?influence))))
+  (methodForAction
+    (induceIndirectInfluencesOnUninfluencedChanges ?mt ?change ?all-changes ?ii-casename ?ii-spindlename ?di-spindlename)
+    (actionSequence
+      (TheList
+        (induceIndirectInfluences ?mt ?change ?all-changes ?ii-casename ?ii-spindlename)))))
+        
+;;; We're going to be conservative here and say that the same slot cannot
+;;; influence itself even on a different entity, unless the dependent
+;;; quantity is an aggregate.  This is a heuristic.  There are conceivably
+;;; some situations where it wouldn't hold.
+;(<== (nonInfluencer ?q1 ?q2)
+;     (unifies ((?functor1 ?pred) ?arg1) ?q1)
+;     (unifies ((?functor2 ?pred) ?arg2) ?q2)
+;     (different ?functor1 AggregateQuantityFn))
+     
+;;; ---------------------------------------------------------------
+;;; Induce Direct Influences
+
+;;; Direct influences are diachronic.  An i+ represents a constituent of a 
+;;; rate, so the influenced quantity can be expected to change.  
+;;; Unfortunately, there's no guarantee that the influencer (the rate) is
+;;; explicitly represented.  Also, there can be ambiguity if there are
+;;; multiple,  competing influences.  Under what conditions can we really
+;;; rule out a hypothesized influence?
+
+;;; According to the sole-mechanism-assumption, if something changes, then
+;;; ultimately there is a process somewhere that causes it.  In which case
+;;; there must be a direct influence somewhere, but there isn't necessarily 
+;;; a direct influence on any given changing quantity.  There could be a
+;;; mediating indirect influence somewhere.
+
+;;; Consider examples of i+ & i- influences:
+;;; (i+ citySize  cityGrowthRate)
+;;; (i+ cityFoodReserves cityFoodSurplus)
+;;; (i+ cityShieldReserves cityShieldSurplus)
+;;; (i+ cityScienceTotal currentScienceRate)
+;;; (i+ currentGold cityTaxTotal)
+;;; These are things we should be able to learn.
+
+
+;;; We keep the before/after so we can store a unique case.
+
+(isa induceDirectInfluences ComplexActionPredicate)
+(arity induceDirectInfluences 4)
+(arg1Isa induceDirectInfluences Microtheory)
+(arg2Isa induceDirectInfluences CycLSentence-Assertible)
+(arg3Isa induceDirectInfluences Microtheory)
+(arg4Isa induceDirectInfluences Microtheory)
+(comment induceDirectInfluences "(induceDirectInfluences ?mt ?quantity-changes ?casename ?spindlename) is a task that hypothesizes type-level direct influences to account for diachronic changes in a quantity (changes over time, across turns).")
+
+;;; This should only be invoked when both ?before and ?after exist.
+;;; In Freeciv, these are years.
+;;; quantityChange looks like this:
+;;; (quantityChange ((MeasurableQuantityFn currentBulbsResearched) FC-Player-KenForbus) 1)
+
+
+;;; Conservative induction:
+;;; 1) assume entities are the same (no going from city to civ, etc)
+;;;    In practice, influences between cities and player are indirect.
+;;; 2) assume exactly one direct influence (no summing of multiple DIs)
+;;; 3) assume units are the same (problematic, since rates aren't amounts, and
+;;;    TradePoints aren't Gold)
+;;; But if we can find a direct influence this way, that should be preferred,
+;;; and we can define alternative, less preferred methods for when this fails.
+;;; A direct influence detected on a quantity should override any prior
+;;; leafQuantity misapprehensions.  Whaat?  no!  If something appeared to be
+;;; a leaf quantity, then at the very least it changed instantaneously after
+;;; an action, so it *can't* be directly influenced.
+(preconditionForMethod
+  (and (unifies (quantityChange ?quantity ?change-magnitude) ?change-stmt)
+       (unifies (?qtype ?dep-entity) ?quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))
+       (iiSpindleFor ?di-spindle ?ii-spindle)
+       (uninferredSentence
+         (ist-Information ?ii-spindle
+           (leafQuantity (?qtype ?any-entity))))  ; don't look for dis on leaf quantities.
+       ;(uninferredSentence
+       ;  (kbOnly (ambiguousInfluenceHypothesisOn ?mt ?ii-spindle ?quantity ?influence)))
+       (infSpindleFor ?di-spindle ?inf-spindle)
+       (uninferredSentence
+         (kbOnly (influenceHypothesisOn ?mt ?inf-spindle ?quantity ?influence)))
+       (uninferredSentence
+         (discreteUnitaryChange  ?casename ?change-stmt ?num-turns))  ; not a step function
+       (magnitudeToValue ?qtype ?change-magnitude ?value)  ; apply units to the delta
+       (inferenceOnly (collectPotentialDirectInfluencers ?mt ?quantity ?value ?change-magnitude ?influencers))
+       (different ?influencers (TheSet))  ; don't care yet if it's ambiguous
+       (evaluate ?rel-stmts
+         (TheClosedRetrievalSetOf ?rel-stmt
+           (and (lookupOnly (elementOf ?entry ?influencers))
+                (unifies ((?indep-quantity ?indep-value?indep-entity) ?rel) ?entry)
+                (different ?rel equals)                                 ; not assertible
+                (unifies ?rel-stmt (?rel ?dep-entity ?indep-entity)))))
+       (evaluate ?value-stmts
+         (TheClosedRetrievalSetOf ?value-stmt
+           (and (lookupOnly (elementOf ?entry ?influencers))
+                (unifies (?indep-quantity ?indep-value ?rel) ?entry)
+                (unifies ?value-stmt (quantityValue ?indep-quantity ?indep-value))))))  ; We've filtered out influencers with values different from change magnitude
+  (methodForAction
+    (induceDirectInfluences ?mt ?change-stmt ?casename ?di-spindle)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext ?casename ?rel-stmts)   ; augment the case with pertinent relational facts
+        (doRecordMembersInContext ?casename ?value-stmts) ; augment the case with relevant value statements
+        (induceFromPotentialInfluencers ?mt ?change-stmt ?value ?casename ?inf-spindle ?influencers)))))
+
+
+
+(isa induceFromPotentialInfluencers ComplexActionPredicate)
+(arity induceFromPotentialInfluencers 6)
+
+;;; Case of unambiguous direct influencer:
+(preconditionForMethod
+  (matches (TheSet ?singleton) ?influencers) ; unambiguous influencer
+  (methodForAction
+    (induceFromPotentialInfluencers ?mt ?change-stmt ?value ?casename ?inf-spindle ?influencers)
+    (actionSequence
+      (TheList
+        (doForEach (?indep-q ?indep-value ?rel) ?influencers ; lift & record type-level direct influence statements
+          (induceDirectInfluenceBetween ?mt ?change-stmt ?indep-q ?indep-value ?rel ?casename ?inf-spindle))))))
+
+;;; Ambiguous direct influencer (due to an indirect influence between them
+;;; with ambiguous directionality).
+;;; NOTE: The influencers are actually [quantity, rel] pairs.
+;;; They are neither true influence statements nor quantities.
+(preconditionForMethod
+  (and (evaluate ?num (CardinalityFn ?influencers))
+       (greaterThan ?num 1)  ; ambiguous di
+       (unifies (quantityChange (?qtype ?dep-entity) ?change-magnitude) ?change-stmt)
+       ;(matches (TheSet ?inf-pair1 ?inf-pair2) ?influencers) 
+       ; check for known ambiguous influencers
+       ;(unifies (?q1 equals) ?inf-pair1)
+       ;(unifies (?q2 equals) ?inf-pair2)
+       ;(ambiguousInfluenceHypothesisBetween ?ii-spindle ?q1 ?q2)
+       )
+  (methodForAction
+    (induceFromPotentialInfluencers ?mt ?change-stmt ?value ?casename ?inf-spindle ?influencers)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Hypothesizing direct influence on ~s from ~s ambiguous possibilities." (?qtype ?num))
+        (doRecord (ist-Information ?casename (directlyInfluenced ?qtype)))))))
+
+;;;
+;;; Case where prior hypothesized influence does *not* hold.
+;;; *** ToDo: Fix this so it doesn't throw out valid influences when city size changes.
+;;; *** Also, we're getting:
+;;; *** Induce direct influences on (quantityChange ((MeasurableQuantityFn citySize) FC-City-Washington) 1)
+;;; *** in (DICaseFn fc-game18 (YearFn -3400)).
+;;; *** Seems to be violated: 
+;;; ***   (TheSet (i+TypeType (MeasurableQuantityFn cityShieldReserves)
+;;; ***                       (DependentQuantityFn 
+;;; ***                         (TheSet (MeasurableQuantityFn cityShieldProduction) 
+;;; ***                                 (MeasurableQuantityFn cityShieldSurplus)))
+;;; ***                       FreeCiv-City FreeCiv-City equals))
+
+(preconditionForMethod
+  (and (unifies (quantityChange ?dep-quantity ?change-magnitude) ?change-stmt)
+       (unifies (?qtype ?dep-entity) ?dep-quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))
+       (evaluate ?type-level-influences
+         (TheClosedRetrievalSetOf ?influence
+           (kbOnly (influenceHypothesisOn ?mt ?di-spindle ?dep-quantity ?influence))))
+       (different ?type-level-influences (TheSet))
+       (uninferredSentence
+         ;(satisfiesHypothesizedTypeLevelInfluences ?mt ?dep-quantity ?change-magnitude ?type-level-influences ?casename)
+         (satisfiesTypeLevelInfluences ?dep-quantity ?change-magnitude ?casename ?type-level-influences)
+         ))
+  (methodForAction
+    (induceDirectInfluences ?mt ?change-stmt ?casename ?di-spindle)
+    (actionSequence
+      (TheList
+        (explainDIViolation ?mt ?dep-quantity ?type-level-influences ?casename ?di-spindle)))))
+
+;;; default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceDirectInfluences ?mt ?change-stmt ?casename ?spindlename)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (induceDirectInfluences ?mt ?change-stmt ?casename ?spindlename) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa explainDIViolation ComplexActionPredicate)
+(arity explainDIViolation 5)
+(arg1Isa explainDIViolation Microtheory)
+(arg2Isa explainDIViolation Quantity)
+(arg3Isa explainDIViolation Set-Mathematical)
+(arg4Isa explainDIViolation Microtheory)
+(arg5Isa explainDIViolation Microtheory)
+(comment explainDIViolation "(explainDIViolation ?mt ?dep-quantity ?type-level-influences ?casename ?di-spindle) is a task that attempts to explain a violation of a previously hypothesized direct influence.  In the case of a sudden discontinuity, it looks for likely process limits.")
+
+;;; The dependent quantity is presumably some accumulator that got reset somehow
+;;; or else it's not a valid DI.  Try to find a process limit to explain the 
+;;; discontinuity.
+(preconditionForMethod
+  (ignoreTimestamps
+    (uninferredSentence
+      (explainableByProcessLimit ?casename ?dep-quantity ?type-level-influences ?condition ?event-types)))
+  (methodForAction
+    (explainDIViolation ?mt ?dep-quantity ?type-level-influences ?casename ?di-spindle)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Seems to be violated: ~s" (?type-level-influences))
+        (doForEach ?inf ?type-level-influences
+          (actionSequence
+            (TheList
+              (doRecord 
+                (ist-Information ?casename
+                  (counterExample ?inf 1 ?dep-quantity)))  ; it is a counter example, but it doesn't necessarily invalidate the influence
+               ;; Now go off and diagnose the problem.  process-delimited?
+              (retractOnThreeStrikesRule ?mt ?inf ?casename ?di-spindle))))
+        ))))
+
+(preconditionForMethod
+  (and (ignoreTimestamps
+         (explainableByProcessLimit ?casename ?dep-quantity ?type-level-influences ?condition ?event-types))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain)))
+  (methodForAction
+    (explainDIViolation ?mt ?dep-quantity ?type-level-influences ?casename ?di-spindle)
+    (actionSequence
+      (TheList
+        (doForEach ?inf ?type-level-influences ;;  Write something out here!
+          (doRecord (ist-Information ?lkmt (hypothesizedProcessLimit ?inf ?condition ?event-types))))
+        (doAnnounce "~&Influence ~s ~% is conditioned on: ~s~% and bounded by event types: ~s" (?type-level-influences ?condition ?event-types))))))
+
+(isa explainableByProcessLimit QuintaryPredicate)
+(arity explainableByProcessLimit 5)
+(arg1Isa explainableByProcessLimit Microtheory)
+(arg2Isa explainableByProcessLimit Quantity)
+(arg3Isa explainableByProcessLimit Set-Mathematical)
+(arg4Isa explainableByProcessLimit CycLFormula)
+(arg5Isa explainableByProcessLimit Set-Mathematical)
+(comment explainableByProcessLimit "(explainableByProcessLimit ?casename ?dep-quantity ?type-level-influences ?condition ?event-types) means the violation of direct influences on ?dep-quantity coincide with domain-level events that coincide with the termination of a linear trend.")
+
+;;; find a domain event that occurs at ?when
+;;; find a trend on ?dep-quantity that terminated at ?when
+(<== (explainableByProcessLimit ?di-case ?dep-quantity ?type-level-influences ?condition ?event-types)
+     (priorDICase ?di-case ?prior)
+     (linearTrend ?prior ?dep-quantity ?starting-turn ?delta)
+     (unifies (DICaseFn ?mt ?ending-turn) ?di-case)
+     (commonEventTypesOn ?mt ?starting-turn ?ending-turn ?event-types)
+     (quantityConditionBetween ?dep-quantity (DICaseFn ?mt ?starting-turn) ?prior  ?condition))
+
+;;; Zero makes a good process limit.
+;;; *** But it doesn't bind ?condition or ?event-types!!
+(<== (explainableByProcessLimit ?di-case ?dep-quantity ?type-level-influences ?condition ?event-types)
+     (unifies ((MeasurableQuantityFn ?slot) ?dep-entity) ?dep-quantity)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?di-case
+           (addedStatement (?slot ?dep-entity ?value)))))
+     (isZeroQuantity ?value))
+
+(isa commonEventTypesOn QuaternaryPredicate)
+(arity commonEventTypesOn 4)
+(arg1Isa commonEventTypesOn Microtheory)
+(arg2Isa commonEventTypesOn Set-Mathematical)
+(arg3Isa commonEventTypesOn Set-Mathematical)
+(arg4Isa commonEventTypesOn Set-Mathematical)
+(comment commonEventTypesOn "(commonEventTypesOn ?mt ?turn1 ?turn2 ?types) binds ?types to a set of domain-level entity types that occur in both turns in ?mt on the same entities.")
+
+(<== (commonEventTypesOn ?mt ?turn1 ?turn2 ?types)
+     (eventTypeAgentPairs ?mt ?turn1 ?turn1-pairs)
+     (eventTypeAgentPairs ?mt ?turn2 ?turn2-pairs)
+     (eventTypeAgentIntersection ?turn1-pairs ?turn2-pairs ?types))
+
+(isa eventTypeAgentPairs TernaryPredicate)
+(arity eventTypeAgentPairs 3)
+(arg1Isa eventTypeAgentPairs Microtheory)
+(arg2Isa eventTypeAgentPairs TimeInterval)
+(arg3Isa eventTypeAgentPairs Set-Mathematical)
+(comment eventTypeAgentPairs "(eventTypeAgentPairs ?mt ?turn ?pairs) binds ?paris to a set of (event-type entity) 2-tuples.")
+
+(<== (eventTypeAgentPairs ?mt ?turn ?pairs)
+     (evaluate ?pairs
+       (TheClosedRetrievalSetOf ?pair
+         (and (ist-Information ?mt
+                (dateOfEvent ?turn-event ?turn))
+              (domainEvent ?mt ?turn-event)
+              (lookupOnly
+                (localOnly
+                  (allFActsAllowed          ;; *** was kbOnly
+                    (ist-Information ?mt
+                      (isa ?turn-event ?turn-event-type)))))
+              (different ?turn-event-type PerceptualAgentEvent)
+              (lookupOnly
+                (localOnly
+                  (ist-Information ?mt
+                    (doneBy ?turn-event ?who))))    ; note: This fails for GameStartedEvent, CityBuiltEvent, UnitDestructionEvent...
+              (unifies ?pair (?turn-event-type ?who))))))
+
+(isa eventTypeAgentIntersection TernaryPredicate)
+(arity eventTypeAgentIntersection 3)
+(arg1Isa eventTypeAgentIntersection Set-Mathematical) ; a tuple
+(arg2Isa eventTypeAgentIntersection Set-Mathematical)
+(arg3Isa eventTypeAgentIntersection Set-Mathematical)
+(comment eventTypeAgentIntersection "(eventTypeAgentIntersection ?pairs1 ?pairs2 ?types) collects the set of event types in the common intersection of two sets of (event-type agent) pairs.")
+
+;;; Collect the intersection based on isa & doneBy.
+(<== (eventTypeAgentIntersection ?pairs1 ?pairs2 ?types)
+     (evaluate ?pairwise-intersection
+       (SetOrCollectionIntersection ?pairs1 ?pairs2))  ; sets of binary tuples
+     (evaluate ?types
+       (TheClosedRetrievalSetOf ?event-type
+         (and (lookupOnly (elementOf ?pair ?pairwise-intersection))
+              (natFunction ?pair ?event-type)))))
+
+(isa quantityConditionBetween QuaternaryPredicate)
+(arity quantityConditionBetween 4)
+
+(<== (quantityConditionBetween ?quantity ?earlier ?later ?condition)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?earlier
+           (quantityValue ?quantity ?earlier-value))))  ; won't work if quantityValue is a dynamicUpdatePredicate
+     (lookupOnly
+       (localOnly
+         (ist-Information ?later
+           (quantityValue ?quantity ?later-value))))    ; won't work if quantityValue is a dynamicUpdatePredicate
+     (valueToMagnitude ?earlier-value ?num1)
+     (valueToMagnitude ?later-value ?num2)
+     (qualitativeRelationBetween ?num1 ?num2 ?qrel)
+     (unifies (?qtype ?entity) ?quantity)
+     (unifies ?condition (?qrel ?qtype ?later-value)))
+
+(isa qualitativeRelationBetween TernaryPredicate)
+(arity qualitativeRelationBetween 3)
+
+(<== (qualitativeRelationBetween ?num1 ?num2 qLessThan)
+     (lessThan ?num1 ?num2))
+
+(<== (qualitativeRelationBetween ?num1 ?num2 qGreaterThan)
+     (greaterThan ?num1 ?num2))
+
+(<== (qualitativeRelationBetween ?num ?num qEqualTo))
+
+     
+;;; --------------------------
+
+(isa collectPotentialDirectInfluencers QuintaryPredicate)
+(arity collectPotentialDirectInfluencers 5)
+(arg1Isa collectPotentialDirectInfluencers Microtheory)
+(arg2Isa collectPotentialDirectInfluencers Quantity)
+(arg3Isa collectPotentialDirectInfluencers ContinuousQuantity)
+(arg4Isa collectPotentialDirectInfluencers ScalarInterval)
+(arg5Isa collectPotentialDirectInfluencers Set-Mathematical)
+(comment collectPotentialDirectInfluencers "(collectPotentialDirectInfluencers ?mt ?quantity ?value ?magnitude ?influencers) binds ?influencers, a set of (?independent-quantity ?binrel) pairs.")
+
+(<== (collectPotentialDirectInfluencers ?mt ?quantity ?dep-value ?dep-magnitude ?influencers) ; tuples of (indep-quantity indep-value rel)
+     (evaluate ?initial-set
+       (TheClosedRetrievalSetOf (?influencer ?indep-value ?rel)
+         (inferenceOnly (possibleDirectInfluencer ?mt ?quantity ?dep-value ?dep-magnitude ?indep-value ?influencer ?rel))))
+     (inferenceOnly
+       (augmentBy ?initial-set    ; only if initial set is empty do we try to augment it
+         (evaluate ?augmented-set 
+           (TheClosedRetrievalSetOf (?influencer ?indep-value ?rel)
+             (inferenceOnly 
+               (possibleCrossEntityDirectInfluencer ?mt ?quantity ?dep-value ?dep-magnitude ?indep-value ?influencer ?rel))))
+         ?influencers)))
+     ;; *** TBD: prefer singleton sets by retaining known direct influences if possible.
+
+
+;;; Make a variant of this that just proposes influencers on the same entity:
+
+(isa possibleDirectInfluencer Predicate)
+(arity possibleDirectInfluencer 7)
+(arg1Isa possibleDirectInfluencer Microtheory)
+(arg2Isa possibleDirectInfluencer Quantity)
+(arg3Isa possibleDirectInfluencer ContinuousQuantity)
+(arg4Isa possibleDirectInfluencer ScalarInterval)
+(arg5Isa possibleDirectInfluencer ContinuousQuantity)
+(arg6Isa possibleDirectInfluencer Quantity)
+(arg7Isa possibleDirectInfluencer BinaryRelation)
+(comment possibleDirectInfluencer "(possibleDirectInfluencer ?mt ?quantity ?dep-value ?dep-magnitude ?indep-value ?influencer ?rel) enumerates possible influencer quantities and the propositional relation between their entities.")
+
+;;; Other quantities on the same entity.
+;;; If we identify a viable independent direct influencer on the same entity, that
+;;; should override hypothesized indirect influencers.  We'll identify and prune them
+;;; later.
+;;; Note: Even if we require them to have the same magnitudes, the dependent value
+;;; and the independent value may have opposite signs.  They must be kept separate.
+(<== (possibleDirectInfluencer ?mt ?quantity ?dep-value ?dep-magnitude ?indep-value ?influencer equals)
+     (evaluate ?abs-value (AbsoluteValueFn ?dep-magnitude))  ; Does dep-value have units??
+     (unifies (?quantity-type ?entity) ?quantity)
+     (ist-Information ?mt (quantityMentions ?influencer ?entity))
+     (different ?influencer ?quantity)
+     (numAnswers 1 
+       (wmOnly (priorValue ?mt ?influencer ?indep-value)))
+     (valueToMagnitude ?indep-value ?indep-magnitude)  ; we should really check that units are compatible...
+     (evaluate ?abs-value (AbsoluteValueFn ?indep-magnitude))          ;; change might be negative
+     (compatibleUnits ?dep-value ?indep-value)
+     ;; We can't rule out a DI just because an II was hypothesized first.
+     ;; Return it, then reason about who wins.
+;     (unifies (?indep-qtype ?entity) ?influencer)
+;     (uninferredSentence
+;       (contextEnvAllowed
+;         (lookupOnly
+;           (ist-Information ?ii-spindle
+;             (hypothesis 
+;               (?ii-pred ?any-qtype ?indep-qtype ?col1 ?col2 ?rel))))))  ; no mixed influences
+     )
+
+
+(isa compatibleUnits BinaryPredicate)
+(arity compatibleUnits 2)
+(arg1Isa compatibleUnits ContinuousQuantity)
+(arg2Isa compatibleUnits ContinuousQuantity)
+(comment compatibleUnits "(compatibleUnits ?dep-q ?indep-q) succeeds if quantity units are either the same, or if ?indep-q could be a rate of ?dep-q")
+
+(<== (compatibleUnits ?dep-q ?indep-q)
+     (valueToUnits ?dep-q ?dep-units)
+     (valueToUnits ?indep-q ?dep-units))
+     
+(<== (compatibleUnits ?dep-q ?indep-q)
+     (valueToUnits ?dep-q ?dep-units)
+     (valueToUnits ?indep-q ?indep-units)
+     (different ?dep-q ?indep-q)
+     (unifies (PerFn ?dep-units ?time) ?indep-units))
+
+(isa possibleCrossEntityDirectInfluencer Predicate)
+(arity possibleCrossEntityDirectInfluencer 7)
+(arg1Isa possibleCrossEntityDirectInfluencer Microtheory)
+(arg2Isa possibleCrossEntityDirectInfluencer Quantity)
+(arg3Isa possibleCrossEntityDirectInfluencer ContinuousQuantity)
+(arg4Isa possibleCrossEntityDirectInfluencer ScalarInterval)
+(arg5Isa possibleCrossEntityDirectInfluencer ContinuousQuantity)
+(arg6Isa possibleCrossEntityDirectInfluencer Quantity)
+(arg7Isa possibleCrossEntityDirectInfluencer BinaryRelation)
+(comment possibleCrossEntityDirectInfluencer "(possibleCrossEntityDirectInfluencer ?mt ?quantity ?dep-value ?dep-magnitude ?indep-value ?influencer ?rel) enumerates possible influencer quantities and the propositional relation between their entities.")
+
+
+;;; Other quantities on related, liftable, entities.
+;;; These should not override prior indirect influences unless those are also cross-entity
+(<== (possibleCrossEntityDirectInfluencer ?mt ?quantity ?dep-value ?dep-magnitude ?indep-value ?influencer ?rel)
+     (evaluate ?abs-value (AbsoluteValueFn ?dep-magnitude))
+     (unifies (?dep-qtype ?entity) ?quantity)
+     (ist-Information ?mt (domainInitiallyRelationBetween ?rel ?entity ?other-entity))  ;; *** Freeciv-specific (currently)
+     (different ?entity ?other-entity)
+     (ist-Information ?mt (quantityMentions ?influencer ?other-entity))        ;; *** Freeciv-specific outsourced pred
+     (numAnswers 1 
+       (wmOnly (priorValue ?mt ?influencer ?indep-value)))
+     (valueToMagnitude ?indep-value ?indep-magnitude)
+     (evaluate ?abs-value (AbsoluteValueFn ?indep-magnitude))
+     (unifies (?indep-qtype ?other-entity) ?influencer) ; destructure
+;     (uninferredSentence
+;       (impliesMixedInfluence ?dep-qtype ?indep-qtype ?ii-spindle equals ?inf))
+     )
+     
+(isa domainInitiallyRelationBetween TernaryPredicate)
+
+
+;(isa impliesMixedInfluence TernaryPredicate)
+;(arity impliesMixedInfluence 5)
+;(arg1Isa impliesMixedInfluence QuantityType)
+;(arg2Isa impliesMixedInfluence QuantityType)
+;(arg3Isa impliesMixedInfluence Microtheory)
+;(arg4Isa impliesMixedInfluence BinaryRelation)
+;(arg5Isa impliesMixedInfluence CycLSentence-Assertible)
+;(comment impliesMixedInfluence "(impliesMixedInfluence ?qtype1 ?qtype2 ?spindle-microtheory ?rel ?influence) means either ?qtype1 or ?qtype2 already participate in a hypothesized influence in influence-case spindle.")
+
+;(<== (impliesMixedInfluence ?qtype1 ?qtype2 ?spindle-mt ?rel ?inf)
+;     (contextEnvAllowed
+;       (lookupOnly
+;         (kbOnly  ; wm barfs on variablized pred
+;           (ist-Information ?spindle-mt
+;             (?hypothesis
+;               (?inf-pred ?any-qtype ?qtype2 ?col1 ?col2 ?rel))))))
+;     (different ?hypothesis counterExample) ; can't be - this is binary now
+;     (different ?hypothesis ambiguousInfluenceDirection)
+;     (unifies ?inf 
+;       (?hypothesis
+;         (?inf-pred ?any-qtype ?qtype2 ?col1 ?col2 ?rel))))  ; pass this back so we can retract it if need be
+;
+;(<== (impliesMixedInfluence ?qtype1 ?qtype2 ?spindle-mt ?rel ?inf)
+;     (contextEnvAllowed
+;       (lookupOnly
+;         (kbOnly
+;           (ist-Information ?spindle-mt
+;             (?hypothesis
+;               (?inf-pred ?qtype1 ?any-qtype ?col1 ?col2 ?rel))))))
+;     (different ?hypothesis counterExample)  ; can't be - this is binary now
+;     (different ?hypothesis ambiguousInfluenceDirection)
+;     (unifies ?inf 
+;       (?hypothesis
+;         (?inf-pred ?qtype1 ?any-qtype ?col1 ?col2 ?rel))))  ; pass this back so we can retract it if need be
+
+;;; priorValue is diectic.  We need a corresponding predicate priorCaseValue that looks at
+;;; the reified addedStatement and deletedStatements in a given influence case.  However the 
+;;; quantity values in influence cases indicate the value before the change.
+(isa priorValue TernaryPredicate)
+(isa priorValue DynamicUpdatePredicate)
+(arity priorValue 3)
+(arg1Isa priorValue Microtheory)
+(arg2Isa priorValue Quantity)
+(arg3Isa priorValue ContinuousQuantity)
+(comment priorValue "(priorValue ?mt ?quantity ?value) infers the previous value before the latest change.")
+
+(<== (priorValue ?mt ((MeasurableQuantityFn ?pred) ?entity) ?value)
+     (deletedValue ?mt ?pred ?entity ?value))
+
+(<== (priorValue ?mt ((MeasurableQuantityFn ?pred) ?entity) ?value)
+     (uninferredSentence
+       (deletedValue ?mt ?pred ?entity ?old-value))
+     (addedValue ?mt ?pred ?entity ?new-value)
+     (unifies (?units ?magnitude) ?new-value)  ; assumes units!
+     (unifies ?value (?units 0)))
+
+;;; This causes a problem for regression testing, since the regression test has no access to outsourced preds.
+(<== (priorValue ?mt ((MeasurableQuantityFn ?pred) ?entity) ?value)
+     (uninferredSentence
+       (deletedValue ?mt ?pred ?entity ?prior-value))
+     (uninferredSentence
+       (addedValue ?mt ?pred ?entity ?new-value))
+     (outsourcedOnly (counterValue eventCounter ?action-count)) ; This should never fail.  It may just return 1, though
+     ; don't slam ?value here, since not all outsourced preds behave nicely given the wrong units
+     (numAnswers 1 (currentValue ?mt ?action-count ?pred ?entity ?prior-value)) 
+     (unifies ?value ?prior-value))
+
+(<== (priorValue ?mt ((AggregateQuantityFn ?pred) ?coll) ?value)
+     (bufferedValue ((AggregateQuantityFn ?pred) ?coll) ?value))  ;; Freeciv-specific (for now)
+
+(isa currentValue QuintaryPredicate)
+(arity currentValue 5)
+(arg1Isa currentValue Microtheory)
+(arg2Isa currentValue Integer)
+(arg3Isa currentValue BinaryRelation)
+(arg4Isa currentValue Thing)
+(arg5Isa currentValue ContinuousQuantity)
+(comment currentValue "(currentValue ?mt ?action-count ?pred ?entity ?value) binds the current value of pred, and reifies it (if necessary) in a regression-test.")
+
+;;; Let there be a tell-handler on currentValue that will see if there's an open 
+;;; regression stream and write out the statement to that stream.
+;;; When running a saved regression test, it should just find that fact in wm.
+;;; The count is necessary since this can't be diectic, but turns are too granular.
+(<== (currentValue ?mt ?count ?pred ?entity ?value)  ; justification of this doesn't go through tell-handlers
+     (numAnswers 1
+       (ist-Information ?mt 
+         (?pred ?entity ?value)))  ; typically outsourced.
+     (tell 
+       (ist-Information ?mt 
+         (regressionTestValue ?mt ?count ?pred ?entity ?value))))
+
+(isa deletedValue QuaternaryPredicate)
+(isa deletedValue DynamicUpdatePredicate)
+(arity deletedValue 4)
+(arg1Isa deletedValue Microtheory)
+(arg2Isa deletedValue BinaryRelation)
+(arg3Isa deletedValue Thing)
+(arg4Isa deletedValue ContinuousQuantity)
+(comment deletedValue "(deletedValue ?mt ?pred ?entity ?value) means the statement (?pred ?entity ?value) was retracted during the last event.")
+
+(<== (deletedValue ?mt ?pred ?entity ?value)
+     (outsourcedOnly (ist-Information ?mt (currentDeleteList ?delete-list)))
+     (subexpressionMatching (?pred ?entity ?val) ?delete-list ?stmt)
+     (formulaArgument ?stmt 2 ?value))
+
+
+(isa addedValue QuaternaryPredicate)
+(isa addedValue DynamicUpdatePredicate)
+(arity addedValue 4)
+(arg1Isa addedValue Microtheory)
+(arg2Isa addedValue BinaryRelation)
+(arg3Isa addedValue Thing)
+(arg4Isa addedValue ContinuousQuantity)
+(comment addedValue "(addedValue ?mt ?pred ?entity ?value) means the statement (?pred ?entity ?value) was added during the last event.")
+
+(<== (addedValue ?mt ?pred ?entity ?value)
+     (outsourcedOnly (ist-Information ?mt (currentAddList ?add-list)))
+     (subexpressionMatching (?pred ?entity ?val) ?add-list ?stmt)
+     (formulaArgument ?stmt 2 ?value))
+
+;;; currentQuantityChange is a dynamic update predicate defined in quantity-reasoning.meld.
+(<== (currentQuantityChange ?quantity ?change)
+     (currentQuantityValue ?quantity ?value)
+     (executionContext ?mt)
+     (priorValue ?mt ?quantity ?old-value)
+     (valueToMagnitude ?value ?current-magnitude)
+     (valueToMagnitude ?old-value ?old-magnitude)
+     (evaluate ?change (DifferenceFn ?current-magnitude ?old-magnitude)))
+
+
+(isa priorCaseValue TernaryPredicate)  ; Not dynamicUpdate!
+(arity priorCaseValue 3)
+(arg1Isa priorCaseValue Microtheory)
+(arg2Isa priorCaseValue Quantity)
+(arg3Isa priorCaseValue ContinuousQuantity)
+(comment priorCaseValue "(priorCaseValue ?influence-case ?quantity ?value) binds the initial ?value of the designated ?quantity, before the change.")
+
+(<== (priorCaseValue ?case ?quantity ?value)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?case
+           (quantityValue ?quantity ?value)))))
+
+(isa afterCaseValue TernaryPredicate)  ; Not dynamicUpdate!
+(arity afterCaseValue 3)
+(arg1Isa afterCaseValue Microtheory)
+(arg2Isa afterCaseValue Quantity)
+(arg3Isa afterCaseValue ContinuousQuantity)
+(comment afterCaseValue "(afterCaseValue ?influence-case ?quantity ?value) binds the final ?value of the designated ?quantity, after the change.")
+
+
+(<== (afterCaseValue ?case ?quantity ?value)
+     (priorCaseValue ?case ?quantity ?prior-value)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?case
+             (quantityChange ?quantity ?change-magnitude)))))
+     (addMagnitudeToValue ?prior-value ?change-magnitude ?value))
+
+
+(isa addMagnitudeToValue TernaryPredicate)  ; not a great name.
+(arity addMagnitudeToValue 3)
+(comment addMagnitudeToValue "(addMagnitudeToValue ?quantity-value ?change-magnitude ?new-value)")
+
+(<== (addMagnitudeToValue (?units ?magnitude) ?change ?value)
+     (evaluate ?new-magnitude (PlusFn ?magnitude ?change))
+     (unifies ?value (?units ?new-magnitude)))
+
+(<== (addMagnitudeToValue ?old-magnitude ?change ?value)
+     (not (variableExpression ?old-magnitude))
+     (atomicTerm ?old-magnitude)
+     (isa ?old-magnitude RealNumber)
+     (evaluate ?value (PlusFn ?old-magnitude ?change)))
+
+
+;;; This needs to take the dependent quantity in order to potentially use the
+;;; newfound DI to resolve prior ambiguous II.
+;(isa coalesceAmbiguousInfluencers QuaternaryPredicate)
+;(arity coalesceAmbiguousInfluencers 4)
+;(arg1Isa coalesceAmbiguousInfluencers Microtheory)
+;(arg2Isa coalesceAmbiguousInfluencers Microtheory)
+;(arg3Isa coalesceAmbiguousInfluencers Set-Mathematical)
+;(arg4Isa coalesceAmbiguousInfluencers Set-Mathematical)
+;(comment coalesceAmbiguousInfluencers "(coalesceAmbiguousInfluencers ?mt ?di-spindle ?influencers ?canonical-influencers)")
+
+;;; ?influencers and ?canonical-influencers are sets of (?quantity ?relationship) pairs.
+;(<== (coalesceAmbiguousInfluencers ?mt ?di-spindle ?influencers ?canonical-influencers)
+;     (matches (TheSet ?influencer1 ?influencer2) ?influencers)
+;     (iiSpindleFor ?di-spindle ?ii-spindle)
+;     (unifies (?q1 ?rel) ?influencer1)
+;     (unifies (?q2 ?rel) ?influencer2)  ; we're going to require entities to be the same here.
+;     (numAnswers 1
+;       (ambiguousIndirectRelationBetween ?mt ?ii-spindle ?q1 ?q2 ?influence))
+;     (unifies ?canonical-influencers (TheSet (((DependentQuantityFn ?influence) ?entity) ?rel))))
+
+;(<== (coalesceAmbiguousInfluencers ?mt ?di-spindle ?influencers ?influencers)
+;     (matches (TheSet ?influencer) ?influencers))
+
+;;; hypothesis is of form: (?pred ?indep-qype ?dep-qtype ?coll1 ?coll2 ?rel)
+;;; This only works when the ?rel is equals.  Otherwise, the tms barfs.
+;(<== (ambiguousIndirectRelationBetween ?mt ?ii-spindle ?q1 ?q2 ?set-of-qtypes)
+;     (not (variableExpression ?q1))
+;     (not (variableExpression ?q2))
+;     (unifies (?qtype1 ?entity1) ?q1)
+;     (unifies (?qtype2 ?entity2) ?q2)
+;     (lookupOnly
+;       (ist-Information ?ii-spindle
+;         (ambiguousInfluenceDirection (?pred ?qtype1 ?qtype2 ?coll ?coll equals))))
+;     (ist-Information ?mt
+;       (isa ?entity1 ?coll))
+;     (ist-Information ?mt
+;       (isa ?entity2 ?coll))
+;     ;; Try to keep the set in a canonical order.  Maybe we should just use a list...
+;     (evaluate ?set-of-qtypes (ListToSetFn (SortFn (TheList ?qtype1 ?qtype2) (Kappa (?one ?two) (alphalessp ?one ?two)) IdentityFn))))
+     
+;(<== (ambiguousIndirectRelationBetween ?mt ?ii-spindle ?q2 ?q1 ?set-of-qtypes)
+;     (not (variableExpression ?q1))
+;     (not (variableExpression ?q2))
+;     (unifies (?qtype1 ?entity1) ?q1)
+;     (unifies (?qtype2 ?entity2) ?q2)
+;     (lookupOnly
+;       (ist-Information ?ii-spindle
+;         (ambiguousInfluenceDirection (?pred ?qtype1 ?qtype2 ?coll ?coll equals))))
+;     (ist-Information ?mt
+;       (isa ?entity1 ?coll))
+;     (ist-Information ?mt
+;       (isa ?entity2 ?coll))
+;     ;; Try to keep the set in a canonical order.  Maybe we should just use a list...
+;     (evaluate ?set-of-qtypes (ListToSetFn (SortFn (TheList ?qtype1 ?qtype2) (Kappa (?one ?two) (alphalessp ?one ?two)) IdentityFn))))
+
+
+;(<== (canonicalizeInfluencer ?mt ?spindle ?influencer ?influencer) ; ?spindle could be the general influence spindle or the ii-spindle.
+;     (not (variableExpression ?influencer))
+;     (uninferredSentence
+;       (lookupAmbiguousInfluencer ?mt ?spindle ?influencer ?canonicalized-influencer)))
+
+;(<== (canonicalizeInfluencer ?mt ?spindle ?influencer ?canonicalized-influencer)
+;     (lookupAmbiguousInfluencer ?mt ?spindle ?influencer ?canonicalized-influencer))
+;
+;;; probably should coordinate better with ambiguousIndirectRelationBetween
+;(<== (lookupAmbiguousInfluencer ?mt ?ii-spindle ?influencer ?canonicalized-influencer)
+;     (not (variableExpression ?influencer))
+;     (unifies (?qtype ?entity) ?influencer)
+;     (lookupOnly
+;       (ist-Information ?ii-spindle
+;         (ambiguousInfluenceDirection (?pred ?qtype ?other-qtype ?coll1 ?coll2 equals))))
+;     (evaluate ?oset (ListToSetFn (SortFn (TheList ?qtype ?other-qtype) (Kappa (?one ?two) (alphalessp ?one ?two)) IdentityFn))) ; "ordered set".  simplifies lookup.
+;     (unifies ?canonicalized-influencer ((DependentQuantityFn ?oset) ?entity)))
+     
+;(<== (lookupAmbiguousInfluencer ?mt ?ii-spindle ?influencer ?canonicalized-influencer)
+;     (not (variableExpression ?influencer))
+;     (unifies (?qtype ?entity) ?influencer)
+;     (lookupOnly
+;       (ist-Information ?ii-spindle
+;         (ambiguousInfluenceDirection (?pred ?other-qtype ?qtype ?coll1 ?coll2 equals))))
+;     (evaluate ?oset (ListToSetFn (SortFn (TheList ?qtype ?other-qtype) (Kappa (?one ?two) (alphalessp ?one ?two)) IdentityFn))) ; "ordered set".  simplifies lookup.
+;     (unifies ?canonicalized-influencer ((DependentQuantityFn ?oset) ?entity)))
+
+
+
+(isa induceDirectInfluenceBetween ComplexActionPredicate)
+(arity induceDirectInfluenceBetween 7)
+(arg1Isa induceDirectInfluenceBetween Microtheory)
+(arg2Isa induceDirectInfluenceBetween CycLSentence-Assertible)
+(arg3Isa induceDirectInfluenceBetween ContinuousQuantity)
+(arg4Isa induceDirectInfluenceBetween ContinuousQuantity)
+(arg5Isa induceDirectInfluenceBetween BinaryRelation)
+(arg6Isa induceDirectInfluenceBetween Microtheory)
+(arg7Isa induceDirectInfluenceBetween Microtheory)
+(comment induceDirectInfluenceBetween "(induceDirectInfluenceBetween ?mt ?change-stmt ?influencer ?value ?rel ?casename ?inf-spindle) proposes a direct influence between the rate quantity in ?value-stmt and the quantity in ?change-stmt.")
+
+;;; Make this retract any conflicting indirect influences from the independent quantity.
+;;; ?indep-quantity could be of the form ((DependentQuantityFn (TheSet ?qtype1 ?qtype2)) ?entity)
+;;; ?value is the value of the *dependent* quantity.
+(preconditionForMethod
+  (and (unifies (quantityChange ?dep-quantity ?change-magnitude) ?change-stmt)
+       (different ?dep-quantity ?indep-quantity)
+       (uninferredSentence
+         (influencePathExists ?mt ?dep-quantity ?indep-quantity ?inf-spindle)) ; avoid redundant paths
+       (numAnswers 1
+         (directInfluenceTypeFromMagnitudes ?change-magnitude ?indep-value ?type)) ; figure out the polarity of influence
+       (evaluate ?redundant-influences
+         (TheClosedRetrievalSetOf ?inf
+           (completesLongerInfluencePath ?mt ?dep-quantity ?indep-quantity ?inf-spindle ?inf))))
+  (methodForAction
+    (induceDirectInfluenceBetween ?mt ?change-stmt ?indep-quantity ?indep-value ?rel ?casename ?inf-spindle)
+    (actionSequence
+      (TheList
+        (hypothesizeInfluence ?mt ?type ?dep-quantity ?change-magnitude ?indep-quantity ?rel ?casename)
+        (doAnnounce "~{~1@*~#[~:;~&Retracting redundant influence paths~@{~& ~s~^ ~}~]~}" (?redundant-influences)) ; gag if empty.
+        (doForgetInheritedFacts ?inf-spindle ?redundant-influences)))))
+
+;;; default
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (induceDirectInfluenceBetween ?mt ?change-stmt ?influencer ?indep-value ?rel  ?casename ?spindle)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (induceDirectInfluenceBetween ?mt ?change-stmt ?value-stmt ?casename ?spindle) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa directInfluenceTypeFromMagnitudes TernaryPredicate)
+(arity directInfluenceTypeFromMagnitudes 3)
+(arg1Isa directInfluenceTypeFromMagnitudes Number-General)
+(arg2Isa directInfluenceTypeFromMagnitudes Number-General)
+(arg3Isa directInfluenceTypeFromMagnitudes Predicate)
+(comment directInfluenceTypeFromMagnitudes "(directInfluenceTypeFromMagnitudes ?dep-mag ?indep-mag i+TypeType) ")
+   
+(<== (directInfluenceTypeFromMagnitudes ?dep-mag ?indep-mag i+)
+     (numAnswers 1 (isPositiveQuantity ?indep-mag))  ; no negative (or zero) rates allowed.
+     (numAnswers 1 (isPositiveQuantity ?dep-mag)))
+     
+(<== (directInfluenceTypeFromMagnitudes ?dep-mag ?indep-mag i-)
+     (numAnswers 1 (isPositiveQuantity ?indep-mag))  ; no negative (or zero) rates allowed.
+     (numAnswers 1 (isNegativeQuantity ?dep-mag)))
+     
+;;; Issue: What happens when we have many cities and a different city grows on each turn?
+;;; We'll have 3 consecutive violations of (i+ size growth-rate) at the type-level.
+(isa retractOnThreeStrikesRule ComplexActionPredicate)
+(arity retractOnThreeStrikesRule 4)
+(arg1Isa retractOnThreeStrikesRule Microtheory)
+(arg2Isa retractOnThreeStrikesRule CycLSentence-Assertible)
+(arg3Isa retractOnThreeStrikesRule Microtheory)
+(arg4Isa retractOnThreeStrikesRule Microtheory)
+(comment retractOnThreeStrikesRule "(retractOnThreeStrikesRule ?mt ?inf ?casename ?spindle) retracts known unsatisfied influences if they are consistently invalidated.")
+
+(preconditionForMethod
+  (uninferredSentence (thirdConsecutiveCounterexample ?casename ?inf))
+  (methodForAction
+    (retractOnThreeStrikesRule ?mt ?inf ?casename ?spindle)
+    (actionSequence
+      (TheList))))  ; here's where we might want to attribute to an event.
+
+
+;;; Draconian, but necessary for now:
+(preconditionForMethod
+  (thirdConsecutiveCounterexample ?casename ?inf)
+  (methodForAction
+    (retractOnThreeStrikesRule ?mt ?inf ?casename ?spindle)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Retracting after 3 strikes:~%  ~s" (?inf))
+        (doForgetInheritedFacts ?spindle
+           (hypothesis ?inf))))))
+           
+(isa thirdConsecutiveCounterexample BinaryPredicate)
+(arity thirdConsecutiveCounterexample 2)
+(arg1Isa thirdConsecutiveCounterexample Microtheory)
+(arg2Isa thirdConsecutiveCounterexample CycLSentence-Assertible)
+
+;;; Not even going to make this recursive.
+;;; Assume counterexample in ?di-case
+(<== (thirdConsecutiveCounterexample ?casename ?inf)
+     (priorCase ?casename ?prior-case)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?prior-case
+           (counterExample ?inf ?n ?quantity))))
+     (priorCase ?prior-case ?third-case)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?third-case
+           (counterExample ?inf ?n ?quantity)))))
+
+;;; ---------------------
+;;; Handling fractional rates
+;;;
+
+
+(preconditionForMethod
+  (and (unifies (quantityChange ?quantity ?change-magnitude) ?change-stmt)
+       (unifies (?qtype ?dep-entity) ?quantity)
+       (not (operatorFormulas AggregateQuantityFn ?qtype))
+       (uninferredSentence
+         (kbOnly (influenceHypothesisOn ?mt ?di-spindle ?quantity ?putative-influence)))
+       (discreteUnitaryChange  ?casename ?change-stmt ?num-turns)
+       ;; Look for a percentage that is roughly 100/numTurns that hasn't changed in numTurns
+       (evaluate ?min-value (QuotientFn 100 (PlusFn ?num-turns 1)))
+       (evaluate ?max-value (QuotientFn 100 ?num-turns))
+       (evaluate ?influencers
+         (TheClosedRetrievalSetOf ?indep-quantity
+           (possibleFractionalRateInfluencer ?casename ?quantity ?min-value ?max-value ?num-turns ?indep-quantity)))
+       (unifies (TheSet ?influencer) ?influencers) ; no ambiguity
+       ;(numAnswers 1 
+       ;  (wmOnly (priorValue ?mt ?influencer ?value)))
+       )
+  (methodForAction
+    (induceDirectInfluences ?mt ?change-stmt ?casename ?di-spindle)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Probable rate: ~s" (?influencer))
+        (induceDirectInfluenceBetween ?mt ?change-stmt ?influencer 1 equals ?casename ?di-spindle)
+      ))))
+
+(isa discreteUnitaryChange TernaryPredicate)
+(arity discreteUnitaryChange 3)
+(arg1Isa discreteUnitaryChange Microtheory)
+(arg2Isa discreteUnitaryChange CycLSentence-Assertible)
+(comment discreteUnitaryChange "(discreteUnitaryChange  ?di-case ?change ?num-turns) succeeds if ?change has magnitude 1 and hasn't changed in ?num-turns.")
+
+(<== (discreteUnitaryChange ?di-case (quantityChange ?quantity 1) ?turns)
+     (priorDICase ?di-case ?prior-case)
+     (changeIntegratedOverTurns ?prior-case ?quantity ?turns)
+     (greaterThan ?turns 1))
+
+(isa changeIntegratedOverTurns TernaryPredicate)
+(arity changeIntegratedOverTurns 3)
+(arg1Isa changeIntegratedOverTurns Microtheory)
+(arg2Isa changeIntegratedOverTurns CycLSentence-Assertible)
+(arg3Isa changeIntegratedOverTurns Integer)
+(comment changeIntegratedOverTurns "(changeIntegratedOverTurns ?di-case ?change ?num-turns)")
+
+;;; primordial case:
+(<== (changeIntegratedOverTurns ?di-case ?quantity 1)
+     (uninferredSentence
+       (priorDICase ?di-case ?prior)))
+
+(<== (changeIntegratedOverTurns ?di-case ?quantity 1)
+     (ist-Information ?di-case
+       (localOnly
+         (lookupOnly
+           (numAnswers 1
+             (quantityChange ?quantity ?num))))))   ; *** problematic if quantityChange is dynamicUpdate
+
+(<== (changeIntegratedOverTurns ?di-case ?quantity ?num)
+     (uninferredSentence
+       (ist-Information ?di-case
+         (localOnly
+           (lookupOnly
+             (numAnswers 1
+               (quantityChange ?quantity ?any-num))))))
+     (priorDICase ?di-case ?prior)
+     (numAnswers 1
+       (changeIntegratedOverTurns  ?prior ?quantity ?prior-turns))
+     (evaluate ?num (PlusFn 1 ?prior-turns)))
+
+(isa possibleFractionalRateInfluencer Predicate)
+(arity possibleFractionalRateInfluencer 6)
+(arg1Isa possibleFractionalRateInfluencer Microtheory)
+(arg2Isa possibleFractionalRateInfluencer Quantity)
+(arg3Isa possibleFractionalRateInfluencer PositiveNumber)
+(arg4Isa possibleFractionalRateInfluencer PositiveNumber)
+(arg5Isa possibleFractionalRateInfluencer PositiveNumber)
+(arg6Isa possibleFractionalRateInfluencer Quantity)
+(comment possibleFractionalRateInfluencer "(possibleFractionalRateInfluencer ?di-case ?quantity ?min-value ?max-value ?turns ?influencer) ")
+
+;;; Assume same entity?
+(<== (possibleFractionalRateInfluencer ?di-case ?quantity ?min-value ?max-value ?turns ?influencer)
+     (unifies (?quantity-type ?entity) ?quantity)
+     (unifies (DICaseFn ?mt ?turn) ?di-case)
+     (lookupOnly
+       (quantityPrimitive ?influencer-type ?entity-type Percent))
+     (ist-Information ?mt
+       (isa ?entity ?entity-type))
+     (different ?influencer-type ?quantity-type)
+     (unifies ?influencer (?influencer-type ?entity))
+     (numAnswers 1 
+       (wmOnly (priorValue ?mt ?influencer ?value)))
+     (unifies (Percent ?magnitude) ?value)
+     (greaterThanOrEqualTo ?magnitude ?min-value)
+     (lessThanOrEqualTo ?magnitude ?max-value)
+     (priorDICase ?di-case ?prior)
+     (constantValueOverTurns ?prior ?influencer ?turns))
+
+(isa constantValueOverTurns TernaryPredicate)
+
+;;; Not the same as changeIntegratedOverTurns, because we don't 
+;;; require the quantity to have ever changed.  Plus, it doesn't
+;;; bind ?turns.
+;;; Assumes that if value changed, a di-case would record it.
+(<== (constantValueOverTurns ?di-case ?quantity ?turns)
+     (greaterThan ?turns 1)
+     (uninferredSentence
+       (ist-Information ?di-case
+         (localOnly
+           (lookupOnly
+             (numAnswers 1
+               (quantityChange ?quantity ?any-num))))))
+     (priorDICase ?di-case ?prior)
+     (evaluate ?prior-turns (DifferenceFn ?turns 1))
+     (numAnswers 1
+       (constantValueOverTurns ?prior ?quantity ?prior-turns)))
+
+(<== (constantValueOverTurns ?di-case ?quantity 1)
+     (uninferredSentence
+       (ist-Information ?di-case
+         (localOnly
+           (lookupOnly
+             (numAnswers 1
+               (quantityChange ?quantity ?any-num)))))))
+
+
+
+;;; Unfortunately, we're also getting
+;;; (discreteUnitaryChange (DICaseFn fc-game7 (YearFn -3700))
+;;;  (quantityChange
+;;;   ((MeasurableQuantityFn contentCitizens) FC-City-Detroit) 1)
+;;;  6)
+;;; and:
+;;; (discreteUnitaryChange (DICaseFn fc-game7 (YearFn -3700))
+;;;  (quantityChange
+;;;   ((MeasurableQuantityFn cityShieldReserves) FC-City-Detroit) 1)
+;;;  6)
+;;; both contentCitizens and citySize are in ambiguous qprops
+;;; (with numEntertainers and numTurnsToGrow, respectively)
+;;; and cityGrowthRate is qprop- to cityLuxuryTotal and qprop+ to tax total.
+;;; Since citySize is so important, we may want it to spin off a 
+;;; learning goal to disambiguate.
+      
+;;; ---------------------------------------------------------------
+;;; Lifting Hypotheses
+;;;
+;;; Given a possible influence, hypothesize a type-level influence, 
+;;; check that it is valid and write it out.
+;;; Heuristic: Prefer influences between quantities in the same entity
+;;; or across entities of different types, rather than quantities on
+;;; instances of entities of the same type (eg, we rarely see influences
+;;; between quantities in one city influencing another city).  This falls
+;;; out of the fact that we don't have specific relations between cities
+
+(isa hypothesizeInfluence ComplexActionPredicate)
+(arity hypothesizeInfluence 7)
+(arg1Isa hypothesizeInfluence Microtheory)
+(arg2Isa hypothesizeInfluence Predicate)
+(arg3Isa hypothesizeInfluence ContinuousQuantity)
+(arg4Isa hypothesizeInfluence Number-General)
+(arg5Isa hypothesizeInfluence ContinuousQuantity)
+(arg6Isa hypothesizeInfluence BinaryRelation)
+(arg7Isa hypothesizeInfluence Microtheory)
+(comment hypothesizeInfluence "(hypothesizeInfluence ?mt ?infl-pred ?dep-quantity ?dep-change-magnitude ?indep-quantity ?binrel ?casename) constructs and stores a hypothesized influence of ?indep-quantity on ?dep-quantity.")
+
+;;; Here, it doesn't matter if the hypothesis already exists,
+;;; if it's been invalidated, or if it can be invalidated.
+;;; go ahead and write out the hypothesis and then invalidate it
+;;; if appropriate.
+
+;;; *** What we want to do is detect if the hyp was previously known
+;;; *** and/or whether it is anomalous wrt prior cases.
+;;; *** To find this out, we want to query the spindle case
+;;; *** (SpindleMtFn Freeciv-TheGame DirectInfluences) or IndirectInfluences,
+;;; *** as the case may be.  Ultimately, what we want to do is track the
+;;; *** elicitation and constuction of new knowledge.  If we hit a dry well,
+;;; *** stop recording cases.
+
+;;; produce something like:
+;;; (i+TypeType  (MeasurableQuantityFn cityFoodReserves)
+;;;              (MeasurableQuantityFn cityFoodSurplus)
+;;;              FreeCiv-City FreeCiv-City equals)
+;;; Note: We can't use assignableActor here because the arguments may not be 
+;;; agents (e.g., tiles, etc)
+
+
+(preconditionForMethod
+  (and (different ?rel equals)
+       (different ?dep-q ?indep-q)                  ; sanity check
+       (typeLevelInfluencePred ?inf-type ?type-level-inf-type) ; lift propositional influence to type level
+       ;; Given ?rel, we want the arg isas
+       (lookupOnly
+         (numAnswers 1
+           (ist-Information ?mt
+             (indexedDomainRel (?rel ?arg1-type ?arg2-type))))) ; won't work for equals
+       (unifies (?dep-qtype ?dep-entity) ?dep-q)
+       (unifies (?indep-qtype ?indep-entity) ?indep-q)
+       (unifies ?inf (?type-level-inf-type ?dep-qtype ?indep-qtype ?arg1-type ?arg2-type ?rel)))
+  (methodForAction
+    (hypothesizeInfluence ?mt ?inf-type ?dep-q ?magnitude ?indep-q ?rel ?casename)
+    (actionSequence
+      (TheList
+        ;; record both propositional & type-level
+        ;(doRecord
+        ;  (ist-Information ?casename
+        ;    (hypothesis
+        ;      (?inf-type ?dep-q ?indep-q))))  ; propositional level
+        (doAnnounce "~&New hypothesis: ~s" (?inf))
+        (doRecord 
+          (ist-Information ?casename 
+            (hypothesis ?inf)))))))
+
+(preconditionForMethod
+  (and (different ?dep-q ?indep-q)                  ; sanity check
+       (typeLevelInfluencePred ?inf-type ?type-level-inf-type)
+       (unifies (?dep-qtype ?entity) ?dep-q)
+       (unifies (?indep-qtype ?entity) ?indep-q)
+       (numAnswers 1 (domainEntityType ?mt ?entity ?type)) ; lookup if cached
+       (unifies ?inf (?type-level-inf-type ?dep-qtype ?indep-qtype ?type ?type equals)))
+  (methodForAction
+    (hypothesizeInfluence ?mt ?inf-type ?dep-q ?magnitude ?indep-q equals ?casename)
+    (actionSequence
+      (TheList
+        (proposeTypeLevelInfluence ?dep-q ?magnitude ?indep-q ?casename ?inf)))))
+          
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (hypothesizeInfluence ?mt ?inf-type ?quant ?magnitude ?quant ?rel ?casename)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Shouldn't happen: attempting to hypothesize ~s between ~s and itself." (?inf-type ?quant))))))
+
+
+(isa proposeTypeLevelInfluence ComplexActionPredicate)
+(arity proposeTypeLevelInfluence 5)
+
+;;; Note: ?event-functor might be TurnFn (for downstream indirect influences on diachronic changes)
+;;; (but TurnFn is unary, while CommandFn is binary!)
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (proposeTypeLevelInfluence ?dep-q ?magnitude ?indep-q ?casename ?inf)
+    (actionSequence
+      (TheList
+        ;(doRecord 
+        ;  (ist-Information ?casename 
+        ;    (hypothesis 
+        ;      (?inf-type ?dep-qtype ?indep-qtype ?type ?type equals))))
+        (doAnnounce "~&New hypothesis: ~s" (?inf))
+        (doRecord
+          (ist-Information ?casename (hypothesis ?inf)))))))
+
+;;; Pre-emptively block bad influences:    
+(preconditionForMethod
+  (and (matches (IICaseFn ?mt ?turn ?event-fn) ?casename)
+       (uninferredSentence
+         (satisfiesTypeLevelInfluences ?dep-q ?magnitude ?casename (TheSet ?inf)))
+       (unifies ?stmt (counterExample ?inf)))
+  (methodForAction
+    (proposeTypeLevelInfluence ?dep-q ?magnitude ?indep-q ?casename ?inf)
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Propositional influence doesn't generalize: ~%  ~s <- ~s~%  Preemptively recording counter example: ~s" (?dep-q ?indep-q ?stmt))
+        (doRecord 
+          (ist-Information ?casename ?stmt))))))
+
+
+(<== (preferInContext (proposeTypeLevelInfluence ?dep-q ?magnitude ?indep-q ?casename ?inf) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 counterExample))
+     
+;;; ---------------------------------------------------------------
+;;; Lifting Binary Relations
+;;;
+;;; This is handled through the outsourced predicate domainRelationBetween,
+;;; which exploits the cached results of static analysis.  It's faster than
+;;; a single backchaining inference.
+
+
+;;; reified in static analysis:
+(isa indexedDomainRel UnaryPredicate)
+(arity indexedDomainRel 1)
+(arg1Isa indexedDomainRel CycLExpression)
+(comment indexedDomainRel "(indexedDomainRel ?type-level-signature) reifies type information in the domain to facilitate relation lifting.
+?type-level-signature is a tuple of predicate . arg-types.  This is a convenience reification, entirely inferrable from arity and arg-isa information.")
+
+;;; Intrinsic and extrinsic properties are all candidates for goal decomposition.
+;;; We want to be able to discover good decompositions  that help us think about a problem.
+;;; These decompositions should be useful for helping allocate resources to goals and also 
+;;; for specifying focus of attention for noticing and reifying certain kinds of events.
+(isa indexedIntrinsicProperty UnaryPredicate)
+(arity indexedIntrinsicProperty 1)
+(arg1Isa indexedIntrinsicProperty CycLExpression)
+(comment indexedIntrinsicProperty "(indexedIntrinsicProperty ?type-level-signature) reifies type-level information about predicates that represent intrinsic properties of an object type.  e.g., (indexedIntrinsicProperty (unitTypeHasFuelCapacity FreeCiv-UnitType Integer)) means Freeciv unit types have well-defined fuel capacities that don't vary across individuals of the same type.")
+
+(isa indexedExtrinsicProperty UnaryPredicate)
+(arity indexedExtrinsicProperty 1)
+(arg1Isa indexedExtrinsicProperty CycLExpression)
+(comment indexedExtrinsicProperty "(indexedExtrinsicProperty ?type-level-signature) reifies type-level information about predicates that represent extrinsic, or dynamically-changing properites of an object.  E.g., (indexedExtrinsicProperty (currentMovepoints FreeCiv-Unit MeasurableQuantity)) means Freeciv units have a property currentMovepoints that changes over time.")
+
+;;; From Freeciv dev notes 12-22-14.txt:
+;;; Grab the partitioning of domain actors (ie, player, city & unit)
+;;; Then we find all the functional slots with them as arg1.
+;;; Those are our extrinsic properties.
+;;; Then find the isas of each of these and all their domain-specific genls.
+;;; The functional slots of those types are the intrinsic properties.
+
+;;; ------------------------------
+;;; learn a type-level dependency
+;;; Induce something of the form:
+;;; (positivelyDependsOn-TypeType (MeasurableQuantityFn tileShieldProduction)
+;;;                               SpatialThing-Localized
+;;;                               FreeCiv-GoodProduction-Special
+;;;                               specialAt)
+;;; Perhaps we can get rid of the argnumber by assuming the binpred has the
+;;; right arg order.  That works now that we've redefined terrainAt and
+;;; specialAt.  (Done)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

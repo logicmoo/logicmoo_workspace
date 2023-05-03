@@ -1,0 +1,150 @@
+;;;
+;;; functional-roles.meld
+;;;
+;;;
+;;; Inference rules for reasoning with functional roles and specializations.
+;;;
+
+(in-microtheory PerceptualAgentMt)
+
+(isa FunctionalRole Collection)  ; *** This should actually be a spec of CapabilityRole, maybe just replace it with FunctionalObject (qqv)
+
+(isa CapabilityRole Collection)
+(genls CapabilityRole ThingTypeByCapability)  ; connect to Cyc-native concept
+(genls CapabilityRole FunctionalRole)
+(comment CapabilityRole "CapabilityRole is an intrinsic property of agents by virtue of their type-level capabilities.")
+
+;;; Other roles will be based on extrinsic properties that vary dynamically,
+;;; such as specializing a city to maximize science.
+
+(isa CapabilityRoleFn ReifiableFunction)
+(isa CapabilityRoleFn AtomicAnalogyNAT-Function)
+(arity CapabilityRoleFn 1)
+(arg1Isa CapabilityRoleFn Integer)
+(resultIsa CapabilityRoleFn CapabilityRole)
+(comment CapabilityRoleFn "(CapabilityRoleFn #) is a NAT representing a functional role based on capabilities of its members.")
+
+(isa SpecialistFn ReifiableFunction)
+(isa SpecialistFn AtomicAnalogyNAT-Function)
+(arity SpecialistFn 1)
+(arg1Isa SpecialistFn BinaryPredicate)
+(resultIsa SpecialistFn FunctionalRole)
+(comment SpecialistFn "(SpecialistFn <binpred>) denotes a functional role of maximizing the value of binpred for some entity type.")
+
+(isa SpecialistMinFn ReifiableFunction)
+(isa SpecialistMinFn AtomicAnalogyNAT-Function)
+(arity SpecialistMinFn 1)
+(arg1Isa SpecialistMinFn BinaryPredicate)
+(resultIsa SpecialistMinFn FunctionalRole)
+(comment SpecialistMinFn "(SpecialistMinFn <binpred>) denotes a functional role of minimizing the value of binpred for some entity type.")
+
+;;; *** To Do: Migrate this towards a NAT representation.
+(isa capabilityRole UnaryPredicate)
+(arity capabilityRole 1)
+(arg1Isa capabilityRole CapabilityRole)
+(comment capabilityRole "(capabilityRole ?role) is a cheap way to gather roles in the domain.")
+
+
+;;; This should correspond to taskAchieves, except that it should
+;;; take (or bind) a generic role, rather than an individual actor instance.
+;;; We want to learn these rules when we learn the tasks, by lifting the 
+;;; task achieves statement.
+;;; Do we even need the task statement?  I suspect not, so long as we 
+;;; have taskAchieves.  
+(isa achievableByRole BinaryPredicate)
+(arity achievableByRole 2)
+(arg1Isa achievableByRole Collection)
+(arg2Isa achievableByRole Goal)
+(comment achievableByRole "(achievableByRole ?role ?goal) indexes goals by the abstract role definition of the kind of agents that can achieve them.")
+
+(isa assignedToRole BinaryPredicate)
+(arity assignedToRole 2)
+(arg1Isa assignedToRole Goal)
+(arg2Isa assignedToRole CapabilityRole)
+(comment assignedToRole "(assignedToRole ?goal ?role) represents an assignment of a functional role to a goal.")
+
+(isa assignedToType BinaryPredicate)
+(arity assignedToType 2)
+(arg1Isa assignedToType Goal)
+(arg2Isa assignedToType CapabilityRole)
+(comment assignedToType "(assignedToType ?goal ?role) represents an assignment of a agent type to a goal.")
+
+(isa roleMemberType BinaryPredicate)
+(arity roleMemberType 2)
+(arg1Isa roleMemberType Collection)
+(arg2Isa roleMemberType CapabilityRole)
+(comment roleMemberType "(roleMemberType ?subtype ?role) caches the association between an agent type and a functional role.  This is reified by static analysis in the strategic model.")
+
+;;; Can't use assignedTo, since that's already used to designate Companions
+;;; Agents in the task agenda.  A role is a more general thing.  It means
+;;; the agent is available and/or appropriate for a possibly broad set of
+;;; tasks that may reoccur periodically.
+(isa roleMember TernaryPredicate)
+(arity roleMember 3)
+(arg1Isa roleMember Microtheory)
+(arg2Isa roleMember Agent-Generic)
+(arg3Isa roleMember Collection)
+(comment roleMember "(roleMember ?mt ?actor ?role) represents an assignment of an (individual) actor to a specialized functional role in the specified microtheory.")
+
+(isa roleEntailsCapability BinaryPredicate)
+(arity roleEntailsCapability 2)
+(arg1Isa roleEntailsCapability CapabilityRole)
+(arg2Isa roleEntailsCapability ActionPredicate)
+
+
+;;; A function is actually a pair of a situation type and a BinaryRoleRelation
+(isa canPerformDefaultFunction QuaternaryPredicate)
+(arity canPerformDefaultFunction 4)
+(arg1Isa canPerformDefaultFunction Microtheory)
+(arg2Isa canPerformDefaultFunction Agent-Generic)  ; an Individual actor
+(arg3Isa canPerformDefaultFunction Collection)
+(arg4Isa canPerformDefaultFunction BinaryRoleRelation)
+(comment canPerformDefaultFunction "(canPerformDefaultFunction ?mt ?actor ?sit-type ?role-relation) identifies a default function of ?role-reln in ?sit-type) that individual ?actor could perform in situation ?mt.")
+
+(isa canContinueCurrentRole BinaryPredicate)
+(arity canContinueCurrentRole 2)
+(comment canContinueCurrentRole "(canContinueCurrentRole ?mt ?actor) means ?actor isn't sick of doing the same thing over and over yet, nor is it needed elsewhere.")
+
+(isa shouldOverrideCurrentRole TernaryPredicate)
+(arity shouldOverrideCurrentRole 3)
+(arg1Isa shouldOverrideCurrentRole Microtheory)
+(arg2Isa shouldOverrideCurrentRole Agent-Generic)
+(arg3Isa shouldOverrideCurrentRole Goal)
+(comment shouldOverrideCurrentRole "(shouldOverrideCurrentRole ?mt ?actor ? goal) succeeds if ?actor's current role should be dropped in favor of pursuing more critical ?goal.")
+
+;;; Consider (typePrimaryFunction OBJ-TYPE SIT-TYPE ROLE)
+;;; See also (TypeCapableFn behaviorCapable), typeIntendedBehaviorCapable and primaryFunction.
+
+;;; Consider that functional role is typically implicit.
+;;; We can get it from multiple places:
+;;;   Unique qualification for performaning certain actions
+;;;     Qualitatively (logically) - what actions they may do
+;;;     Quantitatively (parametrically) - contributions to influences
+;;;      (relative appropriateness w.r.t. parametric properties, e.g., good Defensive unit)
+;;;   History of observing that type perform that action
+;;;   
+
+;;; We want to be able to dynamically specialize cities and units to particular
+;;; functional roles that address particular goals.  So it may not be a typical 
+;;; role in a process, but rather a goal that it continually serves.
+
+;;; -----------
+;;; Construct the body of an achievableByRole statement.
+;;; 1) find all the statements that mention ?actor
+;;; 2) find any behaviorCapable (or other capability statement) that filters ?actor
+;;; 3) look up the type-level correlate (e.g., (TypeCapableFn behaviorCapable)
+;;; 4) if there's only one such statement, the arg1 is the new role.
+;;;    else, we need to define the role with a CollectionSubsetFn of the common ancestor
+;;;    and predicate the set-spec with behaviorCapable.
+;(<== (liftAchievableRole ?actor ?goal ?condition ?role ?lifted-condition)
+;     )
+
+
+#|
+(fire:ask-it
+                '(and ((TypeCapableFn behaviorCapable) ?a ?b performedBy)
+                      (genls ?a FreeCiv-Actor))
+               :context 'FreecivPlanMt
+               :response '(?a ?b)
+               :transitive t)
+|#

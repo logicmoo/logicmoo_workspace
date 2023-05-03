@@ -1,0 +1,12 @@
+(in-microtheory MySentientKEIrrelevanceForQuestionAnsweringMt)
+
+(isa relationInstanceExistsCount InstanceTypeQuaternaryRuleMacroPredicate)
+(isa relationInstanceExistsMax InstanceTypeQuaternaryRuleMacroPredicate)
+(isa relationInstanceExistsMin InstanceTypeQuaternaryRuleMacroPredicate)
+(isa relationInstanceExistsRange InstanceTypeQuaternaryRuleMacroPredicate)
+(isa relationExistsMinInstance TypeInstanceQuaternaryRuleMacroPredicate)
+(isa relationExistsMaxInstance TypeInstanceQuaternaryRuleMacroPredicate)
+(isa relationExistsCountInstance TypeInstanceQuaternaryRuleMacroPredicate)
+(isa relationExistsRangeInstance TypeInstanceQuaternaryRuleMacroPredicate)
+(comment TypeInstanceQuaternaryRuleMacroPredicate "A specialization of #$RuleMacroPredicate and #$QuaternaryPredicate.  Each instance of #$TypeInstanceQuaternaryRuleMacroPredicate relates a count in its fourth argument place and an instance of #$Thing in its third argument place to a #$Collection in its second argument place via an instance of #$BinaryPredicate in its first argument place.  One example of instances of this collection is #$relationExistsCountInstance.")
+(comment InstanceTypeQuaternaryRuleMacroPredicate "A specialization of #$RuleMacroPredicate and #$QuaternaryPredicate.  Each instance of #$InstanceTypeQuaternaryRuleMacroPredicate relates a count in its fourth argument place and a collection in its third argument place to an instance of #$Thing in its second argument place via an instance of #$BinaryPredicate in its first argument place.  One example of instances of this collection is #$relationInstanceExistsCount.")

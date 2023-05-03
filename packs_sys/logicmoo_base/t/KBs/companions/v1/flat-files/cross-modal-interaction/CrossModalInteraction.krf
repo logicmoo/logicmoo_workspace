@@ -1,0 +1,133 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: CrossModalInteraction
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: August 13, 2014 16:21:02
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory (InterpretationMtFn CrossModalInteraction) :exclude-globals t)
+
+(isa (InterpretationMtFn CrossModalInteraction) (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(genlMt (InterpretationMtFn CrossModalInteraction) EAGeneralQueriesMt)
+
+;;(genlMt (InterpretationMtFn CrossModalInteraction) (InterpretationMtFn Instruction))
+
+
+;;;(queryForInterpretation  1 
+;;;                        (dialogUtteranceTag (PresentationEventFn :REPLACE-SID ?event-id)
+;;;                                            ?utterance-tag))
+
+(queryForInterpretation 1
+                        (communicationActTypeOf (UtteranceFn :REPLACE-SID) MultiModalUtterance))
+
+(queryForInterpretation 2
+                        (communicationActTypeOf (UtteranceFn :REPLACE-SID) ConceptExampleIntroduction))
+
+(queryForInterpretation 3
+                        (communicationActTypeOf (UtteranceFn :REPLACE-SID) WhichConceptInterrogation))
+
+(queryForInterpretation 4
+                        (communicationActTypeOf (UtteranceFn :REPLACE-SID) NewConceptExampleIntroduction))
+
+(queryForInterpretation 5
+                        (communicationActTypeOf (UtteranceFn :REPLACE-SID) MultipleExampleIntroduction))
+
+;;;if any of the reference in utterance got resolved to an element in the perceptual source
+;;;we tag this as multimodal utterance
+(<== (communicationActTypeOf (UtteranceFn ?sid) MultiModalUtterance)
+     ;;is the sentence id ground?
+     (groundExpression ?sid)
+     ;;is there a deictic source for the discourse
+     (drsForDiscourse ?discourse-id)
+     ;;does some reference in the sentence resolves to one of the dietic referencee?
+     (lookupOnly (referent (ReferenceInSentenceFn ?var ?sid) 
+                           (ReferentInDrsFn 
+                            (ReferentInPerceptualSourceFn 
+                             ?selected-items 
+                             ?layer 
+                             ?subsketch 
+                             ?sketch) ?discourse-id)))
+     ;;check in diectic references records that the reference still exist (sanity)
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlyActiveSketch ?sketch ?_time-sketch))
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlyActiveSubsketch ?subsketch ?_time-subsketch))
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlyActiveLayer ?layer ?_time-layer))
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlySelectedItems ?selected_items ?_time-items)))
+     
+;;;introducing example of a concept using a demonstrative reference
+;;;example: this is a cat, That is a toma. etc.
+(<== (communicationActTypeOf (UtteranceFn ?sid) ConceptExampleIntroduction)     
+     (groundExpression ?sid)
+     (drsForDiscourse ?discourse-id)
+     (lookupOnly (communicationActTypeOf (UtteranceFn ?sid) MultiModalUtterance))
+     (ist-Information (DrsCaseFn ?sid)
+       (denotes (DemonstrativeFn ?var) ?token))
+     (ist-Information (DrsCaseFn ?sid) 
+       (isa ?token ?collection)))
+
+;;asking which one the selected concept is of the concept type
+;;;example: which one of these is a cat?, which one of these is a toma?
+(<== (communicationActTypeOf (UtteranceFn ?sid) WhichConceptInterrogation)
+     (groundExpression ?sid)
+     (drsForDiscourse ?discourse-id)
+     (lookupOnly (communicationActTypeOf (UtteranceFn ?sid) MultiModalUtterance))
+     (ist-Information (DrsCaseFn ?sid)
+       (member ?one-of (DemonstrativeFn ?var)))
+     (ist-Information (DrsCaseFn ?sid)
+       (denotes ?one-of ?token))
+     (ist-Information (DrsCaseFn ?sid) 
+       (isa ?token ?collection))
+     (ist-Information (DrsCaseFn ?sid)
+       (coreferent ?one-of (WhQuestionFn which))))
+
+;;;if there is no lexicon entry, the parser will assume the term as a noun based on POS
+;;;We check for this information and tag the utterance as introducing a brand new concept
+;;;example: this is a toma.
+(<== (communicationActTypeOf (UtteranceFn ?sid) NewConceptExampleIntroduction)
+     (groundExpression ?sid)     
+     (lookupOnly (communicationActTypeOf (UtteranceFn ?sid) ConceptExampleIntroduction))
+     (ist-Information (DrsCaseFn ?sid)
+       (denotes (DemonstrativeFn ?var) ?token))
+     (ist-Information (DrsCaseFn ?sid) 
+       (isa ?token (ConceptKnownAsFn ?name)))
+     (ptConstitFeat ?np assumed-noun ?name))
+
+;;;multiple example introduction
+
+(<== (communicationActTypeOf (UtteranceFn ?sid) MultipleExampleIntroduction)
+     (groundExpression ?sid)
+     (lookupOnly (communicationActTypeOf (UtteranceFn ?sid) MultiModalUtterance))
+     (ist-Information (DrsCaseFn ?sid)
+       (implies-DrsDrs (DrsCaseFn ?cause-drs-id)
+                       (DrsCaseFn ?effect-drs-id)))
+     (ist-Information (DrsCaseFn ?cause-drs-id) 
+       (isa ?token ?collection))
+     (ist-Information (DrsCaseFn ?effect-drs-id)
+       (denotes (DemonstrativeFn ?var) ?token))
+     (ist-Information (DeicticReferenceRecordsFn ?drs-id)
+       (currentlySelectedItems ?selected_items ?_time-items))
+     (evaluate ?selected-items-size (CardinalityFn ?selected_items))
+     (different 1 ?selected-items-size))
+
+
+;;;InterogativeUtterance
+;;;ClassMembershipInterogation
+;;;multiple example introduction.
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

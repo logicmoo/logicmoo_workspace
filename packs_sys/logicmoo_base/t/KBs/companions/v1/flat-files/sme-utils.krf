@@ -1,0 +1,42 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: sme-utils.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 16, 2014 16:11:50
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+
+(isa dehydrateSME Predicate)
+(arity dehydrateSME 2)
+(arg1Isa dehydrateSME String) ;; The path to put it in
+(arg2Isa dehydrateSME Mapping)
+
+(isa storeSMEMapping Predicate)
+(arity storeSMEMapping 2)
+(arg1Isa storeSMEMapping String) ;; The path to put it in
+(arg2Isa storeSMEMapping Mapping)
+
+(isa AtFn Function-Denotational)
+
+(arity AtFn 2)
+(arg1Isa AtFn TemporalThing)
+(arg2Isa AtFn Situation)
+(resultIsa AtFn TemporalThing)
+(comment AtFn "(AtFn ?thing ?situation) is ?thing, at the period
+?situation.")
+
+(in-microtheory UniversalVocabularyMt)
+(ubiquitousForAnalogy AtFn)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

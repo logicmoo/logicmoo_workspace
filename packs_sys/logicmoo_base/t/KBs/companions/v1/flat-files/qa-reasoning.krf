@@ -1,0 +1,249 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qa-reasoning.meld
+;;;;    System: 
+;;;;    Author: Crouse
+;;;;   Created: April 26, 2016 13:48:00
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CompanionsQueryHelperMt)
+(genlMt CompanionsQueryHelperMt CompanionsMt)
+(genlMt CompanionsMt CompanionsQueryHelperMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defSuggestion JustUseUserQuery
+    (userQuery ?query)
+  :cost-function 0
+  :subgoals
+  (?query))
+
+(defSuggestion SpecPredInferenceStrategy
+    (?p ?x ?y) 
+  :test (different ?p inferViaSpecPreds)
+  :cost-function 10 ;;; if it tries this too early it branches way too much and runs out of resources
+  :subgoals ((groundExpression ?p)
+             (inferViaSpecPreds (?p ?x ?y) ?foo)))
+
+;;;(defSuggestion QA-Spec-Pred-Strategy
+;;;    (userQuery ?query)
+;;;  :cost-function 10
+;;;  :subgoals
+;;;  ((evaluate ?list-query (MakeFormulaFn TheList ?query))
+;;;   (evaluate ?new-list-query
+;;;     (MapFunctionOverList
+;;;      (FunctionToArg 1 (Kappa (?new-expr ?expr)
+;;;                              (and (evaluate ?var-for-expr (UniquifyVariablesFn ?support))
+;;;                                   (unifies ?new-expr 
+;;;                                            (ist-Information CompanionsQueryHelperMt 
+;;;                                              (specPredInf ?expr CurrentWorldDataCollectorMt-NonHomocentric  ?var-for-expr))))))
+;;;      ?list-query))
+;;;   (evaluate ?new-query (MakeFormulaFn and ?new-list-query))
+;;;   (different ?new-query ?query) ;; prevent infinite looping
+;;;   ?new-query))
+
+;;;(defSuggestion BOTE-VolumeQ
+;;;    (BOTEQuery ?query ?ans)
+;;;  :cost-function 0
+;;;  :test (subexpressionMatching (fitsInsideObject ?x ?y) ?query ?r)
+;;;  :subgoals
+;;;  ((evaluate ?list-query (MakeFormulaFn TheList ?query))
+;;;   (unifies ?mt BOTESizeMt)
+;;;   (subexpressionMatching (relationExistsInstance fitsInsideObject ?type-of-containee ?container) ?list-query ?res1)
+;;;   (evaluate ?constr
+;;;     (FirstInListFn (RemoveIfFn
+;;;                     ?list-query
+;;;                     (Kappa (?expr)
+;;;                            (or (uninferredSentence (containsExpression ?container ?expr))
+;;;                                (uninferredSentence (containsExpression isa ?expr))))
+;;;                     IdentityFn)))
+;;;   (unifies ?constr (isa ?container ?type-of-container))
+;;;   (inferenceOnly (numAnswers 1 (ist-Information ?mt (volumeOfObjectType ?type-of-containee (BOTEUnit ?s-size)))))
+;;;   (numAnswers 1 (inferenceOnly (ist-Information ?mt (volumeOfObjectType ?type-of-container (BOTEUnit ?l-size)))))
+;;;   (evaluate ?ans (ExponentFn 10 (DifferenceFn ?l-size ?s-size)))))
+
+
+(isa specPredInf BinaryRelation)
+(<== (specPredInf ?expr ?var-for-expr)
+     (inferViaSpecPreds ?expr ?var-for-expr))   ; outsourced
+;;;(<== (specPredInf ?expr ?var-for-expr)
+;;;     (ist-Information ?mt ?expr)
+;;;     (unifies ?var-for-expr ?expr))
+;;;(<== (specPredInf ?expr ?mt ?var-for-expr)
+;;;     (ist-Information CompanionsQueryHelperMt ?expr)
+;;;     (unifies ?var-for-expr ?expr))
+
+
+(isa userQueryStrategySelector Predicate)
+(arity userQueryStrategySelector 3)
+(arg1Isa userQueryStrategySelector CycLFormula)
+(arg2Isa userQueryStrategySelector Microtheory)
+(arg3Isa userQueryStrategySelector CycLFormula)
+(comment userQueryStrategySelector "(userQueryStrategySelector <query> <interpretation-mt> <ans>) attempts to solve <query>, derived from the sentence whose
+interpretation lives in <interpretation-mt>, but can rederive new queries from the interpretation, answers for <query> bound to <ans>")
+
+(defSuggestion TryUserQuerySecond
+    (userQueryStrategySelector ?query ?interpretation-mt ?ans)
+  :cost-function 1
+  :test (uninferredSentence (ist-Information BOTEMt (boteQueryAppropriate ?query)))
+  :subgoals
+  ((userQuery ?query)
+   (evaluate ?ans ?query)))
+
+(defSuggestion TryBOTEQueryFirst
+    (userQueryStrategySelector ?query ?interpretation-mt ?ans)
+  :cost-function 0
+  :test (ist-Information BOTEMt (boteQueryAppropriate ?query))
+  :subgoals
+  ((BOTEQuery ?query ?ans)))
+
+(defSuggestion CleanUpRedundantEAExprs
+    (userQueryStrategySelector ?query ?interpretation-mt ?ans)
+  :cost-function 2
+  :subgoals
+  ((containsExpression and ?query)
+   (sessionContext ?context)
+   (evaluate ?confusion-removed
+     (RemoveIfFn
+      ?query
+      (Kappa (?expr)
+             (or (containsExpression WHFocus ?expr)
+                 (containsExpression possessiveRelation ?expr)))
+      IdentityFn))
+   (different ?confusion-removed ?query) ;; prevent infinite loops
+   (outsourcedOnly (optimizedQuery ?confusion-removed ?optimized-q))
+   (userQueryStrategySelector ?optimized-q ?interpretation-mt ?ans)
+   (justify (ist-Information ?context (userQueryStrategySelector ?query ?interpretation-mt ?ans))
+            (TheList (ist-Information ?context (userQueryStrategySelector ?ans ?interpretation-mt ?ans))))))
+
+;;;(defSuggestion EstimateHowManyViaBOTE
+;;;    (userQueryStrategySelector ?query ?interpretation-mt ?ans)
+;;;  :cost-function 1
+;;;  :subgoals
+;;;  ((BOTEQuery ?query ?ans)))
+
+(defSuggestion BOTEQueries
+    (BOTEQuery ?query ?ans)
+  :cost-function 1
+  :test (ist-Information BOTEMt (boteQueryAppropriate ?query)) ;; already tested but to be sure
+  :subgoals
+  (?query
+   (evaluate ?ans ?query)))
+
+(defSuggestion CountContainedBotE
+    (BOTEQuery (CountContained ?type-of-container ?type-of-containee ?ans) ?answer)
+  :cost-function 0
+  :subgoals
+  ((CountContained ?type-of-container ?type-of-containee ?ans)
+   (evaluate ?round (RoundFn ?ans))
+   (evaluate ?answer (SymbolConcatenateFn (TheList "Approximately " ?round " " ?type-of-containee "s fit in a " ?type-of-container)))))
+
+(defSuggestion CountContainedBOTEFromNLUOutput
+    (BOTEQuery ?query ?ans)
+  :cost-function 1
+  :test (subexpressionMatching (fitsInsideObject ?contained ?container) ?query ?r)
+  :subgoals
+  ((subexpressionMatching (relationExistsInstance fitsInsideObject ?type-of-containee ?container) ?query ?res1)
+   (evaluate ?constr
+     (FirstInListFn 
+      (MakeFormulaFn TheList
+                     (RemoveIfFn
+                      ?query
+                      (Kappa (?expr)
+                             (uninferredSentence (and (containsExpression ?container ?expr)
+                                                      (containsExpression isa ?expr))))
+                      IdentityFn))))
+   (unifies ?constr (isa ?container ?type-of-container))
+   (CountContained ?type-of-container ?type-of-containee ?ans)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; get rid of this 
+(in-microtheory Interaction-ManagerMt)
+(<== (bindAnswersFromUserQuery ?solution ?answers) 
+     (uninferredSentence (unifies ?solution (userQueryStrategySelector ?prop ?mt ?ans))) 
+     (evaluate ?answer (TheSet ?solution)))
+
+(<== (bindAnswersFromUserQuery (userQueryStrategySelector ?solution ?mt ?ans) ?answers)
+     (evaluate ?answers (TheSet ?ans)))
+
+
+(in-microtheory BOTESizeMt)
+
+(isa BOTEUnit UnitOfMeasure)
+
+(<== (volumeOfObjectType ?x (BOTEUnit 1))
+     (volumeOfObjectType ?x MicroscopicSized))
+
+(<== (volumeOfObjectType ?x (BOTEUnit 2))
+     (volumeOfObjectType ?x BarelyVisibleSized))
+
+(<== (volumeOfObjectType ?x (BOTEUnit 3))
+     (volumeOfObjectType ?x InsectSized))
+
+(<== (volumeOfObjectType ?x (BOTEUnit 4))
+     (volumeOfObjectType ?x GolfBallSized))
+
+(<== (volumeOfObjectType ?x (BOTEUnit 5))
+     (volumeOfObjectType ?x FistSized))
+
+(<== (volumeOfObjectType ?x (BOTEUnit 6))
+     (volumeOfObjectType ?x BreadboxSized))     
+
+(<== (volumeOfObjectType ?x (BOTEUnit 7))
+     (volumeOfObjectType ?x HumanSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 8))
+     (volumeOfObjectType ?x PartOfRoomSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 9))
+     (volumeOfObjectType ?x RoomSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 10))
+     (volumeOfObjectType ?x WhaleSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 11))
+     (volumeOfObjectType ?x HouseSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 12))
+     (volumeOfObjectType ?x SupermarketSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 13))
+     (volumeOfObjectType ?x StadiumSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 14))
+     (volumeOfObjectType ?x MountainSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 15))
+     (volumeOfObjectType ?x PlanetSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 16))
+     (volumeOfObjectType ?x StarSized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 17))
+     (volumeOfObjectType ?x GalaxySized))  
+
+(<== (volumeOfObjectType ?x (BOTEUnit 18))
+     (volumeOfObjectType ?x UniverseSized))  
+
+(isa InsectSized Volume)
+(isa InsectSized NonNumericScalarQuantity)
+
+(volumeOfObjectType Pizza BreadboxSized)
+(volumeOfObjectType Person HumanSized)
+
+(isa volumeOfObjectType Predicate)
+(arity volumeOfObjectType 2)
+(arg1Isa volumeOfObjectType Collection)
+(arg2Isa volumeOfObjectType Volume)
+(comment volumeOfObjectType
+  "(volumeOfObjectType <Collection> <Volume>) indicates that members of <Collection> are generally <Volume>-sized.  This exists
+to replace having to use relationAllInstance, since we couldn't get that predicate to not do ruleMacroPred inference.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

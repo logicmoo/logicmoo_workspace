@@ -1,0 +1,262 @@
+
+ (in-microtheory ReasoningWithTense-LogicMt-MixedDateSeries)
+ (argGenl was-SometimeDuring-NthDate 1 Date)
+ (arg2Isa was-SometimeDuring-Metric PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn willBe-Throughout-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (argQuotedIsa was-SometimeDuring-Metric 3 CycLSentence-Assertible)
+ (argIsa was-Throughout-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (argIsa willBe-Throughout-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (genlPreds willBe-NthDate willBe-SometimeDuring-NthDate)
+ (isa
+ (ModalOpSet1-2Fn was-SometimeDuring-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (argGenl was-Throughout-NthDate 1 Date)
+ (argQuotedIsa was-Throughout-NthDate 3 CycLSentence-Assertible)
+ (comment was-Metric
+ "(#$was-Metric TYPE NUM PROP) means that it was the case NUM 
+`steps' backward that PROP, where the interpretation of `step' is 
+determined by TYPE.  For example, (#$was-Metric #$CalendarDay 2 `Fritz 
+is sick') means that Fritz was sick the day before yesterday, and 
+(#$was-Metric #$CalendarYear 1 `Cyc goes public') means that Cyc went 
+public last year.  Note that unlike the situation in the 
+#$ReasoningWithTense-LogicMt-SingleDateSeries, this predicate can be 
+used not only when the #$reasoningWithTenseMtTime is a date of type TYPE, but also  
+when the #$reasoningWithTenseMtTime is `subsumed' by a date DATE of type TYPE (and  
+thus (#$currentDate DATE) must hold in the current microtheory).")
+ (argIsa willBe-SometimeDuring-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (argIsa willBe-SometimeDuring-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (arg3QuotedIsa willBe-SometimeDuring-Metric CycLSentence-Assertible)
+ (genlPreds was-Metric was-SometimeDuring-Metric)
+ (comment willBe-Throughout-Metric
+ "(#$willBe-Throughout-Metric TYPE n PROP) means that it will
+be the case PROP throughout DATE, where DATE is the instance of #$Date
+that is of type TYPE and is n steps in the future relative to the
+current date of type TYPE.  For example, (#$willBe-Throughout-Metric
+#$CalendarDay 1 `the temporature in Austin is above 50 degree') means
+that the temporature in Austin will be above 50 degree throughout
+tomorrow, and (#$willBe-Throughout-Metric #$CalendarWeek 2 `Fritz is
+on vacation') means that Fritz will be on vacation the whole week
+after the next.")
+ (genlPreds willBe-Throughout-NthDate willBe-NthDate)
+ (arg1Genl willBe-Throughout-NthDate Date)
+ (isa
+ (ModalOpSet1-2Fn willBe-Throughout-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (comment willBe-SometimeDuring-Metric
+ "(#$willBe-SometimeDuring-Metric TYPE n PROP) means that it
+will be the case that PROP sometime during DATE, where DATE is the
+instance of #$Date that is of type TYPE and is n steps in the future
+relative to the current date of type TYPE.  For example,
+(#$willBe-SometimeDuring-Metric #$CalendarDay 1 `the temporature in
+Austin is above 50 degree') means that the temporature in Austin will
+be above 50 degree sometime tomorrow, and (#$willBe-Throughout-Metric
+#$CalendarWeek 2 `Fritz is on vacation') means that Fritz will be on
+vacation sometime during the week after the next.")
+ (isa willBe-SometimeDuring-NthDate TensePredicate)
+ (arg2Isa willBe-Throughout-NthDate PositiveInteger)
+ (arg3QuotedIsa willBe-SometimeDuring-NthDate CycLSentence-Assertible)
+ (argIsa willBe-Throughout-Metric 2 PositiveInteger)
+ (argIsa was-SometimeDuring-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (arg1Genl was-SometimeDuring-NthDate Date)
+ (arg3QuotedIsa was-Throughout-NthDate CycLSentence-Assertible)
+ (comment willBe-Throughout-NthDate
+ "(#$willBe-Throughout-NthDate TYPE n PROP) means that it will
+be the case that PROP throughout the n-th date of type TYPE, counting
+toword future from and excluding the current date of type TYPE.  For
+example, (#$willBe-Throughout-NthDate #$Friday 1 `Fritz is out of his
+office') means that Fritz will be out of his office throughout the
+next Friday (the first coming Friday).")
+ (isa was-Throughout-Metric TensePredicate)
+ (isa willBe-Throughout-NthDate TensePredicate)
+ (argIsa willBe-SometimeDuring-Metric 2 PositiveInteger)
+ (isa was-SometimeDuring-Metric TensePredicate)
+ (comment willBe-SometimeDuring-NthDate
+ "(#$willBe-SometimeDuring-NthDate TYPE n PROP) means that it
+will be the case that PROP sometime during the n-th date of type TYPE,
+counting toword future from and excluding the current date of type
+TYPE.  For example, (#$willBe-SometimeDuring-NthDate #$Friday 1 `Fritz
+is out of his office') means that Fritz will be out of his office
+sometime during the next Friday (the first coming Friday).")
+ (argQuotedIsa willBe-Throughout-NthDate 3 CycLSentence-Assertible)
+ (isa
+ (ModalOpSet1-2Fn willBe-SometimeDuring-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (arg2Isa was-Throughout-Metric PositiveInteger)
+ (genlPreds willBe-Throughout-Metric willBe-Metric)
+ (isa
+ (ModalOpSet1-2Fn willBe-SometimeDuring-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (argQuotedIsa willBe-Throughout-Metric 3 CycLSentence-Assertible)
+ (comment willBe-Metric
+ "(#$willBe-Metric TYPE n PROP) means that it will be the case n `steps' forward that PROP, where the interpretation of `step' is determined by TYPE.  For example, (#$willBe-Metric #$CalendarDay 2 `Fritz drives to work') means that Fritz will drive to work the day after tomorrow, and (#$willBe-Metric #$CalendarYear 1 `Cyc goes public') means that Cyc will go public next year.  Note that unlike the situation in the #$ReasoningWithTense-LogicMt-SingleDateSeries, this predicate can be used not only when the #$reasoningWithTenseMtTime is a date of type TYPE, but also when the #$reasoningWithTenseMtTime is `subsumed' by a date DATE of type TYPE (and thus (#$currentDate DATE) must hold in the current microtheory).")
+ (isa
+ (ModalOpSet1-2Fn willBe-Throughout-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (argIsa willBe-Throughout-NthDate 2 PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn was-SometimeDuring-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (arg1Isa was-SometimeDuring-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (argQuotedIsa was-SometimeDuring-NthDate 3 CycLSentence-Assertible)
+ (argQuotedIsa willBe-SometimeDuring-Metric 3 CycLSentence-Assertible)
+ (arg1Genl was-Throughout-NthDate Date)
+ (arg1Genl willBe-SometimeDuring-NthDate Date)
+ (arg3QuotedIsa willBe-Throughout-Metric CycLSentence-Assertible)
+ (isa was-SometimeDuring-NthDate TensePredicate)
+ (isa
+ (ModalOpSet1-2Fn willBe-Throughout-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (arg1Isa willBe-Throughout-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (isa
+ (ModalOpSet1-2Fn willBe-SometimeDuring-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (arg1Isa was-Throughout-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (comment was-Throughout-NthDate
+ "(#$was-Throughout-NthDate TYPE n PROP) means that it will be
+the case that PROP throughout the n-th date of type TYPE, counting
+toward past from and excluding the current date of type TYPE.  For
+example, (#$was-Throughout-NthDate #$Friday 1 `Fritz is sick') means
+that Fritz was sick throughout the entire last Friday (the first
+Friday when counting toward past).")
+ (arg1Isa willBe-Throughout-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (comment ReasoningWithTense-LogicMt-MixedDateSeries
+ "In this microtheory we define #$willBe-Throughout-Metric, 
+#$willBe-SometimeDuring-Metric, #$was-Throughout-Metric and 
+#$was-SometimeDuring-Metric.  We also give different definitions for 
+#$willBe-Metric and #$was-Metric.  Note that instances of 
+#$ReasoningWithTenseMicrotheory that take this microtheory 
+as #$genlMt are exactly the instances of 
+#$ReasoningWithTenseMicrotheory-MixedDateSeries.  Note also 
+that NO instance of #$ReasoningWithTenseMicrotheory should 
+be a specMt of both #$ReasoningWithTense-LogicMt-MixedDateSeries and 
+#$ReasoningWithTense-LogicMt-SingleDateSeries.")
+ (arg3QuotedIsa willBe-Throughout-NthDate CycLSentence-Assertible)
+ (argIsa was-SometimeDuring-Metric 1
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (arg1Isa was-SometimeDuring-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (comment was-Throughout-Metric
+ "(#$was-Throughout-Metric TYPE n PROP) means that it was the
+case that PROP throughout DATE, where DATE is the instance of #$Date
+that is of type TYPE and is n steps in the past relative to the
+current date of type TYPE.  For example, (#$was-Throughout-Metric
+#$CalendarDay 1 `the temporature in Austin is above 50 degree') means
+that the temporature in Austin was above 50 degree throughout
+yesterday, and (#$was-Throughout-Metric #$CalendarWeek 2 `Fritz is on
+vacation') means that Fritz was on vacation the whole week before the
+last.")
+ (arg2Isa was-Throughout-NthDate PositiveInteger)
+ (arg3QuotedIsa was-SometimeDuring-NthDate CycLSentence-Assertible)
+ (arg2Isa willBe-SometimeDuring-NthDate PositiveInteger)
+ (arg2Isa willBe-Throughout-Metric PositiveInteger)
+ (arg2Isa was-SometimeDuring-NthDate PositiveInteger)
+ (argIsa was-Throughout-NthDate 2 PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn was-Throughout-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (comment was-SometimeDuring-NthDate
+ "(#$was-SometimeDuring-NthDate TYPE n PROP) means that it
+will be the case that PROP sometime during the n-th date of type TYPE,
+counting toward past from and excluding the current date of type TYPE.
+For example, (#$was-SometimeDuring-NthDate #$Friday 1 `Fritz is sick')
+means that Fritz was sick some time last Friday (the first Friday when
+counting toward past).")
+ (argGenl willBe-SometimeDuring-NthDate 1 Date)
+ (argIsa willBe-SometimeDuring-NthDate 2 PositiveInteger)
+ (isa
+ (ModalOpSet1-2Fn was-Throughout-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (argIsa willBe-Throughout-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (genlPreds was-Throughout-Metric was-Metric)
+ (isa willBe-SometimeDuring-Metric TensePredicate)
+ (argIsa was-Throughout-NthDate 1
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (argQuotedIsa was-Throughout-Metric 3 CycLSentence-Assertible)
+ (arg3QuotedIsa was-SometimeDuring-Metric CycLSentence-Assertible)
+ (argGenl willBe-Throughout-NthDate 1 Date)
+ (argQuotedIsa willBe-SometimeDuring-NthDate 3 CycLSentence-Assertible)
+ (argIsa was-SometimeDuring-Metric 2 PositiveInteger)
+ (isa willBe-Throughout-Metric TensePredicate)
+ (arg1Isa willBe-SometimeDuring-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (comment was-SometimeDuring-Metric
+ "(#$was-SometimeDuring-Metric TYPE n PROP) means that it was
+the case that PROP sometime during DATE, where DATE is the instance of
+#$Date that is of type TYPE and is n steps in the past relative to the
+current date of type TYPE.  For example, (#$was-SometimeDuring-Metric
+#$CalendarDay 1 `the temporature in Austin is above 50 degree') means
+that the temporature in Austin was above 50 degree sometime yesterday,
+and (#$was-Throughout-Metric #$CalendarWeek 2 `Fritz is on vacation')
+means that Fritz was on vacation sometime during the week before the
+last.")
+ (isa
+ (ModalOpSet1-2Fn was-SometimeDuring-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (genlPreds was-Throughout-NthDate was-NthDate)
+ (isa
+ (ModalOpSet1-2Fn was-Throughout-NthDate
+  ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (isa
+ (ModalOpSet1-2Fn was-SometimeDuring-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (isa
+ (ModalOpSet1-2Fn willBe-SometimeDuring-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn UnaryModalOperator))
+ (genlPreds was-NthDate was-SometimeDuring-NthDate)
+ (argIsa was-Throughout-Metric 2 PositiveInteger)
+ (genlPreds willBe-Metric willBe-SometimeDuring-Metric)
+ (argIsa was-SometimeDuring-NthDate 2 PositiveInteger)
+ (arg1Isa was-Throughout-Metric
+ ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint)
+ (isa
+ (ModalOpSet1-2Fn was-Throughout-Metric
+  ConventionallyClassifiedTimeIntervalSeries-CoveringAndDisjoint
+  PositiveInteger)
+ (SetOfTypeFn CommonUnaryModalOperator))
+ (isa was-Throughout-NthDate TensePredicate)
+ (arg3QuotedIsa was-Throughout-Metric CycLSentence-Assertible)
+ (arg1Isa willBe-SometimeDuring-NthDate
+ ConventionallyClassifiedTimeIntervalSeries-DisjointWithGaps)
+ (arg2Isa willBe-SometimeDuring-Metric PositiveInteger)

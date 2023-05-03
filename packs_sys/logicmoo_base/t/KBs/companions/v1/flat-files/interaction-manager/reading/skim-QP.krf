@@ -1,0 +1,449 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: skim-QP.meld
+;;;;    System: 
+;;;;    Author: your name here
+;;;;   Created: July 11, 2012 15:26:39
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+(isa NLPSpindleFn Function-Denotational)
+(arity NLPSpindleFn 1)
+(resultIsa NLPSpindleFn Microtheory)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;; PREDICATE DEFS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa generalizeQPInterpretation ComplexActionPredicate)
+(arity generalizeQPInterpretation 0)
+(comment generalizeQPInterpretation "(generalizeQPInterpretation) attempts to use EA's QP Frames to generate general theories.")
+
+(isa generalizeIndirects ComplexActionPredicate)
+(arity generalizeIndirects 4)
+(comment generalizeIndirects "(GeneralizeIndirects <frames> <DID> <mt>) attempts to generate hypothesis frames from ID frames")
+
+(isa generateKappa ComplexActionPredicate)
+(arity generateKappa 5)
+
+(isa QPHypothesisMt Microtheory)
+
+(isa hypothesizeInfluenceFromText ComplexActionPredicate)
+(arity hypothesizeInfluenceFromText 8)
+(arg1Isa hypothesizeInfluenceFromText Microtheory)
+(arg2Isa hypothesizeInfluenceFromText Predicate)
+(arg3Isa hypothesizeInfluenceFromText ContinuousQuantity)
+(arg4Isa hypothesizeInfluenceFromText ContinuousQuantity)
+(arg5Isa hypothesizeInfluenceFromText Collection)
+(arg6Isa hypothesizeInfluenceFromText Collection)
+(arg7Isa hypothesizeInfluenceFromText BinaryRelation)
+(arg8Isa hypothesizeInfluenceFromText Microtheory)
+(comment hypothesizeInfluence "(hypothesizeInfluence ?mt ?infl-pred ?dep-quantity ?indep-quantity ?binrel ?casename) constructs and stores a hypothesized influence of ?indep-quantity on ?dep-quantity.")
+
+(isa binrelIn BinaryPredicate)
+
+(isa relationThroughEvent Predicate)
+(arity relationThroughEvent 5)
+(comment relationThroughEvent "(relationThroughEvent ?event-collection ?constrained-relationship ?constrainer-relationship ?constrained-entity ?constrainer-entity)")
+
+
+(isa underspecifiedBinRel Predicate)
+(arity underspecifiedBinRel 2)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(isa ExtractQPGeneralsFromDiscourse ComplexActionPredicate)
+(arity ExtractQPGeneralsFromDiscourse 2)
+
+
+(preconditionForMethod
+ (unifies ?state (StartOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQPGeneralsFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "Start of processing discourse ~A" (?d))))))
+
+(preconditionForMethod
+ (ist-Information (DiscourseCaseFn ?d)
+   (sentenceInDiscourse ?state ?counter ?tokens))
+ (methodForAction
+  (ExtractQPGeneralsFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "I'm handling a sentence" ())
+    (doEAReadSingleSentence ?state ?d)))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfParagraphFn ?p))
+ (methodForAction
+  (ExtractQPGeneralsFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (doAnnounce "End of paragraph ~A in ~A." (?p ?d))))))
+
+(preconditionForMethod
+ (unifies ?state (EndOfDiscourseFn ?d))
+ (methodForAction
+  (ExtractQPGeneralsFromDiscourse ?state ?d)
+  (actionSequence
+   (TheList
+    (useDiscourseCoreferenceResolution)
+    (doAgentPlan
+     (actionSequence
+      (TheList
+       (useQPInterpretation)
+       (doAgentPlan
+        (actionSequence
+         (TheList
+          (generalizeQPInterpretation)))))))))))
+   
+
+;;;;;;;; methods for generalizeQPInterp ;;;;;;;;;;;
+;;;;;
+;;;;; This should look for indirect influence frames
+;;;;; For each one lift it's isa relations to the type level assertion
+;;;;; Currently I'm putting these in a separate MT. Not sure if this is good.
+;;;;; Ideally wouldn't each of these frames be a case or mt
+;;;;;
+;;;
+;;; for each indirect-frame found, of any type, try to generalize
+;;;
+(preconditionForMethod
+ (and 
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (inferenceAllowed (ist-Information (DiscourseCaseFn ?discourse-id)
+                (drsForDiscourse ?discourse-interpretation-id)))
+      (evaluate ?interpretation-facts
+        (TheClosedRetrievalSetOf ?indirect-frame
+          (ist-Information (DrsCaseFn ?discourse-interpretation-id) (isa ?indirect-frame IndirectInfluenceFrame))))
+      (evaluate ?list (SetToListFn ?interpretation-facts))
+      (evaluate ?len (LengthOfListFn ?list))
+      (greaterThan ?len 0)
+      )
+ (methodForAction
+  (generalizeQPInterpretation)
+  (actionSequence
+   (TheList
+    (doForEach ?iframe ?interpretation-facts (actionSequence
+                                              (TheList
+                                               (generalizeIndirects ?iframe ?discourse-interpretation-id QPHypothesisMt 0))))
+    (doAnnounce "IndirectGen/QP works" ())))))
+;;;
+;;; default = an indirect influenece frame that's not getting quants with signs
+;;;
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (generalizeIndirects ?iframe ?discourse-interpretation-id ?mt ?num)
+    (actionSequence
+      (TheList (doAnnounce "~%error on frame." ())))))
+     
+(<== (preferInContext (generalizeIndirects ?iframe ?discourse-interpretation-id ?mt ?num) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList (doAnnounce "~%error on frame." ())))))
+
+;;;; THIS IS ONLY FOR QPROP ++ with bin-rel
+;;; use the outsourced predicate to look for binary relations
+;;; that occur with entities of corresponding types to our quants.
+;;; These are found from the Spindle which contains binary assertions from
+;;; throughout the discourse.
+
+(preconditionForMethod
+      ;;;
+      ;;; find all the quants and entities
+      ;;; then if there is a handy bin-rel
+      ;;; following code finds the entity type 
+      ;;; and looks for a bin pred
+      ;;;
+ (and (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrained ?iframe ?constrained-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrainer ?iframe ?constrainer-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrained-q-frame ?constrained-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrainer-q-frame ?constrainer-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrainer-q-frame ?constrainer-entity))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrained-q-frame ?constrained-entity))
+      ;;;
+      ;;; this tells us what kind of influence
+      ;;;
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (sign ?iframe Positive))
+      ;;;
+       (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+         (currentDiscourseCase ?dcase))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrained-entity ?constrained-col))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrainer-entity ?constrainer-col)) 
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity1 ?constrainer-col))
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity2 ?constrained-col))
+      (outsourcedOnly (binrelIn (NLPSpindleFn ?dcase) ?binrel))
+      ;;;
+      ;;; look through WM for the bound bin-preds and hypothesize one influence relation for each.
+      ;;;
+      (evaluate ?bin-preds
+        (TheClosedRetrievalSetOf ?binpred
+          (or
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity1 ?entity2)))
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity2 ?entity1))))))
+      (evaluate ?lis (SetToListFn ?bin-preds))
+      (evaluate ?len (LengthOfListFn ?lis))
+      (greaterThan ?len 0)
+      ) 
+ (methodForAction
+  (generalizeIndirects ?iframe ?discourse-interpretation-id ?mt ?num)
+  (actionSequence
+   (TheList
+    (doForEach ?pred ?bin-preds (actionSequence
+                                 (TheList
+                                  (doAnnounce "IndirectGen/QP works ~A" (?pred))
+                                  (hypothesizeInfluenceFromText QPHypothesisMt qprop ?constrained-quant ?constrainer-quant ?constrainer-col ?constrained-col ?pred ?discourse-interpretation-id)
+                                  )))))))
+
+
+
+;;; Now, if we didn't find a bin-rel, we need to look back through the discourse.
+;;; If we find entities of the same collection as our qframe roles
+;;; we check to see if they're in some davidsonian relation.
+;;; If so, they're used to generate a underSpecifiedBinRel
+;;; These are told into the KB but are contextuatlized to the dcase
+;;; that they came from.
+(preconditionForMethod
+ (and (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrained ?iframe ?constrained-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrainer ?iframe ?constrainer-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrained-q-frame ?constrained-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrainer-q-frame ?constrainer-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrainer-q-frame ?constrainer-entity))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrained-q-frame ?constrained-entity))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (sign ?iframe Positive))
+      ;;;
+      ;;; find all the quants and entities
+      ;;; then if there is NO handy bin-rel
+      ;;;
+       (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+         (currentDiscourseCase ?dcase))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrained-entity ?constrained-col))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrainer-entity ?constrainer-col)) 
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity1 ?constrainer-col))
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity2 ?constrained-col))
+      ;;;(evaluate ?binrels
+        ;;;(TheClosedRetrievalSetOf ?binrel
+      (outsourcedOnly (binrelIn (NLPSpindleFn ?dcase) ?binrel))
+      ;;;))
+      (evaluate ?bin-preds
+        (TheClosedRetrievalSetOf ?binpred
+          (or
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity1 ?entity2)))
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity2 ?entity1))))))
+      (evaluate ?lis (SetToListFn ?bin-preds))
+      (evaluate ?len (LengthOfListFn ?lis))
+      (equals ?len 0)
+      )    
+ (methodForAction
+  (generalizeIndirects ?iframe ?discourse-interpretation-id ?mt ?num)
+  (actionSequence
+   (TheList
+    (doAnnounce "No bin-rel found" ())
+    (generateKappa ?discourse-interpretation-id ?iframe ?entity1 ?entity2 ?num)
+    ))))
+
+
+
+(preconditionForMethod
+ (and (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrained ?iframe ?constrained-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrainer ?iframe ?constrainer-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrainer-q-frame ?constrainer-entity))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrained-q-frame ?constrained-entity))
+      (equals ?num 0)
+      ;;;;;;;;;;;;
+      ;;;;;;;;;;;; Now querying for preds in davidsonian reps
+      ;;;;;;;;;;;;
+      (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred1 ?event ?entity1)))
+      (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred2 ?event ?entity2)))
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?event ?event-col))
+      )
+      ;;;
+      ;;; Now bind the CycL assertibles for use in relationThroughEvent
+      ;;;
+     (methodForAction
+      (generateKappa ?discourse-interpretation-id ?iframe ?entity1 ?entity2 ?num)
+       (actionSequence
+        (TheList 
+         (doAnnounce "~%creating kappa." ())
+         (doAgentPlan
+          (actionSequence
+           (TheList
+            (doRecord (ist-Information (NLPSpindleFn ?dcase) (relationThroughEvent ?event-col ?binpred1 ?binpred2 ?constrainer-entity ?constrained-entity)))
+            (doAgentPlan
+             (actionSequence
+              (TheList
+               (doTell (ist-Information (NLPSpindleFn ?dcase) (underspecifiedBinRel ?constrainer-entity ?constrained-entity))) 
+               (doAgentPlan
+                (actionSequence
+                 (TheList
+                  ;;;
+                  ;;; finally,call generalize again with the now underspeced pred in WM
+                  ;;;
+                  (generalizeIndirects ?iframe ?discourse-id QPHypothesisMT 1))))
+            ))))))))))
+
+;;;
+;;;This is to stop infinite looping
+;;;
+(preconditionForMethod
+ (equals ?num 1)
+ (methodForAction
+  (generateKappa ?discourse-interpretation-id ?iframe ?entity1 ?entity2 ?num)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%creating kappa failed." ())))))
+
+
+;;;;;;; THIS IS ONLY FOR QPROP --
+;;; This is a repeat of the above methods,
+;;; but the sign is negative rather than positive.
+;;; This should get us negative indirect-influences.
+;;;;;;;
+
+(preconditionForMethod
+      ;;;
+      ;;; find all the quants and entities
+      ;;; then if there is a handy bin-rel
+      ;;; following code finds the entity type 
+      ;;; and looks for a bin pred
+      ;;;
+ (and (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrained ?iframe ?constrained-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrainer ?iframe ?constrainer-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrained-q-frame ?constrained-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrainer-q-frame ?constrainer-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrainer-q-frame ?constrainer-entity))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrained-q-frame ?constrained-entity))
+      ;;;
+      ;;; this tells us what kind of influence
+      ;;;
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (sign ?iframe Negative))
+      ;;;
+       (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+         (currentDiscourseCase ?dcase))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrained-entity ?constrained-col))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrainer-entity ?constrainer-col)) 
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity1 ?constrainer-col))
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity2 ?constrained-col))
+      (outsourcedOnly (binrelIn (NLPSpindleFn ?dcase) ?binrel))
+      ;;;
+      ;;; look through WM for the bound bin-preds and hypothesize one influence relation for each.
+      ;;;
+      (evaluate ?bin-preds
+        (TheClosedRetrievalSetOf ?binpred
+          (or
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity1 ?entity2)))
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity2 ?entity1))))))
+      (evaluate ?lis (SetToListFn ?bin-preds))
+      (evaluate ?len (LengthOfListFn ?lis))
+      (greaterThan ?len 0)
+      ) 
+ (methodForAction
+  (generalizeIndirects ?iframe ?discourse-interpretation-id ?mt ?num)
+  (actionSequence
+   (TheList
+    (doForEach ?pred ?bin-preds (actionSequence
+                                 (TheList
+                                  (doAnnounce "IndirectGen/QP works ~A" (?pred))
+                                  (hypothesizeInfluenceFromText QPHypothesisMt qprop- ?constrained-quant ?constrainer-quant ?constrainer-col ?constrained-col ?pred ?discourse-interpretation-id)
+                                  )))))))
+
+(preconditionForMethod
+ (and (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrained ?iframe ?constrained-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (constrainer ?iframe ?constrainer-q-frame))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrained-q-frame ?constrained-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (quantityType ?constrainer-q-frame ?constrainer-quant))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrainer-q-frame ?constrainer-entity))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (entity ?constrained-q-frame ?constrained-entity))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (sign ?iframe Negative))
+      ;;;
+      ;;; find all the quants and entities
+      ;;; then if there is NO handy bin-rel
+      ;;;
+       (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+         (currentDiscourseCase ?dcase))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrained-entity ?constrained-col))
+      (ist-Information (DrsCaseFn ?discourse-interpretation-id)
+        (isa ?constrainer-entity ?constrainer-col)) 
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity1 ?constrainer-col))
+      (ist-Information (NLPSpindleFn ?dcase) (isa ?entity2 ?constrained-col))
+      (outsourcedOnly (binrelIn (NLPSpindleFn ?dcase) ?binrel))
+      (evaluate ?bin-preds
+        (TheClosedRetrievalSetOf ?binpred
+          (or
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity1 ?entity2)))
+              (ist-Information Interaction-ManagerPlanMt  (binrelIn (NLPSpindleFn ?dcase) (?binpred ?entity2 ?entity1))))))
+      (evaluate ?lis (SetToListFn ?bin-preds))
+      (evaluate ?len (LengthOfListFn ?lis))
+      (equals ?len 0)
+      )    
+ (methodForAction
+  (generalizeIndirects ?iframe ?discourse-interpretation-id ?mt ?num)
+  (actionSequence
+   (TheList
+    (doAnnounce "No bin-rel found" ())
+    (generateKappa ?discourse-interpretation-id ?iframe ?entity1 ?entity2 ?num)
+    ))))
+
+;;;;;;;;;;;
+;;;;;;;;;;; Hypothesis gen
+;;;;;;;;;;;
+
+(preconditionForMethod
+ (and 
+      (typeLevelInfluencePred ?inf-type ?type-level-inf-type))
+ (methodForAction
+  (hypothesizeInfluenceFromText ?mt ?inf-type ?constrained-quant ?constrainer-quant ?constrainer-col ?constrained-col ?pred ?discourse-interpretation-id)
+  (actionSequence
+        (TheList 
+         (doRecord (ist-Information (DiscourseCaseFn ?discourse-interpretation-id) (?type-level-inf-type ?constrained-quant ?constrainer-quant ?constrained-col ?constrainer-col ?pred)))
+         (doAnnounce "~%hypothesis can be asserted." ())
+         ))))
+
+
+

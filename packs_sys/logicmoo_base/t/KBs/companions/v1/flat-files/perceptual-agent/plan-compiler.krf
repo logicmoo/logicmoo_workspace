@@ -1,0 +1,192 @@
+;;;
+;;; plan-compiler.meld
+;;;
+;;; Support compiling COAs to htn plan fragments
+;;;
+;;; Author: Tom Hinrichs
+;;; Created: December 1, 2010 09:15:28
+;;; $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;; $LastChangedBy: hinrichs $
+;;;
+;;; Long-term strategies may be represented in terms of event-triggered
+;;; contingencies, durative goals, preferences and tradeoffs, etc.
+;;; These are not representable purely as complete-information, single-actor
+;;; plans, but may be better encoded as something like military courses of 
+;;; action (COAs).  The HTN plans in this file translate COA objectives
+;;; and assignments into (multiple) HTN methods and stores them in a way
+;;; that permits their execution at the appropriate time.
+;;;
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Need to be able to take a declarative condition and translate it into
+;;; indexed triggers.  What asynchronous events are there, and when they
+;;; happen, what buckets do they look in for plans to execute?
+
+(isa translateConditionToTrigger ComplexActionPredicate)
+
+;;; Implement a synchronization protocol where one agent/actor waits 
+;;; (e.g., at a phase line) for the other.  When conditions are met,
+;;; fire the event to proceed.
+(isa translateSynchronizedTasksToEventTriggers ComplexActionPredicate)
+
+;;; Just as a primitive action may have a task to achieve its 
+;;; preconditions, a qualitative process may have a task to cause it
+;;; to become active.  Encode it similarly.
+(isa fireProcessActivationPlan ComplexActionPredicate)
+
+;;; This is going to require doRecordPlans to record the planForTask statement
+;;; and then to store it as a callbackPlanForEvent somehow.
+
+;;; How would we translate a 'buyTime' strategy?
+
+;;; The input representation needs to be FOPC, not operational.
+;;; The plan compiler needs to be able to reason about events in a way
+;;; that allows it to recognize threats (and counterplan) without trying
+;;; to extract lessons from HTN methods.
+
+
+;;; Need to generate statements like this:
+#||
+(isa (ComplexActionFn 
+        (NonDavidsonianPredFn GainingUserRights 
+          (TheList toPossessor 
+            (BinaryRoleTypePredFn objectOfPossessionTransfer)))) 
+      ComplexActionPredicate)
+||#
+;;; althought the resultIsa of ComplexActionFn should give us the isa.
+
+
+;;; Given a process sequence, we'll want to post an event when each 
+;;; process reaches its upper limit point and invoke enable-process-for-entity
+;;; for the next process.
+
+
+
+(isa processSequence BinaryPredicate)
+(arg1Isa processSequence QPQuantityType)
+(arg2Isa processSequence List)
+(comment processSequence "(processSequence ?quantity-type ?sequence) identifies ordered phase changes of the quantity type in the form of a list of process types that must be passed through in sequence.")
+
+(<== (processSequence ?qtype ?sequence)
+     (evaluate ?process-bounds
+       (TheClosedRetrievalSetOf (?process ?lb ?ub)
+          (and (consequenceOf-TypeType ?process (i+ (?qtype ?role) ?rate))
+               (numAnswers 1 (sequencedConditionBounds ?qtype ?process ?lb ?ub)))))
+     (evaluate ?sorted-bounds
+       (SortFn ?process-bounds 
+           (Kappa (?a ?b) (tripleBefore ?a ?b)) ; need the Kappa to recursively invoke query.
+           IdentityFn))
+     (evaluate ?sequence
+       (MapFunctionOverList Arg0Fn ?sorted-bounds)))
+
+(isa sequencedConditionBounds QuaternaryPredicate)
+(arity sequencedConditionBounds 4)
+
+(<== (sequencedConditionBounds ?qtype ?process ?lb ?ub)
+     (numAnswers 1 (lowerBoundFor ?qtype ?process ?lb))
+     (numAnswers 1 (upperBoundFor ?qtype ?process ?ub))
+     (different (?lb ?ub) (None None)))
+     
+(isa lowerBoundFor TernaryPredicate)
+
+(<== (lowerBoundFor ?qtype ?process ?lb)
+     (conditionLowerBound ?qtype ?process ?lb))
+
+(<== (lowerBoundFor ?qtype ?process None)
+     (uninferredSentence
+       (conditionLowerBound ?qtype ?process ?bound)))
+       
+(isa upperBoundFor TernaryPredicate)
+
+(<== (upperBoundFor ?qtype ?process ?ub)
+     (conditionUpperBound ?qtype ?process ?ub))
+
+(<== (upperBoundFor ?qtype ?process None)
+     (uninferredSentence
+       (conditionUpperBound ?qtype ?process ?bound)))
+
+(isa conditionLowerBound TernaryPredicate)
+
+(<== (conditionLowerBound ?qtype ?process ?bound)
+     (conditionOf-TypeType ?process (greaterThan (?qtype ?role) ?bound))
+     (isConstant ?bound))
+
+(<== (conditionLowerBound ?qtype ?process ?bound)
+     (conditionOf-TypeType ?process (greaterThanOrEqualTo (?qtype ?role) ?bound))
+     (isConstant ?bound))
+     
+(<== (conditionLowerBound ?qtype ?process ?bound)
+     (conditionOf-TypeType ?process (equals (?qtype ?role) ?bound))
+     (isConstant ?bound))
+
+(isa conditionUpperBound TernaryPredicate)
+
+(<== (conditionUpperBound ?qtype ?process ?bound)
+     (conditionOf-TypeType ?process (lessThan (?qtype ?role) ?bound))
+     (isConstant ?bound))
+
+(<== (conditionUpperBound ?qtype ?process ?bound)
+     (conditionOf-TypeType ?process (lessThanOrEqualTo (?qtype ?role) ?bound))
+     (isConstant ?bound))
+
+(<== (conditionUpperBound ?qtype ?process ?bound)
+     (conditionOf-TypeType ?process (equals (?qtype ?role) ?bound))
+     (isConstant ?bound))
+
+(isa isConstant UnaryPredicate)
+(arity isConstant 1)
+(comment isConstant "(isConstant <thing>) means <thing> is either a number or a NAT with units and a value.")
+
+;;; Numbers are constants:
+(<== (isConstant ?item)
+     (isa ?item Number-General))
+
+;;; Handle functors that are units or measurable (non-fluent) quantities:
+(<== (isConstant (?functor ?value))
+     (groundExpression (?functor ?value))
+     (different ?functor MeasurableQuantityFn)
+     (different ?functor QPQuantityFn)
+     (isa ?value Number-General))  ; Shortcut. Not ideal.
+
+
+;;; Something like this:
+;;; (tripleBefore (CityGrowthProcess3 (FreecivCitizenCountFn 12) None)
+;;;               (CityGrowthProcess2 (FreecivCitizenCountFn 8) (FreecivCitizenCountFn 12)))
+(isa tripleBefore BinaryPredicate)
+(arity tripleBefore 2)
+(arg1Isa tripleBefore CycLTerm)  ; a Tuple?
+(arg2Isa tripleBefore CycLTerm)  ; a Tuple?
+(comment tripleBefore "(tripleBefore ?triple1 ?triple2) is a convenience predicate for sorting.  Triples are of the form (<process-type> <lower-bound> <upper-bound>).")
+
+(<== (tripleBefore ?t1 ?t2)
+     (unifies (?p1 ?l1 ?u1) ?t1)
+     (unifies (?p2 ?l2 ?u2) ?t2)
+     (groundExpression ?u1)
+     (groundExpression ?l2)
+     (different ?u1 None)
+     (different ?l2 None)
+     (effectivelyLess ?u1 ?l2))
+     
+(isa effectivelyLess BinaryPredicate)
+
+(<== (effectivelyLess ?lower ?upper)
+     (unifies (?functor ?lnum) ?lower)
+     (unifies (?functor ?unum) ?upper)
+     (lessThanOrEqualTo ?lnum ?unum))
+
+;;; Case of simple numbers:
+(<== (effectivelyLess ?lower ?upper)
+     (lessThanOrEqualTo ?lower ?upper))
+     
+;;; -------------------------------------------------------------------------
+
+
+
+
+
+
+
+     
+
+

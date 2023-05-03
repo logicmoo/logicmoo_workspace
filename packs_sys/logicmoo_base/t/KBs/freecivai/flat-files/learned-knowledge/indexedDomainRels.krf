@@ -1,0 +1,95 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: indexedDomainRels.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: December 22, 2014 16:09:42
+;;;;   Purpose: cache out indexed domain rels
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 18:04:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory FreecivMt)
+
+(indexedDomainRel (terrainTransformsTo FreeCiv-TerrainTile FreeCiv-TerrainTile))
+(indexedDomainRel (unitProducedThisTurn FreeCiv-City FreeCiv-Unit))
+(indexedDomainRel (strongestLandDefender FreeCiv-Player FreeCiv-UnitType))
+(indexedDomainRel (largestBuildableTransport FreeCiv-Player FreeCiv-SeaUnit))
+(indexedDomainRel (nearestFriendlyCity FreecivLocation FreeCiv-City))
+(indexedDomainRel (cityAt FreeCiv-City FreecivLocation))
+(indexedDomainRel (plansConstruction FreeCiv-City FreeCiv-BuildableThing-Type))
+(indexedDomainRel (roadBlockedByRiver FreeCiv-Player FreecivLocation))
+(indexedDomainRel (cityCanBuild FreeCiv-City FreeCiv-ObjectType))
+;(indexedDomainRel (potentialCityAt FreeCiv-City FreeCiv-TerrainTile))
+(indexedDomainRel (potentialCityAt FreecivLocation))
+(indexedDomainRel (inFriendlyCity FreeCiv-Unit FreeCiv-City))
+(indexedDomainRel (canTravelOn FreeCiv-Unit FreeCiv-TerrainTile))
+(indexedDomainRel (homeCityOf FreeCiv-City FreeCiv-Unit))
+(indexedDomainRel (ownsUnit FreeCiv-Player FreeCiv-Unit))
+(indexedDomainRel (ownsCity FreeCiv-Player FreeCiv-City))
+(indexedDomainRel (spaceshipStatus FreeCiv-Player FreeCiv-SpaceStatus))
+(indexedDomainRel (intelPossible FreeCiv-Player FreeCiv-Player))
+(indexedDomainRel (couldMeetWith FreeCiv-Player FreeCiv-Player))
+(indexedDomainRel (diplomacyPossible FreeCiv-Player FreeCiv-Player))
+(indexedDomainRel (hasEmbassy FreeCiv-Player FreeCiv-Player))
+(indexedDomainRel (sameContinent FreecivLocation FreecivLocation))
+(indexedDomainRel (resourceAt FreecivLocation FreeCiv-Resource))
+(indexedDomainRel (specialAt FreecivLocation FreeCiv-Special))
+(indexedDomainRel (terrainAt FreecivLocation FreeCiv-TerrainTile))
+(indexedDomainRel (fcObjectAt FreeCiv-Object FreecivLocation))
+(indexedDomainRel (transportedBy FreeCiv-Unit FreeCiv-Unit))
+(indexedDomainRel (unitHomeCity FreeCiv-Unit FreeCiv-City))
+(indexedDomainRel (unitOwner FreeCiv-Unit FreeCiv-Player))
+(indexedDomainRel (tileWorkedByCity FreecivLocation FreeCiv-City))
+(indexedDomainRel (cityWorkingTileAt FreeCiv-City FreecivLocation))
+(indexedDomainRel (cityOwner FreeCiv-City FreeCiv-Player))
+(indexedDomainRel (cityHasImprovement FreeCiv-City FreeCiv-ObjectType))
+(indexedDomainRel (currentlyBuilding FreeCiv-City FreeCiv-BuildableThing-Type))
+(indexedDomainRel (capitolCity FreeCiv-Player FreeCiv-City))
+(indexedDomainRel (playerKnowsTech FreeCiv-Player FreeCiv-Tech))
+(indexedDomainRel (canSetGovernment FreeCiv-Player FreeCiv-Government))
+(indexedDomainRel (techGoal FreeCiv-Player FreeCiv-Tech))
+(indexedDomainRel (currentlyResearching FreeCiv-Player FreeCiv-Tech))
+(indexedDomainRel (currentlyResearchable FreeCiv-Player FreeCiv-Tech))
+(indexedDomainRel (currentGovernment FreeCiv-Player FreeCiv-Government))
+(indexedDomainRel (canBuild FreeCiv-Player FreeCiv-BuildableThing-Type))
+(indexedDomainRel (objectTypeObsoleteBy FreeCiv-BuildableThing-Type FreeCiv-ObjectType))
+(indexedDomainRel (objectProductionRequiresBuilding FreeCiv-BuildableThing-Type FreeCiv-BuildableThing-Type))
+(indexedDomainRel (objectProductionRequiresTech FreeCiv-ObjectType FreeCiv-Tech))
+(indexedDomainRel (researchRequiresTech FreeCiv-Tech FreeCiv-Tech))
+(indexedDomainRel (playerNationality FreeCiv-Player FreeCiv-Nation))
+
+;;; constants
+(indexedIntrinsicProperty (unitTypeHasPopulationCost FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasAttackStrength FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasDefendStrength FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasHitpoints FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasFirepower FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasVisionRange FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasMoveRate FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasTransportCapacity FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (unitTypeHasFuelCapacity FreeCiv-UnitType MeasurableQuantity))
+(indexedIntrinsicProperty (objectTypeHasProductionCost FreeCiv-BuildableThing-Type MeasurableQuantity))
+(indexedIntrinsicProperty (objectTypeHasUpkeepFoodCost FreeCiv-BuildableThing-Type MeasurableQuantity))
+(indexedIntrinsicProperty (objectTypeHasUpkeepShieldEffect FreeCiv-BuildableThing-Type MeasurableQuantity))
+(indexedIntrinsicProperty (objectTypeHasUpkeepGoldCost FreeCiv-BuildableThing-Type MeasurableQuantity))
+(indexedIntrinsicProperty (objectTypeHasUpkeepHappyEffect FreeCiv-BuildableThing-Type MeasurableQuantity))
+
+(indexedIntrinsicProperty (researchRequiresTech FreeCiv-Tech FreeCiv-Tech))
+(indexedIntrinsicProperty (objectProductionRequiresTech FreeCiv-ObjectType FreeCiv-Tech))
+(indexedIntrinsicProperty (objectProductionRequiresBuilding FreeCiv-BuildableThing-Type FreeCiv-BuildableThing-Type))
+(indexedIntrinsicProperty (technologyObsoletes FreeCiv-Tech FreeCiv-BuildableThing-Type))
+(indexedIntrinsicProperty (objectTypeObsoletes FreeCiv-BuildableThing-Type FreeCiv-BuildableThing-Type))
+
+;;; propositional fluents
+(indexedExtrinsicProperty (currentHitpoints FreeCiv-Unit MeasurableQuantity))
+(indexedExtrinsicProperty (currentMovepoints FreeCiv-Unit MeasurableQuantity))
+(indexedExtrinsicProperty (currentHealth FreeCiv-Unit Integer)) ; Percent?
+(indexedExtrinsicProperty (unitOwner FreeCiv-Unit FreeCiv-Player))
+(indexedExtrinsicProperty (unitHomeCity FreeCiv-Unit FreeCiv-City))
+(indexedExtrinsicProperty (transportedBy FreeCiv-Unit FreeCiv-Unit))
+;(indexedExtrinsicProperty (currentActivity FreeCiv-Unit Collection))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

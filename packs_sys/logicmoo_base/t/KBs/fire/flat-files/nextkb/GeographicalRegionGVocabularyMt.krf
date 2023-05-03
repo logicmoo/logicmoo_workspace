@@ -1,0 +1,4 @@
+(in-microtheory GeographicalRegionGVocabularyMt)
+
+(isa SouthernHemisphere-Region GeographicalHemisphere)
+(isa NorthernHemisphere-Region GeographicalHemisphere)

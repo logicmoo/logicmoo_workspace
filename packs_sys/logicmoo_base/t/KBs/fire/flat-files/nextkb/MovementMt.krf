@@ -1,0 +1,20 @@
+(in-microtheory MovementMt)
+
+(functionalInArgs totalDisplacement 2)
+(rewriteOf PassiveBarrierTransport (SubcollectionOfWithRelationToTypeFn SelectiveBarrierTransport transportedDownAGradientIn PartiallyTangible))
+(rewriteOf ActiveBarrierTransport (SubcollectionOfWithRelationToTypeFn SelectiveBarrierTransport transportedUpAGradientIn PartiallyTangible))
+(argFormat totalDisplacement 1 SetTheFormat)
+(argFormat totalDisplacement 2 IntervalEntry)
+(arityMin Knot-Speed 1)
+(arityMax Knot-Speed 2)
+(comment intendedToLocation "A #$BinaryRolePredicate that relates a #$Translocation to an #$EnduringThing-Localized.  <code>(#$intendedToLocation TRANSLOC LOC)</code> means that the agent responsible for <code>TRANSLOC</code> <i>intended</i> that the #$toLocation of <code>TRANSLOC</code> be <code>LOC</code>; the #$toLocation of <code>TRANSLOC</code> was \"supposed to be\" <code>LOC</code>.  Note that #$intendedToLocation is neither a specialization nor a generalization of #$toLocation; nor are the predicates contraries (cf. #$negationPreds).  Suppose that Johnny throws a baseball through his neighbors' window.  If Johnny <i>meant</i> to throw the baseball to his friend Jimmy, then the window is the #$toLocation but not the #$intendedToLocation of the throwing, and Jimmy's baseball glove is the #$intendedToLocation but not the #$toLocation of the throwing.  If Johnny <i>deliberately</i> threw the ball through the window, then the window is both the #$toLocation and the #$intendedToLocation of the throwing.")
+(comment containerEntered "An #$ActorSlot and a specialization of #$toLocation.  Where <code>ENTERING</code> is an instance of #$EnteringAContainer and <code>CONTAINER</code> is an instance of #$Container, <code>(#$containerEntered ENTERING CONTAINER)</code> means that <code>CONTAINER</code> is entered by the #$primaryObjectMoving in <code>ENTERING</code>.")
+(comment containerExited "An #$ActorSlot and a specialization of #$fromLocation.  Where <code>EXITING</code> is an instance of #$ExitingAContainer and <code>CONTAINER</code> is an instance of #$Container, <code>(#$containerExited EXITING CONTAINER)</code> means that <code>CONTAINER</code> is exited by the #$primaryObjectMoving in <code>EXITING</code>.")
+(comment StationaryObject "An #$ExistingObjectType and specialization of #$PartiallyTangible.  Each instance of #$StationaryObject is a physical object that is not in motion (to any significant degree) with respect to the salient frame of reference in the current context.  For example, in an ordinary, common sense context Bob might be an instance of #$StationaryObject while he is sitting still in his #$RecliningChair.  (In such a context the relevant frame of reference might be #$PlanetEarth, or Bob's #$LivingRoom.)  In a different context, in which (say) the #$Sun provides the salient frame of reference, Bob might not be an instance of #$StationaryObject even though he is (from an Earth-oriented, commonsense point of view) \"sitting still\" in his recliner.
+<p>
+Note that #$StationaryObject is simply a rewrite of (#$SubcollectionOfWithRelationToFn #$PartiallyTangible #$velocityOfObject #$Stationary).")
+(genls AutocatalyticProcess Event)
+(genls ActiveBarrierTransport RegulatedTransportSituation)
+(genls ActiveBarrierTransport SelectiveBarrierTransport)
+(genls PassiveBarrierTransport RegulatedTransportSituation)
+(genls PassiveBarrierTransport SelectiveBarrierTransport)

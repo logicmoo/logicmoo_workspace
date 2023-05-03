@@ -1,0 +1,864 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: microstories-for-copa.meld
+;;;;    System: 
+;;;;    Author: Blass
+;;;;   Created: January 12, 2016 13:09:06
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory CommonsenseMicrostoryMt)
+(genlMt CommonsenseMicrostoryMt MicrostoryMt)
+(genlMt MatchConstraintStorageMt CommonsenseMicrostoryMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa CommonsenseMicrostoryMtFn Function-Denotational)
+(arity CommonsenseMicrostoryMtFn 1)
+(arg1Isa CommonsenseMicrostoryMtFn Thing)
+(resultIsa CommonsenseMicrostoryMtFn Microtheory)
+(comment CommonsenseMicrostoryMtFn
+  "(CommonsenseMicrostoryMtFn <concept>) is the microtheory that holds the minimal 
+commonsense unit associated with <concept>")
+
+;;; Each microstory has a set of required correspondences to make sure that
+;;; retrieved cases aren't too loopy
+
+(isa matchConstraintsForMtFn Function-Denotational)
+(arity matchConstraintsForMtFn 1)
+(arg1Isa matchConstraintsForMtFn Microtheory)
+(resultIsa matchConstraintsForMtFn Microtheory)
+(comment matchConstraintsForMtFn
+  "(matchConstraintsForMtFn <mt>) holds all the match constraint
+facts to be used when matching against the microtheory <mt>.")
+
+;;; fundamental common sense (to be used many times)
+
+;; a violent impact causes harm
+
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentImpact-Harm))
+(genlMt (CommonsenseMicrostoryMtFn ViolentImpact-Harm) CommonsenseMicrostoryMt)
+
+(isa impact11177 ViolentImpact)
+(objectHarmed impact11177 impacted17177) 
+
+(in-microtheory MatchConstraintStorageMt)
+
+;;;(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpact-Harm) (requireWithinPartitionCorrespondences ViolentImpact))
+;;; so you only use this case when you are certain you have a ViolentImpact already, else you will infer that every harm is caused by impact
+;;;(requiredBaseCorrespondence impact11177)
+
+;;; For Q 370
+
+;; the boiling of water creates steam
+(in-microtheory (CommonsenseMicrostoryMtFn BoilingWaterSteams))
+(genlMt (CommonsenseMicrostoryMtFn BoilingWaterSteams) CommonsenseMicrostoryMt)
+
+(isa water1983 (LiquidFn Water))
+(isa boil4837 Boiling)
+(causes-PropProp (and (isa water1983 (LiquidFn Water))
+                     (isa boil4837 Boiling)
+                     (inputsDestroyed boil4837 water1983))
+                (createdBy steam1984 boil4837))
+(inputsDestroyed boil4837 water1983)
+(isa steam1984 (GaseousFn Water))
+(createdBy steam1984 boil4837)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn BoilingWaterSteams) (requireWithinPartitionCorrespondences Boiling))
+
+
+;; boiling water in a container heats the container
+(in-microtheory (CommonsenseMicrostoryMtFn BoilingWaterHeatsItsContainer))
+(genlMt (CommonsenseMicrostoryMtFn BoilingWaterHeatsItsContainer) CommonsenseMicrostoryMt)
+
+(isa water1979 (LiquidFn Water))
+(isa boil4836 Boiling)
+(inputsDestroyed boil4836 water1979)
+(in-UnderspecifiedContainer water1979 container5774)
+(isa heat58972 HeatingProcess)
+(objectOfStateChange heat58972 container5774)
+(causes-PropProp (and (isa water1979 (LiquidFn Water))
+                      (isa boil4836 Boiling)
+                      (inputsDestroyed boil4836 water1979)
+                      (in-UnderspecifiedContainer water1979 container5774))
+                 (and (isa heat58972 HeatingProcess)
+                      (objectOfStateChange heat58972 container5774)))
+(createdBy steam1984 boil4837)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn BoilingWaterHeatsItsContainer) (requireWithinPartitionCorrespondences Boiling))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn BoilingWaterHeatsItsContainer) (requireWithinPartitionCorrespondences HeatingProcess))
+
+;;;(requiredBaseCorrespondence container5774)
+
+;; boiling water in a container creates steam in that container
+(in-microtheory (CommonsenseMicrostoryMtFn SteamIsInItsWatersContainer))
+(genlMt (CommonsenseMicrostoryMtFn SteamIsInItsWatersContainer) CommonsenseMicrostoryMt)
+
+(isa water1986 (LiquidFn Water))
+(in-UnderspecifiedContainer water1986 container5775)
+(isa boil4838 Boiling)
+(inputsDestroyed boil4838 water1986)
+(isa steam1985 (GaseousFn Water))
+(createdBy steam1985 boil4838)
+(in-UnderspecifiedContainer steam1985 container5775)
+(causes-PropProp (and (isa water1979 (LiquidFn Water))
+                      (isa boil4836 Boiling)
+                      (inputsDestroyed boil4836 water1979)
+                      (in-UnderspecifiedContainer water1979 container5774))
+                 (and (isa steam1985 (GaseousFn Water))
+                      (createdBy steam1985 boil4838)
+                      (in-UnderspecifiedContainer steam1985 container5775)))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn SteamIsInItsWatersContainer) (requireWithinPartitionCorrespondences Boiling))
+
+;;;(requiredBaseCorrespondence container5775)
+;;;(requiredBaseCorrespondence water1986)
+;;;(requiredBaseCorrespondence steam1985)
+
+;; some kettles whistle when they have steam in them
+(in-microtheory (CommonsenseMicrostoryMtFn SteamInKettleWhistles))
+(genlMt (CommonsenseMicrostoryMtFn SteamInKettleWhistles) CommonsenseMicrostoryMt)
+
+(isa steam1987 (GaseousFn Water))
+(in-UnderspecifiedContainer steam1987 container5776)
+(isa container5776 Kettle)
+(isa whistle52987 Whistling-Human)
+(performedBy whistle52987 container5776)
+(causes-PropProp (and (isa steam1987 (GaseousFn Water))
+                      (in-UnderspecifiedContainer steam1987 container5776)
+                      (isa container5776 Kettle))
+                 (and (isa whistle52987 Whistling-Human)
+                      (performedBy whistle52987 container5776)))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn SteamInKettleWhistles) (requireWithinPartitionCorrespondences Boiling))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn SteamInKettleWhistles) (requireWithinPartitionCorrespondences Kettle))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn SteamInKettleWhistles) (requireWithinPartitionCorrespondences Whistling-Human))
+
+;;;(requiredBaseCorrespondence container5776)
+
+;;; for Q 255
+
+;; airplanes need engines to fly
+(in-microtheory (CommonsenseMicrostoryMtFn AirplanesNeedEnginesToFly))
+(genlMt (CommonsenseMicrostoryMtFn AirplanesNeedEnginesToFly) CommonsenseMicrostoryMt)
+
+(isa airplane4767 Airplane)
+(isa fly4772 Flying)
+(primaryObjectMoving fly4772 airplane4767)
+(isa engine4875 Engine)
+(possessiveRelation airplane4767 engine4875)
+(instrumentalRole fly4772 engine4875)
+(causes-PropProp (and (isa airplane4767 Airplane)
+                      (isa fly4772 Flying)
+                      (primaryObjectMoving fly4772 airplane4767)
+                      (isa engine4875 Engine)
+                      (possessiveRelation airplane4767 engine4875))
+                 (instrumentalRole fly4772 engine4875))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn AirplanesNeedEnginesToFly) (requireWithinPartitionCorrespondences Airplane))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn AirplanesNeedEnginesToFly) (requireWithinPartitionCorrespondences Flying))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn AirplanesNeedEnginesToFly) (requireWithinPartitionCorrespondences Engine))
+
+;; things don't work when crucial components malfunction
+(in-microtheory (CommonsenseMicrostoryMtFn ThingsDontWorkWithoutThoseThingsInstrumentalToTheirFunctioning))
+(genlMt (CommonsenseMicrostoryMtFn ThingsDontWorkWithoutThoseThingsInstrumentalToTheirFunctioning) CommonsenseMicrostoryMt)
+
+(isa broken5158 FaultyThing)
+(instrumentalRole anything4772 broken5158)
+(isa malfunction5240 Malfunction)
+(causes-PropProp (and (instrumentalRole anything4772 broken5158)
+                      (isa broken5158 FaultyThing))
+                 (and (isa malfunction5240 Malfunction)
+                      (malfunctionAffects malfunction9846 anything4772)))
+(malfunctionAffects malfunction9846 anything4772)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ThingsDontWorkWithoutThoseThingsInstrumentalToTheirFunctioning) (requireWithinPartitionCorrespondences Malfunction))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ThingsDontWorkWithoutThoseThingsInstrumentalToTheirFunctioning) (requireWithinPartitionCorrespondences FaultyThing))
+
+;; an airplane that malfunctions in flight crashes
+
+(in-microtheory (CommonsenseMicrostoryMtFn WhenAnAirplanesFlightMalfunctionsItCrashes))
+(genlMt (CommonsenseMicrostoryMtFn WhenAnAirplanesFlightMalfunctionsItCrashes) CommonsenseMicrostoryMt)
+
+(isa airplane5312 Airplane)
+(isa flight5339 Flying)
+(primaryObjectMoving flight5339 airplane5312)
+(isa malfunction5323 Malfunction)
+(malfunctionAffects malfunction5323 flight5339)
+(causes-PropProp (and (isa airplane5312 Airplane)
+                     (isa flight5339 Flying)
+                     (primaryObjectMoving flight5339 airplane5312)
+                     (isa malfunction5323 Malfunction)
+                     (malfunctionAffects malfunction5323 flight5339)
+                     )
+                (and (isa crash5365 ViolentCollision)
+                     (objectHarmed crash5365 airplane5312)
+                     (primaryObjectMoving crash5365 airplane5312)))
+(isa crash5365 ViolentCollision)
+(objectHarmed crash5365 airplane5312)
+(primaryObjectMoving crash5365 airplane5312)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn WhenAnAirplanesFlightMalfunctionsItCrashes) (requireWithinPartitionCorrespondences Malfunction))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn WhenAnAirplanesFlightMalfunctionsItCrashes) (requireWithinPartitionCorrespondences Airplane))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn WhenAnAirplanesFlightMalfunctionsItCrashes) (requireWithinPartitionCorrespondences Flying))
+
+;;; too obvious
+;;;(in-microtheory (CommonsenseMicrostoryMtFn FaultyAirplaneEngineLeadsToCrash))
+;;;(genlMt (CommonsenseMicrostoryMtFn FaultyAirplaneEngineLeadsToCrash) CommonsenseMicrostoryMt)
+;;;
+;;;(isa airplane3265 Airplane)
+;;;(isa engine3293 Engine)
+;;;(isa engine3293 FaultyThing)
+;;;(possessiveRelation airplane3265 engine3293)
+;;;(primaryObjectMoving crash3392 airplane3265)
+;;;(isa crash3392 ViolentCollision)
+;;;(objectHarmed crash3392 airplane3265)
+
+;;; Earlier CSUs for Q255, not to be deleted on principle
+
+;; a malfunctioning vehicle crashes
+
+;;; deleted this one after all, but I don't have a good reason for it. Should put it back in after 2/1/16
+;;;(in-microtheory (CommonsenseMicrostoryMtFn MalfunctioningVehicleCrashes))
+;;;(genlMt (CommonsenseMicrostoryMtFn MalfunctioningVehicleCrashes) CommonsenseMicrostoryMt)
+;;;
+;;;(isa vehicle5923 TransportationDevice-Vehicle)
+;;;(isa malfunction9845 Malfunction)
+;;;(malfunctionAffects malfunction9845 vehicle5923)
+;;;(isa crash8514 ViolentCollision)
+;;;(primaryObjectMoving crash8514 vehicle5923)
+;;;(causes-Underspecified malfunction9845 crash8514)
+;;;
+;;;(in-microtheory (matchConstraintsForMtFn (CommonsenseMicrostoryMtFn MalfunctioningVehicleCrashes)))
+;;;(genlMt (matchConstraintsForMtFn (CommonsenseMicrostoryMtFn MalfunctioningVehicleCrashes)) CommonsenseMicrostoryMt)
+;;;
+;;;(requireWithinPartitionCorrespondences TransportationDevice-Vehicle)
+;;;(requireWithinPartitionCorrespondences Malfunction)
+;;;(requireWithinPartitionCorrespondences ViolentCollision)
+;;;(requiredBaseCorrespondence vehicle5923)
+
+;; a malfunctioning transportation vehicle powers down
+
+(in-microtheory (CommonsenseMicrostoryMtFn MalfunctioningVehiclePowersDown))
+(genlMt (CommonsenseMicrostoryMtFn MalfunctioningVehiclePowersDown) CommonsenseMicrostoryMt)
+
+(isa vehicle5924 TransportationDevice-Vehicle)
+(isa malfunction9846 Malfunction)
+(malfunctionAffects malfunction9846 vehicle5924)
+(isa turn-off3901 TurningOffPoweredDevice)
+(objectOfStateChange turn-off3901 vehicle5924)
+(causes-PropProp (and (isa vehicle5924 TransportationDevice-Vehicle)
+                      (isa malfunction9846 Malfunction)
+                      (malfunctionAffects malfunction9846 vehicle5924))
+                 (and (isa turn-off3901 TurningOffPoweredDevice)
+                      (objectOfStateChange turn-off3901 vehicle5924)))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn MalfunctioningVehiclePowersDown) (requireWithinPartitionCorrespondences Malfunction))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn MalfunctioningVehiclePowersDown) (requireWithinPartitionCorrespondences TransportationDevice-Vehicle))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn MalfunctioningVehiclePowersDown) (requireWithinPartitionCorrespondences TurningOffPoweredDevice))
+
+;;;(requiredBaseCorrespondence vehicle5924)
+
+;; a faulty vehicle causes/can cause its sensor to be faulty
+
+(in-microtheory (CommonsenseMicrostoryMtFn FaultyVehicleCausesFaultyInstrumentReadouts))
+(genlMt (CommonsenseMicrostoryMtFn FaultyVehicleCausesFaultyInstrumentReadouts) CommonsenseMicrostoryMt)
+
+(isa vehicle1298 FaultyThing)
+(isa vehicle1298 TransportationDevice-Vehicle)
+(isa sensor4274 Sensor-Device)
+(possessiveRelation vehicle1298 sensor4274)
+(isa sensor4274 FaultyThing)
+(causes-PropProp (and (isa vehicle1298 FaultyThing)
+                      (isa sensor4274 Sensor-Device)
+                      (possessiveRelation vehicle1298 sensor4274))
+                 (isa sensor4274 FaultyThing))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultyVehicleCausesFaultyInstrumentReadouts) (requireWithinPartitionCorrespondences FaultyThing))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultyVehicleCausesFaultyInstrumentReadouts) (requireWithinPartitionCorrespondences TransportationDevice-Vehicle))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultyVehicleCausesFaultyInstrumentReadouts) (requireWithinPartitionCorrespondences Sensor-Device))
+;;;(requiredBaseCorrespondence vehicle1298)
+
+;; a faulty sensor can cause an operator error
+
+(in-microtheory (CommonsenseMicrostoryMtFn FaultySensorsCauseOperatorError))
+(genlMt (CommonsenseMicrostoryMtFn FaultySensorsCauseOperatorError) CommonsenseMicrostoryMt)
+
+(isa vehicle1289 TransportationDevice-Vehicle)
+(isa sensor4286 Sensor-Device)
+(possessiveRelation vehicle1289 sensor4286)
+(isa sensor4286 FaultyThing)
+(isa driver9275 Person)
+(isa driving8156 TransportationEvent)
+(vehicle driving8156 vehicle1289)
+(driverActor driving8156 driver9275)
+(isa error3592 MakingAMistake)
+(isa make3563 MakingSomething)
+(performedBy make3563 driver9275)
+(products make3563 error3592)
+(causes-PropProp (and (isa vehicle1289 TransportationDevice-Vehicle)
+                      (isa sensor4286 Sensor-Device)
+                      (possessiveRelation vehicle1289 sensor4286)
+                      (isa sensor4286 FaultyThing)
+                      (isa driver9275 Person)
+                      (isa driving8156 TransportationEvent)
+                      (vehicle driving8156 vehicle1289)
+                      (driverActor driving8156 driver9275))
+                 (and (isa error3592 MakingAMistake)
+                      (isa make3563 MakingSomething)
+                      (performedBy make3563 driver9275)
+                      (products make3563 error3592)))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultySensorsCauseOperatorError) 
+                     (requireWithinPartitionCorrespondences FaultyThing))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultySensorsCauseOperatorError) 
+                     (requireWithinPartitionCorrespondences TransportationDevice-Vehicle))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultySensorsCauseOperatorError) 
+                     (requireWithinPartitionCorrespondences Sensor-Device))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultySensorsCauseOperatorError) 
+                     (requireWithinPartitionCorrespondences TransportationEvent))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FaultySensorsCauseOperatorError) 
+                     (requireWithinPartitionCorrespondences MakingAMistake))
+;;;(requiredBaseCorrespondence vehicle1289)
+;;;(requiredBaseCorrespondence sensor4286)
+;;;(requiredBaseCorrespondence driving8156)
+
+;;; for Q 347
+
+;;; NEXT TWO ARE TOO OBVIOUS
+;; Hitting an animal can cause injury
+;;;(in-microtheory (CommonsenseMicrostoryMtFn HittingAnAnimalCausesInjury))
+;;;(genlMt (CommonsenseMicrostoryMtFn HittingAnAnimalCausesInjury) CommonsenseMicrostoryMt)
+;;;(isa injured9657 Animal)
+;;;(isa hit9746 HittingAnObject)
+;;;(objectActedOn hit9746 injured9657)
+;;;(isa getInjured11394 IncurringAnInjury)
+;;;(causes-SitSit hit9746 getInjured11394)
+;;;(causes-SitSit getInjured11394 injury11469)
+;;;(isa injury11469 Injury-Object)
+;;;(objectHarmed injury11469 injured9657)
+;;;(in-microtheory (matchConstraintsForMtFn (CommonsenseMicrostoryMtFn HittingAnAnimalCausesInjury)))
+;;;(genlMt (matchConstraintsForMtFn (CommonsenseMicrostoryMtFn HittingAnAnimalCausesInjury)) CommonsenseMicrostoryMt)
+;;;(requireWithinPartitionCorrespondences HittingAnObject)
+;;;(requireWithinPartitionCorrespondences IncurringAnInjury)
+;; getting punched gives you a black eye
+;;;(in-microtheory (CommonsenseMicrostoryMtFn Punch-BlackEye))
+;;;(genlMt (CommonsenseMicrostoryMtFn Punch-BlackEye) CommonsenseMicrostoryMt)
+;;;(causes-SitSit get10965 black-eye11038)
+;;;(causes-SitSit punch11623 get10965)
+;;;(isa black-eye11038 BruisedEye)
+;;;(isa boy10957 HomoSapiens)
+;;;(isa puncher3849 Homosapiens)
+;;;(isa get10965 IncurringAnInjury)
+;;;(objectHarmed black-eye11038 boy10957)
+;;;(isa punch11623 PunchingSomething)
+;;;(objectActedOn punch11623 boy10957)
+;;;(performedBy punch11623 puncher3849)
+;;;(in-microtheory (matchConstraintsForMtFn (CommonsenseMicrostoryMtFn Punch-BlackEye)))
+;;;(genlMt (matchConstraintsForMtFn (CommonsenseMicrostoryMtFn Punch-BlackEye)) CommonsenseMicrostoryMt)
+;;;(requireWithinPartitionCorrespondences BruisedEye)
+;;;(requireWithinPartitionCorrespondences IncurringAnInjury)
+;;;(requireWithinPartitionCorrespondences PunchingSomething)
+
+;;; a violent impact causes an injury
+;;; black eye needs to be connected to person here...
+
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentImpact-BlackEye))
+(genlMt (CommonsenseMicrostoryMtFn ViolentImpact-BlackEye) CommonsenseMicrostoryMt)
+
+(isa getInjured11394 IncurringAnInjury)
+(objectHarmed getInjured11394 person2572)
+(isa person2572 Person)
+(causes-PropProp (and (objectActedOn getInjured11394 person2572)
+                      (isa getInjured11394 ViolentImpact))
+                 (and (isa getInjured11394 IncurringAnInjury)
+                      (objectHarmed getInjured11394 person2572)
+                      (isa black-eye11131 BruisedEye)
+                      (objectHarmed black-eye11131 person2572)))
+(isa black-eye11131 BruisedEye)
+(isa getInjured11394 ViolentImpact)
+(objectActedOn getInjured11394 person2572)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpact-BlackEye) 
+                     (requireWithinPartitionCorrespondences IncurringAnInjury))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpact-BlackEye) 
+                     (requireWithinPartitionCorrespondences BruisedEye))
+
+;;;(requiredBaseCorrespondence black-eye11131)
+;;;(requiredBaseCorrespondence getInjured11394)
+
+(in-microtheory (CommonsenseMicrostoryMtFn Punch-ViolentImpact-Harm))
+(genlMt (CommonsenseMicrostoryMtFn Punch-ViolentImpact-Harm) CommonsenseMicrostoryMt)
+
+;;; a punch is a violent impact
+(isa punch5623 PunchingSomething)
+(objectActedOn punch5623 person2547)
+(isa punch5623 ViolentImpact)
+(objectHarmed punch5623 person2547)
+(performedBy punch5623 whoever123)
+(causes-PropProp (and (isa punch5623 PunchingSomething)
+                      (objectActedOn punch5623 person2547)
+                      (performedBy punch5623 whoever123))
+                 (and (objectHarmed punch5623 person2547)
+					  (isa punch5623 ViolentImpact)))
+
+;;;(requireWithinPartitionCorrespondences PunchingSomething)
+;;;(requiredBaseCorrespondence punch5623)
+
+;; bullies hit people
+
+(in-microtheory (CommonsenseMicrostoryMtFn BulliesHit))
+(genlMt (CommonsenseMicrostoryMtFn BulliesHit) CommonsenseMicrostoryMt)
+
+(isa bully11605 Bully)
+(isa punch11628 PunchingSomething)
+(objectActedOn punch11628 boy10956)
+(objectHarmed punch11628 boy10956)
+(performedBy punch11628 bully11605)
+(causes-PropProp (isa bully11605 Bully)
+                 (and (isa punch11628 PunchingSomething)
+                      (objectActedOn punch11628 boy10956)
+                      (performedBy punch11628 bully11605)
+                      (objectHarmed punch11628 boy10956)))
+;;; this is just the same as answer B to Copa Q 347. Because we are reasoning our way to the answer, that seems ok
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn BulliesHit) 
+                     (requireWithinPartitionCorrespondences PunchingSomething))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn BulliesHit) 
+                     (requireWithinPartitionCorrespondences Bully))
+
+;; For the wrong answer
+;; mockery causes offense
+
+(in-microtheory (CommonsenseMicrostoryMtFn MockingAPersonCausesOffense))
+(genlMt (CommonsenseMicrostoryMtFn MockingAPersonCausesOffense) CommonsenseMicrostoryMt)
+
+(isa schlamazl10957 HomoSapiens)
+(isa bully11177 HomoSapiens)
+(isa mock11199 Mockery)
+(communicatorOfInfo mock11199 bully11177)
+(recipientOfInfo mock11199 schlamazl10957)
+(topicOfInfoTransfer mock11199 schlamazl10957)
+(isa make16154 CausingToBeInACertainCondition)
+(causes-SitSit mock11199 make16155)
+(causes-SitProp make16155
+                (feelsTowardsObjectToDegree schlamazl10957 mock11199 Anger MediumToVeryHighAmountFn))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn MockingAPersonCausesOffense) 
+                     (requireWithinPartitionCorrespondences Mockery))
+
+;; anger causes punching
+
+(in-microtheory (CommonsenseMicrostoryMtFn AngryPersonHitsTargetOfIre))
+(genlMt (CommonsenseMicrostoryMtFn AngryPersonHitsTargetOfIre) CommonsenseMicrostoryMt)
+
+(isa angryPerson43 HomoSapiens)
+(performedBy attack4295 angryPerson43)
+(isa attack4295 AttackOnObject)
+(objectAttacked attack4295 anything1199)
+(causes-PropSit 
+ (feelsTowardsObjectToDegree angryPerson43 anything1199 Anger MediumToVeryHighAmountFn)
+ hit5776)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn AngryPersonHitsTargetOfIre) 
+                     (requireWithinPartitionCorrespondences AttackOnObject))
+
+;; punching causes anger
+
+(in-microtheory (CommonsenseMicrostoryMtFn InjuredPersonGetsMad))
+(genlMt (CommonsenseMicrostoryMtFn PunchedPersonGetsMad) CommonsenseMicrostoryMt)
+
+(isa puncher44 HomoSapiens)
+(isa person1199 HomoSapiens)
+(performedBy injury5778 puncher44)
+(objectHarmed injury5778 person1199)
+(causes-PropSit 
+ (feelsTowardsObjectToDegree person1199 puncher44 Anger MediumToVeryHighAmountFn)
+ hit5778)
+
+
+;; bullies mock people
+
+(in-microtheory (CommonsenseMicrostoryMtFn BulliesMock))
+(genlMt (CommonsenseMicrostoryMtFn BulliesMock) CommonsenseMicrostoryMt)
+
+(isa bully11177 HomoSapiens)
+(communicatorOfInfo mock11198 bully11177)
+(isa bully11177 Bully)
+(isa mock11198 Mockery)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn BulliesMock) 
+                     (requireWithinPartitionCorrespondences Mockery))
+
+;;;(requiredBaseCorrespondence bully11177)
+
+;;; Q 214
+
+;;; throwing a rock at something violently impacts it
+
+(in-microtheory (CommonsenseMicrostoryMtFn RockThrow-ViolentImpact))
+(genlMt (CommonsenseMicrostoryMtFn RockThrow-ViolentImpact) CommonsenseMicrostoryMt)
+
+(isa rock2942 StoneStuff)
+(isa throw2912 ThrowingAnObject)
+(objectActedOn throw2912 rock2942)
+(target throw2912 target2992)
+(causes-PropProp (and (isa rock2942 StoneStuff)
+                      (isa throw2912 ThrowingAnObject)
+                      (objectActedOn throw2912 rock2942)
+                      (target throw2912 target2992))
+                 (and (isa impact5928 ViolentImpact)
+                      (objectActedOn impact5928 target2992)))
+(isa impact5928 ViolentImpact)
+(objectActedOn impact5928 target2992)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn RockThrow-ViolentImpact) 
+                     (requireWithinPartitionCorrespondences StoneStuff))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn RockThrow-ViolentImpact) 
+                     (requireWithinPartitionCorrespondences ThrowingAnObject))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn RockThrow-ViolentImpact) 
+                     (requireWithinPartitionCorrespondences ViolentImpact))
+
+;;;(requiredBaseCorrespondence throw2912)
+;;;(requiredBaseCorrespondence rock2942)
+
+;;; violent impact on window cracks it
+
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentImpactCracksWindow))
+(genlMt (CommonsenseMicrostoryMtFn ViolentImpactCracksWindow) CommonsenseMicrostoryMt)
+
+(isa impact5927 ViolentImpact)
+(objectActedOn impact5927 window2995)
+(isa crack3119 Cracking)
+(objectOfStateChange crack3119 window2995)
+(isa window2995 WindowPortalCovering-Glass)
+(causes-PropProp (and (isa impact5927 ViolentImpact)
+                      (objectActedOn impact5927 window2995)
+                      (isa window2995 WindowPortalCovering-Glass))
+                 (and (isa crack3119 Cracking)
+                      (objectOfStateChange crack3119 window2995)))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactCracksWindow) 
+                     (requireWithinPartitionCorrespondences ViolentImpact))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactCracksWindow) 
+                     (requireWithinPartitionCorrespondences WindowPortalCovering-Glass))
+
+;;;(requiredBaseCorrespondence impact5927)
+(requiredBaseCorrespondence window2995)
+
+;;; Q 294
+
+;;; a violent impact on an egg causes splatter
+
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentImpactOnEgg-Splatter))
+(genlMt (CommonsenseMicrostoryMtFn ViolentImpactOnEgg-Splatter) CommonsenseMicrostoryMt)
+
+(isa impact5928 ViolentImpact)
+(objectActedOn impact5928 egg2992)
+(causes-PropProp (and (isa impact5928 ViolentImpact)
+                      (objectActedOn impact5928 egg2992)
+                      (isa egg2992 Egg))
+                 (and (isa splatter2327 SpillingSomething)
+                      (objectActedOn splatter2327 egg2992)))
+(isa egg2992 Egg)
+(isa splatter2327 SpillingSomething)
+(objectActedOn splatter2327 egg2992)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactOnEgg-Splatter) 
+                     (requireWithinPartitionCorrespondences ViolentImpact))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactOnEgg-Splatter) 
+                     (requireWithinPartitionCorrespondences Egg))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactOnEgg-Splatter) 
+                     (requireWithinPartitionCorrespondences SpillingSomething))
+
+;;; dropping something causes violent impact
+;;; should this be more specific?
+
+(in-microtheory (CommonsenseMicrostoryMtFn Drop-ViolentImpact))
+(genlMt (CommonsenseMicrostoryMtFn Drop-ViolentImpact) CommonsenseMicrostoryMt)
+
+(doneBy drop2398 someone2390) ;;; the doneBy is only there because it's in the COPA answer; realizing it's not necessary to the COPA answer would let us remove it here
+(isa drop2398 Dropping)
+(primaryObjectMoving drop2398 dropped2304)
+(isa impact5929 ViolentImpact)
+(objectActedOn impact5929 dropped2304)
+(causes-PropProp (and (doneBy drop2398 someone2390)
+                      (primaryObjectMoving drop2398 dropped2304)
+                      (isa drop2398 Dropping))
+                (and (isa impact5929 ViolentImpact)
+                     (objectActedOn impact5929 dropped2304)))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn Drop-ViolentImpact) 
+                     (requireWithinPartitionCorrespondences ViolentImpact))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn Drop-ViolentImpact) 
+                     (requireWithinPartitionCorrespondences Dropping))
+
+;;; Q 390
+
+;;; a violent collision is a violent impact
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentCollision-ViolentImpact))
+(genlMt (CommonsenseMicrostoryMtFn ViolentCollision-ViolentImpact) CommonsenseMicrostoryMt)
+
+(isa crash5623 ViolentCollision)
+(isa crash5623 ViolentImpact)
+
+;;; a violent impact into something (like a crash) acts on that thing.
+;;; note that it's not NECESSARILY objectHarmed, since if you crash into a boulder, the rock may not be harmed.
+
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentImpactIntoSomethingActsOnIt))
+(genlMt (CommonsenseMicrostoryMtFn ViolentImpactIntoSomethingActsOnIt) CommonsenseMicrostoryMt)
+
+(isa crash5642 ViolentImpact)
+(into-UnderspecifiedContainer crash5642 thingInto8496)
+(causes-PropProp (and (isa crash5642 ViolentImpact)
+                      (into-UnderspecifiedContainer crash5642 thingInto8496))
+                 (objectActedOn crash5642 thingInto8496))
+(objectActedOn crash5642 thingInto8496)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactIntoSomethingActsOnIt) 
+                     (requireWithinPartitionCorrespondences ViolentImpact))
+
+;;;(requiredBaseCorrespondence crash5623)
+
+;;; a violent impact into a motorcycle severely harms the motorcyclist
+
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentImpactOnBikeKillsBiker))
+(genlMt (CommonsenseMicrostoryMtFn ViolentImpactOnBikeKillsBiker) CommonsenseMicrostoryMt)
+
+(isa hit5642 ViolentImpact)
+(objectActedOn hit5642 motorcycle5791)
+(isa motorcycle5791 Motorcycle)
+(isa die5820 Dying)
+(causes-PropProp (and (isa hit5642 ViolentImpact)
+                      (objectActedOn hit5642 motorcycle5791)
+                      (isa motorcycle5791 Motorcycle))
+                 (and (isa die5820 Dying)
+                      (objectOfStateChange die5820 motorcyclist)))
+(objectOfStateChange die5820 motorcyclist)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactOnBikeKillsBiker) 
+                     (requireWithinPartitionCorrespondences ViolentImpact))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactOnBikeKillsBiker) 
+                     (requireWithinPartitionCorrespondences Motorcycle))
+;;;(requiredBaseCorrespondence hit5642)
+;;;(requiredBaseCorrespondence motorcycle5791)
+
+;;; Q 461
+
+;;; start simple: mothers love their sons
+(in-microtheory (CommonsenseMicrostoryMtFn MothersLoveTheirSons))
+(genlMt (CommonsenseMicrostoryMtFn MothersLoveTheirSons) CommonsenseMicrostoryMt)
+
+(isa mother22349 HumanMother)
+(sons mother22349 son26849)
+(loves mother22349 son26849)
+(causes-PropProp (and (isa mother22349 HumanMother)
+                      (sons mother22349 son26849))
+                 (loves mother22349 son26849))
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn MothersLoveTheirSons) 
+                     (requireWithinPartitionCorrespondences HumanMother))
+
+;;;(requiredBaseCorrespondence mother22349)
+
+;;; and daughters, of course
+(in-microtheory (CommonsenseMicrostoryMtFn MothersLoveTheirDaughters))
+(genlMt (CommonsenseMicrostoryMtFn MothersLoveTheirDaughters) CommonsenseMicrostoryMt)
+(isa mother22351 HumanMother)
+(daughters mother22351 daughter26849)
+(loves mother22351 daughter26849)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn MothersLoveTheirDaughters) 
+                     (requireWithinPartitionCorrespondences HumanMother))
+
+;;;(requiredBaseCorrespondence mother22351)
+
+;;; when your loved one is hurt you call an ambulance
+(in-microtheory (CommonsenseMicrostoryMtFn AmbulanceCalledForHarmedLovedOne))
+(genlMt (CommonsenseMicrostoryMtFn AmbulanceCalledForHarmedLovedOne) CommonsenseMicrostoryMt)
+
+(causes-PropProp (and (objectHarmed someHarm1523 person6293)
+                      (loves caller6829 person6293))
+                 (and (communicationTarget call22246 ambulance22371)
+                      (isa ambulance22371 Ambulance)
+                      (isa call22246 MakingAPhoneCall)
+                      (senderOfInfo call22246 caller6829)))
+(loves caller6829 person6293)
+(communicationTarget call22246 ambulance22371)
+(isa ambulance22371 Ambulance)
+(isa call22246 MakingAPhoneCall)
+(senderOfInfo call22246 caller6829)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn AmbulanceCalledForHarmedLovedOne) 
+                     (requireWithinPartitionCorrespondences Ambulance))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn AmbulanceCalledForHarmedLovedOne) 
+                     (requireWithinPartitionCorrespondences MakingAPhoneCall))
+
+;;;(requiredBaseCorrespondence crash5623)
+
+;;; falling out of bed is a violent impact
+(in-microtheory (CommonsenseMicrostoryMtFn FallingOutOfBedHurts))
+(genlMt (CommonsenseMicrostoryMtFn FallingOutOfBedHurts) CommonsenseMicrostoryMt)
+
+(from-UnderspecifiedLocation bed2498 person22386)
+(isa bed2498 Bed-PieceOfFurniture)
+(isa fall24789 FallingEvent)
+(primaryObjectMoving fall24789 person22386)
+(causes-PropProp (and (from-UnderspecifiedLocation bed2498 person22386)
+                      (isa bed2498 Bed-PieceOfFurniture)
+                      (isa fall24789 FallingEvent)
+                      (primaryObjectMoving fall24789 person22386))
+                 (and (isa impact1953 ViolentImpact)
+                      (objectHarmed impact1953 person22386)))
+(isa impact1953 ViolentImpact)
+(objectHarmed impact1953 person22386)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn FallingOutOfBedHurts) 
+                     (requireWithinPartitionCorrespondences FallingEvent))
+;;;(requiredBaseCorrespondence fall24789)
+
+;;; Q 496
+
+;;; concerts are loud
+(in-microtheory (CommonsenseMicrostoryMtFn ConcertsAreLoud))
+(genlMt (CommonsenseMicrostoryMtFn ConcertsAreLoud) CommonsenseMicrostoryMt)
+
+(isa concert33116 
+     (CollectionIntersection2Fn PublicEvent MusicalPerformance))
+(loudnessOfEvent concert33116 (VeryHighAmountFn AcousticNoiseLevel))
+(causes-PropProp (isa concert33116 
+                      (CollectionIntersection2Fn PublicEvent MusicalPerformance))
+                 (loudnessOfEvent concert33116 (VeryHighAmountFn AcousticNoiseLevel)))
+
+;;; (requireWithinPartitionCorrespondences (CollectionIntersection2Fn PublicEvent MusicalPerformance))
+;;;(requiredBaseCorrespondence concert33116)
+
+;;; a violent impact on your ears causes ringing
+
+(in-microtheory (CommonsenseMicrostoryMtFn ViolentImpactOnEars-Tinnitus))
+(genlMt (CommonsenseMicrostoryMtFn ViolentImpactOnEars-Tinnitus) CommonsenseMicrostoryMt)
+
+(isa impactOnEars98465 ViolentImpact)
+(objectActedOn impactOnEars98465 ear94653)
+(isa ear94653 Ear)
+(causes-PropProp (and (isa impactOnEars98465 ViolentImpact)
+                      (objectActedOn impactOnEars98465 ear94653)
+                      (isa ear94653 Ear))
+                 (and (isa ring94649 Tinnitus)
+                      (objectHarmed ring94649 ear94653)))
+(isa ring94649 Tinnitus)
+(objectHarmed ring94649 ear94653)
+
+(in-microtheory MatchConstraintStorageMt)
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactOnEars-Tinnitus) 
+                     (requireWithinPartitionCorrespondences Tinnitus))
+(matchConstraintsFor (CommonsenseMicrostoryMtFn ViolentImpactOnEars-Tinnitus) 
+                     (requireWithinPartitionCorrespondences Ear))
+
+;;; being at a loud concert violently impacts your ears
+(in-microtheory (CommonsenseMicrostoryMtFn LoudHurtsEars))
+(genlMt (CommonsenseMicrostoryMtFn LoudHurtsEars) CommonsenseMicrostoryMt)
+
+(isa go-to35116 AttendingSomething)
+(to-UnderspecifiedLocation go-to35116 concert33116)
+(isa concert33116 (CollectionIntersection2Fn PublicEvent MusicalPerformance))
+(performedBy go-to35116 person5082) ;;; should be connected to the ear, but EA currently doesn't and don't want to violate 1:1 mapping
+(loudnessOfEvent concert33116 (VeryHighAmountFn AcousticNoiseLevel))
+(isa concert33116 ViolentImpact)
+(objectActedOn impactOnEars98465 ear94654)
+(isa ear94654 Ear)
+(causes-PropProp (and (isa concert33116 (CollectionIntersection2Fn PublicEvent MusicalPerformance))
+                      (isa go-to35116 AttendingSomething)
+                      (to-UnderspecifiedLocation go-to35116 concert33116)
+                      (performedBy go-to35116 person5082)
+                      (loudnessOfEvent concert33116 (VeryHighAmountFn AcousticNoiseLevel)))
+                 (and (isa concert33116 ViolentImpact)
+                      (objectActedOn impactOnEars98465 ear94654)
+                      (isa ear94654 Ear)))
+
+
+;;;(requireWithinPartitionCorrespondences ViolentImpact)
+;;;(requireWithinPartitionCorrespondences Ear)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; disjointness
+;;;(in-microtheory CommonsenseMicrostoryMt)
+;;;
+;;;(<== (disjointWith ?x ?y)
+;;;     (unifies ?x (isa ?thing ?coll1))
+;;;     (unifies ?y (isa ?thing ?coll2))
+;;;     (disjointWith ?coll1 ?coll2))
+;;;
+;;;(disjointWith (GaseousFn ?x) (LiquidFn ?x))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; linguistic conversion/understanding microtheories
+(in-microtheory LinguisticUnderstandingMicrostoriesMt)
+
+(isa CommonsenseLinguisticUnderstandingMtFn Function-Denotational)
+(arity CommonsenseLinguisticUnderstandingMtFn 1)
+(arg1Isa CommonsenseLinguisticUnderstandingMtFn Thing)
+(resultIsa CommonsenseLinguisticUnderstandingMtFn Microtheory)
+
+(in-microtheory (CommonsenseLinguisticUnderstandingMtFn turnEAsRepnOfACouldntToABehaviorIncapable))
+(genlMt (CommonsenseLinguisticUnderstandingMtFn turnEAsRepnOfACouldntToABehaviorIncapable) LinguisticUnderstandingMicrostoriesMt)
+
+;;; start with
+(uninferredSentence 
+  (possible-Historical 
+    (bringsAbout bird11029 
+      (and (primaryObjectMoving fly11046 bird11029) 
+           (isa fly11046 Flying)))))
+;;; go to
+(behaviorIncapable bird11029 fly11046 primaryObjectMoving)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,13 @@
+(in-microtheory DocumentIngesterReificationTemplateMt)
+
+(isa DocumentIngesterExemplarWebPageTitle ProperNameString)
+(quotedIsa DocumentIngesterExemplarWebPageTitle TermSuggestorExpertOnlyTerm)
+(quotedIsa DocumentIngesterExemplarWebPageTitle IndexicalConcept)
+(quotedIsa TheDocIngesterUser IndexicalConcept)
+(quotedIsa TheDocIngestionTimestamp IndexicalConcept)
+(quotedIsa TheDocIngesterSubWorkSourceString IndexicalConcept)
+(comment TheDocIngesterSubWorkSourceString "An indexical that the document ingester code resolves to the string representation of the relevant sub-work.")
+(comment TheDocIngestionTimestamp "An indexical that the document ingester resolves to a timestamp.")
+(comment TheDocIngesterUser "An indexical that the document ingester resolves to the user.")
+(comment DocumentIngesterExemplarWebPageTitle "An indexical that the document ingester reification code resolves to a string that is asserted to be the title of the web document that the ingester is working on.")
+(comment DocumentIngesterExemplarWebPage "An exemplar FORT used by the document ingester reification code.")

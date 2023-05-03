@@ -1,0 +1,42 @@
+(in-microtheory PeloponnesianWarMt)
+
+(isa AthenianNavalAidToCorcyraeans (AttemptingFn HelpingAnAgent))
+(isa AthenianNavalAidToCorcyraeans NavalMilitaryOperation)
+(isa CorcyraInterceptsCorinthianShips NavalMilitaryOperation)
+(isa CorinthianNavalAidToEpidamnus TransferIn)
+(isa CorinthianNavalAidToEpidamnus (AttemptingFn HelpingAnAgent))
+(isa CorinthianNavalAidToEpidamnus NavalMilitaryOperation)
+(isa EpidamnusRequestToCorinth Requesting-CommunicationAct)
+(isa CorcyraeansRefuseHelp DecliningARequest)
+(isa EpidamnusRequestToCorcyra Requesting-CommunicationAct)
+(isa PreludeToPeloponnesianWar EscalationOfHostilities)
+(comment AncientGreece "#$Greece from the end of the Mycenaean civilization (1200 BC) to the death of Alexander the Great (323 BC). ")
+(comment PreludeToPeloponnesianWar "These are the events that lead to the declaration of war
+
+between #$CityOfAthensGreece and #$Sparta in 431 BC.")
+(comment EpidamnusRequestToCorcyra "The event in which Epidamnus requests military intervention
+
+from Corcyra to halt an internal political struggle.  Corcyra's
+
+subsequent refusal causes Epidamnus to seek help from
+
+#$CityOfCorinthGreece.")
+(comment CorcyraeansRefuseHelp "The event in which Corcyra refuses to aid its colony
+
+Epidamnus, which is involved in an internal political revolt.  After
+
+this refusal, Epidamnus seeks help from Corinth.")
+(comment EpidamnusRequestToCorinth "The event in which Epidamnus asks Corinth for help to halt
+an internal political struggle.  Epidamnus asks Corinth after Corcyra
+has refused aid.  Corinth agrees to help and sends ships to
+Epidamnus.")
+(comment CorinthianNavalAidToEpidamnus "The set of events in which #$CityOfCorinthGreece sends naval
+aid to Epidamnus.  Epidamnus' motherland, Corcyra, has already refused
+to help stop an insurgency in the colony.")
+(comment CorcyraInterceptsCorinthianShips "The events in which Corcyra sends ships to intercept the
+Corinthian ships dispatched to stop the political struggles in
+Epidamnus.")
+(comment AthenianNavalAidToCorcyraeans "One of the events which lead to the beginning of the
+#$PeloponnesianWar.  The Athenian navy aided the Corcyraeans in a
+revolt against Corinth in 433 BC.")
+(disjointWith BoatOrShipPart (SubcollectionOfWithRelationFromTypeFn GeographicalRegion territoryOf GeographicalAgent))

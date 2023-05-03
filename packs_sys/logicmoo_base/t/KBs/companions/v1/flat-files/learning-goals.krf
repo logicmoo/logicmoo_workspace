@@ -1,0 +1,456 @@
+;;;
+;;; learning-goals.meld
+;;;
+;;; This file contains the definitions for different types of companion 
+;;; learning goals.
+;;;
+;;; Although the executive is responsible for maintaining the self model
+;;; and pursuing learning goals, all agents need access to the vocabulary
+;;; of goals in order to post them.  Hence, it's been moved up from the
+;;; executive subdirectory.
+;;;
+;;; Also, it's likely to be increasingly important to represent relationships
+;;; between learning goals and performance goals.  The subgoalFor relation 
+;;; can be used for straight parent-child relationships, but we need a 
+;;; vocabulary to connect learning goals to performance goals.  
+;;; learningGoalFor (qqv) will do this.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+(isa LearningGoal Collection)
+(genls LearningGoal Goal)
+
+(isa LearnedModelMicrotheory Collection)
+(genls LearnedModelMicrotheory Microtheory)
+
+;;;
+;;; Predicates with which to assert sentences about companion learning goals:
+;;;
+
+(isa learningGoalForCompanion UnaryPredicate)
+(arity learningGoalForCompanion 1)
+(arg1Isa learningGoalForCompanion LearningGoal)
+(comment learningGoalForCompanion "(learningGoalForCompanion ?goal) denotes learning goals that persist across sessions.  These should be part of the companion's self model.")
+
+(isa learningGoalFor BinaryPredicate) ;; not functional!
+(arity learningGoalFor 2)
+(arg1Isa learningGoalFor PerformanceGoal)
+(arg2Isa learningGoalFor LearningGoal)
+(comment learningGoalFor "(learningGoalFor ?performance-goal ?learning-goal) means ?learning-goal is a goal to support the pursuit of ?performance-goal.")
+
+
+;;; Learning goal types:
+
+;;;
+;;; Start with a hierarchy of three classes of models.
+;;; 
+(isa StrategicModelLearningGoal GoalTypeByCategory)
+(genls StrategicModelLearningGoal LearningGoal)
+(comment StrategicModelLearningGoal "Strategies involve how to achieve things.")
+
+(isa QualitativeModelLearningGoal GoalTypeByCategory)
+(genls QualitativeModelLearningGoal LearningGoal)
+(comment QualitativeModelLearningGoal "Qualitative models characterize dynamic relationships.")
+
+(isa ActionModelLearningGoal GoalTypeByCategory)
+(genls ActionModelLearningGoal LearningGoal)
+(comment ActionModelLearningGoal "Actions are primitive changes to the world.")
+
+;;;
+;;; Learning facts, inferences and procedures are ways of achieving higher-level modeling goals.
+;;;
+
+(isa FactLearningGoal GoalTypeByCategory)
+(genls FactLearningGoal LearningGoal)
+(comment FactLearningGoal "Curiosity.  Drive to learn new facts about the world.")
+
+(isa InferenceLearningGoal GoalTypeByCategory)
+(genls InferenceLearningGoal LearningGoal)
+(comment InferenceLearningGoal "Construct a general rule to explain an input-output (or query-response) pair.")
+
+(isa ProcedureLearningGoal GoalTypeByCategory)
+(genls ProcedureLearningGoal LearningGoal)
+(comment ProcedureLearningGoal "Programming-By-Demonstration. Construct an HTN to reproduce an extended behavior.")
+
+(isa DecisionLearningGoal GoalTypeByCategory)
+(genls DecisionLearningGoal LearningGoal)
+(comment DecisionLearningGoal "Learn how to choose between alternatives for a given property.")
+
+;;;
+;;; At the tactical level, we have goals for learning from particular kinds of input:
+;;;
+
+;;; Improve consistency and interconnectedness of knowledge:
+(isa AssimilateKnowledgeLearningGoal GoalTypeByCategory)
+(genls AssimilateKnowledgeLearningGoal LearningGoal)
+(comment AssimilateKnowledgeLearningGoal "Seek relationships and similarities in learned knowledge and existing beliefs.  Seek parsimonious representations.")
+
+(isa EffectOfActionLearningGoal GoalTypeByCategory) ; and by inference, a FirstOrderCollection
+(genls EffectOfActionLearningGoal LearningGoal)
+(comment EffectOfActionLearningGoal "What happens if I do this?")
+
+(isa ConditionForActionLearningGoal GoalTypeByCategory)
+(genls ConditionForActionLearningGoal LearningGoal)
+(comment ConditionForActionLearningGoal "When should I do this or not do this?")
+
+(isa CausesOfEventLearningGoal GoalTypeByCategory)
+(genls CausesOfEventLearningGoal LearningGoal)
+(comment CausesOfEventLearningGoal "Why did this happen?")
+
+(isa OperationalizeTradeoffLearningGoal GoalTypeByCategory)
+(genls OperationalizeTradeoffLearningGoal LearningGoal)
+(comment OperationalizeTradeoffLearningGoal "What is an optimal tradeoff between these goals?")
+
+;;; In GGP, this entailed going to an entity to see what happened.  
+;;; In Freeciv, the entity may not be physical (eg, a tech or improvement), in which case
+;;; the idea would be to acquire it and use it somehow to see how it influences quantities.
+(isa AffordancesOfEntityLearningGoal GoalTypeByCategory)
+(genls AffordancesOfEntityLearningGoal LearningGoal)
+(comment AffordancesOfEntityLearningGoal "What does this permit?")
+;;; We want to know:
+;;; - What actions can this be an argument of?
+;;; - What relations can it participate in?
+;;; - What leaf quantities do these relations enable?
+;;; - What processes do they enable?
+;;; - What quantities do they support?
+;;; - What preconditions are they part of?
+
+(isa CaseEncodingLearningGoal GoalTypeByCategory)
+(genls CaseEncodingLearningGoal LearningGoal)
+(comment CaseEncodingLearningGoal "What should I remember about this?")
+
+(isa GoalOfVerifyingHypothesizedInfluence GoalTypeByCategory)
+(genls GoalOfVerifyingHypothesizedInfluence LearningGoal)
+(comment GoalOfVerifyingHypothesizedInfluence "Seek counterexamples to hypothesized qualitative influence.")
+
+(isa GoalOfDetectingPotentialQualitativeInfluence GoalTypeByCategory)
+(genls GoalOfDetectingPotentialQualitativeInfluence LearningGoal)
+(comment GoalOfDetectingPotentialQualitativeInfluence "Monitor and reify changes to a specified quantity and potentially related quantities.")
+
+(isa ClassificationLearningGoal GoalTypeByCateogory)
+(genls ClassificationLearningGoal LearningGoal)
+(comment ClassificationLearningGoal "Learn about why some thing has been labeled as an instance of some concept.")
+
+;;; Should this be related to InferenceLearningGoal?
+(isa DecompositionLearningGoal GoalTypeByCategory)
+(genls DecompositionLearningGoal LearningGoal)
+(comment DecompositionLearningGoal "Learn how to break down a goal to subgoals.")
+
+(isa RefinementLearningGoal GoalTypeByCategory)
+(genls RefinementLearningGoal LearningGoal)
+(comment RefinementLearningGoal "Sharpen or operationalize a description of a concept.")
+
+(isa SpatialClassificationLearningGoal GoalTypeByCategory)
+(genls SpatialClassificationLearningGoal ClassificationLearningGoal)
+(comment SpatialClassificationLearningGoal "Learn about why some thing has been labeled as an instance of some concept, based on spatial extent.")
+
+;;;
+;;; The next four are subgoals of StrategyLearningGoals:
+;;;
+(isa PurposeOfActionLearningGoal GoalTypeByCategory) ; and by inference, a FirstOrderCollection
+(genls PurposeOfActionLearningGoal LearningGoal)
+(comment PurposeOfActionLearningGoal "What happens if I do this?")
+
+(isa EfficiencyLearningGoal GoalTypeByCategory)
+(genls EfficiencyLearningGoal LearningGoal)
+(comment EfficiencyLearningGoal "Goals to learn more efficient ways of achieving a task.")
+
+(isa RobustnessLearningGoal GoalTypeByCategory)
+(genls RobustnessLearningGoal LearningGoal)
+(comment RobustnessLearningGoal "Goals to learn how to better ensure success in achieving a task.")
+
+(isa OptimalityLearningGoal GoalTypeByCategory)
+(genls OptimalityLearningGoal LearningGoal)
+(comment OptimalityLearningGoal "Learn an optimal (or at least good) condition with respect to some goal.")
+
+;;;
+;;; The next two are special cases of goals to learn qualitative models:
+;;;
+(isa SelfKnowledgeLearningGoal GoalTypeByCategory)
+(genls SelfKnowledgeLearningGoal QualitativeModelLearningGoal)
+(comment SelfKnowledgeLearningGoal "Learn to predict own behavior.  Optimize performance.  Build self model.")
+
+(isa UserModelLearningGoal GoalTypeByCateogory)
+(genls UserModelLearningGoal QualitativeModelLearningGoal)
+(comment UserModelLearningGoal "Learn about external user's behavior patterns. Improve communications.  Build user model.")
+
+
+;;;
+;;; NATs to denote learning goal instances.  This allows us to define relationships between goals.
+;;;
+
+(isa LearnStrategicModelFn UnaryFunction)
+(arity LearnStrategicModelFn 1)
+(arg1Isa LearnStrategicModelFn Thing)  ; e.g., Freeciv-TheGame, or some other domain.
+(resultIsa LearnStrategicModelFn StrategicModelLearningGoal)
+(comment LearnStrategicModelFn "(LearnStrategicModelFn ?domain) denotes the goal to learn how to achieve goals in ?domain.")
+
+(isa LearnQualitativeModelFn UnaryFunction)
+(arity LearnQualitativeModelFn 1)
+(arg1Isa LearnQualitativeModelFn Thing) 
+(resultIsa LearnQualitativeModelFn QualitativeModelLearningGoal)
+(comment LearnQualitativeModelFn "(LearnQualitativeModelFn ?domain) denotes the goal to learn qualitative models in ?domain.")
+
+(isa LearnActionModelFn UnaryFunction)
+(arity LearnActionModelFn 1)
+(arg1Isa LearnActionModelFn Thing)
+(resultIsa LearnActionModelFn ActionModelLearningGoal)
+(comment LearnActionModelFn "(LearnActionModelFn ?domain) denotes the goal to learn action models in ?domain.")
+
+(isa LearnFactsGoalFn UnaryFunction)
+(arity LearnFactsGoalFn 1)
+(arg1Isa LearnFactsGoalFn Thing)  ; some reified concept
+(resultIsa LearnFactsGoalFn FactLearningGoal)
+(comment LearnFactsGoalFn "(LearnFactsGoalFn ?concept) denotes the goal to learn facts related to ?concept.")
+
+(isa LearnInferenceRuleFn BinaryFunction)
+(arity LearnInferenceRuleFn 2)
+(arg1Isa LearnInferenceRuleFn CycLFormula)
+(arg2Isa LearnInferenceRuleFn CycLFormula)
+(resultIsa LearnInferenceRuleFn InferenceLearningGoal)
+(comment LearnInferenceRuleFn "(LearnInferenceRuleFn ?query ?answer) denotes the goal to learn an inference rule that can derive ?answer for ?query.")
+
+(isa LearnProcedureFn BinaryFunction)
+(arity LearnProcedureFn 2)
+(arg1Isa LearnProcedureFn CycLFormula)
+(arg2Isa LearnProcedureFn CycLFormula)
+(resultIsa LearnProcedureFn ProcedureLearningGoal)
+(comment LearnProcedureFn "(LearnProcedureFn ?task ?end-state) denotes the goal to learn an htn method that can achieve ?end-state via ?task.")
+
+(isa LearnDecisionFn BinaryFunction)
+(arity LearnDecisionFn 2)
+(arg1Isa LearnDecisionFn CycLFormula)
+(arg2Isa LearnDecisionFn CycLFormula)
+(resultIsa LearnDecisionFn DecisionLearningGoal)
+(comment LearnDecisionFn "(LearnDecisionFn (DecisionFn ?decision-slot)) denotes the goal to learn criteria for choosing good values for ?decision-slot.")
+
+(isa AssimilateKnowledgeGoalFn UnaryFunction)
+(arity AssimilateKnowledgeGoalFn 1)
+(arg1Isa AssimilateKnowledgeGoalFn ELSentence-Assertible)
+(resultIsa AssimilateKnowledgeGoalFn AssimilateKnowledgeLearningGoal)
+(comment AssimilateKnowledgeGoalFn "(AssimilateKnowledgeGoalFn ?learned-fact) denotes the goal to relate ?learned-fact to prior knowledge and beliefs.")
+
+(isa LearnEffectOfActionFn UnaryFunction)
+(arity LearnEffectOfActionFn 1)
+(arg1Isa LearnEffectOfActionFn CycLFormula)
+(resultIsa LearnEffectOfActionFn EffectOfActionLearningGoal)
+(comment LearnEffectOfActionFn "(LearnEffectOfActionFn ?prim) denotes the goal to learn what ?prim does, where ?prim is a primitive task, not just a predicate.")
+
+(isa LearnConditionForActionFn UnaryFunction)
+(arity LearnConditionForActionFn 1)
+(arg1Isa LearnConditionForActionFn CycLFormula)
+(resultIsa LearnConditionForActionFn ConditionForActionLearningGoal)
+(comment LearnConditionForActionFn "(LearnConditionForActionFn ?action-pred) denotes the goal to learn appropriate conditions under which to apply (or not to apply) ?action-pred.")
+
+(isa LearnCausesOfEventFn UnaryFunction)
+(arity LearnCausesOfEventFn 1)
+(arg1Isa LearnCausesOfEventFn CycLFormula)
+(resultIsa LearnCausesOfEventFn CausesOfEventLearningGoal)
+(comment LearnCausesOfEventFn "(LearnCausesOfEventFn ?event) denotes the goal to learn why an event happens.")
+
+(isa LearnTradeoffFn UnaryFunction)
+(arity LearnTradeoffFn 1)
+(arg1Isa LearnTradeoffFn CycLFormula)
+(resultIsa LearnTradeoffFn OperationalizeTradeoffLearningGoal)
+(comment LearnTradeoffFn "(LearnTradeoffFn ?tradeoff) denotes the goal to learn how to optimally operationalize ?tradeoff.")
+
+(isa LearnAffordancesOfEntityFn UnaryFunction)
+(arity LearnAffordancesOfEntityFn 1)
+(arg1Isa LearnAffordancesOfEntityFn CycLTerm)
+(resultIsa LearnAffordancesOfEntityFn AffordancesOfEntityLearningGoal)
+(comment LearnAffordancesOfEntityFn "(LearnAffordancesOfEntityFn ?entity) denotes the goal to learn how ?entity contributes to preconditions for actions.")
+
+(isa LearnCaseEncodingFn UnaryFunction)
+(arity LearnCaseEncodingFn 1)
+(arg1Isa LearnCaseEncodingFn CycLFormula)
+(resultIsa LearnCaseEncodingFn CaseEncodingLearningGoal)
+(comment LearnCaseEncodingFn "(LearnCaseEncodingFn ?thing) denotes the goal to learn an appropriate case encoding for ?thing.")
+
+(isa DetectPotentialQualitativeInfluence UnaryFunction)
+(arity DetectPotentialQualitativeInfluence 1)
+(arg1Isa DetectPotentialQualitativeInfluence ContinuousQuantity)  ; QP fluent
+(resultIsa DetectPotentialQualitativeInfluence GoalOfDetectingPotentialQualitativeInfluence)
+(comment DetectPotentialQualitativeInfluence "(DetectPotentialQualitativeInfluence ?qtype) denotes the goal to monitor and reify changes to a specified quantity-type and potentially related quantity-types.")
+
+(isa VerifyHypothesizedInfluenceFn UnaryFunction)
+(arity VerifyHypothesizedInfluenceFn 1)
+(arg1Isa VerifyHypothesizedInfluenceFn CycLSentence)    ; Type-level QP Influence statement
+(resultIsa VerifyHypothesizedInfluenceFn GoalOfVerifyingHypothesizedInfluence)
+(comment VerifyHypothesizedInfluenceFn "(VerifyHypothesizedInfluenceFn ?type-level-influence) denotes the goal to find counterexamples to the hypothesized influence.")
+
+(isa ClassificationLearningGoalFn BinaryFunction)
+(arity ClassificationLearningGoalFn 2)
+(arg1Isa ClassificationLearningGoalFn Thing)
+(arg2Isa ClassificationLearningGoalFn Collection)
+(resultIsa ClassificationLearningGoalFn ClassificationLearningGoal)
+(comment ClassificationLearningGoalFn "(ClassificationLearningGoalFn ?example ?concept) denotes the goal to learn to classify instances of ?concept, based on an example instance ?example.")
+
+(isa ClassificationGoalFn BinaryFunction)
+(arity ClassificationGoalFn 2)
+(arg1Isa ClassificationGoalFn Thing)
+(arg2Isa ClassificationGoalFn Collection)
+(resultIsa ClassificationGoalFn ClassificationLearningGoal)
+(comment ClassificationGoalFn "(ClassificationLearningGoalFn ?example ?concept) denotes the goal to learn to classify instances of ?concept, based on an example instance ?example.")
+
+(isa SpatialClassificationLearningGoalFn LearningGoalDenotingFunction)
+(arity SpatialClassificationLearningGoalFn 1)
+(arg1Isa SpatialClassificationLearningGoalFn SpatialThing)
+(resultIsa SpatialClassificationLearningGoalFn SpatialClassificationLearningGoal)
+
+(isa ImproveEfficiencyFn UnaryFunction)
+(arity ImproveEfficiencyFn 1)
+(arg1Isa ImproveEfficiencyFn CycLFormula)
+(resultIsa ImproveEfficiencyFn EfficiencyLearningGoal)
+(comment ImproveEfficiencyFn "(ImproveEfficiencyFn ?task) denotes the goal to learn more efficient methods to achieve ?task.")
+
+(isa ImproveRobustnessFn UnaryFunction)
+(arity ImproveRobustnessFn 1)
+(arg1Isa ImproveRobustnessFn CycLFormula)
+(resultIsa ImproveRobustnessFn RobustnessLearningGoal)
+(comment ImproveRobustnessFn "(ImproveRobustnessFn ?task) denotes the goal to learn more robust methods to achieve ?taks (ie, more likely to succeed.)")
+
+(isa LearnOptimalConditionFn UnaryFunction)
+(arity LearnOptimalConditionFn 1)
+(resultIsa LearnOptimalConditionFn OptimalityLearningGoal)
+(comment LearnOptimalConditionFn "(LearnOptimalConditionFn ?action-pred) denotes the goal to find optimal (or at least good) conditions to bind open variables on the precondition of simple action predicate ?pred.")
+
+(isa LearnDecompositionFn UnaryFunction)
+(arity LearnDecompositionFn 1)
+(resultIsa LearnDecompositionFn DecompositionLearningGoal)
+(comment LearnDecompositionFn "(LearnDecompositionFn (DecompositionFn ?goal)) denotes a goal to learn how to break down ?goal to subgoals.")
+
+(isa RefineFn UnaryFunction)
+(arity RefineFn 1)
+(resultIsa RefineFn RefinementLearningGoal)
+(comment RefineFn "(RefineFn ?concept) denotes the goal to refine ?concept  down to a single operational concept.  ?concept itself may be a NART, such as (DependentVariableFn <action-pred>).")
+
+(isa LearnPurposeOfActionFn UnaryFunction)
+(arity LearnPurposeOfActionFn 1)
+(arg1Isa LearnPurposeOfActionFn CycLFormula)
+(resultIsa LearnPurposeOfActionFn PurposeOfActionLearningGoal)
+(comment LearnPurposeOfActionFn "(LearnPurposeOfActionFn ?prim) denotes the goal to learn what ?prim is for, where ?prim is a primitive task, not just a predicate..")
+
+
+(isa LearnSelfModelFn UnaryFunction)
+(arity LearnSelfModelFn 1)
+(arg1Isa LearnSelfModelFn IntelligentAgent)
+(resultIsa LearnSelfModelFn SelfKnowledgeLearningGoal)
+(comment LearnSelfModelFn "(LearnSelfModelFn SelfToken-Indexical) denotes the goal to build a self model of the companion's own mental processes.")
+
+(isa LearnUserModelFn UnaryFunction)
+(arity LearnUserModelFn 1)
+(arg1Isa LearnUserModelFn HumanCyclist)
+(resultIsa LearnUserModelFn UserModelLearningGoal)
+(comment LearnUserModelFn "(LearnUserModelFn ?user) denotes the goal to construct a model of the specified human user.")
+
+;;; Learning a Task Model might be more general than simply a procedure because a dialog 
+;;; tasks (for instance) should be role-independent.  It should generalize a sequence of
+;;; utterances that can be used prescriptively to drive conversation or descriptively to
+;;; recognize the speaker's intent and expectations.
+
+;;;
+;;; Microtheories for storing learned knowledge
+;;;
+
+
+;;; Assume the LearnedKnowledgeMtFn for the domain is a spindle that inherits from the qualitative, action, and strategy model mts.
+
+(isa LearnedKnowledgeMtFn Function-Denotational)
+(arity LearnedKnowledgeMtFn 1)
+(arg1Isa LearnedKnowledgeMtFn CycLTerm)  ; could be a domain, could be a collection or goal, basically any concept
+(resultIsa LearnedKnowledgeMtFn LearnedModelMicrotheory)
+(comment LearnedKnowledgeMtFn "(LearnedKnowledgeMtFn ?domain) denotes a microtheory to be used for maintaining learned knowledge about a domain.")
+
+(isa QualitativeModelMtFn Function-Denotational)
+(arity QualitativeModelMtFn 1)
+(arg1Isa QualitativeModelMtFn CycLTerm)
+(resultIsa QualitativeModelMtFn LearnedModelMicrotheory)
+(comment QualitativeModelMtFn "(QualitativeModelMtFn ?domain) denotes a microtheory in which to store a learned qualitative model for a domain.")
+
+(isa ActionModelMtFn Function-Denotational)
+(arity ActionModelMtFn 1)
+(arg1Isa ActionModelMtFn CycLTerm)
+(resultIsa ActionModelMtFn LearnedModelMicrotheory)
+(comment ActionModelMtFn "(ActionModelMtFn ?domain) denotes a microtheory in which to store a learned action model for a domain.")
+
+(isa StrategyModelMtFn Function-Denotational)
+(arity StrategyModelMtFn 1)
+(arg1Isa StrategyModelMtFn CycLTerm)
+(resultIsa StrategyModelMtFn LearnedModelMicrotheory)
+(comment StrategyModelMtFn "(StrategyModelMtFn ?domain) denotes a microtheory in which to store a learned strategy model for a domain, such as learned tasks, etc.")
+
+(isa learnedKnowledgeMicrotheory BinaryRelation)
+(arity learnedKnowledgeMicrotheory 2)
+(arg1Isa learnedKnowledgeMicrotheory Thing)
+(arg2Isa learnedKnowledgeMicrotheory LearnedModelMicrotheory)
+(comment learnedKnowledgeMicrotheory "(learnedKnowledgeMicrotheory ?game-or-task ?mt) indexes the microtheory for storing learned knowledge for the domain.")
+
+(<== (learnedKnowledgeMicrotheory ?domain (LearnedKnowledgeMtFn ?domain)))
+
+(isa scenarioMicrotheory UnaryPredicate)
+(arity scenarioMicrotheory 1)
+(arg1Isa scenarioMicrotheory Microtheory)
+(comment scenarioMicrotheory "(scenarioMicrotheory ?mt) succeeds if ?mt is not a LearnedModelMicrotheory.")
+
+(<== (scenarioMicrotheory ?mt)
+     (groundExpression ?mt)
+     (uninferredSentence 
+       (isa ?mt LearnedModelMicrotheory)))
+
+
+;;; Collecting active learning goals:
+
+(isa activeLearningGoal BinaryPredicate)
+(arity activeLearningGoal 2)
+(arg1Isa activeLearningGoal CycLTerm)
+(arg2Isa activeLearningGoal LearningGoal)
+(comment activeLearningGoal "(activeLearningGoal ?thing ?learning-goal) means there is a learning goal to learn ?thing and it's not inactive.")
+
+(<== (activeLearningGoal (DecisionFn ?property) (LearnDecisionFn (DecisionFn ?property)))
+     (groundExpression ?property)  ; safety
+     (activeGoal (LearnDecisionFn (DecisionFn ?property))))
+
+(<== (activeLearningGoal ?action-pred (LearnEffectOfActionFn ?action-pred))
+     (groundExpression ?action-pred)
+     (isa ?action-pred SimpleActionPredicate)
+     (activeGoal (LearnEffectOfActionFn ?action-pred)))
+     
+(<== (activeLearningGoal ?action-pred (LearnConditionForActionFn ?action-pred))
+     (groundExpression ?action-pred)
+     (isa ?action-Pred SimpleActionPredicate)
+     (activeGoal (LearnConditionForActionFn ?action-pred)))
+
+(<== (activeLearningGoal ?action-pred (LearnOptimalConditionFn ?action-pred))
+     (groundExpression ?action-pred)
+     (isa ?action-pred SimpleActionPredicate)
+     (activeGoal (LearnOptimalConditionFn ?action-pred)))
+
+(<== (activeLearningGoal ?qtype (DetectPotentialQualitativeInfluence ?qtype)) ; basically means we failed to explain an observed change.
+     (groundExpression ?qtype)
+     (isa ?qtype ContinuousQuantity)  
+     (activeGoal (DetectPotentialQualitativeInfluence ?qtype)))
+     
+(<== (activeLearningGoal ?thing (LearnAffordancesOfEntityFn ?thing))
+     (not (variableExpression ?thing))
+     (activeGoal (LearnAffordancesOfEntityFn ?thing)))
+     
+
+(<== (activeLearningGoal ?inf (VerifyHypothesizedInfluenceFn ?inf))  ; not currently used
+     (not (variableExpression ?inf))
+     (not (atomicTerm ?inf))
+     (operatorFormulas ?type-level-pred ?inf)
+     (typeLevelInfluencePred ?prop-level-pred ?type-level-pred)
+     (activeGoal (VerifyHypothesizedInfluenceFn ?inf)))
+
+
+(<== (activeLearningGoal ?goal (LearnDecompositionFn ?lifted-goal))
+     (not (variableExpression ?goal))
+     (liftedIndexicalGoal ?goal ?lifted-goal)  ; will fail outside PerceptualAgent.  TBD elsewhere
+     (activeGoal (LearnDecompositionFn ?lifted-goal)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

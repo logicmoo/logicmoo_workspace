@@ -1,0 +1,17 @@
+(in-microtheory BlockScenario1 :exclude-globals t)
+
+(isa Block1 Block)
+(onTable Block1)
+(clear Block1)
+
+(isa Block2 Block)
+(onTable Block2)
+(clear Block2)
+
+(isa Block3 Block)
+(onTable Block3)
+(clear Block3)
+
+
+(goal (on-Physical Block1 Block2))
+(goal (on-Physical Block2 Block3))

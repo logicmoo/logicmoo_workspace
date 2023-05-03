@@ -1,0 +1,127 @@
+;;;
+;;; LearnedKnowledgeMt.meld
+;;;
+
+;;; Miscellaneous learned (but stored) knowledge.
+
+(in-microtheory (LearnedKnowledgeMtFn Freeciv-TheGame) :exclude-globals t)
+
+(predictiveFeature doBuildCity resourceAt)
+(predictiveFeature doBuildCity specialAt)
+(predictiveFeature doBuildCity terrainAt)
+
+
+(learningGoalForCompanion (LearnOptimalConditionFn doBuildCity))
+(operatorIndependentVariable doBuildCity 2 fcObjectAt)
+(operatorDependentVariable doBuildCity 2 cityGrowthRate)
+(operatorDependentGoalFunc doBuildCity MaximizeFn)
+(inactiveGoal (RefineFn (DependentVariableFn doBuildCity)))
+
+(<== (salientActionFact ?mt (doBuildCity ?0 ?1) ?fact2)
+ (formulaArgument (doBuildCity ?0 ?1) 2 ?ent)
+ (ist-Information ?mt (fcObjectAt ?ent ?value))
+ (domainRelationBetween ?some-rel ?some-ent ?value)
+ (unifies ?fact2 (?some-rel ?some-ent ?value)))
+ 
+(<== (salientActionFact ?mt (doBuildCity ?0 ?1) ?fact3)
+ (formulaArgument (doBuildCity ?0 ?1) 2 ?ent)
+ (ist-Information ?mt (fcObjectAt ?ent ?value))
+ (domainRelationBetween ?some-rel ?value ?some-ent)
+ (unifies ?fact3 (?some-rel ?value ?some-ent)))
+
+
+(<== (salientActionFact ?mt (doBuildCity ?0 ?1) ?fact1)
+ (formulaArgument (doBuildCity ?0 ?1) 2 ?ent)
+ (currentQuantityChange ((MeasurableQuantityFn cityGrowthRate) ?ent)
+  ?magnitude)
+ (unifies ?fact1
+  (quantityChange ((MeasurableQuantityFn cityGrowthRate) ?ent)
+   ?magnitude)))
+
+(<== (salientActionFact ?mt (doBuildCity ?0 ?1) ?fact2)
+ (formulaArgument (doBuildCity ?0 ?1) 2 ?ent)
+ (priorValue ?mt ((MeasurableQuantityFn cityGrowthRate) ?ent) ?value)
+ (unifies ?fact2
+  (quantityValue ((MeasurableQuantityFn cityGrowthRate) ?ent) ?value)))
+
+(isa doBuildCityScore BinaryPredicate)
+(<== (doBuildCityScore ?input ?output) (doBuildCityFilter ?input True)
+ (numAnswers 1
+  (dtreeScoreMidpoint (DTreeFn doBuildCity)
+   (TheList terrainAt resourceAt) ?input ?output)))
+(optimalityConditionFor doBuildCity doBuildCityScore)
+(<== (doBuildCityExperiment ?input True)
+ (doBuildCityFilter ?input True)
+ (experimentScore (DTreeFn doBuildCity) (TheList terrainAt resourceAt)
+  ?input ?output))
+(experimentalConditionFor doBuildCity doBuildCityExperiment)
+
+;;; learned terrain scores:
+(dtreeScore (DTreeFn doBuildCity) (TheList) 5 15)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Swamp) 5 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Swamp None) 5 5)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Mountains) 5 5)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Mountains None) 5 5)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Plains) 10 15)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Plains None) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Plains FC-Resource-Wheat) 15 15)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Desert) 5 5)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Desert None) 5 5)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Grassland) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Grassland None) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Grassland FC-Resource-Resources) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Forest) 5 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Forest None) 5 5)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Forest FC-Resource-Pheasant) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Hills) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Hills FC-Resource-Wine) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Hills FC-Resource-Coal) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Swamp FC-Resource-Spice) 10 10)
+(dtreeScore (DTreeFn doBuildCity) (TheList FC-Terrain-Plains FC-Resource-Buffalo) 10 10)
+
+
+;;; From Post-mortem:
+(learningGoalForCompanion (LearnEffectOfActionFn doSetWorklist))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doSetWorklist))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doSentry))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doSentry))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doEstablishTraderoute))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doEstablishTraderoute))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doConvertSpecialistToWorker))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doConvertSpecialistToWorker))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doConvertWorkerToSpecialist))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doConvertWorkerToSpecialist))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doUpgradeType))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doUpgradeType))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doMakeHomeCity))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doMakeHomeCity))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doCityBuy))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doCityBuy))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doSetTechGoal))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doSetTechGoal))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doMakeEmbassy))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doMakeEmbassy))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doSetRates))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doSetRates))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doConnectBy))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doConnectBy))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doAcceptTreaty))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doAcceptTreaty))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doDisband))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doDisband))
+
+(learningGoalForCompanion (LearnEffectOfActionFn doCancelOrders))
+(subgoalFor (LearnActionModelFn Freeciv-TheGame) (LearnEffectOfActionFn doCancelOrders))

@@ -1,0 +1,444 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: analogy-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:15:48
+;;;;   Purpose: Finding and using analogies to solve problems
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+(isa analogForProblem Predicate)
+(arity analogForProblem 2)
+(arg1Isa analogForProblem Thing) ;; Should be problem, will fix later
+(arg2Isa analogForProblem Match)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Chainer to find the analog
+
+;;;Basic Case
+(<== (analogForProblem ?problem ?matcher)
+     (unknownSentence (analogForProblem ?problem ?matcher))
+     (hypotheticalMicrotheoryOfTest ?problem ?context)
+     (bestReminding (PhysicsCaseFn ?context)
+                    (CaseLibraryFn PhysicsCaseLibrary)
+                    (TheSet (identicalFunctions)) ?reminding-case)
+     (matchBetween (EventStructureCaseFn ?reminding-case)
+                   (EventStructureCaseFn (PhysicsCaseFn ?context))
+                   (TheSet (identicalFunctions)) ?event-matcher)
+     (bestMapping ?event-matcher ?event-mapping)
+     (evaluate ?requirements
+       (SetOrCollectionUnion
+        (TheSet (identicalFunctions))
+        (TheClosedRetrievalSetOf
+            (requiredCorrespondence ?base-item ?target-item)
+          (and (entitySimilarityOf ?event-mapping ?event-info-correspondence)
+               (correspondenceBetween ?event-info-correspondence
+                                      ?base-item ?target-item)))))
+     (matchBetween (PhysicsCaseWSFn ?reminding-case)
+                   (PhysicsCaseFn ?context)
+                   ?requirements
+                   ?matcher)
+     (bestMapping ?matcher ?mapping)
+     (forEffectOnly (and (candidateInferenceOf ?ci ?mapping)
+                         (candidateInferenceContent ?ci ?content)))
+     (tell (matcherForProblem ?matcher ?problem))
+     (forEffectOnly (otherAnalogForProblem ?problem ?m)))
+
+;;;tries harder to match any additional event structure
+(<== (otherAnalogForProblem ?problem ?matcher)
+     (hypotheticalMicrotheoryOfTest ?problem ?context)
+     (unmatchedEvents ?events) ;;a set of events which we will create a new case constructor around
+     (different ?events (TheSet))
+     (previousAnalogsUsed ?problem ?analogs)
+     (bestReminding (EventStructureCaseFn (PhysicsCaseFn ?context) ?events)
+                    (CaseLibraryMinusFn
+                     (CaseLibraryFn PhysicsCaseLibrary)
+                     ?analogs)
+                    (TheSet (identicalFunctions)) ?reminding-case)
+     (matchBetween (EventStructureCaseFn ?reminding-case)
+                   (EventStructureCaseFn (PhysicsCaseFn ?context) ?events)
+                   (TheSet (identicalFunctions)) ?event-matcher)
+     (bestMapping ?event-matcher ?event-mapping)
+     (evaluate ?requirements
+       (SetOrCollectionUnion
+        (TheSet (identicalFunctions))
+        (TheClosedRetrievalSetOf
+            (requiredCorrespondence ?base-item ?target-item)
+          (and (entitySimilarityOf ?event-mapping ?event-info-correspondence)
+               (correspondenceBetween ?event-info-correspondence
+                                      ?base-item ?target-item)))))
+     ;;; MEK I don't know if we should filter the target down to the unmatched
+     ;;; event structure...I'm not going to yet...the more CIs the better 
+     (matchBetween ?reminding-case (PhysicsCaseFn ?context)
+                   ?requirements ?matcher)
+     (bestMapping ?matcher ?mapping)
+     (forEffectOnly (and (candidateInferenceOf ?ci ?mapping)
+                         (candidateInferenceContent ?ci ?content)))
+     (tell (matcherForProblem ?matcher ?problem))
+     (forEffectOnly (otherAnalogForProblem ?problem ?m)))
+
+(<== (unmatchedEvents ?events)
+     (unmatchedEvent ?event)
+     (evaluate ?events (TheClosedRetrievalSetOf ?e (unmatchedEvent ?e))))
+
+(<== (unmatchedEvent ?event)
+     (evaluate ?matched-constraints
+       (TheClosedRetrievalSetOf
+           ?constraints  
+         (and (matcherForProblem ?matcher ?problem)
+              (matchBetween ?base ?target ?constraints ?matcher))))
+     (localOnly  (isa ?event Event))
+          ;;if the event is every in the constraints it is not unmatched
+     (uninferredSentence (containsPattern ?event ?matched-constraints)))
+
+(<== (previousAnalogsUsed ?problem ?analogs)
+     (evaluate 
+         ?analogs 
+       (SetToListFn
+        (TheClosedRetrievalSetOf 
+            ?base
+          (and (matcherForProblem ?matcher ?problem)
+               (matchBetween ?base ?target ?constraints ?matcher))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Assuming quantities
+;;; Very Very Similar to chainer rule in equation-rules.lsp
+
+(isa assumedQuantityStepForQuantity Predicate)
+(arity assumedQuantityStepForQuantity 4)
+
+(<== (assumedQuantityStepForQuantity ?step ?preconditions ?value ?quantity)
+     (assumedQuantityStep ?quantity ?step ?match ?value)
+     (skolemStepInformation ?step ?match DeterminingSpecificScalarOrVectorValuesFromContext ?preconditions)
+     (groundExpression ?value))
+
+(<== (assumedQuantityStep ?quantity ?step ?match ?ret-value)
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent
+        ?ci (solutionStepResult ?step (valueOf ?skolem-quantity ?value)))))
+     (sameQuantity ?skolem-quantity ?quantity)
+     (wmOnly (candidateInferenceOf ?ci ?mapping))
+     (wmOnly (mappingOf ?mapping ?match))
+     (resolveAssumedValue ?value ?mapping ?ret-value) ;;;no more skolems there
+     (uninferredSentence ;;;This is an equivalent quantities situation
+      (valueExistsInStepUses ?step ?ret-value)))
+
+
+(isa applicableValueForQuantity Predicate)
+(arity applicableValueForQuantity 2)
+
+(<== (applicableValueForQuantity ?quantity ?value)
+     (isa ?value NumericalValueWithUnits)
+     (subexpressionMatching (QPQuantityFn ?q) ?quantity ?qp-quantity)
+     (ist-Information PhysicsBackgroundMt (unitForQuantity ?q ?unit)) ;;;this is all we need to write
+     (groundExpression ?unit)
+     (subexpressionMatching (?unit ?number) ?value ?t-or-f))
+
+(<== (applicableValueForQuantity ?i-quantity ?value)
+     (symbolicProblem ?problem)
+     (knownSentence (acceptableTerm ?value)))
+		      
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; resolving entity skolems rules SKOLEM 
+
+(<== (resolveAssumedValue ?value ?mapping ?ret-value)
+     (uninferredSentence 
+      (resolveAssumedValueByCorrespondence ?value ?mapping ?ret-value))
+     (resolveAllSkolems ?value ?ret-value))
+
+(<== (resolveAssumedValue ?value ?mapping ?ret-value)
+     (resolveAssumedValueByCorrespondence ?value ?mapping ?ret-value))
+
+(<== (resolveAssumedValueByCorrespondence ?value ?mapping ?ret-value)
+     (correspondsInMapping ?mapping ?base-item ?value)
+     (uninferredSentence (useTargetValue ?base-item ?value))
+     (unifies ?ret-value ?base-item)
+     (groundExpression ?ret-value))
+
+(<== (useTargetValue ?base-value ?target-value)
+     (unifies (?base-units ?b-num) ?base-value)
+     (unifies (?target-units ?t-num) ?target-value)
+     (equals ?base-units ?target-units))
+
+(<== (useTargetValue ?i-base-value ?target-value)
+     (uninferredSentence (isa ?target-value NumericalValueWithUnits)))
+                      
+(<== (resolveAllSkolems ?expression ?ret-expression)
+     (evaluate 
+         ?blist
+       (TheClosedRetrievalSetOf 
+           (?subexpression ?x) 
+         (subexpressionMatching (AnalogySkolemFn ?x) ?expression ?subexpression)))
+     (evaluate ?ret-expression (SublisFn ?blist (QuoteFn ?expression)))
+     (groundExpression ?ret-expression))
+
+(<== (resolveEquationSkolems ?equation ?mapping ?ret-equation-2)
+     (groundExpression ?equation)
+     (substituteEquationNumbers ?equation ?mapping ?ret-equation-1)
+     (resolveEntitySkolems ?ret-equation-1 ?ret-equation-2)
+     (groundExpression ?ret-equation-2))
+
+(<== (substituteEquationNumbers ?equation-1 ?mapping ?ret-equation)
+     (makeGensymSkolemBlist ?equation-1 ?skolem-blist ?equation-2)
+     (evaluate ?blist (TheClosedRetrievalSetOf (?number ?base-number)
+                        (and 
+                         (numberMentionedInEquation ?equation-2 ?number)
+                         (correspondsInMapping ?mapping ?base-number ?number))))
+     (evaluate ?equation-3 (SublisFn ?blist (QuoteFn ?equation-2)))
+     (evaluate ?ret-equation (SublisFn ?skolem-blist (QuoteFn ?equation-3))))
+
+(<== (makeGensymSkolemBlist ?equation-1 ?skolem-blist ?equation-2)
+     (evaluate ?blist
+       (TheClosedRetrievalSetOf (?y ?term)
+         (and (subexpressionMatching (AnalogySkolemFn ?x) ?equation-1 ?y)
+              (individualRepresenting ?y "gensym" ?term))))
+     (evaluate ?equation-2 (SublisFn ?blist (QuoteFn ?equation-1)))
+     (evaluate ?skolem-blist 
+       (MapFunctionOverList
+        (FunctionToArg 2 (Kappa (?binding ?reverse-binding)
+                                (reverseBinding ?binding ?reverse-binding)))
+        ?blist)))
+		      
+
+(<== (reverseBinding ?binding ?reverse-binding)
+     (unifies (?car ?cdr) ?binding)
+     (unifies ?reverse-binding (?cdr ?car)))
+							    
+(<== (numberMentionedInEquation ?equation ?number)
+     (termFormulas ?equation ?number)
+     (atomicTerm ?number)
+     (isa ?number Number-General))
+
+(<== (resolveEntitySkolems ?equation ?ret-equation)
+     (evaluate 
+         ?blist
+       (TheClosedRetrievalSetOf
+           (?skolem ?skolem-value) 
+         (and
+          (subexpressionMatching (AnalogySkolemFn ?x) ?equation ?skolem)
+          (resolveSkolemForEquation ?equation ?skolem ?skolem-value))))
+     (evaluate ?ret-equation (SublisFn ?blist (QuoteFn ?equation)))
+     (uninferredSentence
+      (subexpressionMatching (AnalogySkolemFn ?x1) ?ret-equation ?subexpression1))
+     (groundExpression ?ret-equation))
+
+                      
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; rules for specific types of skolems
+
+(<== (resolveSkolemForEquation ?i-equation (AnalogySkolemFn ?x) ?value)
+     (isa ?x Number-General)
+     (unifies ?x ?value))
+
+(<== (resolveSkolemForEquation ?i-equation (AnalogySkolemFn ?x) ?value)
+     (isa ?x PlanetaryBody)
+     (evaluate 
+         (TheSet ?x)
+       (TheClosedRetrievalSetOf ?planetary-body
+         (localOnly
+          (useTransitiveInference 
+           (isa ?planetary-body PlanetaryBody)))))
+     (unifies ?x ?value))
+
+;;;this is to get the G Across?
+(<== (resolveSkolemForEquation ?i-equation (AnalogySkolemFn ?x) ?value)
+     (isa ?x MathematicalObject)
+     (unifies ?x ?value))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utilities
+
+(<== (sameQuantity ?q1 ?q2)
+     (resolveAllSkolems ?q1 ?new-q1)
+     (resolveAllSkolems ?q2 ?new-q2)
+     (groundExpression ?new-q1)
+     (groundExpression ?new-q2)
+     (equals ?new-q1 ?new-q2))
+
+(<== (valueExistsInStepUses ?step ?value)
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent
+        ?ci (solutionStepUses ?step (valueOf ?use-quantity ?use-value)))))
+     (wmOnly (candidateInferenceOf ?ci ?mapping))
+     (wmOnly (mappingOf ?mapping ?match))
+     (resolveAssumedValue ?use-value ?mapping ?use-ass-value)
+     (sameOrOppositeValues ?value ?use-ass-value))
+
+(<== (sameOrOppositeValues ?v1 ?v2)
+     (sameUnit ?v1 ?v2)
+     (numberInUnitValue ?v1 ?number)
+     (numberInUnitValue ?v2 ?number))
+
+(<== (sameUnit ?v1 ?v2)
+     (unifies (?u1 ?n1) ?v1)
+     (unifies (?u1 ?n2) ?v2))
+
+(<== (numberInUnitValue ?v1 ?n1)
+     (unifies (?u1 ?n1) ?v1)
+     (unknownSentence (operatorFormulas MinusFn ?n1)))
+
+(<== (numberInUnitValue ?v1 ?n1)
+     (unifies (?u1 (MinusFn ?n1)) ?v1))
+
+(<== (skolemStepInformation ?step ?matcher ?type ?preconditions)
+     (evaluate
+         ?preconditions
+       (TheClosedRetrievalSetOf
+           ?precondition (and  ;;;need to get a check to make sure ci2 is in the matcher
+                          (candidateInferenceContent ?ci2 ?content2)
+                          (unifies ?content2 (solutionStepUses ?step ?precondition)))))
+     (baseOfMatch ?matcher ?base)
+     (unifies (?case-type ?context) ?base)
+     (natArgument ?step 1 ?step-in-base)
+     (ist-Information ?context (solutionStepOperationType ?step-in-base ?type)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;; Equivalent Quantities
+;;;   (solutionStepUses ETS-WorkedSolution-1-3-Step5
+;;;    (valueOf
+;;;     (MeasurementAtFn ((QPQuantityFn Height) Building-1-3) Fall-1-3)
+;;;     (Meter 200)))
+;;;
+;;;   (solutionStepResult ETS-WorkedSolution-1-3-Step5
+;;;    (valueOf
+;;;     (MeasurementAtFn
+;;;      ((QPQuantityFn DistanceTravelled) Ball-1-3 Interval-1-3)
+;;;      Interval-1-3)
+;;;     (Meter 200)))
+;;;There should not be able skolems in here
+;;; more rules
+
+(<== (equivalentQuantities ?quantity-1 ?quantity-2)
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent
+        ?ci-1 
+        (solutionStepResult ?step (valueOf ?quantity-1 ?value)))))
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent
+        ?ci-2 
+        (solutionStepUses ?step (valueOf ?quantity-2 ?value)))))
+     (wmOnly (candidateInferenceOf ?ci-1 ?mapping))
+     (wmOnly (mappingOf ?mapping ?match))
+     (skolemStepInformation ?step ?match DeterminingSpecificScalarOrVectorValuesFromContext ?preconditions)
+     (allPreconditionsSatisfied ?preconditions))
+
+(<== (equivalentQuantities ?quantity-1 ?quantity-2)
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent
+        ?ci-1 
+        (solutionStepResult ?step (greaterThan ?quantity-1 ?value)))))
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent
+        ?ci-2 
+        (solutionStepUses ?step (greaterThan ?quantity-2 ?value)))))
+     (wmOnly (candidateInferenceOf ?ci-1 ?mapping))
+     (wmOnly (mappingOf ?mapping ?match))
+     (skolemStepInformation ?step ?match DeterminingSpecificScalarOrVectorValuesFromContext ?preconditions)
+     (allPreconditionsSatisfied ?preconditions))
+
+(<== (equivalentQuantities ?q1 ?q2)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-2 (solutionStepResult 
+                      ?step (valueOf ?ci-q1 ?quantity)))))
+     (unknownSentence
+      (wmOnly (lookupOnly
+               (candidateInferenceContent
+                ?ci-1 (solutionStepUses 
+                       ?step (valueOf ?ci-q2 ?quantity))))))
+     (wmOnly (candidateInferenceOf ?ci-2 ?mapping))
+     (wmOnly (mappingOf ?mapping ?match))
+     (resolveEquationSkolems ?ci-q1 ?mapping ?q1)
+     (resolveEquationSkolems ?quantity ?mapping ?q2)
+     (quantitiesOkForEquality ?q1 ?q2)
+     (skolemStepInformation ?step ?match DeterminingSpecificScalarOrVectorValuesFromContext ?preconditions)
+     ;;;MEK: if DSSVVC is filtering out things we do want
+     ;;;then we can use difference checks      (different ?type SolvingAMathematicalEquation)
+      (allEquationPreconditionsSatisfied ?preconditions))
+
+(<== (quantitiesOkForEquality ?q1 ?q2)
+     (groundExpression ?q1)
+     (groundExpression ?q2)
+     (unknownSentence (isa ?q1 NumericalValueWithUnits))
+     (unknownSentence (isa ?q2 NumericalValueWithUnits))
+     ;		      (unknownSentence (acceptableTerm ?q1))
+     ;		      (unknownSentence (acceptableTerm ?q2))
+     )
+;;;There used to be 
+;;;(unknownSentence (valueOf ?q1 ?val1))
+;;;(unknownSentence (valueOf ?q2 ?val2))
+
+;;; Might need something that pushes this across different events.     
+
+;;;Look through the candidate inferences for a ?quantity-2 that
+;;;is the equivelent of ?quantity-1 based upon qualitative structure
+(<== (equivalentQuantities 
+      (MeasurementAtFn ((QPQuantityFn Acceleration) ?obj) ?time)
+      ?quantity-2)
+     (assumeObjectInProjectileMotionAt ?obj ?time)
+     (candidateInferenceContent ?ci ?content)
+     (subexpressionMatching 
+      (MeasurementAtFn ((QPQuantityFn Acceleration) ?obj-2) ?time-2)
+      ?content
+      ?quantity-2)
+     (different ?time ?time-2)
+     (assumeObjectInProjectileMotionAt ?obj-2 ?time-2))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Finding quantities mentioned in candidate inferences
+;;; this is a useful filter for finding quantities to search for in qualitative
+;;; problems.
+;;; Grumble: Four cases because Result/Uses versus equationForSolution/equationFormFor
+
+(<== (quantityMentionedInCandidateInferenceEquations
+      (MeasurementAtFn ?q ?e))
+     (wmOnly (candidateInferenceContent
+              ?ci 
+              (solutionStepResult ?step
+                                  (equationForSolution ?ostep ?eqn))))
+     (subexpressionMatching (MeasurementAtFn ?q ?e) ?eqn
+                            ?slice)
+     (unifies (MeasurementAtFn ?q ?e) ?slice))
+
+(<== (quantityMentionedInCandidateInferenceEquations (MeasurementAtFn ?q ?e))
+     (wmOnly (candidateInferenceContent
+              ?ci 
+              (solutionStepUses ?step
+                                (equationForSolution ?ostep ?eqn))))
+     (subexpressionMatching (MeasurementAtFn ?q ?e) ?eqn
+                            ?slice)
+     (unifies (MeasurementAtFn ?q ?e) ?slice))
+
+(<== (quantityMentionedInCandidateInferenceEquations (MeasurementAtFn ?q ?e))
+     (wmOnly (candidateInferenceContent
+              ?ci 
+              (solutionStepResult ?step
+                                  (equationFormFor ?ostep ?eqn))))
+     (subexpressionMatching (MeasurementAtFn ?q ?e) ?eqn
+                            ?slice)
+     (unifies (MeasurementAtFn ?q ?e) ?slice))
+
+(<== (quantityMentionedInCandidateInferenceEquations (MeasurementAtFn ?q ?e))
+     (wmOnly (candidateInferenceContent
+              ?ci 
+              (solutionStepUses ?step
+                                (equationFormFor ?ostep ?eqn))))
+     (subexpressionMatching (MeasurementAtFn ?q ?e) ?eqn
+                            ?slice)
+     (unifies (MeasurementAtFn ?q ?e) ?slice))
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

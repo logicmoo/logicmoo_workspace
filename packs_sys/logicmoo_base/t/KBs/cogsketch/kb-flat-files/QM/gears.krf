@@ -1,0 +1,41 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: gears.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: January 19, 2009 14:57:03
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa enmeshed SymmetricBinaryPredicate)
+(arity enmeshed 2)
+(arg1Isa enmeshed Gear)
+(arg2Isa enmeshed Gear)
+
+(isa ToothedTexture Texture)
+
+(isa textureOfSurface BinaryPredicate)
+(comment textureOfSurface
+  "textureOfSurface is true iff Surface has the specified Texture.")
+(arity textureOfSurface 2)
+(arg1Isa textureOfSurface Surface)
+(arg2Isa textureOfSurface Texture)
+(genlPreds textureOfSurface textureOfObject)
+
+(isa rotationalOriginByGear BinaryPredicate)
+(comment rotationalOriginByGear "rotationalOriginByGear is true iff obj is a 
+                                 gear and it's rotational origin is ori")
+(arg1Isa rotationalOriginByGear Gear)
+(arg2Isa rotationalOriginByGear QMPoint)
+(genlPreds rotationalOriginByGear rotationalOrigin)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

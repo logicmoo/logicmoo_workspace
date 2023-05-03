@@ -1,0 +1,1013 @@
+;;;
+;;; abstract-planning.krf
+;;;
+;;; The tasks defined here are intended to support domain-independent planning
+;;; based on performance goals and qualitative models plus a domain-specific
+;;; vocabulary of primitive operators.
+;;;
+;;; Some of this task vocabulary has been adapted from the GGP TL code,
+;;; but will initially be applied to Freeciv and Long Lived Learning Software
+;;; Collaborators.
+
+(in-microtheory PerceptualAgentMt)
+
+(isa domainActorType BinaryPredicate)
+(arity domainActorType 2)
+(arg1Isa domainActorType CompanionsDomain)
+(arg2Isa domainActorType Collection)
+(arg2Genl domainActorType Agent-Generic)
+(comment domainActorType "(domainActorType ?domain ?root-type) indicates the root actor type shared by all actors in ?domain.")
+
+;;; See fc-inference.krf for implementation:
+;;;(isa domainLevelActor UnaryPredicate)
+;;;(arity domainLevelActor 1)
+;;;(arg1Isa domainLevelActor Agent-Generic)
+;;;(comment domainLevelActor "(domainLevelActor ?entity) means ?entity is an Agent-Generic in the domain that can be independently planned and tasked.")
+
+;;; Should these take the currentPlayer (ie, role) so that it isn't implicit?
+(isa assignableActorOfType BinaryPredicate)
+(isa assignableActorOfType DynamicUpdatePredicate)  ; Units die or disband.  Can't assume they persist.
+(arity assignableActorOfType 2)
+(arg1Isa assignableActorOfType Agent-Generic)
+(arg2Isa assignableActorOfType Collection)
+(comment assignableActorOfType "(assignableActorOfType ?entity ?type) means ?entity is an Agent-Generic of type ?type in the domain that can be independently planned and tasked.")
+
+
+(isa adversarialActorOfType BinaryPredicate)
+(arity adversarialActorOfType 2)
+(arg1Isa adversarialActorOfType Agent-Generic)
+(arg2Isa adversarialActorOfType Collection)
+(comment adversarialActorOfType "(adversarialActor ?entity ?type) means ?entity is an opposing player or one of his pieces (something that can take action) of type ?type.")
+
+(isa PlanningMetaPredicate Collection)
+(comment PlanningMetaPredicate "PlanningMetaPredicate denotes the collection of all non-domain level planning predicates.")
+
+(isa planForTask PlanningMetaPredicate) ; a CYC predicate.
+
+;;; rule defined implementation is domain-specific:
+(isa busyActor UnaryPredicate)
+(isa busyActor DynamicUpdatePredicate)
+(arity busyActor 1)
+(arg1Isa busyActor Agent-Generic)
+(comment busyActor "(busyActor ?actor) means ?actor is currently pursuing some task and cannot be re-planned without interruption.")
+
+;;; Eventually we'd like this to be rule-defined to infer
+;;; the current plan from the strategic plan and the current
+;;; situation.
+(isa currentPlan BinaryPredicate)
+(isa currentPlan FunctionalSlot)
+(isa currentPlan DynamicUpdatePredicate)  ; This is outsourced currently
+(functionalInArgs currentPlan 2)
+(arity currentPlan 2)
+(arg1Isa currentPlan Agent-Generic)
+(arg2Isa currentPlan CycLFormula)  ; An s-expression of the form (actionSequence ....)
+(comment currentPlan "(currentPlan ?unit ?plan) means the current plan of ?unit is ?plan (an actionSequence).")
+
+;;; Written out by doRecordIntent
+(isa intentForActor BinaryPredicate)
+(arity intentForActor 2)
+(arg1Isa intentForActor Agent-Generic)
+(arg2Isa intentForActor CycLExpression)  ; a ground operator
+(comment intentForActor "(intentForActor ?actor ?task) is a reifiable expression for stating that ?actor intends to do ?task at some point in the future.")
+
+(isa recordIntent ComplexActionPredicate)
+(arity recordIntent 5)
+(arg1Isa recordIntent TimeInterval)
+(arg2Isa recordIntent Microtheory)
+(arg3Isa recordIntent Agent-Generic)
+(arg4Isa recordIntent Goal)
+(arg5Isa recordIntent CycLExpression)
+(comment recordIntent "(recordIntent ?when ?mt ?actor ?goal ?action) reifies the goal intent behind a planned task (which may or may not execute successfully) in the current execution transcript microtheory.  Intent is reified using the intendedTaskForGoal predicate.")
+
+;;; Written out by recordIntent complex task:
+(isa intendedTaskForGoal TernaryPredicate)
+(isa intendedTaskForGoal PlanningMetaPredicate)
+(arity intendedTaskForGoal 2)
+(arg1Isa intendedTaskForGoal CycLFormula)
+(arg2Isa intendedTaskForGoal Goal)
+(comment intendedTaskForGoal "(intendedTaskForGoal ?task ?goal) associates ?task with a learning or performance goal ?goal for reification in a case.  The task need not actually succeed, it may simply be an intention.")
+
+(isa recordRationale ComplexActionPredicate)
+(arity recordRationale 3)
+(arg1Isa recordRationale Microtheory)
+(arg2Isa recordRationale CycLExpression)
+(arg3Isa recordRationale Goal)
+(comment recordRationale "(recordRationale ?mt ?action ?goal) annotates a command with its goal representation rationale in the current execution transcript microtheory.")
+
+;;; Written out by recordRationale complex task:
+(isa reasonForTask TernaryPredicate)
+(isa reasonForTask PlanningMetaPredicate)
+(arity reasonForTask 3)
+(arg1Isa reasonForTask PerceptualAgentCommand)
+(arg2Isa reasonForTask CycLFormula)
+(arg3Isa reasonForTask Goal)
+(comment reasonForTask "(reasonForTask ?cmd ?task ?goal) associates primitive task ?task with a learning or performance goal ?goal for reification in a case.")
+
+
+(preconditionForMethod
+  ; extract the event name of the last command executed:
+  ;(outsourcedOnly (counterValue eventCounter ?n))  ; This is called *after* executing decision.
+  (outsourcedOnly (latestDomainAction ?cmd))
+  (methodForAction
+    (recordRationale ?mt ?action ?goal)
+    (actionSequence
+      (TheList
+        (doAnnounce "(reasonForTask ~s~%  ~s)" (?action ?goal))
+        (doRecord (ist-Information ?mt (holdsIn ?cmd (reasonForTask ?action ?goal))))))))
+
+
+(preconditionForMethod
+  (true) ; ?when is the current dateOfEvent in the simulation, game, or real-world, as appropriate.
+  (methodForAction
+    (recordIntent ?when ?mt ?actor ?goal ?action-seq)
+    (actionSequence
+      (TheList
+        (doAnnounce "Record Intent: actor = ~a goal = ~a~% plan = ~a" (?actor ?goal ?action-seq))
+        (doRecord (ist-Information ?mt (holdsIn ?when (intendedTaskForGoal ?action-seq ?goal))))  ; ?goal is the rep.
+        ))))
+
+
+(isa recordAssignmentFailure ComplexActionPredicate)
+(arity recordAssignmentFailure 2)
+(arg1Isa recordAssignmentFailure Microtheory)
+(arg2Isa recordAssignmentFailure Agent-Generic)
+(comment recordAssignmentFailure "(recordAssignmentFailure ?mt ?actor) reifies a failure to assign ?actor to a task.")
+
+(preconditionForMethod
+  (and (outsourcedOnly (counterValue eventCounter ?n))
+       (numAnswers 1
+         (lookupOnly
+           (ist-Information ?mt
+             (dateOfEvent (?functor ?mt ?n) ?when)))))  ; was CommmandFn!! Really just looking for current turn/time
+  (methodForAction
+    (recordAssignmentFailure ?mt ?resource)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?mt (holdsIn ?when (failureToAssign ?resource))))))))
+
+(isa sourceOfPlan BinaryPredicate)
+(isa sourceOfPlan PlanningMetaPredicate)
+(arity sourceOfPlan 2)
+(arg1Isa sourceOfPlan CycLFormula)
+(arg2Isa sourceOfPlan CycLFormula)
+(comment sourceOfPlan "(sourceOfPlan ?action-seq ?method-stmt) records the method used to derive the plan ?action-seq.")
+
+;;; Some vocabulary to support representing the fact that some tasks achieve the preconditions of other tasks.
+(isa PreconditionOfFn UnaryFunction)
+(arity PreconditionOfFn 1)
+(resultIsa PreconditionOfFn CycLFormula)
+(comment PreconditionOfFn "(PreconditionOfFn ?task) is a fluent that denotes the precondition of a primitive task.")
+
+;;; Enable us to represent the goal of activating a given process.
+(isa ActivationConditionFn UnaryFunction)
+(arity ActivationConditionFn 1)
+(resultIsa ActivationConditionFn CycLFormula)
+(comment ActivationConditionFn "(ActivationConditionFn ?process) is a fluent that denotes the activation condition of a qualitative process.")
+
+;;; *** Should this be "effectiveConditionFor" instead?
+(isa optimalityConditionFor BinaryRelation)
+(arity optimalityConditionFor 2)
+(arg1Isa optimalityConditionFor ActionPredicate)
+(arg2Isa optimalityConditionFor BinaryRelation)
+(comment optimalityConditionFor "(optimalityConditionFor ?actionpred ?binrel) relates a Kappa predicate to ActionPredicate ?pred.")
+
+(isa legalityConditionFor BinaryRelation)
+(arity legalityConditionFor 2)
+(arg1Isa legalityConditionFor ActionPredicate)
+(arg2Isa legalityConditionFor BinaryRelation)
+(comment legalityConditionFor "(legalityConditionFor ?actionpred ?binrel) relates a Kappa predicate to ActionPredicate ?pred.")
+
+(isa experimentalConditionFor BinaryRelation)
+(arity experimentalConditionFor 2)
+(arg1Isa experimentalConditionFor ActionPredicate)
+(arg2Isa experimentalConditionFor BinaryRelation)
+(comment experimentalConditionFor "(experimentalConditionFor ?actionpred ?binrel) relates an action predicate to a scanning condition predicate that prefers unknown values over known values.  Used to fill out decision tree epistemic forms.")
+
+(isa activeExperimentalConditionFor BinaryPredicate)
+(arity activeExperimentalConditionFor 2)
+(arg1Isa activeExperimentalConditionFor ActionPredicate)
+(arg2Isa activeExperimentalConditionFor BinaryRelation)
+(comment activeExperimentalConditionFor "(activeExperimentalConditionFor ?actionpred ?binrel) binds the test iff there's an active learning goal for ?actionpred and the current scenario is an experiment.")
+
+(isa scanningConditionFor BinaryRelation)
+(arity scanningConditionFor 2)
+(arg1Isa scanningConditionFor ActionPredicate)
+(arg2Isa scanningConditionFor BinaryRelation)
+(comment scanningConditionFor "(scanningConditionFor ?actionpred ?binrel) relates an evaluation predicate ?binrel to ActionPredicate ?actionpred.")
+
+(<== (scanningConditionFor ?pred ?cond)
+     (activeExperimentalConditionFor ?pred ?cond))
+
+(<== (scanningConditionFor ?pred ?cond)
+     (uninferredSentence
+       (activeExperimentalConditionFor ?pred ?exp-cond))
+     (optimalityConditionFor ?pred ?cond))
+
+(<== (scanningConditionFor ?pred ?cond)
+     (uninferredSentence
+       (optimalityConditionFor ?pred ?cond))
+     (legalityConditionFor ?pred ?cond))
+
+(<== (activeExperimentalConditionFor ?pred ?cond)
+     (currentActivityMode Experimentation)
+     (experimentalConditionFor ?pred ?cond)
+     (activeGoal (LearnOptimalConditionFn ?pred)))  ;; And not a control variable!!
+
+(isa instantiatedScanningConditionFor TernaryPredicate)
+(arity instantiatedScanningConditionFor 3)
+(arg1Isa instantiatedScanningConditionFor Predicate)
+(arg2Isa instantiatedScanningConditionFor List)
+(arg3Isa instantiatedScanningConditionFor CycLExpression)
+(comment instantiatedScanningConditionFor "(instantiatedScanningConditionFor ?pred ?bindings ?condition) instantiates the condition stored for ?pred with the specified ?bindings.")
+
+;;; Instantiate open variables at run time.
+;;; Bindings is the list of (ground) arguments to an operator.
+;;; We need to associate them with (TheList ?arg1 ?arg2 ... ?arg2)
+;;; so that we can ground out any such open variables in scanning condition Kappa functions.
+(<== (instantiatedScanningConditionFor ?pred ?bindings ?cond)
+     (scanningConditionFor ?pred ?raw-cond)
+     (evaluate ?len (LengthOfListFn ?bindings))
+     (evaluate ?vars (SublistFromToFn (TheList ?arg1 ?arg2 ?arg3 ?arg4 ?arg5 ?arg6 ?arg7) 1 ?len))
+     (unifies ?vars ?bindings)
+     ;; The environment now has ?arg1 bound to the 1st element of ?bindings, and ?arg2 to the 2nd, etc.
+     ;; By calling unifies here, we're implicitly instantiating the condition with the bindings of ?arg1, ?arg2, etc.
+     (unifies ?translated-cond ?raw-cond)
+     ;; Now, we uniquify any remaining unbound variables to avoid capture:
+     (evaluate ?cond (UniquifyVariablesFn ?translated-cond)))
+     
+(isa likelyActivityFor BinaryPredicate)
+(arity likelyActivityFor 2)
+(arg1Isa likelyActivityFor Agent-Generic)
+(arg2Isa likelyActivityFor Situation)
+(comment likelyActivityFor "(likelyActivityFor ?agent ?activity) looks for frequent prototypical activities of the type of ?agent.")
+
+(isa frequentPrototypicalActivityTypeOfPersonType BinaryPredicate)
+(arity frequentPrototypicalActivityTypeOfPersonType 2)
+(arg1Isa frequentPrototypicalActivityTypeOfPersonType Collection)
+(arg2Isa frequentPrototypicalActivityTypeOfPersonType Collection)
+;; ***** The argument constraints are really that the first is some
+;; ***** kind of event, the second is some kind of entity that can
+;; ***** participate in instances of that event
+(comment frequentPrototypicalActivityTypeOfPersonType
+  "(frequentPrototypicalActivityTypeOfPersonType ?event-col ?p-col) indicates that instances of ?p-col
+ are typically involved in instances of ?event-col, e.g. military units are prototypically involved in
+ defending something.")
+
+(<== (likelyActivityFor ?agent ?activity)
+     (nonTransitiveInference (isa ?agent ?person-type))
+     (frequentPrototypicalActivityTypeOfPersonType ?activity ?person-type))
+
+(<== (likelyActivityFor ?agent ?activity)
+     (nonTransitiveInference (isa ?agent ?parent-type))
+     (nonTransitiveInference (genls ?parent-type ?person-type))  ; go one level up if necessary.
+     (frequentPrototypicalActivityTypeOfPersonType ?activity ?person-type))
+
+;;; Used in case-encoding to wrap action preds.
+(isa ActionFn UnaryFunction)
+(arity ActionFn 1)
+(arg1Isa ActionFn ActionPredicate)
+(resultIsa ActionFn PurposefulAction)
+(comment ActionFn "(ActionFn ?action-pred) denotes a task involving ?action-pred.")
+
+(isa ReifiedEventFn UnaryFunction)
+(arity ReifiedEventFn 1)
+(arg1Isa ReifiedEventFn Event)
+(resultIsa ReifiedEventFn Event)
+(comment ReifiedEventFn "(ReifiedEventFn ?event-type) denotes an Event.")
+
+;;; These are used by the planning graph generator.  Although they may not appear in
+;;; PerceptualAgent krf files, they are referenced by code in agents/planning-graph.lsp.
+(isa actionTypeProducesResourceType TernaryPredicate)
+(arity actionTypeProducesResourceType 3)
+(arg1Isa actionTypeProducesResourceType ActionPredicate)
+(arg2Isa actionTypeProducesResourceType Collection)
+(arg3Isa actionTypeProducesResourceType BinaryPredicate)
+(comment actionTypeProducesResourceType "(actionTypeProducesResourceType ?action-pred ?resource-type ?binpred) means entities of the specified type are produced by actions of the specified type.")
+
+(isa actionTypeConsumesResourceType TernaryPredicate)
+(arity actionTypeConsumesResourceType 3)
+(arg1Isa actionTypeConsumesResourceType Collection)
+(arg2Isa actionTypeConsumesResourceType ActionPredicate)
+(arg3Isa actionTypeConsumesResourceType BinaryPredicate)
+(comment actionTypeConsumesResourceType "(actionTypeConsumesResourceType ?action-pred ?resource-type ?binpred) means entities of the specified type are used in ?action-pred.")
+
+(isa actionPredSlotMapping BinaryRelation)
+(arity actionPredSlotMapping 2)
+(arg1Isa actionPredSlotMapping ActionPredicate)
+(arg2Isa actionPredSlotMapping List-Extensional)
+(comment actionPredSlotMapping "(actionPredSlotMapping ?action-pred ?list-of-role-relations) is similar to the collection ActorSlotList, but doesn't require role relations to be actor slots.")
+
+(isa objectTypeProduced BinaryPredicate)
+(isa objectTypeProduced FirstOrderCollectionPredicate)
+(comment objectTypeProduced "(objectTypeProduced EVENT OBJECT-Type) is like outputsCreated, but arg2 is a collection.  Not quite the same as outputsCreated-TypeType.")
+(arity objectTypeProduced 2)
+(arg1Isa objectTypeProduced Event)
+(arg2Isa objectTypeProduced ExistingObjectType)
+(argGenl objectTypeProduced 2 PartiallyTangible)
+(comment objectTypeProduced "(objectTypeProduced EVT OBJTYPE) says that some instance(s) of OBJTYPE were produced during EVT.  This is similar to objectTypeUsed and a type-level version of objectCreated.")
+(genlPreds objectTypeProduced (Kappa (?COL1 ?COL2) (relationInstanceExists outputsCreated ?COL1 ?COL2)))
+
+(isa objectSelected-TypeType BinaryPredicate)
+(isa objectSelected-TypeType KindLevelPredicate)
+(arity objectSelected-TypeType 2)
+(comment objectSelected-TypeType "(objectSelected-TypeType EVENT OBJECT-Type) is like outputsCreated, but arg2 is a collection.  Not quite the same as outputsCreated-TypeType.")
+(arg1Isa objectSelected-TypeType TemporalStuffType)
+(arg1Genl objectSelected-TypeType SelectingSomething)
+(arg2Isa objectSelected-TypeType ExistingObjectType)
+(argGenl objectSelected-TypeType 2 SomethingExisting)
+(comment objectSelected-TypeType "(objectSelected-TypeType EVTTYPE OBJTYPE) says that some instance of OBJTYPE is selected during events of type EVTTYPE.  This is the type-level analog of objectSelected.")
+(genlPreds objectSelected-TypeType (Kappa (?COL1 ?COL2) (relationAllExists objectSelected ?COL1 ?COL2)))
+
+
+
+;;;
+;;; Decision Tasks
+;;;
+
+;;; We want to represent DecisionTasks (aka DecisionPoints).
+;;; How do we do this?  The predicate is not itself the task.
+;;; If we specialize ComplexActionPredicate, we cannot say that 
+;;; it is also a spec of SelectingSomething.
+(genls DecisionTask SelectingSomething) ; Do we need this?
+(isa DecisionTask Collection)           ; It could distinguish domain-level decisions from meta-level
+
+;;; Ok, what should the arguments to this be?
+;;; Intuitively, we want to replace things like decideTechnology or planForUnit with 
+;;; learnable tasks.  That argues for a NAT representation that can be composed from
+;;; domain-specific concepts.
+;;; Do we want something like (DecisionFn Unit-103 fcObjectAt) ??
+;;; (DecisionFn FC-Player-AbrahamLincoln currentGovernment)
+;;; We'd have to look to effectOfAction-Props and eventualEffectOfAction-Props
+;;; to find the connection between the observable property and the primitive.
+;;; 
+;;; Assume these are going to be learned by demonstration.  User takes an action.
+;;; Learner looks at expected effectOfAction-Props.  Constructs a decision task
+;;; for that action.  Do we lift the agent? How do we index it?  Will isa 
+;;; retrieve it?
+;;; *** Change this to be a 2nd-order function, like MeasurableQuantityFn.
+;;; *** 
+(isa DecisionFn UnaryFunction)
+(arity DecisionFn 1)
+(arg1Isa DecisionFn FunctionalSlot)  ; binpred that's functional in arg2.
+(resultIsa DecisionFn VariableArityFunction)
+(resultResultIsa DecisionFn DecisionTask)
+(comment DecisionFn "(DecisionFn ?slot) denotes a unary function that can be applied to an entity to yield a decision instance.")
+
+(isa decisionTask BinaryRelation)
+(arity decisionTask 2)
+(arg1Isa decisionTask Collection)
+(arg2Isa decisionTask FunctionalSlot)
+(comment decisionTask "(decisionTask ?coll ?slot) means there is a recurrent decision task to decide the value of ?slot for members of collection ?coll.")
+
+(isa actionEntailsDecision-TypeType BinaryRelation)
+(arity actionEntailsDecision-TypeType 2)
+(arg1Isa actionEntailsDecision-TypeType ActionPredicate)
+(arg2Isa actionEntailsDecision-TypeType DecisionTask) 
+(comment actionEntailsDecision-TypeType "(actionEntailsDecision-TypeType  ?action-pred ?decision) associates an action-pred with a decision it makes.")
+
+;;; Use a collection or a CollectionSubsetFn to enumerate the scope of agents
+;;; for which the decision must be made.  With the right backchaining rules,
+;;; we can enumerate using elementOf.  (see companion-predicates.krf)
+
+;(isa decisionQuantifier BinaryPredicate)
+;(arity decisionQuantifier 2)
+;(arg1Isa decisionQuantifier Set-Mathematical)
+;(arg2Isa decisionQuantifier DecisionTask)
+;(comment decisionQuantifier "(decisionQuantifier ?scope ?decision) means ?decision is universally quantified over ?scope, which may be represented using CollectionSubsetFn or as an explicit set.")
+
+;(isa scopePrecedence UnaryRelation)
+;(arity scopePrecedence 1)
+;(arg1Isa scopePrecedence List-Extensional)
+;(comment scopePrecedence "(scopePrecedence ?scope-list) represents the preferred ordering of decisions based solely on collection type.")
+
+;;; If we learn decisionQuantifiers, then we don't need to rely on isa to enumerate decision tasks.
+
+;(isa decideForAll ComplexActionPredicate)
+;(arity decideForAll 3)
+;(arg1Isa decideForAll Microtheory)
+;(arg2Isa decideForAll Set-Mathematical)
+;(arg3Isa decideForAll FunctionalSlot)
+;(comment decideForAll "(decideForAll ?mt ?scope ?slot) is a task to make decisions for each element of ?scope for the value of its predicate ?slot.  scope may be defined using CollectionSubsetFn.")
+
+;(isa executeDecisionTask ComplexActionPredicate)
+;(arity executeDecisionTask 3)
+;(arg1Isa executeDecisionTask Microtheory)
+;(arg2Isa executeDecisionTask List-Extensional)
+;(arg3Isa executeDecisionTask FunctionalSlot)
+;(comment executeDecisionTask "(executeDecisionTask ?mt ?set ?slot) is a task to make decisions for each element of ?list for the value of its predicate ?slot.  ?list is an explicit, extensional list.")
+
+(isa decide ComplexActionPredicate)
+(arity decide 3)
+(arg1Isa decide Microtheory)
+(arg2Isa decide Agent-Generic)
+(arg3Isa decide FunctionalSlot)
+(comment decide "(decide ?mt ?actor ?slot) selects a value for ?slot of ?actor.")
+
+(isa eventTriggersDecision BinaryPredicate)
+(arity eventTriggersDecision 2)
+(arg1Isa eventTriggersDecision Event)  ; a reified individual for which there may be role relations like objectActedOn, or outputsCreated.
+(arg2Isa eventTriggersDecision DecisionTask)
+(comment eventTriggersDecision "(eventTriggersDecision ?event ?decision-task) means asynchronous ?event should initiate planning for a (related) ?decision-task.  E.g., UnitCreated in Freeciv should kick off planning to figure out how to assign the unit.  This may be rule-defined in order to pass bindings around.")
+
+;;; Would it be better to have eventTriggersGoal (or activates?)
+(isa eventTriggersResponse BinaryPredicate)
+(arity eventTriggersResponse 2)
+(arg1Isa eventTriggersResponse Event)
+(arg2Isa eventTriggersResponse Task)
+(comment eventTriggersResponse "(eventTriggersResponse ?event ?task) means ?event kicks off a plan.")
+
+(isa conjunctivePrecondition BinaryPredicate)
+(arity conjunctivePrecondition 2)
+(arg1Isa conjunctivePrecondition CycLSentence-Askable)
+(arg2Isa conjunctivePrecondition CycLSentence-Askable)
+(comment conjunctivePrecondition "(conjunctivePrecondition ?generator ?filter) checks that for each binding produced by ?generator, ?filter holds.")
+
+;;; This is a higher-order precondition statement that exists so planning
+;;; graph generation can see into the preconditions, enabling subgoaling.
+
+(<== (conjunctivePrecondition ?generator ?filter)
+     (uninferredSentence
+       (and ?generator
+         (uninferredSentence ?filter))))
+
+;;; 
+;;; Action/Goal Linkage
+;;;
+
+(isa satisfiedGoal BinaryPredicate)
+(arity satisfiedGoal 2)
+(arg1Isa satisfiedGoal Microtheory)
+(arg2Isa satisfiedGoal Goal)
+(comment satisfiedGoal "(satisfiedGoal ?mt ?goal) succeeds iff ?goal is satisfied in ?mt.")
+
+(<== (satisfiedGoal ?mt ?goal)
+     (not (variableExpression ?goal))
+     (unifies (AchieveFn ?prop) ?goal)
+     (ist-Information ?mt
+       (trueSentence ?prop)))
+
+(isa inactiveStartingGoal BinaryPredicate)
+(arity inactiveStartingGoal 2)
+(arg1Isa inactiveStartingGoal Microtheory)
+(arg2Isa inactiveStartingGoal Goal)
+
+(<== (inactiveStartingGoal ?mt ?goal)
+     (lookupOnly
+       (ist-Information ?mt (inactiveGoal ?goal))))
+
+(<== (inactiveStartingGoal ?mt ?goal)
+     (satisfiedGoal ?mt ?goal))
+
+;;; Used in LBD:
+
+(isa operatorInstantiatedPrecondition BinaryRelation)
+(arity operatorInstantiatedPrecondition 2)
+(comment operatorInstantiatedPrecondition "(operatorInstantiatedPrecondition ?operator ?instantiate-precondition-stmt) binds and instantiates the precondition stmt.")
+
+(<== (operatorInstantiatedPrecondition ?operator ?instantiated-prec)
+     (not (variableExpression ?operator))
+     (operatorFormulas ?pred ?operator)
+     (numAnswers 1 (variablizedStatement ?pred ?var-prim))  ; defined in companion-predicates.krf
+     (kbOnly
+       (numAnswers 1
+         (preconditionFor-Props ?prec ?var-prim)))
+     (unifies ?var-stmt (preconditionFor-Props ?prec ?var-prim))
+     (instantiationOf ?var-stmt (preconditionFor-Props ?anything ?operator) ?instantiated-prec))
+
+;;; These only work for direct propositional statements or horn clauses whose
+;;; results have been cached in wm.  For eventualEffectOfAction-Props of
+;;; doChangeProduction, this is a problem. planningGraph gets around it by
+;;; querying.
+
+;;; Not currently used:
+(isa operatorInstantiatedEffect BinaryRelation)
+(arity operatorInstantiatedEffect 2)
+(comment operatorInstantiatedEffect "(operatorInstantiatedEffect ?operator ?instantiate-effect-stmt) binds and instantiates the effect stmt.")
+
+(<== (operatorInstantiatedEffect ?operator ?instantiated-effect)
+     (not (variableExpression ?operator))
+     (operatorFormulas ?pred ?operator)
+     (numAnswers 1 (variablizedStatement ?pred ?var-prim))  ; defined in companion-predicates.krf
+     (kbOnly
+       (numAnswers 1
+         (effectOfAction-Props ?var-prim ?effect)))
+     (unifies ?var-stmt (effectOfAction-Props ?var-prim ?effect))
+     (instantiationOf ?var-stmt (effectOfAction-Props ?operator ?effect) ?instantiated-effect))
+
+
+;;; Used in LBD (in compileAchievementTask)
+(isa operatorInstantiatedEventualEffect BinaryRelation)
+(arity operatorInstantiatedEventualEffect 2)
+(comment operatorInstantiatedEventualEffect "(operatorInstantiatedEventualEffect ?operator ?instantiate-effect-stmt) binds and instantiates the effect stmt.")
+
+(<== (operatorInstantiatedEventualEffect ?operator ?instantiated-effect)
+     (not (variableExpression ?operator))
+     (operatorFormulas ?pred ?operator)
+     (numAnswers 1 (variablizedStatement ?pred ?var-prim))  ; defined in companion-predicates.krf
+     (kbOnly                                                ; We just want the variablized statement from the kb.
+       (numAnswers 1
+         (eventualEffectOfAction-Props ?var-prim ?effect)))
+     (unifies ?var-stmt (eventualEffectOfAction-Props ?var-prim ?effect))
+     (instantiationOf ?var-stmt (eventualEffectOfAction-Props ?operator ?effect) ?instantiated-effect))
+
+;;; Used in LBD (in compileAchievementTask)
+(isa operatorInstantiatedPrecond BinaryRelation)
+(arity operatorInstantiatedPrecond 2)
+(comment operatorInstantiatedPrecond "(operatorInstantiatedPrecond ?operator ?instantiated-precondition) binds and instantiates the precondition stmt.")
+
+(<== (operatorInstantiatedPrecond ?operator ?instantiated-precond)
+     (not (variableExpression ?operator))
+     (operatorFormulas ?pred ?operator)
+     (numAnswers 1 (variablizedStatement ?pred ?var-prim))  ; defined in companion-predicates.krf
+     (kbOnly
+       (numAnswers 1
+         (preconditionFor-Props ?precond ?var-prim)))
+     (unifies ?var-stmt (preconditionFor-Props ?precond ?var-prim))
+     (instantiationOf ?var-stmt (preconditionFor-Props ?precond ?operator) ?instantiated-precond))
+
+
+
+;;; Used in rational player:
+
+(isa instantiatedOperatorSet QuaternaryRelation)
+(arity instantiatedOperatorSet 4)
+(arg1Isa instantiatedOperatorSet Microtheory)
+(arg2Isa instantiatedOperatorSet Agent-Generic)
+(arg3Isa instantiatedOperatorSet FunctionalSlot)
+(arg4Isa instantiatedOperatorSet Set-Mathematical)
+(comment instantiatedOperatorSet "(instantiatedOperatorSet ?mt ?actor ?slot ?actions) enumerates possible actions for binding ?slot for ?actor.")
+
+;;; Enumerate possible actions for binding ?slot for ?actor.
+(<== (instantiatedOperatorSet ?mt ?ios-actor ?slot ?actions)
+     (evaluate ?actions
+       (TheClosedRetrievalSetOf ?action
+          (outsourcedOnly
+            (legalInstantiatedActions ?mt (?slot ?ios-actor ?v1) ?action)))))
+
+;;;
+;;; Task/Goal Linkage
+;;;
+
+;;; The "promissory note" task:
+(isa achieve ComplexActionPredicate)
+(arity achieve 1)
+(arg1Isa achieve CycLFormula)
+(comment achieve "(achieve ?goal) is a task to achieve a stated goal proposition.")
+
+;;; Simple case: to achieve a goal that's already true, do nothing.
+(preconditionForMethod
+  (and (not (variableExpression ?prop))
+       (operatorFormulas ?pred ?prop)
+       (different ?pred PreconditionOfFn)  ; may not suffice if we introduce other functors
+       (trueSentence ?prop))   ; basically, ensure that this is a proposition
+  (methodForAction
+    (achieve ?prop)
+    (actionSequence
+      (TheList))))
+
+;;; This should probably be (does ?actor (achieve ?prop)).  Maybe.
+(isa achieveBy ComplexActionPredicate)
+(arity achieveBy 2)
+(arg1Isa achieveBy Agent-Generic)
+(arg2Isa achieveBy CycLFormula)
+(comment achieveBy "(achieveBy ?actor ?goal) is a task for ?actor to achieve a stated goal proposition.")
+
+;;; Simple case: to achieve a goal that's already true, do nothing.
+;;; This is causing all kinds of problem.  It needs to go away and
+;;; we must check for satisfiedGoal at some level above this.
+;(preconditionForMethod
+;  (and (not (variableExpression ?prop))
+;       (operatorFormulas ?pred ?prop)
+;       (different ?pred PreconditionOfFn)  ; may not suffice if we introduce other functors
+;       (trueSentence ?prop))   ; basically, ensure that this is a proposition
+;  (methodForAction
+;    (achieveBy ?actor ?prop)
+;    (actionSequence
+;      (TheList))))
+
+;;; The implementation of legalAction is domain dependent.
+;;; Freecivai defines it in the legal player.  GGP would have its own definition.
+(isa legalAction BinaryPredicate)
+(isa legalAction DynamicUpdatePredicate)
+(arity legalAction 2)
+(arg1Isa legalAction Microtheory)
+(arg2Isa legalAction CycLExpression)
+(comment legalAction "(legalAction ?mt ?action) binds ?action to a primitive, domain-level action that can be performed now.")
+
+
+;;; ?goal here is an arbitrary proposition.  It might be a formula that describes the state.
+;;; It might be (activeMF <process>), etc.
+
+(isa achieveQuantityValue ComplexActionPredicate)
+(arity achieveQuantityValue 4)
+(arg1Isa achieveQuantityValue Microtheory)
+(arg2Isa achieveQuantityValue SomethingExisting)
+(arg3Isa achieveQuantityValue CycLTerm)
+(arg4Isa achieveQuantityValue CycLTerm)  ; number?
+(comment achieveQuantityValue "(achieveQuantityValue ?microtheory ?actor ?quantity-nat ?target-value) plans a sequence of actions that modify ?quantity fromits current value to its target value.")
+
+(isa verifyQuantityChange ComplexActionPredicate)
+(arity verifyQuantityChange 6)
+(arg1Isa verifyQuantityChange Microtheory)
+(arg2Isa verifyQuantityChange SomethingExisting)
+(arg3Isa verifyQuantityChange MeasurableQuantity)
+(arg4Isa verifyQuantityChange Number-General)
+(arg5Isa verifyQuantityChange Number-General)
+(arg6Isa verifyQuantityChange OrderOfMagnitudeInterval)  ; Seems wrong, but that's Cyc.
+(comment verifyQuantityChange "(verifyQuantityChange ?mt ?actor ?quantity-nat ?old-value ?target-value ?direction)")
+
+;;; Not clear that we need ?game and ?role.  If the plans are inherited from 
+;;; a microtheory in which we can access the causal model and the game state
+;;; (and the current player),  then the role could be indexically determined
+;;; via an outsourced pred. However, the rule of thumb should be "Does this
+;;; predicate make sense outside of games?" We probably need the microtheory
+;;; and actor.
+
+;;; Break taskAchieves down into complexTaskAchieves and primitiveAchieves in
+;;; order to distinguish improvised plans from learned tasks (and to prefer
+;;; existing complex task htn methods over from-scratch regression planning)
+
+;;; originally from ggp w/different arity:
+(isa taskAchieves TernaryPredicate)
+(arity taskAchieves 3)
+(arg1Isa taskAchieves Agent-Generic)
+(arg2Isa taskAchieves CycLFormula)
+(arg3Isa taskAchieves CycLFormula)
+(comment taskAchieves "(taskAchieves ?actor ?goal ?task) binds ?task to an instantiated complex task that will achieve ?goal.")
+
+(<== (taskAchieves ?actor ?goal ?task)
+     (complexTaskAchieves ?actor ?goal ?task))
+
+(<== (taskAchieves ?actor ?goal ?task)
+     (primitiveAchieves ?actor ?goal ?task))
+
+(<== (taskAchieves ?actor (AchieveFn ?conjprop) ?task)
+     (not (variableExpression ?conjprop))
+     (not (variableExpression ?actor))
+     (operatorFormulas and ?conjprop)
+     (parentPropOrEntity (AchieveFn ?conjprop) ?parent-conjprop)
+     (evaluate ?difference 
+       (SetDifferenceFn 
+         (RemoveIfFn 
+           (MakeFormulaFn TheSet ?conjprop)
+           (Kappa (?item) (operatorFormulas uninferredSentence ?item))  ; unachievable filters
+           IdentityFn)
+         (MakeFormulaFn TheSet ?parent-conjprop)))
+     (unifies (TheSet ?prop) ?difference)
+     (taskAchieves ?actor (AchieveFn ?prop) ?task))
+
+(isa parentPropOrEntity BinaryPredicate)
+
+(<== (parentPropOrEntity ?child-grep ?prop)
+     (allFactsAllowed (numAnswers 1 (goalName ?gname ?child-grep)))
+     (allFactsAllowed
+       (contextEnvAllowed
+         (subgoal ?parent-gname ?gname)))
+     (allFactsAllowed (numAnswers 1 (goalName ?parent-gname ?parent-grep)))
+     (goalPropOrEntitySpec ?parent-grep ?prop))
+
+(isa goalPropOrEntitySpec BinaryPredicate)
+
+(<== (goalPropOrEntitySpec ?goalrep ?prop)
+     (propositionalGoalNat ?goalrep)
+     (unifies (?functor ?prop) ?goalrep))
+
+(<== (goalPropOrEntitySpec ?goalrep ?prop)
+     (quantitativeGoalNat ?goalrep)
+     (unifies (?functor (?qtype ?espec)) ?goalrep)  ; destructure
+     (typeLevelSetSpec ?espec ?prop))
+
+(isa typeLevelSetSpec BinaryPredicate)
+
+(<== (typeLevelSetSpec (GenericInstanceFn (CollectionSubsetFn ?coll (TheSetOf ?v ?prop))) ?prop)) ; do it all in one unify!
+
+
+(isa complexTaskAchieves TernaryPredicate)
+(arity complexTaskAchieves 3)
+(arg1Isa complexTaskAchieves Agent-Generic)
+(arg2Isa complexTaskAchieves CycLFormula)
+(arg3Isa complexTaskAchieves CycLFormula) ; not just the predicate, but the instantiated operator
+(comment complexTaskAchieves "(complexTaskAchieves ?actor ?goal ?task) binds ?task to an instantiated complex task that directly achieves ?goal.")
+
+
+
+
+
+(isa primitiveAchieves TernaryPredicate)
+(arity primitiveAchieves 3)
+(arg1Isa primitiveAchieves Agent-Generic)
+(arg1Isa primitiveAchieves CycLFormula)
+(arg2Isa primitiveAchieves CycLFormula) ; not just the predicate, but the instantiated operator
+(comment primitiveAchieves "(primitiveAchieves ?actor ?goal ?operator) binds ?operator to an instantiated primitive operator that directly or indirectly achieves ?goal.")
+
+;;; primitiveAchieves assumes the goal has been completely de-indexicalized.
+
+;;; This would have to be queried in the execution microtheory
+(<== (primitiveAchieves ?actor (MaximizeFn ?q) ?task)
+     (not (variableExpression ?q))
+     (actionPositivelyAffectsQuantity ?q ?action)
+     ;; how to instantiate actor in the task?
+     (couldDo ?actor ?action)
+     (bindActor ?actor ?action ?task)
+     )
+
+(<== (primitiveAchieves ?actor (MinimizeFn ?q) ?task)
+     (not (variableExpression ?q))
+     (actionNegativelyAffectsQuantity ?q ?action)
+     ;; how to instantiate actor in the task?
+     (couldDo ?actor ?action)
+     (bindActor ?actor ?action ?task)
+     )
+
+;;; Is there one achievable conjunct?
+;;; How can we prefer directly achievable methods? Experimental methods?
+;;; The learned methods are still Horn clauses, so it can't be lookupOnly.
+(<== (primitiveAchieves ?actor (AchieveFn ?conjprop) ?action)
+     (not (variableExpression ?conjprop))
+     (not (variableExpression ?actor))
+     (operatorFormulas and ?conjprop)
+     (instantiatedPropWith ?actor ?conjprop ?prop)
+     (conjunctSet ?prop ?cset)
+     (inferenceOnly (subclauseAchievableBy ?actor ?cset ?conj ?action))
+     (subexpressionMatching ?conj ?prop ?bound-conj)  ; bind variables
+     ;; Rather than go to the trouble of splicing out the achievable 
+     ;; conjunct, just replace it with (true):
+     (evaluate ?remaining-prop
+       (SublisFn (TheSet (?conj (true))) ?prop))
+     ;; Kind of expensive if there are open vars. Better if there aren't.
+     ;; Otherwise we should invoke the clause optimizer.
+     (trueSentence ?remaining-prop))
+
+;;; Non-conjuncts:
+;;; Is this going to work? is it better?
+(<== (primitiveAchieves ?actor (AchieveFn ?prop) ?inst-action)
+     (not (variableExpression ?prop))
+     (operatorFormulas ?pred ?prop)
+     (different ?pred and)
+     (executionContext ?mt)
+     (outsourcedOnly
+       (actionsForGoal ?mt (AchieveFn ?prop) ?action))  ; How can we incorporate the actor in the answer?
+     (formulaArgument ?action 1 ?actor-var)
+     (evaluate ?inst-action (SublisFn (TheSet (?actor-var ?actor)) ?action)))
+
+
+(isa instantiatedPropWith TernaryPredicate)
+(comment instantiatedPropWith "(instantiatedPropWith ?inst ?raw-prop ?prop)")
+
+(<== (instantiatedPropWith ?inst ?prop ?prop)
+     (groundExpression ?prop))
+
+;;; Do we want to require exactly one variable?
+(<== (instantiatedPropWith ?inst ?raw-prop ?prop)
+     (conjunctSet ?raw-prop ?conjunct-set)
+     (singletonVarBinding ?inst ?conjunct-set ?var)
+     (evaluate ?prop (SublisFn (TheSet (?var ?inst)) ?raw-prop)))
+
+(isa singletonVarBinding TernaryPredicate)
+(arg1Isa singletonVarBinding Individual)
+(arg2Isa singletonVarBinding Set-Mathematical)
+(arg3Isa ?var CycLTerm)
+(comment singletonVarBinding "(singletonVarBinding ?inst ?conjunctSet ?var) binds ?var to the (singular) variable for which ?inst could satisfy type constraints.")
+
+(<== (singletonVarBinding ?inst ?conjunctSet ?var)
+     (evaluate ?vars
+       (TheClosedRetrievalSetOf ?v
+         (and (elementOf ?isa-stmt ?conjunctSet)
+              (operatorFormulas isa ?isa-stmt)
+              (formulaArgument ?isa-stmt 1 ?v)
+              (variableExpression ?v)
+              (formulaArgument ?isa-stmt 2 ?type)
+              (isa ?inst ?type))))
+     (singularValueOrInstance ?vars ?inst ?var))
+
+(isa singularValueOrInstance TernaryPredicate)
+(comment singularValueOrInstance "(singularValueOrInstance ?set ?inst ?result) binds ?result to the singleton value of ?set or ?inst if ?set is empty.")
+(<== (singularValueOrInstance (TheSet ?var) ?inst ?var))
+(<== (singularValueOrInstance (TheSet) ?inst ?inst))
+
+(isa mapActivityToOperator TernaryPredicate)
+(arity mapActivityToOperator 3)
+(arg1Isa mapActivityToOperator Agent-Generic)
+(arg2Isa mapActivityToOperator Collection)  ; an activity type or process type.
+(comment mapActivityToOperator "(mapActivityToOperator ?actor ?activity ?operator) binds ?operator to an action that will initiate process or activity.")
+
+(isa subclauseAchievableBy QuaternaryPredicate)
+(arity subclauseAchievableBy 4)
+
+;(<== (subclauseAchievableBy ?actor ?cset ?conj ?action)
+;     (elementOf ?conj ?cset)
+;     (primitiveAchieves ?actor (AchieveFn ?conj) ?action))
+     
+(<== (subclauseAchievableBy ?actor ?cset ?conj ?action)
+     (elementOf ?conj ?cset)
+     (not (atomicTerm ?conj))
+     (operatorFormulas ?pred ?conj)
+     (different ?pred isa)
+     (primitiveAchieves ?actor (AchieveFn ?conj) ?action))
+
+(isa couldDo BinaryPredicate)
+(arity couldDo 2)
+(arg1Isa couldDo Agent-Generic)
+(arg2Isa couldDo CycLSentence-Assertible)
+
+;;; Assumes arg1 is the doer.
+;;; *** This is insufficient!  It suggests that a Settler could perform a doAttack.
+(<== (couldDo ?actor ?action)
+     (groundExpression ?actor)
+     (operatorFormulas ?pred ?action)
+     (arity ?pred ?arity)
+     (greaterThan ?arity 0)
+     (arg1Isa ?pred ?isa)
+     (isa ?actor ?isa))
+     
+(<== (couldDo ?actor ?action)
+     (variableExpression ?actor))
+
+;;; How does Cyc associate the doneBy of a Davidsonian event with the 
+;;; arg position of a positional expression?  
+;;; By convention, it's arg1.
+
+(isa bindActor TernaryRelation)
+(arity bindActor 3)
+(arg1Isa bindActor Agent-Generic)
+(arg2Isa bindActor CycLSentence-Assertible)
+(arg3Isa bindActor CycLSentence-Assertible)
+
+(<== (bindActor ?actor ?action ?task)
+     (formulaArgument ?action 1 ?term)
+     (evaluate ?task 
+       (SublisFn (TheSet (?term ?actor)) ?action)))
+
+;;;
+;;; Task/Effect Reasoning
+;;;
+
+(isa taskHasImmediateEffect UnaryPredicate)
+(arity taskHasImmediateEffect 1)
+(arg1Isa taskHasImmediateEffect CycLFormula)
+(comment taskHasImmediateEffect "(taskHasImmediateEffect ?task) means the effects of ?task are felt immediately")
+
+(isa taskHasDelayedEffect TernaryPredicate)
+(arity taskHasDelayedEffect 3)
+(arg1Isa taskHasDelayedEffect CycLFormula)
+(arg2Isa taskHasDelayedEffect Set-Mathematical)
+(arg3Isa taskHasDelayedEffect CycLFormula)
+(comment taskHasDelayedEffect "(taskHasDelayedEffect ?task ?event-set ?condition) means the effect of ?task will be felt when some ?event makes ?condition true (to be employed by doCallback).")
+
+(isa subtaskHasDelayedEffect QuaternaryPredicate)
+(arity subtaskHasDelayedEffect 4)
+(arg1Isa subtaskHasDelayedEffect CycLFormula)
+(arg2Isa subtaskHasDelayedEffect List)
+(arg3Isa subtaskHasDelayedEffect Set-Mathematical)
+(arg4Isa subtaskHasDelayedEffect CycLFormula)
+(comment subtaskHasDelayedEffect "(subtaskHasDelayedEffect ?subtask ?action-list ?event-set ?condition) is a helper predicate.")
+
+(<== (taskHasImmediateEffect ?task)
+     (uninferredSentence
+        (taskHasDelayedEffect ?task ?event-set ?condition)))
+
+(<== (taskHasDelayedEffect ?task ?event-set ?condition)
+     (operatorFormulas ?task-pred ?task)
+     (evaluate ?generalized-task (GeneralizeFormulaFn ?task))
+     (eventualEffectOfAction-Props ?generalized-task ?condition)
+     (unifies ?task ?generalized-task)  ; re-instantiate ?condition
+     (evaluate ?event-set
+       (TheClosedRetrievalSetOf ?event
+          (eventTriggerForEffect ?task-pred ?event)))  ; These are statements in experimentation.krf
+     (different ?event-set (TheSet)))
+
+;;; The problem with this is that it is called at planning time, before
+;;; subtasks are reified in the case, so planForTask fails.
+;;; We fixed this by deferring saveEventualActionEffect until
+;;; after executing the action.
+(<== (taskHasDelayedEffect ?task ?event-set ?condition)
+     (operatorFormulas ?task-pred ?task)
+     (isa ?task-pred ComplexActionPredicate)
+     (fcExecutionContext ?mt)
+     (gameTurn ?year)
+     (localOnly
+       (ist-Information ?mt
+         (holdsIn ?when
+           (planForTask ?task
+             (actionSequence ?action-list)))))
+       ;; recurse through ?action-list:
+     (evaluate ?first (FirstInListFn ?action-list))
+     (evaluate ?rest (RestOfListFn ?action-list))
+     (subtaskHasDelayedEffect ?first ?rest ?event-set ?condition))
+
+(<== (subtaskHasDelayedEffect ?subtask ?action-list ?event-set ?condition)
+     (taskHasDelayedEffect ?subtask ?event-set ?condition))
+
+(<== (subtaskHasDelayedEffect ?subtask ?action-list ?event-set ?condition)
+     (uninferredSentence
+       (taskHasDelayedEffect ?subtask ?evs ?cond))
+     (different ?action-list (TheList))
+     (evaluate ?first (FirstInListFn ?action-list))
+     (evaluate ?rest (RestOfListFn ?action-list))
+     (subtaskHasDelayedEffect ?first ?rest ?event-set ?condition))
+
+
+;;; 
+;;; taskEfficiency
+;;;
+
+;;; taskEfficiency is a quantitySlot (tho' not measurable)
+;;; arg1 = CreationEvent
+;;; arg2 = Efficiency (The ratio of input to useful output in a system or process.)
+
+(<== (taskEfficiency ?task ?efficiency-level)
+     (nonTransitiveInference 
+       (lookupOnly
+         (isa ?task ?task-type)))  ; not something you'll find in high abstractions
+     (numAnswers 1
+       (taskEfficiencyOfType ?task-type ?efficiency-level)))
+
+;;; We need to add a denotationalFunction:
+
+(functionCorrespondingPredicate TaskEfficiencyFn taskEfficiency 2)
+(isa TaskEfficiencyFn IndividualDenotingFunction)
+(isa TaskEfficiencyFn PartialFunction)
+(isa TaskEfficiencyFn UnaryFunction)
+(isa TaskEfficiencyFn UnreifiableFunction)
+
+(arity TaskEfficiencyFn 1)
+(arg1Isa TaskEfficiencyFn PurposefulAction)
+(resultIsa TaskEfficiencyFn ContinuousQuantity)
+(comment TaskEfficiencyFn "(TaskEfficiencyFn <task-event>) denotes the efficiency of <task-event> in its use of resources.")
+
+
+;;; We want to be able to specify goals to maximize efficiency of tasks/processes.
+;;; Limiting this to CreationEvents is a bit problematic, though.
+;;; ConversionProcesses would be better.
+
+;;; --------------------------
+
+;;; Is this not used anywhere?
+;;; It appears that indexicals are resolved in the fap when it translates the 
+;;; objective-fn and in the outsourced preds for strategyFromGoalNames
+;;; and in goal-graph walking (via resolve-indexicals)
+
+(isa expandedGoal TernaryPredicate)
+(arity expandedGoal 3)
+(arg1Isa expandedGoal Microtheory)
+(arg2Isa expandedGoal Goal)
+(arg3Isa expandedGoal Goal)
+(comment expandedGoal "(expandedGoal ?mt ?goal-name ?expanded-goal) looks up the representational form of ?goal and replaces indexical references.")
+
+(<== (expandedGoal ?mt ?goal-name ?goal)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (goalName ?goal-name ?goal-rep))))
+     (expandedIndexicals ?mt ?goal-rep ?goal))
+
+(isa expandedIndexicals TernaryPredicate)
+(arity expandedIndexicals 3)
+(arg1Isa expandedIndexicals Microtheory)
+(arg2Isa expandedIndexicals CycLFormula)
+(arg3Isa expandedIndexicals CycLFormula)
+(comment expandedIndexicals "(expandedIndexicals ?mt ?formula ?expanded-formula) replaces occurances of (IndexicalFn ?pred) with the actual value.")
+
+;(<== (expandedIndexicals ?mt ?formula ?formula)
+;     (uninferredSentence
+;       (subexpressionMatching (IndexicalFn ?pred) ?formula ?subexpr)))
+       
+(<== (expandedIndexicals ?mt ?formula ?expanded-formula)
+     (evaluate ?blist
+       (TheClosedRetrievalSetOf ?sub
+         (and (subexpressionMatching (IndexicalFn ?pred%) ?formula ?expr)
+              (numAnswers 1
+                (ist-Information ?mt
+                  (?pred% ?value%)))
+              (unifies ?sub (TheList (IndexicalFn ?pred%) ?value%)))))
+     (evaluate ?expanded-formula
+       (LogicSublisFn ?blist ?formula)))
+                  
+;;; -----------------------------
+
+;;; invoke with (planActionsToGoals <action> (TheList <action>))
+
+#||
+(preconditionForMethod
+  (goalFound ?action ?goal)
+  (methodForAction
+    (planActionsToGoals ?action ?path-so-far)
+    (actionSequence
+      (TheList))))
+      
+(preconditionForMethod
+  (and (uninferredSentence
+         (goalFound ?action ?goal))
+       (operatorFormulas ?pred ?action)
+       (formulaArgument ?action 1 ?actor)
+       (enablementRelation ?pred ?state ?next-pred)  ; multiple bindings, depth first search
+       (not (listMember ?next-pred ?path-so-far))
+       (evaluate ?next-path (JoinListsFn (TheList ?next-pred) ?path-so-far))
+       
+||#
+
+
+;;; -----------------------------
+
+;;; End of File
+

@@ -1,0 +1,616 @@
+;;; File name: pa-experimentation.krf
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: December 24, 2013 08:40:54
+;;;   Purpose: Plans for running experiments
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 16:02:56 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Make a distinction between exploratory (pilot) experiments intended to
+;;; gather information in order to form a hypothesis and confirmatory
+;;; experiments intended to confirm or disconfirm a hypothesis.  
+
+
+;;; The replaying is just part of the experiment.
+;;; The experiment specification may indicate what to do, what data to gather, 
+;;; what to control (or keep the same as initial scenario), how to vary
+;;; independent variable across runs, how to store and organize data,
+;;; how to analyze data.
+;;; The results of one experiment may suggest another.
+
+
+
+;;; Depending on the learning goal, we'll want to vary different things.
+;;; In improving efficiency, we'd generally start by keeping controlling as
+;;; much as possible.
+;;; Example: In learning city placement, we'd want to discover the effect 
+;;; of travel time on ultimate population size over time.
+;;; So experimental design should note variation in performance and try to
+;;; identify factors responsible, make predictions, and test them by 
+;;; experiment.
+
+;;; Let's say we have an experiment to understand the causes of variation
+;;; in a given goal quantity.  If we have some data on maximizing civ population
+;;; and we have a first pass qualitative model that relates terrain to
+;;; growth rate, comparative post-mortem analysis should reveal unexplained
+;;; variation.  Could we learn the tradeoff of travel time vs terrain fertility?
+
+;;; In this case, we'd want to keep the terrain the same,  make different 
+;;; choices and compare the growth profiles.  (Tradeoffs suggest composite
+;;; quantities.)  We'd want to decompose by city location and vary that
+;;; across multiple games.  Possibly permuting the order of city founding.
+
+;;; Something similar should be possible for learning technology trajectories.
+;;; If we have a set of things to do, time is money and higher-value actions
+;;; may have a time cost.
+
+;;; If we want to learn to efficiently maximize a quantity over time, look
+;;; at the rates and durations of production.
+
+;;; We need to be able to specify termination conditions better.
+;;; How can we declaratively say how many turns we want to play?
+;;; or how long in realtime? (eg, play for 5 minutes)
+;;; or disjunctive conditions?
+
+(isa PAExperiment Collection)
+(genls PAExperiment CompanionsExperiment)
+(comment PAExperiment "PAExperiment is the collection of perceptual agent experiments.")
+
+;;; An ExperimentSeries is really a series of trials with some systematic variation across trials.
+(isa ExperimentSeries Collection)
+(comment ExperimentSeries "An ExperimentSeries is a coherent collection of experiments aimed at addressing a learning goal.")
+
+(isa experimentInSeries BinaryPredicate)
+(arity experimentInSeries 2)
+(arg1Isa experimentInSeries CompanionsExperiment)
+(arg2Isa experimentInSeries ExperimentSeries)
+(comment experimentInSeries "(experimentInSeries ?expt ?series) associates an experiment with a series of experiments.")
+
+(isa experimentOrdering BinaryPredicate)
+(arity experimentOrdering 2)
+(arg1Isa experimentOrdering ExperimentSeries)
+(arg2Isa experimentOrdering List-Extensional)
+(comment experimentOrdering "(experimentOrdering ?series ?list) lists the members of the experiment series. Typically written in the Learned Knowledge Microtheory of the domain.")
+
+(isa replayScenario BinaryRelation)
+(arity replayScenario 2)
+(arg1Isa replayScenario CompanionsExperiment)
+(arg2Isa replayScenario Microtheory)
+(comment replayScenario "(replayScenario ?expt ?prior-case) controls *everything* by replaying the exact actions of a prior game.  Typically intended as a regression test.")
+
+(isa replayUntil BinaryRelation)
+(arity replayUntil 2)
+(arg1Isa replayUntil CompanionsExperiment)
+(arg2Isa replayUntil Integer)
+(comment replayUntil "(replayUntil ?expt ?turn-number) indicates when to stop replaying a prior scenario.")
+
+(isa experimentTerminalState BinaryRelation)
+(arity experimentTerminalState 2)
+(arg1Isa experimentTerminalState CompanionsExperiment)
+(arg2Isa experimentTerminalState CycLExpression)
+(comment experimentTerminalState "(experimentTerminalState ?expt ?state-description) means experiment trial ends when ?state-description holds.")
+
+;;; Experiments end if they involve a game that ended:
+(<== (experimentTerminalState ?expt ?state)
+     (currentDomain ?game)
+     (isa ?game Game)
+     (gameTerminalState ?game ?state))  ; Actually, see terminationCondition, defined in  perceptual-agent.krf
+
+(isa experimentMaxTurns BinaryRelation)
+(arity experimentMaxTurns 2)
+(arg1Isa experimentMaxTurns CompanionsExperiment)
+(arg2Isa experimentMaxTurns Integer)
+(comment experimentMaxTurns "(experimentMaxTurns ?expt ?max-turns) places a bound on the number of turns to play.")
+
+(isa turnBoundStmt BinaryPredicate)
+(arg1Isa turnBoundStmt CompanionsExperiment)
+(arg2Isa turnBoundStmt CycLExpression-Assertible)
+(comment turnBoundStmt "(turnBoundStmt ?experiment ?stmt) binds a reifiable statements, either a maxTurns or noTurnBound statement.")
+
+(<== (turnBoundStmt ?expt (noTurnBound ?expt))
+     (uninferredSentence
+       (lookupOnly
+         (experimentMaxTurns ?expt ?turns))))
+
+(<== (turnBoundStmt ?expt (maxTurns ?expt ?turns))
+     (lookupOnly
+       (experimentMaxTurns ?expt ?turns)))
+
+
+(isa experimentScenario BinaryRelation)
+(arity experimentScenario 2)
+(arg1Isa experimentScenario CompanionsExperiment)
+(arg2Isa experimentScenario Thing)    ; scenario, game or other initial conditions
+(comment experimentScenario "(experimentScenario ?expt ?scenario) associates a scenario or game initial conditions withan experiment.")
+
+;;; This is how we record what the experiment was in an execution trace.
+(isa experimentCase BinaryRelation)
+(arity experimentCase 2)
+(arg1Isa experimentCase Microtheory)
+(arg2Isa experimentCase CompanionsExperiment)
+(comment experimentCase "(experimentCase ?mt ?expt) reifies the companions experiment for the reified execution case ?mt.")
+
+(isa experimentObjectiveFunction BinaryRelation)
+(arity experimentObjectiveFunction 2)
+(arg1Isa experimentObjectiveFunction CompanionsExperiment)
+(arg2Isa experimentObjectiveFunction PerformanceGoal)
+(comment experimentObjectiveFunction "(experimentObjectiveFunction ?expt ?performance-goal) associates an objective function with an experiement.")
+
+(isa experimentMeasures BinaryRelation)
+(arity experimentMeasures 2)
+(arg1Isa experimentMeasures CompanionsExperiment)
+(arg2Isa experimentMeasures Set-Mathematical)
+(comment experimentMeasures "(experimentMeasures ?expt ?quantity-set) Defines the set of quantity patterns to be reified")
+
+(isa controlInvariant BinaryRelation)
+(arity controlInvariant 2)
+(arg1Isa controlInvariant CompanionsExperiment)
+(arg2Isa controlInvariant DecisionTask)  ; e.g., (DecisionFn currentlyResearching)
+(comment controlInvariant "(controlInvariant ?expt ?decision-task) means do not reason about ?decision-task, but leave it constant (or made automatically by the game.")
+
+;;; 
+;;; Obsolete?
+;;;
+
+;;; Running Experiments
+
+;;; Method1: running an experiment involving a game:
+;(preconditionForMethod
+;  (and (currentDomain ?domain)   ; Cannot query for execution context here
+;       (isa ?domain Game)        ; since it does't exist until game starts!
+;       (experimentScenario ?expt ?game))
+;  (methodForAction
+;    (runExperiment ?expt)
+;    (actionSequence
+;      (TheList
+;        (doStartAutonomousGame ?game)  ; start up and join the game, but don't take any actions yet.
+;        (doAnnounce "~%Started autonomous game ~s" (?game))
+;        (doAgentPlan
+;          (actionSequence
+;            (TheList
+;              (initializeAndPlayGame ?expt))))))))
+
+
+(isa initializeAndPlayGame ComplexActionPredicate)
+(arity initializeAndPlayGame 1)
+(arg1Isa initializeAndPlayGame CompanionsExperiment)
+(comment initializeAndPlayGame "(initializeAndPlayGame ?experiment) sets up experimental parameters, starts playing turns and runs post mortem afterwards.")
+
+(preconditionForMethod
+  (and (executionContext ?ctxt)
+       (experimentObjectiveFunction ?expt ?goal)
+       (turnBoundStmt ?expt ?bound-stmt)
+       (evaluate ?conditions 
+         (TheClosedRetrievalSetOf ?state
+           (experimentTerminalState ?expt ?state))))
+  (methodForAction
+    (initializeAndPlayGame ?expt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?ctxt (experimentCase ?ctxt ?expt)))
+        (doRecord (ist-Information ?ctxt ?bound-stmt))
+        (doRecord (ist-Information ?ctxt (interactionMode ?ctxt Experimentation))) ; set mode
+        (doRecord (ist-Information ?ctxt (performanceGoalForGame ?ctxt ?goal)))
+        (doForEach ?condition ?conditions 
+          (doRecord 
+            (ist-Information ?ctxt 
+               (terminationCondition ?ctxt ?condition))))
+        ;; Now start the loop
+        (doAnnounce "~%Starting to play turns" ())
+        (doPlayGame ?ctxt)  ; begin (or resume) taking turns.
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (doAnnounce "~%Starting to run post-mortem" ())
+              (runPostMortem ?ctxt))))   ; Can't plan post-mortem until we've played the game.
+        ))))
+
+
+
+;;; This should run on the executive:
+;;;(isa performExperiment ComplexActionPredicate)
+;;;(arity performExperiment 1)
+;;;(arg1Isa performExperiment CompanionsExperiment)
+;;;(comment performExperiment "(performExperiment <expt>) sets up the session reasoner to perform the designated experiment.")
+;;;
+;;;(preconditionForMethod
+;;;  (and (currentDomain ?domain)
+;;;       (isa ?domain Game)
+;;;       (currentSessionReasoner ?sr)
+;;;       (experimentScenario ?expt ?game)
+;;;       ;; controls?  measures?
+;;;       )
+;;;  (methodForAction
+;;;    (performExperiment ?expt)
+;;;    (actionSequence
+;;;      (TheList
+;;;        (doSynchronousRemotePlan ?sr (doStartAutonomousGame ?game))  ; start up and join the game, but don't take any actions yet.
+;;;        (doAnnounce "~%Started autonomous game ~s" (?game))
+;;;        (doAgentPlan
+;;;          (actionSequence
+;;;            (TheList
+;;;              (setExperimentParameters ?sr ?expt))))))))
+;;;
+;;;
+;;;(isa setExperimentParameters ComplexActionPredicate)
+;;;(arity setExperimentParameters 2)
+;;;(arg1Isa setExperimentParameters CompanionsAgent)
+;;;(arg2Isa setExperimentParameters CompanionsExperiment)
+;;;(comment setExperimentParameters "(setExperimentParameters ?agent ?experiment) sets parameters of experiment before commencing.")
+
+;;; doRecord had better call tell here, since these predicates have
+;;; outsourced tell handlers to cache things on slots:
+;;;(preconditionForMethod
+;;;  (and (experimentObjectiveFunction ?expt ?goal)
+;;;       (turnBoundStmt ?expt ?bound-stmt)
+;;;       (evaluate ?conditions 
+;;;         (TheClosedRetrievalSetOf ?state
+;;;           (experimentTerminalState ?expt ?state)))
+;;;       (holdsOnRemoteAgent ?sr (executionContext ?ctxt)))
+;;;  (methodForAction
+;;;    (setExperimentParameters ?sr ?expt)
+;;;    (actionSequence
+;;;      (TheList
+;;;        (doRemoteAgentPlan ?sr
+;;;          (actionSequence
+;;;            (TheList
+;;;              (doRecord (ist-Information ?ctxt (experimentCase ?ctxt ?expt)))
+;;;              (doRecord (ist-Information ?ctxt ?bound-stmt))
+;;;              (doRecord (ist-Information ?ctxt (interactionMode ?ctxt Experimentation))) ; set mode
+;;;              (doRecord (ist-Information ?ctxt (performanceGoalForGame ?ctxt ?goal)))
+;;;              (doForEach ?condition ?conditions 
+;;;                (doRecord 
+;;;                  (ist-Information ?ctxt 
+;;;                     (terminationCondition ?ctxt ?condition))))
+;;;              ;; Now start the loop
+;;;              (doAnnounce "~%Starting to play turns" ())
+;;;              (doPlayGame ?ctxt)  ; begin (or resume) taking turns.
+;;;              ;; Analyze the results
+;;;              (doAgentPlan
+;;;                (actionSequence
+;;;                  (TheList
+;;;                    (doAnnounce "~%Starting to run post-mortem" ())
+;;;                    (runPostMortem ?ctxt))))   ; Can't plan post-mortem until we've played the game.
+;;;              )))))))
+
+
+;;;
+;;; Tasks
+;;;
+
+(preconditionForMethod
+  (lookupOnly
+    (allFactsAllowed
+      (isa ?experiment PAExperiment)))
+  (methodForAction
+    (runExperiment ?experiment)  ; Does this run on the executive?
+    (actionSequence
+      (TheList
+        (runPAExperiment ?experiment)))))
+        
+(isa runPAExperiment ComplexActionPredicate)
+(arity runPAExperiment 1)
+(arg1Isa runPAExperiment PAExperiment)
+(comment runPAExperiment "(runPAExperiment ?experiment) executes a perceptual agent experiment on the session reasoner.")
+
+(preconditionForMethod
+  (and (numAnswers 1 
+         (lookupOnly
+           (experimentScenario ?experiment ?scenario)))
+       (numAnswers 1
+         (lookupOnly
+           (experimentMeasures ?experiment ?measures)))
+       )
+  (methodForAction
+    (runPAExperiment ?experiment)
+    (actionSequence
+      (TheList
+        (doStartAutonomousGame ?scenario Experimentation)
+        (doSetMeasureQuantities ?measures)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (setReplayScenario ?experiment)
+              (setTerminationConditions ?experiment))))  ; lock and load
+        ))))
+
+;;; Do we need to do this, or is it enough to associate the current game with the experiment?
+(isa setReplayScenario ComplexActionPredicate)
+(arity setReplayScenario 1)
+(arg1Isa setReplayScenario PAExperiment)
+(comment setReplayScenario "(setReplayScenario ?expt) reifies the prior scenario game to replay (if any).")
+
+(preconditionForMethod
+  (and (lookupOnly
+         (allFactsAllowed
+           (numAnswers 1
+             (replayScenario ?experiment ?case))))
+       (executionContext ?ctxt))
+  (methodForAction
+    (setReplayScenario ?experiment)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?ctxt (experimentCase ?ctxt ?experiment)))  ; lousy name.  Consider changing it.
+        (doRecord (ist-Information ?ctxt (replayScenario ?experiment ?case)))))))
+        
+(preconditionForMethod
+  (uninferredSentence
+    (lookupOnly
+      (allFactsAllowed
+        (numAnswers 1
+          (replayScenario ?experiment ?case)))))
+  (methodForAction
+    (setReplayScenario ?experiment)
+    (actionSequence
+      (TheList))))
+
+
+(isa setTerminationConditions ComplexActionPredicate)
+(arity setTerminationConditions 1)
+(arg1Isa setTerminationConditions PAExperiment)
+(comment setTerminationConditions "(setTerminationConditions ?expt) sets up the termination conditions for a game and starts it.")
+
+;;; This assumes that primitive actions can be recursive.  Not clear that's correct.
+
+(preconditionForMethod
+  (and (experimentMaxTurns ?experiment ?turns))  ; for now, don't worry about terminal states.
+  (methodForAction
+    (setTerminationConditions ?experiment)
+    (actionSequence
+      (TheList
+        (doPlayNTurns ?turns)  ; Ideally, we would enqueue these on the agenda.
+        ;; post-mortem?
+        (doEndGame)
+        (doAnnounce "~%Finished experiment ~s" (?experiment))
+        ))))
+
+
+;;;; We need to set up a doEndGame.
+
+(isa planExperimentActions ComplexActionPredicate)
+(arity planExperimentActions 2)
+(arg1Isa planExperimentActions TimeInterval)
+(arg2Isa planExperimentActions Microtheory)
+(comment planExperimentActions "(planExperimentActions ?when ?mt)")
+
+;;; Use a different entry point for controlled experiments
+;;; First loopup the experiment instance
+;;; Then look for controlled decisions
+;;; Make them first.
+;;; Then make any uncontrolled decisions via default methods.
+;;; Look for decisionSource constraints to specify how to make particular decisions.
+;;; Make sure the decide task honors these as well.
+(preconditionForMethod
+  (and ;(currentPlayer ?player)
+       (numAnswers 1
+         (lookupOnly
+           (localOnly
+             (allFactsAllowed
+               (ist-Information ?mt
+                 (replayScenario ?experiment ?scenario-mt)))))))
+  (methodForAction
+    (planExperimentActions ?when ?mt) ; for now, assume the FAP branches to here automatically
+    (actionSequence
+      (TheList
+        (replayScenarioTurn ?scenario-mt) ; doExactly what we did before.
+        ))))
+        
+;;; As we decompose the problem of what to do, we need to track what decision is
+;;; being made.  
+;;; planExperimentActions == 
+;;; ((DecisionFn currentPlan) 
+;;;    (GenericInstanceFn 
+;;;      (CollectionSubsetFn Agent-Generic 
+;;;         (TheSetOf ?actor 
+;;;           (assignableActorOfType ?actor ?type))))))
+
+;;; assignActorsToGoals ==
+;;; ((DecisionFn assignedTo)
+;;;  
+
+;;; We need a canonical set of decision types wrt planning tasks.
+;;; 
+
+;;; Note: We added general support for reifying measure quantities via
+;;; doSetMeasureQuantities and the outsourced pred: currentMeasureQuantities
+;;; and currentExplanationQuantities. 
+;;; (the latter returns contents of slot quantity-changes-to-explain)
+
+
+;;; -------------------------------------------------------------------------
+;;; Replay
+
+(isa replayScenarioTurn ComplexActionPredicate)
+(arity replayScenarioTurn 1)
+(arg1Isa replayScenarioTurn Microtheory)
+(comment replayScenarioTurn "(replayScenarioTurn ?scenario-mt) replays actions from prior scenario.")
+
+;;; Replay the actions within the current year (turn)
+(preconditionForMethod
+  (and (gameTurn ?turn)  
+       (perceptualAgentCommands ?scenario-mt ?turn ?cmds)) ; bind sorted sequence of (prior) commands
+  (methodForAction
+    (replayScenarioTurn ?scenario-mt)
+    (actionSequence
+      (TheList
+        (replayScenarioActions ?scenario-mt ?cmds)  ; step thru until ?cmds is empty.
+        ))))
+
+
+(isa perceptualAgentCommands TernaryPredicate)
+(arity perceptualAgentCommands 3)
+(arg1Isa perceptualAgentCommands Microtheory)
+(arg2Isa perceptualAgentCommands TimeInterval)
+(arg3Isa perceptualAgentCommands List)
+(comment perceptualAgentCommands "(perceptualAgentCommands ?mt ?turn ?cmd-seq) binds ?cmd-seq to the ordered sequence of PerceeptualAgentCommands in ?turn.")
+
+;;; Bind ?cmds to a sorted list of commands issued in ?turn.
+(<== (perceptualAgentCommands ?mt ?turn ?cmds)
+     (evaluate ?cmds
+       (SortFn
+         (TheClosedRetrievalSetOf (CommandFn ?mt ?cmd-id)
+           (lookupOnly
+             (kbOnly
+               (localOnly
+                 (ist-Information ?mt
+                   (dateOfEvent (CommandFn ?mt ?cmd-id) ?turn))))))
+         lessThan
+         Arg2Fn)))
+
+;;; In experimental replay, do *not* respond to events at all.
+
+(isa replayScenarioActions ComplexActionPredicate)
+(arity replayScenarioActions 2)
+(arg1Isa replayScenarioActions Microtheory)
+(arg2Isa replayScenarioActions List)
+(comment replayScenarioActions "(replayScenarioActions ?scenario-mt ?cmd-list) steps through the ?cmd-list from ?scenario-mt and replays the actions in the current execution-context.")
+
+;;; Return from the turn planning to allow the next-turn to kick in.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (replayScenarioActions ?scenario-mt (TheList))
+    (actionSequence
+      (TheList))))
+
+(preconditionForMethod
+  (and (evaluate ?cmd (FirstInListFn ?cmds))
+       (evaluate ?rest-cmds (RestOfListFn ?cmds))
+       (lookupOnly
+         (localOnly
+           (kbOnly
+             (ist-Information ?scenario-mt
+               (infoTransferred ?cmd ?action)))))
+       ;; Assume instances all have same name.
+       ;; Here's where we might want to tell if ?action is supposed to deviate from prior scenario.
+       )
+  (methodForAction
+    (replayScenarioActions ?scenario-mt ?cmds)
+    (actionSequence
+      (TheList
+        ?action
+        (replayScenarioActions ?scenario-mt ?rest-cmds)
+        ))))
+
+
+
+;;; -------------------------------------------------------------------------
+;;; Hard-code some experiments:
+
+;;; What microtheory are experiment instances supposed to go in?
+;;;   LKMT? (probably)
+;;; How do we associate "default" values with a collection?
+;;;  use a relationAllInstance construct
+;;;  so (relationAllInstance pred coll thing) == (pred inst thing)
+;;;  Ugh, doesn't help.  Maybe don't bother with inheriting from a collection.
+;;; Better: 
+;;;  (controlledDecision Expt1 ((DecisionFn currentPlan) Unit-101) (ReplayFn attackScenario))
+;;;  (controlledDecision Expt1 ((DecisionFn currentPlan) Unit-102 NoDecision)  ; This needs to prevent planStrategicGoalActions from selecting something.
+;;;  (controlledDecision Expt1 ((DecisionFn currentGovernment) (IndexicalFn currentPlayer)) (LiteralFn TheRepublic))
+;;;  (controlledDecision Expt1 ((DecisionFn goalDecomposition) (GoalFn 23)) (TheSet (GoalFn 26) (GoalFn 28))
+;;;  (controlledDecision Expt1 ((DecisionFn assignedTo) (GoalFn 23)) (superlativeValue <set-spec> <Kappa-comparator>))
+
+
+(isa FC-Expt1 CompanionsExperiment)
+(experimentLearningGoal FC-Expt1 (LearnQualitativeModelFn Freeciv-TheGame))
+(experimentScenario FC-Expt1 "A")
+(experimentObjectiveFunction FC-Expt1 
+  (MaximizeFn 
+    ((AggregateQuantityFn cityPopulation)
+       (CollectionSubsetFn FreeCiv-City 
+         (TheSetOf ?city 
+           (and (currentPlayer ?player)
+                (cityOwner ?city ?player)))))))
+(experimentTerminalState FC-Expt1
+  (and (currentPlayer ?player)
+       (playerKnowsTech ?player FC-Tech-TheRepublic)))
+(experimentMaxTurns FC-Expt1 75)
+
+;;; play 1 turn:
+(isa FC-Expt2 CompanionsExperiment)
+(experimentLearningGoal FC-Expt2 (LearnQualitativeModelFn Freeciv-TheGame))
+(experimentScenario FC-Expt2 "A")
+(experimentObjectiveFunction FC-Expt2 
+  (MaximizeFn 
+    ((AggregateQuantityFn cityPopulation)
+       (CollectionSubsetFn FreeCiv-City 
+         (TheSetOf ?city 
+           (and (currentPlayer ?player)
+                (cityOwner ?city ?player)))))))
+(experimentTerminalState FC-Expt2
+  (and (currentPlayer ?player)
+       (playerKnowsTech ?player FC-Tech-TheRepublic)))
+(experimentMaxTurns FC-Expt2 1)
+
+(in-microtheory (LearnedKnowledgeMtFn Freeciv-TheGame) :exclude-globals t)
+
+
+(isa Test-Expt1 CompanionsExperiment)
+(experimentLearningGoal Test-Expt1 (LearnQualitativeModelFn Freeciv-TheGame))
+(experimentScenario Test-Expt1 "A")
+(experimentObjectiveFunction Test-Expt1 
+  (MaximizeFn 
+    ((AggregateQuantityFn cityFoodSurplus)
+       (CollectionSubsetFn FreeCiv-City 
+         (TheSetOf ?city 
+           (and (currentPlayer ?player)
+                (cityOwner ?city ?player)))))))
+(experimentMaxTurns Test-Expt1 5)
+
+(isa Test-Expt2 CompanionsExperiment)
+(experimentLearningGoal Test-Expt2 (LearnQualitativeModelFn Freeciv-TheGame))
+(experimentScenario Test-Expt2 "B")
+(experimentObjectiveFunction Test-Expt2 
+  (MaximizeFn 
+    ((AggregateQuantityFn cityFoodSurplus)
+       (CollectionSubsetFn FreeCiv-City 
+         (TheSetOf ?city 
+           (and (currentPlayer ?player)
+                (cityOwner ?city ?player)))))))
+(experimentMaxTurns Test-Expt2 5)
+
+(isa Test-Expt3 CompanionsExperiment)
+(experimentLearningGoal Test-Expt3 (LearnQualitativeModelFn Freeciv-TheGame))
+(experimentScenario Test-Expt3 "C")
+(experimentObjectiveFunction Test-Expt3 
+  (MaximizeFn 
+    ((AggregateQuantityFn cityFoodSurplus)
+       (CollectionSubsetFn FreeCiv-City 
+         (TheSetOf ?city 
+           (and (currentPlayer ?player)
+                (cityOwner ?city ?player)))))))
+(experimentMaxTurns Test-Expt3 5)
+
+
+(isa FCTestSeries ExperimentSeries)
+(experimentInSeries Test-Expt1 FCTestSeries)
+(experimentInSeries Test-Expt2 FCTestSeries)
+(experimentInSeries Test-Expt3 FCTestSeries)
+(experimentOrdering FCTestSeries (TheList Test-Expt1 Test-Expt2 Test-Expt3))
+
+;;; Replay experiment
+(isa ReplayExperiment PAExperiment)
+(experimentScenario ReplayExperiment "attack-scenario") ; saved game
+(replayScenario ReplayExperiment fc-attack-scenario)  ; prior execution mt
+(experimentMaxTurns ReplayExperiment 5)
+(experimentMeasures ReplayExperiment 
+  (TheSet ((MeasurableQuantityFn currentMovepoints) Unit-273)
+          ((MeasurableQuantityFn currentHitpoints) Unit-273)
+          ((MeasurableQuantityFn veteranStatus) Unit-273)
+          ((MeasurableQuantityFn currentMovepoints) Unit-264)
+          ((MeasurableQuantityFn currentHitpoints) Unit-264)
+          ((MeasurableQuantityFn veteranStatus) Unit-264)))
+
+
+;;; We need for the executive to be able to start a game in experiment mode
+;;; with a particular experiment.  This would call doStartAutonomousGame
+;;; so that it joins the game without a gui.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+

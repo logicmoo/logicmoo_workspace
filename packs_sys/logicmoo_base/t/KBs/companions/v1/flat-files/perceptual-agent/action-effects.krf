@@ -1,0 +1,642 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: action-effects
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: September 21, 2011 09:02:08
+;;;;   Purpose: Knowledge-level routines for detecting action effects on
+;;;;            fluent quantities in a qualitative model.
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+;;; 
+;;; Note: This will only work dynamically, during LBD.  It relies on access to
+;;; the currentAddList and currentDeleteList 
+
+(in-microtheory PerceptualAgentMt)
+
+(isa actionEffectRecorded UnaryPredicate)
+(arity actionEffectRecorded 1)
+(arg1Isa actionEffectRecorded ActionPredicate)
+(comment actionEffectRecorded "(actionEffectRecorded ?action-pred) means the results of ?sction-pred have been inferred and recorded previously.")
+
+(isa leafQuantity UnaryPredicate)
+(arity leafQuantity 1)
+(arg1Isa leafQuantity Quantity)
+(comment leafQuantity "(leafQuantity ?quantity) is a reified statement in IndirectInfluenceCases that indicates that a change in ?quantity is a proximal effect of a domain action.")
+
+(isa recordActionEffects ComplexActionPredicate)
+(arity recordActionEffects 5)
+(arg1Isa recordActionEffects Microtheory)
+(arg2Isa recordActionEffects CycLSentence-Assertible)
+(arg3Isa recordActionEffects Set-Mathematical)
+(arg4Isa recordActionEffects Microtheory)
+(arg5Isa recordActionEffects Microtheory)
+(comment recordActionEffects "(recordActionEffects ?mt ?operator ?changes ?casename ?spindle-mt) ")
+
+;;; This needs to filter the changes that will be explained in terms of
+;;; the action.  If an action mentions a value that is either an explicit
+;;; quantity or number that corresponds to an 'after' value, (eg, setting
+;;; the tax percentage), then that tells us a leaf quantity.  If the operator
+;;; introduces a relationship that switches quantities on one of the entities
+;;; between zero and a constant, then those may be leaves.
+
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?operator)
+       (uninferredSentence
+         (lookupOnly
+           (contextEnvAllowed
+             (ist-Information ?spindlename
+               (actionEffectRecorded ?action-pred)))))
+       (inferenceOnly (leafQuantityChanges ?mt ?casename ?operator ?changes ?leaf-changes))
+       (inferenceOnly (aggregateQuantityChanges ?changes ?aggregate-changes))
+       (evaluate ?filtered-changes (SetOrCollectionUnion ?leaf-changes ?aggregate-changes)))
+  (methodForAction
+    (recordActionEffects ?mt ?operator ?changes ?casename ?spindlename)
+    (actionSequence
+      (TheList
+        (doForEach ?change ?filtered-changes 
+          (recordActionEffect ?mt ?operator ?change ?casename))
+        (doRecord (ist-Information ?casename (actionEffectRecorded ?action-pred)))))))
+
+;;; *** TBD
+;;; We need an alternative method here for when we have hypotheses about the effect.
+;;; We want to inexpensively verify that they continue to hold, and that there are no other,
+;;; previously unrecognized effects.  If there's an anomaly, we want to post a learning goal
+;;; to discriminate.
+
+;;; default:
+(preconditionForMethod 
+  (true)
+  (methodForAction 
+    (recordActionEffects ?mt ?operator ?changes ?casename ?spindlename)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (recordActionEffects ?mt ?operator ?changes ?casename ?spindlename) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; If we can't find proximal effects, fail this and do nothing.
+
+(isa leafQuantityChanges QuintaryPredicate)
+(arity leafQuantityChanges 5)
+(arg1Isa leafQuantityChanges Microtheory)
+(arg2Isa leafQuantityChanges Microtheory)
+(arg3Isa leafQuantityChanges CycLSentence-Assertible)
+(arg4Isa leafQuantityChanges Set-Mathematical)
+(arg5Isa leafQuantityChanges Set-Mathematical)
+(comment leafQuantityChanges "(leafQuantityChanges ?mt ?casename ?operator ?changes ?filtered-changes) distinguishes the immediate quantitative effects of an action from the downstream effects.")
+
+(<== (leafQuantityChanges ?mt ?casename ?operator ?changes ?filtered-changes)
+     (inferenceOnly (operatorMentionsQuantityValues ?mt ?operator ?values-mentioned))
+     (different ?values-mentioned (TheSet))
+     (unifies ?indicates-current-value
+       (Kappa (?change)
+         (currentChangeValueIsOneOf ?mt ?change ?values-mentioned)))
+     (inferenceOnly (filterBy ?changes ?indicates-current-value ?filtered-changes)))
+     
+
+;;; Determine if operator has an argument that is either a quantity (not a fluent) or a number.
+;;; Then determine if that quantity value corresponds the the current value of one of the
+;;; changed fluent quantities.  This won't work so well if the action increases
+;;; a quantity by some amount, rather than sets it.  That might be a fallback thing
+;;; to look for.
+;;; (doConvertSpecialistToWorker FC-City-NewYork (FreeCivLocationFn 26 27))
+;;; (quantityChange ((MeasurableQuantityFn cityFoodSurplus) FC-City-NewYork) 1)
+;;; (quantityValue ((MeasurableQuantityFn cityShieldProduction) FC-City-NewYork) (ProductionPoints 5))
+
+(isa operatorMentionsQuantityValues TernaryPredicate)
+(arity operatorMentionsQuantityValues 3)
+(arg1Isa operatorMentionsQuantityValues Microtheory)
+(arg2Isa operatorMentionsQuantityValues CycLExpression)
+(arg3Isa operatorMentionsQuantityValues Set-Mathematical)
+(comment operatorMentionsQuantityValues "Determine if operator has an argument that is either a quantity (not a fluent) or a number.
+Then determine if that quantity value corresponds the the current value of one of the
+changed fluent quantities.  This won't work so well if the action increases
+a quantity by some amount, rather than sets it.  That might be a fallback thing
+to look for.")
+
+(<== (operatorMentionsQuantityValues ?mt ?operator ?values-mentioned)
+     (evaluate ?values-mentioned
+       (TheClosedRetrievalSetOf ?value
+         (and (formulaArgument ?operator ?n ?value)
+              (groundExpression ?value)
+              (numberOrQuantity ?mt ?value)))))
+
+(isa numberOrQuantity BinaryPredicate)
+(arity numberOrQuantity 2)
+(arg1Isa numberOrQuantity Microtheory)
+(arg2Isa numberOrQuantity Thing)
+
+(<== (numberOrQuantity ?mt ?value)
+     (isa ?value RealNumber))
+
+(<== (numberOrQuantity ?mt (?units ?value))
+     (isa ?value RealNumber)
+     (lookupOnly
+       (numAnswers 1           ; this is our way of saying cache-complete
+         (ist-Information ?mt
+           (quantityPrimitive ?type ?coll ?units)))))
+
+(isa currentChangeValueIsOneOf TernaryPredicate)
+(arity currentChangeValueIsOneOf 3)
+(arg1Isa currentChangeValueIsOneOf Microtheory)
+(arg2Isa currentChangeValueIsOneOf CycLExpression)
+(arg3Isa currentChangeValueIsOneOf ScalarInterval)
+
+(<== (currentChangeValueIsOneOf ?mt ?change ?value-set)
+     (unifies (quantityChange ((MeasurableQuantityType ?pred) ?arg) ?magnitude) ?change)
+     (currentAddList ?add-list)
+     (elementOf (?pred ?arg ?current-value) ?add-list)
+     (elementOf ?current-value ?value-set))
+     
+;;; Probably want to look at the effectOfAction-Props to detect intended
+;;; quantity results:
+;;; (effectOfAction-Props
+;;;   (doSetRates ?player ?tax ?lux ?sci)
+;;;   (and (currentTaxPercent ?player ?tax)
+;;;        (currentSciencePercent ?player ?science)
+;;;        (currentLuxuryPercent ?player ?lux)))
+
+(<== (leafQuantityChanges ?mt ?casename ?operator ?changes ?filtered-changes)  ; ignore ?operator
+     (currentAddList ?add-list)
+     (currentDeleteList ?delete-list)
+     (evaluate ?leaf-quantities
+       (TheClosedRetrievalSetOf ?quantity
+         (inferenceOnly (leafQuantityViaRelation ?mt ?add-list ?delete-list ?quantity))))
+     (unifies ?switched-parameter-quantity
+       (Kappa (?change) (and (unifies (quantityChange ?quant ?mag) ?change)
+                             (not (matches (quantityChange ((AggregateQuantityFn ?pred) ?arg) ?val) ?change))
+                             (elementOf ?quant ?leaf-quantities))))
+     ;; given this, can we infer which changes correspond to leaves?
+     (inferenceOnly (filterBy ?changes ?switched-parameter-quantity ?filtered-changes))
+     (different ?filtered-changes (TheSet)))
+
+(isa leafQuantityViaRelation QuaternaryPredicate)
+(arity leafQuantityViaRelation 4)
+
+(<== (leafQuantityViaRelation ?mt ?add-list ?delete-list ?quantity)
+     (inferenceOnly (operatorSwitchesEffectOf ?mt ?add-list ?delete-list ?quantity)))
+     
+(<== (leafQuantityViaRelation ?mt ?add-list ?delete-list ?quantity)
+     (inferenceOnly (operatorSwitchesEffectOf ?mt ?delete-list ?add-list ?quantity)))
+
+(isa operatorSwitchesEffectOf QuaternaryPredicate)
+(arity operatorSwitchesEffectOf 4)
+(arg1Isa operatorSwitchesEffectOf Microtheory)
+(arg2Isa operatorSwitchesEffectOf List)
+(arg3Isa operatorSwitchesEffectOf List)
+(arg4Isa operatorSwitchesEffectOf Quantity)
+
+;;; Ultimately, we want a pred and entity to define a quantity.
+;;; operatorSwitchesEffectOf ?entity would let us scrape the 
+;;; predicate.  Perhaps just bind ?quantity. Collect the set outside of
+;;; this rule:
+(<== (operatorSwitchesEffectOf ?mt ?lst1 ?lst2 ?quantity)         ; addlist & deletelst are actually sets
+     (inferenceOnly (operatorSwitchesRelation ?mt ?lst1 ?rel))    ; rel is present in lst1
+     (inferenceOnly (operatorActivatesEntity ?rel ?lst1 ?lst2 ?entity))
+     (elementOf ?prop ?lst1)
+     (formulaArgument ?prop 1 ?entity)
+     (operatorFormulas ?pred ?prop)
+     (unifies ?quantity ((MeasurableQuantityFn ?pred) ?entity)))
+
+(isa operatorSwitchesRelation TernaryPredicate)
+(arity operatorSwitchesRelation 3)
+(arg1Isa operatorSwitchesRelation Microtheory)
+(arg2Isa operatorSwitchesRelation List)
+(arg3Isa operatorSwitchesRelation BinaryRelation)
+
+;;; Find a non-quantity binrel on ?lst (either addlist or deletelist)
+(<== (operatorSwitchesRelation ?mt ?lst ?rel)
+     (elementOf ?rel ?lst)
+     (unifies (?pred ?arg1 ?arg2) ?rel)      ; a binary relation
+     (uninferredSentence
+       (isa ?pred MeasurableQuantitySlot)))   ; maybe too specific
+
+
+(isa operatorActivatesEntity QuaternaryPredicate)
+(arity operatorActivatesEntity 4)
+(arg1Isa operatorActivatesEntity BinaryRelation)
+(arg2Isa operatorActivatesEntity List)
+(arg3Isa operatorActivatesEntity List)
+(arg4Isa operatorActivatesEntity Thing)
+
+;;; The operator activates (or deactivates) quantities on ?entity
+;;; if all such quantities are zero valued in the absence of the relation
+;;; and may be non-zero (but constant valued) in the presence.
+;;; We don't care if the presence condition is on the add-list or  delete-list
+(<== (operatorActivatesEntity ?rel ?lst1 ?lst2 ?entity)
+     (formulaArgument ?rel ?n ?entity)
+     (groundExpression ?entity)
+     (uninferredSentence
+       (inferenceOnly
+         (someNonzeroValuedQuantitiesOnIn ?entity ?lst2)))
+     (numAnswers 1
+       (inferenceOnly
+         (someNonzeroValuedQuantitiesOnIn ?entity ?lst1))))  ; and they'd better be constant.
+
+(isa someNonzeroValuedQuantitiesOnIn BinaryPredicate)
+(arity someNonzeroValuedQuantitiesOnIn 2)
+(arg1Isa someNonzeroValuedQuantitiesOnIn Thing)
+(arg2Isa someNonzeroValuedQuantitiesOnIn Set-Mathematical)
+(comment someNonzeroValuedQuantitiesOnIn "(someNonzeroValuedQuantitiesOnIn ?entity ?propositions) succeeds if some ?entity has a zero-quantity value in the set of propositions (typically an add-list or delete-list).")
+
+;;; pass-in either add-list or delete-list
+(<== (someNonzeroValuedQuantitiesOnIn ?ent ?props)
+     (elementOf ?prop ?props)
+     (formulaArgument ?prop 1 ?ent)
+     (formulaArgument ?prop 2 ?value)
+     (isNonZeroQuantity ?value))
+
+
+;;; When relation not present, find those quantities at zero that change to
+;;; a constant when it is.  
+;(<== (quantitiesSwitchBetweenZeroAndConstant ?mt ?rel ?casename ?quantities)
+;     ;;(IICaseFn ?mt ?when ?cmd)
+;     )
+     
+;;; Verify this property by retrieving values of the concrete quantity
+;;; over the whole game and by verifying that the quantity type
+;;; has that property over the whole domain.
+;(<== (verifyConstantOrZero ?mt ?quantity ?spindle-mt)
+;     ;; TBD
+;     (fail)
+;     )
+
+(isa aggregateQuantityChanges BinaryPredicate)
+(arity aggregateQuantityChanges 2)
+(arg1Isa aggregateQuantityChanges Set-Mathematical)
+(arg2Isa aggregateQuantityChanges Set-Mathematical)
+(comment aggregateQuantityChanges "(aggregateQuantityChanges ?changes ?aggregate-changes) filters ?changes.")
+
+(<== (aggregateQuantityChanges ?changes ?aggregate-changes)
+     (evaluate ?aggregate-changes
+       (TheClosedRetrievalSetOf ?change
+         (and (elementOf ?change ?changes)
+              (matches (quantityChange ((AggregateQuantityFn ?pred) ?arg) ?val) ?change)))))
+
+
+
+
+
+;;; Want to get something like:
+; (actionPositivelyAffectsQuantityType 
+;   (MeasurableQuantityFn tileFoodProduction)
+;   doConvertSpecialistToWorker
+;   FreeCiv-City
+;   1
+;   equals)
+;
+; or
+; (actionPositivelyAffectsQuantityType 
+;   (MeasurableQuantityFn cardinalityOf)
+;   doBuildCity 
+;   (CollectionSubsetFn FreeCiv-City 
+;     (TheSetOf ?city 
+;        (and (currentRole ?player)
+;             (cityOwner ?city ?player)))
+;   1
+;  true)
+
+(isa recordActionEffect ComplexActionPredicate)
+(arity recordActionEffect 4)
+(arg1Isa recordActionEffect Microtheory)
+(arg2Isa recordActionEffect CycLExpression)           ; operator
+(arg3Isa recordActionEffect CycLSentence-Assertible)  ; change
+(arg4Isa recordActionEffect Microtheory)              ; influence-case
+(comment recordActionEffect "(recordActionEffect ?mt ?operator ?change ?inf-case) writes a qualitative dependency on an action in the learned knowledge.")
+
+
+(preconditionForMethod
+  (and (unifies (quantityChange ?quantity ?change-magnitude) ?change-stmt) ; destructure
+       (not (matches ((AggregateQuantityFn ?pred) ?entity) ?quantity)))    ; clearly not a leaf
+  (methodForAction
+    (recordActionEffect ?mt ?operator ?change-stmt ?casename)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?casename (leafQuantity ?quantity)))
+        (recordQualitativeActionInfluence ?mt ?operator ?quantity ?change-magnitude ?casename)))))
+        
+(preconditionForMethod
+  (matches (quantityChange ((AggregateQuantityFn ?pred) ?entity) ?change-magnitude) ?change-stmt) ; test
+  (methodForAction
+    (recordActionEffect ?mt ?operator ?change-stmt ?casename)
+    (actionSequence
+      (TheList))))  ; don't write out aggregate quantities as leaves, 'cause they're not.
+
+
+(isa recordQualitativeActionInfluence ComplexActionPredicate)
+(arity recordQualitativeActionInfluence 5)
+(arg1Isa recordQualitativeActionInfluence Microtheory)
+(arg2Isa recordQualitativeActionInfluence CycLSentence-Assertible)
+(arg3Isa recordQualitativeActionInfluence Quantity)
+(arg4Isa recordQualitativeActionInfluence ScalarInterval)
+(arg5Isa recordQualitativeActionInfluence Microtheory)
+(comment recordQualitativeActionInfluence "(recordQualitativeActionInfluence ?mt ?operator ?quantity ?change-magnitude ?ii-casename) ")
+
+(preconditionForMethod
+  (and (qualitativeDSValue ?change-magnitude ?change)
+       (actionEffectPred ?change ?effect-pred)
+       (numAnswers 1 (liftActionRelation ?mt ?quantity ?operator ?effect-pred ?stmt)))  ; this fails for some leaf quantities
+  (methodForAction
+    (recordQualitativeActionInfluence ?mt ?operator ?quantity ?change-magnitude ?casename)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Hypothesis (actionEffect): ~a" (?stmt))
+        (doRecord (ist-Information ?casename ?stmt))))))
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (recordQualitativeActionInfluence ?mt ?operator ?quantity ?change-magnitude ?casename)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Failed to lift action relation for leaf quantity: ~a" (?quantity))))))
+
+
+(<== (preferInContext (recordQualitativeActionInfluence ?mt ?operator ?quantity ?change-magnitude ?casename) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 doRecord))
+
+(isa actionEffectPred BinaryPredicate)
+(arity actionEffectPred 2)
+(arg1Isa actionEffectPred Predicate)
+(arg2Isa actionEffectPred Predicate)
+(comment actionEffectPred "(actionEffectPred ?qualitativeDSValue ?effect-pred) associates a qualitative change pred with a qualitative modeling predicate.")
+
+;;; Don't even need a rule here:
+(actionEffectPred increases actionPositivelyAffectsQuantityType)
+(actionEffectPred decreases actionNegativelyAffectsQuantityType)
+
+;;; --------------------------------------------------------------------------
+;;;
+;;; Lifting to type-level stmt
+;;;
+
+(isa liftActionRelation QuintaryPredicate)
+(arity liftActionRelation 5)
+(arg1Isa liftActionRelation Microtheory)
+(arg2Isa liftActionRelation Quantity)
+(arg3Isa liftActionRelation CycLSentence-Assertible)
+(arg4Isa liftActionRelation Predicate)
+(arg5Isa liftActionRelation CycLSentence-Assertible)
+(comment liftActionRelation "(liftActionRelation ?mt ?quantity ?operator ?type ?stmt) binds ?stmt to a type-level statement representing the causal relation between ?operator and ?quantity.")
+
+;;; case 1: If quantity is a cardinality and arg is CollectionSubsetFn, 
+;;;         punt with entity as-is, argnum = 1, rel = true
+;;; *** Not great.  We should detect the argnum based on operator arg being an instance of ?coll-type.
+(<== (liftActionRelation ?mt ?quantity ?operator ?rel-type ?stmt)
+     (unifies (?qtype (CollectionSubsetFn ?coll-type ?set-spec)) ?quantity)
+     (operatorFormulas ?pred ?operator)
+     (unifies ?stmt (?rel-type ?qtype ?pred (CollectionSubsetFn ?coll-type ?set-spec) 1 true)))
+
+(<== (liftActionRelation ?mt ?quantity ?operator ?rel-type ?stmt)
+     (unifies ((MeasurableQuantityFn cardinalityOf) ?coll) ?quantity)
+     (not (matches (CollectionSubsetFn ?coll-type ?set-spec) ?coll))
+     (operatorFormulas ?pred ?operator)
+     (unifies ?stmt (?rel-type (MeasurableQuantityFn cardinalityOf) ?pred ?coll 1 true)))
+
+
+;;; case 2: If entity of quantity is mentioned in operator, via
+;;;         (formulaArgument ?operator ?n ?entity)
+;;;         lift type of entity and make statement w/rel = equals.
+(<== (liftActionRelation ?mt ?quantity ?operator ?rel-type ?stmt)
+     (noArgumentHasPredicate ?quantity CollectionSubsetFn)
+     (unifies (?qtype ?entity) ?quantity)
+     (different ?qtype (MeasurableQuantityFn cardinalityOf))
+     (operatorFormulas ?pred ?operator)
+     (formulaArgument ?operator ?n ?entity)
+     (numAnswers 1 (domainEntityType ?mt ?entity ?coll))
+     (unifies ?stmt (?rel-type ?qtype ?pred ?coll ?n equals)))
+
+;;; case 3: If there exists some operator arg with a domain relationship to
+;;;         the quantity entity, lift the type of entity and type of arg.
+(<== (liftActionRelation ?mt ?quantity ?operator ?rel-type ?stmt)
+     (noArgumentHasPredicate ?quantity CollectionSubsetFn)
+     (unifies (?qtype ?entity) ?quantity)
+     (different ?qtype (MeasurableQuantityFn cardinalityOf))
+     (operatorFormulas ?pred ?operator)
+     (uninferredSentence
+       (formulaArgument ?operator ?n ?entity))
+     (formulaArgument ?operator ?n ?arg)
+     (groundExpression ?arg)
+     (numAnswers 1
+       (domainRelationBetween ?rel ?entity ?arg)) ; domainRelationInitiallyBetween?  requires casename
+     (numAnswers 1
+       (domainEntityType ?mt ?entity ?coll))
+     (unifies ?stmt
+       (?rel-type ?qtype ?pred ?coll ?n ?rel)))
+
+
+
+;;; --------------------------------------------------------------------------
+;;;
+;;; Recording Cardinality Influences
+;;;
+
+(isa recordCardinalityInfluence ComplexActionPredicate)
+(arity recordCardinalityInfluence 5)
+(arg1Isa recordCardinalityInfluence Microtheory)
+(arg2Isa recordCardinalityInfluence CycLFormula)
+(arg3Isa recordCardinalityInfluence Predicate)
+(arg4Isa recordCardinalityInfluence Collection)
+(arg5Isa recordCardinalityInfluence Microtheory)
+(comment recordCardinalityInfluence "(recordCardinalityInfluence ?mt ?operator ?effect-pred ?element-type ?casename)")
+
+
+;;; Induce the relationship between an action and the cardinality of a set,
+;;; based on observing PhysicalCreation or Destruction events.
+;;; All we're doing is saying that an important quantity changed somehow, and
+;;; if there was an attendant discrete event that produced or destroyed an object,
+;;; attribute the change in cardinality of those objects to the action/operator.
+;;; This is necessary because the connection between the event and the operator 
+;;; may otherwise be unattainable. (e.g., doBuildCity does not mention the city
+;;; since it doesn't exist yet, and the unit that performed it is gone, along 
+;;; with it's location at the time of the action.)  So this association is made
+;;; between a change in a relevant quantity and the immediately prior action.
+;;; This will create statements like:
+;;; (<== (actionPositivelyAffectsQuantity
+;;;   ((MeasurableQuantityFn cardinalityOf) FreeCiv-City)
+;;;   (doBuildCity ?settler2164 ?city2160)))
+;;; ie, the total number cities increases when you build one.
+;;; But it also overgeneralizes:
+;;; (<== (actionPositivelyAffectsQuantity 
+;;;   ((MeasurableQuantityFn cardinalityOf) FreeCiv-Building)
+;;;   (doBuildCity ?settler2164 ?city2160)))
+;;; which is only true when the first city is built and you get a Palace.
+;;; As hypotheses, these aren't bad but they need to be verified.
+(preconditionForMethod
+  (and (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))  ; Really, this is more a qualitative influence than an action effect
+       (operatorFormulas ?action-pred ?operator)
+       (uninferredSentence
+         (ist-Information ?lkmt
+           (?effect-pred  (MeasurableQuantityFn cardinalityOf) ?action-pred ?element-type ?argn ?rel)))
+       (unifies ?cardinality-quantity 
+           ((MeasurableQuantityFn cardinalityOf) ?element-type))  ; We don't need to specialize the set here.
+       (numAnswers 1 (liftActionRelation ?mt ?cardinality-quantity ?operator ?effect-pred ?stmt)))
+  (methodForAction
+    (recordCardinalityInfluence ?mt ?operator ?effect-pred ?element-type ?casename)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Hypothesis (cardinality): ~a" (?stmt))
+        (doRecord (ist-Information ?casename ?stmt))
+        (doRecord (ist-Information ?lkmt ?stmt)) ; We need this if we're going to use the knowledge to explain user decisions.
+        ))))
+
+;;; default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (recordCardinalityInfluence ?mt ?operator ?effect-pred ?element-type ?casename)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (recordCardinalityInfluence ?mt ?operator ?effect-pred ?element-type ?case-name) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;; --------------------------------------------------------------------------
+;;;
+;;; Validating Recorded Influences
+;;;
+
+
+(isa validateActionPredictions ComplexActionPredicate)
+(arity validateActionPredictions 4)
+(arg1Isa validateActionPredictions Microtheory)
+(arg2Isa validateActionPredictions Event)
+(arg3Isa validateActionPredictions CycLExpression)
+(arg4Isa validateActionPredictions TimeInterval)
+(comment validateActionPredictions "(validateActionPredictions ?mt ?event ?operator ?when) seeks to validate predicted influences for action preds with active learning goals.")
+
+
+(preconditionForMethod
+  (and (operatorFormulas ?action-pred ?operator)
+       (activeGoal (LearnEffectOfActionFn ?action-pred))
+       (numAnswers 1 (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))
+       (evaluate ?posInfluences
+         (TheClosedRetrievalSetOf ?pos-infl
+           (and (lookupOnly
+                  (localOnly
+                    (ist-Information ?lkmt
+                      (actionPositivelyAffectsQuantityType ?qtype ?action-pred ?entity ?n ?rel))))
+                (unifies ?pos-infl (actionPositivelyAffectsQuantityType ?qtype ?action-pred ?entity ?n ?rel)))))
+       (evaluate ?negInfluences
+         (TheClosedRetrievalSetOf ?neg-infl
+           (and (lookupOnly
+                  (localOnly
+                    (ist-Information ?lkmt
+                      (actionNegativelyAffectsQuantityType ?qtype ?action-pred ?entity ?n ?rel))))
+                (unifies ?neg-infl (actionNegativelyAffectsQuantityType ?qtype ?action-pred ?entity ?n ?rel)))))
+       )
+  (methodForAction
+    (validateActionPredictions ?mt ?event ?operator ?when)
+    (actionSequence
+      (TheList
+        (doForEach ?pos-infl ?posInfluences (validatePositiveInfluence ?mt ?lkmt ?event ?operator ?when ?pos-infl))
+        (doForEach ?neg-infl ?negInfluences (validateNegativeInfluence ?mt ?lkmt ?event ?operator ?when ?neg-infl))
+        ))))
+        
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (validateActionPredictions ?mt ?event ?operator ?when)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (validateActionPredictions ?mt ?event ?operator ?when) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa validatePositiveInfluence ComplexActionPredicate)
+(arity validatePositiveInfluence 6)
+(arg1Isa validatePositiveInfluence Microtheory)
+(arg2Isa validatePositiveInfluence Microtheory)
+(arg3Isa validatePositiveInfluence Event)
+(arg4Isa validatePositiveInfluence CycLExpression)
+(arg5Isa validatePositiveInfluence TimeInterval)
+(arg6Isa validatePositiveInfluence CycLExpression)
+(comment validatePositiveInfluence "(validatePositiveInfluence ?mt ?lkmt ?event ?operator ?when ?influence) seeks to validate a predicted positive influence for the action pred of ?operator..")
+
+;;; We want to invalidate this:
+;;; (actionPositivelyAffectsQuantityType (MeasurableQuantityFn cardinalityOf) doBuildCity FreeCiv-Building 1 true)
+;;; *** Do we have a timing problem here?
+;;; *** Are we trying to validate the effect of an action before we've received
+;;; *** the update packets from that action?
+
+(preconditionForMethod
+  (and (unifies (actionPositivelyAffectsQuantityType
+                  (MeasurableQuantityFn cardinalityOf) ?action-pred ?entity-type 1 true) 
+                ?influence)
+       ;; What do we expect to find on the addlist?
+       (currentAddList ?adds)  ; actually a set of propositions
+       (not (containsPattern (isa ?inst ?entity-type) ?adds)))
+  (methodForAction
+    (validatePositiveInfluence ?mt ?lkmt ?event ?operator ?when ?influence)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Would have expected to see (isa ?inst ~a) in add-list after ~a." (?entity-type ?action-pred))
+        ;; May also want to record the fact that you're pruning it and why.
+        (doForget (ist-Information ?lkmt ?influence))
+        ))))
+
+
+;;; To Do: Make a version for continuous quantities.
+
+      
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (validatePositiveInfluence ?mt ?lkmt ?event ?operator ?when ?influence)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (validatePositiveInfluence ?mt ?lkmt ?event ?operator ?when ?influence) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa validateNegativeInfluence ComplexActionPredicate)
+(arity validateNegativeInfluence 6)
+(arg1Isa validateNegativeInfluence Microtheory)
+(arg2Isa validateNegativeInfluence Microtheory)
+(arg3Isa validateNegativeInfluence Event)
+(arg4Isa validateNegativeInfluence CycLExpression)
+(arg5Isa validateNegativeInfluence TimeInterval)
+(arg6Isa validateNegativeInfluence CycLExpression)
+(comment validateNegativeInfluence "(validateNegativeInfluence ?mt ?lkmt ?event ?operator ?when ?influence) seeks to validate a predicted negative influence for the action pred of ?operator..")
+
+
+(preconditionForMethod
+  (and (unifies (actionNegativelyAffectsQuantityType
+                  (MeasurableQuantityFn cardinalityOf) ?action-pred ?entity-type 1 true) 
+                ?influence)
+       ;; What do we expect to find on the addlist?
+       (currentDeleteList ?deletes)  ; actually a set of propositions
+       (not (containsPattern (isa ?inst ?entity-type) ?deletes)))
+  (methodForAction
+    (validateNegativeInfluence ?mt ?lkmt ?event ?operator ?when ?influence)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Would have expected to see (isa ?inst ~a) in delete-list after ~a." (?entity-type ?action-pred))
+        ;; May also want to record the fact that you're pruning it and why.
+        (doForget (ist-Information ?lkmt ?influence))
+        ))))
+
+;;; To Do: Make a version for continuous quantities.
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (validateNegativeInfluence ?mt ?lkmt ?event ?operator ?when ?influence)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (validateNegativeInfluence ?mt ?lkmt ?event ?operator ?when ?influence) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+      
+;(numAnswers 1
+;       (nextPersistentCounterValue GoalFn ?count))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

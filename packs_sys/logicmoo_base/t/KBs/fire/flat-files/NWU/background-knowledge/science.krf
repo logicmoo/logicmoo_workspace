@@ -1,0 +1,367 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                         -*-
+;;;; --------------------------------------------------------------------------
+;;;; File name: science.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 11, 2017 15:06:14
+;;;;   Purpose: Elementary school science knowledge
+;;;; --------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-03 17:47:38 -0600 (Thu, 03 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; --------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa SeaLevel Altitude)
+(isa SeaLevel Individual)
+
+(isa Plankton FirstOrderCollection)
+(genls Plankton AquaticOrganism)
+(genls Plankton Microorganism)
+(typeBehaviorIncapable Plankton LocomotionProcess doneBy) ; they drift on ocean currents
+
+(isa Bubble InanimateObject-Natural)
+;; Bubbles have a SurfaceRegion-Tangible that is liquid and an InteriorRegionFn filled with a GaseousTangibleObject.
+(relationAllExists inside-UnderspecifiedRegion Bubble GaseousTangibleThing)
+;; The EntireExternalSurfaceRegion-Tangible is a Film-SheetOrCoating consisting of (LiquidFn Soap) for soap bubbles,
+;; or just a LiquidTangibleThing otherwise.
+;; ExteriorMEmbraneSurfacePart?
+;; Bubbles may exist in a liquid or in air (in which case they are held together by surface tension)
+
+;;;(isa Echo-Audible TemporalStuffType)
+;;;(genls Echo-Audible RepeatedEventType)  ; instances of Echo-Audible are collections of sound repetitions
+;;;(relationInstanceExists isa (WaveEmissionFn AudibleSound) Echo-Audible)
+;;;(comment Echo-Audible "An Echo-Audible is a decaying repetition of audible sounds due to reflection of the sound wave off a distant hard surface.")
+;;; SoundStructure
+;;; We'd like to use relationAllExistsSame to say that every instance of a given echo has the same SoundStructure (although diminishing loudness)
+
+
+(isa TreeSap TangibleStuffCompositionType)
+(isa TreeSap PlantPartType)
+(genls TreeSap LiquidTangibleThing)
+(comment TreeSap "The sticky liquid that flows in trees.")
+
+
+(isa Echo FirstOrderCollection)
+(genls Echo DeflectingSomething)
+(genls Echo PhysicalEvent)
+(relationAllExists itemDeflected Echo (WaveEmissionFn AudibleSound))
+(comment Echo "An Echo is the reflection of a sound back toward its producer, muffled and delayed by its transit time.")
+
+(disjointWith Instinct IntelligentAgentActivity)
+
+(isa Mutation TemporalObjectType)
+(isa Mutation FirstOrderCollection)
+(genls Mutation BiologicalProcess)
+(genls Mutation IntrinsicStateChangeEvent)
+(comment Mutation "Mutation, as opposed to Evolution, is a single change in a BLO, due to envionmental conditions (chemical or radiation)")
+(properSubEventTypes Evolution Mutation)
+;; a mutation might be manifested as a change in physical shape
+
+(frequencyOfEventType Tide-Lunar Daily)
+
+
+;;; The ocean is made of salt water
+(mainConstituent-TypeType Ocean (LiquidFn Water))
+(relationAllExists mainConstituent Ocean (LiquidFn Water))
+(relationAllExists constituents Ocean Salt-ChemicalSubstance)
+;(solutionOf (SolutionFn (LiquidFn Water) Salt-ChemicalSubstance) (LiquidFn Water) Salt-ChemicalSubstance)
+; SeaWater is a solution of salt and liquid water
+; all subregions of a sea are SeaWater (including Oceans)
+;mainConstituentAmount-Type
+
+;; a Riverbank isa (ContainerContainingFn ??? River)
+;;;  (riversides BANK RIVER)
+(relationAllExists BordersOn River Riverbank)
+;;; cf., Water-Fresh, FreshWaterLake
+
+;;; Water is wet.
+
+(relationAllInstance wetnessOfObject (LiquidFn Water) Wet)
+
+;;; Wind is the movement of Air due to pressure differences 
+(relationAllInstance objectTranslating WindProcess Air)
+
+;;; Maple leaves are temporary parts of Maple Trees:
+(relationAllExists temporaryParts DeciduousPlant (LeafFn DeciduousPlant))
+(relationAllExists temporaryParts MapleTree (LeafFn MapleTree))
+
+;;; (systemComponents Tissue Cell)
+;;; (systemComponents Organ Tissue)
+;;; (systemComponents OrganSystem Organ)
+;;; cf, CellTypeOfTissueTypeFn, TissueTypeOfOrganTypeFn, AnimalBodyPartType
+;;; CellTypeByTissueType, TissueTypeByOrganType, (SubcollectionOfWithRelationToFn AnimalBodyPartType genls Organ)
+;;; An OrganSystem is a system whose systemComponents are Organs
+;;; An Organ is a system whose systemComponents are BiologicalTissue, and BiologicalTissue is a system whose components are Cells
+(isa BiologicalSystem FirstOrderCollection)
+(genls BiologicalSystem System)
+(genls BiologicalSystem SomethingExisting)
+(isa OrganSystem FirstOrderCollection)
+(genls OrganSystem BiologicalSystem)
+(genls Organ BiologicalSystem)
+(genls BiologicalTissue BiologicalSystem)
+(genls Cell BiologicalSystem)
+(relationAllExists systemComponents OrganSystem Organ)
+(relationAllExists systemComponents Organ BiologicalTissue)
+(relationAllExists systemComponents BiologicalTissue Cell)
+
+
+(in-microtheory BotanyMt)
+
+;;; (Most) Plants grow from Seeds
+
+;;; Rose stems have thorns:
+(relationAllExists anatomicalParts RoseBush RoseFlowerStem)  ; At most one per flower, though
+(relationAllExists anatomicalParts RoseFlowerStem Thorn)
+(relationAllExists anatomicalParts RoseBush RoseFlower)
+(normalWholeTypeForPartType RoseFlower RoseBush)
+(relationAllExists anatomicalParts RoseFlower Petal)
+;;; RoseFlowerStem == (StemFn RoseBush)
+
+(relationMostExists anatomicalParts Cactus Thorn)  ; Could be many
+
+;;; Plan roots grow underground
+(typicalLocationTypeOfType Root Underground)
+(eventTypeOccursAtLocationType (SubcollectionOfWithRelationToTypeFn BiologicalGrowthEvent objectOfStateChange Root) Underground)
+
+(isa Mycelium ExistingObjectType)
+(isa Mycelium SpatiallyDisjointObjectType)
+(isa Mycelium FirstOrderCollection)
+(genls Mycelium BotanicalOrgan)
+(genls Mycelium ExternalAnatomicalPart)
+(genls Mycelium FungusTissue)
+(comment Mycelium "Part of a #$Fungus consisting of a mass of threadlike #$Hypha, typically found underground.")
+
+(relationExistsAll anatomicalParts Fungus Mycelium)
+(normalWholeTypeForPartType Mycelium Fungus)
+(typicalLocationTypeOfType Mycelium Underground)
+(eventTypeOccursAtLocationType (SubcollectionOfWithRelationToTypeFn BiologicalGrowthEvent objectOfStateChange Mycelium) Underground)
+
+
+(isa Hypha ExistingObjectType)
+(isa Hypha SpatiallyDisjointObjectType)
+(isa Hypha FirstOrderCollection)
+(genls Hypha BotanicalOrgan)
+(genls Hypha ExternalAnatomicalPart)
+(genls Hypha FungusTissue)
+(genls Hypha CordlikeObject)
+(comment Hypha "Long threadlike filaments that form the #$Mycelium of a #$Fungus.")
+
+(relationExistsAll anatomicalParts Mycelium Hypha)
+(normalWholeTypeForPartType Hypha Mycelium)
+
+
+(in-microtheory NaivePhysicsMt)
+
+(altitudeAboveSeaLevel (SurfaceArea-TopSurfaceFn EarthsOceanSea) SeaLevel)
+(altitudeAboveSeaLevel (SurfaceArea-TopSurfaceFn EarthsOceanSea) (Meter 0))
+
+(constituents TheEarthsAtmosphere (MoleculeFn Air))
+(mainConstituent-TypeType Air (GaseousFn Oxygen))
+(mainConstituent-TypeType Air (GaseousFn Nitrogen))
+(wholeOfTypeHasPartTypeOfPortion Air (GaseousFn Oxygen) (ApproximatelyFn (Percent 21)))
+(wholeOfTypeHasPartTypeOfPortion Air (GaseousFn Nitrogen) (ApproximatelyFn (Percent 78)))
+
+;;; TheEarthsAtmosphere is denser at sealevel than up in the stratosphere
+(qprop- ((QPQuantityFn Density) TheEarthsAtmosphere)
+         ((QPQuantityFn Altitude) TheEarthsAtmosphere))
+
+;;; TheEarthsAtmosphere is colder higher up.
+(qprop- ((QPQuantityFn Temperature) TheEarthsAtmosphere)
+         ((QPQuantityFn Altitude) TheEarthsAtmosphere))
+;;; (qprop- ((QPQuantityFn Temperature) TheEarthsAtmosphere) 
+;;;         ((MeasurableQuantityFn altitudeAboveSeaLevel) TheEarthsAtmosphere))
+
+
+(genls Wax ElectricalInsulator)
+(genls Rubber ElectricalInsulator)
+(genls SilkCloth ElectricalInsulator)
+(genls NaturalFiberCloth ElectricalInsulator)
+(genls CottonStuff ElectricalInsulator)
+(genls Air ElectricalInsulator)
+(genls Ceramic ElectricalInsulator)
+
+(genls Carbon ElectricalConductor)
+(genls Mercury ElectricalConductor)
+
+;;; --------------------------------------------
+
+(relationAllInstance transformationInputType Liquefying SolidTangibleThing)
+(relationAllInstance transformationResultType Liquefying LiquidTangibleThing)
+
+(relationAllInstance transformationInputType Freezing LiquidTangibleThing)
+(relationAllInstance transformationResultType Freezing SolidTangibleThing)
+
+(relationAllInstance transformationInputType Evaporating LiquidTangibleThing)
+(relationAllInstance transformationResultType Evaporating GaseousTangibleThing)
+
+(relationAllInstance transformationInputType Melting SolidTangibleThing)
+(relationAllInstance transformationResultType Melting LiquidTangibleThing)
+
+(relationAllInstance transformationInputType Sublimating SolidTangibleThing)
+(relationAllInstance transformationResultType Sublimating GaseousTangibleThing)
+
+(relationAllInstance transformationInputType SublimatingToSolid GaseousTangibleThing)
+(relationAllInstance transformationResultType SublimatingToSolid SolidTangibleThing)
+
+;;; --------------------------------------------
+;;; Migrated from ADA background knowledge:
+(particleTypeOfType (StuffFn Light) Photon)
+(particleTypeOfType Electricity Electron)
+(particleTypeOfType Electricity Proton)
+(particleTypeOfType SandMob SandParticle)
+
+(genls ElectromagneticRadiation SomethingExisting)
+(genls EnergyStuff SomethingExisting)   ; This is the only way we can say that "heat is converted into light."
+(mainConstituent-TypeType  Sunlight-Direct (StuffFn VisibleLight))
+(relationExistsAll emitter Sun Sunlight-Direct)
+
+;;; This is implied by the resultGenls of LiquidFn, but we don't support that:
+(genls (LiquidFn Water) LiquidTangibleThing)
+
+;;; "Atmosphere"
+(mainConstituent-TypeType Atmosphere GaseousTangibleThing)
+(relationAllExists covers-Generic Atmosphere Planet)
+;(relationExistsAll doneBy CoveringSomething Atmosphere)
+;(relationExistsAll objectActedOn CoveringSomething Planet) ; that can't be right
+
+(relationAllExists suspendedPart DustCloud DustParticle)
+
+;;; Ash is the powdery Grayish residue of a CombustionProcess.
+(outputsCreated-TypeType CombustionProcess Ash)
+(genls Ash Powder)
+
+;;;;;;;;;;;;;;;
+;;; "Insulation"
+(relationAllExists objectOfStateChange InsulatingCover ThermalConductivity)
+
+
+;;; To Represent:
+;;; There's no atmosphere in outer space (or on the moon)
+;;; Without an atmosphere, there's no sound (except as transmitted thru solids)
+;;; Without an atmosphere, there's no lift or drag or wind
+;;; Without a medium, there's no conduction (of sound or heat) or convection
+;;; 3 kinds of heat transfer are conduction, convection, & radiation
+;;; friction causes heat transfer, transforms translational (or rotational) motion into heat
+;;; inertia is proportional to mass
+;;; liquids in a gravitational field adapt to the shape of their container, otherwise surface tension minimized their surface area
+;;; a sphere has the minimal surface area for its volume
+
+(isa SeismicWave FirstOrderCollection)
+(genls SeismicWave WavePropagation)
+(comment SeismicWave "A SeismicWave is the collection of all waves propagated through the earth.")
+(relationAllExists propagationMediumType SeismicWave RockyPlanetaryStuff)
+
+(isa RedGiantStar ExistingObjectType)
+(isa RedGiantStar SpatiallyDisjointObjectType )
+(isa RedGiantStar Collection)
+(genls RedGiantStar Star)
+(comment RedGiantStar "Red Giant stars are large suns that have greatly expanded toward the end of their lifespan.")
+
+(isa TidePool NaturalFeatureType)
+(isa TidePool ExistingObjectType)
+(isa TidePool WaterBodyConcept)
+(genls TidePool BodyOfWater)
+(genls TidePool NaturalThing)
+(genls TidePool PeriodicallyFloodedRegion)
+(genls TidePool (SmallFn Basin-Topographical))
+(comment TidePool "A TidePool is a small basin in rock that fills with ocean water when the tide comes in and dries up when the tide goes out.")
+
+;;; Anatomical parts and their purpose
+;;; The heart pumps blood. (genls from Pump-Generic) PumpingFluid has arg-isas = flowSource
+;;; Gills let you survive underwater
+;;; Fins help an animal to swim faster
+;;; Most BLOs need oxygen in air to breathe and must breathe to stay alive
+;;; Suffocation is an inability to breathe
+
+
+;;; The leaves of DeciduousPlants die in FallSeason, change color and Falling-Freefall off the tree.
+;;; (changesSlot <leavesChangingColor> mainColorOfObject)
+;;; (objectOfStateChange <leavesChangingColor> <Leaf>)
+
+;;; Legs are needed to walk
+;;; Eyes are used for visual perception
+;;; Ears are used for auditory perception
+;;; Visual perception enables mobile agents to avoid colliding with obstacles
+;;; Visual perception enables agents to know the location and motion of nearby objects (if there is light)
+;;; Animal's visual perception detects (reflected) electromagnetic radiation in the visual range of frequencies
+;;; Echolocation uses reflection of (high-pitched) sound to determine range to obstacles and targets
+;;; Bats are nocturnal (active in the dark)
+;;; Reflection changes the direction of a trajectory (often back toward the emitter)
+;;; Shiny metal surfaces reflect light
+;;; Glass is translucent.  Window glass is transparent (to visible light).
+;;; Crystals have flat surfaces called facets.
+;;; Most crystals are transparent
+;;; Crystals grow over a long period of time
+;;; Wood has a preferred direction for splitting, called grain
+;;; Hardwood is usually more expensive than softwood
+;;; Hardwood is more desirable for building furniture and visible trim than softwood  (FurniturePart)
+;;; WoodStain makes wood darker and increases contrast of the grain
+;;; Most animals make audible sounds through their mouths (but not crickets)
+
+(in-microtheory UniverseDataMt)
+
+;;; The Moon has no atmosphere
+;;; The Moon is far away (> 200,000 miles) from the Earth
+
+(distanceBetween PlanetEarth MoonOfEarth ((Kilo Mile) 238.9))
+
+;;; The Earth is bigger than the Moon:
+
+(biggerThan PlanetEarth MoonOfEarth)
+
+;;; The Moon orbits the Earth
+
+(orbits MoonOfEarth PlanetEarth)
+
+;;; The Moon has craters
+
+(relationInstanceExistsMany properPhysicalParts MoonOfEarth Crater-Lunar)
+
+;;; The Sun is much bigger than the Earth
+
+(biggerThan TheSun PlanetEarth)
+
+;;; The Sun is very hot
+
+(relationAllInstance temperatureOfObject Sun (VeryHighAmountFn Temperature))
+(temperatureOfObject TheSun (VeryHighAmountFn Temperature))
+
+;;; The Sun is 93 million miles away from the Earth
+
+(distanceBetween PlanetEarth TheSun ((Mega Mile) 93))
+
+;;; The Earth orbits the Sun
+
+(orbits PlanetEarth TheSun)
+
+(relationAllInstance orbits PlanetInTheSolarSystem TheSun)
+
+(groupMembers SolarSystem PlanetEarth)
+(groupMembers SolarSystem PlanetJupiter)
+(groupMembers SolarSystem PlanetMars)
+(groupMembers SolarSystem PlanetMercury)
+(groupMembers SolarSystem PlanetNeptune)
+(groupMembers SolarSystem PlanetSaturn)
+(groupMembers SolarSystem PlanetUranus)
+(groupMembers SolarSystem PlanetVenus)
+(groupMembers SolarSystem PlanetPluto) ; isa DwarfPlanet
+(groupMembers SolarSystem Ceres)
+(spatiallyContains SolarSystem AsteroidBelt)
+
+
+(in-microtheory BaseKB)
+
+(argsIsa Qubit NumericInterval)
+(resultIsa Qubit Individual)
+(resultIsa Qubit ComputerMemoryCapacity)
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa Qubit UnitOfComputerStorageCapacity)
+(isa Qubit UnitOfMeasureConcept)
+(isa Qubit UnitOfMeasureNoPrefix)
+(comment Qubit "A quantum bit.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

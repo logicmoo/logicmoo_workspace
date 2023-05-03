@@ -1,0 +1,85 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: untitled
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: February 1, 2018 17:17:53
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+; see MetaEngineering
+
+(isa Lever Collection)
+(genls Lever SimpleMachine)
+
+(physicalPartTypes Lever Fulcrum)
+(physicalPartTypes Lever LeverBeam)
+
+(isa LeverBeam Collection)
+(genls LeverBeam Beam)
+
+(physicalPartTypes LeverBeam LeverEffortArm)
+(physicalPartTypes LeverBeam LeverLoadArm)
+
+(isa LeverEffortArm Collection)
+(genls LeverEffortArm LeverBeam)
+
+(isa LeverLoadArm Collection)
+(genls LeverLoadArm LeverBeam)
+
+(isa FirstClassLever Collection)
+(genls FirstClassLever Lever)
+
+(isa SecondClassLever Collection)
+(genls SecondClassLever Lever)
+
+(isa ThirdClassLever Collection)
+(genls ThirdClassLever Lever)
+
+(isa InclinedPlane Collection)
+(genls InclinedPlane SimpleMachine)
+
+(isa BlockAndTackle Collection)
+(genls BlockAndTackle SimpleMachine)
+
+(physicalPartTypes BlockAndTackle Pulley)
+(physicalPartTypes BlockAndTackle CordlikeArtifact)
+;;; cf CordSegment and cordSegmentOf
+
+(isa Pulley Collection)
+(genls Pulley SimpleMachine)
+
+(isa Screw-SimpleMachine Collection)
+(genls Screw-SimpleMachine SimpleMachine)
+
+(isa Wedge Collection)
+(genls Wedge SimpleMachine)
+
+(isa WheelAndAxle Collection)
+(genls WheelAndAxle SimpleMachine)
+
+(physicalPartTypes WheelAndAxle Wheel)
+(physicalPartTypes WheelAndAxle Axle)
+
+(isa ResistingForce Collection)
+(genls ResistingForce ForceQuantity)
+
+(isa AppliedForce Collection)
+(genls AppliedForce ForceQuantity)
+
+;;; cf ApplyingAForce
+
+;;; Mechanical Advantage
+;;;   the ratio of ResistingForce to AppliedForce
+
+
+;;; Tension
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

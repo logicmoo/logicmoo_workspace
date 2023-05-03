@@ -1,0 +1,908 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: experimentation.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 2, 2012 15:32:02
+;;;;   Purpose: Representation of experimentation strategies
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+;; Hopefully we'll merge this with CompanionsExperimentMt someday...
+(in-microtheory CompanionsMt)
+
+;;; An experiment is a strategy that spans multiple games or scenarios with
+;;; the objective of acquiring data to satisfy a learning goal.  
+
+;;; Experiment strategies should be explicitly reified.
+;;; They are active strategies that address learning goals by specifying
+;;; performance goals (objectives), termination conditions, game scenarios,
+;;; what should be varied, what should be controlled, what to measure
+;;; and what it is hoped will be learned.
+
+;;; Clearly Matt's notion of experimentation diverges stongly from mine, so
+;;; I've migrated the replay-based experimentation infrastructure to
+;;; PerceptualAgentsMt in order avoid interfering with Matt's stuff.
+
+(isa CompanionsExperiment Collection)
+(genls CompanionsExperiment Strategy)
+
+
+(isa experimentFinished UnaryPredicate)
+(arity experimentFinished 1)
+(arg1Isa experimentFinished CompanionsExperiment)
+(comment experimentFinished "(experimentFinished ?experiment) says that an experiment has finished running.")
+
+(isa startExperimentFromScratch UnaryPredicate)
+(arity startExperimentFromScratch 1)
+(arg1Isa startExperimentFromScratch CompanionsExperiment)
+(comment startExperimentFromScratch "(startExperimentFromScratch ?experiment) says that an experiment should always blow away its past progress when starting.")
+
+(isa ExperimentFn Function-Denotational)
+(arity ExperimentFn 1)
+(arg1Isa ExperimentFn Integer)
+(comment ExperimentFn "(ExperimentFn <num>) denotes a unique experiment.")
+
+(isa GameActionGPoolFn Function-Denotational)
+(arity GameActionGPoolFn 2)
+(arg1Isa GameActionGPoolFn Game)
+(arg2Isa GameActionGPoolFn PurposefulAction)
+
+(isa MostSpecificConditionFn Function-Denotational)
+(arity MostSpecificConditionFn 1)
+(arg1Isa MostSpecificConditionFn Predicate)
+(resultIsa MostSpecificConditionFn CycLExpression)
+
+(isa MostGeneralConditionFn Function-Denotational)
+(arity MostGeneralConditionFn 1)
+(arg1Isa MostGeneralConditionFn Predicate)
+(resultIsa MostGeneralConditionFn CycLExpression)
+
+(isa ControlConditionFn Function-Denotational)
+(arity ControlConditionFn 1)
+(arg1Isa ControlConditionFn Predicate)
+(resultIsa ControlConditionFn CycLExpression)
+
+(isa observationCondition TernaryPredicate)
+(arity observationCondition 3)
+(arg1Isa observationCondition LearningGoal)
+(arg2Isa observationCondition CycLExpression) ; the condition name
+(arg3Isa observationCondition MeasurableQuantity)
+
+
+;;; Alternatively, use (newPersistableSymbol Experiment ?name)
+
+
+(isa experimentLearningGoal BinaryRelation)
+(arity experimentLearningGoal 2)
+(arg1Isa experimentLearningGoal CompanionsExperiment)
+(arg2Isa experimentLearningGoal LearningGoal)
+(comment experimentLearningGoal "(experimentLearningGoal ?expt ?learning-goal) associates a learning goal with an experiment.")
+
+
+;;;
+;;; Do this the agenda way.
+;;; Should the experiment name *be* the agenda task name?
+;;; Ok, but we want the scheduling constraints to be on the executive
+
+(isa scheduleExperiments ComplexActionPredicate)
+(arity scheduleExperiments 1)
+(arg1Isa scheduleExperiments List-Extensional)
+(comment scheduleExperiments "(scheduleExperiments <list-of-experiments>) performs each designated experiment in turn.")
+
+
+(preconditionForMethod
+  (and (localAgent ?ex)
+       (currentSessionReasoner ?sr)
+       (agendaContext ?mt)
+       (evaluate ?subtask-list
+         (MapFunctionOverList 
+           (FunctionToArg 2 
+             (Kappa (?in ?out) 
+               (unifies ?out (DispatchTaskFn ?in))))
+           ?expt-list))
+       (implicitSequenceConstraints ?subtask-list ?sequencing-constraints))
+  (methodForAction
+    (scheduleExperiments ?expt-list)
+    (actionSequence
+      (TheList
+       (doForEach ?subtask ?subtask-list (doTell (ist-Information ?mt (assignedTo ?subtask ?ex))))
+       (doForEach ?subtask ?subtask-list (doTell (ist-Information ?mt (taskImportance ?subtask 1))))
+       (ifThen (currentAgendaItem ?current-task)
+               (doForEach ?subtask ?subtask-list
+                          (doTell (ist-Information ?mt (subTasks ?current-task ?subtask)))))
+       (doForEach ?const ?sequencing-constraints (doTell (ist-Information ?mt ?const)))
+       (doForEach ?expt ?expt-list (doEnqueue ?ex (DispatchTaskFn ?expt) (dispatchExperiment ?sr ?expt)))))))
+
+
+;;; A dispatch task is a task that does nothing but schedule another task.
+;;; It exists so that scheduling constraints can be local to the executive
+;;; and the remote agent (ie, session-reasoner), can run its task to completion
+;;; without blocking the executive's agenda thread.
+(isa dispatchExperiment ComplexActionPredicate)
+(arity dispatchExperiment 2)
+(arg1Isa dispatchExperiment CompanionsAgent)
+(arg2Isa dispatchExperiment CompanionsExperiment)
+(comment dispatchExperiment "(dispatchExperiment ?mt ?agent ?expt) schedules ?expt to run on ?agent.  ?mt is the local agenda microtheory.")
+
+(preconditionForMethod
+  (agendaContext ?mt)
+  (methodForAction
+   (dispatchExperiment ?agent ?expt)
+   (actionSequence
+    (TheList
+     (doTell (ist-Information ?mt (assignedTo ?expt ?agent)))
+     (doTell (ist-Information ?mt (taskImportance ?expt 1)))
+     (doTell (ist-Information ?mt (subTasks (DispatchTaskFn ?expt) ?expt)))
+     ;;(doEnqueue ?agent ?expt (doAnnounce "~%running dispatched experiment ~s" (?expt)))
+     (doSynchronousRemotePlan ?agent
+                              (maybeInitializeRandomStateForExperiment ?expt))
+     (doEnqueue ?agent ?expt (runExperiment ?expt))))))
+
+(isa implicitSequenceConstraints BinaryPredicate)
+(arity implicitSequenceConstraints 2)
+(arg1Isa implicitSequenceConstraints List-Extensional)
+(arg2Isa implicitSequenceConstraints Set-Mathematical)
+(comment implicitSequenceConstraints "(implicitSequenceConstraints ?list ?explicit-sequence-constraints) binds constraints to a set of (startsAfterEndingOf ?x ?y) statements.")
+
+
+(isa temporallyDisjointWRTAgentConstraints BinaryPredicate)
+(arity temporallyDisjointWRTAgentConstraints 2)
+(arg1Isa temporallyDisjointWRTAgentConstraints Set-Mathematical)
+(arg2Isa temporallyDisjointWRTAgentConstraints Set-Mathematical)
+(comment temporallyDisjointWRTAgentConstraints
+  "(temporallyDisjointWRTAgentConstraints ?set ?constraints) binds ?constraints to a set of (temporallyDisjointWRTAgent ?x ?y) statements.")
+
+(<== (temporallyDisjointWRTAgentConstraints ?lst ?stmts)
+     (evaluate ?stmts
+       (TheClosedRetrievalSetOf (temporallyDisjointWRTAgent ?item1 ?item2)
+         (and (elementOf ?item1 ?lst)
+              (elementOf ?item2 ?lst)
+              (different ?item1 ?item2)))))
+
+(isa runExperiment ComplexActionPredicate)
+(arity runExperiment 1)
+(arg1Isa runExperiment CompanionsExperiment)
+(comment runExperiment "(runExperiment <expt>) runs the designated experiment on the session reasoner.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Some additional infrastructure for designing controlled experiments.
+
+(isa ControlledExperiment Collection)
+(genls ControlledExperiment CompanionsExperiment)
+(comment ControlledExperiment "An experiment in which the experimenter repeatedly
+conducts the same test under multiple conditions that are distinguished by assigning
+different predetermined values to a closed set of independent variables. By manipulating
+a single independent variable at a time, the resulting effects on dependent variables
+can be isolated.  While a CompanionsExperiment can be a ControlledExperiment, its
+individual conditions are also instances of CompanionsExperiment without being
+instances of ControlledExperiment.")
+
+(isa ExperimentalCondition Collection)
+(genls ExperimentalCondition CompanionsExperiment)
+(comment ExperimentalCondition "One condition (with independent variables assigned
+to particular values) of a controlled experiment.")
+
+(isa ExperimentalConditionType SecondOrderCollection)
+
+(isa experimentIndependentVariable Predicate)
+(arity experimentIndependentVariable 2)
+(arg1Isa experimentIndependentVariable ExperimentSeries)
+(arg2Isa experimentIndependentVariable CycL-Formula)
+
+(<== (experimentIndependentVariable ?exp ?iv)
+     (experimentIVExplorationOrder ?exp ?iv-list)
+     (memberOfList ?iv ?iv-list)
+     (uninferredSentence (variableExpression ?iv)))
+     
+(isa experimentIVExplorationOrder BinaryPredicate)
+(arity experimentIVExplorationOrder 2)
+(arg1Isa experimentIVExplorationOrder ExperimentSeries)
+(arg2Isa experimentIVExplorationOrder List-Extensional)
+
+(isa experimentDependentVariable Predicate)
+(arity experimentDependentVariable 2)
+(arg1Isa experimentDependentVariable ExperimentSeries)
+(arg2Isa experimentDependentVariable CycL-Formula)
+
+(isa independentVariableRange Predicate)
+(arity independentVariableRange 2)
+(arg1Isa independentVariableRange CycL-Formula)
+(arg2Isa independentVariableRange List-Extensional)
+
+(isa independentVariableRange-LowerBound Predicate)
+(arity independentVariableRange-LowerBound 2)
+(arg1Isa independentVariableRange-LowerBound CycL-Formula)
+(arg2Isa independentVariableRange-LowerBound Number)
+
+(isa independentVariableRange-UpperBound Predicate)
+(arity independentVariableRange-UpperBound 2)
+(arg1Isa independentVariableRange-UpperBound CycL-Formula)
+(arg2Isa independentVariableRange-UpperBound Number)
+
+(isa independentVariableRange-Resolution Predicate)
+(arity independentVariableRange-Resolution 2)
+(arg1Isa independentVariableRange-Resolution CycL-Formula)
+(arg2Isa independentVariableRange-Resolution Number)
+
+(isa independentVariableRangeValues Predicate)
+(arity independentVariableRangeValues 2)
+(arg1Isa independentVariableRangeValues CycL-Formula)
+(arg2Isa independentVariableRangeValues List-Extensional)
+
+(isa instantiatedIndependentVariables Predicate)
+(arity instantiatedIndependentVariables 2)
+(arg1Isa instantiatedIndependentVariables ExperimentalCondition)
+(arg2Isa instantiatedIndependentVariables Set-Mathematical)
+
+(isa usesSetupMt Predicate)
+(arity usesSetupMt 2)
+(arg1Isa usesSetupMt Thing)
+(arg2Isa usesSetupMt Microtheory)
+
+(isa usesCaseLibrary BinaryPredicate)
+(arg1Isa usesCaseLibrary Event)
+(arg2Isa usesCaseLibrary CaseLibrary)
+
+(isa experimentLog BinaryPredicate)
+
+(isa usesBookkeepingMt Predicate)
+(arity usesBookkeepingMt 2)
+(arg1Isa usesBookkeepingMt Thing)
+(arg2Isa usesBookkeepingMt Microtheory)
+
+(isa evaluationTypeInExperiment Predicate)
+(arity evaluationTypeInExperiment 2)
+(arg1Isa evaluationTypeInExperiment CompanionsExperiment)
+(arg2Isa evaluationTypeInExperiment PerformanceTesting)
+
+(isa usesFreshInitialRandomState Predicate)
+(arity usesFreshInitialRandomState 1)
+(arg1Isa usesFreshInitialRandomState CompanionsExperiment)
+
+(isa ExperimentalConditionFn Function-Denotational)
+(arity ExperimentalConditionFn 2)
+(arg1Isa ExperimentalConditionFn ControlledExperiment)
+(arg2Isa ExperimentalConditionFn Set-Extensional)
+(resultIsa ExperimentalConditionFn ExperimentalCondition)
+
+(isa BookkeepingFn Function-Denotational)
+(arity BookkeepingFn 1)
+(resultIsa BookkeepingFn Microtheory)
+(comment BookkeepingFn "(#$BookkeepingFn EVENT) denotes the microtheory that stores all bookkeeping for EVENT.")
+(arg1Isa BookkeepingFn Individual)
+
+(isa SetupFn Function-Denotational)
+(arity SetupFn 1)
+(resultIsa SetupFn Microtheory)
+(comment SetupFn "(#$SetupFn EVENT) denotes the microtheory that stores all setup information for EVENT.")
+(arg1Isa SetupFn Individual)
+
+(isa experimentalConditionProhibited UnaryPredicate)
+(arity experimentalConditionProhibited 1)
+(arg1Isa experimentalConditionProhibited CompanionsExperiment)
+(comment experimentalConditionProhibited "(experimentalConditionProhibited ?experiment) says that an experiment should not be run.")
+
+(<== (experimentalConditionProhibited ?condition-nat)
+     (groundExpression ?condition-nat)
+     (unifies ?condition-nat (ExperimentalConditionFn ?experiment ?instantiated-ivs))
+     (independentVariableValuesProhibited ?prohibited-ivs)
+     (subsetOf ?prohibited-ivs ?instantiated-ivs))
+
+(isa independentVariableValuesProhibited UnaryPredicate)
+(arity independentVariableValuesProhibited 1)
+(arg1Isa independentVariableValuesProhibited Set-Mathematical)
+(comment independentVariableValuesProhibited "(independentVariableValuesProhibited ?iv-set) says that any experiment in which the instantiated independent variables are a super set of ?iv-set should not be run.")
+
+(isa ExperimentResultsMt Microtheory)
+
+(isa evaluationPlanForExperiment Predicate)
+(arity evaluationPlanForExperiment 2)
+(arg1Isa evaluationPlanForExperiment CompanionsExperiment)
+(arg2Isa evaluationPlanForExperiment ComplexActionPredicate)
+
+(<== (independentVariableRange ?var-expression ?range)
+     (nonGroundExpression ?var-expression)
+     (uninferredSentence (variableExpression ?var-expression))
+     (formulaArgument ?var-expression ?n ?var)
+     (variableExpression ?var)    ;;assumes there is exactly one variable in ?var-expression
+     (independentVariableRangeValues ?var-expression ?val-list)
+     (numAnswers 1
+       (evaluate ?unsorted-range
+         (MapFunctionOverList 
+          (FunctionToArg 2 
+                         (Kappa (?val ?val-exp) 
+                                (evaluate ?val-exp
+                                  (SublisFn (TheSet (?var ?val)) ?var-expression))))
+          ?val-list)))
+     (numAnswers 1
+       (evaluate ?filtered-range
+         (RemoveIfFn ?unsorted-range
+                     (Kappa (?range-exp) 
+                            (independentVariableValuesProhibited
+                             (TheSet ?range-exp)))
+                     IdentityFn)))
+     (numAnswers 1
+       (evaluate ?range
+         (SortFn ?filtered-range
+                 (Kappa (?v1 ?v2)
+                        (preferIndependentVariableAssignment ?v1 ?v2))
+                 IdentityFn))))
+
+(<== (independentVariableRangeValues ?var-expression ?val-list)
+     (isa ?var-expression IndependentVariableExpression-Interval)
+     (independentVariableRange-LowerBound ?var-expression ?lower-bound)
+     (independentVariableRange-UpperBound ?var-expression ?upper-bound)
+     (independentVariableRange-Resolution ?var-expression ?res)
+     (evaluate ?depth
+       (PlusFn 2 (RoundFn (QuotientFn (DifferenceFn ?upper-bound ?lower-bound) ?res))))
+     (withBackchainingDepth ?depth 
+                            (enumerateFromToBy ?lower-bound ?upper-bound ?res ?val-list)))
+     
+
+(<== (independentVariableRangeValues ?var-expression (TheList True False))
+     (isa ?var-expression IndependentVariableExpression-Boolean))
+     
+(isa independentVariableAssignmentsForExperiment BinaryPredicate)
+
+(<== (independentVariableAssignmentsForExperiment ?independent-var-expressions ?ordered-assignments)
+     (evaluate ?ranges
+       (MapFunctionOverList 
+        (FunctionToArg 2 
+          (Kappa (?in ?out) 
+                 (and (independentVariableRange ?in ?list)
+                      (evaluate ?out (ListToSetFn ?list)))))
+        ?independent-var-expressions))
+     (evaluate ?ordered-assignments
+       (SetToListFn
+        (CartesianProductFn ?ranges))))
+
+(isa experimentalCondition BinaryPredicate)
+
+(<== (experimentalCondition ?experiment ?condition)
+     (groundExpression ?experiment)
+     (variableExpression ?condition)
+     (numAnswers 1 (experimentalConditionOrdering ?experiment ?conditions))
+     (memberOfList ?condition ?conditions))
+      
+(<== (experimentalCondition ?experiment ?condition)
+     (groundExpression ?condition)
+     (unifies ?condition (ExperimentalConditionFn ?experiment ?independent-vars-bound)))
+
+(<== (experimentLog ?condition ?log)
+     (numAnswers 1 (experimentalCondition ?experiment ?condition))
+     (numAnswers 1 (experimentLog ?experiment ?log)))
+
+(<== (usesBookkeepingMt ?event ?bookkeeping)
+     (groundExpression ?event)
+     (uninferredSentence (isa ?event ExperimentalCondition))
+     (uninferredSentence (isa ?event CrossValidationTestRound))
+     (unifies ?bookkeeping (BookkeepingFn ?event)))
+
+(<== (usesBookkeepingMt ?event ?bookkeeping)
+     (groundExpression ?event)
+     (isa ?event ExperimentalCondition)
+     (experimentalConditionSymbol ?event ?symbol)
+     (unifies ?bookkeeping (BookkeepingFn ?symbol)))
+
+(<== (usesBookkeepingMt ?event ?bookkeeping)
+     (groundExpression ?bookkeeping)
+     (ist-Information ?bookkeeping
+       (isa ?event ExperimentalCondition))
+     (experimentalConditionSymbol ?event ?symbol)
+     (unifies ?bookkeeping (BookkeepingFn ?symbol)))
+
+(<== (usesBookkeepingMt ?event ?bookkeeping)
+     (groundExpression ?bookkeeping)
+     (unifies ?bookkeeping (BookkeepingFn ?event))
+     (ist-Information ?bookkeeping
+       (isa ?event ControlledExperiment)))
+
+(<== (usesSetupMt ?event ?setup-mt)
+     (groundExpression ?event)
+     (uninferredSentence (isa ?event ExperimentalCondition))
+     (uninferredSentence (isa ?event CrossValidationTestRound))
+     (unifies ?setup-mt (SetupFn ?event)))
+
+(<== (usesSetupMt ?event ?setup-mt)
+     (groundExpression ?event)
+     (isa ?event ExperimentalCondition)
+     (experimentalConditionSymbol ?event ?symbol)
+     (unifies ?setup-mt (SetupFn ?symbol)))
+
+(<== (usesSetupMt ?event ?setup-mt)
+     (groundExpression ?setup-mt)
+     (ist-Information ?setup-mt
+       (isa ?event ExperimentalCondition))
+     (experimentalConditionSymbol ?event ?symbol)
+     (unifies ?setup-mt (SetupFn ?symbol)))
+
+(<== (usesSetupMt ?event ?setup)
+     (groundExpression ?setup)
+     (unifies ?setup (SetupFn ?event))
+     (ist-Information ?setup
+       (isa ?event ControlledExperiment)))
+
+(<== (usesCaseLibrary ?event ?lib)
+     (groundExpression ?event)
+     (uninferredSentence (isa ?event ExperimentalCondition))
+     (uninferredSentence (isa ?event CrossValidationTestRound))
+     (uninferredSentence (unifies ?event (BookkeepingFn ?something)))
+     (unifies ?lib (CaseLibraryFn ?event)))
+
+(<== (usesCaseLibrary ?event ?lib)
+     (groundExpression ?event)
+     (isa ?event ExperimentalCondition)
+     (experimentalConditionSymbol ?event ?symbol)
+     (unifies ?lib (CaseLibraryFn ?symbol)))
+
+(<== (usesCaseLibrary ?bookkeeping ?lib)
+     (groundExpression ?bookkeeping)
+     (unifies ?bookkeeping (BookkeepingFn ?event-symbol))
+     (unifies ?lib (CaseLibraryFn ?event-symbol)))
+
+(<== (instantiatedIndependentVariables ?evaluation ?instantiated-ivs)
+     (unifies ?evaluation (ExperimentalConditionFn ?experiment ?unwrapped-ivs))
+     (numAnswers 1 (usesSetupMt ?evaluation ?setup-mt))
+     (evaluate ?instantiated-ivs
+       (TheClosedRetrievalSetOf (ist-Information ?setup-mt ?unwrapped-iv)
+           (elementOf ?unwrapped-iv ?unwrapped-ivs))))
+                    
+
+    
+;;;   Still have to fill in all the metaknowledge for these predicates!
+;;; experimentalCondition
+;;; exampleShuffleSeed
+;;; preferredExperimentalCondition
+;;; preferIndependentVariableAssignment
+;;; priortizedIndependentVariableAssignments
+;;; preferIndependentVariableExploration
+;;; firstDifferenceAcrossLists
+
+(isa experimentalConditionOrdering BinaryPredicate)
+
+(<== (experimentalConditionOrdering ?experiment ?conditions)
+     (experimentIVExplorationOrder ?experiment ?iv-list)
+     (evaluate ?rev-iv-list (ReverseListFn ?iv-list))
+     (independentVariableAssignmentsForExperiment ?rev-iv-list ?iv-lists-bound)
+     (evaluate ?conditions
+       (ReverseListFn
+        (SetToListFn
+         (TheClosedRetrievalSetOf ?condition
+           (and (memberOfList ?ivs ?iv-lists-bound)
+                (sortedAlphabetically ?ivs ?ivs-alpha-list)
+                (evaluate ?ivs-alpha
+                  (ListToSetFn ?ivs-alpha-list))
+                (unifies ?condition (ExperimentalConditionFn ?experiment ?ivs-alpha))
+                (uninferredSentence (experimentalConditionProhibited ?condition))))))))
+
+(isa preferIndependentVariableAssignment BinaryPredicate)
+(arity preferIndependentVariableAssignment 2)
+
+(<== (preferIndependentVariableAssignment ?assigned-iv-1 ?assigned-iv-2)
+     (prioritizedIndependentVariableAssignments ?iv-variable ?assignment-list)
+     (evaluate ?pos1 (PositionInListFn ?assigned-iv-1 ?assignment-list))
+     (evaluate ?pos2 (PositionInListFn ?assigned-iv-2 ?assignment-list))
+     (lessThan ?pos1 ?pos2))
+
+(<== (preferIndependentVariableAssignment ?assigned-iv-1 ?assigned-iv-2)
+     (priortizedIndependentVariableAssignments ?iv-variable ?assignment-list)    ;; Not defined anywhere!
+     (evaluate ?pos1 (PositionInListFn ?assigned-iv-1 ?assignment-list))
+     (uninferredSentence (evaluate ?pos2 (PositionInListFn ?assigned-iv-2 ?assignment-list))))
+
+(isa priortizedIndependentVariableAssignments BinaryPredicate)  ;; TBD??
+    
+(isa preferredExperimentalCondition BinaryPredicate)
+(arity preferredExperimentalCondition 2)
+
+;; assumes that the order in which the IVs are listed in each condition is already consistent
+;; (should be alphabetical - see horn clauses for experimentalCondition), and that SortFn is
+;; a "stable" sort (order maintained in ties).
+;; [8/14] SortFn is not stable.  Therefore, try to create a full (not partial) order for now
+(<== (preferredExperimentalCondition ?c1 ?c2)
+     (unifies ?c1 (ExperimentalConditionFn ?experiment ?iv-set-1))
+     (unifies ?c2 (ExperimentalConditionFn ?experiment ?iv-set-2))
+     (evaluate ?sorted-ivs-1
+       (SortFn (SetToListFn ?iv-set-1)
+               (Kappa (?ivA ?ivB)
+                 (and (lookupOnly (wmOnly (preferIndependentVariableExploration ?experiment ?ivB-variable ?ivA-variable)))
+                      (unifies ?ivA ?ivA-variable)
+                      (unifies ?ivB ?ivB-variable)))
+               IdentityFn))
+     (evaluate ?sorted-ivs-2
+       (SortFn (SetToListFn ?iv-set-2)
+               (Kappa (?ivA ?ivB)
+                 (and (lookupOnly (wmOnly (preferIndependentVariableExploration ?experiment ?ivB-variable ?ivA-variable)))
+                      (unifies ?ivA ?ivA-variable)
+                      (unifies ?ivB ?ivB-variable)))
+               IdentityFn))
+     (withBackchainingDepth 10000
+                            (firstDifferenceAcrossLists ?sorted-ivs-1 ?sorted-ivs-2 ?assigned-iv-1 ?assigned-iv-2))
+     (preferIndependentVariableAssignment ?assigned-iv-1 ?assigned-iv-2))
+
+
+(isa preferIndependentVariableExploration Predicate)
+(arity preferIndependentVariableExploration 3)
+
+(<== (preferIndependentVariableExploration ?experiment ?iv1 ?iv2)
+     (experimentIVExplorationOrder ?experiment ?ordered-ivs)
+     (memberOfList ?iv1 ?ordered-ivs)
+     (memberOfList ?iv2 ?ordered-ivs)
+     (different ?iv1 ?iv2)
+     (evaluate ?pos1 (PositionInListFn ?iv1 ?ordered-ivs))
+     (evaluate ?pos2 (PositionInListFn ?iv2 ?ordered-ivs))
+     (lessThan ?pos1 ?pos2))
+
+
+(<== (preferIndependentVariableExploration ?experiment ?iv1 ?iv2)
+     (experimentIVExplorationOrder ?experiment ?ordered-ivs)
+     (evaluate ?pos1 (PositionInListFn ?iv1 ?ordered-ivs))
+     (uninferredSentence (evaluate ?pos2 (PositionInListFn ?iv2 ?ordered-ivs))))
+     
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Plans
+
+(preconditionForMethod
+ (and (groundExpression ?experiment)
+      (numAnswers 1 (usesSetupMt ?experiment ?setup-mt))
+      (numAnswers 1 (usesBookkeepingMt ?experiment ?book-mt))
+      (ist-Information ?setup-mt
+        (isa ?experiment ControlledExperiment))
+      (genlMt ?book-mt ?setup-mt)
+      (agendaContext ?mt)
+      (currentSessionReasoner ?sr)
+      (currentExecutive ?ex)
+      (currentAgendaItem ?experiment-task)
+      (newUniqueTask PrepareForExperiment ?prep-task)
+      (newUniqueTask WrapUpExperiment ?wrap-up-task) 
+      (numAnswers 1 
+         (ist-Information ?book-mt 
+           (experimentalConditionOrdering ?experiment ?sorted-conditions)))
+      ;;filter out the conditions that have been finished
+      (ist-Information ?book-mt
+        (evaluate ?conditions
+          (RemoveIfFn ?sorted-conditions
+                      experimentFinished
+                      IdentityFn)))
+      (evaluate ?condition-task-pairs
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?condition ?pair)
+             (and (newUniqueTask RunExperimentCondition ?condition-task)
+                  (unifies ?pair (TheList ?condition ?condition-task)))))
+         ?conditions))
+      (evaluate ?condition-tasks
+        (MapFunctionOverList SecondInListFn ?condition-task-pairs))
+      (evaluate ?first-condition-task (FirstInListFn ?condition-tasks))
+      (evaluate ?last-condition-task (LastInListFn ?condition-tasks))
+      (evaluate ?depth (PlusFn 2 (LengthOfListFn ?conditions))))
+ (methodForAction 
+  (runExperiment ?experiment)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Running experiment ~a" (?experiment))
+    (doForEach ?condition ?conditions
+               (doRecord (ist-Information ?setup-mt (experimentalCondition ?experiment ?condition))))
+    (doTell (ist-Information ?mt (subTasks ?experiment-task ?prep-task)))
+    (doTell (ist-Information ?mt (subTasks ?experiment-task ?wrap-up-task)))
+    (doTell (ist-Information ?mt (assignedTo ?prep-task ?sr)))
+    (doTell (ist-Information ?mt (assignedTo ?wrap-up-task ?sr)))
+    (doTell (ist-Information ?mt (taskImportance ?prep-task 2)))
+    (doTell (ist-Information ?mt (taskImportance ?wrap-up-task 2)))
+    ;;; We don't want sequence constraints if there's a hope for delegation.
+    ;;; There's probably a cleaner way...
+    (ifThen (and (sessionContext ?sctx)
+                 (holdsOnRemoteAgent ?ex
+                   (ist-Information ?sctx
+                     (numVacantMachines 0)))
+                 (implicitSequenceConstraints ?condition-tasks ?seq-constraints))
+            (doForEach ?seq-constraint ?seq-constraints
+                       (doTell (ist-Information ?mt ?seq-constraint))))
+    (doForEach ?condition-task ?condition-tasks
+               (actionSequence
+                (TheList 
+                 (doTell (ist-Information ?mt (startsAfterEndingOf ?condition-task ?prep-task)))
+                 (doTell (ist-Information ?mt (startsAfterEndingOf ?wrap-up-task ?condition-task)))
+                 (doTell (ist-Information ?mt (subTasks ?experiment-task ?condition-task)))
+                 (doTell (ist-Information ?mt (assignedTo ?condition-task ?sr)))
+                 (doTell (ist-Information ?mt (taskImportance ?condition-task 2))))))
+    (doEnqueue ?sr ?prep-task (prepareForExperiment ?experiment))
+    (doForEach (TheList ?condition ?condition-task) ?condition-task-pairs
+               (doEnqueue ?sr ?condition-task (runExperimentEvaluation ?experiment ?condition)))
+    (doEnqueue ?sr ?wrap-up-task (wrapUpExperiment ?experiment))))))
+
+(preconditionForMethod
+ (and (groundExpression ?experiment)
+      (numAnswers 1 (usesSetupMt ?experiment ?setup-mt))
+      (numAnswers 1 (usesBookkeepingMt ?experiment ?book-mt))
+      (ist-Information ?setup-mt
+        (isa ?experiment ControlledExperiment))
+      (uninferredSentence (kbOnly (genlMt ?book-mt ?setup-mt))))
+ (methodForAction 
+  (runExperiment ?experiment)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information BaseKB (genlMt ?book-mt ?setup-mt)))
+    (doRecord (ist-Information BaseKB (genlMt ?book-mt CompanionsMt)))
+    (doAgentPlan (runExperiment ?experiment))))))
+
+
+(isa maybeInitializeRandomStateForExperiment ComplexActionPredicate)
+(arity maybeInitializeRandomStateForExperiment 1)
+
+(preconditionForMethod
+ (and (groundExpression ?experiment)
+      (numAnswers 1 (usesSetupMt ?experiment ?setup-mt))
+      (ist-Information ?setup-mt (usesFreshInitialRandomState ?experiment)))
+ (methodForAction
+  (maybeInitializeRandomStateForExperiment ?experiment)
+  (actionSequence
+   (TheList
+    (doInitializeRandomState)
+    (doAnnounce "Initialized random state." ())))))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (maybeInitializeRandomStateForExperiment ?experiment)
+  (actionSequence
+   (TheList))))
+
+(<== (preferInContext (maybeInitializeRandomStateForExperiment ?experiment) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+
+;;; (runExperimentEvaluation ?experiment ?condition)
+
+(isa runExperimentEvaluation ComplexActionPredicate)
+(arity runExperimentEvaluation 2)
+(arg1Isa runExperimentEvaluation ControlledExperiment)
+(arg2Isa runExperimentEvaluation ExperimentalCondition)
+
+
+(preconditionForMethod
+ (and (groundExpression ?experiment)
+      (numAnswers 1 (usesSetupMt ?experiment ?exp-setup-mt))
+      (numAnswers 1 (usesSetupMt ?evaluation ?eval-setup-mt))
+      (numAnswers 1 (usesBookkeepingMt ?experiment ?exp-book-mt))
+      (numAnswers 1 (usesBookkeepingMt ?evaluation ?eval-book-mt))
+      (numAnswers 1 (usesCaseLibrary ?experiment ?exp-lib))
+      (numAnswers 1 (usesCaseLibrary ?evaluation ?eval-lib))
+      (evaluationPlanForExperiment ?experiment ?evaluation-plan)
+      (numAnswers 1 (instantiatedIndependentVariables ?evaluation ?instantiated-ivs))
+      (evaluate ?evaluation-isas
+        (TheClosedRetrievalSetOf (ist-Information ?eval-setup-mt (isa ?evaluation ?type))
+          (ist-Information ?exp-setup-mt (evaluationTypeInExperiment ?experiment ?type)))))
+ (methodForAction
+  (runExperimentEvaluation ?experiment ?evaluation)
+  (actionSequence
+   (TheList 
+    (doAnnounce "~%Running experimental evaluation: ~A" (?evaluation))
+    ;;to inherit experiment paramters:
+    (doRecord (ist-Information BaseKB (genlMt ?eval-setup-mt ?exp-setup-mt)))
+    ;;to exploit for rbrowse navigation:
+    (doRecord (ist-Information BaseKB (subCaseLibrary ?eval-lib ?exp-lib)))
+    ;;to aggregate results:
+    (doRecord (ist-Information BaseKB (genlMt ?exp-book-mt ?eval-book-mt)))
+    ;; to be able to reason in the bookkeeping mt
+    (doRecord (ist-Information BaseKB (genlMt ?eval-book-mt ?eval-setup-mt)))
+    (doRecord (ist-Information BaseKB (genlMt ?eval-book-mt CompanionsMt)))
+    (doRecord (ist-Information ?eval-setup-mt
+                (isa ?evaluation ExperimentalCondition)))
+    (doRecordMembers ?instantiated-ivs)
+    (doRecordMembers ?evaluation-isas)
+    (doAgentPlan (?evaluation-plan ?evaluation))
+    ))))
+
+
+;;; (prepareForExperiment ?experiment)
+
+(isa prepareForExperiment ComplexActionPredicate)
+(arity prepareForExperiment 1)
+(arg1Isa prepareForExperiment ControlledExperiment)
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (prepareForExperiment ?experiment)
+  (actionSequence
+   (TheList))))
+
+(preconditionForMethod
+ (and (numAnswers 1 (usesBookkeepingMt ?experiment ?book-mt))
+      (currentDate ?start-date)
+      (currentTime ?start-time))
+ (methodForAction
+  (prepareForExperiment ?experiment)
+  (actionSequence
+   (TheList
+    (ifThen (ist-Information ?book-mt (startExperimentFromScratch ?experiment))
+            (clearExperimentProgress ?experiment))
+    (doRecord (ist-Information ?book-mt (startingDate ?experiment (DateFn ?start-date))))
+    (doRecord (ist-Information ?book-mt (startingPoint ?experiment (TimeFn ?start-time))))
+    (doRecord (ist-Information BaseKB (genlMt ExperimentResultsMt ?book-mt)))))))
+
+(<== (preferInContext (prepareForExperiment ?evaluation) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+
+;;; (wrapUpExperiment ?experiment)
+
+(isa wrapUpExperiment ComplexActionPredicate)
+(arity wrapUpExperiment 1)
+
+(preconditionForMethod
+ (and (numAnswers 1 (usesBookkeepingMt ?experiment ?book-mt))
+      (ist-Information ?book-mt
+        (startingTime ?experiment (TimeFn ?start-time)))
+      (ist-Information ?book-mt
+        (startingDate ?experiment (DateFn ?start-date)))
+      (currentDate ?end-date)
+      (currentTime ?end-time)
+      (intervalDuration-Minutes ?start-date ?start-time ?end-date ?end-time ?elapsed)
+      (unifies ?elapsed (MinutesDuration ?elapsed-min)))
+ (methodForAction
+  (wrapUpExperiment ?experiment)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Wrapping up experiment: ~A" (?experiment))
+    (doAnnounce "~%Navigate to ~A in Session Reasoner KB for Results" (?book-mt))
+;;;    (doPopupKBConcept ?book-mt)
+    (doRecord (ist-Information ?book-mt 
+                (endingDate ?experiment (DateFn ?end-date))))
+    (doRecord (ist-Information ?book-mt 
+                (endingPoint ?experiment (TimeFn ?end-time))))
+    (doRecord (ist-Information ?book-mt 
+                (duration-Minutes ?experiment ?elapsed-min)))))))
+
+
+;;  (clearExperimentProgress ?experiment)
+
+(isa clearExperimentProgress ComplexActionPredicate)
+(arity clearExperimentProgress 1)
+(arg1Isa clearExperimentProgress ControlledExperiment)
+
+(preconditionForMethod
+ (and (numAnswers 1 (usesBookkeepingMt ?experiment ?book-mt))
+      (numAnswers 1 (usesCaseLibrary ?experiment ?caselib))
+      (evaluate ?super-book-mts
+        (SetAdjoinFn (TheClosedRetrievalSetOf ?parent-book
+                       (and (ist-Information BaseKB
+                              (genlMt ?book-mt ?parent-book))
+                            (unifies ?parent-book (BookkeepingFn ?something))))
+                     ?book-mt))
+      (evaluate ?caselibs
+        (SetAdjoinFn (TheClosedRetrievalSetOf ?sublib
+                       (ist-Information BaseKB
+                         (subCaseLibrary ?sublib ?caselib)))
+                     ?caselib))
+      (evaluate ?finished-facts
+         (TheClosedRetrievalSetOf (ist-Information ?some-mt
+                                    (experimentFinished ?experiment))
+           (ist-Information ?some-mt
+             (experimentFinished ?experiment))
+           (elementOf ?some-mt ?super-book-mts))))
+ (methodForAction
+  (clearExperimentProgress ?experiment)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Nuking experiment progress (default): ~A..." (?experiment))
+    (doForEach ?lib ?caselibs
+               (nukeCaseLibrary ?lib))
+    (doDeleteCases ?super-book-mts)
+    (doForgetMembers ?finished-facts)
+    (doClearSMEs)))))
+
+(<== (preferInContext (clearExperimentProgress ?experiment) ?seq1 ?seq2)
+     (containsPattern (doAnnounce "~%Nuking experiment progress (default): ~A..." (?experiment)) ?seq2))
+
+
+;;a hook for running a single condition via the experiment dispatcher
+
+(preconditionForMethod
+ ;;gotta decide whether we should require the experiment case here or not...
+ (unifies ?evaluation (ExperimentalConditionFn ?experiment ?variables))
+ (methodForAction
+  (runExperiment ?evaluation)
+  (actionSequence
+   (TheList
+    (runExperimentEvaluation ?experiment ?evaluation)
+    ))))
+
+(<== (preferInContext (runExperiment ?evaluation) ?seq1 ?seq2)
+     (equals ?seq1 (actionSequence (TheList (runExperimentEvaluation ?experiment ?evaluation)))))
+
+
+;; copyKBBookkeepingGenlMtsToAgent
+
+(isa copyKBBookkeepingGenlMtsToAgent ComplexActionPredicate)
+(arity copyKBBookkeepingGenlMtsToAgent 2)
+(arg1Isa copyKBBookkeepingGenlMtsToAgent Microtheory)
+(arg2Isa copyKBBookkeepingGenlMtsToAgent CompanionsAgent)
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (different ?local-agent ?agent)
+      (evaluate ?genl-mts
+        (TheClosedRetrievalSetOf ?genl-mt
+          (and (ist-Information ?mt (genlMt ?mt ?genl-mt))
+               (unifies ?genl-mt (BookkeepingFn ?something))))))
+  (methodForAction
+    (copyKBBookkeepingGenlMtsToAgent ?mt ?agent)
+    (actionSequence
+      (TheList
+        (doForEach ?genl-mt ?genl-mts
+                   (copyKBMtToAgent ?genl-mt ?agent))))))
+
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (copyKBBookkeepingGenlMtsToAgent ?mt ?agent)
+    (actionSequence
+     (TheList))))
+
+;; copyKBSetupGenlMtsToAgent
+
+(isa copyKBSetupGenlMtsToAgent ComplexActionPredicate)
+(arity copyKBSetupGenlMtsToAgent 2)
+(arg1Isa copyKBSetupGenlMtsToAgent Microtheory)
+(arg2Isa copyKBSetupGenlMtsToAgent CompanionsAgent)
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (different ?local-agent ?agent)
+      (evaluate ?genl-mts
+        (TheClosedRetrievalSetOf ?genl-mt
+          (and (ist-Information ?mt (genlMt ?mt ?genl-mt))
+               (unifies ?genl-mt (SetupFn ?something))))))
+  (methodForAction
+    (copyKBSetupGenlMtsToAgent ?mt ?agent)
+    (actionSequence
+      (TheList
+        (doForEach ?genl-mt ?genl-mts
+                   (copyKBMtToAgent ?genl-mt ?agent))))))
+
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (copyKBSetupGenlMtsToAgent ?mt ?agent)
+    (actionSequence
+     (TheList))))
+
+;; copyKBBookkeepingSpecMtsToAgent
+
+(isa copyKBBookkeepingSpecMtsToAgent ComplexActionPredicate)
+(arity copyKBBookkeepingSpecMtsToAgent 2)
+(arg1Isa copyKBBookkeepingSpecMtsToAgent Microtheory)
+(arg2Isa copyKBBookkeepingSpecMtsToAgent CompanionsAgent)
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (different ?local-agent ?agent)
+      (evaluate ?spec-mts
+        (TheClosedRetrievalSetOf ?spec-mt
+          (and (ist-Information ?mt (genlMt ?spec-mt ?mt))
+               (unifies ?spec-mt (BookkeepingFn ?something))))))
+  (methodForAction
+    (copyKBBookkeepingSpecMtsToAgent ?mt ?agent)
+    (actionSequence
+      (TheList
+        (doForEach ?spec-mt ?spec-mts
+                   (copyKBMtToAgent ?spec-mt ?agent))))))
+
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (copyKBBookkeepingSpecMtsToAgent ?mt ?agent)
+    (actionSequence
+     (TheList))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,5 @@
+(in-microtheory NaiveDeviceBehaviorVocabularyMt)
+
+(isa TheMaker-Consumer Agent-PartiallyTangible)
+(disjointWith KickScooter Amphitheater)
+(comment TheMaker-Consumer "An average person.  Not necessarily the maker or the consumer.")

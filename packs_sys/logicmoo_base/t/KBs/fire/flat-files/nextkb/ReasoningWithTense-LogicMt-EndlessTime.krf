@@ -1,0 +1,4 @@
+
+ (in-microtheory ReasoningWithTense-LogicMt-EndlessTime)
+ (genlPreds hasAlwaysBeen was)
+ (genlPreds willAlwaysBe willBe)

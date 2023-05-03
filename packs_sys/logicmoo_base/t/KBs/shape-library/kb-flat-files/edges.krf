@@ -1,0 +1,541 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: edges.lsp
+;;;;    System: CogSketch
+;;;;    Author: Andrew Lovett
+;;;;   Created: July 8, 2008 15:28:35
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:35:41 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;; The terms used to describe perceptual objects for sme.
+
+(in-package :data)
+
+(in-microtheory PerceptionMt)
+
+
+;;(fire::meld-file->kb 
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;Edge Representation
+
+(isa PerceptualElement Collection)
+(genls PerceptualEdge PerceptualElement)
+
+(genls StraightEdge PerceptualEdge)
+(genls CurvedEdge PerceptualEdge)
+(genls EllipseEdge PerceptualEdge)
+(genls HorizontalEdge PerceptualEdge)
+(genls VerticalEdge PerceptualEdge)
+(genls ObliqueEdge PerceptualEdge)
+(genls ObliqueEdge-Upward ObliqueEdge)
+(genls ObliqueEdge-Downward ObliqueEdge)
+(genls CurvedEdge-LeftBumped CurvedEdge)
+(genls CurvedEdge-RightBumped CurvedEdge)
+(genls CurvedEdge-UpBumped CurvedEdge)
+(genls CurvedEdge-DownBumped CurvedEdge)
+
+(genls DirectedEdge PerceptualEdge)
+(genls UndirectedEdge PerceptualEdge)
+
+(genls EdgeInfoPredicate EdgeInfo)
+(genls PerceptualEdge EdgeInfo)
+
+(genls EdgeInfoPredicate Predicate)
+(comment EdgeInfoPredicate "Gives us information about an edge.")
+
+
+(genls EdgeComparisonPredicate Predicate)
+(comment EdgeComparisonPredicate "A predicate that compares two edges.")
+
+
+
+
+
+;;;;;;;;;;Predicates for the orientation of edges
+
+
+(isa horizontal EdgeInfoPredicate)
+(isa horizontal Orientation-Specific-Term)
+(arity horizontal 1)
+(comment horizontal "The edge is parallel to the x-axis.")
+(arg1Isa horizontal StraightEdge)
+
+(isa vertical EdgeInfoPredicate)
+(isa vertical Orientation-Specific-Term)
+(arity vertical 1)
+(comment vertical "The edge is parallel to the y-axis.")
+(arg1Isa vertical StraightEdge)
+
+(isa axisAligned EdgeInfoPredicate)
+(isa axisAligned Orientation-Specific-Term)
+(arity axisAligned 1)
+(comment axisAligned "The edge is parallel to one of the axes.")
+(arg1Isa axisAligned StraightEdge)
+
+
+
+(isa edgesParallel EdgeComparisonPredicate)
+(isa edgesParallel SymmetricRelation)
+(isa edgesParallel Orientation-Invariant-Term)
+(arity edgesParallel 2)
+(comment edgesParallel "The two edges are parallel, i.e., they have similar slopes.")
+(arg1Isa edgesParallel StraightEdge)
+(arg2Isa edgesParallel StraightEdge)
+
+(isa edgesColinear EdgeComparisonPredicate)
+(isa edgesColinear SymmetricRelation)
+(isa edgesColinear Orientation-Invariant-Term)
+(arity edgesColinear 2)
+(comment edgesColinear "The two edges are colinear.")
+(arg1Isa edgesColinear StraightEdge)
+(arg2Isa edgesColinear StraightEdge)
+
+(isa edgesPerpendicular EdgeComparisonPredicate)
+(isa edgesPerpendicular SymmetricRelation)
+(isa edgesPerpendicular Orientation-Invariant-Term)
+(arity edgesPerpendicular 2)
+(comment edgesPerpendicular "The two edges are perpendicular.")
+(arg1Isa edgesPerpendicular StraightEdge)
+(arg2Isa edgesPerpendicular StraightEdge)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;Predicates for curve compatibility of edges
+
+(isa edgesCurveCompatible EdgeComparisonPredicate)
+(isa edgesCurveCompatible SymmetricRelation)
+(isa edgesCurveCompatible Orientation-Invariant-Term)
+(arity edgesCurveCompatible 2)
+(comment edgesCurveCompatible "The curves of these connected edges go in the same direction.")
+(arg1Isa edgesCurveCompatible CurvedEdge)
+(arg2Isa edgesCurveCompatible CurvedEdge)
+
+(isa edgesCurveIncompatible EdgeComparisonPredicate)
+(isa edgesCurveIncompatible SymmetricRelation)
+(isa edgesCurveIncompatible Orientation-Invariant-Term)
+(arity edgesCurveIncompatible 2)
+(comment edgesCurveIncompatible "The curves of these connected edges go in opposite directions.")
+(arg1Isa edgesCurveIncompatible CurvedEdge)
+(arg2Isa edgesCurveIncompatible CurvedEdge)
+
+(isa edgeCurveCompatibleWith EdgeComparisonPredicate)
+(isa edgeCurveCompatibleWith Orientation-Invariant-Term)
+(arity edgeCurveCompatibleWith 2)
+(comment edgeCurveCompatibleWith "The first edge curves towards the second one in the direction of their connection.")
+(arg1Isa edgeCurveCompatibleWith CurvedEdge)
+(arg2Isa edgeCurveCompatibleWith CurvedEdge)
+
+;;;;;;;;;;;;;;;;;;;;;;;Predicates for edge length
+
+
+(genls LengthPredicate EdgeInfoPredicate)
+(genls LengthPredicate QualitativeDegreePredicate)
+(genls TinyToShortLengthPredicate LengthPredicate)
+(genls ShortToMediumLengthPredicate LengthPredicate)
+(genls MediumToLongLengthPredicate LengthPredicate)
+
+(isa EdgeLength DimensionOfQualitativeDegree)
+(measurableAlongDimension EdgeLength PerceptualEdge)
+(describesQualitativeDegreeAlongDimension-Default EdgeLength lengthMedium)
+
+(<== (describesQualitativeDegreeAlongDimension EdgeLength ?pred)
+     (isa ?pred LengthPredicate))
+
+(relationAllInstance denotesSubRange LengthPredicate LengthFn)
+;;; writing a temporary rule as a proxy for
+;;; reasoning with this rule macro predicate
+;;; hopefully fire will support it someday
+(<== (denotesSubRange ?instance LengthFn)
+     (isa ?instance LengthPredicate))
+
+(isa lengthLong MediumToLongLengthPredicate)
+(isa lengthLong HighQualitativeDegreePredicate)
+(isa lengthLong LengthPredicate)
+(isa lengthLong Orientation-Invariant-Term)
+(arity lengthLong 1)
+(arg1Isa lengthLong EdgeInfo)
+
+(isa lengthMedium ShortToMediumLengthPredicate)
+(isa lengthMedium MediumToLongLengthPredicate)
+(isa lengthMedium MediumQualitativeDegreePredicate)
+(isa lengthMedium LengthPredicate)
+(isa lengthMedium Orientation-Invariant-Term)
+(arity lengthMedium 1)
+(arg1Isa lengthMedium EdgeInfo)
+
+(isa lengthShort TinyToShortLengthPredicate)
+(isa lengthShort ShortToMediumLengthPredicate)
+(isa lengthShort LowQualitativeDegreePredicate)
+(isa lengthShort LengthPredicate)
+(isa lengthShort Orientation-Invariant-Term)
+(arity lengthShort 1)
+(arg1Isa lengthShort EdgeInfo)
+
+(isa lengthTiny TinyToShortLengthPredicate)
+(isa lengthTiny VeryLowQualitativeDegreePredicate)
+(isa lengthTiny LengthPredicate)
+(isa lengthTiny Orientation-Invariant-Term)
+(arity lengthTiny 1)
+(arg1Isa lengthTiny EdgeInfo)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;Binary edge relations related to connectedness
+
+(isa edgesDisconnected EdgeComparisonPredicate)
+(isa edgesDisconnected SymmetricRelation)
+(isa edgesDisconnected Orientation-Invariant-Term)
+(arity edgesDisconnected 2)
+(comment edgesDisconnected "Indicates that edges along a cycle are not connected.")
+(arg1Isa edgesDisconnected EdgeInfo)
+(arg2Isa edgesDisconnected EdgeInfo)
+
+(isa angleBetweenEdges EdgeComparisonPredicate)
+(isa angleBetweenEdges Orientation-Invariant-Term)
+(arity angleBetweenEdges 2)
+(comment angleBetweenEdges "This relation tells us there is an angle between the two edges.")
+(arg1Isa angleBetweenEdges EdgeInfo)
+(arg2Isa angleBetweenEdges EdgeInfo)
+
+(isa terminalCornerBetweenEdges EdgeComparisonPredicate)
+(isa terminalCornerBetweenEdges Orientation-Invariant-Term)
+(arity terminalCornerBetweenEdges 2)
+(comment terminalCornerBetweenEdges "This relation tells us there is an zero-degree angle between the two edges.")
+(arg1Isa terminalCornerBetweenEdges EdgeInfo)
+(arg2Isa terminalCornerBetweenEdges EdgeInfo)
+
+(isa convexAngleBetweenEdges EdgeComparisonPredicate)
+(isa convexAngleBetweenEdges Orientation-Invariant-Term)
+(arity convexAngleBetweenEdges 2)
+(comment convexAngleBetweenEdges "This relation tells us there is a convex angle between the two edges.")
+(arg1Isa convexAngleBetweenEdges EdgeInfo)
+(arg2Isa convexAngleBetweenEdges EdgeInfo)
+
+(isa concaveAngleBetweenEdges EdgeComparisonPredicate)
+(isa concaveAngleBetweenEdges Orientation-Invariant-Term)
+(arity concaveAngleBetweenEdges 2)
+(comment concaveAngleBetweenEdges "This relation tells us there is a concave angle between the two edges.")
+(arg1Isa concaveAngleBetweenEdges EdgeInfo)
+(arg2Isa concaveAngleBetweenEdges EdgeInfo)
+
+
+(isa symmetricAngleBetweenEdges EdgeComparisonPredicate)
+(isa symmetricAngleBetweenEdges SymmetricRelation)
+(isa symmetricAngleBetweenEdges Orientation-Invariant-Term)
+(arity symmetricAngleBetweenEdges 2)
+(comment symmetricAngleBetweenEdges "This is a symmetric version of angleBetween.")
+(arg1Isa symmetricAngleBetweenEdges EdgeInfo)
+(arg2Isa symmetricAngleBetweenEdges EdgeInfo)
+
+(isa convexSymmetricAngleBetweenEdges EdgeComparisonPredicate)
+(isa convexSymmetricAngleBetweenEdges SymmetricRelation)
+(isa convexSymmetricAngleBetweenEdges Orientation-Invariant-Term)
+(arity convexSymmetricAngleBetweenEdges 2)
+(comment convexSymmetricAngleBetweenEdges "This is a symmetric version of convexAngleBetweenEdges.")
+(arg1Isa convexSymmetricAngleBetweenEdges EdgeInfo)
+(arg2Isa convexSymmetricAngleBetweenEdges EdgeInfo)
+
+(isa concaveSymmetricAngleBetweenEdges EdgeComparisonPredicate)
+(isa concaveSymmetricAngleBetweenEdges SymmetricRelation)
+(isa concaveSymmetricAngleBetweenEdges Orientation-Invariant-Term)
+(arity concaveSymmetricAngleBetweenEdges 2)
+(comment concaveSymmetricAngleBetweenEdges "This is a symmetric version of concaveAngleBetweenEdges.")
+(arg1Isa concaveSymmetricAngleBetweenEdges EdgeInfo)
+(arg2Isa concaveSymmetricAngleBetweenEdges EdgeInfo)
+
+(isa elementsConnected Predicate)
+(isa elementsConnected SymmetricRelation)
+(isa elementsConnected Orientation-Invariant-Term)
+(arity elementsConnected 2)
+(comment elementsConnected "This relation tells us two perceptual elements are connected.")
+(arg1Isa elementsConnected PerceptualElement)
+(arg2Isa elementsConnected PerceptualElement)
+
+(isa neighborAtJunction SymmetricBinaryPredicate)
+(isa neighborAtJunction Orientation-Invariant-Term)
+(arity neighborAtJunction 2)
+(comment neighborAtJunction "This relation tells us that at some junction where the two edges
+                             connect, the second edge immediately follows the first edge when
+                             radially progressing through the edges in clockwise or
+                             counter-clockwise order.")
+(arg1Isa neighborAtJunction PerceptualEdge)
+(arg2Isa neighborAtJunction PerceptualEdge)
+
+(isa clockwiseNeighborAtJunction Predicate)
+(isa clockwiseNeighborAtJunction Orientation-Invariant-Term)
+(arity clockwiseNeighborAtJunction 2)
+(comment clockwiseNeighborAtJunction "This relation tells us that at some junction where the two edges
+                                       connect, the second edge immediately follows the first edge when
+                                       radially progressing through the edges in clockwise order.  In other
+                                       words, if you trace the first edge in towards the junction and 
+                                       take make the sharpest left-hand turn possible, you will then be
+                                       tracing the second edge as it leaves the junction.")
+(arg1Isa clockwiseNeighborAtJunction PerceptualEdge)
+(arg2Isa clockwiseNeighborAtJunction PerceptualEdge)
+(genlPreds clockwiseNeighborAtJunction neighborAtJunction)
+
+(isa elementsIntersect Predicate)
+(isa elementsIntersect SymmetricRelation)
+(isa elementsIntersect Orientation-Invariant-Term)
+(arity elementsIntersect 2)
+(comment elementsIntersect "This relation tells us two perceptual elements intersect.")
+(arg1Isa elementsIntersect PerceptualElement)
+(arg2Isa elementsIntersect PerceptualElement)
+
+(isa elementIntersects Predicate)
+(isa elementIntersects Orientation-Invariant-Term)
+(arity elementIntersects 2)
+(comment elementIntersects "This relation tells us the first perceptual element intersects the second.")
+(arg1Isa elementIntersects PerceptualElement)
+(arg2Isa elementIntersects PerceptualElement)
+
+(isa colinearElements Predicate)
+(isa colinearElements SymmetricRelation)
+(isa colinearElements Orientation-Invariant-Term)
+(arity colinearElements 2)
+(arg1Isa colinearElements PerceptualElement)
+(arg2Isa colinearElements PerceptualElement)
+
+(isa shortToLongCornerBetween Predicate)
+(arity shortToLongCornerBetween 2)
+(arg1Isa shortToLongCornerBetween PerceptualElement)
+(arg2Isa shortToLongCornerBetween PerceptualElement)
+
+(isa longToShortCornerBetween Predicate)
+(arity longToShortCornerBetween 2)
+(arg1Isa longToShortCornerBetween PerceptualElement)
+(arg2Isa longToShortCornerBetween PerceptualElement)
+
+(isa clockwiseCornerBetween Predicate)
+(arity clockwiseCornerBetween 2)
+(comment clockwiseCornerBetween "The relation between two edges that form a corner that turns right going from the first to the second edge.")
+(arg1Isa clockwiseCornerBetween PerceptualElement)
+(arg2Isa clockwiseCornerBetween PerceptualElement)
+
+(isa perpendicularCornerBetween Predicate)
+(isa perpendicularCornerBetween SymmetricRelation)
+(arity perpendicularCornerBetween 2)
+(comment perpendicularCornerBetween "The relation between elements with a perpendicular angle between them.")
+(arg1Isa perpendicularCornerBetween PerceptualElement)
+(arg2Isa perpendicularCornerBetween PerceptualElement)
+
+(isa acuteCornerBetween Predicate)
+(isa acuteCornerBetween SymmetricRelation)
+(arity acuteCornerBetween 2)
+(comment acuteCornerBetween "The relation between elements with a acute angle between them.")
+(arg1Isa acuteCornerBetween PerceptualElement)
+(arg2Isa acuteCornerBetween PerceptualElement)
+
+(isa obtuseCornerBetween Predicate)
+(isa obtuseCornerBetween SymmetricRelation)
+(arity obtuseCornerBetween 2)
+(comment obtuseCornerBetween "The relation between elements with an obtuse angle between them.")
+(arg1Isa obtuseCornerBetween PerceptualElement)
+(arg2Isa obtuseCornerBetween PerceptualElement)
+
+(isa straightCornerBetween Predicate)
+(isa straightCornerBetween SymmetricRelation)
+(arity straightCornerBetween 2)
+(comment straightCornerBetween "The relation between elements with a straight angle between them.")
+(arg1Isa straightCornerBetween PerceptualElement)
+(arg2Isa straightCornerBetween PerceptualElement)
+
+
+;;;;;;;;;;;;;;;;;;;;;Attributes used somewhat like functions, to describe an angle and edge is part of
+
+(isa edgeAngle EdgeInfoPredicate)
+(arity edgeAngle 1)
+(arg1Isa edgeAngle EdgeInfo)
+
+(isa edgeConvexAngle EdgeInfoPredicate)
+(arity edgeConvexAngle 1)
+(arg1Isa edgeConvexAngle EdgeInfo)
+
+(isa edgeConcaveAngle EdgeInfoPredicate)
+(arity edgeConcaveAngle 1)
+(arg1Isa edgeConcaveAngle EdgeInfo)
+
+;;;;;;;;;;;;;;;;;;;;;More complicated relations relating to cycles and paths of connected edges
+
+(genls EdgeTrioPredicate Predicate)
+
+(isa symmetricConsistentTrio EdgeTrioPredicate)
+(isa symmetricConsistentTrio SymmetricRelation)
+(isa symmetricConsistentTrio Orientation-Invariant-Term)
+(arity symmetricConsistentTrio 3)
+(comment symmetricConsistentTrio "Three consecutive edges along a path, the directions of the two angles are the same.")
+(arg1Isa symmetricConsistentTrio EdgeInfo)
+(arg2Isa symmetricConsistentTrio EdgeInfo)
+(arg3Isa symmetricConsistentTrio EdgeInfo)
+
+(isa symmetricInconsistentTrio EdgeTrioPredicate)
+(isa symmetricInconsistentTrio SymmetricRelation)
+(isa symmetricInconsistentTrio Orientation-Invariant-Term)
+(arity symmetricInconsistentTrio 3)
+(comment symmetricInconsistentTrio "Three consecutive edges along a path, the directions of the two angles are the different.")
+(arg1Isa symmetricInconsistentTrio EdgeInfo)
+(arg2Isa symmetricInconsistentTrio EdgeInfo)
+(arg3Isa symmetricInconsistentTrio EdgeInfo)
+
+(isa symmetricCycleTrio EdgeTrioPredicate)
+(isa symmetricCycleTrio SymmetricRelation)
+(isa symmetricCycleTrio Orientation-Invariant-Term)
+(arity symmetricCycleTrio 3)
+(comment symmetricCycleTrio "Three consecutive edges in a cycle.  Direction does not matter.")
+(arg1Isa symmetricCycleTrio EdgeInfo)
+(arg2Isa symmetricCycleTrio EdgeInfo)
+(arg3Isa symmetricCycleTrio EdgeInfo)
+
+(isa symmetricCycleQuint EdgeTrioPredicate)
+(isa symmetricCycleQuint SymmetricRelation)
+(isa symmetricCycleQuint Orientation-Invariant-Term)
+(arity symmetricCycleQuint 5)
+(comment symmetricCycleQuint "Five consecutive edges in a cycle.  Direction does not matter.")
+(arg1Isa symmetricCycleQuint EdgeInfo)
+(arg2Isa symmetricCycleQuint EdgeInfo)
+(arg3Isa symmetricCycleQuint EdgeInfo)
+(arg4Isa symmetricCycleQuint EdgeInfo)
+(arg5Isa symmetricCycleQuint EdgeInfo)
+
+(isa cycleAdjacentAngles EdgeTrioPredicate)
+(isa cycleAdjacentAngles Orientation-Invariant-Term)
+(arity cycleAdjacentAngles 2)
+(comment cycleAdjacentAngles "Describes a pair of adjacent angles going clockwise around a cycle.")
+(arg1Isa cycleAdjacentAngles EdgeComparisonPredicate)
+(arg2Isa cycleAdjacentAngles EdgeComparisonPredicate)
+
+(isa consistentAdjacentAngles EdgeTrioPredicate)
+(isa consistentAdjacentAngles Orientation-Invariant-Term)
+(arity consistentAdjacentAngles 2)
+(comment consistentAdjacentAngles "Describes a pair of adjacent angles with the same sign.")
+(arg1Isa consistentAdjacentAngles EdgeComparisonPredicate)
+(arg2Isa consistentAdjacentAngles EdgeComparisonPredicate)
+
+(isa inconsistentAdjacentAngles EdgeTrioPredicate)
+(isa inconsistentAdjacentAngles Orientation-Invariant-Term)
+(arity inconsistentAdjacentAngles 2)
+(comment inconsistentAdjacentAngles "Describes a pair of adjacent angles with opposite signs.")
+(arg1Isa inconsistentAdjacentAngles EdgeComparisonPredicate)
+(arg2Isa inconsistentAdjacentAngles EdgeComparisonPredicate)
+
+(isa adjacentObtuseAcuteAngles EdgeTrioPredicate)
+(isa adjacentObtuseAcuteAngles Orientation-Invariant-Term)
+(arity adjacentObtuseAcuteAngles 2)
+(comment adjacentObtuseAcuteAngles "Describes a pair of adjacent angles, with the first obtuse and the second acute.")
+(arg1Isa adjacentObtuseAcuteAngles EdgeComparisonPredicate)
+(arg2Isa adjacentObtuseAcuteAngles EdgeComparisonPredicate)
+
+(isa adjacentAcuteObtuseAngles EdgeTrioPredicate)
+(isa adjacentAcuteObtuseAngles Orientation-Invariant-Term)
+(arity adjacentAcuteObtuseAngles 2)
+(comment adjacentAcuteObtuseAngles "Describes a pair of adjacent angles, with the first acute and the second obtuse.")
+(arg1Isa adjacentAcuteObtuseAngles EdgeComparisonPredicate)
+(arg2Isa adjacentAcuteObtuseAngles EdgeComparisonPredicate)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;Predicates for further describing corners
+
+(isa perpendicularCorner Predicate)
+(isa perpendicularCorner EdgeInfoPredicate)
+(isa perpendicularCorner Orientation-Invariant-Term)
+(arity perpendicularCorner 1)
+(comment perpendicularCorner "Surrounds an expression denoting a perpendicular angle.")
+(arg1Isa perpendicularCorner CycLSentence-Assertible)
+
+(isa acuteCorner Predicate)
+(isa acuteCorner EdgeInfoPredicate)
+(isa acuteCorner Orientation-Invariant-Term)
+(arity acuteCorner 1)
+(comment acuteCorner "Surrounds an expression denoting an acute angle.")
+(arg1Isa acuteCorner CycLSentence-Assertible)
+
+(isa obtuseCorner Predicate)
+(isa obtuseCorner EdgeInfoPredicate)
+(isa obtuseCorner Orientation-Invariant-Term)
+(arity obtuseCorner 1)
+(comment obtuseCorner "Surrounds an expression denoting an obtuse angle.")
+(arg1Isa obtuseCorner CycLSentence-Assertible)
+
+(isa straightCorner Predicate)
+(isa straightCorner EdgeInfoPredicate)
+(isa straightCorner Orientation-Invariant-Term)
+(arity straightCorner 1)
+(comment straightCorner "Surrounds an expression about two joined colinear edges.")
+(arg1Isa straightCorner CycLSentence-Assertible)
+
+(isa longToShortCorner Predicate)
+(isa longToShortCorner Orientation-Invariant-Term)
+(arity longToShortCorner 1)
+(comment longToShortCorner "Surrounds an expression denoting an angle between a long edge and a short one.")
+(arg1Isa longToShortCorner CycLSentence-Assertible)
+
+(isa shortToLongCorner Predicate)
+(isa shortToLongCorner Orientation-Invariant-Term)
+(arity shortToLongCorner 1)
+(comment shortToLongCorner "Surrounds an expression denoting an angle between a long edge and a short one.")
+(arg1Isa shortToLongCorner CycLSentence-Assertible)
+
+(isa equalLengthEdgesCorner Predicate)
+(isa equalLengthEdgesCorner Orientation-Invariant-Term)
+(arity equalLengthEdgesCorner 1)
+(comment equalLengthEdgesCorner "Surrounds an expression denoting an angle between two edges of equal length.")
+(arg1Isa equalLengthEdgesCorner CycLSentence-Assertible)
+
+(isa parallelEdgeRelation Predicate)
+(isa parallelEdgeRelation Orientation-Invariant-Term)
+(arity parallelEdgeRelation 1)
+(comment parallelEdgeRelation "Surrounds an expression about two parallel edges.")
+(arg1Isa parallelEdgeRelation CycLSentence-Assertible)
+
+(isa leftToRightCorner Predicate)
+(isa leftToRightCorner Orientation-Specific-Term)
+(arity leftToRightCorner 1)
+(comment leftToRightCorner "Surrounds an expression denoting an angle going from left to right.")
+(arg1Isa leftToRightCorner CycLSentence-Assertible)
+
+(isa rightToLeftCorner Predicate)
+(isa rightToLeftCorner Orientation-Specific-Term)
+(arity rightToLeftCorner 1)
+(comment rightToLeftCorner "Surrounds an expression denoting an angle going from right to left.")
+(arg1Isa rightToLeftCorner CycLSentence-Assertible)
+
+(isa bottomToTopCorner Predicate)
+(isa bottomToTopCorner Orientation-Specific-Term)
+(arity bottomToTopCorner 1)
+(comment bottomToTopCorner "Surrounds an expression denoting an angle going from bottom to top.")
+(arg1Isa bottomToTopCorner CycLSentence-Assertible)
+
+(isa topToBottomCorner Predicate)
+(isa topToBottomCorner Orientation-Specific-Term)
+(arity topToBottomCorner 1)
+(comment topToBottomCorner "Surrounds an expression denoting an angle going from top to bottom.")
+(arg1Isa topToBottomCorner CycLSentence-Assertible)
+
+(isa horizontallyOrientedCorner Predicate)
+(isa horizontallyOrientedCorner Orientation-Specific-Term)
+(arity horizontallyOrientedCorner 1)
+(comment horizontallyOrientedCorner "Surrounds an expression denoting an angle pointed horizontally.")
+(arg1Isa horizontallyOrientedCorner CycLSentence-Assertible)
+
+(isa verticallyOrientedCorner Predicate)
+(isa verticallyOrientedCorner Orientation-Specific-Term)
+(arity verticallyOrientedCorner 1)
+(comment verticallyOrientedCorner "Surrounds an expression denoting an angle pointed horizontally.")
+(arg1Isa verticallyOrientedCorner CycLSentence-Assertible)
+
+(isa clockwiseCorner Predicate)
+(isa clockwiseCorner EdgeInfoPredicate)
+(isa clockwiseCorner Orientation-Invariant-Term)
+(arity clockwiseCorner 1)
+(comment clockwiseCorner "Applies only to directed (asymetric) corners. Says that angle going from the end of the first edge into the beginning second edge constitutes a right-hand turn.")
+(arg1Isa clockwiseCorner CycLSentence-Assertible)
+
+(isa counterClockwiseCorner Predicate)
+(isa counterClockwiseCorner EdgeInfoPredicate)
+(isa counterClockwiseCorner Orientation-Invariant-Term)
+(arity counterClockwiseCorner 1)
+(comment counterClockwiseCorner "Applies only to directed (asymetric) corners. Says that angle going from the end of the first edge into the beginning second edge constitutes a left-hand turn.")
+(arg1Isa counterClockwiseCorner CycLSentence-Assertible)

@@ -1,0 +1,12 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv specialists
+;; -------------------
+
+(isa FreeCiv-Specialist SecondOrderCollection)
+(genls FreeCiv-Specialist FreeCiv-ObjectType)
+(lookupGenls FreeCiv-Specialist FreeCiv-ObjectType)
+
+;; This should probably tie into a concept above the
+;; FreeCiv level...

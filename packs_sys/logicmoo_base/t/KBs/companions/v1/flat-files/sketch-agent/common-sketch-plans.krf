@@ -1,0 +1,247 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: common-sketch-plans.meld
+;;;;    System: nuSketch hookup
+;;;;    Author: Matt McLure
+;;;;   Created: June 26, 2011 22:13:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+;;; for now, this is the place for non-primitive, domain-general sketching plans
+
+(in-microtheory Sketch-AgentMt)
+(genlMt Sketch-AgentMt CompanionsMt)
+(genlMt Sketch-AgentMt NuSketchMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa deleteGlyphs ComplexActionPredicate)
+(arity deleteGlyphs 1)
+(arg1Isa deleteGlyphs Set-Extensional)
+(comment deleteGlyphs "(deleteGlyphs ?glyph-set) deletes all glyphs in the set ?glyph-set")
+
+(isa deleteAllGlyphsOnLayer ComplexActionPredicate)
+(arity deleteAllGlyphsOnLayer 1)
+(arg1Isa deleteAllGlyphsOnLayer NuSketchBundle)
+(comment deleteAllGlyphsOnLayer "(deleteAllGlyphsOnLayer ?layer) deletes all glyphs from layer ?layer")
+
+;; made for freeciv
+(isa clearSAWLayers ComplexActionPredicate)
+(arity clearSAWLayers 0)
+(comment clearSAWLayers "(clearSAWLayers) deletes all glyphs on any layers of type SpatialAnalysisWorkspace-Layer")
+
+
+(isa deselectGlyphs ComplexActionPredicate)
+(arity deselectGlyphs 1)
+(arg1Isa deselectGlyphs Set-Extensional)
+(comment deselectGlyphs "(deselectGlyphs ?glyph-set) deselects all glyphs in the set ?glyph-set")
+
+(isa selectGlyphs ComplexActionPredicate)
+(arity selectGlyphs 1)
+(arg1Isa selectGlyphs Set-Extensional)
+(comment selectGlyphs "(selectGlyphs ?glyph-set) selects all glyphs in the set ?glyph-set")
+
+(isa selectGlyphs-Exclusive ComplexActionPredicate)
+(arity selectGlyphs-Exclusive 1)
+(arg1Isa selectGlyphs-Exclusive Set-Extensional)
+(comment selectGlyphs-Exclusive "(selectGlyphs-Exclusive ?glyph-set) selects all glyphs in the set ?glyph-set, and deselects all other glyphs")
+
+
+(isa deselectAllSelectedGlyphs ComplexActionPredicate)
+(arity deselectAllSelectedGlyphs 0)
+(comment deselectAllSelectedGlyphs "(deselectAllSelectedGlyphs ?layer) deselects all glyphs")
+
+;; made for freeciv
+(isa deselectAllInteractionGlyphs ComplexActionPredicate)
+(arity deselectAllInteractionGlyphs 0)
+(comment deselectAllInteractionGlyphs "(deselectAllInteractionGlyphs) deselects all glyphs on any layers of type SpatialAnalysisWorkspace-Layer")
+
+
+(isa unhighlightGlyphs ComplexActionPredicate)
+(arity unhighlightGlyphs 1)
+(arg1Isa unhighlightGlyphs Set-Extensional)
+(comment unhighlightGlyphs "(unhighlightGlyphs ?glyph-set) unhighlights all glyphs in the set ?glyph-set")
+
+(isa highlightGlyphs ComplexActionPredicate)
+(arity highlightGlyphs 1)
+(arg1Isa highlightGlyphs Set-Extensional)
+(comment highlightGlyphs "(highlightGlyphs ?glyph-set) highlights all glyphs in the set ?glyph-set")
+
+(isa highlightGlyphs-Exclusive ComplexActionPredicate)
+(arity highlightGlyphs-Exclusive 1)
+(arg1Isa highlightGlyphs-Exclusive Set-Extensional)
+(comment highlightGlyphs-Exclusive "(highlightGlyphs-Exclusive ?glyph-set) highlights all glyphs in the set ?glyph-set, and deselects all other glyphs")
+
+(isa unhighlightAllHighlightedGlyphs ComplexActionPredicate)
+(arity unhighlightAllHighlightedGlyphs 0)
+(comment unhighlightAllHighlightedGlyphs "(unhighlightAllHighlightedGlyphs ?layer) unhighlights all glyphs")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; camera actions
+
+(isa panToGlyphs ComplexActionPredicate)
+(arity panToGlyphs 2)
+(arg1Isa panToGlyphs Set-Extensional)
+(arg2Isa panToGlyphs Number)
+(comment panToGlyphs "(panToGlyphs <set-of-glyphs> <zoom-factor>) Moves the
+                      camera first to fit all of the glyphs in <set-of-glyphs>,
+                      and then zooms it by <zoom-factor>.  Typically this is used
+                      with 0 < zom-factor < 1, so as to zoom out a bit to include
+                      all the glyphs and a bit of their surroundings")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; deleting
+
+(preconditionForMethod
+ (and (subSketchGroupRepresentsObject ?bundle ?bcase)
+      (ist-Information ?bcase (subSketchGroupFor ?layer ?bundle))
+      (evaluate ?glyph-set (TheClosedRetrievalSetOf ?glyph
+                        (ist-Information ?bcase (subSketchFor ?glyph ?layer)))))
+  (methodForAction
+    (deleteAllGlyphsOnLayer ?layer)
+    (actionSequence
+     (TheList
+      (deleteGlyphs ?glyph-set)))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (deleteGlyphs ?glyph-set)
+    (actionSequence
+     (TheList
+      (doForEach
+       ?glyph ?glyph-set
+       (doDeleteGlyph ?glyph))))))
+
+(preconditionForMethod
+ (evaluate ?saw-layers
+   (TheClosedRetrievalSetOf ?layer
+     (and (subSketchGroupRepresentsObject ?bundle ?bcase)
+          (ist-Information ?bcase (isa ?layer SpatialAnalysisWorkspace-Layer))
+          (ist-Information ?bcase (uninferredSentence (wmOnly (preservedLayer ?layer)))))))
+ (methodForAction
+  (clearSAWLayers)
+  (actionSequence
+   (TheList
+    (doForEach
+     ?saw-layer ?saw-layers
+     (deleteAllGlyphsOnLayer ?saw-layer))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; selecting and deselecting
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (deselectGlyphs ?glyph-set)
+    (actionSequence
+     (TheList
+      (doForEach
+       ?glyph ?glyph-set
+        (doDeselectGlyph ?glyph))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (selectGlyphs ?glyph-set)
+    (actionSequence
+     (TheList
+      (doForEach
+       ?glyph ?glyph-set
+        (doSelectGlyph ?glyph))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (selectGlyphs-Exclusive ?glyph-set)
+    (actionSequence
+     (TheList
+      (deselectAllSelectedGlyphs)
+      (selectGlyphs ?glyph-set)))))
+
+(preconditionForMethod
+ (and (sketchRepresentsObject ?sketch ?case)
+      (evaluate ?glyph-set (TheClosedRetrievalSetOf ?glyph
+                                  (ist-Information ?case (currentlySelectedGlyph ?glyph)))))
+  (methodForAction
+    (deselectAllSelectedGlyphs)
+    (actionSequence
+     (TheList
+      (deselectGlyphs ?glyph-set)))))
+
+(preconditionForMethod
+ (evaluate ?interaction-layers
+   (TheClosedRetrievalSetOf ?layer
+     (and (subSketchGroupRepresentsObject ?bundle ?bcase)
+          (ist-Information ?bcase (isa ?layer Interaction-Layer)))))
+  (methodForAction
+   (deselectAllInteractionGlyphs)
+    (actionSequence
+     (TheList
+      (doForEach
+       ?interaction-layer ?interaction-layers
+        (deselectAllGlyphsOnLayer ?interaction-layer))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; highlighting and unhighlighting
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (unhighlightGlyphs ?glyph-set)
+    (actionSequence
+     (TheList
+      (doForEach
+       ?glyph ?glyph-set
+        (doUnhighlightGlyph ?glyph))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (highlightGlyphs ?glyph-set)
+    (actionSequence
+     (TheList
+      (doForEach
+       ?glyph ?glyph-set
+        (doHighlightGlyph ?glyph))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (highlightGlyphs-Exclusive ?glyph-set)
+    (actionSequence
+     (TheList
+      (unhighlightAllHighlightedGlyphs)
+      (highlightGlyphs ?glyph-set)))))
+
+(preconditionForMethod
+ (and (sketchRepresentsObject ?sketch ?case)
+      (evaluate ?glyph-set (TheClosedRetrievalSetOf ?glyph
+                                  (ist-Information ?case (currentlyHighlightedGlyph ?glyph)))))
+  (methodForAction
+    (unhighlightAllHighlightedGlyphs)
+    (actionSequence
+     (TheList
+      (unhighlightGlyphs ?glyph-set)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; camera actions
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (panToGlyphs ?glyph-set ?zoom-factor)
+  (actionSequence
+   (TheList
+    (doZoomToFitGlyphs ?glyph-set)
+    (doZoom ?zoom-factor)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

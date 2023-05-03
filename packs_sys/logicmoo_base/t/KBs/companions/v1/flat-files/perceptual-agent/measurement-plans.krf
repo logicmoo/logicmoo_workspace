@@ -1,0 +1,42 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: measurement-plans.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: January 25, 2017 10:56:32
+;;;;   Purpose: Define measurement plans
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; Define plans that will support credit assignment 
+;;; E.g., progressively monitor all the quantities that contribute to a goal
+;;; quantity, as well as the process activations and subgoal achievements.
+;;; Observed values that deviate from the normative proportional allocation
+;;; indicate strategies.
+
+
+(isa measureGoalInfluencers ComplexActionPredicate)
+(arity measureGoalInfluencers 1)
+(arg1Isa measureGoalInfluencers Goal)
+(comment measureGoalInfluencers "(measureGoalInfluencers ?goal) collects 
+quantitative subgoals of ?goal and adds them to the measure-quantities of 
+the agent in order to reify their value measurements in the execution trace.")
+
+(preconditionForMethod
+  (and (influencingQuantities ?goal ?influencer-set)  ; collect the subgoal quantities
+       (currentMeasureQuantities ?initial-set)
+       (evaluate ?quantity-set (SetOrCollectionUnion ?initial-set ?influencer-set)))
+  (methodForAction
+    (measureGoalInfluencers ?goal)
+    (actionSequence
+      (TheList
+        (doSetMeasureQuantities ?quantity-set)))))
+        
+;;; works (4-24-17)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,267 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: misc-relations.meld
+;;;;    System: nusketch
+;;;;    Author: Matthew Klenk
+;;;;   Created: 7/7/2004
+;;;;   Purpose: KB definitions for misc. relations between glyphs
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa conceptualGroupGlyph Predicate)
+(arity conceptualGroupGlyph 2)
+(comment conceptualGroupGlyph 
+  "conceptualGroupGlyph This is used to conceptually group glyphs together in sketches.  Arg1 is the glyph representing the group Arg2 is a subglyph.")
+(arg1Isa conceptualGroupGlyph NuSketchGlyph)
+(arg2Isa conceptualGroupGlyph NuSketchGlyph)
+
+
+(isa glyphAnnotatedBy Predicate)
+(arity glyphAnnotatedBy 2)
+(comment glyphAnnotatedBy 
+  "glyphAnnotatedBy is used to define annotation relations.  The first argument is the glyph being refernced and the second argument is the annotation.")
+(arg1Isa glyphAnnotatedBy NuSketchGlyph)
+(arg2Isa glyphAnnotatedBy NuSketchGlyph)
+
+(isa annotationGlyphRepresentsObject Predicate)
+(arity annotationGlyphRepresentsObject 2)
+(genlPreds annotationGlyphRepresentsObject glyphRepresentsObject)
+(comment annotationGlyphRepresentsObject
+  "(annotationGlyphRepresentsObject ?ag ?o) indicates that annotation glyph ?ag represents object ?o.")
+(arg1Isa annotationGlyphRepresentsObject NuSketchGlyph)
+(arg2Isa annotationGlyphRepresentsObject Thing)
+
+(<== (glyphRepresentsObject ?glyph ?object)
+     (annotationGlyphRepresentsObject ?glyph ?object))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa sameObject Predicate)
+(arity sameObject 2)
+(arg1Isa sameObject Thing)
+(arg2Isa sameObject Thing)
+(comment sameObject 
+  "Says that two things are really the same object.  Usually this is used when
+   a reasoning system received input from two different sources and only later
+   came to realize that two entities it had been reasoning about really are
+   one and the same.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment currentlySelectedGlyph
+ "Says that the given object is currently selected in the sketch corresponding to this reasoner.")
+(isa currentlySelectedGlyph DynamicUpdatePredicate)
+(isa currentlySelectedGlyph UnaryPredicate)
+(arity currentlySelectedGlyph 1)
+(arg1Isa currentlySelectedGlyph Glyph)
+
+(comment currentlyHighlightedGlyph
+ "Says that the given object is currently highlighted in the sketch corresponding to this reasoner.")
+(isa currentlyHighlightedGlyph DynamicUpdatePredicate)
+(isa currentlyHighlightedGlyph UnaryPredicate)
+(arity currentlyHighlightedGlyph 1)
+(arg1Isa currentlyHighlightedGlyph Glyph)
+
+(comment currentlyVisibleSketchComponent
+ "Says that the given object is currently visible in the bundle corresponding to the context of the query.")
+(isa currentlyVisibleSketchComponent DynamicUpdatePredicate)
+(isa currentlyVisibleSketchComponent UnaryPredicate)
+(arity currentlyVisibleSketchComponent 1)
+(arg1Isa currentlyVisibleSketchComponent SpatialThing)
+
+(comment currentlyInvisibleSketchComponent
+ "Says that the given object is currently not visible in the bundle corresponding to the context of the query.")
+(isa currentlyInvisibleSketchComponent DynamicUpdatePredicate)
+(isa currentlyInvisibleSketchComponent UnaryPredicate)
+(arity currentlyInvisibleSketchComponent 1)
+(arg1Isa currentlyInvisibleSketchComponent SpatialThing)
+
+(comment currentlyPartiallyVisibleSketchComponent
+ "Says that the given object is currently only partially visible in the bundle corresponding to the context of the query.")
+(isa currentlyPartiallyVisibleSketchComponent DynamicUpdatePredicate)
+(isa currentlyPartiallyVisibleSketchComponent UnaryPredicate)
+(arity currentlyPartiallyVisibleSketchComponent 1)
+(arg1Isa currentlyPartiallyVisibleSketchComponent SpatialThing)
+
+(isa nuSketchBusyMsg BinaryPredicate)
+(arity nuSketchBusyMsg 2)
+(arg1Isa nuSketchBusyMsg TextString)
+(arg2Isa nuSketchBusyMsg List)
+(notForAnalogy nuSketchBusyMsg)
+(comment nuSketchBusyMsg
+  "Used with a FIRE tell handler -- when facts using this predicate are 
+   asserted, the text on the current busy message window (if any) is changed.
+   The first argument should be a Lisp control string (like that used for the
+   format function) and the second argument is a list of values that will be
+   used in the control string.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment glyphFromGlyphIntersection
+ "(glyphFromGlyphIntersection <glyph1> <glyph2> <layer> ?resulting-glyph) Says that ?resulting-glyph is the object whose spatial extent is produced by taking the intersection of the spatial extents of <glyph1> and <glyph2>, and that the glyph for ?resulting-glyph is on sketch layer <layer>.")
+(isa glyphFromGlyphIntersection QuaternaryPredicate)
+(arity glyphFromGlyphIntersection 4)
+(arg1Isa glyphFromGlyphIntersection NuSketchGlyph)
+(arg2Isa glyphFromGlyphIntersection NuSketchGlyph)
+(arg3Isa glyphFromGlyphIntersection NuSketchLayer)
+(arg4Isa glyphFromGlyphIntersection NuSketchGlyph)
+
+(comment glyphFromGlyphDifference
+ "(glyphFromGlyphDifference <glyph1> <glyph2> <layer> ?resulting-glyph) Says that ?resulting-glyph is the object whose spatial extent is produced by taking the difference of the spatial extents of <glyph1> and <glyph2>, and that the glyph for ?resulting-glyph is on sketch layer <layer>.")
+(isa glyphFromGlyphDifference QuaternaryPredicate)
+(arity glyphFromGlyphDifference 4)
+(arg1Isa glyphFromGlyphDifference NuSketchGlyph)
+(arg2Isa glyphFromGlyphDifference NuSketchGlyph)
+(arg3Isa glyphFromGlyphDifference NuSketchLayer)
+(arg4Isa glyphFromGlyphDifference NuSketchGlyph)
+
+(comment glyphFromGlyphUnion
+ "(glyphFromGlyphUnion <glyph1> <glyph2> <layer> ?resulting-glyph) Says that ?resulting-glyph is the object whose spatial extent is produced by taking the union of the spatial extents of <glyph1> and <glyph2>, and that the glyph for ?resulting-glyph is on sketch layer <layer>.")
+(isa glyphFromGlyphUnion QuaternaryPredicate)
+(arity glyphFromGlyphUnion 4)
+(arg1Isa glyphFromGlyphUnion NuSketchGlyph)
+(arg2Isa glyphFromGlyphUnion NuSketchGlyph)
+(arg3Isa glyphFromGlyphUnion NuSketchLayer)
+(arg4Isa glyphFromGlyphUnion NuSketchGlyph)
+
+(comment glyphFromVisibleGlyphPartInDrawpane
+ "(glyphFromVisibleGlyphPartInDrawpane <original-glyph> <layer> ?resulting-glyph) Says that ?resulting-glyph is the object whose spatial extent is produced by taking the part of <original-glyph1> that is visible in its drawing pane, and that ?resulting-glyph is on sketch layer <layer>.")
+(isa glyphFromVisibleGlyphPartInDrawpane Predicate)
+(isa glyphFromVisibleGlyphPartInDrawpane DynamicUpdatePredicate)
+(arity glyphFromVisibleGlyphPartInDrawpane 3)
+(arg1Isa glyphFromVisibleGlyphPartInDrawpane NuSketchGlyph)
+(arg2Isa glyphFromVisibleGlyphPartInDrawpane NuSketchLayer)
+(arg3Isa glyphFromVisibleGlyphPartInDrawpane NuSketchGlyph)
+
+(comment visibleSketchComponentsInDrawpane
+ "(visibleSketchComponentsInDrawpane ?sketch-component) Says that ?sketch-component is currently visible in the drawpane.")
+(isa visibleSketchComponentsInDrawpane Predicate)
+(isa visibleSketchComponentsInDrawpane DynamicUpdatePredicate)
+(arity visibleSketchComponentsInDrawpane 1)
+(arg1Isa visibleSketchComponentsInDrawpane SpatialThing)
+
+
+(comment glyphFromInkContents
+ "(glyphFromInkContents <container-component> <reference-object> ?resulting-glyph) Says that ?resulting-glyph is the result of taking the pieces of the ink from reference-object that overlap the polygon associated with the container-component, as well as the ink fromt he polygon itself.")
+(isa glyphFromInkContents TernaryPredicate)
+(arity glyphFromInkContents 3)
+(arg1Isa glyphFromInkContents SpatialThing)
+(arg2Isa glyphFromInkContents SpatialThing)
+(arg3Isa glyphFromInkContents NuSketchGlyph)
+
+(isa InkPartitionRegion Collection)
+(genls InkPartitionRegion SpatialThing)
+(comment InkPartitionRegion
+  "These polygons are used to divide ink into glyphs.  For example, a teacher 
+   might author a worksheet in which all the ink drawn by the student in a 
+   given rectangular region should be automatically partitioned into a glyph.  
+   The rectangle in this example would be an #$InkPartitionRegion.")
+(prettyString InkPartitionRegion "ink partitioning region")
+
+(isa sourceForInkPartitionRegion Relation)
+(arity sourceForInkPartitionRegion 2)
+(arg1Isa sourceForInkPartitionRegion InkPartitionRegion)
+(arg2Isa sourceForInkPartitionRegion InformationStore)
+(comment sourceForInkPartitionRegion
+  "When paritioning ink into glyphs using InkPartitionRegions, this relation
+   specifies what ink should be considered.  The source is often a #$SubSketch
+   or #$SubSketchGroup, but it can be anything with associated ink.  For example,
+   a #$PerceptualEdgeConnectedObject might also be a useful source.")
+(notForAnalogy sourceForInkPartitionRegion)
+
+(isa destinationLayerForInkPartitionRegion Relation)
+(arity destinationLayerForInkPartitionRegion 2)
+(arg1Isa destinationLayerForInkPartitionRegion InkPartitionRegion)
+(arg2Isa destinationLayerForInkPartitionRegion SubSketch)
+(comment destinationLayerForInkPartitionRegion
+  "Specifies on what layer the resulting glyph from an #$InkPartitionRegion 
+   should be placed.")
+(notForAnalogy destinationLayerForInkPartitionRegion)
+
+(isa collectionsForGlyphCreatedByInkPartitionRegion Relation)
+(arity collectionsForGlyphCreatedByInkPartitionRegion 2)
+(arg1Isa collectionsForGlyphCreatedByInkPartitionRegion InkPartitionRegion)
+(arg2Isa collectionsForGlyphCreatedByInkPartitionRegion Set-Mathematical)
+(comment collectionsForGlyphCreatedByInkPartitionRegion
+  "Specifies the Collections that should be assigned to a glyph resulting from
+   an #$InkPartitionRegion.")
+(notForAnalogy collectionsForGlyphCreatedByInkPartitionRegion)
+
+(isa namestringForGlyphCreatedByInkPartitionRegion Relation)
+(arity namestringForGlyphCreatedByInkPartitionRegion 2)
+(arg1Isa namestringForGlyphCreatedByInkPartitionRegion InkPartitionRegion)
+(arg2Isa namestringForGlyphCreatedByInkPartitionRegion ProperNameString)
+(comment namestringForGlyphCreatedByInkPartitionRegion
+  "Specifies the #$nameString that should be assigned to a glyph resulting from
+   an #$InkPartitionRegion.")
+(notForAnalogy namestringForGlyphCreatedByInkPartitionRegion)
+
+(isa glyphCreatedByInkPartitionRegion Relation)
+(arity glyphCreatedByInkPartitionRegion 3)
+(arg1Isa glyphCreatedByInkPartitionRegion InkPartitionRegion)
+(arg2Isa glyphCreatedByInkPartitionRegion SubSketchGroup)
+(arg3Isa glyphCreatedByInkPartitionRegion NuSketchGlyph)
+(comment glyphCreatedByInkPartitionRegion
+  "Specifies that a given #$NuSketchGlyph is the glyph created by an 
+   #$InkPartitionRegion for the given subsketch.  The subsketch is mentioned 
+   because an #$InkPartitionRegion might be used to create glyphs on multiple 
+   subsketches.  There should be only one such glyph per region per subsketch.")
+(notForAnalogy glyphCreatedByInkPartitionRegion)
+
+(isa includeInkPartitionBoundsInGlyphCreated Relation)
+(arity includeInkPartitionBoundsInGlyphCreated 1)
+(arg1Isa includeInkPartitionBoundsInGlyphCreated InkPartitionRegion)
+(comment includeInkPartitionBoundsInGlyphCreated
+  "Says that the boundary of a given #$InkPartitionRegion should be included as
+   part of any glyph created by that region.")
+
+
+(comment resampleGlyph
+ "(resampleGlyph <original-glyph> <interval>) An outsourced tell for resampling a glyph at a certain interval (sketch distance between consecutive points).")
+(isa resampleGlyph Predicate)
+(arity resampleGlyph 2)
+(arg1Isa resampleGlyph NuSketchGlyph)
+(arg2Isa resampleGlyph Number)
+
+(comment makeVoronoiSensitive
+ "(makeVoronoiSensitive <glyph> <interval>) An outsourced tell for giving a glyph a finer grained set of voronoi sites.")
+(isa makeVoronoiSensitive Predicate)
+(arity makeVoronoiSensitive 1)
+(arg1Isa makeVoronoiSensitive NuSketchGlyph)
+
+(comment surfaceContactDirection
+ "(surfaceContactDirection <obj1> <obj2> ?direction) Says that there exists a place where <obj1> contacts <obj2> in a way that could suggest a surface normal ?direction")
+(isa surfaceContactDirection Predicate)
+(arity surfaceContactDirection 3)
+(arg1Isa surfaceContactDirection SpatialThing)
+(arg2Isa surfaceContactDirection SpatialThing)
+(arg3Isa surfaceContactDirection 2DQDirection)
+
+(comment polyOpAdjacent
+ "(polyOpAdjacent <glyph1> <glyph2>) Says that glyph1 and glyph2 are adjacent by virtue of the fact that they were created via difference and intersection operations (respectively) on the same two parent glyphs.")
+(isa polyOpAdjacent SymmetricBinaryPredicate)
+(arity polyOpAdjacent 2)
+(arg1Isa polyOpAdjacent NuSketchGlyph)
+(arg2Isa polyOpAdjacent NuSketchGlyph)
+
+(<== (glyphFromGlyphIntersection ?glyph1 ?glyph2 ?layer ?glyph3)
+     (glyphFromGlyphIntersection ?glyph2 ?glyph1 ?layer ?glyph3))
+
+(<== (glyphFromGlyphUnion ?glyph1 ?glyph2 ?layer ?glyph3)
+     (glyphFromGlyphUnion ?glyph2 ?glyph1 ?layer ?glyph3))
+
+(<== (polyOpAdjacent ?glyph1 ?glyph2)
+     (lookupOnly (glyphFromGlyphDifference ?parent1 ?parent2 ?layer ?glyph1))
+     (lookupOnly (glyphFromGlyphIntersection ?parent1 ?parent2 ?layer ?glyph2)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End Of Code

@@ -1,0 +1,30 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qp-basics.meld
+;;;;    System: FIRE
+;;;;    Author: Ken Forbus
+;;;;   Created: March 8, 2002 13:53:47
+;;;;   Purpose: Supporing QP theory in FIRE
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory BaseKB)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; ValueFn is an experiment, to translate 
+
+(isa ValueFn VariableArityFunction)
+(genFormat ValueFn "the ~A of ~A" (1 2))
+
+(genFormat primaryObjectMoving "~A is what is primarily moving in ~A"
+           (2 1))
+(genFormat puller "~A is pulling in ~A" (2 1))
+(genFormat pullee "~A is being pulled in ~A" (2 1))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

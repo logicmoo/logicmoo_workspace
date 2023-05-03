@@ -1,0 +1,12 @@
+(in-microtheory ChemicalThermodynamicsMt)
+
+(isa CellularRespiration-Aerobic CatabolicPathwayTypeByFunction)
+(genls EnzymeMolecule Macromolecule)
+(genls (BiochemicalSynthesisFn AminoAcid) AnabolicPathway)
+(genls CellularProteinSynthesis AnabolicPathway)
+(genls ExergonicChemicalInteraction ProcessRequiringNoEnergyInput)
+(genls EndergonicChemicalInteraction ProcessRequiringEnergyInput)
+(genls EndergonicChemicalInteraction ChemicalInteraction)
+(genls Hydrolysis-ChemicalReaction ExergonicReaction)
+(genls EndergonicReaction ProcessRequiringEnergyInput)
+(genls ExergonicReaction ProcessRequiringNoEnergyInput)

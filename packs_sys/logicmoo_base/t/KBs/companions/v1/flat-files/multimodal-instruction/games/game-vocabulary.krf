@@ -1,0 +1,367 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: game-vocabulary.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: April 12, 2013 09:44:24
+;;;;   Purpose: Conceptual definitions for game playing
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory FmiGamesMt)
+
+;;; GGP focused on using predicates rather than collections, because it helped
+;;; with analogy.  We probably need both in order to support incremental 
+;;; acquisition.
+
+;;; It appears that TwoPersonGame is a collection built-in to Cyc.
+;;; Use that instead of TwoPlayerGame.
+
+;;; The GGP representation are somewhat problematic.
+;;; They make it impossible to express the type of game without also 
+;;; speicifying the particular predicate used for moves and marks.
+;;; We probably want to define collections as well.
+;;; So we replace pieceMovingGame and markingGame with
+;;; the more accurate pieceMovingPredicate and markingPredicate:
+
+;;; To the extent that a game in this formalism is a FiniteStateMachine,
+;;; then the PlayingFn of a game is a concise history comprised of
+;;; a sequence of states interleaved with a sequence of discrete actions.
+;;; We need to be able to refer to things like the initial state and the
+;;; terminal (final) state.  Cyc is really weak in this area.
+;;; The IntrinsicStateChangeEvent with roles fromState, toState, 
+;;; and objectOfStateChange are not bad, but states tend to be
+;;; represented at the type level.
+;;; so (nthSubSituationTypeInSituationType ?sit-type ?num ?sub-sit)
+;;; or (firstProperSubSituationTypes ?sit-type ?sub-sit-type)
+
+(isa Hexapawn Game)
+
+;;; Note that there is a built-in functor GameRulesFn which denotes a collection.
+;;; There are no examples of its use and one can only surmise that individual rules
+;;; would be instances of that collection.
+;;; This seems much cleaner.
+(isa GameRulesMtFn Function-Denotational)
+(isa GameRulesMtFn UnaryFunction)
+(arity GameRulesMtFn 1)
+(arg1Isa GameRulesMtFn Game)
+(resultIsa GameRulesMtFn Microtheory)
+(comment GameRulesMtFn "(GameRulesMtFn <game>) denotes the microtheory containing the rules of the specified game.")
+
+;;; Collections
+;;; (see PerceptualAgent for TurnTakingGame)
+(isa MarkingGame ObjectType)
+(isa MarkingGame TemporalStuffType)
+(isa MarkingGame Collection)
+(genls MarkingGame Game)
+
+(isa PieceMovingGame ObjectType)
+(isa PieceMovingGame TemporalStuffType)
+(isa PieceMovingGame Collection)
+(genls PieceMovingGame Game)
+
+(isa GameEntity Collection)
+
+(isa GameMark Collection)
+(genls GameMark GameEntity)
+
+(isa GamePieceType Collection)  ; Second order collection
+
+(isa GamePiece Collection)
+(isa GamePiece GamePieceType)
+(genls GamePiece GameEntity)
+
+(isa gameEntityType Predicate)
+(arity gameEntityType 1)
+
+;(gameEntityType GameRole) ; rule this out for now, since it's handled separately.
+(gameEntityType GameMark)
+(gameEntityType GamePiece)
+
+(genls Pawn GamePiece)  ; Shouldn't pre-define this.  Left over from Hexapawn.
+
+(isa GameRole Collection)
+(genls GameRole GameEntity)
+
+(isa GameRoleFn Function-Denotational)
+(arity GameRoleFn 1)
+(resultIsa GameRoleFn GameRole)
+
+(isa gameDomain UnaryPredicate)
+(arity gameDomain 1)
+(comment gameDomain "(gameDomain <game>) denotes the particular game being learned and played, as opposed to the Companions Domain of multimodal instruction.")
+
+(isa pieceMovingPredicate BinaryPredicate)
+(arity pieceMovingPredicate 2)
+(arg1Isa pieceMovingPredicate Case)
+(arg2Isa pieceMovingPredicate Predicate)
+(comment pieceMovingPredicate "(pieceMovingPredicate ?game ?movePred) means there is some operator ?movePred that moves pieces from one location to another.")
+
+(isa markingPredicate BinaryPredicate)
+(arity markingPredicate 2)
+(arg1Isa markingPredicate Case)
+(arg2Isa markingPredicate Predicate)
+(comment markingPredicate "(markingPredicate ?game ?markPred) means there exists an operator ?markPred that irreversibly fills a location in some space.")
+
+(isa maxCoordX BinaryPredicate)
+(arg1Isa maxCoordX SpatialThing)
+(arg2Isa maxCoordX ScalarInterval)
+(comment maxCoordX "(maxCoordX <spatialThing> <number>) indicates the maximum X-coordinate of <spatialThing>)")
+
+(isa maxCoordY BinaryPredicate)
+(arg1Isa maxCoordY SpatialThing)
+(arg2Isa maxCoordY ScalarInterval)
+(comment maxCoordY "(maxCoordY <spatialThing> <number>) indicates the maximum Y-coordinate of <spatialThing>)")
+
+(isa entityLabel BinaryPredicate)
+(arity entityLabel 2)
+(arg1Isa entityLabel GameEntity)
+(arg2Isa entityLabel CharacterString)
+(comment entityLabel "(entityLabel ?role ?glyph-username) maps from game entities to glyph usernames.")
+
+(isa pieceOwner BinaryPredicate)
+(arity pieceOwner 2)
+(arg1Isa pieceOwner GameRole)
+(arg2Isa pieceOwner GamePiece)
+(comment pieceOwner "(pieceOwner ?owner ?piece) associates a player with a piece.")
+
+(isa pieceOwnerType Predicate)
+(arity pieceOwnerType 3)
+(comment pieceOwnerType "(pieceOwnerType ?name ?player ?type) defines ownership of a named piece type.")
+
+(isa pieceType Predicate)
+(arity pieceType 1)
+(arg1Isa pieceType Collection)
+(comment pieceType "(pieceType ?type) enumerates types of pieces in a game.")
+
+(isa opponentRole BinaryPredicate)
+(arity opponentRole 2)
+(arg1Isa opponentRole Microtheory)
+(arg2Isa opponentRole GameRole)
+(comment opponentRole "(opponentRole ?game-instance ?opponent) binds the opponent roles.")
+
+;;; This needn't be limited to a single opponent, though it won't distinguish
+;;; allies from opponents in that case.
+(<== (opponentRole ?game-instance ?opponent)
+     (groundExpression ?game-instance)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?game-instance
+             (currentRole ?role)))))
+     (numAnswers 1
+       (lookupOnly
+         (allFactsAllowed
+           (ist-Information ?game-instance
+             (gameDomain ?game)))))
+     (lookupOnly
+       (localOnly
+         (allFactsAllowed
+           (ist-Information (GameRulesMtFn ?game)
+             (isa ?opponent GameRole)))))
+     (different ?opponent ?role))
+     
+
+
+;;; We need to reify Pieces and Marks as things with glyph representations.
+;;; We need to represent the possibility of a piece or mark belonging to a player.
+;;; We probably want to handle the "promotion" of pieces as the destruction of the old
+;;; piece and creation of a new piece.  So when a checker reaches the far end and 
+;;; becomes a king, it's a new piece.  This is easier than introducing 
+;;; indirection in the type specification.
+
+
+;;; REPLACE THIS WITH SomeSituationAlternating.
+;;; The concept of taking turns with action.
+;;; Anything where action is interleaved by different performers is turn-taking.
+;;(isa TurnTaking-Alternation Collection)
+;;(comment TurnTaking-Alternation "TurnTaking-Alternation is the Davidsonian representaiton of composite events consisting of sequences of actions performed by alternating actors.")
+
+(isa CoordinateGrid ObjectType)  ; and hence a FirstOrderCollection
+(comment CoordinateGrid "CoordinateGrid is the collection of all two-dimensional, x-y addressable spatial partitions.")
+
+(isa GridLocation Collection)
+(genls GridLocation GeographicalRegion) ; for now
+
+(isa LocFn Function-Denotational)
+(arity LocFn 2)
+(arg1Isa LocFn Integer)
+(arg2Isa LocFn Integer)
+(resultIsa LocFn GridLocation)  ; for now
+(comment LocFn "(LocFn ?x ?y) denotes a location in a grid coordinate system.")
+
+
+(isa cell GamePredicate)
+(arity cell 3)
+
+;;; Probably want to define up, down, left & right predicates
+;;; plus nextTo, diagonal, and adjacent (on entire locations)
+;;; Maybe these should all be prefixed with "grid"
+
+(isa up BinaryPredicate)
+(arity up 2)
+(arg1Isa up GridLocation)
+(arg2Isa up GridLocation)
+(comment up "(up ?loc1 ?loc2) means ?loc2 is one unit above ?loc1.")
+
+(<== (up (LocFn ?x ?y1) (LocFn ?x ?y2))
+     (evaluate ?y2 (PlusFn ?y1 1)))
+
+(isa down BinaryPredicate)
+(arity down 2)
+(arg1Isa down GridLocation)
+(arg2Isa down GridLocation)
+(comment down "(down ?loc1 ?loc2) means ?loc2 is one unit below ?loc1.")
+
+(<== (down (LocFn ?x ?y1) (LocFn ?x ?y2))
+     (evaluate ?y2 (DifferenceFn ?y1 1)))
+
+(isa left BinaryPredicate)
+(arity left 2)
+(arg1Isa left GridLocation)
+(arg2Isa left GridLocation)
+(comment left "(left ?loc1 ?loc2) means ?loc2 is one unit left of ?loc1.")
+
+(<== (left (LocFn ?x1 ?y) (LocFn ?x2 ?y))
+     (evaluate ?x2 (DifferenceFn ?x1 1)))
+
+(isa right BinaryPredicate)
+(arity right 2)
+(arg1Isa right GridLocation)
+(arg2Isa right GridLocation)
+(comment right "(right ?loc1 ?loc2) means ?loc2 is one unit right of ?loc1.")
+
+(<== (right (LocFn ?x1 ?y) (LocFn ?x2 ?y))
+     (evaluate ?x2 (PlusFn ?x1 1)))
+     
+(isa nextTo BinaryPredicate)
+(arity nextTo 2)
+(arg1Isa nextTo GridLocation)
+(arg2Isa nextTo GridLocation)
+(comment nextTo "(nextTo ?loc1 ?loc2) means ?loc1 is cartesianally next to ?loc2.")
+
+(<== (nextTo ?loc1 ?loc2)
+     (right ?loc1 ?loc2))
+
+(<== (nextTo ?loc1 ?loc2)
+     (left ?loc1 ?loc2))
+
+(<== (nextTo ?loc1 ?loc2)
+     (up ?loc1 ?loc2))
+
+(<== (nextTo ?loc1 ?loc2)
+     (down ?loc1 ?loc2))
+
+(isa adjacent BinaryPredicate)
+(arity adjacent 2)
+(arg1Isa adjacent Integer)
+(arg2Isa adjacent Integer)
+(comment adjacent "(adjacent ?num1 ?num2) means ?num2 is one more or less than ?num1")
+
+(<== (adjacent ?num1 ?num2)
+     (evaluate ?num2 (PlusFn ?num1 1)))
+
+(<== (adjacent ?num1 ?num2)
+     (evaluate ?num2 (DifferenceFn ?num1 1)))
+
+(isa diagonal BinaryPredicate)
+(arity diagonal 2)
+(arg1Isa diagonal GridLocation)
+(arg2Isa diagonal GridLocation)
+(comment diagonal "(diagonal ?loc1 ?loc2) means ?loc2 is diagonal from ?loc1 in some direction.")
+
+(<== (diagonal (LocFn ?x1 ?y1) (LocFn ?x2 ?y2))
+     (adjacent ?x1 ?x2)
+     (adjacent ?y1 ?y2))
+
+
+;;; These are not great, given that Directions are pretty well covered in Cyc,
+;;; just not quite how we want.
+
+; replace orientationOfEvent with directionOfTranslation-Avg
+
+;(isa orientationOfEvent BinaryPredicate)
+;(arg1Isa orientationOfEvent Movement-TranslationEvent)
+;(arg2Isa orientationOfEvent MovementDirection)  ; <- ok, I just made that up.
+
+;(isa MovementDirection Collection)
+;(isa HorizontalMovement MovementDirection)
+;(isa VerticalMovement MovementDirection)
+;(isa DiagonalMovement MovementDirection)
+;(isa UpMovement MovementDirection)
+;(isa DownMovement MovementDirection)
+;(isa LeftMovement MovementDirection)
+;(isa RightMovement MovementDirection)
+
+;;; These are in Ocyc as UnitVectorIntervals,  But I want to specialize them to be 
+;;; Directions
+(isa Leftward Direction)
+(isa Rightward Direction)
+(isa Diagonal-Generally Direction)  ; added this one
+
+;;; Consider (SequenceOfFn Turn-GameEvent) as a representation of a sequence of turns.
+;;; relational pred is: (sequentiallyArrangedSetOf ?tyhpe ?seq)
+
+
+
+;;; These are usually disjoint, but they don't have to be.
+
+
+;;; BACKFILL
+(in-microtheory BaseKB)
+
+(rolesForEventType SelectingSomething objectSelected)
+(rolesForEventType MarkingOnASurface objectMarked)
+(rolesForEventType MarkingOnASurface markCreated)
+
+(rolesForEventType CausingAnotherObjectsTranslationalMotion primaryObjectMoving)
+(rolesForEventType CausingAnotherObjectsTranslationalMotion toLocation)
+(rolesForEventType HidingAnObject objectHidden)
+(rolesForEventType HidingAnObject instrumentForHiding)
+(rolesForEventType ConcealingFromSight objectHidden)
+(rolesForEventType ConcealingFromSight instrumentForHiding)
+(rolesForEventType DisplayingSomething objectActedOn)
+(rolesForEventType DisplayingSomething instrument-Generic)
+
+(rolesForEventType MakingAnAgreement agreementCreated)
+(rolesForEventType Warning warnee)
+(rolesForEventType GoingSomewhere fromLocation)
+(rolesForEventType UsingAnObject instrument-Generic)
+(rolesForEventType PuttingSomethingSomewhere target)
+
+;;; Advice giving:
+(rolesForEventType Advising communicationToken)
+(rolesForEventType Observing thingsObserved)  ; already there.
+(rolesForEventType Observing objectsObserved)
+(rolesForEventType Observing recipientOfInfo)
+
+;;; Sketching:
+(rolesForEventType NonVerbalCommunicating communicationTarget)
+(rolesForEventType NonVerbalCommunicating communicationToken)
+(rolesForEventType NonVerbalCommunicating communicationParticipants)
+(rolesForEventType NonVerbalCommunicating senderOfInfo)
+(rolesForEventType NonVerbalCommunicating communicatorOfInfo)
+(rolesForEventType NonVerbalCommunicating infoCommunicatedTo)
+
+;;; Freeciv:
+(rolesForEventType Exploration infoGatheredAbout)
+(rolesForEventType Exploration informationOrigin)
+
+
+;(nonDavidsonianPredReln InformationGathering (TheList performedBy informationOrigin)
+; (NonDavidsonianPredFn InformationGathering (TheList performedBy informationOrigin)))
+
+;;;; MakingAGesture 
+
+
+;;;"For a given #$PositiveInteger n, (#$NonDavidsonianPredFn EVENTTYPE (#$TheList SLOT_1 ... SLOT_n)) denotes the n-ary #$EventPredicate corresponding, in some sense, to the collection EVENTTYPE. For instance: (#$NonDavidsonianPredFn #$Cleaning (#$TheList #$performedBy #$objectActedOn)) corresponds to the #$ActionPredicate #$cleans (which is binary). Hence ((#$NonDavidsonianPredFn #$Cleaning (#$TheList #$performedBy #$objectActedOn)) Pierre PierresKitchen) is an #$CycLSentence-Assertible that is true at a time interval t iff Pierre cleans his kitchen at t. NOTE: the accepted OE practice is to use #$EventPredicates as primitively defined constants; use of this function should be limited to special cases in which the creation of a suitable action predicate is not justified by considerations of reusability, sufficient generality, etc."
+
+(nonDavidsonianPredReln SelectingSomething (TheList objectSelected) doSelectGlyph)
+(nonDavidsonianPredReln MarkingOnASurface (TheList markCreated objectSelected) doMakeGlyph)  ; doesn't exist yet.
+(nonDavidsonianPredReln CausingAnotherObjectsTranslationalMotion (TheList primaryObjectMoving toLocation) doMoveGlyph)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

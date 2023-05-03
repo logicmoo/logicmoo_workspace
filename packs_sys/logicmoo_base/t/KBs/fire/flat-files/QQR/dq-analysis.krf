@@ -1,0 +1,496 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: dq-analysis.meld
+;;;;    System: FIRE QQR
+;;;;    Author: Ken Forbus
+;;;;   Created: 6/12/2013
+;;;;   Purpose: Basic differential qualitative analysis
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2013-05-07 20:48:06 -0500 (Tue, 07 May 2013) $
+;;;;  $LastChangedBy: mdc235 $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory DQAnalysisMt)
+
+(isa DQAnalysisMt Microtheory)
+(comment DQAnalysisMt
+  "DQAnalysisMt defines differential qualitative analysis, where the differences in aspects between two systems
+   (or two parts of the same system) are used to predict differences in values.  For example, given two ladders,
+   the one with the wider base will be more stable.  This microtheory defines the basic logic of the analysis,
+   with extensions to using visual properties and numerical values handled by other microtheories.")
+(genlMt QPTheoryMt DQAnalysisMt)
+
+(isa ConceptualPSMtForFn Function-Denotational)
+(comment ConceptualPSMtForFn
+  "(ConceptualPSMtForFn ?mt) is the logical environment which includes both ?mt and the conceptual problem solving
+ knowledge, since ?mt may not inherit from that by default.")
+(resultIsa ConceptualPSMtForFn Microtheory)
+(arg1Isa ConceptualPSMtForFn Microtheory)
+(arity ConceptualPSMtForFn 1)
+
+;;; Ontology
+
+(isa dqValue TernaryPredicate)
+(arity dqValue 3)
+(arg1Isa dqValue ContinuousQuantity)
+(arg2Isa dqValue Mapping)
+(arg3Isa dqValue PossibleDsValue)
+(comment dqValue "(dqValue ?q ?m ?v) indicates that quantity ?q has the
+ differential qualitative value ?v relative to the comparison frame ?m.
+ The comparison frame is an instance of DQReferenceFrame, which is a spec of
+ analogical Mapping.  Values are the same as Ds values, i.e. -1 to indicate 
+ decreased, 1 to indicate increased, 0 to indicate unchanged, and Ambig to
+ indicate that the result is known to be ambiguous.")
+
+(isa DQReferenceFrame Collection)
+(genls DQReferenceFrame Mapping)
+(comment DQReferenceFrame
+  "A DQReferenceFrame is an analogical mapping used in differential qualitative analysis,
+   to figure out how some value varies between the situations.  This factors solving DQ analysis
+   problems into framing the situations to be compared and then working through the consequences.
+   Note that the situations being compared might be two different systems, but could also be two
+   different subsets of the same system.")
+
+(isa contextForCase BinaryRelation)
+(comment contextForCase
+    "(contextForCase ?case ?mt) indicates that ?mt is the right microtheory to use for
+    computations involving SME case ?case.  If ?case is atomic, then ?mt = ?case.  But
+    if ?case is a NAT, then this information must be extracted from an analysis of the type
+    of case being dealt with.")
+(arity contextForCase 2)
+(arg1Isa contextForCase Case)
+(arg2Isa contextForCase Microtheory)
+
+(is solveDQProblemBinarySystems Predicate)
+(arity solveDQProblemBinarySystems 5)
+(arg1Isa solveDQProblemBinarySystems ContinuousQuantity)
+(arg2Isa solveDQProblemBinarySystems Microtheory)
+(arg3Isa solveDQProblemBinarySystems ContinuousQuantity)
+(arg4Isa solveDQProblemBinarySystems Microtheory)
+(arg5Isa solveDQProblemBinarySystems PossibleDsValue)
+(comment "(solveDQProblemBinarySystems ?q-base ?base ?q-target ?target ?value)
+represents the attempt to solve a differential qualitative analysis problem
+for the relationship between corresponding quantities ?q-base of microtheory ?base
+and ?q-target of microtheory ?target.  Successful attempts (via SOLVE) bind ?value.")
+
+
+(comment "(solveDQValue ?quantity ?target-q ?base-mt ?target-mt ?m ?value)
+represents the differential qualitative analysis of ?quantity relative to ?target-q,
+drawn from microtheories ?base-mt and ?target-mt respectively.  This is used in SOLVE,
+binding ?value to whatever is found.  ?base-mt and ?target-mt are the situations being
+compared, with analogical mapping ?m indicating how they correspond. Originally they
+might be separate situations, or they might be two aspects of the same situation, extracted
+via the analysis of the problem.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Setting up the DQ reference frame
+;;;
+;;; We assume that the analysis of a problem by other means invokes one of
+;;; the predicates below. Setting up the frame is separate from the process
+;;; of solving, since it's just an analogical mapping in any case.  If some
+;;; assumption is violated, then the system should retry, by for example
+;;; reformulating the reference frame and/or extending the base and/or target
+;;; with richer causal models.
+
+(defSuggestion BinarySystemsDQSolution
+    (solveDQProblemBinarySystems
+     ?q-base ?base ?q-target ?target ?value)
+  :subgoals ((outsourcedOnly ;; Ignore previous attempts
+              (matchBetween ?base ?target
+                            (TheSet (requiredCorrespondence ?q-base ?q-target))
+                            ?match))
+             (outsourcedOnly (bestMapping ?match ?mapping))
+             ;; make sure the required correspondence actually worked, i.e.
+             ;; make sure that both quantities actually exist in the dgroups.
+             (correspondsInMapping ?mapping ?q-base ?q-target)  
+             (dqValue ?q-base ?mapping ?value))
+  :documentation "BinarySystemsDQSolution is intended to be the entry point to the
+basic differential qualitative analysis capabilities.  Figuring out how to carve up
+a problem into pieces can require more domain-specific reasoning, e.g. extracting
+relevant material from two sketched items, or comparing two models derived via
+natural language.  Those aspects of formulating the problem lie outside QQR.
+This method sets up an analogical mapping between the two situations being compared,
+which then provides the framework for doing the DQ analysis.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Strategies for figuring out DQ values
+
+;;; **** It would be nice to be able to declare a whole subset of antecedents
+;;; **** cacheComplete.  Not clear it's worth it, though.
+
+(defSuggestion SetupDQSolutionAnalysis
+    (dqValue ?quantity ?mapping ?value)
+  :subgoals ((correspondsInMapping ?mapping ?quantity ?target-q)
+             (baseOfMapping ?mapping ?base)
+             (contextForCase ?base ?base-mt)
+             (targetOfMapping ?mapping ?target)
+             (contextForCase ?target ?target-mt)
+             (solveDQValue ?quantity ?target-q ?base-mt ?target-mt ?mapping ?value))
+  :documentation "SetupDQSolutionAnalysis ensures that the environment for DQ analysis
+is set up correctly.")
+
+;; N.B. contextForCase is defined for all non-atomic case constructor terms.
+;; This rule handles the situation where the term is atomic.
+
+(<== (contextForCase (ExplicitCaseFn ?mt) ?mt))
+(<== (contextForCase ?atomic-case ?case)
+     (atomicTerm ?atomic-case)
+     (unifies ?case ?atomic-case))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Using numerical values
+;;; N.B. The relationships used here can handle unit conversions automatically.
+
+(defSuggestion SolveDQViaNumericalValues
+    (solveDQValue ?quantity ?target-q ?base-mt ?target-mt ?m ?value)
+  :subgoals ((ist-Information ?base-mt (valueOf ?quantity ?v1))
+             (ist-Information ?target-mt (valueOf ?target-q ?v2))
+             (deriveDQValueFromNumbers ?v1 ?v2 ?value))
+  :documentation "SolveDQViaNumericalValues looks for numerical values (perhaps including units)
+that can be used for DQ analysis.")
+
+(isa deriveDQValueFromNumbers Predicate)
+(arity deriveDQValueFromNumbers 3)
+(arg1Isa deriveDQValueFromNumbers ScalarInterval)
+(arg2Isa deriveDQValueFromNumbers ScalarInterval)
+(arg3Isa deriveDQValueFromNumbers PossibleDsValue)
+(comment deriveDQValueFromNumbers
+  "(deriveDQValueFromNumbers ?v1 ?v2 ?value) indicates that the DQ value ?value holds between the values
+   compared, i.e. ?v1 and ?v2.")
+
+;;; Since these tests can involve floating point values and unit conversions,
+;;; it's important to make sure that we take numerical uncertainty into account.
+(<== (deriveDQValueFromNumbers ?v1 ?v2 -1)
+     (uninferredSentence (evaluate True (EqualTo-UnitValuesFn ?v1 ?v2)))
+     (evaluate True (LessThan-UnitValuesFn ?v1 ?v2)))
+(<== (deriveDQValueFromNumbers ?v1 ?v2 1)
+     (uninferredSentence (evaluate True (EqualTo-UnitValuesFn ?v1 ?v2)))
+     (evaluate True (LessThan-UnitValuesFn ?v2 ?v1)))
+(<== (deriveDQValueFromNumbers ?v1 ?v2 0)
+     (evaluate True (EqualTo-UnitValuesFn ?v1 ?v2)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Using ordinals
+
+(defSuggestion SolveDQViaOrdinals
+    (solveDQValue ?quantity ?target-q ?base-mt ?target-mt ?m ?value)
+  :subgoals ((deriveDQvalueFromOrdinals ?quantity ?target-q ?value)))
+
+(isa deriveDQvalueFromOrdinals Predicate)
+(arity deriveDQvalueFromOrdinals 3)
+(arg1Isa deriveDQvalueFromOrdinals ContinuousQuantity)
+(arg2Isa deriveDQvalueFromOrdinals ContinuousQuantity)
+(arg3Isa deriveDQvalueFromOrdinals PossibleDsValue)
+(comment deriveDQvalueFromOrdinals
+  "(deriveDQvalueFromOrdinals ?bq ?tq ?v) indicates that the DQ value of
+?bq relative to ?tq is ?v, as derived from ordinal relationships concerning
+?bq and ?tq.")
+
+(<== (deriveDQvalueFromOrdinals ?base-q ?target-q 1)
+     (qGreaterThan ?base-q ?target-q))
+
+(<== (deriveDQvalueFromOrdinals ?base-q ?target-q 1)
+     (qLessThan ?target-q ?base-q))
+
+(<== (deriveDQvalueFromOrdinals ?base-q ?target-q 0)
+     (qEqualTo ?base-q ?target-q))
+
+(<== (deriveDQvalueFromOrdinals ?base-q ?target-q -1)
+     (qLessThan ?base-q ?target-q))
+
+(<== (deriveDQvalueFromOrdinals ?base-q ?target-q -1)
+     (qGreaterThan ?target-q ?base-q))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Use causal constraints
+;; N.B. Simplified for now, no exclusion/preference logic to turn this off if
+;; other information is available.  Should use some form of preference to run
+;; this after the others.
+
+(defSuggestion SolveDQViaCausalPropagation
+    (solveDQValue ?quantity ?target-q ?base-mt ?target-mt ?m ?value)
+  :subgoals ((jointCausalConstraintsInMapping ?quantity ?target-q ?m)
+             (resolveDQViaCausalConstraints ?quantity ?target-q ?m ?value)))
+
+(isa jointCausalConstraintsInMapping Predicate)
+(arity jointCausalConstraintsInMapping 3)
+(arg1Isa jointCausalConstraintsInMapping ContinuousQuantity)
+(arg2Isa jointCausalConstraintsInMapping ContinuousQuantity)
+(arg3Isa jointCausalConstraintsInMapping Mapping)
+(comment jointCausalConstraintsInMapping
+  "(jointCausalConstraintsInMapping ?bq ?tq ?m) indicates that there are
+causal constraints in analogical mapping ?m that could be used in performing
+DQ analysis of ?bq relative to ?tq.  This is used both to signal that this
+approach should be tried, and in doing so, classifying the qualitative
+proportionalities as to sign, to simplify subsequent analysis, since we're
+retrieving them anyway.")
+
+(isa causalConstraintOnInMapping Predicate)
+(arity causalConstraintOnInMapping 4)
+(arg1Isa causalConstraintOnInMapping Mapping)
+(arg2Isa causalConstraintOnInMapping ContinuousQuantity)
+(arg3Isa causalConstraintOnInMapping ContinuousQuantity)
+(arg4Isa causalConstraintOnInMapping ContinuousQuantity)
+(comment causalConstraintOnInMapping
+  "(causalConstraintOnInMapping ?m ?bq ?tq ?ante) indicates that
+there is a qualitative proportionality (qprop or qprop-) between 
+?bq and ?ante as well as a corresponding (via analogical mapping ?m)
+relationship between ?tq and some other quantity.  This is to support
+propagation of DQ values during differential qualitative analysis.")
+
+(<== (jointCausalConstraintsInMapping ?base-q ?target-q ?m)
+     (evaluate ?the-set
+        (TheClosedRetrievalSetOf ?ante
+          (causalConstraintOnInMapping ?m ?base-q ?target-q ?ante)))
+     (different (TheSet) ?the-set))
+
+(isa positiveCausalConstraintOnInMapping Predicate)
+(arity positiveCausalConstraintOnInMapping 4)
+(arg1Isa positiveCausalConstraintOnInMapping Mapping)
+(arg2Isa positiveCausalConstraintOnInMapping ContinuousQuantity)
+(arg3Isa positiveCausalConstraintOnInMapping ContinuousQuantity)
+(arg4Isa positiveCausalConstraintOnInMapping ContinuousQuantity)
+(comment positiveCausalConstraintOnInMapping
+  "(positiveCausalConstraintOnInMapping ?m ?bq ?tq ?ante) indicates
+that (qprop ?bq ?ante) holds in the base of analogical mapping ?m,
+and that there is a corresponding qprop between ?tq and another quantity
+in the target of ?m.  Used in differential qualitative analysis.")
+
+(isa negativeCausalConstraintOnInMapping Predicate)
+(arity negativeCausalConstraintOnInMapping 4)
+(arg1Isa negativeCausalConstraintOnInMapping Mapping)
+(arg2Isa negativeCausalConstraintOnInMapping ContinuousQuantity)
+(arg3Isa negativeCausalConstraintOnInMapping ContinuousQuantity)
+(arg4Isa negativeCausalConstraintOnInMapping ContinuousQuantity)
+(comment negativeCausalConstraintOnInMapping
+  "(negativeCausalConstraintOnInMapping ?m ?bq ?tq ?ante) indicates
+that (qprop- ?bq ?ante) holds in the base of analogical mapping ?m,
+and that there is a corresponding qprop between ?tq and another quantity
+in the target of ?m.  Used in differential qualitative analysis.")
+
+(<== (causalConstraintOnInMapping ?m ?base-q ?target-q ?ante)
+     (positiveCausalConstraintOnInMapping ?m ?base-q ?target-q ?ante))
+
+(<== (causalConstraintOnInMapping ?m ?base-q ?target-q ?ante)
+     (negativeCausalConstraintOnInMapping ?m ?base-q ?target-q ?ante))
+
+;; N.B. The below are a bit promiscuous, in that they don't look at the source
+;; of the corresponding qprops to see if they plausibly correspond.  That could
+;; lead to trouble in more complex problems.
+
+(<== (positiveCausalConstraintOnInMapping ?m ?base-q ?target-q ?ante)
+     (correspondsInMappingWorkaround
+      ?m (qprop ?base-q ?ante)
+      (qprop ?target-q ?target-ante)))
+
+(<== (negativeCausalConstraintOnInMapping ?m ?base-q ?target-q ?ante)
+     (correspondsInMappingWorkaround ?m (qprop- ?base-q ?ante)
+                                     (qprop- ?target-q ?target-ante)))
+
+(isa correspondsInMappingWorkaround Predicate)
+(arity correspondsInMappingWorkaround 3)
+(arg1Isa correspondsInMappingWorkaround Mapping)
+(arg2Isa correspondsInMappingWorkaround CycLExpression-Askable)
+(arg3Isa correspondsInMappingWorkaround CycLExpression-Askable)
+(comment correspondsInMappingWorkaround
+  "(correspondsInMappingWorkaround ?m ?bp ?tp) indicates that in mapping ?m,
+?bp corresponds to ?tp.  The difference between this and correspondsInMapping
+is that, due to a limitation in FIRE\v3's outsourcing mechanism, arguments
+to the latter are only handled properly when they are ground expressions or
+variables.  This predicate handles ?bp and ?tp being patterns with open variables,
+ensuring consistent bindings across them.  This limitation should be fixed in 
+the next version of FIRE.")
+
+(<== (correspondsInMappingWorkaround ?m ?base-pattern ?target-pattern)
+     ;; This is needed because of a bug in the FIRE source mechanism,
+     ;; namely that the :VARIABLE check really does support only variables,
+     ;; not structures containing variables.  Fixing this would break a huge
+     ;; number of outsourced predicates, so this won't be fixed in the current
+     ;; version of FIRE.  
+     (baseOfMapping ?m ?base)
+     (contextForCase ?base ?base-mt)
+     (ist-Information ?base-mt ?base-pattern)
+     (correspondsInMapping ?m ?base-pattern ?tp)
+     (unifies ?tp ?target-pattern))
+
+
+;;; When operating from natural language descriptions, we need to build up 
+;;; qprops from indirect influence frames.  These rules might be more properly
+;;; installed elsewhere, but something like them is needed as a transducer from
+;;; what language provides to what a QP reasoner expects.  
+
+(<== (qprop ?constrained ?constrainer)
+     (wmOnly (lookupOnly (isa ?frame IndirectInfluenceFrame)))
+     (wmOnly (lookupOnly (sign ?frame 1)))
+     (wmOnly (constrainer ?frame ?constrainer-frame))
+     (wmOnly (constrained ?frame ?constrained-frame))
+     (translateQuantityFrameIntoExpression ?constrained-frame ?constrained)
+     (translateQuantityFrameIntoExpression ?constrained-frame ?constrainer))
+
+(<== (qprop- ?constrained ?constrainer)
+     (wmOnly (lookupOnly (isa ?frame IndirectInfluenceFrame)))
+     (wmOnly (lookupOnly (sign ?frame -1)))
+     (wmOnly (constrainer ?frame ?constrainer-frame))
+     (wmOnly (constrained ?frame ?constrained-frame))
+     (translateQuantityFrameIntoExpression ?constrained-frame ?constrained)
+     (translateQuantityFrameIntoExpression ?constrained-frame ?constrainer))
+
+(isa translateQuantityFrameIntoExpression Predicate)
+(arity translateQuantityFrameIntoExpression 2)
+(arg1Isa translateQuantityFrameIntoExpression QuantityFrame)
+(arg2Isa translateQuantityFrameIntoExpression ContinuousQuantity)
+(comment translateQuantityFrameIntoExpression
+  "(translateQuantityFrameIntoExpression ?f ?e) converts quantity frame ?f
+ into an expression ?e for a continuous quantity.")
+
+(<== (translateQuantityFrameIntoExpression ?frame ?expression)
+     (wmOnly (entity ?frame ?entity))
+     (wmOnly (quantityType ?frame ?qtype))
+     (unifies ?expression (?qtype ?entity)))
+
+;; N.B. the use of dqValue in the solveAll below does a small bit of extra work,
+;; rebinding some of the context variables, but the alternative is to burden
+;; the causal constraint calculations with maintaining this information, which
+;; seems less elegant, given that the result of their analysis might be a lack
+;; of information.
+
+(defSuggestion ResolveDQViaCausalConstraints
+    (resolveDQViaCausalConstraints ?quantity ?target-q ?m ?value)
+    :subgoals ((solveAll (causalConstraintOnInMapping ?m ?quantity ?target-q ?ante)
+                         (dqValue ?ante ?m ?v))
+               ;; are the disjunctions causing ask struct not believed problems?
+               ;; splitting out to see...
+               (evaluate ?pos-influences1
+                 (TheClosedRetrievalSetOf ?pos-ante
+                   (and (positiveCausalConstraintOnInMapping
+                             ?m ?quantity ?target-q ?pos-ante)
+                        (dqValue ?pos-ante ?m 1))))
+               (evaluate ?pos-influences2
+                 (TheClosedRetrievalSetOf ?pos-ante
+                   (and (negativeCausalConstraintOnInMapping
+                             ?m ?quantity ?target-q ?pos-ante)
+                        (dqValue ?pos-ante ?m -1))))
+               (evaluate ?pos-influences (SetOrCollectionUnion ?pos-influences1 ?pos-influences2))
+               (evaluate ?neg-influences1
+                        (TheClosedRetrievalSetOf ?neg-ante
+                          (and (positiveCausalConstraintOnInMapping
+                                ?m ?quantity ?target-q ?neg-ante)
+                               (dqValue ?neg-ante ?m -1))))
+               (evaluate ?neg-influences2
+                        (TheClosedRetrievalSetOf ?neg-ante
+                          (and (negativeCausalConstraintOnInMapping
+                                ?m ?quantity ?target-q ?neg-ante)
+                               (dqValue ?neg-ante ?m 1))))
+               (evaluate ?neg-influences (SetOrCollectionUnion ?neg-influences1 ?neg-influences2))
+               (evaluate ?zero-influences1
+                 (TheClosedRetrievalSetOf ?zero-ante
+                   (and (positiveCausalConstraintOnInMapping
+                             ?m ?quantity ?target-q ?zero-ante)
+                        (dqValue ?zero-ante ?m 0))))
+               (evaluate ?zero-influences2
+                 (TheClosedRetrievalSetOf ?zero-ante
+                   (and (negativeCausalConstraintOnInMapping
+                         ?m ?quantity ?target-q ?zero-ante)
+                        (dqValue ?zero-ante ?m 0))))
+               (evaluate ?zero-influences (SetOrCollectionUnion ?zero-influences1 ?zero-influences2))
+               (evaluate ?ambig-influences1 
+                 (TheClosedRetrievalSetOf ?ambig-ante
+                   (and (positiveCausalConstraintOnInMapping
+                             ?m ?quantity ?target-q ?ambig-ante)
+                        (dqValue ?ambig-ante ?m Ambig))))
+               (evaluate ?ambig-influences2
+                 (TheClosedRetrievalSetOf ?ambig-ante
+                   (and (negativeCausalConstraintOnInMapping
+                         ?m ?quantity ?target-q ?ambig-ante)
+                        (dqValue ?ambig-ante ?m Ambig))))
+               (evaluate ?ambig-influences (SetOrCollectionUnion ?ambig-influences1 ?ambig-influences2))
+               (decideDQViaCausalConstraints
+                ?pos-influences ?zero-influences ?neg-influences
+                ?ambig-influences ?value))
+  :documentation
+  "ResolveDQViaCausalConstraints uses qualitative proportionalities to
+propagate DQ values.")
+
+;; The ambiguity inference is reasonable because the methods should resort to
+;; causal propagation last.  In other words, if you already had other
+;; sources of knowledge that were sufficient to constrain it, you would have.
+;; ****** Is this true?
+
+(isa decideDQViaCausalConstraints Predicate)
+(arity decideDQViaCausalConstraints 5)
+(arg1Isa decideDQViaCausalConstraints Set-Mathematical)
+(arg2Isa decideDQViaCausalConstraints Set-Mathematical)
+(arg3Isa decideDQViaCausalConstraints Set-Mathematical)
+(arg4Isa decideDQViaCausalConstraints Set-Mathematical)
+(arg5Isa decideDQViaCausalConstraints PossibleDsValue)
+(comment decideDQViaCausalConstraints
+  "(decideDQViaCausalConstraints ?p ?z ?n ?a ?v) encodes the logic
+for computing the DQ value of a quantity based the combination of
+postive (?p), negative (?n), zero (?z), and ambiguous (?a)
+indirect influences, computing DQ value ?v accordingly.")
+
+(<== (decideDQViaCausalConstraints ?pos ?zero ?neg ?ambig Ambig)
+     (different ?ambig (TheSet)))
+
+(<== (decideDQViaCausalConstraints ?pos ?zero ?neg ?ambig Ambig)
+     (different ?pos (TheSet))
+     (different ?neg (TheSet)))
+
+(<== (decideDQViaCausalConstraints ?pos ?zero ?neg ?ambig 1)
+     (equals ?ambig (TheSet))
+     (different ?pos (TheSet))
+     (equals ?neg (TheSet)))
+
+(<== (decideDQViaCausalConstraints ?pos ?zero ?neg ?ambig -1)
+     (equals ?ambig (TheSet))
+     (different ?neg (TheSet))
+     (equals ?pos (TheSet)))
+
+(<== (decideDQViaCausalConstraints ?pos ?zero ?neg ?ambig 0)
+     (equals ?ambig (TheSet))
+     (equals ?neg (TheSet))
+     (equals ?pos (TheSet)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; If all else fails, assume it's zero
+
+(isa otherDQResolvingInformationAvailable Predicate)
+(arity otherDQResolvingInformationAvailable 3)
+(arg1Isa otherDQResolvingInformationAvailable ContinuousQuantity)
+(arg2Isa otherDQResolvingInformationAvailable ContinuousQuantity)
+(arg3Isa otherDQResolvingInformationAvailable Mapping)
+(comment otherDQResolvingInformationAvailable
+  "(otherDQResolvingInformationAvailable ?bq ?tq ?m) indicates that there is some other
+information source, outside of what is supported inside the QQR DQ analysis system, that
+can provide information about how quantity ?bq compares to corresponding quantity ?tq,
+as determined by mapping ?m. Using sketches to derive DQ values by comparing visual
+quantities is one such method.  We assume external systems define a Horn clause involving
+this predicate that can be used to ascertain their relevance.")
+
+(defSuggestion SolveDQViaAssumption
+    (solveDQValue ?quantity ?target-q ?base-mt ?target-mt ?m ?value)
+  :subgoals ((insufficientNumericalInformationForDQ ?quantity ?target-q ?base-mt ?target-mt)
+             ;; Can't have open variables here.  What if I derived other dqValues via numbers
+             ;; before getting to this point?  We should rely on the previous subgoal
+             ;; to fail if it is possible to deriveDQ value via numbers for this particular
+             ;; target quantity
+             ;;(uninferredSentence (deriveDQValueFromNumbers ?v1 ?v2 ?value))
+             (uninferredSentence (jointCausalConstraintsInMapping ?quantity ?target-q ?m))
+             (uninferredSentence (otherDQResolvingInformationAvailable ?quantity ?target-q ?m))
+             (unifies ?value 0))
+  :documentation 
+  "SolveDQViaAssumption encodes the logic that, if we really know nothing about two corresponding
+quantities in DQ analysis, then we should assume that they are equal.  This is very reasonable,
+since the alternative would be formulating a complete model (whatever that means) and inquiring
+about all of the parameters, which would then simply cause the same problem, recursively.
+
+An open question concerns what to do if external sources of information fail.  A repair strategy
+might be to re-run DQ analysis with the failures assumed to be zero, for example.  Under the view
+that SOLVE suggestions are our how we encode skills, this would be done by the next level up,
+monitoring the processing.")
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

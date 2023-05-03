@@ -1,0 +1,9 @@
+(in-microtheory ComputerHardwareDataVocabularyMt)
+
+(isa PowerMacintoshComputer ProductTypeByBrandVersion)
+(isa WatchguardFirebox2-Network ProductTypeByBrandVersion)
+(isa ApplePowerCD ProductTypeByBrandVersion)
+(isa CiscoPIXFirewall-Network ProductTypeByBrandVersion)
+(isa PowerMacintoshComputer ComputerTypeByBrand)
+(isa SunMachine ComputerTypeByBrand)
+(genls ZoomModem-TheProduct Modem)

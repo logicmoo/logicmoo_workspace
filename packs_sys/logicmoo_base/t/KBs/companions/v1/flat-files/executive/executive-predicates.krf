@@ -1,0 +1,225 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: executive-predicates.meld
+;;;;    System: Companions
+;;;;   Version: 1.0
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 17, 2006 13:20:46
+;;;;   Purpose: predicate definitions for executive
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ExecutiveMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Outsourced Predicates
+;;; (These are implemented in executive/reflection-source.lsp")
+
+(isa numTMSNodes TernaryPredicate)
+(isa numTMSNodes DynamicUpdatePredicate)
+(arity numTMSNodes 3)
+(arg1Isa numTMSNodes CompanionsAgent)
+(arg2Isa numTMSNodes Integer)
+(arg3Isa numTMSNodes Integer)
+(comment numTMSNodes "(numTMSNodes ?agent ?nodes ?clauses) returns the number of tms nodes and clauses in the current ltre of ?agent.")
+
+(isa numSMEs BinaryPredicate)
+(isa numSMEs DynamicUpdatePredicate)
+(arity numSMEs 2)
+(arg1Isa numSMEs CompanionsAgent)
+(arg2Isa numSMEs Integer)
+(comment numSMEs "(numSMEs ?agent ?num) returns the number of SMEs cached in the current reasoner of ?agent.")
+
+(isa currentHeapSpace TernaryPredicate)
+(isa currentHeapSpace DynamicUpdatePredicate)
+(arity currentHeapSpace 3)
+(arg1Isa currentHeapSpace CompanionsAgent)
+(arg2Isa currentHeapSpace Number)
+(arg3Isa currentHeapSpace Number)
+(comment currentHeapSpace "(currentHeapSpace ?agent ?used ?avail) binds ?used and ?avail to the number of used and available megabytes of lisp heap storage in ?agent.")
+
+(isa agentDomain BinaryPredicate)
+(isa agentDomain DynamicUpdatePredicate)
+(arity agentDomain 2)
+(arg1Isa agentDomain CompanionsAgent)
+(arg2Isa agentDomain CompanionsDomain)
+(comment agentDomain "(agentDomain ?agent ?domain) binds ?domain to the current domain of ?agent.")
+
+(isa agentState TernaryPredicate)
+(isa agentState DynamicUpdatePredicate)
+(arity agentState 3)
+(arg1Isa agentState CompanionsAgent)
+(arg2Isa agentState CycLTerm)
+(arg3Isa agentState Integer)
+(comment agentState "(agentState ?agent ?state ?howlong) binds ?state to the current working state of ?agent and ?howlong to the number of seconds it has been in that state.")
+
+(isa stateTimestamp BinaryPredicate)
+(isa stateTimestamp DynamicUpdatePredicate)
+(arity stateTimestamp 2)
+(arg1Isa stateTimestamp CompanionsAgent)
+(arg2Isa stateTimestamp TimePoint)  ;; or should it be a UniversalTimeFn term?
+(comment stateTimestamp "(stateTimestamp ?agent ?timestamp) binds ?timestamp to the last time ?agent's state changed.")
+
+(isa agentKBNum BinaryPredicate)
+(isa agentKBNum DynamicUpdatePredicate)
+(arity agentKBNum 2)
+(arg1Isa agentKBNum CompanionsAgent)
+(arg2Isa agentKBNum Integer)
+(comment agentKBNum "(agentKBNum ?agent ?num) binds ?num to the current instance of the kb on the node on which ?agent is running.")
+
+(isa agentKBName BinaryPredicate)
+(arity agentKBName 2)
+(arg1Isa agentKBName CompanionsAgent)
+(arg2Isa agentKBName CharacterString)
+(comment agentKBName "(agentKBName ?agent ?name) binds ?name to the name of the kb running under ?agent.")
+
+(isa agentReasonerClass BinaryPredicate)
+(arity agentReasonerClass 2)
+(arg1Isa agentReasonerClass CompanionsAgent)
+(arg2Isa agentReasonerClass Thing) ;; Really just a symbol.
+(comment agentReasonerClass "(agentReasonerClass ?agent ?class) binds ?class to the name of the class of reasoner running in ?agent.")
+
+(isa agentProcesses BinaryPredicate)
+(isa agentProcesses DynamicUpdatePredicate)
+(arity agentProcesses 2)
+(arg1Isa agentProcesses CompanionsAgent)
+(arg2Isa agentProcesses Set-Mathematical)
+(comment agentProcesses "(agentProcesses ?agent ?processSet) binds ?processSet to (TheSet ?p1 ?p2...) of named processes running in ?agent.")
+
+(isa agentSubscriptions BinaryPredicate)
+(isa agentSubscriptions DynamicUpdatePredicate)
+(arity agentSubscriptions 2)
+(arg1Isa agentSubscriptions CompanionsAgent)
+(arg2Isa agentSubscriptions Set-Mathematical)
+(comment agentSubscriptions "(agentSubscriptions ?agent ?subs) binds ?subs to the set of subscriptions currently serviced by ?agent.")
+
+(isa agentSubscriptionRequests BinaryPredicate)
+(isa agentSubscriptionRequests DynamicUpdatePredicate)
+(arity agentSubscriptionRequests 2)
+(arg1Isa agentSubscriptionRequests CompanionsAgent)
+(arg2Isa agentSubscriptionRequests Set-Mathematical)
+(comment agentSubscriptionRequests "(agentSubscriptionRequests ?agent ?subs) binds ?subs to the set of subscriptions currently requested by ?agent.")
+
+(isa advertisementsReceived BinaryPredicate)
+(isa advertisementsReceived DynamicUpdatePredicate)
+(arity advertisementsReceived 2)
+(arg1Isa advertisementsReceived CompanionsAgent)
+(arg2Isa advertisementsReceived Set-Mathematical)
+(comment advertisementsReceived "(advertisementsReceived ?agent ?adverts) binds ?adverts to the set of advertisements received by ?agent.")
+
+(isa agentCapabilities BinaryPredicate)
+(isa agentCapabilities DynamicUpdatePredicate)
+(arity agentCapabilities 2)
+(arg1Isa agentCapabilities CompanionsAgent)
+(arg2Isa agentCapabilities Set-Mathematical)
+(comment agentCapabilities "(agentCapabilities ?agent ?adverts) binds ?adverts to the set of advertisements sent by ?agent.")
+
+(isa newWorkerAgent UnaryPredicate)
+(isa newWorkerAgent DynamicUpdatePredicate)
+(arity newWorkerAgent 1)
+(arg1Isa newWorkerAgent CompanionsAgent)
+(comment newWorkerAgent "(newWorkerAgent ?new-worker) spawns a new worker agent and binds ?new-worker to its name.  Don't use this if you're just trying to query for existing worker agents.  Instead, query (workerAgent ?worker) in the session context.")
+
+(isa numVacantMachines UnaryPredicate)
+(isa numVacantMachines DynamicUpdatePredicate)
+(arity numVacantMachines 1)
+(arg1Isa numVacantMachines Integer)
+(comment numVacantMachines "(numVacantMachines ?num) says that there are ?num machines available to the facilitator without any agents running on them yet.")
+
+(isa numSolveRequests BinaryPredicate)
+(isa numSolveRequests DynamicUpdatePredicate)
+(arity numSolveRequests 2)
+(arg1Isa numSolveRequests CompanionsAgent)
+(arg2Isa numSolveRequests Integer)
+(comment numSolveRequests "(numSolveRequests ?session-reasoner ?num) binds ?num to the number of solve requests being pursued by the ?session-reasoner agent.")
+
+(isa solveQueries BinaryPredicate)
+(isa solveQueries DynamicUpdatePredicate)
+(arity solveQueries 2)
+(arg1Isa solveQueries  CompanionsAgent)
+(arg2Isa solveQueries Set-Mathematical)
+(comment solveQueries "(solveQueries ?session-reasoner ?queries) binds ?queries to TheSet of queries being pursued by the ?session-reasoner.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Chainer defined rules
+;;;
+
+(isa criticalMemoryShortage UnaryPredicate)
+(isa criticalMemoryShortage DynamicUpdatePredicate)
+(arity criticalMemoryShortage 1)
+(arg1Isa criticalMemoryShortage CompanionsAgent)
+(comment criticalMemoryShortage "(criticalMemoryShortage ?agent) means, well, there's a critical memory shortage on the node.  Prepare to reboot.")
+
+(isa interactiveDomain UnaryPredicate)
+(arity interactiveDomain 1)
+(arg1Isa interactiveDomain CompanionsDomain)
+(comment interactiveDomain "(interactiveDomain ?domain) means ?domain is a companions domain that uses an interaction manager.")
+
+(isa agentUptime BinaryPredicate)
+(isa agentUptime DynamicUpdatePredicate)
+(arity agentUptime 2)
+(arg1Isa agentUptime CompanionsAgent)
+(arg2Isa agentUptime Time-Quantity)
+(comment agentUptime "(agentUptime ?agent ?duration) binds ?duration ot the duration the agent has been online.")
+
+(isa summarizeHealth QuaternaryPredicate)
+(arity summarizeHealth 4)
+(arg1Isa summarizeHealth CompanionsAgent)
+(arg2Isa summarizeHealth List-Extensional)
+(arg3Isa summarizeHealth Integer)
+(arg4Isa summarizeHealth TruthValue)
+(comment summarizeHealth "(summarizeHealth ?agent ?health-tuple ?healthPct ?stuck) characterizes the health of the agent.")
+
+;;; (Not currently implemented)
+
+(isa reasonForUserTask BinaryPredicate)
+(isa reasonForUserTask FunctionalPredicate)
+(functionalInArgs reasonForUserTask 2)
+(arity reasonForUserTask 2)
+(arg1Isa reasonForUserTask CycLFormula)
+(arg2Isa reasonForUserTask CycLFormula)
+(comment reasonForUserTask "(reasonForUserTask ?task ?reason) means ?reason is the parent task for ?task.")
+
+(isa shouldDeferTask UnaryPredicate)
+(arity shouldDeferTask 1)
+(arg1Isa shouldDeferTask CycLFormula)
+(comment shouldDeferTask "(shouldDeferTask ?task) means ?task should be postponed or refused.")
+
+(isa anticipatedTimeToComplete BinaryPredicate)
+(isa anticipatedTimeToComplete FunctionalPredicate)
+(functionalInArgs anticipatedTimeToComplete 2)
+(arity anticipatedTimeToComplete 2)
+(arg1Isa anticipatedTimeToComplete CycLFormula)
+(arg2Isa anticipatedTimeToComplete TimeInterval)
+(comment anticipatedTimeToComplete "(anticipatedTimeToComplete ?task ?time) means the companion expects ?task to take ?time to complete.")
+
+(isa currentTaskCompetence BinaryPredicate)
+(isa currentTaskCompetence FunctionalPredicate)
+(functionalInArgs currentTaskCompetence 2)
+(arity currentTaskCompetence 2)
+(arg1Isa currentTaskCompetence CycLFormula)
+(arg2Isa currentTaskCompetence RatioQuantity)
+(comment currentTaskCompetence "(currentTaskCompetence ?task ?ratio) means the companion expects ?task to succeed ?ratio amount of the time.")
+
+(isa alternativeEncodingFor TernaryPredicate)
+(arity alternativeEncodingFor 3)
+(arg1Isa alternativeEncodingFor CycLFormula)
+(arg2Isa alternativeEncodingFor CycLFormula)
+(arg3Isa alternativeEncodingFor CycLFormula)
+(comment alternativeEncodingFor "(alternativeEncodingFor ?task ?problem ?encoding) means ?encoding is another way of representing ?problem given ?task.")
+
+
+;;; Reified relations
+
+
+(isa learnedModelTopic BinaryPredicate)  ;; moved from im-preds.meld
+(arity learnedModelTopic 2)
+(arg1Isa learnedModelTopic Microtheory)
+(arg2Isa learnedModelTopic HumanCyclist)
+(comment learnedModelTopic "(learnedModelTopic ?mt ?user) identifies the topic of a learned model, such as a particular user.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

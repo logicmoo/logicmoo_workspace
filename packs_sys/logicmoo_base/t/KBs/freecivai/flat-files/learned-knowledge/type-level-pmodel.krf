@@ -1,0 +1,940 @@
+;;;
+;;; Type-level process model
+;;;
+
+;;; Experimental forays into true process modeling for Freeciv.  
+;;; 
+;;; Although represented at the type-level, reasoning about active processes
+;;; is ultimately at the instance level.  The code that does this is in
+;;; companions/v1/agents/process-activation.lsp.  That code is responsible
+;;; for resolving instances of entities, which it does by working
+;;; down from goals.  Consequently, indexical references, like the current
+;;; player, are expanded in code and shouldn't exist in these process
+;;; specs at all.  In other words, process specs may refer to participants
+;;; of type FreeCiv-Player, but they aren't constrained to the current 
+;;; player.
+
+(in-microtheory (QualitativeModelMtFn Freeciv-TheGame) :exclude-globals t)
+
+;;; To Do: knowledge acquisition processes?
+
+;;; We need to connect primitive actions to process types.
+;;; *** These can't be sufficient:
+;;; *** (doConnectBy ?unit ?loc ?special ?plan) - we need 4 arguments, not 2.
+;;; *** (doChangeProduction ?city ?item) - we need 2 args, not 1.
+(actionInitiatesProcess doGotoDest UnitMovement (TheList primaryObjectMoving toLocation))
+(actionInitiatesProcess doConnectBy UnitMovement (TheList primaryObjectMoving toLocation))
+(actionInitiatesProcess doChangeProduction CityProductionProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doResearch 1)
+;(actionInitiatesProcess doIrrigate UnitActivityProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doMine UnitActivityProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doBuildRoad UnitActivityProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doBuildRailRoad UnitActivityProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doCleanPollution UnitActivityProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doCleanFallout UnitActivityProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doTransform UnitActivityProcess (TheList objectOfStateChange))
+;(actionInitiatesProcess doLaunchSpaceship 1)
+
+;;; We have: (ActionProcessTypeFn doChangeProduction)
+
+;;; This should be familiar from Deep Green
+;;; This is actually a durative action, as opposed to other, causal processes.
+(isa UnitMovement QPProcessType)
+(genls UnitMovement Movement-TranslationProcess)
+(participantType UnitMovement primaryObjectMoving FreeCiv-Unit)  ; this *is* the from-location
+(participantType UnitMovement toLocation FreecivLocation)
+(associatedRoleList UnitMovement (TheList primaryObjectMoving toLocation)) ; similar to associatedActorSlotList
+;;; That's kind of like gathering together a bunch of rolesForEventType statements.
+(conditionOf-TypeType UnitMovement
+  (greaterThan (DistanceFn primaryObjectMoving toLocation) (FreecivTileDistance 0)))
+
+;;; Make a QPQuantity out of speedOfObject-Translation
+;;; problem: speedOfObject-Translation isn't a MeasurableQuantitySlot.  (It's a Relation)
+(consequenceOf-TypeType UnitMovement
+  (i- (DistanceFn primaryObjectMoving toLocation) ((QPQuantityFn Speed) primaryObjectMoving)))
+
+;;; Consider things like WaterSurfaceTrajectory, etc.
+
+
+
+
+;;; PathSystem Effect
+;;; "Land units move faster over pathways than over unimproved terrain."
+(isa PathwayTraversalEffect ModelFragmentType)
+(participantType PathwayTraversalEffect primaryObjectMoving FreeCiv-LandUnit)
+(participantType PathwayTraversalEffect eventOccursAt FreecivLocation)
+(associatedRoleList PathwayTraversalEffect (TheList primaryObjectMoving eventOccursAt))
+(participantConstraint PathwayTraversalEffect (objectFoundInLocation primaryObjectMoving eventOccursAt))
+(participantConstraint PathwayTraversalEffect (or (specialAt eventOccursAt FC-Special-Road)
+                                                  (specialAt eventOccursAt FC-Special-Railroad)))
+;; Do we need to say (active UnitMovement (TheList primaryObjectMoving))?  You could of course, just be an idle Sentry on the road.
+(consequenceOf-TypeType PathwayTraversalEffect
+  (positiveDependence ((QPQuantityFn Speed) primaryObjectMoving)))
+
+
+;;;
+;;; Activities
+;;;
+;; (MeasurableQuantityFn numTurnsToComplete)
+
+;;; "An activity is a durative action that consumes no resources other than time."
+;;; "An activity type may be completed after a certain amount of time, or may continue until interrupted."
+(isa UnitActivityProcess QPProcessType)
+(participantType UnitActivityProcess objectOfStateChange FreeCiv-Unit)
+(associatedRoleList UnitActivityProcess (TheList objectOfStateChange))
+(conditionOf-TypeType UnitActivityProcess
+  (greaterThan ((MeasurableQuantityFn numTurnsToComplete) objectOfStateChange) (Turns 0)))
+;;; Activities consume no resources
+(consequenceOf-TypeType UnitActivityProcess
+  (i- ((MeasurableQuantityFn numTurnsToComplete) objectOfStateChange) (Turns 1)))
+
+;;;
+;;; City Growth
+;;;
+
+;(i+TypeType (MeasurableQuantityFn citySize) (MeasurableQuantityFn cityGrowthRate) FreeCiv-City FreeCiv-City equals)
+
+;;; "The growth of a city is measured by its increase in size."
+;;; "A city's population is proportional to its size."
+;;; "A city stops growing when it is in the disordered state."
+;;; "A city of size 8 requires an Aqueduct to continue growing.
+;;; "A city of size 12 requires a Sewer System to continue growing."
+(isa CityGrowthProcess QPProcessType)
+(participantType CityGrowthProcess objectOfStateChange FreeCiv-City)
+(associatedRoleList CityGrowthProcess (TheList objectOfStateChange))
+(participantConstraint CityGrowthProcess
+  (not (activeMF (MFInstanceFn CityDisorderState (TheList objectOfStateChange))))) ; No growth if city is in disorder!
+(conditionOf-TypeType CityGrowthProcess
+  (lessThan ((MeasurableQuantityFn citySize) objectOfStateChange) (FreecivCitizenCountFn 8)))
+(conditionOf-TypeType CityGrowthProcess
+  (greaterThan ((MeasurableQuantityFn numTurnsToGrow) objectOfStateChange) (Turns 0)))  ; but what if it's "never"? (numTurnsToGrow will fail now)
+(consequenceOf-TypeType CityGrowthProcess
+  (i+ ((MeasurableQuantityFn citySize) objectOfStateChange) ((MeasurableQuantityFn cityGrowthRate) objectOfStateChange)))
+(consequenceOf-TypeType CityGrowthProcess
+  (i- ((MeasurableQuantityFn numTurnsToGrow) objectOfStateChange) (Turns 1)))
+
+;;; To grow past size 8 you need an aqueduct:
+(isa CityGrowthProcess2 QPProcessType)
+(participantType CityGrowthProcess2 objectOfStateChange FreeCiv-City)
+(associatedRoleList CityGrowthProcess2 (TheList objectOfStateChange))
+(participantConstraint CityGrowthProcess2 
+  (cityHasImprovement objectOfStateChange FC-Building-Aqueduct))
+(participantConstraint CityGrowthProcess2
+  (not (activeMF (MFInstanceFn CityDisorderState (TheList objectOfStateChange))))) ; No growth if city is in disorder!
+(conditionOf-TypeType CityGrowthProcess2
+  (greaterThanOrEqualTo ((MeasurableQuantityFn citySize) objectOfStateChange) (FreecivCitizenCountFn 8)))
+(conditionOf-TypeType CityGrowthProcess2
+  (lessThan ((MeasurableQuantityFn citySize) objectOfStateChange) (FreecivCitizenCountFn 12)))
+(conditionOf-TypeType CityGrowthProcess2
+  (greaterThan ((MeasurableQuantityFn numTurnsToGrow) objectOfStateChange) (Turns 0)))
+(consequenceOf-TypeType CityGrowthProcess2
+  (i+ ((MeasurableQuantityFn citySize) objectOfStateChange) ((MeasurableQuantityFn cityGrowthRate) objectOfStateChange)))
+(consequenceOf-TypeType CityGrowthProcess2
+  (i- ((MeasurableQuantityFn numTurnsToGrow) objectOfStateChange) (Turns 1)))
+
+;;; To grow past size 12 you need a sewer system:
+(isa CityGrowthProcess3 QPProcessType)
+(participantType CityGrowthProcess3 objectOfStateChange FreeCiv-City)
+(associatedRoleList CityGrowthProcess3 (TheList objectOfStateChange))
+;(participantConstraint CityGrowthProcess3
+;  (cityHasImprovement objectOfStateChange FC-Building-Aqueduct))
+(participantConstraint CityGrowthProcess3
+  (cityHasImprovement objectOfStateChange FC-Building-SewerSystem))
+(participantConstraint CityGrowthProcess3
+  (not (activeMF (MFInstanceFn CityDisorderState (TheList objectOfStateChange))))) ; No growth if city is in disorder!
+(conditionOf-TypeType CityGrowthProcess3
+  (greaterThanOrEqualTo ((MeasurableQuantityFn citySize) objectOfStateChange) (FreecivCitizenCountFn 12)))
+(conditionOf-TypeType CityGrowthProcess3
+  (greaterThan ((MeasurableQuantityFn numTurnsToGrow) objectOfStateChange) (Turns 0)))
+(consequenceOf-TypeType CityGrowthProcess3
+  (i+ ((MeasurableQuantityFn citySize) objectOfStateChange) ((MeasurableQuantityFn cityGrowthRate) objectOfStateChange)))
+(consequenceOf-TypeType CityGrowthProcess3
+  (i- ((MeasurableQuantityFn numTurnsToGrow) objectOfStateChange) (Turns 1)))
+
+;;; 
+;;; Production
+;;; 
+
+;;; "There is a process in which entities are produced."
+;;; "The entities may be units, buildings, wonders, or coinage."
+;;; "The entity production process begins when an entity type is placed on a
+;;;  city's production queue."
+;;; "The number of turns to build the entity decreases until the entity 
+;;;  instance is produced."
+;;; "The rate at which a city produces entities is proportional to its shield
+;;;  surplus."
+
+;;; "Cities produce at a rate determined by their shield surplus."
+;;; "A city in revolt stops producing anything."
+(isa CityProductionProcess QPProcessType)
+(participantType CityProductionProcess objectOfStateChange FreeCiv-City)
+(participantType CityProductionProcess objectTypeProduced FreeCiv-BuildableThing-Type)
+(associatedRoleList CityProductionProcess (TheList objectOfStateChange objectTypeProduced))
+(participantConstraint CityProductionProcess
+  (currentlyBuilding objectOfStateChange objectTypeProduced))
+(participantConstraint CityProductionProcess
+  (different objectTypeProduced FC-Coinage))  ; This is a totally different kind of process
+(participantConstraint CityProductionProcess
+  (not (activeMF (MFInstanceFn CityDisorderState (TheList objectOfStateChange))))) ; No production if city is in disorder!
+(conditionOf-TypeType CityProductionProcess
+  (greaterThan ((MeasurableQuantityFn numTurnsToBuild) objectOfStateChange) (Turns 0))) ; this will simply fail if city is in revolt.
+(consequenceOf-TypeType CityProductionProcess
+  (i+ ((MeasurableQuantityFn cityShieldReserves) objectOfStateChange)
+      ((MeasurableQuantityFn cityShieldSurplus) objectOfStateChange)))
+(consequenceOf-TypeType CityProductionProcess
+  (i- ((MeasurableQuantityFn numTurnsToBuild) objectOfStateChange)
+      (Turns 1)))
+
+;;; "When a city produces coinage, it adds gold directly to the civilization's treasury."
+(isa CityCoinageProduction QPProcessType)
+(participantType CityCoinageProduction objectOfStateChange FreeCiv-City)
+(associatedRoleList CityCoinageProduction (TheList objectOfStateChange))
+(participantConstraint CityCoinageProduction
+  (currentlyBuilding objectOfStateChange FC-Coinage))  ; no need to reify coinage with a role relation
+(participantConstraint CityCoinageProduction
+  (not (activeMF (MFInstanceFn CityDisorderState (TheList objectOfStateChange))))) ; No production if city is in disorder!
+(consequenceOf-TypeType CityCoinageProduction
+  (c+ ((MeasurableQuantityFn cityCoinageProduction) objectOfStateChange)
+      ((MeasurableQuantityFn cityShieldSurplus) objectOfStateChange)))  ; Of course, they're different units. Does that work?
+
+
+;;;
+;;; Terrain Improvement
+;;;
+
+;;; Need more general terrain improvement process to cover terrain transformation.
+
+(isa RoadBonus ModelFragmentType)
+(participantType RoadBonus objectOfStateChange FreeCiv-City)
+(participantType RoadBonus eventOccursAt FreecivLocation)
+(associatedRoleList RoadBonus (TheList objectOfStateChange eventOccursAt))
+(participantConstraint RoadBonus (cityWorkingTileAt objectOfStateChange eventOccursAt))
+(participantConstraint RoadBonus (uninferredSentence (fcObjectAt objectOfStateChange eventOccursAt)))
+;;; Hate using 'or'.  Short of re-factoring the ontology, not sure what to do.
+(participantConstraint RoadBonus (or (terrainAt eventOccursAt FC-Terrain-Grassland)
+                                     (terrainAt eventOccursAt FC-Terrain-Plains)
+                                     (terrainAt eventOccursAt FC-Terrain-Desert)))
+(participantConstraint RoadBonus (specialAt eventOccursAt FC-Special-Road))
+;;; If RoadBonus is active, it has a positive influence on tileTradeProduction:
+(consequenceOf-TypeType RoadBonus
+  (positiveDependence ((MeasurableQuantityFn tileTradeProduction) eventOccursAt)))
+  
+(isa RailroadBonus ModelFragmentType)
+(participantType RailroadBonus objectOfStateChange FreeCiv-City)
+(participantType RailroadBonus eventOccursAt FreecivLocation)
+(associatedRoleList RailroadBonus (TheList objectOfStateChange eventOccursAt))
+(participantConstraint RailroadBonus (cityWorkingTileAt objectOfStateChange eventOccursAt))
+(participantConstraint RailroadBonus (uninferredSentence (fcObjectAt objectOfStateChange eventOccursAt)))
+;;; Hate using 'or'.  Short of re-factoring the ontology, not sure what to do.
+(participantConstraint RailroadBonus (or (terrainAt eventOccursAt FC-Terrain-Grassland)
+                                         (terrainAt eventOccursAt FC-Terrain-Plains)
+                                         (terrainAt eventOccursAt FC-Terrain-Desert)))
+(participantConstraint RailroadBonus (specialAt eventOccursAt FC-Special-Railroad))
+;;; If RailroadBonus is active, it has a positive influence on tileTradeProduction:
+(consequenceOf-TypeType RailroadBonus
+  (positiveDependence ((MeasurableQuantityFn tileTradeProduction) eventOccursAt)))
+
+;;; "When a city works a tile whose terrain is hills, mountains, glacier or desert, 
+;;; the city's production rate is increased if there is a mine on the tile."
+(isa MineBonus ModelFragmentType)
+(participantType MineBonus objectOfStateChange FreeCiv-City)
+(participantType MineBonus eventOccursAt FreecivLocation)
+(associatedRoleList MineBonus (TheList objectOfStateChange eventOccursAt))
+(participantConstraint MineBonus (cityWorkingTileAt objectOfStateChange eventOccursAt))
+;; You actually can get a mine bonus by mining the city center
+(participantConstraint MineBonus (or (terrainAt eventOccursAt FC-Terrain-Hills)
+                                     (terrainAt eventOccursAt FC-Terrain-Mountains)
+                                     (terrainAt eventOccursAt FC-Terrain-Glacier)
+                                     (terrainAt eventOccursAt FC-Terrain-Desert)))
+(participantConstraint MineBonus (specialAt eventOccursAt FC-Special-Mine))
+;;; If MineBonus is active, it has a positive influence on tileShieldProduction:
+(consequenceOf-TypeType MineBonus
+  (positiveDependence ((MeasurableQuantityFn tileShieldProduction) eventOccursAt)))
+  
+
+(isa IrrigationBonus ModelFragmentType)
+(participantType IrrigationBonus objectOfStateChange FreeCiv-City)
+(participantType IrrigationBonus eventOccursAt FreecivLocation)
+(associatedRoleList IrrigationBonus (TheList objectOfStateChange eventOccursAt))
+(participantConstraint IrrigationBonus (cityWorkingTileAt objectOfStateChange eventOccursAt))
+(participantConstraint IrrigationBonus (uninferredSentence (fcObjectAt objectOfStateChange eventOccursAt)))
+(participantConstraint IrrigationBonus (or (terrainAt eventOccursAt FC-Terrain-Grassland)
+                                           (terrainAt eventOccursAt FC-Terrain-Plains)
+                                           (terrainAt eventOccursAt FC-Terrain-Hills)
+                                           (terrainAt eventOccursAt FC-Terrain-Tundra)
+                                           (terrainAt eventOccursAt FC-Terrain-Desert)))
+(participantConstraint IrrigationBonus (specialAt eventOccursAt FC-Special-Irrigation))
+;;; If IrrigationBonus is active, it has a positive influence on tileFoodProduction:
+(consequenceOf-TypeType IrrigationBonus
+  (positiveDependence ((MeasurableQuantityFn tileFoodProduction) eventOccursAt)))
+  
+(isa FarmlandBonus ModelFragmentType)
+(participantType FarmlandBonus objectOfStateChange FreeCiv-City)
+(participantType FarmlandBonus eventOccursAt FreecivLocation)
+(associatedRoleList FarmlandBonus (TheList objectOfStateChange eventOccursAt))
+(participantConstraint FarmlandBonus (cityWorkingTileAt objectOfStateChange eventOccursAt))
+(participantConstraint FarmlandBonus (uninferredSentence (fcObjectAt objectOfStateChange eventOccursAt)))
+(participantConstraint FarmlandBonus (or (terrainAt eventOccursAt FC-Terrain-Grassland)
+                                           (terrainAt eventOccursAt FC-Terrain-Plains)
+                                           (terrainAt eventOccursAt FC-Terrain-Hills)
+                                           (terrainAt eventOccursAt FC-Terrain-Tundra)
+                                           (terrainAt eventOccursAt FC-Terrain-Desert)))
+(participantConstraint FarmlandBonus (specialAt eventOccursAt FC-Special-Farmland))
+;;; If FarmlandBonus is active, it has a positive influence on tileFoodProduction:
+(consequenceOf-TypeType FarmlandBonus
+  (positiveDependence ((MeasurableQuantityFn tileFoodProduction) eventOccursAt)))
+
+;;;
+;;; Pollution
+;;;
+
+;;; Knowing the ultimate cause of pollution is not helpful here.
+;;; It's causing the generation of goals to minimize the size and outputs of cities.
+;;; It's sufficient for our purposes to know mitigation subgoals.
+;(isa InfrastructureEffectOnPollution ModelFragmentType)
+;(participantType InfrastructureEffectOnPollution objectOfStateChange FreeCiv-City)
+;(participantType InfrastructureEffectOnPollution instrument FC-Janitors-Type)
+;(associatedRoleList InfrastructureEffectOnPollution (TheList objectOfStateChange instrument))
+;(participantConstraint InfrastructureEffectOnPollution (cityHasImprovement objectOfStateChange instrument))
+;
+;;; *** Really, this needs to be the rate of pollution:
+;(consequenceOf-TypeType InfrastructureEffectOnPollution
+;  (negativeDependence ((MeasurableQuantityFn cityPollution) objectOfStateChange)))
+;
+;(isa ProductionEffectOnPollution ModelFragmentType)
+;(participantType ProductionEffectOnPollution objectOfStateChange FreeCiv-City)
+;(associatedRoleList ProductionEffectOnPollution (TheList objectOfStateChange))
+;(conditionOf-TypeType ProductionEffectOnPollution
+;  (greaterThan ((MeasurableQuantityFn cityShieldProduction) objectOfStateChange) (ProductionPoints 20)))
+;(consequenceOf-TypeType ProductionEffectOnPollution
+;  (qprop ((MeasurableQuantityFn cityPollution) objectOfStateChange)
+;         ((MeasurableQuantityFn cityShieldProduction) objectOfStateChange)))
+;;; There's also a convoluted dependence on the citySize and the attainment of certain technologies
+;;; (industrialization, the automobile, mass production, and plastics), but production > 20 will suffice for now.
+
+
+;;; Healing
+
+;;; We can now measure the health of a unit as a percentage of its maximum
+;;; hitpoints.  Much better than the absolute number of hitpoints (which is
+;;; still available)
+;;; 
+;;; "Damaged units also begin each turn with fewer movement points than 
+;;; normal, in proportion to what fraction of their total hit points remain."
+;;;
+;;; UnitedNations Wonder speeds healing.
+
+;;; "Healing is the process of increasing a units current health up to a maximum of 100%"
+;;; "A unit can only heal if it is not moving."
+(isa FCHealing QPProcessType)
+(genls FCHealing Healing)
+(participantType FCHealing objectOfStateChange FreeCiv-Unit)
+(associatedRoleList FCHealing (TheList objectOfStateChange))
+
+;;; damaged:
+(conditionOf-TypeType FCHealing 
+  (lessThan ((MeasurableQuantityFn currentHealth) objectOfStateChange) (Percent 100)))
+  
+;;; alive:
+(conditionOf-TypeType FCHealing 
+  (greaterThan ((MeasurableQuantityFn currentHealth) objectOfStateChange) (Percent 0)))
+  
+;;; stationary:
+;;; Units don't seem to heal if they're moving.
+(conditionOf-TypeType FCHealing 
+  (equals ((QPQuantityFn  Speed) objectOfStateChange) (TilesPerTurn 0)))
+  
+  
+;;; We need a quantity for movement rate.
+;;; Something like (PerFn FreecivTileDistance Turn-GameEvent)
+
+(consequenceOf-TypeType FCHealing 
+  (i+ ((MeasurableQuantityFn currentHealth) objectOfStateChange) 
+      ((MeasurableQuantityFn healingRate) objectOfStateChange)))
+
+
+;;; Can we get rid of explicit references to rates of processes and assume 
+;;; they're all properties of objects?
+
+;;; The rate a unit heals is increased if it is inside a friendly city."  ;; any city?
+(isa CityEffectOnHealing ModelFragmentType)
+
+(participantType CityEffectOnHealing objectOfStateChange FreeCiv-Unit)
+(participantType CityEffectOnHealing eventOccursAt FreeCiv-City)
+(participantType CityEffectOnHealing directingAgent FreeCiv-Player)  
+(associatedRoleList CityEffectOnHealing (TheList objectOfStateChange eventOccursAt))
+
+(participantConstraint CityEffectOnHealing (and (unitOwner objectOfStateChange directingAgent)
+                                                (cityOwner eventOccursAt directingAgent)))
+(participantConstraint CityEffectOnHealing
+  (objectFoundInLocation objectOfStateChange eventOccursAt)) ; *** check this.
+
+(consequenceOf-TypeType CityEffectOnHealing
+  (positiveDependence ((MeasurableQuantityFn healingRate) objectOfStateChange)))
+
+;;; The effect of having a Barracks (or a PortFacility or an Airport) has to
+;;; be a conditionalized qprop on the healing rate.
+;;; That means it's a model fragment, but not a process (no direct influence)
+
+;;; "A land unit heals faster inside a city if the city has a barracks."
+;;; "A Sea unit heals faster inside a city if the city has a port."
+(isa InfrastructureEffectOnHealing ModelFragmentType)
+
+;;; HealingInfrastructureType = FC-Building-Barracks, BarracksII, Airport,
+;;; PortFacility...
+
+;;; replaced instrument with objectTypeUsed (a built-in Cyc role)
+;(participantType InfrastructureEffectOnHealing objectOfStateChange FreeCiv-Unit)
+;(participantType InfrastructureEffectOnHealing eventOccursAt FreeCiv-City)
+;(participantType InfrastructureEffectOnHealing objectTypeUsed HealingInfrastructureType)
+;(associatedRoleList InfrastructureEffectOnHealing (TheList objectOfStateChange eventOccursAt objectTypeUsed))
+
+;(participantConstraint InfrastructureEffectOnHealing (objectFoundInLocation objectOfStateChange eventOccursAt))
+;(participantConstraint InfrastructureEffectOnHealing (cityHasImprovement eventOccursAt objectTypeUsed))
+
+;;; Now how do we reference the rate of an external process if it isn't instantiated?
+;(consequenceOf-TypeType InfrastructureEffectOnHealing
+;  (positiveDependence ((MeasurableQuantityFn healingRate) objectOfStateChange)))
+  
+(participantType InfrastructureEffectOnLandUnitHealing objectOfStateChange FreeCiv-LandUnit)
+(participantType InfrastructureEffectOnLandUnitHealing eventOccursAt FreeCiv-City)
+(participantType InfrastructureEffectOnLandUnitHealing objectTypeUsed FC-Building-Barracks)  ; Ugh.  Need to handle BarracksII & BarracksIII?
+(participantType InfrastructureEffectOnLandUnitHealing directingAgent FreeCiv-Player)
+(associatedRoleList InfrastructureEffectOnLandUnitHealing (TheList objectOfStateChange eventOccursAt objectTypeUsed))
+
+(participantConstraint InfrastructureEffectOnLandUnitHealing (and (unitOwner objectOfStateChange directingAgent)
+                                                                  (cityOwner eventOccursAt directingAgent)))
+(participantConstraint InfrastructureEffectOnLandUnitHealing (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint InfrastructureEffectOnLandUnitHealing (cityHasImprovement eventOccursAt objectTypeUsed))
+;; Now, we have to somehow say that the unit is in one of his own civilization's cities.
+
+;;; Now how do we reference the rate of an external process if it isn't instantiated?
+(consequenceOf-TypeType InfrastructureEffectOnLandUnitHealing
+  (positiveDependence ((MeasurableQuantityFn healingRate) objectOfStateChange)))
+
+
+(participantType InfrastructureEffectOnSeaUnitHealing objectOfStateChange FreeCiv-SeaUnit)
+(participantType InfrastructureEffectOnSeaUnitHealing eventOccursAt FreeCiv-City)
+(participantType InfrastructureEffectOnSeaUnitHealing objectTypeUsed FC-Building-PortFacility)
+(participantType InfrastructureEffectOnSeaUnitHealing directingAgent FreeCiv-Player)
+(associatedRoleList InfrastructureEffectOnSeaUnitHealing (TheList objectOfStateChange eventOccursAt objectTypeUsed))
+
+(participantConstraint InfrastructureEffectOnSeaUnitHealing (and (unitOwner objectOfStateChange directingAgent)
+                                                                 (cityOwner eventOccursAt directingAgent)))
+(participantConstraint InfrastructureEffectOnSeaUnitHealing (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint InfrastructureEffectOnSeaUnitHealing (cityHasImprovement eventOccursAt objectTypeUsed))
+
+;;; Now how do we reference the rate of an external process if it isn't instantiated?
+(consequenceOf-TypeType InfrastructureEffectOnSeaUnitHealing
+  (positiveDependence ((MeasurableQuantityFn healingRate) objectOfStateChange)))
+
+(participantType InfrastructureEffectOnAirUnitHealing objectOfStateChange FreeCiv-AirUnit)
+(participantType InfrastructureEffectOnAirUnitHealing eventOccursAt FreeCiv-City)
+(participantType InfrastructureEffectOnAirUnitHealing objectTypeUsed FC-Building-Airport)
+(participantType InfrastructureEffectOnAirUnitHealing directingAgent FreeCiv-Player)
+(associatedRoleList InfrastructureEffectOnAirUnitHealing (TheList objectOfStateChange eventOccursAt objectTypeUsed))
+
+(participantConstraint InfrastructureEffectOnAirUnitHealing (and (unitOwner objectOfStateChange directingAgent)
+                                                                 (cityOwner eventOccursAt directingAgent)))
+(participantConstraint InfrastructureEffectOnAirUnitHealing (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint InfrastructureEffectOnAirUnitHealing (cityHasImprovement eventOccursAt objectTypeUsed))
+
+;;; Now how do we reference the rate of an external process if it isn't instantiated?
+(consequenceOf-TypeType InfrastructureEffectOnAirUnitHealing
+  (positiveDependence ((MeasurableQuantityFn healingRate) objectOfStateChange)))
+
+;;;
+;;; Happiness
+;;;
+
+;;; contingent on city size, empire size, government, luxury improvements,
+;;; luxury %, military presence, and autocratic improvements (police station)
+
+#|
+Cities with three or more citizens celebrate when at least half their citizens are happy and none remain unhappy. The effects of celebration vary depending on your government type; in the default ruleset:
+ - Under Anarchy or Despotism, you will not suffer the normal production penalty for tiles which produce more than 2 points of any resource (food, production, or trade).
+ - Under Monarchy or Communism, your city will gain the trade bonus of Republican/Democratic governments: 1 bonus trade point in any tile which already produces at least 1 trade.
+ - Under a Republic or a Democracy, your city will enter 'rapture': its population will increase by 1 each turn until there is no excess food or until the number of happy citizens is no longer sufficient for celebration. Without rapture, large cities can grow only by struggling to produce a food surplus -- which can be difficult.
+
+ Luxury makes citizens happy. For every two luxury points a city produces, one content citizen is made happy.
+|#
+
+;;; 1) production is contingent on city not being in disorder. (only luxury production is not)
+;;; 2) disorder is a quantity-conditioned state (numUnhappy > numHappy)
+;;; 3) disorder has a direct influence on a propensityForRevolution quantity in Democracy
+;;; 4) celebration is a quantity-conditioned state (size >= 3, numUnhappy = 0, numHappy >= totalnumWorkers / 2).
+;;; 5) celebration under Anarchy or Despotism: qprop+ food, shield, trade production.
+;;; 6) celebration under Monarchy or Communism: qprop+ trade production
+;;; 7) celebration under Republic or Democracy: i+ citySize
+;;; 8) size 5 is an inflection point where new citizens start out unhappy.
+;;; 9) empire size influences numUnhappy when (size>12 for Republic, size>13 for Democracy, size>9 for Despotism)
+;;; 
+
+;;; PoliceStation: Reduces the unhappiness caused by military units outside
+;;; the city by 2 under Democracy and 1 under Republic. This improvement has
+;;; no effect under other governments. 
+
+
+;;; (cityIsHappy ?city)
+;;; (cityIsUnhappy ?city)
+;;; (happyCitizens ?city ?numCitizens)  ; as (FreecivCitizenCountFn <num>) <- that's terrible.  units != citizens.
+;;; (contentCitizens ?city ?numCitizens)
+;;; (unhappyCitizens ?city ?numCitizens)
+;;; (angryCitizens ?city ?numCitizens)
+
+;; (qprop+TypeType (MeasurableQuantityFn cityHappiness)
+;;;                (MeasurableQuantityFn cityLuxuryTotal)
+;;;                FreeCiv-City FreeCiv-City equals)
+
+
+;;; "A city can only celebrate if its size is greater than 2."
+;;; "A city can only celebrate if it has no unhappy citizens."
+;;; "A city can only celebrate if more than half of its citizens are happy."
+(isa CityCelebration ModelFragmentType)
+(participantType CityCelebration objectOfStateChange FreeCiv-City)
+(associatedRoleList CityCelebration (TheList objectOfStateChange))
+(conditionOf-TypeType CityCelebration
+  (greaterThanOrEqualTo ((MeasurableQuantityFn citySize) objectOfStateChange) (FreecivCitizenCountFn 3)))
+(conditionOf-TypeType CityCelebration
+  (equals ((MeasurableQuantityFn unhappyCitizens) objectOfStateChange) (FreecivCitizenCountFn 0)))
+(conditionOf-TypeType CityCelebration
+  (greaterThan ((MeasurableQuantityFn happyCitizens) objectOfStateChange) 
+                (QuotientFn ((MeasurableQuantityFn numWorkers) objectOfStateChange) 2))) ; this is really problematic.
+
+;;; "When a city is celebrating and the government of the city's civilization is Monarchy or Communist, 
+;;; the city's trade surplus is increased."
+(isa CelebrationTradeBonus QPProcessType)
+(participantType CelebrationTradeBonus objectOfStateChange FreeCiv-City)
+(participantType CelebrationTradeBonus directingAgent FreeCiv-Player)  
+(associatedRoleList CelebrationTradeBonus (TheList objectOfStateChange directingAgent))
+(participantConstraint CelebrationTradeBonus
+  (activeMF (MFInstanceFn CityCelebration (TheList objectOfStateChange))))
+(participantConstraint CelebrationTradeBonus
+  (cityOwner objectOfStateChange directingAgent))
+(participantConstraint CelebrationTradeBonus
+  (or (currentGovernment directingAgent FC-Monarchy) 
+      (currentGovernment directingAgent FC-Communist)))
+(consequenceOf-TypeType CelebrationTradeBonus
+  (positiveDependence ((MeasurableQuantityFn cityTradeSurplus) objectOfStateChange)))
+
+;;; The effects of celebration are dependent on the type of government:
+
+;;; "When a city is celebrating and the government ofthe city's civilization is Republic or Democracy, 
+;;; the city's growth rate is increased."
+(isa CityRaptureProcess QPProcessType)
+(participantType CityRaptureProcess objectOfStateChange FreeCiv-City)
+;; could almost use eventOccursInCountry, or fostersCondition
+(participantType CityRaptureProcess directingAgent FreeCiv-Player)  
+(associatedRoleList CityRaptureProcess (TheList objectOfStateChange directingAgent))
+(participantConstraint CityRaptureProcess
+  (activeMF (MFInstanceFn CityCelebration (TheList objectOfStateChange))))
+(participantConstraint CityRaptureProcess
+  (cityOwner objectOfStateChange directingAgent))
+(participantConstraint CityRaptureProcess
+  (or (currentGovernment directingAgent FC-Republic)
+      (currentGovernment directingAgent FC-Democracy)))
+(consequenceOf-TypeType CityRaptureProcess
+  (i+ ((MeasurableQuantityFn citySize) objectOfStateChange) (Turns 1)))
+
+
+
+;;; This is a process, because it intrinsically drives towards revolt.
+(isa CityDisorderState ModelFragmentType)
+(participantType CityDisorderState objectOfStateChange FreeCiv-City)
+(associatedRoleList CityDisorderState (TheList objectOfStateChange))
+(conditionOf-TypeType CityDisorderState
+  (greaterThan ((MeasurableQuantityFn unhappyCitizens) objectOfStateChange)
+               ((MeasurableQuantityFn happyCitizens) objectOfStateChange)))
+               
+;;; *** ToDo: represent the proximity (turns until) revolt and the effect of revolt.
+
+
+;;; Unhappiness due to aggressive military field units:
+;;; ---------------------------------------------------
+;;; Under Democracy:
+;;;  Military units away from home and field units will each cause 2 citizens to become unhappy.
+
+;;; Under Republic:
+;;;  Military units away from home and field units will each cause 1 citizen to become unhappy.
+
+(isa AggressiveUnitUnhappyEffect ModelFragmentType)
+(participantType AggressiveUnitUnhappyEffect objectOfStateChange FreeCiv-City)
+(participantType AggressiveUnitUnhappyEffect directingAgent FreeCiv-Player) ; doesn't assume any particular player!
+(participantType AggressiveUnitUnhappyEffect governmentOf RepresentativeGovernment) ; must be the isa, not a genls
+(associatedRoleList AggressiveUnitUnhappyEffect (TheList objectOfStateChange directingAgent))
+(participantConstraint AggressiveUnitUnhappyEffect
+  (cityOwner objectOfStateChange directingAgent))
+(participantConstraint AggressiveUnitUnhappyEffect
+  (currentGovernment directingAgent governmentOf))
+
+;;; Actually, this threshold depends on government style.
+;;; *** ToDo: change this quantity from the outsourced pred to a cardinality of defined subset.
+(conditionOf-TypeType AggressiveUnitUnhappyEffect
+  (greaterThan ((MeasurableQuantityFn numPresentMilitaryUnits) objectOfStateChange) (FreecivUnitCountFn 0)))
+
+(consequenceOf-TypeType AggressiveUnitUnhappyEffect
+  (qprop ((MeasurableQuantityFn unhappyCitizens) objectOfStateChange)
+         ((MeasurableQuantityFn numDeployedMilitaryUnits) objectOfStateChange)))
+
+(consequenceOf-TypeType AggressiveUnitUnhappyEffect
+  (qprop- ((MeasurableQuantityFn contentCitizens) objectOfStateChange) 
+          ((MeasurableQuantityFn numDeployedMilitaryUnits) objectOfStateChange)))
+
+
+;;; Under Despotism:
+;;;  Your units may impose martial law. Each military unit inside a city will force 1 unhappy citizen to become content.
+
+;;; Under Monarchy:
+;;; Your units may impose martial law. Each military unit inside a city will force 1 unhappy citizen to become content.
+;;;  A maximum of 3 units in each city can enforce martial law.
+
+;;; Under Communism:
+;;;  Your units may impose martial law. Each military unit inside a city will force 2 unhappy citizens to become content.
+;;;  A maximum of 3 units in each city can enforce martial law.
+
+(isa MartialLaw ModelFragmentType)
+(participantType MartialLaw objectOfStateChange FreeCiv-City)
+(participantType MartialLaw directingAgent FreeCiv-Player)
+(participantType MartialLaw governmentOf CentralizedGovernment)  ; FC-Despotism, FC-Monarchy, and FC-Communism
+(associatedRoleList MartialLaw (TheList objectOfStateChange directingAgent))
+(participantConstraint MartialLaw
+  (cityOwner objectOfStateChange directingAgent))
+(participantConstraint MartialLaw
+  (governmentType directingAgent CentralizedGovernment))
+  ;;; *** ToDo: change this quantity from the outsourced pred to a cardinality of defined subset.
+(conditionOf-TypeType MartialLaw
+  (greaterThan ((MeasurableQuantityFn numPresentMilitaryUnits) objectOfStateChange) (FreecivUnitCountFn 0)))
+
+(consequenceOf-TypeType MartialLaw
+  (qprop ((MeasurableQuantityFn contentCitizens) objectOfStateChange)
+         ((MeasurableQuantityFn numPresentMilitaryUnits) objectOfStateChange)))
+
+(consequenceOf-TypeType MartialLaw
+  (qprop- ((MeasurableQuantityFn unhappyCitizens) objectOfStateChange) 
+          ((MeasurableQuantityFn numPresentMilitaryUnits) objectOfStateChange)))
+
+;;; We added outsourced preds for numPresentMilitaryUnits and numDeployedMilitaryUnits.
+;;; A bit more hardcoded than I'd like.  In fact, since units are reified, a cardinality
+;;; of the collection subset would be preferable.  Otherwise, there's no way to tell 
+;;; that zero is the minimum value. We'd like for there to be a subgoal to reduce 
+;;; deployed military units, but if the representation is just a number, we can't
+;;; connect it to any primitive action.
+
+
+;;; States: Martial Law, Civil War, offensive military campaign, Global Warming,
+
+;;; "A military unit can defend another unit or a city from attack by an opposing unit."
+;;; "The defending unit must be in the same location as the entity it is protecting."
+;;; "Defending an entity reduces the vulnerability of that entity."
+(isa Defending ModelFragmentType)
+(genls Defending ProtectingSomething)
+(participantType Defending protector-Agentive FreeCiv-MilitaryUnit)
+(participantType Defending objectProtected FreeCiv-Actor)
+(associatedRoleList Defending (TheList protector-Agentive objectProtected))
+(participantConstraint Defending
+  (and (objectFoundInLocation protector-Agentive objectProtected) ; benefiting from a defender requires co-location
+       (different protector-Agentive objectProtected)))
+;;;actionProtectsFromAttackOfType 
+;;; consequence = influence of defensiveStrength on likelihood of damage.
+;;; Want to say it reduces the (LikelihoodFn (PhysicalDestructionOfIndividualFn objectProtected)).
+;;; Or would it be better to say
+;;; (LikelihoodOfSuccessFn 
+;;;   (SubcollectionOfWithRelationToFn 
+;;;     (AttemptingFn AttackOnTangible)
+;;;     maleficiary objectProtected))
+
+(consequenceOf-TypeType Defending
+  (qprop- ((QPQuantityFn Vulnerability) objectProtected)
+          ((QPQuantityFn DefensiveStrength) protector-Agentive)))
+
+(relationAllInstance purposeOfEvent-GoalType Defending ProtectionGoal)
+
+
+;;; "A military unit can withstand attacks proportional to its own DefenseStrength."
+
+(isa SelfDefense ModelFragmentType)
+(genls SelfDefense ProtectingOneself)
+(participantType SelfDefense doneBy FreeCiv-Unit)
+(associatedRoleList SelfDefense (TheList doneBy))
+
+(consequenceOf-TypeType SelfDefense
+  (qprop- ((QPQuantityFn Vulnerability) doneBy)
+          ((QPQuantityFn DefensiveStrength) doneBy)))
+
+
+
+;;;
+;;; City Defense
+;;;
+
+;;; We need a quantity for liklihoodOfDestruction.
+;;; How would this be connected to DestructionEvents?
+
+;;; enhanced by specs of DefensiveStructure 
+;;; CityWalls (against land units),
+;;; CoastalDefense (against sea units)
+;;; SAM Battery (against non-nuclear air units)
+;;; SDI Defense (against nuclear units and other missiles)
+
+;;; (likelihood <proposition> (HighToVeryHighAmountFn Probability-QuantityType))
+;;;
+;;; (implies (and (isa ?SIT Situation) (causes-SitProp ?SIT ?PROP)) 
+;;;    (increasesCausally ?SIT ?PROP likelihood))
+
+
+;;; Defense is multi-dimensional.  There is no scalar "defense value", you must defend against
+;;; different threats.
+
+;;; There's a terrain-bonus for land-defense, plus infrastructure bonuses.
+;;; There's a veteran bonus for units with veteran status
+;;; There's a move penalty for attacking with < full move point
+
+;;; Assume we have (DefenseStrengthFn ?a ?b) and (OffensiveStrengthFn ?a)
+
+;;; How do we want to connect (DefenseStrengthFn defender LandUnit) to liklihood of successfully defending?
+
+
+;;; If the attacker is a veteran, its strength is multiplied by 1.5.
+;;; If the defender is a veteran, then its strength is multiplied by 1.5.
+(isa VeteranStrengthEffect ModelFragmentType)
+(participantType VeteranStrengthEffect doneBy FreeCiv-MilitaryUnit)
+(associatedRoleList VeteranStrengthEffect (TheList doneBy))
+(conditionOf-TypeType VeteranStrengthEffect
+  (greaterThan ((MeasurableQuantityFn veteranStatus) doneBy) (VeteranLevel 0)))
+
+(consequenceOf-TypeType VeteranStrengthEffect
+  (qprop ((QPQuantityFn DefensiveStrength) doneBy)
+         ((MeasurableQuantityFn veteranStatus) doneBy)))
+
+(consequenceOf-TypeType VeteranStrengthEffect
+  (qprop (OffensiveStrengthFn doneBy)               ; only reference to this quantity
+         ((MeasurableQuantityFn veteranStatus) doneBy)))
+
+;;; Land units can additionally be ordered to fortify, which means they spend
+;;; one movement point preparing to be attacked; once fortified they enjoy the
+;;; same advantage as units within an unwalled city. A unit whose movement
+;;; points are exhausted cannot fortify - it must have one movement point left
+;;; at the end of a turn to begin the next turn fortified.
+(isa FortifyDefenseEffect ModelFragmentType)
+(participantType FortifyDefenseEffect doneBy FreeCiv-MilitaryLandUnit)  ; Military LandUnits
+(associatedRoleList FortifyDefenseEffect (TheList doneBy))
+(participantConstraint FortifyDefenseEffect (currentActivity doneBy FC-ActivityFortified)) ; and not in a city
+
+(consequenceOf-TypeType FortifyDefenseEffect
+  (positiveDependence ((QPQuantityFn DefensiveStrength) doneBy)))
+
+;;; City Effect (or Fortress!):
+
+(isa CityDefenseEffect ModelFragmentType)
+(participantType CityDefenseEffect objectOfStateChange FreeCiv-LandUnit)    ; would objectTakenCareOf be better? intendedMaleficiary?
+(participantType CityDefenseEffect eventOccursAt FreeCiv-City)
+(associatedRoleList CityDefenseEffect (TheList objectOfStateChange eventOccursAt))
+
+(participantConstraint CityDefenseEffect (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint CityDefenseEffect (and (unitOwner objectOfStateChange ?directingAgent)
+                                              (cityOwner eventOccursAt ?directingAgent)))
+
+(consequenceOf-TypeType CityDefenseEffect
+  (positiveDependence ((QPQuantityFn DefensiveStrength) objectOfStateChange)))  ; protection from other military units
+  
+;;; Infrastructure Effects:
+
+;;; How can we say that the owner of the unit is the owner of the city?
+;;; Thinking about (equals (OwnerFn objectOfStateChange) (OwnerFn eventOccursAt))
+;;; but that would put a large reasoning burden on process and goal formation.
+(isa LandDefenseEffect ModelFragmentType)
+(comment LandDefenseEffect "City walls help defend units inside a city from land attackers.")
+(participantType LandDefenseEffect objectOfStateChange FreeCiv-LandUnit)
+(participantType LandDefenseEffect eventOccursAt FreeCiv-City)
+(associatedRoleList LandDefenseEffect (TheList objectOfStateChange eventOccursAt))
+(participantConstraint LandDefenseEffect (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint LandDefenseEffect (cityHasImprovement eventOccursAt FC-Building-CityWalls))
+;; Without this constraint, goal generation will loop forever:
+(participantConstraint LandDefenseEffect (and (unitOwner objectOfStateChange ?directingAgent)
+                                              (cityOwner eventOccursAt ?directingAgent)))
+(consequenceOf-TypeType LandDefenseEffect
+  (positiveDependence ((QPQuantityFn DefensiveStrength) objectOfStateChange)))
+(consequenceOf-TypeType LandDefenseEffect
+  (negativeDependence ((QPQuantityFn Vulnerability) eventOccursAt)))
+
+
+(isa SeaDefenseEffect ModelFragmentType)
+(comment SeaDefenseEffect "Coastal Defense helps defend units inside a city from sea attackers.")
+(participantType SeaDefenseEffect objectOfStateChange FreeCiv-LandUnit)
+(participantType SeaDefenseEffect eventOccursAt FreeCiv-City)
+(participantType SeaDefenseEffect directingAgent FreeCiv-Player)
+(associatedRoleList SeaDefenseEffect (TheList objectOfStateChange eventOccursAt))
+(participantConstraint SeaDefenseEffect (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint SeaDefenseEffect (cityHasImprovement eventOccursAt FC-Building-CoastalDefense))
+;; Without this constraint, goal generation will loop forever:
+(participantConstraint SeaDefenseEffect (and (unitOwner objectOfStateChange ?directingAgent)
+                                              (cityOwner eventOccursAt ?directingAgent)))
+(consequenceOf-TypeType SeaDefenseEffect
+  (positiveDependence ((QPQuantityFn DefensiveStrength) objectOfStateChange)))
+(consequenceOf-TypeType SeaDefenseEffect
+  (negativeDependence ((QPQuantityFn Vulnerability) eventOccursAt)))
+
+
+(isa AirDefenseEffect ModelFragmentType)
+(comment AirDefenseEffect "A SAM Battery will help defend units inside a city from air attackers.")
+(participantType AirDefenseEffect objectOfStateChange FreeCiv-LandUnit)
+(participantType AirDefenseEffect eventOccursAt FreeCiv-City)
+(participantType AirDefenseEffect directingAgent FreeCiv-Player)
+(associatedRoleList AirDefenseEffect (TheList objectOfStateChange eventOccursAt))
+(participantConstraint AirDefenseEffect (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint AirDefenseEffect (cityHasImprovement eventOccursAt FC-Building-SAMBattery))
+;; Without this constraint, goal generation will loop forever:
+(participantConstraint AirDefenseEffect (and (unitOwner objectOfStateChange ?directingAgent)
+                                              (cityOwner eventOccursAt ?directingAgent)))
+(consequenceOf-TypeType AirDefenseEffect
+  (positiveDependence ((QPQuantityFn DefensiveStrength) objectOfStateChange)))
+(consequenceOf-TypeType AirDefenseEffect
+  (negativeDependence ((QPQuantityFn Vulnerability) eventOccursAt)))
+
+
+(isa NuclearDefenseEffect ModelFragmentType)
+(comment NuclearDefenseEffect "SDI Defense will help defend units inside a city from nuclear attackers.")
+(participantType NuclearDefenseEffect objectOfStateChange FreeCiv-LandUnit)
+(participantType NuclearDefenseEffect eventOccursAt FreeCiv-City)
+(participantType NuclearDefenseEffect directingAgent FreeCiv-Player)
+(associatedRoleList NuclearDefenseEffect (TheList objectOfStateChange eventOccursAt))
+(participantConstraint NuclearDefenseEffect (objectFoundInLocation objectOfStateChange eventOccursAt))
+(participantConstraint NuclearDefenseEffect (cityHasImprovement eventOccursAt FC-Building-SDIDefense))
+;; Without this constraint, goal generation will loop forever:
+(participantConstraint NuclearDefenseEffect (and (unitOwner objectOfStateChange ?directingAgent)
+                                              (cityOwner eventOccursAt ?directingAgent)))
+(consequenceOf-TypeType NuclearDefenseEffect
+  (positiveDependence ((QPQuantityFn DefensiveStrength) objectOfStateChange)))
+(consequenceOf-TypeType NuclearDefenseEffect
+  (negativeDependence ((QPQuantityFn Vulnerability) eventOccursAt)))
+
+
+;;; Offensive state
+;;;
+
+
+;;;
+;;; Fuel usage in aircraft
+;;;
+
+;;;
+;;; Trade
+;;;
+
+;;;
+;;; QUANTITY-CONDITIONED EXISTENCE
+;;; ------------------------------
+
+(isa ExistingCiv ModelFragmentType)
+(genls ExistingCiv QuantityConditionedExistence)  ; help for reasoning about these model fragments
+(associatedRoleList ExistingCiv (TheList actors))
+(participantType ExistingCiv actors FreeCiv-Player) ; actors is the most general actorSlot.  The coTemporal entity of SomethingExisting.
+;;; *** This isn't quite right:
+;;; *** It's saying that a civ must have both cities and units, when really it's either/or.
+;;; *** For now, that doesn't matter, since we only want this to generate subgoals for eliminating opposing civs.
+(conditionOf-TypeType ExistingCiv
+  (greaterThan ((MeasurableQuantityFn cardinalityOf)
+                (CollectionSubsetFn FreeCiv-City
+                  (TheSetOf ?city
+                    (cityOwner ?city actors))))
+               0))
+(conditionOf-TypeType ExistingCiv
+  (greaterThan ((MeasurableQuantityFn cardinalityOf)
+                (CollectionSubsetFn FreeCiv-Unit
+                  (TheSetOf ?unit
+                    (unitOwner ?unit actors))))
+               0))
+
+
+;;; STATES OF THE GAME
+;;; ------------------
+
+;;; "A Freeciv game can be divided into temporal phases."
+;;; "The first phase is the exploration phase."
+;;; "During the exploration phase, the explorer explores the continent to map
+;;;  the terrain."
+
+(isa ExplorationPhase ModelFragmentType)
+(participantType ExplorationPhase doneBy FreeCiv-Player)
+;(participantType ExplorationPhase primaryObjectMoving FC-Unit-Explorer)  ; Unnecessary
+;(participantConstraint ExplorationPhase (unitOwner primaryObjectMoving doneBy))
+(associatedRoleList ExplorationPhase (TheList doneBy))
+;;; Ick.  
+;;; I'd rather say there exists unexplored territory on the explorer's continent.
+;;; Or the total knownTerritory is less than X.
+;;; Problem: To reference the cardinality of a set, we can't make individual
+;;; cities be participants - It needs to be the set.
+;;; Entity resolution needs to note the cardinalityOf and invoke extent on the set.
+(conditionOf-TypeType ExplorationPhase
+  (lessThan ((MeasurableQuantityFn cardinalityOf)
+              (CollectionSubsetFn FreeCiv-City
+                (TheSetOf ?city
+                  (cityOwner ?city doneBy))))
+             6))
+
+;;; "The second phase is the expansion phase."
+;;; "During the expansion phase, a player builds and grows cities as fast as he can."
+;;; "After building about ten cities, the expansion phase slows down."
+
+;;; The expansion phase overlaps with the exploration phase.
+(isa ExpansionPhase ModelFragmentType)
+(participantType ExpansionPhase doneBy FreeCiv-Player)
+(associatedRoleList ExpansionPhase (TheList doneBy))
+;;; Just because there are no cities, doesn't mean we're not in ExpansionPhase!!
+;(conditionOf-TypeType ExpansionPhase
+;  (greaterThan ((MeasurableQuantityFn cardinalityOf)
+;                (CollectionSubsetFn FreeCiv-City
+;                  (TheSetOf ?city
+;                    (cityOwner ?city doneBy))))
+;               0))
+(conditionOf-TypeType ExpansionPhase
+  (lessThan ((MeasurableQuantityFn cardinalityOf)
+              (CollectionSubsetFn FreeCiv-City
+                (TheSetOf ?city
+                  (cityOwner ?city doneBy))))
+             11))
+
+;;; "The third phase is the conquest phase."
+;;; "During the conquest phase, a civilization attempts to destroy his opponents' civilizations."
+
+(isa ConquestPhase ModelFragmentType)
+(participantType ConquestPhase doneBy FreeCiv-Player)
+(participantType ConquestPhase opponent FreeCiv-Player)
+(associatedRoleList ConquestPhase (TheList doneBy))
+(conditionOf-TypeType ConquestPhase
+  (greaterThan ((MeasurableQuantityFn cardinalityOf)
+                (CollectionSubsetFn FreeCiv-City
+                  (TheSetOf ?city
+                    (cityOwner ?city doneBy))))
+               10))
+
+
+(isa LowFunds ModelFragmentType)
+(participantType LowFunds objectOfStateChange FreeCiv-Player)
+(associatedRoleList LowFunds (TheList objectOfStateChange))
+(conditionOf-TypeType LowFunds
+  (lessThan ((MeasurableQuantityFn currentGold) objectOfStateChange) (GoldPoints 10)))
+
+
+;;; By itself, ceasefire doesn't mean military buildup.  Perhaps uneasyTruce is the 
+;;; state and militaryBuildup is the strategy.
+(isa CeaseFire ModelFragmentType)
+(participantType CeaseFire doneBy FreeCiv-Player)
+(participantType CeaseFire opponent FreeCiv-Player)
+(associatedRoleList CeaseFire (TheList doneBy opponent))
+(participantConstraint CeaseFire
+  (diplomaticState doneBy opponent FC-Ceasefire))  ; always assume this presages war.
+
+
+(isa AtWar ModelFragmentType)
+(participantType AtWar doneBy FreeCiv-Player)
+(associatedRoleList AtWar (TheList doneBy))
+;; Trivial condition: there's more than one opponent at war with us:
+(conditionOf-TypeType AtWar
+  (greaterThan ((MeasurableQuantityFn cardinalityOf)
+                (CollectionSubsetFn FreeCiv-Player
+                  (TheSetOf ?opponent
+                    (and (isa ?opponent FreeCiv-Player)
+                         (different ?opponent doneBy)
+                         (diplomaticState doneBy ?opponent FC-War)))))
+   0))

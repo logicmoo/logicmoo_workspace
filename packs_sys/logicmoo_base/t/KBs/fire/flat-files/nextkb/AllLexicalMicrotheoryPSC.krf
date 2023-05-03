@@ -1,0 +1,3 @@
+(in-microtheory AllLexicalMicrotheoryPSC)
+
+(comment AllLexicalMicrotheoryPSC "A problem solving context in which all lexical assertions in the entire KB are visible.  This context can be used for NL testing.  See spec Mt's such as #$KBIT-GenPhraseWithNoParsingAssertion for examples of such.")

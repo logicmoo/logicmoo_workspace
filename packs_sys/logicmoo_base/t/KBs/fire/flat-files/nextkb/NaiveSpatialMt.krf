@@ -1,0 +1,101 @@
+(in-microtheory NaiveSpatialMt)
+
+(isa flapHingedTo InterExistingObjectPredicate)
+(strictlyFunctionalInArgs receptorSiteInBindingEvent 2)
+(argFormat receptorSiteInBindingEvent 2 SingleEntry)
+(argFormat signalMoleculeInBindingEvent 2 SingleEntry)
+(functionCorrespondingPredicate FootprintOfLateralShiftFn lateralShiftFootprintRegion 3)
+(strictlyFunctionalInArgs objectAdheredTo 2)
+(strictlyFunctionalInArgs objectAttached 2)
+(strictlyFunctionalInArgs alongsidePathSegment 2)
+(strictlyFunctionalInArgs xyCrossSectionShape 2)
+(strictlyFunctionalInArgs xzCrossSectionShape 2)
+(strictlyFunctionalInArgs yzCrossSectionShape 2)
+(strictlyFunctionalInArgs xzCrossSectionShapeType 2)
+(strictlyFunctionalInArgs xyCrossSectionShapeType 2)
+(strictlyFunctionalInArgs yzCrossSectionShapeType 2)
+(negationInverse onHorizon above-Generally)
+(negationPreds onHorizon above-Generally)
+(argFormat genericallyLocatedAt-Spatial 2 SetTheFormat)
+(argFormat genericallyLocatedAt-Spatial 1 SetTheFormat)
+(argFormat objectAdheredTo 2 SingleEntry)
+(argFormat objectAttached 2 SingleEntry)
+(argFormat internalSubRegions 1 SetTheFormat)
+(argFormat internalSubRegions 2 SetTheFormat)
+(argFormat alongsidePathSegment 2 SingleEntry)
+(argFormat objectPerimeter 2 SetTheFormat)
+(argFormat yzCrossSectionShapeType 2 SingleEntry)
+(argFormat inFrontOf-Generally 2 SetTheFormat)
+(argFormat spatiallyIntersects 1 SetTheFormat)
+(argFormat xyCrossSectionShape 1 SingleEntry)
+(argFormat inFrontOf-Generally 1 SetTheFormat)
+(argFormat spatiallyIntersects 2 SetTheFormat)
+(argFormat xyCrossSectionShape 2 SingleEntry)
+(argFormat xzCrossSectionShape 2 SingleEntry)
+(argFormat yzCrossSectionShape 2 SingleEntry)
+(argFormat xzCrossSectionShapeType 2 SingleEntry)
+(argFormat xyCrossSectionShapeType 2 SingleEntry)
+(argFormat sameYlocation 2 SetTheFormat)
+(comment SpatialThingTypeByGenericLocation "A collection of collections.  Each instance of #$SpatialThingTypeByGenericLocation is a collection of instances of #$SpatialThing-Localized that are all in the same type of location.  Instances of #$SpatialThingTypeByGenericLocation include #$Underground and #$Indoors-IsolatedFromOutside.")
+(comment SurroundingConfiguration-2D "A #$TemporalStuffType.  Each instance of #$SurroundingConfiguration-2D is a #$Configuration in which some #$SpatialThing surrounds (in the sense of #$surrounds-2D) some other #$SpatialThing.")
+(comment SurroundingConfiguration-Ringlike "A #$TemporalStuffType and specialization of #$SurroundingConfiguration-2D.  Each instance of #$SurroundingConfiguration-Ringlike is a #$Configuration in which some #$SpatialThing (which may itself be a complex configuration of #$SpatialThings) surrounds (in the sense of #$surrounds-Ringlike) some other #$SpatialThing, as in 'The house was surrounded by a ring of trees'.")
+(comment surrounds-Ringlike "A #$BinaryPredicate and specialization of #$surrounds-2D that relates a #$SpatialThing to another #$SpatialThing.  (#$surrounds-Ringlike X Y) means that X surrounds Y in a ringlike fashion.  Generally this entails Y's extending all the way, or nearly all the way, through a #$Portal in X.  Examples include Saturn's rings surrounding Saturn, a wedding ring surrounding its wearer's finger, and a circle of trees surrounding a house.")
+(comment fitsInsideObject "An #$IrreflexiveBinaryPredicate and a specialization of #$temporallyCoexist.  Where <code>THING1</code> and <code>THING2</code> are both instances of #$PartiallyTangible, <code>(#$fitsInsideObject THING1 THING2</code>) means that <code>THING1</code> can fit inside <code>THING2</code>.  For example:
+<pre>
+  (#$fitsInsideObject Joe JoesCar)
+  (#$fitsInsideObject JoesCar JoesGarage)
+  (#$not (#$fitsInsideObject JoesGarage JoesCar))
+  (#$not (#$fitsInsideObject #$PlanetEarth JoesGarage))
+</pre>
+More specifically, <code>(#$fitsInsideObject THING1 THING2)</code> means that, in principle at least, one could make it the case that <code>(#$in-ContCompletely THING1 THING2)</code> <i>without altering the physical structure of <code>THING1</code> or <code>THING2</code> in an atypical way</i>.
+<p>
+The italicized clause is vague but nevertheless quite important.  Consider, for example, an inflatable raft, <code>RAFT</code>, that comes packaged (deflated) in a small (say, 20 cm x 30 cm) cardboard box, <code>BOX</code>.  Even when <code>RAFT</code> is inflated, it is true that <code>(#$fitsInsideObject RAFT BOX)</code>, since one could deflate the raft and put it into the box (and to deflate the raft would not be to alter its physical structure in an atypical way).  Now suppose that <code>STICK</code> is a (non-collapsible) wooden meter stick.  It is false that <code>(#$fitsInsideObject STICK BOX)</code>; for one could make it the case that <code>(#$in-ContCompletely STICK BOX)</code> only by changing the physical structure of <code>STICK</code> or <code>BOX</code> in an atypical way (e.g. by breaking <code>STICK</code> into pieces or radically altering the shape of <code>BOX</code>).")
+(comment partFarthestInDirection "A ternary #$RelativeLocationalPredicate that relates a #$PartiallyTangible to a #$Direction to a #$PartiallyTangible that is part of the first.  <code>(#$partFarthestInDirection OBJ DIR PART)</code> means that <code>PART</code> is the (possibly discontinuous) part of <code>OBJ</code> that is located farther in direction <code>DIR</code> than any part of <code>OBJ</code> that is not part of <code>PART</code>.
+<p>
+For example, if Tom (who has exceptionally big feet) is standing up and facing East with his arms akimbo, we might have:
+<pre>
+(#$partFarthestInDirection Tom #$Up-Directly TopOfTomsHead)
+(#$partFarthestInDirection Tom #$Down-Directly SolesOfTomsFeet)
+(#$partFarthestInDirection Tom #$East-Directly TipsOfTomsToes)
+(#$partFarthestInDirection Tom #$South-Directly TomsRightElbow)
+</pre>.")
+(comment normalOrientationInCoordinateSystem "A ternary #$RotationalOrientationPredicate that relates a #$HexalateralObject to a #$CartesianCoordinateSystem to an #$AngularDistance.  <code>(#$normalOrientationInCoordinateSystem OBJ SYSTEM DIST)</code> means that <code>DIST</code> is the angular distance that <code>OBJ</code> has \"strayed\" (so to speak) from its standard or original rotational orientation about its normal (top-to-bottom) axis in <code>SYSTEM</code>.  (See #$NoteOnStandardRotationalOrientation.)
+<p>
+In flight dynamics, the normal orientation of an aircraft is known as its \"yaw\".
+<p>
+See also #$lateralOrientationInCoordinateSystem and #$longitudinalOrientationInCoordinateSystem.")
+(comment longitudinalOrientationInCoordinateSystem "A ternary #$RotationalOrientationPredicate that relates a #$HexalateralObject to a #$CartesianCoordinateSystem to an #$AngularDistance.  <code>(#$lateralOrientationInCoordinateSystem OBJ SYSTEM DIST)</code> means that <code>DIST</code> is the angular distance that <code>OBJ</code> has \"strayed\" (so to speak) from its standard or original rotational orientation about its longitudinal (front-to-back) axis in <code>SYSTEM</code>.  (See #$NoteOnStandardRotationalOrientation.)
+<p>
+In flight dynamics, the lateral orientation of an aircraft is known as its \"roll\".
+<p>
+See also #$normalOrientationInCoordinateSystem and #$lateralOrientationInCoordinateSystem.")
+(comment lateralOrientationInCoordinateSystem "A ternary #$RotationalOrientationPredicate that relates a #$HexalateralObject to a #$CartesianCoordinateSystem to an #$AngularDistance.  <code>(#$lateralOrientationInCoordinateSystem OBJ SYSTEM DIST)</code> means that <code>DIST</code> is the angular distance that <code>OBJ</code> has \"strayed\" (so to speak) from its standard or original rotational orientation about its lateral (side-to-side) axis in <code>SYSTEM</code>.  (See #$NoteOnStandardRotationalOrientation.
+<p>
+In flight dynamics, the lateral orientation of an aircraft is known as its \"pitch\".
+<p>
+See also #$normalOrientationInCoordinateSystem and #$longitudinalOrientationInCoordinateSystem.")
+(comment RotationalOrientationPredicate "A #$PredicateType and specialization of #$RelativeLocationalPredicate.  Each instance of #$RotationalOrientationPredicate is a #$Predicate that expresses the rotationtal orientation of an object in a #$CoordinateSystem.  The coordinate system in question may be explicity mentioned as an argument of the predicate, it may be built into the meaning of the predicate itself, or it may be left implicit.")
+(comment normalOrientation "A #$RotationalOrientationPredicate and #$QuantitySlot that relates a #$HexalateralObject to an #$AngularDistance.  <code>(#$normalOrientation OBJ DIST)</code> means <code>DIST</code> is the angular distance that <code>OBJ</code> has \"strayed\" (so to speak) from its standard or beginning position about its normal (top-to-bottom) axis in the #$CoordinateSystem that is relevant in the current context.  (See #$NoteOnStandardRotationalOrientation.)
+<p>
+In flight dynamics, the #$normalOrientation of an aircraft is known as its \"yaw\".
+<p>
+See also #$normalOrientationInCoordinateSystem for a version of this predicate that makes explicit reference to the relevant #$CoordinateSystem.")
+(comment lateralOrientation "A #$RotationalOrientationPredicate and #$QuantitySlot that relates a #$HexalateralObject to an #$AngularDistance.  <code>(#$lateralOrientation OBJ DIST)</code> means <code>DIST</code> is the angular distance that <code>OBJ</code> has \"strayed\" (so to speak) from its standard or beginning position about its lateral (side-to-side) axis in the #$CoordinateSystem that is relevant in the current context.  (See #$NoteOnStandardRotationalOrientation.)
+<p>
+In flight dynamics, the #$lateralOrientation of an aircraft is known as its \"pitch\".
+<p>
+See also #$lateralOrientationInCoordinateSystem for a version of this predicate that makes explicit reference to the relevant #$CoordinateSystem.")
+(comment longitudinalOrientation "A #$RotationalOrientationPredicate and #$QuantitySlot that relates a #$HexalateralObject to an #$AngularDistance.  <code>(#$longitudinalOrientation OBJ DIST)</code> means <code>DIST</code> is the angular distance that <code>OBJ</code> has \"strayed\" (so to speak) from its standard or beginning position about its longitudinal (front-to-back) axis in the #$CoordinateSystem that is relevant in the current context.  (See #$NoteOnStandardRotationalOrientation.)
+<p>
+In flight dynamics, the #$longitudinalOrientation of an aircraft is known as its \"roll\".
+<p>
+See also #$longitudinalOrientationInCoordinateSystem for a version of this predicate that makes explicit reference to the relevant #$CoordinateSystem.")
+(genlPreds nextToLike-Horizontally nextToLikeObjects)
+(genls Table-PieceOfFurniture ObjectWithOpenAreaUnderneath)
+(genls TentlikeShelter ObjectWithOpenAreaUnderneath)
+(genls CeilingOfARoom ObjectWithOpenAreaUnderneath)
+(genls TreeCanopy ObjectWithOpenAreaUnderneath)
+(genls (SpaceBeneathTypeFn Table-PieceOfFurniture) (SpaceBeneathTypeFn ObjectWithOpenAreaUnderneath))
+(genls (SpaceBeneathTypeFn CeilingOfARoom) (SpaceBeneathTypeFn ObjectWithOpenAreaUnderneath))
+(genls (SpaceBeneathTypeFn TreeCanopy) (SpaceBeneathTypeFn ObjectWithOpenAreaUnderneath))
+(genls (SpaceBeneathTypeFn TentlikeShelter) (SpaceBeneathTypeFn ObjectWithOpenAreaUnderneath))

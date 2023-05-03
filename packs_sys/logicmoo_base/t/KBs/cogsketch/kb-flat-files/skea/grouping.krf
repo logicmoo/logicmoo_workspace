@@ -1,0 +1,128 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: grouping.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: April 27, 2003 17:49:58
+;;;;   Purpose: Predicates related to glyph groups
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(genls GlyphGroup SpatialThing-Localized) ;; Might do better
+(isa GlyphGroup Collection)
+(comment GlyphGroup "A GlyphGroup is a set of glyphs that has been grouped together via some criteria.")
+
+
+(genls GlyphGraph AbstractInformationalThing) ;; Might do better
+(isa GlyphGraph Collection)
+(comment GlyphGraph "A GlyphGraph is a finite discrete graph whose nodes are glyphs and whose arcs indicate the presence of specific relationships between the glyphs.  Used for visual processing of glyphs.")
+
+
+(isa ConnectedGlyphGroup Collection)
+(genls ConnectedGlyphGroup GlyphGroup)
+(comment ConnectedGlyphGroup "A ConnectedGlyphGroup is a set of glyphs all of which are connected via the RCC8 relationships EC or PO.")
+
+
+(isa ContainedGlyphGroup Collection)
+(genls ContainedGlyphGroup GlyphGroup)
+(comment ContainedGlyphGroup "A ContainedGlyphGroup is a set of glyphs that is directly contained inside another glyph.  Glyphs that are inside a glyph inside the container are not counted as part of that glyph group, although they could be members of some glyph group farther down in the containment hierarchy.")
+
+
+(isa connectedGlyphGroupMember Relation)
+(arity connectedGlyphGroupMember 2)
+(arg1Isa connectedGlyphGroupMember NuSketchGlyph)
+(arg2Isa connectedGlyphGroupMember ConnectedGlyphGroup)
+(comment connectedGlyphGroupMember "(connectedGlyphGroupMember glyph CGG) states that glyph GLYPH is a member of the connected glyph group CGG.")
+(genFormat connectedGlyphGroupMember "~a is a member of the ~a" (1 2))
+
+(isa connectedGlyphGroupTangentialConnection Relation)
+(arity connectedGlyphGroupTangentialConnection 3)
+(arg1Isa connectedGlyphGroupTangentialConnection NuSketchGlyph)
+(arg2Isa connectedGlyphGroupTangentialConnection NuSketchGlyph)
+(arg3Isa connectedGlyphGroupTangentialConnection ConnectedGlyphGroup)
+(comment connectedGlyphGroupTangentialConnection "(connectedGlyphGroupTangentialConnection glyph1 glyph2 CGG) states that glyph GLYPH1 and glyph GLYPH2 are members of the connected glyph group CGG and are RCC-EC to one another.")
+(genFormat connectedGlyphGroupTangentialConnection "~a and ~a connect tangentially and are members of the ~a" (1 2 3))
+
+(isa containedGlyphGroupInsider Relation)
+(arity containedGlyphGroupInsider 2)
+(arg1Isa containedGlyphGroupInsider NuSketchGlyph)
+(arg2Isa containedGlyphGroupInsider ContainedGlyphGroup)
+(comment containedGlyphGroupInsider "(containedGlyphGroupInsider GLYPH CGG) says that glyph GLYPH is one of the glyphs inside the container for the contained glyph group CGG.")
+
+(isa containedGlyphGroupTangentialInsider Relation)
+(arity containedGlyphGroupTangentialInsider 2)
+(arg1Isa containedGlyphGroupTangentialInsider NuSketchGlyph)
+(arg2Isa containedGlyphGroupTangentialInsider ContainedGlyphGroup)
+(comment containedGlyphGroupTangentialInsider "(containedGlyphGroupTangentialInsider GLYPH CGG) says that glyph GLYPH is one of the glyphs inside the container for the contained glyph group CGG and is RCC-TPP with the containing glyph.")
+
+(isa connectedGlyphGroupArticulationPoint Relation)
+(arity connectedGlyphGroupArticulationPoint 2)
+(arg1Isa connectedGlyphGroupArticulationPoint NuSketchGlyph)
+(arg2Isa connectedGlyphGroupArticulationPoint ConnectedGlyphGroup)
+(comment connectedGlyphGroupArticulationPoint "(connectedGlyphGroupArticulationPoint glyph CGG) states that glyph GLYPH is an articulation point of the connected glyph group CGG.")
+(genFormat connectedGlyphGroupArticulationPoint "~a is an articulation point of the ~a" (1 2))
+
+         
+(isa containedGlyphGroupContainer Relation)
+(arity containedGlyphGroupContainer 2)
+(arg1Isa containedGlyphGroupContainer NuSketchGlyph)
+(arg2Isa containedGlyphGroupContainer ContainedGlyphGroup)
+(comment containedGlyphGroupContainer "(containedGlyphGroupContainer GLYPH CGG) says that glyph GLYPH is the container for the contained glyph group CGG.")
+
+(isa glyphGraphCWA Relation)
+(arity glyphGraphCWA 3)
+(arg1Isa glyphGraphCWA GlyphGraph)
+(arg2Isa glyphGraphCWA NuSketchGlyph)
+(arg3Isa glyphGraphCWA List)
+(comment glyphGraphCWA "(glyphGraphCWA GG GLYPH ELEMENTS) is the closed world assumption indicating that the edges for the glyph GLYPH in glyph graph GG is exactly the set of glyphs ELEMENTS.")
+
+
+(isa glyphGraphEdgesFor Relation)
+(arity glyphGraphEdgesFor 3)
+(arg1Isa glyphGraphEdgesFor GlyphGraph)
+(arg2Isa glyphGraphEdgesFor NuSketchGlyph)
+(arg3Isa glyphGraphEdgesFor List)
+(comment glyphGraphEdgesFor "(glyphGraphEdgesFor GG GLYPH ELEMENTS) says that GLYPH is a node in glyph graph GG whose arcs consist of links to the glyphs ELEMENTS.")
+
+(isa ConnectedGlyphGroupFn Function-Denotational)
+(resultIsa ConnectedGlyphGroupFn ConnectedGlyphGroup)
+(arity ConnectedGlyphGroupFn 1)
+(arg1Isa ConnectedGlyphGroupFn List)
+(comment ConnectedGlyphGroupFn "(ConnectedGlyphGroupFn ELEMENTS) denotes the connected glyph group consisting of the glyphs ELEMENTS.  ELEMENTS is a list instead of a set because it is sorted for canonicalization.")
+(genFormat ConnectedGlyphGroupFn "connected glyph-group of ~a" (1))
+
+
+(isa ContainedGlyphGroupFn Function-Denotational)
+(resultIsa ContainedGlyphGroupFn GlyphGroup)
+(arity ContainedGlyphGroupFn 2)
+(arg1Isa ContainedGlyphGroupFn NuSketchGlyph)
+(arg2Isa ContainedGlyphGroupFn List)
+(comment ContainedGlyphGroupFn "(ContainedGlyphGroupFn CONTAINER INSIDERS) denotes the contained glyph group consisting of the containing glyph CONTAINER and the glyphs directly inside of it, INSIDERS.")
+(genFormat ContainedGlyphGroupFn "glyph-group with ~a (the container) and ~a (the thing(s) inside)" (1 2))
+
+
+(isa GlyphConnectionGraphFn Function-Denotational)
+(resultIsa GlyphConnectionGraphFn GlyphGraph)
+(arity GlyphConnectionGraphFn 1)
+(arg1Isa GlyphConnectionGraphFn NuSketchCase)
+(comment GlyphConnectionGraphFn "(GlyphConnectionGraph CASE) denotes the graph consisting of glyphs in the bundle CASE, with arcs between nodes that are related via RCC8 EC or RCC8 PO.")
+(genFormat GlyphConnectionGraphFn "glyph connection graph of ~a" (1))
+
+
+(isa GlyphContainedGraphFn Function-Denotational)
+(resultIsa GlyphContainedGraphFn GlyphGraph)
+(arity GlyphContainedGraphFn 1)
+(arg1Isa GlyphContainedGraphFn NuSketchCase)
+(comment GlyphContainedGraphFn "(GlyphContainedGraphFn CASE) denotes the graph consisting of glyphs in the bundle CASE, with arcs between glyphs when they are related via RCC8 TPPi or NTPPi.")
+(genFormat GlyphContainedGraphFn "glyph contained graph of ~a" (1))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

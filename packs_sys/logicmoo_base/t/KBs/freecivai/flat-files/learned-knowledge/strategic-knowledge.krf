@@ -1,0 +1,103 @@
+;;; 
+;;; strategic-knowledge.meld
+;;;
+
+(in-microtheory (StrategyModelMtFn Freeciv-TheGame) :exclude-globals t)
+
+
+;;; This is like influences but says something about the optimality criterion
+
+(rangeLimit FC-Unit-Settlers 8)  ; as far as we're willing to send units of this type
+
+;(optimalityConditionFor doBuildCity potentialTileFoodProduction)
+
+;(preconditionForMethod
+;  (and (fcExecutionContext ?mt)
+;       (unitType ?unit ?unit-type)
+;       (rangeLimit ?unit-type ?max-dist)
+;       (optimalityConditionFor doBuildCity ?condition)
+;       (ist-Information ?mt (fcObjectAt ?unit ?start-loc))
+;       (ist-Information ?mt (closestLocationSatisfying ?start-loc 2 ?max-dist ?condition ?target-loc)))
+;  (methodForAction
+;    (achieve (PreconditionOfFn (doBuildCity ?unit ?city)))
+;    (actionSequence
+;      (TheList
+;        (simplestTravelPlan ?unit ?target-loc)))))
+
+;;; This is the actual learned htn.  It works better.  We need to redesign the optimality condition mechanism.
+
+(isa doBuildCityFilter BinaryPredicate)
+
+(<== (doBuildCityFilter ?loc ?output)
+     (numAnswers 1 (terrainAt ?loc ?terrain))
+     (potentialCityAt ?loc)
+     (different ?terrain FC-Terrain-Ocean)
+     (different ?terrain FC-Terrain-Lake)
+     (different ?terrain FC-Terrain-DeepOcean)
+     (executionContext ?mt)
+     (uninferredSentence
+       (ist-Information ?mt
+         (intentForActor ?someone (doBuildCity ?someone ?loc))))  ; don't step on another agent's toes
+     (unifies ?output True))
+ 
+(legalityConditionFor doBuildCity doBuildCityFilter)
+
+;; The second arg to doBuildCity is now the location, rather than the putative name.
+(preconditionForMethod
+ (and (numAnswers 1 (unitType ?arg1 FC-Unit-Settlers))
+      (numAnswers 1 (currentPlayer ?player))
+      (unitOwner ?arg1 ?player) 
+      (scanningConditionFor doBuildCity ?condition)
+      (fcObjectAt ?arg1 ?start-binding)                        ; could just use arg2 now
+      (closestLocationSatisfying ?start-binding 0 8 ?condition ?loc))
+ (methodForAction (achieve (PreconditionOfFn (doBuildCity ?arg1 ?loc)))
+  (actionSequence 
+    (TheList 
+      (doRecordIntent ?arg1 (doBuildCity ?arg1 ?loc))  ; backfill this in lbd asap
+      (simplestTravelPlan ?arg1 ?loc)))))
+
+
+;;; ---------------------------
+;;; Testing:
+;;;
+
+;;; Essentially, we want to learn the equivalent of potentialTileOutput
+
+(<== (doBuildCityScoring ?loc ?output)
+     (doBuildCityFilter ?loc True)
+     (specialAt ?loc ?special)               ; shouldn't be a requirement!
+     (isa ?special FreeCiv-GoodFood-Special) ; This should be learned
+     (terrainAt ?loc ?terrain)
+     (terrainBaseFoodProduction ?terrain ?food-prod)
+     (valueToMagnitude ?food-prod ?output))  ; first order approximation
+
+;;; Really, we want to learn this sparse function definition directly from
+;;; prior cases.  SAGE?
+
+
+;;; -----
+
+;;; This really depends on GoalFn 35 being defined as:
+;;; 
+;(goalName (GoalFn 35)
+; (PreventFn
+;  (negativeOutcomeForActor
+;   (GenericInstanceFn
+;    (CollectionSubsetFn UnitDestructionEvent
+;     (TheSetOf ?evt-var
+;      (and (lookupOnly (isa ?evt-var UnitDestructionEvent))
+;           (inputsDestroyed ?evt-var ?var1)
+;           (unitOwner ?var1 (IndexicalFn currentPlayer))))))
+;   (IndexicalFn currentRole))))
+
+;(<== (eventTriggersResponse ?evt-var (activateGoal (GoalFn 35)))
+;     (executionContext ?mt) 
+;     (currentPlayer ?role%)
+;     (ist-Information ?mt (lookupOnly (isa ?evt-var UnitDestructionEvent)))
+;     (ist-Information ?mt (inputsDestroyed ?evt-var ?var1))
+;     (ist-Information ?mt (unitOwner ?var1 ?role%)))
+
+;;; Removed cached static analysis statements
+
+;;;; ------------------------------------------------------------------------
+;;;; End of Code

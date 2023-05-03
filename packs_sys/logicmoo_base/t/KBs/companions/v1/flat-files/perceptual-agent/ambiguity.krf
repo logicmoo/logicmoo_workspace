@@ -1,0 +1,114 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: ambiguity.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 5, 2011 13:27:54
+;;;;   Purpose: Representations for ambiguity
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; We need to support counterExamples on both the dependent and independent quantities.
+(isa counterExample TernaryPredicate)
+(arity counterExample 3)
+(arg1Isa counterExample CycLSentence-Assertible)
+(arg2Isa counterExample Integer)
+(arg3Isa counterExample Quantity)
+(comment counterExample "(counterExample ?type-level-influence ?argnum ?quantity-arg) is a reifiable statement meaning that the prior hypothesis ?influence is violated in the current context for the specified quantity.")
+
+;;; Try to represent partial information this way:
+(isa directlyInfluenced UnaryPredicate)
+(arity directlyInfluenced 1)
+(arg1Isa directlyInfluenced QuantityType)
+(comment directlyInfluenced "(directlyInfluenced ?quantity-type) is a hint to future induction to not look for indirect influencers on ?quantity-type.")
+
+
+(isa isDirectlyInfluenced BinaryPredicate)
+(arity isDirectlyInfluenced 2)
+(arg1Isa isDirectlyInfluenced Microtheory)
+(arg1Isa isDirectlyInfluenced QuantityType)
+(comment isDirectlyInfluenced "(isDirectlyInfluenced ?spindle-mt ?quantity-type) is a hint to future induction to not look for indirect influencers on ?quantity-type.")
+
+
+;;; It's also possible that ?spindle-mt might just be an influence case
+(<== (isDirectlyInfluenced ?spindle-mt ?qtype)
+     (not (variableExpression ?qtype))
+     (lookupOnly
+       (ist-Information ?spindle-mt 
+         (hypothesis (?pred ?qtype ?indep-qtype ?coll1 ?coll2 ?rel)))))
+
+(<== (isDirectlyInfluenced ?spindle-mt ?qtype)
+     (kbOnly
+       (lookupOnly
+         (ist-Information ?spindle-mt
+           (directlyInfluenced ?qtype)))))
+         
+(isa indirectlyInfluenced UnaryPredicate)
+(arity indirectlyInfluenced 1)
+(arg1Isa indirectlyInfluenced QuantityType)
+(comment indirectlyInfluenced "(indirectlyInfluenced ?quantity-type) is a hint to future induction to not look for direct influencers on ?quantity-type.")
+
+(isa isIndirectlyInfluenced BinaryPredicate)
+(arity isIndirectlyInfluenced 2)
+(arg1Isa isIndirectlyInfluenced Microtheory)
+(arg2Isa isIndirectlyInfluenced QuantityType)
+(comment isIndirectlyInfluenced "(isIndirectlyInfluenced ?spindle-mt ?quantity-type) is a hint to future induction to not look for direct influencers on ?quantity-type.")
+
+
+(<== (isIndirectlyInfluenced ?spindle-mt ?qtype)
+     (not (variableExpression ?qtype))
+     (lookupOnly
+       (ist-Information ?spindle-mt
+         (hypothesis (?pred ?qtype ?indep-qtype ?coll1 ?coll2 ?rel)))))
+         
+(<== (isIndirectlyInfluenced ?spindle-mt ?qtype)
+     (kbOnly
+       (lookupOnly
+         (ist-Information ?spindle-mt
+           (indirectlyInfluenced ?qtype)))))
+
+;;; *** This was a bad idea:
+(isa ambiguousInfluenceDirection UnaryPredicate)
+(arity ambiguousInfluenceDirection 1)
+(arg1Isa ambiguousInfluenceDirection CycLSentence-Assertible)
+(comment ambiguousInfluenceDirection "(ambiguousInfluenceDirection ?influence) is a reifiable statement meaning that it's currently indeterminate which direction the influence should go.")
+
+
+;;; *** This was also a bad idea.  We can't treat the causally ambiguous quantities as 
+;;; *** an equivalence class of influencers, because one may go up, while the other
+;;; *** goes down. Better to rely on re-writing the graph later.
+(isa DependentQuantityFn UnaryFunction)
+(arity DependentQuantityFn 1)
+(arg1Isa DependentQuantityFn Set-Mathematical)
+(comment DependentQuantityFn "(DependentQuantityFn ?set-of-qtypes) denotes the element of the set that ultimately resolves to the dependent quantity in a currently ambiguous influence.")
+
+(isa IndependentQuantityFn UnaryFunction)
+(arity IndependentQuantityFn 1)
+(arg1Isa IndependentQuantityFn Set-Mathematical)
+(comment IndependentQuantityFn "(IndependentQuantityFn ?set-of-qtypes) denotes the element of the set that ultimately resolves to the independent quantity in a currently ambiguous influence.")
+
+
+;;; When we have two quantities that appear to change in lockstep, we record 
+;;; their indirect influence as having ambiguous direction.  This should not
+;;; prevent us from opportunistically recording up-stream and down-stream
+;;; influences, despite not knowing the exact influence.  We do this using
+;;; the functions DependentQuantityFn and IndependentQuantityFn to defer the
+;;; specification.  So long as the direction between them is ambiguous, we can
+;;; still verify the up- and down-stream influences since either quantity will
+;;; suffice.
+;;;
+;;; This will, however, cause some problems with actually planning with these
+;;; ambiguous influences, since many of the reasoning rules use unification
+;;; to dispatch, instead of backchaining based on meaning.  Syntax is faster,
+;;; but less flexible. (we already have this problem with AggregateQuantityFn)
+;;; 
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

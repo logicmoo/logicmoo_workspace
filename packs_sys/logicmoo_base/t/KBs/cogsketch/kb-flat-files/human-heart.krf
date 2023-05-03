@@ -1,0 +1,135 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: human-heart.meld
+;;;;    System: CogSketch
+;;;;    Author: Maria Chang
+;;;;   Created: July 1, 2010 11:19:17
+;;;;   Purpose: Defining terms for a human heart worksheet.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(in-microtheory AnimalPhysiologyMt)
+
+(isa HumanHeart Collection)
+(comment HumanHeart 
+  "The collection of all human hearts.")
+(genls HumanHeart AnimalBodyPart)
+
+(isa HumanHeartChamber Collection)
+(comment HumanHeartChamber
+  "The collection of human heart chambers.  This includes the RightAtrium, 
+LeftAtrium, RightVentricle and LeftVentricle.")
+(genls HumanHeartChamber AnimalBodyPart)
+
+(isa RightAtrium Collection)
+(isa LeftAtrium Collection)
+(isa RightVentricle Collection)
+(isa LeftVentricle Collection)
+(genls RightAtrium HumanHeartChamber)
+(genls LeftAtrium HumanHeartChamber)
+(genls RightVentricle HumanHeartChamber)
+(genls LeftVentricle HumanHeartChamber)
+
+;;;(isa pumpsBloodTo BinaryPredicate)
+;;;(arity pumpsBloodTo 2)
+;;;(arg1Isa pumpsBloodTo HumanHeartChamber)
+;;;(arg2Isa pumpsBloodTo AnimalBodyPart)
+;;;(comment pumpsBloodTo
+;;;  "Indicates that one HumanHeartChamber pumps blood to some destination.  
+;;;For example, (pumpsBloodTo RightAtrium RightVentricle) means that the RightAtrium 
+;;;pumps blood to the RightVentricle.  The second argument does not need to be another 
+;;;heart chamber, for example: (pumpsBloodTo RightVentricle Lungs).")
+
+;; Let's call this relation a biologicTransfer.  I expect we will want to create
+;; other transfer relations, e.g. biologicTransfer-nutrients, biologicTransfer-waste, etc.
+(isa biologicTransfer-Generic AsymmetricBinaryPredicate)
+(arity biologicTransfer-Generic 2)
+(arg1Isa biologicTransfer-Generic OrganicMaterial)
+(arg2Isa biologicTransfer-Generic OrganicMaterial)
+(genFormat biologicTransfer-Generic "~A transfers something to ~A" (1 2))
+(comment biologicTransfer-Generic
+  "Indicates the general biologic transfer of something from arg1 to arg2.  This covers
+things like waste transferring from cells to blood, nutrients transferring from blood
+to cells, etc.  It can also mean the transfer of blood from one area of the body to another (see
+#$bloodFlowsFromAndTo).  When possible, use an existing (or define a new) specialization of this
+relation.")
+
+(isa biologicTransfer-CarbonDioxide AsymmetricBinaryPredicate)
+(genlPreds biologicTransfer-CarbonDioxide biologicTransfer-Generic)
+(arity biologicTransfer-CarbonDioxide 2)
+(arg1Isa biologicTransfer-CarbonDioxide OrganicMaterial)
+(arg2Isa biologicTransfer-CarbonDioxide OrganicMaterial)
+(genFormat biologicTransfer-CarbonDioxide "~A transfers carbon dioxide to ~A" (1 2))
+(comment biologicTransfer-CarbonDioxide
+  "Indicates the transfer of carbon dioxide from one instance of #$OrganicMaterial to another.
+For example: (biologicTransfer-CarbonDioxide Blood Lungs) represents the transfer of carbon dioxide
+from Blood to Lungs.  Arguments can be instances of #$AnimalBodyPart (e.g. Blood, Lungs) or, more
+generally, #$OrganicMaterial (e.g. the atmosphere).  See also #$biologicTransfer-Oxygen")
+
+(isa biologicTransfer-Oxygen AsymmetricBinaryPredicate)
+(genlPreds biologicTransfer-Oxygen biologicTransfer-Generic)
+(arity biologicTransfer-Oxygen 2)
+(arg1Isa biologicTransfer-Oxygen OrganicMaterial)
+(arg2Isa biologicTransfer-Oxygen OrganicMaterial)
+(genFormat biologicTransfer-Oxygen "~A transfers oxygen to ~A" (1 2))
+(comment biologicTransfer-Oxygen
+  "Indicates the transfer of carbon dioxide from one instance of #$OrganicMaterial to another.
+For example: (biologicTransfer-Oxygen Lungs Blood) represents the transfer of carbon dioxide
+from Lungs to Blood.  Arguments can be instances of #$AnimalBodyPart (e.g. Lungs, Blood) or, more
+generally, #$OrganicMaterial (e.g. the atmosphere).")
+
+(isa bloodFlowsFromAndTo AsymmetricBinaryPredicate)
+(genlPreds bloodFlowsFromAndTo biologicTransfer-Generic)
+(arity bloodFlowsFromAndTo 2)
+(arg1Isa bloodFlowsFromAndTo AnimalBodyPart)
+(arg2Isa bloodFlowsFromAndTo AnimalBodyPart)
+(genFormat bloodFlowsFromAndTo "Blood flows from ~A to ~A" (1 2))
+(comment bloodFlowsFromAndTo 
+  "Indicates that blood flows from arg1 to arg2.  
+This relation is asymmetric because blood flow has direction.
+For example, (bloodFlowsFromAndTo RightVentricle Lungs) means that blood flows from the
+right ventricle to the lungs.")
+
+(isa deoxygenatedBloodFlowsFromAndTo AsymmetricBinaryPredicate)
+(genlPreds deoxygenatedBloodFlowsFromAndTo bloodFlowsFromAndTo)
+(arity deoxygenatedBloodFlowsFromAndTo 2)
+(arg1Isa deoxygenatedBloodFlowsFromAndTo AnimalBodyPart)
+(arg2Isa deoxygenatedBloodFlowsFromAndTo AnimalBodyPart)
+(genFormat deoxygenatedBloodFlowsFromAndTo "Oxygen-poor blood flows from ~A to ~A" (1 2))
+(comment deoxygenatedBloodFlowsFromAndTo
+  "Indicates that deoxygenated blood flows from arg1 to arg2.  For example,
+(deoxygenatedBloodFlowsFromAndTo RightVentricle Lungs) means that deoxygenated blood flows
+from the right ventricle to the lungs.")
+
+(isa oxygenatedBloodFlowsFromAndTo AsymmetricBinaryPredicate)
+(genlPreds oxygenatedBloodFlowsFromAndTo bloodFlowsFromAndTo)
+(arity oxygenatedBloodFlowsFromAndTo 2)
+(arg1Isa oxygenatedBloodFlowsFromAndTo AnimalBodyPart)
+(arg2Isa oxygenatedBloodFlowsFromAndTo AnimalBodyPart)
+(genFormat oxygenatedBloodFlowsFromAndTo "Oxygen-rich blood flows from ~A to ~A" (1 2))
+(comment oxygenatedBloodFlowsFromAndTo
+  "Indicates that oxygenated blood flows from arg1 to arg2.  For example,
+(oxygenatedBloodFlowsFromAndTo Lungs LeftAtrium) means that oxygenated blood flows
+from the lungs to the left ventricle.")
+
+(in-microtheory EnglishMt)
+(prettyString HumanHeart "human heart")
+(prettyString HumanHeartChamber "human heart chamber")
+(prettyString RightAtrium "right atrium")
+(prettyString LeftAtrium "left atrium")
+(prettyString RightVentricle "right ventricle")
+(prettyString LeftVentricle "left ventricle")
+(prettyString bloodFlowsFromAndTo "blood flows")
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

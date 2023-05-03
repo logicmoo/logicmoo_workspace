@@ -1,0 +1,119 @@
+(in-microtheory Freeciv-defaultMt)
+
+;;; These are actually Collections.  
+;;; They're types, not individual entities.
+;;; Assume FreeCiv-Special is a 2nd-order collection
+
+(isa FC-Special-Road FreeCiv-Special)
+(genls FC-Special-Road Roadway)
+(typePrimaryFunction FC-Special-Road TransportationEvent motionPathway-Partial)
+
+(isa FC-Special-Irrigation FreeCiv-Special)
+(genls FC-Special-Irrigation IrrigationCanal)
+
+(isa FC-Special-Railroad FreeCiv-Special)
+(genls FC-Special-Railroad  Railway)
+(typePrimaryFunction FC-Special-Railroad TransportationEvent motionPathway-Partial)
+
+(isa FC-Special-Mine FreeCiv-Special)
+(genls FC-Special-Mine Mine-Hole)
+
+(isa FC-Special-Pollution FreeCiv-Special)
+(genls FC-Special-Pollution Pollutant)
+
+(isa FC-Special-Hut FreeCiv-Special)
+(genls FC-Special-Hut Village)
+
+(isa FC-Special-Fortress FreeCiv-Special)
+(genls FC-Special-Fortress MilitaryBase-Grounds)
+(genls FC-Special-Fortress DefensiveStructure)   ; vs DefenseSystem
+
+(isa FC-Special-River FreeCiv-Special)
+(genls FC-Special-River River)
+
+(isa FC-Special-Farmland FreeCiv-Special)
+(genls FC-Special-Farmland Field-Agricultural)
+
+(isa FC-Special-Airbase FreeCiv-Special)
+(genls FC-Special-Airbase AirForceBase-Grounds)
+(genls FC-Special-Airbase DefenseSystem)
+
+(isa FC-Special-Fallout FreeCiv-Special)
+(genls FC-Special-Fallout (MobFn NuclearFalloutParticle))
+
+;;; The remainder are technically Resources, rather than Specials.
+
+
+(isa FreeCiv-GoodProduction-Resource Collection)
+(isa FreeCiv-GoodFood-Resource Collection)
+(isa FreeCiv-GoodTrade-Resource Collection)
+
+
+;;; Resource1 & Resource2 depend on terrain:
+
+; Forests:
+(isa FC-Resource-Pheasant FreeCiv-Resource) ; Resource 1
+(isa FC-Resource-Pheasant FreeCiv-GoodFood-Resource)
+(isa FC-Resource-Silk FreeCiv-Resource)     ; Resource 2
+(isa FC-Resource-Silk FreeCiv-GoodTrade-Resource)
+
+; Glaciers:
+(isa FC-Resource-Ivory FreeCiv-Resource)  ; Resource 1
+(isa FC-Resource-Ivory FreeCiv-GoodTrade-Resource)
+(isa FC-Resource-Oil FreeCiv-Resource)    ; Resource 2
+(isa FC-Resource-Oil FreeCiv-GoodProduction-Resource)
+
+; Deserts:
+(isa FC-Resource-Oasis FreeCiv-Resource)  ; Resource 1
+(isa FC-Resource-Oasis FreeCiv-GoodFood-Resource)
+;(isa FC-Resource-Oil FreeCiv-Resource)   ; Resource 2
+;(isa FC-Resource-Oil FreeCiv-GoodProduction-Resource)
+
+; Grassland:
+(isa FC-Resource-Shield FreeCiv-Resource)  ; Resource1 & 2 - these show up as shields
+
+; Hills:
+(isa FC-Resource-Coal FreeCiv-Resource)    ; Resource 1
+(isa FC-Resource-Coal FreeCiv-GoodProduction-Resource)
+(isa FC-Resource-Wine FreeCiv-Resource)    ; Resource 2
+(isa FC-Resource-Wine FreeCiv-GoodTrade-Resource)
+
+; Jungle:
+(isa FC-Resource-Gems FreeCiv-Resource)    ; Resource 1
+(isa FC-Resource-Gems FreeCiv-GoodTrade-Resource)
+(isa FC-Resource-Fruit FreeCiv-Resource)   ; Resource 2
+(isa FC-Resource-Fruit FreeCiv-GoodFood-Resource)
+
+; Mountains
+(isa FC-Resource-Gold FreeCiv-Resource)    ; Resource 1
+(isa FC-Resource-Gold FreeCiv-GoodTrade-Resource)
+(isa FC-Resource-Iron FreeCiv-Resource)    ; Resource 2
+(isa FC-Resource-Iron FreeCiv-GoodProduction-Resource)
+
+; Oceans
+(isa FC-Resource-Fish FreeCiv-Resource)    ; Resource 1
+(isa FC-Resource-Fish FreeCiv-GoodFood-Resource)
+(isa FC-Resource-Whales FreeCiv-Resource)  ; Resource 2
+(isa FC-Resource-Whales FreeCiv-GoodFood-Resource)
+(isa FC-Resource-Whales FreeCiv-GoodTrade-Resource) ;; not actually that great for trade...
+
+; Plains
+(isa FC-Resource-Buffalo FreeCiv-Resource) ; Resource 1
+(isa FC-Resource-Buffalo FreeCiv-GoodProduction-Resource)
+(isa FC-Resource-Wheat FreeCiv-Resource)   ; Resource 2
+(isa FC-Resource-Wheat FreeCiv-GoodFood-Resource)
+
+; Swamps
+(isa FC-Resource-Peat FreeCiv-Resource)    ; Resource 1
+(isa FC-Resource-Peat FreeCiv-GoodProduction-Resource)
+(isa FC-Resource-Spice FreeCiv-Resource)   ; Resource 2
+(isa FC-Resource-Spice FreeCiv-GoodTrade-Resource)
+(isa FC-Resource-Spice FreeCiv-GoodFood-Resource)
+
+; Tundra
+(isa FC-Resource-Game FreeCiv-Resource)    ; Resource 1
+(isa FC-Resource-Game FreeCiv-GoodFood-Resource)
+(isa FC-Resource-Furs FreeCiv-Resource)    ; Resource 2
+(isa FC-Resource-Furs FreeCiv-GoodTrade-Resource)
+
+

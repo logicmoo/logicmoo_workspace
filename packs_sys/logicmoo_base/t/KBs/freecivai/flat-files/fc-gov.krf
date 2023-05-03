@@ -1,0 +1,21 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic Freeciv government
+;; -------------------
+
+(isa FreeCiv-Government Collection)
+(genls FreeCiv-Government FreeCiv-Object)
+(genls FreeCiv-Government GeopoliticalEntityBySystemOfGovernment)
+
+;; This should probably tie into a concept above the
+;; FreeCiv level...
+; (genls FreeCiv-Government ComputerGame-Strategy-Government)
+
+(isa CentralizedGovernment Collection)
+(genls CentralizedGovernment GeopoliticalEntityBySystemOfGovernment)
+
+(isa RepresentativeGovernment Collection)
+(genls RepresentativeGovernment GeopoliticalEntityBySystemOfGovernment)
+
+

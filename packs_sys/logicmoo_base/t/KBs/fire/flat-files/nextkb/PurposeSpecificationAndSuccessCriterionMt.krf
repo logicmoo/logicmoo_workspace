@@ -1,0 +1,287 @@
+(in-microtheory PurposeSpecificationAndSuccessCriterionMt)
+
+(isa eventToStop-SitType PurposeSpecificationSlot)
+(isa toMaintainInPlan-SitType SuccessCriterionSlot)
+(isa toThwartInPlan-SitType SuccessCriterionSlot)
+(isa planToInterrupt-SitType PurposeSpecificationSlot)
+(isa toPreventInPlan-SitType SuccessCriterionSlot)
+(isa planToAchievePrimitive-SitType PurposeSpecificationSlot)
+(isa eventToAchievePrimitive-SitType PurposeSpecificationSlot)
+(isa eventToUphold-SitType PurposeSpecificationSlot)
+(isa toEnsureInPlan-SitType SuccessCriterionSlot)
+(isa planToPrevent-SitType PurposeSpecificationSlot)
+(isa eventToThwart-SitType PurposeSpecificationSlot)
+(isa toStopInEvent-SitType SuccessCriterionSlot)
+(isa planToEnsure-SitType PurposeSpecificationSlot)
+(isa toMaintainPrimitiveInEvent-SitType SuccessCriterionSlot)
+(isa toInterruptInEvent-SitType SuccessCriterionSlot)
+(isa planToStop-SitType PurposeSpecificationSlot)
+(isa toAchievePrimitiveInEvent-SitType SuccessCriterionSlot)
+(isa toUpholdInEvent-SitType SuccessCriterionSlot)
+(isa planToAchieve-SitType PurposeSpecificationSlot)
+(isa toInterruptInPlan-SitType SuccessCriterionSlot)
+(isa toMaintainInEvent-SitType SuccessCriterionSlot)
+(isa planToMaintainPrimitive-SitType PurposeSpecificationSlot)
+(isa toStopInPlan-SitType SuccessCriterionSlot)
+(isa eventToAchieve-SitType PurposeSpecificationSlot)
+(isa planToUphold-SitType PurposeSpecificationSlot)
+(isa toThwartInEvent-SitType SuccessCriterionSlot)
+(isa toPreventInEvent-SitType SuccessCriterionSlot)
+(isa planToMaintain-SitType PurposeSpecificationSlot)
+(isa planToThwart-SitType PurposeSpecificationSlot)
+(isa toInsureInEvent-SitType SuccessCriterionSlot)
+(isa eventToPrevent-SitType PurposeSpecificationSlot)
+(isa toAchieveInPlan-SitType SuccessCriterionSlot)
+(isa eventToInterrupt-SitType PurposeSpecificationSlot)
+(isa toMaintainPrimitiveInPlan-SitType SuccessCriterionSlot)
+(isa toAchieveInEvent-SitType SuccessCriterionSlot)
+(isa eventToMaintain-SitType PurposeSpecificationSlot)
+(isa eventToInsure-SitType PurposeSpecificationSlot)
+(isa toAchievePrimitiveInPlan-SitType SuccessCriterionSlot)
+(isa eventToMaintainPrimitive-SitType PurposeSpecificationSlot)
+(isa toUpholdInPlan-SitType SuccessCriterionSlot)
+(arg2Genl toAchieveInPlan-SitType Situation)
+(argGenl eventToAchievePrimitive-SitType 2 Situation)
+(argGenl toStopInPlan-SitType 2 Situation)
+(arg2Genl eventToThwart-SitType Situation)
+(argGenl eventToPrevent-SitType 2 Situation)
+(arg2Genl eventToInsure-SitType Situation)
+(arg2Genl toAchievePrimitiveInEvent-SitType Situation)
+(arg2Genl eventToAchieve-SitType Situation)
+(argGenl toAchieveInPlan-SitType 2 Situation)
+(arg2Genl toUpholdInEvent-SitType Situation)
+(argGenl eventToThwart-SitType 2 Situation)
+(argGenl toMaintainPrimitiveInEvent-SitType 2 Situation)
+(argGenl toUpholdInEvent-SitType 2 Situation)
+(arg2Genl toStopInPlan-SitType Situation)
+(arg2Genl toMaintainInPlan-SitType Situation)
+(arg2Genl toThwartInEvent-SitType Situation)
+(argGenl planToAchieve-SitType 2 Situation)
+(arg2Genl planToMaintainPrimitive-SitType Situation)
+(argGenl toMaintainInEvent-SitType 2 Situation)
+(arg2Genl toAchievePrimitiveInPlan-SitType Situation)
+(arg2Genl toPreventInEvent-SitType Situation)
+(arg2Genl eventToInterrupt-SitType Situation)
+(argGenl toInterruptInEvent-SitType 2 Situation)
+(arg2Genl planToAchieve-SitType Situation)
+(arg2Genl toAchieveInEvent-SitType Situation)
+(argGenl eventToUphold-SitType 2 Situation)
+(arg2Genl eventToMaintain-SitType Situation)
+(argGenl toAchievePrimitiveInPlan-SitType 2 Situation)
+(arg2Genl eventToStop-SitType Situation)
+(argGenl eventToMaintainPrimitive-SitType 2 Situation)
+(arg2Genl toMaintainPrimitiveInEvent-SitType Situation)
+(arg2Genl eventToMaintainPrimitive-SitType Situation)
+(argGenl eventToInterrupt-SitType 2 Situation)
+(argGenl toMaintainPrimitiveInPlan-SitType 2 Situation)
+(argGenl eventToMaintain-SitType 2 Situation)
+(arg2Genl planToInterrupt-SitType Situation)
+(argGenl toStopInEvent-SitType 2 Situation)
+(arg2Genl toMaintainInEvent-SitType Situation)
+(argGenl eventToInsure-SitType 2 Situation)
+(arg2Genl toMaintainPrimitiveInPlan-SitType Situation)
+(argGenl toAchieveInEvent-SitType 2 Situation)
+(arg2Genl eventToUphold-SitType Situation)
+(argGenl planToInterrupt-SitType 2 Situation)
+(argGenl toMaintainInPlan-SitType 2 Situation)
+(arg2Genl eventToPrevent-SitType Situation)
+(argGenl toThwartInEvent-SitType 2 Situation)
+(argGenl eventToStop-SitType 2 Situation)
+(argGenl toPreventInEvent-SitType 2 Situation)
+(argGenl planToMaintainPrimitive-SitType 2 Situation)
+(arg2Genl eventToAchievePrimitive-SitType Situation)
+(argGenl eventToAchieve-SitType 2 Situation)
+(argGenl toAchievePrimitiveInEvent-SitType 2 Situation)
+(arg2Genl toInterruptInEvent-SitType Situation)
+(arg2Genl toStopInEvent-SitType Situation)
+(comment planToThwart-SitType "(#$planToThwart-SitType PLAN SIT_TYPE) means that if a #$Situation of type SIT_TYPE obtains at the start of the execution of PLAN, then it is part of the purpose of PLAN that it be stopped some time in the course of PLAN, and if a #$Situation of type SIT_TYPE does not obtain at the start of the execution of PLAN, then it is part of the purpose of PLAN that such a situation must be prevented throughout PLAN. The predicate is defined in terms of #$planToStop-SitType and #$planToPrevent-SitType.")
+(comment planToEnsure-SitType "(#$planToEnsure-SitType PLAN SITTYPE) means that part of the purpose of the plan represented by the #$PlanSpecificationMicrotheory PLAN is that a situation of type SITTYPE should 'happen' at some time in the course of the exectution of PLAN.  It is presupposed that no situation of type SITTYPE obtains at the start of the execution of PLAN and that the situation should persist after its inception.")
+(comment eventToStop-SitType "(#$eventToStop-SitType EVT SITTYPE) means that, in the
+planning context, the success of EVT is contingent upon a pre-existing
+situation of type SITTYPE ceasing to obtain at some time in the course
+of SIT.")
+(comment planToPrevent-SitType "(#$planToPrevent-SitType PLAN SITTYPE) means that it is part of the purpose of PLAN that a #$Situation satisfying the description of SITTYPE must NOT come about at any time during the course of an execution of PLAN.  It is presupposed that no #$Situation of type SITTYPE obtains at the start of the execution of PLAN.")
+(comment toAchieveInEvent-SitType "(#$toAchieveInEvent-SitType EVT SIT_TYPE) means that, in the
+planning context, a situation of type SIT_TYPE is supposed to become
+true in EVT but not hold true for the duration of EVT.")
+(comment planToAchieve-SitType "(#$planToAchieve-SitType PLAN SIT_TYPE) means that part of
+the purpose of PLAN is that a situation of type SIT_TYPE is supposed
+to become true in the execution of PLAN but not hold true for the
+duration of the execution.")
+(comment toPreventInEvent-SitType "(#$toPreventInEvent-SitType EVT SITTYPE) means that, in the
+planning context, a #$Situation satisfying the description of SITTYPE
+must NOT come about at any time during the course of EVT in order for
+EVT to count as 'successful'.  It is presupposed that no #$Situation
+of type SITTYPE obtains at the start of SIT.")
+(comment toThwartInEvent-SitType "(#$toThwartInEvent-SitType EVENT SIT_TYPE) means that if a
+#$Situation of type SIT_TYPE obtains at the start of EVENT, then it must
+be stopped some time in the course of EVENT, and if a #$Situation of
+type SIT_TYPE does not obtain at the start of EVENT, then it must be
+prevented throughout EVENT, in order for EVENT to count as successful.
+The predicate is defined in terms of #$toStopInEvent-SitType and
+#$toPreventInEvent-SitType.")
+(comment toUpholdInPlan-SitType "(#$toUpholdInPlan-SitType PLAN SIT_TYPE) means that if a #$Situation of type SIT_TYPE does not obtain at the start of the execution ofPLAN, then it must be brought about some time in the course of the execution of PLAN, and if a #$Situation of type SIT_TYPE does obtain at the start of the execution ofPLAN, then it must be maintained throughout PLAN, in order for PLAN to count as successful. The predicate is defined in terms of #$toMaintainInPlan-SitType and #$toInsureInPlan-SitType.")
+(comment toMaintainInPlan-SitType "(#$toMaintainInPlan-SitType PLAN SIT_TYPE) means that the
+maintainance of a pre-existing #$Situation satisfying the description
+of SIT_TYPE throughout the course of PLAN is a criterion of PLAN's
+success.")
+(comment toStopInPlan-SitType "(toStopInPlan-SitType PLAN SITTYPE) means that the success
+of the plan represented by the SupposedToBeMicrotheory PLAN is
+contingent upon a pre-existing situation of type SITTYPE ceasing to
+obtain at some time in the course of the exectution of PLAN.  It is
+presupposed that a situation of the type SITTYPE obtains at the start
+of the execution of PLAN.")
+(comment toPreventInPlan-SitType "(#$toPreventInPlan-SitType PLAN SITTYPE) means that a
+#$Situation satisfying the description of SITTYPE must NOT come about
+at any time during the course of an execution of PLAN in order for
+PLAN to count as 'successful'.  It is presupposed that no #$Situation
+of type SITTYPE obtains at the start of the execution of PLAN.")
+(comment planToAchievePrimitive-SitType "(#$planToAchievePrimitive-SitType PLAN SIT_TYPE) means that it is part of the purpose of PLAN that a situation of type SIT_TYPE must be brought about in the course of PLAN.")
+(comment toUpholdInEvent-SitType "(#$toUpholdInEvent-SitType EVT SIT_TYPE) means that if a
+#$Situation of type SIT_TYPE does not obtain at the start of EVT, then
+it must be brought about some time in the course of SIT, and if a
+#$Situation of type SIT_TYPE does obtain at the start of EVT, then it
+must be maintained throughout EVT, in order for EVT to count as
+successful in the planning context.  The predicate is defined in terms
+of #$toMaintainInEvent-SitType and #$toInsureInEvent-SitType.")
+(comment toMaintainPrimitiveInPlan-SitType "(#$toMaintainPrimitiveInPlan-SitType PLAN SIT_TYPE) means
+that a situation of type SIT_TYPE should obtain for the duration of
+any execution of PLAN in order for that execution to count as a
+'success'.  More specifically, if (#$toMaintainPrimitiveInPlan-SitType
+PLAN SIT_TYPE) and (#$planningAgent PLAN AGENT) and (#$executionOfPlan
+PLAN EXEC) and (#$successfulForAgents EXEC AGENT), then
+(#$relationExistsInstance #$endsAfterEndingOf SIT_TYPE EXEC).")
+(comment eventToInsure-SitType "(eventToInsure-SitType EVT SITTYPE) means that in the
+planning context it is part of the purpose of EVT that a situation of
+type SITTYPE should 'happen' at some time in the course of EVT.  It is
+presupposed that no #$Situation of type SITTYPE obtains at the start
+of EVT, and that the situation should persist after its inception.")
+(comment toThwartInPlan-SitType "(#$toThwartInPlan-SitType PLAN SIT_TYPE) means that if a #$Situation of type SIT_TYPE obtains at the start of the execution of PLAN, then it must be stopped some time in the course of PLAN, and if a #$Situation of type SIT_TYPE does not obtain at the start the execution of PLAN, then such a situation must be prevented throughout PLAN, in order for PLAN to count as successful. The predicate is defined in terms of #$toStopInPlan-SitType and #$toPreventInPlan-SitType.")
+(comment eventToThwart-SitType "(#$eventToThwart-SitType EVENT SIT_TYPE) means that if a
+#$Situation of type SIT_TYPE obtains at the start of EVT, then it is
+part of the purpose of EVT that it be stopped some time in the course
+of SIT, and if a #$Situation of type SIT_TYPE does not obtain at the
+start of EVT, then it is part of the purpose of EVT that such a
+situation be prevented throughout EVT.  The predicate is defined in
+terms of #$eventToStop-SitType and #$eventToPrevent-SitType.")
+(comment planToUphold-SitType "(#$planToUphold-SitType PLAN SIT_TYPE) means that if a #$Situation of type SIT_TYPE does not obtain at the start of the execution of PLAN, then part of the purpose of PLAN is to bring it about at some time in the course of the execution of PLAN, and if a #$Situation of type SIT_TYPE does obtain at the start of the execution of PLAN, then it must be maintained throughout the execution of PLAN. The predicate is defined in terms of #$planToMaintain-SitType and #$planToEnsure-SitType.")
+(comment toAchievePrimitiveInEvent-SitType "(#$toAchievePrimitiveInEvent-SitType EVT SIT_TYPE) means
+that in order for EVT to count as 'successful' in the planning context of the sassertion, a situation of type
+SIT_TYPE must be brought about in the course of EVT.  More
+specifically, if (#$toAchievePrimitiveInEvent-SitType EVT SIT_TYPE)
+and (#$eventOfPlan EVT PLAN) and (#$planningAgent PLAN AGENT) and
+(#$successfulForAgents EVT AGENT), then (#$relationExistsInstance
+#$startsDuring SIT_TYPE EVT).")
+(comment toAchieveInPlan-SitType "(#$toAchieveInPlan-SitType PLAN SIT_TYPE) means that a
+situation of type SIT_TYPE is supposed to become true in the execution
+of PLAN but not hold true for the duration of the plan execution.")
+(comment toStopInEvent-SitType "(toStopInEvent-SitType EVT SITTYPE) means that, in the
+planning context, the success of EVT is contingent upon a pre-existing
+situation of type SITTYPE ceasing to obtain at some time in the course
+of SIT.")
+(comment toInterruptInEvent-SitType "(#$toInterruptInEvent-SitType EVT SIT_TYPE) means that, in
+the planning context, a situation of type SIT_TYPE is supposed to
+cease to obtain at some point in EVENT but that a situation of type
+SIT_TYPE should become true again sometime before the end of EVENT.")
+(comment planToStop-SitType "(#$planToStop-SitType PLAN SITTYPE) means that it is part of the purpose of the plan represented by the #$PlanSpecificationMicrotheory PLAN that a pre-existing situation of type SITTYPE should cease to obtain at some time in the course of the exectution of PLAN.  It is presupposed that a situation of the type SITTYPE obtains at the start of the execution of PLAN.")
+(comment eventToAchievePrimitive-SitType "(#$eventToAchievePrimitive-SitType EVT SIT_TYPE) means
+that part of the purpose of EVT in the planning context is that a situation of
+type SIT_TYPE be brought about in the course of EVT.")
+(comment eventToMaintainPrimitive-SitType "(#$eventToMaintainPrimitive-SitType EVT SIT_TYPE) means that
+it is part of the purpose of EVT that a situation of type SIT_TYPE be
+maintained throughout the course of EVT.")
+(comment toMaintainPrimitiveInEvent-SitType "(#$toMaintainPrimitiveInEvent-SitType EVT SIT_TYPE) means
+that a situation of type SIT_TYPE must be maintained throughout the
+course of EVT in order for EVT to count as 'successful' in the
+planning context of the assertion. More specifically, if
+(#$toMaintainPrimitiveInEvent-SitType EVT SIT_TYPE) and
+(#$eventOfPlan EVT PLAN) and (#$planningAgent PLAN AGENT) and
+(#$successfulForAgents EVT AGENT), then (#$relationExistsInstance
+#$endsAfterEndingOf SIT_TYPE EVT).")
+(comment eventToMaintain-SitType "(#$eventToMaintain-SitType EVT SIT_TYPE) means that, in the
+planning context, the maintainance of a pre-existing #$Situation
+satisfying the description of SIT_TYPE throughout the course of EVT is
+part of the purpose of EVT.")
+(comment SuccessCriterionSlot "Instances are predicates used to give criteria of success
+for #$Plans, or for #$PurposefulActions reified in planning contexts.")
+(comment toAchievePrimitiveInPlan-SitType "(#$toAchievePrimitiveInPlan-SitType PLAN SIT_TYPE) means
+that in order for PLAN to count as 'successful', a situation of type
+SIT_TYPE must be brought about in the course of PLAN.  More
+specifically, if (#$toAchievePrimitiveInPlan-SitType PLAN SIT_TYPE)
+and (#$executionOfPlan PLAN EXEC) and (#$planningAgent PLAN AGENT) and
+(#$successfulForAgents EXEC AGENT), then (#$relationExistsInstance
+#$startsDuring SIT_TYPE EXEC)")
+(comment eventToInterrupt-SitType "(#$eventToInterrupt-SitType EVT SIT_TYPE) means that, in the
+planning context, it is part of the purpose of EVT that a situation of
+type SIT_TYPE should cease to obtain at some point in EVENT but that a
+situation of type SIT_TYPE should become true again sometime before
+the end of EVENT.")
+(comment eventToPrevent-SitType "(#$eventToPrevent-SitType EVT SITTYPE) means that, in the
+planning context, a #$Situation satisfying the description of SITTYPE
+must NOT come about at any time during the course of EVT in order for
+EVT to count as 'successful'.  It is presupposed that no #$Situation
+of type SITTYPE obtains at the start of SIT.")
+(comment planToMaintainPrimitive-SitType "(#$planToMaintainPrimitive-SitType PLAN SIT_TYPE) means that
+it is part of the purpose of PLAN that a situation of type SIT_TYPE
+should obtain for the duration of any execution of PLAN.")
+(comment eventToUphold-SitType "(#$eventToUphold-SitType EVT SIT_TYPE) means that if a
+
+#$Situation of type SIT_TYPE does not obtain at the start of EVT, then
+
+it is part of the purpose of EVT in the planning context that such a
+
+#$Situation be brought about some time in the course of EVT, and if a
+
+#$Situation of type SIT_TYPE does obtain at the start of EVT, then it
+
+is part of the purpose of EVT that such a #$Situation be maintained
+
+throughout EVT.  The predicate is defined in terms of
+
+#$eventToMaintain-SitType and #$eventToInsure-SitType.")
+(comment toInsureInEvent-SitType "(#$toInsureInEvent-SitType EVT SITTYPE) means that in the
+
+planning context the success of EVT is contingent upon a situation of
+
+type SITTYPE 'happening' at some time in the course of SIT.  It is
+
+presupposed that no #$Situation of type SITTYPE obtains at the start
+
+of SIT, and that the situation should persist after its inception.")
+(comment planToMaintain-SitType "(#$planToMaintain-SitType PLAN SIT_TYPE) means that the maintainance of a pre-existing #$Situation satisfying the description of SIT_TYPE throughout the course of PLAN is part of the purpose of PLAN.")
+(comment toInterruptInPlan-SitType "(#$toInterruptInPlan-SitType PLAN SIT_TYPE) means that a situation of type SIT_TYPE is supposed to cease to obtain at some point in the execution of PLAN but that a situation of type SIT_TYPE should become true again sometime before the end of the plan execution.")
+(comment toMaintainInEvent-SitType "(#$toMaintainInEvent-SitType EVT SIT_TYPE) means that, in the
+planning context, the maintainance of a pre-existing #$Situation
+satisfying the description of SIT_TYPE throughout the course of EVT is
+a criterion of EVT's success.")
+(comment eventToAchieve-SitType "(#$eventToAchieve-SitType EVT SIT_TYPE) means that, in the
+planning context, it is part of the purpose of EVT that a situation of
+type SIT_TYPE become true in EVT but not hold true for the duration of
+EVT.")
+(comment PurposeSpecificationSlot "Instances are predicates used to specify states that
+instances of #$Plan or instances of #$PurposefulAction in a planning
+context are supposed to bring about.  Usually but not always this will entail
+a specific statement of purpose.")
+(comment toEnsureInPlan-SitType "(toInsureInPlan-SitType PLAN SITTYPE) means that the success
+of the plan represented by the SupposedToBeMicrotheory PLAN is
+contingent upon a situation of type SITTYPE 'happening' at some time
+in the course of the exectution of PLAN.  It is presupposed that no
+situation of type SITTYPE obtains at the start of the execution of
+PLAN and that the situation should persist after its inception.")
+(comment planToInterrupt-SitType "(#$planToInterrupt-SitType PLAN SIT_TYPE) means that it is
+part of the purpose of PLAN that a situation of type SIT_TYPE cease to
+obtain at some point in the execution of PLAN but that a situation of
+type SIT_TYPE should become true again sometime before the end of the
+plan execution.")
+(genlPreds eventToAchieve-SitType eventToAchievePrimitive-SitType)
+(genlPreds toMaintainInEvent-SitType toMaintainPrimitiveInEvent-SitType)
+(genlPreds toEnsureInPlan-SitType toAchievePrimitiveInPlan-SitType)
+(genlPreds planToMaintain-SitType planToMaintainPrimitive-SitType)
+(genlPreds toAchieveInEvent-SitType toAchievePrimitiveInEvent-SitType)
+(genlPreds planToAchieve-SitType planToAchievePrimitive-SitType)
+(genlPreds eventToInsure-SitType eventToAchievePrimitive-SitType)
+(genlPreds toAchieveInPlan-SitType toAchievePrimitiveInPlan-SitType)
+(genlPreds eventToMaintain-SitType eventToMaintainPrimitive-SitType)
+(genlPreds toMaintainInPlan-SitType toMaintainPrimitiveInPlan-SitType)
+(genlPreds toInsureInEvent-SitType toAchievePrimitiveInEvent-SitType)
+(genlPreds planToEnsure-SitType planToAchievePrimitive-SitType)

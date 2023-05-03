@@ -1,0 +1,27 @@
+;;; 
+;;; flatten-list.meld
+;;;
+
+(in-microtheory TestPlanMt)
+(genlMt TestPlanMt CompanionsMt)
+(genlMt CompanionsMt TestPlanMt)
+
+(isa flatten BinaryPredicate)
+(arity flatten 2)
+(arg1Isa flatten CycLTerm)
+(arg2Isa flatten List-Extensional)
+(comment flatten "(flatten ?nested-list ?flat-list) creates a flat-list of the possibly nested lists of terms in the first argument.
+If presented with an atomic literal, it will still produce a flat list.")
+
+(<== (flatten ?nested-list ?flat-list)
+     (evaluate ?first (FirstInListFn ?nested-list))
+     (evaluate ?rest (RestOfListFn ?nested-list))
+     (flatten ?rest ?suffix)
+     (flatten ?first ?prefix)
+     (evaluate ?flat-list (JoinListsFn ?prefix ?suffix)))
+     
+
+(<== (flatten ?item (TheList ?item))
+     (not (operatorFormulas TheList ?item)))  ; good thing this one fails silently.
+
+(flatten (TheList) (TheList))

@@ -1,0 +1,102 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: equation-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:20:54
+;;;;   Purpose: Finding and solving equations
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory EquationSolvingRulesMt)
+
+;; To prevent looping, we pass in the set of equations being worked on, and update
+;; it as we go.  (Small bug: We don't currently increment for each solved parameter
+;; sequentially, which could still be trouble in some cases.)
+
+;; findIndependentEquationFor is the primary entry point from the suggestions.
+;; Finding equations is done before hand with available equations
+
+(isa findIndependentEquationFor Predicate)
+(arity findIndependentEquationFor 4)
+
+(<== (findIndependentEquationFor
+      ?parameter ?equation-set ?new-equation ?new-equation-set)
+     (localEquationMentioning ?parameter ?new-equation)
+     (independentEquationFrom ?new-equation ?equation-set)
+     (evaluate ?new-equation-set 
+       (SetAdjoinFn ?equation-set ?new-equation)))
+
+(<== (localEquationMentioning ?q ?eqn)
+     ;(wmOnly (lookupOnly (availableEquation ?eqn)))
+     (availableEquation ?eqn)
+     (containsAlgebraParameter ?q ?eqn))
+                      
+;; Useful heuristic to detect when equations have to be different.
+;; May not be currently used, but might turn out to be useful.
+(<== (unlikelySameEquations ?eqn1 ?eqn2)
+     (algebraParametersOf ?eqn1 ?parameters1)
+     (algebraParametersOf ?eqn2 ?parameters2)
+     ;; Not the same parameters -- heuristic
+     (evaluate True
+       (GreaterThanByFn
+        (LengthOfListFn
+         (SetToListFn
+          (SetOrCollectionUnion
+           (SetDifferenceFn ?parameters1 ?parameters2)
+           (SetDifferenceFn ?parameters2 ?parameters1))))
+        0 0.1)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Batch extraction of equations from worked solutions
+;;
+;;
+
+(<== (availableEquation ?eqn)
+     (wmOnly
+      (mathEquals ?a ?b))
+     (unifies ?eqn (mathEquals ?a ?b)))
+
+(<== (availableEquation ?equation2)
+     (equationFromCIWithPreconditions ?equation ?ci ?step)
+     (wmOnly (candidateInferenceOf ?ci ?mapping))
+     (resolveEquationSkolems ?equation ?mapping ?equation2)
+     (wmOnly (mappingOf ?mapping ?match))
+     (skolemStepInformation ?step ?match ?type ?preconditions)
+     (allEquationPreconditionsSatisfied ?preconditions))
+
+(<== (availableEquation ?equation)
+     (equivalentQuantities ?quantity ?equiv-quantity)
+     (groundExpression ?quantity)
+     (groundExpression ?equiv-quantity)
+     (unifies ?equation (mathEquals ?quantity ?equiv-quantity)))
+
+(<== (availableEquation ?equation)
+     (valuesUsefulAcrossEvents ?q ?e ?other-e)
+     (different ?e ?other-e)
+     (groundExpression ?q)
+     (groundExpression ?e)
+     (groundExpression ?other-e)
+     (unifies ?equation
+              (mathEquals (MeasurementAtFn ?q ?e)
+                          (MeasurementAtFn ?q ?other-e))))
+
+;;; Support predicates
+
+(<== (equationFromCIWithPreconditions ?equation ?ci ?step)
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent 
+        ?ci 
+        (solutionStepResult ?step (equationFormFor ?name ?equation))))))
+
+
+(<== (equationFromCIWithPreconditions ?equation ?ci ?step)
+     (wmOnly
+      (lookupOnly
+       (candidateInferenceContent 
+        ?ci 
+        (solutionStepResult ?step (equationForSolution ?name ?equation))))))

@@ -1,0 +1,1945 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QPTypeLevelRules.meld
+;;;;    System: 
+;;;;    Author: Clifton McFate
+;;;;   Created: August 6, 2014 18:11:49
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPTypeLevelRulesMt :exclude-globals t)
+
+(genlMt QPTypeLevelRulesMt EAStructuralRulesMt)
+(genlMt QPTypeLevelRulesMt EAReferenceResolutionMt)
+(genlMt QPTypeLevelRulesMt QPInterpretationRulesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;(abductiveNLUScoringProcedure abductive-score-via-symbol-weights)
+;;;(abductiveNLPredicateScore positivelyDependsOn-TypeType 10)
+;;;(abductiveNLPredicateScore negativelyDependsOn-TypeType 10)
+;;;(abductiveNLPredicateScore qprop+TypeType 10)
+;;;(abductiveNLPredicateScore qprop-TypeType 10)
+;;;(abductiveNLPredicateScore qprop-TypeType 10)
+;;;(abductiveNLPredicateScore fixThing 10)
+;;;(abductiveNLPredicateScore buildTypeLevelQprop 10)
+;;;(abductiveNLPredicateScore positivelyDependsOnProp 5)
+;;;(abductiveNLPredicateScore negativelyDependsOnProp 5)
+;;;(abductiveNLPredicateScore causesIncreaseInQuantityType 2)
+;;;(abductiveNLPredicateScore narrativeFunction 2)
+;;;
+;;;(abductiveNLPredicateScore FC-QPEntity 10)
+;;;(abductiveNLPredicateScore realWorld-QPEntity 5)
+;;;(abductiveNLPredicateScore naturalArtifact-QPEntity 7)
+;;;(abductiveNLPredicateScore artifact-QPEntity 6)
+;;;(abductiveNLPredicateScore constrainedPredicate-General 2)
+;;;(abductiveNLPredicateScore ratePredicate-General 2)
+;;;(abductiveNLPredicateScore constrainedPredicate-FC 20)
+;;;(abductiveNLPredicateScore ratePredicate-FC 20)
+
+
+;;;; Finding a type-level Quantity
+;;;;   .Type-level QFrames may not have an entity, just a Quantity (no possession)
+;;;;       .example: As size increases population increases
+;;;;   .Type-level QFrames may have plural instead of singular entities
+;;;;       .example: Heat flows from hot objects to cool objects.
+;;;;   .Hardest case: Generic entitities
+;;;;       .example: A city, an object (almost certainly indefinite)
+;;;;
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?qpframe IntroducesTypeLevelQuantity)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+     (introducesQPTypeFrame
+       (PresentationEventFn ?sid ?event-id)
+      ?qpframe)))
+;;; For plurals (ie. food points)
+(<== (quantityInDrs ?dv ?sid ?qtype)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs ?sid))))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs2 ?sid))))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs3 ?sid))))
+     ;;;(contextIndependentDrsFor ?drs ?sid)
+     (groundExpression ?dv)
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?drs) (isa ?dv Set-Mathematical)))
+     (ist-Information (DrsCaseFn ?drs2) (member ?quant ?dv))
+     (getPotentialIsas ?sid ?quant FreecivQtype ?qtype FreecivMt ?ddrs-id) 
+     (ist-Information (DrsCaseFn ?drs3) (isa ?quant ?qtype))
+     (groundExpression ?qtype)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (pluralQuantity ?dv ?quant ?qtype))
+                             (TheList (quantityInDrs ?dv ?sid ?qtype)))) 
+     )
+
+
+
+;;;; Compound Process Quantities
+;;;; "food production of a city"
+;;;; "food consumption of a city"
+;;;; "food production of a tile etc."
+
+(<== (quantityTypeOfEntityFound ?sid ?qtype ?quantity-process ?entity-wrapped ?etype ?pred)
+     (drsForDiscourse ?ddrs-id)
+     (discourseCaseForDrs ?dcase ?ddrs-id)
+     (ist-Information ?dcase (contextIndependentDrsFor ?sdrs-id ?sid))
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?entity ?quantity-process))
+     (ist-Information (DrsCaseFn ?sdrs-id) (compoundNoun ?quantity-descriptor ?quantity-process))
+     (getPotentialIsas ?sid ?quantity-process CreationOrDestructionEvent ?event-type WorldLikeOursCollectorMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity-process ?event-type)) 
+     (quantityInDrs ?quantity-descriptor ?sid ?qdescriptor-type)
+     (unifies ?qtype (RateOfFn ?quantity-descriptor ?quantity-process))
+     (resolvedVar ?sid ?entity ?entity-res)
+     ;;;(resolvedVar ?sid ?quantity-process ?quantity-res)
+     (groundExpression ?entity-res)
+     (groundExpression ?quantity-process)
+     (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?entity ?etype))))
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+     (unifies ?pred possessiveRelation))
+
+;;;; Compound reference to prior process:
+;;;;;  -?qtype = (RateOfFn food6497 production6502) etc.
+;;;;    quantity = production (should resolve to produce)
+;;;;    entity = city (should already be resolved)
+
+;;; 10/31 Since change to MQSlot for food points I'll have to redo this because I can't rely on AmountFn
+(<== (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid2)
+     (drsForDiscourse ?ddrs-id)
+     (groundExpression ?sid)
+     (groundExpression ?qtype)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (ist-Information ?dcase (contextIndependentDrsFor ?sdrs-id ?sid))
+     (unifies ?qtype (RateOfFn ?quant ?proc))
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframeid2 (RateFn ?ptype))))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quantity  ?ptype))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframeid3 ?e-type2)))
+     (unifies ?e-type2 (AmountFn ?type))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?quant ?type))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?qframeid2)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?qframeid3))))
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Unpossessed Quantity
+(<== (introducesQPTypeFrame
+       (PresentationEventFn ?sid ?nevent)
+      ?qframeid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (quantityTypeWithoutEntityFound ?sid ?qtype ?quantity)
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (groundExpression ?quantity)))
+     (individualSatisfyingConditions 
+      ?qframeid TypeLevelQuantityFrame
+      (TheSet (groundExpression ?quantity)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qframeid TypeLevelQuantityFrame))
+                             (TheList (quantityTypeWithoutEntityFound ?sid ?qtype ?quantity))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframeid ?qtype))
+                             (TheList (quantityTypeWithoutEntityFound ?sid ?qtype ?quantity))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframeid ?quantity))
+                             (TheList (quantityTypeWithoutEntityFound ?sid ?qtype ?quantity)))))
+
+;;; specifically for unbound: Number or Amount of X:
+;;; 11/17 Need to make sure this doesn't trigger when there is an actual entity...
+
+(<== (quantityTypeWithoutEntityFound ?sid ?qtype ?quantity)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?entity ?quantity))
+     (unifies ?pred possessiveRelation)
+     (quantityInDrs ?quantity ?sid ?qtype1)
+     (uninferredSentence (fixPolysemy2 ?qtype1))
+     (fixPolysemy1 ?qtype1)
+     (resolvedVar ?sid ?entity ?entity-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (groundExpression ?entity-res)
+     (groundExpression ?quantity-res)
+     (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?any)
+     (nonTransitiveInference (wmOnly (ist-Information (DrsCaseFn ?any) (isa ?entity ?etype))))
+     (ist-Information ?dcase (wrapEntity ?entity-res ?entity-wrapped ?sdrs-id))
+     ;;; This is the converse rule of the one that binds an entity
+     (stopUnboundQuantities ?sid ?entity ?etype ?qtype1)     
+     )
+
+
+
+
+
+;;; UnpossessedQuantity
+;;; This needs to not trigger for DI's, so we either need to counter or do a find/make on:
+;;;    .a brick emits heat. A brick produces heat.
+;;;; Heat increases with temperature
+(<== (quantityTypeWithoutEntityFound ?sid ?qtype ?quantity)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (findQuantityInDrs ?sid ?quantity ?sdrs-id ?qtype)
+     ;;; Really make sure it's in no possessive relationship
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?any-sdrs-id)
+     (uninferredSentence (ist-Information (DrsCaseFn ?any-sdrs-id) (possessiveRelation ?entity ?quantity)))
+     (uninferredSentence (ist-Information (DrsCaseFn ?any-sdrs-id) (primaryObjectMoving ?event ?quantity)))
+     ;;;;(uninferredSentence (ist-Information (DrsCaseFn ?any-sdrs-id) (outputsCreated ?event ?quantity)))
+     
+     )
+
+(<== (quantityTypeWithoutEntityFound ?sid ?qtype ?quantity)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotesFunction-Underspecified ?quantity (MeasurableQuantityFn ?pred)))
+     ;;; Really make sure it's in no possessive relationship
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (possessiveRelation ?entity ?quantity)))
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (primaryObjectMoving ?event ?quantity)))
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?quantity ?cont)))
+     (unifies ?qtype (MeasurableQuantityFn ?pred))
+     )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Generic objects
+;;;; Introduction Predicate
+;;;; 11/3: Moved (genericEntity ?sid ?entity ?etype) to allow for reference resolution later on
+;;;;
+(<== (introducesQPTypeFrame
+       (PresentationEventFn ?sid ?nevent)
+      ?qframeid)
+     (quantityTypeOfEntityFound ?sid ?qtype ?quantity ?entity ?etype ?pred)
+     (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred)
+     (buildQPValues ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent))
+
+;;; When it does not refer to anything
+
+(<== (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred)
+     (drsForDiscourse ?ddrs-id)
+     (groundExpression ?qtype)
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (groundExpression ?quantity)
+                                             (groundExpression ?entity)))
+     (uninferredSentence (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid))
+     ;;;;(genericEntity ?sid ?entity ?etype)
+     (individualSatisfyingConditions 
+      ?qframeid TypeLevelQuantityFrame
+      (TheSet (groundExpression ?quantity)
+              (groundExpression ?entity)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qframeid TypeLevelQuantityFrame))
+                             (TheList (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframeid ?qtype))
+                             (TheList (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframeid ?quantity))
+                             (TheList (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qframeid ?etype))
+                             (TheList (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframeid ?entity))
+                             (TheList (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?qframeid ?entity))
+                             (TheList (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?qframeid ?pred))
+                             (TheList (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred))))
+     )
+
+;;; When it is a quantity reference
+(<== (buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred)
+     (drsForDiscourse ?ddrs-id)
+     (groundExpression ?qtype)
+     (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid)
+     (groundExpression ?qframeid)
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (groundExpression ?qframeid)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qframeid ?entity ?quantity))
+                             (TheList (isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qframeid)))))
+
+;;;;;;;;;;;;;;;;;
+;;; Generic Objects in Plural
+;;;   "Hot objects to cold objects"
+(<== (genericEntity ?sid ?entity ?etype)
+     (groundExpression ?entity)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (member ?entity ?group))
+     (groundExpression ?group)
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?sdrs-id) (isa ?group Set-Mathematical))))
+
+
+;;; indefinite and very unspecific items are likely generics
+;;;   "a hot object"
+(<== (genericEntity ?sid ?entity ?etype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (unifies ?etype PartiallyTangible)
+     (ist-Information ?dcase 
+       (indefiniteReference ?entity ?sid)))
+
+;;; CJM 11/4 This is a hard problem. I'm assuming right now that we're only looking for type level frames or entity level frames at one time.
+;;;   So right now these aren't being used.
+;;
+;; Well, what do you do when talking about a type of object?
+;; ie. when the temperature in a boiler... the pressure in a boiler...
+;;   or even more general. Container? This is totally unconstrained for now. It won't work
+;;   when there is competition. The problem is, I think it may be impossible to tell generic
+;;   vs non-generic with just local context because you also use "a" for introduction of a specific item.
+;;   and "the" for referring to a part of a generic item. ie.  "a solar collector has an exchanger. The exchanger..."
+;;   "As a boiler heats up the pressure in the boiler heats up" vs "Heat flows to a boiler". The pressure of the boiler.
+;;
+;;; Currently this is basically working for everything, though later we'll need to 
+;;;  constrain it to syntactic cues for generics
+
+(<== (genericEntity ?sid ?entity ?etype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     ;;;(unifies ?etype PartiallyTangible)
+     (ist-Information ?dcase 
+       (indefiniteReference ?entity ?sid)))
+
+;;; Coreferent to a generic entity
+(<== (genericEntity ?sid ?entity ?etype)
+     (drsForDiscourse ?ddrs-id)
+     (resolvedVar ?sid ?entity ?entity-res)
+     (different ?entity ?entity-res)
+     (genericEntity ?sid ?entity-res ?etype))
+
+;;;
+;;;QProp+TypeType
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?narrative-event)
+                        ?qpframe
+                        IntroductionOfQPropTypeEvent)
+      (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesQPropTypeFrame
+                                                 (PresentationEventFn ?sid ?narrative-event)
+                                                 ?qpframe)))
+
+;;;
+;;; As the size of a city increases, its population increases
+;;; 
+
+(<== (introducesQPropTypeFrame
+       (PresentationEventFn ?sid ?narrative-event)
+       ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (indirectlyConstrainedTypeFrames ?qf1 ?qf2 ?sign ?sid)
+     (requiredRelationship ?qf1 ?qf2 ?rel ?sid)
+     (individualSatisfyingConditions 
+      ?nevent IBTGeneration
+      (TheSet 
+       (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)))
+     (unifies ?fact true)
+     (ist-Information (DrsCaseFn ?ddrs-id) (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign)))
+
+
+(<== (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign)
+     (unifies ?sign 1)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (entityType ?qf1 ?etype1))
+     (lookupOnly (entityType ?qf2 ?etype2))
+     (lookupOnly (quantityType ?qf1 ?qtype1))
+     (lookupOnly (quantityType ?qf2 ?qtype2))
+     (individualSatisfyingConditions 
+      ?iiframeid TypeLevelQPropFrame
+      (TheSet 
+       (true)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (qprop+TypeType ?qtype2 ?qtype1 ?etype2 ?etype1 ?rel))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (isa ?iiframeid TypeLevelQPropFrame))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (sign ?iiframeid ?sign))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrainer ?iiframeid ?qf2))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrained ?iiframeid ?qf1))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     )
+(<== (bothEntityTypes ?qf1 ?qf2 ?etype1 ?etyp2)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf1 ?etype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf2 ?etype2))))
+
+(<== (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign)
+     (unifies ?sign 1)
+     (drsForDiscourse ?ddrs-id)
+     (uninferredSentence (bothEntityTypes ?qf1 ?qf2 ?etype1 ?etype2))
+     (lookupOnly (quantityType ?qf1 ?qtype1))
+     (lookupOnly (quantityType ?qf2 ?qtype2))
+     (individualSatisfyingConditions 
+      ?iiframeid TypeLevelQPropFrame
+      (TheSet 
+       (true)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (qprop+TypeType ?qtype2 ?qtype1 PartiallyTangible PartiallyTangible ?rel))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (isa ?iiframeid TypeLevelQPropFrame))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (sign ?iiframeid ?sign))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrainer ?iiframeid ?qf2))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrained ?iiframeid ?qf1))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     )
+
+
+
+(<== (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign)
+     (unifies ?sign -1)
+     (drsForDiscourse ?ddrs-id)
+     (bothEntityTypes ?qf1 ?qf2 ?etype1 ?etype2)
+     (lookupOnly (quantityType ?qf1 ?qtype1))
+     (lookupOnly (quantityType ?qf2 ?qtype2))
+     (individualSatisfyingConditions 
+      ?iiframeid TypeLevelQPropFrame
+      (TheSet 
+       (true)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (qprop-TypeType ?qtype2 ?qtype1 ?etype1 ?etype2 ?rel))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (isa ?iiframeid TypeLevelQPropFrame))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (sign ?iiframeid ?sign))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrainer ?iiframeid ?qf2))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrained ?iiframeid ?qf1))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     )
+     
+(<== (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign)
+     (unifies ?sign -1)
+     (drsForDiscourse ?ddrs-id)
+     (uninferredSentence (bothEntityTypes ?qf1 ?qf2 ?etype1 ?etype2))
+     (lookupOnly (quantityType ?qf1 ?qtype1))
+     (lookupOnly (quantityType ?qf2 ?qtype2))
+     (individualSatisfyingConditions 
+      ?iiframeid TypeLevelQPropFrame
+      (TheSet 
+       (true)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (qprop-TypeType ?qtype2 ?qtype1 PartiallyTangible PartiallyTangible ?rel))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (isa ?iiframeid TypeLevelQPropFrame))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (sign ?iiframeid ?sign))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrainer ?iiframeid ?qf2))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (constrained ?iiframeid ?qf1))
+                             (TheList (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign))))
+     )
+     
+     
+;;; Assuming QuantityTypeFrames are within the sentence
+;;; See qp-narrative-rules for incDecEvents
+
+(<== (indirectlyConstrainedTypeFrames ?qf1 ?qf2 ?sign ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 TypeLevelQuantityFrame))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf2 TypeLevelQuantityFrame))))
+     (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid))
+
+(<== (indirectlyConstrainedTypeFrames ?qf1 ?qf2 ?sign ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 TypeLevelQuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf2 TypeLevelQuantityFrame))))
+     (constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid))
+
+;;;; Now for X depends on Y
+(<== (introducesQPropTypeFrame
+       (PresentationEventFn ?sid ?narrative-event)
+       ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (indirectlyConstrainedTypeDependence ?qf1 ?qf2 ?sign)
+     ;;;;(requiredRelationship ?qf1 ?qf2 ?rel ?sid)
+     (individualSatisfyingConditions 
+      ?nevent IBTGeneration
+      (TheSet 
+       (indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid)))
+     (unifies ?fact true)
+     (ist-Information (DrsCaseFn ?ddrs-id) (buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign)))
+
+
+;;; CJM 11/3/2015
+;;; It looks like X depends on Y no longer generates a positivelyDependsOn statement. Instead we just get relyOn-Generic. Look into this.
+(<== (indirectlyConstrainedTypeDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 TypeLevelQuantityFrame))))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (groupOrSolo ?sid ?qtvar1 ?newtvar1)
+     (groupOrSolo ?sid ?qtvar2 ?newtvar2)
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?newtvar1 ?newtvar2))
+     (unifies ?sign 1))
+
+;;; cjm 11/16 this is probably not the best place for this, but I don't have time at the moment to try and integrate it from the top down.
+;;;   Basically we need to let it know that group of x and x are the same entity for the purposes of rely-on (could be true for other preds too)
+(<== (groupOrSolo1 ?sid ?qtvar ?newtvar)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (member ?qtvar ?newtvar)))
+(<== (groupOrSolo ?sid ?qtvar ?newtvar)
+     (groupOrSolo1 ?sid ?qtvar ?newtvar))
+(<== (groupOrSolo ?sid ?qtvar ?newtvar)
+     (uninferredSentence (groupOrSolo1 ?sid ?qtvar ?newtvar))
+     (unifies ?qtvar ?newtvar))
+
+
+(<== (indirectlyConstrainedTypeDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf1 ?qtvar1)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 TypeLevelQuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (groupOrSolo ?sid ?qtvar1 ?newtvar1)
+     (groupOrSolo ?sid ?qtvar2 ?newtvar2)
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?newtvar1 ?newtvar2))
+     (unifies ?sign 1))
+
+(<== (indirectlyConstrainedTypeDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qf2 ?qtvar2)))
+     (nonTransitiveInference (ist-Information (DrsCaseFn ?ddrs-id) (lookupOnly (isa ?qf1 TypeLevelQuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (groupOrSolo ?sid ?qtvar1 ?newtvar1)
+     (groupOrSolo ?sid ?qtvar2 ?newtvar2)
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?newtvar1 ?newtvar2))
+     (unifies ?sign 1))
+
+(<== (indirectlyConstrainedTypeDependence ?qf1 ?qf2 ?sign)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf2 ?ent ?qtvar2)))
+     (nonTransitiveInference (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf1 TypeLevelQuantityFrame))))
+     (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (referentToQFrame ?sid ?qf1 ?ent ?qtvar1)))
+     (different ?qf1 ?qf2)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf1 ?qtype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf2 ?qtype2)))
+     (groupOrSolo ?sid ?qtvar1 ?newtvar1)
+     (groupOrSolo ?sid ?qtvar2 ?newtvar2)
+     (ist-Information (DrsCaseFn ?sdrs-id) (relyOn-Generic ?newtvar1 ?newtvar2))
+     (unifies ?sign 1))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;; If entities resolve then relationship is equality
+;;; reference sucks, for now do it based on type
+(<== (requiredRelationship ?qf1 ?qf2 ?rel ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf1 ?etype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf2 ?etype2)))
+     (unifies ?etype1 ?etype2)
+     (unifies ?rel equals))
+
+;;; if unpossessed type entities
+(<== (requiredRelationship ?qf1 ?qf2 ?rel ?sid)
+     (uninferredSentence (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf1 ?etype1))))
+     (uninferredSentence (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf2 ?etype2))))
+     (unifies ?rel underspecified))
+
+;;; For production and a city
+(<== (requiredRelationship ?qf1 ?qf2 ?rel ?sid)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf1 ?etype1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf2 ?etype2)))
+     (unifies ?etype1 FreeCiv-City)
+     (kbOnly (useTransitiveInference (ist-Information WorldLikeOursCollectorMt (genls ?etype2 Event))))
+     (unifies ?rel processIn))
+
+;;;;;;;;;;;;;;; I+/- TypeType ;;;;;;;;;;;;;;;;;;;;;;
+;;; 9/2 There are different assumptions you can make about classes of continuous processes.
+(<== (narrativeFunction
+      (PresentationEventFn ?sid ?nevent)
+      ?fact IntroductionOfInfluenceTypeQuantities)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesDITypeQuantities
+                                                 (PresentationEventFn ?sid ?nevent)
+                                                 ?fact)))
+
+;;; Positive
+(<== (introducesDITypeQuantities
+       (PresentationEventFn ?sid ?nevent)
+      ?to-frame)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (directInfluence+TypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+     ;;;;;(addRateInfo ?sid ?event ?event-res ?to-frame)
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (directInfluence+TypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)))
+     )
+
+;;; Negative
+(<== (introducesDITypeQuantities
+       (PresentationEventFn ?sid ?nevent)
+      ?src-frame)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (drsForDiscourse ?ddrs-id)
+     (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (directInfluence-TypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?src-frame ?etype)
+     ;;;;(addRateInfo ?sid ?event ?event-res ?src-frame)
+     (individualSatisfyingConditions ?nevent IBTGeneration
+                                     (TheSet (directInfluence-TypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?src-frame ?etype)))
+
+     )
+(<== (addRateInfo ?sid ?event ?event-res ?frame)
+     (true))
+
+;;;; X per Y isn't working properly in the grammar.
+;;;(<== (addRateInfo ?sid ?event ?event-res ?frame)
+;;;     (contextIndependentDrsFor ?sdrs-id ?sid)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?frame (RateFn ?etype)))
+;;;     (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?frame ?event))
+;;;     (ist-Information (DrsCaseFn ?sdrs-id) 
+
+;;;;;;;;;; di+/-
+(<== (directInfluence+TypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+     (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+     )
+
+(<== (directInfluence-TypeType  ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype)
+     (genSourceFrameTypeType  ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype)
+     )
+
+;;; New diPredicate Assertions
+;;;
+;;;These are for what I'm calling self-focused processes (ie. produce instead of flow)
+;;; diPredicate for <Ent> Produces <Quant>
+;;; Creation Events
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (getAllPotentialIsas ?sid ?event CreationEvent ?event-type WorldLikeOursCollectorMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?event-type))
+     (ist-Information (DrsCaseFn ?sdrs-id) (outputsCreated ?event ?quantity))
+     (quantityInDrs ?quantity ?sid ?qtype)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))))
+
+;;; Consumption Events
+;;; An explorer requires food (unpossessed)
+;;; An explorer requires one food point per turn (value, but unpossessed)
+;;; An explorer in the city requires food from the city.
+;;; An explorer in the city requires food.
+;;; Units in a city require food.
+;;; Explorers require one food point per turn.
+;;;;; Should be a PFrame for Unit then explorers with a specific value in pframe
+;;;;; Also need to get the in-constraint
+
+;;; CJM 11/16 I think this is just wrong changed to qtype instead of always triggering on funcs
+(<== (TypeLevelQuantityBackReference ?quantity ?sdrs-id ?qtype ?qpframe ?dv1 ?dv2)
+     (drsForDiscourse ?ddrs-id)
+     (groundExpression ?sdrs-id)
+     (groundExpression ?quantity)
+     ;;; Is there another type level frame with this type
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qpframe ?qtype))))
+     ;;;;(unifies ?TypeLevelQtype (?func ?qtype))
+     ;;;; explicitly, the producer or other entity
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?qpframe ?dv)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qpframe ?dv2))))
+
+     ;;; So there is a quantity that shares the same type
+     
+(<== (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (getAllPotentialIsas ?sid ?event DestructionEvent ?event-type WorldLikeOursCollectorMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?event-type))
+     (ist-Information (DrsCaseFn ?sdrs-id) (inputsDestroyed ?event ?quantity))
+     (quantityInDrs ?quantity ?sid ?qtype)
+     (resolvedVar ?sid ?event ?event-res)
+     (resolvedVar ?sid ?quantity ?quantity-res)
+     ;;; So this is only for FC amount quantities, change this in the future
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)) (TheList (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))))
+
+
+;;;;;; Type Level To-Frame Generation
+;;;
+;;;
+;;;;;;;;; for produces events     
+(<== (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id ?sid))))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id2 ?sid))))
+     
+     (ist-Information WorldLikeOursCollectorMt (genls ?event-type CreationEvent))
+     (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?producer))
+     (ist-Information (DrsCaseFn ?sdrs-id) (outputsCreated ?event ?quantity))
+     
+     (validQPEntity ?sid ?qtype ?producer ?etype ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id2) (isa ?producer ?etype))
+     ;;;(genericEntity ?sid ?producer ?etype)
+     (individualSatisfyingConditions 
+      ?to-frame TypeLevelQuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?producer))))
+     
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?to-frame TypeLevelQuantityFrame))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?to-frame ?etype))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     ;;; NB: This should not necessarily be amount, I should change this
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?to-frame (AmountFn ?qtype))) 
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?to-frame ?quantity))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?to-frame ?producer))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?to-frame doneBy))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?producer doneBy ?quantity outputsCreated ?event-res positive))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)))))
+
+;;; For destruction Events
+;;; Consumption Events
+;;; An explorer requires food (unpossessed)
+;;; An explorer requires one food point per turn (value, but unpossessed)
+;;; An explorer in the city requires food from the city.
+;;; An explorer in the city requires food.
+;;; Units in a city require food.
+;;; Explorers require one food point per turn.
+;;;;; Should be a PFrame for Unit then explorers with a specific value in pframe
+;;;;; Also need to get the in-constraint
+;;;;;;;
+;;;;;;; CJM 10/28/2015 Note that the from isn't necessarily specified....Need a form for saying foodpoints itself can be a source
+;;;;;;; Ex: A citizen consumes 2 food points per turn... (FROM WHERE?) A generic.
+
+(<== (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id ?sid))))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id2 ?sid))))
+     
+     (ist-Information WorldLikeOursCollectorMt (genls ?event-type DestructionEvent))
+     (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?consumer))
+     ;;;; Note unlike production, the quantity doesn't belong to the consumer.
+     (ist-Information (DrsCaseFn ?sdrs-id) (inputsDestroyed ?event ?quantity))
+     
+     (validQPEntity ?sid ?qtype ?consumer ?ctype ?ddrs-id)
+     ;;;;(ist-Information (DrsCaseFn ?sdrs-id2) (isa ?consumer ?etype))
+     (findOrMakeSource ?sdrs-id ?event ?qtype ?loc)
+     (validQPEntity ?sid ?qtype ?loc ?etype ?ddrs-id)
+     (resolvedVar ?sid ?loc ?loc-res)
+     ;;;;(genericEntity ?sid ?consumer ?etype)
+     (uninferredSentence (TypeLevelQuantityBackReference ?quantity ?sdrs-id ?qtype ?to-frame ?loc-res ?quantity-res))
+     
+     (individualSatisfyingConditions 
+      ?to-frame TypeLevelQuantityFrame
+      (TheSet (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?consumer))))
+     ;;;CJM 10/29/2015 This used to make the consumer the entity, but that's almost certainly wrong
+     ;;;  It should be the food from the city or some general concept like a player. They aren't consuming their own food points
+     ;;;  Previous cases didn't have that relationship though so not sure if I changed it at some point?
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?to-frame TypeLevelQuantityFrame))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?to-frame ?etype))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     ;;; NB: This should not necessarily be amount, I should change this
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?to-frame ?qtype)) 
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?to-frame ?quantity))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?to-frame ?loc))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?to-frame from-UnderspecifiedLocation))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?loc-res from-UnderspecifiedLocation ?quantity inputsDestroyed ?event-res negative))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (causer ?event-res ?consumer doneBy ?ctype))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)))))
+
+(<== (findOrMakeSource ?sdrs-id ?event ?qtype ?loc)
+     (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?loc))
+     )
+(<== (findOrMakeSource ?sdrs-id ?event ?qtype ?loc)
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?loc)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?consumer ?entity-container))
+     (unifies ?loc ?entity-container))
+
+(<== (findOrMakeSource ?sdrs-id ?event ?qtype ?loc)
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?loc)))
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (in-UnderspecifiedContainer ?consumer ?entity-container)))
+     (unifies ?loc (GameUnitQuantityFn ?qtype)))
+
+
+;;;;GAAAAAH
+;;;; Okay, I'm going to need to do something special here.
+;;;; The thing needs a possessive Mandatory
+;;; 11/14/2015 Ah this is for a back refrence.
+(<== (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id ?sid))))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id2 ?sid))))
+     
+     (ist-Information WorldLikeOursCollectorMt (genls ?event-type DestructionEvent))
+     (ist-Information (DrsCaseFn ?sdrs-id) (doneBy ?event ?consumer))
+     ;;;; Note unlike production, the quantity doesn't belong to the consumer.
+     (ist-Information (DrsCaseFn ?sdrs-id) (inputsDestroyed ?event ?quantity))
+     (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?loc))
+     ;;; So for back-reference resolvedVar isn't working right through intra-reference
+     ;;; Instead I'm going to side-step reference by grabbing the entity of the frame it refers to
+     ;;;(resolvedVar ?sid ?loc ?loc-res)
+     ;;;(genericEntity ?sid ?consumer ?etype)
+     (validQPEntity ?sid ?qtype ?consumer ?etype ?ddrs-id)
+     
+     (ist-Information (DrsCaseFn ?sdrs-id2) (isa ?consumer ?etype))
+     (TypeLevelQuantityBackReference ?quantity ?sdrs-id ?qtype ?to-frame ?loc ?quantity-res)
+     (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?to-frame ?loc-res))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?loc-res from-UnderspecifiedLocation ?quantity-res inputsDestroyed ?event-res negative))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (causer ?event-res ?consumer doneBy ?etype))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)))))
+
+     
+;;; This differs from the original in that it needs to return
+;;;  the entityType etc. in order to produce the type-level assertion in introducesDI
+;;; It also needs the process in order to give a type-level rate function
+(<== (genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (groundExpression ?diframe)
+     (individualSatisfyingConditions 
+      ?rateframeid TypeLevelQuantityFrame
+      (TheSet (isa ?diframe TypeLevelInfluenceFrame)))
+     
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?rateframeid TypeLevelQuantityFrame))
+                             (TheList (genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?rateframeid (RateFn ?process-type)))
+                             (TheList (genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?rateframeid ?process-type))
+                             (TheList (genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?rateframeid))
+                             (TheList (genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rateframeid ?resolved-ent))
+                             (TheList (genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?rateframeid processInstanceOf))
+                             (TheList (genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe))))
+     ;;;add rate value/unit for VP MP per NP
+     (addRateValues ?sid ?resolved-ent ?rateframeid)
+     
+     )
+;;base case
+
+(<== (addRateValues ?sid ?resolved-ent ?rateframeid)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (measureForAction ?resolved-ent ?unit1 ?denom))
+     (unifies ?unit1 (?unit ?num))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityUnit ?rateframeid (PerFn ?unit ?denom)))
+                             (TheList (addRateValues ?sid ?resolved-ent ?rateframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?rateframeid ?num))
+                             (TheList (addRateValues ?sid ?resolved-ent ?rateframeid)))))
+
+(<== (addRateValues ?sid ?resolved-ent ?rateframeid)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (measureForAction ?resolved-ent ?unit1 ?denom))))
+
+
+;;;;; Traditional QP
+;;;;; Flow and Transfer-Events
+
+;;; To an object
+(<== (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (to-UnderspecifiedLocation ?event ?dst))
+     (validQPEntity ?sid ?qtype ?dst ?etype ?ddrs-id)
+     ;;;(genericEntity ?sid ?dst ?etype)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?dst ?etype))
+     (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     (individualSatisfyingConditions 
+      ?to-frame TypeLevelQuantityFrame
+      (TheSet
+       (ist-Information (DrsCaseFn ?sdrs-id) (to-UnderspecifiedLocation ?event ?dst))
+       ))
+     (resolvedVar ?sid ?dst ?dst-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?to-frame ?etype))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?to-frame ?qtype))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?to-frame TypeLevelQuantityFrame))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?to-frame ?quantity))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?to-frame ?dst))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?to-frame to-UnderspecifiedLocation))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?dst to-UnderspecifiedLocation ?quantity ?pred ?event-res positive))
+                             (TheList (genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype)))))
+
+;;;;; from an object
+(<== (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src))
+     (validQPEntity ?sid ?qtype ?src ?etype ?ddrs-id)
+     ;;;(genericEntity ?sid ?src ?etype)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?src ?etype))
+     (subDIFind ?sdrs-id ?pred ?event ?quantity)
+     (individualSatisfyingConditions 
+      ?from-frame TypeLevelQuantityFrame
+      (TheSet
+       (ist-Information (DrsCaseFn ?sdrs-id) (from-UnderspecifiedLocation ?event ?src))))
+     (resolvedVar ?sid ?src ?src-res)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?from-frame ?etype))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?from-frame ?qtype))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?from-frame TypeLevelQuantityFrame))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?from-frame ?quantity))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?from-frame ?src))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?from-frame from-UnderspecifiedLocation))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?src from-UnderspecifiedLocation ?quantity ?pred ?event-res negative))
+                             (TheList (genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype)))))
+
+
+(<== (narrativeFunction
+      (PresentationEventFn ?sid ?event-id)
+      ?fact IntroductionOfInfluenceTypeEvent)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesTypeLevelDI
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)))
+
+
+;;;; 11/4/2014
+;;;; OKAY for A city produces food. A settler consumes two food points from the city.
+;;;; This is generating multiple directInfluence-TypeTypes
+;;;; Changed to individualSatisfyingConditions diPredicate to fix overgeneration, but it's a bandaid
+;;;; Underlying problem has to do with multiple inferred sdrs-ids
+
+(<== (introducesTypeLevelDI
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)
+     (drsForDiscourse ?ddrs-id)
+     ;;; First, is there a DI relationship
+     (lookupOnly (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype))
+     (lookupOnly (directInfluence+TypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype))
+     (individualSatisfyingConditions ?di-frame TypeLevelInfluenceFrame
+                                     (theSet (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))
+     (individualSatisfyingConditions ?event-id IBTGeneration
+                                     (TheSet (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))
+     (unifies ?fact ?di-frame)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?di-frame TypeLevelInfluenceFrame)) (TheList (introducesTypeLevelDI (PresentationEventFn ?sid ?event-id) ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame positive)) (TheList (introducesTypeLevelDI (PresentationEventFn ?sid ?event-id) ?fact))))
+     (genOrFindTypeLevelRateFrame ?sid ?event-res ?event-type ?di-frame)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?di-frame ?to-frame)) (TheList (introducesTypeLevelDI (PresentationEventFn ?sid ?event-id) ?fact))))
+     )
+
+(<== (introducesTypeLevelDI
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)
+     (drsForDiscourse ?ddrs-id)
+     ;;; First, is there a DI relationship
+     (lookupOnly (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype))
+     (lookupOnly (directInfluence-TypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype))
+     (individualSatisfyingConditions 
+      ?di-frame TypeLevelInfluenceFrame
+      (TheSet
+       (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))
+     (individualSatisfyingConditions ?event-id IBTGeneration
+                                     (TheSet (diPredicate ?sid ?event ?event-res ?event-type ?quantity ?quantity-res ?qtype)))
+     
+     (unifies ?fact ?di-frame)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?di-frame TypeLevelInfluenceFrame)) (TheList (introducesTypeLevelDI (PresentationEventFn ?sid ?event-id) ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame negative)) (TheList (introducesTypeLevelDI (PresentationEventFn ?sid ?event-id) ?fact))))
+     (genOrFindTypeLevelRateFrame ?sid ?event-res ?event-type ?di-frame)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?di-frame ?from-frame)) (TheList (introducesTypeLevelDI (PresentationEventFn ?sid ?event-id) ?fact))))
+     )
+
+
+;;;;;;;;;;;;;
+;;;; Ordinals
+;;;;;;;;;;;;
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?fact IntroductionOfOrdinalConstraint)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesTypeOrdinal
+      (PresentationEventFn ?sid ?event-id) ?fact)))
+
+;;; implicit ordinality
+
+(<== (introducesTypeOrdinal
+      (PresentationEventFn ?sid ?event-id) ?ordframeid)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qf1 ?qvalue1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qf2 ?qvalue2)))
+     (different ?qf1 ?qf2)   
+     (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation)
+     (individualSatisfyingConditions 
+      ?ordframeid OrdinalRelationFrame
+      (TheSet 
+       (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation)
+       ))
+     (individualSatisfyingConditions 
+      ?narrative-event IBTGeneration
+      (TheSet 
+       (symbolicRelBetween ?qvalue1 ?qvalue2 ?relation)
+       ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (quantity1 ?ordframeid ?qf1)) (TheList (introducesTypeOrdinal
+      (PresentationEventFn ?sid ?event-id) ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (quantity2 ?ordframeid ?qf2)) (TheList (introducesTypeOrdinal
+      (PresentationEventFn ?sid ?event-id) ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (isa ?ordframeid OrdinalRelationFrame)) (TheList (introducesTypeOrdinal
+      (PresentationEventFn ?sid ?event-id) ?ordframeid))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id ) (relationBetweenQuantities ?ordframeid ?relation)) (TheList (introducesTypeOrdinal
+      (PresentationEventFn ?sid ?event-id) ?ordframeid))))
+     )
+
+;;;;;;;;;;;;;
+;;;;; Process Models
+;;;;;;;;;;;;;
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?fact IntroductionOfTypeLevelProcessFragment)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (introducesProcessType
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)))
+
+(<== (introducesProcessType
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)))
+     (individualSatisfyingConditions 
+      ?pframeid TypeLevelModelFragmentFrame
+      (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)))
+       ))
+     (individualSatisfyingConditions 
+       ?narrative-event IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (processEvent ?event-res)))
+       ))
+     (unifies ?fact ?pframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframeid TypeLevelModelFragmentFrame)) (TheList (introducesProcessType
+      (PresentationEventFn ?sid ?event-id)
+      ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (referingEvent ?pframeid ?event-res)) (TheList (introducesProcessType
+      (PresentationEventFn ?sid ?event-id)
+      ?fact))))
+     )
+;;;;For just flat qprops
+(<== (introducesProcessType
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qprop TypeLevelQPropFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?qprop ?ant)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?consq)))
+     ;;; If it's connected to a DI we want it as part of the di process I think
+;;;     (uninferredSentence (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?ant))))
+;;;     (uninferredSentence (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?consq))))
+     (individualSatisfyingConditions 
+      ?pframeid TypeLevelModelFragmentFrame
+      (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qprop TypeLevelQPropFrame)))
+       ))
+     (individualSatisfyingConditions 
+       ?narrative-event IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qprop TypeLevelQPropFrame)))
+       ))
+     (unifies ?fact ?pframeid)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframeid TypeLevelModelFragmentFrame)) 
+                             (TheList (introducesProcessType (PresentationEventFn ?sid ?event-id) ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (qpropRelates ?pframeid ?qprop)) 
+                             (TheList (introducesProcessType (PresentationEventFn ?sid ?event-id) ?fact))))
+     )
+
+
+
+
+(<== (narrativeFunction
+       (PresentationEventFn ?sid ?event-id)
+       ?fact IntroductionOfTypeLevelProcessRoles)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+       (addsProcessRoles (PresentationEventFn ?sid ?event-id) ?fact)))
+
+
+
+
+for qprops
+(<== (addsProcessRoles
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframe TypeLevelModelFragmentFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (qpropRelates ?pframe ?qprop)))
+     ;;; only if it's not already part of a MF
+;;;     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?any-p-frame ?qprop)))
+;;;     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?qprop)))
+;;;     (uninferredSentence (consequence ?any-p-frame ?qprop))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?qprop ?ant)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?consq)))
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (qpropRelates ?pframe ?qprop)))
+        ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?qprop)) 
+                             (TheList (ist-Information (DrsCaseFn ?ddrs-id) (qpropRelates ?pframe ?qprop)))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?ant)) 
+                             (TheList (ist-Information (DrsCaseFn ?ddrs-id) (qpropRelates ?pframe ?qprop)))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?consq)) 
+                               (TheList (ist-Information (DrsCaseFn ?ddrs-id) (qpropRelates ?pframe ?qprop))))))
+     
+
+(<== (addsProcessRoles
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframe TypeLevelModelFragmentFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (referingEvent ?pframe ?event-res)))
+     (assertKnownFacts ?pframe ?event-res ?event-id ?fact))
+
+;;; I can't count on diPreds
+;;; I need to basically go through each eTypeVar and find what predicates it relates to
+;;;
+;;;; Consequences & Participant Types
+;;; chain off of direct influences
+
+
+
+
+;;;;; OH! The reason we were getting duplicates is that diPreds is tied to an event rather than a type-level process
+;;;;;  and it's the same quantity for each so the diPreds are identical! diPreds needs to have the direction or tie to a specific influence
+;;;;;;
+(<== (assertKnownFacts ?pframe ?event-res ?event-id ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframe TypeLevelInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?rate-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate-frame ?event-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?rate-frame ?event-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?rate-frame (RateFn ?ptype))))
+     
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?loc-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?loc-frame ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?loc-frame ?etype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?diframe positive)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?loc-frame ?entity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?loc-frame ?quantity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?entity ?pred1 ?quantity ?pred2 ?event-res positive)))
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?entity ?pred1 ?quantity ?pred2 ?event-res positive)))
+        ))
+     
+     (unifies ?fact ?pframe)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?diframe)) 
+                               (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?loc-frame)) (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?rate-frame)) (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (MFType ?pframe (ProcessFn ?event-type))) (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+     )
+
+
+;;; Consume and ideally flow
+(<== (assertKnownFacts ?pframe ?event-res ?event-id ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframe TypeLevelInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?rate-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate-frame ?event-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?rate-frame ?event-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?rate-frame (RateFn ?ptype))))
+     
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?loc-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?loc-frame ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?loc-frame ?etype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?diframe negative)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?loc-frame ?entity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?loc-frame ?quantity)))
+     
+;;;     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate-frame ?process)))
+     ;;;;(uninferredSentence (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?process DestructionEvent))))
+     
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?entity ?pred1 ?quantity ?pred2 ?event-res negative)))
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?entity ?pred1 ?quantity ?pred2 ?event-res negative)))
+        ))
+     
+     (unifies ?fact ?pframe)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?loc-frame)) (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?rate-frame)) (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (MFType ?pframe (ProcessFn ?event-type))) (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?diframe)) 
+                             (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact)))))
+
+;;;
+;;; When there is a causer (consume)
+(<== (assertKnownFacts ?pframe ?event-res ?event-id ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframe TypeLevelInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?rate-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate-frame ?event-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?rate-frame ?event-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?rate-frame (RateFn ?ptype))))
+     
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?loc-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?loc-frame ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?loc-frame ?etype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?diframe negative)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?loc-frame ?entity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?loc-frame ?quantity)))    
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?entity ?pred1 ?quantity ?pred2 ?event-res negative)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (causer ?event-res ?consumer ?pred3 ?ctype)))
+     (unifies ?thefact (causer ?event-res ?consumer ?pred3 ?ctype))
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (causer ?event-res ?consumer ?pred3 ?ctype)))
+        ))
+     
+     (unifies ?fact ?pframe)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (causal ?pframe ?thefact)) (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+    )
+
+
+
+;;;; For Qprops attached to a DI
+(<== (assertKnownFacts ?pframe ?event-res ?event-id ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframe TypeLevelInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?rate-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate-frame ?event-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?rate-frame ?event-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?rate-frame (RateFn ?ptype))))
+     
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?loc-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?loc-frame ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?loc-frame ?etype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?loc-frame ?entity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?loc-frame ?quantity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?entity ?pred1 ?quantity ?pred2 ?event-res ?sign-di)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qprop TypeLevelQPropFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?qprop 1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?rate-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?qprop ?constrainer-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrainer-frame ?constrainer-qtype)))
+     (unifies ?fact ?pframe)
+     
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?rate-frame)))
+        ))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?qprop)) 
+                             (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact)))))
+
+;;;;qprop- is experimental. Haven't tried this yet. IT could be weird with consume events
+;;;; I have to look back at the dipreds  (though language may not support food consumption as a compound yet)
+(<== (assertKnownFacts ?pframe ?event-res ?event-id ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?diframe TypeLevelInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?rate-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate-frame ?event-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?rate-frame ?event-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?rate-frame (RateFn ?ptype))))
+     
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe ?loc-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?loc-frame ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?loc-frame ?etype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?loc-frame ?entity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?loc-frame ?quantity)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?entity ?pred1 ?quantity ?pred2 ?event-res ?sign-di)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qprop TypeLevelQPropFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?qprop -1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?rate-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?qprop ?constrainer-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrainer-frame ?constrainer-qtype)))
+     (unifies ?fact ?pframe)
+     
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+       (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop ?rate-frame)))
+        ))    
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe (qprop- ?qprop ((QPQuantityFn ?constrainer-qtype) ?pred1)))) 
+                             (TheList (assertKnownFacts ?pframe ?event-res ?event-id ?fact))))
+    )
+
+
+;;;; Asserting conditions
+(<== (narrativeFunction
+       (PresentationEventFn ?sid ?event-id)
+       ?fact IntroductionOfTypeLevelProcessConstraints)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+                                                (addsConstraint
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)))
+
+;;; God this is big and messy, but it seems like the clearest way to do it
+;;; It's interesting, I didn't realize in the past how much we were obscuring by refering to the frame rather than 
+;;;   drilling down to predicates/entities etc.
+;;;
+;;; Assertions for Under X, Y where it's subject object
+;;; Currently I'm 
+
+
+
+;;; Take a look at this for qprops etc. THe specific way we make C+s means this rule won't quite work.
+;;;(<== (addsConstraint
+;;;      (PresentationEventFn ?sid ?event-id)
+;;;      ?fact)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     ;;; This didn't constrain the ?pframe to being in the same sentence...
+;;;     ;;;
+;;;     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframe TypeLevelModelFragmentFrame)))
+;;;     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+;;;     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?part)))
+;;;     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?part ?ent)))
+;;;     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?part ?qtype)))
+;;;     (ist-Information (DrsCaseFn ?sdrs-id) (underInfluenceOf ?ent ?gov))
+;;;     (validQPEntity ?sid ?qtype ?ent ?etype ?ddrs-id)
+;;;     (unifies ?fact underInfluenceOf)
+;;;     (individualSatisfyingConditions 
+;;;       ?event-id IBTGeneration
+;;;       (TheSet 
+;;;        (ist-Information (DrsCaseFn ?sdrs-id) (underInfluenceOf ?part ?gov))))
+;;;     ;; let's not do anything special yet for govs.
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+;;;                               (condition ?pframe (underFrameGov ?part ?etype))) 
+;;;                             (TheList (addsConstraint
+;;;      (PresentationEventFn ?sid ?event-id)
+;;;      ?fact)))))
+
+
+
+(<== (addsConstraint
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)
+     (drsForDiscourse ?ddrs-id)
+     ;;;; Is there an ordinal frame
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframe TypeLevelModelFragmentFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (referingEvent ?pframe ?event-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?ordFrame OrdinalRelationFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantity1 ?ordFrame ?bigger-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantity2 ?ordFrame ?smaller-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relationBetweenQuantities ?ordFrame greaterThan)))
+     ;;; are the quantities in the ordinal the constrained quantities of a di
+     ;;;   Shit... they actually aren't in the case of temperature. They just share an object.
+     ;;;   SO MESSY
+     ;;; So do the big/small frames relate to the same object as the di frames?
+     ;;; First are the di frames related to this process
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe1 ?big-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?diframe2 ?small-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe1 ?rate1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe2 ?rate2)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate1 ?event-res)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?rate2 ?event-res)))
+     ;;; Now is their entity the same as the ordinal?
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?bigger-frame ?big-ent)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?smaller-frame ?small-ent)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?big-frame ?big-ent)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?small-frame ?small-ent)))
+     ;;;;
+     ;;;; Now get their quantities and types
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?big-frame ?big-Q)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?small-frame ?small-Q)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?bigger-frame ?big-Qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?smaller-frame ?small-Qtype)))
+     ;;;; and what are their predicate roles?
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?big-ent ?pred1 ?big-Q ?pred2 ?ent-res1 ?sign1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?small-ent ?pred3 ?small-Q ?pred4 ?ent-res2 ?sign2)))
+     ;;;;; Finally we have what we need to build the constraint
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+        (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?big-ent ?pred1 ?big-Q ?pred2 ?ent-res1 ?sign1)))
+        (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (diPreds ?small-ent ?pred2 ?small-Q ?pred2 ?ent-res2 ?sign2)))))
+     (unifies ?fact ?pframe)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (condition ?pframe ?ordFrame)) (TheList (addsConstraint
+      (PresentationEventFn ?sid ?event-id)
+      ?fact)))))
+
+
+
+;;; cjm 11/13 new model fragment stuff
+(<== (narrativeFunction
+      (PresentationEventFn ?sid ?event-id)
+      ?fact IntroductionOfCTypeFrame)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id) 
+       (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?fact)))
+
+;;;
+;;; When we have a constraint and a corresponding value: e.g. Under  anarchy...
+;;; When we have a value of a rate tied to a specific entity doer.
+;;;    either X consumes Y per turn
+;;;    or Y rate of X is __
+(<== (introducesCTypeFrame
+      (PresentationEventFn ?sid ?event-id)
+      ?mf-id)
+     (drsForDiscourse ?ddrs-id)
+     ;;; Are their any values
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityValue ?qframe ?value))
+     (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframe ?qevent))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe ?qtype))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe2 ?qtype))
+     (different ?qframe ?qframe2)
+     (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframe2 ?qevent2))
+     (ist-Information (DrsCaseFn ?ddrs-id) (signifiesTotalQuantity ?qevent2))
+     ;;; get conditions
+     ;;; cjm 11/13 why lookupOnly... because entityType exists as a pred in freeciv elsewhere.... FUCK
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qframe ?etype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qframe2 ?etype2)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe2 ?ent)))
+     (individualSatisfyingConditions 
+       ?event-id IBTGeneration
+       (TheSet 
+        (ist-Information (DrsCaseFn ?ddrs-id) (signifiesTotalQuantity ?qevent2))
+        (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qframe ?etype)))))
+     (individualSatisfyingConditions 
+       ?mf-id TypeLevelModelFragmentFrame
+       (TheSet 
+        (ist-Information (DrsCaseFn ?ddrs-id) (signifiesTotalQuantity ?qevent2))
+        (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qframe ?etype)))))
+     ;;; Make the C+
+     (individualSatisfyingConditions 
+       ?cf-id CTypeLevelFrame
+       (TheSet 
+        (ist-Information (DrsCaseFn ?ddrs-id) (signifiesTotalQuantity ?qevent2))
+        (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qframe ?etype)))))
+     (individualSatisfyingConditions 
+       ?qf-id TypeLevelQuantityFrame
+       (TheSet 
+        (ist-Information (DrsCaseFn ?ddrs-id) (signifiesTotalQuantity ?qevent2))
+        (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qframe ?etype)))))
+     
+     
+     ;;; Make the amount QF
+     ;;; Amount of the entity as a quantity of the constrained entity.
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qf-id TypeLevelQuantityFrame)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?qf-id ?etype2)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qf-id ?ent)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qf-id (AmountFn ?etype))) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?qf-id possessiveRelation)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     
+     ;;; Link it with the CF
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?cf-id CTypeLevelFrame)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (antecedent ?cf-id ?qf-id)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequent ?cf-id ?qframe2)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (valueOfAntecedent ?cf-id ?value)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (sign ?cf-id 1)) 
+                        (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     ;;;;;;; Assert the MF
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?mf-id TypeLevelModelFragmentFrame)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?mf-id ?cf-id)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?mf-id ?qf-id)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participant ?mf-id ?qframe2)) 
+                             (TheList (introducesCTypeFrame (PresentationEventFn ?sid ?event-id) ?mf-id))))
+     (anyConditions ?sid ?qframe ?mf-id))
+
+(<== (anyConditions ?sid ?qframe ?mf-id)
+     (uninferredSentence (anyConditions2 ?sid ?qframe ?mf-id ?fact)))
+
+(<== (anyConditions ?sid ?qframe ?mf-id)
+     (anyConditions2 ?sid ?qframe ?mf-id ?fact))
+
+(<== (anyConditions2 ?sid ?qframe ?mf-id ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (relatesToQTypeVar ?qframe ?ent))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe ?qtype))
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (underInfluenceOf ?ent ?gov))
+     (validQPEntity ?sid ?qtype ?gov ?gtype ?ddrs-id)
+     (unifies ?fact (currentGovernment FreeCiv-Player ?gtype))
+;;could separate this for different preds
+    ;;;; (useTransitiveInference (kbOnly (ist-Information FreecivPlanningDomain (isa ?gtype FreeCiv-Government))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (condition ?mf-id (currentGovernment FreeCiv-Player ?gtype))) 
+                             (TheList (anyConditions2 ?sid ?qframe ?mf-id ?fact)))))
+
+
+;;;(<== (rateQuantity ?qframe ?qtype)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe ?qtype))
+;;;     (unifies ?qtype Rate))
+;;;(<== (rateQuantity ?qframe ?qtype)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe ?qtype))
+;;;     (unifies ?qtype (MeasurableQuantityFn ?pred))
+;;;     (ist-Information (LanguageMtFn Freeciv-TheGame) (genls ?pred Rate)
+
+
+
+
+     
+;;; Generic
+;;; Okay, the reason these were not working is that they aren't pursuant to different abductive choices.
+;;;  So the NLU scoring prodcedure can't help. preferInContext is too high level... so... uninferredSentence it is
+
+(<== (constrainedPredicate ?pred ?constrained-etype ?constrained-qtype)
+     (uninferredSentence (unifies ?constrained-qtype Rate))
+     (constrainedPredicate-FC ?pred ?constrained-etype ?constrained-qtype))
+
+(<== (ratePredicate ?pred ?processType ?constrained-qtype ?constrained-etype)
+     (groundExpression ?processType)
+     (kbOnly (useTransitiveInference (ist-Information WorldLikeOursCollectorMt (genls ?processType Event))))
+     (ratePredicate-FC ?pred ?processType ?constrained-qtype ?constrained-etype))
+
+(<== (constrainedPredicate ?pred ?constrained-etype ?constrained-qtype)
+     (uninferredSentence (unifies ?constrained-qtype Rate))
+     (constrainedPredicate-General ?pred ?constrained-etype ?constrained-qtype))
+
+(<== (ratePredicate ?pred ?processType ?constrained-qtype ?constrained-etype)
+     (groundExpression ?processType)
+     (kbOnly (useTransitiveInference (ist-Information WorldLikeOursCollectorMt (genls ?processType Event))))
+     (ratePredicate-General ?pred ?processType ?constrained-qtype ?constrained-etype))
+
+
+(<== (ratePredicate-General ?pred ?processType ?constrained-qtype ?constrained-etype)
+     (uninferredSentence (ratePredicate-FC ?pred ?processType ?constrained-qtype ?constrained-etype))
+     (unifies ?pred (MeasurableQuantitySlotFn ?processType ?constrained-qtype)))
+
+(<== (constrainedPredicate-General ?pred ?constrained-etype ?constrained-qtype)
+     (uninferredSentence (constrainedPredicate-FC ?pred ?constrained-etype ?constrained-qtype))
+     (unifies ?pred (MeasurableQuantitySlotFn ?constrained-etype ?constrained-qtype)))
+
+
+;;; Freeciv Specific
+;;; cjm10/31 No more AmountFn Trade-Freeciv etc.
+;;;  Need to re-write
+(<== (constrainedPredicate-FC ?pred ?constrained-etype ?constrained-qtype)
+     (unifies ?constrained-qtype (AmountFn Food-Freeciv))
+     (unifies ?constrained-etype FreeCiv-City)
+     (unifies ?pred cityFoodReserves))
+
+(<== (ratePredicate-FC ?pred ?processType ?constrained-qtype ?constrained-etype)
+     (unifies ?constrained-qtype (AmountFn Food-Freeciv))
+     (unifies ?constrained-etype FreeCiv-City)
+     (unifies ?process-type Production-Generic)
+     (unifies ?pred cityFoodProduction))
+
+
+(<== (constrainedPredicate-FC ?pred ?constrained-etype ?constrained-qtype)
+     (unifies ?constrained-qtype (AmountFn Trade-Freeciv))
+     (unifies ?constrained-etype FreeCiv-City)
+     (unifies ?pred cityTradeReserves))
+
+(<== (ratePredicate-FC ?pred ?processType ?constrained-qtype ?constrained-etype)
+     (unifies ?constrained-qtype (AmountFn Trade-Freeciv))
+     (unifies ?constrained-etype FreeCiv-City)
+     (unifies ?process-type Production-Generic)
+     (unifies ?pred cityTradeProduction))
+
+(<== (constrainedPredicate-FC ?pred ?constrained-etype ?constrained-qtype)
+     (unifies ?constrained-qtype (AmountFn Shield-Freeciv))
+     (unifies ?constrained-etype FreeCiv-City)
+     (unifies ?pred cityShieldReserves))
+
+
+(<== (ratePredicate-FC ?pred ?processType ?constrained-qtype ?constrained-etype)
+     (unifies ?constrained-qtype (AmountFn Shield-Freeciv))
+     (unifies ?constrained-etype FreeCiv-City)
+     (unifies ?process-type Production-Generic)
+     (unifies ?pred cityShieldProduction))
+
+
+
+;;;;; FC Specific Type Level Rules
+(in-microtheory FC-DomainTypeQueriesMt :exclude-globals t)
+(genlMt FC-DomainTypeQueriesMt Freeciv-defaultMt)
+(genlMt FC-DomainTypeQueriesMt FreecivNarrativeRulesMt)
+
+;;; FreeCiv generic entities
+;;;; See change to validQPEntity in qp-narrative-rules. Lets us use QTOE.
+;;; ie. "food production of a city"
+;;;; Not indefinite because of within-sentence co-reference
+;;;;  This let's us say that Free-civ actors can be generics 
+;;;;   especially when another one has been introduced as generic
+(<== (genericEntity ?sid ?entity ?etype)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (useTransitiveInference (ist-Information Freeciv-defaultMt (genls ?etype FreeCiv-Actor)))
+     (lookupOnly (ist-Information ?dcase (genericEntity ?some-sid ?some-entity ?etype)))
+     )
+
+(<== (quantityInDrs ?dv ?sid ?qtype)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?drs ?sid))))
+     (wmOnly (lookupOnly (ist-Information ?dcase (drsEntailedBySentence ?sdrs ?sid))))
+     ;;;(contextIndependentDrsFor ?drs ?sid)
+     (getPotentialIsas ?sid ?dv FreecivQtype ?qtype FreecivMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs) (isa ?dv ?qtype))
+     (groundExpression ?qtype)
+     )
+
+(<== (validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id))
+
+
+(<== (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     ;;;(uninferredSentence (unifies ?qtype (MeasurableQuantityFn ?anything)))
+     (getPotentialIsas ?sid ?entity FreeCiv-Actor ?etype Freeciv-defaultMt ?ddrs-id))
+
+(<== (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     ;;;(uninferredSentence (unifies ?qtype (MeasurableQuantityFn ?anything)))
+     (getPotentialIsas ?sid ?entity FreeCiv-Government ?etype (LanguageMtFn Freeciv-TheGame) ?ddrs-id))
+
+;; Citizens are their own thing. They can't be entities, but we need to treat them like ones linguistically.
+(<== (FC-QPEntity ?sid ?qtype ?entity ?etype ?ddrs-id)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?entity FC-Unit-Citizens))
+     (unifies ?etype FC-Unit-Citizens))
+
+
+
+;;;; For positivelyDependsOnTypeType
+;;;; Ex: 'Adding a university in a city increases its science output'
+
+;;;; Currently positivelyDependsOn-TypeType rules are only in fc-narrative-rules
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?fact IntroducesTypeDependence)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel))
+     (unifies ?fact (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel)))
+     (individualSatisfyingConditions ?event-id IBTGeneration
+                                     (TheSet (contextIndependentDrsFor ?sdrs-id ?sid)
+                                             (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype ?obj-type
+                                                                                                        ?imp-type ?part-rel)))))
+
+;;; For negativelyDependsOnTypeType
+;;; Ex: Adding a courthouse in a city decreases its corruption.
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?fact IntroducesTypeDependence)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (relationHoldsInDrs ?sdrs-id (negativelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel))
+     (unifies ?fact (relationHoldsInDrs ?sdrs-id (negativelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel)))
+     (individualSatisfyingConditions ?event-id IBTGeneration 
+                                     (TheSet (contextIndependentDrsFor ?sdrs-id ?sid)
+                                             (relationHoldsInDrs ?sdrs-id (negativelyDependsOn-TypeType ?qtype ?obj-type
+                                                                                                        ?imp-type ?part-rel)))))
+
+
+
+
+
+
+(in-microtheory QPTypeLevelRulesMt :exclude-globals t)
+;;; Extract a process model:
+(<== (narrativeFunction
+      (PresentationEventFn ?sid ?event-id)
+      ?mf ExtractProcessModel)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (NLPScratchPadFn ?ddrs-id)
+     (introducesMF
+      (PresentationEventFn ?sid ?event-id) ?mf)))
+
+
+
+
+
+(<== (introducesMF
+      (PresentationEventFn ?sid ?event-id) ?mf)
+     (drsForDiscourse ?ddrs-id)
+;;several of these made
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?mf-frame TypeLevelModelFragmentFrame)))
+     (individualSatisfyingConditions ?mf ModelFragment 
+                                     (TheSet 
+                                      (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?mf-frame TypeLevelModelFragmentFrame)))))
+     (assertConsequences ?sid  ?mf ?mf-frame)
+     (assertPTypes ?sid ?mf ?mf-frame ?fact)
+     ;;; CF or DI or Qprop
+     (individualSatisfyingConditions ?event-id IBTGeneration 
+                                     (TheSet 
+                                      (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?mf-frame TypeLevelModelFragmentFrame))))))
+
+
+(<== (getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (drsForDiscourse ?ddrs-id)
+     ;;; Whatever entity requires the quantity
+     ;;; It's going to be the objectOfStateChange in a model fragment because it's being affected. The city is being 
+     ;;; affected in food consumption.
+     (unifies ?pred requires-Underspecified)
+     (unifies ?new-pred objectOfStateChange))
+
+(<== (getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (drsForDiscourse ?ddrs-id)
+     ;;; Whatever entity requires the quantity
+     ;;; It's going to be the objectOfStateChange in a model fragment because it's being affected. The city is being 
+     ;;; affected in food consumption.
+     (unifies ?pred from-UnderspecifiedLocation)
+     (unifies ?new-pred from-UnderspecifiedLocation))
+
+(<== (getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (drsForDiscourse ?ddrs-id)
+     ;;; Whatever entity requires the quantity
+     ;;; It's going to be the objectOfStateChange in a model fragment because it's being affected. The city is being 
+     ;;; affected in food consumption.
+     (unifies ?pred to-UnderspecifiedLocation)
+     (unifies ?new-pred to-UnderspecifiedLocation))
+
+(<== (getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (drsForDiscourse ?ddrs-id)
+     ;;; Whatever entity requires the quantity
+     ;;; It's going to be the objectOfStateChange in a model fragment because it's being affected. The city is being 
+     ;;; affected in food consumption.
+     (unifies ?pred processInstanceOf)
+     (false))
+
+;;; For possessive relation: If the qtype is amount of the entity, then the entity is the relationship
+;;; otherwise use objectOfStateChange.
+(<== (getConstrainingPred2 ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?sdrs-id)
+     ;;; Whatever entity requires the quantity
+     (unifies ?qtype (AmountFn ?type))
+     (nonTransitiveInference (lookupOnly (wmOnly (ist-Information (DrsCaseFn ?sdrs-id) (isa ?entity ?type)))))
+     (unifies ?pred possessiveRelation)
+     (unifies ?new-pred possessiveRelation))
+
+(<== (getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (getConstrainingPred2 ?sid ?entity ?qtype ?frame ?pred ?new-pred))
+
+(<== (getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (uninferredSentence (getConstrainingPred2 ?sid ?entity ?qtype ?frame ?pred ?new-pred))
+     (drsForDiscourse ?ddrs-id)
+     ;;; Whatever entity requires the quantity
+     ;;; It's going to be the objectOfStateChange in a model fragment because it's being affected. The city is being 
+     ;;; affected in food consumption. Ditto possessiveRelation
+     (unifies ?pred possessiveRelation)
+     (unifies ?new-pred objectOfStateChange))
+
+                      
+
+(<== (assertPTypes ?sid ?mf ?mf-frame ?fact)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (participant ?mf-frame ?participant)))
+     ;; are they the same entity?
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?participant ?entity)))
+     ;;; What is the type
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?participant ?etype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?participant ?qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?participant ?pred)))
+     (unifies ?fact buildPType)
+     (getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (isa ?mf ModelFragment)) 
+                             (TheList (assertPTypes ?sid ?mf ?mf-frame ?fact))))
+     (buildPType ?mf ?entity ?etype ?new-pred))
+
+(<== (buildPType ?mf ?entity ?etype ?new-pred)
+     (drsForDiscourse ?ddrs-id)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participantType ?mf ?new-pred ?etype)) 
+                             (TheList (buildPType ?mf ?entity ?etype ?new-pred)
+                                      ))))
+
+(<== (assertPTypes ?sid ?mf ?mf-frame ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?mf-frame ?consq)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (causal ?consq ?expr)))
+     (unifies ?fact participantType)
+     (unifies ?expr (causer ?event ?ent ?pred ?etype))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (participantType ?mf ?pred ?etype)) 
+                             (TheList (assertPTypes ?sid ?mf ?mf-frame ?fact)
+                                      ))))
+
+(<== (assertPTypes ?sid ?mf ?mf-frame ?fact)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (condition ?mf-frame ?fact)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (conditionOf-TypeType ?mf ?fact)) 
+                             (TheList (assertPTypes ?sid ?mf ?mf-frame ?fact)
+                                      ))))
+
+;;;;CF
+;;; 11/15 given the constraints on production this is pretty much always going to be the same entity
+(<== (assertConsequences ?sid ?mf ?mf-frame)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?mf-frame ?consq)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?consq CTypeLevelFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (valueOfAntecedent ?consq ?val)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (antecedent ?consq ?ant-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (consequent ?consq ?consq-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?ant-frame ?ant-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?consq-frame ?consq-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?ant-frame ?ant-pred)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?consq-frame ?consq-pred)))
+     (wrapQtype ?consq-qtype ?consq-new-type)
+     (wrapQtype ?ant-qtype ?ant-new-type)
+;;;     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+;;;                               (valueOfAntecedentQuantity ?mf ?val)) 
+;;;                             (TheList (assertConsequences ?sid ?mf ?mf-frame))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (consequenceOf-TypeType ?mf (C+ (?consq-new-type objectOfStateChange) (\* ?val (?ant-new-type objectOfStateChange))))) 
+                             (TheList (assertConsequences ?sid ?mf ?mf-frame)))))
+;;;;;DI
+(<== (assertConsequences ?sid ?mf ?mf-frame)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?mf-frame ?consq)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?consq TypeLevelInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?consq positive)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?consq ?ant-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?consq ?consq-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?ant-frame ?ant-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?consq-frame ?consq-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?ant-frame ?ant-pred)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?consq-frame ?consq-pred)))
+     (wrapQtype ?consq-qtype ?consq-new-type)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+ 
+                               (consequenceOf-TypeType ?mf (I+ (?consq-new-type ?consq-pred) ((QPQuantityFn ?ant-qtype) ?consq-pred)))) 
+                             (TheList (assertConsequences ?sid ?mf ?mf-frame)))))
+
+(<== (assertConsequences ?sid ?mf ?mf-frame)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?mf-frame ?consq)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?consq TypeLevelInfluenceFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?consq negative)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?consq ?ant-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?consq ?consq-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?ant-frame ?ant-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?consq-frame ?consq-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?ant-frame ?ant-pred)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?consq-frame ?consq-pred)))
+     (wrapQtype ?consq-qtype ?consq-new-type)
+     ;;;(wrapQtype ?ant-qtype ?ant-new-type)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (consequenceOf-TypeType ?mf (I- (?consq-new-type ?consq-pred) ((QPQuantityFn ?ant-qtype) ?consq-pred)))) 
+                             (TheList (assertConsequences ?sid ?mf ?mf-frame)))))
+
+(<== (wrapQtype1 ?consq-qtype ?consq-new-type)
+     (kbOnly (ist-Information (LanguageMtFn Freeciv-TheGame) (genls ?consq-qtype FreecivQtype)))
+     (unifies ?consq-new-type (QPQuantityFn ?consq-qtype)))
+
+(<== (wrapQtype1 ?consq-qtype ?consq-new-type)
+     (unifies ?consq-qtype (AmountFn ?x))
+     (unifies ?consq-new-type (QPQuantityFn ?consq-qtype)))
+
+(<== (wrapQtype ?consq-qtype ?consq-new-type)
+     (wrapQtype1 ?consq-qtype ?consq-new-type))
+(<== (wrapQtype ?consq-qtype ?consq-new-type)
+     (uninferredSentence (wrapQtype1 ?consq-qtype ?consq-new-type))
+     (unifies ?consq-new-type ?consq-qtype))
+     
+     
+
+
+(<== (assertConsequences ?sid ?mf ?mf-frame)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?mf-frame ?consq)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?consq TypeLevelQPropFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?consq -1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?consq ?ant-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?ant-frame ?ant-ent)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?ant-frame ?ant-e-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?consq ?consq-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?consq-frame ?consq-ent)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?consq-frame ?consq-e-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?ant-frame ?ant-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?consq-frame ?consq-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?ant-frame ?ant-pred)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?consq-frame ?consq-pred)))
+     ;;; This only works under an assumption that possessive/requires will match to the same pred
+     ;;; I'm not sure this is a good idea long term.
+     ;; CHECK THIS ON FULL RUN
+     (getConstrainingPred ?sid ?ant-ent ?ant-qtype ?frame ?ant-pred ?new-ant-pred)
+     (getConstrainingPred ?sid ?consq-ent ?consq-qtype ?frame ?consq-pred ?new-consq-pred)
+     (wrapQtype ?consq-qtype ?consq-new-type)
+     (wrapQtype ?ant-qtype ?ant-new-type)
+     ;; So if ant-ent and consq-ent are the same we just one one pred
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (consequenceOf-TypeType ?mf (qprop- (?consq-new-type ?new-consq-pred) (?ant-new-type ?new-ant-pred)))) 
+                             (TheList (assertConsequences ?sid ?mf ?mf-frame)))))
+
+(<== (assertConsequences ?sid ?mf ?mf-frame)
+     (drsForDiscourse ?ddrs-id)
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?mf-frame ?consq)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?consq TypeLevelQPropFrame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (sign ?consq 1)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?consq ?ant-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?ant-frame ?ant-ent)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?consq ?consq-frame)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (relatesToETypeVar ?consq-frame ?consq-ent)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?ant-frame ?ant-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?consq-frame ?consq-qtype)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?ant-frame ?ant-pred)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (constrainingPred ?consq-frame ?consq-pred)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?consq-frame ?consq-e-type)))
+     (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (entityType ?ant-frame ?ant-e-type)))
+     (getConstrainingPred ?sid ?ant-ent ?ant-qtype ?frame ?ant-pred ?new-ant-pred)
+     (getConstrainingPred ?sid ?consq-ent ?consq-qtype ?frame ?consq-pred ?new-consq-pred)
+     (wrapQtype ?consq-qtype ?consq-new-type)
+     (wrapQtype ?ant-qtype ?ant-new-type)
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) 
+                               (consequenceOf-TypeType ?mf (qprop+ (?consq-new-type ?new-consq-pred) (?ant-new-type ?new-ant-pred)))) 
+                             (TheList (assertConsequences ?sid ?mf ?mf-frame)))))
+
+     
+;;; 
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

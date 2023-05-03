@@ -1,0 +1,314 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: error-detection-plans
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: October 22, 2013 12:52:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa evaluateParseErrors ComplexActionPredicate)
+(arity evaluateParseErrors 0)
+(comment evaluateParseErrors 
+  "(evaluateSentenceErrors) produces a report of various things that could go wrong with parsing and stores it in
+sentenceErrorsMt.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (evaluateParseErrors)
+  (actionSequence
+   (TheList
+    (evaluateAndStoreParseErrors parseErrorsMt)))))
+
+(isa parseErrorsMt Microtheory)
+(comment parseErrorsMt 
+  "This is the default microtheory for storing records of what went wrong in a sentence understanding attempt.")
+
+(isa evaluateAndStoreParseErrors ComplexActionPredicate)
+(arity evaluateAndStoreParseErrors 1)
+(arg1Isa evaluateAndStoreParseErrors Microtheory)
+(comment evaluateAndStoreParseErrors 
+  "(evaluateAndStoreParseErrors ?mt) produces a report of various things that 
+could go wrong with parsing and stores it in ?mt. It generates a name for the source text and reading.")
+
+;;; This needs to generate a source text name
+(preconditionForMethod
+ (generatedSourceTextName CurrentST ?generated-st-name)
+ (methodForAction
+  (evaluateAndStoreParseErrors ?storage-mt)
+  (actionSequence
+   (TheList
+    (evaluateAndStoreParseErrorsForST ?storage-mt ?generated-st-name)))))
+
+(isa evaluateAndStoreParseErrorsForST ComplexActionPredicate)
+(arity evaluateAndStoreParseErrorsForST 2)
+(arg1Isa evaluateAndStoreParseErrorsForST Microtheory)
+(arg2Isa evaluateAndStoreParseErrorsForST InformationBearingThing)
+(comment evaluateAndStoreParseErrorsForST 
+  "(evaluateAndStoreParseErrorsForST ?storage-mt ?source-text-name) produces a report of various things that 
+could go wrong with parsing and stores it in ?mt. It generates a name for the reading.")
+
+;;; This needs to generate a source text name
+(preconditionForMethod
+ (generatedReadingName ?source-text-name ?generated-reading-name)
+ (methodForAction
+  (evaluateAndStoreParseErrorsForST ?storage-mt ?source-text-name)
+  (actionSequence
+   (TheList
+    (evaluateAndStoreParseErrorsForReading ?storage-mt 
+                                           ?source-text-name ?generated-reading-name)))))
+
+(isa evaluateAndStoreParseErrorsForReading ComplexActionPredicate)
+(arity evaluateAndStoreParseErrorsForReading 3)
+(arg1Isa evaluateAndStoreParseErrorsForReading Microtheory)
+(arg2Isa evaluateAndStoreParseErrorsForReading InformationBearingThing)
+(arg3Isa evaluateAndStoreParseErrorsForReading AccessingAnIBT)
+(comment evaluateAndStoreParseErrorsForReading
+  "(evaluateAndStoreParseErrorsForReading ?storage-mt ?source-text-name ?reading-name)
+produces a report of various things that could go wrong with parsing that went wrong with the current discourse
+and stores it in ?mt.")
+
+;;; This needs to go sentence by sentence
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      ;;; Get the sentence IDs
+      (evaluate ?list-of-sen-ids
+        (TheClosedRetrievalSetOf ?sen-id
+           (ist-Information (DiscourseCaseFn ?discourse-id) 
+              (wmOnly (sentenceInDiscourse ?sen-id ?sen-position ?token-list)))))
+      )
+ (methodForAction
+  (evaluateAndStoreParseErrorsForReading ?storage-mt ?source-text-name ?reading-name)
+  (actionSequence
+   (TheList
+    (doForEach ?next-sen-id ?list-of-sen-ids
+               (evaluateAndStoreParseErrorsForSentence
+                ?storage-mt ?source-text-name ?reading-name ?next-sen-id))))))
+
+(isa evaluateAndStoreParseErrorsForSentence ComplexActionPredicate)
+(arity evaluateAndStoreParseErrorsForSentence 4)
+(arg1Isa evaluateAndStoreParseErrorsForSentence Microtheory)
+(arg2Isa evaluateAndStoreParseErrorsForSentence InformationBearingThing)
+(arg3Isa evaluateAndStoreParseErrorsForSentence AccessingAnIBT)
+(arg4Isa evaluateAndStoreParseErrorsForSentence Thing)
+(comment evaluateAndStoreParseErrorsForSentence
+  "(evaluateAndStoreParseErrorsForSentence ?storage-mt ?source-text-name ?reading-name ?sen-id)
+produces a report of various things that could go wrong with parsing that went wrong with the sentence ?sen-id and stores it in ?mt. If you want to
+do an entire discourse at once, you should look at evaluateAndStoreParseErrors or the plans it uses.")
+
+;;; Step one: Find the SPLIT PARSES - fire::split-parse
+;;; Find the THINGS THAT DONT TOP OUT - fire::sen-root-is-s? - this can easily be knowledge iff split parse is knowledge.
+;;; Find the missing sem transes - only if there's no complete sem trans for that span - The cat flatters.
+;;; Find the missing lex items - Bogota boats.
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (evaluateAndStoreParseErrorsForSentence ?storage-mt ?source-text-name ?reading-name ?sen-id)
+  (actionSequence
+   (TheList
+    (recordIfSentenceRootNotS ?storage-mt ?source-text-name ?reading-name ?sen-id)
+    (recordIfSentenceParseIsSplit ?storage-mt ?source-text-name ?reading-name ?sen-id)
+    (recordMissingSemTransSpans ?storage-mt ?source-text-name ?reading-name ?sen-id)
+    (recordMissingLexItemSpans ?storage-mt ?source-text-name ?reading-name ?sen-id)
+    
+    ))))
+
+(isa recordIfSentenceRootNotS ComplexActionPredicate)
+(arity recordIfSentenceRootNotS 4)
+(arg1Isa recordIfSentenceRootNotS Microtheory)
+(arg2Isa recordIfSentenceRootNotS InformationBearingThing)
+(arg3Isa recordIfSentenceRootNotS AccessingAnIBT)
+(arg4Isa recordIfSentenceRootNotS Thing)
+(comment recordIfSentenceRootNotS 
+  "(recordIfSentenceRootNotS ?storage-mt ?source-text-name ?reading-name ?sen-id)
+records in ?storage-mt if the root of ?sen-id isn't s. (That means that it didn't resolve as a complete parse.)")
+
+(preconditionForMethod
+ (uninferredSentence (wmOnly (sentenceRootIsS ?sen-id)))
+ (methodForAction
+  (recordIfSentenceRootNotS ?storage-mt ?source-text-name ?reading-name ?sen-id)
+  (actionSequence
+   (TheList
+    (doRecord
+     (ist-Information ?storage-mt 
+       (readingErrorInReading (sentenceRootIsntS ?sen-id) 
+                              ?source-text-name ?reading-name)))))))
+
+(preconditionForMethod
+ (wmOnly (sentenceRootIsS ?sen-id))
+ (methodForAction
+  (recordIfSentenceRootNotS ?storage-mt ?source-text-name ?reading-name ?sen-id)
+  (actionSequence
+   (TheList
+    ))))
+
+(isa recordIfSentenceParseIsSplit ComplexActionPredicate)
+(arity recordIfSentenceParseIsSplit 4)
+(arg1Isa recordIfSentenceParseIsSplit Microtheory)
+(arg2Isa recordIfSentenceParseIsSplit InformationBearingThing)
+(arg3Isa recordIfSentenceParseIsSplit AccessingAnIBT)
+(arg4Isa recordIfSentenceParseIsSplit Thing)
+(comment recordIfSentenceParseIsSplit
+  "(recordIfSentenceParseIsSplit ?storage-mt ?source-text-name ?reading-name ?sen-id)
+records if the system couldn't figure out a way to parse ?sen-id as a complete sentence.")
+
+(preconditionForMethod
+ (wmOnly (sentenceParseIsSplit ?sen-id))
+ (methodForAction
+  (recordIfSentenceParseIsSplit ?storage-mt ?source-text-name ?reading-name ?sen-id)
+  (actionSequence
+   (TheList
+    (doRecord
+     (ist-Information ?storage-mt
+       (readingErrorInReading (sentenceParseIsSplit ?sen-id)
+                              ?source-text-name ?reading-name)))))))
+
+(preconditionForMethod
+ (uninferredSentence (wmOnly (sentenceParseIsSplit ?sen-id)))
+ (methodForAction
+  (recordIfSentenceParseIsSplit ?storage-mt ?source-text-name ?reading-name ?sen-id)
+  (actionSequence
+   (TheList
+    ))))
+
+(isa readingErrorInReading Predicate)
+(arity readingErrorInReading 3)
+(arg1Isa readingErrorInReading CycLSentence-Assertible)
+(arg2Isa readingErrorInReading InformationBearingThing)
+(arg3Isa readingErrorInReading AccessingAnIBT)
+(comment readingErrorInReading
+  "(readingErrorInReading ?error ?source-text-name ?reading-name) indicates that ?error occured while we were
+reading ?source-text-name during the reading ?reading-name.")
+
+(isa ReadingErrorTypePredicate Collection)
+(genls ReadingErrorTypePredicate Predicate)
+(comment ReadingErrorTypePredicate
+  "Statements whose predicate is an instance of ReadingErrorTypePredicate indicate the occurrence of a particular category of error in reading.")
+
+(isa sentenceRootIsS ReadingErrorTypePredicate)
+(arity sentenceRootIsS 1)
+(arg1Isa sentenceRootIsS Thing)
+(comment sentenceRootIsS
+  "(sentenceRootIsS ?sen-id) indicates that the pt category of ?sen-id's root is s - in other words, that it was parsed
+as a complete sentence.")
+
+(isa sentenceRootIsntS ReadingErrorTypePredicate)
+(arity sentenceRootIsntS 1)
+(arg1Isa sentenceRootIsntS Thing)
+(comment sentenceRootIsntS
+  "(sentenceRootIsntS ?sen-id) indicates that the pt category of ?sen-id's root isn't s - in other words, that it
+wasn's split, but it wasn't parsed as a complete sentence.")
+
+(<== (sentenceRootIsS ?sen-id)
+     (uninferredSentence (sentenceParseIsSplit ?sen-id))
+     (outsourcedOnly (currentDiscourseId ?did))
+     (wmOnly (ist-Information (DiscourseCaseFn ?did)
+               (ptRoot (ParseTreeFn ?sen-id ?pt-name) ?root-node)))
+     (wmOnly (ist-Information (DiscourseCaseFn ?did)
+               (ptConstitLexCat ?root-node s))))
+
+(isa sentenceParseIsSplit ReadingErrorTypePredicate)
+(arity sentenceParseIsSplit 1)
+(arg1Isa sentenceParseIsSplit Thing)
+(comment sentenceParseIsSplit
+  "(sentenceParseIsSplit ?sen-id) indicates that the parse of ?sen-id isn't a single unit.")
+
+(<== (sentenceParseIsSplit ?sen-id)
+     (outsourcedOnly (currentDiscourseId ?did))
+     (wmOnly (ist-Information (DiscourseCaseFn ?did)
+               (ptRoot (ParseTreeFn ?sen-id ?ptname) ?node-name)))
+     (wmOnly (ist-Information (DiscourseCaseFn ?did)
+               (ptEntrySpan ?node-name (SpanFn ?start ?end))))
+     (greaterThan ?start 0))
+
+(isa recordMissingSemTransSpans ComplexActionPredicate)
+(arity recordMissingSemTransSpans 4)
+(arg1Isa recordMissingSemTransSpans Microtheory)
+(arg2Isa recordMissingSemTransSpans InformationBearingThing)
+(arg3Isa recordMissingSemTransSpans AccessingAnIBT)
+(arg4Isa recordMissingSemTransSpans Thing)
+(comment recordMissingSemTransSpans "(recordMissingSemTransSpans ?storage-mt ?source-text-name ?reading-name ?sen-id)
+records in ?storage-mt the spans in the sentence that were missing a semtrans.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (wmOnly (ist-Information (DiscourseCaseFn ?discourse-id)
+               (drsForSentence ?drs-id ?sen-id)))
+      (evaluate ?list-of-span-statements
+        (TheClosedRetrievalSetOf
+            (readingErrorInReading (sentenceParseMissingSemTransForSpan ?sen-id ?span)
+                                   ?source-text-name ?reading-name)
+          (and (wmOnly
+                (ist-Information (DiscourseCaseFn ?discourse-id) 
+                  (dvSpanInParseTree ?entity ?span (ParseTreeFn ?sen-id ?ptid))))
+               (wmOnly 
+                (ist-Information (DrsCaseFn ?drs-id) 
+                  (missingSemTrans ?entity ?pos ?word)))))))
+ (methodForAction
+  (recordMissingSemTransSpans ?storage-mt ?source-text-name ?reading-name ?sen-id)
+  (actionSequence
+   (TheList
+    (doRecordMembersInContext ?storage-mt ?list-of-span-statements)))))
+
+(isa sentenceParseMissingSemTransForSpan ReadingErrorTypePredicate)
+(arity sentenceParseMissingSemTransForSpan 2)
+(arg1Isa sentenceParseMissingSemTransForSpan Thing)
+(arg2Isa sentenceParseMissingSemTransForSpan Thing)
+(comment sentenceParseMissingSemTransForSpan "(sentenceParseMissingSemTransForSpan ?sen-id ?span)
+indicates that the parse of ?sen-id is missing a semtrans for the span ?span.")
+
+(isa recordMissingLexItemSpans ComplexActionPredicate)
+(arity recordMissingLexItemSpans 4)
+(arg1Isa recordMissingLexItemSpans Microtheory)
+(arg2Isa recordMissingLexItemSpans InformationBearingThing)
+(arg3Isa recordMissingLexItemSpans AccessingAnIBT)
+(arg4Isa recordMissingLexItemSpans Thing)
+(comment recordMissingLexItemSpans "(recordMissingLexItemSpans ?storage-mt ?source-text-name ?reading-name ?sen-id)
+records in ?storage-mt the spans in the sentence that were missing a semtrans.")
+
+(preconditionForMethod
+ (and
+      (outsourcedOnly (currentDiscourseId ?discourse-id))
+      (evaluate ?list-of-span-statements
+        (TheClosedRetrievalSetOf (readingErrorInReading (sentenceParseMissingLexItemForSpan ?sen-id ?span) ?source-text-name ?reading-name)
+          (and
+               (wmOnly
+                (ist-Information (DiscourseCaseFn ?discourse-id)
+                  (missingLexItem ?sen-id ?word-with-missing)))
+               ;;; This can potentially find the wrong node. We need to be better than this. We need to make sure that the node we find is part of the sentence.
+               ;;; ptEntry can get us the parse tree; is there a more direct way?
+               (wmOnly
+                (ist-Information (DiscourseCaseFn ?discourse-id)
+                  (ptConstitFeat ?node-name lex ?word-with-missing)))
+               (wmOnly
+                (ist-Information (DiscourseCaseFn ?discourse-id) 
+                  (ptRoot (ParseTreeFn ?sen-id ?pt-id) ?node-name)))
+               (wmOnly 
+                (ist-Information (DiscourseCaseFn ?discourse-id) 
+                  (ptEntrySpan ?node-name ?span)))))))
+ (methodForAction
+  (recordMissingLexItemSpans ?storage-mt ?source-text-name ?reading-name ?sen-id)
+  (actionSequence
+   (TheList
+    (doRecordMembersInContext ?storage-mt ?list-of-span-statements)))))
+
+(isa sentenceParseMissingLexItemForSpan ReadingErrorTypePredicate)
+(arity sentenceParseMissingLexItemForSpan 2)
+(arg1Isa sentenceParseMissingLexItemForSpan Thing)
+(arg2Isa sentenceParseMissingLexItemForSpan Thing)
+(comment sentenceParseMissingLexItemForSpan "(sentenceParseMissingLexItemForSpan ?sen-id ?span)
+indicates that the parse of ?sen-id is missing a lexical entry for the span ?span.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

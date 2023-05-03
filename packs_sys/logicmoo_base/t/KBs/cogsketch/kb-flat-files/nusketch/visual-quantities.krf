@@ -1,0 +1,97 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: visual-quantities.meld
+;;;;    System: CogSketch
+;;;;    Author: your name here
+;;;;   Created: March 20, 2013 00:55:08
+;;;;   Purpose: Reasoning about visual quantities
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(isa VisualQuantitiesMt Microtheory)
+(genlMt NuSketchReasoningCollectorMt VisualQuantitiesMt)
+(comment "This microtheory supports reasoning about visual quantities.  This includes
+reasoning about instances of #$VisualQuantity and inferring #$visualQuantityMeasurement facts.")
+
+(in-microtheory VisualQuantitiesMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; MajorAxisAngleFn
+
+(isa MajorAxisAngleFn ContinuousQuantityDenotingFn)
+;;;(isa MajorAxisAngleFn UnaryFunction)
+;;;(arity MajorAxisAngleFn 1)
+(arg1Isa MajorAxisAngleFn NuSketchGlyph)
+(resultIsa MajorAxisAngleFn VisualQuantity)
+(comment MajorAxisAngleFn 
+  "Refers to the major axis angle of a glyph.  The major axis angle
+is the angle between the major axis of the glyph and the horizontal axis of the sketch.")
+
+(<== (visualQuantityMeasurement (MajorAxisAngleFn ?glyph) ?degrees)
+     (lookupOnly (glyphRepresentsObject ?glyph ?object))
+     (majorAxisAngle ?object ?radians)
+     (different ?radians :rotational-symmetry)
+     (evaluate ?degrees
+       (QuantityConversionFn Degree-UnitOfAngularMeasure ?radians)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ArrowOrientationFn
+
+;; Inferring Arrow angle should rely on the orientation of the vector
+;; between the arrow ends and NOT the major axis angle because the major
+;; axis might be totally different than the vector between the arrow ends.
+
+(isa ArrowOrientationFn ContinuousQuantityDenotingFn)
+;;;(isa ArrowOrientationFn UnaryFunction)
+;;;(arity ArrowOrientationFn 1)
+(arg1Isa ArrowOrientationFn NuSketchGlyph)
+(resultIsa ArrowOrientationFn VisualQuantity)
+(comment ArrowOrientationFn
+  "Denotes the orientation of an angle in degrees.  For example, an arrow pointing right
+has an orientation of 0 degrees, pointing up is 90 degrees, pointing left is 180 degrees
+and pointing down is 270 degrees.")
+
+(<== (visualQuantityMeasurement (ArrowOrientationFn ?glyph) ?degrees)
+     (lookupOnly (glyphRepresentsObject ?glyph ?object))
+     (arrowOrientation ?glyph ?radians)
+     (evaluate ?degrees
+       (QuantityConversionFn Degree-UnitOfAngularMeasure ?radians)))
+
+(<== (visualQuantityMeasurement (ArrowOrientationFn ?glyph) (?units ?value))
+     (groundExpression ?units)
+     (lookupOnly (glyphRepresentsObject ?glyph ?object))
+     (arrowOrientation ?glyph ?radians)
+     (evaluate ?value
+       (QuantityConversionFn ?units ?radians)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; DirectionOfMovementFn
+
+(isa DirectionOfMovementFn ContinuousQuantityDenotingFn)
+;;;(isa DirectionOfMovementFn UnaryFunction)
+;;;(arity DirectionOfMovementFn 1)
+(arg1Isa DirectionOfMovementFn SpatialThing)
+(resultIsa DirectionOfMovementFn VisualQuantity)
+(comment DirectionOfMovementFn
+  "Denotes the direction of movement of a spatial thing.  This is linked to the
+#$ArrowOrientationFn of a #$DirectionOfMovement annotation of that spatial thing.
+For instance, if Object-1 is annotated by Object-2 and Object-2 is a direction of
+movement annotation for Object-1, the (DirectionOfMovementFn Object-1) will be
+equal to (ArrowOrientationFn Object-2).")
+
+(<== (visualQuantityMeasurement (DirectionOfMovementFn ?object) ?degrees)
+     (glyphRepresentsObject ?glyph ?object)
+     (lookupOnly (glyphAnnotatedBy ?glyph ?annotation-glyph))
+     (annotationGlyphRepresentsObject ?annotation-glyph ?annotation)
+     (lookupOnly (isa ?annotation DirectionOfMovement))
+     (visualQuantityMeasurement (ArrowOrientationFn ?annotation-glyph) ?degrees))
+               
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,62 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: precondition-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:15:48
+;;;;   Purpose: rules for evaluating preconditions
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Predcondition chainer Rules
+;;;;; General Plan. We let everything through except what we deem as interesting
+;;;;; If they are interesting we will have rules to see if they are satisfied
+
+(<== (allEquationPreconditionsSatisfied ?preconditions)
+     (allPreconditionsSatisfied ?preconditions))
+
+(isa allPreconditionsSatisfied Predicate)
+(arity allPreconditionsSatisfied 1)
+
+(<== (allPreconditionsSatisfied ?conditions)
+     (everySatisfies ?precondition ?conditions
+                     (preconditionSatisfied ?precondition)))
+
+(<== (preconditionSatisfied ?fact)
+     (uninferredSentence (interestingPrecondition ?fact)))
+
+(<== (preconditionSatisfied ?fact)
+     (interestingPrecondition ?fact)
+     (interestingPreconditionSatisfied ?fact))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Identify interesting preconditions
+
+;;;If the precondition involves some unmapped entity...we need to think about it some more
+(<== (interestingPrecondition ?fact)
+     (groundExpression ?fact)
+     (subexpressionMatching (AnalogySkolemFn ?base-item) ?fact ?sub-exp)
+     (useTransitiveInference (isa ?base-item PlanetaryBody)))
+
+(<== (interestingPrecondition ?fact)
+     (unifies ?fact (not (consistent (valueOf ?quantity ?value)))))
+
+      
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; verify them
+
+(<== (interestingPreconditionSatisfied ?fact)
+     (subexpressionMatching (AnalogySkolemFn ?base-planet) ?fact ?sub-exp)
+     (useTransitiveInference (isa ?base-planet PlanetaryBody))
+     (localOnly 
+      (useTransitiveInference 
+       (uninferredSentence 
+        (and (isa ?planetary-body PlanetaryBody)
+             (different ?planetary-body ?base-planet))))))
+

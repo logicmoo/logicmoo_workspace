@@ -1,0 +1,1341 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: actions.krf
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 21, 2017 13:52:29
+;;;;   Purpose: Backfilling some simple Actions
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-03 21:39:10 -0600 (Thu, 03 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory UniversalVocabularyMt)
+
+;;; outputsCreated-TypeType 
+;;; inputsDestroyed-TypeType 
+;;; objectActedOn-TypeType 
+;;; characteristicActivityTypeOfPersonType 
+;;; characteristicActivityTypeOfOrganizationType 
+;;; bodyPartsUsed-TypeType 
+;;; agentTypeCreatesArtifactType 
+;;; agentTypePerformsWorkOfType 
+;;; agentTypePerformsActsOfType 
+;;; agentTypeProvidesServiceOfType
+;;; agentTypeEmployedByOrgType 
+;;; agentTypeSellsProductType
+;;; frequencyOfActionType
+
+(genls Lending TemporaryChangeOfUserRights) ; missing from OpenCyc, though it's there for Borrowing
+
+;;; Iterate through instances of RetailOutletCategoryType 
+(agentTypeSellsProductType ArtSupplyStore ArtSupplies)
+(agentTypeSellsProductType AutoDealership Automobile)
+(agentTypeSellsProductType AutoPartsStore AutoPart)
+(agentTypeSellsProductType BakeryStore Baked)
+(agentTypeSellsProductType BicycleShop Bicycle)
+(agentTypeSellsProductType Bookstore BookCopy)
+(agentTypeSellsProductType ButcherShop Meat)
+(agentTypeSellsProductType ClothingStore Clohing-Generic)
+(agentTypeSellsProductType ComputerStore Computer)
+(agentTypeSellsProductType Confectionery Candy)
+(agentTypeSellsProductType DoughnutShop Doughnut)
+(agentTypeSellsProductType FloristShop FlowerArrangement)
+(agentTypeSellsProductType FurnitureStore Furniture)
+(agentTypeSellsProductType GroceryStore GroceryMarketCategory)
+(agentTypeSellsProductType IceCreamShop IceCream)
+(agentTypeSellsProductType LawnAndGardenStore GardeningSuppliesMarketCategory)
+(agentTypeSellsProductType LightingStore ElectricalLightingDevice)
+(agentTypeSellsProductType LiquorStore Liquor-Drink)
+(agentTypeSellsProductType MusicalEquipmentStore MusicalInstrument)
+(agentTypeSellsProductType OfficeSupplyStore OfficeProduct)
+(agentTypeSellsProductType OpticalRetailer Eyeglasses)
+(agentTypeSellsProductType PetStore DomesticPet)
+(agentTypeSellsProductType PetStore PetFood)
+(agentTypeSellsProductType PetStore PetTreat)
+(agentTypeSellsProductType PhotoEquipmentStore PhotographicEquipmentAndSuppliesMC)
+(agentTypeSellsProductType RecordedMusicStore AudioRecordedObject)
+(agentTypeSellsProductType ServiceStation GasolineFuel)
+(agentTypeSellsProductType ShoeStore Shoe)
+(agentTypeSellsProductType SportingGoodsStore SportsEquipment)
+(agentTypeSellsProductType Tobacconist Tobacco)
+(agentTypeSellsProductType Tobacconist SmokingDevice)
+(agentTypeSellsProductType TruckDealership Truck)
+(agentTypeSellsProductType UsedAutoDealership (PreviouslyOwnedFn Automobile))
+(agentTypeSellsProductType UsedEquipmentStore (PreviouslyOwnedFn Artifact))
+
+(agentTypeProvidesServiceOfType HairStylist HairCuttingEvent)
+(agentTypeProvidesServiceOfType HairSalon WashingHair)
+(agentTypeProvidesServiceOfType NailSalon (SubcollectionOfWithRelationToTypeFn ManicuringSomething objectActedOn Fingernail))
+(agentTypeProvidesServiceOfType NailSalon (SubcollectionOfWithRelationToTypeFn ManicuringSomething objectActedOn Toenail))
+(agentTypeProvidesServiceOfType NailSalon (ApplyingStuffFn NailPolish))
+(agentTypeProvidesServiceOfType Beauty-CosmeticsOrganization FacialCosmeticTreatment)
+(agentTypeProvidesServiceOfType Beauty-CosmeticsOrganization (ApplyingStuffFn Moisturizer))
+(agentTypeProvidesServiceOfType Beauty-CosmeticsOrganization (ApplyingStuffFn FacialMaskProduct))
+(agentTypeProvidesServiceOfType Beauty-CosmeticsOrganization (ApplyingStuffFn FacialCleanser))
+(agentTypeProvidesServiceOfType Beauty-CosmeticsOrganization (ApplyingStuffFn Wax-HairRemoval))
+(agentTypeProvidesServiceOfType DefenseAttorney DefendingSomeoneInALegalProceding)
+(agentTypeProvidesServiceOfType PersonalInjuryLawyer Lawsuit)
+
+(agentTypeEmployedByOrgType Auditor TaxAgency)
+(agentTypeEmployedByOrgType BankTeller BankOrganization)
+(agentTypeEmployedByOrgType Banker BankOrganization)
+(agentTypeEmployedByOrgType Bartender Bar-DrinkingEstablishment)
+(agentTypeEmployedByOrgType Bouncer NightClub)
+(agentTypeEmployedByOrgType Caddy (SubcollectionOfWithRelationToFn Club-Organization institutionalFocus Golf))
+(agentTypeEmployedByOrgType CarWasher CarWashShop)
+(agentTypeEmployedByOrgType ComputerRepairPerson ITDepartment)
+(agentTypeEmployedByOrgType ComputerSystemsManager ITDepartment)
+(agentTypeEmployedByOrgType Concierge HotelOrganization)
+(agentTypeEmployedByOrgType Confectioner Confectionery)
+(agentTypeEmployedByOrgType Cowboy CattleRanch)
+(agentTypeEmployedByOrgType Cowpoke CattleRanch)
+(agentTypeEmployedByOrgType CreditManager CreditCardCompany) ; Maybe too specific
+(agentTypeEmployedByOrgType DentalHygienist DentistsOffice)
+(agentTypeEmployedByOrgType Dentist DentistsOffice)
+(agentTypeEmployedByOrgType DoorMan HotelOrganization)
+(agentTypeEmployedByOrgType Editor PublishingOrganization)
+(agentTypeEmployedByOrgType EnlistedPerson ModernMilitaryOrganization)
+(agentTypeEmployedByOrgType FastFoodCook FastFoodRestaurant-Organization)
+(agentTypeEmployedByOrgType Firefighter FireDepartment)
+(agentTypeEmployedByOrgType FlightAttendant AirlineCompany)
+(agentTypeEmployedByOrgType FlightInstructor FlightSchool)
+(agentTypeEmployedByOrgType HairStylist HairSalon)
+(agentTypeEmployedByOrgType HeadNurse Hospital)
+(agentTypeEmployedByOrgType Headmaster SchoolInstitution)
+(agentTypeEmployedByOrgType Headwaiter Restaurant-Organization)
+(agentTypeEmployedByOrgType LawEnforcementAgent LawEnforcementAgency)
+(agentTypeEmployedByOrgType Lawyer LawFirm)
+(agentTypeEmployedByOrgType Librarian Library-Organization)
+(agentTypeEmployedByOrgType MarketingPerson MarketingDepartment)
+(agentTypeEmployedByOrgType Mayor Town)
+(agentTypeEmployedByOrgType MilitaryOfficer ModernMilitaryOrganization)
+(agentTypeEmployedByOrgType MilitaryPerson ModernMilitaryOrganization)
+(agentTypeEmployedByOrgType MovieProjectionist Cinema-Organization)
+(agentTypeEmployedByOrgType MuseumCurator Museum-Organization)
+(agentTypeEmployedByOrgType NFLCheerleader NFLTeam)
+(agentTypeEmployedByOrgType NewsShowHost BroadcastingAndCableTV-SubIndustrySP)
+(agentTypeEmployedByOrgType Newscaster NewsOrganization)
+(agentTypeEmployedByOrgType NewspaperEditor NewspaperOrganization)
+(agentTypeEmployedByOrgType Pharmacist-Retail DrugStore)
+(agentTypeEmployedByOrgType PoliceOfficer-Municipal PoliceOrganization)
+(agentTypeEmployedByOrgType Professor UniversityDepartment)
+(agentTypeEmployedByOrgType RegisteredNurse HealthCareOrganization)
+(agentTypeEmployedByOrgType SalesManager SalesDepartment)
+(agentTypeEmployedByOrgType SalesPerson SalesDepartment)
+(agentTypeEmployedByOrgType ShipCaptain ShippingOrganization)  ; not certain about this
+(agentTypeEmployedByOrgType ShortOrderCook Diner)
+(agentTypeEmployedByOrgType Spy IntelligenceAgency)
+(agentTypeEmployedByOrgType StateEmployee StateGovernmentAgency)
+(agentTypeEmployedByOrgType TaxiDriver TaxiCompany)
+(agentTypeEmployedByOrgType TelephoneOperator TelephoneCompany)
+(agentTypeEmployedByOrgType TestPilot (ManufacturerFn AirTransportationDevice))
+(agentTypeEmployedByOrgType TourGuide TourAgency)
+(agentTypeEmployedByOrgType TrainEngineer RailwayOrganization)
+(agentTypeEmployedByOrgType TravelAgent TravelAgency)
+(agentTypeEmployedByOrgType TruckDriver Trucking-SubIndustry)
+(agentTypeEmployedByOrgType USNavyPersonnel UnitedStatesNavy)
+(agentTypeEmployedByOrgType USNavySEAL USNaveSealTeam)
+(agentTypeEmployedByOrgType USRepresentative (SingletonCollectionFn USHouseOfRepresentatives))
+(agentTypeEmployedByOrgType USSenator (SingletonCollectionFn USSenate))
+(agentTypeEmployedByOrgType Usher Theater-Organization)
+(agentTypeEmployedByOrgType Veterinarian VeterinaryHospital)
+(agentTypeEmployedByOrgType Waitperson Restaurant-Organization) ; also caterers
+
+
+(relationAllExists properSubEvents KillingByOrganism Dying)
+
+(relationAllAll healedInjury BoneFractionHealing BoneFracture)
+(relationAllAll healedInjury SkinningOver-Healing SkinLaceration)
+
+(isa Scab Collection)
+(isa Scab ExistingObjectType)
+(genls Scab (DriedFn BloodClot))
+
+(relationAllAll outputsCreated FormingAScab Scab)
+
+;;; Upward version exists in OpenCyc.  Can't find Downward, so make it here:
+(isa FluidFlow-Translation-VerticalDownward TemporalStufType)
+(genls FluidFlow-Translation-VerticalDownward FluidFlow-Translation)
+(genls FluidFlow-Translation-VerticalDownward (MovementInDirectionFn Down-Directly))
+(comment FluidFlow-Translation-VerticalDownward "A specialization of FluidFlow-Translation . FluidFlow-Translation-VerticalDownward is the collection of events in which a fluid moves downward.")
+     
+(isa nth-Underspecified BinaryPredicate)
+(isa nth-Underspecified UnderspecifiedPredicate)
+(arity nth-Underspecified 2)
+(arg1Isa nth-Underspecified Thing)
+(arg2Isa nth-Underspecified PositiveInteger)
+(genlPreds nth-Underspecified (Kappa (?thing ?n) (nthInSeries ?thing ?series ?n)))  ; unbound series - implicitly existential?
+(comment nth-Underspecified "(nth-Underspecified ?thing ?n) means ?thing is the ?nth element of some (unspecified) series.")
+
+;;; action modeling:
+
+(relationAllInstance levelOfDangerousness RockClimbing (MediumToHighAmountFn Dangerousness))
+(eventTypeUsesDeviceType RockClimbing ClimbingHarness)
+
+(inputsDestroyed-TypeType BrushingOnesTeeth Toothpaste)
+(inputsDestroyed-TypeType Gargling Mouthwash)
+
+(objectActedOn-TypeType MowingGrass Lawn)
+(relationAllAll cleans WashingClothesInAMachine ClothingItem) ; of course, we wash bedsheets too...
+(relationAllAll objectActedOn DryingLaundry ClothingItem)
+(relationAllAll cleans VacuumingACarpet Carpet)
+(relationAllAll cleans WashingDishesByMachine EatingVessel)
+(relationAllAll cleans WashingDishesByMachine FoodUtensil)
+(relationAllAll cleans MoppingAFloor FloorInAConstruction)
+(relationAllAll cleans BrushingOnesTeeth Tooth)
+(relationAllAll cleans TeethCleaning Tooth)
+(relationAllAll cleans WashingHair Hair-Stuff)
+(relationAllAll cleans WashingHands Hand)
+(relationMostExists cleans SweepingAnArea FloorInAConstruction) ; but also Walkways, etc.
+;(relationMostExists cleans 
+(relationAllInstance loudnessLevel (SubcollectionOfWithRelationFromTypeFn AudibleSound waveEmitted Whispering) (LowAmountFn AcousticNoiseLevel))
+(relationAllInstance loudnessLevel (SubcollectionOfWithRelationFromTypeFn AudibleSound waveEmitted Shouting) (HighAmountFn AcousticNoiseLevel))
+(relationMostInstance loudnessLevel AlarmSound (HighAmountFn AcousticNoiseLevel))
+
+
+(relationExistsAll outputsCreated TakingAPhotograph Photograph)
+(relationMostExists outputsCreated TakingAPhotograph Photograph)  ; sometimes the process fails.
+
+(relationAllAll toState Bending Bent) ; most?
+
+(relationExistsAll objectEmitted Vomiting Vomit)
+(relationExistsMost intendedToLocation Vomiting Toilet)
+;(fosters-ActionTypeSitType Vomiting Embarrassment)  ; Ooh.  Embarrassment is not really a Situation.
+(relationExistsMost evokes Vomiting Embarrassment)   ; Better
+
+(isa Accompanying FirstOrderCollection)
+(genls Accompanying 
+  (CollectionSubsetFn PurposefulAction
+    (TheSetOf ?accomp
+      (and (isa ?accomp PurposefulAction)
+           (performedBy ?accomp ?agt1)
+           (accompaniedBy ?agt1 ?agt2 ?evt)
+           (isa ?agt1 Agent-Generic)
+           (isa ?agt2 Agent-Generic)
+           (isa ?evt Event)))))
+(comment Accompanying "Accompanying is the collection of actions in which a supportingActor accompanies a primaryActor in some event.")
+
+(isa BeingArmed FirstOrderCollection)
+(genls BeingArmed
+  (CollectionSubsetFn Situation
+    (TheSetOf ?sit
+      (and (isa ?sit Situation)
+           (situationConstituents ?sit ?actor)
+           (isa ?actor IntelligentAgent)
+           (situationConstituents ?sit ?weapon)
+           (isa ?weapon Weapon)
+           (holdsIn ?sit (armedWithWeapon ?actor ?weapon))))))
+(comment BeingArmed "BeingArmed is the Situation in which an IntelligentAgent is armed with a Weapon.")
+           
+(isa BeingFamiliar FirstOrderCollection)
+(genls BeingFamiliar
+  (CollectionSubsetFn Situation 
+    (TheSetOf ?sit 
+      (and (isa ?sit Situation)
+           (situationConstituents ?sit ?actor)
+           (isa ?person Person)
+           (situationConstituents ?sit ?obj) 
+           (isa ?obj SomethingExisting)
+           (different ?obj ?actor)
+           (holdsIn ?sit (knowsAbout ?person ?obj))))))
+(comment BeingFamiliar "BeingFamiliar is the Situation in which a Person knowsAbout SomethingExisting.")
+
+(isa BlowingOnesNose FirstOrderCollection)
+(genls BlowingOnesNose Blowing-EmittingAnObject)
+(genls BlowingOnesNose ReflexiveAction)  ; you have to blow your own nose.
+(relationExistsAll objectActedOn BlowingOnesNose Nose)
+(relationExistsMost objectEmitted BlowingOnesNose (MobFn Mucus))
+(relationExistsMost intendedToLocation BlowingOnesNose FacialTissue)
+
+
+(isa Skidding DurativeEventType)
+(genls Skidding Sliding-Generic)
+(genls Skidding FrictionProcess)
+(genls Skidding Ablation)
+(comment Skidding "#$Skidding is the process in which an object locomoting loses traction and continues its trajectory despite friction.")
+
+(isa SkidMark FirstOrderCollection)
+(genls SkidMark VisualMark)
+(comment SkidMark "#$SkidMark is the mark left behind by #$Skidding.  Usually from rubber tires on pavement.")
+;;; evidenceFor  LosingControlOfAControlledActor SkidMark 0.9
+
+;;; Chide-TheWord, Admonish-TheWord, Berate, Chastise, Harangue, Jeer, Rebuke,
+;;; Reproach, Reprove, Scold, Take-To-Task, Tell-Off, Upbraid
+;;; Should be the communication of a negative evaluation of the behavior 
+;;; of the recipient of the communication.
+(isa Chiding FirstOrderCollection)
+(isa Chiding TemporalObjectType)
+;(isa Chiding TypicalHumanActivityType-AtLeastOnce) ; sb in HumanActivitiesMt
+(genls Chiding
+  (CollectionSubsetFn CommunicationAct-Single
+    (TheSetOf ?telling 
+      (and (isa ?telling CommunicationAct-Single)
+           (performedBy ?telling ?judge)
+           (isa ?judge IntelligentAgent)
+           (recipientOfInfo ?telling ?judged) 
+           (topicOfInfoTransfer ?telling ?evaluation) 
+           (isa ?evaluation Evaluating) 
+           (performedBy ?evaluation ?judge) 
+           (evaluee-Direct ?evaluation ?judged)
+           (isa ?judged Agent-Generic)  ; you can't chide a building, but you could criticize it
+           (subjectivelyEvaluates ?judge ?judged Substandard)))))
+(comment Chiding "Chiding is the communication of a negative evaluation of the recipient.")
+
+(equals Substandard (LowAmountFn LevelOfQuality))  ; rewriteOf?
+
+(genls Uproar ActOfDissent)
+(genls Desalination PurificationProcess)
+
+;;; Consider toneOfInformationThing PROP THING NegativeTone) , or PositiveTone
+           
+;;; Compliment
+(isa Complimenting FirstOrderCollection)
+(isa Complimenting TemporalObjectType)
+(genls Complimenting
+  (CollectionSubsetFn CommunicationAct-Single
+    (TheSetOf ?telling 
+      (and (isa ?telling CommunicationAct-Single)
+           (performedBy ?telling ?judge)
+           (recipientOfInfo ?telling ?judged) 
+           (topicOfInfoTransfer ?telling ?evaluation) 
+           (isa ?evaluation Evaluating) 
+           (performedBy ?evaluation ?judge)
+           (isa ?judge IntelligentAgent)
+           (evaluee-Direct ?evaluation ?judged)
+           (isa ?judge Agent-Generic)
+           (subjectivelyEvaluates ?judge ?judged (HighAmountFn Quality))))))
+(comment Complimenting "Complimenting is the communication of a positive evaluation of quality to some evaluated agent.  <br>Note: yhou can compliment a dog or an organization, but not, e.g., the weather.")
+
+(isa CriticizingSomething FirstOrderCollection)
+(genls CriticizingSomething
+  (SubcollectionOfWithRelationToTypeFn CommunicationAct-Single topicOfInfoTransfer 
+    (SubcollectionOfWithRelationToFn Evaluating evaluationOfType Goodness-Generic)))
+(comment CriticizingSomething "CriticizingSomething is communicating a negative evaluation of something.")
+
+;;; Praising is often communicated to a third party, not necessarily in a single utterance:
+(genls CriticizingSomething
+  (CollectionSubsetFn CommunicationAct
+    (TheSetOf ?telling 
+      (and (isa ?telling CommunicationAct)
+           (performedBy ?telling ?judge)
+           (topicOfInfoTransfer ?telling ?evaluation) 
+           (isa ?evaluation Evaluating) 
+           (performedBy ?evaluation ?judge) 
+           (evaluee-Direct ?evaluation ?judged)
+           (isa ?judged Thing)
+           (subjectivelyEvaluates ?judge ?judged Substandard)))))
+
+;;; Claim-TheWord
+
+(isa ClaimingOwnership FirstOrderCollection)
+(isa ClaimingOwnership TemporalObjectType)
+
+(genls ClaimingOwnership 
+  (CollectionSubsetFn AnnouncingSomething
+    (TheSetOf ?announce 
+      (and (performedBy ?announce ?agt) 
+           (isa ?agt IntelligentAgent) 
+           (infoTransferred ?announce (owns ?agt ?thing))
+           (isa ?thing SomethingExisting)))))
+           
+(isa DeservingSomething FirstOrderCollection)
+(genls DeservingSomething
+  (SubcollectionOfWithRelationFromTypeFn SomethingExisting 
+    (Kappa (?thing ?evt) (and (nearestisa ?evt ?evt-type) (oughtToBe-SitRolePlayerOfType ?thing objectActedOn ?evt-type)))
+  Event))
+
+;;; Should this be a ProcessType of some sort?
+(isa Dwindling FirstOrderCollection)
+(isa Dwindling ProcessType)
+(genls Dwindling
+  (SubcollectionOfWithRelationToTypeFn Event 
+    (Kappa (?evt ?set) (causes-SitProp ?evt (decreasesFluent ?set extentCardinality)))
+    SetOrCollection))
+(comment Dwindling "Dwindling is the decrease in number of elements of a set.")
+
+
+(isa FallingForADeception FirstOrderCollection)
+(comment FallingForADeception "FallingForADeception is an Event in which the doer is the deceivedAgent of a Deception.")
+;;; This can't quite be right.  There's no connection between the Event and the Deception, except 
+;;; that they both involve the same agent somehow.
+;;; cf, BelievingThat believedProp (ako objectOfMentalSituation)
+;;; cf pretendsThat
+;(genls FallingForADeception
+;  (SubcollectionOfWithRelationToTypeFn 
+;    Event
+;    doneBy
+;    (SubcollectionOfWithRelationFromTypeFn
+;      GullibleAgent
+;      deceivedAgent
+;      Deceiving)))  ; not Deception
+(genls FallingForADeception
+  (CollectionSubsetFn BelievingThat
+    (TheSetOf ?believing
+      (and (isa ?believing BelievingThat)
+           (doneBy ?believing ?victim)
+           (isa ?victim GullibleAgent)
+           (believedProp ?believing ?deception)
+           (pretendsThat ?deceiving ?deception)
+           (isa ?deceiving Deceiving)
+           (deceivedAgent ?deceiving ?victim)))))
+
+;;; Translation of a FrameNet frame.
+(isa GettingAVehicleUnderway FirstOrderCollection)
+(genls GettingAVehicleUnderway
+  (SubcollectionOfWithRelationFromTypeFn TransferOut 
+    transferOutSubEvent
+    (CollectionSubsetFn CausingAnotherObjectsTranslationalMotion 
+      (TheSetOf ?moving 
+        (and (objectActedOn ?moving ?veh) 
+             (isa ?veh Vehicle))))))
+
+(isa HavingATantrum FirstOrderCollection)
+(isa HavingATantrum ProcessType)
+(comment HavingATantrum "Throwing a temper tantrum.")
+(genls HavingATantrum Action)
+(relationAllExists HavingATantrum IntelligentAgent)
+(relationExistsMost subEvents HavingATantrum Screaming)
+(relationExistsMost subEvents HavingATantrum Pacing)
+(relationExistsMost subEvents HavingATantrum Complaining)
+(relationMostExists doneBy HavingATantrum 
+  (CollectionSubsetFn IntelligentAgent
+    (TheSetOf ?doer
+      (and (feelsEmotion ?doer (HighAmountFn Frustration))
+           (feelsEmotion ?doer (HighAmountFn Irritation))))))
+
+; (motivesForAction ?freak-out feelsEmotion ?agent (HighAmountFn Frustration))
+; (motivesForAction ?freak-out feelsEmotion ?agent (HighAmountFn Irritation))
+
+
+;;; Fossilize-TheWord
+
+(isa Fossilizing DurativeEventType)
+(isa Fossilizing NaturalThing)
+(genls Fossilizing IntrinsicStateChangeEvent)
+(genls Fossilizing IrreflexiveAction)
+(genls Fossilizing PhysicalCreationEvent)
+(genls Fossilizing (PreventingFn BiologicalDecompositionEvent))
+(outputsCreated-TypeType Fossilizing Fossil)
+(inputsDestroyed-TypeType Fossilizing (DeadPhysicalRemainsFn BiologicalLivingObject))
+(relationAllInstance duration Fossilizing LongTime)
+(mainConstituent-TypeType Fossil StoneStuff)
+(comment Fossilizing "Fossilizing is the process of turning dead organic matter into stone.")
+;;; Generally involves a SedimentationProcess and ExposureToSubstance.
+
+;;; Hit-TheWord
+
+(isa HittingATarget SkilledActivityType)
+(isa HittingATarget FirstOrderCollection)
+(isa HittingATarget AccomplishmentType)
+(genls HittingATarget  ; this is an ActionOnObject with 2 parts
+  (CollectionSubsetFn ActionOnObject
+    (TheSetOf ?hitting
+      (and (isa ?hitting ActionOnObject)
+           (objectActedOn ?hitting ?target)
+           (performedBy ?hitting ?performer)
+           (deviceUsed ?hitting ?projectile)
+           (isa ?target Target-Device)
+           (isa ?performer IntelligentAgent)
+           (isa ?projectile ProjectileDevice)
+           (primaryObjectMoving ?hitting ?projectile)
+           (properSubEvents ?hitting ?launching)
+           (properSubEvents ?hitting ?colliding)
+           (isa ?launching Propelling)
+           (performedBy ?launching ?performer)
+           (objectActedOn ?launching ?projectile)
+           (isa ?colliding Collision)
+           (objectActedOn ?colliding ?target)
+           (doneBy ?colliding ?projectile)
+           (doneBy ?colliding ?target)))))
+           
+(comment HittingATarget "HittingATarget is the collection of actions in which the performer launches a projectile at a target and hits it.")
+
+
+(isa BrainSurgery SkilledActivityType)
+(isa BrainSurgery TemporalObjectType)
+(genls BrainSurgery IntelligentAgentActivity)
+(genls BrainSurgery MajorSurgery)
+(coment BrainSurgery " A specialization of #$MajorSurgery . Each instance of BrainSurgery is a surgery involving procedures that require direct action on the #$Brain .")
+
+;;; This really hasn't been defined sufficiently:
+(isa Impairment FirstOrderCollection)
+(genls Impairment DysfunctionalCondition)
+(genls Impairment PhysiologicalCondition)
+(comment Impairment "An Impairment is a reduction in some capability, e.g., a limp or a lisp.")
+;;; An Impediment is ako Impairment.
+
+;;; less physicallyCapableOf
+;;; (performanceLevel ?doer ?action performedBy (LowAmountFn Efficiency)) ; or Effectiveness
+
+(isa ImpairmentFn UnaryFunction)
+(arg1Isa ImpairmentFn Action)
+(resultIsa ImpairmentFn Impairment)
+
+;;; Should be ako Impairment of Speech
+(genls Lisping (ImpairmentFn Speaking))
+
+(genls Limping (ImpairmentFn Walking-Generic))
+
+(fosters-SitTypeSitType (InjuryConditionToPartTypeFn Leg) Limping)
+(fosters-SitTypeSitType Stroke-PhysiologicalCondition (ImpairmentFn Speaking))
+(fosters-SitTypeSitType Emphysema (ImpairmentFn Breathing))
+(fosters-SitTypeSitType Asthma AsthmaAttack)
+(fosters-SitTypeSitType (AllergyToTypeFn (SeedFn PeanutPlant)) (ImpairmentFn Breathing))
+
+(genls Wrongdoing PurposefulAction)
+(genls IllegalAction Wrongdoing)
+(relationAllInstance hasEvaluativeQuantity Wrongdoing (PositiveAmountFn Badness-Moral)) 
+
+;Muttering is quietly talking to yourself
+;Nattering is verbally pestering/annoying someone ad-nauseum
+;Ranting and Raving about something are fervently complaining or endorsing something.
+
+;(Merit-TheWord Deserving 
+;;; object has sufficient Merit (ako Goodness-Generic) at to be appropriate for something else
+;(SubcollectionOfWithRelationFromTypeFn SomethingExisting 
+;(Kappa (?thing ?evt) 
+;(and (nearestisa ?evt ?evt-type) 
+;(oughtToBe-SitRolePlayerOfType ?thing objectActedOn ?evt-type))) Event))
+
+(isa WindowShopping FirstOrderCollection)
+(genls WindowShopping Shopping)
+(genls WindowShopping RecreationalActivity)
+(comment WindowShopping "WindowShopping is the collection of #$Shopping events in which the doer has no intention of buying anything.")
+(relationNotExistsExists subEvents WindowShopping Buying)
+
+
+;;; BeingHomesick is ako Depression brought on by BeingSomewhere far from home, and wishing you were there.
+
+;;; Would this be better termed GrievingALoss?
+(isa OutlivingSomeone FirstOrderCollection)
+(genls OutlivingSomeone
+  (CollectionSubsetFn Survival 
+    (TheSetOf ?surviving
+      (and (doneBy ?surviving ?survivor)
+           (loves ?survivor ?deceased) 
+           (deathOf ?dying ?deceased)
+           (mournsOver ?survivor ?dying) 
+           (temporallyContains ?survivor ?dying)))))
+(comment "OutlivingSomeone is the event of mourning over the death of a loved one.")
+
+(isa ParallelParking FirstOrderCollection)
+(isa ParallelParking SkilledActivityType)
+(genls ParallelParking ParkingARoadVehicle)
+;; Say something about intended configuration wrt curb?
+
+(isa PraisingSomething FirstOrderCollection)
+(genls PraisingSomething
+  (SubcollectionOfWithRelationToTypeFn CommunicationAct-Single topicOfInfoTransfer 
+    (SubcollectionOfWithRelationToFn Evaluating evaluationOfType Goodness-Generic)))
+(comment PraisingSomething "PraisingSomething is communicating a positive evaluation of something.")
+
+;;; Praising is often communicated to a third party, not necessarily in a single utterance:
+(genls PraisingSomething
+  (CollectionSubsetFn CommunicationAct
+    (TheSetOf ?telling 
+      (and (isa ?telling CommunicationAct)
+           (performedBy ?telling ?judge)
+           (topicOfInfoTransfer ?telling ?evaluation) 
+           (isa ?evaluation Evaluating) 
+           (performedBy ?evaluation ?judge) 
+           (evaluee-Direct ?evaluation ?judged)
+           (isa ?judged Thing)
+           (subjectivelyEvaluates ?judge ?judged (HighAmountFn Goodness-Generic))))))
+
+
+(isa Proliferating FirstOrderCollection)
+(isa Proliferating ProcessType)
+(genls Proliferating
+  (SubcollectionOfWithRelationToTypeFn Event 
+    (Kappa (?evt ?set) (causes-SitProp ?evt (increasesFluent ?set extentCardinality)))
+    SetOrCollection))
+(comment Proliferating "Proliferating is the increase in number of elements of a set.")
+
+(isa JumpingRope FirstOrdeCollection)
+(isa JumpingRope ProcessType)
+(genls JumpingRope CoordinatedBodyMovement)
+(genls JumpingRope SkilledActivity)
+(genls JumpingRope LearnedActivity)
+(comment JumpingRope "$#JumpingRope is the coordinated activity of twirling a rope around your body in a regular cyclic fashion and jumping up and down to hurdle over the rope.")
+
+(isa Raking FirstOrderCollection)
+(genls Raking Clearing-RemovingSomething)
+(genls Raking YardWork)
+(relationMostExists objectRemoved Raking (DeadPhysicalRemainsFn Leaf))
+
+;;; Wiring, schematics, etc
+;;; AssemblingPartsDuringMaking
+;;; ElectricalWire
+;;; ElectricalCircuit
+;;; (UsingAForFn Schematic WiringACircuit instructionsFollowed)
+
+(isa WiringACircuit FirstOrderCollection)
+(isa WiringACircuit SkilledActivityType)
+(genls WiringACircuit AssemblingPartsDuringMaking)
+(genls WiringACircuit ConnectingTogether)
+(inputsCommitted-TypeType WiringACircuit ElectricalDevice)
+(relationAllExists assemblyInputs WiringACircuit ElectricalDevice)
+
+(subEventTypes WiringACircuit Soldering)
+(subEventTypes WiringACircuit Splicing-Electrical)
+
+(isa Splicing-Electrical FirstOrderCollection)
+(isa Splicing-Electrical SkilledActivityType)
+(genls Splicing-Electrical Splicing)
+(genls Splicing-Electrical ConnectingTogether)
+(inputsCommitted-TypeType Splicing-Electrical ElectricalWire)
+(relationAllExists objectOfAttachment Splicing-Electrical ElectricalWire)
+;;; Splicing by a handyman connotes jury-rigging.  Splicing of high-tension wires, of course, doesn't.
+
+;;; Should this be Soldering-Electrical?
+(isa Soldering FirstOrderCollection)
+(isa Soldering SkilledActivityType)
+(genls Soldering PhysicalCreationEvent)
+(genls Soldering PurposefulAction)
+(genls Soldering ConnectingTogether)
+(inputsCommitted-TypeType Soldering Solder)
+(eventTypeUsesDeviceType Soldering SolderingIron)
+(eventTypeUsesDeviceType Soldering PropaneTorch) ; for plumbing fixtures
+
+;;; cf, electricallyConnectedTo, ElectricalConductor
+
+(isa SolderedConnection ObjectType)
+(isa SolderedConnection TemporalStuffType)
+(genls SolderedConnection FastenerConnection)
+(genls SolderedConnection ElectricalConnector)  ; not strictly correct.
+(mainConstituent-TypeType SolderedConnection Solder)
+;;; Some soldered connections connect pipes end-to-end.
+;;; Others connect conductors electrically.
+
+(isa SendingOrReceivingATextMessage FirstOrderCollection)
+(prettyString-Canonical SendingOrReceivingATextMessage "texting")
+(genls SendingOrReceivingATextMessage InformationTransferEvent-Electronic)
+(relationAllInstance deviceUsed SendingOrReceivingATextMessage Smartphone)
+(comment SendingOrReceivingATextMessage "Texting, using a smartphone.")
+
+
+(isa SurpriseParty FirstOrderCollection)
+(comment SurpriseParty "SurpriseParty is a kind of Party-Celebration in which the honoree is unaware before the fact.")
+(genls SurpriseParty 
+  (CollectionSubsetFn Party-Celebration
+    (TheSetOf ?party
+      (and (isa ?party Party-Celebration)
+           (eventHonors ?party ?pers)
+           (isa ?pers Person)
+           (organizerOfEvent ?party ?organizer)
+           (isa ?organizer Person)
+           (intends ?organizer
+             (and (holdsIn (IntervalEndedByFn ?party)
+                    (not (knowsAbout ?pers ?party)))
+                  (holdsIn (STIF (StartFn ?party))
+                    (isa ?pers Surprised))))))))
+
+(isa SuspectingSomething FirstOrderCollection)
+(comment SuspectingSomething "SuspectingSomething is the situation in which an actor suspects something.")
+(genls SuspectingSomething
+  (CollectionSubsetFn IntentionalMentalState
+    (TheSetOf ?state 
+      (and (actors ?state ?actor)
+           (mentalSituationIsDefinedSuchThat ?state suspects ?actor ?stmt) 
+           (isa ?stmt CycLSentence-Assertible)))))
+           
+(isa Suspect FirstOrderCollection)
+(comment Suspect "A Suspect is the object of a suspicion, believed to be responsible for some state of affairs.")
+(genls Suspect
+  (SubcollectionOfWithRelationFromTypeFn 
+    SomethingExisting objectOfMentalSituation SuspectingSomething))
+
+
+;;; ShapingSubtractively involves removing unwanted matter from an object in order to change it's shape to a desired form.
+
+;;; Thank-TheWord
+
+(genls ThankingSomeone  (ExpressingEmotionFn Gratitude))
+
+
+(isa TuningARadio FirstOrderCollection)
+(genls TuningARadio PurposefulAction)
+(genls TuningARadio
+  (SubcollectionOfWithRelationToTypeFn SelectingSomething objectSelected 
+    (SubcollectionOfWithRelationFromTypeFn (TransmissionOfRadiationTypeFn RadioWave)
+      receptionOfWaveType ReceivingAWave)))
+
+(isa JuryDuty FirstOrderCollection)
+(genls JuryDuty 
+  (CollectionSubsetFn Obligation
+    (TheSetOf ?jury-duty
+      (and (obligatedAgents ?jury-duty ?juror)
+           (isa ?juror (AdultFn Person))
+           (agentObligationInSituation 
+             ?juror ?jury-duty 
+             (SituationFn ?jury 
+               (and (isa ?jury Jury)
+                    (groupMember ?juror ?jury))))))))
+           
+
+;;; JuryDuty takes priority over job:
+;(obligationHasPriorityOverObligationForAgent PRIOR-OBLIGATION OBLIGATION AGENT)
+(relationAllOnly obligationParticipants JuryDuty 
+    (SubcollectionOfWithRelationFromTypeFn (AdultFn Person) citizens GeopoliticalEntitiy))
+    
+(onlyTypePlaysRoleInSituationType JuryDuty (AdultFn Person) obligatedAgents)
+;;; A Jury is an organization/Group of Adult people: (GroupFn HumanAdult)
+
+;;; (agentObligationInSituation <AGENT> <JuryDuty> <BeingOnAJury>)
+;;; (obligationOwedTo <JuryDuty> <GeopoliticalEntity>)
+;;; (obligatedAgents <JuryDuty> <Person>)
+;;; sitRolePlayerOfType?
+
+(isa BakeSale FirstOrderCollection)
+(genls BakeSale OfferingForSale)
+(relationAllExists objectTendered BakeSale Baked)
+(relationAllExists performedBy BakeSale Association) ; Church group, PTA, etc
+(purposeOf-EventTypeSitType BakeSale RaisingRevenue)
+
+(isa Coincidence FirstOrderCollection)
+(genls Coincidence Situation)
+; subSituations, situationIsSuchThat
+;(relationNotExistsExists causes-Underspecified 
+
+;(not (and (situationConstituents ?sit ?A)
+;          (causes-Underspecified ?A ?B) 
+;          (situationConstituents ?sit ?B))))))
+
+
+(genls Following Action)
+;; there is no Leading??
+
+;;; Migrated from ea/moral-background.meld:
+
+(isa MorallyNeutralEvent Collection)
+(isa MorallyRightEvent Collection)
+(isa MorallyWrongEvent Collection)
+
+(isa Compassion EmotionalQuantityType)
+(isa Compassion PersonTypeByPersonalityTrait)
+
+(isa Caring EmotionalQuantityType)
+(comment Caring "A feeling of concern. Can be directed towards events (as in being concerned 
+about their outcome) or people (as in being concerned about their well-being). Caring naturally 
+implies that the concern is for a positive outcome, but the concern can be negative; caring 
+only requires some concern about the outcome or future of the thing cared about. Caring is 
+also used euphemistically for Love.")
+
+;;; SecurityFn returns 'that which secures X'
+;;; defining SafetyFn as 'the degree to which X is safe'
+
+(isa SafetyFn Function-Denotational)
+(arity SafetyFn 1)
+(arg1Isa SafetyFn Thing)
+(resultIsa SafetyFn Thing)
+(comment SafetyFn "(SafetyFn AGT) refers to the general security of AGT, that is, the 
+degree to which AGT finds itself in danger")
+
+(isa Warlord Collection)
+(genls Warlord TribalLeader)
+
+(isa ViolentAgent Collection)
+(genls ViolentAgent Agent-Generic)
+(comment ViolentAgent "a ViolentAgent is an actor who either regularly employs violence or is 
+quick to employ violence as a tool.")
+(isa Violent PersonTypeByPersonalityTrait)
+
+(isa Brutal PersonTypeByPersonalityTrait)
+(isa Brutal EmotionalQuantityType) 
+
+(isa AbandoningSomeone Collection)
+(genls AbandoningSomeone SocialOccurrence)
+(genls AbandoningSomeone PurposefulAction)
+(comment AbandoningSomeone "An event where a person is abandoned by another")
+
+(isa Impairment Collection)
+(comment Impairment "the collection of events in which something is impaired.")
+(genls Impairment DecreaseEvent)
+(genls Impairment WeakeningEvent)
+(genls Impairment PurposefulAction)
+
+(isa TakingAdvantageOfSomething Collection)
+(comment TakingAdvantageOfSomething "TakingAdvantageOfSomething is an event where some agent takes advantage of another agent, exploits an opportunity, etc.")
+(genls TakingAdvantageOfSomething PurposefulAction)
+(genls TakingAdvantageOfSomething InfluencingAnAgent)
+(genls TakingAdvantageOfSomething HostileSocialAction)
+
+(isa Fairness Collection)
+(isa Fairness EmotionalQuantityType) ;;; how to talk about the fairness of a situation?
+(isa Fairness PersonTypeByPersonalityTrait)
+
+(isa Unfairness Collection)
+(isa Unfairness EmotionalQuantityType) ;;; how to talk about the fairness of a situation?
+(isa Unfairness PersonTypeByPersonalityTrait)
+
+(isa Justice Collection)
+(isa Justice EmotionalQuantityType)
+(genls Justice Goodness-Functional) ;; where else could this go?
+(comment Justice "each instance of Justice represents some just thing, situation, etc.  Righteousness.")
+
+(isa Injustice Collection)
+(isa Injustice EmotionalQuantityType)
+(genls Injustice Badness-Generic) ;; where else could this go?
+(comment Injustice "each instance of Injustice represents some unjust thing, situation, etc.")
+
+(isa Justification Collection)
+(genls Justification Explanation)
+(genls Justification Motive)
+(comment Justification "a Justification is the reason for something being the case. 
+it is kind of an explanation, kind of a motive, kind of both.")
+
+;;; There is a JustificationFn already, but it's binary.
+(isa JustificationForFn Functional-Denotational)
+(arity JustificationForFn 1)
+(arg1Isa JustificationForFn Thing)
+(resultIsa JustificationForFn Justification)
+(comment JustificationForFn "(JustificationForFn <Thing>) denotes the justification for <Thing>")
+
+(isa Reciprocation Collection)
+(genls Reciprocation CulturalActivity)
+(genls Reciprocation Event)
+(comment Reciprocation "a Reciprocation is an event wherein an agent reciprocates something
+done by another agent.  A reciprocation can be positive, negative, or neutral. It can be an exchange 
+of physical objects, words, or actions.  Reciprocation need not happen at the same time as the event 
+reciprocated, nor does it need to be an understood part of the original event. That is, if Agent2 
+reciprocates some action of Agent1, Agent1 need not have thought that Agent2 would reciprocate when
+Agent1 was performing the original action.")
+
+(isa ReciprocityFn FuncationalPredicate)
+(arity ReciprocityFn 1)
+(arg1Isa ReciprocityFn Thing)
+(resultIsa ReciprocityFn Reciprocation)
+(comment ReciprocityFn "(ReciprocityFn <Thing>) returns the Reciprocation event for <Thing>. That is,
+if Bill buys Bob a drink, buying123, then Bob buys Bill a drink, buying456, then 
+(isa buying456 (ReciprocityFn buying123))")
+
+(isa Impartiality Collection)
+(comment Impartiality "An Impartiality is a character trait wherein one does not let ones biases affect decision-making.")
+(isa Impartiality EmotionalQuantityType)
+(isa Impartiality PersonTypeByPersonalityTrait)
+
+(isa Egalitarianism Collection)
+(comment Egalitarianism "An Egalitarianism is a character trait wherein one believes people are to be treated equally.")
+(isa Egalitarianism EmotionalQuantityType)
+(isa Egalitarianism PersonTypeByPersonalityTrait)
+(genls Egalitarianism FeelingAttribute)
+(genls Egalitarianism (CollectionUnionFn (TheSet Person (GroupFn Person))))
+
+(isa ToleratingEvent Collection)  ; Isn't this just EnduringATryingSituation?
+(genls ToleratingEvent Event)
+(comment ToleratingEvent "a ToleratingEvent is an event in which an agent puts up with something")
+
+(isa Reasonability Collection)
+(comment Reasonability "Reasonability is a character trait wherein one listens to reason, is logical, rational, etc.")
+(isa Reasonability EmotionalQuantityType)
+(isa Reasonability PersonTypeByPersonalityTrait)
+(genls Reasonability FeelingAttribute)
+(genls Reasonability (CollectionUnionFn (TheSet Person (GroupFn Person))))
+
+(isa Dishonesty Collection)
+(genls Dishonesty PersonalQuantity)
+
+(isa Exclusion Collection)
+(genls Exclusion SocialOccurrence)
+(comment Exclusion "an Exclusion is a social situation in which one or more agents have been excluded by one or more of the others")
+
+(isa Betrayal Collection)
+(comment Betrayal "A Betrayal is an instance of someone betraying someone else.")
+(genls Betrayal SocialOccurrence)
+
+
+;;; Predicates
+
+(isa egalitarian Predicate)
+(arity egalitarian 1)
+(arg1Isa egalitarian Situation)
+(comment egalitarian "(egalitarian <SITUATION>) indicates that <SITUATION> displays the quality of being egalitarian")
+
+(isa equivalent Predicate)
+(isa equivalent EquivalenceRelation)
+(arity equivalent 2)
+(arg1Isa equivalent Thing)
+(arg2Isa equivalent Thing)
+(comment equivalent "(equivalent <THING1> <THING2>) says very broadly and generically that THING1 and THING2 are interchangeable.")
+
+(isa equitable Predicate)
+;(isa equitable EquivalenceRelation)  ; No, this would require it to be binary.
+(arity equitable 1)
+(arg1Isa equitable Thing) ;; anything can be fairly divided....?
+(comment equitable "(equitable <THING>) means that the situation described by <THING> is fair to
+ those involved.  <THING> could be any sort of situation such as division of goods, a living situation
+ a treaty, etc.")
+ 
+(isa damaged Predicate)
+(arity damaged 1)
+(arg1Isa damaged Thing)
+(comment damaged "(damaged <THING>) means that <THING> has been damaged, i.e., is in a state 
+of disrepair or has been harmed.")
+
+(isa displaysBehaviorTowards Predicate)
+(arity displaysBehaviorTowards 3)
+(arg1Isa displaysBehaviorTowards Agent-Generic)
+(arg2Isa displaysBehaviorTowards Thing)
+(arg3Isa displaysBehaviorTowards Thing)
+(comment displaysBehaviorTowards
+  "(displaysBehaviorTowards <AGT> <BHVR> <TARGET>) means that AGT's actions towards TARGET can be 
+described as BHVR or are done in the manner of BHVR. BHVR and TARGET are both THING because people
+ can display behavior towards all sorts of things including inanimate objects, and the behaviors
+ displayed can be personality traits, actions, attitudes, etc")
+
+(isa mannerOfAction Predicate)
+(arity mannerOfAction 2)
+(arg1Isa mannerOfAction Action)
+(arg2Isa mannerOfAction Thing)
+(comment mannerOfAction
+  "(mannerOfAction <ACTION> <MANNER>) means that <ACTION> was performed in a particular fashion
+as specified by <MANNER>. This could be a personality trait (such as cruelty or kindness) or 
+ a descriptor like quickly.")
+
+(isa tolerant Predicate)
+(arity tolerant 1)
+(arg1Isa tolerant Agent-Generic)
+(comment tolerant "(tolerant <AGT>) means that <AGT> is accepting of those with qualities 
+and attributes different from AGT's own.")
+
+(isa tolerates Predicate)
+(arity tolerates 2)
+(arg1Isa tolerates Agent-Generic)
+(arg2Isa tolerates Thing)
+(comment tolerates "(tolerates <AGT> <THING>) means that <AGT> accepts, puts up with, abides, 
+etc., <THING>.")
+
+(isa excludedIn Predicate)
+(arity excludedIn 2)
+(arg1Isa excludedIn Action)
+(arg2Isa excludedIn Thing)
+(comment excludedIn "(excludedIn <Action> <Thing>) means that <Thing> is forcibly excluded by the action <Action>, as opposed to being simply left out.")
+
+(isa excludedFrom Predicate)
+(arity excludedFrom 2)
+(arg1Isa excludedFrom Situation)
+(arg2Isa excludedFrom Thing)
+(comment excludedFrom "(excludedFrom <Situation> <Thing>) means that <Thing> is forcibly excluded in <Situation>, as opposed to being simply left out.")
+
+;;; This should be capitalized.  Where is it used?
+(isa nationOfFn Function-Denotational)
+(arity nationOfFn 1)
+(arg1Isa nationOfFn Thing)
+(resultIsa nationOfFn Country)
+(comment nationOfFn "(nationOfFn <thing>) returns the nation to which <thing> belongs.")
+
+(isa national Predicate)
+(arity national 2)
+(arg1Isa national Thing)
+(arg2Isa national Country)
+(comment national "(national <thing> <country>) indicates that <thing> is the corresponding entity of its class for the nation <country>")
+
+(isa activityBegun BinaryPredicate)
+(arity activityBegun 2)
+(arg1Isa activityBegun BeginningAnActivity)
+(arg2Isa activityBegun Thing)
+(comment activityBegun
+  "(activityBegun <activityInstance> <activities>) means that <activities> started with
+ the event <activityInstance>")
+
+(isa repeatedEvent UnaryPredicate)
+(arity repeatedEvent 1)
+(arg1Isa repeatedEvent Event)
+
+(in-microtheory BaseKB)
+
+(atLeastAmount HighAmountFn MediumToHighAmountFn)
+(atLeastAmount HighToVeryHighAmountFn MediumToHighAmountFn)
+(hasMoralQuality Courageousness-Feeling Positive)
+
+(commonQualityOfAction Courageousness-Feeling Strength)
+(opposingQualityOfAction Gentleness Intensity)
+(isa opposingQualityOfAction SymmetricBinaryPredicate)
+(isa commonQualityOfAction SymmetricBinaryPredicate)
+
+(genls Tooth Weapon)
+(genls Claw Weapon)
+(genls StingingByAnimal HarmingAnAgent)
+(genls GraspingSomething TouchingEvent)
+(genls Sport RecreationalActivity)
+
+;;; -----------------------------------------------------------------------
+
+(in-microtheory AnimalActivitiesMt)
+
+(animalTypeMakesSoundType Pig OinkingSound)
+(animalTypeMakesSoundType Dog BarkingSound)
+(animalTypeMakesSoundType Cow MooingSound)
+(animalTypeMakesSoundType Bird Birdsong)
+(animalTypeMakesSoundType Donkey BrayingSound)
+(animalTypeMakesSoundType Goat BleatingSound)
+(animalTypeMakesSoundType Chicken CluckingSound)
+(animalTypeMakesSoundType Goose-Bird HonkingSound)
+(animalTypeMakesSoundType Wolf HowlingSound)
+(animalTypeMakesSoundType Dog HowlingSound)
+(animalTypeMakesSoundType Cat MeowingSound)
+(animalTypeMakesSoundType Cat PurringSound)
+(animalTypeMakesSoundType Lion RoaringSound)
+
+;;; -----------------------------------------------------------------------
+
+(in-microtheory HumanActivitiesMt)
+
+(relationAllExists transporter HorsebackRiding Horse-Domesticated)
+
+(isa Chiding TypicalHumanActivityType-AtLeastOnce)
+(isa Complimenting TypicalHumanActivityType-AtLeastOnce)
+(isa CriticizingSomething TypicalHumanActivityType-AtLeastOnce)
+(isa ClaimingOwnership TypicalHumanActivityType-AtLeastOnce)
+(isa PraisingSomething TypicalHumanActivityType-AtLeastOnce)
+
+(agentTypePerformsActsOfType Thief Stealing)
+
+(agentTypePerformsWorkOfType Actor Acting)
+(agentTypePerformsWorkOfType AdministrativeAssistant Typing)
+(agentTypePerformsWorkOfType AdvertisingAgency (DesignFn Advertisement)) 
+(agentTypePerformsWorkOfType AerospaceEngineer (DesignFn AirTransportationDevice))
+(agentTypePerformsWorkOfType AirplanePilot AirplaneTrip)
+(agentTypePerformsWorkOfType Architect (DesignFn Building))
+(agentTypePerformsWorkOfType ArtistsModel Posing)
+(agentTypePerformsWorkOfType Astronaut SpaceTransportationEvent)
+(agentTypePerformsWorkOfType Athlete SportsEvent)
+(agentTypePerformsWorkOfType AutomotiveEngineer (DesignFn RoadVehicle))
+(agentTypePerformsWorkOfType Babysitter Babysitting)
+(agentTypePerformsWorkOfType Baker BakingFood)
+(agentTypePerformsWorkOfType Banker Banking)
+(agentTypePerformsWorkOfType BaseballPlayer (PlayingFn Baseball))
+(agentTypePerformsWorkOfType Boxer BoxingSportsEvent)
+(agentTypePerformsWorkOfType Butcher Butchering)
+(agentTypePerformsWorkOfType CarMechanic (RepairingFn Automobile))
+(agentTypePerformsWorkOfType Chef CookingFood)
+(agentTypePerformsWorkOfType ComputerProgrammer ProgrammingAComputer)
+(agentTypePerformsWorkOfType Correspondent Reporting)
+(agentTypePerformsWorkOfType Cowboy CattleDrive)
+(agentTypePerformsWorkOfType CraftWorker CraftActivity)
+(agentTypePerformsWorkOfType Criminal CriminalAct)
+(agentTypePerformsWorkOfType CustomerRep CustomerSupport)
+(agentTypePerformsWorkOfType CustomsAgent (PreventingFn IllegalImmigration))
+(agentTypePerformsWorkOfType CustomsAgent (PreventingFn (CollectionIntersection2Fn IllegalAction ImportExportEvent)))
+(agentTypePerformsWorkOfType Dancer-Performer Dancing-Human)
+(agentTypePerformsWorkOfType Dentist DentalCareEvent)
+(agentTypePerformsWorkOfType Detective CrimeDetection)
+(agentTypePerformsWorkOfType Detective CriminalInvestigation)
+(agentTypePerformsWorkOfType Doctor-Medical MedicalCareEvent)
+(agentTypePerformsWorkOfType Driver-TransportationProfessional (UsingAForFn TransportationDevice-Vehicle vehicle))
+(agentTypePerformsWorkOfType Editor EditingOfCW)
+(agentTypePerformsWorkOfType Farmer Agriculture)
+(agentTypePerformsWorkOfType FashionModel PosingForAPicture) ; but also modeling clothes
+(agentTypePerformsWorkOfType FashionModel FashionShow)
+(agentTypePerformsWorkOfType Firefighter Firefighting)
+(agentTypePerformsWorkOfType FlightAttendant ServingAirPassenger)
+(agentTypePerformsWorkOfType Interpreter-Occupation (CollectionIntersection2Fn NaturalLanguageTranslation Evaluation))
+(agentTypePerformsWorkOfType Janitor CleaningARoom)
+(agentTypePerformsWorkOfType Janitor (CleaningFn (FloorFn OfficeBuilding)))
+(agentTypePerformsWorkOfType Janitor (CleaningFn (FloorFn SchoolBuilding)))
+(agentTypePerformsWorkOfType LawEnforcementOfficer LawEnforcementActivity)
+(agentTypePerformsWorkOfType Lawyer LegalProceeding)
+(agentTypePerformsWorkOfType Legislator (MakingFn Law))
+(agentTypePerformsWorkOfType Librarian (SubcollectionOfWithRelationToTypeFn TakingCareOfSomething objectTakenCareOf LibraryHoldings))
+(agentTypePerformsWorkOfType LoanOfficer (MakingFn LoanAgreement))
+(agentTypePerformsWorkOfType Lobbyist Lobbying-PoliticalActivity)
+(agentTypePerformsWorkOfType Lumberjack (SubcollectionOfWithRelationToTypeFn HarvestingAPlant objectActedOn Tree-ThePlant))
+(agentTypePerformsWorkOfType Maid BuildingCleaningChore)
+(agentTypePerformsWorkOfType MailCarrier (ConveyFn MailableObject))
+(agentTypePerformsWorkOfType MaintenancePerson MaintainingSomething)
+(agentTypePerformsWorkOfType Manager Management)
+(agentTypePerformsWorkOfType MarketingPerson MarketingActivity)
+(agentTypePerformsWorkOfType Mechanic (SubcollectionOfWithRelationToTypeFn MaintainingSomething objectTakenCareOf MechanicalDevice))
+(agentTypePerformsWorkOfType MetalRefinisher MetalRefinishing)
+(agentTypePerformsWorkOfType Metalworker Metalworking)
+(agentTypePerformsWorkOfType Minister (SubcollectionOfWithRelationToTypeFn Leading-BringingAboutSomething outputsCreated ChurchService))
+(agentTypePerformsWorkOfType MovieProjectionist (JobFn MovieProjectionist))
+(agentTypePerformsWorkOfType Nanny ChildcareService)
+(agentTypePerformsWorkOfType Newscaster Newscast)
+(agentTypePerformsWorkOfType Novelist (WritingFn Novel-CW))
+(agentTypePerformsWorkOfType Nurse Nursing)
+(agentTypePerformsWorkOfType Nutritionist EvaluatingNutrituion)
+(agentTypePerformsWorkOfType Oncologist (MedicalTreatmentFn Cancer))
+(agentTypePerformsWorkOfType Optician (MakingFn SensoryEnhancementDevice-Visual))
+(agentTypePerformsWorkOfType OptionsTrader (TradingFn FinancialFuture))
+(agentTypePerformsWorkOfType OralSurgeon GumSurgery)
+(agentTypePerformsWorkOfType Orthodontist OrthodonticCareEvent)
+(agentTypePerformsWorkOfType Orthopaedist BoneRepair)
+(agentTypePerformsWorkOfType Otologist (MedicalTreatmentFn (ImpairmentFn Hearing)))
+(agentTypePerformsWorkOfType Pediatrician PediatricCareEvent)
+(agentTypePerformsWorkOfType (PlayerOfInstrumentFn DrumInstrument) (InstrumentPlayingFn DrumInstrument))
+(agentTypePerformsWorkOfType (PlayerOfInstrumentFn Guitar) (InstrumentPlayingFn Guitar))
+(agentTypePerformsWorkOfType (PlayerOfInstrumentFn Piano-Acoustic) (InstrumentPlayingFn Piano-Acoustic))
+(agentTypePerformsWorkOfType (PlayerOfInstrumentFn Violin) (InstrumentPlayingFn Violin))
+(agentTypePerformsWorkOfType Poet (WritingFn PoeticWork))
+(agentTypePerformsWorkOfType PoliceOfficer-Municipal LawEnforcementActivity)
+(agentTypePerformsWorkOfType PortfolioManager PortfolioManagement)
+(agentTypePerformsWorkOfType Potter MakingPottery)
+(agentTypePerformsWorkOfType PrisonGuard (SubcollectionOfWithRelationToTypeFn GuardingSomething objectGuarded Prisoner-Legal))
+(agentTypePerformsWorkOfType ProfessionalTennisPlayer (PlayingFn Tennis))
+(agentTypePerformsWorkOfType (ProfessionalFn FootballPlayer-American) (PlayingFn FootballBall-American))
+(agentTypePerformsWorkOfType (ProfessionalFn FigureSkater) FigureSkatingSportsEvent)
+(agentTypePerformsWorkOfType (ProfessionalFn BasketballPlayer) (PlayingFn Basketball))
+(agentTypePerformsWorkOfType (ProfessionalFn Fisherman) CommercialFishing)
+(agentTypePerformsWorkOfType (ProfessionalFn HockeyPlayer) (PlayingFn IceHockey))
+(agentTypePerformsWorkOfType Prostitute Prostitution)
+(agentTypePerformsWorkOfType Publisher-Occupation PublishingWrittenMaterial)
+(agentTypePerformsWorkOfType Publicist PublicRelationsActivity)
+(agentTypePerformsWorkOfType Rancher (HusbandryFn Livestock))
+(agentTypePerformsWorkOfType RealEstateAgent (SubcollectionOfWithRelationToTypeFn ChangeInUserRights objectOfPossessionTransfer RealEstate)) ; the buyingAgent
+(agentTypePerformsWorkOfType Receptionist GreetingSomeone)
+(agentTypePerformsWorkOfType Recruiter RecruitingActivity)
+(agentTypePerformsWorkOfType Referee (SubcollectionOfWithRelationToTypeFn BecomingAwareOfAnEvent eventKnown SportsInfraction))
+(agentTypePerformsWorkOfType Refinisher Refinishing)
+(agentTypePerformsWorkOfType Restaurant-Organization CookingFood)
+(agentTypePerformsWorkOfType Roofer Roofing)
+(agentTypePerformsWorkOfType SafetyInspector SafetyInspection)
+(agentTypePerformsWorkOfType SalesPerson SalesActivity)
+(agentTypePerformsWorkOfType SalesPerson MakingASalesPhoneCall)
+(agentTypePerformsWorkOfType Schoolteacher Teaching)
+(agentTypePerformsWorkOfType Scout DiscoveringSomething)
+(agentTypePerformsWorkOfType SecurityGuard (PreventingFn Intrusion))
+(agentTypePerformsWorkOfType Servant ServingFoodOrDrink)
+(agentTypePerformsWorkOfType SexWorker SexualProductOrServiceEvent)
+(agentTypePerformsWorkOfType ShipEngineer (DesignerFn Ship))
+(agentTypePerformsWorkOfType Singer Singing-Human)
+(agentTypePerformsWorkOfType Sniper-Professional ShootingAGun)
+(agentTypePerformsWorkOfType Soldier War)
+(agentTypePerformsWorkOfType Songwriter WritingAMusicalComposition)
+(agentTypePerformsWorkOfType SportsCoach Coaching)
+(agentTypePerformsWorkOfType SportsJudge (SubcollectionOfWithRelationToTypeFn EvaluatingAnAction evaluatedAction SportsEvent))
+(agentTypePerformsWorkOfType SportsOfficial SportsOfficiatingEvent)
+(agentTypePerformsWorkOfType Sprinter Sprinting)
+(agentTypePerformsWorkOfType Supermodel (DisplayingFn SomethingToWear))
+(agentTypePerformsWorkOfType Supervisor Supervising)
+(agentTypePerformsWorkOfType Surgeon Surgery)
+(agentTypePerformsWorkOfType Swimmer Swimming-Generic)
+(agentTypePerformsWorkOfType Tailor-Professional (MakingFn ClothingItem))
+(agentTypePerformsWorkOfType TaxiDriver (TransportViaFn TaxiCab))
+(agentTypePerformsWorkOfType Teacher Teaching)
+(agentTypePerformsWorkOfType TechSupportPerson CustomerSupport)  ; Not great
+(agentTypePerformsWorkOfType Telemarketer MakingASalesPhoneCall)
+(agentTypePerformsWorkOfType TestPilot  (SubcollectionOfWithRelationToTypeFn PerformanceTesting objectTested AirTransportationDevice))
+(agentTypePerformsWorkOfType Trader ExchangeOfUserRights)
+(agentTypePerformsWorkOfType Translator NaturalLanguageTranslation)
+(agentTypePerformsWorkOfType TruckDriver (TransportViaFn Truck))
+(agentTypePerformsWorkOfType Tutor Tutoring)
+(agentTypePerformsWorkOfType Veterinarian VeterinaryCareEvent)
+(agentTypePerformsWorkOfType VolleyballPlayer (PlayingFn Volleyball))
+(agentTypePerformsWorkOfType Waitperson WaitingOnATable)
+(agentTypePerformsWorkOfType WindowWasher (SubcollectionOfWithRelationToTypeFn Washing objectTakenCareOf WindowPortalCovering-Glass)) ; WindowPane?
+(agentTypePerformsWorkOfType WoodRefinisher WoodRefinishing)
+(agentTypePerformsWorkOfType Wrestler WrestlingSportsEvent)
+(agentTypePerformsWorkOfType Writer Writing)
+
+;;
+(agentTypeCreatesArtifactType Author TextualPCW)
+(agentTypeCreatesArtifactType Chef Meal)
+(agentTypeCreatesArtifactType Cheesemaker Cheese)
+(agentTypeCreatesArtifactType Confectioner Candy)
+(agentTypeCreatesArtifactType Bartender MixedDrink)
+(agentTypeCreatesArtifactType Baker  BakedFood)                      ; from opencyc comments
+(agentTypeCreatesArtifactType ComputerProgrammer ComputerProgram-CW) ; from opencyc comments
+(agentTypeCreatesArtifactType Painter-FineArtist Painting-ArtForm)   ; from opencyc comments
+(agentTypeCreatesArtifactType Photographer Photograph)
+(agentTypeCreatesArtifactType Potter Pottery)
+(agentTypeCreatesArtifactType Maker Artifact)
+(agentTypeCreatesArtifactType RoadConstructor PavedRoadway)
+(agentTypeCreatesArtifactType BuildingConstructor Building)
+(agentTypeCreatesArtifactType ConstructionWorker ConstructionArtifact)
+(agentTypeCreatesArtifactType CraftWorker CraftArtifact)
+(agentTypeCreatesArtifactType Novelist Novel-CW)  ; arg2 not technically required to be an artifact!
+(agentTypeCreatesArtifactType Poet PoeticWork)
+(agentTypeCreatesArtifactType Legislator Law)
+(agentTypeCreatesArtifactType Choreographer Choreography)
+(agentTypeCreatesArtifactType Songwriter Song-CW)
+(agentTypeCreatesArtifactType Architect (DesignForObjectTypeFn Building))
+(agentTypeCreatesArtifactType FashionDesigner (DesignForObjectTypeFn SomethingToWear))
+(agentTypeCreatesArtifactType Tailor Clothing-Generic)
+(agentTypeCreatesArtifactType ShoeCobbler Shoe)
+(agentTypeCreatesArtifactType Engineer (DesignForObjectTypeFn ObjectWithUse))
+(agentTypeCreatesArtifactType ComputerManufacturer Computer)
+(agentTypeCreatesArtifactType (ManufacturerFn Clothing-Generic) Clothing-Generic)
+(agentTypeCreatesArtifactType (ManufacturerFn Computer) Computer)
+(agentTypeCreatesArtifactType (ManufacturerFn DVD-Disk) DVD-Disk)
+(agentTypeCreatesArtifactType (ManufacturerFn GolfClub) GolfClub)
+(agentTypeCreatesArtifactType (ManufacturerFn Lingerie) Lingerie)
+(agentTypeCreatesArtifactType (ManufacturerFn MicrowaveOven) MicrowaveOven)
+(agentTypeCreatesArtifactType (ManufacturerFn Motorcycle) Motorcycle)
+(agentTypeCreatesArtifactType (ManufacturerFn Refrigerator) Refrigerator)
+(agentTypeCreatesArtifactType (ManufacturerFn RiceCooker) RiceCooker)
+(agentTypeCreatesArtifactType (ManufacturerFn Steel) Steel)
+(agentTypeCreatesArtifactType (ManufacturerFn Submarine) Submarine)
+(agentTypeCreatesArtifactType (ManufacturerFn TelevisionSet) TelevisionSet)
+(agentTypeCreatesArtifactType (ManufacturerFn AgriculturalImplement) AgriculturalImplement)
+(agentTypeCreatesArtifactType (ManufacturerFn AirConditioner) AirConditioner)
+(agentTypeCreatesArtifactType (ManufacturerFn Airplane) Airplane)
+(agentTypeCreatesArtifactType (ManufacturerFn AutoPart) AutoPart)
+(agentTypeCreatesArtifactType (ManufacturerFn BallBearing) BallBearing)
+(agentTypeCreatesArtifactType (ManufacturerFn ComputerMonitor-VideoKind) ComputerMonitor-VideoKind)
+(agentTypeCreatesArtifactType (ManufacturerFn ElectricalDevice) ElectricalDevice)
+(agentTypeCreatesArtifactType (ManufacturerFn ElectronicComponent) ElectronicComponent)
+(agentTypeCreatesArtifactType (ManufacturerFn ElectronicDevice) ElectronicDevice)
+(agentTypeCreatesArtifactType (ManufacturerFn HydroPoweredTurbine) HydroPoweredTurbine)
+(agentTypeCreatesArtifactType (ManufacturerFn IntegratedCircuit) IntegratedCircuit)
+(agentTypeCreatesArtifactType (ManufacturerFn MachineTool) MachineTool)
+
+(characteristicActivityTypeOfPersonType-Frequently (SubcollectionOfWithRelationFromTypeFn Person physiologicalConditionAffects Narcolepsy) Sleeping)
+
+(conceptuallyRelated Lumberjack MasculinePerson)
+
+(outputsCreated-TypeType MakingAPrediction Prediction-CW)
+
+;;; Dying leaves behind dead physical remains
+(outputsCreated-TypeType DyingOfBLO (DeadPhysicalRemainsFn BiologicalLivingObject))
+
+;;; Dying is cotemporal with (EndingFn Living) - for a given doer
+
+;;; What was this intended for?
+;;; Looks like Emmett made up contraryEvents in narrativeRules.meld
+(isa contraryEvents SymmetricBinaryPredicate)
+(contraryEvents Sport Dying)
+(contraryEvents Laughing Crying)  ; but not disjoint
+
+;;; Resenting something:
+;;; (feelsTowardsObject-Ternary :SUBJECT :OBJECT (PositiveAmountFn Resentment))
+
+;;; (feelsTowardsObject-Ternary (GovernmentFn Israel ) YassirArafat (HighAmountFn Distrust))
+;;; (subjectivelyEvaluates Sally SallyLearningToRideABike Easy)
+;;; 
+
+(properSubEventTypes ShotPutSportsEvent (SubcollectionOfWithRelationToTypeFn ThrowingAnObject objectThrown ShotPutShot))
+
+
+(socialQuantityTypeExpressedByInsOfEventType EconomicSupport GivingEconomicAid)
+(socialQuantityTypeExpressedByInsOfEventType HumanitarianAssistance GivingHumanitarianAid)
+(socialQuantityTypeExpressedByInsOfEventType PoliticalSupport EndorsingAPoliticalCandidate)
+(socialQuantityTypeExpressedByInsOfEventType IntelligenceSupport (SubcollectionOfWithRelationToTypeFn Sharing objectMadeAvailable MilitaryIntelligence))
+(socialQuantityTypeExpressedByInsOfEventType FinancialSupport (SubcollectionOfWithRelationToTypeFn Lending transferredThing MonetaryValue))
+(socialQuantityTypeExpressedByInsOfEventType LogisticsSupport Conveying-Generic)
+;(socialQuantityTypeExpressedByInsOfEventType DiplomaticSupport ???)
+;(socialQuantityTypeExpressedByInsOfEventType IdeologicalSupport ???)
+(socialQuantityTypeExpressedByInsOfEventType ManPowerAndPersonnelSupport ManagingPersonnelData)
+;(socialQuantityTypeExpressedByInsOfEventType MaterialSupport ???)
+;(socialQuantityTypeExpressedByInsOfEventType PlanningAndPolicySupport ???)
+
+;;; Installing in Cyc is physically mounting something tangible.
+;(isa (InstallingFn OperatingSystem) SkilledActivityType)
+(isa (SubcollectionOfWithRelationToTypeFn InstallingAProgramCopy programCopyInstalled OperatingSystem) SkilledActivityType)
+
+(bodyPartsUsed-TypeType (InstrumentPlayingFn Piano-Acoustic) Finger)
+(bodyPartsUsed-TypeType (InstrumentPlayingFn Piano-Acoustic) Foot-AnimalBodyPart)
+(bodyPartsUsed-TypeType (InstrumentPlayingFn Keyboard-MusicalInstrument) Finger)
+(bodyPartsUsed-TypeType ComputerKeyboardTyping Finger)
+(bodyPartsUsed-TypeType (UsingAForFn MouseButton SelectingSomething deviceUsed) Finger)
+(bodyPartsUsed-TypeType WavingArmsInAir Arm)
+(bodyPartsUsed-TypeType WavingAFist Fist)
+(bodyPartsUsed-TypeType WavingAHand-Gesture Hand)
+(bodyPartsUsed-TypeType Nodding-Gesture Head-AnimalBodyPart)
+(bodyPartsUsed-TypeType ShakingAFist Fist)
+(bodyPartsUsed-TypeType ShakingHands Hand)
+(bodyPartsUsed-TypeType ShakingHead Head-BodyPart)
+(bodyPartsUsed-TypeType CraningOnesNeck Neck-AnimalBodyPart)
+(bodyPartsUsed-TypeType StretchingBody WholeBody)
+(bodyPartsUsed-TypeType VisualPerception Eye)
+(bodyPartsUsed-TypeType Hearing Ear)
+(bodyPartsUsed-TypeType SmellPerception Nose)
+(bodyPartsUsed-TypeType TastePerception Tongue)
+(bodyPartsUsed-TypeType TouchPerception Skin)
+(bodyPartsUsed-TypeType Smiling Mouth)
+(bodyPartsUsed-TypeType Frowning Mouth)
+(bodyPartsUsed-TypeType Scowling Face-MainSurface)
+(bodyPartsUsed-TypeType Grimacing Face-MainSurface)
+(bodyPartsUsed-TypeType Smirking Face-MainSurface)
+(bodyPartsUsed-TypeType Wincing Face-MainSurface)
+(bodyPartsUsed-TypeType Pouting Face-MainSurface)
+(bodyPartsUsed-TypeType Grinning Face-MainSurface)
+(bodyPartsUsed-TypeType LookingSurprised Face-MainSurface)
+(bodyPartsUsed-TypeType LookingPuzzled Face-MainSurface)
+(bodyPartsUsed-TypeType ScrewingUp-Grimacing Face-MainSurface)
+(bodyPartsUsed-TypeType MakingFacialExpression Face-MainSurface)
+(bodyPartsUsed-TypeType StandingOnTipToesPosture Toe)
+(bodyPartsUsed-TypeType StandingOnAllLegsPosture Leg)
+(bodyPartsUsed-TypeType StandingOnOneLegPosture Leg)
+(bodyPartsUsed-TypeType StandingOnOnesHeadPosture Head-BodyPart)
+(bodyPartsUsed-TypeType MakingAnOralSound Mouth)
+(bodyPartsUsed-TypeType SimpleWholeBodyMovement WholeBody)
+(bodyPartsUsed-TypeType LegMovement Leg)
+(bodyPartsUsed-TypeType TakingAStep Leg)
+(bodyPartsUsed-TypeType WalkingOnTwoLegs Leg)
+(bodyPartsUsed-TypeType ArmMovement Arm)
+(bodyPartsUsed-TypeType Kneeling Knee)
+(bodyPartsUsed-TypeType StubbingToe Toe)
+(bodyPartsUsed-TypeType Swallowing Mouth)
+(bodyPartsUsed-TypeType SuckingOnSomethingInMouth Mouth)
+(bodyPartsUsed-TypeType Blinking Eye)
+(bodyPartsUsed-TypeType Shrugging-Gesture Shoulder)
+(bodyPartsUsed-TypeType ClenchingFists Fist)
+(bodyPartsUsed-TypeType FlingingArmsWide Arm)
+(bodyPartsUsed-TypeType FlippingSomeoneOff MiddleFinger)
+(bodyPartsUsed-TypeType PointingThumbsDown Thumb)
+(bodyPartsUsed-TypeType PointingThumbsUp Thumb)
+(bodyPartsUsed-TypeType ThrowingAnObject Arm)
+(bodyPartsUsed-TypeType Mooning Buttocks)
+(bodyPartsUsed-TypeType WringingHands Hand)
+(bodyPartsUsed-TypeType Saluting OpenHandPosition-FingersTogether)
+(bodyPartsUsed-TypeType NursingYoung MammaryGland)
+(bodyPartsUsed-TypeType NursingYoung Teat)
+(bodyPartsUsed-TypeType Crying TearDuct)
+(bodyPartsUsed-TypeType Crying Eye)
+(bodyPartsUsed-TypeType Sneezing Nose)
+(bodyPartsUsed-TypeType Sneezing Mouth)
+(bodyPartsUsed-TypeType Kissing Lip-AnimalBodyPart)
+(bodyPartsUsed-TypeType Pinching Thumb)
+(bodyPartsUsed-TypeType Pinching IndexFinger)
+(bodyPartsUsed-TypeType Saluting Forearm)
+(bodyPartsUsed-TypeType ArmWrestling Arm)
+(bodyPartsUsed-TypeType SexualCopulation ExternalSexOrgan)
+(bodyPartsUsed-TypeType CrawlingOnHandsAndKnees Hand)
+(bodyPartsUsed-TypeType CrawlingOnHandsAndKnees Knee)
+(bodyPartsUsed-TypeType Chewing Tooth) ; specifically MolarTooth?
+
+(anatomicalPartTypeRequired Chewing Tooth doneBy)
+(anatomicalPartTypeRequired VisualPerception Eye doneBy)
+(anatomicalPartTypeRequired TastePerception Tongue doneBy)
+(anatomicalPartTypeRequired Hearing Ear doneBy)
+(anatomicalPartTypeRequired SmellPerception Nose doneBy)
+
+(relationAllExists doneBy FleaBiting Flea)
+(relationAllExists doneBy Fly-InsectBiting Fly-Insect)
+(relationAllExists doneBy LouseBiting Louse)
+(relationAllExists doneBy MiteBiting Mite)
+(relationAllExists doneBy MosquitoBiting Mosquito)
+(relationAllExists doneBy TickBiting Tick)
+(relationAllExists doneBy IntelligentAgentActivity IntelligentAgent)
+
+;;; Every compressed substance results from compressing something:
+(relationExistsAll objectActedOn Compressing CompressedSubstance)
+(relationExistsAll adjacentTo Harbor PortCity)
+
+(outputsCreated-TypeType InsectBiting InsectBite)
+(outputsCreated-TypeType TickBiting TickBite-Wound)
+(outputsCreated-TypeType MosquitoBiting MosquitoBite)
+
+;;; Only Intelligent Agents can do Intelligent Agent activities:
+(relationOnlyAll doneBy IntelligentAgentActivity IntelligentAgent)
+
+;;; Ultrasonics can't be heard by people, but can by bats
+(typeBehaviorIncapable HomoSapiens (SubcollectionOfWithRelationToTypeFn Hearing perceivedThing Ultrasound) doneBy)
+(typeBehaviorIncapable HomoSapiens (WaveReceptionFn Ultrasound) doneBy)
+(typeBehaviorIncapable HomoSapiens EcholocationPerception doneBy)
+(typeBehaviorCapable Bat-Mammal EcholocationPerception doneBy)
+(typeBehaviorCapable Dog (WaveReceptionFn Ultrasound) doneBy)  ; cf, dog whistles.
+
+(frequencyOfActionType WalkingAPet Dog beneficiary TwiceDaily)
+
+;;; StainlessSteel doesn't rust:
+(typeBehaviorIncapable StainlessSteel RustingProcess objectActedOn)
+(typeBehaviorIncapable Wood RustingProcess objectActedOn)
+(typeBehaviorCapable Iron RustingProcess objectActedOn)
+;; Aluminum actually does rust, but so quickly that it seals out the air.
+;; But in salt water, aluminum corrodes badly.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

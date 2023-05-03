@@ -1,0 +1,110 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: s.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+(EAHeadFeaturesForNodeType aux (TheList agr))
+
+;;; Omitted 5-15-17 [trh]
+;;;(isa -s->s-s- EAGrammarRule)
+;;;(probabilityEAGrammarRule -s->s-s- 1.0)
+;;;(grammarRule -s->s-s-
+;;; (EATermFn s (TheList (var ?vars1) (sem (and ?sems1 ?sems2))))
+;;; (TheList (EATermFn s (TheList (sem ?sems1) (var ?vars1)))
+;;;  (EATermFn s (TheList (sem ?sems2)))))
+
+(isa -s->slp-stype- EAGrammarRule)
+(comment -s->slp-stype- "pass up stype from the slp.")
+(probabilityEAGrammarRule -s->slp-stype- 1.0)
+(grammarRule -s->slp-stype-
+ (EATermFn s (TheList (var ?vars) (stype ?!stype) (sem ?sems)))
+ (TheList
+  (EAHeadFn
+   (EATermFn slp
+    (TheList (var ?vars) (sem ?sems) (stype (? !stype -)))))
+  (EATermFn Punctuation-SP
+   (TheList
+    (lex
+     (? l punc-period punc-exclamation-mark punc-question-mark))))))
+
+(isa -s->Sfin- EAGrammarRule)
+(comment -s->Sfin- "An Sfin is by default a declarative.")
+(probabilityEAGrammarRule -s->Sfin- 1.0)
+(grammarRule -s->Sfin-
+ (EATermFn s
+  (TheList (var ?vars) (stype DeclarativeUtterance)
+   (sem ?sems)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Sfin (TheList (var ?vars) (sem ?sems) (stype -))))
+  (EATermFn Punctuation-SP
+   (TheList (lex (? l punc-period punc-exclamation-mark))))))
+
+(isa -s->slp-declarative- EAGrammarRule)
+(comment -s->slp-declarative- "if the slp doesn't have an stype, use defaults.")
+(probabilityEAGrammarRule -s->slp-declarative- 1.0)
+(grammarRule -s->slp-declarative-
+ (EATermFn s
+  (TheList (var ?vars) (stype DeclarativeUtterance)
+   (sem ?sems)))
+ (TheList
+  (EAHeadFn
+   (EATermFn slp (TheList (var ?vars) (sem ?sems) (stype -))))
+  (EATermFn Punctuation-SP
+   (TheList (lex (? l punc-period punc-exclamation-mark))))))
+
+(isa -s->slp-question- EAGrammarRule)
+(probabilityEAGrammarRule -s->slp-question- 1.0)
+(grammarRule -s->slp-question-
+ (EATermFn s
+  (TheList (var ?vars) (stype InterrogativeUtterance)
+   (sem ?sems)))
+ (TheList
+  (EAHeadFn
+   (EATermFn slp (TheList (var ?vars) (sem ?sems) (stype -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-question-mark)))))
+
+(isa -s->Sfin-question- EAGrammarRule)
+(probabilityEAGrammarRule -s->Sfin-question- 1.0)
+(grammarRule -s->Sfin-question-
+ (EATermFn s
+  (TheList (var ?vars) (stype InterrogativeUtterance)
+   (sem ?sems)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Sfin (TheList (var ?vars) (sem ?sems) (stype -))))
+  (EATermFn Punctuation-SP (TheList (lex punc-question-mark)))))
+
+(isa -s->slp-colon- EAGrammarRule)
+(comment -s->slp-colon- "no handling for colon/semicolon")
+(probabilityEAGrammarRule -s->slp-colon- 1.0)
+(grammarRule -s->slp-colon-
+ (EATermFn s (TheList (var ?vars) (sem ?sems)))
+ (TheList 
+  (EAHeadFn
+   (EATermFn slp (TheList (var ?vars) (sem ?sems))))
+  (EATermFn Punctuation-SP (TheList (lex (? l punc-colon punc-semicolon))))))
+
+(isa -s->slp-quoted- EAGrammarRule)
+(comment -s->slp-quoted- "quoted text can have the punctuation inside")
+(probabilityEAGrammarRule -s->slp-quoted- 1.0)
+(grammarRule -s->slp-quoted-
+ (EATermFn s
+  (TheList (var ?vars) (stype DeclarativeUtterance)
+   (sem ?sems)))
+ (TheList
+  (EAHeadFn
+   (EATermFn slp (TheList (var ?vars) (sem ?sems) (utterance +))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

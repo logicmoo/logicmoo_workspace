@@ -1,0 +1,638 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: reflective-player.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: October 19, 2011 13:20:43
+;;;;   Purpose: A game player that reasons about its goals, rather than just
+;;;;            blindly following them.
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory PerceptualAgentMt)
+
+;;; This was just evicerated by the introduction of the goal-graph walking
+;;; continuations, as exposed through the outsourced predicates
+;;; currentTopPriorityGoal and nextHighestPriorityGoal.
+
+;;; -------------------------------------------------------------------------
+;;;
+;;; REFLECTIVE PLAYER
+;;;
+;;; Rather than iterate through decisions and agents on each turn, the 
+;;; reflective player should consult its strategies to see how they're doing.
+;;; We don't necessarily have to start out with a blank slate, but may
+;;; instead learn to operationalize general strategies.
+
+;;; Override:
+;;; (planStrategicGoalActions ?when ?mt)
+;;; (assignActorsToGoals ?mt ?actor-type-pairs ?planned-actions)
+;;; (takeAction ?mt ?actor ?goal ?action ?planned-actions)
+;;; (decide ?mt ?actor ?slot)
+;;; (breadthFirstGoalSearch ?mt ?actor ?slot ?actions ?goals ?seen)
+
+;;; Ugh. currentTopPriorityGoal is starting from the performanceGoalForGame,
+;;; rather than the root of the goal hierarchy.  This is not good.
+;;; Hardcode (GoalFn 0) to be the root.
+
+;;; Make this respond to threats first, before assigning remaining actors.
+(preconditionForMethod
+  (currentPlayer ?player)  ; collect active strategies, or walk the goal hierarchy looking for them?
+  (methodForAction
+    (planStrategicGoalActions when ?mt)
+    (actionSequence
+      (TheList
+        (respondToThreats ?mt ?player)))))  we want to walk breadth first until we reach an active strategy.
+
+(<== (preferInContext (planStrategicGoalActions ?mt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 respondToThreats))
+
+(isa respondToThreats ComplexActionPredicate)
+(arity respondToThreats 2)
+
+;;; Don't need the player yet, but threat detection really ought to take it.
+(preconditionForMethod
+  (and (activeAssignedGoals ?mt ?active-goals ?active-actors)
+       (evaluate ?threats
+         (TheClosedRetrievalSetOf ?threat
+           (ist-Information ?mt
+             (agentPosesThreat ?threat ?player))))  ; see combat.meld for definition. (companions background knowledge)
+       (evaluate ?goals
+         (TheClosedRetrievalSetOf ?goal-rep
+           ;; This should compute goals from goalCategoryForAgent,
+           ;; which in the case of SelfPreservationGoals should identify existential threats.
+           (and (lookupOnly (elementOf ?threat ?threats))
+                (unifies ?goal-rep
+                  (AchieveFn (agentsExistentialStatus ?threat AgentNowTerminated)))
+                (uninferredSentence
+                  (goalMember ?mt ?goal-rep ?active-goals))
+                )))
+       (different ?goals (TheSet))
+       (evaluate ?assignable-actors
+         (TheClosedRetrievalSetOf (?actor ?type)
+           (and (assignableActorOfType ?actor ?type)  ; This is a cheap way of getting the domain actor type
+                (uninferredSentence
+                  (lookupOnly
+                    (elementOf ?actor ?active-actors)))
+                (uninferredSentence
+                  (busyActor ?actor)))))
+        (different ?assignable-actors (TheSet))
+        (evaluate ?goal-list (SetToListFn ?goals)))
+  (methodForAction
+    (respondToThreats ?mt ?player)
+    (actionSequence
+      (TheList
+        (doForEach ?goal ?goals (reifyThreatGoal ?mt ?goal (GoalFn 0)))
+        (doForEach ?threat ?threats (reifyThreatIsa ?mt ?threat ?player))
+        (doAgentPlan (allocateAgentsToThreats ?mt ?player ?goal-list ?assignable-actors))
+        ))))
+
+        
+(isa allocateAgentsToThreats ComplexActionPredicate)
+(arity allocateAgentsToThreats 4)
+(comment allocateAgentsToThreats "(allocateAgentsToThreats ?mt ?player ?goal-list ?actor-type-pairs)")
+
+;;; For each threat, post a goal to eliminate it.
+;;; Then traverse those goals first.
+;;; This needs to be mutually recursive, not directly recursive.
+;;; Just because we might fail to assign a unit, doesn't mean we should stop 
+;;; reifying threat subgoals.
+;;; Use (achievableByRole ?role ?subgoal) 
+(preconditionForMethod 
+  (and (evaluate ?goal (FirstInListFn ?goal-list))
+       (evaluate ?rest-goals (RestOfListFn ?goal-list))
+       ;; can't use assignedToRole, since that's statically determined wrt goal-name.
+       ;; Must operationalize on the fly.
+       (evaluate ?roles 
+         (TheClosedRetrievalSetOf ?role
+           (achievableByRole ?role ?goal)))  ; There are going to be multiple roles here.  Possibly more than there are actors. 
+       (filteredActorsByRoles ?actor-type-pairs ?roles ?filtered-pairs))
+  (methodForAction
+    (allocateAgentsToThreats ?mt ?player ?goal-list ?actor-type-pairs)
+    (actionSequence
+      (TheList
+        ;; This is mutually recursive - it calls allocateAgentsToThreats.
+        (allocateAgentToThreat ?mt ?player ?rest-goals ?actor-type-pairs ?goal ?filtered-pairs)
+        ))))
+
+;;; No more threats:
+(preconditionForMethod 
+  (true)
+  (methodForAction
+    (allocateAgentsToThreats ?mt ?player (TheList) ?actor-type-pairs)
+    (actionSequence
+      (TheList
+        (doAgentPlan  ; Do *not* backtrack here!
+          (defeasiblyAssignActorsToGoals ?mt ?actor-type-pairs))))))  ; assign the leftovers
+          
+(isa defeasiblyAssignActorsToGoals ComplexActionPredicate)
+(arity defeasiblyAssignActorsToGoals 2)
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (defeasiblyAssignActorsToGoals ?mt ?actor-type-pairs)
+    (actionSequence
+      (TheList))))
+
+;;; Updated to be compatible with strategic player [10-9-14]
+(preconditionForMethod
+  (evaluate ?assignable-actors
+    (SetToListFn 
+      (TheClosedRetrievalSetOf ?actor
+        (and (assignableActorOfType ?actor ?type)  ; This pred really should take the scenario!
+             (uninferredSentence
+               (busyActor ?actor))))))
+  (methodForAction
+    (defeasiblyAssignActorsToGoals ?mt ?actor-type-pairs)
+    (actionSequence
+      (TheList
+        (doForEach ?actor ?assignable-actors (assignActor ?mt ?actor))))))
+        
+(<== (preferInContext (defeasiblyAssignActorsToGoals ?mt ?actor-type-pairs) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+(isa allocateAgentToThreat ComplexActionPredicate)
+(arity allocateAgentToThreat 6)
+
+;;; What we want is the best method for the best assignment.
+;;; That's non-trivial.  
+;;; The taskAchieves rule is really weak. 
+;;; It recurses on any sub-conjunct that could lead to achieving the goal.
+;;; We'd like to prefer complete reified plans or current experiments.
+(preconditionForMethod
+  (and (bestAssignment ?mt ?candidate-actors ?goal ?actor-type-pair)  ; define this to take and return an (actor type) pair
+       (unifies (?actor ?type) ?actor-type-pair)
+       (ist-Information ?mt
+         (taskAchieves ?actor ?goal ?action))  ; Couldn't this just invoke htn planning? No.
+       (groundExpression ?action)
+       (numAnswers 1
+         (lookupOnly
+           (localOnly
+           (ist-Information ?mt
+             (goalName ?goal-name ?goal)))))
+       (evaluate ?remaining-actor-type-pairs
+         (SetMinusFn ?actor-type-pairs ?actor-type-pair)))
+  (methodForAction
+    (allocateAgentToThreat ?mt ?player ?rest-goals ?actor-type-pairs ?goal ?candidate-actors)
+    (actionSequence
+      (TheList
+        (takeAction ?mt ?actor ?goal-name ?action (TheList ?action))
+        (reifyThreatAssignment ?mt ?actor ?goal-name ?action)
+        (doAgentPlan
+          (allocateAgentsToThreats ?mt ?player ?rest-goals ?remaining-actor-type-pairs))))))
+
+;;; Default if we're unable to act on the goal, is to move on to the next goal:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (allocateAgentToThreat ?mt ?player ?rest-goals ?actor-type-pairs ?goal ?candidate-actors)
+    (actionSequence
+      (TheList
+        (allocateAgentsToThreats ?mt ?player ?rest-goals ?actor-type-pairs)))))
+        
+(<== (preferInContext (allocateAgentToThreat ?mt ?player ?rest-goals ?actor-type-pairs ?goal ?candidate-actors) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 takeAction))
+
+(isa reifyThreatGoal ComplexActionPredicate)
+(arity reifyThreatGoal 3)
+(arg1Isa reifyThreatGoal Microtheory)
+(arg2Isa reifyThreatGoal Goal)  ; expanded goal representation
+(arg3Isa reifyThreatGoal Goal)  ; goal name
+(comment reifyThreatGoal "(reifyThreatGoal ?mt ?threat ?parent-goal) writes out a goal to address a particular threat.")
+
+;;; The goal may already exist (from a prior turn),
+;;; so don't fail if it does.
+;;; *** Do we need to timestamp the goal?  Probably.
+;;; *** (startingDate ?time (activeGoal ?goal)) ?? 
+(preconditionForMethod
+  (and (uninferredSentence 
+         (lookupOnly
+           (localOnly
+             (ist-Information ?mt
+               (goalName ?named-goal ?goal-probe)))))
+       (reifiedScenarioGoal ?mt ?name ?goal-probe ?goal-rep))  ; generate a new name
+  (methodForAction
+    (reifyThreatGoal ?mt ?goal-probe ?parent-goal)
+    (actionSequence
+      (TheList
+        (doRecord
+          (ist-Information ?mt
+            (goalName ?name ?goal-rep)))   ; reify in the scenario instance context, rather than the strategy model.
+        (doRecord
+          (ist-Information ?mt
+            (subgoal ?parent-goal ?name)))      ; should this be goalDecomposition?
+        (doRecord
+          (ist-Information ?mt
+            (goalDecomposition ?parent-goal ?name agentPosesThreat))) ; *** weird. agentPosesThreat is not a decomposition type.
+       ))))
+            
+(preconditionForMethod
+  (numAnswers 1
+    (lookupOnly
+      (localOnly
+        (ist-Information ?mt
+          (goalName ?named-goal ?goal-rep)))))
+  (methodForAction
+    (reifyThreatGoal ?mt ?goal-rep ?parent-goal)
+    (actionSequence
+      (TheList))))
+
+(isa reifiedScenarioGoal QuaternaryPredicate)
+(arity reifiedScenarioGoal 4)
+(arg1Isa reifiedScenarioGoal Microtheory)
+(arg2Isa reifiedScenarioGoal CycLTerm)
+(arg3Isa reifiedScenarioGoal Goal)
+(arg4Isa reifiedScenarioGoal Goal)
+(comment reifiedScenarioGoal "(reifiedScenarioGoal ?mt ?name ?goal-probe ?goal) finds or makes a reifiable NAT name for ?goal representation.")
+
+(<== (reifiedScenarioGoal ?mt ?name ?goal-probe ?goal)
+     (scenarioMicrotheory ?mt)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (goalName ?name ?goal-probe)))))
+     (unifies ?goal ?goal-probe))  ; *** Shouldn't this bind ?goal to ?name ??
+
+(<== (reifiedScenarioGoal ?mt ?name ?goal-probe ?goal)
+     (scenarioMicrotheory ?mt)
+     (uninferredSentence
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (goalName ?some-name ?goal-probe)))))
+     (numAnswers 1
+       (nextCounterValue SGoalFn ?count))  ;; Not persistent across sessions.
+     (unifies (?name ?goal) ((SGoalFn ?count) ?goal-probe)))  ; It's binary, not ternary!
+
+
+(isa reifyThreatIsa ComplexActionPredicate)
+(arity reifyThreatIsa 3)
+(arg1Isa reifyThreatIsa Microtheory)
+(arg2Isa reifyThreatIsa SomethingExisting)
+(arg3Isa reifyThreatIsa Agent-Generic)
+(comment reifyThreatIsa "(reifyThreatIsa ?mt ?thing ?actor) reifies the isa of ?thing in ?mt, along with the ThreatDetected event.")
+
+;;; We want to ensure that threat instances have an isa recorded in the scenario
+;;; to help with variablizing goals to see if they have known achievement plans.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (reifyThreatIsa ?mt ?thing ?actor)
+    (actionSequence
+      (TheList))))
+
+(preconditionForMethod
+  (and (uninferredSentence
+          (kbOnly
+            (lookupOnly
+              (localOnly
+                (ist-Information ?mt
+                  (isa ?threat ?what))))))  ; not already there
+       (numAnswers 1
+         (mostSpecificIsa ?mt ?threat ?something))  ; We want the most specific isa
+       (ist-Information ?mt
+         (objectFoundInLocation ?threat ?where))
+       (unifies ?event-roles (TheList ?who ?threat ?where)))
+  (methodForAction
+    (reifyThreatIsa ?mt ?threat ?who)
+    (actionSequence
+      (TheList
+        ; We really want to synthesize and reify an event here:
+        (doRecordEvent ThreatDetectedEvent ?event-roles)
+        (doRecord (ist-Information ?mt (isa ?threat ?something)))))))
+        
+(<== (preferInContext (reifyThreatIsa ?mt ?thing ?actor) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+(isa mostSpecificIsa TernaryPredicate)
+(arity mostSpecificIsa 3)
+(arg1Isa mostSpecificIsa Microtheory)
+(arg2Isa mostSpecificIsa Individual)
+(arg3Isa mostSpecificIsa Collection)
+(comment mostSpecificIsa "(mostSpecificIsa ?mt ?inst ?type) binds ?type to the most specific isa of ?inst.")
+
+(<== (mostSpecificIsa ?mt ?inst ?type)
+     (evaluate ?types
+       (TheClosedRetrievalSetOf ?isa
+         (inferenceAllowed
+           (nonTransitiveInference
+             (allFactsAllowed
+               (contextEnvAllowed
+                 (ist-Information ?mt
+                   (isa ?inst ?isa))))))))
+     (numAnswers 1 
+       (mostSpecificType ?mt ?types ?type)))
+
+(isa mostSpecificType TernaryPredicate)
+(arity mostSpecificType 3)
+(arg1Isa mostSpecificType Microtheory)
+(arg2Isa mostSpecificType Set-Mathematical)
+(arg3Isa mostSpecificType Collection)
+(comment mostSpecificType "(mostSpecificType ?mt ?types ?type) binds ?type to the most specific type.")
+
+;;; Technically, we should check genls wrt ?mt,
+;;; but let's see if this works:
+(<== (mostSpecificType ?mt ?types ?type)
+     (evaluate ?type
+       (FirstInListFn (SortFn ?types genls IdentityFn))))
+
+
+(isa bestAssignment Predicate)
+(arity bestAssignment 4)
+(comment bestAssignment "(bestAssignment ?mt ?candidate-actors ?goal ?actor-type-pair)")
+
+;;; For now, this is total hokum.  Takes the first element.
+;;; Ideally, it should establish a preference based on intrinsic (type) info
+;;; and extrinsic (eg, distance) info.
+(<== (bestAssignment ?mt ?candidate-actors ?goal ?actor-type-pair)
+     (different ?candidate-actors (TheSet))
+     (not (matches (AchieveFn (agentsExistentialStatus ?threat ?status)) ?goal))  ; If we can't figure out the threat
+     (formulaArgument ?candidate-actors 1 ?actor-type-pair))
+
+(<== (bestAssignment ?mt ?candidate-actors
+                     (AchieveFn (agentsExistentialStatus ?threat AgentNowTerminated)) 
+                     ?actor-type-pair)
+     (different ?candidate-actors (TheSet))
+     (closestActorPair ?candidate-actors ?threat ?actor-type-pair))
+     
+(isa closestActorPair TernaryPredicate)
+(arity closestActorPair 3)
+(arg1Isa closestActorPair Set-Mathematical)
+(arg2Isa closestActorPair SomethingExisting) ; PartiallyTangible might be better
+(arg3Isa closestActorPair CycLTerm)
+(comment closestActorPair "(closestActorPair ?pairs ?target ?pair) identifies the (<instance> <type>) element of ?pairs that is closest to ?target.")
+
+(<== (closestActorPair ?pairs ?target ?pair)
+     (evaluate ?sorted-pairs
+       (SortFn ?pairs lessThan 
+         (FunctionToArg 2 
+           (Kappa (?pair ?magnitude)
+             (and (unifies (?actor ?type) ?pair)
+                  (distanceBetween ?actor ?target ?distance)  ; operationalized in Freeciv inferences.
+                  (numericMagnitude ?distance ?magnitude))))))
+     (evaluate ?pair
+       (FirstInListFn ?sorted-pairs)))
+
+(isa numericMagnitude BinaryPredicate)
+
+(<== (numericMagnitude ?quantity ?number)
+     (groundExpression ?quantity)
+     (unifies (?functor ?number) ?quantity)
+     (isa ?number Number-General))
+
+(<== (numericMagnitude ?number ?number)
+     (groundExpression ?number)
+     (atomicTerm ?number)
+     (isa ?number Number-General))
+
+(isa assignedToGoal TernaryPredicate)
+(arity assignedToGoal 3)
+(arg1Isa assignedToGoal Goal)
+(arg2Isa assignedToGoal Agent-Generic)
+(arg3Isa assignedToGoal Task)
+(comment assignedToGoal "(assignedToGoal ?goal ?actor ?task) means ?actor is pursuing ?goal via ?task.")
+
+(isa reifyThreatAssignment ComplexActionPredicate)
+(arity reifyThreatAssignment 4)
+(arg1Isa reifyThreatAssignment Microtheory)
+(arg2Isa reifyThreatAssignment Agent-Generic)  ; expanded goal representation
+(arg3Isa reifyThreatAssignment Goal)  ; goal name
+(arg4Isa reifyThreatAssignment Task)  ; Either an action or a complex task in pursuant of goal.
+(comment reifyThreatAssignment "(reifyThreatAssignment ?mt ?actor ?goal ?task) writes out a goal assignment and goal activation event.")
+
+(preconditionForMethod
+  (ist-Information ?mt (gameTurn ?when))
+  (methodForAction
+    (reifyThreatAssignment ?mt ?actor ?goal ?task)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?mt (holdsIn ?when (assignedToGoal ?goal ?actor ?task))))
+        (doNotifyPA ?goal GoalActivationEvent)    ; define a generic notify-listeners method in session-reasoner/event-handling.lsp
+        ))))
+        
+;;; How do we know when to deactivate a goal?
+;;; When a unit dies we check the goals its involved with.
+;;; If the goal is not satisfied, but our performer died, re-assign.
+;;; If the goal is satisfied, deactivate it.
+;;; What other triggers should there be?
+;;; The agentTerminated state should be associated with death evetns.
+
+
+(isa activeAssignedGoals TernaryPredicate)
+(arity activeAssignedGoals 3)
+(arg1Isa activeAssignedGoals Microtheory)
+(arg2Isa activeAssignedGoals Set-Mathematical)
+(arg3Isa activeAssignedGoals Set-Mathematical)
+(comment activeAssignedGoals "(activeAssignedGoals ?mt ?active-goals ?active-actors)")
+
+(<== (activeAssignedGoals ?mt ?active-goals ?active-actors)
+     (evaluate ?pairs
+       (TheClosedRetrievalSetOf (?goal ?actor)
+         (and (lookupOnly
+                (localOnly
+                  (ist-Information ?mt
+                    (assignedToGoal ?goal ?actor ?task))))
+              (uninferredSentence
+                (deactivatedGoal ?mt ?goal)))))
+     (evaluate ?active-goals
+       (TheClosedRetrievalSetOf ?goal
+         (and (lookupOnly (elementOf ?pair ?pairs))
+              (unifies (?goal ?actor) ?pair))))
+     (evaluate ?active-actors
+       (TheClosedRetrievalSetOf ?actor
+         (and (lookupOnly (elementOf ?pair ?pairs))
+              (unifies (?goal ?actor) ?pair)))))
+
+(isa deactivatedGoal BinaryPredicate)
+(arity deactivatedGoal 2)
+(arg1Isa deactivatedGoal Microtheory)
+(arg2Isa deactivatedGoal Goal)
+(comment deactivatedGoal "(deactivatedGoal ?mt ?goal) means ?goal has been the object of a GoalDeactivatedEvent in ?mt.")
+
+;;; This really assumes a goal can't be reactivated.
+(<== (deactivatedGoal ?mt ?goal)
+     (lookupOnly
+       (localOnly
+         (ist-Information ?mt
+           (objectOfStateChange ?goal-event ?goal))))
+     (lookupOnly
+       (localOnly
+         (useTransitiveInference
+           (allFactsAllowed
+             (ist-Information ?mt
+               (isa ?goal-event GoalDeactivationEvent)))))))
+
+
+(isa goalMember TernaryPredicate)
+(arity goalMember 3)
+(arg1Isa goalMember Microtheory)
+(arg2Isa goalMember Goal)
+(arg3Isa goalMember Set-Mathematical)
+(comment goalMember "(goalMember ?mt ?goal-rep ?goal-name-set) succeeds if ?goal-rep has a name in ?mt that is an element of ?goal-name-set.")
+
+(<== (goalMember ?mt ?goal-rep ?goal-set)
+     (numAnswers 1
+       (lookupOnly
+         (ist-Information ?mt
+           (goalName ?goal ?goal-rep))))
+     (lookupOnly (elementOf ?goal ?goal-set)))
+
+
+;;; ----------------------------------------------
+;;; Respond to goal activations
+
+;(isa activateGoal ComplexActionPredicate)
+;(arity activateGoal 1)
+;(arg1Isa activateGoal Goal)
+;(comment activateGoal "(activateGoal ?goal-name) makes a goal active in response to an event.")
+
+;(preconditionForMethod
+;  (true)
+;  (methodForAction
+;    (activateGoal ?goal-name)
+;    (actionSequence
+;      (TheList
+;        (doNotifyPA ?goal-name GoalActivationEvent)))))
+
+
+
+;;; Really it should be (respondToGoalFailure ?mt ?agent ?event ?goal)
+
+;;; The problem here is that the goal that fails is not necessarily the 
+;;; goal that was being pursued and needs to be repaired.
+
+(isa respondToGoalFailure ComplexActionPredicate)
+(arity respondToGoalFailure 4)
+(arg1Isa respondToGoalFailure Microtheory)
+(arg2Isa respondToGoalFailure Agent-Generic)
+(arg3Isa respondToGoalFailure PerceptualAgentEvent)
+(arg4Isa respondToGoalFailure Goal)
+(comment respondToGoalFailure "(respondToGoalFailure ?mt ?actor ?event ?goal) attempts to salvage a situation from a goal failure or learn how to avoid it in the future.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (respondToGoalFailure ?mt ?actor ?event ?goal)
+    (actionSequence
+      (TheList
+        (doNotifyPA ?goal GoalActivationEvent)
+        (repairPlanWRTGoalFailure ?mt ?actor ?event ?goal)  ; If nothing else, start making cases.
+        ))))
+        
+;;; To Do: Post a robustness learning goal?
+;;; Look for the learned knowledge that led to failure.  Compare to training scenario.
+;;; We can find a
+;;; (holdsIn (TurnFn 86)
+;;;  (reasonForTask (doAttack Unit-273 Unit-264) (GoalFn 49)))
+;;; where  (GoalFn 49) is the goal that failed.
+
+
+;;; Check for malfeasance
+
+
+
+
+;;; ---- Do we want to do it this way? ---
+(isa OODA-Observe ComplexActionPredicate)
+
+(isa OODA-Orient ComplexActionPredicate)
+
+(isa OODA-Decide ComplexActionPredicate) ; This really is planStrategicGoalActions
+
+(isa OODA-Act ComplexActionPredicate)
+;;; ---------------------------------------
+
+;;; Assume we learn the strategyFor association.
+;;; Assume also that strategies are recursive, so just because we have a high-
+;;; level strategy, doesn't mean we have a plan all the way down.
+;;; This should tell us how we're going to decompose, schedule, and prefer
+;;; decisions.
+
+;;; We need to be able to specify the root(s) of our goal hierarchy.
+;;; This shouldn't just be the performanceGoalForGame.
+
+;;; Decisions to be made by the reflective player:
+;;; When to revise or refine a strategy
+;;; How to decompose a strategy
+;;;  by phases
+;;;  by regions
+;;;  by decision trajectory
+;;;  by unit type
+;;;  ...
+;;; How to measure progress against a strategy
+;;;  is it working?
+;;; How to detect threats against a strategy
+;;;  vulnerabilities
+;;; How to balance risk vs reward
+
+;;; On a turn -
+;;;  see if our strategic phase has changed.  New processes active?
+;;;  who's waiting to synchronize on a phase?
+;;;  who's improvising?  what are their goals?
+;;;  what roles? what assignments?  Can a unit be assigned to a role?
+;;; 
+;;; Unlike a COA, new units come into existence dynamically.
+;;; "Force Strength" == manpower.
+
+;;; Should this be a plan, a solve strategy, or a backchaining predicate?
+;;; If it's going to reify the strategy in the kb, then a plan sounds like
+;;; the right way to go.
+(isa operationalizeAbstractStrategy ComplexActionPredicate)
+(arity operationalizeAbstractStrategy 3)
+(arg1Isa operationalizeAbstractStrategy Microtheory)
+(arg2Isa operationalizeAbstractStrategy Strategy)
+(arg3Isa operationalizeAbstractStrategy Set-Mathematical)
+(comment operationalizeAbstractStrategy "(operationalizeAbstractStrategy ?mt ?strategy ?resources)")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (operationalizeAbstractStrategy ?mt ?strategy ?resources)
+    (actionSequence
+      (TheList))))
+      
+(isa generateInitialStrategyFor ComplexActionPredicate)
+(arity generateInitialStrategyFor 2)
+(arg1Isa generateInitialStrategyFor Microtheory)
+(arg2Isa generateInitialStrategyFor Goal)
+(comment generateInitialStrategyFor "(generateInitialStrategyFor ?mt ?goal) produces an initial strategy for achieving ?goal.")
+
+;;; This should write out a strategyFor statement.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (generateInitialStrategyFor ?mt ?goal)
+    (actionSequence
+      (TheList))))
+
+(isa reviseStrategy ComplexActionPredicate)
+(arity reviseStrategy 3)
+(arg1Isa reviseStrategy Microtheory)
+(arg2Isa reviseStrategy Goal)
+(arg3Isa reviseStrategy Strategy)
+(comment reviseStrategy "(reviseStrategy ?mt ?goal ?strategy) updates failing ?strategy to better achieve ?goal.")
+
+;;; A strategy may be revised parametrically, for minor repairs, or 
+;;; structurally, for major overhauls.  If it cannot be repaired,
+;;; the parent strategy should be revised.
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (reviseStrategy ?mt ?goal ?strategy)
+    (actionSequence
+      (TheList))))
+
+;;; Two factors go into deciding whether to revising a strategy:
+;;; goal performance and goal criticality.
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

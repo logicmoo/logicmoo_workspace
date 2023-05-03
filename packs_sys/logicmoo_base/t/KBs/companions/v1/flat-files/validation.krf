@@ -1,0 +1,1256 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: validation.meld
+;;;;    System: spatial concept learning
+;;;;    Author: Matt McLure
+;;;;   Created: June 7, 2016 09:21:21
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+; Validation
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+; Machine learning algorithms are typically evaluated by partitioning a dataset
+; into a training set, for exposing the model to data in order to fit it to the
+; data in such a way that it learns to make predictions, and a test set, for
+; assessing the model's performance after learning.  The training set is
+; sometimes further partitioned to produce a validation set, which should be
+; used when the model has free parameters that can be explored during training
+; but are to be fixed during testing.  Performance on the validation set
+; provides a basis for choosing values for free parameters.  If instead, free
+; parameters are explored using the testing set, then the true error of the
+; model, which is assessed on the testing set, tends to be underestimated.
+;
+; The semantics of training, testing, and validation sets are subtly nested.
+; Within the scope of the training set, the validation set acts like a test set,
+; and there is additionally kind of a sub-training set left over.  Cross
+; validation is a technique used to test on every example in the dataset once
+; by iteratively training and testing on rotating subsets of the data.  It can
+; serve as the structure for the entire experiment, or instead as the structure
+; of the training phase (in which case it is a technique for validating on every
+; example in the training set).  Within the scope of each round (rotation) of
+; cross-validation, the cross-validation dataset is partitioned into a training
+; set and a test set. Decisions about the design of the experiment in terms of
+; independent variables vs dependent variables vs free parameters, and their
+; consequences for partitioning into test, training, and validation subsets,
+; should be orthogonal to the methods for evaluating the model on these subsets
+; and statistically analyzing the results, e.g. cross-validation accompanied by
+; a t-test.
+;
+; This file contains:
+;  * Ontology for learning evaluations partitioned into training, test, and
+;    validation, sets and techniques like cross-validation for orchestrating
+;    learning within them.
+;  * Plans for running this type of evaluation within a Companions experiment
+;  * Inference rules to support plans
+;
+; Future Work:
+; * Allow a training set to be recursively partitioned to produce a validation
+;   set.
+; * We need ontology that separates independent variables (at the experiment
+;   level) from free parameters, which can act like independent variables within
+;   the narrower scope of training & validation.
+; * For more virtuous analysis, we should support the ability for the
+;   experimenter (human or companion) to make hypotheses about relationships
+;   between independent and dependent variables at the experiment level.  The
+;   hypothesized relationship should determine the type of analysis used to
+;   determine the significance of the results, since, for example, t-tests
+;   should be one-tailed (vs two-tailed) only when the qualitative relationship
+;   between dependent and independent variables in the results matches the
+;   predicted relationship between that pair.
+; * Wouldn't it be nice if we could design and run one of these experiments
+;   via natural language?
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(in-microtheory CompanionsMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Ontology
+
+
+; Simple training/test partitioning
+
+(isa PartitionedValidationTest Collection)
+(genls PartitionedValidationTest PerformanceTesting)
+(comment PartitionedValidationTest "A PartitionedValidationTest is a learning
+          evaluation that partitions a dataset into 2 sets - training and
+          testing - and then training on some subset of the training set and
+          testing on the entire testing set.")
+
+
+; Cross-validation 
+
+(isa CrossValidationTest Collection)
+(genls CrossValidationTest PerformanceTesting)
+(comment CrossValidationTest "A CrossValidationTest is a learning evaluation
+          that partitions a dataset randomly into groups called folds,
+          and iterates through training and testing phases on rotating subsets
+          of the folds.")
+
+(isa CrossValidationTest-LeaveOneOut Collection)
+(genls CrossValidationTest-LeaveOneOut CrossValidationTest)
+(comment CrossValidationTest-LeaveOneOut "A CrossValidationTest-LeaveOneOut is an CrossValidationTest in which
+          the Companion's concept learning ability is evaluated by
+          dividing a dataset into representative groups called folds,
+          and then repeatedly training on all but one and testing on the one.")
+
+(isa CrossValidationTestRound Collection)
+(comment CrossValidationTestRound "A CrossValidationTestRound is one training/testing
+         sequence in a CrossValidationTest.")
+
+; Predicates
+
+(isa examplesInTrainingSet Predicate)
+(arity examplesInTrainingSet 3)
+(arg1Isa examplesInTrainingSet PartitionedValidationTest)
+(arg2Isa examplesInTrainingSet UnitOfVolume)
+(arg3Isa examplesInTrainingSet List-Extensional)
+(comment examplesInTrainingSet "(examplesInTrainingSet ?test ?round-number ?examples)")
+
+(isa examplesInTestingSet Predicate)
+(arity examplesInTestingSet 2)
+(arg1Isa examplesInTestingSet PartitionedValidationTest)
+(arg2Isa examplesInTestingSet List-Extensional)
+(comment examplesInTestingSet "(examplesInTestingSet ?test ?examples)")
+
+(isa examplesInEncodingSet Predicate)
+(arity examplesInTestingSet 2)
+(arg1Isa examplesInEncodingSet PartitionedValidationTest)
+(arg2Isa examplesInEncodingSet List-Extensional)
+(comment examplesInEncodingSet "(examplesInTestingSet ?test ?examples)")
+
+(isa examplesOfConceptInExperiment Predicate)
+(arity examplesOfConceptInExperiment 3)
+(arg1Isa examplesOfConceptInExperiment CrossValidationTest)
+(arg2Isa examplesOfConceptInExperiment Collection)
+(arg3Isa examplesOfConceptInExperiment List-Extensional)
+(comment examplesOfConceptInExperiment
+  "(examplesOfConceptInExperiment ?experiment ?concept ?examples)
+   Says that ?examples are the examples of ?concept in ?experiment.")
+
+(isa examplesOfConceptInExperiment-Training Predicate)
+(arity examplesOfConceptInExperiment-Training 3)
+(arg1Isa examplesOfConceptInExperiment-Training PartitionedValidationTest)
+(arg2Isa examplesOfConceptInExperiment-Training Collection)
+(arg3Isa examplesOfConceptInExperiment-Training List-Extensional)
+(comment examplesOfConceptInExperiment-Training
+  "(examplesOfConceptInExperiment-Training ?experiment ?concept ?examples)
+   Says that ?examples are the examples of ?concept in ?experiment.")
+
+(isa examplesOfConceptInExperiment-Testing Predicate)
+(arity examplesOfConceptInExperiment-Testing 3)
+(arg1Isa examplesOfConceptInExperiment-Testing PartitionedValidationTest)
+(arg2Isa examplesOfConceptInExperiment-Testing Collection)
+(arg3Isa examplesOfConceptInExperiment-Testing List-Extensional)
+(comment examplesOfConceptInExperiment-Testing
+  "(examplesOfConceptInExperiment-Testing ?experiment ?concept ?examples)
+   Says that ?examples are the examples of ?concept in ?experiment.")
+
+(isa examplesOfConceptInExperiment-Encoding Predicate)
+(arity examplesOfConceptInExperiment-Encoding 3)
+(arg1Isa examplesOfConceptInExperiment-Encoding PartitionedValidationTest)
+(arg2Isa examplesOfConceptInExperiment-Encoding Collection)
+(arg3Isa examplesOfConceptInExperiment-Encoding List-Extensional)
+(comment examplesOfConceptInExperiment-Encoding
+  "(examplesOfConceptInExperiment-Encoding ?experiment ?concept ?examples)
+   Says that ?examples are the examples of ?concept in ?experiment.")
+
+(isa exampleOfConceptInExperiment Predicate)
+(arity exampleOfConceptInExperiment 3)
+(arg1Isa exampleOfConceptInExperiment CrossValidationTest)
+(arg2Isa exampleOfConceptInExperiment Collection)
+(arg3Isa exampleOfConceptInExperiment Thing)
+(comment exampleOfConceptInExperiment
+  "(exampleOfConceptInExperiment ?experiment ?concept ?example)
+   Says that ?example is one the examples of ?concept in ?experiment.")
+
+(isa exampleOfConceptInExperiment-Training Predicate)
+(arity exampleOfConceptInExperiment-Training 3)
+(arg1Isa exampleOfConceptInExperiment-Training PartitionedValidationTest)
+(arg2Isa exampleOfConceptInExperiment-Training Collection)
+(arg3Isa exampleOfConceptInExperiment-Training Thing)
+(comment exampleOfConceptInExperiment-Training
+  "(exampleOfConceptInExperiment-Training ?experiment ?concept ?example)
+   Says that ?example is one the examples of ?concept in ?experiment.")
+
+(isa exampleOfConceptInExperiment-Testing Predicate)
+(arity exampleOfConceptInExperiment-Testing 3)
+(arg1Isa exampleOfConceptInExperiment-Testing PartitionedValidationTest)
+(arg2Isa exampleOfConceptInExperiment-Testing Collection)
+(arg3Isa exampleOfConceptInExperiment-Testing Thing)
+(comment exampleOfConceptInExperiment-Testing
+  "(exampleOfConceptInExperiment-Testing ?experiment ?concept ?example)
+   Says that ?example is one the examples of ?concept in ?experiment.")
+
+(isa exampleOfConceptInExperiment-Encoding Predicate)
+(arity exampleOfConceptInExperiment-Encoding 3)
+(arg1Isa exampleOfConceptInExperiment-Encoding PartitionedValidationTest)
+(arg2Isa exampleOfConceptInExperiment-Encoding Collection)
+(arg3Isa exampleOfConceptInExperiment-Encoding Thing)
+(comment exampleOfConceptInExperiment-Encoding
+  "(exampleOfConceptInExperiment-Encoding ?experiment ?concept ?example)
+   Says that ?example is one the examples of ?concept in ?experiment.")
+
+(isa negativeExampleOfConceptInExperiment Predicate)
+(arity negativeExampleOfConceptInExperiment 3)
+(arg1Isa negativeExampleOfConceptInExperiment CrossValidationTest)
+(arg2Isa negativeExampleOfConceptInExperiment Collection)
+(arg3Isa negativeExampleOfConceptInExperiment Thing)
+(comment negativeExampleOfConceptInExperiment
+  "(negativeExampleOfConceptInExperiment ?experiment ?concept ?example)
+   Says that ?example is an example of [NOT ?concept] in ?experiment.")
+
+;;;(shuffleExamples ?unmixed-examples ?seed-mod ?examples)
+(isa shuffleExamples Predicate)
+(arity shuffleExamples 3)
+
+; marking progress
+
+(isa preparedFor Predicate)
+(arity preparedFor 1)
+(arg1Isa preparedFor Thing)
+
+(isa trainedOn Predicate)
+(arity trainedOn 1)
+(arg1Isa trainedOn Thing)
+
+(isa testedOn Predicate)
+(arity testedOn 1)
+(arg1Isa testedOn Thing)
+
+
+(isa ValidationRoundFn Function-Denotational)
+(arity ValidationRoundFn 2)
+(arg1Isa ValidationRoundFn CrossValidationTest)
+(arg2Isa ValidationRoundFn Integer)
+(resultIsa ValidationRoundFn CrossValidationTestRound)
+
+(isa examplesInCVTestFold Predicate)
+(arity examplesInCVTestFold 3)
+(arg1Isa examplesInCVTestFold CrossValidationTest)
+(arg2Isa examplesInCVTestFold Integer)
+(arg3Isa examplesInCVTestFold List-Extensional)
+(comment examplesInCVTestFold "")
+
+(isa numberOfValidationRounds Predicate)
+(arity numberOfValidationRounds 2)
+(arg1Isa numberOfValidationRounds CrossValidationTest)
+(arg2Isa numberOfValidationRounds Integer)
+(comment numberOfValidationRounds
+  "(numberOfValidationRounds ?experiment ?number-of-folds)
+   Says that the cross-validation experiment ?experiment has
+   ?number-of-folds folds.")
+
+(isa trainingFoldsForCVTestRound Predicate)
+(arity trainingFoldsForCVTestRound 3)
+(arg1Isa trainingFoldsForCVTestRound CrossValidationTest)
+(arg2Isa trainingFoldsForCVTestRound Integer)
+(arg3Isa trainingFoldsForCVTestRound List-Extensional)
+(comment trainingFoldsForCVTestRound
+  "(trainingFoldsForCVTestRound ?experiment ?round-number ?training-fold-number-list)
+   Says that in the cross-validation experiment ?experiment, during round number
+   ?round-number, the fold-numbers that are trained on are listed in order according
+   to ?training-fold-number-list.")
+
+(isa testingFoldsForCVTestRound Predicate)
+(arity testingFoldsForCVTestRound 3)
+(arg1Isa testingFoldsForCVTestRound CrossValidationTest)
+(arg2Isa testingFoldsForCVTestRound Integer)
+(arg3Isa testingFoldsForCVTestRound List-Extensional)
+(comment testingFoldsForCVTestRound
+  "(testingFoldsForCVTestRound ?experiment ?round-number ?testing-fold-number-list)
+   Says that in the cross-validation experiment ?experiment, during round number
+   ?round-number, the fold-numbers that are tested on are listed in order according
+   to ?testing-fold-number-list.")
+
+(isa roundForValidationTest Predicate)
+(arity roundForValidationTest 2)
+(arg1Isa roundForValidationTest CrossValidationTest)
+(arg2Isa roundForValidationTest CrossValidationTestRound)
+(comment roundForValidationTest
+  "(roundForValidationTest ?experiment ?round) Says that ?round is one of the
+rounds in the cross-validation experiment ?experiment.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Complex Action Predicates
+
+
+; Validation in general
+
+(isa runValidationTest ComplexActionPredicate)
+(arity runValidationTest 1)
+
+(isa prepareForValidationTest ComplexActionPredicate)
+(arity prepareForValidationTest 1)
+
+(isa runValidationTestRound ComplexActionPredicate)
+(arity runValidationTestRound 2)
+
+(isa prepareForValidationTestRound ComplexActionPredicate)
+(arity prepareForValidationTestRound 2)
+
+(isa trainForValidationTestRound ComplexActionPredicate)
+(arity trainForValidationTestRound 2)
+
+(isa testForValidationTestRound ComplexActionPredicate)
+(arity testForValidationTestRound 2)
+
+(isa trainOnExample ComplexActionPredicate)
+(arity trainOnExample 2)
+
+(isa testOnExample ComplexActionPredicate)
+(arity testOnExample 2)
+
+(isa wrapUpValidationTestRound ComplexActionPredicate)
+(arity wrapUpValidationTestRound 2)
+
+(isa wrapUpValidationTest ComplexActionPredicate)
+(arity wrapUpValidationTest 1)
+
+
+; Specific to Cross-validaiton
+
+(isa trainOnCVTestFold ComplexActionPredicate)
+(arity trainOnCVTestFold 3)
+
+(isa testOnCVTestFold ComplexActionPredicate)
+(arity testOnCVTestFold 3)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Plans
+
+;; runValidationTest
+
+;; A collapsed version of what was previously runCVTest and runPVTest.
+;; The CV/PV should only really need to branch at methods for
+;; trainForValidationTestRound and testForValidationTestRound
+
+(preconditionForMethod
+ (and (groundExpression ?test)
+      (agendaContext ?mt)
+      (currentSessionReasoner ?sr)
+      (currentExecutive ?ex)
+      (currentAgendaItem ?test-task)
+      (numAnswers 1 (usesSetupMt ?test ?setup-mt))
+      (numAnswers 1 (usesBookkeepingMt ?test ?book-mt))
+      (ist-Information ?book-mt
+        (numberOfValidationRounds ?test ?total-folds))
+      (evaluate ?depth (PlusFn 2 ?total-folds))
+      (withBackchainingDepth ?depth (enumerateFromToBy 1 ?total-folds 1 ?all-round-numbers))
+      (evaluate ?all-rounds  ;;convert to full round names
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?round-number ?round)
+             (unifies ?round (ValidationRoundFn ?test ?round-number))))
+         ?all-round-numbers))
+      (ist-Information ?book-mt  ;;filter out any rounds that have already been finished
+        (evaluate ?rounds
+          (RemoveIfFn ?all-rounds
+                      experimentFinished
+                      IdentityFn)))
+      (evaluate ?round-numbers  ;;now switch back to the number (i know this is ugly)
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?round ?round-number)
+             (unifies ?round (ValidationRoundFn ?test ?round-number))))
+         ?rounds))
+      (newUniqueTask prepareForValidationTest ?prep-task)
+      (newUniqueTask wrapUpValidationTest ?wrap-up-task)
+      (evaluate ?round-task-pairs
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?round-number ?pair)
+             (and (newUniqueTask RunExperimentRound ?round-task)
+                  (unifies ?pair (TheList ?round-number ?round-task)))))
+         ?round-numbers))
+      (evaluate ?round-tasks
+        (MapFunctionOverList SecondInListFn ?round-task-pairs)))
+ (methodForAction 
+  (runValidationTest ?test)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Running validation test ~a" (?test))
+     
+    ;;setup agenda item assertions
+    (doTell (ist-Information ?mt (subTasks ?test-task ?prep-task)))
+    (doTell (ist-Information ?mt (assignedTo ?prep-task ?sr)))
+    (doTell (ist-Information ?mt (taskImportance ?prep-task 3)))
+    ;;; We don't want sequence constraints if there's a hope for delegation.
+    ;;; There's probably a cleaner way...
+    (ifThen (and (sessionContext ?sctx)
+                 (holdsOnRemoteAgent ?ex
+                   (ist-Information ?sctx
+                     (numVacantMachines 0)))
+                 (implicitSequenceConstraints ?round-tasks ?seq-constraints))
+            (doForEach ?seq-constraint ?seq-constraints
+                       (doTell (ist-Information ?mt ?seq-constraint))))
+    (doForEach ?round-task ?round-tasks
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (startsAfterEndingOf ?round-task ?prep-task)))
+                 (doTell (ist-Information ?mt (startsAfterEndingOf ?wrap-up-task ?round-task)))
+                 (doTell (ist-Information ?mt (subTasks ?test-task ?round-task)))
+                 (doTell (ist-Information ?mt (taskImportance ?round-task 3)))
+                 (doTell (ist-Information ?mt (assignedTo ?round-task ?ex)))
+                 )))
+    (doTell (ist-Information ?mt (subTasks ?test-task ?wrap-up-task)))
+    (doTell (ist-Information ?mt (taskImportance ?wrap-up-task 3)))
+    (doTell (ist-Information ?mt (assignedTo ?wrap-up-task ?sr)))
+    
+    ;;enqueue the tasks on the executive to delegate
+    ;;(they could get sent back if no workers are available)
+    (doEnqueue ?sr ?prep-task (prepareForValidationTest ?test))
+    (doForEach (TheList ?round-number ?round-task) ?round-task-pairs
+               (doEnqueue ?ex ?round-task
+                          (delegateToNextAvailableWorker (runValidationTestRound ?test ?round-number) 3)))
+    (doEnqueue ?sr ?wrap-up-task (wrapUpValidationTest ?test))))))
+
+
+;; runValidationTestRound
+
+(preconditionForMethod
+ (and (agendaContext ?mt)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?round-task)
+      (currentSessionReasoner ?sr)
+      (numAnswers 1 (usesSetupMt ?test ?test-setup-mt))
+      (numAnswers 1 (usesBookkeepingMt ?test ?test-book-mt))
+      (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesSetupMt ?round ?round-setup-mt))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (numAnswers 1 (usesCaseLibrary ?test ?test-lib))
+      (numAnswers 1 (usesCaseLibrary ?round ?round-lib))
+      (newUniqueTask PrepareForRound ?round-prep-task)
+      (newUniqueTask TrainForRound ?round-training-task)
+      (newUniqueTask TestForRound ?round-testing-task)
+      (newUniqueTask WrapUpRound ?round-wrap-up-task))
+ (methodForAction
+  (runValidationTestRound ?test ?round-number)
+  (actionSequence 
+   (TheList
+    (doAnnounce "~%Running cross validation experiment round ~a for ~a" (?round-number ?test))
+    ;;copy the string of setup microtheories leading to test-setup-mt
+    (planSynchronouslyOnAgent ?sr (copyKBSetupGenlMtsToAgent ?test-setup-mt ?local-agent))
+    (planSynchronouslyOnAgent ?sr (copyKBBookkeepingSpecMtsToAgent ?test-book-mt ?local-agent))
+    ;;maybe want to add something here to copy the super-libs of ?test-lib
+    
+    ;;now construct this layer of the setup/bookkeeping lattice
+    (doRecord (ist-Information BaseKB (genlMt ?round-setup-mt ?test-setup-mt)))
+    (doRecord (ist-Information BaseKB (genlMt ?test-book-mt ?round-book-mt)))
+    (doRecord (ist-Information BaseKB (genlMt ?round-book-mt ?round-setup-mt)))
+    (doRecord (ist-Information BaseKB (genlMt ?round-book-mt CompanionsMt)))
+    (doRecord (ist-Information BaseKB (subCaseLibrary ?round-lib ?test-lib)))
+    (doRecord (ist-Information ?round-setup-mt
+                (isa ?round CrossValidationTestRound)))
+    ;;the rest is agenda stuff
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?round-training-task ?round-prep-task)))
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?round-testing-task ?round-training-task)))
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?round-wrap-up-task ?round-testing-task)))
+    (doTell (ist-Information ?mt (subTasks ?round-task ?round-prep-task)))
+    (doTell (ist-Information ?mt (subTasks ?round-task ?round-training-task)))
+    (doTell (ist-Information ?mt (subTasks ?round-task ?round-testing-task)))
+    (doTell (ist-Information ?mt (subTasks ?round-task ?round-wrap-up-task)))
+    (doTell (ist-Information ?mt (assignedTo ?round-prep-task ?local-agent)))
+    (doTell (ist-Information ?mt (assignedTo ?round-training-task ?local-agent)))
+    (doTell (ist-Information ?mt (assignedTo ?round-testing-task ?local-agent)))
+    (doTell (ist-Information ?mt (assignedTo ?round-wrap-up-task ?local-agent)))
+    (doEnqueue ?local-agent ?round-prep-task (prepareForValidationTestRound ?test ?round-number))
+    (doEnqueue ?local-agent ?round-training-task (trainForValidationTestRound ?test ?round-number))
+    (doEnqueue ?local-agent ?round-testing-task (testForValidationTestRound ?test ?round-number))
+;;;    (enqueueAgendaPause (TheSet ?round-testing-task) (TheSet ?round-wrap-up-task))
+    (doEnqueue ?local-agent ?round-wrap-up-task (wrapUpValidationTestRound ?test ?round-number))))))
+        
+
+
+(preconditionForMethod
+  (uninferredSentence
+    (currentSessionReasoner ?sr))
+  (methodForAction
+    (runValidationTestRound ?test ?round-number)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Failed to run cross validation experiment round ~a for ~a" (?round-number ?test))))))
+
+
+
+;;trainForValidationTestRound - Cross validation method
+
+(preconditionForMethod
+ (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (numAnswers 1 (usesBookkeepingMt ?test ?test-book-mt))
+      (ist-Information ?test-book-mt (isa ?test CrossValidationTest))
+      (uninferredSentence
+        (ist-Information ?round-book-mt
+          (trainedOn ?test)))
+      (agendaContext ?mt)
+      (currentSessionReasoner ?sr)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?round-training-task)
+      (ist-Information ?round-book-mt
+        (trainingFoldsForCVTestRound ?test ?round-number ?training-folds))
+      (evaluate ?fold-task-number-tuples
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?training-fold ?tuple)
+             (and (newUniqueTask TrainOnFold ?training-task)
+                  (evaluate ?num (PositionInListFn ?training-fold ?training-folds))
+                  (evaluate ?num-1 (PlusFn ?num -1))
+                  (unifies ?tuple (TheList ?training-fold ?training-task ?num ?num-1)))))
+         ?training-folds))
+      (evaluate ?training-tasks
+        (MapFunctionOverList SecondInListFn ?fold-task-number-tuples))
+      (evaluate ?training-task-set
+        (ListToSetFn ?training-tasks))
+      (evaluate ?n-folds (CardinalityFn ?training-task-set))
+      (implicitSequenceConstraints ?training-tasks ?seq-constraints)
+      (newUniqueTask ExitLastState ?exit-task)  ;;ugly but necessary
+      (currentDate ?start-date)
+      (currentTime ?start-time))
+ (methodForAction 
+  (trainForValidationTestRound ?test ?round-number)
+  (actionSequence 
+   (TheList
+    (doEnterState "training" ())
+    (doAnnounce "~%Training on experiment round ~a for ~a" (?round-number ?test))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingDate (TrainingPhaseFn ?round) ?start-date)))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingTime (TrainingPhaseFn ?round) ?start-time)))
+    (doForEach ?seq-constraint ?seq-constraints
+               (doTell (ist-Information ?mt ?seq-constraint)))
+    (doForEach ?training-task ?training-tasks
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (subTasks ?round-training-task ?training-task)))
+                 (doTell (ist-Information ?mt (assignedTo ?training-task ?local-agent)))
+                 (doTell (ist-Information ?mt (taskImportance ?training-task 4)))
+                 (doTell (ist-Information ?mt (startsAfterEndingOf ?exit-task ?training-task))))))
+    (doTell (ist-Information ?mt (subTasks ?round-training-task ?exit-task)))
+    (doTell (ist-Information ?mt (assignedTo ?exit-task ?local-agent)))
+    (doTell (ist-Information ?mt (taskImportance ?exit-task 4)))
+    (doForEach (TheList ?fold ?training-task ?num ?num-1) ?fold-task-number-tuples
+               (doEnqueue ?local-agent ?training-task
+                          (actionSequence 
+                           (TheList
+                            (ifThen (different ?num 1) (doExitState "f~A" (?num-1)))
+                            (doEnterState "f~A" (?num))
+                            (trainOnCVTestFold ?test ?round-number ?fold)))))
+    (doEnqueue ?local-agent ?exit-task
+               (doExitState "f~A" (?n-folds)))
+    (enqueueImmediateSuccessorTask
+     (doRecord (ist-Information ?round-book-mt (trainedOn ?round))))
+;;;    (enqueueAgendaPause ?training-task-set (TheSet))
+    ))))
+
+;;trainForValidationTestRound - Partitioned validation method
+
+(preconditionForMethod
+ (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (numAnswers 1 (usesBookkeepingMt ?test ?test-book-mt))
+      (ist-Information ?test-book-mt (isa ?test PartitionedValidationTest))
+      (uninferredSentence
+        (ist-Information ?round-book-mt
+          (trainedOn ?test)))
+      (agendaContext ?mt)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?round-training-task)
+      (numAnswers 1
+        (ist-Information ?round-book-mt
+          (examplesInTrainingSet ?test ?round-number ?examples)))
+      ;;filter out any examples that have already been trained on
+      (ist-Information ?round-book-mt
+        (evaluate ?remaining-examples
+          (RemoveIfFn ?examples
+                      trainedOn
+                      IdentityFn)))
+      (evaluate ?example-task-pairs
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?example ?pair)
+             (and (newUniqueTask TrainOnExample ?learning-task)
+                  (unifies ?pair (TheList ?example ?learning-task)))))
+         ?remaining-examples))
+      (evaluate ?training-tasks
+        (MapFunctionOverList SecondInListFn ?example-task-pairs))
+      (evaluate ?training-task-set
+        (ListToSetFn ?training-tasks))
+      (implicitSequenceConstraints ?training-tasks ?seq-constraints)
+      (currentDate ?start-date)
+      (currentTime ?start-time))
+ (methodForAction 
+  (trainForValidationTestRound ?test ?round-number)
+  (actionSequence 
+   (TheList
+    (doEnterState "training" ())
+    (doAnnounce "~%Training on experiment round ~a for ~a" (?round-number ?test))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingDate (TrainingPhaseFn ?round) ?start-date)))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingTime (TrainingPhaseFn ?round) ?start-time)))
+    (doForEach ?seq-constraint ?seq-constraints
+               (doTell (ist-Information ?mt ?seq-constraint)))
+    (doForEach ?training-task ?training-tasks
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (subTasks ?round-training-task ?training-task)))
+                 (doTell (ist-Information ?mt (assignedTo ?training-task ?local-agent)))
+                 (doTell (ist-Information ?mt (taskImportance ?training-task 4))))))
+    (doForEach (TheList ?example ?training-task) ?example-task-pairs
+               (doEnqueue ?local-agent ?training-task
+                          (doAgentPlan (trainOnExample ?round ?example))))
+    (enqueueImmediateSuccessorTask
+     (doRecord (ist-Information ?round-book-mt (trainedOn ?round))))
+    ))))
+
+(preconditionForMethod
+ (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (numAnswers 1 (usesBookkeepingMt ?test ?test-book-mt))
+      (ist-Information ?test-book-mt (isa ?test PartitionedValidationTest))
+      (uninferredSentence
+        (ist-Information ?round-book-mt
+          (trainedOn ?test)))
+      (agendaContext ?mt)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?round-training-task)
+      (uninferredSentence
+       (ist-Information ?round-book-mt
+         (examplesInTrainingSet ?test ?round-number ?examples)))
+      (ist-Information ?round-book-mt
+        (examplesPerConceptInExperiment ?num-examples)))
+ (methodForAction 
+  (trainForValidationTestRound ?test ?round-number)
+  (actionSequence 
+   (TheList
+    (doAnnounce "trainForValidationTestRound FAILED:~%  Verify that ~A training examples exist of each label" (?num-examples))
+    ))))
+
+
+;; testForValidationTestRound - cross validation method
+
+(preconditionForMethod
+ (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (numAnswers 1 (usesBookkeepingMt ?test ?test-book-mt))
+      (ist-Information ?test-book-mt (isa ?test CrossValidationTest))
+      (agendaContext ?mt)
+      (currentSessionReasoner ?sr)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?round-testing-task)
+      (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (ist-Information ?round-book-mt
+        (testingFoldsForCVTestRound ?test ?round-number ?testing-folds))
+      (evaluate ?fold-task-pairs
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?testing-fold ?pair)
+             (and (newUniqueTask TestOnFold ?testing-task)
+                  (unifies ?pair (TheList ?testing-fold ?testing-task)))))
+         ?testing-folds))
+      (evaluate ?testing-tasks
+        (MapFunctionOverList SecondInListFn ?fold-task-pairs))
+      (evaluate ?testing-task-set
+        (ListToSetFn ?testing-tasks))
+      (implicitSequenceConstraints ?testing-tasks ?seq-constraints)
+      (ist-Information ?round-book-mt
+        (startingDate (TrainingPhaseFn ?round) ?train-start-date))
+      (ist-Information ?round-book-mt
+        (startingTime (TrainingPhaseFn ?round) ?train-start-time))
+      (currentDate ?cur-date)
+      (currentTime ?cur-time)
+      (intervalDuration-Minutes ?train-start-date ?train-start-time ?cur-date ?cur-time ?elapsed)
+      (unifies ?elapsed (MinutesDuration ?elapsed-min)))
+ (methodForAction 
+  (testForValidationTestRound ?test ?round-number)
+  (actionSequence 
+   (TheList
+    (doExitState "training" ())
+    (doEnterState "testing" ())
+    (doAnnounce "~%Testing on experiment round ~a for ~a" (?round-number ?test))
+    (doRecord (ist-Information ?round-book-mt 
+                (endingDate (TrainingPhaseFn ?round) ?cur-date)))
+    (doRecord (ist-Information ?round-book-mt 
+                (endingTime (TrainingPhaseFn ?round) ?cur-time)))
+    (doRecord (ist-Information ?round-book-mt 
+                (duration-Minutes (TrainingPhaseFn ?round) ?elapsed-min)))
+    (doRecord (ist-Information ?test-book-mt 
+                (duration-Minutes (TrainingPhaseFn ?round) ?elapsed-min)))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingDate (TestingPhaseFn ?round) ?cur-date)))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingTime (TestingPhaseFn ?round) ?cur-time)))
+    (doForEach ?seq-constraint ?seq-constraints
+               (doTell (ist-Information ?mt ?seq-constraint)))
+    (doForEach ?testing-task ?testing-tasks
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (subTasks ?round-testing-task ?testing-task)))
+                 (doTell (ist-Information ?mt (taskImportance ?testing-task 4.5)))
+                 (doTell (ist-Information ?mt (assignedTo ?testing-task ?local-agent))))))
+    (doForEach (TheList ?fold ?testing-task) ?fold-task-pairs
+               (doEnqueue ?local-agent ?testing-task (testOnCVTestFold ?test ?round-number ?fold)))
+    (enqueueImmediateSuccessorTask
+     (doRecord (ist-Information ?round-book-mt (testedOn ?round))))
+;;;    (enqueueAgendaPause ?testing-task-set (TheSet))
+    ))))
+
+;; testForValidationTestRound - partitioned validation method
+
+(preconditionForMethod
+ (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (numAnswers 1 (usesBookkeepingMt ?test ?test-book-mt))
+      (ist-Information ?test-book-mt (isa ?test PartitionedValidationTest))
+      (agendaContext ?mt)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?parent-task)
+      (uninferredSentence
+        (ist-Information ?round-book-mt
+          (testedOn ?round)))
+      (ist-Information ?round-book-mt
+        (numAnswers 1 (examplesInTestingSet ?test ?examples)))
+      (ist-Information ?round-book-mt
+        (evaluate ?remaining-examples
+          (RemoveIfFn ?examples
+                      testedOn
+                      IdentityFn)))
+      (evaluate ?example-task-pairs
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?example ?pair)
+             (and (newUniqueTask TestOnExample ?learning-task)
+                  (unifies ?pair (TheList ?example ?learning-task)))))
+         ?remaining-examples))
+      (evaluate ?testing-tasks
+        (MapFunctionOverList SecondInListFn ?example-task-pairs))
+      (evaluate ?testing-task-set
+        (ListToSetFn ?testing-tasks))
+      (implicitSequenceConstraints ?testing-tasks ?seq-constraints)
+      (ist-Information ?round-book-mt
+        (startingDate (TrainingPhaseFn ?round) ?train-start-date))
+      (ist-Information ?round-book-mt
+        (startingTime (TrainingPhaseFn ?round) ?train-start-time))
+      (currentDate ?cur-date)
+      (currentTime ?cur-time)
+      (intervalDuration-Minutes ?train-start-date ?train-start-time ?cur-date ?cur-time ?elapsed)
+      (unifies ?elapsed (MinutesDuration ?elapsed-min)))
+ (methodForAction 
+  (testForValidationTestRound ?test ?round-number)
+  (actionSequence
+   (TheList
+    (doExitState "training" ())
+    (doEnterState "testing" ())
+    (doAnnounce "~%Testing on experiment round ~a for ~a" (?round-number ?test))
+    (doRecord (ist-Information ?round-book-mt 
+                (endingDate (TrainingPhaseFn ?round) ?cur-date)))
+    (doRecord (ist-Information ?round-book-mt 
+                (endingTime (TrainingPhaseFn ?round) ?cur-time)))
+    (doRecord (ist-Information ?round-book-mt 
+                (duration-Minutes (TrainingPhaseFn ?round) ?elapsed-min)))
+    (doRecord (ist-Information ?test-book-mt 
+                (duration-Minutes (TrainingPhaseFn ?round) ?elapsed-min)))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingDate (TestingPhaseFn ?round) ?cur-date)))
+    (doRecord (ist-Information ?round-book-mt 
+                (startingTime (TestingPhaseFn ?round) ?cur-time)))
+    (doForEach ?seq-constraint ?seq-constraints
+               (doTell (ist-Information ?mt ?seq-constraint)))
+    (doForEach ?testing-task ?testing-tasks
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (subTasks ?parent-task ?testing-task)))
+                 (doTell (ist-Information ?mt (taskImportance ?testing-task 4.5)))
+                 (doTell (ist-Information ?mt (assignedTo ?testing-task ?local-agent))))))
+    (doForEach (TheList ?example ?testing-task) ?example-task-pairs
+               (doEnqueue ?local-agent ?testing-task (testOnExample ?round ?example)))
+    (enqueueImmediateSuccessorTask
+     (doRecord (ist-Information ?round-book-mt (testedOn ?test))))
+    ))))
+
+
+;; trainOnCVTestFold
+
+(preconditionForMethod
+ (and (numAnswers 1 (usesBookkeepingMt ?test ?book-mt))
+      (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (agendaContext ?mt)
+      (currentSessionReasoner ?sr)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?fold-task)
+      (uninferredSentence
+        (ist-Information ?round-book-mt
+          (trainedOn ?fold)))
+      (ist-Information ?book-mt
+        (numAnswers 1 (examplesInCVTestFold ?test ?fold ?examples)))
+      ;;filter out any examples that have already been trained on
+      (ist-Information ?round-book-mt
+        (evaluate ?remaining-examples
+          (RemoveIfFn ?examples
+                      trainedOn
+                      IdentityFn)))
+      (evaluate ?example-task-pairs
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?example ?pair)
+             (and (newUniqueTask TrainOnExample ?learning-task)
+                  (unifies ?pair (TheList ?example ?learning-task)))))
+         ?remaining-examples))
+      (evaluate ?training-tasks
+        (MapFunctionOverList SecondInListFn ?example-task-pairs))
+      (evaluate ?training-task-set
+        (ListToSetFn ?training-tasks))
+      (implicitSequenceConstraints ?training-tasks ?seq-constraints))
+ (methodForAction 
+  (trainOnCVTestFold ?test ?round-number ?fold)
+  (actionSequence 
+   (TheList
+    (doAnnounce "Training on experiment fold ~a for ~a" (?fold ?test))
+    (doForEach ?seq-constraint ?seq-constraints
+               (doTell (ist-Information ?mt ?seq-constraint)))
+    (doForEach ?training-task ?training-tasks
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (subTasks ?fold-task ?training-task)))
+                 (doTell (ist-Information ?mt (taskImportance ?training-task 4.5)))
+                 (doTell (ist-Information ?mt (assignedTo ?training-task ?local-agent))))))
+    (doForEach (TheList ?example ?training-task) ?example-task-pairs
+               (doEnqueue ?local-agent ?training-task
+                          (doAgentPlan (trainOnExample ?round ?example))))
+    (enqueueImmediateSuccessorTask
+     (doRecord (ist-Information ?round-book-mt
+                 (trainedOn ?fold))))
+    ))))
+
+(preconditionForMethod
+  (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+       (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+       (ist-Information ?round-book-mt
+         (trainedOn ?fold)))
+  (methodForAction
+    (trainOnCVTestFold ?test ?round-number ?fold)
+    (actionSequence
+      (TheList
+       (doAnnounce "Already trained on fold ~a." (?fold))))))
+
+(<== (preferInContext (trainOnCVTestFold ?test ?round-number ?fold) ?seq1 ?seq2)
+     (equals ?seq1 (actionSequence
+                    (TheList
+                     (doAnnounce "Already trained on fold ~a." (?fold))))))
+
+
+
+;; testOnCVTestFold
+
+(preconditionForMethod
+ (and (agendaContext ?mt)
+      (currentSessionReasoner ?sr)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?fold-task)
+      (numAnswers 1 (usesBookkeepingMt ?test ?book-mt))
+      (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (uninferredSentence
+        (ist-Information ?round-book-mt
+          (testedOn ?fold)))
+      (ist-Information ?book-mt
+        (numAnswers 1 (examplesInCVTestFold ?test ?fold ?examples)))
+      (ist-Information ?round-book-mt
+        (evaluate ?remaining-examples
+          (RemoveIfFn ?examples
+                      testedOn
+                      IdentityFn)))
+      (evaluate ?example-task-pairs
+        (MapFunctionOverList 
+         (FunctionToArg 2 
+           (Kappa (?example ?pair)
+             (and (newUniqueTask TestOnExample ?learning-task)
+                  (unifies ?pair (TheList ?example ?learning-task)))))
+         ?remaining-examples))
+      (evaluate ?testing-tasks
+        (MapFunctionOverList SecondInListFn ?example-task-pairs))
+      (evaluate ?testing-task-set
+        (ListToSetFn ?testing-tasks))
+      (implicitSequenceConstraints ?testing-tasks ?seq-constraints))
+ (methodForAction 
+  (testOnCVTestFold ?test ?round-number ?fold)
+  (actionSequence
+   (TheList
+    (doAnnounce "Testing on experiment fold ~a for ~a" (?fold ?test))
+    (doForEach ?seq-constraint ?seq-constraints
+               (doTell (ist-Information ?mt ?seq-constraint)))
+    (doForEach ?testing-task ?testing-tasks
+               (actionSequence
+                (TheList
+                 (doTell (ist-Information ?mt (subTasks ?fold-task ?testing-task)))
+                 (doTell (ist-Information ?mt (taskImportance ?testing-task 4.5)))
+                 (doTell (ist-Information ?mt (assignedTo ?testing-task ?local-agent))))))
+    (doForEach (TheList ?example ?testing-task) ?example-task-pairs
+               (doEnqueue ?local-agent ?testing-task (testOnExample ?round ?example)))
+    (enqueueImmediateSuccessorTask
+     (doRecord (ist-Information ?round-book-mt
+                 (testedOn ?fold))))
+    ))))
+
+(preconditionForMethod
+  (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+       (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+       (ist-Information ?round-book-mt
+         (testedOn ?fold)))
+  (methodForAction
+    (testOnCVTestFold ?test ?round-number ?fold)
+    (actionSequence
+      (TheList
+       (doAnnounce "Already tested on fold ~a." (?fold))))))
+
+(<== (preferInContext (testOnCVTestFold ?test ?round-number ?fold) ?seq1 ?seq2)
+     (equals ?seq1 (actionSequence
+                    (TheList
+                     (doAnnounce "Already tested on fold ~a." (?fold))))))
+
+;;;
+;;; These last plans are more or less the API for designing a
+;;; new types of CV experiments, I think. (besides declaring how many
+;;; folds there are using numberOfValidationRounds and assigning
+;;; examples to concept labels using examplesOfConceptInExperiment or, alternatively,
+;;; examplesInCVTestFold).
+;;; To hunt down examples, do a find-in-files for SketchedConceptLearningExperiment-WithinSketch.
+;;;
+
+;; prepareForValidationTest
+
+;;default method
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (prepareForValidationTest ?test)
+  (actionSequence
+   (TheList
+    (doAnnounce "Default stub for prepareForValidationTest. There is no acceptable method defined." ())))))
+
+(preconditionForMethod
+  (and (numAnswers 1 (usesBookkeepingMt ?test ?book-mt))
+       (ist-Information ?book-mt (preparedFor ?test)))
+  (methodForAction
+    (prepareForValidationTest ?test)
+    (actionSequence
+      (TheList
+       (doAnnounce "Already prepared for ~a." (?test))))))
+
+(<== (preferInContext (prepareForValidationTest ?test) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence
+                    (TheList
+                     (doAnnounce "Default stub for prepareForValidationTest. There is no acceptable method defined." ())))))
+
+(<== (preferInContext (prepareForValidationTest ?test) ?seq1 ?seq2)
+     (equals ?seq1 (actionSequence
+                    (TheList
+                     (doAnnounce "Already prepared for ~a." (?test))))))
+
+
+;; prepareForValidationTestRound
+
+;;default method
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (prepareForValidationTestRound ?test ?round-number)
+  (actionSequence
+   (TheList
+    (doAnnounce "Default stub for prepareForValidationTestRound. There is no acceptable method defined." ())))))
+
+(preconditionForMethod
+  (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+       (numAnswers 1 (usesBookkeepingMt ?round ?book-mt))
+       (ist-Information ?book-mt (preparedFor ?round)))
+  (methodForAction
+    (prepareForValidationTestRound ?test ?round-number)
+    (actionSequence
+      (TheList
+       (doAnnounce "Already prepared for ~a." (?round))))))
+
+(<== (preferInContext (prepareForValidationTestRound ?test ?round-number) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence
+                    (TheList
+                     (doAnnounce "Default stub for prepareForValidationTestRound. There is no acceptable method defined." ())))))
+
+(<== (preferInContext (prepareForValidationTestRound ?test ?round-number) ?seq1 ?seq2)
+     (equals ?seq1 (actionSequence
+                    (TheList
+                     (doAnnounce "Already prepared for ~a." (?round))))))
+
+;; trainOnExample
+
+;;default method
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (trainOnExample ?round ?example)
+  (actionSequence
+   (TheList
+    (doAnnounce "Default stub for trainOnExample. There is no acceptable method defined." ())))))
+
+(preconditionForMethod
+  (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+       (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+       (ist-Information ?round-book-mt (trainedOn ?example)))
+  (methodForAction
+    (trainOnExample ?round ?example)
+    (actionSequence
+      (TheList
+       (doAnnounce "Already trained on example ~a." (?example))))))
+
+(<== (preferInContext (trainOnExample ?round ?example) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence
+                    (TheList
+                     (doAnnounce "Default stub for trainOnExample. There is no acceptable method defined." ())))))
+
+(<== (preferInContext (trainOnExample ?round ?example) ?seq1 ?seq2)
+     (equals ?seq1 (actionSequence
+                    (TheList
+                     (doAnnounce "Already trained on example ~a." (?example))))))
+
+
+;; testOnExample
+
+;;default method
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (testOnExample ?round ?example)
+  (actionSequence
+   (TheList
+    (doAnnounce "Default stub for testOnExample. There is no acceptable method defined." ())))))
+
+(preconditionForMethod
+ (and (unifies ?round (ValidationRoundFn ?test ?round-number))
+      (numAnswers 1 (usesBookkeepingMt ?round ?round-book-mt))
+      (ist-Information ?round-book-mt (testedOn ?example)))
+ (methodForAction
+  (testOnExample ?round ?example)
+  (actionSequence
+   (TheList
+    (doAnnounce "Already tested on example ~a." (?example))))))
+
+(<== (preferInContext (testOnExample ?round ?example) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence
+                    (TheList
+                     (doAnnounce "Default stub for testOnExample. There is no acceptable method defined." ())))))
+
+(<== (preferInContext (testOnExample ?round ?example) ?seq1 ?seq2)
+     (equals ?seq1 (actionSequence
+                    (TheList
+                     (doAnnounce "Already tested on example ~a." (?example))))))
+
+
+;; wrapUpValidationTestRound
+
+;;default method
+(preconditionForMethod
+ (currentSessionReasoner ?sr)
+  (methodForAction
+    (wrapUpValidationTestRound ?test ?round-number)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (wrapUpValidationTestRound ?test ?round-number) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+
+;; wrapUpValidationTest
+
+;;default method
+(preconditionForMethod
+ (and (currentSessionReasoner ?sr)
+      (currentExecutive ?ex)
+      (numAnswers 1 (usesBookkeepingMt ?test ?book-mt))
+      (ist-Information ?book-mt
+        (startingDate ?test ?start-date))
+      (ist-Information ?book-mt
+        (startingTime ?test ?start-time))
+      (currentDate ?cur-date)
+      (currentTime ?cur-time)
+      (intervalDuration-Minutes ?start-date ?start-time ?cur-date ?cur-time ?elapsed)
+      (unifies ?elapsed (MinutesDuration ?elapsed-min)))
+ (methodForAction
+  (wrapUpValidationTest ?test)
+  (actionSequence
+   (TheList
+;;;    (doPauseAgenda)
+    (doRecord (ist-Information ?book-mt 
+                (endingDate ?test ?cur-date)))
+    (doRecord (ist-Information ?book-mt 
+                (endingTime ?test ?cur-time)))
+    (doRecord (ist-Information ?book-mt 
+                (duration-Minutes ?test ?elapsed-min)))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Rules
+
+(<== (usesSetupMt ?event ?setup-mt)
+     (groundExpression ?setup-mt)
+     (ist-Information ?setup-mt
+       (isa ?event CrossValidationTestRound))
+     (unifies ?event (ValidationRoundFn ?test ?num))
+     (isa ?test ExperimentalCondition)
+     (experimentalConditionSymbol ?test ?symbol)
+     (evaluate ?r-symbol
+       (SymbolConcatenateFn (TheList ?symbol - ?num)))
+     (unifies ?setup-mt (SetupFn ?r-symbol)))
+
+(<== (usesSetupMt ?event ?setup-mt)
+     (groundExpression ?event)
+     (isa ?event CrossValidationTestRound)
+     (unifies ?event (ValidationRoundFn ?test ?num))
+     (isa ?test ExperimentalCondition)
+     (experimentalConditionSymbol ?test ?symbol)
+     (evaluate ?r-symbol
+       (SymbolConcatenateFn (TheList ?symbol - ?num)))
+     (unifies ?setup-mt (SetupFn ?r-symbol)))
+
+(<== (usesBookkeepingMt ?event ?bookkeeping)
+     (groundExpression ?bookkeeping)
+     (ist-Information ?bookkeeping
+       (isa ?event CrossValidationTestRound))
+     (unifies ?event (ValidationRoundFn ?test ?num))
+     (isa ?test ExperimentalCondition)
+     (experimentalConditionSymbol ?test ?symbol)
+     (evaluate ?r-symbol
+       (SymbolConcatenateFn (TheList ?symbol - ?num)))
+     (unifies ?bookkeeping (BookkeepingFn ?r-symbol)))
+
+(<== (usesBookkeepingMt ?event ?bookkeeping)
+     (groundExpression ?event)
+     (isa ?event CrossValidationTestRound)
+     (unifies ?event (ValidationRoundFn ?test ?num))
+     (isa ?test ExperimentalCondition)
+     (experimentalConditionSymbol ?test ?symbol)
+     (evaluate ?r-symbol
+       (SymbolConcatenateFn (TheList ?symbol - ?num)))
+     (unifies ?bookkeeping (BookkeepingFn ?r-symbol)))
+
+(<== (usesCaseLibrary ?event ?lib)
+     (groundExpression ?event)
+     (isa ?event CrossValidationTestRound)
+     (unifies ?event (ValidationRoundFn ?test ?num))
+     (isa ?test ExperimentalCondition)
+     (experimentalConditionSymbol ?test ?symbol)
+     (evaluate ?r-symbol
+       (SymbolConcatenateFn (TheList ?symbol - ?num)))
+     (unifies ?lib (CaseLibraryFn ?r-symbol)))
+
+(<== (experimentLog ?round ?log)
+     (numAnswers 1 (roundForValidationTest ?test ?round))
+     (experimentLog ?test ?log))
+
+(<== (numberOfValidationRounds ?condition ?n)
+     (numAnswers 1 (experimentalCondition ?experiment ?condition))
+     (numAnswers 1 (numberOfValidationRounds ?experiment ?n)))
+
+(<== (evaluationPlanForExperiment ?experiment runValidationTest)
+     (numAnswers 1 (usesSetupMt ?experiment ?exp-setup-mt))
+     (ist-Information ?exp-setup-mt
+       (evaluationTypeInExperiment ?experiment CrossValidationTest)))
+
+(<== (evaluationPlanForExperiment ?experiment runValidationTest)
+     (numAnswers 1 (usesSetupMt ?experiment ?exp-setup-mt))
+     (ist-Information ?exp-setup-mt
+       (evaluationTypeInExperiment ?experiment PartitionedValidationTest)))
+
+
+(<== (exampleOfConceptInExperiment ?experiment ?concept ?example)
+     (lookupOnly
+      (kbOnly
+       (examplesOfConceptInExperiment ?experiment ?concept ?examples)))
+     (groundExpression (examplesOfConceptInExperiment ?experiment ?concept ?examples))
+     (memberOfList ?example ?examples))
+
+(<== (exampleOfConceptInExperiment ?experiment ?concept ?example)
+     (exampleOfConceptInExperiment-Training ?experiment ?concept ?example))
+
+(<== (exampleOfConceptInExperiment ?experiment ?concept ?example)
+     (exampleOfConceptInExperiment-Testing ?experiment ?concept ?example))
+
+(<== (negativeExampleOfConceptInExperiment ?experiment ?concept ?example)
+     (exampleOfConceptInExperiment ?experiment ?concept ?some-other-example)
+     (uninferredSentence (exampleOfConceptInExperiment ?experiment ?concept ?example)))
+
+
+(<== (shuffleExamples ?unmixed-examples ?seed-mod ?examples)
+     (exampleShuffleSeed ?seed)
+     (equals ?seed :random)
+     (evaluate ?examples
+       (RandomizedListFn ?unmixed-examples)))
+
+(<== (shuffleExamples ?examples ?seed-mod ?examples)
+     (uninferredSentence (exampleShuffleSeed ?seed))
+     (groundExpression ?seed-mod)
+     (pseudoRandomShuffle ?unmixed-examples ?seed-mod ?examples))
+
+(<== (shuffleExamples ?examples ?seed-mod ?examples)
+     (uninferredSentence (exampleShuffleSeed ?seed))
+     (variableExpression ?seed-mod))
+
+(<== (shuffleExamples ?unmixed-examples ?seed-mod ?examples)
+     (exampleShuffleSeed ?seed)
+     (groundExpression ?seed)
+     (groundExpression ?seed-mod)
+     (different ?seed :random)
+     (evaluate ?updated-seed (PlusFn ?seed ?seed-mod))
+     (pseudoRandomShuffle ?unmixed-examples ?updated-seed ?examples))
+
+(<== (shuffleExamples ?unmixed-examples ?seed-mod ?examples)
+     (exampleShuffleSeed ?seed)
+     (groundExpression ?seed)
+     (variableExpression ?seed-mod)
+     (different ?seed :random)
+     (pseudoRandomShuffle ?unmixed-examples ?seed ?examples))
+
+
+(<== (trainingFoldsForCVTestRound ?experiment ?round ?training-folds)
+     (numberOfValidationRounds ?experiment ?total-folds)
+     (evaluate ?depth (PlusFn ?total-folds 2))
+     (withBackchainingDepth ?depth
+                            (enumerateFromToBy 1 ?total-folds 1 ?all-folds))
+     (testingFoldsForCVTestRound ?experiment ?round ?testing-folds)
+     (evaluate ?last-test-fold
+       (LastInListFn ?testing-folds))
+     (evaluate ?rot-pos (PositionInListFn ?last-test-fold ?all-folds))
+     (rotatedList ?all-folds ?rot-pos ?rotated-folds)
+     (evaluate ?training-folds
+       (SetToListFn
+        (SetDifferenceFn (ListToSetFn ?rotated-folds)
+                         (ListToSetFn ?testing-folds)))))
+    
+
+(<== (testingFoldsForCVTestRound ?experiment ?round (TheList ?round))
+     (isa ?experiment CrossValidationTest-LeaveOneOut))
+
+
+(<== (roundForValidationTest ?experiment ?round)
+     (groundExpression ?experiment)
+     (numberOfValidationRounds ?experiment ?folds)
+     (evaluate ?depth (PlusFn 2 ?folds))
+     (withBackchainingDepth ?depth
+      (enumerateFromToBy 1 ?folds 1 ?round-numbers))
+     (memberOfList ?round-number ?round-numbers)
+     (unifies ?round (ValidationRoundFn ?experiment ?round-number)))
+
+(<== (roundForValidationTest ?experiment ?round)
+     (groundExpression ?round)
+     (unifies ?round (ValidationRoundFn ?experiment ?round-number)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

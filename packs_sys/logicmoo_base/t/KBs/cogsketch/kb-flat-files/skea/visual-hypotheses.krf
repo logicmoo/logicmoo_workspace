@@ -1,0 +1,250 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: visual-hypotheses.meld
+;;;;    System: sKEA
+;;;;    Author: Ken Forbus
+;;;;   Created: June 26, 2004 10:51:37
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Wednesday, July 2, 2008 at 19:30:42 by usher
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEA-VisualConceptualMappingsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa visualInterpretationRelationSurmise Predicate)
+(arity visualInterpretationRelationSurmise 3)
+(comment visualInterpretationRelationSurmise
+         "(visualInterpretationRelationSurmise ?reln ?o1 ?o2) represents the hypothesis that (?reln ?o1 ?o2) holds, based on visual considerations.  Non-visual considerations, e.g., object categories, typically are involved as well.")
+(arg1Isa visualInterpretationRelationSurmise Predicate)
+(arg2Isa visualInterpretationRelationSurmise Thing)
+(arg3Isa visualInterpretationRelationSurmise Thing)
+
+(isa visualInterpretationContext Predicate)
+(arity visualInterpretationContext 5)
+(arg1Isa visualInterpretationContext SubSketchGenreCollection)
+(arg2Isa visualInterpretationContext SubSketchPoseCollection)
+(arg3Isa visualInterpretationContext Thing) ;; Really is open-ended
+(arg4Isa visualInterpretationContext Thing) 
+(arg5Isa visualInterpretationContext Predicate) ;; Should specialize to visual relation
+(comment visualInterpretationContext
+         "(visualInterpretationContext G P O1 O2 VR) specifies a context for visually interpreting the relationship between depicted objects O1 and O2, based on the visual relationship VR between the glyphs depicting them in a subsketch with genre G and pose P.")
+
+(comment visualInterpretationRelationSuggestion "(visualInterpretationRelationSuggestion ?reln ?o1 ?o2) represents the suggestion that (?reln ?o1 ?o2) holds.")
+(isa visualInterpretationRelationSuggestion Predicate)
+(arg1Isa visualInterpretationRelationSuggestion Predicate)
+(arg2Isa visualInterpretationRelationSuggestion Thing)
+(arg3Isa visualInterpretationRelationSuggestion Thing)
+(arity visualInterpretationRelationSuggestion 3)
+
+(comment visualInterpretationRelationBaseline "(visualInterpretationRelationBaseline ?reln ?o1 ?o2) indicates that, based on qualitative spatial relations, (?reln ?o1 ?o2) holds.")
+(isa visualInterpretationRelationBaseline Predicate)
+(arg1Isa visualInterpretationRelationBaseline Predicate)
+(arg2Isa visualInterpretationRelationBaseline Thing)
+(arg3Isa visualInterpretationRelationBaseline Thing)
+(arity visualInterpretationRelationBaseline 3)
+
+(comment userAcceptsBinaryRelationSuggestion "(userAcceptsBinaryRelationSuggestion ?reln ?o1 ?o2) indicates that the user accepted the suggestion of (?reln ?o1 ?o2).")
+(isa userAcceptsBinaryRelationSuggestion Predicate)
+(arg1Isa userAcceptsBinaryRelationSuggestion Predicate)
+(arg2Isa userAcceptsBinaryRelationSuggestion Thing)
+(arg3Isa userAcceptsBinaryRelationSuggestion Thing)
+(arity userAcceptsBinaryRelationSuggestion 3)
+
+;; Surprised this isn't defined somewhere in the KB already.
+;; Couldn't find it after searching around for a while.
+;; Should migrate somewhere more general if no preexisting concept
+;; is really found, since it seems quite useful.
+(isa genlsInclusive Predicate)
+(comment genlsInclusive "(genlsInclusive ?c1 ?c2) holds when either (genls ?c1 ?c2) or ?c1 = ?c2.")
+(arg1Isa genlsInclusive Collection)
+(arg2Isa genlsInclusive Collection)
+(arity genlsInclusive 2)
+
+(isa genlPredsInclusive Predicate)
+(comment genlPredsInclusive "(genlPredsInclusive ?c1 ?c2) holds when either (genlPreds ?c1 ?c2) or ?c1 = ?c2.")
+(arg1Isa genlPredsInclusive Collection)
+(arg2Isa genlPredsInclusive Collection)
+(arity genlPredsInclusive 2)
+
+(isa genlsTransitive Predicate)
+(comment genlsTransitive "(genlsTransitive ?c1 ?c2) holds when ?c1 is somewhere below ?c2 in the genls lattice.")
+(arg1Isa genlsTransitive Collection)
+(arg2Isa genlsTransitive Collection)
+(arity genlsTransitive 2)
+
+(isa genlPredsTransitive Predicate)
+(comment genlPredsTransitive "(genlPredsTransitive ?c1 ?c2) holds when ?r1 is somewhere below ?r2 in the genlPreds lattice.")
+(arg1Isa genlPredsTransitive Relation)
+(arg2Isa genlPredsTransitive Relation)
+(arity genlPredsTransitive 2)
+
+;; Should move this to analogy ontology at some point
+(isa analogySuggestionFor Predicate)
+(arity analogySuggestionFor 3)
+(arg1Isa analogySuggestionFor Thing)
+(arg2Isa analogySuggestionFor Case)
+(arg3Isa analogySuggestionFor Mapping)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; sKEA-VisualConceptualMappings Chainer Rules
+
+
+;;;(chainerContains 
+;;; (ChainerFn sKEA-VisualConceptualMappings)
+;;; ;; Gathers information for subsequent processing
+;;; (<== (visualInterpretationContext ?genre ?pose ?o1 ?o2 ?glyph-reln)
+;;;      (subSketchHasPose ?layer ?pose)
+;;;      (subSketchHasGenre ?layer ?genre)
+;;;      (glyphRepresentsObject ?g1 ?o1)
+;;;      (glyphRepresentsObject ?g2 ?o2)
+;;;      (hasRCC8Relation ?g1 ?g2 ?glyph-reln)))
+;;;
+;;;(chainerContains 
+;;; (ChainerFn sKEA-VisualConceptualMappings)
+;;; ;; For each context, checks the KB to find candidates
+;;; (<== (visualInterpretationRelationSurmise ?object-reln ?o1 ?o2) 
+;;;      (visualInterpretationContext ?my-genre ?my-pose ?o1 ?o2 ?glyph-reln)
+;;;      (visualToConceptualSuggestedRelation
+;;;       ?genre ?pose ?glyph-reln ?object-reln)
+;;;      (genlsInclusive ?my-genre ?genre)
+;;;      (genlsInclusive ?my-pose ?pose)))
+
+
+;;; genlsInclusive:
+(<== (genlsInclusive ?a ?b) 
+  (equals ?a ?b))
+
+(<== (genlsInclusive ?a ?b) 
+  (genlsTransitive ?a ?b))
+
+(<== (genlPredsInclusive ?a ?b)
+  (equals ?a ?b))
+
+(<== (genlPredsInclusive ?a ?b) 
+  (genlPredsTransitive ?a ?b))
+
+
+;;; Much of this computation has been moved into code, for efficiency.
+;;; I've left these axioms here but commented out because it would be nice
+;;; to see how to automate that process.
+;;;(chainerContains
+;;; (ChainerFn sKEA-VisualConceptualMappings)
+;;; ;; Baseline relations are so high-level that they can be safely assumed,
+;;; ;; if the argisas are correct.  (Typically SpatialThing)
+;;; (<== (visualInterpretationRelationBaseline ?reln ?o1 ?o2)
+;;;      (visualInterpretationRelationSurmise ?reln ?o1 ?o2)
+;;;      (arg1Isa ?reln ?first-arg-col)
+;;;      (isa ?o1 ?col1)
+;;;      (genlsInclusive ?col1 ?first-arg-col)
+;;;      (arg2Isa ?reln ?second-arg-col)
+;;;      (isa ?o2 ?col2)
+;;;      (genlsInclusive ?col2 ?second-arg-col)))
+
+;;;(chainerContains
+;;; (ChainerFn sKEA-VisualConceptualMappings)
+;;; ;; Propose the specPreds of the relationship suggested by the table
+;;; (<== (visualInterpretationRelationSuggestion ?reln ?o1 ?o2)
+;;;      (visualInterpretationRelationSurmise ?hreln ?o1 ?o2)
+;;;      (genlPredsTransitive ?reln ?hreln)
+;;;      (arg1Isa ?reln ?first-arg-col)
+;;;      (isa ?o1 ?col1)
+;;;      (genlsInclusive ?col1 ?first-arg-col)
+;;;      (arg2Isa ?reln ?second-arg-col)
+;;;      (isa ?o2 ?col2)
+;;;      (genlsInclusive ?col2 ?second-arg-col)))
+
+(<== (analogySuggestionFor (visualInterpretationRelationSuggestion ?reln ?o1 ?o2)
+                           ?probe ?mapping)
+  ;; Get reminding(s) based on the whole thing
+  (reminding ?probe (CaseLibraryFn sKEA-VCM-CaseLibrary) ?case ?original-match)
+  ;; When mining for candidate inferences, focus on conceptual knowledge only
+  (matchBetween ?case (ConceptualFactsOfCaseFn ?probe) (TheSet) ?match)
+  (bestMapping ?match ?mapping)
+  ;; Search the candidate inferences for possibly relevant material
+  (candidateInferenceOf ?ci ?mapping)
+  (candidateInferenceContent ?ci ?formula)
+  (unifies (userAcceptsBinaryRelationSuggestion
+            (AnalogySkolemFn ?reln) ?o1 ?o2)
+           ?formula)
+  ;; Okay, we have a possibly relevant inference.  Now we need to find if
+  ;; there was a visual suggestion made that this corresponds to.
+  ;; If there is, we have an analogy suggestion.
+  (visualInterpretationRelationSuggestion ?reln ?o1 ?o2)
+  ;; The rest of these terms aren't strictly speaking necessary.
+  ;; However, they will help in terms of explanation when looking at the
+  ;; reason for the suggestion.
+  (correspondsInMapping ?mapping ?bo1 ?o1)
+  (correspondsInMapping ?mapping ?bo2 ?o2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Examples of pragmas given to term optimizer via KB assertions
+;;;
+;;; First implementation of sKEA-VisualConceptualMappings chainer.
+;;;
+;;; This version used the new facilities for providing advice to the term optimizer.
+;;; I've left this version in for reference purposes, the prolog-style implementation
+;;; above is more efficient to create, and, due to the addition of genlsInclusive,
+;;; more efficient.
+
+;;;(forbiddenQuerySignatureForChainer (ChainerFn sKEA-VisualConceptualMappings)
+;;;                                   genls
+;;;                                   (QuerySignatureFn :unknown :known))
+;;;
+;;;(forbiddenQuerySignatureForChainer (ChainerFn sKEA-VisualConceptualMappings)
+;;;                                   genls
+;;;                                   (QuerySignatureFn :known :unknown))
+;;;
+;;;(requiredQuerySignatureForChainer (ChainerFn sKEA-VisualConceptualMappings)
+;;;                                   hasRCC8Relation
+;;;                                  (QuerySignatureFn :known :known :unknown))
+;;;
+;;;(requiredQuerySignatureForChainer (ChainerFn sKEA-VisualConceptualMappings)
+;;;                                  glyphRepresentsObject
+;;;                                  (QuerySignatureFn :unknown :known))
+;;;
+;;;(requiredQuerySignatureForChainer (ChainerFn sKEA-VisualConceptualMappings)
+;;;                                  visualToConceptualSuggestedRelation
+;;;                                  (QuerySignatureFn :unknown :unknown :known :unknown))
+;;;
+;;;
+;;;(requiredQuerySignatureForChainer (ChainerFn sKEA-VisualConceptualMappings)
+;;;                                  visualToConceptualSuggestedRelation
+;;;                                  (QuerySignatureFn :known :known :known :known))
+;;;
+;;;(<== (visualInterpretationRelationSurmise ?object-reln ?o1 ?o2)
+;;; (subSketchHasPose ?layer ?my-pose)
+;;;  (subSketchHasGenre ?layer ?my-genre)
+;;;  (glyphRepresentsObject ?g1 ?o1)
+;;;  (glyphRepresentsObject ?g2 ?o2)
+;;;  (hasRCC8Relation ?g1 ?g2 ?glyph-reln)
+;;;  (visualToConceptualSuggestedRelation ?genre ?pose ?glyph-reln ?object-reln)
+;;;  (or (equals ?genre ?my-genre)
+;;;      (genls ?my-genre ?genre))
+;;;  (or (equals ?pose ?my-pose)
+;;;      (genls ?my-pose ?pose)))
+
+
+
+;;; This axiom was an attempt to do this in a set-based way.  So far, not good.
+;;;(chainerContains
+;;; (ChainerFn sKEA-VisualConceptualMappings)
+;;; (<== (visualInterpretationRelationSuggestionSet ?reln-set ?o1 ?o2)
+;;;      (evaluate ?reln-set
+;;;                (TheClosedRetrievalSetOf ?hreln
+;;;                                         (and (visualInterpretationRelationSurmise ?hreln ?o1 ?o2)
+;;;                                                    (genlPredsTransitive ?reln ?hreln)
+;;;                                              (arg1Isa ?reln ?first-arg-col)
+;;;                                              (isa ?o1 ?col1)
+;;;                                              (genlsInclusive ?col1 ?first-arg-col)
+;;;                                              (arg2Isa ?reln ?second-arg-col)
+;;;                                              (isa ?o2 ?col2)
+;;;                                              (genlsInclusive ?col2 ?second-arg-col))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

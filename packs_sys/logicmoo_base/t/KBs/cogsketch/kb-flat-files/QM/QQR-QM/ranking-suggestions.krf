@@ -1,0 +1,546 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ranking-suggestions.meld
+;;;;    System: skea
+;;;;    Author: Jon Wetzel
+;;;;   Created: March 16, 2011 18:22:12
+;;;;   Purpose: Solve suggestions for ranking problems
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory NuSketchMt :exclude-globals t)
+(isa NuSketchRankingProblemSolvingMt Microtheory)
+(comment NuSketchRankingProblemSolvingMt
+          "Suggestions for solving conceptual physics ranking problems.")
+(genlMt NuSketchReasoningCollectorMt NuSketchRankingProblemSolvingMt)
+(genlMt NuSketchRankingProblemSolvingMt ConceptualPS-QQRMt)
+
+(in-microtheory NuSketchRankingProblemSolvingMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; MDC, 2/7/2014: We have a chance to clean this up.
+
+;;; A ranking problem can be solved in one of the following ways:
+;;;  1) DQA using existing knowledge in the cases
+;;;  2) Do QM and QP analysis on the scenario, then try DQA one last time
+;;;  
+;;;  Idea: currently we use exhaustive modeling strategy, which tries all
+;;;  all model fragment types available to the current context.  Instead,
+;;;  spatial information in the diagram should be used to hypothesize which model
+;;;  fragments that might help.  This could be a strategy for modeling diagrams
+;;;  in general.  
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (spatialQuantityRankingProblem ?qtype ?ent-sits ?rel ?ranked-ent-sits)
+;;; A special kind of quantity ranking problem that involves spatial information
+;;; (e.g. conceptual physics ranking problems that are depicted in sketches).
+
+;; TODO -- ontologizing
+(isa spatialQuantityRankingProblem Relation)
+;; END TODO
+
+(defSuggestion SpatialRankingProblemWithoutQPAnalysis
+    (spatialQuantityRankingProblem ?qtype ?ent-sits ?rel ?ranked-ent-sits)
+  :documentation 
+  "SpatialRankingProblemWithoutQPAnalysis treats the problem as a quantity
+   ranking problem immediately, in case it can be solved with information
+   already given."
+  :cost-function 1
+  :subgoals
+  ((solveSequentially ?ent-sit-pair ?ent-sits
+     (detectQuantities ?qtype ?ent-sit-pair ?q-expression))
+   (quantityRankingProblem ?qtype ?ent-sits ?rel ?ranked-ent-sits)))
+
+(defSuggestion DetectQuantitiesBeforeQPAnalysis
+    (detectQuantities ?qtype ?ent-sit-pair ?q-expression)
+  :documentation
+  "DetectQuantitiesBeforeQPAnalysis checks for quantities that could be
+   used in DQ analyses without QP analysis.  This is needed because 
+   if a quantity isn't detected before DQ analysis it 
+   will not be present in the analogy."
+  :subgoals
+  ((evaluate ?entity (FirstInListFn ?ent-sit-pair))
+   (evaluate ?situation (SecondInListFn ?ent-sit-pair))
+   (quantityExpression ?qtype ?entity ?q-expression)
+   (contextForCase ?situation ?context)
+   (ist-Information ?context
+     (visuallyDerivedValueOf ?q-expression ?value))))
+   
+   
+
+(defSuggestion SpatialQuantityRankingProblem-viaQPAnalysis
+    (spatialQuantityRankingProblem ?qtype ?ent-sits ?rel ?ranked-ent-states)
+  :documentation
+  "SpatialQuantityRankingProblem-viaQPAnalysis kicks off QQR analysis on the
+   situations being compared, then tries to solve the quantity ranking problem."
+  :cost-function 500
+  :subgoals
+  (;; do QP analysis
+   (solveSequentially ?ent-sit-pair ?ent-sits
+     (prepAndPerformSpatialQQR ?qtype ?ent-sit-pair ?ent-state-pair))
+   (evaluate ?ent-state-case-pairs
+     (MapFunctionOverList
+      (FunctionToArg 2
+        (Kappa (?ent-sit ?ent-state-case)
+          (and (lookupOnly (prepAndPerformSpatialQQR ?qtype ?ent-sit ?ent-state))
+               (evaluate ?entity (FirstInListFn ?ent-state))
+               (evaluate ?state (SecondInListFn ?ent-state))
+               (unifies ?ent-state-case
+                 (TheList ?entity (AskCaseFn (TheSetOf ?fact (ist-Information ?state ?fact))))))))
+      ?ent-sits))
+   (quantityRankingProblem ?qtype ?ent-state-case-pairs ?rel ?ranked-ent-states)
+   ))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (prepAndPerformSpatialQQR ?qtype ?ent-sit)
+;;; Determines the domain theory mt and strategy mt for the situation being
+;;; analyzed
+
+(defSuggestion KickOffSpatialQQR
+    (prepAndPerformSpatialQQR ?qtype ?ent-sit ?ent-state)
+  :documentation
+  "KickOffSpatialQQR looks for the domain theory mt and strategy mt for the
+   situation being analyzed and uses them to kick off a QP analysis."
+  :subgoals
+  (;; unhighlight things that have remained highlighted from earlier
+   (evaluate ?entity (FirstInListFn ?ent-sit))
+   (evaluate ?situation (SecondInListFn ?ent-sit))
+   (contextForCase ?situation ?scenario)
+   (scenarioModelForScenario ?scenario ?sm)
+   (stateForScenarioModel ?sm ?state)
+   ;; DT and strategy are assumed to exist in WM
+   (domainTheoryForScenario ?scenario ?dt)  
+   (modelingStrategyForScenario ?scenario ?strategy)
+   ;; highlight the subsketch
+   (lookupOnly (subSketchGroupRepresentsObject ?subsketch-glyph ?scenario))
+   (tell (highlightGlyph ?subsketch-glyph))
+   ;; do QP analysis
+   (ist-Information ?state
+     (performQPAnalysis ?state ?sm ?dt ?scenario ?strategy))
+   ;; report results and unhighlight
+   (tell (showMFIsInState ?state ?sm ?dt ?scenario ?strategy))
+   (tell (unHighlightGlyph ?subsketch-glyph))
+   (unifies ?ent-state (TheList ?entity ?state))))
+
+(<== (scenarioModelForScenario ?scenario ?sm)
+     (atomicTerm ?scenario)
+     (evaluate ?sm (SymbolConcatenateFn (TheList ?scenario -sm)))
+     (tell (genlMt ?sm ?scenario)))
+
+(<== (stateForScenarioModel ?sm ?state)
+     (atomicTerm ?sm)
+     (evaluate ?state (SymbolConcatenateFn (TheList ?sm -s0)))
+     (tell (genlMt ?state ?sm)))
+  
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; quantityRankingProblem
+;;; Very similar to quantityComparisonProblem except that it gives a sorted
+;;; list of entity-situation pairs instead of just one entity-situation pair.
+
+;; TODO -- ontologizing
+(isa quantityRankingProblem Relation)
+;; END TODO
+
+(defSuggestion SolveQuantityRankingProblemWithOneQuantity
+    (quantityRankingProblem ?qtype ?ent-sits ?rel ?ranked-ent-sits)
+  :test
+  (evaluate False (GreaterThan-UnitValuesFn (LengthOfListFn ?ent-sits) 1))
+  :subgoals
+  ((unifies ?ranked-ent-sits ?ent-sits)))
+
+(defSuggestion SolveQuantityRankingProblem
+    (quantityRankingProblem ?qtype ?ent-sits ?rel ?ranked-ent-sits)
+  :test
+  (evaluate True (GreaterThan-UnitValuesFn (LengthOfListFn ?ent-sits) 1))
+  :subgoals
+  ((quantityComparisonProblem ?qtype ?ent-sits ?rel ?first-answer)
+   (assessQuantityRankingProblem ?qtype ?ent-sits ?rel ?first-answer ?ranked-ent-sits)))
+
+(defSuggestion ContinueQuantityRankingProblem-OneAnswerFound
+    (assessQuantityRankingProblem ?qtype ?ent-sits ?rel ?first-answer ?ranked-ent-sits)
+  :test
+  (operatorFormulas TheList ?first-answer)
+  :subgoals
+  ((evaluate ?rest-ent-sits
+     (RemoveIfFn ?ent-sits (Kappa (?pair) (unifies ?pair ?first-answer)) IdentityFn))
+   (quantityRankingProblem ?qtype ?rest-ent-sits ?rel ?rest-answers)
+   (combineComparisonAndRankingResults ?first-answer ?rest-answers ?ranked-ent-sits))
+  :documentation
+  "ContinueQuantityRankingProblem-OneAnswerFound
+   assesses the answer found using quantityComparisonProblem and determines what to do next.
+   When one answer is found via quantity comparison, it is removed from the list of
+   entity-situation pairs and we find the next answer in the rest of the entity-situation pairs."
+  )
+
+(defSuggestion ContinueQuantityRankingProblem-EqualQuantitiesFound
+    (assessQuantityRankingProblem ?qtype ?ent-sits ?rel ?first-answer ?ranked-ent-sits)
+  :test
+  (evaluate True (LessThan-UnitValuesFn (CardinalityFn ?first-answer) (LengthOfListFn ?ent-sits)))
+  :subgoals
+  ((evaluate ?union
+     (JoinListsFn (SetToListFn ?first-answer) ?ent-sits))
+   (evaluate ?rest-ent-sits
+     (RemoveIfFn ?union
+                 (Kappa (?ent-sit)
+                   (evaluate True (GreaterThan-UnitValuesFn (CountFn ?ent-sit ?union) 1)))
+                 IdentityFn))
+   (quantityRankingProblem ?qtype ?rest-ent-sits ?rel ?rest-answers)
+   (combineComparisonAndRankingResults ?first-answer ?rest-answers ?ranked-ent-sits))
+   :documentation
+  "ContinueQuantityRankingProblem-EqualQuantitiesFound
+   assesses the answer found using quantityComparisonProblem and determines what to do next.
+   If the answer is a set of entity situation pairs, but not all the entity situation pairs,
+   those pairs are removed from the full list and we find the next answer in the rest of
+   the entity situation pairs."
+  )
+   
+     
+(defSuggestion AbortQuantityRankingProblem-AllQuantitiesAreEqual
+    (assessQuantityRankingProblem ?qtype ?ent-sits ?rel ?first-answer ?ranked-ent-sits)
+  :test
+  (evaluate True (EqualTo-UnitValuesFn (CardinalityFn ?first-answer) (LengthOfListFn ?ent-sits)))
+  :subgoals
+  ((unifies ?ranked-ent-sits ?first-answer))
+  :documentation
+  "AbortQuantityRankingProblem-AllQuantitiesAreEqual
+   assesses the answer found using quantityComparisonProblem and determines what to do next.
+   If the answer is a set of all the entity situation pairs, that means they were all found
+   to be equal with respect to the quantity being ranked.  In this case, we simply return
+   the first answer, which is a set of all the entity situation pairs."
+  )
+    
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; combineComparisonAndRankingResults
+
+(<== (combineComparisonAndRankingResults ?comparison-result ?ranking-result ?combined)
+     (operatorFormulas TheSet ?ranking-result)
+     (evaluate ?combined
+       (JoinListsFn (TheList ?comparison-result) (TheList ?ranking-result))))
+
+(<== (combineComparisonAndRankingResults ?comparison-result ?ranking-result ?combined)
+     (operatorFormulas TheList ?ranking-result)
+     (evaluate ?combined
+       (JoinListsFn (TheList ?comparison-result) ?ranking-result)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; inferring qprops from sourceOfInfluence facts
+;; this should probably go in QPTheoryMt but I need to talk to KDF about it first.
+
+;;; This should not be needed.
+;;;(<== (qprop ?consq ?ante)
+;;;     (lookupOnly (activeMF ?mf))
+;;;     (lookupOnly (sourceOfInfluence (qprop ?consq ?ante) ?mf)))
+;;;
+;;;(<== (qprop- ?consq ?ante)
+;;;     (lookupOnly (activeMF ?mf))
+;;;     (lookupOnly (sourceOfInfluence (qprop- ?consq ?ante) ?mf)))
+;;;
+;;;(<== (qprop ?consq ?ante)
+;;;     (lookupOnly (activeMF ?mf))
+;;;     (lookupOnly (mfiConsequenceOf 
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; notForAnalogy preds -- most things having to do with model formulation
+
+(notForAnalogy scenarioHasMFI)
+(notForAnalogy ModelFragment)
+(notForAnalogy mfiType)
+(notForAnalogy mfiBindings)
+(notForAnalogy mfiAntecedents)
+(notForAnalogy mfiParticipantOf)
+(notForAnalogy mfiConsequenceOf)
+(notForAnalogy mfiReverseConsequenceOf)
+(notForAnalogy scenarioModelOf)
+(notForAnalogy queryContext)
+(notForAnalogy activeMF)
+(notForAnalogy suggestFor)
+(notForAnalogy suggestionGoalForm)
+
+(notForAnalogy alphalessp)
+(notForAnalogy closedRetrievalSetCWA)
+(notForAnalogy considerEntity)
+(notForAnalogy directInfluencesOn)
+(notForAnalogy dsValue)
+(notForAnalogy ignoreMF)
+(notForAnalogy includeEntity)
+(notForAnalogy indirectInfluencesOn)
+(notForAnalogy resolveDsValue)
+(notForAnalogy temporalCWA)
+(notForAnalogy unknownSentence)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Everything below this comment is old and should be cleaned up / replaced.
+;;; MDC, 2/15/2014
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; solveRankingProblem
+
+;;;(defSuggestion solveRankingProblemWithQQR
+;;;    (solveRankingProblem ?sketch-case ?quantity ?object ?ranking
+;;;                         ?domain-theory ?strategy)
+;;;  
+;;;  :subgoals (;; do model formulation for each subsketch
+;;;             (evaluate ?bcases
+;;;               (TheClosedRetrievalSetOf ?bcase
+;;;                 (and (genlMt ?bcase ?sketch-case)
+;;;                      (subSketchGroupRepresentsObject ?subsketch ?bcase))))
+;;;             (solveSequentially ?b ?bcases
+;;;                                (prepAndPerformQPAnalysis 
+;;;                                 ?domain-theory ?b ?strategy ?quantity))
+;;;             
+;;;             ;; run SME for each combination of subsketches
+;;;             (subsketchPairs ?sketch-case ?all-pairs) 
+;;;             (solveSequentially ?pair ?all-pairs 
+;;;                                (rankQuantityPair 
+;;;                                 ?pair ?quantity ?object ?value))             
+;;;             (evaluate ?ranking
+;;;               (TheClosedRetrievalSetOf ?rank-statement
+;;;                 (and (rankQuantityPair ?pair ?quantity ?object ?value-2)
+;;;                      (unifies ?rank-statement
+;;;                               (TheList ?pair ?value-2))))))
+;;;  :subcontext? t
+;;;  :result-step nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; prepAndPerformQPAnalysis
+
+;;;(defSuggestion prepareAndPerformQPAnalysisForSubsketch
+;;;    (prepAndPerformQPAnalysis ?domain-theory ?bcase ?strategy ?quantity)
+;;;  :subgoals ((smForRankingProblem ?scenario-model ?bcase)
+;;;             (stateForRankingProblem ?state ?bcase)
+;;;             
+;;;             ;; highlighting
+;;;             (lookupOnly (subSketchGroupRepresentsObject ?metalayer-glyph-name ?bcase))            
+;;;             (tell (highlightGlyph ?metalayer-glyph-name))
+;;;             
+;;;             (ist-Information ?state
+;;;               (performQPAnalysis ?state ?scenario-model 
+;;;                                  ?domain-theory ?bcase ?strategy))
+;;;             
+;;;             ;; unhilight
+;;;             (tell (unHighlightGlyph ?metalayer-glyph-name))
+;;;             )
+;;;  :result-step nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; rankQuantityPair
+;;; MDC, 6/18/2013: This suggestion should be replaced by something that uses
+;;; the new, more general framework for DQA.  
+
+;;; NEW VERSION: This is made to work with the new DQA framework. --MDC, 6/18/2013
+;;;(defSuggestion rankSketchQuantitiesViaDQA
+;;;    (rankQuantityPair ?pair ?quantity ?object ?dqValue)
+;;;  :subgoals ((evaluate ?base-bundle (FirstInListFn ?pair))
+;;;             (evaluate ?target-bundle (SecondInListFn ?pair))
+;;;             (unifies ?base (AskCaseFn (TheSetOf ?x (ist-Information ?base-bundle ?x))))
+;;;             (unifies ?target (AskCaseFn (TheSetOf ?y (ist-Information ?target-bundle ?y))))
+;;;                           
+;;;             ;; highlight
+;;;             (lookupOnly (subSketchGroupRepresentsObject ?base-metalayer-glyph-name ?base-bundle))
+;;;             (lookupOnly (subSketchGroupRepresentsObject ?target-metalayer-glyph-name ?target-bundle))
+;;;             (tell (highlightGlyph ?base-metalayer-glyph-name))
+;;;             (tell (highlightGlyph ?target-metalayer-glyph-name))
+;;;              
+;;;             (solveDQProblemBinarySystems ?quantity ?base ?q-target ?target ?dqValue)
+;;;              
+;;;             ;; unhighlight
+;;;             (tell (unHighlightGlyph ?base-metalayer-glyph-name))
+;;;             (tell (unHighlightGlyph ?target-metalayer-glyph-name))
+;;;             )
+;;;  :result-step nil)
+
+
+;;; OLD VERSION:
+;;;(defSuggestion runSMEAndRankPair
+;;;    (rankQuantityPair ?pair ?quantity ?object ?dqValue)
+;;;  :subgoals  ((evaluate ?baseBundle
+;;;                (FirstInListFn ?pair))
+;;;              (evaluate ?targetBundle
+;;;                (SecondInListFn ?pair))
+;;;              (matchBetween 
+;;;               (AskCaseFn (TheSetOf ?x (ist-Information ?baseBundle ?x)))
+;;;               (AskCaseFn (TheSetOf ?y (ist-Information ?targetBundle ?y)))
+;;;               (TheSet)
+;;;               ?match)
+;;;              (bestMapping ?match ?mapping)
+;;;              
+;;;              ;; highlight
+;;;              (lookupOnly (subSketchGroupRepresentsObject ?base-metalayer-glyph-name ?baseBundle))
+;;;              (lookupOnly (subSketchGroupRepresentsObject ?target-metalayer-glyph-name ?targetBundle))
+;;;              (tell (highlightGlyph ?base-metalayer-glyph-name))
+;;;              (tell (highlightGlyph ?target-metalayer-glyph-name))
+;;;              
+;;;              (dqValue ?quantity ?mapping ?dqValue)
+;;;              
+;;;              ;; unhighlight
+;;;              (tell (unHighlightGlyph ?base-metalayer-glyph-name))
+;;;              (tell (unHighlightGlyph ?target-metalayer-glyph-name))
+;;;              )
+;;;  :result-step nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; special purpose suggestions for solving a problem with one bundle
+;; this is basically a comparison (via ordinals) of two quantities in the same bundle
+
+;;;(defSuggestion solveSingleSubsketchRankingProblem
+;;;    (solveSingleBundleRankingProblem ?sketch-case ?q1 ?q2 ?obj1 ?obj2 ?result ?dt ?strategy) 
+;;;  :subgoals (;; do model formulation for the (only) subsketch
+;;;             (genlMt ?bcase ?sketch-case)
+;;;             (subSketchGroupRepresentsObject ?subsketch ?bcase)
+;;;             (prepAndPerformQPAnalysis 
+;;;              ?dt ?bcase ?strategy ?q1)
+;;;             ;; bind result to a quantity ordering or qEqualTo
+;;;             (resolveOrdinals ?bcase ?q1 ?q2 ?result)
+;;;             )
+;;;  :subcontext? t 
+;;;  :result-step nil
+;;;  )
+;;;
+;;;;; these suggestions check for ordinal relationships in the
+;;;;; state context
+;;;(defSuggestion firstQuantityIsGreater
+;;;    (resolveOrdinals ?bcase ?q1 ?q2 qGreaterThan)
+;;;  :subgoals ((wmOnly (lookupOnly (stateForRankingProblem ?state ?bcase)))
+;;;             (ist-Information ?state (qGreaterThan ?q1 ?q2)))
+;;;  :result-step nil
+;;;  )
+;;;
+;;;(defSuggestion firstQuantityIsLesser
+;;;    (resolveOrdinals ?bcase ?q1 ?q2 qLessThan)
+;;;  :subgoals ((wmOnly (lookupOnly (stateForRankingProblem ?state ?bcase)))
+;;;             (ist-Information ?state (qLessThan ?q1 ?q2)))
+;;;  :result-step nil
+;;;  )
+;;;
+;;;(defSuggestion quantitiesAreEqual
+;;;    (resolveOrdinals ?bcase ?q1 ?q2 qEqualTo)
+;;;  :subgoals ((wmOnly (lookupOnly (stateForRankingProblem ?state ?bcase)))
+;;;             (ist-Information ?state (qEqualTo ?q1 ?q2)))
+;;;  :result-step nil
+;;;  )
+;;;
+;;;
+;;;;; these suggestions check for ordinal relationships in the bundle
+;;;;; context because outsourced predicates aren't working when queried 
+;;;;; in the state context...  need to figure out why...
+;;;(defSuggestion firstQuantityIsGreater-inBundle
+;;;    (resolveOrdinals ?bcase ?q1 ?q2 qGreaterThan)
+;;;  :subgoals ((ist-Information ?bcase (qGreaterThan ?q1 ?q2)))
+;;;  :result-step nil
+;;;  )
+;;;
+;;;(defSuggestion firstQuantityIsLesser-inBundle
+;;;    (resolveOrdinals ?bcase ?q1 ?q2 qLessThan)
+;;;  :subgoals ((ist-Information ?bcase (qLessThan ?q1 ?q2)))
+;;;  :result-step nil
+;;;  )
+;;;
+;;;(defSuggestion quantitiesAreEqual-inBundle
+;;;    (resolveOrdinals ?bcase ?q1 ?q2 qEqualTo)
+;;;  :subgoals ((ist-Information ?bcase (qEqualTo ?q1 ?q2)))
+;;;  :result-step nil
+;;;  )
+
+;; end suggestions for single bundle ranking problem
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;(isa smForRankingProblem BinaryPredicate)
+;;;(comment smForRankingProblem 
+;;;  "(smForRankingProblem ?sm ?bcase) means that ?sm is the scenario model for
+;;;   the bundle represented by ?bcase.")
+;;;(arg1isa smForRankingProblem Microtheory)
+;;;(arg2isa smForRankingProblem NuSketchCase)
+;;;
+;;;(isa stateForRankingProblem BinaryPredicate)
+;;;(comment stateForRankingProblem 
+;;;  "(stateForRankingProblem ?s0 ?bcase) means that ?s0 is the state for
+;;;   the bundle represented by ?bcase.")
+;;;(arg1isa stateForRankingProblem Microtheory)
+;;;(arg2isa stateForRankingProblem NuSketchCase)
+
+;;; dqValue is ontologized in DQAnalysisMt, part of QQR
+
+;;;(isa dqValueBetweenBundles Predicate)
+;;;(comment dqValueBetweenBundles
+;;;  "(dqValueBetweenBundles ?base ?target ?quantity ?value) means that
+;;;   the dqvalue of ?quantity changing from ?target to ?base is ?value.")
+;;;(arity dqValueBetweenBundles 4)
+;;;(arg1isa dqValueBetweenBundles NuSketchCase)
+;;;(arg2isa dqValueBetweenBundles NuSketchCase)
+;;;(arg3isa dqValueBetweenBundles ContinuousQuantity)
+;;;(arg4isa dqValueBetweenBundles PossibleDsValue)
+;;;
+;;;(isa DQReferenceFrame Collection)
+;;;(genls DQReferenceFrame Mapping)
+;;;(comment DQReferenceFrame "A DQReferenceFrame is a comparison between two things, so we use a mapping to describe them.")
+;;;
+;;;(isa positiveDQInfluenceOn Predicate)
+;;;(comment positiveDQInfluenceOn "(positiveDQInfluenceOn ?constrained ?m 
+;;;  ?constrainer) indicates that, because of a qualitative proportionality 
+;;;  (see qprop and qprop-) and DQ value information, ?constrainer has a positive 
+;;;  effect on ?constrained.")
+;;;(arity positiveDQInfluenceOn 3)
+;;;(arg1Isa positiveDQInfluenceOn ContinuousQuantity)
+;;;(arg2Isa positiveDQInfluenceOn DQReferenceFrame)
+;;;(arg3Isa positiveDQInfluenceOn ContinuousQuantity)
+;;;
+;;;(isa negativeDQInfluenceOn Predicate)
+;;;(comment negativeDQInfluenceOn "(negativeDQInfluenceOn ?constrained ?m 
+;;;  ?constrainer) indicates that, because of a qualitative proportionality (see
+;;;  qprop and qprop-) and DQ value information, ?constrainer has a negative effect
+;;;  on ?constrained.")
+;;;(arity negativeDQInfluenceOn 3)
+;;;(arg1Isa negativeDQInfluenceOn ContinuousQuantity)
+;;;(arg2Isa negativeDQInfluenceOn DQReferenceFrame)
+;;;(arg3Isa negativeDQInfluenceOn ContinuousQuantity)
+;;;
+;;;(isa hasPositiveDQInfluence Predicate)
+;;;(comment hasPositiveDQInfluence "(hasPositiveDQInfluence ?q ?m) indicates that
+;;; ?q has at least one positive influence on it.")
+;;;(arity hasPositiveDQInfluence 2)
+;;;(arg1Isa hasPositiveDQInfluence ContinuousQuantity)
+;;;(arg2Isa hasPositiveDQInfluence DQReferenceFrame)
+;;;
+;;;(isa hasNegativeDQInfluence Predicate)
+;;;(comment hasNegativeDQInfluence "(hasNegativeDQInfluence ?q ?m) indicates that
+;;; ?q has at least one negative influence on it.")
+;;;(arity hasNegativeDQInfluence 2)
+;;;(arg1Isa hasNegativeDQInfluence ContinuousQuantity)
+;;;(arg2Isa hasNegativeDQInfluence DQReferenceFrame)
+;;;
+;;;;; N.B. these used to be noPositiveDQInfluencesOn, noNegativeDQInfluencesOn, but
+;;;;; we changed to what is below in the solve suggestions.
+;;;(isa noPositiveDQInfluence Predicate)
+;;;(comment noPositiveDQInfluence "(noPositiveDQInfluence ?q ?m) indicates that ?q
+;;; has no positive influences on it with respect to the mapping ?m.")
+;;;(arity noPositiveDQInfluence 2)
+;;;(arg1Isa noPositiveDQInfluence ContinuousQuantity)
+;;;(arg2Isa noPositiveDQInfluence DQReferenceFrame)
+;;;
+;;;(isa noNegativeDQInfluence Predicate)
+;;;(comment noNegativeDQInfluence "(noNegativeDQInfluence ?q ?m) indicates that ?q
+;;; has no negative influences on it.")
+;;;(arity noNegativeDQInfluence 2)
+;;;(arg1Isa noNegativeDQInfluence ContinuousQuantity)
+;;;(arg2Isa noNegativeDQInfluence DQReferenceFrame)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

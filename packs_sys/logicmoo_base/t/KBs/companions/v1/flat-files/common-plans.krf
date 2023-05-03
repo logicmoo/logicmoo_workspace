@@ -1,0 +1,1142 @@
+;;;
+;;; common-plans.krf
+;;;
+;;; This file contains method definitions for plans that should be available
+;;; to all agents.  
+
+(in-microtheory CompanionsMt)
+
+(isa announceIfNonEmpty ComplexActionPredicate)
+(arity announceIfNonEmpty 2)
+(arg1Isa announceIfNonEmpty CharacterString)
+(arg2Isa announceIfNonEmpty Set-Mathematical)
+(comment announceIfNonEmpty "(announceIfNonEmpty ?ctrl-string ?set) invokes doAnnounce iff ?set is non-empty.")
+
+(preconditionForMethod
+  (different ?set (TheSet))
+  (methodForAction
+    (announceIfNonEmpty ?ctrl-str ?set)
+    (actionSequence
+      (TheList
+        (doAnnounce ?ctrl-str (?set))))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (announceIfNonEmpty ?ctrl-str (TheSet))
+    (actionSequence
+      (TheList))))
+
+;; This should cover both learning goals and performance goals:
+(isa goalStatus BinaryPredicate)
+(arity goalStatus 2)
+(arg1Isa goalStatus Goal)
+(arg2Isa goalStatus ActionTypeByWorkflowStatus)
+(comment goalStatus "(goalStatus ?goal ?status) describes the present status of ?goal, using the ActionTypeByWorkflowStatus ?status.  This should always be set using setStatusForLearningGoal.")
+
+;; I like the name setLearningGoalStatus better but it will cause collisions with Scott's etc-plans in the short term :(
+(isa setStatusForLearningGoal ComplexActionPredicate)
+(arity setStatusForLearningGoal 2)
+(comment setStatusForLearningGoal "Sets the status of a learning goal to a specified status, forgetting the previous status.")
+(arg1Isa setStatusForLearningGoal LearningGoal)
+(arg2Isa setStatusForLearningGoal ActionTypeByWorkflowStatus)
+
+(isa postLearningGoal ComplexActionPredicate)
+(arity postLearningGoal 1)
+(arg1Isa postLearningGoal LearningGoal)
+(comment postLearningGoal "(postLearningGoal ?goal) records the companion learning goal ?goal in the self model, along with the initial status of PendingStatus.")
+
+(isa followUpOnPostedGoal ComplexActionPredicate)
+(arity followUpOnPostedGoal 1)
+(arg1Isa followUpOnPostedGoal LearningGoal)
+(comment followUpOnPostedGoal "(followUpOnPostedGoal ?learningGoal) On agents that are not the executive, this reposts the learning goal on the executive.  On the executive, it pursues all pending learning goals.")
+
+(isa pursuePendingGoal ComplexActionPredicate)
+(arity pursuePendingGoal 1)
+(comment pursuePendingGoal "Pursues a goal - implementation of various goal-handling plans will be domain-specific.")
+(arg1Isa pursuePendingGoal Goal)
+
+
+(preconditionForMethod
+  (and (sessionContext ?session-ctxt)
+       (currentTime ?cyc-time)
+       (unifies ?time-point (TimePointFn ?cyc-time)))
+  (methodForAction
+    (postLearningGoal ?learningGoal)
+    (actionSequence
+      (TheList
+       (doRecord (ist-Information SelfModelMt (learningGoalForCompanion ?learningGoal)))
+       (doRecord (ist-Information SelfModelMt (isa ?learningGoal Goal)))
+       (doAgentPlan
+        (setStatusForLearningGoal ?learningGoal PendingStatus))
+       (doRecord (ist-Information ?session-ctxt (startingPoint ?learningGoal ?time-point)))
+       (doAgentPlan
+        (followUpOnPostedGoal ?learningGoal))))))  ; skip actionSequence for singleton task
+
+(preconditionForMethod
+ (and (kbOnly (ist-Information SelfModelMt (learningGoalForCompanion ?learningGoal)))
+      (kbOnly (ist-Information SelfModelMt (goalStatus ?learningGoal PendingStatus))))
+ (methodForAction
+  (postLearningGoal ?learningGoal)
+  (actionSequence
+   (TheList
+    (followUpOnPostedGoal ?learningGoal)))))  ;; If it's already posted, we should still treat it as a trigger to either post it on the executive or pursue it
+
+(<== (preferInContext (postLearningGoal ?learning-goal) ?seq1 ?seq2) 
+     (subexpressionMatching (doRecord (ist-Information SelfModelMt (learningGoalForCompanion ?learningGoal)))
+                            ?seq2 ?subex))
+
+;;; if the agent it comes from is not the executive
+(preconditionForMethod
+  (and (localAgent ?agent)
+       (currentExecutive ?exec)
+       (different ?agent ?exec))
+  (methodForAction
+    (followUpOnPostedGoal ?learningGoal)
+    (actionSequence
+      (TheList
+       (doRemoteAgentPlan ?exec (postLearningGoal ?learningGoal))))))
+
+
+;;; If the agent it comes from is the executive...
+
+;;; for now, anytime a learning goal comes in, we treat it as a trigger to check on all our learning goals.
+;;; This might not be the best way to go, but it's basically a mechanism for periodically
+;;; revisiting goals in local mode at times other than the start of a session and when the goal is first posted.
+;;; In distributed companions, we can have a cpu dedicated to constantly checking learning goal applicability, but
+;;; that's not within the scope of the short-term. -mdm
+
+(preconditionForMethod
+  (and (localAgent ?agent)
+       (currentExecutive ?agent))
+  (methodForAction
+    (followUpOnPostedGoal ?learningGoal)
+    (actionSequence
+     (TheList
+      (pursuePendingLearningGoals)
+      ))))
+
+;;; if the executive cannot be found
+(preconditionForMethod
+  (uninferredSentence
+    (currentExecutive ?agent))
+  (methodForAction
+    (followUpOnPostedGoal ?learningGoal)
+    (actionSequence
+      (TheList))))
+
+;; setting the status of a learning goal
+
+(preconditionForMethod
+ (and (ist-Information SelfModelMt (lookupOnly (learningGoalForCompanion ?learningGoal)))
+      (ist-Information SelfModelMt (lookupOnly (goalStatus ?learningGoal ?old-status))))
+  (methodForAction
+    (setStatusForLearningGoal ?learningGoal ?status)
+    (actionSequence
+     (TheList
+      (doForget (ist-Information SelfModelMt (goalStatus ?learningGoal ?old-status)))
+      (doRecord (ist-Information SelfModelMt (goalStatus ?learningGoal ?status)))))))
+
+(preconditionForMethod
+ (ist-Information SelfModelMt (lookupOnly (learningGoalForCompanion ?learningGoal)))
+  (methodForAction
+    (setStatusForLearningGoal ?learningGoal ?status)
+    (actionSequence
+     (TheList
+      (doRecord (ist-Information SelfModelMt (goalStatus ?learningGoal ?status)))))))
+
+(preconditionForMethod
+ (true)
+  (methodForAction
+    (setStatusForLearningGoal ?learningGoal ?status)
+    (actionSequence
+     (TheList
+      (doAnnounce "~%Attempted to set the status of a non-existent learning goal ~a" (?learningGoal))))))
+
+(<== (preferInContext (setStatusForLearningGoal ?learningGoal ?status) ?seq1 ?seq2) 
+     (subexpressionMatching (doForget (ist-Information SelfModelMt (goalStatus ?learningGoal ?old-status)))
+                            ?seq1 ?subex))
+
+(<== (preferInContext (setStatusForLearningGoal ?learningGoal ?status) ?seq1 ?seq2) 
+     (subexpressionMatching (doRecord (ist-Information SelfModelMt (goalStatus ?learningGoal ?status)))
+                            ?seq1 ?subex))
+
+
+;;;
+;;; Defining a new learnable domain
+;;;
+
+(isa defineDomainMts ComplexActionPredicate)
+(arity defineDomainMts 1)
+(arg1Isa defineDomainMts CompanionsDomain)
+(comment defineDomainMts "(defineDomainMts ?domain) sets up a system of microtheories in which to learn about ?domain.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (defineDomainMts ?domain)
+    (actionSequence
+      (TheList
+        (doRecordMembersInContext BaseKB
+          (TheSet
+            (isa (LearnedKnowledgeMtFn ?domain) Microtheory)
+            (isa (ActionModelMtFn ?domain) Microtheory)
+            (isa (QualitativeModelMtFn ?domain) Microtheory)
+            (isa (StrategyModelMtFn ?domain) Microtheory)
+            (genlMt (LearnedKnowledgeMtFn ?domain) (ActionModelMtFn ?domain))
+            (genlMt (LearnedKnowledgeMtFn ?domain) (QualitativeModelMtFn ?domain))
+            (genlMt (LearnedKnowledgeMtFn ?domain) (StrategyModelMtFn ?domain))
+            (isa (SpindleMtFn ?domain DirectInfluences) Microtheory)
+            (isa (SpindleMtFn ?domain IndirectInfluences) Microtheory)
+            (isa (SpindleMtFn ?domain Influences) Microtheory)
+            (genlMt (SpindleMtFn ?domain Influences) (SpindleMtFn ?domain DirectInfluences))
+            (genlMt (SpindleMtFn ?domain Influences) (SpindleMtFn ?domain IndirectInfluences))))
+    ;; Pre-populate some learning goals:
+        (doRecord 
+          (ist-Information (StrategyModelMtFn ?domain)
+            (learningGoalForCompanion
+              (LearnStrategicModelFn ?domain))))
+        (doRecord 
+          (ist-Information (QualitativeModelMtFn ?domain)
+            (learningGoalForCompanion
+              (LearnQualitativeModelFn ?domain))))
+        (doRecord 
+          (ist-Information (ActionModelMtFn ?domain)
+            (learningGoalForCompanion
+              (LearnActionModelFn ?domain))))
+        ))))
+
+
+;;;
+;;; Setting up an agent domain
+;;;
+
+(isa setupAgentDomain ComplexActionPredicate)
+(arity setupAgentDomain 1)
+(arg1Isa setupAgentDomain Microtheory)
+(comment setupAgentDomain "(setupAgentDomain ?domain) sets the local agent's context and planning context.")
+
+;;; Case where domain is an atomic microtheory:
+(preconditionForMethod
+  (and (groundExpression ?domain)
+       (atomicTerm ?domain)
+       (evaluate ?planning-mt (SymbolConcatenateFn (TheList ?domain "-planMt"))))
+  (methodForAction
+    (setupAgentDomain ?domain)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information BaseKB (isa ?planning-mt Individual)))
+        (doRecord (ist-Information BaseKB (isa ?planning-mt Microtheory)))
+        (doRecord (ist-Information BaseKB (genlMt ?planning-mt ?domain)))
+        (doSetPlanningContext ?planning-mt)
+        (doSetAgentContext ?domain)))))
+
+;;; Case where domain is a concept, but not necessarily a microtheory:
+(preconditionForMethod
+  (and (groundExpression ?mt)
+       (unifies (?functor ?domain) ?mt)
+       (different ?functor PlanningMtFn)      ; sanity check
+       (unifies ?planning-mt (PlanningMtFn ?domain)))
+  (methodForAction
+    (setupAgentDomain ?mt)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information BaseKB (isa ?planning-mt Individual)))
+        (doRecord (ist-Information BaseKB (isa ?planning-mt Microtheory)))
+        (doRecord (ist-Information BaseKB (genlMt ?planning-mt ?mt)))
+        (doSetPlanningContext ?planning-mt)
+       (doSetAgentContext ?mt)))))
+
+;;;for setting the contexts for agents (not just for local but also remote-agents if necessary
+;;;There might be a need for setting the context of a different agent (example: Executive might want
+;;;to set the context of session-reasoner).
+
+(isa setupDomainForAgent ComplexActionPredicate)
+(arity setupDomainForAgent 2)
+(arg1Isa setupDomainForAgent CompanionsAgent)
+(arg2Isa setupDomainForAgent Thing)
+(comment setupDomainForAgent "(setupDomainForAgent ?agent ?domain) sets the agent's context and planning context.")
+
+;;if its not the local agent
+(preconditionForMethod
+ (uninferredSentence (localAgent ?agent))
+ (methodForAction
+  (setupDomainForAgent ?agent ?domain)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?agent (actionSequence (TheList (setupAgentDomain ?domain))))))))
+
+;;if its the local agent
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (setupDomainForAgent ?agent ?domain)
+  (actionSequence
+   (TheList
+    (setupAgentDomain ?domain)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Subscribe to remindings or case
+
+(isa subscribeToRemindingsForCase ComplexActionPredicate)
+(arity subscribeToRemindingsForCase 2)
+(arg1Isa subscribeToRemindingsForCase Microtheory)
+(arg2Isa subscribeToRemindingsForCase CaseLibrary)
+(comment subscribeToRemindingsForCase "(subscribeToRemindingsForCase ?case ?caselib) subscribes to remindings on the tickler.  It assumes that any relevant match constraints are visible from the probe context.")
+
+
+(preconditionForMethod
+ (and (variableExpression ?caselib)
+      (caseLibraryForReminding ?caselib)
+      (cacheComplete (matchConstraints ?case ?constraints)))
+ (methodForAction
+  (subscribeToRemindingsForCase ?case ?caselib)
+  (actionSequence
+   (TheList
+    (doSubscribeToRemindings (KBCaseFn ?case) (CaseLibrarySansFn ?caselib ?case) ?constraints)
+    ))))
+
+(preconditionForMethod
+ (and (groundExpression ?caselib)
+      (cacheComplete (matchConstraints ?case ?constraints)))
+ (methodForAction
+  (subscribeToRemindingsForCase ?case ?caselib)
+  (actionSequence
+   (TheList
+    (doSubscribeToRemindings (KBCaseFn ?case) (CaseLibrarySansFn ?caselib ?case) ?constraints)
+    ))))
+
+(preconditionForMethod
+ (and (groundExpression ?caselib)
+      (uninferredSentence (matchConstraints ?case ?constraints)))
+ (methodForAction
+  (subscribeToRemindingsForCase ?case ?caselib)
+  (actionSequence
+   (TheList
+    (doSubscribeToRemindings (KBCaseFn ?case) (CaseLibrarySansFn ?caselib ?case) (TheSet))
+    ))))
+
+;;;
+;;; Learning by being told:
+;;;
+(isa assimilateStatement ComplexActionPredicate)
+(arity assimilateStatement 1)
+(comment assimilateStatement "(assimilateStatement ?statement) attempts to reconcile ?statement with prior knowledge and store it in an appropriate microtheory.")
+
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assimilateStatement ?statement)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (assimilateStatement ?stmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;;
+;;; Learning by being shown:
+;;;
+(isa assimilateGlyph ComplexActionPredicate)
+(arity assimilateGlyph 1)
+(comment assimilateGlyph "(assimilateGlyph ?new-glyph) attempt to reconcile ?new-glyph with prior knowledge and store it in an appropriate microtheory.")
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assimilateGlyph ?glyph)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (assimilateGlyph ?stmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;; Tasking via language:
+
+(isa assimilateRequest ComplexActionPredicate)
+(arity assimilateRequest 1)
+(comment assimilateRequest "(assimilateRequest ?statement) builds a task and runs it.")
+
+;;; Default:
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (assimilateRequest ?glyph)
+    (actionSequence
+      (TheList))))
+
+(<== (preferInContext (assimilateRequest ?stmt) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; planOnAgent
+
+
+(isa planOnAgent ComplexActionPredicate)
+(arity planOnAgent 2)
+(arg1Isa planOnAgent CompanionsAgent)
+(arg2Isa planOnAgent CycLSentence-Assertible)
+(comment planOnAgent "(planOnAgent ?agent ?plan) Performs either (doAgentPlan ?plan) or (doRemoteAgentPlan ?agent ?plan), depending on whether ?agent is the local agent.  Useful when you want your plan to execute some step on a particular agent, but the plan may or may not already be executing on that agent.")
+
+
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (planOnAgent ?agent ?plan)
+  (actionSequence
+   (TheList
+    (doAgentPlan ?plan)))))
+
+(preconditionForMethod
+ (uninferredSentence (localAgent ?agent))
+ (methodForAction
+  (planOnAgent ?agent ?plan)
+  (actionSequence
+   (TheList
+    (doRemoteAgentPlan ?agent ?plan)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; planSynchronouslyOnAgent
+
+
+(isa planSynchronouslyOnAgent ComplexActionPredicate)
+(arity planSynchronouslyOnAgent 2)
+(arg1Isa planSynchronouslyOnAgent CompanionsAgent)
+(arg2Isa planSynchronouslyOnAgent CycLSentence-Assertible)
+(comment planSynchronouslyOnAgent "(planSynchronouslyOnAgent ?agent ?plan) Performs either (doAgentPlan ?plan) or (doSynchronousRemotePlan ?agent ?plan), depending on whether ?agent is the local agent.  Useful when you want your plan to execute some step on a particular agent, but the plan may or may not already be executing on that agent.")
+
+
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (planSynchronouslyOnAgent ?agent ?plan)
+  (actionSequence
+   (TheList
+    (doAgentPlan ?plan)))))
+
+(preconditionForMethod
+ (uninferredSentence (localAgent ?agent))
+ (methodForAction
+  (planSynchronouslyOnAgent ?agent ?plan)
+  (actionSequence
+   (TheList
+    (doSynchronousRemotePlan ?agent ?plan)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; maybeSubscribeTo
+
+(isa maybeSubscribeTo ComplexActionPredicate)
+(arity maybeSubscribeTo 2)
+(arg1Isa maybeSubscribeTo CompanionsAgent)
+(arg2Isa maybeSubscribeTo CycLSentence-Askable)
+(comment maybeSubscribeTo "(maybeSubscribeTo ?advertiser ?query) Might subscribe to a query!  This is ultimately what is called by the callback for subscribeToSome.")
+
+(<== (preferInContext (maybeSubscribeTo ?advertiser ?query) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))
+
+;;default method doesn't subscribe. For now, we treat this as a white list, rather than a black list
+(preconditionForMethod
+ (true)
+ (methodForAction 
+  (maybeSubscribeTo ?advertiser ?query)
+  (actionSequence
+   (TheList))))
+
+;; deliberately subscribing to sketch microtheories
+(preconditionForMethod
+ (and (agentContext ?agent-ctx)
+      (localAgent ?agent)
+      (ist-Information ?agent-ctx (subscribeToFutureSketchMicrotheories ?agent))
+      (groundExpression ?advertiser)
+      (groundExpression ?case)
+      (uninferredSentence 
+        (lookupOnly
+          (localOnly
+            (subscribedToAll (ist-Information ?case ?ms2fact-A)))))
+      ;;ask the advertiser if the ?case is a submicrotheory of a sketch microtheory
+      (holdsOnRemoteAgent ?advertiser
+        (ist-Information EverythingPSC
+          (sketchRepresentsObject ?sketch ?case))))
+ (methodForAction 
+  (maybeSubscribeTo ?advertiser (ist-Information ?case ?ms2fact-A))
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Subcribing to microtheory ~A on sketch agent ~A" (?case ?advertiser))
+    (doSubscribeToAll (ist-Information ?case ?ms2fact-A))
+    ;;say something about what kind of subscription it is,
+    ;;in case you want to clean them up later
+    (doTell (ist-Information ?agent-ctx
+              (sketchMicrotheorySubscription (ist-Information ?case ?ms2fact-A))))))))
+
+(preconditionForMethod
+ (and (agentContext ?agent-ctx)
+      (localAgent ?agent)
+      (ist-Information ?agent-ctx (subscribeToFutureSketchMicrotheories ?agent))
+      (groundExpression ?advertiser)
+      (groundExpression ?case)
+      (uninferredSentence 
+        (lookupOnly
+          (localOnly
+            (subscribedToAll (ist-Information ?case ?ms2fact-B)))))
+      ;;ask the advertiser if the ?case is a submicrotheory of a sketch microtheory
+      (holdsOnRemoteAgent ?advertiser
+        (ist-Information EverythingPSC
+          (and (sketchRepresentsObject ?sketch ?sketch-case)
+               (different ?case ?sketch-case)
+               (different ?case EverythingPSC)
+               (genlMt-WMTransitive ?case ?sketch-case)))))
+ (methodForAction 
+  (maybeSubscribeTo ?advertiser (ist-Information ?case ?ms2fact-B))
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Subcribing to microtheory ~A on sketch agent ~A" (?case ?advertiser))
+    (doSubscribeToAll (ist-Information ?case ?ms2fact-B))
+    (doTell (ist-Information ?agent-ctx
+              (sketchMicrotheorySubscription (ist-Information ?case ?ms2fact-B))))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; subscribeToAllSketchData
+
+(isa subscribeToAllSketchData ComplexActionPredicate)
+(arity subscribeToAllSketchData 0)
+(comment subscribeToAllSketchData "(subscribeToAllSketchData) Subscribes the calling agent first to nusketch hookup data to discover available sketches, then to all the data for each of those sketches.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction 
+  (subscribeToAllSketchData)
+  (actionSequence
+   (TheList
+    (subscribeToNuSketchHookupData)
+    (subscribeToSketchMicrotheories)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; unSubscribeFromAllSketchData
+
+(isa unSubscribeFromAllSketchData ComplexActionPredicate)
+(arity unSubscribeFromAllSketchData 0)
+(comment unSubscribeFromAllSketchData "(unSubscribeFromAllSketchData) Unsubscribes the calling agent from all available sketch microtheories, and then from the nusketch hookup data.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction 
+  (unSubscribeFromAllSketchData)
+  (actionSequence
+   (TheList
+    (unsubscribeFromSketchMicrotheories)
+    (unsubscribeFromNuSketchHookupData)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; subscribeToNuSketchHookupData
+
+(isa subscribeToNuSketchHookupData ComplexActionPredicate)
+(arity subscribeToNuSketchHookupData 0)
+(comment subscribeToNuSketchHookupData "(subscribeToNuSketchHookupData) Subscribes the calling agent to everything the nusketch hookup has to offer, specifically facts with the predicates: agentforOpenSketch, currentlyActiveSketch, currentlyActiveBundleInSketch, currentlyActiveLayerInSketch, and selectedItemInSketch.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction 
+  (subscribeToNuSketchHookupData)
+  (actionSequence
+   (TheList
+    (doAnnounce "Subscribing to NuSketch hookup data." ())
+    (doSubscribeToAll (agentForOpenSketch ?sketch ?agent))
+    (doSubscribeToAll (nuSketchFileURL ?casename ?file-url))
+    (doSubscribeToAll (currentlyActiveSketch ?sketch))
+    (doSubscribeToAll (currentlyActiveBundleInSketch ?sketch ?bundle))
+    (doSubscribeToAll (currentlyActiveLayerInSketch ?sketch ?layer))
+    (doSubscribeToAll (selectedItemInSketch ?sketch ?item))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; unsubscribeFromNuSketchHookupData
+
+(isa unsubscribeFromNuSketchHookupData ComplexActionPredicate)
+(arity unsubscribeFromNuSketchHookupData 0)
+(comment unsubscribeFromNuSketchHookupData "(unsubscribeFromNuSketchHookupData) Unsubscribes the calling agent to everything the nusketch hookup has to offer, specifically facts with the predicates: agentforOpenSketch, nuSketchFileURL, currentlyActiveSketch, currentlyActiveBundleInSketch, currentlyActiveLayerInSketch, and selectedItemInSketch.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction 
+  (unsubscribeFromNuSketchHookupData)
+  (actionSequence
+   (TheList
+    (doAnnounce "Unsubscribing from NuSketch hookup data." ())
+    (doUnsubscribeFromAll (agentForOpenSketch ?sketch ?agent))
+    (doUnsubscribeFromAll (nuSketchFileURL ?casename ?file-url))
+    (doUnsubscribeFromAll (currentlyActiveSketch ?sketch))
+    (doUnsubscribeFromAll (currentlyActiveBundleInSketch ?sketch ?bundle))
+    (doUnsubscribeFromAll (currentlyActiveLayerInSketch ?sketch ?layer))
+    (doUnsubscribeFromAll (selectedItemInSketch ?sketch ?item))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; subscribeToSpatialAgentData
+
+(isa subscribeToSpatialAgentData ComplexActionPredicate)
+(arity subscribeToSpatialAgentData 0)
+(comment subscribeToSpatialAgentData "(subscribeToSpatialAgentData) Subscribes the calling agent to everything the cogsketch interface has to offer, specifically facts with the predicates: agentforOpenSketch and sketchAgentFileURL.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction 
+  (subscribeToSpatialAgentData)
+  (actionSequence
+   (TheList
+    (doAnnounce "Subscribing to CogSketch Interface data." ())
+    (doSubscribeToAll (agentForOpenSketch ?sketch ?agent))
+    (doSubscribeToAll (sketchAgentFileURL ?agent ?file-url))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; unsubscribeFromSpatialAgentData
+
+(isa unsubscribeFromSpatialAgentData ComplexActionPredicate)
+(arity unsubscribeFromSpatialAgentData 0)
+(comment unsubscribeFromSpatialAgentData "(unsubscribeFromSpatialAgentData) Unsubscribes the calling agent to everything the nusketch hookup has to offer, specifically facts with the predicates: agentforOpenSketch and sketchAgentFileURL.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction 
+  (unsubscribeFromSpatialAgentData)
+  (actionSequence
+   (TheList
+    (doAnnounce "Subscribing to CogSketch Interface data." ())
+    (doUnsubscribeFromAll (agentForOpenSketch ?sketch ?agent))
+    (doUnsubscribeFromAll (sketchAgentFileURL ?agent ?file-url))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; subscribeToSketchMicrotheories
+
+(isa subscribeToSketchMicrotheories ComplexActionPredicate)
+(arity subscribeToSketchMicrotheories 0)
+(comment subscribeToSketchMicrotheories "(subscribeToSketchMicrotheories) Subscribes the calling agent to all microtheories on sketch agents that are sketch cases or submicrotheories of sketch cases.")
+
+(preconditionForMethod
+ (and (agentContext ?agent-ctx)
+      (localAgent ?agent))
+ (methodForAction 
+  (subscribeToSketchMicrotheories)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?agent-ctx (subscribeToFutureSketchMicrotheories ?agent)))
+    ;; even if this has been done before, doing it here should kick off another pass through
+    ;; maybeSubscribeTo for the matching advertisements
+    (doSubscribeToSome (ist-Information ?case ?dS2S-fact))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; unsubscribeFromSketchMicrotheories
+
+(isa unsubscribeFromSketchMicrotheories ComplexActionPredicate)
+(arity unsubscribeFromSketchMicrotheories 0)
+(comment unsubscribeFromSketchMicrotheories "(unsubscribeFromSketchMicrotheories) Unsubscribes the calling agent to any microtheories that are marked as sketch microtheory in the agent context.")
+
+(preconditionForMethod
+ (and (agentContext ?agent-ctx)
+      (localAgent ?agent)
+      (evaluate ?sketch-mt-subs
+        (TheClosedRetrievalSetOf ?query
+          (and (lookupOnly (subscribedToAll ?query))
+               (ist-Information ?agent-ctx
+                 (sketchMicrotheorySubscription ?query))))))
+ (methodForAction 
+  (unsubscribeFromSketchMicrotheories)
+  (actionSequence
+   (TheList
+    (doForEach ?sub ?sketch-mt-subs
+               (actionSequence
+                (TheList
+                 (doAnnounce "Unsubscribing to sketch mt: ~A" (?query))
+                 (doUnsubscribeFromAll ?query))))
+    (doUntell (ist-Information ?agent-ctx (subscribeToFutureSketchMicrotheories ?agent)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; subscribeToSketchCase
+
+(isa subscribeToSketchCase ComplexActionPredicate)
+(arity subscribeToSketchCase 1)
+(arg1Isa subscribeToSketchCase NuSketchSketch)
+(comment subscribeToSketchCase "(subscribeToSketchCase ?sketch) Subscribes the calling agent to the sketch case on the agent corresponding to ?sketch.")
+
+(preconditionForMethod
+ (and (groundExpression ?sketch)
+      (agentForOpenSketch ?sketch ?sketch-agent)
+      (holdsOnRemoteAgent ?sketch-agent
+        (ist-Information EverythingPSC
+          (sketchRepresentsObject ?sketch ?case))))
+ (methodForAction 
+  (subscribeToSketchCase ?sketch)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Subcribing to sketch case: ~A" (?case))
+    (doSubscribeToAll (ist-Information ?case ?dS2A-facA))))))
+
+(preconditionForMethod
+ (and (groundExpression ?sketch)
+      (uninferredSentence (agentForOpenSketch ?sketch ?sketch-agent)))
+ (methodForAction
+  (subscribeToSketchCase ?sketch)
+  (actionSequence
+   (TheList
+    (doAnnounce "Warning: subscribeToSketchCase found no agent corresponding to ~A" (?sketch))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; subscribeToSketchBundles
+
+(isa subscribeToSketchBundles ComplexActionPredicate)
+(arity subscribeToSketchBundles 1)
+(arg1Isa subscribeToSketchBundles NuSketchSketch)
+(comment subscribeToSketchBundles "(subscribeToSketchBundles ?sketch) Subscribes the calling agent to all bundle cases on agent corresponding to ?sketch.")
+
+(preconditionForMethod
+ (and (groundExpression ?sketch)
+      (agentForOpenSketch ?sketch ?sketch-agent)
+      (evaluate ?bcases
+        (SetToListFn
+         (TheClosedRetrievalSetOf ?bcase
+           (holdsOnRemoteAgent ?sketch-agent
+             (ist-Information EverythingPSC
+               (subSketchGroupRepresentsObject ?bundle ?bcase)))))))
+ (methodForAction 
+  (subscribeToSketchBundles ?sketch)
+  (actionSequence
+   (TheList
+    (doAnnounce "~%Subcribing to bundle cases: ~A" (?bcases))
+    (doForEach ?bcase ?bcases
+               (doSubscribeToAll (ist-Information ?bcase ?dS2A-fact-B)))))))
+
+(preconditionForMethod
+ (and (groundExpression ?sketch)
+      (uninferredSentence (agentForOpenSketch ?sketch ?sketch-agent)))
+ (methodForAction
+  (subscribeToSketchBundles ?sketch)
+  (actionSequence
+   (TheList
+    (doAnnounce "Warning: subscribeToSketchBundles found no agent corresponding to ~A" (?sketch))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; displayMappingInSketches
+
+(isa displayMappingInSketches ComplexActionPredicate)
+(arity displayMappingInSketches 3)
+(arg1Isa displayMappingInSketches NuSketchSketch)
+(arg2Isa displayMappingInSketches NuSketchSketch)
+(arg3Isa displayMappingInSketches Mapping)
+(comment displayMappingInSketches
+  "(displayMappingInSketches <base-sketch> <target-sketch> <color>)
+   Colorizes the sketch components in <base-sketch> and <target-sketch> based on the <mapping>.
+   Corresponding pairs of perceptual elements (edges, cycles, etc.) will be colorized to match,
+   and perceptual elements that show up in the cases and not the mapping will be colored black.
+   The calling agent has to have access to the SME mapping in it's agent source for this to work.")
+
+(preconditionForMethod
+ (and (currentNuSketchHookup ?ns-hookup)
+      (mappingOf ?mapping ?match)
+      (baseOfMatch ?match ?base)
+      (targetOfMatch ?match ?target)
+      (evaluate ?correspondences
+        (TheClosedRetrievalSetOf (TheList ?base-item ?target-item)
+          (and (hasCorrespondence ?mapping ?correspondence)
+               (isEntityCorrespondence ?correspondence)
+               (correspondenceBetween ?correspondence ?base-item ?target-item)))))
+ (methodForAction
+  (displayMappingInSketches ?base-sketch ?target-sketch ?mapping)
+  (actionSequence
+   (TheList
+    (colorizePerceptualElementsFromCase ?base-sketch ?base BlackColor)
+    (colorizePerceptualElementsFromCase ?target-sketch ?target BlackColor)
+    (doSynchronousRemotePlan ?ns-hookup
+                             (colorizePerceptualElementsFromCorrespondences ?base-sketch ?target-sketch ?correspondences))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; colorizeAllPerceptualElements
+
+(isa colorizePerceptualElementsFromCase ComplexActionPredicate)
+(arity colorizePerceptualElementsFromCase 3)
+(arg1Isa colorizePerceptualElementsFromCase NuSketchSketch)
+(arg2Isa colorizePerceptualElementsFromCase Microtheory)
+(arg3Isa colorizePerceptualElementsFromCase Color)
+(comment colorizePerceptualElementsFromCase
+  "(colorizePerceptualElementsFromCase <sketch> <mt> <color>) sets the ink color of every
+   instance of PerceptualElement that shows up in <mt>.  You do not need to call this from the
+   sketch agent for <sketch>, but you do need to call it from an agent that can see <mt>.")
+
+(preconditionForMethod
+ (and (currentNuSketchHookup ?ns-hookup)
+      (holdsOnRemoteAgent ?ns-hookup
+        (agentForOpenSketch ?sketch ?agent))
+      ;;This method for gathering components assumes that 
+      ;;?case genls from CogSketchReasoningCollectorMt
+      (evaluate ?components
+        (TheClosedRetrievalSetOf ?component
+          (useTransitiveInference
+           (ist-Information ?case
+             (isa ?component PerceptualElement))))))
+ (methodForAction
+  (colorizePerceptualElementsFromCase ?sketch ?case ?color)
+  (actionSequence
+   (TheList
+    (doSynchronousRemotePlan ?agent
+                             (doForEach ?component ?components
+                                        (doSetInkColor ?component ?color)))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; clearCachesAndWMIfTaskless
+
+(isa clearCachesAndWMIfTaskless ComplexActionPredicate)
+(arity clearCachesAndWMIfTaskless 0)
+(comment clearCachesAndWMIfTaskless "(clearCachesAndWMIfTaskless) does a complete wipe of WM and agent caches as long as the agent doesn't have any tasks currently executing or waiting for execution on it's agenda. USE CAREFULLY - this will wipe the agenda Mt as well.")
+
+(preconditionForMethod
+ (and (localAgent ?agent)
+      (agendaContext ?mt)
+      (uninferredSentence
+       (ist-Information ?mt
+         (onAgenda ?agent ?waiting-task)))
+      (uninferredSentence
+       (ist-Information ?mt
+         (currentAgendaItem ?agent ?current-task))))
+ (methodForAction
+  (clearCachesAndWMIfTaskless)
+  (actionSequence
+   (TheList
+    (doAnnounce "Wiping agent caches and WM!" ())
+    (doClearAgentCaches)
+    (doClearWorkingMemory)))))
+
+;;; Default:
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (clearCachesAndWMIfTaskless)
+  (actionSequence
+   (TheList))))
+
+(<== (preferInContext (clearCachesAndWMIfTaskless) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (copyKBMtToAgent ?mt ?agent)
+
+(isa copyKBMtToAgent ComplexActionPredicate)
+(arity copyKBMtToAgent 2)
+(arg1Isa copyKBMtToAgent Microtheory)
+(arg2Isa copyKBMtToAgent CompanionsAgent)
+(comment copyKBMtToAgent
+ "(copyKBMtToAgent <mt> <agent>) copies the microtheory <mt> from the local KB to the KB of <agent>.")
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (different ?agent ?local-agent)
+      (urlForFlatFileTransport ?mt ?url)
+      (evaluate ?genl-facts
+        (TheClosedRetrievalSetOf (ist-Information BaseKB (genlMt ?mt ?genl-mt))
+          (kbOnly (nonTransitiveInference (ist-Information BaseKB (genlMt ?mt ?genl-mt))))))
+      (evaluate ?spec-facts
+        (TheClosedRetrievalSetOf (ist-Information BaseKB (genlMt ?spec-mt ?mt))
+          (kbOnly (nonTransitiveInference (ist-Information BaseKB (genlMt ?spec-mt ?mt)))))))
+ (methodForAction
+  (copyKBMtToAgent ?mt ?agent)
+  (actionSequence
+   (TheList
+    (doWriteKBMtToFlatFile ?mt ?url)
+    (doCopyRemotely ?agent ?url)
+    (doSynchronousRemotePlan ?agent
+                             (actionSequence
+                              (TheList
+                               (doLoadFlatFile ?url)
+                               (doRecordMembers ?genl-facts)
+                               (doRecordMembers ?spec-facts)
+                               (doDeleteFile ?url)
+                               (doClearWMContext ?mt)
+                               (doFlushKBCaches))))
+    (doDeleteFile ?url)))))
+
+(preconditionForMethod
+ (localAgent ?agent)
+ (methodForAction
+  (copyKBMtToAgent ?mt ?agent)
+  (actionSequence
+   (TheList))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (copyKBCaseLibraryToAgent ?case-library ?agent)
+
+(isa copyKBCaseLibraryToAgent ComplexActionPredicate)
+(arity copyKBCaseLibraryToAgent 2)
+(arg1Isa copyKBCaseLibraryToAgent CaseLibrary)
+(arg2Isa copyKBCaseLibraryToAgent CompanionsAgent)
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (different ?agent ?local-agent)
+      (evaluate ?cases
+        (TheClosedRetrievalSetOf ?case
+          (ist-Information BaseKB (caseLibraryContains ?case-library ?case)))))
+ (methodForAction
+  (copyKBCaseLibraryToAgent ?case-library ?agent)
+  (actionSequence
+   (TheList
+    (doForEach ?case ?cases
+               (actionSequence
+                (TheList (copyKBMtToAgent ?case ?agent)
+                         (doSynchronousRemotePlan ?agent
+                            (doRecord (ist-Information BaseKB
+                                         (caseLibraryContains ?case-library ?case)))))))))))
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (equals ?agent ?local-agent))
+ (methodForAction
+  (copyKBCaseLibraryToAgent ?case-library ?agent)
+  (actionSequence
+   (TheList))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (copyKBCaseLibraryFromAgent ?case-library ?agent)
+
+(isa copyKBCaseLibraryFromAgent ComplexActionPredicate)
+(arity copyKBCaseLibraryFromAgent 2)
+(arg1Isa copyKBCaseLibraryFromAgent CaseLibrary)
+(arg2Isa copyKBCaseLibraryFromAgent CompanionsAgent)
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (different ?agent ?local-agent))
+ (methodForAction
+  (copyKBCaseLibraryFromAgent ?case-library ?agent)
+  (actionSequence
+   (TheList
+    (doSynchronousRemotePlan ?agent
+                             (copyKBCaseLibraryToAgent ?case-library ?local-agent))))))
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (equals ?agent ?local-agent))
+ (methodForAction
+  (copyKBCaseLibraryFromAgent ?case-library ?agent)
+  (actionSequence
+   (TheList))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (enqueueAgendaPause ?predecessor-tasks ?successor-tasks)
+
+(isa enqueueAgendaPause ComplexActionPredicate)
+(arity enqueueAgendaPause 2)
+(arg1Isa enqueueAgendaPause Set-Mathematical)
+(arg2Isa enqueueAgendaPause Set-Mathematical)
+(comment enqueueAgendaPause "(enqueueAgendaPause ?predecessor-tasks ?successor-tasks) enqueues an agenda pause of the agent from which this plan is called.  The pause is assumed to be a sub-task of the current agenda item.  ?predecessor-tasks are the tasks that you want to finish running before the pause (usually a subset of the siblings of the pause task).  ?successor-tasks are those tasks you want to wait until after the pause (also usually siblings).")
+
+(preconditionForMethod
+ (and (agendaContext ?mt)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?parent-task)
+      (newUniqueTask Pause ?pause-task))
+ (methodForAction 
+  (enqueueAgendaPause ?predecessor-tasks ?successor-tasks)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (subTasks ?parent-task ?pause-task)))
+    (doTell (ist-Information ?mt (assignedTo ?pause-task ?local-agent)))
+    (doForEach ?predecessor-task ?predecessor-tasks
+               (doTell (ist-Information ?mt (startsAfterEndingOf ?pause-task ?predecessor-task))))
+    (doForEach ?successor-task ?successor-tasks
+               (doTell (ist-Information ?mt (startsAfterEndingOf ?successor-task ?pause-task))))
+    (doEnqueue ?local-agent ?pause-task
+               (doPauseAgenda))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (enqueueImmediateSuccessorTask ?plan)
+
+(isa enqueueImmediateSuccessorTask ComplexActionPredicate)
+(arity enqueueImmediateSuccessorTask 1)
+(arg1Isa enqueueImmediateSuccessorTask CycLSentence-Assertible)
+(comment enqueueImmediateSuccessorTask "(enqueueImmediateSuccessorTask ?plan) enqueues a high-priorioty task that starts after the current task ends, with the action sequence ?plan.")
+
+(preconditionForMethod
+ (and (agendaContext ?mt)
+      (localAgent ?local-agent)
+      (currentAgendaItem ?parent-task)
+      (newUniqueTask ImmediateSuccessor ?successor-task))
+ (methodForAction 
+  (enqueueImmediateSuccessorTask ?plan)
+  (actionSequence
+   (TheList
+    (doTell (ist-Information ?mt (startsAfterEndingOf ?successor-task ?parent-task)))
+    (doTell (ist-Information ?mt (assignedTo ?successor-task ?local-agent)))
+    ;;set importance very high to get it to execute next
+    (doTell (ist-Information ?mt (taskImportance ?successor-task 100)))
+    (doEnqueue ?local-agent ?successor-task ?plan)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (ifThen ?condition ?action)
+
+(isa ifThen ComplexActionPredicate)
+(arity ifThen 2)
+(arg1Isa ifThen CycLSentence-Assertible)
+(arg2Isa ifThen CycLSentence-Assertible)
+(comment ifThen "(ifThen ?condition ?action) plans and executes ?action if ?condition holds.  ?action can either be a solitary action or an action sequence, such as (actionSequence (TheList <some stuff to do>)).")
+
+(preconditionForMethod
+ (and ?condition
+      (ensureActionSequence ?action ?action-sequence))
+ (methodForAction
+  (ifThen ?condition ?action)
+  ?action-sequence))
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (ifThen ?condition ?action)
+  (actionSequence
+   (TheList))))
+
+(<== (preferInContext (ifThen ?condition ?action) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (writeHandoffCheckpoint)
+
+(isa writeHandoffCheckpoint ComplexActionPredicate)
+(arity writeHandoffCheckpoint 0)
+(comment writeHandoffCheckpoint "(writeHandoffCheckpoint) Writes a handoff microtheory for the local agent at the default Handoff Mt location (specified by the agent name and the session id).")
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (uninferredSentence (currentSessionReasoner ?local-agent))
+      (currentSession ?session)
+      (unifies ?handoff-mt (HandoffMtFn ?session ?local-agent)))
+ (methodForAction
+  (writeHandoffCheckpoint)
+  (actionSequence
+   (TheList
+    (doAnnounceDebug "Writing Handoff Mt: ~A" (handoff-mt))
+    (doWriteHandoffMt ?handoff-mt)))))
+
+(preconditionForMethod
+ (and (localAgent ?local-agent)
+      (currentSessionReasoner ?local-agent))
+ (methodForAction
+  (writeHandoffCheckpoint)
+  (actionSequence
+   (TheList
+    (doAnnounceDebug "Skip writing handoff for session reasoner." ())))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; (answerUserQuery ?context ?sid ?query)
+;;; Provide a cleaner way to invoke solve locally and send answers back.
+;;; 
+
+;;; userQueryStrategySelectorPlan now decides whether to run userQuery directly or to manipulate the query in some way
+;;;(isa answerUserQuery ComplexActionPredicate)
+;;;(arity answerUserQuery 3)
+;;;(arg1Isa answerUserQuery Microtheory)
+;;;(arg2Isa answerUserQuery CycLTerm)
+;;;(arg3Isa answerUserQuery CycLSentence-Askable)
+;;;(comment answerUserQuery "(answerUserQuery ?context ?sid ?query) invokes solve locally (in the session-reasoner) and returns the result using a remote plan invoked on the interaction-manager.")
+
+;;;(preconditionForMethod
+;;;  (ist-Information ?context
+;;;    (goalOfSolve ?solve-fn (userQuery ?query)))  ; set up solver
+;;;  (methodForAction
+;;;    (answerUserQuery ?context ?sentence-id ?query)
+;;;    (actionSequence
+;;;      (TheList
+;;;        (doNotifyPA ?query UserQueryEvent)       ; inform listeners of query
+;;;        (doRunToSolution ?solve-fn)              ; generate answer(s)
+;;;        (doAgentPlan                             ; return answer(s)
+;;;         (returnAnswersToUser ?context ?sentence-id ?query ?solve-fn))))))
+
+(isa userQueryStrategySelectorPlan ComplexActionPredicate)
+(arity userQueryStrategySelectorPlan 4)
+(arg1Isa userQueryStrategySelectorPlan Microtheory)
+(arg2Isa userQueryStrategySelectorPlan CycLTerm)
+(arg3Isa userQueryStrategySelectorPlan CycLSentence-Askable)
+(comment userQueryStrategySelectorPlan "(userQueryStrategySelectorPlan ?context ?sentence-id ?query ?interpretation-microtheory) 
+decides how to proceed with ?query. Currently ?interpretation-microtheory is not being used but is kept because it seems like it will be useful 
+for query reinterpretation.")
+
+
+(preconditionForMethod
+ (ist-Information ?context
+   (goalOfSolve ?solve-fn (userQueryStrategySelector ?query ?interpretation-microtheory ?ans)))  ; set up solver
+  (methodForAction
+    (userQueryStrategySelectorPlan ?context ?sentence-id ?query ?interpretation-microtheory)
+    (actionSequence
+      (TheList
+        (doNotifyPA ?ans UserQueryEvent)       ; inform listeners of query
+        (doRunToSolution ?solve-fn)              ; generate answer(s)
+        (doAgentPlan                             ; return answer(s)
+          (returnAnswersToUser ?context ?sentence-id ?query ?solve-fn))))))
+
+(isa returnAnswersToUser ComplexActionPredicate)
+(arity returnAnswersToUser 4)
+(arg1Isa returnAnswersToUser Microtheory)
+(arg2Isa returnAnswersToUser CycLTerm)
+(arg3Isa returnAnswersToUser CycLSentence-Askable)
+(arg4Isa returnAnswersToUser SolveActivity)
+(comment returnAnswersToUser "(returnAnswersToUser ?context ?sid ?query ?solve-id) extracts an answer (if available) from an AO-Tree and sends it back to the interaction manager.")
+
+(preconditionForMethod
+  (and (rootNodeOfSolve ?solve-id ?root)
+       (aoNodeSolutionStatus ?root Solved)
+       (currentSolutionOfSolve ?solve-id ?solution)
+       (unifies (ist-Information ?context ?solve-result) ?solution) ; destructure
+       (currentInteractionMgr ?im))
+  (methodForAction
+    (returnAnswersToUser ?context ?sid ?query ?solve-id)
+    (actionSequence
+      (TheList
+       (doRemoteAgentPlan ?im (presentAnswersToUser ?context ?sid ?query ?solve-result ?solve-id))))))
+
+;;;(preconditionForMethod
+;;;  (and (rootNodeOfSolve ?solve-id ?root)
+;;;       (uninferredSentence (aoNodeSolutionStatus ?root Solved))
+;;;       (containsExpression and ?query)
+;;;       (evaluate ?confusion-removed
+;;;         (RemoveIfFn
+;;;          ?query
+;;;          (Kappa (?expr)
+;;;                 (or (containsExpression WHFocus ?expr)
+;;;                     (and (containsExpression possessiveRelation ?expr)
+;;;                          (containsExpression ?answer ?expr))))
+;;;          IdentityFn))
+;;;       (different ?confusion-removed ?query) ;; prevent infinite loops
+;;;       (outsourcedOnly (optimizedQuery ?confusion-removed ?optimized-q))
+;;;       (userQueryStrategySelector ?optimized-q ?interpretation-mt ?ans))
+;;; (methodForAction
+;;;    (returnAnswersToUser ?context ?sid ?query ?solve-id)
+;;;    (actionSequence
+;;;      (TheList
+;;;        (doRemoteAgentPlan ?im (presentAnswersToUser ?context ?sid ?query ?solve-result ?solve-id))))))
+
+(preconditionForMethod
+  (currentInteractionMgr ?im)
+  (methodForAction
+    (returnAnswersToUser ?context ?sid ?query ?solve-id)
+    (actionSequence
+      (TheList
+        (doRemoteAgentPlan ?im (presentQueryFailureToUser ?context ?sid ?query))))))
+        
+(<== (preferInContext (returnAnswersToUser ?context ?sid ?query ?solve-id) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 presentAnswersToUser))
+
+     
+
+;;; End of File
+

@@ -1,0 +1,8 @@
+(in-microtheory AcademicOrganizationVocabularyMt)
+
+(isa AAAI ResearchOrganization)
+(isa IEEE ResearchOrganization)
+(isa AssociationForComputingMachinery ResearchOrganization)
+(isa AAAIPress Organization)
+(genls TeachingAssistant GraduateStudent)
+(genls ResearchAssistant GraduateStudent)

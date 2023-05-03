@@ -1,0 +1,82 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: analogical-disambiguation.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 10, 2011 15:12:26
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(in-microtheory Interaction-ManagerMt)
+(isa All-AD-CircumstancesMt Microtheory)
+(isa All-APD-CircumstancesMt Microtheory)
+(isa factToRecord Predicate)
+(arity factToRecord 1)
+(arg1Isa factToRecord Thing)
+(comment "factToRecord is wrapped around types
+of facts to record for analogical disambiguation.")
+
+(in-microtheory All-AD-CircumstancesMt)
+;;(factToRecord cfChoices)
+;;(factToRecord cfOtherSentenceChoices)
+
+(factToRecord cfSelectedChoice)
+(factToRecord cfOtherSentenceSelectedChoice)
+(factToRecord cfWordsInSentence)
+(factToRecord cfWordsForCS)
+(factToRecord cfSubjectOfSentence)
+(factToRecord cfPartOfSpeech)
+(factToRecord cfPartnersInCNP)
+(factToRecord cfPrepositionOfAttachedPP)
+(factToRecord cfPrepositionOfLocalPP)
+(factToRecord cfGrammarRulesPath)
+(factToRecord cfDistributedParseTree-Local)
+
+(in-microtheory All-AD-Circumstances-PPs-relational-Mt)
+(factToRecord cfDistributedParseTree-Local)
+(factToRecord cfOtherSentenceSelectedChoice)
+(factToRecord cfSelectedChoice)
+(factToRecord cfWordsInSentence)
+(factToRecord cfWordsForCS)
+(factToRecord cfSubjectOfSentence)
+(factToRecord cfPartOfSpeech)
+(factToRecord cfPartnersInCNP)
+(factToRecord cfRelationalPrepositionOfAttachedPP)
+(factToRecord cfRelationalPrepositionOfLocalPP)
+(factToRecord cfGrammarRulesPath)
+
+(in-microtheory Only-AD-Words-Mt)
+(factToRecord cfWordsInSentence)
+(factToRecord cfWordsForCS)
+
+
+;;; This describes an ambiguity between two parse trees, not a parse tree directly
+;;; Used by gather-choice-set-circumstances-APR
+(in-microtheory All-APD-CircumstancesMt)
+(d::factToRecord d::cfWordsInSentence) ;; Done, not tested
+(d::factToRecord d::cfSubjectOfSentence) ;; Done, not tested
+;;; Something with what prepositions are in the sentence? Might be redundant with the words.
+;;; Part of speech of the word that the prepositions are attached to? For each preposition
+;;; How does SME handle just being given two large trees?
+;;; Badly, without consistant arity.
+;;; How about distributed?
+;;; That works out, and should work even better if we also get all the node types in there too.
+;;; Cool, that's great.
+;;; Store the root node? Maybe force that to match? (No, don't do that.)
+(d::factToRecord d::SentenceParses) ;;
+(d::factToRecord d::RootOfSelectedParse) ;;
+(d::factToRecord d::RootOfOurParse) ;;
+(d::factToRecord d::RootOfOtherParse)
+;;; Here's a thing: How do we distinguish between the selected and unselected parses?
+;;; Can we use RootOfSelectedParse or something? Will that reliably work?
+;;; What other sorts of things do we want in there?
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

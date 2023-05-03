@@ -1,0 +1,314 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: problem-analysis-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:17:37
+;;;;   Purpose: Analysing physics problems to determine strategy
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;what are acceptable answers
+;;;;;what type of problem is this
+;;;; This list could/should be filtered in the future, but for now it should get the job done
+
+(<== (acceptableSymbolicTermInAnswerForQuestion ?x ?question)
+     (multipleChoiceSingleOptionList 
+              ?question 
+              (TheList ?prop ?ans))
+     (mathExpression ?prop) ;; Limit to mathematical expressions
+     (termFormulas ?prop ?x)
+     (acceptableTerm ?x))
+
+(<== (acceptableTerm ?x)
+     (uninferredSentence (mathExpression ?x))
+     (uninferredSentence (numericAnswer ?x)))
+
+;;;; Until we are doing trig, trig functions have to be considered
+;;;; appropriate terms
+(<== (acceptableTerm ?x)
+     (operatorFormulas ?pred ?x)
+     (arg1Isa ?pred AngularDistance))
+      
+(<== (mathExpression ?exp)
+     (operatorFormulas ?pred ?exp)
+     (isa ?pred MathematicalFunctionOnScalars))
+
+(<== (numericAnswer ?unit-description)
+     (unifies (?units ?number) ?unit-description)
+     (isa ?units UnitOfMeasure)
+     (isa ?number RealNumber))
+
+(<== (numericAnswer ?number)
+     (isa ?number RealNumber))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; numericProblem or symbolicProblem or qualitativeProblem
+;;;
+;;; This choice is considered mutually exclusive and collectively exhaustive
+;;; We assume that answer choices are either purely numeric or purely symbolic.
+;;; (This has been true for all of the ETS and ETS-like problems we have seen, but
+;;;  obviously need not be true in general.)
+;;;
+;;; If we don't recognize the type of problem, we will fail quickly. 
+
+(isa symbolicProblem UnaryPredicate)
+(arity symbolicProblem 1)
+
+(<== (symbolicProblem ?problem)
+     (termToSolveFor (TestQueryFn ?problem)
+                     (valueOf ?quantity ?value-term)
+                     ?value-term)
+     (acceptableSymbolicTermInAnswerForQuestion ?x ?problem))
+
+(isa numericProblem UnaryPredicate)
+(arity numericProblem 1)
+
+(<== (numericProblem ?problem)
+     (termToSolveFor (TestQueryFn ?problem)
+                     (valueOf ?quantity ?value-term)
+                     ?value-term)
+     (evaluate ?answer-choices
+       (TheClosedRetrievalSetOf
+           ?choice 
+         (multipleChoiceSingleOptionList
+          ?problem
+          (TheList ?choice ?letter))))
+     (everySatisfies ?answer-choice
+                     ?answer-choices
+                     (numericAnswer ?answer-choice)))
+
+(isa qualitativeProblem UnaryPredicate)
+(arity qualitativeProblem 1)
+
+(isa stateElaborationProblem UnaryPredicate)
+(arity stateElaborationProblem 1)
+
+(<== (qualitativeProblem ?problem)
+     (termToSolveFor
+              (TestQueryFn ?problem)
+              (causes-SitProp ?event ?prop) ?prop)
+     (tell (stateElaborationProblem ?problem)))
+
+;;; elaborateBasicProblemInformation works around odd encodings by Cycorp.
+;;; Right now, the key case is
+;;; (causes-SitProp Pulling-11-3 (and <good stuff>))
+;;; where <good stuff> needs to be believed in the current problem-solving
+;;; microtheory.  
+
+(<== (elaborateBasicProblemInformation ?i-problem)
+     (causes-SitProp ?event ?maybe-stuff)
+     (believeInCurrentMt ?maybe-stuff))
+
+;;; This is simplistic in several ways. 
+;;; 1. We assume no nested ands.
+;;; 2. We ignore other connectives.
+;;; 3. We don't try to check the antecedents of the causal statement,
+;;;       one could imagine nasty problems with explicit conditionals,
+;;;       for example.
+
+(<== (believeInCurrentMt ?maybe-stuff)
+     (operatorFormulas and ?maybe-stuff)
+     (evaluate ?the-list
+       (RestOfListFn (ConsFn TheList ?maybe-stuff)))
+     (everySatisfies ?fact ?the-list
+                     (tell ?fact)))
+
+(<== (believeInCurrentMt ?maybe-stuff)
+     (uninferredSentence (operatorFormulas and ?maybe-stuff))
+     (tell ?fact))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Determine quantity problem is about
+
+(isa quantityForProblem BinaryPredicate)
+(arity quantityForProblem 2)
+
+(<== (quantityForProblem ?problem ?quantity)
+     (querySentenceOfQuery 
+      (TestQueryFn ?problem)
+      (valueOf ?quantity ?value)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Scoring answers
+
+;;; For scoring numerical answers,
+;;;  we'll use percentage of variance from magnitude of answer.
+
+(<== (scoreForNumericalChoice ?letter ?value ?calculated-answer ?score)
+     (multipleChoiceSingleOptionList ?problem (TheList ?value ?letter))
+     (isa ?value NumericalValueWithUnits)
+     (isa ?calculated-answer NumericalValueWithUnits)
+     (evaluate ?score
+       (ValueFromUnitsFn
+        (AbsoluteValueFn
+         (QuotientFn
+          (DifferenceFn ?value ?calculated-answer)
+          ?calculated-answer)))))
+
+(<== (scoreForSymbolicChoice ?letter ?value ?calculated-answer ?score)
+     (multipleChoiceSingleOptionList ?problem (TheList ?value ?letter))
+     (mathExpression ?value)
+     (mathExpression ?calculated-answer)
+     (algebraDifferenceScore ?value ?calculated-answer ?score))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Creating microtheories for each alternative hypothesis
+
+(isa microtheoryForAnswerChoice Predicate)
+(arity microtheoryForAnswerChoice 3)
+
+(<== (microtheoryForAnswerChoice ?problem ?baseMt ?alternateMt)
+     (multipleChoiceSingleOptionList ?problem
+                                     (TheList ?prop ?choice))
+     (tell (isa (ProblemOptionMtFn ?choice ?problem) Microtheory))
+     ;; We use subCaseOf here instead of genlMt because FIRE doesn't
+     ;; handle the latter properly - FIRE been updated, no longer true
+     (tell (genlMt (ProblemOptionMtFn ?choice ?problem) ?baseMt))
+     ;; In order for queries done in the context of (ProblemOptionMtFn ?x ?y) to see
+     ;; most relevant rules, it all needs to specialize PhysicsProblemSolvingMt
+     ;; Alternatively, it could specialize Mt for the query context and get both the
+     ;; ?baseMt and PhysicsProblemSolvingMt because they added as genlMts in the rule
+     ;; addPhysicsMtsForProblem
+     (tell (genlMt (ProblemOptionMtFn ?choice ?problem) PhysicsProblemSolvingMt))
+     ;; Actually it does need the queryContext because all of the query results
+     ;; are cached in that context.  Hence, any intermediate results would not be
+     ;; visible to the ProblemOptionMtFn if it does not genlMt from it.  We probably
+     ;; can then get rid of the above two genlMt statements
+     (queryContext ?ctxt)
+     (tell (genlMt (ProblemOptionMtFn ?choice ?problem) ?ctxt))
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (tell ?prop))
+     (unifies ?alternateMt (ProblemOptionMtFn ?choice ?problem)))
+
+(<== (makeMicrotheoriesForNumericalAnswerChoice ?problem ?baseMt)
+     (microtheoryForNumericalAnswerChoice ?problem ?baseMt ?altMt))
+
+(<== (microtheoryForNumericalAnswerChoice ?problem ?baseMt ?alternateMt)
+     (numericalAssumptionConsistencyProblem ?problem)
+     (termToSolveFor (TestQueryFn ?problem)
+                     (consistent (valueOf ?quantity ?term)) ?term)
+     (multipleChoiceSingleOptionList ?problem
+                                     (TheList ?value ?choice))
+     (tell (isa (ProblemOptionMtFn ?choice ?problem) Microtheory))
+     ;; We use subCaseOf here instead of genlMt because FIRE doesn't
+     ;; handle the latter properly - FIRE been updated, no longer true
+     (tell (genlMt (ProblemOptionMtFn ?choice ?problem) ?baseMt))
+     ;; In order for queries done in the context of (ProblemOptionMtFn ?x ?y) to see
+     ;; most relevant rules, it all needs to specialize PhysicsProblemSolvingMt
+     ;; Alternatively, it could specialize Mt for the query context and get both the
+     ;; ?baseMt and PhysicsProblemSolvingMt because they added as genlMts in the rule
+     ;; addPhysicsMtsForProblem
+     (tell (genlMt (ProblemOptionMtFn ?choice ?problem) PhysicsProblemSolvingMt))
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (tell (valueOf ?quantity ?value)))
+     (unifies ?alternateMt (ProblemOptionMtFn ?choice ?problem)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Finding quantities to solve based on the answer choices
+;;;
+;;; Basically, this is qualitative value information that can be ascertained
+;;; from the equations solved over the relevant intervals
+;;; We limit the scope to the particular alternate Mt, and demand that it
+;;; explicitly be in the state. 
+;;; 
+;;; N.B. If one parameter is the derivative of another, e.g., speed and acceleration,
+;;; we really don't need to solve for the integrated parameter.  How to do that?
+
+(isa quantitySuggestedByAnswerChoice Predicate)
+(arity quantitySuggestedByAnswerChoice 5)
+
+(<== (quantitySuggestedByAnswerChoice ?choice ?problem ?q ?e-choice
+                                      ?e-problem)
+     ;; Find a mentioned quantity
+     (quantityMentionedInAnswerChoice
+      ?choice ?problem (MeasurementAtFn ?q ?e-choice))
+     ;; Select event from problem that at least has values
+     (eventProvidesQuantitativeValues ?e-problem)
+     ;; and is mentioned in equations in the analogy
+     (quantityMentionedInCandidateInferenceEquations
+      (MeasurementAtFn ?q ?e-problem))
+     ;; and can be related to the event from the choice Mt
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (valuesUsefulAcrossEvents ?q ?e-choice ?e-problem)))
+
+(<== (quantityMentionedInAnswerChoice ?choice ?problem 
+                                      (MeasurementAtFn ?q ?e))
+     (lookupOnly (ist-Information
+                     (ProblemOptionMtFn ?choice ?problem)
+                   (increasesThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInAnswerChoice ?choice ?problem
+                                      (MeasurementAtFn ?q ?e))
+     (lookupOnly (ist-Information
+                     (ProblemOptionMtFn ?choice ?problem)
+                   (decreasesThroughoutEvent-Fluent ?q ?e))))
+     
+(<== (quantityMentionedInAnswerChoice ?choice ?problem
+                                      (MeasurementAtFn ?q ?e))
+     (lookupOnly (ist-Information
+                     (ProblemOptionMtFn ?choice ?problem)
+                   (constantThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInAnswerChoice ?choice ?problem
+                                      (MeasurementAtFn ?q ?e))
+     (lookupOnly (ist-Information
+                     (ProblemOptionMtFn ?choice ?problem)
+                   (zeroThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInAnswerChoice ?choice ?problem 
+                                      (MeasurementAtFn ?q ?e))
+     (lookupOnly (ist-Information
+                     (ProblemOptionMtFn ?choice ?problem)
+                   (positiveThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInAnswerChoice ?choice ?problem 
+                                      (MeasurementAtFn ?q ?e))
+     (lookupOnly (ist-Information
+                     (ProblemOptionMtFn ?choice ?problem)
+                   (negativeThroughoutEvent-Fluent ?q ?e))))
+
+(<== (quantityMentionedInAnswerChoice ?choice ?problem
+                                      (MeasurementAtFn ?q ?e))
+     (lookupOnly (ist-Information
+                     (ProblemOptionMtFn ?choice ?problem)
+                   (increasesThroughoutEvent-Fluent ?q ?e))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Figuring out relevant events for problem-solving
+;;;
+;;; There can be distractor events in the problems, so we want to find events that
+;;; can provide information that is potentially relevant.  We use something very
+;;; crude here, it could be made more sophisticated by for instance specifying what
+;;; values are linked by equations, once the system knows more via learning.
+
+
+(<== (eventProvidesQuantitativeValues ?e)
+     (valueOf (MeasurementAtFn ?q ?e) ?value)
+     (groundExpression ?e))
+
+;;; Very crude version, suitable for reasoning within a single qualitative state
+
+(<== (valuesUsefulAcrossEvents ?i-q ?e1 ?e2)
+     (cotemporal ?e1 ?e2)
+     (groundExpression ?e1)
+     (groundExpression ?e2))
+
+(<== (valuesUsefulAcrossEvents ?i-q ?e1 ?e2)
+     (equals ?e1 ?e2)
+     (groundExpression ?e1))
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code

@@ -1,0 +1,10 @@
+(in-microtheory UnitedNationsOrganizationMt)
+
+(isa UnitedNationsConferenceOnTradeAndDevelopment InternationalOrganizationOfCountries)
+(isa UnitedNationsProtectionForce InternationalOrganizationOfCountries)
+(isa UNGeneralAssembly PoliticalOrganization)
+(isa UnitedNationsSecretariat Secretariat)
+(isa UnitedNationsIndustrialDevelopmentOrganization InternationalOrganizationOfCountries)
+(isa UnitedNationsOfficeOfTheHighCommissionerForRefugees InternationalOrganizationOfCountries)
+(comment UnitedNationsSecretariat "The secretariat or principal administrative suborganization for the #$UnitedNationsOrganization.  An instance of #$Secretariat.")
+(comment UNGeneralAssembly "The General Assembly is the largest, most political, body of the  #$UnitedNationsOrganization. It is here that all the members of the U.N.  are represented. The functions of the general assembly are deliberative,  supervisory, financial, elective and can suggest amendments to the U.N.  charter.")

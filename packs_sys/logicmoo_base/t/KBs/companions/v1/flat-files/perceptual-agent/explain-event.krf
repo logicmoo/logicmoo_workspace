@@ -1,0 +1,712 @@
+;;; File name: explain-event.meld
+;;;    System: Companions
+;;;    Author: Tom Hinrichs
+;;;   Created: November 14, 2011 11:26:26
+;;;   Purpose: Explain asynchronous PerceptualAgent events.
+;;; -------------------------------------------------------------------------
+;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;  $LastChangedBy: hinrichs $
+;;; -------------------------------------------------------------------------
+;;;
+;;;  11-14-11 [TRH] - Split off from lbd.meld.
+;;;
+;;; explainEvent fails for events that have no perceived relevance to prior actions.
+;;; So going into a hut and discovering Pottery cannot be explained.  If we record 
+;;; unexplained events as anomalies, could we later go back and notice the 
+;;; correspondence with huts?  But is there even any mention of a hut in the
+;;; execution trace?
+
+(in-microtheory PerceptualAgentMt)
+
+
+(isa explainEvent ComplexActionPredicate)
+(arity explainEvent 4)
+(arg1Isa explainEvent Microtheory)
+(arg2Isa explainEvent Event)
+(arg3Isa explainEvent Collection)
+(arg4Isa explainEvent TimeInterval)
+(comment explainEvent "(explainEvent ?mt ?event ?event-type ?when) attempts to explain an asynchronous event with respect to a process limit point or prior action or event.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (explainEvent ?mt ?event ?event-type ?when)
+    (actionSequence
+      (TheList
+        (doRecord (ist-Information ?mt (explanationFailure ?event-type)))     ; Too broad-brushed?
+        (doAnnounce "Failure to explain ~a in ~a" (?event ?when))))))  ; Temporary!
+
+(<== (preferInContext (explainEvent ?mt ?event ?event-type ?when) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq2 doAnnounce))
+     
+(isa hypothesizedProcessLimitFromAction BinaryPredicate)
+(arity hypothesizedProcessLimitFromAction 2)
+(arg1Isa hypothesizedProcessLimitFromAction ActionPredicate)
+(arg2Isa hypothesizedProcessLimitFromAction Collection)
+(comment hypothesizedProcessLimitFromAction "(hypothesizedProcessLimitFromAction ?action-pred ?event-type) is a reifiable statement that indicates that ?event-type probably terminates a process started by ?action-pred.")
+
+(isa ActionProcessTypeFn Function-Denotational)
+(isa ActionProcessTypeFn AtomicAnalogyNAT-Function)
+(arity ActionProcessTypeFn 1)
+(arg1Isa ActionProcessTypeFn ActionPredicate)
+(resultIsa ActionProcessTypeFn QPProcessType)
+(comment ActionProcessTypeFn "(ActionProcessTypeFn <action-pred>) denotes the process type initiated by actions of type <action-pred>.")
+
+;;; *** Issue: we'll need some kind of constraint on dependent entity,
+;;; *** though for now, we're assuming it's the doer of the action.
+(isa processDependentVariable BinaryPredicate)
+(arity processDependentVariable 2)
+(arg1Isa processDependentVariable QPProcessType)
+(arg2Isa processDependentVariable QuantityType)
+(comment processDependentVariable "(processDependentVariable ?process-type ?quantity-type) associates a dependent quantity type with a process type.")
+
+(isa influenceDirection TernaryPredicate)
+(arity influenceDirection 3)
+(arg1Isa influenceDirection QPProcessType)
+(arg2Isa influenceDirection QuantityType)
+(arg3Isa influenceDirection UnaryPredicate) ; Yuk.
+(comment influenceDirection "(influenceDirection ?process-type ?quantity-type ?direction-pred) associates an influenced direction of a dependent quantity type with a process type.")
+
+;;; ---------------------------------------------------------------
+;;; Event Explanation
+
+;;; Issue: we reify the event with a name, a dateOfEvent and an isa, but
+;;; nothing else.  so we have:
+;;; (isa FC-City-DetroitProductionChanged1 CityProductionChangedEvent) 
+;;; but we never say what it was changed to.  The fact that we decided
+;;; to build Settlers is important, but not recorded.
+;;; 
+;;; *** ToDo: short-circuit this when we know what causes the event,
+;;; *** and check for obvious spatio-temporal coincidences first.
+;;; *** What co-located actions immediately precede this? 
+;;; *** What propositional changes happen on the add-delete list?
+;;; *** What other actions also happen, either concurrently or immediately prior?
+;;; 
+;;; Step 1: associate event with action that causes it
+;;; Step 2: record that so we can explain it away
+;;; Step 3: if action preceded event by many turns, may want to 
+;;;         define an eventualEffectOfAction-Props
+;;; Step 4: if so, posit a process between action and culminating event
+;;; 
+
+;;; Should check first for (hypothesizedProcessLimitFromAction <action-pred> <event-type>)
+;;; or (hypothesizedCauseOfEvent-TypeType ?event-type ?action-pred)
+
+;;; Preferred Method
+(preconditionForMethod
+  (and (uninferredSentence
+         (ist-Information ?mt (explanationFailure ?event-type)))
+       (spatioTemporalCoincidence ?mt ?event ?added ?deleted ?cmd ?prior-action))
+  (methodForAction
+    (explainEvent ?mt ?event ?event-type ?when)
+    (actionSequence
+      (TheList
+        (hypothesizeImmediateCause ?mt ?event ?cmd ?prior-action ?added ?deleted)))))
+
+(<== (preferInContext (explainEvent ?mt ?event ?event-type ?when) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 hypothesizeImmediateCause))
+
+(isa hypothesizeImmediateCause ComplexActionPredicate)
+(arity hypothesizeImmediateCause 6)
+(arg1Isa hypothesizeImmediateCause Microtheory)
+(arg2Isa hypothesizeImmediateCause Event)
+(arg3Isa hypothesizeImmediateCause PerceptualAgentCommand)
+(arg4Isa hypothesizeImmediateCause CycLExpression)
+(arg5Isa hypothesizeImmediateCause Set-Mathematical)
+(arg6Isa hypothesizeImmediateCause Set-Mathematical)
+(comment hypothesizeImmediateCause "(hypothesizeImmediateCause ?mt ?event ?cmd ?prior-action ?added ?deleted) attempts to explain the cause of ?event in terms of the immediate effect of an action.")
+
+(isa hypothesizedCauseOfEvent TernaryRelation)
+(arity hypothesizedCauseOfEvent 3)
+(arg1Isa hypothesizedCauseOfEvent Event)
+(arg2Isa hypothesizedCauseOfEvent PerceptualAgentCommand)
+(arg3Isa hypothesizedCauseOfEvent CycLExpression)
+(comment "(hypothesizedCauseOfEvent ?e ?c ?exp) indicates that the event ?e is being 
+hypothesized as the result of the command ?c, whose propositional content is ?exp")
+
+(isa hypothesizedCauseOfEvent-TypeType BinaryRelation)
+(arity hypothesizedCauseOfEvent-TypeType 2)
+(arg1Isa hypothesizedCauseOfEvent-TypeType TemporalStuffType)
+(arg2Isa hypothesizedCauseOfEvent-TypeType ActionPredicate)
+(comment "(hypothesizedCauseOfEvent-TypeType ?et ?ap) indicates that
+ event types of ?et cause actions of type ?ap")
+
+(isa eventDeletedProposition BinaryPredicate)
+(arity eventDeletedProposition 2)
+(arg1Isa eventDeletedProposition Event)
+(arg2Isa eventDeletedProposition CycLExpression)
+(comment eventDeletedProposition 
+  "(eventDeletedProposition ?e ?exp) indicates that after event ?e, ?exp is no longer
+ believed in this context.")
+
+(isa eventAddedProposition BinaryPredicate)
+(arity eventAddedProposition 2)
+(arg1Isa eventAddedProposition Event)
+(arg2Isa eventAddedProposition CycLExpression)
+(comment eventAddedProposition 
+  "(eventAddedProposition ?e ?exp) indicates that after event ?e, ?exp is newly
+ believed in this context.")
+
+;;; This will find things like:
+;;; (eventDeletedProposition TechFoundEvent3 (specialAt (FreeCivLocationFn 55 43) FC-Special-Hut))
+
+(preconditionForMethod
+  (and (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))
+       (domainEntityType ?mt ?event ?event-type)
+       (operatorFormulas ?action-pred ?action))
+  (methodForAction
+    (hypothesizeImmediateCause ?mt ?event ?cmd ?action ?added ?deleted)
+    (actionSequence
+      (TheList
+        (doAnnounce "Event ~a was probably caused by ~a" (?event ?action))
+        (doRecord 
+          (ist-Information ?mt
+            (hypothesizedCauseOfEvent ?event ?cmd ?action)))
+        (doForEach ?addition ?added (doRecord (ist-Information ?mt (eventAddedProposition ?event ?addition))))
+        (doForEach ?deletion ?deleted (doRecord (ist-Information ?mt (eventDeletedProposition ?event ?deletion))))
+        (doRecord 
+          (ist-Information ?lkmt
+            (hypothesizedCauseOfEvent-TypeType ?event-type ?action-pred)))
+        ;; If there were deleted propositions at ?loc, they were probably conditions.
+        ;; We should make a horn clause somehow.
+        ))))
+    
+
+
+
+;;; precededByRelatedAction now gives the latest related command.
+;;; Not clear why we were extracting ?event-time before.
+(preconditionForMethod
+  (and (uninferredSentence 
+         (ist-Information ?mt (explanationFailure ?event-type)))
+       ;; There's no depth limit on this, so it can take a long time in late-stage game.
+       (precededByRelatedAction ?mt ?event ?when ?command ?action ?action-turn))
+  (methodForAction
+    (explainEvent ?mt ?event ?event-type ?when)
+    (actionSequence
+      (TheList
+        ;; Don't put doAnnounce here or it will interfere with preference rule.
+        (hypothesizeEventCause ?mt ?event ?when ?command ?action ?action-turn)
+        (hypothesizeEventMotivation ?mt ?event ?when ?command ?action ?action-turn)
+        ))))
+
+;;; Need to handle more subtle cases of related actions.
+;;; An action may be related if it probably interacts in space and time
+;;; with something anomalous.
+;;; E.g., if we spontaneously learn a technology, it helps to determine that
+;;; the immediately preceding action took a unit to the location of some 
+;;; special (like a hut) that no longer exists. (or that does still exist but
+;;; has never been encounted before.)
+;;;
+;;; One property of games is that the type of an entity pretty much determines
+;;; its behavior.  There just isn't much individual variation across instances
+;;; except for a handful of state variables such as veteran status.
+;;; There's type, intrinsic state variables, and extrinsic situation variables
+;;; (e.g., what terrain you're on, proximity to salient things, etc)
+
+(isa hypothesizeEventCause ComplexActionPredicate)
+(arity hypothesizeEventCause 6)
+(arg1Isa hypothesizeEventCause Microtheory)
+(arg2Isa hypothesizeEventCause Event)
+(arg3Isa hypothesizeEventCause TemporalThing)
+(arg4Isa hypothesizeEventCause PerceptualAgentCommand)
+(arg5Isa hypothesizeEventCause CycLExpression)
+(arg6Isa hypothesizeEventCause TemporalThing)
+(comment hypothesizeEventCause "(hypothesizeEventCause ?mt ?event ?when ?command ?action ?action-turn) attempts to explain the proximal or distal cause of ?event, hypothesizing either a process limit or cardinality action effect.")
+
+
+;;; Write out the hypothesis so it can validate over several trials.
+;;; We want to look for some quantity that monotonically increases or
+;;; decreases between the action and the event.  This would signify a process.
+;;; It would be nice if we could hypothesize some quantities to monitor
+;;; the next time we execute the action type.  Otherwise, we'll just have to
+;;; buffer quantities mentioning the action args.
+(preconditionForMethod
+  (and (different ?event-time ?action-time)       ; a delayed effect
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain))
+       (domainEntityType ?mt ?event ?event-type)
+       (operatorFormulas ?action-pred ?action))
+  (methodForAction
+    (hypothesizeEventCause  ?mt ?event ?event-time ?command ?action ?action-time)
+    (actionSequence
+      (TheList
+        (doAnnounce "Maybe event ~a is a process limit deriving from ~a in ~a" (?event ?action ?action-time))
+        (doRecord 
+          (ist-Information ?lkmt
+            (hypothesizedProcessLimitFromAction ?action-pred ?event-type)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (elaborateHypothesizedProcess ?mt ?action-time ?event-time ?action ?event))))
+        ))))
+
+;;; Case of instantaneous event:
+(preconditionForMethod
+  (and (ist-Information ?mt
+         (isa ?event CreationOrDestructionEvent))
+       (operatorFormulas ?action-pred ?action)
+       ;; inherit from ?lkmt:
+       (evaluate ?element-types-created
+         (TheClosedRetrievalSetOf ?element-type
+           (cacheComplete (elementTypeCreated ?mt ?event ?element-type))))
+       (evaluate ?element-types-consumed
+         (TheClosedRetrievalSetOf ?element-type
+           (cacheComplete (elementTypeDestroyed ?mt ?event ?element-type))))
+       (evaluate ?union (SetOrCollectionUnion ?element-types-created ?element-types-consumed))
+       (different ?union (TheSet))
+       (unifies ?casename (IICaseFn ?mt ?when ?command)))
+  (methodForAction
+    (hypothesizeEventCause  ?mt ?event ?when ?command ?action ?when)  ; binding of ?when signifies simultaneity, instantaneous effect
+    (actionSequence
+      (TheList
+        (doForEach ?pos-type ?element-types-created
+          (recordCardinalityInfluence ?mt ?action actionPositivelyAffectsQuantityType ?pos-type ?casename))
+        (doForEach ?neg-type ?element-types-consumed
+          (recordCardinalityInfluence ?mt ?action actionNegativelyAffectsQuantityType ?neg-type ?casename))))))
+
+(preconditionForMethod
+  (and (uninferredSentence
+         (ist-Information ?mt
+           (isa ?event CreationOrDestructionEvent)))
+       (localOnly
+         (ist-Information ?mt
+           (textMessageFor ?event ?message)))
+       (unifies ?casename (IICaseFn ?mt ?when ?command)))
+  (methodForAction
+    (hypothesizeEventCause  ?mt ?event ?when ?command ?action ?when)
+    (actionSequence
+      (TheList
+        (doAnnounce "Maybe event message ~s is a simple announcement of ~s." (?message ?action))))))
+
+;;; default
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (hypothesizeEventCause  ?mt ?event ?event-time ?command ?action ?action-time)
+    (actionSequence
+      (TheList))))
+        
+(<== (preferInContext  (hypothesizeEventCause  ?mt ?event ?event-time ?command ?action ?action-time) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+     
+(isa elementTypeCreated TernaryPredicate)
+(arity elementTypeCreated 3)
+(arg1Isa elementTypeCreated Microtheory)
+(arg2Isa elementTypeCreated Event)
+(arg3Isa elementTypeCreated Collection)
+(comment elementTypeCreated "(elementTypeCreated ?mt ?event ?type) binds ?type to the type of output created by ?event.")
+
+(<== (elementTypeCreated ?mt ?event ?obj-type)
+     (nonTransitiveInference
+        (lookupOnly
+           (ist-Information ?mt
+             (isa ?event ?event-type))))
+     (genls ?event-type PhysicalCreationEvent)
+     (lookupOnly 
+       (numAnswers 1 
+         (outputsCreated-TypeType ?event-type ?obj-type)))
+     (lookupOnly
+        (ist-Information ?mt 
+           (cacheComplete (outputsCreated ?event ?obj)))) ; is this restriction valid?
+     (ist-Information ?mt
+        (isa ?obj ?obj-type)))
+
+(isa elementTypeDestroyed TernaryPredicate)
+(arity elementTypeDestroyed 3)
+(arg1Isa elementTypeDestroyed Microtheory)
+(arg2Isa elementTypeDestroyed Event)
+(arg3Isa elementTypeDestroyed Collection)
+(comment elementTypeDestroyed "(elementTypeDestroyed ?mt ?event ?type) binds ?type to the type of output created by ?event.")
+
+(<== (elementTypeDestroyed ?mt ?event ?obj-type)
+     (nonTransitiveInference
+        (lookupOnly
+           (ist-Information ?mt
+             (isa ?event ?event-type))))
+     (genls ?event-type PhysicalDestructionEvent)
+     (lookupOnly 
+       (cacheComplete 
+         (inputsDestroyed-TypeType ?event-type ?obj-type)))
+     (lookupOnly
+        (ist-Information ?mt 
+           (cacheComplete (inputsDestroyed ?event ?obj))))
+     (ist-Information ?mt
+        (isa ?obj ?obj-type)))
+
+
+;;; We have (eventTriggerForEffect doSetTechGoal TechLearnedEvent)
+;;; but other than that, there's no connection between events and
+;;; actions.  Learning that could be helpful.
+
+;;; We want to know if the event can be explained directly by an action
+;;; or whether it's due to a quantity condition.
+;;;  Can we relate event to a process?
+;;;   determine whether event is quantity-conditioned?
+;;;  Can this signal when to infer qualitative relations?
+;;;  Can this write out the hypotheses?
+;;;  Can this store enough of a case to validate hypotheses?
+
+(isa elaborateHypothesizedProcess ComplexActionPredicate)
+(arity elaborateHypothesizedProcess 5)
+(arg1Isa elaborateHypothesizedProcess Microtheory)
+(arg2Isa elaborateHypothesizedProcess TemporalThing)
+(arg3Isa elaborateHypothesizedProcess TemporalThing)
+(arg4Isa elaborateHypothesizedProcess CycLExpression)
+(arg5Isa elaborateHypothesizedProcess Event)
+(comment elaborateHypothesizedProcess "(elaborateHypothesizedProcess ?mt ?action-time ?event-time ?action ?event) attempts to identify the relevant quantities, influences, and eventual effects involved in the hypothesized process.")
+
+;;; default
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (elaborateHypothesizedProcess ?mt ?action-time ?event-time ?action ?event)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext  (elaborateHypothesizedProcess ?mt ?action-time ?event-time ?action ?event) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; Find the dependent entity affected by the process
+;;; Find quantity discontinuities that bookend the process
+;;; Find the structual change that accompanies the event
+;;;  ie, something created, destroyed, learned, etc.
+;;; Note: There may already be an eventualEffectOfAction-Props in the domain knowledge.
+;;; This is necessary for computing the planning graph.
+
+(preconditionForMethod
+  (and (formulaArgument ?action 1 ?doer)  ; For now, assume dependent entity is the performer of the action
+       (operatorFormulas ?action-pred ?action)
+       (numAnswers 1 (variablizedStatement ?action-pred ?action-template))
+       (anticipatedEffects ?mt ?action ?action-template ?effects)  ; retrieve known eventual effects
+       (evaluate ?pairs
+         (TheClosedRetrievalSetOf ?pair
+           (and (ist-Information ?mt (quantityMentions ?quant ?doer))
+                (bookendingDiscontinuities ?mt ?quant ?action-time ?event-time ?dir)
+                (unifies ?pair (?quant ?dir)))))
+       (unifies (TheSet (?quantity ?direction)) ?pairs)  ; uniqueness requirement
+       (unifies (?qtype ?doer) ?quantity)
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (QualitativeModelMtFn ?domain)))
+  (methodForAction
+    (elaborateHypothesizedProcess ?mt ?action-time ?event-time ?action ?event)
+    (actionSequence
+      (TheList
+        ;; What do we want to record?
+        ;; a) the dependent quantity type
+        ;; b) the direction of the influence
+        ;; c) maybe look around for likely rates?  Or leave that to model learning.
+        ;; Track the instantiated effect and the duration of the process.
+        (doRecord (ist-Information ?lkmt (processDependentVariable (ActionProcessTypeFn ?action-pred) ?qtype)))
+        (doRecord (ist-Information ?lkmt (influenceDirection (ActionProcessTypeFn ?action-pred) ?qtype ?direction)))
+;        (doForEach ?effect ?effects
+;          (doRecord (ist-Information ?
+        ))))
+
+
+
+;;; What does it mean to find the discontinuities that bookend the process?
+;;;  - find a quantity that changes in the opposite direction than it's been changing.
+;;;  - if it's been increasing, it suddenly resets.  If it's been decreasing, it 
+;;;  - suddenly jumps up (or flatlines)
+
+
+(isa anticipatedEffects QuaternaryPredicate)
+(arity anticipatedEffects 4)
+(arg1Isa anticipatedEffects Microtheory)
+(arg2Isa anticipatedEffects CycLExpression)
+(arg3Isa anticipatedEffects CycLExpression)
+(arg3Isa anticipatedEffects Set-Mathematical)
+(comment anticipatedEffects "(anticipatedEffects ?mt ?action ?action-template ?proposition-set) reifies a set of instantiated propositional effects of ?action.")
+
+(<== (anticipatedEffects ?mt ?action ?action-template ?effects-set)
+     (eventualEffectOfAction-Props ?action-template ?effect-template)  ; retrieve known eventual effects
+     (instantiationOf 
+       (eventualEffectOfAction-Props ?action ?props)
+       (eventualEffectOfAction-Props ?action-template ?effect-template)
+       (eventualEffectOfAction-Props ?action ?inst-props))
+     (conjunctSet ?inst-props ?conj-set)
+     (evaluate ?effects-set
+       (TheClosedRetrievalSetOf ?effect
+         (and (lookupOnly (elementOf ?conj ?conj-set))
+              (negationQuery ?conj ?effect)
+              (ist-Information ?mt ?effect)))))   ; is it currently true?  We'd really like to know that it wasn't true previously.
+
+;;; We could use gameTurn and followingTurn to try to query prior turn, but we really don't know.
+;;; If event is a Creation Or Destruction event, we could look to the object of the event 
+;;; to filter.
+
+;;; Information may not be available.
+(<== (anticipatedEffects ?mt ?action ?action-template (TheSet))
+     (uninferredSentence
+       (eventualEffectOfAction-Props ?action-template ?effect-template)))
+
+
+(isa negationQuery BinaryPredicate)
+(comment negationQuery "(negationQuery ?stmt ?query) converts (not <qry>) into (uninferredSentence <qry>)")
+
+(<== (negationQuery ?stmt ?stmt)
+     (operatorFormulas ?pred ?stmt)
+     (different ?pred not))
+
+(<== (negationQuery (not ?qry) (uninferredSentence ?qry)))
+     
+
+;;; --------------------------------------------------------------------------
+
+(isa hypothesizeEventMotivation ComplexActionPredicate)
+(arity hypothesizeEventMotivation 6)
+(arg1Isa hypothesizeEventMotivation Microtheory)
+(arg2Isa hypothesizeEventMotivation Event)
+(arg3Isa hypothesizeEventMotivation TemporalThing)
+(arg4Isa hypothesizeEventMotivation PerceptualAgentCommand)
+(arg5Isa hypothesizeEventMotivation CycLExpression)
+(arg6Isa hypothesizeEventMotivation TemporalThing)
+(comment hypothesizeEventMotivation "(hypothesizeEventMotivation ?mt ?event ?when ?command ?action ?action-turn) attempts to explain why an event was a good thing by understanding how it serves the player's goals.")
+
+;;; default
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (hypothesizeEventMotivation  ?mt ?event ?event-time ?command ?action ?action-time)
+    (actionSequence
+      (TheList))))
+        
+(<== (preferInContext  (hypothesizeEventMotivation  ?mt ?event ?event-time ?command ?action ?action-time) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+;;; If instructor builds, e.g., a granary, we'd like to find out why by learning what granaries do.
+;;; Do we get any kind of event when a worker finishes building irrigation?  or just loss of orders?
+(preconditionForMethod
+  (and (currentActivityMode LearnByDemonstration)  ; Don't explain motivation during autonomous scenarios!
+       (ist-Information ?mt
+         (isa ?event PhysicalCreationEvent))
+       (elementTypeCreated ?mt ?event ?entity-type)
+       (outsourcedOnly (currentDomain ?domain))
+       (unifies ?lkmt (LearnedKnowledgeMtFn ?domain)))
+  (methodForAction
+    (hypothesizeEventMotivation  ?lkmt ?event ?event-time ?command ?action ?action-time)
+    (actionSequence
+      (TheList
+        (postAffordanceLearningGoal ?lkmt ?entity-type)))))
+
+;;; Destruction events are harder.  They may be caused by an opponent, in 
+;;; which case we want to understand the mechanism and instrument of destruction.
+;;; Note that in Chess, there's no creation at all.
+
+;;; --------------------------------
+
+
+(isa spatioTemporalCoincidence Predicate)
+(arity spatioTemporalCoincidence 6)
+(comment spatioTemporalCoincidence "(spatioTemporalCoincidence ?mt ?event ?added ?deleted ?cmd ?prior-action)")
+
+;;; This will fail to find earlier actions like goToDest, or
+;;; extrinsic actions like being attacked.
+(<== (spatioTemporalCoincidence ?mt ?event ?added ?deleted ?cmd ?prior-action)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?mt
+             (eventOccursAt ?event ?location)))))
+     (currentAddList ?all-added-props)
+     (evaluate ?added
+       (TheClosedRetrievalSetOf ?stmt
+         (and (lookupOnly (elementOf ?stmt ?all-added-props))
+              (formulaArgument ?stmt ?n ?location))))
+     (currentDeleteList ?all-deleted-props)
+     (evaluate ?deleted
+       (TheClosedRetrievalSetOf ?stmt
+         (and (lookupOnly (elementOf ?stmt ?all-deleted-props))
+              (formulaArgument ?stmt ?n ?location))))
+     (priorCommand ?mt ?event ?cmd)  ; may be too strict
+     ;; Either the agent is currently at the location, or the action mentioned it:
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (infoTransferred ?cmd ?prior-action)))))
+     (actionRelevantToLocation ?mt ?prior-action ?location))
+
+(isa actionRelevantToLocation TernaryPredicate)
+(arity actionRelevantToLocation 3)
+(arg1Isa actionRelevantToLocation Microtheory)
+(arg2Isa actionRelevantToLocation CycLExpression)
+(arg3Isa actionRelevantToLocation CycLTerm)
+(comment actionRelevantToLocation "(actionRelevantToLocation MT ACTION-EXPR LOCATION) means location is either an argument of the non-Davidsonian ACTION-EXPR, or is the is the location of one of the arguments.")
+
+(<== (actionRelevantToLocation ?mt ?action ?location)
+     (formulaArgument ?action ?n ?location))  ; location is an argument
+
+(<== (actionRelevantToLocation ?mt ?action ?location)
+     (formulaArgument ?action 1 ?agent)
+     (numAnswers 1
+       (ist-Information ?mt
+         (objectFoundInLocation ?agent ?location))))
+         
+;;; For an extrinsic action (like being attacked), we'd want to 
+;;; compare the location of the event to the locations of
+;;; adversarial units and detect adjacencies.  But: we don't 
+;;; want to build in the definition of adjacency.  So what do we
+;;; do?  Look at the primitive determined to be a movement primitive
+;;; and see what adjacency means with respect to that primitive.
+
+(isa precededByRelatedAction Predicate)
+(arity precededByRelatedAction 6)
+(arg1Isa precededByRelatedAction Microtheory)
+(arg2Isa precededByRelatedAction Event)
+(arg3Isa precededByRelatedAction TemporalThing)
+(arg4Isa precededByRelatedAction PerceptualAgentCommand)
+(arg5Isa precededByRelatedAction CycLExpression)
+(arg6Isa precededByRelatedAction TemporalThing)
+(comment precededByRelatedAction "(precededByRelatedAction ?mt ?event ?event-time ?command ?action ?action-time)")
+
+(<== (precededByRelatedAction ?mt ?event ?event-turn ?command ?action ?action-turn)
+     (eventArguments ?mt ?event ?arguments)
+     (priorCommand ?mt ?event ?cmd)
+     (precededByRelatedCommand ?mt ?event-turn ?arguments ?cmd ?command ?action)
+     (lookupOnly
+       (localOnly
+         (numAnswers 1
+           (ist-Information ?mt
+             (dateOfEvent ?command ?action-turn))))))
+
+(isa eventArguments TernaryPredicate)
+(arity eventArguments 3)
+(arg1Isa eventArguments Microtheory)
+(arg2Isa eventArguments PerceptualAgentEvent)
+(arg3Isa eventArguments Set-Mathematical)
+(comment eventArguments "(eventArguments ?mt ?event ?arguments) collects the values of the role-relations of ?events.")
+
+(<== (eventArguments ?mt ?event ?arguments)
+     (not (matches (CommandFn ?mt ?num) ?event))
+     (evaluate ?arguments
+       (TheClosedRetrievalSetOf ?thing
+         (hasRoleRelationBinding ?mt ?event ?thing ?role))))  ; This is really weak.
+
+(isa precededByRelatedCommand Predicate)
+(arity precededByRelatedCommand 6)
+(arg1Isa precededByRelatedCommand Microtheory)
+(arg2Isa precededByRelatedCommand TemporalThing)
+(arg3Isa precededByRelatedCommand Set-Mathematical)
+(arg4Isa precededByRelatedCommand PerceptualAgentCommand)
+(arg5Isa precededByRelatedCommand PerceptualAgentCommand)
+(arg6Isa precededByRelatedCommand CycLExpression)
+(comment precededByRelatedCommand "(precededByRelatedCommand ?mt ?event-turn ?arguments ?later-cmd ?earlier-cmd ?action) binds ?earlier-cmd and ?action to the most recent command starting at ?later-cmd whose ?action mentions at least one of the arguments.")
+
+;;; If command *is* the related command, don't recurse:
+(<== (precededByRelatedCommand ?mt ?event-turn ?arguments ?command ?command ?action)
+     (numAnswers 1 (relatedCommand ?mt ?event-turn ?command ?arguments ?action)))
+
+
+(<== (precededByRelatedCommand ?mt ?event-turn ?arguments ?later-cmd ?earlier-cmd ?action)
+     (uninferredSentence
+       (relatedCommand ?mt ?event-turn ?later-cmd ?arguments ?action))
+     (numAnswers 1 (priorCommand ?mt ?later-cmd ?command))
+     (precededByRelatedCommand ?mt ?event-turn ?arguments ?command ?earlier-cmd ?action))
+
+(isa priorCommand TernaryPredicate)
+(arity priorCommand 3)
+(arg1Isa priorCommand Microtheory)
+(arg2Isa priorCommand PerceptualAgentCommand)
+(arg3Isa priorCommand PerceptualAgentCommand)
+(comment priorCommand "(priorCommand ?mt ?later ?earlier) binds ?earlier to the most recent command before ?later.")
+
+(<== (priorCommand ?mt ?later ?prior-command)
+     (numAnswers 1 
+       (localOnly
+         (ist-Information ?mt
+           (followsInProgression ?later (CommandFn ?mt ?num) ?mt))))
+     (unifies ?prior-command (CommandFn ?mt ?num)))
+
+(<== (priorCommand ?mt ?later ?prior-command)
+     (numAnswers 1 
+       (localOnly
+         (ist-Information ?mt 
+           (followsInProgression ?later ?prior ?mt))))
+     (not (matches (CommandFn ?mt ?num) ?prior))
+     (numAnswers 1 (priorCommand ?mt ?prior ?prior-command)))
+
+(isa relatedCommand QuintaryPredicate)
+(arity relatedCommand 5)
+(arg1Isa relatedCommand Microtheory)
+(arg2Isa relatedCommand TemporalThing)
+(arg3Isa relatedCommand PerceptualAgentCommand)
+(arg4Isa relatedCommand Set-Mathematical)
+(arg5Isa relatedCommand CycLSentence-Assertible)
+(comment relatedCommand "(relatedCommand ?mt ?event-turn ?cmd ?arguments ?action) succeeds if given a command ?cmd, the corresponding ?action that is the infoTransferred mentions at least one of the ?arguments.")
+
+;;; Do we need to extend this to handle the case where the action specifies
+;;; the type of the arguments (e.g., build "a settler", whereas the outputsProduced
+;;; is a particular unit.)?
+(<== (relatedCommand ?mt ?event-turn ?cmd ?arguments ?action)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent ?cmd ?event-turn)))))
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (infoTransferred ?cmd ?action)))))
+     (lookupOnly (elementOf ?thing ?arguments))
+     (containsPattern ?thing ?action)
+     (operatorFormulas ?action-pred ?action))
+
+;;; If we look back in time across turns for a command that
+;;; caused an event, that better be a durative action:
+(<== (relatedCommand ?mt ?event-turn ?cmd ?arguments ?action)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (dateOfEvent ?cmd ?command-turn)))))
+     (different ?command-turn ?event-turn)
+     (numAnswers 1
+       (lookupOnly
+         (localOnly
+           (ist-Information ?mt
+             (infoTransferred ?cmd ?action)))))
+     (operatorFormulas ?action-pred ?action)
+     (lookupOnly
+       (durativeAction ?action-pred ?argnum))
+     (formulaArgument ?action ?argnum ?thing) ; I guess this was the idea behind the argnum
+     (lookupOnly (elementOf ?thing ?arguments)))
+
+;;; --------------------------------
+
+;(isa hypothesizedPositiveInfluence BinaryPredicate)
+;(isa hypothesizedNegativeInfluence BinaryPredicate)
+(isa hypothesizedProcess BinaryRelation)
+(isa eventInfluencesGoal BinaryPredicate)
+(isa enablesOrInitiates BinaryPredicate)
+(isa proximalCause BinaryPredicate)
+(isa distalCause BinaryPredicate)
+
+(isa rangeLimit BinaryPredicate)
+(arity rangeLimit 2)
+(arg1Isa rangeLimit Collection) ; typeGenls = Agent-Generic
+(arg2Isa rangeLimit Integer)    ; a distance
+(comment rangeLimit "(rangeLimit ?agent ?integer-dist) was intended to be the parameter that would limit how far to send settlers.")
+
+
+;;; --------------------------------
+
+;;; Explain "bad" events - those with a maleficiary belonging to currentPlayer
+;;; (or same nationality, etc)
+;;; If we can't explain motivation or cause or enablement, post a goal to
+;;; better encode cases, track units, compare initiator and maleficiary, etc.
+;;; (should initiator be intentionalPerformer or some such?)
+;;;
+;;; If one of our units is threatened, we want to learn how this came to be,
+;;; what is likely to happen next, and how this fits into an overall strategy.
+;;; After an attack, we want to ascertain what determines success.  What
+;;; relations between intrinsic properties are relevant?
+;;;
+;;; If we see a tank (or a destroyer), how do we know to try to achieve one,
+;;; and how?
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of File

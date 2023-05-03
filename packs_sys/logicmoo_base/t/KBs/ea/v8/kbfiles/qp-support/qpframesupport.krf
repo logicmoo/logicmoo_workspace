@@ -1,0 +1,200 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qpframesupport.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: February 26, 2004 20:00:01
+;;;;   Purpose: Support definitions for QP frames
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QPInterpretationMt :exclude-globals t)
+
+;;; The parts of frame definitions in this file are very similar to the work
+;;; of the FrameNet project. Verbs usually denote an event and are associated 
+;;; with a frame structure, for which we have number of frame elements defined.
+;;; In CycL terms, the frame elements are treated as role relations. In terms
+;;; of QP semantics, frame elements can also have special QP-specific semantic
+;;; denotations.
+
+;;; For example, the verb 'flow' in the 'Transfer' frame uses the prepositions
+;;; 'from' and 'to' to indicate the source and destination of the flow. For the same
+;;; verb in the 'Motion' frame the same prepostions would be treated as locations.
+;;; Compare 'Heat flows from the brick to the room' to 'The particle flows from the
+;;; tank to the nozzle'.
+
+
+;;; General definitions
+
+(genls QPFrameSupportPredicate NLSemanticPredicate)
+    
+    
+;;; This predicate ties events (and possibly other things) to a particular QP frame.
+;;; Knowing the QP frame associated with an event allows us to lookup and assert 
+;;; further information such as the roles indicated by the supportsRoleInFrame
+;;; assertions.
+
+(isa relatedQPFrame QPFrameSupportPredicate)
+(arg1Isa relatedQPFrame Thing)
+(arg2Isa relatedQPFrame QPFrame)
+(arity relatedQPFrame 2)
+
+
+;;; This predicate allows a mapping from generic Cyc predicates for role relations
+;;; to the roles for a particular QP frame. Technically it wouldn't be necessary to
+;;; explicitly state these mappings and have specialized rules for each of them.
+;;; However, 'supportRoleInFrame' creates an intermediate layer and allows many-to-one 
+;;; mappings with a minimum number LTRE rules.
+;;;
+;;; Note that the specialized role relations are not the predicates for the frame slots 
+;;; but provide information for constructing the frame slot information. A good example
+;;; is the sourceOfTransfer slot for the QuantityTransfer frame. The expression
+;;; found in the general semantic interpretation data is something like (from-generic
+;;; flow123 brick456). We cannot use 'brick456' as a slot filler for sourceOfTransfer,
+;;; since it expects a quantity instead of an entity. To construct the quantity frame
+;;; for sourceOfTransfer we need to combine the location information from the 
+;;;'from-generic' expression with information about a quantity type participating in
+;;; the same transfer event.
+
+(isa supportsRoleInQPFrame QPFrameSupportPredicate)
+(arg1Isa supportsRoleInQPFrame QPFrame)
+(arg2Isa supportsRoleInQPFrame Thing) ;; ActorSlot or BinaryRolePredicate
+(arg3Isa supportsRoleInQPFrame Thing)
+(arity supportsRoleInQPFrame 3)
+
+
+;;; This predicate is used to connect a discourse variable for an entity (flow1234)
+;;; to an instance of a frame (qt6789).
+
+(isa usesQPFrame QPFrameSupportPredicate)
+(arg1Isa usesQPFrame Thing)
+(arg2Isa usesQPFrame QPFrame)
+(arity usesQPFrame 2)
+
+
+;;; Verb frames
+
+;;; when Sven did this, the subcat frame for the word "flow" was translation-flow
+;; then it changed to fluidflow-translation.  the former version makes more sense
+;; and also makes the QP rules work, so we're sticking with it.
+
+;; this file needs to be run through meld-file->cache if you're doing an 
+;; incremental update
+
+;;; JLT - No we're not.
+;;;(verbSemTrans Flow-TheWord 1 IntransitiveVerbFrame
+;;;              (and (isa :ACTION Translation-Flow)
+;;;                   (primaryObjectMoving :ACTION :SUBJECT)))
+
+;;; this denotation is also missing, not sure why since it is in rc-one
+(denotation Heat-TheWord MassNoun 0 ThermalEnergy)
+
+
+(relatedQPFrame FluidFlow-Translation QuantityTransferFrame)
+(relatedQPFrame RollingOnASurface QuantityTransferFrame)
+(relatedQPFrame Running QuantityTransferFrame)
+(relatedQPFrame Walking-Generic QuantityTransferFrame)
+(relatedQPFrame MovementEvent QuantityTransferFrame)
+(relatedQPFrame GeneralizedTransfer QuantityTransferFrame)
+(relatedQPFrame InformationTransferEvent QuantityTransferFrame)
+(relatedQPFrame TransferIn QuantityTransferFrame)
+(relatedQPFrame TransferOut QuantityTransferFrame)
+(relatedQPFrame Translocation QuantityTransferFrame)
+
+
+(relatedQPFrame EmptyingAContainer StateChangeFrame)
+(relatedQPFrame OpeningSomething StateChangeFrame)
+(relatedQPFrame ClosingAContainerProduct StateChangeFrame)
+(relatedQPFrame SomethingAppearingSomewhere StateChangeFrame)
+(relatedQPFrame WeightChangingProcess StateChangeFrame)
+(relatedQPFrame GrowthEvent StateChangeFrame)
+(relatedQPFrame Elongation StateChangeFrame)
+(relatedQPFrame StateOfMatterChangeEvent StateChangeFrame)
+(relatedQPFrame ShapeChangeEvent StateChangeFrame)
+(relatedQPFrame Splitting StateChangeFrame)
+(relatedQPFrame Growth-Physical StateChangeFrame)
+(relatedQPFrame FillingProcess StateChangeFrame)
+(relatedQPFrame TemperatureChangingProcess StateChangeFrame)
+(relatedQPFrame Separation-Incomplete StateChangeFrame)
+(relatedQPFrame Cracking StateChangeFrame)
+(relatedQPFrame Drying StateChangeFrame)
+(relatedQPFrame BreakingOpenEvent StateChangeFrame)
+(relatedQPFrame ShorteningEvent StateChangeFrame)
+
+;;; TransformationEvents are similar, but the inputs are destroyed
+
+;;; Support relations
+
+(supportsRoleInQPFrame QuantityTransferFrame primaryObjectMoving transferredStuff)
+(supportsRoleInQPFrame QuantityTransferFrame transferredThing transferredStuff)
+(supportsRoleInQPFrame QuantityTransferFrame from-Generic sourceLocOfTransfer)
+(supportsRoleInQPFrame QuantityTransferFrame to-Generic destLocOfTransfer)
+(supportsRoleInQPFrame QuantityTransferFrame by-Underspecified pathOfTransfer)
+(supportsRoleInQPFrame QuantityTransferFrame instrument-Generic pathOfTransfer)
+(supportsRoleInQPFrame QuantityTransferFrame doneBy actorOfTransfer)
+(supportsRoleInQPFrame QuantityTransferFrame providerOfMotiveForce actorOfTransfer)
+
+(supportsRoleInQPFrame StateChangeFrame fromState fromState)
+(supportsRoleInQPFrame StateChangeFrame from-Generic fromState)
+(supportsRoleInQPFrame StateChangeFrame toState toState)
+(supportsRoleInQPFrame StateChangeFrame to-Generic toState)
+(supportsRoleInQPFrame StateChangeFrame objectOfStateChange changedStuff)
+
+;;; support for "level of X"
+
+(nounSemTrans Level-TheWord 0 (PPCompFrameFn TransitivePPFrameType Of-TheWord)
+              (and (isa :THIS Level)
+                   (isa :THIS (AmountFn :OBLIQUE-OBJECT))))
+
+;;; Roles in QP frames
+;;; <need to be defined here>
+
+;;; more to come
+
+
+;;; More verbSemTrans statements 3/21/2016
+;;;
+;;;
+(in-microtheory EANLU)
+
+(verbSemTrans Convert-TheWord 0 
+  (PPCompFrameFn TransitivePPFrameType To-TheWord) 
+  (and (isa :ACTION IntrinsicStateChangeEvent) 
+       (toState :ACTION :OBLIQUE-OBJECT) 
+       (objectOfStateChange :ACTION :OBJECT) (doneBy :ACTION :SUBJECT)))
+
+(verbSemTrans Convert-TheWord 0 
+  (PPCompFrameFn TransitivePPFrameType Into-TheWord) 
+  (and (isa :ACTION IntrinsicStateChangeEvent) 
+       (toState :ACTION :OBLIQUE-OBJECT) 
+       (objectOfStateChange :ACTION :OBJECT) (doneBy :ACTION :SUBJECT)))
+
+;;; Genitives for Amount, Rate, and Number of
+;;;
+(nounSemTrans Number-TheWord 101 GenitiveFrame
+              (and (isa :NOUN Number-General)
+                   (partitiveSelectsFor :NOUN :POSSESSOR)))
+
+(nounSemTrans Amount-TheWord 101 GenitiveFrame
+              (and (isa :NOUN Amount)
+                   (partitiveSelectsFor :NOUN :POSSESSOR)))
+
+(nounSemTrans Rate-TheWord 101 GenitiveFrame
+              (and (isa :NOUN Rate)
+                   (rateOfEvent :POSSESSOR :NOUN)))
+
+
+
+(in-microtheory (LanguageMtFn Freeciv-TheGame))
+(multiWordString (TheList "food") Production-TheWord
+                 MassNoun FoodProductionProcess)
+
+(in-microtheory QPInterpretationMt)
+(isa FoodProductionProcess Collection)
+(genls FoodProductionProcess Production-Generic)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

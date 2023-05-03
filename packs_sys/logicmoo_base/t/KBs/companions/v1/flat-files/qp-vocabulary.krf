@@ -1,0 +1,400 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qp-vocabulary.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: April 18, 2011 15:36:14
+;;;;   Purpose: vocabulary with which to define qualitative models
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CompanionsMt)
+
+(isa directInfluence UnaryPredicate)
+(arity directInfluence 1)
+(arg1Isa directInfluence CycLSentence-Assertible)
+(comment directInfluence "(directInfluence ?stmt) is true iff ?stmt is an i+ or i- influence statement.")
+
+(isa indirectInfluence UnaryPredicate)
+(arity indirectInfluence 1)
+(arg1Isa indirectInfluence CycLSentence-Assertible)
+(comment indirectInfluence "(indirectInfluence ?stmt) is true iff ?stmt is a qprop or qprop- influence statement.")
+
+(isa additiveInfluence UnaryPredicate)
+(arity additiveInfluence 1)
+(arg1Isa additiveInfluence CycLSentence-Assertible)
+(comment additiveInfluence "(additiveInfluence ?stmt) is true iff ?stmt is an c+ or c- influence statement.")
+
+(<== (directInfluence ?stmt)
+     (unifies (?pred ?q1 ?q2) ?stmt)
+     (elementOf ?pred (TheSet i+ i-)))
+
+(<== (indirectInfluence ?stmt)
+     (unifies (?pred ?q1 ?q2) ?stmt)
+     (elementOf ?pred (TheSet qprop qprop-)))
+
+(<== (additiveInfluence ?stmt)
+     (unifies (?pred ?q1 ?q2) ?stmt)
+     (elementOf ?pred (TheSet c+ c-)))
+
+(isa influencedBy BinaryPredicate)
+(arity influencedBy 2)
+(arg1Isa influencedBy ContinuousQuantity)
+(arg2Isa influencedBy ContinuousQuantity)
+(comment influencedBy "(influencedBy ?dep ?indep) means ?dep quantity is influenced in some direction by ?indep quantity")
+
+(<== (influencedBy ?depVar ?indepVar)
+     (positivelyInfluencedBy ?depVar ?indepVar))
+
+(<== (influencedBy ?depVar ?indepVar)
+     (negativelyInfluencedBy ?depVar ?indepVar))
+
+(isa positivelyInfluencedBy BinaryPredicate)
+(arity positivelyInfluencedBy 2)
+(arg1Isa positivelyInfluencedBy ContinuousQuantity)
+(arg2Isa positivelyInfluencedBy ContinuousQuantity)
+(comment positivelyInfluencedBy "(positivelyInfluencedBy ?dep ?indep) means ?dep quantity is positively influenced by ?indep quantity")
+
+(<== (positivelyInfluencedBy ?dep-var ?indep-var)
+     (lookupOnly (qprop ?dep-var ?indep-var)))
+     
+(<== (positivelyInfluencedBy ?dep-var ?indep-var)
+     (lookupOnly (c+ ?dep-var ?indep-var)))
+     
+(<== (positivelyInfluencedBy ?dep-var ?indep-var)
+     (lookupOnly (i+ ?dep-var ?indep-var)))
+
+;;; New 9-4-12
+(<== (positivelyInfluencedBy (?dep-qtype ?entity) ?indep-var)
+     (positivelyInfluencedBy-TypeType ?dep-qtype ?indep-qtype ?entity-type1 ?entity-type2 ?relation)
+     (isa ?entity ?entity-type1)
+     (propagateBinpred ?relation ?entity ?indep-entity)
+     (isa ?other-entity ?entity-type2)
+     (unifies ?indep-var (?indep-qtype ?indep-entity)))
+     
+(<== (positivelyInfluencedBy ((AggregateQuantityFn ?prop) ?coll) ?indep-var)
+     (groundExpression ?coll)
+     (atomicTerm ?coll)
+     (isa ?coll Collection)
+     (isa ?obj ?coll)          ; enumerate instances
+     ;; syntactically construct constituent quantities:
+     (unifies ?indep-var ((MeasurableQuantityFn ?prop) ?obj)))  
+     
+(<== (positivelyInfluencedBy ((AggregateQuantityFn ?prop) ?set) ?indep-var)
+     (not (variableExpression ?set))
+     (not (atomicTerm ?set))
+     (elementOf ?obj ?set)     ; enumerate members
+     ;; syntactically construct constituent quantities:
+     (unifies ?indep-var ((MeasurableQuantityFn ?prop) ?obj)))
+     
+;;; If the set is currently empty, we can't say its members influence anything.
+;;; But the potential is there new elements to be created and cause influence
+;;; later, so we introduce the typeLevelPositiveInfluence relation (and its
+;;; negative counterpart).  When we're talking about goals, we might well
+;;; use the potential for influence as a reason to do something.
+
+;;; We somehow want to represent the cardinality of the aggregate quantity as
+;;; a positive influence.
+;;; Possibly use ((MeasurableQuantityFn cardinalityOf) ?obj), even though
+;;; cardinalityOf was added to Cyc after our current build and its argument
+;;; appears to be a Collection, rather than a SetOrCollection.
+
+;;; I don't think we want this.  Leads to variants of the same thing during subgoaling.
+;(<== (positivelyInfluencedBy ((AggregateQuantityFn ?prop) ?set) ?indep-var)
+;     (unifies ?indep-var ((MeasurableQuantityFn cardinalityOf) ?set)))
+     
+;;; ArgIsas are problematic here, since we really haven't nailed
+;;; down the ontology for quantity types.  Technically, it's a
+;;; variable-arity function, but that's not really helpful.
+;;; a quantity type is something like (QPQuantityFn Pressure), or
+;;; (MeasurableQuantityFn pressureOf).  When applied to an entity,
+;;; it gives you a fluent.  On its own, we'd like to be able to
+;;; say that it's a QPQuantityType.
+(isa qprop+TypeType QuintaryPredicate)
+(arity qprop+TypeType 5)
+(isa qprop-TypeType QuintaryPredicate)
+(arity qprop-TypeType 5)
+(isa c+TypeType QuintaryPredicate)
+(arity c+TypeType 5)
+(isa c-TypeType QuintaryPredicate)
+(arity c-TypeType 5)
+(isa i+TypeType QuintaryPredicate)
+(arity i+TypeType 5)
+(isa i-TypeType QuintaryPredicate)
+(arity i-TypeType 5)
+
+(isa positivelyDependsOn-TypeType QuaternaryPredicate)
+(arity positivelyDependsOn-TypeType 4)
+(comment positivelyDependsOn-TypeType "(positivelyDependsOn-TypeType ?qtype ?coll1 ?coll2 ?binpred) means quantities defined by the quantity type applied to an instance of ?coll1 are positively influenced by the propositional relation between the instance of ?coll1 and an instance of ?coll2.")
+
+(isa negativelyDependsOn-TypeType QuaternaryPredicate)
+(arity negativelyDependsOn-TypeType 4)
+(comment negativelyDependsOn-TypeType "(negativelyDependsOn-TypeType ?qtype ?coll1 ?coll2 ?binpred) means quantities defined by the quantity type applied to an instance of ?coll1 are negatively influenced by the propositional relation between that instance and an instance of ?coll2.")
+
+(isa typeLevelInfluencePred BinaryPredicate)
+(arity typeLevelInfluencePred 2)
+(arg1Isa typeLevelInfluencePred BinaryPredicate)
+(arg2Isa typeLevelInfluencePred QuintaryPredicate)
+(comment typeLevelInfluencePred "(typeLevelInfluencePred ?prop-pred ?type-pred) maps from propositional influence predicate to type-level.")
+
+(typeLevelInfluencePred qprop qprop+TypeType)
+(typeLevelInfluencePred qprop- qprop-TypeType)
+(typeLevelInfluencePred c+ c+TypeType)
+(typeLevelInfluencePred c- c-TypeType)
+(typeLevelInfluencePred i+ i+TypeType)
+(typeLevelInfluencePred i- i-TypeType)
+
+(<== (directInfluence ?stmt)
+     (unifies (?pred ?qtype1 ?qtype2 ?colltype1 ?colltype2 ?binrel) ?stmt)
+     (elementOf ?pred (TheSet i+TypeType i-TypeType)))
+
+(<== (indirectInfluence ?stmt)
+     (unifies (?pred ?qtype1 ?qtype2 ?colltype1 ?colltype2 ?binrel) ?stmt)
+     (elementOf ?pred (TheSet qprop+TypeType qprop-TypeType)))
+
+(<== (additiveInfluence ?stmt)
+     (unifies (?pred ?qtype1 ?qtype2 ?colltype1 ?colltype2 ?binrel) ?stmt)
+     (elementOf ?pred (TheSet c+TypeType c-TypeType)))
+
+(isa positivelyInfluencedBy-TypeType QuintaryPredicate)
+(arity positivelyInfluencedBy-TypeType 5)
+(arg1Isa positivelyInfluencedBy-TypeType ContinuousQuantity)
+(arg2Isa positivelyInfluencedBy-TypeType ContinuousQuantity)
+(arg3Isa positivelyInfluencedBy-TypeType Collection)
+(arg4Isa positivelyInfluencedBy-TypeType Collection)
+(arg5Isa positivelyInfluencedBy-TypeType Relation)
+(comment positivelyInfluencedBy-TypeType "(positivelyInfluencedBy-TypeType ?dep-quantity-type ?indep-quantity-type ?arg-type1 ?arg-type2 ?relation)")
+
+(<== (positivelyInfluencedBy-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation)
+     (qprop+TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation))
+     
+(<== (positivelyInfluencedBy-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation)
+     (c+TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation))
+     
+(<== (positivelyInfluencedBy-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation)
+     (i+TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation))
+
+(<== (qprop+TypeType ((AggregateQuantityFn ?prop) ?set) (MeasurableQuantityFn ?prop) ?type ?type equals))
+
+;;; I don't think we want this.  Leads to variants of the same thing during subgoaling.
+;(<== (positivelyInfluencedBy-TypeType ((AggregateQuantityFn ?prop) ?set) ?indep-var)
+;     (unifies ?indep-var ((MeasurableQuantityFn cardinalityOf) ?set)))
+
+
+(isa negativelyInfluencedBy BinaryPredicate)
+(arity negativelyInfluencedBy 2)
+(arg1Isa negativelyInfluencedBy ContinuousQuantity)
+(arg2Isa negativelyInfluencedBy ContinuousQuantity)
+(comment negativelyInfluencedBy "(negativelyInfluencedBy ?dep-quantity ?indep-quantity) means ?dep quantity is negatively influenced by ?indep quantity")
+
+(<== (negativelyInfluencedBy ?dep-var ?indep-var)
+     (lookupOnly (qprop- ?dep-var ?indep-var)))  ; No, I don't want the funky rules from qp-ontology.
+     
+(<== (negativelyInfluencedBy ?dep-var ?indep-var)
+     (lookupOnly (c- ?dep-var ?indep-var)))
+
+(<== (negativelyInfluencedBy ?dep-var ?indep-var)
+     (lookupOnly (i- ?dep-var ?indep-var)))
+
+;;; New 9-4-12
+(<== (negativelyInfluencedBy (?dep-qtype ?entity) ?indep-var)
+     (negativelyInfluencedBy-TypeType ?dep-qtype ?indep-qtype ?entity-type1 ?entity-type2 ?relation)
+     (isa ?entity ?entity-type1)
+     (propagateBinpred ?relation ?entity ?indep-entity)
+     (isa ?other-entity ?entity-type2)
+     (unifies ?indep-var (?indep-qtype ?indep-entity)))
+
+(isa negativelyInfluencedBy-TypeType QuintaryPredicate)
+(arity negativelyInfluencedBy-TypeType 5)
+(arg1Isa negativelyInfluencedBy-TypeType ContinuousQuantity)  ; *** I don't think this is right.
+(arg2Isa negativelyInfluencedBy-TypeType ContinuousQuantity)  ; *** It's a quantity type, not a quantity.
+(arg3Isa negativelyInfluencedBy-TypeType Collection)
+(arg4Isa negativelyInfluencedBy-TypeType Collection)
+(arg5Isa negativelyInfluencedBy-TypeType Relation)
+(comment negativelyInfluencedBy "(negativelyInfluencedBTypeType ?dep-quantity-type ?indep-quantity-type ?arg-type1 ?arg-type2 ?relation) means ?dep quantity is negatively influenced by ?indep quantity")
+
+
+(<== (negativelyInfluencedBy-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation)
+     (qprop-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation))
+
+(<== (negativelyInfluencedBy-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation)
+     (c-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation))
+
+(<== (negativelyInfluencedBy-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation)
+     (i-TypeType ?dep-quantity-type ?indep-quantity-type ?type1 ?type2 ?relation))
+
+;;; The dependsOn variants don't seem to be used at all.
+(isa positivelyDependsOnProp BinaryPredicate)
+(arity positivelyDependsOnProp 2)
+(arg1Isa positivelyDependsOnProp ContinuousQuantity)
+(arg2Isa positivelyDependsOnProp CycLFormula)  ; may be a conjunction, therefore not assertible.
+(comment positivelyDependsOnProp "(positivelyDependsOnProp ?quantity ?proposition) means the truth of ?proposition positively affects ?quantity.")
+
+;;; The type-level variant is is much more constrained in terms of the proposition.
+;;; New 9-4-12
+(<== (positivelyDependsOnProp (?qtype ?entity) ?prop)
+     (positivelyDependsOn-TypeType ?qtype ?dep-coll ?indep-coll ?binrel)
+     (isa ?entity ?dep-coll)
+     (propagateBinpred ?binrel ?entity ?indep-entity)
+     (isa ?indep-entity ?indep-coll)
+     (unifies ?prop (?binrel ?entity ?indep-entity)))
+
+(isa negativelyDependsOnProp BinaryPredicate)
+(arity negativelyDependsOnProp 2)
+(arg1Isa negativelyDependsOnProp ContinuousQuantity)
+(arg2Isa negativelyDependsOnProp CycLFormula)  ; may be a conjunction, therefore not assertible.
+(comment negativelyDependsOnProp "(negativelyDependsOnProp ?quantity ?proposition) means the truth of ?proposition inversely affects ?quantity.")
+
+;;; New 9-4-12
+(<== (negativelyDependsOnProp (?qtype ?entity) ?prop)
+     (negativelyDependsOn-TypeType ?qtype ?dep-coll ?indep-coll ?binrel)
+     (isa ?entity ?dep-coll)
+     (propagateBinpred ?binrel ?entity ?indep-entity)
+     (isa ?indep-entity ?indep-coll)
+     (unifies ?prop (?binrel ?entity ?indep-entity)))
+
+(isa actionPositivelyAffectsQuantity BinaryPredicate)
+(arity actionPositivelyAffectsQuantity 2)
+(arg1Isa actionPositivelyAffectsQuantity ContinuousQuantity)
+(arg2Isa actionPositivelyAffectsQuantity CycLFormula)
+(comment actionPositivelyAffectsQuantity "(actionPositivelyAffectsQuantity ?quantity ?action) means the ?action has an instantaneous positive effect on ?quantity.")
+
+(isa actionNegativelyAffectsQuantity BinaryPredicate)
+(arity actionNegativelyAffectsQuantity 2)
+(arg1Isa actionNegativelyAffectsQuantity ContinuousQuantity)
+(arg2Isa actionNegativelyAffectsQuantity CycLFormula)
+(comment actionNegativelyAffectsQuantity "(actionNegativelyAffectsQuantity ?quantity ?action) means the ?action has an instantaneous negative effect on ?quantity.")
+
+(<== (actionPositivelyAffectsQuantity ?quantity ?action)
+     (quantityGeneralization ?quantity ?gen-quantity)
+     (actionPositivelyAffectsQuantity ?gen-quantity ?action))
+ 
+(<== (actionNegativelyAffectsQuantity ?quantity ?action)
+     (quantityGeneralization ?quantity ?gen-quantity)
+     (actionNegativelyAffectsQuantity ?gen-quantity ?action))
+
+;;; This isn't going to fully instantiate ?action.
+;;; This relies on the quantity having been generalized already.  Yuk!
+;;; However, it allows the ?entity to be a CollectionSubsetFn set-specifier
+(<== (actionPositivelyAffectsQuantity ?quantity ?action)
+     (not (variableExpression ?quantity))
+     (variableExpression ?action)
+     (unifies (?qtype ?entity) ?quantity) 
+     (actionPositivelyAffectsQuantityType ?qtype ?action-pred ?entity ?argnum ?binpred)
+     (numAnswers 1 (propagateBinpred ?binpred ?entity ?arg))
+     (arity ?action-pred ?arity)
+     (evaluate ?args 
+       (SublistFromToFn (TheList ?1 ?2 ?3 ?4 ?5 ?6 ?7) 1 ?arity))
+     (evaluate ?var-action
+       (MakeFormulaFn ?action-pred ?args))
+     (evaluate ?action
+       (SubstituteFormulaArgPositionFn (TheList ?argnum) ?arg ?var-action)))
+
+;;; Need this one too:
+(<== (actionNegativelyAffectsQuantity ?quantity ?action)
+     (not (variableExpression ?quantity))
+     (variableExpression ?action)
+     (unifies (?qtype ?entity) ?quantity) 
+     (actionNegativelyAffectsQuantityType ?qtype ?action-pred ?entity ?argnum ?binpred)
+     (numAnswers 1 (propagateBinpred ?binpred ?entity ?arg))
+     (arity ?action-pred ?arity)
+     (evaluate ?args 
+       (SublistFromToFn (TheList ?1 ?2 ?3 ?4 ?5 ?6 ?7) 1 ?arity))
+     (evaluate ?var-action
+       (MakeFormulaFn ?action-pred ?args))
+     (evaluate ?action
+       (SubstituteFormulaArgPositionFn (TheList ?argnum) ?arg ?var-action)))
+
+
+(isa propagateBinpred TernaryPredicate)
+(arity propagateBinpred 3)
+(arg1Isa propagateBinpred BinaryRelation)
+(arg2Isa propagateBinpred Thing)
+(arg3Isa propagateBinpred Thing)
+(comment propagateBinpred "(propagateBinpred ?binpred ?input ?output) propagates a functional binpred from input to output.")
+
+(<== (propagateBinpred equals ?entity ?entity))
+(<== (propagateBinpred true ?entity ?anything))
+(<== (propagateBinpred ?binpred ?input ?output)
+     (?binpred ?input ?output))  ; hope current context suffices
+     
+(isa eventNegativelyAffectsQuantityType TernaryPredicate)
+(arity eventNegativelyAffectsQuantityType 3)
+(arg1Isa eventNegativelyAffectsQuantityType QuantityType)
+(arg2Isa eventNegativelyAffectsQuantityType Collection)
+(arg3Isa eventNegativelyAffectsQuantityType Collection)
+(comment eventNegativelyAffectsQuantityType "(eventNegativelyAffectsQuantityType ?qtype ?event-type ?entity-type) means that an entity of type ?entity-type negatively affects the quantity ?qtype applied to ?entity-type.")
+
+;;; These are learned statements:
+(isa actionPositivelyAffectsQuantityType QuintaryPredicate)
+(arity actionPositivelyAffectsQuantityType 5)
+(arg1Isa actionPositivelyAffectsQuantityType QuantityType)
+(arg2Isa actionPositivelyAffectsQuantityType ActionPredicate)
+(arg3Isa actionPositivelyAffectsQuantityType Collection)
+(arg4Isa actionPositivelyAffectsQuantityType Integer)
+(arg5Isa actionPositivelyAffectsQuantityType BinaryPredicate)
+(comment actionPositivelyAffectsQuantityType "(actionPositivelyAffectsQuantityType ?qtype ?pred ?coll ?n binrel) means the actions of type ?pred have an instantaneous positive effect on quantities of type ?qtype given arg ?n of the action holds ?rel to the ?coll arg of the quantity.")
+
+(isa actionNegativelyAffectsQuantityType QuintaryPredicate)
+(arity actionNegativelyAffectsQuantityType 5)
+(arg1Isa actionNegativelyAffectsQuantityType QuantityType)
+(arg2Isa actionNegativelyAffectsQuantityType ActionPredicate)
+(arg3Isa actionNegativelyAffectsQuantityType Collection)
+(arg4Isa actionNegativelyAffectsQuantityType Integer)
+(arg5Isa actionNegativelyAffectsQuantityType BinaryPredicate)
+(comment actionNegativelyAffectsQuantityType "(actionNegativelyAffectsQuantityType ?qtype ?pred ?coll ?n binrel) means the actions of type ?pred have an instantaneous negative effect on quantities of type ?qtype given arg ?n of the action holds ?rel to the ?coll arg of the quantity.")
+
+(isa quantityGeneralization BinaryPredicate)
+(arity quantityGeneralization 2)
+(arg1Isa quantityGeneralization Quantity)
+(arg2Isa quantityGeneralization Quantity)
+
+(<== (quantityGeneralization ((MeasurableQuantityFn ?slot) (GenericInstanceFn ?set)) ?gen-quantity)
+     (quantityGeneralization ((MeasurableQuantityFn ?slot) ?set) ?gen-quantity))
+     
+(<== (quantityGeneralization ((MeasurableQuantityFn ?slot) (CollectionSubsetFn ?type ?set-spec))
+                             ((MeasurableQuantityFn ?slot) ?type))
+     (not (variableExpression ?type)))
+     
+(<== (quantityGeneralization ((MeasurableQuantityFn ?slot) ?entity)
+                             ((MeasurableQuantityFn ?slot) ?entity))
+     (not (variableExpression ?entity))
+     (atomicTerm ?entity))
+
+(isa independentVariablesFor BinaryPredicate)
+(arity independentVariablesFor 2)
+(arg1Isa independentVariablesFor ContinuousQuantity)
+(arg2Isa independentVariablesFor ContinuousQuantity)
+(comment independentVariablesFor "(independentVariablesFor ?dependent ?independent) means ?independent is an independent quantitative variable with respect to ?dependent")
+
+(<== (independentVariablesFor ?dep-var ?indep-var)
+     (positivelyInfluencedBy ?dep-var ?indep-var))
+
+(<== (independentVariablesFor ?dep-var ?indep-var)
+     (negativelyInfluencedBy ?dep-var ?indep-var))
+
+(isa dependentVariablesFor BinaryPredicate)
+(arity dependentVariablesFor 2)
+(arg1Isa dependentVariablesFor ContinuousQuantity)
+(arg2Isa dependentVariablesFor ContinuousQuantity)
+(comment dependentVariablesFor "(dependentVariablesFor ?independent ?dependent) means ?independent is an independent quantitative variable with respect to ?dependent")
+
+(<== (dependentVariablesFor ?indep-var ?dep-var)
+     (independentVariablesFor ?dep-var ?indep-var))
+
+(isa independentPropositionsFor BinaryPredicate)
+(arity independentPropositionsFor 2)
+(arg1Isa independentPropositionsFor ContinuousQuantity)
+(arg2Isa independentPropositionsFor CycLFormula)
+
+(<== (independentPropositionsFor ?dep-var ?prop)
+     (positivelyDependsOnProp ?dep-var ?prop))
+       
+(<== (independentPropositionsFor ?dep-var ?prop)
+     (negativelyDependsOnProp ?dep-var ?prop))
+
+;;;
+;;; End of Code
+;;;

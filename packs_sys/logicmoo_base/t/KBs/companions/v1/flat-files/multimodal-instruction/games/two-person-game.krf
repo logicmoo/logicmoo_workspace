@@ -1,0 +1,44 @@
+;;; two-person-turn-taking
+
+(in-microtheory (GameRulesMtFn TwoPersonGame))
+
+(genlMt (GameRulesMtFn TwoPersonGame) FmiGamesMt)
+
+;;; Additive semantics.  Rules in the microtheory can be added to the rules of
+;;; any game which is an instance of this category.
+
+
+;;; Action Primitives:
+
+
+(isa control GamePredicate)
+(arity control 1)
+
+(isa opponent GamePredicate)
+(arity opponent 2)
+
+;;; two-player alternation:
+;;; *** I'd like to replace this with a lookup query for opponent.
+;;; *** This isn't horrible, though.
+ (<== (next (control ?player))
+      (currentlyTrue (control ?other-player))
+      (numAnswers 1 (gameDomain ?domain))
+      (allFactsAllowed
+        (lookupOnly
+          (localOnly
+            (nonTransitiveInference
+              (ist-Information (GameRulesMtFn ?domain)
+                (isa ?player GameRole))))))
+      (different ?player ?other-player))
+
+
+;;; End on win:
+(<== (terminalState)
+     (goalState ?player 100))
+     
+(<== (terminalState)
+     (currentlyTrue (control ?who))
+     (uninferredSentence
+       (legal ?who ?action)))  ; no legal action means game over.
+ 
+ 

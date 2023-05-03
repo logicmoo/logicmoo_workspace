@@ -1,0 +1,90 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: picking-choice-suggestions1.meld
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: January 8, 2014 19:41:05
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2015-04-22 14:10:31 -0500 (Wed, 22 Apr 2015) $
+;;;;  $LastChangedBy: subu $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PickingChoiceSuggestionsMt)
+
+(isa PickingChoiceSuggestionsMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(defSuggestion PickWinningChoiceBasic
+    (pickBasicChoice ?standard ?choices ?winning-choice ?winning-score ?winning-mapping ?confident)
+  :test (and (different ?choices (TheList))
+             (evaluate ?length (LengthOfListFn ?choices))
+             (greaterThan ?length 1))
+  :subgoals ((defaultNormalizationStrategy ForcedChoiceTask ?normalization-strategy)
+             ;;;             (evaluate ?choice-score-pairs
+             ;;;               (MapFunctionOverList
+             ;;;                (FunctionToArg 2
+             ;;;                  (Kappa (?choice ?choice-score)
+             ;;;                    (and (reverseCIsAllowed 
+             ;;;                          (wmOnly 
+             ;;;                           (matchBetween (WMCaseFn ?standard) 
+             ;;;                                               (WMCaseFn ?choice)
+             ;;;                                               (TheSet)
+             ;;;                                               ?matcher)))
+             ;;;                         (bestMapping ?matcher ?mapping)
+             ;;;                         (ciVerifiedMapping ?matcher ?mapping ?civ-mapping)
+             ;;;                         (?normalization-strategy ?civ-mapping ?score)
+             ;;;                         (unifies ?choice-score (TheList ?score (TheList ?choice ?civ-mapping))))))
+             ;;;                ?choices))
+             (getChoiceScorePair ?standard ?choices ?normalization-strategy ?choice-score-pairs)
+             (compareScores ?choice-score-pairs ?winning-choice ?winning-score ?winning-mapping ?confident)))
+
+(defSuggestion PickWinningChoiceViaRerep
+    (pickChoice ?standard ?choices ?winning-choice ?winning-score ?winning-mapping ?confident)
+  :test (and (different ?choices (TheList))
+             (evaluate ?length (LengthOfListFn ?choices))
+             (greaterThan ?length 1)
+             (pickBasicChoice ?stimulus ?bad-winning-choice ?bad-winning-score ?bad-winning-mapping false))
+  :subgoals ((defaultNormalizationStrategy Rerepresentation ?normalization-strategy)
+             (evaluate ?choice-score-pairs
+               (MapFunctionOverList
+                (FunctionToArg 2
+                  (Kappa (?choice ?choice-score)
+                    (and (wmOnly (bestComparisonWith (WMCaseFn ?standard) 
+                                                     (WMCaseFn ?choice)
+                                                     0.7
+                                                     ?rerep-normalization-strategy															   
+                                                     ?mapping ?comp-score))
+                         (?normalization-strategy ?mapping ?score)
+                         (unifies ?choice-score (TheList ?score (TheList ?choice ?mapping))))))
+                ?choices))
+             (compareScores ?choice-score-pairs ?winning-choice ?winning-score ?winning-mapping ?confident)))
+
+
+(defSuggestion CompareChoiceScorePairs
+    (compareScores ?choice-score-pairs ?winning-choice ?winning-score ?winning-mapping ?confident)
+  :subgoals ((evaluate ?max-score
+               (MaximumFn ?choice-score-pairs FirstInListFn))
+             (evaluate ?min-score
+               (MinimumFn ?choice-score-pairs FirstInListFn))
+             (compareMaxMinScores ?max-score ?min-score ?winning-score ?confident)
+             (evaluate ?winning-pair (AssocFn ?winning-score ?choice-score-pairs))	
+             (unifies (TheList ?winning-score (TheList ?winning-choice ?winning-mapping)) ?winning-pair))) 
+
+(defSuggestion ClearWinningChoice
+    (compareMaxMinScores ?max-score ?min-score ?winning-score ?confident)
+  :test (different ?max-score ?min-score)
+  :subgoals ((unifies ?winning-score ?max-score)
+             (unifies ?confident true)))
+
+(defSuggestion ChoicesWithSameScores
+    (compareMaxMinScores ?max-score ?min-score ?winning-score ?confident)
+  :test (uninferredSentence (different ?max-score ?min-score))
+  :subgoals ((unifies ?winning-score ?max-score)
+             (unifies ?confident false)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

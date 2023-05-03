@@ -1,0 +1,315 @@
+
+
+(in-microtheory FreecivMt)
+
+;;; This is part of the action model that lets us identify
+;;; and reason about domain-level actions.  Unfortunately,
+;;; the primitives are currently defined in the FreecivPlanningDomain
+;;; microtheory, which isn't visible here.  Need to promote the
+;;; definitions of the primitives, if not their effects & preconds.
+;;; After all, that's not strategic knowledge.
+
+
+;;; Enumerating domain-level primitives
+;;; --------------------------------------------------------------------------
+;;; Label the domain-level primitive action predicates that change the
+;;; state of the execution environment:
+
+(actionPrimitive doResearch)
+(actionPrimitive doSetTechGoal)
+(actionPrimitive doSetRates)
+(actionPrimitive doSetGov)
+(actionPrimitive doLaunchSpaceship)
+(actionPrimitive doMove)
+(actionPrimitive doGoToDest)
+(actionPrimitive doConnectBy)
+(actionPrimitive doIdle)
+(actionPrimitive doSentry)
+(actionPrimitive doFortify)
+(actionPrimitive doFortress)
+(actionPrimitive doBuildAirbase)
+(actionPrimitive doPatrol)
+(actionPrimitive doDisband)
+(actionPrimitive doUpgrade)
+(actionPrimitive doMakeHomeCity)
+(actionPrimitive doLoad)
+(actionPrimitive doUnload)
+(actionPrimitive doBuildCity)
+(actionPrimitive doAddToCity)
+(actionPrimitive doIrrigate)
+(actionPrimitive doMine)
+(actionPrimitive doBuildRoad)
+(actionPrimitive doBuildRailRoad)
+(actionPrimitive doCleanPollution)
+(actionPrimitive doCleanFallout)
+(actionPrimitive doTransform)
+(actionPrimitive doAttack)
+(actionPrimitive doPillage)
+(actionPrimitive doEstablishTraderoute)
+(actionPrimitive doHelpBuildWonder)
+(actionPrimitive doAirlift)
+(actionPrimitive doParadropTo)
+(actionPrimitive doUnitNuke)
+(actionPrimitive doBase)
+(actionPrimitive doInitMeeting)
+(actionPrimitive doCancelMeeting)
+(actionPrimitive doCreateClause)
+(actionPrimitive doRemoveClause)
+(actionPrimitive doAcceptTreaty)
+(actionPrimitive doCancelPact)
+(actionPrimitive doBribe)
+(actionPrimitive doMakeEmbassy)
+(actionPrimitive doSabotageCity)
+(actionPrimitive doStealAdvance)
+(actionPrimitive doInciteCityRebellion)
+(actionPrimitive doPoisonCityWater)
+(actionPrimitive doInvestigateCity)
+(actionPrimitive doChangeProduction)
+(actionPrimitive doSetWorklist)
+(actionPrimitive doCityBuy)
+(actionPrimitive doCitySell)
+(actionPrimitive doConvertWorkerToSpecialist)
+(actionPrimitive doConvertSpecialistToWorker)
+(actionPrimitive doChangeSpecialist)
+(actionPrimitive doMoveWorker)
+
+;;; A deferrable action is one for which the agent may be
+;;; temporarily incapable because, e.g., it has exhausted
+;;; its move points.
+(deferrableAction doMove)  ; wait a second. There are a lot of these. This is now handled through code.
+
+;;; Any durative action is actually an instantaneous action
+;;; that changes a state to initate a process.  So long as we 
+;;; understand that, we can look for delayed effects, search for
+;;; ways to speed up the process, etc.
+(durativeAction doResearch)
+(durativeAction doGoToDest)
+(durativeAction doConnectBy)
+(durativeAction doIrrigate)
+(durativeAction doMine)
+(durativeAction doBuildRoad)
+(durativeAction doBuildRailRoad)
+(durativeAction doCleanPollution)
+(durativeAction doCleanFallout)
+(durativeAction doTransform)
+(durativeAction doFortress)
+(durativeAction doBuildAirbase)
+(durativeAction doPillage)
+(durativeAction doFortify)
+
+;;; ToDo: make sure Turns is defined as a unit of duration.
+(durationOfType (MakingFn FC-Special-Road) (Turns 2 5))
+(durationOfType (MakingFn FC-Special-Irrigation) (Turns 2 5))
+(durationOfType (MakingFn FC-Special-Farmland) (Turns 2 5))
+(durationOfType (MakingFn FC-Special-Mine) (Turns 5 15))
+;;; plus researching, building, etc.
+
+
+;;; Eventual effects
+;;; --------------------------------------------------------------------------
+;;; The eventualEffectOfAction-Props information is used
+;;; in the planningGraph generation code and in actionsToAchieve, which
+;;; is used in computing instantiatedOperatorSet.
+
+;;; A Unit can only do one thing at a time, so there's no need for callbacks.
+;;; ALTHOUGH: It would be nice to be able to coordinate units, e.g., for 
+;;; transport loading.  Have to do this with doWait.
+;(eventualEffectOfAction-Props
+;  (doGoToDest ?unit ?dest ?plan)
+;  (fcObjectAt ?unit ?dest))
+
+
+(eventualEffectOfAction-Props
+   (doResearch ?player ?tech)
+   (playerKnowsTech ?player ?tech))
+
+;;; Perhaps the eventual effect is that we'll be currentlyResearching ?tech
+;;; (or ?tech will be currently researchable?)
+(eventualEffectOfAction-Props
+   (doSetTechGoal ?player ?tech)
+   (playerKnowsTech ?player ?tech))
+
+;;; If there's a period of Anarchy, then the government 
+;;; does *not* immediately change to what you specified>
+(eventualEffectOfAction-Props
+   (doSetGov ?player ?gov)
+   (currentGovernment ?player ?gov))
+
+;;; Spacetravel is a long process.
+(eventualEffectOfAction-Props
+    (doLaunchSpaceship ?player)
+    (spaceshipStatus ?player FC-SpaceshipArrived))
+
+(eventualEffectOfAction-Props
+  (doFortress ?unit ?loc)
+  (specialAt ?loc FC-Special-Fortress))  ;; bind ?loc via precondition bindings.
+
+;;; This needs an eventualEffectOfAction to trigger on unit losing orders.
+;;; We don't reify that.  Instead, poll each year.
+(eventualEffectOfAction-Props
+   (doIrrigate ?worker ?loc)
+   (specialAt ?loc FC-Special-Irrigation))   ;; bind ?loc via precondition bindings.
+
+(eventualEffectOfAction-Props
+  (doMine ?worker ?loc)
+  (specialAt ?loc FC-Special-Mine))  ;; bind ?loc via precondition bindings.
+
+(eventualEffectOfAction-Props
+   (doBuildRoad ?worker ?loc)
+   (specialAt ?loc FC-Special-Road))
+   
+(eventualEffectOfAction-Props
+   (doFortify ?unit)
+   (currentActivity ?unit FC-ActivityFortified))
+
+(eventualEffectOfAction-Props
+   (doBuildRailRoad ?worker ?loc)
+   (specialAt ?loc FC-Special-Railroad))
+
+(eventualEffectOfAction-Props
+   (doCleanPollution ?worker ?loc)
+   (not (specialAt ?loc FC-Special-Pollution)))
+   
+(eventualEffectOfAction-Props
+   (doCleanFallout ?worker ?loc)
+   (not (specialAt ?loc FC-Special-Fallout)))
+
+(eventualEffectOfAction-Props
+   (doTransform ?engineer ?loc)
+   (terrainAt ?loc ?newTerrain))
+
+;;; Because pathBetween is not a precondition for any action, it never shows up in the
+;;; planning graph.  But pathBetween *could* be part of an activation condition for
+;;; some process.
+
+(eventualEffectOfAction-Props
+   (doConnectBy ?unit ?dest FC-Special-Road ?path)
+   (and (isa (PathFn ?origin ?dest) Roadway)
+        (pathBetween (PathFn ?origin ?dest) ?origin ?dest)))
+
+(eventualEffectOfAction-Props
+   (doConnectBy ?unit ?dest FC-Special-Railroad ?path)
+   (and (isa (PathFn ?origin ?dest) Railway)
+        (pathBetween (PathFn ?origin ?dest) ?origin ?dest)))
+
+;;; How can we even specify the eventualEffectOfAction-Props when
+;;; we don't know if the thing we're building is a unit or improvement?
+;;; Must we invent a new predicate: cityHasProductionItem?  Then define rules
+;;; to infer whether cityHasImprovement or unitHomeCity (which would be tough,
+;;; because unit won't have a name yet)
+
+;;; Specify the eventualEffectOfAction-Props as a horn clause.
+;;; Unfortunately, this breaks plan-graph generation.  It doesn't crack the 
+;;; horn clause to determine that an eventual effect may be
+;;; (cityHasImprovement ?city ?obj)
+
+;;; Technically, this is only true if ?obj is a building or wonder.  Heck with it, it's defeasible.
+;(eventualEffectOfAction-Props
+;   (doChangeProduction ?city ?obj)
+;   (cityHasImprovement ?city ?obj))  ;; cityHasImprovementType??
+
+(eventualEffectOfActionIf-Props
+  (doChangeProduction ?city ?obj)
+  (genls ?obj FreeCiv-Building)
+  (cityHasImprovement ?city ?obj))  ; type-level effect
+
+(eventualEffectOfActionIf-Props
+  (doChangeProduction ?city ?unit-type)
+  (and (genls ?unit-type FreeCiv-Unit)
+       (currentYear ?year))  ; timestamp
+  (and (isa ?unit ?unit-type)  ; Change ?unit to GenericInstanceFn?  (would still mess up goal operationalizer)
+       (objectFoundInLocation ?unit ?city)))
+
+;;; This requires gnarly changes to get-enablement-from-index:
+(eventualEffectOfAction-Props
+   (doSetWorklist ?city ?worklist)
+   (cityHasImprovement ?city (MemberFn ?worklist)))
+
+;;; Resource Reasoning
+;;; --------------------------------------------------------------------------
+;;; Built-in Cyc resource preds:
+;;; (resourceCapableOf AGENT SIT-TYPE ROLE)
+;;; (resourceInEvent EVENT RESOURCE) 
+;;; (resourceInPlan PLANNING-MT RESOURCE)
+;;; (resourceTypeRequiredForSituationType THING-TYPE SIT-TYPE)
+;;; (resourceAvailable AGENT RESOURCE)
+;;; (taskTypeRequiresResourceType TASK-TYPE RESOURCE-TYPE)
+;;; e.g., (taskTypeRequiresResourceType AttackingByFire Gun)
+
+;;; The following two predicates are defined in Companions/abstract-planning.meld.
+;;; They're used in the regression planner to figure out what constitutes a resource
+;;; with respect to an action.
+(actionPredSlotMapping doChangeProduction (TheList doneBy objectTypeProduced))
+(actionTypeProducesResourceType doChangeProduction FreeCiv-BuildableThing objectTypeProduced)
+
+(actionPredSlotMapping doBuildCity (TheList doneBy)) ; ignore the ?city arg for now?
+(actionTypeConsumesResourceType doBuildCity FC-Unit-Settlers doneBy)
+(actionTypeConsumesResourceType doAddToCity FC-Unit-Settlers doneBy)
+(actionTypeConsumesResourceType doEstablishTraderoute FreeCiv-TradingUnit doneBy)
+(actionTypeConsumesResourceType doHelpBuildWonder FreeCiv-TradingUnit doneBy)
+(actionTypeConsumesResourceType doDisband FreeCiv-Unit doneBy)
+
+;;; This Cyc predicate would almost do what we want, except that 
+;;; a) it requires a Davidsonian Event type, and
+;;; b) it doesn't relate the two through a role relation
+;(resourceTypeRequiredForSituationType FC-Unit-Settlers (MakingFn FreeCiv-City))
+
+;(nonDavidsonianPredReln CausingAnotherObjectsTranslationalMotion (TheList primaryObjectMoving toLocation) doMoveGlyph)
+
+(nonDavidsonianPredReln AttackOnTangible (TheList performedBy objectAttacked) doAttack) ; objectAttacked, or intendedMaleficiary?
+(nonDavidsonianPredReln Movement-TranslationEvent (TheList performedBy toLocation) doMove)
+(nonDavidsonianPredReln MoneyTransaction (TheList performedBy objectTypeOfPossessionTransfer) doCityBuy)  ; This assumes doCityBuy is binary!
+(nonDavidsonianPredReln (MakingFn FreeCiv-City) (TheList performedBy eventOccursAt) doBuildCity)
+(nonDavidsonianPredReln BuyingAnObject (TheList performedBy eventOccursAt) doHelpBuildWonder)
+
+(inputsDestroyed-TypeType (MakingFn FreeCiv-City) FC-Unit-Settlers)  ; *not* committed.  The unit doesn't exist afterwards.
+
+;;; Davidsonian Representations
+;;; --------------------------------------------------------------------------
+;;; We care about identifying Davidsonian representations of game actions 
+;;; because type-level statements almost always connect types via role-relations
+;;; in Davidsonian Events.
+
+(correspondingCycCollection doChangeProduction MakingSomething) ; SettingProduction is *not* a built-in Event!
+(associatedActorSlotList doChangeProduction (TheList doneBy objectTypeProduced))
+
+;;; The problem with the ActorSlot mechanism is that actorSlots are always
+;;; at the individual level, not at the type-level.  They must refer to an instance
+;;; of SomethingExisting, not a Collection.  Neither doChangeProduction, doBuildCity,
+;;; nor doResearch satisfy this requirement.
+;;; 
+;;; Could we define objectTypeProduced such that it's an ActorSlot?
+;;; Or should we use outputsProduced and have the argument to doChangeProduction be
+;;; (CityProductionFn <type>)?  This leads to coordination problems between 
+;;; currentlyBuilding and cityHasImprovement.  Should their arg-isa be a FreeCiv_ObjectType?
+
+
+;;; Do we want to say:
+;;; (correspondingCycCollection doBuildCity (MakingFn FreeCiv-City))
+;;; whereas the effect of changing production to ?obj-type is
+;;; (ProcessFn (MakingFn ?obj-type))
+;;;
+(correspondingCycCollection doResearch Research)  ;(ResearchInFn ?tech)
+(associatedActorSlotList doResearch (TheList doneBy objectOfInvestigation))
+
+
+;;; Type-level representation is hard!
+;;; This is a GAF that represents the fact that when you change production to
+;;; a building or wonder, you commence a process of ConstructingABuilding.
+;;; We're going to need a lot of code to handle this representation.
+(causes-SitTypeSitType
+  (SubcollectionOfWithRelationToTypeFn
+    SettingProduction outputsCreated FreeCiv-BuildableThing)
+  (ProcessFn ConstructingABuilding))
+
+
+
+;;; (agentTypePerformsActsOfType Scout InformationGathering)
+;;; (implies (scout-OrganizationalRole ??ORG ?SCOUT) (performsActsOfType ?SCOUT InformationGathering))
+;;; It's not clear what the relationship is between Scout and Explorer:
+;;; (genls Scout PersonWithOccupation)
+;;; (genls Researcher PersonWithOccupation)
+;;; (genls Explorer Researcher)
+;;;
+;;; (arg2Isa exploredBy Explorer)
+

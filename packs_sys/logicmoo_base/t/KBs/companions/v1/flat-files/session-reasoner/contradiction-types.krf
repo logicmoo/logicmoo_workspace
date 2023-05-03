@@ -1,0 +1,54 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: contradiction-types.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: April 28, 2013 17:54:03
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ContradictionTypesMt)
+
+(isa useContradictionType Predicate)
+(arity useContradictionType 1)
+(comment useContradictionType "(useContradictionType ?x) means that the contradiction type ?x should be one of the contradictions detected by the learning by reading
+system when the microtheory in which it is asserted is being used as the source of contradictions to detect.")
+
+(isa lbrContradictionType Collection)
+(comment lbrContradictionType "The collection of contradiction types detected by the lbr system. They are detected when (useContradictionType ?x)
+is asserted in the microtheory being used as the source of contradictions to detect.")
+
+(isa deductivelyValidLbrContradictionType Collection)
+(genls deductivelyValidLbrContradictionType lbrContradictionType)
+(comment deductivelyValidLbrContradictionType "A member of deductivelyValidLbrContradictionType is a type of contradiction where if it's detected, something
+has definitely gone wrong - for example, if something is believed to be a member of two disjoint sets at the same time. Contrast with notDeductivelyValidLbrContradictionType.")
+
+(isa notDeductivelyValidLbrContradictionType Collection)
+(genls notDeductivelyValidLbrContradictionType lbrContradictionType)
+(comment notDeductivelyValidLbrContradictionType "A member of notDeductivelyValidLbrContradictionType is a type of contradiction where if it's detected, something
+may have gone wrong, but not necessarily - for example, if some entity X is a member of a collection and is also filling a slot in a role relation that has an argIsa
+of a different type, that's a clue that something has gone wrong, but it's not certain, since X could also be a member of another collection that would let it qualify
+for that argIsa. Contrast with deductivelyValidLbrContradictionType.")
+
+;;; Specific types of contradiction
+
+(isa choiceMakesAnArgIsaThatViolatesEarlierIsa lbrContradictionType)
+(isa choiceMakesAnArgIsaThatViolatesEarlierIsa notDeductivelyValidLbrContradictionType)
+(comment choiceMakesAnArgIsaThatViolatesEarlierIsa "This contradiction type flags as a potential source of a contradiction any choice that use some entity X
+as the argument of some assertion, but X has been established earlier as being isa some collection that isn't something that falls under the argIsa for that slot.
+This is a notDeductivelyValidLbrContradictionType because it could be a member of another collection that does belong to that argIsa.")
+
+
+(in-microtheory AllContradictionTypesMt)
+
+(useContradictionType choiceMakesAnArgIsaThatViolatesEarlierIsa)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,88 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QPTypeLevelQueries.meld
+;;;;    System: 
+;;;;    Author: Clifton McFate
+;;;;   Created: August 6, 2014 18:09:29
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QPTypeLevelQueriesMt :exclude-globals t)
+(genlMt QPTypeLevelQueriesMt QPTypeLevelRulesMt)
+(genlMt FC-DomainTypeQueriesMt QPTypeLevelQueriesMt)
+(genlMt QP-DomainTypeQueriesMt QPTypeLevelQueriesMt)
+
+;;;(abductiveNLUScoringProcedure abductive-score-via-symbol-weights)
+;;;(abductiveNLPredicateScore FC-QPEntity 10)
+;;;(abductiveNLPredicateScore realWorld-QPEntity 5)
+;;;(abductiveNLPredicateScore naturalArtifact-QPEntity 7)
+;;;(abductiveNLPredicateScore artifact-QPEntity 6)
+;;;(abductiveNLPredicateScore constrainedPredicate-General 2)
+;;;(abductiveNLPredicateScore ratePredicate-General 2)
+;;;(abductiveNLPredicateScore constrainedPredicate-FC 20)
+;;;(abductiveNLPredicateScore ratePredicate-FC 20)
+
+
+(queryForInterpretation 0
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroducesTypeLevelQuantity))
+;;;
+(queryForInterpretation 0
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroducesTypeDependence))
+
+(queryForInterpretation 1
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfInfluenceTypeQuantities))
+
+(queryForInterpretation 2
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfOrdinalConstraint))
+
+(queryForInterpretation 2
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfInfluenceTypeEvent))
+
+(queryForInterpretation 2
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfQPropTypeEvent))
+
+
+(queryForInterpretation 3
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfTypeLevelProcessFragment))
+
+(queryForInterpretation 4
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfTypeLevelProcessRoles))
+
+(queryForInterpretation 5
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfCTypeFrame))
+
+(queryForInterpretation 6
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact IntroductionOfTypeLevelProcessConstraints))
+(queryForInterpretation 6
+                        (narrativeFunction
+                         (PresentationEventFn :REPLACE-SID ?event-id)
+                         ?fact ExtractProcessModel))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

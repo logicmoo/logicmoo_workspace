@@ -1,0 +1,173 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: cords.meld
+;;;;    System: CogSketch
+;;;;    Author: Jon Wetzel
+;;;;   Created: December 6, 2012 17:43:25
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QualitativeMechanicsMt :exclude-globals t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Possibly useful existing concepts:
+;; (parts WHOLE PART)
+;; (physicalParts WHOLE PART)
+;; (cordEnd CordLikeObject EndOfCordLikeObject)
+;; EndOfCordLikeObject
+;; hangsAround
+
+
+(isa Strap Collection)
+(genls Strap CordlikeArtifact)
+(comment Strap 
+  "A flat, thin, strip of material, often use to attach things together.")
+
+#|  thinking about adding this
+(isa connectVia TernaryPredicate)
+(comment connectVia
+  "(connectVia <entity1> <entity2> <entity3>) is true when entities 1 and 2 are
+   connected together via entity 3.  This predicate is introduced for cases 
+   where the connector of a connectedTo relationship needs to be represented.")
+(arg1Isa connectVia Entity)
+(arg2Isa connectVia Entity)
+(arg3Isa connectVia Entity)
+|#
+
+(isa connectedViaCord SymmetricBinaryPredicate)
+(comment "connectedViaCord <ObjA> <ObjB> implies that ObjA and ObjB are
+          connectedViaFlexibleConnector and that connector is an instance of
+          Cord.")
+(arg1Isa connectedViaCord SolidTangibleThing)
+(arg2Isa connectedViaCord SolidTangibleThing)
+(genlPreds connectedViaCord connectedViaFlexibleConnector)
+
+(isa cordConnection Predicate)
+(arity cordConnection 4)
+(arg1Isa cordConnection SolidTangibleThing)
+(arg2Isa cordConnection SolidTangibleThing)
+(arg3Isa cordConnection CordSegment)
+(arg4Isa cordConnection CordSegment)
+(comment "cordConnection <ObjA> <ObjB> <CordSeg1> <CordSeg2> implies that ObjA and ObjB are
+          connected by a cord made up of <CordSeg1> and <CordSeg2>.")
+
+(isa rotationalOriginByCordConnection BinaryPredicate)
+(comment rotationalOriginByCordConnection 
+  "rotationalOriginByCordConnection is true iff obj has ori as rotational 
+   origin because ori is obj is connected by cord to something.")
+(arg1Isa rotationalOriginByCordConnection Physob)
+(arg2Isa rotationalOriginByCordConnection QMPoint)
+(genlPreds rotationalOriginByCordConnection rotationalOrigin)
+
+(isa rotationallyConstrainedAtCordSeg BinaryPredicate)
+(arg1Isa rotationallyConstrainedAtCordSeg Physob)
+(arg2Isa rotationallyConstrainedAtCordSeg Cord)
+(comment rotationallyConstrainedAtCordSeg
+  "(rotationallyConstrainedAtCordSeg ?obj ?cord) is true if ?obj cannot rotate
+   about its rotational origin towards the cord.")
+
+;;; CordSegments
+
+(isa CordSegment Collection)
+(genls CordSegment CordlikeArtifact)
+(comment CordSegment 
+  "A portion of a cord-like artifact")
+
+(isa cordSegmentOf PhysicalPartPredicate)
+(genlPreds cordSegmentOf physicalParts)
+(arg1Isa cordSegmentOf CordSegment)
+(arg2Isa cordSegmentOf CordlikeArtifact)
+(comment cordSegmentOf 
+  "(cordSegmentOf <CordSegment> <Cord>) is true when CordSegment is a part 
+   of Cord.")
+
+(isa cordSegmentAxis BinaryPredicate)
+(arg1Isa cordSegmentAxis CordSegment)
+(arg2Isa cordSegmentAxis QVAxis)
+(comment cordSegmentAxis 
+  "(cordSegmentAxis <CordSegment> <Axis>) is true when <Axis> is the QVAxis to 
+   which <CordSegment> is aligned.")
+
+(isa edgeRepresentsCordSegment BinaryPredicate)
+(arg1Isa edgeRepresentsCordSegment PerceptualEdge)
+(arg2Isa edgeRepresentsCordSegment CordSegment)
+(comment edgeRepresentsCordSegment "(edgeRepresentsCordSegment <edge> <cordseg>)
+ is true when <edge> is the ink representing a segment of cord, <cordseg>.")
+
+
+(isa qvFromCordConnection TernaryPredicate)
+(arg1Isa qvFromCordConnection CordSegment)
+(arg2Isa qvFromCordConnection PhysOb)
+(arg3Isa qvFromCordConnection 2DQVector)
+(comment qvFromCordConnection "(qvFromCordConnection <cordseg> <obj> <dir>) is
+ true when <cordseg> is connectedAtEnd to <obj> and the direction from the
+ <cordseg> to <obj> is <dir>.")
+
+
+(isa sameCord EquivalenceRelation)
+(arg1Isa qvFromCordConnection CordSegment)
+(arg2Isa qvFromCordConnection CordSegment)
+(comment qvFromCordConnection "(sameCord <cordseg> <cordseg>) is true when both
+ args are segments of the same cord.")
+
+
+;;; Pulleys
+
+;; All pulleys are rigid
+(genls Pulley RigidOb)
+
+(isa pulleyCWCord BinaryPredicate)
+(comment pulleyCWCord
+  "(pulleyCWCord <Pulley> <CordSegment>) is true when CordSegment will 
+   rotate the pulley clockwise if pulled.")
+(arg1Isa pulleyCWCord Pulley)
+(arg2Isa pulleyCWCord CordSegment)
+
+(isa pulleyCCWCord BinaryPredicate)
+(comment pulleyCCWCord
+  "(pulleyCCWCord <Pulley> <CordSegment>) is true when CordSegment will 
+   rotate the pulley counter-clickwise if pulled.")
+(arg1Isa pulleyCCWCord Pulley)
+(arg2Isa pulleyCCWCord CordSegment)
+
+(isa pulleyTopCord BinaryPredicate)
+(comment pulleyTopCord
+  " (pullelyTopCord <Pulley> <CordSegment>) is true when CordSegment is
+     connected to the Top connection point of the pulley ")
+(arg1Isa pulleyTopCord Pulley)
+(arg2Isa pulleyTopCord CordSegment)
+
+(isa pulleyBottomCord BinaryPredicate)
+(comment pulleyBottomCord
+  " (pullelyBottomCord <Pulley> <CordSegment>) is true when CordSegment is
+     connected to the Bottom connection point of the pulley ")
+(arg1Isa pulleyBottomCord Pulley)
+(arg2Isa pulleyBottomCord CordSegment)
+
+(isa cordSegEntersPulley BinaryPredicate)
+(arg1Isa cordSegEntersPulley CordSegment)
+(arg2Isa cordSegEntersPulley Pulley)
+(comment cordSegEntersPulley "(cordSegEntersPulley <cordseg> <pulley>) is true
+ when one end of <cordseg> is at the breech of a pulley, meaning the cord enters
+ it.")
+
+(isa cordSegsConnectThroughPulley BinaryPredicate)
+(arg1Isa cordSegsConnectThroughPulley CordSegment)
+(arg2Isa cordSegsConnectThroughPulley Pulley)
+(comment cordSegsConnectThroughPulley 
+  "(cordSegsConnectThroughPulley <cordsegA> <cordsegB> <pulley>) is true
+ when <cordsegA> and <cordsegB> are both cordSegmentOf the same cord which runs
+ through pulley, coming in as <cordSegA> and leaving as <cordSegB> (or vice 
+ versa)")
+
+(isa kinematicCordConnection Predicate)
+(arity kinematicCordConnection 4)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

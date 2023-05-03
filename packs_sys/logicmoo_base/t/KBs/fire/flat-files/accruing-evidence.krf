@@ -1,0 +1,82 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: accruing-evidence.meld
+;;;;    System: Companions
+;;;;    Author: Blass
+;;;;   Created: July 10, 2017 15:06:06
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory EvidenceAccrualMt)
+;(genlMt EvidenceAccrualMt CompanionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; basic evidence for and against harness
+(isa gatherEvidenceForAndAgainst Predicate)
+(arity gatherEvidenceForAndAgainst 2)
+(arg1Isa gatherEvidenceForAndAgainst CycLExpression)
+(arg2Isa gatherEvidenceForAndAgainst Set-Mathematical)
+(comment gatherEvidenceForAndAgainst
+  "(gatherEvidenceForAndAgainst <fact> <evidenceSet>) binds all evidenceFor and evidenceAgainst statements
+for <fact> up in evidenceSet>")
+
+(isa evidenceFor Predicate)
+(arity evidenceFor 3)
+(arg1Isa evidenceFor CycLExpression)
+(arg2Isa evidenceFor CycLExpression)
+(arg3Isa evidenceFor PositiveNumber)
+(comment evidenceFor
+  "(evidenceFor <fact> <evidence> <weight>) indicates that <evidence> is evidence in favor 
+of <fact> and carries weight <weight>. <weight> is a positive unmber because evidence is summed.")
+
+(isa evidenceAgainst Predicate)
+(arity evidenceAgainst 3)
+(arg1Isa evidenceAgainst CycLExpression)
+(arg2Isa evidenceAgainst CycLExpression)
+(arg3Isa evidenceAgainst NegativeNumber)
+(comment evidenceAgainst
+  "(evidenceAgainst <fact> <evidence> <weight>) indicates that <evidence> is evidence against 
+<fact> and carries weight <weight>. <weight> is a negative number because evidence is summed.")
+
+(<== (gatherEvidenceForAndAgainst ?fact ?evidenceSet)
+     (evaluate ?evidenceFor
+       (TheClosedRetrievalSetOf (evidenceFor ?fact ?evidence ?weight)
+         (evidenceFor ?fact ?evidence ?weight)))
+     (evaluate ?evidenceAgainst
+       (TheClosedRetrievalSetOf (evidenceAgainst ?fact ?evidence2 ?weight2)
+         (evidenceAgainst ?fact ?evidence2 ?weight2)))
+     (evaluate ?evidenceSet
+       (SetOrCollectionUnion ?evidenceFor ?evidenceAgainst)))
+
+(isa totalEvidenceScore Predicate)
+(arity totalEvidenceScore 2)
+(arg1Isa totalEvidenceScore CycLExpression)
+(arg2Isa totalEvidenceScore Number)
+(comment totalEvidenceScore
+  "(totalEvidenceScore <fact> <score>) uses gatherEvidenceForAndAgainst to gather all the evidence in favor
+and against a particular fact, then simply adds up the scores of those facts to get <score>")
+
+(<== (totalEvidenceScore ?fact ?score)
+     (gatherEvidenceForAndAgainst ?fact ?evidenceSet)
+     (evaluate ?scores
+       (TheClosedRetrievalSetOf ?weight
+         (and (elementOf ?ev ?evidenceSet)
+              (unifies ?ev (?evidencePred ?fact ?ev2 ?weight)))))
+     (evaluate ?scoreFormula (MakeFormulaFn PlusFn ?scores))
+     (evaluate ?score ?scoreFormula))
+
+;;; everything gets a default score of 0 for and against
+;;; largely for debug purposes
+
+(<== (evidenceFor ?fact nil 0))
+(<== (evidenceAgainst ?fact nil 0))
+
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

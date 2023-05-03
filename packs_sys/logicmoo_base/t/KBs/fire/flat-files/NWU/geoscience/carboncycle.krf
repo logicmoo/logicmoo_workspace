@@ -1,0 +1,160 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: carboncycle.meld
+;;;;    System: FIRE
+;;;;    Author: Panrong(Penny) Yin
+;;;;   Created: November 6, 2009 16:16:27
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  modified: Thursday, November 12, 2009 at 14:36:44 by usher
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory GeoscienceFactsMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Reservoir Definitions: 
+;;; - Biosphere
+;;; - Lithosphere
+;;; - Pedosphere(soil)
+;;; - Hydrosphere(ocean)
+;;; - Atmosphere(defined in Cyc)
+
+(isa Biosphere Collection)
+(genls Biosphere EcologicalRegion)
+(comment Biosphere 
+  "The biosphere is the global sum of all ecosystems. From the broadest 
+   biophysiological point of view, the biosphere is the global ecological 
+   system integrating all living beings and their relationships, including 
+   their interaction with the elements of other reservoirs.")
+
+(isa Lithosphere Collection)
+(genls Lithosphere GeologicalRockUnit)
+(genls Lithosphere RockyPlanetaryStuff)
+(comment Lithosphere 
+  "In the Earth, the lithosphere includes the crust and the uppermost mantle, 
+   which constitutes the hard and rigid outer layer of the Earth.")
+
+(isa Pedosphere Collection)
+(genls Pedosphere Soil-Generic)
+(comment Pedosphere 
+  "The peosphere is the outermost layer of the Earth that is composed of soil and 
+   subject to soil formation processes. It exists at the interface of the 
+   lithosphere, atmosphere, hydrosphere and biosphere.")
+
+(isa Hydrosphere Collection)
+(genls Hydrosphere BodyOfWater)
+(nameString Hydrosphere "hydrosphere")
+(comment Hydrosphere 
+  "A hydrosphere describes the combined mass of water found on, under, and over 
+   the surface of a planet.")
+
+(isa CoalOilGasDeposits Collection)
+(genls CoalOilGasDeposits MineralField)
+(nameString CoalOilGasDeposits "coal, oil, and gas deposits")
+(comment CoalOilGasDeposits
+  "Represents deposits of #$Coal, #$Oil, or #$NaturalGas in the ground.")
+
+(isa FossilFuelUsageAndCementProduction Collection)
+(genls FossilFuelUsageAndCementProduction PartiallyTangible)
+(nameString FossilFuelUsageAndCementProduction
+            "fossil fuel usage and cement production")
+(comment FossilFuelUsageAndCementProduction
+  "This is an aggregate collection of things like factories, power plants,
+   vehicles that use consume fossil fuels and also cement production 
+   facilities.  Since all of these represent a large portion of human
+   carbon output, it is sometimes useful to talk about these as members
+   of a single collection.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Carbon transfer processes
+
+(isa photosynthesis-CarbonTransfer BinaryPredicate)
+(nameString photosynthesis-CarbonTransfer "photosynthesis")
+(comment photosynthesis-CarbonTransfer 
+  "Photosynthesis-CarbonTransfer is true iff the process that converts carbon 
+   dioxide into organic compounds causes a carbon flow transfers from one 
+   reservoir to another.")
+(arity photosynthesis-CarbonTransfer 2)
+(arg1Isa photosynthesis-CarbonTransfer PartiallyTangible)
+(arg2Isa photosynthesis-CarbonTransfer PartiallyTangible)
+
+(isa respiration-CarbonTransfer BinaryPredicate)
+(nameString respiration-CarbonTransfer "respiration")
+(comment respiration-CarbonTransfer 
+  "Respiration-CarbonTransfer is true iff the process that exchanges carbon 
+   flux occurring in the atmosphere through various processes adds and subtracts 
+   atmospheric carbon. ")
+(arity respiration-CarbonTransfer 2)
+(arg1Isa respiration-CarbonTransfer PartiallyTangible)
+(arg2Isa respiration-CarbonTransfer PartiallyTangible)
+
+(isa air-SeaExchage-CarbonTransfer BinaryPredicate)
+(nameString air-SeaExchage-CarbonTransfer "air-sea exchange")
+(comment air-SeaExchage-CarbonTransfer 
+  "Air-SeaExchage-CarbonTransfer is true iff the dissolution of calcium 
+   carbonate and reverse of the reaction to form carbonate rocks cause carbon 
+   flows transfers between atmosphere and the ocean.")
+(arity air-SeaExchage-CarbonTransfer 2)
+(arg1Isa air-SeaExchage-CarbonTransfer PartiallyTangible)
+(arg2Isa air-SeaExchage-CarbonTransfer PartiallyTangible)
+
+(isa organicCompoundsDeposition-CarbonTransfer BinaryPredicate)
+(nameString organicCompoundsDeposition-CarbonTransfer 
+            "organic compounds deposition")
+(comment organicCompoundsDeposition-CarbonTransfer 
+  "OrganicCompoundsDeposition-CarbonTransfer is true iff organic compounds 
+   settle out of a reservoir into another.")
+(arity organicCompoundsDeposition-CarbonTransfer 2)
+(arg1Isa organicCompoundsDeposition-CarbonTransfer PartiallyTangible)
+(arg2Isa organicCompoundsDeposition-CarbonTransfer PartiallyTangible)
+
+(isa carbonicAcidDeposition-CarbonTransfer BinaryPredicate)
+(nameString carbonicAcidDeposition-CarbonTransfer "carbonic acid deposition")
+(comment carbonicAcidDeposition-CarbonTransfer 
+  "CarbonicAcidDeposition-CarbonTransfer is true iff carbonic acid settle out 
+   of a reservoir into another.")
+(arity carbonicAcidDeposition-CarbonTransfer 2)
+(arg1Isa carbonicAcidDeposition-CarbonTransfer PartiallyTangible)
+(arg2Isa carbonicAcidDeposition-CarbonTransfer PartiallyTangible)
+
+(isa weathering-CarbonTransfer BinaryPredicate)
+(nameString weathering-CarbonTransfer "weathering")
+(comment weathering-CarbonTransfer 
+  "Weathering-CarbonTransfer is true iff the decomposition of Earth's rocks, 
+   soils and minerals through direct contact with the planet's atmosphere causes 
+   a carbon flow transfer.")
+(arity weathering-CarbonTransfer 2)
+(arg1Isa weathering-CarbonTransfer PartiallyTangible)
+(arg2Isa weathering-CarbonTransfer PartiallyTangible)
+
+(isa volcanicEruption-CarbonTransfer BinaryPredicate)
+(nameString volcanicEruption-CarbonTransfer "volcanic eruption")
+(comment volcanicEruption-CarbonTransfer 
+  "VolcanicEruption-CarbonTransfer is true iff the various gases expelled from 
+   a volcano during a volcanic eruption transfers a carbon flow.")
+(arity volcanicEruption-CarbonTransfer 2)
+(arg1Isa volcanicEruption-CarbonTransfer PartiallyTangible)
+(arg2Isa volcanicEruption-CarbonTransfer PartiallyTangible)
+
+(isa fossilFuelCombustion-CarbonTransfer BinaryPredicate)
+(nameString fossilFuelCombustion-CarbonTransfer "fossil fuel burning")
+(comment fossilFuelCombustion-CarbonTransfer 
+  "FossilFuelCombustion-CarbonTransfer is true iff the combustion product gas 
+   resulting from the burning of fossil fuels transfers a carbon flow.")
+(arity fossilFuelCombustion-CarbonTransfer 2)
+(arg1Isa fossilFuelCombustion-CarbonTransfer PartiallyTangible)
+(arg2Isa fossilFuelCombustion-CarbonTransfer PartiallyTangible)
+
+(isa carbonTransfer-Generic BinaryPredicate)
+(arity carbonTransfer-Generic 2)
+(arg1Isa carbonTransfer-Generic PartiallyTangible)
+(arg2Isa carbonTransfer-Generic PartiallyTangible)
+(nameString carbonTransfer-Generic "carbon transfer")
+(comment carbonTransfer-Generic 
+  "Represents a transfer of carbon from one thing to another.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

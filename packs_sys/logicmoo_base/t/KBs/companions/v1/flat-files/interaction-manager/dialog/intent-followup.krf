@@ -1,0 +1,81 @@
+;;;
+;;; intent-folloup.meld
+;;;
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; This is invoked after inferring the surface meaning of an utterance
+;;; and after answering the query (if it's a question)
+
+(isa inferDeeperMeaning ComplexActionPredicate)
+(arity inferDeeperMeaning 3)
+(comment inferDeeperMeaning "(inferDeeperMeaning ?context ?sid ?utterance-type) tries to uncover the motivation behind a question or statement.")
+
+;;; Does the declarative introduce new information that conflicts with prior belief?
+;;; Does the declarative present information that could have been inferred?
+;;; Does it justify an assertion? Introduce a term? Describe a scenario?
+;;; Are we filling in an epistemic form?
+(preconditionForMethod
+  (uniqueInterpretation ?context ?sid ?interpretation)
+  (methodForAction
+    (inferDeeperMeaning ?context ?sid DeclarativeUtterance)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Looking for deeper meaning in statement ~s." (?interpretation))
+        ))))
+
+;;; Is the imperative walking us through a procedure? ("Do <this>. Next, do <that>.")
+;;; Does it demonstrate a fallacy? ("Try to fly straight up.")
+;;; Is it an implicit query?       ("Give me an explanation.", "Compute the sine of 30 degrees.")
+(preconditionForMethod
+  (uniqueInterpretation ?context ?sid ?interpretation)
+  (methodForAction
+    (inferDeeperMeaning ?context ?sid ImperativeUtterance)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Looking for deeper meaning in imperative ~s." (?interpretation))
+        ))))
+
+;;; Is the question an indirect request? ("Can you...")
+;;; Is it part of a sequence of queries that constitute a solve suggestion?
+;;; Does the answer entail a contradiction with prior belief?
+;;; look for: (ist-Information ?context (queryAnswer ?sentence-id ?answers))
+(preconditionForMethod
+  (and 
+    ;(allFactsAllowed (isa ?type InterrogativeUtterance))  
+    (different ?type DeclarativeUtterance)
+    (different ?type ImperativeUtterance)  ; this is easier
+    (lookupOnly
+      (localOnly
+        (ist-Information ?context 
+          (queryAnswer ?sid ?answers))))
+    ;; queryAnswer format is all over the map, unfortunately.
+    ;; What we want to know is "Does this answer entail an answer to some prior question?"
+    )
+  (methodForAction
+    (inferDeeperMeaning ?context ?sid ?type)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Looking for deeper meaning from (queryAnswer ~s ~s)" (?sid ?answers))
+        ))))
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (inferDeeperMeaning ?context ?sid ?type)
+    (actionSequence
+      (TheList))))
+      
+(<== (preferInContext (inferDeeperMeaning ?context ?sid ?type) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+
+
+
+;;; What to do with deeper meanings:
+
+;;; Induce solve suggestion
+;;; Induce task
+;;; Induce inference rule (extrapolate)
+;;; Infer closed world
+;;; Infer orthogonal dimensions
+;;; Infer decomposition

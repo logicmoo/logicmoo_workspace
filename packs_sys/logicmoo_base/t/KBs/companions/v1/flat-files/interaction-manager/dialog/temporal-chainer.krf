@@ -1,0 +1,76 @@
+;;;
+;;;
+;;; Simple temporal reasoning
+
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; Pretty-printing relative dates:
+
+(isa relativeDate BinaryPredicate)
+
+(<== (relativeDate ?date ?relative-expression)
+     (currentDate ?now)
+     (equals ?date ?now)
+     (unifies ?relative-expression "earlier today"))
+     
+(<== (relativeDate ?date ?relative-expression)
+     (currentDate ?now)
+     (different ?date ?now)
+     (uninferredSentence
+       (inferenceOnly
+         (yesterday ?date)))
+     (absoluteDate ?date ?date-expression)
+     (formattedContentString "on ~a" (TheList ?date-expression) ?relative-expression))
+     
+(<== (relativeDate ?date "yesterday")
+     (inferenceOnly
+      (yesterday ?date)))
+
+(isa absoluteDate BinaryPredicate)
+
+;;; This assumes we have a packed CycTime, rather than , e.g.,
+;;; (MonthFn August (YearFn 2005)) 
+(<== (absoluteDate ?date ?date-expression)
+     (destructuredCycDate ?date ?year ?month-num ?day)
+     (allFactsAllowed
+       (numAnswers 1
+         (localOnly
+           (ist-Information CalendarsMt
+             (calendarMonthIndex GregorianMonthType ?month ?month-num)))))
+     (localOnly
+       (ist-Information GeneralEnglishMt
+         (nameString ?month ?month-name)))
+     (formattedContentString "~a ~a, ~a" (TheList ?month-name ?day ?year) ?date-expression)
+     )
+
+;;; Need to deal with temporally-circumscribed propositions, eg,
+;;; TimeIntervalBetweenFn
+;;; IntervalStartedByFn
+;;; IntervalEndedByFn
+;;; IntervalAfterFn
+;;; IntervalBeforeFn
+;;; TimeIntervalBetweenFn
+;;; STIB
+;;; STIF
+;;; IntervalStartedByFn-Inclusive
+;;; IntervalEndedByFn-Inclusive
+;;; TimeIntervalInclusiveFn
+
+ #||
+"(temporalUpdateRequiredForArg PRED N) means that when there is a temporally qualified assertion in a context with monadic MT-1 with PRED in the arg0 position and TERM in the Nth position, then if there is reason to make an additional assertion in a context with monadic MT-2 (where MT-2 inherits from MT-1) with PRED in the arg0 position and TERM in the Nth position, and where the temporal qualification of the existing assertion is open-ended toward the future, then the temporal qualification of the existing assertion needs to be temporally closed off before the novel assertion can be made. For example, given 
+(temporalUpdateRequiredForArg president 1) 
+
+then if we have this assertion in the Cyc KB: 
+
+(ist HistoricalPeopleDataMt (MtTimeWithGranularityDimFn (TimeIntervalBetweenFn (YearFn 2000) Now) TimePoint) (president UnitedStatesOfAmerica GeorgeWBush)) 
+
+if we wish to add a new assertion with president in the arg0 position and UnitedStatesOfAmerica in the arg1 position, and NEW-PRESIDENT in the arg2 position (where NEW-PRESIDENT is different from GeorgeWBush) in a temporal context that starts at time T where T is later than (YearFn 2000), then the previous assertion must first be updated to: 
+
+(ist HistoricalPeopleDataMt (MtTimeWithGranularityDimFn (TimeIntervalBetweenFn (YearFn 2000) T) TimePoint) (president UnitedStatesOfAmerica GeorgeWBush)) 
+
+before we can assert: 
+
+(ist HistoricalPeopleDataMt (MtTimeWithGranularityDimFn (TimeIntervalBetweenFn T Now) TimePoint) (president UnitedStatesOfAmerica NEW-PRESIDENT)) "
+||#
+

@@ -1,0 +1,241 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: experiments.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: May 24, 2010 17:55:52
+;;;;   Purpose: Knowledge definitions used for supporting cogsci and psych
+;;;;            experiments.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa CogSketchExperimentSketch Collection)
+(genls CogSketchExperimentSketch NuSketchSketch)
+(comment CogSketchExperimentSketch
+  "This kind of #$NuSketchSketch is used for experiments run by researchers.")
+
+
+(isa cogsketchExperimentInstructions BinaryRelation)
+(arity cogsketchExperimentInstructions 2)
+(arg1Isa cogsketchExperimentInstructions NuSketchSketch)
+(arg2Isa cogsketchExperimentInstructions TextString)
+(comment cogsketchExperimentInstructions
+  "Human-readable string that is given to experiment subjects at the start of
+   an experiment.  The string should give overall instructions applicable to
+   the entire experiment.  See also #$cogsketchProblemStatement which gives
+   instructions for each trial (really each #$NuSketchBundle).  If desired, 
+   this can be a rich-text string.")
+
+
+(isa cogsketchExperimentFinishInstructions BinaryRelation)
+(arity cogsketchExperimentFinishInstructions 2)
+(arg1Isa cogsketchExperimentFinishInstructions NuSketchSketch)
+(arg2Isa cogsketchExperimentFinishInstructions TextString)
+(comment cogsketchExperimentFinishInstructions
+  "Human-readable string that is given to experiment subjects at the end of
+   an experiment.  The string should give overall instructions applicable to
+   the entire experiment.  See also #$cogsketchProblemStatement which gives
+   instructions for each trial (really each #$NuSketchBundle).  If desired, 
+   this can be a rich-text string.")
+
+
+(isa cogsketchProblemStatement BinaryRelation)
+(arity cogsketchProblemStatement 2)
+(arg1Isa cogsketchProblemStatement NuSketchBundle)
+(arg2Isa cogsketchProblemStatement TextString)
+(comment cogsketchProblemStatement
+  "Human-readable string that can be used to describe to the experiment subjects
+   or students what they are supposed to do for a given #$NuSketchBundle.  See 
+   also #$cogsketchExperimentInstructions which gives instructions for the 
+   overall experiment.  If desired, this can be a rich-text string.")
+
+
+(isa cogsketchAllowedCollections BinaryRelation)
+(arity cogsketchAllowedCollections 2)
+(arg1Isa cogsketchAllowedCollections NuSketchBundle)
+(arg2Isa cogsketchAllowedCollections Set-Mathematical)
+(comment cogsketchAllowedCollections
+  "Set of collections that can be assigned to any #$NuSketchGlyph in the 
+   #$NuSketchBundle.")
+
+
+(isa cogsketchFreeTextEntryForCollections UnaryRelation)
+(arity cogsketchFreeTextEntryForCollections 1)
+(arg1Isa cogsketchFreeTextEntryForCollections NuSketchBundle)
+(comment cogsketchFreeTextEntryForCollections
+  "Says that the user will be able to use free-text entry for the collections
+   assigned to any #$NuSketchGlyph in the #$NuSketchBundle.  If this is 
+   specified for a given #$NuSketchBundle, then #$cogsketchAllowedCollections 
+   facts will be ignored.")
+
+
+(isa cogsketchAllowedRelations BinaryRelation)
+(arity cogsketchAllowedRelations 2)
+(arg1Isa cogsketchAllowedRelations NuSketchBundle)
+(arg2Isa cogsketchAllowedRelations Set-Mathematical)
+(comment cogsketchAllowedRelations
+  "Set of relations that can be assigned to any #$NuSketchGlyph in the 
+   #$NuSketchBundle.")
+
+
+(isa cogsketchFreeTextEntryForRelations UnaryRelation)
+(arity cogsketchFreeTextEntryForRelations 1)
+(arg1Isa cogsketchFreeTextEntryForRelations NuSketchBundle)
+(comment cogsketchFreeTextEntryForRelations
+  "Says that the user will be able to use free-text entry for the relations
+   assigned to any #$NuSketchGlyph in the #$NuSketchBundle.  If this is 
+   specified for a given #$NuSketchBundle, then #$cogsketchAllowedRelations 
+   facts will be ignored.")
+
+
+(isa cogsketchAllowedAnnotations BinaryRelation)
+(arity cogsketchAllowedAnnotations 2)
+(arg1Isa cogsketchAllowedAnnotations NuSketchBundle)
+(arg2Isa cogsketchAllowedAnnotations Set-Mathematical)
+(comment cogsketchAllowedAnnotations
+  "Set of annotation that can be assigned to any #$NuSketchGlyph in the 
+   #$NuSketchBundle.")
+
+
+(isa cogsketchFreeTextEntryForAnnotations UnaryRelation)
+(arity cogsketchFreeTextEntryForAnnotations 1)
+(arg1Isa cogsketchFreeTextEntryForAnnotations NuSketchBundle)
+(comment cogsketchFreeTextEntryForAnnotations
+  "Says that the user will be able to use free-text entry for the annotations
+   represented by any #$NuSketchGlyph in the #$NuSketchBundle.  If this is 
+   specified for a given #$NuSketchBundle, then #$cogsketchAllowedAnnotations
+   facts will be ignored.")
+
+
+(isa cogsketchExperimentSubsketchOrdering UnaryRelation)
+(arity cogsketchExperimentSubsketchOrdering 1)
+(arg1Isa cogsketchExperimentSubsketchOrdering List)
+(comment cogsketchExperimentSubsketchOrdering
+  "States the order in which subsketches should be worked through by subjects of
+   the experiment.  The experiment itself is implicit -- each experiment has its
+   own context and these facts are in that context (see #$Microtheory).  Each
+   element of the list should be a #$NuSketchBundle.  The list may be generated
+   randomly using #$RandomizedListFn.")
+
+
+
+(isa cogsketchAllottedTimeForSubsketch BinaryRelation)
+(arity cogsketchAllottedTimeForSubsketch 2)
+(arg1Isa cogsketchAllottedTimeForSubsketch NuSketchBundle)
+(arg2Isa cogsketchAllottedTimeForSubsketch Time-Quantity)
+(comment cogsketchAllottedTimeForSubsketch
+  "Specifies how much time an experiment subject has to complete the specified
+   trial (given as a single #$NuSketchBundle).  If this fact is not specified
+   for a given #$NuSketchBundle, CogSketch will place no time constraints on the 
+   subject.")
+
+
+
+(isa cogsketchActionRequiredToContinue UnaryRelation)
+(arity cogsketchActionRequiredToContinue 1)
+(arg1Isa cogsketchActionRequiredToContinue NuSketchAction)
+(comment cogsketchActionRequiredToContinue
+  "Specifies a particular #$NuSketchAction which must occur in the experiment
+   before the participant is allowed to continue.")
+
+(isa NuSketchAction Collection)
+(genls NuSketchAction Action)
+(comment NuSketchAction 
+  "Refers to the set of actions recorded by nuSketch in its history.")
+
+
+
+(isa cogsketchDefaultLineWidth BinaryRelation)
+(arity cogsketchDefaultLineWidth 2)
+(arg1Isa cogsketchDefaultLineWidth NuSketchBundle)
+(arg2Isa cogsketchDefaultLineWidth PositiveNumber)
+(comment cogsketchDefaultLineWidth
+  "If specified for a sketch or subsketch, the CogSketch drawing-pane's
+   line width for drawing new ink will be set to this value when CogSketch
+   switches to this subsketch.  The line width should be given in internal
+   sketch units (i.e. inches of display space at zoom 1:1).")
+
+
+
+(isa cogsketchInitialViewBox Relation)
+(arity cogsketchInitialViewBox 5)
+(arg1Isa cogsketchInitialViewBox NuSketchBundle)
+(arg2Isa cogsketchInitialViewBox RealNumber)
+(arg3Isa cogsketchInitialViewBox RealNumber)
+(arg4Isa cogsketchInitialViewBox RealNumber)
+(arg5Isa cogsketchInitialViewBox RealNumber)
+(comment cogsketchInitialViewBox
+  "(cogsketchInitialViewBox <bundle> <left> <top> <right> <bottom>) says 
+   that upon opening the sketch the specified bundle should be fit to the 
+   drawing pane using the box given by the left, top, right, and bottom.")
+
+
+
+(isa cogsketchExperimentRightClickMenuDisabled UnaryRelation)
+(arity cogsketchExperimentRightClickMenuDisabled 1)
+(arg1Isa cogsketchExperimentRightClickMenuDisabled NuSketchBundle)
+(comment cogsketchExperimentRightClickMenuDisabled
+  "Says that the right-click menu should be disabled for the specified 
+   #$NuSketchBundle.")
+
+
+
+(isa cogsketchUserAssignedNamestringsAllowed UnaryRelation)
+(arity cogsketchUserAssignedNamestringsAllowed 1)
+(arg1Isa cogsketchUserAssignedNamestringsAllowed NuSketchBundle)
+(comment cogsketchUserAssignedNamestringsAllowed
+  "Says that the user should be able to assign their own namestrings to glyphs 
+   in the specified #$NuSketchBundle.")
+
+
+
+(isa cogsketchExperimentAutorunPrompt BinaryRelation)
+(arity cogsketchExperimentAutorunPrompt 2)
+(arg1Isa cogsketchExperimentAutorunPrompt NuSketchSketch)
+(arg2Isa cogsketchExperimentAutorunPrompt TextString)
+(comment cogsketchExperimentAutorunPrompt
+  "Human-readable string that asks the user if they want to run or edit an
+   experiment sketch.")
+
+
+
+(isa cogsketchExperimentSubjectNamePrompt BinaryRelation)
+(arity cogsketchExperimentSubjectNamePrompt 2)
+(arg1Isa cogsketchExperimentSubjectNamePrompt NuSketchSketch)
+(arg2Isa cogsketchExperimentSubjectNamePrompt TextString)
+(comment cogsketchExperimentSubjectNamePrompt
+  "Human-readable string that asks the user for his or her name.")
+
+
+
+(isa cogsketchExperimentPlayAudioFile BinaryRelation)
+(arity cogsketchExperimentPlayAudioFile 2)
+(arg1Isa cogsketchExperimentPlayAudioFile NuSketchBundle)
+(arg2Isa cogsketchExperimentPlayAudioFile RelativePathname)
+(comment cogsketchExperimentPlayAudioFile
+  "Says that the specified audio-file should be played when the given 
+   #$NuSketchBundle is reveled to the subject.  In other words, the audio file
+   will be played at the start of a trial within the experiment.  The second
+   argument to this relation should be a path to a file that is relative to
+   the location of the saved sketch file used for the experiment.")
+
+
+
+(isa cogsketchExperimentInitialInteractionMode BinaryRelation)
+(arity cogsketchExperimentInitialInteractionMode 2)
+(arg1Isa cogsketchExperimentInitialInteractionMode NuSketchBundle)
+(arg2Isa cogsketchExperimentInitialInteractionMode TextString)
+(comment cogsketchExperimentInitialInteractionMode
+  "Symbol name of the interaction mode that should be set upon opening each
+   subsketch of an experiment.")
+   
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

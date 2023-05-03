@@ -1,0 +1,44 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: problems.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: November 4, 2005 19:02:42
+;;;;   Purpose: Defines the relations and collections used to describe problems
+;;;;            that the student can work on.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-package :data)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa CogSketchProblem Collection)
+(genls CogSketchProblem Assignment-Specification)
+(comment CogSketchProblem
+  "CogSketchProblems are problem given to a student using CogSketch to solve.")
+
+
+
+(isa cogSketchProblemForSketch Predicate)
+(arity cogSketchProblemForSketch 2)
+(arg1Isa cogSketchProblemForSketch CogSketchProblem)
+(arg2Isa cogSketchProblemForSketch NuSketchSketch)
+(comment cogSketchProblemForSketch
+  "Gives the current problem assigned to the student working on a sketch.")
+
+
+(isa cogSketchProblem-AllowedCollection Predicate)
+(arity cogSketchProblem-AllowedCollection 2)
+(arg1Isa cogSketchProblem-AllowedCollection CogSketchProblem)
+(arg2Isa cogSketchProblem-AllowedCollection Collection)
+(comment cogSketchProblem-AllowedCollection
+   "Says the the specified #$Collection is one that can be assigned to entities
+    by students working on the given #$CogSketchProblem.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

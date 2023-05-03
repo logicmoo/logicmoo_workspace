@@ -1,0 +1,269 @@
+(in-microtheory PeopleForSocialModelingMt)
+(genlMt PeopleForSocialModelingMt SocialModelingMt)
+(genlMt SocialModelingMt PeopleForSocialModelingMt)
+
+;;;; N.B. Programs and departments are different, but we are going to
+;;;; them here.  This file is currently very NU-centric, need to clean that
+;;;; up too.
+
+;;ComputerScienceDepartment is already a defined collection
+
+(isa ComputerEngineeringDepartment Collection)
+(genls ComputerEngineeringDepartment AcademicDepartment)
+(isa CommunicationStudiesDepartment Collection)
+(genls CommunicationStudiesDepartment AcademicDepartment)
+(isa NUComputerScience ComputerScienceDepartment)
+(isa NUMechanicalEngineering AcademicDepartment)
+(isa NUKellogg AcademicDepartment)
+(isa NULearningSciences AcademicDepartment)
+(isa NUFeinberg MedicalSchool)
+(subOrganizations NorthwesternUniversity NUComputerScience)
+(subOrganizations NorthwesternUniversity NUComputerEngineering)
+(subOrganizations NorthwesternUniversity NUCommunicationStudies)
+(subOrganizations NorthwesternUniversity NUMechanicalEngineering)
+(subOrganizations NorthwesternUniversity NUKellogg)
+(subOrganizations NorthwesternUniversity NULearningSciences)
+(subOrganizations NorthwesternUniversity NUFeinberg)
+(comment NUComputerScience "NUComputerScience is the Northwestern Computer Science Program.")
+(comment NUComputerEngineering "NUComputerEngineering is the Northwestern University Computer Engineering Program.")
+(comment NUCommuncationStudies "NUCommuncationStudies is the Northwestern University Communications Studies Program.")
+(comment NUMechanicalEngineering "NUMechanicalEngineering is the Northwestern University Mechanical Engineering Program.")
+(comment NUKellogg "NUKellogg is the Northwestern University Kellogg business school.")
+(comment NULearningSciences "NULearningScience is the Northwestern University Learning Sciences Program.")
+(comment NUFeinberg "NUFeinberg is Northwestern University's medical school.")
+
+;;; //\\//\\// To Do \\//\\//\\
+;;; Recognition data
+;;; (later) Ontologize entire elderly living stuff 
+
+
+;;; //\\//\\//\\// Reusing existing ontology  \\//\\//\\//\\
+;;;;
+;;; (in-microtheory EnglishMt)
+;;; No, please use NUPeopleLanguageInfoMt instead!  Modularity matters
+;;;
+;;; (fullName Agent-Generic FullNameString)
+;;; (nameString person FirstName)
+;;; (nickname Person Name)
+;;; 
+;;;
+;;; (in-microtheory PeopleDataMt)
+;;; No, please use NUPeopleDataMt -- modularity matters!
+;;;
+;;; (titleOfPerson Person Dr/Ms/Mrs/Mr/etc)
+;;; (programsIn Person ProgrammingLanguage)
+;;; (interests Subject XAmountOf)
+;;; (hasDegreeinField Person KindOfDegree Subject)
+;;; (schooling Person University ?Graduate)
+;;; (picturesOfType-Person ?Collection ?IBTContentType)
+
+
+;;; //\\// Contact Info \\//\\
+;;; pre-baked:
+;;; contactInformation collection
+;;; (contactInfo Intelligent-Agent contactInformation)
+
+(isa phoneNumberOf BinaryPredicate)
+(arity phoneNumberOf 2)
+(genlPreds phoneNumberOf contactInfo)
+(arg1Isa phoneNumberOf IntelligentAgent)
+(arg2Isa phoneNumberOf PhoneNumber)
+
+(isa emailOf BinaryPredicate)
+(arity emailOf 2)
+(genlPreds emailOf contactInfo)
+(arg1Isa emailOf IntelligentAgent)
+(arg2Isa emailOf EMailAddress)
+
+(isa personalWebsite BinaryPredicate)
+(arity personalWebsite 2)
+(genlPreds personalWebsite contactInfo)
+(arg1Isa personalWebsite IntelligentAgent)
+(arg2Isa personalWebsite DomainName)
+
+(isa officeLocation BinaryPredicate)
+(arity officeLocation 2)
+(genlPreds officeLocation contactInfo)
+(genlPreds officeLocation at-UnderspecifiedLandmark)
+(arg1Isa officeLocation IntelligentAgent)
+(arg2Isa officeLocation StreetAddress)
+;; NOTE: we may want to do a spec of street address that takes a building and a room number
+
+(isa calendarLink Predicate)
+(genlPreds calendarLink urlOfCW)
+(arity calendarLink 2)
+(arg1Isa calendarLink Agent-Generic)
+(arg2Isa calendarLink CharacterString)
+(comment calendarLink 
+  "(calendarLink ?Agent-Generic ?CharacterString) a link to ?Agent-Generic's website")
+
+
+;;; //\\// Roles \\//\\
+
+(isa NUPerson Collection)
+(genls NUPerson Agent-Generic)
+(comment NUPerson "NUPerson is a person associated with NU.")
+
+;; N.B. Really didn't need this, could use existing reln and a CollectionSubset... logical function.
+
+(isa NUVisitor Collection)
+(genls NUVisitor Visitor)
+(genls NUVisitor NUPerson)
+
+(isa NUStudent Collection)
+(genls NUStudent Student)
+(genls NUStudent NUPerson)
+(comment NUStudent "NUStudent is the collection of students at Northwestern University.")
+
+(isa NUUndergraduate Collection)
+(genls NUUndergraduate UndergraduateStudent)
+(genls NUUndergraduate NUStudent)
+(comment NUUndergraduate "NUUndergraduate is the subset of NU students that are undergraduates.")
+
+(isa NUGraduateStudent Collection)
+(genls NUGraduateStudent GraduateStudent)
+(genls NUGraduateStudent NUStudent)
+(comment NUGraduateStudent "NUGraduateStudent is the collection of grad students at Northwestern University.")
+
+(disjointWith NUGraduateStudent NUUndergraduate)
+
+(isa NUPhDStudent Collection)
+(genls NUPhDStudent NUGraduateStudent)
+
+(isa NUMastersStudent Collection)
+(genls NUMastersStudent NUGraduateStudent)
+
+(isa NUStaff Collection)
+(genls NUStaff NUPerson)
+(genls NUStaff Staff)
+
+(isa NUFaculty Collection)
+(genls NUFaculty NUPerson)
+(genls NUFaculty AcademicProfessional)
+
+(isa CSFaculty Collection)
+(genls CSFaculty NUFaculty)
+
+(isa CSRegularFaculty Collection)
+(isa CSResearchFaculty Collection)
+(isa CSAdjunctFaculty Collection)
+(isa CSInstructionFaculty Collection)
+(genls CSRegularFaculty CSFaculty)
+(genls CSResearchFaculty CSFaculty)
+(genls CSAdjunctFaculty CSFaculty)
+(genls CSInstructionFaculty CSFaculty)
+(isa CSInstructors Collection)
+(genls CSRegularFaculty CSInstructors)
+(genls CSInstructionFaculty CSInstructors)
+
+(comment CSRegularFaculty "CSRegularFaculty are the CS faculty who do both research and teaching.
+  They may be cross-appointed in other academic units.")
+(comment CSResearchFaculty "CSResearchFaculty are the CS faculty who only do research, not teaching.")
+(comment CSInstructionFaculty "CSInstructionFaculty are the CS faculty who focus on teaching.")
+(comment CSAdjunctFaculty "CSAdjunctFaculty are connected to CS, but their regular teaching and research committments are
+ elsewhere in the university.")
+(comment CSInstructors "CSInstructors are the people who regularly teach CS courses.")
+
+(isa CEFaculty Collection)
+(genls CEFaculty NUFaculty)
+
+(isa facultyDepartment BinaryPredicate)
+(arity facultyDepartment 2)
+(genlPreds facultyDepartment member)
+(arg1Isa facultyDepartment NUFaculty)
+(arg2Isa facultyDepartment AcademicDepartment)
+(comment facultyDepartment
+  "(facultyDepartment ?f ?d) indicates that faculty member ?f is a member of department ?d")
+
+(isa studentMajor BinaryPredicate)
+(arity studentMajor 2)
+(genlPreds studentMajor member)
+(arg1Isa studentMajor NUStudent)
+(arg2Isa studentMajor AcademicDepartment)
+(comment studentMajor
+  "(studentMajor ?s ?d) indicates that student ?s has ?d as their academic major.
+N.B. this should actually be a program, not a department, fix this later.")
+
+;;; //\\// Classes/Organizations \\//\\
+
+;; Note: We are not currently using enrolledInClass or teachingClass.
+;; See social-modeling-courses-ontology.meld for their replacements.
+
+(isa enrolledInClass Predicate)
+(genlPreds enrolledInClass groupMembers)
+(arity enrolledInClass 2)
+(arg1Isa enrolledInClass NUStudent)
+(arg2Isa enrolledInClass Class-Educational)
+(comment enrolledInClass 
+  "(enrolledInClass ?NUStudent ?Class-Educational) indicates that ?NUStudent is enrolled in ?Class-Educational")
+
+(isa teachingClass Predicate)
+(genlPreds teachingClass presenter)
+(arity teachingClass 2)
+(arg1Isa teachingClass NUFaculty)
+(arg2Isa teachingClass Class-Educational)
+(comment teachingClass
+  "(teachingClass ?NUFaculty ?Class-Educational) indicates that ?NUFaculty is teaching class ?Classes-Educational")
+
+(isa NUClub Collection)
+(genls NUClub Club-Organization)
+
+(isa nuClubMember Predicate)
+(genlPreds nuClubMember groupMembers)
+(arity nuClubMember 2)
+(arg1Isa nuClubMember NUStudent)
+(arg2Isa nuClubMember NUClub)
+(comment nuClubMember 
+  "(NUClubMember ?NUStudent ?NUClub)")
+
+(isa NUGroup Collection)
+(genls NUGroup Group) ; Laboratory
+(genls NUGroup (GroupFn NUPerson))
+(comment NUGroup
+	"Collection representing groups of NU people.  For academic groups,
+	labs, clubs, etc.")
+
+(isa nuGroupMember BinaryPredicate)
+(arity nuGroupMember 2)
+(genlPreds nuGroupMember groupMembers)
+(arg1Isa nuGroupMember NUGroup)
+(arg2Isa nuGroupMember NUPerson)
+(comment nuGroupMember
+  "(nuGroupMember ?NUGroup ?NUPerson) says that ?NUGroup contains ?NUPerson
+   as a member.")
+
+;;; //\\// NU Group Instances \\//\\
+
+;; TODO: Figure out a more principled place to put these.
+
+(isa NUSolidStateAndPhotonics NUGroup)
+(isa NUSignalsAndSystems NUGroup)
+(isa NUComputerEngineeringAndSystems NUGroup)
+(isa NUComputingAlgorithmsAndApplications NUGroup)
+(isa NUCognitiveSystems NUGroup)
+(isa NUGraphicsAndInteractiveMedia NUGroup)
+
+;;; //\\// Other \\//\\
+
+
+(isa familiarityWithBuilding BinaryPredicate)
+(genlPreds familiarityWithBuilding interests) ;;; NOTE: maybe?
+(arity familiarityWithBuilding 3)
+(arg1Isa familiarityWithBuilding Agent-Generic)
+(arg2Isa familiarityWithBuilding Building)
+(arg3Isa familiarityWithBuilding GenericValuePredicate)
+(comment familiarityWithBuilding 
+  "(familiarWithMudd ?Agent-Generic ?Building  ?GenericValuePredicate) Sets the amount that a person is familiar with the building")
+
+(isa numberOfTimesVisited Predicate)
+(genlPreds numberOfTimesVisited amountActionPerformed)
+(arity numberOfTimesVisited 2)
+(arg1Isa numberOfTimesVisited Agent-Generic)
+(arg2Isa numberOfTimesVisited NonNegativeInteger)
+(comment numberOfTimesVisited
+  "(numberOfTimesVisited ?Agent-Generic ?NonNegativeInteger) number of times a person has visited the intelligent agent")
+
+
+
+
+

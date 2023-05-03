@@ -1,0 +1,413 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: cnp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+(EAHeadFeaturesForNodeType cnp (TheList countable mass unit ntime1 ntime2 lex))
+
+;;;
+;;; Common Noun Phrases
+;;;
+
+(isa -cnp->n- EAGrammarRule)
+(comment -cnp->n- "noun as common noun phrase")
+(probabilityEAGrammarRule -cnp->n- 1.0)
+(grammarRule -cnp->n-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (ntime1 ?nt1) (ntime2 ?nt2)
+   (:NOUN ?varn) (sem ?semn)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Noun
+    (TheList (sem ?semn) (agr ?a) (var ?varn)
+     (ntime1 ?nt1) (ntime2 ?nt2))))))
+     
+
+;;; For God's sake, we need to be able to say "I like softer pillows." or "I ate the biggest apple."
+(isa -cnp->adjp-cnp- EAGrammarRule)
+(comment -cnp->adjp-cnp- "'red car', 'hot day'")
+(probabilityEAGrammarRule -cnp->adjp-cnp- 1.0)
+(grammarRule -cnp->adjp-cnp-
+ (EATermFn cnp
+  (TheList (var ?varcnp) (agr ?a) (modif-adj +)
+   (:NOUN ?varcnp)
+   (:REPLACE (ConceptForInstanceFn ?varcnp ?semcnp))
+   (sem (and ?semcnp ?semadjp))))
+ (TheList
+  (EATermFn adjp
+   ;; (quant -) means if the adj can be treated as a quantifier/determiner, do that.
+   (TheList (sem ?semadjp) (var ?varadjp) (quant -))) ; (comparative -) (superlative -)))
+  (EAHeadFn
+   (EATermFn cnp
+             (TheList (var ?varcnp) (agr ?a) (sem ?semcnp) (gerund -))))))
+
+;;;Now to add superlative and comparatives...
+
+;; Question, should comparative be a feature of a cnp?
+;; We need a way of distinguishing them if we're treating comparative sentences compositionally
+;; And we kind of want to because it makes "Chose the larger dog." etc. easier. Or do we just want 
+;; to go full arg strcuct?
+(isa -cnp->adjp-cnp-comparative EAGrammarRule)
+(comment -cnp->adjp-cnp- "Used for something like 'longer race + compp' or 'choose the larger...'
+ when it combines with a compp it get's the comparer and comparee from the vp. When it doesn't it
+ also gets it from the vp but one that checks if there's no compp and inserts a null feat. This is
+ rather complicated but, trust me, the alternatives are far worse...")
+
+;;;(grammarRule -cnp->adjp-cnp-comparative
+;;;             (EATermFn cnp (TheList ))
+;;;             (TheList
+;;;              (EATermFn adjp (TheList (sem ?semadjp) (var ?varadjp) (quant -) (comparative +)))
+;;;              (EAHeadFn
+;;;               (TheList (var ?varcnp) (agr ?a) (sem ?semcnp) (gerund -)))))
+;;;                            
+
+(isa -cnp->adjp-cnp-supp EAGrammarRule)
+(probabilityEAGrammarRule -cnp->adjp-cnp-supp 1.0)
+;;;Note we don't want most least as generic adjectives. You can't say 'most person' as an adjective. Just as a quant.
+(grammarRule -cnp->adjp-cnp-supp
+             (EATermFn cnp (TheList (var ?varcnp) (agr ?a) (gerund -) 
+                                    (sem (and ?semcnp ?semrel))
+                                    (:NOUN ?varcnp)
+                                    (:REPLACE (ConceptForInstanceFn ?varcnp ?semcnp))))
+             (TheList
+              (EATermFn adjp (TheList (sem ?semadjp) (modlex ?mod) (var ?varadjp) (lex (? !lexa most least)) (quant -) (superlative +)))
+              (EAHeadFn (EATermFn cnp
+                                  (TheList (var ?varcnp) (agr ?a) (sem ?semcnp) (gerund -))))
+              (EATermFn bind-superlative-relation
+                        (TheList (inp ?semadjp) (inp2 ?semcnp) (inp3 ?mod) (sem ?semrel)))))                                    
+
+                            
+;;;(grammarRule -adjp->adjp-compp-
+;;; (EATermFn adjp
+;;;  (TheList (var ?varadjp) (:RELATION ?semrel)
+;;;   (:CONSTITUENT1 :SUBJECT) (:CONSTITUENT2 ?varcompp)
+;;;   (sem ?semcompp)))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn adjp
+;;;    (TheList (comparative +) (var ?varadjp) (sem ?semadjp))))
+;;;  (EATermFn compp (TheList (var ?varcompp) (sem ?semcompp)))
+;;;  (EATermFn bind-comparative-relation
+;;;   (TheList (inp ?semadjp) (sem ?semrel)))))
+
+
+
+
+;;; *** Problem: "cup of tea" doesn't work because cup *could* be a unit of measure.
+;;; *** (nunit -) rules it out.
+;;; Should this maybe be np?
+;;;(isa -cnp->cnp-pp- EAGrammarRule)
+;;;(comment -cnp->cnp-pp- "'bunch of grapes', 'temperature of the brick', 'ball with stripes'")
+;;;(probabilityEAGrammarRule -cnp->cnp-pp- 1.0)
+;;;(grammarRule -cnp->cnp-pp-
+;;; (EATermFn cnp
+;;;  (TheList (var ?varcnp) (agr ?a) (:NOUN ?varcnp) (:POSSESSOR ?varpp)
+;;;   (:OBLIQUE-OBJECT ?varpp)
+;;;   (:OBL-OBJ-COL (ConceptForInstanceFn ?varpp ?sempp))
+;;;   (:ACTION (GapFn :ACTION)) ; say what? This is the only difference from the rule below.
+;;;   (prep-lex ?!plex)
+;;;   (sem (and ?semcnp ?sempp))))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn cnp
+;;;    (TheList (var ?varcnp) (sem ?semcnp) (agr ?a) (gerund -)
+;;;     (nunit -) (modif-adj -))))
+;;;  (EATermFn pp
+;;;   (TheList (var ?varpp) (sem ?sempp)
+;;;            (prep-lex (? !plex into to during at for by out-of))))))
+    
+
+(isa -cnp->noun-that-slp- EAGrammarRule)
+(comment -cnp->noun-that-slp- "noun-be-that-s (clausal substitution)")
+(probabilityEAGrammarRule -cnp->noun-that-slp- 1.0)
+;;;(grammarRule -cnp->noun-that-s-
+;;; (EATermFn cnp
+;;;  (TheList (var ?varn) (agr ?a) (:NOUN ?varn) (:CLAUSE ?semslp)
+;;;   (sem ?semn)))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn Noun
+;;;    (TheList (var ?varn) (sem ?semn) (agr ?a)
+;;;     (subcat noun-be-that-s))))
+;;;  (EATermFn SubordinatingConjunction (TheList (lex that)))
+;;;  (EATermFn slp (TheList (var ?varslp) (sem ?semslp)))))
+
+;;; pass any determiner up, in case this is plural,
+;;; so we can distinguish generic from plural.
+;;;(isa -cnp->cnp-that-slp- EAGrammarRule)
+;;;(comment -cnp->cnp-that-slp- "the girl that I know")
+;;;(probabilityEAGrammarRule -cnp->cnp-that-slp- 1.0)
+;;;
+;;;(grammarRule -cnp->cnp-that-slp-
+;;;             (EATermFn cnp
+;;;                       (TheList (var ?varnp) (agr ?a) (det ?det) (:OBJECT ?varnp) (:POSSESSOR :NOUN)
+;;;                                (:NOUN ?sub) (sem (and ?semnp ?semslp))))
+;;;             (TheList
+;;;              (EAHeadFn (EATermFn np (TheList (var ?varnp) (sem ?semnp) (agr ?a) (det ?det))))
+;;;              (EATermFn SubordinatingConjunction (TheList (lex that)))
+;;;              (EATermFn slp (TheList (:SUBJECT ?sub) (var ?varslp) (sem ?semslp)))))
+;;;
+;;;(grammarRule -cnp->np-that-slp-
+;;; (EATermFn cnp
+;;;  (TheList (var ?varnp) (agr ?a) (det ?det)
+;;;   (:NOUN ?varnp) (:CLAUSE ?semslp)
+;;;   (sem ?semnp)))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn np (TheList (var ?varnp) (sem ?semnp) (agr ?a) (det ?det))))
+;;;  (EATermFn SubordinatingConjunction (TheList (lex that)))
+;;;  (EATermFn slp (TheList (var ?varslp) (sem ?semslp)))))
+
+
+;;; Referring expressions:
+(isa -cnp->cnp-Sfin- EAGrammarRule)
+(comment -cnp->cnp-Sfin- "the [girl I know]")
+(probabilityEAGrammarRule -cnp->cnp-Sfin- 1.0)
+(grammarRule -cnp->cnp-Sfin-
+ (EATermFn cnp
+  (TheList (var ?varnp) (agr ?a) (det ?det)
+   (:NOUN ?varnp) (:CLAUSE ?semslp) (lex (? !l who what why where))
+   (sem (and ?semslp ?semnp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp (TheList (var ?varnp) (sem ?semnp) (agr ?a) (pro -) (det ?det))))
+  (EATermFn Sfin (TheList (var ?varslp) (sem ?semslp) (inv -)))))
+
+(isa -cnp->cnp-pp-cconj-pp- EAGrammarRule)
+(comment -cnp->cnp-pp-cconj-pp- "Conjunct adjectival prepositional phrases 'Research on X and on Y' As with conjunct adverbial prepositional phrases, below, technically the sem of the cconj should dictate whether the prepositional phrases are conjunct or disjunct or whether the consituents are negated. (JLT)")
+(probabilityEAGrammarRule -cnp->cnp-pp-cconj-pp- 1.0)
+(grammarRule -cnp->cnp-pp-cconj-pp-
+ (EATermFn cnp
+  (TheList (var ?varcnp) (agr ?a) (:NOUN ?varcnp)
+   (prep-lex (and ?plex1 ?plex2))
+   (sem (and ?semcnp ?sempp1 ?sempp2))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (var ?varcnp) (sem ?semcnp) (agr ?a) (gerund -)
+     (nunit -) (modif-adj -))))
+  (EATermFn pp
+   (TheList (var ?varpp1) (sem ?sempp1) (prep-lex ?plex1)))
+  (EATermFn Conjunction (TheList (var ?varcconj) (lex ?lexcconj)))
+  (EATermFn pp
+   (TheList (var ?varpp2) (sem ?sempp2) (prep-lex ?plex2)))))
+
+(isa -cnp->n-npinf- EAGrammarRule)
+(comment -cnp->n-npinf- "not sure how to constrain this one, 'opportunity' doesn't have special comlex tags")
+(probabilityEAGrammarRule -cnp->n-npinf- 1.0)
+(grammarRule -cnp->n-npinf-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (:SUBJECT ?varn) (:NOUN ?varn)
+   (sem (and ?semn ?seminf))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Noun
+    (TheList (var ?varn) (sem ?semn) (agr ?a) (lex opportunity))))
+  (EATermFn np
+   (TheList (var ?varinf) (sem ?seminf) (inf +) (np-inf -)))))
+
+(isa -cnp->cnp-rel-clause- EAGrammarRule)
+(comment -cnp->cnp-rel-clause- "'Car that makes noise', 'plant that employs 50 workers'")
+(probabilityEAGrammarRule -cnp->cnp-rel-clause- 1.0)
+(grammarRule -cnp->cnp-rel-clause-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (modif-adj +) (:ACTION ?varvp)
+   (:EVENT ?varvp) (:SUBJECT ?varn) (:NOUN ?varn)
+   (sem (and ?semn ?semvp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (var ?varn) (sem ?semn) (agr ?a) (modif-adj -))))
+  (EATermFn Determiner (TheList (lex (? lex that which whom who))))
+  (EATermFn vp
+   (TheList (var ?varvp) (sem ?semvp) (vform ?vform) (agr ?a)))))
+
+(isa -cnp->n-where-clause- EAGrammarRule)
+(comment -cnp->n-where-clause- "'city where he is fighting'")
+(probabilityEAGrammarRule -cnp->n-where-clause- 1.0)
+(grammarRule -cnp->n-where-clause-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (modif-adj +) (:ACTION ?varvp)
+   (:EVENT ?varvp) (:SUBJECT ?varn) (:NOUN ?varn)
+   (sem (and ?semn ?semvp (eventOccursAt ?varvp ?varn)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Noun (TheList (var ?varn) (sem ?semn) (agr ?a))))
+  (EATermFn SubordinatingConjunction (TheList (lex where)))
+  (EATermFn vp
+   (TheList (inv +) (aux -) (link -) (agr ?a) (var ?varvp)
+    (sem ?semvp)))))
+
+
+;;;CJM 6/21 Adding superlative support
+;;; Hottest and coldest are the same predicate, and we don't know valence
+    
+(isa -cnp->ordinal-cnp- EAGrammarRule) 
+(comment -cnp->ordinal-cnp- "'third cat'")
+(probabilityEAGrammarRule -cnp->ordinal-cnp- 1.0)
+(grammarRule -cnp->ordinal-cnp-
+ (EATermFn cnp
+  (TheList (var ?varcnp) (agr ?a) (:NOUN ?varcnp)
+   (:REPLACE (ConceptForInstanceFn ?varcnp ?semcnp)) (sem (and ?semcnp ?semord))))
+ (TheList 
+  (EATermFn OrdinalAdjective (TheList (var ?varord) (sem ?semord)))
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (var ?varcnp) (agr ?a) (sem ?semcnp) (gerund -) (prep-lex -)
+     ;;(modif-adj -) ; *** No! you should be able to say 'the third black cat'
+     )))))
+
+(isa -cnp->mp-n- EAGrammarRule)
+(comment -cnp->mp-n- "'5 foot stick'")
+(probabilityEAGrammarRule -cnp->mp-n- 1.0)
+(grammarRule -cnp->mp-n-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (:NOUN ?varn)
+   (sem
+    (and (measure-Underspecified ?varn ?semmp) ?semn))))
+ (TheList (EATermFn mp (TheList (sem ?semmp) (var ?varmp)))
+  (EAHeadFn
+   (EATermFn Noun (TheList (var ?varn) (agr ?a) (sem ?semn))))))
+                       
+
+;;; Whenever possible, use multiword semtrans.
+;;; Otherwise, you get constits like "buy milk" as a cnp.
+(isa -cnp->cnp-cnp- EAGrammarRule)
+(comment -cnp->cnp-cnp- "compound noun")
+(probabilityEAGrammarRule -cnp->cnp-cnp- 0.8)
+(grammarRule -cnp->cnp-cnp-
+ (EATermFn cnp
+  (TheList (var ?varcnp2) (agr ?a2)
+   (sem
+    (and ?semcnp1 ?semcnp2
+         (compoundNoun ?varcnp1 ?varcnp2)))))
+ (TheList
+  (EATermFn cnp
+   (TheList (var ?varcnp1) (agr ?a1) (sem ?semcnp1) (gerund -)
+    (prep-lex -) (modif-adj -) (mass +)))
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (var ?varcnp2) (agr ?a2) (sem ?semcnp2) (gerund -)
+     (prep-lex -) (modif-adj -))))))
+
+(isa -cnp->type-of-cnp- EAGrammarRule)
+(comment -cnp->type-of-cnp- "'type of mammal'")
+(probabilityEAGrammarRule -cnp->type-of-cnp- 1.0)
+(grammarRule -cnp->type-of-cnp-
+ (EATermFn cnp
+  (TheList (var ?varcnp) (agr ?a)
+   (sem
+    (refersToTypeOf ?varcnp
+     (ConceptForInstanceFn ?varcnp ?semcnp)))))
+ (TheList (EATermFn Noun (TheList (lex (? type-of kind-of))))
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (agr (? a 1s 2s 3s)) (var ?varcnp) (sem ?semcnp))))))
+
+(isa -cnp->pname-cnp- EAGrammarRule)
+(probabilityEAGrammarRule -cnp->pname-cnp- 0.8)
+(comment -cnp->pname-cnp- "What is this supposed to capture? 'Boston driver'?")
+(grammarRule -cnp->pname-cnp-
+ (EATermFn cnp
+  (TheList (var ?varcnp2) (agr ?a2)
+   (sem
+    (and ?semcnp2 (possessiveRelation ?semn ?varcnp2)))))
+ (TheList
+  (EATermFn pname
+   (TheList (agr ?a) (var ?varn) (lex ?lexn) (orth ?orthn)
+    (sem ?semn)))
+  (EAHeadFn
+   (EATermFn cnp
+    (TheList (var ?varcnp2) (agr ?a2) (sem ?semcnp2) (gerund -)
+             (prep-lex -) (modif-adj -))))))
+
+(isa -cnp->way-npinf- EAGrammarRule)
+(comment -cnp->way-npinf- "way + infinitive: 'way to eat bananas' REM: other nouns besides 'way'?")
+(probabilityEAGrammarRule -cnp->way-npinf- 1.0)
+(grammarRule -cnp->way-npinf-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (:INF-COMP ?semnp) (sem ?semn)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Noun
+    (TheList (agr ?a) (var ?varn) (sem ?semn) (lex way))))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (inf +)))))
+
+;;;(isa -cnp->vpgerund- EAGrammarRule)
+;;;(comment -cnp->vpgerund- "gerund as common noun phrase")
+;;;(probabilityEAGrammarRule -cnp->vpgerund- 1.0)
+;;;(grammarRule -cnp->vpgerund-
+;;; (EATermFn cnp
+;;;  (TheList (var ?varv) (agr (? a 1s 2s 3s 1p 2p 3p)) (gerund +)
+;;;   (gerund-dir-obj ?dir-obj) (:OBJECT :OBLIQUE-OBJECT)
+;;;   (:ACTION ?varv) (sem ?semv)))
+;;; (TheList
+;;;  (EAHeadFn
+;;;   (EATermFn vp
+;;;    (TheList (vform prespart) (var ?varv) (sem ?semv) (aux -) (inv -)
+;;;     (modal -) (dir-obj ?dir-obj))))))
+
+;;; Experimenting with gerunds not thinking that they do themselves.
+;;; CJM 12/1 fixed bad ?lex feature. Change filter-possible-noun to match,
+(isa -cnp->vpgerund- EAGrammarRule)
+(comment -cnp->vpgerund- "gerund as common noun phrase")
+(probabilityEAGrammarRule -cnp->vpgerund- 1.0)
+(grammarRule -cnp->vpgerund-
+ (EATermFn cnp
+  (TheList (var ?varv) (gerund +)
+           (gerund-dir-obj ?dir-obj) (:OBJECT :OBLIQUE-OBJECT)
+           (:SUBJECT UnspecifiedPassive)
+           (:ACTION ?varv) (sem ?semv)))
+ (TheList
+  (EAHeadFn
+   (EATermFn vp
+    (TheList (vform prespart) (var ?varv) (sem ?semv) (aux -) (inv -)
+     (modal -) (dir-obj ?dir-obj) (lex ?lex)))) ; depends on lex being on EAHeadFeaturesForNodeType of vp.
+  (EATermFn filter-possible-noun (TheList (lex ?lex)))
+  ))
+
+;;;CJM 11/2 This shouldn't be specific to by. 'See food required in a city'
+(isa -cnp->cnp-vp-prep-np- EAGrammarRule)
+(comment -cnp->cnp-vp-prep-np- "'divided by...', 'surrounded by...'")
+(probabilityEAGrammarRule -cnp->cnp-vp-prep-np- 1.0)
+(grammarRule -cnp->cnp-vp-prep-np-
+ (EATermFn cnp
+  (TheList (var ?varn) (agr ?a) (modif-adj +) (:SUBJECT ?varn)
+   (:ACTION ?varvp) (:OBJECT ?varnp)
+   (sem (and ?semn ?semvp ?semnp))))
+ (TheList
+  (EAHeadFn
+   (EATermFn cnp (TheList (var ?varn) (sem ?semn) (agr ?a))))
+  (EATermFn vp
+   (TheList (var ?varvp) (sem ?semvp) (agr ?a) (vform pastpart) (subcat (? s np)) ))
+  (EATermFn Preposition (TheList (var ?varp)))
+  (EATermFn np (TheList (var ?varnp) (sem ?semnp) (agr ?!agr)))))
+
+;;;
+;;; Unknowns
+;;;
+
+(isa -cnp->noun-unknown- EAGrammarRule)
+(comment -cnp->noun-unknown- "'cylinder C1'")
+(probabilityEAGrammarRule -cnp->noun-unknown- 0.8)
+(grammarRule -cnp->noun-unknown-
+ (EATermFn cnp
+  (TheList (var ?semu) (agr ?a) (:NOUN ?semu)
+   (sem (and ?semn (namedEntityInDiscourse ?semu)))))
+ (TheList
+  (EAHeadFn
+   (EATermFn Noun (TheList (var ?varn) (sem ?semn) (agr ?a))))
+  (EATermFn unknown (TheList (var ?varu) (sem ?semu)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,1201 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor-defs.meld
+;;;;    System: CogSketch
+;;;;    Author: Ken Forbus & Maria Chang
+;;;;   Created: March 5, 2012 15:43:57
+;;;;   Purpose: Basic definitions for Worksheet Tutoring Suggestions via SOLVE
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchTutorSuggestionsMt)
+(isa CogSketchTutorSuggestionsMt Microtheory)
+(genlMt CogSketchReasoningCollectorMt CogSketchTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; These shouldn't be used in worksheet analogies because
+;;; they are either bookkeeping facts for solve, or for other
+;;; ancilary computations.
+
+(notForAnalogy suggestFor)
+(notForAnalogy suggestionGoalForm)
+(notForAnalogy suggestionCostFunction)
+(notForAnalogy suggestionSubgoals)
+
+(notForAnalogy genFormat)
+(notForAnalogy forEffectOnly)
+(notForAnalogy solveSequentially)
+(notForAnalogy MeaningInSystemFn)
+(notForAnalogy CollectionUnionFn)
+(notForAnalogy glyphRepresentsObject)
+(notForAnalogy annotationGlyphRepresentsObject)
+(notForAnalogy formulaArgument)
+(notForAnalogy closestGlyphOfType)
+(notForAnalogy worksheetElaborationQueries)
+(notForAnalogy genlMt)
+(notForAnalogy alphalessp)
+(notForAnalogy arity)
+(notForAnalogy NuSketchGlyph)
+(notForAnalogy NotVeryRoundGlyph)
+(notForAnalogy VeryRoundGlyph)
+(notForAnalogy SomewhatRoundGlyph)
+(notForAnalogy correspondenceBetween)
+(notForAnalogy targetOfMatch)
+(notForAnalogy baseOfMatch)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Collections and Relations defined by a worksheet author
+
+(isa CogSketchWorksheetSpecificCollectionFn Function-Denotational)
+(arity CogSketchWorksheetSpecificCollectionFn 3)
+(arg1Isa CogSketchWorksheetSpecificCollectionFn NuSketchSketch)
+(arg2Isa CogSketchWorksheetSpecificCollectionFn GUIDString)
+(arg3Isa CogSketchWorksheetSpecificCollectionFn TextString)
+(resultIsa CogSketchWorksheetSpecificCollectionFn Collection)
+(comment CogSketchWorksheetSpecificCollectionFn
+  "(CogSketchWorksheetSpecificCollectionFn <sketch> <GUID> <collection-name>)
+   denotes a #$Collection that was defined specifically for a given 
+   worksheet.")
+(genFormat CogSketchWorksheetSpecificCollectionFn "~A" (3))
+
+           
+(atomicAnalogyNat CogSketchWorksheetSpecificCollectionFn)
+
+
+;;; *** not complete yet -- might need to define the argisas of the resulting
+;;; *** relation.
+(isa CogSketchWorksheetSpecificRelationFn Function-Denotational)
+(arity CogSketchWorksheetSpecificRelationFn 2)
+(arg1Isa CogSketchWorksheetSpecificRelationFn NuSketchSketch)
+(arg2Isa CogSketchWorksheetSpecificRelationFn GUIDString)
+(resultIsa CogSketchWorksheetSpecificRelationFn Relation)
+(comment CogSketchWorksheetSpecificRelationFn
+  "(CogSketchWorksheetSpecificRelationFn <sketch> <GUID>) denotes a 
+   #$Relation that was defined specifically for a given worksheet.")
+(atomicAnalogyNat CogSketchWorksheetSpecificRelationFn)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tutor metaknowledge used for SAGE
+
+(isa conceptuallyRelevantExpression BinaryRelation)
+(arity conceptuallyRelevantExpression 2)
+(arg1Isa conceptuallyRelevantExpression CycLExpression)
+(arg2Isa conceptuallyRelevantExpression NuSketchBundle)
+
+(isa importantRelationshipForBundle BinaryRelation)
+(arity importantRelationshipForBundle 2)
+(arg1Isa importantRelationshipForBundle CycLExpression)
+(arg2Isa importantRelationshipForBundle NuSketchBundle)
+
+(isa ObjectNearLandmarkFn CollectionDenotingFunction)
+(arity ObjectNearLandmarkFn 1)
+(arg1Isa ObjectNearLandmarkFn SpatialThing)
+(resultIsa ObjectNearLandmarkFn Collection)
+(resultGenl ObjectNearLandmarkFn SpatialThing)
+(comment ObjectNearLandmarkFn
+  "Denotes the collection of things near the first argument.  For example,
+(isa Object-1 (ObjectNearLandmarkFn Object-2)) means that Object-1 is a member
+of the collection of things near Object-2.  This can be useful for using
+paritition constraints between two things that are near a third.")
+
+(isa QuantitativeInkLocationPredicate Collection)
+(genls QuantitativeInkLocationPredicate LocationalPredicate)
+(comment QuantitativeInkLocationPredicate
+  "The collection of predicates used to describe the location
+   of glyphs that are involved in quantitative ink comparison.")
+
+;; hasReasonableLocation
+(isa hasReasonableLocation QuantitativeInkLoc)
+(arity hasReasonableLocation 2)
+(arg1Isa hasReasonableLocation SpatialThing)
+(arg2Isa hasReasonableLocation SpatialThing)
+(comment hasReasonableLocation
+  "Means that the first argument meets the quantitative ink criteria associated with second argument.")
+
+;; hasUnreasonableLocation
+(isa hasUnreasonableLocation QuantitativeInkLocationPredicate)
+(arity hasUnreasonableLocation 2)
+(arg1Isa hasUnreasonableLocation SpatialThing)
+(arg2Isa hasUnreasonableLocation SpatialThing)
+(comment hasUnreasonableLocation 
+  "Means that the first argument does not meet the quantitative ink criteria associated with the second argument.")
+
+;; exceedsQuantInkLeftBound
+(isa exceedsQuantInkLeftBound QuantitativeInkLocationPredicate)
+(arity exceedsQuantInkLeftBound 2)
+(arg1Isa exceedsQuantInkLeftBound SpatialThing)
+(arg2Isa exceedsQuantInkLeftBound SpatialThing)
+(comment exceedsQuantInkLeftBound
+  "Indicates that the first argument exceeds the left boundary of
+          the quantitative ink constraint region associated with the second argument.")
+
+;; exceedsQuantInkRightBound
+(isa exceedsQuantInkRightBound QuantitativeInkLocationPredicate)
+(arity exceedsQuantInkRightBound 2)
+(arg1Isa exceedsQuantInkRightBound SpatialThing)
+(arg2Isa exceedsQuantInkRightBound SpatialThing)
+(comment exceedsQuantInkRightBound
+  "Indicates that the first argument exceeds the right boundary of
+          the quantitative ink constraint region associated with the second argument.")
+
+;; lessThanQuantInkLeftBound
+(isa lessThanQuantInkLeftBound QuantitativeInkLocationPredicate)
+(arity lessThanQuantInkLeftBound 2)
+(arg1Isa lessThanQuantInkLeftBound SpatialThing)
+(arg2Isa lessThanQuantInkLeftBound SpatialThing)
+(comment lessThanQuantInkLeftBound
+  "Indicates that the first argument falls short of the left boundary of
+          the quantitative ink constraint region associated with the second argument.")
+
+;; lessThanQuantInkRightBound
+(isa lessThanQuantInkRightBound QuantitativeInkLocationPredicate)
+(arity lessThanQuantInkRightBound 2)
+(arg1Isa lessThanQuantInkRightBound SpatialThing)
+(arg2Isa lessThanQuantInkRightBound SpatialThing)
+(comment lessThanQuantInkRightBound
+  "Indicates that the first argument falls short of the right boundary of
+          the quantitative ink constraint region associated with the second argument.")
+
+;; exceedsQuantInkUpperBound
+(isa exceedsQuantInkUpperBound QuantitativeInkLocationPredicate)
+(arity exceedsQuantInkUpperBound 2)
+(arg1Isa exceedsQuantInkUpperBound SpatialThing)
+(arg2Isa exceedsQuantInkUpperBound SpatialThing)
+(comment exceedsQuantInkUpperBound
+  "Indicates that the first argument exceeds the upper boundary of
+          the quantitative ink constraint region for the second argument.")
+
+;; exceedsQuantInkLowerBound
+(isa exceedsQuantInkLowerBound QuantitativeInkLocationPredicate)
+(arity exceedsQuantInkLowerBound 2)
+(arg1Isa exceedsQuantInkLowerBound SpatialThing)
+(arg2Isa exceedsQuantInkLowerBound SpatialThing)
+(comment exceedsQuantInkLowerBound
+  "Indicates that the first argument exceeds the lower boundary of
+          the quantitative ink constraint region associated with the second argument.")
+
+;; lessThanQuantInkUpperBound
+(isa lessThanQuantInkUpperBound QuantitativeInkLocationPredicate)
+(arity lessThanQuantInkUpperBound 2)
+(arg1Isa lessThanQuantInkUpperBound SpatialThing)
+(arg2Isa lessThanQuantInkUpperBound SpatialThing)
+(comment lessThanQuantInkUpperBound
+  "Indicates that the first argument falls short of the upper boundary of
+          the quantitative ink constraint region for the second argument.")
+
+;; lessThanQuantInkLowerBound
+(isa lessThanQuantInkLowerBound QuantitativeInkLocationPredicate)
+(arity lessThanQuantInkLowerBound 2)
+(arg1Isa lessThanQuantInkLowerBound SpatialThing)
+(arg2Isa lessThanQuantInkLowerBound SpatialThing)
+(comment lessThanQuantInkLowerBound
+  "Indicates that the first argument falls short of the lower boundary of
+          the quantitative ink constraint region for the second argument.")
+
+;; quantInk-tooWide
+(isa quantInk-tooWide QuantitativeInkLocationPredicate)
+(arity quantInk-tooWide 2)
+(arg1Isa quantInk-tooWide SpatialThing)
+(arg2Isa quantInk-tooWide SpatialThing)
+(comment quantInk-tooWide
+  "Indicates that the first argument exceeds horizontal bounds of
+          the quantitative ink constraint region for the second argument.")
+
+;; quantInk-tooNarrow
+(isa quantInk-tooNarrow QuantitativeInkLocationPredicate)
+(arity quantInk-tooNarrow 2)
+(arg1Isa quantInk-tooNarrow SpatialThing)
+(arg2Isa quantInk-tooNarrow SpatialThing)
+(comment quantInk-tooNarrow
+  "Indicates that the first argument falls short of the horizontal bounds of
+          the quantitative ink constraint region for the second argument.")
+
+;; quantInk-tooTall
+(isa quantInk-tooTall QuantitativeInkLocationPredicate)
+(arity quantInk-tooTall 2)
+(arg1Isa quantInk-tooTall SpatialThing)
+(arg2Isa quantInk-tooTall SpatialThing)
+(comment quantInk-tooTall
+  "Indicates that the first argument exceeds the vertical bounds of
+          the quantitative ink constraint region for the second argument.")
+
+;; quantInk-tooShort
+(isa quantInk-tooShort QuantitativeInkLocationPredicate)
+(arity quantInk-tooShort 2)
+(arg1Isa quantInk-tooShort SpatialThing)
+(arg1Isa quantInk-tooShort SpatialThing)
+(comment quantInk-tooShort
+  "Indicates that the first argument falls short of the vertical bounds of
+          the quantitative ink constraint region for the second argument.")
+
+;; quantInk-tooLarge
+(isa quantInk-tooLarge QuantitativeInkLocationPredicate)
+(arity quantInk-tooLarge 2)
+(arg1Isa quantInk-tooLarge SpatialThing)
+(arg2Isa quantInk-tooLarge SpatialThing)
+(comment quantInk-tooLarge
+  "Indicates that the first argument exceeds the vertical and horizontal bounds of
+          the quantitative ink constraint region for the second argument.")
+
+;; quantInk-tooSmall
+(isa quantInk-tooSmall QuantitativeInkLocationPredicate)
+(arity quantInk-tooSmall 2)
+(arg1Isa quantInk-tooSmall SpatialThing)
+(arg2Isa quantInk-tooSmall SpatialThing)
+(comment quantInk-tooSmall
+  "Indicates that the first argument falls short of the vertical and horizontal bounds of
+          the quantitative ink constraint region for the second argument.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa dGroupFactOf Relation)
+(arity dGroupFactOf 3)
+(arg1Isa dGroupFactOf Case)
+(arg2Isa dGroupFactOf CycLExpression)
+(arg3Isa dGroupFactOf CycLExpression)
+(notForAnalogy dGroupFactOf)
+(comment dGroupFactOf
+  "Represents the dgroup substitution of a NuSketch fact.  
+   When two subsketches are compared with analogy, NuSketch facts about glyphs 
+   are substituted with facts about the objects the glyphs represent.
+   For example, a fact in a bundle's context may be in the form 
+     (<relation> (GlyphFn Object-1 User-Drawn-Sketch-Layer-1) 
+                 (GlyphFn Object-2 User-Drawn-Sketch-Layer-1))
+   but that fact will be represented in an analogy dgroup as
+     (<relation> Object-1 Object-2).  
+   The first argument to dGroupFactOf is the name of the dgroup.
+   The second argument to dGroupFactOf is the fact as it appears in the dgroup.
+     (In FIRE syntax, not SME syntax.)
+   The third argument to dGroupFactOf is the fact as it appears in the subsketch 
+     context.
+   This can be read as 'arg2 is the dGroupFactOf arg3.'")
+
+(isa uninferredDGroupFact Relation)
+(arity uninferredDGroupFact 2)
+(arg1Isa uninferredDGroupFact NuSketchCase)
+(arg2Isa uninferredDGroupFact CycLExpression)
+(comment uninferredDGroupFact
+  "This relation holds if the second argument has no corresponding bundle fact
+(via the dGroupFactOf relation) OR if there is a corresponding bundle fact but that
+bundle fact is not true in the context given in the first argument.  This is used
+to check if candidate inferences are true in the target.
+For example, (uninferredDGroupFact <case-name> (objectContains Object-1 Object-2))
+is true if there is no stored dGroup substitution for (objectContains Object-1 Object-2) OR
+if the corresponding bundle fact 
+(objectContains (GlyphFn Object-1 User-Drawn-Sketch-Layer-1)
+                (GlyphFn Object-2 User-Drawn-Sketch-Layer-1)) 
+is not true in <case-name>.")
+
+
+
+(isa mtForTutorSuggestionGeneration BinaryRelation)
+(arity mtForTutorSuggestionGeneration 2)
+(arg1Isa mtForTutorSuggestionGeneration NuSketchBundle)
+(arg2Isa mtForTutorSuggestionGeneration Microtheory)
+(notForAnalogy mtForTutorSuggestionGeneration)
+(comment mtForTutorSuggestionGeneration 
+  "(mtForTutorSuggestionGeneration ?subsketch ?mt) indicates that when generating
+ worksheet tutoring suggestions for ?subsketch, the tutor strategies in ?mt should
+ be used.  Default is ClassicWorksheetTutorSuggestionsMt.")
+
+(<== (mtForTutorSuggestionGeneration ?subsketch ?mt)
+     (uninferredSentence 
+      (lookupOnly (mtForTutorSuggestionGeneration ?subsketch ?mt)))
+     (unifies ?mt ClassicWorksheetTutorSuggestionsMt)) 
+;;; The above default mechanism implies that in worksheet authoring, we store away
+;;; a fact that specifies the correct microtheory, if it anything other than a classic
+;;; worksheet.  This supports backward compatibility.
+
+
+(isa generateSubsketchTutorSuggestions TernaryRelation)
+(isa generateSubsketchTutorSuggestions DynamicUpdatePredicate)
+(arity generateSubsketchTutorSuggestions 3)
+(arg1Isa generateSubsketchTutorSuggestions NuSketchBundle)
+(arg2Isa generateSubsketchTutorSuggestions List)
+(arg3Isa generateSubsketchTutorSuggestions Set-Mathematical)
+(notForAnalogy generateSubsketchTutorSuggestions)
+(comment generateSubsketchTutorSuggestions
+  "(generateSubsketchTutorSuggestions ?subsketch ?suggestions ?entity-correspondences) indicates that
+   the #$Set-Mathematical bound to ?suggestions contains properties of suggestions 
+   that should be given when feedback is requested in ?subsketch.  ?subsketch 
+   should be name of the subsketch (e.g. Bundle-24 as opposed to the user namestring 
+   or the casename).")
+;;; Note: SubSketchGroup contains entities that are called "subsketches" in the
+;;; nusketch user interface.  This can be confusing, but "layers" are instances
+;;; of SubSketch and "subsketches" are instances of SubSketchGroup (and NuSketchBundle).
+
+
+(isa suggestionsForStudentMatch Relation)
+(arity suggestionsForStudentMatch 4)
+(arg1Isa suggestionsForStudentMatch NuSketchBundle)
+(arg2Isa suggestionsForStudentMatch AnalogyMatch)
+(arg2Isa suggestionsForStudentMatch Match)
+(arg3Isa suggestionsForStudentMatch List)
+(arg4Isa suggestionsForStudentMatch Set-Mathematical)
+(notForAnalogy suggestionsForStudentMatch)
+
+
+(isa tutorSuggestionFromWorksheetExtenstions TernaryRelation)
+(arity tutorSuggestionFromWorksheetExtenstions 3)
+(arg1Isa tutorSuggestionFromWorksheetExtenstions AnalogyMatch)
+(arg1Isa tutorSuggestionFromWorksheetExtenstions Match)
+(arg2Isa tutorSuggestionFromWorksheetExtenstions NuSketchBundle)
+(arg3Isa tutorSuggestionFromWorksheetExtenstions CogSketchWorksheetSuggestion)
+(notForAnalogy tutorSuggestionFromWorksheetExtenstions)
+(comment tutorSuggestionFromWorksheetExtenstions
+  "It's possible for a tutor suggestion to be inferred directly via rules in
+   a worksheet's extensions #$Microtheory (a microtheory specific to a given
+   worksheet).  This relation specifies such a suggestion.")
+
+
+(isa CogSketchWorkspaceBundle Collection)
+(genls CogSketchWorkspaceBundle NuSketchBundle)
+(comment CogSketchWorkspaceBundle
+  "The collection of all bundles that contain the student's sketch for a 
+   CogSketch worksheet.")
+
+
+(isa CogSketchSolutionBundle Collection)
+(genls CogSketchSolutionBundle NuSketchBundle)
+(comment CogSketchSolutionBundle
+  "The collection of all bundles that contain the teacher's solution sketch 
+   for a CogSketch worksheet.")
+
+(<== (isa ?bundle CogSketchSolutionBundle)
+     (lookupOnly (isa ?sketch NuSketchSketch))
+     (solutionForWorksheet ?sketch ?bundle))
+
+
+(isa ImportantForCogSketchTutoringGlyph Collection)
+(genls ImportantForCogSketchTutoringGlyph NuSketchGlyph)
+(comment ImportantForCogSketchTutoringGlyph
+  "The collection of all glyphs that are important for determining tutoring advice
+   in CogSketch.  This includes glyphs that are mentioned in important tutoring
+   facts and glyphs for which quantitative ink comparison is enabled.
+   <p> See also #$ImportantForCogSketchTutoringFact.")
+
+(<== (isa ?glyph ImportantForCogSketchTutoringGlyph)
+     (lookupOnly (isa ?fact ImportantForCogSketchTutoringFact))
+     (glyphMentionedInFact ?fact ?glyph))
+
+(<== (isa ?glyph ImportantForCogSketchTutoringGlyph)
+     (localOnly (quantInkAdviceEnabledForGlyph ?glyph))
+     (localOnly (subSketchFor ?glyph ?layer))
+     (sketchFor ?layer ?sketch)
+     (quantInkAdviceEnabledForSketch ?sketch))
+
+;; because visual quantities are represented differently...
+(<== (isa ?glyph ImportantForCogSketchTutoringGlyph)
+     (unifies ?glyph (AnnotationGlyphFn ?object ?layer))
+     (lookupOnly (isa ?fact ImportantForCogSketchTutoringFact))
+     (unifies ?fact (visualQuantityQuantitativeMeasurement
+                     (QuantityDenotedByAnnotation ?object ?object-type
+                                                  ?annotated-objects)
+                     ?quantity)))
+
+(<== (isa ?glyph ImportantForCogSketchTutoringGlyph)
+     (unifies ?glyph (AnnotationGlyphFn ?object ?layer))
+     (lookupOnly (isa ?fact ImportantForCogSketchTutoringFact))
+     (unifies ?fact (visualQuantityMeasurement
+                     (QuantityDenotedByAnnotation ?object ?object-type
+                                                  ?annotated-objects)
+                     ?measurement)))
+     
+
+
+(isa solutionForWorksheet BinaryRelation)
+(arity solutionForWorksheet 2)
+(arg1Isa solutionForWorksheet NuSketchSketch)
+(arg2Isa solutionForWorksheet CogSketchSolutionBundle)
+(comment solutionForWorksheet 
+  "(solutionForWorksheet ?sketch ?teacher-solution) indicates
+   that ?teacher-solution is a solution bundle for ?sketch.
+   This relation makes no guarantee that ?teacher-solution is the
+   only solution to the sketch.  There can be many solutionForWorksheet
+   fact asserted if a sketch has many solutions.")
+
+
+
+(isa solutionForWorksheetStudentWorkspace BinaryRelation)
+(arity solutionForWorksheetStudentWorkspace 2)
+(arg1Isa solutionForWorksheetStudentWorkspace NuSketchBundle)
+(arg2Isa solutionForWorksheetStudentWorkspace NuSketchBundle)
+(comment solutionForWorksheetStudentWorkspace
+  "(solutionForWorksheetStudentWorkspace <workspace-subsketch> 
+    <solution-subsketch>) indicates which solution(s) subsketch(es)
+    should be used for a given student workspace subsketch.")
+(notForAnalogy solutionForWorksheetStudentWorkspace)
+
+(<== (solutionForWorksheetStudentWorkspace ?student-subsketch ?solution-subsketch)
+     (wmOnly (lookupOnly (sketchFor ?student-subsketch ?sketch)))
+     (solutionForWorksheet ?sketch ?solution-subsketch))
+
+
+
+(isa solutionCaseForWorksheetStudentWorkspace BinaryRelation)
+(arity solutionCaseForWorksheetStudentWorkspace 2)
+(arg1Isa solutionCaseForWorksheetStudentWorkspace NuSketchBundle)
+(arg2Isa solutionCaseForWorksheetStudentWorkspace NuSketchCase)
+(comment solutionCaseForWorksheetStudentWorkspace
+  "(solutionCaseForWorksheetStudentWorkspace <workspace-subsketch> 
+    <solution-case>) indicates which solution(s) case(es)
+    should be used for a given student workspace subsketch.")
+(notForAnalogy solutionCaseForWorksheetStudentWorkspace)
+
+(<== (solutionCaseForWorksheetStudentWorkspace ?student-subsketch ?solution-case)
+     (solutionForWorksheetStudentWorkspace ?student-subsketch ?solution-subsketch)
+     (wmOnly
+      (lookupOnly
+       (subSketchGroupRepresentsObject ?solution-subsketch ?solution-case))))
+
+
+(isa solutionLayerForStudentWorkspaceLayer TernaryRelation)
+(arity solutionLayerForStudentWorkspaceLayer 3)
+(arg1Isa solutionLayerForStudentWorkspaceLayer NuSketchBundle)
+(arg2Isa solutionLayerForStudentWorkspaceLayer NuSketchLayer)
+(arg2Isa solutionLayerForStudentWorkspaceLayer NuSketchLayer)
+(comment solutionLayerForStudentWorkspaceLayer
+  "(solutionLayerForStudentWorkspaceLayer 
+     <student-subsketch> <student-layer> <solution-layer>) indicates which 
+    solution layers correspond to which student layers.")
+(notForAnalogy solutionLayerForStudentWorkspaceLayer)
+
+(<== (solutionLayerForStudentWorkspaceLayer ?student-subsketch ?student-layer
+                                            ?solution-layer)
+     ;; Currently this works by comparing namestrings of layers.  Might want
+     ;; something more precise.
+     (solutionForWorksheetStudentWorkspace ?student-subsketch ?solution-subsketch)
+     (subSketchGroupRepresentsObject ?solution-subsketch ?solution-case)
+     (ist-Information ?solution-case
+       (subSketchGroupFor ?solution-layer ?solution-subsketch))
+     (ist-Information ?solution-case
+       (nameString ?solution-layer ?solution-layer-namestring))
+     (subSketchGroupFor ?student-layer ?student-subsketch)
+     (nameString ?student-layer ?student-layer-namestring)
+     (equals ?student-layer-namestring ?solution-layer-namestring))
+
+
+
+(isa worksheetElaborationQueries TernaryRelation)
+(arity worksheetElaborationQueries 3)
+(arg1Isa worksheetElaborationQueries AbstractInformationalThing)
+(arg2Isa worksheetElaborationQueries Relation)
+(arg3Isa worksheetElaborationQueries Set-Mathematical)
+(comment worksheetElaborationQueries
+  "(worksheetElaborationQueries ?bundle-or-sketch ?qfq-pred ?queries) indicates that
+   the #$Set-Mathematical bound to ?queries is the set of queries that are executed as part of
+   worksheet elaboration.  Each query in ?queries is stored in a fact of the form
+   (?qfq-pred ?priority ?query).  The resultant set, ?queries is sorted by ?priority,
+   with lower number priorities getting solved for first. See #$queryForCogSketchWorksheetQuestions
+   and #$queryForCogSketchPostComparisonWorksheetQuestions.")
+
+(<== (worksheetElaborationQueries ?bundle ?qfq-pred ?sorted-queries)
+     (lookupOnly (subSketchGroupRepresentsObject ?bundle ?case-name))
+     (evaluate ?unsorted-facts
+       (TheClosedRetrievalSetOf (TheList ?priority ?query)
+         (ist-Information ?case-name
+           (lookupOnly
+            (?qfq-pred ?priority ?query)))))
+     (evaluate ?sorted-facts
+       (SortFn ?unsorted-facts lessThan FirstInListFn))
+     (evaluate ?sorted-queries
+       (MapFunctionOverList SecondInListFn ?sorted-facts)))
+
+
+(isa glyphMentionedInFact BinaryRelation)
+(arity glyphMentionedInFact 2)
+(arg1Isa glyphMentionedInFact CycLFormula)
+(arg2Isa glyphMentionedInFact NuSketchGlyph)
+(notForAnalogy glyphMentionedInFact)
+(comment glyphMentionedInFact
+  "(glyphMentionedInFact ?fact ?glyph) indicates that ?glyph
+   is mentioned in ?fact.  See also #$glyphsMentionedInFact.")
+
+(isa glyphsMentionedInFact BinaryRelation)
+(arity glyphsMentionedInFact 2)
+(arg1Isa glyphsMentionedInFact CycLFormula)
+(arg2Isa glyphsMentionedInFact Set-Mathematical)
+(notForAnalogy glyphsMentionedInFact)
+(comment glyphsMentionedInFact
+  "(glyphsMentionedInFact ?fact ?glyphs) indicates that the #$Set-Mathematical bound to ?glyphs
+   contains the glyphs that are mentioned in ?fact. See also #$glyphMentionedInFact.")
+
+
+(isa shapeMentionedInFact BinaryRelation)
+(arity shapeMentionedInFact 2)
+(arg1Isa shapeMentionedInFact CycLFormula)
+(arg2Isa shapeMentionedInFact 2D-Shape-Generic)
+(notForAnalogy shapeMentionedInFact)
+(comment shapeMentionedInFact
+  "(shapeMentionedInFact <fact> <shape>) indicates that a #$2D-Shape-Generic is 
+   mentioned somewhere in the given fact.  See also #$shapesMentionedInFact.")
+
+(<== (shapeMentionedInFact ?fact ?shape)
+     (lastTutorRequestTime ?sketch ?timestamp)
+     (formulaArgument ?fact ?n ?shape)
+     (boundingShapeRepresentationsForGlyph ?glyph ?t1 ?t2 
+                                           ?shape-mt ?shape-set ?num)
+     (evaluate True (ListMemberFn ?shape ?shape-set)))
+
+
+(isa shapesMentionedInFact BinaryRelation)
+(arity shapesMentionedInFact 2)
+(arg1Isa shapesMentionedInFact CycLFormula)
+(arg2Isa shapesMentionedInFact Set-Mathematical)
+(notForAnalogy shapesMentionedInFact)
+(comment shapesMentionedInFact
+  "(shapesMentionedInFact <fact> <shapes>) gives the #$Set-Mathematical of all shapes
+   mentioned in the given fact.  See also #$shapeMentionedInFact.")
+
+(<== (shapesMentionedInFact ?fact ?sorted-shapes)
+     (evaluate ?shapes
+       (TheClosedRetrievalSetOf ?shape
+         (shapeMentionedInFact ?fact ?shape)))
+     (evaluate ?sorted-shapes-list
+       (SortFn ?shapes 
+               (Kappa (?one ?two) (alphalessp ?one ?two))
+               IdentityFn))
+     (evaluate ?sorted-shapes
+       (ListToSetFn ?sorted-shapes-list)))
+
+
+(isa decompositionComponentsMentionedInFactBySubsketch Relation)
+(arity decompositionComponentsMentionedInFactBySubsketch 4)
+(arg2Isa decompositionComponentsMentionedInFactBySubsketch NuSketchBundle)
+(arg2Isa decompositionComponentsMentionedInFactBySubsketch CycLFormula)
+(arg3Isa decompositionComponentsMentionedInFactBySubsketch Set-Mathematical)
+(arg4Isa decompositionComponentsMentionedInFactBySubsketch Set-Mathematical)
+(notForAnalogy decompositionComponentsMentionedInFactBySubsketch)
+
+
+(arity lastTutorRequestTime 2)
+(isa lastTutorRequestTime Predicate)
+(arg1Isa lastTutorRequestTime NuSketchSketch)
+(arg2Isa lastTutorRequestTime TimePoint)
+(notForAnalogy lastTutorRequestTime)
+(comment lastTutorRequestTime
+ "States when the user last requested tutoring for a subsketch.")
+
+
+(isa quantInkDifference Relation)
+(arity quantInkDifference 5)
+(arg1Isa quantInkDifference NuSketchGlyph)
+(arg2Isa quantInkDifference NuSketchGlyph)
+(arg3Isa quantInkDifference RealNumber)
+(arg4Isa quantInkDifference List)
+(arg3Isa quantInkDifference List)
+(notForAnalogy quantInkDifference)
+(comment quantInkDifference
+  "(quantInkDifference ?teacher-glyph ?student-glyph ?tolerance ?student-bad-points ?teacher-bad-points)
+   indicates that there is a quantitative ink difference between ?teacher-glyph and ?student-glyph
+   using the tolerance bound to ?tolerance.  The last two arguments are sets with elements that
+   are instances of #$NuSketchPoint.  They contain points that fall outside of the tolerance region
+   and belong to the student glyph and teacher glyph respectively.")
+
+
+(isa computePositionalRelations Relation)
+(arity computePositionalRelations 1)
+(arg1Isa computePositionalRelations AbstractInformationalThing)
+(comment computePositionalRelations
+  "(computePositionalRelations ?sketch-or-bundle) invokes a tell handler that
+   recomputes the positional relations in ?sketch-or-bundle.")
+
+
+
+(isa sketchSpecificPrettystring Relation)
+(arity sketchSpecificPrettystring 2)
+(arg1Isa sketchSpecificPrettystring Thing)
+(arg2Isa sketchSpecificPrettystring CharacterString)
+(notForAnalogy sketchSpecificPrettystring)
+(isa sketchSpecificPrettystring DynamicUpdatePredicate)
+(comment sketchSpecificPrettystring
+  "Creators of sketch-based worksheets sometimes want to override the normal
+   #$prettyString and #$nameString facts for a given term in a way that is
+   specific to the worksheet's context.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Defs for quantity value suggestions
+
+(isa quantValueAdviceEnabledForSketch Relation)
+(arity quantValueAdviceEnabledForSketch 1)
+(arg1Isa quantValueAdviceEnabledForSketch NuSketchSketch)
+(comment quantValueAdviceEnabledForSketch
+  "Indicates that quantity value suggestions have been been defined for this sketch.")
+
+(<== (quantValueAdviceEnabledForSketch ?sketch)
+     (solutionForWorksheet ?sketch ?solution-bundle)
+     (lookupOnly (subSketchGroupRepresentsObject ?solution-bundle ?solution-case-name))
+     (ist-Information ?solution-case-name
+       (numAnswers 1 (lookupOnly (cogSketchTutoringMaxValString ?fact ?q ?string)))))
+
+(<== (quantValueAdviceEnabledForSketch ?sketch)
+     (solutionForWorksheet ?sketch ?solution-bundle)
+     (lookupOnly (subSketchGroupRepresentsObject ?solution-bundle ?solution-case-name))
+     (ist-Information ?solution-case-name
+       (numAnswers 1 (lookupOnly (cogSketchTutoringMinValString ?fact ?q ?string)))))
+
+
+(isa importantQuantityFact TernaryRelation)
+(arity importantQuantityFact 3)
+(arg1Isa importantQuantityFact NusketchCase)
+(arg2Isa importantQuantityFact CycLFormula)
+(arg3Isa importantQuantityFact ScalarQuantity)
+(comment importantQuantityFact
+  "(importantQuantityFact ?solution-case ?fact ?solution-quantity) means that in ?solution-case,
+?fact is an important tutoring fact with the quantity ?solution-quantity.  Essentially this means
+that there is maximum or minimum quantity value advice associated with the fact.  See also
+#$cogSketchTutoringQuantityMaxVal , #$cogSketchTutoringQuantityMinVal")
+
+(<== (importantQuantityFact ?teacher-case-name ?fact ?teacher-quantity)
+     (ist-Information ?teacher-case-name
+       (lookupOnly (cogSketchTutoringQuantityMaxVal ?fact ?teacher-quantity ?max-val))))
+
+(<== (importantQuantityFact ?teacher-case-name ?fact ?teacher-quantity)
+     (ist-Information ?teacher-case-name
+       (lookupOnly (cogSketchTutoringQuantityMinVal ?fact ?teacher-quantity ?min-val))))
+        
+
+
+
+
+
+(isa visualQuantityDescribes BinaryRelation)
+(arity visualQuantityDescribes 2)
+(arg1Isa visualQuantityDescribes VisualQuantity)
+(arg2Isa visualQuantityDescribes Thing)
+(comment visualQuantityDescribes
+  "visualQuantityDescribes relates a VisualQuantity with an entity that it describes.
+   (visualQuantityDescribes ?visual-quantity ?thing) indicates that ?thing is the object
+   that was annotated when this visual quantity was created.  For example,
+   <p>
+   <pre>
+   (visualQuantityDescribes 
+      (QuantityDenotedByAnnotation 
+            Object-1 
+            CarbonMassIndicator 
+            (TheSet Object-2)) 
+      Object-2)
+  </pre>
+  <p> is true because Object-2 is a member of the set
+  of things that are annotated by the Carbon mass indicator annotation, Object-1.")
+
+;; via annotation
+(<== (visualQuantityDescribes ?visual-quantity ?object)
+     (unifies ?visual-quantity
+       (QuantityDenotedByAnnotation
+        ?annotation ?vis-q-inicator ?set))
+     (elementOf ?object ?set))
+
+;; via unary visual quantity fn (for glyphs)
+(<== (visualQuantityDescribes ?visual-quantity ?object)
+     (isa ?visual-quantity VisualQuantity)
+     (unifies ?visual-quantity
+       (?unary-visual-quantity-fn ?glyph))
+     (glyphRepresentsObject ?glyph ?object))
+
+;; via unary visual quantity fn (for objects)
+(<== (visualQuantityDescribes ?visual-quantity ?object)
+     (isa ?visual-quantity VisualQuantity)
+     (unifies ?visual-quantity
+       (?unary-visual-quantity-fn ?object))
+     (glyphRepresentsObject ?glyph ?object))
+
+
+(isa quantityFromExpression BinaryRelation)
+(arity quantityFromExpression 2)
+(arg1Isa quantityFromExpression CycLSentence)
+(arg2Isa quantityFromExpression ScalarOrVectorInterval)
+(comment quantityFromExpression
+  "Extracts the quantity from a #$visualQuantityQuantitativeMeasurement or 
+   #$visualQuantityMeasurement statement.")
+         
+
+;; via visualQuantityQuantitativeMeasurement
+(<== (quantityFromExpression ?expr ?q)
+     (unifies ?expr
+       (visualQuantityQuantitativeMeasurement
+        ?visual-quantity
+        ?q)))
+
+;; via visualQuantityMeasurement
+(<== (quantityFromExpression ?expr ?q)
+     (unifies ?expr
+       (visualQuantityMeasurement
+        ?visual-quantity
+        ?q)))
+
+
+
+
+
+  
+
+
+(isa quantitativelyConstrainedMatch BinaryRelation)
+(arity quantitativelyConstrainedMatch 2)
+(arg1Isa quantitativelyConstrainedMatch Match)
+(arg1Isa quantitativelyConstrainedMatch AnalogyMatch)
+(arg2Isa quantitativelyConstrainedMatch Match)
+(arg2Isa quantitativelyConstrainedMatch AnalogyMatch)
+(comment quantitativelyConstrainedMatch 
+  "Relates an analogical match to another analogical match that has quantitative constraints
+   applied to it.  (quantitativelyConstrainedMatch ?old-match ?new-match) means that ?new-match
+   is a re-match of ?old-match after any new required correspondences have been asserted.  If
+   no new required correspondences have been asserted as a result of quantitative constraints, 
+   then ?old-match and ?new-match are the same.")
+(notForAnalogy quantitativelyConstrainedMatch)
+
+
+
+;; (tutoringCandidateInference ?mapping ?tutoring-ci-src-exp ?tutoring-ci)
+(isa tutoringCandidateInference Relation)
+(arity tutoringCandidateInference 3)
+(arg1Isa tutoringCandidateInference AnalogyMapping)
+(arg2Isa tutoringCandidateInference CycLFormula)
+(arg3Isa tutoringCandidateInference CycLFormula)
+(comment tutoringCandidateInference 
+  "A relation between an analogical mapping, a base expression and the target
+   expression of a candidate inference.  (tutoringCandidateInference ?mapping ?base-ci-exp ?ci-content)
+   means that in ?mapping, there is a candidate inference where ?base-ci-exp is the
+   the base expression and ?ci-content is the target expression.  Both ?base-ci-exp and ?ci-content
+   are of the form (isa ?fact #$ImportantForCogSketchTutoringFact).  In ?base-ci-exp, ?fact
+   is an important fact (flagged in the authoring environment).  In ?ci-content, ?fact
+   is a hypothetical student fact.  (tutoringCandidateInference ?mapping ?base-ci-exp ?ci-content)
+   holds only if the student fact is not true in the student workspace context and if it
+   passes skolem filtering.  In other words, tutoringCandidateInference relates a mapping
+   with important teacher facts and candidate inferences that should trigger tutoring advice.
+   See also #$ImportantForCogSketchTutoringFact.")
+
+
+;; (unmappedTutoringGlyphs ?teacher-case ?corrs ?missing-glyphs)
+(isa unmappedTutoringGlyphs Relation)
+(arity unmappedTutoringGlyphs 3)
+(arg1Isa unmappedTutoringGlyphs Case)
+(arg2Isa unmappedTutoringGlyphs Set)
+(arg3Isa unmappedTutoringGlyphs Set)
+(comment unmappedTutoringGlyphs 
+  "(unmappedTutoringGlyphs ?teacher-case ?corrs ?missing-glyphs) means that 
+   the set of glyphs in ?missing-glyphs are missing from the entity correspondences
+   in ?corrs.  The members of ?missing-glyphs are glyphs that were created in
+   ?teacher-case and were flagged as important for tutoring.")
+(notForAnalogy unmappedTutoringGlyphs)
+
+
+;; (importantForTutoringGlyphs ?subsketch-or-layer ?glyphs)
+;;
+;; For speed, this is handled by an outsourced predicate.
+;;
+(isa importantForTutoringGlyphs BinaryRelation)
+(arity importantForTutoringGlyphs 2)
+(arg1Isa importantForTutoringGlyphs InformationStore)
+(arg2Isa importantForTutoringGlyphs Set)
+(comment importantForTutoringGlyphs 
+  "Gives the set of glyphs for which some fact was declared to be a 
+   #$ImportantForCogSketchTutoringFact .")
+(notForAnalogy importantForTutoringGlyphs)
+
+
+;; (unmappedTutoringEdgeCycles ?teacher-case ?corrs ?missing-cycles)
+(isa unmappedTutoringEdgeCycles Relation)
+(arity unmappedTutoringEdgeCycles 3)
+(arg1Isa unmappedTutoringEdgeCycles Case)
+(arg2Isa unmappedTutoringEdgeCycles Set)
+(arg3Isa unmappedTutoringEdgeCycles Set)
+(comment unmappedTutoringEdgeCycles 
+  "(unmappedTutoringEdgeCycles ?teacher-case ?corrs ?missing-cycles) means that 
+   the set of edge cycles in ?missing-cycles are missing from the entity 
+   correspondences in ?corrs.")
+(notForAnalogy unmappedTutoringEdgeCycles)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Representing Misconceptions
+
+(isa CogSketchMisconceptionBundle Collection)
+(genls CogSketchMisconceptionBundle NuSketchBundle)
+(comment CogSketchMisconceptionBundle
+  "The collection of all bundles that are used to represent misconceptions in a CogSketch worksheet.")
+
+(isa misconceptionsDefinedForSketch UnaryPredicate)
+(arity misconceptionsDefinedForSketch 1)
+(arg1Isa misconceptionsDefinedForSketch NuSketchSketch)
+(comment misconceptionsDefinedForSketch
+  "(misconceptionsDefinedForSketch ?sketch) indicates that there are one or more misconceptions
+   defined for ?sketch and they should be checked when generating feedback.")
+
+(isa misconceptionForWorksheet BinaryRelation)
+(arity misconceptionForWorksheet 2)
+(arg1Isa misconceptionForWorksheet NuSketchSketch)
+(arg2Isa misconceptionForWorksheet CogSketchMisconceptionBundle)
+(comment misconceptionForWorksheet
+  "(misconceptionForWorksheet ?sketch ?bundle) indicates that the drawing in ?bundle represents a misconception
+   for problem represented in ?sketch.")
+
+(isa misconceptionConditionsMetFor BinaryPredicate)
+(arity misconceptionConditionsMetFor 2)
+(arg1Isa misconceptionConditionsMetFor CogSketchMisconceptionBundle)
+(arg2Isa misconceptionConditionsMetFor AnalogyMapping)
+(arg2Isa misconceptionConditionsMetFor Mapping)
+(comment misconceptionConditionsMetFor
+  "(misconceptionConditionsMetFor ?bundle ?mapping) indicates that all the conditions 
+(instances of #$MisconceptionConditionFact and any queries defined with
+#$misconceptionConditionsQueryfor ) this misconception are met.
+   See also #$MisconceptionConditionFact and #$misconceptionConditionsQuery .")
+
+(isa misconceptionSubQuerySatisfied UnaryPredicate)
+(arity misconceptionSubQuerySatisfied 1)
+(arg1Isa misconceptionSubQuerySatisfied CogSketchMisconceptionBundle)
+(comment misconceptionSubQuerySatisfied
+  "(misconceptionSubQuerySatisfied ?bundle) means that a misconception condition query (if one exists)
+is satisfied.  This statement also holds if no misconception condition queries exist.
+This is different from checks on #$MisconceptionConditionFact statements.  #$MisconceptionConditionFact
+statements are used to check for the existence of something in the workspace.
+Unlike instances of #$MisconceptionConditionFact , misconception condition queries can include the absence
+of something (using #$uninferredSentence ) and can be defined, for example,
+via worksheet extensions.  See also #$misonceptionConditionsQuery .")
+
+(isa misconceptionConditionsQuery BinaryPredicate)
+(arity misconceptionConditionsQuery 2)
+(arg1Isa misconceptionConditionsQuery CogSketchMisconceptionBundle)
+(arg2Isa misconceptionConditionsQuery CycFormula)
+(comment misconceptionConditionsQuery
+  "(misconceptionConditionsQuery ?misc ?query) indicates that ?query should be true in order
+for the misconception depicted in the misconception bundle ?misc to be applicable.  The
+variable ?query is different than instances of #$MisconceptionConditionFact because it
+is a raw query that happens in the workspace mt and can make use of #$uninferredSentence.
+See also #$misconceptionQueriesSatisfied and #$misconceptionConditionsMetFor.")
+
+
+;; MDC, 9/25, This is not working as well as I thought it did.
+;; I can't rely on MisconceptionConditionFact isas to be CIs... I don't
+;; yet understand why this is different than ImportantForCogSketchTutoringFact,
+;; but until I get get it to work properly, I am taking it out.
+;; misconceptionConditionsMetFor is now inferred via worksheet extensions.
+;; MDC, 9/27, I am bringing this back.  There were two problems: 1) constraints
+;; between workspace bundle and misconception bundles were not being used, so
+;; entity correspondences were being wonky, and 2) MisconceptionConditionFact isas
+;; were not in the local misconception MT (they were in KB extensions) so they
+;; weren't being collected into the dgroups, and thus left out of the analogy
+;; and candidate inferences.  I have fixed both via worksheet extensions so this
+;; rule can come back.  The more "correct" fix will be implemented in code changes
+;; for the next release.
+;; MDC, 9/27, Now that MisconceptionConditionFact isas are working as CIs, we need
+;; a way of having raw queries involved in the conditions.  For example, if I want
+;; to have an uninferredSentence fact as one of my conditions, I can't do that via
+;; candidate inferences because uninferred sentences are notForAnalogy.  That's
+;; what I'll use misconceptionConditionsQuery for.  Also, misconceptionConditionsMetFor
+;; should really include a ?mapping argument.
+;; ----------------
+;; assuming that this query will take place in the workspace context
+(<== (misconceptionConditionsMetFor ?bundle ?mapping)
+     (targetOfMapping ?mapping ?student-dgroup)
+     (baseOfMapping ?mapping ?misc-dgroup)
+     (misconceptionForWorksheet ?sketch ?bundle)
+     (lookupOnly (lastTutorRequestTime ?sketch ?timestamp))
+     (subSketchGroupRepresentsObject ?bundle ?misconception-case-name)
+     ;; grab conditions as candidate inferences
+     (evaluate ?satisfied-conditions
+       (TheClosedRetrievalSetOf ?condition
+         (and (candidateInferenceOf ?ci ?mapping)
+              (sourceOfCandidateInference ?ci ?src)
+              (unifies ?src (isa ?condition MisconceptionConditionFact))
+              (candidateInferenceContent ?ci ?prop)
+              (unifies ?prop
+                (isa ?dgroup-student-fact MisconceptionConditionFact))
+              ;; the following fact is only true if the ?student-fact
+              ;; is true in the student workspace (otherwise
+              ;; it would not be in the analogy-sub lookup table)
+              (dGroupFactOf ?student-dgroup ?dgroup-student-fact ?student-fact))))
+     (evaluate ?all-conditions
+       (TheClosedRetrievalSetOf ?condition
+         (and (ist-Information ?misconception-case-name
+                (lookupOnly (isa ?raw-condition MisconceptionConditionFact)))
+              (ist-Information ?misconception-case-name
+                (dGroupFactOf ?misc-dgroup ?condition ?raw-condition)))))
+     (different ?all-conditions (TheSet))
+     (equals ?all-conditions ?satisfied-conditions)
+     ;; check for additional condition queries
+     (misconceptionSubQuerySatisfied ?bundle))
+
+;; misconceptionQueriesSatisfied is true if all the subqueries are true
+;; OR if there are no subqueries
+(<== (misconceptionSubQuerySatisfied ?bundle)
+     (lookupOnly (lastTutorRequestTime ?sketch ?timestamp))
+     (evaluate ?misconception-queries
+       (TheClosedRetrievalSetOf ?query
+         (lookupOnly (misconceptionConditionsQuery ?bundle ?query))))
+     (unifies ?misconception-queries (TheSet)))
+
+(<== (misconceptionSubQuerySatisfied ?bundle)
+     (lookupOnly (lastTutorRequestTime ?sketch ?timestamp))
+     (lookupOnly (misconceptionConditionsQuery ?bundle ?query))
+     (trueSentence ?query))
+
+
+     
+         
+(isa MisconceptionConditionFact Collection)
+(genls MisconceptionConditionFact CycLSentence)
+(comment MisconceptionConditionFact
+  "The collection of facts that are conditions for a misconception to be relevant.")
+
+(isa suggestionForMisconception Relation)
+(arity suggestionForMisconception 4)
+(arg1Isa suggestionForMisconception CogSketchMisconceptionBundle)
+(arg2Isa suggestionForMisconception Integer) ;; ordering for suggestion presentation, lower numbers go first.
+(arg3Isa suggestionForMisconception TextString) ;; suggestion text
+(arg4Isa suggestionForMisconception Set-Mathematical) ;; set of teacher glyphs that are relevant
+(notForAnalogy suggestionForMisconception)
+(comment suggestionForMisconception
+  "(suggestionForMisconception ?bundle ?n ?text ?glyph-set) means that if a 
+   student subsketch matches with the misconception defined in ?bundle, then a 
+   suggestion should be created with text ?text and with relevant and highlighted 
+   glyphs that correspond to the teacher glyphs in ?glyph-set.  The second 
+   argument allows the suggestions to have stable order, in case the author 
+   wants the feedback to sound more like a coherent explanation than isolated 
+   suggestions.")
+
+
+
+
+;;; Match predicates
+;;;    (bestMatchForStudentSubSketch ?sketch ?student-subsketch ?initial-match)
+;;;    (bestMisconceptionMatch ?sketch ?student-subsketch ?misconception-match)
+;;;    (classicWorksheetMatchBetween ?base-subsketch ?target-subsketch ?match-id)
+
+(isa bestMatchForStudentSubSketch Relation)
+(arity bestMatchForStudentSubSketch 3)
+(arg1Isa bestMatchForStudentSubSketch NuSketchSketch)
+(arg2Isa bestMatchForStudentSubSketch CogSketchWorkspaceBundle)
+(arg3Isa bestMatchForStudentSubSketch AnalogyMatch)
+(arg3Isa bestMatchForStudentSubSketch Match)
+(comment bestMatchForStudentSubSketch
+  "(bestMatchForStudentSubSketch ?sketch ?student-subsketch ?match-id) means that the match denoted by ?match-id
+   is the best match for ?student-subsketch.  The match will either be a match between the teacher solution (base) and
+   the student subsketch (target) OR a match between a misconception (base) and the student subsketch.")
+(notForAnalogy bestMatchForStudentSubSketch)
+
+(isa bestMisconceptionMatch Relation)
+(arity bestMisconceptionMatch 3)
+(arg1Isa bestMisconceptionMatch NuSketchSketch)
+(arg2Isa bestMisconceptionMatch CogSketchWorkspaceBundle)
+(arg3Isa bestMisconceptionMatch AnalogyMatch)
+(arg3Isa bestMisconceptionMatch Match)
+(comment bestMisconceptionMatch
+  "(bestMisconceptionMatch ?sketch ?student-subsketch ?match-id) means that the match denoted by ?match-id is
+   the best match that could be found between the student subsketch (target) and any of the misconceptions defined
+   in ?sketch.")
+(notForAnalogy bestMisconceptionMatch)
+
+(isa classicWorksheetMatchBetween Relation)
+(arity classicWorksheetMatchBetween 3)
+(arg1Isa classicWorksheetMatchBetween NuSketchBundle)
+(arg2Isa classicWorksheetMatchBetween NuSketchBundle)
+(arg3Isa classicWorksheetMatchBetween AnalogyMatch)
+(arg3Isa classicWorksheetMatchBetween Match)
+(comment classicWorksheetMatchBetween
+  "(classicWorksheetMatchBetween ?base-bundle ?target-bundle ?match-id) indicates that a match between ?base-bundle
+   and ?target-bundle is denoted by ?match-id.  The match uses classic worksheet case constructors and match
+   constraints.")
+(notForAnalogy classicWorksheetMatchBetween)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Edge Decomposition
+
+(isa computeECORepsForGlyph Relation)
+(arity computeECORepsForGlyph 3)
+(arg1Isa computeECORepsForGlyph NuSketchGlyph)
+(arg2Isa computeECORepsForGlyph RealNumber)
+(arg3Isa computeECORepsForGlyph RealNumber)
+(comment computeECORepsForGlyph 
+  "Declares that edge decompositions should be computed and the representations
+   at the level of edge-connected objects (#$PerceptualEdgeConnectedObject) 
+   should be generated.  
+   The second and third arguments declare the thresholds to use when computing 
+   the decompositions:
+     (2) angle threshold modifier for the perception code; 
+     (3) different size ratio modifier for the perception code.")
+
+
+(isa computeEdgeCycleRepsForGlyph Relation)
+(arity computeEdgeCycleRepsForGlyph 3)
+(arg1Isa computeEdgeCycleRepsForGlyph NuSketchGlyph)
+(arg2Isa computeEdgeCycleRepsForGlyph RealNumber)
+(arg3Isa computeEdgeCycleRepsForGlyph RealNumber)
+(comment computeEdgeCycleRepsForGlyph 
+  "Declares that edge decompositions should be computed and the representations
+   at the level of edge-cycles (#$PerceptualEdgeCycle) should be generated.
+   This only makes sense if #$computeECORepsForGlyph is also true.
+   The second and third arguments declare the thresholds to use when computing 
+   the decompositions:
+     (2) angle threshold modifier for the perception code; 
+     (3) different size ratio modifier for the perception code.")
+
+
+(isa computeEdgeRepsForGlyph Relation)
+(arity computeEdgeRepsForGlyph 3)
+(arg1Isa computeEdgeRepsForGlyph NuSketchGlyph)
+(arg2Isa computeEdgeRepsForGlyph RealNumber)
+(arg3Isa computeEdgeRepsForGlyph RealNumber)
+(comment computeEdgeRepsForGlyph 
+  "Declares that edge decompositions should be computed and the representations
+   at the level of edges (#$PerceptualEdge) should be generated.
+   This only makes sense if #$computeEdgeRepsForGlyph is also true.
+   The second and third arguments declare the thresholds to use when computing 
+   the decompositions:
+     (2) angle threshold modifier for the perception code; 
+     (3) different size ratio modifier for the perception code.")
+
+
+(isa otherGlyphsOfTypeInWorksheetDGroup Relation)
+(arity otherGlyphsOfTypeInWorksheetDGroup 3)
+(arg1Isa otherGlyphsOfTypeInWorksheetDGroup Case)
+(arg2Isa otherGlyphsOfTypeInWorksheetDGroup NuSketchGlyph)
+(arg3Isa otherGlyphsOfTypeInWorksheetDGroup Set-Mathematical)
+(comment otherGlyphsOfTypeInWorksheetDGroup
+  "The set of all other glyphs in the same worksheet tutoring analogy dgroup
+   that belong to the same #$worksheetRelevantCollection as the given glyph.")
+(notForAnalogy otherGlyphsOfTypeInWorksheetDGroup)
+
+(<== (otherGlyphsOfTypeInWorksheetDGroup ?dgroup ?glyph ?other-glyphs)
+     (and (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-context)
+          (evaluate ?other-glyphs
+            (TheClosedRetrievalSetOf ?other-glyph
+              (ist-Information ?subsketch-context
+                (and (localOnly (glyphRepresentsObject ?glyph ?obj))
+                     (worksheetRelevantCollection ?obj ?col)
+                     (glyphInWorksheetDGroup ?dgroup ?other-glyph)
+                     (different ?other-glyph ?glyph)
+                     (localOnly
+                      (glyphRepresentsObject ?other-glyph ?other-obj))
+                     (worksheetRelevantCollection ?other-obj ?col)))))))
+
+  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Suggestions and suggestion NAT Definitions
+
+;; A separate Function-Denotational for each of the 7 suggestion types.
+;; The first 3 arguments to each NAT should be stable across the different
+;; types: text, glyphs to highlight, glyphs involved.  The extra ones can
+;; change between types.
+
+(isa CogSketchWorksheetSuggestion Collection)
+(genls CogSketchWorksheetSuggestion NuSketchTutoringSuggestion)
+(comment CogSketchWorksheetSuggestion
+  "The collection of suggestions that can be given to users of CogSketch worksheets.
+   An instance of CogSketchWorksheetSuggestion can be denoted by instances of #$Function-Denotational,
+   like #$CogSketchWorksheetCandidateInferenceSuggestionFn.")
+
+
+(isa CogSketchSuggestionFn Function-Denotational)
+(arity CogSketchSuggestionFn 3)
+(arg1Isa CogSketchSuggestionFn TextString) ;; text
+(arg2Isa CogSketchSuggestionFn Set-Mathematical) ;; glyphs to highlight
+(arg3Isa CogSketchSuggestionFn Set-Mathematical) ;; glyphs involved
+(resultIsa CogSketchSuggestionFn CogSketchWorksheetSuggestion)
+(notForAnalogy CogSketchSuggestionFn)
+
+(isa CogSketchCandidateInferenceSuggestionFn Function-Denotational)
+(arity CogSketchCandidateInferenceSuggestionFn 5)
+(arg1Isa CogSketchCandidateInferenceSuggestionFn TextString) ;; text
+(arg2Isa CogSketchCandidateInferenceSuggestionFn Set-Mathematical) ;; items to highlight
+(arg3Isa CogSketchCandidateInferenceSuggestionFn Set-Mathematical) ;; glyphs involved
+(arg4Isa CogSketchCandidateInferenceSuggestionFn CycLFormula) ;; teacher fact
+(arg5Isa CogSketchCandidateInferenceSuggestionFn CycLFormula) ;; student fact
+(resultIsa CogSketchCandidateInferenceSuggestionFn
+           CogSketchWorksheetSuggestion)
+(notForAnalogy CogSketchCandidateInferenceSuggestionFn)
+(comment CogSketchCandidateInferenceSuggestionFn
+  "Non-atomic term for denoting a CogSketch worksheet candidate inference suggestion.
+   See also #$cogSketchAdviceString.")
+
+(isa CogSketchQuantitativeInkSuggestionFn Function-Denotational)
+(arity CogSketchQuantitativeInkSuggestionFn 6)
+(arg1Isa CogSketchQuantitativeInkSuggestionFn TextString) ;; text
+(arg2Isa CogSketchQuantitativeInkSuggestionFn Set-Mathematical) ;; glyphs to highlight
+(arg3Isa CogSketchQuantitativeInkSuggestionFn Set-Mathematical) ;; glyphs involved
+(arg4Isa CogSketchQuantitativeInkSuggestionFn NuSketchGlyph) ;; solution glyph
+(arg5Isa CogSketchQuantitativeInkSuggestionFn List) ;; bad points in workspace glyph
+(arg6Isa CogSketchQuantitativeInkSuggestionFn List) ;; bad points in solution glyph
+(resultIsa CogSketchQuantitativeInkSuggestionFn CogSketchWorkSheetSuggestion)
+(notForAnalogy CogSketchQuantitativeInkSuggestionFn)
+(comment CogSketchQuantitativeInkSuggestionFn 
+  "Non-atomic term for denoting a CogSketch worksheet quantitative ink suggestion.
+   See also #$quantInkTolerance and #$quantInkAdviceString.")
+
+(isa CogSketchMissingEntitySuggestionFn Function-Denotational)
+(arity CogSketchMissingEntitySuggestionFn 4)
+(arg1Isa CogSketchMissingEntitySuggestionFn TextString) ;; text
+(arg2Isa CogSketchMissingEntitySuggestionFn Set-Mathematical) ;; glyphs to highlight
+(arg3Isa CogSketchMissingEntitySuggestionFn Set-Mathematical) ;; glyphs involved
+(arg4Isa CogSketchMissingEntitySuggestionFn NuSketchGlyph) ;; solution glyph
+(resultIsa CogSketchMissingEntitySuggestionFn CogSketchWorksheetSuggestion)
+(notForAnalogy CogSketchWorksheetSuggestion)
+(comment CogSketchMissingEntitySuggestionFn 
+  "Non-atomic term for denoting a CogSketch worksheet missing entity suggestion.")
+
+(isa CogSketchExtraEntitySuggestionFn Function-Denotational)
+(arity CogSketchExtraEntitySuggestionFn 4)
+(arg1Isa CogSketchExtraEntitySuggestionFn TextString) ;; text
+(arg2Isa CogSketchExtraEntitySuggestionFn Set-Mathematical) ;; glyphs to highlight
+(arg3Isa CogSketchExtraEntitySuggestionFn Set-Mathematical) ;; glyphs involved
+(arg4Isa CogSketchExtraEntitySuggestionFn Collection) ;; collection of extra glyph
+(resultIsa CogSketchExtraEntitySuggestionFn CogSketchWorksheetSuggestion)
+(notForAnalogy CogSketchExtraEntitySuggestionFn)
+(comment CogSketchExtraEntitySuggestionFn 
+  "Non-atomic term for denoting a CogSketch worksheet extra entity suggestion.")
+
+(isa CogSketchMissingLabelSuggestionFn Function-Denotational)
+(arity CogSketchMissingLabelSuggestionFn 3)
+(arg1Isa CogSketchMissingLabelSuggestionFn TextString)  ;; text
+(arg2Isa CogSketchMissingLabelSuggestionFn Set-Mathematical) ;; glyphs to highlight
+(arg3Isa CogSketchMissingLabelSuggestionFn Set-Mathematical) ;; glyphs involved
+(resultIsa CogSketchMissingLabelSuggestionFn CogSketchWorksheetSuggestion)
+(notForAnalogy CogSketchMissingLabelSuggestionFn)
+(comment CogSketchMissingLabelSuggestionFn 
+  "Non-atomic term for denoting a CogSketch worksheet missing label suggestion.
+   These suggestions let the user/student know that they forgot to provide a
+   conceptual label for a glyph.")
+
+(isa CogSketchQuantityValueSuggestionFn Function-Denotational)
+(arity CogSketchQuantityValueSuggestionFn 9)
+(arg1Isa CogSketchQuantityValueSuggestionFn TextString)  ;; text
+(arg2Isa CogSketchQuantityValueSuggestionFn Set-Mathematical) ;; glyphs to highlight
+(arg3Isa CogSketchQuantityValueSuggestionFn Set-Mathematical) ;; glyphs involved
+(arg4Isa CogSketchQuantityValueSuggestionFn CycLFormula) ;; teacher fact
+(arg5Isa CogSketchQuantityValueSuggestionFn CycLFormula) ;; student fact
+(arg6Isa CogSketchQuantityValueSuggestionFn Quantity)    ;; teacher quantity
+(arg7Isa CogSketchQuantityValueSuggestionFn Quantity)    ;; student quantity
+(arg8Isa CogSketchQuantityValueSuggestionFn Quantity)    ;; max value allowed
+(arg9Isa CogSketchQuantityValueSuggestionFn Quantity)    ;; min value allowed
+(resultIsa CogSketchQuantityValueSuggestionFn CogSketchWorksheetSuggestion)
+(notForAnalogy CogSketchQuantityValueSuggestionFn)
+(comment CogSketchQuantityValueSuggestionFn 
+  "Non-atomic term for denoting a CogSketch worksheet quantity value suggestion.
+   These suggestions let the student know that the quantity denoted by an annotation
+   is incorrect.")
+
+(isa CogSketchOrderingSuggestionFn Function-Denotational)
+(arity CogSketchOrderingSuggestionFn 3)
+(arg1Isa CogSketchOrderingSuggestionFn TextString) ;; text
+(arg2Isa CogSketchOrderingSuggestionFn Set-Mathematical) ;; glyphs to highlight
+(arg3Isa CogSketchOrderingSuggestionFn Set-Mathematical) ;; glyphs involved
+(resultIsa CogSketchOrderingSuggestionFn CogSketchWorksheetSuggestion)
+(notForAnalogy CogSketchOrderingSuggestionFn)
+(comment CogSketchOrderingSuggestionFn
+  "Describes a CogSketch tutor suggestion based on ordering specified by a 
+   student.  This is used in worksheets like the geology worksheet where students
+   need to specify in which order various geologic layers were created.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,240 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_quant-ink.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: July 17, 2013 17:49:47
+;;;;   Purpose: Worksheet tutoring suggestions based on quantitative ink
+;;;;            comparisons.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa glyphIsBentLine Relation)
+(arity glyphIsBentLine 1)
+(arg1Isa glyphIsBentLine NuSketchGlyph)
+(comment glyphIsBentLine 
+  "Says that a given glyphs' ink forms a single bent line segment.  This means that
+   the glyph consists of either multiple edges or it consists of one curved edge.")
+
+(isa glyphIsBentLine-DownBumped Relation)
+(arity glyphIsBentLine-DownBumped 1)
+(arg1Isa glyphIsBentLine-DownBumped NuSketchGlyph)
+(comment glyphIsBentLine-DownBumped
+  "Says that a given glyphs' ink is bumped downward, like a valley.")
+
+(isa glyphIsBentLine-UpBumped Relation)
+(arity glyphIsBentLine-UpBumped 1)
+(arg1Isa glyphIsBentLine-UpBumped NuSketchGlyph)
+(comment glyphIsBentLine-UpBumped
+  "Says that a given glyphs' ink is bumped upward, like a hill.")
+
+(isa glyphIsBentLine-LeftBumped Relation)
+(arity glyphIsBentLine-LeftBumped 1)
+(arg1Isa glyphIsBentLine-LeftBumped NuSketchGlyph)
+(comment glyphIsBentLine-LeftBumped
+  "Says that a given glyphs' ink is bumped to the left, like the letter C.")
+
+(isa glyphIsBentLine-RightBumped Relation)
+(arity glyphIsBentLine-RightBumped 1)
+(arg1Isa glyphIsBentLine-RightBumped NuSketchGlyph)
+(comment glyphIsBentLine-RightBumped
+  "Says that a given glyphs' ink is bumped to the right, like the curve of the letter D.")
+
+(isa glyphIsStraightLine Relation)
+(arity glyphIsStraightLine 1)
+(arg1Isa glyphIsStraightLine NuSketchGlyph)
+(comment glyphIsStraightLine
+  "Says that a given glyph's ink forms a single straight line segment.")
+
+
+;;; The following was moved to an ask-handler in tutor.lsp for speed reasons:
+;;;
+;;;(<== (glyphIsStraightLine ?glyph ?angle-thresh ?size-thresh)
+;;;     ;; Assumes ECOs, edge-cycles, and edges have already been computed.
+;;;     
+;;;     (lookupOnly 
+;;;      (ecoRepresentationsForGlyph ?glyph ?angle-thresh ?size-thresh 
+;;;                                  ?eco-facts-mt ?ecos ?num-eco-facts))
+;;;     (evaluate ?num-ecos (CardinalityFn ?ecos))
+;;;     (equals ?num-ecos 1)
+;;;     (evaluate ?ecos-list (SetToListFn ?ecos))
+;;;     (evaluate ?eco (FirstInListFn ?ecos-list))
+;;;     
+;;;     (lookupOnly
+;;;      (ist-Information ?eco-facts-mt
+;;;        (edgeCycleRepresentationsFor 
+;;;         ?eco ?angle-thresh ?size-thresh 
+;;;         ?cycle-facts-mt ?cycles ?num-cycle-facts)))
+;;;     (evaluate ?num-cycles (CardinalityFn ?cycles))
+;;;     (equals ?num-cycles 1)
+;;;     (evaluate ?cycles-list (SetToListFn ?cycles))
+;;;     (evaluate ?cycle (FirstInListFn ?cycles-list))
+;;;     (ist-Information ?cycle-facts-mt (isa ?cycle 2D-Shape-Open))
+;;;     (ist-Information ?cycle-facts-mt (isa ?cycle 2D-Shape-Straight))
+;;;     
+;;;     (lookupOnly
+;;;      (ist-Information ?cycle-facts-mt
+;;;        (boundingEdgeRepresentationsForEdgeCycle 
+;;;         ?cycle ?angle-thresh ?size-thresh ?edge-facts-mt
+;;;         ?edges ?num-edge-facts)))
+;;;     (evaluate ?num-edges (CardinalityFn ?edges))
+;;;     (equals ?num-edges 1))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; gatherQuantitativeInkSuggestions
+
+;; Quant ink enabled for sketch
+(defSuggestion GatherClassicQuantInkSuggs
+    (gatherQuantitativeInkSuggestions ?match ?teacher-case ?student-case 
+                                      ?quant-ink-suggs)
+  :test (lookupOnly (quantInkAdviceEnabledForSketch ?sketch))
+  :subgoals
+  ((subsketchContextForWorksheetDGroup ?teacher-case ?teacher-case-name)
+   (bestMapping ?match ?mapping)
+   (solveAll 
+    (and (localOnly
+          (wmOnly
+           (ist-Information ?teacher-case-name 
+             (quantInkAdviceEnabledForGlyph ?tg1))))
+         (localOnly
+          (wmOnly
+           (ist-Information ?teacher-case-name
+             (glyphRepresentsObject ?tg1 ?to1))))
+         (wmOnly (correspondsInMapping ?mapping ?to1 ?so1))
+         (localOnly (wmOnly (glyphRepresentsObject ?sg1 ?so1))))
+    (applicableQuantInkAdvice ?teacher-case ?tg1 ?sg1 ?advice1))
+   (solveAll 
+    (and (localOnly 
+          (wmOnly
+           (ist-Information ?teacher-case-name 
+             (quantInkAdviceEnabledForPerceptualElement ?to2))))
+         (wmOnly (correspondsInMapping ?mapping ?to2 ?so2)))
+    (applicableQuantInkAdvice ?teacher-case ?to2 ?so2 ?advice2))
+   
+   (evaluate ?quant-ink-suggs-set
+     (TheClosedRetrievalSetOf (CogSketchQuantitativeInkSuggestionFn
+                               ?text ?glyphs ?glyphs
+                               ?teacher-glyph (TheSet) (TheSet))
+       ;; We used to use ?bad-pts-student ?bad-pts-teacher (see quantInkDifference 
+       ;; below) as arguments to CogSketchQuantitativeInkSuggestionFn but this 
+       ;; resulted in a huge list of points embedded in the suggestion, which 
+       ;; slowed down various sorting and duplicate-removing operations.  We 
+       ;; haven't had a use for them up to this point, so we will simply use 
+       ;; empty sets in their place, which shaves off 1.5 seconds (on average) in 
+       ;; feedback request time.  If we decide that we want it in the future, 
+       ;; the necessary variables are bound below.  -MDC 10/8/2012
+       (and (lookupOnly (applicableQuantInkAdvice 
+                         ?teacher-case ?teacher-glyph ?student-glyph ?text))
+            (different ?text :none)
+            (unifies ?glyphs (TheSet ?student-glyph)))))   
+   (evaluate ?quant-ink-suggs
+     (SetToListFn ?quant-ink-suggs-set))
+   
+   ;; last step to assert scores based on applicableQuantInkAdvice facts
+   (detectQuantInkSuggestionScores ?match)
+   ))
+
+
+;; Quant ink NOT enabled for sketch
+(defSuggestion GatherClassicQuantInkSuggs-NA
+    (gatherQuantitativeInkSuggestions ?match ?teacher-case ?student-case 
+                                      ?quant-ink-suggs)
+  :test (and (subsketchForWorksheetDGroup ?student-case ?student-bundle)
+             (lookupOnly (sketchFor ?student-bundle ?sketch))
+             (lookupOnly 
+              (honorTimestamps 
+               (uninferredSentence (quantInkAdviceEnabledForSketch ?sketch)))))
+  :subgoals
+  ((unifies ?quant-ink-suggs (TheList))))
+
+
+
+(isa detectQuantInkSuggestionScores Relation)
+(arity detectQuantInkSuggestionScores 1)
+(notForAnalogy detectQuantInkSuggestionScores)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; applicableQuantInkAdvice
+
+;; Quant ink sugg based on positional relations: the student glyph and the teacher
+;; glyph have a particular positional relationship and advice is based off of that.
+(defSuggestion QuantInkAdvice-relativePosition
+    (applicableQuantInkAdvice ?teacher-case ?teacher-glyph ?student-glyph ?advice)
+  :cost-function 1
+  :subgoals
+  ((subsketchContextForWorksheetDGroup ?teacher-case ?teacher-case-name)
+   (sketchContextForWorksheetDGroup ?teacher-case ?sketch-context)
+   (ist-Information ?teacher-case-name
+     (lookupOnly (quantInkTolerance ?teacher-glyph ?tolerance)))
+   (ist-Information ?sketch-context
+     (quantInkDifference ?teacher-glyph ?student-glyph ?tolerance
+                         ?bad-pts-student ?bad-pts-teacher))
+   (ist-Information ?teacher-case-name
+     (quantInkAdviceEnabledForItem-positionDependent 
+      ?teacher-glyph ?positional-relation))
+   (evaluate ?applicable-advice
+     (TheClosedRetrievalSetOf ?text-string  
+       (and (localOnly
+             (lookupOnly
+              (ist-Information ?teacher-case-name
+                (quantInkAdvice-positionDependent 
+                 ?teacher-glyph ?positional-relation ?text-string))))
+            (positionalRelationFor-bundleIndependent 
+             ?student-glyph ?teacher-glyph ?positional-relation))))
+   (evaluate ?advice
+     (FirstInListFn (SetToListFn ?applicable-advice)))))
+
+;; Original Quant ink sugg: the student glyph falls outside of the tolerance region
+;; This suggestion has a higher cost because we only want to default to this feedback
+;; if we can't say something more specific.
+(defSuggestion QuantInkAdvice-regionOverlap
+    (applicableQuantInkAdvice ?teacher-case ?teacher-thing ?student-thing ?advice)
+  :cost-function 3
+  :subgoals
+  ((subsketchContextForWorksheetDGroup ?teacher-case ?teacher-case-name)
+   (sketchContextForWorksheetDGroup ?teacher-case ?sketch-context)
+   (ist-Information ?teacher-case-name
+     (lookupOnly (quantInkTolerance ?teacher-thing ?tolerance)))
+   ;; The following should already by in WM because of the cheaper suggestion:
+   (lookupOnly 
+    (ist-Information ?sketch-context
+      (quantInkDifference ?teacher-thing ?student-thing ?tolerance
+                          ?bad-pts-student ?bad-pts-teacher)))
+   (ist-Information ?teacher-case-name
+     (quantInkAdviceString ?teacher-thing ?advice))))
+
+;; if it gets to this point, then no advice is applicable
+(defSuggestion QuantInkAdvice-NoneApplicable
+    (applicableQuantInkAdvice ?teacher-case ?teacher-glyph ?student-glyph ?advice)
+  :cost-function 5
+  :subgoals
+  ((unifies ?advice :none)))
+
+
+
+(isa quantInkAdviceEnabledForItem-positionDependent Relation)
+(arity quantInkAdviceEnabledForItem-positionDependent 2)
+(arg1Isa quantInkAdviceEnabledForItem-positionDependent SpatialThing)
+(arg2Isa quantInkAdviceEnabledForItem-positionDependent Relation)
+(notForAnalogy quantInkAdviceEnabledForItem-positionDependent)
+
+(<== (quantInkAdviceEnabledForItem-positionDependent ?teacher-item ?pos-relation)
+     (quantInkAdviceEnabledForGlyph-positionDependent 
+      ?teacher-item ?pos-relation))
+
+(<== (quantInkAdviceEnabledForItem-positionDependent ?teacher-item ?pos-relation)
+     (quantInkAdviceEnabledForPerceptualElement-positionDependent 
+        ?teacher-item ?pos-relation))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,22 @@
+(in-microtheory SecurityMt)
+
+(strictlyFunctionalInArgs reliabilityOfReportSources 2)
+(strictlyFunctionalInArgs reportID 2)
+(argFormat reliabilityOfReportSources 2 SingleEntry)
+(argFormat classificationOfReport 2 SetTheFormat)
+(typedGenlPreds levelOfEncryption levelOfSecurity)
+(requiredActorSlots SecurityBreach maleficiary)
+(argFormat reportID 2 SingleEntry)
+(comment SecurityProcedure "The collection of complex actions that are undertaken in an effort to
+secure an individual or object.  This can be distinguished from the more general
+#$ProtectingSomething in that instances of that collection can have nothing to
+do with what, in English, we might call \"security procedures\".  For example, a
+bystander who steps in on an impulse to defend a child from a bully may have
+peformed an instance of #$ProtectingSomething, but unless his action was part of
+a planned/scripted effort to stop the bully, it is not likely an instance of
+#$SecurityProcedure.")
+(genls BiometricallyProtected AuthenticationProtected)
+(genlPreds levelOfEncryption levelOfSecurity)
+(genls DetentionFacility (SubcollectionOfWithRelationToFn Facility-Generic objectSecureToDegree (HighAmountFn GenericSecurityLevel)))
+(genls MilitaryFacility (SubcollectionOfWithRelationToFn Facility-Generic objectSecureToDegree (HighAmountFn GenericSecurityLevel)))
+(genls EncryptedAIS Encrypted)

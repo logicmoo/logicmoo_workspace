@@ -1,0 +1,1436 @@
+(in-microtheory FrameNetSemTransMt)
+(genlMt EANLU FrameNetSemTransMt)
+
+(FNPrepSemtrans (TheList) About-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_individuals))
+   (:OBJECT (NP fe_individuals massOfObject fe_reference_quantity))
+   (:OBLIQUE-OBJECT (NP fe_individuals) ((PPFn of) fe_individuals)
+    (AVP fe_reference_quantity))
+   (:GAP (-- fe_denoted_quantity) (DNI fe_individuals fe_reference_quantity))
+   (:NOUN (N fe_individuals))))
+ (groupPatterns
+  (TheSet ((1 0 1)) ((1 0 2)) ((2 1 0)) ((0 0 0)) ((2 0 0)) ((4 0 0)) ((1 0 0))
+   ((0 0 0) (1 0 2)) ((2 0 0) (2 2 0)))))
+
+(FNPrepSemtrans (TheList) About-TheWord (focalSubject :SUBJECT :OBJECT)
+ (frame FN_Topic)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (NP communicatorOfInfo (InverseBinaryPredicateFn topicOfPCW))
+    ((PPFn on) (InverseBinaryPredicateFn topicOfPCW)))
+   (:OBJECT (NP situationTopic))
+   (:OBLIQUE-OBJECT (NP situationTopic) (Sub situationTopic))
+   (:GAP (CNI (InverseBinaryPredicateFn topicOfPCW))
+    (DNI communicatorOfInfo (InverseBinaryPredicateFn topicOfPCW)))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 1 0) (2 0 0)) ((0 0 1) (1 0 0)) ((0 0 1) (2 0 0))
+   ((0 0 0) (2 1 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Above-TheWord (above-Generally :NOUN :OBJECT)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (NP distanceTranslated)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile temporallyIntersects))
+   (:GAP (2nd fe_accessibility fe_directness) (DNI focalSubject fe_ground))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0)) ((1 0 0) (2 0 0))
+   ((2 1 4) (4 0 0)) ((0 0 0) (2 1 1)) ((0 0 0) (1 0 0) (2 1 5))
+   ((1 0 0) (2 0 0) (4 0 0)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 1 4)) ((0 0 0) (1 0 0) (2 1 3))
+   ((0 0 0) (1 0 0) (2 1 2)) ((0 0 0) (1 0 0) (2 1 1))
+   ((1 0 0) (2 1 0) (4 0 0)) ((0 0 0) (1 0 0) (2 1 0))
+   ((1 0 0) (2 1 3) (4 0 0)) ((0 0 0) (1 0 0) (2 0 0) (2 1 6))
+   ((0 0 0) (0 0 0) (1 0 0) (2 1 3)) ((0 0 0) (1 0 0) (2 1 2) (2 1 6))
+   ((0 0 0) (1 0 0) (2 1 1) (2 1 2)) ((0 0 0) (1 0 0) (2 1 0) (2 1 1)))))
+
+(FNPrepSemtrans (TheList "according") To-TheWord (and)
+ (frame FN_Attributed_information)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_proposition) (Sfin fe_proposition))
+   (:OBJECT (Sinterrog performedBy) (NP performedBy informationSource))
+   (:OBLIQUE-OBJECT (Sfin fe_proposition) (NP performedBy))
+   (:NOUN (Sfin fe_proposition))))
+ (groupPatterns
+  (TheSet ((0 1 0) (1 1 1)) ((1 1 1) (2 0 0)) ((0 0 0) (1 1 1))
+   ((1 1 0) (3 0 0)) ((2 1 0) (3 0 0)) ((0 1 0) (1 0 0)) ((0 1 0) (1 1 0))
+   ((0 0 0) (2 1 0)) ((0 1 0) (0 1 0) (1 1 1)) ((0 1 0) (0 1 0) (1 1 0)))))
+
+(FNPrepSemtrans (TheList) Across-TheWord
+ (across-UnderspecifiedRegion :SUBJECT :OBJECT) (frame FN_Distributed_position)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP situationConstituents))
+   (:OBJECT (NP objectFoundInLocation))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) After-TheWord (intervalStartedBy :ACTION :OBJECT)
+ (frame FN_Relative_time)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (Sfin fe_focal_occasion) (Srel fe_focal_occasion)
+    (VPbrst fe_focal_occasion) (VPing fe_focal_occasion)
+    (VPto fe_focal_occasion))
+   (:OBJECT (NP fe_landmark_occasion) (Sfin fe_landmark_occasion))
+   (:OBLIQUE-OBJECT ((PPFn to) fe_interval) (NP fe_landmark_occasion)
+    (Sfin fe_landmark_occasion) (VPing fe_landmark_occasion))
+   (:GAP (DNI fe_focal_occasion)) (:NOUN (Sfin fe_focal_occasion))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 4 0) (2 1 0)) ((0 3 0) (2 2 0)) ((0 2 0) (1 0 0))
+   ((0 1 0) (1 0 0)) ((1 0 0) (4 0 0)) ((0 0 0) (2 3 0)) ((0 0 0) (1 1 0))
+   ((0 0 0) (2 2 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 1 0))
+   ((0 0 0) (2 1 0) (4 0 0)) ((0 0 0) (0 0 0) (1 0 0))
+   ((0 0 0) (0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) After-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (N duration) (NP duration fe_event) (Sfin fe_event)
+    (VPbrst fe_event) (Sing fe_event))
+   (:OBJECT (NP duration fe_landmark_event) (VPing fe_landmark_event)
+    (Sfin fe_landmark_event))
+   (:OBLIQUE-OBJECT ((PPFn within) duration) (NP duration fe_landmark_event)
+    (Sfin fe_landmark_event))
+   (:GAP (-- fe_direction) (DEN fe_direction) (2nd duration) (DNI duration)
+    (INI duration))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((2 2 0) (4 0 0)) ((0 2 0) (1 2 0)) ((0 2 0) (2 1 1))
+   ((0 0 0) (1 0 1)) ((0 3 0) (1 0 1)) ((0 2 0) (1 1 0)) ((0 2 0) (1 0 1))
+   ((0 1 1) (2 1 1)) ((1 0 1) (4 0 0)) ((0 1 1) (1 0 1)) ((0 2 0) (1 0 0))
+   ((0 2 0) (0 2 0) (1 0 1)) ((0 4 0) (1 0 1) (2 0 0))
+   ((0 1 1) (1 0 1) (2 0 0)) ((0 1 0) (2 1 1) (4 0 0))
+   ((0 2 0) (1 0 1) (2 1 0)) ((0 1 1) (1 0 1) (2 1 0))
+   ((1 0 1) (2 1 0) (4 0 0)))))
+
+(FNPrepSemtrans (TheList) Against-TheWord (and) (frame FN_Spatial_contact)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Against-TheWord (and) (frame FN_Taking_sides)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (VPfin objectActedOn) (NP objectActedOn subjectOfMentalSituation))
+   (:OBJECT (NP fe_issue fe_side)) (:OBLIQUE-OBJECT (NP fe_issue fe_side))
+   (:GAP (DNI subjectOfMentalSituation))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 1 1) (1 0 1)) ((0 1 1) (2 0 1)) ((0 1 1) (1 0 0))
+   ((0 1 1) (2 0 0)) ((0 0 0) (1 0 1)) ((0 1 0) (2 0 1))
+   ((0 1 1) (0 1 1) (2 0 1)))))
+
+(FNPrepSemtrans (TheList "all") About-TheWord (and) (frame FN_Emotion_directed)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "all") Over-TheWord (and)
+ (frame FN_Distributed_position) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "all") Over-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:GAP (DNI fe_ground) (INI fe_ground))
+   (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((3 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0)))))
+
+(FNPrepSemtrans (TheList) Almost-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:OBJECT (NP fe_individuals))
+   (:OBLIQUE-OBJECT (N massOfObject) ((PPFn of) fe_individuals massOfObject)
+    (A fe_reference_quantity) (NP massOfObject fe_reference_quantity))
+   (:GAP (-- fe_denoted_quantity))
+   (:NOUN (N fe_individuals massOfObject fe_reference_quantity))))
+ (groupPatterns
+  (TheSet ((1 3 0)) ((3 0 1)) ((1 0 0)) ((0 0 0)) ((1 1 1) (3 0 2))
+   ((1 1 0) (1 3 1)) ((1 2 0) (3 0 0)))))
+
+(FNPrepSemtrans (TheList) Along-TheWord (motionPathway-Partial :ACTION :OBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction) ((PPFn to) fe_direction)
+    ((PPFn between) distanceTranslated))
+   (:GAP (CNI objectFoundInLocation)) (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 2 0)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Along-TheWord (and) (frame FN_Non-gradable_proximity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "along") With-TheWord (and) (frame FN_Accompaniment)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_co-participant doneBy))
+   (:OBJECT (NP fe_co-participant doneBy))
+   (:OBLIQUE-OBJECT (NP fe_co-participant) ((PPFn with) fe_co-participant))))
+ (groupPatterns
+  (TheSet ((0 0 1) (2 1 0)) ((0 0 1) (1 0 0)) ((0 0 0) (1 0 1))
+   ((0 0 1) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Amid-TheWord (and)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_deixis fe_direction))
+   (:NOUN (Sfin focalSubject) (VPbrst focalSubject) (VPed focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0) (3 2 0)) ((1 0 0) (3 1 0)) ((1 0 0) (3 0 0))
+   ((0 0 0) (1 0 0)) ((1 0 0) (3 0 0) (3 0 0)) ((0 0 0) (1 0 0) (2 0 1))
+   ((1 0 0) (2 0 0) (2 0 1) (3 0 0)))))
+
+(FNPrepSemtrans (TheList) Amidst-TheWord (and)
+ (frame FN_Contrary_circumstances) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Among-TheWord (groupMembers :OBJECT :SUBJECT)
+ (frame FN_Be_subset_of)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP parts)) (:OBJECT (NP fe_total))
+   (:OBLIQUE-OBJECT ((PPFn at) temporallyIntersects) (NP fe_total))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Among-TheWord (in-Among :SUBJECT :OBJECT)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction))
+   (:NOUN (Sfin focalSubject) (VPing focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0) (3 1 0)) ((1 0 0) (3 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Ante-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Around-TheWord (and) (frame FN_Distributed_position)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP situationConstituents))
+   (:OBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (AVP fe_deixis fe_region_quantification)
+    (NP fe_region_quantification))
+   (:GAP (DNI objectFoundInLocation)) (:NOUN (Sfin situationConstituents))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (2 0 1)) ((0 0 0) (1 0 0) (2 1 0))
+   ((1 0 0) (2 0 1) (4 0 0)) ((0 0 0) (1 0 0) (2 0 1))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Around-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:OBJECT (NP fe_reference_quantity))
+   (:OBLIQUE-OBJECT (NP fe_individuals) (Num fe_reference_quantity))
+   (:GAP (-- fe_denoted_quantity) (2nd fe_denoted_quantity)
+    (DNI fe_individuals))
+   (:NOUN (N fe_individuals))))
+ (groupPatterns (TheSet ((0 0 0)) ((1 0 0)) ((1 1 0) (3 0 0)))))
+
+(FNPrepSemtrans (TheList) Around-TheWord (surroundsCompletely :SUBJECT :OBJECT)
+ (frame FN_Surrounding)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (NP distanceTranslated) ((PPFn for) distanceTranslated)
+    (unknown fe_ground)
+    (AVP fe_accessibility fe_direction fe_directness temporallyIntersects))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 0 0) (2 2 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 3 3)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 0 0)) ((0 0 0) (1 0 0) (2 3 2))
+   ((0 0 0) (1 0 0) (2 3 1)) ((1 0 0) (2 3 0) (4 0 0)))))
+
+(FNPrepSemtrans (TheList) Around-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_landmark_event))
+   (:OBJECT (NP fe_landmark_period))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) As-TheWord (and) (frame FN_Performers_and_roles)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP performedBy))
+   (:OBLIQUE-OBJECT (NP (Kappa (?sit ?role) (playsRole ?sit :OBJECT ?role))))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Astride-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Astride-TheWord (and) (frame FN_Surrounding)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction temporallyIntersects))
+   (:GAP (DNI focalSubject fe_ground))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((1 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 0 1))
+   ((0 0 0) (0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) At-TheWord (and) (frame FN_Being_employed)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) At-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction temporallyIntersects)
+    ((PPFn at) temporallyIntersects) ((PPFn on) temporallyIntersects)
+    (NP temporallyIntersects))
+   (:NOUN (Sfin objectFoundInLocation) (VPing objectFoundInLocation)
+    (VPto objectFoundInLocation))))
+ (groupPatterns
+  (TheSet ((1 0 0) (3 1 0)) ((1 0 0) (3 0 0)) ((0 0 0) (1 0 0))
+   ((1 0 0) (2 3 0) (3 2 0)) ((0 0 0) (1 0 0) (2 2 0))
+   ((0 0 0) (1 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 1))
+   ((1 0 0) (3 0 0) (3 0 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) At-TheWord (and) (frame FN_Spatial_co-location)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT ((PPFn for) temporallyIntersects)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     fe_temporal_profile temporallyIntersects)
+    (NP temporallyIntersects) ((PPFn until) temporallyIntersects)
+    (Sub temporallyIntersects) ((PPFn at) temporallyIntersects)
+    ((PPFn during) temporallyIntersects))
+   (:GAP (2nd fe_directness) (DNI focalSubject) (CNI focalSubject))
+   (:NOUN (Sfin focalSubject) (VPing focalSubject) (VPed focalSubject)
+    (VPto focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((1 0 0) (4 3 0)) ((1 0 0) (4 1 0)) ((1 0 0) (4 2 0))
+   ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0)) ((1 0 0) (2 1 3)) ((1 0 0) (2 1 0))
+   ((1 0 0) (2 0 0) (4 0 0)) ((1 0 0) (2 6 0) (4 0 0))
+   ((1 0 0) (2 5 0) (4 0 0)) ((1 0 0) (2 2 0) (4 0 0))
+   ((1 0 0) (2 1 5) (4 0 0)) ((0 0 0) (1 0 0) (2 4 0))
+   ((0 0 0) (1 0 0) (2 3 0)) ((0 0 0) (1 0 0) (2 1 5))
+   ((1 0 0) (2 1 4) (2 2 0)) ((1 0 0) (2 1 4) (4 0 0))
+   ((0 0 0) (1 0 0) (2 1 4)) ((1 0 0) (4 0 0) (4 0 0))
+   ((0 0 0) (0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 1 3))
+   ((0 0 0) (1 0 0) (2 1 2)) ((1 0 0) (2 1 1) (4 1 0))
+   ((0 0 0) (1 0 0) (2 1 1)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 1 2) (2 1 5)) ((1 0 0) (2 1 2) (4 0 0) (4 0 0))
+   ((1 0 0) (2 0 0) (2 1 1) (4 0 0)))))
+
+(FNPrepSemtrans (TheList) At-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (NP objectTranslating) (Sfin fe_landmark_event fe_trajector_event)
+    (Sing fe_trajector_event) (VPbrst fe_trajector_event))
+   (:OBJECT ((PPFn around) fe_landmark_period)
+    (NP fe_landmark_event fe_landmark_period fe_trajector_period))
+   (:OBLIQUE-OBJECT (VPing fe_event_description) (NP fe_landmark_period))
+   (:GAP (DNI fe_trajector_event fe_trajector_period))
+   (:NOUN (NP fe_landmark_period) (Sfin fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((2 1 0)) ((1 1 1)) ((0 1 1) (1 0 0)) ((0 3 0) (1 1 1))
+   ((0 2 0) (1 1 1)) ((1 1 1) (4 1 0)) ((0 1 1) (1 1 1)) ((0 1 1) (4 0 0))
+   ((0 0 0) (1 1 1)) ((0 1 0) (1 1 2)) ((0 1 1) (1 1 0))
+   ((0 1 1) (0 1 1) (1 1 1)) ((0 1 1) (1 1 1) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Athwart-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Atop-TheWord (and) (frame FN_Spatial_contact)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction)) (:GAP (DNI fe_ground))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0))
+   ((1 0 0) (4 0 0) (4 0 0)) ((0 0 0) (0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList "because") Of-TheWord (and) (frame FN_Causation)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_effect))
+   (:OBJECT (NP causes-Underspecified) (Sfin causes-Underspecified))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 1 0)) ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Before-TheWord (intervalEndedBy :ACTION :OBJECT)
+ (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (VPto fe_event) (NP duration fe_event) (Sbrst fe_event)
+    (Sto fe_event) (Sfin fe_event fe_landmark_event))
+   (:OBJECT (Sfin fe_event fe_landmark_event) (NP fe_landmark_event)
+    (VPing fe_landmark_event))
+   (:OBLIQUE-OBJECT (AVP duration) ((PPFn for) duration) ((PPFn as) duration)
+    (NP fe_event fe_landmark_event) (Num fe_landmark_event)
+    (VPing fe_landmark_event) (Sfin fe_event fe_landmark_event))
+   (:GAP (-- fe_direction) (INI duration) (CNI fe_event fe_landmark_event))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((2 6 1)) ((1 1 0)) ((0 4 1) (1 0 0)) ((0 4 0) (1 0 1))
+   ((0 1 0) (2 3 1)) ((0 3 0) (1 0 1)) ((0 4 0) (1 2 0)) ((0 4 0) (1 1 0))
+   ((0 2 0) (1 0 1)) ((0 1 1) (2 5 0)) ((0 1 1) (1 1 0)) ((0 1 0) (2 4 0))
+   ((2 3 1) (4 0 0)) ((0 4 0) (0 4 0) (1 0 1)) ((0 4 0) (1 0 1) (2 1 0))
+   ((0 1 0) (2 3 0) (2 6 1)) ((2 2 0) (2 6 0) (2 6 0))
+   ((0 4 0) (0 4 0) (1 2 0)) ((0 4 0) (2 1 0) (2 3 1))
+   ((0 0 0) (1 0 1) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Behind-TheWord (behind-Generally :SUBJECT :OBJECT)
+ (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (NP distanceTranslated temporallyIntersects)
+    (AVP fe_deixis fe_direction fe_directness distanceTranslated
+     fe_temporal_profile temporallyIntersects))
+   (:GAP (2nd fe_accessibility) (CNI focalSubject) (DNI fe_ground))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 0 0) (2 1 4)) ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (2 0 0)) ((1 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 1 5))
+   ((0 0 0) (1 0 0) (2 1 4)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 1 3)) ((0 0 0) (1 0 0) (2 1 1))
+   ((0 0 0) (1 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 1 2))
+   ((0 0 0) (1 0 0) (2 0 1) (2 1 4)) ((0 0 0) (1 0 0) (2 1 1) (2 1 3)))))
+
+(FNPrepSemtrans (TheList) Behind-TheWord (and) (frame FN_Responsibility)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP doneBy)) (:OBJECT (NP fe_act))
+   (:GAP (2nd eventOccursAt temporallyIntersects))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Below-TheWord (and)
+ (frame FN_Directional_locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (NP fe_accessibility distanceTranslated fe_ground)
+    (Num fe_ground)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile temporallyIntersects)
+    ((PPFn at) temporallyIntersects))
+   (:GAP (2nd fe_accessibility fe_directness) (DNI focalSubject fe_ground))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((1 0 0)) ((0 0 0) (2 2 5)) ((1 0 0) (2 2 5))
+   ((1 0 0) (4 0 0)) ((0 0 0) (2 1 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 2))
+   ((0 0 0) (2 2 4)) ((2 2 2) (4 0 0)) ((0 0 0) (2 0 0)) ((0 0 0) (2 2 0))
+   ((0 0 0) (1 0 0) (2 3 0)) ((0 0 0) (1 0 0) (2 2 6))
+   ((0 0 0) (1 0 0) (2 0 1)) ((1 0 0) (2 2 4) (4 0 0))
+   ((0 0 0) (1 0 0) (2 2 4)) ((0 0 0) (1 0 0) (2 2 3))
+   ((0 0 0) (1 0 0) (2 2 2)) ((0 0 0) (2 2 2) (2 2 4))
+   ((0 0 0) (1 0 0) (2 2 1)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 2 0)) ((1 0 0) (2 2 3) (4 0 0))
+   ((0 0 0) (1 0 0) (2 0 1) (2 2 6)) ((0 0 0) (1 0 0) (2 2 1) (2 2 4))
+   ((0 0 0) (1 0 0) (2 2 1) (2 2 2)) ((0 0 0) (1 0 0) (2 2 0) (2 2 6)))))
+
+(FNPrepSemtrans (TheList) Beneath-TheWord (and)
+ (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Beside-TheWord (and)
+ (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AJP distanceTranslated)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile temporallyIntersects))
+   (:GAP (2nd fe_accessibility fe_directness distanceTranslated)
+    (CNI focalSubject) (DNI focalSubject))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((1 0 0) (2 1 5)) ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0))
+   ((1 0 0) (2 1 6) (4 0 0)) ((0 0 0) (1 0 0) (2 1 6))
+   ((0 0 0) (1 0 0) (2 1 5)) ((0 0 0) (0 0 0) (1 0 0))
+   ((1 0 0) (2 1 4) (4 0 0)) ((0 0 0) (1 0 0) (2 1 4))
+   ((0 0 0) (1 0 0) (2 0 0)) ((1 0 0) (2 1 3) (4 0 0))
+   ((1 0 0) (2 1 2) (4 0 0)) ((0 0 0) (1 0 0) (2 1 2))
+   ((0 0 0) (1 0 0) (2 1 1)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 1 3)) ((0 0 0) (1 0 0) (2 1 0) (2 1 1)))))
+
+(FNPrepSemtrans (TheList) Between-TheWord
+ (between :OBJECT :OBLIQUE-OBJECT :SUBJECT)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_deixis fe_direction fe_directness)
+    ((PPFn across) fe_profiled_region))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0) (3 0 0)) ((0 0 0) (1 0 0)) ((1 0 0) (2 1 0) (3 0 0))
+   ((1 0 0) (3 0 0) (3 0 0)) ((0 0 0) (1 0 0) (2 0 2))
+   ((0 0 0) (1 0 0) (2 0 1)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (0 0 0) (1 0 0) (2 0 1)))))
+
+(FNPrepSemtrans (TheList) Beyond-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (N distanceTranslated)
+    (AVP fe_accessibility fe_direction distanceTranslated))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 1 2)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 0 0) (2 1 1)))))
+
+(FNPrepSemtrans (TheList) By-TheWord (doneBy :ACTION :OBJECT) (frame FN_Means)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (VPed by-Underspecified) (NP doneBy purposeOfEvent)
+    (Sfin purposeOfEvent) (VPfin purposeOfEvent))
+   (:OBJECT (NP by-Underspecified) (VPing by-Underspecified))
+   (:OBLIQUE-OBJECT (VPing by-Underspecified) (Sfin by-Underspecified)
+    (NP by-Underspecified purposeOfEvent) ((PPFn over) temporallyIntersects))
+   (:GAP (DNI doneBy) (CNI doneBy purposeOfEvent)
+    (INI doneBy purposeOfEvent))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 3 0) (1 1 0)) ((0 2 0) (1 1 0)) ((0 2 0) (2 0 0))
+   ((0 2 0) (1 0 0)) ((0 2 0) (2 2 0)) ((0 0 0) (1 0 0)) ((0 2 0) (2 1 0))
+   ((0 1 1) (2 0 0)) ((2 2 0) (2 2 1)) ((0 1 1) (2 2 0))
+   ((0 1 1) (2 0 0) (2 3 0)) ((0 2 0) (0 2 0) (1 0 0))
+   ((0 1 0) (0 1 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) By-TheWord (near :SUBJECT :OBJECT)
+ (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT
+    (AVP fe_accessibility fe_deixis fe_direction distanceTranslated
+     temporallyIntersects)
+    (NP temporallyIntersects))
+   (:GAP (2nd fe_directness) (CNI focalSubject) (DNI focalSubject fe_ground))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 3))
+   ((1 0 0) (2 0 2)) ((1 0 0) (2 0 1)) ((1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 4))
+   ((0 0 0) (1 0 0) (2 0 3)) ((0 0 0) (1 0 0) (2 0 2))
+   ((0 0 0) (1 0 0) (2 0 1)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 0 1) (2 0 2)))))
+
+(FNPrepSemtrans (TheList) Circa-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Concerning-TheWord (and) (frame FN_Topic)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP (InverseBinaryPredicateFn topicOfPCW)))
+   (:OBJECT (NP situationTopic)) (:OBLIQUE-OBJECT (NP situationTopic))
+   (:GAP (INI communicatorOfInfo)) (:GEN (Poss situationTopic))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)) ((0 0 0) (4 0 0)))))
+
+(FNPrepSemtrans (TheList) Despite-TheWord (and) (frame FN_Concessive)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (Sfin fe_conceded_state_of_affairs)
+    (VPing fe_conceded_state_of_affairs)
+    (NP fe_conceded_state_of_affairs situationTopic))
+   (:NOUN (Sfin fe_main_assertion) (VPbrst fe_main_assertion)
+    (Sinterrog fe_main_assertion))))
+ (groupPatterns
+  (TheSet ((0 2 1) (1 2 0)) ((0 2 1) (1 0 0)) ((0 1 0) (1 0 0))
+   ((0 0 0) (1 0 0)) ((0 2 0) (1 1 0)) ((0 2 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Despite-TheWord (and)
+ (frame FN_Contrary_circumstances) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Down-TheWord (and)
+ (frame FN_Change_position_on_a_scale)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT ((PPFn to) fe_final_value) ((PPFn on) fe_initial_correlate)
+    ((PPFn from) fe_initial_value))))
+ (groupPatterns (TheSet ((0 0 0) (0 1 0) (0 2 0)))))
+
+(FNPrepSemtrans (TheList) Down-TheWord
+ (direction-Pointing :SUBJECT Down-Generally) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP distanceTranslated))
+   (:GAP (CNI objectFoundInLocation))))
+ (groupPatterns (TheSet ((0 0 0)) ((1 0 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList "down") To-TheWord (outputs :SUBJECT :OBJECT)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "due") To-TheWord
+ (causes-Underspecified :OBJECT :ACTION) (frame FN_Causation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_effect)) (:OBJECT (NP causes-Underspecified))
+   (:OBLIQUE-OBJECT (Sing causes-Underspecified))
+   (:NOUN (VPbrst fe_effect) (Sfin fe_effect))))
+ (groupPatterns (TheSet ((2 0 0) (3 1 0)) ((1 0 0) (3 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList "due") To-TheWord (and)
+ (frame FN_Condition_symptom_relation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) During-TheWord (occursDuring :ACTION :OBJECT)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (Sfin fe_trajector_event)
+    (NP objectTranslating fe_trajector_event))
+   (:OBJECT (NP objectFoundInLocation fe_landmark_event fe_landmark_period))
+   (:OBLIQUE-OBJECT (Sub fe_event_description) (NP fe_landmark_period))
+   (:NOUN (Sfin fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((1 0 2) (3 0 0)) ((0 0 0) (1 0 2)) ((0 1 1) (1 0 2))
+   ((0 0 0) (2 1 0)) ((0 0 0) (1 0 1)) ((0 1 1) (1 0 0)) ((0 1 0) (1 0 0))
+   ((0 0 0) (1 0 1) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) East-TheWord (eastOf :SUBJECT :OBJECT)
+ (frame FN_Locative_relation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Every-TheWord (and) (frame FN_Frequency)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_event) (VPfin fe_event))
+   (:OBJECT (NP fe_interval fe_time_span) (N fe_time_span))
+   (:OBLIQUE-OBJECT ((PPFn between) temporallyIntersects))
+   (:GAP (2nd frequencyOfEvent)) (:NOUN (N fe_interval))))
+ (groupPatterns
+  (TheSet ((4 0 0)) ((0 0 0) (1 0 1)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 0 0)) ((0 1 0) (0 1 0) (1 1 0)))))
+
+(FNPrepSemtrans (TheList) Excluding-TheWord (and) (frame FN_Inclusion)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Following-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_event)) (:OBJECT (NP fe_landmark_event))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) For-TheWord (duration :ACTION :OBJECT)
+ (frame FN_Duration_relation)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP duration)) (:NOUN (Sfin fe_eventuality))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) For-TheWord (supports-Underspecified :NOUN :OBJECT)
+ (frame FN_Taking_sides)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP subjectOfMentalSituation))
+   (:OBLIQUE-OBJECT (NP fe_issue))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) From-TheWord (and) (frame FN_Evidence)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP subjectOfMentalSituation fe_proposition))
+   (:OBJECT (NP fe_support))
+   (:OBLIQUE-OBJECT (VPfin fe_proposition) (NP fe_support))
+   (:NOUN (NP eventOutcomes))))
+ (groupPatterns
+  (TheSet ((2 1 0) (3 0 0)) ((0 0 1) (1 0 0)) ((0 0 0) (2 0 0) (2 1 0)))))
+
+(FNPrepSemtrans (TheList) From-TheWord (and) (frame FN_Origin)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (NP objectActedOn) (Num objectActedOn) (Sfin objectActedOn))
+   (:OBJECT (NP comesFrom-Generic))
+   (:OBLIQUE-OBJECT (NP comesFrom-Generic) ((PPFn from) comesFrom-Generic)
+    ((PPFn within) comesFrom-Generic) (unknown comesFrom-Generic))))
+ (groupPatterns
+  (TheSet ((0 2 0) (1 0 0)) ((0 1 0) (2 0 0)) ((0 0 0) (2 3 0))
+   ((0 0 0) (2 2 0)) ((0 0 0) (2 1 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) From-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP duration fe_event) (Sfin fe_event fe_landmark_event))
+   (:OBJECT (NP duration fe_landmark_event) (VPing fe_landmark_event))
+   (:OBLIQUE-OBJECT (AVP fe_direction) (Sfin fe_event) (Sinterrog fe_event)
+    (VPing fe_landmark_event) (NP fe_landmark_event))
+   (:GAP (-- fe_direction) (DNI duration))
+   (:NOUN (Srel fe_event) (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((0 0 1) (2 4 0)) ((0 1 0) (1 0 1)) ((0 1 1) (1 0 0))
+   ((0 0 0) (1 1 0)) ((1 0 1) (4 0 0)) ((0 1 0) (1 0 0))
+   ((0 0 0) (2 0 0) (2 3 0)) ((0 0 0) (1 0 1) (2 2 0))
+   ((0 0 0) (1 0 1) (4 1 0)) ((0 0 0) (1 0 1) (2 1 0))
+   ((0 1 0) (0 1 0) (1 0 1)))))
+
+(FNPrepSemtrans (TheList) Hence-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP duration fe_event) (Sfin fe_event))
+   (:OBJECT (NP duration)) (:OBLIQUE-OBJECT (NP duration))
+   (:GAP (-- fe_direction) (DNI fe_landmark_event) (INI fe_landmark_event))
+   (:NOUN (Sbrst fe_event) (Sfin fe_event) (Sinterrog fe_event)
+    (Srel fe_event))))
+ (groupPatterns
+  (TheSet ((0 0 0) (4 1 0)) ((2 0 0) (4 3 0)) ((1 0 0) (4 1 0))
+   ((0 1 0) (1 0 0)) ((2 0 0) (4 2 0)) ((2 0 0) (4 1 0)) ((0 0 1) (2 0 0))
+   ((0 0 0) (4 1 0) (4 1 0)) ((2 0 0) (4 0 0) (4 0 0)))))
+
+(FNPrepSemtrans (TheList "in") Among-TheWord (and)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT
+    (AVP fe_directness fe_profiled_region temporallyIntersects))
+   (:GAP (CNI focalSubject)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 0 2)) ((0 0 0) (1 0 0) (2 0 1))
+   ((1 0 0) (2 0 0) (4 0 0)) ((0 0 0) (0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList "in" "back") Of-TheWord
+ (behind-Generally :SUBJECT :OBJECT) (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBLIQUE-OBJECT (AVP fe_direction) ((PPFn of) fe_ground))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((3 0 0)) ((0 0 0)) ((0 0 0) (1 1 0)) ((0 0 0) (1 0 0))
+   ((3 0 0) (3 0 0) (3 0 0)))))
+
+(FNPrepSemtrans (TheList "in") Between-TheWord
+ (between :OBJECT :OBLIQUE-OBJECT :SUBJECT)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_accessibility fe_direction) (Sing fe_ground))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((4 0 0)) ((0 0 0)) ((2 1 0) (4 0 0)) ((1 0 0) (4 0 0))
+   ((0 0 0) (1 0 0)) ((0 0 0) (2 0 1)) ((0 0 0) (0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList "in") Combination-TheWord (and)
+ (frame FN_Accompaniment)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP doneBy))
+   (:OBLIQUE-OBJECT ((PPFn with) fe_co-participant)) (:GAP (DNI doneBy))))
+ (groupPatterns (TheSet ((1 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList "in" "face") Of-TheWord (and)
+ (frame FN_Contrary_circumstances)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_event)) (:OBJECT (NP fe_adversity))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList "in") Favor-TheWord (and) (frame FN_Taking_sides)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP subjectOfMentalSituation))
+   (:OBLIQUE-OBJECT ((PPingFn of) objectActedOn) ((PPFn of) fe_side))
+   (:GAP (DNI subjectOfMentalSituation))))
+ (groupPatterns (TheSet ((1 1 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList "in" "front") Of-TheWord
+ (behind-Generally :OBJECT :SUBJECT) (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject))
+   (:OBJECT (NP fe_ground) ((PPFn of) fe_ground))
+   (:OBLIQUE-OBJECT (NP fe_accessibility distanceTranslated)
+    ((PPFn of) fe_ground)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile temporallyIntersects)
+    ((PPFn in) temporallyIntersects) ((PPFn during) temporallyIntersects)
+    ((PPFn before) temporallyIntersects) ((PPFn for) temporallyIntersects))
+   (:GAP (2nd fe_accessibility fe_directness) (DNI focalSubject fe_ground))
+   (:NOUN (Sto focalSubject) (Sfin focalSubject) (VPing focalSubject))))
+ (groupPatterns
+  (TheSet ((4 2 0)) ((4 1 0)) ((0 0 0)) ((0 0 0) (2 2 5)) ((0 0 0) (2 2 6))
+   ((1 1 0) (4 1 0)) ((2 1 0) (4 1 0)) ((0 0 0) (2 1 0)) ((4 1 0) (4 1 0))
+   ((0 0 0) (0 0 0)) ((0 0 0) (2 0 1)) ((0 0 0) (2 2 2)) ((0 0 0) (2 0 0))
+   ((2 1 0) (2 6 0) (4 1 0)) ((0 0 0) (2 1 0) (2 4 0))
+   ((0 0 0) (2 1 0) (2 2 6)) ((2 2 5) (2 5 0) (4 1 0))
+   ((0 0 0) (2 2 5) (2 3 0)) ((2 1 0) (4 1 0) (4 1 0))
+   ((1 0 0) (4 1 0) (4 1 0)) ((0 0 0) (2 0 1) (2 1 0))
+   ((2 1 0) (2 2 3) (4 1 0)) ((0 0 0) (2 1 0) (2 2 4))
+   ((0 0 0) (2 2 2) (2 2 6)) ((0 0 0) (2 1 0) (2 2 2))
+   ((2 1 0) (2 2 1) (4 1 0)) ((0 0 0) (2 1 0) (2 2 1))
+   ((0 0 0) (2 0 0) (2 2 6)) ((2 1 0) (2 2 0) (4 1 0))
+   ((0 0 0) (2 1 0) (2 2 3)) ((2 2 0) (2 2 1) (2 2 2))
+   ((0 0 0) (2 1 0) (2 2 3) (2 2 6)) ((0 0 0) (2 1 0) (2 2 0) (2 2 2))
+   ((2 1 0) (2 2 0) (2 2 1) (4 0 0)))))
+
+(FNPrepSemtrans (TheList "in" "hopes") Of-TheWord (and) (frame FN_Desiring)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "in" "neighborhood") Of-TheWord (and)
+ (frame FN_Proportional_quantity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "in" "spite") Of-TheWord (and) (frame FN_Concessive)
+ (bindingTemplate
+  (TheList
+   (:OBLIQUE-OBJECT (Sfin fe_conceded_state_of_affairs)
+    (VPing fe_conceded_state_of_affairs)
+    (NP fe_conceded_state_of_affairs situationTopic))
+   (:NOUN (Sfin fe_main_assertion))))
+ (groupPatterns
+  (TheSet ((0 2 1) (1 0 0)) ((0 0 0) (1 0 0)) ((0 2 0) (1 0 0))
+   ((0 1 0) (1 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList "in" "the") Event-TheWord (and)
+ (frame FN_Conditional_occurrence)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_consequence))
+   (:OBLIQUE-OBJECT (Sfin fe_profiled_possibility)
+    ((PPFn of) fe_profiled_possibility))
+   (:GAP (DNI fe_consequence))
+   (:NOUN (Sfin fe_consequence) (Sinterrog fe_consequence) (Sto fe_consequence)
+    (Swhether fe_consequence) (VPbrst fe_consequence) (VPing fe_consequence)
+    (VPto fe_consequence))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((1 1 0) (3 6 0)) ((1 0 0) (3 5 0)) ((1 1 0) (3 5 0))
+   ((1 0 0) (3 4 0)) ((1 1 0) (3 4 0)) ((1 1 0) (3 3 0)) ((1 1 0) (3 2 0))
+   ((1 1 0) (3 1 0)) ((1 0 0) (3 0 0)) ((1 1 0) (3 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 1 0)) ((1 0 0) (3 0 0) (3 0 0)) ((1 1 0) (3 0 0) (3 0 0)))))
+
+(FNPrepSemtrans (TheList "in" "the" "face") Of-TheWord (and)
+ (frame FN_Contrary_circumstances)
+ (bindingTemplate
+  (TheList (:OBJECT (NP fe_adversity))
+   (:NOUN (NP fe_event) (Sfin fe_event) (VPto fe_event))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 2 0)) ((0 0 0) (1 1 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 1 0) (1 1 0)))))
+
+(FNPrepSemtrans (TheList "in" "the" "hope") Of-TheWord (and)
+ (frame FN_Desiring)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectActedOn)) (:OBLIQUE-OBJECT (VPing fe_event))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) In-TheWord
+ (direction-Pointing :SUBJECT InteriorDirection)
+ (frame FN_Expected_location_of_person)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP personFoundInLocation))
+   (:OBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT ((PPFn on) temporallyIntersects)
+    ((PPFn by) temporallyIntersects) ((PPFn after) temporallyIntersects)
+    ((PPFn before) temporallyIntersects) (AVP duration))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 4 0))
+   ((0 0 0) (1 0 0) (2 3 0)) ((0 0 0) (1 0 0) (2 2 0))
+   ((0 0 0) (1 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 0) (2 4 0)))))
+
+(FNPrepSemtrans (TheList) In-TheWord (and) (frame FN_Fields)
+ (bindingTemplate
+  (TheList (:SUBJECT (VPing processTypeForAccomplishmentType))
+   (:OBJECT (NP processTypeForAccomplishmentType))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) In-TheWord (and) (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness focalSubject
+     temporallyIntersects)
+    (NP fe_ground temporallyIntersects) ((PPFn at) temporallyIntersects)
+    ((PPFn during) temporallyIntersects) ((PPFn in) temporallyIntersects)
+    ((PPFn on) temporallyIntersects) ((PPFn since) temporallyIntersects)
+    (Sub temporallyIntersects))
+   (:GAP (2nd fe_direction) (CNI focalSubject) (DNI fe_ground))
+   (:NOUN (Sfin focalSubject) ((PPFn at) focalSubject) (Sing focalSubject)
+    (VPbrst focalSubject) (VPed focalSubject) (VPing focalSubject)
+    (VPto focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((1 0 0)) ((1 0 0) (4 6 0)) ((1 0 0) (4 5 0))
+   ((1 0 0) (4 4 0)) ((1 0 0) (4 3 0)) ((1 0 0) (4 2 0)) ((1 0 0) (4 0 0))
+   ((0 0 0) (1 0 0)) ((0 0 0) (2 1 0)) ((1 0 0) (2 2 0) (4 0 0))
+   ((1 0 0) (2 0 5) (4 1 0)) ((0 0 0) (1 0 0) (2 7 0))
+   ((0 0 0) (1 0 0) (2 6 0)) ((0 0 0) (1 0 0) (2 5 0))
+   ((0 0 0) (1 0 0) (2 4 0)) ((0 0 0) (1 0 0) (2 3 0))
+   ((0 0 0) (1 0 0) (2 2 0)) ((0 0 0) (1 0 0) (2 1 1))
+   ((0 0 0) (1 0 0) (2 0 5)) ((1 0 0) (4 0 0) (4 0 0))
+   ((0 0 0) (0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 0 4))
+   ((1 0 0) (2 0 3) (4 0 0)) ((0 0 0) (1 0 0) (2 0 3))
+   ((1 0 0) (2 0 2) (4 0 0)) ((0 0 0) (1 0 0) (2 0 2))
+   ((0 0 0) (1 0 0) (2 0 1)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 0 2) (2 1 1)) ((0 0 0) (1 0 0) (2 0 2) (2 0 5))
+   ((0 0 0) (1 0 0) (2 0 1) (2 1 1)) ((1 0 0) (2 0 0) (4 0 0) (4 0 0))
+   ((0 0 0) (1 0 0) (2 0 0) (2 0 5) (2 0 5)))))
+
+(FNPrepSemtrans (TheList) In-TheWord (and) (frame FN_Medium)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectOfStateChange) (Sfin objectOfStateChange))
+   (:OBJECT (NP informationSource))))
+ (groupPatterns
+  (TheSet ((0 1 0) (1 0 0)) ((0 0 0) (1 0 0)) ((0 1 0) (0 1 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) In-TheWord (and) (frame FN_Taking_time)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin processTypeForAccomplishmentType) (NP doneBy))
+   (:OBJECT (NP duration))
+   (:OBLIQUE-OBJECT (VPto processTypeForAccomplishmentType) (NP duration))
+   (:GAP (INI doneBy))))
+ (groupPatterns (TheSet ((2 1 0)) ((0 0 0) (1 0 0)) ((0 1 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) In-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (Sub fe_trajector_event) (NP objectTranslating fe_trajector_event)
+    (VPfin fe_trajector_event) (VPbrst fe_trajector_event)
+    (VPed fe_trajector_event) (VPing fe_trajector_event)
+    (Sfin fe_landmark_event fe_trajector_event fe_trajector_period))
+   (:OBJECT (N fe_landmark_event)
+    (NP objectFoundInLocation fe_landmark_event fe_landmark_period))
+   (:OBLIQUE-OBJECT ((PPFn as) fe_event_description)
+    (NP fe_landmark_event fe_landmark_period))
+   (:GAP (CNI fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((1 1 2)) ((0 5 0) (1 1 2)) ((0 4 0) (1 1 2)) ((0 3 0) (1 1 2))
+   ((0 6 1) (1 1 2)) ((0 1 1) (1 1 2)) ((0 2 0) (2 1 1)) ((0 6 1) (2 1 1))
+   ((0 1 1) (2 1 1)) ((0 1 0) (1 1 2)) ((0 1 0) (2 1 1)) ((0 1 1) (1 1 1))
+   ((0 0 0) (2 1 0)) ((0 6 1) (1 0 0)) ((0 6 0) (2 1 1)) ((0 6 1) (1 1 0))
+   ((0 6 2) (0 6 2) (1 1 2)) ((0 6 1) (0 6 1) (1 1 2))
+   ((0 6 1) (1 1 2) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) In-TheWord (and) (frame FN_Wearing)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP wearer)) (:OBJECT (NP wearsClothing))
+   (:OBLIQUE-OBJECT (NP wearsClothing) (AVP temporallyIntersects wearer))
+   (:GAP (-- wearer))))
+ (groupPatterns
+  (TheSet ((2 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)) ((2 0 0) (2 1 1))
+   ((0 0 0) (1 0 0) (2 1 0)))))
+
+(FNPrepSemtrans (TheList) Including-TheWord (and) (frame FN_Inclusion)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_total)) (:OBJECT (NP parts fe_total))
+   (:OBLIQUE-OBJECT (NP parts) (VPing parts) (Sfin fe_total))
+   (:GAP (DNI fe_total)) (:NOUN (NP fe_total))))
+ (groupPatterns
+  (TheSet ((2 1 0)) ((1 0 0)) ((2 0 0)) ((0 0 0) (1 0 1)) ((0 0 0) (2 1 0))
+   ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0))
+   ((0 0 0) (2 0 0) (2 2 0)))))
+
+(FNPrepSemtrans (TheList) Inside-TheWord (and)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT ((PPFn of) fe_ground)
+    (AVP fe_accessibility fe_direction fe_profiled_region)
+    ((PPFn at) temporallyIntersects))
+   (:GAP (CNI focalSubject) (DNI fe_ground))
+   (:NOUN (VPing focalSubject) (NP focalSubject) (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((4 0 0)) ((1 0 0)) ((0 0 0) (2 2 0)) ((1 0 0) (4 0 0))
+   ((2 0 0) (4 2 0)) ((1 0 0) (4 2 0)) ((0 0 0) (2 0 0)) ((0 0 0) (1 0 0))
+   ((1 0 0) (2 1 1)) ((1 0 0) (2 1 0)) ((2 0 0) (2 1 2) (4 2 0))
+   ((2 0 0) (4 2 0) (4 2 0)) ((1 0 0) (4 2 0) (4 2 0))
+   ((2 0 0) (4 1 0) (4 1 0)) ((0 0 0) (0 0 0) (2 0 0))
+   ((1 0 0) (2 1 0) (4 0 0)) ((0 0 0) (2 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 1 0) (2 1 1)))))
+
+(FNPrepSemtrans (TheList) Into-TheWord (to-Generic :ACTION :OBJECT)
+ (frame FN_Goal)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectTranslating)) (:OBJECT (NP to-Generic))
+   (:GAP (CNI objectTranslating))))
+ (groupPatterns (TheSet ((1 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Into-TheWord (toState :ACTION :OBJECT)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Like-TheWord (and) (frame FN_Similarity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_differentiating_fact objectOfMentalSituation))
+   (:OBJECT (NP hasPhysicalQuantity objectOfMentalSituation))
+   (:OBLIQUE-OBJECT (AVP fe_degree) (VPfin hasPhysicalQuantity)
+    (NP fe_degree objectOfMentalSituation) (VPing objectOfMentalSituation))
+   (:GAP (INI fe_differentiating_fact hasPhysicalQuantity) (-- fe_entities)
+    (DNI fe_differentiating_fact hasPhysicalQuantity
+     objectOfMentalSituation))))
+ (groupPatterns
+  (TheSet ((1 0 1)) ((1 0 0)) ((0 0 1) (2 3 0)) ((0 0 1) (1 0 1))
+   ((0 0 1) (2 2 1)) ((0 0 0) (1 0 1)) ((0 0 1) (1 0 1) (2 1 0))
+   ((0 0 1) (2 1 0) (2 2 1)) ((0 0 1) (2 0 0) (2 2 1))
+   ((0 0 1) (1 0 1) (2 2 0)) ((0 0 1) (1 0 1) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Minus-TheWord (and)
+ (frame FN_Non-commutative_statement) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Near-TheWord (near :NOUN :OBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:GAP (DNI objectFoundInLocation)) (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((1 0 0)) ((1 0 0) (3 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList "next") To-TheWord (adjacentTo :NOUN :OBJECT)
+ (frame FN_Adjacency)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated)
+    ((PPFn to) fe_ground) (Sub temporallyIntersects))
+   (:GAP (2nd fe_accessibility) (DNI focalSubject) (INI focalSubject))
+   (:NOUN (Sfin focalSubject) (Sbrst focalSubject))))
+ (groupPatterns
+  (TheSet ((2 1 0)) ((2 1 0) (4 0 0)) ((1 0 0) (4 0 0)) ((2 1 0) (4 1 0))
+   ((0 0 0) (2 1 0)) ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 0 4)) ((0 0 0) (1 0 0) (2 0 2))
+   ((0 0 0) (1 0 0) (2 0 1)) ((1 0 0) (2 0 0) (4 0 0))
+   ((0 0 0) (2 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 0 3)) ((0 0 0) (1 0 0) (2 0 0) (2 2 0)))))
+
+(FNPrepSemtrans (TheList) North-TheWord (northOf :SUBJECT :OBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT ((PPFn of) fe_ground)) (:GAP (DNI fe_ground))
+   (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((0 0 0)) ((1 0 0) (3 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Northeast-TheWord (northeastof :SUBJECT :OBJECT)
+ (frame FN_Locative_relation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Northwest-TheWord (northwestof :SUBJECT :OBJECT)
+ (frame FN_Locative_relation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Of-TheWord (and) (frame FN_Age)
+ (bindingTemplate (TheList (:SUBJECT (NP objectActedOn)) (:OBJECT (NP age))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Of-TheWord (and) (frame FN_Partitive)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_subset)) (:OBJECT (NP groupMembers))
+   (:OBLIQUE-OBJECT (NP groupMembers)) (:GAP (DNI fe_subset))))
+ (groupPatterns (TheSet ((1 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Off-TheWord
+ (accuracyLevelOfType :NOUN (LowAmountFn Accuracy)) (frame FN_Accuracy)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Off-TheWord (isa :NOUN Device-Off)
+ (frame FN_Being_in_operation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Off-TheWord (not (on-Physical :NOUN :OBJECT))
+ (frame FN_Spatial_contact)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_accessibility) (N fe_accessibility))
+   (:GAP (DNI fe_ground))))
+ (groupPatterns
+  (TheSet ((0 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) On-TheWord
+ (accuracyLevelOfType :NOUN (HighAmountFn Accuracy)) (frame FN_Accuracy)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) On-TheWord (isa :NOUN Device-On)
+ (frame FN_Being_in_operation)
+ (bindingTemplate (TheList (:SUBJECT (NP deviceUsed))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNPrepSemtrans (TheList) On-TheWord (and) (frame FN_Means)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin purposeOfEvent)) (:OBJECT (NP by-Underspecified))
+   (:OBLIQUE-OBJECT (NP by-Underspecified)) (:GAP (2nd doneBy) (CNI doneBy))
+   (:NOUN (Sfin purposeOfEvent))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0))
+   ((2 0 0) (4 0 0) (4 0 0)))))
+
+(FNPrepSemtrans (TheList) On-TheWord (and) (frame FN_Non-gradable_proximity)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) On-TheWord (on-Physical :NOUN :OBJECT)
+ (frame FN_Spatial_contact)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject fe_ground))
+   (:OBJECT (NP focalSubject fe_ground))
+   (:OBLIQUE-OBJECT (AJP focalSubject) ((PPFn to) fe_ground)
+    (NP temporallyIntersects)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     fe_temporal_profile temporallyIntersects))
+   (:GAP (CNI focalSubject) (DNI focalSubject fe_ground))
+   (:NOUN (Sfin focalSubject) (VPed focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 1)) ((0 0 0)) ((0 0 0) (2 3 4)) ((1 0 1) (4 1 0))
+   ((1 0 1) (4 0 0)) ((0 0 0) (1 0 1)) ((1 0 1) (2 0 0))
+   ((0 0 0) (1 0 1) (2 2 0)) ((0 0 0) (1 0 1) (2 3 5))
+   ((0 0 0) (2 1 0) (2 3 4)) ((0 0 0) (1 0 1) (2 3 4))
+   ((1 0 1) (1 0 1) (4 0 0)) ((0 0 1) (0 0 1) (1 0 0))
+   ((0 0 0) (1 0 1) (1 0 1)) ((1 0 1) (4 0 0) (4 0 0))
+   ((0 0 0) (0 0 0) (1 0 1)) ((1 0 1) (2 3 3) (2 3 5))
+   ((1 0 1) (2 3 3) (4 0 0)) ((0 0 0) (2 1 0) (2 3 3))
+   ((0 0 0) (1 0 1) (2 3 3)) ((0 0 0) (1 0 1) (2 3 2))
+   ((0 0 0) (0 0 0) (2 3 2)) ((1 0 1) (2 2 0) (2 3 1))
+   ((1 0 1) (2 3 1) (4 0 0)) ((0 0 0) (1 0 1) (2 3 1))
+   ((0 0 0) (2 1 0) (2 3 0)) ((0 0 0) (1 0 1) (2 3 0))
+   ((0 0 0) (1 0 1) (2 3 4) (2 3 5)) ((0 0 0) (1 0 1) (2 2 0) (2 3 1))
+   ((0 0 0) (0 0 0) (1 0 1) (2 3 1)) ((0 0 0) (1 0 1) (2 3 0) (2 3 2)))))
+
+(FNPrepSemtrans (TheList) On-TheWord (dateOfEvent :NOUN :OBJECT)
+ (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_trajector_event) (NP fe_trajector_period))
+   (:OBJECT (NP fe_landmark_event fe_landmark_period))
+   (:NOUN (NP fe_trajector_event) (Sfin fe_trajector_event))))
+ (groupPatterns
+  (TheSet ((0 1 0) (1 0 1)) ((0 0 0) (1 0 1)) ((1 0 1) (2 0 0))
+   ((0 0 0) (1 0 0)) ((1 0 1) (2 1 0) (2 1 0)) ((0 0 0) (0 0 0) (1 0 1)))))
+
+(FNPrepSemtrans (TheList) On-TheWord (topicOf :NOUN :OBJECT) (frame FN_Topic)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (NP communicatorOfInfo (InverseBinaryPredicateFn topicOfPCW)))
+   (:OBJECT (NP situationTopic))
+   (:OBLIQUE-OBJECT (NP situationTopic) (Swhether situationTopic))))
+ (groupPatterns (TheSet ((0 0 1) (2 1 0)) ((0 0 1) (1 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList "on" "top") Of-TheWord (on-Physical :NOUN :OBJECT)
+ (frame FN_Spatial_contact) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Opposite-TheWord (and)
+ (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:NOUN (Sfin focalSubject))))
+ (groupPatterns (TheSet ((1 0 0) (2 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList "out") Of-TheWord (and) (frame FN_Partitive)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_subset)) (:OBJECT (NP groupMembers))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Out-TheWord
+ (direction-Pointing :SUBJECT ExteriorDirection)
+ (frame FN_Expected_location_of_person)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP personFoundInLocation))
+   (:OBLIQUE-OBJECT (AVP duration) ((PPFn of) objectFoundInLocation))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (1 0 0) (1 1 0)))))
+
+(FNPrepSemtrans (TheList) Out-TheWord
+ (direction-Pointing :SUBJECT ExteriorDirection) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (AVP distanceTranslated) ((PPFn of) fe_ground))
+   (:GAP (DNI fe_ground))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (1 1 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Outside-TheWord (and)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_accessibility))
+   (:NOUN (Sfin focalSubject) (VPing focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0) (3 1 0)) ((1 0 0) (3 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Over-TheWord (and) (frame FN_Distributed_position)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP situationConstituents))
+   (:OBJECT (NP objectFoundInLocation)) (:OBLIQUE-OBJECT (AJP fe_deixis))
+   (:GAP (DNI situationConstituents))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Over-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((1 0 0) (2 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Over-TheWord
+ (over-UnderspecifiedLocation :ACTION :OBJECT)
+ (frame FN_Non-gradable_proximity) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Over-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_individuals))
+   (:OBJECT (NP fe_denoted_quantity fe_reference_quantity))
+   (:OBLIQUE-OBJECT (AVP fe_degree fe_q_prop)
+    (NP fe_degree fe_individuals fe_reference_quantity)
+    (Num fe_reference_quantity))
+   (:GAP (-- fe_denoted_quantity) (2nd fe_denoted_quantity fe_individuals)
+    (DNI fe_individuals) (INI fe_reference_quantity))
+   (:NOUN (N fe_individuals) (NP fe_individuals))))
+ (groupPatterns
+  (TheSet ((2 1 1)) ((4 0 0)) ((2 1 0)) ((0 0 0) (1 0 0)) ((2 1 2) (4 1 0))
+   ((2 2 0) (4 0 0)) ((2 1 1) (2 2 0)) ((2 0 1) (2 1 2))
+   ((1 0 1) (2 0 0) (4 0 0)))))
+
+(FNPrepSemtrans (TheList) Over-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Past-TheWord (and) (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((1 0 0) (2 0 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Post-TheWord (after :NOUN :OBJECT)
+ (frame FN_Time_vector) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Pre-TheWord (after :OBJECT :NOUN)
+ (frame FN_Time_vector) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Regarding-TheWord (and) (frame FN_Topic)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP (InverseBinaryPredicateFn topicOfPCW)))
+   (:OBJECT (NP situationTopic)) (:OBLIQUE-OBJECT (NP situationTopic))
+   (:GAP (2nd communicatorOfInfo))))
+ (groupPatterns
+  (TheSet ((0 0 0) (2 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Since-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_event)) (:OBJECT (NP fe_landmark_event))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) South-TheWord (northOf :OBJECT :SUBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (AVP distanceTranslated) ((PPFn of) fe_ground))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin objectFoundInLocation))))
+ (groupPatterns (TheSet ((0 0 0)) ((1 0 0) (1 1 0) (3 0 0)))))
+
+(FNPrepSemtrans (TheList) Southeast-TheWord (sourtheastOf :SUBJECT :OBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation))
+   (:OBLIQUE-OBJECT (NP distanceTranslated) ((PPFn of) fe_ground))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0) (1 1 0)))))
+
+(FNPrepSemtrans (TheList) Southwest-TheWord (southwestof :SUBJECT :OBJECT)
+ (frame FN_Locative_relation) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Through-TheWord
+ (temporallyContinuousDuring :SUBJECT :OBJECT) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_event)) (:OBJECT (NP fe_landmark_event))
+   (:OBLIQUE-OBJECT (NP fe_event fe_landmark_event))
+   (:GAP (-- fe_direction) (INI duration))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)) ((2 0 0) (2 0 1)))))
+
+(FNPrepSemtrans (TheList) Through-TheWord
+ (trajectoryPassesThrough :SUBJECT :OBJECT) (frame FN_Path_traveled)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin trajectory-Complete))
+   (:OBJECT (NP trajectory-Complete alongObject))
+   (:OBLIQUE-OBJECT (NP trajectory-Complete alongObject))
+   (:GAP (-- fe_direction) (INI lengthOfObject))))
+ (groupPatterns (TheSet ((1 0 0)) ((0 0 0) (1 0 1)) ((2 0 0) (2 0 1)))))
+
+(FNPrepSemtrans (TheList) Through-TheWord (isa :OBLIQUE-OBJECT MethodType)
+ (frame FN_Means)
+ (bindingTemplate
+  (TheList
+   (:SUBJECT (VPed by-Underspecified) (NP doneBy purposeOfEvent)
+    (Sfin purposeOfEvent) (VPfin purposeOfEvent))
+   (:OBJECT (NP by-Underspecified) (VPing by-Underspecified))
+   (:OBLIQUE-OBJECT (VPing by-Underspecified) (Sfin by-Underspecified)
+    (NP by-Underspecified purposeOfEvent) ((PPFn over) temporallyIntersects))
+   (:GAP (DNI doneBy) (CNI doneBy purposeOfEvent)
+    (INI doneBy purposeOfEvent))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 3 0) (1 1 0)) ((0 2 0) (1 1 0)) ((0 2 0) (2 0 0))
+   ((0 2 0) (1 0 0)) ((0 2 0) (2 2 0)) ((0 0 0) (1 0 0)) ((0 2 0) (2 1 0))
+   ((0 1 1) (2 0 0)) ((2 2 0) (2 2 1)) ((0 1 1) (2 2 0))
+   ((0 1 1) (2 0 0) (2 3 0)) ((0 2 0) (0 2 0) (1 0 0))
+   ((0 1 0) (0 1 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) To-TheWord (to-Generic :ACTION :OBJECT)
+ (frame FN_Goal)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectTranslating) (Poss objectTranslating))
+   (:OBJECT (NP to-Generic)) (:OBLIQUE-OBJECT ((PPFn on) temporallyIntersects))
+   (:GAP (CNI objectTranslating))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((0 1 0) (1 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) To-TheWord (toLocation :ACTION :OBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction) (NP fe_direction))
+   (:GAP (DNI fe_ground))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) To-TheWord (endOfPath :NOUN :OBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_direction) (NP fe_direction))
+   (:GAP (DNI fe_ground))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (2 1 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Toward-TheWord (towardLocation :ACTION :OBJECT)
+ (frame FN_Misc) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "under" "suspicion") Of-TheWord (and)
+ (frame FN_Suspicion) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList "under" "the" "influence") Of-TheWord (and)
+ (frame FN_Intoxication) (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Under-TheWord (and) (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (NP distanceTranslated)
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile))
+   (:GAP (DNI focalSubject fe_ground))
+   (:NOUN (Sfin focalSubject) (VPbrst focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0) (2 1 5)) ((1 0 0) (4 1 0)) ((1 0 0) (4 0 0))
+   ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)) ((1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 1 5)) ((0 0 0) (1 0 0) (1 0 0))
+   ((1 0 0) (4 0 0) (4 0 0)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 1 3)) ((0 0 0) (1 0 0) (2 1 2))
+   ((0 0 0) (1 0 0) (2 1 1)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 1 3) (2 1 4)) ((0 0 0) (0 0 0) (1 0 0) (2 1 1))
+   ((0 0 0) (1 0 0) (2 1 0) (2 1 2)))))
+
+(FNPrepSemtrans (TheList) Under-TheWord (and) (frame FN_Proportional_quantity)
+ (bindingTemplate
+  (TheList (:OBLIQUE-OBJECT (NP fe_reference_quantity))
+   (:GAP (-- fe_denoted_quantity) (INI fe_individuals))))
+ (groupPatterns (TheSet ((0 0 0)))))
+
+(FNPrepSemtrans (TheList) Underneath-TheWord
+ (under-UnderspecifiedLocation :ACTION :OBJECT)
+ (frame FN_Non-gradable_proximity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject) (Sfin focalSubject))
+   (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT
+    (AVP fe_accessibility fe_deixis fe_direction fe_directness
+     distanceTranslated fe_temporal_profile temporallyIntersects)
+    (NP distanceTranslated temporallyIntersects))
+   (:GAP (2nd fe_directness) (CNI focalSubject) (DNI fe_ground))
+   (:NOUN (Sfin focalSubject)) (:APPOSITIVE (NP focalSubject))))
+ (groupPatterns
+  (TheSet ((4 0 0)) ((0 0 0)) ((1 0 0)) ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0))
+   ((0 0 0) (2 0 1)) ((0 1 0) (1 0 0) (2 0 6)) ((0 0 0) (1 0 0) (2 1 1))
+   ((0 0 0) (1 0 0) (2 0 6)) ((0 0 0) (1 0 0) (2 0 5))
+   ((0 0 0) (0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (5 0 0))
+   ((0 0 0) (1 0 0) (2 0 3)) ((0 0 0) (1 0 0) (2 0 4))
+   ((0 0 0) (1 0 0) (2 0 2)) ((0 0 0) (1 0 0) (2 0 1))
+   ((0 0 0) (1 0 0) (2 0 0)) ((0 0 0) (1 0 0) (2 0 2) (2 1 0)))))
+
+(FNPrepSemtrans (TheList) Unlike-TheWord (and) (frame FN_Similarity)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectOfMentalSituation objectOfMentalSituation))
+   (:OBJECT (NP objectOfMentalSituation objectOfMentalSituation))
+   (:OBLIQUE-OBJECT (AVP fe_degree) ((PPFn in) hasPhysicalQuantity))
+   (:GAP (INI hasPhysicalQuantity) (2nd hasPhysicalQuantity))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 0 0) (2 1 0)))))
+
+(FNPrepSemtrans (TheList) Until-TheWord (and) (frame FN_Time_vector)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_event) (VPing fe_event) (Sfin fe_event))
+   (:OBJECT (NP fe_landmark_event) (Sfin fe_landmark_event))
+   (:OBLIQUE-OBJECT (Srel fe_event) (NP fe_landmark_event)
+    (Sfin fe_event fe_landmark_event))
+   (:GAP (-- fe_direction) (DNI duration) (INI duration))
+   (:NOUN (Sfin fe_event))))
+ (groupPatterns
+  (TheSet ((0 2 0) (1 1 0)) ((1 0 0) (2 0 0)) ((1 1 0) (4 0 0))
+   ((0 2 0) (2 2 1)) ((0 1 0) (1 1 0)) ((2 1 0) (2 2 0)) ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Up-TheWord (direction-Pointing :SUBJECT Up-Generally)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (NP distanceTranslated))
+   (:GAP (-- fe_direction) (DNI fe_ground))))
+ (groupPatterns (TheSet ((0 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList "up") To-TheWord
+ (capableOf :SUBJECT :OBJECT performedBy) (frame FN_Being_up_to_it)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectActedOn))
+   (:OBJECT (VPing processTypeForAccomplishmentType))
+   (:OBLIQUE-OBJECT (Sabs situationConstituents))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList "up") To-TheWord (and)
+ (frame FN_Continued_state_of_affairs)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP fe_state_of_affairs))
+   (:OBLIQUE-OBJECT (NP fe_reference_occasion))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) Upon-TheWord (and) (frame FN_Spatial_contact)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT
+    (AVP fe_deixis fe_direction fe_directness fe_temporal_profile
+     temporallyIntersects))
+   (:GAP (DNI focalSubject))
+   (:NOUN (VPtorel focalSubject) (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((1 0 0) (4 1 0)) ((0 0 0) (1 0 0)) ((1 0 0) (2 0 2))
+   ((0 0 0) (1 0 0) (2 0 4)) ((0 0 0) (1 0 0) (2 0 3))
+   ((0 0 0) (1 0 0) (1 0 0)) ((0 0 0) (0 0 0) (1 0 0))
+   ((1 0 0) (2 0 2) (4 0 0)) ((0 0 0) (1 0 0) (2 0 2))
+   ((0 0 0) (1 0 0) (2 0 1)) ((0 0 0) (1 0 0) (2 0 0))
+   ((0 0 0) (1 0 0) (2 0 1) (2 0 4)) ((0 0 0) (0 0 0) (1 0 0) (2 0 1)))))
+
+(FNPrepSemtrans (TheList) West-TheWord (westOf :SUBJECT :OBJECT)
+ (frame FN_Locative_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP objectFoundInLocation)) (:OBJECT (NP fe_ground))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)))))
+
+(FNPrepSemtrans (TheList) With-TheWord (accompaniedBy :SUBJECT :OBJECT :ACTION)
+ (frame FN_Accompaniment)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP doneBy)) (:OBJECT (NP fe_co-participant))
+   (:OBLIQUE-OBJECT (NP fe_co-participant)) (:GAP (DNI doneBy))))
+ (groupPatterns
+  (TheSet ((1 0 0)) ((2 0 0)) ((0 0 0) (1 0 0)) ((0 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) With-TheWord (instrument-Generic :ACTION :OBJECT)
+ (frame FN_Have_associated) (bindingTemplate (TheList))
+ (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Within-TheWord
+ (inside-UnderspecifiedRegion :SUBJECT :OBJECT)
+ (frame FN_Interior_profile_relation)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP fe_ground))
+   (:OBLIQUE-OBJECT (AVP fe_accessibility) (AJP focalSubject))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin focalSubject) (VPing focalSubject))))
+ (groupPatterns
+  (TheSet ((4 1 0)) ((4 0 0)) ((0 0 0)) ((2 1 0)) ((1 0 0) (4 1 0))
+   ((1 0 0) (4 0 0)) ((0 0 0) (1 0 0)) ((4 0 0) (4 0 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Within-TheWord (and) (frame FN_Temporal_collocation)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin fe_trajector_event))
+   (:OBJECT (NP fe_landmark_period))
+   (:OBLIQUE-OBJECT ((PPFn with) fe_trajector_event))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)) ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Within-TheWord (and) (frame FN_Within_distance)
+ (bindingTemplate
+  (TheList (:SUBJECT (NP focalSubject)) (:OBJECT (NP distanceTranslated))
+   (:OBLIQUE-OBJECT ((PPFn of) fe_ground) ((PPFn to) fe_ground))
+   (:GAP (DNI fe_ground)) (:NOUN (Sfin focalSubject))))
+ (groupPatterns
+  (TheSet ((0 0 0) (1 0 0)) ((1 0 0) (2 0 0) (4 0 0)) ((0 0 0) (1 0 0) (2 1 0))
+   ((0 0 0) (1 0 0) (2 0 0)))))
+
+(FNPrepSemtrans (TheList) Without-TheWord (and) (frame FN_Negation)
+ (bindingTemplate (TheList)) (groupPatterns (TheSet)))
+
+(FNPrepSemtrans (TheList) Via-TheWord
+ (trajectoryPassesThrough :SUBJECT :OBJECT) (frame FN_Path_traveled)
+ (bindingTemplate
+  (TheList (:SUBJECT (Sfin trajectory-Complete)) (:OBJECT (NP alongObject))
+   (:OBLIQUE-OBJECT (NP trajectory-Complete alongObject))
+   (:GAP (-- fe_direction) (INI lengthOfObject))))
+ (groupPatterns (TheSet ((0 0 0) (1 0 0)) ((2 0 0) (2 0 1)))))

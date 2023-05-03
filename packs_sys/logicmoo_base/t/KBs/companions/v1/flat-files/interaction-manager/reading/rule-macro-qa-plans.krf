@@ -1,0 +1,153 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: rule-macro-qa-plans.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: March 10, 2014 04:08:05
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;(isa genSimpleRMPQuestionsFromIsaList Predicate)
+;;;(arity 
+
+(isa getSimpleRMPQuestionsFromMt ComplexActionPredicate)
+(arity getSimpleRMPQuestionsFromMt 3)
+(arg1Isa getSimpleRMPQuestionsFromMt Microtheory)
+(arg2Isa getSimpleRMPQuestionsFromMt Microtheory)
+(arg3Isa getSimpleRMPQuestionsFromMt Thing)
+(comment getSimpleRMPQuestionsFromMt "(getSimpleRMPQuestionsFromMt ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+generates a list of questions for the collections in ?stored-reading-mt using rulemacropredicates and a conservative
+method for choosing which RMP to choose. ?mt-to-store-in is where they are stored, and ?kb-or-wm is WM if they're
+to be stored in working memory, and anything else if they're to be stored in the KB")
+
+;;; This version stores them in the KB - nevermind, these can be combined.
+(preconditionForMethod
+ (and
+      ;;;(different ?kb-or-wm WM)
+      (evaluate ?isas-to-use
+        ;;; This looks a little weird and inefficient, but we cannot look for isas directly.
+        (TheClosedRetrievalSetOf (isa ?entity-in-mt ?collection-of-that-entity)
+          (and
+               (lookupOnly (ist-Information ?stored-reading-mt ?fact))
+               (unifies (isa ?entity-in-mt ?collection-of-that-entity) ?fact)))))
+ (methodForAction
+    (getSimpleRMPQuestionsFromMt ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+    (actionSequence
+     (TheList
+      (doForEach ?next-isa ?isas-to-use
+               (getSimpleRMPQuestionsFromMt-NextIsa ?next-isa ?isas-to-use ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)) 
+      (doAnnounce "~%Finished GetSimpleRMPQuestionsFromMt." ())))))
+
+(isa getSimpleRMPQuestionsFromMt-NextIsa ComplexActionPredicate)
+(arity getSimpleRMPQuestionsFromMt-NextIsa 5)
+(arg1Isa getSimpleRMPQuestionsFromMt-NextIsa CycLSentence-Assertible)
+(arg2Isa getSimpleRMPQuestionsFromMt-NextIsa Set)
+(arg3Isa getSimpleRMPQuestionsFromMt-NextIsa Microtheory)
+(arg4Isa getSimpleRMPQuestionsFromMt-NextIsa Microtheory)
+(arg5Isa getSimpleRMPQuestionsFromMt-NextIsa Thing)
+(comment getSimpleRMPQuestionsFromMt-NextIsa "(getSimpleRMPQuestionsFromMt-NextIsa ?next-isa ?isas-to-use ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+generates a list of questions for the collection in ?next-isa using rulemacropredicates and a conservative
+method for choosing which RMP to choose. ?mt-to-store-in is where they are stored, and ?kb-or-wm is WM if they're
+to be stored in working memory, and anything else if they're to be stored in the KB")
+
+(isa generatedRMPQuestions ComplexActionPredicate)
+(arity generatedRMPQuestions 3)
+(arg1Isa generatedRMPQuestions CycLSentence-Assertible)
+(arg2Isa generatedRMPQuestions Set)
+(arg3Isa generatedRMPQuestions List)
+(comment generatedRMPQuestions "(generatedRMPQuestions ?next-isa ?isas-to-use ?questions)
+generates a list of questions for the collections in ?next-isa using rulemacropredicates and a conservative
+method for choosing which RMP to choose. Use it as an outsourced predicate with the third argument
+open.")
+
+(isa questionToAsk Predicate)
+(arity questionToAsk 1)
+(arg1Isa questionToAsk CycLSentence-Assertible)
+(comment questionToAsk "(questionToAsk ?statement) indicates that questionToAsk is a potential question
+to ask about what we've just read. It's important that these are stored in a microtheory relevent to
+the current task, otherwise they don't really mean anything.")
+
+(preconditionForMethod
+ (and
+      (different ?kb-or-wm WM)   
+      (generatedRMPQuestions ?next-isa ?isas-to-use ?questions)
+  )
+ (methodForAction
+    (getSimpleRMPQuestionsFromMt-NextIsa ?next-isa ?isas-to-use ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+    (actionSequence
+     (TheList
+      (doRecordMembersInContext ?mt-to-store-in ?questions)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa getTransitiveRMPQuestionsFromMt ComplexActionPredicate)
+(arity getTransitiveRMPQuestionsFromMt 3)
+(arg1Isa getTransitiveRMPQuestionsFromMt Microtheory)
+(arg2Isa getTransitiveRMPQuestionsFromMt Microtheory)
+(arg3Isa getTransitiveRMPQuestionsFromMt Thing)
+(comment getTransitiveRMPQuestionsFromMt "(getTransitiveRMPQuestionsFromMt ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+generates a list of questions for the collections in ?stored-reading-mt using rulemacropredicates and an aggressive
+method for choosing which RMP to choose. ?mt-to-store-in is where they are stored, and ?kb-or-wm is WM if they're
+to be stored in working memory, and anything else if they're to be stored in the KB")
+
+;;; This version stores them in the KB - nevermind, these can be combined.
+(preconditionForMethod
+ (and
+      ;;;(different ?kb-or-wm WM)
+      (evaluate ?isas-to-use
+        ;;; This looks a little weird and inefficient, but we cannot look for isas directly.
+        (TheClosedRetrievalSetOf (isa ?entity-in-mt ?collection-of-that-entity)
+          (and
+               (lookupOnly (ist-Information ?stored-reading-mt ?fact))
+               (unifies (isa ?entity-in-mt ?collection-of-that-entity) ?fact)))))
+ (methodForAction
+    (getTransitiveRMPQuestionsFromMt ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+    (actionSequence
+     (TheList
+      (doForEach ?next-isa ?isas-to-use
+               (getTransitiveRMPQuestionsFromMt-NextIsa ?next-isa ?isas-to-use ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)) 
+      (doAnnounce "~%Finished getTransitiveRMPQuestionsFromMt" ())))))
+
+(isa getTransitiveRMPQuestionsFromMt-NextIsa ComplexActionPredicate)
+(arity getTransitiveRMPQuestionsFromMt-NextIsa 5)
+(arg1Isa getTransitiveRMPQuestionsFromMt-NextIsa CycLSentence-Assertible)
+(arg2Isa getTransitiveRMPQuestionsFromMt-NextIsa Set)
+(arg3Isa getTransitiveRMPQuestionsFromMt-NextIsa Microtheory)
+(arg4Isa getTransitiveRMPQuestionsFromMt-NextIsa Microtheory)
+(arg5Isa getTransitiveRMPQuestionsFromMt-NextIsa Thing)
+(comment getTransitiveRMPQuestionsFromMt-NextIsa "(getSimpleRMPQuestionsFromMt-NextIsa ?next-isa ?isas-to-use ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+generates a list of questions for the collection in ?next-isa using rulemacropredicates and an aggressive
+method for choosing which RMP to choose. ?mt-to-store-in is where they are stored, and ?kb-or-wm is WM if they're
+to be stored in working memory, and anything else if they're to be stored in the KB")
+
+(isa generatedRMPQuestions-Transitive ComplexActionPredicate)
+(arity generatedRMPQuestions-Transitive 3)
+(arg1Isa generatedRMPQuestions-Transitive CycLSentence-Assertible)
+(arg2Isa generatedRMPQuestions-Transitive Set)
+(arg3Isa generatedRMPQuestions-Transitive List)
+(comment generatedRMPQuestions-Transitive "(generatedRMPQuestions-Transitive ?next-isa ?isas-to-use ?questions)
+generates a list of questions for the collections in ?next-isa using rulemacropredicates and
+method for choosing RMP that allows genls. Use it as an outsourced predicate with the third argument
+open.")
+
+(preconditionForMethod
+ (and
+      (different ?kb-or-wm WM)   
+      (generatedRMPQuestions-Transitive ?next-isa ?isas-to-use ?questions)
+  )
+ (methodForAction
+    (getTransitiveRMPQuestionsFromMt-NextIsa ?next-isa ?isas-to-use ?stored-reading-mt ?mt-to-store-in ?kb-or-wm)
+    (actionSequence
+     (TheList
+      (doRecordMembersInContext ?mt-to-store-in ?questions)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

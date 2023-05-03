@@ -1,0 +1,491 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ar-experiments
+;;;;    System: 
+;;;;    Author: your name here
+;;;;   Created: September 30, 2010 21:36:35
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2011-11-16 18:38:00 -0600 (Wed, 16 Nov 2011) $
+;;;;  $LastChangedBy: Barbella $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; This plan takes in a list of readings. It then does n-fold cross validation to see how well
+;;; we internally match.
+
+(isa internalARNFoldTest ComplexActionPredicate)
+(arity internalARNFoldTest 4)
+(arg1Isa internalARNFoldTest List) ;;; This is the list of gold standard readings to use, in order.
+(arg2Isa internalARNFoldTest List) ;;; this is the list of texts that correspond to the readings.
+(arg3Isa internalARNFoldTest List) ;;; this is the list of source text names that correspond to the readings.
+(arg4Isa internalARNFoldTest Thing) ;;; The name of the experimental trial
+(comment internalARNFoldTest "(internalARNFoldTest ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name) takes in a list of readings. It then does n-fold cross
+validation to see how well we internally match.")
+
+(isa internalARCascadingTest ComplexActionPredicate)
+(arity internalARCascadingTest 4)
+(arg1Isa internalARCascadingTest List) ;;; This is the list of gold standard readings to use, in order.
+(arg2Isa internalARCascadingTest List) ;;; this is the list of texts that correspond to the readings.
+(arg3Isa internalARCascadingTest List) ;;; this is the list of source text names that correspond to the readings.
+(arg4Isa internalARCascadingTest Thing) ;;; The name of the experimental trial
+(comment internalARCascadingTest "(internalARCascadingTest ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name) takes in a list of readings. It Checks to
+see how much better we do on each successive reading .")
+
+
+(isa internalARCascadingTestOnSourceTexts ComplexActionPredicate)
+(arity internalARCascadingTestOnSourceTexts 2)
+(arg1Isa internalARCascadingTestOnSourceTexts List) ;;; This is the list of source text names to use, in order.
+(arg2Isa internalARCascadingTestOnSourceTexts Thing) ;;; The name of the experimental trial
+(comment internalARCascadingTestOnSourceTexts "(internalARCascadingTestOnSourceTexts  ?list-of-st-names ?experimental-trial-name) takes in a list of readings. It Checks to
+see how much better we do on each successive reading .")
+
+(isa internalARNFoldTestOnSourceTexts ComplexActionPredicate)
+(arity internalARNFoldTestOnSourceTexts 2)
+(arg1Isa internalARNFoldTestOnSourceTexts List) ;;; This is the list of source text names to use, in order.
+(arg2Isa internalARNFoldTestOnSourceTexts Thing) ;;; The name of the experimental trial
+(comment internalARNFoldTestOnSourceTexts "(internalARNFoldTestOnSourceTexts  ?list-of-st-names ?experimental-trial-name) takes in a list of readings. It then does n-fold cross
+validation to see how well we internally match.")
+
+
+(isa internalARNFoldTestPly ComplexActionPredicate)
+(arity internalARNFoldTestPly 5)
+(arg1Isa internalARNFoldTestPly AccessingAnIBT) ;;; This is the  reading
+(arg2Isa internalARNFoldTestPly List) ;;; This is the list of readings to use, in order.
+(arg3Isa internalARNFoldTestPly List) ;;; this is the list of texts that correspond to the readings.
+(arg4Isa internalARNFoldTestPly List) ;;; this is the list of source text names that correspond to the readings.
+(arg5Isa internalARNFoldTestPly Thing) ;;; The name of the experimental trial
+(comment internalARNFoldTestPly "(internalARNFoldTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name) 
+does one ply for internalARNFoldTest.")
+
+(isa internalARCascadingTestPly ComplexActionPredicate)
+(arity internalARCascadingTestPly 5)
+(arg1Isa internalARCascadingTestPly AccessingAnIBT) ;;; This is the reading
+(arg2Isa internalARCascadingTestPly List) ;;; This is the list of readings to use, in order.
+(arg3Isa internalARCascadingTestPly List) ;;; this is the list of texts that correspond to the readings.
+(arg4Isa internalARCascadingTestPly List) ;;; this is the list of source text names that correspond to the readings.
+(arg5Isa internalARCascadingTestPly Thing) ;;; The name of the experimental trial
+(comment internalARCascadingTestPly "(internalARCascadingTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name) 
+does one ply for internalARNFoldTest.")
+
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (internalARNFoldTest ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name)
+  (actionSequence
+   (TheList
+    (doForEach ?reading ?list-of-readings
+               (internalARNFoldTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name))))))
+
+
+(preconditionForMethod
+ (and 
+      (textsOfSourceTexts ?list-of-st-names ?list-of-texts)
+      (goldStandardsOfSourceTexts ?list-of-st-names ?list-of-gs-readings))
+ (methodForAction
+  (internalARNFoldTestOnSourceTexts ?list-of-st-names ?experimental-trial-name)
+  (actionSequence
+   (TheList
+    (doForEach ?reading ?list-of-gs-readings
+               (internalARNFoldTestPly ?reading ?list-of-gs-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name))))))
+
+;;; Unlike the nfold test, the cascading test uses the same gcf throughout, so we should generate it here and pass it along.
+(preconditionForMethod
+ (and 
+      (textsOfSourceTexts ?list-of-st-names ?list-of-texts)
+      (goldStandardsOfSourceTexts ?list-of-st-names ?list-of-gs-readings)
+      (newGenContextFamilyName CascadingTestGCFForTrial ?experimental-trial-name ?new-GCF-name))
+ (methodForAction
+  (internalARCascadingTestOnSourceTexts ?list-of-st-names ?experimental-trial-name)
+  (actionSequence
+   (TheList
+    (doForEach ?reading ?list-of-gs-readings
+               (internalARCascadingTestPly ?reading ?list-of-gs-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name ?new-GCF-name))))))
+
+(preconditionForMethod
+ (newGenContextFamilyName CascadingTestGCFForTrial ?experimental-trial-name ?new-GCF-name)
+ (methodForAction
+  (internalARCascadingTest ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name)
+  (actionSequence
+   (TheList
+;;;    (doRecord (ist-Information ARExperimentsLogisticsMt (genContextFamilyUsedForTrial ?experimental-trial-name ?new-GCF-name)))
+    (doForEach ?reading ?list-of-readings
+               (internalARCascadingTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name ?new-GCF-name))))))
+
+;;; What this needs to do:
+;;; Clear working memory.
+;;; Read the reading
+;;; Disambiguate it using the ?GCF-name
+;;; Check the accurracy of the reading of the reading
+;;; THEN, add it into ?GCF-name.
+;;; Store some more connecting tissue facts
+(preconditionForMethod
+ (and
+      (textForReadingInListOfReadings ?reading ?list-of-readings ?list-of-texts ?text)
+      (textForReadingInListOfReadings ?reading ?list-of-readings ?list-of-st-names ?current-st-name)
+      (generatedSourceTextName ?experimental-trial-name ?generated-st-name)
+      (generatedReadingName ?generated-st-name ?generated-reading-name)
+      )
+ ;;; What is the list of readings for? What even is it?
+ ;;; It's the list of gold standard readings.
+ (methodForAction
+  (internalARCascadingTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name ?GCF-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)    
+    ;;;;
+    (doEAProcess ?text)
+    (doAgentPlan
+           (actionSequence
+            (TheList
+             (disambiguateSourceText ?generated-st-name ?generated-reading-name 
+                                     (TheSet (analogicalRecallGenContextSuggestions ?GCF-name All-AD-CircumstancesMt)) LbrDisambiguationMt)
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                ;;; When we store that something is a gold standard, do we store anywhere that it's a gold standard?
+                ;;; Looks like we really need the names of the source texts after all.
+                (doTell (populateNewGCFforARCascadingPly ?reading ?list-of-readings ?experimental-trial-name ?GCF-name))
+                (doRecordMembersInContext ARExperimentsLogisticsMt (TheList (GCFUsedInExperiment ?GCF-name ?experimental-trial-name)))
+                (doAgentPlan
+                 (actionSequence
+                  (TheList
+                   ;;; When we store that something is a gold standard, do we store anywhere that it's a gold standard?
+                   ;;; Looks like we really need the names of the source texts after all.
+                   ;;; This may need to be something else.
+                   
+                   (checkAdvancedAccuracyForARNFoldTestPly ?experimental-trial-name ?current-st-name ?generated-reading-name ?experimental-trial-name ?GCF-name)
+                   (doAnnounce "internalARCascadingTestPly completed for ~A." (?reading)) 
+                   )))))))))))))
+
+(isa GCFUsedInExperiment Predicate)
+(arity GCFUsedInExperiment 2)
+(comment GCFUsedInExperiment "(GCFUsedInExperiment ?gcf ?experiment) indicates that ?gcf is a generalization context family used in ?experiment.")
+
+(isa attachedPreposition Predicate)
+(arity attachedPreposition 2)
+(arg1Isa attachedPreposition Thing)
+(arg2Isa attachedPreposition Thing)
+
+(isa withinPreposition Predicate)
+(arity withinPreposition 2)
+(arg1Isa withinPreposition Thing)
+(arg2Isa withinPreposition Thing)
+
+(preconditionForMethod
+ (and
+      (textForReadingInListOfReadings ?reading ?list-of-readings ?list-of-texts ?text)
+      (textForReadingInListOfReadings ?reading ?list-of-readings ?list-of-st-names ?current-st-name)
+      (newGenContextFamilyName ?reading ?experimental-trial-name ?new-GCF-name)
+      (generatedSourceTextName ?experimental-trial-name ?generated-st-name)
+      (generatedReadingName ?generated-st-name ?generated-reading-name)
+      )
+ ;;; What on earth is the list of readings for? What even is it?
+ ;;; It's actually the list of gold standard readings.
+ ;;; It's used to make a new GCF name, I guess. Why is that not just the source text name with the experimental trial name?
+ ;;; Where do we populate the new GCF name?
+ (methodForAction
+  (internalARNFoldTestPly ?reading ?list-of-readings ?list-of-texts ?list-of-st-names ?experimental-trial-name)
+  (actionSequence
+   (TheList
+    (doClearWorkingMemory)    
+    (doTell (populateNewGCFforARNFoldPly ?reading ?list-of-readings ?experimental-trial-name ?new-GCF-name))
+    (doRecordMembersInContext ARExperimentsLogisticsMt 
+                                    (TheList 
+                                     (isa (disambiguationGenContextForPhraseFn ?gen-context-family ?span-words ?anonymized-choice) DisambiguationGeneralizationPool)
+                                     (gpoolSelectStrategy ?new-GCF-name :macfac)
+                                     
+                                     ))
+    (doRecordMembersInContext ARExperimentsLogisticsMt (TheList (GCFUsedInExperiment ?new-GCF-name ?experimental-trial-name)))
+    (doEAProcess ?text)
+    (doAgentPlan
+           (actionSequence
+            (TheList
+             (disambiguateSourceText ?generated-st-name ?generated-reading-name 
+                                     (TheSet (analogicalRecallGenContextSuggestions ?new-GCF-name All-AD-CircumstancesMt)) LbrDisambiguationMt)
+             (doAgentPlan
+              (actionSequence
+               (TheList
+                (checkAdvancedAccuracyForARNFoldTestPly ?experimental-trial-name ?current-st-name ?generated-reading-name ?experimental-trial-name ?new-GCF-name)
+                (doAnnounce "internalARNFoldTestPly completed for ~A." (?reading)) 
+                ))))))))))
+
+(isa checkAdvancedAccuracyForARNFoldTestPly ComplexActionPredicate)
+(arity checkAdvancedAccuracyForARNFoldTestPly 5)
+(arg1Isa checkAdvancedAccuracyForARNFoldTestPly Thing) ;;; The trial name
+(arg2Isa checkAdvancedAccuracyForARNFoldTestPly InformationBearingThing)
+(arg3Isa checkAdvancedAccuracyForARNFoldTestPly AccessingAnIBT)
+(arg4Isa checkAdvancedAccuracyForARNFoldTestPly Thing)
+(arg5Isa checkAdvancedAccuracyForARNFoldTestPly GeneralizationPoolDisambiguationFamily)
+(comment checkAdvancedAccuracyForARNFoldTestPly 
+  "(checkAdvancedAccuracyForARNFoldTestPly ?trial ?source-text-name ?current-reading-name ?experiment-name ?library-name) checks the accurracy of the source text being
+disambiguated and puts it in the trial's mt.")
+
+;;; (accuracyOfCurrentDiscourseComparedToGoldStandardAR ?gs-reading-name ?trial 
+;;; ?current-reading-name ?experiment-name ?GCF-name ?acc)
+(isa accuracyOfCurrentDiscourseComparedToGoldStandardAR Predicate)
+(arity accuracyOfCurrentDiscourseComparedToGoldStandardAR 6)
+(arg1Isa accuracyOfCurrentDiscourseComparedToGoldStandardAR AccessingAnIBT)
+(arg2Isa accuracyOfCurrentDiscourseComparedToGoldStandardAR Thing)
+(arg3Isa accuracyOfCurrentDiscourseComparedToGoldStandardAR AccessingAnIBT)
+(arg4Isa accuracyOfCurrentDiscourseComparedToGoldStandardAR Thing)
+(arg5Isa accuracyOfCurrentDiscourseComparedToGoldStandardAR GeneralizationPoolDisambiguationFamily)
+(arg6Isa accuracyOfCurrentDiscourseComparedToGoldStandardAR Number)
+(comment accuracyOfCurrentDiscourseComparedToGoldStandardAR "(accuracyOfCurrentDiscourseComparedToGoldStandardAR 
+?gs-reading-name ?trial ?current-reading-name ?experiment-name ?GCF-name ?acc) is an oursourced predicate that
+compares the accuracy of the current reading to a gold standard.")
+
+
+(preconditionForMethod
+ (and
+      ;;; Have to get the GSR at some point.
+      (ist-Information LbrSourceTextsMt (goldStandardReadingOfSourceText ?gs-reading-name ?source-text-name))
+      (outsourcedOnly (accuracyOfCurrentDiscourseComparedToGoldStandardAR ?gs-reading-name ?trial ?current-reading-name ?experiment-name ?GCF-name ?acc))
+      )
+ (methodForAction
+  (checkAdvancedAccuracyForARNFoldTestPly ?trial ?source-text-name ?current-reading-name ?experiment-name ?GCF-name)
+  (actionSequence
+   (TheList
+    ;;; Store that in the KB, and maybe in a flat-file I guess.
+    (doRecord (ist-Information ExperimentalResults (accuracyOfCurrentDiscourseComparedToGoldStandard ?gs-reading-name ?trial ?current-reading-name ?acc )))
+    ))))
+
+(isa accuracyOfCurrentDiscourseComparedToGoldStandard Predicate)
+(arity accuracyOfCurrentDiscourseComparedToGoldStandard 3)
+(arg1Isa accuracyOfCurrentDiscourseComparedToGoldStandard AccessingAnIBT) ;;; The trial name
+(arg2Isa accuracyOfCurrentDiscourseComparedToGoldStandard Thing)
+(arg3Isa accuracyOfCurrentDiscourseComparedToGoldStandard GeneralizationPoolDisambiguationFamily)
+(comment accuracyOfCurrentDiscourseComparedToGoldStandard "(newGenContextFamilyName ?reading ?experimental-trial-name ?new-GCF-name) makes a new
+name for a GeneralizationPoolDisambiguationFamily.")
+
+(isa accuracyOfCurrentParsesComparedToGoldStandardAR Predicate)
+(arity accuracyOfCurrentParsesComparedToGoldStandardAR 6)
+(arg1Isa accuracyOfCurrentParsesComparedToGoldStandardAR AccessingAnIBT) ;;; The trial name
+(arg2Isa accuracyOfCurrentParsesComparedToGoldStandardAR Thing)
+(arg3Isa accuracyOfCurrentParsesComparedToGoldStandardAR InformationBearingThing)
+(arg3Isa accuracyOfCurrentParsesComparedToGoldStandardAR Thing)
+(arg3Isa accuracyOfCurrentParsesComparedToGoldStandardAR CaseLibrary)
+(arg6Isa accuracyOfCurrentParsesComparedToGoldStandardAR Number)
+(comment accuracyOfCurrentParsesComparedToGoldStandardAR "(accuracyOfCurrentParsesComparedToGoldStandardAR
+ ?gold-standard-reading ?trial ?source-text-name ?experiment ?library ?accuracy) finds the parsing accuracy.")
+
+;;;      (textsOfSourceTexts ?list-of-st-names ?list-of-texts)
+;;;      (goldStandardsOfSourceTexts ?list-of-st-names ?list-of-gs-readings)
+
+(isa textsOfSourceTexts Predicate)
+(arity textsOfSourceTexts 2)
+(arg1Isa textsOfSourceTexts List) ;;; The trial name
+(arg2Isa textsOfSourceTexts List)
+(comment textsOfSourceTexts "(textsOfSourceTexts ?list-of-st-names ?list-of-texts)
+gets the texts associated with the source texts in ?list-of-st-names.")
+
+(isa unifiedTextOfSourceTexts Predicate)
+(arity unifiedTextOfSourceTexts 2)
+(arg1Isa unifiedTextOfSourceTexts List) ;;; The trial name
+(arg2Isa unifiedTextOfSourceTexts String)
+(comment unifiedTextOfSourceTexts "(unifiedTextOfSourceTexts ?list-of-st-names ?unified-text)
+gets the texts associated with the source texts in ?list-of-st-names and makes one big text.")
+
+
+(isa goldStandardsOfSourceTexts Predicate)
+(arity goldStandardsOfSourceTexts 4)
+(arg1Isa goldStandardsOfSourceTexts List) ;;; The trial name
+(arg2Isa goldStandardsOfSourceTexts List)
+(comment goldStandardsOfSourceTexts "(goldStandardsOfSourceTexts ?list-of-st-names ?list-of-texts)
+gets the gold standards associated with the source texts in ?list-of-st-names.")
+
+(isa newGenContextFamilyName Predicate)
+(arity newGenContextFamilyName 4)
+(arg1Isa newGenContextFamilyName Thing) ;;; The trial name
+(arg2Isa newGenContextFamilyName InformationBearingThing)
+(arg3Isa newGenContextFamilyName AccessingAnIBT)
+(arg4Isa newGenContextFamilyName Thing)
+(comment newGenContextFamilyName "(newGenContextFamilyName ?trial ?source-text-name ?current-reading-name ?gcf-name)
+generates a new generalization context family name.")
+
+;;; This might want to be a tell handler.
+;;; It does.
+(isa populateNewGCFforARNFoldPly Predicate)
+(arity populateNewGCFforARNFoldPly 3)
+(arg1Isa populateNewGCFforARNFoldPly AccessingAnIBT) ;;; This is reading.
+(arg2Isa populateNewGCFforARNFoldPly List) ;;; this is the list of readings
+(arg3Isa populateNewGCFforARNFoldPly Thing) ;;; The name of the experimental trial
+(arg4Isa populateNewGCFforARNFoldPly GeneralizationPoolDisambiguationFamily)
+(comment populateNewGCFforARNFoldPly "(populateNewGCFforARNFoldPly ?reading ?list-of-readings ?experimental-trial-name ?GCF-name) 
+does one ply for internalARNFoldTest.")
+
+(isa populateNewGCforARParsingNFoldPly Predicate)
+(arity populateNewGCforARParsingNFoldPly 3)
+(arg1Isa populateNewGCforARParsingNFoldPly AccessingAnIBT) ;;; This is reading.
+(arg2Isa populateNewGCforARParsingNFoldPly List) ;;; this is the list of readings
+(arg3Isa populateNewGCforARParsingNFoldPly Thing) ;;; The name of the experimental trial
+(arg4Isa populateNewGCforARParsingNFoldPly GeneralizationPoolDisambiguationFamily)
+(comment populateNewGCforARParsingNFoldPly "(populateNewGCforARParsingNFoldPly ?reading ?list-of-readings ?experimental-trial-name ?case-library-name) 
+populates a case library one ply for internalARNFoldParsingTestOnSourceTexts")
+
+(isa populateNewGCFforARCascadingPly Predicate)
+(arity populateNewGCFforARCascadingPly 3)
+(arg1Isa populateNewGCFforARCascadingPly AccessingAnIBT) ;;; This is reading.
+(arg2Isa populateNewGCFforARCascadingPly List) ;;; this is the list of readings
+(arg3Isa populateNewGCFforARCascadingPly Thing) ;;; The name of the experimental trial
+(arg4Isa populateNewGCFforARCascadingPly GeneralizationPoolDisambiguationFamily)
+(comment populateNewGCFforARCascadingPly "(populateNewGCFforARCascadingPly ?reading ?list-of-readings ?experimental-trial-name ?GCF-name) 
+does one ply for internalARCascadingTest.")
+ 
+(isa textForReadingInListOfReadings Predicate)
+(arity textForReadingInListOfReadings 4)
+(arg1Isa textForReadingInListOfReadings AccessingAnIBT) ;;; The reading
+(arg2Isa textForReadingInListOfReadings List) ;;; List of readings.
+(arg3Isa textForReadingInListOfReadings List) ;;; List of texts
+(arg4Isa textForReadingInListOfReadings Thing) ;;; The text
+(comment textForReadingInListOfReadings "(textForReadingInListOfReadings ?reading ?list-of-readings ?list-of-texts ?text) 
+is intended to be used as an outsourced predicate with the last argument open. It gets the text from ?list-of-texts that corresponds to the ?reading in ?list-of-readings.")
+
+
+(isa newGenContextFamilyName Predicate)
+(arity newGenContextFamilyName 3)
+(arg1Isa newGenContextFamilyName Thing) ;;; The sentence-id
+(arg2Isa newGenContextFamilyName Microtheory) ;;; This is the over-mt which will genl to where we store it.
+(arg3Isa newGenContextFamilyName GeneralizationPoolDisambiguationFamily) ;;; This is the source text
+(comment newGenContextFamilyName "(newGenContextFamilyName ?reading ?experimental-trial-name ?new-GCF-name) 
+is intended to be used as an outsourced predicate with the last argument open. It makes a new GCF name.")
+
+(resultIsa ExampleFn Thing)
+(isa (ExampleFn FamousHuman) Collection)
+
+
+(isa selectionMadeInARExperiment Predicate)
+(comment selectionMadeInARExperiment "(selectionMadeInARExperiment ?experiment ?word ?choice-set ?right-answer ?our-answer ?match-yes-or-no ?right-possible ?wrong-possible ?case-summary ?gs)")
+(arity selectionMadeInARExperiment 10)
+
+(isa resultsofARExperimentMtFn Function-Denotational)
+(resultIsa resultsofARExperimentMtFn Microtheory)
+(arity resultsofARExperimentMtFn 1)
+(comment resultsofARExperimentMtFn "(resultsofARExperimentMtFn ?experiment) contains experimental results from ?experiment.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;
+(isa evaluateDistinguishingFeaturesWithinGCFsInExperimentPlan ComplexActionPredicate)
+(arity evaluateDistinguishingFeaturesWithinGCFsInExperimentPlan 1)
+(arg1Isa evaluateDistinguishingFeaturesWithinGCFsInExperimentPlan Thing) ;;; The experiment name 
+(comment evaluateDistinguishingFeaturesWithinGCFsInExperimentPlan 
+  "(evaluateDistinguishingFeaturesWithinGCFsInExperimentPlan ?experiment-name) collects and produces information on the distinctions between the generalization contexts
+for different senses of the same word encountered during ?experiment name.")
+
+(isa evaluateDistinguishingFeaturesWithinGCFsPlan ComplexActionPredicate)
+(arity evaluateDistinguishingFeaturesWithinGCFsPlan 2)
+(arg1Isa evaluateDistinguishingFeaturesWithinGCFsPlan List)
+(arg2Isa evaluateDistinguishingFeaturesWithinGCFsPlan Thing) ;;; The experiment name 
+(comment evaluateDistinguishingFeaturesWithinGCFsPlan 
+  "(evaluateDistinguishingFeaturesWithinGCFsPlan ?case-list ?experiment-name) collects and produces information on the distinguishing features between different cases.")
+
+(isa genContextForFamilyForWords Predicate)
+(arity genContextForFamilyForWords 3)
+(arg1Isa genContextForFamilyForWords GeneralizationPoolDisambiguationFamily)
+(arg2Isa genContextForFamilyForWords List)
+(arg3Isa genContextForFamilyForWords GeneralizationPool)
+(comment genContextForFamilyForWords 
+  "(genContextForFamilyForWords ?gcf ?words ?gen-context) indicates that in ?gcf, the gen context for ?words is ?gen-context.")
+
+
+;;; This is just totally wrong. We don't want to be doing this for each gencontext at all. Ugh.
+;;; We want to get all the gen contexts that were used in the experiment and merge them into one
+;;; large context.
+;;;(preconditionForMethod
+;;; (and
+;;;      ;;; First, get the gen context families used by the experiment
+;;;      (evaluate ?set-of-gen-contexts-used-with-phrases-they-are-over
+;;;        (TheClosedRetrievalSetOf (TheList ?phrase-for-gen-context ?gen-context-used)
+;;;          (and                 
+;;;               (ist-Information ARExperimentsLogisticsMt (GCFUsedInExperiment ?gcf-name ?experiment-name))
+;;;               (ist-Information genContextsForFamiliesForWordsMt
+;;;                 (genContextForFamilyForWords
+;;;                  ?gcf-name
+;;;                  ?phrase-for-gen-context
+;;;                  ?gen-context-used))))))
+;;; (methodForAction
+;;;  (evaluateDistinguishingFeaturesWithinGCFsInExperimentPlan ?experiment-name)
+;;;  (actionSequence
+;;;   (TheList
+;;;    ;;; For each of the ones we used, perform the analysis
+;;;    (doForEach ?gen-context-with-phrase-it-is-over ?set-of-gen-contexts-used-with-phrases-they-are-over
+;;;               (evaluateDistinguishingFeaturesWithinGCFsPlan ?gen-context-with-phrase-it-is-over ?experiment-name)) 
+;;;    ))))
+
+;;; What this does:
+;;; Gets the set of gen contexts used in the experiment with the phrases they are over.
+;;; For each of those, do an evaluateDistinguishingFeaturesWithinGCFsPlan taking in the GCWPIIO
+;;; What that does is essentially just pull CaseLibraryUnionFn off and pass it into computeDistinguishingFeatures
+;;; So what computeDistinguishingFeatures is getting is one gen context family from the whole experiment and an experiment name.
+;;; That's terribad.
+(preconditionForMethod
+ (and
+      ;;; First, get the gen context families used by the experiment
+      (evaluate ?set-of-gen-contexts-used-with-phrases-they-are-over
+        (TheClosedRetrievalSetOf (TheList ?phrase-for-gen-context ?gen-context-used)
+          (and                 
+               (ist-Information ARExperimentsLogisticsMt (GCFUsedInExperiment ?gcf-name ?experiment-name))
+               (ist-Information genContextsForFamiliesForWordsMt
+                 (genContextForFamilyForWords
+                  ?gcf-name
+                  ?phrase-for-gen-context
+                  ?gen-context-used))))))
+ (methodForAction
+  (evaluateDistinguishingFeaturesWithinGCFsInExperimentPlan ?experiment-name)
+  (actionSequence
+   (TheList
+    ;;; For each of the ones we used, perform the analysis
+    (doForEach ?gen-context-with-phrase-it-is-over ?set-of-gen-contexts-used-with-phrases-they-are-over
+               (evaluateDistinguishingFeaturesWithinGCFsPlan ?gen-context-with-phrase-it-is-over ?experiment-name)) 
+    ))))
+
+
+;;; If ?gen-context-used isn't a caseunionfn of several things, then we don't really care about it.
+;;; If it is, we need to deunify it
+;;; Okay, we've got it as a list now.
+;;; What we need to do is iterate through the cases... doing what? Or just ship them all off?
+(preconditionForMethod
+ (true)
+ (methodForAction
+  (evaluateDistinguishingFeaturesWithinGCFsPlan (TheList ?phrase-for-gen-context (CaseLibraryUnionFn ?actual-list-of-cases)) ?experiment-name)
+  (actionSequence
+   (TheList
+    (doTell (computeDistinguishingFeatures ?actual-list-of-cases ?experiment-name))))))
+
+;;; This is the borning case
+(preconditionForMethod
+ (and
+      (not (unifies ?solo-list (CaseLibraryUnionFn ?actual-list-of-cases)))
+      
+      )
+ (methodForAction
+  (evaluateDistinguishingFeaturesWithinGCFsPlan (TheList ?phrase-for-gen-context ?solo-list) ?experiment-name)
+  (actionSequence
+   (TheList))))
+
+
+(isa nestedCaseUnionFnToListOfCases Predicate)
+(arity nestedCaseUnionFnToListOfCases 2)
+(arg1Isa nestedCaseUnionFnToListOfCases Case) ;;; The reading
+(arg2Isa nestedCaseUnionFnToListOfCases List) ;;; List of readings.
+(comment nestedCaseUnionFnToListOfCases "(nestedCaseUnionFnToListOfCases ?gen-context ?list-of-sub-cases) 
+is intended to be used as an outsourced predicate with the last argument open. It takes in a nested union of cases and returns a list of the cases.")
+
+(isa computeDistinguishingFeatures Predicate)
+(arity computeDistinguishingFeatures 2)
+(arg1Isa computeDistinguishingFeatures List) ;;; The reading
+(arg2Isa computeDistinguishingFeatures Thing)
+(comment computeDistinguishingFeatures "(computeDistinguishingFeatures ?list-of-cases ?experiment-name) 
+is intended to be used as an tell handler predicate. It computes .")
+
+;;;(isa evaluateDistinguishingFeaturesWithinGCFs Predicate)
+;;;(arity evaluateDistinguishingFeaturesWithinGCFs 1)
+;;;(arg1Isa evaluateDistinguishingFeaturesWithinGCFs Thing) ;;; The sentence-id
+;;;(comment evaluateDistinguishingFeaturesWithinGCFs "(evaluateDistinguishingFeaturesWithinGCFs ?set-of-gen-contexts-used-with-phrases-they-are-over) 
+;;;is intended to be used as an outsourced predicate with the last argument open. It makes a new GCF name.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

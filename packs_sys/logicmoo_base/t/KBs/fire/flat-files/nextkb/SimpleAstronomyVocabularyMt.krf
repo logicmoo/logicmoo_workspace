@@ -1,0 +1,13 @@
+(in-microtheory SimpleAstronomyVocabularyMt)
+
+(isa OuterSpace OuterSpaceRegion)
+(isa OuterSpace Place)
+(isa SolarSystem PlanetarySystem)
+(isa IntergalacticSpace ThreeDimensionalThing)
+(isa InterstellarSpace ThreeDimensionalThing)
+(comment PlanetMars "The planet Mars -- the fourth planet from the Sun.")
+(comment IntergalacticSpace "#$IntergalacticSpace is the region of space between the galaxies, i.e., all of space except that within the boundaries of some galaxy.")
+(comment InterstellarSpace "#$InterstellarSpace is the region of space between star systems, i.e., outside the 
+
+spheres which contain whatever objects orbit about a star.")
+(comment SolarSystem "The region of the universe near the Sun that includes the sun, the nine known major planets and their moons or satellites, and objects such as asteroids and comets that travel in independent orbits.")

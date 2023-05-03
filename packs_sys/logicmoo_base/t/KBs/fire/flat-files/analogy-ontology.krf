@@ -1,0 +1,1757 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: analogy-ontology
+;;;;    System: FIRE
+;;;;    Author: Forbus
+;;;;   Created: October 30, 1998 17:13:24
+;;;;   Purpose: Analogy ontology.  The symbols referenced in this file are for
+;;;;            mixed-case KBs.  This file should be used instead of 
+;;;;            analogy-dt.lsp for all new KBs.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+
+(in-microtheory UniversalVocabularyMt)
+
+;;;; The analogy ontology provides an explicit representation of the ideas
+;;;; of structure-mapping, so that we can reason with matches, mappings,
+;;;; and remindings as well as their constituents.
+;;;;
+;;;; This file contains vocabulary for:
+;;;; Control Predicates
+;;;; Miscellaneous
+;;;; Cases (including denoting functions and relationships between them)
+;;;; Matches
+;;;; Mappings
+;;;; Match Constraints
+;;;; Correspondences
+;;;; Candidate inferences
+;;;; Skolem resolution support
+;;;; Case libraries
+;;;; Remindings
+;;;; Clarifying attributes (for improving retrieval accuracy)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Control Information About Predicates
+
+(isa ubiquitousForAnalogy Relation)
+(arity ubiquitousForAnalogy 1)
+(arg1Isa ubiquitousForAnalogy Thing)
+(comment ubiquitousForAnalogy
+  "(ubiquitousForAnalogy <thing>) says that the thing should be treated as 
+   uninteresting for analogical reasoning.")
+
+(isa notForAnalogy Relation)
+(arity notForAnalogy 1)
+(arg1Isa notForAnalogy Thing)
+(comment notForAnalogy
+  "(notForAnalogy <thing>) says that the thing should not be considered at all
+   for analogical reasoning.")
+
+(isa atomicAnalogyNat Relation)
+(arity atomicAnalogyNat 1)
+(arg1Isa atomicAnalogyNat Thing)
+(comment atomicAnalogyNat
+  "(atomicAnalogyNat <fn>) declares that the specified function is used to 
+   build NATs that will be treated as atomic entities by default during 
+   analogical mapping.  That is in contrast to the default, which is to 
+   decompose NATs so that their arguments can also be aligned.  An example 
+   is GlyphFn.")
+
+
+
+(isa UbiquitousPredicate Collection)
+;;; *** Lame fix -- NotForAnalogyPredicate probably really should genl from
+;;; *** Relation, however we've been using it more generically than that.
+;;; *** This is going to be replaced by an entirely new mechanism in FIRE v3
+;;; *** so I'll just comment this out for now:
+;;;(genls UbiquitousPredicate Relation)
+;; N.B. These can be functions or relations, in the standard logical sense.
+;; However, in the Cyc ontology, Relation is the more general collection, and 
+;; Predicate is the more specific, essentially meaning relation.  That's what happens
+;; when you let a set theorist loose in the ontology :-).  
+(comment UbiquitousPredicate
+  "A predicate that should be treated as uninteresting for analogical reasoning.")
+
+(isa ubiquitousFor StateDependentControlInfoPredicate)
+(arity ubiquitousFor 2)
+(arg1Isa ubiquitousFor Relation)
+(arg2Isa ubiquitousFor ReasonerControlState)
+(comment ubiquitousFor 
+  "Says that a predicate should be deemed a #$UbiquitousPredicate when 
+the reasoner is in a particular #$ReasonerControlState.")
+
+(isa TheSet UbiquitousPredicate)
+(ubiquitousForAnalogy TheSet)
+
+(isa TheList UbiquitousPredicate)
+(ubiquitousForAnalogy TheList)
+
+(isa and UbiquitousPredicate)
+(ubiquitousForAnalogy and)
+
+(isa or UbiquitousPredicate)
+(ubiquitousForAnalogy or)
+
+(isa NotForAnalogyPredicate Collection)
+;;; *** Lame fix -- NotForAnalogyPredicate probably really should genl from
+;;; *** Relation, however we've been using it more generically than that.
+;;; *** This is going to be replaced by an entirely new mechanism in FIRE v3
+;;; *** so I'll just comment this out for now:
+;;(genls NotForAnalogyPredicate Relation)
+;;(isa NotForAnalogyPredicate NotForAnalogyPredicate)
+(comment NotForAnalogyPredicate 
+  "(isa ?p NotForAnalogyPredicate) says that ?p should not be considered at all for analogical reasoning (e.g. expressions using this predicate should not even be put into the cases or dgroups being compared.  By courtesy, since SME treats collections as attributes, collections can also be members of this collection.")
+
+(isa notForAnalogyPredFor StateDependentControlInfoPredicate)
+(arity notForAnalogyPredFor 2)
+(arg1Isa ubiquitousFor Relation)
+(arg2Isa ubiquitousFor ReasonerControlState)
+(comment notForAnalogyPredFor
+  "Says that a predicate should be deemed a #$NotForAnalogyPredicate when 
+the reasoner is in a particular #$ReasonerControlState.")
+
+;;; Some things that should never be included in analogies
+(isa notForAnalogyPredFor NotForAnalogyPredicate)
+(notForAnalogy notForAnalogyPredFor)
+(isa inKB NotForAnalogyPredicate)
+(isa comment NotForAnalogyPredicate)
+(isa nameString NotForAnalogyPredicate)
+(isa ist-Information NotForAnalogyPredicate) ;; Strong, but I think correct -- KDF
+
+
+
+(isa AtomicAnalogyNAT-Function Collection)
+(genls AtomicAnalogyNAT-Function Function-Denotational)
+(comment AtomicAnalogyNAT-Function
+  "Instances of AtomicAnalogyNATFunction are functions used to build NATs that will be treated as atomic entities by default during analogical mapping.  That is in contrast to the default, which is to decompose NATs so that their arguments can also be aligned.  An example is GlyphFn.")
+
+(isa atomicAnalogyNAT-FunctionFor StateDependentControlInfoPredicate)
+(arity atomicAnalogyNAT-FunctionFor 2)
+(arg1Isa atomicAnalogyNAT-FunctionFor Function-Denotational)
+(arg2Isa atomicAnalogyNAT-FunctionFor ReasonerControlState)
+(comment atomicAnalogyNAT-FunctionFor
+  "(atomicAnalogyNAT-FunctionFor ?fn ?state) indicates that, in the 
+context of analogical processing done when the reasoner is in a 
+particular ReasonerControlState., ?fn should be treated as if 
+it is an instance of #$AtomicAnalogyNAT-Function, i.e., NATs 
+constructed with it should be treated as atomic entities rather 
+than being treated as expressions.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Miscellaneous
+
+(isa ComputerCodeFunction Collection)
+(genls ComputerCodeFunction ComputerCode)
+(comment ComputerCodeFunction "An instance belonging to this collection is a ComputerCode 
+that can be run with a single procedure call.")
+
+(arity ExecutableFunctionFn 1)
+(isa ExecutableFunctionFn Function-Denotational)
+(comment ExecutableFunctionFn "Term denoting a function in the computer code sense (not 
+a function in the knowledge sense).  This function could 
+actually be run with a procedure call.")
+(resultIsa ExecutableFunctionFn ComputerCodeFunction)
+
+(isa relevantComparison Predicate)
+(arity relevantComparison 2)
+(comment relevantComparison
+ "(relevantComparions <sme> <time>) indicates that <sme> is relevant.  The <time> is used to control updates.")
+(arg2Isa relevantComparison Number)
+(arg1Isa relevantComparison Match)
+(isa relevantComparison NotForAnalogyPredicate)
+(notForAnalogy relevantComparison)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Cases
+
+;;; A Case is still a spec of AbstractInformationalThing by transitivity.
+
+(isa Case Collection)
+(isa Case MicrotheoryType)
+(genls Case Microtheory)
+(comment Case "A case is a collection of propositions that can be used in 
+analogical processing or for collecting a group of data 
+as a single scenario.")
+
+;; We use the Cyc predicate ist-Information to state that a proposition holds in a case.
+
+;; Relationships involving cases
+
+(isa numberOfCaseEntities Predicate)
+(arity numberOfCaseEntities 2)
+(arg1Isa numberOfCaseEntities Case)
+(arg2Isa numberOfCaseEntities Number)
+(comment numberOfCaseEntities "(numberOfCaseEntities ?c ?n) indicates that case ?c has ?n entities.")
+
+(isa numberOfCaseFacts Predicate)
+(arity numberOfCaseFacts 2)
+(arg1Isa numberOfCaseFacts Case)
+(arg2Isa numberOfCaseFacts Number)
+(comment numberOfCaseFacts "(numberOfCaseFacts ?c ?n) indicates that case ?c has ?n facts.")
+
+(isa caseFact Predicate)
+(arity caseFact 2)
+(arg1Isa caseFact Case)
+(arg2Isa caseFact CycLExpression)
+(comment caseFact "(caseFact ?c ?f) indicates that ?f is a fact in case ?c.  Facts are fully-contextualized.")
+
+(isa caseMentionsPredicate Predicate)
+(arity caseMentionsPredicate 2)
+(arg1Isa caseMentionsPredicate Case)
+(arg2Isa caseMentionsPredicate Relation)
+(comment caseMentionsPredicate "(caseMentionsPredicate ?c ?r) indicates case ?c includes a fact in which ?r is a predicate.")
+
+(isa caseMentionsEntity Predicate)
+(arity caseMentionsEntity 2)
+(arg1Isa caseMentionsEntity Case)
+(arg2Isa caseMentionsEntity Individual)
+(comment caseMentionsEntity "(caseMentionsEntity ?c ?r) indicates case ?c includes a fact in which ?r is an entity.")
+
+(isa matchHypothesisForestEstimate Predicate)
+(arity matchHypothesisForestEstimate 3)
+(arg1Isa matchHypothesisForestEstimate Case)
+(arg2Isa matchHypothesisForestEstimate Case)
+(arg3Isa matchHypothesisForestEstimate Number)
+(comment matchHypothesisForestEstimate "(matchHypothesisForestEstimate ?base ?target ?size) indicates that matching ?base to ?target produces a match hypothesis forest of size ?size.")
+
+(isa constructCaseInWM Predicate)
+(arity constructCaseInWM 1)
+(arg1Isa constructCaseInWM Case)
+(comment constructCaseInWM
+  "(constructCaseInWM ?case) being asserted causes ?case to be constructed in working memory, leaving behind this fact to record that it has been done.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Case functions
+
+
+(isa CaseFunctions Collection)
+(genls CaseFunctions Function-Denotational)
+
+(isa contextForCaseConstructorType Predicate)
+(arity contextForCaseConstructorType 2)
+(arg1Isa contextForCaseConstructorType Thing)
+(arg2Isa contextForCaseConstructorType Microtheory)
+(comment contextForCaseConstructorType
+  "(contextForCaseConstructorType ?cc ?mt) indicates that the context appropriate for constructing
+ cases of type ?cc is the microtheory ?mt. In FIRE, this is generally automatically computed
+ from the NAT procedurally.  This assertion is used in the default method.")
+
+(isa ExplicitCaseFn CaseFunctions)
+(arity ExplicitCaseFn 1)
+(arg1Isa ExplicitCaseFn Thing)
+(resultIsa ExplicitCaseFn Case)
+(comment ExplicitCaseFn "(ExplicitCaseFn ?n) is the set of facts in the explicitly determined case ?n.")
+
+(isa WMCaseFn CaseFunctions)
+(arity WMCaseFn 1)
+(arg1Isa WMCaseFn Case)
+(resultIsa WMCaseFn Case)
+(comment WMCaseFn "(WMCaseFn <case>) denotes the version of <case> currently stored in working memory.")
+
+(isa AskCaseFn CaseFunctions)
+(arity AskCaseFn 1)
+(arg1Isa AskCaseFn CycL-Formula)
+(resultIsa AskCaseFn Case)
+(comment AskCaseFn "(AskCaseFn ?query) denotes the case defined by the set of facts retrieved via ?query.")
+
+(isa GroundCaseFn CaseFunctions)
+(arity GroundCaseFn 1)
+(arg1Isa GroundCaseFn Case)
+(resultIsa GroundCaseFn Case)
+(comment GroundCaseFn "(GroundCaseFn ?case) denotes the case defined by the subset of ground facts in ?case.")
+
+(isa MinimalCaseFn CaseFunctions)
+(arity MinimalCaseFn 1)
+(arg1Isa MinimalCaseFn Thing)
+(resultIsa MinimalCaseFn Case)
+(comment MinimalCaseFn "(MinimalCaseFn ?c) denotes the case consisting of all non-bookkeeping facts that reference ?c.")
+
+(isa MinimalCaseInMtFn CaseFunctions)
+(arity MinimalCaseInMtFn 2)
+(arg1Isa MinimalCaseInMtFn Thing)
+(arg2Isa MinimalCaseInMtFn Microtheory)
+(resultIsa MinimalCaseInMtFn Case)
+(comment MinimalCaseInMtFn "(MinimalCaseInMtFn ?c ?mt) denotes the case consisting of all non-bookkeeping facts that reference ?c visible in context ?mt.")
+
+(isa MinimalCaseInWMContextFn CaseFunctions)
+(arity MinimalCaseInWMContextFn 2)
+(arg1Isa MinimalCaseInWMContextFn Thing)
+(arg2Isa MinimalCaseInWMContextFn Microtheory)
+(resultIsa MinimalCaseInWMContextFn Case)
+(comment MinimalCaseInWMContextFn "(MinimalCaseInWMContextFn ?c ?mt) denotes the case consisting of all non-bookkeeping facts that reference ?c visible in context ?mt in working memory.")
+
+(isa CaseFn CaseFunctions)
+(arity CaseFn 1)
+(arg1Isa CaseFn Thing)
+(resultIsa CaseFn Case)
+(comment CaseFn "(CaseFn ?x) denotes the facts of MinimalCaseFn plus the attributes of mentioned entities.")
+
+(isa ConceptualFactsOfCaseFn CaseFunctions)
+(arity ConceptualFactsOfCaseFn 1)
+(arg1Isa ConceptualFactsOfCaseFn Case)
+(resultIsa ConceptualFactsOfCaseFn Case)
+(comment ConceptualFactsOfCaseFn
+         "(ConceptualFactsOfCaseFn ?case) denotes the subset of the facts in ?case that are purely conceptual, i.e., no nuSketch sketch information.")
+
+(isa EconomicCaseFn CaseFunctions)
+(arity EconomicCaseFn 1)
+(arg1Isa EconomicCaseFn Case)
+(resultIsa EconomicCaseFn Case)
+(comment EconomicCaseFn "(EconomicCaseFn ?case) denotes the case defined by the subset of economic facts in ?case.")
+
+(isa CaseUnionFn CaseFunctions)
+(arity CaseUnionFn n-ary)
+(arg1Isa CaseUnionFn Case)
+(arg2Isa CaseUnionFn Case)
+(resultIsa CaseUnionFn Case)
+(comment CaseUnionFn "Creates a Case from the union of facts in its arguments.")
+
+(isa CaseIntersectionFn CaseFunctions)
+(arity CaseIntersectionFn n-ary)
+(arg1Isa CaseIntersectionFn Case)
+(arg2Isa CaseIntersectionFn Case)
+(resultIsa CaseIntersectionFn Case)
+(comment CaseIntersectionFn "Creates a Case from the intersection of facts in its argument cases.")
+
+(isa CaseComplementFn CaseFunctions)
+(arity CaseComplementFn n-ary)
+(arg1Isa CaseComplementFn Case)
+(arg2Isa CaseComplementFn Case)
+(resultIsa CaseComplementFn Case)
+(comment CaseComplementFn "(CaseComplementFn ?super-case ?sub-case) denotes the case defined by the facts in ?super-case minus the facts in ?sub-case.")
+
+(isa CaseByEventSetFn CaseFunctions)
+(arity CaseByEventSetFn 1)
+(arg1Isa CaseByEventsSetFn Set)
+(resultIsa CaseByEventSetFn Case)
+(comment CaseByEventSetFn "Creates a Case by applying eventCaseFn on each of the 
+elements of the ?setOf-events and unioning the facts together.")
+
+(isa CaseConjunctionFn CaseFunctions)
+(arity CaseConjunctionFn 2)
+(arg1Isa CaseConjunctionFn Case)
+(arg2Isa CaseConjunctionFn Case)
+(resultIsa CaseConjunctionFn Case)
+(comment CaseConjunctionFn "Creates a Case by combining the information from the ?case1 and ?case2.")
+
+(isa ExtendedCaseFn CaseFunctions)
+(resultIsa ExtendedCaseFn Case)
+(arity ExtendedCaseFn 2)
+(arg1Isa ExtendedCaseFn Case)
+(arg2Isa ExtendedCaseFn Thing) ;; What's the right collection here?
+(comment ExtendedCaseFn 
+  "Creates a Case by adding all facts of form 
+(ist-Information ?originalCase-name <fact>) which has 
+the justification label set to ?justification in the 
+reasoning session.")
+
+(isa EnhancedCaseFn CaseFunctions)
+(arity EnhancedCaseFn 2)
+(arg1Isa EnhancedCaseFn Thing)
+(arg2Isa EnhancedCaseFn Thing)
+(resultIsa EnhancedCaseFn Case)
+(comment EnhancedCaseFn 
+  "Creates a Case by finding all the relations that are used 
+to generate the answer to the query, with the query scoped 
+by the facts originally specified in ?case. Also includes 
+all the isa relations between the objects referenced in 
+those relations.")
+
+(isa CaseByQueryFn CaseFunctions)
+(arity CaseByQueryFn 1)
+(arg1Isa CaseByQueryFn Thing) ;; Too vague
+(resultIsa CaseByQueryFn Case)
+(comment CaseByQueryFn 
+  "Creates a Case by finding all the relations that are used 
+to generate the answer to the query. Also includes all 
+the isa relations between the objects referenced in those 
+relations.")
+
+(isa SegFactsCaseFn FunctionOrFunctionalPredicate)
+(isa SegFactsCaseFn CaseFunctions)
+(arity SegFactsCaseFn 1)
+(arg1Isa SegFactsCaseFn Thing)
+(resultIsa SegFactsCaseFn Case)
+(comment SegFactsCaseFn "(SegFactsCaseFn ?n) is the set of facts in the segmentation case ?n.")
+
+(isa SenFactsCaseFn FunctionOrFunctionalPredicate)
+(isa SenFactsCaseFn CaseFunctions)
+(arity SenFactsCaseFn 1)
+(arg1Isa SenFactsCaseFn Thing)
+(resultIsa SenFactsCaseFn Case)
+(comment SenFactsCaseFn "(SenFactsCaseFn ?n) is the set of facts in the sentence case ?n,
+including its sub-DRSes.")
+
+(isa CaseWFilterFn CaseFunctions)
+(arity CaseWFilterFn 3)
+(arg1Isa CaseWFilterFn Thing) ;; Vague
+(arg2Isa CaseWFilterFn Thing) ;; Vague
+(arg3Isa CaseWFilterFn Thing) ;; Vague
+(resultIsa CaseWFilterFn Case)
+(comment CaseWFilterFn 
+  "Creates a Case by finding all the relations that are 
+common between ?obj1 and ?obj2, and all the relations 
+that are used to generate the answer to the query.  Also 
+includes all the isa relations between the objects 
+referenced in those relations.")
+
+(isa ComparativeCaseFn CaseFunctions)
+(arity ComparativeCaseFn 2)
+(arg1Isa ComparativeCaseFn Thing)
+(arg2Isa ComparativeCaseFn Thing)
+(resultIsa ComparativeCaseFn Case)
+(comment ComparativeCaseFn 
+  "(ComparativeCaseFn ?obj1 ?obj2) denotes the case defined by finding all the relations that are 
+common between ?obj1 and ?obj2.  Also includes all the 
+isa relations between the objects referenced in those 
+relations.")
+
+(isa AgentCaseFn CaseFunctions)
+(arity AgentCaseFn 1)
+(arg1Isa AgentCaseFn Agent)
+(resultIsa AgentCaseFn Case)
+(comment AgentCaseFn "Creates a Case by finding all the relations that reference 
+?agent, plus all relations between objects in that first 
+set of relations.  (Designed with ?agent being of type agent.)")
+
+(isa AgentInContextCaseFn CaseFunctions)
+(arity AgentInContextCaseFn 2)
+(arg1Isa AgentInContextCaseFn Agent)
+(arg2Isa AgentInContextCaseFn Thing)  ;; Vague
+(resultIsa AgentInContextCaseFn Case)
+(comment AgentInContextCaseFn "Creates a Case by finding all the relations that reference 
+?agent, that are within the scope of the event ?context 
+(context constrained by case-sub-event-predicate)")
+
+(isa EventCaseFn CaseFunctions)
+(arity EventCaseFn 1)
+(arg1Isa EventCaseFn Event)
+(resultIsa EventCaseFn Case)
+(comment EventCaseFn "Creates a Case by finding all the relations that reference ?event")
+
+(isa EventNoPostludeCaseFn CaseFunctions)
+(arity EventNoPostludeCaseFn 1)
+(arg1Isa EventNoPostludeCaseFn Event)
+(resultIsa EventNoPostludeCaseFn Case)
+(comment EventNoPostludeCaseFn "Creates a Case by finding all the relations that 
+reference ?event, but excludes any facts that references 
+what things this event causes")
+
+(isa RecursiveCaseFn CaseFunctions) 
+(arity RecursiveCaseFn 2)
+(arg1Isa RecursiveCaseFn Thing)
+(arg2Isa RecursiveCaseFn Thing)
+(resultIsa RecursiveCaseFn Case)
+(comment RecursiveCaseFn "Creates a Case by finding all the relations that reference 
+?event, plus all the relations that refernces any of its 
+sub-events (constrained by case-sub-event-predicate) ")
+
+(isa InterestCaseFn CaseFunctions)
+(arity InterestCaseFn 1)
+(arg1Isa InterestCaseFn Thing)
+(resultIsa InterestCaseFn Case)
+(comment InterestCaseFn "Creates a Case by finding all the relations that 
+reference the interest/goal ?interest")
+
+(isa InterestNoPostludeCaseFn CaseFunctions)
+(arity InterestNoPostludeCaseFn 1)
+(arg1Isa InterestNoPostludeCaseFn Thing)
+(resultIsa InterestNoPostludeCaseFn Case)
+(comment InterestNoPostludeCaseFn
+   "Creates a Case by finding all the relations that reference 
+the interest/goal ?interest, but excludes any facts that 
+references what things this event causes ")
+
+(isa InterestInContextCaseFn CaseFunctions)
+(arity InterestInContextCaseFn 2)
+(arg1Isa InterestInContextCaseFn Thing) ;; Vague
+(arg2Isa InterestInContextCaseFn Thing) ;; Vague
+(resultIsa InterestInContextCaseFn Case)
+(comment InterestInContextCaseFn
+  "Creates a Case by finding all the relations that reference 
+the interest/goal ?interest that are within the scope of 
+the event ?context (context constrained by 
+case-sub-event-predicate)")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Relationships between cases
+
+
+(isa subCaseOf Predicate)
+(arity subCaseOf 2)
+(arg1Isa subCaseOf Case)
+(arg2Isa subCaseOf Case)
+(comment subCaseOf "Says that ?subcase exists in the context of ?supercase.  
+In other words, all facts known in ?supercase also hold in ?subcase.")
+
+;;; Consider adding (genlpreds subCaseOf genlMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Matches
+
+(isa Match Collection)
+(genls Match AbstractInformationalThing)
+(comment Match "A similarity match.")
+
+(isa matchBetween Predicate)
+(arity matchBetween 4)
+(comment matchBetween "?match is from ?base to ?target subject to ?constraints")
+(arg1Isa matchBetween Case)
+(arg2Isa matchBetween Case)
+(arg3Isa matchBetween Set-Mathematical)
+(arg4Isa matchBetween Match)
+
+;; ***** Adding pragmas by hand, until there's time for implementing
+;; ***** the pragma refinery.
+;;;(pragma matchBetween
+;;;        (TheList :backchain :never :functional (4)))
+
+(isa seekingMatchBetween Predicate)
+(isa seekingMatchBetween FunctionalPredicate)
+(arity seekingMatchBetween 4)
+(arg1Isa seekingMatchBetween Case)
+(arg2Isa seekingMatchBetween Case)
+(arg3Isa seekingMatchBetween Set-Mathematical)
+(arg4Isa seekingMatchBetween Match)
+(comment seekingMatchBetween "Uses SME to match ?base and ?target, with the comparison 
+                  represented by ?match.  Does recursive case buildup, but 
+                  also uses required constraints to focus the match.")
+;; ***** Adding pragmas by hand, until there's time for implementing
+;; ***** the pragma refinery.
+;;;(pragma seekingMatchBetween
+;;;        (TheList :backchain :never :functional (4)))
+
+(isa filteredMatchBetween Predicate)
+(arity filteredMatchBetween 4)
+(comment filteredMatchBetween "Uses SME to match ?base and ?target, with the comparison 
+represented by ?match.  Uses ?filter-fn to focus the 
+match.  The filtering function should be a 
+$ComputerCodeFunction that takes one argument: the match 
+hypothesis being considered at the time; it should return 
+true if the match-hypothesis should be rejected.  
+Often, the ?filter-fn will be specified using the form 
+(ExecutableFunctionFn <function-name>).")
+(isa filteredMatchBetween FunctionalPredicate)
+(arg1Isa filteredMatchBetween Case)
+(arg2Isa filteredMatchBetween Case)
+(arg3Isa filteredMatchBetween ComputerCodeFunction)
+(arg4Isa filteredMatchBetween Match)
+;; ***** Adding pragmas by hand, until there's time for implementing
+;; ***** the pragma refinery.
+;;;(pragma filteredMatchBetween
+;;;        (TheList :backchain :never :functional (4)))
+
+(isa strongFilteredMatchBetween Predicate)
+(arity strongFilteredMatchBetween 4)
+(isa strongFilteredMatchBetween FunctionalPredicate)
+(arg1Isa strongFilteredMatchBetween Case)
+(arg2Isa strongFilteredMatchBetween Case)
+(arg3Isa strongFilteredMatchBetween ComputerCodeFunction)
+(arg4Isa strongFilteredMatchBetween Match)
+(comment strongFilteredMatchBetween "Prevents mappings that entail violations of pragmatic match constraints from being generated.")
+
+(isa analogyEntityWithStructuralEvaluation Collection)
+(genls analogyEntityWithStructuralEvaluation AbstractInformationalThing)
+(comment analogyEntityWithStructuralEvaluation "Correspondence or mapping.")
+
+(isa MatcherFn Function-Denotational)
+(arity MatcherFn 2)
+(arg1Isa MatcherFn Number)
+(arg2Isa MatcherFn Number)
+(resultIsa MatcherFn Match)
+(comment MatcherFn "Term denoting a Match.")
+
+(isa currentMatcherTerm Predicate)
+(isa currentMatcherTerm NotForAnalogyPredicate)
+(notForAnalogy currentMatcherTerm)
+(arity currentMatcherTerm 2)
+(arg1Isa currentMatcherTerm Match)
+(arg2Isa currentMatcherTerm Match)
+(comment currentMatcherTerm
+         "(currentMatcherTerm <old> <new>) indicates that <new> is the current version of the match denoted by <old>.  This is a dynamic-update predicate.")
+
+(isa baseOfMatch Predicate)
+(arity baseOfMatch 2)
+(arg1Isa baseOfMatch Match)
+(arg2Isa baseOfMatch Case)
+(comment baseOfMatch "(baseOfMatch ?m ?c) indicates that case ?c is the base description in match ?m.")
+
+(isa targetOfMatch Predicate)
+(arity targetOfMatch 2)
+(arg1Isa targetOfMatch Match)
+(arg2Isa targetOfMatch Case)
+(comment targetOfMatch "(targetOfMatch ?m ?c) indicates that case ?c is the base description in match ?m.")
+
+
+(isa retractAnalogyResults Relation)
+(arity retractAnalogyResults 2)
+(arg1Isa retractAnalogyResults Case)
+(arg2Isa retractAnalogyResults Case)
+(comment retractAnalogyResults
+  "(retractAnalogyResults <base> <target>) invokes a tell handler that uncaches
+   the dgroups and retracts the facts related to the analogies involving those
+   dgroups.")
+(notForAnalogy retractAnalogyResults)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Mappings
+
+(isa Mapping Collection)
+(genls Mapping AbstractInformationalThing)
+(genls Mapping AnalogyEntityWithStructuralEvaluation)
+(comment Mapping "A mapping is a set of correspondences plus candidate 
+inferences that is an interpretation of a match.")
+
+(isa mappingOf Predicate)
+(isa mappingOf FunctionalSlot)
+(arity mappingOf 2)
+(arg1Isa mappingOf Mapping)
+(arg2Isa mappingOf Match)
+(comment mappingOf "?mapping is a mapping of match ?match")
+
+(arity structuralEvaluationScore 1)
+(isa structuralEvaluationScore ContinuousQuantity)
+(comment structuralEvaluationScore
+ "Each mapping and correspondence has a structural evaluation 
+score.  Higher scores indicate more structural overlap, with 
+a bias towards higher-order (in the Structure-Mapping sense) 
+structure.  This number is derived via SME automatically, as 
+a side effect of the matching process. We use the functional 
+version to express the result declaratively because this 
+supports comparison of scores more easily.  In FIRE what is 
+asserted looks like 
+(nvalue (structuralEvaluationScore MH32) 0.2554), where 
+nvalue requires its second argument to be a numerical value.")
+
+
+(isa structuralEvaluationScoreOf Predicate)
+(arity structuralEvaluationScoreOf 2)
+(arg1Isa structuralEvaluationScoreOf AnalogyEntityWithStructuralEvaluation)
+(arg2Isa structuralEvaluationScoreOf Number)
+(comment structuralEvaluationScoreOf
+  "Mapping or correspondence ?thing has a structural evaluation of ?n")
+
+(isa baseNormalizedScoreOf Predicate)
+(arity baseNormalizedScoreOf 2)
+(arg1Isa baseNormalizedScoreOf Mapping)
+(arg2Isa baseNormalizedScoreOf Number)
+(comment baseNormalizedScoreOf
+  "Mapping ?thing has a base-normalized structural evaluation score of ?n")
+
+(isa normalizedScoreOf Predicate)
+(arity normalizedScoreOf 2)
+(arg1Isa normalizedScoreOf Mapping)
+(arg2Isa normalizedScoreOf Number)
+(comment normalizedScoreOf
+  "Mapping ?thing has a normalized structural evaluation score of ?n")
+
+(isa targetNormalizedScoreOf Predicate)
+(arity targetNormalizedScoreOf 2)
+(arg1Isa targetNormalizedScoreOf Mapping)
+(arg2Isa targetNormalizedScoreOf Number)
+(comment targetNormalizedScoreOf
+ "Mapping ?thing has a target-normalized structural evaluation score of ?n")
+
+;;; N.B. We reify the SES for only mappings right now, because that's been
+;;; the most relevant.  If you want to look at the SES for debugging purposes,
+;;; use the FIRE explanation system, which accesses this and other SME internals.
+;;; If you need knowledge-level access, we can add additional reification.
+
+(isa bestMapping Predicate)
+(isa bestMapping FunctionalSlot)
+(arity bestMapping 2)
+(arg1Isa bestMapping Match)
+(arg2Isa bestMapping Mapping)
+(comment bestMapping
+ "Indicates that ?mapping of ?match has the highest structural evaluation.")
+;; N.B. Generally the best mapping SME returns is what one wants to use.
+
+(isa numberOfMappings Predicate)
+(isa numberOfMappings FunctionalSlot)
+(arity numberOfMappings 2)
+(arg1Isa numberOfMappings Match)
+(arg2Isa numberOfMappings Integer)
+(comment numberOfMappings "(numberOfMappings ?match ?n) binds ?n to the number of mappings in ?match")
+
+(arity MappingFn 2)
+(isa MappingFn Function-Denotational)
+(resultIsa MappingFn Mapping)
+(arg1Isa MappingFn Number)
+(arg2Isa MappingFn Matcher)
+(comment MappingFn "Term denoting a Mapping.")
+                         
+(isa correspondsInMapping Predicate)
+(arity correspondsInMapping 3)
+(arg1Isa correspondsInMapping Mapping)
+(arg2Isa correspondsInMapping CycLExpression)
+(arg3Isa correspondsInMapping CycLExpression)
+(comment correspondsInMapping
+ "(correspondsInMapping ?m ?bi ?ti) indicates that base item ?bi and target item ?ti correspond in mapping ?m")
+
+(isa baseOfMapping Predicate)
+(arity baseOfMapping 2)
+(arg1Isa baseOfMapping Mapping)
+(arg2Isa baseOfMapping Case)
+(comment baseOfMapping "(baseOfMapping ?m ?c) indicates that case ?c is the base description in mapping ?m.")
+
+(isa targetOfMapping Predicate)
+(arity targetOfMapping 2)
+(arg1Isa targetOfMapping Mapping)
+(arg2Isa targetOfMapping Case)
+(comment targetOfMapping "(targetOfMapping ?m ?c) indicates that case ?c is the base description in mapping ?m.")
+
+;; unmappedTargetEntity
+
+(isa unmappedTargetEntity Predicate)
+(arity unmappedTargetEntity 2)
+(arg1Isa unmappedTargetEntity Mapping)
+(arg2Isa unmappedTargetEntity CycLTerm)
+(comment unmappedTargetEntity "(unmappedTargetEntity ?mapping ?entity) means ?entity is present in the target but is not a target entity of any correspondence in ?mapping.")
+
+(isa unmappedBaseEntity Predicate)
+(arity unmappedBaseEntity 2)
+(arg1Isa unmappedBaseEntity Mapping)
+(arg2Isa unmappedBaseEntity CycLTerm)
+(comment unmappedBaseEntity "(unmappedBaseEntity ?mapping ?entity) means ?entity is not a base entity of any correspondence in ?mapping.")
+
+
+(isa minimalSMEAbstraction Predicate)
+(arity minimalSMEAbstraction 2)
+(arg1Isa minimalSMEAbstraction Mapping)
+(arg1Isa minimalSMEAbstraction Match)
+(arg2Isa minimalSMEAbstraction SetExtensional)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Constraints On Matches
+;;;
+;;; Used in forming the constraint argument to the match predicates.
+
+(isa requiredCorrespondence Predicate)
+(arity requiredCorrespondence 2)
+(arg1Isa requiredCorrespondence CycLExpression)
+(arg2Isa requiredCorrespondence CycLExpression)
+(comment requiredCorrespondence
+  "Any mappings generated must have ?base-item 
+corresponding to ?target-item.  ?base-item and ?target-item 
+are either entities or expressions.")
+
+(isa matchHasConstraint Predicate)
+(arity matchHasConstraint 2)
+(arg1Isa matchHasConstraint Match)
+(arg2Isa matchHasConstraint CycLExpression)
+(comment matchHasConstraint
+  "(matchHasConstraint ?m ?c) means that constraint ?c was operative
+   when match ?m was being carried out.")
+
+(isa excludedCorrespondence Predicate)
+(arity excludedCorrespondence 2)
+(arg1Isa excludedCorrespondence CycLExpression)
+(arg2Isa excludedCorrespondence CycLExpression)
+(comment excludedCorrespondence 
+  "(excludedCorrespondence ?base-item ?target-item)
+In ?match, any mappings generated must not have ?base-item 
+corresponding to ?target-item.  ?base-item and ?target-item 
+are either entities or expressions.  Useful when the best 
+mapping so far looks unproductive, and one wants to force 
+alternatives.")
+
+(isa excludedBaseCorrespondence Predicate)
+(arity excludedBaseCorrespondence 1)
+(arg1Isa excludedBaseCorrespondence CycLExpression)
+(comment excludedBaseCorrespondence
+  "(excludedBaseCorrespondence ?base-item) means that mappings generated must not
+  have ?base-item corresponding to something in the target.")
+
+(isa excludedTargetCorrespondence Predicate)
+(arity excludedTargetCorrespondence 1)
+(arg1Isa excludedTargetCorrespondence CycLExpression)
+(comment excludedTargetCorrespondence 
+  "(excludedTargetCorrespondence ?target-item) means that mappings must not
+  have ?target-item corresponding to something in the base")
+
+(isa requiredBaseCorrespondence Predicate)
+(arity requiredBaseCorrespondence 1)
+(arg1Isa requiredBaseCorrespondence CycLExpression)
+(comment requiredBaseCorrespondence "Any mappings generated must have ?base-item
+                  corresponding to something in the target.")
+
+(isa requiredTargetCorrespondence Predicate)
+(arity requiredTargetCorrespondence 1)
+(arg1Isa requiredTargetCorrespondence CycLExpression)
+(comment requiredTargetCorrespondence "Any mappings must have ?base-item
+                  corresponding to something in the target.")
+
+(isa excludedCross-PartitionCorrespondences Predicate)
+(arity excludedCross-PartitionCorrespondences 1)
+(arg1Isa excludedCross-PartitionCorrespondences Set)
+(comment excludedCross-PartitionCorrespondences
+  "(excludedCross-PartitionCorrespondences <set>) constrains an SME match to
+  have no entity corresponences that are members of more than one of the set of collections given.
+  No type inference aside from lookup is done inside SME, so to use this constraint requires that 
+  case construction explicitly include this information.")
+
+(isa requireWithinPartitionCorrespondences Predicate)
+(arity requireWithinPartitionCorrespondences 1)
+(arg1Isa requireWithinPartitionCorrespondences Collection)
+(comment requireWithinPartitionCorrespondences
+  "(requireWithinPartitionCorrespondences <collection>) constrains the entities 
+ which are known to be in <collection> in an SME match to only bind with other
+  entities that are also known to be members of <collection>.  
+  No type inference is done at the SME level, case construction must explicitly include it.")
+
+(isa identicalFunctions Predicate)
+(arity identicalFunctions 0)
+(comment identicalFunctions
+  "(identicalFunctions) is a constraint indicating that the match in context should
+  not allow non-identical function mappings.")
+
+(isa seekInferencesAbout Predicate)
+(arity seekInferencesAbout 1)
+(arg1Isa seekInferencesAbout CycLExpression)
+(comment seekInferencesAbout
+  "(seekInferencesAbout <target item>) implements pragmatic marking, 
+ indicating that SME should only consider kernel mappings that could contribute
+ candidate inferences about the specified target item, which can be an entity or an expression.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Correspondences
+;;;
+;;; Correspondences are the EL level of what inside SME are called
+;;; match hypotheses.  This is why mhFn is the working memory function.
+
+(isa Correspondence Collection)
+(genls Correspondence AbstractInformationalThing)
+(genls Correspondence AnalogyEntityWithStructuralEvaluation)
+(comment Correspondence 
+  "Represents a correspondence between an item in the base
+and an item in the target, with respect to a given match.  
+As such, it can appear in multiple mappings under the same 
+match.  However, its structural evaluation is the same for 
+every mapping.  See also correspondenceOf and 
+correspondence-between.")
+
+;; N.B. The previous version of this ontology had subclasses for entity,
+;; functor, and expression correspondences.  Never were used in our HPKB
+;; work, so I've eliminated them in this version.
+
+(isa correspondenceOf Predicate)
+(isa correspondenceOf FunctionalSlot)
+(arity correspondenceOf 2)
+(arg1Isa correspondenceOf Correspondence)
+(arg2Isa correspondenceOf Match)
+(comment correspondenceOf "?correspondence is part of ?match.")
+
+(isa hasCorrespondence Predicate)
+(arity hasCorrespondence 2)
+(comment hasCorrespondence "?correspondence is one of the correspondences
+                  that comprise ?mapping.  A correspondence can 
+                  be part of multiple mappings.")
+(arg1Isa hasCorrespondence Mapping)
+(arg2Isa hasCorrespondence Correspondence)
+
+(isa correspondenceBetween Predicate)
+(arity correspondenceBetween 3)
+(comment correspondenceBetween "(correspondenceBetween ?correspondence ?base-prop ?target-prop) means ?correspondence is the hypothesis that ?base-item matches 
+?target-item.  ?base-item and ?target-item can be entities, functors, or expressions.")
+(arg1Isa correspondenceBetween Correspondence)
+(arg2Isa correspondenceBetween CycLExpression)
+(arg3Isa correspondenceBetween CycLExpression)
+
+(isa correspondenceBaseItem Predicate)
+(arity correspondenceBaseItem 2)
+(comment correspondenceBaseItem
+ "(correspondenceBaseItem ?correspondence ?base-item) ?base-item is the thing in the base connected via ?correspondence.")
+(arg1Isa correspondenceBaseItem Correspondence)
+(arg2Isa correspondenceBaseItem CycLExpression)
+
+(isa correspondenceTargetItem Predicate)
+(arity correspondenceTargetItem 2)
+(comment correspondenceTargetItem
+ "(correspondenceTargetItem ?correspondence ?target-item) means ?target-item is the thing in the target connected via ?correspondence.")
+(arg2Isa correspondenceTargetItem CycLExpression)
+(arg1Isa correspondenceTargetItem Correspondence)
+
+(isa correspondenceForBaseItem Predicate)
+(arity correspondenceForBaseItem 3)
+(comment correspondenceForBaseItem
+ "(correspondenceForBaseItem ?match ?base-item ?correspondence) means ?correspondence has ?base-item in ?match as its base item.")
+(arg1Isa correspondenceForBaseItem Match)
+(arg2Isa correspondenceForBaseItem CycLExpression)
+(arg3Isa correspondenceForBaseItem Correspondence)
+
+(isa correspondenceForTargetItem Predicate)
+(arity correspondenceForTargetItem 3)
+(comment correspondenceForTargetItem
+ "(correspondenceForTargetItem ?match ?target-item ?correspondence) means ?correspondence has ?target-item in ?match as its target item.")
+(arg1Isa correspondenceForTargetItem Match)
+(arg2Isa correspondenceForTargetItem CycLExpression)
+(arg3Isa correspondenceForTargetItem Correspondence)
+
+(isa isEntityCorrespondence Predicate)
+(arity isEntityCorrespondence 1)
+(comment isEntityCorrespondence
+         "(isEntityCorrespondence ?mh) is true exactly when ?mh aligns two entities.")
+(arg1Isa isEntityCorrespondence Correspondence)
+
+(isa isExpressionCorrespondence Predicate)
+(arity isExpressionCorrespondence 1)
+(comment isExpressionCorrespondence
+         "(isExpressionCorrespondence ?mh) is true exactly when ?mh aligns two expressions.")
+(arg1Isa isExpressionCorrespondence Correspondence)
+
+(isa isFunctorCorrespondence Predicate)
+(arity isFunctorCorrespondence 1)
+(comment isFunctorCorrespondence
+         "(isFunctorCorrespondence ?mh) is true exactly when ?mh aligns two functors.")
+(arg1Isa isFunctorCorrespondence Correspondence)
+
+(isa rootCorrespondenceFor Predicate)
+(arity rootCorrespondenceFor 2)
+(comment rootCorrespondenceFor 
+  "(rootCorrespondenceFor ?mh ?root-mh) means ?root-mh is one of the root 
+    match-hypotheses of the given ?mh.  This can be used to find the expression
+    containing sub-expressions that were found as correspondences.")
+(arg1Isa rootCorrespondenceFor Correspondence)
+(arg2Isa rootCorrespondenceFor Correspondence)
+
+
+;; N.B. Structural support relationships were included in the earlier version
+;; of this ontology.  Probably useful for more sophisticated analogical reasoning,
+;; but we will add these back in as actually warrented.  
+
+(arity MhFn 2)
+(isa MhFn Function-Denotational)
+(resultIsa MhFn Correspondence)
+(arg1Isa MhFn Number)
+(arg2Isa MhFn Match)
+(comment MhFn "Term denoting a Correspondence.")
+
+(isa numberOfCorrespondences Predicate)
+(arity numberOfCorrespondences 2)
+(arg1Isa numberOfCorrespondences AbstractInformationalThing) ;; Vague
+(arg2Isa numberOfCorrespondences Number)
+(comment numberOfCorrespondences "Number of correspondences in SME or mapping.")
+
+(isa numberOfCandidateInferences Predicate)
+(arity numberOfCandidateInferences 2)
+(arg1Isa numberOfCandidateInferences Mapping)
+(arg2Isa numberOfCandidateInferences Number)
+(comment numberOfCandidateInferences "Number of candidate inferences in the mapping.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Candidate Inferences
+
+(isa CandidateInference Collection)
+(genls CandidateInference AbstractInformationalThing)
+(comment CandidateInference "An analogical inference suggested by a mapping. 
+Candidate inferences are surmises; they must be 
+tested using other forms of reasoning.  A candidate 
+inference can be an entire piece of an argument, 
+e.g., an implication with its antecedents and conclusions 
+that appears in the base as a whole expression, or it can 
+be a proposition.")
+
+(isa candidateInferenceOf Predicate)
+(isa candidateInferenceOf FunctionalSlot)
+(arity candidateInferenceOf 2)
+(arg1Isa candidateInferenceOf CandidateInference)
+(arg2Isa candidateInferenceOf Mapping)
+(comment candidateInferenceOf "?candidateInference is a consequence of ?mapping.")
+
+(isa reverseCandidateInferenceOf Predicate)
+(isa reverseCandidateInferenceOf FunctionalSlot)
+(arity reverseCandidateInferenceOf 2)
+(arg1Isa reverseCandidateInferenceOf CandidateInference)
+(arg2Isa reverseCandidateInferenceOf Mapping)
+(comment reverseCandidateInferenceOf "?candidateInference is a consequence of ?mapping.")
+
+(isa candidateInferenceContent Predicate)
+(isa candidateInferenceContent FunctionalSlot)
+(arity candidateInferenceContent 2)
+(arg1Isa candidateInferenceContent CandidateInference)
+(arg2Isa candidateInferenceContent CYC-Formula)
+(comment candidateInferenceContent
+ "?prop is the propositional content of ?candidateInference")
+
+;; N.B. The previous version included candidateInference-support,
+;; which referred to the base statement that was projected, and
+;; candidateInferenceCorrespondence-support, the subset of MH's
+;; that support this particular inference.  Again, wasn't used in HPKB,
+;; but we can reinstall if needed.
+
+(isa candidateInferenceCorrespondences Predicate)
+(arity candidateInferenceCorrespondences 2)
+(arg1Isa candidateInferenceCorrespondences CandidateInference)
+(arg2Isa candidateInferenceCorrespondences Set-Mathematical)
+(comment candidateInferenceCorrespondences "(candidateInferenceCorrespondences ?ci ?set) binds ?set to the set of match hypotheses in ?ci.")
+
+(isa sourceOfCandidateInference Predicate)
+(arity sourceOfCandidateInference 2)
+(arg1Isa sourceOfCandidateInference CandidateInference)
+(arg2Isa sourceOfCandidateInference CycLExpression)
+
+(isa supportScore ContinuousQuantity)
+(arity supportScore 1)
+(arg1Isa supportScore CandidateInference)
+(comment supportScore "Degree of structural support ?candidateInference 
+gets from its mapping.")
+
+(isa extrapolationScore ContinuousQuantity)
+(arity extrapolationScore 1)
+(arg1Isa extrapolationScore CandidateInference)
+(comment extrapolationScore "Degree to which ?candidateInference introduces 
+new information.")
+
+(isa supportScoreOf Predicate)
+(arity supportScoreOf 2)
+(arg1Isa supportScoreOf CandidateInference)
+(arg2Isa supportScoreOf Number)
+(comment supportScoreOf "(supportScoreOf ?ci ?score) represents the amount of
+structural support ?candidateInference gets from its mapping.")
+
+(isa extrapolationScoreOf Predicate)
+(arity extrapolationScoreOf 2)
+(arg1Isa extrapolationScoreOf CandidateInference)
+(arg2Isa extrapolationScoreOf Number)
+(comment extrapolationScoreOf "(extrapolationScoreOf ?ci ?score) represents 
+degree to which ?ci introduces new information.")
+
+(isa candidateInferenceSupportScore Predicate)
+(arity candidateInferenceSupportScore 2)
+(arg1Isa candidateInferenceSupportScore CandidateInference)
+(arg2Isa candidateInferenceSupportScore Number)
+(comment candidateInferenceSupportScore
+ "The candidate inference ?ci has a support score of ?n")
+
+(isa candidateInferenceExtrapolationScore Predicate)
+(arity candidateInferenceExtrapolationScore 2)
+(arg2Isa candidateInferenceExtrapolationScore Number)
+(arg1Isa candidateInferenceExtrapolationScore CandidateInference)
+(comment candidateInferenceExtrapolationScore
+ "The candidate inference ?ci has an extrapolation score of ?n.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Analogy Skolem resolution support
+
+(isa AnalogySkolem Collection)
+(genls AnalogySkolem CycLTerm)
+(comment AnalogySkolem
+  "This special kind of expression represents a hypothetical derived from
+   analogy via a candidate-inference.")
+
+(arity AnalogySkolemFn 1)
+(isa AnalogySkolemFn Function-Denotational)
+(arg1Isa AnalogySkolemFn Thing)
+(resultIsa AnalogySkolemFn AnalogySkolem)
+(genFormat AnalogySkolemFn "something like ~A" (1))
+(comment AnalogySkolemFn "An arbitrary individual introduced during analogical 
+reasoning.")
+
+(arity AnalogyPlunkFn 2)
+(isa AnalogyPlunkFn Function-Denotational)
+(isa AnalogyPlunkFn AtomicAnalogyNAT-Function)
+(atomicAnalogyNat AnalogyPlunkFn)
+(arg1Isa AnalogyPlunkFn Thing)
+(arg2Isa AnalogyPlunkFn Number)
+(resultIsa AnalogyPlunkFn AnalogySkolem)
+(genFormat AnalogyPlunkFn "something akin to ~A" (1))
+(comment AnalogyPlunkFn 
+         "(AnalogyPlunkFn <entity> <smeid>) denotes an aribitrary individual intended to map to <entity> in the base, in match <smeid>.")
+
+(arity resolveNongroundSkolemsPassthrough 2)
+(isa resolveNongroundSkolemsPassthrough Predicate)
+(arg1Isa resolveNongroundSkolemsPassthrough CycLExpression)
+(arg2Isa resolveNongroundSkolemsPassthrough CycLExpression)
+(comment resolveNongroundSkolemsPassthrough
+         "(resolveNongroundSkolemsPassthrough ?in ?out) indicates that ?out is the result of replacing all non-ground analogy skolems in ?in with their content, i.e., simply importing the abstract base term itself.  This is a very simple but surprisingly common skolem resolution strategy.")
+
+;;; (defrelation dimensional-difference (?mapping ?difference-pred 
+;;;                                                 ?base-term ?target-term)
+;;;   :documentation "In ?mapping, ?base-term and ?target-term differ as expressed 
+;;;                   by ?difference-pred. ?base-term and ?target-term must be 
+;;;                   functional expressions. For example, (dimensional-difference 
+;;;                   Mapping-27 Greater-Than (Population UUSR) (Population Iran))")
+;;; 
+;;; (defuniversalfact (arg1Isa dimensional-difference Mapping))
+;;; (defuniversalfact (arg2Isa dimensional-difference BinaryPredicate))
+;;; (defuniversalfact (arg3Isa dimensional-difference function-expression))
+;;; (defuniversalfact (arg4Isa dimensional-difference function-expression))
+
+(isa CiFn Function-Denotational)
+(arity CiFn 3)
+(arg1Isa CiFn Number)
+(arg2Isa CiFn Number)
+(arg3Isa CiFn Match)
+(resultIsa CiFn CandidateInference)
+(comment CiFn "Term denoting a CandidateInference .")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Reifying analogy parameters
+;;;
+
+(isa AnalogyParameter Collection)
+(genls AnalogyParameter SoftwareParameter)
+(comment AnalogyParameter 
+         "AnalogyParameter is the collection of parameters used in analogical reasoning.")
+
+(isa SME-Parameter Collection)
+(genls SME-Parameter AnalogyParameter)
+(comment SME-Parameter "SMEParameter is the collection of parameters used with the Structure-Mapping Engine.")
+
+(isa SME-TrickleDown SME-Parameter)
+(isa SME-SameFunctor SME-Parameter)
+(isa SME-SameFunction SME-Parameter)
+(isa SME-GreedyMax SME-Parameter)
+
+(isa MACFAC-Parameter Collection)
+(genls MACFAC-Parameter AnalogyParameter)
+(comment MACFAC-Parameter "MACFAC parameter is the collection of parameters used with the MAC/FAC similarity retrieval system.")
+
+(isa MAC-MaximumOutput MACFAC-Parameter)
+(isa MAC-SelectorWidth MACFAC-Parameter)
+(isa FAC-MaximumOutput MACFAC-Parameter)
+(isa FAC-SelectorWidth MACFAC-Parameter)
+
+(isa analogyParameterUsed Predicate)
+(arity analogyParameterUsed 3)
+(arg1Isa analogyParameterUsed Thing) ;; match or retrieval, really
+(arg2Isa analogyParameterUsed AnalogyParameter)
+(arg3Isa analogyParameterUsed Thing) ;; Binary or numerical, no good join here?
+(comment analogyParameterUsed
+         "(analogyParameterUsed ?a ?p ?v) indicates that the value of parameter ?p was ?v when computing ?a.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Extending mappings
+;;;
+
+(isa extendMatch Predicate)
+(arity extendMatch 3)
+(comment extendMatch "(extendMatch ?old ?constraints ?new) extends the match ?old, based on changes in base and target, if any, and under constraints ?constraints.  The result is denoted via ?new.")
+(arg1Isa extendMatch Match)
+(arg2Isa extendMatch Set-Mathematical)
+(arg3Isa extendMatch Match)
+(isa extendMatch NotForAnalogyPredicate)
+(notForAnalogy extendMatch)
+
+(isa baseNewItemOf Predicate)
+(arity baseNewItemOf 2)
+(comment baseNewItemOf "(baseNewItemOf ?match ?item) indicates that ?item was added to the base after ?match.")
+(arg1Isa baseNewItemOf Match)
+(arg2Isa baseNewItemOf Thing)
+
+(isa targetNewItemOf Predicate)
+(arity targetNewItemOf 2)
+(comment targetNewItemOf "(targetNewItemOf ?match ?item) indicates that ?item was added to the target after ?match.")
+(arg1Isa targetNewItemOf Match)
+(arg2Isa targetNewItemOf Thing)
+
+(isa remapMatch Predicate)
+(arity remapMatch 3)
+(comment remapMatch "(remapMatch ?old ?constraints ?new) carries out a remapping operation on ?old, under ?constraints, resulting in ?new.")
+(arg1Isa remapMatch Match)
+(arg2Isa remapMatch Set-Mathematical)
+(arg3Isa remapMatch Match)
+(isa remapMatch NotForAnalogyPredicate)
+(notForAnalogy remapMatch)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Reporting On Similarities And Differences
+;;;
+;;; These are based on the definitions in sme\v4\simdiff.lsp
+
+(isa entitySimilarityOf Predicate)
+(arity entitySimilarityOf 2)
+(comment entitySimilarityOf "(entitySimilarityOf ?mapping ?correspondence) means ?correspondence of ?mapping involves entities")
+(arg1Isa entitySimilarityOf Mapping)
+(arg2Isa entitySimilarityOf Correspondence)
+
+(isa rootSimilarityOf Predicate)
+(arity rootSimilarityOf 2)
+(comment rootSimilarityOf "(rootSimilarityOf ?mapping ?correspondence) means ?correspondence of ?mapping is a top-level correspondence.")
+(arg1Isa rootSimilarityOf Mapping)
+(arg2Isa rootSimilarityOf Correspondence)
+
+(isa roleDifferenceOf Predicate)
+(arity roleDifferenceOf 4)
+(arg1Isa roleDifferenceOf Correspondence)
+(arg2Isa roleDifferenceOf Mapping)
+(arg3Isa roleDifferenceOf Set-Mathematical)
+(arg4Isa roleDifferenceOf Set-Mathematical)
+(comment roleDifferenceOf "In ?mh of ?mapping, ?bisas is a set of ISA statements about items
+in the base that are different from the ISA statements about the corresponding 
+target items in ?tisas")
+
+(isa baseAlignableAbsenceOf Predicate)
+(arity baseAlignableAbsenceOf 2)
+(comment baseAlignableAbsenceOf "In ?mapping, ?exp from the base might apply to target.")
+(arg1Isa baseAlignableAbsenceOf Mapping)
+(arg2Isa baseAlignableAbsenceOf CycLExpression)
+
+(isa targetAlignableAbsenceOf Predicate)
+(arity targetAlignableAbsenceOf 2)
+(comment targetAlignableAbsenceOf "In ?mapping, ?exp from the target might apply to base.")
+(arg1Isa targetAlignableAbsenceOf Mapping)
+(arg2Isa targetAlignableAbsenceOf CycLExpression)
+
+(isa baseOnlyNADOf Predicate)
+(arity baseOnlyNADOf 2)
+(comment baseOnlyNADOf "In ?mapping, nothing corresponds to ?exp in the base.")
+(arg1Isa baseOnlyNADOf Mapping)
+(arg2Isa baseOnlyNADOf CycLExpression)
+
+(isa targetOnlyNADOf Predicate)
+(arity targetOnlyNADOf 2)
+(comment targetOnlyNADOf "In ?mapping, nothing corresponds to ?exp in the target.")
+(arg1Isa targetOnlyNADOf Mapping)
+(arg2Isa targetOnlyNADOf CycLExpression)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Extended Matching
+;;;
+;;; N.B. These are not implemented in FIRE yet. 
+
+(isa quickMatchBetween Predicate)
+(arity quickMatchBetween 3)
+(comment quickMatchBetween 
+  "Uses SME to make a ?match from ?base to ?target, but 
+by-passes the merge step (returns the biggest kernel). 
+Useful for image retrieval in which a person makes the 
+final decision about what's best")
+
+(isa recursiveMatchBetween Predicate)
+(arity recursiveMatchBetween 3)
+(comment recursiveMatchBetween
+  "Uses SME to make ?match is from ?base to ?target, but 
+automatically builds up the base and target cases by 
+getting more detail about events put in correspondence.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; MAC/FAC related predicates
+;;;
+;;; Since case libraries can be large, we reify as little as possible.
+;;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Case libraries
+
+(isa CaseLibrary Collection)
+(genls CaseLibrary Set-Mathematical)
+(comment CaseLibrary "A set of cases used in some variety of reasoning.")
+
+(isa caseLibraryContents Predicate)
+(arity caseLibraryContents 2)
+(comment caseLibraryContents "?set is the current construal of the contents of ?library.")
+(arg1Isa caseLibraryContents CaseLibrary)
+(arg2Isa caseLibraryContents Set-Mathematical)
+
+(isa CaseLibraryFunctions Collection)
+(genls CaseLibraryFunctions Function-Denotational)
+(comment CaseLibraryFunctions "CaseLibraryFunctions is the collection of functions which can be used to denote case libraries.")
+
+(arity CaseLibraryFn 1)
+(isa CaseLibraryFn CaseLibraryFunctions)
+(comment CaseLibraryFn "Denotes a case library")
+(resultIsa CaseLibraryFn CaseLibrary)
+
+(arity CaseLibrarySansFn 2)
+(isa CaseLibrarySansFn CaseLibraryFunctions)
+(comment CaseLibrarySansFn
+ "Denotes the case library consisting of the case library ?cl minus the case ?case.  Useful for finding the most similar element to something within a set.")
+(resultIsa CaseLibrarySansFn CaseLibrary)
+(arg1Isa CaseLibrarySansFn CaseLibrary)
+(arg2Isa CaseLibrarySansFn Case)
+
+(arity CaseLibraryMinusFn 2)
+(isa CaseLibraryMinusFn CaseLibraryFunctions)
+(comment CaseLibraryMinusFn
+ "Denotes the case library consisting of the contents of ?cl minus the cases ?set-of-cases.  Useful for going back to find more answers if earlier retrievals were unsatisfactory.")
+(resultIsa CaseLibraryMinusFn CaseLibrary)
+(arg1Isa CaseLibraryMinusFn CaseLibrary)
+(arg2Isa CaseLibraryMinusFn SetOrList-Extensional)
+
+(arity CaseLibraryComplementFn 2)
+(isa CaseLibraryComplementFn CaseLibraryFunctions)
+(comment CaseLibraryComplementFn
+ "Denotes the case library consisting of the contents of ?cl minus the sub-case-libraries ?set-of-case-libs.  Useful for detecting near-misses in a learning context.")
+(resultIsa CaseLibraryComplementFn CaseLibrary)
+(arg1Isa CaseLibraryComplementFn CaseLibrary)
+(arg2Isa CaseLibraryComplementFn SetOrList-Extensional)
+
+(arity CaseLibraryUnionFn 1)
+(isa CaseLibraryUnionFn CaseLibraryFunctions)
+(comment CaseLibraryUnionFn
+"(CaseLibraryUnionFn <set of case libraries>) denotes the case library consisting of the union of the cases in the set of libraries provided as its sole argument.")
+(resultIsa CaseLibrarySubsetFn CaseLibrary)
+(arg1Isa CaseLibrarySubsetFn Set-Mathematical)
+
+;;; Relations involving case libraries
+
+(isa caseLibraryContains Predicate)
+(arity caseLibraryContains 2)
+(comment caseLibraryContains
+ "(caseLibraryContains ?library ?case) means that ?case is in the current
+  construal of the contents of ?library.")
+(arg1Isa caseLibraryContains CaseLibrary)
+(arg2Isa caseLibraryContains Case)
+
+(isa subCaseLibrary Predicate)
+(arity subCaseLibrary 2)
+(comment subCaseLibrary
+ "(subCaseLibrary ?sub ?super) indicates that ?sub is a case library contained
+ within case library ?super.")
+(arg1Isa subCaseLibrary CaseLibrary)
+(arg2Isa subCaseLibrary CaseLibrary)
+
+(isa withinCaseLibrary Predicate)
+(arity withinCaseLibrary 2)
+(comment withinCaseLibrary 
+ "(withinCaseLibrary ?sub ?super) holds when case library ?sub is a 
+ subCaseLibrary of case library ?super.")
+(arg1Isa withinCaseLibrary CaseLibrary)
+(arg2Isa withinCaseLibrary CaseLibrary)
+
+(isa caseLibrarySize Predicate)
+(arity caseLibrarySize 2)
+(comment caseLibrarySize 
+ "(caseLibrarySize ?cl ?n) holds when case library ?cl contains ?n cases.
+ This relationship is recursive, see caseLibraryLocalSize for just those
+ cases directly within ?cl.")
+(arg1Isa caseLibrarySize CaseLibrary)
+(arg2Isa caseLibrarySize Integer)
+
+(isa caseLibraryLocalSize Predicate)
+(arity caseLibraryLocalSize 2)
+(comment caseLibraryLocalSize 
+ "(caseLibraryLocalSize ?cl ?n) holds when case library ?cl contains ?n cases.
+ This relationship is local, see caseLibrarySize for the recursive version.")
+(arg1Isa caseLibraryLocalSize CaseLibrary)
+(arg2Isa caseLibraryLocalSize Integer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Remindings and their properties
+
+(isa reminding Predicate)
+(arity reminding 5)
+(comment reminding "Given a description ?probe and a case library ?case-library, 
+(reminding ?probe ?case-library ?constraints ?case ?match) 
+uses MAC/FAC to retrieve cases (typically one, but sometimes 
+more than one) that are similar.  ?match is the SME used 
+by MAC/FAC, so that the results can be extracted as with 
+other matches.")
+(arg1Isa reminding Case)
+(arg2Isa reminding CaseLibrary)
+(arg3Isa reminding Set-Mathematical)
+(arg4Isa reminding Case)
+(arg5Isa reminding Match)
+
+(isa remindingCaseOnly Predicate)
+(arity remindingCaseOnly 5)
+(comment remindingCaseOnly "Given a description ?probe and a case library ?case-library, 
+remindingCaseOnly uses MAC/FAC to retrieve cases (typically one, but sometimes 
+more than one) that are similar. This predicate does not provide the match itself, 
+if one needs details they must be recomputed.  It does provide the score, 
+for sorting and filtering purposes.")
+(arg1Isa remindingCaseOnly Case)
+(arg2Isa remindingCaseOnly CaseLibrary)
+(arg3Isa remindingCaseOnly Set-Mathematical)
+(arg4Isa remindingCaseOnly Case)
+(arg5Isa remindingCaseOnly Number)
+
+(isa bestReminding Predicate)
+(arity bestReminding 4)
+(arg1Isa bestReminding Case)
+(arg2Isa bestReminding CaseLibrary)
+(arg3Isa bestReminding Set-Mathematical)
+(arg4Isa bestReminding Case)
+(comment bestReminding 
+         "(bestReminding ?probe ?lib ?constraints ?r), given probe ?probe, case library ?lib and correspondence constraints, binds ?r to the case with the highest FAC score.  This assumes that remindingCaseOnly has been evaluated first.")
+
+(isa StructureFlattenFn Function-Denotational)
+(atomicAnalogyNat StructureFlattenFn)
+(arity StructureFlattenFn 3)
+(arg1Isa StructureFlattenFn BinaryPredicate)
+(arg2Isa StructureFlattenFn Collection)
+(arg3Isa StructureFlattenFn Collection)
+(resultIsa StructureFlattenFn Collection)
+(comment StructureFlattenFn 
+  "(StructureFlattenFn <predicate> <arg1Type> <arg2Type>) flattens event representations to be stored in a content vector 
+and usable by MAC. So if your case includes (isa sandwich123 Sandwich), (isa eating123 EatingEvent), and (objectEaten eating123 sandwich123),
+we can flatten that structure to (StructureFlattenFn objectEaten EatingEvent Sandwich), to compactly represent that 
+the case contains an instance of a sandwich being eaten (and not only, for example, that there is an eating event in 
+which something is eaten, and a sandwich).  This will let MAC encode the difference between Man bites Dog and Dog bites Man,
+ rather than only have FAC notice that difference. With arity 3 as it is currently defined, using a BinaryPredicate, 
+it is quite similar to relationExistsExists (although that is not a function). However StructureFlattenFn should 
+eventually be amended to be n-ary and to take predicates of any arity.  The relevant functions to change for that 
+will be make-cv-from-dgroup and sme-flatten-expression in fire\v3\analogy\macfac.lsp and 
+content-vector-from-mt-with-shared-structure and cv-flatten-expression in planb\content-vector.lsp. 
+")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; We aren't reifying remindings anymore.  That requires creating a retrieval
+;;;;; object, which is a serious space hog.  Our hypothesis is that the reminding
+;;;;; process isn't that penetrable.  So if we are looking at this level of detail,
+;;;;; that's a code-level debugging operation, not something at the reasoning level.
+
+;;; Retrievals are the results of doing a reminding.  
+;;;(isa Reminding Collection)
+;;;(genls Reminding AbstractInformationThing)
+;;;(comment Reminding
+;;; "A Reminding is an instance of the use of the MAC/FAC similarity-based retrieval algorithm.")
+;;;
+;;;(arity RemindingFn 1)
+;;;(isa RemindingFn Function-Denotational)
+;;;(comment RemindingFn "(RemindingFn ?id) denotes an instance of a reminding")
+;;;(resultIsa RemindingFn Reminding)
+;;;(arg1Isa RemindingFn Number)
+;;;(isa probeOf Predicate)
+;;;(arity probeOf 2)
+;;;(comment probeOf "?case is the probe of ?reminding.")
+;;;(arg1Isa probeOf Reminding)
+;;;(arg2Isa probeOf Case)
+;;;
+;;;(isa caseLibraryOf Predicate)
+;;;(arity caseLibraryOf 2)
+;;;(comment caseLibraryOf "(caseLibraryOf ?l ?r) indicates that ?l is the case library of reminding ?r.")
+;;;(arg1Isa caseLibraryOf Reminding)
+;;;(arg2Isa caseLibraryOf CaseLibrary)
+;;;
+;;;(isa contentVectorDotProduct Predicate)
+;;;(arity contentVectorDotProduct 3)
+;;;(comment contentVectorDotProduct
+;;; "(contentVectorDotProduct ?case1 ?case2 ?n) indicates that the dot product of the content vectors for ?case1 and ?case2 is ?n")
+;;;(arg1Isa contentVectorDotProduct Case)
+;;;(arg2Isa contentVectorDotProduct Case)
+;;;(arg3Isa contentVectorDotProduct Number)
+;;;
+;;;(isa numberOfMACItems Predicate)
+;;;(arity numberOfMACItems 2)
+;;;(comment numberOfMACItems "Reminding ?reminding has ?n items in the MAC stage.")
+;;;(arg1Isa numberOfMACItems Reminding)
+;;;(arg2Isa numberOfMACItems Number)
+;;;
+;;;(isa numberOfFACItems Predicate)
+;;;(arity numberOfFACItems 2)
+;;;(comment numberOfFACItems "Reminding ?reminding has ?n items in the FAC stage.")
+;;;(arg1Isa numberOfFACItems Reminding)
+;;;(arg2Isa numberOfFACItems Number)
+;;;
+;;;(isa remindingMACContains Predicate)
+;;;(arity remindingMACContains 2)
+;;;(comment remindingMACContains "MAC stage of reminding ?reminding includes ?case.")
+;;;(arg1Isa remindingMACContains Reminding)
+;;;(arg2Isa remindingMACContains Number)
+;;;
+;;;(isa remindingFACContains Predicate)
+;;;(arity remindingFACContains 2)
+;;;(comment remindingFACContains "FAC stage of reminding ?reminding includes ?case.")
+;;;(arg1Isa remindingFACContains Reminding)
+;;;(arg2Isa remindingFACContains Number)
+
+(isa caseLibraryFileName Predicate)
+(arity caseLibraryFileName 2)
+(comment caseLibraryFileName "(caseLibraryFileName <case library> <string>) indicates that <string>
+is the location-name of a case library stored off to disk.")
+(arg1Isa caseLibraryFileName CaseLibrary)
+(arg2Isa caseLibraryFileName CharacterString)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; The following is for SAGE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa GenEntFn Function-Denotational)
+(comment GenEntFn "(GenEntFn 1 2 my-context) indicates the 1st generalized entity within the 2nd generalization of the gpool named 'my-context'.")
+(atomicAnalogyNat GenEntFn)
+(arity GenEntFn 3)
+(resultIsa GenEntFn GeneralizedEntity)
+(arg1Isa GenEntFn Number)
+(arg2Isa GenEntFn Number)
+(arg3Isa GenEntFn GeneralizationPool)
+
+(isa EntityInCaseFn Function-Denotational)
+(comment EntityInCaseFn "(EntityInCaseFn ENT MT) refers to the #$Individual entity ENT in #$Microtheory MT.")
+(atomicAnalogyNat EntityInCaseFn)
+(arity EntityInCaseFn 2)
+(resultIsa GenEntFn Individual)
+(arg1Isa GenEntFn CycLTerm)
+(arg2Isa GenEntFn Microtheory)
+
+(isa SageGenFn Function-Denotational)
+(comment SageGenFn "(SageGenFn 1 my-context) indicates the 1st generalization inside gpool my-context.")
+(atomicAnalogyNat SageGenFn)
+(arity SageGenFn 2)
+(resultIsa SageGenFn GeneralizationMicrotheory)
+(arg1Isa SageGenFn Number)
+(arg2Isa SageGenFn GeneralizationPool)
+
+(isa sageAddExampleToGpool Predicate)
+(comment sageAddExampleToGpool
+  "(sageAddExampleToGpool ?gpool ?e ?r) adds example ?e to generalization pool ?gpool.  The return value ?r is either the generalization
+ it was assimilated into, or if unassimilated, ?e itself.")
+(arg1Isa sageAddExampleToGpool GeneralizationPool)
+(arg2Isa Microtheory)
+(arg3Isa Microtheory)
+
+(isa sageAddExample Predicate)
+(comment sageAddExample
+  "(sageAddExample ?e) adds example ?e to all generalization pools whose entry pattern it matches that are relevant in the
+   current logical environment.")
+(arity sageAddExample 1) ;; No return value, set of pools could be quite large.
+(arg1Isa sageAddExample Microtheory)
+
+(isa sageSelect Predicate)
+(arity sageSelect 4)
+(comment sageSelect "(sageSelect ?e ?gpool ??target ?mapping) uses the present #$gpoolSelectStrategy to compute the ??target (#$Microtheory) where ?e should be generalized within ?gpool.  Binds ?mapping to the SME mapping between ?e and ??target.")
+(arg1Isa sageSelect Microtheory)
+(arg2Isa sageSelect GeneralizationPool)
+(arg3Isa sageSelect Microtheory)
+(arg4Isa sageSelect Individual)
+
+(isa sageGeneralize Predicate)
+(arity sageGeneralize 3)
+(comment sageGeneralize "(sageGeneralize ?e ?target ?gpool), when told, generalizes ?e with ?target inside #$GeneralizationPool ?gpool.  Assumes that #$sageSelect is used to compute ?target.")
+(arg1Isa sageGeneralize Microtheory)
+(arg2Isa sageGeneralize Microtheory)
+(arg3Isa sageGeneralize GeneralizationPool)
+
+(isa sageGeneralizeWithMapping Predicate)
+(arity sageGeneralizeWithMapping 4)
+(comment sageGeneralizeWithMapping "(sageGeneralizeWithMapping ?e ?target ?gpool ?mapping), when told, generalizes ?e with ?target inside #$GeneralizationPool ?gpool.  Assumes you've used #$sageSelect to compute ?target and ?mapping.")
+(arg1Isa sageGeneralizeWithMapping Microtheory)
+(arg2Isa sageGeneralizeWithMapping Microtheory)
+(arg3Isa sageGeneralizeWithMapping GeneralizationPool)
+(arg4Isa sageGeneralizeWithMapping Individual)
+
+(isa sageSelectAndGeneralize Predicate)
+(arity sageSelectAndGeneralize 2)
+(comment sageSelectAndGeneralize "(sageSelectAndGeneralize ?e ?gpool), when told, assimilates example ?e in generalization pool ?gpool.  
+It retrieves the most similar item, and if sufficiently similar, as determined by #$gpoolAssimilationThreshold, they are merged, producing an updated (or new) generalization.  Otherwise, ?e is added to the list of outliers.")
+(arg1Isa sageSelectAndGeneralize Microtheory)
+(arg2Isa sageSelectAndGeneralize GeneralizationPool)
+
+(isa sageAddSyntheticData Predicate)
+(arity sageAddSyntheticData 3)
+(comment sageAddSyntheticData "(sageAddSyntheticData GENERALIZATION FACTS PROBABILITIES) adds each fact in FACTS and its associated probability in PROBABILITY to GENERALIZATION. GENERALIZATION should be a previously-defined #$sageGenFn.
+ FACTS and PROBABILITIES should be the same length (so that indices match properly). This is an outsourced fire:tell.")
+(arg1Isa sageAddSyntheticData Microtheory)
+(arg2Isa sageAddSyntheticData List)
+(arg3Isa sageAddSyntheticData List)
+
+(isa sageInstantiateGeneralization Predicate)
+(arity sageInstantiateGeneralization 3)
+(comment sageInstantiateGeneralization "(sageInstantiateGeneralization ?gmt ?bindings ?imt), when told, treats generalization ?gmt as a schema and instantiates in the microtheory ?imt the facts of the schema with the bindings of ?bindings")
+(arg1Isa sageInstantiateGeneralization GeneralizationPool)
+(arg2Isa sageInstantiateGeneralization GeneralizationMicrotheory)
+(arg3Isa sageInstantiateGeneralization List)
+(arg4Isa sageInstantiateGeneralization CycLExpression)
+
+(isa sageAddUngeneralized Predicate)
+(arity sageAddUngeneralized 2)
+(comment sageAddUngeneralized "(sageAddUngeneralized ?e ?gpool), when told, adds ?e to the list of ungeneralized examples inside #$GeneralizationPool ?gpool.  This is the desired action if a #$sageSelect operation does not return a ?target/mapping.")
+(arg1Isa sageAddUngeneralized Microtheory)
+(arg2Isa sageAddUngeneralized GeneralizationPool)
+
+(isa sageClassify Predicate)
+(arity sageClassify 5)
+(comment sageClassify
+  "(sageClassify ?case ?gpools ?gpool ?item ?sme) indicates that, given the example ?case to be classified with respect to a set of
+ generalization pools ?gpools, the appropriate classification is generalization pool ?gpool
+ because the most similar item retrieved was ?item. ?sme is bound to a term denoting that SME comparison, so that scores and
+ similarities/differences can be computed for explanatory purposes.")
+(arg1Isa sageClassify Microtheory)
+(arg2Isa sageClassify CaseLibrary) ;; These can be recursive and specified as unions.
+(arg3Isa sageClassify CaseLibrary) ;; Of which gpool is a subclass
+(arg4Isa sageClassify Microtheory)
+(arg5Isa sageClassify Match)
+
+
+
+(isa sageConstituent Collection)
+(arity sageConstituent 3)
+(comment sageConsituent
+  "(sageConstituent ?example ?generalization ?gpool)")
+(arg1Isa sageConstituent Microtheory)
+(arg2Isa sageConstituent CycLExpression) ;; probably not what we want
+(arg3Isa sageConstituent GeneralizationPool)
+
+
+(isa nukeGpool Predicate)
+(arity nukeGpool 1)
+(comment nukeGpool "(nukeGpool ?gp), when told, wipes generalization pool ?gp clean.")
+(arg1Isa nukeGpool GeneralizationPool)
+
+(isa gpoolSelectStrategy Predicate)
+(arity gpoolSelectStrategy 2)
+(comment gpoolSelectStrategy "(gpoolSelectStrategy ?gp ?x) binds/sets ?x as the selection strategy for generalization pool ?gp")
+(arg1Isa gpoolSelectStrategy GeneralizationPool)
+(arg2Isa gpoolSelectStrategy CycLExpression)
+
+(isa gpoolUseProbability Predicate)
+(arity gpoolUseProbability 2)
+(comment gpoolUseProbability "(gpoolUseProbability ?gp ?x) binds/sets ?x as a flag indicating whether probabilities are used.  Default is true.")
+(arg1Isa gpoolUseProbability GeneralizationPool)
+(arg2Isa gpoolUseProbability CycLExpression)
+
+(isa gpoolAssimilationThreshold Predicate)
+(arity gpoolAssimilationThreshold 2)
+(comment gpoolAssimilationThreshold "(gpoolAssimilationThreshold ?gp ?x) binds/sets ?x as the assimilation threshold for generalization pool ?gp")
+(arg1Isa gpoolAssimilationThreshold GeneralizationPool)
+(arg2Isa gpoolAssimilationThreshold Number)
+
+(isa gpoolProbabilityCutoff Predicate)
+(arity gpoolProbabilityCutoff 2)
+(comment gpoolProbabilityCutoff "(gpoolProbabilityCutoff ?gp ?x) binds/sets the probability threshold to be ?x for generalization pool ?gp.")
+(arg1Isa gpoolProbabilityCutoff GeneralizationPool)
+(arg2Isa gpoolProbabilityCutoff Number)
+
+(isa gpoolEntryPattern Predicate)
+(arity gpoolEntryPattern 2)
+(comment "(gpoolEntryPattern ?gp ?pattern) indicates that pattern ?pattern is the entry pattern for generalization pool ?gp.")
+(arg1Isa gpoolEntryPattern GeneralizationPool)
+(arg2Isa CycLExpression)
+
+(isa gpoolEntryPatternCriterion Predicate)
+(arity gpoolEntryPatternCriterion 2)
+(comment "(gpoolEntryPatternCriterion ?gp ?test) indicates that the criterion for matching the entry pattern for generalization
+ pool ?gp is ?test.  ?test can be either :ask or :containsPattern, with :ask being the default.")
+(arg1Isa gpoolEntryPatternCriterion GeneralizationPool)
+(arg2Isa gpoolEntryPatternCriterion CycLExpression)
+
+(isa gpoolRelevanceContext Predicate)
+(arity gpoolRelevanceContext 2)
+(comment "(gpoolRelevanceContext ?gp ?mt) indicates that generalization pool ?gp is defined as part of microtheory ?mt,
+ so that it will be available in any logical environment that includes ?mt.")
+(arg1Isa gpoolRelevanceContext GeneralizationPool)
+(arg2Isa gpoolRelevanceContext Microtheory)
+
+(isa wmGpoolMaxSize Predicate)
+(arity wmGpoolMaxSize 2)
+(comment wmGpoolMaxSize "(wmGpoolMaxSize ?wmg ?num) indicates that working memory generalization pool ?wmg is limited to ?num elements.")
+(arg1Isa wmGpoolMaxSize GeneralizationPool)
+(arg2Isa wmGpoolMaxSize ScalarInterval)
+
+(isa gpoolExample Predicate)
+(arity gpoolExample 2)
+(comment gpoolExample "(gpoolExample ?gpool ?x) indicates that ?x is an unassimilated example in the generalization pool ?gpool.")
+(arg1Isa gpoolExample GeneralizationPool)
+(arg2Isa gpoolExample Microtheory)
+
+(isa gpoolGeneralization Predicate)
+(arity gpoolGeneralization 2)
+(comment gpoolGeneralization "(gpoolGeneralization ?gp ?x) indicates that ?x is a generalization in generalization pool ?gp")
+(arg1Isa gpoolGeneralization GeneralizationPool)
+(arg2Isa gpoolGeneralization Microtheory)
+
+(isa gmtEntityHistory Predicate)
+(arity gmtEntityHistory 3)
+(comment gmtEntityHistory "(gmtEntityHistory my-gmt my-genent ?x) binds ?x to the set of values my-genent has taken inside GeneralizationMicrotheory my-gmt.")
+(arg1Isa gmtEntityHistory GeneralizationMicrotheory)
+(arg2Isa gmtEntityHistory GeneralizedEntity)
+(arg3Isa gmtEntityHistory Set-Mathematical)
+
+(isa gmtNExamples Predicate)
+(arity gmtNExamples 2)
+(comment gmtNExamples "(gmtNExamples ?gp ?x) indicates that ?x examples have been integrated into generalization ?gmt")
+(arg1Isa gmtNExamples GeneralizationMicrotheory)
+(arg2Isa gmtNExamples Number)
+
+(isa sageRequireCorrespondence Predicate)
+(arity sageRequireCorrespondence 2)
+(comment sageRequireCorrespondence "If the expression (sageRequireCorrespondence base-entity x) occurs in the base and the expression (sageRequireCorrespondence ?target-entity x) occurs in the garget, 
+then base-entity and ?target-entity must correspond due to their identical 2nd argument.")
+(arg1Isa sageRequireCorrespondence CycLExpression)
+(arg2Isa sageRequireCorrespondence CycLExpression)
+
+(isa sageRequireInMapping Predicate)
+(arity sageRequireInMapping 1)
+(comment sageRequireInMapping "(sageRequiresInMapping ?e) indicates that the given #$CycLExpression ?e must correspond to to something in SAGE comparisons.")
+(arg1Isa sageRequireInMapping CycLExpression)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; The following is for SAGE Stand-Alone (Dan Halstead's stuff)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa sameValue SymmetricBinaryPredicate)
+(arity sameValue 2)
+
+(isa ContextDesignatingPredicate PredicateType)
+(genls MicrotheoryDesignatingPredicate ContextDesignatingPredicate)
+
+(isa hasAttributeValueSlot BinaryPredicate)
+(isa hasAttributeValueSlot MetaPredicate)
+(arity hasAttributeValueSlot 2)
+(arg1Isa hasAttributeValueSlot Predicate)
+(arg2Isa hasAttributeValueSlot PositiveInteger)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Clarifying attributes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa CaseInvolvesIndividualFn Function-Denotational)
+(arity CaseInvolvesIndividualFn 1)
+(arg1Isa CaseInvolvesIndividualFn Thing)
+(resultIsa CaseInvolvesIndividualFn Collection)
+(comment CaseInvolvesIndividualFn
+  "(CaseInvolvesIndividualFn <thing>) denotes the collection of cases that involve the individual <thing> in some noteworthy way.
+ Terms involving caseInvolvesIndividualFn are added so that attributes unique to specific individuals
+ will be available for analogical retrieval and matching.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Tell handlers
+
+(isa constructCaseInWM Relation)
+(arity constructCaseInWM 1)
+(arg1Isa constructCaseInWM Case)
+(comment constructCaseInWM
+  "(constructCaseInWM ?case) causes the case ?case to be copied into FIRE's working memory.")
+
+(isa copyWMCase Relation)
+(arity copyWMCase 2)
+(arg1Isa copyWMCase Case)
+(arg2Isa copyWMCase Case)
+(comment copyWMCase
+  "(copyWMCase ?from ?to) copies working memory case ?from to working memory case ?to.")
+
+(isa addFactsToWMCase Relation)
+(arity addFactsToWMCase 2)
+(arg1Isa addFactsToWMCase Case)
+(arg2Isa addFactsToWMCase Case)
+(comment addFactsToWMCase
+  "(addFactsToWMCase ?facts ?case) adds the set (or list) of facts ?facts to 
+ the working memory case ?case.")
+
+(isa deleteWMCase Relation)
+(arity deleteWMCase 1)
+(arg1Isa deleteWMCase Case)
+(comment deleteWMCase
+  "(deleteWMCase ?case) causes working memory case ?case to be deleted.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

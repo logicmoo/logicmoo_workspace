@@ -1,0 +1,3 @@
+(in-microtheory Ist-HoldsInAssumptionsMt)
+
+(implies (and (isa ?HYP-CONT HypotheticalContext) (genlMt ?HYP-CONT ?TEMP-MT) (termDependsOn ?HYP-CONT ?TEMP-MT) (ist ?HYP-CONT ?ANT-PROP) (genlMt ?PROOF-CONT ?HYP-CONT) (termDependsOn ?PROOF-CONT ?HYP-CONT) (isa ?PROOF-CONT HypotheticalContext) (ist ?PROOF-CONT ?CONS-PROP)) (holdsIn ?TEMP (implies ?ANT-PROP ?CONS-PROP)))

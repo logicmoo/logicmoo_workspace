@@ -1,0 +1,164 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ex3
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: December 27, 2010 14:01:33
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2015-07-15 16:44:47 -0500 (Wed, 15 Jul 2015) $
+;;;;  $LastChangedBy: usher $
+
+(in-microtheory QPExampleEx3Mt)
+;;; We want to do ambiguity propagation for this one
+(genlMt QPExampleEx3Mt IR-PropagateAmbiguityStrategyMt)
+
+(comment QPExampleEx3Mt
+  "QPExampleEx3Mt is a microtheory describing the classic three containers scenario, used in testing QP theory implementations.")
+
+(includeEntity F)
+(includeEntity G)
+(includeEntity H)
+(includeEntity P1)
+(includeEntity P2)
+
+(includeEntity Liquid-StateOfMatter)
+(includeEntity Water)
+
+(isa F Container)
+(canContainSubstance F Water Liquid-StateOfMatter)
+(isa G Container)
+(canContainSubstance G Water Liquid-StateOfMatter)
+(isa H Container)
+(canContainSubstance H Water Liquid-StateOfMatter)
+(isa P1 LiquidPath)
+(liquidConnection P1 F G)
+(liquidConnection P1 G F)
+(isa P2 LiquidPath)
+(liquidConnection P2 H G)
+(liquidConnection P2 G H)
+
+(mfiName H-PossibleL
+         (ModelFragmentInstanceFn ContainedStuffPossibility
+                                  (TheSet (TheList containerOf H) 
+                                          (TheList phaseOf Liquid-StateOfMatter)
+                                          (TheList substanceOf Water))))
+(mfiName G-PossibleL
+         (ModelFragmentInstanceFn ContainedStuffPossibility
+                                  (TheSet (TheList containerOf G) 
+                                          (TheList phaseOf Liquid-StateOfMatter)
+                                          (TheList substanceOf Water))))
+(mfiName F-PossibleL
+         (ModelFragmentInstanceFn ContainedStuffPossibility
+                                  (TheSet (TheList containerOf F) 
+                                          (TheList phaseOf Liquid-StateOfMatter)
+                                          (TheList substanceOf Water))))
+(mfiName Wf
+         (ModelFragmentInstanceFn ContainedStuff
+                                  (TheSet (TheList containerOf F) 
+                                          (TheList mfParticipant F-PossibleL)
+                                          (TheList phaseOf Liquid-StateOfMatter) 
+                                          (TheList substanceOf Water))))
+(mfiName Wg
+         (ModelFragmentInstanceFn ContainedStuff
+                                  (TheSet (TheList containerOf G) 
+                                          (TheList mfParticipant G-PossibleL)
+                                          (TheList phaseOf Liquid-StateOfMatter) 
+                                          (TheList substanceOf Water))))
+(mfiName Wh
+         (ModelFragmentInstanceFn ContainedStuff
+                                  (TheSet (TheList containerOf H) 
+                                          (TheList mfParticipant H-PossibleL)
+                                          (TheList phaseOf Liquid-StateOfMatter) 
+                                          (TheList substanceOf Water))))
+(mfiName Wf-Props
+         (ModelFragmentInstanceFn ContainedLiquidProperties
+                                  (TheSet (TheList containerOf F) 
+                                          (TheList liquidOf Wf)
+                                          (TheList substanceOf Water))))
+(mfiName Wg-Props
+         (ModelFragmentInstanceFn ContainedLiquidProperties
+                                  (TheSet (TheList containerOf G) 
+                                          (TheList liquidOf Wg)
+                                          (TheList substanceOf Water))))
+(mfiName Wh-Props
+         (ModelFragmentInstanceFn ContainedLiquidProperties
+                                  (TheSet (TheList containerOf H) 
+                                          (TheList liquidOf Wh)
+                                          (TheList substanceOf Water))))
+(mfiName Wf-L>Wg
+         (ModelFragmentInstanceFn LiquidFlowProcess
+                                  (TheSet (TheList destinationLiquid Wg)
+                                          (TheList destinationOfLiquid G)
+                                          (TheList pathOfLiquid P1)
+                                          (TheList sourceLiquid Wf) 
+                                          (TheList sourceOfLiquid F) 
+                                          (TheList substanceOf Water))))
+(mfiName Wg-L>Wf
+         (ModelFragmentInstanceFn LiquidFlowProcess
+                                  (TheSet (TheList destinationLiquid Wf)
+                                          (TheList destinationOfLiquid F)
+                                          (TheList pathOfLiquid P1)
+                                          (TheList sourceLiquid Wg) 
+                                          (TheList sourceOfLiquid G) 
+                                          (TheList substanceOf Water))))
+(mfiName Wh-L>Wg
+         (ModelFragmentInstanceFn LiquidFlowProcess
+                                  (TheSet (TheList destinationLiquid Wg)
+                                          (TheList destinationOfLiquid G)
+                                          (TheList pathOfLiquid P2)
+                                          (TheList sourceLiquid Wh) 
+                                          (TheList sourceOfLiquid H) 
+                                          (TheList substanceOf Water))))
+(mfiName Wg-L>Wh
+         (ModelFragmentInstanceFn LiquidFlowProcess
+                                  (TheSet (TheList destinationLiquid Wh)
+                                          (TheList destinationOfLiquid H)
+                                          (TheList pathOfLiquid P2)
+                                          (TheList sourceLiquid Wg) 
+                                          (TheList sourceOfLiquid G) 
+                                          (TheList substanceOf Water))))
+
+
+(in-microtheory QPExampleEx3-ic1Mt)
+(comment QPExampleEx3-ic1Mt
+ "QPExampleEx3-ic1Mt is the microtheory describing the initial conditions for three container liquid flow,
+ where water is flowing from G to both F and H.")
+(genlMt QPExampleEx3-ic1Mt QPExampleEx3Mt)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter F) Zero)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter G) Zero)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter H) Zero)
+
+(liquidAligned P1)
+(liquidAligned P2)
+(qGreaterThan ((QPQuantityFn Pressure) Wg)
+              ((QPQuantityFn Pressure) Wf))
+(qGreaterThan ((QPQuantityFn Pressure) Wg) 
+              ((QPQuantityFn Pressure) Wh))
+
+(in-microtheory QPExampleEx3-ic2Mt)
+(comment QPExampleEx1-ic1Mt
+ "QPExampleEx1-ic2Mt is the microtheory describing the initial conditions for two container liquid flow,
+ where water is flowing from F to G and from G to H.")
+(genlMt QPExampleEx3-ic2Mt QPExampleEx3Mt)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter F) Zero)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter G) Zero)
+(qGreaterThan (AmountOfFn Water Liquid-StateOfMatter H) Zero)
+
+(liquidAligned P1)
+(liquidAligned P2)
+(qGreaterThan ((QPQuantityFn Pressure) Wf) 
+              ((QPQuantityFn Pressure) Wg)) 
+(qGreaterThan ((QPQuantityFn Pressure) Wg)  
+              ((QPQuantityFn Pressure) Wh)) 
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,1231 @@
+(in-microtheory (StrategyModelMtFn Freeciv-TheGame) :exclude-globals t)
+
+;;; Generated from static analysis
+
+(goalName (GoalFn 0)               ; rootDomainGoal of games
+ (AchieveFn
+  (winner-First (IndexicalFn executionContext) (IndexicalFn currentRole))))
+(subgoal (GoalFn 0) (GoalFn 1))
+(subgoal (GoalFn 0) (GoalFn 2))
+(subgoal (GoalFn 0) (GoalFn 3))
+(subgoal (GoalFn 0) (GoalFn 4))
+
+(goalName (GoalFn 1)              ; impliedSubgoal of strategy games
+ (MaintainFn (exists (IndexicalFn currentRole))))
+(subgoal (GoalFn 1) (GoalFn 7))
+(subgoal (GoalFn 1) (GoalFn 8))
+(subgoal (GoalFn 1) (GoalFn 9))
+
+(goalName (GoalFn 2)              ; impliedSubgoal of strategy games
+ (MaximizeFn ((QPQuantityFn FreedomOfAction) (IndexicalFn currentRole))))
+(subgoal (GoalFn 2) (GoalFn 5))
+(subgoal (GoalFn 2) (GoalFn 6))
+
+(goalName (GoalFn 3)              ; reified domain-specific game objective
+ (AchieveFn (spaceshipStatus (IndexicalFn currentRole) FC-SpaceshipArrived)))
+(assignedToRole (GoalFn 3) CapabilityRole1)
+
+(goalName (GoalFn 4)              ; reified domain-specific game objective
+ (AchieveFn
+  (cardinalityOf
+   (CollectionSubsetFn FreeCiv-Player
+    (TheSetOf ?opponent
+     (opponentsInConflict (IndexicalFn currentRole) ?opponent
+      (IndexicalFn executionContext))))
+   0)))
+(subgoal (GoalFn 4) (GoalFn 10))   ; destroy opponents
+
+(goalName (GoalFn 5)               ; hardcoded in FAP
+ (MaximizeFn
+  ((MeasurableQuantityFn civGoldProduction) (IndexicalFn currentRole))))
+(subgoal (GoalFn 5) (GoalFn 11))
+(subgoal (GoalFn 5) (GoalFn 12))
+(subgoal (GoalFn 5) (GoalFn 13))
+
+(goalName (GoalFn 6)               ; hardcoded in FAP
+ (MaximizeFn
+  ((MeasurableQuantityFn civBulbsPerTurn) (IndexicalFn currentRole))))
+(subgoal (GoalFn 6) (GoalFn 13))
+(subgoal (GoalFn 6) (GoalFn 14))
+
+(goalName (GoalFn 7)
+ (MinimizeFn
+  ((QPQuantityFn HostilityLevel)
+   (CollectionSubsetFn IntelligentAgent
+    (TheSetOf ?opponent
+     (and (opponentsInConflict (IndexicalFn currentRole) ?opponent (IndexicalFn executionContext))
+          (isa ?opponent IntelligentAgent)))))))
+(assignedToType (GoalFn 7) IntelligentAgent)
+
+(goalName (GoalFn 8)               ; quantity-conditioned existence of player
+ (MaintainFn
+  (greaterThan
+   ((MeasurableQuantityFn cardinalityOf)
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city (cityOwner ?city (IndexicalFn currentRole)))))
+   0)))
+(subgoal (GoalFn 8) (GoalFn 15))
+
+(goalName (GoalFn 9)               ; quantity-conditioned existence of player
+ (MaintainFn
+  (greaterThan
+   ((MeasurableQuantityFn cardinalityOf)
+    (CollectionSubsetFn FreeCiv-Unit
+     (TheSetOf ?unit (unitOwner ?unit (IndexicalFn currentRole)))))
+   0)))
+(subgoal (GoalFn 9) (GoalFn 16))
+
+(goalName (GoalFn 10)              ; propositional -> quantitative goal translation
+ (MinimizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn FreeCiv-Player
+    (TheSetOf ?opponent
+     (opponentsInConflict (IndexicalFn currentRole) ?opponent
+      (IndexicalFn executionContext)))))))
+(subgoal (GoalFn 10) (GoalFn 17))  ; destroy opponents' units
+(subgoal (GoalFn 10) (GoalFn 18))  ; destroy opponents' cities
+(assignedToType (GoalFn 10) FreeCiv-Player)
+
+(goalName (GoalFn 11)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityCoinageProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 11) (GoalFn 19))
+(subgoal (GoalFn 11) (GoalFn 20))
+(assignedToType (GoalFn 11) FreeCiv-City)
+
+(goalName (GoalFn 12)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityGoldSurplus)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 12) (GoalFn 21))
+(subgoal (GoalFn 12) (GoalFn 22))
+(assignedToType (GoalFn 12) FreeCiv-City)
+
+(goalName (GoalFn 13)
+ (MaximizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn FreeCiv-City
+    (TheSetOf ?var1
+     (and (cityOwner ?var1 (IndexicalFn currentRole))
+          (isa ?var1 FreeCiv-City)))))))
+(goalTradeoff (GoalFn 13) (GoalFn 19) InitialPartialProgressiveTradeoff) ; FC-Coinage
+(goalTradeoff (GoalFn 13) (GoalFn 26) InitialPartialProgressiveTradeoff) ; FC-Building-ResearchLab
+(goalTradeoff (GoalFn 13) (GoalFn 27) InitialPartialProgressiveTradeoff) ; FC-Building-Library
+(goalTradeoff (GoalFn 13) (GoalFn 28) InitialPartialProgressiveTradeoff) ; FC-Building-University
+(goalTradeoff (GoalFn 13) (GoalFn 30) InitialPartialProgressiveTradeoff) ; FC-Building-CityWalls
+(goalTradeoff (GoalFn 13) (GoalFn 31) InitialPartialProgressiveTradeoff) ; FC-Building-CoastalDefense
+(goalTradeoff (GoalFn 13) (GoalFn 32) InitialPartialProgressiveTradeoff) ; FC-Building-SAMBattery
+(goalTradeoff (GoalFn 13) (GoalFn 33) InitialPartialProgressiveTradeoff) ; FC-Building-SDIDefense
+(goalTradeoff (GoalFn 13) (GoalFn 41) InitialPartialProgressiveTradeoff) ; FC-Building-Marketplace
+(goalTradeoff (GoalFn 13) (GoalFn 42) InitialPartialProgressiveTradeoff) ; FC-Building-Bank
+(goalTradeoff (GoalFn 13) (GoalFn 43) InitialPartialProgressiveTradeoff) ; FC-Building-StockExchange
+(goalTradeoff (GoalFn 13) (GoalFn 57) InitialPartialProgressiveTradeoff) ; build something (other than coinage)
+(goalTradeoff (GoalFn 13) (GoalFn 58) InitialPartialProgressiveTradeoff) ; FC-Building-Colosseum
+(goalTradeoff (GoalFn 13) (GoalFn 59) InitialPartialProgressiveTradeoff) ; FC-Building-Temple
+(goalTradeoff (GoalFn 13) (GoalFn 60) InitialPartialProgressiveTradeoff) ; FC-Building-Cathedral
+(goalTradeoff (GoalFn 13) (GoalFn 61) InitialPartialProgressiveTradeoff) ; FC-Building-PoliceStation
+(goalTradeoff (GoalFn 13) (GoalFn 69) InitialPartialProgressiveTradeoff) ; FC-Building-SewerSystem
+(goalTradeoff (GoalFn 13) (GoalFn 70) InitialPartialProgressiveTradeoff) ; FC-Building-Aqueduct
+(goalTradeoff (GoalFn 13) (GoalFn 75) InitialPartialProgressiveTradeoff) ; FC-Building-SuperHighways
+(goalTradeoff (GoalFn 13) (GoalFn 76) InitialPartialProgressiveTradeoff) ; FC-Building-Courthouse
+(goalTradeoff (GoalFn 13) (GoalFn 83) InitialPartialProgressiveTradeoff) ; FC-Building-Granary
+(goalTradeoff (GoalFn 13) (GoalFn 88) InitialPartialProgressiveTradeoff) ; FC-Building-Factory
+(goalTradeoff (GoalFn 13) (GoalFn 89) InitialPartialProgressiveTradeoff) ; FC-Building-Mfg.Plant
+(goalTradeoff (GoalFn 13) (GoalFn 90) InitialPartialProgressiveTradeoff) ; FC-Building-NuclearPlant
+(goalTradeoff (GoalFn 13) (GoalFn 91) InitialPartialProgressiveTradeoff) ; FC-Building-HydroPlant
+(goalTradeoff (GoalFn 13) (GoalFn 92) InitialPartialProgressiveTradeoff) ; FC-Building-PowerPlant
+(goalTradeoff (GoalFn 13) (GoalFn 93) InitialPartialProgressiveTradeoff) ; FC-Building-OffshorePlatform
+(goalTradeoff (GoalFn 13) (GoalFn 97) InitialPartialProgressiveTradeoff) ; FC-Building-MassTransit
+(goalTradeoff (GoalFn 13) (GoalFn 98) InitialPartialProgressiveTradeoff) ; FC-Building-RecyclingCenter
+(goalTradeoff (GoalFn 13) (GoalFn 99) InitialPartialProgressiveTradeoff) ; FC-Building-SolarPlant
+(goalTradeoff (GoalFn 13) (GoalFn 102) InitialPartialProgressiveTradeoff) ; FC-Building-Harbour
+(goalTradeoff (GoalFn 13) (GoalFn 103) InitialPartialProgressiveTradeoff) ; FC-Building-Supermarket
+(assignedToRole (GoalFn 13) CapabilityRole3)
+(assignedToType (GoalFn 13) FreeCiv-City)
+
+(goalName (GoalFn 14)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityScienceTotal)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 14) (GoalFn 23))
+(subgoal (GoalFn 14) (GoalFn 24))
+(subgoal (GoalFn 14) (GoalFn 25))
+(subgoal (GoalFn 14) (GoalFn 26))
+(subgoal (GoalFn 14) (GoalFn 27))
+(subgoal (GoalFn 14) (GoalFn 28))
+(assignedToType (GoalFn 14) FreeCiv-City)
+
+(goalName (GoalFn 15)
+ (MinimizeFn
+  ((QPQuantityFn Vulnerability)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city (cityOwner ?city (IndexicalFn currentRole))))))))
+(subgoal (GoalFn 15) (GoalFn 29))
+(subgoal (GoalFn 15) (GoalFn 30))
+(subgoal (GoalFn 15) (GoalFn 31))
+(subgoal (GoalFn 15) (GoalFn 32))
+(subgoal (GoalFn 15) (GoalFn 33))
+(assignedToType (GoalFn 15) FreeCiv-City)
+
+(goalName (GoalFn 16)
+ (MinimizeFn
+  ((QPQuantityFn Vulnerability)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-Unit
+     (TheSetOf ?unit (unitOwner ?unit (IndexicalFn currentRole))))))))
+(subgoal (GoalFn 16) (GoalFn 34))
+(subgoal (GoalFn 16) (GoalFn 35))
+(assignedToType (GoalFn 16) FreeCiv-Unit)
+
+(goalName (GoalFn 17)
+ (MinimizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn FreeCiv-Unit
+    (TheSetOf ?unit
+     (and (isa ?opponent FreeCiv-Player) (isa ?unit FreeCiv-Unit)
+          (opponentsInConflict (IndexicalFn currentRole) ?opponent
+           (IndexicalFn executionContext))
+          (unitOwner ?unit ?opponent)))))))
+;(assignedToRole (GoalFn 17) CapabilityRole17)
+(assignedToRole (GoalFn 17) CapabilityRole10)
+;(assignedToType (GoalFn 17) FreeCiv-Unit)
+
+(goalName (GoalFn 18)
+ (MinimizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn FreeCiv-City
+    (TheSetOf ?city
+     (and (isa ?opponent FreeCiv-Player) (isa ?city FreeCiv-City)
+          (opponentsInConflict (IndexicalFn currentRole) ?opponent
+           (IndexicalFn executionContext))
+          (cityOwner ?city ?opponent)))))))
+(assignedToType (GoalFn 18) FreeCiv-City)
+(assignedToRole (GoalFn 18) CapabilityRole10) ; added manually
+
+(goalName (GoalFn 19)
+ (AchieveFn
+  (and (cityOwner ?var1 (IndexicalFn currentRole))
+       (currentlyBuilding ?var1 FC-Coinage) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 19) (currentlyBuilding ?var1 FC-Coinage))
+(subgoal (GoalFn 19) (GoalFn 36))
+(assignedToRole (GoalFn 19) CapabilityRole6)
+
+(goalName (GoalFn 20)
+ (PreventFn
+  (activeMF
+   (MFInstanceFn CityDisorderState
+    (TheList
+     (GenericInstanceFn
+      (CollectionSubsetFn FreeCiv-City
+       (TheSetOf ?var1
+        (and (cityOwner ?var1 (IndexicalFn currentRole))
+             (isa ?var1 FreeCiv-City))))))))))
+(subgoal (GoalFn 20) (GoalFn 37))
+(subgoal (GoalFn 20) (GoalFn 38))
+(justifiedByProcessType (GoalFn 20) CityCoinageProduction)
+
+(goalName (GoalFn 21)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityGoldProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 21) (GoalFn 25))   ; max trade surplus
+(subgoal (GoalFn 21) (GoalFn 39))   ; maximize #tax collectors
+(subgoal (GoalFn 21) (GoalFn 40))   ; maximize tax%
+(subgoal (GoalFn 21) (GoalFn 41))   ; have a marketplace
+(subgoal (GoalFn 21) (GoalFn 42))   ; have a bank
+(subgoal (GoalFn 21) (GoalFn 43))   ; have a stock exchange
+(assignedToType (GoalFn 21) FreeCiv-City)
+
+(goalName (GoalFn 22)
+ (MinimizeFn
+  ((MeasurableQuantityFn cityImprovementsUpkeep)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 22) (GoalFn 44)) ; min objectTypeHasUpkeepGoldCost
+(subgoal (GoalFn 22) (GoalFn 45)) ; min # Buildings
+(assignedToType (GoalFn 22) FreeCiv-City)
+
+(goalName (GoalFn 23)
+ (MaximizeFn
+  ((MeasurableQuantityFn numScientists)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 23) (GoalFn 46)) ; max citySize
+(assignedToRole (GoalFn 23) CapabilityRole6)
+(assignedToType (GoalFn 23) FreeCiv-City)
+
+(goalName (GoalFn 24)
+ (MaximizeFn
+  ((MeasurableQuantityFn currentSciencePercent) (IndexicalFn currentRole))))
+
+(goalName (GoalFn 25)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityTradeSurplus)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 25) (GoalFn 47)) ; max city trade prod
+(subgoal (GoalFn 25) (GoalFn 48)) ; min city corruption
+(subgoal (GoalFn 25) (GoalFn 49)) ; ach monarchy or communism
+(diachronicSubgoal (GoalFn 25) (GoalFn 50)) ; ach celebration (manually converted to diachronic)
+(assignedToType (GoalFn 25) FreeCiv-City)
+
+(goalName (GoalFn 26)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-ResearchLab)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 26) (cityHasImprovement ?var1 FC-Building-ResearchLab))
+(subgoal (GoalFn 26) (GoalFn 36))
+(assignedToRole (GoalFn 26) CapabilityRole6)
+
+(goalName (GoalFn 27)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Library)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 27) (cityHasImprovement ?var1 FC-Building-Library))
+(subgoal (GoalFn 27) (GoalFn 36))
+(assignedToRole (GoalFn 27) CapabilityRole6)
+
+(goalName (GoalFn 28)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-University)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 28) (cityHasImprovement ?var1 FC-Building-University))
+(subgoal (GoalFn 28) (GoalFn 36))
+(assignedToRole (GoalFn 28) CapabilityRole6)
+
+(goalName (GoalFn 29)
+ (AchieveFn
+  (and (cityOwner ?objectProtected (IndexicalFn currentRole))
+       (different ?protector-Agentive ?objectProtected)
+       (isa ?objectProtected FreeCiv-City)
+       (isa ?protector-Agentive FreeCiv-MilitaryUnit)
+       (objectFoundInLocation ?protector-Agentive ?objectProtected))))
+;(achievableClause (GoalFn 29) (isa ?protector-Agentive FreeCiv-MilitaryUnit))
+(achievableClause (GoalFn 29) (objectFoundInLocation ?protector-Agentive ?objectProtected))
+;;; subgoal disappeared?
+(justifiedByProcessType (GoalFn 29) Defending)
+(assignedToType (GoalFn 29) FreeCiv-MilitaryUnit)
+
+(goalName (GoalFn 30)
+ (AchieveFn
+  (and (cityHasImprovement ?eventOccursAt FC-Building-CityWalls)
+       (cityOwner ?eventOccursAt (IndexicalFn currentRole))
+       (isa ?eventOccursAt FreeCiv-City)
+       (isa ?objectOfStateChange FreeCiv-LandUnit)
+       (objectFoundInLocation ?objectOfStateChange ?eventOccursAt)
+       (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))))
+;(achievableClause (GoalFn 30) (cityOwner ?eventOccursAt (IndexicalFn currentRole)))
+;(achievableClause (GoalFn 30) (isa ?eventOccursAt FreeCiv-City))
+(achievableClause (GoalFn 30) (cityHasImprovement ?eventOccursAt FC-Building-CityWalls))
+;(achievableClause (GoalFn 30) (isa ?objectOfStateChange FreeCiv-LandUnit))
+(achievableClause (GoalFn 30) (objectFoundInLocation ?objectOfStateChange ?eventOccursAt))
+;(achievableClause (GoalFn 30) (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))
+(subgoal (GoalFn 30) (GoalFn 36))
+(justifiedByProcessType (GoalFn 30) LandDefenseEffect)
+(assignedToRole (GoalFn 30) CapabilityRole12)
+(assignedToType (GoalFn 30) FreeCiv-LandUnit)
+(assignedToType (GoalFn 30) FreeCiv-City)
+
+(goalName (GoalFn 31)
+ (AchieveFn
+  (and (cityHasImprovement ?eventOccursAt FC-Building-CoastalDefense)
+       (cityOwner ?eventOccursAt (IndexicalFn currentRole))
+       (isa ?eventOccursAt FreeCiv-City)
+       (isa ?objectOfStateChange FreeCiv-LandUnit)
+       (objectFoundInLocation ?objectOfStateChange ?eventOccursAt)
+       (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))))
+;(achievableClause (GoalFn 31) (cityOwner ?eventOccursAt (IndexicalFn currentRole)))
+;(achievableClause (GoalFn 31) (isa ?eventOccursAt FreeCiv-City))
+(achievableClause (GoalFn 31) (cityHasImprovement ?eventOccursAt FC-Building-CoastalDefense))
+;(achievableClause (GoalFn 31) (isa ?objectOfStateChange FreeCiv-LandUnit))
+(achievableClause (GoalFn 31) (objectFoundInLocation ?objectOfStateChange ?eventOccursAt))
+;(achievableClause (GoalFn 31) (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))
+(subgoal (GoalFn 31) (GoalFn 36))
+(justifiedByProcessType (GoalFn 31) SeaDefenseEffect)
+(assignedToRole (GoalFn 31) CapabilityRole12)
+(assignedToType (GoalFn 31) FreeCiv-LandUnit)
+(assignedToType (GoalFn 31) FreeCiv-City)
+
+(goalName (GoalFn 32)
+ (AchieveFn
+  (and (cityHasImprovement ?eventOccursAt FC-Building-SAMBattery)
+       (cityOwner ?eventOccursAt (IndexicalFn currentRole))
+       (isa ?eventOccursAt FreeCiv-City)
+       (isa ?objectOfStateChange FreeCiv-LandUnit)
+       (objectFoundInLocation ?objectOfStateChange ?eventOccursAt)
+       (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))))
+;(achievableClause (GoalFn 32) (cityOwner ?eventOccursAt (IndexicalFn currentRole)))
+;(achievableClause (GoalFn 32) (isa ?eventOccursAt FreeCiv-City))
+(achievableClause (GoalFn 32) (cityHasImprovement ?eventOccursAt FC-Building-SAMBattery))
+;(achievableClause (GoalFn 32) (isa ?objectOfStateChange FreeCiv-LandUnit))
+(achievableClause (GoalFn 32) (objectFoundInLocation ?objectOfStateChange ?eventOccursAt))
+;(achievableClause (GoalFn 32) (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))
+(subgoal (GoalFn 32) (GoalFn 36))
+(justifiedByProcessType (GoalFn 32) AirDefenseEffect)
+(assignedToRole (GoalFn 32) CapabilityRole12)
+(assignedToType (GoalFn 32) FreeCiv-LandUnit)
+(assignedToType (GoalFn 32) FreeCiv-City)
+
+(goalName (GoalFn 33)
+ (AchieveFn
+  (and (cityHasImprovement ?eventOccursAt FC-Building-SDIDefense)
+       (cityOwner ?eventOccursAt (IndexicalFn currentRole))
+       (isa ?eventOccursAt FreeCiv-City)
+       (isa ?objectOfStateChange FreeCiv-LandUnit)
+       (objectFoundInLocation ?objectOfStateChange ?eventOccursAt)
+       (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))))
+;(achievableClause (GoalFn 33) (cityOwner ?eventOccursAt (IndexicalFn currentRole)))
+;(achievableClause (GoalFn 33) (isa ?eventOccursAt FreeCiv-City))
+(achievableClause (GoalFn 33) (cityHasImprovement ?eventOccursAt FC-Building-SDIDefense))
+;(achievableClause (GoalFn 33) (isa ?objectOfStateChange FreeCiv-LandUnit))
+(achievableClause (GoalFn 33) (objectFoundInLocation ?objectOfStateChange ?eventOccursAt))
+;(achievableClause (GoalFn 33) (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))
+(subgoal (GoalFn 33) (GoalFn 36))
+(justifiedByProcessType (GoalFn 33) NuclearDefenseEffect)
+(assignedToRole (GoalFn 33) CapabilityRole12)
+(assignedToType (GoalFn 33) FreeCiv-LandUnit)
+(assignedToType (GoalFn 33) FreeCiv-City)
+
+(goalName (GoalFn 34)
+ (MaximizeFn
+  ((QPQuantityFn DefensiveStrength)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-Unit
+     (TheSetOf ?unit (unitOwner ?unit (IndexicalFn currentRole))))))))
+(subgoal (GoalFn 34) (GoalFn 30))   ; be inside city walls
+(subgoal (GoalFn 34) (GoalFn 31))   ; be in city with coastal defense
+(subgoal (GoalFn 34) (GoalFn 32))   ; be in city with SAM battery
+(subgoal (GoalFn 34) (GoalFn 33))   ; be in city with SDI
+(subgoal (GoalFn 34) (GoalFn 51))   ; max current health
+(subgoal (GoalFn 34) (GoalFn 52))   ; max defend strength
+(subgoal (GoalFn 34) (GoalFn 53))   ; max veteran status
+(subgoal (GoalFn 34) (GoalFn 54))   ; be fortified
+(subgoal (GoalFn 34) (GoalFn 55))   ; be inside a city
+(justifiedByProcessType (GoalFn 34) SelfDefense)
+(assignedToType (GoalFn 34) FreeCiv-Unit)
+
+(goalName (GoalFn 35)
+ (AchieveFn
+  (and (different ?protector-Agentive ?objectProtected)
+       (isa ?objectProtected FreeCiv-Unit)
+       (isa ?protector-Agentive FreeCiv-MilitaryUnit)
+       (objectFoundInLocation ?protector-Agentive ?objectProtected)
+       (unitOwner ?objectProtected (IndexicalFn currentRole)))))
+(achievableClause (GoalFn 35) (isa ?protector-Agentive FreeCiv-MilitaryUnit))
+(achievableClause (GoalFn 35) (objectFoundInLocation ?protector-Agentive ?objectProtected))
+(justifiedByProcessType (GoalFn 35) Defending)
+(assignedToType (GoalFn 35) FreeCiv-MilitaryUnit)
+
+(goalName (GoalFn 36)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityShieldReserves)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city
+      (and (cityOwner ?city (IndexicalFn currentRole))
+           (isa ?city FreeCiv-City))))))))
+(diachronicSubgoal (GoalFn 36) (GoalFn 20))  ; prevent disorder
+(subgoal (GoalFn 36) (GoalFn 56))  ; max shield surplus
+(subgoal (GoalFn 36) (GoalFn 57))  ; build something other than coinage
+(diachronicSubgoal (GoalFn 36) (GoalFn 56))
+(assignedToRole (GoalFn 36) CapabilityRole6)
+(assignedToType (GoalFn 36) FreeCiv-City)
+
+(goalName (GoalFn 37)
+ (MinimizeFn
+  ((MeasurableQuantityFn unhappyCitizens)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 37) (GoalFn 58)) ; FC-Building-Colosseum
+(subgoal (GoalFn 37) (GoalFn 59)) ; FC-Building-Temple
+(subgoal (GoalFn 37) (GoalFn 60)) ; FC-Building-Cathedral
+(subgoal (GoalFn 37) (GoalFn 61)) ; FC-Building-PoliceStation
+(subgoal (GoalFn 37) (GoalFn 62)) ; min numDeployedMilitaryUnits
+(subgoal (GoalFn 37) (GoalFn 63)) ; prevent representative govt
+(subgoal (GoalFn 37) (GoalFn 64)) ; max num present military units (under martial law)
+(subgoal (GoalFn 37) (GoalFn 65)) ; ach centralized govt
+(assignedToType (GoalFn 37) FreeCiv-City)
+
+(goalName (GoalFn 38)
+ (MaximizeFn
+  ((MeasurableQuantityFn happyCitizens)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 38) (GoalFn 66))  ; max cityLuxuryTotal
+(assignedToType (GoalFn 38) FreeCiv-City)
+
+(goalName (GoalFn 39)
+ (MaximizeFn
+  ((MeasurableQuantityFn numTaxCollectors)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 39) (GoalFn 46))  ; max citySize
+(assignedToRole (GoalFn 39) CapabilityRole6)
+(assignedToType (GoalFn 39) FreeCiv-City)
+
+(goalName (GoalFn 40)
+ (MaximizeFn
+  ((MeasurableQuantityFn currentTaxPercent) (IndexicalFn currentRole))))
+
+(goalName (GoalFn 41)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Marketplace)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 41) (cityHasImprovement ?var1 FC-Building-Marketplace))
+(subgoal (GoalFn 41) (GoalFn 36))
+(assignedToRole (GoalFn 41) CapabilityRole6)
+
+(goalName (GoalFn 42)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Bank)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 42) (cityHasImprovement ?var1 FC-Building-Bank))
+(subgoal (GoalFn 42) (GoalFn 36))
+(assignedToRole (GoalFn 42) CapabilityRole6)
+
+(goalName (GoalFn 43)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-StockExchange)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 43) (cityHasImprovement ?var1 FC-Building-StockExchange))
+(subgoal (GoalFn 43) (GoalFn 36))
+(assignedToRole (GoalFn 43) CapabilityRole6)
+
+(goalName (GoalFn 44)
+ (MinimizeFn
+  ((MeasurableQuantityFn objectTypeHasUpkeepGoldCost)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-Building
+     (TheSetOf ?v1
+      (and (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City)
+           (cityHasImprovement ?var1 ?v1) (isa ?v1 FreeCiv-Building))))))))
+
+(goalName (GoalFn 45)
+ (MinimizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn FreeCiv-Building
+    (TheSetOf ?v1
+     (and (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City)
+          (cityHasImprovement ?var1 ?v1) (isa ?v1 FreeCiv-Building)))))))
+
+(goalName (GoalFn 46)
+ (MaximizeFn
+  ((MeasurableQuantityFn citySize)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+;; Next 2 manually converted to diachronic
+(diachronicSubgoal (GoalFn 46) (GoalFn 20)) ; prev CityDisorderState
+(diachronicSubgoal (GoalFn 46) (GoalFn 50)) ; ach CityCelebration
+(subgoal (GoalFn 46) (GoalFn 67))  ; max city growth rate
+(subgoal (GoalFn 46) (GoalFn 68))  ; ach Republic or Democracy
+(subgoal (GoalFn 46) (GoalFn 69))  ; ach Sewer
+(subgoal (GoalFn 46) (GoalFn 70))  ; ach Aqueduct
+(diachronicSubgoal (GoalFn 46) (GoalFn 67))
+(assignedToType (GoalFn 46) FreeCiv-City)
+
+(goalName (GoalFn 47)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityTradeProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 47) (GoalFn 71))  ; max # workers
+(subgoal (GoalFn 47) (GoalFn 72))  ; max tile trade prod
+(subgoal (GoalFn 47) (GoalFn 73))  ; max num worked locations
+(subgoal (GoalFn 47) (GoalFn 74))  ; max trade route income
+(subgoal (GoalFn 47) (GoalFn 75))  ; ach FC-Building-SuperHighways
+(assignedToType (GoalFn 47) FreeCiv-City)
+
+(goalName (GoalFn 48)
+ (MinimizeFn
+  ((MeasurableQuantityFn cityCorruption)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 48) (GoalFn 76))  ; ach FC-Building-Courthouse
+(assignedToType (GoalFn 48) FreeCiv-City)
+
+(goalName (GoalFn 49)
+ (AchieveFn
+  (and (currentGovernment (IndexicalFn currentRole) ?currentGovernment)
+       (isa (IndexicalFn currentRole) FreeCiv-Player)
+       (elementOf ?currentGovernment (TheSet FC-Monarchy FC-Communist)))))
+(achievableClause (GoalFn 49) (currentGovernment (IndexicalFn currentRole) ?currentGovernment))
+;(achievableClause (GoalFn 49) (isa (IndexicalFn currentRole) FreeCiv-Player))
+(justifiedByProcessType (GoalFn 49) CelebrationTradeBonus)
+(assignedToRole (GoalFn 49) CapabilityRole1)
+
+(goalName (GoalFn 50)
+ (AchieveFn
+  (activeMF
+   (MFInstanceFn CityCelebration
+    (TheList
+     (GenericInstanceFn
+      (CollectionSubsetFn FreeCiv-City
+       (TheSetOf ?var1
+        (and (cityOwner ?var1 (IndexicalFn currentRole))
+             (isa ?var1 FreeCiv-City))))))))))
+(achievableClause (GoalFn 50)
+ (activeMF
+  (MFInstanceFn CityCelebration
+   (TheList
+    (GenericInstanceFn
+     (CollectionSubsetFn FreeCiv-City
+      (TheSetOf ?var1
+       (and (cityOwner ?var1 (IndexicalFn currentRole))
+            (isa ?var1 FreeCiv-City)))))))))
+(subgoal (GoalFn 50) (GoalFn 38))  ; max happy citizens
+(subgoal (GoalFn 50) (GoalFn 46))  ; max citySize
+(justifiedByProcessType (GoalFn 50) CelebrationTradeBonus)
+
+(goalName (GoalFn 51)
+ (MaximizeFn
+  ((MeasurableQuantityFn currentHealth)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-Unit
+     (TheSetOf ?unit (unitOwner ?unit (IndexicalFn currentRole))))))))
+(subgoal (GoalFn 51) (GoalFn 77))
+(diachronicSubgoal (GoalFn 51) (GoalFn 77))
+(assignedToType (GoalFn 51) FreeCiv-Unit)
+
+(goalName (GoalFn 52)
+ (MaximizeFn
+  ((MeasurableQuantityFn unitHasDefendStrength)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-Unit
+     (TheSetOf ?unit (unitOwner ?unit (IndexicalFn currentRole))))))))
+(assignedToType (GoalFn 52) FreeCiv-Unit)
+
+(goalName (GoalFn 53)
+ (MaximizeFn
+  ((MeasurableQuantityFn veteranStatus)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-MilitaryUnit
+     (TheSetOf ?unit (unitOwner ?unit (IndexicalFn currentRole))))))))
+(justifiedByProcessType (GoalFn 53) VeteranStrengthEffect)
+(assignedToType (GoalFn 53) FreeCiv-MilitaryUnit)
+
+(goalName (GoalFn 54)
+ (AchieveFn
+  (and (currentActivity ?doneBy FC-ActivityFortified)
+       (isa ?doneBy FreeCiv-MilitaryLandUnit)
+       (unitOwner ?doneBy (IndexicalFn currentRole)))))
+(achievableClause (GoalFn 54) (currentActivity ?doneBy FC-ActivityFortified))
+(achievableClause (GoalFn 54) (isa ?doneBy FreeCiv-MilitaryLandUnit))
+(justifiedByProcessType (GoalFn 54) FortifyDefenseEffect)
+(assignedToRole (GoalFn 54) CapabilityRole13)
+(assignedToType (GoalFn 54) FreeCiv-MilitaryLandUnit)
+
+(goalName (GoalFn 55)
+ (AchieveFn
+  (and (cityOwner ?eventOccursAt (IndexicalFn currentRole))
+       (isa ?eventOccursAt FreeCiv-City)
+       (isa ?objectOfStateChange FreeCiv-LandUnit)
+       (objectFoundInLocation ?objectOfStateChange ?eventOccursAt)
+       (unitOwner ?objectOfStateChange (IndexicalFn currentRole)))))
+;(achievableClause (GoalFn 55) (cityOwner ?eventOccursAt (IndexicalFn currentRole)))
+;(achievableClause (GoalFn 55) (isa ?eventOccursAt FreeCiv-City))
+;(achievableClause (GoalFn 55) (isa ?objectOfStateChange FreeCiv-LandUnit))
+(achievableClause (GoalFn 55) (objectFoundInLocation ?objectOfStateChange ?eventOccursAt))
+(justifiedByProcessType (GoalFn 55) CityDefenseEffect)
+;(assignedToRole (GoalFn 55) CapabilityRole3) ; Settlers only relevant if cityOwner is an achievableClause
+(assignedToType (GoalFn 55) FreeCiv-LandUnit)
+(assignedToType (GoalFn 55) FreeCiv-City)
+
+(goalName (GoalFn 56)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityShieldSurplus)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city
+      (and (cityOwner ?city (IndexicalFn currentRole))
+           (isa ?city FreeCiv-City))))))))
+(subgoal (GoalFn 56) (GoalFn 78))
+(subgoal (GoalFn 56) (GoalFn 79))
+(justifiedByProcessType (GoalFn 56) CityProductionProcess)
+(assignedToType (GoalFn 56) FreeCiv-City)
+
+(goalName (GoalFn 57)
+ (AchieveFn
+  (and (cityOwner ?objectOfStateChange (IndexicalFn currentRole))
+       (currentlyBuilding ?objectOfStateChange ?objectTypeProduced)
+       (different ?objectTypeProduced FC-Coinage)
+       (isa ?objectTypeProduced FreeCiv-BuildableThing-Type)
+       (isa ?objectOfStateChange FreeCiv-City))))
+(achievableClause (GoalFn 57) (currentlyBuilding ?objectOfStateChange ?objectTypeProduced))
+;(achievableClause (GoalFn 57) (isa ?objectTypeProduced FreeCiv-BuildableThing-Type))
+(justifiedByProcessType (GoalFn 57) CityProductionProcess)
+(assignedToRole (GoalFn 57) CapabilityRole6)
+
+(goalName (GoalFn 58)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Colosseum)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 58) (cityHasImprovement ?var1 FC-Building-Colosseum))
+(subgoal (GoalFn 58) (GoalFn 36))
+(assignedToRole (GoalFn 58) CapabilityRole6)
+
+(goalName (GoalFn 59)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Temple)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 59) (cityHasImprovement ?var1 FC-Building-Temple))
+(subgoal (GoalFn 59) (GoalFn 36))
+(assignedToRole (GoalFn 59) CapabilityRole6)
+
+(goalName (GoalFn 60)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Cathedral)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 60) (cityHasImprovement ?var1 FC-Building-Cathedral))
+(subgoal (GoalFn 60) (GoalFn 36))
+(assignedToRole (GoalFn 60) CapabilityRole6)
+
+(goalName (GoalFn 61)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-PoliceStation)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 61) (cityHasImprovement ?var1 FC-Building-PoliceStation))
+(subgoal (GoalFn 61) (GoalFn 36))
+(assignedToRole (GoalFn 61) CapabilityRole6)
+
+(goalName (GoalFn 62)
+ (MinimizeFn
+  ((MeasurableQuantityFn numDeployedMilitaryUnits)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city
+      (and (cityOwner ?city (IndexicalFn currentRole))
+           (isa ?city FreeCiv-City))))))))
+(justifiedByProcessType (GoalFn 62) AggressiveUnitUnhappyEffect)
+(assignedToType (GoalFn 62) FreeCiv-City)
+
+(goalName (GoalFn 63)
+ (PreventFn
+  (and (currentGovernment (IndexicalFn currentRole) ?governmentOf)
+       (isa (IndexicalFn currentRole) FreeCiv-Player)
+       (isa ?governmentOf RepresentativeGovernment))))
+(justifiedByProcessType (GoalFn 63) AggressiveUnitUnhappyEffect)
+
+(goalName (GoalFn 64)
+ (MaximizeFn
+  ((MeasurableQuantityFn numPresentMilitaryUnits)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city
+      (and (cityOwner ?city (IndexicalFn currentRole))
+           (isa ?city FreeCiv-City))))))))
+(justifiedByProcessType (GoalFn 64) MartialLaw)
+(assignedToType (GoalFn 64) FreeCiv-City)
+
+(goalName (GoalFn 65)
+ (AchieveFn
+  (and (governmentType (IndexicalFn currentRole) CentralizedGovernment)
+       (isa (IndexicalFn currentRole) FreeCiv-Player))))
+(achievableClause (GoalFn 65) (governmentType (IndexicalFn currentRole) CentralizedGovernment))
+(achievableClause (GoalFn 65) (isa (IndexicalFn currentRole) FreeCiv-Player))
+(justifiedByProcessType (GoalFn 65) MartialLaw)
+
+(goalName (GoalFn 66)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityLuxuryTotal)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 66) (GoalFn 25))
+(subgoal (GoalFn 66) (GoalFn 41))
+(subgoal (GoalFn 66) (GoalFn 42))
+(subgoal (GoalFn 66) (GoalFn 43))
+(subgoal (GoalFn 66) (GoalFn 80))
+(subgoal (GoalFn 66) (GoalFn 81))
+(assignedToType (GoalFn 66) FreeCiv-City)
+
+(goalName (GoalFn 67)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityGrowthRate)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 67) (GoalFn 82))
+(subgoal (GoalFn 67) (GoalFn 83))
+(assignedToType (GoalFn 67) FreeCiv-City)
+
+(goalName (GoalFn 68)
+ (AchieveFn
+  (and (currentGovernment (IndexicalFn currentRole) ?currentGovernment)
+       (elementOf ?currentGovernment (TheSet FC-Republic FC-Democracy))
+       (isa (IndexicalFn currentRole) FreeCiv-Player))))
+(achievableClause (GoalFn 68) (currentGovernment (IndexicalFn currentRole) ?currentGovernment))
+;(achievableClause (GoalFn 68) (isa (IndexicalFn currentRole) FreeCiv-Player))
+(justifiedByProcessType (GoalFn 68) CityRaptureProcess)
+(assignedToRole (GoalFn 68) CapabilityRole1)
+
+(goalName (GoalFn 69)
+ (AchieveFn
+  (and (cityHasImprovement ?objectOfStateChange FC-Building-SewerSystem)
+       (cityOwner ?objectOfStateChange (IndexicalFn currentRole))
+       (isa ?objectOfStateChange FreeCiv-City))))
+(achievableClause (GoalFn 69) (cityHasImprovement ?objectOfStateChange FC-Building-SewerSystem))
+(subgoal (GoalFn 69) (GoalFn 36))
+(justifiedByProcessType (GoalFn 69) CityGrowthProcess3)
+(assignedToRole (GoalFn 69) CapabilityRole6)
+
+(goalName (GoalFn 70)
+ (AchieveFn
+  (and (cityHasImprovement ?objectOfStateChange FC-Building-Aqueduct)
+       (cityOwner ?objectOfStateChange (IndexicalFn currentRole))
+       (isa ?objectOfStateChange FreeCiv-City))))
+(achievableClause (GoalFn 70) (cityHasImprovement ?objectOfStateChange FC-Building-Aqueduct))
+(subgoal (GoalFn 70) (GoalFn 36))
+(justifiedByProcessType (GoalFn 70) CityGrowthProcess2)
+(assignedToRole (GoalFn 70) CapabilityRole6)
+
+(goalName (GoalFn 71)
+ (MaximizeFn
+  ((MeasurableQuantityFn numWorkers)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 71) (GoalFn 46))
+(assignedToRole (GoalFn 71) CapabilityRole6)
+(assignedToType (GoalFn 71) FreeCiv-City)
+
+(goalName (GoalFn 72)
+ (MaximizeFn
+  ((MeasurableQuantityFn tileTradeProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreecivLocation
+     (TheSetOf ?v1
+      (and (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City)
+           (cityWorkingTileAt ?var1 ?v1) (isa ?v1 FreecivLocation))))))))
+(subgoal (GoalFn 72) (GoalFn 84)) ; min cityPollution
+(subgoal (GoalFn 72) (GoalFn 85)) ; ach FC-Special-Road (from RoadBonus)
+(subgoal (GoalFn 72) (GoalFn 86)) ; ach FC-Special-Railroad (from RoadBonus)
+(assignedToRole (GoalFn 72) CapabilityRole6)
+
+(goalName (GoalFn 73)
+ (MaximizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn FreecivLocation
+    (TheSetOf ?v1
+     (and (cityOwner ?var1 (IndexicalFn currentRole)) 
+          (isa ?var1 FreeCiv-City)
+          (cityWorkingTileAt ?var1 ?v1)
+          (isa ?v1 FreecivLocation)))))))
+
+(goalName (GoalFn 74)
+ (MaximizeFn
+  ((MeasurableQuantityFn tradeRouteIncome)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(assignedToRole (GoalFn 74) CapabilityRole4)
+(assignedToType (GoalFn 74) FreeCiv-City)
+
+(goalName (GoalFn 75)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-SuperHighways)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 75) (cityHasImprovement ?var1 FC-Building-SuperHighways))
+(subgoal (GoalFn 75) (GoalFn 36))
+(assignedToRole (GoalFn 75) CapabilityRole6)
+
+(goalName (GoalFn 76)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Courthouse)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 76) (cityHasImprovement ?var1 FC-Building-Courthouse))
+(subgoal (GoalFn 76) (GoalFn 36))
+(assignedToRole (GoalFn 76) CapabilityRole6)
+
+(goalName (GoalFn 77)
+ (MaximizeFn
+  ((MeasurableQuantityFn healingRate)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-Unit
+     (TheSetOf ?unit (unitOwner ?unit (IndexicalFn currentRole))))))))
+(justifiedByProcessType (GoalFn 77) FCHealing)
+(assignedToType (GoalFn 77) FreeCiv-Unit)
+
+(goalName (GoalFn 78)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityShieldProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city
+      (and (cityOwner ?city (IndexicalFn currentRole))
+           (isa ?city FreeCiv-City))))))))
+(subgoal (GoalFn 78) (GoalFn 71)) ; max num workers
+(subgoal (GoalFn 78) (GoalFn 73)) ; max num tiles worked
+(subgoal (GoalFn 78) (GoalFn 87)) ; max tile shield production
+(subgoal (GoalFn 78) (GoalFn 88)) ; FC-Building-Factory
+(subgoal (GoalFn 78) (GoalFn 89)) ; FC-Building-Mfg.Plant
+(subgoal (GoalFn 78) (GoalFn 90)) ; FC-Building-NuclearPlant
+(subgoal (GoalFn 78) (GoalFn 91)) ; FC-Building-HydroPlant
+(subgoal (GoalFn 78) (GoalFn 92)) ; FC-Building-PowerPlant
+(subgoal (GoalFn 78) (GoalFn 93)) ; FC-Building-OffshorePlatform
+(goalTradeoff (GoalFn 78) (GoalFn 84) PartialAbruptTradeoff)
+(assignedToType (GoalFn 78) FreeCiv-City)
+
+(goalName (GoalFn 79)
+ (MinimizeFn
+  ((MeasurableQuantityFn supportedUnitsShieldUpkeep)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?city
+      (and (cityOwner ?city (IndexicalFn currentRole))
+           (isa ?city FreeCiv-City))))))))
+(assignedToType (GoalFn 79) FreeCiv-City)
+
+(goalName (GoalFn 80)
+ (MaximizeFn
+  ((MeasurableQuantityFn numEntertainers)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 80) (GoalFn 46)) ; max citySize
+(assignedToRole (GoalFn 80) CapabilityRole6)
+(assignedToType (GoalFn 80) FreeCiv-City)
+
+(goalName (GoalFn 81)
+ (MaximizeFn
+  ((MeasurableQuantityFn currentLuxuryPercent) (IndexicalFn currentRole))))
+
+(goalName (GoalFn 82)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityFoodSurplus)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 82) (GoalFn 94)) ; max cityFoodProduction
+(subgoal (GoalFn 82) (GoalFn 95)) ; min supportedUnitsFoodUpkeep
+(assignedToType (GoalFn 82) FreeCiv-City)
+
+(goalName (GoalFn 83)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Granary)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 83) (cityHasImprovement ?var1 FC-Building-Granary))
+(subgoal (GoalFn 83) (GoalFn 36)) ; max cityShieldReserves
+(assignedToRole (GoalFn 83) CapabilityRole6)
+
+(goalName (GoalFn 84)
+ (MinimizeFn
+  ((MeasurableQuantityFn cityPollution)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 84) (GoalFn 90)) ; FC-Building-NuclearPlant
+(subgoal (GoalFn 84) (GoalFn 91)) ; FC-Building-HydroPlant
+(subgoal (GoalFn 84) (GoalFn 96)) ; prevent FC-Building-PowerPlant
+(subgoal (GoalFn 84) (GoalFn 97)) ; FC-Building-MassTransit
+(subgoal (GoalFn 84) (GoalFn 98)) ; FC-Building-RecyclingCenter
+(subgoal (GoalFn 84) (GoalFn 99)) ; FC-Building-SolarPlant
+(goalTradeoff (GoalFn 84) (GoalFn 78) PartialAbruptTradeoff)
+(assignedToType (GoalFn 84) FreeCiv-City)
+
+(goalName (GoalFn 85)
+ (AchieveFn
+  (and (cityOwner ?var1 (IndexicalFn currentRole))
+       (cityWorkingTileAt ?var1 ?eventOccursAt)
+       (isa ?eventOccursAt FreecivLocation) (isa ?var1 FreeCiv-City)
+       (specialAt ?eventOccursAt FC-Special-Road)
+       (terrainAt ?eventOccursAt ?terrainAt)
+       (elementOf ?terrainAt (TheSet FC-Terrain-Grassland FC-Terrain-Plains FC-Terrain-Desert))
+       (uninferredSentence (fcObjectAt ?var1 ?eventOccursAt)))))
+(achievableClause (GoalFn 85) (specialAt ?eventOccursAt FC-Special-Road))
+;(achievableClause (GoalFn 85) (terrainAt ?eventOccursAt ?terrainAt))
+(justifiedByProcessType (GoalFn 85) RoadBonus)
+(assignedToRole (GoalFn 85) CapabilityRole7)
+
+(goalName (GoalFn 86)
+ (AchieveFn
+  (and (cityOwner ?var1 (IndexicalFn currentRole))
+       (cityWorkingTileAt ?var1 ?eventOccursAt)
+       (isa ?eventOccursAt FreecivLocation) (isa ?var1 FreeCiv-City)
+       (specialAt ?eventOccursAt FC-Special-Railroad)
+       (terrainAt ?eventOccursAt ?terrainAt)
+       (elementOf ?terrainAt (TheSet FC-Terrain-Grassland FC-Terrain-Plains FC-Terrain-Desert))
+       (uninferredSentence (fcObjectAt ?var1 ?eventOccursAt)))))
+(achievableClause (GoalFn 86) (specialAt ?eventOccursAt FC-Special-Railroad))
+;(achievableClause (GoalFn 86) (terrainAt ?eventOccursAt ?terrainAt))
+(justifiedByProcessType (GoalFn 86) RailroadBonus)
+(assignedToRole (GoalFn 86) CapabilityRole7)
+
+(goalName (GoalFn 87)
+ (MaximizeFn
+  ((MeasurableQuantityFn tileShieldProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreecivLocation
+     (TheSetOf ?v1
+      (and (cityOwner ?city (IndexicalFn currentRole)) 
+           (isa ?city FreeCiv-City)
+           (cityWorkingTileAt ?city ?v1) 
+           (isa ?v1 FreecivLocation))))))))
+(subgoal (GoalFn 87) (GoalFn 84))  ; min pollution
+(subgoal (GoalFn 87) (GoalFn 100)) ; mine
+(assignedToRole (GoalFn 87) CapabilityRole6)
+
+(goalName (GoalFn 88)
+ (AchieveFn
+  (and (cityHasImprovement ?city FC-Building-Factory)
+       (cityOwner ?city (IndexicalFn currentRole)) (isa ?city FreeCiv-City))))
+(achievableClause (GoalFn 88) (cityHasImprovement ?city FC-Building-Factory))
+(subgoal (GoalFn 88) (GoalFn 36))
+(assignedToRole (GoalFn 88) CapabilityRole6)
+
+(goalName (GoalFn 89)
+ (AchieveFn
+  (and (cityHasImprovement ?city FC-Building-Mfg.Plant)
+       (cityOwner ?city (IndexicalFn currentRole)) (isa ?city FreeCiv-City))))
+(achievableClause (GoalFn 89) (cityHasImprovement ?city FC-Building-Mfg.Plant))
+(subgoal (GoalFn 89) (GoalFn 36))
+(assignedToRole (GoalFn 89) CapabilityRole6)
+
+(goalName (GoalFn 90)
+ (AchieveFn
+  (and (cityHasImprovement ?city FC-Building-NuclearPlant)
+       (cityOwner ?city (IndexicalFn currentRole)) (isa ?city FreeCiv-City))))
+(achievableClause (GoalFn 90) (cityHasImprovement ?city FC-Building-NuclearPlant))
+(subgoal (GoalFn 90) (GoalFn 36))
+(assignedToRole (GoalFn 90) CapabilityRole6)
+
+(goalName (GoalFn 91)
+ (AchieveFn
+  (and (cityHasImprovement ?city FC-Building-HydroPlant)
+       (cityOwner ?city (IndexicalFn currentRole)) (isa ?city FreeCiv-City))))
+(achievableClause (GoalFn 91) (cityHasImprovement ?city FC-Building-HydroPlant))
+(subgoal (GoalFn 91) (GoalFn 36))
+(assignedToRole (GoalFn 91) CapabilityRole6)
+
+(goalName (GoalFn 92)
+ (AchieveFn
+  (and (cityHasImprovement ?city FC-Building-PowerPlant)
+       (cityOwner ?city (IndexicalFn currentRole)) (isa ?city FreeCiv-City))))
+(achievableClause (GoalFn 92) (cityHasImprovement ?city FC-Building-PowerPlant))
+(subgoal (GoalFn 92) (GoalFn 36))
+(goalTradeoff (GoalFn 92) (GoalFn 96) TotalAbruptTradeoff)
+(assignedToRole (GoalFn 92) CapabilityRole6)
+
+(goalName (GoalFn 93)
+ (AchieveFn
+  (and (cityHasImprovement ?city FC-Building-OffshorePlatform)
+       (cityOwner ?city (IndexicalFn currentRole)) (isa ?city FreeCiv-City))))
+(achievableClause (GoalFn 93) (cityHasImprovement ?city FC-Building-OffshorePlatform))
+(subgoal (GoalFn 93) (GoalFn 36))
+(assignedToRole (GoalFn 93) CapabilityRole6)
+
+(goalName (GoalFn 94)
+ (MaximizeFn
+  ((MeasurableQuantityFn cityFoodProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 94) (GoalFn 71)) ; max num workers
+(subgoal (GoalFn 94) (GoalFn 73)) ; max num tiles worked
+(subgoal (GoalFn 94) (GoalFn 101)) ; max tile food production
+(subgoal (GoalFn 94) (GoalFn 102)) ; FC-Building-Harbour
+(subgoal (GoalFn 94) (GoalFn 103)) ; FC-Building-Supermarket
+(assignedToType (GoalFn 94) FreeCiv-City)
+
+(goalName (GoalFn 95)
+ (MinimizeFn
+  ((MeasurableQuantityFn supportedUnitsFoodUpkeep)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreeCiv-City
+     (TheSetOf ?var1
+      (and (cityOwner ?var1 (IndexicalFn currentRole))
+           (isa ?var1 FreeCiv-City))))))))
+(subgoal (GoalFn 95) (GoalFn 104)) ; min num Settlers
+(assignedToType (GoalFn 95) FreeCiv-City)
+
+(goalName (GoalFn 96)
+ (PreventFn
+  (and (cityHasImprovement ?var1 FC-Building-PowerPlant)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(goalTradeoff (GoalFn 96) (GoalFn 92) TotalAbruptTradeoff)  ;  have and don't have a power plant
+
+(goalName (GoalFn 97)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-MassTransit)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 97) (cityHasImprovement ?var1 FC-Building-MassTransit))
+(subgoal (GoalFn 97) (GoalFn 36))
+(assignedToRole (GoalFn 97) CapabilityRole6)
+
+(goalName (GoalFn 98)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-RecyclingCenter)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 98) (cityHasImprovement ?var1 FC-Building-RecyclingCenter))
+(subgoal (GoalFn 98) (GoalFn 36))
+(assignedToRole (GoalFn 98) CapabilityRole6)
+
+(goalName (GoalFn 99)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-SolarPlant)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 99) (cityHasImprovement ?var1 FC-Building-SolarPlant))
+(subgoal (GoalFn 99) (GoalFn 36))
+(assignedToRole (GoalFn 99) CapabilityRole6)
+
+(goalName (GoalFn 100)
+ (AchieveFn
+  (and (cityOwner ?city (IndexicalFn currentRole))
+       (cityWorkingTileAt ?city ?eventOccursAt)
+       (specialAt ?eventOccursAt FC-Special-Mine)
+       (terrainAt ?eventOccursAt ?terrainAt)
+       (elementOf ?terrainAt (TheSet FC-Terrain-Hills FC-Terrain-Mountains FC-Terrain-Glacier FC-Terrain-Desert))
+       (isa ?eventOccursAt FreecivLocation)
+       (isa ?city FreeCiv-City))))
+(achievableClause (GoalFn 100) (specialAt ?eventOccursAt FC-Special-Mine))
+;(achievableClause (GoalFn 100) (terrainAt ?eventOccursAt ?terrainAt))
+(justifiedByProcessType (GoalFn 100) MineBonus)
+(assignedToRole (GoalFn 100) CapabilityRole7)
+
+(goalName (GoalFn 101)
+ (MaximizeFn
+  ((MeasurableQuantityFn tileFoodProduction)
+   (GenericInstanceFn
+    (CollectionSubsetFn FreecivLocation
+     (TheSetOf ?v1
+      (and (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City)
+           (cityWorkingTileAt ?var1 ?v1) (isa ?v1 FreecivLocation))))))))
+(subgoal (GoalFn 101) (GoalFn 84))  ; min pollution
+(subgoal (GoalFn 101) (GoalFn 105)) ; Irrigate
+(subgoal (GoalFn 101) (GoalFn 106)) ; Farm
+(assignedToRole (GoalFn 101) CapabilityRole6)
+
+(goalName (GoalFn 102)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Harbour)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 102) (cityHasImprovement ?var1 FC-Building-Harbour))
+(subgoal (GoalFn 102) (GoalFn 36))
+(assignedToRole (GoalFn 102) CapabilityRole6)
+
+(goalName (GoalFn 103)
+ (AchieveFn
+  (and (cityHasImprovement ?var1 FC-Building-Supermarket)
+       (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City))))
+(achievableClause (GoalFn 103) (cityHasImprovement ?var1 FC-Building-Supermarket))
+(subgoal (GoalFn 103) (GoalFn 36))
+(assignedToRole (GoalFn 103) CapabilityRole6)
+
+(goalName (GoalFn 104)
+ (MinimizeFn
+  ((MeasurableQuantityFn cardinalityOf)
+   (CollectionSubsetFn FC-Unit-Settlers
+    (TheSetOf ?v1
+     (and (cityOwner ?var1 (IndexicalFn currentRole)) (isa ?var1 FreeCiv-City)
+          (homeCityOf ?var1 ?v1) (isa ?v1 FC-Unit-Settlers)))))))
+(assignedToRole (GoalFn 104) CapabilityRole3)
+(assignedToType (GoalFn 104) FC-Unit-Settlers)
+
+(goalName (GoalFn 105)
+ (AchieveFn
+  (and (cityOwner ?city (IndexicalFn currentRole))
+       (cityWorkingTileAt ?city ?eventOccursAt)
+       (isa ?eventOccursAt FreecivLocation) (isa ?city FreeCiv-City)
+       (specialAt ?eventOccursAt FC-Special-Irrigation)
+       (terrainAt ?eventOccursAt ?terrainAt)
+       (elementOf ?terrainAt (TheSet FC-Terrain-Grassland FC-Terrain-Plains FC-Terrain-Hills FC-Terrain-Tundra FC-Terrain-Desert))
+       (uninferredSentence (fcObjectAt ?city ?eventOccursAt)))))
+(achievableClause (GoalFn 105) (specialAt ?eventOccursAt FC-Special-Irrigation))
+;(achievableClause (GoalFn 105) (terrainAt ?eventOccursAt ?terrainAt))
+(justifiedByProcessType (GoalFn 105) IrrigationBonus)
+(assignedToRole (GoalFn 105) CapabilityRole7)
+
+(goalName (GoalFn 106)
+ (AchieveFn
+  (and (cityOwner ?city (IndexicalFn currentRole))
+       (cityWorkingTileAt ?city ?eventOccursAt)
+       (isa ?eventOccursAt FreecivLocation) (isa ?city FreeCiv-City)
+       (specialAt ?eventOccursAt FC-Special-Farmland)
+       (terrainAt ?eventOccursAt ?terrainAt)
+       (elementOf ?terrainAt (TheSet FC-Terrain-Grassland FC-Terrain-Plains FC-Terrain-Hills FC-Terrain-Tundra FC-Terrain-Desert))
+       (uninferredSentence (fcObjectAt ?city ?eventOccursAt)))))
+(achievableClause (GoalFn 106) (specialAt ?eventOccursAt FC-Special-Farmland))
+;(achievableClause (GoalFn 106) (terrainAt ?eventOccursAt ?terrainAt))
+(justifiedByProcessType (GoalFn 106) FarmlandBonus)
+(assignedToRole (GoalFn 106) CapabilityRole7)
+
+(goalTradeoffs (TheSet (GoalFn 49) (GoalFn 68)) TotalAbruptTradeoff)
+
+(goalTradeoffs
+ (TheSet (GoalFn 92) (GoalFn 103) (GoalFn 102) (GoalFn 99) (GoalFn 98)
+  (GoalFn 97) (GoalFn 93) (GoalFn 91) (GoalFn 90) (GoalFn 89) (GoalFn 88)
+  (GoalFn 83) (GoalFn 76) (GoalFn 75) (GoalFn 70) (GoalFn 69) (GoalFn 61)
+  (GoalFn 60) (GoalFn 59) (GoalFn 58) (GoalFn 43) (GoalFn 42) (GoalFn 41)
+  (GoalFn 33) (GoalFn 32) (GoalFn 31) (GoalFn 30) (GoalFn 28) (GoalFn 27)
+  (GoalFn 26) (GoalFn 19) (GoalFn 57))
+ TotalAbruptTradeoff)
+
+(goalTradeoffs (TheSet (GoalFn 24) (GoalFn 40) (GoalFn 81))
+ PartialAbruptTradeoff)
+
+(goalTradeoffs (TheSet (GoalFn 66) (GoalFn 21) (GoalFn 14))
+ PartialAbruptTradeoff)
+
+(in-microtheory BaseKB)
+
+(persistentCounter GoalFn 106)

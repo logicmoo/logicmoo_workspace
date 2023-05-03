@@ -1,0 +1,11 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv specials
+;; -------------------
+
+(isa FreeCiv-Special SecondOrderCollection)
+(genls FreeCiv-Special FreeCiv-ObjectType)
+
+(isa FreeCiv-Resource SecondOrderCollection)
+(genls FreeCiv-Resource FreeCiv-ObjectType)

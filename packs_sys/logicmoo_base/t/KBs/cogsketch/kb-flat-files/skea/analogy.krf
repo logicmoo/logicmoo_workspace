@@ -1,0 +1,70 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: analogy.meld
+;;;;    System: sKEA
+;;;;    Author: Madeline Usher
+;;;;   Created: June 25, 2008 17:30:10
+;;;;   Purpose: sKEA-specific analogy-related definitions.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SKEAAnalogyMt :exclude-globals t)
+
+(genlMt SKEAAnalogyMt NuSketchAnalogyMt)
+(comment SKEAAnalogyMt
+  "Contains sKEA-specific analogy-related definitions.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ubiquitousForAnalogy
+
+(ubiquitousForAnalogy rcc8-EC)
+(ubiquitousForAnalogy rcc8-PO)
+(ubiquitousForAnalogy rcc8-NTPP)
+(ubiquitousForAnalogy rcc8-NTPPi)
+(ubiquitousForAnalogy rcc8-TPP)
+(ubiquitousForAnalogy rcc8-TPPi)
+(ubiquitousForAnalogy different)
+(ubiquitousForAnalogy glyphRepresentsObject)
+(ubiquitousForAnalogy GlyphFn)
+(ubiquitousForAnalogy AnnotationGlyphFn)
+(ubiquitousForAnalogy Entity)
+(ubiquitousForAnalogy spatiallyIntersects)
+(ubiquitousForAnalogy Case)
+(ubiquitousForAnalogy NuSketchCase)
+(ubiquitousForAnalogy NuSketchBundle)
+(ubiquitousForAnalogy SubSketchGroup)
+(ubiquitousForAnalogy SubSketch)
+(ubiquitousForAnalogy subCaseOf)
+(ubiquitousForAnalogy genlMt)
+(ubiquitousForAnalogy atOrOverlapsInSketch)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; notForAnalogy
+
+(notForAnalogy glyphGraphCWA)
+(notForAnalogy glyphGraphEdgesFor)
+(notForAnalogy glyphInterpretationNotDone)
+(notForAnalogy annotationLastModifiedTime)
+(notForAnalogy annotationDependsUponGlyphInk)
+(notForAnalogy visualInterpretationRelationSuggestion)
+(notForAnalogy visualInterpretationRelationSurmise)
+(notForAnalogy visualInterpretationContext)
+(notForAnalogy visualInterpretationRelationBaseline)
+(notForAnalogy userAcceptsBinaryRelationSuggestion)
+(notForAnalogy evaluate)
+(notForAnalogy uninferredSentence)
+(notForAnalogy subexpressionMatching)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; atomicAnalogyNat
+
+(atomicAnalogyNat CollectionSubsetFn)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

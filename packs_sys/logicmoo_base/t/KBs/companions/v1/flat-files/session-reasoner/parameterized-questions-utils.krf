@@ -1,0 +1,254 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: parameterized-questions-utils.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 9, 2014 09:45:39
+;;;;   Purpose: Outsourced preds for dealing with PQQs
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Session-ReasonerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa segmentedCaseForEntity Predicate)
+(arity segmentedCaseForEntity 2)
+(arg1Isa segmentedCaseForEntity ?entity)
+(arg2Isa segmentedCaseForEntity ?case)
+(comment segmentedCaseForEntity "(segmentedCaseForEntity ?entity ?case) is an outsourced
+predicate that returns a case to be used for pqq. It's specifically for doing
+pqq over segmentation cases.")
+
+(isa storedSegmentationForEntity Predicate)
+(arity storedSegmentationForEntity 2)
+(arg1Isa storedSegmentationForEntity ?entity)
+(arg2Isa storedSegmentationForEntity ?case)
+(comment storedSegmentationForEntity "(storedSegmentationForEntity ?entity ?case) is an outsourced
+predicate that returns a case to be used for pqq. It's specifically for doing
+pqq over segmentations.")
+
+(isa storedSegmentationFactsForEntity Predicate)
+(arity storedSegmentationFactsForEntity 2)
+(arg1Isa storedSegmentationFactsForEntity ?entity)
+(arg2Isa storedSegmentationFactsForEntity ?case)
+(comment storedSegmentationFactsForEntity "(storedSegmentationFactsForEntity ?entity ?case) is an outsourced
+predicate that returns a case to be used for pqq. It's specifically for doing
+pqq over segmentations. It only returns the facts in the segmentation, without the bookkeeping information
+that they're enclosed in.")
+
+(isa baselineCaseForEntity Predicate)
+(arity baselineCaseForEntity 2)
+(arg1Isa baselineCaseForEntity ?entity)
+(arg2Isa baselineCaseForEntity ?case)
+(comment baselineCaseForEntity "(baselineCaseForEntity ?entity ?case) is an outsourced
+predicate that returns a case to be used for pqq. It's specifically for doing
+pqq over non-segmentation cases.")
+
+(isa CaseRetrievalFactsMt Microtheory)
+(comment CaseRetrievalFactsMt "Contains information about how to make cases for pqq.")
+
+;;; A tell handler that sets the defaults for case segmentation.
+;;; It's a tell handler because it also removes existing ones.
+
+(isa setCurrentSegGenExpt Predicate)
+(arity setCurrentSegGenExpt 1)
+(comment setCurrentSegGenExpt "(setCurrentSegGenExpt ?seg-gen-expt) lets the system
+know that ?expt-name is the segmentation generation experiment name that's currently
+active.")
+
+(isa currentSegGenExpt Predicate)
+(arity currentSegGenExpt 1)
+(arg1Isa currentSegGenExpt Thing)
+(comment currentSegGenExpt "(currentSegGenExpt ?seg-gen-expt)")
+
+(isa setCurrentTopReadingMt Predicate)
+(arity setCurrentTopReadingMt 1)
+(comment setCurrentTopReadingMt "(setCurrentTopReadingMt ?seg-gen-expt) lets the system
+know that ?expt-name is the segmentation generation experiment name that's currently
+active.")
+
+(isa currentTopReadingMt Predicate)
+(arity currentTopReadingMt 1)
+(arg1Isa currentTopReadingMt Thing)
+(comment currentTopReadingMt "(currentTopReadingMt ?reading-mt)")
+
+(isa segGenExptForTestExpt Predicate)
+(arity segGenExptForTestExpt 2)
+(arg1Isa segGenExptForTestExpt Thing)
+(arg2Isa segGenExptForTestExpt Thing)
+(comment segGenExptForTestExpt "(segGenExptForTestExpt ?test-expt ?seg-gen-expt)")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This is for filtering things out
+
+(isa topicEntityInReading Predicate)
+(arity topicEntityInReading 2)
+(arg1Isa topicEntityInReading Entity)
+(arg2Isa topicEntityInReading AccessingAnIBT)
+(comment topicEntityInReading "(topicEntityInReading ?entity ?reading) indicates
+that ?entity is one of the major topics of ?reading.")
+
+(isa topicCollectionInReading Predicate)
+(arity topicCollectionInReading 2)
+(arg1Isa topicCollectionInReading Entity)
+(arg2Isa topicCollectionInReading AccessingAnIBT)
+(comment topicCollectionInReading "(topicCollectionInReading ?entity ?reading) indicates
+that ?collection is one of the major topics of ?reading.")
+
+(isa topicPairInSpindle Predicate)
+(arity topicPairInSpindle 3)
+(arg1Isa topicPairInSpindle Entity)
+(arg2Isa topicPairInSpindle Entity)
+(arg3Isa topicPairInSpindle Microtheory)
+(comment topicPairInSpindle "(topicPairInSpindle ?entity1 ?entity2 ?reading) indicates
+that ?entity1 and ?entity2 are interesting to compare in spindle ?spindle.")
+
+(isa topicPairIndicesInSpindle Predicate)
+(arity topicPairIndicesInSpindle 4)
+(arg1Isa topicPairIndicesInSpindle Microtheory)
+(arg2Isa topicPairIndicesInSpindle ParseTreeSpan)
+(arg3Isa topicPairIndicesInSpindle ParseTreeSpan)
+(arg4Isa topicPairIndicesInSpindle PQEvaluationQuestion)
+(comment topicPairIndicesInSpindle "(topicPairIndicesInSpindle ?entity1 ?entity2 ?reading ?evaluation-name) indicates
+that ?entity1 and ?entity2 are interesting to compare in spindle ?spindle. ?entity1 and ?entity2 are denoted by their
+ParagraphSentenceSpanFn indices. ?evaluation-name is the name of the task of comparing them.")
+
+(isa PQEvaluationQuestion Collection)
+(comment PQEvaluationQuestion "A PQEvaluationQuestion is the name of a task given to the parameterized
+question answering system for evaluation purposes.")
+
+(isa ParagraphSentenceSpanFn FunctionOrFunctionalPredicate)
+(arity ParagraphSentenceSpanFn 3)
+(arg1Isa ParagraphSentenceSpanFn InformationBearingThing)
+(arg2Isa ParagraphSentenceSpanFn Integer)
+(arg3Isa ParagraphSentenceSpanFn ParseTreeSpan)
+(resultIsa ParagraphSentenceSpanFn ParseTreeSpan)
+(comment ParagraphSentenceSpanFn "(ParagraphSentenceSpanFn ?source-text ?sentence-position ?span)
+is a span in the parse tree of the ?sentence-position'th sentence in ?source-text.")
+
+
+;;;The name of the problem
+;;;Maybe a string description of the difference in question, or some kind of sub-problem ID?
+;;;Whether it’s for similarity or difference.
+;;;The predicate or collection we’re looking for.
+(isa entitiesForPQComparisonQuestion Predicate)
+(arity entitiesForPQComparisonQuestion 4)
+(arg1Isa entitiesForPQComparisonQuestion PQEvaluationQuestion)
+(arg2Isa entitiesForPQComparisonQuestion Integer)
+(arg3Isa entitiesForPQComparisonQuestion Thing)
+(arg4Isa entitiesForPQComparisonQuestion Set)
+(comment entitiesForPQComparisonQuestion "(entitiesForPQComparisonQuestion ?evaluation-name
+?subtask ?sim-or-diff ?entity-set) denotes what predicates, collections, or entities
+to look for to see if the system found anything for the subtask ?subtask of ?evaluation-name.
+Finding something does NOT mean that the system found the relevant similarity or difference.
+The system only reports things that contain ALL of the entities or collections from ?entity-set;
+to do an OR, use multiple entitiesForPQComparisonQuestion statements.")
+
+
+(isa sourceSentenceForEntity Predicate)
+(arity sourceSentenceForEntity 2)
+(arg1Isa sourceSentenceForEntity Sentence)
+(arg2Isa sourceSentenceForEntity Entity) 
+(comment sourceSentenceForEntity "(sourceSentenceForEntity  ?sentence ?entity) indicates
+that ?entity originates in ?sentence.")
+
+(isa resolvedEntityInDiscourse Predicate)
+(arity resolvedEntityInDiscourse 2)
+(arg1Isa resolvedEntityInDiscourse Entity)
+(arg2Isa resolvedEntityInDiscourse Entity) 
+(comment resolvedEntityInDiscourse "(resolvedEntityInDiscourse ?entity1 ?entity2) indicates
+that ?entity1 resolved to ?entity2 in the original discourse they appeared in. For many
+entities, ?entity1 and 2 will be the same.")
+
+(isa outResolvedEntityInDiscourse Predicate)
+(arity outResolvedEntityInDiscourse 2)
+(arg1Isa outResolvedEntityInDiscourse Entity)
+(arg2Isa outResolvedEntityInDiscourse Entity) 
+(comment outResolvedEntityInDiscourse "(outResolvedEntityInDiscourse ?referent ?reference) indicates
+that ?entity1 resolved to ?entity2 in the original discourse they appeared in. For many
+entities, ?entity1 and 2 will be the same.")
+
+
+;;;(<== (outResolvedEntityInDiscourse ?x ?y)
+;;;     (resolvedEntityInDiscourse ?x ?y))
+;;;
+;;;(<== (outResolvedEntityInDiscourse ?x ?y)
+;;;     (uninferredSentence (resolvedEntityInDiscourse ?x ?y))
+;;;     (unifies ?x ?y))
+;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+
+(isa StoredPQComparisonsMt Microtheory)
+
+(isa StoredPQComparisonsMtFn FunctionOrFunctionalPredicate)
+(arity StoredPQComparisonsMtFn 4)
+(resultIsa StoredPQComparisonsMtFn Microtheory)
+(comment "(StoredPQComparisonsMtFn ?base-entity ?target-entity ?experiment-name ?comparison-type)
+is the microtheory where the comparison of type ?comparison-type between ?base-entity
+and ?target-entity is stored in ?experiment-name.")
+
+(isa StoredPQComparison Collection)
+
+(isa storedPQCompareFn FunctionOrFunctionalPredicate)
+(arity storedPQCompareFn 3)
+(arg1Isa storedPQCompareFn Case)
+(arg2Isa storedPQCompareFn Case)
+(arg3Isa storedPQCompareFn Thing)
+(comment storedPQCompareFn "(storedPQQCompareFn ?base ?target ?experiment-name)")
+
+(isa baseFactsStoredPQCompare Predicate)
+(arity baseFactsStoredPQCompare 2)
+(arg1Isa baseFactsStoredPQCompare StoredPQComparison)
+(arg2Isa baseFactsStoredPQCompare List)
+
+(isa targetFactsStoredPQCompare Predicate)
+(arity targetFactsStoredPQCompare 2)
+(arg1Isa targetFactsStoredPQCompare StoredPQComparison)
+(arg2Isa targetFactsStoredPQCompare List)
+
+(isa cisSupportsStoredPQCompare Predicate)
+(arity cisSupportsStoredPQCompare 2)
+(arg1Isa cisSupportsStoredPQCompare StoredPQComparison)
+(arg2Isa cisSupportsStoredPQCompare List)
+
+(isa rcisSupportsStoredPQCompare Predicate)
+(arity rcisSupportsStoredPQCompare 2)
+(arg1Isa rcisSupportsStoredPQCompare StoredPQComparison)
+(arg2Isa rcisSupportsStoredPQCompare List)
+
+(isa correspondencesStoredPQCompare Predicate)
+(arity correspondencesStoredPQCompare 2)
+(arg1Isa correspondencesStoredPQCompare StoredPQComparison)
+(arg2Isa correspondencesStoredPQCompare List)
+
+
+(isa sentenceDRSFn FunctionOrFunctionalPredicate)
+(arity sentenceDRSFn 2)
+(resultIsa sentenceDRSFn Microtheory)
+(arg1Isa sentenceDRSFn AccessingAnIBT)
+(arg2Isa sentenceDRSFn Sentence)
+
+
+(isa resolvedReferenceInReading Predicate)
+(arity resolvedReferenceInReading 3)
+(arg1Isa resolvedReferenceInReading Entity) 
+(arg2Isa resolvedReferenceInReading Entity)
+(arg3Isa resolvedReferenceInReading AccessingAnIBT)
+(comment resolvedReferenceInReading "(resolvedReferenceInReading ?referent ?reference ?reading)")
+
+(isa resolvedReferencesInReadingsMt Microtheory)
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,117 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: ordering-predicates
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 5, 2012 10:35:07
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2011-03-08 22:12:45 -0600 (Tue, 08 Mar 2011) $
+;;;;  $LastChangedBy: forbus $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory Interaction-ManagerMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Ordering sentences and paragraphs
+
+(isa orderedSentencesInParagraph Predicate)
+(arity orderedSentencesInParagraph 2)
+(comment orderedSentencesInParagraph
+  "(orderedSentencesInParagraph ?p ?s-list) indicates that the list of sentences ?s-list
+ are the contents of paragraph ?p.")
+
+(isa middleSentencesInParagraph Predicate)
+(arity middleSentencesInParagraph 4)
+(comment middleSentencesInParagraph
+  "(middleSentencesInParagraph ?p ?f ?l ?middle) derives the middle sentences ?middle in
+ paragraph ?p, in an ordered list, between the first [?f] and last [?l] exclusively.")
+
+(isa combineResultsOfOrderingOperation Predicate)
+(arity combineResultsOfOrderingOperation 4)
+(comment combineResultsOfOrderingOperation
+  "(combineResultsOfOrderingOperation ?f ?m ?l ?result) derives the ordered list ?result
+ by combining the first [?f], middle [?m], and last [?l] elements, computed by other means.")
+
+(isa ParagraphInDiscourseFn Function-Denotational)
+(arity ParagraphInDiscourseFn 2)
+(comment ParagraphInDiscourseFn
+  "(ParagraphInDiscourseFn ?x ?y) is part of a blind alley, and should probably be flushed.")
+
+(<== (orderedSentencesInParagraph ?p ?s-set)
+     (firstSentenceInParagraph ?f-s ?p)
+     (lastSentenceInParagraph ?l-s ?p)
+     (middleSentencesInParagraph ?p ?f-s ?l-s ?middle)
+     (combineResultsOfOrderingOperation ?f-s ?middle ?l-s ?s-set))
+
+(<== (middleSentencesInParagraph ?p ?first ?last ?middle)
+     (different ?first ?last)
+     (evaluate ?sentences 
+       (TheClosedRetrievalSetOf ?sentence
+         (and (sentenceInParagraph ?sentence ?p)
+              (different ?sentence ?first)
+              (different ?sentence ?last))))
+     (evaluate ?middle 
+       (SortFn (SetToListFn ?sentences)
+               lessThan
+               (FunctionToArg 2
+                              (Kappa (?s ?n)
+                                     (sentenceInDiscourse ?s ?n ?l))))))
+
+(<== (middleSentencesInParagraph ?p ?first ?last ?middle)
+     (equals ?first ?last)
+     (unifies ?middle (TheList)))
+
+(<== (combineResultsOfOrderingOperation ?first ?middle ?last ?result)
+     (equals ?first ?last)
+     (unifies ?result (TheList ?first)))
+
+(<== (combineResultsOfOrderingOperation ?first ?middle ?last ?result)
+     (different ?first ?last)
+     (evaluate ?result
+       (JoinListsFn (TheList ?first) ?middle (TheList ?last))))
+
+(isa orderedParagraphsInDiscourse Predicate)
+(arity orderedParagraphsInDiscourse 2)
+(comment orderedParagraphsInDiscourse
+  "(orderedParagraphsInDiscourse ?d ?p-list) indicates that the list of paragraphs ?p-list
+ are the contents of discourse ?d.")
+
+(isa middleParagraphsInDiscourse Predicate)
+(arity middleParagraphsInDiscourse 4)
+(comment middleParagraphsInDiscourse
+  "(middleParagraphsInDiscourse ?p ?f ?l ?middle) derives the middle paragraphs ?middle in
+ discourse ?d, in an ordered list, between the first [?f] and last [?l] exclusively.")
+
+(<== (orderedParagraphsInDiscourse ?d ?p-set)
+     (firstParagraphInDiscourse ?f-p ?d)
+     (lastParagraphInDiscourse ?l-p ?d)
+     (middleParagraphsInDiscourse ?d ?f-p ?l-p ?middle)
+     (combineResultsOfOrderingOperation ?f-p ?middle ?l-p ?p-set))
+
+(<== (middleParagraphsInDiscourse ?d ?first ?last ?middle)
+     (equals ?first ?last)
+     (unifies ?middle (TheList)))
+
+(<== (middleParagraphsInDiscourse ?d ?first ?last ?middle)
+     (different ?first ?last)
+     (evaluate ?paragraphs
+       (TheClosedRetrievalSetOf ?p
+         (and (paragraphInDiscourse ?p ?d)
+              (different ?first ?p)
+              (different ?last ?p))))
+     (evaluate ?middle
+       (SortFn (SetToListFn ?paragraphs)
+               lessThan
+               (FunctionToArg 1
+                              (Kappa (?p ?counter)
+                                     (evaluate ?counter
+                                       (unifies ?p (ParagraphInDiscourseFn
+                                                    ?d ?counter))))))))
+
+        
+         
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

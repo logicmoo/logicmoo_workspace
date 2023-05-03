@@ -1,0 +1,427 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: sketches.meld
+;;;;    System: sKEA
+;;;;    Author: Ken Forbus
+;;;;   Created: January 19, 2001 20:19:54
+;;;;   Purpose: Types of sketches and relationships between them
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory NuSketchMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Sketches and subsketches
+;;;
+;;; In human-human interactions, choices of genre and pose are often
+;;; not constant over an entire sketch.  For instance, someone might
+;;; shift from a top-down geospatial view to a side view, when showing
+;;; a plan detail.  We claim that sketches can naturally be broken
+;;; into subsketches over which genre and pose are constant.  The
+;;; criteria for individuating subsketches include differences in
+;;; genre, differences in pose, representing different states in a
+;;; sequence, and representing alternative construals of the same
+;;; situation.
+;;;
+;;; Semantics of using subsketches to specify sequences:
+;;;
+;;; Recall that a sketch can consist of any number of subsketches.
+;;; Some subset of the subsketches can be organized as a sequence.
+;;; In such cases, the following is true for each subsketch:
+;;; 
+;;; 1. There is an entity to represent the #$Situation-Temporal
+;;; that the subsketch describes.  Its name will be the name of
+;;; the layer, i.e.,
+;;;
+;;; (ist-Information Case32
+;;;      (layerRepresentsObject USER-DRAWN-SKETCH-LAYER-3 SITUATION-8))
+;;; (ist-Information Case32
+;;;      (nameString USER-DRAWN-SKETCH-LAYER-3 "Step 1"))
+;;; (ist-Information Case32 ;; Same name for layer as situation
+;;;      (nameString SITUATION-8 "Step 1"))
+;;; (ist-Information Case32 ;; type info
+;;;      (isa SITUATION-8 Situation-Temporal))
+;;;
+;;; 2. The isa's for the various objects in the situation
+;;;    are stated relative to the case, as they are now.
+;;;    However, facts about the situation, such as the spatial relationships
+;;;    involving the objects, or any other facts that get stated about 
+;;;    the situation, need to be scoped by holdsIn statements:
+;;;
+;;; (ist-Information Case32
+;;;      (holdsIn SITUATION-8 (objectFoundInLocation Nucleus2 Cell2)))
+;;;
+;;; A bit clunky, but it does enable us to express changes of relationships
+;;; over time.  Notice that since the glyphs are different on different
+;;; layers, spatial relationships involving them are just asserted directly
+;;; in the ist-Information context.  But anything involving the objects
+;;; needs this holdsIn statement wrapped around it.
+;;; 
+;;; 3. When saying that SIT1 is before SIT2, the minimal thing we can say is
+;;;    #$startsAfterEndingOf, i.e.,
+;;; 
+;;; (ist-Information Case32
+;;;      (startsAfterEndingOf SITUATION-8 SITUATION-9))
+;;;
+;;; Information about situations themselves needs to be asserted in the context
+;;; of the case representing the entire sketch.
+;;;
+;;; Possible Sub-Classes of SubSketch:
+;;;
+;;; sequences
+;;; detail/close-up
+;;; cutaway
+;;; 
+;;; perspectiveShift
+
+(comment Sketch-Drawing
+ "A kind of drawing chracterized by 'hand-drawn' strokes.  Often generated as 
+  a quick and temporary way of describing something during a communication act.")
+(genls Sketch-Drawing AbstractInformationalThing)
+(genls Sketch-Drawing VisualInformationSource)
+(genls Sketch-Drawing DevisedPracticeOrWork)
+(genls Sketch-Drawing Drawing-Depiction)
+(isa Sketch-Drawing Collection)
+
+
+(comment SubSketchGroup
+ "Each member of a #$SubSketchGroup is a #$SubSketch.  These can be convenient, 
+  for example, to discuss a bundle of SubSketches that represent different 
+  views of the same thing.")
+(genls SubSketchGroup AbstractInformationalThing)
+(isa SubSketchGroup Collection)
+
+
+(comment SubSketch 
+  "In human-human interactions, choices of genre and pose are often not 
+   constant over an entire sketch.  For instance, someone might shift from a 
+   top-down geospatial view to a side view, when showing a plan detail.  We 
+   claim that sketches can naturally be broken into subsketches over which 
+   genre and pose are constant.  The criteria for individuating subsketches 
+   include differences in genre, differences in pose, representing different 
+   states in a sequence, and representing alternative construals of the same 
+   situation.")
+(genls SubSketch AbstractInformationalThing)
+(genls SubSketch VisualInformationSource)
+(genls SubSketch DevisedPracticeOrWork)
+(isa SubSketch Collection)
+
+
+(comment subSketchFor
+ "Says that some thing is a part of the specified #$SubSketch.")
+(arity subSketchFor 2)
+(isa subSketchFor Predicate)
+(arg1Isa subSketchFor Thing)
+(arg2Isa subSketchFor SubSketch)
+
+
+(comment subSketchGroupFor
+ "Says that a particular #$SubSketch belongs to the specified #$SubSketchGroup.")
+(arity subSketchGroupFor 2)
+(isa subSketchGroupFor Predicate)
+(arg1Isa subSketchGroupFor SubSketch)
+(arg2Isa subSketchGroupFor SubSketchGroup)
+
+
+(comment sketchFor "Says that some thing is a part of the specified #$Sketch-Drawing.")
+(arity sketchFor 2)
+(isa sketchFor Predicate)
+(arg1Isa sketchFor Thing)
+(arg2Isa sketchFor Sketch-Drawing)
+
+
+(comment subSketchRepresentsObject
+ "Says that a given #$SubSketch is used to represent something else.  For 
+  example, an instance of a #$Sequence-SubSketch might be used to represent 
+  a #$Situation-Temporal.")
+(arity subSketchRepresentsObject 2)
+(isa subSketchRepresentsObject Predicate)
+(arg1Isa subSketchRepresentsObject SubSketch)
+(arg2Isa subSketchRepresentsObject Thing)
+
+
+(comment subSketchGroupRepresentsObject
+ "Says that a given #$SubSketchGroup is used to represent something else.  
+  For example, an instance of a #$SubSketchGroup might be used to represent a 
+  #$Situation-Temporal.")
+(arity subSketchGroupRepresentsObject 2)
+(isa subSketchGroupRepresentsObject Predicate)
+(arg1Isa subSketchGroupRepresentsObject SubSketchGroup)
+(arg2Isa subSketchGroupRepresentsObject Thing)
+
+
+(comment sketchRepresentsObject
+ "Says that the specified sketch represents the given object.  As an example, 
+  this can be used to say that a sketch represents a specified case.")
+(arity sketchRepresentsObject 2)
+(isa sketchRepresentsObject Predicate)
+(arg1Isa sketchRepresentsObject Sketch-Drawing)
+(arg2Isa sketchRepresentsObject Thing)
+
+
+(comment Sequence-SubSketch
+ "The collection of #$SubSketches that are intended to represent a step in 
+  a sequence.")
+(genls Sequence-SubSketch SubSketch)
+(isa Sequence-SubSketch Collection)
+
+
+(comment subSketchGroupPertinent
+ "Says that a certain SubSketchGroup is relavant to the specified action.")
+(arity subSketchGroupPertinent 2)
+(isa subSketchGroupPertinent Predicate)
+(arg1Isa subSketchGroupPertinent SubSketchGroup)
+
+
+(comment subSketchGroupClonedFrom
+ "Says that a certain SubSketchGroup was created by cloning from the original.  
+  This is useful for determining  SubSketchGroups that might contain the same 
+  entities.")
+(arity subSketchGroupClonedFrom 2)
+(isa subSketchGroupClonedFrom Predicate)
+(arg1Isa subSketchGroupClonedFrom SubSketchGroup)
+(arg2Isa subSketchGroupClonedFrom SubSketchGroup)
+
+
+(comment currentSubsketchContext
+  "Says that the given #$NuSketchCase is the context currently selected in the
+   main drawing-pane of the current sketch.  This context will be the context of
+   a #$NuSketchBundle if a bundle/subsketch is currently selected, or will be 
+   the context of a #$NuSketchSketch if the meta-layer is currently selected.")
+(isa currentSubsketchContext DynamicUpdatePredicate)
+(isa currentSubsketchContext UnaryPredicate)
+(arity currentSubsketchContext 1)
+(arg1Isa currentSubsketchContext NuSketchCase)
+(notForAnalogy currentSubsketchContext)
+
+
+(comment currentSketchLayer
+  "Says that the given #$NuSketchLayer is the one currently selected in the
+   main drawing-pane of the current sketch.")
+(isa currentSketchLayer DynamicUpdatePredicate)
+(isa currentSketchLayer UnaryPredicate)
+(arity currentSketchLayer 1)
+(arg1Isa currentSketchLayer NuSketchLayer)
+(notForAnalogy currentSketchLayer)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Pose
+;;;
+;;; The pose of a sketch is the orientation of what is depicted
+;;; with respect to the viewers.  Pose is used to assign qualitative
+;;; spatial relationships to differences in sketch coordinates.
+
+(comment SubSketchPoseCollection
+ "Members of this collection are collections used to describe the pose of 
+  SubSketches.")
+(genls SubSketchPoseCollection Collection)
+(isa SubSketchPoseCollection Collection)
+
+
+(comment SubSketchWithPose
+ "The pose of a sketch is the orientation of what is depicted with respect to 
+  the viewers.  Pose is used to assign qualitative spatial relationships to 
+  differences in sketch coordinates.")
+(genls SubSketchWithPose SubSketch)
+(genls SubSketchWithPose AbstractInformationalThing)
+(isa SubSketchWithPose Collection)
+(isa SubSketchWithPose SubSketchPoseCollection)
+(prettyString SubSketchWithPose "unspecified viewpoint")
+
+
+(comment LookingFromTop-SubSketch
+ "Members of this class are SubSketches whose pose is known to be one such that 
+  the viewer is looking down on the objects represented in the sketch.")
+(genls LookingFromTop-SubSketch SubSketchWithPose)
+(isa LookingFromTop-SubSketch Collection)
+(isa LookingFromTop-SubSketch SubSketchPoseCollection)
+(prettyString LookingFromTop-SubSketch "looking from top")
+
+
+(comment LookingFromSide-SubSketch
+ "Members of this class are SubSketches whose pose is known to be one such 
+  that the viewer is looking from the side at the objects represented in the 
+  sketch.")
+(genls LookingFromSide-SubSketch SubSketchWithPose)
+(isa LookingFromSide-SubSketch Collection)
+(isa LookingFromSide-SubSketch SubSketchPoseCollection)
+(prettyString LookingFromSide-SubSketch "looking from side")
+
+(comment LookingFromFront-SubSketch
+ "Members of this class are SubSketches whose pose is known to be one such 
+  that the viewer is looking from the side at the objects represented in the 
+  sketch.")
+(genls LookingFromFront-SubSketch SubSketchWithPose)
+(isa LookingFromFront-SubSketch Collection)
+(isa LookingFromFront-SubSketch SubSketchPoseCollection)
+(prettyString LookingFromFront-SubSketch "looking from front")
+
+
+(comment LookingFromBottom-SubSketch
+ "Members of this class are SubSketches whose pose is known to be one such that 
+  the viewer is looking from the bottom at the objects represented in the sketch.")
+(genls LookingFromBottom-SubSketch SubSketchWithPose)
+(isa LookingFromBottom-SubSketch Collection)
+(isa LookingFromBottom-SubSketch SubSketchPoseCollection)
+(prettyString LookingFromBottom-SubSketch "looking from bottom")
+
+
+(comment LookingFromObject-SubSketch
+ "Members of this class are SubSketches whose pose is known to be one such 
+  that the viewer is looking from the reference point of another object at 
+  the rest of the objects represented in the sketch.")
+(genls LookingFromObject-SubSketch SubSketchWithPose)
+(isa LookingFromObject-SubSketch Collection)
+(isa LookingFromObject-SubSketch SubSketchPoseCollection)
+(prettyString LookingFromObject-SubSketch "looking from another object")
+
+
+(comment subSketchHasPose
+ "Says that a specified #$SubSketch is an instance of the collection specified 
+  by pose-collection.")
+(arity subSketchHasPose 2)
+(isa subSketchHasPose Predicate)
+(arg1Isa subSketchHasPose SubSketch)
+(arg2Isa subSketchHasPose SubSketchPoseCollection)
+(genFormat subSketchHasPose "~A is viewed as a ~A" (1 2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Genre
+;;;
+;;; The genre of a sketch determines what conventions are used to
+;;; interpret what is depicted.  Showing how something looks is quite
+;;; different from an abstract node/link diagram, for instance, which
+;;; in turn is quite different from a map.
+
+(comment SubSketchGenreCollection
+ "Members of this collection are collections used to describe the genre of 
+  SubSketches.")
+(genls SubSketchGenreCollection Collection)
+(isa SubSketchGenreCollection Collection)
+
+
+(comment SubSketchWithGenre
+ "The genre of a sketch determines what conventions are used to interpret what 
+  is depicted.  Showing how something looks is quite different from an abstract 
+  node/link diagram, for instance, which in turn is quite different from a map.
+  Members of this #$Collection are SubSketches whose genre is known.")
+(genls SubSketchWithGenre SubSketch)
+(genls SubSketchWithGenre AbstractInformationalThing)
+(isa SubSketchWithGenre Collection)
+(isa SubSketchWithGenre SubSketchGenreCollection)
+
+
+(comment PhysicalView-SubSketch
+ "Members of this class are SubSketches that are used to represent a view of 
+  physical objects.")
+(genls PhysicalView-SubSketch SubSketchWithGenre)
+(isa PhysicalView-SubSketch Collection)
+(isa PhysicalView-SubSketch SubSketchGenreCollection)
+(prettyString PhysicalView-SubSketch "physical view")
+
+
+(comment GeospatialView-SubSketch
+ "Members of this class are SubSketches that are used to represent geo-spatial 
+  information (e.g. maps).")
+(genls GeospatialView-SubSketch PhysicalView-SubSketch)
+(isa GeospatialView-SubSketch Collection)
+(isa GeospatialView-SubSketch SubSketchGenreCollection)
+(prettyString GeospatialView-SubSketch "geospatial view")
+
+
+(comment AbstractView-SubSketch
+ "Members of this class are SubSketches that are used to represent a view of 
+  abstract objects.")
+(genls AbstractView-SubSketch SubSketchWithGenre)
+(isa AbstractView-SubSketch Collection)
+(isa AbstractView-SubSketch SubSketchGenreCollection)
+(prettyString AbstractView-SubSketch "abstract view")
+
+
+(comment DiscreteGraphView-SubSketch
+ "Members of this class are SubSketches that are used to represent graphs 
+  of information.")
+(genls DiscreteGraphView-SubSketch AbstractView-SubSketch)
+(isa DiscreteGraphView-SubSketch Collection)
+(isa DiscreteGraphView-SubSketch SubSketchGenreCollection)
+(prettyString DiscreteGraphView-SubSketch "discrete graph view")
+
+
+(comment subSketchHasGenre
+ "Says that a specified #$SubSketch is an instance of the collection specified 
+  by genre-collection.")
+(arity subSketchHasGenre 2)
+(isa subSketchHasGenre Predicate)
+(arg1Isa subSketchHasGenre SubSketch)
+(arg2Isa subSketchHasGenre SubSketchGenreCollection)
+(genFormat subSketchHasGenre "~A is considered a ~A" (1 2))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Coordinate Systems
+
+(comment sketchUsesCoordinateSystem
+ "Says that a specified Sketch uses the given instance of a CoordinateSystem.")
+(arity sketchUsesCoordinateSystem 2)
+(isa sketchUsesCoordinateSystem Predicate)
+(arg1Isa sketchUsesCoordinateSystem Sketch-Drawing)
+(arg2Isa sketchUsesCoordinateSystem CoordinateSystem)
+
+
+(comment dimensionsOfCoordinateSystem
+ "Says that a specified CoordinateSystem consists of the given number of 
+  dimensions. (e.g.: (dimensionsOfCoordinateSystem CSYS-23 2))")
+(arity dimensionsOfCoordinateSystem 2)
+(isa dimensionsOfCoordinateSystem Predicate)
+(arg1Isa dimensionsOfCoordinateSystem CoordinateSystem)
+(arg2Isa dimensionsOfCoordinateSystem PositiveInteger)
+
+
+(comment unitsForCoordinateSystem
+ "Says that one unit of distance in the specified coordinate system is one 
+  unit of the specified UnitOfDistance.")
+(arity unitsForCoordinateSystem 2)
+(isa unitsForCoordinateSystem Predicate)
+(arg1Isa unitsForCoordinateSystem CoordinateSystem)
+(arg2Isa unitsForCoordinateSystem UnitOfDistance)
+
+
+(comment eastingDistance
+ "Says that the specified thing is located the given distance east of the 
+  zero point for thing's coordinate system.  This is often used with 
+  CartesianCoordinateSystems in which the locations are geographic locations.  
+  A negative value for distance means that thing is west of the zero-point.")
+(arity eastingDistance 2)
+(isa eastingDistance Predicate)
+(arg1Isa eastingDistance SpatialThing)
+(arg2Isa eastingDistance ScalarInterval)
+
+
+(comment northingDistance
+ "Says that the specified thing is located the given distance north of the 
+  zero point for thing's coordinate system.  This is often used with 
+  CartesianCoordinateSystems in which the locations are geographic locations.  
+  A negative value for distance means that thing is south of the zero-point.")
+(arity northingDistance 2)
+(isa northingDistance Predicate)
+(arg1Isa northingDistance SpatialThing)
+(arg2Isa northingDistance ScalarInterval)
+
+
+(comment distancePerDegree
+ "For a PolarCoordinateSystem, this relation gives the size of each degree of 
+  measurement (at the equator if describing a 2D polar coordinate system 
+  mapped onto a sphere).")
+(arity distancePerDegree 2)
+(isa distancePerDegree Predicate)
+(arg1Isa distancePerDegree PolarCoordinateSystem)
+(arg2Isa distancePerDegree ScalarInterval)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

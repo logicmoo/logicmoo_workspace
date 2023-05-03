@@ -1,0 +1,1048 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QPdefinitions
+;;;;    System: 
+;;;;    Author: your name here
+;;;;   Created: May 14, 2014 16:24:30
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; BEGIN ONTOLOGIZING;;;;
+(in-microtheory QPInterpretationMt :exclude-globals t)
+
+(isa AmountRequiredFn unaryFunction)
+(arity AmountRequiredFn 1)
+(arg1Isa AmountRequiredFn Collection)
+(resultIsa AmountRequiredFn VariableArityFunction)
+(comment AmountRequiredFn "Produces a quantity function for the amount of X required. Used for things like: ((AmountRequiredFn FoodPoints) city1))")
+
+(isa unitMeasuringThisQuantity Predicate)
+(arity unitMeasuringThisQuantity 2)
+(comment unitMeasuringThisQuantity "Says that the first arg is measured by the second.")
+
+(unitMeasuringThisQuantity Amount Liter)
+(polarityOfComparativeRelation High-TheWord 1)
+(polarityOfComparativeRelation Great-TheWord 1)
+(polarityOfComparativeRelation Low-TheWord 0)
+(polarityOfComparativeRelation Less-TheWord 0)
+
+;;; Definitions for the introduction  and linguistic predicates
+
+(isa introducesQPQuantityFrame Predicate)
+(comment introducesQPQuantityFrame "(introducesQPQuantityFrame(PresentationEventFn ?sid ?nevent) ?qpframe))indicates that 
+a sentence has a narrative event that introduces a quantity frame. ?qpframe is the binding for the frame.")
+(arg1Isa introducesQPQuantityFrame IBTGeneration )
+(arg2Isa introducesQPQuantityFrame QPFrame)
+(arity introducesQPQuantityFrame 2)
+
+(isa introducesDIFrame Predicate)
+(comment introducesDIFrame "(introducesDIFrame(PresentationEventFn ?sid ?nevent) ?diframe))indicates that 
+a sentence has a narrative event that introduces a direct influence frame. ?diframe is the binding for the frame.")
+(arg1Isa introducesDIFrame IBTGeneration )
+(arg2Isa introducesDIFrame QPFrame)
+(arity introducesDIFrame 2)
+
+(isa introducesQPropFrame Predicate)
+(comment introducesQPropFrame "(introducesQPropFrame(PresentationEventFn ?sid ?nevent) ?qpframe))indicates that 
+a sentence has a narrative event that introduces an indirect influence frame. ?qpframe is the binding for the frame.")
+(arg1Isa introducesQPropFrame IBTGeneration )
+(arg2Isa introducesQPropFrame QPFrame)
+(arity introducesQPropFrame 2)
+
+(isa introducesOrdinalComparison Predicate)
+(comment introducesOrdinalComparison "(introducesOrdinalComparison(PresentationEventFn ?sid ?nevent) ?qpframe))indicates that 
+a sentence has a narrative event that introduces an ordinal comparison (ie. hotter or larger etc.) ?qpframe is the binding for the ordinal.")
+(arg1Isa introducesOrdinalComparison IBTGeneration )
+(arg2Isa introducesOrdinalComparison QPFrame)
+(arity introducesOrdinalComparison 2)
+
+(isa introducesQuantityTransfer Predicate)
+(comment introducesQuantityTransfer "(introducesQuantityTransfer(PresentationEventFn ?sid ?nevent) ?qtframe))indicates that 
+a sentence has a narrative event that introduces a quantity transfer between two entities.
+?qtframe is the binding for the ordinal.")
+(arg1Isa introducesQuantityTransfer IBTGeneration )
+(arg2Isa introducesQuantityTransfer QPFrame)
+(arity introducesQuantityTransfer 2)
+
+(isa introducesProcessFrame Predicate)
+(comment introducesProcessFrame "(introducesProcessFrame (PresentationEventFn ?sid ?nevent) ?process-frame))indicates that 
+a sentence has a narrative event that introduces a process. Any direct or indirect influence does this. Certain process verbs do as well.")
+(arg1Isa introducesProcessFrame IBTGeneration )
+(arg2Isa introducesProcessFrame QPFrame)
+(arity introducesProcessFrame 2)
+
+(isa introducesProcessRoles Predicate)
+(comment introducesProcessRoles "(introducesProcessRoles (PresentationEventFn ?sid ?nevent) ?process-frame))indicates that 
+a sentence has a narrative event that introduces a process role. Process unfold over multiple sentences and these are filled in
+over time.")
+(arg1Isa introducesProcessRoles IBTGeneration )
+(arg2Isa introducesProcessRoles QPFrame)
+(arity introducesProcessRoles 2)
+
+;;; Topology is work in progress
+(isa introducesTopology Predicate)
+(comment introducesTopology "(introducesTopology (PresentationEventFn ?sid ?nevent) ?topo-frame))indicates that 
+a sentence has a narrative event that introduces a some relevant topological feature such as a connection. This constructs a Topology frame.")
+(arg1Isa introducesTopology IBTGeneration )
+(arg2Isa introducesTopology QPFrame)
+(arity introducesTopology 2)
+
+(isa introducesTopologyConstraint Predicate)
+(comment introducesTopologyConstraint "(introducesTopologyConstraint (PresentationEventFn ?sid ?nevent) ?topo-frame))indicates that 
+a sentence has a narrative event that introduces a some relevant topological constraint such as a connection breaking. This constructs a Topology frame.")
+(arg1Isa introducesTopologyConstraint IBTGeneration )
+(arg2Isa introducesTopologyConstraint QPFrame)
+(arity introducesTopologyConstraint 2)
+
+(isa resolvedVar Predicate)
+(comment resolvedVar "(resolvedVar ?sid ?orig-var ?discourse-var) connects a word ?orig-var in an ?sid to a ?discourse-var
+ via coreference resolution.")
+(arg1Isa resolvedVar CyclTerm)
+(arg2Isa resolvedVar CyclTerm)
+(arg3Isa resolvedVar CyclTerm)
+(arity resolvedVar 3)
+
+(isa isaQuantityReference Predicate)
+(arity isaQuantityReference 6)
+(comment isaQuantityReference "(isaQuantityReference ?sid ?qtype ?quantity ?entity ?etype ?qtframeid) says that for some sentence, ?sid, there is a ?quantity with type ?qtype 
+and entity with type ?etype that correspond to some previously existing quantity frame ?qtframeid")
+
+(isa getPotentialIsas Predicate)
+(arity getPotentialIsas 6)
+(comment getPotentialIsas "(getPotentialIsas ?sid ?dv ?TYPE ?qtype ?MT ?ddrs-id) says if a discourse variable, ?dv, 
+in a choice-set for sentence, ?sid, that can be an instance of type ?TYPE via query in ?MT. This is an outsourced Pred.")
+
+(isa getAllPotentialIsas Predicate)
+(arity getAllPotentialIsas 6)
+(comment getPotentialIsas "(getAllPotentialIsas ?sid ?dv ?TYPE ?qtype ?MT ?ddrs-id) finds any discourse variable, ?dv, 
+in a choice-set for sentence, ?sid, that can be an instance of type ?TYPE via query in ?MT. This is an outsourced pred.")
+
+(isa binPredsWhichMention Predicate)
+(arity binPredsWhichMention 3)
+(comment binPredsWhichMention "(binPredsWhichMention ?ddrs ?dv ?pred) returns a binding for ?pred where ?pred is in a true statement
+ in the ddrs that mentions that fact. For example, if ?dv were eat1 and (performedBy eat1 dog1) were true, ?pred would bind to performedBy")
+
+(isa referentToQFrame Predicate)
+(arity referentToQFrame 4)
+(comment referentToQFrame "(referentToQFrame ?sid ?quantity-frame-id ?entity ?quantity) states that a certain 
+ ?quantity and ?entity within ?sid are acting as an explicit reference to prior quantity frame ?qtframeid")
+
+(isa wrapEntity Predicate)
+(arity wrapEntity 3)
+(comment wrapEntity "(wrapEntity ?entity-res ?entity-wrapped ?sdrs-id) is used to output a compacted entity of the type
+ ContainedStuffFn. This is ?entity-wrapped. ?entity-res is the origional.") 
+
+(isa buildsQPFrame Predicate)
+(arity buildsQPFrame 7)
+(comment buildsQPFrame "(buildsQPFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent) this predicate is used to build the quantity frame and assert justifications.
+ It's not meant to be semantic")
+
+;;; QP FRAME ELEMENTS;;;
+;;; These were taken from Sven's work.
+;;; They should already be ontologied. Examples include entity and quantityType.
+;;;
+
+;;; Quantity Predicates;;;
+
+;;; I'm currently using CyclTerm for both SIDs and words ie. cat123
+;;; There may be a better collection for the words.
+;;; One possibility is to specify type such that arg3 of quantType must be a physical thing.
+;;; This could help with abduction, but would overspecify these preds. I'd rather make constrain types
+;;; in the rules.
+
+(isa quantityTypeOfEntityFound Predicate)
+(comment quantityTypeOfEntityFound "(quantityTypeOfEntityFound ?sid ?qtype ?quantity ?entity ?etype) indicates that 
+ a sentence ?sid has a reference to a ?quantity with type ?qtype that pertains to some ?entity with type ?etype. 
+ An example is the heat of the brick.")
+(arity quantityTypeOfEntityFound 5)
+(arg1Isa quantityTypeOfEntityFound CycLTerm)
+(arg2Isa quantityTypeOfEntityFound PhysicalQuantity)
+(arg3Isa quantityTypeOfEntityFound CyclTerm)
+(arg4Isa quantityTypeOfEntityFound CyclTerm)
+(arg5Isa quantityTypeOfEntityFound CyclTerm)
+
+(isa quantityInDrs Predicate)
+(comment quantityInDrs "(quantityInDrs ?quantity-res ?sdrs-id ?qtype)checks that the token ?quantity-res 
+ is understood as a physical quantity.")
+(arity quantityInDrs 3)
+(arg1Isa quantityTypeOfEntityFound CycLTerm)
+(arg2Isa quantityTypeOfEntityFound Thing)
+(arg3Isa quantityTypeOfEntityFound PhysicalQuantity)
+
+(isa findQuantityInDrs Predicate)
+(arity findQuantityInDrs 4)
+(comment findQuantityInDrs "(findQuantityInDrs ?dv ?drs ?qtype) finds any discourse variable within the sentence drs, ?drs, that has some ?qtype.")
+
+(isa quantityFrameWithQuantityTypeValue Predicate)
+(comment quantityFrameWithQuantityTypeValue "(quantityFrameWithQuantityTypeValue ?qframe ?qtype ?value) binds the value  for the quantity
+ type within the ?qframe (ie 5 gallons of water).")
+(arity quantityFrameWithQuantityTypeValue 3)
+(arg1Isa quantityFrameWithQuantityTypeValue QPFrame)
+(arg2Isa quantityFrameWithQuantityTypeValue PhysicalQuantity)
+(arg3Isa quantityFrameWithQuantityTypeValue ContinuousQuantity)
+
+(isa hasQuantityValue Predicate)
+(arity hasQuantityValue 3)
+(comment hasQuantityValue "(hasQuantityValue ?qframe ?value ?sdrs-id) means that for some quantity frame, ?qframe, there quantity has a value found from the sdrs")
+
+(isa hasQuantityUnit Predicate)
+(arity hasQuantityUnit 3)
+(comment hasQuantityUnit "(hasQuantityUnit ?qframe ?unit ?ddrs-id) the quantity frame, ?qframe, has a unit (ie. lieters) withing the discourse drs.")
+
+;;; Direct Influence Predicates;;;
+(isa diPredicate Predicate)
+(comment diPredicate "(diPredicate ?sid ?event ?event-res ?quantity ?qtype) looks for an ?event within a sentence ?sid. It resloves
+ the event using co-reference resolution if needed. The resolved var is ?event-res. The event is a word like flow123 that can be
+ interpreted as a direct influence event (like fluid-Flow). The quantity is the ?quantity that moves or interacts in the process. ?qtype
+ is its type. Both must have been previously created through introducesQPQuantityFrame.")
+(arity diPredicate 5)
+(arg1Isa diPredicate CycLTerm)
+(arg2Isa diPredicate CycLTerm)
+(arg3Isa diPredicate CycLTerm)
+(arg4Isa diPredicate QuantityType)
+
+(isa directInfluence- Predicate)
+(comment directInfluence- "((directInfluence- ?sid ?event ?event-res ?quantity ?qtype ?src-frame)takes a resolved ?event within a sentence ?sid. As well as its
+ quantity and type. All of this information comes from diPredicate. It binds ?src-frame which is created using genSourceFrame.")
+(arity directInfluence- 6)
+(arg1Isa directInfluence- CycLTerm)
+(arg2Isa directInfluence- CycLTerm)
+(arg3Isa directInfluence- CycLTerm)
+(arg4Isa directInfluence- CycLTerm)
+(arg5Isa directInfluence- QuantityType)
+(arg6Isa directInfluence- QPFrame)
+
+(isa directInfluence+ Predicate)
+(comment directInfluence+ "((directInfluence- ?sid ?event ?event-res ?quantity ?qtype ?to-frame)takes a resolved ?event within a sentence ?sid. As well as its
+ quantity and type. All of this information comes from diPredicate. It binds ?to-frame which is created using genToFrame.")
+(arity directInfluence+ 6)
+(arg1Isa directInfluence+ CycLTerm)
+(arg2Isa directInfluence+ CycLTerm)
+(arg3Isa directInfluence+ CycLTerm)
+(arg4Isa directInfluence+ CycLTerm)
+(arg5Isa directInfluence+ QuantityType)
+(arg6Isa directInfluence+ QPFrame)
+
+(isa genSourceFrame Predicate)
+(comment genSourceFrame "((genSourceFrame ?sid ?event ?event-res ?quantity ?qtype ?src-frame)takes a resolved ?event within a sentence ?sid. As well as its
+ quantity and type. All of this information comes from directInfluence-. This information is used to create a quantity frame for the physical quantity that
+ is being transferred with the from-location as the entity if one does not already exist. Ie. heat flows from the brick. ")
+(arity genSourceFrame 6)
+(arg1Isa genSourceFrame CycLTerm)
+(arg2Isa genSourceFrame CycLTerm)
+(arg3Isa genSourceFrame CycLTerm)
+(arg4Isa genSourceFrame CycLTerm)
+(arg5Isa genSourceFrame QuantityType)
+(arg6Isa genSourceFrame QPFrame)
+
+(isa genToFrame Predicate)
+(comment genToFrame "((genToFrame ?sid ?event ?event-res ?quantity ?qtype ?to-frame)takes a resolved ?event within a sentence ?sid. As well as its
+ quantity and type. All of this information comes from directInfluence-. This information is used to create a quantity frame for the physical quantity that
+ is being transferred with the to-location as the entity if one does not already exist. Ie. heat flows to the brick. ")
+(arity genToFrame 6)
+(arg1Isa genToFrame CycLTerm)
+(arg2Isa genToFrame CycLTerm)
+(arg3Isa genToFrame CycLTerm)
+(arg4Isa genToFrame CycLTerm)
+(arg5Isa genToFrame QuantityType)
+(arg6Isa genToFrame QPFrame)
+
+(isa genOrFindRateFrame Predicate)
+(comment genOrFindRateFrame "(genOrFindRateFrame ?sid ?event-res ?diframeid) takes a direct influence frame and finds the rate that governs it.
+ It creates a quantity for the governing rate if one does not exist. The rate is the rate of the event found by diPredicate.")
+(arity genOrFindRateFrame 3)
+(arg1Isa genOrFindRateFrame CycLTerm)
+(arg2Isa genOrFindRateFrame CycLTerm)
+(arg3Isa genOrFindRateFrame QPFrame)
+
+;;; Indirect Influence Predicates;;;
+
+;;; 1/30/2014: changed to be more efficient
+(isa indirectlyConstrainedFrames Predicate)
+(comment indirectlyConstrainedFrames "(indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid) two quantity frames (?qf1 and ?qf2) can be in a qprop if one
+ changes as the other changes. In such a relationship ?qf1 is the consequent (constrained) and ?qf2 is the antecedent (constrainer).
+ The co-varying relationship is found through a call to inDecEvents. The sign is the sign of the qprop. The evidence is in sentence ?sid")
+(arity indirectlyConstrainedFrames 4)
+(arg1Isa indirectlyConstrainedFrames QPFrame)
+(arg2Isa indirectlyConstrainedFrames QPFrame)
+(arg3Isa indirectlyConstrainedFrames CycLTerm)
+(arg4Isa indirectlyConstrainedFrames CycLTerm)
+
+(isa incDecEvents Predicate)
+(comment incDecEvents "(incDecEvents ?ev1 ?ev2 ?qtvar1 ?qtvar2) binds two increase/decrease events (?ev1 and ?ev2) to their
+ respective quantitity vars when the two events temporally intersect. The events are detected by qpropEvent")
+(arity incDecEvents 4)
+(arg1Isa incDecEvents CycLTerm)
+(arg2Isa incDecEvents CycLTerm)
+(arg3Isa incDecEvents CycLTerm)
+(arg4Isa incDecEvents CycLTerm)
+
+(isa qpropEvent Predicate)
+(comment qpropEvent "(qpropEvent ?ev1 ?ev2)is true if the two events (ev1 and 2) temporally intersect and if one follows the other in
+ a parse tree. This uses dvSpanInParseTree to find that information.")
+(arity qpropEvent 2)
+(arg1Isa qpropEvent CycLTerm)
+(arg2Isa qpropEvent CycLTerm)
+
+(isa indirectlyConstrainedDependence Predicate)
+(comment indirectlyConstrainedDependence "(indirectlyConstrainedDependence ?qf1 ?qf2 ?sign)is true if the two quantity frames (?qf1 and ?qf2) are
+ in a dependsOn relationship  through some lexical form such as x depends on y. The sign is either positive or negative")
+(arg1Isa indirectlyConstrainedDependence CycLTerm)
+(arg2Isa indirectlyConstrainedDependence CycLTerm)
+(arg3Isa indirectlyConstrainedDependence Number)
+(arity indirectlyConstrainedDependence 3)
+
+(isa constrainedFramesSign Predicate)
+(comment constrainedFramesSign "(constrainedFramesSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid) gives the sign of the constrained frame in the indirect influence
+ frame between ?qf1 and ?qf2. The sign is either 1 or -1. The events ?ev1 and ?ev2 are used to determine ?sign")
+(arg1Isa constrainedFramesSign QPFrame)
+(arg2Isa constrainedFramesSign QPFrame)
+(arg3Isa constrainedFramesSign Event)
+(arg4Isa constrainedFramesSign Event)
+(arg5Isa constrainedFramesSign Number)
+(arg6Isa constrainedFramesSign CycLTerm)
+(arity constrainedFramesSign 6)
+
+(isa qpropDegreeFrames Predicate)
+(comment qpropDegreeFrames "(qpropDegreeFrames ?thing1 ?thing2 ?qf1 ?qf2) is used for phrases such as the bigger X the lesser Y.")
+(arg1Isa qpropDegreeFrames CycLTerm)
+(arg2Isa qpropDegreeFrames CycLTerm)
+(arg3Isa qpropDegreeFrames QPFrame)
+(arg4Isa qpropDegreeFrames QPFrame)
+(arity qpropDegreeFrames 4)
+
+(isa comparativeDegrees Predicate)
+(arity comparativeDegrees 5)
+
+(isa getWord Predicate)
+(arity getWord 2)
+(comment getWord "This is an outsourced predicate in im-source. It takes the token and returns the string ie (getWord great1111 Great-TheWord)")
+
+(isa  ordinalRelationHolds Predicate)
+(arity  ordinalRelationHolds 4)
+(comment  ordinalRelationHolds "I'm prety sure this is supposed to take two frames and their values. Essentially if the values are different
+ ie. 5 and 6 then there is some ordinal relation that holds between them. It doesn't specify direction.")
+
+;;;
+
+;;; 
+;;; sign of derivative info
+;;;
+
+(isa introducesQPDsInfo Predicate)
+(arity introducesQPDsInfo 3)
+(arg1Isa introducesQPDsInfo CycLTerm)
+(arg2Isa introducesQPDsInfo QPFrame)
+(arg3Isa introducesQPDsInfo Number)
+(comment introducesQPDsInfo "This is the Narrative event hook for sign of derivative information. The ?qframe is a quantity frame.
+ It's sign is either 1 0 or -1. It is true when sign information is found using seekDsInforForQuantityFrame")
+
+(isa seekDsInfoForQuantityFrame Predicate)
+(arity seekDsInfoForQuantityFrame 3)
+(arg1Isa seekDsInfoForQuantityFrame CycLTerm)
+(arg2Isa seekDsInfoForQuantityFrame CycLTerm)
+(arg3Isa seekDsInfoForQuantityFrame Number)
+(comment seekDsInfoForQuantityFrame " (seekDsInforForQUantityFrame ?sdrs-id ?quantity ?sign) The ?quantity is a quantity in an
+ existing quantity frame. The third argument is the sign which is either 1 0 or -1. 
+ seekDsInfoForQuantityFrame is true when  there is some kind of increase/decrease/stability
+ event and the object of that event is a quantity in a quantity frame.")
+
+(isa signOf Predicate)
+(arity signOf 3)
+(comment signOf "(signOf ?n1 ?n2 ?n3) ?n3 is the sign of the process whose inputs have derivative signs ?n1 and ?n2.
+ If both ?n1 and ?n2 are negative then signOf is true if ?n3 is also negative. ?n3 can be 1 -1 or unkown.
+ This is a misleadingly named predicate and needs to be remade.")
+(arg1Isa signOf Number)
+(arg2Isa signOf Number)
+(arg3Isa signOf CycLTerm)
+
+(comment Polarity "This collection is a required arg type for polarityOfComparativeRelation. I believe that positive and negative are meant
+ to be treated like 1 and -1 for sign of derivative information. Given this mapping I assume 0 is also a valid polarity but this needs more
+ investigation. If there are sign problems look here and at comparative relations.")
+
+
+(isa signWord Predicate)
+(arity signWord 3)
+(comment signWord "Basically it looks at the event and if it's increase or decrease gives the appropriate sign")
+(arg1Isa Event)
+(arg2Isa Number)
+(arg3Isa CycLTerm)
+
+(isa symbolicRelationForEvent Predicate)
+(arity symbolicRelationForEvent 5)
+
+(isa quantityFrameWithQuantityTypeEntity Predicate)
+(arity quantityFrameWithQuantityTypeEntity 4)
+(arg1Isa quantityFrameWithQuantityTypeEntity QPFrame)
+(arg2Isa quantityFrameWithQuantityTypeEntity CycLTerm)
+(arg3Isa quantityFrameWithQuantityTypeEntity Quantity)
+(arg4Isa quantityFrameWithQuantityTypeEntity CycLTerm)
+(comment quantityFrameWithQuantityTypeEntity "(quantityFrameWithQuantityTypeEntity ?qframe ?thing ?qtype ?ddrs-id) is true when
+ ?qframe is a quantity frame that has entity ?thing with some quantity ?qtype in the ?ddrs.")
+
+
+;;;
+;;; Process and topology
+;;;
+
+(isa stoppedEvent Predicate)
+(arity stoppedEvent 1)
+(arg1Isa stoppedEvent Event)
+(comment stoppedEvent "(stoppedEvent is true when the EVENT has been stopped either via direct interuption or
+ topological ineruption (like separation). It's meant to be inferred when a process stops due to some outside influence.")
+
+(isa changeInAccessibility Predicate)
+(arity changeInAccessibility 4)
+(arg1Isa changeInAccessibility CycLTerm)
+(arg2Isa changeInAccessibility Event)
+(arg3Isa changeInAccessibility CycLTerm)
+(arg4Isa changeInAccessibility Event)
+(comment changeInAccessibility "(changeInAccessibility ?sid ?changeEvent ?path ?event-id2)  is true when within a sentence some event
+ ?changeEvent occurs such that ?path for ?event-id2 is interrupted. This makes ?event-id2 not accessible.")
+
+(isa processEvent Predicate)
+(arity processEvent 1)
+(arg1Isa processEvent Event)
+(comment processEvent "When an EVENT occurs that triggers a direct influence it gets asserted as a processEvent. This is used in constructing 
+  the higher level process qp frames.")
+
+
+(isa genericQuantityReference Predicate)
+(arity genericQuantityReference 5)
+(comment genericQuantityReference "This predicate is used to say that some non-coreferent term (like water)
+ is being used to refer to multiple entities in a sentence. It's used in example 7 specifically. We may be able
+ to replace or upgrade this rule using referentToQFrame.")
+
+
+(isa ContainedStuffFn Function-Denotational)
+(comment ContainedStuffFn
+"(ContainedStuffFn ?sub ?phase ?c) denotes an individual in the contained stuff ontology, i.e. the material whose substance s ?sub in the ?phase phase in container ?can.")
+;;; Next three are from ContainedStuff definition
+(arg1Isa ContainedStuffFn ChemicalCompoundTypeByChemicalSpecies)
+(arg2Isa ContainedStuffFn MatterTypeByPhysicalState)
+(arg3Isa ContainedStuffFn Container)
+(resultIsa ContainedStuffFn ContainedStuff)
+
+;;; Connect the participant relations, so that we can identify equality of
+;;; this term with whatever was found via model formulation
+ 
+(<== (containerOf (ContainedStuffFn ?sub ?phase ?c) ?c))
+(<== (phaseOf (ContainedStuffFn ?sub ?phase ?c) ?phase))
+(<== (substanceOf (ContainedStuffFn ?sub ?phase ?c) ?sub))
+
+;;;; For Money
+(isa PossessedStuffFn Function-Denotational)
+(arg1Isa PossessedStuffFn Currency)
+(arg2Isa PossessedStuffFn Artifact-Generic)
+(resultIsa PossessedStuffFn OwningSomething)
+(arity PossessedStuffFn 2)
+
+(isa constrained Predicate)
+(arity constrained 2)
+
+(isa constrainer Predicate)
+(arity constrainer 2)
+
+(isa container Predicate)
+(arity container 2)
+
+(isa ContainedStuffFn Function-Denotational)
+(arity ContainedStuffFn 3)
+
+(atomicAnalogyNat ContainedStuffFn)
+(isa allowedRelationship Predicate)
+(arity allowedRelationship 2)
+
+
+
+;;; Outstanding instance-level Preds that need to be ontologized 2/20
+
+(isa UnitQType Predicate)
+(arity UnitQType 2)
+(comment UnitQType "binds the qtype for an FC Function. These should be asserted in the FC Domain, though the predicate is QP general.")
+
+(isa buildQPValues Predicate)
+(arity buildQPValues 7)
+(comment buildQPValues "This predicate adds value/unit FEs to a quantity frame. It uses hasQuantityValue.")
+
+(isa fixPolysemy1 UnaryPredicate)
+(arity fixPolysemy1 1)
+(comment fixPolysemy1 "This is used to prefer an FC interpretation of food points. It will be removed shortly.")
+(isa fixPolysemy2 UnaryPredicate)
+(arity fixPolysemy2 1)
+(comment fixPolysemy2 "This is used to prefer an FC interpretation of food points. It will be removed shortly.")
+
+(isa subDIFind Predicate)
+(arity subDIFind 4)
+(comment subDIFind "Cyc hase several possible ways of indicating an object of an event, and they are inconsistent in verbSemTranses.
+  (subDIFind ?sdrs-id ?pred ?event ?quantity) is true in the event that an object-pred ?pred holds between ?quantity and ?event in ?sdrs-id")
+
+(isa qlabel Predicate)
+(arity qlabel 1)
+(comment qlabel "(qlabel X) is always true. It's used to label individual rules for quantityTypeOfEntityFound so that they're easier to see in the profiler.")
+
+(isa buildOrMakeToFrame Predicate)
+(arity buildOrMakeToFrame 9)
+(comment buildOrMakeToFrame "(buildOrMakeToFrame ?quantity ?sid ?sdrs-id ?qtype ?dst ?dst-res ?to-frame ?event ?event-res) is used by genToFrame. It dispatches
+   to different rules for building a positive instance level DI. It should be renamed and broken up...")
+
+(isa introducesContainment Predicate)
+(arity introducesContainment 4)
+(comment introducesContainment "(introducesContainment ?sid ?container-res ?substance-res ?rel) binds the containment relationship rel and the container. It's used
+  in toplogy frame construction.")
+
+(isa introducesPath Predicate)
+(arity introducesPath 4)
+(comment introducesPath "(introducesPath ?sid ?event ?path ?rel) binds the  relationship rel and the path for an event. It's used
+  in toplogy frame construction.")
+
+(isa ordinalRelationFrameForEventPossessive Predicate)
+(arity ordinalRelationFrameForEventPossessive 4)
+(comment ordinalRelationFrameForEventPossessive "For direct comparisons (I think X is bigger than Y?)")
+
+(isa quantityTransferEvent Predicate)
+(arity quantityTransferEvent 4)
+(comment quantityTransferEvent "(quantityTransferEvent ?from-frame ?to-frame ?rate-frame1 ?rate-frame)
+ holds when there is a quantity transfer between the from and to frames with rates 1 and 2.")
+
+(isa potentialEvent Predicate)
+(arity potentialEvent 2)
+(comment potentialEvent "Was used to say an event had stopped or started. I believe it's not currently used.")
+
+(isa ApplyAnalogy Predicate)
+(arity ApplyAnalogy 2)
+(comment ApplyAnalogy "The optimistically named ApplyAnalogy was going to be a hook for analogy in QP reasoning.
+ Currently it does nothing.")
+
+(isa validQPEntity Predicate)
+(arity validQPEntity 5)
+(comment validQPEntity "(validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id) finds a valid collection for the entity given
+  the possible choice sets. It feeds into several more specific predicates so that we can prefer certain kinds of interpretations
+  over others.")
+
+(isa naturalArtifact-QPEntity Predicate)
+(arity naturalArtifact-QPEntity 5)
+(comment naturalArtifact-QPEntity "called by validQPEntity. Returns a valid natural artifact entity.")
+
+(isa artifact-QPEntity Predicate)
+(arity artifact-QPEntity 5)
+(comment artifact-QPEntity "called by validQPEntity. Returns a valid artifact entity.")
+
+(isa realWorld-QPEntity Predicate)
+(arity realWorld-QPEntity 5)
+(comment realWorld-QPEntity "called by validQPEntity. Returns a valid partially tangible entity.")
+
+(isa FC-QPEntity Predicate)
+(arity FC-QPEntity 5)
+(comment FC-QPEntity "called by validQPEntity. Returns a valid FreeCiv entity (actor, gov, citizen etc.).")
+
+(isa organic-QPEntity Predicate)
+(arity organic-QPEntity 5)
+(comment organic-QPEntity "called by validQPEntity. Returns a valid NaturalTangibleStuff entity.")
+
+(isa conduit-QPEntity Predicate)
+(arity conduit-QPEntity 5)
+(comment conduit-QPEntity "called by validQPEntity. Returns a valid FluidConduit entity.")
+
+
+
+(isa rateofQuantity-entiy  Predicate)
+(arity rateofQuantity-entiy  5)
+(comment rateofQuantity-entiy  "Finds a physical quantity.")
+
+(isa trueInAnyDrs Predicate)
+(arity trueInAnyDrs 4)
+(comment trueInAnyDrs "(trueInAnyDrs ?sid ?pred ?arg1 ?arg2) is true if (?pred ?arg1 ?arg2) is true in an drs entailed by ?sid.")
+
+(isa isaOrDenotesInSid Predicate)
+(arity isaOrDenotesInSid 3)
+(comment isaOrDenotesInSid "(isaOrDenotesInSid ?ent ?col-or-pred ?sid) is true if ent is col-or-pred via isa or denotation of any kind.")
+
+(isa wrapquantity Predicate)
+(arity wrapquantity 4)
+(comment wrapquantity "currently does nothing. Mark for removal.")
+
+(isa contraContain Predicate)
+(arity contraContain 3)
+(comment contraContain "This checks for containment in order to block a bad possessive relation quantityTypeOfEntityFound rule.")
+
+(isa contraIn Predicate)
+(arity contraIn 3)
+(comment contraIn "This is special handeling for 'food required in X'. Make this more general please.")
+
+(isa ContradictoryPossessives Predicate)
+(arity ContradictoryPossessives 2)
+(comment ContradictoryPossessives "true if the two arguments are possessed by or contained in objects that can't co-refer.")
+
+(isa UndergoStateChangePred Predicate)
+(arity UndergoStateChangePred 4)
+(comment UndergoStateChangePred "(UndergoStateChangePred ?sdrs-id ?event ?pred ?src) is true if ?pred is a state-change role-relation in 
+ a state-change event ?event that applies to ?src.")
+
+(isa PositiveMotionPred Predicate)
+(arity PositiveMotionPred 4)
+(comment PositiveMotionPred "(PositiveMotionPred ?sdrs-id ?event ?pred ?entity) is true if role relation ?pred holds between ?event
+ and ?entity and ?pred is a goal motion predicate (e.g. toLocation).")
+
+(isa objectivePredicate Predicate)
+(arity objectivePredicate 4)
+(comment objectivePredicate "(objectivePredicate ?ev ?qtvar ?pred ?sdrs-id) is true if ?pred holds between event ?ev and ?qtvar and 
+ is an object predicate (e.g. objectOfStateChange)")
+
+(isa introducesPossessor Predicate)
+(arity introducesPossessor 3)
+(comment introducesPossessor "(introducesPossessor ?sid ?possessor ?thing) is true if ?possessor possesses ?thing in sentence ?sid.")
+
+(isa directConnection Predicate)
+(arity directConnection 4)
+(comment directConnection "(directConnection ?sid ?loc1 ?loc2 ?rel) is true if ?loc1 and ?loc2 are connected by ?rel (e.g. touchesDirectly)")
+
+
+
+
+
+
+
+
+
+;;;; Type Level Ontology 2/20
+(isa signifiesTotalQuantity UnaryPredicate)
+(arity signifiesTotalQuantity 1)
+(comment signifiesTotalQuantity "Signifies the total quantity of the first argument e.g. 'total food consumption'. Should probably change this to a function as QP stuff is rewritten.")
+
+(isa indirectlyConstrainedFrames Predicate)
+(arity indirectlyConstrainedFrames 4)
+(comment indirectlyConstrainedFrames "(indirectlyConstrainedFrames ?qf1 ?qf2 ?sign ?sid) means that quantity frames 1 and 2 are antecedent and consequent in
+  a qprop with sign ?sign. ?sid is the sid that supports this conclusion. It binds ?qf1 ?qf2 and ?sign if all empty.")
+
+
+(isa constrainedFrameSign Predicate)
+(arity constrainedFrameSign 6)
+(comment constrainedFrameSign "(constrainedFrameSign ?qf1 ?qf2 ?ev1 ?ev2 ?sign ?sid) gets the sign of the consequent in a qprop frame given the frames and the
+  comparison event.")
+
+(isa symbolicRelBetween Predicate)
+(arity symbolicRelBetween 3)
+(comment symbolicRelBetween "(symbolicRelBetween ?qvalue1 ?qvalue2 ?relation) relates a sign, > or <, to two symbolic values like hot and cold.")
+
+(isa validQPEntity Predicate)
+(arity validQPEntity 5)
+(comment validQPEntity "(validQPEntity ?sid ?qtype ?entity ?etype ?ddrs-id) is true given one of its sub-functions (artifact, natural etc.) is true. It forms
+  a preference hirearchy for interpreting the collection ?etype for an ?entity given the ?qtype of the quantity belonging to the entity.")
+
+(isa stopUnboundQuantities Predicate)
+(arity stopUnboundQuantities 4)
+(comment stopUnboundQuantities "(stopUnboundQuantities ?sid ?entity ?etype ?qtype) is true if the ?qtype is the amountFn of the ?etype. It is a check to stop
+ an ?entity from having the qtype of amount of self (e.g. citizens do not have an ammount of citizen quantity).")
+
+(isa bindAllDrsValuesForSid Predicate)
+(arity bindAllDrsValuesForSid 4)
+(comment bindAllDrsValuesForSid "(bindAllDrsValuesForSid ?sid ?ddrs-id ?dcase ?any-sdrs-id) binds the ddrs, dcase, and all relevant sdrses for an sid. It's a shortcut to having to 
+  retrieve this information for each HC.")
+
+(isa introducesQPTypeFrame Predicate)
+(arity introducesQPTypeFrame 2)
+(comment introducesQPTypeFrame "(introducesQPTypeFrame (PresentationEventFn ?sid ?nevent) ?qframeid) kicks off looking for type level qp quantity frames.")
+
+(isa quantityTypeWithoutEntityFound Predicate)
+(arity quantityTypeWithoutEntityFound 3)
+(comment quantityTypeWithoutEntityFound "Used for unpossessed entities. e.g. heat depends on pressure.")
+
+(isa buildQTypeFrame Predicate)
+(arity buildQTypeFrame 8)
+(comment buildQTypeFrame "(buildQPTypeFrame ?sid ?qtype ?quantity ?entity ?etype ?qframeid ?nevent ?pred) creates a type-level quantity frame 
+  and its core roles.")
+
+(isa genericEntity Predicate)
+(arity genericEntity 3)
+(comment genericEntity "(genericEntity ?sid ?entity ?etype) holds if ?entity in ?sid is of the type ?etype where ?etype is a possible generic (e.g. object)")
+
+(isa introducesQPropTypeFrame Predicate)
+(arity introducesQPropTypeFrame 2)
+(comment introducesQPropTypeFrame "(introducesQPropTypeFrame (PresentationEventFn ?sid ?narrative-event) ?fact) kicks off type level qprops")
+
+(isa buildTypeLevelQprop Predicate)
+(arity buildTypeLevelQprop 4)
+(comment buildTypeLevelQprop "(buildTypeLevelQprop ?qf1 ?qf2 ?rel ?sign) builds and justifies the actual qprop given the quantity frames, sign, and a constraining
+  relationship")
+
+(isa bothEntityTypes Predicate)
+(arity bothEntityTypes 4)
+(comment bothEntityTypes "(bothEntityTypes ?qf1 ?qf2 ?etype1 ?etyp2) holds if etype1 is the etype of quantity frame qf1 and etype2 is the type of qf2")
+
+(isa indirectlyConstrainedTypeFrames Predicate)
+(arity indirectlyConstrainedTypeFrames 4)
+(comment indirectlyConstrainedTypeFrames "type level rule for As X changes, Y Changes")
+
+(isa indirectlyConstrainedTypeDependence Predicate)
+(arity indirectlyConstrainedTypeDependence 4)
+(comment indirectlyConstrainedTypeDependence "type level rule for X relies on or depends on Y")
+
+(isa groupOrSolo1 Predicate)
+(isa groupOrSolo Predicate)
+(arity groupOrSolo 2)
+(arity groupOrSolo1 2)
+(comment groupOrSolo "(groupOrSolo ?sid ?qtvar ?newtvar) is newtvar not a member of qtvar (e.g. group of)")
+(comment groupOrSolo1 "(groupOrSolo1 ?sid ?qtvar ?newtvar) is newtvar a member of qtvar (e.g. group of)")
+
+(isa requiredRelationship Predicate)
+(arity requiredRelationship 4)
+(comment requiredRelationship "(requiredRelationship ?qf1 ?qf2 ?rel ?sid): constraining relationship ?rel (e.g. sameObject) holds between entities in qf1 and 2.")
+
+(isa introducesDITypeQuantities Predicate)
+(arity introducesDITypeQuantities 2)
+(comment introducesDITypeQuantities "(introducesDITypeQuantities (PresentationEventFn ?sid ?nevent) ?src-frame) kicks off DI finding.")
+
+(isa addRateInfo Predicate)
+(arity addRateInfo 4)
+(comment addRateInfo "Not currently used by any rules. Commented out rules reveal that it was meant to handle X per Y")
+
+(isa directInfluence+TypeType Predicate)
+(arity directInfluence+TypeType 8)
+(comment directInfluence+TypeType "Now passes directly to genToFrameTypeType. Doesn't need to exist.")
+(isa directInfluence-TypeType Predicate)
+(arity directInfluence-TypeType 8)
+(comment directInfluence-TypeType "Now passes directly to genSourceFrameTypeType. Doesn't need to exist.")
+
+(isa genToFrameTypeType Predicate)
+(arity genToFrameTypeType 8)
+(comment genToFrameTypeType "(genToFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?to-frame ?etype) produces positive di-frames.
+  It does all the work with justifications and there is separate rule (or set of rules) for each frame type. ?to-frame is the resulting positive di.")
+(isa genSourceFrameTypeType Predicate)
+(arity genSourceFrameTypeType 8)
+(comment genSourceFrameTypeType "(genSourceFrameTypeType ?sid ?event ?event-res ?event-type ?quantity ?qtype ?from-frame ?etype) produces negative di-frames.
+  It does all the work with justifications and there is separate rule (or set of rules) for each frame type. ?from-frame is the resulting negative di.")
+
+(isa findOrMakeSource Predicate)
+(arity findOrMakeSource 4)
+(comment findOrMakeSource "((findOrMakeSource ?sdrs-id ?event ?qtype ?loc) identifies the source, ?loc, for ?event with a preference hirearchy of different
+  predicates (in, from etc.)")
+
+(isa genOrFindTypeLevelRateFrame Predicate)
+(arity genOrFindTypeLevelRateFrame 4)
+(comment genOrFindTypeLevelRateFrame "(genOrFindTypeLevelRateFrame ?sid ?resolved-ent ?process-type ?diframe) either makes the rate frame for the DI ?diframe
+  or finds an already existing one.")
+
+(isa TypeLevelQuantityBackReference Predicate)
+(arity TypeLevelQuantityBackReference 6)
+(comment TypeLevelQuantityBackReference "(TypeLevelQuantityBackReference ?quantity ?sdrs-id ?qtype ?qpframe ?dv1 ?dv2) For type level frames,
+  does ?quantity refer to ?qpframe? Where ?dv1 and ?dv2 are referenetial discousre variables.")
+
+(isa addRateValues Predicate)
+(arity addRateValues 3)
+(comment addRateValues "adds a rate value to a rate quantity frame by checking for an explicit measureForAction assertion.")
+
+(isa introducesTypeLevelDI Predicate)
+(arity introducesTypeLevelDI 2)
+(comment introducesTypeLevelDI "(introducesTypeLevelDI (PresentationEventFn ?sid ?event-id) ?fact) kicks off building the actual DI fact.")
+
+(isa introducesTypeOrdinal Predicate)
+(arity introducesTypeOrdinal 2)
+(comment introducesTypeOrdinal "((introducesTypeOrdinal (PresentationEventFn ?sid ?event-id) ?ordframeid) kicks off finding ordinal frames.")
+
+(isa introducesProcessType Predicate)
+(arity introducesProcessType 2)
+(comment introducesProcessType "(introducesProcessType (PresentationEventFn ?sid ?event-id) ?fact) kicks off finding a process (MF) frame.")
+
+(isa addsProcessRoles Predicate)
+(arity addsProcessRoles 2)
+(comment addsProcessRoles "(addsProcessRoles (PresentationEventFn ?sid ?event-id) ?fact) kicks off filling the frame elements of a found process frame.")
+
+(isa assertKnownFacts Predicate)
+(arity assertKnownFacts 4)
+(comment assertKnownFacts "(assertKnownFacts ?pframe ?event-res ?event-id ?fact) asserts type-level consequences and participant types for a type-level
+ process frame.")
+
+(isa addsConstraint Predicate)
+(arity addsConstraint 2)
+(comment addsConstraint "(addsConstraint (PresentationEventFn ?sid ?event-id) ?fact) is for model fragment frames. It adds topological and ordinal constraints.")
+
+(isa introducesCTypeFrame Predicate)
+(arity introducesCTypeFrame 2)
+(comment introducesCTypeFrame "Kicks off finding and justifying a Type-level C+/- frame.")
+
+(isa anyConditions Predicate)
+(arity anyConditions 3)
+(comment anyConditions "(anyConditions ?sid ?qframe ?mf-id) asserts a condition for a model fragment frame. It is true whether there is or isn't one. When there
+ is a condition, anyConditons2 returns correct.")
+(isa anyConditions2 Predicate)
+(arity anyConditions2 3)
+(comment anyConditions2 "(anyConditions2 ?sid ?qframe ?mf-id ?fact) asserts a condition for a model fragment frame. ?fact is the condition. Currently I believe
+  this only works for currentGov as a condition.")
+
+(isa constrainedPredicate Predicate)
+(arity constrainedPredicate 3)
+(comment constrainedPredicate "(constrainedPredicate ?pred ?constrained-etype ?constrained-qtype) returns a pred for the constrained quantity based on the 
+ etype and qtype. It feeds into domain specific rules.(Not currently in use?)")
+
+
+(isa constrainedPredicate-General Predicate)
+(arity constrainedPredicate-General 3)
+(comment constrainedPredicate-General "constrainedPredicate-General is a spec of constrainedPredicate for the non-FC domain. 
+ It looks for MeasurableQuantitySlotFn.")
+
+(isa ratePredicate Predicate)
+(arity ratePredicate 4)
+(comment ratePredicate "(ratePredicate ?pred ?processType ?constrained-qtype ?constrained-etype) returns MQSlot ?pred given the info about the constrained frame
+  in a type level DI. This is for converting to FC-specific preds. (Not currently in use?)")
+
+(isa ratePredicate-General Predicate)
+(arity ratePredicate 4)
+(comment ratePredicate "The general version of ratePredicate. For non FC domains. Looks for MeasurableQuantitySlotFn of a rate.")
+
+(isa ratePredicate-FC Predicate)
+(arity ratePredicate 4)
+(comment ratePredicate "The FC version of ratePredicate. For FC domains. Converts to things like cityFoodProduction")
+
+(isa introducesMF Predicate)
+(arity introducesMF 2)
+(comment introducesMF "(introducesMF (PresentationEventFn ?sid ?event-id) ?mf) kicks off building a model fragment frame.")
+
+(isa getConstrainingPred Predicate)
+(arity getConstrainingPred 6)
+(comment getConstrainingPred "(getConstrainingPred ?sid ?entity ?qtype ?frame ?pred ?new-pred) is used to assert consequenceOf-TypeType assertions
+  for qprops in a model fragment frame.")
+
+(isa getConstrainingPred2 Predicate)
+(arity getConstrainingPred2 6)
+(comment getConstrainingPred2 "This is used to prefer certain interpretations over others for the consequenceOf-TypeType assertion.")
+
+(isa assertPTypes Predicate)
+(arity assertPTypes 4)
+(comment assertPTypes "Used to assert participant types of a model fragment frame.")
+
+(isa buildPType Predicate)
+(arity buildPType 4)
+(comment buildPType "Used in assertPTypes, (buildPType ?mf ?entity ?etype ?new-pred) actually justifies the participantType assertion.")
+
+(isa assertConsequences Predicate)
+(arity assertCosequences 3)
+(comment assertConsequences "(assertConsequences ?sid  ?mf ?mf-frame) asserts consequenceOfTypeType assertions for DIs and C+/- in a MF.")
+
+(isa wrapQType1 Predicate)
+(arity wrapQType1 2)
+(comment wrapQType1 "(wrapQtype1 ?consq-qtype ?consq-new-type) wraps the q-type in AmountFn or QPQuantityFn when needed.") 
+
+(isa wrapQType Predicate)
+(arity wrapQType 2)
+(comment wrapQType "(wrapQtype1 ?consq-qtype ?consq-new-type) returns the same qtype when wrapping isn't needed (wrapQType1 fails). Otherwise returns
+  the new qtype as the output of wrapQType1.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;; CJM 3/1/2016
+;;;;;;;;;;;;;;;; New type-level predicates from type_level_new.meld
+
+
+(isa getQuantityInDrs Predicate)
+(arity getQuantityInDrs 4)
+(comment getQuantityInDrs "(getQuantityInDrs ?sid ?quantity ?qtype ?eventType) finds a quantity whether it is or is not supported by
+ an entity relationship (such as a possesser or a container). It prefers an interpretation that ties the quantity to an entity through
+ getQuantityInDrs-specific. EventType is the dipredicate event or a manually defined type in the case of other supporting relationships.")
+
+(isa qpVeryLongInference Predicate)
+(arity qpVeryLongInference 4)
+(comment qpVeryLongInference "This is a wrapper for getQuantityInDrs-specific to allow for efficient branching. See the wiki page on this topic.")
+
+(isa noSpecificQuantityInDrs Predicate)
+(arity noSpecificQuantityInDrs 4)
+(comment noSpecificQuantityInDrs "This is a wrapper function used with getQuantityInDrs-specific to allow for efficient branching.")
+
+(isa getQuantityInDrs-specific Predicate)
+(arity getQuantityInDrs-specific 4)
+(comment getQuantityInDrs-specific "(getQuantityInDrs-specific ?sid ?quantity ?qtype ?eventType) finds a quantity of type ?qtype which is supported
+ by some relevant QP-evoking relationship such as containment/possession or a process verb.")
+
+(isa entityRelationship Predicate)
+(arity entityRelationship 5)
+(comment entityRelationship "(entityRelationship ?sid ?quantity ?entity ?eventType ?evoking-rel) given a quantity and some event-type associated
+ with the quantity, this function finds an entity and an event specific evoking relationship (e.g. fromLocation, inputsDestroyed).")
+
+(isa entityRelationship2 Predicate)
+(arity entityRelationship2 5)
+(comment entityRelationship2 "This is a wrapper in case entityRelationship returns null.")
+
+(isa predRelatesToVar Predicate)
+(arity predRelatesToVar 4)
+(comment predRelatesToVar "(predRelatesToVar ?sid ?event ?quantity ?pred) the object-denoting predicate for an entity.")
+
+(isa findFillerForRole Predicate)
+(arity findFillerForRole 6)
+(comment findFillerForRole "(findFillerForRole ?sid ?qframeid ?quantity ?qtype ?eventType ?role) given a role, it finds a filler for that role
+ based on role-specific sub-queries (e.g. units, values etc.). It's used to find and fill non-core FEs.")
+
+(isa unfilledRole Predicate)
+(arity unfilledRole 5)
+(comment unfilledRole "(unfilledRole ?sid ?ddrs-id ?resolved-quantity ?qframe ?predicate) is true if ?predicate is unfilled in a frame ?qframe.")
+
+(isa resultingQTypeFn UnaryFunction)
+(arity resultingQTypeFn 1)
+(resultIsa resultingQTypeFn QuantityType)
+(comment resultingQTypeFn "returns the qtype of some measurable slot for a quantity.")
+
+(isa roleForFrame Predicate)
+(arity roleForFrame 2)
+(comment roleForFrame "(roleForFrame ?role ?frame-type) means that ?role is a Frame Element for frames of type ?frame-type).")
+
+(isa optionalRoleForFrame Predicate)
+(arity optionalRoleForFrame 2)
+(comment optionalRoleForFrame "(optionalRoleForFrame ?role ?frame-type) means that ?role is an optional Frame Element for frames of type ?frame-type).")
+
+(isa introducesNewQTypeFrame Predicate)
+(arity introducesNewQTypeFrame 2)
+(comment introducesNewQTypeFrame "The top-level NarrativeFunction for finding new quantity frames. This is type-level. It replaces older
+ quantity frame finding NFs in the most recent FN-style approach.")
+
+(isa makeQuantityFrame Predicate)
+(arity makeQuantityFrame 6)
+(comment makeQuantityFrame "(makeQuantityFrame ?sid ?qtype ?quantity ?entity ?evoking-rel ?qframeid) actually instantiates the quantity frame
+?qframeid. All other variables should be bound on input. It also kicks off the hunt to fill optional FEs.")
+
+(isa quantitySpecificEntityGeneration Predicate)
+(arity quantitySpecificEntityGeneration 5)
+(comment quantitySpecificEntityGeneration "(quantitySpecificEntityGeneration ?sid ?qframeid ?entity ?evoking-rel ?etype)
+ if ?entity and ?evoking-rel aren't the value empty, then it justifies the entity assertion for ?qframeid and abductively finds
+ the ?etype of the entity. In the event that there is no entity, the etype is none.")
+
+(isa ratioOrStandardQP Predicate)
+(arity ratioOrStandardQP 3)
+(comment ratioOrStandardQP "Special handeling for X per Y constructions.")
+
+(isa rateFromEvent Predicate)
+(arity rateFromEvent 6)
+(comment rateFromEvent "(rateFromEvent ?sid ?event ?event-res ?event-type ?quantity-res ?rate-frame) 
+ given an explicit reference to the rate of a process (e.g. it's measurement), this will instantiate a ?rate-frame which is the quantity frame
+ for the rate that governs ?event (resolved to ?event-res).")
+
+(isa acceptableunit Predicate)
+(arity acceptableunit 2)
+(comment acceptableunit "(acceptableunit ?unit2 ?stat) is true if ?unit2 is the kind of thing that can be a unit in a ratio.
+ This is essentially used to say 'Turning' probably isn't the unit in 2 FoodPoints per turn. It needs a better solution.")
+
+(isa diFromEvent Predicate)
+(arity diFromEvent 7)
+(comment diFromEvent "Based on the kind of event, each diFromEvent rule essentialy instantiates a specific type of valence pattern. It provides
+ direct influence patterns given a frame type (like Creation/Destruction) and instantiates a DI frame.")
+
+
+(isa IntroductionOfQPropTypeEvent Predicate)
+(arity IntroductionOfQPropTypeEvent 2)
+
+(isa indirectlyConstrainedQuantities Predicate)
+(arity indirectlyConstrainedQuantities 4)
+(comment indirectlyConstrainedQuantities "(indirectlyConstrainedQuantities ?sid ?qtvar1 ?qtvar2 ?sign) is used to find quantities in the
+ construction As ?qtvar1 <change verb>, ?qtvar2 <change verb>.")
+
+(isa constrainedQpropSign Predicate)
+(arity constrainedQpropSign 6)
+(comment constrainedQpropSign "(constrainedQpropSign ?sid ?ev1 ?ev2 ?qtvar1 ?qtvar2 ?sign) gets the sign of the qprop between ?qtvar1
+ and ?qtvar2 based on a comparitive adjective such as 'greater than' ")
+
+(isa indirectlyDependentQuantities Predicate)
+(arity indirectlyDependentQuantities 4)
+(comment indirectlyDependentQuantities "Used to find a qprop for the construction 'x depends on y'.")
+
+(isa elaborateQTypeFrame Predicate)
+(arity elaborateQTypeFrame 2)
+(comment elaborateQTypeFrame "This is actually a narrative function. The idea is to recognize a QP reference and elaborate a frame before
+ building a new one. Currently it's not in use (though it will be later). Efficient branching will be VERY important here.")
+
+(isa quantityResolvesToFrame Predicate)
+(arity quantityResolvesToFrame 6)
+(comment quantityResolvesToFrame "Finds the reference for a quantity and passes to resolvesToFrame which looks up possible existing quantity
+ frames that the reference could be for.")
+
+(isa resolvesToFrame Predicate)
+(arity resolvesToFrame 5)
+(comment resolvesToFrame "(resolvesToFrame ?sid ?quantity ?quantity-res ?resolved-quantity-frame ?qtype)
+ finds a quantity-frame ?resolved-quantity-frame for resolved discourse-var ?quantity-res if any exist.")
+
+(isa emptyRoleForFrame Predicate)
+(arity emptyRoleForFrame 3)
+(comment emptyRoleForFrame "(emptyRoleForFrame ?sid ?qframe ?fe) is true if frame element ?fe isn't filled for frame ?qframe.")
+
+(isa referenceFillsRole Predicate)
+(arity referenceFillsRole 5)
+(comment referenceFillsRole "(referenceFillsRole ?sid ?ddrs-id ?quantity ?qframe ?fe) is true when the role filler is a reference.")
+
+(isa influenceCapableThing Predicate)
+(arity influenceCapableThing 3)
+(comment influenceCapableThing "This is used to allow certain states (e.g. being under a certain government) to conditionalize a MF.")
+
+(isa conditionalizedEvent Predicate)
+(arity conditionalizedEvent 3)
+(comment conditionalizedEvent "checks for preconditions to an event either in the drs-structure or through the underInfluenceOf predicate.")
+
+(isa entityRelationshipVLIWrapper Predicate)
+(arity entityRelationshipVLIWrapper 5)
+(comment entityRelationshipVLIWrapper "Used for efficient branching with entitRelationship.")
+
+(isa noExplicitEntityRelationship Predicate)
+(arity noExplicitEntityRelationship 5)
+(comment noExplicitEntityRelationship "Used for efficient branching with entitRelationship.")
+
+(isa resolvedVarVLIWrapper Predicate)
+(arity resolvedVarVLIWrapper 3)
+(comment resolvedVarVLIWrapper "Used for efficient branching with resolvedVar.")
+
+(isa noExistingReferent Predicate)
+(arity noExistingReferent 3)
+(comment noExistingReferent "Used for efficient branching with resolvedVar.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;; QP Model Formation 3/15/2016
+(isa consequenceFrameArg2 Predicate)
+(arity consequenceFrameArg2 2)
+(comment consequenceFrameArg2 "A frame element for consequence frames in a model fragment frame.")
+
+(isa consequenceFrameArg1 Predicate)
+(arity consequenceFrameArg1 2)
+(comment consequenceFrameArg1 "A frame element for consequence frames in a model fragment frame.")
+
+(isa fillModelFragmentFEs Predicate)
+(arity fillModelFragmentFEs 1)
+(comment fillModelFragmentFEs "A narrativeFunction for filling roles in an MF frame.")
+
+(isa identifyModelFragments Predicate)
+(arity identifyModelFragments 1)
+(comment identifyModelFragments "A narrativeFunction for recognizing patterns of QP frames that evoke an MF frame.")
+
+(isa addAgentiveParticipant Predicate)
+(arity addAgentiveParticipant 4)
+(comment addAgentiveParticipant "Creates a participant frame for a causal-agent in a direct-influence. Note this doesn't have to be an entity
+ with a relevant quantity.")
+
+(isa addMFConsequences Predicate)
+(arity addMFConsequences 4)
+(comment addMFConsequences "Creates a cosnequence frame for DIS that are consequences of the model fragment.")
+
+(isa assertMFRolesAndConditions Predicate)
+(arity assertMFRolesAndConditions 5)
+(comment assertMFRolesAndConditions "Feeder function that asserts FEs for the model fragment frame.")
+
+(isa assertMFRole Predicate)
+(arity assertMFRole 5)
+(comment assertMFRole "Finds the predicate for a type-level participant.")
+
+(isa assertMFCondition Predicate)
+(arity assertMFCondition 5)
+(comment assertMFCondition "Finds any topological conditions for a type-level participant.")
+
+(isa getOrdinalFillers Predicate)
+(arity getOrdinalFillers 7)
+(comment getOrdinalFillers "chains through qp frames to determine if an ordinal constrains a model fragment frame.")
+
+(isa addParticipantConstraint Predicate)
+(arity addParticipantConstraint 4)
+(comment addParticipantConstraint "This is a stub. It does nothing.")
+
+
+
+
+  
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

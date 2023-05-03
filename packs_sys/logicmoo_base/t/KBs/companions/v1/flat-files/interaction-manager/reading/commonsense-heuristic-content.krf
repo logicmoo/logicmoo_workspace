@@ -1,0 +1,446 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: commonsense-heuristic-content.meld
+;;;;    System: Companions
+;;;;    Author: Blass
+;;;;   Created: January 21, 2016 15:07:54
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CommonSenseHeuristicMt)
+(genlMt Interaction-ManagerMt CommonSenseHeuristicMt)
+
+;;; the commonsense heuristics will be a series of horn clauses, somewhat 
+;;; specialized, each of which says that certain things going together 
+;;; either makes (somewhat subjective) sense or violates it. These heuristics
+;;; look at other choice sets 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; gathering choice sets once per discourse saves cycles, but seriously don't call this too often
+(<== (gatherDiscourseFactsAndChoices ?factsAndChoices)
+     (outsourcedOnly (currentDiscourseId ?discourse-id))
+     (wmOnly
+      (evaluate ?choices
+        (TheClosedRetrievalSetOf (choice ?choice-set-id ?choice-id ?choice)
+          (ist-Information (DiscourseCaseFn ?discourse-id)
+            (choice ?choice-set-id ?choice-id ?choice))))) ;; choices
+     (wmOnly
+      (evaluate ?facts
+        (TheClosedRetrievalSetOf (isa ?x ?y)
+          (ist-Information (DrsCaseFn ?discourse-id) (isa ?x ?y))))) ;;; all things declared in DRS
+     (evaluate ?factsAndChoices 
+       (SetOrCollectionUnionFn ?choices ?facts))) ;; union of facts and choices
+              
+;;; first do no harm: if you can't say whether it makes sense or not, don't favor or disfavor
+;(<== (favorCommonsense ?choice (ChoiceFavorFn 0.0))
+;     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices)) 
+;     (cacheComplete (uninferredSentence (makesCommonSense ?choice (ChoiceFavorFn ?f))))
+;     (cacheComplete (uninferredSentence (makesNoCommonSense ?choice (ChoiceFavorFn ?f2)))))
+
+;(<== (favorCommonsense ?choice (ChoiceFavorFn ?f))
+;     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+;     (evaluate ?favors
+;       (TheClosedRetrievalSetOf ?f2
+;         (cacheComplete (makesCommonSense ?choice (ChoiceFavorFn ?f2)))))
+;     (cacheComplete (uninferredSentence (makesNoCommonSense ?choice (ChoiceFavorFn ?f3))))
+;     (evaluate ?formula (MakeFormulaFn PlusFn ?favors))
+;     (evaluate ?f ?formula))
+
+;(<== (favorCommonsense ?choice (ChoiceFavorFn ?f))
+;     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+;     (evaluate ?disfavors
+;       (TheClosedRetrievalSetOf ?f2
+;         (cacheComplete (makesNoCommonSense ?choice (ChoiceFavorFn ?f2)))))
+;     (cacheComplete (uninferredSentence (makesCommonSense ?choice (ChoiceFavorFn ?f3))))
+;     (evaluate ?formula (MakeFormulaFn PlusFn ?favors))
+;     (evaluate ?f ?formula))
+
+;;; sum the extent to which it makes sense and doesnt make sense.
+(<== (favorCommonsense ?choice (ChoiceFavorFn ?f3))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (evaluate ?disfavors
+       (TheClosedRetrievalSetOf ?f2
+         (cacheComplete (makesNoCommonSense ?choice (ChoiceFavorFn ?f2)))))
+     (evaluate ?favors
+       (TheClosedRetrievalSetOf ?f3
+         (cacheComplete (makesCommonSense ?choice (ChoiceFavorFn ?f3)))))
+     (evaluate ?formula (MakeFormulaFn PlusFn ?favors))
+     (evaluate ?formula2 (MakeFormulaFn PlusFn ?disfavors))
+     (evaluate ?f4 ?formula)
+     (evaluate ?f5 ?formula2)
+     (evaluate ?f3 (PlusFn ?f4 ?f5)))
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+;;; stuff it really seems Cyc should prevent automatically: 
+;;; interpretations involving things doing impossible things to themselves
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; things can't perform or be the object of state change of themselves
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (subexpressionMatching (performedBy ?var ?var) ?choice ?performsItself))
+
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (subexpressionMatching (objectOfStateChange ?var ?var) ?choice ?performsItself))    ;; don't interpret the mother as being the son of the son
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -3))
+     (or (subexpressionMatching (sons ?parent ?child) ?choice ?sonStatement)
+         (subexpressionMatching (daughters ?parent ?child) ?choice ?daughterStatement)
+         (subexpressionMatching (children ?parent ?child) ?choice ?childStatement))
+     (uninferredSentence (or (containedInASubChoice ?sonStatement ?choice)
+                             (containedInASubChoice ?daughterStatement ?choice)
+                             (containedInASubChoice ?childStatement ?choice)))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (or (subexpressionMatching (isa ?child HumanMother) ?factsAndChoices ?motherStatement)
+         (subexpressionMatching (isa ?child HumanFather) ?factsAndChoices ?fatherStatement))
+     (uninferredSentence (or (subexpressionMatching (isa ?parent HumanMother) ?factsAndChoices ?grandmother)
+                             (subexpressionMatching (isa ?parent HumanFather) ?factsAndChoices ?grandfather))))
+							 
+;; if it's "her son", she's not his son.
+;; this could be hurt if elsewhere in the discourse we have "his mother".
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -1))
+     (or (subexpressionMatching (sons ?parent ?child) ?choice ?sonStatement)
+         (subexpressionMatching (daughters ?parent ?child) ?choice ?daughterStatement)
+         (subexpressionMatching (children ?parent ?child) ?choice ?childStatement))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (possessiveRelation ?child ?parent) ?factsAndChoices ?possessiveStatement))
+
+;;; EA seems keen on declaring people to be their own parents or children
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -4))
+     (or (subexpressionMatching (mother ?mom ?mom) ?choice ?momStmt)
+         (subexpressionMatching (father ?dad ?dad) ?choice ?dadStmt)
+         (subexpressionMatching (sons ?son ?son) ?choice ?sonStmt)
+         (subexpressionMatching (daughters ?daught ?daught) ?choice ?daugStmt)
+         (subexpressionMatching (children ?par ?par) ?choice ?kidStmt)))
+
+;;; taking care of something can't take care of itself
+;;; this comes from an interpretation of "mother"
+(<== (makesNoCommonSense (and (isa ?mothering TakingCareOfSomething) (beneficiary ?mothering ?mothering)) (ChoiceFavorFn -4)))
+
+(<== (makesNoCommonSense (mother ?mom ?mom) (ChoiceFavorFn -4)))
+(<== (makesNoCommonSense (father ?dad ?dad) (ChoiceFavorFn -4)))
+(<== (makesNoCommonSense (sons ?son ?son) (ChoiceFavorFn -4)))
+(<== (makesNoCommonSense (daughters ?daught ?daught) (ChoiceFavorFn -4)))
+(<== (makesNoCommonSense (children ?par ?par) (ChoiceFavorFn -4)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; picking things that may be getting referred to in the current context
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; pick the possessiveRelation sense of a preposition if the possessor and possessed make sense together
+(<== (makesCommonSense (possessiveRelation ?possessor ?possessed) (ChoiceFavorFn 1))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (subexpressionMatching (isa ?possessor ?orType) ?factsAndChoices ?possessorType)
+	 (subexpressionMatching (isa ?possessed ?edType) ?factsAndChoices ?possessedType)
+	 (possessionMakesSense ?possessor ?possessed))
+	 
+(<== (possessionMakesSense ?x VisualDisplayScreen)
+	 (genls ?x PoweredDevice))
+
+;;; makes sense to talk about getting injuries if there are specific injuries being bandied about
+(<== (makesCommonSense ?choice (ChoiceFavorFn 1))
+     (subexpressionMatching (isa ?x IncurringAnInjury) ?choice ?somethingDeclared)
+     (uninferredSentence (containedInASubChoice ?somethingDeclared ?choice))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (or
+         (subexpressionMatching (isa ?y BruisedEye) ?factsAndChoices ?aBlackEye)
+         ))
+
+;;; something is likely to be a capitalCity if elsewhere you see references to it as such
+(<== (makesCommonSense ?choice (ChoiceFavorFn 1))
+     (subexpressionMatching (capitalCity ?place ?capital) ?choice ?match)
+     (uninferredSentence (containedInASubChoice ?match ?choice))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?capital CapitalCityOfRegion) ?factsAndChoices ?otherMatch))
+	 
+;;; in the context of electronic devices, screens are this kind of screen
+(<== (makesCommonSense (isa ?screen VisualDisplayScreen) (ChoiceFavorFn 1))
+	 (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (splitOnOrPossessive ?screen ?device ?factsAndChoices)
+	 (subexpressionMatching (isa ?device ?deviceType) ?factsAndChoices ?screenType)
+	 (genls ?deviceType PoweredDevice))
+	 
+;; helper function to avoid an or
+(<== (splitOnOrPossessive ?screen ?device ?factsAndChoices)
+	 (subexpressionMatching (on-UnderspecifiedSurface ?screen ?device) ?factsAndChoices ?screenOwner))
+
+(<== (splitOnOrPossessive ?screen ?device ?factsAndChoices)
+	 (subexpressionMatching (possessiveRelation ?device ?screen) ?factsAndChoices ?screenOwner2))
+
+;;; don't take an EquppingSomething interpretation of fit if there isn't an objectActedOn
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (subexpressionMatching (isa ?fit EquippingSomething) ?choice ?fitting)
+     (uninferredSentence (containedInASubChoice ?fitting ?choice))
+     (uninferredSentence (subexpressionMatching (objectActedOn ?fit ?equipped) ?choice ?notEquipped)))
+ 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CAUSALITY
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; super simple: prefer anything that involves complex causal relationships
+(<== (makesCommonSense (?causalPred ?cause ?effect) (ChoiceFavorFn ?f))
+     (different ?causalPred isa) ;; special cases not to even check
+     (different ?causalPred and) ;; special cases not to even check
+     (uninferredSentence (unifies ?cause (DemonstrativeFn ?this))) ;; for causal statements of the form "A. This causes B.", we don't want the "this" to be the demonstrative, just the token
+     (ist-Information UniversalVocabularyMt (lookupOnly (localOnly (isa ?causalPred CausationPredicate))))
+     (favorSpecificity ?causalPred ?s) ;;; we want to prefer things that have more information in them
+     (evaluate ?f (PlusFn 0 ?s)))
+
+;;; this is going to make this slow
+;;; something makes common sense if it introduces a member of a collection
+;;; that is already being referenced in the discourse
+(<== (makesCommonSense (isa ?x ?collection) (ChoiceFavorFn 1))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?z ?collection) ?factsAndChoices ?item)
+     (different ?x ?z))
+
+;;; the SUPER slow version
+(<== (makesCommonSense ?choice (ChoiceFavorFn 1))
+     (subexpressionMatching (isa ?x ?collection) ?choice ?introduced)
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?z ?collection) ?factsAndChoices ?existing)
+     (different ?x ?z))
+
+;;; just an override so choices for "this" and "these" aren't selected
+;;; we need one for pronouns too
+; start and finish writing this at some point?
+
+;;; don't look inside subchoices
+(<== (containedInASubChoice ?expr ?choice)
+     (subexpressionMatching (thereExists ?entities ?newChoices) ?choice ?thereExists)
+     ;(getSubChoicesFromChoiceSetConjunct ?newChoices ?subChoice)
+     ;(different ?subChoice nil)
+     (numAnswers 1 (subexpressionMatching ?expr ?newChoices ?subexpr))) ; this used to be ?subChoice but we might not need to isolate choices after all
+
+(favorSpecificity agentTypeCausesConditionType 2)
+(favorSpecificity causes-EventEvent 2)
+(favorSpecificity causes-PropProp 3);; props are s-expressions, therefore more informative
+(favorSpecificity causes-PropSit 2)
+(favorSpecificity causes-SitProp 2)
+(favorSpecificity causes-SitSit 2)
+(favorSpecificity causes-SitSitType 1)
+(favorSpecificity causes-SitTypeProp 2)
+(favorSpecificity causes-SitTypeSitType 2)
+(favorSpecificity causes-ThingProp 1)
+(favorSpecificity causes-TypeSitType 2)
+(favorSpecificity causes-Underspecified 0)
+(favorSpecificity couldImpact 1)
+(favorSpecificity eventTypeCausedDeathOf 3)
+(favorSpecificity infectionCausedByOrganism 3)
+(favorSpecificity infectionCausedByOrganismType 2)
+(favorSpecificity parasiteCausesAilmentCondition 3)
+(favorSpecificity pathogenCausesCondition 3)
+(favorSpecificity pathogenCausesConditionType 2)
+(favorSpecificity pathogenCausesEpidemicType 2)
+(favorSpecificity pathogenSoleCauseOfInfectionType 2)
+(favorSpecificity pathogenTypeCausesInfectionType 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; hacks for which fixing argIsa supporter/ed/violator/ed heuristics should obviate the need
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; the sea cannot be the participant in a SinkingEvent
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (cacheComplete (subexpressionMatching (isa ?x SinkingEvent) ?choice ?thatSinkingFeeling))
+     (uninferredSentence (containedInASubChoice ?thatSinkingFeeling ?choice))
+     (cacheComplete (subexpressionMatching (primaryObjectMoving ?x ?theSinker) ?choice ?theSunken))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     ;;; this should really be: if the the thing sinking MUST be the sea (i.e., only one choice set), then it's wrong
+     (subexpressionMatching (isa ?theSinker Sea) ?factsAndChoices ?theSunken))
+
+;;; if there's a sinking event into the sea, it's not toState, it's in-underspecified
+(<== (makesNoCommonSense (toState ?sinking ?sea) (ChoiceFavorFn -2))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?sea Sea) ?factsAndChoices ?theSunken)
+     (subexpressionMatching (isa ?sinking SinkingEvent) ?factsAndChoices ?theSinking))
+
+(<== (makesCommonSense (in-UnderspecifiedContainer ?sinking ?sea) (ChoiceFavorFn 2))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?sea Sea) ?factsAndChoices ?theSunken)
+     (subexpressionMatching (isa ?sinking SinkingEvent) ?factsAndChoices ?theSinking))
+     
+
+;;; if the thing being harmed is a limb, it should be objectHarmed, not animalHarmed
+(<== (makesCommonSense ?choice (ChoiceFavorFn 2))
+     (cacheComplete (subexpressionMatching (isa ?injury IncurringAnInjury) ?choice ?theInjury))
+     (uninferredSentence (containedInASubChoice ?theInjury ?choice))
+     (cacheComplete (subexpressionMatching (objectHarmed ?injury ?limb) ?choice ?theThingHarmed))
+     (isa ?limb Limb-AnimalBodyPart))
+
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (cacheComplete (subexpressionMatching (isa ?injury IncurringAnInjury) ?choice ?theInjury))
+     (uninferredSentence (containedInASubChoice ?theInjury ?choice))
+     (or (cacheComplete (subexpressionMatching (animalWoundedIn ?injury ?limb) ?choice ?theThingHarmed))
+         (cacheComplete (subexpressionMatching (animalInjuredIn ?injury ?limb) ?choice ?theThingHarmed)))
+     (isa ?limb Limb-AnimalBodyPart))
+
+;;; "for" generates both beneficiary and location-related predicates
+;;; this says, if the event is a vote, treat it like a vote
+(<== (makesCommonSense ?choice (ChoiceFavorFn 1))
+     (subexpressionMatching (beneficiary ?vote ?person) ?choice ?voting)
+     (uninferredSentence (containedInASubChoice ?voting ?choice))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?vote Voting) ?factsAndChoices ?itsAVote))
+	 
+(<== (makesCommonSense (isa ?expired ExpiredAgreement) (ChoiceFavorFn 1.5))
+	 (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (subexpressionMatching (isa ?expired ?type) ?factsAndChoices ?typeStmt)
+	 (different ?type ExpiredAgreement)
+	 (genls ?type Agreement))
+	 
+;;; by the same token, if something is being injured, it's not an inanimate object
+;;; I guess that's questionable for "injuring one's pride"
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (cacheComplete (unifies (isa ?x ?y) ?choice))
+     (uninferredSentence (genls ?y OrganismPart)) ;;the thing being injured is not part of an organism
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?injury IncurringAnInjury) ?factsAndChoices ?weHaveAnInjury)
+     (subexpressionMatching (objectHarmed ?injury ?x) ?factsAndChoices ?weAreHurt))
+	 
+;;; It doesn't make sense to assume you are dropping something from membership if the thing being dropped from is not an organization
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (subexpressionMatching (isa ?drop Dismissing-ExpellingFromMembership) ?choice ?somethingDropped)
+     (uninferredSentence (containedInASubChoice ?somethingDropped ?choice))
+     (subexpressionMatching (from-Generic ?drop ?droppedFrom) ?choice ?whenceDropping)
+     (uninferredSentence (isa ?droppedFrom Organization)))
+
+;;; ditto other expellings
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (subexpressionMatching (isa ?expel ExpellingFromMembership) ?choice ?expelled)
+     (uninferredSentence (containedInASubChoice ?expelled ?choice))
+     (subexpressionMatching (from-Generic ?expel ?expelledFrom) ?choice ?whenceExpelled)
+     (uninferredSentence (isa ?expelledFrom Organization)))
+
+;;; it doesn't make sense to have any animal be the topicOfIndividual of a particular winning or losing a conflict
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (or (subexpressionMatching (isa ?winLoss LosingAConflict) ?choice ?loss)
+         (subexpressionMatching (isa ?winLoss WinningAConflict) ?choice ?win))
+     (subexpressionMatching (topicOfIndividual ?winLoss ?topic) ?choice ?conflictTopic)
+     (uninferredSentence (containedInASubChoice ?conflictTopic ?choice))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?topic ?topicCat) ?factsAndChoices ?topicCategory)
+     (genls ?topicCat Animal))
+
+;;; it doesn't make sense to have any animal be the CompetitionEventTypeFn of any conflict
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -3))
+     (subexpressionMatching (isa ?winLoss (CompetitionEventTypeFn ?competitionType)) ?choice ?loss)
+     (uninferredSentence (containedInASubChoice ?loss ?choice))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?topic ?competitionType) ?factsAndChoices ?topicCategory)
+     (genls ?competitionType Animal))
+
+;;; a fluidflow-translation doesn't make sense if the thing flowing is not a liquid
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -3))
+     (subexpressionMatching (isa ?fluidFlow FluidFlow-Translation) ?choice ?flow)
+     (uninferredSentence (containedInASubChoice ?flow ?choice))
+     (subexpressionMatching (objectMoving ?fluidFlow ?flowee) ?choice ?flowing)
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (subexpressionMatching (isa ?flowee ?floweeCategory) ?factsAndChoices ?whatIsFlowing)
+     (uninferredSentence (genls ?floweeCategory LiquidTangibleThing)))
+
+;;; having something shouldn't be a birth event if the thing being born isn't a baby
+;;; this could be amended to things that are capable of being born?
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (subexpressionMatching (birthChild ?have ?child) ?choice ?child)
+     (uninferredSentence (containedInASubChoice ?child ?choice))
+     (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+     (uninferredSentence (or (subexpressionMatching (isa ?child HumanInfant) ?factsAndChoices ?baby)
+                             (subexpressionMatching (isa ?child NewbornAnimal) ?factsAndChoices ?baby2))))
+
+;;; don't like the semantics for "open" for opening for business unless it's a god damn business
+(<== (makesNoCommonSense (and (isa ?open IntrinsicStateChangeEvent) 
+                              (performedBy ?open ?whoever) 
+                              (holdsIn 
+                               (STIF ?open) 
+                               (localOrganizationOpennessState ?whoever OpenForBusiness)) 
+                              (holdsIn 
+                               (STIB ?open) 
+                               (not (localOrganizationOpennessState ?whoever OpenForBusiness))))
+                         (ChoiceFavorFn -2))
+     (uninferredSentence (genls ?whoever SingleSiteOrganization)))
+	 
+When is dying a dying and when is it a turning off a powered device?
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -1))
+     (subexpressionMatching (isa ?dying Dying) ?choice ?death)
+     (uninferredSentence (containedInASubChoice ?death ?choice))
+	 (subexpressionMatching (objectOfStateChange ?dying ?dead) ?choice ?deadThing)
+	 (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (subexpressionMatching (isa ?dead ?deadType) ?factsAndChoices ?deadTypeStatement)
+	 (uninferredSentence (genls ?deadType BiologicalLivingObject)))
+	 
+(<== (makesCommonSense ?choice (ChoiceFavorFn 1))
+     (subexpressionMatching (isa ?dying Dying) ?choice ?death)
+     (uninferredSentence (containedInASubChoice ?death ?choice))
+	 (subexpressionMatching (objectOfStateChange ?dying ?dead) ?choice ?deadThing)
+	 (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (subexpressionMatching (isa ?dead ?deadType) ?factsAndChoices ?deadTypeStatement)
+	 (genls ?deadType BiologicalLivingObject))
+	 
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -1))
+     (subexpressionMatching (isa ?dying TurningOffPoweredDevice) ?choice ?death)
+     (uninferredSentence (containedInASubChoice ?death ?choice))
+	 (subexpressionMatching (objectOfStateChange ?dying ?dead) ?choice ?deadThing)
+	 (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (subexpressionMatching (isa ?dead ?deadType) ?factsAndChoices ?deadTypeStatement)
+	 (uninferredSentence (genls ?deadType PoweredDevice)))
+	 
+(<== (makesCommonSense ?choice (ChoiceFavorFn 1))
+     (subexpressionMatching (isa ?dying TurningOffPoweredDevice) ?choice ?death)
+     (uninferredSentence (containedInASubChoice ?death ?choice))
+	 (subexpressionMatching (objectOfStateChange ?dying ?dead) ?choice ?deadThing)
+	 (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (subexpressionMatching (isa ?dead ?deadType) ?factsAndChoices ?deadTypeStatement)
+	 (genls ?deadType PoweredDevice))
+	 
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -2))
+     (subexpressionMatching (agentsExistentialState ?closing MultiIndividualAgentNowDisbanded) ?choice ?disbanding)
+	 (cacheComplete (gatherDiscourseFactsAndChoices ?factsAndChoices))
+	 (subexpressionMatching (isa ?closing ?type) ?factsAndChoices ?closingType)
+	 (uninferredSentence (subexpressionMatching ?closingType ?choice ?closingType)) ;; make sure it's not from the same interpret
+	 (genls ?type Organization))
+	 
+;;; this is probably WAY too aggressive:
+(<== (makesNoCommonSense ?choice (ChoiceFavorFn -1))
+	 (subexpressionMatching (isa ?shutoff ShuttingOffSomething) ?choice ?shuttingOff)
+	 (subexpressionMatching (objectActedOn ?shutoff ?thingShut) ?choice ?actedOn)
+	 (uninferredSentence (isa ?thingShut FluidFlowEvent)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; utter hacks I am ashamed of
+
+;;; it's not picking a choice set where others are disprefered
+;;; pick the damn Chef option already
+
+(<== (makesCommonSense (isa ?chef Chef) (ChoiceFavorFn 1)))
+
+;;; prefer Warranty to WarrantyDocument
+(<== (makesCommonSense (isa ?warranty Warranty) (ChoiceFavorFn 0.1)))
+(<== (makesNoCommonSense (isa ?warranty WarrantyDocument) (ChoiceFavorFn -0.1)))
+
+;;; every choice makes a tiny bit of sense
+;;; this is so choices with no evidence for or against get selected
+(<== (makesCommonSense ?choice (ChoiceFavorFn 0.1))
+      (uninferredSentence (unifies ?choice Backreference-ClassA-NLAttr))
+	  (uninferredSentence (unifies ?choice Demonstrative-ClassA-NLAttr))
+	  (uninferredSentence (unifies ?choice (PronounFn ?person ?singPlur ?gender ?type))))
+	  
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; favorG-Rated
+
+(in-microtheory GRatedHeuristicMt)
+(genlMt Interaction-ManagerMt GRatedHeuristicMt)
+
+(<== (favorG-Rated ?choice (ChoiceFavorFn -3.0))
+     (or (cacheComplete (subexpressionMatching (isa ?thing HavingAnOrgasm) ?choice ?anOrgasm))
+         (cacheComplete (subexpressionMatching (isa ?thing Semen) ?choice ?semen))
+         (cacheComplete (subexpressionMatching (isa ?thing Prostitute) ?choice ?prostitute))
+         (cacheComplete (subexpressionMatching (isa ?thing SexualCopulation) ?choice ?copulation))
+         ;;; not really dirty, but EA prefers the interpretation of "ovum" for eggs
+         (cacheComplete (subexpressionMatching (isa ?thing Ovum) ?choice ?egg)) 
+         ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

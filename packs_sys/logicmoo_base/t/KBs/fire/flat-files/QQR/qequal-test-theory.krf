@@ -1,0 +1,52 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qequal-test-theory.meld
+;;;;    System: FIRE
+;;;;    Author: Jon Wetzel
+;;;;   Created: June 29, 2011 12:33:22
+;;;;   Purpose: A QP Domain theory for testing the new q= rules
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory QPQ=TestTheoryMt)
+
+(isa QPQ=TestTheoryMt Microtheory)
+(genlMt QPQ=TestTheoryMt QPTheoryMt)
+(genlMt QPQ=TestTheoryMt CompositionalModelingMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa QPQ=GreaterTestObject Collection)
+(genls QPQ=GreaterTestObject Thing)
+
+(isa QPQ=LesserTargetObject Collection)
+(genls QPQ=LesserTargetObject Thing)
+
+(isa QPQ=TestQuantityFn Function-Denotational)
+(arity QPQ=TestQuantityFn 1)
+(arg1Isa QPQ=TestQuantityFn PartiallyTangible)
+(resultIsa QPQ=TestQuantityFn ContinuousQuantity)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Model fragments 
+
+(isa GoalFragment ConceptualModelFragmentType)
+;; The goal of this test is to activate this goal fragment
+;; if A qGreaterThan B, QPQ=Success
+(mfTypeParticipant GoalFragment ?A QPQ=GreaterTestObject quantity1Of)
+(mfTypeParticipant GoalFragment ?B QPQ=LesserTargetObject quantity2Of)
+(mfTypeCondition GoalFragment (qGreaterThan (QPQ=TestQuantityFn ?A)
+                                            (QPQ=TestQuantityFn ?B)))
+(mfTypeConsequence GoalFragment (QPQ=Success))
+
+(isa Q=Fragment ConceptualModelFragmentType)
+;; This fragment gets activated, which should allow the goal fragment to suceed
+(mfTypeParticipant Q=Fragment ?X QPQ=GreaterTestObject quantity1Of)
+(mfTypeParticipant Q=Fragment ?Y QPQ=GreaterTestObject quantity2Of)
+(mfTypeConstraint Q=Fragment (different ?X ?Y))
+(mfTypeConsequence Q=Fragment (q= (QPQ=TestQuantityFn ?X) (QPQ=TestQuantityFn ?Y)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

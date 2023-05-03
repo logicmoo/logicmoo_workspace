@@ -1,0 +1,90 @@
+;;;
+;;; resources.meld
+;;;
+;;; The ontology and rules defined here support reasoning about resources in plans.
+;;;
+
+
+;;; Built-in Cyc preds:
+;;; (resourceCapableOf AGENT SIT-TYPE ROLE)
+;;; (resourceInEvent EVENT RESOURCE) 
+;;; (resourceInPlan PLAN RESOURCE)
+;;; (resourceTypeRequiredForSituationType THING-TYPE SIT-TYPE)
+;;; (resourceAvailable AGENT RESOURCE)           ; resource isa SomethingExisting
+;;; (resourceTypeAvailable AGENT RESOURCE-TYPE)  ; resource-type is a first-order collection
+;;; (taskTypeRequiresResourceType TASK_TYPE RES_TYPE) ; from military contexts
+
+;;; We want to be able to treat arbitrary quantity fluents as resources, but
+;;; need to be able to distinguish their types.
+;;; Ie, we can't add space resources to time resources, but might
+;;; be able to convert one to the other via some process.
+;;; See also Allotment and ReservationRequest (in Cyc).
+
+;;; For resource conversion, see PurposefulAction-ResourceTransformation.
+
+(in-microtheory PerceptualAgentMt)
+
+(isa Resource Collection)
+(genls Resource MeasurableQuantity)  ; not necessarily tangible.  Not clear that it *must* be continuous, but it should be additive.
+(comment Resource "A Resource is an abstraction that treats a quantity as something that can be conserved, converted, produced, etc.  Almost always reified as the resultIsa of a ResourceFn NAT.")
+
+(isa ResourceFn UnaryFunction)
+(isa ResourceFn AtomicAnalogyNAT-Function)
+(arity ResourceFn 1)
+(arg1Isa ResourceFn MeasurableQuantity)
+(resultIsa ResourceFn Resource)
+(comment ResourceFn "(ResourceFn ?quantity) translates ?quantity into some kind of resource that can be conserved or converted.")
+
+;;; resourceType could be the cardinality of an entity type, or a continuous quantity type.
+(isa resourceType BinaryPredicate)
+(arity resourceType 2)
+(arg1Isa resourceType Resource)
+(arg2Isa resourceType MeasurableQuantityType)
+(comment resourceType "(resourceType ?resource ?type) identifies the MeasurableQuantityType ?type with a particular resource.")
+
+(<== (resourceType (ResourceFn ?quantity) ?type)
+     (quantityType ?quantity ?type))               ; Not every quantity is a resource!  Distance?  Only very obliquely.
+     
+;;; actually, quantityType is QPOntology predicate that relates a QPFrame to a PhysicalQuantity.
+;;; whereas QuantityType is a Cyc-native spec of ObjectType, a second-order collection. 
+
+
+(isa resourceConsumptionLowerBound TernaryPredicate)
+(arity resourceConsumptionLowerBound 3)
+(arg1Isa resourceConsumptionLowerBound CycLSentence-Assertible)
+(arg2Isa resourceConsumptionLowerBound Resource)
+(arg3Isa resourceConsumptionLowerBound MeasurableQuantity)
+(comment resourceConsumptionLowerBound "(resourceConsumptionLowerBound ?plan ?resource ?amount) specifies a lower bound on the amount of ?resource that will be consumed (or required) by ?plan.")
+
+;;; This needs to be at the type level.
+;;; *** Use outputsCreated-TypeType and inputsDestroyed-TypeType
+;;; *** and (taskTypeRequiresResourceType (MakingFn FreeCiv-City) FC-Unit-Settlers)
+
+;;;
+;;; We should treat time, space, and knowledge as special cases of resources
+;;; that are domain-independent and ubiquitous.
+;;; There should be an abstract plan for converting one resource type to another.
+;;; Operationalizing that would be one kind of learned knowledge.
+
+;;; We may want a notion of a minimum effective threshold for a resource
+;;; and a concept of diminishing returns.
+
+;;;
+;;; Task/Resource Reasoning
+;;;
+
+;;; High level plan:
+;;; Convert resource X to resource Y
+
+;;; Critiquer for above:
+;;; Does it cost too much?
+;;; Are there ways to spread the cost around?
+;;; How fast is it needed?
+
+;;; estimatedTaskCompletionTime (an expectation)
+;;; estimatedTaskCost  (an expectation)
+
+;;; Just as GGP quantity planning looked up the operational constraint of the
+;;; game and tested it after each recursive task to drive a quantity, we'll
+;;; want to  check with the relevant operational policy for active goals and
+;;; check them

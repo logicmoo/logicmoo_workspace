@@ -1,0 +1,70 @@
+;;; Augmented knowledge learned on Dec 10,2012:
+
+(in-microtheory (LearnedKnowledgeMtFn Freeciv-TheGame) :exclude-globals t)
+
+;;; Do we really need the complexTaskAchieves and achieveBy mechanism, or could
+;;; we just say (does ?actor (AchieveFn ?prop))
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?arg1 ?player))
+       (uninferredSentence (specialAt ?loc FC-Special-Road))
+       (numAnswers 1 (terrainAt ?loc ?terrain)) (possibleToRoad ?terrain)
+       (uninferredSentence (cityAt ?city ?loc))
+       (uninferredSentence (roadBlockedByRiver ?player ?loc))
+       (isa ?arg1 FreeCiv-LandUnit)
+       (behaviorCapable ?arg1 FC-ActivityRoad performedBy))
+  (methodForAction (achieveBy ?arg1 (specialAt ?loc FC-Special-Road))
+   (actionSequence
+    (TheList (simplestTravelPlan ?arg1 ?loc)
+     (doAgentPlan (actionSequence (TheList (doBuildRoad ?arg1 ?loc))))))))
+
+(<== (complexTaskAchieves ?arg1 (AchieveFn (specialAt ?loc FC-Special-Road)) (achieveBy ?arg1 (specialAt ?loc FC-Special-Road)))
+     (isa ?arg1 FreeCiv-LandUnit) 
+     (behaviorCapable ?arg1 FC-ActivityRoad performedBy))
+     
+(achievableByRole CapabilityRole7 (AchieveFn (specialAt ?loc FC-Special-Road)))
+     
+;;; ----------------------
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?arg1 ?player))
+       (uninferredSentence (specialAt ?loc FC-Special-Mine))
+       (numAnswers 1 (terrainAt ?loc ?terrain)) (possibleToMine ?terrain)
+       (uninferredSentence (cityAt ?city ?loc))
+       (isa ?arg1 FreeCiv-LandUnit)
+       (behaviorCapable ?arg1 FC-ActivityMine performedBy))
+  (methodForAction (achieveBy ?arg1 (specialAt ?loc FC-Special-Mine))
+   (actionSequence
+    (TheList (simplestTravelPlan ?arg1 ?loc)
+     (doAgentPlan (actionSequence (TheList (doMine ?arg1 ?loc))))))))
+
+(<== (complexTaskAchieves ?arg1 (AchieveFn (specialAt ?loc FC-Special-Mine)) (achieveBy ?arg1 (specialAt ?loc FC-Special-Mine)))
+     (isa ?arg1 FreeCiv-LandUnit) 
+     (behaviorCapable ?arg1 FC-ActivityMine performedBy))
+
+(achievableByRole CapabilityRole7 (AchieveFn (specialAt ?loc FC-Special-Mine)))
+
+;;; ----------------------
+
+(preconditionForMethod
+  (and (numAnswers 1 (currentPlayer ?player))
+       (numAnswers 1 (unitOwner ?arg1 ?player))
+       (uninferredSentence (specialAt ?loc FC-Special-Irrigation))
+       (numAnswers 1 (terrainAt ?loc ?terrain))
+       (possibleToIrrigate ?terrain)
+       (uninferredSentence (cityAt ?city ?loc))
+       (nextToWater ?loc)
+       (isa ?arg1 FreeCiv-LandUnit)
+       (behaviorCapable ?arg1 FC-ActivityIrrigate performedBy))
+  (methodForAction (achieveBy ?arg1 (specialAt ?loc FC-Special-Irrigation))
+   (actionSequence
+    (TheList (simplestTravelPlan ?arg1 ?loc)
+     (doAgentPlan (actionSequence (TheList (doIrrigate ?arg1 ?loc))))))))
+
+(<== (complexTaskAchieves ?arg1 (AchieveFn (specialAt ?loc FC-Special-Irrigation)) (achieveBy ?arg1 (specialAt ?loc FC-Special-Irrigation)))
+     (isa ?arg1 FreeCiv-LandUnit) 
+     (behaviorCapable ?arg1 FC-ActivityIrrigate performedBy))
+
+(achievableByRole CapabilityRole7 (AchieveFn (specialAt ?loc FC-Special-Irrigation)))

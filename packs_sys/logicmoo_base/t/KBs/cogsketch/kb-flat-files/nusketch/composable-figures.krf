@@ -1,0 +1,153 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: composable-figures.meld
+;;;;    System: nuSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: June 20, 2008 16:50:49
+;;;;   Purpose: Descriptions of "canned" figures that can be built up from
+;;;;            smaller, composable pieces.  This file contains definitions
+;;;;            general to all composable figures.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ComposableFiguresMt :exclude-globals t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment VisualFigure
+ "Says that a stored case represents a figure and that it contains information 
+  needed to render it visually.")
+(isa VisualFigure Collection)
+
+
+(comment visualFigureClass
+ "Associates a visual-figure with the class of objects that it represents.  
+  E.g. (visualFigureClass ArmorBn ModernMilitaryUnit-Deployable)")
+(arity visualFigureClass 2)
+(isa visualFigureClass Predicate)
+
+;;; (defrelation figureOf (?glyph-name ?fig-name)
+;;;   *** obsolete -- use referenceFigure instead
+;;;   :documentation "Relates a glyph to a corresponding stored figure.")
+
+(comment referenceFigure
+ "For an uninterpreted object referenced by the symbol ?name, 
+                  ?figure-name is the name of a case which contains the 
+                  visual-elements that comprise the object")
+(arity referenceFigure 2)
+(isa referenceFigure Predicate)
+
+
+(comment visualUserDefaultWidth
+ "States the user's prefered width for a visual figure.  The width should be 
+  specified with its units, so statements declaring the width of figure 
+  normally look like the following: (visual-user-default-width 
+  visual-figure-military-unit Usher (inch 1.0))")
+(arity visualUserDefaultWidth 3)
+(isa visualUserDefaultWidth Predicate)
+
+
+(comment visualDefaultWidth
+ "States the general prefered width for a visual figure.  
+                  The width should be specified with its units, so statements 
+                  declaring the width of figure normally look like the following:
+                  (visual-default-width visual-figure-military-unit (inch 1.0))")
+(arity visualDefaultWidth 2)
+(isa visualDefaultWidth Predicate)
+
+
+(comment visualDefaultDefaultWidth
+ "States the general prefered width for all visual figures; 
+                  this is used if the default width for a figure cannot be
+                  determined by any other means. 
+                  The width should be specified with its units, so statements 
+                  declaring the width of figure normally look like the following:
+                  (visual-default-default-width (inch 1.0))")
+(arity visualDefaultDefaultWidth 1)
+(isa visualDefaultDefaultWidth Predicate)
+
+
+(comment visualUserDefaultHeight
+ "States the user's prefered height for a visual figure.  
+                  The width should be specified with its units, so statements 
+                  declaring the height of figure normally look like the following:
+                  (visual-user-default-height visual-figure-military-unit 
+                     usher (inch 1.0))")
+(arity visualUserDefaultHeight 3)
+(isa visualUserDefaultHeight Predicate)
+
+
+(comment visualDefaultHeight
+ "States the general prefered height for a visual figure.  
+                  The width should be specified with its units, so statements 
+                  declaring the height of figure normally look like the following:
+                  (visual-default-height visual-figure-military-unit (inch 1.0))")
+(arity visualDefaultHeight 2)
+(isa visualDefaultHeight Predicate)
+
+
+(comment visualDefaultDefaultHeight
+ "States the general prefered height for all visual figures; 
+                  this is used if the default height for a figure cannot be
+                  determined by any other means. 
+                  The height should be specified with its units, so statements 
+                  declaring the width of figure normally look like the following:
+                  (visual-default-default-height (inch 1.0))")
+(arity visualDefaultDefaultHeight 1)
+(isa visualDefaultDefaultHeight Predicate)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(isa composableFigureFor Predicate)
+(arity composableFigureFor 2)
+(arg1Isa composableFigureFor Thing)
+(arg2Isa composableFigureFor StoredFigure)
+(comment composableFigureFor
+  "(composableFigureFor <obj> <#$StoredFigure>) says that the specified 
+   #$StoredFigure should be used when composing a diagram denoting the given
+   object.")
+
+(isa figureComponent Predicate)
+(arity figureComponent 2)
+(arg1Isa figureComponent Thing)
+(arg2Isa figureComponent Thing)
+
+
+(isa storedForm Predicate)
+(arity storedForm 2)
+(arg1Isa storedForm Thing)
+(arg2Isa storedForm Thing)
+(comment storedForm
+  "storedForm is probably obsolete.  I define it here because it pops up in 
+   some old sketches and SME generates an error if it can't find the arity.")
+
+(isa composableFigureSpec Predicate)
+(arity composableFigureSpec 3)
+(comment composableFigureSpec 
+  "composableFigureSpec is obsolete.  It is defined because it pops up in 
+   some old sketches and SME generates an error if it can't find the arity.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Default Figure
+
+(isa defaultFigureFor Predicate)
+(arity defaultFigureFor 2)
+(arg1Isa defaultFigureFor Thing)
+(arg2Isa defaultFigureFor Thing)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Facts
+
+(visualDefaultDefaultWidth (Inch 0.5))
+
+(visualDefaultDefaultHeight (Inch 0.5))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,93 @@
+;;;
+;;; movement.meld
+;;;
+
+;;; Ultimately, this task should be defined at a more domain-independent
+;;; level, with particular methods being domain-specific.
+
+(in-microtheory FreecivPlanningDomain)
+
+(isa simplestTravelPlan ComplexActionPredicate)
+(arity simplestTravelPlan 2)
+(arg1Isa simplestTravelPlan FreeCiv-Unit)
+(arg2Isa simplestTravelPlan SpatialThing-Localized)
+(comment simplestTravelPlan "(simplestTravelPlan ?unit ?dest) chooses between no-op, doMove and doGoToDest.")
+
+(<== (complexTaskAchieves ?actor 
+                   (AchieveFn (fcObjectAt ?actor ?loc)) ; goal
+                   (simplestTravelPlan ?actor ?loc))    ; task
+      ;; In order to support retroactive explanation of actions, we
+      ;; cannot require ?actor to be currently owned by ?player.
+      ;; ?actor may no longer exist!
+;     (currentPlayer ?player)
+;     (unitOwner ?actor ?player)
+     )
+
+(<== (complexTaskAchieves ?actor
+         (AchieveFn (objectFoundInLocation ?actor ?place))
+         (achieve (objectFoundInLocation ?actor ?place))))
+
+(preconditionForMethod
+  (behaviorCapable ?unit doMove)
+  (methodForAction
+    (achieve (objectFoundInLocation ?unit (FreecivLocationFn ?x ?y)))
+    (actionSequence
+      (TheList 
+        (simplestTravelPlan ?unit (FreecivLocationFn ?x ?y))))))
+
+(preconditionForMethod
+  (and (fcObjectAt ?dest ?loc)
+       (behaviorCapable ?unit doMove))
+  (methodForAction
+    (achieve (objectFoundInLocation ?unit ?dest))
+    (actionSequence
+      (TheList 
+        (simplestTravelPlan ?unit ?loc)))))
+        
+(<== (preferInContext (achieve (objectFoundInLocation ?unit ?loc)) ?seq1 ?seq2)
+     (different ?seq1 (actionSequence (TheList))))
+  
+
+
+;;; This is the "How do I get there?" task
+;;; The simplest travel plan, if you're already there, is to do nothing.
+(preconditionForMethod
+  (and (fcExecutionContext ?mt)
+       (ist-Information ?mt (fcObjectAt ?unit ?start))
+       (equals ?start ?dest))
+  (methodForAction
+    (simplestTravelPlan ?unit ?dest)
+    (actionSequence
+      (TheList))))
+
+;;; Prefer doMove for single-distance moves.
+(preconditionForMethod
+  (and (fcExecutionContext ?mt)
+       (ist-Information ?mt (fcObjectAt ?unit ?start))
+       (ist-Information ?mt (fcDistance ?start ?dest ?dist))
+       (equals ?dist 1)
+       (terrainAt ?dest ?terrain)
+       (canTravelOn ?unit ?terrain))
+  (methodForAction
+    (simplestTravelPlan ?unit ?dest)
+    (actionSequence
+      (TheList
+        (doMove ?unit ?dest)))))
+
+;;; pathFromTo invokes the A* planner to find a traversable path and 
+;;; sets the unit's orders.
+(preconditionForMethod
+  (and (fcExecutionContext ?mt)
+       (ist-Information ?mt (fcObjectAt ?unit ?start))
+       (ist-Information ?mt (fcDistance ?start ?dest ?dist))
+       (greaterThan ?dist 1)
+       (pathFromTo ?unit ?dest ?plan))
+  (methodForAction
+    (simplestTravelPlan ?unit ?dest)
+    (actionSequence
+      (TheList
+        (doGoToDest ?unit ?dest ?plan)
+        (doWait ?unit (fcObjectAt ?unit ?dest)) ; don't keep planning at this point
+        ))))
+
+;;; End of file

@@ -1,0 +1,167 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: topic-entities-dolphin.meld
+;;;;    System: 
+;;;;    Author: David Barbella
+;;;;   Created: August 14, 2014 20:56:19
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate$
+;;;;  $LastChangedBy$
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CaseRetrievalFactsMt :exclude-globals t)
+
+;;; Use interpretationOfWithRespectTo
+
+;;; (entitiesForPQComparisonQuestion ?evaluation-name ?subtask ?sim-or-diff ?entity-set)
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 2 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 4 (SpanFn 1 2))
+                           DolphinComparisonQ-001)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-001 1 Difference (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-001 2 Difference (TheSet conceptuallyRelated))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-001 2 Difference (TheSet surfaceFeatureOfObject))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-001 3 Difference NFI)
+(entitiesForPQComparisonQuestion DolphinComparisonQ-001 4 Difference (TheSet surfaceFeatureOfObject))
+
+
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 12 (SpanFn 3 4))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 12 (SpanFn 8 9))
+                           DolphinComparisonQ-004)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 1 Difference (TheSet greaterThan-Underspecified))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 2 Difference (TheSet comparer))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 2 Difference (TheSet comparee))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 3 Similarity (TheSet bodilyDoer))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 4 Similarity NFI)
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 5 Similarity (TheSet through-UnderspecifiedPortal))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 6 Similarity (TheSet temporallyIntersects))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 7 Similarity (TheSet giver))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 8 Similarity (TheSet to-UnderspecifiedLocation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 9 Similarity (TheSet performedBy))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 10 Similarity (TheSet consumedObject))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-004 11 Similarity (TheSet possessiveRelation))
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 23 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 23 (SpanFn 4 5))
+                           DolphinComparisonQ-005)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 1 Similarity (TheSet cardinality))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 1 Similarity (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 2 Similarity (TheSet containingObject))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 2 Similarity (TheSet containedObject))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 4 Similarity (TheSet As-TheWord))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 4 Similarity (TheSet containedObject))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 5 Similarity (TheSet cardinality))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-005 5 Similarity (TheSet possessiveRelation))
+
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 39 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 39 (SpanFn 4 5))
+                           DolphinComparisonQ-006)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 1 Similarity (TheSet instrument-Generic))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 1 Similarity (TheSet performedBy))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 2 Difference (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 3 Difference (TheSet with-UnderspecifiedAgent))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 3 Difference (TheSet beneficiary))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 4 Difference (TheSet doneBy))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 5 Difference (TheSet conceptuallyRelated))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-006 5 Difference (TheSet possessiveRelation))
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 46 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 46 (SpanFn 4 5))
+                           DolphinComparisonQ-007)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-007 1 Similarity (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-007 2 Similarity (TheSet Behind-TheWord))
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 49 (SpanFn 4 5))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 50 (SpanFn 8 9))
+                           DolphinComparisonQ-008)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-008 1 Difference (TheSet LongTime))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-008 2 Difference (TheSet Frequent-TheWord))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-008 3 Difference (TheSet greaterThan-Underspecified))
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 52 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 52 (SpanFn 3 4))
+                           DolphinComparisonQ-009)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-009 1 Similarity (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-009 2 Similarity (TheSet cardinality))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-009 3 Similarity (TheSet VentralDirection))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-009 3 Similarity (TheSet possessiveRelation))
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 53 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 53 (SpanFn 3 4))
+                           DolphinComparisonQ-010)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-010 1 Similarity (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-010 2 Similarity (TheSet cardinality))
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 57 (SpanFn 3 4))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 57 (SpanFn 8 9))
+                           DolphinComparisonQ-011)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-011 1 Similarity (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-011 2 Similarity (TheSet Dominate-TheWord))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-011 3 Similarity (TheSet MaleHuman))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-011 4 Difference (TheSet purposeOf-Generic))
+
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 59 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 59 (SpanFn 9 10))
+                           DolphinComparisonQ-012)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-012 1 Similarity (TheSet bodilyDoer))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-012 2 Similarity (TheSet purposeOf-Generic))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-012 3 Similarity (TheSet possessiveRelation))
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 62 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 66 (SpanFn 1 2))
+                           DolphinComparisonQ-013)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-013 1 Difference (TheSet conceptuallyRelated))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-013 4 Difference (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-013 5 Difference (TheSet occursDuring))
+
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 75 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 75 (SpanFn 4 5))
+                           DolphinComparisonQ-014)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-014 1 Similarity (TheSet HighIntelligence))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-014 2 Similarity (TheSet possessiveRelation))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-014 3 Similarity (TheSet RelativeGenericValueFn sizeParameterOfObject Brain highAmountOf))
+
+
+(topicPairIndicesInSpindle DolphinSpindle-0205 
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 86 (SpanFn 1 2))
+                           (ParagraphSentenceSpanFn Dolphins-Feb-05-2015-01 88 (SpanFn 1 2))
+                           DolphinComparisonQ-015)
+
+(entitiesForPQComparisonQuestion DolphinComparisonQ-015 1 Difference (TheSet conceptuallyRelated))
+(entitiesForPQComparisonQuestion DolphinComparisonQ-015 2 Difference (TheSet performanceLevel))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

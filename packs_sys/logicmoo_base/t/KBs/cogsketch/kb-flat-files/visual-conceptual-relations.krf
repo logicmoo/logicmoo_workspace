@@ -1,0 +1,260 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: visual-conceptual-relations.meld
+;;;;    System: 
+;;;;    Author: your name here
+;;;;   Created: October 8, 2015 16:37:32
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: usher $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory CogSketchVCRsMt)
+;; Apparently, in v3, CogSketch==worksheets, so if I open a plain old sketch,
+;; it will have the reasoning environment for SKEA, not CogSketch.  This means
+;; that if I want to use any of this information, it needs to be visible to SKEA.
+(genlMt CogSketchReasoningCollectorMt CogSketchVCRsMt)
+(genlMt SKEAReasoningCollectorMt CogSketchVCRsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Reasoning about events that are depicting as arrows:
+;; 
+;; IntrinsicStateChangeEvent:  objectOfStateChange --> toState
+;; CreationEvent:              doneBy --> outputsCreated, products
+;; DestructionEvent:           doneBy --> inputsDestroyed
+;; MakingSomethingAvailable:   doneBy --> objectActedOn, transferredObject
+;; UsingAnObject:              doneBy --> instrument-Generic
+
+;;
+;; IntrinsicStateChangeEvent
+;;
+(<== (objectOfStateChange ?event ?object)
+     (wmOnly (localOnly (isa ?event IntrinsicStateChangeEvent)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowTailFn ?g-event) PartiallyTangible ?g-object)
+     (glyphRepresentsObject ?g-object ?object)
+     (different ?object ?event))
+
+(<== (toState ?event ?state)
+     (wmOnly (localOnly (isa ?event IntrinsicStateChangeEvent)))
+     (glyphRepresentsObject ?g-event ?event)
+     ;; ObjectTypeByIntrinsicState may be too strict.
+     ;; Yeah, let's say SomethingExisting instead
+     (closestGlyphOfType (ArrowHeadFn ?g-event) SomethingExisting ?g-state)
+     (glyphRepresentsObject ?g-state ?state)
+     (different ?event ?state))
+
+;;
+;; CreationEvent:
+;; 
+(<== (outputsCreated ?event ?object)
+     (wmOnly (localOnly (isa ?event CreationEvent)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowHeadFn ?g-event) SomethingExisting ?g-object)
+     (glyphRepresentsObject ?g-object ?object))
+
+(<== (products ?event ?object)
+     (wmOnly (localOnly (isa ?event CreationEvent)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowHeadFn ?g-event) Artifact ?g-object)
+     (glyphRepresentsObject ?g-object ?object))
+
+(<== (doneBy ?event ?state)
+     (wmOnly (localOnly (isa ?event CreationEvent)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowTailFn ?g-event) SomethingExisting ?g-state)
+     (glyphRepresentsObject ?g-state ?state))
+
+;;
+;; DestructionEvent:
+;; 
+(<== (inputsDestroyed ?event ?object)
+     (wmOnly (localOnly (isa ?event DestructionEvent)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowHeadFn ?g-event) SomethingExisting ?g-object)
+     (glyphRepresentsObject ?g-object ?object))
+
+(<== (doneBy ?event ?state)
+     (wmOnly (localOnly (isa ?event DestructionEvent)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowTailFn ?g-event) SomethingExisting ?g-state)
+     (glyphRepresentsObject ?g-state ?state))
+
+;;
+;; MakingSomethingAvailable:
+;; 
+(<== (objectActedOn ?event ?object)
+     (wmOnly (localOnly (isa ?event MakingSomethingAvailable)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowHeadFn ?g-event) SomethingExisting ?g-object)
+     (glyphRepresentsObject ?g-object ?object))
+
+(<== (transferredObject ?event ?object)
+     (wmOnly (localOnly (isa ?event MakingSomethingAvailable)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowHeadFn ?g-event) SomethingExisting ?g-object)
+     (glyphRepresentsObject ?g-object ?object))
+
+(<== (doneBy ?event ?state)
+     (wmOnly (localOnly (isa ?event MakingSomethingAvailable)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowTailFn ?g-event) SomethingExisting ?g-state)
+     (glyphRepresentsObject ?g-state ?state))
+
+
+;;
+;; UsingAnObject:
+;; 
+(<== (instrument-Generic ?event ?object)
+     (wmOnly (localOnly (isa ?event UsingAnObject)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowHeadFn ?g-event) PartiallyTangible ?g-object)
+     (glyphRepresentsObject ?g-object ?object))
+
+(<== (doneBy ?event ?state)
+     (wmOnly (localOnly (isa ?event UsingAnObject)))
+     (glyphRepresentsObject ?g-event ?event)
+     (closestGlyphOfType (ArrowTailFn ?g-event) SomethingExisting ?g-state)
+     (glyphRepresentsObject ?g-state ?state))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Part/whole relations
+;;
+;; containment/grouping -> visualPart -> possessiveRelation -> subset
+;;                                                          -> physicalParts
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; subEvents
+;; basically possessiveRelation for Events
+
+(<== (subEvents ?whole ?part)
+     (possessiveRelation ?whole ?part)
+     (isa ?part Event)
+     (isa ?whole Event))    
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; physicalParts
+;; basically possessiveRelation for physical things
+
+(<== (physicalParts ?whole ?part)
+     (possessiveRelation ?whole ?part)
+     (isa ?part PartiallyTangible)
+     (isa ?whole PartiallyTangible))                       
+     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; subsetOf is a structural query, but I can still make a horn clause for it.
+;; (this is possessive relation for collections)
+;;  uhh... no you can't.
+
+(<== (subsetOf ?subset ?superset)
+     (possessiveRelation ?superset ?subset)
+     (isa ?superset SetOrCollection)
+     (isa ?subset SetOrCollection))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; possessiveRelation
+;; the underspecified way of saying something "has" or is part of another.
+;; Different rules are here to limit effort (so that we don't
+;; flat out try to infer visual part for everything).
+
+(<== (possessiveRelation ?owner ?thing)
+     (groundExpression ?owner)
+     (variableExpression ?thing)
+     (localOnly (glyphRepresentsObject ?g-owner ?owner))
+     (visualPartRelation ?g-owner ?g-thing)
+     (localOnly (glyphRepresentsObject ?g-thing ?thing)))
+
+(<== (possessiveRelation ?owner ?thing)
+     (groundExpression ?thing)
+     (variableExpression ?owner)
+     (localOnly (glyphRepresentsObject ?g-thing ?thing))
+     (visualPartRelation ?g-owner ?g-thing)
+     (localOnly (glyphRepresentsObject ?g-owner ?owner)))
+
+(<== (possessiveRelation ?owner ?thing)
+     (groundExpression ?thing)
+     (groundExpression ?owner)
+     (localOnly (glyphRepresentsObject ?g-thing ?thing))
+     (localOnly (glyphRepresentsObject ?g-owner ?owner))
+     (visualPartRelation ?g-owner ?g-thing))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; visualPartRelation
+
+(isa visualPartRelation PartPredicate)
+(arity visualPartRelation 2)
+(arg1Isa visualPartRelation NuSketchGlyph)
+(arg2Isa visualPartRelation NuSketchGlyph)
+
+(<== (visualPartRelation ?whole-g ?part-g)
+     (localOnly (hollowObjectContains ?whole-g ?part-g)) ;; outsourced
+     (glyphRepresentsObject ?whole-g ?whole)
+     (isa ?whole SetOrCollection))
+
+(<== (visualPartRelation ?whole-g ?part-g)
+     ;;(localOnly (hollowObjectContains ?whole-g ?part-g)) ;; outsourced
+     (objectContains ?whole-g ?part-g)
+     (glyphRepresentsObject ?whole-g ?whole)
+     (isa ?whole Container))
+
+;; 4/17
+(<== (visualPartRelation ?whole-g ?part-g)
+     (localOnly (hollowObjectContains ?whole-g ?part-g)) ;; outsourced
+     (glyphRepresentsObject ?whole-g ?whole)
+     (isa ?whole Event))
+
+(<== (visualPartRelation ?whole-g ?part-g)
+     (localOnly (lookupOnly (conceptualGroupGlyph ?whole-g ?part-g))))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; connectedTo-Directly
+
+(<== (connectedTo-Directly ?obj1 ?obj2)
+     (wmOnly (lookupOnly (localOnly (glyphRepresentsObject ?gc ?connector))))
+     (wmOnly (lookupOnly (localOnly (isa ?connector Attachment))))
+     (localOnly (lookupOnly (objectsIntersect ?gc ?g1)))
+     (localOnly (lookupOnly (objectsIntersect ?gc ?g2)))
+     (different ?g1 ?g2)
+     (wmOnly (lookupOnly (localOnly (glyphRepresentsObject ?g1 ?obj1))))
+     (wmOnly (lookupOnly (localOnly (glyphRepresentsObject ?g2 ?obj2)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; visualQuantityQuantitativeMeasurement --> valueOf
+
+;; e.g. an instance of Temperature that is annotated with TemperatureIndicator
+;;      annotation
+(<== (valueOf ?annotated-obj ?quantity)
+     (lookupOnly 
+      (localOnly 
+       (visualQuantityQuantitativeMeasurement 
+        (QuantityDenotedByAnnotation 
+         ?anno-obj 
+         ?anno-type 
+         (TheSet ?annotated-obj)) 
+        ?quantity)))
+     (unifies ?quantity (?q-units ?q-value))
+     (resultIsa ?q-units ?q-col)
+     (isa ?annotated-obj ?q-col))
+
+
+
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
+
+

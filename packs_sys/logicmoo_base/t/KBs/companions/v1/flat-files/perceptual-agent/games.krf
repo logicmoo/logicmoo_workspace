@@ -1,0 +1,207 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: games.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: July 30, 2012 16:06:44
+;;;;   Purpose: Game concept representations
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+;;;
+;;; This should contain some GGP-like representations to support game
+;;; definitions.  This will be an important part of the target representation
+;;; for multimodal-instruction as well as Freeciv learning.
+
+(in-microtheory GamesMt)
+(genlMt GamesMt PerceptualAgentMt)
+
+
+;;; Collections:
+
+(isa GameRole Collection)
+(genls GameRole IntelligentAgent)
+(comment GameRole "GameRole is the collection of roles that a player can take on in a game.")
+
+(isa TurnTakingGame Collection)
+(genls TurnTakingGame Game)
+(comment TurnTakingGame "The collection of games in which activity is factored into turns, not necessarily alternating.  As opposed to, e.g., soccer.")
+
+(isa GameStartedEvent Collection)
+(genls GameStartedEvent PerceptualAgentEvent)
+(comment GameStartedEvent "The collection of events in which a game begins.")
+
+(isa GameEndedEvent Collection)
+(genls GameEndedEvent PerceptualAgentEvent)
+(comment GameEndedEvent "The collection of events in which a game ends.")
+
+;;; Turn events subdivide a turn-taking game.
+(isa Turn-GameEvent Collection)
+(genls Turn-GameEvent GameEvent)
+(genls Turn-GameEvent PerceptualAgentEvent)
+(genls Turn-GameEvent TimeInterval)
+(comment Turn-GameEvent "The collection of turn events in turn-taking games.")
+
+;;; Functions:
+
+(isa StateTurnFn UnaryFunction)
+(atomicAnalogyNat StateTurnFn)
+(arity StateTurnFn 2)
+(arg1Isa StateTurnFn Integer)
+(arg2Isa StateTurnFn Integer)
+(resultIsa StateTurnFn GameState)
+(comment StateTurnFn "(StateTurnFn <state#> <turn#>) denotes the state# state in the current game, which occurs in turn#.")
+
+;;; Predicates:
+
+(isa gameTerminalState BinaryRelation)
+(arity gameTerminalState 2)
+(arg1Isa gameTerminalState Game)  ; E.g., Freeciv-TheGame
+(arg2Isa gameTerminalState CycLFormula)
+(comment gameTerminalState "(gameTerminalState ?game ?state-description) means game instance ends when ?state-description holds.")
+
+;;; Unlike performanceGoalForGame, this passes in the civ.  Not clear that's appropriate, except that we
+;;; might want to reason about opponent's goal and it might be different from currentPlayer's.
+(isa gameObjective BinaryPredicate)
+(arity gameObjective 2)
+(arg1Isa gameObjective Game)
+(arg2Isa gameObjective CycLFormula)
+(comment gameObjective "(gameObjective ?game-type ?goal) binds ?goal to a (possibly indexicalized) goal statement.")
+
+;;; Put this here.  It's in the version of ResearchCyc on Pullman, but otherwise
+;;; missing from our flatfiles:
+
+(genls ComputerGameEvent Competition)
+;;; We want to get to the fact that our games are ConflictEvents, and therefore
+;;; may involve opponents.
+
+(isa gameTurn UnaryPredicate)
+(isa gameTurn DynamicUpdatePredicate)
+(arity gameTurn 1)
+(arg1Isa gameTurn Turn-GameEvent)
+(comment gameTurn "(gameTurn ?turn) resolves to game-specific outsourced predicates to return the current turn.  This may be a year or a number, etc.")
+
+(isa playerName BinaryPredicate)
+(arity playerName 2)
+(arg1Isa playerName Microtheory) ; the current game case
+(arg2Isa playerName Agent-Generic)
+(comment playerName "(playerName ?game-case ?player-name) reifies the currentPlayer in a form that won't conflate stored cases with the dynamic outsourced predicate.")
+(functionCorrespondingPredicate-Canonical PlayerFn playerName 2)
+
+(isa PlayerFn UnaryFunction)
+(isa PlayerFn ReifiableFunction)
+(arg1Isa PlayerFn Microtheory)
+(resultIsa PlayerFn Agent-Generic)
+(comment PlayerFn "PlayerFn represents the player of the specified game or scenario.")
+
+;;; Lifted from FMI:
+(isa currentRole UnaryPredicate)
+(arity currentRole 1)
+(arg1Isa currentRole GameRole)
+
+(isa planTurn ComplexActionPredicate)
+(arity planTurn 2)
+(arg1Isa planTurn Microtheory)
+(arg2Isa planTurn Agent-Generic)
+(comment planTurn "(planTurn ?gameinst ?player) is the top-level task for each turn.")
+
+(isa planGameAction ComplexActionPredicate)
+(arity planGameAction 2)
+(arg1Isa planGameAction Microtheory)
+(arg2Isa planGameAction Agent-Generic)
+(comment planGameAction "(planGameAction ?game-instance ?player) invokes domain-level action planning.")
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (planGameAction ?mt ?player)
+    (actionSequence
+      (TheList))))  ; default
+      
+(<== (preferInContext (planGameAction ?mt ?player) ?seq1 ?seq2)
+     (equals ?seq2 (actionSequence (TheList))))  ; last choice
+
+(isa decideRandomly ComplexActionPredicate)
+(arity decideRandomly 2)
+(arg1Isa decideRandomly Microtheory)
+(arg2Isa decideRandomly GameRole)
+(comment decideRandomly "(decideRandomly ?game-instance ?role ?max-x ?max-y ?sketch-agent ?sketch) makes a random legal decision, recording the results for the purposes of experimentation.")
+
+;;; Find a random move that is not the noop:
+
+(preconditionForMethod
+  (and (evaluate ?legal-moves
+         (TheClosedRetrievalSetOf ?move
+           (and (ist-Information ?game-instance
+                  (legal ?role ?move))
+                ;(operatorFormulas mark ?move)  ; restrict to marking game?
+                )))
+       (different ?legal-moves (TheSet))
+       (evaluate ?move (RandomMemberFn ?legal-moves))  ; pick randomly
+       (groundExpression ?move))                       ; better be!
+  (methodForAction
+    (decideRandomly ?game-instance ?role)
+    (actionSequence
+      (TheList
+        (applyOwnGameAction ?game-instance ?role ?move)))))
+
+;;; What would some other root goals be (for e.g., companions life-long learning?)
+(<== (rootDomainGoal ?domain ?goal)
+     (isa ?domain Game)
+     (unifies ?goal (AchieveFn (winner-First (IndexicalFn executionContext) (IndexicalFn currentRole)))))
+
+(in-microtheory StrategyGameMt)
+(comment StrategyGameMt "StrategyGameMt holds general facts about strategy games, such as the fact that you compete against other players, and develop both offensive and defensive strategies,")
+(genlMt StrategyGameMt PerceptualAgentMt)
+
+;;; Basic idea: make (possibly nonlinear) progress toward a goal and prevent opponents from reaching the goal sooner.
+;;; Usually the game is symmetric - a race towards a common goal.
+
+;;; Main goal: achieve game objectives as fast as possible.
+;;; Subsidiary goal: slow down opponents' progress towards game objectives.
+
+;;;(relationAllInstance agentsExistentialStatus (CollectionSubsetFn ?unit (and (owner ?unit ?player) (different ?player (IndexicalFn currentRole))) AgentNowTerminated)
+
+;;; impliedSubgoal is currently invoked in reify-root-goals in the FAP.
+
+
+;;; This rule should be completely invisible unless domain is a StrategyGame, 
+;;; so we don't need to test the domain at all.
+;;; Also, this is analogous to goalCategoryForAgent SelfPreservationGoal.
+(<== (impliedSubgoal ?domain ?goal)
+     (isa ?domain StrategyGameProgram)
+     (unifies ?goal (MaintainFn (exists (IndexicalFn currentRole)))))
+
+
+;;; Toward codifying Diplomacy (9-2-15):
+
+;;; A subgoal of maintaining existence of instances of some type is to minimize their vulnerabilities:
+(<== (subgoal-TypeType (MaintainFn (greaterThan ((MeasurableQuantityFn cardinalityOf) ?coll-spec) 0)) ?subgoal-type)
+     (unifies ?subgoal-type
+       (MinimizeFn ((QPQuantityFn Vulnerability) (GenericInstanceFn ?coll-spec)))))
+
+;;; In a strategy game, maintaining FreedomOfAction is a subgoal of the root goal (winning):
+(<== (impliedSubgoal ?domain ?goal)
+     (isa ?domain StrategyGameProgram)
+     (unifies ?goal (MaximizeFn ((QPQuantityFn FreedomOfAction) (IndexicalFn currentRole)))))
+
+;;; In a strategy game, reducing hostility of opponents helps maintain your existence:
+(<== (subgoal-TypeType (MaintainFn (exists (IndexicalFn currentRole))) ?subgoal-type)
+     (unifies ?subgoal-type
+       (MinimizeFn 
+         ((QPQuantityFn HostilityLevel)
+          (CollectionSubsetFn IntelligentAgent  ; this require GameRole to inherit from IntelligentAgent.
+            (TheSetOf ?opponent
+              (and (opponentsInConflict (IndexicalFn currentRole) ?opponent (IndexicalFn executionContext))
+                   (isa ?opponent IntelligentAgent))))))))
+
+(in-microtheory UniversalVocabularyMt)
+
+(isa OnePersonGame ObjectType)
+(isa OnePersonGame TemporalStuffType)
+(genls OnePersonGame Game)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

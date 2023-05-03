@@ -1,0 +1,8 @@
+(in-microtheory SimpleAstronomyDataMt)
+
+(isa PlanetTauBooB CelestialBody)
+(isa PlanetMars CelestialBody)
+(isa PlanetJupiter CelestialBody)
+(isa PlanetSaturn CelestialBody)
+(isa PlanetVenus CelestialBody)
+(isa PlanetMercury CelestialBody)

@@ -1,0 +1,62 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: social-modeling-general-ontology.meld
+;;;;    System: 
+;;;;    Author: Irina Rabkina
+;;;;   Created: April 17, 2018 12:23:20
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory SocialModelingMt)
+(genlMt Interaction-ManagerMt SocialModelingMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(recommendNUEvent ?person ?nu-event)
+(isa recommendNUEvent BinaryPredicate)
+(arity recommendNUEvent 2)
+(arg1Isa recommendNUEvent Agent-Generic)
+(arg2Isa recommendNUEvent NUEvent)
+(comment recommendNUEvent 
+  "(recommendNUEvent ?person ?nu-event) suggests that ?nu-event should be recommended to ?person based on timing and interests")
+
+(isa SocialModelMtFn Function-Denotational)
+(arity SocialModelMtFn 1)
+(resultIsa SocialModelMtFn ModelMicrotheory)
+(resultGenl SocialModelMtFn PeopleForSocialModelingMt) ;; ?!
+(arg1Isa SocialModelMtFn Agent-Generic)
+(comment SocialModelMtFn "(SocialModelMtFn ?person) denotes the microtheory in which the social model for ?person is stored")
+
+;;(qualitativelyPositiveValue ?val)
+(isa qualitativelyPositiveValue UnaryPredicate)
+(arity qualitativelyPositiveValue 1)
+(arg1Isa qualitativelyPositiveValue GenericValuePredicate)
+(comment qualitativelyPositiveValue "(qualitativelyPositiveValue ?val) states that ?val is mediumAmountOf of better")
+
+
+
+;; added for directions demo
+(isa directionsGMapsPredicate UnaryPredicate)
+(arity directionsGMapsPredicate 1)
+(arg1Isa directionsGMapsPredicate StreetAddress)
+
+(isa RoomOfFn Function-Denotational)
+(arity RoomOfFn 2)
+(resultIsa RoomOfFn StreetAddress)
+(arg1Isa CharacterString)
+(arg2Isa Place)
+(comment RoomOfFn "A function that allows us to compositionally represent a room in a building")
+
+(isa FloorOfFn Function-Denotational)
+(arity FloorOfFn 2)
+(resultIsa FloorOfFn StreetAddress)
+(arg1Isa CharacterString)
+(arg2Isa Place)
+(comment RoomOfFn "A function that allows us to compositionally represent a floor in a building")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,340 @@
+;;; piece-moving-game.meld
+
+(in-microtheory (GameRulesMtFn PieceMovingGame))
+
+(genlMt (GameRulesMtFn PieceMovingGame) FmiGamesMt)
+
+;;; Piece moving game has four possible operations:
+;;;  change location of a piece  (move)
+;;;  delete a piece              (capture)
+;;;  add a piece                 (introduce)
+;;;  change type of piece        (promote)
+
+
+(isa cell GamePredicate)
+(arity cell 3)
+
+;;; Probably want to define up, down, left & right predicates
+;;; plus nextTo, diagonal, and adjacent (on entire locations)
+
+;;; Do we want to say that a piece moving game assumes a single occupant of a cell?
+;;; Given the cell representation, I think it does.
+
+;;; We don't individuate pieces, except by their type and location.  
+;;; So br at 3,3 is a black rook in location 3,3.  There may be another black rook
+;;; elsewhere.
+
+;;; While published chess games may simply report a move as bk -> a3 (when it's
+;;; unambiguous), we really have to include both from and to locations.
+;;; What does that imply for the move operator definition?  The actual piece
+;;; is unnecessary.  Too bad, we'll include it anyway.
+
+;;; Action Primitives:
+
+;(isa move SimpleActionPredicate)
+;(arity move 5)
+;(arg1Isa move GameRole)
+
+
+;;; Inference Rules:
+
+;;; When you move into a cell, you occupy it:
+(<== (next (cell ?x ?y ?p))
+     (doesAction ?player (move ?p ?u ?v ?x ?y)))
+
+;;; When you move out of a cell, it becomes blank:
+(<== (next (cell ?u ?v Empty))
+     (doesAction ?player (move ?p ?u ?v ?x ?y)))
+
+;;; Cells don't change except by movement:
+(<== (next (cell ?w ?z ?content))
+     (doesAction ?player (move ?p ?u ?v ?x ?y))
+     (currentlyTrue (cell ?w ?z ?content))
+     (different (LocFn ?u ?v) (LocFn ?w ?z))
+     (different (LocFn ?x ?y) (LocFn ?w ?z)))
+     
+;;; Note: This kind of implicitly covers capture.
+;;; However, if a domain rule were to define a next rule that handled the case 
+;;; where two pieces could occupy the same cell, these rules would not need to
+;;; change.  It's still compositional.
+
+
+;;;
+;;; Generic, but not necessarily universal rules:
+;;;
+
+
+(<== (pieceType ?type)
+     (pieceOwnerType ?piece ?player ?type))
+
+(isa ownPieceAt GamePredicate)
+(arity ownPieceAt 3)
+(arg1Isa ownPieceAt GameRole)
+(arg2Isa ownPieceAt Integer)
+(arg3Isa ownPieceAt Integer)
+(comment ownPieceAt "(ownPieceAt ?player ?x ?y) indicates that location x,y contains a piece belonging to ?player.")
+
+(<== (ownPieceAt ?player ?x ?y)
+     (wmOnly
+       (lookupOnly
+         (currentlyTrue (cell ?x ?y ?piece))))
+     (allFactsAllowed
+       (pieceOwnerType ?piece ?player ?piece-type)))
+     
+(isa moveRange GamePredicate)
+(arity moveRange 2)
+(arg1Isa moveRange GamePiece)
+(arg2Isa moveRange Integer)
+(comment moveRange "(moveRange ?piece-type ?distance) indicates maximum distance a piece can travel in one turn.")
+
+(isa moveDirection GamePredicate)
+(arity moveDirection 3)
+(arg1Isa moveDirection GamePiece) ; or is it the type?
+(arg2Isa moveDirection GameRole)
+(arg3Isa moveDirection BinaryPredicate)
+(comment moveDirection "(moveDirection ?piece-type ?role ?dir-pred) indicates translational directions a piece type can move.")
+
+(isa deltaXY GamePredicate)
+(arity deltaXY 3) ; maybe should be 4, to include role?
+(comment deltaXY "(deltaXY ?piece-type ?dx ?dy) defines irregular move types by enumeration.")
+
+(isa primitiveDir GamePredication)
+(arity primitiveDir 5)
+(comment primitiveDir "(primitiveDir ?start-x ?start-y ?end-x ?end-y ?dir) Maps from actual coordinate pairs to primitive directions to simplify legal move checking.")
+
+(<== (primitiveDir ?x ?start-y ?x ?end-y up)
+     (lessThan ?end-y ?start-y))
+(<== (primitiveDir  ?x ?start-y ?x ?end-y down)
+     (greaterThan ?end-y ?start-y))
+(<== (primitiveDir ?start-x ?y ?end-x ?y left)
+     (lessThan ?end-x ?start-x))
+(<== (primitiveDir ?start-x ?y ?end-x ?y right)
+     (greaterThan ?end-x ?start-x))
+(<== (primitiveDir ?start-x ?start-y ?end-x ?end-y ur)
+     (greaterThan ?end-x ?start-x)
+     (lessThan ?end-y ?start-y))
+(<== (primitiveDir  ?start-x ?start-y ?end-x ?end-y dl)
+     (lessThan ?end-x ?start-x)
+     (greaterThan ?end-y ?start-y))
+(<== (primitiveDir ?start-x ?start-y ?end-x ?end-y ul)
+     (lessThan ?end-x ?start-x)
+     (lessThan ?end-y ?start-y))
+(<== (primitiveDir ?start-x ?start-y ?end-x ?end-y dr)
+     (greaterThan ?end-x ?start-x)
+     (greaterThan ?end-y ?start-y))
+
+(isa enumerateDirections GamePredicate)
+(arity enumerateDirections 2)
+(comment enumerateDirections "(enumerateDirections ?abstract-dir ?concrete-dir) enables enumerating the constituent directions of an abstraction like 'CardinalDirection'")
+
+(enumerateDirections down down)
+(enumerateDirections up up)
+(enumerateDirections left left)
+(enumerateDirections right right)
+(enumerateDirections cartesian up)
+(enumerateDirections cartesian down)
+(enumerateDirections cartesian left)
+(enumerateDirections cartesian right)
+(enumerateDirections diagonal ur)
+(enumerateDirections diagonal dl)
+(enumerateDirections diagonal ul)
+(enumerateDirections diagonal dr)
+(enumerateDirections diagonal ur)
+
+(<== (enumerateDirections all ?dir)
+     (enumerateDirections cartesian ?dir))
+(<== (enumerateDirections all ?dir)
+     (enumerateDirections diagonal ?dir))
+
+(isa specialMove GamePredicate)
+(arity specialMove 7)
+(arg1Isa specialMove Collection)
+(arg2Isa specialMove GameRole)
+(arg3Isa specialMove GamePiece)
+(arg4Isa specialMove Integer)
+(arg5Isa specialMove Integer)
+(arg6Isa specialMove Integer)
+(arg7Isa specialMove Integer)
+(comment specialMove "(specialMove ?type ?player ?piece ?start-x ?start-y ?end-x ?end-y)")
+
+(isa legalMove GamePredicate)
+(arity legalMove 6)
+(arg1Isa legalMove GameRole)
+(arg2Isa legalMove GamePiece)
+(arg3Isa legalMove Integer)
+(arg4Isa legalMove Integer)
+(arg5Isa legalMove Integer)
+(arg6Isa legalMove Integer)
+(comment legalMove "(legalMove ?player ?piece  ?start-x ?start-y ?end-x ?end-y) is the additive version (subpredicate) of legal")
+
+
+;;; Assume only ?player is bound, generate possible legal moves:
+(<== (legalMove ?player ?piece  ?start-x ?start-y ?end-x ?end-y)
+     (variableExpression ?end-x)
+     (variableExpression ?end-y)
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))
+     ;(numAnswers 1 (allFactsAllowed (jumps ?piece-type ?jumps)))
+     (numAnswers 1 (allFactsAllowed (moveRange ?piece-type ?range)))
+     (numAnswers 1 (allFactsAllowed (moveDirection ?piece-type ?player ?dir)))
+     (allFactsAllowed (enumerateDirections ?dir ?constituent-dir))
+     (currentlyTrue (cell ?start-x ?start-y ?piece))
+     (generateMoves ?constituent-dir ?player ?range ?start-x ?start-y ?end-x ?end-y))
+
+;;; All args are ground, check move for legality:
+(<== (legalMove ?player ?piece  ?start-x ?start-y ?end-x ?end-y)
+     (groundExpression (TheSet ?start-x ?start-y ?end-x ?end-y))
+     (currentlyTrue (cell ?start-x ?start-y ?piece))
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))
+     ;(numAnswers 1 (allFactsAllowed (jumps ?piece-type ?jumps)))
+     (numAnswers 1 (allFactsAllowed (moveRange ?piece-type ?range)))
+     (numAnswers 1 (allFactsAllowed (moveDirection ?piece-type ?player ?dir)))
+     (numAnswers 1 (primitiveDir ?start-x ?start-y ?end-x ?end-y ?actual-dir))
+     (allFactsAllowed (enumerateDirections ?dir ?actual-dir))
+     (generateMoves ?actual-dir ?player ?range ?start-x ?start-y ?end-x ?end-y))
+
+;;; Dest is bound, source is not.  For testing check.
+(<== (legalMove ?player ?piece  ?start-x ?start-y ?end-x ?end-y)
+     (variableExpression ?start-x)
+     (variableExpression ?start-y)
+     (groundExpression ?end-x)
+     (groundExpression ?end-y)
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))  ; enumerate pieces
+     (currentlyTrue (cell ?start-x ?start-y ?piece))                     ; bind starting locations
+     (numAnswers 1 (allFactsAllowed (moveRange ?piece-type ?range)))
+     (numAnswers 1 (allFactsAllowed (moveDirection ?piece-type ?player ?dir)))
+     (numAnswers 1 (primitiveDir ?start-x ?start-y ?end-x ?end-y ?actual-dir))
+     (allFactsAllowed (enumerateDirections ?dir ?actual-dir))        ; is translation in legal dir?
+     (generateMoves ?actual-dir ?player ?range ?start-x ?start-y ?end-x ?end-y)) ; could it get there?
+
+;; special moves
+;;; Assume only ?player is bound, generate possible legal moves:
+(<== (legalMove ?player ?piece  ?start-x ?start-y ?end-x ?end-y)
+     (variableExpression ?end-x)
+     (variableExpression ?end-y)
+     (allFactsAllowed (pieceOwnerType ?piece ?player ?piece-type))
+     (currentlyTrue (cell ?start-x ?start-y ?piece))
+     (specialMove ?piece-type ?player ?piece ?start-x ?start-y ?end-x ?end-y))
+
+
+(isa generateMoves GamePredicate)
+(arity generateMoves 7)
+(arg1Isa generateMoves BinaryPredicate)
+(arg2Isa generateMoves GameRole)
+(arg3Isa generateMoves Integer)
+(arg4Isa generateMoves Integer)
+(arg5Isa generateMoves Integer)
+(arg6Isa generateMoves Integer)
+(arg7Isa generateMoves Integer)
+(comment generateMoves "(generateMoves ?dir ?player ?range ?start-x ?start-y ?end-x ?end-y) generates all possible moves based on piece-type range and dir and special move definitions.")
+
+;; Bullet-proof this to indicate which args are ground!
+(<== (generateMoves ?dir ?player ?range ?start-x ?start-y ?end-x ?end-y)
+     (numAnswers 1 (incrementCoord ?dir ?start-x ?start-y ?x ?y))
+     (integerBetween 1 ?x 8)
+     (integerBetween 1 ?y 8)           ; on the board
+     (currentlyTrue (cell ?x ?y ?content))
+     (uninferredSentence  ; redefine this in terms of not blocked??
+       (allFactsAllowed
+         (pieceOwnerType ?content ?player ?something))) ; ?content is either Empty or opponent's piece
+     (generateMove ?dir ?player ?range ?x ?y ?end-x ?end-y))
+
+(isa generateMove GamePredicate)
+(arity generateMove 7)
+
+(<== (generateMove ?dir ?player ?range ?x ?y ?x ?y)) ; a legitimate endpoint
+
+;;; Is this right? it's decrementing range, so how do we know more distant 
+;;; move isn't blocked locally?
+(<== (generateMove ?dir ?player ?range ?x ?y ?end-x ?end-y)
+     (greaterThan ?range 1)
+     (currentlyTrue (cell ?x ?y Empty))
+     (evaluate ?new-range (DifferenceFn ?range 1))
+     (generateMoves ?dir ?player ?new-range ?x ?y ?end-x ?end-y))
+
+(isa incrementCoord GamePredicate)
+(arity incrementCoord 5)
+(comment incrementCoord "(incrementCoord ?dir ?start-x ?start-y ?dest-x ?dest-y) binds dest coord based on incrementing start-coord in specified direction.")
+
+(<== (incrementCoord up ?x ?start-y ?x ?y)
+     (evaluate ?y (DifferenceFn ?start-y 1)))
+
+(<== (incrementCoord down ?x ?start-y ?x ?y)
+     (evaluate ?y (PlusFn ?start-y 1)))
+
+(<== (incrementCoord left ?start-x ?y ?x ?y)
+     (evaluate ?x (DifferenceFn ?start-x 1)))
+
+(<== (incrementCoord right ?start-x ?y ?x ?y)
+     (evaluate ?x (PlusFn ?start-x 1)))
+
+(<== (incrementCoord ur ?start-x ?start-y ?x ?y)
+     (evaluate ?x (PlusFn ?start-x 1))
+     (evaluate ?y (DifferenceFn ?start-y 1)))
+
+(<== (incrementCoord dl ?start-x ?start-y ?x ?y)
+     (evaluate ?x (DifferenceFn ?start-x 1))
+     (evaluate ?y (PlusFn ?start-y 1)))
+
+(<== (incrementCoord ul ?start-x ?start-y ?x ?y)
+     (evaluate ?x (DifferenceFn ?start-x 1))
+     (evaluate ?y (DifferenceFn ?start-y 1)))
+
+(<== (incrementCoord dr ?start-x ?start-y ?x ?y)
+     (evaluate ?x (PlusFn ?start-x 1))
+     (evaluate ?y (PlusFn ?start-y 1)))
+
+
+;;; Setting a persistent flag to indicate something moved from its initial 
+;;; position.
+
+(isa pieceHasMoved GamePredicate)
+(arity pieceHasMoved 3)
+(arg1Isa pieceHasMoved GamePiece)
+(arg2Isa pieceHasMoved Integer)
+(arg3Isa pieceHasMoved Integer)
+
+;;; Keep track of pieces moved from their initial locations:
+(<== (next (pieceHasMoved ?piece ?u ?v))
+     (doesAction ?player (move ?piece ?u ?v ?x ?y))
+     (lookupOnly
+       (allFactsAllowed
+         (init (cell ?u ?v ?piece)))))
+
+;;; Once moved, forever after:
+(<== (next (pieceHasMoved ?piece ?x ?y))
+     (currentlyTrue (pieceHasMoved ?piece ?x ?y)))
+
+(isa trueInNextState GamePredicate)
+(arity trueInNextState 2)
+
+
+;;; Assume queried in current game mt:
+(<== (trueInNextState ?action ?query)
+     (not (variableExpression ?query))  ; sanity check.
+     (lookupOnly 
+       (currentlyTrue (step ?step)))
+     (queryContext ?gameinst)
+     (unifies ?scratchpad-mt (FutureStateFn ?gameinst))
+     (lookupOnly (gameDomain ?domain))
+     (tell (genlMt ?scratchpad-mt (GameRulesMtFn ?domain)))
+     ;; Compute the counterfactual state
+     (withCounterfactual ?action ; (doesAction player move)
+       (and (inferenceOnly
+              (queryNextState ?scratchpad-mt ?action))
+            (ist-Information ?scratchpad-mt ?query)
+            (tell (trueAfterAction ?step ?action ?query))))
+     (lookupOnly
+       (trueAfterAction ?step ?action ?query))
+     (justify (trueInNextState ?action ?query)
+       (TheList (trueAfterAction ?step ?action ?query))))
+
+(isa queryNextState GamePredicate)
+(arity queryNextState 2)
+
+;;; Temporarily justify the next state in the next-state mt
+;;; based on taking the action in the current state:
+(<== (queryNextState ?next-state-mt ?action)
+     (inferenceOnly (next ?stmt))
+     (justify (ist-Information ?next-state-mt (currentlyTrue ?stmt))
+       (TheList ?action)))
+

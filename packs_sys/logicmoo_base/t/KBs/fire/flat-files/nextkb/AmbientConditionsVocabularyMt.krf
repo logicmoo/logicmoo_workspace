@@ -1,0 +1,36 @@
+(in-microtheory AmbientConditionsVocabularyMt)
+
+(isa TheSkyAboveHere PieceOfSky)
+(isa (HighAmountFn RelativeHumidity) GenericQuantity)
+(comment ChemicalSpillSituation "This is the collection of dangerous situations following a #$ChemicalSpill in which a significant amount of some dangerous chemical is present in the environment.")
+(comment ExtremeThermalSituation "This is the collection of situations involving dangerous extremes of heat or cold.")
+(comment TheSkyAboveHere "#$TheSkyAboveHere is what
+
+one sees when one looks up while outside, not under any trees,
+
+shelters, umbrellas etc..  This concept does not make much sense when
+
+#$Here is not on or near the #$groundOf #$PlanetEarth.  When the time
+
+of the viewing location is #$DaytimeHours, #$TheSkyAboveHere is blue
+
+and the sun is in it (unless there's a total eclispe, or it is near
+
+sunset, sunrise etc..).  When it is nighttime, the #$TheSkyAboveHere
+
+is black and there are stars in it.  Note that if the
+
+#$weather of #$Here are #$CloudyArea, or if #$Here is #$Indoors-IsolatedFromOutside
+
+the #$TheSkyAboveHere can not be seen.  #$TheSkyAboveHere is similar
+
+to the notion of 'the heavens'.  Often #$TheSkyAboveHere is what one
+
+refers to when one says 'the sky'.  However, see also #$SkyFn,
+
+#$TheWholeSky, and #$PieceOfSky.")
+(genls ExtremeThermalSituation DangerousSituation)
+(genls CombustionProcess ExtremeThermalSituation)
+(genls Freezing ExtremeThermalSituation)
+(genls BiochemicallyHarmfulSubstanceReleaseSituation DangerousSituation)
+(genls AboveGroundFuelStorageTank AboveGround)

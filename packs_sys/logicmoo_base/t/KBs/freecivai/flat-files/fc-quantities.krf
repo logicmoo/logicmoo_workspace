@@ -1,0 +1,132 @@
+;;;
+;;; fc-quantities.meld
+;;;
+;;; In order to learn how to encode decision cases, we have to be 
+;;; able to figure out which quantities and relations are salient.
+;;; This is problematic in an incomplete information game, because
+;;; information is not automatically present in the state of the
+;;; game - it must be queried for.  How do we even know what queries
+;;; we could make without building in domain knowledge?  This is the
+;;; same problem we face with actions - the actionPrimitive predicate
+;;; lets us enumerate actions.  The quantityPrimitive predicate will
+;;; let us enumerate the basis set of quantities.  Combinations of 
+;;; quantities and other higher-order quantities can be computed from 
+;;; these.
+
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; FreeCiv-specific Quantities
+;; -------------------
+
+;;; We could just query for MeasurableQuantitySlot and get the list
+;;; of predicates, but that includes things that are not fluents.
+;;;
+;;; Note: This is now ternary and returns the units by which quantity 
+;;; is measured.  Technically, many of the "units" should be rates.
+;;; To do this without exploding the number of concepts, they should
+;;; be something like (PerFn FoodPoints Turns).
+;;; Qualitative model induction and reasoning will have to be extended
+;;; to handle this.
+;;; -----------------------------------------------------------------
+(quantityPrimitive (MeasurableQuantityFn currentTaxPercent)             FreeCiv-Player Percent)
+(quantityPrimitive (MeasurableQuantityFn currentSciencePercent)         FreeCiv-Player Percent)
+(quantityPrimitive (MeasurableQuantityFn currentLuxuryPercent)          FreeCiv-Player Percent)
+(quantityPrimitive (MeasurableQuantityFn currentGold)                   FreeCiv-Player GoldPoints)
+(quantityPrimitive (MeasurableQuantityFn currentBulbsResearched)        FreeCiv-Player SciencePoints)
+(quantityPrimitive (MeasurableQuantityFn currentTechsResearched)        FreeCiv-Player Number)   ; Integer?
+(quantityPrimitive (MeasurableQuantityFn civPopulation)                 FreeCiv-Player FreeCivPopulationFn)
+(quantityPrimitive (MeasurableQuantityFn civFoodSurplusTotal)           FreeCiv-Player FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn civBulbsPerTurn)               FreeCiv-Player SciencePoints)
+(quantityPrimitive (MeasurableQuantityFn civGoldProduction)             FreeCiv-Player GoldPoints)
+(quantityPrimitive (MeasurableQuantityFn civProductionTotal)            FreeCiv-Player ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn citySize)                      FreeCiv-City FreecivCitizenCountFn)
+(quantityPrimitive (MeasurableQuantityFn cityBuyCost)                   FreeCiv-City GoldPoints)
+(quantityPrimitive (MeasurableQuantityFn tileFoodProduction)            FreecivLocation FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn tileShieldProduction)          FreecivLocation ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn tileTradeProduction)           FreecivLocation TradePoints)
+(quantityPrimitive (MeasurableQuantityFn cityFoodProduction)            FreeCiv-City FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn cityShieldProduction)          FreeCiv-City ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn cityTradeProduction)           FreeCiv-City TradePoints)
+(quantityPrimitive (MeasurableQuantityFn cityFoodSurplus)               FreeCiv-City FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn cityShieldSurplus)             FreeCiv-City ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn cityTradeSurplus)              FreeCiv-City TradePoints)
+(quantityPrimitive (MeasurableQuantityFn cityFoodReserves)              FreeCiv-City FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn cityShieldReserves)            FreeCiv-City ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn cityGoldProduction)            FreeCiv-City GoldPoints)
+(quantityPrimitive (MeasurableQuantityFn cityGoldSurplus)               FreeCiv-City GoldPoints)
+(quantityPrimitive (MeasurableQuantityFn cityScienceTotal)              FreeCiv-City SciencePoints)
+(quantityPrimitive (MeasurableQuantityFn cityLuxuryTotal)               FreeCiv-City LuxuryPoints)
+(quantityPrimitive (MeasurableQuantityFn cityPollution)                 FreeCiv-City PollutionPoints)
+(quantityPrimitive (MeasurableQuantityFn happyCitizens)                 FreeCiv-City FreecivCitizenCountFn)
+(quantityPrimitive (MeasurableQuantityFn contentCitizens)               FreeCiv-City FreecivCitizenCountFn)
+(quantityPrimitive (MeasurableQuantityFn unhappyCitizens)               FreeCiv-City FreecivCitizenCountFn)
+(quantityPrimitive (MeasurableQuantityFn angryCitizens)                 FreeCiv-City FreecivCitizenCountFn)
+;;; Do we need to roll up the above into a generic city happiness?  An average? (it is: cityHappiness)
+(quantityPrimitive (MeasurableQuantityFn cityHappiness)                 FreeCiv-City FreeCivMoodFn)  ; rule-defined, not outsourced
+(quantityPrimitive (MeasurableQuantityFn cityCorruption)                FreeCiv-City TradePoints)
+(quantityPrimitive (MeasurableQuantityFn cityShieldWaste)               FreeCiv-City ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn cityGranarySize)               FreeCiv-City FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn cityGrowthRate)                FreeCiv-City Percent)
+(quantityPrimitive (MeasurableQuantityFn numTurnsToGrow)                FreeCiv-City Turns)
+(quantityPrimitive (MeasurableQuantityFn numTurnsToBuild)               FreeCiv-City Turns)
+(quantityPrimitive (MeasurableQuantityFn numTurnsToComplete)            FreeCiv-Unit Turns)
+(quantityPrimitive (MeasurableQuantityFn cityPopulation)                FreeCiv-City FreeCivPopulationFn)
+(quantityPrimitive (MeasurableQuantityFn supportedUnitsShieldUpkeep)    FreeCiv-City ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn supportedUnitsFoodUpkeep)      FreeCiv-City FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn cityImprovementsUpkeep)        FreeCiv-City GoldPoints) ; yes, gold, not trade. It's civ-wide.
+(quantityPrimitive (MeasurableQuantityFn cityCoinageProduction)         FreeCiv-City GoldPoints) ; coinage goes directly to gold
+(quantityPrimitive (MeasurableQuantityFn objectTypeHasUpkeepGoldCost)   FreeCiv-Building GoldPoints)
+(quantityPrimitive (MeasurableQuantityFn unitHasShieldUpkeep)           FreeCiv-Unit ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn unitHasFoodUpkeep)             FreeCiv-Unit FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn tradeRouteIncome)              FreeCiv-City TradePoints)
+;(quantityPrimitive (MeasurableQuantityFn distanceToCapitol)             FreeCiv-City FreecivTileDistance)  ; non-operational! no def for pred.
+(quantityPrimitive (MeasurableQuantityFn numTaxCollectors)              FreeCiv-City FreecivCitizenCountFn)
+(quantityPrimitive (MeasurableQuantityFn numScientists)                 FreeCiv-City FreecivCitizenCountFn)
+(quantityPrimitive (MeasurableQuantityFn numEntertainers)               FreeCiv-City FreecivCitizenCountFn)
+(quantityPrimitive (MeasurableQuantityFn numWorkers)                    FreeCiv-City FreecivCitizenCountFn)
+;;; Extrinsic properties of units:
+(quantityPrimitive (MeasurableQuantityFn currentHitpoints)              FreeCiv-Unit HitPoints)  ; This is pointless.  What we want is the % of total.
+(quantityPrimitive (MeasurableQuantityFn currentHealth)                 FreeCiv-Unit Percent)    ; <- yeah, that.
+(quantityPrimitive (MeasurableQuantityFn currentMovepoints)             FreeCiv-Unit MovePoints)
+(quantityPrimitive (MeasurableQuantityFn veteranStatus)                 FreeCiv-Unit VeteranLevel)
+;; Not sure these help.  They're constants.
+(quantityPrimitive (MeasurableQuantityFn terrainBaseFoodProduction)     FreeCiv-TerrainTile FoodPoints)
+(quantityPrimitive (MeasurableQuantityFn terrainBaseShieldProduction)   FreeCiv-TerrainTile ProductionPoints)
+(quantityPrimitive (MeasurableQuantityFn terrainBaseTradeProduction)    FreeCiv-TerrainTile TradePoints)
+
+;;; These do *not* help.  Ultimately, they should go away.
+;(quantityPrimitive (MeasurableQuantityFn potentialTileFoodProduction)   FreecivLocation FoodPoints)
+;(quantityPrimitive (MeasurableQuantityFn potentialTileShieldProduction) FreecivLocation ProductionPoints)
+;(quantityPrimitive (MeasurableQuantityFn potentialTileTradeProduction)  FreecivLocation TradePoints)
+
+;;; We need a quantity to represent the number of military units present in a city
+;;; and another quantity to represent the deployed military units of a city.
+
+;;; *** These three should go away.  Since the units are distinct and enumerable,
+;;; *** these should be represented as cardinalities of explicit sets.That allows for more general 
+;;; *** goal representations, goal decomposition specifications, and indexing from goals to 
+;;; *** actions that can influence these quantities.
+(quantityPrimitive (MeasurableQuantityFn numSupportedUnits)             FreeCiv-City FreecivUnitCountFn)
+(quantityPrimitive (MeasurableQuantityFn numPresentMilitaryUnits)       FreeCiv-City FreecivUnitCountFn)
+(quantityPrimitive (MeasurableQuantityFn numDeployedMilitaryUnits)      FreeCiv-City FreecivUnitCountFn)
+
+;;; We now have:
+;;; (OffensiveStrengthFn ?attacker)
+;;; (DefensiveStrengthFn ?defender ?attacker-type)  ; Note this is binary!
+
+(quantityPrimitive (MeasurableQuantityFn unitHasDefendStrength)         FreeCiv-Unit FreecivStrengthFn)
+(quantityPrimitive (MeasurableQuantityFn unitHasAttackStrength)         FreeCiv-Unit FreecivStrengthFn)
+(quantityPrimitive (MeasurableQuantityFn unitHasMoveRate)               FreeCiv-Unit (PerFn FreecivTileDistance Turns))
+(quantityPrimitive (MeasurableQuantityFn unitHasTransportCapacity)      FreeCiv-Unit FreecivUnitCountFn)
+(quantityPrimitive (MeasurableQuantityFn unitHasFuelCapacity)           FreeCiv-Unit FreecivTileDistance)
+(quantityPrimitive (MeasurableQuantityFn unitHasHitpoints)              FreeCiv-Unit HitPoints)
+(quantityPrimitive (MeasurableQuantityFn unitHasFirepower)              FreeCiv-Unit HitPoints)
+
+(quantityPrimitive (MeasurableQuantityFn unitTypeHasDefendStrength)     FreeCiv-UnitType FreecivStrengthFn)
+(quantityPrimitive (MeasurableQuantityFn unitTypeHasAttackStrength)     FreeCiv-UnitType FreecivStrengthFn)
+(quantityPrimitive (MeasurableQuantityFn unitTypeHasMoveRate)           FreeCiv-UnitType (PerFn FreecivTileDistance Turns))
+(quantityPrimitive (MeasurableQuantityFn unitTypeHasTransportCapacity)  FreeCiv-UnitType FreecivUnitCountFn)
+(quantityPrimitive (MeasurableQuantityFn unitTypeHasFuelCapacity)       FreeCiv-UnitType FreecivTileDistance)
+(quantityPrimitive (MeasurableQuantityFn unitTypeHasHitpoints)          FreeCiv-UnitType HitPoints)
+(quantityPrimitive (MeasurableQuantityFn unitTypeHasFirepower)          FreeCiv-UnitType HitPoints)

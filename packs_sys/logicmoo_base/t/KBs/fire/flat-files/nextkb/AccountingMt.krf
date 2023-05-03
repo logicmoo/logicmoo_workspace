@@ -1,0 +1,7 @@
+(in-microtheory AccountingMt)
+
+(argFormat paidForIn 2 SetTheFormat)
+(argFormat bookValue 2 SingleEntry)
+(argFormat assets 2 SetTheFormat)
+(strictlyFunctionalInArgs bookValue 2)
+(comment priceToBookRatio "A #$QuantitySlot that relates a #$PubliclyHeldCorporation to a #$RealNumber.  (#$priceToBookRatio CORP NUM) means that CORP's price-to-book ratio is NUM.  The price-to-book ratio of a corporation is calculated by dividing the current price of the corporation's stock by the corporation's latest #$bookValue (i.e. assets minus liabilities).")

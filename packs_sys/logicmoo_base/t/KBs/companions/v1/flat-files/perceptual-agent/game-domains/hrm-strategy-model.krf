@@ -1,0 +1,90 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                        -*-
+;;;; -------------------------------------------------------------------------
+;;;; File name: hrm-strategy-model.meld
+;;;;    System: Companions
+;;;;    Author: Tom Hinrichs
+;;;;   Created: September 10, 2017 15:25:52
+;;;;   Purpose: Type-level Strategies
+;;;; -------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; -------------------------------------------------------------------------
+
+(in-microtheory (StrategyModelMtFn HRM) :exclude-globals t)
+
+;;; Quantities to reify:
+;;; Don't do this as a big set. 
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn performance)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCharacter
+       (TheSetOf ?emp
+        (currentlyTrue (status ?emp Employee)))))))
+        
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn attitude)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCharacter
+       (TheSetOf ?emp
+        (currentlyTrue (status ?emp Employee)))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn salary)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCharacter
+       (TheSetOf ?emp
+        (currentlyTrue (status ?emp Employee)))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn competence)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCharacter
+       (TheSetOf ?emp
+        (currentlyTrue (status ?emp Employee)))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn morale)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCompany
+        (TheSetOf ?company
+         (companyName ?company ?name))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn productivity)
+     (GenericInstanceFn 
+       (CollectionSubsetFn HRMCompany
+         (TheSetOf ?company
+          (companyName ?company ?name))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn profitability)
+     (GenericInstanceFn 
+       (CollectionSubsetFn HRMCompany
+         (TheSetOf ?company
+          (companyName ?company ?name))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn income)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCompany
+        (TheSetOf ?company
+         (companyName ?company ?name))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn productionCost)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCompany
+        (TheSetOf ?company
+         (companyName ?company ?name))))))
+
+(defaultMeasureQuantity HRM
+    ((MeasurableQuantityFn capital)
+     (GenericInstanceFn
+      (CollectionSubsetFn HRMCompany
+        (TheSetOf ?company
+         (companyName ?company ?name))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

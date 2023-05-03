@@ -1,0 +1,385 @@
+;;;
+;;; intent.meld
+;;;
+;;; This file contains htn plans for inferring the intent
+;;; behind a user utterance.  This may be as simple as
+;;; determining whether the utterance was a question, declarative
+;;; or imperative, or it may involve figuring out plan-based
+;;; speech acts or establishing that the system is being tutored
+;;; in a socratic dialog of some sort.
+;;; 
+;;; An intermediate level might involve determining a Conversational
+;;; Associative Category (CAC), such as asking (or supplying) a 
+;;; cause, effect, example, big picture, analogy or contrast.
+;;;
+;;; This will elaborate the goal model of the user and system, and/or
+;;; use that goal model to determine how to interpret and act on an
+;;; utterance.
+;;;
+
+(in-microtheory Interaction-ManagerMt)
+
+;;; -------------------------------------------------------------------------
+;;; Action Vocabulary
+;;;
+
+(isa inferIntent ComplexActionPredicate)
+(arity inferIntent 3)
+(arg1Isa inferIntent Microtheory)
+(arg2Isa inferIntent CycLTerm)
+(arg3Isa inferIntent Microtheory)
+(comment inferIntent "(inferIntent ?context ?sentence-id ?discourse-ctxt) ")
+
+(isa handleContradictions ComplexActionPredicate)
+(arity handleContradictions 4)
+(arg1Isa handleContradictions Microtheory)
+(arg2Isa handleContradictions ELSentence-Assertible)
+(arg3Isa handleContradictions ELSentence-Assertible)
+(arg4Isa handleContradictions Collection)
+(comment handleContradictions "(handleContradictions ?context ?query ?answer ?relation-type) handles disparities between tutor-supplied answers and self-generated responses.")
+
+(isa handleFragmentaryQuestion ComplexActionPredicate)
+(arity handleFragmentaryQuestion 4)
+(arg1Isa handleFragmentaryQuestion Microtheory)
+(arg2Isa handleFragmentaryQuestion CycLTerm)
+(arg3Isa handleFragmentaryQuestion Microtheory)
+(arg4Isa handleFragmentaryQuestion Collection)
+(comment handleFragmentaryQuestion "(handleFragmentaryQuestion ?context ?sentence-id ?discourse-ctxt ?question-type) supports 1-word questions, like \"why?\".")
+
+(isa InterpretationMtForSentenceFn Function-Denotational)
+(arity InterpretationMtForSentenceFn 1)
+(resultIsa InterpretationMtForSentenceFn Microtheory)
+(comment InterpretationMtForSentenceFn "(InterpretationMtForSentenceFn <sentence-id>) holds the interpretation of the sentence <sentence-id>")
+
+;;; -------------------------------------------------------------------------
+;;; Task Models
+;;;
+
+;;; Case 1: surface-level intent.
+;;; Do this if there is no on-going context.
+;;; Utterance is a simple statement of fact or request for information
+;;; Default method (see preferInContext rules)
+;;; respondToUtterance has been beefed up to catch non-propositional content
+;;;  that slips through, like (NLResponseFn Negative-NLResponse) or 34.
+(preconditionForMethod
+ (and (mostSpecificUtteranceType ?sentence-id ?type)  ; is there a type for unclassified?
+      (localAgent ?im)
+      (wmOnly 
+        (ist-Information ?context
+          (interpretationOf ?sentence-id ?interpretation)))
+      (not (atomicTerm ?interpretation))  ; safety
+      (conjunctToListOrJustFact ?interpretation ?interpretation-facts))
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?context (utteranceType ?sentence-id ?type)))
+    (doTellAllInContext ?interpretation-facts (InterpretationMtForSentenceFn ?sentence-id))
+    (respondToUtterance ?context ?sentence-id ?type)
+    ;(doEnqueue ?im AnonymousTask (inferDeeperMeaning ?context ?sentence-id ?type)) ; ensures this happens after generating answers, etc.
+    ))))
+
+(<== (conjunctToListOrJustFact ?toDecompose ?decomposed)
+     (evaluate ?first (FirstInListFn (MakeListFn ?toDecompose)))
+     (unifies ?first and)
+     (evaluate ?decomposed (ListToSetFn (RestOfListFn (MakeListFn ?toDecompose)))))
+
+(<== (conjunctToListOrJustFact ?toDecompose ?decomposed)
+     (evaluate ?first (FirstInListFn (MakeListFn ?toDecompose)))
+     (uninferredSentence (unifies ?first and))
+     (evaluate ?decomposed (TheList ?toDecompose)))
+
+(isa conjunctToListOrJustFact Predicate)
+(arity conjunctToListOrJustFact 2)
+(arg1Isa conjunctToListOrJustFact CycLSentence)
+(arg2Isa conjunctToListOrJustFact CycLSentence)
+(comment conjunctToListOrJustFact
+  "(conjunctToListOrJustFact <toDecompose> <decomposed>) turns <toDecompose> into a list of facts if it is a conjunct, or simply returns the fact if it is not.")
+
+;;; Case 2: expected response to a system question:
+(preconditionForMethod
+  (wmOnly (userResponseExpected ?context ?question-type))  ;;<- Perhaps this should embed the prior-reply check.
+  (methodForAction
+    (inferIntent ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (interpretAsResponse ?context ?sentence-id ?discourse-ctxt ?question-type)))))
+
+;;; If you can interpret an utterence as some kind of expected response, then do so:
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 interpretAsResponse))
+
+
+;;; Case 3: implicit correction.
+
+;;; Tutor-supplied correction or volunteered information:
+;;; Issue: This must also be able to deal with tutors's tutors contradiction or elaboration of system's *answers*.
+;;; As soon as the user answers his own question, we know we're being tutored.
+;;; 
+(preconditionForMethod
+  (wmOnly
+    (and (mostSpecificUtteranceType ?sentence-id DeclarativeUtterance)  ; Statement?
+         (evaluate ?prior-queries
+           (TheClosedRetrievalSetOf (?interp ?qid ?qry)
+             (answersPriorQuestion ?context ?sentence-id ?interp ?qid ?qry)))
+         ;; simultaneously test for uniqueness and destructure:
+         (unifies (TheSet (?interpretation ?question-id ?query)) ?prior-queries)
+         (numAnswers 1
+           (inferenceOnly (relationToAnswer ?context ?sentence-id ?question-id ?relation)))
+         (ist-Information ?context (userUtteranceAt ?time ?question-id ?question-string))
+         (formattedContentString
+             "~&I see that answers prior question ~s" 
+              (TheList ?question-string) ?utterance-string)
+         (outsourcedOnly (newReifiedUtterance ?system-utterance))))
+  (methodForAction
+    (inferIntent ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (doRespond ?system-utterance ?utterance-string)
+        (handleContradictions ?context ?query ?interpretation ?relation)          ; maybe post a learning goal
+        (doRecord (ist-Information ?context (utteranceType ?sentence-id DeclarativeUtterance)))
+        (doRecord (ist-Information ?context (preferredInterpretation ?sentence-id ?interpretation)))
+        (doRecord (ist-Information ?context ?interpretation))
+        (doAgentPlan  ; defer to ensure bookkeeping is executed before dispatching
+          (actionSequence
+            (TheList
+              (respondToUtterance ?context ?sentence-id DeclarativeUtterance))))
+        ))))
+
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 handleContradictions))
+
+
+;;; Case 4: Term introduction
+
+(preconditionForMethod
+  (wmOnly
+    (and (mostSpecificUtteranceType ?sentence-id DeclarativeUtterance)
+         (ist-Information ?context
+            (interpretationOf ?sentence-id ?interpretation))
+         (subexpressionMatching (nameForConcept ?discourse-var ?tokens) ?interpretation ?subexpr1)
+         (subexpressionMatching (isa ?discourse-var ?concept) ?interpretation ?subexpr2)))
+  (methodForAction
+    (inferIntent ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (indexNewTerm ?concept ?tokens)
+        (doAgentPlan  ; defer to ensure bookkeeping is executed before dispatching
+          (actionSequence
+            (TheList
+              (respondToUtterance ?context ?sentence-id DeclarativeUtterance))))))))
+              
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 indexNewExample))
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 indexNewExample)
+     (someArgumentHasPredicate ?seq2 assimilateAsPositiveExampleOf))
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 indexNewExample)
+     (someArgumentHasPredicate ?seq2 assimilateAsNegativeExampleOf))
+
+;;; Case 5: Positive Example Introduction
+
+(preconditionForMethod
+ (and (wmOnly (mostSpecificUtteranceType ?sentence-id DeclarativeUtterance))
+      (wmOnly (ist-Information ?context
+                (interpretationOf ?sentence-id ?interpretation)))
+      (subexpressionMatching (isa ?dv ?concept) ?interpretation ?isa-stmt)
+      (subexpressionMatching (denotes ?example ?dv) ?interpretation ?denotes-stmt)
+      (matches (ReferentInPerceptualSourceFn ?item ?sketch) ?example) ; Rein it in.
+      (uninferredSentence (subexpressionMatching (uninferredSentence (denotes ?example ?dv)) ?interpretation ?denotes-stmt)))
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?context (isa ?sentence-id ProvidingAnExample)))
+    (doRecord (ist-Information ?context (exampleProvidedInUtterance ?sentence-id ?example)))
+    (doAgentPlan  ; give an early response before emarking on processing, to let the user know the utterance is acknowledged
+     (actionSequence
+      (TheList
+       (respondToUtterance ?context ?sentence-id DeclarativeUtterance))))
+    (doAgentPlan  ;; we need to be able to see the recorded fact above
+     (actionSequence
+      (TheList
+       (assimilateAsPositiveExampleOf ?example ?concept ?discourse-ctxt ?sentence-id ?context))))
+    ))))
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 assimilateAsPositiveExampleOf))
+
+
+;;; Case 6: Negative Example Introduction
+
+(preconditionForMethod
+ (and (wmOnly (mostSpecificUtteranceType ?sentence-id DeclarativeUtterance))
+      (wmOnly (ist-Information ?context
+                (interpretationOf ?sentence-id ?interpretation)))
+      (subexpressionMatching (isa ?dv ?concept) ?interpretation ?isa-stmt)
+      (subexpressionMatching (uninferredSentence (denotes ?negative-example ?dv)) ?interpretation ?denotes-stmt)
+      (matches (ReferentInPerceptualSourceFn ?item ?sketch) ?example))
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?context (isa ?sentence-id ProvidingAnExample)))
+    (doRecord (ist-Information ?context (exampleProvidedInUtterance ?sentence-id ?negative-example)))
+    (doAgentPlan  ; give an early response before emarking on processing, to let the user know the utterance is acknowledged
+     (actionSequence
+      (TheList
+       (respondToUtterance ?context ?sentence-id DeclarativeUtterance))))
+    (doAgentPlan  ;; we need to be able to see the recorded fact above
+     (actionSequence
+      (TheList
+       (assimilateAsNegativeExampleOf ?negative-example ?concept ?discourse-ctxt ?sentence-id ?context))))
+    ))))
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 assimilateAsNegativeExampleOf))
+
+;;; Case 7: Providing a new fact
+
+(preconditionForMethod
+ (and (wmOnly (mostSpecificUtteranceType ?sentence-id DeclarativeUtterance))
+      (wmOnly (ist-Information ?context
+                (interpretationOf ?sentence-id ?new-information)))
+      (uninferredSentence (subexpressionMatching (isa ?dv ?t) ?new-information ?isa-stmt)) ;; we are not introducing a new concept
+      (uninferredSentence (subexpressionMatching (denotes ?dv ?t2) ?new-information ?denotes-stmt))
+      (uninferredSentence (ist-Information ?context ?new-information)) ;; to make sure the information isn't known already, at least in the current context
+      )
+ (methodForAction
+  (inferIntent ?context ?sentence-id ?discourse-ctxt)
+  (actionSequence
+   (TheList
+    (doRecord (ist-Information ?context (isa ?sentence-id ProvidingInformation)))  ; *** Doesn't exist in OCyc?
+    (doRecord (ist-Information ?context (informationProvidedInUtterance ?sentence-id ?new-information)))
+    (doAgentPlan  ; give an early response before embarking on processing, to let the user know the utterance is acknowledged
+     (actionSequence
+      (TheList
+       (respondToUtterance ?context ?sentence-id DeclarativeUtterance))))
+    (doAgentPlan  ;; we need to be able to see the recorded fact above
+     (actionSequence
+      (TheList
+       (absorbNewInformation ?new-information ?discourse-ctxt ?sentence-id ?context))))
+    ))))
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 absorbNewInformation))
+
+
+
+;;; Case 8: implied command (Speech act)
+
+(preconditionForMethod
+  (and
+    (ist-Information ?context
+      (interpretationOf ?sentence-id (NLExpressionFn SayingGoodbyeToSomeone)))
+    (currentSession ?session-id)
+    (localAgent ?sender)  ; presumably the Interaction-Manager
+    (currentFacilitator ?facilitator)
+    (unifies ?message (logout :sender ?sender :receiver ?facilitator :in-reply-to ?session-id :content (?session-id))))
+  (methodForAction
+    (inferIntent ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Shutting down session." ())
+        ;; Send message to facilitator to shutdown
+        (doSend ?facilitator ?message)  ;; This should work in a real companion and do nothing in a test-im.
+        ))))
+
+(<== (preferInContext (inferIntent ?context ?sentence-id ?discourse-ctxt) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 doSend))
+
+;;; ---------------------------
+;;; User agreements and contradictions
+;;;
+
+;;; Handling disparities, corrections, agreements, etc.
+(preconditionForMethod
+  (different ?relation Correction)
+  (methodForAction
+    (handleContradictions ?context ?query ?correct-answer ?relation)  ; a native CYC collection
+    (actionSequence
+      (TheList))))
+
+;;; This is too simplistic.  
+;;; We're not necessarily dealing with a contradiction.
+(preconditionForMethod
+    (goalStatementForContradiction ?context ?query ?correct-answer ?goal-statement)
+  (methodForAction
+    (handleContradictions ?context ?query ?correct-answer Correction)  ; a native CYC collection
+    (actionSequence
+      (TheList
+        (doAnnounce "~&Posting goal: ~s" (?goal-statement))
+        ;; Save in the session context and in the self model:
+        (doRecord 
+          (ist-Information ?context ?goal-statement))
+        (doRecord
+          (ist-Information SelfModelMt ?goal-statement))
+        ))))
+
+;;; Do we automatically share kb updates  or does the goal statement need 
+;;; to be explicitly to the executive?
+
+;;; ------------------------
+;;; User follow-up questions
+;;;
+;;; Follow-up questions are fragmentary utterances that implicitly reference
+;;; the previous statement, such as "Why?" or "How?"
+;;; Since EA can't handle them (ie, it produces no interpretation), we detect
+;;; them explicitly and handle them here.
+
+(preconditionForMethod
+  (true)
+  (methodForAction
+    (handleFragmentaryQuestion ?context ?sentence-id ?discourse-ctxt ?question-type)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Not yet able to handle fragmentary parses: ~s" (?question-type))))))
+        
+(preconditionForMethod
+  (and (currentSystemUtterance ?system-stmt)) ; <= the answer for which we want an explanation
+  (methodForAction
+    (handleFragmentaryQuestion ?context ?sentence-id ?discourse-ctxt WhyQuestion-IBT)
+    (actionSequence
+      (TheList
+        (explainBelief ?context ?sentence-id ?system-stmt ?discourse-ctxt)))))
+        
+(<== (preferInContext (handleFragmentaryQuestion ?context ?sentence-id ?discourse-ctxt ?question-type) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 explainBelief))
+        
+;;;
+;;; What kinds of higher-level tutoring intent is there?
+;;;  - teach an inference rule
+;;;  - teach a procedure
+;;;  - teach a concept
+;;;  - teach discrimination & recognition criteria
+;;;  - test or probe understanding
+;;;  - correct factual errors
+;;;  - a qualification of a system-generated description or definition
+;;;  - an explicit quantifier in response to an example instance
+;;;
+;;; How would we detect each of these?
+;;;  - a sequence of questions leading to an an answerable question
+;;;  - a denial of a system-generated response
+;;;  - a statement describing a concept
+;;;  - providing an example
+;;;  - asking for an example
+;;;
+;;; What kinds of goals should be recorded?
+;;;  - use the same vocabulary of learning goal types, but use NATs to distinguish tutoring from self-learning goals
+;;; 
+;;; We already produce (learningGoalForCompanion (LearnInferenceRuleFn ?query ?correct-answer))
+;;; in response to being given an answer to a prior question.
+
+
+;;; expecting user input of the "tell me a story" variety
+(preconditionForMethod
+  (userResponseExpected ?context StoryInput)
+  (methodForAction
+    (inferIntent ?context ?sentence-id ?discourse-ctxt)
+    (actionSequence
+      (TheList
+       (interpretAsResponse ?context ?sentence-id ?discourse-ctxt StoryInput)))))

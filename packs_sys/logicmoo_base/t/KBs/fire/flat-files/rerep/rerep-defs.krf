@@ -1,0 +1,106 @@
+(in-microtheory RerepresentationDefinitionsMt)
+
+;;;;NEEDS DOCUMENTATION
+
+(isa normalizedSimilarityScore Predicate)
+(arity normalizedSimilarityScore 4)
+(arg1Isa selfSimilarityScore Number)
+(arg2Isa selfSimilarityScore Microtheory)
+(arg3Isa selfSimilarityScore Set-Mathematical)
+(arg4Isa selfSimilarityScore Number)
+
+(isa selfSimilarityScore Predicate)
+(arity selfSimilarityScore 3)
+(arg1Isa selfSimilarityScore Microtheory)
+(arg2Isa selfSimilarityScore Set-Mathematical)
+(arg3Isa selfSimilarityScore Number)
+
+
+(isa factModifiedForRerep Predicate)
+(arity factModifiedForRerep 3)
+(arg1Isa factModifiedForRerep CycLExpression)
+(arg2Isa factModifiedForRerep CycLExpression)
+(arg3Isa factModifiedForRerep RewriteType)
+(arg4Isa factModifiedForRerep CycLExpression)
+
+(isa predicateRewritten Predicate)
+(arity predicateRewritten 4)
+(arg1Isa predicateRewritten CycLExpression)
+(arg2Isa predicateRewritten CycLExpression)
+(arg3Isa predicateRewritten RewriteType)
+(arg4Isa predicateRewritten CycLExpression)
+
+(isa rerepMatchBetween Predicate)
+(isa rerepMatchBetween FunctionalPredicate)
+(arity rerepMatchBetween 4)
+(arg1Isa rerepMatchBetween Case)
+(arg2Isa rerepMatchBetween Case)
+(arg3Isa rerepMatchBetween Set-Mathematical)
+(arg4Isa rerepMatchBetween Match)
+(comment rerepMatchBetween "Uses rerepresentation")
+
+(isa rerepSuggestionsFor QuaternaryPredicate)
+(arity rerepSuggestionsFor 4)
+(arg1Isa rerepSuggestionsFor Mapping)
+(arg2Isa rerepSuggestionsFor CycLExpression)
+(arg3Isa rerepSuggestionsFor CycLExpression)
+(arg4Isa rerepSuggestionsFor CycLExpression)
+
+(isa repChoice Predicate)
+(arity repChoice 4)
+(arg1Isa repChoice CycLExpression)
+(arg2Isa repChoice CycLExpression)
+(arg3Isa repChoice CycLExpression)
+(arg4Isa repChoice ScalarInterval)
+
+(isa baseRepChoice TernaryPredicate)
+(arity baseRepChoice 3)
+(arg1Isa baseRepChoice CycLExpression)
+(arg2Isa baseRepChoice CycLExpression)
+(arg3Isa baseRepChoice CycLExpression)
+
+(isa targetRepChoice TernaryPredicate)
+(arity targetRepChoice 3)
+(arg1Isa targetRepChoice CycLExpression)
+(arg2Isa targetRepChoice CycLExpression)
+(arg3Isa targetRepChoice CycLExpression)
+
+(isa rerepSuggestionUsed TernaryPredicate)
+(arity rerepSuggestionUsed 3)
+(arg1Isa rerepSuggestionUsed CycLExpression)
+(arg2Isa rerepSuggestionUsed CycLExpression)
+(arg3Isa rerepSuggestionUsed CycLExpression)
+
+;;; BaseRewrite   - the transformation strategy
+(isa baseRewrite TernaryPredicate)
+(arity baseRewrite 3)
+(arg1Isa rewrite CycLExpression)
+(arg2Isa rewrite CycLExpression)
+(arg3Isa rewrite CycLExpression)
+
+;;; TargetRewrite   - the transformation strategy
+(isa targetRewrite TernaryPredicate)
+(arity targetRewrite 3)
+(arg1Isa targetRewrite CycLExpression)
+(arg2Isa targetRewrite CycLExpression)
+(arg3Isa targetRewrite CycLExpression)
+
+(isa RewriteType Collection)
+(isa ImpliesRewrite RewriteType)
+(isa EquivRewrite RewriteType)
+(isa GenlPredRewrite RewriteType)
+(isa NoRewrite RewriteType)
+
+(isa RerepScratchMicrotheory MicrotheoryType)
+(isa RerepScratchMicrotheory Collection)
+(genls RerepScratchMicrotheory Microtheory)   
+
+
+(<== (selfSimilarityScore ?case ?constraints ?self-score)
+     (numAnswers 1 (blockMostOutOfMappingSupport (matchBetween ?case ?case ?constraints ?self-match)))
+     (bestMapping ?self-match ?self-mapping)
+     (structuralEvaluationScoreOf ?self-mapping ?self-score))
+	 
+(<== (normalizedSimilarityScore ?score ?case ?constraints ?norm-score)
+     (numAnswers 1 (selfSimilarityScore ?case ?constraints ?self-score))
+     (evaluate ?norm-score (QuotientFn ?score ?self-score)))

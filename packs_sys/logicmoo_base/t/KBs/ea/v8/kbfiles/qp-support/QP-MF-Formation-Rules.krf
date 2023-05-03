@@ -1,0 +1,376 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: QP-MF-Formation-Rules.meld
+;;;;    System: 
+;;;;    Author: McFate
+;;;;   Created: March 3, 2015 17:07:15
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2010-09-09 17:19:49 -0500 (Thu, 09 Sep 2010) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+(in-microtheory QPMFQueriesMt)
+(genlMt QPMFQueriesMt QPInterpretationMt)
+(queryForInterpretation
+ 0 (convertToModelFragments ?processType))
+(in-microtheory QPFormationMt)
+(genlMt QPInterpretationMt QPFormationMt)
+
+(<== (convertToModelFragments ?processType)
+     (processMF ?processType ?quantityType ?pframe ?MF)
+     (generateProcessConsequences ?processType ?quantityType ?consequence-assertion ?pframe ?MF)
+     (generateBiconditionalConsequence ?processType ?pframe ?MF))
+
+;;; Base Case, does nothing. This way if all else fails we don't get stuck and have the plan end
+;;;
+(<== (convertToModelFragments ?processType)
+     (unifies ?processType true))
+
+
+;;; For non-process descriptions e.g. A contained substance
+;;;
+
+;;;(<== (convertToModelFragments ?processType)
+;;;     (uninferredSentence (processMF ?processType ?quantityType ?pframe ?MF))
+;;;     (processMF2 ?processType ?quantityType ?pframe ?MF)
+;;;     (generateProcessConsequences ?processType ?quantityType ?consequence-assertion ?pframe ?MF)
+;;;     )
+;;;
+;;;;; For describing just indirect constraints
+;;;(<== (processMF2 ?processType ?quantityType ?pframe ?MF)
+;;;     (drsForDiscourse ?ddrs-id)
+;;;     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframe IndirectInfluenceFrame))
+;;;     (unifies ?processType Situation)
+;;;     (individualSatisfyingConditions 
+;;;      ?MF ?processType
+;;;      (TheSet (ist-Information (DrsCaseFn ?ddrs-id) (unifies ?processType Situation))))
+;;;     (forEffectOnly (justify (ist-Information learnedModelMt (isa ?MF QPProcessType)) 
+;;;                             (TheList (processMF ?processType ?quantityType ?pframe ?MF))))
+;;;     (forEffectOnly (justify (ist-Information learnedModelMt (processType ?MF ?processType)) 
+;;;                             (TheList (processMF ?processType ?quantityType ?pframe ?MF)))))
+
+(<== (processMF ?processType ?quantityType ?pframe ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?pframe PhysicalProcessFrame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (participant ?pframe ?entity)) ;;;has two bindings in quant Trans
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe ?entity)) ;;; two bindings
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe ?quantityType))
+     (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?diframe)) ;;;two bindings
+     (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?diframe ?constrainer-frame)) ;;;two bindings
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrainer-frame ?process))
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?process ?processType))))
+     (individualSatisfyingConditions 
+      ?MF ?processType
+      (TheSet (ist-Information (DrsCaseFn ?ddrs-id) (isa ?process ?processType))))
+     (forEffectOnly (justify (ist-Information learnedModelMt (isa ?MF QPProcessType)) 
+                             (TheList (processMF ?processType ?quantityType ?pframe ?MF))))
+     (forEffectOnly (justify (ist-Information learnedModelMt (processType ?MF ?processType)) 
+                             (TheList (processMF ?processType ?quantityType ?pframe ?MF)))))
+
+
+;;; Generate DI consequences
+(<== (generateProcessConsequences ?processType ?quantityType ?consequence-assertion ?pframe ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?di-frame)) ;;; has two bindings in QTrans
+     ;; For The DI Frame
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?di-frame DirectInfluenceFrame)) ;;;2
+     (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?di-frame ?constrained-frame));;; 2
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrained-frame ?quantityType))
+     (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF) ;; 2 for QTrans
+     ;;; For The MF ParticipantRoles
+     ;;; Could put rate constraints here?
+     (justifyParticipantRoles ?pframe ?processType ?constrained-frame ?quantityType ?MF))
+
+
+(<== (convertQuantity ?entity ?new-entity ?qtype ?processType)
+     (drsForDiscourse ?ddrs-id)
+     (unifies ?qtype Rate)
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?entity ?processType))
+     (unifies ?new-entity (RateFn ?self)))
+
+(<== (convertQuantity ?quantity ?new-quantity ?qtype ?processType)
+     (drsForDiscourse ?ddrs-id)
+     (uninferredSentence (unifies ?qtype Rate))
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (isa ?quantity ?processType)))
+     (uninferredSentence (unifies ?quantity (?a ?b ?c ?d)))
+     (unifies ?new-quantity ((QPQuantityFn ?qtype) (variableFn ?quantity))))
+
+(<== (convertQuantity ?quantity ?new-quantity ?qtype ?processType)
+     (drsForDiscourse ?ddrs-id)
+     (uninferredSentence (ist-Information (DrsCaseFn ?ddrs-id) (isa ?quantity ?processType)))
+     (unifies ?quantity (?a ?b ?c ?d))
+     (unifies ?new-quantity ((QPQuantityFn ?qtype) (variableFn ?b))))
+
+;;; Generate Qprop Consequences
+(<== (generateProcessConsequences ?processType ?quantityType ?consequence-assertion ?pframe ?MF)
+     (drsForDiscourse ?ddrs-id)
+     ;;;;(ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe ?qprop-frame))     ;; For The QProp
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?qprop-frame IndirectInfluenceFrame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?qprop-frame ?constrained-frame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrained-frame ?quantityType1))
+     (ist-Information (DrsCaseFn ?ddrs-id) (constrainer ?qprop-frame ?constrainer-frame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrainer-frame ?quantityType2))
+     (unifies ?consequence-assertion true)
+     (justifyIndirectInfluence ?qprop-frame ?constrained-frame ?constrainer-frame ?processType ?sign ?MF)
+     ;;; For The MF ParticipantRoles
+     ;;; Could put rate constraints here?
+     (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)
+;;;     (justifyParticipantRoles ?pframe ?processType ?constrained-frame ?quantityType1 ?MF)
+;;;     (justifyParticipantRoles ?pframe ?processType ?constrained-frame ?quantityType2 ?MF2)
+     )
+
+
+
+
+(<== (generateBiconditionalConsequence ?processType ?pframe ?MF)
+     (isa ?pframe PhysicalProcessFrame)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeBiconditionalConsequence ?MF (hasQuantity ?self (RateFn ?self))))
+                             (TheList (generateBiconditionalConsequence ?processType ?pframe ?MF)))))
+
+
+;;;;;;;;;;;;;;;;;;; QPROP For Diff Quant Types
+(<== (justifyIndirectInfluence ?qprop-frame ?constrained-frame ?constrainer-frame ?processType ?sign ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (sign ?qprop-frame 1))
+     (unifies ?sign 1)
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame ?entity))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrained-frame ?quantityType1))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrainer-frame ?entity2))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrainer-frame ?quantityType2))
+     (convertQuantity ?entity ?new-entity ?quantityType1 ?processType)
+     (convertQuantity ?entity2 ?new-entity2 ?quantityType2 ?processType)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeConsequence ?MF (qprop ?new-entity ?new-entity2)))
+                             (TheList (justifyIndirectInfluence ?qprop-frame ?constrained-frame ?constrainer-frame ?processType ?sign ?MF)))))
+
+;;;;;;;;;;; QPROP- Justifications (Depending on QuantityType compound or not)
+(<== (justifyIndirectInfluence ?qprop-frame ?constrained-frame ?constrainer-frame ?processType ?sign ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (sign ?qprop-frame -1))
+     (unifies ?sign -1)
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame ?entity))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrained-frame ?quantityType1))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrainer-frame ?entity2))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?constrainer-frame ?quantityType2))
+     (convertQuantity ?entity ?new-entity ?quantityType1 ?processType)
+     (convertQuantity ?entity2 ?new-entity2 ?quantityType2 ?processType)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeConsequence ?MF (qprop- ?new-entity ?new-entity2)))
+                             (TheList (justifyIndirectInfluence ?qprop-frame ?constrained-frame ?constrainer-frame ?processType ?sign ?MF)))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+     
+;;; Need to add some sort of special handeling for entity here.
+;;; check if it's a NAT?
+;;; Justify the direct influence consequences (justifies whole compounds)
+(<== (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame Positive))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame ?entity))
+     (uninferredSentence (unifies ?entity (?a ?b ?c ?d)))
+     (unifies ?sign Positive)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeConsequence ?MF (i+ ((QPQuantityFn ?quantityType) (variableFn ?entity)) (RateFn ?self))))
+                             (TheList (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)))))
+
+(<== (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame Negative))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame ?entity))
+     (uninferredSentence (unifies ?entity (?a ?b ?c ?d)))
+     (unifies ?sign Negative)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeConsequence ?MF (i- ((QPQuantityFn ?quantityType) (variableFn ?entity)) (RateFn ?self))))
+                             (TheList (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)))))
+
+;;;contained
+;;; IN QP frames this was (i+ ((QPQuantityFn Amount) (ContainedStuffFn ?water51785 default ?c2)) (RateFn ?self))
+;;; QQR though captures the constraint through role relations and relates the quantity to the substance
+;;; So in a contained substance situation, the quantity belongs to the substance which is then constrained elswhere
+;;; to be in a containment relationship (liquid phase) etc.
+
+(<== (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame Positive))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame ?entity))
+     (unifies ?entity (?a ?b ?c ?d))
+     (unifies ?sign Positive)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeConsequence ?MF (i+ ((QPQuantityFn ?quantityType) (variableFn ?b)) (RateFn ?self))))
+                             (TheList (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)))))
+
+(<== (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame Negative))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame ?entity))
+     (unifies ?entity (?a ?b ?c ?d))
+     (unifies ?sign Negative)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeConsequence ?MF (i- ((QPQuantityFn ?quantityType) (variableFn ?b)) (RateFn ?self))))
+                             (TheList (justifyDirectInfluence ?di-frame ?constrained-frame ?quantityType ?processType ?sign ?MF)))))
+
+
+;;; Justify the MFParticipant assertions
+
+(<== (justifyParticipantRoles ?pframe ?processType ?constrained-frame ?quantityType ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe (?role ?event ?entity))) ;; 2 for QTrans
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame ?entity))
+     (localOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?ddrs-id) (isa ?entity ?entity-type))))
+     (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?di-frame ?constrained-frame))
+     ;;;;(ist-Information (DrsCaseFn ?ddrs-id) (sign ?di-frame Negative))
+     (individualSatisfyingConditions ?ent-token ?entity-type
+                                     (TheSet (ist-Information (DrsCaseFn ?ddrs-id) (isa ?entity ?entity-type))))
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipant ?MF (variableFn ?entity) ?entity-type ?role))
+                             (TheList (justifyParticipantRoles ?pframe ?processType ?constrained-frame ?quantityType ?MF))))
+     (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)
+     )
+
+
+
+;;; For compound entities (e.g. ContainedSubstanceFn)
+;;;
+(<== (justifyParticipantRoles ?pframe ?processType ?constrained-frame ?quantityType ?MF)
+     (drsForDiscourse ?ddrs-id)
+     ;;; So for any consequence DI find the constrained frame
+     (ist-Information (DrsCaseFn ?ddrs-id) (constrained ?di-frame ?constrained-frame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?constrained-frame (ContainedStuffFn ?entity-quant ?phase ?container)))
+     (ist-Information (DrsCaseFn ?ddrs-id) (consequence ?pframe (?role ?event ?container)))
+     (localOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?ddrs-id) (isa ?container ?ctype))))
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipant ?MF (variableFn ?container) ?ctype ?role))
+                             (TheList (justifyParticipantRoles ?pframe ?processType ?constrained-frame ?quantityType ?MF))))
+     (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?container ?pred ?MF))
+
+     
+     
+     
+     
+;;; Justify constraints on the participants
+;;; To get around the issues with binding to vars like ?src and ?dst, I'm using (variableFn ?ent) which can be
+;;; manually or automatically replaced after
+
+(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe ?entity))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantity1 ?ordframe1 ?qframe))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantity2 ?ordframe1 ?qframe2))
+     (ist-Information (DrsCaseFn ?ddrs-id) (relationBetweenQuantities ?ordframe1 greaterThan))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe2 ?entity2))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe2 ?qtype))
+     (unifies ?pred qGreaterThan)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeCondition ?MF (qGreaterThan ((QPQuantityFn ?qtype) (variableFn ?entity))
+                                                                           ((QPQuantityFn ?qtype) (variableFn ?entity2)))))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)))))
+     
+     
+     
+(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe ?entity))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantity1 ?ordframe1 ?qframe))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantity2 ?ordframe1 ?qframe2))
+     (ist-Information (DrsCaseFn ?ddrs-id) (relationBetweenQuantities ?ordframe1 lessThan))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?qframe2 ?entity2))
+     (ist-Information (DrsCaseFn ?ddrs-id) (quantityType ?qframe2 ?qtype))
+     (unifies ?pred qGreaterThan)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeCondition ?MF (qGreaterThan ((QPQuantityFn ?qtype) (variableFn ?entity2))
+                                                                           ((QPQuantityFn ?qtype) (variableFn ?entity)))))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)))))
+     
+     
+;;; Sometimes we don't know the constraints, but still want to 
+;;; extract a partial model
+;;; Well we REALLY don't want constraint relationships for things like pressure being in a container.
+;;; contained substance but it's tricky linguistically if we want to avoid assuming containment models already
+(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?container ?pred ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topFrame TopologyFrame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (container ?topFrame ?container))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?topFrame ?ent))
+     (localOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?ddrs-id) (isa ?ent ?ent-type))))
+     (unifies ?pred in-UnderspecifiedContainer)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipant ?MF (variableFn ?ent) ?ent-type in-UnderspecifiedContainer))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?container ?pred ?MF))))
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipantConstraint ?MF (in-UnderspecifiedContainer (variableFn ?ent) (variableFn ?container))))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?container ?pred ?MF))))
+     )
+
+;;If it itself is contained.
+(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?ent ?pred ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topFrame TopologyFrame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (container ?topFrame ?container))
+     (ist-Information (DrsCaseFn ?ddrs-id) (entity ?topFrame ?ent))
+     (localOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?ddrs-id) (isa ?ent ?ent-type))))
+     (localOnly (nonTransitiveInference (ist-Information (DrsCaseFn ?ddrs-id) (isa ?container ?contain-type))))
+     (unifies ?pred in-UnderspecifiedContainer)
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipant ?MF (variableFn ?container) ?contain-type in-UnderspecifiedContainer))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?container ?pred ?MF))))
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipantConstraint ?MF (in-UnderspecifiedContainer (variableFn ?ent) (variableFn ?container))))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?ent ?pred ?MF))))
+     )
+
+;;;(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity)
+;;;     (true))
+;;; Connection
+;;; A is connected to B, specific phrasing
+;;; representation will be (pathConnects ?path ?a ?b)
+;;; No binary predicate e.g. pathforFlow. Sometimes it's there and sometimes it won't be. We want to pick up that constraint when it is there
+;;; but not fail when it is
+
+(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topFrame TopologyFrame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (pathForFrame ?topFrame ?path-obj)) ;;; the pipe
+     (ist-Information (DrsCaseFn ?ddrs-id) (pathConnects ?path-obj ?a ?b))
+     (unifies ?pred pathConnects)
+     (wmOnly (lookupOnly (ist-Information (DrsCaseFn ?ddrs-id) (isa ?path-obj ?ptype))))
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipant ?MF (variableFn ?path-obj) ?ptype pathConnects)) ;;This might break here
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF))))
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipantConstraint ?MF (pathConnects (variableFn ?path-obj) (variableFn ?a) (variableFn ?b))))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)))))
+
+
+;;; connectedEntity
+(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (isa ?topFrame TopologyFrame))
+     (ist-Information (DrsCaseFn ?ddrs-id) (connectedEntity ?topFrame ?entity))
+     (ist-Information (DrsCaseFn ?ddrs-id) (connectedEntity ?topFrame ?entity2))
+     (different ?entity ?entity2)
+     (ist-Information (DrsCaseFn ?ddrs-id) (requiredRel ?topFrame ?rel))
+     (ist-Information (DrsCaseFn ?ddrs-id) (?rel ?entity ?entity2))
+     (forEffectOnly (justify (ist-Information learnedModelMt 
+                               (mfTypeParticipantConstraint ?MF (?rel (variableFn ?entity) (variableFn ?entity2))))
+                             (TheList (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)))))
+
+;;; Unconstrained in the text
+(<== (justifyParticipantConstraints ?pframe ?processType ?constrained-frame ?entity ?pred ?MF)
+     (true))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Learning hasQuantity Condtions
+;;; (<== (hasQuantity ?A Heat)
+;;;         (isa ?A Brick)
+;;;        ? (fromUnderspecifiedContainer...?))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

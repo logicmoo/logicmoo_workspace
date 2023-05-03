@@ -1,0 +1,391 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: sanity-rules.lsp
+;;;;    System: Companions AP Physics
+;;;;   Version: 1.0
+;;;;    Author: MEK & KDF
+;;;;   Created: July 2, 2006 14:39:19
+;;;;   Purpose: Consistency and sanity checks for problem solving
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PhysicsProblemSolvingMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ascertaining consistency of problem choices
+;; This is why I'm not a fan of Cycorp's encoding.  There must be a cleaner way.
+
+(<== (inconsistentChoice ?problem ?choice)
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (constantThroughoutEvent-Fluent ?q ?e1))
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (notConstantThroughoutEvent-Fluent ?q ?e1)))
+
+(<== (inconsistentChoice ?problem ?choice)
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (increasesThroughoutEvent-Fluent ?q ?e1))
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (notIncreasesThroughoutEvent-Fluent ?q ?e1)))
+
+(<== (inconsistentChoice ?problem ?choice)
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (decreasesThroughoutEvent-Fluent ?q ?e1))
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (notDecreasesThroughoutEvent-Fluent ?q ?e1)))
+
+;; The next two rules are dicey, in that they presume events take an interval of time
+;; and/or discontinuous changes from equality.  
+(<== (inconsistentChoice ?problem ?choice)
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (zeroThroughoutEvent-Fluent ((QPQuantityFn Acceleration) ?object) ?event))
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (nonZeroThroughoutEvent-Fluent ((QPQuantityFn Acceleration) ?object) ?event)))
+
+(<== (inconsistentChoice ?problem ?choice)
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (zeroThroughoutEvent-Fluent ((QPQuantityFn Speed) ?object) ?event))
+     (ist-Information (ProblemOptionMtFn ?choice ?problem)
+       (nonZeroThroughoutEvent-Fluent ((QPQuantityFn Speed) ?object) ?event)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; infering properties of quantities
+
+(<== (zeroThroughoutEvent-Fluent ((QPQuantityFn Acceleration) ?object) ?event)
+     (objectStationary ?event ?object))
+
+(<== (zeroThroughoutEvent-Fluent ((QPQuantityFn Speed) ?object) ?event)
+     (objectStationary ?event ?object))
+
+(<== (notDecreasesThroughoutEvent-Fluent ?q ?e1)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (constantThroughoutEvent-Fluent ?q ?e1))
+
+(<== (notDecreasesThroughoutEvent-Fluent ?q ?e1)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (increasesThroughoutEvent-Fluent ?q ?e1))
+
+(<== (notIncreasesThroughoutEvent-Fluent ?q ?e1)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (constantThroughoutEvent-Fluent ?q ?e1))
+
+(<== (notIncreasesThroughoutEvent-Fluent ?q ?e1)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (decreasesThroughoutEvent-Fluent ?q ?e1))
+
+(<== (notConstantThroughoutEvent-Fluent ?q ?e1)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (increasesThroughoutEvent-Fluent ?q ?e1))
+
+(<== (notConstantThroughoutEvent-Fluent ?q ?e1)
+     (uninferredSentence (operatorFormulas MeasurementAtFn ?q))
+     (decreasesThroughoutEvent-Fluent ?q ?e1))
+                      
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;Sanity Checking
+;;;; Definitely look at this for optimization
+
+(isa sanityCheckAnswer Predicate)
+(arity sanityCheckAnswer 3)
+
+(<== (sanityCheckAnswer ?calculated-answer ?problem ?sane-answer)
+     (maybeInvertSign ?calculated-answer ?problem ?maybe-inverted-answer)
+     (checkBoundaryConditions ?maybe-inverted-answer ?problem ?sane-answer))
+
+(<== (sanityCheckAnswer ?calculated-answer ?problem ?sane-answer)
+     (maybeInvertSign ?calculated-answer ?problem ?maybe-inverted-answer)
+     (uninferredSentence (checkBoundaryConditions ?maybe-inverted-answer ?problem ?sane-answer))
+     (unifies ?maybe-inverted-answer ?sane-answer))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Handle Boundary Comaprisons
+
+;;;MEK should we invert the answer before dealing with boundary conditions...I think so
+
+(<== (checkBoundaryConditions ?input-answer ?problem ?sane-answer)
+     (problemHasBoundaryComparison ?problem ?step ?quantity)
+     (boundaryComparisonBetween ?step ?operator ?quantity-1 ?quantity-2)
+     (resolveBoundaryComparison ?quantity ?input-answer ?operator ?quantity-1 ?quantity-2 ?sane-answer))
+
+;;; What if the comparision is Qualitative Comparision and not between quantities
+(<== (checkBoundaryConditions ?input-answer ?problem ?sane-answer)
+     (problemHasBoundaryComparison ?problem ?step ?quantity)
+     (boundaryComparisonBetween-QuantityValue ?step ?operator ?quantity ?value)
+     (resolveLimitBoundaryComparison-ValueQuantity ?input-answer ?operator ?quantity ?value ?sane-answer))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Identify Boundary Comparisons
+
+(<== (problemHasBoundaryComparison ?problem ?step ?quantity)
+     (quantityForProblem ?problem ?quantity)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-1 (solutionStepResult 
+                      ?step (consistent (valueOf ?quantity ?value)))))))
+
+(<== (problemHasBoundaryComparison ?problem ?step ?quantity)
+     (quantityForProblem ?problem ?quantity)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-1 (solutionStepResult 
+                      ?step (not (consistent (valueOf ?quantity ?value))))))))
+
+(<== (quantityForProblem ?problem ?quantity)
+     (solveRelevantQuantityForAnswerChoices ?problem ?quantity ?value))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Determining Boundary Comparisons
+
+;;;MEK: There could be more than one boundry condition but we are not going to
+;;;address that at this junction
+(<== (boundaryComparisonBetween ?step ?fire-operator ?quantity-1 ?quantity-2)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-1 (solutionStepUses 
+                      ?step (?operator ?value-1 ?value-2)))))
+     (fireOperator ?operator ?fire-operator)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-2 (solutionStepUses 
+                      ?step (valueOf ?quantity-1 ?value-1)))))
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-3 (solutionStepUses 
+                      ?step (valueOf ?quantity-2 ?value-2))))))
+
+(<== (boundaryComparisonBetween ?step ?fire-operator ?quantity-1 ?quantity-2)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-1 (solutionStepUses 
+                      ?step (not (?operator ?value-1 ?value-2))))))
+     (fireOperator ?operator ?fire-operator)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-2 (solutionStepUses 
+                      ?step (valueOf ?quantity-1 ?value-1)))))
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-3 (solutionStepUses 
+                      ?step (valueOf ?quantity-2 ?value-2))))))
+
+;;; what if the comparision is just between a quantity and a value? Here
+;;;The value always comes last  Furthermore if the operator is true then use the boundary condition
+(<== (boundaryComparisonBetween-QuantityValue ?step ?fire-operator ?quantity-1 ?value-1)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-1 (solutionStepUses ?step (?operator ?quantity-1 (AnalogySkolemFn ?value-1))))))
+     (fireOperator ?operator ?fire-operator)
+     (unknownSentence (candidateInferenceContent
+                       ?ci-2 (solutionStepUses ?step (valueOf ?quantity-2 ?value-1))))
+     (unknownSentence (candidateInferenceContent
+                       ?ci-3 (solutionStepResult ?step (not ?x)))))
+
+;;;switch the operator because the comparison order is switched here
+(<== (boundaryComparisonBetween-QuantityValue ?step ?fire-operator ?quantity-1 ?value-1)
+     (wmOnly (lookupOnly
+              (candidateInferenceContent
+               ?ci-1 (solutionStepUses ?step (?operator-1 ?quantity-1 (AnalogySkolemFn ?value-1))))))
+     (unknownSentence (candidateInferenceContent
+                       ?ci-2 (solutionStepUses ?step (valueOf ?quantity-2 ?value-1))))
+     (candidateInferenceContent ?ci-3 (solutionStepResult ?step (not ?x)))
+     (inverseBinaryPredicateOf ?operator-1 ?operator-2)
+     (fireOperator ?operator-2 ?fire-operator))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Resolving Boundary Comparisons
+
+;;;MEK CASE 1
+(<== (resolveBoundaryComparison ?quantity ?input-answer ?operator ?quantity-1 ?quantity-2 ?sane-answer)
+     (equals ?quantity ?quantity-1)
+     (valueOf ?quantity-2 ?boundary-value)
+     (evaluate True (?operator ?input-answer ?boundary-value))
+     (unifies ?input-answer ?sane-answer))
+
+;;;MEK CASE 2
+(<== (resolveBoundaryComparison ?quantity ?input-answer ?operator ?quantity-1 ?quantity-2 ?sane-answer)
+     (equals ?quantity ?quantity-1)
+     (valueOf ?quantity-2 ?boundary-value)
+     (evaluate False (?operator ?input-answer ?boundary-value))
+     (unifies ?boundary-value ?sane-answer))
+
+;;;MEK CASE 3
+(<== (resolveBoundaryComparison ?quantity ?input-answer ?operator ?quantity-1 ?quantity-2 ?sane-answer)
+     (equals ?quantity ?quantity-2)
+     (valueOf ?quantity-1 ?boundary-value)
+     (evaluate True (?operator ?boundary-value ?input-answer))
+     (unifies ?input-answer ?sane-answer))
+
+;;;MEK CASE 4
+(<== (resolveBoundaryComparison ?quantity ?input-answer ?operator ?quantity-1 ?quantity-2 ?sane-answer)
+     (equals ?quantity ?quantity-2)
+     (valueOf ?quantity-1 ?boundary-value)
+     (evaluate False (?operator ?boundary-value ?input-answer))
+     (unifies ?boundary-value ?sane-answer))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; crazy order of arguments issues for comparisons here
+
+(<== (resolveLimitBoundaryComparison-ValueQuantity ?input-answer ?operator ?i-quantity ?boundary-value ?sane-answer)
+     (evaluate True (?operator ?boundary-value ?input-answer))
+     (unifies ?boundary-value ?sane-answer))
+
+(<== (resolveLimitBoundaryComparison-ValueQuantity ?input-answer ?operator ?i-quantity ?boundary-value ?sane-answer)
+     (evaluate False (?operator ?boundary-value ?input-answer))
+     (unifies ?input-answer ?sane-answer))
+
+
+;;;MEK This is annoying but I don't feel like writing new evalfns at the moment
+(isa fireOperator BinaryPredicate)
+(fireOperator greaterThanOrEqualTo GreaterThan-UnitValuesFn)
+(fireOperator lessThanOrEqualTo LessThan-UnitValuesFn)
+(inverseBinaryPredicateOf lessThanOrEqualTo greaterThanOrEqualTo)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; deal with the possibility of inverting the sign of the answer to match the answer choices
+
+;;;Case 1: Calculated answer is the opposite sign as all of the answers
+;;;then invert it. 0 gets inverted
+(<== (maybeInvertSign ?calculated-answer ?problem ?inverted-answer)
+     (signOfValue ?calculated-answer ?sign)
+     (setOfPossibleAnswerValues ?problem ?answer-values)
+     (uninferredSentence 
+      (someSatisfies ?pos-ans ?answer-values (signOfValue ?pos-ans ?sign)))
+     (oppositeSign ?sign ?ops-sign)
+     (someSatisfies ?pos-ans ?answer-values (signOfValue ?pos-ans ?ops-sign))
+     (operatorFormulas ?units ?calculated-answer)
+     (evaluate ?inverted-answer (DifferenceFn (?units 0) ?calculated-answer)))
+
+;;;Case 2: Calculated answer is the same sign as at least one of the answers
+;;;then leave it
+(<== (maybeInvertSign ?calculated-answer ?problem ?maybe-inverted-answer)
+     (signOfValue ?calculated-answer ?sign)
+     (setOfPossibleAnswerValues ?problem ?answer-values)
+     (oppositeSign ?sign ?ops-sign)
+     (uninferredSentence (someSatisfies ?pos-ans ?answer-values (signOfValue ?pos-ans ?ops-sign)))
+     (unifies ?calculated-answer ?maybe-inverted-answer))
+
+(<== (setOfPossibleAnswerValues ?problem ?answer-values)
+     (querySentenceOfQuery (TestQueryFn ?problem) ?query)
+     (wmOnly
+      (evaluate ?answer-values 
+        (TheClosedRetrievalSetOf 
+            ?answer (multipleChoiceSingleOptionList
+                     ?problem (TheList ?answer ?letter))))))
+
+(<== (signOfValue ?value Positive)
+     (operatorFormulas ?units ?value)
+     (evaluate True (GreaterThan-UnitValuesFn ?value (?units 0))))
+
+(<== (signOfValue ?value Negative)
+     (operatorFormulas ?units ?value)
+     (evaluate True (LessThan-UnitValuesFn ?value (?units 0))))
+
+(<== (signOfValue ?value Zero)
+     (operatorFormulas ?units ?value)
+     (evaluate True (EqualTo-UnitValuesFn ?value (?units 0))))
+
+(<== (oppositeSign Positive Negative))
+
+(<== (oppositeSign Negative Positive))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; This section is for consistentValueByValue statements
+;;; Hopefully this could be tied into analogical sanity checking
+
+(<== (consistentValueByValue ?quantity ?value ?ret-value)
+     (uninferredSentence (interestingQuantity ?quantity))
+     (unifies ?value ?ret-value))
+
+(<== (consistentValueByValue ?quantity ?value ?ret-value)
+     (interestingQuantity ?quantity)
+     (consistentValueByValue-InterestingQuantity
+      ?quantity ?value ?ret-value))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Should expand to vector quantities at some point.
+
+(<== (interestingQuantity ?quantity)
+     (wmOnly (problemHasBoundaryComparison ?problem ?step ?quantity)))
+
+;;;MEK these should be in a microtheory somewhere
+;;;(isa Speed MotionQuantityType)
+;;;(isa Acceleration MotionQuantityType)
+
+;;;(chainerContains
+;;; (ChainerFn QMOutcomeChainer)
+;;; (<== (motionQuantity (MeasurementAtFn 
+;;;			    ((QPQuantityFn ?q) ?i-obj) ?i-event))
+;;;      (isa ?q MotionQuantityType)))
+
+;;;(chainerContains
+;;; (ChainerFn QMOutcomeChainer)
+;;; (<== (motionQuantity ((QPQuantityFn ?q) ?i-obj))
+;;;      (isa ?q MotionQuantityType)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; SanityCheckingInterestingQuantities	 
+      
+(<== (consistentValueByValue-InterestingQuantity ?i-quantity ?value ?ret-value)
+     (wmOnly (sanityCheckAnswer ?value ?problem ?ret-value)))
+
+;;;(chainerContains 
+;;; (ChainerFn QMOutcomeChainer)
+;;; (<== (consistentValueByValue-InterestingQuantity
+;;;       ?quantity (?units ?value) ?ret-value)
+;;;      (motionQuantity ?quantity)
+;;;      (directionOfQuantity ?quantity ?value ?dir)
+;;;      (objectInQuantity ?quantity ?obj)
+;;;      (transConstraint ?obj ?dir)
+;;;      (unifies (?units 0) ?ret-value)))
+
+(<== (objectInQuantity ((QPQuantityFn ?i-q) ?i-obj) ?i-obj))
+
+(<== (objectInQuantity 
+      (MeasurementAtFn ((QPQuantityFn ?i-q) ?i-obj) ?i-event) ?i-obj))
+
+;;; We should be getting this from something else other than the
+;;; flat file, we need some kind of explicit frame of reference
+;;; and then we need to import the value from the scenario into
+;;; that frame of reference MEK 9-5
+
+;;;(chainerContains 
+;;; (ChainerFn QMOutcomeChainer)
+;;; (<== (directionOfQuantity (MeasurementAtFn ?quantity ?event) ?value ?dir)
+;;;      (isa ?event PullingAnObject)
+;;;      (directionOfPulling ?event ?dir)
+;;;      (isa ?value PositiveNumber)))
+
+(oppositeDirection-Precise Up-Directly Down-Directly)
+
+;;;(chainerContains 
+;;; (ChainerFn QMOutcomeChainer)
+;;; (<== (directionOfQuantity (MeasurementAtFn ?quantity ?event) ?value ?ret-dir)
+;;;      (isa ?event PullingAnObject)
+;;;      (directionOfPulling ?event ?dir)
+;;;      (isa ?value NegativeNumber)
+;;;      (oppositeDirection-Precise ?dir ?ret-dir)
+;;;      ))
+
+;;;(chainerContains 
+;;; (ChainerFn QMOutcomeChainer)
+;;; (<== (transFreedom ?obj ?dir)
+;;;      (uninferredSentence (transConstraint ?obj ?dir))))
+
+;;;(chainerContains 
+;;; (ChainerFn QMOutcomeChainer)
+;;; (<== (transConstraint ?obj1 Down-Directly)
+;;;      (on-Physical ?obj1 ?obj2)
+;;;      (transConstraint ?obj2 Down-Directly)))
+
+;;;(chainerContains
+;;;  (ChainerFn QMOutcomeChainer)
+;;;  (<== (transConstraint ?obj1 ?dir)
+;;;       (isa ?obj1 FixedPhysicalObject)))
+      
+
+
+;;;; ---------------------------------------------------------------------------
+;;;; End of Code;;; 

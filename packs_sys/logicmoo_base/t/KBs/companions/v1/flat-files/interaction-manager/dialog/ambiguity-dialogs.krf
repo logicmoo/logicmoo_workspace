@@ -1,0 +1,425 @@
+;;;
+;;; ambiguity-dialogs.meld
+;;;
+;;; Define htn methods for ambiguity dialogs.
+;;;
+;;; Author: Tom Hinrichs
+;;; Created: September 2, 2009 12:04:43
+;;; $LastChangedDate: 2018-09-22 12:28:49 -0500 (Sat, 22 Sep 2018) $
+;;; $LastChangedBy: hinrichs $
+;;;
+;;; Ambiguity dialogs should permit a companion to resolve common types of
+;;; linguistic ambiguities, such as quantification ("Did you mean some <foo> or all <foo>?")
+;;; Davidsonian vs positional representation choices
+;;; strength of belief ("Is this your personal opinion, a well-accepted fact, or a premise?")
+;;;
+;;; One kind of semantic ambiguity is between reified event vs object.  
+;;; To distinguish these, it helps to understand whether a query is asking about an 
+;;; intrinsic or extrinsic property.  So if there is a choice between a concept or as event,
+;;; then a question about an extrinsic property such as location should prefer the event
+;;; interpretation.  Otherwise the answer might have to be conditionalized on some other
+;;; event in which the property holds.
+;;; 
+;;; (genls HurricaneAsEvent Event) holds, but (genls HurricaneAsObject Event) does not.
+;;;
+;;; Likewise, agency is something that needs to be inferred.
+
+
+
+(in-microtheory Interaction-ManagerMt)
+
+(isa resolveUnknownWords ComplexActionPredicate)
+(arity resolveUnknownWords 4)
+(arg1Isa resolveUnknownWords Microtheory)
+(arg2Isa resolveUnknownWords CycLTerm)
+(arg3Isa resolveUnknownWords Microtheory)
+(arg4Isa resolveUnknownWords Set-Mathematical)
+(comment resolveUnknownWords "(resolveUnknownWord ?context ?sentence-id ?discourse-context ?tokens) Attempts to explain away or find referents for each token in ?tokens.")
+
+(isa resolveUnknownMeaning ComplexActionPredicate)
+(arity resolveUnknownMeaning 4)
+(arg1Isa resolveUnknownMeaning Microtheory)
+(arg2Isa resolveUnknownMeaning CycLTerm)
+(arg3Isa resolveUnknownMeaning Microtheory)
+(arg4Isa resolveUnknownMeaning Set-Mathematical)
+(comment resolveUnknownMeaning "(resolveUnknownMeaning ?context ?sentence-id ?discourse-context ?word-set)")
+
+(isa resolveCompetingParses ComplexActionPredicate)
+(arity resolveCompetingParses 4)
+(arg1Isa resolveCompetingParses Microtheory)
+(arg2Isa resolveCompetingParses CycLTerm)
+(arg3Isa resolveCompetingParses Microtheory)
+(arg4Isa resolveCompetingParses CycLTerm)
+(comment resolveCompetingParses "(resolveCompetingParses ?context ?sentence-id ?discourse-context ?csid) resolves ambiguous parse trees by asking the user (or simply stating the ambiguity).")
+
+(isa resolveAmbiguousSemantics ComplexActionPredicate)
+(arity resolveAmbiguousSemantics 4)
+(arg1Isa resolveAmbiguousSemantics Microtheory)
+(arg2Isa resolveAmbiguousSemantics CycLTerm)
+(arg3Isa resolveAmbiguousSemantics Microtheory)
+(arg4Isa resolveAmbiguousSemantics CycLTerm)
+(comment resolveAmbiguousSemantics "(resolveAmbiguousSemantics ?context ?sentence-id ?discourse-context ?choice-set-id)")
+
+(isa resolveAmbiguousInterpretation ComplexActionPredicate)
+(arity resolveAmbiguousInterpretation 2)
+(arg1Isa resolveAmbiguousInterpretation Microtheory)
+(arg2Isa resolveAmbiguousInterpretation CycLTerm)
+(comment resolveAmbiguousInterpretation "(resolveAmbiguousInterpretation ?context ?sentence-id) typically asks the user to pick an interpretation unless it can be inferred.")
+
+(isa interpretAsMetonymy ComplexActionPredicate)
+(arity interpretAsMetonymy 4)
+(arg1Isa interpretAsMetonymy Microtheory)
+(arg2Isa interpretAsMetonymy CycLTerm)
+(arg3Isa interpretAsMetonymy Microtheory)
+(arg4Isa interpretAsMetonymy CycLFormula)
+(comment interpretAsMetonymy "(interpretAsMetonymy ?context ?sentence-id ?discourse-ctxt ?ea-interpretation) rewrites ea-interpretation so that it does not fail arg-isa constraints.")
+
+
+;;;
+;;; Resolving Ambiguities
+;;;
+;;; Handle cases where the bottom-up processes in EA fail to produce unambiguous interpretations
+;;;
+
+;;; Default: report the unknown token
+(preconditionForMethod
+  (wmOnly
+    (and (different ?token-set (TheSet))
+         (unknownPhraseMessage ?token-set ?utterance-string)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveUnknownWords ?context ?sentence-id ?discourse-ctxt ?token-set)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance NotUnderstanding-CommunicationAct))
+            (ist-Information ?context (isa ?system-utterance AnnouncingSomething))
+            ;; ToDo: represent content of utterance as the set of unknown tokens
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?utterance-string)))))
+
+;;; Base case:  We've explained away all the unknown words
+;;; We only want to reparse and reinterpret the sentence if we didn't have a valid parse to begin with.
+(preconditionForMethod
+  (wmOnly
+    (and (ist-Information ?discourse-ctxt (parseAttempt ?sentence-id ?num-attempts))
+         (lessThan ?num-attempts 4)))
+  (methodForAction
+    (resolveUnknownWords ?context ?sentence-id ?discourse-ctxt (TheSet))
+    (actionSequence
+      (TheList
+        (doReparse ?sentence-id ?discourse-ctxt)
+        ;(doUpdateDrs ?sentence-id ?discourse-ctxt)
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (reinterpretSentence ?context ?sentence-id ?discourse-ctxt))))))))
+
+;;; catch yourself:
+(preconditionForMethod
+  (wmOnly
+    (ist-Information ?discourse-ctxt (parseAttempt ?sentence-id 4)))
+  (methodForAction
+    (resolveUnknownWords ?context ?sentence-id ?discourse-ctxt (TheSet))
+    (actionSequence
+      (TheList
+        (doAnnounce "~%!! Probable infinite re-parsing loop on ~s !!" (?sentence-id))))))
+
+;;; Recursive case: Explain away one token/word
+;;; Note: This will not work when running test-im, because the new proper name must be stored in the 
+;;; KB, and the test im overrides doRecord to work exclusively from working memory.
+(preconditionForMethod
+  (wmOnly
+    (and (different ?token-set (TheSet))
+         (formulaArgument ?token-set 1 ?token)
+         (evaluate ?antes
+           (TheClosedRetrievalSetOf ?ante
+             (wmAntecedentOf ?lex-stmt ?ante)))  ; Now supported in FIRE
+         (likelyNameToken ?sentence-id ?token ?discourse-ctxt ?term)  
+         (evaluate ?remaining-tokens (SetMinusFn ?token-set ?token))))
+  (methodForAction
+    (resolveUnknownWords ?context ?sentence-id ?discourse-ctxt ?token-set)
+    (actionSequence
+      (TheList
+        (doClearLexItem ?token)                            ; Dump the parser cache entry for ?token
+        ;;; Note: This will only work if it's stored into the KB, not just WM:
+        (doRecord
+          (ist-Information EANLU (indexedProperName ?token (TheList) ?term)))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              ;; Do we want to do this or do we want to go all the way back to checkUnderstanding??
+              (resolveUnknownWords ?context ?sentence-id ?discourse-ctxt ?remaining-tokens))))))))
+
+
+(<== (preferInContext (resolveUnknownWords ?context ?sentence-id ?discourse-ctxt ?token-set) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 doRespond))
+
+
+;;; Default: report the ambiguity
+(preconditionForMethod
+  (wmOnly
+    (and (different ?word-set (TheSet))
+         (unknownConceptMessage ?word-set ?utterance-string)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveUnknownMeaning ?context ?sentence-id ?discourse-ctxt ?word-set)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance NotUnderstanding-CommunicationAct))
+            (ist-Information ?context (isa ?system-utterance AnnouncingSomething))
+            ;; To Do: represent the content of utterance as set of unmapped words
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?utterance-string)))))
+
+(<== (preferInContext (resolveUnknownMeaning ?context ?sentence-id ?discourse-ctxt ?word-set) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 doRespond))
+
+
+;;;
+;;; Handle case of multiple, complete parse trees
+;;;
+
+;;; Default: report the ambiguity
+(preconditionForMethod
+  (wmOnly
+    (and (uninferredSentence
+           (quantificationAmbiguity ?sentence-id ?discourse-ctxt ?universal-pt-id ?existential-pt-id))
+         (syntacticalAmbiguityMessage ?utterance-string)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveCompetingParses ?context ?sentence-id ?discourse-ctxt ?csid)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance NotUnderstanding-CommunicationAct))
+            (ist-Information ?context (isa ?system-utterance AnnouncingSomething))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))
+            (ist-Information ?context (incorrectlyParsedSentence ?sentence-id))))
+        (doRespond ?system-utterance ?utterance-string)))))
+
+
+;;; Common case: ambiguity due to implied quantitiers.  Ask for disambiguation.
+;;; *** Is there a good way to determine if we've disambiguated this before in this session?
+(preconditionForMethod
+  (wmOnly
+    (and (quantificationAmbiguity ?sentence-id ?discourse-ctxt ?universal-pt-id ?existential-pt-id)
+         (unifies ?choice-list (TheList ?universal-pt-id ?existential-pt-id))
+         (selectionMsgFromList (TheList always sometimes) ?system-question)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveCompetingParses ?context ?sentence-id ?discourse-ctxt ?csid)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance WhichQuestion-IBT))
+            (ist-Information ?context (queryChoices ?system-utterance ?choice-list))
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?system-question)))))
+        
+(preconditionForMethod
+  (wmOnly
+    (and (attachmentAmbiguity ?sentence-id ?discourse-ctxt ?pt-id1 ?pt-id2 ?spanlst1 ?spanlst2)
+         (unifies ?choice-list (TheList ?pt-id1 ?pt-id2))
+         (tokenAttachments ?sentence-id ?discourse-ctxt ?spanlst1 ?first-attachment)
+         (tokenAttachments ?sentence-id ?discourse-ctxt ?spanlst2 ?second-attachment)
+         (selectionMsgFromList (TheList ?first-attachment ?second-attachment) ?system-question)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveCompetingParses ?context ?sentence-id ?discourse-ctxt ?csid)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance WhichQuestion-IBT))
+            (ist-Information ?context (queryChoices ?system-utterance ?choice-list))
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?system-question)))))
+
+;;; Degenerate case: select arbitrarily from among isomorphic parse trees
+;;;
+;;; Apply preferences to resolve ambiguities and re-check understanding until
+;;; statement is understood in context.
+;;;
+;;; **** This is no good!  We need to identify exactly how the parse trees differ,
+;;; **** which often isn't due to different lexcats.
+;;; **** The semprocess code can create different general/specific parse interpretations.
+
+(preconditionForMethod
+  (wmOnly
+    (and (uninferredSentence
+           (inferenceOnly
+             (fragmentaryParse ?sentence-id ?discourse-ctxt)))
+         (preferParseTree ?sentence-id ?discourse-ctxt ?pt)
+         (ist-Information ?discourse-ctxt
+           (choice ?choice-set ?choice-id ?pt))))     ; assume parse-tree isn't a choice in more than one choice-set.
+  (methodForAction
+    (resolveCompetingParses ?context ?sentence-id ?discourse-ctxt ?csid)
+    (actionSequence
+      (TheList
+        (doTell (ist-Information ?discourse-ctxt
+                  (selectedChoice ?choice-set ?choice-id ?pt)))
+        (doUpdateDrs ?sentence-id ?discourse-ctxt)
+        (doAnnounce "~&Preferring parse tree ~s" (?pt))
+        (doAgentPlan  ; defer this because we have to make the choices before gathering the interpretations.
+          (actionSequence
+            (TheList
+              (processUpdatedInterpretation ?context ?sentence-id ?discourse-ctxt))))))))
+
+(<== (preferInContext (resolveCompetingParses ?context ?sentence-id ?discourse-ctxt ?csid) ?seq1 ?seq2)
+     (not (containsPattern (incorrectlyParsedSentence ?sentence-id) ?seq1)))
+
+
+;;; resolve semantic ambiguity
+;;; Here, we can simply report it, ask for a choice, or if this is a question
+;;; attempt to answer each of the questions, combining the answers if possible.
+
+;;; Case 1: complain (default)
+(preconditionForMethod
+  (wmOnly
+    (and (semanticAmbiguityMessage ?context ?sentence-id ?utterance-string)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveAmbiguousSemantics ?context ?sentence-id ?discourse-context ?choice-set-id)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance NotUnderstanding-CommunicationAct))
+            (ist-Information ?context (isa ?system-utterance AnnouncingSomething))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?utterance-string)))))
+        
+
+;;; This may be called when there are simply more semantic ambiguity than the
+;;; semantic-choice-heuristics can handle.  No valid intrpretation was passed
+;;; on (see case 6 of checkUnderstanding).  One resolution here might be to 
+;;; look for domain-specific preferences.
+
+;;; Case 2: Re-use disambiguations the user has made in the current session.
+(preconditionForMethod
+  (wmOnly
+    (and (competingSemanticChoiceList ?discourse-ctxt ?choice-set-id ?choice-list)
+         (preferSemanticChoice ?sentence-id ?discourse-ctxt ?choice-set-id ?choice-list ?choice)
+         (lookupOnly
+           (ist-Information ?discourse-ctxt
+             (choice ?choice-set-id ?choiceid ?choice)))))
+  (methodForAction
+    (resolveAmbiguousSemantics ?context ?sentence-id ?discourse-ctxt ?choice-set-id)
+    (actionSequence
+      (TheList
+        (doTell (ist-Information ?discourse-ctxt
+                  (selectedChoice ?choice-set-id ?choiceid ?choice)))
+        (doUpdateDrs ?sentence-id ?discourse-ctxt)
+        (doAnnounce "~&Assuming you mean ~s" (?choice))
+        (doAgentPlan
+          (actionSequence
+            (TheList
+              (reinterpretSentence ?context ?sentence-id ?discourse-ctxt))))))))
+
+;;; Ask a clarifying question
+;;; If we get an answer to this, we need to then go and create a proper query for it.
+;;; For the case of "When was the Civil War?" we have an ambiguous referent, because
+;;; the concept CivilWar is the general collection of Civil Wars denoted by the multi-word
+;;; string.  There actually is no representation of the American Civil War.  If
+;;; we knew of a (small) set of civil wars, we could give answers for each.
+;;; There is a concept for the American Revolution, but it has no dates.
+;;; To handle numeric selections as a resonse, see interpretAsResponse in
+;;; expectation-based-interpretation.
+;;; **** competingSemanticChoiceList may return a singleton choicelist.
+;;;
+;;; Case 3: Ask for individual semantic choices
+(preconditionForMethod
+  (wmOnly
+    (and (competingSemanticChoiceList ?discourse-ctxt ?choice-set-id ?choice-list)
+         (uninferredSentence 
+           (preferSemanticChoice ?sentence-id ?discourse-ctxt ?choice-set-id ?choice-list ?choice))
+         (selectionMsgFromList ?choice-list ?system-question)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveAmbiguousSemantics ?context ?sentence-id ?discourse-ctxt ?choice-set-id)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance WhichQuestion-IBT))
+            (ist-Information ?context (queryChoices ?system-utterance ?choice-list))
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?system-question)))))
+
+;;; **** Also want to handle the case where the interpretations of a question are not
+;;; **** disjoint, but actually can be combined in producing an answer.
+
+;;; **** The third case is where the answers determine which interpretation was intended.
+
+;;; prefer to resolve ambiguous semantics without user intervention:
+(<== (preferInContext (resolveAmbiguousSemantics ?context ?sentence-id ?discourse-ctxt ?csid) ?seq1 ?seq2)
+     (noArgumentHasPredicate ?seq1 doRespond))
+
+(<== (preferInContext (resolveAmbiguousSemantics ?context ?sentence-id ?discourse-context ?csid) ?seq1 ?seq2)
+     (someArgumentHasPredicate ?seq1 queryChoices))
+
+
+;;;
+;;; Resolve ambiguities at the level of complete interpretations, rather than EA choice sets.
+;;; This is really only used to handle declarative or imperative statements because ambiguity
+;;; in questions can be handled in the response phase.
+;;;
+(preconditionForMethod
+  (wmOnly
+    (and (evaluate ?choice-list
+           (SetToListFn
+             (TheClosedRetrievalSetOf ?interpretation
+               (and
+                 (allFactsAllowed
+                   (ist-Information ?context 
+                     (interpretationOf ?sentence-id ?interpretation)))
+                 (keywordFreeExpression ?interpretation)))))  ; Don't show malformed interpretations.
+         (uninferredSentence                             ; avoid infinite recursion
+           (inferenceOnly
+             (previouslyResolved ?context ?sentence-id ?choice-list)))
+         (selectionMsgFromList ?choice-list ?system-question)
+         (newReifiedUtterance ?system-utterance)))
+  (methodForAction
+    (resolveAmbiguousInterpretation ?context ?sentence-id)
+    (actionSequence
+      (TheList
+        (doRecordMembers
+          (TheSet
+            (ist-Information ?context (isa ?system-utterance WhichQuestion-IBT))
+            (ist-Information ?context (queryChoices ?system-utterance ?choice-list))
+            (ist-Information ?context (iteIllocutionaryForce ?system-utterance Query))
+            (ist-Information ?context (inReplyTo ?system-utterance ?sentence-id))))
+        (doRespond ?system-utterance ?system-question)))))  ;; respond by asking the user to select from a list
+
+
+;;; How else can ambiguous interpretations be resolved?
+;;;  - assess liklihood with respect to background knowledge
+;;;  - assess liklihood with respect to session context
+;;;  - assess liklihood with respect to standing knowledge goals
+;;;  - parsimony
+;;;  
+
+;;; Given an interpretation that violates arg-isa constraints, we need to invoke
+;;; reasoning to identify the metonymy (if any) 
+(preconditionForMethod
+  (metonymicReference ?formula ?interpretation)
+  (methodForAction
+    (interpretAsMetonymy ?context ?sentence-id ?discourse-ctxt ?formula)
+    (actionSequence
+      (TheList
+        (doAnnounce "~%Interpreting as metonymy: ~s" (?interpretation))
+        (doRecord (ist-Information ?context (interpretationOf ?sentence-id ?interpretation)))
+        (doAgentPlan
+	  (actionSequence
+            (TheList
+              (inferIntent ?context ?sentence-id ?discourse-ctxt))))))))
+

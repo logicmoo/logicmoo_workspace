@@ -1,0 +1,339 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: geo-rules.meld
+;;;;    System: 
+;;;;    Author: Panrong(Penny) Yin
+;;;;   Created: July 8, 2009 14:07:46
+;;;;   Purpose: Rules for whether these geologic events happened between two states
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:34:44 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory GeoscienceFactsMt :exclude-globals t)
+
+(isa GeoscienceRulesMt Microtheory)
+(genlMt GeoscienceRulesMt GeoscienceFactsMt)
+
+(in-microtheory GeoscienceRulesMt :exclude-globals t)
+
+(isa NuSketchGeoscienceMt Microtheory)
+(genlMt NuSketchGeoscienceMt GeoscienceRulesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Deposition
+
+(<== (problemsForPossibleGPT ?b ?a deposition-GeologicalProcess)
+     (propertyOfDepositedObject ?b ?a ?r1 ?r2)
+     (spatialPositionOfDepositedObject ?b ?a ?r1 ?r2)
+     (rccRelationOfDepositedObject ?b ?a ?r1 ?r2)     
+     (glyphRepresentsRelation ?r-glyph deposition-GeologicalProcess)
+     (deposition-GeologicalProcess ?b ?a))
+
+(<== (propertyOfDepositedObject ?b ?a ?r1 ?r2)
+     (ist-Information ?b (isa ?r1 GeologicalRockUnit))
+     (ist-Information ?a (isa ?r1 GeologicalRockUnit))
+     (ist-Information ?a (isa ?r2 GeologicalRockUnit))
+     (different ?r1 ?r2))
+
+(<== (spatialPositionOfDepositedObject ?b ?a ?r1 ?r2)
+     (uninferredSentence (ist-Information ?b (isa ?r2 GeologicalRockUnit)))
+     (uninferredSentence (ist-Information ?b (above ?r_b ?r1)))
+     (ist-Information ?a (above ?r2 ?r1))
+     (uninferredSentence (ist-Information ?a (above ?r_a ?r2))))
+
+(<== (rccRelationOfDepositedObject ?b ?a ?r1 ?r2)
+     (ist-Information ?a (glyphRepresentsObject ?r1-glyph ?r1))
+     (ist-Information ?a (glyphRepresentsObject ?r2-glyph ?r2))
+     (or (ist-Information ?a (rcc8-PO ?r2-glyph ?r1-glyph))
+         (ist-Information ?a (rcc8-EC ?r2-glyph ?r1-glyph))))
+
+(<== (existSeperatedRock ?s ?r)
+     (ist-Information ?s (nameString ?r ?name))
+     (ist-Information ?s (nameString ?r2 ?name2))
+     (different ?r ?r2)
+     (equalp ?name ?name2))
+
+;;;geological reasoning;;;
+(<== (geologicalProcessLeadingTo ?after ?proc)
+     (ist-Information ?after (isa ?r SedimentaryRock))
+     (uninferredSentence (ist-Information ?after (above ?r-no ?r)))    
+     (uninferredSentence (existSeperatedRock ?after ?r))
+     (ist-Information ?after (glyphRepresentsObject ?r-glyph ?r))
+     (uninferredSentence (ist-Information ?after 
+                           (blobIntersectsConvexHull ?rno-glyph ?r-glyph)))
+     (ist-Information ?after (q-2D-orientation ?r-glyph 1 0))
+     (evaluate ?set (TheClosedRetrievalSetOf ?r-s
+                      (and (ist-Information ?after (isa ?r-s GeologicalRockUnit))
+                           (ist-Information ?after (above ?r ?r-s))
+                           (rccRelationOfDepositedObject ?b ?after ?r ?r-s)
+                           (ist-Information ?after (glyphRepresentsObject ?rs-glyph ?r-s))
+                           (uninferredSentence (ist-Information ?after 
+                                                 (blobIntersectsConvexHull ?r-glyph ?rs-glyph)))
+                           (uninferredSentence (ist-Information ?after 
+                                                 (blobIntersectsConvexHull ?rs-glyph ?r-glyph)))
+                           )))
+     (uninferredSentence (setEmpty ?set))                 
+     (unifies ?proc (Deposition-GeoProcessFn ?r ?set)))
+
+(<== (geologicalProcessCausing ?before ?after ?proc)
+     (geologicalProcessLeadingTo ?after ?proc)
+     (unifies ?proc (Deposition-GeoProcessFn ?r ?set))
+     ;;;(unifies ?before (StateBeforeFn ?after (Deposition-GeoProcessFn ?r ?set)))
+     (tell (uninferredSentence (ist-Information ?before (isa ?r SedimentaryRock))))
+     (iterateSetElement ?set ?proc ?before))
+
+(<== (tellFacts ?before ?ele ?proc)
+     (unifies ?proc (Deposition-GeoProcessFn ?r ?set))
+     (tell (ist-Information ?before (isa ?ele GeologicalRockUnit)))
+     (tell (uninferredSentence (ist-Information ?before (above ?r ?ele)))))
+
+;;;Infer about changes on the ?before state
+(<== (geologicalProcessCausingChanges ?before ?after ?proc ?changes)
+     (geologicalProcessLeadingTo ?after ?proc)
+     (unifies ?proc (Deposition-GeoProcessFn ?r ?set))
+     (unifies ?changes (TheSet (removeRock ?before ?r))))
+     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Faulting
+
+(<== (problemsForPossibleGPT ?b ?a faulting-GeologicalProcess)
+     (propertyOfFaultingObject ?b ?a ?f ?r1 ?r2)
+     (spatialPositionOfFaultingObject ?b ?a ?f ?r1 ?r2)
+     (nameStringOfFaultingObject ?b ?a ?r1 ?r2)
+     (glyphRepresentsRelation ?r-glyph faulting-GeologicalProcess)
+     (faulting-GeologicalProcess ?b ?a))
+
+(<== (propertyOfFaultingObject ?b ?a ?f ?r1 ?r2)
+     (ist-Information ?a (isa ?f Fault-Topographical))
+     (uninferredSentence (ist-Information ?b (isa ?f Fault-Topographical))))
+
+     
+(<== (spatialPositionOfFaultingObject ?b ?a ?f ?r1 ?r2)
+     (ist-Information ?a (isa ?f Fault-Topographical))
+     (ist-Information ?a (rightOf ?r1 ?f))
+     (ist-Information ?a (rightOf ?f ?r2)))
+
+(<== (nameStringOfFaultingObject ?b ?a ?r1 ?r2)
+     (ist-Information ?b (isa ?r GeologicalRockUnit))
+     (ist-Information ?b (nameString ?r ?name1))
+     (ist-Information ?a (isa ?r1 GeologicalRockUnit))
+     (ist-Information ?a (isa ?r2 GeologicalRockUnit))
+     (ist-Information ?a (nameString ?r1 ?name1))
+     (ist-Information ?a (nameString ?r2 ?name2))
+     (equalp ?name1 ?name2)
+     (different ?r1 ?r2))
+
+;;;geological reasoning;;;
+(<== (geologicalProcessLeadingTo ?after ?proc)
+     (ist-Information ?after (isa ?f Fault-Topographical))
+     (evaluate ?set (TheClosedRetrievalSetOf ?r-set
+                      (and (separatedRocksByFaultOrRock ?after ?r1 ?r2 ?f)
+                           (evaluate ?r-set (?r1 ?r2)))))
+     (uninferredSentence (setEmpty ?set))                 
+     (unifies ?proc (Faulting-GeoProcessFn ?f ?set)))
+
+(<== (geologicalProcessCausing ?before ?after ?proc)     
+     (geologicalProcessLeadingTo ?after ?proc)
+     (ist-Information ?after (nameString ?r1 ?name1))
+     (ist-Information ?after (nameString ?r2 ?name2))
+     (equalp ?name1 ?name2)
+     (unifies ?proc (Faulting-GeoProcessFn ?f ?set))
+     (unifies ?before (StateBeforeFn ?after (Faulting-GeoProcessFn ?f ?set)))
+     (tell (ist-Information ?before (isa ?r SedimentaryRock)))
+     (tell (ist-Information ?before (nameString ?r ?name1))))
+
+;;;Infer about changes on the ?before state
+(<== (geologicalProcessCausingChanges ?before ?after ?proc ?changes)
+     (geologicalProcessLeadingTo ?after ?proc)
+     (unifies ?proc (Faulting-GeoProcessFn ?f ?set))
+     (unifies ?changes (TheSet (removeFault ?before ?f)
+                               (mergeRocks ?before ?set))))     
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tilting
+     
+(<== (problemsForPossibleGPT ?b ?a tilting-GeologicalProcess)
+     (ist-Information ?b (isa ?obj GeologicalRockUnit))
+     (ist-Information ?a (isa ?obj GeologicalRockUnit))
+     (existTiltingBetween ?obj ?b ?a)
+     (glyphRepresentsRelation ?r-glyph tilting-GeologicalProcess)
+     (tilting-GeologicalProcess ?b ?a))
+
+(<== (existTiltingBetween ?obj ?b ?a)
+     (ist-Information ?b (glyphRepresentsObject ?objb-glyph ?obj))
+     (ist-Information ?a (glyphRepresentsObject ?obja-glyph ?obj))
+     (or (and (ist-Information ?b (q-2D-orientation ?objb-glyph 1 0))
+              (ist-Information ?a (q-2D-orientation ?obja-glyph 1 1)))
+         (and (ist-Information ?b (q-2D-orientation ?objb-glyph 1 0))
+              (ist-Information ?a (q-2D-orientation ?obja-glyph 1 -1)))
+         (and (ist-Information ?b (q-2D-orientation ?objb-glyph 1 1))
+              (ist-Information ?a (q-2D-orientation ?obja-glyph 1 0)))
+         (and (ist-Information ?b (q-2D-orientation ?objb-glyph 1 -1))
+              (ist-Information ?a (q-2D-orientation ?obja-glyph 1 0)))
+         (and (ist-Information ?b (q-2D-orientation ?objb-glyph 1 1))
+              (ist-Information ?a (q-2D-orientation ?obja-glyph 1 -1)))
+         (and (ist-Information ?b (q-2D-orientation ?objb-glyph 1 -1))
+              (ist-Information ?a (q-2D-orientation ?obja-glyph 1 1)))))
+
+;;;geological reasoning;;;
+(<== (geologicalProcessLeadingTo ?after ?proc)
+     (ist-Information ?after (isa ?r GeologicalRockUnit))
+     (uninferredSentence (ist-Information ?after (above ?r-no ?r)))
+     (ist-Information ?after (glyphRepresentsObject ?r-glyph ?r))
+     (uninferredSentence (ist-Information ?after (q-2D-orientation ?r-glyph 1 0)))
+     (ist-Information ?after (q-2D-orientation ?r-glyph ?x ?y))
+     (evaluate ?set (TheClosedRetrievalSetOf ?r-s
+                      (and (ist-Information ?after (isa ?r-s GeologicalRockUnit))
+                           (ist-Information ?after (glyphRepresentsObject ?rs-glyph ?r-s))
+                           (uninferredSentence (ist-Information ?after (q-2D-orientation ?rs-glyph 1 0)))
+                           (ist-Information ?after (q-2D-orientation ?rs-glyph ?x ?y))
+                           )))
+     (uninferredSentence (setEmpty ?set))
+     (unifies ?proc (Tilting-GeoProcessFn ?set ?x ?y)))
+
+(<== (geologicalProcessCausing ?before ?after ?proc)
+     (geologicalProcessLeadingTo ?after ?proc)
+     (unifies ?proc (Tilting-GeoProcessFn ?r ?x ?y))
+     (unifies ?before (StateBeforeFn ?after (Tilting-GeoProcessFn ?set ?x ?y)))
+     (tell (ist-Information ?before (isa ?r SedimentaryRock)))
+     (tell (ist-Information ?before (glyphRepresentsObject ?rb-glyph ?r)))
+     (tell (ist-Information ?before (q-2D-orientation ?rb-glyph 1 0))))
+
+;;;Infer about changes on the ?before state
+(<== (geologicalProcessCausingChanges ?before ?after ?proc ?changes)
+     (geologicalProcessLeadingTo ?after ?proc)
+     (unifies ?proc (Tilting-GeoProcessFn ?set ?x ?y))
+     (unifies ?changes (TheSet (rotateRockToHorizon ?before ?set)
+                               (reshapeRocks ?before ?set)))) 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Erosion
+
+(<== (problemsForPossibleGPT ?b ?a erosion-GeologicalProcess)
+     (ist-Information ?b (isa ?obj GeologicalRockUnit))
+     (ist-Information ?a (isa ?obj GeologicalRockUnit))
+     (relativeSizeDecrease ?b ?a ?obj)
+     (uninferredSentence (ist-Information ?a (above ?obj_a ?obj)))
+     (glyphRepresentsRelation ?r-glyph erosion-GeologicalProcess)
+     (erosion-GeologicalProcess ?b ?a))
+
+(<== (relativeSizeDecrease ?b ?a ?obj)
+     (and (ist-Information ?b (areaOfObject ?obj ?val1))
+          (ist-Information ?b (evaluate ?area1 (ValueFromUnitsFn ?val1))))
+     (and (ist-Information ?a (areaOfObject ?obj ?val2))
+          (ist-Information ?a (evaluate ?area2 (ValueFromUnitsFn ?val2))))
+     (alphalessp ?area2 ?area1))
+
+;;;geological reasoning;;;
+(<== (geologicalProcessLeadingTo ?after ?proc)
+     (evaluate ?set (TheClosedRetrievalSetOf ?r-s
+                      (and (ist-Information ?after (isa ?r-s GeologicalRockUnit))
+                           (uninferredSentence (ist-Information ?after (above ?r-no ?r-s))))))
+     (uninferredSentence (setEmpty ?set))
+     (unifies ?proc (Erosion-GeoProcessFn ?set)))
+
+;;;(<== (geologicalProcessCausing ?before ?after ?proc)
+;;;     (geologicalProcessLeadingTo ?after ?proc)   
+;;;     (unifies ?proc (Erosion-GeoProcessFn ?r))
+;;;     (unifies ?before (StateBeforeFn ?after (Erosion-GeoProcessFn ?r)))
+;;;     (tell (ist-Information ?before (isa ?r SedimentaryRock)))
+;;;     (tell (ist-Information ?before (above ?r-below ?r)))
+;;;     (tell (rccRelationOfDepositedObject ?before ?r ?r-below))
+;;;     (tell (uninferredSentence (ist-Information ?before (above ?r-no ?r)))))
+
+;;;Infer about changes on the ?before state
+(<== (geologicalProcessCausingChanges ?before ?after ?proc ?changes)
+     (geologicalProcessLeadingTo ?after ?proc)
+     (unifies ?proc (Erosion-GeoProcessFn ?set))
+     (unifies ?changes (TheSet (increaseRockHeight ?before ?set))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Intrusion
+
+(<== (problemsForPossibleGPT ?b ?a intrusion-GeologicalProcess)
+     (ist-Information ?a (isa ?ir IgneousRock))
+     (uninferredSentence (ist-Information ?b (isa ?ir IgneousRock)))
+     (existIntrusionIn ?ir ?a)
+     (glyphRepresentsRelation ?r-glyph intrusion-GeologicalProcess)
+     (intrusion-GeologicalProcess ?b ?a))
+
+(<== (existIntrusionIn ?ir ?s)
+     (ist-Information ?s (isa ?r1 GeologicalRockUnit))
+     (ist-Information ?s (isa ?r2 GeologicalRockUnit))
+     (ist-Information ?s (nameString ?r1 ?name1))
+     (ist-Information ?s (nameString ?r2 ?name2))
+     (equalp ?name1 ?name2)
+     (ist-Information ?s (rightOf ?r1 ?ir))
+     (ist-Information ?s (rightOf ?ir ?r2)))
+
+(<== (geologicalProcessLeadingTo ?after ?proc)
+     (ist-Information ?after (isa ?r IgneousRock))
+     (ist-Information ?after (glyphRepresentsObject ?r-glyph ?r))     
+     (evaluate ?set (TheClosedRetrievalSetOf ?r-s
+                       (and (ist-Information ?after (isa ?r-s GeologicalRockUnit))
+                            (different ?r ?r-s)                         
+                            (ist-Information ?after (glyphRepresentsObject ?rs-glyph ?r-s))
+                            (ist-Information ?after (blobIntersectsConvexHull ?r-glyph ?rs-glyph))
+                            (uninferredSentence (separatedRocksByFaultOrRock ?after ?r-s ?r2 ?r))
+                            (uninferredSentence (separatedRocksByFaultOrRock ?after ?r1 ?r-s ?r)))))
+     (uninferredSentence (setEmpty ?set))
+     (unifies ?proc (Intrusion-GeoProcessFn ?r ?set)))
+
+;;;geological reasoning;;;
+(<== (geologicalProcessLeadingTo ?after ?proc)
+     (ist-Information ?after (isa ?r IgneousRock))
+     (evaluate ?set (TheClosedRetrievalSetOf ?r-set
+                      (and (separatedRocksByFaultOrRock ?after ?r1 ?r2 ?r)
+                           (evaluate ?r-set (?r1 ?r2)))))
+     (uninferredSentence (setEmpty ?set))
+     (unifies ?proc (Intrusion-GeoProcessFn ?r ?set)))
+                         
+;;;(<== (geologicalProcessCausing ?before ?after ?proc)
+;;;     (geologicalProcessLeadingTo ?after ?proc)
+;;;     (ist-Information ?after (nameString ?r1 ?name1))
+;;;     (ist-Information ?after (nameString ?r2 ?name2))
+;;;     (equalp ?name1 ?name2)
+;;;     (unifies ?proc (Intrusion-GeoProcessFn ?r ?r1))
+;;;     (unifies ?before (StateBeforeFn ?after (Intrusion-GeoProcessFn ?r ?r1)))
+;;;     (tell (ist-Information ?before (isa ?r SedimentaryRock)))
+;;;     (tell (ist-Information ?before (nameString ?r ?name1))))
+
+;;;Infer about changes on the ?before state
+(<== (geologicalProcessCausingChanges ?before ?after ?proc ?changes)
+     (geologicalProcessLeadingTo ?after ?proc)
+     (unifies ?proc (Intrusion-GeoProcessFn ?r ?set))
+     (unifies ?changes (TheSet (removeRock ?before ?r)
+                               (mergeRocks ?before ?set))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Utilities
+(<== (setEmpty ?x)
+     (evaluate 0 (CardinalityFn ?x)))
+
+(<== (separatedRocksByFaultOrRock ?after ?r1 ?r2 ?rf)
+     (ist-Information ?after (isa ?r1 SedimentaryRock))
+     (ist-Information ?after (isa ?r2 SedimentaryRock))
+     (ist-Information ?after (rightOf ?r2 ?rf))
+     (ist-Information ?after (rightOf ?rf ?r1))
+     (ist-Information ?after (nameString ?r1 ?name1))
+     (ist-Information ?after (nameString ?r2 ?name2))
+     (equalp ?name1 ?name2)
+     (different ?r1 ?r2))
+
+(<== (iterateSetElement ?set ?proc ?before)
+     (equals ?set (TheSet)))
+
+(<== (iterateSetElement ?set ?proc ?before)
+     (different ?set (TheSet ))
+     (natArgument ?set 1 ?ele)
+     (tellFacts ?before ?ele ?proc)
+     ;;;(tell (ist-Information ?before (isa ?ele GeologicalRockUnit))) ;;test
+     (evaluate ?cdr (SetMinusFn ?set ?ele))
+     (iterateSetElement ?cdr ?proc ?before))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

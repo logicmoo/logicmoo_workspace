@@ -1,0 +1,251 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: qpframes.meld
+;;;;    System: EA
+;;;;    Author: Sven E. Kuehne
+;;;;   Created: August 15, 2002 13:10:07
+;;;;   Purpose: QP frame defintions in CycL
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+
+(in-microtheory QPInterpretationMt :exclude-globals t)
+
+;;; Definitions for QP frames in CycL.
+;;; Some parts are still incomplete and/or need to be reworked:
+;;; - concepts like QPUnit, QPSign
+
+;;; ****** All of these need comment assertions, we want the intent to be clear
+;;; ****** to anyone who comes across these in the browsers/explanation inspectors,
+;;; ****** without having to go back to source files.
+
+;;; General definitions for frame and frame elements
+
+(genls Frame Intangible)
+(genls Frame Situation)
+(genls FrameElement Role)
+
+(genls QPFrame Frame)
+(genls QPFrameElement FrameElement)
+
+
+(isa usesQPFramePrefix BinaryRelation)
+(comment usesQPFramePrefix "(usesQPFramePrefix ?type ?prefix) indicates that QP frames of type ?type
+ should be created with string prefix ?prefix)")
+(arg1Isa usesQPFramePrefix QPFrame)
+(arg2Isa usesQPFramePrefix CharacterString)
+(arity usesQPFramePrefix 2)
+
+(isa usesQPFrameElement BinaryRelation)
+(comment usesQPFrameElement "(usesQPFrameElement ?type ?role) indicates that QP frames of type ?type
+ can have role relation ?role")
+(arg1Isa usesQPFrameElement QPFrame)
+(arg2Isa usesQPFrameElement QPFrameElement)
+(arity usesQPFrameElement 2)
+
+;;; QPUnit and QPSign aren't currently used,
+;;; but they should be, depending on what's in
+;;; the qp-ontology.meld in fire\flat-files.
+;;; We want to be using those concepts whenever
+;;; possible, since they can be tied to Gizmo.
+(isa QPUnit Collection)
+(genls QPUnit AbstractInformationalThing)
+(isa QPSign Collection)
+(genls QPSign AbstractInformationalThing)
+
+
+;;; PhysicalProcess frame
+
+;;; ***** Nit: the QPFrameElement relation names are awfully general
+;;; *****      Not worth fixing right now, though.
+
+(genls PhysicalProcessFrame QPFrame)
+(usesQPFramePrefix PhysicalProcessFrame "pp")
+(usesQPFrameElement PhysicalProcessFrame type)
+(usesQPFrameElement PhysicalProcessFrame participant)
+(usesQPFrameElement PhysicalProcessFrame condition)
+(usesQPFrameElement PhysicalProcessFrame consequence)
+(usesQPFrameElement PhysicalProcessFrame status)
+
+(isa type QPFrameElement)
+(arg1Isa type QPFrame)
+(arg2Isa type PhysicalEvent)
+(arity type 2)
+
+(isa participant QPFrameElement)
+(arg1Isa participant QPFrame)
+(arg2Isa participant Thing)
+(arity participant 2)
+
+(isa condition QPFrameElement)
+(arg1Isa condition QPFrame)
+(arg2Isa condition Thing)
+(arity condition 2)
+
+(isa consequence QPFrameElement)
+(arg1Isa consequence QPFrame)
+(arg2Isa consequence Thing)
+(arity consequence 2)
+
+(isa status QPFrameElement)
+(arg1Isa status QPFrame)
+(arg2Isa status QPStatus)
+(arity status 2)
+
+
+;;; Quantity frame
+
+(genls QuantityFrame QPFrame)
+(usesQPFramePrefix QuantityFrame "q")
+(usesQPFrameElement QuantityFrame entity)
+(usesQPFrameElement QuantityFrame quantityType)
+(usesQPFrameElement QuantityFrame quantityValue)
+(usesQPFrameElement QuantityFrame quantityUnit)
+(usesQPFrameElement QuantityFrame signOfDerivative)
+
+(isa entity QPFrameElement)
+(arg1Isa entity QPFrame)
+(arg2Isa entity Thing)
+(arity entity 2)
+
+(isa quantityType QPFrameElement)
+(arg1Isa quantityType QPFrame)
+(arg2Isa quantityType PhysicalQuantity)  ;; Not QuantityType?
+(arity quantityType 2)
+
+(isa quantityValue QPFrameElement)
+(arg1Isa quantityValue QPFrame)
+(arg2Isa quantityValue Number-General)
+(arity quantityValue 2)
+
+(isa quantityUnit QPFrameElement)
+(arg1Isa quantityUnit QPFrame)
+(arg2Isa quantityUnit QPUnit)
+(arity quantityUnit 2)
+
+(isa signOfDerivative QPFrameElement)
+(arg1Isa signOfDerivative QPFrame)
+(arg2Isa signOfDerivative QPSign)
+(arity signOfDerivative 2)
+
+;;; These predicates represent useful intermediate results
+;;; in building quantity frames
+
+(isa quantitySlotRel TernaryPredicate)
+(arity quantitySlotRel 3)
+(comment quantitySlotRel
+  "(quantitySlotRel ?qslot ?entity ?value) indicates that the quantity slot ?qslot
+   holds between entity ?entity and value ?value.")
+(arg1Isa quantitySlotRel QuantitySlot)
+(arg2Isa quantitySlotRel Thing)
+(arg3Isa quantitySlotRel Quantity) ;; Maybe should be ScalarInterval?
+
+(isa quantitySlotRelPhysicalQuant Predicate)
+(arity quantitySlotRelPhysicalQuant 4)
+(comment quantitySlotRelPhysicalQuant
+  "(quantitySlotRelPhysicalQuant ?qslot ?entity ?value ?qtype) indicates that the quantity slot ?qslot
+   involving quantity type ?qtype holds between entity ?entity and value ?value.")
+(arg1Isa quantitySlotRelPhysicalQuant QuantitySlot)
+(arg2Isa quantitySlotRelPhysicalQuant Thing) ;; Maybe PartiallyTangible?
+(arg3Isa quantitySlotRelPhysicalQuant Quantity) 
+(arg4Isa quantitySlotRelPhysicalQuant QuantityType) ;; 
+
+
+;;; Influence frame
+
+(genls InfluenceFrame QPFrame)
+(usesQPFramePrefix InfluenceFrame "inf")
+(usesQPFrameElement InfluenceFrame constrainer)
+(usesQPFrameElement InfluenceFrame constrained)
+(usesQPFrameElement InfluenceFrame sign)
+
+(genls DirectInfluenceFrame InfluenceFrame)
+(usesQPFramePrefix DirectInfluenceFrame "di")
+(usesQPFrameElement DirectInfluenceFrame constrainer)
+(usesQPFrameElement DirectInfluenceFrame constrained)
+(usesQPFrameElement DirectInfluenceFrame sign)
+
+(genls IndirectInfluenceFrame InfluenceFrame)
+(usesQPFramePrefix IndirectInfluenceFrame "ii")
+(usesQPFrameElement IndirectInfluenceFrame constrainer)
+(usesQPFrameElement IndirectInfluenceFrame constrained)
+(usesQPFrameElement IndirectInfluenceFrame sign)
+                   
+(isa constrainer QPFrameElement)
+(arg1Isa constrainer QPFrame)
+(arg2Isa constrainer QuantityFrame)
+(arity constrainer 2)
+
+(isa constrained QPFrameElement)
+(arg1Isa constrained QPFrame)
+(arg2Isa constrained QuantityFrame)
+(arity constrainer 2)
+
+(isa sign QPFrameElement)
+(arg1Isa sign QPFrame)
+(arg2Isa sign QPSign)
+(arity sign 2)
+
+;;; we need to define the signs somewhere. I don't think it would be a good idea to use
+;;; the functional defintions here like #$MonotonicallyIncreasingFunction. Those assertions
+;;; should be created in one of the following steps.
+
+
+;;; OrdinalRelation frame
+
+(genls OrdinalRelationFrame QPFrame)
+(usesQPFramePrefix OrdinalRelationFrame "or")
+(usesQPFrameElement OrdinalRelationFrame quantity1)
+(usesQPFrameElement OrdinalRelationFrame quantity2)
+(usesQPFrameElement OrdinalRelationFrame relationBetweenQuantities)
+
+(isa quantity1 QPFrameElement)
+(arg1Isa quantity1 QPFrame)
+(arg2Isa quantity1 QuantityFrame)
+(arity quantity1 2)
+
+(isa quantity2 QPFrameElement)
+(arg1Isa quantity2 QPFrame)
+(arg2Isa quantity2 QuantityFrame)
+(arity quantity2 2)
+
+(isa relationBetweenQuantities QPFrameElement)
+(arg1Isa relationBetweenQuantities QPFrame)
+(arg2Isa relationBetweenQuantities ComparisonPredicate)
+(arity relationBetweenQuantities 2)
+
+;;; - or the more specialized version:
+;;; (arg2Isa relationBetweenQuantities NumericComparison)
+;;; (arity relationBetweenQuantities 2)
+
+
+;;; QuantityTransfer frame
+
+(genls QuantityTransferFrame QPFrame)
+(usesQPFramePrefix QuantityTransferFrame "qt")
+(usesQPFrameElement QuantityTransferFrame sourceOfTransfer)
+(usesQPFrameElement QuantityTransferFrame destOfTransfer)
+(usesQPFrameElement QuantityTransferFrame rateOfTransfer)
+
+(isa sourceOfTransfer QPFrameElement)
+(arg1Isa sourceOfTransfer QPFrame)
+(arg2Isa sourceOfTransfer QuantityFrame)
+(arity sourceOfTransfer 2)
+
+(isa destOfTransfer QPFrameElement)
+(arg1Isa destOfTransfer QPFrame)
+(arg2Isa destOfTransfer QuantityFrame)
+(arity destOfTransfer 2)
+
+(isa rateOfTransfer QPFrameElement)
+(arg1Isa rateOfTransfer QPFrame)
+(arg2Isa rateOfTransfer QuantityFrame)
+(arity rateOfTransfer 2)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

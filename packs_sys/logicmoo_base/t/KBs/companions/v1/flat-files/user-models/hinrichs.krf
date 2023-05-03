@@ -1,0 +1,61 @@
+;;;
+;;; Hinrichs.meld
+;;;
+
+(in-microtheory CyclistDefinitionalMt)
+
+(isa Hinrichs HumanCyclist)
+
+(in-microtheory PeopleDataMt)
+
+(isa Hinrichs MaleHuman)
+(isa Hinrichs AdultMaleHuman)
+(isa Hinrichs ComputerScientist)
+(isa Hinrichs ArtificialIntelligenceResearcher)
+(isa Hinrichs AcademicProfessional)
+(isa Hinrichs ResearchScientist)
+(isa Hinrichs (MaleFn Widowed))
+(birthDate Hinrichs (YearFn 1959))
+(hasDegreeInField Hinrichs PhDDegree ComputerScience)
+(languageSpoken Hinrichs EnglishLanguage)
+(citizens-Birth UnitedStatesOfAmerica Hinrichs)
+(schooling Hinrichs CornellUniversity Graduate)
+(schooling Hinrichs GeorgiaInstituteOfTechnology-University Graduate)
+(titleOfPerson Hinrichs Dr)
+(performsWorkOfType Hinrichs (ResearchingAndDevelopingFn ArtificialIntelligenceProgram))
+(programsIn Hinrichs Lisp)
+(programsIn Hinrichs JavaProgrammingLanguage)
+(programsIn Hinrichs JavaScriptProgrammingLanguage)
+(programsIn Hinrichs Python-ProgrammingLanguage)
+(holdsIn (TimeIntervalInclusiveFn (YearFn 2002) Now)
+  (employees NorthwesternUniversity Hinrichs))
+(holdsIn (TimeIntervalInclusiveFn (YearFn 2002) Now)
+  (hasWorkers QualitativeReasoningGroupAtNorthwesternU Hinrichs))
+(hasLeaders QualitativeReasoningGroupAtNorthwesternU Forbus)
+(holdsIn (TimeIntervalInclusiveFn (YearFn 1984) Now) 
+  (feelsTowardsObject Hinrichs Forbus Respect highAmountOf))
+  
+(likesRoleInEventType Hinrichs performedBy (InstrumentPlayingFn DrumInstrument))
+(likesRoleInEventType Hinrichs performedBy Reading-Visual)
+
+;;; May not want this in opensource release:
+(preferredEmailAddressText Hinrichs "t-hinrichs@northwestern.edu")
+
+(in-microtheory EnglishMt)
+
+(fullName Hinrichs "Thomas R. Hinrichs")
+(nameString Hinrichs "Tom")
+(nickname Hinrichs "Tom")
+
+
+(in-microtheory UniversityDataMt)
+
+(subOrganizations NorthwesternUniversity QualitativeReasoningGroupAtNorthwesternU)
+
+;;; consider built-in cyc preds:
+;;;(modelMtOfUser (UserModelMtFn Guest) Guest)
+
+(in-microtheory EANLU-Pnames :exclude-globals t)
+
+(indexedProperName (TheList tom) hinrichs Hinrichs)
+(indexedProperName (TheList thomas) hinrichs Hinrichs)

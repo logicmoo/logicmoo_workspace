@@ -1,0 +1,67 @@
+;;;
+;;; coas.meld
+;;;
+;;; This file contains the predicate definitions and backchaining rules to 
+;;; support a rudimentary Course Of Action representation.  For justification
+;;; of why this is useful, see the wiki at: 
+;;; http://qrgwiki.qrg.northwestern.edu/index.php/LLLSC/Project_Log#COAs_as_long-term_plans
+;;; The idea is to represent long-term plans rather than continually deciding
+;;; what to do right now.  This is known in the vernacular as a "strategy".
+;;;
+;;; COAs should be learned in the same way that HTN plans were learned in GGP.
+;;; The interpretation of a COA with respect to HTN plan execution needs to be
+;;; designed.  How do we sequence and coordinate multiple units?  Does it 
+;;; bottom out in pre-defined building-block HTNs?  What are they?  Do we have
+;;; primitives for coordination?  Is a COA a template for instances, or is it
+;;; a concrete plan built up from the specifics of a scenario?
+
+
+(in-microtheory PerceptualAgentMt)
+
+
+;;; COAs
+;;; Let a COA be a reified, individual concept.
+;;; Instead of gensyming a name, let it be referenced via a NART, given
+;;; the game case and an integer. In other words, there may be more than
+;;; one COA in a game.  They may be competing alternatives, or sequential
+;;; or concurrent COAs.
+
+;;; Assignment
+;;; A unit can be assigned a role in a COA.  Units are given different tasks
+;;; to perform.  Thus we overcome the problem of having a single htn plan for
+;;; all units of a single type.  That role can persist over time, rather than
+;;; continually looking around for appropriate performers.
+
+;;; Task
+;;; A task has (at least) a what and a how component.  The desired effect is
+;;; different from how you achieve it.  This allows us to get away from the
+;;; global hill-climbing that's entailed by always evaluating performance
+;;; with respect to a global goal.
+
+;;; Phase
+;;; In different phases, different goals obtain.  An explicit notion of
+;;; phase allows different criteria for reassigning tasks and goals.  Instead
+;;; of building in notions such as 'Exploration Phase' and 'Expansion Phase'
+;;; into the vocabulary, we can build in a much more generic concept and 
+;;; learn the events and relations that signify phase transitions.
+;;; Possibly these will be quantity conditions for process activation.
+
+;;; Measures of Merit
+;;; There may be competing factors involved in evaluating an outcome.  Having
+;;; explicit Measures of Merit permits characterizing tradeoffs between
+;;; such things as resource consumption and time, etc.
+
+;;; Decision Points
+;;; Explicitly representing contingencies allows more flexible behavior.
+;;;
+
+;;; Control Measures
+;;; Spatial demarcations that contribute to defining triggers, phases, 
+;;; routes.
+
+;;; Resources
+;;; A quantity of something may be treated as an expendable resource with
+;;; respect to a goal.  Knowing that something can be a resource in pursuing
+;;; a goal allows you to look for ways to convert it, replenish it, or 
+;;; measure it.
+

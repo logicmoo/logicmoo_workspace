@@ -1,0 +1,85 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ----------------------------------------------------------------------------
+;;;; File name: temporal-rules.meld
+;;;;    System: EA
+;;;;    Author: Emmett Tomai
+;;;;   Created: November 18, 2008 15:55:05
+;;;;   Purpose: Infer temporal relations from discourse
+;;;; ----------------------------------------------------------------------------
+;;;;  Modified: Thursday, February 19, 2009 at 16:46:04 by etomai
+;;;; ----------------------------------------------------------------------------
+
+(in-microtheory EATemporalRulesMt :exclude-globals t)
+
+(genlMt EATemporalRulesMt EAStructuralRulesMt)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; temporal relations
+
+;; atelic progressive + atelic any
+(<== (startsDuring ?event ?sit)
+     (discourseCaseForDrs ?dcase ?drs-id)
+     (ist-Information ?dcase (startsDuring-IP ?drs-id ?event ?sit)))
+
+(<== (startsDuring-IP ?drs-id ?event ?progressive)
+     (verbForm ?event past Non-Perfect Progressive)
+     (leadsTo ?progressive ?event)
+     (verbForm ?progressive past Non-Perfect Non-Progressive))
+
+;; non-progressive event + atelic event
+(<== (before ?prior-event ?event)
+     (discourseCaseForDrs ?dcase)
+     (ist-Information ?dcase
+                      (sentenceAttachment ?sent-id ?attach-to-sent-id))
+     
+     (ist-Information (SentenceCaseFn ?attach-to-sent-id)
+                      (headEvent ?prior-event))
+     (ist-Information (SentenceCaseFn ?attach-to-sent-id)
+                      (discourseVarVerbTense ?prior-event ?tense))
+     (ist-Information (SentenceCaseFn ?attach-to-sent-id)
+                      (uninferredSentence
+                       (discourseVarVerbProgressive ?prior-event)))
+     
+     (ist-Information (SentenceCaseFn ?sent-id)
+                      (headEvent ?event))
+     (ist-Information (SentenceCaseFn ?sent-id)
+                      (discourseVarVerbTense ?event ?tense))
+     (ist-Information (SentenceCaseFn ?sent-id)
+                      (uninferredSentence
+                       (discourseVarVerbPerfect ?event)))
+     )
+
+;;(<== (before ?prior-event ?event)
+     
+
+;; transitive before
+(<== (before ?a ?c)
+     (before ?a ?b)
+     (before ?b ?c))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; endpoint relations vs. temporal interval relations
+
+(<== (startsBefore ?prior-event ?event)
+     (before ?prior-event ?event))
+
+(<== (startsBefore ?prior-event ?event)
+     (startsDuring ?event ?prior-event))
+
+(<== (startsDuring ?starting-event ?event)
+     (temporallySubsumes ?event ?starting-event))
+
+(<== (startsDuring ?starting-event ?event)
+     (overlaps ?event ?starting-event))
+
+(<== (endsDuring ?ending-event ?event)
+     (temporallySubsumes ?event ?ending-event))
+
+(<== (endsDuring ?ending-event ?event)
+     (overlaps ?ending-event ?event))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; end of code

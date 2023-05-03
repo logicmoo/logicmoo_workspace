@@ -1,0 +1,118 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: FNAnalogyControl.meld
+;;;;    System: EA
+;;;;    Author: McFate
+;;;;   Created: March 15, 2017 20:07:35
+;;;;   Purpose: Define syntactic category predicates to support analogy
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:29:31 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory FNAnalogyControlMt)
+
+(isa punc VariableArityPredicate)
+(arity punc-nary n-ary)
+(isa cconj VariableArityPredicate)
+(arity cconj-nary n-ary)
+(isa sconj VariableArityPredicate)
+(arity sconj-nary n-ary)
+(isa pname VariableArityPredicate)
+(arity pname-nary n-ary)
+
+;;;; Grammatical triples
+(isa np VariableArityPredicate)
+(arity np-nary n-ary)
+(isa cnp VariableArityPredicate)
+(arity cnp-nary n-ary)
+(isa noun VariableArityPredicate)
+(arity noun-nary n-ary)
+(isa pronoun VariableArityPredicate)
+(arity pronoun-nary n-ary)
+(isa pp VariableArityPredicate)
+(arity pp-nary n-ary)
+(isa prep VariableArityPredicate)
+(arity prep-nary n-ary)
+
+(isa adjp VariableArityPredicate)
+(arity adjp-nary n-ary)
+(isa adjective VariableArityPredicate)
+(arity adjective-nary n-ary)
+
+(isa vp VariableArityPredicate)
+(arity vp-nary n-ary)
+(isa verb VariableArityPredicate)
+(arity verb-nary n-ary)
+
+(isa slp VariableArityPredicate)
+(arity slp-nary n-ary)
+(isa s VariableArityPredicate)
+(arity s-nary n-ary)
+
+(isa advp VariableArityPredicate)
+(arity advp-nary n-ary)
+(isa adverb VariableArityPredicate)
+(arity adverb-nary n-ary)
+(isa advpart VariableArityPredicate)
+(arity advpart-nary n-ary)
+
+
+(isa unknown VariableArityPredicate)
+(arity unknown-nary n-ary)
+(isa misc VariableArityPredicate)
+(arity misc-nary n-ary)
+
+(isa cardinal VariableArityPredicate)
+(arity cardinal-nary n-ary)
+(isa number VariableArityPredicate)
+(arity number-nary n-ary)
+(isa punc VariableArityPredicate)
+(arity punc-nary n-ary)
+(isa det VariableArityPredicate)
+(arity det-nary n-ary)
+(isa aux VariableArityPredicate)
+(arity aux-nary n-ary)
+
+(isa np-naryFn VariableArityFunction)
+(arity np-naryFn n-ary)
+(resultIsa np-naryFn NounPhrase)
+(atomicAnalogyNat np-naryFn)
+
+(isa pp-naryFn VariableArityFunction)
+(arity pp-naryFn n-ary)
+(resultIsa pp-naryFn PrepositionalPhrase)
+(atomicAnalogyNat pp-naryFn)
+
+(isa pp-to-Fn VariableArityFunction)
+(arity pp-to-Fn n-ary)
+(resultIsa pp-to-Fn PrepositionalPhrase)
+(atomicAnalogyNat pp-to-Fn)
+
+(isa pp-from-Fn VariableArityFunction)
+(arity pp-from-Fn n-ary)
+(resultIsa pp-from-Fn PrepositionalPhrase)
+(atomicAnalogyNat pp-from-Fn)
+
+(isa pp-in-Fn VariableArityFunction)
+(arity pp-in-Fn n-ary)
+(resultIsa pp-in-Fn PrepositionalPhrase)
+(atomicAnalogyNat pp-in-Fn)
+
+(isa pp-of-Fn VariableArityFunction)
+(arity pp-of-Fn n-ary)
+(resultIsa pp-of-Fn PrepositionalPhrase)
+(atomicAnalogyNat pp-of-Fn)
+
+
+
+(isa stype Predicate)
+(arity stype 1)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

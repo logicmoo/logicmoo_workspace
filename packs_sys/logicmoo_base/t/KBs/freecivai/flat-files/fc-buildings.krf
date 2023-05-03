@@ -1,0 +1,35 @@
+(in-microtheory FreecivMt)
+
+;; -------------------
+;; Generic FreeCiv buildings
+;; -------------------
+
+(isa FreeCiv-Building-Type SecondOrderCollection)
+(genls FreeCiv-Building-Type FreeCiv-BuildableThing-Type)
+(typeGenls FreeCiv-Building-Type FreeCiv-Building)
+
+(isa FreeCiv-Building FreeCiv-Building-Type)
+(genls FreeCiv-Building FreeCiv-BuildableThing)
+(genls FreeCiv-Building ConstructionArtifact)      ; tie to Cyc world knowledge
+(genls FreeCiv-Building Building)
+
+;; This should probably tie into a concept above the
+;; FreeCiv level...
+; (genls FreeCiv-Building ComputerGame-Strategy-Building)
+
+;;; Unlike buildings, wonders are unique.  We *could* say that
+;;; they are individuals, but it will be simpler if they 
+;;; are handled just like buildings.
+
+(isa FreeCiv-Wonder-Type SecondOrderCollection)
+(genls FreeCiv-Wonder-Type FreeCiv-BuildableThing-Type)
+(typeGenls FreeCiv-Wonder-Type FreeCiv-Wonder)
+
+(isa FreeCiv-Wonder FreeCiv-BuildableThing-Type)
+(genls FreeCiv-Wonder FreeCiv-BuildableThing)
+;;; Wonders aren't necessarily ConstructionArtifacts in the normal sense (e.g. ApolloProgram)
+
+(isa FC-Improvement-None FreeCiv-BuildableThing-Type)
+(isa FC-Improvement-None EmptyCollection)
+(genls FC-Improvement-None FreeCiv-BuildableThing)
+(comment FC-Improvement-None "FC-Improvement-None is the empty collection denoting the lack of any required building or wonder.")

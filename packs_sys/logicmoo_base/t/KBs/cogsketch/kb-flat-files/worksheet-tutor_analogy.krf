@@ -1,0 +1,533 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: worksheet-tutor_analogy.meld
+;;;;    System: CogSketch
+;;;;    Author: Madeline Usher
+;;;;   Created: January 24, 2013 17:20:43
+;;;;   Purpose: SOLVE suggestions for doing the analogy part of our tutoring.
+;;;;            worksheet-tutor_classic.meld makes use of these.
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2018-09-22 12:28:27 -0500 (Sat, 22 Sep 2018) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory ClassicWorksheetTutorSuggestionsMt)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Helpers for case constructors
+
+(isa subsketchForWorksheetDGroup Relation)
+(arity subsketchForWorksheetDGroup 2)
+(arg1Isa subsketchForWorksheetDGroup Case)
+(arg2Isa subsketchForWorksheetDGroup NuSketchBundle)
+(comment subsketchForWorksheetDGroup
+  "This provides an easy way to figure out the subsketch from which items were
+   included for the specified worksheet analogy dgroup.")
+(notForAnalogy subsketchForWorksheetDGroup)
+
+
+(isa subsketchContextForWorksheetDGroup Relation)
+(arity subsketchContextForWorksheetDGroup 2)
+(arg1Isa subsketchContextForWorksheetDGroup Case)
+(arg2Isa subsketchContextForWorksheetDGroup Microtheory)
+(comment subsketchContextForWorksheetDGroup
+  "This provides an easy way to figure out the casename of the subsketch from 
+   which items were included for the specified worksheet analogy dgroup.")
+(notForAnalogy subsketchContextForWorksheetDGroup)
+
+
+(isa glyphInWorksheetDGroup Relation)
+(arity glyphInWorksheetDGroup 2)
+(arg1Isa glyphInWorksheetDGroup Case)
+(arg2Isa glyphInWorksheetDGroup NuSketchGlyph)
+(comment glyphInWorksheetDGroup
+  "This provides an easy way to figure out which glyphs are mentioned in a dgroup.")
+(notForAnalogy glyphInWorksheetDGroup)
+
+
+(isa sketchForWorksheetDGroup Relation)
+(arity sketchForWorksheetDGroup 2)
+(arg1Isa sketchForWorksheetDGroup Case)
+(arg2Isa sketchForWorksheetDGroup NuSketchSketch)
+(comment sketchForWorksheetDGroup
+  "This provides an easy way to figure out the sketch from which items were 
+   included for the specified worksheet analogy dgroup.")
+(notForAnalogy sketchForWorksheetDGroup)
+
+(<== (sketchForWorksheetDGroup ?dgroup ?sketch)
+     (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-context)
+     (subSketchGroupRepresentsObject ?subsketch ?subsketch-context)
+     (ist-Information ?subsketch-context
+       (sketchFor ?subsketch ?sketch)))
+
+
+(isa sketchContextForWorksheetDGroup Relation)
+(arity sketchContextForWorksheetDGroup 2)
+(arg1Isa sketchContextForWorksheetDGroup Case)
+(arg2Isa sketchContextForWorksheetDGroup Microtheory)
+(comment sketchContextForWorksheetDGroup
+  "This provides an easy way to figure out the casename of the sketch from 
+   which items were included for the specified worksheet analogy dgroup.")
+(notForAnalogy sketchContextForWorksheetDGroup)
+
+(<== (sketchContextForWorksheetDGroup ?dgroup ?sketch-context)
+     (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-context)
+     (subSketchGroupRepresentsObject ?subsketch ?subsketch-context)
+     (ist-Information ?subsketch-context
+       (sketchFor ?subsketch ?sketch))
+     (ist-Information ?subsketch-context
+       (sketchRepresentsObject ?sketch ?sketch-context)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchTutorBundleCaseFn
+
+(isa CogSketchTutorBundleCaseFn CaseFunctions)
+(arity CogSketchTutorBundleCaseFn 2)
+(arg1Isa CogSketchTutorBundleCaseFn Case)
+(arg2Isa CogSketchTutorBundleCaseFn NuSketchBundle)
+(resultIsa CogSketchTutorBundleCaseFn Case)
+(comment CogSketchTutorBundleCaseFn
+ "Creates a case for use with the CogSketch Tutor containing all the facts 
+  appropriate for the tutor known about the entities in the specified bundle 
+  of a nuSketch sketch.")
+
+
+(<== (subsketchForWorksheetDGroup ?dgroup ?subsketch)
+     (unifies ?dgroup 
+       (CogSketchTutorBundleCaseFn ?subsketch-casename ?subsketch)))
+
+
+(<== (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-casename)
+     (unifies ?dgroup 
+       (CogSketchTutorBundleCaseFn ?subsketch-casename ?subsketch)))
+
+
+(<== (glyphInWorksheetDGroup ?dgroup ?glyph)
+     (unifies ?dgroup 
+       (CogSketchTutorBundleCaseFn ?subsketch-casename ?bundle))
+     (subSketchGroupFor ?layer ?bundle)
+     (subSketchFor ?glyph ?layer)
+     (localOnly (lookupOnly (isa ?glyph NuSketchGlyph))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchTutorLayerCaseFn
+
+(isa CogSketchTutorLayerCaseFn CaseFunctions)
+(arity CogSketchTutorLayerCaseFn 2)
+(arg1Isa CogSketchTutorLayerCaseFn Case)  ;; subsketch context
+(arg2Isa CogSketchTutorLayerCaseFn NuSketchLayer)
+(resultIsa CogSketchTutorLayerCaseFn Case)
+(comment CogSketchTutorLayerCaseFn
+ "Creates a case for use with the CogSketch Tutor containing all the facts 
+  appropriate for the tutor known about the entities in the specified layer 
+  of a nuSketch sketch.")
+
+
+(<== (subsketchForWorksheetDGroup ?dgroup ?subsketch)
+     (unifies ?dgroup 
+       (CogSketchTutorLayerCaseFn ?subsketch-casename ?layer))
+     (lookupOnly 
+      (subSketchGroupRepresentsObject ?subsketch ?subsketch-casename)))
+
+
+(<== (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-casename)
+     (unifies ?dgroup 
+       (CogSketchTutorLayerCaseFn ?subsketch-casename ?layer)))
+
+
+(<== (glyphInWorksheetDGroup ?dgroup ?glyph)
+     (unifies ?dgroup 
+       (CogSketchTutorLayerCaseFn ?subsketch-casename ?layer))
+     (subSketchFor ?glyph ?layer)
+     (localOnly (lookupOnly (isa ?glyph NuSketchGlyph))))
+
+
+
+(isa layerWorksheetMatchConstraints Relation)
+(arity layerWorksheetMatchConstraints 3)
+(arg1Isa layerWorksheetMatchConstraints NuSketchLayer)
+(arg2Isa layerWorksheetMatchConstraints NuSketchLayer)
+(arg3Isa layerWorksheetMatchConstraints List)
+(notForAnalogy layerWorksheetMatchConstraints)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchTutorLatticeEntryCaseFn
+
+(isa CogSketchTutorLatticeEntryCaseFn CaseFunctions)
+(arity CogSketchTutorLatticeEntryCaseFn 2)
+(arg1Isa CogSketchTutorLatticeEntryCaseFn Case)
+(arg2Isa CogSketchTutorLatticeEntryCaseFn NuSketchLatticeEntry)
+(resultIsa CogSketchTutorLatticeEntryCaseFn Case)
+(comment CogSketchTutorLatticeEntryCaseFn
+  "Creates a case for use with the CogSketch Tutor containing all the facts 
+   appropriate for the tutor known about the entities in the specified cell of
+   a #$NuSketchLattice.  The first argument should be the case-name for the 
+   subsketch containing the lattice.")
+
+
+(<== (subsketchForWorksheetDGroup ?dgroup ?subsketch)
+     (unifies ?dgroup 
+       (CogSketchTutorLatticeEntryCaseFn ?subsketch-casename ?lattice-cell))
+     (lookupOnly 
+      (subSketchGroupRepresentsObject ?subsketch ?subsketch-casename)))
+
+
+(<== (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-casename)
+     (unifies ?dgroup 
+       (CogSketchTutorLatticeEntryCaseFn ?subsketch-casename ?lattice-cell)))
+
+
+(<== (glyphInWorksheetDGroup ?dgroup ?glyph)
+     (unifies ?dgroup 
+       (CogSketchTutorLatticeEntryCaseFn ?subsketch-casename ?lattice-cell))
+     (latticeEntryContainsGlyph ?lattice-cell ?glyph))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchTutorInkPartitionRegionCaseFn
+;;;
+;;; (CogSketchTutorInkPartitionRegionCaseFn <subsketch-case> 
+;;;                                         <ink-parition-region>)
+;;;
+
+(isa CogSketchTutorInkPartitionRegionCaseFn CaseFunctions)
+(arity CogSketchTutorInkPartitionRegionCaseFn 2)
+(arg1Isa CogSketchTutorInkPartitionRegionCaseFn Case)
+(arg2Isa CogSketchTutorInkPartitionRegionCaseFn InkPartitionRegion)
+(resultIsa CogSketchTutorInkPartitionRegionCaseFn Case)
+(comment CogSketchTutorInkPartitionRegionCaseFn
+  "Creates a case for use with the CogSketch Tutor containing all the facts 
+   appropriate for the tutor known about the entities in the specified
+   #$InkPartitionRegion.  The first argument should be the case-name for the 
+   subsketch containing the lattice.")
+
+
+(<== (subsketchForWorksheetDGroup ?dgroup ?subsketch)
+     (unifies ?dgroup 
+       (CogSketchTutorInkPartitionRegionCaseFn ?subsketch-casename ?region))
+     (lookupOnly 
+      (subSketchGroupRepresentsObject ?subsketch ?subsketch-casename)))
+
+
+(<== (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-casename)
+     (unifies ?dgroup 
+       (CogSketchTutorInkPartitionRegionCaseFn ?subsketch-casename ?region)))
+
+
+(<== (glyphInWorksheetDGroup ?dgroup ?glyph)
+     (unifies ?dgroup 
+       (CogSketchTutorInkPartitionRegionCaseFn ?subsketch-casename ?region))
+     (lookupOnly 
+      (subSketchGroupRepresentsObject ?subsketch ?subsketch-casename))
+     (wmOnly
+      (lookupOnly
+       (glyphCreatedByInkPartitionRegion ?region ?subsketch ?glyph))))
+
+
+
+(isa inkPartitionRegionForWorksheetDGroup Relation)
+(arity inkPartitionRegionForWorksheetDGroup 2)
+(arg1Isa inkPartitionRegionForWorksheetDGroup Case)
+(arg2Isa inkPartitionRegionForWorksheetDGroup InkPartitionRegion)
+(comment inkPartitionRegionForWorksheetDGroup
+  "This provides an easy way to figure out the ink partitioning region from a 
+   given CogSketchTutorInkPartitionRegionCaseFn expression.")
+(notForAnalogy inkPartitionRegionForWorksheetDGroup)
+
+
+(<== (inkPartitionRegionForWorksheetDGroup ?dgroup ?region)
+     (unifies ?dgroup 
+       (CogSketchTutorInkPartitionRegionCaseFn ?subsketch-casename ?region)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchTutorECOsForGlyphCaseFn
+
+(isa CogSketchTutorECOsForGlyphCaseFn CaseFunctions)
+(arity CogSketchTutorECOsForGlyphCaseFn 2)
+(arg1Isa CogSketchTutorECOsForGlyphCaseFn NuSketchGlyph)
+(arg2Isa CogSketchTutorECOsForGlyphCaseFn Case)  ;; subsketch case
+(resultIsa CogSketchTutorECOsForGlyphCaseFn Case)
+(comment CogSketchTutorECOsForGlyphCaseFn
+  "Constructs a case containing the facts about the edge-connected objects 
+   ($PerceptualEdgeConnectedObject) for a given glyph.")
+
+
+(<== (subsketchForWorksheetDGroup ?dgroup ?subsketch)
+     (unifies ?dgroup 
+       (CogSketchTutorECOsForGlyphCaseFn ?glyph ?subsketch-casename))
+     (lookupOnly 
+      (subSketchGroupRepresentsObject ?subsketch ?subsketch-casename)))
+
+
+(<== (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-casename)
+     (unifies ?dgroup 
+       (CogSketchTutorECOsForGlyphCaseFn ?glyph ?subsketch-casename)))
+
+
+(<== (glyphInWorksheetDGroup ?dgroup ?glyph)
+     (unifies ?dgroup 
+       (CogSketchTutorECOsForGlyphCaseFn ?glyph ?subsketch-casename)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchTutorEdgeCyclesForECOCaseFn
+
+(isa CogSketchTutorEdgeCyclesForECOCaseFn CaseFunctions)
+(arity CogSketchTutorEdgeCyclesForECOCaseFn 3)
+(arg1Isa CogSketchTutorEdgeCyclesForECOCaseFn PerceptualEdgeConnectedObject)
+(arg2Isa CogSketchTutorEdgeCyclesForECOCaseFn NuSketchGlyph)
+(arg3Isa CogSketchTutorEdgeCyclesForECOCaseFn Case)  ;; subsketch case
+(resultIsa CogSketchTutorEdgeCyclesForECOCaseFn Case)
+(comment CogSketchTutorEdgeCyclesForECOCaseFn
+  "Constructs a case containing the facts about the edge cycles 
+   (#$PerceptualEdgeCycle) for a given edge-connected object
+   (#$PerceptualEdgeConnectedObject).")
+
+
+(<== (subsketchForWorksheetDGroup ?dgroup ?subsketch)
+     (unifies ?dgroup 
+       (CogSketchTutorEdgeCyclesForECOCaseFn ?eco ?glyph ?subsketch-casename))
+     (lookupOnly 
+      (subSketchGroupRepresentsObject ?subsketch ?subsketch-casename)))
+
+
+(<== (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-casename)
+     (unifies ?dgroup 
+       (CogSketchTutorEdgeCyclesForECOCaseFn ?eco ?glyph ?subsketch-casename)))
+
+
+(<== (glyphInWorksheetDGroup ?dgroup ?glyph)
+     (unifies ?dgroup 
+       (CogSketchTutorEdgeCyclesForECOCaseFn ?eco ?glyph ?subsketch-casename)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CogSketchTutorEdgesForEdgeCycleCaseFn
+
+(isa CogSketchTutorEdgesForEdgeCycleCaseFn CaseFunctions)
+(arity CogSketchTutorEdgesForEdgeCycleCaseFn 4)
+(arg1Isa CogSketchTutorEdgesForEdgeCycleCaseFn PerceptualEdgeCycle)
+(arg2Isa CogSketchTutorEdgesForEdgeCycleCaseFn PerceptualEdgeConnectedObject)
+(arg3Isa CogSketchTutorEdgesForEdgeCycleCaseFn NuSketchGlyph)
+(arg4Isa CogSketchTutorEdgesForEdgeCycleCaseFn Case)  ;; subsketch case
+(resultIsa CogSketchTutorEdgesForEdgeCycleCaseFn Case)
+(comment CogSketchTutorEdgesForEdgeCycleCaseFn
+  "Constructs a case containing the facts about the edges (#$PerceptualEdge) 
+   for a given edge-cycle (#$PerceptualEdgeCycle).")
+
+
+(<== (subsketchForWorksheetDGroup ?dgroup ?subsketch)
+     (unifies ?dgroup 
+       (CogSketchTutorEdgesForEdgeCycleCaseFn ?edge-cycle ?eco ?glyph 
+                                              ?subsketch-casename))
+     (lookupOnly 
+      (subSketchGroupRepresentsObject ?subsketch ?subsketch-casename)))
+
+
+(<== (subsketchContextForWorksheetDGroup ?dgroup ?subsketch-casename)
+     (unifies ?dgroup 
+       (CogSketchTutorEdgesForEdgeCycleCaseFn ?edge-cycle ?eco ?glyph 
+                                              ?subsketch-casename)))
+
+
+(<== (glyphInWorksheetDGroup ?dgroup ?glyph)
+     (unifies ?dgroup 
+       (CogSketchTutorEdgesForEdgeCycleCaseFn ?edge-cycle ?eco ?glyph 
+                                              ?subsketch-casename)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForStudentSubSketch -- misconceptions available
+
+(defSuggestion TheBestMatchIsAMisconception
+    (bestMatchForStudentSubSketch ?sketch ?student-subsketch ?initial-match)
+  ;;:cost-function 1
+  :test (lookupOnly (misconceptionsDefinedForSketch ?sketch))
+  :subgoals
+  ((bestMisconceptionMatch ?sketch ?student-subsketch ?initial-match)))
+
+(defSuggestion NoMisconceptionsApply
+    (bestMatchForStudentSubSketch ?sketch ?student-subsketch ?initial-match)
+  :cost-function 2
+  :test (lookupOnly (misconceptionsDefinedForSketch ?sketch))
+  :subgoals
+  (;; MDC: in the future, if we allow for multiple correct solutions,
+   ;; then the following subgoals should be replaced with something like
+   ;; (bestSolutionMatch ?sketch ?student-subsketch ?initial-match)
+   ;; which will create matches between multiple solution sketches and
+   ;; choose the best one.
+   (solutionForWorksheet ?sketch ?teacher-subsketch)
+   (classicWorksheetMatchBetween ?teacher-subsketch ?student-subsketch 
+                                 ?initial-match)))
+
+
+
+(defSuggestion CompareWithMisconceptions
+    (bestMisconceptionMatch ?sketch ?student-subsketch ?misconception-match)
+  :subgoals
+  ((tell (retractAllAnalogyResults ?sketch))
+   (evaluate ?misconceptions
+     (TheClosedRetrievalSetOf ?misconception
+       (misconceptionForWorksheet ?sketch ?misconception)))
+   (solveSequentially ?m ?misconceptions
+     (matchBetweenMisconceptionAndWorkspace ?m ?student-subsketch ?match-id))
+   (evaluate ?relevant-matches
+     (TheClosedRetrievalSetOf ?relevant-match
+       (and (lookupOnly 
+             (matchBetweenMisconceptionAndWorkspace ?relevant-misconception 
+                                           ?student-subsketch ?relevant-match))
+            (bestMapping ?relevant-match ?relevant-mapping)
+            (misconceptionConditionsMetFor ?relevant-misconception ?relevant-mapping))))
+   (evaluate ?sorted-matches
+     (SortFn ?relevant-matches
+             greaterThan
+             (FunctionToArg 2
+               (Kappa (?match ?best-score)
+                 (and (bestMapping ?match ?mapping)
+                      (structuralEvaluationScoreOf ?mapping ?best-score))))))
+   (evaluate ?misconception-match
+     (FirstInListFn ?sorted-matches))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; bestMatchForStudentSubSketch -- no misconceptions defined
+
+(defSuggestion CompareWithSolutionOnly
+    (bestMatchForStudentSubSketch ?sketch ?student-subsketch ?initial-match)
+  :test (honorTimestamps 
+         (uninferredSentence (misconceptionsDefinedForSketch ?sketch)))
+  :subgoals
+  ((solutionForWorksheet ?sketch ?teacher-subsketch)
+   (classicWorksheetMatchBetween ?teacher-subsketch ?student-subsketch 
+                                 ?initial-match)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; classicWorksheetMatchBetween
+
+(defSuggestion ClassicWorksheetAnalogicalMatch
+    (classicWorksheetMatchBetween ?base-subsketch ?target-subsketch ?match)
+  :subgoals
+  (
+;;;   (forEffectOnly 
+;;;    (tell (cogSketchBusyMsg "Comparing to solution ..." (TheList))))
+   (sketchFor ?target-subsketch ?sketch)
+   (classicWorksheetCaseConstructor ?base-subsketch ?base-case)
+   (classicWorksheetCaseConstructor ?target-subsketch ?target-case)
+   (numAnswers 1
+      (classicWorksheetMatchConstraints ?base-subsketch ?target-subsketch 
+                                        ?constraints))
+   
+   ;; retract ALL the results of previous analogies
+   (tell (retractAllAnalogyResults ?sketch))
+   
+   (matchBetween ?base-case ?target-case ?constraints ?initial-match)
+   (quantitativelyConstrainedMatch ?initial-match ?match)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; classicWorksheetExtendMatch
+
+(defSuggestion ExtendClassicWorksheetMatch
+    (classicWorksheetExtendMatch ?old-match ?new-match)
+  :test
+  (and (lookupOnly (bestMatchForStudentSubSketch ?sketch ?student-subsketch ?old-match))
+       (lookupOnly 
+        (worksheetElaborationQueries 
+         ?student-subsketch queryForCogSketchPostComparisonWorksheetQuestions ?queries))
+       (different (TheList) ?queries))
+  :subgoals
+  ((baseOfMatch ?old-match ?base)
+   (subsketchForWorksheetDGroup ?base ?base-subsketch)
+   (targetOfMatch ?old-match ?target)
+   (subsketchForWorksheetDGroup ?target ?target-subsketch)
+   (lookupOnly (classicWorksheetMatchConstraints ?base-subsketch ?target-subsketch ?constraints))
+   (extendMatch ?old-match ?constraints ?new-match))) 
+
+
+;; problem: with the new wpe-add-solution-fact, doesn't EVERY worksheet now
+;; have queryForCogSketchPostComparisonWorksheetQuestions??  That means we'll
+;; extend the match every damn time ...  I don't like this.
+(defSuggestion DoNotExtendClassicWorksheetMatch
+    (classicWorksheetExtendMatch ?old-match ?new-match)
+  :test
+  (and (lookupOnly (bestMatchForStudentSubSketch ?sketch ?student-subsketch ?old-match))
+       (lookupOnly 
+        (worksheetElaborationQueries 
+         ?student-subsketch queryForCogSketchPostComparisonWorksheetQuestions ?queries))
+       (unifies (TheList) ?queries))
+  :subgoals
+  ((unifies ?old-match ?new-match))) 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; matchBetweenMisconceptionAndWorkspace
+
+(defSuggestion MatchBetweenForMisconceptions
+    (matchBetweenMisconceptionAndWorkspace ?base-subsketch ?target-subsketch ?match)
+  :subgoals
+  (
+;;;   (forEffectOnly 
+;;;    (tell (cogSketchBusyMsg "Comparing to solution ..." (TheList))))
+   (sketchFor ?target-subsketch ?sketch)
+   (classicWorksheetCaseConstructor ?base-subsketch ?base-case)
+   (classicWorksheetCaseConstructor ?target-subsketch ?target-case)
+   (numAnswers 1
+      (classicWorksheetMatchConstraints ?base-subsketch ?target-subsketch 
+                                        ?constraints))
+   
+   ;; do not retract the results of previous analogies
+   
+   (matchBetween ?base-case ?target-case ?constraints ?initial-match)
+   (quantitativelyConstrainedMatch ?initial-match ?match)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; correspondsInWorksheetMapping
+
+(isa correspondsInWorksheetMapping TernaryPredicate)
+(arity correspondsInWorksheetMapping 3)
+(arg1Isa correspondsInWorksheetMapping Mapping)
+(arg2Isa correspondsInWorksheetMapping CycLExpression)
+(arg3Isa correspondsInWorksheetMapping CycLExpression)
+(comment correspondsInWorksheetMapping 
+  "A different version of #$correspondsInMapping that can handle #$GlyphFn expressions
+   as arguments.  For example, if (correspondsInMapping Mapping-1 base-item target-item)
+   holds, then (correspondsInWorksheetMapping Mapping-1 (GlyphFn base-item base-layer) (GlyphFn target-item target-layer))
+   also holds (provided that the GlyphFn expression is linked to the object via #$glyphRepresentsObject).
+   This should only be used in the context of sketch worksheets since glyphs
+   are collapsed into the objects they represent when doing worksheet analogies.")
+
+(<== (correspondsInWorksheetMapping ?mapping ?base-thing ?target-thing)
+     (wmOnly (localOnly(correspondsInMapping ?mapping ?base-thing ?target-thing))))
+
+(<== (correspondsInWorksheetMapping ?mapping ?base-glyph ?target-glyph)
+     (groundExpression ?base-glyph)
+     (unifies ?base-glyph (GlyphFn ?base-thing ?base-layer))
+     (wmOnly (localOnly (correspondsInMapping ?mapping ?base-thing ?target-thing)))
+     (wmOnly (bestMapping ?match ?mapping))
+     (wmOnly (targetOfMatch ?match ?target))
+     (subsketchContextForWorksheetDGroup ?target ?target-case)
+     (ist-Information ?target-case
+       (lookupOnly (glyphRepresentsObject ?target-glyph ?target-thing))))
+
+(<== (correspondsInWorksheetMapping ?mapping ?base-glyph ?target-glyph)
+     (groundExpression ?target-glyph)
+     (unifies ?target-glyph (GlyphFn ?target-thing ?target-layer))
+     (correspondsInMapping ?mapping ?base-thing ?target-thing)
+     (bestMappping ?match ?mapping)
+     (baseOfMatch ?match ?base)
+     (subsketchContextForWorksheetDGroup ?base ?base-case)
+     (ist-Information ?base-case
+       (lookupOnly (glyphRepresentsObject ?base-glyph ?base-thing))))
+      
+      
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

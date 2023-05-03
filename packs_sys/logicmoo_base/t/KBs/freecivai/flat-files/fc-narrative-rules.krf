@@ -1,0 +1,422 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: fc-narrative-rules.meld
+;;;;    System: 
+;;;;    Author: Ken Forbus
+;;;;   Created: January 14, 2013 10:58:47
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2013-01-06 13:30:52 -0600 (Sun, 06 Jan 2013) $
+;;;;  $LastChangedBy: McFate $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory FreecivNarrativeRulesMt :exclude-globals t)
+
+(genlMt FreecivNarrativeRulesMt EAStructuralRulesMt)
+(genlMt FreecivNarrativeRulesMt Freeciv-defaultMt)
+
+(abductiveNLUScoringProcedure abductive-score-via-symbol-weights)
+(abductiveNLCollectionScore FC-Unit-Citizens 10)
+(abductiveNLCollectionScore FreeCiv-City 10)
+(abductiveNLCollectionScore FC-Building-University)
+;; Really would like a fast isa test to see if something is a freeciv
+;; concept for the above.
+(abductiveNLPredicateScore positivelyDependsOn-TypeType 10)
+(abductiveNLPredicateScore negativelyDependsOn-TypeType 10)
+(abductiveNLPredicateScore positivelyDependsOnProp 5)
+(abductiveNLPredicateScore negativelyDependsOnProp 5)
+(abductiveNLPredicateScore causesIncreaseInQuantityType 2)
+(abductiveNLPredicateScore narrativeFunction 2)
+
+
+(<== (narrativeFunction (PresentationEventFn ?sid ?event-id)
+                        ?fact IntroductionOfFCRelation)
+     (drsForDiscourse ?ddrs-id)
+     (contextIndependentDrsFor ?sdrs-id ?sid)
+     (relationHoldsInDrs ?sdrs-id ?fact)
+     (individualSatisfyingConditions ?event-id IBTGeneration
+                                     (TheSet (contextIndependentDrsFor ?sdrs-id ?sid)
+                                             (relationHoldsInDrs ?sdrs-id ?fact))))
+
+
+;;;;;;;;;;;;;;;;;;;; Type Level QP Stuff ;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; PositivelyDependsOn-TypeType top level
+;;; If you cause something to have a part and that in turn causes
+;;; an increase in a quantity, then there is a type-level influence
+;;; between having that part and an increase in the quantity.
+
+;;;CJM It would be nice if these were documented with typical sentences they are intended to cover
+;;;
+;;; Ex: Adding a university in a city increases its science output
+(<== (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel))
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (relationHoldsInDrs ?sdrs-id (causes-SitProp ?imp-event
+                                                  (?part-rel ?obj ?improvement)))   
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt (genlPreds ?part-rel parts))))
+     (relationHoldsInDrs ?sdrs-id (causesIncreaseOfQuantityType ?qevent ?qtype))
+     (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?imp-event ?qevent))
+     (allFactsAllowed (ist-Information FreecivNarrativeRulesMt
+                        (arg1Isa ?part-rel ?obj-type)))
+     (getPotentialIsas ?sdrs-id ?improvement FreeCiv-Building ?imp-type FreecivNarrativeRulesMt ?ddrs-id)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?improvement ?imp-type))
+     ;; Was very inefficient. Changed to getPotentialIsas
+     ;;;     (ist-Information (DrsCaseFn ?sdrs-id) (nonTransitiveInference  (isa ?improvement ?imp-type))) ;; 2nd extraction, wish we could pass in
+     ;;;     (allFactsAllowed
+     ;;;      (useTransitiveInference
+     ;;;       (ist-Information FreecivNarrativeRulesMt ;; Shouldn't need this
+     ;;;         (genls ?imp-type FreeCiv-Building))))
+     ;;; I have no idea why we're telling instead of justifying here?
+     ;;; Changing this to justify 3/31
+     ;;;     (tell (ist-Information ?dcase
+     ;;;             (originDrsId (positivelyDependsOn-TypeType ?qtype ?obj-type
+     ;;;                                                        ?imp-type ?part-rel)
+     ;;;                          ?sdrs-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (positivelyDependsOn-TypeType ?qtype ?obj-type ?imp-type ?part-rel))
+                             (TheList (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel))))))
+     
+
+(genlPreds specialAt parts)
+
+;;; For FreeCiv specials ie FC-Special-Fortress
+;;; Oddly enough not needed for university? What is the point of this distinction? Is it only for improvements?
+
+(<== (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?special ?part-rel))
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     ;;; Handling the case of specials
+     (relationHoldsInDrs ?sdrs-id (causes-SitProp ?event
+                                                  (?part-rel ?obj ?special)))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt (genlPreds ?part-rel parts))))
+     (relationHoldsInDrs ?sdrs-id (causesIncreaseOfQuantityType ?qevent ?qtype))
+     (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?event ?qevent))
+     (satisfiesQuantityTypeConstraint ?sdrs-id ?obj ?qtype)
+     ;; Checking the part relationship, each constituent in order
+     (allFactsAllowed (ist-Information FreecivNarrativeRulesMt
+                        (arg1Isa ?part-rel ?obj-type)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?obj ?obj-type))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt ;; Shouldn't need this
+         (isa ?special FreeCiv-Special))))
+     ;;;     (tell (ist-Information ?dcase
+     ;;;             (originDrsId (positivelyDependsOn-TypeType ?qtype ?obj-type
+     ;;;                                                                ?special ?part-rel)
+     ;;;                          ?sdrs-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (positivelyDependsOn-TypeType ?qtype ?obj-type ?special ?part-rel))
+                             (TheList (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?special ?part-rel))))))
+
+(<== (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype FreecivLocation
+                                                                ?special specialAt))
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (relationHoldsInDrs ?sdrs-id 
+                         (causes-SitProp ?event
+                                         (specialAtType FreecivLocation ?special)))
+     (relationHoldsInDrs ?sdrs-id (causesIncreaseOfQuantityType ?qevent ?qtype))
+     (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?event ?qevent))
+     (typeSatisfiesQuantityTypeConstraint ?sdrs-id FreecivLocation ?qtype)
+;;;     (tell (ist-Information ?dcase
+;;;             (originDrsId (positivelyDependsOn-TypeType ?qtype FreecivLocation
+;;;                                                        ?special specialAt)
+;;;                          ?sdrs-id))))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (positivelyDependsOn-TypeType ?qtype FreecivLocation ?special ?part-rel))
+                             (TheList (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype FreecivLocation
+                                                                                                 ?special specialAt))))))
+
+
+;;;(<== (relationHoldsInDrs ?sdrs-id (positivelyDependsOn-TypeType ?qtype FreeCiv-City
+;;;                                                                ?improvement cityHasImprovement))
+;;;     ;; Putting it all together
+;;;     (relationHoldsInDrs ?sdrs-id (causes-SitProp ?imp-event
+;;;                                                  (cityHasImprovement ?city ?improvement)))
+;;;     (relationHoldsInDrs ?sdrs-id (causesIncreaseOfQuantityType ?qevent ?qtype))
+;;;     (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?imp-event ?qevent)))
+
+
+;;;; NegativelyDependsOn-TypeType top level
+;;; If you cause something to have a part and that in turn causes
+;;; a decrease in a quantity, then there is a type-level influence
+;;; between having that part and an increase in the quantity.
+;;;
+;;; Ex: Adding a courthouse in a city decreases its corruption
+(<== (relationHoldsInDrs ?sdrs-id (negativelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel))
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (relationHoldsInDrs ?sdrs-id (causes-SitProp ?imp-event
+                                                  (?part-rel ?obj ?improvement)))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt (genlPreds ?part-rel parts))))
+     (relationHoldsInDrs ?sdrs-id (causesDecreaseOfQuantityType ?qevent ?qtype))
+     (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?imp-event ?qevent))
+     (allFactsAllowed (ist-Information FreecivNarrativeRulesMt
+                        (arg1Isa ?part-rel ?obj-type)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?improvement ?imp-type)) ;; 2nd extraction, wish we could pass in
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt ;; Shouldn't need this
+         (genls ?imp-type FreeCiv-Building))))
+;;;     (tell (ist-Information ?dcase
+;;;             (originDrsId (positivelyDependsOn-TypeType ?qtype ?obj-type
+;;;                                                        ?imp-type ?part-rel)
+     ;;;                          ?sdrs-id)))
+     (forEffectOnly (justify (ist-Information (DrsCaseFn ?ddrs-id) (negativelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel))
+                             (TheList (relationHoldsInDrs ?sdrs-id (negativelyDependsOn-TypeType ?qtype ?obj-type
+                                                                ?imp-type ?part-rel)))))
+     )
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Spotting FC-specific relations in language
+;;; This approach uses existing relationships to extract higher-order patterns of
+;;; causality out of what language provides.  This minimizes the amount of domain-specific
+;;; rules that are needed.  With predicate strengthening and backtracking, in theory we
+;;; could eliminate domain-specific rules entirely!
+
+;;;; Recognizing Freeciv relationships in language
+;;;;
+;;;; causes-SitProp
+;;; "adding a university"
+(<== (relationHoldsInDrs ?sdrs-id
+                         (causes-SitProp ?imp-event
+                                         (cityHasImprovement ?city ?improvement)))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?imp-event Incorporation-Physical))
+     (trueInDrs ?sdrs-id (thingIncorporated ?imp-event ?improvement))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?improvement ?obj-type))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt ;; Shouldn't need this
+         (genls ?obj-type FreeCiv-Building))))
+     (trueInDrs ?sdrs-id (in-UnderspecifiedContainer ?improvement ?city))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?city FreeCiv-City)))
+
+;;;; Existential
+;;;; "a university in a city" - implicit building
+(<== (relationHoldsInDrs ?sdrs-id
+                         (causes-SitProp ?imp-event
+                                         (cityHasImprovement ?city ?improvement)))
+     (uninferredSentence (ist-Information (DrsCaseFn ?sdrs-id) (isa ?imp-event Incorporation-Physical)))
+     ;;;(trueInDrs ?sdrs-id (thingIncorporated ?imp-event ?improvement))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?improvement ?obj-type))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt ;; Shouldn't need this
+         (genls ?obj-type FreeCiv-Building))))
+     (trueInDrs ?sdrs-id (in-UnderspecifiedContainer ?improvement ?city))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?city FreeCiv-City))
+     (unifies ?imp-event (impliedActionFn Incorporation-Physical)))
+
+(<== (relationHoldsInDrs ?sdrs-id 
+                         (causes-SitProp ?event
+                                         (specialAtType FreecivLocation ?special)))
+     ;;; Handling implicit places
+     (eventInDrs ?sdrs-id ?event Incorporation-Physical)
+     (trueInDrs ?sdrs-id (thingIncorporated ?event ?dv-special))
+     (trueInDrs ?sdrs-id (denotes-Underspecified ?dv-special ?special))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt
+         (isa ?special FreeCiv-Special)))))
+                         
+
+;;; Is there any better way to handle verb forms of specials?
+;;; "Irrigating a place increases food production."
+
+(<== (relationHoldsInDrs ?sdrs-id
+                         (causes-SitProp ?event
+                                         (specialAt ?place FC-Special-Irrigation)))
+     (eventInDrs ?sdrs-id ?event Irrigation)
+     (trueInDrs ?sdrs-id (objectActedOn ?event ?place))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?place FreecivLocation)))
+
+(<== (relationHoldsInDrs ?sdrs-id
+                         (causes-SitProp ?event
+                                         (specialAt ?place FC-Special-Mine)))
+     (eventInDrs ?sdrs-id ?event Mining)
+     (trueInDrs ?sdrs-id (objectOfStateChange ?event ?place))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?place FreecivLocation)))
+     
+
+;;;(<== (relationHoldsInDrs ?sdrs-id
+;;;                         (causes-SitProp ?event
+;;;                                         (specialAt ?loc ?improvement)))
+;;;     (isaInDrs ?imp-event ?sdrs-id Incorporation-Physical)
+;;;     (trueInDrs ?sdrs-id (thingIncorporated ?imp-event ?improvement))
+;;;     (isaInDrs ?improvement ?sdrs-id ?obj-type)
+;;;     (allFactsAllowed
+;;;      (useTransitiveInference
+;;;       (ist-Information FreecivNarrativeRulesMt ;; Shouldn't need this
+;;;         (genls ?obj-type FreeCiv-Special))))
+;;;     (trueInDrs ?sdrs-id (in-UnderspecifiedContainer ?improvement ?loc))
+;;;     (isaInDrs ?loc ?sdrs-id FreecivLocation))
+
+;;;;;;;;; causes-EventEvent
+;;; Some very general relationships
+;;; I believe this only works for terms like "adding a". Not general terms like "a univeristy in a city..."
+
+
+
+(<== (eventInDrs ?sdrs-id ?event ?event-type)
+     (groundExpression ?event)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?event-type))
+     (allFactsAllowed
+      (useTransitiveInference 
+       (ist-Information FreecivNarrativeRulesMt
+         (genls ?event-type Event)))))
+
+;;; implied addition
+(<== (eventInDrs ?sdrs-id ?event ?event-type)
+     (groundExpression ?event)
+     (unifies ?event-type (impliedActionFn Incorporation-Physical)))
+      
+(<== (eventInDrs ?sdrs-id ?event ?event-type)
+     (groundExpression ?event-type)
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event ?event-type))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt
+         (genls ?event-type Event)))))
+
+(<== (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?ante ?conse))
+     (groundExpression ?ante)
+     (eventInDrs ?sdrs-id ?conse ?col)
+     (trueInDrs ?sdrs-id (doneBy ?conse ?ante)) ;; Awfully specific
+     (eventInDrs ?sdrs-id ?ante ?col2))
+
+(<== (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?ante ?conse))
+     (groundExpression ?conse)
+     (eventInDrs ?sdrs-id ?conse ?col)
+     (trueInDrs ?sdrs-id (doneBy ?conse ?ante))  ;; Awfully specific
+     
+     (eventInDrs ?sdrs-id ?ante ?col2))
+;;; implicit action
+(<== (relationHoldsInDrs ?sdrs-id (causes-EventEvent ?ante ?conse))
+     (groundExpression ?conse)
+     (eventInDrs ?sdrs-id ?conse ?col)
+     ;;;;(trueInDrs ?sdrs-id (doneBy ?conse ?ante))  ;; Awfully specific
+     (eventInDrs ?sdrs-id ?ante ?col2)
+     (unifies ?ante (impliedActionFn Incorporation-Physical)))
+
+
+;; Quantities crop up a couple of places in the ontology
+;; Need to figure out a better place to put this
+
+(<== (typeOfQuantity ?qtype)
+     (unifies ?qtype (MeasurableQuantityFn ?type)))
+
+(<== (typeOfQuantity ?qtype)
+     (allFactsAllowed
+      (useTransitiveInference 
+       (ist-Information FreecivNarrativeRulesMt
+         (genls ?qtype PhysicalQuantity)))))
+      
+(<== (typeOfQuantity ?qtype)
+     (allFactsAllowed
+      (useTransitiveInference 
+       (ist-Information FreecivNarrativeRulesMt
+         (genls ?qtype ContinuousQuantity)))))
+
+
+(<== (quantityInDrs ?dv ?drs ?qtype)
+     (qlabel 7)
+     (groundExpression ?drs)
+     (groundExpression ?dv)
+     (drsForDiscourse ?ddrs-id)
+     (ist-Information (DrsCaseFn ?ddrs-id) (discourseCaseForDrs ?dcase ?ddrs-id))
+     (ist-Information ?dcase (drsEntailedBySentence ?sdrs-id ?sid))
+     (ist-Information (DrsCaseFn ?sdrs-id) (denotes-Underspecified ?dv (MeasurableQuantityFn ?anything)))
+     (unifies ?qtype (MeasurableQuantityFn ?anything)))
+
+;;;; This is assuming a functional QType. Which is probably correct but not how FC language works currently.
+;;;; 3/31 This is a hack. Technically foodProductionRate should be a function I think, but I want to check it more thoroughly before I make that change.
+
+
+
+;;;(<== (satisfiesQuantityTypeConstraint ?sdrs-id ?obj ?qtype)
+;;;     (allFactsAllowed
+;;;      (useTransitiveInference
+;;;       (ist-Information FreecivNarrativeRulesMt
+;;;         (isa ?qtype FreecivQtype)))))
+
+(<== (satisfiesQuantityTypeConstraint ?sdrs-id ?obj ?qtype)
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt
+         (isa ?qtype ?type))))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?obj ?type)))
+
+(<== (satisfiesQuantityTypeConstraint ?sdrs-id ?obj (MeasurableQuantityFn ?qtype))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt
+         (arg1Isa ?qtype ?type))))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?obj ?type)))
+
+(<== (typeSatisfiesQuantityTypeConstraint ?sdrs-id ?type ?qtype)
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt
+         (arg1Isa ?qtype ?type)))))
+
+(<== (typeSatisfiesQuantityTypeConstraint ?sdrs-id ?type (MeasurableQuantityFn ?qtype))
+     (allFactsAllowed
+      (useTransitiveInference
+       (ist-Information FreecivNarrativeRulesMt
+         (arg1Isa ?qtype ?type)))))
+
+;;; Recognizing general patterns involving quantities
+
+(<== (relationHoldsInDrs ?sdrs-id (causesIncreaseOfQuantityType ?event ?qtype))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event IncreaseEvent))
+     (trueInDrs ?sdrs-id (objectActedOn ?event ?qt-ref))
+     (trueInDrs ?sdrs-id (denotes-Underspecified ?qt-ref ?qtype))
+     (typeOfQuantity ?qtype))
+
+(<== (relationHoldsInDrs ?sdrs-id (causesDecreaseOfQuantityType ?event ?qtype))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event DecreaseEvent))
+     (trueInDrs ?sdrs-id (objectActedOn ?event ?qt-ref))
+     (trueInDrs ?sdrs-id (denotes-Underspecified ?qt-ref ?qtype))
+     (typeOfQuantity ?qtype))
+
+(<== (relationHoldsInDrs ?sdrs-id (causesDecreaseOfQuantityType ?event ?qtype))
+     (ist-Information (DrsCaseFn ?sdrs-id) (isa ?event DecreaseEvent))
+     (trueInDrs ?sdrs-id (objectOfStateChange ?event ?qt-ref))
+     (trueInDrs ?sdrs-id (denotes-Underspecified ?qt-ref ?qtype))
+     (typeOfQuantity ?qtype))
+
+
+
+
+
+;;; Extracting a type-level influence.  This pattern is close to domain-independent,
+;;; extracting the type of the second entity and the binary relation connecting
+;;; them is what is tough.  Might use genlPreds with cityHasImprovement, and pull out
+;;; type information from argument constraints.  
+
+(genlPreds cityHasImprovement parts)
+
+
+     
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,6 @@
+(in-microtheory ComputerHardwareMt)
+
+(disjointWith RISCArchitecture CISCArchitecture)
+(genls MagneticTape ComputerInformationStorageMedia)
+(genls PersonalComputer InformationManagementUse)
+(genls EAXRegister CPUMemoryRegister)

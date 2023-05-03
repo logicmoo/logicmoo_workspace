@@ -1,0 +1,128 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                       -*-
+;;;; ------------------------------------------------------------------------
+;;;; File name: advp.krf
+;;;;    System: Explanation Agent
+;;;;    Author: Tom Hinrichs
+;;;;   Created: March 24, 2017 11:20:25
+;;;;   Purpose: FrameNet grammar for sentence-level phrases
+;;;; ------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2019-01-04 14:12:54 -0600 (Fri, 04 Jan 2019) $
+;;;;  $LastChangedBy: hinrichs $
+;;;; ------------------------------------------------------------------------
+
+(in-microtheory EANulexGrammarMt :exclude-globals t)
+
+;;;
+;;; Adverb Phrases
+;;;
+
+
+(isa -advp->adverb- EAGrammarRule)
+(comment -advp->adverb- "adverb phrase: 'newly' 'fast'")
+(probabilityEAGrammarRule -advp->adverb- 1.0)
+(grammarRule -advp->adverb-
+ (EATermFn advp
+  (TheList (var ?vara)
+   (lex ?!l)
+   (:GENERIC-VALUE-FN MediumToHighAmountFn) 
+   (sem ?sema)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Adverb
+    (TheList (var ?vara) (sem ?sema) (part -) (lex (? !l here there not)) ; treat particles specially
+     )))))
+
+;;;CJM 7-19 again removing modif because we don't have it
+(isa -advp->adverb-adverb- EAGrammarRule)
+(comment -advp->adverb-adverb- "adverb phrase: 'very quickly'")
+(probabilityEAGrammarRule -advp->adverb-adverb- 1.0)
+(grammarRule -advp->adverb-adverb-
+ (EATermFn advp
+  (TheList (var ?vara2)
+   (:GENERIC-VALUE-FN
+    (ConceptForInstanceFn ?vara1 ?sema1))
+   (sem ?sema2)))
+ (TheList
+  (EATermFn Adverb
+   (TheList (var ?vara1) (sem ?sema1) 
+   ;;;(modif pre-adv)
+   ))
+  (EAHeadFn
+   (EATermFn Adverb
+    (TheList (var ?vara2) (sem ?sema2) 
+    )))))
+
+;(isa -advp->advp-cconj-advp- EAGrammarRule)
+;(comment -advp->advp-cconj-advp- "coordinating conjunctions REM: need to be much better constrained")
+;(probabilityEAGrammarRule -advp->advp-cconj-advp- 1.0)
+;(grammarRule -advp->advp-cconj-advp-
+; (EATermFn advp (TheList (var ?varc) (sem (and ?sema1 ?sema2))))
+; (TheList
+;  (EAHeadFn (EATermFn advp (TheList (var ?vara1) (sem ?sema1))))
+;  (EATermFn Conjunction (TheList (var ?varc) (lex ?lexc)))
+;  (EATermFn advp (TheList (var ?vara2) (sem ?sema2)))))
+
+(isa -advp->mp-advp- EAGrammarRule)
+(comment -advp->mp-advp- "'600 miles northeast of' (JLT)")
+(probabilityEAGrammarRule -advp->mp-advp- 1.0)
+(grammarRule -advp->mp-advp-
+ (EATermFn advp (TheList (var ?varmp) (:MEASURE ?semmp) (sem ?sema)))
+ (TheList (EATermFn mp (TheList (var ?varmp) (sem ?semmp)))
+  (EAHeadFn (EATermFn advp (TheList (var ?vara) (sem ?sema))))))
+
+(isa -advp->adv-pp- EAGrammarRule)
+(comment -advp->adv-pp- "'northeast of'")
+(probabilityEAGrammarRule -advp->adv-pp- 0.9)
+(grammarRule -advp->adv-pp-
+ (EATermFn advp
+  (TheList (var ?vara) (:OBLIQUE-OBJECT ?varpp) (prep-lex ?lexp)
+   (sem (and ?sema ?sempp))))
+ (TheList
+  (EAHeadFn (EATermFn Adverb (TheList (var ?vara) (sem ?sema))))
+  (EATermFn pp (TheList (var ?varpp) (sem ?sempp) (prep-lex ?lexp)))))
+
+(isa -advp->atimetag-ntime1- EAGrammarRule)
+(comment -advp->atimetag-ntime1- "timetag adjectives go before ntime1 nouns, 'last June', 'next hour'")
+(probabilityEAGrammarRule -advp->atimetag-ntime1- 1.0)
+(grammarRule -advp->atimetag-ntime1-
+ (EATermFn advp
+  (TheList (agr ?a) (var ?varn) (ntime1 +) (:NOUN ?varn)
+   (:REPLACE ?semn) (sem (and ?semn ?sema))))
+ (TheList
+  (EATermFn Adjective (TheList (var ?vara) (sem ?sema) (lex (? l next last)))); (atimetag +)
+  (EAHeadFn
+   (EATermFn Noun
+    (TheList (agr ?a) (var ?varn) (sem ?semn) (ntime1 +))))))
+
+(isa -advp->adverb-compp- EAGrammarRule)
+(comment -advp->adverb-compp- "'faster than ...' REM: Modified to use procedural attachment to construct a comparative relation given an adverb like 'faster'. (TRH)")
+(probabilityEAGrammarRule -advp->adverb-compp- 1.0)
+(grammarRule -advp->adverb-compp-
+ (EATermFn advp
+  (TheList (var ?varadv) (:RELATION ?semrel) (:CONSTITUENT1 :SUBJECT)
+   (:CONSTITUENT2 ?varcompp) (sem ?semcompp)))
+ (TheList
+  (EAHeadFn
+   (EATermFn Adverb
+    (TheList (comparative +) (var ?varadv) (sem ?semadv))))
+  (EATermFn compp (TheList (var ?varcompp) (sem ?semcompp)))
+  (EATermFn bind-comparative-relation
+   (TheList (inp ?semadv) (sem ?semrel)))))
+
+(isa -advp->adverb-slp- EAGrammarRule)
+(comment -advp->adverb-slp- "constructs relative adverb phrases")
+(probabilityEAGrammarRule -advp->adverb-slp- 1.0)
+(grammarRule -advp->adverb-slp-
+ (EATermFn advp
+  (TheList (var ?varslp) (arg ?a) (:CLAUSE ?semslp) (sem ?semw)))
+ (TheList 
+   (EATermFn Adverb
+    (TheList (wh q) (sem ?semw)))
+  (EAHeadFn 
+   (EATermFn slp
+    (TheList (var ?varslp) (arg ?a) (sem ?semslp))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code

@@ -1,0 +1,203 @@
+;;;; -*-  Mode: LISP; Syntax: Common-Lisp; Base: 10                          -*-
+;;;; ---------------------------------------------------------------------------
+;;;; File name: perform-forced-choice-task-plans.meld
+;;;;    System: Companions
+;;;;    Author: subu
+;;;;   Created: January 23, 2014 15:35:51
+;;;;   Purpose: 
+;;;; ---------------------------------------------------------------------------
+;;;;  $LastChangedDate: 2015-04-22 14:10:31 -0500 (Wed, 22 Apr 2015) $
+;;;;  $LastChangedBy: subu $
+;;;; ---------------------------------------------------------------------------
+
+(in-microtheory PerformForcedChoiceTaskPlansMt)
+
+(isa PerformForcedChoiceTaskPlansMt (ExperimentInfraStructureFn "Cross Modal Interaction"))
+
+(isa selectChoiceMatchingLabel ComplexActionPredicate)
+(arity selectChoiceMatchingLabel 3)
+
+;;if there is a labeledAbstraction for the given label
+(preconditionForMethod
+ (and (wmOnly (isa (LabeledAbstractionFn ?label ?referred-item-set) LabeledAbstractionWMMicrotheory))
+      (unifies ?standard (LabeledAbstractionFn ?label ?referred-item-set))
+      (evaluate ?choices (SetToListFn 
+                                   (TheClosedRetrievalSetOf ?choice-encoding
+                                     (and (wmOnly (isa (PerceptualReferentCaseFn (PossibleLabelFn ?label) ?dem-var ?sketch-item) PerceptualReferentWMMicrotheory))
+                                          (unifies ?choice-encoding 
+                                            (EncodedCaseFn (PerceptualReferentCaseFn (PossibleLabelFn ?label) ?dem-var ?sketch-item) SUB-EP-ID))))))
+            (different ?choices (TheList)))                  
+ (methodForAction
+  (selectChoiceMatchingLabel ?label ?dem-var ?_referent)
+  (actionSequence
+   (TheList
+    (doAnnounce "The standard is a labeledAbstraction : ~A" (?standard))
+    (doMap (?choice)
+           (doAnnounce "choice : ~A" (?choice))
+           ?choices)
+    (doAgentPlan (chooseBestChoice ?standard ?choices))))))
+
+
+;;if there is a labeledAbstraction for the given label and the choices have prior encoding
+(preconditionForMethod
+ (and (wmOnly (isa (LabeledAbstractionFn ?label ?referred-item-set) LabeledAbstractionWMMicrotheory))
+      (unifies ?standard (LabeledAbstractionFn ?label ?referred-item-set))
+      (evaluate ?choices (SetToListFn 
+                                   (TheClosedRetrievalSetOf ?choice-encoding
+                                     (and (wmOnly (sameVisualEncodedObject 
+                                                   (PerceptualReferentCaseFn (PossibleLabelFn ?label) ?dem-var ?sketch-item)
+                                                   (PerceptualReferentCaseFn ?pos-label ?pos-var ?sketch-item)))
+                                          (unifies ?choice-encoding 
+                                            (EncodedCaseFn (PerceptualReferentCaseFn ?pos-label ?pos-var ?sketch-item) SUB-EP-ID))))))
+            (different ?choices (TheList))) 
+ (methodForAction
+  (selectChoiceMatchingLabel ?label ?dem-var ?_referent)
+  (actionSequence
+   (TheList
+    (doAnnounce "The standard is a labeledAbstraction : ~A" (?standard))
+    (doMap (?choice)
+           (doAnnounce "choice from prior encoding: ~A" (?choice))
+           ?choices)
+    (doAgentPlan (chooseBestChoice ?standard ?choices))))))
+    
+
+;;if there is no labaled abstraction for the given label
+(preconditionForMethod
+ (and (uninferredSentence (isa (LabeledAbstractionFn ?label ?_referred-item-set) LabeledAbstractionWMMicrotheory))
+      (wmOnly (isa (PerceptualReferentCaseFn ?label ?var ?item) PerceptualReferentWMMicrotheory))
+      (unifies ?standard (EncodedCaseFn (PerceptualReferentCaseFn ?label ?var ?item) SUB-EP-ID))
+      (evaluate ?choices (SetToListFn 
+                                   (TheClosedRetrievalSetOf ?choice-encoding
+                                     (and (wmOnly (isa (PerceptualReferentCaseFn (PossibleLabelFn ?label) ?dem-var ?sketch-item) PerceptualReferentWMMicrotheory))
+                                          (unifies ?choice-encoding 
+                                            (EncodedCaseFn (PerceptualReferentCaseFn (PossibleLabelFn ?label) ?dem-var ?sketch-item) SUB-EP-ID))))))
+      (different ?choices (TheList)))                  
+ (methodForAction
+  (selectChoiceMatchingLabel ?label ?dem-var ?_referent)
+  (actionSequence
+   (TheList
+    (doAnnounce "The standard is just one element : ~A" (?standard))
+    (doMap (?choice)
+           (doAnnounce "choice  : ~A" (?choice))
+           ?choices)
+    (doAgentPlan (chooseBestChoice ?standard ?choices))))))
+
+
+;;if there is a no labeled abstraction for the given label and the choices have prior encoding
+(preconditionForMethod
+ (and (uninferredSentence (isa (LabeledAbstractionFn ?label ?_referred-item-set) LabeledAbstractionWMMicrotheory))
+      (wmOnly (isa (PerceptualReferentCaseFn ?label ?var ?item) PerceptualReferentWMMicrotheory))
+      (unifies ?standard (EncodedCaseFn (PerceptualReferentCaseFn ?label ?var ?item) SUB-EP-ID))
+      (evaluate ?choices (SetToListFn 
+                                   (TheClosedRetrievalSetOf ?choice-encoding
+                                     (and (wmOnly (sameVisualEncodedObject 
+                                                   (PerceptualReferentCaseFn (PossibleLabelFn ?label) ?dem-var ?sketch-item)
+                                                   (PerceptualReferentCaseFn ?pos-label ?pos-var ?sketch-item)))
+                                          (unifies ?choice-encoding 
+                                            (EncodedCaseFn (PerceptualReferentCaseFn ?pos-label ?pos-var ?sketch-item) SUB-EP-ID))))))
+            (different ?choices (TheList))) 
+ (methodForAction
+  (selectChoiceMatchingLabel ?label ?dem-var ?_referent)
+  (actionSequence
+   (TheList
+    (doAnnounce "The standard is just one element : ~A" (?standard))
+    (doMap (?choice)
+           (doAnnounce "choice from prior encoding: ~A" (?choice))
+           ?choices)
+    (doAgentPlan (chooseBestChoice ?standard ?choices))))))
+
+;;;Algrorithm for ChooseBestChoice
+;;; 1. IF (UNINFERRED PICK-BASIC-CHOICE) THEN PICK-BASIC-CHOICE
+;;; 2. IF (confidence of PICK-BASIC-CHOICE = true) ANNOUNCE RESULTS.
+;;; 3. IF (confidence of PICK-BASIC-CHOICE = false) THEN PICK-CHOICE(which does rerep)
+;;;after rerep
+;;; 4. IF (confidence of PICK-CHOICE = true) ANNOUNCE RESULTS.
+;;; 5. IF (confidence of PICK-CHOICE = false) ANNOUNCE defeat i.e "tried but still can't make a confident selection" 
+;;; the below plans roughly correspond to the above algorithm.
+
+
+(isa chooseBestChoice ComplexActionPredicate)
+(arity chooseBestChoice 2)
+
+(preconditionForMethod
+ (and (different ?choices (TheList))
+      (evaluate ?length (LengthOfListFn ?choices))
+      (greaterThan ?length 1)
+      (wmOnly (uninferredSentence
+               (ist-Information CrossModalInteractionSpindleMt
+                 (pickBasicChoice ?standard ?choices ?winning-choice ?winning-score ?winning-mapping ?confident)))))
+ (methodForAction
+  (chooseBestChoice ?standard ?choices)
+  (actionSequence
+   (TheList
+    (doMap (?choice)
+           (doCompare (WMCaseFn ?standard) (WMCaseFn ?choice) (TheSet))
+           ?choices)
+    (doSolve (pickBasicChoice ?standard ?choices ?winning-choice ?winning-score ?winning-mapping ?confident) 
+              CrossModalInteractionSpindleMt)
+    (doAgentPlan (chooseBestChoice ?standard ?choices))))))
+
+;;;;TODO need to variablize rerep threshold
+(preconditionForMethod
+ (and (wmOnly (ist-Information CrossModalInteractionSpindleMt 
+                (pickBasicChoice ?standard ?choices ?winning-choice ?winning-score ?winning-mapping true)))
+       (currentNuSketchHookup ?nusketch-hookup-agent))
+ (methodForAction
+  (chooseBestChoice ?standard ?choices)
+  (actionSequence
+   (TheList
+    (doAgentPlan 
+     (doTell (ist-Information CrossModalInteractionSpindleMt 
+               (pickChoice ?standard ?choices ?winning-choice ?winning-score ?winning-mapping true)))) 
+    (doAgentPlan (doAnnounce "was able to pick ~A without much work" (?winning-choice)))
+    (doRemoteAgentPlan ?nusketch-hookup-agent 
+                       (selectWinningGlyph ?winning-choice))))))
+    
+
+
+(preconditionForMethod
+ (and (wmOnly (ist-Information CrossModalInteractionSpindleMt 
+                (pickBasicChoice ?standard ?choices ?_rand-choice ?_rand-score ?_rand-mapping false)))
+      (defaultNormalizationStrategy Rerepresentation ?normalization-strategy)) ;;DEAL WITH THIS
+ (methodForAction
+  (chooseBestChoice ?standard ?choices)
+  (actionSequence
+   (TheList
+    (doMap (?choice)
+           (doSolve (bestComparisonWith (WMCaseFn ?standard) 
+                                        (WMCaseFn ?choice)
+                                        0.7 ;;variablize this
+                                        ?normalization-strategy													 
+                                        ?_mapping ?_score)
+                    CrossModalInteractionSpindleMt)
+           ?choices)
+    (doAgentPlan 
+     (doSolve (pickChoice ?standard ?choices ?_winning-choice ?_winning-score ?_winning-mapping ?_confident) 
+              CrossModalInteractionSpindleMt))
+    (doAgentPlan
+     (announcePickChoiceResults ?standard ?choices))))))
+
+
+(isa announcePickChoiceResults ComplexActionPredicate)
+(arity announcePickChoiceResults 2)
+
+(preconditionForMethod
+ (and (currentNuSketchHookup ?nusketch-hookup-agent)
+      (wmOnly 
+       (ist-Information CrossModalInteractionSpindleMt
+         (pickChoice ?standard ?choices ?winning-choice ?winning-score ?_winning-mapping ?confident))))
+ (methodForAction
+  (announcePickChoiceResults ?standard ?choices)
+  (actionSequence
+   (TheList
+    (doAnnounce "after rerepresentation the winning choice: ~A winning-score: ~A with confident: ~A"
+                (?winning-choice ?winning-score ?confident))
+    (doRemoteAgentPlan ?nusketch-hookup-agent 
+                       (selectWinningGlyph ?winning-choice))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; End of Code
