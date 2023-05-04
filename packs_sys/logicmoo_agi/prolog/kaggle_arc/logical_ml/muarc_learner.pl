@@ -1,7 +1,8 @@
+% You can extend this foundation to support more complex networks and vision processing tasks.
 
-% Implementing a complete neural network library in Prolog is beyond the scope of this response. However, I can provide you with a basic structure and some functions to get you started with a simple feedforward neural network in Prolog. You can extend this foundation to support more complex networks and vision processing tasks.
-
-% First, let's define some core functions for matrix operations, since neural networks rely on these operations for feedforward and backpropagation processes:
+% First, let's define some core functions for matrix operations, 
+%  since neural networks rely on these operations for 
+%  feedforward and backpropagation processes:
 
 % Matrix multiplication
 mat_mul([], _, []).
