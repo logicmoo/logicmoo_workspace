@@ -293,7 +293,7 @@ exmaple_usage:-
     decode_sequence(Hidden, DecodedSequence),
     generate_text(DecodedSequence, 20, Text),
     writeln(Text).
-
+/*
 This implementation extends the previous implementation by adding a self-attention mechanism to the autoencoder. 
 The self_attention/4 predicate applies self-attention to the input matrix to generate a lower-dimensional 
 representation of the input.
@@ -324,4 +324,4 @@ Here are some possible extensions to this implementation:
 
 Prolog can be used as a powerful tool for exploring 
  and prototyping deep learning models due to its natural support for symbolic programming and logical reasoning.
-
+*/
