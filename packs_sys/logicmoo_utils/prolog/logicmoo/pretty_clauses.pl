@@ -651,7 +651,9 @@ color_format_maybe(_,F,A):- format(F,A),!.
 :- export(write_q/1). 
 write_q(S):- maybe_pp_hook(write_q, S),!.
 write_q(X):- in_pp(bfly),!,print_html_term(X).
+write_q(O):- maybe_special_printing(O),!.
 write_q(X):- writeq(X).
+
 
 ec_portray(_,X):- as_is_cmpd(X),!,without_ec_portray_hook(write_q(X)).
 ec_portray(_,X):- atom(X),ansi_ansi,!,without_ec_portray_hook(write_q(X)).
@@ -947,6 +949,12 @@ in_color(C,P):-
 %:- dynamic(pretty_clauses:goal_expansion/2).
 % pretty_clauses:goal_expansion(pt_nl,(pformat(S:L),nl)):- source_location(S,L).
 
+maybe_special_printing(O):- \+ compound(O),!,fail.
+maybe_special_printing(O):- \+ (sub_term(E,O),never_as_is(E)),!,fail.
+%maybe_special_printing(O):- nl,nl,portray_with_vars(O,[]),nl,nl,!.
+maybe_special_printing(O):- nl,nl,nl,nl, print(O),!.
+
+write_simple(A):- maybe_special_printing(A),!.
 write_simple(A):- write_simple(A,[]).
 write_simple(S,_):- term_is_ansi(S), !, write_keeping_ansi(S).
 write_simple(A,Options):- get_portrayal_vars(Vs), 
@@ -956,6 +964,7 @@ write_simple(A,Options):- get_portrayal_vars(Vs),
      simple_write_term(A,OptionsNew),
      erase(Ref)))).
 
+portray_with_vars(A):- maybe_special_printing(A),!.
 portray_with_vars(A):- portray_with_vars(A,[]),!.
 
 portray_with_vars(A,Options):- 
@@ -989,6 +998,7 @@ prolog_pretty_print_term(A,Options):-
 % @TODO comment out the next line
 %simple_write_term(A):- !, with_no_hrefs(t,(if_defined(rok_writeq(A),write_q(A)))),!.
 
+system:simple_write_term(S):- maybe_special_printing(S),!.
 system:simple_write_term(S):- maybe_pp_hook(simple_write_term, S),!.
 system:simple_write_term(A):- in_pp(bfly),!,print_html_term(A).
 system:simple_write_term(A):- 
@@ -1711,8 +1721,10 @@ print_lc_tab_term(LC,Tab,T):- write(LC),print_tab_term(Tab,T).
 
 pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
-pt1(_FS,Tab,_S) :- prefix_spaces(Tab), fail.
 
+
+pt1(_FS,Tab,_S) :- prefix_spaces(Tab), fail.
+pt1(_FS,_Tab, S) :- maybe_special_printing(S),!.
 
 
 pt1(FS, _Tab,S) :- maybe_pp_hook(pt1(FS),S),!.
@@ -1971,7 +1983,19 @@ splice_off([A0,A|As],[A0|Left],[R|Rest]):-
 
 
 pt_args_arglist( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis clickprev fold',true),pl_span_goal('args',true)),E).
-pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
+
+pt_args_arglist(FS,Tab,S,M,E,[H|TT]):- is_list(T), append(T,[Last],TT), never_as_is(Last),
+ Sep = (', '),
+ pt_s_e(S,  
+  pformat_e_args([H|T],      
+    ( prefix_spaces(Tab),
+     print_tree_no_nl(H), pt_cont_args(Sep, Tab,Sep, M, FS,T),
+     write(Sep),  write(' '),
+       pt1(FS,Tab-3,Last)
+       % prefix_spaces(Tab-1),print(Last)
+      )),E).
+
+pt_args_arglist(FS,Tab,S,M,E,[H|T]):- 
  pt_s_e(S,  
   pformat_e_args([H|T],      
     ( prefix_spaces(Tab),
@@ -2011,8 +2035,10 @@ first_n(N,[E|R],[E|List],Right):- NN is N-1, first_n(NN,R,List,Right).
 
 pt_cont_args(_Sep1, _Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
 pt_cont_args(_Sep1, Tab,_Sep, Mid, FS, A) :- (var(A) ; A \= [_|_]), !,  pformat(Mid), print_tab_term(Tab,FS,A), !.
+%pt_cont_args(Sep1, Tab,_Sep,_Mid, FS,[A|R]) :- R==[], compound(A), pformat(Sep1),!,print_tab_term(Tab-1,FS,A), !.
 pt_cont_args(Sep1, Tab,_Sep,_Mid, FS,[A|R]) :- R==[], pformat(Sep1), !, print_tab_term(Tab,FS,A), !.
-pt_cont_args(Sep1, Tab,Sep, Mid, FS, RL):- 
+
+pt_cont_args(Sep1, Tab,Sep, Mid, FS, RL):-  is_list(RL), last(RL,Last), \+ never_as_is(Last), fail_when_arc_pp,
   wots(S,pt_cont_args_s(Sep1, Tab,Sep, Mid, FS, RL)), write(S),!.
 pt_cont_args(Sep1, Tab,Sep, Mid, FS,[A|As]) :- !,  
    pformat(Sep1), print_tab_term(Tab,[lf|FS],A),
@@ -2020,26 +2046,36 @@ pt_cont_args(Sep1, Tab,Sep, Mid, FS,[A|As]) :- !,
 
 
 first_right_not_short(List,[FR|_]):- last(List,Last), display_length(Last,LL),display_length(FR,RL),RL<LL, !, fail.
-first_right_not_short(_,_Right):- !.
+first_right_not_short(_,_Right):- fail_when_arc_pp, !.
+
+fail_when_arc_pp:- true.
+never_as_is(_):-!,fail.
+never_as_is(V):- var(V),!,fail.
+never_as_is(rhs(_)).
+never_as_is(lhs(_)).
+never_as_is(edit(_)).
+never_as_is(copy(_)).
+never_as_is(edit_copy(_,_,_,_,_)).
 
 pt_cont_args_s(Sep1, Tab, Sep, Mid,FS,RL) :- 
-    rev_append(List,Right,RL), 
+    rev_append(List,Right,RL), fail_when_arc_pp,
    length(List,L), L>1, maplist(not_is_list_local,List), max_output(Tab,80,List), 
    first_right_not_short(List,Right), !,
    write_ar_simple(Sep1,Tab,Sep,List),    
    ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
-pt_cont_args_s(Sep1, Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),RL,List,Right), List\= [_],
+pt_cont_args_s(Sep1, Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),RL,List,Right), List\= [_], fail_when_arc_pp,
   first_right_not_short(List,Right), !,
   write_ar_simple(Sep1, Tab,Sep,List),
    ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
-pt_cont_args_s(Sep1, Tab, Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_],  max_output(Tab,80,List),
+pt_cont_args_s(Sep1, Tab, Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_],  max_output(Tab,80,List), fail_when_arc_pp,
    first_right_not_short(List,Right), !,
    write_ar_simple(Sep1, Tab,Sep,List),
    ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
 
-pt_cont_args_s(Sep1, Tab, Sep,_Mid,_FS, List) :- % ground(List),
+pt_cont_args_s(Sep1, Tab, Sep,_Mid,_FS, List) :- % ground(List),   
+   fail_when_arc_pp,
    is_list(List), length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), 
    first_right_not_short([A],R), !,
    pformat(Sep1), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),!.
@@ -2070,11 +2106,15 @@ use_system_portray(Term):- (( \+ compound(Term)); is_arity_lt1(Term); functor(Te
 use_system_portray(A=B):- use_system_portray(A),use_system_portray(B),!. 
 
 
-as_is(V):- as_is0(V).
+as_is(V):- as_is0(V),!.
 
 not_string(V):- \+ string(V).
 
+
+%never_as_is(iz(_)).
+
 as_is0(V):- var(V).
+as_is0(A):- never_as_is(A),!,fail.
 as_is0(A) :- is_arity_lt1(A), !.
 as_is0(V) :- is_dict(V), !, fail.
 as_is0(V):- term_contains_ansi(V),!,fail.

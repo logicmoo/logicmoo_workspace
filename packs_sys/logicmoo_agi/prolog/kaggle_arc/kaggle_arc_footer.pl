@@ -31,6 +31,8 @@
 :- ensure_loaded(kaggle_arc_intruder).
 :- ensure_loaded(kaggle_arc_test_cache).
 :- ensure_loaded(kaggle_arc_individuation).
+:- ensure_loaded(kaggle_arc_transrules).
+:- ensure_loaded(kaggle_arc_generalization).
 
 :- ensure_loaded(kaggle_arc_object).
 :- ensure_loaded(kaggle_arc_boards).

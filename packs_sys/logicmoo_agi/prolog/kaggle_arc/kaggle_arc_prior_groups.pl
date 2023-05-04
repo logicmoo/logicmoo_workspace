@@ -560,8 +560,21 @@ contains_enough_for_print([P|Props],G):- is_obj_props(Props),!,(contains_enough_
 :- abolish(is_prop2d/1).
 :- dynamic(is_prop2d/1).
 
+never_is_prop(obj(_)).
+never_is_prop(edit_copy(_,_,_,_)).
+never_is_prop(edit_copy(_,_,_)).
+never_is_prop(grp(_,_,_)).
+never_is_prop((_+_)).
+never_is_prop((_>_)).
+never_is_prop((_*_)).
+never_is_prop((_-_)).
+never_is_prop(into_new(_,_,_)). 
+never_is_prop(ac_db(_,_,_,_)).
+
+
 is_obj_props(Props):- is_list(Props), Props\==[], maplist(is_prop1,Props).
 is_prop1(Prop):- ( \+ compound(Prop); Prop=[_|_] ; Prop=(_-_)),!,fail.
+is_prop1(Prop):- never_is_prop(Prop),!,fail. 
 is_prop1(Prop):- is_prop2(Prop),!.
 is_prop1(Prop):- ( is_point(Prop) ; is_color(Prop);  is_object(Prop) ; is_grid_cell(Prop)),!,fail.
 is_prop1(P):- functor(P,F,A),functor(T,F,A),asserta(is_prop2d(T)),!.
@@ -1000,6 +1013,7 @@ indv_eprops_list(Indv,List9):-
   ku_rewrite_props(List0,List9).
 
 flat_props(PropLists,OUTL):- is_list_of_prop_lists(PropLists),!,flatten(PropLists,OUTL).
+flat_props(Objs,EList):- \+ is_list(Objs),!,flat_props([Objs],EList).
 flat_props(Objs,EList):-
   maplist(indv_eprops_list,Objs,PropLists),
   flatten(PropLists,List), %list_to_set(List,Set),

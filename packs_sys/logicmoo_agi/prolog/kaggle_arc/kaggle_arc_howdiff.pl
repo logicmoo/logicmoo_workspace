@@ -534,7 +534,7 @@ bonus_sort_by_jaccard(Bonus,A,Candidates,Objs):-
 
 find_prox_mappings(Bonus,A,GroupID,Candidates,Objs):- bonus_sort_by_jaccard(Bonus,A,GroupID,Candidates,Objs).
 
-points_by_distance_to_center(I,GGP):- center2D(I,X,Y), globalpoints(I,GP), sort_on(dist_to(X,Y),GP,GGP).
+points_by_distance_to_center(I,GGP):- center2D(I,X,Y), globalpoints(I,GP), predsort_on(dist_to(X,Y),GP,GGP).
 
 dist_to(X1,Y1,HVP,Dist):- center2D(HVP,X2,Y2),dist(X1,Y1,X2,Y2,Dist).
 dist_to(P1,P2,Dist):- center2D(P1,X1,Y1), center2D(P2,X2,Y2),dist(X1,Y1,X2,Y2,Dist).
@@ -855,7 +855,7 @@ type_prop(rescale,iz(sizeGX(_))).
 type_prop(rescale,iz(sizeGY(_))).
 type_prop(rescale,rotSize2D(_,_,_)).
 type_prop(rescale,mass(_)).
-type_prop(rescale,cc(_,_)).
+%type_prop(rescale,cc(fg,_)).
 type_prop(rescale,grid_rep(norm,_)).
 type_prop(reshape,shape_rep(grav,_)).
 type_prop(reshape,iz(sid(_))).
