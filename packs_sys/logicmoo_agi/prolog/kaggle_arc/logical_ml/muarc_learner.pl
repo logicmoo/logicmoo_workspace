@@ -61,10 +61,12 @@ forward_pass(Input, Weights, Biases, Activations, Output) :-
     mat_add(Temp, Biases, PreActivation),
     apply_activation(PreActivation, Activations, Output).
 
-% With these functions, you can create a simple feedforward neural network with customizable layers, weights, biases, and activation functions. To add more complex functionality, such as vision processing, you would need to implement additional layers (e.g., convolutional layers) and operations (e.g., max-pooling).
+% With these functions, you can create a simple feedforward neural network with customizable layers, weights, 
+%  biases, and activation functions. To add more complex functionality, such as vision processing, you would 
+%  need to implement additional layers (e.g., convolutional layers) and operations (e.g., max-pooling).
 
-% To support more complex networks and vision processing tasks, we'll need to add convolutional layers and pooling layers to our neural network library. I'll provide you with the code for the convolutional and max-pooling layers. Note that these implementations are not optimized for performance, and in practice, it is recommended to use dedicated deep learning libraries like TensorFlow or PyTorch.
-
+% To support more complex networks and vision processing tasks, we'll need to add convolutional layers 
+%    and pooling layers to our neural network library.
 % Convolutional Layer:
 % We'll add support for the convolution operation, which is the core operation of convolutional layers.
 
@@ -98,8 +100,11 @@ apply_filter_helper([], [], Acc, Acc).
 apply_filter_helper([ImgPixel|ImgPixels], [FilterPixel|FilterPixels], Acc, Result) :-
     NewAcc is Acc + ImgPixel * FilterPixel,
     apply_filter_helper(ImgPixels, FilterPixels, NewAcc, Result).
+
+
 % Max-Pooling Layer:
-% We'll add support for the max-pooling operation, which is a common operation for reducing the spatial dimensions of the feature maps.
+% We'll add support for the max-pooling operation, which is a common operation for reducing the spatial 
+    % dimensions of the feature maps.
 
 % Max-pooling operation
 max_pooling(Image, PoolSize, Output) :-
@@ -139,17 +144,25 @@ sublist(List, Sublist, Offset, Length) :-
 % MaxPoolOutput = [[1, 1, 1], [1, 1, 1], [1, 1, 1]].
 
 /*
-Now, you can extend the forward_pass function to include support for the convolutional and max-pooling layers. Depending on the layer type, you can use the conv2d or max_pooling function to process the input.
+Now, you can extend the forward_pass function to include support for the convolutional and max-pooling layers.
+ Depending on the layer type, you can use the conv2d or max_pooling function to process the input.
 
-When designing a neural network for vision processing, the architecture typically starts with a series of convolutional and max-pooling layers, followed by fully connected layers. The convolutional layers are responsible for detecting local patterns, such as edges or textures, while the max-pooling layers reduce the spatial dimensions of the feature maps, making the network invariant to small translations. The fully connected layers then learn higher-level features and produce the final classification or output.
+When designing a neural network for vision processing, the architecture typically starts with a 
+  series of convolutional and max-pooling layers, followed by fully connected layers. 
 
-Note that this Prolog implementation is not optimized for performance, and in practice, it is recommended to use dedicated deep learning libraries like TensorFlow or PyTorch. These libraries provide efficient and scalable solutions for building and training neural networks for various tasks, including vision processing.
+The convolutional layers are responsible for detecting local patterns, such as edges or textures, 
+  while the max-pooling layers reduce the spatial dimensions of the feature maps, making the network 
+  invariant to small translations. The fully connected layers then learn higher-level features and 
+  produce the final classification or output.
 
-
+These libraries provide efficient and scalable solutions for building and training neural networks 
+ for various tasks, including vision processing.
 
 Now extend the forward_pass function to include support for the convolutional and max-pooling layers. 
 
-To extend the forward_pass function to include support for convolutional and max-pooling layers, we will modify the function to accept a list of layers with their types and parameters. For each layer, the function will call the appropriate operation (conv2d, max_pooling, or mat_mul) based on the layer type.
+To extend the forward_pass function to include support for convolutional and max-pooling layers, we 
+  will modify the function to accept a list of layers with their types and parameters. 
+  For each layer, the function will call the appropriate operation (conv2d, max_pooling, or mat_mul) based on the layer type.
 
 Here's the updated forward_pass function:
 
