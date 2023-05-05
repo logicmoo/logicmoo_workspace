@@ -25,7 +25,7 @@ ac_db(List,CtxU,P,PSame):-
 ac_db1(List,Ctx,P,PSame):- is_list(List),!,member(ac_unit(Ctx,P,PSame),List).
 ac_db1(TestID,Ctx,P,PSame):- ac_unit(TestID,Ctx,P,PSame).
 
-%ac_db(TestID,P,PSame):- ac_db(TestID,_,P,PSame).
+%ac_rules(TestID,P,PSame):- ac_rules(TestID,_,P,PSame).
 
 
 % Define predicates that shouldn't be noticed
@@ -197,7 +197,7 @@ solve_via_scene_change_rules(TestID,ExampleNum):-
     ;(banner_lines(red,10),!,
       print_scene_change_rules(rules_at_time_of_failure,TestID),
       banner_lines(red,10),
-      %if_t((findall(_,ac_db(_,_,_,_),L), L == []), (get_scene_change_rules(TestID,pass2_rule_new,Rules),pp_ilp(Rules))),banner_lines(red,5),
+      %if_t((findall(_,ac_rules(_,_,_,_),L), L == []), (get_scene_change_rules(TestID,pass2_rule_new,Rules),pp_ilp(Rules))),banner_lines(red,5),
       %print_object_dependancy(TestID),
       !,fail)).
 
@@ -220,12 +220,18 @@ enter_solve_obj(VM,TestID,ExampleNum,ROptions,Objs,ObjsO):-
  ObjsO \==[],!.
 
 score_rule(Ways,Obj,Rule,Score):- is_object(Rule), \+ is_object(Obj),!,score_rule(Ways,Rule,Obj,Score).
+
 score_rule(Ways,Obj,Rule,Score):- 
- (Rule = (_Ctx:edit(P):- obj_atoms(PCond))),
- indv_props_list(Obj,Props), \+ member(P,Props),
- %\+ \+ ((member(E,Props),member(E,PCond))),
- once( ( \+ is_bg_object(Obj) ); sub_var(black,PCond)),
- score_rule(Ways,Obj,PCond,P,Score).
+  into_lhs(Rule,PCond), into_rhs(Rule,P), 
+  % indv_props_list(Obj,Props), \+ member(P,Props), %\+ \+ ((member(E,Props),member(E,PCond))),
+   once( ( \+ is_bg_object(Obj) ); sub_var(black,PCond)),
+    score_rule(Ways,Obj,PCond,P,Score).
+score_rule(exact,Obj,PCond,_P,Score):-  has_all_props(PCond,Obj),!,Score=1000.
+score_rule(_Ways,Obj,PCond,_P,Score):-
+   obj_atoms(Obj,A),
+   obj_atoms(PCond,B),
+     intersection(A,B,Good,_Extra,_Bad),
+     length(Good,Score).
 
 has_all_props(CanL,Obj):- maplist(inv_has_prop(Obj),CanL).
 
@@ -243,13 +249,6 @@ inv_has_prop(Obj, \+ Prop):- !, \+ inv_has_prop(Obj,Prop).
 inv_has_prop(Obj,grid_ops(norm,Props)):- !, has_prop(grid_ops(norm,VProps),Obj),!,Props=@=VProps.
 inv_has_prop(Obj,grid_rep(norm,Props)):- !, has_prop(grid_rep(norm,VProps),Obj),!,Props=@=VProps.
 inv_has_prop(Obj,Prop):- has_prop(Prop,Obj).
-
-score_rule(exact,Obj,PCond,_P,Score):-  has_all_props(PCond,Obj),!,Score=1000.
-score_rule(_Ways,Obj,PCond,_P,Score):-
-   obj_atoms(Obj,A),
-   obj_atoms(PCond,B),
-     intersection(A,B,Good,_Extra,_Bad),
-     length(Good,Score).
   
 match_ok(_,B):- plain_var(B),!.
 match_ok(A,B):- \+ \+ A = B.
@@ -316,7 +315,7 @@ rhs_ground(G):- ground(G),!.
 rhs_ground(G):- nop(writeln(G)),!.
 
 ac_rules(TestID,IO,P,PCond):- 
-  ac_db(TestID,IO,P,PCond). % vsr_set(PSame,PCond).
+  ac_db(TestID,IO,P,PCond), P \= edit(_,_,_), P \= edit(_). % vsr_set(PSame,PCond).
 
 solve_obj_group(VM,TestID,_ExampleNum,_ROptions,Ctx,Objs,ObjsO):-
   (Rule = (Ctx:edit(P):- obj_atoms(PCond))),
@@ -327,7 +326,7 @@ solve_obj_group(VM,TestID,_ExampleNum,_ROptions,Ctx,Objs,ObjsO):-
   maplist(into_solid_grid_strings,Todo,PStr),
   unwonk_ansi(PStr,PPStr),
   pp_ilp((see_Strategy(Ways-Strategy)=PPStr)), Todo\==[],
-  once((maplist(run_todo_output(VM),Todo,ObjsM),flatten_objects(ObjsM,ObjsO))), ObjsO\==[],!.
+  run_todo_output(VM,Todo,ObjsO),ObjsO\==[],!.
 
 /*
 solve_obj_group(_VM,TestID,_ExampleNum,Ctx,_ROptions,Objs,ObjsO):-
@@ -401,12 +400,22 @@ copy_obj(_VM,_TestID,_ExampleNum,_IO_,_ROptions,Obj,Obj).
 %solve_obj(VM,_TestID,_ExampleNum,IO_,_ROptions,_Obj,[]).
 */
 
-edit_object(_VM,Ps,_Obj,NewObj):- Ps==[],!,NewObj=[]. %edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
-edit_object(VM,Ps,Obj,NewObj):- Ps==[],!,edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
-edit_object(VM,Ps,Obj,NewObj):-
+run_todo_output(VM,[],NewObjs):- NewObjs = VM.robjs,!.
+run_todo_output(VM,[apply(Rule,Obj)|TODO],NewObjs):-
+  edit_object(VM,Rule,Obj),
+  run_todo_output(VM,TODO,NewObjs).
+
+edit_object(_VM,Ps,_Obj):- Ps==[],!.
+%edit_object(VM,Ps,Obj):- Ps==[],!,edit_object(VM,pen([cc(black,1)]),Obj).
+edit_object(VM,[H|T],Obj):- !,edit_object(VM,H,Obj),edit_object(VM,T,Obj).
+edit_object(VM,copy_step(_,perfect_in_out),Obj):- addRObjects(VM,Obj).
+edit_object(VM,creation_step(_,_,Props),Obj):-
+  clone_object(Obj,NewObj), edit_object(VM,Props,NewObj).
+edit_object(VM,Ps,Obj):-
   must_det_ll((
    wots(SS,print(Ps)),
    override_object_1(VM,Ps,Obj,NewObj),
+   addRObjects(VM,NewObj),
    into_solid_grid([NewObj],SG),SG=_,
    dash_chars,
    print_ss(override_object(SS),[Obj],[NewObj]),
@@ -425,15 +434,10 @@ override_object_1(VM,loc2D(X,Y),Obj,NewObj):- loc2D(Obj,WX,WY),
   offset_points(X,Y,LPoints,GPoints),rebuild_from_globalpoints(VM,Obj,GPoints,NewObj).
 override_object_1(VM,Term,I,O):- sub_term(Sub,Term),
    compound(Sub),Sub=edit(P), !, pp_ilp(Term), override_object_1(VM,P,I,O).
-override_object_1(VM,Term,I,O):- sub_term(Sub,Term),
-   compound(Sub),Sub=edit(_,_,P), !, pp_ilp(Term), override_object_1(VM,P,I,O).
-override_object_1(VM,copy_step(_,perfect_in_out),I,I).
-override_object_1(VM,creation_step(_,_,Props),I,I).
+%override_object_1(VM,Term,I,O):- sub_term(Sub,Term), compound(Sub),Sub=edit(_,_,P),  !, pp_ilp(Term), I=O,!. %override_object_1(VM,P,I,O).
 
 
 override_object_1(_VM,O,I,OO):- override_object(O,I,OO),!.
-run_todo_output(VM,apply(Rule,Obj),NewObj):-
-  edit_object(VM,Rule,Obj,NewObj),!.
 
 
 mapping_step(    in_out).
@@ -832,8 +836,18 @@ something_common(R1,R2):- \+ \+ ((member(E1,R1), good_for_rhs(E1),  member(E2,R2
 
 merge_vals(A,B,C):- atom(A),!,A==B,C=A.
 merge_vals(A,B,C):- A=@=B,!,C=A.
+merge_vals(A, A, A) :- !.
 merge_vals(A,B,C):- A==[],!,B=C.
 merge_vals(A,B,C):- B==[],!,A=C.
+
+merge_vals(A,B,C):- is_obj_props(A),is_obj_props(B),!,merge_props(A,B,C).
+merge_vals([A1,A2],[B],[C1,C2]):-  !, merge_vals(A1,B,C1),merge_vals(A2,B,C2).
+merge_vals([A|AA],[B|BB],[C|CC]):- !, merge_vals(A,B,C), merge_vals(AA,BB,CC).
+
+merge_vals(prop(Name,A),prop(Name,B),prop(Name,C)):- !, merge_vals(A, B, C).
+merge_vals(prop(Name, A1, A2),prop(Name, B1, B2), prop(Name, C1, C2)):- !,
+  merge_vals(A1, B1, C1),merge_vals(A2, B2, C2).
+
 merge_vals(A,B,C):- ( \+ compound(A) ; \+ compound(B)),!, flatten_sets([A,B],C),!. 
 merge_vals(T+A,T+B,C):-!,must_det_ll((C=(T+A+B))).
 merge_vals(A,B,C):- 
@@ -845,11 +859,11 @@ merge_vals(A,B,C):-
   C =  info(Step,IsSwapped,Ctx,Type1,TestID, _, ExList),!.
 
 merge_vals(A,B,C):-
-  A =  ac_db(TestID, IO, P1, PSame1),
-  B =  ac_db(TestID, IO, P2, PSame2),!,
+  A =  ac_rules(TestID, IO, P1, PSame1),
+  B =  ac_rules(TestID, IO, P2, PSame2),!,
   P1=@=P2,
   merge_props(PSame1,PSame2,PSame),!,
-  C =  ac_db(TestID, IO, P1, PSame).
+  C =  ac_rules(TestID, IO, P1, PSame).
 
 merge_vals(Rule1,Rule2,NewRule):-
   r(Type1,LHS1,RHS1,S1,L1,R1, Ex1, Step1) = Rule1,
@@ -862,9 +876,6 @@ merge_vals(Rule1,Rule2,NewRule):-
 
 merge_vals(rhs(A),rhs(B),rhs(C)):- !, same_rhs_operation(A,B),!,merge_vals(A,B,C).
 
-merge_vals(A,B,C):- is_obj_props(A),is_obj_props(B),!,merge_props(A,B,C).
-merge_vals([A1,A2],[B],[C1,C2]):-  !, merge_vals(A1,B,C1),merge_vals(A2,B,C2).
-merge_vals([A|AA],[B|BB],[C|CC]):- !, merge_vals(A,B,C), merge_vals(AA,BB,CC).
 merge_vals(A,B,C):- compound(A),compound(B),var(C),
   compound_name_arguments(A,F,AA),compound_name_arguments(B,F,BB),!,
   maplist(merge_vals,AA,BB,CC),!, compound_name_arguments(C,F,CC).
@@ -951,7 +962,7 @@ good_for_lhs(vis2D(_, _)).
 good_for_lhs(pg(_,_,_,_)).
 good_for_lhs(\+ P):- !, good_for_lhs(P).
 
-%pass2_rule_new(TestID,Ctx,P,PSame):- ac_db(TestID,Ctx,P,PSame).
+%pass2_rule_new(TestID,Ctx,P,PSame):- ac_rules(TestID,Ctx,P,PSame).
 
 pass2_rule_new(TestID,Ctx,RHS,[iz(info(Info))|LHS]):- 
  ensure_test(TestID),
@@ -1023,6 +1034,9 @@ into_lhs(In,Out):- \+ compound(In),!,Out=In.
 into_lhs(R,P):- sub_compound(lhs(E),R),!, into_lhs(E,P).
 into_lhs(rule(_RuleType,_SortKey,In),Out):- nonvar(In),!,into_lhs(In,Out),!.
 into_lhs(obj(In),Out):- nonvar(In),!,into_lhs(In,Out),!.
+into_lhs(ac_unit(_Tst,_IO,_P,PConds),Out):- into_lhs(PConds,Out).
+into_lhs(ac_rule(_Tst,_IO,_P,PConds),Out):- into_lhs(PConds,Out).
+into_lhs(ac_rules(_Tst,_IO,_P,PConds),Out):- into_lhs(PConds,Out).
 into_lhs(In,Out):- \+ is_list(In),!,Out=In.
 into_lhs(In,Out):- flatten([In],InF),into_lhs1(InF,LHSF),flatten(LHSF,LHSV),variant_list_to_set(LHSV,Out),!.
 into_lhs1(In,Out):- m_unifiers(In,MidF),o_unifiers(MidF,Mid),In\=@=Mid,!,into_lhs1(Mid,Out).
@@ -1138,7 +1152,7 @@ pp_ilp(D,A+B):-  !, prefix_spaces(D,(pp_ilp(A),nl,pp_ilp(B))).
 pp_ilp(D,Grid):- is_grid(Grid),!,prefix_spaces(D,print_grid(Grid)),!,nl.
 pp_ilp(D,Grid):- is_object(Grid),!,prefix_spaces(D,print_grid([Grid])),!,nl.
 
-pp_ilp(D,ac_db(_TestID,IO,P,PSame)):- !,
+pp_ilp(D,ac_rules(_TestID,IO,P,PSame)):- !,
  must_det_ll((
   once(io_to_cntx(IO,CTX);IO=CTX),
   once(list_to_conjuncts(PSame,Conj);PSame=Conj),
@@ -2102,7 +2116,7 @@ remove_o_giz(Out,Out).
 %is_accompany_changed_verified(TestID,IO,P,PSame):- is_accompany_changed_computed(TestID,IO,P,PSame), PSame\==[].
 
 %is_accompany_changed_computed(TestID,IO,P,PSame):-
-%   ac_db(TestID,IO,P,PSame) *->true ; prop_can(TestID,IO,P,PSame). 
+%   ac_rules(TestID,IO,P,PSame) *->true ; prop_can(TestID,IO,P,PSame). 
    
 prop_can(TestID,IO,P,Can):-    
   props_change(TestID,IO,P),
@@ -2184,10 +2198,10 @@ changing_props(TestID,X1,X2):-
 print_scene_change_rules(TestID):- ensure_test(TestID),
   print_scene_change_rules(print_scene_change_rules,TestID).
 
-get_scene_change_rules(TestID,P3,Rules):-
+get_scene_change_rules(TestID,P4db,Rules):-
  ensure_test(TestID),
-  findall_vset_R(ac_db(TestID,IO,P,PSame),
-    call(P3,TestID,IO,P,PSame),Rules).
+  findall_vset_R(ac_rules(TestID,IO,P,PSame),
+    call(P4db,TestID,IO,P,PSame),Rules).
 
 trans_rules_current(TestID,Ctx,Rules):-
   findall_vset_R(TransRule,arc_cache:trans_rule_db(TestID,_ExampleNum1,Ctx,TransRule),Rules),!.
@@ -2212,9 +2226,9 @@ combine_trans_rules([],[]).
 
 print_scene_change_rules(Why,TestID):-
  ensure_test(TestID),
- P3 = ac_db,
+ P4db = ac_rules,
   must_det_ll((
-   get_scene_change_rules(TestID,P3,Rules),
+   get_scene_change_rules(TestID,P4db,Rules),
    nb_setval(last_P3,Rules),
    banner_lines(cyan,4),
    %trans_rules_combined(TestID,_Ctx,CombinedR),reverse(CombinedR,Combined), pp_ilp(merged(Why)=Combined),
@@ -2225,17 +2239,17 @@ print_scene_change_rules(Why,TestID):-
    must_det_ll(( \+ (member(R,[2|Combined]), is_list(R)))).
    */
    banner_lines(cyan,2),
-   pp_ilp(rules(Why,P3)=Rules),
+   pp_ilp(rules(Why,P4db)=Rules),
    banner_lines(cyan,4))).
 
-print_scene_change_rules_if_differnt(Why,P3,TestID):-
+print_scene_change_rules_if_differnt(Why,P4db,TestID):-
   nb_current(last_P3,Prev),
-  get_scene_change_rules(TestID,P3,Rules),  
+  get_scene_change_rules(TestID,P4db,Rules),  
  ignore((
   Prev \=@= Rules,
    nb_setval(last_P3,Rules),
    banner_lines(cyan,4),
-   pp_ilp(updated(Why,P3)=Rules),
+   pp_ilp(updated(Why,P4db)=Rules),
    banner_lines(cyan,4))).
 
 
@@ -2282,7 +2296,7 @@ counts_change(TestID,ExampleNum,Out,P,N1,N2):- in_out_atoms(In,Out),
 
 ensure_scene_change_rules(TestID):-
  ensure_test(TestID),
- (\+ ac_db(TestID,_,_,_) -> compute_scene_change(TestID) ; true).
+ (\+ ac_rules(TestID,_,_,_) -> compute_scene_change(TestID) ; true).
 
 
 
@@ -2326,36 +2340,36 @@ compute_scene_change_pass3(TestID):-
 
 
 compute_scene_change_pass3a(TestID,IO_-P):- 
-   findall(PSame,ac_db(TestID,IO_,P,PSame),List),
+   findall(PSame,ac_rules(TestID,IO_,P,PSame),List),
    List=[_,_|_],
    into_lhs(List,SameS),
    update_accompany_changed_db(TestID,IO_,P,SameS),
-   print_scene_change_rules_if_differnt(compute_scene_change_pass3a,ac_db,TestID).
+   print_scene_change_rules_if_differnt(compute_scene_change_pass3a,ac_rules,TestID).
 compute_scene_change_pass3a(_,_).
 
 compute_scene_change_pass3b(TestID,P4,IO_-P):-
-   findall(PSame,ac_db(TestID,IO_,P,PSame),List),
+   findall(PSame,ac_rules(TestID,IO_,P,PSame),List),
    flatten(List,SameF), variant_list_to_set(SameF,SameS1),
    my_partition(assume_prop,SameS1,Skip,SameS),
    call(P4,TestID,IO_,P,SameS,KeptS), KeptS\==[],!,
    append(KeptS,Skip,Kept),
   update_accompany_changed_db(TestID,IO_,P,Kept),
-  print_scene_change_rules_if_differnt(P4,ac_db,TestID).
+  print_scene_change_rules_if_differnt(P4,ac_rules,TestID).
 compute_scene_change_pass3b(_,_,_). 
 
 compute_scene_change_pass3c(_,_):-!.
 compute_scene_change_pass3c(TestID,IO_-P):-
-  ac_db(TestID,IO_,P,PSame1),
+  ac_rules(TestID,IO_,P,PSame1),
   my_partition(assume_prop,PSame1,Skip,PSame),
   findall(DSame,
-     (ac_db(TestID,IO_,DP,DSame), 
+     (ac_rules(TestID,IO_,DP,DSame), 
       same_rhs_property(DP,P),at_least_one_overlap(DSame,PSame)),
    SL),  SL = [_,_|_],
   common_members(SL,Commons),
-  forall((ac_db(TestID,IO_,DP,DSame),same_rhs_property(DP,P)),
+  forall((ac_rules(TestID,IO_,DP,DSame),same_rhs_property(DP,P)),
       (intersection(DSame,Commons,_,Kept,_),
         ignore((Kept\==[],append(Kept,Skip,Save),update_accompany_changed_db(TestID,IO_,P,Save))))),
-  print_scene_change_rules_if_differnt(compute_scene_change_pass3c,ac_db,TestID),
+  print_scene_change_rules_if_differnt(compute_scene_change_pass3c,ac_rules,TestID),
   !.
 compute_scene_change_pass3c(_,_).
 
@@ -2365,21 +2379,23 @@ compute_scene_change_pass4(TestID):-
 
 set_of_changes(TestID,P1):-
   ((findall_vset_R(Ctx-P1,
-    ((ac_db(TestID,IO_,P,_)
+    ((ac_rules(TestID,IO_,P,_)
      ;ensure_props_change(TestID,IO_,P)
      ;pass2_rule(TestID,IO_,P,_)),io_to_cntx(IO_,Ctx),into_rhs(P,P1)), Ps))),
 
-  %findall_vset_R(IO_-P,(ac_db(TestID,IO_,P,_)), Ps),
+  %findall_vset_R(IO_-P,(ac_rules(TestID,IO_,P,_)), Ps),
 
   maplist(P1,Ps).
 
 into_rhs(P,P):- \+ compound(P),!.
-%into_rhs(rhs(R),P):- !, into_rhs(R,P).
+into_rhs(ac_unit(_Tst,_IO,P,_PConds),Out):- into_rhs(P,Out).
+into_rhs(ac_rule(_Tst,_IO,P,_PConds),Out):- into_rhs(P,Out).
+into_rhs(ac_rules(_Tst,_IO,P,_PConds),Out):- into_rhs(P,Out).
+into_rhs(P,E):- sub_compound(rhs(E),P),!. %into_rhs(rhs(R),P):- !, into_rhs(R,P).
 %into_rhs(edit(R),P):- !, into_rhs(R,P).
 %into_rhs(create(R),P):- !, into_rhs(R,P).
 %into_rhs(delete(R),P):- !, into_rhs(R,P).
-%into_rhs([R],P):- !, into_rhs(R,P).
-into_rhs(P,E):- sub_compound(rhs(E),P),!.
+into_rhs([R],P):- !, into_rhs(R,P).
 into_rhs(P,P).
 
 update_accompany_changed_db(TestID,IO_,P,Kept):- Kept\==[],
@@ -2410,7 +2426,7 @@ correct_antes1(TestID,IO_,P,PSame,SL):- fail,
   findall(S,
    (member(S,PSame),
      \+ \+ ((
-       forall((ac_db(TestID,IO_,DP,DSame),at_least_one_overlap(DSame,PSame)),
+       forall((ac_rules(TestID,IO_,DP,DSame),at_least_one_overlap(DSame,PSame)),
           ((P==DP)-> true; (member(DS,DSame),  
              \+ negated_s_lit(S,_), other_val(S,DS))))))),
    SL), SL\==[],!.
@@ -2434,7 +2450,7 @@ correct_antes4(TestID,IO_,P,PSame,SL):- fail,
    ( member(S,PSame), 
      (negated_s_lit(S,_)->true;
       \+ ((  
-       forall((ac_db(TestID,IO_,DP,DSame),
+       forall((ac_rules(TestID,IO_,DP,DSame),
               same_rhs_property(P,DP)),          
             (member(DS,DSame), DS=@=S)))))),
    SL), 
@@ -2449,7 +2465,7 @@ correct_antes5(_TestID,_IO_,_P,PSame,PSame).
 correct_antes_neg(TestID,IO_,P,PSame,Kept):-
   findall( ( \+ DS),
    ((member(S,PSame), \+ negated_s_lit(S,_), is_unbound_prop(S), make_unifiable(S,DS),
-     ac_db(TestID,IO_,DP,DSame),      
+     ac_rules(TestID,IO_,DP,DSame),      
      other_val(P,DP), at_least_one_overlap(DSame,PSame),
      member(DS,DSame), \+ negated_s_lit(DS,_), \+ is_unbound_prop(DS), 
        \+ member(\+ DS,PSame))), SL), SL\==[],

@@ -50,7 +50,7 @@ unique_attribute(_, []).
 unique_attribute(Type, [Type:_|T]) :-
     \+ member(Type:_, T),
     unique_attribute(Type, T).
-unique_attribute(Type, [_:X|T]) :-
+unique_attribute(Type, [_:_X|T]) :-
     unique_attribute(Type, T).
 
 % List all possible values for a given attribute
@@ -264,4 +264,394 @@ This output indicates that the target concept can be described with the followin
 1. An object is a target if it is red and small.
 2. An object is a target if it is green, a circle, and small.
 */
+/*
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+
+The code provided is a Prolog program that represents a rule learning problem. The main goal of the problem is to 
+ learn rules from example pairs of property groups, apply these rules to a given group of properties, and guess 
+ the resulting group of properties.
+
+To briefly explain the main parts of the code:
+
+1. Constant values: The `constant_vals/17` predicate defines a set of constants that are used thDeleteout the program.
+
+2. Example pairs: The `example_pair_of_property_groups/2` predicates define a series of example pairs of property groups. Each pair consists of two groups of properties (each group is represented as a list of properties), and the goal is to learn rules that can transform the first group into the second group.
+
+3. Extracting properties: The `extract_properties/2` predicate is a helper predicate used to extract properties from example pairs.
+
+4. Updating knowledge: The `update_knowledge/4` predicate is used to update the rule knowledge based on the given pair of property groups. The knowledge update process involves finding the least general generalization (LGG) of the two property groups and updating the knowledge with the LGG.
+
+5. Learning rules: The `learn_rules/3` predicate is a recursive predicate that learns rules from example pairs. The predicate initializes the knowledge base with some basic rules and iteratively updates the knowledge based on the example pairs.
+
+6. Initialization of knowledge: The `init_knowledge/1` predicate is used to initialize the knowledge base with some basic rules.
+
+7. Learning rules from examples: The `learn_rules_from_examples/1` predicate is used to learn rules from example pairs.
+
+8. Guessing rules: The `guess_rules_of_example_pairs/1` predicate is used to guess the rules of example pairs by learning rules from the examples.
+
+9. Calculating offset: The `calculate_offset/2` predicate is used to calculate the offset from example pairs.
+
+10. Applying rules: The `apply_rules_to_group/3` and related predicates are used to apply the learned rules to a given group of properties.
+
+11. Guessing scene pairs: The `guess_scene_pair/2` predicate is the main predicate that takes a group of properties (Silvers) as input, applies the learned rules, and returns the resulting group of properties (Result).
+
+You can run this Prolog program in a Prolog interpreter such as SWI-Prolog. 
+
+The main predicate to execute is `guess_scene_pair/2`, providing a group of properties as input and receiving the resulting 
+group of properties as output.
+
+Here are examples of Scene pairs defined in Prolog.  
+*/
+constant_vals(Color,Shape,Size,Texture,Location,Color1,Color2,Color3,Drab,
+   Size1,Size2,Size3,Active,Inert,Keep,Delete):-
+     Color=color,Shape=shape,Size=size,Texture=texture,Location=position,
+     Color1=yellow,Color2=blue,Color3=red,Drab=silver,
+     Size1=small,Size2=medium,Size3=large,
+     Active=round,Inert=square,
+     Keep=smooth,Delete=thorny.
+
+:- style_check(-singleton).
+
+example_pair_of_property_groups(
+  [
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size1), prop(Texture, Delete), prop(Location, 40, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 50, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 60, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 70, 90)])], 
+  [
+     properties([prop(Color,Color2),   prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 51, 81)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 61, 81)]), 
+     properties([prop(Color,Color3), prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 71, 91)])])
+  :- constant_vals(Color,Shape,Size,Texture,Location,Color1,Color2,Color3,Drab, Size1,Size2,Size3,Active,Inert,Keep,Delete).
+
+example_pair_of_property_groups(
+  [
+     properties([prop(Color,Drab),  prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 10, 80)]), 
+     properties([prop(Color,Drab),  prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 20, 80)]), 
+     properties([prop(Color,Drab),  prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 30, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 60, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 70, 90)])], 
+  [
+     properties([prop(Color,Color2),   prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 11, 81)]), 
+     properties([prop(Color,Color2),   prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 21, 81)]), 
+     properties([prop(Color,Color2),   prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 31, 81)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 61, 81)]), 
+     properties([prop(Color,Color3), prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 71, 91)])])
+  :- constant_vals(Color,Shape,Size,Texture,Location,Color1,Color2,Color3,Drab, Size1,Size2,Size3,Active,Inert,Keep,Delete). 
+
+example_pair_of_property_groups(
+  [
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 40, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size2), prop(Texture, Delete), prop(Location, 50, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 60, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size3), prop(Texture, Keep), prop(Location, 70, 90)])], 
+  [
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 41, 81)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size1), prop(Texture, Keep), prop(Location, 61, 81)]), 
+     properties([prop(Color,Drab), prop(Shape, Inert), prop(Size, Size3), prop(Texture, Keep), prop(Location, 71, 91)])])
+  :- constant_vals(Color,Shape,Size,Texture,Location,Color1,Color2,Color3,Drab, Size1,Size2,Size3,Active,Inert,Keep,Delete).
+
+example_pair_of_property_groups(
+  [
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 40, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 70, 90)])], 
+  [
+     properties([prop(Color,Color1),    prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 41, 81)]), 
+     properties([prop(Color,Color3), prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 71, 91)])])
+  :- constant_vals(Color,Shape,Size,Texture,Location,Color1,Color2,Color3,Drab,Size1,Size2,Size3,Active,Inert,Keep,Delete).
+
+example_pair_of_property_groups(
+  [
+     properties([prop(Color,Drab),  prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 11, 81)]), 
+     properties([prop(Color,Drab),  prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 21, 81)]), 
+     properties([prop(Color,Drab),  prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 31, 81)]), 
+     properties([prop(Color,Drab),  prop(Shape, Inert),  prop(Size, Size1), prop(Texture, Keep), prop(Location, 61, 81)]), 
+     properties([prop(Color,Drab),  prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 71, 91)])], 
+  [
+     properties([prop(Color,Color1),   prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 12, 82)]), 
+     properties([prop(Color,Color2),   prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 22, 82)]), 
+     properties([prop(Color,Color3),   prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 32, 82)]), 
+     properties([prop(Color,Drab),     prop(Shape, Inert),  prop(Size, Size1), prop(Texture, Keep), prop(Location, 62, 82)]), 
+     properties([prop(Color,Color3),   prop(Shape, Active), prop(Size, Size3), prop(Texture, Keep), prop(Location, 72, 92)])])
+   :- constant_vals(Color,Shape,Size,Texture,Location,Color1,Color2,Color3,Drab,Size1,Size2,Size3,Active,Inert,Keep,Delete).
+
+
+/*
+
+The 5 example pairs have some things in common:
+
+   All LHS properties are all Drab color.
+
+   All example pair property lists seem to have rules about how they are copied to the LHS
+
+   Circle shaped properties get copied to RHS with a new color based on size
+    prop(Shape, Active), prop(Size, Size1) -> prop(Color,Color1).
+    prop(Shape, Active), prop(Size, Size2) -> prop(Color,Color2).
+    prop(Shape, Active), prop(Size, Size3) -> prop(Color,Color3).
+
+   Rough textuColor1 properties in LHS are not copied to RHS
+    prop(Texture, Delete) -> removed.
+
+   LHS properties copies are moved down and right by Size1
+    prop(Location, X, Y) -> prop(Location, X+Size1, Y+Size1).
+
+
+Use any algorythemsyou wish if you need a hint try least general generalization along with the AQ algorithm
+
+In order to write `guess_rules_of_example_pairs/Size1`
+
+That it acts like this: 
+```Prolog
+?- guess_rules_of_example_pairs(Rules).
+
+Rules = 
+   [ prop(Shape, Active), prop(Size, Size1) -> prop(Color,Color1), 
+     prop(Shape, Active), prop(Size, Size2) -> prop(Color,Color2), 
+     prop(Shape, Active), prop(Size, Size3) -> prop(Color,Color3), 
+     prop(Texture, Delete) -> removed, 
+     prop(Location, X, Y), plus(X, Size1, X1), plus(Y, Size1, Y1) -> prop(Location, X1, Y1)].
+```
+
+And next apply_rules_to_group/Size3  
+```Prolog
+?- guess_rules_of_pairs(Rules), apply_rules_to_group(Rules, 
+  [ properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 50, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 40, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 60, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size2), prop(Texture, Delete), prop(Location, 70, 90)])], 
+  Guess).
+
+Rules = 
+   [ prop(Shape, Active), prop(Size, Size1) -> prop(Color,Color1), 
+     prop(Shape, Active), prop(Size, Size2) -> prop(Color,Color2), 
+     prop(Shape, Active), prop(Size, Size3) -> prop(Color,Color3), 
+     prop(Texture, Delete) -> removed, 
+     prop(Location, X, Y), plus(X, Size1, X1), plus(Y, Size1, Y1) -> prop(Location, X1, Y1) ], 
+Guess =
+  [properties([prop(Color,Color2), prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 51, 81)]), 
+   properties([prop(Color,Color1), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 41, 81)]), 
+   properties([prop(Color,Color1), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 61, 81)])]).
+```
+
+So the final result is to implement guess_scene_pair/Size2 in Prolog
+
+```Prolog
+guess_scene_pair(Silvers, Result):- 
+  guess_rules_of_example_pairs(Rules), 
+  apply_rules_to_group(Rules, Silvers, Guess).
+```
+
+So it operates like 
+
+```Prolog
+?- guess_scene_pair(
+  [
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 50, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 40, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 60, 80)]), 
+     properties([prop(Color,Drab), prop(Shape, Active), prop(Size, Size2), prop(Texture, Delete), prop(Location, 70, 90)])], 
+  Guess).
+
+The result should be.
+
+Guess =
+  [properties([prop(Color,Color2), prop(Shape, Active), prop(Size, Size2), prop(Texture, Keep), prop(Location, 51, 81)]), 
+   properties([prop(Color,Color1), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 41, 81)]), 
+   properties([prop(Color,Color1), prop(Shape, Active), prop(Size, Size1), prop(Texture, Keep), prop(Location, 61, 81)])]).
+```
+
+Here's the full implementation with all the predicates combined:
+
+```prolog
+*/
+:- style_check(+singleton).
+% Predicate for least general generalization of two properties
+
+lgg(A,B,C):- pp(lgg(A,B,C)),lgg_property(A,B,C).
+
+%lgg(A,B,C):- is_lsimaplist(lgg_property, P1, P2, LGG).
+  
+lgg_property(A, B, C):- merge_vals(A, B, C).
+
+%lgg_property(A, A, A) :- !. lgg_property(_, _, _).
+% Original rule (unchanged)
+lgg_property_unused(S, S, S) :-
+    constant_vals(_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, S).
+
+% Handle numeric properties with average
+lgg_property_unused(A, B, C) :-
+    number(A), number(B),
+    C is (A + B) / 2.
+
+% Handle color properties with a new color (could also be a blend)
+lgg_property_unused(A, B, new_color) :-
+    constant_vals(_, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _),
+    constant_vals(_, B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _),
+    A \= B.
+
+% Handle shape properties with a new shape (could also be a blend)
+lgg_property_unused(A, B, new_shape) :-
+    constant_vals(_, _, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _),
+    constant_vals(_, _, _, B, _, _, _, _, _, _, _, _, _, _, _, _, _),
+    A \= B.
+
+% Add other rules for different property types as needed
+
+% Predicate for applying rules to a property
+apply_rules(_, [], []).
+apply_rules(Rules, [P | Ps], [Q | Qs]) :-
+    apply_rules_to_property(Rules, P, Q),
+    apply_rules(Rules, Ps, Qs).
+
+apply_rules_to_property([], P, P).
+apply_rules_to_property([Rule | Rules], P, Q) :-
+    (apply_rule_PR(Rule, P, R) -> apply_rules_to_property(Rules, R, Q);
+     apply_rules_to_property(Rules, P, Q)).
+
+
+apply_rule_PR(prop(Shape, Active),prop(Size, Size1) -> prop(Color, Color1), properties(Ps), properties([prop(Color, Color1) | Ps])) :-
+    member(prop(Shape, Active), Ps),
+    member(prop(Size, Size1), Ps).
+apply_rule_PR(prop(Shape, Active),prop(Size, Size2) -> prop(Color, Color2), properties(Ps), properties([prop(Color, Color2) | Ps])) :-
+    member(prop(Shape, Active), Ps),
+    member(prop(Size, Size2), Ps).
+apply_rule_PR(prop(Shape, Active),prop(Size, Size3) -> prop(Color, Color3), properties(Ps), properties([prop(Color, Color3) | Ps])) :-
+    member(prop(Shape, Active), Ps),
+    member(prop(Size, Size3), Ps).
+apply_rule_PR(prop(Texture, Delete) -> removed, properties(Ps), properties(NewPs)) :-
+    (select(prop(Texture, Delete), Ps, NewPs), !; NewPs = Ps).
+apply_rule_PR(prop(Location, X,Y),plus(X,1,X1),plus(Y,1,Y1) -> prop(Location, X1,Y1), properties(Ps), properties(NewPs)) :-
+    select(prop(Location, X, Y), Ps, Remaining),
+    X1 is X + 1,
+    Y1 is Y + 1,
+    append(Remaining, [prop(Location, X1, Y1)], NewPs).
+
+
+
+% Helper predicate to extract properties from example pairs
+extract_properties([], []).
+extract_properties([example_pair_of_property_groups(P1, P2) | Examples], [P1-P2 | Properties]) :-
+    extract_properties(Examples, Properties).
+
+% Helper predicate to update the rule knowledge
+update_knowledge(P1, P2, Knowledge, NewKnowledge) :-
+    maplist(update_property_knowledge(P2), P1, Knowledge, NewKnowledge).
+
+% Helper predicate to update the property knowledge
+update_property_knowledge(P2, P1, OldKnowledge, NewKnowledge) :-
+    lgg(P1, P2, LGG), 
+    update_knowledge_with_lgg(LGG, OldKnowledge, NewKnowledge).
+
+
+update_knowledge_with_lgg(Term1, Term2, Properties) :-
+    lgg(Term1, Term2, LGGTerm),
+    update_properties(LGGTerm, Properties, UpdatedLGGTerm),
+    pp(updatedLGGTerm(UpdatedLGGTerm)),
+    assertz_if_new(kb(UpdatedLGGTerm)).
+
+update_properties(Term, [], Term).
+update_properties(Term, [Prop|Props], UpdatedTerm) :-
+    lgg_property(Term, Prop, TempTerm),
+    update_properties(TempTerm, Props, UpdatedTerm).
+
+
+% Predicate to learn rules from example pairs
+learn_rules([], Knowledge, Knowledge).
+learn_rules([P1-P2 | Examples], Knowledge, Rules) :-
+    update_knowledge(P1, P2, Knowledge, NewKnowledge), 
+    learn_rules(Examples, NewKnowledge, Rules).
+
+% Predicate to initialize knowledge
+init_knowledge([
+    prop(Shape, Active), prop(Size, Size1) -> prop(Color,_), 
+    prop(Shape, Active), prop(Size, Size2) -> prop(Color,_), 
+    prop(Shape, Active), prop(Size, Size3) -> prop(Color,_), 
+    prop(Texture, _) -> _, 
+    prop(Location, _, _) -> prop(Location, _, _)
+]):-
+  constant_vals(Color,Shape,Size,Texture,Location,
+   _Color1,_Color2,_Color3,_Drab,
+   Size1,Size2,Size3,
+   Active,_ShapeInert,_Keep,_Delete).
+
+% Predicate to learn rules from example_pair_of_property_groups
+learn_rules_from_examples(Rules) :-
+    findall(example_pair_of_property_groups(E1, E2), 
+      example_pair_of_property_groups(E1, E2), Examples),
+    extract_properties(Examples, Properties),
+    init_knowledge(Knowledge),
+    learn_rules(Properties, Knowledge, Rules).
+
+% Predicate for guessing rules of example pairs
+guess_rules_of_example_pairs(Rules) :-
+    learn_rules_from_examples(Rules).
+
+% Helper predicate to extract offset from example pairs
+extract_offset([], XOffset, YOffset, XOffset, YOffset).
+extract_offset([properties(LHS) - properties(RHS) | Pairs], XOffsetAcc, YOffsetAcc, XOffset, YOffset) :-
+    member(prop(Location, X1, Y1), LHS), 
+    member(prop(Location, X2, Y2), RHS), 
+    XOffsetNew is max(XOffsetAcc, X2 - X1), 
+    YOffsetNew is max(YOffsetAcc, Y2 - Y1), 
+    extract_offset(Pairs, XOffsetNew, YOffsetNew, XOffset, YOffset).
+
+% Predicate to calculate offset from example pairs
+calculate_offset(XOffset, YOffset) :-
+    findall(E, example_pair_of_property_groups(_, E), Examples),
+    extract_properties(Examples, Properties),
+    extract_offset(Properties, 0, 0, XOffset, YOffset).
+
+% Predicate to apply rules to a group
+apply_rules_to_group([], Group, Group).
+apply_rules_to_group([Rule | Rules], Group, Result) :-
+    maplist(apply_rule(Rule), Group, NewGroup), 
+    apply_rules_to_group(Rules, NewGroup, Result).
+
+% Predicate to apply a single rule to a property
+apply_rule(Rule, properties(Props), properties(NewProps)) :-
+    apply_rule_to_props(Rule, Props, NewProps).
+
+% Apply rule to properties
+apply_rule_to_props(_, [], []).
+apply_rule_to_props(Rule, [Prop | Props], [NewProp | NewProps]) :-
+    apply_rule_to_prop(Rule, Prop, NewProp), 
+    apply_rule_to_props(Rule, Props, NewProps).
+
+% Apply rule to a single property
+apply_rule_to_prop(prop(Shape, Active) -> prop(Color,NewColor), prop(Shape, Active), prop(Shape, Active)):- 
+  only_modify_when(Color, NewColor, Shape, Active).
+
+apply_rule_to_prop(prop(Size, SizeN) -> prop(Color,NewColor), prop(Size, SizeN), prop(Size, SizeN)):-
+  prop_to_prop(Color,NewColor,Size,SizeN).
+  %constant_vals(Color,Shape,Size,Texture,Location,Color1,Color2,Color3,Drab, Size1,Size2,Size3, Active,Inert,Keep,Delete).
+
+
+apply_rule_to_prop(prop(Texture, _) -> removed, prop(Texture, _), removed).
+apply_rule_to_prop(prop(Location, X, Y) -> prop(Location, X1, Y1), prop(Location, X, Y), prop(Location, X1, Y1)) :-
+    calculate_offset(XOffset, YOffset), 
+    X1 is X + XOffset, 
+    Y1 is Y + YOffset.
+apply_rule_to_prop(Rule, Prop, Prop) :-
+    \+ Rule = (Prop -> _).
+
+% Predicate to guess scene pair
+guess_scene_pair(Silvers, Result):- 
+    guess_rules_of_example_pairs(Rules), 
+    apply_rules_to_group(Rules, Silvers, Result).
+
+/*
+
+*/
+
+
+
+
+
+
+
+
+
 
