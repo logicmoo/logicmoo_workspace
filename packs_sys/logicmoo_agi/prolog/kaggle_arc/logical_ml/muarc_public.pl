@@ -39,6 +39,7 @@ group of properties as output.
 
 */
 
+end_of_file.
 
 % Construct and edit arbitrary number lists
 add_number(N, List, [N|List]).

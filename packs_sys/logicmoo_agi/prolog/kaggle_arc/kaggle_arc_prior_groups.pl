@@ -568,8 +568,12 @@ never_is_prop((_+_)).
 never_is_prop((_>_)).
 never_is_prop((_*_)).
 never_is_prop((_-_)).
+never_is_prop((_:-_)).
+never_is_prop((_/_)).
 never_is_prop(into_new(_,_,_)). 
 never_is_prop(ac_db(_,_,_,_)).
+never_is_prop(ac_rules(_,_,_,_)).
+never_is_prop(rhs(_)).
 
 
 is_obj_props(Props):- is_list(Props), Props\==[], maplist(is_prop1,Props).

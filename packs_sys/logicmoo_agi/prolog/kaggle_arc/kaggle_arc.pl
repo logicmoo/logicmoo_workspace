@@ -880,7 +880,7 @@ create_group_dmiles:-
     %copy with mod
         '08ed6ac7', 'ea32f347',  '0a2355a6', '37d3e8b2', 'a61ba2ce', 'b230c067',  'd2abd087', '6e82a1ae',
     %copy with mod (harder?)
-       '705a3229', 'e41c6fd3', 'a61f2674', '0d3d703e', 'makesboxsq', 'a79310a0', '27a77e38',
+       '705a3229', 'e41c6fd3', 'a61f2674', '0d3d703e', 'makesboxsq', 'a79310a0', '27a77e38', 'f45f5ca7','fc754716',
     %todo
      'f8b3ba0a', '5582e5ca', '33b52de3', '1b60fb0c',
     %recolor with a pattern from output
