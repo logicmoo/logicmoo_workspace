@@ -2,22 +2,43 @@
 :- ensure_loaded('solvers.pl').
 
 michod_solved_names(TestID):-
- findall(FTestID,(michod_solved_len_2(ID,_Len),fix_test_name(ID,FTestID)),List), list_to_set(List,Set),
- member(TestID,Set).
+  list_715(List),member((TestAtom,_),List),once(fix_test_name(TestAtom,TestID)).
 
-michod_solved_ordered(ID):-
-  E= (Len-ID),
-  findall(E,(michod_solved_names(ID),michod_solved_len(ID,Len)),List2),
-  sort(List2,Set2),member(E,Set2). 
+michod_solved_ordered(TestID):-michod_solved_names(TestID).
 
-michod_solved_len(TestID,Len):- var(TestID),!,michod_solved_names(TestID),once(michod_solved_len_1(TestID,Len)).
-michod_solved_len(TestID,Len):-michod_solved_len_1(TestID,Len).
-michod_solved_len_1(ID,Len):- test_id_atom(ID,TestIDA),!,michod_solved_len_2(TestIDA,Len).
-michod_solved_len_2(ID,Len):- clause(l_solve(ID,_IN,_OUT),Program),length(Program,Len).
-michod_solved_len_2(ID,Len):- member((ID,Len),[('3c9b0459', 1), ('60c09cac', 1), ('6150a2bd', 1), ('67a3c6ac', 1), ('68b16354', 1), ('68b67ca3', 1), ('74dd1130', 1), ('9172f3a0', 1), ('9dfd6313', 1), ('a416b8f3', 1), ('b1948b0a', 1), ('c59eb873', 1), ('c8f0f002', 1), ('d10ecb37', 1), ('d511f180', 1), ('ed36ccf7', 1), ('2dee498d', 2), ('4c4377d9', 2), ('5582e5ca', 2), ('5614dbcf', 2), ('5bd6f4ac', 2), ('6d0aefbc', 2), ('6fa7a44f', 2), ('8be77c9e', 2), ('c9e6f938', 2), ('d4b1c2b1', 2), ('0b148d64', 3), ('19bb5feb', 3), ('1cf80156', 3), ('1f85a75f', 3), ('23b5c85d', 3), ('25ff71a9', 3), ('32597951', 3), ('3aa6fb7a', 3), ('4258a5f9', 3), ('59341089', 3), ('7b7f7511', 3), ('9a4bb226', 3), ('9ecd008a', 3), ('ac0a08a4', 3), ('b91ae062', 3), ('be94b721', 3), ('c1d99e64', 3), ('c909285e', 3), ('e7639916', 3), ('f25ffba3', 3), ('0c786b71', 4), ('0d3d703e', 4), ('1a2e2828', 4), ('1c786137', 4), ('1e0a9b12', 4), ('1e81d6f9', 4), ('28bf18c6', 4), ('2dc579da', 4), ('3194b014', 4), ('3618c87e', 4), ('3af2c5a8', 4), ('42a50994', 4), ('4347f46a', 4), ('44d8ac46', 4), ('44f52bb0', 4), ('46f33fce', 4), ('50cb2852', 4), ('56ff96f3', 4), ('62c24649', 4), ('662c240a', 4), ('67e8384a', 4), ('7468f01a', 4), ('833dafe3', 4), ('a740d043', 4), ('a79310a0', 4), ('aabf363d', 4), ('ae4f1146', 4), ('b27ca6d3', 4), ('bf699163', 4), ('ce22a75a', 4), ('d56f2372', 4), ('dc1df850', 4), ('f0df5ff0', 4), ('f25fbde4', 4), ('2013d3e2', 5), ('22eb0ac0', 5), ('41e4d17e', 5), ('445eab21', 5), ('5783df64', 5), ('642d658d', 5), ('6f8cd79b', 5), ('73182012', 5), ('73ccf9c2', 5), ('8efcae92', 5), ('9565186b', 5), ('9f236235', 5), ('a699fb00', 5), ('ae58858e', 5), ('aedd82e4', 5), ('bb43febb', 5), ('bc4146bd', 5), ('cd3c21df', 5), ('ce9e57f2', 5), ('e0fb7511', 5), ('e74e1818', 5), ('e872b94a', 5), ('e98196ab', 5), ('f76d97a5', 5), ('fc754716', 5), ('00d62c1b', 6), ('0520fde7', 6), ('0ca9ddb6', 6), ('10fcaaa3', 6), ('1c0d0a4b', 6), ('2546ccf6', 6), ('319f2597', 6), ('32e9702f', 6), ('332efdb3', 6), ('3906de3d', 6), ('46442a0e', 6), ('48131b3c', 6), ('48d8fb45', 6), ('5117e062', 6), ('543a7ed5', 6), ('62ab2642', 6), ('67385a82', 6), ('7953d61e', 6), ('7b6016b9', 6), ('7bb29440', 6), ('7fe24cdd', 6), ('84db8fc4', 6), ('8d5021e8', 6), ('928ad970', 6), ('a5313dff', 6), ('a934301b', 6), ('b60334d2', 6), ('b94a9452', 6), ('ccd554ac', 6), ('d037b0a7', 6), ('d0f5fe59', 6), ('d406998b', 6), ('d631b094', 6), ('dae9d2b5', 6), ('e21a174a', 6), ('e3497940', 6), ('e9afcf9a', 6), ('ea32f347', 6), ('ed98d772', 6), ('00576224', 7), ('007bbfb7', 7), ('017c7c7b', 7), ('05f2a901', 7), ('08ed6ac7', 7), ('140c817e', 7), ('1a6449f1', 7), ('1b2d62fb', 7), ('1f876c06', 7), ('2072aba6', 7), ('363442ee', 7), ('39a8645d', 7), ('40853293', 7), ('496994bd', 7), ('4f537728', 7), ('5168d44c', 7), ('55059096', 7), ('5521c0d9', 7), ('64a7c07e', 7), ('66e6c45b', 7), ('84f2aca1', 7), ('85c4e7cd', 7), ('8ee62060', 7), ('90c28cc7', 7), ('9ddd00f0', 7), ('a59b95c0', 7), ('b6afb2da', 7), ('b9b7f026', 7), ('ba97ae07', 7), ('bbb1b8b6', 7), ('bcb3040b', 7), ('c48954c1', 7), ('c9f8e694', 7), ('d23f8c26', 7), ('d2abd087', 7), ('d5d6de2d', 7), ('d9fac9be', 7), ('dbc1a6ce', 7), ('ded97339', 7), ('e9614598', 7), ('ea786f4a', 7), ('f5aa3634', 7), ('f823c43c', 7), ('f8ff0b80', 7), ('0c9aba6e', 8), ('1190e5a7', 8), 
+michod_solved_len(TestID,Len):- var(TestID),!,michod_solved_names(TestID),once(michod_solved_len(TestID,Len)).
+michod_solved_len(TestID,Len):- test_id_atom(TestID,TestAtom),!,michod_solved_test_atom_len(TestAtom,Len).
+
+michod_solved_test_atom_len(TestAtom,Len):- clause(l_solve(TestAtom,_IN,_OUT),Program),length(Program,Len).
+michod_solved_test_atom_len(TestAtom,Len):- list_715(List),member((TestAtom,Len),List).
+
+list_715([('3c9b0459', 1), ('60c09cac', 1), ('6150a2bd', 1), ('67a3c6ac', 1), ('68b16354', 1), ('68b67ca3', 1), ('74dd1130', 1), ('9172f3a0', 1), ('9dfd6313', 1), ('a416b8f3', 1), ('b1948b0a', 1), ('c59eb873', 1), ('c8f0f002', 1), ('d10ecb37', 1), ('d511f180', 1), ('ed36ccf7', 1), ('2dee498d', 2), ('4c4377d9', 2), ('5582e5ca', 2), ('5614dbcf', 2), ('5bd6f4ac', 2), ('6d0aefbc', 2), ('6fa7a44f', 2), ('8be77c9e', 2), ('c9e6f938', 2), ('d4b1c2b1', 2), ('0b148d64', 3), ('19bb5feb', 3), ('1cf80156', 3), ('1f85a75f', 3), ('23b5c85d', 3), ('25ff71a9', 3), ('32597951', 3), ('3aa6fb7a', 3), ('4258a5f9', 3), ('59341089', 3), ('7b7f7511', 3), ('9a4bb226', 3), ('9ecd008a', 3), ('ac0a08a4', 3), ('b91ae062', 3), ('be94b721', 3), ('c1d99e64', 3), ('c909285e', 3), ('e7639916', 3), ('f25ffba3', 3), ('0c786b71', 4), ('0d3d703e', 4), ('1a2e2828', 4), ('1c786137', 4), ('1e0a9b12', 4), ('1e81d6f9', 4), ('28bf18c6', 4), ('2dc579da', 4), ('3194b014', 4), ('3618c87e', 4), ('3af2c5a8', 4), ('42a50994', 4), ('4347f46a', 4), ('44d8ac46', 4), ('44f52bb0', 4), ('46f33fce', 4), ('50cb2852', 4), ('56ff96f3', 4), ('62c24649', 4), ('662c240a', 4), ('67e8384a', 4), ('7468f01a', 4), ('833dafe3', 4), ('a740d043', 4), ('a79310a0', 4), ('aabf363d', 4), ('ae4f1146', 4), ('b27ca6d3', 4), ('bf699163', 4), ('ce22a75a', 4), ('d56f2372', 4), ('dc1df850', 4), ('f0df5ff0', 4), ('f25fbde4', 4), ('2013d3e2', 5), ('22eb0ac0', 5), ('41e4d17e', 5), ('445eab21', 5), ('5783df64', 5), ('642d658d', 5), ('6f8cd79b', 5), ('73182012', 5), ('73ccf9c2', 5), ('8efcae92', 5), ('9565186b', 5), ('9f236235', 5), ('a699fb00', 5), ('ae58858e', 5), ('aedd82e4', 5), ('bb43febb', 5), ('bc4146bd', 5), ('cd3c21df', 5), ('ce9e57f2', 5), ('e0fb7511', 5), ('e74e1818', 5), ('e872b94a', 5), ('e98196ab', 5), ('f76d97a5', 5), ('fc754716', 5), ('00d62c1b', 6), ('0520fde7', 6), ('0ca9ddb6', 6), ('10fcaaa3', 6), ('1c0d0a4b', 6), ('2546ccf6', 6), ('319f2597', 6), ('32e9702f', 6), ('332efdb3', 6), ('3906de3d', 6), ('46442a0e', 6), ('48131b3c', 6), ('48d8fb45', 6), ('5117e062', 6), ('543a7ed5', 6), ('62ab2642', 6), ('67385a82', 6), ('7953d61e', 6), ('7b6016b9', 6), ('7bb29440', 6), ('7fe24cdd', 6), ('84db8fc4', 6), ('8d5021e8', 6), ('928ad970', 6), ('a5313dff', 6), ('a934301b', 6), ('b60334d2', 6), ('b94a9452', 6), ('ccd554ac', 6), ('d037b0a7', 6), ('d0f5fe59', 6), ('d406998b', 6), ('d631b094', 6), ('dae9d2b5', 6), ('e21a174a', 6), ('e3497940', 6), ('e9afcf9a', 6), ('ea32f347', 6), ('ed98d772', 6), ('00576224', 7), ('007bbfb7', 7), ('017c7c7b', 7), ('05f2a901', 7), ('08ed6ac7', 7), ('140c817e', 7), ('1a6449f1', 7), ('1b2d62fb', 7), ('1f876c06', 7), ('2072aba6', 7), ('363442ee', 7), ('39a8645d', 7), ('40853293', 7), ('496994bd', 7), ('4f537728', 7), ('5168d44c', 7), ('55059096', 7), ('5521c0d9', 7), ('64a7c07e', 7), ('66e6c45b', 7), ('84f2aca1', 7), ('85c4e7cd', 7), ('8ee62060', 7), ('90c28cc7', 7), ('9ddd00f0', 7), ('a59b95c0', 7), ('b6afb2da', 7), ('b9b7f026', 7), ('ba97ae07', 7), ('bbb1b8b6', 7), ('bcb3040b', 7), ('c48954c1', 7), ('c9f8e694', 7), ('d23f8c26', 7), ('d2abd087', 7), ('d5d6de2d', 7), ('d9fac9be', 7), ('dbc1a6ce', 7), ('ded97339', 7), ('e9614598', 7), ('ea786f4a', 7), ('f5aa3634', 7), ('f823c43c', 7), ('f8ff0b80', 7), ('0c9aba6e', 8), ('1190e5a7', 8), 
  ('195ba7dc', 8), ('239be575', 8), ('25d8a9c8', 8), ('310f3251', 8), ('3f7978a0', 8), ('506d28a5', 8), ('54d82841', 8), ('5c0a986e', 8), ('5d2a5c43', 8), ('60a26a3e', 8), ('60b61512', 8), ('6430c8c4', 8), ('66f2d22f', 8), ('67a423a3', 8), ('6d75e8bb', 8), ('6e02f1e3', 8), ('6ea4a07e', 8), ('7039b2d7', 8), ('7c008303', 8), ('7e02026e', 8), ('7f4411dc', 8), ('810b9b61', 8), ('929ab4e9', 8), ('94f9d214', 8), ('9f27f097', 8), ('a1570a43', 8), ('a61f2674', 8), ('b230c067', 8), ('ce4f8723', 8), ('d13f3404', 8), ('d19f7514', 8), ('dc433765', 8), ('e133d23d', 8), ('e2092e0c', 8), ('e345f17b', 8), ('e50d258f', 8), ('e76a88a6', 8), ('e7dd8335', 8), ('e8593010', 8), ('f2829549', 8), ('fafffa47', 8), ('fcb5c309', 8), ('ff805c23', 8), ('025d127b', 9), ('0692e18c', 9), ('0b17323b', 9), ('0becf7df', 9), ('137eaa0f', 9), ('1f642eb9', 9), ('22168020', 9), ('2281f1f4', 9), ('253bf280', 9), ('25d487eb', 9), ('27a28665', 9), ('27a77e38', 9), ('2c608aff', 9), ('31aa019c', 9), ('358ba94e', 9), ('3ac3eb23', 9), ('3bd67248', 9), ('444801d8', 9), ('4852f2fa', 9), ('4be741c5', 9), ('5b6cbef5', 9), ('6455b5f5', 9), ('67636eac', 9), ('681b3aeb', 9), ('694f12f3', 9), ('6a11f6da', 9), ('6e82a1ae', 9), ('72ca375d', 9), ('73251a56', 9), ('7d1f7ee8', 9), ('7ddcd7ec', 9), ('868de0fa', 9), ('8e5a5113', 9), ('8f2ea7aa', 9), ('903d1b4a', 9), ('917bccba', 9), ('a5f85a15', 9), ('aee291af', 9), ('b2862040', 9), ('b8825c91', 9), ('b8cdaf2b', 9), ('bbc9ae5d', 9), ('bd4472b8', 9), ('bda2d7a6', 9), ('c3202e5a', 9), ('cce03e0d', 9), ('cf98881b', 9), ('d364b489', 9), ('d4f3cd78', 9), ('d90796e8', 9), ('da2b0fe3', 9), ('e66aafb8', 9), ('e7a25a18', 9), ('f0afb749', 9), ('fcc82909', 9), ('09c534e7', 10), ('11852cab', 10), ('12eac192', 10), ('15696249', 10), ('178fcbfb', 10), ('1b60fb0c', 10), ('1caeab9d', 10), ('1fad071e', 10), ('2037f2c7', 10), ('21f83797', 10), ('23581191', 10), ('27f8ce4f', 10), ('31d5ba1a', 10), ('321b1fc6', 10), ('3428a4f5', 10), ('34b99a2b', 10), ('37d3e8b2', 10), ('3b4c2228', 10), ('3de23699', 10), ('3eda0437', 10), ('47c1f68c', 10), ('48f8583b', 10), ('54d9e175', 10), ('5ad4f10b', 10), ('5b526a93', 10), ('623ea044', 10), ('67b4a34d', 10), ('6b9890af', 10), ('6c434453', 10), ('77fdfe62', 10), ('782b5218', 10), ('794b24be', 10), ('7c8af763', 10), ('7c9b52a0', 10), ('80af3007', 10), ('83302e8f', 10), ('88a10436', 10), ('88a62173', 10), ('890034e9', 10), ('8e2edd66', 10), ('8eb1be9a', 10), ('99b1bc43', 10), ('a3325580', 10), ('a9f96cdd', 10), ('aa18de87', 10), ('ad7e01d0', 10), ('af902bf9', 10), ('b548a754', 10), ('bb52a14b', 10), ('bdad9b1f', 10), ('c0f76784', 10), ('c3e719e8', 10), ('c8cbb738', 10), ('d37a1ef5', 10), ('d4469b4b', 10), ('d47aa2ff', 10), ('d492a647', 10), ('d8c310e9', 10), ('dc0a314f', 10), ('ddf7fa4f', 10), ('de1cd16c', 10), ('ef26cbf6', 10), ('f4081712', 10), ('f8b3ba0a', 10), ('009d5c81', 11), ('09629e4f', 11), ('2a5f8217', 11), ('2c737e39', 11), ('45737921', 11), ('575b1a71', 11), ('6ecd11f4', 11), ('6f473927', 11), ('760b3cac', 11), ('7e0986d6', 11), ('817e6c09', 11), ('8597cfd7', 11), ('8fbca751', 11), ('981571dc', 11), ('a04b2602', 11), ('a85d4709', 11), ('c074846d', 11), ('c444b776', 11), ('c7d4e6ad', 11), ('d4a91cb9', 11), ('e69241bd', 11), ('eb281b96', 11), ('ed74f2f2', 11), ('feca6190', 11), ('ff28f65a', 11), ('070dd51e', 12), ('0962bcdd', 12), ('25094a63', 12), ('281123b4', 12), ('31adaf00', 12), ('33b52de3', 12), ('3a301edc', 12), ('52fd389e', 12), ('7ee1c6ea', 12), ('85b81ff1', 12), ('90347967', 12), ('913fb3ed', 12), ('a68b268e', 12), ('aa300dc3', 12), ('b4a43f3b', 12), ('be03b35f', 12), ('beb8660c', 12), ('bf32578f', 12), ('c35c1b4c', 12), ('c8b7cc0f', 12), ('c92b942c', 12), ('ce039d91', 12), ('e41c6fd3', 12), ('e99362f0', 12), ('ea9794b1', 12), ('f5c89df1', 12), ('05269061', 13), ('0d87d2a6', 13), ('11e1fe23', 13), ('3631a71a', 13), ('62b74c02', 13), ('92e50de0', 13), ('95990924', 13), ('9c56f360', 13), ('af24b4cc', 13), ('d43fd935', 13), ('d94c3b52', 13), ('db3e9e38', 13), ('e509e548', 13), ('e73095fd', 13), ('e9b4f6fc', 13), ('00dbd492', 14), ('18419cfa', 14), ('1bfc4729', 14), ('292dd178', 14), ('2c0b0aff', 14), ('6df30ad6', 14), ('7447852a', 14), ('759f3fd3', 14), ('8e1813be', 14), ('91714a58', 14), ('93b4f4b3', 14), ('93b581b8', 14), ('97999447', 14), ('9edfc990', 14), ('a61ba2ce', 14), ('a65b410d', 14), ('bc1d5164', 14), ('ce602527', 14), ('1a07d186', 15), ('22a4bbc2', 15), ('4093f84a', 15), ('4364c1c4', 15), ('50a16a69', 15), ('55783887', 15), ('5c2c9af4', 15), ('695367ec', 15), ('6cf79266', 15), ('6e19193c', 15), ('72207abc', 15), ('72a961c9', 15), ('75b8110e', 15), ('762cd429', 15), ('8a004b2b', 15), ('941d9a10', 15), ('9af7a82c', 15), ('9b4c17c4', 15), ('a8610ef7', 15), ('a87f7484', 15), ('af22c60d', 15), ('ba9d41b8', 15), ('c3f564a4', 15), ('cbded52d', 15), ('d687bc17', 15), ('e26a3af2', 15), ('e619ca6e', 15), ('ef135b50', 15), ('f21745ec', 15), ('fafd9572', 15), ('12422b43', 16), ('1f0c79e5', 16), ('29c11459', 16), ('414297c0', 16), ('4612dd53', 16), ('516b51b7', 16), ('5289ad53', 16), ('5af49b42', 16), ('705a3229', 16), ('88207623', 16), ('8a371977', 16), ('963e52fc', 16), ('a680ac02', 16), ('aa4ec2a5', 16), ('ae3edfdc', 16), ('b7fb29bc', 16), ('ba26e723', 16), ('c658a4bd', 16), ('e1baa8a4', 16), ('2697da3f', 17), ('3391f8c0', 17), ('42a15761', 17), ('56dc2b01', 17), ('6773b310', 17), ('73c3b0d8', 17), ('770cc55f', 17), ('a406ac07', 17), ('aab50785', 17), ('ce8d95cc', 17), ('e1d2900e', 17), ('e48d4e1a', 17), ('e57337a4', 17), ('e633a9e5', 17), ('e7b06bea', 17), ('e9bb6954', 17), ('e9c9d9a1', 17), ('f45f5ca7', 17), ('20981f0e', 18), ('2204b7a8', 18), ('3d31c5b3', 18), ('3f23242b', 18), ('45bbe264', 18), ('4938f0c2', 18), ('5207a7b5', 18), ('58743b76', 18), ('673ef223', 18), ('780d0b14', 18), ('834ec97d', 18), ('846bdb03', 18), ('8719f442', 18), ('90f3ed37', 18), ('9110e3c5', 18), ('a8d7556c', 18), ('b782dc8a', 18), ('b7999b51', 18), ('b7f8a4d8', 18), ('c1990cce', 18), ('ca8de6ea', 18), ('d9f24cd1', 18), ('e5062a87', 18), ('e681b708', 18), ('ecdecbb3', 18), ('f5b8619d', 18), ('f83cb3f6', 18), ('f8c80d96', 18), ('0e671a1a', 19), ('137f0df0', 19), ('29700607', 19), ('3bdb4ada', 19), ('539a4f51', 19), ('551d5bf1', 19), ('5daaa586', 19), ('8403a5d5', 19), ('8dae5dfc', 19), ('91413438', 19), ('94133066', 19), ('9bebae7a', 19), ('bf89d739', 19), ('d931c21c', 19), ('ec883f72', 19), ('f3cdc58f', 19), ('1c02dbbe', 20), ('272f95fa', 20), ('29623171', 20), ('2bee17df', 20), ('2f0c5170', 20), ('53b68214', 20), ('54db823b', 20), ('7d18a6fb', 20), ('8731374e', 20), ('a2fd1cf0', 20), ('b0c4d837', 20), ('d6ad076f', 20), ('db93a21d', 20), ('df8cc377', 20), ('e40b9e2f', 20), ('e8dc4411', 20), ('fb791726', 20), ('3345333e', 21), ('50aad11f', 21), ('642248e4', 21), ('6cdd2623', 21), ('8d510a79', 21), ('9772c176', 21), ('a3df8b1e', 21), ('b190f7f5', 21), ('bd14c3bf', 21), ('cdecee7f', 21), ('d304284e', 21), ('06df4c85', 22), ('0a2355a6', 22), ('12997ef3', 22), ('2b01abd0', 22), ('4522001f', 22), ('63613498', 22), ('639f5a19', 22), ('746b3537', 22), ('95a58926', 22), ('a48eeaf7', 22), ('a57f2f04', 22), ('ac0c5833', 22), ('caa06a1f', 22), ('cad67732', 22), ('d2acf2cb', 22), ('d5c634a2', 22), ('d89b689b', 22), ('e21d9049', 22), ('f9012d9b', 22), ('fe9372f3', 22), ('ff72ca3e', 22), ('03560426', 23), ('0a938d79', 23), ('1d0a4b61', 23), ('228f6490', 23), ('36fdfd69', 23), ('4c177718', 23), ('50f325b5', 23), ('604001fa', 23), ('992798f6', 23), ('995c5fa3', 23), ('9def23fe', 23), ('b1fc8b8e', 23), ('c663677b', 23), ('ca8f78db', 23), ('d06dbe63', 23), ('de493100', 23), ('e179c5f4', 23), ('e78887d1', 23), ('e95e3d8e', 23), ('eb5a1d5d', 23), ('045e512c', 24), ('13713586', 24), ('1990f7a8', 24), ('4e469f39', 24), ('72322fa7', 24), ('79369cc6', 24), ('82819916', 24), ('855e0971', 24), ('99fa7670', 24), ('a78176bb', 24), ('ac3e2b04', 24), ('447fd412', 25), ('6aa20dc0', 25), ('6d58a25d', 25), ('952a094c', 25), ('9caba7c3', 25), ('baf41dbf', 25), ('c97c0139', 25), ('d4c90558', 25), ('e6721834', 25), ('e88171ec', 25), ('0dfd9992', 26), ('17cae0c1', 26), ('1da012fc', 26), ('29ec7d0e', 26), ('2bcee788', 26), ('36d67576', 26), ('776ffc46', 26), ('81c0276b', 26), ('98cf29f8', 26), ('9c1e755f', 26), ('cb227835', 26), ('d282b262', 26), ('e9ac8c9e', 26), ('f35d900a', 26), ('103eff5b', 27), ('2753e76c', 27), ('39e1d7f9', 27), ('469497ad', 27), ('484b58aa', 27), ('5a5a2103', 27), ('712bf12e', 27), ('99306f82', 27), ('c62e2108', 27), ('e4075551', 27), ('3befdf3e', 28), ('9aec4887', 28), ('15663ba9', 29), ('17b80ad2', 29), ('49d1d64f', 29), ('57aa92db', 29), ('5833af48', 29), ('963f59bc', 29), ('dc2e9a9d', 29), ('f3e62deb', 29), ('845d6e51', 30), ('aba27056', 30), ('f1cefba8', 30), ('1e32b0e9', 31), ('28e73c20', 31), ('4aab4007', 31), ('4b6b68e5', 32), ('4c5c2cf0', 32), ('508bd3b6', 32), ('6d0160f0', 32), ('a096bf4d', 32), ('d07ae81c', 32), ('e760a62e', 32), ('f8a8fe49', 32), ('20818e16', 33), ('6a1e5592', 33), ('ea959feb', 33), ('1acc24af', 34), ('fd096ab6', 34), ('0bb8deee', 35), ('0e206a2e', 35), ('c87289bb', 35), ('d22278a0', 35), ('f9a67cb5', 35), ('4290ef0e', 37), ('dc2aa30b', 38), ('50846271', 39), ('150deff5', 40), ('b20f7c8b', 40), ('b527c5c6', 40), ('b7249182', 40), ('6855a6e4', 41), ('9d9215db', 41), ('96a8c0cd', 42), ('cfb2ce5a', 42), ('e5790162', 42), ('1d398264', 43), ('264363fd', 44), ('234bbc79', 45), ('58e15b12', 45), ('7df24a62', 45), ('9356391f', 45), ('f15e1fac', 45), ('22233c11', 46), ('5ffb2104', 46), ('8ba14f53', 46), ('2dd70a9a', 47), ('a3f84088', 48), ('a64e4611', 48), ('ac605cbb', 48), ('7837ac64', 50), 
  ('a8c38be5', 50), ('b775ac94', 57), ('891232d6', 58), ('69889d6e', 59), ('97a05b5b', 60), ('3e980e27', 61), ('6ad5bdfd', 67)]).
 
+michod_submod(TestID):- 
+member(TestAtom,
+['195ba7dc',
+ '506d28a5',
+ '0c9aba6e',
+ 'd19f7514',
+ '31d5ba1a',
+ 'e133d23d',
+ 'e345f17b',
+ '5d2a5c43',
+ '34b99a2b',
+ '66f2d22f',
+ '94f9d214',
+ '99b1bc43',
+ '6430c8c4',
+ 'fafffa47',
+ '1b2d62fb',
+ 'ce4f8723',
+ '0520fde7',
+ '3428a4f5',
+ 'f2829549',
+ 'dae9d2b5']),
+  once(fix_test_name(TestAtom,TestID)).
 
 read_dsl_test:-  make,     
       setup_call_cleanup(open('arc-dsl/solvers.py',read,In2,[]),read_python(In2),close(In2)),
@@ -344,8 +365,8 @@ tok_atom(ADDTOK,ADDTOK).
 
 :- discontiguous compile_block/5.
 
-compile_block(PF,_PASS,_RET,A,A):- is_ftVar(A),!.
-compile_block(PF,_PASS,_RET,A,A):- \+ compound(A),!.
+compile_block(_PF,_PASS,_RET,A,A):- is_ftVar(A),!.
+compile_block(_PF,_PASS,_RET,A,A):- \+ compound(A),!.
 compile_block(PF,PASS,RET,(AST,ASTL),Code):- !,
   compile_block(PF,PASS,RET,AST,Code1),
   compile_block(PF,PASS,RET,ASTL,Code2),
@@ -380,34 +401,34 @@ compile_block(_PF,ra(0),_RET,call_func_args("isinstance",[ELEMENT_01,STuple]),[
  call_func_args(isinstance,[ELEMENT_01,Tuple])]):- 
    string(STuple),atom_string(Tuple,STuple),!.
 
-compile_block(PF,ra(0),_RET,expr_value(string_value(Str)),comment(Str)).
+compile_block(_PF,ra(0),_RET,expr_value(string_value(Str)),comment(Str)).
 
 compile_block(PF,ra(0),RET,return_value(Stuff),Code):-
   compile_block(PF,ra(0),RET,[assign_targets_value([RET],Stuff),exit_proc(RET)],Code).
 
 
 
-compile_block(PF,ra(0),_RET,bin_op_left_right(ADDTOK,L,R),call_func_args(ADDTOK,[L,R])).
-compile_block(PF,ra(0),_RET,bin_op_left_right(ADDTOK,L,R,O),call_func_args(ADDTOK,[L,R],O)).
+compile_block(_PF,ra(0),_RET,bin_op_left_right(ADDTOK,L,R),call_func_args(ADDTOK,[L,R])).
+compile_block(_PF,ra(0),_RET,bin_op_left_right(ADDTOK,L,R,O),call_func_args(ADDTOK,[L,R],O)).
 %compile_block(PF,ra(0),_RET,bin_op_left_right(ADDTOK,L,R),call_func_args(Str,[L,R])):- 
 %  tok_atom(ADDTOK,Str),!.
-compile_block(PF,ra(0),_RET,unary_op_operand(ADDTOK,L),call_func_args(Str,[L])):- 
+compile_block(_PF,ra(0),_RET,unary_op_operand(ADDTOK,L),call_func_args(Str,[L])):- 
   tok_atom(ADDTOK,Str),!.
 
-compile_block(PF,ra(0),_RET,compare_ops_left_comparators(ops([]),_L,comparators([])),[]):-!.
+compile_block(_PF,ra(0),_RET,compare_ops_left_comparators(ops([]),_L,comparators([])),[]):-!.
 compile_block(PF,ra(0),RET,compare_ops_left_comparators(ops([E1|List1]),L,comparators([E2|List2])),Code):- 
   length(List1,Len),length(List2,Len),
   compile_block(PF,ra(0),RET,compare_ops_left_comparators(E1,L,E2),Code1),
   compile_block(PF,ra(0),RET,compare_ops_left_comparators(ops(List1),L,comparators(List2)),Code2),
   into_codeL([Code1,Code2],Code).
-compile_block(PF,ra(0),_RET,compare_ops_left_comparators(ADDTOK,L,R),call_func_args(Str,[L,R])):- %\+ is_list(ADDTOK),
+compile_block(_PF,ra(0),_RET,compare_ops_left_comparators(ADDTOK,L,R),call_func_args(Str,[L,R])):- %\+ is_list(ADDTOK),
   tok_atom(ADDTOK,Str),!.
 %compare_ops_left_comparators(['python:NotIn'],J,"ci")
 
 
-compile_block(PF,_PASS,_RET,set_comp_elt_generators(A,
+compile_block(_PF,_PASS,_RET,set_comp_elt_generators(A,
                                [ comprehension_target_iter_ifs(B,C,D)]), set_comp_elt_generators_ifs(A,B,C,D)).
-compile_block(PF,ra(0),_RET,
+compile_block(_PF,ra(0),_RET,
     set_comp_elt_generators(A,comprehension_target_iter(B,C,D)),
     set_comp_elt_generators_comprehension_target_iter(A,B,C,D)).
 compile_block(PF,PASS,RET, 
@@ -417,11 +438,11 @@ compile_block(PF,PASS,RET,
    compile_block(PF,PASS,RET,generator_exp_elt_generators(tuple_elts(List1),List2),Code2),
    into_codeL([Code1,Code2],Code).
 
-compile_block(PF,_PASS,_RET, set_comp_elt_generators(B,C),elt_generator(v2,VARS,C)):- is_vars(B,VARS).
-compile_block(PF,_PASS,_RET, generator_exp_elt_generators(B,C),elt_generator(v1,VARS,C)):- is_vars(B,VARS).
-compile_block(PF,_PASS,_RET, comprehension_target_iter(B,C),assign_targets_value1(VARS,C)):- is_vars(B,VARS).
-compile_block(PF,_PASS,_RET, generator_exp_elt_generators(B),assign_targets_value(["T"],B)).
-compile_block(PF,_PASS,_RET, set_comp_elt_generators(B),assign_targets_value(["T"],B)).
+compile_block(_PF,_PASS,_RET, set_comp_elt_generators(B,C),elt_generator(v2,VARS,C)):- is_vars(B,VARS).
+compile_block(_PF,_PASS,_RET, generator_exp_elt_generators(B,C),elt_generator(v1,VARS,C)):- is_vars(B,VARS).
+compile_block(_PF,_PASS,_RET, comprehension_target_iter(B,C),assign_targets_value1(VARS,C)):- is_vars(B,VARS).
+compile_block(_PF,_PASS,_RET, generator_exp_elt_generators(B),assign_targets_value(["T"],B)).
+compile_block(_PF,_PASS,_RET, set_comp_elt_generators(B),assign_targets_value(["T"],B)).
 
 is_vars(List,List):- is_list(List),!,maplist(is_vars,List).
 is_vars(B,B):- is_vars(B),!.
@@ -478,33 +499,33 @@ def vperiod(
 
 
 
-compile_block(PF,ra(0),_RET, 
+compile_block(_PF,ra(0),_RET, 
   qualified_identifier_identifiers([Prune,boxed_attribute_value(Sub)]),
   [Sub,Prune]).
 
-compile_block(PF,ra(0),_RET,  call_func_args([A,B],Stuff), call_func_args(A,[B|Stuff])).
+compile_block(_PF,ra(0),_RET,  call_func_args([A,B],Stuff), call_func_args(A,[B|Stuff])).
 
 
 compile_block(PF,Pass,RET,assign_targets_value(Str,Compound),Code):- \+ var(Str), Str=[Str1],!,
   compile_block(PF,Pass,RET,assign_targets_value(Str1,Compound),Code),!.
 
-compile_block(PF,ra(0),_RET,assign_targets_value(tuple_elts([]),tuple_elts([])),[]):-!.
+compile_block(_PF,ra(0),_RET,assign_targets_value(tuple_elts([]),tuple_elts([])),[]):-!.
 compile_block(PF,ra(0),RET,assign_targets_value(tuple_elts([E1|List1]),tuple_elts([E2|List2])),Code):-
   length(List1,Len),length(List2,Len),
   compile_block(PF,ra(0),RET,assign_targets_value(E1,E2),Code1),
   compile_block(PF,ra(0),RET,assign_targets_value(tuple_elts(List1),tuple_elts(List2)),Code2),
   into_codeL([Code1,Code2],Code).
 
-compile_block(PF,ra(0),_RET,assign_targets_value(tuple_elts([Str1,Str2]),StrT),Code):-
+compile_block(_PF,ra(0),_RET,assign_targets_value(tuple_elts([Str1,Str2]),StrT),Code):-
   str_var(Str1),str_var(Str2),str_var(StrT),into_codeL(from_tuple(StrT,Str1,Str2),Code),!.
 
-compile_block(PF,ra(0),_RET,assign_targets_value(StrT,tuple_elts([Str1,Str2])),Code):-
+compile_block(_PF,ra(0),_RET,assign_targets_value(StrT,tuple_elts([Str1,Str2])),Code):-
   str_var(Str1),str_var(Str2),str_var(StrT),into_codeL(into_tuple(Str1,Str2,StrT),Code).
 
-compile_block(PF,ra(0),_RET,assign_targets_value(Str1,StrT),Code):-
+compile_block(_PF,ra(0),_RET,assign_targets_value(Str1,StrT),Code):-
   str_var(Str1),str_var(StrT),!,must_det_ll((into_callL('='(Str1,StrT),Code))).
 
-compile_block(PF,ra(0),_RET,assign_targets_value(T1,Cmpd),Code):- compile_expression(T1,Cmpd,Code12), into_codeL(Code12,Code),!.
+compile_block(_PF,ra(0),_RET,assign_targets_value(T1,Cmpd),Code):- compile_expression(T1,Cmpd,Code12), into_codeL(Code12,Code),!.
 
 compile_block(PF,PASS,RET,Cmpd,OUT):- cmpd(Cmpd), 
   once(( PF\=assign_targets_value(_,_), 
@@ -516,7 +537,7 @@ compile_block(PF,PASS,RET,Cmpd,OUT):- cmpd(Cmpd),
   NewCmpd\==Cmpd,!,
   compile_block(PF,PASS,RET,[assign_targets_value(VAR,Arg),NewCmpd],OUT).
 
-compile_block(PF,ra(2),_RET, assign_targets_value(Var,Compound),Code):- !, append_last_term(Var,Compound,Code).
+compile_block(_PF,ra(2),_RET, assign_targets_value(Var,Compound),Code):- !, append_last_term(Var,Compound,Code).
 
 
 compile_block_simple(call_func_args(Isinstance, [A_01, Int]),integer(A_01)):- Int==int,Isinstance=isinstance.
@@ -531,7 +552,7 @@ within_arg(Cmpd,E):- arg(_,Cmpd,Arg),within_arg_e(Arg,E).
 within_arg_e(Arg,E):- \+ is_list(Arg),!,E=Arg.
 within_arg_e(Arg,E):- member(E,Arg).
 
-compile_block(PF,_,_LASTHEADARG,NewAST,NewAST):- \+ compound(NewAST),!.  
+compile_block(_PF,_,_LASTHEADARG,NewAST,NewAST):- \+ compound(NewAST),!.  
 compile_block(PF,PASS,RET,AST,Code):- 
   compound_name_arguments(AST,F,ASTARGS),
   maplist(compile_block([AST|PF],PASS,RET),ASTARGS,ECode),!,

@@ -224,7 +224,7 @@ reduce_1op(Types,Half,Len,_,Grid ,copy_row_ntimes(N1,2),GridR):-
 
 */
 
-copy_row_ntimes(N1,Times,Grid,GridR):- Times1 is Times-1,copy_row_ntimes_1(N1,Times1,Grid,GridR).
+copy_row_ntimes(N1,Times,Grid,GridR):- Times1 is Times-1,copy_row_ntimes_1(N1,Times1,Grid,GridR),!.
 
 copy_row_ntimes_1(1,1,[Row1|Grid],[Row1,Row1|Grid]):-!.
 copy_row_ntimes_1(1,N,[Row1|Grid],[Row1,Row1,Row1|GridO]):- N>3,!,
@@ -590,7 +590,7 @@ reduce_grid(Grid,Grid).
 reduce_grid(G,OPA,AAOO):- G\=(_^_), into_grid(G,Grid),
   A=Grid,B=A,
    reduce_two(A,B,ROP,AAO,_BBO),reverse_op(ROP,OP),
-   ((OP==[reversed(rot90^rot90)])-> (OPA=[rollD|OP],rollDR(G,AA),reduce_grid(AA,OP,AAOO)) ; (OPA=OP,AAOO=AAO)).
+   ((OP==[reversed(rot90^rot90)])-> (OPA=[rollD|OP],rollDR(G,AA),reduce_grid(AA,OP,AAOO)) ; (OPA=OP,AAOO=AAO)),!.
 reduce_grid(A^B,OP,AAO^BBO):- reduce_two(A,B,ROP,AAO,BBO),reverse(ROP,OP),!.
 reduce_grid(AB,[],AB):-!.
 

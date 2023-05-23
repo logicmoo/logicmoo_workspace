@@ -85,15 +85,17 @@ menu_cmd1(i,'o','                  or (o)bjects found in the input/outputs',    
 menu_cmd1(_,'u','                  or (u)se scene change solver between objects in the input/outputs',   (cls_z_make,!,ndividuator,ignore(solve_via_scene_change))).
 menu_cmd1(_,'y','                  or Wh(y) between objects in the input/outputs',   ((cls_z_make,!,why_io))).
 menu_cmd1(_,'a','                  or (a)ll between objects',   (cls_z_make,!,ndividuator)).
-menu_cmd1(_,'j','                  or (j)unctions between objects',   (cls_z_make,!,show_object_dependancy,print_scene_change_rules)).
+menu_cmd1(_,'j','                  or (j)unctions between objects',   (cls_z_make,!,show_object_dependancy)).
 menu_cmd1(_,'k','                  or (k)ill/clear all test data.',(update_changes,clear_test)).
 menu_cmd1(_,'B','                  or (B)oxes test.',(update_changes,pbox_indivs)).
 menu_cmd1(_,'R','                  or (R)epairs test.',(update_changes,repair_symmetry)).
+menu_cmd1(_,'G','                  or (G)ridcells between objects in the input/outputs',(cls_z_make,!,maplist(ignore,[clear_training_now,clear_test_now,force_clear_test,compute_and_show_test_hints,compile_and_save_hints]))).
 menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls_z_make,!,compute_and_show_test_hints,compile_and_save_hints)).
 menu_cmd1(_,'p','                  or (p)rint the test (textured grid)',(update_changes,maybe_set_suite,print_testinfo,print_test)).
 menu_cmd1(_,'w','                  or (w)rite the test info',(update_changes,switch_pair_mode)).
 menu_cmd1(_,'X','                  or  E(X)amine the program leared by training',(cls_z_make,print_test,!,learned_test,solve_easy)).
 menu_cmd1(_,'L','                  or (L)earned Data',(learned_test)).
+menu_cmd1(_,'E','                  or (E)earned Data',(force_clear_test,solve_via_scene_change_API)).
 menu_cmd1(_,'e',S,(Cmd)):- get_test_cmd(Cmd),
       sformat(S,"                  or (e)xecute .................. '~@'",[bold_print(color_print(cyan,Cmd))]).
 menu_cmd1(_,'x',S,(Cmd)):- get_test_cmd2(Cmd),
@@ -117,7 +119,7 @@ menu_cmd1(r,'i','             Re-enter(i)nteractve mode.',(interact)).
 
 menu_cmd9(_,'m','recomple this progra(m),',(clear_tee,update_changes,threads)).
 menu_cmd9(_,'c','(c)lear the scrollback buffer,',(force_full_tee,really_cls)).
-menu_cmd9(_,'C','(C)lear cached test info,',(clear_training_now,clear_test_now,force_clear_test)).
+menu_cmd9(_,'C','(C)lear cached test info,',(force_clear_test)).
 menu_cmd9(_,'r','(r)un DSL code,',(call_dsl)).
 menu_cmd9(_,'Q','(Q)uit Menu,',true).
 menu_cmd9(_,'^q','(^q)uit to shell,',halt(4)). 
@@ -155,12 +157,10 @@ print_menu_list(L):- forall(nth_above(100,N,L,E),format('~N~@',[print_menu_cmd1(
 
 
 
-
-
-
 % ignore((read_line_to_string(user_input,Sel),atom_number(Sel,Num))),
 
 ui_menu_call(G):- ignore(catch(must_not_error(G),E,u_dmsg(E))).
+%ui_menu_call(G):- rtrace(G).
 %ui_menu_call(G):- when_in_html(catch(ignore((G)),E,u_dmsg(E))) ->true ; catch(ignore((G)),E,u_dmsg(E)).
   
 my_menu_call(E):- locally(set_prolog_flag(gc,true),ui_menu_call(E)).
@@ -265,12 +265,21 @@ menu_goal(Goal):-
   ignore(once((time(((catch(my_menu_call(Goal),'$aborted',fail))))*->!;(!,fail,atrace,arcST,rrtrace(Goal))))),!,
   clear_pending_input,!.
 
+:- public(invoke_arc_cmd/1).
+:- export(invoke_arc_cmd/1).
+  
 :- public(do_web_menu_key/1).
 :- export(do_web_menu_key/1).
 
-invoke_arc_cmd(Key):- \+ arc_sensical_term(Key),!.
-invoke_arc_cmd(Key):- arc_atom_to_term(Key,Prolog,Vs),Vs==[], Prolog\=@=Key,!,invoke_arc_cmd(Prolog).
+invoke_n_v(Key):- fix_test_name(Key,TestID),is_valid_testname(TestID),ensure_test(TestID),!, do_web_menu_key('e').
+invoke_n_v(NV):- compound(NV),functor(NV,F,2), atom_length(F,1), NV =..[_,Char,TestAtom], invoke_n_v(Char,TestAtom),!.
+invoke_n_v(NV):- atom(NV),invoke_n_v('e',NV),!.
+invoke_n_v(Char,TestAtom):- nonvar(TestAtom), fix_test_name(TestAtom,TestID),is_valid_testname(TestID),ensure_test(TestID),!, do_web_menu_key(Char).
+invoke_n_v(TestAtom,Char):- nonvar(TestAtom), fix_test_name(TestAtom,TestID),is_valid_testname(TestID),ensure_test(TestID),!, do_web_menu_key(Char).
   
+invoke_arc_cmd(Key):- invoke_n_v(Key),!.
+invoke_arc_cmd(Key):- arc_atom_to_term(Key,Prolog,Vs),Vs==[], Prolog\=@=Key,!,invoke_arc_cmd(Prolog).
+invoke_arc_cmd(Key):- Key \= (_-_), \+ arc_sensical_term(Key),!.
 invoke_arc_cmd(Goal):- \+ missing_arity(Goal,0),!, 
   write('<pre style="color: white">'),
   weto(ignore(Goal)),
@@ -602,8 +611,8 @@ show_task_pairs(TestID):- ensure_test(TestID), set_flag(indiv,0),
 
 why_io:- 
  maplist(ignore,[
-  ndividuator,  
-  show_object_dependancy,
+  nop(ndividuator),  
+  %show_object_dependancy,
   ensure_scene_change_rules,
   print_scene_change_rules]).
 
@@ -859,11 +868,20 @@ dont_sort_by_hard(test_names_by_fav). dont_sort_by_hard(all_arc_test_name). dont
 dont_sort_by_hard(_).
 %dont_sort_by_hard(P):- atom(P), \+ atom_concat(_,'_hard',P).
 
+into_test_id_list(TestList,Tests):- is_list(TestList),flatten(TestList,Flat),Flat\=@=TestList,!,into_test_id_list(Flat,Tests).
+into_test_id_list(TestList,Tests):- is_list(TestList),list_to_set(TestList,Set),TestList\=@=Set,!,into_test_id_list(Set,Tests).
+into_test_id_list(TestList,Tests):- is_list(TestList),!,maplist(into_test_id_list,TestList,TestsL),append(TestsL,Tests).
+into_test_id_list(TestName,[TestID]):- fix_test_name(TestName,TestID),!.
+into_test_id_list(String,Tests):- split_string(String,",[] \n\r\t\s",",[] \n\r\t\s",L),into_test_id_list(L,Tests).
+ 
 
-create_group(Name,Tests):- arc_assert(test_suite_name(Name)),arc_assert(dont_sort_by_hard(Name)),
+create_group(Name,TestList):- 
+ must_det_ll((
+  into_test_id_list(TestList,Tests),
+  arc_assert(test_suite_name(Name)),arc_assert(dont_sort_by_hard(Name)),
   assert(muarc_tmp:skip_calc_suite(Name)),
-  my_maplist(fix_test_name,Tests,TestID),list_to_set(TestID,Set),arc_assert(muarc_tmp:cached_tests(Name,Set)),
-  set_test_suite(Name).
+  arc_assert(muarc_tmp:cached_tests(Name,Tests)),
+  set_test_suite(Name))).
 
 
 :- multifile(test_suite_name/1).
@@ -1022,8 +1040,13 @@ memoized_p1(P1,F):- findall(E,call(P1,E),S), list_to_set(S,L), asserta(muarc_tmp
 
 
 test_suite_name_by_call(F):- memoized_p1(test_suite_name_by_call_1,F).
+%test_suite_name_by_call(is_test_pre_normalizable_io).
+%test_suite_name_by_call(is_test_pre_normalizable_pairs).
+%test_suite_name_by_call(is_test_pre_normalizable_o).
+%test_suite_name_by_call(is_test_pre_normalizable_i).
+test_suite_name_by_call(is_repainting).
 
-test_suite_name_by_call_1(F):- clauses_predicate_cmpd_goal(F/1,F),member(ensure_arc_test_properties,foreach_test).
+test_suite_name_by_call_1(F):- clauses_predicate_cmpd_goal(F/1,F2),member(F2,[ensure_arc_test_properties]).
 %test_suite_name_by_call_1(F):- clauses_predicate_cmpd_goal(F/1,every_grid).
 test_suite_name_by_call_1(no_pair(P1)):-every_pair(P1). 
 test_suite_name_by_call_1(every_pair(P1)):-every_pair(P1). 
@@ -1063,7 +1086,7 @@ is_size_lte_3x3(Grid):- ensure_grid(Grid), mgrid_size(Grid,H,V),H=<3,V=<3.
 %is_size_lte_10x10(Grid):- ensure_grid(Grid), mgrid_size(Grid,H,V),H=<10,V=<10.
 is_size_gte_20x20(Grid):- ensure_grid(Grid), mgrid_size(Grid,H,V),H>=20,V>=20.
 is_mass_lte_25(Grid):- ensure_grid(Grid), mmass(Grid,Mass),Mass=<25.
-%is_mass_lte_81(Grid):- ensure_grid(Grid), mmass(Grid,Mass),Mass=<81.
+is_mass_lte_100(Grid):- ensure_grid(Grid), mmass(Grid,Mass),Mass=<100.
 %is_mass_gte_600(Grid):- ensure_grid(Grid), mmass(Grid,Mass),Mass>=600.
 
 is_colors_adjacent(Grid):- ensure_gid(Grid,GID), ensure_cmem(GID),
@@ -1074,7 +1097,32 @@ is_colors_adjacent_no_d(Grid):- ensure_gid(Grid,GID), ensure_cmem(GID),
   cmem(GID,HV1,C1),is_adj_point_es(HV1,HV2),cmem(GID,HV2,C2),
   C1\==C2,is_fg_color(C1),is_fg_color(C2),!.
 
+is_repainting(T):- 
+  kaggle_arc(T,trn+0,_,_),
+  forall(kaggle_arc(T,trn+_,I,O),maybe_pair_is_simple_repaint(I,O)).
 
+fg_to_else(Fg2,Bg2,Cell,To):- is_fg_color(Cell)->To=Fg2 ; To=Bg2.
+maybe_pair_is_simple_repaint(I,O):-
+  %kaggle_arc(_,_,I,O),
+  into_solid_grid(I,II),unique_fg_colors(II,[_C]), unique_colors(II,UC), member(black,UC),
+  into_solid_grid(O,OO),%unique_fg_colors(OO,OCs), !,
+  %\+ member(C,OCs),
+  
+  mapgrid(fg_to_else(fg,bg),II,III),
+  mapgrid(fg_to_else(fg,bg),OO,OOO),!,
+  III=@=OOO.
+
+
+is_test_pre_normalizable_io(T):- is_test_pre_normalizable(T,outputs(N1)),once((is_test_pre_normalizable(T,inputs(N2)),N1=@=N2)).
+is_test_pre_normalizable_i(T):- is_test_pre_normalizable(T,inputs(_)), \+ is_test_pre_normalizable_io(T).
+is_test_pre_normalizable_o(T):- is_test_pre_normalizable(T,outputs(_)), \+ is_test_pre_normalizable_io(T).
+is_test_pre_normalizable_pairs(T):- is_test_pre_normalizable(T,pairs), \+ is_test_pre_normalizable_io(T).
+
+is_test_pre_normalizable(T,IO):- var(T),!,kaggle_arc_io(T,trn+0,_,_),is_test_pre_normalizable(T,IO).
+is_test_pre_normalizable(T,inputs(N)):- findall(I,kaggle_arc_io(T,trn+_,in,I),InS),normalizes_together(InS,N).
+is_test_pre_normalizable(T,outputs(N)):- findall(I,kaggle_arc_io(T,trn+_,out,I),InS),normalizes_together(InS,N).
+is_test_pre_normalizable(T,pairs):- forall(kaggle_arc(T,trn+_,X,Y),normalizes_together([X,Y],_)).
+normalizes_together(X,Same):- maplist(normalize_grid,N,X,_XX),maplist(=(Same),N),Same\==[].
 
 %mgrid_size(A,B,C):- arc_memoized(grid_size(A,B,C)),!.
 %mmass(A,B):- arc_memoized(mass(A,B)),!.
@@ -1317,6 +1365,8 @@ test_name_ansi_output_file(TestID,File):- \+ atom(TestID),
 test_name_ansi_output_file(TestID,File):- arc_sub_path(TestID,File),!.
 
 
+maybe_testid_to_filename(TestID,NewName):- 
+  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID.
 test_name_output_file(TestID,Ext,ExtFile):- 
   test_name_ansi_output_file(TestID,File),
   ensure_file_extension(File,Ext,ExtFile),!.
@@ -1334,7 +1384,7 @@ call_file_goal(_, discontiguous(_)):- !.
 call_file_goal(_,Goal):- call(Goal),!.
 
 load_file_dyn(TestID):- once(\+ atom(TestID); \+ exists_file(TestID)), 
-  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn(TestID,NewName).
+  maybe_testid_to_filename(TestID,NewName),!,load_file_dyn(TestID,NewName).
 load_file_dyn(File):- warn_skip(load_file_dyn_pfc(File)).
 
 load_file_dyn(TestID,NewName):- warn_skip(load_file_dyn_pfc(TestID,NewName)). 
@@ -1343,11 +1393,11 @@ load_file_dyn(TestID,NewName):- warn_skip(load_file_dyn_pfc(TestID,NewName)).
 
 :- dynamic(has_loaded_file_dyn_pfc/1).
 load_file_dyn_pfc(TestID):- once(\+ atom(TestID); \+ exists_file(TestID)),
-  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(TestID,NewName).
+  maybe_testid_to_filename(TestID,NewName),!,load_file_dyn_pfc(TestID,NewName).
 /*
 load_file_dyn_pfc(TestID,TestID):- var(TestID),!,ensure_test(TestID),load_file_dyn_pfc(TestID,TestID).
 load_file_dyn_pfc(TestID,TestID):- once(\+ atom(TestID); \+ exists_file(TestID)),
-  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(TestID,NewName).
+  maybe_testid_to_filename(TestID,NewName),!,load_file_dyn_pfc(TestID,NewName).
 %load_file_dyn(File):- consult(File),!.
 */
 load_file_dyn_pfc(_TestID,File):- has_loaded_file_dyn_pfc(File),!. 
@@ -1484,7 +1534,9 @@ save_test_hints_now(TestID):- test_name_output_file(TestID,'.pl',File), save_tes
 save_test_hints_now(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_test_hints_now(TestID,File).
 save_test_hints_now(TestID,File):- maybe_append_file_extension(File,'.pl',NewName),!,save_test_hints_now(TestID,NewName).
 
-save_test_hints_now(TestID,File):-
+save_test_hints_now(TestID,File):- warn_skip(save_test_hints_now_really(TestID,File)).
+
+save_test_hints_now_really(TestID,File):-
    setup_call_cleanup(open(File,write,O,[create([default]),encoding(text)]), 
        with_output_to(O,print_test_file_hints(TestID)),
       close(O)), 
@@ -1496,12 +1548,19 @@ print_test_file_hints(TestID):-
   saveable_test_info(TestID,Info),
   my_maplist(print_ref,Info).
 
+force_clear_test:- get_current_test(TestID),force_clear_test(TestID).
 force_clear_test(TestID):-
   ensure_test(TestID),
-  clear_test_now(TestID),
-  save_test_hints_now(TestID).
+  clear_training_now(TestID),
+  clear_saveable_test_info_now(TestID),
+  unload_test_file(TestID),
+  delete_test_file(TestID).
 
+delete_test_file:- get_current_test(TestID),delete_test_file(TestID).
+delete_test_file(File):- maybe_testid_to_filename(File,NewName),!,delete_test_file(NewName).
+delete_test_file(File):- exists_file(File)->delete_file(File);true.
 
+clear_test:- get_current_test(TestID),clear_test(TestID).
 clear_test(TestID):- is_list(TestID),!,my_maplist(clear_test,TestID).
 clear_test(TestID):- ensure_test(TestID),warn_skip(clear_test(TestID)).
 clear_test_now(TestID):- ensure_test(TestID),
@@ -1519,11 +1578,16 @@ clear_saveable_test_info_now(TestID):-
 
 erase_refs(Info):- my_maplist(erase,Info).
 
+
+unload_test_file:- get_current_test(TestID),unload_test_file(TestID).
 unload_test_file(TestID):- unload_file_dyn(TestID).
 
-unload_file_dyn(File):- test_name_output_file(File,'.pl',NewName),NewName\=@=File,!,unload_file_dyn(NewName).
+unload_file_dyn:- get_current_test(TestID),unload_file_dyn(TestID).
+unload_file_dyn(File):- maybe_testid_to_filename(File,NewName),!,unload_file_dyn(NewName).
 unload_file_dyn(File):- \+ exists_file(File), !.
-unload_file_dyn(File):- unload_file_dyn_pfc(File), unload_file(File),!.
+unload_file_dyn(File):- 
+  forall(retract(has_loaded_file_dyn_pfc(File)),fail),
+  unload_file_dyn_pfc(File), unload_file(File),!.
 
 unload_file_dyn_pfc(File):-  
  open(File,read,I),
@@ -1544,8 +1608,10 @@ clear_test_training(TestID):-
       unload_file(File),
       (exists_file(File)->delete_file(File);true))),
 */
+clear_training:- get_current_test(TestID),clear_training(TestID).
 clear_training(TestID):- ensure_test(TestID),warn_skip(clear_training(TestID)),!.
 
+clear_training_now:- get_current_test(TestID),clear_training_now(TestID).
 clear_training_now(TestID):- ensure_test(TestID),
   %retractall(arc_cache:individuated_cache(_,_,_)),
   set_bgc(_),
@@ -1626,6 +1692,7 @@ print_single_pair(TName):-
        print_single_pair(TestID,ExampleNum,In,Out)),
      write('%= '), parcCmt(TestID))),!.
 
+print_test:- get_current_test(TestID),print_test(TestID).
 print_test(TName):- (is_cgi ; arc_html),!,preview_test(TName).
 print_test(TName):-    
   fix_test_name(TName,TestID,ExampleNum1),  
@@ -1787,8 +1854,7 @@ ensure_test(TestID):- var(TestID), !, var_ensure_test(TestID).
 %ensure_test(TestID):- all_arc_test_name(TestID).
 
 all_arc_test_name(TestID):- get_current_test(Test),!,
- (((TestID=Test);(all_suite_test_name(TestID),TestID\=Test);(set_current_test(Test),!,fail))).
-
+ (((TestID=Test);(all_suite_test_name(TestID),TestID\=Test,set_current_test(TestID));(set_current_test(Test),!,fail))).
 all_arc_test_name_unordered(TestID):- kaggle_arc(TestID,trn+0,_,_).
 
 all_suite_test_name(TestID):- get_current_suite_testnames(Set),!,member(TestID,Set).
@@ -1799,7 +1865,12 @@ matches(InfoS,InfoM):- member(InfoS,InfoM).
 :- abolish(muarc_tmp:test_info_cache,2).
 :- dynamic(muarc_tmp:test_info_cache/2).
 
-print_testinfo(TestID):- ensure_test(TestID), forall(test_info_recache(TestID,F),pp(fav(TestID,F))),
+print_testinfo:-
+  get_current_test(TestID),
+  print_testinfo(TestID).
+
+print_testinfo(TestID):- 
+ ensure_test(TestID), !, forall(test_info_recache(TestID,F),pp(fav(TestID,F))),
   nop(test_show_grid_objs(TestID)),
   findall(III,runtime_test_info(TestID,III),LL),pp(LL).
 
@@ -2397,11 +2468,11 @@ color_sym(OS,C,Sym):- color_sym(OS,4,C,Sym).
 color_sym(_,_,C,Sym):- enum_colors(C),color_int(C,I),nth1(I,`ose=xt~+*zk>`,S),name(Sym,[S]).
 %color_sym(P*T,_,C,Sym):- enum_colors(C),color_int(C,I),S is P+I*T,name(Sym,[S]).
 
-with_current_test(P1):- current_predicate_human(P1/0),!,call(P1).
 with_current_test(P1):- get_pair_mode(entire_suite),!,
   forall_count(all_arc_test_name(TestID), 
-           catch_non_abort(with_current_test(P1,TestID))).
+           catch_non_abort(call(P1,TestID))).
 with_current_test(P1):- current_predicate(P1/1),!,call(P1,_).
+with_current_test(P1):- current_predicate_human(P1/0),!,call(P1).
 with_current_test(P1):- doall(with_current_test(P1,_TestID)).
 
 %with_current_test(P1,TestID_IN):- ensure_test(TestID_IN,TestID), with_current_test(P1,TestID).

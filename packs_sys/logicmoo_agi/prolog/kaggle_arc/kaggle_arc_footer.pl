@@ -42,6 +42,8 @@
 :- ensure_loaded(kaggle_arc_uniqueness).
 :- ensure_loaded(kaggle_arc_test_easy).
 :- ensure_loaded(kaggle_arc_test_old).
+:- ensure_loaded(kaggle_arc_uniqueness_API).
+
 :- set_prolog_flag(verbose_load,false).
 :- set_prolog_flag(verbose_autoload,false).
 

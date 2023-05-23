@@ -84,6 +84,31 @@ fav(t('f8b3ba0a'),
 fav(t('f8b3ba0a'),
   indiv_h(colormass)).
 
+fav(v(T),buggy(Note)):- member(T:Note,
+
+   ['a8610ef7': 'blue should be grey in test example output',
+    'a3f84088': 'middle pixel should be grey in the output of the first example',
+    '9def23fe': 'upper left corner of the output of the first example should be black',
+    '9356391f': 'topmost grey pixel should be light blue in output of second example',
+    '58e15b12': 'green-blue overlap is green instead of pink in output of test example',
+    '54db823b': 'upper left green object has a red pixel misplaced in output of first example',
+    '20818e16': 'output grid does not have shape of pink object in third example',
+    'b4a43f3b': 'test example output missing two green pixels',
+    'b7cb93ac': 'order of L-shaped objects not clear',
+    'bd14c3bf': 'no red object in input of test example',
+    'c35c1b4c': 'red pixel missing in last train example output',
+    'c92b942c': '??',
+    'd931c21c': 'red mixel too many in last train example output',
+    'e1d2900e': 'some blue dot does not move in first example',
+    'e7b06bea': 'grey missing in output of third example',
+    'f8be4b64': '2nd to last example should have black hole in lower red line',
+    '05a7bcf2': 'faulty pixel in first example',
+    '0934a4d8': 'prog on train ex does not work on test ex (can prooly be fixed by changing order / only mirrh after mirrv, not simult)',
+    '423a55dc': 'fails on test ex',
+    '456873bc': 'fails on test ex',
+    'b457fec5': 'ill-defined: messup order',
+    'b7cb93ac': 'agaon underdetermined test ex']).
+
 
 %~ (save_test_hints(v('00576224'),'muarc_cache/00576224.ansi.pl'))
 %~ (clear_saveable_test_info(v('00576224')))

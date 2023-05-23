@@ -819,3 +819,202 @@ def test_hperiod():
 def test_vperiod():
     assert vperiod(frozenset({(2, (2, 6)), (2, (2, 0)), (3, (2, 4)), (3, (2, 2)), (3, (2, 5)), (2, (2, 3)), (3, (2, 1))})) == 1
     assert vperiod(frozenset({(1, (2, 6)), (2, (3, 5)), (2, (3, 0)), (2, (2, 2)), (2, (2, 7)), (1, (3, 4)), (2, (2, 1)), (1, (2, 3)), (2, (2, 5)), (2, (2, 4)), (1, (3, 7)), (1, (2, 0)), (2, (3, 6)), (2, (3, 2)), (2, (3, 3)), (1, (3, 1))})) == 2
+
+
+
+import os
+import json
+
+
+
+def get_data(path):
+    data = {}
+    for filename in os.listdir(path):
+        with open(os.path.join(path, filename)) as f:
+            data[filename.rstrip('.json')] = json.load(f)
+    return {
+        'train': {k: [{
+            'input': tuple(tuple(r) for r in e['input']),
+            'output': tuple(tuple(r) for r in e['output']),
+        } for e in v['train']] for k, v in data.items()},
+        'test': {k: [{
+            'input': tuple(tuple(r) for r in e['input']),
+        } for e in v['test']] for k, v in data.items()}
+    }
+
+
+def shape(g):
+    return (len(g), len(g[0]))
+
+def combine(a, b):
+    return a | b
+
+
+def difference(a, b):
+    return a - b
+
+
+def intersection(a, b):
+    return a & b
+
+
+def palette(g):
+    p = set()
+    for r in g:
+        for e in r:
+            p.add(e)
+    return frozenset(p)
+
+
+def rot90(grid):
+    return tuple(row for row in zip(*grid[::-1]))
+
+
+def rot270(grid):
+    return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+
+
+def tophalf(grid):
+    return grid[:len(grid) // 2]
+
+
+def bottomhalf(grid):
+    return grid[len(grid) // 2 + len(grid) % 2:]
+
+
+def lefthalf(grid):
+    return rot270(tophalf(rot90(grid)))
+
+
+def righthalf(grid):
+    return rot270(bottomhalf(rot90(grid)))
+
+
+def ofcolor(grid, value):
+    return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+
+
+def canvas(value, dimensions):
+    return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+
+
+def toindices(patch):
+    if len(patch) == 0:
+        return frozenset()
+    if isinstance(next(iter(patch))[1], tuple):
+        return frozenset(index for value, index in patch)
+    return patch
+
+
+def fill(grid, value, patch):
+    h, w = len(grid), len(grid[0])
+    grid_filled = list(list(row) for row in grid)
+    for i, j in toindices(patch):
+        if 0 <= i < h and 0 <= j < w:
+            grid_filled[i][j] = value
+    return tuple(tuple(row) for row in grid_filled)
+
+
+def is_masking(examples):
+    ism = True
+    opc = frozenset({})
+    for ex in examples:
+        a, b = shape(ex['input'])
+        c, d = shape(ex['output'])
+        if not ((a == c and d == b // 2) or (b == d and c == a // 2)):
+            ism = False
+            break
+        opc = combine(opc, palette(ex['output']))
+        if len(opc) > 2:
+            ism = False
+            break
+    return ism
+
+
+def find_masking(examples):
+    i = examples[0]['input']
+    o = examples[0]['output']
+    th, bh, lh, rh = tophalf(i), bottomhalf(i), lefthalf(i), righthalf(i)
+    ths, lhs, os = shape(th), shape(lh), shape(o)
+    if ths == os:
+        a, b = th, bh
+        afun, bfun = 'tophalf(I)', 'bottomhalf(I)'
+    elif lhs == os:
+        a, b = lh, rh
+        afun, bfun = 'lefthalf(I)', 'righthalf(I)'
+    ap, bp, op = palette(a), palette(b), palette(o)
+    
+    fs = {
+        'intersection': lambda a, b: a & b,
+        'combine': lambda a, b: a | b,
+        'difference': lambda a, b: a - b,
+        'antidifference': lambda a, b: b - a,
+        'exclusive': lambda a, b: (a - b) | (b - a)
+    }
+    op2 = (sorted(op), sorted(op)[::-1])
+    for ac in ap:
+        ofca = ofcolor(a, ac)
+        for bc in bp:
+            ofcb = ofcolor(b, bc)
+            for (bgc, c) in op2:
+                canv = canvas(bgc, os)
+                for fname, f in fs.items():
+                    if fill(canv, c, f(ofca, ofcb)) == o:
+                        acp = f'ofcolor({afun}, {ac})'
+                        bcp = f'ofcolor({bfun}, {bc})'
+                        cfun = f'canvas({bgc}, shape({afun}))'
+                        if fname == 'antidifference':
+                            resfun = f'difference({bcp}, {acp})'
+                        elif fname == 'exclusive':
+                            resfun = f'combine(difference({acp}, {bcp}), difference({bcp}, {acp}))'
+                        else:
+                            resfun = f'{fname}({acp}, {bcp})'
+                        
+                        prog = f'fill({cfun}, {c}, {resfun})'
+                        return prog
+    return False
+
+
+def fmt(g):
+    return str(g).replace(', ', '').replace(')(', '|').replace('((', '|').replace('))', '|')
+
+
+def run_full(full_data):
+    counter = 0
+    towrite = 'output_id,output\n'
+    for k, examples in full_data['train'].items():
+        try:
+            if is_masking(examples):
+                f = find_masking(examples)
+                if f:
+                    prog = f"(lambda I: {f})(ex['input'])"
+                    works = all([eval(prog) == ex['output'] for ex in examples])
+                    if works:
+                        counter += 1
+                        print(k)
+                        for i, ex in enumerate(full_data['test'][k]):
+                            hat = eval(prog)
+                            ln = f'{k}_{i},{fmt(hat)}\n'
+                            towrite += ln
+        except:
+            pass
+    print(counter)
+    return towrite
+                    
+    
+
+
+def main():
+    dummy = True
+    if dummy:
+        #pth = '../../data/evaluation'
+        pth = '../data/evaluation'
+    else:
+        pth = '/kaggle/input/abstraction-and-reasoning-challenge/test'
+    data = get_data(pth)
+    towrite = run_full(data)
+    with open('submission.csv', 'w') as fp:
+        fp.write(towrite)
+
+
+main()

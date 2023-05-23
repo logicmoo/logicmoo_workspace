@@ -1270,9 +1270,32 @@ save_grid_calc(TestID,ExampleNum,XForms,In,Out,Op):-
   (
  ignore((on_x_rtrace(call(Op,In,Out,RIO)), assert_test_property(TestID,ExampleNum,iro([Op|XForms]),RIO))),
  ignore((on_x_rtrace(call(Op,Out,In,ROI)), assert_test_property(TestID,ExampleNum,ori([Op|XForms]),ROI))),
- ignore((on_x_rtrace(print_ss(no(Op,TestID,ExampleNum,XForms),RIO,ROI)))))).
+ ignore((on_x_rtrace(print_ss(no(Op,TestID,ExampleNum,XForms),RIO,ROI)))),
+ ignore((
+   reduce_by_blur(ROI,ROI2),
+   reduce_by_blur(RIO,RIO2),
+   if_t((RIO2\==RIO;ROI2\==ROI),
+   on_x_rtrace(print_ss(blur(Op,TestID,ExampleNum,XForms),RIO2,ROI2))))))).
 
+reduce_by_blur(I,RIO2):- non_fg_to_black(I,R),I\==R,!,reduce_by_blur(R,RIO2).
+reduce_by_blur(I,RIO2):- trim_to_rect(I,R),I\==R,!,reduce_by_blur(R,RIO2).
+reduce_by_blur(I,RIO2):- reduce_by_blur2(I,R),I\==R,!,reduce_by_blur(R,RIO2).
+reduce_by_blur(I,RIO2):- c_r(reduce_by_blur2,I,R),I\==R,!,reduce_by_blur(R,RIO2).
+reduce_by_blur(I,I).
 
+is_deletable(C,List):- maplist(=(C),List),!. 
+reduce_by_blur2([],[]).
+reduce_by_blur2([R],[R]).
+reduce_by_blur2([R|IO],RIO2):- is_list(R),is_deletable(black,R),!,reduce_by_blur2(IO,RIO2).
+reduce_by_blur2([R1,R,R2|IO],[R1,R|RIO2]):- color_list(R1,CL1),color_list(R2,CL2),CL1=@=CL2,!, reduce_by_blur2(IO,RIO2).
+reduce_by_blur2([R1,R2|IO],[R1|RIO2]):- color_list(R1,CL1),color_list(R2,CL2),CL1=@=CL2,!, reduce_by_blur2(IO,RIO2).
+reduce_by_blur2([R|List],[R|RIO]):-reduce_by_blur2(List,RIO).
+%reduce_by_blur(W,[R,black|List],RIO):-reduce_by_blur(W,[R|List],RIO).
+%reduce_by_blur(W,R,RIO):- clumped(R,C),length(C,W),maplist(arg(1),C,RIO).
+
+color_list(R,CL):- my_exclude(=(black),R,RR),clumped(RR,C),maplist(arg(1),C,CL).
+
+  
 
 same_sizes([I|In],[O|Out]):- length(I,Cols),length(O,Cols),length(In,Rows0),length(Out,Rows0).
 

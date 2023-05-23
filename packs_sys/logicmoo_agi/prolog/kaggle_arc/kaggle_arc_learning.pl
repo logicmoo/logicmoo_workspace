@@ -875,7 +875,7 @@ classify_rules_2(PAIR,In,ExpectedOut,Rules,PairsUsed,[PAIR|Keeper],Rejected,Unkn
   must_det_ll((
   Awesome=awesome,
   PAIR = result(I,Rule,_,GPs,Matches,_),
-  banner_lines(green,3),
+  %banner_lines(green,3),
   nb_setarg(6,PAIR,Awesome),
   gp_class(I,GPs,Awesome,ExpectedOut),
   pp(rule(Awesome)=Rule),

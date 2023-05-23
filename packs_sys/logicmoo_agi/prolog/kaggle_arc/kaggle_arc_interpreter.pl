@@ -43,6 +43,8 @@ do_eager_goals([Eager|OperationList]):- !,
 do_eager_goals(_).
 
 
+% `?- soon(X is Y+1), when(integer(Y),print(X)).`
+
 % Process eager goals, freeze goals, and other goal types.
 immc(eager(_,V,Eager)):- !, del_attrs(V), immc(Eager).
 immc(freeze(V,Eager)):- !, del_attrs(V), immc(Eager).
@@ -73,6 +75,7 @@ soon(Operation):- ground(Operation),!,call(Operation).
 soon((Operation_1,Operation_2)):- !, soon(Operation_1),soon(Operation_2).
 soon(is(X,Operation)):- !,clpr:{X =:= Operation}.
 soon(Operation):- functor(Operation,F,2),clp_r_arithmetic(F),!,clpr:{Operation}.
+soon(Operation):- term_variables(Operation,[_]),!,call(Operation).
 soon(Operation):- term_variables(Operation,Vs),maplist(freeze_rev(soon_1(Operation)),Vs).
 
 % Delays code to be executed soon but not *too* soon

@@ -872,28 +872,53 @@ create_group_dmiles:-
   %must_det_ll((create_group(dmiles_nsn2,[
   % 'a61f2674','0a2355a6', 'a61ba2ce', 'ea32f347', 'a79310a0', '37d3e8b2', 'e41c6fd3', 'b230c067', '0d3d703e', '08ed6ac7']))),
 
+   %'b230c067 d2abd087 6e82a1ae'
    flatten([
     % plus 1
-        '32e9702f', '1d398264', '29c11459', '3c9b0459',
+        %'32e9702f',
+         '1d398264', '29c11459', '3c9b0459','009d5c81','b8825c91',%'3631a71a',
     %start (plus 1)
-        '25d487eb','780d0b14',
+        '25d487eb','780d0b14', 
     %copy with mod
+        '7e0986d6', '136b0064',
         '08ed6ac7', 'ea32f347',  '0a2355a6', '37d3e8b2', 'a61ba2ce', 'b230c067',  'd2abd087', '6e82a1ae',
     %copy with mod (harder?)
        '705a3229', 'e41c6fd3', 'a61f2674', '0d3d703e', 'makesboxsq', 'a79310a0', '27a77e38', 'f45f5ca7','fc754716',
-    %todo
+
+'bd14c3bf', '9772c176','7d18a6fb','1c02dbbe','746b3537','a48eeaf7','d89b689b',
+
+    %todo 
      'f8b3ba0a', '5582e5ca', '33b52de3', '1b60fb0c',
     %recolor with a pattern from output
      '103eff5b','626c0bcc',        
         []],Flat),
    list_to_set(Flat,SetR), reverse(SetR,Set),
-   must_det_ll((create_group(dmiles,Set))),
+   must_det_ll((create_group(dmiles_all,Set))),
+
+
+  create_group(dmiles_fast,'bd14c3bf 08ed6ac7 ea32f347  0a2355a6 37d3e8b2 a61ba2ce b230c067 d2abd087 6e82a1ae 0d3d703e a61f2674 e509e548 810b9b61 aedd82e4 817e6c09  ae58858e fea12743'),
+
+  create_group(dmiles_cc_1,[t('find-the-color-of-the-gray-pixels-l6afriful4bel4379yo'), t(ea32f347),t('6e82a1ae'),%v('626c0bcc'),
+                                                         t('08ed6ac7'),%t('150deff5'),%v(a8610ef7),
+                                                         t(e509e548),t(b230c067),t(d2abd087),
+                                                         %t('0uduqqj6f'),
+                                                         %t(b6afb2da),
+                                                         v('0a2355a6'),
+                                                         v('37d3e8b2'),%v('639f5a19')
+                                                         []]),
+
+  create_group(dmiles,'bd14c3bf 08ed6ac7 ea32f347  0a2355a6 37d3e8b2 a61ba2ce b230c067 d2abd087 6e82a1ae 0d3d703e a61f2674 e509e548 810b9b61 aedd82e4
+    find-the-5-and-1-l6ae9ses9zaejs6idai Importance-of-social-distance-l6afc1q0dm28z9i6egn find-the-color-of-the-gray-pixels-l6afriful4bel4379yo
+    817e6c09  ae58858e fea12743'),
+
   %set_current_test('0a2355a6'),
   set_pair_mode(whole_test),
   %set_current_test('makesboxsq'),
   %
   %set_current_test('25d487eb'),
-  set_current_test('08ed6ac7'),
+  %set_current_test('08ed6ac7'),
+  set_current_test('6e82a1ae'),
+  %set_current_test('bd14c3bf'),
   !.
 :- initialization(create_group_dmiles).
 %:- noguitracer.
@@ -908,3 +933,6 @@ create_group_dmiles:-
 %:- use_module('./induction/h_muarc_alephlib').
 %:- consult('./induction/h_muarc_aleph').
 %:- tmp:loading_arc_from(M),'$set_source_module'(M).
+
+% 
+

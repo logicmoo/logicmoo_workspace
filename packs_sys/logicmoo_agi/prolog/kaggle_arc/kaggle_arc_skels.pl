@@ -6,7 +6,7 @@
 */
 :- include(kaggle_arc_header).
 
-into_ngrid(Points,NGrid):-  vis2D(Points,H,V),into_ngrid(Points,H,V,NGrid).
+into_ngrid(Points,NN):-  vis2D(Points,H,V),into_ngrid(Points,H,V,NGrid),fix_tt_juctions(NGrid,NN).
 into_ngrid(Obj,H,V,NGrid):-
   localpoints_include_bg(Obj,Points),
   neighbor_map1(H,V,Points,Points,CountedPoints),!,
@@ -36,6 +36,7 @@ most_d_colors(Grid,ColorO,GridNM):-
   my_maplist(arg(2),CColors,Set),
   get_black(Black),
   (Set==[]->ColorO=[Black];ColorO=Set),!.
+  
 
 ping_indiv_grid(show_neighbor_map).
 
@@ -71,16 +72,17 @@ make_bg_visible_c(In,wbg):- plain_var(In),!.
 make_bg_visible_c(In,In):- var(In),!.
 make_bg_visible_c(In,Grid):- get_black(Black),subst001(In,Black,'#201020',Grid).
 
+fix_tt_juctions(X,X):-!.
 
 
-
-get_fill_points(In,UNFP,GridO):-
+get_fill_points(In,UNFP,GridOO):-
  must_det_ll((
  %grid_size(Grid,H,V),
  make_bg_visible_b(In,Grid),
  %print(In=Grid),
  neighbor_map(Grid,GridO), 
- localpoints(GridO,NPS),  
+ fix_tt_juctions(GridO,GridOO),
+ localpoints(GridOO,NPS),  
  %print(NPS),nl,
  include(p1_or(is_point_type('~'),is_fill_point(NPS)),NPS,FillPoints),
  %%include(is_point_type('wbg'),NPS,NotFillPoints),
@@ -307,12 +309,14 @@ map_neib_ex([e,w,sw,nw],_,'>').
 map_neib_ex([e,w,ne,se],_,'<').
 map_neib_ex([s,n,nw,ne],_,'v').
 
+% % % 
 map_neib_ex([w,ne],_,'-').
 %
 map_neib_ex([n,e],_,'+').
 map_neib_ex([n,w],_,'+').
 map_neib_ex([s,e],_,'+').
 map_neib_ex([s,w],_,'+').
+
 map_neib_ex([n],_,'|').
 map_neib_ex([s],_,'|').
 map_neib_ex([e],_,'-').
@@ -355,6 +359,7 @@ map_neib_ex([e,se],_,'-').
 map_neib_ex([e,ne],_,'-').
 map_neib_ex([w,sw],_,'-').
 
+
 /*
 map_neib_ex([n,nw],_,U):- curvDD(U).
 map_neib_ex([s,se],_,U):- curvDD(U).
@@ -377,6 +382,8 @@ map_neib_ex([s,ne,sw],_,U):- curvDU1(U).
 map_neib_ex([s,nw,se],_,U):- curvDD1(U).
 map_neib_ex([s,ne],_,U):- curvDU2(U).
 map_neib_ex([s,nw],_,U):- curvDD(U).
+
+
 map_neib_ex(_,[sw,se],'-').
 map_neib_ex(_,[s,sw],'-').
 map_neib_ex(_,[s,se],'-').
@@ -384,16 +391,17 @@ map_neib_ex(_,[s,se],'-').
 map_neib_ex(_,[n,ne],'-').
 map_neib_ex(_,[n,nw],'-').
 
-
 map_neib_ex(_,[ne],U):- curvDD(U).
 map_neib_ex(_,[nw],U):- curvDU(U).
 map_neib_ex(_,[se],U):- curvDU2(U).
 map_neib_ex(_,[sw],U):- curvDD(U).
 
+
 map_neib_ex(_,[s,sw,se],'-').
 map_neib_ex(_,[n,ne,nw],'-').
 map_neib_ex(_,[e,ne,se],'|').
 map_neib_ex(_,[w,sw,nw],'|').
+
 
 /*
 map_neib_ex(_,[sw,se],'V').
@@ -420,7 +428,7 @@ map_neib_ex(_,[D],'*'):- \+ is_diag(D),!.
 
 map_neib_ex(_,[],'~').
 
-map_neib_ex([n,sw,se],_,'A').
+%map_neib_ex([n,sw,se],_,'A').
 map_neib_ex(_,[n,s,e,w,nw],U):- curvDU1(U).
 map_neib_ex(_,[n,s,e,w,se],U):- curvDU1(U).
 map_neib_ex(_,[n,s,e,w,sw],U):- curvDD1(U).
@@ -436,59 +444,96 @@ map_neib_ex([_,sw],_,U):- curvDU(U).
 
 same_sets(S1,S2):- sort_safe(S1,SS1),sort_safe(S2,SS2),SS1==SS2.
 
-map_neib_u1([n,s,e,w],[ne,se,nw,sw],'0').
+map_neib_u1([n,s,e,w],[ne,se,nw,sw],'@').
 
 map_neib(Has,Not,R):- 
   map_neib_u1(CHas,CNot,R),
-  if_t(nonvar(CHas),forall(member(C,CHas),member(C,Has))),
-  if_t(nonvar(CNot),forall(member(C,CNot),member(C,Not))),!.
+  respect_set(CHas,Has,Not),
+  respect_set(CNot,Not,Has),!.
 map_neib(Has,Not,R):-
   map_neib_ex(CHas,CNot,R),
   (if_t(nonvar(CHas),same_sets(Has,CHas)),
    if_t(nonvar(CNot),same_sets(Not,CNot))),!.
 map_neib(Has,Not,R):- 
   map_neib_u2(CHas,CNot,R),
-  if_t(nonvar(CHas),forall(member(C,CHas),member(C,Has))),
-  if_t(nonvar(CNot),forall(member(C,CNot),member(C,Not))),!.
+  respect_set(CHas,Has,Not),
+  respect_set(CNot,Not,Has),!.
+
+respect_set(CSet,_Set,_Other):- var(CSet),!.
+respect_set(not(Spec),Set,Other):- !, \+ respect_set(Spec,Set,Other).
+respect_set(len(N),Set,_Other):- !, length(Set,Len),Len=N.
+respect_set(more(N),Set,_Other):- !, length(Set,Len),Len>N.
+respect_set(less(N),Set,_Other):- !, length(Set,Len),Len<N.
+respect_set(only(Spec),Set,_Other):- !, forall(member(C,Set), member(C,Spec)), forall(member(C,Spec), member(C,Spec)).
+respect_set(none_of(Spec),Set,_Other):- !, forall(member(C,Set),\+ member(C,Spec)).
+respect_set(some_of(Spec),Set,_Other):- !, member(C,Set), member(C,Spec),!.
+respect_set(Spec,Set,_Other):- is_list(Spec),!,forall(member(C,Spec),member(C,Set)).
+  
+
+map_neib_u2([n,s],[e,w],'|'). % |
+map_neib_u2([n,s],[e],'*'). % -
+map_neib_u2([n,s],[w],'*'). % -
+map_neib_u2([e,w],[n,s],'-'). % |
+map_neib_u2([e,w],[n],'*'). % |
+map_neib_u2([e,w],[s],'*'). % |
 
 
-map_neib_u2([n,s],[e,w],'|').
-map_neib_u2([e,w],[n,s],'-').
+
+map_neib_u2([ne,nw],len(5),'V').
+map_neib_u2(only([ne,sw]),_,'/').
+map_neib_u2(only([nw,se]),_,'\\').
 
 
-map_neib_u2([n,s],[e],'|').
-map_neib_u2([n,s],[w],'|').
-map_neib_u2([e,w],[n],'-').
-map_neib_u2([e,w],[s],'-').
-
-map_neib_u2([ne,nw],[n],'V').
-
-map_neib_u2([n],[e,w],'!').
-map_neib_u2([s],[e,w],'!').
+% % map_neib_u2([n],[e,w],'|').
+% % map_neib_u2([s],[e,w],'|').
+/*
+map_neib_u2([e],[n,s],'=').
+map_neib_u2([w],[n,s],'=').
 
 map_neib_u2([nw],_,U):- curvDD1(U).
 map_neib_u2([se],_,U):- curvDD1(U).
 map_neib_u2([ne],_,U):- curvDU1(U).
 map_neib_u2([sw],_,U):- curvDU1(U).
+*/
 
+/*
+vs latter.. 
+%map_neib_u2([n],[e,w],'|').
+%map_neib_u2([s],[e,w],'|').
 map_neib_u2([e],[n,s],'=').
 map_neib_u2([w],[n,s],'=').
+*/
 
-map_neib_u2([_],[nw,sw,se,ne],'+').
+% % map_neib_u2([_],[nw,sw,se,ne],'+').
+
 
 map_neib_u2([n,w],[nw,sw,se,ne],'/'):- curvD,!.
 map_neib_u2([s,e],[nw,sw,se,ne],'/'):- curvD,!.
 map_neib_u2([n,e],[nw,sw,se,ne],'\\'):- curvD,!.
 map_neib_u2([s,w],[nw,sw,se,ne],'\\'):- curvD,!.
 
+map_neib_u2([nw,w,sw],[ne,e,se],'>'). % |
+map_neib_u2([ne,e,se],[nw,w,sw],'<'). % |
+map_neib_u2([sw,s,se],[nw,n,ne],'^'). % |
+map_neib_u2([nw,n,ne],[sw,s,se],'v'). % |
+
 map_neib_u2([ne,sw],[n,s,e,w],'/'). %:- \+ failD,!.
 map_neib_u2([nw,se],[n,s,e,w],'\\'). %:- \+ failD,!.
 map_neib_u2([ne,sw],_,U):- curvDU2(U).
 map_neib_u2([nw,se],_,U):- curvDD(U).
+%map_neib_u2(only([w,s,sw]),_,'A').
 
+map_neib_u2(only([n]),_,'|').
+map_neib_u2(only([s]),_,'|').
+map_neib_u2(only([e]),_,'-').
+map_neib_u2(only([w]),_,'-').
+map_neib_u2([n],[s,e,w],'|').
+map_neib_u2([s],[n,e,w],'|').
+map_neib_u2([e],[n,s,w],'-').
+map_neib_u2([w],[n,s,e],'-').
 
 curvDU('/'):- true.
-curvDU2('%'):- true.
+curvDU2('/'):- true.
 curvDU1('/').
 curvDD('\\'):- true.
 curvDD1('\\').
@@ -497,8 +542,8 @@ failD:- true.
 
 map_neib2(Has,Not,R):-
   map_neib_u3(CHas,CNot,R),
-  forall(member(C,CHas),member(C,Has)),
-  forall(member(C,CNot),member(C,Not)),!.
+  respect_set(CHas,Has,Not),
+  respect_set(CNot,Not,Has).
   
 map_neib_u3([n,s,e,w],[],'~').
 

@@ -39,6 +39,134 @@ group of properties as output.
 
 */
 
+% Helper predicates
+
+% Cell properties
+%cell(X, Y, Color).
+
+% Get min and max X coordinates
+min_max_x(Cells, MinX, MaxX) :-
+    findall(X, (member(cell(X, _, _), Cells)), Xs),
+    min_list(Xs, MinX),
+    max_list(Xs, MaxX).
+
+% Get min and max Y coordinates
+min_max_y(Cells, MinY, MaxY) :-
+    findall(Y, (member(cell(_, Y, _), Cells)), Ys),
+    min_list(Ys, MinY),
+    max_list(Ys, MaxY).
+
+
+% Horizontal or Vertical Line
+shape(Cells, Tolerance, obj([hv_line(Direction), color(C), len(Length), tol(Tolerance), cells(Cells)])) :- length(Cells,Length),Length>1,
+    min_max_x(Cells, MinX, MaxX),
+    min_max_y(Cells, MinY, MaxY),
+    same_colors(C,Cells),
+    (Length is MaxX - MinX + 1, Length > 1, Direction = horizontal, Tolerance is 0 ; 
+     Length is MaxY - MinY + 1, Length > 1, Direction = vertical, Tolerance is 0).
+
+% Diagonal Line
+shape(Cells, Tolerance, obj([dg_line(Direction), color(C), len(Length), tol(Tolerance), cells(Cells)])) :- length(Cells,Length),Length>1,
+    same_colors(C,Cells),
+    sort_cells(Cells, SortedCells),
+    (check_ascending(SortedCells), Direction = ascending, length(Cells, Length), Tolerance is 0 ;
+     check_descending(SortedCells), Direction = descending, length(Cells, Length), Tolerance is 0).
+
+% Rectangle
+shape(Cells, Tolerance, 
+  rectangle(Width, Height, Tolerance, InsideColor, OutsideColor, DeviantCells, Cells)) :-
+    %between(0,10,Tolerance),
+    min_max_x(Cells, MinX, MaxX),
+    min_max_y(Cells, MinY, MaxY),
+    Height is MaxY - MinY + 1, 
+    Width is MaxX - MinX + 1,
+    TotalCells is Width * Height,
+    findall(cell(X, Y, Color), 
+            (between(MinX, MaxX, X), between(MinY, MaxY, Y), 
+             (member(cell(X, Y, Color), Cells) ; Color = empty)), 
+            AllCells),
+    exclude(=(cell(_, _, InsideColor)), AllCells, InsideDeviantCells),
+    exclude(=(cell(_, _, OutsideColor)), AllCells, OutsideDeviantCells),
+    append(InsideDeviantCells, OutsideDeviantCells, DeviantCells),
+    length(DeviantCells, NumDeviantCells),
+    NumDeviantCells / TotalCells =< Tolerance.
+
+% Dot
+shape([Cell], _Tolerance, Cell).
+
+same_colors(_,[]).
+same_colors(C,[cell(_,_,C)|Cells]):- same_colors(C,Cells).
+
+% Check ascending diagonal
+check_ascending([cell(X, Y, _) | Rest]) :-
+    (Rest = [] ; Rest = [cell(X1, Y1, _) | _], X1 is X + 1, Y1 is Y + 1, check_ascending(Rest)).
+
+% Check descending diagonal
+check_descending([cell(X, Y, _) | Rest]) :-
+    (Rest = [] ; Rest = [cell(X1, Y1, _) | _], X1 is X + 1, Y1 is Y - 1, check_descending(Rest)).
+
+% Sort cells by X and Y
+sort_cells(Cells, SortedCells) :-
+    sort(2, @=<, Cells, SortedByY),
+    sort(1, @=<, SortedByY, SortedCells).
+
+% And the rest of your predicates...
+
+
+/*
+% Shape identification with tolerance
+shape(Cells, dot, 0, []) :- dot(Cells), !.
+shape(Cells, line, Tolerance, DeviantCells) :- 
+    line(Cells, Tolerance, DeviantCells), !.
+shape(Cells, square, Tolerance, InsideColor, Color, DeviantCells) :- 
+    square(Cells, Tolerance, InsideColor, Color, DeviantCells), !.
+shape(Cells, rectangle, Tolerance, InsideColor, Color, DeviantCells) :- 
+    rectangle(Cells, Tolerance, InsideColor, Color, DeviantCells), !.
+shape(_, unknown).
+*/
+
+% Detect the most tolerant shapes
+detect_the_most_tolerant_shapes(Sells, Shapes) :-
+  permutation(Sells,Cells),
+  findall(Shape, shape_with_tolerance(Cells, Shape), Shapes).
+
+
+shape_with_tolerance([],X):-!,X=[].
+shape_with_tolerance(Cells, [Shape|ShapeL]):-
+  between(0, 2, Tolerance), 
+  append(LC, RC, Cells),
+  shape(RC, Tolerance, Shape),
+  shape_with_tolerance(LC, ShapeL).
+
+
+
+% Cell facts
+cell(1, 1, red).  % Square
+cell(2, 1, red).
+cell(3, 1, red).
+cell(1, 2, red).
+cell(2, 2, white).
+cell(3, 2, red).
+cell(1, 3, red).
+cell(2, 3, red).
+cell(3, 3, red).
+
+cell(5, 1, blue). % Dot
+cell(7, 1, blue). % Line
+cell(7, 2, blue).
+cell(7, 3, blue).
+
+cell(9, 1, green).  % Rectangle
+cell(10, 1, green).
+cell(11, 1, green).
+cell(9, 2, green).
+cell(10, 2, white).
+cell(11, 2, green).
+cell(9, 3, green).
+cell(10, 3, green).
+cell(11, 3, green).
+
+
 end_of_file.
 
 % Construct and edit arbitrary number lists

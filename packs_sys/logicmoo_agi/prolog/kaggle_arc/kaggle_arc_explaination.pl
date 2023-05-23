@@ -160,6 +160,8 @@ show_indiv_object(Why, Obj):-
      (((((normalize_grid(NOps,Grid,Normalized), 
          if_t(Normalized\=@=Grid,(sformat(SN,'~q',['NORMALIZED!!!'(NOps)]),append(_,[SN=Normalized|_],Grids)))))))),
 
+     into_fg_ngrid(Normalized,ONGrid),  print_ss(noramlized_ngrid,NGrid,ONGrid),
+
      term_variables(Normalized,RV1),
      (((((GV1\=@=RV1 ; (Normalized\=@=Grid,Normalized=[[_]])) -> ShowQ = true ; ShowQ = _)))),
 

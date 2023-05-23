@@ -84,7 +84,7 @@ is_black(C):- get_black(B),!,C==B.
 :- use_module(library(logicmoo/util_bb_frame)).
 set_fg_vars(Vars):-
   all_different_bindings(Vars),
-  my_maplist(decl_many_fg_colors,Vars).
+  maplist(decl_many_fg_colors,Vars).
 
 is_fg_color_if_nonvar(Trig,V):- plain_var(V),Trig==run,!,fail,constrain_type(V,is_fg_color_if_nonvar(Trig,V)).
 is_fg_color_if_nonvar(Trig,V):- nop(ppnl(is_fg_color_if_nonvar(Trig,V))),fail.
@@ -461,13 +461,14 @@ data_typec(lst(vals([N|_]),_,_),Type):- nonvar(N),!,data_type(N,Type).
 data_typec(O,object):- is_object(O),!.
 data_typec(iz(O),iz(T)):- !, data_type(O,T).
 data_typec(diff(_->O),T):- nonvar(O),!, data_type(O,T).
+data_typec(O,is_prop1):- is_prop1(O),!.
 data_typec(O,dict(L)):- is_vm_map(O),get_kov(objs,O,Value),!,data_type(Value,L).
 data_typec(O,group(N)):- is_group(O),into_list(O,L),!,length(L,N).
 data_typec(Out,grid(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
 data_typec(Out,lst(DT)=H):- is_list(Out),!,length(Out,H), last(Out,Last),data_type(Last,DT).
 data_typec(_=O,=(N)):- nonvar(O),!,data_type(O,N).
 data_typec(Out,S):- compound_name_arity(Out,print_grid,A),arg(A,Out,P),data_type(P,S),!.
-data_typec(Out,Type):- compound_name_arguments(Out,F,Args),my_maplist(data_type,Args,DTs),compound_name_arguments(Type,F,DTs),!.
+data_typec(Out,Type):- compound_name_arguments(Out,F,Args),maplist(data_type,Args,DTs),compound_name_arguments(Type,F,DTs),!.
 data_typec(Out,FS):- compound_name_arity(Out,F,A),arg(A,Out,P),data_type(P,S),!,FS=..[F,S].
 
 
@@ -476,7 +477,7 @@ is_point(P):- is_ncpoint(P),!.
 is_point(P):- is_cpoint(P),!.
 is_point(_-P):- is_ncpoint(P),!.
 
-%elems_are(L,P1):- L\==[],is_list(L),my_maplist(P1,L).
+%elems_are(L,P1):- L\==[],is_list(L),maplist(P1,L).
 elems_are([E|_],P1):- !, call(P1,E),!.
 
 is_points_list(L):- elems_are(L,is_point).
@@ -516,7 +517,7 @@ is_cpoint(C):- \+ compound(C),!,fail.
 is_cpoint(T/**/-P):- is_t(T),!,is_cpoint(P).
 is_cpoint(_/**/-P):- is_ncpoint(P).
 
-%is_list_of_gt0(P1,List):- is_list(List),my_maplist(P1,List).
+%is_list_of_gt0(P1,List):- is_list(List),maplist(P1,List).
 
 :- dynamic(hv_point/3).
 
@@ -527,7 +528,7 @@ is_gpoint(_/**/-G):-!,is_gpoint(G).
 is_gpoint(G):- hv_point(H,_,G),!,nonvar_or_ci(H),my_assertion(number(H)).
 
 % Grid-oids
-is_list_of_gridoids([G|V]):- \+ is_grid([G|V]), is_gridoid(G), is_list(V), my_maplist(is_gridoid,V).
+is_list_of_gridoids([G|V]):- \+ is_grid([G|V]), is_gridoid(G), is_list(V), maplist(is_gridoid,V).
 
 is_1gridoid(G):- is_object(G),!.
 is_1gridoid(G):- is_grid(G),!.
@@ -553,7 +554,7 @@ is_printable_gridoid(G):- is_point(G),!.
 is_printable_gridoid(G):- is_cpoint(G),!.
 is_printable_gridoid(G):- is_ncpoints_list(G),!.
 is_printable_gridoid(D):- is_vm_map(D),get_kov(grid,D,_).
-is_printable_gridoid(G):- is_list(G),!,my_maplist(is_printable_gridoid,G).
+is_printable_gridoid(G):- is_list(G),!,maplist(is_printable_gridoid,G).
 is_printable_gridoid(G):- resolve_reference(G,R),!,nonvar(R),!.
 is_printable_gridoid(G):- known_gridoid(G,R),!,nonvar(R),!.
 
@@ -564,14 +565,14 @@ vm_obj(VM,O):- member(O,VM.objs).
 is_grid(G):- \+ \+  quietly(fast_is_grid(G)).
 %is_grid(G):- nonvar(G), \+ \+  quietly(is_grid_of(is_grid_cell,G)).
 
-fast_is_grid(List):- nonvar(List), List\==[], my_maplist(fast_is_row(_LenMinus1),List).
+fast_is_grid(List):- nonvar(List), List\==[], maplist(fast_is_row(_LenMinus1),List).
 fast_is_row(LenMinus1,[C|List]):- is_list(List), is_grid_cell(C), !, length(List,LenMinus1),!.
 
 is_grid_of(P1,[[C|H]|R]):- 
   call(P1,C),!,is_list(H),is_list(R),
   length([C|H],L),!,
-  my_maplist(P1,H),!,
-  my_maplist(is_row_len(L),R).
+  maplist(P1,H),!,
+  maplist(is_row_len(L),R).
 is_row_len(N,L):- is_list(L),length(L,N).
 
 %is_object(H):- is_list(H),is_cpoints_list(H).
@@ -598,9 +599,9 @@ h_symmetric(Group):- true,into_grid(Group,Grid),!,h_symmetric(Grid).
 
 is_object(O):- compound(O), O = obj(_).
 
-%is_object_group([G|V]):- is_object(G),is_list(V),my_maplist(is_object,V).
+%is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
 %is_group(Dict):- is_vm_map(Dict),!,get_kov(objs,Dict,_).
-is_group([G|V]):- is_object_group([G|V]),!. % is_object_or_grid(G),is_list(V),my_maplist(is_object_or_grid,V),!.
+is_group([G|V]):- is_object_group([G|V]),!. % is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 is_group(Grp):- is_rule_mapping(Grp),!.
 
 :- ansi_term:import(is_group/1).
@@ -608,8 +609,8 @@ is_group(Grp):- is_rule_mapping(Grp),!.
 
 is_functor(F,E):- compound(E),functor(E,F,_).
 is_functor(F,A,E):- compound(E),functor(E,F,A).
-is_object_group(V):- is_list(V),my_maplist(is_functor(obj),V),!.
-is_grid_group([G|V]):- is_grid(G),is_list(V),my_maplist(call(is_grid),V),!.
+is_object_group(V):- is_list(V),maplist(is_functor(obj),V),!.
+is_grid_group([G|V]):- is_grid(G),is_list(V),maplist(call(is_grid),V),!.
 
 is_object_or_grid(Grid):- is_list(Grid),!,is_grid(Grid).
 is_object_or_grid(Obj):- is_object(Obj).
@@ -625,7 +626,7 @@ is_point_obj(O,Color,Point):- is_object(O),vis2D(O,1,1),
 %free_cell(8).
 
 %trim_unused_vert_square(BG,Grid,GridO).
-%trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),my_maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
+%trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(_,G,G).*/
 
 non_h_rot(sameR).

@@ -69,6 +69,7 @@ must_det_ll1(X):-
 %must_not_error(G):- must(once(G)).
 
 must_not_error(G):- (tracing;never_rrtrace),!,call(G).
+must_not_error(G):- !, call(G).
 must_not_error(G):- is_cgi,!, catch((G),E,((u_dmsg(E=G)))).
 must_not_error(X):- is_guitracer,!, call(X).
 must_not_error(X):- catch(X,E,(rethrow_abort(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
@@ -79,8 +80,8 @@ always_rethrow(E):- never_rrtrace,!,throw(E).
 always_rethrow('$aborted').
 always_rethrow(must_det_ll_failed(_)).
 
-catch_non_abort(Goal):- cant_rrtrace(Goal).
-%catch_non_abort(Goal):- catch(cant_rrtrace(Goal),E,rethrow_abort(E)),!.
+%catch_non_abort(Goal):- cant_rrtrace(Goal).
+catch_non_abort(Goal):- catch(cant_rrtrace(Goal),E,rethrow_abort(E)),!.
 rethrow_abort(E):- format(user_error,'~N~q~n',[catch_non_abort_or_abort(E)]),fail.
 rethrow_abort(time_limit_exceeded):-!.
 rethrow_abort('$aborted'):- !, throw('$aborted'),!,forall(between(1,700,_),sleep(0.01)),writeln(timeout),!,fail.

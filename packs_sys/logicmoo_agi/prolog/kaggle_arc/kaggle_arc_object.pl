@@ -49,7 +49,7 @@ gpoints_to_iv(GPoints,Iv):-
   gpoints_to_iv_info(GPoints,_ColorlessPoints,_LocX,_LocY,_PenColors,_RotG,Iv,[],_LPoints,_Grid,_SH,_SV,_SizeY,_SizeX,_CentX,_CentY).
 %     GPoints,ShapePoints,LocX,LocY,PenColors,RotG,Iv,LPoints,Grid,OX,OY,SizeX,SizeY,CentX,CentY)
 
-
+% single point
 gpoints_to_iv_info(Cmpd,ShapePoints,LocX,LocY,PenColors,RotG,Iv,_Overrides,[C-HV11],[[C]],OX,OY,SizeX,SizeY,CentX,CentY):-
     is_list(Cmpd),Cmpd=[CP], compound(CP),
     (CP=(C-P)),!,
@@ -106,9 +106,31 @@ add_prop_with_count(O,N,V):- my_assertion(is_list(V)),add_prop(O,N,V),
 real_colors(GPoints,Cs):- 
  findall(C,(sub_term(C,GPoints),is_real_color(C),is_fg_color(C)),L),list_to_set(L,S),!,Cs=S.
 
+into_fg_ngrid(NormGrid,NormNGridFG):-
+  mapgrid(into_fg_bg_as(fg,bg),NormGrid,MonoNorm),
+  into_ngrid(MonoNorm,NormNGrid),mapgrid(fg_grid_syms,NormNGrid,NormNGridFG),!.
+
+fg_grid_syms(BG,_):- is_bg_color(BG),!.
+fg_grid_syms(BG,_):- var(BG),!.
+fg_grid_syms(BG,_):- \+ ground(BG),!.
+fg_grid_syms(S,SS):- S=='!',!,SS='|'.
+fg_grid_syms(S,SS):- S=='=',!,SS='-'.
+fg_grid_syms(S-FG,SS):- is_fg_color(FG),!,fg_grid_syms(S,SS).
+fg_grid_syms(_-BG,_):- is_bg_color(BG),!.
+%fg_grid_syms(FG,FG):- is_fg_color(FG),!.
+fg_grid_syms(S,S).
+  
+add_extra_propz(obj(Obj),obj(ObjL)):- add_extra_propz_l(Obj,Obj,ObjL),!.
+
+add_extra_propz_l(Obj,ObjO,[sym_counts(m4(TF),1)|ObjO]):- mass(Obj,Mass),into_true_false(Mass>4,TF),!.
+add_extra_propz_l(_,O,O).
+
+make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):- 
+  make_indiv_object_s1(GID0,GridH,GridV,Overrides0,GPoints00,ObjM),
+  add_extra_propz(ObjM,ObjO).
 
 :- style_check(+singleton).
-make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):- 
+make_indiv_object_s1(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):- 
  fix_point_colors(GPoints00,GPoints0),
  must_be_nonvar(GID0),
  testid_name_num_io(GID0,TestID,Example,Num,IO),
@@ -207,6 +229,8 @@ make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
  % RE=ADD=PHASE2 into_ngrid(Grid,NGrid),ngrid_syms(NGrid,Syms),
  % RE=ADD=PHASE2 
   normalize_grid(NormOps,Grid,NormGrid),local_shape_id(NormGrid,NormSID),
+  into_fg_ngrid(NormGrid,NormNGrid), ngrid_syms(NormNGrid,NSymCounts),
+
   compress_grid(CompOps,NormGrid,CompGrid),local_shape_id(CompGrid,CompSID),
   %writeg([normgrid=NormGrid]), 
   %if_t([[black,_]]=@=NormGrid,atrace),
@@ -226,7 +250,7 @@ make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
   int2glyph(Iv,Glyph), % object_glyph(Obj,Glyph),       
          atomic_list_concat(['o',Glyph,Iv,GIDR],'_',OID))),
 
-  
+  %ngridsyms_to_iz(NormNGridSyms,NSymsList),
   %grav_rot(Grid,NormOps,NormGrid),
   my_maplist(ignore,[GIDOMem==GID,IvOMem=Iv,GlyphOMem=Glyph,OIDOMem=OID]),
   (PenColors == [cc(Wfg,1)] -> PenColorsR = [cc(FG1,1)] ; PenColorsR = PenColors),
@@ -236,8 +260,10 @@ make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
     pen(PenColorsR),
     rot2D(RotG),
     rotSize2D(grav,OX,OY),
-
+   
     loc2D(LocX,LocY), 
+    iz(ngrid(NormNGrid)),
+    NSymCounts,
     unkept(loc2G(LocXG,LocYG)),
     kept(center2D(CentX,CentY)),
     kept(center2G(CentXG,CentYG)),
@@ -281,8 +307,10 @@ make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
     globalpoints(GPointsM),
     giz(grid_sz(GridH,GridV)),
     []],Ps00),  
-   redress_override(Ps00,Ps0),
-  include('\\=='([]),Ps0,Ps),
+
+  redress_override(Ps00,Ps01),
+  include(not_bad_prop,Ps01,Ps),
+  
 
   %make_localpoints(ShapePoints,RotG,OX,OY,PenColors,XX), assertion((XX == LPoints)),
 
@@ -290,6 +318,20 @@ make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
   sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj),!,
   remove_gridoid_props(Obj,ObjM),
  must_det_ll((ObjM = ObjO)))).
+
+not_bad_prop(P):- bad_prop(P),!,fail.
+not_bad_prop(_).
+bad_prop(P):-var(P),!.
+bad_prop(P):-P==[].
+bad_prop(P):- P= iz(symmetry_type(_,_)).
+bad_prop(center2G(_,_)).
+bad_prop(iz(stype(_))).
+bad_prop(cc(plain_var,0)).
+bad_prop(iz(cenGY(_))).
+bad_prop(iz(cenGX(_))).
+bad_prop(iz(sizeGY(_))).
+bad_prop(iz(sizeGX(_))).
+
 
 remove_gridoid_props(O,O):- !.
 remove_gridoid_props(O,O):- \+ compound(O),!.
@@ -775,6 +817,7 @@ with_objprops2(override,E,List,NewList):-
 aggregates(iz(_)).
 aggregates(occurs_in_links(_,_)).
 aggregates(links_count(_,_)).
+aggregates(sym_counts(_,_)).
 aggregates(creates_object(_,_)).
 aggregates(links_to_object(_,_)).
 
@@ -788,13 +831,31 @@ aggregates(link(_,_)).
 aggregates(insideOf(_)).
 
 is_rule_mapping(Obj):- current_predicate(is_mapping/1), is_mapping(Obj),!.
+
+
 %is_bg_object(Obj):- get_black(Black),has_prop(pen(  [cc(Black,_)]),Obj).
 is_bg_object(Obj):- is_rule_mapping(Obj),!,fail.
-is_bg_object(Obj):- sub_var(cc(fg,0),Obj),!, \+ is_whole_grid(Obj).
-is_bg_object(Obj):- \+ is_object(Obj),sub_var(cc(fg,0),Obj),!.
+is_bg_object(Obj):- is_whole_grid(Obj),!,fail.
+is_bg_object(Obj):- is_edge_object(Obj),is_bg_object_really(Obj),!.
+is_bg_object(Obj):- is_bg_object_really(Obj),!.
 
-is_fg_object(Obj):- sub_var(cc(bg,0),Obj),!.
+is_bg_object_really(Obj):- \+ is_object(Obj),!,sub_var(cc(fg,0),Obj),!.
+is_bg_object_really(Obj):- \+ sub_var(cc(bg,0),Obj), sub_var(cc(fg,0),Obj).
+
+old_is_bg_object(Obj):- sub_var(cc(fg,0),Obj).
+
+is_edge_object(Obj):- must_det_ll((grid_size(Obj,X,Y),globalpoints(Obj,Points))),!,
+  include(is_edge_point(X,Y),Points,Edges),!,Edges\==[].
+
+is_edge_point(X,Y,Point):- point_to_hvc(Point,H,V,_),!,is_edge_hv(X,Y,H,V).
+is_edge_hv(_,_,1,_):-!.
+is_edge_hv(_,_,_,1):-!.
+is_edge_hv(N,_,N,_):-!.
+is_edge_hv(_,N,_,_,N):-!.
+
 is_fg_object(Obj):- is_whole_grid(Obj),!.
+is_fg_object(Obj):- sub_var(cc(bg,0),Obj),!.
+%is_fg_object(Obj):- is_rule_mapping(Obj),!,fail.
 is_fg_object(Obj):- \+ is_bg_object(Obj),!.
 
 is_used_fg_object(Obj):- has_prop(cc(fg,FG),Obj),FG>0, \+ is_whole_grid(Obj). 
@@ -1506,7 +1567,8 @@ colorize_points(ShapePoints,PenColors,LPointS):-
   sort_safe(LPoints,LPointS).
 
 make_localpoints(RotLCLPoints,RotG,OX,OY,PenColors,LPointS):- 
-  must_det_ll((   maybe_undo_effect_points(OX,OY,RotLCLPoints,RotG,ShapePoints),
+  must_det_ll((   
+     maybe_undo_effect_points(OX,OY,RotLCLPoints,RotG,ShapePoints),
      PenColors\==[],is_list(PenColors),
      combine_pen(ShapePoints,PenColors,PenColors,LPoints) )),!,
   sort_safe(LPoints,LPointS).
@@ -1516,6 +1578,14 @@ maybe_undo_effect_points(OX,OY,RotLCLPoints,RotG,LPoints):-
  must_det_ll((points_to_grid(OX,OY,RotLCLPoints,Grid),   
    undo_effect(RotG,Grid,Grid90),localpoints_include_bg(Grid90,LPoints))).
 
+/*
+
+          _______
+         |   @   |
+         | @ @   |
+         |       |
+          ¯¯¯¯¯¯¯
+*/
 
 combine_pen(A,B,C,D):- nonvar(D),!,combine_pen(A,B,C,V),!,V=D.
 combine_pen([],_,_,[]):-!.
@@ -1540,7 +1610,7 @@ add_color([C1-P|L],C,[C1-P|XX]):- !, add_color(L,C,XX).
 add_color([P|L],C,[C-P|XX]):- !, add_color(L,C,XX).
 
 shape_rep(grav,I,X):- is_object(I),!, indv_props_list(I,L),(member(shape_rep(grav,X),L)->true; (member(iz(sid(ShapeID)),L),is_shape_id_for(X,ShapeID))).
-shape_rep(grav,G,X):- is_group(G),!,mapgroup(colorlesspoints,G,Points),append_sets(Points,X).
+shape_rep(Grav,G,X):- is_group(G),!,mapgroup(shape_rep(Grav),G,Points),append_sets(Points,X).
 % returns the objects decolorize localpoints
 shape_rep(grav,I,ShapePoints):- into_grid(I,Grid),grid_to_shape(Grid,_RotG,_SH,_SV,ShapePoints,_PenColors).
   %localpoints(I,Points), grid_to_shape(Points,X).
@@ -1627,24 +1697,51 @@ pen(I,C):- indv_props(I,pen(C)),!.
 
 
 
-object_ngrid(Obj,GNGrid):- object_grid(Obj,Grid), into_ngrid(Grid,GNGrid).
+object_ngrid(Obj,GNGridFG):- object_grid(Obj,Grid), into_ngrid(Grid,GNGrid),mapgrid(fg_grid_syms,GNGrid,GNGridFG).
 
 object_ngrid_symbols(Obj,Syms):- object_ngrid(Obj,NGrid), ngrid_syms(NGrid,Syms).
 
-ngrid_syms(NGrid,Syms):- 
- subst_syms(bg,NGrid,GFlatSyms),get_ccs(GFlatSyms,Syms).
+ngrid_syms(NGrid,NSymCounts):- fix_tt_juctions(NGrid,TGrid90),
+ subst_syms(bg,TGrid90,GFlatSyms),get_ccs(GFlatSyms,Syms),
+ create_sym_vectors(Syms,NSymCounts).
 
-find_syms('-'). find_syms('|'). 
-find_syms('='). find_syms('!'). 
+/*
+ngrid_syms(NGrid,[Extra]):- !,
+ fix_tt_juctions(NGrid,TGrid90),
+ subst_syms(bg,TGrid90,GFlatSyms),get_ccs(GFlatSyms,Syms),
+ ignore(member(cc('*',Stars),Syms)), ignore(member(cc('+',Plusses),Syms)), ignore(Plusses=0),ignore(Stars=0),
+ PS is 10* Plusses+Stars,
+ Extra= sym_counts('+*',PS).
+*/ 
+create_sym_vectors(Syms,Counts):-
+  findall(sym_counts(Sym,Count),
+    (vector_pairs(T,ListU),
+     sort(ListU,List),atomic_list_concat([sym,T|List],'_',Sym),
+     total_ccs(1,List,Syms,Count)),Counts).
+
+total_ccs(_,[],_,0).
+total_ccs(N,[S|List],Syms,Count):- 
+ N2 is N * 10, 
+ total_ccs(N2,List,Syms,CT),!,
+ (member(cc(S,C),Syms)->(Count is (CT + (C*N))); Count=CT).
+
+into_sym_count(cc(Sym,Count),sym_counts(Sym,Count)).
+
+%vector_pairs([A,B]):- find_syms(T,A),find_syms(T,B),A@<B.
+%vector_pairs([S]):- find_syms(S).
+%vector_pairs([S]):- find_syms(_,S).
+vector_pairs(T,SS):- findall_vset(T,find_syms(T,_),TT),member(T,TT),findall(S,find_syms(T,S),SS).
+
+find_syms(node,'@'). find_syms(node,'+'). find_syms(node,'*'). find_syms(node,'~').
+find_syms(dir,'<'). find_syms(dir,'>'). find_syms(dir,'v'). find_syms(dir,'^').
+find_syms(extend,'-'). find_syms(extend,'|'). 
+find_syms(extend,'\\'). find_syms(extend,'/').
+/*
 find_syms('~'). find_syms('0').
+find_syms('='). find_syms('!'). 
 find_syms('X'). find_syms('#').
-find_syms('x'). find_syms('+').
-find_syms('*'). find_syms('.').
-find_syms('<'). find_syms('>').
-find_syms('v'). find_syms('^').
-find_syms('\\'). find_syms('/').
 find_syms('7'). find_syms('`').
-
+*/
 subst_syms(IBGC,List, L) :-
  must_det_ll(( flatten([List],L1),   
    my_maplist(cell_syms(IBGC),L1, L2),
@@ -2235,8 +2332,8 @@ guess_shape(GridH,GridV,GridIn,LocalGrid,I,Empty,N,H,V,[cc(Black,_)|Rest],Points
 %guess_shape(GridH,GridV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,monochrome):- Colors=[_],length(Colors,Len).
 guess_shape(GridH,GridV,GridIn,LocalGrid,I,0,9,3,3,Colors,Points,keypad).
 
-guess_shape(GridH,GridV,GridIn,LocalGrid,I,0,N,H,V,Colors,Points,filltype(solid)):- N > 1.
-guess_shape(GridH,GridV,GridIn,LocalGrid,I,Empty,N,H,V,Colors,Points,filltype(nonsolid)):- N > 1, Empty > 0.
+%guess_shape(GridH,GridV,GridIn,LocalGrid,I,0,N,H,V,Colors,Points,filltype(solid)):- N > 1.
+%guess_shape(GridH,GridV,GridIn,LocalGrid,I,Empty,N,H,V,Colors,Points,filltype(nonsolid)):- N > 1, Empty > 0.
 %guess_shape(GridH,GridV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
 
 guess_shape(GridH,GridV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2, iz_symmetry(GridIn,R).

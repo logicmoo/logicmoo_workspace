@@ -1296,10 +1296,10 @@ get_context_atoms(TestAtom,PairName):-
 show_selected_object:- get_pair_mode(entire_suite),!, preview_suite.
 
 show_selected_object:- get_pair_mode(whole_test),!, get_current_test(TestID),get_current_test_atom(TestAtom),
-  w_section(title(["Task",TestAtom]),((preview_test(TestID),do_web_menu_key('o')))).
+  w_section(title(["Task",TestAtom]),((preview_test(TestID),do_web_menu_key('e')))).
 show_selected_object:- get_pair_mode(single_pair),!,   
   get_context_atoms(TestAtom,PairName),
-  w_section(title(["Pair ",PairName,"of",TestAtom]),((preview_test(PairName),do_web_menu_key('o')))).
+  w_section(title(["Pair ",PairName,"of",TestAtom]),((preview_test(PairName),do_web_menu_key('e')))).
   
 
 show_selected_object:-   

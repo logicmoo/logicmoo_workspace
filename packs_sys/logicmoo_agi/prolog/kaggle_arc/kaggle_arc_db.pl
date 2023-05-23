@@ -906,6 +906,7 @@ on_edge_of(HV1,_,n):- hv_point(_,1,HV1).
 on_edge_of(HV1,_,e):- hv_point(1,_,HV1).
 on_edge_of(HV1,grid(H,_),w):- hv_point(H,_,HV1).
 on_edge_of(HV1,grid(_,V),s):- hv_point(_,V,HV1).
+
 over_edge_of(HV1,_GID):- hv_point(_,VV,HV1),VV<1,!.
 over_edge_of(HV1,_GID):- hv_point(HH,_,HV1),HH<1,!.
 over_edge_of(HV1,GID):- mgrid_size(GID,H,V),hv_point(HH,VV,HV1),!,(HH>H;VV>V).
@@ -930,6 +931,7 @@ n_d_s(N,[A,B,_,_],'+'):- (A\==[],B\==[]),N\==5,!.
 
 n_d_s(3,[[],[],[_,_],[_]],'/').
 n_d_s(3,[[],[],[_],[_,_]],'\\').
+
 n_d_s(2,[_,_,[ne],[se]],'<').
 n_d_s(2,[_,_,[sw],[se]],'^').
 n_d_s(2,[_,_,[ne],[nw]],'v').
@@ -974,6 +976,7 @@ on_edge_become('(','-').
 on_edge_become(')','-').
 on_edge_become('h','|').
 on_edge_become('y','|').
+
 
 
 cache_grid_objs1(Var,GID):- var(Var),!,ensure_indv_type(Var),cache_grid_objs1(Var,GID).

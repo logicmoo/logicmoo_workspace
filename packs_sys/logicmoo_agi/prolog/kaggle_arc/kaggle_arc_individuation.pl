@@ -348,6 +348,10 @@ fill_in_bg(Alt,In,Out):- only_color_data_or(Alt,In,Out),!.
 fill_in_bg(_Alt,In,In):-!.
 into_solid_grid(I,GG1):- into_grid(I,G1),mapgrid(fill_in_bg(black),G1,GG1),!.
 
+non_fg_to_black(_Black,G2,G2):- is_fg_color(G2).
+non_fg_to_black(Black,_,GG2):- ignore(GG2=Black).
+non_fg_to_black(I,GG1):- into_grid(I,G1),mapgrid(non_fg_to_black(black),G1,GG1),!.
+
 
 
 
@@ -4149,8 +4153,8 @@ maybe_remove_sort_tag(L-G,G):- is_sort_tag(L).
 
 into_list(G,[]):- G==[],!.
 into_list(G,[G]):- \+ compound(G),!.
-into_list(G,L):- is_mapping(G), get_mapping_info_list(G,_,List),!,into_list(List,L).
 into_list(G,[G]):- is_grid(G),!.
+into_list(G,L):- is_mapping(G), get_mapping_info_list(G,_,List),!,into_list(List,L).
 into_list(G,[G]):- is_object(G),!.
 into_list(G,L):- maybe_remove_sort_tag(G,LL),!,into_list(LL,L).
 %into_list(G,L):- is_group(G),mapgroup(into_list,G,GG),!,flatten(GG,L).

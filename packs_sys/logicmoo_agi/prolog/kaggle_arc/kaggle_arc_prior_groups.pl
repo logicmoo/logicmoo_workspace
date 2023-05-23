@@ -282,8 +282,8 @@ calc_skip_display:- nb_current(skip_display,calc),!.
 :- thread_local(t_l:objs_others/4).
 show_interesting_props(Named,InC,OutC):-
  must_det_ll((
-  extend_grp_proplist(InC,ObjsI),
-  extend_grp_proplist(OutC,ObjsO),
+  ensure_grp_proplist(InC,ObjsI),
+  ensure_grp_proplist(OutC,ObjsO),
   banner_lines(cyan,4),
   w_section('INPUT PROPS',
     locally(t_l:objs_others(inputs,ObjsI,ObjsO,outputs),
@@ -563,7 +563,7 @@ contains_enough_for_print([P|Props],G):- is_obj_props(Props),!,(contains_enough_
 never_is_prop(obj(_)).
 never_is_prop(edit_copy(_,_,_,_)).
 never_is_prop(edit_copy(_,_,_)).
-never_is_prop(grp(_,_,_)).
+never_is_prop(l2r(_,_,_)).
 never_is_prop((_+_)).
 never_is_prop((_>_)).
 never_is_prop((_*_)).
@@ -589,6 +589,8 @@ is_prop2(grid(_)). is_prop2(f_grid(_)). is_prop2(pen(_)). is_prop2(unique_colors
 is_prop2(rul(_)). is_prop2(localpoints(_)). is_prop2(globalpoints(_)).
 is_prop2(iz(_)).  is_prop2(giz(_)).  is_prop2(oid(_)). 
 is_prop2(mass(_)). is_prop2(rot2D(_)). 
+is_prop2(simularz(_,_)). is_prop2(link(_,_)).
+is_prop2(pg(_,_,_,_)).
 %is_prop2(center2D(_,_)). %is_prop2(rotSize2D(_,_)). %is_prop2(grid_ops(_,_)). 
 % is_prop2(grid_rep(_,_)). is_prop2(points_rep(_,_)).
 %is_prop2(nth_fg_color(_,_)).  %is_prop2(uprop_was(_,_)).  %is_prop2(links_count(_,_)).
@@ -602,8 +604,23 @@ is_fti_step(extend_obj_proplists).
 % =====================================================================
 extend_obj_proplists(VM):- extend_grp_proplist(VM.objs,set(VM.objs)).
 
+% called when we think the proplist is already extended
+avoid_grp_proplist(I,I).
+
+skip_extending_proplist(I):- \+ compound(I),!.
+skip_extending_proplist([_]).
+skip_extending_proplist(I):- \+ is_group(I),!.
+skip_extending_proplist(I):- is_group(I), \+ chk_from_same_grid(I),!.
+skip_extending_proplist(I):- sub_compound(pg(_,simularz(_,_),_,_),I),!.
+%skip_extending_proplist(I):- sub_compound(links_count(_,_),I).
+
+ensure_grp_proplist(I,AG0):- skip_extending_proplist(I),!,AG0=I.
+ensure_grp_proplist(I,AG0):- extend_grp_proplist(I,AG0),!.
+ensure_grp_proplist(I,I).
+
 extend_grp_proplist(Grp,GrpO):- Grp==[],!,GrpO=[].
 extend_grp_proplist(Grp,GrpO):- user:extend_grp_proplist0(Grp,GrpO),!.
+extend_grp_proplist(Grp,GrpO):- must_det_ll(( user:extend_grp_proplist0(Grp,GrpM), group_prior_objs1(cuz,GrpM,GrpO))),!.
 
 %extend_grp_member_proplist(Var,NewObj):- var(Var),!, enum_object(Var),extend_grp_proplist(Var,NewObj).
 dont_extend_proplist(Grp):- \+ compound(Grp),!.
@@ -711,26 +728,26 @@ print_grouped_props(Named,OProps):-
 %print_grouped_props(Named,Obj):- \+ is_list(Obj), !, mpp(print_grouped_props(Named)=Obj).
 
 print_grouped_props(Named,In):- 
-  extend_grp_proplist(In,Objs),
+  ensure_grp_proplist(In,Objs),
   set_test_id_io(Named),
   print_grouped_props2(Named,Objs),!,
   print_grouped_props1(Named,Objs),!.
 
 print_grouped_props1(Named,In):-
   must_det_ll((
-   extend_grp_proplist(In,Objs),
+   ensure_grp_proplist(In,Objs),
    print_treeified_props(Named,Objs),
-   banner_lines(green,1))).
+   banner_lines(blue,1))).
 
 print_grouped_props2(Named,In):- 
  must_det_ll((
-   extend_grp_proplist(In,Objs),
+   ensure_grp_proplist(In,Objs),
    must_det_ll((hack_prop_groups(Named,Objs))),
-   banner_lines(green,1))),!.
+   banner_lines(blue,1))),!.
 
 print_grouped_props3(Named,In):-
  must_det_ll((
-   extend_grp_proplist(In,ObjsG),
+   ensure_grp_proplist(In,ObjsG),
    consider_for_rank(ObjsG,Objs,_),
    %hack_prop_groups(Named,Objs),
    show_three_interesting_groups(Named,Objs,Groups),
@@ -785,40 +802,41 @@ skip_ku(S):- priority_prop(S),!,fail.
 %skip_ku(pg(is_fg_object,_,_,_)).
 %skip_ku(link(sees([_,_|_]),_)).
 %skip_ku(link(sees(_),_)).
+skip_ku(changes(_)).
+skip_ku(giz(iv(_))).
+skip_ku(giz(KU)):- !, skip_ku(KU),!.
+skip_ku(iz(media(_))).
+skip_ku(iz(KU)):- !, skip_ku(KU),!.
+skip_ku(_-KU):- !, skip_ku(KU),!.
 skip_ku(area(_)).
 skip_ku(localpoints(_)).
 skip_ku(links_count(sees,_)).
 skip_ku(occurs_in_links(sees,_)).
 skip_ku(grid_rep(comp,_)).
-skip_ku(iz(media(_))).
 skip_ku(shape_rep( _,_)).
 skip_ku(points_rep( _,_)).
 skip_ku(globalpoints(_)).
-skip_ku(center2G(_,_)).
-skip_ku(changes(_)).
-skip_ku(o(_,_,_,_)).
 skip_ku( elink( sees(_),_)).
-skip_ku(giz(iv(_))).
+
+%skip_ku1(center2G(_,_)).
+%skip_ku1(o(_,_,_,_)).
 %skip_ku(cc(C,_)):- is_real_color(C),!.
 %skip_ku(giz(KU)):- nop(skip_ku(KU)),!.
-skip_ku(giz(KU)):- skip_ku(KU),!.
-skip_ku(giz(gido(_))).
-skip_ku(giz(testid_example_io(_))).
-skip_ku(giz(KU)):- \+ has_subterm(number,KU), \+ has_subterm(in_or_out,KU).
-skip_ku(iz(KU)):- skip_ku(KU),!.
+%skip_ku1(giz(gido(_))).
+%skip_ku1(giz(testid_example_io(_))).
+%skip_ku1(giz(KU)):- \+ has_subterm(number,KU), \+ has_subterm(in_or_out,KU).
 %skip_ku(iz(info(_))).
 %skip_ku(iz(_)).
-skip_ku(_-KU):- skip_ku(KU),!.
 
 
 priority_prop(Var):- var(Var),!,fail.
 priority_prop(pg(_,PG,_,_)):- priority_pg(PG),!.
 priority_prop(pg(_,_,_,_)).
-priority_prop((algo_sid(norm,_))).
+priority_prop((algo_sid(_,_))).
 priority_prop((stype(_))).
-priority_prop(iz(P)):- priority_prop(P),!.
-priority_prop(giz(P)):- priority_prop(P),!.
-priority_prop(_-P):- priority_prop(P),!.
+priority_prop(iz(P)):- !, priority_prop(P),!.
+priority_prop(giz(P)):- !, priority_prop(P),!.
+priority_prop(_-P):- !, priority_prop(P),!.
 priority_prop(pen(_)).
 %priority_prop(iv(_)).
 priority_prop(sid(_)).
@@ -891,6 +909,10 @@ prop_first_value(List,Value):- is_list(List),!,member(Prop,List),prop_first_valu
 prop_first_value(Value,Value).
 
 prop_name(Prop,Named):- nonvar(Named),prop_name(Prop,Var),!,Named=Var.
+prop_name(X,Y):- \+ compound(X),!,X=Y.
+prop_name(simularz(X, _),simularz(X)).
+prop_name(pg(_,X,R,_),pg(X,R)).
+prop_name(Prop,Named):- make_unifiable_u(Prop,Named),Named=@=Prop,!.
 prop_name(Prop,Named):- prop_first_value(Prop,Value), value_to_name(Value,Named),!.
 
 value_to_name(Value,Named):- nonvar(Named),value_to_name(Value,Named2),!,Named2=Named.
@@ -1011,11 +1033,13 @@ obj_link_count(Obj,Functor,Count):-
 %is_in_subgroup(Grp,_,all).
 not_skip_ku(P):- \+ skip_ku(P).
 
+indv_eprops_list(Grid,Props):- is_grid(Grid),!,grid_props(Grid,Props).
 indv_eprops_list(Indv,List9):- is_prop1(Indv),!,List9=[Indv].
 indv_eprops_list(Indv,List9):- 
   indv_props_list(Indv,List0),
   ku_rewrite_props(List0,List9).
 
+flat_props(Grid,Props):- is_grid(Grid),!,grid_props(Grid,Props).
 flat_props(PropLists,OUTL):- is_list_of_prop_lists(PropLists),!,flatten(PropLists,OUTL).
 flat_props(Objs,EList):- \+ is_list(Objs),!,flat_props([Objs],EList).
 flat_props(Objs,EList):-
@@ -1035,6 +1059,7 @@ hack_prop_groups(Named,Objs):- %ds, break,
 
 obj_had_vbo(Objs,HAD,VbO):-
   variance_had_counts(_Common,HAD,Objs,_Versions,_Missing,VersionsByCount,_Variance),
+  chk_from_same_grid(Objs),
   vesion_uniqueness(VersionsByCount,VersionsByOccurancesN),
   vesion_uniqueness(VersionsByOccurancesN,VbO),!.
 
@@ -1123,7 +1148,7 @@ clean_1split(_,X,X).
 
 last_type_is_value(I,O):- last_type_is(number,I,O).
 last_type_is_value(I,O):- last_type_is(is_list,I,O).
-last_type_is_value(I,O):- last_type_is(is_color,I,O).
+last_type_is_value(I,O):- last_type_is(comparable_value,I,O).
 last_type_is_value(I,I).
 
 last_type_is(P1,List,Last):- is_list(List),reverse(List,Term),member(E,Term),last_type_is(P1,E,Last).
@@ -1321,7 +1346,9 @@ is_fti_step(really_group_vm_priors).
 %really_group_vm_priors(_VM):-!.
 really_group_vm_priors(VM):-
  must_det_ll((
-  ObjsG = VM.objs,
+  ObjsG0 = VM.objs,
+  ObjsG0 = ObjsG,
+  %extend_link_props(VM,ObjsG0,ObjsG),
   %print_list_of(ppnl,ObjsG),
   TID_GID=tid_gid(VM.id,VM.gid),
   check_tid_gid(TID_GID,VM.start_grid),
@@ -1329,6 +1356,22 @@ really_group_vm_priors(VM):-
   add_rankings(TID_GID,FG,Objs),  
   append(Objs,BG,FGBG),
   gset(VM.objs) = FGBG)).
+
+/*
+extend_link_props(_VM,ObjsG0,ObjsG):- sub_compound(links_count(_,_),ObjsG0),!,ObjsG=ObjsG0.
+extend_link_props(VM,ObjsG0,ObjsG):-
+  \+ sub_compound(link(_,_),ObjsG0),!,
+  find_relations(VM),
+  Objs = VM.objs,
+  find_relationsA(Objs,NewObjs),
+  %my_assertion(sub_compound(link(_,_),NewObjs)),!,
+  extend_link_props(VM,NewObjs,ObjsG).
+extend_link_props(VM,_,ObjsG):-
+  extend_obj_proplists(VM),
+  ObjsG=VM.objs,!,
+  my_assertion(sub_compound(links_count(_,_),ObjsG)).
+*/
+  
 
 consider_for_rank(ObjsG,FG,BG):- my_partition(is_fg_object,ObjsG,FG,BG),
  FG\==[],BG\==[].
@@ -1373,10 +1416,12 @@ add_rankings(Why,Objs,WithPriors):-
 
 group_prior_objs0(Why,Objs,WithPriors):- 
  must_det_ll(group_prior_objs1(Why,Objs,WithPriors)),!,
- (Objs=@=WithPriors -> wdmsg(group_prior_objs0_same) ; wdmsg(group_prior_objs0_DIFFF)),
+ (Objs=@=WithPriors -> wdmsg(group_prior_objs0_same(Why)) ; wdmsg(group_prior_objs0_DIFFF(Why))),
  !.
 
-add_how_simular(ObjsIn,ObjsIn):-!.
+has_peer_simularz(Objs):- sub_compound(simularz(S,_),Objs),nop(S=simularz(_)),!.
+
+add_how_simular(ObjsIn,ObjsIn):- has_peer_simularz(ObjsIn),!.
 add_how_simular(ObjsIn,Simulars):-
   add_how_simular(ObjsIn,ObjsIn,Simulars).
 
@@ -1387,10 +1432,10 @@ add_how_simular([obj(O)|Objs],ObjsIn,[obj(OO)|Simulars]):-
   add_how_simular(Objs,ObjsIn,Simulars).
 
 add_how_common([],_,[]):-!.
-add_how_common([Prop|O],Rest,[Prop,simular(Prop,N)|OO]):- 
-  Prop\=giz(_), Prop\=simular(_,_), Prop\=link(_,_),
-  Prop\=oid(_),
+add_how_common([Prop|O],Rest,[Prop,simularz(Name,N)|OO]):-   
+  Prop\=giz(_), Prop\=simularz(_,_), Prop\=oid(_),  Prop\=link(_,_),
   \+ (compound_name_arity(Prop,_,A),A>2),
+  prop_name(Prop,Name),
   % \+ ( arg(2,Prop,E),number(E) ),
   % Prop\=pg(_,_,_,_),
   findall(_,(sub_term(E,Rest),E==Prop),L),length(L,N),
@@ -1413,25 +1458,28 @@ group_prior_objs1(Why,Objs,WithPriors):-
  w_section(title(add_priors(Title)),
   %print_tree(groupPriors=Lbls,[max_depth(200)]),
   with_tag_class(div,nonpre,
-     add_uset_priors(ObjsLen,Lbls,Objs,WithPriors))))).
+     add_uset_priors(ObjsLen,[iz(sid(_))|Lbls],Objs,WithPriors))))).
 
 skip_prior(HAD):- \+ compound(HAD),!.
+%skip_prior(HAD):- HAD=simularz(_,_),!,fail.
 skip_prior(HAD):- \+ \+ not_care_to_count(HAD),!.
-%skip_prior(HAD):- HAD=simular(_,_),!,fail.
+skip_prior(HAD):- priority_prop(HAD),!,fail.
 skip_prior(HAD):- compound_name_arity(HAD,_,N),!,N>1.
 
 add_uset_priors(_,[],Objs,Objs):-!.
 add_uset_priors(ObjsLen,[HAD|Lbls],Objs,WithPriors):-
-  skip_prior(HAD), !, add_uset_priors(ObjsLen,Lbls,Objs,WithPriors).
-add_uset_priors(ObjsLen,[HAD|Lbls],Objs,WithPriors):-
-  skip_prior(HAD), !, add_uset_priors(ObjsLen,Lbls,Objs,WithPriors).
+  HAD\=pg(_,_,_,_),
+  skip_prior(HAD), !, 
+  add_uset_priors(ObjsLen,Lbls,Objs,WithPriors).
 
-add_uset_priors(ObjsLen,[HAD|Lbls],Objs,WithPriors):-  
- must_det_ll((
-  variance_had_counts(Common,HAD,Objs,Versions,Missing,VersionsByCount,Variance))),
-   \+ \+ (member(V,Versions),has_subterm(number,V)),
-  must_det_ll((((  Variance==1;  (fail, length(Objs,Len),Len==Variance,Missing==[])),fail)
-   -> add_uset_priors(ObjsLen,Lbls,Objs,WithPriors)
+add_uset_priors(ObjsLen,[HAD|Lbls],Objs,WithPriors):-
+ must_det_ll((variance_had_counts(Common,HAD,Objs,Versions,Missing,VersionsByCount,Variance))),
+
+  \+ \+ (member(V,Versions),has_subterm(number,V)), !,
+  must_det_ll(
+
+(((  Variance==1;  (fail, length(Objs,Len),Len==Variance,Missing==[])),fail)
+-> (     add_uset_priors(ObjsLen,Lbls,Objs,WithPriors) )
    ; (add_1uset_prior(ObjsLen,Common,VersionsByCount,Objs,NObjs), add_uset_priors(ObjsLen,Lbls,NObjs,WithPriors)))),!.
 
 add_uset_priors(ObjsLen,[_|Lbls],Objs,WithPriors):-
@@ -1447,46 +1495,59 @@ add_prior_info(Objs,ObjsLen,Common,VbO,obj(List),obj(NewList)):-
 add_prior_info(Objs,ObjsLen,Common,VbO,(List),(NewList)):- 
   add_prior_info_1(Objs,ObjsLen,Common,VbO,List,NewList),!.
 
-add_prior_info_1(_Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),
-  length(VbO,Rankers), %Rankers>1,
+add_prior_info_1(Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),ObjsLen>1, chk_from_same_grid(Objs),  
+  length(VbO,Rankers), Rankers>1,
   find_version(VbO,Prop,N1,N2,PropList),
-  Prop\=pen(_),
+  Prop\=pg(_,_,_,_), % Prop\=pen(_),
   member(Prop,PropList),
   %prop_name(Prop,Name),  
   value_to_name(Prop,Name),
-  R = pg(Rankers,Name,rank1,N2),  
+  
+  R = pg(PGRankers,Name,rank1, RA),  
   \+ member(R,PropList),  
-  rank_size(Rankers,N2,Size),
+  
+  ObjsLen = PGRankers,
   %subst(PropList,Prop,R,PropListR),
   PropList = PropListR,
-  nop(_=pg(Size,Name,rank3,Size)),
-  extra_rank_prop(ObjsLen,Name,N1,ExtraProp),
-  append(PropListR,[R,ExtraProp,pg(ObjsLen,Name,simulars,N1)],OUTE),!,
+  must_det_ll((findall(Obj,(member(Obj,Objs),sub_term(OProp,Obj), (OProp =@= Prop)),Identicals),
+  length(Identicals,IL),
+  RA = N2, % order(N2)^n1(N1)^uniq(IL)^val(Prop)^supr(A4),
+  rank_size(ObjsLen,Name,N2,ExtraProp),
+  %arg(4,ExtraProp,A4),
+  %pg(ObjsLen,sames(Prop,_),rank1,RR),
+  append(PropListR,[R ,ExtraProp %,simularz(Name,N1,IL)
+     /*,
+         pg(ObjsLen,Prop,sames,IL),
+         
+         pg(ObjsLen,Name,simulars,N1)*/],OUTE))),!,
   include(some_pgs_and_props(PropList),OUTE,OUT).
 
 add_prior_info_1(_Objs,_ObjsLen,_Common,_VersionsByCount,PropList,PropList).
 
-extra_rank_prop(ObjsLen,Name,N1,pg(ObjsLen,Name,rankLS,largest)):- ObjsLen==N1,!.
-extra_rank_prop(ObjsLen,Name,1,pg(ObjsLen,Name,rankLS,smallest)):-!.
-extra_rank_prop(ObjsLen,Name,_,pg(ObjsLen,Name,rankLS,mediumest)).
+rank_size(ObjsLen,Name,1,pg(ObjsLen,Name,rankLS,smallest)):-!.
+rank_size(ObjsLen,Name,N2,pg(ObjsLen,Name,rankLS,largest)):- ObjsLen==N2,!.
+%rank_size(ObjsLen,Name,_,pg(ObjsLen,Name,rankLS,middlest)).
+rank_size(_ObjsLen,_Name,_,[]).
 
-use_simulars(_):- fail.
-use_rank(mass(_)).
+use_simulars(_):- true.
+use_rank1(mass(_)).
+use_rank1(simularz(_,_)).
+use_rank1(links_count(contains,_)).
+use_rank1(links_count(_,_)).
+use_rank1(_).
 %redundant_prop(_,_):-!,fail.
 redundant_prop(_,nth_fg_color(N1,_)):- N1==1.
 redundant_prop(Props,unique_colors([FG])):- sub_var(pen([cc(FG,1)]),Props),!.
 redundant_prop(Props,cc(FG,_)):- is_real_fg_color(FG),sub_var(pen([cc(FG,1)]),Props),!.
+redundant_prop(_Props,pg(_, iz(_), rankLS, Var)):- var(Var),!.
 redundant_prop(Props,center2D(_,_)):- sub_compound(loc2D(_,_),Props).
 %redundant_prop(Props,center2D(X,Y)):- sub_var(center2G(X,Y),Props).
 %redundant_prop(Props,center2G(X,Y)):- sub_var(center2D(X,Y),Props).
-
+some_pgs_and_props(_,[]):-!,fail.
 some_pgs_and_props(_,pg(_,Name,simulars,_)):- !, use_simulars(Name),!.
-some_pgs_and_props(_,pg(_,Name,rank1,_)):- !, use_rank(Name),!.
-some_pgs_and_props(PropList,Name):- \+ redundant_prop(PropList,Name).
+some_pgs_and_props(_,pg(_,Name,rank1,_)):- !, use_rank1(Name),!.
+some_pgs_and_props(PropList,Name):- \+ redundant_prop(PropList,Name),!.
 
-rank_size(_,1,3):-!.
-rank_size(M,N,2):- N\==M,!.
-rank_size(N,N,1):-!.
 
 find_version(VbO,Prop,N1,N2,PropList):-
   member(Version,VbO),deepest_kv(Version,N2,Prop),has_nprop(Prop,PropList),arg(1,Version,N1),!.
@@ -1688,7 +1749,8 @@ is_care_to_count(_).
 has_subterm(P1,HasNumber):- sub_term(N,HasNumber),call(P1,N),!.
 
 variance_had_counts(Common,HAD,RRR,Versions,Missing,VersionsByCount,Variance):-
- %HAD\=simular(_,_),
+ ignore(show_failure(always,chk_from_same_grid(RRR))),
+ %HAD\=simularz(_,_),
  must_det_ll((  
   make_unifiable_cc(HAD,UHAD),
   findall(RR,(member(RR,RRR), once((indv_props_list(RR,R), \+ member(UHAD,R)))),Missing),
@@ -1818,7 +1880,11 @@ not_divide_on_never(A,_):- \+ divide_on_never(A).
 not_divide_on_very_last(A,B):- \+ divide_on_very_last(A,B).
 
 
+chk_from_same_grid(Objs):- length(Objs,L),L<2,!.
+chk_from_same_grid([O|Objs]):-
+   (obj_to_parent_gid(O,GID)-> maplist(chk_from_gid(GID),Objs) ; true).
 
+chk_from_gid(Want,O):- (obj_to_parent_gid(O,GID)->((GID==Want));true).
 
 treeify_props(P1,Named,DontDivOnThisNumber,RRR, (EACH -> EACHOUT)):- 
  EACH = each((SubEach>=SEG)*Variance*UProp),
@@ -2239,12 +2305,14 @@ props_object_prior(S,L):- S\=info(_), first_atom_value(S,L), \+ rankOnly(L), \+ 
 first_atom_value(S,S):- atom(S),!.
 first_atom_value(S,_):- \+ compound(S),!,fail.
 first_atom_value(S,rank1(F)):- S=..[F,A],comparable_value(A).
+first_atom_value(S,rank1(F)):- S=..[F,_,A],comparable_value(A).
 %first_atom_value(S,rank2(F)):- S=..[F,A,B],F\=='/', comparable_value(A),comparable_value(B).
 first_atom_value(S,O):- arg(1,S,E),atomic(E),E\==[],!,O=S, O \= (_/_).
 first_atom_value(S,O):- arg(2,S,E),first_atom_value(E,O),O \= (_/_).
 
 %comparable_value(A):- compound(A),!,A=(_/_).
 comparable_value(A):- is_color(A),!.
+comparable_value(A):- atom(A),atom_concat('s',_,A).
 comparable_value(A):- number(A),!.
 %comparable_value(A):- atom(A),!.
 
@@ -2593,7 +2661,7 @@ get_is_for_ilp(_,_,input, :-(D) ):-
 get_is_for_ilp(_,_,input, :-(D) ):- get_is_for_ilp(_,_,determination, D ).
 
 get_is_for_ilp(TestID,common,logicmoo_ex,is_accompany_changed_db(TestID,IO,P,Same)):-
-  is_accompany_changed_db(TestID,IO,P,Same).
+  ac_listing(TestID,IO,P,Same).
 
 
 get_is_for_ilp(_,_,liftcover_ex,D):- read_terms_from_atom(D, '

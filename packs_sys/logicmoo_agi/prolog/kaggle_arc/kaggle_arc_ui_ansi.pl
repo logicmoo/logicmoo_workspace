@@ -585,6 +585,8 @@ pp_hook_g1(O):-  attvar(O), !, is_colorish(O), data_type(O,DT), writeq('...'(DT)
 pp_hook_g1(S):-  term_is_ansi(S), !, write_nbsp, write_keeping_ansi_mb(S).
 %pp_hook_g1(S):-  term_contains_ansi(S), !, fail, write_nbsp, write_keeping_ansi_mb(S).
 pp_hook_g1(rhs(O)):- write_nbsp,nl,bold_print(print(r_h_s(O))),!.
+
+pp_hook_g1(iz(O)):- compound(O), O = info(_),underline_print(print(izz(O))),!.
 pp_hook_g1(O):-  is_grid(O), /* \+ (sub_term(E,O),compound(E),E='$VAR'(_)), */ pretty_grid(O).
 
 
@@ -592,7 +594,7 @@ pp_hook_g1(O):- is_object(O), into_solid_grid(O,G), wots(SS,pretty_grid(G)),writ
 
 pp_hook_g1(shape_rep(grav,O)):- is_points_list(O), as_grid_string(O,S), wotsq(O,Q), print(shape_rep(grav,S,Q)),!.
 pp_hook_g1(vals(O)):- !, writeq(vals(O)),!.
-%pp_hook_g1(grp(O)):- into_solid_grid_strings(grp(O),Str),Str\=@=grp(O),print_term_no_nl(Str),!.
+%pp_hook_g1(l2r(O)):- into_solid_grid_strings(l2r(O),Str),Str\=@=l2r(O),print_term_no_nl(Str),!.
 pp_hook_g1(localpoints(O)):- is_points_list(O), as_grid_string(O,S), wotsq(O,Q), print(localpoints(S,Q)),!.
 pp_hook_g1(C):- compound(C), compound_name_arguments(C,F,[O]),is_points_list(O), length(O,N),N>2, as_grid_string(O,S), compound_name_arguments(CO,F,[S]), print(CO),!.
 
@@ -1381,8 +1383,8 @@ print_side_by_side0(C1-A,LW,C2-B):- nonvar(A),!,
   ignore(max_min(LW1,LW2,LW,_)).
 */
 
-print_side_by_side0(Nil,Lw,G2):- Nil==[],!,print_side_by_side0([[_nil]],Lw,G2).
-print_side_by_side0(G1,Lw,Nil):- Nil==[],!,print_side_by_side0(G1,Lw,[[_nil]]).
+print_side_by_side0(Nil,Lw,G2):- Nil==[],!,print_side_by_side0([[_Nil1]],Lw,G2).
+print_side_by_side0(G1,Lw,Nil):- Nil==[],!,print_side_by_side0(G1,Lw,[[_Nil1]]).
 
 print_side_by_side0(C1,LW,C2):- var(LW), fail, gridoid_size(C1,H1,V1),gridoid_size(C2,H2,V2),!,    
     ((V2 > V1) -> LW is -(H2 * 2 + 12) ; LW is (H1 * 2 + 12)),!, print_side_by_side0(C1,LW,C2).
