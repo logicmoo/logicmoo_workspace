@@ -1,5 +1,6 @@
 
-:- ensure_loaded('solvers.pl').
+%:- ensure_loaded('solvers.pl').
+run_dsl(Len,DSL):- throw(run_dsl(Len,DSL)).
 
 michod_solved_names(TestID):-
   list_715(List),member((TestAtom,_),List),once(fix_test_name(TestAtom,TestID)).
@@ -9,7 +10,7 @@ michod_solved_ordered(TestID):-michod_solved_names(TestID).
 michod_solved_len(TestID,Len):- var(TestID),!,michod_solved_names(TestID),once(michod_solved_len(TestID,Len)).
 michod_solved_len(TestID,Len):- test_id_atom(TestID,TestAtom),!,michod_solved_test_atom_len(TestAtom,Len).
 
-michod_solved_test_atom_len(TestAtom,Len):- clause(l_solve(TestAtom,_IN,_OUT),Program),length(Program,Len).
+michod_solved_test_atom_len(TestAtom,Len):- clause(l_solve(TestAtom,_IN,_OUT),run_dsl(_,Program)),length(Program,Len).
 michod_solved_test_atom_len(TestAtom,Len):- list_715(List),member((TestAtom,Len),List).
 
 list_715([('3c9b0459', 1), ('60c09cac', 1), ('6150a2bd', 1), ('67a3c6ac', 1), ('68b16354', 1), ('68b67ca3', 1), ('74dd1130', 1), ('9172f3a0', 1), ('9dfd6313', 1), ('a416b8f3', 1), ('b1948b0a', 1), ('c59eb873', 1), ('c8f0f002', 1), ('d10ecb37', 1), ('d511f180', 1), ('ed36ccf7', 1), ('2dee498d', 2), ('4c4377d9', 2), ('5582e5ca', 2), ('5614dbcf', 2), ('5bd6f4ac', 2), ('6d0aefbc', 2), ('6fa7a44f', 2), ('8be77c9e', 2), ('c9e6f938', 2), ('d4b1c2b1', 2), ('0b148d64', 3), ('19bb5feb', 3), ('1cf80156', 3), ('1f85a75f', 3), ('23b5c85d', 3), ('25ff71a9', 3), ('32597951', 3), ('3aa6fb7a', 3), ('4258a5f9', 3), ('59341089', 3), ('7b7f7511', 3), ('9a4bb226', 3), ('9ecd008a', 3), ('ac0a08a4', 3), ('b91ae062', 3), ('be94b721', 3), ('c1d99e64', 3), ('c909285e', 3), ('e7639916', 3), ('f25ffba3', 3), ('0c786b71', 4), ('0d3d703e', 4), ('1a2e2828', 4), ('1c786137', 4), ('1e0a9b12', 4), ('1e81d6f9', 4), ('28bf18c6', 4), ('2dc579da', 4), ('3194b014', 4), ('3618c87e', 4), ('3af2c5a8', 4), ('42a50994', 4), ('4347f46a', 4), ('44d8ac46', 4), ('44f52bb0', 4), ('46f33fce', 4), ('50cb2852', 4), ('56ff96f3', 4), ('62c24649', 4), ('662c240a', 4), ('67e8384a', 4), ('7468f01a', 4), ('833dafe3', 4), ('a740d043', 4), ('a79310a0', 4), ('aabf363d', 4), ('ae4f1146', 4), ('b27ca6d3', 4), ('bf699163', 4), ('ce22a75a', 4), ('d56f2372', 4), ('dc1df850', 4), ('f0df5ff0', 4), ('f25fbde4', 4), ('2013d3e2', 5), ('22eb0ac0', 5), ('41e4d17e', 5), ('445eab21', 5), ('5783df64', 5), ('642d658d', 5), ('6f8cd79b', 5), ('73182012', 5), ('73ccf9c2', 5), ('8efcae92', 5), ('9565186b', 5), ('9f236235', 5), ('a699fb00', 5), ('ae58858e', 5), ('aedd82e4', 5), ('bb43febb', 5), ('bc4146bd', 5), ('cd3c21df', 5), ('ce9e57f2', 5), ('e0fb7511', 5), ('e74e1818', 5), ('e872b94a', 5), ('e98196ab', 5), ('f76d97a5', 5), ('fc754716', 5), ('00d62c1b', 6), ('0520fde7', 6), ('0ca9ddb6', 6), ('10fcaaa3', 6), ('1c0d0a4b', 6), ('2546ccf6', 6), ('319f2597', 6), ('32e9702f', 6), ('332efdb3', 6), ('3906de3d', 6), ('46442a0e', 6), ('48131b3c', 6), ('48d8fb45', 6), ('5117e062', 6), ('543a7ed5', 6), ('62ab2642', 6), ('67385a82', 6), ('7953d61e', 6), ('7b6016b9', 6), ('7bb29440', 6), ('7fe24cdd', 6), ('84db8fc4', 6), ('8d5021e8', 6), ('928ad970', 6), ('a5313dff', 6), ('a934301b', 6), ('b60334d2', 6), ('b94a9452', 6), ('ccd554ac', 6), ('d037b0a7', 6), ('d0f5fe59', 6), ('d406998b', 6), ('d631b094', 6), ('dae9d2b5', 6), ('e21a174a', 6), ('e3497940', 6), ('e9afcf9a', 6), ('ea32f347', 6), ('ed98d772', 6), ('00576224', 7), ('007bbfb7', 7), ('017c7c7b', 7), ('05f2a901', 7), ('08ed6ac7', 7), ('140c817e', 7), ('1a6449f1', 7), ('1b2d62fb', 7), ('1f876c06', 7), ('2072aba6', 7), ('363442ee', 7), ('39a8645d', 7), ('40853293', 7), ('496994bd', 7), ('4f537728', 7), ('5168d44c', 7), ('55059096', 7), ('5521c0d9', 7), ('64a7c07e', 7), ('66e6c45b', 7), ('84f2aca1', 7), ('85c4e7cd', 7), ('8ee62060', 7), ('90c28cc7', 7), ('9ddd00f0', 7), ('a59b95c0', 7), ('b6afb2da', 7), ('b9b7f026', 7), ('ba97ae07', 7), ('bbb1b8b6', 7), ('bcb3040b', 7), ('c48954c1', 7), ('c9f8e694', 7), ('d23f8c26', 7), ('d2abd087', 7), ('d5d6de2d', 7), ('d9fac9be', 7), ('dbc1a6ce', 7), ('ded97339', 7), ('e9614598', 7), ('ea786f4a', 7), ('f5aa3634', 7), ('f823c43c', 7), ('f8ff0b80', 7), ('0c9aba6e', 8), ('1190e5a7', 8), 
@@ -40,16 +41,14 @@ member(TestAtom,
  'dae9d2b5']),
   once(fix_test_name(TestAtom,TestID)).
 
-read_dsl_test:-  make,     
-      setup_call_cleanup(open('arc-dsl/solvers.py',read,In2,[]),read_python(In2),close(In2)),
-      uast,!,
-      setup_call_cleanup(open('arc-dsl/constants.py',read,In1,[]),read_python(In1),close(In1)),
-      !.
-read_michod_test:- read_sols,read_dsl.
+read_sols:- setup_call_cleanup(open('../ARC-Others/arc-dsl/solvers800.py',read,In2,[encoding(octet)]),read_python(In2),close(In2)),!.
+read_dsl_test:- uast,!,
+     setup_call_cleanup(open('../ARC-Others/arc-dsl/constants.py',read,In1,[encoding(utf8)]),read_python(In1),close(In1)), !.
+read_michod_test:- read_sols,read_dsl_test.
 
 uast:- uast_test.
-uast_test:-setup_call_cleanup(open('arc-dsl/dsl.py.uast',read,In3,[]),read_uast_python(In3),close(In3)).
-uast_test2:-setup_call_cleanup(open('arc-dsl/dsl.json',read,In3,[]),read_as_term(In3),close(In3)).
+uast_test:-setup_call_cleanup(open('../ARC-Others/arc-dsl/dsl.py.uast',read,In3,[]),read_uast_python(In3),close(In3)).
+uast_test2:-setup_call_cleanup(open('../ARC-Others/arc-dsl/dsl.json',read,In3,[]),read_as_term(In3),close(In3)).
 
 read_as_term(In):- locally(set_prolog_flag(allow_variable_name_as_functor,true),read_term(In,Term,[])),pp(Term).
 read_uast_python(In):- %json_read(In,AST),
@@ -770,11 +769,26 @@ Es = [2,4,6], Os = [1,3,5,7].
 :- dynamic(michod_solved/2).
 :- dynamic(py_consts/2).
 
-:- dynamic(michod_dsl/4).
-print_sols:- make, T = michod_solved(TestID,Prog),
+save_sols:- T = michod_solved(TestID,Prog),
    %forall(T,(print(fun(TestID)),maplist(writeln,Prog),nl)).
    %forall(T,(michod_solved_cor(TestID,Prog,Clause),portray_clause(user_output,Clause))).
-   forall(T,(michod_solved_cor(TestID,Prog,Clause),print(Clause))).
+   forall(T,(michod_solved_cor(TestID,Prog,Clause),assert_mic_clause(Clause))).
+
+assert_mic_clause(Clause):- 
+  with_output_to(string(S),portray_clause(Clause)),
+  read_term_from_atom(S,Term,[variable_names(Vars)]),
+  assertz_new(Term),!,
+  %Term = (l_solve(TestAtom,IN,OUT):-run_dsl(Len,List)),
+  maplist(dollar_each_var,Vars),
+  assertz_new(ll_solve(Term)),
+  nop((portray_clause(Term),nl)).
+dollar_each_var(N=V):- V = '$VAR'(N).
+
+:- dynamic(michod_dsl/4).
+print_sols:- T = michod_solved(TestID,Prog),
+   %forall(T,(print(fun(TestID)),maplist(writeln,Prog),nl)).
+   %forall(T,(michod_solved_cor(TestID,Prog,Clause),portray_clause(user_output,Clause))).
+   forall(T,(michod_solved_cor(TestID,Prog,Clause),(nl,print(Clause),writeln('.')))).
 print_dsl:- T = michod_dsl(Fun,Params,_Cmt,Src),
    forall(T,(print(fun(Fun,Params)),maplist(writeln,Src),nl)).
 read_python(In):- 
@@ -806,11 +820,13 @@ fff('THREE_BY_THREE',3, 3).
 %michod_solved_cor(TestID,Prog):- michod_solved(TestID,Prog).
 michod_solved_cor(TestID,Prog,Clause):- 
   michod_solved(TestID,Prog),
-  Head=..[solve,TestID,'I','O'],
+  Head=..[l_solve,TestID,'I','O'],
   
-  maplist(predifiy,Prog,Preds),
+  maplist(predifiy,Prog,Preds),  
+  length(Preds,Len),
   findall(N-V,py_substs(N,V),Substs),
-  subst_1L(['O'-'$VAR'('OUT'),'I'-'$VAR'('IN')|Substs],(Head:-Preds),Clause).
+  subst_1L(['O'-'$VAR'('OUT'),'I'-'$VAR'('IN')|Substs],(Head:-
+   run_dsl(Len,Preds)),Clause).
 
 predifiy(X=Y,Preds):- Y=..[F|A],append(A,[X],O),
    get_typearray(F,AT),add_argType(O,AT,OO),Preds=..[f,F|OO].
@@ -844,7 +860,8 @@ process_line(_, Str):- str_between(['from',_],Str),!.
 process_line(_, Str):- str_between([''],Str),!.
 process_line(In,Str):- str_between(['def solve_',s(TestID),'(I)',_],Str),!,
   read_solve(In,Prog),
-  assertz_new(michod_solved(TestID,Prog)).
+  assertz_new(michod_solved(TestID,Prog)),!.
+  
 
 process_line(In,Str):- str_between(['def ',s(Fun),'(',_],Str),
  read_params(In,Params),!,
@@ -887,8 +904,11 @@ read_funct(SFun,Fun):- trim(SFun,SS),
 trim_comma(SS,S):- atom_concat(S,',',SS),!.
 trim_comma(S,S).
 
+read_save_sols:- read_sols,save_sols.
 
+:- read_sols.
 
+:- save_sols.
 
 end_of_file.
 

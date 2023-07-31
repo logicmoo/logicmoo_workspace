@@ -175,7 +175,7 @@ initialize(M):-
 	aleph:aleph_version(V), aleph:set(version,V,M), aleph:reset(M),
   %findall(local_setting(P,V),default_setting_sc(P,V),L),
   %assert_all(L,M,_),
-	M:dynamic((pos_on/0,neg_on/0,bg_on/0,incneg/1,incpos/1,in/1,bgc/1,bg/1)),
+	M:dynamic((pos_on/0,neg_on/0,bg_on/0,incneg/1,incpos/1,in/1,bgc/1,unkC/1)),
 	 M:dynamic(('$aleph_feature'/2,
  '$aleph_global'/2,
  '$aleph_good'/3,
@@ -248,7 +248,7 @@ system:term_expansion((:- end_bg), []) :-
   %retractall(M:bgc(_)),
  % (M:bg(BG0)->
  %   retract(M:bg(BG0)),
- %   my_append(BG0,L,BG),
+ %   append(BG0,L,BG),
  %   arc_assert(M:bg(BG))
  % ;
  %   assert_all(L,M,_)
@@ -276,7 +276,7 @@ system:term_expansion((:- end_in_pos), []) :-
 %  (M:in(IN0)->
 %    retract(M:in(IN0)),%
 %	
-%    my_append(IN0,L,IN),
+%    append(IN0,L,IN),
 %    arc_assert(M:in(IN))
 %  ;
 %    arc_assert(M:in(L))
@@ -332,7 +332,7 @@ system:term_expansion((:- end_in_neg), []) :-
 %  (M:in(IN0)->
 %    retract(M:in(IN0)),
 	
-%    my_append(IN0,L,IN),
+%    append(IN0,L,IN),
 %    arc_assert(M:in(IN))
 %  ;
 %    arc_assert(M:in(L))
@@ -571,7 +571,7 @@ flatten_atoms(_,_,_,Last,M):-
 %	update lits database by adding ``flattened atoms''. This involves:
 %	replacing ground terms at +/- positions in Lit with variables
 %	and wrapping # positions in Lit within a special term stucture
-%	Mode contains actual mode and term-place numbers and types for +/-/# 
+%	Mode contained_by actual mode and term-place numbers and types for +/-/# 
 %	Last is the last literal number in the lits database at present
 %	Last1 is the last literal number after the update
 flatten_atom(Depth,Depth1,Lit,Negated,Mode,Last,Last1,M):-
@@ -609,7 +609,7 @@ flatten_lits(_,_,_,_,_,_,Last1,M):-
 
 % flatten_lit(+Lit,+Mode,+FAtom,-IVars,-OVars)
 % variabilise Lit as FAtom
-%	Mode contains actual mode and 
+%	Mode contained_by actual mode and 
 %	In, Out, Const positions as term-place numbers with types
 % 	replace ground terms with integers denoting variables
 %	or special terms denoting constants
@@ -1300,8 +1300,8 @@ add_eqs([Var2|Rest],Depth,Var1,Type,Last,NewLast,M):-
 % integrate terms specified by a list of arguments
 % integrating a term means:
 %	updating 2 databases: terms and vars
-%	terms contains the term along with a term-id
-%	vars contains a var-id <-> term-id mapping
+%	terms contained_by the term along with a term-id
+%	vars contained_by a var-id <-> term-id mapping
 % var and term-ids are integers
 integrate_args(_,_,[],_M):-!.
 integrate_args(Depth,Literal,[Pos/Type|T],M):-
@@ -7054,7 +7054,7 @@ add_inferred_modes([Mode|Modes],Flag,M):-
 %	lengths is assumed.
 %	Each element of Clauses is of the form L-[E,T,Lits,Clause] where
 %	L is the clauselength; E,T are example number and type (pos, neg) used
-%	to build the bottom clause; Lits contains the literal numbers in the
+%	to build the bottom clause; Lits contained_by the literal numbers in the
 %	bottom clause for Clause. If no bottom clause then E,T = 0 and Lits = []
 % 	Clauses is in ascending order of clause length
 sample_clauses(N,Clauses,M):-
@@ -7473,7 +7473,7 @@ randclause(L,C,Status,Lits,M):-
 %	Lits is the lits left to add to the clause
 %	LitsSoFar is the lits in the clause so far
 %	StatusSoFar is the Status of the clause so far
-%		if a literal to be added contains unbound input vars then
+%		if a literal to be added contained_by unbound input vars then
 %		status is illegal
 clause_status(Lits,LitsSoFar,Status1,Status2,M):-
 	bottom_key(_,_,Key,_,M),
@@ -8349,7 +8349,7 @@ interval_subtract(Start1-Finish1,Start2-Finish2,[Start1-S1,S2-Finish1]):-
 % code for set manipulation utilities 
 % taken from the Yap library
 % aleph_ord_subtract(+Set1,+Set2,?Difference)
-% is true when Difference contains all and only the elements of Set1
+% is true when Difference contained_by all and only the elements of Set1
 % which are not also in Set2.
 aleph_ord_subtract(Set1,[],Set1) :- !.
 aleph_ord_subtract([],_,[]) :- !.
@@ -9639,10 +9639,10 @@ store_values([Parameter|T],M):-
 %	details are stored in 5 idbs:
 %	1. bottom: points to 2 other idbs sat_X_n and lits_X_N
 %	2. sat_X_N: where X is the type of the current example and N the number 
-%		this contains misc stuff recorded by sat/2 for use by reduce/1
-%	3. lits_X_N: contains the lits in bottom
-%	4. ovars_X_N: contains output vars of lits in bottom
-%	5. ivars_X_N: contains input vars of lits in bottom
+%		this contained_by misc stuff recorded by sat/2 for use by reduce/1
+%	3. lits_X_N: contained_by the lits in bottom
+%	4. ovars_X_N: contained_by output vars of lits in bottom
+%	5. ivars_X_N: contained_by input vars of lits in bottom
 store_bottom(M):-
 	bottom_key(Num,Type,Key,true,M),
 	asserta(M:'$aleph_sat'(stored,stored(Num,Type,Key))),
@@ -11158,7 +11158,7 @@ special_consideration(portray_literals,true,M):-
 special_consideration(record,true,M):-
 	noset(recordfile_stream,M),
 	(setting(recordfile,F,M) -> 
-		aleph_open(F,my_append,Stream),
+		aleph_open(F,append,Stream),
 		set(recordfile_stream,Stream,M);
 		true), !.
 special_consideration(record,false,M):-
@@ -11166,13 +11166,13 @@ special_consideration(record,false,M):-
 special_consideration(recordfile,File,M):-
 	noset(recordfile_stream,M), 
 	(setting(record,true,M) -> 
-		aleph_open(File,my_append,Stream),
+		aleph_open(File,append,Stream),
 		set(recordfile_stream,Stream,M);
 		true), !.
 special_consideration(good,true,M):-
 	noset(goodfile_stream,M),
 	(setting(goodfile,F,M) -> 
-		aleph_open(F,my_append,Stream),
+		aleph_open(F,append,Stream),
 		set(goodfile_stream,Stream,M);
 		true), !.
 special_consideration(good,false,M):-
@@ -11180,7 +11180,7 @@ special_consideration(good,false,M):-
 special_consideration(goodfile,File,M):-
 	noset(goodfile_stream,M), 
 	(setting(good,true,M) -> 
-		aleph_open(File,my_append,Stream),
+		aleph_open(File,append,Stream),
 		set(goodfile_stream,Stream,M);
 		true), !.
 special_consideration(minscore,_,M):-

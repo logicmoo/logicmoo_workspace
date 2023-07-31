@@ -49,15 +49,3 @@ Test[
     ,
     TestID -> "ARCExpressionComplexity-20220825-821RT1"
 ]
-
-Test[
-    Utility`ReplaceAssociationsWithUnevaluatedAssociations[
-        Daniel`ARC`ARCExpressionComplexity[
-            <|"Height" -> Inactive[Times][Daniel`ARC`ObjectValue["Parent", "Height"], 1/2]|>
-        ]
-    ]
-    ,
-    0.59
-    ,
-    TestID -> "ARCExpressionComplexity-20221111-QLYIUR"
-]

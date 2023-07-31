@@ -177,30 +177,3 @@ Test[
     ,
     TestID -> "ARCCleanRules-20220905-JKLAZ4"
 ]
-
-Test[
-    Daniel`ARC`ARCCleanRules[
-        <|
-            "Rules" -> {
-                <||> -> <|
-                    "Shape" -> Daniel`ARC`ARCScene[{{1}}],
-                    "X2" -> Inactive[Plus][Daniel`ARC`ObjectValue["InputObject", "X2"], 1],
-                    "Width" -> 3,
-                    "Height" -> 6
-                |>
-            }
-        |>,
-        {}
-    ]
-    ,
-    <|
-        "Rules" -> {
-            <||> -> <|
-                "Shape" -> Daniel`ARC`ARCScene[{{1}}],
-                "X2" -> Inactive[Plus][Daniel`ARC`ObjectValue["InputObject", "X2"], 1]
-            |>
-        }
-    |>
-    ,
-    TestID -> "ARCCleanRules-20221112-XA42PG"
-]

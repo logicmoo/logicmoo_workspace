@@ -5,6 +5,7 @@
   unless permission or license is granted (contact at business@logicmoo.org)
 */
 :- include(kaggle_arc_header).
+:- set_prolog_flag(pfc_term_expansion,false).
 
 %%:- module(user).
 
@@ -40,7 +41,9 @@
 %:- module(system).
 
 %:- expects_dialect(pfc).
+:- if( \+ current_predicate(forall_assert/2)).
 forall_assert(G,P):- forall(G,arc_assert(P)).
+:- endif.
 :- set_prolog_flag(pfc_term_expansion,true).
 
 meta_argtypes(find_test_gids(testID,grid_type,gid)).
@@ -78,7 +81,7 @@ startAll_4 ==> (all_arc_test_name(ID) ==>process_test(ID)).
 ((process_test(TestID)/find_test_gids(TestID,Type,GID))==> test_to_gid(TestID,Type,GID)).
 ((process_oid(GID)/find_test_gids(TestID,Type,GID))==> test_to_gid(TestID,Type,GID)).
 
-((test_to_gid(TestID,train_input,GID),process_test(TestID))==>{assert_id_grid_cells(GID),individuate(complete,GID,_)}).
+((test_to_gid(TestID,train_input,GID),process_test(TestID))==>{assert_id_grid_cells(GID),individuate_3(complete,GID,_)}).
 
 (((test_to_gid(TestID,visible,GID),(process_test(TestID)/(unique_colors(GID,Colors),member(Color,Colors)))))==>color_of(TestID,Color)).
 
@@ -86,16 +89,17 @@ want_arg_counts(Pred,A,N,Col1,C,Col2)/(functor(CALL,Pred,A),arg(N,CALL,ARG1),arg
  ==>
 (arg1Isa(Pred,N,Col1),
  arg1Isa(Pred,C,Col2), 
- ((argInstance(Pred,N,ARG1)/findall_count(ARG2,CALL,Count)) ==> ({wdmsg(argInstanceInstanceCount(Pred,N,ARG1,C,Count))},argInstanceInstanceCount(Pred,N,ARG1,C,Count))),
+ ((argInstance(Pred,N,ARG1)/findall_count(ARG2,CALL,Count)) ==> ({u_dmsg(argInstanceInstanceCount(Pred,N,ARG1,C,Count))},argInstanceInstanceCount(Pred,N,ARG1,C,Count))),
  (CALL==>(argInstance(Pred,N,ARG1),argInstance(Pred,C,ARG2)))).
 
 :- mpred_info(want_arg_counts(_,_,_,_,_,_)).
 
 ==> want_arg_counts(color_of,2,1,testID,2,color).
 
-(process_test(TestID) / (\+ saved_training(TestID))) ==> {compile_and_save_test(TestID)}.
+(process_test(TestID) / (\+ saved_training(TestID))) ==> {compile_and_save_hints(TestID)}.
 
-assert_obj_global_points==>
+assert_obj_global_points
+ ==>
   ((cindv( Obj, localpoints, _)/(obj_to_oid(Obj,GID),globalpoints(Obj,GPS)))==> {assert_id_cells(GID,GPS)}).
 
 
@@ -104,8 +108,10 @@ arc_test_property(T, common,(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/
 %arc_test_property(T, common,(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> arc_note(T,"output size2D always equal as input").
 
 %:- forall_assert(kaggle_arc_io(TestID,ExampleNum,IO,_),some_grid_tid(TestID>ExampleNum*IO)).
-:- set_prolog_flag(pfc_term_expansion,false).
 
+need_save_rule1(Mode,Why,I,O)==>do_save_rule1(Mode,Why,I,O).
+
+:- set_prolog_flag(pfc_term_expansion,false).
 
 :- include(kaggle_arc_footer).
 

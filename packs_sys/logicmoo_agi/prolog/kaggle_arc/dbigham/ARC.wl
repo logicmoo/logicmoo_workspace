@@ -659,12 +659,6 @@ ARCVectorToAngle::usage = "ARCVectorToAngle  "
 
 ARCMovementAngle::usage = "ARCMovementAngle  "
 
-ARCClassifyY::usage = "ARCClassifyY  "
-
-ObjectX::usage = "ObjectX  "
-
-ObjectY::usage = "ObjectY  "
-
 Begin["`Private`"]
 
 
@@ -2382,16 +2376,8 @@ Options[ARCClassifyShape] =
 {
     "IncludeImageShapes" -> False   (*< Whether to include shapes of type <|"Type" -> "Image", ...|>. *)
 };
-
-ARCClassifyShape[{}, OptionsPattern[]] := {}
-
 ARCClassifyShape[image_List, OptionsPattern[]] :=
-    Module[{rectangleClassification, rotatedImages},
-        
-        rotatedImagesIncludingOriginal =
-            ARCImageRotations[image, "IncludeUnrotatedImage" -> True];
-        rotatedImages = Rest[rotatedImagesIncludingOriginal];
-        
+    Module[{rectangleClassification},
         {
             If [TrueQ[OptionValue["IncludeImageShapes"]],
                 ARCImageShapes[image]
@@ -2411,18 +2397,16 @@ ARCClassifyShape[image_List, OptionsPattern[]] :=
                 ARCClassifyL[image],
                 ARCClassifyTriangle[image],
                 Sequence @@
-                ARCClassifyY["AllRotations", rotatedImagesIncludingOriginal],
+                ARCClassifyRotatedImage[image, ARCClassifyTriangle],
                 Sequence @@
-                ARCClassifyRotatedImage["RotatedImages", rotatedImages, ARCClassifyTriangle],
+                ARCClassifyRotatedImage[image, ARCClassifyL],
                 Sequence @@
-                ARCClassifyRotatedImage["RotatedImages", rotatedImages, ARCClassifyL],
-                Sequence @@
-                ARCClassifyFlippedImage[image, ARCClassifyL],
-                Sequence @@
-                ARCClassifyRotatedImage["RotatedImages", rotatedImages, ARCClassifyY]
+                ARCClassifyFlippedImage[image, ARCClassifyL]
             }
         }
     ]
+
+ARCClassifyShape[{}] := {}
 
 (*!
     \function ARCClassifyTriangle
@@ -2788,36 +2772,22 @@ ARCClassifyL[image_List] :=
     \maintainer danielb
 *)
 Clear[ARCClassifyRotatedImage];
-ARCClassifyRotatedImage[image_List, classifyFunction_] :=
-    Module[{},
-        ARCClassifyRotatedImage[
-            "RotatedImages",
-            ARCImageRotations[image],
-            classifyFunction
-        ]
-    ]
-
-ARCClassifyRotatedImage["RotatedImages", rotatedImages_List, classifyFunction_] :=
-    Module[{image, angle, classification},
-        Flatten[
-            Function[{rotatedImage},
-                image = rotatedImage["Image"][[1]];
-                angle = rotatedImage["Transform", "Angle"];
-                If [!MatchQ[classifications = classifyFunction[image], Nothing | {}],
-                    Function[{classification},
-                        Join[
-                            classification,
-                            <|
-                                "Transform" -> <|"Type" -> "Rotation", "Angle" -> angle|>
-                            |>
-                        ]
-                    ] /@ Flatten[{classifications}]
-                    ,
-                    Nothing
+ARCClassifyRotatedImage[imageIn_List, classifyFunction_] :=
+    Module[{image = imageIn, classification},
+        Function[{angle},
+            (* Rotate by 90 degrees. *)
+            image = RotateImage[image, 90];
+            If [(classification = classifyFunction[image]) =!= Nothing,
+                Join[
+                    classification,
+                    <|
+                        "Transform" -> <|"Type" -> "Rotation", "Angle" -> angle|>
+                    |>
                 ]
-            ] /@ rotatedImages,
-            1
-        ]
+                ,
+                Nothing
+            ]
+        ] /@ {270, 180, 90}
     ]
 
 (*!
@@ -4459,9 +4429,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
                     (* Oct 22 2022 *)
                     "d10ecb37" | "b6afb2da" |
                     (* Nov 8 2022: Started timing out, but still fails with extra time. *)
-                    "42a15761" |
-                    (* Nov 12 2022 *)
-                    "3ee1011a"
+                    "42a15761"
                 ],
                 (* If an input is known to be slow, but should be working, then we give
                    it lots of time to try to avoid false positive failures. *)
@@ -4649,7 +4617,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
             res =
                 ARCLogScope["ARCFindRules:MultiColorObjects"]@
                 arcFindRulesHelper[examples, opts];
-            parsedExamples = <|"Examples" -> $parsedExamples, "ParseOptions" -> <|opts|>|>;
+            parsedExamples = $parsedExamples
         ];
         foundRulesQ = MatchQ[res, KeyValuePattern["Rules" -> _List]];
         
@@ -4696,11 +4664,11 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
                         opts
                     ];
                 
-                parsedExamplesForNotFormingMultiColorCompositeObjects = $parsedExamples;
-                
-                If [!MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
-                    parsedExamples = parsedExamplesForNotFormingMultiColorCompositeObjects
+                If [!ListQ[parsedExamples],
+                    parsedExamples = $parsedExamples
                 ];
+                
+                parsedExamplesForNotFormingMultiColorCompositeObjects = $parsedExamples;
                 
                 (*ARCEcho2[ARCSimplifyRules[res2["PartialRules"]]];*)
                 (*ARCEcho2[ARCSimplifyRules[res2["Rules"]]];*)
@@ -4815,8 +4783,8 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
         (* If both inputs and outputs have a shared grid structure, we can try subdividing
            the input/output scenes into their individual grid cells. *)
         If [And[
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
-                ARCAllExamplesUseGridInInputAndOutput[parsedExamples["Examples"]],
+                ListQ[parsedExamples],
+                ARCAllExamplesUseGridInInputAndOutput[parsedExamples],
                 TrueQ[OptionValue["AllowSubdividing"]]
             ],
             (* Previously we weren't trying this parsing mode unless we were unable to find
@@ -4828,7 +4796,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
             (*If [!TrueQ[workingRulesFound[]],*)
                 res2 =
                     ARCLogScope["ARCFindRulesForGridSubdivision"]@
-                    ARCFindRulesForGridSubdivision[parsedExamples["Examples"]];
+                    ARCFindRulesForGridSubdivision[parsedExamples];
                 (*ARCEcho[ARCSimplifyRules[res2]];*)
                 foundRulesQ2 = MatchQ[res2, KeyValuePattern["Rules" -> _List]];
                 If [And[
@@ -4849,14 +4817,14 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
            matches the number of grid rows/columns, we can try finding rules to map from grid
            cells to output pixels. *)
         If [And[
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
-                ARCGridSizeMatchesOutputPixelDimensions[parsedExamples["Examples"]],
+                ListQ[parsedExamples],
+                ARCGridSizeMatchesOutputPixelDimensions[parsedExamples],
                 TrueQ[OptionValue["AllowSubdividing"]]
             ],
             If [!TrueQ[workingRulesFound[]],
                 res2 =
                     ARCLogScope["ARCFindRulesForGridSubdivisionToOutputPixels"]@
-                    ARCFindRulesForGridSubdivisionToOutputPixels[parsedExamples["Examples"]];
+                    ARCFindRulesForGridSubdivisionToOutputPixels[parsedExamples];
                 foundRulesQ2 = MatchQ[res2, KeyValuePattern["Rules" -> _List | _Association]];
                 If [foundRulesQ2,
                     foundRulesQ = True;
@@ -4868,13 +4836,10 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
         (* Check if the input scenes can be subdivided into a grid structure on account of their
            colorings. Sometimes this is done so that the output can be produced as a logical
            combination of the input segments. e.g. 94f9d214 *)
-        If [And[
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
-                FreeQ[parsedExamples, KeyValuePattern["Grid" -> _]]
-            ],
-            With[{parseColorGridsResult = ARCParseColorGrids[parsedExamples["Examples"]]},
+        If [FreeQ[parsedExamples, KeyValuePattern["Grid" -> _]],
+            With[{parseColorGridsResult = ARCParseColorGrids[parsedExamples]},
                 If [TrueQ[parseColorGridsResult["Result"]],
-                    parsedExamples[["Examples", All, "Input", "Grid"]] = KeyDrop[parseColorGridsResult, "Result"]
+                    parsedExamples[[All, "Input", "Grid"]] = KeyDrop[parseColorGridsResult, "Result"]
                 ]
             ]
         ];
@@ -4884,9 +4849,9 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
            being a single color), then we can consider whether the segments from the first image
            should be combined via logical operations. *)
         If [And[
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
+                ListQ[parsedExamples],
                 MatchQ[
-                    subdivisionInfo = ARCCheckForLogicOperationQ[parsedExamples["Examples"]],
+                    subdivisionInfo = ARCCheckForLogicOperationQ[parsedExamples],
                     KeyValuePattern["Result" -> True]
                 ],
                 TrueQ[OptionValue["AllowSubdividing"]]
@@ -4894,7 +4859,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
             If [!TrueQ[workingRulesFound[]],
                 res2 =
                     ARCLogScope["ARCConsiderLogicOperations"]@
-                    ARCConsiderLogicOperations[parsedExamples["Examples"], subdivisionInfo];
+                    ARCConsiderLogicOperations[parsedExamples, subdivisionInfo];
                 foundRulesQ2 = MatchQ[res2, _Association];
                 If [foundRulesQ2,
                     foundRulesQ = True;
@@ -4902,12 +4867,12 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
                         "Subdivision" -> <|
                             "Input" -> (
                                 gridType = Replace[
-                                    parsedExamples["Examples"][[1, "Input", "Grid", "Type"]],
+                                    parsedExamples[[1, "Input", "Grid", "Type"]],
                                     {
                                         "ColorGrid" :> <|
                                             "Type" -> "ColorGrid",
                                             KeyTake[
-                                                parsedExamples["Examples"][[1, "Input", "Grid"]],
+                                                parsedExamples[[1, "Input", "Grid"]],
                                                 {"RowCount", "ColumnCount"}
                                             ]
                                         |>,
@@ -4932,8 +4897,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
            then try parsing the scene again without Z order. e.g. b91ae062 *)
         If [And[
                 !TrueQ[workingRulesFound[]],
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
-                With[{whetherEachExampleUsesZOrder = !FreeQ[#, KeyValuePattern["ZOrder" -> 1]] & /@ parsedExamples["Examples"]},
+                With[{whetherEachExampleUsesZOrder = !FreeQ[#, KeyValuePattern["ZOrder" -> 1]] & /@ parsedExamples},
                     And[
                         !FreeQ[whetherEachExampleUsesZOrder, True],
                         !FreeQ[whetherEachExampleUsesZOrder, False]
@@ -4958,13 +4922,13 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
            then try parsing the scenes again assuming a black background. e.g. 7468f01a *)
         If [And[
                 OptionValue["Background"] === Automatic,
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
+                ListQ[parsedExamples],
                 !TrueQ[workingRulesFound[]],
                 With[
                     {
                         backgroundColors = Join[
-                            parsedExamples["Examples"][[All, "Output", "Background"]],
-                            parsedExamples["Examples"][[All, "Input", "Background"]]
+                            parsedExamples[[All, "Output", "Background"]],
+                            parsedExamples[[All, "Input", "Background"]]
                         ]
                     },
                     (*And[
@@ -4992,14 +4956,14 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
            color, then try again using no background color. e.g. bda2d7a6 *)
         If [And[
                 OptionValue["Background"] === Automatic,
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
+                ListQ[parsedExamples],
                 !TrueQ[workingRulesFound[]],
                 (* Black was chosen as the background color for at least one scene. *)
                 With[
                     {
                         backgroundColors = Join[
-                            parsedExamples["Examples"][[All, "Output", "Background"]],
-                            parsedExamples["Examples"][[All, "Input", "Background"]]
+                            parsedExamples[[All, "Output", "Background"]],
+                            parsedExamples[[All, "Input", "Background"]]
                         ]
                     },
                     MemberQ[backgroundColors, 0]
@@ -5064,7 +5028,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
            e.g. 67385A82 *)
         If [And[
                 OptionValue["FollowDiagonals"] === Automatic,
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
+                ListQ[parsedExamples],
                 !TrueQ[workingRulesFound[]],
                 And[
                     (* Originally we had only enabled this for inputs with a maximum width/height
@@ -5072,8 +5036,8 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
                        you didn't want to follow diagonals, but b6afb2da is an example where it's
                        helpful (currently required) to not follow diagonals, and it has a size of
                        10, so I will increase the max size from 8 to 16. *)
-                    AllTrue[parsedExamples["Examples"][[All, "Input", "Width"]], Function[Between[#, {2, 16}]]],
-                    AllTrue[parsedExamples["Examples"][[All, "Input", "Height"]], Function[Between[#, {2, 16}]]]
+                    AllTrue[parsedExamples[[All, "Input", "Width"]], Function[Between[#, {2, 16}]]],
+                    AllTrue[parsedExamples[[All, "Input", "Height"]], Function[Between[#, {2, 16}]]]
                 ]
             ],
             res2 =
@@ -5097,7 +5061,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
            without treating those things as a grid (e.g. d9f24cd1) or dividers (e.g. 496994bd). *)
         If [And[
                 OptionValue["CheckForGridsAndDividers"] === Automatic,
-                MatchQ[parsedExamples, KeyValuePattern["Examples" -> _List]],
+                ListQ[parsedExamples],
                 !FreeQ[parsedExamples, KeyValuePattern["GridOrDivider" | "Grid" -> _Association]]
             ],
             If [Or[
@@ -5187,14 +5151,12 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
                    normalization. *)
                 FreeQ[examples, KeyValuePattern["NormalizationAngle" -> _]]
             ],
+            
             (* Check if there is a way to rotationally normalize the examples. *)
             Replace[
                 SelectFirst[
                     Function[{theseParsedExamples},
-                        ARCFindRotationalNormalizationsForScenes[
-                            theseParsedExamples["Examples"],
-                            "ParseOptions" -> theseParsedExamples["ParseOptions"]
-                        ]
+                        ARCFindRotationalNormalizationsForScenes[theseParsedExamples]
                     ] /@ Select[
                         DeleteDuplicates@
                         {
@@ -5203,7 +5165,7 @@ ARCFindRules[examplesIn_List, opts:OptionsPattern[]] :=
                                normalization is only seen when not forming them. *)
                             parsedExamplesForNotFormingMultiColorCompositeObjects
                         },
-                        AssociationQ
+                        ListQ
                     ],
                     !MissingQ[#] &
                 ],
@@ -5360,7 +5322,7 @@ arcFindRulesHelper[examplesIn_List, opts:OptionsPattern[]] :=
         
         (* Helper function for producing the final return value. *)
         returnRules[rules_Association] :=
-            Block[{rulesResult, rotationNormalization, rotationNormalizationParseOptions},
+            Block[{rulesResult},
                 Return[
                     
                     (* TODO: WHEN ADDING PROPERTIES HERE, REMEMBER TO UPDATE:
@@ -5368,27 +5330,7 @@ arcFindRulesHelper[examplesIn_List, opts:OptionsPattern[]] :=
                     
                     rulesResult = <|
                         If [MatchQ[examplesIn[[1]], KeyValuePattern["RotationNormalization" -> _]],
-                            rotationNormalization = examplesIn[[1, "RotationNormalization"]];
-                            If [AssociationQ[rotationNormalization["ParseOptions"]],
-                                rotationNormalizationParseOptions =
-                                    Association@
-                                    Complement[
-                                        Normal[rotationNormalization["ParseOptions"]],
-                                        {opts}
-                                    ];
-                                If [Length[rotationNormalizationParseOptions] > 0,
-                                    (* The parse options used by rotation normalization differ
-                                       from the parse options used for rule finding, so we
-                                       specify which options differed, for use by the rule applier
-                                       when parsing objects for determining the rotational
-                                       normalization angle. *)
-                                    rotationNormalization["ParseOptions"] =
-                                        rotationNormalizationParseOptions
-                                    ,
-                                    rotationNormalization = KeyDrop[rotationNormalization, "ParseOptions"]
-                                ]
-                            ];
-                            "RotationNormalization" -> rotationNormalization
+                            "RotationNormalization" -> examplesIn[[1, "RotationNormalization"]]
                             ,
                             Nothing
                         ],
@@ -6075,9 +6017,9 @@ ARCFindRules[examples_List, objectMappingsIn_List, referenceableInputObjects_Ass
                     (* UNDOME *)
                     If [False && !TrueQ[$arcFindRulesForGeneratedObjects],
                         If [!TrueQ[$mapComponents],
-                            {"Shape"}
-                            ,
                             {"Y.Rank"}
+                            ,
+                            {None}
                         ]
                         (*{"Area.Rank", "Shapes"}*)
                         (*{"Width.Rank", "Width.InverseRank", "Image"}*)
@@ -6585,10 +6527,9 @@ ARCFindRules[conclusionGroupIn_List, referenceableInputObjects_Association, exam
                 (* These conclusions aren't all identical, so we check whether they can be
                    generalized. *)
                 conclusionList = Flatten[Values[groupedByConclusion]];
-                
                 conclusion =
                     ARCGeneralizeConclusions[
-                        conclusionList,
+                        KeyDrop[conclusionList, "Output"],
                         referenceableInputObjects,
                         examples
                     ];
@@ -6618,7 +6559,7 @@ ARCFindRules[conclusionGroupIn_List, referenceableInputObjects_Association, exam
                     conclusion =
                         ReturnIfFailure@
                         ARCGeneralizeConclusions[
-                            conclusionList2,
+                            KeyDrop[conclusionList2, "Output"],
                             referenceableInputObjects,
                             examples
                         ]
@@ -6899,28 +6840,11 @@ ARCApplyRules[sceneIn_ARCScene, rulesIn_Association, opts:OptionsPattern[]] :=
             outputWidth,
             outputHeight,
             background,
-            rotationalNormalizationParseOptions,
             rotationalNormalizationAngle
         },
         
         (* e.g. 56dc2b01 *)
         If [!MissingQ[rules["RotationNormalization"]],
-            
-            rotationalNormalizationParseOptions =
-                Association@
-                FilterRules[
-                    Normal@
-                    Join[
-                        rules,
-                        If [!MissingQ[rules["RotationNormalization", "ParseOptions"]],
-                            rules["RotationNormalization", "ParseOptions"]
-                            ,
-                            <||>
-                        ]
-                    ],
-                    ARCParseScene
-                ];
-            
             Replace[
                 ReturnIfFailure@
                 If [MatchQ[rules["RotationNormalization"], KeyValuePattern["ObjectsAngle" -> _]],
@@ -6929,24 +6853,12 @@ ARCApplyRules[sceneIn_ARCScene, rulesIn_Association, opts:OptionsPattern[]] :=
                         rules["RotationNormalization", "ObjectsAngle"],
                         If [!MissingQ[rules["RotationNormalization", "FavoredRotationAngle"]],
                             "FavoredRotationAngle" -> rules["RotationNormalization", "FavoredRotationAngle"]
-                            ,
-                            Sequence @@ {}
-                        ],
-                        If [AssociationQ[rotationalNormalizationParseOptions],
-                            "ParseOptions" -> rotationalNormalizationParseOptions
-                            ,
-                            Sequence @@ {}
                         ]
                     ]
                     ,
                     ARCFindRotationalNormalizationsForScenes2[
                         scene,
-                        rules["RotationNormalization"],
-                        If [AssociationQ[rotationalNormalizationParseOptions],
-                            "ParseOptions" -> rotationalNormalizationParseOptions
-                            ,
-                            Sequence @@ {}
-                        ]
+                        rules["RotationNormalization"]
                     ]
                 ],
                 {
@@ -7534,9 +7446,7 @@ ARCApplyRules[objectIn_Association, rule_Rule, inputScene_Association, outputSce
                 ],
                 (* The rule matches, so apply its conclusion. *)
                 object = ARCApplyConclusion[object, conclusion, inputScene, outputScene];
-                (* Not sure if this gets used anymore, since I think we try to return `Nothing`
-                   when a flat object gets produced, so this might be silent. *)
-                If [object =!= Nothing && (object["Width"] == 0 || object["Height"] == 0),
+                If [object["Width"] == 0 || object["Height"] == 0,
                     ReturnFailure[
                         "FlatObjectFailure",
                         "Applying a rule conclusion resulted in an object with a width or height of 0.",
@@ -7598,50 +7508,9 @@ ARCApplyConclusion[objectIn_Association, conclusion_Association, inputScene_Asso
             ];
         ];
         
-        If [And[
-                MissingQ[conclusion["Transform"]],
-                MissingQ[conclusion["Position"]],
-                MissingQ[conclusion["Y"]],
-                MissingQ[conclusion["YInverse"]],
-                !And[
-                    Or[
-                        !MissingQ[conclusion["Height"]],
-                        !MissingQ[conclusion["Image"]],
-                        (* e.g. 3ac3eb23 (but wrt Width) *)
-                        MatchQ[conclusion["Shape"], _ARCScene | KeyValuePattern["Image" -> _]]
-                    ],
-                    Or[
-                        !MissingQ[conclusion["Y2"]],
-                        !MissingQ[conclusion["Y2Inverse"]]
-                    ]
-                ],
-                MissingQ[conclusion["X"]],
-                MissingQ[conclusion["XInverse"]],
-                !And[
-                    Or[
-                        !MissingQ[conclusion["Width"]],
-                        !MissingQ[conclusion["Image"]],
-                        (* e.g. 3ac3eb23 *)
-                        MatchQ[conclusion["Shape"], _ARCScene | KeyValuePattern["Image" -> _]]
-                    ],
-                    Or[
-                        !MissingQ[conclusion["X2"]],
-                        !MissingQ[conclusion["X2Inverse"]]
-                    ]
-                ]
-            ],
+        If [MissingQ[conclusion["Transform"]] && MissingQ[conclusion["Position"]],
             (* Incase any ARCApplyConclusion handlers need to know the position, such as
-               X2Inverse. But we don't want to do this in some cases like b7249182
-               where conclusions specify Y2 and Height, whereby the old Y value should
-               be thrown away, so I'm concerned by the lack of generality here.
-               Ideally I feel like we shouldn't be doing this, or otherwise would
-               need to do something more sophisticated. I've added a bunch of checks
-               above to ensure the conclusion isn't specifying things like Y2,
-               but maybe that will cause breakages downstream for ARCApplyConclusion
-               down values that rely on Position. *)
-            (* 97999447 seems to be an example that still makes use of this, whereby
-               it updates X2Inverse, and something downstream depends on Position
-               being set. *)
+               X2Inverse. *)
             objectOut["Position"] = objectIn["Position"]
         ];
         
@@ -7659,17 +7528,10 @@ ARCApplyConclusion[objectIn_Association, conclusion_Association, inputScene_Asso
                             Function[{object2, key2, value2},
                                 Block[
                                     {
-                                        $inputScene = inputScene
+                                        $inputScene = inputScene,
                                         (* MapComponents transforms may use Object["Parent"] to
-                                           refer to the input composite object.
-                                           As of Nov 12 2022, I'm confused why this is needed,
-                                           since we Block $parent in the ARCApplyConclusion down
-                                           value for MapComponents. And for b7249182, it causes
-                                           breakage because it overrides the true parent with
-                                           the _component_, so it ends up treating itself as
-                                           its parent. I'll remove this until we understand
-                                           why it's needed. *)
-                                        (*$parent = object2*)
+                                           refer to the input composite object. *)
+                                        $parent = object2
                                     },
                                     ReturnIfFailure@
                                     ARCApplyConclusion[
@@ -7695,7 +7557,7 @@ ARCApplyConclusion[objectIn_Association, conclusion_Association, inputScene_Asso
         ];
         
         (* Ensure we didn't produce an non-Integer values for properties that need integers. *)
-        ReturnFailureIfBadValues[objectOut];
+        ReturnFailureIfBadValues[finalObject];
         
         (* If this isn't a named "transform" but rather is just setting one or more
            property values of the object, then we want to be sure to keep properties
@@ -7709,91 +7571,30 @@ ARCApplyConclusion[objectIn_Association, conclusion_Association, inputScene_Asso
                 ];
                 If [MissingQ[objectOut["Shape"]] && !MissingQ[objectOut["Shapes"]],
                     objectOut = Append[objectOut, "Shape" -> First[objectOut["Shapes"]]]
-                ]
-            ];
-        ];
-        
-        If [MissingQ[objectOut["Y"]],
-            Which[
-                !MissingQ[objectOut["YInverse"]],
-                    objectOut["Y"] = outputScene["Height"] - objectOut["YInverse"] + 1
-            ]
-        ];
-        
-        If [MissingQ[objectOut["Y2"]],
-            Which[
-                !MissingQ[objectOut["Y2Inverse"]],
-                    objectOut["Y2"] = outputScene["Height"] - objectOut["Y2Inverse"] + 1
-            ]
-        ];
-        
-        If [MissingQ[objectOut["X"]],
-            Which[
-                !MissingQ[objectOut["XInverse"]],
-                    objectOut["X"] = outputScene["Width"] - objectOut["XInverse"] + 1
-            ]
-        ];
-        
-        If [MissingQ[objectOut["X2"]],
-            Which[
-                !MissingQ[objectOut["X2Inverse"]],
-                    objectOut["X2"] = outputScene["Width"] - objectOut["X2Inverse"] + 1
-            ]
-        ];
-        
-        If [MissingQ[objectOut["Width"]],
-            Which[
-                !MissingQ[objectOut["Image"]],
-                    objectOut["Width"] = ImageWidth[objectOut["Width"]],
-                MatchQ[objectOut["Shape"], _ARCScene],
-                    objectOut["Width"] = ImageWidth[objectOut["Shape"]],
-                !MissingQ[objectOut["X"]] && !MissingQ[objectOut["X2"]],
-                    objectOut["Width"] = objectOut["X2"] - objectOut["X"] + 1,
-                !MissingQ[object["Width"]],
+                ];
+                If [MissingQ[objectOut["Width"]] && !MissingQ[object["Width"]],
                     objectOut["Width"] = object["Width"]
-            ]
-        ];
-        
-        If [MissingQ[objectOut["Height"]],
-            Which[
-                !MissingQ[objectOut["Image"]],
-                    objectOut["Height"] = ImageHeight[objectOut["Width"]],
-                MatchQ[objectOut["Shape"], _ARCScene],
-                    objectOut["Height"] = ImageHeight[objectOut["Shape"]],
-                !MissingQ[objectOut["Y"]] && !MissingQ[objectOut["Y2"]],
-                    objectOut["Height"] = objectOut["Y2"] - objectOut["Y"] + 1,
-                !MissingQ[object["Width"]],
+                ];
+                If [MissingQ[objectOut["Height"]] && !MissingQ[object["Height"]],
                     objectOut["Height"] = object["Height"]
-            ]
-        ];
-        
-        If [MissingQ[objectOut["Y"]],
-            Which[
-                !MissingQ[objectOut["Y2"]] && !MissingQ[objectOut["Height"]],
-                    objectOut["Y"] = objectOut["Y2"] - objectOut["Height"] + 1
-            ]
-        ];
-        
-        If [MissingQ[objectOut["X"]],
-            Which[
-                !MissingQ[objectOut["X2"]] && !MissingQ[objectOut["Width"]],
-                    objectOut["X"] = objectOut["X2"] - objectOut["Width"] + 1
-            ]
+                ];
+            ];
         ];
         
         If [MissingQ[objectOut["Position"]],
-            objectOut["Position"] = {TODO, TODO};
             Which[
-                !MissingQ[objectOut["X"]],
-                    objectOut[["Position", 2]] = objectOut["X"],
-                !MissingQ[object["X"]],
-                    objectOut[["Position", 2]] = object["X"]
-            ];
-            Which[
-                !MissingQ[objectOut["Y"]],
-                    objectOut[["Position", 1]] = objectOut["Y"],
-                !MissingQ[object["Y"]],
-                    objectOut[["Position", 1]] = object["Y"]
+                MissingQ[objectOut["X"]] && MissingQ[objectOut["Y"]],
+                    objectOut["Position"] = {object["Y"], object["X"]},
+                MissingQ[objectOut["Y"]],
+                    objectOut["Position"] = {
+                        object["Y"],
+                        objectOut["X"]
+                    },
+                MissingQ[objectOut["X"]],
+                    objectOut["Position"] = {
+                        objectOut["Y"],
+                        object["X"]
+                    }
             ];
         ];
         
@@ -7808,10 +7609,7 @@ ARCApplyConclusion[objectIn_Association, conclusion_Association, inputScene_Asso
             objectOut =
                 ReturnIfFailure@
                 ARCRotateObjectFrame[
-                    Replace[
-                        ARCInferObjectProperties[objectOut, outputScene["Width"], outputScene["Height"]],
-                        Nothing :> Return[Nothing, Module]
-                    ],
+                    ARCInferObjectProperties[objectOut, outputScene["Width"], outputScene["Height"]],
                     objectIn["Shape", "Transform", "Angle"],
                     Sequence @@
                     Switch[
@@ -7968,16 +7766,16 @@ ARCApplyConclusion[key:"Y", y_Integer, objectIn_Association, objectOut_Associati
 
 ARCApplyConclusion[key:"Y2", y2_Integer, objectIn_Association, objectOut_Association, scene_Association] :=
     Module[{y},
+        y = Replace[
+            objectOut["Position"],
+            {
+                _Association :> objectOut["Position", "Y"],
+                _ :> objectOut[["Position", 1]]
+            }
+        ];
         Sett[
             objectOut,
-            {
-                "Y2" -> y2,
-                If [!MissingQ[y = ObjectY[objectOut]],
-                    "Height" -> (y2 - y + 1)
-                    ,
-                    Nothing
-                ]
-            }
+            "Height" -> (y2 - y + 1)
         ]
     ]
 
@@ -8019,46 +7817,46 @@ ARCApplyConclusion[key:"X", x_Integer, objectIn_Association, objectOut_Associati
 
 ARCApplyConclusion[key:"X2", x2_Integer, objectIn_Association, objectOut_Association, scene_Association] :=
     Module[{x},
+        x = Replace[
+            objectOut["Position"],
+            {
+                _Association :> objectOut["Position", "X"],
+                _ :> objectOut[["Position", 2]]
+            }
+        ];
         Sett[
             objectOut,
-            {
-                "X2" -> x2,
-                If [!MissingQ[x = ObjectX[objectOut]],
-                    "Width" -> (x2 - x + 1)
-                    ,
-                    Nothing
-                ]
-            }
+            "Width" -> (x2 - x + 1)
         ]
     ]
 
 ARCApplyConclusion[key:"X2Inverse", x2Inverse_Integer, objectIn_Association, objectOut_Association, scene_Association] :=
     Module[{x},
+        x = Replace[
+            objectOut["Position"],
+            {
+                _Association :> objectOut["Position", "X"],
+                _ :> objectOut[["Position", 2]]
+            }
+        ];
         Sett[
             objectOut,
-            {
-                "X2Inverse" -> x2Inverse,
-                If [!MissingQ[x = ObjectX[objectOut]],
-                    "Width" -> (scene["Width"] - x2Inverse + 1) - x + 1
-                    ,
-                    Nothing
-                ]
-            }
+            "Width" -> (scene["Width"] - x2Inverse + 1) - x + 1
         ]
     ]
 
 ARCApplyConclusion[key:"Y2Inverse", y2Inverse_Integer, objectIn_Association, objectOut_Association, scene_Association] :=
     Module[{y},
+        y = Replace[
+            objectOut["Position"],
+            {
+                _Association :> objectOut["Position", "Y"],
+                _ :> objectOut[["Position", 1]]
+            }
+        ];
         Sett[
             objectOut,
-            {
-                "Y2Inverse" -> y2Inverse,
-                If [!MissingQ[y = ObjectY[objectOut]],
-                    "Height" -> (scene["Height"] - y2Inverse + 1) - y + 1
-                    ,
-                    Nothing
-                ]
-            }
+            "Height" -> (scene["Height"] - y2Inverse + 1) - y + 1
         ]
     ]
 
@@ -8092,15 +7890,11 @@ ARCApplyConclusion[key:"XInverse", xInverse_Integer, objectIn_Association, objec
         ]
     ]
 
-(*ARCApplyConclusion[key:"Shape", value: KeyValuePattern["Image" -> _] | _ARCScene, objectIn_Association, objectOut_Association, scene_Association] :=
+ARCApplyConclusion[key:"Shape", value: KeyValuePattern["Image" -> _], objectIn_Association, objectOut_Association, scene_Association] :=
     Sett[
         objectOut,
-        {
-            "Image" -> ARCColorize[value, objectIn[["Colors", 1]]],
-            "Width" -> ImageWidth[value],
-            "Height" -> ImageHeight[value]
-        }
-    ]*)
+        "Image" -> ARCColorize[value, objectIn[["Colors", 1]]]
+    ]
 
 ARCApplyConclusion[key:"Shape", value: KeyValuePattern["Fill" -> _], objectIn_Association, objectOut_Association, scene_Association] :=
     Sett[
@@ -8294,6 +8088,7 @@ ARCApplyConclusion[key:"Transform", value:KeyValuePattern[{"Type" -> "MapCompone
         Block[{$parent = objectIn},
             
             If [MatchQ[value["Groups"], {__}],
+                
                 objects =
                     ReturnIfFailure@
                     ARCFormGroupsWhenApplyingRules[
@@ -8668,34 +8463,22 @@ ARCTest[file_String, opts:OptionsPattern[]] :=
 Clear[ARCImageRotations];
 Options[ARCImageRotations] =
 {
-    "IncludeNoopTransforms" -> False,       (*< Should we include image transforms that result in the image not changing? e.g. A horizontal flip for an image that has vertical line symmetry. *)
-    "IncludeUnrotatedImage" -> False        (*< Should we include the unrotated image? *)
+    "IncludeNoopTransforms" -> False        (*< Should we include image transforms that result in the image not changing? e.g. A horizontal flip for an image that has vertical line symmetry. *)
 };
 ARCImageRotations[imageIn_List, OptionsPattern[]] :=
     Module[{image = imageIn},
         Function[{angle},
-            If [angle =!= 0,
-                (* Rotate by another 90 degrees. *)
-                image = RotateImage[image, 90]
-            ];
+            (* Rotate by 90 degrees. *)
+            image = RotateImage[image, 90];
             If [Or[
-                    TrueQ[OptionValue["IncludeNoopTransforms"]] || angle === 0,
+                    TrueQ[OptionValue["IncludeNoopTransforms"]],
                     image =!= imageIn
                 ],
                 <|"Image" -> ARCScene[image], "Transform" -> <|"Type" -> "Rotation", "Angle" -> angle|>|>
                 ,
                 Nothing
             ]
-        ] /@ {
-            If [TrueQ[OptionValue["IncludeUnrotatedImage"]],
-                0
-                ,
-                Nothing
-            ],
-            270,
-            180,
-            90
-        }
+        ] /@ {270, 180, 90}
     ]
 
 (*!
@@ -8797,9 +8580,6 @@ ARCWorkingQ[examples_List, rules_Association, opts:OptionsPattern[]] :=
     \maintainer danielb
 *)
 Clear[RotateImage];
-
-RotateImage[image_List, 0] := image
-
 RotateImage[imageIn_List, angle_] :=
     Module[{image = imageIn},
         Function[{i},
@@ -9622,26 +9402,17 @@ ARCObjectMinimalPropertySetsAndSubProperties[OptionsPattern[]] :=
                     Alternatives[
                         "Shape",
                         "MonochromeImage",
-                        "Shapes" /; Function[{conclusionSoFar, conclusionSoFarIncludingCurrentAlternatives, conclusionsBeingGeneralized},
+                        "Shapes" /; Function[{conclusionSoFar, conclusionsBeingGeneralized},
                             (* For 97999447, we want to avoid it choosing
                                "Shapes" -> {<|"Name" -> "Line"|>} at this stage over
                                a "Shape" definition that specifies the fill pattern.
                                For some reason on M13 sees the "Shapes" alternative here. *)
                             !ARCConclusionsSoFarMatchQ[
-                                conclusionSoFarIncludingCurrentAlternatives,
+                                conclusionSoFar,
                                 "Shape",
                                 Alternatives[
                                     KeyValuePattern[
                                         "Fill" -> _
-                                    ],
-                                    (* This further demonstrates the issue with this "Shapes"
-                                       alternative. It doesn't guarentee that it provides
-                                       enough information to render output objects. We'll
-                                       need to try removing it, see what breaks, and then think
-                                       more about how to make it work robustly if it's
-                                       really needed. e.g. b7249182 *)
-                                    KeyValuePattern[
-                                        "StemHeight" -> _
                                     ]
                                 ]
                                 (*"ConclusionsBeingGeneralized" -> conclusionsBeingGeneralized*)
@@ -9681,67 +9452,12 @@ ARCObjectMinimalPropertySetsAndSubProperties[OptionsPattern[]] :=
                         }
                         ,
                         {
+                            "X" | "XInverse",
+                            "Y" | "YInverse",
                             Alternatives[
-                                <|
-                                    "Name" -> "X"
-                                    (* We'll allow AllowUnspecifiedIfUnchanged such that if Width
-                                       changes and properties like X2 or X2Inverse aren't
-                                       specified, we'll assume that we should use the input X value. *)
-                                |>,
-                                <|
-                                    "Name" -> "XInverse",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        (* See X2Inverse for comment. *)
-                                        (* NOTE: I'm really fuzzy on what AllowUnspecifiedIfUnchanged
-                                                 should be in this top Alternatives for XInverse,
-                                                 X2, and X2Inverse. Other possibilities that come
-                                                 to mind: Should they always be False? Should they
-                                                 always be True? etc. *)
-                                        ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Width"]
-                                    ]
-                                |>,
+                                "Width",
                                 <|
                                     "Name" -> "X2",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        (* See X2Inverse for comment. *)
-                                        ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Width"]
-                                    ]
-                                |>,
-                                <|
-                                    "Name" -> "X2Inverse",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        (* See X2Inverse for comment. *)
-                                        ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Width"]
-                                    ]
-                                |>
-                            ],
-                            Alternatives[
-                                <|
-                                    "Name" -> "Width",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        And[
-                                            (* If X2 or X2Inverse are changing, then it becomes
-                                               ambiguous whether the width of the object is
-                                               changing, so if it's not changing, we want to
-                                               specify that explicitly. e.g. beb8660c *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "X2"],
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "X2Inverse"]
-                                        ]
-                                    ]
-                                |>,
-                                <|
-                                    "Name" -> "X2",
-                                    "Condition" -> Function[
-                                        And[
-                                            MissingQ[#["X2"]] && MissingQ[#["X2Inverse"]],
-                                            Or[
-                                                !MissingQ[#["X"]],
-                                                ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "X"],
-                                                !MissingQ[#["XInverse"]],
-                                                !MissingQ[#["Width"]]
-                                            ]
-                                        ]
-                                    ],
                                     (* See X2Inverse for comment. e.g. 29c11459 *)
                                     "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
                                         And[
@@ -9753,17 +9469,6 @@ ARCObjectMinimalPropertySetsAndSubProperties[OptionsPattern[]] :=
                                 |>,
                                 <|
                                     "Name" -> "X2Inverse",
-                                    "Condition" -> Function[{conclusionSoFar, conclusionSoFarIncludingCurrentAlternatives, conclusionsBeingGeneralized},
-                                        And[
-                                            MissingQ[conclusionSoFar["X2Inverse"]] && MissingQ[conclusionSoFar["X2"]],
-                                            Or[
-                                                !MissingQ[#["X"]],
-                                                ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "X"],
-                                                !MissingQ[#["XInverse"]],
-                                                !MissingQ[#["Width"]]
-                                            ]
-                                        ]
-                                    ],
                                     (* If the values for this property are unchanged from the
                                        input objects, is it OK to leave the property unspecified
                                        in the rule's conclusion? An example of where we don't want
@@ -9781,97 +9486,16 @@ ARCObjectMinimalPropertySetsAndSubProperties[OptionsPattern[]] :=
                                             ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Width"]
                                         ]
                                     ]
-                                |>,
-                                <|
-                                    "Name" -> "X",
-                                    "Condition" -> Function[
-                                        And[
-                                            MissingQ[#["X"]] && MissingQ[#["XInverse"]],
-                                            !MissingQ[#["X2"]] || !MissingQ[#["X2Inverse"]] || !MissingQ[#["Width"]]
-                                        ]
-                                    ],
-                                    (* See X2Inverse for comment. e.g. 29c11459 *)
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        And[
-                                            MissingQ[conclusionSoFar["X2"]],
-                                            (* See X2Inverse for comment. *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Width"]
-                                        ]
-                                    ]
-                                |>,
-                                <|
-                                    "Name" -> "XInverse",
-                                    "Condition" -> Function[
-                                        And[
-                                            MissingQ[#["XInverse"]] && MissingQ[#["X"]],
-                                            !MissingQ[#["X2"]] || !MissingQ[#["X2Inverse"]] || !MissingQ[#["Width"]]
-                                        ]
-                                    ],
-                                    (* See X2Inverse for comment. e.g. 29c11459 *)
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        And[
-                                            MissingQ[conclusionSoFar["X2"]],
-                                            (* See X2Inverse for comment. *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Width"]
-                                        ]
-                                    ]
                                 |>
                             ],
                             Alternatives[
-                                <|
-                                    "Name" -> "Y"
-                                    (* We'll allow AllowUnspecifiedIfUnchanged such that if Height
-                                       changes and properties like Y2 or Y2Inverse aren't
-                                       specified, we'll assume that we should use the input Y value. *)
-                                |>,
-                                <|
-                                    "Name" -> "YInverse",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        (* See X2Inverse for comment. *)
-                                        ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Height"]
-                                    ]
-                                |>,
+                                "Height",
                                 <|
                                     "Name" -> "Y2",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        (* See X2Inverse for comment. *)
-                                        ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Height"]
-                                    ]
-                                |>,
-                                <|
-                                    "Name" -> "Y2Inverse",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        (* See X2Inverse for comment. *)
-                                        ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Height"]
-                                    ]
-                                |>
-                            ],
-                            Alternatives[
-                                <|
-                                    "Name" -> "Height",
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        And[
-                                            (* If Y2 or Y2Inverse are changing, then it becomes
-                                               ambiguous whether the height of the object is
-                                               changing, so if it's not changing, we want to
-                                               specify that explicitly. e.g. beb8660c *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Y2"],
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Y2Inverse"]
-                                        ]
-                                    ]
-                                |>,
-                                <|
-                                    "Name" -> "Y2",
-                                    "Condition" -> Function[
-                                        And[
-                                            MissingQ[#["Y2"]] && MissingQ[#["Y2Inverse"]],
-                                            !MissingQ[#["Y"]] || !MissingQ[#["YInverse"]] || !MissingQ[#["Height"]]
-                                        ]
-                                    ],
                                     "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
                                         And[
                                             (* See X2Inverse for comment. *)
-                                            MissingQ[conclusionSoFar["Y"]] && MissingQ[conclusionSoFar["YInverse"]],
+                                            MissingQ[conclusionSoFar["Y"]],
                                             (* See X2Inverse for comment. *)
                                             ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Height"]
                                         ]
@@ -9879,64 +9503,12 @@ ARCObjectMinimalPropertySetsAndSubProperties[OptionsPattern[]] :=
                                 |>,
                                 <|
                                     "Name" -> "Y2Inverse",
-                                    "Condition" -> Function[
-                                        And[
-                                            MissingQ[#["Y2Inverse"]] && MissingQ[#["Y2"]],
-                                            !MissingQ[#["Y"]] || !MissingQ[#["YInverse"]] || !MissingQ[#["Height"]]
-                                        ]
-                                    ],
                                     "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
                                         And[
                                             (* See X2Inverse for comment. *)
-                                            MissingQ[conclusionSoFar["Y"]] && MissingQ[conclusionSoFar["YInverse"]],
+                                            MissingQ[conclusionSoFar["Y"]],
                                             (* See X2Inverse for comment. *)
                                             ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Height"]
-                                        ]
-                                    ]
-                                |>,
-                                <|
-                                    "Name" -> "Y",
-                                    "Condition" -> Function[
-                                        And[
-                                            MissingQ[#["Y"]] && MissingQ[#["YInverse"]],
-                                            !MissingQ[#["Y2"]] || !MissingQ[#["Y2Inverse"]] || !MissingQ[#["Height"]]
-                                        ]
-                                    ],
-                                    (* See X2Inverse for comment. e.g. 29c11459 *)
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        And[
-                                            MissingQ[conclusionSoFar["Y2"]] && MissingQ[conclusionSoFar["Y2Inverse"]],
-                                            (* See X2Inverse for comment. *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Height"],
-                                            (* If Y2 or Y2Inverse are changing, then it is
-                                               ambiguous whether the object is getting taller or
-                                               not, so we'll explicitly specify the Y or YInverse
-                                               values. *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Y2"],
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Y2Inverse"]
-                                        ]
-                                    ]
-                                |>,
-                                <|
-                                    "Name" -> "YInverse",
-                                    "Condition" -> Function[
-                                        And[
-                                            MissingQ[#["YInverse"]] && MissingQ[#["Y"]],
-                                            !MissingQ[#["Y2"]] || !MissingQ[#["Y2Inverse"]] || !MissingQ[#["Height"]]
-                                        ]
-                                    ],
-                                    (* See X2Inverse for comment. e.g. 29c11459 *)
-                                    "AllowUnspecifiedIfUnchanged" -> Function[{conclusionSoFar, conclusionsBeingGeneralized},
-                                        And[
-                                            MissingQ[conclusionSoFar["Y2"]] && MissingQ[conclusionSoFar["Y2Inverse"]],
-                                            (* See X2Inverse for comment. *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Height"],
-                                            (* If Y2 or Y2Inverse are changing, then it is
-                                               ambiguous whether the object is getting taller or
-                                               not, so we'll explicitly specify the Y or YInverse
-                                               values. *)
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Y2"],
-                                            ARCPropertyUnchangingInConclusionsQ[conclusionsBeingGeneralized, "Y2Inverse"]
                                         ]
                                     ]
                                 |>
@@ -10002,10 +9574,6 @@ ARCObjectMinimalPropertySetsAndSubProperties[OptionsPattern[]] :=
                         {
                             "Name",
                             "Angle",
-                            Alternatives[
-                                "StemHeight",
-                                Missing["StemHeight"] /; !MatchQ[#["Name"], "Y"]
-                            ],
                             (* In most  cases this isn't required, but if we weren't provided
                                with a line's color, we will need it. *)
                             Alternatives[
@@ -10163,8 +9731,7 @@ ARCGeneralizeConclusions[conclusionsIn_List, referenceableInputObjects_Associati
         
         (* HERE1 *)
         
-        (*ARCEcho["ARCGeneralizeConclusions" -> SimplifyObjects["ExtraKeys" -> {"Shape", "Input", "Output"}][conclusions]];
-        Throw["HERE"];*)
+        (*ARCEcho["ARCGeneralizeConclusions" -> SimplifyObjects["ExtraKeys" -> {"Shape", "Input"}][conclusions]];*)
         
         inputObjectComponentSets = conclusions[[All, "Input", "Components"]];
         If [MatchQ[inputObjectComponentSets, {Repeated[{__}]}],
@@ -10467,12 +10034,6 @@ Options[ARCGeneralizeConclusionValue] =
 ARCGeneralizeConclusionValue[propertyPath_List, propertyAttributes: _Association | Automatic, conclusions_List, referenceableObjects_Association, examples_List, OptionsPattern[]] :=
     (* HERE2 *)
     (*EchoTag["ARCGeneralizeConclusionValue result" -> propertyPath]@*)
-    (*Function[{expr},
-        If [propertyPath === {"Height"},
-            EchoTag["ARCGeneralizeConclusionValue result" -> propertyPath][expr]
-        ];
-        expr
-    ]@*)
     ARCMemoized[
         "MemoizationKey" -> {
             propertyPath,
@@ -10500,7 +10061,7 @@ ARCGeneralizeConclusionValue[propertyPath_List, propertyAttributes: _Association
         
         values = conclusions[[All, "Value"]];
         
-        (*If [property === "Height" && TrueQ[$mapComponents],
+        (*If [property === "ZOrder",
             ARCEcho["Conclusion values" -> values];
             ARCEcho["Input values" -> conclusions[[All, "Input", property]]];
         ];*)
@@ -10549,15 +10110,10 @@ ARCGeneralizeConclusionValue[propertyPath_List, propertyAttributes: _Association
                    did, ARCApplyConclusion wouldn't know to take the input property
                    value and stuff it down into this nested location. *)
                 Length[propertyPath] === 1,
-                conclusions[[All, "Input", property]] === values
+                conclusions[[All, "Input", property]] === values,
+                TrueQ[OptionValue["AllowUnspecifiedIfUnchanged"]]
             ],
-            If [TrueQ[OptionValue["AllowUnspecifiedIfUnchanged"]],
-                Return[Nothing, Module]
-                ,
-                (* Even though the values don't change, we need to specify the values
-                   explicitly. *)
-                Return[property -> ObjectValue["InputObject", property], Module]
-            ]
+            Return[Nothing, Module]
         ];
         
         If [And[
@@ -10621,17 +10177,12 @@ ARCGeneralizeConclusionValue[propertyPath_List, propertyAttributes: _Association
                             "AllowUnspecifiedIfUnchanged" -> OptionValue["AllowUnspecifiedIfUnchanged"],
                             (* Since we handle that in this function. *)
                             "CheckForConsistentValues" -> False
-                        ] === Nothing
+                        ] === Nothing,
+                        TrueQ[OptionValue["AllowUnspecifiedIfUnchanged"]]
                     ],
                     (* But actually, its value is always the same as the input's value,
                        so we don't need to include this property in our rule's conclusion. *)
-                    If [TrueQ[OptionValue["AllowUnspecifiedIfUnchanged"]],
-                        Return[Nothing, Module]
-                        ,
-                        (* Even though the values don't change, we need to specify the values
-                           explicitly. *)
-                        Return[property -> ObjectValue["InputObject", property], Module]
-                    ]
+                    Return[Nothing, Module]
                     ,
                     (* Constant value, and different than input. *)
                     (* TODO: In cases like 66e6c45b, this results in us returning
@@ -10858,14 +10409,8 @@ ARCGeneralizeConclusionValueNonRecursive[propertyPath_List, propertyAttributes: 
                        sub-properties actually change from the values they have
                        in the inputs. If not, we can actually just drop this key
                        from our rule conclusion. *)
-                    values === inputObjectValues,
-                        If [TrueQ[OptionValue["AllowUnspecifiedIfUnchanged"]],
-                            Return[Nothing, Module]
-                            ,
-                            (* Even though the values don't change, we need to specify the values
-                               explicitly. *)
-                            Return[property -> ObjectValue["InputObject", property], Module]
-                        ],
+                    values === inputObjectValues && TrueQ[OptionValue["AllowUnspecifiedIfUnchanged"]],
+                        Return[Nothing, Module],
                     TrueQ[OptionValue["OnlyCheckIfValuesMatchInputObjects"]],
                         (* Now that we've had a chance (above) to check if these values are the
                            same as the input values, if that's all we were asked to do, then we
@@ -10886,17 +10431,10 @@ ARCGeneralizeConclusionValueNonRecursive[propertyPath_List, propertyAttributes: 
                                      perhaps move away from using ObjectGet _functions_
                                      and instead specify them as the corresponding property
                                      name. *)
-                            If [First[differences] == 0,
+                            If [First[differences] === 0.,
                                 (* Integer vs Real, but the values are the same, so we can just
                                    inherit the input's property values. *)
-                                If [TrueQ[OptionValue["AllowUnspecifiedIfUnchanged"]],
-                                    Return[Nothing, Module]
-                                    ,
-                                    (* Because we aren't allowing this property to be unspecified,
-                                       we will explicitly specify it to be the same as the input
-                                       object. e.g. b7249182 *)
-                                    Return[property -> ObjectValue["InputObject", property], Module]
-                                ]
+                                Return[Nothing, Module]
                             ];
                             property -> Inactive[Plus][
                                 ObjectValue["InputObject", property],
@@ -11036,7 +10574,7 @@ arcGeneralizeConclusionValueHelper[propertyPath_List, subProperties_List, conclu
                                                         Hold[inner: Except[_Function]] :> Function[inner],
                                                         Hold[function_Function] :> function
                                                     }
-                                                ][conclusionsSoFar2, conclusionsSoFar3, conclusions]
+                                                ][conclusionsSoFar3, conclusions]
                                             ],
                                             (* This property has a condition specified that must be
                                                true for it to apply, and that condition evaluated to
@@ -11352,6 +10890,7 @@ ARCGeneralizeConclusionValueUsingReferenceableObjects[propertyPath_List, values_
                     ]
                 ];*)
                 
+                (* HERE13 *)
                 If [!MissingQ[propertyOrProperties],
                     Sequence @@ (
                         Function[{property},
@@ -11389,9 +10928,8 @@ ARCGeneralizeConclusionValueUsingReferenceableObjects[propertyPath_List, values_
             Echo[referenceableObjects -> referenceableValues]
         ];*)
         
-        (* HERE REF *)
         If [MatchQ[referenceableValues, {__}],
-            (*If [Last[propertyPath] === "Height",
+            (*If [Last[propertyPath] === "Width",
                 ARCEcho["referenceableValues"];
                 ARCDebug@
                 ARCEcho2@
@@ -11544,7 +11082,7 @@ ARCFindPropertyToInferValues[propertyPath_List, objectsIn_List, values_List, opt
             If [And[
                     numberQ = AllTrue[values, NumberQ],
                     (* What properties of these objects, if we use addition, appear to be usable
-                       to infer these values? *)
+                    to infer these values? *)
                     matchingPropertiesUsingAddition = Select[
                         transposedObjects,
                         And[
@@ -11578,6 +11116,7 @@ ARCFindPropertyToInferValues[propertyPath_List, objectsIn_List, values_List, opt
                          and choose the first usable property of the first visited object.
                          It could easily be the case that that isn't desirable. *)
                 Function[{property},
+                    (* HERE12 *)
                     Inactive[Plus][
                         ObjectValue[
                             (* The caller is responsible for filling in the object reference
@@ -11586,7 +11125,7 @@ ARCFindPropertyToInferValues[propertyPath_List, objectsIn_List, values_List, opt
                             property
                         ],
                         With[{difference = values[[1]] - transposedObjects[[property, 1]]},
-                            If [difference == 0,
+                            If [difference === 0.,
                                 (* If we have one set of values being integers, and the other
                                    being Reals, then this can happen. e.g. ac0a08a4 *)
                                 Return[
@@ -11647,7 +11186,7 @@ ARCFindPropertyToInferValues[propertyPath_List, objectsIn_List, values_List, opt
                             property
                         ],
                         With[{factor = values[[1]] / transposedObjects[[property, 1]]},
-                            If [factor == 1,
+                            If [factor === 1.,
                                 (* If we have one set of values being integers, and the other
                                    being Reals, then this can happen. *)
                                 Return[
@@ -11920,22 +11459,9 @@ Options[ResolveValues] =
     "ParsedOutputScene" -> Null         (*< If both referenceable input and output objects are in use, this allows the parsed output scene to be specified. *)
 };
 ResolveValues[expr_, inputObject_Association, scene_Association, OptionsPattern[]] :=
-    Module[{resolvedObject, propertyValue, head, reapTag, symbol},
-        
-        replacementsToRestoreRemovedParts = ReapList[
-            reapTag,
-            res = Replace[
-                expr,
-                e: KeyValuePattern["Type" -> "MapComponents"] :> (
-                    Sow[(symbol = Unique["temporaryReplacement"]) -> e, reapTag];
-                    symbol
-                ),
-                {0, Infinity}
-            ]
-        ];
-        
+    Module[{resolvedObject, propertyValue, head},
         res = Replace[
-            res,
+            expr,
             {
                 (* Resolve an object's value. *)
                 (objectOrClassValueHead:(ObjectValue | ClassValue))[pattern: OptionValue["ObjectsPattern"], property_] :> (
@@ -12044,14 +11570,6 @@ ResolveValues[expr_, inputObject_Association, scene_Association, OptionsPattern[
         res = Replace[
             res,
             real_Real :> ToIntegerIfNoDecimal[real],
-            {0, Infinity}
-        ];
-        
-        (* Restore the sub-expressions that we temporarily removed to avoid expressions
-           getting resolved in them. *)
-        res = Replace[
-            res,
-            replacementsToRestoreRemovedParts,
             {0, Infinity}
         ];
         
@@ -12576,11 +12094,6 @@ ARCInferObjectProperties[object_Association, sceneWidth_, sceneHeight_] :=
             horizontalLineSymmetry,
             pixelColorCounts
         },
-        
-        If [MatchQ[object["Image"], ARCScene[{}] | ARCScene[{{}}]],
-            (* Dissolve/delete this object since it seems to have a width and height of 0. *)
-            Return[Nothing, Module]
-        ];
         
         If [!MatchQ[object["Image"], _ARCScene],
             ReturnFailure[
@@ -13609,7 +13122,6 @@ ARCChooseBestTransform[transforms_List] :=
             Association[
                 Function[{transform},
                     transform -> (
-                        ReturnIfFailure@
                         ARCTransformScore[
                             Replace[
                                 transform,
@@ -13660,10 +13172,6 @@ Clear[ARCTransformScore];
 ARCTransformScore[transformIn_] :=
     Module[{transform = transformIn, objectValueCondition, objectValueProperty, score = 0},
         
-        If [MatchQ[transform, _Rule],
-            transform = <|transform|>
-        ];
-        
         If [AssociationQ[transform],
             transform = ARCRemoveExtendedMetadataFromConclusion[transform]
         ];
@@ -13681,9 +13189,7 @@ ARCTransformScore[transformIn_] :=
                     ]
                 ] :> KeyValueMap[
                     Function[{key, rhs},
-                        score +=
-                            ReturnIfFailure@
-                            ARCTransformScore[key, rhs]
+                        score += ARCTransformScore[key, rhs]
                     ],
                     assoc
                 ],
@@ -13813,25 +13319,8 @@ ARCTransformScore[key_, rhs_] :=
         ];
         
         score += Which[
-            MatchQ[rhs, ObjectValue["InputObject", key]],
-                (* Sometimes to avoid ambiguity we want to explicitly specify that a property
-                   isn't changing from the input, but that results in a somewhat lengthy
-                   expression like "X" -> ObjectValue["InputObject", "X"]. One negative
-                   outcome of this is that the rule finder may favor another possible expression
-                   that happens to be true in the training examples but might not be true in
-                   the text examples, so we want to try to nudge the rule finder to
-                   prefer interpretations where a value is said to be unchanging.
-                   ARCTransformScore-20221112-C6NMQW *)
-                (* HERE20 *)
-                0.3,
             key === objectValueProperty,
                 0,
-            key === "Color" && objectValueProperty =!= "Color",
-                (* Since we represent color with integers, sometimes rules will be found where
-                   the color of an object is inferred to be, say, the X value of another
-                   object, which is almost certainly not a correct interpretation.
-                   e.g. a8c38be5 *)
-                -5,
             MatchQ[
                 Sort[{key, objectValueProperty}],
                 Alternatives[
@@ -13877,7 +13366,7 @@ ARCTransformScore[key_, rhs_] :=
                 -0.75,
             True,
                 (* We are inferring a property using the value of another property
-                   where the types don't match. This in general is not good/likely. *)
+                    where the types don't match. This in general is not good/likely. *)
                 -1.1
         ];
         
@@ -14335,8 +13824,6 @@ ARCSetGroupProperties[components_List, sceneWidth_Integer, sceneHeight_Integer] 
             sceneWidth,
             sceneHeight
         ];
-        
-        If [group === Nothing, Return[Nothing, Module]];
         
         If [And[
                 MatchQ[components[[All, "Shape"]], {Repeated[KeyValuePattern["Name" -> "Pixel"], {2}]}],
@@ -16249,18 +15736,6 @@ Module[{tasks},
             "CodeLength" -> 32275,
             "NewGeneralizedSuccesses" -> {},
             "NewEvaluationSuccesses" -> {}
-        |>,
-        <|
-            "ExampleImplemented" -> "b7249182",
-            "Timestamp" -> DateObject[{2022, 11, 11}],
-            "ImplementationTime" -> Quantity[4, "Hours"],
-            "CodeLength" -> 32763,
-            "NewGeneralizedSuccesses" -> {},
-            "NewEvaluationSuccesses" -> {
-                "3ee1011a",
-                "7039b2d7",
-                "da2b0fe3"
-            }
         |>
     };
     
@@ -16885,10 +16360,10 @@ ARCInferObjectImage[objectIn_Association, scene_Association, OptionsPattern[]] :
                 ]
         ];
         
-        If [MissingQ[object["Shapes"]] && MissingQ[object["Shape"]] && MissingQ[object["MonochromeImage"]],
+        If [MissingQ[object["Shapes"]] && MissingQ[object["Shape"]],
             ReturnFailure[
                 "ARCInferObjectImageFailure",
-                "Either the Shapes or Shape or MonochromeImage properties must be specified.",
+                "Either the Shapes or Shape properties must be specified.",
                 "Object" -> object
             ]
         ];
@@ -16912,13 +16387,10 @@ ARCInferObjectImage[objectIn_Association, scene_Association, OptionsPattern[]] :
         ];
         
         ARCInferObjectImage[
-            Which[
-                !MissingQ[object["Shape"]],
-                    object["Shape"],
-                !MissingQ[object["MonochromeImage"]],
-                    object["MonochromeImage"],
-                True,
-                    First[ARCPruneAlternatives[object["Shapes"], "Shapes", "Most" -> "Specific"]]
+            If [!MissingQ[object["Shape"]],
+                object["Shape"]
+                ,
+                First[ARCPruneAlternatives[object["Shapes"], "Shapes", "Most" -> "Specific"]]
             ],
             color,
             object["Width"],
@@ -17165,59 +16637,6 @@ ARCInferObjectImage[
             ],
             (* Horizontal line. *)
             Table[color, {width}]
-        }
-    ]
-
-ARCInferObjectImage[
-        shape: KeyValuePattern["Name" -> "Y"],
-        color_Integer,
-        widthIn_,
-        heightIn_
-    ] :=
-    Module[{width = widthIn, height = heightIn},
-        ReturnFailureIfMissing[width];
-        ReturnFailureIfMissing[height];
-        ARCScene@
-        Function[ARCApplyImageTransforms[#, <|"Type" -> "Rotation", "Angle" -> shape["Angle"]|>]]@
-        {
-            upperHeight = height - shape["StemHeight"] - 1;
-            Sequence @@
-            Table[
-                {
-                    color,
-                    Sequence @@
-                    Table[
-                        If [TrueQ[shape["Filled"]],
-                            color
-                            ,
-                            $nonImageColor
-                        ],
-                        {width - 2}
-                    ],
-                    color
-                },
-                {upperHeight}
-            ],
-            (* Horizontal line. *)
-            Table[color, {width}],
-            (* Stem. *)
-            Sequence @@
-            Table[
-                {
-                    Sequence @@
-                    Table[
-                        $nonImageColor,
-                        {Floor[width / 2]}
-                    ],
-                    color,
-                    Sequence @@
-                    Table[
-                        $nonImageColor,
-                        {Floor[width / 2]}
-                    ]
-                },
-                {shape["StemHeight"]}
-            ]
         }
     ]
 
@@ -18712,15 +18131,6 @@ Options[ARCInferShapeAndShapes] =
 {
     "IncludeNoopTransforms" -> False        (*< Should we include image transforms that result in the image not changing? e.g. A horizontal flip for an image that has vertical line symmetry. *)
 };
-
-ARCInferShapeAndShapes[{}, _, OptionsPattern[]] :=
-    <|
-        "Shape" -> <|"Name" -> "Empty"|>,
-        "Shapes" -> {
-            <|"Name" -> "Empty"|>
-        }
-    |>
-
 ARCInferShapeAndShapes[image_List, colors_List, OptionsPattern[]] :=
     Module[
         {
@@ -20448,15 +19858,7 @@ ARCExpressionComplexity[exprIn_] :=
         Times[
             StringLength[
                 StringReplace[
-                    (* We use InputForm to avoid a situation where if there's a fraction in
-                       the expression, ToString[expr] can produce a multi-line string with
-                       a bunch of whitespace, which creates a very high score.
-                       e.g. ToString["Height" -> Inactive[Times][ObjectValue["Parent", "Height"], 1/2]] // InputForm
-                       ARCExpressionComplexity-20221111-QLYIUR *)
-                    StringReplace[
-                        ToString[expr, InputForm],
-                        "\"" -> ""
-                    ],
+                    ToString[expr],
                     {
                         (* We don't want rank properties to be penalized too much. *)
                         ".Rank" -> ".R",
@@ -20794,8 +20196,6 @@ ARCFindOccludedLines[scene_ARCScene, background_, objects_List] :=
                         ImageHeight[scene]
                     ];
                     
-                    If[newObject === Nothing, Return[Nothing, Module]];
-                    
                     (* For use below to replace the UUIDs of the now-defunct fragments with
                        the UUID of the object that replaces them. *)
                     AppendTo[
@@ -21116,19 +20516,7 @@ ARCPrunePattern[patternIn_, OptionsPattern[]] :=
                             {
                                 "Width",
                                 "Height",
-                                If [Or[
-                                        !MissingQ[pattern["X"]]
-                                        (* Disabled Nov 12 2022. I don't understand how this makes
-                                           sense, and it breaks conclusions if they specify say
-                                           Shape and X2, where the X2 is being specified to move
-                                           the object. If X is specified in that case, then yes,
-                                           we don't need to also specify X2 if we know the width
-                                           of the object (via Shape or Image), but that's why we
-                                           have the condition above that checks that X is
-                                           specified. e.g. 3ac3eb23
-                                           ARCCleanRules-20221112-XA42PG *)
-                                        (*TrueQ[OptionValue["Conclusion"]]*)
-                                    ],
+                                If [!MissingQ[pattern["X"]] || TrueQ[OptionValue["Conclusion"]],
                                     {
                                         "X2",
                                         "X2.InverseRank",
@@ -21141,11 +20529,7 @@ ARCPrunePattern[patternIn_, OptionsPattern[]] :=
                                     ,
                                     Nothing
                                 ],
-                                If [Or[
-                                        !MissingQ[pattern["Y"]]
-                                        (* See analogous comment above for the X case. *)
-                                        (*TrueQ[OptionValue["Conclusion"]]*)
-                                    ],
+                                If [!MissingQ[pattern["Y"]] || TrueQ[OptionValue["Conclusion"]],
                                     {
                                         "Y2",
                                         "Y2.InverseRank",
@@ -24917,9 +24301,6 @@ ARCImageFlipPlusRotations[imageIn_List] :=
     \maintainer danielb
 *)
 Clear[ARCHandlerForListConclusions];
-
-ARCHandlerForListConclusions[key_, value_, applyConclusionFunc_, object: Nothing] := Nothing
-
 ARCHandlerForListConclusions[key:"Transform", values_List, applyConclusionFunc_, objectIn_Association] :=
     Module[{object = objectIn},
         Function[{value},
@@ -31353,8 +30734,7 @@ ReturnFailureIfBadValues[object_] :=
                             ReturnFailure[
                                 "IntegerExpected",
                                 "The property " <> propertyName <> " is expected to have an integer value.",
-                                "Value" -> value,
-                                "Object" -> object
+                                "Value" -> value
                             ]
                         ]
                     ],
@@ -31502,14 +30882,7 @@ ARCPropertyUnchangingInConclusionsQ[conclusions_List, property_] :=
     AllTrue[
         conclusions,
         Function[{conclusion},
-            Or[
-                conclusion["Input", property] === conclusion["Output", property],
-                (*MissingQ[conclusion["Input", property]] && MissingQ[conclusion["Output", property]],*)
-                (* If the property isn't specified in the output, should we consider it
-                   as unchanging? For example, in a5f85a15, Width is set in the input and not set
-                   in the conclusion when properties like Y and X are being inferred. *)
-                MissingQ[conclusion["Output", property]]
-            ]
+            conclusion["Input", property] === conclusion["Output", property]
         ]
     ]
 
@@ -32003,70 +31376,42 @@ ARCColorCountSameQ[image1_List, image2_List, OptionsPattern[]] :=
     \maintainer danielb
 *)
 Clear[ARCFindRotationalNormalizationsForScenes];
-Options[ARCFindRotationalNormalizationsForScenes] =
-{
-    "ParseOptions" -> Automatic     (*< The ARCParseScene options that were used to parse the scenes in `examples`. *)
-};
-ARCFindRotationalNormalizationsForScenes[examples_List, OptionsPattern[]] :=
-    Module[{res},
+ARCFindRotationalNormalizationsForScenes[examples_List] :=
+    Module[{favoredAngle = Null},
         
-        res = Module[{favoredAngle = Null},
-            
-            (* Check if referenceable objects can be used to determine how scenes should
-            be rotationally normalized. *)
-            Replace[
-                ARCFindRotationalNormalizationsForScenes2[examples],
-                res: Except[_Missing] :> Return[res, Module]
-            ];
-            
-            (* Check if the motion of objects can help us differentiate whether we should rotate
-            clockwise vs. counter clockwise? *)
-            Replace[
-                ARCFindRotationalNormalizationsForScenes4[examples],
-                res: Except[_Missing] :> (
-                    Replace[
-                        DeleteDuplicates[Rest[res][[All, "NormalizationAngle"]]],
-                        {-90} :> (
-                            (* It appears to always be the case that when we need to normalize
-                            an input rotationally, we want to use an angle of -90 rather than
-                            the default angle of 90, so we'll make note of that wrt
-                            ARCFindRotationalNormalizationsForScenes3. *)
-                            favoredAngle = -90
-                        )
-                    ]
-                )
-            ];
-            
-            (* Check if the direction of scene objects can be used to determine how scenes should
-            be rotationally normalized. *)
-            Replace[
-                ARCFindRotationalNormalizationsForScenes3[examples, "FavoredRotationAngle" -> favoredAngle],
-                res: Except[_Missing] :> Return[res, Module]
-            ];
-            
-            Missing["NotFound"]
+        (* Check if referenceable objects can be used to determine how scenes should
+           be rotationally normalized. *)
+        Replace[
+            ARCFindRotationalNormalizationsForScenes2[examples],
+            res: Except[_Missing] :> Return[res, Module]
         ];
         
-        If [And[
-                MatchQ[res, {KeyValuePattern["RotationNormalization" -> _Association], ___}],
-                AssociationQ[OptionValue["ParseOptions"]]
-            ],
-            (* We also record the parse options that were used to produce `examples` so that if
-               the parse options that end up getting used to find the main rule set differs,
-               the rule applier can know that it should use these options to parse the scene
-               when determining the rotational normalization to apply. *)
-            res[[1, "RotationNormalization"]] = Append[
-                res[[1, "RotationNormalization"]],
-                "ParseOptions" -> Association[
-                    FilterOptions[
-                        Normal[OptionValue["ParseOptions"]],
-                        ARCParseScene
-                    ]
+        (* Check if the motion of objects can help us differentiate whether we should rotate
+           clockwise vs. counter clockwise? *)
+        Replace[
+            ARCFindRotationalNormalizationsForScenes4[examples],
+            res: Except[_Missing] :> (
+                Replace[
+                    DeleteDuplicates[Rest[res][[All, "NormalizationAngle"]]],
+                    {-90} :> (
+                        (* It appears to always be the case that when we need to normalize
+                           an input rotationally, we want to use an angle of -90 rather than
+                           the default angle of 90, so we'll make note of that wrt
+                           ARCFindRotationalNormalizationsForScenes3. *)
+                        favoredAngle = -90
+                    )
                 ]
-            ]
+            )
         ];
         
-        res
+        (* Check if the direction of scene objects can be used to determine how scenes should
+           be rotationally normalized. *)
+        Replace[
+            ARCFindRotationalNormalizationsForScenes3[examples, "FavoredRotationAngle" -> favoredAngle],
+            res: Except[_Missing] :> Return[res, Module]
+        ];
+        
+        Missing["NotFound"]
     ]
 
 ARCFindRotationalNormalizationsForScenes4[examplesIn_List] :=
@@ -32184,8 +31529,7 @@ ARCFindRotationalNormalizationsForScenes4[parsedExample_Association, canonicalAn
 Clear[ARCFindRotationalNormalizationsForScenes3];
 Options[ARCFindRotationalNormalizationsForScenes3] =
 {
-    "FavoredRotationAngle" -> Null,     (*< Can be specified as -90 if we should favor a normalization of -90 over an angle of 90. This can be useful in cases like 5168d44c where all vertically oriented examples should be rotated by -90 rather than 90, due to the motion always being downward for vertical examples, but being left-to-right for horizontal examples. *)
-    "ParseOptions" -> <||>              (*< ARCParseScene options to use when parsing a scene. *)
+    "FavoredRotationAngle" -> Null      (*< Can be specified as -90 if we should favor a normalization of -90 over an angle of 90. This can be useful in cases like 5168d44c where all vertically oriented examples should be rotated by -90 rather than 90, due to the motion always being downward for vertical examples, but being left-to-right for horizontal examples. *)
 };
 ARCFindRotationalNormalizationsForScenes3[examplesIn_List, opts:OptionsPattern[]] :=
     Module[
@@ -32308,10 +31652,7 @@ ARCFindRotationalNormalizationsForScenes3[scene_ARCScene, canonicalObjectsAngle_
                     parsedScene
                     ,
                     ReturnIfFailure@
-                    ARCParseScene[
-                        RotateImage[scene, angle],
-                        Sequence @@ Normal[OptionValue["ParseOptions"]]
-                    ]
+                    ARCParseScene[RotateImage[scene, angle]]
                 ];
             
             directionOfRotatedExample =
@@ -32342,11 +31683,6 @@ ARCFindRotationalNormalizationsForScenes3[scene_ARCScene, canonicalObjectsAngle_
         Missing["NotFound"]
     ]
 
-Clear[ARCFindRotationalNormalizationsForScenes2];
-Options[ARCFindRotationalNormalizationsForScenes2] =
-{
-    "ParseOptions" -> <||>              (*< ARCParseScene options to use when parsing a scene. *)
-};
 ARCFindRotationalNormalizationsForScenes2[examplesIn_List] :=
     Module[
         {
@@ -32479,7 +31815,7 @@ ARCFindRotationalNormalizationsForScenes2[examplesIn_List] :=
 
 (* Given a specific scene, tries to find an angle that it can be rotated by to normalize it
    in a way consistent with `referenceableObjects`. *)
-ARCFindRotationalNormalizationsForScenes2[scene_ARCScene, referenceableObjects_Association, parsedScene_Association : Automatic, OptionsPattern[]] :=
+ARCFindRotationalNormalizationsForScenes2[scene_ARCScene, referenceableObjects_Association, parsedScene_Association : Automatic] :=
     Module[
         {
             objectReferences = Keys[referenceableObjects],
@@ -32506,10 +31842,7 @@ ARCFindRotationalNormalizationsForScenes2[scene_ARCScene, referenceableObjects_A
                         nonZeroRotationPerformedQ = True
                     ];
                     ReturnIfFailure@
-                    ARCParseScene[
-                        RotateImage[scene, angle],
-                        Sequence @@ Normal[OptionValue["ParseOptions"]]
-                    ]
+                    ARCParseScene[RotateImage[scene, angle]]
                 ];
             
             (* Look up the referenceable objects from the scene. *)
@@ -32942,150 +32275,6 @@ ARCVectorToAngle[vector_] :=
         (* Degrees *)
         radians / Pi * 180
     ]
-
-(*!
-    \function ARCClassifyY
-    
-    \calltable
-        ARCClassifyY[image] '' Checks whether the given image can be classified as a Y shape.
-    
-    Examples:
-    
-    ARCClassifyY[
-        Replace[#1, 0 -> -1, {2}] & [
-            {
-                {1, 0, 0, 0, 1},
-                {1, 0, 0, 0, 1},
-                {1, 1, 1, 1, 1},
-                {0, 0, 1, 0, 0},
-                {0, 0, 1, 0, 0},
-                {0, 0, 1, 0, 0}
-            }
-        ]
-    ]
-    
-    ===
-    
-    <|"Name" -> "Y"|>
-    
-    Unit tests:
-    
-    RunUnitTests[Daniel`ARC`ARCClassifyY]
-    
-    \maintainer danielb
-*)
-Clear[ARCClassifyY];
-ARCClassifyY[image_List] :=
-    ARCClassifyY[
-        "AllRotations",
-        ARCImageRotations[image, "IncludeUnrotatedImage" -> True]
-    ]
-
-ARCClassifyY["AllRotations", rotatedImages_List] :=
-    Module[{image, angle},
-        Function[{rotatedImage},
-            image = rotatedImage["Image"][[1]];
-            angle = rotatedImage["Transform", "Angle"];
-            If [And[
-                    ImageWidth[image] > 1,
-                    ImageHeight[image] > 1
-                ],
-                Replace[
-                    image,
-                    {
-                        List[
-                            Repeated[
-                                List[
-                                    c: Except[$nonImageColor],
-                                    Repeated[$nonImageColor],
-                                    c: Except[$nonImageColor]
-                                ]
-                            ],
-                            List[
-                                Repeated[c: Except[$nonImageColor]]
-                            ],
-                            stem: Repeated[
-                                List[
-                                    b: Repeated[$nonImageColor],
-                                    c: Except[$nonImageColor],
-                                    b: Repeated[$nonImageColor]
-                                ]
-                            ]
-                        ] :> (
-                            <|"Name" -> "Y", "Angle" -> angle, "StemHeight" -> Length[{stem}]|>
-                        ),
-                        _ :> Nothing
-                    }
-                ]
-                ,
-                Nothing
-            ]
-        ] /@ rotatedImages
-    ]
-
-(*!
-    \function ObjectX
-    
-    \calltable
-        ObjectX[object] '' Returns the X position of an object, or Missing if unknown.
-    
-    Examples:
-    
-    ObjectX[<|"X" -> 1|>] === 1
-    
-    Unit tests:
-    
-    RunUnitTests[Daniel`ARC`ObjectX]
-    
-    \maintainer danielb
-*)
-Clear[ObjectX];
-ObjectX[object_Association] :=
-    Module[{},
-        Replace[
-            object,
-            {
-                KeyValuePattern["X" -> _] :> object["X"],
-                KeyValuePattern["Position" -> KeyValuePattern["X" -> _]] :> object[["Position", "X"]],
-                KeyValuePattern["Position" -> _List] :> object[["Position", 2]],
-                _ :> Missing["NetSpecified", "X"]
-            }
-        ]
-    ]
-
-ObjectX[object_] := Missing["NetSpecified", "X"]
-
-(*!
-    \function ObjectY
-    
-    \calltable
-        ObjectY[object] '' Returns the Y position of an object, or Missing if unknown.
-    
-    Examples:
-    
-    ObjectY[<|"Y" -> 1|>] === 1
-    
-    Unit tests:
-    
-    RunUnitTests[Daniel`ARC`ObjectY]
-    
-    \maintainer danielb
-*)
-Clear[ObjectY];
-ObjectY[object_Association] :=
-    Module[{},
-        Replace[
-            object,
-            {
-                KeyValuePattern["Y" -> _] :> object["Y"],
-                KeyValuePattern["Position" -> KeyValuePattern["Y" -> _]] :> object[["Position", "Y"]],
-                KeyValuePattern["Position" -> _List] :> object[["Position", 1]],
-                _ :> Missing["NetSpecified", "Y"]
-            }
-        ]
-    ]
-
-ObjectX[object_] := Missing["NetSpecified", "Y"]
 
 End[]
 

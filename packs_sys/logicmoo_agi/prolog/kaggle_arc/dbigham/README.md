@@ -8,11 +8,11 @@ https://github.com/fchollet/ARC
 
 ## Percentage of Tasks Passing
 
-* Training tasks: 178 / 400 (44.5%)\
+* Training tasks: 177 / 400 (44.2%)\
   ![Percentage of Training Tasks Passing](TrainingTasksProgressBar.png?raw=true)
-  * Implemented: 92
+  * Implemented: 91
   * Passing via generalization: 86
-* Evaluation tasks: 64 / 400 (16%)\
+* Evaluation tasks: 61 / 400 (15.2%)\
   ![Percentage of Evaluation Tasks Passing](EvaluationTasksProgressBar.png?raw=true)
 
 ## Progress over Time
@@ -21,7 +21,7 @@ https://github.com/fchollet/ARC
 
 ## Tasks Implemented
 
-### Core ARC Training Tasks (92)
+### Core ARC Training Tasks (91)
 
 * [0ca9ddb6](TaskNotes/0ca9ddb6/notes.md)
 * [3c9b0459](TaskNotes/3c9b0459/notes.md)
@@ -114,7 +114,6 @@ https://github.com/fchollet/ARC
 * [d6ad076f](TaskNotes/d6ad076f/notes.md)
 * [f8a8fe49](TaskNotes/f8a8fe49/notes.md)
 * [5168d44c](TaskNotes/5168d44c/notes.md)
-* [b7249182](TaskNotes/b7249182/notes.md)
 
 ### Personally Created Training Tasks (16)
 
@@ -228,7 +227,7 @@ The following ARC training tasks started passing after some different task was i
 * [dc1df850](TaskNotes/dc1df850/notes.md)
 * [3bdb4ada](TaskNotes/3bdb4ada/notes.md)
 
-### Evaluation Tasks (64)
+### Evaluation Tasks (61)
 
 The following ARC evaluation tasks are passing. My intention is to not analyzed or implemented evaluation examples specifically, but I have implemented a few accidentally.
 
@@ -291,8 +290,5 @@ The following ARC evaluation tasks are passing. My intention is to not analyzed 
 * [2b01abd0](TaskNotes/2b01abd0/notes.md)
 * [817e6c09](TaskNotes/817e6c09/notes.md)
 * [8ee62060](TaskNotes/8ee62060/notes.md)
-* [3ee1011a](TaskNotes/3ee1011a/notes.md)
-* [7039b2d7](TaskNotes/7039b2d7/notes.md)
-* [da2b0fe3](TaskNotes/da2b0fe3/notes.md)
 * [e5790162](TaskNotes/e5790162/notes.md)
 * [27a77e38](TaskNotes/27a77e38/notes.md)

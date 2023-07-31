@@ -77,16 +77,11 @@ Test[
 ]
 
 Test[
-    Utility`ReplaceAssociationsWithUnevaluatedAssociations[
-        Daniel`ARC`ARCChooseBestTransform[
-            {
-                "X" -> Inactive[Plus][
-                    Daniel`ARC`ObjectValue[<|"Y2.InverseRank" -> 2|>, "Width"],
-                    -1
-                ],
-                "XInverse" -> 0
-            }
-        ]
+    Daniel`ARC`ARCChooseBestTransform[
+        {
+            "X" -> Inactive[Plus][Daniel`ARC`ObjectValue[<|"Y2InverseRank" -> 2|>, "Width"], -1],
+            "XInverse" -> 0
+        }
     ]
     ,
     "XInverse" -> 0
@@ -219,18 +214,4 @@ Test[
     |>
     ,
     TestID -> "ARCChooseBestTransform-20221011-ABQ0YS"
-]
-
-Test[
-    Daniel`ARC`ARCChooseBestTransform[
-        {
-            "Width" -> Daniel`ARC`ObjectValue["InputObject", "Width"],
-            "X" -> Daniel`ARC`ObjectValue["InputObject", "Area.Rank"],
-            "XInverse" -> Daniel`ARC`ObjectValue["InputObject", "ColorUseCount"]
-        }
-    ]
-    ,
-    "Width" -> Daniel`ARC`ObjectValue["InputObject", "Width"]
-    ,
-    TestID -> "ARCChooseBestTransform-20221112-D4U3ZF"
 ]

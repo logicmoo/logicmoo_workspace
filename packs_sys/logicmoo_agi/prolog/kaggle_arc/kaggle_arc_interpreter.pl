@@ -6,11 +6,94 @@
 */
 :- include(kaggle_arc_header).
 
+:- ensure_loaded(library(logicmoo/typesystem/mpred_type_constraints)).
+:- use_module(library(wfs)).
+
+% This Prolog source code is for managing the execution of lazy goals.
+% The code is reformatted and commented for better understanding.
+
+% The entry point for handling lazy goals
+do_lazy:-
+  % Obtain the variable names in the current context
+  prolog_load_context(variable_names, Vars),
+  % Execute lazy goals with the given variables
+  do_lazy_goals(Vars).
+
+% Extract delayed goals from a given term
+get_delayed_goals(Term, OperationList):-
+  copy_term(Term, Term, OperationList).
+
+% Execute lazy goals in the order of their eagerness
+do_lazy_goals(Vars):-
+  % Get the delayed goals for the given variables
+  get_delayed_goals(Vars, OperationList),
+  % Add eagerness values to the goals
+  maplist(add_eagerness([]), OperationList, EagerOperationList),
+  % Sort the goals by their eagerness values
+  sort(EagerOperationList, OrderedEagerOperationList),!,
+  % Execute the ordered eager goals
+  do_eager_goals(OrderedEagerOperationList).
+
+% Execute first Eager goal afterwords ordering if the rest of eagerness changes
+do_eager_goals([Eager|OperationList]):- !,
+  % Execute the current eager goal
+  immc(Eager),
+  % Continue with the remaining goals
+  do_lazy_goals(Eager+OperationList).
+do_eager_goals(_).
+
+
+% `?- soon(X is Y+1), when(integer(Y),print(X)).`
+
+% Process eager goals, freeze goals, and other goal types.
+immc(eager(_,V,Eager)):- !, del_attrs(V), immc(Eager).
+immc(freeze(V,Eager)):- !, del_attrs(V), immc(Eager).
+immc(soon(Eager)):-!, immc(Eager).
+immc(soon_1(Eager)):-!, immc(Eager).
+immc(lazy(Eager)):-!, immc(Eager).
+immc(lazy_1(Eager)):-!, immc(Eager).
+immc(_:Eager):- !,immc(Eager).
+immc(Eager):- call(Eager).
+
+% Add eagerness levels to the goals.
+add_eagerness(Vs,soon(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(Vs,soon_1(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(Vs,lazy(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(Vs,lazy_1(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(_,freeze(V,Operation),New):- !,add_eagerness(V,Operation,New).
+add_eagerness(_,eager(N,A,Operation),eager(N,A,Operation)):- preserve_eagerness(Operation),!.
+add_eagerness(_,eager(_,Vs,Operation),New):- add_eagerness(Vs,Operation,New),!.
+add_eagerness(Vs,Operation,eager(N,Vs,Operation)):- 
+  % actually compute it
+  term_variables(Operation,TV),length(TV,N).
+
+preserve_eagerness(_Operation):- fail.
+
+% Execute a goal soon
+soon(Operation):- var(Operation),!,freeze(Operation,soon(Operation)).
+soon(Operation):- ground(Operation),!,call(Operation).
+soon((Operation_1,Operation_2)):- !, soon(Operation_1),soon(Operation_2).
+soon(is(X,Operation)):- !,clpr:{X =:= Operation}.
+soon(Operation):- functor(Operation,F,2),clp_r_arithmetic(F),!,clpr:{Operation}.
+soon(Operation):- term_variables(Operation,[_]),!,call(Operation).
+soon(Operation):- term_variables(Operation,Vs),maplist(freeze_rev(soon_1(Operation)),Vs).
+
+% Delays code to be executed soon but not *too* soon
+soon_1(Operation):- var(Operation),!,freeze(Operation,soon_1(Operation)).
+soon_1((Operation_1,Operation_2)):- !, soon_1(Operation_1),soon_1(Operation_2).
+soon_1(Operation):- term_variables(Operation,Vs),soon_2(Vs,Operation).
+
+soon_2( [],Operation):- !,call(Operation).
+soon_2( _ ,is(X,Operation)):- !,clpr:{X =:= Operation}.
+soon_2( _ ,Operation):- functor(Operation,F,2),clp_r_arithmetic(F),!,clpr:{Operation}.
+soon_2([_],Operation):- !,call(Operation).
+soon_2( Vs,Operation):- maplist(freeze_rev(soon_1(Operation)),Vs).
 
 :- meta_predicate(grid_call(+,+,-)).
 
-must_grid_call(T,I,O):- (grid_call(T,I,O)*->true; (print_side_by_side_msg(failed_grid_call(T),I,O),trace,fail)).
- 
+must_grid_call(T,I,O):- (grid_call(T,I,O)*->true; (print_side_by_side_msg(failed_grid_call(T),I,O),atrace,grid_call(T,I,O),fail)).
+
+
 gref_call(P1,In,Out):- 
   duplicate_term(in(In),IIn),
   call(P1,IIn), 
@@ -18,21 +101,48 @@ gref_call(P1,In,Out):-
 dref_grid(IIn,Grid):- is_grid(IIn),!,Grid=IIn.
 dref_grid(IIn,Grid):- arg(_,IIn,Grid),is_grid(Grid),!.
 
-grid_call(T,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(T,G,O).
+
+grid_call(Nil,I,O):- Nil==[],!,I=O.
+grid_call(PT,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(PT,G,O).
 grid_call(=,I,O):- !, I=O. 
-grid_call(P2,IO,IIOO):- is_plus_split(IO,I,O),!,unplus_split(IIOO,II,OO),grid_call(P2,I,II),grid_call(P2,O,OO).
-grid_call(Nil,I,I):- Nil==[],!. 
+grid_call(P2,IO,IIOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIOO,How,II,OO),grid_call(P2,I,II),grid_call(P2,O,OO).
 grid_call([H|T],I,O):- nonvar(H), !, grid_call(H,I,M), grid_call(T,M,O).
-
 grid_call(P2,IG,IIOO):- is_grid_group(IG),!, grid_group_call(P2,IG,IIOO).
-%grid_call(T,I,O):- into_p2(T,I,O,P),check_args(P,PP),call(PP).
-grid_call(T,I,O):- call(T,I,O).
+grid_call(P2,I,O):- p2_call(P2,I,O)*->true;grid_call(call,P2,I,O).
 
+grid_call(PC,Nil,I,O):- Nil==[],!,call(PC,I=O).
+grid_call(PC,T,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(PC,T,G,O).
+grid_call(PC,=,I,O):- !, call(PC,I=O). 
+grid_call(PC,P2,IO,IIOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIOO,How,II,OO),grid_call(PC,P2,I,II),grid_call(PC,P2,O,OO).
+grid_call(PC,[H|T],I,O):- nonvar(H), !, grid_call(PC,H,I,M), grid_call(PC,T,M,O).
+grid_call(PC,P2,IG,IIOO):- is_grid_group(IG),!, call(PC,grid_group_call(P2,IG,IIOO)).
+%grid_call(PC,T,I,O):- into_p2(T,I,O,P),check_args(P,PP),call(PP).
+%grid_call(PC,T,I,O):- call(PC,call(T,I,O)).
+grid_call(PC,T,I,O):- call(PC,T,I,O).
 
+c_r(P2,Grid,Double):- a_as_g(h_as_v0(P2),Grid,Double).
+r_c(P2,Grid,Double):- h_as_rv(P2,Grid,Double).
+
+a_as_g(P2,I,O):- is_grid(I),!,grid_call(P2,I,O).
+a_as_g(P2,Group,Double):- is_group(Group),!,into_p2(P2,Group,Double,PIO),override_group(PIO),!.
+a_as_g(P2,I,O):- cast_to_grid(I,II,UnCast),grid_call(P2,II,OO),uncast(I,UnCast,OO,O).
 
 into_p2(P2,I,O,PIO):- atom(P2),!,PIO=..[P2,I,O].
 into_p2(P2,I,O,PIO):- P2=..FArgs,append(FArgs,[I,O],FArgsIO),!,PIO=..FArgsIO.
 
+h_as_v0(P2,I,O):- rot90(I,G90), safe_grid(G90,S90), grid_call(P2,S90,GG90), rot270(GG90,O).
+
+
+safe_grid(I,T):- mapgrid(=,I,T).
+
+h_and_v(P2,Grid,Double):- a_as_g(h_and_v0(P2),Grid,Double).
+h_and_v0(P2,I,O):- safe_grid(I,T), grid_call(P2,T,M),c_r(P2,M,O),!.
+
+h_as_rv(P2,Grid,Double):- a_as_g(h_as_rv0(P2),Grid,Double).
+h_as_rv0(P2,I,O):- rot270(I,G90), safe_grid(G90,S90), grid_call(P2,S90,GG90), rot90(GG90,O).
+
+
+and(P2a,P2b,I,O):- grid_call(P2a,I,M),grid_call(P2b,M,O).
 
 grid_group_call(P2,IG,IIOO):- findall(O,(member(I,IG), object_call(P2,I,O)),List),List\==[],list_to_set(List,IIOO).
 
@@ -41,7 +151,7 @@ object_call(=,I,O):- !, I=O.
 
 
 object_call(Nil,I,I):- Nil==[],!. 
-object_call(P2,IO,IIOO):- is_plus_split(IO,I,O),!,unplus_split(IIOO,II,OO), object_call(P2,I,II),object_call(P2,O,OO).
+object_call(P2,IO,IIOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIOO,How,II,OO), object_call(P2,I,II),object_call(P2,O,OO).
 object_call([H|T],I,O):- nonvar(H), !, object_call(H,I,M), object_call(T,M,O).
 object_call(T,I,O):- call(T,I,O).
 
@@ -49,13 +159,18 @@ object_call(T,I,O):- call(T,I,O).
 grid_call_alters([H|T],I,O):- !, grid_call_alters(H,I,M),grid_call_alters(T,M,O).
 grid_call_alters(T,I,O):- grid_call(T,I,O),I\=@=O.
 
-:- meta_predicate(try_p2(+,+,-)).
+:- meta_predicate(try_p2(+,+,+)).
+try_p2(P2,In,Out):- var(Out),!,try_p2(P2,In,Out).
 try_p2(P2,In,Out):- grid_call(P2,In,Mid),Mid=@=Out.
 
-is_plus_split(IO,I,O):- compound(IO),unplus_split(IO,I,O).
-unplus_split(II+OO,II,OO).
+is_plus_split(IO,How,I,O):- compound(IO),unplus_split(IO,How,I,O).
+unplus_split(II^OO,^,II,OO).
+unplus_split(II+OO,+,II,OO).
 
-show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,I,O),!,unplus_split(IIIOOO,III,OOO),
+show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIIOOO,How,III,OOO),
+  copy_term(P2,P22), show_grid_call(P2,I,III), show_grid_call(P22,O,OOO).
+/*
+show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIIOOO,How,III,OOO),
  must_det_ll((grid_to_gid(I,GIDI),grid_to_gid(O,GIDO),
   copy_term(P2,P22),
   grid_call_for_info(P2,I,III,S1),
@@ -64,7 +179,7 @@ show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,I,O),!,unplus_split(IIIOOO,III,O
        ((O=OOO,tersify(P22,S2),Aligned=false))))),  
   if_t(((III+OOO)\=@=(I+O)), 
      print_side_by_side(green,III,called(S1,left,from(GIDI)),_,OOO,aligned(Aligned,S2,right,from(GIDO)))))),!.
-
+*/
 show_grid_call(P2,I,III):-
   grid_call_for_info(P2,I,III,S1),
    if_t(((III)\=@=(I)), print_side_by_side(green,I,before(S1),_,III,after(S1))),!.
@@ -83,7 +198,7 @@ member_or_it(G,G).
 
 
 show_workflow(InO,_,InO):-pass_thru_workflow(InO),!. 
-show_workflow(In,String,Out):- nonvar(Out),!,arcST,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
+show_workflow(In,String,Out):- nonvar(Out),!,arcST,atrace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
 show_workflow(InO,String,InO):- string(String),!, 
  ignore((InO\==[], nl, writeln(String), forall(member_or_it(G,InO),ignore(print_grid(_,_,String,G))))).
 show_workflow(InO,[],InO):-!.
@@ -92,7 +207,7 @@ show_workflow(In,[H|T],Out):-
   show_workflow(Mid,T,Out).
 show_workflow(In,add(P),Out):- !,
   show_workflow(In,P,Mid),!,
-  my_append(Mid,In,Out).
+  append(Mid,In,Out).
 show_workflow(In,each(P),Out):- show_workflow_each(In,P,Out).
 show_workflow(In,P,Out):- must_det_ll(call(P,In,Out)),!.
 show_workflow(In,P,In):- arcdbg(warn(failed(show_workflow(P)))),!.
@@ -127,7 +242,7 @@ call_expanded(_VM,G):- catch(call(G),E,(arcST,pp(E),rrtrace(G))).
 
 quinish(Var):- var(Var),!.
 quinish(Var):- is_grid(Var),!.
-quinish(Var):- is_map(Var),!.
+quinish(Var):- is_vm_map(Var),!.
 quinish(Var):- is_object(Var),!.
 quinish(Var):- is_group(Var),!.
 quinish(Var):- is_list(Var),!.
@@ -146,7 +261,7 @@ exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X),!.
 exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)),!.
 exp_call(VM,I,O):- compound(I),
        compound_name_arguments(I, F, Args),
-       maplist(exp_call(VM), Args, ArgsNew),
+       my_maplist(exp_call(VM), Args, ArgsNew),
        compound_name_arguments( O, F, ArgsNew ),!.
 %exp_call(_VM,P,(=(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=val(X).
 exp_call(_,E,E).
@@ -168,44 +283,51 @@ set_vm_grid(VM,In):- In == VM,!.
 set_vm_grid(VM,In):- var(In),!, In = VM.grid . 
 set_vm_grid(VM,In):- is_grid(In), !, set_vm_grid_now(VM,In).
 set_vm_grid(VM,In):- into_grid(In,Grid), set_vm_grid_now(VM,Grid),!.
-set_vm_grid(VM,In):- is_map(In), map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
-set_vm_grid(VM,In):- collapsible_section(debug,set_vm_grid_now(VM,In)).
+set_vm_grid(VM,In):- is_vm_map(In), map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
+set_vm_grid(VM,In):- w_section(debug,set_vm_grid_now(VM,In)).
 
-set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
+%set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
 set_vm_grid_now(VM,Grp):- 
   data_type(Grp,Type),
   gset(VM.type) = data_type(Type),
-  pp(yellow,set_vm_grid_now(Type)),pp(cyan,Type),fail.
-set_vm_grid_now(VM,In):- VM==In,!.
-set_vm_grid_now(VM,In):- is_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
-set_vm_grid_now(VM,Grp):- is_group(Grp), !,
-  gset(VM.points_o) = VM.points,
-  gset(VM.objs)=Grp,
-  globalpoints(Grp, Points),
-  gset(VM.points)=Points,
-  grid_size(Grp,H,V), gset(VM.h)=H, gset(VM.v)=V, 
-  points_to_grid(H,V,Points,Grid),
-  gset(VM.grid)=Grid,!.
+  pp(yellow,set_vm_grid_now(Type)),pp(cyan,Type),
+  fail.
 
-set_vm_grid_now(VM,Obj):- is_object(Obj), !,
-  gset(VM.objs)=[Obj],
-  object_grid(Obj,Grid),
-  gset(VM.grid)=Grid,
-  vis2D(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
-  gset(VM.points_o) = VM.points,
-  localpoints_include_bg(Obj, Points),
-  gset(VM.points)=Points .
+set_vm_grid_now(VM,In):- VM==In,!.
+set_vm_grid_now(VM,In):- is_vm_map(In),!,
+  map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
+
 
 set_vm_grid_now(VM,Grid):- is_grid(Grid), !,
+ must_det_ll((
+  grid_size(Grid,H,V), 
+  gset(VM.h)=H, gset(VM.v)=V, 
   gset(VM.grid)=Grid, 
-  grid_size(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
-  gset(VM.points_o) = VM.points,
+  gset(VM.start_grid)=Grid, 
   localpoints_include_bg(Grid, Points),
-  gset(VM.points)=Points.
+  gset(VM.lo_points)=Points,
+  gset(VM.start_points)=Points)).
+
+set_vm_grid_now(VM,Points):- is_cpoints_list(Points), !,  
+%  gset(VM.start_points) = VM.lo_points,
+  gset(VM.lo_points)=Points,
+  points_to_grid(VM.h,VM.v,Points,Grid),
+  gset(VM.grid)=Grid,!.
+
+set_vm_grid_now(VM,Grp):- is_group(Grp), !,  
+  grid_size(Grp,H,V), gset(VM.h)=H, gset(VM.v)=V,
+  globalpoints(Grp, Points),
+  set_vm_grid_now(VM,Points),
+  gset(VM.objs)=Grp.
+
+set_vm_grid_now(VM,Obj):- is_object(Obj), !,
+  localpoints(Obj,Points),
+  set_vm_grid_now(VM,Points),
+  gset(VM.objs)=[Obj].
 
 set_vm_grid_now(VM,In):- gset(VM.last_key) = In,!.
 
-expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
+expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, my_maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
 expand_dsl_value(VM, Mode,In,Val,OutValue):-
   run_dsl(VM, Mode,Val,In,OutValue).
 
@@ -230,13 +352,14 @@ run_dsl(VM,Mode,forall(All,Exec),In,OutO):-!,
 
 run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In; true).
 
-%run_dsl(VM, Mode,[N|V],In,OutValue):-!, vm_grid(VM, maplist(expand_dsl_value(VM, Mode,In),[N|V],OutValue),In,_Out).
+%run_dsl(VM, Mode,[N|V],In,OutValue):-!, vm_grid(VM, my_maplist(expand_dsl_value(VM, Mode,In),[N|V],OutValue),In,_Out).
 
 run_dsl(VM, Mode,Name=Val,In,Out):- nonvar(Name),run_dsl(VM, Mode,nb_set(Name,Val),In,Out).
 run_dsl(VM,_Mode,get(Name,Val),In,Out):- !, vm_grid(VM,get_vm(Name,Val),In,Out).
 
 run_dsl(VM,_Mode,get(Name),In,Out):- !, vm_grid(VM, (get_vm(Name,Out),nonvar(Out)),In,Out),!.
-run_dsl(VM,_Mode,get(Name),_In,Out):- maybe_set_vm(VM),
+run_dsl(VM,_Mode,get(Name),_In,Out):-  
+  ignore(maybe_set_vm(VM)),
   must_det_ll(get_vm(Name,Val)),nonvar(Val),!,into_grid(Val,VOut), trim_to_rect(VOut,Rect), print_grid(Name,Rect),
   set(VM.grid)=Rect,
   Rect=Out.
@@ -246,36 +369,32 @@ run_dsl(VM,_Mode,b_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,O
 run_dsl(VM,_Mode,nb_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
 run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
 run_dsl(VM,_Mode,vm_set(Name,Val),In,Out):- !, vm_grid(VM,set_vm(Name,Val),In, Out).
-run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,In,Objs),set_vm_grid(VM,Objs)),In,Out).
+run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,(individuate_3(Indiv,In,Objs),set_vm_grid(VM,Objs)),In,Out).
 
-run_dsl(VM,_Mode,o(_Indiv),In,In):- var(VM.grid_target),!.
-run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.grid_target,Objs),set_vm_grid(VM,Objs)),In,Out).
+run_dsl(VM,_Mode,o(_Indiv),In,In):- var(VM.target_grid),!.
+run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate_3(Indiv,VM.target_grid,Objs),set_vm_grid(VM,Objs)),In,Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
-run_dsl(_VM,Mode,Prog,In,_Out):- ppt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
+run_dsl(_VM,Mode,Prog,In,_Out):- once(print_grid(_,_,ppt(yellow,run_dsl(vm,Mode,Prog)),In)),fail.
 
 run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((luser_getval(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),luser_linkval(dsl_pipe,PipeOut).
 run_dsl(_VM,_Mode,sameR,In,Out):-!, duplicate_term(In,Out).
 
 % prevents unneeded updates such as color/position settings
-run_dsl(VM,_Mode,Prog,In,Out):- \+ missing_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
-run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, vm_grid(VM, call(Step,VM),In,Out).
-run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), Step=..[F|ARGS], !, vm_grid(VM, apply(F,[VM|ARGS]),In,Out).
-run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), ping_indiv_grid(F), !, vm_grid(VM, call(Step,VM.grid),In,Out).
-
-run_dsl(VM,_Mode,Step,In,Out):-  i_step(Step), !, vm_grid(VM,fti(VM,Step),In,Out).
-
-
-run_dsl(VM,enforce,color(Obj,Color),In,Out):-!, 
- color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
-    override_object_io(VM,color(Color),Obj,In,Out).
-
+run_dsl(VM,enforce,color(Obj,Color),In,Out):-!,  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out), override_object_io(VM,color(Color),Obj,In,Out).
 run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc2D(Obj,X,_Old), override_object_io(VM,loc2D(X,New),Obj,In,Out).
 
-run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !, 
+run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, vm_grid(VM, call(Step,VM),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), Step=..[F|ARGS], !, vm_grid(VM, apply(F,[VM|ARGS]),In,Out).
+run_dsl(VM,_Mode,Prog,In,Out):- callable_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), ping_indiv_grid(F), !, vm_grid(VM, call(Step,VM.grid),In,Out).
+
+run_dsl(VM,Mode,Prog,In,Out):- callable_arity(Prog,2), !, 
   vm_grid(VM, run_dsl_call_io(VM,Mode,Prog,In,Out), In, Out).
+
+run_dsl(VM,_Mode,Step,In,Out):-  i_step(Step), !, vm_grid(VM,fti(VM,Step),In,Out).
 
 run_dsl(_VM,Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
@@ -290,18 +409,18 @@ override_object_io(_VM,Update,Obj,In,Out):-
   add_global_points(ObjCopy,Mid, Out).
 
 
-sync_colors(Orig,Colors):- is_object(Orig),!,colors(Orig,Colors),
-  globalpoints(Orig,OrigGPoints),colors(OrigGPoints,Colors),
-  localpoints(Orig,OrigLPoints),colors(OrigLPoints,Colors),!.
-sync_colors(Orig,Colors):- colors(Orig,Colors).
+sync_colors(Orig,Colors):- is_object(Orig),!,colors_cc(Orig,Colors),
+  globalpoints(Orig,OrigGPoints),colors_cc(OrigGPoints,Colors),
+  localpoints(Orig,OrigLPoints),colors_cc(OrigLPoints,Colors),!.
+sync_colors(Orig,Colors):- colors_cc(Orig,Colors).
 
 uncast_grid_to_object(Orig,Grid,NewObj):- 
  must_det_ll((
   localpoints(Grid,LocalPoints),
-  (( LocalPoints==[]) -> (arcST,writeq(LocalPoints),trace ); true),
+  (( LocalPoints==[]) -> (arcST,writeq(LocalPoints),atrace ); true),
   rebuild_from_localpoints(Orig,LocalPoints,NewObj))).
 
-closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
+closure_grid_to_group(Orig,Grid,Group):- individuate_3(Orig,Grid,Group).
 
 back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
   ppt(back_to_map(Was,Dict,Prev,Grid,Closure,New)),
@@ -309,17 +428,21 @@ back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
   gset(Dict.Was) = NewPrev ,
   Ret = Dict.
 
-:- if( \+ current_predicate(any_to_ace_str/2)).
-:- include(pfc_3_0/pfc_3_0_0).
+:- if( \+ current_predicate(arc_assert/1)).
+:- include('../pfc_3_0/pfc_3_0_0').
 %:- use_module(library(pfc_lib)).
+:- endif.
+
+:- if( \+ current_predicate(arc_assert/1)).
+arc_assert(G):- asserta_if_new(G).
 :- endif.
 
 :- decl_pt(into_grids(+(prefer_grid),-mv(grid))).
 into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(prefer_grid),-grid)).
-into_grid(P,G):- var(P),!,ignore(get_current_test(TestID)),test_grids(TestID,G),grid_to_tid(G,P).
-into_grid(A+B,AA+BB):- nonvar(A), !, cast_to_grid(A,AA, _),cast_to_grid(B,BB, _).
+into_grid(P,G):- var(P),!,ignore(get_current_test(TestID)),test_grids(TestID,G),once(grid_to_tid(G,P)).
+into_grid(A^B,AA^BB):- atrace, nonvar(A), !, cast_to_grid(A,AA, _),cast_to_grid(B,BB, _).
 into_grid(P,G):- cast_to_grid(P,G, _).
 
 map_to_grid(objs,Dict,Obj,Grid,Closure):- get_kov(objs,Dict,Obj), Obj\=[], cast_to_grid(Obj,Grid,Closure),!.
@@ -336,17 +459,24 @@ cast_to_grid(gridOpFn(Grid,OP),GridO,reduce_grid):- !, unreduce_grid(Grid,OP,Gri
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), group_to_grid(Grp,Grid),!.
-cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj\=@=Var, !,cast_to_grid(Var,Grid,Closure).
+
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),text_to_grid(Text,Grid),!.
-cast_to_grid(OID, Grid, (=) ):- atom(OID),oid_to_gridoid(OID,Grid),!.
-cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),text_to_grid(Text,Grid),!.
+cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),atom_length(Text,Len),Len>20,atom_contains(Text,'|'),text_to_grid(Text,Grid),!.
+
 % TODO Comment out next line to prefer the line after
-cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
-cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
-cast_to_grid(TestID>(Tst+N)*IO,Grid,(=)):- !, kaggle_arc_io(TestID,(Tst+N),IO,Grid).
-cast_to_grid(Naming,Grid, Closure ):- 
+% cast_to_grid(Dict,Grid, (=) ):- is_vm_map(Dict), get_kov(grid,Dict,Grid),!.
+cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_vm_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
+
+cast_to_grid(Obj,Grid, Closure):- cast_to_grid1(Obj,Grid, Closure).
+
+%cast_to_grid1(OID, Grid, Uncast):- atom(OID),g2o(OID,Obj),Obj\==OID,!,cast_to_grid(Obj,Grid,Uncast).
+cast_to_grid1(TestID>(Tst+N)*IO,Grid,(=)):- !, kaggle_arc_io(TestID,(Tst+N),IO,Grid).
+cast_to_grid1(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj\=@=Var, !,cast_to_grid(Var,Grid,Closure).
+cast_to_grid1(OID, Grid, (=) ):-  atom(OID),oid_to_gridoid(OID,Grid),!.
+cast_to_grid1(Naming,Grid, Closure ):- 
   ((known_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;
    (fail,recast_to_grid0(Naming,Grid, Closure))).
+
   
 recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
@@ -364,7 +494,7 @@ recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points
 group_to_grid(Grp,Grid):-   
   reproduction_objs(Grp,Objs),
   grid_size(Objs,H,V),
-  maplist(globalpoints,Objs,Points),
+  my_maplist(globalpoints,Objs,Points),
   append(Points,AllPoints),
   points_to_grid(H,V,AllPoints,Grid),!.
 
@@ -399,29 +529,46 @@ called_gid(_Suffix,P2,Color,MGrid):- call(P2,Color,MGrid),!.
 called_gid3(_P2,MOID,_Color,MGrid):- was_grid_gid(MGrid,MOID),!.
 called_gid3(P2,MOID,Color,MGrid):- call(P2,Color,MGrid),assert_grid_gid(MGrid,MOID).
 
-grid_to_gid(Grid,OID):- was_grid_gid(Grid,OID),!.
-grid_to_gid(Grid,OID):- grid_to_etid(Grid,ID),!,(clause(tid_to_gids(ID,OID),true)*-> true ; term_to_oid(ID,OID)).
-grid_to_gid(Grid,OID):- grid_to_tid(Grid,ID),!,(clause(tid_to_gids(ID,OID),true)*-> true ; term_to_oid(ID,OID)).
+grid_to_gid(Grid,GID):- was_grid_gid(Grid,GID),!.
+grid_to_gid(Grid,GID):- grid_to_etid(Grid,ID),!,ensure_now_tid_gids(Grid,ID,GID).
+grid_to_gid(Grid,GID):- grid_to_tid(Grid,ID),!,ensure_now_tid_gids(Grid,ID,GID).
+
+ensure_now_tid_gids(Grid,ID,GID):- 
+  (clause(tid_to_gids(ID,GID),true)*-> true ; term_to_oid(ID,GID)),
+  assert_grid_tid(Grid,ID),
+  assert_grid_gid(Grid,GID),!.
+
 % be03b35f
 
 was_grid_gid(G,GID):- current_predicate(gid_to_grid/2), call(call,gid_to_grid,GID,G),assertion(atom(GID)).
 was_grid_gid(Grid,GID):- atom(GID),oid_to_gridoid(GID,G),into_grid(G,GG),Grid=GG,assertz_if_new(gid_to_grid(GID,Grid)).
 was_grid_gid(Grid,GID):- is_grid_tid(Grid,GID),atom(GID),assertz_if_new(gid_to_grid(GID,Grid)).
+assert_grid_tid(Grid,GID):- atom(GID),!,asserta_new(gid_to_grid(GID,Grid)).
 assert_grid_tid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
-assert_grid_gid(Grid,GID):- assertz_if_new(is_grid_tid(Grid,GID)),ignore((atom(GID),assertz_if_new(gid_to_grid(GID,Grid)))).
+assert_grid_gid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
+assert_grid_oid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
 
 oid_to_gridoid(GID,G):- current_predicate(gid_to_grid/2), call(call,gid_to_grid,GID,G),!.
+
+oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), append([o,_,_],GOID,Term),
+  testid_name_num_io(GOID,_Name,_Example,_Num,_IO),g2o(ID,G),!.
+/*
+oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), append([o,GGL,OID],GOID,Term),
+  testid_name_num_io(GOID,_Name,_Example,_Num,_IO),!,
+  ((atom(OID),atom_number(OID,ONum))-> int2glyph(ONum,GL);GL=GGL),
+  get_current_test(TestID),
+  g_2_o(TestID,GL,G).*/
 oid_to_gridoid(ID,G):- atom(ID),
   testid_name_num_io(ID,Name,Example,Num,IO),atom(IO),
   kaggle_arc_io(Name,Example+Num,IO,G),!.
-oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], !,append(GOID,[OID],Term),
-  testid_name_num_io(GOID,_Name,_Example,_Num,_IO),
-  ((atom(OID),atom_number(OID,ONum))-> int2glyph(ONum,GL);GL=OID),
-  get_current_test(TestID),
-  g_2_o(TestID,GL,G).
 
+
+
+bad_cell(Var):- var(Var),fail.
+bad_cell(_-_).
 
 known_grid0(ID,_):- var(ID),!,fail.
+known_grid0(BC,_):- bad_cell(BC),!,fail.
 known_grid0(ID,G):- is_grid(ID),!,G=ID.
 known_grid0(ID,_):- is_list(ID),!,fail.
 known_grid0(OID, Grid):- atom(OID),oid_to_gridoid(OID,Grid),!.
@@ -437,17 +584,19 @@ known_grid0(ID,G):- compound(ID),ID=(_>(Trn+Num)*IO),!,fix_test_name(ID,Name,Trn
 known_grid0(ID,G):- compound(ID),ID=(_>_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_grid0(Term,G).
+known_grid0(ID,G):- (atom(ID);string(ID)),arc_atom_to_term(ID,Term,_), Term\==ID,!,known_grid0(Term,G).
 
 
-
+:- dynamic(kaggle_arc_answers/4).
 
 addProgramStep(_VM,Step):-
   pp(addProgramStep(vm,Step)).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- 
-  arg(_,v(trn+_,tst+_),ExampleNum),
+  arg(_,v((trn+_),(tst+_)),ExampleNum),
   kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
+%kaggle_arc_io(Name,tst+ID,out,Grid):- kaggle_arc_answers(Name,ID,ID,Grid).
+
 
 into_gridnameA(G,Name):- known_grid(Name,G).
 
@@ -456,8 +605,10 @@ into_gridnameA(G,Name):- known_grid(Name,G).
 :- dynamic(is_grid_tid/2).
 :- dynamic(is_grid_gid/2).
 set_grid_tid(Grid,ID):-
-  my_assertion((ground(ID),nonvar_or_ci(Grid))),
   my_assertion(\+ is_grid(ID)),
+  numbervars(ID,1,_),
+  my_assertion((nop(ground(ID)),nonvar_or_ci(Grid))),
+  
   luser_setval(grid_name,ID),
   ignore(( \+ into_gridnameA(Grid,ID),
   copy_term(Grid,GGrid),numbervars(GGrid,1,_),
@@ -466,9 +617,9 @@ set_grid_tid(Grid,ID):-
 to_assertable_grid(A,A):- ground(A),!.
 %to_assertable_grid(A,C):- copy_term(A,B),numbervars(B,0,_,[attvar(skip),singletons(true)]),B\==A,to_assertable_grid(B,C).
 to_assertable_grid(A,B):- 
-  term_attvars(A,V),maplist(get_attrs,V,ATTS),term_attvars(A+ATTS,V2),maplist(get_attrs,V2,ATTS2),
+  term_attvars(A,V),my_maplist(get_attrs,V,ATTS),term_attvars(A+ATTS,V2),my_maplist(get_attrs,V2,ATTS2),
   copy_term(A+V2+ATTS2,B+VV2+VATTS2,_),
-  maplist(save_atts,VATTS2,VV2),numbervars(B+VV2+VATTS2,0,_,[attvar(skip),singletons(true)]).
+  my_maplist(save_atts,VATTS2,VV2),numbervars(B+VV2+VATTS2,0,_,[attvar(skip),singletons(true)]).
 
 save_atts(A,'$attrs'(Attrs)):- attvar(A),!,get_attrs(A,Attrs).
 save_atts(A,'$attrs'(A)). 
@@ -500,42 +651,55 @@ into_oid(X,ID):- tid_to_gids(X,ID),!.
 
 
 makeup_gridname(Grid,TID):- nonvar(TID),!,makeup_gridname(Grid,GridNameM),!,must_det_ll((GridNameM=TID)).
-makeup_gridname(Grid,TID):- get_current_test(TestID), kaggle_arc_io(TestID,Trn+Num,IO,Grid), name_num_io_id(TestID,Trn,Num,IO,TID),!.
+makeup_gridname(Grid,TID):- get_current_test(TestID), kaggle_arc_io(TestID,Trn+Num,IO,Grid), 
+  name_num_io_id(TestID,Trn,Num,IO,TID),!.
 makeup_gridname(Grid,TID):- is_grid_tid(Grid,TID),!.
 %makeup_gridname(Grid,TID):- was_grid_gid(Grid,TID),!.
 makeup_gridname(Grid,TID):- get_current_test(TestID),
-  flag(made_up_grid,F,F+1),
-   get_example_num(Example+Num),
-   (ground(Example+Num)->atomic_list_concat([Example,Num,ex],'_',HH);HH= 'Example'),
-   name_num_io_id(TestID,HH,F,io,TID),
+ must_det_ll((
+   flag('$makeup_gridname',F,F+1),
+   current_example_num_io(Example,Num,IO),
+   ignore(IO=io),
+   format(atom(HH),'~w_~w_~w_~w',[Example,Num,subgrid,IO]),
+   name_num_io_id(TestID,HH,F,IO,TID),
    assert_grid_tid(Grid,TID), nop(dumpST), 
-    %nop
-    (print_grid(no_name(TestID,TID),Grid)).
+    (print_grid(no_name(TestID,TID),Grid)))),!,
+  break.
 
 incomplete(X,X).
 
+current_example_num_io(Example,Num,IO):- 
+   get_example_num(Example+Num),
+   (peek_vm(VM)-> VM.id = (_>(_+_)*IO) ; IO=io_unk).
+
+into_obj(G,O):- var(G),var(O),!,enum_object(O),G=O.
+into_obj(G,O):- atom(G),oid_to_obj(G,O),!.
+into_obj(G,O):- atom(G),g2o(G,O),!.
 into_obj(G,O):- is_object(G),!,G=O.
-into_obj(G,O):- is_grid(G),!,individuate(whole,G,Objs),last(Objs,O),!.
+into_obj(G,O):- is_grid(G),!,individuate_3(whole,G,Objs),last(Objs,O),!.
 into_obj(G,O):- no_repeats(O,known_obj0(G,O))*->true; (into_grid(G,GG),!,into_obj(GG,O)),!.
 
-  %set(VM.points)=[],!.
+  %set(VM.lo_points)=[],!.
 
 
 :- module_transparent register_obj/1.
-%register_obj(O):- quietly((wots(S,weto(arcST)), asserta(obj_cache(TestID,O,S)))),!.
+%register_obj(O):- quietly((wots(S,arc_weto(arcST)), asserta(obj_cache(TestID,O,S)))),!.
 register_obj(O):-  must_det_ll(o2g(O,_)),!.
 /*register_obj(L):- asserta(obj_cache(TestID,L,'')),
-  ignore(( false, O=obj(L),amass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
+  ignore(( false, O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
 */
 :- dynamic(obj_cache/3).
 :- module_transparent obj_cache/2.
 
 :- dynamic(oid_glyph_object/3).
 
-o2g(Obj,Glyph):- var(Obj),!,gid_glyph_oid(_,Glyph,OID),oid_glyph_object(OID,Glyph,Obj).
+o2g(Obj,Glyph):- var(Obj),!,oid_glyph_object(_,Glyph,Obj).
+o2g(Obj,Glyph):- oid_glyph_object(_,Glyph,Obj),!.
+o2g(Obj,Glyph):- obj_to_oid(Obj,OID),!,oid_glyph_object(OID,Glyph,_).
+o2g(Obj,Glyph):- object_glyph(Obj,Glyph),!.%oid_glyph_object(_,Glyph,Obj).
 %o2g(Obj,Glyph):-  g2o(Glyph,Obj),!.
-o2g(Obj,NewGlyph):- var(NewGlyph),must_det_ll((o2g_f(Obj,NewGlyph))),!. 
-o2g(Obj,NewGlyph):- trace,o2g_f(Obj,NewGlyph).
+%o2g(Obj,NewGlyph):- var(NewGlyph),must_det_ll((o2g_f(Obj,NewGlyph))),!. 
+%o2g(Obj,NewGlyph):- atrace,o2g_f(Obj,NewGlyph).
 
 /*
  obj_to _oid(Obj,Old), int2glyph(Old,Glyph), 
@@ -545,9 +709,9 @@ o2g(Obj,NewGlyph):- trace,o2g_f(Obj,NewGlyph).
            flag(indiv,Iv,Iv+1),
            int2glyph(Iv,NewGlyph),!,           
            subst001(Obj,obj_to_oid(ID,Old),obj_to_oid(ID,Iv),NewObj),
-           (number(NewGlyph)->trace;true),
+           (number(NewGlyph)->atrace;true),
            set_glyph_to_object(NewGlyph,NewObj))))
-  ; ((number(NewGlyph)->trace;true),NewGlyph=Glyph,(number(NewGlyph)->trace;true),set_glyph_to_object(NewGlyph,Obj))),
+  ; ((number(NewGlyph)->atrace;true),NewGlyph=Glyph,(number(NewGlyph)->atrace;true),set_glyph_to_object(NewGlyph,Obj))),
  set_glyph_to_object(NewGlyph,Obj).
 */
 
@@ -559,17 +723,27 @@ g_2_o(_,_,_):- fail.
 %set_glyph_to_object(G,O):- ignore(luser_linkval(G,O)),(get_current_test(TestID),my_asserta_if_new(g_2_o(TestID,G,O))).
 
 g2o(G,O):- var(G), !, oid_glyph_object(_,G,O).
-g2o(G,O):- integer(G),!,int2glyph(G,C),!,g2o(C,O),!.
-g2o(C,O):- compound(C), !, compound_name_arguments(C,objFn,[G|_]), !, g2o(G,O).
-g2o(G,O):- \+ atom(G), !, string(G),Chars=[_|_],atom_chars(G,Chars),!,chars2o(Chars,O).
-g2o(G,_):- is_fg_color(G),!,fail.
-g2o(G,O):- oid_to_object(G,O)-> true;(oid_glyph_object(_,G,O)*->true;(Chars=[_,_|_],atom_chars(G,Chars),chars2o(Chars,O))).
+g2o(G,O):- g2o0(G,O),
+  once(if_t(get_current_test(TestID),
+    (O=obj(T),member(giz(testid(TestID)),T)))),
+  nop(once(if_t((get_example_num(ExampleNum),ground(ExampleNum)),
+    (O=obj(T),member(giz(example_num(ExampleNum)),T))))),!.
+g2o(G,O):- g2o0(G,O).
+
+g2o0(G,O):- var(G), !, oid_glyph_object(_,G,O).
+g2o0(G,O):- integer(G),!,int2glyph(G,C),!,g2o(C,O),!.
+g2o0(C,O):- compound(C), !, compound_name_arguments(C,objFn,[G|_]), !, g2o(G,O).
+g2o0(G,O):- \+ atom(G), !, string(G),!,atom_string(A,G),!,g2o(A,O).
+g2o0(G,_):- is_fg_color(G),!,fail.
+g2o0(G,O):- oid_glyph_object(_,G,O),!.
+g2o0(G,O):- oid_glyph_object(G,_,O),!.
+g2o0(G,O):- oid_to_obj(G,O)-> true;(oid_glyph_object(_,G,O)*->true;(Chars=[_,_|_],atom_chars(G,Chars),chars2o(Chars,O))).
 
 
 
 %get_glyph_to_object(G,O):- ((luser_getval(G,O),is_object(O))*->true;(get_current_test(TestID),g_2_o(TestID,G,O))).
 
-chars2o(['o',C,'_'|_],O):- !, g2o(C,O).
+chars2o(['o','_',C|_],O):- g2o(C,O),!.
 chars2o(Chars,O):- \+ member('_',Chars), member(C,Chars),g2o(C,O),!.
 
 
@@ -585,15 +759,17 @@ known_obj0(G,O):- is_group(G),into_group(G,OL),OL=[_],must([O|_]=OL).
 
 % this is bad  ?- into_grid('E',ID),grid_to_tid(G,ID).  ?- into_grid('Z',ID),grid_to_tid(G,ID).
 
+current_group(G):- why_grouped(_Why, G)*->true;current_group1(G).
+current_group1(G):-   
+     arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs),
+ % tries again
+      (why_grouped(_Why, G)*->true; G=Objs).
+
 into_group(GI,G):- into_group(GI,G, _ ).
 
 into_group(G,G,(=)) :- G==[],!.
 into_group(P,G,(=)):- is_group(P),!,G=P.
-into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
-   (why_grouped(_Why, G)*->true; 
-     (arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs),
-       % tries again
-      (why_grouped(_Why, G)*->true; G=Objs))).
+into_group(G, G, _):- plain_var(G),!, throw(var_into_group(G)), nop(current_groups(G)).
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),G=VM.objs,is_group(G),!.
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),run_fti(VM),G=VM.objs,is_group(G),!.
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
@@ -629,8 +805,12 @@ calc(_).
 create_bag(Obj1):- gensym(bag_,Obj1),ain(iz(Obj1,group)).
 
 
-missing_arity(P2,N):- compound(P2),!,compound_name_arity(P2,F,Am2),A is Am2 + N, \+ current_predicate(F/A).
-missing_arity(F,N):- \+ current_predicate(F/N).
+missing_arity(P2,N):- \+ callable_arity(P2,N).
+
+callable_arity(F,N):-  atom(F),!, upcase_atom(F,UC), \+ downcase_atom(F,UC), current_predicate(F/N).
+callable_arity(P2,N):- compound(P2),!, \+ is_list(P2), compound_name_arity(P2,F,Am2),A is Am2 + N, callable_arity(F,A).
+  
+
 % turtle(H,V,Dir,N,H2,V2):- 
 prim_ops([
   call_object_grid_size(obj),
@@ -646,9 +826,9 @@ prim_ops([
   rotate_grid(nsew)]).
 
 
-throw_missed(G):-  Info = missed(G),wdmsg(Info),break, arcST,throw_missed_pt2(G,Info).
+throw_missed(G):-  Info = missed(G),u_dmsg(Info),ibreak, arcST,throw_missed_pt2(G,Info).
 throw_missed_pt2(_,Info):- tracing,!,throw(Info).
-throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rrtrace(G),throw(Info).
+throw_missed_pt2(G,Info):- notrace,nortrace,atrace,u_dmsg(Info),break,rrtrace(G),throw(Info).
 
 
 
@@ -709,10 +889,11 @@ goal_expansion_query(Goal,Out):- compound(Goal),
    call(P1,Var),expand_goal((Exp,Goal),Out).
 
 is_goal_query(Goal):- 
-  \+ source_location(_,_),luser_getval('$goal', Term), !, % writeq(Term=@=Goal),nl,
+  \+ source_location(_,_),nb_current('$goal', Term), !, % writeq(Term=@=Goal),nl,
   Goal=@=Term.
 
-goal_expansion_q(Goal,I,Out,O):- var(I), is_goal_query(Goal), (goal_expansion_query(Goal,Out)-> Goal\=@=Out),I=O.
+goal_expansion_q(Goal,I,Out,O):- var(I), is_goal_query(Goal),
+   (goal_expansion_query(Goal,Out)-> Goal\=@=Out),I=O.
 
 :- export(thread_httpd:http_process/4).
 :- system:import(thread_httpd:http_process/4).
@@ -723,26 +904,30 @@ goal_expansion_q(Goal,I,Out,O):- var(I), is_goal_query(Goal), (goal_expansion_qu
 :- dynamic(goal_expansion/4).
 goal_expansion(Goal,I,Out,O):- 
    nb_current(arc_can_expand_query,t),
+   \+ current_prolog_flag(arc_query_expansion,false),
    \+ current_prolog_flag(arc_term_expansion,false),
    current_predicate(goal_expansion_q/4),
    goal_expansion_q(Goal,I,Out,O).
 
+:- set_prolog_flag(arc_query_expansion,false).
 % ?- print_grid(gridFn(X)).
 %:- export(is_toplevel_query/2).
 %:- b_setval('$goal', []).
-:- luser_linkval('$goal', []).
+:- nb_linkval('$goal', []).
 %:- b_setval('$goal_expanded', []).
-:- luser_linkval('$goal_expanded', []).
+:- nb_linkval('$goal_expanded', []).
 expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
+  \+ current_prolog_flag(arc_term_expansion,false),
+  \+ current_prolog_flag(arc_query_expansion,false),
   current_predicate(luser_linkval/2),
     % Have vars to expand and varnames are empty
-    luser_getval('$goal', WGoal), WGoal\=@=Goal, % this prevents the loop
-    luser_linkval('$goal', Goal),
+    nb_current('$goal', WGoal), WGoal\=@=Goal, % this prevents the loop
+    nb_linkval('$goal', Goal),
     quietly((Bindings\==[],prolog_load_context(variable_names,Vs), Vs ==[])), % this prevents the loop
-    luser_linkval('$variable_names', Bindings),
+    nb_linkval('$variable_names', Bindings),
     debug(expand_query,'~q',[b_setval('$variable_names', Bindings)]),
     writeq(Goal+Bindings),nl,
     expand_query(Goal, Expanded, Bindings, ExpandedBindings),
-    luser_linkval('$goal_expanded', Expanded).    
+    nb_linkval('$goal_expanded', Expanded).    
 
 

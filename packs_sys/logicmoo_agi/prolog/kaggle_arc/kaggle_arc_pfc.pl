@@ -162,7 +162,7 @@ show_child_info(P,L):- list_to_set(L,S),
   ansi_format([fg(green)],'~@',[pp(P)]),
   format(" :~n",[]),
   forall((member(D,S), \+ t_l:shown_dep(P,D)),(asserta(t_l:shown_dep(P,D)),ansi_format([fg(yellow)],'~N ~@. ~n',[pp(D)]))),
-  maplist(show_child_info,S).
+  my_maplist(show_child_info,S).
 
 mpred_why(X):- mpred_test_why(X).
 
@@ -307,7 +307,7 @@ term_subst(tilded_negation,P,O):- !, term_subst(
 
 term_subst(Subst,P,O):- 
  compound_name_arguments(P,F,Args),
- maplist(term_subst(Subst),Args,ArgsL),
+ my_maplist(term_subst(Subst),Args,ArgsL),
  termf_subst(Subst,F,F2),
  compound_name_arguments(O,F2,ArgsL).
 
@@ -408,7 +408,7 @@ pfcPost(List,S):- pfcPost_rev(S,List).
 
 pfcPost_rev(S,Term) :-  
   is_list(Term) 
-  -> maplist(pfcPost_rev(S),Term)
+  -> my_maplist(pfcPost_rev(S),Term)
   ; pfcPost1(Term,S).
 
 
@@ -705,7 +705,7 @@ pfcAddType(action,_Action) :- !.
 
 % pfcWithdraw/1  withdraws any "direct" support for P.
 % If a list, iterates down the list
-pfcWithdraw(P) :- is_list(P),!,maplist(pfcWithdraw,P).
+pfcWithdraw(P) :- is_list(P),!,my_maplist(pfcWithdraw,P).
 pfcWithdraw(P) :- matches_why_UU(UU), pfcWithdraw(P,UU).
 % %  pfcWithdraw(P,S) removes support S from P and checks to see if P is still supported.
 % %  If it is not, then the fact is retractred from the database and any support
@@ -728,7 +728,7 @@ pfcWithdraw(P,S) :-
 
 % pfcRetractAll/1  withdraws any "direct" and "indirect" support for P.
 % If a list, iterates down the list
-pfcRetractAll(P) :- is_list(P),!,maplist(pfcRetractAll,P).
+pfcRetractAll(P) :- is_list(P),!,my_maplist(pfcRetractAll,P).
 pfcRetractAll(P) :- matches_why_UU(UU), pfcRetractAll(P,UU).
 
 % %  pfcRetractAll(P,S) removes support S from P and checks to see if P is still supported.
@@ -992,7 +992,7 @@ may_cheat:- fail.
 % %  pfcFwd(X) forward chains from a fact or a list of facts X.
 % % 
 pfcFwd(Fact) :- control_arg_types(Fact,Fixed),!,pfcFwd(Fixed).
-pfcFwd(Fact) :- is_list(List)->maplist(pfcFwd1,List);pfcFwd1(Fact).
+pfcFwd(Fact) :- is_list(List)->my_maplist(pfcFwd1,List);pfcFwd1(Fact).
 
 % fc1(+P) forward chains for a single fact.
 
@@ -1843,7 +1843,7 @@ pfcFacts(P,L) :- pfcFacts(P,true,L).
 
 pfcFacts(P,C,L) :- setof_or_nil(P,pfcFact(P,C),L).
 
-brake(X) :-  X, break.
+brake(X) :-  X, ibreak.
 
 % % 
 % % 
@@ -1884,7 +1884,7 @@ pfcTraceBreak(P,_S) :-
    (pretty_numbervars(P,Pcopy),
     % numbervars(Pcopy,0,_),
     pfcPrintf("Breaking on pfcAdd(~p)",[Pcopy]),
-    break)
+    ibreak)
    ; true.
 
 pfcTraceRem('$pt$'(_,_)) :-
@@ -1900,7 +1900,7 @@ pfcTraceRem(P) :-
       ; true),
   (pfcSpied(P,-)
    -> (pfcPrintf("Breaking on pfcRem(~p)",[P]),
-       break)
+       ibreak)
    ; true).
 
 pfcIsTraced(P):- pfcTraced(P).
@@ -2388,7 +2388,7 @@ short_filename(F,FN):- F=FN,!.
 pfcShowSingleJust_MFL(MFL):- MFL=mfl4(VarNameZ,_M,F,L),atom(F),short_filename(F,FN),!,varnames_load_context(VarNameZ),
    ansi_format([hfg(black)]," % [~w:~w] ",[FN,L]).
 
-pfcShowSingleJust_MFL(MFL):- MFL=mfl4(V,M,F,L),maplist(var,[V,M,F,L]),!.
+pfcShowSingleJust_MFL(MFL):- MFL=mfl4(V,M,F,L),my_maplist(var,[V,M,F,L]),!.
 pfcShowSingleJust_MFL(MFL):- ansi_format([hfg(black)]," % [~w] ",[MFL]),!.
 
 pfcAsk(Msg,Ans) :-
@@ -3430,14 +3430,14 @@ update_single_valued_arg(M,M:Pred,N):-!,update_single_valued_arg(M,Pred,N).
 update_single_valued_arg(_,M:Pred,N):-!,update_single_valued_arg(M,Pred,N).
 
 update_single_valued_arg(world,P,N):- !, current_prolog_flag(pfc_shared_module,BaseKB), update_single_valued_arg(BaseKB,P,N).
-update_single_valued_arg(M,P,N):- break, \+ clause_b(mtHybrid(M)), trace, clause_b(mtHybrid(M2)),!,
+update_single_valued_arg(M,P,N):- ibreak, \+ clause_b(mtHybrid(M)), trace, clause_b(mtHybrid(M2)),!,
    update_single_valued_arg(M2,P,N).
 
 update_single_valued_arg(M,P,N):- 
   get_assertion_head_arg(N,P,UPDATE),
   is_relative(UPDATE),!,
   dtrace,
-  break,
+  ibreak,
   replace_arg(P,N,OLD,Q),
   must_det_l((clause_u(Q),update_value(OLD,UPDATE,NEW),\+ is_relative(NEW), replace_arg(Q,N,NEW,R))),!,
   update_single_valued_arg(M,R,N).

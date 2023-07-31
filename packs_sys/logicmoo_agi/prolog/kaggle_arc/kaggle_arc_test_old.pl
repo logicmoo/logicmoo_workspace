@@ -70,7 +70,7 @@ test_classes :-
     csv_read_file('test_classes.csv', CSV, []),
     CSV = [Colnames|Rows],
     Colnames =.. [row,_|Names],
-    maplist(test_classes_row(Names), Rows).
+    my_maplist(test_classes_row(Names), Rows).
 
 test_classes_row(Names, Row) :-
     Row =.. [row,Name|Fields],
@@ -89,9 +89,11 @@ test_classes_row(Names, Row) :-
 type_to_letter(training,t):-!.
 type_to_letter(_,v).
 
+more_test_info(t(A),BCD):- more_test_info(t(A),B,C,_D),append([B,C,[alphabetical_t]],BCD).
+more_test_info(v(A),BCD):- more_test_info(v(A),B,C,_D),append([B,C,[alphabetical_v]],BCD).
+more_test_info(TestID,solves(More)):- clause(l_solve(A,in,out),More),once((fix_test_name(A,TestID);TestID=t(A))).
+more_test_info(TestID,dsl_length(Len)):- michod_solved_len(TestID,Len).
 
-more_test_info(t(A),BCD):- more_test_info(t(A),B,C,D),my_append([B,C,D,[training]],BCD).
-more_test_info(v(A),BCD):- more_test_info(v(A),B,C,D),my_append([B,C,D,[evaluation]],BCD).
 :- dynamic(more_test_info/4).
 more_test_info(t('0d3d703e'),[+mask_match,+shape_match,-rotation_match,-color_match,associate_colors_to_colors],['(4, 1)'],[tt]).
 more_test_info(t(d511f180),[+mask_match,+shape_match,+'Errors',-rotation_match,-color_match,associate_colors_to_colors],['(3, 1)'], ['https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021#760920']).
@@ -142,7 +144,7 @@ more_test_info(t('28bf18c6'),[+color_match,-mask_match,-shape_match,-rotation_ma
 more_test_info(t('80af3007'),[+color_match,-mask_match,-shape_match,-rotation_match,crop,pattern_resizing,image_resizing,fractal_repetition],['(3, 1)'],[tt]).
 more_test_info(t('3f7978a0'),[+color_match,-mask_match,-shape_match,-rotation_match,crop,rectangle_guessing,find_the_intruder],['(3, 1)'],[tt]).
 more_test_info(t('90c28cc7'),[-mask_match,-shape_match,-rotation_match,-color_match,crop,rectangle_guessing,summarize],['(3, 1)'],[tt]).
-more_test_info(t(ce602527),[-mask_match,-shape_match,-rotation_match,-color_match,crop,size_guessing,shape_guessing,find_the_intruder,remove_intruder],['(4, 1)'],[tt]).
+more_test_info(t(ce602527),[-mask_match,-shape_match,-rotation_match,-color_match,crop,size_guessing,shape_guessing,find_the_intruder,remove_intruders],['(4, 1)'],[tt]).
 more_test_info(t(b94a9452),[-mask_match,-shape_match,-rotation_match,-color_match,crop,take_negative],['(3, 1)'],[tt]).
 more_test_info(t('1cf80156'),[+color_match,-mask_match,-shape_match,-rotation_match,crop],['(3, 1)'],[tt]).
 more_test_info(t(d10ecb37),[+color_match,-mask_match,-shape_match,-rotation_match,crop],['(3, 1)'],[tt]).
@@ -287,7 +289,7 @@ more_test_info(t(c0f76784),[+shape_match,-mask_match,-rotation_match,-color_matc
 more_test_info(t('44d8ac46'),[+shape_match,-mask_match,-rotation_match,-color_match,loop_filling,rectangle_guessing],['(4, 1)'],[tt]).
 more_test_info(t(e73095fd),[+shape_match,-mask_match,-rotation_match,-color_match,loop_filling,rectangle_guessing],['(3, 1)'],[tt]).
 more_test_info(t(d5d6de2d),[+shape_match,-mask_match,-rotation_match,-color_match,loop_filling,replace_pattern,remove_intruders],['(3, 2)'],[tt]).
-more_test_info(t(bb43febb),[+mask_match,+shape_match,-rotation_match,-color_match,loop_filling,rettangle_guessing],['(2, 1)'],[tt]).
+more_test_info(t(bb43febb),[+mask_match,+shape_match,-rotation_match,-color_match,loop_filling,rectangle_guessing],['(2, 1)'],[tt]).
 more_test_info(t('00d62c1b'),[+shape_match,-mask_match,-rotation_match,-color_match,loop_filling],['(5, 1)'],[tt]).
 more_test_info(t(a5313dff),[+shape_match,-mask_match,-rotation_match,-color_match,loop_filling],['(3, 1)'],[tt]).
 more_test_info(t('6455b5f5'),[+shape_match,-mask_match,-rotation_match,-color_match,measure_area,take_maximum,take_minimum,loop_filling,associate_colors_to_ranks],['(4, 1)'],[tt]).
@@ -318,7 +320,7 @@ more_test_info(t('045e512c'),[+shape_match,+color_match,-mask_match,-rotation_ma
 more_test_info(t(e8dc4411),[+mask_match,+shape_match,+color_match,-rotation_match,pattern_expansion,direction_guessing],['(3, 1)'],[tt]).
 more_test_info(t(e21d9049),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_expansion,draw_line_from_point,color_palette],['(2, 1)'],[tt]).
 more_test_info(t(b527c5c6),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_expansion,draw_line_from_point,contouring,direction_guessing,size_guessing],['(4, 1)'],[tt]).
-more_test_info(t(a3df8b1e),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_expansion,draw_line_from_point,diagonals,bounce],['(3, 1)'],[tt]).
+more_test_info(t(a3df8b1e),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_expansion,draw_line_from_point,diagonals,bouncing],['(3, 1)'],[tt]).
 more_test_info(t(b8cdaf2b),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_expansion,draw_line_from_point,diagonals,pairwise_analogy],['(4, 1)'],[tt]).
 more_test_info(t(aba27056),[+shape_match,-mask_match,-rotation_match,-color_match,pattern_expansion,draw_line_from_point,diagonals],['(3, 1)'],[tt]).
 more_test_info(t(ec883f72),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_expansion,draw_line_from_point,diagonals],['(4, 1)'],[tt]).
@@ -364,7 +366,7 @@ more_test_info(t('137eaa0f'),[-mask_match,-shape_match,-rotation_match,-color_ma
 more_test_info(t(ea786f4a),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_modification,draw_line_from_point,diagonals],['(3, 1)'],[tt]).
 more_test_info(t(ecdecbb3),[+shape_match,+color_match,-mask_match,-rotation_match,pattern_modification,draw_line_from_point],['(3, 1)'],[tt]).
 more_test_info(t(ba26e723),[+mask_match,+shape_match,-rotation_match,-color_match,pattern_modification,pairwise_analogy,recoloring],['(5, 1)'],[tt]).
-more_test_info(t(ba97ae07),[+mask_match,+shape_match,+color_match,-rotation_match,pattern_modification,pairwise_analogy,rettangle_guessing,recoloring],['(4, 1)'],[tt]).
+more_test_info(t(ba97ae07),[+mask_match,+shape_match,+color_match,-rotation_match,pattern_modification,pairwise_analogy,rectangle_guessing,recoloring],['(4, 1)'],[tt]).
 more_test_info(t('025d127b'),[+shape_match,+color_match,+'Errors',-mask_match,-rotation_match,pattern_modification],['(2, 1)'],[tt,'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021']).
 more_test_info(t(e9afcf9a),[+mask_match,+shape_match,+color_match,-rotation_match,pattern_modification],['(2, 1)'],[tt]).
 more_test_info(t(a61ba2ce),[+color_match,-mask_match,-shape_match,-rotation_match,pattern_moving,bring_patterns_close,crop,jigsaw],['(2, 1)'],[tt]).
@@ -423,7 +425,7 @@ more_test_info(t('776ffc46'),[+mask_match,+shape_match,+color_match,-rotation_ma
 more_test_info(t(e509e548),[+mask_match,+shape_match,-rotation_match,-color_match,recoloring,associate_colors_to_shapes,homeomorphism],['(3, 1)'],[tt]).
 more_test_info(t('234bbc79'),[-mask_match,-shape_match,-rotation_match,-color_match,recoloring,bring_patterns_close,crop],['(4, 1)'],[tt]).
 more_test_info(t('77fdfe62'),[-mask_match,-shape_match,-rotation_match,-color_match,recoloring,color_guessing,detect_grid,crop],['(3, 1)'],[tt]).
-more_test_info(t('8e1813be'),[-mask_match,-shape_match,-rotation_match,-color_match,recoloring,color_guessing,direction_guesingcrop,image_within_image],['(3, 1)'],[tt]).
+more_test_info(t('8e1813be'),[-mask_match,-shape_match,-rotation_match,-color_match,recoloring,color_guessing,direction_guessing,crop,image_within_image],['(3, 1)'],[tt]).
 more_test_info(t(aabf363d),[+shape_match,-mask_match,-rotation_match,-color_match,recoloring,color_guessing,remove_intruders],['(2, 1)'],[tt]).
 more_test_info(t('63613498'),[+mask_match,+shape_match,-rotation_match,-color_match,recoloring,compare_image,detect_wall],['(3, 1)'],[tt]).
 more_test_info(t('6e82a1ae'),[+mask_match,+shape_match,-rotation_match,-color_match,recoloring,count_tiles,associate_colors_to_numbers],['(3, 1)'],[tt]).
@@ -471,7 +473,7 @@ more_test_info(t(e50d258f),[-mask_match,-shape_match,-rotation_match,-color_matc
 more_test_info(t('7b7f7511'),[+color_match,-mask_match,-shape_match,-rotation_match,separate_images,detect_repetition,crop],['(3, 1)'],[tt]).
 more_test_info(t('662c240a'),[-mask_match,-shape_match,-rotation_match,-color_match,separate_images,detect_symmetry,find_the_intruder,crop],['(4, 1)'],[tt]).
 more_test_info(t(a87f7484),[-mask_match,-shape_match,-rotation_match,-color_match,separate_images,find_the_intruder,crop],['(4, 1)'],[tt]).
-more_test_info(t(b190f7f5),[-mask_match,-shape_match,-rotation_match,-color_match,separate_images,image_expasion,color_palette,image_resizing,replace_pattern],['(3, 1)'],[tt]).
+more_test_info(t(b190f7f5),[-mask_match,-shape_match,-rotation_match,-color_match,separate_images,image_expansion,color_palette,image_resizing,replace_pattern],['(3, 1)'],[tt]).
 more_test_info(t('75b8110e'),[-mask_match,-shape_match,-rotation_match,-color_match,separate_images,image_juxtaposition],['(5, 1)'],[tt]).
 more_test_info(t('8efcae92'),[-mask_match,-shape_match,-rotation_match,-color_match,separate_images,rectangle_guessing,count_tiles,take_maximum,crop],['(3, 1)'],[tt]).
 more_test_info(t('94f9d214'),[-mask_match,-shape_match,-rotation_match,-color_match,separate_images,take_complement,pattern_intersection],['(4, 1)'],[tt]).
@@ -892,105 +894,105 @@ more_test_info(v(fd4b2b02),[+shape_match,-mask_match,-rotation_match,-color_matc
 more_test_info(v(fe9372f3),[+shape_match,-mask_match,-rotation_match,-color_match],['(2, 1) '],[]).
 more_test_info(v(fea12743),[+mask_match,+shape_match,+'Errors',-rotation_match,-color_match],['(3, 1)'], ['https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021']).
 more_test_info(v(ff72ca3e),[+shape_match,-mask_match,-rotation_match,-color_match],['(4, 1) '],[]).
-more_test_info(v('576224'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(2, 1) '],[]).
-more_test_info(v('009d5c81'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(5, 1) '],[]).
-more_test_info(v('00dbd492'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('3560426'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('05a7bcf2'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('0607ce86'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('0692e18c'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('070dd51e'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(2, 1) '],[]).
-more_test_info(v('08573cc6'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('0934a4d8'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('09c534e7'),[+mask_match,+shape_match,+color_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('0a1d4ef5'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('0a2355a6'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('0b17323b'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('0bb8deee'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('0becf7df'),[+mask_match,+shape_match,+color_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('0c786b71'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('0c9aba6e'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('0d87d2a6'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('0e671a1a'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('0f63c0b9'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(4, 1) '],[]).
-more_test_info(v('103eff5b'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('11e1fe23'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('12422b43'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(5, 1) '],[]).
-more_test_info(v('12997ef3'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 2) '],[]).
-more_test_info(v('12eac192'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('136b0064'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('13713586'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('137f0df0'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('140c817e'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('14754a24'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('15113be4'),[+mask_match,+shape_match,+color_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('15663ba9'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('15696249'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('16b78196'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(2, 1) '],[]).
-more_test_info(v('17b80ad2'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(4, 1) '],[]).
-more_test_info(v('17cae0c1'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('18419cfa'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('184a9768'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('195ba7dc'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('1990f7a8'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('19bb5feb'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('1a2e2828'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(5, 1) '],[]).
-more_test_info(v('1a6449f1'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('1acc24af'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('1c02dbbe'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('1c0d0a4b'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('1c56ad9f'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(4, 1) '],[]).
-more_test_info(v('1d0a4b61'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('1d398264'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 2) '],[]).
-more_test_info(v('1da012fc'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('1e81d6f9'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('1e97544e'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('2037f2c7'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('2072aba6'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('2.08e+20'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('20981f0e'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('212895b5'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('21f83797'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('22a4bbc2'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('25094a63'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('2546ccf6'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(2, 1) '],[]).
-more_test_info(v('256b0a75'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('2685904e'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(6, 1) '],[]).
-more_test_info(v('2697da3f'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(4, 1) '],[]).
-more_test_info(v('2753e76c'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('27a77e38'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('27f8ce4f'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('281123b4'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(6, 1) '],[]).
-more_test_info(v('292dd178'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('29700607'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('2a5f8217'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('2b01abd0'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('2c0b0aff'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('2c737e39'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('2f0c5170'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('310f3251'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('3194b014'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('319f2597'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('31adaf00'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('31d5ba1a'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(5, 2) '],[]).
-more_test_info(v('32e9702f'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('332efdb3'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('3391f8c0'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(4, 1) '],[]).
-more_test_info(v('33b52de3'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('3490cc26'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('34b99a2b'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(4, 1) '],[]).
-more_test_info(v('351d6448'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('358ba94e'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(4, 1) '],[]).
-more_test_info(v('37d3e8b2'),[+mask_match,+shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('3979b1a8'),[+color_match,-mask_match,-shape_match,-rotation_match,test],['(2, 1) '],[]).
-more_test_info(v('3a301edc'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(5, 1) '],[]).
-more_test_info(v('3b4c2228'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(5, 2) '],[]).
-more_test_info(v('3d31c5b3'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(6, 1) '],[]).
-more_test_info(v('3ed85e70'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('3ee1011a'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('3f23242b'),[+shape_match,-mask_match,-rotation_match,-color_match,test],['(2, 1) '],[]).
-more_test_info(v('40f6cd08'),[+mask_match,+shape_match,+color_match,-rotation_match,test],['(3, 1) '],[]).
-more_test_info(v('414297c0'),[-mask_match,-shape_match,-rotation_match,-color_match,test],['(3, 1) '],[]).
-more_test_info(v('423a55dc'),[+shape_match,+color_match,-mask_match,-rotation_match,test],['(5, 1) '],[]).
+more_test_info(v('576224'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('009d5c81'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(5, 1) '],[]).
+more_test_info(v('00dbd492'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('3560426'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('05a7bcf2'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0607ce86'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0692e18c'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('070dd51e'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('08573cc6'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0934a4d8'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('09c534e7'),[+mask_match,+shape_match,+color_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0a1d4ef5'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0a2355a6'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('0b17323b'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('0bb8deee'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0becf7df'),[+mask_match,+shape_match,+color_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0c786b71'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0c9aba6e'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('0d87d2a6'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('0e671a1a'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('0f63c0b9'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('103eff5b'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('11e1fe23'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('12422b43'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(5, 1) '],[]).
+more_test_info(v('12997ef3'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 2) '],[]).
+more_test_info(v('12eac192'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('136b0064'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('13713586'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('137f0df0'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('140c817e'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('14754a24'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('15113be4'),[+mask_match,+shape_match,+color_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('15663ba9'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('15696249'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('16b78196'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('17b80ad2'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('17cae0c1'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('18419cfa'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('184a9768'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('195ba7dc'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('1990f7a8'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('19bb5feb'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('1a2e2828'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(5, 1) '],[]).
+more_test_info(v('1a6449f1'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('1acc24af'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('1c02dbbe'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('1c0d0a4b'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('1c56ad9f'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('1d0a4b61'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('1d398264'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 2) '],[]).
+more_test_info(v('1da012fc'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('1e81d6f9'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('1e97544e'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2037f2c7'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2072aba6'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2.08e+20'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('20981f0e'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('212895b5'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('21f83797'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('22a4bbc2'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('25094a63'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('2546ccf6'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('256b0a75'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2685904e'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(6, 1) '],[]).
+more_test_info(v('2697da3f'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('2753e76c'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('27a77e38'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('27f8ce4f'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('281123b4'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(6, 1) '],[]).
+more_test_info(v('292dd178'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('29700607'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2a5f8217'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2b01abd0'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2c0b0aff'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('2c737e39'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('2f0c5170'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('310f3251'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('3194b014'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('319f2597'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('31adaf00'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('31d5ba1a'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(5, 2) '],[]).
+more_test_info(v('32e9702f'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('332efdb3'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('3391f8c0'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('33b52de3'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('3490cc26'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('34b99a2b'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('351d6448'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('358ba94e'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(4, 1) '],[]).
+more_test_info(v('37d3e8b2'),[+mask_match,+shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('3979b1a8'),[+color_match,-mask_match,-shape_match,-rotation_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('3a301edc'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(5, 1) '],[]).
+more_test_info(v('3b4c2228'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(5, 2) '],[]).
+more_test_info(v('3d31c5b3'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(6, 1) '],[]).
+more_test_info(v('3ed85e70'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('3ee1011a'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('3f23242b'),[+shape_match,-mask_match,-rotation_match,-color_match,test_suite([eval400])],['(2, 1) '],[]).
+more_test_info(v('40f6cd08'),[+mask_match,+shape_match,+color_match,-rotation_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('414297c0'),[-mask_match,-shape_match,-rotation_match,-color_match,test_suite([eval400])],['(3, 1) '],[]).
+more_test_info(v('423a55dc'),[+shape_match,+color_match,-mask_match,-rotation_match,test_suite([eval400])],['(5, 1) '],[]).
 
 

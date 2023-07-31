@@ -27,6 +27,7 @@ bc_p(b).
 
 :- mpred_test(\+ clause_u(bc_q(_),true)).
 
+%:- mpred_test(((bc_q(b)))).
 :- mpred_test((call_u(bc_q(b)))).
 
 %= something cached
@@ -83,7 +84,7 @@ a(1).
 
 (default_01a((P ==> Q))/mpred_literal(Q)) ==> (P, \+( ~Q) ==> Q).
 
-%:- set_prolog_flag(gc,false).
+%:- set_prolog_flag(nogc,false).
 
 %
 

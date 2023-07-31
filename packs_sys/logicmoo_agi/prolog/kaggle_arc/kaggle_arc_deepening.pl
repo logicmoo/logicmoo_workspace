@@ -1,9 +1,4 @@
-/*
-  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
-  This work may not be copied and used by anyone other than the author Douglas Miles
-  unless permission or license is granted (contact at business@logicmoo.org)
-*/
 % make_grid(3,4)
 % ===================================================================
 % File 'parser_candc.pl'
@@ -18,6 +13,13 @@
 % end_of_file.
 %:-module(arc_deepening,
 
+/*
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
+
 :- export(  (
             deepen_arc/1,
             call_until_arc_failed/1,
@@ -30,6 +32,7 @@
 :- include(kaggle_arc_header).
 
 
+when_arc_expanding(Goal):- nop(Goal).
 
 :- dynamic(pdtmp:arc_expands/3).
 :- thread_local(pdtmp:expand_enabled/3).
@@ -50,12 +53,12 @@ call_until_arc_failed([]).
 
 :-meta_predicate(deepen_local_0(+,0)).
 deepen_local_0(Local, Call):-
-  ( \+ retract(Local) -> setup_call_cleanup(true, one_must(Call,locally(Local,Call)), ignore(retract(Local)))  ; 
-     (setup_call_cleanup(true, 
-       one_must(Call,locally(Local,Call)), 
+  ( \+ retract(Local) -> setup_call_cleanup(true, one_must(Call,locally(Local,Call)), ignore(retract(Local)))  ;
+     (setup_call_cleanup(true,
+       one_must(Call,locally(Local,Call)),
         asserta(Local)))).
 
-%t_l:old_text.
+%t_l:old_tex
 
 :- thread_local(t_l:useAltPOS/0).
 %t_l:useAltPOS:- fail.
@@ -145,6 +148,44 @@ if_arc_expanded_ge(if_arc_expanded(N),if_arc_expanded(N,T)):-
 system:goal_expansion(G,O,GE,O):- compound(G),current_predicate(if_arc_expanded_ge/2),if_arc_expanded_ge(G,GE).
 
 
-:- include(kaggle_arc_footer).
 
+end_of_file.
+
+end_of_file.
+end_of_file.
+
+
+sdfsdf 
+sdfsdfs   sdfdf
+
+
+end_of_file.
+
+end_of_file.
+end_of_file.
+
+
+sdfsdf 
+sdfsdfs   sdfdf
+
+end_of_file.
+
+end_of_file.
+end_of_file.
+
+
+sdfsdf 
+sdfsdfs   sdfdf
+end_of_file.
+
+end_of_file.
+end_of_file.
+
+
+sdfsdf 
+sdfsdfs   sdfdf
+end_of_file.
+
+end_of_file.
+end_of_file.
 

@@ -128,7 +128,7 @@ destructive_js_cvt(Jsv):- Jsv=(_=V), !, cvt_js_result_structure(V, Term), ( V\==
 destructive_js_cvt(Jsv):- Jsv=[E|T], !, cvt_js_result_structure(E, Term),
  ( E\==Term-> nb_setarg(1, Jsv, Term) ; true), !, destructive_js_cvt(T).
 
-destructive_js_cvt(Jsv):- compound_name_arguments(Jsv,_,Args),maplist(destructive_js_cvt,Args),!.
+destructive_js_cvt(Jsv):- compound_name_arguments(Jsv,_,Args),my_maplist(destructive_js_cvt,Args),!.
 destructive_js_cvt(_):-!.
 
 destructive_js_cvt_cmpd(I, _, L, _):- I > L, !.
@@ -158,15 +158,15 @@ cvt_js_result_structure(json(List),Term):- fail, !,
 cvt_js_result_structure(Jsv, Term):- compound(Jsv), Term = Jsv, destructive_js_cvt(Term), !.
 /*
  cvt_js_result_structure(Jsv, Term):- is_dict(Jsv), dict_pairs(Jsv, Tag, Pairs), !,
- ignore(Tag=json), maplist(coerce_pairs, Pairs, PairsC),
+ ignore(Tag=json), my_maplist(coerce_pairs, Pairs, PairsC),
  (Pairs =@=PairsC -> Term = Jsv ; dict_pairs(Term, Tag, PairsC)).
-cvt_js_result_structure(Jsv, Term):- is_list(Jsv), !, maplist(cvt_js_result_structure, Jsv, Term).
+cvt_js_result_structure(Jsv, Term):- is_list(Jsv), !, my_maplist(cvt_js_result_structure, Jsv, Term).
 */
 cvt_js_result_structure(Jsv, Term):- Term=Jsv.
 /*
 cvt_js_result_structure(Jsv, Term):-
  compound_name_arguments(Jsv, C, A),
- maplist(cvt_js_result_structure, A, AA), !,
+ my_maplist(cvt_js_result_structure, A, AA), !,
  compound_name_arguments(Term, C, AA).
 coerce_pairs(K-Jsv, K-Term):- cvt_js_result_structure(Jsv, Term).
 */
@@ -176,7 +176,7 @@ cvt_js_result_atom_data('[]', _):- !, fail.
 cvt_js_result_atom_data('', _):- !, fail.
 % cvt_js_result_atom_data(Jsv, Term):- cvt_js_result_ref(Jsv, Term),!.
 cvt_js_result_atom_data(Jsv, Term):- cvt_js_result_atom_data_json(Jsv, Term),!.
-cvt_js_result_atom_data(Jsv, Term):- fail, on_x_fail(atom_to_term(Jsv, Term, VS)), maplist(call, VS), !.
+cvt_js_result_atom_data(Jsv, Term):- fail, on_x_fail(atom_to_term(Jsv, Term, VS)), my_maplist(call, VS), !.
 %cvt_js_result_atom_data(Jsv, Jsv).
 %cvt_js_result_atom_data_json(Jsv, Term):- on_x_fail(json:atom_json_dict(Jsv, Term, [as(string)])), !.
 cvt_js_result_atom_data_json(Jsv, Term):- on_x_fail(json:atom_json_term(Jsv, Term, [value_string_as(string),end_of_file(@(eof))])), !.
@@ -234,12 +234,12 @@ js_cvt_eval( text(Js), text(Js)):- !.
 js_cvt_eval( res(Js), Js).
 js_cvt_eval( raw(Js), Result):- js_cvt_eval( (Js), Result).
 js_cvt_eval( Js, Result):- on_x_fail(text_to_string(Js,Str)), !, atom_concat('+', Str, S), js_cvt_eval(text(S), Result).
-js_cvt_eval( Js, Result):- is_list(Js), !, maplist(js_cvt_eval, Js, Result).
+js_cvt_eval( Js, Result):- is_list(Js), !, my_maplist(js_cvt_eval, Js, Result).
 js_cvt_eval( Js, Result):- sformat(S, '~w', [Js]), js_cvt_eval( S, Result).
 
   
 js_eval(WebSocket, Js, Result):- var(Js), !, throw(var_js_eval(WebSocket, Js, Result)).
-js_eval(WebSocket, Js, Result):- is_list(Js), !, maplist(js_eval(WebSocket), Js, Result).
+js_eval(WebSocket, Js, Result):- is_list(Js), !, my_maplist(js_eval(WebSocket), Js, Result).
 js_eval(WebSocket, res(Js), Result):- !, js_cvt_eval( Js, Op), js_eval_ws(WebSocket, Op, Result).
 js_eval(WebSocket, raw(Js), Result):- !, js_cvt_eval( Js, Op), js_eval_ws_raw(WebSocket, Op, Result).
 js_eval(WebSocket, Js, Result):- !, js_cvt_eval( Js, Op), js_eval_ws(WebSocket, Op, Result).
@@ -371,7 +371,7 @@ text_to_a4obj(Text,Obj):- text_to_atom(Text,Atom),atom_to_a4_obj(Atom,Obj),!.
 obj_path(Obj,A4):- atom(Obj),atom_number(Obj,A4),!.
 obj_path(Obj,A4):- atomic(Obj), arg(_,v('[','.',']'),E), atomic_list_concat([L1,L2|List],E,Obj),!,obj_path([L1,L2|List],A4).
 obj_path(Obj,A4):- is_list(Obj),select('',Obj,ObjM),!,obj_path(ObjM,A4).
-obj_path(Obj,A4):- is_list(Obj),!,maplist(obj_path,Obj,AM),(Obj==AM-> AM=A4 ; (flatten(AM,AF),obj_path(AF,AM))),!.
+obj_path(Obj,A4):- is_list(Obj),!,my_maplist(obj_path,Obj,AM),(Obj==AM-> AM=A4 ; (flatten(AM,AF),obj_path(AF,AM))),!.
 obj_path(Obj,A4):- Obj=A4,!.
 
 process_a4_obj(Obj0,A4):- ptgf(process_a4_obj_1(Obj0,A4)).

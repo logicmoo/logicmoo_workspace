@@ -110,12 +110,15 @@ Test[
     Utility`ReplaceAssociationsWithUnevaluatedAssociations[
         Daniel`ARC`ARCTransformScore[
             <|
-                "X" -> Inactive[Plus][Daniel`ARC`ObjectValue[<|"X" -> 2|>, "Height.Rank"], -1]
+                "Color" -> Inactive[Plus][
+                    Daniel`ARC`ObjectValue[<|"X" -> 2|>, "Height.Rank"],
+                    -1
+                ]
             |>
         ]
     ]
     ,
-    -2.6185871324805667
+    -2.6585871324805668
     ,
     TestID -> "ARCTransformScore-20220825-4RBNEY"
 ]
@@ -315,38 +318,4 @@ Test[
     -1.2529795897113272
     ,
     TestID -> "ARCTransformScore-20221109-6NC6YM"
-]
-
-Test[
-    Daniel`ARC`ARCTransformScore[
-        <|"Height" -> Inactive[Times][Daniel`ARC`ObjectValue["Parent", "Height"], 1/2]|>
-    ]
-    ,
-    -1.19
-    ,
-    TestID -> "ARCTransformScore-20221111-194EFK"
-]
-
-Test[
-    Utility`ReplaceAssociationsWithUnevaluatedAssociations[
-        Daniel`ARC`ARCTransformScore[
-            <|"Color" -> Daniel`ARC`ObjectValue[<|"Colors" -> {1, 2}|>, "X2.InverseRank"]|>
-        ]
-    ]
-    ,
-    -5.570399859209916
-    ,
-    TestID -> "ARCTransformScore-20221112-GHNTYO"
-]
-
-Test[
-    Utility`ReplaceAssociationsWithUnevaluatedAssociations[
-        Daniel`ARC`ARCTransformScore[
-            <|"Width" -> Daniel`ARC`ObjectValue["InputObject", "Width"]|>
-        ]
-    ]
-    ,
-    -0.10000000000000003
-    ,
-    TestID -> "ARCTransformScore-20221112-C6NMQW"
 ]

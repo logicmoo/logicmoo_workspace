@@ -3,11 +3,11 @@ My ARC WIKI [ARC - XWiki](https://logicmoo.org/xwiki/bin/view/Main/ARC/)
 
 [Chollet Youtube Videos discussing ARC](https://www.youtube.com/watch?v=mEVnu-KZjq4&t=523s)
 
-Create an AI capable of solving reasoning tasks it has never seen beforeÖ
+Create an AI capable of solving reasoning tasks it has never seen before‚Ä¶
 
 
 
-* Initial thought: This is a very unique sort of test that specifically looks for the type of reasoning humans do naturally. Evidently machine learning tests very poorly at ARC . Specifically because it requires the understanding of visual individuation and relating them to mental abstractions. The right way to approach the test according to the Author is a ìDSLî that produces the visual images.. Currently the SOTA with the best score out of 1000s of teams competing being 20%-30%.. I was already halfway world's top scores so should I dedicate a full 90 days towards getting to a score of 100%?
+* Initial thought: This is a very unique sort of test that specifically looks for the type of reasoning humans do naturally. Evidently machine learning tests very poorly at ARC . Specifically because it requires the understanding of visual individuation and relating them to mental abstractions. The right way to approach the test according to the Author is a ‚ÄúDSL‚Äù that produces the visual images.. Currently the SOTA with the best score out of 1000s of teams competing being 20%-30%.. I was already halfway world's top scores so should I dedicate a full 90 days towards getting to a score of 100%?
 
 
 * Not too hard for humans
@@ -15,30 +15,30 @@ Create an AI capable of solving reasoning tasks it has never seen beforeÖ
     * Trying hard they can get 100%
     * Supposedly a real test of precursor/proto-AGI
     * Humans can learn how to take the tests in under 3 minutes
-    * Ö
+    * ‚Ä¶
 * Too hard for Machine Learning
     * SOTA 7.5%
     * No examples of what the machine needs to know already
     * Made very easy for ML to try (tests organized as Input/Output pairs)
-    * Ö
+    * ‚Ä¶
 * Too hard for GOFAI
     * SOTA 20/28% (Public/Private)
     * Naive brute search is a million squared search paths
     * Informed search (Search space cut down by humans making up paradigms)
     * Designed ideally as DSL
-    * Ö
+    * ‚Ä¶
 * Douglas MUARC program?
-* (H)MUARC that Douglas is writing for 3 months (H is for ìHardcodedî)
+* (H)MUARC that Douglas is writing for 3 months (H is for ‚ÄúHardcoded‚Äù)
     * Am I overconfident in my skills?
     * [https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/tree/master/packs_sys/logicmoo_agi/prolog/kaggle_arc](https://gitlab.logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/tree/master/packs_sys/logicmoo_agi/prolog/kaggle_arc)
-    * Reached MLís SOTA (7.5%) after 8 hours of devel
+    * Reached ML‚Äôs SOTA (7.5%) after 8 hours of devel
     * Reached the leaderboard SOTA (20%) after 60 devel hours
     * Will reach privates SOTA after 100 hours (28%)
     * BUT I think I can get 100% in 3 months of work
-* (G)MUARC allows to tweak the parameters that will ìGî-generate the ìHî
+* (G)MUARC allows to tweak the parameters that will ‚ÄúG‚Äù-generate the ‚ÄúH‚Äù
     * Can I get this to handle non vision problems? Word problems? Etc?
     * 160-320 hours
-* ALEPH-MUARC-I will examine ìGî and ìHî to try to write itís very own (G)MUARC
+* ALEPH-MUARC-I will examine ‚ÄúG‚Äù and ‚ÄúH‚Äù to try to write it‚Äôs very own (G)MUARC
     * Too large a task for ALEPH?
     * 160-320 hours
 * ALEPH-MUARC-II
@@ -80,7 +80,7 @@ Active Daily Random Thoughts/Notes: [https://docs.google.com/document/d/1ewzuNdL
 
 
 
-* Need to inform people waiting on LOGICMOO-AGI employment/contracts that our funding will probably come from the success of Douglasí ARC code?
+* Need to inform people waiting on LOGICMOO-AGI employment/contracts that our funding will probably come from the success of Douglas‚Äô ARC code?
 * Focused on a set of tests that only show me that the individuation strategy was sane. (TThis is ready for 6/9/2022 demo)
 
 I don't think AGI can be created by upscaling AI. But I can see where people with a different definition of AGI think this .. but they have a different definition of AGI...
@@ -137,7 +137,7 @@ Tests that can still be passed by memorization code (ML) and deduction code (GOF
 * Time taking options:
     * Guile-log (80 hours)
         * Will make my code run.. 2-3 times slower  
-        * ìCompatibleî with OpenCog Prime.
+        * ‚ÄúCompatible‚Äù with OpenCog Prime.
         * Will be fixing bugs with in Guile-log
     * Yap (50 hours) or Sicstus (40 hours)
         * Yap make my code run 2 to 4 times faster
@@ -172,9 +172,9 @@ Tests that can still be passed by memorization code (ML) and deduction code (GOF
 
 6/10/2022
 
-The process of (H)MUARC is as followsÖ.
+The process of (H)MUARC is as follows‚Ä¶.
 
-Individuate the input images (using the ìcompleteî algo)
+Individuate the input images (using the ‚Äúcomplete‚Äù algo)
 
 
 
@@ -190,7 +190,7 @@ Individuate the input images (using the ìcompleteî algo)
     * Individuate rest as-pixels
     * Individuate-by-distance to previous individuals
 * With Individuals compute:
-    * Possible ìfillî areas
+    * Possible ‚Äúfill‚Äù areas
     * Distances
         * Negative for individuals inside the fill areas
         * Zero is for touching
@@ -201,7 +201,7 @@ Individuate the input images (using the ìcompleteî algo)
 * Rerun individuation on the individuals using only themselves
 * Rerun individuation on the individuals using individuals in their fill areas
 
-Individuate the output image (using the ìcompleteî algo again)
+Individuate the output image (using the ‚Äúcomplete‚Äù algo again)
 
 Identify remaining, new and removed individuals: Images get created from groups
 
@@ -236,7 +236,7 @@ Find correspondence between the 30 algos which answers and does:
 
 The Algos are saved for each of the training sample pairs (3-5 training pairs per test)
 
-The overlapping algos in the training samples are considered its ìTheoryî they concatenate together and run in the DSL I created for the vm
+The overlapping algos in the training samples are considered its ‚ÄúTheory‚Äù they concatenate together and run in the DSL I created for the vm
 
 .. depending on the result it may backtrack. Usually it is the inviduators that need disabling.. They can obfuscate the results usually with too much individual of information
 
@@ -280,7 +280,7 @@ for Example:
 ---
 
 
-A copy is below of the previous README from: [ARC/README.md at master ∑ fchollet/ARC ∑ GitHub](https://github.com/fchollet/ARC/blob/master/README.md)
+A copy is below of the previous README from: [ARC/README.md at master ¬∑ fchollet/ARC ¬∑ GitHub](https://github.com/fchollet/ARC/blob/master/README.md)
 
 
 # The Abstraction and Reasoning Corpus (ARC)

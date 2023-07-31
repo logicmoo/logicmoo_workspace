@@ -70,29 +70,3 @@ Test[
     ,
     TestID -> "ResolveValues-20220724-RSQDZ9"
 ]
-
-Test[
-    Daniel`ARC`ResolveValues[
-        <|
-            "Type" -> "MapComponents",
-            "Rules" -> {
-                <|"Width" -> 3|> -> <|
-                    "X2" -> Inactive[Plus][Daniel`ARC`ObjectValue["InputObject", "X2"], 1]
-                |>
-            }
-        |>,
-        <||>,
-        <||>
-    ]
-    ,
-    <|
-        "Type" -> "MapComponents",
-        "Rules" -> {
-            <|"Width" -> 3|> -> <|
-                "X2" -> Inactive[Plus][Daniel`ARC`ObjectValue["InputObject", "X2"], 1]
-            |>
-        }
-    |>
-    ,
-    TestID -> "ResolveValues-20221112-I1TDZ3"
-]
