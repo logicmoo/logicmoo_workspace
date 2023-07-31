@@ -19,177 +19,56 @@
 %:- listing(lists:'$seek_list'/4).
 %:- break.
 
-
-mask_to_fullnames(Mask,FullNames):- absolute_file_name(Mask,AbsMask,[relative_to('/data')]), 
-  expand_file_name(AbsMask,FullNames),FullNames\==[].
-mask_to_fullnames(Mask,FullNames):- AbsMask = Mask, expand_file_name(AbsMask,Nonmask),Nonmask\==[],
-  my_maplist(absolute_file_name,Nonmask,FullNames).
-mask_to_fullnames(Mask,FullNames):-
-  arc_sub_path('.',ARC_DIR), member(Rel,['.','/','/data',ARC_DIR]), absolute_file_name(Mask,AbsMask,[relative_to(Rel)]),
-  expand_file_name(AbsMask,FullNames),FullNames\==[].
-
-  
-
-:- export(load_json_files/3).
-load_json_files(SuiteX,F,Mask):- 
-  asserta_if_new(dir_test_suite_name(SuiteX)),
-  locally(t_l:local_test_props([test_suite=SuiteX,loadmask=Mask]),
-     load_json_file(F,Mask)).
-
-/*:- export(load_json_files/2).
+:- export(load_json_files/2).
 load_json_files(F,Mask):- 
-  mask_to_fullnames(Mask,FullNames),  FullNames\==[],
-  u_dmsg(load_json_files(F,Mask)),
-  my_maplist(load_json_file(F),FullNames),!.
-*/
+  arc_sub_path('.',ARC_DIR),
+  absolute_file_name(Mask,AbsMask,[relative_to(ARC_DIR)]),
+  expand_file_name(AbsMask,FullNames),
+  wdmsg(load_json_files(AbsMask,FullNames)),
+  maplist(file_base_name,FullNames,BaseNames),
+  maplist(file_name_extension,Names,_,BaseNames),
+  maplist(load_json_file(F),Names,FullNames),!.
+
 no_uscore(UBaseName,BaseName):- 
   atomic_list_concat(List,'_',UBaseName),
   atomic_list_concat(List,'-',BaseName).
 
-/*
-expand_to_abs_file_name_list(FName,ABSFullNames):- 
-  \+ exists_file(FName), expand_file_name(FName,FullNames),FullNames\=@=[FName],
-  my_maplist(afn_maybe,FullNames,ABSFullNames),
-  last(ABSFullNames,Exist),
-  exists_file(Exist),!.
-afn_maybe(A,A).
-load_json_file(F, FName):-  pp(load_json_file(F)=FName),fail.
-load_json_file(F, FName):- is_list(FName),!,my_maplist(load_json_file(F), FName).
-load_json_file(F, FName):- \+ exists_file(FName), !, expand_to_abs_file_name_list(FName,FullNames),load_json_file(F, FullNames).
-%load_json_file(F, FName):- exists_file(FName),\+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\==ABSName,!,load_json_file_abs(F, ABSName).
-load_json_file(F, FName):- \+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\=@=ABSName,!,load_json_file_abs(F, ABSName).
-load_json_file(F, FName):- load_json_file_abs(F, FName),!.
-*/
-%load_json_file(F, FName):-  pp(load_json_file(F)=FName),fail.
-load_json_file(F, FName):- is_list(FName),!,my_maplist(load_json_file(F), FName).
-load_json_file(F, FName):- \+ exists_file(FName), expand_file_name(FName,FullNames),FullNames\=@=[FName],last(FullNames,Exist),exists_file(Exist),!,load_json_file(F, FullNames).
-%load_json_file(F, FName):- exists_file(FName),\+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\==ABSName,!,load_json_file2(F, ABSName).
-load_json_file(F, FName):- \+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\=@=ABSName,!,load_json_file2(F, ABSName),!.
-load_json_file(F, FName):- load_json_file2(F, FName),!.
-
-load_json_file2(F, FullName):- 
-  %pp(load_json_file2(F)=FullName),!,
-  must_det_ll((
-  file_base_name(FullName,FileBaseName),
-  file_name_extension(UName,_,FileBaseName),
-  no_uscore(UName,Name), 
-  Testname=..[F,Name], 
+load_json_file(F, UBaseName, FullName):- no_uscore(UBaseName,BaseName), Testname=..[F,BaseName], 
   % dmsg(load_json_file=FullName),
-
-  setup_call_cleanup(open(FullName,read,In), json:json_read(In,Term,[]), close(In)),
-
-  locally(t_l:local_test_props(filename=FullName),
-    (load_json_of_file(Testname,file,Term),
-     ignore((
-      kaggle_arc(Testname,_,_,_), 
-      add_test_info(Testname),
-      add_testfile_name(Testname,FullName))))))),!.
-
-
-add_testfile_name(Testname,FullName):- 
-  ignore((  
+  setup_call_cleanup(open(FullName,read,In),
+   json:json_read(In,Term,[]),
+   close(In)),
+  load_json_of_file(Testname,file,Term),!,
+  ignore((
+  add_test_info_prop(Testname,fullname,FullName),
   split_string(FullName, "\\/",'./',L),append(_,[Dir,_],L),
-  atom_string(ADir,Dir),!,
-  ADir\==[],
+  atom_string(ADir,Dir),
   add_test_info_prop(Testname,test_suite,ADir),
-  (ADir==solution -> true ; asserta_if_new(dir_test_suite_name(ADir))))).
+  asserta_if_new(dir_test_suite_name(ADir)))).
 
 
-add_test_info(Name):- forall(t_l:local_test_props(Props),add_test_info_props(Name,Props)).
-
-
-add_test_info_props(Name,RestInfo):- is_list(RestInfo),!, my_maplist(add_test_info_props(Name),RestInfo).
-add_test_info_props(Name,F=V):- !, add_test_info_prop(Name,F,V).
-add_test_info_props(Name,FV):- compound_name_arguments(FV,F,V),add_test_info_prop(Name,F,V),!.
-add_test_info_props(Name,TV):- assert_if_new(some_test_info_prop(Name,TV)),u_dmsg(fallback_some_test_info_prop(Name,TV)).
-
-:- multifile(muarc_tmp:some_test_info_prop/2).
-:- dynamic(muarc_tmp:some_test_info_prop/2).
-
-add_test_info_prop(Name,F,V):- var(V),!,u_dmsg(var_add_test_info_prop(Name,F,V)).
-add_test_info_prop(Name,F,[]):- NV=..[F,_], \+ \+ muarc_tmp:some_test_info_prop(Name,NV),!.
-add_test_info_prop(Name,F,[V]):- !,add_test_info_prop(Name,F,V).
-add_test_info_prop(Name,F,V):-  
-  must_det_ll((
-    NV=..[F,[]],ignore(retract(muarc_tmp:some_test_info_prop(Name,NV))), 
-   n_v_to_nv(F,[V],TV),
-   assert_if_new(muarc_tmp:some_test_info_prop(Name,TV)),
-   nop(u_dmsg(muarc_tmp:some_test_info_prop(Name,TV))))).
-
-:- thread_local(t_l:local_test_props/1).
-
-
-  load_json_predictions(Name,Rest,json(Term)):- !, load_json_predictions(Name,Rest,Term).
-  load_json_predictions(Name,Rest,Term):- %u_dmsg(load_json_predictions(Name,Rest,Term)),
-    select(output_id=ID,Rest,RestInfo),
-    select(prediction_id=AnswerID0,Term,TermInfo0),    
-     AnswerID is AnswerID0 + 10,
-    select(output=G,TermInfo0,TermInfo1),
-    add_test_info_props(Name,TermInfo1),
-    add_test_info_props(Name,RestInfo),
-    json_to_colors(G,Grid), 
-    add_prediction(Name,ID,AnswerID,Grid).
-
-  load_json_predictions(Name,Rest,Term):- u_dmsg(munused_load_json_predictions(Name,Rest,Term)),!.
-
-
- add_prediction(Name,ID,AnswerID,_Grid):- assert_if_new(kaggle_arc_answers(Name,ID,AnswerID,_BadGrid)).
-
-
-  load_json_of_file(_, Atom+_, []):- atom(Atom),!.
   load_json_of_file(Name,Type,json(Term)):-! , load_json_of_file(Name,Type,Term).
-  
-  load_json_of_file(FName,Type,Term):- select(task_name=Name,Term,Rest),!,
-   must_det_ll((FName=..[F|Info], TestID=..[F,Name],         
-         add_test_info(TestID), 
-         add_test_info_props(TestID,info(Info)),
-         load_json_of_file(TestID,Type,Rest))).
-
-  load_json_of_file(Name,Type,[id=_|T]):- !, load_json_of_file(Name,Type,T).
-  load_json_of_file(FName,Type,Term):- select(id=Name,Term,Rest), atom(Name), atom_length(Name,Len),Len>1,
-    must_det_ll((FName=..[F|Info], TestID=..[F,Name],
-        locally(t_l:local_test_props(Info), add_test_info(TestID)),
-        locally(t_l:local_test_props(Rest),
-          load_json_of_file(TestID,Type,Rest)))).
-
-  %load_json_of_file(FName,Type,Term):- select(id=Name,Term,Rest),functor(FName,F,_), TestID=..[FName,Name],!, load_json_of_file(TestID,Type,Rest).
-
-  load_json_of_file(TestID,_Type,[Test=Out]):- Test==test, !, load_json_of_file(TestID,Test,Out).
-
-  load_json_of_file(Name, _Type,List):- select(predictions=Items,List,Rest),!,
-    add_test_info_props(Name,Rest),
-    my_maplist(load_json_predictions(Name,Rest),Items).
-
   load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
-  load_json_of_file(TestID,train,T):-!,load_json_of_file(TestID,trn,T).
-  load_json_of_file(TestID,test,T):-!,load_json_of_file(TestID,tst,T).
+  load_json_of_file(Name,train,T):-!,load_json_of_file(Name,trn,T).
+  load_json_of_file(Name,test,T):-!,load_json_of_file(Name,tst,T).
+  load_json_of_file(Name,Type,[id=_|T]):- !, load_json_of_file(Name,Type,T).
 
-
-  
-  load_json_of_file(Name,_Type,[train =In, test=Out]):- load_json_of_file(Name,train,In),load_json_of_file(Name,test,Out).
   load_json_of_file(Name,Type,[input=In,output=Out]):- assert_kaggle_arc_json(Name,Type,In,Out),!.
   load_json_of_file(Name,Type,[input=In]):-assert_kaggle_arc_json(Name,Type,In,_Out),!.
 
   load_json_of_file(Name,A,V):- atom(A),atomic(V),!,add_test_info_prop(Name,A,V).
-
-  load_json_of_file(Name,Type,[H|T]):- atom(Type),is_list(T),!,forall(nth00(N,[H|T],E), 
-      load_json_of_file(Name,Type+N,E)).    
-
-  load_json_of_file(Name,A,V):- u_dmsg(miss_load_json_of_file(Name,A,V)),!, add_test_info_prop(Name,A,V).
+  load_json_of_file(Name,Type,[H|T]):- atom(Type),is_list(T),!,forall(nth00(N,[H|T],E), load_json_of_file(Name,Type+N,E)).    
+  load_json_of_file(Name,A,V):- wdmsg(load_json_of_file(Name,A,V)),!, add_test_info_prop(Name,A,V).
 
 assert_kaggle_arc_json(Name,Type,In0,Out0):- 
-  json_to_colors(In0,In), json_to_colors(Out0,Out),!, 
+  json_to_colors(In0,In), json_to_colors(Out0,Out), 
   assert_kaggle_arc_json_now(Name,Type,In,Out).
-  
 
-%assert_kaggle_arc_json_now(Name,Type,In,Out):- kaggle_arc_json(Name,Type,In,OutO),Out=OutO,!.
-assert_kaggle_arc_json_now(Name,Type,In,Out):- 
-  retractall(kaggle_arc_json(Name,Type,_In,_Out)),
-  into_solid_grid(In,InS),
-  into_solid_grid(Out,OutS),
-  assert_if_new(kaggle_arc_json(Name,Type,InS,OutS)),
-  add_test_info(Name).
+assert_kaggle_arc_json_now(Name,Type,In,Out):- kaggle_arc_json(Name,Type,In,OutO),Out=OutO,!.
+assert_kaggle_arc_json_now(Name,Type,In,Out):- assert_if_new(kaggle_arc_json(Name,Type,In,Out)).
 
+add_test_info_prop(Name,A,[V]):- nonvar(V), !, add_test_info_prop(Name,A,V).
+add_test_info_prop(Name,A,V):- n_v_to_nv(A,[V],TV),assert_if_new(some_test_info_prop(Name,TV)).
 
 :- multifile(dir_test_suite_name/1).
 :- dynamic(dir_test_suite_name/1).
@@ -213,7 +92,7 @@ nth11(N,HT,E,Rest):- nth00(N2,HT,E,Rest),N2 is N+1.
 
 % json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.
 :- export(json_to_colors/2).
-json_to_colors(Out,Color):- is_list(Out),!,my_maplist(json_to_colors,Out,Color).
+json_to_colors(Out,Color):- is_list(Out),!,maplist(json_to_colors,Out,Color).
 json_to_colors(Out,Color):- grid_color_code(Out,Color).
 
 
@@ -225,108 +104,32 @@ user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
 
 :- prolog_load_context(directory,ARC_DIR), asserta(muarc_tmp:arc_directory(ARC_DIR)).
 
-%test_name_ansi_output_file(TestID,File):- absolute_file_name(TestID,File,[access(read),file_errors(fail)]),!.
-%test_name_ansi_output_file(TestID,File):- absolute_file_name(TestID,File,[access(create),file_errors(fail)]),!.
-
-
 absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
   catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(directory),solutions(first),file_errors(fail),access(read)]),_,fail),!.
+    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
 absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
   absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(regular),solutions(first),file_errors(fail),access(read)]).
+    file_type(regular),solutions(first),file_errors(error),access(read)]).
 
-absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
-  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(directory),solutions(first),file_errors(fail),access(none)]),_,fail),!.
-absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
-  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(regular),solutions(first),file_errors(fail),access(none)]).
-
-arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),
-  absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath),!.
+arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath),!.
 
 :- export(arc_sub_path/2).
 
-load_deval:- fail.
 
-load_json_files1:- load_json_files(train400,t,'./data/training/*.json').
-load_json_files1:- load_json_files(eval400,v,'./data/devaluation/*.json').
+:- load_json_files(t,'./data/training/*.json').
+:- load_json_files(v,'./data/evaluation/*.json').
 %:- load_json_files(v,'./data/test_100/*.json').
 %:- load_json_files(t,'./data/test_nar_10x10/*.json').
-load_json_files1:- load_json_files('1D_testset',t,'./data/1D_testset/*.json').
-load_json_files1:- load_json_files('MyTrainingData',t,'./dbigham/Data/MyTrainingData/*.json').
-
-%load_json_files1:- load_json_files('object_modifications_schema',t,'./object_modifications_schema/tasks/*.json').
-%:- load_json_files(v,'../../secret_data/solu**66/*.json').
-%:- load_json_files(v,'../../secret_data/evaluation/*.json').
-%load_json_files1:- load_deval, load_json_files('secret_data_evaluation',v,'/data/evaluation/*.json').
-%load_json_files1:- load_json_files('secret_data_solution',v,'/secret_data/solution/*.json').
-% % % load_json_files1:- load_json_files('secret_data_solution',v,'/data/solution/*.json').
-
-%load_json_files2:- load_json_files(michod,t,'./arc-task-generator/conditional_transforms_schema/tasks/0*.json').
-load_json_files1:- load_json_files('MiniARC',t,'./MINI-ARC/data/MiniARC/*.json').
-
-load_json_files:- 
-  forall(load_json_files1,true).
+:- load_json_files(t,'./data/1D_testset/*.json').
+:- load_json_files(t,'./dbigham/Data/MyTrainingData/*.json').
 
 %:- load_json_files(v,'./data/test/*.json').
 :- export(kaggle_arc/4).
-
-:- thread_local(t_l:encoder/1).
-
-with_raw_encoder(Goal):- with_encoder(raw,Goal).
-
-with_encoder(Enc,Goal):- locally(t_l:encoder(Enc),Goal).
-
-:- dynamic(is_encode_tst/1).
-
-is_encode_tst(A):- simp_encode(A).
-is_encode_tst(A):- ensure_test(A), fail.
-
-is_output_simple(TestID):- fail, foreach_test((TestID), 
-  \+ \+ (get_raw_input_outputs(TestID,_ExampleNums,_Ins,Outs), simple_reencode(_,Outs,EOuts),Outs\==EOuts)).
-
-is_input_simple(TestID):- fail, foreach_test((TestID), 
-  \+ \+ (get_raw_input_outputs(TestID,_ExampleNums,Ins,_Outs),  simple_reencode(_,Ins,EIns),Ins\==EIns)).
-
-is_each_pair_use_simple(_TestID):- fail.
-
-simp_encode(t('5582e5ca')).
-simp_encode(t('0d3d703e')).
-
-get_raw_input_outputs(TestID,ExampleNums,Ins,Outs):-
-  (var(TestID)-> is_encode_tst(TestID);true),
-  findall(ExampleNum,kaggle_arc_raw(TestID,ExampleNum,In,Out),ExampleNums),
-  findall(In,kaggle_arc_raw(TestID,ExampleNum,In,Out),Ins),
-  findall(Out,kaggle_arc_raw(TestID,ExampleNum,In,Out),Outs).
-
-:- ensure_loaded('./logical_ml/muarc_dmiles').
-%kaggle_arc(TestID,ExampleNum,In,Out):- !, kaggle_arc_raw(TestID,ExampleNum,In,Out).
-kaggle_arc(TestID,ExampleNum,In,Out):-
-  kaggle_arc_raw(TestID,ExampleNum,In0,Out0),
-  % in private impl of muarc_dmiles
-  maybe_reencode(TestID,ExampleNum,In0,Out0,In1,Out1), In1=In, Out1=Out.
-
-maybe_reencode(TestID,ExampleNum,In0,Out0,In,Out):-
- (t_l:encoder(Enc)->Enc\==raw),!,call(Enc,TestID,ExampleNum,In0,Out0,In,Out).
-maybe_reencode(_TName,_ExampleNum,In,Out,In,Out).
-
-
-kaggle_arc_raw(TestID,ExampleNum,In,Out):- kaggle_arc0(TestID,ExampleNum,In,Out)*-> true ; kaggle_arc1(TestID,ExampleNum,In,Out).
-kaggle_arc_raw(Name,tst+AnswerID,In,Grid):- kaggle_arc_answers(Name,ID,AnswerID,Grid), kaggle_arc0(Name,tst+ID,In,_Out).
-
-kaggle_arc0(TestID,ExampleNum,In,Out):- kaggle_arc_json(TestID,ExampleNum,In,O), not_disallow_test_out(ExampleNum,O,Out).
-kaggle_arc1(TestID,ExampleNum,In,Out):- nonvar(ExampleNum),
-  kaggle_arc0(TestID,NewExample,In,Out),!,
-  ignore((\+ \+ nb_current(example,ExampleNum),  nb_setval(example,NewExample))).
-
-   
-
+kaggle_arc(TName,ExampleNum,In,Out):- kaggle_arc_json(TName,ExampleNum,In,O), disallow_test_out(ExampleNum,O,Out).
 
 %adisallow_test_out(trn+_,OO,OO):-!.
 %disallow_test_out(tst+_, O,OO):- grid_size(O,H,V),make_grid(H,V,OO).
-not_disallow_test_out(_,OO,OO).
+disallow_test_out(_,OO,OO).
 
 tasks_split(ID,String):- split_string(String,",[] \n\r\t\s",",[] \n\r\t\s",L),member(S,L),atom_string(E,S),atom_id_e(E,ID).
 
@@ -731,7 +534,7 @@ icu('feca6190', 3 ).
 icu('ff28f65a', -1 ).
 icu('ff805c23', -1 ).
 
-%Personally Created Training Tasks (16)
+%Personally Created Training Tasks (15)
 suite_tag(dbigham_personal,'
 jnohuorzh-easier
 ihiz27k2n
@@ -741,19 +544,18 @@ jnohuorzh
 2wfys5w64-relative-right-side
 n1hczotml
 ifmyulnv8
-ifmyulnv8-colorlesspoints
-ifmyulnv8-dynamic-colorlesspoints
+ifmyulnv8-shape
+ifmyulnv8-dynamic-shape
 referenceable-components
 178fcbfb-easier
 middle
 surface-pixel-count
 4938f0c2-easy
-56dc2b01-easier-2
 ').
 
-% Core ARC Training Tasks (93)
-suite_tag(dbigham_train_core,'
+% Core ARC Training Tasks (91)
 
+suite_tag(dbigham_train_core,'
 0ca9ddb6
 3c9b0459
 1caeab9d
@@ -845,12 +647,9 @@ d364b489
 d6ad076f
 f8a8fe49
 5168d44c
-b7249182
-b548a754
 ').
 
-% Tasks Passing via Generalization
-% Training Tasks (88)
+% Training Tasks (86)
 % The following ARC training tasks started passing after some different task was implemented.
 suite_tag(dbigham_train_pass,'
 ea32f347
@@ -938,10 +737,7 @@ b8cdaf2b
 af902bf9
 ba26e723
 dc1df850
-3bdb4ada
-dc433765
-e50d258f
-').
+3bdb4ada').
 
 % Evaluation Tasks (56)
 % The following ARC evaluation tasks are passing. My intention is to not analyzed or implemented evaluation examples specifically, 
@@ -1006,8 +802,6 @@ e872b94a
 2b01abd0
 817e6c09
 8ee62060
-3ee1011a
-7039b2d7
-da2b0fe3
 e5790162
-27a77e38').
+27a77e38
+').

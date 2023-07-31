@@ -4,9 +4,6 @@
 % Douglas Miles
 
 */
-
-:- throw(afc_shared_module).
-
 :- if( \+ current_predicate(set_fileAssertMt/1)).
 
 :- set_prolog_flag(afc_shared_module,user).

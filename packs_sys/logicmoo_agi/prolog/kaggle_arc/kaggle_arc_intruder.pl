@@ -6,46 +6,6 @@
 */
 :- include(kaggle_arc_header).
 
-
-
-grid2objs(Grid,LisOfLists):- ensure_grid(Grid),
-  localpoints(Grid,LPs),reclump_points(LPs,LisOfLists).
-
-is_adjacent_cpoint(C-P1,Dir,C-P2):- is_adjacent_point(P1,Dir,P2), Dir\==c.
-
-reclump_points(LPs,OUT):- 
-  select(CP1,LPs,LPs1),!,
-  reclump_points(LPs1,[CP1],OUT).
-
-reclump_points([],CPSoFar,[CPSoFar]):-!.
-reclump_points(LPs,CPSoFar,[CPSoFar|OUT]):-
-  member(CP1,CPSoFar), is_adjacent_cpoint(CP1,_Dir,CP2), select(CP2,LPs,LPs1),!,
-  reclump_points(LPs1,[CP2|CPSoFar],OUT).
-reclump_points([CP0|LPs],CPSoFar,[CPSoFar|OUT]):- reclump_points(LPs,[CP0],OUT).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 :- discontiguous stuff_options1/2.
 :- discontiguous stuff_options1/3.
 :- discontiguous stuff_options/2.
@@ -65,7 +25,7 @@ test( " Fill the smallest square hole?",
 |       N         N       |   |       ?         ?       |
 |       N         N       |   |       ?         ?       |
 |       N N N N N N       |   |       ? ? ? ? ? ?       |
- -------------------------     -------------------------").
+ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯").
 :- multifile learn_shapelib/7.
 :- discontiguous learn_shapelib/7.
 learn_shapelib(PairName,In,Out,IH,IV,OH,OV):-
@@ -76,15 +36,15 @@ learn_shapelib(PairName,In,Out,IH,IV,OH,OV):-
 learn_intruders(PairName,In,Out,IH,IV,OH,OV):- nop(learn_intruders(PairName,In,Out,IH,IV,OH,OV)).
 
 rtrace_on_error(Goal):- !, call(Goal),!.
-rtrace_on_error(Goal):- catch(quietly(Goal),E,(notrace,dmsg(E=Goal),ibreak,1==1,rtrace(Goal))).
+rtrace_on_error(Goal):- catch(quietly(Goal),E,(notrace,dmsg(E=Goal),break,1==1,rtrace(Goal))).
 
 :- multifile individuals_from_pair/9.
 :- discontiguous individuals_from_pair/9.
 % Grid subtraction
 individuals_from_pair(PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):- 
   add_note("trying grid minus grid"),
-  grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
-  grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
+  grid_minus_grid(In,Out,ImO),amass(ImO,IMass),
+  grid_minus_grid(Out,In,OmI),amass(OmI,OMass),
    show_pair_no_i(H,V,H,V,grid_subtraction,PairName,ImO,OmI),
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),
@@ -122,19 +82,19 @@ current_neurons(NeuralVM):- luser_getval(system_props,NeuralVM).
 :- ht_new(NeuralVM), luser_linkval(system_props,NeuralVM).
 
 % Grid subtraction
-learn_intruders(PairName,In,Out,IH,IV,OH,OV):- %atrace, 
+learn_intruders(PairName,In,Out,IH,IV,OH,OV):- %trace, 
   current_neurons(NeuralVM),
   set_prop_of(NeuralVM,NeuralVM,in,In),
   set_prop_of(NeuralVM,NeuralVM,out,Out),
   in_out_xform(NeuralVM,PairName,[In,Out],[ImO,OmI],[PLAN]),
-  u_dmsg(learn_intruders=PLAN),
+  wdmsg(learn_intruders=PLAN),
   individualizer_heuristics(PairName,ImO,OmI,IH,IV,OH,OV).
 
 individuals_from_pair(PairName,In,Out,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs):-
   current_neurons(NeuralVM),
   in_out_xform(NeuralVM,PairName,[In,Out],[ImO,OmI],[PLAN]),
   (In\=@=ImO;Out\=@=OmI),
-  u_dmsg(individuals_from_pair=PLAN),
+  wdmsg(individuals_from_pair=PLAN),
   individuals_from_pair(PairName,ImO,OmI,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs).
   
 
@@ -146,7 +106,7 @@ individuals_from_pair(PairName,In,Out,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs):-
   %show_pair_no_i(H,V,H,V,grid_subtraction,PairName,ImO,OmI),
   unique_colors(ImO,ICs), unique_colors(OmI,OCs),
   intersection(ICs,OCs,CommonCs,IPCs,OPCs),
-  my_maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
+  maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
   individuals_from_pair_colors(PairName,In,Out,
     IH,IV,OH,OV,
     ICs,IPCs,CommonCs,OPCs,OCs,
@@ -215,20 +175,20 @@ in_out_xform(NeuralVM,PairName,StartInOut,ResultInOut,[DONE|MORETODO]):-
 
 
 maybe_in_out_xform(NeuralVM,PairName,StartInOut,NextStartInOut,DONE):-
- arcST,atrace,
+ arcST,trace,
  DONE=withStuff(SourceType,StuffType,TargetType,OverlapType,WhatWithType),
   must_det_ll((
-    my_maplist(call(SourceType,NeuralVM,PairName),StartInOut,FromInOut),
-    my_maplist(call(TargetType,NeuralVM,PairName),StartInOut,TargetInOut),
-    my_maplist(StuffType,FromInOut,StuffInOut),
-    my_maplist(call(OverlapType,TargetInOut),StuffInOut,OverlapInOut),  
-    my_maplist(call(WhatWithType,StuffType,OverlapInOut),TargetInOut,FromInOut,NextStartInOut)
+    maplist(call(SourceType,NeuralVM,PairName),StartInOut,FromInOut),
+    maplist(call(TargetType,NeuralVM,PairName),StartInOut,TargetInOut),
+    maplist(StuffType,FromInOut,StuffInOut),
+    maplist(call(OverlapType,TargetInOut),StuffInOut,OverlapInOut),  
+    maplist(call(WhatWithType,StuffType,OverlapInOut),TargetInOut,FromInOut,NextStartInOut)
   )).
 
 
 stuff_options1(stuffType,is_cpoints,globalpoints). %:- globalpoints(Grid,Stuff).
 stuff_options1(stuffType,is_colors,unique_colors). %:- unique_colors(Grid,Stuff).
-stuff_options(stuffType,is_ncpoints,colorlesspoints). %:-  globalpoints(Grid,Stuff),decolorize(StuffM,Stuff).
+stuff_options(stuffType,is_nc_points,shape). %:-  globalpoints(Grid,Stuff),decolorize(StuffM,Stuff).
 stuff_options(stuffType,is_group,default_individuals). %:- individuals_default(Grid,Stuff).
 
 
@@ -257,8 +217,6 @@ add_stuff_missing(_,_,Each,Target,Result):- add_global_points(Each,Target,Result
 stuff_options1(whatWithType,remove_stuff_matching).
 stuff_options(whatWithType,change_stuff_not_matching).
 stuff_options(whatWithType,add_stuff_missing).
-
-
 
 
 :- include(kaggle_arc_footer).

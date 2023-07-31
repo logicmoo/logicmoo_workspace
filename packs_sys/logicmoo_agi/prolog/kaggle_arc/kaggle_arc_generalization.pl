@@ -7,6 +7,7 @@
 :- encoding(iso_latin_1).
 :- include(kaggle_arc_header).
 
+end_of_file.
 
 /*
 The Least General Generalization (LGG) is a concept in inductive logic programming (ILP) and machine learning that refers to the least specific hypothesis that generalizes two or more given examples. In other words, it is the most general description that still covers all the examples.

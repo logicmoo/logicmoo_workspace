@@ -669,6 +669,13 @@ unnumbervars_and_copy(X,YO):-
    (NewVs==[]-> YO=X ; (length(TV,TVL),length(NewVs,NewVarsL),(NewVarsL==TVL-> (YO=X) ; (dtrace,add_newvars(NewVs),Y=X)))).
 */
 
+unnumbervars2a(X,Y):-
+   with_output_to(string(A),write_term(X,[numbervars(true),% variable_names([]),
+     character_escapes(true),
+     ignore_ops(true),quoted(true)])),
+   atom_to_term(A,Y,_NewVs).
+
+
 %add_newvars(_):-!.
 
 %= 	 	 

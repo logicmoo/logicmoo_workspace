@@ -200,13 +200,13 @@ using_style(Out,Ctrl,Goal,How):-
   using_style_emitter(Emitter, Out,Ctrl,Goal,How),!.
 
 using_style_emitter(sgr,_Out,Ctrl,Goal,How):- fail,
-  How = (with_output_to(string(S),
+  How = (with_output_to_each(string(S),
      (set_stream_ignore(current_output, tty(true)),call(Goal))),
           terminal_ansi_format([Ctrl],'~s',[S])), !.
 
 using_style_emitter(Emitter,Out,Ctrl,Goal,How):- 
   cnvt_in_out(Emitter,Out,Ctrl,OnCode,OffCode),!,
-  How = setup_call_cleanup((OnCode,!),once(Goal),(OffCode,!)).
+  How = scce_orig((OnCode,!),once(Goal),(OffCode,!)).
 
 style_emitter(Out,NV):- nonvar(NV),style_emitter(Out,Var),!,NV==Var.
 style_emitter(Out,none):- dis_pp(ansi), \+ is_tty(Out), !.
@@ -230,8 +230,10 @@ cnvt_in_out(html,_Out,C,I,O):- html_on_off(C,I,O),!.
 cnvt_in_out(_, _Out,_Ctrl,true,true):-!.
 cnvt_in_out(Mode, _Out, Ctrl,true,true):- format(user_error,'~N% ~q.~n', [mising_ctrl(Mode, Ctrl)]).
 
-enter_recording_stream(_Out,_Ctrl,H,S):- new_memory_file(H),open_memory_file(H,write,S),set_output(S).
-exit_recording_stream(Out,Ctrl,H,S):- set_output(Out),close(S),memory_file_to_string(H,Str),terminal_ansi_format([Ctrl],'~s',[Str]).
+set_output_safe(Strm):- catch(set_output(Strm),_,true).
+
+enter_recording_stream(_Out,_Ctrl,H,S):- new_memory_file(H),open_memory_file(H,write,S),set_output_safe(S).
+exit_recording_stream(Out,Ctrl,H,S):- set_output_safe(Out),close(S),memory_file_to_string(H,Str),terminal_ansi_format([Ctrl],'~s',[Str]).
 
 into_oncode_call(Out,OnCode,OnCodeCall):- OnCodeCall= smart_format(Out,'\e[~wm', [OnCode]).
 
@@ -503,8 +505,8 @@ with_error_to_string(S,Goal):-
 with_output_to_each(Dest,Goal):- compound(Dest), \+ compound_name_arity(Dest,_,0), 
   Dest=..[F,A],stream_u_type(F),!,
   current_output(Was), 
-  Unset = set_output(Was),
-  MFS = mfs(_,F,_,set_output,Unset),
+  Unset = set_output_safe(Was),
+  MFS = mfs(_,F,_,set_output_safe,Unset),
   Done = mfs_end(MFS,A),
   call_cleanup(trusted_redo_call_cleanup(mfs_start(MFS),(Goal,Done),Done),Done).
 /*
@@ -513,14 +515,14 @@ with_output_to_each(Dest,Goal):- Dest=..[F,A],!,
    nb_setarg(1,Dest,""),
    new_memory_file(Handle),
    open_memory_file(Handle,write,Stream,[free_on_close(true)]),
-     scce_orig(set_output(Stream),
-      setup_call_cleanup(true,Goal,
+     scce_orig(set_output_safe(Stream),
+      scce_orig(true,Goal,
         (close(Stream),mem_handle_to_type(Handle,F,Atom),nb_setarg(1,Dest,Atom),ignore(A=Atom))),
-      (set_output(Was))).
+      (set_output_safe(Was))).
 */
 with_output_to_each(Dest,Goal):- 
    current_output(Was),
-    scce_orig(set_output(Dest),Goal,set_output(Was)).
+    scce_orig(set_output_safe(Dest),Goal,set_output_safe(Was)).
 
 
 
@@ -720,7 +722,7 @@ smart_format(X,Y):- smart_format([X,Y]).
 smart_format(DDD):- \+ is_list(DDD),!, format('~q',[DDD]).
 
 smart_format([X,Y]):- is_regular_format_args(X,Y),!,catch(format(X,Y),error(smart_format(A),B),writeq(smart_format(X,Y)=error(smart_format(A),B))),!.
-smart_format([X|More]):- (compound(X);is_stream(X)),!,with_output_to(X,smart_format(More)),!.
+smart_format([X|More]):- (compound(X);is_stream(X)),!,with_output_to_each(X,smart_format(More)),!.
 smart_format([X,Y]):- smart_format(X-Y),!.
 
 :- export(smart_format/3).
@@ -901,9 +903,9 @@ dfmt(X,Y):- get_thread_current_error(Err), with_output_to_stream(Err,fmt(X,Y)).
 %
 with_output_to_stream(Stream,Goal):- is_stream(Stream),!,
    current_output(Saved),
-   scce_orig(set_output(Stream),
+   scce_orig(set_output_safe(Stream),
          Goal,
-         set_output(Saved)).
+         set_output_safe(Saved)).
 with_output_to_stream(Prop,Goal):- compound(Prop), on_x_fail(stream_property(Stream,Prop)),!, 
   with_output_to_stream(Stream,Goal).
 with_output_to_stream(Out,Goal):- with_output_to_each(Out,Goal).
@@ -1062,7 +1064,7 @@ portray_append_goals(Var,Goals,(maplist(call,Goals),Var)).
 %dzotrace(G):- notrace(G),!.
 dzotrace(G):- notrace(woi(no_bfly(G))),!.
 
-woi(G):- setup_call_cleanup(G,true,true).
+woi(G):- scce_orig(G,true,true).
 
 %= 	 	 
 
@@ -1160,7 +1162,7 @@ print_prepended_line(Pre,S):- prepend_trim(S,H),
 in_cmt(Goal):- in_cmt(guess,Goal).
 
 in_cmt(line,Goal):- !, maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
-in_cmt(block,Goal):- !, maybe_bfly_html(setup_call_cleanup(write(' /* '), call(Goal),write(' */ '))),!.
+in_cmt(block,Goal):- !, maybe_bfly_html(scce_orig(write(' /* '), call(Goal),write(' */ '))).
 in_cmt(guess,Goal):- !, maybe_bfly_html(prepend_each_line('%~ ',Goal)),!.
 in_cmt(Block,Goal):- maybe_bfly_html(prepend_each_line(Block,Goal)),!.
 
@@ -1244,7 +1246,7 @@ prepend_each_line(Pre,Goal):- fail,
   set_stream_ignore(Stream,tty(true)),
   %set_stream_ignore(Stream,buffer(false)),
   %undo(ignore(catch(close(Stream),_,true))),!,
-  setup_call_cleanup(true,
+  scce_orig(true,
    (with_output_to_each(Stream,once(Goal)),flush_output(Stream)),
     ignore(catch(close(Stream),_,true))),!.
 
@@ -1346,7 +1348,7 @@ transform_mesg(F,A,fmt0(F,A)).
 
 with_output_to_main_error(G):-
   t_l:thread_local_error_stream(Where),!,
-  with_output_to(Where,G).
+  with_output_to_each(Where,G).
 with_output_to_main_error(G):-
   with_output_to_real_main_error(G).
 
@@ -1365,7 +1367,7 @@ save_real_main_error:-
 with_output_to_real_main_error(G):-
   %set_prolog_flag(occurs_check,false),
   %stream_property(Err,file_no(2)),!,
-  tmp:real_main_error(Err) -> with_output_to(Err,G); with_output_to(user_error,G).
+  tmp:real_main_error(Err) -> with_output_to_each(Err,G); with_output_to_each(user_error,G).
 
 /*
 with_output_to_main_error(G):-
@@ -1744,7 +1746,7 @@ use_tty(_,false).
 
 :- meta_predicate(woto_tty(+,+,0)).
 :- export(woto_tty/3).
-woto_tty(S,TTY,Goal):- with_output_to(S,((set_stream_ignore(current_output,tty(TTY))),Goal)).
+woto_tty(S,TTY,Goal):- with_output_to_each(S,((set_stream_ignore(current_output,tty(TTY))),Goal)).
 
 :- meta_predicate(woto(+,0)).
 :- export(woto/2).
@@ -1783,7 +1785,7 @@ wotso(Goal):- wots(S,Goal), ignore((S\=="",write(S))).
 
 :- meta_predicate(wote(0)).
 :- export(wote/1).
-wote(G):-stream_property(X,file_no(2)), with_output_to(X,G).
+wote(G):-stream_property(X,file_no(2)), with_output_to_each(X,G).
 
 :- meta_predicate(weto(0)).
 %weto(G):- !, call(G).
@@ -1799,10 +1801,12 @@ weto(G):-
   stream_property(UO,alias(user_output)),
   once(stream_property(CE,alias(current_error));CE=UE),
   once(stream_property(CO,alias(current_output));current_output(CO)),!,
-  setup_call_cleanup(
+  mscce_orig(
      (set_stream_nop(CO,alias(user_error)),set_stream_nop(CO,alias(user_output)),
          set_stream_nop(CO,alias(current_error)),set_stream_nop(CO,alias(current_output))),
-     locally_tl(thread_local_error_stream(CO),once(G)), 
+
+                locally_tl(thread_local_error_stream(CO),call(G)), 
+
      (set_stream_nop(UE,alias(user_error)),set_stream_nop(CE,alias(current_error)),
          set_stream_nop(UO,alias(user_output)),set_stream_nop(CO,alias(current_output)))).
 weto(G):- call(G).
@@ -1816,7 +1820,7 @@ with_ioe(G):-
   stream_property(UO,alias(user_output)),
   once(stream_property(CE,alias(current_error));CE=UE),
   once(stream_property(CO,alias(current_output));current_output(CO)),!,
-  setup_call_cleanup(true, G, 
+  scce_orig(true, G, 
      (set_stream_ignore(UE,alias(user_error)),set_stream_ignore(CE,alias(current_error)),
          set_stream_ignore(UO,alias(user_output)),set_stream_ignore(CO,alias(current_output)))).
 
@@ -1858,7 +1862,7 @@ mUST_det_ll(\+ (X)):- !, (\+ mUST_not_error(X) -> true ; mUST_det_ll_failed(\+ X
 %mUST_det_ll((M:Y)):- nonvar(M), !, M:mUST_det_ll(Y).
 mUST_det_ll(once(A)):- !, once(mUST_det_ll(A)).
 mUST_det_ll(X):- 
-  strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(mUST_not_error(X)*->true;mUST_det_ll_failed(X)),
+  strip_module(X,M,P),functor(P,F,A),scce_orig(nop(trace(M:F/A,+fail)),(mUST_not_error(X)*->true;mUST_det_ll_failed(X)),
     nop(trace(M:F/A,-fail))).
 
 mUST_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/wdmsg(E=X),wdmsg(rRTrace(E)=X),rRTrace(X)))).
@@ -1920,11 +1924,11 @@ terminal_ansi_goal(Stream, Class, Goal):-
  class_attrs(Class, Attr),
     phrase(sgr_codes_ex(Attr), Codes),
     atomic_list_concat(Codes, ;, Code),
-    with_output_to(
+    with_output_to_each(
         Stream,
-        setup_call_cleanup(   
+        scce_orig(   
             keep_line_pos(current_output, format('\e[~wm', [Code])),
-            once(Goal),
+            call(Goal),
             keep_line_pos(current_output, format('\e[0m'))
         )
     ),
@@ -1945,7 +1949,7 @@ keep_line_pos_w_w(_, G) :- use_html_styles, !, call(G).
 keep_line_pos_w_w(_, G) :- !, call(G).
 keep_line_pos_w_w(S, G) :-
       line_pos(S,LPos) ->
-         call_cleanup(G, set_stream_line_position_safe(S, LPos)) ; call(G).
+         scce_orig(G, set_stream_line_position_safe(S, LPos)) ; call(G).
 
 line_pos(S,LPos):- stream_property(S, position(Pos)),stream_position_data(line_position, Pos, LPos).
 

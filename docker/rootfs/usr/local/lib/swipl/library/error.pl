@@ -109,7 +109,7 @@ domain_error(ValidDomain, Culprit) :-
 %   existing (external) resource of type  ObjectType that is represented
 %   by it.
 
-existence_error(ObjectType, Culprit) :-
+existence_error(ObjectType, Culprit) :- 
     throw(error(existence_error(ObjectType, Culprit), _)).
 
 %!  existence_error(+ObjectType, +Culprit, +Set).
@@ -122,7 +122,7 @@ existence_error(ObjectType, Culprit) :-
 %
 %   @compat This error is outside the ISO Standard.
 
-existence_error(ObjectType, Culprit, Set) :-
+existence_error(ObjectType, Culprit, Set) :- 
     throw(error(existence_error(ObjectType, Culprit, Set), _)).
 
 %!  permission_error(+Operation, +PermissionType, +Culprit).

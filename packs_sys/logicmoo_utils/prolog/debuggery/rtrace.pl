@@ -420,14 +420,17 @@ ERROR: Unhandled exception: good
 set_leash_vis(OldL,OldV):- '$leash'(_, OldL),'$visible'(_, OldV),!.
 :- my_totally_hide(set_leash_vis/2).
 
-restart_rtrace:-
+restart_rtrace:- restart_rtrace1,!.
+restart_rtrace.
+restart_rtrace1:-
    notrace,leash(-all),
    set_prolog_flag(gui_tracer,false),
    visible(+all),
    maybe_leash(+exception),
    trace.
 :- 'my_totally_hide'(restart_rtrace/0).
-      
+:- export(restart_rtrace/0).
+
 rtrace(Goal):- trace,
   get_trace_reset(W),scce_orig(restart_rtrace,Goal,W).
 

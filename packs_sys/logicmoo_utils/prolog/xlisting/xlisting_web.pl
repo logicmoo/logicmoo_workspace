@@ -591,7 +591,7 @@ print_request([H|T]) :-
         print_request(T).
 
 
-:- xlisting_web:listing(print_request/1).
+%:- xlisting_web:listing(print_request/1).
 
 
 
@@ -1157,7 +1157,7 @@ add_context_menu:-!.
 
 :- include(xlisting_web_cm).
 
-:- listing(ensure_collapsable_script/0).
+%:- listing(ensure_collapsable_script/0).
 
 % logicmoo_html_needs_debug.
 

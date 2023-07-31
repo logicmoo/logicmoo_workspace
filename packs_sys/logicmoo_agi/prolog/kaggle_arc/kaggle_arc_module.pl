@@ -20,7 +20,7 @@ do_forgotten_exports(M):-
 :- module_transparent(do_forgotten_exports/0).
 do_forgotten_exports:- 
    strip_module(_,M,_), 
-   u_dmsg(do_forgotten_exports(M)), 
+   wdmsg(do_forgotten_exports(M)), 
    do_forgotten_exports(M).
 
 %:- use_module(library(pfc_lib)).

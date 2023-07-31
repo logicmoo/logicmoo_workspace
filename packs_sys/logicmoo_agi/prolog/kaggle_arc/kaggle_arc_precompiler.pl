@@ -8,7 +8,6 @@
 
 
 :- meta_predicate(must_det_ll(0)).
-:- meta_predicate(must_det_ll1(0)).
 :- meta_predicate(must_det_ll_failed(0)).
 :- meta_predicate(must_not_error(0)).
 %:- meta_predicate(must_det_l(0)).
@@ -24,28 +23,21 @@ must_det_ll_maplist(P1,[H|T]):- must_det_ll(call(P1,H)), must_det_ll_maplist(P1,
 must_det_ll_maplist(_,[],[]):-!.
 must_det_ll_maplist(P2,[HA|TA],[HB|TB]):- must_det_ll(call(P2,HA,HB)), must_det_ll_maplist(P2,TA,TB).
 
-must_det_ll_maplist(_,[],[],[]):-!.
-must_det_ll_maplist(P3,[HA|TA],[HB|TB],[HC|TC]):- must_det_ll(call(P3,HA,HB,HC)), must_det_ll_maplist(P3,TA,TB,TC).
-
-%must_det_ll(G):- !, once((notrace(G)*->true;must_det_ll_failed(G))).
-must_det_ll(G):- never_rrtrace,!,once(G).
-must_det_ll(G):- notrace(arc_html),!, ignore(notrace(G)),!.
-must_det_ll(G):- tracing,!, call(G). % once((call(G)*->true;must_det_ll_failed(G))).
+must_det_ll(G):- arc_html,!, ignore(notrace(G)).
 %must_det_ll(X):- !,must_not_error(X).
-must_det_ll((X,Goal)):- is_trace_call(X),!,call((itrace,Goal)).
-must_det_ll(X):- is_trace_call(X),!,itrace.
-must_det_ll(X):- nb_current(no_must_det_ll,t),!,call(X),!.
+must_det_ll((X,Goal)):- X==trace,!,call(trace,Goal).
+must_det_ll(X):- X==trace,!,trace.
+must_det_ll(X):- nb_current(no_must_det_ll,t),!,call(X).
 must_det_ll(X):- \+ callable(X), !, throw(must_det_ll_not_callable(X)).
 must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
-must_det_ll((X,Cut)):- (Cut==(!)), !, (must_det_ll(X),!).
-must_det_ll(my_maplist(P1,List)):- !, must_det_ll_maplist(P1,List).
-must_det_ll(my_maplist(P2,ListA,ListB)):- !, must_det_ll_maplist(P2,ListA,ListB).
-must_det_ll(my_maplist(P3,ListA,ListB,ListC)):- !, must_det_ll_maplist(P3,ListA,ListB,ListC).
-must_det_ll((X,Cut,Y)):- (Cut==(!)), !, (must_det_ll(X),!,must_det_ll(Y)).
-must_det_ll((X,Y)):- !, (must_det_ll(X),!,must_det_ll(Y)).
+must_det_ll((X,!)):- !, (must_det_ll(X),!).
+must_det_ll(maplist(P1,List)):- !, must_det_ll_maplist(P1,List).
+must_det_ll(maplist(P2,ListA,ListB)):- !, must_det_ll_maplist(P2,ListA,ListB).
+must_det_ll((X,!,Y)):- !, (must_det_ll(X),!,must_det_ll(Y)).
+must_det_ll((X,Y)):- !, (must_det_ll(X),must_det_ll(Y)),!.
 %must_det_ll(X):- notrace(catch(X,_,fail)),!.
-must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,my_maplist(must_det_ll,List).
+must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(must_det_ll,List).
 must_det_ll(must_det_ll(X)):- !, must_det_ll(X).
 must_det_ll(grid_call(P2,I,O)):- !, must_grid_call(P2,I,O).
 must_det_ll(call(P2,I,O)):- !, must_grid_call(P2,I,O).
@@ -58,73 +50,21 @@ must_det_ll(\+ (X, \+ Y)):- !, must_det_ll(forall(must_not_error(X),must_not_err
 must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
 must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
 %must_det_ll((M:Y)):- nonvar(M), !, M:must_det_ll(Y).
-must_det_ll(X):- must_det_ll1(X),!.
-
-must_det_ll1(X):- tracing,!,must_not_error(X),!.
-must_det_ll1(once(A)):- !, once(must_det_ll(A)).
-must_det_ll1(X):- 
+must_det_ll(X):- tracing,!,must_not_error(X).
+must_det_ll(once(A)):- !, once(must_det_ll(A)).
+must_det_ll(X):- 
   strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
-    nop(trace(M:F/A,-fail))),!.
+    nop(trace(M:F/A,-fail))).
 
 %must_not_error(G):- must(once(G)).
 
-must_not_error(G):- (tracing;never_rrtrace),!,call(G).
-must_not_error(G):- !, call(G).
-must_not_error(G):- is_cgi,!, catch((G),E,((u_dmsg(E=G)))).
-must_not_error(X):- is_guitracer,!, call(X).
-must_not_error(X):- catch(X,E,(rethrow_abort(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
-  trace,
+must_not_error(G):- is_cgi,!, catch(notrace(G),E,((u_dmsg(E=G)))).
+must_not_error(X):- \+ nb_current(cant_rrtrace,t),is_guitracer,!, call(X).
+must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> throw(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
   rrtrace(visible_rtrace([-all,+exception]),X)))).
 
-always_rethrow(E):- never_rrtrace,!,throw(E).
-always_rethrow('$aborted').
-always_rethrow(must_det_ll_failed(_)).
-
-%catch_non_abort(Goal):- cant_rrtrace(Goal).
-catch_non_abort(Goal):- catch(cant_rrtrace(Goal),E,rethrow_abort(E)),!.
-rethrow_abort(E):- format(user_error,'~N~q~n',[catch_non_abort_or_abort(E)]),fail.
-rethrow_abort(time_limit_exceeded):-!.
-rethrow_abort('$aborted'):- !, throw('$aborted'),!,forall(between(1,700,_),sleep(0.01)),writeln(timeout),!,fail.
-rethrow_abort(E):- ds,!,format(user_error,'~N~q~n',[catch_non_abort(E)]),!.
-never_rrtrace:- nb_current(cant_rrtrace,t),!,notrace.
-never_rrtrace:- is_cgi,notrace.
-cant_rrtrace(Goal):- never_rrtrace,!,call(Goal). 
-cant_rrtrace(Goal):- setup_call_cleanup(cant_rrtrace,Goal,can_rrtrace).
-
-main_debug:- main_thread,current_prolog_flag(debug,true).
-cant_rrtrace:- nb_setval(cant_rrtrace,t).
-can_rrtrace:- nb_setval(cant_rrtrace,f).
-%must_det_ll_failed(X):- predicate_property(X,number_of_clauses(1)),clause(X,(A,B,C,Body)), (B\==!),!,must_det_ll(A),must_det_ll((B,C,Body)).
-must_det_ll_failed(G):- never_rrtrace,!,notrace,notrace(u_dmsg(must_det_ll_failed(G))),!,throw(must_det_ll_failed(G)).
-must_det_ll_failed(_):- never_rrtrace,!,fail.
-must_det_ll_failed(G):- tracing,notrace(u_dmsg(must_det_ll_failed(G))),!,throw(must_det_ll_failed(G)).
-must_det_ll_failed(G):- main_debug,notrace(u_dmsg(must_det_ll_failed(G))),!,trace,call(G).
-must_det_ll_failed(G):- is_cgi,!, u_dmsg(arc_html(must_det_ll_failed(G))).
-must_det_ll_failed(X):- notrace,is_guitracer,u_dmsg(failed(X))/*,arcST*/,nortrace,atrace, call(X).
-must_det_ll_failed(X):-  u_dmsg(failed(X))/*,arcST*/,nortrace,atrace,
- trace,visible_rtrace([-all,+fail,+call,+exception],X).
-% must_det_ll(X):- must_det_ll(X),!.
-
-:- meta_predicate(rrtrace(0)).
-rrtrace(X):- rrtrace(etrace,X).
-
-is_guitracer:- getenv('DISPLAY',_), current_prolog_flag(gui_tracer,true).
-:- meta_predicate(rrtrace(1,0)).
-rrtrace(P1,X):- never_rrtrace,!,nop((u_dmsg(cant_rrtrace(P1,X)))),!,fail.
-rrtrace(P1,G):- is_cgi,!, u_dmsg(arc_html(rrtrace(P1,G))),call(P1,G).
-rrtrace(P1,X):- notrace, \+ is_guitracer,!,nortrace, /*arcST, sleep(0.5), trace,*/
-   (notrace(\+ current_prolog_flag(gui_tracer,true)) -> call(P1,X); (itrace,call(P1,X))).
-%rrtrace(_,X):- is_guitracer,!,notrace,nortrace,catch(call(call,gtrace),_,true),atrace,call(X).
-rrtrace(P1,X):- itrace,!, call(P1,X).
-
-:- meta_predicate(arc_wote(0)).
-arc_wote(G):- with_pp(ansi,wote(G)).
-arcST:- itrace,arc_wote(bts),itrace.
-atrace:- arc_wote(bts).
-%atrace:- ignore((stream_property(X,file_no(2)), with_output_to(X,dumpST))),!.
-
 :- meta_predicate(odd_failure(0)).
-odd_failure(G):- never_rrtrace,!,call(G).
+odd_failure(G):- nb_current(cant_rrtrace,t),!,call(G).
 odd_failure(G):- wno_must(G)*->true;fail_odd_failure(G).
 
 :- meta_predicate(fail_odd_failure(0)).
@@ -132,32 +72,31 @@ fail_odd_failure(G):- u_dmsg(odd_failure(G)),rtrace(G), fail.
 %fail_odd_failure(G):- call(G)*->true;(u_dmsg(odd_failure(G)),fail,rrtrace(G)).
 
 
-bts:- 
- ensure_loaded(library(prolog_stack)),
- prolog_stack:export(prolog_stack:get_prolog_backtrace_lc/3),
- use_module(library(prolog_stack),[print_prolog_backtrace/2,get_prolog_backtrace_lc/3]),
-  notrace(prolog_stack:call(call,get_prolog_backtrace_lc,8000, Stack, [goal_depth(600)])),
-  stream_property(S,file_no(1)), prolog_stack:print_prolog_backtrace(S, Stack),
-  ignore((fail, current_output(Out), \+ stream_property(Out,file_no(1)), print_prolog_backtrace(Out, Stack))),!.
+%must_det_ll_failed(X):- predicate_property(X,number_of_clauses(1)),clause(X,(A,B,C,Body)), (B\==!),!,must_det_ll(A),must_det_ll((B,C,Body)).
+must_det_ll_failed(G):- is_cgi,!, u_dmsg(arc_html(must_det_ll_failed(G))).
+must_det_ll_failed(X):- notrace,is_guitracer,u_dmsg(failed(X))/*,arcST*/,nortrace,atrace, call(X).
+must_det_ll_failed(X):-  u_dmsg(failed(X))/*,arcST*/,nortrace,atrace,visible_rtrace([-all,+fail,+exception],X).
+% must_det_ll(X):- must_det_ll(X),!.
 
-my_assertion(G):- my_assertion(call(G),G).
+:- meta_predicate(rrtrace(0)).
+rrtrace(X):- rrtrace(etrace,X).
 
-my_assertion(_,G):- call(G),!.
-my_assertion(Why,G):- u_dmsg(my_assertion(Why,G)),writeq(Why=goal(G)),nl,!,ibreak.
+is_guitracer:- getenv('DISPLAY',_), current_prolog_flag(gui_tracer,true).
+:- meta_predicate(rrtrace(1,0)).
+rrtrace(P1,X):- nb_current(cant_rrtrace,t),!,nop((u_dmsg(cant_rrtrace(P1,X)))),!,fail.
+rrtrace(P1,G):- is_cgi,!, u_dmsg(arc_html(rrtrace(P1,G))),call(P1,G).
+rrtrace(P1,X):- notrace, \+ is_guitracer,!,nortrace, /*arcST, sleep(0.5), trace,*/
+   (notrace(\+ current_prolog_flag(gui_tracer,true)) -> call(P1,X); (trace,call(P1,X))).
+%rrtrace(_,X):- is_guitracer,!,notrace,nortrace,catch(call(call,gtrace),_,true),atrace,call(X).
+rrtrace(P1,X):- trace,!, call(P1,X).
 
-must_be_free(Free):- plain_var(Free),!.
-must_be_free(Free):- \+ nonvar_or_ci(Free),!.
-must_be_free(Nonfree):- arcST,u_dmsg(must_be_free(Nonfree)),
-  ignore((attvar(Nonfree),get_attrs(Nonfree,ATTS),pp(ATTS))),ibreak,fail.
+:- meta_predicate(arc_wote(0)).
+arc_wote(G):- with_pp(ansi,wote(G)).
+arcST:- arc_wote(bt).
+atrace:- arc_wote(bt).
+%atrace:- ignore((stream_property(X,file_no(2)), with_output_to(X,dumpST))),!.
 
-must_be_nonvar(Nonvar):- nonvar_or_ci(Nonvar),!.
-must_be_nonvar(IsVar):- arcST,u_dmsg(must_be_nonvar(IsVar)),ibreak,fail.
 
-%itrace:- !.
-itrace:- \+ current_prolog_flag(debug,true),!.
-itrace:- if_thread_main(trace),!.
-ibreak:- if_thread_main(((trace,break))).
-%recolor(_,_):- ibreak.
 
 
 remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
@@ -195,14 +134,13 @@ set_omember(How,Member,Obj,Var):-
 
 
 
-get_kov(K,O,V):- dictoo:is_dot_hook(user,O,K,V),!,o_m_v(O,K,V).
-get_kov(K,O,V):- ((get_kov1(K,O,V)*->true;(get_kov1(props,O,VV),get_kov1(K,VV,V)))).
-
-get_kov1(K,O,V):- (is_hooked_obj(O),o_m_v(O,K,V))*->true;get_kov2(K,O,V).
+get_kov(K,O,V):- get_kov1(K,O,V),!.
+get_kov(K,O,V):- get_kov1(props,O,VV),!,get_kov1(K,VV,V).
 % (get_kov(Prop,VM,Value) -> true ; (get_kov(props,VM,Hashmap),nonvar(Hashmap),must_not_error(nb_get_value(Hashmap,Prop,ValueOOV)),get_oov_value(ValueOOV,Value))).
-get_kov2(K,O,V):- is_dict(O),!,get_dict(K,O,OOV),get_oov_value(OOV,V).
-get_kov2(K,O,V):- nonvar(K),is_rbtree(O),!,rb_lookup(K,V,O).
-get_kov2(K,O,V):- is_rbtree(O),!,rb_in(K,V,OOV),get_oov_value(OOV,V).
+get_kov1(K,O,V):- is_dict(O),!,get_dict(K,O,OOV),get_oov_value(OOV,V).
+
+get_kov1(K,O,V):- nonvar(K),is_rbtree(O),!,rb_lookup(K,V,O).
+get_kov1(K,O,V):- is_rbtree(O),!,rb_in(K,V,OOV),get_oov_value(OOV,V).
 %get_kov(K,O,V):- is_rbtree(O),!,nb_rb_get_node(K,O,Node),nb_rb_node_value(Node,V).
 
 get_oov_value(ValueOOV,Value):- compound(ValueOOV),ValueOOV=oov(Value),!.
@@ -242,7 +180,7 @@ expand_must_det(I,_):- \+ compound(I),!,fail.
 % THIS DISABLES
 %expand_must_det(must_det_ll(GoalL),GoalL):-!.
 expand_must_det(must_det_ll(GoalL),GoalLO):- !, expand_must_det0(GoalL,GoalLO).
-expand_must_det(my_maplist(P1,GoalL),GoalLO):- P1 ==must_det_ll,!,
+expand_must_det(maplist(P1,GoalL),GoalLO):- P1 ==must_det_ll,!,
   expand_must_det0(GoalL,GoalLO).
 
 expand_must_det0(Nil,true):- Nil==[],!.
@@ -251,14 +189,9 @@ expand_must_det0([A|B],(AA,BB)):- assertion(callable(A)), assertion(is_list(B)),
   expand_must_det1(A,AA), expand_must_det0(B,BB).
 expand_must_det0(A,AA):- !, expand_must_det1(A,AA).
 
-prevents_expansion(A):- is_trace_call(A).
-is_trace_call(A):- A == trace.
-is_trace_call(A):- A == itrace.
+prevents_expansion(A):- A == trace.
 skip_expansion(A):- A == !.
 expand_must_det1(Var,Var):- \+ callable(Var),!.
-expand_must_det1(my_maplist(P1,A),must_det_ll_maplist(P1,A)):-!.
-expand_must_det1(my_maplist(P2,A,B),must_det_ll_maplist(P2,A,B)):-!.
-expand_must_det1(my_maplist(P3,A,B,C),must_det_ll_maplist(P3,A,B,C)):-!.
 expand_must_det1(Cut,Cut):-  skip_expansion(Cut).
 expand_must_det1(Goal,O):- \+ compound(Goal), !,O = must_det_ll(Goal).
 expand_must_det1((A,B),must_det_ll((A,B))):- prevents_expansion(A),!.
@@ -278,7 +211,7 @@ expand_must_det1(P, AABB) :- predicate_property(P,(meta_predicate( MP ))),
    strip_module(P,_,SP),strip_module(MP,_,SMP), kaggle_arc_1_pred(_,SP),
    \+ skippable_built_in(P),
    SP=..[F|Args],SMP=..[F|Margs],!,
-   my_maplist(expand_meta_predicate_arg,Margs,Args,EArgs),
+   maplist(expand_meta_predicate_arg,Margs,Args,EArgs),
    AABB=..[F|EArgs].  
 expand_must_det1(must_det_ll(AB), AABB):-!, expand_must_det1(AB,AABB).
 expand_must_det1( A,must_det_ll(AA)):- expand_goal(A,AA).
@@ -308,7 +241,7 @@ goal_expansion_getter(Goal,get_kov(Func,Self,Value)):-
   compound_name_arguments(Goal,'.', [Self, Func, Value]),!.
 goal_expansion_getter(Goal,Out):- 
  compound_name_arguments(Goal,F,Args),
- my_maplist(goal_expansion_getter,Args,ArgsOut),
+ maplist(goal_expansion_getter,Args,ArgsOut),
  compound_name_arguments(Out,F,ArgsOut).
 
 :- export(goal_expansion_getter/2).
@@ -405,5 +338,3 @@ dte(set(E.v)):- set(E.that)=v.
 :- disable_arc_expansion.
 :- listing(dte).
 :- endif.
-
-

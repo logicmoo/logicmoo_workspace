@@ -7,53 +7,6 @@
 
 %muarc:test_arcui
 
-handler_logicmoo_right_2(Request):- 
-   %set_http_debug_error(false),
-   /*current_output(Out),
-   current_input(Out),
-   open_null_stream(Err),
-   set_prolog_IO(In,Out,Err),   */
-   %set_html_stream_encoding(utf8),
-   %arc_set_stream(Out, encoding(utf8)),  
-   intern_arc_request_data(Request),
-   write_arc_start(Where),
-   handler_logicmoo_menu,
-  write('<div id="main">'),  
-  write('<span style="font-size:20px;cursor:pointer;color: white; top: 0; left: 0; position: fixed" onclick="toggleNavL(\'mySideNavL\')">&#9776; Test Suites</span>'),
-  w_section(title("Accordion One Heading"),(write('<p>Content for first Accordion.</p>'),w_section("Accordion Two Heading",write('<p>Content for Second Accordion.</p>'),true)),true),
-  with_tag_style('ul','right: 300px; top: 0px', (
-    %write_ddm('Suite Menu',ignore(report_suites)),
-    %write_ddm('Test Menu',ignore(with_pre(test_webui_menu))),    
-    nop((write_ddm('Test Cases',ignore(offer_testcases)),
-    write_ddm('Session Info',
-      (ignore(show_http_session),
-       ignore((get_http_current_request(Request))),
-       pp(Request))))))),!,
-    write('<span style="font-size:20px;cursor:pointer;color: white" onclick="toggleNavL(\'mySideNavL\')">&#9776; Test Suites</span>'),
-    write('<span style="font-size:20px;cursor:pointer;color: white" onclick="toggleNavR(\'mySideNavR\')">&#9776; Task Operations</span>'),
-  write('<span style="font-size:20px;cursor:pointer;color: white; top: 0; right: 0; position: fixed" onclick="toggleNavR(\'mySideNavR\')">&#9776; Task Operations</span>'),
-   
-   %begin_arc_html_request(right,Request),
-   %arc_html_format([handler_logicmoo_right,write_end_html]))
-   %arc_html_format( 
-   write('<style type="text/css">html, body{ font-size: xx-small; background-color: #333; color: white; } td { font-size: small; }</style>'),
-
-   %write_ddm('Test Menu',ignore(test_webui_menu)),
-  
-  ignore(arc_http_nav_menu),  
-  %write('  <iframe id="main" src="arcproc_iframe?" class="main_iframe"/>'),
-  ignore(call_current_arc_cmds),
-   %ignore(print_test),
-   %ignore(show_console_info),   
- %  ignore(call_current_arc_cmds),
-   write('<hr>'),
-   %w_section(edit1term),
-   %w_section(show_http_session),
-   write('</div>'),
-   write_arc_end(Where),
-   !.
-
-
  % our_pengine_output(`<script src="https://unpkg.com/gojs/release/go-debug.js"></script>`).
 test_arcui:- make,test_arcui1. 
 test_arcui1:- 

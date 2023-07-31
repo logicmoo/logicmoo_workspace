@@ -8,26 +8,17 @@
 
 :- include(kaggle_arc_header).
 
-:- dynamic(muarc_tmp:learned_grid_size/2).
-:- dynamic(muarc_tmp:grid_size_prediction/4).
+:- dynamic(learned_grid_size/2).
 
+test_grid_size_prediction:- forall_count(kaggle_arc(TestID,trn+0,_,_), test_grid_sizes(TestID)). 
+store_grid_size_predictions:- forall_count(kaggle_arc(TestID,trn+0,_,_), test_grid_sizes(TestID)). 
 
-store_grid_size_predictions:- forall_count(all_arc_test_name(TestID), learn_grid_size(TestID)). 
-
-test_grid_size_prediction:- forall_count(all_arc_test_name(TestID), test_predict_grid_size(TestID)). 
-
-get_learned_grid_size_info(TestID,List):- muarc_tmp:learned_grid_size(TestID,List),!.
-get_learned_grid_size_info(TestID,List):- learn_grid_size(TestID),
-  must_det_ll(muarc_tmp:learned_grid_size(TestID,List)),!.
-
-
-learn_grid_size(TestID):- 
- ensure_test(TestID),
- must_det_ll((
-   retractall(muarc_tmp:learned_grid_size(TestID,_)),
-   retractall(muarc_tmp:grid_size_prediction(TestID,_,_,_)),
-   findall(R,(kaggle_arc(TestID,(trn+_),In,Out),learn_grid_size(In,Out,R),nop((writeq(R),write('.\n')))),L), 
-   asserta_if_new(muarc_tmp:learned_grid_size(TestID,L)))).
+test_grid_sizes(TestID):- 
+   retractall(learned_grid_size(TestID,_)),
+   retractall(grid_size_prediction(TestID,_,_,_)),
+   findall(R,(kaggle_arc(TestID,trn+_,In,Out),learn_grid_size(In,Out,R),nop((writeq(R),write('.\n')))),L), 
+   asserta_if_new(learned_grid_size(TestID,L)),
+   forall(kaggle_arc(TestID,tst+_,In,Out),predict_grid_size(TestID,In,Out)).
 
 learn_grid_size(In,Out,R):- 
   grid_size(In,IH,IV),grid_size(Out,OH,OV),
@@ -35,57 +26,32 @@ learn_grid_size(In,Out,R):-
     proportional(size2D(IH,IV),size2D(OH,OV),R)).
   %proportional_size2D(IH,IV,OH,OV,R).
    
-predict_grid_size_now(TestID,In,PH,PV):-
-   grid_size(In,IH,IV),
-   get_learned_grid_size_info(TestID,List),
- %  predsort_on(better_grid_size_prop,List,SList), 
-   predict_grid_size(List,IH,IV,PH,PV).
-
-
 predict_grid_size(TestID,In,Out):-    
-   predict_grid_size_now(TestID,In,PH,PV),
-  (var(Out)->make_grid(PH,PV,Out);true),!.
+   grid_size(In,IH,IV),grid_size(Out,OH,OV),
+   learned_grid_size(TestID,List),
+ %  predsort(sort_on(better_grid_size_prop),List,SList), 
+   wots(SS,((             
+   dash_chars, dash_chars, write(test_grid_sizes(TestID)), write('\n'),   
+   predict_grid_size(List,IH,IV,PH,PV),
+   ((PH=OH,PV=OV) -> C = green ; C = red),
+   color_print(C,predict_grid_size(TestID,in(size2D(IH,IV)),predicted(size2D(PH,PV)),actual(size2D(OH,OV))))))),!,
+   (C==green 
+     -> asserta(grid_size_prediction(TestID,In,PH,PV))
+     ;(nop(print_test(TestID)),write(SS),!,fail)).
+
+add_akeys(A,A-A).
+alphabetize(List,ListA):- maplist(add_akeys,List,AKeys),keysort(AKeys,AKeysSorted),maplist(arg(2),AKeysSorted,ListA).
+
 
 predict_grid_size(List,IH,IV,PH,PV):-
   alphabetize(List,ListA),
-  predsort_on(better_grid_size_prop,ListA,SList),
+  predsort(sort_on(better_grid_size_prop),ListA,SList),
   add_info(SList,[],NewInfo),
-  predict_grid_size_now(ListA,NewInfo,IH,IV,PH,PV),!.
-
-predict_grid_size_now(ListA,NewInfo,IH,IV,PH,PV):-
-  predict_grid_size1(ListA,NewInfo,IH,IV,PH,PV), 
-  pp(predicted_grid_size(IH,IV,PH,PV)),!.
-predict_grid_size_now(_,_,IH,IV,_,_):- pp(predict_grid_size_unknown(IH,IV)).
-
-
-
-test_predict_grid_size(TestID):- 
-  ensure_test(TestID),
-  learn_grid_size(TestID),
-  forall(kaggle_arc(TestID,tst+_,In,Out),
-     once((test_predict_grid_size(TestID,In,Out)))).
-
-test_predict_grid_size(TestID,In,Out):-
-  (nonvar(In)->grid_size(In,IH,IV);true),
-  (nonvar(Out)->grid_size(Out,OH,OV);true),
-   wots(SS,((             
-     dash_chars, dash_chars, write(test_predict_grid_size(TestID)), write('\n'),   
-       get_learned_grid_size_info(TestID,List),
-  alphabetize(List,ListA),
-  predsort_on(better_grid_size_prop,ListA,SList),
-  add_info(SList,[],NewInfo),
-   %maplist(ppnl,List),dash_chars,
-   maplist(ppnl,ListA),dash_chars,
-   maplist(ppnl,NewInfo),dash_chars,
-        predict_grid_size_now(ListA,NewInfo,IH,IV,PH,PV),
-
-   ((PH=OH,PV=OV) -> C = green ; C = red),
-   color_print(C,test_predict_grid_size(TestID,in(size2D(IH,IV)),predicted(size2D(PH,PV)),actual(size2D(OH,OV))))))),!,
-   (C==green 
-     -> asserta(muarc_tmp:grid_size_prediction(TestID,In,PH,PV))
-     ;(nop(print_test(TestID)),  write(SS),assert_test_suite(failed_predict_grid_size,TestID),!,fail)).
-add_akeys(A,A-A).
-alphabetize(List,ListA):- maplist(add_akeys,List,AKeys),keysort(AKeys,AKeysSorted),maplist(arg(2),AKeysSorted,ListA).
+   %maplist(wqnl,List),dash_chars,
+   maplist(wqnl,ListA),dash_chars,
+   maplist(wqnl,NewInfo),dash_chars,
+  predict_grid_size1(ListA,NewInfo,IH,IV,PH,PV).
+predict_grid_size(_List,IH,IV,IH,IV).
 
 better_grid_size_prop(_,1).
 
@@ -117,9 +83,9 @@ predict_grid_size1( ListA, _List, _, _,PH,PV):- findall(size2D(MH,MV),
 
 predict_grid_size1( ListA, _List, IH, IV,PH,PV):-  
  findall(size2D(PH,PV),
-  (member((size_inv(num(_,+_,_),num(_,+_,ratio(Two)))
-  ),ListA),
-  integer(Two),PH = IH, PV is IV / Two, PV is floor(PV)),L),
+  (member((
+     size_inv(num(_,+_,_),num(_,+_,ratio(Two)))
+  ),ListA),integer(Two),PH = IH, PV is IV / Two, PV is floor(PV)),L),
   L\=[],L\=[_],maplist(=(_),L),last(L,size2D(PH,PV)),!.
 
 apply_proportional(IH,MH,PH,IV,MV,PV):- 
@@ -169,16 +135,14 @@ proportional_size(N1,N2,num(vals(Vals),+N,ratio(R))):- number(N1),number(N2),!,
 
 
 
-:- meta_predicate(with_other_grid(+,0)).
-with_other_grid(OtherGrid,Goal):- 
-  locally(nb_setval(other_grid,OtherGrid),
-    (set_target_grid(OtherGrid),Goal)).
+
+with_other_grid(OtherGrid,Goal):- locally(nb_setval(other_grid,OtherGrid),(set_target_grid(OtherGrid),Goal)).
 
 other_grid(_,OtherGrid):- luser_getval(other_grid,OtherGrid),is_grid(OtherGrid),!.
-other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.target_grid, is_grid(OtherGrid),!.
+other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.grid_target, is_grid(OtherGrid),!.
 other_grid(Grid,OtherGrid):- is_other_grid(Grid,OtherGrid),!.
 other_grid(Grid,OtherGrid):- \+ is_grid(Grid),!, into_grid(Grid,ThisGrid),  Grid\==ThisGrid,!,other_grid(ThisGrid,OtherGrid).
-other_grid(In,OtherGrid):- get_current_test(TestID), muarc_tmp:grid_size_prediction(TestID,In,PH,PV), make_grid(PH,PV,OtherGrid).
+other_grid(In,OtherGrid):- get_current_test(TestID), grid_size_prediction(TestID,In,PH,PV), make_grid(PH,PV,OtherGrid).
 
 :- dynamic(is_decl_other_grid/2).
 ensure_other_grid(ThisGrid,OtherGrid):- is_other_grid(ThisGrid,OtherGrid),!.
@@ -193,8 +157,7 @@ is_other_grid(ThisGrid,OtherGrid):-
 
 other_grid_size(_Grid,PH,PV):- luser_getval(other_grid_size,size2D(PH,PV)),!.
 other_grid_size( Grid,PH,PV):- must_det_ll((other_grid(Grid,OtherGrid),grid_size(OtherGrid,PH,PV))).
-other_grid_size(   In,PH,PV):- get_current_test(TestID), muarc_tmp:grid_size_prediction(TestID,In,PH,PV).
-
+other_grid_size(   In,PH,PV):- get_current_test(TestID), grid_size_prediction(TestID,In,PH,PV).
 
 set_target_grid(ExpectedOut):-
     luser_setval(other_grid,ExpectedOut),
@@ -206,38 +169,12 @@ with_current_pair(I,O,Goal):-
   ((I=@=CI,O=@=CO) -> call(Goal) ;
   setup_call_cleanup(set_current_pair(I,O),Goal,
    set_current_pair(CI,CO))).
-%current_pair(I,O):- current_pair0(II,OO),II=I,OO=O.
-current_pair(I,O):-  (var(I)->luser_getval(input_grid,I);true),
-  must_det_ll((is_gridoid(I),other_grid(I,O))).
 
+  
 
-ensure_example_num(I,O):-
- ignore((
-  current_test_example(TestID,ExampleNum0),
-  ((ExampleNum=ExampleNum0;ExampleNum=_), kaggle_arc(TestID,ExampleNum,II,OO), 
-    once((II=@=I,OO=@=O);(II=@=I,OO=@=O))),
-  set_example_num(ExampleNum))),!.
+set_current_pair(I,O):- luser_setval(input_grid,I),luser_setval(output_grid,O),ensure_other_grid(I,O),set_target_grid(O).
 
-set_current_pair(I,O):-
-  must_det_ll((ensure_example_num(I,O),
-  %luser_setval(input_grid,I),
-  %luser_setval(output_grid,O),
-  ensure_other_grid(I,O),
-  %set_target_grid(O),
-  other_grid(I,OOO),nop((OOO=@=O)))),!.
-
-%current_pair_io(I,O):- fail, current_test_example(TestID,ExampleNum), ground(ExampleNum),!, kaggle_arc(TestID,ExampleNum,I,O).
-current_pair_io(I,O):-  
-   current_test_example(TestID,ExampleNum), 
-   kaggle_arc(TestID,ExampleNum,I,O), set_current_pair(I,O), (ground(ExampleNum)->!;true).
-
-/*
-current_pair_io(I,O):- current_test_example(TestID,ExampleNum),
-   (luser_getval(input_grid,Was);Was=[]),
-   setup_call_cleanup(true,
-     ((kaggle_arc(TestID,ExampleNum,I,O);fail),set_current_pair(I,O)), 
-        luser_setval(input_grid,Was)).
-*/
+current_pair(I,O):- luser_getval(input_grid,I), must_det_ll((other_grid(I,O))).
 
 % test_hint(ratio_between(mass,mass)). %ac0a08a4
 increase_size_by_grid_mass(In,Out):- mass(In,Mass),increase_size(Mass,In,Out).
@@ -246,16 +183,16 @@ increase_size_by_color_count(In,Out):- fg_color_count(In,Size),increase_size(Siz
 
 
 
-ratio_between(Unique_color_count,and(Mass,Area)):- !, current_pair_io(I,O),
+ratio_between(Unique_color_count,and(Mass,Area)):- !, current_pair(I,O),
   call(Unique_color_count,I,UCC), ratio_about(Mass,UCC,I,O), ratio_about(Area,UCC,I,O).
-ratio_between(Mass1,Mass2):- current_pair_io(I,O), call(Mass1,I,UCC), ratio_about(Mass2,UCC,I,O).
+ratio_between(Mass1,Mass2):- current_pair(I,O), call(Mass1,I,UCC), ratio_about(Mass2,UCC,I,O).
 
 ratio_about(square(Area), UCC,I,O):- !, call(Area,I,IA), call(Area,O,OA), n_times(UCC^2,IA,OA).
 ratio_about(Mass, UCC,I,O):-  call(Mass,I,IM), call(Mass,O,OM), n_times(UCC,IM,OM).
 
-test_hint(How,P2):- must_det_ll((current_pair_io(I,O),call(P2,I,II),call(P2,O,OO))),call(How,II,OO).
-test_hint(G):- current_predicate(_,G),!,call(G).
+test_hint(How,P2):- must_det_ll((current_pair(I,O),call(P2,I,II),call(P2,O,OO))),call(How,II,OO).
 
+test_hint(G):- current_predicate(_,G),!,call(G).
 mass_and_area(P2Mass,P2Area):- test_hint(P2Mass,mass),test_hint(P2Area,area).
 mass_and_area_times(N):- mass_and_area(n_times(N),n_times(N)).
 
@@ -265,20 +202,11 @@ mass_and_area_times(N):- mass_and_area(n_times(N),n_times(N)).
 %   -> 8 - 24
 %   -> 9 - 48
 %   -> 10 - 96
-
-input_plus(N,X,Y):- Y #= X + N.
-input_lt(X,Y):- Y #> X.
-input_gt(X,Y):- Y #< X.
-
-is_squared(X,Y):- Y #= X * X.
 grow_less_than_times(N,A,B):- N #>= 1, N #=< 4, MaxB #= A*2^(N-1), MinB #= A+N,  MaxB #> B, B #> MinB.
-grow_greater_than_times(N,A,B):- N #>= 1, N #=< 10, MaxB #= A*2^(N-1), MinB #= A+N,  MaxB #< B, B #< MinB.
 n_times(N,A,B):- \+ compound(N),!, B #= N * A.
 n_times(N^2,A,B):- !, B #= N * N * A.
 %n_times(N,A,B):- B #= N * A.
 
 
 :- include(kaggle_arc_footer).
-
-
 
