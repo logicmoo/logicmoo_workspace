@@ -2106,7 +2106,7 @@ make_unifiable_cc(WP1,WP2):- \+ compound(WP1),!,WP2=WP1.
 make_unifiable_cc(N-WP1,N-_):- \+ is_list(WP1),!.
 make_unifiable_cc(N-WP1,N-WP2):- !, make_unifiable_cc(WP1,WP2).
 make_unifiable_cc([H|T],[HH|TT]):- !, make_unifiable_cc(H,HH),make_unifiable_cc(T,TT).
-make_unifiable_cc(cc(C,N),cc(_,N)):- is_real_color(C),!.
+make_unifiable_cc(cc(C,N),cc(_,N)):- integer(N), is_real_color(C),!.
 make_unifiable_cc(cc(N,_),cc(N,_)):-!.
 make_unifiable_cc(oid(_),oid(_)):-!.
 make_unifiable_cc(recolor(N,_),recolor(N,_)):-!.

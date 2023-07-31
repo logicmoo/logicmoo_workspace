@@ -80,6 +80,8 @@ dont_notice(pg(_,mass(_),rank1,_)).
 dont_notice(pg(_,pen(_), rankLS ,_)).
 
 dont_notice(P):- P=@= pg(_,cc(_,_),rank1,2),!.
+dont_notice(P):- sub_var(unkC,P),!.
+
 dont_notice(P):- P= pg(_,cc(X,_),rank1,2),compound(X),!.
 dont_notice(P):- P=@= pg(_,cc(unkC,_),rankLS,3),!.
 dont_notice(iz(fg_or_bg(_))).
@@ -273,6 +275,7 @@ same_prop_names(X1,X2):-
   make_unifiable_u(X1,U1), make_unifiable_u(X2,U2),!,  U1 =@= U2.
 
 % Helper predicate to create a unifiable version of a term
+make_unifiable_u(X1,X2):- verbatum_unifiable(X1), !, X2=X1.
 make_unifiable_u(X1,X2):- maybe_deref_value(X1,E1), !, make_unifiable_u(E1,X2).
 make_unifiable_u(P,U):- copy_term(P,PP),make_unifiable_u1(PP,U),!.
 make_unifiable_u1(Atom,U):- is_ftVar(Atom),!,Atom=U.
@@ -817,12 +820,6 @@ grid_indv_versions(TestID, ExampleNum, Dir, LHOInS):-
 grid_indv_versions(TestID, ExampleNum, Dir, LHOInS):-
  grid_indv_versions1(TestID, ExampleNum, Dir, LHOInS), LHOInS\==[], !,
  assert(cached_arc_test_property(TestID, ExampleNum, grid_indv_versions(Dir), LHOInS)).
-grid_indv_versions(TestID, ExampleNum, Dir, [lho(CI, InPSS, HowIn, InC)]):-
- kaggle_arc_dir_io(TestID, ExampleNum, Dir, In, Out),
- each_option(TestID,ExampleNum,Dir,In,Out,HowIn,InC),
- visible_order(InC,InCC),
- objs_to_spoints(InCC, InPSS),
- include(is_fg_object, InC, FGObjs), length(FGObjs, CI),!.
 
 
 grid_indv_versions1(TestID, ExampleNum, Dir, LHOInS):- var(ExampleNum), !,
@@ -838,6 +835,8 @@ grid_indv_versions1(TestID, ExampleNum, Dir, LHOInS):-
      LHOIn),
      LHOIn\==[],
      =(LHOIn, LHOInS))).
+
+
 
 
 kaggle_arc_dir_io(TestID, ExampleNum, Dir, In, Out):-
@@ -860,6 +859,15 @@ grid_indv_version_lho_sout(TestID, ExampleNum, Dir, CI, InPSS, HowIn, InCC):-
   mass(In,IMass), FGMass>=IMass,
   visible_order(InC,InCC),
   objs_to_spoints(InCC, InPSS))).
+
+grid_indv_version_lho_sout(TestID, ExampleNum, Dir, CI, InPSS, HowIn, InCC):-
+ kaggle_arc_dir_io(TestID, ExampleNum, Dir, In, Out),
+ each_option(TestID,ExampleNum,Dir,In,Out,HowIn,InC),
+ once((include(is_fg_object, InC, FGObjs), length(FGObjs, CI),
+ visible_order(InC,InCC),
+ objs_to_spoints(InCC, InPSS))).
+
+
 
 each_option(TestID,ExampleNum,Dir,In,Out,HowIn,InC):-
   at_least_once(indv_options(HowIn)), 
@@ -1587,10 +1595,10 @@ subst_2L_sometimes(HF, TF, In, Mid):- subst0011(HF, TF, In, Mid).
 
 verbatum_unifiable(Var):-var(Var), fail.
 verbatum_unifiable(C):- sub_term(E, C), compound(E), E='$VAR'(_), !.
-verbatum_unifiable(of_obj(_)).
-verbatum_unifiable(of_obj(_, _)).
-verbatum_unifiable(of_obj(_, _, _)).
-verbatum_unifiable(of_obj(_, _, _, _)).
+verbatum_unifiable(borrow_trait(_)).
+verbatum_unifiable(borrow_trait(_, _)).
+verbatum_unifiable(borrow_trait(_, _, _)).
+verbatum_unifiable(borrow_trait(_, _, _, _)).
 verbatum_unifiable(always(_)).
 
 is_visible_object(Left):- is_object(Left),is_fg_object(Left),
@@ -1614,7 +1622,7 @@ find_relative_sr(_VM,Same, Info, Left, Right, PrevRules, R, NewRSet, PreCond, Xt
     into_lhs(P, LHS1), subst001(LHS1, E, always(GetR), PLHS),
     %noteable_propdiffs(P,Left, _, PL, _),    
     noteable_propdiffs(P, Right, _, PR, _), subst001(PR, E, true, PRG),
-    OF_OBJ=of_obj(NewRSet, Convertor /*, PRG*/),
+    OF_OBJ=borrow_trait(NewRSet, Convertor /*, PRG*/),
     subst001(OF_OBJ, NewRSet, GetR, GET_OF_OBJ),
     append_LR([always(GET_OF_OBJ), PRG, iz(info(GET_OF_OBJ))], PreCond),    
 
@@ -1843,7 +1851,9 @@ rhs_ground(G):- nop(writeln(G)),!.
 ac_rules(TestID,Ctx,P,PSame):- 
   ac_unit(TestID, Ctx, P, Same), 
  once(( \+ never_use_horn_rhs(P),
-  include_not_already_true(Same,PSame))),  %Same=PSame,
+  %include_not_already_true(Same,PSame)
+  Same=PSame
+  )),  %Same=PSame,
   PSame\==[].
 
 not_debug_info(P):- \+ is_debug_info(P),!.
@@ -1996,13 +2006,6 @@ trans_rule(Info, E1, E2, Rules):- print((Info, E1, E2)), !, fail,
 
 
 
-
-
-
-
-
-
-
 score_rule(Ways,Obj,Rule,Score):- is_object(Rule), \+ is_object(Obj),!,score_rule(Ways,Rule,Obj,Score).
 
 score_rule(Ways,Obj,Rule,Score):- 
@@ -2018,7 +2021,7 @@ score_rule(_Ways, Obj, PConds, _P, Score):- %fail,
      intersection(A,B,Good,_Extra,_Bad),
      length(Good,Score).
 
-has_all_props(CanL,Obj):- maplist(inv_has_prop(Obj),CanL).
+%has_all_props(CanL,Obj):- maplist(inv_has_prop(Obj),CanL).
 score_all_props(CanL,Obj,Score):- maplist(inv_has_prop_score(Obj),CanL,ScoreL),sumlist(ScoreL,Score),!.
 
 assume_prop(P):- \+ compound(P), !, fail.
@@ -2044,7 +2047,8 @@ assume_prop_e(P):- get_current_test(TestID), \+ \+ peek_arc_trans_rule_db(TestID
 %include_not_already_true(LHS,NonDebug):- keep_all_props, LHS=NonDebug,!.
 
 remove_already_true(NHRules,NRules):- \+ compound(NHRules),!,NHRules=NRules.
-remove_already_true(ac_unit(T,C,P,L),Out):- is_list(L),include_not_already_true(L,LL),!,(LL==[]->(wdmsg(giving_up(ac_unit(T,C,P,L))),Out=[]);Out=ac_unit(T,C,P,LL)).
+remove_already_true(ac_unit(T,C,P,L),Out):- is_list(L),include_not_already_true(L,LL),!,
+  (LL==[]->(wdmsg(giving_up(ac_unit(T,C,P,L))),Out=[]);Out=ac_unit(T,C,P,LL)).
 remove_already_true(NHRules,NRules):- is_list(NHRules),!,maplist(remove_already_true,NHRules,NMRules),include(\==([]),NMRules,NRules).
 remove_already_true(IO,IO).
 
@@ -2055,12 +2059,12 @@ keep_all_props:-fail.
 is_not_already_true(P):- \+ is_already_true(P).
 
 is_already_true(P):- \+ \+ is_unbound_prop(P),!.
+is_already_true(P):- \+ \+ is_debug_info(P),!.
 is_already_true(P):- \+ keep_prop(P),!.
 
 keep_prop(_):- keep_all_props,!.
 keep_prop(P):- \+ \+ verbatum_unifiable(P), !.
 keep_prop(P):- dont_notice(P), !, fail.
-keep_prop(P):- is_debug_info(P),!,fail.
 keep_prop(P):- \+ \+ is_unbound_prop(P),!.
 keep_prop(P):- \+ assume_prop(P).
 /*
@@ -2119,28 +2123,46 @@ max_prop_score(P,1.0):- ground(P),!.
 max_prop_score(P,0.0):- is_unbound_prop(P),!.
 max_prop_score(_,0.7).
 
-inv_has_prop(Obj,Prop):- has_prop(Prop,Obj),!.
-inv_has_prop(Obj,Prop):- inv_has_prop_score(Obj,Prop,Score),Score>0.
+/*
+inv_has_prop(_Rules,_VM, Obj, _P,Prop):- has_prop(Prop,Obj),!.
+inv_has_prop(_Rules,_VM, Obj, _P,Prop):- inv_has_prop_score(Obj,Prop,Score),Score>0.
 
-inv_has_prop_score(Obj,Prop, Score):- max_prop_score(Prop,Score), inv_has_prop2(Obj,Prop).
+inv_has_prop_score(Rules,VM, Obj, P,Prop, Score):- max_prop_score(Prop,Score), indv_has_conds(Rules,VM, Obj, P,Prop).
+*/
 
-inv_has_prop2(_O, P):- P==[], !.
-inv_has_prop2(_O,P):- \+ \+ assume_prop(P),!.
+rule_clause(Rules,Rest,P,PConds):- select(NRule, Rules, Rest), 
+ unnumbervars2a(NRule, Rule), rule_units(Rule, _Ctx, P, PConds).
 
-inv_has_prop2(Obj, [P|T]):- !, inv_has_prop2(Obj, P), inv_has_prop2(Obj, T).
-inv_has_prop2(Obj, pg(_, B, C, D)):- has_prop(pg(_, B, C, D), Obj), !.
-%inv_has_prop2(Obj, always(of_obj(Prop))):- !, ac_call(of_obj(Prop)).
-inv_has_prop2(Obj, \+ Prop):- !, \+ inv_has_prop(Obj,Prop).
-inv_has_prop2(Obj,grid_ops(norm,Props)):- !, has_prop(grid_ops(norm,VProps),Obj),!,Props=@=VProps.
-inv_has_prop2(Obj,grid_rep(norm,Props)):- !, has_prop(grid_rep(norm,VProps),Obj),!,Props=@=VProps.
-inv_has_prop2(Obj,Prop):- has_prop(Prop,Obj).
+indv_has_conds(Rules, VM, Obj, P, PConds):- 
+  %member(Rule,Rules),
+  %rule_units(Rule, _Ctx, P, H),
+  %wdmsg(indv_has_conds_1(Rules, VM, Obj, P, H)),
+  indv_has_conds_1(Rules, VM, Obj, P, PConds).
+
+indv_has_conds_1(_Rules,_VM,_Obj, P, H):- var(H), !, ds,throw(var_indv_has_conds(P, H)).
+indv_has_conds_1(_Rules,_VM,_Obj,_P, []):-!.
+indv_has_conds_1( Rules, VM, Obj, P, [H|T]):- !, indv_has_conds_1(Rules,VM, Obj, P, H), indv_has_conds_1(Rules,VM, Obj, P, T).
+
+indv_has_conds_1( Rules, VM, Obj, P, \+ Prop):- !, \+ inv_has_prop(Rules,VM, Obj, P,Prop).
+indv_has_conds_1( Rules, VM, Obj, P, always(H)):- !, indv_has_conds_1( Rules, VM, Obj, P, H).
+indv_has_conds_1( Rules, VM, Obj, P, borrow_trait(Prop, G)):- !, OF_OBJ = borrow_trait(Prop, G),
+  get_type_prop(P,_,Prop), !, 
+ rule_clause(Rules,Rest,OF_OBJ,ObjConds), 
+ ((member(O, VM.robjs);member(O, VM.objs)), O\==Obj), 
+  indv_has_conds_1( Rest,VM,O,OF_OBJ,ObjConds), call(G),
+  get_type_prop(O,_, Prop).
+indv_has_conds_1(_Rules,_VM,_Obj,_P, H):- \+ \+ assume_prop(H),!.
+indv_has_conds_1(_Rules,_VM, Obj, _P, pg(_, B, C, D)):- has_prop(pg(_, B, C, D), Obj), !.
+indv_has_conds_1(_Rules,_VM, Obj, _P,grid_ops(norm,Props)):- !, has_prop(grid_ops(norm,VProps),Obj),!,Props=@=VProps.
+indv_has_conds_1(_Rules,_VM, Obj, _P,grid_rep(norm,Props)):- !, has_prop(grid_rep(norm,VProps),Obj),!,Props=@=VProps.
+indv_has_conds_1(_Rules,_VM, Obj, _P,Prop):- has_prop(Prop,Obj).
 
 match_ok(_,B):- plain_var(B),!.
 match_ok(A,B):- \+ \+ A = B.
 
 
-never_use_horn_rhs(P):- var(P), !, fail.
-never_use_horn_rhs(rhs(P)):- !, never_use_horn_rhs(P).
+never_use_horn_rhs(H):- var(H), !, fail.
+never_use_horn_rhs(rhs(H)):- !, never_use_horn_rhs(H).
 never_use_horn_rhs(create3c(_, _, _)).
 
 %apply_transforms(_VM, _TestID, _ExampleNum, _Ctx, Objs, Objs).
@@ -2168,18 +2190,20 @@ assert_more_assumed(P):- assert(more_assumed(P)).
 into_general_requirements(Reqs,GReqs):- m_unifiers(Reqs,GReqs),!.
 into_general_requirements(Reqs,Reqs).
 
-
-rule_units(ac_unit(_, Ctx, P, PConds), Ctx, P, PCondL):-  PConds=PCondL.
+rule_units(Rule, Ctx, P, PConds):- nonvar(Rule),!,Rule=ac_unit(_, Ctx, P, PConds).
+rule_units(Rule, Ctx, P, PConds):- Rule=ac_unit(_, Ctx, P, PConds).
    %include_not_already_true(PConds,PCondL),!.
 
 %testid_to_rules(TestID,Ctx,Rules):- is_list(TestID),!,unnumbervars2a(TestID, URules),  correct_rule_vars(URules,Rules).
 testid_to_rules(TestID,Ctx,Rules):-
-  findall_vset_R(Rule, (ac_rules(TestID, Ctx, P, PConds), rule_units(Rule, Ctx, P, PConds)), NRules),  %unnumbervars2a(NRules, URules),
-  correct_rule_vars(NRules,Rules).
+  rule_units(Rule, Ctx, P, PConds),
+  findall_vset_R(Rule, ac_rules(TestID, Ctx, P, PConds), NRules),  
+  unnumbervars2a(NRules, URules),
+  correct_rule_vars(URules,Rules).
 
 correct_rule_vars(List,NewList):- maplist(correct_rule_vars_1,List,NewList).
 
-correct_rule_vars_1(I,O):- I=ac_unit(_T,_C,P,_LHS),
+correct_rule_vars_1(I,O):- fail, I=ac_unit(_T,_C,P,_LHS),
    sub_term(Prop,P), compound(Prop),is_prop1(Prop), \+ \+ (sub_term(Var,Prop),(var(Var);is_ftVar(Var))),
    F=Prop,R=Prop,
    subst001_p2(prop_variant,I,F,R,M),I\=@=M,!,
@@ -2224,9 +2248,9 @@ solve_via_scene_change(TestID,ExampleNum):-
   repress_output(ensure_scene_change_rules(TestID)),
   testid_to_rules(TestID,_Ctx,Rules),
   rule_copies_no_happy_endings(Rules,NHRules),
-  print_scene_change_rules(solve_via_current_scene_change_rules_start_wc(cyan,ExampleNum),NHRules),
-  remove_already_true(NHRules,NRules),
-  print_scene_change_rules(solve_via_current_scene_change_rules_start(cyan,ExampleNum),NRules),
+  print_scene_change_rules(solve_via_scene_change_start_wc(cyan,ExampleNum),NHRules),
+  maplist(remove_already_true,NHRules,NRules),
+  print_scene_change_rules(solve_via_scene_change_start_ncu(cyan,ExampleNum),NRules),
   %forall(kaggle_arc(TestID, ExampleNum, _, _), ignore(print_individuals(TestID, ExampleNum))),
   %predict_grid_size_now(TestID,In,PX,PY),
   %repress_some_output(learn_solve_via_grid_change(TestID)),  
@@ -2253,7 +2277,8 @@ apply_easy_transforms(Rules,ObjsIn,NewRules,Objs):-
   my_partition(is_bg_object_really,ObjsIn,_BgObj,FGObjs),
   apply_easy_transforms(MidRules,FGObjs,NewRules,Objs).
 apply_easy_transforms(Rules,ObjsIn,NewRules,Objs):-
-  select(ac_unit(_,_,delete_object(_),List),Rules,MidRules),member(pen([cc(Black,_)]),List),Black==black,!,
+  select(ac_unit(_,_,delete_object(_),List),Rules,MidRules),
+  ((member(cc(Black,_),List);member(pen([cc(Black,_)]),List)),Black==black),!,
   my_partition(is_bg_object_really,ObjsIn,_BgObj,FGObjs),
   apply_easy_transforms(MidRules,FGObjs,NewRules,Objs).
 apply_easy_transforms(Rules,ObjsIn,NewRules,Objs):-
@@ -2352,14 +2377,16 @@ rules_rhs_prop_names(Rules,PS,GReqs):-
 enter_solve_obj(VM,NewRules,TestID,ExampleNum,Objs,ObjsO):- 
   apply_transforms(VM,NewRules,TestID,ExampleNum,in_out,Objs,ObjsO).
 
-apply_transforms(VM,Rules0,TestID, ExampleNum, Ctx, ObjsIn, ObjsO):-
+apply_transforms(VM,NHRules,TestID, ExampleNum, Ctx, ObjsIn, ObjsO):-
+  remove_already_true(NHRules,Rules0),
   apply_easy_transforms(Rules0,ObjsIn,Rules,Objs),
   gset(VM.rules)=Rules,
   gset(VM.robjs)=[],
   while_slowly_assuming_less_requirments(VM,Rules,NewRules,Objs,    
     (apply_obj_transforms(VM, TestID, ExampleNum, Ctx, NewRules, Objs, ObjsO), ObjsO\==[])).
 
-while_slowly_assuming_less_requirments(VM,Rules,NewRules,Objs,Goal):-
+while_slowly_assuming_less_requirments(VM,NHRules,NewRules,Objs,Goal):-
+  remove_already_true(NHRules,Rules),
   assuming_less_requirments(Rules,NewRules,AssumeThese),
   wdmsg(more_assumed(AssumeThese)),
   dash_chars,
@@ -2369,7 +2396,7 @@ while_slowly_assuming_less_requirments(VM,Rules,NewRules,Objs,Goal):-
   call(Goal).
 % assuming_less_requirments(sym_counts(_,_)). assuming_less_requirments(pg(_,mass(_),rank1,_)). assuming_less_requirments(mass(_)). assuming_less_requirments(cc(fg,_)).
 assuming_less_requirments(Rules,Rules,[]).
-assuming_less_requirments(Rules,NewRules,Assumed):-
+assuming_less_requirments(Rules,NewRules,Assumed):- fail,
  must_det_ll(
   (retractall(more_assumed(_)),
    rules_lhs_prop_names(Rules,_PCondS,GReqs),
@@ -2393,15 +2420,31 @@ rules_fit_objs(VM,NewRules,Objs):- maplist(rule_count_per_obj(VM,NewRules),Objs,
   wdmsg(rules_fit_objs(oc=ObjCount,rc=RuleCount,Counts=CountsTotal)),!.
 
 rule_count_per_obj(_VM,_LeftOver,Obj,1):- (is_bg_object(Obj);has_prop(cc(fg,0),Obj);is_bg_object_really(Obj)),!.
-rule_count_per_obj(VM,NewRules,Obj,Count):- 
-  findall(P, (rule_copies_no_happy_endings(NewRules,_Ctx,P,PConds),
-   vm_has_obj_prop(NewRules,VM, Obj, PConds)),Results),
+rule_count_per_obj(VM,Rules,Obj,Count):- 
+  duplicate_term(Rules,NewRules),
+  findall(P, %rule_copies_no_happy_endings(NewRules,_Ctx,P,PConds),
+   (select(Rule,NewRules,RestRules),
+    rule_units(Rule , _Ctx, P, PConds),
+    indv_has_conds(RestRules,VM, Obj, P, PConds)),Results),
   length(Results,Count).
-%   \+ (member(Other,Rest),vm_has_obj_prop(Rules,VM, Obj, Other)).
+%   \+ (member(Other,Rest),indv_has_conds(Rules,VM, Obj, P, Other)).
 
 
 
-remove_from_rules(_P2,[],Rules, Rules):- !.
+apply_copy_perfects(VM, TestID, ExampleNum, Ctx, Rules, Objs, [Rule|Used], [Obj|PerfectCopies], LeftOvers):-
+  PC = perfect_copy(_,_),
+  
+
+  select(Rule,Rules,RulesRest),
+  copy_term(Rule,RuleC), rule_units(RuleC, _Ctx, PC, PConds),  
+  select(Obj,Objs,ObjsRest),
+  append(RulesRest,[Rule],NewRules),
+  must_be_nonvar(PConds),
+  indv_has_conds(RulesRest,VM, Obj, PC, PConds),!,
+  apply_copy_perfects(VM, TestID, ExampleNum, Ctx, NewRules, Used, ObjsRest, PerfectCopies, LeftOvers).
+apply_copy_perfects(_VM, _TestID, _ExampleNum, _Ctx, _Rules, [], LeftOvers, [], LeftOvers).
+
+remove_from_rules(_P2,   [],    Rules, Rules):- !.
 remove_from_rules(P2,[P|Common],Rules,NewRules):-
   maplist(remove_p_from_rules(P2,P),Rules,Mid),!,
   remove_from_rules(P2,Common,Mid,NewRules).
@@ -2409,20 +2452,28 @@ remove_from_rules(P2,[_|Common],Rules,NewRules):-
   remove_from_rules(P2,Common,Rules,NewRules).
 
 remove_p_from_rules(P2,Common,Rule,NewRule):- rule_units(Rule,Ctx, P, PConds),
-  my_partition(is_ele_p2(P2,Common),PConds,_Removed,NewPConds),NewPConds\==[],!,
-  rule_units(NewRule,Ctx, P, NewPConds).
+  my_partition(is_ele_p2(P2,Common),PConds,_Removed,NConds),NConds\==[],!,
+  rule_units(NewRule,Ctx, P, NConds).
 %remove_p_from_rules(P2,_Common,Rule,Rule):-!.
 
 is_ele_p2(P2,Common,PCond):- is_list(Common),!, \+ \+ (member(E,Common), call(P2,E,PCond)).
 is_ele_p2(P2,E,PCond):- \+ \+ call(P2,E,PCond).
 
 apply_obj_transforms(_VM, _TestID, _ExampleNum, _Ctx, _Rules, Objs, ObjsO):- \+ compound(Objs),!,ObjsO=Objs.
+apply_obj_transforms(VM, TestID, ExampleNum, Ctx, Rules, Objs, ObjsO):- 
+  apply_copy_perfects(VM, TestID, ExampleNum, Ctx, Rules, Objs, Used, MidNewObjs, Uncopied), Used\==[], !,
+  addRObjects(VM,MidNewObjs),
+  intersection(Used,Rules,_,_,NewRules),
+  apply_obj_transforms(VM, TestID, ExampleNum, Ctx, NewRules, Uncopied, NewObjs),
+  append(MidNewObjs,NewObjs,ObjsO).
+
 apply_obj_transforms(VM, TestID, ExampleNum, Ctx, Rules, [O|Objs], [NO|NewObjs]):- !,
   apply_obj_transforms(VM, TestID, ExampleNum, Ctx, Rules, O, NO), !,
   apply_obj_transforms(VM, TestID, ExampleNum, Ctx, Rules, Objs, NewObjs).
 
 apply_obj_transforms(VM,TestID,ExampleNum,Ctx, Rules, Obj, NewObj):- 
   try_one_rule(VM,TestID,ExampleNum,Ctx, Rules, Obj, NewObj),!. 
+
 apply_obj_transforms(_VM,_TestID,_ExampleNum,_Ctx,_Rules,Obj, Obj):- has_prop(cc(fg,0),Obj),!.
 apply_obj_transforms(VM, _TestID, _ExampleNum, _Ctx, Rules, Obj, NewObj):-
   indv_props_list(Obj,Props),sort(Props,SL),include_not_already_true(SL,DoesHave),
@@ -2432,8 +2483,8 @@ apply_obj_transforms(VM, _TestID, _ExampleNum, _Ctx, Rules, Obj, NewObj):-
 %apply_obj_transforms(_VM, _TestID, _ExampleNum, _Ctx, _Rules, Objs, Objs).
 
 try_one_rule(VM, _TestID, _ExampleNum, Ctx, Rules, Obj, NewObj):-
-  rule_copies_no_happy_endings(Rules,Ctx,P,PConds),
-  vm_has_obj_prop(Rules,VM, Obj, PConds),!,
+  rule_copies_no_happy_endings(Rules,Ctx,P,PConds),%member(M,PConds),
+  indv_has_conds(Rules, VM, Obj, P, PConds),!,
   globalpoints(Obj, OGPoints),
   must_det_ll((override_object_1(VM, P, Obj, NewObj),
   gset(VM.robjs) = [NewObj|VM.robjs],
@@ -2442,32 +2493,18 @@ try_one_rule(VM, _TestID, _ExampleNum, Ctx, Rules, Obj, NewObj):-
     print_ss(wqs([ar1(P)]), print_grid(VM.h, VM.v,OGPoints), print_grid(VM.h, VM.v, GPoints)),
     pp_ilp(:-PConds))))).
 
-rule_copies_no_happy_endings(Rules,Ctx,P,LHS):-
- unnumbervars2a(Rules,URules),
- RUnit = ':-'(P,LHS),
- findall(RUnit, 
-     (member(URule, URules),
-      copy_term(URule,Rule),
-      rule_units(Rule , Ctx, P, LHS),
-      P\=happy_ending(_)),
-    SRules),
-  %unnumbervars2a(SRules,USRules),
-  =(SRules,USRules),
-  member(RUnit,USRules).
 
+rule_copies_no_happy_endings(Rules,Ctx,P,LHS):-
+    member(Rule, Rules),
+  %  unnumbervars2a(Rule,URule),
+    copy_term(Rule,UURule),
+    rule_units(UURule , Ctx, P, LHS),
+    P\=happy_ending(_).
 
 rule_copies_no_happy_endings(Rules,Rules):-!.
-rule_copies_no_happy_endings(Rules,NRules):-  
-  findall_vset_R(Rule, (rule_copies_no_happy_endings(Rules,Ctx,P,PConds), rule_units(Rule, Ctx, P, PConds)), NRules).
+%rule_copies_no_happy_endings(Rules,NRules):-  
+%  findall_vset_R(Rule, (rule_copies_no_happy_endings(Rules,Ctx,P,PConds), rule_units(Rule, Ctx, P, PConds)), NRules).
 
-
-vm_has_obj_prop(Rules,VM, Obj, always(of_obj(Prop, G))):-
-  member(Rule, Rules), rule_units(Rule, _Ctx, of_obj(Prop, G), PConds),
-  (member(O, VM.robjs);member(O, VM.objs)),
-  (O \== Obj, inv_has_prop2(O, PConds)), call(G).
-
-vm_has_obj_prop(Rules,VM, Obj, [P|T]):- !, vm_has_obj_prop(Rules,VM, Obj, P), vm_has_obj_prop(Rules,VM, Obj, T).
-vm_has_obj_prop(_Rules,_VM, Obj, PConds):- inv_has_prop2(Obj, PConds).
 
 clone_object(I,O):- duplicate_term(I,O).
 
@@ -4622,7 +4659,7 @@ print_scene_change_rules3(Why,P4db,TestID):-
    */
    if_t(maybe_color_this(Why,Color),banner_lines(Color,2)),
    dash_chars,pp_ilp(rules(Why,P4db)=Rules),
-   listing(more_assumed/1),
+   nl_if_needed,listing(more_assumed/1),
    if_t(maybe_color_this(Why,Color),banner_lines(Color,4)))).
 
 print_scene_change_rules_if_different(Why,P4db,TestID):-
@@ -4638,16 +4675,22 @@ print_scene_change_rules_if_different(Why,P4db,TestID):-
    banner_lines(cyan, 4),
    pp(updated(Why, PrevLenth->Lenth)),
    pp_ilp(updated(Why,P4db)=Rules),
-   listing(more_assumed/1),
+   nl_if_needed,listing(more_assumed/1),
    nop(banner_lines(cyan,4)))).
 
 maybe_color_this(Why,Color):- sub_term(Color,Why),is_color(Color),!.
 
-get_scene_change_rules(RuleList,_P4db,Rules):- is_list(RuleList),!,Rules=RuleList.
+get_scene_change_rules(RuleList,_P4db,Rules):- is_list(RuleList),!,into_renumvars(RuleList,Rules).
 get_scene_change_rules(TestID,P4db,Rules):-
  ensure_test(TestID),
   findall_vset_R(ac_rules(TestID,IO,P,PSame),
-    call(P4db,TestID,IO,P,PSame),Rules).
+    call(P4db,TestID,IO,P,PSame),RuleList),
+  into_renumvars(RuleList,Rules).
+
+into_renumvars(RulesList,Rules):- 
+  %unnumbervars2a(RulesList,URules),
+  (RulesList=URules),
+  copy_term(URules,Rules,_),numbervars(Rules,79,_,[attvar(bind)]).
 
 
 
@@ -4808,11 +4851,11 @@ merge_example_rules(TestID, ExampleNum, RulesList, NewRulesList):-
 merge_example_rules(_TestID,ExampleNum, RulesList, RulesList):- ExampleNum \==common,!.
 
 
-assert_ac_db(RulesList,NewRules):- is_list(NewRules),!,maplist(assert_ac_db(RulesList),NewRules).
+assert_ac_db(Gensym,NewRules):- is_list(Gensym),!,maplist(assert_ac_db(Gensym),NewRules).
 assert_ac_db(Gensym, R):-
   must_det_ll((ctx_p_conds(R, Ctx, P, PSame), assert_ilp_b(ac_db_unit(Gensym, Ctx, P, PSame)))).
 
-retract_ac_db(RulesList,NewRules):- is_list(NewRules),!,maplist(retract_ac_db(RulesList),NewRules).
+retract_ac_db(Gensym,NewRules):- is_list(Gensym),!,maplist(retract_ac_db(Gensym),NewRules).
 retract_ac_db(Gensym, R):-
   must_det_ll((ctx_p_conds(R, Ctx, P, PSame), retractall(ac_db_unit(Gensym, Ctx, P, PSame)))).
 

@@ -1043,7 +1043,7 @@ pp_ilp(Grp):- notrace((must_det_ll(pp_ilp(1,Grp)))),!.
 pp_ilp(_D,_T):- is_print_collapsed,!. % nb_current(print_collapsed,PC),number(PC),PC>=10,!.
 pp_ilp(D,T):- ground(T),!,pp_ilp_n(D,T).
 pp_ilp(D,T):- copy_term(T,CT),term_variables(CT,TV),
-  my_include(not_in_grid(CT),TV,NGTV),numbervars(NGTV,999,_,[attvar(skip),singletons(true)]),T\=@=CT,!,pp_ilp_n(D,CT).
+  my_include(not_in_grid(CT),TV,NGTV),numbervars(NGTV,999,_,[attvar(skip),singletons(false)]),T\=@=CT,!,pp_ilp_n(D,CT).
 pp_ilp(D,T):- pp_ilp_n(D,T).
 
 not_in_grid(CT,Var):- \+ ((p1_sub_term(is_grid,ST,CT),sub_var(Var,ST))).

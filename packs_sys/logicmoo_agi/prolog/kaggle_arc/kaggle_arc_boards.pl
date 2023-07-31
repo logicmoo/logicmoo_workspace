@@ -500,6 +500,7 @@ hint_into_data(Data,Data).
 
  
 relax_hint(G,G):- (\+ compound(G)) -> !; true.
+relax_hint(X1,X2):- verbatum_unifiable(X1), !, X2=X1.
 %relax_hint(rev(G),rev(GG)):- !, relax_hint(G,GG).
 %relax_hint(mono(G),mono(GG)):- !, relax_hint(G,GG).
 %relax_hint(iz(G),iz(GG)):- relax_hint(G,GG).
