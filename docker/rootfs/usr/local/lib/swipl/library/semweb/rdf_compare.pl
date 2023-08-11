@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2009-2020, University of Amsterdam
+    Copyright (c)  2009-2022, University of Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -36,7 +37,9 @@
 :- module(rdf_compare,
           [ rdf_equal_graphs/3          % +Graph1, +Graph2, -Substitutions
           ]).
+:- if(exists_source(library(semweb/rdf_db))).
 :- use_module(library(semweb/rdf_db),[lang_equal/2,rdf_is_bnode/1]).
+:- endif.
 :- autoload(library(apply),[partition/4,maplist/3]).
 :- autoload(library(debug),[debug/3]).
 :- autoload(library(lists),[select/3]).
@@ -117,3 +120,13 @@ node_id(node(_)) :- !.
 node_id(X) :-
     rdf_is_bnode(X).
 
+:- if(\+current_predicate(rdf_is_bnode/1)).
+rdf_is_bnode(Node) :-
+    atom(Node),
+    sub_atom(Node, 0, _, _, '_:').
+:- endif.
+:- if(\+current_predicate(lang_equal/2)).
+lang_equal(X, Y) :-
+    downcase_atom(X, L),
+    downcase_atom(Y, L).
+:- endif.

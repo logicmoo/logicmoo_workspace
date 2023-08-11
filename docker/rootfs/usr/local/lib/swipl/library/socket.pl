@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2000-2020, University of Amsterdam
+    Copyright (c)  2000-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -179,7 +180,7 @@ defined.
                        nodelay(boolean)
                      ]).
 
-:- use_foreign_library(foreign(socket), install_socket).
+:- use_foreign_library(foreign(socket)).
 :- public tcp_debug/1.                  % set debugging.
 
 :- if(current_predicate(unix_domain_socket/1)).

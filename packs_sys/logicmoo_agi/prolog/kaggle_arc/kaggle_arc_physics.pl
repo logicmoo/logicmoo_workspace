@@ -480,10 +480,7 @@ move_object(NX,NY,I,M):- is_object(I),!,
 move_object(H,V,L,LM):- is_group(L),!,mapgroup(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
-is_input(VM):- VM.id = _ * _ * in.
 
-is_input_object(Obj):- is_object(Obj),obj_to_oid(Obj,OID),atom_concat(_,'_in',OID),!.
-is_output_object(Obj):- is_object(Obj), obj_to_oid(Obj,OID),atom_concat(_,'_out',OID),!.
 %ignore(((NewOptions\==Options;(GoneMissing\==[];SofarMaybeNewL\==SofarL)),
 
 %show_object_changes(_VM,_S,Goal):-!, call(Goal).
@@ -516,16 +513,42 @@ print_side_by_side_d(C,A,AN,W,B,BN):- nop(print_side_by_side(C,A,AN,W,B,BN)).
 
 same_surface(O1,O2):- obj_test_example_io(O1,GID),obj_test_example_io(O2,GID).
  
-two_physical_objs(O1,O2):- O1\==O2, is_physical_object(O1),is_physical_object(O2), O1\=@=O2, same_surface(O1,O2).
+two_physical_objs(O1,O2):- O1\==O2, is_spatial_object(O1),is_spatial_object(O2), O1\=@=O2, same_surface(O1,O2).
 
-is_physical_object(O):- var(O),!,enum_object(O),is_physical_object(O).
-is_physical_object(O):- has_prop(iz(flag(not_physical_object)),O),!,fail.
-is_physical_object(O):- has_prop(iz(flag(hidden)),O),!,fail.
-%is_physical_object(O):- is_whole_grid(O),!,fail.
+
+is_input(VM):- VM.id = _ * _ * in.
+
+is_input_object(Obj):- var(Obj),!,enum_object(Obj),is_input_object(Obj).
+is_input_object(Obj):- \+ is_object(Obj),!,fail.
+is_input_object(Obj):- obj_to_oid(Obj,OID),atom_concat(_,'_in',OID),!.
+is_input_object(Obj):- has_prop(iz(i_o(input)),Obj),!.
+
+is_output_object(Obj):- var(Obj),!,enum_object(Obj),is_output_object(Obj).
+is_output_object(Obj):- \+ is_object(Obj),!,fail.
+is_output_object(Obj):- obj_to_oid(Obj,OID),atom_concat(_,'_out',OID),!.
+is_output_object(Obj):- has_prop(iz(i_o(output)),Obj),!.
+
+is_spatial_object(Obj):- var(Obj),!,enum_object(Obj),is_spatial_object(Obj).
+is_spatial_object(Obj):- \+ is_object(Obj),!,fail.
+is_spatial_object(Obj):- is_physical_object(Obj).
+is_spatial_object(Obj):- is_virtual_obj(Obj).
+
+is_physical_fg(Obj):- var(Obj),!,enum_object(Obj),is_physical_fg(Obj).
+is_physical_fg(Obj):- is_object(Obj),is_fg_object(Obj),
+  has_prop(iz(fg_or_bg(iz_fg)),Obj), \+ is_virtual_obj(Obj).
+
+is_virtual_obj(Obj):- var(Obj),!,enum_object(Obj),is_virtual_obj(Obj).
+is_virtual_obj(Obj):- \+ is_object(Obj),!,fail.
+is_virtual_obj(Obj):- has_prop(or(iz(flag(virtual)),iz(flag(hidden))),Obj).
+
+is_physical_object(Obj):- var(Obj),!,enum_object(Obj),is_physical_object(Obj).
+is_physical_object(Obj):- has_prop(iz(flag(not_physical_object)),Obj),!,fail.
+is_physical_object(Obj):- has_prop(iz(flag(hidden)),Obj),!,fail.
+%is_physical_object(Obj):- is_whole_grid(Obj),!,fail.
 is_physical_object(_).
-%is_physical_object(O):- has_prop(cc(fg,0),O),has_prop(cc(unkC,0),O),!,fail.
-%is_physical_object(O):- my_assertion(is_object(O)),has_prop(iz(media(shaped)),O),!.
-%is_physical_object(O):- has_prop(mass(Mass),O),Mass>0.
+%is_spatial_object(Obj):- has_prop(cc(fg,0),Obj),has_prop(cc(unkC,0),Obj),!,fail.
+%is_spatial_object(Obj):- my_assertion(is_object(Obj)),has_prop(iz(media(shaped)),Obj),!.
+%is_spatial_object(Obj):- has_prop(mass(Mass),Obj),Mass>0.
 
 % ==============================================
   %%find_subsumes,
@@ -543,7 +566,7 @@ find_relations(VM):-
 
 find_relationsA(Objs,NewObjs):-
  must_det_ll((
-  include(is_physical_object,Objs,Phys),
+  include(is_spatial_object,Objs,Phys),
   my_maplist(add_oinfo,Phys,PhysOInfo),
   find_relationsB(PhysOInfo,[],TodoLIST),
   flatten(TodoLIST,TodoLISTF),

@@ -313,7 +313,7 @@ handler_with_output_to(Goal, Id, Request, current_output, Status) :-
     ;   Status = error(goal_failed(Goal),_)
     ).
 handler_with_output_to(Goal, Id, Request, Output, Error) :-
-    current_output(OldOut),
+    stream_property(OldOut, alias(current_output)),
     set_output(Output),
     handler_with_output_to(Goal, Id, Request, current_output, Error),
     set_output(OldOut).

@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2000-2017, University of Amsterdam
+    Copyright (c)  2000-2022, University of Amsterdam
                               VU University Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -60,7 +61,7 @@ Unix counterparts.
 and manage processes.
 */
 
-:- use_foreign_library(foreign(unix), install_unix).
+:- use_foreign_library(foreign(unix)).
 
 %!  fork(-Pid) is det.
 %

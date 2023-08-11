@@ -103,19 +103,13 @@ rp_test1(Y):- rp_test0(X),rot90(X,Y).
 /*
 */
 
-into_fg_bg_as(FG,_,Color,FG):- is_fg_color(Color),!.
-into_fg_bg_as(_,BG,Color,BG):- is_bg_color(Color),!.
-into_fg_bg_as(_,_,Color,Color).
-
-into_fg_bg(A,B):- into_fg_bg_as(fg,unkC,A,B).
-
 
 into_bicolor(Grid,Mono):- color_cc_black_first(Grid,CC), into_bicolor(CC,Grid,Mono). 
 
 into_bicolor([_],Grid,Grid):- !.
 into_bicolor([_,_],Grid,Grid):- !.
-into_bicolor([cc(Black,0),cc(BG,N),cc(_,N2)|_Rest],Grid,Mono):- is_black(Black), N2\==N, subst(Grid,BG,unkC,FixBG), mapgrid(into_fg_bg,FixBG,Mono).
-into_bicolor(_,Grid,Mono):- mapgrid(into_fg_bg,Grid,Mono).
+into_bicolor([cc(Black,0),cc(BG,N),cc(_,N2)|_Rest],Grid,Mono):- is_black(Black), N2\==N, subst(Grid,BG,bg,FixBG), mapgrid(into_fg_bg_uc,FixBG,Mono).
+into_bicolor(_,Grid,Mono):- mapgrid(into_fg_bg_uc,Grid,Mono).
 
 is_monotrim_symmetric(Grid):- trim_to_rect(Grid,Rect),!,is_mono_symmetric(Rect).
 is_monotrim_symmetricD(Grid):- trim_to_rect(Grid,Rect),!,is_mono_symmetricD(Rect).

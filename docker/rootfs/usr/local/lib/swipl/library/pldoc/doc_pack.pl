@@ -33,12 +33,14 @@
 */
 
 :- module(pldoc_pack,
-          [ doc_pack/1                  % +Pack
-          ]).
+	  [ doc_pack/1                  % +Pack
+	  ]).
+:- if(exists_source(library(http/http_dispatch))).
+:- use_module(library(http/http_dispatch)).
+:- endif.
 :- use_module(library(prolog_pack)).
 :- use_module(library(http/html_write)).
 :- use_module(library(http/html_head)).
-:- use_module(library(http/http_dispatch)).
 :- use_module(doc_html).
 :- use_module(doc_index).
 
@@ -51,6 +53,7 @@ predicate  doc_pack/1  can  be  used    to   generate  stand-alone  HTML
 documentation for a pack.
 */
 
+:- if(current_predicate(http_handler/3)).
 :- http_handler(pldoc(pack),     http_redirect(moved, pldoc('pack/')), []).
 :- http_handler(pldoc('pack/'),  pldoc_pack, [prefix]).
 
@@ -72,9 +75,9 @@ pldoc_pack(Request) :-
     ).
 pldoc_pack(_Request) :-
     reply_html_page(
-        pldoc(packs),
-        title('Installed extension packs'),
-        \pack_page([])).
+	pldoc(packs),
+	title('Installed extension packs'),
+	\pack_page([])).
 
 pack_path(Pack, PackFile, PackPath) :-
     sub_atom(PackPath, B, _, A, /),
@@ -86,13 +89,13 @@ pack_page(Options) -->
     html_requires(pldoc),
     object_page_header(-, Options),
     html([ h1('Installed extension packs'),
-           p([ 'The following extension packages are installed in ',
-               'the this Prolog system.  Other packages can be found at ',
-               a(href('http://www.swi-prolog.org/pack/list'),
-                 'the SWI-Prolog website')
-             ]),
-           \pack_table(Options)
-         ]).
+	   p([ 'The following extension packages are installed in ',
+	       'the this Prolog system.  Other packages can be found at ',
+	       a(href('http://www.swi-prolog.org/pack/list'),
+		 'the SWI-Prolog website')
+	     ]),
+	   \pack_table(Options)
+	 ]).
 
 
 %!  pack_table(+Options)// is det.
@@ -104,9 +107,9 @@ pack_table(_Options) -->
       sort(Packs0, Packs)
     },
     html(table(class(packs),
-               [ tr([th('Pack'), th('Version'), th('Title')])
-               | \packs(Packs)
-               ])).
+	       [ tr([th('Pack'), th('Version'), th('Title')])
+	       | \packs(Packs)
+	       ])).
 
 packs([]) --> [].
 packs([H|T]) --> pack(H), packs(T).
@@ -120,9 +123,9 @@ pack(Pack) -->
       )
     },
     html(tr([ td(class(pack_name),    a(href(HREF+'/'), Pack)),
-              td(class(pack_version), Version),
-              td(class(pack_title),   Title)
-            ])).
+	      td(class(pack_version), Version),
+	      td(class(pack_title),   Title)
+	    ])).
 
 
 %!  list_pack(+Pack, +PackFile, +Request)
@@ -132,9 +135,9 @@ pack(Pack) -->
 list_pack(Pack, '', _) :-
     !,
     reply_html_page(
-        pldoc(pack),
-        title('Documentation for pack ~w'-[Pack]),
-        \pack_doc(Pack)).
+	pldoc(pack),
+	title('Documentation for pack ~w'-[Pack]),
+	\pack_doc(Pack)).
 list_pack(Pack, File, Request) :-
     pack_property(Pack, directory(PackDir)),
     directory_file_path(PackDir, File, Path0),
@@ -148,16 +151,17 @@ pack_doc(Pack) -->
       findall(O, pack_option(Pack, O), Options)
     },
     dir_index(PackDir,
-              [ if(true),
-                recursive(true),
-                title(Title)
-              | Options
-              ]).
+	      [ if(true),
+		recursive(true),
+		title(Title)
+	      | Options
+	      ]).
+:- endif.			% server facilities
 
 
-                 /*******************************
-                 *        STAND ALONE DOCS      *
-                 *******************************/
+		 /*******************************
+		 *        STAND ALONE DOCS      *
+		 *******************************/
 
 %!  doc_pack(+Pack)
 %
@@ -174,12 +178,12 @@ doc_pack(Pack) :-
     directory_file_path(PackDir, prolog, SourceDir),
     directory_file_path(PackDir, doc, DocDir),
     doc_save(SourceDir,
-             [ title(PackTitle),
-               doc_root(DocDir),
-               if(true),
-               recursive(true)
-             | Options
-             ]).
+	     [ title(PackTitle),
+	       doc_root(DocDir),
+	       if(true),
+	       recursive(true)
+	     | Options
+	     ]).
 
 pack_title(Pack, PackTitle) :-
     pack_property(Pack, title(Title)),

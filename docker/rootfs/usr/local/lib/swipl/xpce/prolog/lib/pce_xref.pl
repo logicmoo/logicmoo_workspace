@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker and Anjo Anjewierden
     E-mail:        wielemak@science.uva.nl
     WWW:           http://www.swi-prolog.org/packages/xpce/
-    Copyright (c)  2006-2020, University of Amsterdam
+    Copyright (c)  2006-2022, University of Amsterdam
                               SWI-Prolog Solutions b.v.
     All rights reserved.
 
@@ -74,6 +74,9 @@
 	     xref_called/4,
              head_name_arity/3
 	   ]).
+
+:- multifile
+    gxref_called/2.
 
 gxref_version('0.1.1').
 
@@ -2014,7 +2017,8 @@ edit_callable(Callable, File) :-
     local_callable(Callable, File, Local),
     (   xref_defined(File, Local, How),
         xref_definition_line(How, Line)
-    ->  edit(file(File, line(Line)))
+    ->  edit_location(Line, File, Location),
+        edit(Location)
     ;   autoload_predicate(Local)
     ->  functor(Local, Name, Arity),
         edit(Name/Arity)
@@ -2045,6 +2049,12 @@ local_callable(M:Callable, File, Callable) :-
     xref_module(File, M),
     !.
 local_callable(Callable, _, Callable).
+
+edit_location(File:Line, _MainFile, Location) =>
+    edit_location(Line, File, Location).
+edit_location(Line, File, Location) =>
+    Location = file(File, line(Line)).
+
 
 
                  /*******************************
@@ -2116,6 +2126,8 @@ generated_callable(M:Term) :-
 %   calls and calls made to predicates where the condition says that
 %   the predicate should not exist.
 
+xref_called(Source, Callable) :-
+    gxref_called(Source, Callable).
 xref_called(Source, Callable) :-
     xref_called_cond(Source, Callable, _).
 
@@ -2193,7 +2205,7 @@ included_if_defined((A;B), Callable) :-
 %   We first resolve all imports to   absolute  files. Localizing is
 %   done afterwards.  Imports is a list of
 %
-%!          use_module(FileSpec, Callables)
+%           use_module(FileSpec, Callables)
 
 xref_file_imports(FileSpec, Imports) :-
     canonical_filename(FileSpec, File),

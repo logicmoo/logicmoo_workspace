@@ -33,46 +33,49 @@
 */
 
 :- module(odbc,
-          [ odbc_connect/3,             % +DSN, -Conn, +Options
-            odbc_driver_connect/3,      % +DriverString, -Conn, +Options
-            odbc_disconnect/1,          % +Conn
-            odbc_current_connection/2,  % ?Conn, -DSN
-            odbc_set_connection/2,      % +Conn, +Option
-            odbc_get_connection/2,      % +Conn, ?Option
-            odbc_end_transaction/2,     % +Conn, +CommitRollback
+	  [ odbc_connect/3,             % +DSN, -Conn, +Options
+	    odbc_driver_connect/3,      % +DriverString, -Conn, +Options
+	    odbc_disconnect/1,          % +Conn
+	    odbc_current_connection/2,  % ?Conn, -DSN
+	    odbc_set_connection/2,      % +Conn, +Option
+	    odbc_get_connection/2,      % +Conn, ?Option
+	    odbc_end_transaction/2,     % +Conn, +CommitRollback
 
-            odbc_query/4,               % +Conn, +SQL, -Row, +Options
-            odbc_query/3,               % +Conn, +SQL, -Row
-            odbc_query/2,               % +Conn, +SQL
+	    odbc_query/4,               % +Conn, +SQL, -Row, +Options
+	    odbc_query/3,               % +Conn, +SQL, -Row
+	    odbc_query/2,               % +Conn, +SQL
 
-            odbc_prepare/4,             % +Conn, +SQL, +Parms, -Qid
-            odbc_prepare/5,             % +Conn, +SQL, +Parms, -Qid, +Options
-            odbc_execute/2,             % +Qid, +Parms
-            odbc_execute/3,             % +Qid, +Parms, -Row
+	    odbc_prepare/4,             % +Conn, +SQL, +Parms, -Qid
+	    odbc_prepare/5,             % +Conn, +SQL, +Parms, -Qid, +Options
+	    odbc_execute/2,             % +Qid, +Parms
+	    odbc_execute/3,             % +Qid, +Parms, -Row
 	    odbc_fetch/3,               % +Qid, -Row, +Options
 	    odbc_next_result_set/1,     % +Qid
-            odbc_close_statement/1,     % +Statement
-            odbc_clone_statement/2,     % +Statement, -Clone
-            odbc_free_statement/1,      % +Statement
-            odbc_cancel_thread/1,       % +ThreadId
-                                        % DB dictionary info
-            odbc_current_table/2,       % +Conn, -Table
-            odbc_current_table/3,       % +Conn, -Table, ?Facet
-            odbc_table_column/3,        % +Conn, ?Table, ?Column
-            odbc_table_column/4,        % +Conn, ?Table, ?Column, ?Facet
-            odbc_type/3,                % +Conn, ?Type, -Facet
-            odbc_data_source/2,         % ?DSN, ?Description
+	    odbc_close_statement/1,     % +Statement
+	    odbc_clone_statement/2,     % +Statement, -Clone
+	    odbc_free_statement/1,      % +Statement
+					% DB dictionary info
+	    odbc_current_table/2,       % +Conn, -Table
+	    odbc_current_table/3,       % +Conn, -Table, ?Facet
+	    odbc_table_column/3,        % +Conn, ?Table, ?Column
+	    odbc_table_column/4,        % +Conn, ?Table, ?Column, ?Facet
+	    odbc_type/3,                % +Conn, ?Type, -Facet
+	    odbc_data_source/2,         % ?DSN, ?Description
 
-            odbc_table_primary_key/3,   % +Conn, ?Table, ?Column
-            odbc_table_foreign_key/5,   % +Conn, ?PkTable, ?PkColumn, ?FkTable, ?FkColumn
+	    odbc_table_primary_key/3,   % +Conn, ?Table, ?Column
+	    odbc_table_foreign_key/5,   % +Conn, ?PkTable, ?PkColumn, ?FkTable, ?FkColumn
 
 	    odbc_set_option/1,          % -Option
-            odbc_statistics/1,          % -Value
-            odbc_debug/1                % +Level
-          ]).
+	    odbc_statistics/1,          % -Value
+	    odbc_debug/1                % +Level
+	  ]).
 :- autoload(library(lists),[member/2]).
 
 :- use_foreign_library(foreign(odbc4pl)).
+
+:- if(current_predicate(odbc_cancel_thread/1)).
+:- export(odbc_cancel_thread/1).       % +ThreadId
+:- endif.
 
 %!  odbc_current_connection(?Conn, ?DSN) is nondet.
 %
@@ -129,9 +132,9 @@ odbc_execute(Statement, Parameters) :-
 odbc_prepare(Connection, SQL, Parameters, Statement) :-
     odbc_prepare(Connection, SQL, Parameters, Statement, []).
 
-                 /*******************************
-                 *          SCHEMA STUFF        *
-                 *******************************/
+		 /*******************************
+		 *          SCHEMA STUFF        *
+		 *******************************/
 
 %!  odbc_current_table(-Table, -Facet)
 %
@@ -169,9 +172,9 @@ table_column(Connection, Table, Column, Tuple) :-
     ),
     (   ground(Column)              % force determinism
     ->  odbc_column(Connection, Table, Tuple),
-        arg(4, Tuple, Column), !
+	arg(4, Tuple, Column), !
     ;   odbc_column(Connection, Table, Tuple),
-        arg(4, Tuple, Column)
+	arg(4, Tuple, Column)
     ).
 
 %!  odbc_table_column(+Connection, +Table, ?Column, -Facet)
@@ -211,7 +214,7 @@ sql_type(decimal, T, Type) :-
     !,
     column_facet(precision(Len), T),
     (   column_facet(scale(D), T),
-        D \== 0
+	D \== 0
     ->  Type = decimal(Len, D)
     ;   Type = decimal(Len)
     ).
@@ -274,9 +277,9 @@ odbc_data_source(DSN, Description) :-
     odbc_data_sources(List),
     member(data_source(DSN, Description), List).
 
-                 /*******************************
-                 *    Primary & foreign keys    *
-                 *******************************/
+		 /*******************************
+		 *    Primary & foreign keys    *
+		 *******************************/
 
 %!  odbc_table_primary_key(+Connection, +Table, ?Column)
 %
@@ -289,9 +292,9 @@ odbc_table_primary_key(Connection, Table, Column) :-
     ),
     (   ground(Column)              % force determinism
     ->  odbc_primary_key(Connection, Table, Tuple),
-        arg(4, Tuple, Column), !
+	arg(4, Tuple, Column), !
     ;   odbc_primary_key(Connection, Table, Tuple),
-        arg(4, Tuple, Column)
+	arg(4, Tuple, Column)
     ).
 
 %!  odbc_table_foreign_key(+Connection, ?PkTable, ?PkCol, ?FkTable, ?FkCol)
@@ -306,9 +309,9 @@ odbc_table_foreign_key(Connection, PkTable, PkColumn, FkTable, FkColumn) :-
     arg(8, Tuple, FkColumn).
 
 
-                 /*******************************
-                 *           STATISTICS         *
-                 *******************************/
+		 /*******************************
+		 *           STATISTICS         *
+		 *******************************/
 
 odbc_statistics(Key) :-
     statistics_key(Key),
@@ -317,9 +320,9 @@ odbc_statistics(Key) :-
 statistics_key(statements(_Created, _Freed)).
 
 
-                 /*******************************
-                 *            MESSAGES          *
-                 *******************************/
+		 /*******************************
+		 *            MESSAGES          *
+		 *******************************/
 
 :- multifile
     prolog:message/3.

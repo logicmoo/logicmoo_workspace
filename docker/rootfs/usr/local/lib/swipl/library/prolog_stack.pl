@@ -336,10 +336,11 @@ prolog_stack_frame_property(frame(_,_,_,Goal), goal(Goal)) :-
 frame_predicate(foreign(PI), PI).
 frame_predicate(call(PI), PI).
 frame_predicate(clause(Clause, _PC), PI) :-
-    clause_property(Clause, PI).
+    clause_property(Clause, predicate(PI)).
 
 default_backtrace_options(Options) :-
-    (   current_prolog_flag(backtrace_show_lines, true)
+    (   current_prolog_flag(backtrace_show_lines, true),
+        current_prolog_flag(iso, false)
     ->  Options = []
     ;   Options = [subgoal_positions(false)]
     ).
@@ -473,6 +474,9 @@ contiguous([frame(D1,_,_)|Frames], D0) :-
 %   Produce a name (typically  Functor/Arity)   for  a  predicate to
 %   which Clause belongs.
 
+:- multifile
+    user:prolog_clause_name/2.
+
 clause_predicate_name(Clause, PredName) :-
     user:prolog_clause_name(Clause, PredName),
     !.
@@ -494,10 +498,11 @@ backtrace(MaxDepth) :-
 subgoal_position(ClauseRef, PC, File, CharA, CharZ) :-
     debug(backtrace, 'Term-position in ~p at PC=~w:', [ClauseRef, PC]),
     clause_info(ClauseRef, File, TPos, _),
-    '$clause_term_position'(ClauseRef, PC, List),    
-    debug(backtrace, '\t~p~n', [List]),    
+    '$clause_term_position'(ClauseRef, PC, List),
+    debug(backtrace, '\t~p~n', [List]),
     find_subgoal(List, TPos, PosTerm),
-    ((var(PosTerm)-> (CharA=65,CharZ=85);(arg(1, PosTerm, CharA), arg(2, PosTerm, CharZ)))).
+    arg(1, PosTerm, CharA),
+    arg(2, PosTerm, CharZ).
 
 %!  find_subgoal(+PosList, +TermPos, -SubGoalPos).
 %

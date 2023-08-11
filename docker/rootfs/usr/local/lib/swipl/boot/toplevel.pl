@@ -520,8 +520,8 @@ initialise_prolog :-
     opt_attach_packs,
     load_init_file,
     catch(setup_colors, E, print_message(warning, E)),
-    '$load_script_file',
     associated_files(Files),
+    '$load_script_file',
     load_associated_files(Files),
     '$cmd_option_val'(goals, Goals),
     (   Goals == [],
@@ -898,6 +898,13 @@ read_expanded_query(BreakLev, ExpandedQuery, ExpandedBindings) :-
 %   !-based history is enabled. The second is   used  if we have command
 %   line editing.
 
+:- if(current_prolog_flag(emscripten, true)).
+read_query(_Prompt, Goal, Bindings) :-
+    '$can_yield',
+    !,
+    await(goal, GoalString),
+    term_string(Goal, GoalString, [variable_names(Bindings)]).
+:- endif.
 read_query(Prompt, Goal, Bindings) :-
     current_prolog_flag(history, N),
     integer(N), N > 0,
@@ -930,15 +937,19 @@ read_query(Prompt, Goal, Bindings) :-
 %!  read_query_line(+Input, -Line) is det.
 
 read_query_line(Input, Line) :-
+    stream_property(Input, error(true)),
+    !,
+    Line = end_of_file.
+read_query_line(Input, Line) :-
     catch(read_term_as_atom(Input, Line), Error, true),
     save_debug_after_read,
     (   var(Error)
     ->  true
-    ;   Error = error(syntax_error(_),_)
-    ->  print_message(error, Error),
-        fail
-    ;   print_message(error, Error),
-        throw(Error)
+    ;   catch(print_message(error, Error), _, true),
+        (   Error = error(syntax_error(_),_)
+        ->  fail
+        ;   throw(Error)
+        )
     ).
 
 %!  read_term_as_atom(+Input, -Line)
@@ -1625,6 +1636,13 @@ self_bounded(binding([Name], Value, [])) :-
 %
 %   Read the continuation entered by the user.
 
+:- if(current_prolog_flag(emscripten, true)).
+get_respons(Action, _Chp) :-
+    '$can_yield',
+    !,
+    await(more, ActionS),
+    atom_string(Action, ActionS).
+:- endif.
 get_respons(Action, Chp) :-
     repeat,
         flush_output(user_output),

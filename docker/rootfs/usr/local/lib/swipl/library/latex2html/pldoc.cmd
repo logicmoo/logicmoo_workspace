@@ -216,6 +216,9 @@
 \Snequal
 \Shat
 \Sbar
+\Sbarbar
+\SCand
+\SCandand
 \Stimes
 \Spow
 \Splus

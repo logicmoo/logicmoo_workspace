@@ -105,12 +105,16 @@ thread_httpd:make_socket_hook(Port, M:Options0, Options) :-
     ->  ensure_close_parent(SSL1, SSL)
     ;   SSL = SSL0
     ),
-    atom_concat('httpsd', Port, Queue),
+    port(Port, PortNum),
+    atom_concat('httpsd', PortNum, Queue),
     Options = [ queue(Queue),
                 tcp_socket(Socket),
                 ssl_instance(SSL)
               | Options1
               ].
+
+port(_Host:Port0, Port) => Port = Port0.
+port(Port0, Port), integer(Port0) => Port = Port0.
 
 ensure_close_parent(SSL0, SSL) :-
     (   ssl_property(SSL0, close_parent(true))

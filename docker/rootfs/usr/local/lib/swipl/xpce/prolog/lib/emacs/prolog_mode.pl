@@ -49,7 +49,6 @@
 :- use_module(library(prolog_predicate)).       % class prolog_predicate
 :- use_module(library(prolog_source)).
 :- require([ guitracer/0,
-	     tdebug/0,
 	     auto_call/1,
 	     delete_breakpoint/1,
              set_breakpoint_condition/2,
@@ -88,6 +87,10 @@
              head_name_arity/3,
              extend_goal/3
 	   ]).
+:- if(current_prolog_flag(threads, true)).
+:- require([ tdebug/0
+           ]).
+:- endif.
 :- if(current_prolog_flag(bounded, false)).
 :- require([ rational/1,
              rational/3
@@ -268,6 +271,8 @@ user_source_file(F) :-
 ignore_paths_from(library).
 ignore_paths_from(pce_boot).
 
+:- table lib_dir/1.
+
 lib_dir(D) :-
     ignore_paths_from(Category),
     user:file_search_path(Category, X),
@@ -278,10 +283,7 @@ expand_path(X, X) :-
     atomic(X),
     !.
 expand_path(Term, D) :-
-    Term =.. [New, Sub],
-    user:file_search_path(New, D0),
-    expand_path(D0, D1),
-    atomic_list_concat([D1, /, Sub], D).
+   absolute_file_name(Term,D,[solutions(all)]).
 
 
 :- pce_group(indent).
@@ -2291,11 +2293,8 @@ set_fragment_context(_, _).
 
 set_fragment_context(Fragment, P, Context) :-
     send(Fragment, has_send_method, P),
-    (   rational(Context),
-        \+ integer(Context)
-    ->  rational(Context, Num, Den),
-        format(string(Ctx), '~d/~d', [Num, Den])
-    ->  send(Fragment, P, Ctx)
+    (   rational_context(Context, String)
+    ->  send(Fragment, P, String)
     ;   atomic(Context)
     ->  send(Fragment, P, Context)
     ;   ground(Context),
@@ -2305,9 +2304,14 @@ set_fragment_context(Fragment, P, Context) :-
     ).
 set_fragment_context(_, _, _).
 
-:- if(\+ current_predicate(rational/1)).
-rational(_) :- fail.
-rational(_,_,_) :- fail.
+:- if(current_predicate(rational/1)).
+rational_context(Context, String) :-
+    rational(Context),
+    \+ integer(Context),
+    rational(Context, Num, Den),
+    format(string(String), '~d/~d', [Num, Den]).
+:- else.
+rational_context(_,_) :- fail.
 :- endif.
 
 
@@ -2657,6 +2661,7 @@ identify(F) :->
     identify_head(Id, F, Report),
     send(TB, report, status, Report).
 
+identify_head(test, _, 'Unit test').
 identify_head(Class, F, Summary) :-
     get(F, print_name, Name),
     !,
@@ -2673,28 +2678,33 @@ head_property(Head, Text) :-
     \+ hidden_property(Prop, Head),
     (   atomic(Text)
     ->  Text = Prop
-    ;   property_text(Prop, Text)
+    ;   property_text(Prop, Head, Text)
     ).
 
 hidden_property(file(_), _).
+hidden_property(static, _).
 hidden_property(line_count(_), _).
+hidden_property(number_of_rules(_), _).
 hidden_property(nodebug, _).
+hidden_property(defined, _).
+hidden_property(last_modified_generation(_), _).
 hidden_property(interpreted, _).
 hidden_property(visible, _).
+hidden_property(size(S), _) :- S < 1000.
 hidden_property(transparent, Head) :-
     predicate_property(Head, meta_predicate(_)).
 
-property_text(number_of_clauses(N), Text) :-
-    !,
-    (   N == 1
-    ->  Text = '1 clause'
-    ;   atomic_list_concat([N, ' clauses'], Text)
-    ).
-property_text(indexed(List), Text) :-
-    !,
-    (   List = [[1]-_]
+property_text(number_of_clauses(N), Head, Text) =>
+    (   predicate_property(Head, number_of_rules(Rules))
+    ->  true
+    ;   Rules = 0
+    ),
+    Facts is N - Rules,
+    clause_text(Rules, Facts, Text).
+property_text(indexed(List), _, Text) =>
+    (   List = [single(1)-_]
     ->  Text = 'hashed on first argument'
-    ;   List = [[N]-_]
+    ;   List = [single(N)-_]
     ->  int_postfix(N, PostFix),
         format(atom(Text), 'hashed on ~d-~w argument', [N, PostFix])
     ;   pairs_keys(List, Args),
@@ -2702,13 +2712,33 @@ property_text(indexed(List), Text) :-
         atomic_list_concat(Atoms, ', ', ArgText),
         format(atom(Text), 'hashed on arguments ~w', [ArgText])
     ).
-property_text(meta_predicate(Head), Text) :-
-    !,
+property_text(meta_predicate(Head), _, Text) =>
     Head =.. [_|Args],
     Meta =.. [meta_predicate|Args],
     term_to_atom(Meta, Text).
-property_text(Term, Text) :-
+property_text(size(N), _, Text) =>
+    (   N < 1_000
+    ->  format(string(Text), '~D bytes', [N])
+    ;   N < 1_000_000
+    ->  K is N/1024,
+        format(string(Text), '~1f Kb', [K])
+    ;   M is N/(1024*1024),
+        format(string(Text), '~1f Mb', [M])
+    ).
+property_text(Term, _, Text) =>
     term_to_atom(Term, Text).
+
+clause_text(1, 0, Text) =>
+    Text = '1 clause'.
+clause_text(0, 1, Text) =>
+     Text = '1 fact'.
+clause_text(N, 0, Text) =>
+    format(string(Text), '~D clauses', [N]).
+clause_text(0, N, Text) =>
+    format(string(Text), '~D facts', [N]).
+clause_text(R, F, Text) =>
+    Total is R+F, format(string(Text), '~D clauses (~D facts)', [Total, F]).
+
 
 int_postfix(1, st) :- !.
 int_postfix(2, nd) :- !.
@@ -2974,9 +3004,6 @@ identify(F) :->
     !,
     send(F, report, status, Summary).
 
-:- multifile
-    identify/2.
-
 identify_fragment(Term, _F, Text) :-
     phrase(syntax_message(Term), List),
     !,
@@ -3083,3 +3110,11 @@ atom_name(Name0, Name) :-
     Name = Name0.
 atom_name(Name0, Name) :-
     format(atom(Name), '~w', [Name0]).
+
+		 /*******************************
+		 *        SINGLE THREAD		*
+		 *******************************/
+
+:- if(\+current_predicate(tdebug/0)).
+tdebug :- debug.
+:- endif.

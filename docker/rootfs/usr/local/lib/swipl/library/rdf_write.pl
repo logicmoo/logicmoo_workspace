@@ -43,8 +43,26 @@
 :- autoload(library(sgml),
 	    [xml_quote_attribute/3, xml_name/1, xml_quote_cdata/3, xml_is_dom/1]).
 :- autoload(library(sgml_write),[xml_write/3]).
+:- use_module(library(semweb/rdf_prefixes),
+              [rdf_global_id/2, rdf_register_ns/2, op(_,_,_)]).
+:- if(exists_source(library(semweb/rdf_db))).
 :- autoload(library(semweb/rdf_db),
-	    [rdf_global_id/2, rdf_register_ns/2, rdf_is_bnode/1, rdf_equal/2]).
+	    [rdf_is_bnode/1, rdf_equal/2]).
+:- else.
+:- rdf_meta
+    rdf_equal(o,o).
+
+rdf_equal(X,X).
+rdf_is_bnode(Node) :-
+    atom(Node),
+    sub_atom(Node, 0, _, _, '_:').
+
+lang_equal(X, Y) :-
+    downcase_atom(X, L),
+    downcase_atom(Y, L).
+
+
+:- endif.
 
 
 /** <module> Write RDF/XML from a list of triples

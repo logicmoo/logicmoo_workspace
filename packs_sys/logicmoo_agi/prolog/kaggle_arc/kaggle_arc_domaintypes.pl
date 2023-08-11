@@ -68,6 +68,7 @@ dif_color(_,_).
 % =============================
 %is_fg_color(C):- C==black, !, fail,get_black(Black),!,Black\==black.
 is_fg_color(C):- C == fg,!.
+is_fg_color(C):- C == unkC,!,fail.
 is_fg_color(C):- C == black, !, black_is_fg.
 is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
 is_fg_color(C):- is_bg_color(C),!,fail.
@@ -78,6 +79,7 @@ is_real_bg_color(C):- is_bg_color(C),is_real_color(C).
 %is_bg_color(BG):- plain_var(BG),!,fail.
 is_bg_color(BG):- var(BG),!,get_attr(BG,ci,bg(_)),!.
 is_bg_color(C):- C==black,!, \+ black_is_fg.
+is_bg_color(C):- C == unkC,!,fail.
 is_bg_color(C):- bg_sym(BG),C==BG,!.
 is_bg_color(wbg).
 %is_bg_color('#104010').

@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker and Anjo Anjewierden
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org/packages/xpce/
-    Copyright (c)  2001-2021, University of Amsterdam
+    Copyright (c)  2001-2022, University of Amsterdam
                               VU University Amsterdam
                               SWI-Prolog Solutions b.v.
     All rights reserved.
@@ -54,7 +54,9 @@
 :- use_module(library(pce_util)).
 :- use_module(library(persistent_frame)).
 :- use_module(library(debug)).
+:- if(exists_source(library(threadutil))).
 :- use_module(library(threadutil)).
+:- endif.
 :- use_module(library(pprint)).
 :- use_module(trace).
 :- use_module(clause).

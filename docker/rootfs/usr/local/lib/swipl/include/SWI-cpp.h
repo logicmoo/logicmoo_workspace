@@ -34,6 +34,8 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
+//#warning "SWI-cpp.h is obsolete and replaced by SWI-cpp2.h"
+
 #ifndef _SWI_CPP_H
 #define _SWI_CPP_H
 
@@ -81,7 +83,7 @@ public:
   { functor = PL_new_functor(PL_new_atom_wchars(wcslen(name), name), arity);
   }
 
-  operator const functor_t(void) const
+  operator functor_t(void) const
   { return functor;
   }
 

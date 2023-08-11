@@ -399,10 +399,10 @@ crypto_password_hash(Password, Hash, Options) :-
 
 bytes_base64(Bytes, Base64) :-
     (   var(Bytes) ->
-        base64_encoded(Atom, Base64, [padding(false)]),
+        base64_encoded(Atom, Base64, [padding(false), encoding(iso_latin_1)]),
         atom_codes(Atom, Bytes)
     ;   atom_codes(Atom, Bytes),
-        base64_encoded(Atom, Base64, [padding(false)])
+        base64_encoded(Atom, Base64, [padding(false), encoding(iso_latin_1)])
     ).
 
 

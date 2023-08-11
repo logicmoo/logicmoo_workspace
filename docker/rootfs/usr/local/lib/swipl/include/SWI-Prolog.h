@@ -4,7 +4,7 @@
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
     Copyright (c)  2008-2022, University of Amsterdam
-                              VU University Amsterdam
+			      VU University Amsterdam
 			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
@@ -50,16 +50,7 @@
 #include <stdarg.h>
 #include <stdlib.h>			/* get size_t */
 #include <stddef.h>
-#ifdef _MSC_VER
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#if (_MSC_VER < 1300)
-typedef long intptr_t;
-typedef unsigned long uintptr_t;
-#endif
-#else
-#include <inttypes.h>			/* more portable than stdint.h */
-#endif
+#include <inttypes.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,7 +60,7 @@ extern "C" {
 /* PLVERSION_TAG: a string, normally "", but for example "rc1" */
 
 #ifndef PLVERSION
-#define PLVERSION 80515
+#define PLVERSION 90004
 #endif
 #ifndef PLVERSION_TAG
 #define PLVERSION_TAG ""
@@ -205,7 +196,7 @@ typedef _PLS(foreign_context) *control_t; /* non-deterministic control arg */
 typedef _PLS(PL_local_data) *PL_engine_t; /* opaque engine handle */
 typedef uintptr_t	PL_atomic_t;	/* same a word */
 typedef uintptr_t	foreign_t;	/* return type of foreign functions */
-typedef wchar_t	        pl_wchar_t;	/* Prolog wide character */
+typedef wchar_t		pl_wchar_t;	/* Prolog wide character */
 #ifdef __cplusplus
 typedef void *		pl_function_t;      /* pass function as void* */
 #else
@@ -487,6 +478,8 @@ PL_EXPORT(atom_t)	PL_new_atom_wchars(size_t len, const pl_wchar_t *s);
 PL_EXPORT(atom_t)	PL_new_atom_mbchars(int rep, size_t len, const char *s);
 PL_EXPORT(const char *)	PL_atom_chars(atom_t a);
 PL_EXPORT(const char *)	PL_atom_nchars(atom_t a, size_t *len);
+PL_EXPORT(int)		PL_atom_mbchars(atom_t a, size_t *len, char **s,
+					unsigned int flags);
 PL_EXPORT(const wchar_t *)	PL_atom_wchars(atom_t a, size_t *len);
 PL_EXPORT(void)		PL_register_atom(atom_t a);
 PL_EXPORT(void)		PL_unregister_atom(atom_t a);
@@ -784,6 +777,7 @@ PL_EXPORT(char *)	PL_cwd(char *buf, size_t buflen);
 		 *    QUINTUS/SICSTUS WRAPPER	*
 		 *******************************/
 
+PL_EXPORT(int)		PL_cvt_i_bool(term_t p, int *c); /* Note "int" because C has no "bool" */
 PL_EXPORT(int)		PL_cvt_i_char(term_t p, char *c);
 PL_EXPORT(int)		PL_cvt_i_schar(term_t p, signed char *c);
 PL_EXPORT(int)		PL_cvt_i_uchar(term_t p, unsigned char *c);
@@ -793,6 +787,10 @@ PL_EXPORT(int)		PL_cvt_i_int(term_t p, int *c);
 PL_EXPORT(int)		PL_cvt_i_uint(term_t p, unsigned int *c);
 PL_EXPORT(int)		PL_cvt_i_long(term_t p, long *c);
 PL_EXPORT(int)		PL_cvt_i_ulong(term_t p, unsigned long *c);
+PL_EXPORT(int)		PL_cvt_i_llong(term_t p, long long *c);
+PL_EXPORT(int)		PL_cvt_i_ullong(term_t p, unsigned long long *c);
+PL_EXPORT(int)		PL_cvt_i_int32(term_t p, int32_t *c);
+PL_EXPORT(int)		PL_cvt_i_uint32(term_t p, uint32_t *c);
 PL_EXPORT(int)		PL_cvt_i_int64(term_t p, int64_t *c);
 PL_EXPORT(int)		PL_cvt_i_uint64(term_t p, uint64_t *c);
 PL_EXPORT(int)		PL_cvt_i_size_t(term_t p, size_t *c);
@@ -915,9 +913,9 @@ UNICODE file functions.
 #define PL_DIFF_LIST	    0x01000000	/* PL_unify_chars() */
 
 
-                /*******************************
-                *         STRING BUFFERS       *
-                *******************************/
+		/*******************************
+		*         STRING BUFFERS       *
+		*******************************/
 
 #define PL_STRINGS_MARK() \
 	{ buf_mark_t __PL_mark; \
@@ -975,14 +973,14 @@ PL_EXPORT(IOSTREAM *)*_PL_streams(void);	/* base of streams */
 	 PL_WRT_ATTVAR_PORTRAY)
 #define PL_WRT_BLOB_PORTRAY	      0x400 /* Use portray for non-text blobs */
 #define PL_WRT_NO_CYCLES	      0x800 /* Never emit @(Template,Subst) */
-#define PL_WRT_NEWLINE	             0x2000 /* Add a newline */
-#define PL_WRT_VARNAMES	             0x4000 /* Internal: variable_names(List) */
+#define PL_WRT_NEWLINE		     0x2000 /* Add a newline */
+#define PL_WRT_VARNAMES		     0x4000 /* Internal: variable_names(List) */
 #define PL_WRT_BACKQUOTE_IS_SYMBOL   0x8000 /* ` is a symbol char */
-#define PL_WRT_DOTLISTS	            0x10000 /* Write lists as .(A,B) */
+#define PL_WRT_DOTLISTS		    0x10000 /* Write lists as .(A,B) */
 #define PL_WRT_BRACETERMS           0x20000 /* Write {A} as {}(A) */
-#define PL_WRT_NODICT	            0x40000 /* Do not write dicts pretty */
+#define PL_WRT_NODICT		    0x40000 /* Do not write dicts pretty */
 #define PL_WRT_NODOTINATOM          0x80000 /* never write a.b unquoted */
-#define PL_WRT_NO_LISTS	           0x100000 /* Do not write lists as [...] */
+#define PL_WRT_NO_LISTS		   0x100000 /* Do not write lists as [...] */
 #define PL_WRT_RAT_NATURAL         0x200000 /* Write rationals as 1/3 */
 #define PL_WRT_CHARESCAPES_UNICODE 0x400000 /* Use \uXXXX escapes */
 #define PL_WRT_QUOTE_NON_ASCII	   0x800000 /* Quote atoms containing non-ascii */
@@ -1340,6 +1338,11 @@ PL_EXPORT(void)		PL_prof_exit(void *node);
 		 /*******************************
 		 *	      DEBUG		*
 		 *******************************/
+
+PL_EXPORT_DATA(int)     plugin_is_GPL_compatible;
+#ifndef EMACS_MODULE_H
+PL_EXPORT(int)          emacs_module_init(void*);
+#endif
 
 PL_EXPORT(int)		PL_prolog_debug(const char *topic);
 PL_EXPORT(int)		PL_prolog_nodebug(const char *topic);

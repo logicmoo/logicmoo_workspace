@@ -317,7 +317,7 @@ user_agent('SWI-Prolog').
 %     Do not install a decoding filter for Encoding.  For example,
 %     using raw_encoding('applocation/gzip') the system will not
 %     decompress the stream if it is compressed using `gzip`.
-
+%
 %     * raw_headers(-Lines)
 %     Unify Lines with a list of strings that represents the complete
 %     reply header returned by the server.  See also headers(-List).

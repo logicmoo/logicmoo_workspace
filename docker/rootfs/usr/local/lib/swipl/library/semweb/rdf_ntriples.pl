@@ -41,8 +41,10 @@
             read_nquad/2,               % +Stream, -Quad
             read_ntuple/2               % +Stream, -TripleOrQuad
           ]).
+:- if(exists_source(library(semweb/rdf_db))).
 :- use_module(library(semweb/rdf_db),
               [rdf_transaction/2,rdf_set_graph/2,rdf_assert/4]).
+:- endif.
 :- use_module(library(record),[(record)/1, op(_,_,record)]).
 
 :- autoload(library(error),[domain_error/2]).
@@ -371,6 +373,7 @@ init_state(In, Options, State) :-
                  *          RDF-DB HOOK         *
                  *******************************/
 
+:- if(current_predicate(rdf_transaction/2)).
 :- multifile
     rdf_db:rdf_load_stream/3,
     rdf_db:rdf_file_type/2.
@@ -407,7 +410,6 @@ assert_tuple(rdf(S,P,O), Graph) :-
 assert_tuple(rdf(S,P,O,Graph), _) :-
     rdf_assert(S,P,O,Graph).
 
-
 %!  rdf_db:rdf_file_type(+Extension, -Format)
 %
 %   Bind the ntriples reader to  files   with  the  extensions =nt=,
@@ -417,3 +419,4 @@ rdf_db:rdf_file_type(nt,       ntriples).
 rdf_db:rdf_file_type(ntriples, ntriples).
 rdf_db:rdf_file_type(nq,       nquads).
 rdf_db:rdf_file_type(nquads,   nquads).
+:- endif.

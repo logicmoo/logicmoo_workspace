@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker and Anjo Anjewierden
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org/packages/xpce/
-    Copyright (c)  1985-2019, University of Amsterdam
-                              VU University Amsterdam
-                              CWI, Amsterdam
+    Copyright (c)  1985-2022, University of Amsterdam
+			      VU University Amsterdam
+			      CWI, Amsterdam
+			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -49,45 +50,45 @@ reexports the content of these files.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :- module(pce,
-          [ new/2, free/1,              % pce_principal predicates
+	  [ new/2, free/1,              % pce_principal predicates
 
-            send/2, send/3, send/4, send/5, send/6, send/7,
-            send/8,
+	    send/2, send/3, send/4, send/5, send/6, send/7,
+	    send/8,
 
-            get/3, get/4, get/5, get/6, get/7, get/8,
+	    get/3, get/4, get/5, get/6, get/7, get/8,
 
-            send_class/3,
-            get_class/4,
-            object/1, object/2,
+	    send_class/3,
+	    get_class/4,
+	    object/1, object/2,
 
-            pce_global/2,               % pce_global
-            pce_autoload/2,             % pce_autoload
-            pce_autoload_all/0,
+	    pce_global/2,               % pce_global
+	    pce_autoload/2,             % pce_autoload
+	    pce_autoload_all/0,
 
-            pce_term_expansion/2,
-            pce_compiling/1,            % -Class
-            pce_compiling/2,            % -Class, -Path
-            pce_begin_recording/1,
-            pce_end_recording/0,
+	    pce_term_expansion/2,
+	    pce_compiling/1,            % -Class
+	    pce_compiling/2,            % -Class, -Path
+	    pce_begin_recording/1,
+	    pce_end_recording/0,
 
-            pce_register_class/1,
-            pce_extended_class/1,
-            pce_begin_class_definition/4,
-            pce_prolog_class/1,
-            pce_prolog_class/2,
+	    pce_register_class/1,
+	    pce_extended_class/1,
+	    pce_begin_class_definition/4,
+	    pce_prolog_class/1,
+	    pce_prolog_class/2,
 
-            pce_catch_error/2,          % pce_error
-            pce_open/3,
-            in_pce_thread/1,            % :Goal
-            in_pce_thread_sync/1,       % :Goal
-            set_pce_thread/0,
-            pce_thread/1,               % -Thread
-            pce_dispatch/0,
+	    pce_catch_error/2,          % pce_error
+	    pce_open/3,
+	    in_pce_thread/1,            % :Goal
+	    in_pce_thread_sync/1,       % :Goal
+	    set_pce_thread/0,
+	    pce_thread/1,               % -Thread
+	    pce_dispatch/0,
 
-            op(200, fy,  @),
-            op(250, yfx, ?),
-            op(800, xfx, :=)
-          ]).
+	    op(200, fy,  @),
+	    op(250, yfx, ?),
+	    op(800, xfx, :=)
+	  ]).
 
 :- multifile
     on_load/0.
@@ -97,32 +98,34 @@ reexports the content of these files.
 :- meta_predicate
     in_pce_thread_sync(0).
 
-                /********************************
-                *      LOAD COMMON PLATFORM     *
-                ********************************/
+		/********************************
+		*      LOAD COMMON PLATFORM     *
+		********************************/
 
 :- multifile user:file_search_path/2.
 
 user:file_search_path(pce_boot, pce(prolog/boot)).
 
 :- load_files([ pce_boot(pce_expand),
-                pce_boot(pce_pl),
-                pce_boot(pce_principal),
-                pce_boot(pce_error),
-                pce_boot(pce_global),
-                pce_boot(pce_expansion),
-                pce_boot(pce_realise),
-                pce_boot(pce_goal_expansion),
-                pce_boot(pce_autoload),
-                pce_boot(pce_editor),
-                pce_boot(pce_keybinding),
-                pce_boot(pce_portray),
-                'english/pce_messages'
-              ],
-              [ qcompile(part),         % compile boot files as part of pce.qlf
-                silent(true)
-              ]).
+		pce_boot(pce_pl),
+		pce_boot(pce_principal),
+		pce_boot(pce_error),
+		pce_boot(pce_global),
+		pce_boot(pce_expansion),
+		pce_boot(pce_realise),
+		pce_boot(pce_goal_expansion),
+		pce_boot(pce_autoload),
+		pce_boot(pce_editor),
+		pce_boot(pce_keybinding),
+		pce_boot(pce_portray),
+		'english/pce_messages'
+	      ],
+	      [ qcompile(part),         % compile boot files as part of pce.qlf
+		silent(true)
+	      ]).
+:- if(current_prolog_flag(threads, true)).
 :- use_module(pce_dispatch).
+:- endif.
 
 %!  pce_thread(-Thread) is det.
 %
@@ -157,6 +160,7 @@ in_pce_thread_sync(Goal) :-
     term_variables(Goal, Vars),
     pce_principal:in_pce_thread_sync2(Goal-Vars, Vars).
 
+:- if(current_prolog_flag(threads, true)).
 start_dispatch :-
     (   current_predicate(pce_dispatch:start_dispatch/0)
     ->  pce_dispatch:start_dispatch
@@ -165,11 +169,12 @@ start_dispatch :-
 
 :- initialization
     start_dispatch.
+:- endif.
 
 set_version :-
     current_prolog_flag(version_data, swi(Major, Minor, Patch, _)),
     format(string(PlId),
-           'SWI-Prolog version ~w.~w.~w', [Major, Minor, Patch]),
+	   'SWI-Prolog version ~w.~w.~w', [Major, Minor, Patch]),
     send(@prolog, system, PlId).
 
 :- initialization set_version.
@@ -178,7 +183,7 @@ get_pce_version :-
     (   current_prolog_flag(xpce_version, _)
     ->  true
     ;   get(@pce, version, name, Version),
-        create_prolog_flag(xpce_version, Version, [])
+	create_prolog_flag(xpce_version, Version, [])
     ).
 
 :- initialization get_pce_version.
@@ -189,16 +194,16 @@ run_on_load :-
 :- initialization run_on_load.
 
 
-                 /*******************************
-                 *           CONSOLE            *
-                 *******************************/
+		 /*******************************
+		 *           CONSOLE            *
+		 *******************************/
 
 %:- send(@pce, console_label, 'XPCE/SWI-Prolog').
 
 
-                /********************************
-                *       PROLOG LIBRARIES        *
-                ********************************/
+		/********************************
+		*       PROLOG LIBRARIES        *
+		********************************/
 
 :- multifile
     user:file_search_path/2.
@@ -208,15 +213,15 @@ user:file_search_path(contrib, pce('prolog/contrib')).
 user:file_search_path(image,   pce(bitmaps)).
 
 
-                 /*******************************
-                 *            HOOKS             *
-                 *******************************/
+		 /*******************************
+		 *            HOOKS             *
+		 *******************************/
 
 :- use_module(library(swi_hooks)).
 
-                 /*******************************
-                 *         EDIT HOOKS           *
-                 *******************************/
+		 /*******************************
+		 *         EDIT HOOKS           *
+		 *******************************/
 
 %       make sure SWI-Prolog edit/0 loads the XPCE edit hooks.
 
@@ -227,9 +232,9 @@ user:file_search_path(image,   pce(bitmaps)).
 prolog_edit:load :-
     ensure_loaded(library(swi_edit)).
 
-                 /*******************************
-                 *          LIST HOOKS          *
-                 *******************************/
+		 /*******************************
+		 *          LIST HOOKS          *
+		 *******************************/
 
 %!  prolog:locate_clauses(Term, Refs)
 %
@@ -268,9 +273,9 @@ method_clause(<-(Class, Get), Ref) :-
     atomic_list_concat([Class,Get], '->', Id).
 
 
-                 /*******************************
-                 *           MESSAGES           *
-                 *******************************/
+		 /*******************************
+		 *           MESSAGES           *
+		 *******************************/
 
 :- multifile
     prolog:message/3.

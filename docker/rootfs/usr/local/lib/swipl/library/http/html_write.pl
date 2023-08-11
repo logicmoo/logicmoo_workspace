@@ -83,7 +83,9 @@
 :- autoload(library(sgml),[xml_quote_cdata/3,xml_quote_attribute/3]).
 :- autoload(library(uri),[uri_encoded/3]).
 :- autoload(library(url),[www_form_encode/2]).
+:- if(exists_source(library(http/http_dispatch))).
 :- autoload(library(http/http_dispatch), [http_location_by_id/2]).
+:- endif.
 
 % Quote output
 :- set_prolog_flag(generate_debug_info, false).
@@ -1600,11 +1602,13 @@ attr_value_colour(_, error).
 location_id(ID, classify) :-
     var(ID),
     !.
+:- if(current_predicate(http_location_for_id/1)).
 location_id(ID, Class) :-
     (   catch(http_location_by_id(ID, Location), _, fail)
     ->  Class = http_location_for_id(Location)
     ;   Class = http_no_location_for_id(ID)
     ).
+:- endif.
 location_id(_, classify).
 
 format_colours(Format, format_string) :- atom(Format), !.

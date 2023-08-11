@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker & Steve Prior
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2004-2020, University of Amsterdam
+    Copyright (c)  2004-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -71,17 +72,20 @@
 %           ==
 %           ?- prolog_server(4000, []).
 %
-%           % telnet localhost 4000
+%           % netcat -N localhost 4000
 %           Welcome to the SWI-Prolog server on thread 3
 %
 %           1 ?-
 %           ==
 %
-%   @bug As the connection does not involve a terminal, command history
-%   and completion are not provided. Neither are interrupts
-%   (Control-C).  To terminate the Prolog shell one must enter the
-%   command "end_of_file."
-
+%   @bug  As  the connection  does  not  involve a  terminal,  command
+%   history and  completion are  not provided. Neither  are interrupts
+%   (Control-C).  The Prolog shell can be terminated if `netcat` shuts
+%   down the socket on ^D (using the `-N` option).  Otherwise one must
+%   enter the command "end_of_file."
+%   @see The  add-on `libssh` provides  an embedded SSH  server.  This
+%   provides encryption  as well as  a _pseudo terminal_ for  a better
+%   user experience.
 
 prolog_server(Port, Options) :-
     tcp_socket(ServerSocket),
@@ -106,7 +110,8 @@ server_loop(ServerSocket, Options) :-
     catch(thread_create(
               service_client(InStream, OutStream, Peer, Options),
               _,
-              [ alias(Alias)
+              [ alias(Alias),
+                detached(true)
               ]),
           error(permission_error(create, thread, Alias), _),
           fail),
@@ -131,9 +136,8 @@ service_client(InStream, OutStream, Peer, Options) :-
            'Welcome to the SWI-Prolog server on thread ~w~n~n',
            [Id]),
     call_cleanup(prolog,
-                 ( close(InStream),
-                   close(OutStream),
-                   thread_detach(Id))).
+                 ( close(InStream, [force(true)]),
+                   close(OutStream, [force(true)]))).
 service_client(InStream, OutStream, _, _):-
     thread_self(Id),
     format(OutStream, 'Go away!!~n', []),

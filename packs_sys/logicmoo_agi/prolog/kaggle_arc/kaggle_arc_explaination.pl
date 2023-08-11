@@ -236,7 +236,7 @@ show_indiv_textinfo2(Why,AS0,ExceptFor):-
   my_partition(p1_or(is_functor(link),is_functor(elink)),Props1,ISLINK,Props2),
 
   my_partition(is_o3,Props2,Rankings0,Props3),  sr_props(Rankings0,Rankings1), 
-  predsort_on(arg(2),Rankings1,Rankings2),reverse(Rankings2,Rankings),
+  predsort_on(tc_arg(2),Rankings1,Rankings2),reverse(Rankings2,Rankings),
 
   %short_indv_props(Props3,TVSI1,TVSI2), 
   %append(TVSI1,TVSI2,TVSI),
@@ -358,7 +358,7 @@ printable_grid(H,V,Grid,GridO,NGrid):-
      ( false -> into_ngrid(PrintGridC,NGrid); NGrid = PrintGridC),!.     
 
 %show_indiv(_Why,Obj):- is_bg_object(Obj),!.
-arg1(P1,E):- arg(1,E,E1),call(P1,E1),!.
+arg1(P1,E):- compound(E),tc_arg(1,E,E1),call(P1,E1),!.
 
 
 
@@ -389,7 +389,8 @@ print_ogrid(Obj):-
   object_short_props(Obj,OID),
   intersection(Reqs,OID,_,_,Rest),
   %my_partition(same_prop_names(OID),Reqs,_,Rest),
-  print_grid([Obj]),
+  member(iz(ngrid(NGrid)),Props),
+  print_ss('',[Obj],NGrid),
   if_t(Rest\==[], format('~N~t~@~n',[wqs_c_l(Rest)])),
   if_t(Reqs\==[], format('~N~treq=~@~n',[wqs_c_l(Reqs)])),
   !.
@@ -510,7 +511,7 @@ print_colors_on_s([C|Color],Glyph):- length([C|Color],CL),length(Glyph,GL),CLL i
   sformat(G,'~s',[GLL]),!,color_print(C,G),print_colors_on_s(Color,More).
 print_colors_on_s([C|Color],[G|Glyph]):- color_print(C,G),print_colors_on_s(Color,Glyph).
 
-object_color_glyph_old(Obj,S):- o2g(Obj,G),colors_cc(Obj,Colors),my_maplist(arg(1),Colors,NColors),
+object_color_glyph_old(Obj,S):- o2g(Obj,G),colors_cc(Obj,Colors),my_maplist(tc_arg(1),Colors,NColors),
   wots(S,my_maplist(user:print_ncolors1(G),NColors)),!.
 
 print_ncolors(G,C):- color_print(C,G).
@@ -551,6 +552,7 @@ c_ot(_P2,O,O).
 prefered(repaired).
 prefered(full_grid).
 prefered(flag(hidden)).
+prefered(flag(virtual)).
 prefered(neededChanged).
 prefered(changed).
 prefered(nsew).
@@ -580,7 +582,7 @@ skip_header(sizeY(_)).
 is_open_list(T):- var(T),!.
 is_open_list([_|T]):-!,is_open_list(T).
 
-is_arg_in(Only,P):- compound(P),arg(2,P,Ref),
+is_arg_in(Only,P):- compound(P),tc_arg(2,P,Ref),
   once(into_obj(Ref,Obj)), \+ is_not_in(Only,Obj).
 
 show_touches(Only,Obj):- must_det_ll((into_obj(Obj,RealObj),show_touches0(Only,RealObj))).
@@ -665,7 +667,7 @@ remove_too_verbose(MyOID,colors_cc(H),HH):- !, remove_too_verbose(MyOID,H,HH).
 remove_too_verbose(_MyID,changes([]),'').
 %remove_too_verbose(_MyID,rot2D(sameR),'').
 %remove_too_verbose(MyOID,L,LL):- is_list(L),!, my_maplist(remove_too_verbose(MyOID),L,LL).
-remove_too_verbose(_MyID,H,HH):- compound(H),arg(1,H,L), is_list(L), maybe_four_terse(L,T),H=..[F,L|Args],HH=..[F,T|Args].
+remove_too_verbose(_MyID,H,HH):- compound(H),tc_arg(1,H,L), is_list(L), maybe_four_terse(L,T),H=..[F,L|Args],HH=..[F,T|Args].
 remove_too_verbose(_MyID,H,H).
 
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
@@ -781,7 +783,7 @@ The extreme case of parallelism in rule-based systems is the and-or-not lattice 
 print_rules(Rules):-pp_ilp(Rules). 
 
 shared_val(P1,P2):- same_prop_names(P1,P2), \+ other_val(P1,P2).
-
+ 
 do_in_plist_high([IO-P|PList],Step,In,Out):-
   call(Step,IO,P,In,Mid),
   do_in_plist_high(PList,Step,Mid,Out).
@@ -791,7 +793,7 @@ do_in_plist_high([],_,InOut,InOut).
 is_rule_about_same(IO,P1,Rule):- sub_var(IO,Rule),into_rhs(Rule,P2),shared_val(P1,P2).
 %is_rule_about_simular(IO,P1,Rule):- sub_var(IO,Rule),into_rhs(Rule,P2),other_val(P1,P2).
 is_rule_about_simular(IO,P1,Rule):- sub_var(IO,Rule),into_rhs(Rule,P2),other_val(P1,P2).
-is_rule_about(IO,P1,Rule):- sub_var(IO,Rule),into_rhs(Rule,P2), once(shared_val(P1,P2);other_val(P1,P2); same_rhs_property_value(P1,P2)).
+is_rule_about(IO,P1,Rule):- sub_var(IO,Rule),into_rhs(Rule,P2), once(shared_val(P1,P2);other_val(P1,P2); same_name_and_value(P1,P2)).
 
 do_in_plist_low([],_,InOut,InOut):-!.
 do_in_plist_low(_,_,[],[]):-!.
@@ -806,7 +808,7 @@ do_in_plist_low([IO-P|PList],Step,In,Out):-
 do_in_plist_low([_|PList],Step,In,Out):- !, do_in_plist_low(PList,Step,In,Out).
 
 
-sames_must_have_sames(I,O):- m_unifiers1(I,O),!.
+sames_must_have_sames(I,O):- m_unifiers1(lhs,I,O),!.
 
 % Make sure each arguement is transformed corretly
 correct_pipe2a(IO,P1,Rules,Out):- trace,%mfail,
@@ -1043,12 +1045,14 @@ pp_ilp(Grp):- notrace((must_det_ll(pp_ilp(1,Grp)))),!.
 pp_ilp(_D,_T):- is_print_collapsed,!. % nb_current(print_collapsed,PC),number(PC),PC>=10,!.
 pp_ilp(D,T):- ground(T),!,pp_ilp_n(D,T).
 pp_ilp(D,T):- copy_term(T,CT),term_variables(CT,TV),
-  my_include(not_in_grid(CT),TV,NGTV),numbervars(NGTV,999,_,[attvar(skip),singletons(false)]),T\=@=CT,!,pp_ilp_n(D,CT).
+  my_include(not_in_grid(CT),TV,NGTV),
+  numbervars(NGTV,999,_,[attvar(skip),singletons(true)]),
+  T\=@=CT,!,pp_ilp_n(D,CT).
 pp_ilp(D,T):- pp_ilp_n(D,T).
 
 not_in_grid(CT,Var):- \+ ((p1_sub_term(is_grid,ST,CT),sub_var(Var,ST))).
 p1_sub_term(P1,ST,CT):- call(P1,CT),!,ST=CT.
-p1_sub_term(P1,ST,CT):- compound(CT),arg(_,CT,Arg),p1_sub_term(P1,ST,Arg).
+p1_sub_term(P1,ST,CT):- compound(CT),tc_arg(_,CT,Arg),p1_sub_term(P1,ST,Arg).
 
 pp_ilp_n(D,T):-  T==[],!,prefix_spaces(D,write('[] ')),!.
 pp_ilp_n(D,_):-  D > 0, format('~N'),fail.
@@ -1203,30 +1207,34 @@ list_or_conjuncts_to_list(Conj,List):- conjuncts_to_list(Conj,List).
 print_body(D,Head, (:- Conj)):- !, list_or_conjuncts_to_list(Conj,List),  
   prefix_spaces(D, (writeln(':- '),
     catch_log(maybe_show_body_shapes(D+1,Head,Conj)),
-    print_proplist(D+2,Head,List),
+    sort(List,SList),
+    print_proplist(D+2,Head,SList),
     nop(write('.')))).
 
 % debug info
 print_proplist(D,H,List):- once(my_partition(is_debug_info,List,Skip,PSame)),Skip\==[],PSame\==[],!,
-  if_t(\+ nb_current(without_comment,t),prefix_spaces(D+1,pp(green,Skip))),
+  if_t((is_task_rule_head(H) ; \+ nb_current(without_comment,t)),prefix_spaces(D+1,pp(green,Skip))),
   print_proplist(D,H,PSame).
 % assumed
-print_proplist(D,H,List):- once(my_partition(assume_prop_not_e,List,Skip,PSame)),Skip\==[],!,
+print_proplist(D,H,List):- \+ is_task_rule_head(H),
+  once(my_partition(assume_prop_not_e,List,Skip,PSame)),Skip\==[],!,
   if_t(\+ nb_current(without_comment,t),prefix_spaces(D+1,pp(blue,Skip))),
   print_proplist(D,H,PSame).
 % shared thus assumed
-print_proplist(D,H,List):- once(my_partition(assume_prop_e,List,Skip,PSame)),Skip\==[],!,
+print_proplist(D,H,List):- % \+ is_task_rule_head(H),
+  once(my_partition(assume_prop_e,List,Skip,PSame)),Skip\==[],!,
   prefix_spaces(D+1,pp(cyan,Skip)), print_proplist(D,H,PSame).
+
 % unbound props
 print_proplist(D,H,List):- my_partition(is_unbound_prop,List,Skip,PSame),Skip\==[],!,
   prefix_spaces(D+1,pp(brown,Skip)), print_proplist(D,H,PSame).
 % pg/4
 print_proplist(D,H,List):- my_partition(is_functor(pg),List,Skip,PSame),Skip\==[],!,
-   predsort(sort_on(arg(4)),Skip,SkipL),
+   predsort(sort_on(tc_arg(4)),Skip,SkipL),
    prefix_spaces(D+1,pp(orange,SkipL)), print_proplist(D,H,PSame).
 % samez/2
 print_proplist(D,H,List):- my_partition(is_functor(samez),List,Skip,PSame),Skip\==[],!,
-  predsort(sort_on(arg(2)),Skip,SkipL),
+  predsort(sort_on(tc_arg(2)),Skip,SkipL),
   prefix_spaces(D+1,pp(yellow,SkipL)), print_proplist(D,H,PSame).
 print_proplist(D,H,List):- notrace(print_proplist1(D,H,List)),!.
 
@@ -1547,14 +1555,14 @@ should_replace(Rule,AltRule):-
   \+ \+ should_replace(Info1,IO1,P1,Kept1, Info2,IO2,P2,Kept2).
 */
 %nb_list_append(List,Rule):- member(AltRule,List),should_replace(Rule,AltRule), functor(Rule,_,A),
-%  forall(between(1,A,N),(arg(N,Rule,Arg),nb_setarg(N,AltRule,Arg))),!.
-nb_list_append(List,Rule):- arg(1,List,OH),arg(2,List,OT),NewTail=[OH|OT],nb_setarg(2,List,NewTail),
+%  forall(between(1,A,N),(tc_arg(N,Rule,Arg),nb_setarg(N,AltRule,Arg))),!.
+nb_list_append(List,Rule):- tc_arg(1,List,OH),tc_arg(2,List,OT),NewTail=[OH|OT],nb_setarg(2,List,NewTail),
  duplicate_term(Rule,DRule),nb_setarg(1,List,DRule).
-%nb_list_append(List,Rule):- member(AltRule,List),should_replace(Rule,AltRule), functor(Rule,_,A), forall(between(1,A,N),(arg(N,Rule,Arg),nb_setarg(N,AltRule,Arg))),!.
-%nb_list_append(List,Rule):- setarg(1,List,OH),arg(2,List,OT),NewTail=[OH|OT],nb_setarg(2,List,NewTail),nb_setarg(1,List,Rule).
+%nb_list_append(List,Rule):- member(AltRule,List),should_replace(Rule,AltRule), functor(Rule,_,A), forall(between(1,A,N),(tc_arg(N,Rule,Arg),nb_setarg(N,AltRule,Arg))),!.
+%nb_list_append(List,Rule):- setarg(1,List,OH),tc_arg(2,List,OT),NewTail=[OH|OT],nb_setarg(2,List,NewTail),nb_setarg(1,List,Rule).
 
 nb_list_delete([],_):-!.
-nb_list_delete(List,Rule):- arg(1,List,OH), \+ OH \= Rule, OT=[H|T], !, arg(2,List,OT), nb_setarg(2,List,T),nb_setarg(1,List,H).
+nb_list_delete(List,Rule):- tc_arg(1,List,OH), \+ OH \= Rule, OT=[H|T], !, tc_arg(2,List,OT), nb_setarg(2,List,T),nb_setarg(1,List,H).
 nb_list_delete([_|List],Rule):- nb_list_delete(List,Rule),!.
 
 show_if_changing(Why,_TestID,_Ctx,PP,Was,P,Kept):- 

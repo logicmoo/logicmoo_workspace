@@ -269,8 +269,10 @@ following finds the executable for =ls=:
 %           i.e., the environment is not inherited.
 
 process_create(Exe, Args, Options) :-
-    exe_options(ExeOptions),
-    absolute_file_name(Exe, PlProg, ExeOptions),
+    (   exe_options(ExeOptions),
+        absolute_file_name(Exe, PlProg, ExeOptions)
+    ->  true
+    ),
     must_be(list, Args),
     maplist(map_arg, Args, Av),
     prolog_to_os_filename(PlProg, Prog),
@@ -280,10 +282,19 @@ process_create(Exe, Args, Options) :-
     expand_env_option(environment, Options2, Options3),
     process_create(Term, Options3).
 
+%!  exe_options(-Options) is multi.
+%
+%   Get options for absolute_file_name to find   an  executable file. On
+%   Windows we first look for a  readable   file,  but  if this does not
+%   exist we are happy with a existing file because the file may be a
+%   [reparse point](https://docs.microsoft.com/en-us/windows/win32/fileio/reparse-points-and-file-operations)
+
 exe_options(Options) :-
     current_prolog_flag(windows, true),
     !,
-    Options = [ extensions(['',exe,com]), access(read) ].
+    (   Options = [ extensions(['',exe,com]), access(read), file_errors(fail) ]
+    ;   Options = [ extensions(['',exe,com]), access(exist) ]
+    ).
 exe_options(Options) :-
     Options = [ access(execute) ].
 

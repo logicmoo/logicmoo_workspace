@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2002-2020, University of Amsterdam
+    Copyright (c)  2002-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -81,7 +82,7 @@ implementations from this library is usually faster.
                      ]).
 
 
-:- use_foreign_library(foreign(files), install_files).
+:- use_foreign_library(foreign(files)).
 
 %!  set_time_file(+File, -OldTimes, +NewTimes) is det.
 %
@@ -162,7 +163,10 @@ relative_file_name(Path, RelTo, RelPath) :- % +,+,-
     atomic_list_concat(RL, /, AbsRelTo),
     delete_common_prefix(PL, RL, PL1, PL2),
     to_dot_dot(PL2, DotDot, PL1),
-    atomic_list_concat(DotDot, /, RelPath).
+    (   DotDot == []
+    ->  RelPath = '.'
+    ;   atomic_list_concat(DotDot, /, RelPath)
+    ).
 relative_file_name(Path, RelTo, RelPath) :-
     (   is_absolute_file_name(RelPath)
     ->  Path = RelPath

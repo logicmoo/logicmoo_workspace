@@ -81,7 +81,7 @@ user:prolog_trace_interception(Port, Frame, CHP, Action) :-
 
 prolog_trace_interception_gui(Port, Frame, CHP, Action) :-
     current_prolog_flag(gui_tracer, true),
-    (   notrace(intercept(Port, Frame, CHP, GuiAction)),
+    (   '$notrace'(intercept(Port, Frame, CHP, GuiAction)),
         map_action(GuiAction, Frame, Action)
     ->  true
     ;   print_message(warning,

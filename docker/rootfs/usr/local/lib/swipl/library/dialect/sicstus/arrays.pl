@@ -59,12 +59,6 @@
 new_array(array(Array)) :-
 	rb_empty(Array).
 
-
-arb_lookup(Index, array(Tree), ListElement):-
-   catch(rb_lookup(Index, array(Tree), ListElement),_,fail),!.
-arb_lookup(Index, array(Tree), ListElement):-
-   catch(rb_lookup(Index, Tree, ListElement),_,fail),!.
-
 %%	is_array(@Term) is semidet.
 %
 %	True if Term is an array
@@ -83,7 +77,7 @@ is_array(array(Tree)) :-
 %	@compat SICStus-3
 
 aref(Index, array(Tree), Element) :-
-	arb_lookup(Index, array(Tree), Element).
+	rb_lookup(Index, array(Tree), Element).
 
 %%	arefa(+Index, +Array, -ArrayElement) is det.
 %
@@ -93,7 +87,7 @@ aref(Index, array(Tree), Element) :-
 %	@compat SICStus-3
 
 arefa(Index, array(Tree), ArrayElement) :-
-	arb_lookup(Index, array(Tree), ArrayElement), !.
+	rb_lookup(Index, array(Tree), ArrayElement), !.
 arefa(_, _, Array) :-
 	new_array(Array).
 
@@ -105,7 +99,7 @@ arefa(_, _, Array) :-
 %	@compat SICStus-3
 
 arefl(Index, array(Tree), ListElement) :-
-	arb_lookup(Index, array(Tree), ListElement), !.
+	rb_lookup(Index, array(Tree), ListElement), !.
 arefl(_, _, []).
 
 %%	array_to_list(+Array, -Pairs) is det.

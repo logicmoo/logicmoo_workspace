@@ -882,7 +882,7 @@ use_gui_debugger:-
     %reload_library_index,
     erase(CLRef),
     gtrace,notrace,guitracer,notrace,
-    call(autoload_all)))))).
+    nop(autoload_all)))))).
 
 %:- use_gui_debugger.
 :- locally(set_prolog_flag(autoload,true), 
@@ -922,12 +922,12 @@ create_group_dmiles:-
   load_last_test_name,
   get_current_test(Tst),print(get_current_test(Tst)),
    must_det_ll((create_group(dmiles_nsn,[
-    'e41c6fd3','ea32f347','37d3e8b2','0a2355a6', 'b230c067','a61f2674','d2abd087','08ed6ac7']))),
+    'e41c6fd3','52fd389e','ea32f347','37d3e8b2','0a2355a6', 'b230c067','a61f2674','d2abd087','08ed6ac7']))),
   %must_det_ll((create_group(dmiles_nsn2,[
   % 'a61f2674','0a2355a6', 'a61ba2ce', 'ea32f347', 'a79310a0', '37d3e8b2', 'e41c6fd3', 'b230c067', '0d3d703e', '08ed6ac7']))),
 
    %'b230c067 d2abd087 6e82a1ae'
-   flatten([
+   flatten(['52fd389e','e41c6fd3',
     % plus 1
         %'32e9702f',
          '1d398264', '29c11459', '3c9b0459','009d5c81','b8825c91',%'3631a71a',
@@ -950,7 +950,7 @@ create_group_dmiles:-
    list_to_set(Flat,SetR), reverse(SetR,Set),
 
 
-  create_group(dmiles_fast,'bd14c3bf 08ed6ac7 ea32f347  0a2355a6 37d3e8b2 a61ba2ce b230c067 d2abd087 6e82a1ae 0d3d703e a61f2674 e509e548 810b9b61 aedd82e4 817e6c09  ae58858e'),
+  create_group(dmiles_fast,'e41c6fd3 52fd389e bd14c3bf 08ed6ac7 ea32f347  0a2355a6 37d3e8b2 a61ba2ce b230c067 d2abd087 6e82a1ae 0d3d703e a61f2674 e509e548 810b9b61 aedd82e4 817e6c09  ae58858e'),
 
   
   create_group(dmiles_cc_1,[t(ea32f347),t('6e82a1ae'),%v('626c0bcc'),
@@ -964,12 +964,12 @@ create_group_dmiles:-
                                                          []]),
 
 
-  create_group(dmiles_lr,'009d5c81, 00d62c1b, 0a2355a6, 2281f1f4, 25d8a9c8, 32597951, 332efdb3, 3618c87e, 37d3e8b2, 4258a5f9, 50cb2852, 543a7ed5, 67385a82, 67a3c6ac, 69889d6e, 6c434453, 6d75e8bb, 6e82a1ae, 6f8cd79b, 810b9b61, 84f2aca1, 903d1b4a, 95990924, a699fb00, a9f96cdd, ae58858e, aedd82e4, b1948b0a, b2862040, b60334d2, b6afb2da, bb43febb, c0f76784, c8f0f002, ce039d91, ce22a75a, d2abd087, d364b489, d406998b, e0fb7511, e8593010'),
+  create_group(dmiles_lr,'e41c6fd3, 009d5c81, 00d62c1b, 0a2355a6, 2281f1f4, 25d8a9c8, 32597951, 332efdb3, 3618c87e, 37d3e8b2, 4258a5f9, 50cb2852, 543a7ed5, 67385a82, 67a3c6ac, 69889d6e, 6c434453, 6d75e8bb, 6e82a1ae, 6f8cd79b, 810b9b61, 84f2aca1, 903d1b4a, 95990924, a699fb00, a9f96cdd, ae58858e, aedd82e4, b1948b0a, b2862040, b60334d2, b6afb2da, bb43febb, c0f76784, c8f0f002, ce039d91, ce22a75a, d2abd087, d364b489, d406998b, e0fb7511, e8593010'),
 % 42a15761
   %     find-the-5-and-1-l6ae9ses9zaejs6idai 
     % Importance-of-social-distance-l6afc1q0dm28z9i6egn find-the-color-of-the-gray-pixels-l6afriful4bel4379yo
-  create_group(dmiles,'bd14c3bf 08ed6ac7 ea32f347  0a2355a6 37d3e8b2 a61ba2ce b230c067 d2abd087 6e82a1ae 0d3d703e a61f2674 e509e548 810b9b61 aedd82e4
-    817e6c09  ae58858e  ea32f347'), % fea12743
+  create_group(dmiles,'e41c6fd3 bd14c3bf 08ed6ac7 ea32f347  0a2355a6 37d3e8b2 a61ba2ce b230c067 d2abd087 6e82a1ae 0d3d703e a61f2674 e509e548 810b9b61 aedd82e4
+    817e6c09 52fd389e  ae58858e  ea32f347'), % fea12743
 
 create_group(dmiles_h,
  ['16b78196',
@@ -1028,4 +1028,6 @@ create_group(dmiles_h,
 
 :- initialization(create_builtin_sids).
 :- initialization(show_sids).
+
+%:- use_gui_debugger.
 %:- expand_file_name('../kaggle_arc_clover/*.pl',Files),maplist(ensure_loaded,Files).

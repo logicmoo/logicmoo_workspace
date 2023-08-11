@@ -669,7 +669,7 @@ class PrologThread:
             list: The query succeeded once with free variables or more than once with no free variables. There will be an item in the list for every answer. Each item will be:
 
                 - `True` if there were no free variables
-                - A `dict` if there were free variables. Each key will be the name of a variable, each value will be the JSON representing the term it was unified with.
+                - A `dict` if there were free variables. Each key will be the name of a variable, each value will be the JSON representing the term it was unified with. Note that a special variable called `$residuals` will be added to each answer that has residual [variable constraints on it](https://www.swi-prolog.org/pldoc/man?section=attvar). This will contain a list of all the constraints on all the variables for that answer.
         """
         if self._socket is None:
             self.start()
@@ -783,7 +783,8 @@ class PrologThread:
             list: The query succeeded once with free variables or more than once with no free variables. There will be an item in the list for every answer. Each item will be:
 
                 - `True` if there were no free variables
-                - A `dict` if there were free variables. Each key will be the name of a variable, each value will be the JSON representing the term it was unified with.
+                - A `dict` if there were free variables. Each key will be the name of a variable, each value will be the JSON representing the term it was unified with. Note that a special variable called `$residuals` will be added to each answer that has residual [variable constraints on it](https://www.swi-prolog.org/pldoc/man?section=attvar). This will contain a list of all the constraints on all the variables for that answer.
+
         """
         timeoutString = (
             "-1" if wait_timeout_seconds is None else str(wait_timeout_seconds)
@@ -1030,7 +1031,9 @@ class _NonBlockingStreamReader:
     def __init__(self, stream):
         def _print_output(stream):
             while True:
-                line = stream.readline()
+                with suppress(Exception):
+                    line = stream.readline()
+
                 # When the process exits the stream will return EOF
                 # and allow us to exit the thread cleanly
                 if line:

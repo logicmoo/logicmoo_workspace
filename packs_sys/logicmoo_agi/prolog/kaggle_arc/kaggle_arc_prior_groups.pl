@@ -202,6 +202,21 @@ show_filtered_groups(TestID):- ensure_test(TestID),
          nop(ignore(((ground((Trn+Num*IO))->mprint(Objs); (Len<10 ->mprint(Objs); true))))),
          print_grouped_props(Named+Filter,Objs)))))))).
 
+show_pair_groups(all_inputs,TestID):-
+  findall(InC,     
+   (kaggle_arc(TestID, ExampleNum,_,_),
+     once(best_obj_group_pair(TestID, ExampleNum, HowIO, InC, _OutC))), AllInC), 
+  print_grouped_props1("All Inputs"+HowIO,AllInC).
+show_pair_groups(all_outputs,TestID):-
+  findall(OutC,     
+   (kaggle_arc(TestID, ExampleNum,_,_),
+     once(best_obj_group_pair(TestID, ExampleNum, HowIO, _InC, OutC))), AllInC), 
+  print_grouped_props1("All Output"+HowIO,AllInC).
+
+         
+         
+         
+
 show_pair_groups(_TestID):-!.
 show_pair_groups(TestID):- ensure_test(TestID),
   forall(no_repeats(vars(Name1+Filter1,Name2+Filter2),
@@ -451,8 +466,10 @@ pp_saved_nv(A,B):- must_det_ll((remember_propcounts(_Named,pp_saved,A,B))).
 
 mpp(_,_):- calc_skip_display,!.
 mpp(C,P):- pp(C,P).
+
 mpp(_):- calc_skip_display,!.
 mpp(P):- pp(P).
+
 mprint(_):- calc_skip_display,!.
 mprint(P):- print(P).
 
@@ -581,7 +598,7 @@ never_is_prop((_:-_)).
 never_is_prop((_/_)).
 never_is_prop(into_new(_,_,_)). 
 never_is_prop(ac_unit(_,_,_,_)).
-never_is_prop(ac_db(_,_,_,_)).
+never_is_prop(ac_db_unit(_,_,_,_)).
 never_is_prop(ac_rules(_,_,_,_)).
 never_is_prop(rhs(_)).
 
@@ -752,10 +769,22 @@ group_intersection(A,B,FA_Shared,FB_AA,FA_BB):- is_list_of_lists(A),is_list_of_l
   flatten(A,FA),group_intersection(FA,B,FA_Shared,_FA_AA,FA_BB),
   !.
 
+is_objtype_mark(fgobjs).
+is_objtype_mark(z(bgobjs)).
+is_objtype_mark(z(ucobjs)).
+contains_obj_marker(Named,Mark):- is_objtype_mark(Mark),sub_var(Mark,Named),!.
+
 
 print_grouped_props(Named,OProps):- 
   non_interesting_props(OProps),!, mprint(print_non_interesting_props(Named)->OProps).
 %print_grouped_props(Named,Obj):- \+ is_list(Obj), !, mpp(print_grouped_props(Named)=Obj).
+
+print_grouped_props(Named,In):- 
+  \+ contains_obj_marker(Named,_),!,
+  into_fg_bg_uc_objs(In,FGObjs,BGObjs,UCObjs),
+  print_grouped_props(Named+fgobjs,FGObjs),
+  print_grouped_props(Named+z(bgobjs),BGObjs),
+  print_grouped_props(Named+z(ucobjs),UCObjs),!.
 
 print_grouped_props(Named,In):- 
   ensure_group_proplist(In,Objs),
@@ -1051,15 +1080,15 @@ is_in_subgroup(_Grp,Obj,iz(IZ)):- group_prop(Prop,IZ), has_prop(Prop,Obj).
 is_in_subgroup(_Grp,Obj,nth_fg_color(Nth,Color)):- unique_fg_colors(Obj,List),
  sort_color_by_mass(Obj,List,Sorted),nth1(Nth,Sorted,Color).
 
-obj_link_count(Obj,Functor,Count):- 
+obj_link_count(Obj,FunctorO,Count):- 
   link_functor(Contained_by,Functor),
   indv_props_list(Obj,List),  
-  ((findall(T,member(link(Contained_by,T),List),FYL),FYL\==[]) ->true;
-    (findall(T,member(elink(Contained_by,T),List),FYL),FYL\==[])),
-  length_s(FYL,Count),
+  findall_count(T,member(link(Contained_by,T),List),Link),
+  findall_count(T,member(elink(Contained_by,T),List),ELink),
+  member(FunctorO-Count,[bg(Functor)-Link,fg(Functor)-ELink]),
   nop(if_t(Count>=3,
        (dash_chars,dash_chars,
-         maplist(print_grid,[Obj|FYL]),
+         maplist(print_grid,[Obj|Link]),
          dash_chars,dash_chars,
         sleep(30)))).
 
@@ -1097,13 +1126,21 @@ flat_props(Objs,EList):-
   flatten(PropLists,List), %list_to_set(List,Set),
   include(not_skip_ku,List,EList).
 
+
+hack_prop_groups(Named,In):- 
+  \+ contains_obj_marker(Named,_),!,
+  into_fg_bg_uc_objs(In,FGObjs,BGObjs,UCObjs),
+  hack_prop_groups(Named+fgobjs,FGObjs),
+  hack_prop_groups(Named+z(bgobjs),BGObjs),
+  hack_prop_groups(Named+z(ucobjs),UCObjs),!.
+
 hack_prop_groups(Named,Objs):- %ds, break,
  must_det_ll((
   flat_props(Objs,EList),
   w_section(print_elists(Named),
     print_elists_hack_objs(Named,EList,Objs,HackedObjs)),
-  banner_lines(orange,2),
   nop((maplist(arg(1),HackedObjs,RRR),
+    banner_lines(orange,2),
     w_section(hack_prop_groups(Named), (print_ptree(hacked(Named),RRR), banner_lines(yellow,2))))),  
   ignore(skip_if_ansi(nop(print_propset_groups(Named,Objs,EList)))))).
 
@@ -1156,6 +1193,8 @@ print_elists_hack_objs(Named,Props0,Objs,HackedObjs):-
   variant_list_to_set(UPropsSetG,UPropsSetGSet),
   which_props(UPropsSetGSet,Objs,WhichCounts),
   (mpp(whichCounts=WhichCounts)),
+  %(contains_obj_marker(Named,Mark)->true;Mark=all),
+  %retract_test_property(TestID,ExampleNum,whichCounts(IO,Mark),_), save_which_counts(TestID,ExampleNum,whichCounts(IO,Mark),WhichCounts),
   count_each(UPropsSetGSet,UPropsSetG,GroupsWithCountsL),
   variant_list_to_set(GroupsWithCountsL,GroupsWithCountsLVS),
   predsort(sort_on(arg(2)),GroupsWithCountsLVS,GroupsWithCounts),!,
@@ -1166,11 +1205,21 @@ print_elists_hack_objs(Named,Props0,Objs,HackedObjs):-
   store_splits(Named,BaseSize,CSplits,Splits),
   %nop
   (print_ptree(countOfEachU(Named),Splits)),
+  %retract_test_property(TestID,ExampleNum,countOfEachU(IO,Mark),_), assert_test_property(TestID,ExampleNum,countOfEachU(IO,Mark),list(Splits)),
   ignore(maplist(remember_propcounts(Named,diversity),GroupsWithCountsWPO)),
   remember_propcounts(Named,diversityE,GroupsWithCountsWPO),
   replace_props_with_stats(GroupsWithCountsWPO,CountOfEach,Objs,HackedObjsM),
   maplist(ku_rewrite_props,HackedObjsM,Hacked),
-  nop(mpp(hackedObjs(Named)=HackedObjs)))).
+  nop(mpp(hackedObjs(Named)=HackedObjs)))),!.
+
+save_which_counts(TestID,ExampleNum,WCMark,[Which|Counts]):- !,
+  save_which_counts(TestID,ExampleNum,WCMark,Which),
+  save_which_counts(TestID,ExampleNum,WCMark,Counts).
+save_which_counts(TestID,ExampleNum,WCMark,((((A-B)-C)-D)-Prop)):- !,
+  assert_test_property(TestID,ExampleNum,WCMark,counted(Prop,A,B,C,D)).
+save_which_counts(TestID,ExampleNum,WCMark,(A-(B-(C-(D-Prop))))):- !,
+  assert_test_property(TestID,ExampleNum,WCMark,counted(Prop,A,B,C,D)).
+save_which_counts(_TestID,_ExampleNum,_WCMark,_).
 
 store_splits(Named,BaseSize,CSplits,Splits):-
   ignore((maplist(save_1split(Named,BaseSize),CSplits))),
@@ -1554,7 +1603,8 @@ add_prior_info(Objs,ObjsLen,Common,VbO,(List),(NewList)):-
 add_prior_info_1(Objs,ObjsLen,_Common,VbO,PropList,OUT):- ObjsLen<40, is_list(PropList),ObjsLen>1, chk_from_same_grid(Objs),  
   length(VbO,Rankers), Rankers>1,
   find_version(VbO,Prop,_N1,N2,PropList),
-  Prop\=pg(_,_,_,_), % Prop\=pen(_),
+  RA = N2, 
+  Prop\=pg(_,_,_,_), Prop\=pen(_),
   member(Prop,PropList),
   %prop_name(Prop,Name),  
   value_to_name(Prop,Name),
@@ -1711,7 +1761,7 @@ equal_sets(A,B):- sort(A,AA),sort(B,BB),AA=@=BB.
 %sprop_piority(pg(OG,_,_,0),0).
 %sprop_piority(birth(i3(_)),0).
 %sprop_piority(birth(i2(_)),0).
-sprop_piority(iz(flag(hidden)),9).
+sprop_piority(iz(flag(virtual)),9).
 sprop_piority(iz(media(shaped)),0).
 sprop_piority(iz(info(combined)),1).
 sprop_piority(iz(media(image)),2).
@@ -1789,11 +1839,13 @@ care_to_count(GSS,GS):- is_list(GSS),include(is_care_to_count,GSS,GS).
 
 
 not_care_to_count(Var):- var(Var), !, fail.
-not_care_to_count(pg(_,_,_,_)).
-not_care_to_count(pg(T,_,N1,N2)):- (N1 == 1 ; N2 == 1 ; N1 == T ; N2 == T), !, fail.
+%not_care_to_count(pg(_,_,_,_)).
 %not_care_to_count(oid(_)).
 not_care_to_count(giz(_)).
-not_care_to_count(elink(_,_)).
+
+% dmiles did today
+%not_care_to_count(elink(_,_)).
+%not_care_to_count(pg(T,_,N1,N2)):- (N1 == 1 ; N2 == 1 ; N1 == T ; N2 == T), !, fail.
 
 not_care_to_count(_):- !, fail.
 not_care_to_count(Cmpd):- arg(_,Cmpd,E),is_gridoid(E),!, \+ is_grid(E).
@@ -1812,7 +1864,7 @@ variance_had_counts(Common,HAD,RRR,Versions,Missing,VersionsByCount,Variance):-
   make_unifiable_cc(HAD,UHAD),
   findall(RR,(member(RR,RRR), once((indv_props_list(RR,R), \+ member(UHAD,R)))),Missing),
   length(Missing,ML),
-  findall(UHAD,(member(RR,RRR), indv_props_list(RR,R), member(UHAD,R)),VersionL),
+  findall(UHAD,(member(RR,RRR), once((indv_props_list(RR,R), copy_term(R,RC), member(UHAD,RC), RC=@=R))),VersionL),
   variant_list_to_set(VersionL,VersionSet),
   once((call((some_min_unifier(VersionSet,Common),nonvar(Common))))),
   number_from_magnitude(VersionSet,VersionSetNumbered),
@@ -2503,7 +2555,9 @@ learn_ilp(TestID):-
     dump_ilp_files(TestID,S),
    nop(( compute_scene_change(TestID),
     must_det_ll(write_ilp_file(TestID,S,logicmoo_ex)),
-    solve_via_scene_change(TestID))))).
+    solve_via_scene_change(TestID))))),
+  show_pair_groups(all_inputs,TestID),
+  show_pair_groups(all_outputs,TestID),!.
 
 
 

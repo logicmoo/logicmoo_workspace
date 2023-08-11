@@ -134,15 +134,17 @@ load_dtd(M, Parser) :-
     new(Re, regex('<!DOCTYPE', @off)),
     (   send(Re, search, TB)
     ->  get(Re, register_start, Start),
-        pce_open(TB, read, In),
-        seek_to(In, Start),
-        catch(sgml_parse(Parser,
-                         [ source(In),
-                           parse(declaration)
-                         ]),
-              E,
-              show_message(M, E)),
-        close(In)
+        setup_call_cleanup(
+            pce_open(TB, read, In),
+            ( seek_to(In, Start),
+              catch(sgml_parse(Parser,
+                               [ source(In),
+                                 parse(declaration)
+                               ]),
+                    E,
+                    show_message(M, E))
+            ),
+            close(In))
     ;   send(M, report, warning, 'No <!DOCTYPE declaration')
     ).
 
@@ -269,36 +271,37 @@ colourise_element(M, Warn:[bool]) :->
     make_parser(M, Parser),
     load_dtd(M, Parser),
     set_sgml_parser(Parser, doctype(_)),
-    pce_open(TB, read, In),
-    (   retractall(ok_range(_,_)),
-        debug(sgml_mode, 'Starting at ~D', [Caret]),
-        find_element(M, Parser, Re, In, Caret, F-T),
-        debug(sgml_mode, 'Found ~D ... ~D', [F, T]),
-        (   Caret < T
-        ->  asserta(ok_range(F, T))
-        ;   true
+    setup_call_cleanup(
+        pce_open(TB, read, In),
+        (   retractall(ok_range(_,_)),
+            debug(sgml_mode, 'Starting at ~D', [Caret]),
+            find_element(M, Parser, Re, In, Caret, F-T),
+            debug(sgml_mode, 'Found ~D ... ~D', [F, T]),
+            (   Caret < T
+            ->  asserta(ok_range(F, T))
+            ;   true
+            ),
+            (   Caret - F > 5000        % limit look-back
+            ->  !,
+                retract(ok_range(From, To))
+            ;   Caret < T,              % surrounds caret
+                F-T > 100               % sufficient context
+            ->  From = F,
+                To = T
+            )
+        ->  debug(sgml_mode, 'Colouring ~D..~D', [From, To]),
+            send(M, remove_syntax_fragments, From, To),
+            seek_to(In, From),
+            set_sgml_parser(Parser, charpos(From)),
+            colourise(M, Parser,
+                      [ source(In),
+                        parse(element)
+                      ])
+        ;   Warn == @off
+        ->  true
+        ;   send(M, report, warning, 'Could not find element')
         ),
-        (   Caret - F > 5000        % limit look-back
-        ->  !,
-            retract(ok_range(From, To))
-        ;   Caret < T,              % surrounds caret
-            F-T > 100               % sufficient context
-        ->  From = F,
-            To = T
-        )
-    ->  debug(sgml_mode, 'Colouring ~D..~D', [From, To]),
-        send(M, remove_syntax_fragments, From, To),
-        seek_to(In, From),
-        set_sgml_parser(Parser, charpos(From)),
-        colourise(M, Parser,
-                  [ source(In),
-                    parse(element)
-                  ])
-    ;   Warn == @off
-    ->  true
-    ;   send(M, report, warning, 'Could not find element')
-    ),
-    close(In),
+        close(In)),
     free_sgml_parser(Parser).
 
 %       find_element(+Mode, +Parser, +BeginRegex, +In, +Caret, -From-To)
@@ -318,15 +321,16 @@ colourise_element(M, Warn:[bool]) :->
 find_element(M, Caret, Range) :-
     get(M, parser, Parser),
     get(M, text_buffer, TB),
-    pce_open(TB, read, In),
-    new(Re, regex('<\\w+')),
-    (   find_element(M, Parser, Re, In, Caret, Range),
-        Range = _-To,
-        To-1>Caret
-    ->  close(In)
-    ;   close(In),
-        fail
-    ).
+    setup_call_cleanup(
+        pce_open(TB, read, In),
+        (   new(Re, regex('<\\w+')),
+            (   find_element(M, Parser, Re, In, Caret, Range),
+                Range = _-To,
+                To-1>Caret
+            ->  true
+            )
+        ),
+        close(In)).
 
 find_element(M, Parser, Re, In, Caret, Range) :-
     get(M, text_buffer, TB),
@@ -405,13 +409,16 @@ colourise_buffer(M) :->
     current_tb/2.
 
 colourise_buffer(M) :-
-    make_parser(M, Parser),
     get(M, text_buffer, TB),
-    pce_open(TB, read, In),
-    colourise(M, Parser,
-              [ source(In)
-              ]),
-    free_sgml_parser(Parser).
+    setup_call_cleanup(
+        make_parser(M, Parser),
+        setup_call_cleanup(
+            pce_open(TB, read, In),
+            colourise(M, Parser,
+                      [ source(In)
+                      ]),
+            close(In)),
+        free_sgml_parser(Parser)).
 
 colourise(M, Parser, Options) :-
     get_sgml_parser(Parser, file(File)),
@@ -980,33 +987,34 @@ allowed_elements(M, Allowed:prolog) :<-
     load_dtd(M, Parser),
     get_sgml_parser(Parser, dtd(DTD)),
     set_sgml_parser(Parser, doctype(_)),
-    pce_open(TB, read, In),
-    (   find_element(M, Parser, Re, In, Caret, From-To),
-        To-1 > Caret,
-        get(M, looking_at_element, From, E),
-%       format('Looking at ~w~n', [E]),
-        (   dtd_property(DTD, doctype(E))
-        ;   dtd_property(DTD, element(E, omit(_, false), _))
-        )
-    ->  seek_to(In, From),
-        set_sgml_parser(Parser, charpos(From)),
-        Len is Caret - From,
-        catch(sgml_parse(Parser,
-                         [ source(In),
-                           content_length(Len),
-                           syntax_errors(quiet),
-                           parse(input)     % do not complete document
-                         ]),
-              E,
-              show_message(M, E)),
-        get_sgml_parser(Parser, allowed(Allowed))
-    ;   dtd_property(DTD, doctype(DocType)),
-        atom(DocType)
-    ->  Allowed = [DocType]
-    ;   send(M, report, warning, 'No current element'),
-        Allowed = []
-    ),
-    close(In),
+    setup_call_cleanup(
+        pce_open(TB, read, In),
+        (   find_element(M, Parser, Re, In, Caret, From-To),
+            To-1 > Caret,
+            get(M, looking_at_element, From, E),
+    %       format('Looking at ~w~n', [E]),
+            (   dtd_property(DTD, doctype(E))
+            ;   dtd_property(DTD, element(E, omit(_, false), _))
+            )
+        ->  seek_to(In, From),
+            set_sgml_parser(Parser, charpos(From)),
+            Len is Caret - From,
+            catch(sgml_parse(Parser,
+                             [ source(In),
+                               content_length(Len),
+                               syntax_errors(quiet),
+                               parse(input)     % do not complete document
+                             ]),
+                  E,
+                  show_message(M, E)),
+            get_sgml_parser(Parser, allowed(Allowed))
+        ;   dtd_property(DTD, doctype(DocType)),
+            atom(DocType)
+        ->  Allowed = [DocType]
+        ;   send(M, report, warning, 'No current element'),
+            Allowed = []
+        ),
+        close(In)),
     free_sgml_parser(Parser).
 
 report_allowed(M) :->                   % DEBUGGING

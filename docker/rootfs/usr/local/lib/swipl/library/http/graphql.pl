@@ -891,7 +891,7 @@ graphql_block_string_first_line(L, S) -->
 graphql_block_string_first_line(L, S) -->
     graphql_line_terminator,
     !,
-    graphql_block_string_line_indent(L, M-M, C-C, 0, 1Inf, S).
+    graphql_block_string_line_indent(L, M-M, C-C, 0, 1.0Inf, S).
 graphql_block_string_first_line(H-T0, S) -->
     graphql_block_string_characters(C),
     {   append(C, T, T0)   },

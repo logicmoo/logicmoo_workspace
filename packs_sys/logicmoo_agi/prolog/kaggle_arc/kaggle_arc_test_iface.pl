@@ -1000,9 +1000,9 @@ get_by_hard(X,ByHard):-
   !,(ignore((ByHard\==[],asserta(muarc_tmp:cached_tests_hard(X,ByHard)))))))))).
 
 
-likely_sort(X,Set,Set):- dont_sort_by_hard(X),!,pp(dont_sort_by_hard(X)).
+likely_sort(X,Set,SetS):- dont_sort_by_hard(X),list_to_set(Set,SetS),!,pp(dont_sort_by_hard(X)).
 likely_sort(_X,Set,Set):- \+ arc_option(always_sort),!.
-likely_sort(X,Set,ByHard):-  pp(sorting_suite(X)), !, sort_by_hard(Set,ByHard), !.
+likely_sort(X,Set,ByHard):-  pp(sorting_suite(X)), !, sort_by_hard(Set,SetS),list_to_set(SetS,ByHard).
 
 sort_by_hard(List,NamesByHardUR):- 
   sort_safe(List,Sorted),
@@ -2811,7 +2811,7 @@ uses_test_id(P):- clauses_predicate(M:F/N,P),
                           ignore((fail,N>=0,listing((M:P))))
 
                    )),
-                   ((N1 is N-1, functor(P1,F,N1),
+                   ((N1 is N-1, N1>=0, functor(P1,F,N1),
                      nop((\+ predicate_property(M:P1,static))))))).
 
 assert_missing_skel_mfa(M,F,A):- 

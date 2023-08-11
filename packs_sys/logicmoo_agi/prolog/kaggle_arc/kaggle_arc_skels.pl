@@ -9,7 +9,7 @@
 into_ngrid(Points,NN):-  vis2D(Points,H,V),into_ngrid(Points,H,V,NGrid),
   fix_tt_juctions(NGrid,NN).
 into_ngrid(Obj,H,V,NGrid):-
-  localpoints_include_bg(Obj,Points),
+  localKpoints_include_bg(Obj,Points),
   neighbor_map1(H,V,Points,Points,CountedPoints),!,
   neighbor_map2(H,V,CountedPoints,CountedPoints,CountedPointsO),
   points_to_grid(H,V,CountedPointsO,NGrid).
@@ -106,6 +106,11 @@ fix_t_juctions(P2,I,O):- call(P2,F,R), subst(I,F,R,M),M\=@=I,!,fix_t_juctions(P2
 fix_t_juctions(_,I,I).
 
 
+known_only(AP,KP):- AP=KP,!.
+known_only(AP,KP):- my_exclude(sub_var(unkC),AP,KP).
+localKpoints(G,KP):- localpoints(G,AP),known_only(AP,KP).
+localKpoints_include_bg(G,KP):- localpoints_include_bg(G,AP),known_only(AP,KP).
+localKpoints_maybe_bg(G,KP):- globalpoints_maybe_bg(G,AP),known_only(AP,KP).
 
 get_fill_points(In,UNFP,GridOO):-
  must_det_ll((
@@ -114,7 +119,7 @@ get_fill_points(In,UNFP,GridOO):-
  %print(In=Grid),
  neighbor_map(Grid,GridO), 
  fix_tt_juctions(GridO,GridOO),
- localpoints(GridOO,NPS),  
+ localKpoints(GridOO,NPS),  
  %print(NPS),nl,
  include(p1_or(is_point_type('~'),is_fill_point(NPS)),NPS,FillPoints),
  %%include(is_point_type('wbg'),NPS,NotFillPoints),
@@ -223,7 +228,7 @@ show_neighbor_map(G):-  grid_to_tid(G,ID), neighbor_map(G,N),!,print_side_by_sid
 
 neighbor_map(Grid,GridO):-
  must_det_ll((
-  globalpoints_maybe_bg(Grid,Points),
+  localKpoints_maybe_bg(Grid,Points),
   grid_size(Grid,H,V),
   neighbor_map1(H,V,Points,Points,CountedPoints),!,
   neighbor_map2(H,V,CountedPoints,CountedPoints,CountedPointsO),
@@ -286,7 +291,7 @@ is_adjacent_point_m2(P1,Dir,P2):- is_adjacent_point(P1,Dir,P2).
 is_adjacent_point_m2(P1,Dir,P2):- is_adjacent_point(P1,Dir,P3),is_adjacent_point(P3,Dir,P2).
 
 would_fill(In,C,P1):-
-  localpoints_include_bg(In,Points),
+  localKpoints_include_bg(In,Points),
   get_black(Black),
   member(C-P1,Points),
   findall(Dir,(n_s_e_w(Dir),is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),dif_color(C,CD),CD\==Black),DirsE),
@@ -790,7 +795,7 @@ unknown_color_hv_point(H, V, unk-Point) :- hv_point(H, V, Point).
 
 locX(Obj1, X) :- 
     indv_props_list(Obj1, Desc),
-    member(globalpoints(Points), Desc),
+    member(localKpoints(Points), Desc),
     findall(X, (member(_-Point, Points),hv_point(X,_,Point)), Xs),
     min_list(Xs, X).
 locX(Obj1, X) :-
@@ -801,7 +806,7 @@ locX(Obj1, X) :-
 
 locY(Obj1, Y) :- 
     indv_props_list(Obj1, Desc),
-    member(globalpoints(Points), Desc),
+    member(localKpoints(Points), Desc),
     findall(Y, (member(_-Point, Points),hv_point(_,Y,Point)), Ys),
     min_list(Ys, Y).
 locY(Obj1, Y) :-
@@ -818,7 +823,7 @@ maxX(Obj1, X) :-
     X is CentX + ((SizeX - 1) div 2).
 maxX(Obj1, X) :- 
     indv_props_list(Obj1, Desc),
-    member(globalpoints(Points), Desc),
+    member(localKpoints(Points), Desc),
     findall(X, (member(_-Point, Points),hv_point(X,_,Point)), Xs),
     max_list(Xs, X).
 
@@ -829,15 +834,18 @@ maxY(Obj1, Y) :-
     Y is CentY + ((SizeY - 1) div 2).
 maxY(Obj1, Y) :- 
     indv_props_list(Obj1, Desc),
-    member(globalpoints(Points), Desc),
+    member(localKpoints(Points), Desc),
     findall(Y, (member(_-Point, Points),hv_point(_,Y,Point)), Ys),
     max_list(Ys, Y).
+
+
+
 
 
 center_of_dist(Len, Cent):-  Cent is ((Len + 1) div 2).
 
 % Define the point object
-meta_point(Object, Height, Width, obj([iv(Object), sizeX(SizeX), sizeY(SizeY), centX(X), centY(Y), mass(Mass), globalpoints(Points), iz(flag(virtual)), iz(shape(dot)), grid_sz(Height, Width)])) :-
+meta_point(Object, Height, Width, obj([iv(Object), sizeX(SizeX), sizeY(SizeY), centX(X), centY(Y), mass(Mass), localKpoints(Points), iz(flag(virtual)), iz(shape(dot)), grid_sz(Height, Width)])) :-
     member(Object, [virt_center, virt_corner_nw, virt_corner_sw, virt_corner_ne, virt_corner_se]),
     (Object == virt_center -> 
         (center_of_dist(Width, X), center_of_dist(Height, Y),
@@ -852,7 +860,7 @@ meta_point(Object, Height, Width, obj([iv(Object), sizeX(SizeX), sizeY(SizeY), c
 
 % Define the line object
 meta_line(Object, Height, Width, obj([iv(Object), sizeX(SizeX), sizeY(SizeY), centX(CentX), centY(CentY), mass(Mass),
-    globalpoints(Points), iz(flag(virtual)), iz(shape(line)), grid_sz(Height, Width)])) :-
+    localKpoints(Points), iz(flag(virtual)), iz(shape(line)), grid_sz(Height, Width)])) :-
     center_of_dist(Width, WidthCenter),
     center_of_dist(Height, HeightCenter),
     member(Object, [virt_edge_n, virt_edge_s, virt_edge_w, virt_edge_e]),
@@ -883,7 +891,7 @@ get_grid_objects1(Height, Width, ObjectDesc) :-
 vm_virtual_objects(VM, Obj) :-
    peek_vm(VM),
    get_grid_objects1(VM.h, VM.v, ObjectDesc),
-   select(globalpoints(Points),ObjectDesc,ObjectDesc0),
+   select(localKpoints(Points),ObjectDesc,ObjectDesc0),
    %select(iv(Waht),ObjectDesc0,ObjectDesc1),
    %atomic_list_concat(['o',Waht,VM.gid],'_',NewOID),
    make_indiv_object(VM,ObjectDesc0,Points,Obj).

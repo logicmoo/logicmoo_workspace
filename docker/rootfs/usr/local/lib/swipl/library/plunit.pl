@@ -3,10 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2006-2021, University of Amsterdam
-                              VU University Amsterdam
-                              CWI, Amsterdam
-                              SWI-Prolog Solutions b.v.
+    Copyright (c)  2006-2022, University of Amsterdam
+			      VU University Amsterdam
+			      CWI, Amsterdam
+			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -36,16 +36,17 @@
 */
 
 :- module(plunit,
-          [ set_test_options/1,         % +Options
-            begin_tests/1,              % +Name
-            begin_tests/2,              % +Name, +Options
-            end_tests/1,                % +Name
-            run_tests/0,                % Run all tests
-            run_tests/1,                % Run named test-set
-            load_test_files/1,          % +Options
-            running_tests/0,            % Prints currently running test
-            current_test/5,             % ?Unit,?Test,?Line,?Body,?Options
-            test_report/1               % +What
+	  [ set_test_options/1,         % +Options
+	    begin_tests/1,              % +Name
+	    begin_tests/2,              % +Name, +Options
+	    end_tests/1,                % +Name
+	    run_tests/0,                % Run all tests
+	    run_tests/1,                % Run named test-set
+	    load_test_files/1,          % +Options
+	    running_tests/0,            % Prints currently running test
+	    current_test/5,             % ?Unit,?Test,?Line,?Body,?Options
+            current_test_unit/2,        % ?Unit,?Options
+	    test_report/1               % +What
           ]).
 
 /** <module> Unit Testing
@@ -61,13 +62,14 @@ please visit http://www.swi-prolog.org/pldoc/package/plunit.
 :- autoload(library(pairs), [group_pairs_by_key/2,pairs_values/2]).
 :- autoload(library(error), [must_be/2]).
 :- autoload(library(thread), [concurrent_forall/2]).
+:- autoload(library(aggregate), [aggregate_all/3]).
 
 :- meta_predicate valid_options(+, 1).
 
 
-                 /*******************************
-                 *    CONDITIONAL COMPILATION   *
-                 *******************************/
+		 /*******************************
+		 *    CONDITIONAL COMPILATION   *
+		 *******************************/
 
 :- discontiguous
     user:term_expansion/2.
@@ -84,20 +86,20 @@ including.
 if_expansion((:- if(G)), []) :-
     (   including
     ->  (   catch(G, E, (print_message(error, E), fail))
-        ->  asserta(include_code(true))
-        ;   asserta(include_code(false))
-        )
+	->  asserta(include_code(true))
+	;   asserta(include_code(false))
+	)
     ;   asserta(include_code(else_false))
     ).
 if_expansion((:- else), []) :-
     (   retract(include_code(X))
     ->  (   X == true
-        ->  X2 = false
-        ;   X == false
-        ->  X2 = true
-        ;   X2 = X
-        ),
-        asserta(include_code(X2))
+	->  X2 = false
+	;   X == false
+	->  X2 = true
+	;   X2 = X
+	),
+	asserta(include_code(X2))
     ;   throw_error(context_error(no_if),_)
     ).
 if_expansion((:- endif), []) :-
@@ -129,9 +131,9 @@ set_test_flag(Name, Value) :-
 
 % ensure expansion to avoid tracing
 goal_expansion(forall(C,A),
-               \+ (C, \+ A)).
+	       \+ (C, \+ A)).
 goal_expansion(current_module(Module,File),
-               module_property(Module, file(File))).
+	       module_property(Module, file(File))).
 
 :- if(current_prolog_flag(dialect, yap)).
 
@@ -183,17 +185,17 @@ user:term_expansion((:- thread_local(PI)), (:- dynamic(PI))) :-
 
 :- endif.
 
-                 /*******************************
-                 *            IMPORTS           *
-                 *******************************/
+		 /*******************************
+		 *            IMPORTS           *
+		 *******************************/
 
 :- initialization
    (   current_test_flag(test_options, _)
    ->  true
    ;   set_test_flag(test_options,
-                 [ run(make),       % run tests on make/0
-                   sto(false)
-                 ])
+		 [ run(make),       % run tests on make/0
+		   sto(false)
+		 ])
    ).
 
 %!  set_test_options(+Options)
@@ -258,12 +260,12 @@ loading_tests :-
     (   Load == always
     ->  true
     ;   Load == normal,
-        \+ current_test_flag(optimise, true)
+	\+ current_test_flag(optimise, true)
     ).
 
-                 /*******************************
-                 *            MODULE            *
-                 *******************************/
+		 /*******************************
+		 *            MODULE            *
+		 *******************************/
 
 :- dynamic
     loading_unit/4,                 % Unit, Module, File, OldSource
@@ -294,7 +296,7 @@ begin_tests(Unit, Name, File:Line, Options) :-
     (   current_unit(Unit, Name, Context, Options)
     ->  true
     ;   retractall(current_unit(Unit, Name, _, _)),
-        assert(current_unit(Unit, Name, Context, Options))
+	assert(current_unit(Unit, Name, Context, Options))
     ),
     '$set_source_module'(Old, Name),
     '$declare_module'(Name, test, Context, File, Line, false),
@@ -311,11 +313,11 @@ begin_tests(Unit, Name, File:_Line, _Options) :-
 % we cannot use discontiguous as a goal in SICStus Prolog.
 
 user:term_expansion((:- begin_tests(Set)),
-                    [ (:- begin_tests(Set)),
-                      (:- discontiguous(test/2)),
-                      (:- discontiguous('unit body'/2)),
-                      (:- discontiguous('unit test'/4))
-                    ]).
+		    [ (:- begin_tests(Set)),
+		      (:- discontiguous(test/2)),
+		      (:- discontiguous('unit body'/2)),
+		      (:- discontiguous('unit test'/4))
+		    ]).
 
 begin_tests(Unit, Name, File:_Line, Options) :-
     loading_tests,
@@ -323,7 +325,7 @@ begin_tests(Unit, Name, File:_Line, Options) :-
     (   current_unit(Unit, Name, _, Options)
     ->  true
     ;   retractall(current_unit(Unit, Name, _, _)),
-        assert(current_unit(Unit, Name, -, Options))
+	assert(current_unit(Unit, Name, -, Options))
     ),
     asserta(loading_unit(Unit, Name, File, -)).
 begin_tests(Unit, Name, File:_Line, _Options) :-
@@ -343,7 +345,7 @@ end_tests(Unit) :-
     !,
     (   Unit == StartUnit
     ->  once(retract(loading_unit(StartUnit, _, _, Old))),
-        '$set_source_module'(_, Old)
+	'$set_source_module'(_, Old)
     ;   throw_error(context_error(plunit_close(Unit, StartUnit)), _)
     ).
 end_tests(Unit) :-
@@ -360,11 +362,11 @@ unit_module(Unit, Module) :-
 make_unit_module(Unit, Module) :-
     unit_module(Unit, Module),
     (   current_module(Module),
-        \+ current_unit(_, Module, _, _),
-        predicate_property(Module:H, _P),
-        \+ predicate_property(Module:H, imported_from(_M))
+	\+ current_unit(_, Module, _, _),
+	predicate_property(Module:H, _P),
+	\+ predicate_property(Module:H, imported_from(_M))
     ->  throw_error(permission_error(create, plunit, Unit),
-                    'Existing module')
+		    'Existing module')
     ;  true
     ).
 
@@ -383,9 +385,9 @@ make_unit_module(Unit, Module) :-
 
 :- endif.
 
-                 /*******************************
-                 *           EXPANSION          *
-                 *******************************/
+		 /*******************************
+		 *           EXPANSION          *
+		 *******************************/
 
 %!  expand_test(+Name, +Options, +Body, -Clause) is det.
 %
@@ -393,9 +395,9 @@ make_unit_module(Unit, Module) :-
 %   'unit test'/4 and 'unit body'/2.
 
 expand_test(Name, Options0, Body,
-            [ 'unit test'(Name, Line, Options, Module:'unit body'(Id, Vars)),
-              ('unit body'(Id, Vars) :- !, Body)
-            ]) :-
+	    [ 'unit test'(Name, Line, Options, Module:'unit body'(Id, Vars)),
+	      ('unit body'(Id, Vars) :- !, Body)
+	    ]) :-
     source_location(_File, Line),
     prolog_load_context(module, Module),
     atomic_list_concat([Name, '@line ', Line], Id),
@@ -474,17 +476,17 @@ expand(test(Name, _Options), _) :-
 system:term_expansion(Term, Expanded) :-
     (   loading_unit(_, _, File, _)
     ->  source_location(ThisFile, _),
-        (   File == ThisFile
-        ->  true
-        ;   source_file_property(ThisFile, included_in(File, _))
-        ),
-        expand(Term, Expanded)
+	(   File == ThisFile
+	->  true
+	;   source_file_property(ThisFile, included_in(File, _))
+	),
+	expand(Term, Expanded)
     ).
 
 
-                 /*******************************
-                 *             OPTIONS          *
-                 *******************************/
+		 /*******************************
+		 *             OPTIONS          *
+		 *******************************/
 
 :- if(swi).
 :- else.
@@ -562,9 +564,9 @@ test_set_option(concurrent(V)) :-
     must_be(boolean, V).
 
 
-                 /*******************************
-                 *        RUNNING TOPLEVEL      *
-                 *******************************/
+		 /*******************************
+		 *        RUNNING TOPLEVEL      *
+		 *******************************/
 
 :- thread_local
     passed/5,                       % Unit, Test, Line, Det, Time
@@ -591,14 +593,14 @@ test_set_option(concurrent(V)) :-
 run_tests :-
     cleanup,
     setup_call_cleanup(
-        setup_trap_assertions(Ref),
-        run_current_units,
-        report_and_cleanup(Ref)).
+	setup_trap_assertions(Ref),
+	run_current_units,
+	report_and_cleanup(Ref)).
 
 run_current_units :-
     forall(current_test_set(Set),
-           run_unit(Set)),
-    check_for_test_errors.
+	   run_unit(Set)),
+    all_tests_passed(_).
 
 report_and_cleanup(Ref) :-
     cleanup_trap_assertions(Ref),
@@ -608,13 +610,13 @@ report_and_cleanup(Ref) :-
 run_tests(Set) :-
     cleanup,
     setup_call_cleanup(
-        setup_trap_assertions(Ref),
-        run_unit_and_check_errors(Set),
-        report_and_cleanup(Ref)).
+	setup_trap_assertions(Ref),
+	run_unit_and_check_errors(Set),
+	report_and_cleanup(Ref)).
 
 run_unit_and_check_errors(Set) :-
     run_unit(Set),
-    check_for_test_errors.
+    all_tests_passed(_).
 
 run_unit([]) :- !.
 run_unit([H|T]) :-
@@ -626,24 +628,36 @@ run_unit(Spec) :-
     (   option(blocked(Reason), UnitOptions)
     ->  info(plunit(blocked(unit(Unit, Reason))))
     ;   setup(Module, unit(Unit), UnitOptions)
-    ->  info(plunit(begin(Spec))),
-        current_test_flag(test_options, GlobalOptions),
-        (   option(concurrent(true), GlobalOptions),
-            option(concurrent(true), UnitOptions, false)
-        ->  concurrent_forall((Module:'unit test'(Name, Line, Options, Body),
-                               matching_test(Name, Tests)),
-                              run_test(Unit, Name, Line, Options, Body))
-        ;   forall((Module:'unit test'(Name, Line, Options, Body),
-                    matching_test(Name, Tests)),
-                   run_test(Unit, Name, Line, Options, Body))),
-        info(plunit(end(Spec))),
-        (   message_level(silent)
-        ->  true
-        ;   format(user_error, '~N', [])
-        ),
-        cleanup(Module, UnitOptions)
+    ->  get_time(T0),
+	info(plunit(begin(Spec))),
+	run_unit_2(Unit, Tests, Module, UnitOptions),
+	get_time(T1),
+	test_summary(Unit, Summary),
+	Time is T1-T0,
+	info(plunit(end(Spec, Summary.put(time, Time)))),
+	(   message_level(silent)
+	->  true
+	;   format(user_error, '~N', [])
+	),
+	cleanup(Module, UnitOptions)
     ;   true
     ).
+
+:- if(current_prolog_flag(threads, true)).
+run_unit_2(Unit, Tests, Module, UnitOptions) :-
+    option(concurrent(true), UnitOptions, false),
+    current_test_flag(test_options, GlobalOptions),
+    option(concurrent(true), GlobalOptions),
+    !,
+    concurrent_forall((Module:'unit test'(Name, Line, Options, Body),
+		       matching_test(Name, Tests)),
+		      run_test(Unit, Name, Line, Options, Body)).
+:- endif.
+run_unit_2(Unit, Tests, Module, _UnitOptions) :-
+    forall(( Module:'unit test'(Name, Line, Options, Body),
+	     matching_test(Name, Tests)),
+	   run_test(Unit, Name, Line, Options, Body)).
+
 
 unit_from_spec(Unit, Unit, _, Module, Options) :-
     atom(Unit),
@@ -701,16 +715,16 @@ unit_in_files(Files, Unit) :-
     !,
     member(F, Files),
     absolute_file_name(F, Source,
-                       [ file_type(prolog),
-                         access(read),
-                         file_errors(fail)
-                       ]),
+		       [ file_type(prolog),
+			 access(read),
+			 file_errors(fail)
+		       ]),
     unit_file(Unit, Source).
 
 
-                 /*******************************
-                 *         HOOKING MAKE/0       *
-                 *******************************/
+		 /*******************************
+		 *         HOOKING MAKE/0       *
+		 *******************************/
 
 %!  make_run_tests(+Files)
 %
@@ -761,9 +775,9 @@ unification_capability(_) :-
 :- endif.
 :- endif.
 
-                 /*******************************
-                 *      ASSERTION HANDLING      *
-                 *******************************/
+		 /*******************************
+		 *      ASSERTION HANDLING      *
+		 *******************************/
 
 :- if(swi).
 
@@ -771,8 +785,8 @@ unification_capability(_) :-
 
 setup_trap_assertions(Ref) :-
     asserta((prolog:assertion_failed(Reason, Goal) :-
-                    test_assertion_failed(Reason, Goal)),
-            Ref).
+		    test_assertion_failed(Reason, Goal)),
+	    Ref).
 
 cleanup_trap_assertions(Ref) :-
     erase(Ref).
@@ -781,29 +795,29 @@ test_assertion_failed(Reason, Goal) :-
     thread_self(Me),
     running(Unit, Test, Line, STO, Me),
     (   catch(get_prolog_backtrace(10, Stack), _, fail),
-        assertion_location(Stack, AssertLoc)
+	assertion_location(Stack, AssertLoc)
     ->  true
     ;   AssertLoc = unknown
     ),
     current_test_flag(test_options, Options),
     report_failed_assertion(Unit, Test, Line, AssertLoc,
-                            STO, Reason, Goal, Options),
+			    STO, Reason, Goal, Options),
     assert_cyclic(failed_assertion(Unit, Test, Line, AssertLoc,
-                                   STO, Reason, Goal)).
+				   STO, Reason, Goal)).
 
 assertion_location(Stack, File:Line) :-
     append(_, [AssertFrame,CallerFrame|_], Stack),
     prolog_stack_frame_property(AssertFrame,
-                                predicate(prolog_debug:assertion/1)),
+				predicate(prolog_debug:assertion/1)),
     !,
     prolog_stack_frame_property(CallerFrame, location(File:Line)).
 
 report_failed_assertion(Unit, Test, Line, AssertLoc,
-                        STO, Reason, Goal, _Options) :-
+			STO, Reason, Goal, _Options) :-
     print_message(
-        error,
-        plunit(failed_assertion(Unit, Test, Line, AssertLoc,
-                                STO, Reason, Goal))).
+	error,
+	plunit(failed_assertion(Unit, Test, Line, AssertLoc,
+				STO, Reason, Goal))).
 
 :- else.
 
@@ -813,9 +827,9 @@ cleanup_trap_assertions(_).
 :- endif.
 
 
-                 /*******************************
-                 *         RUNNING A TEST       *
-                 *******************************/
+		 /*******************************
+		 *         RUNNING A TEST       *
+		 *******************************/
 
 %!  run_test(+Unit, +Name, +Line, +Options, +Body) is det.
 %
@@ -827,7 +841,7 @@ run_test(Unit, Name, Line, Options, Body) :-
     unit_module(Unit, Module),
     term_variables(Generator, Vars),
     forall(Module:Generator,
-           run_test_once(Unit, @(Name,Vars), Line, Options, Body)).
+	   run_test_once(Unit, @(Name,Vars), Line, Options, Body)).
 run_test(Unit, Name, Line, Options, Body) :-
     run_test_once(Unit, Name, Line, Options, Body).
 
@@ -847,32 +861,32 @@ run_test_once(Unit, Name, Line, Options, Body) :-
     !,
     current_unification_capability(Cap0),
     call_cleanup(run_test_cap(Unit, Name, Line, [sto(Type)|Options], Body),
-                 set_unification_capability(Cap0)).
+		 set_unification_capability(Cap0)).
 run_test_once(Unit, Name, Line, Options, Body) :-
     current_unification_capability(Cap0),
     call_cleanup(run_test_cap(Unit, Name, Line, Options, Body),
-                 set_unification_capability(Cap0)).
+		 set_unification_capability(Cap0)).
 
 run_test_cap(Unit, Name, Line, Options, Body) :-
     (   option(sto(Type), Options)
     ->  unification_capability(Type),
-        set_unification_capability(Type),
-        begin_test(Unit, Name, Line, Type),
-        run_test_6(Unit, Name, Line, Options, Body, Result),
-        end_test(Unit, Name, Line, Type),
-        report_result(Result, Options)
+	set_unification_capability(Type),
+	begin_test(Unit, Name, Line, Type),
+	run_test_6(Unit, Name, Line, Options, Body, Result),
+	end_test(Unit, Name, Line, Type),
+	report_result(Result, Options)
     ;   findall(Key-(Type+Result),
-                test_caps(Type, Unit, Name, Line, Options, Body, Result, Key),
-                Pairs),
-        group_pairs_by_key(Pairs, Keyed),
-        (   Keyed == []
-        ->  true
-        ;   Keyed = [_-Results]
-        ->  Results = [_Type+Result|_],
-            report_result(Result, Options)          % consistent results
-        ;   pairs_values(Pairs, ResultByType),
-            report_result(sto(Unit, Name, Line, ResultByType), Options)
-        )
+		test_caps(Type, Unit, Name, Line, Options, Body, Result, Key),
+		Pairs),
+	group_pairs_by_key(Pairs, Keyed),
+	(   Keyed == []
+	->  true
+	;   Keyed = [_-Results]
+	->  Results = [_Type+Result|_],
+	    report_result(Result, Options)          % consistent results
+	;   pairs_values(Pairs, ResultByType),
+	    report_result(sto(Unit, Name, Line, ResultByType), Options)
+	)
     ).
 
 %!  test_caps(-Type, +Unit, +Name, +Line, +Options, +Body, -Result, -Key) is nondet.
@@ -923,7 +937,7 @@ report_sto_results([Type+Result|T], Options) :-
 %           * setup_failed(Unit, Name, Line)
 
 run_test_6(Unit, Name, Line, Options, _Body,
-           blocked(Unit, Name, Line, Reason)) :-
+	   blocked(Unit, Name, Line, Reason)) :-
     option(blocked(Reason), Options),
     !.
 run_test_6(Unit, Name, Line, Options, Body, Result) :-
@@ -940,20 +954,20 @@ run_test_6(Unit, Name, Line, Options, Body, Result) :-
     unit_module(Unit, Module),
     (   setup(Module, test(Unit,Name,Line), Options)
     ->  statistics(runtime, [T0,_]),
-        (   catch(Module:Body, E, true)
-        ->  (   var(E)
-            ->  statistics(runtime, [T1,_]),
-                Time is (T1 - T0)/1000.0,
-                Result = failure(Unit, Name, Line, succeeded(Time)),
-                cleanup(Module, Options)
-            ;   Result = failure(Unit, Name, Line, E),
-                cleanup(Module, Options)
-            )
-        ;   statistics(runtime, [T1,_]),
-            Time is (T1 - T0)/1000.0,
-            Result = success(Unit, Name, Line, true, Time),
-            cleanup(Module, Options)
-        )
+	(   catch(Module:Body, E, true)
+	->  (   var(E)
+	    ->  statistics(runtime, [T1,_]),
+		Time is (T1 - T0)/1000.0,
+		Result = failure(Unit, Name, Line, succeeded(Time)),
+		cleanup(Module, Options)
+	    ;   Result = failure(Unit, Name, Line, E),
+		cleanup(Module, Options)
+	    )
+	;   statistics(runtime, [T1,_]),
+	    Time is (T1 - T0)/1000.0,
+	    Result = success(Unit, Name, Line, true, Time),
+	    cleanup(Module, Options)
+	)
     ;   Result = setup_failed(Unit, Name, Line)
     ).
 run_test_6(Unit, Name, Line, Options, Body, Result) :-
@@ -962,24 +976,24 @@ run_test_6(Unit, Name, Line, Options, Body, Result) :-
     unit_module(Unit, Module),
     (   setup(Module, test(Unit,Name,Line), Options) % true(Binding)
     ->  statistics(runtime, [T0,_]),
-        (   catch(call_det(Module:Body, Det), E, true)
-        ->  (   var(E)
-            ->  statistics(runtime, [T1,_]),
-                Time is (T1 - T0)/1000.0,
-                (   catch(Module:Cmp, E, true)
-                ->  (   var(E)
-                    ->  Result = success(Unit, Name, Line, Det, Time)
-                    ;   Result = failure(Unit, Name, Line, cmp_error(Cmp, E))
-                    )
-                ;   Result = failure(Unit, Name, Line, wrong_answer(Cmp))
-                ),
-                cleanup(Module, Options)
-            ;   Result = failure(Unit, Name, Line, E),
-                cleanup(Module, Options)
-            )
-        ;   Result = failure(Unit, Name, Line, failed),
-            cleanup(Module, Options)
-        )
+	(   catch(call_det(Module:Body, Det), E, true)
+	->  (   var(E)
+	    ->  statistics(runtime, [T1,_]),
+		Time is (T1 - T0)/1000.0,
+		(   catch(Module:Cmp, E, true)
+		->  (   var(E)
+		    ->  Result = success(Unit, Name, Line, Det, Time)
+		    ;   Result = failure(Unit, Name, Line, cmp_error(Cmp, E))
+		    )
+		;   Result = failure(Unit, Name, Line, wrong_answer(Cmp))
+		),
+		cleanup(Module, Options)
+	    ;   Result = failure(Unit, Name, Line, E),
+		cleanup(Module, Options)
+	    )
+	;   Result = failure(Unit, Name, Line, failed),
+	    cleanup(Module, Options)
+	)
     ;   Result = setup_failed(Unit, Name, Line)
     ).
 run_test_6(Unit, Name, Line, Options, Body, Result) :-
@@ -988,21 +1002,21 @@ run_test_6(Unit, Name, Line, Options, Body, Result) :-
     unit_module(Unit, Module),
     (   setup(Module, test(Unit,Name,Line), Options)
     ->  statistics(runtime, [T0,_]),
-        (   catch(Module:Body, E, true)
-        ->  (   var(E)
-            ->  Result = failure(Unit, Name, Line, no_exception),
-                cleanup(Module, Options)
-            ;   statistics(runtime, [T1,_]),
-                Time is (T1 - T0)/1000.0,
-                (   match_error(Expect, E)
-                ->  Result = success(Unit, Name, Line, true, Time)
-                ;   Result = failure(Unit, Name, Line, wrong_error(Expect, E))
-                ),
-                cleanup(Module, Options)
-            )
-        ;   Result = failure(Unit, Name, Line, failed),
-            cleanup(Module, Options)
-        )
+	(   catch(Module:Body, E, true)
+	->  (   var(E)
+	    ->  Result = failure(Unit, Name, Line, no_exception),
+		cleanup(Module, Options)
+	    ;   statistics(runtime, [T1,_]),
+		Time is (T1 - T0)/1000.0,
+		(   match_error(Expect, E)
+		->  Result = success(Unit, Name, Line, true, Time)
+		;   Result = failure(Unit, Name, Line, wrong_error(Expect, E))
+		),
+		cleanup(Module, Options)
+	    )
+	;   Result = failure(Unit, Name, Line, failed),
+	    cleanup(Module, Options)
+	)
     ;   Result = setup_failed(Unit, Name, Line)
     ).
 
@@ -1017,18 +1031,18 @@ nondet_test(Expected, Unit, Name, Line, Options, Body, Result) :-
     statistics(runtime, [T0,_]),
     (   setup(Module, test(Unit,Name,Line), Options)
     ->  (   catch(findall(Vars, Module:Body, Bindings), E, true)
-        ->  (   var(E)
-            ->  statistics(runtime, [T1,_]),
-                Time is (T1 - T0)/1000.0,
-                (   nondet_compare(Expected, Bindings, Unit, Name, Line)
-                ->  Result = success(Unit, Name, Line, true, Time)
-                ;   Result = failure(Unit, Name, Line, wrong_answer(Expected, Bindings))
-                ),
-                cleanup(Module, Options)
-            ;   Result = failure(Unit, Name, Line, E),
-                cleanup(Module, Options)
-            )
-        )
+	->  (   var(E)
+	    ->  statistics(runtime, [T1,_]),
+		Time is (T1 - T0)/1000.0,
+		(   nondet_compare(Expected, Bindings, Unit, Name, Line)
+		->  Result = success(Unit, Name, Line, true, Time)
+		;   Result = failure(Unit, Name, Line, wrong_answer(Expected, Bindings))
+		),
+		cleanup(Module, Options)
+	    ;   Result = failure(Unit, Name, Line, E),
+		cleanup(Module, Options)
+	    )
+	)
     ;   Result = setup_failed(Unit, Name, Line)
     ).
 
@@ -1122,22 +1136,22 @@ setup(Module, Context, Options) :-
     !,
     (   catch(call_ex(Module, Setup), E, true)
     ->  (   var(E)
-        ->  true
-        ;   print_message(error, plunit(error(setup, Context, E))),
-            fail
-        )
+	->  true
+	;   print_message(error, plunit(error(setup, Context, E))),
+	    fail
+	)
     ;   print_message(error, error(goal_failed(Setup), _)),
-        fail
+	fail
     ).
 setup(Module, Context, Options) :-
     option(condition(Setup), Options),
     !,
     (   catch(call_ex(Module, Setup), E, true)
     ->  (   var(E)
-        ->  true
-        ;   print_message(error, plunit(error(condition, Context, E))),
-            fail
-        )
+	->  true
+	;   print_message(error, plunit(error(condition, Context, E))),
+	    fail
+	)
     ;   fail
     ).
 setup(_,_,_).
@@ -1148,7 +1162,7 @@ setup(_,_,_).
 
 call_ex(Module, Goal) :-
     Module:(expand_goal(Goal, GoalEx),
-                GoalEx).
+		GoalEx).
 
 %!  cleanup(+Module, +Options) is det.
 %
@@ -1159,9 +1173,9 @@ cleanup(Module, Options) :-
     option(cleanup(Cleanup), Options, true),
     (   catch(call_ex(Module, Cleanup), E, true)
     ->  (   var(E)
-        ->  true
-        ;   print_message(warning, E)
-        )
+	->  true
+	;   print_message(warning, E)
+	)
     ;   print_message(warning, goal_failed(Cleanup, '(cleanup handler)'))
     ).
 
@@ -1169,12 +1183,12 @@ success(Unit, Name, Line, Det, _Time, Options) :-
     memberchk(fixme(Reason), Options),
     !,
     (   (   Det == true
-        ;   memberchk(nondet, Options)
-        )
+	;   memberchk(nondet, Options)
+	)
     ->  progress(Unit, Name, nondet),
-        Ok = passed
+	Ok = passed
     ;   progress(Unit, Name, fixme),
-        Ok = nondet
+	Ok = nondet
     ),
     flush_output(user_error),
     assert(fixme(Unit, Name, Line, Reason, Ok)).
@@ -1185,11 +1199,11 @@ success(Unit, Name, Line, _, _, Options) :-
 success(Unit, Name, Line, Det, Time, Options) :-
     assert(passed(Unit, Name, Line, Det, Time)),
     (   (   Det == true
-        ;   memberchk(nondet, Options)
-        )
+	;   memberchk(nondet, Options)
+	)
     ->  progress(Unit, Name, passed)
     ;   unit_file(Unit, File),
-        print_message(warning, plunit(nondet(File, Line, Name)))
+	print_message(warning, plunit(nondet(File, Line, Name)))
     ).
 
 failure(Unit, Name, Line, _, Options) :-
@@ -1229,9 +1243,9 @@ assert_cyclic(Term) :-
 :- endif.
 
 
-                 /*******************************
-                 *            REPORTING         *
-                 *******************************/
+		 /*******************************
+		 *            REPORTING         *
+		 *******************************/
 
 %!  begin_test(Unit, Test, Line, STO) is det.
 %!  end_test(Unit, Test, Line, STO) is det.
@@ -1266,12 +1280,12 @@ running_tests :-
 
 running_tests(Running) :-
     findall(running(Unit:Test, File:Line, STO, Thread),
-            (   running(Unit, Test, Line, STO, Thread),
-                unit_file(Unit, File)
-            ), Running).
+	    (   running(Unit, Test, Line, STO, Thread),
+		unit_file(Unit, File)
+	    ), Running).
 
 
-%!  current_test(?Unit, ?Test, ?Line, ?Body, ?Options)
+%!  current_test(?Unit, ?Test, ?Line, ?Body, ?Options) is nondet.
 %
 %   True when a test with the specified properties is loaded.
 
@@ -1279,51 +1293,73 @@ current_test(Unit, Test, Line, Body, Options) :-
     current_unit(Unit, Module, _Supers, _UnitOptions),
     Module:'unit test'(Test, Line, Options, Body).
 
-%!  check_for_test_errors is semidet.
+%!  current_test_unit(?Unit, ?Options) is nondet.
 %
-%   True if there are no errors, otherwise false.
+%   True when a Unit is a current unit test declared with Options.
 
-check_for_test_errors :-
-    number_of_clauses(failed/4, Failed),
-    number_of_clauses(failed_assertion/7, FailedAssertion),
-    number_of_clauses(sto/4, STO),
-    Failed+FailedAssertion+STO =:= 0.     % fail on errors
+current_test_unit(Unit, UnitOptions) :-
+    current_unit(Unit, _Module, _Supers, UnitOptions).
 
+
+:- meta_predicate count(0, -).
+count(Goal, Count) :-
+    aggregate_all(count, Goal, Count).
+
+%!  test_summary(?Unit, -Summary) is det.
+%
+%   True if there are no failures, otherwise false.
+
+test_summary(Unit, Summary) :-
+    count(failed(Unit, _0Test, _0Line, _Reason), Failed),
+    count(failed_assertion(Unit, _0Test, _0Line,
+			   _ALoc, _STO, _0Reason, _Goal), FailedAssertion),
+    count(sto(Unit, _0Test, _0Line, _Results), STO),
+    count(passed(Unit, _0Test, _0Line, _Det, _Time), Passed),
+    count(blocked(Unit, _0Test, _0Line, _0Reason), Blocked),
+    Summary = plunit{passed:Passed,
+		     failed:Failed,
+		     failed_assertions:FailedAssertion,
+		     blocked:Blocked,
+		     sto:STO}.
+
+all_tests_passed(Unit) :-
+    test_summary(Unit, Summary),
+    test_summary_passed(Summary).
+
+test_summary_passed(Summary) :-
+    _{failed: 0, failed_assertions: 0, sto: 0} :< Summary.
 
 %!  report is det.
 %
 %   Print a summary of the tests that ran.
 
 report :-
-    number_of_clauses(passed/5, Passed),
-    number_of_clauses(failed/4, Failed),
-    number_of_clauses(failed_assertion/7, FailedAssertion),
-    number_of_clauses(blocked/4, Blocked),
-    number_of_clauses(sto/4, STO),
-    print_message(silent,
-                  plunit(summary(plunit{passed:Passed,
-                                        failed:Failed,
-                                        failed_assertions:FailedAssertion,
-                                        blocked:Blocked,
-                                        sto:STO}))),
+    test_summary(_, Summary),
+    print_message(silent, plunit(Summary)),
+    _{ passed:Passed,
+       failed:Failed,
+       failed_assertions:FailedAssertion,
+       blocked:Blocked,
+       sto:STO
+     } :< Summary,
     (   Passed+Failed+FailedAssertion+Blocked+STO =:= 0
     ->  info(plunit(no_tests))
     ;   Failed+FailedAssertion+Blocked+STO =:= 0
     ->  report_fixme,
-        info(plunit(all_passed(Passed)))
+	info(plunit(all_passed(Passed)))
     ;   report_blocked,
-        report_fixme,
-        report_failed_assertions,
-        report_failed,
-        report_sto,
-        info(plunit(passed(Passed)))
+	report_fixme,
+	report_failed_assertions,
+	report_failed,
+	report_sto,
+	info(plunit(passed(Passed)))
     ).
 
 number_of_clauses(F/A,N) :-
     (   current_predicate(F/A)
     ->  functor(G,F,A),
-        findall(t, G, Ts),
-        length(Ts, N)
+	findall(t, G, Ts),
+	length(Ts, N)
     ;   N = 0
     ).
 
@@ -1333,10 +1369,10 @@ report_blocked :-
     !,
     info(plunit(blocked(N))),
     (   blocked(Unit, Name, Line, Reason),
-        unit_file(Unit, File),
-        print_message(informational,
-                      plunit(blocked(File:Line, Name, Reason))),
-        fail ; true
+	unit_file(Unit, File),
+	print_message(informational,
+		      plunit(blocked(File:Line, Name, Reason))),
+	fail ; true
     ).
 report_blocked.
 
@@ -1364,7 +1400,7 @@ report_fixme(TuplesF, TuplesP, TuplesN) :-
 
 fixme(How, Tuples, Count) :-
     findall(fixme(Unit, Name, Line, Reason, How),
-            fixme(Unit, Name, Line, Reason, How), Tuples),
+	    fixme(Unit, Name, Line, Reason, How), Tuples),
     length(Tuples, Count).
 
 
@@ -1375,9 +1411,10 @@ report_failure(Unit, Name, Line, Error, _Options) :-
     print_message(error, plunit(failed(Unit, Name, Line, Error))).
 
 
-%!  test_report(What) is det.
+%!  test_report(+What) is det.
 %
-%   Produce reports on test results after the run.
+%   Produce reports on test  results  after   the  run.  Currently  only
+%   supports `fixme` for What.
 
 test_report(fixme) :-
     !,
@@ -1388,9 +1425,9 @@ test_report(What) :-
     throw_error(domain_error(report_class, What), _).
 
 
-                 /*******************************
-                 *             INFO             *
-                 *******************************/
+		 /*******************************
+		 *             INFO             *
+		 *******************************/
 
 %!  current_test_set(?Unit) is nondet.
 %
@@ -1412,9 +1449,9 @@ unit_file(Unit, PlFile) :-
     current_unit(Unit, Module, _Context, _Options).
 
 
-                 /*******************************
-                 *             FILES            *
-                 *******************************/
+		 /*******************************
+		 *             FILES            *
+		 *******************************/
 
 %!  load_test_files(+Options) is det.
 %
@@ -1422,26 +1459,26 @@ unit_file(Unit, PlFile) :-
 
 load_test_files(_Options) :-
     (   source_file(File),
-        file_name_extension(Base, Old, File),
-        Old \== plt,
-        file_name_extension(Base, plt, TestFile),
-        exists_file(TestFile),
-        (   test_file_for(TestFile, File)
-        ->  true
-        ;   load_files(TestFile,
-                       [ if(changed),
-                         imports([])
-                       ]),
-            asserta(test_file_for(TestFile, File))
-        ),
-        fail ; true
+	file_name_extension(Base, Old, File),
+	Old \== plt,
+	file_name_extension(Base, plt, TestFile),
+	exists_file(TestFile),
+	(   test_file_for(TestFile, File)
+	->  true
+	;   load_files(TestFile,
+		       [ if(changed),
+			 imports([])
+		       ]),
+	    asserta(test_file_for(TestFile, File))
+	),
+	fail ; true
     ).
 
 
 
-                 /*******************************
-                 *           MESSAGES           *
-                 *******************************/
+		 /*******************************
+		 *           MESSAGES           *
+		 *******************************/
 
 %!  info(+Term)
 %
@@ -1490,18 +1527,23 @@ message(plunit(nondet(File, Line, Name))) -->
 message(error(plunit(incompatible_options, Tests), _)) -->
     [ 'PL-Unit: incompatible test-options: ~p'-[Tests] ].
 
-                                        % Unit start/end
+					% Unit start/end
 :- if(swi).
 message(plunit(progress(_Unit, _Name, Result))) -->
     [ at_same_line ], result(Result), [flush].
 message(plunit(begin(Unit))) -->
     [ 'PL-Unit: ~w '-[Unit], flush ].
-message(plunit(end(_Unit))) -->
-    [ at_same_line, ' done' ].
+message(plunit(end(_Unit, Summary))) -->
+    [ at_same_line ],
+    (   {test_summary_passed(Summary)}
+    ->  [ ' passed' ]
+    ;   [ ansi(error, '**FAILED', []) ]
+    ),
+    [ ' ~3f sec'-[Summary.time] ].
 :- else.
 message(plunit(begin(Unit))) -->
     [ 'PL-Unit: ~w '-[Unit]/*, flush-[]*/ ].
-message(plunit(end(_Unit))) -->
+message(plunit(end(_Unit, _Summary))) -->
     [ ' done'-[] ].
 :- endif.
 message(plunit(blocked(unit(Unit, Reason)))) -->
@@ -1522,7 +1564,7 @@ message(plunit(fixme(Tuples))) -->
     !,
     fixme_message(Tuples).
 
-                                        % Blocked tests
+					% Blocked tests
 message(plunit(blocked(1))) -->
     !,
     [ 'one test is blocked:'-[] ].
@@ -1533,7 +1575,7 @@ message(plunit(blocked(Pos, Name, Reason))) -->
     test_name(Name),
     [ ': ~w'-[Reason] ].
 
-                                        % fail/success
+					% fail/success
 message(plunit(no_tests)) -->
     !,
     [ 'No tests to run' ].
@@ -1586,7 +1628,7 @@ message(plunit(failed(Unit, Name, Line, Failure))) -->
     failure(Failure).
 :- if(swi).
 message(plunit(failed_assertion(Unit, Name, Line, AssertLoc,
-                                _STO, Reason, Goal))) -->
+				_STO, Reason, Goal))) -->
     { unit_file(Unit, File) },
     locationprefix(File:Line),
     test_name(Name),
@@ -1635,13 +1677,13 @@ result(failed)    --> ['-'-[]].
 result(assertion) --> ['A'-[]].
 
 :- endif.
-                                        % Setup/condition errors
+					% Setup/condition errors
 message(plunit(error(Where, Context, Exception))) -->
     locationprefix(Context),
     { message_to_string(Exception, String) },
     [ 'error in ~w: ~w'-[Where, String] ].
 
-                                        % STO messages
+					% STO messages
 message(plunit(sto(Unit, Name, Line))) -->
     { unit_file(Unit, File) },
        locationprefix(File:Line),
@@ -1651,7 +1693,7 @@ message(plunit(sto(Type, Result))) -->
     sto_type(Type),
     sto_result(Result).
 
-                                        % Interrupts (SWI)
+					% Interrupts (SWI)
 :- if(swi).
 message(interrupt(begin)) -->
     { thread_self(Me),
@@ -1757,13 +1799,13 @@ failure(wrong_answer(Cmp)) -->
 failure(wrong_answer(CmpExpected, Bindings)) -->
     { (   CmpExpected = all(Cmp)
       ->  Cmp =.. [_Op1,_,Expected],
-          Got = Bindings,
-          Type = all
+	  Got = Bindings,
+	  Type = all
       ;   CmpExpected = set(Cmp),
-          Cmp =.. [_Op2,_,Expected0],
-          sort(Expected0, Expected),
-          sort(Bindings, Got),
-          Type = set
+	  Cmp =.. [_Op2,_,Expected0],
+	  sort(Expected0, Expected),
+	  sort(Bindings, Got),
+	  Type = set
       )
     },
     [ 'wrong "~w" answer:'-[Type] ],
@@ -1790,7 +1832,7 @@ fixme_message([fixme(Unit, _Name, Line, Reason, How)|T]) -->
     (   {T == []}
     ->  []
     ;   [nl],
-        fixme_message(T)
+	fixme_message(T)
     ).
 
 fixme_message(Location, Reason, failed) -->
@@ -1802,11 +1844,11 @@ fixme_message(Location, Reason, nondet) -->
 
 
 write_options([ numbervars(true),
-                quoted(true),
-                portray(true),
-                max_depth(100),
-                attributes(portray)
-              ]).
+		quoted(true),
+		portray(true),
+		max_depth(100),
+		attributes(portray)
+	      ]).
 
 :- if(swi).
 

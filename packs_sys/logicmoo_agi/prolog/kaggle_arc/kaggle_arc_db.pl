@@ -246,9 +246,7 @@ maybe_glyph(_G,N,Code):- i_glyph(N,Code),!.
 maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
 maybe_glyph(_,N,N).
 
-is_visible(Obj):- \+ has_prop(iz(flag(hidden)),Obj).
-
-is_pred_sorted_object_grid(O):- last(O,I), \+ is_visible(I).
+is_pred_sorted_object_grid(O):- last(O,I), \+ is_physical_object(I).
 
 object_printables(Objs,GroupVis,GroupPP):- 
  %is_pred_sorted_object_grid(Objs),
@@ -256,7 +254,7 @@ object_printables(Objs,GroupVis,GroupPP):-
   
 object_printables(Objs,GroupVis,GroupPP):-
   visible_first(Objs,SF),
-  my_partition(is_visible,SF,GroupVis,GroupInv),
+  my_partition(is_physical_object,SF,GroupVis,GroupInv),
   append([GroupVis,GroupInv,Objs],GroupP),list_to_set(GroupP,GroupPP),!.
 
 grid_color_and_glyph(Points,C,GN,H,V):- %is_object_group(Points), 

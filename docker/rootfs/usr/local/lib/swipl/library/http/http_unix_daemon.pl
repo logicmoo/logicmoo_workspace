@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2013-2018, University of Amsterdam
+    Copyright (c)  2013-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -839,6 +840,8 @@ wait(Options) :-
         ->  catch(ignore(handle_message(Msg)), E,
                   print_message(error, E)),
             Msg == quit,
+            catch(broadcast(http(shutdown)), E,
+                  print_message(error, E)),
             halt(0)
         ;   Count1 is Count + 1,
             nb_setarg(1, State, Count1),

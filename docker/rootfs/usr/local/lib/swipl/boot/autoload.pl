@@ -488,7 +488,7 @@ exports_(File, Module, Exports) :-
             nonvar(Lib),
             arg(2, State, M),
             atom(M)
-        ->  use_foreign_library(M:Lib),
+        ->  catch('$syspreds':use_foreign_library_noi(M:Lib), error(_,_), true),
             fail
         ;   Term = (:- Directive),
             nonvar(Directive)
@@ -558,7 +558,7 @@ system:term_expansion((:- autoload_path(Alias)),
 '$autoload2'(PI) :-
     setup_call_cleanup(
         leave_sandbox(Old),
-        safe_autoload3(PI),
+        '$autoload3'(PI),
         restore_sandbox(Old)).
 
 leave_sandbox(Sandboxed) :-
@@ -566,9 +566,6 @@ leave_sandbox(Sandboxed) :-
     set_prolog_flag(sandboxed_load, false).
 restore_sandbox(Sandboxed) :-
     set_prolog_flag(sandboxed_load, Sandboxed).
-
-safe_autoload3(M:_/_):-  \+ ground(M),!.
-safe_autoload3(PI) :- '$autoload3'(PI).
 
 '$autoload3'(PI) :-
     autoload_from(PI, LoadModule, FullFile),

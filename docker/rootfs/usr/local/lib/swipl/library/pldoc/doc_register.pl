@@ -74,14 +74,11 @@ do_comment_hook(Comments, TermPos, File, _Term) :-
     !,
     assert(mydoc(Comments, TermPos, File)).
 do_comment_hook(Comments, TermPos, File, _) :-
-    process_comments(Comments, TermPos, File).
-
-user:message_hook(load_file(done(0, _F, _A, _M, _T, _H)), _, _) :-
-    (   mydoc(_, _, _)
-    ->  debug(pldoc, 'Processing delayed comments', []),
-        process_stored_comments
+    (   \+ current_prolog_flag(xref, true)
+    ->  true
+    ;   current_prolog_flag(xref_store_comments, true)
     ),
-    fail.
+    process_comments(Comments, TermPos, File).
 
 %!  prolog:comment_hook(+Comments, +TermPos, +Term) is det.
 %
@@ -111,3 +108,11 @@ delayed_process(Comments, TermPos, File) :-
         '$set_source_module'(Old, Module),
         process_comments(Comments, TermPos, File),
         '$set_source_module'(_, Old)).
+
+user:message_hook(load_file(done(0, _F, _A, _M, _T, _H)), _, _) :-
+    (   mydoc(_, _, _),
+	\+ pldoc_loading
+    ->  debug(pldoc, 'Processing delayed comments', []),
+        process_stored_comments
+    ),
+    fail.

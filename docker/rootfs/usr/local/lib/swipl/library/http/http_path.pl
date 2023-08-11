@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2008-2020, University of Amsterdam
+    Copyright (c)  2008-2022, University of Amsterdam
                               VU University Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -34,10 +35,13 @@
 */
 
 :- module(http_path,
-          [ http_absolute_uri/2,        % +Spec, -URI
-            http_absolute_location/3,   % +Spec, -Path, +Options
+          [ http_absolute_location/3,   % +Spec, -Path, +Options
             http_clean_location_cache/0
           ]).
+:- if(exists_source(library(http/http_host))).
+:- autoload(library(http/http_host),[http_public_host/4]).
+:- export(http_absolute_uri/2).         % +Spec, -URI
+:- endif.
 :- autoload(library(apply),[exclude/3]).
 :- autoload(library(broadcast),[listen/2]).
 :- autoload(library(debug),[debug/3]).
@@ -50,7 +54,6 @@
 	    [ uri_authority_data/3, uri_authority_components/2,
 	      uri_data/3, uri_components/2, uri_normalized/3
 	    ]).
-:- autoload(library(http/http_host),[http_current_host/4]).
 :- use_module(library(settings),[setting/4,setting/2]).
 
 :- predicate_options(http_absolute_location/3, 3, [relative_to(atom)]).
@@ -131,30 +134,39 @@ http:location(root, Root, [priority(-100)]) :-
     ;   Root = (/)
     ).
 
-
+:- if(current_predicate(http_public_host/4)).
 %!  http_absolute_uri(+Spec, -URI) is det.
 %
 %   URI is the absolute (i.e., starting   with  =|http://|=) URI for
 %   the abstract specification Spec. Use http_absolute_location/3 to
 %   create references to locations on the same server.
-%
-%   @tbd    Distinguish =http= from =https=
 
 http_absolute_uri(Spec, URI) :-
-    http_current_host(_Request, Host, Port,
-                      [ global(true)
-                      ]),
+    http_public_host(_Request, Host, Port,
+                     [ global(true)
+                     ]),
+    (   setting(http:public_scheme, Scheme)
+    ->  true
+    ;   default_port(Scheme, Port)
+    ->  true
+    ;   Scheme = http
+    ),
     http_absolute_location(Spec, Path, []),
     uri_authority_data(host, AuthC, Host),
-    (   Port == 80                  % HTTP scheme
+    (   default_port(Scheme, Port)
     ->  true
     ;   uri_authority_data(port, AuthC, Port)
     ),
     uri_authority_components(Authority, AuthC),
     uri_data(path, Components, Path),
-    uri_data(scheme, Components, http),
+    uri_data(scheme, Components, Scheme),
     uri_data(authority, Components, Authority),
     uri_components(URI, Components).
+
+default_port(http,  80).
+default_port(https, 443).
+
+:- endif.
 
 
 %!  http_absolute_location(+Spec, -Path, +Options) is det.

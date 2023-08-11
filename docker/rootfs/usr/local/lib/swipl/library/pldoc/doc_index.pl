@@ -4,7 +4,7 @@
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
     Copyright (c)  2006-2014, University of Amsterdam
-                              VU University Amsterdam
+			      VU University Amsterdam
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -34,65 +34,69 @@
 */
 
 :- module(pldoc_index,
-          [ doc_for_dir/2,              % +Dir, +Options
-            dir_index//2,               % +Dir, +Options, //
-            object_summaries//3,        % +Objs, +Section, +Options, //
-            file_index_header//2,       % +File, +Options, //
-            doc_links//2,               % +Directory, +Options, //
-            doc_file_href/2,            % +File, -HREF
-            places_menu//1,             % +Dir, //
-            source_directory/1          % ?Directory
-          ]).
+	  [ doc_for_dir/2,              % +Dir, +Options
+	    dir_index//2,               % +Dir, +Options, //
+	    object_summaries//3,        % +Objs, +Section, +Options, //
+	    file_index_header//2,       % +File, +Options, //
+	    doc_links//2,               % +Directory, +Options, //
+	    doc_file_href/2,            % +File, -HREF
+	    places_menu//1,             % +Dir, //
+	    source_directory/1          % ?Directory
+	  ]).
 :- use_module(doc_process).
 :- use_module(doc_html).
 :- use_module(doc_wiki).
 :- use_module(doc_search).
 :- use_module(doc_util).
+
+:- if(exists_source(library(doc_http))).
 :- use_module(library(http/http_dispatch)).
+:- use_module(library(doc_http), []).
+:- endif.
+
 :- use_module(library(http/html_write)).
 :- use_module(library(http/html_head)).
 :- use_module(library(readutil)).
 :- use_module(library(url)).
 :- use_module(library(option)).
 :- use_module(library(lists)).
-:- use_module(library(doc_http)).
 :- include(hooks).
 
 /** <module> Create indexes
 */
 
 :- predicate_options(dir_index//2, 2,
-                     [ directory(atom),
-                       edit(boolean),
-                       files(list),
-                       members(list),
-                       qualify(boolean),
-                       title(atom),
-                       if(oneof([true,loaded])),
-                       recursive(boolean),
-                       secref_style(oneof([number, title, number_title])),
-                       pass_to(doc_links/4, 2)
-                     ]).
+		     [ directory(atom),
+		       edit(boolean),
+		       files(list),
+		       members(list),
+		       qualify(boolean),
+		       title(atom),
+		       if(oneof([true,loaded])),
+		       recursive(boolean),
+		       secref_style(oneof([number, title, number_title])),
+		       pass_to(doc_links/4, 2)
+		     ]).
 :- predicate_options(doc_links//2, 2,
-                     [ files(list),
-                       pass_to(pldoc_search:search_form/3, 1)
-                     ]).
+		     [ files(list),
+		       pass_to(pldoc_search:search_form/3, 1)
+		     ]).
 :- predicate_options(file_index_header//2, 2,
-                     [ directory(any),
-                       files(list),
-                       qualify(boolean),
-                       secref_style(oneof([number, title, number_title])),
-                       pass_to(pldoc_html:edit_button/4, 2),
-                       pass_to(pldoc_html:source_button/4, 2)
-                     ]).
+		     [ directory(any),
+		       files(list),
+		       qualify(boolean),
+		       secref_style(oneof([number, title, number_title])),
+		       pass_to(pldoc_html:edit_button/4, 2),
+		       pass_to(pldoc_html:source_button/4, 2)
+		     ]).
 :- predicate_options(object_summaries//3, 3,
-                     [ edit(boolean),
-                       files(list),
-                       module(atom),
-                       public(list),
-                       qualify(boolean),
-                       secref_style(oneof([number, title, number_title]))
-                     ]).
+		     [ edit(boolean),
+		       files(list),
+		       module(atom),
+		       public(list),
+		       qualify(boolean),
+		       secref_style(oneof([number, title, number_title]))
+		     ]).
 :- predicate_options(doc_for_dir/2, 2, [pass_to(dir_index/4, 2)]).
 
 %!  doc_for_dir(+Dir, +Options) is det.
@@ -104,19 +108,19 @@
 
 doc_for_dir(DirSpec, Options) :-
     absolute_file_name(DirSpec,
-                       [ file_type(directory),
-                         access(read)
-                       ],
-                       Dir),
+		       [ file_type(directory),
+			 access(read)
+		       ],
+		       Dir),
     (   option(title(Title), Options)
     ->  true
     ;   file_base_name(Dir, Title)
     ),
     doc_write_page(
-        pldoc(dir_index),
-        title(Title),
-        \dir_index(Dir, Options),
-        Options).
+	pldoc(dir_index),
+	title(Title),
+	\dir_index(Dir, Options),
+	Options).
 
 :- html_meta doc_write_page(+, html, html, +).
 
@@ -147,14 +151,14 @@ dir_index(Dir, Options) -->
       b_setval(pldoc_file, File)    % for predref
     },
     html([ \doc_resources(Options),
-           \doc_links(Dir, Options),
-           \dir_header(Dir, Options),
-           \subdir_links(Dir, Options),
-           h2(class([wiki,plfiles]), 'Prolog files'),
-           table(class(summary),
-                 \file_indices(Files, [directory(Dir)|Options])),
-           \dir_footer(Dir, Options)
-         ]).
+	   \doc_links(Dir, Options),
+	   \dir_header(Dir, Options),
+	   \subdir_links(Dir, Options),
+	   h2(class([wiki,plfiles]), 'Prolog files'),
+	   table(class(summary),
+		 \file_indices(Files, [directory(Dir)|Options])),
+	   \dir_footer(Dir, Options)
+	 ]).
 
 %!  dir_source_files(+Dir, -Files, +Options) is det
 %
@@ -177,9 +181,9 @@ subdir_links(Dir, Options) -->
       SubDirs \== []
     },
     html([ h2(class([wiki,subdirs]), 'Sub directories'),
-           table(class(subdirs),
-                 \subdir_link_rows(SubDirs, Dir))
-         ]).
+	   table(class(subdirs),
+		 \subdir_link_rows(SubDirs, Dir))
+	 ]).
 subdir_links(_, _) --> [].
 
 subdir_link_rows([], _) --> [].
@@ -232,13 +236,13 @@ dir_footer(_, _) -->
 
 wiki_file(Dir, Type, Options) -->
     { (   Opt =.. [Type,WikiFile],
-          option(Opt, Options)
+	  option(Opt, Options)
       ->  true
       ;   directory_files(Dir, Files),
-          member(File, Files),
-          wiki_file_type(Type, Pattern),
-          downcase_atom(File, Pattern),
-          directory_file_path(Dir, File, WikiFile)
+	  member(File, Files),
+	  wiki_file_type(Type, Pattern),
+	  downcase_atom(File, Pattern),
+	  directory_file_path(Dir, File, WikiFile)
       ),
       access_file(WikiFile, read),
       !,
@@ -281,8 +285,8 @@ file_index(File, Options) -->
       sort(Objs1, Objs)
     },
     html([ \file_index_header(File, Options)
-         | \object_summaries(Objs, File, ModuleOptions)
-         ]).
+	 | \object_summaries(Objs, File, ModuleOptions)
+	 ]).
 
 doc_summaries(File, Objects) :-
     xref_current_source(FileSpec),
@@ -290,11 +294,11 @@ doc_summaries(File, Objects) :-
     !,
     Pos = File:0,
     findall(doc(Obj,Pos,Summary),
-            xref_doc_summary(Obj, Pos, Summary), Objects).
+	    xref_doc_summary(Obj, Pos, Summary), Objects).
 doc_summaries(File, Objects) :-
     Pos = File:_Line,
     findall(doc(Obj,Pos,Summary),
-            doc_comment(Obj, Pos, Summary, _), Objects).
+	    doc_comment(Obj, Pos, Summary, _), Objects).
 
 xref_doc_summary(M:Name/Arity, File:_, Summary) :-
     xref_comment(File, Head, Summary, _Comment),
@@ -311,20 +315,20 @@ file_index_header(File, Options) -->
     !.
 file_index_header(File, Options) -->
     { (   option(directory(Dir), Options),
-          directory_file_path(Dir, Label, File)
+	  directory_file_path(Dir, Label, File)
       ->  true
       ;   file_base_name(File, Label)
       ),
       doc_file_href(File, HREF, Options)
     },
     html(tr(th([colspan(3), class(file)],
-               [ span(style('float:left'), a(href(HREF), Label)),
-                 \file_module_title(File),
-                 span(style('float:right'),
-                      [ \source_button(File, Options),
-                        \edit_button(File, Options)
-                      ])
-               ]))).
+	       [ span(style('float:left'), a(href(HREF), Label)),
+		 \file_module_title(File),
+		 span(style('float:right'),
+		      [ \source_button(File, Options),
+			\edit_button(File, Options)
+		      ])
+	       ]))).
 
 file_module_title(File) -->
     { (   module_property(M, file(File))
@@ -348,7 +352,7 @@ doc_file_href(File, HREF, Options) :-
     atom_concat(/, Local, Local0),
     !,
     (   option(files(Map), Options),        % generating files
-        memberchk(file(File, DocFile), Map)
+	memberchk(file(File, DocFile), Map)
     ->  file_base_name(DocFile, HREF)
     ;   HREF = Local
     ).
@@ -424,27 +428,27 @@ object_summary(q(_Q,Obj), Section, Options) -->
 object_summary(doc(Obj, _Pos, _Summary), wiki, Options) -->
     !,
     html(tr(class(wiki),
-            [ td(colspan(3), \object_ref(Obj, Options))
-            ])).
+	    [ td(colspan(3), \object_ref(Obj, Options))
+	    ])).
 object_summary(doc(Obj, _Pos, Summary), _Section, Options) -->
     !,
     (   { string_codes(Summary, Codes),
-          wiki_codes_to_dom(Codes, [], DOM0),
-          strip_leading_par(DOM0, DOM),
-          (   private(Obj, Options)
-          ->  Class = private               % private definition
-          ;   Class = public                % public definition
-          )
-        }
+	  wiki_codes_to_dom(Codes, [], DOM0),
+	  strip_leading_par(DOM0, DOM),
+	  (   private(Obj, Options)
+	  ->  Class = private               % private definition
+	  ;   Class = public                % public definition
+	  )
+	}
     ->  html(tr(class(Class),
-                [ td(\object_ref(Obj, Options)),
-                  td(class(summary), DOM),
-                  td([align(right)],
-                     span(style('white-space: nowrap'),
-                          [ \object_source_button(Obj, Options),
-                            \object_edit_button(Obj, Options)
-                          ]))
-                ]))
+		[ td(\object_ref(Obj, Options)),
+		  td(class(summary), DOM),
+		  td([align(right)],
+		     span(style('white-space: nowrap'),
+			  [ \object_source_button(Obj, Options),
+			    \object_edit_button(Obj, Options)
+			  ]))
+		]))
     ;   []
     ).
 object_summary(Obj, Section, Options) -->
@@ -456,9 +460,9 @@ object_summary(_, _, _) -->
     [].
 
 
-                 /*******************************
-                 *          NAVIGATION          *
-                 *******************************/
+		 /*******************************
+		 *          NAVIGATION          *
+		 *******************************/
 
 %!  doc_links(+Directory, +Options)// is det.
 %
@@ -474,21 +478,21 @@ doc_links(Directory, Options) -->
     html_requires(Resoures).
 doc_links(Directory, Options) -->
     {   (   Directory == ''
-        ->  working_directory(Dir, Dir)
-        ;   Dir = Directory
-        ),
-        option(html_resources(Resoures), Options, pldoc)
+	->  working_directory(Dir, Dir)
+	;   Dir = Directory
+	),
+	option(html_resources(Resoures), Options, pldoc)
     },
     html([ \html_requires(Resoures),
-           div(class(navhdr),
-               [ div(class(jump),
-                      div([ \places_menu(Dir),
-                            \plversion
-                          ])),
-                 div(class(search), \search_form(Options)),
-                 br(clear(right))
-               ])
-         ]).
+	   div(class(navhdr),
+	       [ div(class(jump),
+		      div([ \places_menu(Dir),
+			    \plversion
+			  ])),
+		 div(class(search), \search_form(Options)),
+		 br(clear(right))
+	       ])
+	 ]).
 
 
 %!  version// is det.
@@ -500,17 +504,17 @@ plversion -->
     },
     !,
     html(a([ class(prolog_version),
-             href('http://www.swi-prolog.org')
-           ],
-           [' SWI-Prolog ', Major, '.', Minor, '.', Patch])).
+	     href('http://www.swi-prolog.org')
+	   ],
+	   [' SWI-Prolog ', Major, '.', Minor, '.', Patch])).
 
 plversion -->
     { current_prolog_flag(version_data, yap(Major, Minor, Patch, _))
     },
     html(a([ class(prolog_version),
-             href('http://www.dcc.fc.up.pt/~vsc')
-           ],
-           [' YAP ', Major, '.', Minor, '.', Patch])).
+	     href('http://www.dcc.fc.up.pt/~vsc')
+	   ],
+	   [' YAP ', Major, '.', Minor, '.', Patch])).
 
 
 %!  places_menu(Current)// is det
@@ -525,11 +529,11 @@ places_menu(Dir) -->
       sort(List, Dirs)
     },
     html(form([ action(location_by_id(go_place))
-              ],
-              [ input([type(submit), value('Go')]),
-                select(name(place),
-                       \packs_source_dirs(Dirs, Dir))
-              ])).
+	      ],
+	      [ input([type(submit), value('Go')]),
+		select(name(place),
+		       \packs_source_dirs(Dirs, Dir))
+	      ])).
 
 packs_source_dirs(Dirs, Dir) -->
     packs_link,
@@ -556,10 +560,10 @@ packs_link -->
       format(atom(Call), 'document.location=\'~w\';', [HREF])
     },
     html(option([ class(packs),
-                  onClick(Call),
-                  value(':packs:')
-                ],
-                'List extension packs')).
+		  onClick(Call),
+		  value(':packs:')
+		],
+		'List extension packs')).
 packs_link -->
     [].
 
@@ -572,7 +576,7 @@ packs_link -->
 source_directory(Dir) :-
     (   ground(Dir)
     ->  '$time_source_file'(File, _Time1, _System1),
-        file_directory_name(File, Dir), !
+	file_directory_name(File, Dir), !
     ;   '$time_source_file'(File, _Time2, _System2),
-        file_directory_name(File, Dir)
+	file_directory_name(File, Dir)
     ).

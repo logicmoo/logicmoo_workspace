@@ -20,7 +20,7 @@
 (isa solveEquationForNumericalValue Predicate)
 (arity solveEquationForNumericalValue 4)
 
-;;;The ?equation-set is required for recursion here, for now I'm ignoring yet.
+;;;The ?equation-set is required for recursion here, for now I''m ignoring yet.
 (defSuggestion SolveEquationForNumericalValue
     (solveEquationForNumericalValue ?equation ?parameter ?answer ?equation-set)
   :test (containsAlgebraParameter ?parameter ?equation)

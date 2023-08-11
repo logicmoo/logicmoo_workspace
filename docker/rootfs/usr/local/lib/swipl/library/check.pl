@@ -51,7 +51,6 @@
           list_strings/1,               % +Options
           list_rationals/0,		% list rational objects in clauses
           list_rationals/1              % +Options
-          %found_undef/3
         ]).
 :- autoload(library(apply),[maplist/2]).
 :- autoload(library(lists),[member/2,append/3]).
@@ -635,7 +634,8 @@ list_format_errors(Options) :-
     ;   true
     ).
 
-format_warning(system:format(_Format, Args), Msg) :-
+format_warning(system:format(Format, Args), Msg) :-
+    nonvar(Format),
     nonvar(Args),
     \+ is_list(Args),
     Msg = format_argv(Args).

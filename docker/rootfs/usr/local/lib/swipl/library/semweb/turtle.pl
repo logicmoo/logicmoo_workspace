@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2013-2015, University of Amsterdam
+    Copyright (c)  2013-2022, University of Amsterdam
                               VU University Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -45,8 +46,10 @@
             rdf_save_ntriples/2                 % +File, +Options
           ]).
 :- use_module(library(semweb/rdf_turtle_write)). % re-exports
+:- if(exists_source(library(semweb/rdf_db))).
 :- use_module(library(semweb/rdf_db),
               [rdf_transaction/2,rdf_set_graph/2,rdf_assert/4]).
+:- endif.
 
 :- autoload(library(memfile),
 	    [atom_to_memory_file/2,open_memory_file/4]).
@@ -400,6 +403,7 @@ turtle_write_quoted_string(Out, Text) :-
                  *          RDF-DB HOOK         *
                  *******************************/
 
+:- if(current_predicate(rdf_transaction/2)).
 :- multifile
     rdf_db:rdf_load_stream/3,
     rdf_db:rdf_file_type/2.
@@ -438,6 +442,7 @@ assert_triple(rdf(S,P,O,G), _) :-
 rdf_db:rdf_file_type(ttl,  turtle).
 rdf_db:rdf_file_type(n3,   turtle).     % not really, but good enough
 rdf_db:rdf_file_type(trig, trig).
+:- endif.
 
 
                  /*******************************

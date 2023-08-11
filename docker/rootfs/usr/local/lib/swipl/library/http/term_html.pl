@@ -380,6 +380,8 @@ op2(Term, xfy, LeftPri, RightPri, Options) -->
     { functor(Term, Functor, 2),
       quote_op(Functor, S, Options),
       xfy_list(Term, Functor, List),
+      List \== [],
+      !,
       arg_options(Options, DepthOptions),
       ArgOptions  = DepthOptions.put(#{priority:LeftPri, quoted_op:S}),
       extra_classes(Term, Classes, Attrs, Options.put(op, infix))
@@ -449,7 +451,7 @@ left_space(_,_,_) -->
 
 xfy_list(Term, Name, List),
     compound(Term),
-    compound_name_arguments(Term, _, [A,B]) =>
+    compound_name_arguments(Term, Name, [A,B]) =>
     List = [A|T],
     xfy_list(B, Name, T).
 xfy_list(Term, _, List) =>

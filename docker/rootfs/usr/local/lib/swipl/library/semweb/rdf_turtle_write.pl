@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2009-2020, University of Amsterdam
+    Copyright (c)  2009-2022, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
     All rights reserved.
@@ -43,12 +43,22 @@
           ]).
 :- use_module(library(record),[(record)/1, op(_,_,record)]).
 :- use_module(library(semweb/turtle), []). % we make calls to public preds here
+
+:- use_module(library(semweb/rdf_prefixes),
+              [ rdf_current_prefix/2, rdf_global_id/2
+              ]).
+
+:- if(exists_source(library(semweb/rdf_db))).
 :- use_module(library(semweb/rdf_db),
-              [ rdf_graph/1, rdf_graph_prefixes/3, rdf_current_prefix/2,
+              [ rdf_graph/1, rdf_graph_prefixes/3,
                 rdf_is_bnode/1, rdf_equal/2, rdf_graph_property/2,
                 rdf_statistics/1, rdf/4, rdf_resource/1, rdf_subject/1,
-                rdf/3, rdf_global_id/2
+                rdf/3
               ]).
+have_rdf_db.
+:- else.
+have_rdf_db :- fail.
+:- endif.
 
 :- autoload(library(apply),[maplist/3,include/3,partition/4]).
 :- autoload(library(debug),[assertion/1]).
@@ -249,8 +259,7 @@ has the following properties:
 
 rdf_save_turtle(Spec, QOptions) :-
     meta_options(is_meta, QOptions, Options),
-    thread_self(Me),
-    thread_statistics(Me, cputime, T0),
+    statistics(cputime, T0),
     must_be(list, Options),
     make_tw_state(Options, State0, _Rest),
     init_base(State0, State1),
@@ -262,7 +271,7 @@ rdf_save_turtle(Spec, QOptions) :-
           tw_graph(State, Stream)
         ),
         Cleanup),
-    thread_statistics(Me, cputime, T1),
+    statistics(cputime, T1),
     Time is T1-T0,
     tw_state_triple_count(State, SavedTriples),
     tw_state_subject_count(State, SavedSubjects),
@@ -403,12 +412,16 @@ trig_graphs(State, Graphs) :-
     (   nonvar(Graphs)
     ->  true
     ;   tw_state_expand(State, Expand),
-        (   Expand == lookup
-        ->  findall(G, rdf_graph(G), Graphs0)
-        ;   findall(G, call(Expand,_S,_P,_O,G), Graphs0)
-        ),
+        graphs(Expand, Graphs0),
         sort(Graphs0, Graphs)
     ).
+
+:- if(have_rdf_db).
+graphs(lookup, Graphs) :-
+    findall(G, rdf_graph(G), Graphs).
+:- endif.
+graphs(Expand, Graphs) :-
+    findall(G, distinct(G, call(Expand,_S,_P,_O,G)), Graphs).
 
 
 %!  open_output(+Spec, +Encoding, -Stream, -Cleanup) is det.
@@ -1254,6 +1267,7 @@ subject(State, Subject) :-
     ).
 
 
+:- if(have_rdf_db).
 :- public lookup/4.                     % called from expand hook.
 
 lookup(S,P,O,G) :-
@@ -1261,6 +1275,11 @@ lookup(S,P,O,G) :-
     ->  rdf(S,P,O)
     ;   rdf(S,P,O,G)
     ).
+:- else.
+lookup(_S,_P,_O,_G) :-
+    print_message(error, turtle_write(no_rdf_db)),
+    fail.
+:- endif.
 
 
                  /*******************************

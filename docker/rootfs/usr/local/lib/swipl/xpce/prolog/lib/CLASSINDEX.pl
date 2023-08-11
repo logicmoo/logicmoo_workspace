@@ -9,8 +9,8 @@ class(drag_and_drop_dict_item_gesture, drag_and_drop_gesture, 'Drag and drop ite
 class(drag_and_drop_gesture, gesture, 'Drag and drop command-gesture', 'dragdrop.pl').
 class(draw_shape_class, class, 'Handle class-level stuff', 'draw_extend.pl').
 class(save_file, file, 'File as a destination (type-check only)', 'file_item.pl').
-class(find_file_dialog, dialog, 'Browse for a file', 'find_file_dialog.pl').
 class(finder, object, 'Find files on behalf of applications', 'find_file.pl').
+class(find_file_dialog, dialog, 'Browse for a file', 'find_file_dialog.pl').
 class(passwd_item, text_item, 'text-item for entering a passwd', 'getpass.pl').
 class(gradient, image, 'Create a gradient-image for filling', 'gradient.pl').
 class(help_message_window, dialog, 'Window to display <-help_message', 'help_message.pl').
@@ -21,8 +21,8 @@ class(arm, template, '(Un)arm objects in a window', 'pce_arm.pl').
 class(arrow_item, label_box, 'Extry for viewing/editing an arrow-head', 'pce_arrow_item.pl').
 class(colour_item, dialog_group, 'Item for selecting a colour', 'pce_colour_item.pl').
 class(pce_config_editor, frame, 'library(pce_config): configuration editor', 'pce_configeditor.pl').
-class(drag_and_drop_dict_item_gesture, drag_and_drop_gesture, 'Drag and drop items from a browser', 'pce_drag_and_drop_dict_item.pl').
 class(drag_and_drop_gesture, gesture, 'Drag and drop command-gesture', 'pce_drag_and_drop.pl').
+class(drag_and_drop_dict_item_gesture, drag_and_drop_gesture, 'Drag and drop items from a browser', 'pce_drag_and_drop_dict_item.pl').
 class(editable_text, text, 'Editable short graphical text', 'pce_editable_text.pl').
 class(float_item, text_item, '', 'pce_float_item.pl').
 class(font_item, label_box, 'Dialog item for defining a font', 'pce_font_item.pl').
@@ -44,8 +44,8 @@ class(toc_window, window, 'Window for table-of-contents', 'pce_toc.pl').
 class(pce_unclip_window, window, '', 'pce_unclip.pl').
 class(persistent_frame, frame, 'Frame remembering location', 'persistent_frame.pl').
 class(print_graphics, template, 'Template defining ->print', 'print_graphics.pl').
-class(prolog_predicate_item, text_item, 'Item for entering a Prolog predicate', 'prolog_predicate_item.pl').
 class(prolog_predicate, object, 'Represent a Prolog predicate', 'prolog_predicate.pl').
+class(prolog_predicate_item, text_item, 'Item for entering a Prolog predicate', 'prolog_predicate_item.pl').
 class(scaled_bitmap, bitmap, 'Bitmap that scales its image', 'scaledbitmap.pl').
 class(splash_screen, auto_sized_picture, 'Show splash window', 'splash_screen.pl').
 class(tabbed_window, dialog, 'Resizeable window holding set of tabs', 'tabbed_window.pl').

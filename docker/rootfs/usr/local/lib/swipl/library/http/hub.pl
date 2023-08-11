@@ -532,9 +532,11 @@ create_broadcast_threads(Hub, Count) :-
            create_broadcast_thread(Hub)).
 
 create_broadcast_thread(Hub) :-
+    current_prolog_flag(threads, true),
+    !,
     hub_thread(broadcast_from_queues(Hub, [timeout(0)]),
                     Hub, hub_out_all_).
-
+create_broadcast_thread(_).                   % we are shutting down
 
 %!  broadcast_from_queues(+Hub, +Options) is det.
 %

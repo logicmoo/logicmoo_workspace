@@ -33,9 +33,9 @@
 */
 
 :- module(rdfa,
-          [ read_rdfa/3,                % +Input, -RDF, +Options
-            xml_rdfa/3                  % +XMLDom, -RDF, +Options
-          ]).
+	  [ read_rdfa/3,                % +Input, -RDF, +Options
+	    xml_rdfa/3                  % +XMLDom, -RDF, +Options
+	  ]).
 :- use_module(library(semweb/rdf_db),
 	    [ rdf_register_prefix/2,
 	      rdf_meta/1,
@@ -46,14 +46,16 @@
 	      rdf_transaction/2,
 	      rdf_assert/4,
 	      rdf_set_graph/2,
-              op(_,_,_)
+	      op(_,_,_)
 	    ]).
 :- use_module(library(xpath),[xpath/3, op(_,_,_)]).
 
 :- autoload(library(apply),[maplist/3,maplist/2,exclude/3,include/3]).
 :- autoload(library(debug),[debugging/1,debug/3]).
 :- autoload(library(error),[instantiation_error/1,type_error/2]).
+:- if(exists_source(library(guitracer))).
 :- autoload(library(gui_tracer),[gtrace/0]).
+:- endif.
 :- autoload(library(lists),[append/2,reverse/2,member/2,append/3]).
 :- autoload(library(option),[merge_options/3,option/2,option/3]).
 :- autoload(library(prolog_stack),[backtrace/1]).
@@ -91,27 +93,27 @@ load_xml/3.
     term_expansion/2.
 
 :- predicate_options(xml_rdfa/3, 3,
-                     [ base(atom),
-                       anon_prefix(any),
-                       lang(atom),
-                       vocab(atom),
-                       markup(atom)
-                     ]).
+		     [ base(atom),
+		       anon_prefix(any),
+		       lang(atom),
+		       vocab(atom),
+		       markup(atom)
+		     ]).
 :- predicate_options(read_dom/3, 3,
-                     [ pass_to(load_html/3, 3),
-                       pass_to(load_xml/3, 3)
-                     ]).
+		     [ pass_to(load_html/3, 3),
+		       pass_to(load_xml/3, 3)
+		     ]).
 :- predicate_options(read_rdfa/3, 3,
-                     [ pass_to(read_dom/3, 3),
-                       pass_to(xml_rdfa/3, 3),
-                       pass_to(system:open/4, 4),
-                       pass_to(http_open:http_open/3, 3)
-                     ]).
+		     [ pass_to(read_dom/3, 3),
+		       pass_to(xml_rdfa/3, 3),
+		       pass_to(system:open/4, 4),
+		       pass_to(http_open:http_open/3, 3)
+		     ]).
 
 
-                 /*******************************
-                 *          STREAM READING      *
-                 *******************************/
+		 /*******************************
+		 *          STREAM READING      *
+		 *******************************/
 
 %!  read_rdfa(+Input, -Triples, +Options) is det.
 %
@@ -123,9 +125,9 @@ load_xml/3.
 
 read_rdfa(Input, Triples, Options) :-
     setup_call_cleanup(
-        open_input(Input, In, NewOptions, Close, Options),
-        read_dom(In, DOM, Options),
-        close_input(Close)),
+	open_input(Input, In, NewOptions, Close, Options),
+	read_dom(In, DOM, Options),
+	close_input(Close)),
     merge_options(Options, NewOptions, RDFaOptions),
     xml_rdfa(DOM, Triples, RDFaOptions).
 
@@ -136,7 +138,7 @@ open_input(Input, In, NewOptions, Close, Options) :-
 open_input2(stream(In), In, Options, true, _) :-
     !,
     (   stream_property(In, file_name(Name)),
-        to_uri(Name, URI)
+	to_uri(Name, URI)
     ->  Options = [base(URI)]
     ;   Options = []
     ).
@@ -144,7 +146,7 @@ open_input2(In, In, Options, true, _) :-
     is_stream(In),
     !,
     (   stream_property(In, file_name(Name)),
-        to_uri(Name, URI)
+	to_uri(Name, URI)
     ->  Options = [base(URI)]
     ;   Options = []
     ).
@@ -230,7 +232,7 @@ guess_dialect(Start, Dialect) :-
     (   sub_string(Start, _, _, _, "xmlns:")
     ->  Dialect = xhtml
     ;   string_codes(Start, Codes),
-        phrase(html_doctype(DialectFound), Codes, _)
+	phrase(html_doctype(DialectFound), Codes, _)
     ->  Dialect = DialectFound
     ;   Dialect = html
     ).
@@ -256,9 +258,9 @@ icase_string([]) --> [].
 icase_string([H|T]) --> alpha_to_lower(H), icase_string(T).
 
 
-                 /*******************************
-                 *        DOM PROCESSING        *
-                 *******************************/
+		 /*******************************
+		 *        DOM PROCESSING        *
+		 *******************************/
 
 %!  xml_rdfa(+DOM, -RDF, +Options)
 %
@@ -318,14 +320,15 @@ process_node(DOM, EvalContext) :-
     descent(DOM, LocalContext),                     % 7.5.13
     complete_lists(LocalContext),
     !.                % 7.5.14
+:- if(current_predicate(gtrace/0)).
 process_node(DOM, EvalContext) :-
     print_message(warning, rdfa(failed(DOM, EvalContext))),
     (   debugging(rdfa(test))
     ->  gtrace,
-        process_node(DOM, EvalContext)
+	process_node(DOM, EvalContext)
     ;   true
     ).
-
+:- endif.
 
 %!  rdfa_evaluation_context(+DOM, -Context, +Options)
 %
@@ -335,20 +338,20 @@ process_node(DOM, EvalContext) :-
 
 rdfa_evaluation_context(DOM, Context, Options) :-
     Context = rdfa_eval{base:Base,                  % atom
-                        parent_subject:Base,        % atom
-                        parent_object:null,         % null or atom
-                        incomplete_triples:[],      % list
-                        list_mapping:ListMapping,   % IRI --> list(List)
-                        lang:Lang,                  % null or atom
-                        iri_mapping:IRIMappings,    % dict
-                        term_mapping:TermMappings,  % dict
-                        vocab:Vocab,                % null or atom
-                        bnode_id:bnode(1),          % integer
-                        markup:Markup,              % Processing profile
-                        anon_prefix:AnonPrefix,
-                        named_bnodes:r{v:_{}},
-                        root:DOM,                   % XML DOM
-                        triples:triples([])},       % list
+			parent_subject:Base,        % atom
+			parent_object:null,         % null or atom
+			incomplete_triples:[],      % list
+			list_mapping:ListMapping,   % IRI --> list(List)
+			lang:Lang,                  % null or atom
+			iri_mapping:IRIMappings,    % dict
+			term_mapping:TermMappings,  % dict
+			vocab:Vocab,                % null or atom
+			bnode_id:bnode(1),          % integer
+			markup:Markup,              % Processing profile
+			anon_prefix:AnonPrefix,
+			named_bnodes:r{v:_{}},
+			root:DOM,                   % XML DOM
+			triples:triples([])},       % list
     empty_list_mapping(ListMapping),
     option(markup(Markup), Options, xhtml),
     base(DOM, Options, Base),
@@ -376,7 +379,7 @@ base(_, _, 'http://www.example.org/').
 mapping(Term, Options) :-
     Term =.. [Name, Value],
     (   TermG =.. [Name, Var],
-        option(TermG, Options)
+	option(TermG, Options)
     ->  dict_create(Value, Name, Var)
     ;   dict_create(Value, Name, [])
     ).
@@ -442,17 +445,17 @@ default_vocab(_, '').
 
 rdfa_local_context(EvalContext, LocalContext) :-
     LocalContext = rdfa_local{skip_element:false,
-                              new_subject:null,
-                              current_object_resource:null,
-                              typed_resource:null,
-                              iri_mapping:IRIMappings,
-                              incomplete_triples:[],
-                              list_mapping:ListMapping,
-                              lang:Lang,
-                              term_mapping:TermMapping,
-                              vocab:Vocab,
-                              eval_context:EvalContext
-                             },
+			      new_subject:null,
+			      current_object_resource:null,
+			      typed_resource:null,
+			      iri_mapping:IRIMappings,
+			      incomplete_triples:[],
+			      list_mapping:ListMapping,
+			      lang:Lang,
+			      term_mapping:TermMapping,
+			      vocab:Vocab,
+			      eval_context:EvalContext
+			     },
     _{ iri_mapping:IRIMappings,
        list_mapping:ListMapping,
        lang:Lang,
@@ -474,9 +477,9 @@ update_vocab(DOM, Context) :-
     ),
     nb_set_dict(vocab, Context, Vocab),
     add_triple(Context,
-               Context.eval_context.base,
-               rdfa:usesVocabulary,
-               Vocab).
+	       Context.eval_context.base,
+	       rdfa:usesVocabulary,
+	       Vocab).
 update_vocab(_, _).
 
 %!  update_prefixes(+DOM, +Context) is det.
@@ -520,15 +523,15 @@ prefix_dict(Text, Dict0, Dict) :-
 update_lang(DOM, Context) :-
     DOM=element(_,Attrs,_),
     (   (   memberchk(xml:lang=Lang, Attrs)         % XML with namespaces
-        ;   memberchk('xml:lang'=Lang, Attrs)       % XML without namespaces
-        ;   memberchk(lang=Lang, Attrs)             % HTML 5
-        )
+	;   memberchk('xml:lang'=Lang, Attrs)       % XML without namespaces
+	;   memberchk(lang=Lang, Attrs)             % HTML 5
+	)
     ->  nb_set_dict(lang, Context, Lang)
     ;   true
     ),
     (   (   memberchk(xml:base=Base, Attrs)         % XML with namespaces
-        ;   memberchk('xml:base'=Base, Attrs)       % XML without namespaces
-        )
+	;   memberchk('xml:base'=Base, Attrs)       % XML without namespaces
+	)
     ->  nb_set_dict(base, Context.eval_context, Base)
     ;   true
     ).
@@ -544,99 +547,99 @@ update_subject(DOM, Context) :-
     \+ has_attribute(rev, Attrs, Context),    % Commit to rule-set 7.5.5
     !,
     (   memberchk(property=_, Attrs),
-        \+ memberchk(content=_, Attrs),
-        \+ memberchk(datatype=_, Attrs)
+	\+ memberchk(content=_, Attrs),
+	\+ memberchk(datatype=_, Attrs)
     ->  (   (   about(DOM, About, Context)  % 7.5.5.1
-            ;   About = Context.eval_context.parent_object
-            ),
-            About \== null
-        ->  nb_set_dict(new_subject, Context, About)
-        ;   true
-        ),
-        (   memberchk(typeof=_, Attrs)
-        ->  (   (   iri_attr(about, Attrs, TypedIRI, Context),
-                    TypedIRI \== null
-                ;   DOM == Context.eval_context.root
-                ->  iri('', TypedIRI, Context)
-                ;   (   iri_attr(resource, Attrs, TypedIRI, Context)
-                    ;   iri_attr(href,     Attrs, TypedIRI, Context)
-                    ;   iri_attr(src,      Attrs, TypedIRI, Context)
-                    ;   new_bnode(TypedIRI, Context)
-                    ),
-                    TypedIRI \== null
-                ->  nb_set_dict(typed_resource, Context, TypedIRI),
-                    nb_set_dict(current_object_resource, Context, TypedIRI)
-                )
-            ->  nb_set_dict(typed_resource, Context, TypedIRI)
-            ;   true
-            )
-        ;   true
-        )
+	    ;   About = Context.eval_context.parent_object
+	    ),
+	    About \== null
+	->  nb_set_dict(new_subject, Context, About)
+	;   true
+	),
+	(   memberchk(typeof=_, Attrs)
+	->  (   (   iri_attr(about, Attrs, TypedIRI, Context),
+		    TypedIRI \== null
+		;   DOM == Context.eval_context.root
+		->  iri('', TypedIRI, Context)
+		;   (   iri_attr(resource, Attrs, TypedIRI, Context)
+		    ;   iri_attr(href,     Attrs, TypedIRI, Context)
+		    ;   iri_attr(src,      Attrs, TypedIRI, Context)
+		    ;   new_bnode(TypedIRI, Context)
+		    ),
+		    TypedIRI \== null
+		->  nb_set_dict(typed_resource, Context, TypedIRI),
+		    nb_set_dict(current_object_resource, Context, TypedIRI)
+		)
+	    ->  nb_set_dict(typed_resource, Context, TypedIRI)
+	    ;   true
+	    )
+	;   true
+	)
     ;   (   new_subject_attr_2(SubjectAttr),        % 7.5.5.2
-            memberchk(SubjectAttr=About0, Attrs),
-            attr_convert(SubjectAttr, About0, About, Context),
-            About \== null
-        ->  true
-        ;   html_root(E, Context),
-            About = Context.eval_context.parent_object,
-            About \== null
-        ->  true
-        ;   DOM == Context.eval_context.root
-        ->  iri('', About, Context)
-        ;   memberchk(typeof=_, Attrs)
-        ->  new_bnode(About, Context)
-        ;   About = Context.eval_context.parent_object,
-            About \== null
-        ->  (   \+ memberchk(typeof=_, Attrs)
-            ->  nb_set_dict(skip_element, Context, true)
-            ;   true
-            )
-        ),
-        debug(rdfa(new_subject), '~w: set new_subject to ~p', [E, About]),
-        nb_set_dict(new_subject, Context, About),
-        (   memberchk(typeof=_, Attrs)
-        ->  nb_set_dict(typed_resource, Context, About)
-        ;   true
-        )
+	    memberchk(SubjectAttr=About0, Attrs),
+	    attr_convert(SubjectAttr, About0, About, Context),
+	    About \== null
+	->  true
+	;   html_root(E, Context),
+	    About = Context.eval_context.parent_object,
+	    About \== null
+	->  true
+	;   DOM == Context.eval_context.root
+	->  iri('', About, Context)
+	;   memberchk(typeof=_, Attrs)
+	->  new_bnode(About, Context)
+	;   About = Context.eval_context.parent_object,
+	    About \== null
+	->  (   \+ memberchk(typeof=_, Attrs)
+	    ->  nb_set_dict(skip_element, Context, true)
+	    ;   true
+	    )
+	),
+	debug(rdfa(new_subject), '~w: set new_subject to ~p', [E, About]),
+	nb_set_dict(new_subject, Context, About),
+	(   memberchk(typeof=_, Attrs)
+	->  nb_set_dict(typed_resource, Context, About)
+	;   true
+	)
     ).
 update_subject(DOM, Context) :-
     DOM=element(_,Attrs,_),                 % 7.5.6
     (   iri_attr(about, Attrs, NewSubject, Context)
     ->  nb_set_dict(new_subject, Context, NewSubject),
-        (   memberchk(typeof=_, Attrs)
-        ->  nb_set_dict(typed_resource, Context, NewSubject)
-        ;   true
-        )
+	(   memberchk(typeof=_, Attrs)
+	->  nb_set_dict(typed_resource, Context, NewSubject)
+	;   true
+	)
     ;   true        % was \+ memberchk(resource=_, Attrs):
-                    % If no resource is provided ...
+		    % If no resource is provided ...
     ->  (   DOM == Context.eval_context.root
-        ->  iri('', NewSubject, Context),
-            nb_set_dict(new_subject, Context, NewSubject),
-            (   memberchk(typeof=_, Attrs)
-            ->  nb_set_dict(typed_resource, Context, NewSubject)
-            ;   true
-            )
-        ;   NewSubject = Context.eval_context.parent_object,
-            NewSubject \== null
-        ->  nb_set_dict(new_subject, Context, NewSubject)
-        ;   true
-        )
+	->  iri('', NewSubject, Context),
+	    nb_set_dict(new_subject, Context, NewSubject),
+	    (   memberchk(typeof=_, Attrs)
+	    ->  nb_set_dict(typed_resource, Context, NewSubject)
+	    ;   true
+	    )
+	;   NewSubject = Context.eval_context.parent_object,
+	    NewSubject \== null
+	->  nb_set_dict(new_subject, Context, NewSubject)
+	;   true
+	)
     ),
     (   (   iri_attr(resource, Attrs, CurrentObjectResource, Context)
-        ;   iri_attr(href,     Attrs, CurrentObjectResource, Context)
-        ;   iri_attr(src,      Attrs, CurrentObjectResource, Context)
-        ;   memberchk(typeof=_, Attrs),
-            \+ memberchk(about=_, Attrs),
-            new_bnode(CurrentObjectResource, Context)
-        ),
-        CurrentObjectResource \== null
+	;   iri_attr(href,     Attrs, CurrentObjectResource, Context)
+	;   iri_attr(src,      Attrs, CurrentObjectResource, Context)
+	;   memberchk(typeof=_, Attrs),
+	    \+ memberchk(about=_, Attrs),
+	    new_bnode(CurrentObjectResource, Context)
+	),
+	CurrentObjectResource \== null
     ->  nb_set_dict(current_object_resource, Context, CurrentObjectResource)
     ;   true
     ),
     (   memberchk(typeof=_, Attrs),
-        \+ memberchk(about=_, Attrs)
+	\+ memberchk(about=_, Attrs)
     ->  nb_set_dict(typed_resource, Context,
-                    Context.current_object_resource)
+		    Context.current_object_resource)
     ;   true
     ).
 
@@ -713,28 +716,28 @@ step_7_5_9(DOM, Context) :-
     iri_list(Rel, Preds, Context),
     CurrentObjectResource = Context.current_object_resource,
     maplist(add_property_list(Context, CurrentObjectResource),
-            Preds).
+	    Preds).
 step_7_5_9(DOM, Context) :-
     DOM = element(_,Attrs,_),
     (   has_attribute(rel, Attrs, Rel, Context),
-        \+ memberchk(inlist=_, Attrs)
+	\+ memberchk(inlist=_, Attrs)
     ->  iri_list(Rel, RelIRIs, Context),
-        maplist(rel_triple(Context), RelIRIs)
+	maplist(rel_triple(Context), RelIRIs)
     ;   true
     ),
     (   has_attribute(rev, Attrs, Rev, Context)
     ->  iri_list(Rev, RevIRIs, Context),
-        maplist(rev_triple(Context), RevIRIs)
+	maplist(rev_triple(Context), RevIRIs)
     ;   true
     ).
 
 rel_triple(Context, IRI) :-
     add_triple(Context,
-               Context.new_subject, IRI, Context.current_object_resource).
+	       Context.new_subject, IRI, Context.current_object_resource).
 
 rev_triple(Context, IRI) :-
     add_triple(Context,
-               Context.current_object_resource, IRI, Context.new_subject).
+	       Context.current_object_resource, IRI, Context.new_subject).
 
 %!  step_7_5_10(+DOM, +Context)
 %
@@ -754,16 +757,16 @@ step_7_5_10(DOM, Context) :-
 step_7_5_10(DOM, Context) :-
     DOM = element(_,Attrs,_),
     (   has_attribute(rel, Attrs, Rel, Context),
-        \+ memberchk(inlist=_, Attrs)
+	\+ memberchk(inlist=_, Attrs)
     ->  iri_list(Rel, RelIRIs, Context),
-        set_current_object_resource_to_bnode(Context),
-        maplist(incomplete_rel_triple(Context), RelIRIs)
+	set_current_object_resource_to_bnode(Context),
+	maplist(incomplete_rel_triple(Context), RelIRIs)
     ;   true
     ),
     (   has_attribute(rev, Attrs, Rev, Context)
     ->  iri_list(Rev, RevIRIs, Context),
-        set_current_object_resource_to_bnode(Context),
-        maplist(incomplete_rev_triple(Context), RevIRIs)
+	set_current_object_resource_to_bnode(Context),
+	maplist(incomplete_rev_triple(Context), RevIRIs)
     ;   true
     ).
 
@@ -776,7 +779,7 @@ incomplete_ll_triple(Context, IRI) :-
     (   get_list_mapping(IRI, LM, LL)
     ->  true
     ;   LL = list([]),
-        add_list_mapping(IRI, LM, LL)
+	add_list_mapping(IRI, LM, LL)
     ),
     add_incomplete_triple(Context, _{list:LL, direction:none}).
 
@@ -798,54 +801,54 @@ update_property_value(DOM, Context) :-
     iri_list(PropSpec, Preds, Context),
     (   memberchk(datatype=DTSpec, Attrs)
     ->  (   DTSpec \== '',
-            term_or_curie_or_absiri(DTSpec, DataType, Context),
-            DataType \== null
-        ->  (   (   rdf_equal(rdf:'XMLLiteral', DataType)
-                ;   rdf_equal(rdf:'HTML', DataType)
-                )
-            ->  content_xml(Content, Text)
-            ;   content_text(DOM, Text, Context)
-            ),
-            Obj0 = literal(type(DataType, Text))
-        ;   content_text(DOM, Text, Context),
-            Obj0 = literal(Text)
-        )
+	    term_or_curie_or_absiri(DTSpec, DataType, Context),
+	    DataType \== null
+	->  (   (   rdf_equal(rdf:'XMLLiteral', DataType)
+		;   rdf_equal(rdf:'HTML', DataType)
+		)
+	    ->  content_xml(Content, Text)
+	    ;   content_text(DOM, Text, Context)
+	    ),
+	    Obj0 = literal(type(DataType, Text))
+	;   content_text(DOM, Text, Context),
+	    Obj0 = literal(Text)
+	)
     ;   memberchk(content=Text, Attrs)
     ->  Obj0 = literal(Text)
     ;   \+ has_attribute(rel, Attrs, Context),
-        \+ has_attribute(rev, Attrs, Context),
-        %\+ memberchk(content=_, Attrs),    % already guaranteed
-        (   iri_attr(resource, Attrs, Obj0, Context)
-        ;   iri_attr(href,     Attrs, Obj0, Context)
-        ;   iri_attr(src,      Attrs, Obj0, Context)
-        ),
-        Obj0 \== null
+	\+ has_attribute(rev, Attrs, Context),
+	%\+ memberchk(content=_, Attrs),    % already guaranteed
+	(   iri_attr(resource, Attrs, Obj0, Context)
+	;   iri_attr(href,     Attrs, Obj0, Context)
+	;   iri_attr(src,      Attrs, Obj0, Context)
+	),
+	Obj0 \== null
     ->  true
     ;   (   memberchk(datetime=DateTime, Attrs)
-        ;   Element == time,
-            Content = [DateTime]
-        ),
-        html_markup(Context.eval_context.markup)
+	;   Element == time,
+	    Content = [DateTime]
+	),
+	html_markup(Context.eval_context.markup)
     ->  (   date_time_type(DateTime, DataType)
-        ->  Obj0 = literal(type(DataType, DateTime))
-        ;   Obj0 = literal(DateTime)
-        )
+	->  Obj0 = literal(type(DataType, DateTime))
+	;   Obj0 = literal(DateTime)
+	)
     ;   memberchk(typeof=_, Attrs),
-        \+ memberchk(about=_, Attrs)
+	\+ memberchk(about=_, Attrs)
     ->  Obj0 = Context.typed_resource
     ;   content_text(Content, Text, Context), % "as a plain literal"???
-        Obj0 = literal(Text)
+	Obj0 = literal(Text)
     ),
     (   Obj0 = literal(Text),
-        atomic(Text),
-        Context.lang \== ''
+	atomic(Text),
+	Context.lang \== ''
     ->  Obj = literal(lang(Context.lang, Text))
     ;   Obj = Obj0
     ),
     (   memberchk(inlist=_, Attrs)
     ->  maplist(add_property_list(Context, Obj), Preds)
     ;   NewSubject = Context.new_subject,
-        maplist(add_property(Context, NewSubject, Obj), Preds)
+	maplist(add_property(Context, NewSubject, Obj), Preds)
     ).
 update_property_value(_, _).
 
@@ -853,7 +856,7 @@ add_property_list(Context, Obj, Pred) :-
     LM = Context.list_mapping,
     (   get_list_mapping(Pred, LM, LL)
     ->  LL = list(Old),
-        setarg(1, LL, [Obj|Old])
+	setarg(1, LL, [Obj|Old])
     ;   add_list_mapping(Pred, LM, list([Obj]))
     ).
 
@@ -906,14 +909,14 @@ complete_triple(none, Dict, Context) :-
     setarg(1, List, [Context.new_subject|Old]).
 complete_triple(forward, Dict, Context) :-
     add_triple(Context,
-               Context.eval_context.parent_subject,
-               Dict.predicate,
-               Context.new_subject).
+	       Context.eval_context.parent_subject,
+	       Dict.predicate,
+	       Context.new_subject).
 complete_triple(reverse, Dict, Context) :-
     add_triple(Context,
-               Context.new_subject,
-               Dict.predicate,
-               Context.eval_context.parent_subject).
+	       Context.new_subject,
+	       Dict.predicate,
+	       Context.eval_context.parent_subject).
 
 
 %!  descent(DOM, Context)
@@ -930,38 +933,38 @@ descent_skip(Context, DOM) :-
     DOM = element(E,_,_),
     !,
     debug(rdfa(descent), 'skip: ~w: new_subject=~p',
-          [E, Context.new_subject]),
+	  [E, Context.new_subject]),
     process_node(DOM, Context.eval_context.put(
-                          _{ lang:Context.lang,
-                             vocab:Context.vocab,
-                             iri_mapping:Context.iri_mapping
-                           })).
+			  _{ lang:Context.lang,
+			     vocab:Context.vocab,
+			     iri_mapping:Context.iri_mapping
+			   })).
 descent_skip(_, _).
 
 descent_no_skip(Context, DOM) :-
     DOM = element(E,_,_),
     !,
     (   ParentSubject = Context.new_subject,
-        ParentSubject \== null
+	ParentSubject \== null
     ->  true
     ;   ParentSubject = Context.eval_context.parent_subject
     ),
     (   ParentObject = Context.current_object_resource,
-        ParentObject \== null
+	ParentObject \== null
     ->  true
     ;   ParentObject = ParentSubject
     ),
     debug(rdfa(descent), 'no skip: ~w: parent subject = ~p, object = ~p',
-          [E, ParentSubject, ParentObject]),
+	  [E, ParentSubject, ParentObject]),
     process_node(DOM, Context.eval_context.put(
-                          _{ parent_subject:ParentSubject,
-                             parent_object:ParentObject,
-                             iri_mapping:Context.iri_mapping,
-                             incomplete_triples:Context.incomplete_triples,
-                             list_mapping:Context.list_mapping,
-                             lang:Context.lang,
-                             vocab:Context.vocab
-                            })).
+			  _{ parent_subject:ParentSubject,
+			     parent_object:ParentObject,
+			     iri_mapping:Context.iri_mapping,
+			     incomplete_triples:Context.incomplete_triples,
+			     list_mapping:Context.list_mapping,
+			     lang:Context.lang,
+			     vocab:Context.vocab
+			    })).
 descent_no_skip(_, _).
 
 %!  complete_lists(+Context) is det.
@@ -973,7 +976,7 @@ complete_lists(Context) :-
     !.
 complete_lists(Context) :-
     (   CurrentSubject = Context.new_subject,
-        CurrentSubject \== null
+	CurrentSubject \== null
     ->  true
     ;   CurrentSubject = Context.eval_context.base
     ),
@@ -1086,7 +1089,7 @@ iri_list(Spec, IRIs, Context) :-
     (   SpecList == [""]
     ->  IRIs = []
     ;   maplist(ctx_to_iri(Context), SpecList, IRIs0),
-        exclude(==(null), IRIs0, IRIs)
+	exclude(==(null), IRIs0, IRIs)
     ).
 
 ctx_to_iri(Context, Spec, IRI) :-
@@ -1126,9 +1129,9 @@ safe_curie_or_curie_or_absiri(Spec, IRI, Context) :-
     atom_codes(Spec, Codes),
     (   safe_curie(Codes, Curie)
     ->  (   phrase(curie(IRI, Context), Curie)
-        ->  true
-        ;   IRI = null
-        )
+	->  true
+	;   IRI = null
+	)
     ;   phrase(curie(IRI, Context), Codes)
     ).
 
@@ -1140,8 +1143,8 @@ curie(IRI, Context) -->
     {   IRI = Context.eval_context.named_bnodes.v.get(Reference)
     ->  true
     ;   new_bnode(IRI, Context),
-        b_set_dict(v, Context.eval_context.named_bnodes,
-                   Context.eval_context.named_bnodes.v.put(Reference, IRI))
+	b_set_dict(v, Context.eval_context.named_bnodes,
+		   Context.eval_context.named_bnodes.v.put(Reference, IRI))
     }.
 curie(IRI, Context) -->
     ":", !, reference_or_empty(Reference),
@@ -1165,20 +1168,20 @@ term_or_curie_or_absiri(Spec, IRI, _Context) :-
 term_or_curie_or_absiri(Spec, IRI, Context) :-
     atom_codes(Spec, Codes),
     (   phrase(term(Term), Codes),
-        downcase_atom(Term, LwrCase)
+	downcase_atom(Term, LwrCase)
     ->  (   Vocab = Context.vocab,
-            Vocab \== ''
-        ->  atom_concat(Vocab, Term, IRI)
-        ;   term_iri(LwrCase, Context.eval_context.markup, IRI0)
-        ->  IRI = IRI0
-        ;   IRI = Context.term_mapping.get(Term)
-        ->  true
-        ;   dict_pairs(Context.term_mapping, _Tag, Pairs),
-            member(TermCaps-IRI, Pairs),
-            downcase_atom(TermCaps, LwrCase)
-        ->  true
-        ;   IRI = null
-        )
+	    Vocab \== ''
+	->  atom_concat(Vocab, Term, IRI)
+	;   term_iri(LwrCase, Context.eval_context.markup, IRI0)
+	->  IRI = IRI0
+	;   IRI = Context.term_mapping.get(Term)
+	->  true
+	;   dict_pairs(Context.term_mapping, _Tag, Pairs),
+	    member(TermCaps-IRI, Pairs),
+	    downcase_atom(TermCaps, LwrCase)
+	->  true
+	;   IRI = null
+	)
     ;   phrase(curie(IRI, Context), Codes)
     ->  true
     ;   uri_normalized(Spec, Context.eval_context.base, IRI)
@@ -1221,9 +1224,9 @@ term_iri(describedby, _, 'http://www.w3.org/2007/05/powder-s#describedby').
 term_iri(license,     _, 'http://www.w3.org/1999/xhtml/vocab#license').
 term_iri(role,        _, 'http://www.w3.org/1999/xhtml/vocab#role').
 
-                 /*******************************
-                 *           GRAMMARS           *
-                 *******************************/
+		 /*******************************
+		 *           GRAMMARS           *
+		 *******************************/
 
 prefixes(Dict0, Dict) -->
     ws, nc_name(Name), ws, ":", ws, reference(IRI), !, ws,
@@ -1363,9 +1366,9 @@ opt_ds --> ( int, ("." -> int ; ""), "S" | "" ).
 
 int --> d, ds.
 
-                 /*******************************
-                 *           TRIPLES            *
-                 *******************************/
+		 /*******************************
+		 *           TRIPLES            *
+		 *******************************/
 
 %!  add_triple(+Context, +S, +P, +O) is det.
 %
@@ -1377,7 +1380,7 @@ int --> d, ds.
 add_triple(Context, S, P, O) :-
     (   debugging(rdfa(triple))
     ->  debug(rdfa(triple), 'Added { ~p ~p ~p }', [S,P,O]),
-        backtrace(4)
+	backtrace(4)
     ;   true
     ),
     valid_subject(S),
@@ -1404,14 +1407,14 @@ valid_literal(literal(lang(_,_))).
 add_incomplete_triple(Context, Dict) :-
     debug(rdfa(incomplete), 'Incomplete: ~p', [Dict]),
     b_set_dict(incomplete_triples, Context,
-               [ Dict
-               | Context.incomplete_triples
-               ]).
+	       [ Dict
+	       | Context.incomplete_triples
+	       ]).
 
 
-                 /*******************************
-                 *            PATTERNS          *
-                 *******************************/
+		 /*******************************
+		 *            PATTERNS          *
+		 *******************************/
 
 %!  apply_patterns(+TriplesIn, -TriplesOut) is det.
 %
@@ -1428,10 +1431,10 @@ apply_patterns(TriplesIn, TriplesOut) :-
     (   Pairs == []
     ->  TriplesOut = TriplesIn
     ;   sort(Pairs, UniquePairs),
-        dict_pairs(Dict, _, UniquePairs),
-        pattern_properties(TriplesIn, Dict),
-        delete_invalid_patterns(Dict, Patterns),
-        phrase(apply_patterns(TriplesIn, Patterns), TriplesOut)
+	dict_pairs(Dict, _, UniquePairs),
+	pattern_properties(TriplesIn, Dict),
+	delete_invalid_patterns(Dict, Patterns),
+	phrase(apply_patterns(TriplesIn, Patterns), TriplesOut)
     ).
 
 term_expansion(TIn, TOut) :-
@@ -1479,9 +1482,9 @@ copy_pattern([P-O|T], S) -->
     copy_pattern(T, S).
 
 
-                 /*******************************
-                 *       HOOK INTO RDF-DB       *
-                 *******************************/
+		 /*******************************
+		 *       HOOK INTO RDF-DB       *
+		 *******************************/
 
 :- multifile
     rdf_db:rdf_load_stream/3,
@@ -1499,10 +1502,9 @@ rdf_db:rdf_load_stream(rdfa, Stream, _Module:Options1):-
     merge_options([anon_prefix(BNodePrefix)], Options1, Options2),
     read_rdfa(Stream, Triples, Options2),
     rdf_transaction(( forall(member(rdf(S,P,O), Triples),
-                             rdf_assert(S, P, O, Graph)),
-                      rdf_set_graph(Graph, modified(false))
-                    ),
-                    parse(Graph)).
+			     rdf_assert(S, P, O, Graph)),
+		      rdf_set_graph(Graph, modified(false))
+		    ),
+		    parse(Graph)).
 
 rdf_db:rdf_file_type(html, rdfa).
-

@@ -317,7 +317,7 @@ pcerefer(From, Obj) :-
         send(From, for_slot_reference,
              if(Obj == @arg4,
                 message(@prolog, call,
-                        pcerefer, Obj, @arg1, @arg2, @arg3, @nil))),
+                        pcerefer, Obj, @arg1, @arg2, @arg3, @nil, Found))),
         free(Found)
     ;   true
     ).

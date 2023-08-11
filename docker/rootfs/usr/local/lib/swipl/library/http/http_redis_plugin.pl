@@ -109,9 +109,15 @@ http_session:hooked :-
 %http_session:hook(close_session(?SessionID)).
 %http_session:hook(gc_sessions).
 
+:- dynamic
+    peer/2,                             % SessionID, Peer
+    last_used/2.                        % SessionID, Time
+
+
 http_session:hook(assert_session(SessionID, Peer)) :-
     session_db(SessionID, DB, Key),
     http_session:session_setting(timeout(Timeout)),
+    asserta(peer(SessionID, Peer)),
     peer_string(Peer, PeerS),
     get_time(Now),
     redis(DB, hset(Key,
@@ -131,16 +137,26 @@ http_session:hook(get_session_option(SessionID, Setting)) :-
     Setting =.. [Name,Value],
     redis(DB, hget(Key, Name), Value).
 http_session:hook(active_session(SessionID, Peer, LastUsed)) :-
-    session_db(SessionID, DB, Key),
-    redis(DB, hget(Key, peer), PeerS),
-    peer_string(Peer, PeerS),
-    redis(DB, hget(Key, last_used), LastUsed as number).
+    (   last_used(SessionID, LastUsed0),
+        peer(SessionID, Peer0)
+    ->  LastUsed = LastUsed0,
+        Peer = Peer0
+    ;   session_db(SessionID, DB, Key),
+        redis(DB, hget(Key, peer), PeerS),
+        peer_string(Peer, PeerS),
+        redis(DB, hget(Key, last_used), LastUsed as number),
+        update_session(SessionID, LastUsed, _, Peer)
+    ).
 http_session:hook(set_last_used(SessionID, Now, Timeout)) :-
-    session_db(SessionID, DB, Key),
-    redis(DB, hset(Key,
-                   last_used, Now)),
-    Expire is Now+Timeout,
-    expire(SessionID, Expire).
+    LastUsed is floor(Now/10)*10,
+    update_session(SessionID, LastUsed, Updated, _Peer),
+    (   Updated == true
+    ->  session_db(SessionID, DB, Key),
+        redis(DB, hset(Key, last_used, Now)),
+        Expire is Now+Timeout,
+        expire(SessionID, Expire)
+    ;   true
+    ).
 http_session:hook(asserta(session_data(SessionID, Data))) :-
     must_be(ground, Data),
     session_data_db(SessionID, DB, Key),
@@ -166,11 +182,6 @@ http_session:hook(current_session(SessionID, Data)) :-
     redis(DB, hget(Key, last_used), Time as number),
     get_time(Now),
     Idle is Now - Time,
-    (   http_session:session_setting(SessionID, timeout(TMO)),
-        TMO > 0
-    ->  Idle =< TMO
-    ;   true
-    ),
     (   Data = peer(Peer),
         redis(DB, hget(Key, peer), PeerS),
         peer_string(Peer, PeerS)
@@ -191,6 +202,37 @@ non_reserved_property(idle(_)) :- !, fail.
 non_reserved_property(_).
 
 
+%!  update_session(+SessionID, ?LastUsed, -Updated, ?Peer) is det.
+%
+%   Update cached last_used and peer notions.
+
+update_session(SessionID, LastUsed, Updated, Peer) :-
+    transaction(update_session_(SessionID, LastUsed, Updated, Peer)).
+
+update_session_(SessionID, LastUsed, Updated, Peer) :-
+    update_last_used(SessionID, Updated, LastUsed),
+    update_peer(SessionID, Peer).
+
+update_last_used(SessionID, Updated, LastUsed), nonvar(LastUsed) =>
+    (   last_used(SessionID, LastUsed)
+    ->  true
+    ;   retractall(last_used(SessionID, _)),
+        asserta(last_used(SessionID, LastUsed)),
+        Updated = true
+    ).
+update_last_used(_, _, _) =>
+    true.
+
+update_peer(SessionID, Peer), nonvar(Peer) =>
+    (   peer(SessionID, Peer)
+    ->  true
+    ;   retractall(peer(SessionID, _)),
+        asserta(peer(SessionID, Peer))
+    ).
+update_peer(_, _) =>
+    true.
+
+
 		 /*******************************
 		 *      SCHEDULE TIMEOUT	*
 		 *******************************/
@@ -208,6 +250,11 @@ gc_sessions :-
     forall(member(SessionID, TimedOut),
            gc_session(SessionID)).
 
+gc_session(_) :-
+    prolog_current_frame(Frame),
+    prolog_frame_attribute(Frame, parent, PFrame),
+    prolog_frame_attribute(PFrame, parent_goal, gc_session(_)),
+    !.
 gc_session(SessionID) :-
     debug(http_session(gc), 'GC session ~p', [SessionID]),
     session_db(SessionID, DB, SessionKey),
@@ -218,11 +265,12 @@ gc_session(SessionID) :-
     broadcast(http_session(end(SessionID, Peer))),
     redis(DB, del(SessionKey)),
     session_data_db(SessionID, DB, DataKey),
-    redis(DB, del(DataKey)).
+    redis(DB, del(DataKey)),
+    retractall(peer(SessionID, _)),
+    retractall(last_used(SessionID, _)).
 
 
 		 /*******************************
-		  *
 		 *             UTIL		*
 		 *******************************/
 

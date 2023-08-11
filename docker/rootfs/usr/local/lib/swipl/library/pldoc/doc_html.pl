@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2006-2020, University of Amsterdam
-                              VU University Amsterdam
-                              CWI, Amsterdam
+    Copyright (c)  2006-2022, University of Amsterdam
+			      VU University Amsterdam
+			      CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -35,67 +36,81 @@
 */
 
 :- module(pldoc_html,
-          [ doc_for_file/2,             % +FileSpec, +Options
-            doc_write_html/3,           % +Stream, +Title, +Term
-            doc_for_wiki_file/2,        % +FileSpec, +Options
-                                        % Support doc_index
-            doc_page_dom/3,             % +Title, +Body, -DOM
-            print_html_head/1,          % +Stream
-            predref//1,                 % +PI //
-            predref//2,                 % +PI, Options //
-            nopredref//1,               % +PI //
-            module_info/3,              % +File, +Options0, -Options
-            doc_hide_private/3,         % +Doc0, -Doc, +Options
-            edit_button//2,             % +File, +Options, //
-            source_button//2,           % +File, +Options, //
-            zoom_button//2,             % +File, +Options, //
+	  [ doc_for_file/2,             % +FileSpec, +Options
+	    doc_write_html/3,           % +Stream, +Title, +Term
+	    doc_for_wiki_file/2,        % +FileSpec, +Options
+					% Support doc_index
+	    doc_page_dom/3,             % +Title, +Body, -DOM
+	    print_html_head/1,          % +Stream
+	    predref//1,                 % +PI //
+	    predref//2,                 % +PI, Options //
+	    nopredref//1,               % +PI //
+	    module_info/3,              % +File, +Options0, -Options
+	    doc_hide_private/3,         % +Doc0, -Doc, +Options
+	    edit_button//2,             % +File, +Options, //
+	    source_button//2,           % +File, +Options, //
+	    zoom_button//2,             % +File, +Options, //
             pred_edit_button//2,        % +PredInd, +Options, //
-            object_edit_button//2,      % +Obj, +Options, //
-            object_source_button//2,    % +Obj, +Options, //
-            doc_resources//1,           % +Options
-            ensure_doc_objects/1,       % +File
-                                        % Support other backends
-            doc_file_objects/5,         % +FSpec, -File, -Objs, -FileOpts, +Opts
-            existing_linked_file/2,     % +FileSpec, -Path
-            unquote_filespec/2,         % +FileSpec, -Unquoted
-            doc_tag_title/2,            % +Tag, -Title
-            mode_anchor_name/2,         % +Mode, -Anchor
-            pred_anchor_name/3,         % +Head, -PI, -Anchor
-            private/2,                  % +Obj, +Options
-            (multifile)/2,              % +Obj, +Options
-            is_pi/1,                    % @Term
-            is_op_type/2,               % +Atom, ?Type
-                                        % Output routines
-            file//1,                    % +File, //
-            file//2,                    % +File, +Options, //
-            include//3,                 % +File, +Type, +Options //
-            tags//1,                    % +Tags, //
-            term//3,                    % +Text, +Term, +Bindings, //
-            file_header//2,             % +File, +Options, //
-            flagref//1,                 % +Flag
-            objects//2,                 % +Objects, +Options, //
-            object_ref//2,              % +Object, +Options, //
-            object_name//2,             % +Object, +Object
-            object_href/2,              % +Object, -URL
-            object_tree//3,             % +Tree, +Current, +Options
-            object_page//2,             % +Object, +Options, //
-            object_page_header//2,      % +File, +Options, //
-            object_synopsis//2,         % +Object, +Options, //
-            object_footer//2,           % +Object, +Options, //
-            object_page_footer//2,      % +Object, +Options, //
-            cite//1                     % +Citations
-          ]).
+	    object_edit_button//2,      % +Obj, +Options, //
+	    object_source_button//2,    % +Obj, +Options, //
+	    doc_resources//1,           % +Options
+	    ensure_doc_objects/1,       % +File
+					% Support other backends
+	    doc_file_objects/5,         % +FSpec, -File, -Objs, -FileOpts, +Opts
+	    existing_linked_file/2,     % +FileSpec, -Path
+	    unquote_filespec/2,         % +FileSpec, -Unquoted
+	    doc_tag_title/2,            % +Tag, -Title
+	    mode_anchor_name/2,         % +Mode, -Anchor
+	    pred_anchor_name/3,         % +Head, -PI, -Anchor
+	    private/2,                  % +Obj, +Options
+	    (multifile)/2,              % +Obj, +Options
+	    is_pi/1,                    % @Term
+	    is_op_type/2,               % +Atom, ?Type
+					% Output routines
+	    file//1,                    % +File, //
+	    file//2,                    % +File, +Options, //
+	    include//3,                 % +File, +Type, +Options //
+	    tags//1,                    % +Tags, //
+	    term//3,                    % +Text, +Term, +Bindings, //
+	    file_header//2,             % +File, +Options, //
+	    flagref//1,                 % +Flag
+	    objects//2,                 % +Objects, +Options, //
+	    object_ref//2,              % +Object, +Options, //
+	    object_name//2,             % +Object, +Object
+	    object_href/2,              % +Object, -URL
+	    object_tree//3,             % +Tree, +Current, +Options
+	    object_page//2,             % +Object, +Options, //
+	    object_page_header//2,      % +File, +Options, //
+	    object_synopsis//2,         % +Object, +Options, //
+	    object_footer//2,           % +Object, +Options, //
+	    object_page_footer//2,      % +Object, +Options, //
+	    cite//1                     % +Citations
+	  ]).
+% Get HTTP server infrastructure when available
+:- if(exists_source(library(http/http_dispatch))).
+:- use_module(library(http/http_dispatch)).
+:- use_module(library(http/http_wrapper)).
+:- use_module(library(http/jquery)).
+
+pldoc_server(true).
+:- else.
+
+:- multifile
+    http:location/3.
+
+http:location(pldoc_resource, '/pldoc/res', []).
+
+pldoc_server(false).
+:- endif.
+
 :- use_module(library(lists)).
 :- use_module(library(option)).
 :- use_module(library(uri)).
 :- use_module(library(readutil)).
 :- use_module(library(http/html_write)).
-:- use_module(library(http/http_dispatch)).
-:- use_module(library(http/http_wrapper)).
 :- use_module(library(http/http_path)).
 :- use_module(library(http/html_head)).
 :- use_module(library(http/term_html)).
-:- use_module(library(http/jquery)).
 :- use_module(library(debug)).
 :- use_module(library(apply)).
 :- use_module(library(pairs)).
@@ -122,7 +137,7 @@ This  module  translates  the  Herbrand   term  from  the  documentation
 extracting module doc_wiki.pl into HTML+CSS.
 
 @tbd    Split put generation from computation as computation is reusable
-        in other backends.
+	in other backends.
 */
 
 :- public
@@ -133,106 +148,113 @@ extracting module doc_wiki.pl into HTML+CSS.
 
 
 :- predicate_options(doc_for_wiki_file/2, 2,
-                     [ edit(boolean)
-                     ]).
+		     [ edit(boolean)
+		     ]).
 :- predicate_options(doc_hide_private/3, 3,
-                     [module(atom), public(list), public_only(boolean)]).
+		     [module(atom), public(list), public_only(boolean)]).
 :- predicate_options(edit_button//2, 2,
-                     [ edit(boolean)
-                     ]).
+		     [ edit(boolean)
+		     ]).
 :- predicate_options(file//2, 2,
-                     [ label(any),
-                       absolute_path(atom),
-                       href(atom),
-                       map_extension(list),
-                       files(list),
-                       edit_handler(atom)
-                     ]).
+		     [ label(any),
+		       absolute_path(atom),
+		       href(atom),
+		       map_extension(list),
+		       files(list),
+		       edit_handler(atom)
+		     ]).
 :- predicate_options(file_header//2, 2,
-                     [ edit(boolean),
-                       files(list),
-                       public_only(boolean)
-                     ]).
+		     [ edit(boolean),
+		       files(list),
+		       public_only(boolean)
+		     ]).
 :- predicate_options(include//3, 3,
-                     [ absolute_path(atom),
-                       class(atom),
-                       files(list),
-                       href(atom),
-                       label(any),
-                       map_extension(list)
-                     ]).
+		     [ absolute_path(atom),
+		       class(atom),
+		       files(list),
+		       href(atom),
+		       label(any),
+		       map_extension(list)
+		     ]).
 :- predicate_options(object_edit_button//2, 2,
-                     [ edit(boolean),
-                       pass_to(pred_edit_button//2, 2)
-                     ]).
+		     [ edit(boolean),
+		       pass_to(pred_edit_button//2, 2)
+		     ]).
 :- predicate_options(object_page//2, 2,
-                     [ for(any),
-                       header(boolean),
-                       links(boolean),
-                       no_manual(boolean),
-                       try_manual(boolean),
-                       search_in(oneof([all,app,man])),
-                       search_match(oneof([name,summary])),
-                       search_options(boolean)
-                     ]).
+		     [ for(any),
+		       header(boolean),
+		       links(boolean),
+		       no_manual(boolean),
+		       try_manual(boolean),
+		       search_in(oneof([all,app,man])),
+		       search_match(oneof([name,summary])),
+		       search_options(boolean)
+		     ]).
 :- predicate_options(object_ref//2, 2,
-                     [ files(list),
-                       qualify(boolean),
-                       style(oneof([number,title,number_title])),
-                       secref_style(oneof([number,title,number_title]))
-                     ]).
+		     [ files(list),
+		       qualify(boolean),
+		       style(oneof([number,title,number_title])),
+		       secref_style(oneof([number,title,number_title]))
+		     ]).
 :- predicate_options(object_synopsis//2, 2,
-                     [ href(atom)
-                     ]).
+		     [ href(atom)
+		     ]).
 :- predicate_options(pred_dt//3, 3,
-                     [ edit(boolean)
-                     ]).
+		     [ edit(boolean)
+		     ]).
 :- predicate_options(pred_edit_button//2, 2,
-                     [ edit(boolean)
-                     ]).
+		     [ edit(boolean)
+		     ]).
 :- predicate_options(predref//2, 2,
-                     [ files(list),
-                       prefer(oneof([manual,app])),
-                       pass_to(object_ref/4, 2)
-                     ]).
+		     [ files(list),
+		       prefer(oneof([manual,app])),
+		       pass_to(object_ref/4, 2)
+		     ]).
 :- predicate_options(private/2, 2,
-                     [ module(atom),
-                       public(list)
-                     ]).
+		     [ module(atom),
+		       public(list)
+		     ]).
 :- predicate_options(source_button//2, 2,
-                     [ files(list)
-                     ]).
+		     [ files(list)
+		     ]).
 
 
-                 /*******************************
-                 *           RESOURCES          *
-                 *******************************/
+		 /*******************************
+		 *           RESOURCES          *
+		 *******************************/
 
+:- if(pldoc_server(true)).
 :- html_resource(pldoc_css,
-                 [ virtual(true),
-                   requires([ pldoc_resource('pldoc.css')
-                            ])
-                 ]).
+		 [ virtual(true),
+		   requires([ pldoc_resource('pldoc.css')
+			    ])
+		 ]).
 :- html_resource(pldoc_resource('pldoc.js'),
-                 [ requires([ jquery
-                            ])
-                 ]).
+		 [ requires([ jquery
+			    ])
+		 ]).
 :- html_resource(pldoc_js,
-                 [ virtual(true),
-                   requires([ pldoc_resource('pldoc.js')
-                            ])
-                 ]).
+		 [ virtual(true),
+		   requires([ pldoc_resource('pldoc.js')
+			    ])
+		 ]).
 :- html_resource(pldoc,
-                 [ virtual(true),
-                   requires([ pldoc_css,
-                              pldoc_js
-                            ])
-                 ]).
+		 [ virtual(true),
+		   requires([ pldoc_css,
+			      pldoc_js
+			    ])
+		 ]).
+:- else.
+:- html_resource(pldoc_css, [virtual(true)]).
+:- html_resource(pldoc_resource('pldoc.js'), [virtual(true)]).
+:- html_resource(pldoc_js, [virtual(true)]).
+:- html_resource(pldoc, [virtual(true)]).
+:- endif.
 
 
-                 /*******************************
-                 *       FILE PROCESSING        *
-                 *******************************/
+		 /*******************************
+		 *       FILE PROCESSING        *
+		 *******************************/
 
 %!  doc_for_file(+File, +Options) is det
 %
@@ -257,10 +279,10 @@ doc_for_file(FileSpec, Options) :-
     doc_file_objects(FileSpec, File, Objects, FileOptions, Options),
     doc_file_title(File, Title, FileOptions, Options),
     doc_write_page(
-        pldoc(file(File, Title)),
-        title(Title),
-        \prolog_file(File, Objects, FileOptions, Options),
-        Options).
+	pldoc(file(File, Title)),
+	title(Title),
+	\prolog_file(File, Objects, FileOptions, Options),
+	Options).
 
 doc_file_title(_, Title, _, Options) :-
     option(title(Title), Options),
@@ -289,10 +311,10 @@ prolog_file(File, Objects, FileOptions, Options) -->
       file_directory_name(File, Dir)
     },
     html([ \doc_resources(Options),
-           \doc_links(Dir, FileOptions),
-           \file_header(File, FileOptions)
-         | \objects(Objects, FileOptions)
-         ]),
+	   \doc_links(Dir, FileOptions),
+	   \file_header(File, FileOptions)
+	 | \objects(Objects, FileOptions)
+	 ]),
     undocumented(File, Objects, FileOptions).
 
 %!  doc_resources(+Options)// is det.
@@ -349,24 +371,24 @@ doc_file_objects(FileSpec, File, Objects, FileOptions, Options) :-
     reply_file_objects(File, Objects0, Objects, FileOptions, Options).
 doc_file_objects(FileSpec, File, Objects, FileOptions, Options) :-
     absolute_file_name(FileSpec, File,
-                       [ file_type(prolog),
-                         access(read)
-                       ]),
+		       [ file_type(prolog),
+			 access(read)
+		       ]),
     source_file(File),
     !,
     ensure_doc_objects(File),
     Pos = File:Line,
     findall(Line-doc(Obj,Pos,Comment),
-            doc_comment(Obj, Pos, _, Comment), Pairs),
+	    doc_comment(Obj, Pos, _, Comment), Pairs),
     sort(Pairs, Pairs1),            % remove duplicates
     keysort(Pairs1, ByLine),
     pairs_values(ByLine, Objs0),
     reply_file_objects(File, Objs0, Objects, FileOptions, Options).
 doc_file_objects(FileSpec, File, Objects, FileOptions, Options) :-
     absolute_file_name(FileSpec, File,
-                       [ file_type(prolog),
-                         access(read)
-                       ]),
+		       [ file_type(prolog),
+			 access(read)
+		       ]),
     xref_source(File, [silent(true)]),
     findall(Object, xref_doc_object(File, Object), Objects0),
     reply_file_objects(File, Objects0, Objects, FileOptions, Options).
@@ -429,15 +451,15 @@ ensure_doc_objects(File) :-
     (   doc_file_has_comments(File)
     ->  true
     ;   no_comments(File, TimeChecked),
-        time_file(File, TimeChecked)
+	time_file(File, TimeChecked)
     ->  true
     ;   xref_source(File, [silent(true), comments(store)]),
-        retractall(no_comments(File, _)),
-        (   doc_file_has_comments(File)
-        ->  true
-        ;   time_file(File, TimeChecked),
-            assertz(no_comments(File, TimeChecked))
-        )
+	retractall(no_comments(File, _)),
+	(   doc_file_has_comments(File)
+	->  true
+	;   time_file(File, TimeChecked),
+	    assertz(no_comments(File, TimeChecked))
+	)
     ).
 ensure_doc_objects(File) :-
     xref_source(File, [silent(true)]).
@@ -519,19 +541,19 @@ private(Module:PI, Options) :-
     option(public(Public), Options),
     !,
     \+ ( member(PI2, Public),
-         eq_pi(PI, PI2)
+	 eq_pi(PI, PI2)
        ).
 private(Module:PI, _Options) :-
     module_property(Module, file(_)),      % A loaded module
     !,
     module_property(Module, exports(Exports)),
     \+ ( member(PI2, Exports),
-         eq_pi(PI, PI2)
+	 eq_pi(PI, PI2)
        ).
 private(Module:PI, _Options) :-
     \+ (pi_to_head(PI, Head),
-        xref_exported(Source, Head),
-        xref_module(Source, Module)).
+	xref_exported(Source, Head),
+	xref_module(Source, Module)).
 
 %!  prolog:doc_is_public_object(+Object) is semidet.
 %
@@ -547,7 +569,7 @@ multifile(Obj, _Options) :-
     pi_to_head(PI, Head),
     (   predicate_property(Module:Head, multifile)
     ;   xref_module(Source, Module),
-        xref_defined(Source, Head, multifile(_Line))
+	xref_defined(Source, Head, multifile(_Line))
     ),
     !.
 
@@ -560,7 +582,7 @@ public(Obj, _Options) :-
     pi_to_head(PI, Head),
     (   predicate_property(Module:Head, public)
     ;   xref_module(Source, Module),
-        xref_defined(Source, Head, public(_Line))
+	xref_defined(Source, Head, public(_Line))
     ),
     !.
 
@@ -616,14 +638,14 @@ file_title(Title, File, Options) -->
     { file_base_name(File, Base)
     },
     html(h1(class(file),
-            [ span(style('float:right'),
-                   [ \reload_button(File, Base, Options),
-                     \zoom_button(Base, Options),
-                     \source_button(Base, Options),
-                     \edit_button(File, Options)
-                   ])
-            | Title
-            ])).
+	    [ span(style('float:right'),
+		   [ \reload_button(File, Base, Options),
+		     \zoom_button(Base, Options),
+		     \source_button(Base, Options),
+		     \edit_button(File, Options)
+		   ])
+	    | Title
+	    ])).
 
 
 %!  reload_button(+File, +Base, +Options)// is det.
@@ -645,11 +667,11 @@ reload_button(_File, Base, Options) -->
       option(public_only(Public), Options, true)
     },
     html(a(href(Base+[reload(true), public_only(Public)]),
-           img([ class(action),
-                 alt('Reload'),
-                 title('Make & Reload'),
-                 src(location_by_id(pldoc_resource)+'reload.png')
-               ]))).
+	   img([ class(action),
+		 alt('Reload'),
+		 title('Make & Reload'),
+		 src(location_by_id(pldoc_resource)+'reload.png')
+	       ]))).
 reload_button(_, _, _) --> [].
 
 %!  edit_button(+File, +Options)// is det.
@@ -663,14 +685,14 @@ edit_button(File, Options) -->
     },
     !,
     html(a([ onClick('HTTPrequest(\'' +
-                     location_by_id(pldoc_edit) + [file(File)] +
-                     '\')')
-           ],
-           img([ class(action),
-                 alt(edit),
-                 title('Edit file'),
-                 src(location_by_id(pldoc_resource)+'edit.png')
-             ]))).
+		     location_by_id(pldoc_edit) + [file(File)] +
+		     '\')')
+	   ],
+	   img([ class(action),
+		 alt(edit),
+		 title('Edit file'),
+		 src(location_by_id(pldoc_resource)+'edit.png')
+	     ]))).
 edit_button(_, _) -->
     [].
 
@@ -684,22 +706,22 @@ zoom_button(_, Options) -->
     !.    % generating files
 zoom_button(Base, Options) -->
     {   (   option(public_only(true), Options, true)
-        ->  Zoom = 'public.png',
-            Alt = 'Public',
-            Title = 'Click to include private',
-            PublicOnly = false
-        ;   Zoom = 'private.png',
-            Alt = 'All predicates',
-            Title = 'Click to show exports only',
-            PublicOnly = true
-        )
+	->  Zoom = 'public.png',
+	    Alt = 'Public',
+	    Title = 'Click to include private',
+	    PublicOnly = false
+	;   Zoom = 'private.png',
+	    Alt = 'All predicates',
+	    Title = 'Click to show exports only',
+	    PublicOnly = true
+	)
     },
     html(a(href(Base+[public_only(PublicOnly)]),
-           img([ class(action),
-                 alt(Alt),
-                 title(Title),
-                 src(location_by_id(pldoc_resource)+Zoom)
-               ]))).
+	   img([ class(action),
+		 alt(Alt),
+		 title(Title),
+		 src(location_by_id(pldoc_resource)+Zoom)
+	       ]))).
 
 
 %!  source_button(+File, +Options)// is det.
@@ -716,11 +738,11 @@ source_button(File, _Options) -->
       )
     },
     html(a(href(HREF0+[show(src)]),
-           img([ class(action),
-                 alt('Show source'),
-                 title('Show source'),
-                 src(location_by_id(pldoc_resource)+'source.png')
-               ]))).
+	   img([ class(action),
+		 alt('Show source'),
+		 title('Show source'),
+		 src(location_by_id(pldoc_resource)+'source.png')
+	       ]))).
 
 
 %!  objects(+Objects:list, +Options)// is det.
@@ -736,11 +758,11 @@ objects(Objects, Options) -->
       objects_nav_tree(Objects, Tree)
     },
     html([ div(class(navtree),
-               div(class(navwindow),
-                   \nav_tree(Tree, Objects, Options))),
-           div(class(navcontent),
-               \objects_nt(Objects, Options))
-         ]).
+	       div(class(navwindow),
+		   \nav_tree(Tree, Objects, Options))),
+	   div(class(navcontent),
+	       \objects_nt(Objects, Options))
+	 ]).
 objects(Objects, Options) -->
     objects_nt(Objects, Options).
 
@@ -767,8 +789,8 @@ object(doc(Obj,Pos,Comment), Mode0, Mode, Options) -->
     object(Obj, [Pos-Comment], Mode0, Mode, [scope(file)|Options]).
 object(Obj, Mode0, Mode, Options) -->
     { findall(Pos-Comment,
-              doc_comment(Obj, Pos, _Summary, Comment),
-              Pairs)
+	      doc_comment(Obj, Pos, _Summary, Comment),
+	      Pairs)
     },
     !,
     { b_setval(pldoc_object, Obj) },
@@ -799,12 +821,12 @@ pred_dom(Obj, Options, Pos-Comment, DOM) :-
     ->  Class = privdef             % private definition
     ;   multifile(Obj, Options)
     ->  (   option(scope(file), Options)
-        ->  (   more_doc(Obj, Pos)
-            ->  Class = multidef(object(Obj))
-            ;   Class = multidef
-            )
-        ;   Class = multidef(file((Pos)))
-        )
+	->  (   more_doc(Obj, Pos)
+	    ->  Class = multidef(object(Obj))
+	    ;   Class = multidef
+	    )
+	;   Class = multidef(file((Pos)))
+	)
     ;   public(Obj, Options)
     ->  Class = publicdef           % :- public definition
     ;   Class = pubdef              % exported definition
@@ -878,22 +900,22 @@ reexport_header(_, Options) -->
     },
     !,
     html([ h2(class(wiki), 'Re-exported predicates'),
-           p([ 'The following predicates are re-exported from other ',
-               'modules'
-             ])
-         ]).
+	   p([ 'The following predicates are re-exported from other ',
+	       'modules'
+	     ])
+	 ]).
 reexport_header(_, _) -->
     [].
 
 undocumented([], _) --> !.
 undocumented(UnDoc, Options) -->
     html([ h2(class(undoc), 'Undocumented predicates'),
-           p(['The following predicates are exported, but not ',
-              'or incorrectly documented.'
-             ]),
-           dl(class(undoc),
-              \undocumented_predicates(UnDoc, Options))
-         ]).
+	   p(['The following predicates are exported, but not ',
+	      'or incorrectly documented.'
+	     ]),
+	   dl(class(undoc),
+	      \undocumented_predicates(UnDoc, Options))
+	 ]).
 
 
 undocumented_predicates([], _) -->
@@ -919,7 +941,7 @@ in_doc(PI, Objs) :-
     member(doc(O,_,_), Objs),
     (   is_list(O)
     ->  member(O2, O),
-        eq_pi(PI, O2)
+	eq_pi(PI, O2)
     ;   eq_pi(PI, O)
     ).
 
@@ -963,8 +985,8 @@ re_exported_doc([PI|T0], File, Module, [doc(Orig:PI,Pos,Comment)|ObjT], UnDoc) :
     (   predicate_property(Module:Head, imported_from(Orig))
     ->  true
     ;   xref_defined(File, Head, imported(File2)),
-        ensure_doc_objects(File2),
-        xref_module(File2, Orig)
+	ensure_doc_objects(File2),
+	xref_module(File2, Orig)
     ),
     doc_comment(Orig:PI, Pos, _, Comment),
     !,
@@ -973,9 +995,9 @@ re_exported_doc([PI|T0], File, Module, REObj, [PI|UnDoc]) :-
     re_exported_doc(T0, File, Module, REObj, UnDoc).
 
 
-                 /*******************************
-                 *      SINGLE OBJECT PAGE      *
-                 *******************************/
+		 /*******************************
+		 *      SINGLE OBJECT PAGE      *
+		 *******************************/
 
 %!  object_page(+Obj, +Options)// is semidet.
 %
@@ -994,17 +1016,17 @@ object_page(Obj, Options) -->
     },
     !,
     (   { \+ ( doc_comment(Obj, File2:_, _, _),
-               File2 \== File )
-        }
+	       File2 \== File )
+	}
     ->  html([ \html_requires(pldoc),
-               \object_page_header(File, Options),
-               \object_synopsis(Obj, []),
-               \objects([Obj], Options)
-             ])
+	       \object_page_header(File, Options),
+	       \object_synopsis(Obj, []),
+	       \objects([Obj], Options)
+	     ])
     ;   html([ \html_requires(pldoc),
-               \object_page_header(-, Options),
-               \objects([Obj], [synopsis(true)|Options])
-             ])
+	       \object_page_header(-, Options),
+	       \objects([Obj], [synopsis(true)|Options])
+	     ])
     ),
     object_page_footer(Obj, Options).
 object_page(M:Name/Arity, Options) -->          % specified module, but public
@@ -1025,10 +1047,10 @@ object_page_header(File, Options) -->
     { option(header(true), Options, true) },
     !,
     html(div(class(navhdr),
-             [ div(class(jump), \file_link(File)),
-               div(class(search), \search_form(Options)),
-               br(clear(right))
-             ])).
+	     [ div(class(jump), \file_link(File)),
+	       div(class(search), \search_form(Options)),
+	       br(clear(right))
+	     ])).
 object_page_header(_, _) --> [].
 
 file_link(-) -->
@@ -1039,7 +1061,7 @@ file_link(File) -->
     },
     places_menu(Dir),
     html([ div(a(href(location_by_id(pldoc_doc)+File), File))
-         ]).
+	 ]).
 
 %!  object_footer(+Obj, +Options)// is det.
 %
@@ -1086,19 +1108,19 @@ object_synopsis(M:Name/Arity, Options) -->
     { functor(Head, Name, Arity),
       (   option(source(Spec), Options)
       ->  absolute_file_name(Spec, File,
-                             [ access(read),
-                               file_type(prolog),
-                               file_errors(fail)
-                             ])
+			     [ access(read),
+			       file_type(prolog),
+			       file_errors(fail)
+			     ])
       ;   predicate_property(M:Head, exported),
-          \+ predicate_property(M:Head, imported_from(_)),
-          module_property(M, file(File)),
-          file_name_on_path(File, Spec)
+	  \+ predicate_property(M:Head, imported_from(_)),
+	  module_property(M, file(File)),
+	  file_name_on_path(File, Spec)
       ),
       !,
       unquote_filespec(Spec, Unquoted),
       (   predicate_property(Head, autoload(FileBase)),
-          file_name_extension(FileBase, _Ext, File)
+	  file_name_extension(FileBase, _Ext, File)
       ->  Extra = [span(class(autoload), '(can be autoloaded)')]
       ;   Extra = []
       )
@@ -1117,10 +1139,10 @@ object_synopsis(Module:Name//Arity, Options) -->
     object_synopsis(Module:Name/DCGArity, Options).
 object_synopsis(f(_/_), _) -->
     synopsis(span(class(function),
-                  [ 'Arithmetic function (see ',
-                    \object_ref(is/2, []),
-                    ')'
-                  ])).
+		  [ 'Arithmetic function (see ',
+		    \object_ref(is/2, []),
+		    ')'
+		  ])).
 object_synopsis(c(Func), _) -->
     {   sub_atom(Func, 0, _, _, 'PL_')
     ;   sub_atom(Func, 0, _, _, 'S')
@@ -1131,9 +1153,9 @@ object_synopsis(_, _) --> [].
 
 synopsis(Text) -->
     html(div(class(synopsis),
-             [ span(class('synopsis-hdr'), 'Availability:')
-             | Text
-             ])).
+	     [ span(class('synopsis-hdr'), 'Availability:')
+	     | Text
+	     ])).
 
 %!  unquote_filespec(+Spec, -Unquoted) is det.
 %
@@ -1162,9 +1184,9 @@ parts_to_path(List, More/T) :-
     ).
 
 
-                 /*******************************
-                 *             PRINT            *
-                 *******************************/
+		 /*******************************
+		 *             PRINT            *
+		 *******************************/
 
 %!  doc_write_html(+Out:stream, +Title:atomic, +DOM) is det.
 %
@@ -1183,16 +1205,16 @@ doc_write_html(Out, Title, Doc) :-
 
 doc_page_dom(Title, Body, DOM) :-
     DOM = html([ head([ title(Title),
-                        link([ rel(stylesheet),
-                               type('text/css'),
-                               href(location_by_id(pldoc_resource)+'pldoc.css')
-                             ]),
-                        script([ src(location_by_id(pldoc_resource)+'pldoc.js'),
-                                 type('text/javascript')
-                               ], [])
-                      ]),
-                 body(Body)
-               ]).
+			link([ rel(stylesheet),
+			       type('text/css'),
+			       href(location_by_id(pldoc_resource)+'pldoc.css')
+			     ]),
+			script([ src(location_by_id(pldoc_resource)+'pldoc.js'),
+				 type('text/javascript')
+			       ], [])
+		      ]),
+		 body(Body)
+	       ]).
 
 %!  print_html_head(+Out:stream) is det.
 %
@@ -1200,8 +1222,8 @@ doc_page_dom(Title, Body, DOM) :-
 
 print_html_head(Out) :-
     format(Out,
-           '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" \c
-               "http://www.w3.org/TR/html4/strict.dtd">~n', []).
+	   '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" \c
+	       "http://www.w3.org/TR/html4/strict.dtd">~n', []).
 
 % Rendering rules
 %
@@ -1222,11 +1244,11 @@ tags(Tags) -->
 
 tag(Tag, Values) -->
     {   doc_tag_title(Tag, Title),
-        atom_concat('keyword-', Tag, Class)
+	atom_concat('keyword-', Tag, Class)
     },
     html([ dt(class=Class, Title),
-           \tag_values(Values, Class)
-         ]).
+	   \tag_values(Values, Class)
+	 ]).
 
 tag_values([], _) -->
     [].
@@ -1256,9 +1278,9 @@ tag_title(error,  'Errors').
 
 args(Params) -->
     html([ dt(class=tag, 'Arguments:'),
-           dd(table(class=arglist,
-                    \arg_list(Params)))
-         ]).
+	   dd(table(class=arglist,
+		    \arg_list(Params)))
+	 ]).
 
 arg_list([]) -->
     [].
@@ -1270,9 +1292,9 @@ argument(arg(Name,Descr)) -->
     html(tr([td(var(Name)), td(class=argdescr, ['- '|Descr])])).
 
 
-                 /*******************************
-                 *         NAVIGATION TREE      *
-                 *******************************/
+		 /*******************************
+		 *         NAVIGATION TREE      *
+		 *******************************/
 
 %!  objects_nav_tree(+Objects, -Tree) is det.
 %
@@ -1300,10 +1322,10 @@ object_nav_tree(Obj, Tree) :-
 
 sibling_file_nodes(Dir, Nodes) :-
     findall(node(file(File), []),
-            (   source_file(File),
-                file_directory_name(File, Dir)
-            ),
-            Nodes).
+	    (   source_file(File),
+		file_directory_name(File, Dir)
+	    ),
+	    Nodes).
 
 embed_directories(Node, Tree) :-
     Node = node(file(File), _),
@@ -1354,7 +1376,7 @@ remove_unique_root(Tree, Tree).
 
 nav_tree(Tree, Current, Options) -->
     html(ul(class(nav),
-            \object_tree(Tree, Current, Options))).
+	    \object_tree(Tree, Current, Options))).
 
 %!  object_tree(+Tree, +Current, +Options)// is det.
 %
@@ -1364,15 +1386,15 @@ object_tree(node(Id, []), Target, Options) -->
     !,
     { node_class(Id, Target, Class) },
     html(li(class(Class),
-            \node(Id, Options))).
+	    \node(Id, Options))).
 object_tree(node(Id, Children), Target, Options) -->
     !,
     { node_class(Id, Target, Class) },
     html(li(class(Class),
-            [ \node(Id, Options),
-              ul(class(nav),
-                 \object_trees(Children, Target, Options))
-            ])).
+	    [ \node(Id, Options),
+	      ul(class(nav),
+		 \object_trees(Children, Target, Options))
+	    ])).
 object_tree(Id, Target, Options) -->
     !,
     { node_class(Id, Target, Class) },
@@ -1403,9 +1425,9 @@ node(Id, Options) -->
     object_ref(Id, Options).
 
 
-                 /*******************************
-                 *            SECTIONS          *
-                 *******************************/
+		 /*******************************
+		 *            SECTIONS          *
+		 *******************************/
 
 section(Type, Title) -->
     { string_codes(Title, Codes),
@@ -1419,9 +1441,9 @@ make_section(module,  Title, h1(class=module,  Title)).
 make_section(section, Title, h1(class=section, Title)).
 
 
-                 /*******************************
-                 *       PRED MODE HEADER       *
-                 *******************************/
+		 /*******************************
+		 *       PRED MODE HEADER       *
+		 *******************************/
 
 %!  pred_dt(+Modes, +Class, Options)// is det.
 %
@@ -1437,21 +1459,21 @@ pred_dt([], _, Done, Done, _) -->
 pred_dt([H|T], Class, Done0, Done, Options) -->
     { functor(Class, CSSClass, _) },
     html(dt(class=CSSClass,
-            [ \pred_mode(H, Done0, Done1, Options),
-              \mode_anot(Class)
-            ])),
+	    [ \pred_mode(H, Done0, Done1, Options),
+	      \mode_anot(Class)
+	    ])),
     pred_dt(T, Class, Done1, Done, Options).
 
 mode_anot(privdef) -->
     !,
     html(span([class(anot), style('float:right')],
-              '[private]')).
+	      '[private]')).
 mode_anot(multidef(object(Obj))) -->
     !,
     { object_href(Obj, HREF) },
     html(span([class(anot), style('float:right')],
-              ['[', a(href(HREF), multifile), ']'
-              ])).
+	      ['[', a(href(HREF), multifile), ']'
+	      ])).
 mode_anot(multidef(file(File:_))) -->
     !,
     { file_name_on_path(File, Spec),
@@ -1459,12 +1481,12 @@ mode_anot(multidef(file(File:_))) -->
       doc_file_href(File, HREF)
     },
     html(span([class(anot), style('float:right')],
-              ['[multifile, ', a(href(HREF), '~q'-[Unquoted]), ']'
-              ])).
+	      ['[multifile, ', a(href(HREF), '~q'-[Unquoted]), ']'
+	      ])).
 mode_anot(multidef) -->
     !,
     html(span([class(anot), style('float:right')],
-              '[multifile]')).
+	      '[multifile]')).
 mode_anot(_) -->
     [].
 
@@ -1509,14 +1531,14 @@ anchored_pred_head(Head, Done0, Done, Options) -->
     { pred_anchor_name(Head, PI, Name) },
     (   { memberchk(PI, Done0) }
     ->  { Done = Done0 },
-        pred_head(Head)
+	pred_head(Head)
     ;   html([ span(style('float:right'),
-                    [ \pred_edit_or_source_button(Head, Options),
-                      &(nbsp)
-                    ]),
-               a(name=Name, \pred_head(Head))
-             ]),
-        { Done = [PI|Done0] }
+		    [ \pred_edit_or_source_button(Head, Options),
+		      &(nbsp)
+		    ]),
+	       a(name=Name, \pred_head(Head))
+	     ]),
+	{ Done = [PI|Done0] }
     ).
 
 
@@ -1551,27 +1573,27 @@ pred_edit_button(PI0, Options0) -->
 
 pred_edit_button2(Name/Arity, Options) -->
     { \+ ( memberchk(file(_), Options), % always edit if file and line
-           memberchk(line(_), Options)  % are given.
-         ),
+	   memberchk(line(_), Options)  % are given.
+	 ),
       functor(Head, Name, Arity),
       option(module(M), Options, _),
       \+ ( current_module(M),
-           source_file(M:Head, _File)
-         )
+	   source_file(M:Head, _File)
+	 )
     },
     !.
 pred_edit_button2(Name/Arity, Options) -->
     { include(edit_param, Options, Extra),
       http_link_to_id(pldoc_edit,
-                      [name(Name),arity(Arity)|Extra],
-                      EditHREF)
+		      [name(Name),arity(Arity)|Extra],
+		      EditHREF)
     },
     html(a(onClick('HTTPrequest(\'' + EditHREF + '\')'),
-           img([ class(action),
-                 alt('Edit predicate'),
-                 title('Edit predicate'),
-                 src(location_by_id(pldoc_resource)+'editpred.png')
-               ]))).
+	   img([ class(action),
+		 alt('Edit predicate'),
+		 title('Edit predicate'),
+		 src(location_by_id(pldoc_resource)+'editpred.png')
+	       ]))).
 pred_edit_button2(_, _) -->
     !,
     [].
@@ -1606,12 +1628,12 @@ pred_source_button(PI0, Options0) -->
       pred_source_href(PI, M, HREF), !
     },
     html(a([ href(HREF)
-           ],
-           img([ class(action),
-                 alt('Source'),
-                 title('Show source'),
-                 src(location_by_id(pldoc_resource)+'source.png')
-               ]))).
+	   ],
+	   img([ class(action),
+		 alt('Source'),
+		 title('Show source'),
+		 src(location_by_id(pldoc_resource)+'source.png')
+	       ]))).
 pred_source_button(_, _) -->
     [].
 
@@ -1684,38 +1706,38 @@ pred_head(Head) -->                     % Infix operators
     },
     !,
     html([ var(class=arglist, \pred_arg(Left, 1)),
-           ' ', b(class=pred, Functor), ' ',
-           var(class=arglist, \pred_arg(Right, 2))
-         ]).
+	   ' ', b(class=pred, Functor), ' ',
+	   var(class=arglist, \pred_arg(Right, 2))
+	 ]).
 pred_head(Head) -->                     % Prefix operators
     { Head =.. [Functor,Arg],
       is_op_type(Functor, prefix)
     },
     !,
     html([ b(class=pred, Functor), ' ',
-           var(class=arglist, \pred_arg(Arg, 1))
-         ]).
+	   var(class=arglist, \pred_arg(Arg, 1))
+	 ]).
 pred_head(Head) -->                     % Postfix operators
     { Head =.. [Functor,Arg],
       is_op_type(Functor, postfix)
     },
     !,
     html([ var(class=arglist, \pred_arg(Arg, 1)),
-           ' ', b(class=pred, Functor)
-         ]).
+	   ' ', b(class=pred, Functor)
+	 ]).
 pred_head({Head}) -->
     !,
     html([ b(class=pred, '{'),
-           var(class=arglist,
-               \pred_args([Head], 1)),
-           b(class=pred, '}')
-         ]).
+	   var(class=arglist,
+	       \pred_args([Head], 1)),
+	   b(class=pred, '}')
+	 ]).
 pred_head(Head) -->                     % Plain terms
     { Head =.. [Functor|Args] },
     html([ b(class=pred, Functor),
-           var(class=arglist,
-               [ '(', \pred_args(Args, 1), ')' ])
-         ]).
+	   var(class=arglist,
+	       [ '(', \pred_args(Args, 1), ')' ])
+	 ]).
 
 %!  is_op_type(+Atom, ?Type)
 %
@@ -1743,8 +1765,8 @@ pred_args([H|T], I) -->
     (   {T==[]}
     ->  []
     ;   html(', '),
-        { I2 is I + 1 },
-        pred_args(T, I2)
+	{ I2 is I + 1 },
+	pred_args(T, I2)
     ).
 
 pred_arg(Var, I) -->
@@ -1776,11 +1798,11 @@ argname(Name) -->
 
 argtype(Term) -->
     { format(string(S), '~W',
-             [ Term,
-               [ quoted(true),
-                 numbervars(true)
-               ]
-             ]) },
+	     [ Term,
+	       [ quoted(true),
+		 numbervars(true)
+	       ]
+	     ]) },
     html(S).
 
 pred_det(unknown) -->
@@ -1814,14 +1836,14 @@ term(_, Term, Bindings) -->
     pred_head(Term).
 term(_, Term, Bindings) -->
     term(Term,
-         [ variable_names(Bindings),
-           quoued(true)
-         ]).
+	 [ variable_names(Bindings),
+	   quoued(true)
+	 ]).
 
 
-                 /*******************************
-                 *             PREDREF          *
-                 *******************************/
+		 /*******************************
+		 *             PREDREF          *
+		 *******************************/
 
 %!  predref(+PI)// is det.
 %!  predref(+PI, +Options)// is det.
@@ -1842,9 +1864,9 @@ predref(Obj, Options) -->
     { Obj = _:_,
       doc_comment(Obj, File:_Line, _, _),
       (   (   option(files(Map), Options)
-          ->  memberchk(file(File,_), Map)
-          ;   true
-          )
+	  ->  memberchk(file(File,_), Map)
+	  ;   true
+	  )
       ->  object_href(Obj, HREF, Options)
       ;   manref(Obj, HREF, Options)
       )
@@ -1953,7 +1975,7 @@ citations([H|T]) -->
     (   {T==[]}
     ->  []
     ;   [';'],
-        citations(T)
+	citations(T)
     ).
 
 citation(H) -->
@@ -1969,14 +1991,14 @@ manref(PI, HREF, Options) :-
     predname(PI, PredName),
     (   option(files(_Map), Options)
     ->  option(man_server(Server), Options,
-               'http://www.swi-prolog.org/pldoc'),
-        uri_components(Server, Comp0),
-        uri_data(path, Comp0, Path0),
-        directory_file_path(Path0, man, Path),
-        uri_data(path, Comp0, Path, Components),
-        uri_query_components(Query, [predicate=PredName]),
-        uri_data(search, Components, Query),
-        uri_components(HREF, Components)
+	       'http://www.swi-prolog.org/pldoc'),
+	uri_components(Server, Comp0),
+	uri_data(path, Comp0, Path0),
+	directory_file_path(Path0, man, Path),
+	uri_data(path, Comp0, Path, Components),
+	uri_query_components(Query, [predicate=PredName]),
+	uri_data(search, Components, Query),
+	uri_components(HREF, Components)
     ;   http_link_to_id(pldoc_man, [predicate=PredName], HREF)
     ).
 
@@ -2005,17 +2027,17 @@ pred_href(Name/Arity, Module, HREF) :-
     functor(Head, Name, Arity),
     (   catch(relative_file(Module:Head, File), _, fail)
     ->  uri_data(path, Components, File),
-        uri_components(HREF, Components)
+	uri_components(HREF, Components)
     ;   in_file(Module:Head, File)
     ->  (   current_prolog_flag(home, SWI),
-            sub_atom(File, 0, _, _, SWI),
-            prolog:doc_object_summary(Name/Arity, packages, _, _)
-        ->  http_link_to_id(pldoc_man, [predicate=FragmentId], HREF)
-        ;   http_location_by_id(pldoc_doc, DocHandler),
-            atom_concat(DocHandler, File, Path),
-            uri_data(path, Components, Path),
-            uri_components(HREF, Components)
-        )
+	    sub_atom(File, 0, _, _, SWI),
+	    prolog:doc_object_summary(Name/Arity, packages, _, _)
+	->  http_link_to_id(pldoc_man, [predicate=FragmentId], HREF)
+	;   http_location_by_id(pldoc_doc, DocHandler),
+	    atom_concat(DocHandler, File, Path),
+	    uri_data(path, Components, Path),
+	    uri_components(HREF, Components)
+	)
     ).
 
 relative_file(Head, '') :-
@@ -2039,13 +2061,13 @@ pred_source_href(Name/Arity, Module, HREF) :-
     functor(Head, Name, Arity),
     (   catch(relative_file(Module:Head, File), _, fail)
     ->  uri_data(path, Components, File),
-        uri_components(HREF, Components)
+	uri_components(HREF, Components)
     ;   in_file(Module:Head, File0)
     ->  insert_alias(File0, File),
-        http_location_by_id(pldoc_doc, DocHandler),
-        atom_concat(DocHandler, File, Path),
-        uri_data(path, Components, Path),
-        uri_components(HREF, Components)
+	http_location_by_id(pldoc_doc, DocHandler),
+	atom_concat(DocHandler, File, Path),
+	uri_data(path, Components, Path),
+	uri_components(HREF, Components)
     ).
 
 
@@ -2063,7 +2085,7 @@ object_ref([H|T], Options) -->
     object_ref(H, Options),
     (   {T == []}
     ->  html(', '),
-        object_ref(T, Options)
+	object_ref(T, Options)
     ;   []
     ).
 object_ref(Obj, Options) -->
@@ -2133,13 +2155,13 @@ localise_object(Obj, Obj).
 term_to_string(Term, String) :-
     State = state(-),
     (   numbervars(Term, 0, _, [singletons(true)]),
-        with_output_to(string(String),
-                       write_term(Term,
-                                  [ numbervars(true),
-                                    quoted(true)
-                                  ])),
-        nb_setarg(1, State, String),
-        fail
+	with_output_to(string(String),
+		       write_term(Term,
+				  [ numbervars(true),
+				    quoted(true)
+				  ])),
+	nb_setarg(1, State, String),
+	fail
     ;   arg(1, State, String)
     ).
 
@@ -2205,7 +2227,7 @@ object_name(_, directory(Dir), _) -->
     html(Base).
 object_name(_, module(Title), _Options) -->
     { print_message(warning,
-                    pldoc(module_comment_outside_module(Title)))
+		    pldoc(module_comment_outside_module(Title)))
     }.
 
 pi(title, PI, Options) -->
@@ -2255,16 +2277,20 @@ in_file(Module, Head, File) :-
     var(Module),
     (   predicate_property(system:Head, foreign)
     ->  !,
-        fail
+	fail
     ;   predicate_property(system:Head, file(File)),
-        \+ system_arithmetic_function(Head)
+	\+ system_arithmetic_function(Head)
     ->  !
     ;   predicate_property(Head, autoload(File0))
     ->  !,
-        file_name_extension(File0, pl, File)
+	file_name_extension(File0, pl, File)
     ;   exported_from(Module, Head, File),
-        module_property(Module, class(library))
+	module_property(Module, class(library))
     ).
+in_file(Module, Head, File) :-
+    nonvar(Module),
+    predicate_property(Module:Head, file(File)),
+    \+ predicate_property(Module:Head, imported_from(_)).
 in_file(Module, Head, File) :-
     xref_defined(File, Head, How),
     xref_current_source(File),
@@ -2282,11 +2308,11 @@ in_file(Module, Head, File) :-
 
 exported_from(Module, Head, File) :-
     distinct(Primary,
-             (   predicate_property(Module:Head, exported),
-                 (   predicate_property(Module:Head, imported_from(Primary))
-                 ->  true
-                 ;   Primary = Module
-                 ))),
+	     (   predicate_property(Module:Head, exported),
+		 (   predicate_property(Module:Head, imported_from(Primary))
+		 ->  true
+		 ;   Primary = Module
+		 ))),
     module_property(Primary, file(File)).
 
 :- multifile
@@ -2342,8 +2368,8 @@ file(File, Options) -->
       http_current_request(Request),
       memberchk(path(Path), Request),
       absolute_file_name(File, Location,
-                         [ relative_to(Path)
-                         ]),
+			 [ relative_to(Path)
+			 ]),
       http_link_to_id(Handler, [location(Location)], HREF),
       format(atom(Title), 'Click to create ~w', [File])
     },
@@ -2390,7 +2416,7 @@ file_href_real(File, HREF, Options) :-
     ),
     !,
     (   option(files(Map), Options),
-        memberchk(file(Path, LinkFile), Map)
+	memberchk(file(Path, LinkFile), Map)
     ->  true
     ;   LinkFile = Path
     ),
@@ -2399,9 +2425,9 @@ file_href_real(File, HREF, _) :-
     directory_alias(Alias),
     Term =.. [Alias,File],
     absolute_file_name(Term, _,
-                       [ access(read),
-                         file_errors(fail)
-                       ]),
+		       [ access(read),
+			 file_errors(fail)
+		       ]),
     !,
     http_absolute_location(Term, HREF, []).
 
@@ -2439,10 +2465,10 @@ existing_linked_file(File, Path) :-
     catch(b_getval(pldoc_file, CurrentFile), _, fail),
     CurrentFile \== [],
     absolute_file_name(File, Path,
-                       [ relative_to(CurrentFile),
-                         access(read),
-                         file_errors(fail)
-                       ]).
+		       [ relative_to(CurrentFile),
+			 access(read),
+			 file_errors(fail)
+		       ]).
 
 
 %!  include(+FileName, +Type, +Options)// is det.
@@ -2464,16 +2490,16 @@ include(File, image, Options) -->
       !,
       include(image_attribute, Options, Attrs0),
       merge_options(Attrs0,
-                    [ alt(File),
-                      data(HREF),
-                      type('image/svg+xml')
-                    ], Attrs)
+		    [ alt(File),
+		      data(HREF),
+		      type('image/svg+xml')
+		    ], Attrs)
     },
     (   { option(caption(Caption), Options) }
     ->  html(div(class(figure),
-                 [ div(class(image), object(Attrs, [])),
-                   div(class(caption), Caption)
-                 ]))
+		 [ div(class(image), object(Attrs, [])),
+		   div(class(caption), Caption)
+		 ]))
     ;   html(object(Attrs, []))
     ).
 include(File, image, Options) -->
@@ -2481,16 +2507,16 @@ include(File, image, Options) -->
       !,
       include(image_attribute, Options, Attrs0),
       merge_options(Attrs0,
-                    [ alt(File),
-                      border(0),
-                      src(HREF)
-                    ], Attrs)
+		    [ alt(File),
+		      border(0),
+		      src(HREF)
+		    ], Attrs)
     },
     (   { option(caption(Caption), Options) }
     ->  html(div(class(figure),
-                 [ div(class(image), img(Attrs)),
-                   div(class(caption), Caption)
-                 ]))
+		 [ div(class(image), img(Attrs)),
+		   div(class(caption), Caption)
+		 ]))
     ;   html(img(Attrs))
     ).
 include(File, wiki, _Options) -->       % [[file.txt]] is included
@@ -2549,12 +2575,12 @@ html_tokens_for_predicates(Spec, Options) -->
     html_tokens_for_predicates(List, Options).
 html_tokens_for_predicates(Spec, Options) -->
     man_page(Spec,
-             [ links(false),                % no header
-               navtree(false),              % no navigation tree
-               footer(false),               % no footer
-               synopsis(false)              % no synopsis
-             | Options
-             ]).
+	     [ links(false),                % no header
+	       navtree(false),              % no navigation tree
+	       footer(false),               % no footer
+	       synopsis(false)              % no synopsis
+	     | Options
+	     ]).
 
 
 documented_pi(Spec, PI) :-
@@ -2565,9 +2591,9 @@ generalise_spec(Name/Arity, _M:Name/Arity).
 generalise_spec(Name//Arity, _M:Name//Arity).
 
 
-                 /*******************************
-                 *           WIKI FILES         *
-                 *******************************/
+		 /*******************************
+		 *           WIKI FILES         *
+		 *******************************/
 
 
 %!  doc_for_wiki_file(+File, +Options) is det.
@@ -2576,22 +2602,22 @@ generalise_spec(Name//Arity, _M:Name//Arity).
 
 doc_for_wiki_file(FileSpec, Options) :-
     absolute_file_name(FileSpec, File,
-                       [ access(read)
-                       ]),
+		       [ access(read)
+		       ]),
     read_file_to_codes(File, String, []),
     b_setval(pldoc_file, File),
     call_cleanup(reply_wiki_page(File, String, Options),
-                 nb_delete(pldoc_file)).
+		 nb_delete(pldoc_file)).
 
 reply_wiki_page(File, String, Options) :-
     wiki_codes_to_dom(String, [], DOM0),
     title(DOM0, File, Title),
     insert_edit_button(DOM0, File, DOM, Options),
     reply_html_page(pldoc(wiki),
-                    title(Title),
-                    [ \html_requires(pldoc)
-                    | DOM
-                    ]).
+		    title(Title),
+		    [ \html_requires(pldoc)
+		    | DOM
+		    ]).
 
 title(DOM, _, Title) :-
     sub_term(h1(_,Title), DOM),
@@ -2603,22 +2629,22 @@ insert_edit_button(DOM, _, DOM, Options) :-
     option(edit(false), Options, false),
     !.
 insert_edit_button([h1(Attrs,Title)|DOM], File,
-                   [h1(Attrs,[ span(style('float:right'),
-                                   \edit_button(File, [edit(true)]))
-                             | Title
-                             ])|DOM], _) :- !.
+		   [h1(Attrs,[ span(style('float:right'),
+				   \edit_button(File, [edit(true)]))
+			     | Title
+			     ])|DOM], _) :- !.
 insert_edit_button(DOM, File,
-                   [ h1(class(wiki),
-                        [ span(style('float:right'),
-                               \edit_button(File, [edit(true)]))
-                        ])
-                   | DOM
-                   ], _).
+		   [ h1(class(wiki),
+			[ span(style('float:right'),
+			       \edit_button(File, [edit(true)]))
+			])
+		   | DOM
+		   ], _).
 
 
-                 /*******************************
-                 *            ANCHORS           *
-                 *******************************/
+		 /*******************************
+		 *            ANCHORS           *
+		 *******************************/
 
 %!  mode_anchor_name(+Mode, -Anchor:atom) is det.
 %

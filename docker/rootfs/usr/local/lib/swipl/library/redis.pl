@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker and Sean Charles
     E-mail:        jan@swi-prolog.org and <sean at objitsu dot com>
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2013-2020, Sean Charles
+    Copyright (c)  2013-2022, Sean Charles
                               SWI-Prolog Solutions b.v.
     All rights reserved.
 
@@ -78,16 +78,23 @@
 :- autoload(library(broadcast), [broadcast/1]).
 :- autoload(library(error),
             [ must_be/2,
+	      type_error/2,
               instantiation_error/1,
               uninstantiation_error/1,
-              existence_error/2
+              existence_error/2,
+              existence_error/3
             ]).
 :- autoload(library(lazy_lists), [lazy_list/2]).
 :- autoload(library(lists), [append/3, member/2]).
-:- autoload(library(option), [merge_options/3, option/2, option/3]).
+:- autoload(library(option), [merge_options/3, option/2,
+			      option/3, select_option/4]).
 :- autoload(library(pairs), [group_pairs_by_key/2]).
+:- autoload(library(time), [call_with_time_limit/2]).
 :- use_module(library(debug), [debug/3, assertion/1]).
 :- use_module(library(settings), [setting/4, setting/2]).
+:- if(exists_source(library(ssl))).
+:- autoload(library(ssl), [ssl_context/3, ssl_negotiate/5]).
+:- endif.
 
 :- use_foreign_library(foreign(redis4pl)).
 
@@ -95,6 +102,8 @@
            "Max number of retries").
 :- setting(max_retry_wait, number, 10,
            "Max time to wait between recovery attempts").
+:- setting(sentinel_timeout, number, 0.2,
+	   "Time to wait for a sentinel").
 
 :- predicate_options(redis_server/3, 3,
                      [ pass_to(redis:redis_connect/3, 3)
@@ -139,7 +148,8 @@ User = "Bob"
 
 :- dynamic server/3.
 
-:- dynamic ( connection/2               % ServerName, Stream
+:- dynamic ( connection/2,              % ServerName, Stream
+	     sentinel/2			% Pool, Address
            ) as volatile.
 
 %!  redis_server(+ServerName, +Address, +Options) is det.
@@ -182,6 +192,24 @@ server(default, localhost:6379, []).
 %       Specify the connection protocol version.  Initially this is
 %       version 2.  Redis 6 also supports version 3.  When specified
 %       as `3`, the `HELLO` command is used to upgrade the protocol.
+%     - tls(true)
+%       When specified, initiate a TLS connection.  If this option is
+%       specified we must also specify the `cacert`, `key` and `cert`
+%       options.
+%     - cacert(+File)
+%       CA Certificate file to verify with.
+%     - cert(+File)
+%       Client certificate to authenticate with.
+%     - key(+File)
+%       Private key file to authenticate with.
+%     - sentinels(+ListOfAddresses)
+%       Used together with an Address of the form sentinel(MasterName)
+%       to enable contacting a network of Redis servers guarded by a
+%       sentinel network.
+%     - sentinel_user(+User)
+%     - sentinel_password(+Password)
+%       Authentication information for the senitels.  When omitted we
+%       try to connect withour authentication.
 %
 %   Instead of using these predicates, redis/2  and redis/3 are normally
 %   used with a _server name_  argument registered using redis_server/3.
@@ -222,9 +250,12 @@ redis_connect(Address, Conn, Options) :-
 %
 %       redis_connection(Id, Stream, Failures, Options)
 
-do_connect(Id, Address0, Conn, Options) :-
+do_connect(Id, sentinel(Pool), Conn, Options) =>
+    sentinel_master(Id, Pool, Conn, Options).
+do_connect(Id, Address0, Conn, Options) =>
     tcp_address(Address0, Address),
-    tcp_connect(Address, Stream, Options),
+    tcp_connect(Address, Stream0, Options),
+    tls_upgrade(Address, Stream0, Stream, Options),
     Conn = redis_connection(Id, Stream, 0, Options),
     hello(Conn, Options).
 
@@ -232,6 +263,113 @@ tcp_address(unix(Path), Path) :-
     !.                                  % Using an atom is ambiguous
 tcp_address(Address, Address).
 
+%!  tls_upgrade(+Address, +Raw, -Stream, +Options) is det.
+%
+%   Upgrade to a TLS connection when tls(true) is specified.
+
+:- if(current_predicate(ssl_context/3)).
+tls_upgrade(Host:_Port, Raw, Stream, Options) :-
+    option(tls(true), Options),
+    !,
+    must_have_option(cacert(CacertFile), Options),
+    must_have_option(key(KeyFile), Options),
+    must_have_option(cert(CertFile), Options),
+    ssl_context(client, SSL,
+		[ host(Host),
+		  certificate_file(CertFile),
+		  key_file(KeyFile),
+		  cacerts([file(CacertFile)]),
+		  cert_verify_hook(tls_verify),
+		  close_parent(true)
+		]),
+    stream_pair(Raw, RawRead, RawWrite),
+    ssl_negotiate(SSL, RawRead, RawWrite, Read, Write),
+    stream_pair(Stream, Read, Write).
+:- endif.
+tls_upgrade(_, Stream, Stream, _).
+
+:- if(current_predicate(ssl_context/3)).
+
+%!  tls_verify(+SSL, +ProblemCert, +AllCerts, +FirstCert, +Status) is semidet.
+%
+%   Accept  or reject  the certificate  verification.  Similar  to the
+%   Redis  command   line  client   (``redis-cli``),  we   accept  the
+%   certificate as long as it is signed, not verifying the hostname.
+
+:- public tls_verify/5.
+tls_verify(_SSL, _ProblemCert, _AllCerts, _FirstCert, verified) :-
+    !.
+tls_verify(_SSL, _ProblemCert, _AllCerts, _FirstCert, hostname_mismatch) :-
+    !.
+tls_verify(_SSL, _ProblemCert, _AllCerts, _FirstCert, _Error) :-
+    fail.
+
+:- endif.
+
+%!  sentinel_master(+ServerId, +SetinelPool, -Connection, +Options) is det.
+%
+%   Discover the master and connect to it.
+
+sentinel_master(Id, Pool, Master, Options) :-
+    must_have_option(sentinels(Sentinels), Options),
+    sentinel_auth(Options, Options1),
+    setting(sentinel_timeout, TMO),
+    (   sentinel(Pool, Sentinel)
+    ;   member(Sentinel, Sentinels)
+    ),
+    catch(call_with_time_limit(
+	      TMO,
+	      do_connect(Id, Sentinel, Conn,
+			 [sentinel(true)|Options1])),
+	  Error,
+	  (print_message(warning, Error),fail)),
+    !,
+    debug(redis(sentinel), 'Connected to sentinel at ~p', [Sentinel]),
+    call_cleanup(
+	query_sentinel(Pool, Conn, Sentinel, MasterAddr),
+	redis_disconnect(Conn)),
+    debug(redis(sentinel), 'Sentinel claims master is at ~p', [MasterAddr]),
+    do_connect(Id, MasterAddr, Master, Options),
+    debug(redis(sentinel), 'Connected to claimed master', []),
+    redis(Master, role, Role),
+    (   Role = [master|_Slaves]
+    ->  debug(redis(sentinel), 'Verified role at ~p', [MasterAddr])
+    ;   redis_disconnect(Master),
+	debug(redis(sentinel), '~p is not the master: ~p', [MasterAddr, Role]),
+	sleep(TMO),
+	sentinel_master(Id, Pool, Master, Options)
+    ).
+
+sentinel_auth(Options0, Options) :-
+    option(sentinel_user(User), Options0),
+    option(sentinel_password(Passwd), Options0),
+    !,
+    merge_options([user(User), password(Passwd)], Options0, Options).
+sentinel_auth(Options0, Options) :-
+    select_option(password(_), Options0, Options, _).
+
+
+query_sentinel(Pool, Conn, Sentinel, Host:Port) :-
+    redis(Conn, sentinel('get-master-addr-by-name', Pool), MasterData),
+    MasterData = [Host,Port],
+    redis(Conn, sentinel(sentinels, Pool), Peers),
+    transaction(update_known_sentinels(Pool, Sentinel, Peers)).
+
+update_known_sentinels(Pool, Sentinel, Peers) :-
+    retractall(sentinel(Pool, _)),
+    maplist(update_peer_sentinel(Pool), Peers),
+    asserta(sentinel(Pool, Sentinel)).
+
+update_peer_sentinel(Pool, Attrs),
+  memberchk(ip-Host, Attrs),
+  memberchk(port-Port, Attrs) =>
+    asserta(sentinel(Pool, Host:Port)).
+
+must_have_option(Opt, Options) :-
+    option(Opt, Options),
+    !.
+must_have_option(Opt, Options) :-
+    existence_error(option, Opt, Options).
 
 %!  hello(+Connection, +Option)
 %
@@ -636,6 +774,7 @@ auto_reconnect(Server) :-
     server(Server, _, Options),
     option(reconnect(true), Options, true).
 
+reconnect_error(error(io_error(_Action, _On),_)).
 reconnect_error(error(socket_error(_Code, _),_)).
 reconnect_error(error(syntax_error(unexpected_eof),_)).
 
@@ -1218,6 +1357,11 @@ handle_push_messages([H|T], Redis) :-
 
 handle_push_message(["pubsub"|List], Redis) :-
     redis_broadcast(Redis, List).
+% some protocol version 3 push messages (such as
+% __keyspace@* events) seem to come directly
+% without a pubsub header
+handle_push_message([message|List], Redis) :-
+    redis_broadcast(Redis, [message|List]).
 
 
 %!  resync(+Redis) is det.
@@ -1232,15 +1376,16 @@ resync(Redis) :-
     catch(do_resync(Redis), E, true),
     (   var(Formal)
     ->  true
-    ;   redis_disconnect(Redis, [force(true)]),
-        throw(E)
+    ;   redis_disconnect(Redis, [force(true)])
     ).
 
 do_resync(Redis) :-
     A is random(1_000_000_000),
     redis_stream(Redis, S, true),
     redis_write_msg(S, echo(A)),
-    '$redis_resync'(S, A).
+    catch(call_with_time_limit(0.2, '$redis_resync'(S, A)),
+          time_limit_exceeded,
+          throw(error(time_limit_exceeded,_))).
 
 
 %!  redis_read_msg(+Stream, -Message, -Error, -PushMessages) is det.

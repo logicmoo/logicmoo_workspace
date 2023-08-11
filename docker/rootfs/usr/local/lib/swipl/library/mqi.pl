@@ -167,10 +167,11 @@ Redirects STDOUT and STDERR to the file path specified.  Useful for debugging th
 %  have the broadest adoption possible.
 %
 %  Protocol Version History:
-%  0.0 ->   First published version. Had a protocol bug that required messages sent to MQI to
-%           count Unicode code points instead of bytes for the message header.
-%  1.0 ->   Breaking change: Fixed protocol bug so that it properly accepted byte count instead of Unicode code point
-%           count in the message header for messages sent to MQI.
+%  - 0.0 First published version. Had a protocol bug that required messages sent to MQI to
+%        count Unicode code points instead of bytes for the message header.
+%
+%  - 1.0 Breaking change: Fixed protocol bug so that it properly accepted byte count instead of Unicode code point
+%        count in the message header for messages sent to MQI.
 mqi_version(1, 0).
 
 
@@ -453,19 +454,27 @@ goal_thread(Respond_To_Thread_ID) :-
     debug(mqi(query), "Received Findall = ~w, Query_Timeout = ~w, binding list: ~w, unexpanded: ~w, goal: ~w", [Find_All, Query_Timeout, Binding_List, Unexpanded_Goal, Goal]),
     (   Find_All
     ->  One_Answer_Goal = findall(Binding_List, @(user:Goal, user), Answers)
-    ;   One_Answer_Goal = ( @(user:Goal, user),
-                            Answers = [Binding_List],
-                            send_next_result(Respond_To_Thread_ID, Answers, _, Find_All)
+    ;   One_Answer_Goal = ( findall(    One_Answer,
+                                        (   @(user:Goal, user),
+                                            One_Answer = [Binding_List],
+                                            send_next_result(Respond_To_Thread_ID, One_Answer, _, Find_All)
+                                        ),
+                                        Answers
+                            ),
+                            (   Answers == []
+                            ->  send_next_result(Respond_To_Thread_ID, [], _, Find_All)
+                            ;   true
+                            )
                           )
     ),
-    All_Answers_Goal = run_cancellable_goal(Self_ID, findall(Answers, One_Answer_Goal, [Find_All_Answers | _])),
+    Cancellable_Goal = run_cancellable_goal(Self_ID, One_Answer_Goal),
     (   Query_Timeout == -1
-    ->  catch(All_Answers_Goal, Top_Exception, true)
-    ;   catch(call_with_time_limit(Query_Timeout, All_Answers_Goal), Top_Exception, true)
+    ->  catch(Cancellable_Goal, Top_Exception, true)
+    ;   catch(call_with_time_limit(Query_Timeout, Cancellable_Goal), Top_Exception, true)
     ),
     (   var(Top_Exception)
     ->  (   Find_All
-        ->  send_next_result(Respond_To_Thread_ID, Find_All_Answers, _, Find_All)
+        ->  send_next_result(Respond_To_Thread_ID, Answers, _, Find_All)
         ;   send_next_result(Respond_To_Thread_ID, [], no_more_results, Find_All)
         )
     ;   send_next_result(Respond_To_Thread_ID, [], Top_Exception, true)
@@ -821,7 +830,8 @@ send_next_result(Respond_To_Thread_ID, Answer, Exception_In_Goal, Find_All) :-
                 Answer == []
             )
         ->  thread_send_message(Respond_To_Thread_ID, result(false, Find_All))
-        ;   thread_send_message(Respond_To_Thread_ID, result(true(Answer), Find_All))
+        ;   handle_constraints(Answer, Final_Answer),
+            thread_send_message(Respond_To_Thread_ID, result(true(Final_Answer), Find_All))
         )
     ;   (   debug(mqi(query), "Sending result of goal to communication thread, Exception: ~w", [Exception_In_Goal]),
             thread_send_message(Respond_To_Thread_ID, result(error(Exception_In_Goal), Find_All))
@@ -829,10 +839,24 @@ send_next_result(Respond_To_Thread_ID, Answer, Exception_In_Goal, Find_All) :-
     ).
 
 
+handle_constraints(Answer, Final_Answer) :-
+    (   term_attvars(Answer, [])
+    ->  Final_Answer = Answer
+    ;   findall(    Single_Answer_With_Attributes,
+                    (   member(Single_Answer, Answer),
+                        copy_term(Single_Answer, Single_Answer_Copy, Attributes),
+                        append(['$residuals' = Attributes], Single_Answer_Copy, Single_Answer_With_Attributes)
+                    ),
+                    Final_Answer
+        ),
+        debug(mqi(query), "Constraints detected, converted: ~w to ~w", [Answer, Final_Answer])
+    ).
+
+
 % Gets the next result from the goal thread in the communication thread queue,
 % and retracts query_in_progress/1 when the last result has been sent.
 % Find_All == true only returns one message, so delete query_in_progress
-% No matter what it is
+% no matter what it is
 % \+ Find_All: There may be more than one result. The first one we hit with any exception
 % (note that no_more_results is also returned as an exception) means we are done
 get_next_result(Goal_Thread_ID, Stream, Options, Answers) :-
@@ -862,9 +886,11 @@ get_next_result(Goal_Thread_ID, Stream, Options, Answers) :-
 reply_with_result(_, Stream, error(Error)) :-
     !,
     reply_error(Stream, Error).
+
+% Gracefully handle exceptions that can occur during conversion to JSON
 reply_with_result(_, Stream, Result) :-
     !,
-    reply(Stream, Result).
+    catch(reply(Stream, Result), error(Exception, _), reply_with_result(_, Stream, error(Exception))).
 
 
 % Reply with a normal term

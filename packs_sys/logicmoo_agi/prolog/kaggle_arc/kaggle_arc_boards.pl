@@ -533,7 +533,11 @@ add_hint(TestID,ExampleNum,Hints):-
 assert_test_property(TestID,ExampleNum,Prop,Data):-
   assert_if_new(arc_test_property(TestID,ExampleNum,Prop,Data)),
   nop(pp(assert_test_property(TestID,ExampleNum,Prop,Data))).
-  
+
+retract_test_property(TestID,ExampleNum,Prop,Data):-
+  retractall(arc_test_property(TestID,ExampleNum,Prop,Data)).
+
+
   % forall((kaggle_arc_io(TestID,ExampleNum,in,Out1),N2 is N+1,  (kaggle_arc_io(TestID,(trn+N2),in,Out2)->true;kaggle_arc_io(TestID,(trn+0),in,Out2)),  grid_hint_recolor(i-i,Out1,Out2,Hints)),add_hint(TestID,Hints,N)).
 
 

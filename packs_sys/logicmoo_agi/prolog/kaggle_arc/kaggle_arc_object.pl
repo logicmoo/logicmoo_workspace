@@ -37,6 +37,7 @@ iz_type0(I,I).
 
 if_atype(always_keep,flag).
 if_atype(hidden,flag).
+if_atype(virtual,flag).
 if_atype(nsew,indiv).
 if_atype(indiv,info).
 if_atype(birth,info).
@@ -108,20 +109,39 @@ real_colors(GPoints,Cs):-
  findall(C,(sub_term(C,GPoints),is_real_color(C),is_fg_color(C)),L),list_to_set(L,S),!,Cs=S.
 
 into_fg_ngrid(NormGrid,NormNGridFG):-
-  mapgrid(into_fg_bg_as(wfg,unkC),NormGrid,MonoNorm),
+  %set_output(user_output),
+  mapgrid(into_fg_bg_uc(wfg,bg,_),NormGrid,MonoNorm),
+  %writeg(normGrid=NormGrid),
+  %writeg(monoNorm=MonoNorm),
   into_ngrid(MonoNorm,NormNGrid),
   %print_ss("into_ngrid",MonoNorm,NormNGrid),
-  mapgrid(fg_grid_syms,NormNGrid,NormNGridFG),!.
+  mapgrid(fg_grid_syms,NormNGrid,NormNGridFG),!,
+  %writeg(normNGrid=NormNGrid),
+  %writeg(normNGridFG=NormNGridFG),
+  !.
+
 
 fg_grid_syms(BG,_):- is_bg_color(BG),!.
+fg_grid_syms(BG,_):- unkC==BG,!.
 fg_grid_syms(BG,_):- var(BG),!.
 fg_grid_syms(BG,_):- \+ ground(BG),!.
 fg_grid_syms(S,SS):- S=='!',!,SS='|'.
 fg_grid_syms(S,SS):- S=='=',!,SS='-'.
+fg_grid_syms(_-BG,bg):- BG==unkC,!.
 fg_grid_syms(S-FG,SS):- is_fg_color(FG),!,fg_grid_syms(S,SS).
-fg_grid_syms(_-BG,_):- is_bg_color(BG),!.
+fg_grid_syms(_-BG,bg):- is_bg_color(BG),!.
 %fg_grid_syms(FG,FG):- is_fg_color(FG),!.
 fg_grid_syms(S,S).
+
+into_fg_bg_uc(_,_,UC,Was,Color):- Was==unkC,!,copy_term(UC,Color).
+into_fg_bg_uc(FG,_,_,Was,Color):- is_fg_color(Was),!,copy_term(FG,Color).
+into_fg_bg_uc(_,BG,_,Was,Color):- is_bg_color(Was),!,copy_term(BG,Color).
+into_fg_bg_uc(FG,BG,UC,Was,Color):- compound(Was),!, map_pred(into_fg_bg_uc(FG,BG,UC),Was,Color).
+into_fg_bg_uc(_,_,_,Was,Was).
+
+into_fg_bg_uc(A,B):- map_pred(into_fg_bg_uc(wfg,wbg,unkC),A,B).
+
+
   
 add_extra_propz(obj(Obj),obj(ObjL)):- add_extra_propz_l(Obj,ObjL),!.
 
@@ -243,7 +263,7 @@ make_indiv_object_s1(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
   compress_grid(CompOps,NormGrid,CompGrid),local_shape_id(CompGrid,CompSID),
   %writeg([normgrid=NormGrid]), 
   %if_t([[black,_]]=@=NormGrid,atrace),
-% RE=ADD=PHASE2   localpoints(NormGrid,NormLPoints),my_maplist(arg(2),NormLPoints,ShapeNormLPoints),
+% RE=ADD=PHASE2   localpoints(NormGrid,NormLPoints),my_maplist(tc_arg(2),NormLPoints,ShapeNormLPoints),
  
 % RE=ADD=PHASE2
   %  
@@ -355,7 +375,7 @@ remove_gridoid_props(globalpoints(O),globalpoints(O)):-!.
 remove_gridoid_props(localpoints(O),localpoints(O)):-!.
 remove_gridoid_props([O|Obj],ObjM):- is_list(O),!,maplist(remove_gridoid_props,[O|Obj],ObjM).
 remove_gridoid_props([O|Obj],ObjM):- is_object(O),!,maplist(remove_gridoid_props,[O|Obj],ObjM).
-remove_gridoid_props([O|Obj],ObjM):- is_prop1(O),arg(_,O,E),is_grid_or_points(E),!,remove_gridoid_props(Obj,ObjM).
+remove_gridoid_props([O|Obj],ObjM):- is_prop1(O),tc_arg(_,O,E),is_grid_or_points(E),!,remove_gridoid_props(Obj,ObjM).
 remove_gridoid_props([O|Obj],[O|ObjM]):- is_prop1(O),!,remove_gridoid_props(Obj,ObjM).
 
 is_grid_or_points(E):- is_grid(E),!.
@@ -599,7 +619,7 @@ protect_black(Grid,PGrid,UndoProtect):-
   Grid=PGrid, UndoProtect = (=).
 
 fix_point_colors(RShapeA,RShapeAR):-
-  maplist(arg(1),RShapeA,Cs),list_to_set(Cs,CCS),
+  maplist(tc_arg(1),RShapeA,Cs),list_to_set(Cs,CCS),
   (CCS==[unkC]->subst(RShapeA,unkC,black,RShapeAR);RShapeA=RShapeAR),!.
 fix_point_colors(RShapeA,RShapeA):-!.
 
@@ -619,8 +639,8 @@ grid_to_shape(Grid,RotG,OX,OY,ShapePoints,PenColors):-
   grid_size(RotShape,OX,OY),
   % colors_cc 
   %writeg([rotShape=RotShape,lShape=LShape]),
-  my_maplist(arg(2),LShape,ShapePoints), 
-  my_maplist(arg(1),LShape,Colorz),
+  my_maplist(tc_arg(2),LShape,ShapePoints), 
+  my_maplist(tc_arg(1),LShape,Colorz),
   cclumped(Colorz,PenColors0),!,
   simplify_pen(PenColors0,PenColors))).
 
@@ -765,7 +785,7 @@ prop_of(colorlesspoints,shape_rep(grav,_)).
 
 sort_obj_props(obj(L),obj(LO)):- !, sort_obj_props(L,LO).
 %sort_obj_props(L,LO):- L=LO.
-sort_obj_props(L,LOR):- my_maplist(in_obj_keys,L,LL),keysort(LL,LLS),my_maplist(arg(2),LLS,LO),reverse(LO,LOR).
+sort_obj_props(L,LOR):- my_maplist(in_obj_keys,L,LL),keysort(LL,LLS),my_maplist(tc_arg(2),LLS,LO),reverse(LO,LOR).
 %obj_prop_sort_compare(R,A,B):- compound(A), compound(B), !, obj_prop_sort_compare2(R,B,A).
 %obj_prop_sort_compare(R,A,B):- compare(R,B,A).
 %obj_prop_sort_compare2(R,A,B):- obk_key(A,AK),obk_key(B,BK),!,compare(R,AK-A,BK-B).
@@ -782,9 +802,9 @@ obk_key(touched(_,_),-150).
 obk_key(link(_,_,_),-150).
 obk_key(link(_,_),-150).
 obk_key(chromatic(_,_),0):-!.
-obk_key(A,99):- arg(1,A,L), is_grid(L).
-obk_key(A,92):- arg(_,A,L), is_list(L).
-obk_key(A,91):- arg(_,A,L), number(L).
+obk_key(A,99):- tc_arg(1,A,L), is_grid(L).
+obk_key(A,92):- tc_arg(_,A,L), is_list(L).
+obk_key(A,91):- tc_arg(_,A,L), number(L).
 obk_key(_,80). 
 
 priority(Var,20):- var(Var),!.
@@ -1002,7 +1022,7 @@ physical_points(Points,Points).
 
 physical_colorless_points(CPoints,Points):- is_ncpoints_list(CPoints),!,Points=CPoints.
 physical_colorless_points(CPoints,Points):- is_cpoints_list(CPoints),!,
-  physical_points(CPoints,PhysicalPoints),my_maplist(arg(2),PhysicalPoints,Points).
+  physical_points(CPoints,PhysicalPoints),my_maplist(tc_arg(2),PhysicalPoints,Points).
 physical_colorless_points(Other,Points):- localpoints(Other,CPoints),!,physical_colorless_points(CPoints,Points).
 
 %=================================================
@@ -1211,7 +1231,7 @@ unique_fg_colors(In,Cs):- is_grid(In),!,
 unique_fg_colors(Obj,List):- indv_props(Obj,unique_fg_colors(List))*->true;unique_fg_colors2(Obj,List).
 
 %unique_fg_colors(G,FG):- indv_props(G,unique_colors(SUCOR)),include(is_fg_color,SUCOR,FG),!.
-unique_fg_colors2(G,SUCOR):- colors_cc(G,GF),quietly((my_maplist(arg(1),GF,UC),include(is_real_fg_color,UC,SUCO))),reverse(SUCO,SUCOR).
+unique_fg_colors2(G,SUCOR):- colors_cc(G,GF),quietly((my_maplist(tc_arg(1),GF,UC),include(is_real_fg_color,UC,SUCO))),reverse(SUCO,SUCOR).
 
 
 %remove_color(C-_,hv(1,1)):- is_bg_color(C),!.
@@ -1335,7 +1355,7 @@ indv_prop_val(Obj,A,BL):- indv_props(Obj,NV),NV=..[A|BL].
 %indv_props(C,LL):- arc_expand_arg(C,I,G),call(G),!,indv_props(I,LL).
 %indv_props(I,X):- var_check(I,indv_props(I,X))*->true;(indv_props(I,X)).
 %indv_props(I,NV):- indv_prop_val1(I,NV);indv_prop_val2(I,NV).
-%indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
+%indv_props(Obj,L):- compound(Obj), tc_arg(1,Obj,L), is_list(L),!.
 %indv_props(C,LL):- C=obj(L),!,(is_list(L)->LL=L ; (copy_term(L,LL),append(LL,[],LL))),!.
 
 
@@ -1634,7 +1654,7 @@ grid_rep(I,Algo,NormGrid):- indv_props(I,grid_rep(Algo,NormGrid))*->true; algo_o
 grid_ops(I,Algo,NormOps):- indv_props(I,grid_ops(Algo,NormOps))*->true; algo_ops_grid(I,Algo,NormOps,_NormGrid).
 
 /*
-      localpoints(NormGrid,NormLPoints),my_maplist(arg(2),NormLPoints,ShapeNormLPoints),  
+      localpoints(NormGrid,NormLPoints),my_maplist(tc_arg(2),NormLPoints,ShapeNormLPoints),  
      shape_id(ShapeNormLPoints,NormShapeID),
      PropsOut = [grid_ops(Algo,NormOps),iz(algo_sid(Algo,NormShapeID)),grid_rep(Algo,NormGrid)].*/
 
@@ -1955,13 +1975,29 @@ externalize_links(Grp,NewObjs):- is_group_or_objects_list(Grp),  maplist(externa
 externalize_links(obj(Obj),obj(Props)):- !, maplist(externalize_olinks(obj(Obj)),Obj,Props).
 externalize_links(O,O).
 
-indv_link_props(I,[ grid_ops(norm,NormOps),iz(algo_sid(norm,NormSID)), 
-  iz(cenX(CGX)),iz(cenY(CGY)), pen(Ps), mass(Mass), rot2D(Rot)]):-  
+indv_link_props(CX,CY,R2D,I,[
+  iz(cenX(RX)),iz(cenY(RY)), iz(sizeX(SX)),iz(sizeY(SY)), pen(Ps), mass(Mass), rot2D(RRot),
+  grid_ops(norm,NormOps),iz(algo_sid(norm,NormSID))]):-  
   grid_ops(I,norm,NormOps), indv_props(I,iz(algo_sid(norm,NormSID))),
-  center2D(I,CGX,CGY),pen(I,Ps),rot2D(I,Rot),mass(I,Mass),!.
+  center2D(I,X,Y), vis2D(I,SX,SY), pen(I,Ps),rot2D(I,Rot),mass(I,Mass),!,
+  maybe_plus_minus(CX,X,RX),maybe_plus_minus(CY,Y,RY),
+  relativeRot(R2D,Rot,RRot),!.
+
+indv_link_props(I,[
+  iz(cenX(X)),iz(cenY(Y)), iz(sizeX(SX)),iz(sizeY(SY)), pen(Ps), mass(Mass), rot2D(Rot),
+  grid_ops(norm,NormOps),iz(algo_sid(norm,NormSID))]):-  
+  grid_ops(I,norm,NormOps), indv_props(I,iz(algo_sid(norm,NormSID))),
+  center2D(I,X,Y), vis2D(I,SX,SY), pen(I,Ps),rot2D(I,Rot),mass(I,Mass),!.
+
+relativeRot(_R2D,Rot,Rot).
+maybe_plus_minus(CY,Y, + RY):- CY=<Y,!,RY is Y - CY.
+maybe_plus_minus(CY,Y, - RY):- CY >Y,!,RY is CY-Y.
 
 
-externalize_olinks(_SObj,link(Grp,OID),elink(Grp,OProps)):- atom(OID), oid_to_obj(OID,Obj), indv_link_props(Obj,OProps),!.
+externalize_olinks(SObj,link(Grp,OID),elink(Grp,OProps)):-   atom(OID), oid_to_obj(OID,Obj), \+ is_bg_object(Obj),
+ (is_bg_object(Obj) -> (Grp==contains;Grp==contained_by) ; true),
+  center2D(SObj,CX,CY), rot2D(SObj,R2D),  
+  indv_link_props(CX,CY,R2D,Obj,OProps),!.
 externalize_olinks(_SObj,O,O).
 /*
 relative_props([OProp|ORest],SProps,[Prop|Was]):- make_unifiable(OProp,SProp), member(SProp,SProps),!,
@@ -2270,7 +2306,7 @@ fail_over_time(Secs,Goal,Else):-
 fail_over_time(Secs,Goal):- fail_over_time(Secs,Goal,true).
 
 grid_of(LO,LO,[]):- is_grid(LO),!.
-grid_of(LO,O,H):- arg(1,LO,O),arg(2,LO,H).
+grid_of(LO,O,H):- tc_arg(1,LO,O),tc_arg(2,LO,H).
 find_outline_pred(P3,Grid):- is_grid(Grid),!,
    grid_to_tid(Grid,ID),   
    grid_size(Grid,H,V),
@@ -2498,8 +2534,8 @@ object_to_nm_points(Obj,NPoints):-
 :- style_check(-singleton).
 :- style_check(-discontiguous).
 
-cc_fg_count(Colors,Len):- include(\=(cc(_,0)),Colors,NonZero),my_maplist(arg(1),NonZero,Colorz),include(is_real_fg_color,Colorz,FGC),length(FGC,Len).
-cc_bg_count(Colors,Len):- include(\=(cc(_,0)),Colors,NonZero),my_maplist(arg(1),NonZero,Colorz),include(is_real_bg_color,Colorz,FGC),length(FGC,Len).
+cc_fg_count(Colors,Len):- include(\=(cc(_,0)),Colors,NonZero),my_maplist(tc_arg(1),NonZero,Colorz),include(is_real_fg_color,Colorz,FGC),length(FGC,Len).
+cc_bg_count(Colors,Len):- include(\=(cc(_,0)),Colors,NonZero),my_maplist(tc_arg(1),NonZero,Colorz),include(is_real_bg_color,Colorz,FGC),length(FGC,Len).
 
 
 guess_shape(GridH,GridV,GridIn,LocalGrid,I,Empty,N,H,V,[cc(Black,_)|Rest],Points, bfc(FGB)):-  Rest == [], ((is_bg_color(Black);Black==wbg)->FGB=unkC;FGB=fg).
@@ -2547,7 +2583,7 @@ guess_shape(GridH,GridV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- 
   grid_to_gridmap(GridIn,GridON),
   subst_1L(['~'-'red','+'-'blue','.'-'yellow'],GridON,SSP),
   localpoints(SSP,NPoints),!.
-  %clumped(ON,COO),!,my_maplist(arg(1),COO,PAT).
+  %clumped(ON,COO),!,my_maplist(tc_arg(1),COO,PAT).
   %points_to_grid(H,V,FGridO,RGridO).
 
 :- style_check(+singleton).
