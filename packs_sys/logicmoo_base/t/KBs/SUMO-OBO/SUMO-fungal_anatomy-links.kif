@@ -1,0 +1,4 @@
+(synonymousExternalConcept "FAO--0000019" Spore fungal_anatomy)
+(synonymousExternalConcept "part_of" part fungal_anatomy)
+(subsumedExternalConcept "FAO--0000039" Spore fungal_anatomy)
+(subsumedExternalConcept "FAO--0000040" Spore fungal_anatomy)

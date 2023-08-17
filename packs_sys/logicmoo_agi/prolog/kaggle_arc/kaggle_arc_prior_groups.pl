@@ -956,42 +956,7 @@ objects_props(SubObjs,Props):-
 objects_names_props(SubObjs,Props):-
   findall(F-Prop,(member(O,SubObjs),object_prop(O,Prop),prop_name(Prop,F)),Props).
 
-prop_value(Prop,Value):- nonvar(Value),prop_value(Prop,Var),!,Value=Var.
-prop_value(List,Value):- is_list(List),!,maplist(prop_value,List,Value),!.
-prop_value(Prop,Value):- prop_first_value(Prop,Value).
 
-prop_first_value(Prop,Value):- nonvar(Value),prop_first_value(Prop,Var),!,Value=Var.
-prop_first_value(Prop,Value):- \+ compound(Prop),!,Value=Prop.
-prop_first_value(\+ Prop,Value):- nonvar(Prop),!,prop_first_value(Prop,Value).
-prop_first_value(_ - Prop,Value):- nonvar(Prop),!,prop_first_value(Prop,Value).
-prop_first_value(List,Value):- is_list(List),!,member(Prop,List),prop_first_value(Prop,Value),!.
-prop_first_value(Value,Value).
-
-prop_name(Prop,Named):- nonvar(Named),prop_name(Prop,Var),!,Named=Var.
-prop_name(Prop,Named):- make_prop_name(Prop,Named),!.
-prop_name(Prop,Named):- prop_first_value(Prop,Value), value_to_name(Value,Named),!.
-
-
-make_prop_name(X,Y):- \+ compound(X),!,X=Y.
-make_prop_name(samez(Prop, _),samez(Named)):- !, make_prop_name(Prop,Named).
-make_prop_name(pg(_,X,R,_),pg(X,R)):-!.
-make_prop_name(iz(Prop),iz(Named)):- !, make_prop_name(Prop,Named).
-make_prop_name(giz(Prop),giz(Named)):- !, make_prop_name(Prop,Named).
-make_prop_name(Prop,Free):- make_unifiable_cc(Prop,Named),remove_free_args(Named,Free),!.
-make_prop_name(Prop,Named):- functor(Prop,Named,_).
-remove_free_args(Named,Free):-  copy_term(Named,Free),term_variables(Free,Vs),numbervars(Vs,666,_,[singletons(true)]).
-%remove_free_args(Named,Free):- Named=..[F|Args],include(nonvar,Args,NArgs),Free=..[F|NArgs].
-
-
-
-
-value_to_name(Value,Named):- nonvar(Named),value_to_name(Value,Named2),!,Named2=Named.
-value_to_name(Value,Named):- \+ compound(Value),!,Value=Named.
-value_to_name(Value,Named):- make_unifiable_cc(Value,Named),!.
-value_to_name(Value,Named):- make_unifiable_cc(Value,UProp),
-   compound_name_arguments(UProp,F,Args),
-   include(nonvar,Args,OArgs),
-   (OArgs ==[] -> Named=F ; compound_name_arguments(Named,F,OArgs)).
 
 
 mostly_fg_objs(OutCR,OutCR):-!.
@@ -2154,19 +2119,7 @@ templify_cc(N-WP1,N-_):- is_prop1(WP1),!.
 templify_cc(N-WP1,N-WP2):- !, templify_cc(WP1,WP2).
 
 
-make_unifiable_cc(WP1,WP2):- \+ compound(WP1),!,WP2=WP1.
-make_unifiable_cc(N-WP1,N-_):- \+ is_list(WP1),!.
-make_unifiable_cc(N-WP1,N-WP2):- !, make_unifiable_cc(WP1,WP2).
-make_unifiable_cc([H|T],[HH|TT]):- !, make_unifiable_cc(H,HH),make_unifiable_cc(T,TT).
-make_unifiable_cc(cc(C,N),cc(_,N)):- integer(N), is_real_color(C),!.
-make_unifiable_cc(cc(N,_),cc(N,_)):-!.
-make_unifiable_cc(oid(_),oid(_)):-!.
-make_unifiable_cc(recolor(N,_),recolor(N,_)):-!.
-make_unifiable_cc(rotSize2D(grav,_,_),rotSize2D(grav,_,_)):-!.
-%make_unifiable_cc(grid_ops(comp,_),grid_ops(comp,_)):-!.
-make_unifiable_cc(iz(symmetry_type(N,_)),iz(symmetry_type(N,_))):-!.
-make_unifiable_cc(pg(_,G,M,_),pg(_,UG,M,_)):-!,make_unifiable_cc(G,UG).
-make_unifiable_cc(O,U):- make_unifiable(O,U).
+
 
 count_objs(B,O):- \+ is_list(B),!, O = 0.
 count_objs(B,O):- \+ ( member(E,B), is_list(E)), \+ ( member(E,B), compound(E), functor(E,F,_), upcase_atom(F,UF),downcase_atom(F,UF)),!,O=1.

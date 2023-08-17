@@ -1,0 +1,3625 @@
+(subclass EO--0007116 EO--0007333)
+
+(subclass EO--0007320 EO--0007127)
+
+(termFormat EnglishLanguage EO--0007286 "dry season")
+
+(subclass EO--0007259 EO--0007049)
+
+(mo-definition EO--0007138 "&quot;The treatment involving an exposure of reference/experimental plant to monocot plant Echinodorus spp., found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:13047]")
+
+(subclass EO--0007349 EO--0007124)
+
+(termFormat EnglishLanguage EO--0007372 "Meloidogyne incognita")
+
+(subclass EO--0007377 EO--0007073)
+
+(mo-synonym EO--0007256 "&quot;open field study&quot; []")
+
+(termFormat EnglishLanguage EO--0007331 "Pseudaletia unipuncta")
+
+(subclass EO--0007226 EO--0007135)
+
+(mo-definition EO--0007055 "&quot;Treatment involving the exposure of plant to the pathogen Cochliobolus spp.&quot; [GR:ivy, NCBI_taxid:5015]")
+
+(subclass EO--0007526 EO--0007149)
+
+(subclass EO--0007017 EO--0007141)
+
+(termFormat EnglishLanguage EO--0007248 "green house study")
+
+(subclass EO--0007028 EO--0007137)
+
+(termFormat EnglishLanguage EO--0007396 "flood prone region")
+
+(mo-definition EO--0007392 "&quot;The treatment involving the plant or the populations grown in regions where the land level is steep, rarely flodded and has aerobic soil.&quot; [IRIS:SES]")
+
+(subclass EO--0007329 EO--0007115)
+
+(mo-synonym EO--0007285 "&quot;monsoon season&quot; []")
+
+(termFormat EnglishLanguage EO--0007175 "temperature environment")
+
+(termFormat EnglishLanguage EO--0007232 "selenium nutrient regimen")
+
+(mo-definition EO--0007564 "&quot;The treatment involving use of p-p'-N,N-di(2-chloroethyl)aminophenoxyphenylalanine for mutagenesis process.&quot; [GR:pj, CAS:[857-95-4]]")
+
+(termFormat EnglishLanguage EO--0007197 "humidity regimen")
+
+(subclass EO--0007207 EO--0007221)
+
+(subclass EO--0007553 EO--0007149)
+
+(mo-synonym EO--0007560 "&quot;CB3007&quot; []")
+
+(subclass EO--0007345 EO--0007031)
+
+(termFormat EnglishLanguage EO--0007211 "Cochliobolus miyabeanus")
+
+(subclass EO--0007634 EO--0007115)
+
+(mo-definition EO--0007097 "&quot;Treatment involving the use of ammonium sulfate supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007110 EO--0007210)
+
+(mo-definition EO--0007389 "&quot;The treatment involving exposure of plant to the pathogen Gibberella zeae. It is a causal agent for rice Scab disease.&quot; [GR:ivy, NCBI_taxid:5518]")
+
+(mo-synonym EO--0007108 "&quot;purple bacteria&quot; []")
+
+(mo-synonym EO--0007291 "&quot;verdan senescence inhibitor&quot; []")
+
+(subclass EO--0007536 EO--0007149)
+
+(mo-definition EO--0007083 "&quot;Treatment involving the exposure of plant to the pathogen Phoma sorghina. It is a causal agent for rice Glume Blight Disease disease.&quot; [GR:ivy, NCBI_taxid:73005]")
+
+(subclass EO--0007120 EO--0007333)
+
+(subclass EO--0007544 EO--0007149)
+
+(mo-definition EO--0007044 "&quot;Treatment involving the use of mineral supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007071 "suspension cell culture
+media")
+
+(subclass EO--0007230 EO--0007047)
+
+(termFormat EnglishLanguage EO--0007101 "urea regimen")
+
+(subclass EO--0007253 EO--0007239)
+
+(mo-definition EO--0007377 "&quot;The treatment involving exposure of plant to the pathogen Athelia rolfsii. It is a causal agent for rice Seedling Blight (Fungal) disease.&quot; [GR:ivy, NCBI_taxid:109385]")
+
+(termFormat EnglishLanguage EO--0007063 "DCMU regimen")
+
+(subclass EO--0007385 EO--0007064)
+
+(subclass EO--0007109 EO--0007210)
+
+(termFormat EnglishLanguage EO--0007391 "lowland region")
+
+(termFormat EnglishLanguage EO--0007525 "cisplatin")
+
+(termFormat EnglishLanguage EO--0007273 "boron nutrient regimen")
+
+(subclass EO--0007033 EO--0007027)
+
+(subclass EO--0007336 EO--0007337)
+
+(subclass EO--0007565 EO--0007149)
+
+(mo-definition EO--0007556 "&quot;The treatment involving use of nitrogen mustard for mutagenesis process.&quot; [GR:pj, CAS:[51-75-2]]")
+
+(mo-synonym EO--0007386 "&quot;rice leaf scald&quot; []")
+
+(termFormat EnglishLanguage EO--0007130 "near infra-red light
+regimen")
+
+(subclass EO--0007129 EO--0007222)
+
+(mo-synonym EO--0007010 "&quot;giant arrowhead&quot; []")
+
+(subclass EO--0007249 EO--0007148)
+
+(mo-synonym EO--0007300 "&quot;paddy bug&quot; []")
+
+(mo-definition EO--0007287 "&quot;The treatment involving use of DBMIB. It blocks the oxidation of plastoquinol in the photosynthetic light reaction and keeps the plastoquinone pool reduced. &quot; [GR:pj]")
+
+(subclass EO--0007339 EO--0007109)
+
+(subclass EO--0007335 EO--0007349)
+
+(mo-definition EO--0007382 "&quot;The treatment involving an exposure to wind, which may depend on regional environment.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007367 "Aphelenchoides besseyi")
+
+(termFormat EnglishLanguage EO--0007333 "Insecta")
+
+(mo-definition EO--0007182 "&quot;The treatment involving exposure of plant to the Pythium graminicola. It is a causal agent for rice feeder root necrosis disease.&quot; [GR:pj, NCBI_taxid:82937]")
+
+(mo-definition EO--0007565 "&quot;The treatment involving use of quinhydrone for mutagenesis process.&quot; [GR:pj, CAS:[106-34-3]]")
+
+(subclass EO--0007286 EO--0007027)
+
+(mo-synonym EO--0007250 "&quot;zigzag leafhopper&quot; []")
+
+(termFormat EnglishLanguage EO--0007409 "brassinosteroid")
+
+(mo-synonym EO--0007292 "&quot;carbonyl cyanide phenylhydrazone&quot; []")
+
+(mo-definition EO--0007227 "&quot;The treatment involving exposure of plant to the pathogen Cochliobolus lunatus.&quot; [GR:ivy, NCBI_taxid:5503]")
+
+(subclass EO--0007067 EO--0007265)
+
+(subclass EO--0007018 EO--0007140)
+
+(mo-synonym EO--0007560 "&quot;melphalan&quot; []")
+
+(mo-synonym EO--0007367 "&quot;rice white-tip nematode&quot; []")
+
+(termFormat EnglishLanguage EO--0007217 "green light regimen")
+
+(subclass EO--0007616 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007626 "supersonic-treatment")
+
+(subclass EO--0007543 EO--0007149)
+
+(mo-synonym EO--0007344 "&quot;rice yellow orange leaf virus&quot; []")
+
+(termFormat EnglishLanguage EO--0007341 "Fusarium")
+
+(mo-synonym EO--0007356 "&quot;hoja blanca&quot; []")
+
+(mo-definition EO--0007327 "&quot;The treatment involving exposure of plant to the pathogen Mycovellosiella oryzae. It is a causal agent for rice White Leaf Streak Disease.&quot; [GR:ivy]")
+
+(subclass EO--0007168 EO--0007041)
+
+(mo-definition EO--0007017 "&quot;The exposure of reference/experimental plant to monocot plant Cyperus difformis, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(mo-definition EO--0007127 "&quot;Treatment involving the exposure of plant to the pest Meloidogyne spp. It is a causal agent for rice root knot nematode disease.&quot; [GR:pj, NCBI_taxid:189290]")
+
+(termFormat EnglishLanguage EO--0007190 "Ustilaginoidea virens")
+
+(subclass EO--0007567 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007288 "magnesium nutrient regimen")
+
+(termFormat EnglishLanguage RiverBank "river bank region")
+
+(termFormat EnglishLanguage EO--0007014 "Echinodorus cordifolius")
+
+(subclass EO--0007333 EO--0007349)
+
+(subclass EO--0007293 EO--0007045)
+
+(instance Smo-definedSubset BinaryRelation)
+
+(termFormat EnglishLanguage EO--0007505 "1,2:5,6-dibenzanthracene")
+
+(subclass EO--0007059 EO--0007134)
+
+(termFormat EnglishLanguage EO--0007075 "high light intensity
+regimen")
+
+(subclass EO--0007089 EO--0007087)
+
+(termFormat EnglishLanguage "genotype")
+
+(subclass EO--0007346 EO--0007111)
+
+(subclass EO--0007564 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007522 "aminopterin")
+
+(termFormat EnglishLanguage EO--0007304 "Marasmia patnalis")
+
+(mo-definition EO--0007543 "&quot;The treatment involving use of hexamethylphosphoramide for mutagenesis process.&quot; [GR:pj, CAS:[680-31-9]]")
+
+(termFormat EnglishLanguage EO--0007216 "yellow light regimen")
+
+(mo-definition EO--0007214 "&quot;The treatment involving exposure of plant to the pathogenic Alternaria sp.&quot; [GR:ivy, NCBI_taxid:5598]")
+
+(subclass EO--0007106 EO--0007124)
+
+(subclass EO--0007533 EO--0007149)
+
+(mo-synonym EO--0007196 "&quot;sun light&quot; []")
+
+(subclass EO--0007008 EO--0007022)
+
+(termFormat EnglishLanguage EO--0007388 "Alternaria padwickii")
+
+(termFormat EnglishLanguage EO--0007182 "Pythium graminicola")
+
+(mo-definition EO--0007628 "&quot;The treatment using X-ray either exclusively or as part of a supplemental electromagnetic radiation in the wavelength range of 5pm-10nm.&quot; [GR:pj]")
+
+(mo-synonym EO--0007012 "&quot;ducksalad&quot; []")
+
+(termFormat EnglishLanguage EO--0007191 "abiotic environment")
+
+(subclass EO--0007555 EO--0007149)
+
+(mo-definition EO--0007236 "&quot;The treatment involving exposure of plant to the pathogen Pseudomonas plantarii. It is a causal agent for rice Seedling Blight (Bacterial) disease.&quot; [GR:ivy, NCBI_taxid:41899]")
+
+(mo-definition EO--0007567 "&quot;The treatment involving use of sodium bisulfite for mutagenesis process.&quot; [GR:pj, CAS:[7631-90-5]]")
+
+(subclass EO--0007278 EO--0007043)
+
+(subclass EO--0007306 EO--0007047)
+
+(subclass EO--0007321 EO--0007126)
+
+(mo-definition EO--0007084 "&quot;Treatment involving the exposure of plant to the pests that do not falll under the well known classes of birds, mammals, insects, nematode and molluscs.&quot; [GR:pj]")
+
+(mo-definition EO--0007362 "&quot;The treatment involving exposure of plant to the pathogen Balansia oryzae-sativae. It is a causal agent for rice Udbatta diesase which is also called as Black Choke Disease, False Ergot Disease, Incense Rod Disease.&quot; [GR:ivy, NCBI_taxid:116609]")
+
+(mo-synonym EO--0007114 "&quot;butterfly&quot; []")
+
+(mo-definition EO--0007325 "&quot;The treatment involving exposure of plant to the pest Hirschmaniella imamuri. It is a causal agent for rice rice root nematode disease.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007545 "ICR 100")
+
+(mo-definition EO--0007532 "&quot;The treatment involving use of DNA fragment insertion or deletion as part of mutagenesis.&quot; [GR:pj, CAS:[9007-49-2]]")
+
+(subclass EO--0007176 EO--0007064)
+
+(mo-synonym EO--0007130 "&quot;near IR light regimen&quot; []")
+
+(termFormat EnglishLanguage EO--0007546 "ICR 170")
+
+(subclass EO--0007509 EO--0007149)
+
+(subclass EO--0007022 EO--0007005)
+
+(subclass EO--0007174 EO--0007175)
+
+(subclass EO--0007021 EO--0007022)
+
+(termFormat EnglishLanguage EO--0007192 "Drechslera gigantea")
+
+(mo-synonym EO--0007311 "&quot;gall midge&quot; []")
+
+(mo-synonym EO--0007318 "&quot;RYMV&quot; []")
+
+(mo-definition EO--0007266 "&quot;The treatment involving use of solid growth media for growing the plants or tissue cultured samples.&quot; [GR:pj]")
+
+(subclass EO--0007332 EO--0007174)
+
+(subclass EO--0007272 EO--0007142)
+
+(mo-definition EO--0007504 "&quot;The treatment involving use of 1,2-dichloroethane for mutagenesis process.&quot; [GR:pj, CAS:[107-06-2]]")
+
+(mo-definition EO--0007555 "&quot;The treatment involving use of natural gas for mutagenesis process.&quot; [GR:pj]")
+
+(subclass EO--0007376 EO--0007107)
+
+(subclass EO--0007514 EO--0007149)
+
+(mo-synonym EO--0007347 "&quot;bird&quot; []")
+
+(termFormat EnglishLanguage EO--0007093 "fish meal regimen")
+
+(mo-definition EO--0007250 "&quot;The treatment involving exposure of plant to the pest zigzag leafhopper.&quot; [GR:pj]")
+
+(mo-definition EO--0007059 "&quot;The treatment involving an exposure to acidic pH levels of soil growth media.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007617 "ggr ray")
+
+(termFormat EnglishLanguage "monocot weed plant neighbor")
+
+(subclass EO--0007304 EO--0007114)
+
+(mo-definition EO--0007128 "&quot;In biological experiments it refer to the intermittent exposure of plant to the cycles of light and dark or one light Vs the another type of light &quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007236 "Pseudomonas plantarii")
+
+(mo-synonym EO--0007078 "&quot;photoperiod regimen&quot; []")
+
+(termFormat EnglishLanguage EO--0007510 "1,6-dimethylsulfonoxy
+L-mannitol")
+
+(termFormat EnglishLanguage EO--0007235 "silicon nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007294 "Pelopidas mathias")
+
+(termFormat EnglishLanguage EO--0007220 "violet light regimen")
+
+(mo-synonym EO--0007525 "&quot;cis-dichlorodiammineplatinum(II)&quot; []")
+
+(subclass EO--0007171 EO--0007147)
+
+(termFormat EnglishLanguage EO--0007122 "Chilo")
+
+(mo-synonym EO--0007289 "&quot;rice whorl maggot&quot; []")
+
+(termFormat EnglishLanguage EO--0007072 "Microdochium oryzae")
+
+(mo-definition EO--0007174 "&quot;The treatment involving an exposure to cold or sub-optimal temperature, which may depend on the study type or the regional environment.&quot; [GR:pj]")
+
+(mo-definition EO--0007574 "&quot;The treatment involving use of vinyl carbamate for mutagenesis process.&quot; [GR:pj, CAS:[15805-73-9]]")
+
+(subclass EO--0007410 EO--0007402)
+
+(subclass EO--0007574 EO--0007149)
+
+(subclass EO--0007408 EO--0007189)
+
+(mo-definition EO--0007116 "&quot;Treatment involving the exposure of plant to the pest of hemiptera class.&quot; [GR:pj, NCBI_taxid:7524]")
+
+(subclass EO--0007080 EO--0007165)
+
+(subclass EO--0007375 EO--0007127)
+
+(subclass EO--0007036 EO--0007027)
+
+(mo-synonym EO--0007180 "&quot;Weedar 64A&quot; [CAS:94-75-7]")
+
+(mo-definition EO--0007130 "&quot;The treatment using infra-red light either exclusively or as part of a supplemental light of near IR band that contains energy in the range of wavelengths 750-1300nm, which is closest to the visible light.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007568 "sodium fluoride")
+
+(mo-synonym EO--0007121 "&quot;thrips&quot; []")
+
+(mo-definition EO--0007211 "&quot;The treatment involving exposure of plant to the pathogen Cochliobolus miyabeanus. It is a causal agent for rice Brown Spot diseaseand/or Seedling Blight (Fungal) disease.&quot; [GR:ivy, NCBI_taxid:101162]")
+
+(mo-definition EO--0007177 "&quot;Suggests the exposure of plant to the Pythium myriotylum. It is a causal agent for rice feeder root necrosis disease.&quot; [GR:pj, NCBI_taxid:82941]")
+
+(mo-definition EO--0007118 "&quot;Treatment involving the exposure of plant to the pathogen Gibberella spp.&quot; [GR:ivy, NCBI_taxid:5126]")
+
+(subclass EO--0007308 EO--0007116)
+
+(mo-synonym EO--0007279 "&quot;striped stemborer&quot; []")
+
+(termFormat EnglishLanguage EO--0007212 "Mycoplasma")
+
+(termFormat EnglishLanguage EO--0007257 "Xanthomonas oryzae pv.
+oryzae")
+
+(mo-synonym EO--0007264 "&quot;pink stem borer&quot; []")
+
+(subclass EO--0007364 EO--0007073)
+
+(termFormat EnglishLanguage EO--0007518 "5-bromouracil")
+
+(mo-synonym EO--0007553 "&quot;NNG&quot; []")
+
+(termFormat EnglishLanguage EO--0007230 "iodine nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007123 "Eysarcoris trimaculatus")
+
+(mo-synonym EO--0007572 "&quot;CB1246&quot; []")
+
+(subclass EO--0007545 EO--0007149)
+
+(subclass EO--0007065 EO--0007073)
+
+(subclass EO--0007556 EO--0007149)
+
+(mo-definition EO--0007385 "&quot;The treatment to plants or the populations grown in the regions where the land is leveled, may have bunded fields with water control, shallow. For rice flooded with anaoerobic soil during crop growth.&quot; [IRIS:SES]")
+
+(documentation Smo-inSubset EnglishLanguage "Declares a term/typedef
+to be in a subset.")
+
+(mo-synonym EO--0007515 "&quot;CB1506&quot; []")
+
+(mo-synonym EO--0007283 "&quot;rice thrips&quot; []")
+
+(termFormat EnglishLanguage EO--0007142 "Scirpophaga spp.")
+
+(subclass EO--0007001 EO--0007222)
+
+(mo-definition EO--0007524 "&quot;The treatment involving use of caffeine for mutagenesis process.&quot; [GR:pj, CAS:[58-08-2]]")
+
+(mo-synonym EO--0007073 "&quot;basidiomycetes&quot; []")
+
+(mo-definition EO--0007036 "&quot;The treatment involving an exposure to the summer season.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007284 "nitrogen nutrient regimen")
+
+(subclass EO--0007277 EO--0007122)
+
+(subclass EO--0007180 EO--0007183)
+
+(termFormat EnglishLanguage EO--0007184 "Pythium dissotocum")
+
+(subclass EO--0007311 EO--0007119)
+
+(subclass EO--0007205 EO--0007358)
+
+(termFormat EnglishLanguage EO--0007547 "iodine")
+
+(mo-definition EO--0007035 "&quot;The treatment involving an exposure to the winter season.&quot; [GR:pj]")
+
+(mo-definition EO--0007038 "&quot;The treatment involving an exposure to the autumn season.&quot; [GR:pj]")
+
+(subclass EO--0007372 EO--0007127)
+
+(subclass EO--0007513 EO--0007149)
+
+(mo-definition EO--0007022 "&quot;The exposure of reference/experimental plant to monocot plants found in its growth environment. These plants may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:4447]")
+
+(mo-definition EO--0007064 "&quot;The treatment involving an exposure to the various factors that comprise a geographical/regional location.&quot; [GR:pj]")
+
+(subclass EO--0007521 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007008 "Monochoria vaginalis")
+
+(mo-definition EO--0007094 "&quot;Treatment involving the use of sodium nitrate supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage "germplasm")
+
+(mo-synonym EO--0007017 "&quot;smallflower umbrellaplant&quot; []")
+
+(documentation EnglishLanguage "Represents the transitive property.
+(Typedefs only)")
+
+(subclass EO--0007140 EO--0007022)
+
+(termFormat EnglishLanguage EO--0007243 "Pseudomonas glumae")
+
+(termFormat EnglishLanguage EO--0007324 "Hirschmaniella imamuri")
+
+(termFormat EnglishLanguage EO--0007337 "Nematoda")
+
+(termFormat EnglishLanguage EO--0007090 "ammonium nitrate regimen")
+
+(termFormat EnglishLanguage EO--0007054 "clay content")
+
+(mo-synonym EO--0007363 "&quot;Helminthosporium sigmoideum var.irregulare.&quot; []")
+
+(subclass EO--0007218 EO--0007221)
+
+(mo-synonym EO--0007326 "&quot;MLO&quot; []")
+
+(termFormat EnglishLanguage EO--0007087 "natural fertilizer regimen")
+
+(termFormat EnglishLanguage EO--0007382 "wind environment")
+
+(subclass EO--0007285 EO--0007027)
+
+(mo-definition EO--0007339 "&quot;The treatment involving exposure of plant to the rice tungro spherical virus. It is a causal agent for rice tungro disease, which is also called as Mentek or Waika diease.&quot; [GR:ivy, NCBI_taxid:35287]")
+
+(mo-definition EO--0007205 "&quot;The treatment involving exposure of plant to the rice grassy stunt 2 virus. It is a causal agent for rice grassy stunt disease.&quot; [GR:ivy, NCBI_taxid:66266]")
+
+(subclass EO--0007085 EO--0007241)
+
+(mo-definition EO--0007235 "&quot;The treatment involving exposure of plant to silicon as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-definition EO--0007285 "&quot;The treatment involving an exposure to the wet or the rainy season.&quot; [GR:pj]")
+
+(mo-definition EO--0007095 "&quot;Treatment involving the use of calcium nitrate supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007227 "Cochliobolus lunatus")
+
+(mo-definition EO--0007171 "&quot;The treatment involving exposure of plants to varying levels of pH of the growth media.&quot; [GR:pj]")
+
+(subclass EO--0007215 EO--0007221)
+
+(mo-synonym EO--0007114 "&quot;moth&quot; []")
+
+(mo-synonym EO--0007211 "&quot;Bipolaris oryzae&quot; []")
+
+(mo-synonym EO--0007330 "&quot;Prodenia acronyctoides&quot; []")
+
+(subclass EO--0007097 EO--0007079)
+
+(mo-definition EO--0007288 "&quot;The treatment involving exposure of plant to macronutrient magnesium as supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007508 EO--0007149)
+
+(mo-synonym EO--0007363 "&quot;Leptosphaeria salvinii&quot; []")
+
+(mo-definition EO--0007364 "&quot;The treatment involving exposure of plant to the pathogen Rhizoctonia oryzae. It is a causal agent for rice Sheath Spot disease such as Bordered Sheath Spot Disease, Red Sclerotial Disease and Rhizoctonia Sheath Spot Disease.&quot; [GR:ivy, NCBI_taxid:63190]")
+
+(termFormat EnglishLanguage EO--0007302 "T-DNA insert")
+
+(mo-definition EO--0007062 "&quot;The treatment involving an exposure to basic pH levels of soil growth media.&quot; [GR:pj]")
+
+(subclass EO--0007625 EO--0007154)
+
+(subclass EO--0007322 EO--0007126)
+
+(termFormat EnglishLanguage EO--0007555 "natural gas")
+
+(subclass EO--0007270 EO--0007078)
+
+(subclass EO--0007137 EO--0007022)
+
+(termFormat EnglishLanguage EO--0007562 "p-N,N-di-(2-chloroethyl)aminophenylbutyric acid")
+
+(mo-definition EO--0007005 "&quot;Suggests the exposure of plant to other plants found in its growth environment. These plants may be growing as a weed or as part of normal farming practices. This treatmnet is part of an assay of any direct or indirect, harmful or beneficial effect of one plant on another through the production of chemical compounds (allelochemicals) that escape in the environment.&quot; [GR:pj, Virdiplantae:33090]")
+
+(termFormat EnglishLanguage "optimal temperature regimen")
+
+(termFormat EnglishLanguage EO--0007128 "intermittent light regimen")
+
+(mo-definition EO--0007194 "&quot;The treatment involving exposure of plant to the pathogen Sclerophthora macrospora. It is a causal agent for rice Downy Mildew disease.&quot; [GR:ivy]")
+
+(mo-definition EO--0007190 "&quot;The treatment involving exposure of plant to the pathogen Ustilaginoidea virens. It is a causal agent for rice False Smut Disease also called as Green Smut disease.&quot; [GR:ivy, NCBI_taxid:124427]")
+
+(mo-definition EO--0007338 "&quot;The treatment involving an exposure to cold or sub-optimal water temperature, which may depend on the study type or the regional environment.&quot; [GR:pj]")
+
+(subclass EO--0007383 EO--0007198)
+
+(termFormat EnglishLanguage EO--0007378 "Sarocladium oryzae")
+
+(subclass EO--0007160 EO--0007175)
+
+(termFormat EnglishLanguage EO--0007256 "field study")
+
+(mo-definition EO--0007228 "&quot;The treatment involving exposure of plant to chromium as supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007632 EO--0007167)
+
+(subclass EO--0007069 EO--0007165)
+
+(mo-synonym EO--0007335 "&quot;mollusk&quot; []")
+
+(mo-definition EO--0007067 "&quot;The treatment suggesting the use of liquid growth media for growing the plants. &quot; [GR:pj]")
+
+(mo-synonym EO--0007364 "&quot;Rhizoctonia zeae&quot; []")
+
+(mo-definition EO--0007071 "&quot;The treatment suggesting the use of liquid growth media for cell cultured samples.&quot; [GR:pj]")
+
+(subclass EO--0007037 EO--0007027)
+
+(mo-synonym EO--0007361 "&quot;RGDV&quot; []")
+
+(subclass EO--0007062 EO--0007133)
+
+(subclass EO--0007382 EO--0007316)
+
+(subclass EO--0007504 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007159 "sandy loam soil")
+
+(mo-definition EO--0007119 "&quot;Treatment involving the exposure of plant to the pest of Diptera class.&quot; [GR:pj, NCBI_taxid:7147]")
+
+(mo-definition EO--0007149 "&quot;The treatment involving use of mutagen for the mutagenesis process.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007280 "unknown study type")
+
+(subclass EO--0007347 EO--0007349)
+
+(mo-definition EO--0007512 "&quot;The treatment involving use of 1-bromo-2-chloroethane for mutagenesis process.&quot; [GR:pj, CAS:[107-04-0]]")
+
+(mo-synonym EO--0007180 "&quot;B-Selektonon&quot; [CAS:94-75-7]")
+
+(mo-definition EO--0007367 "&quot;The treatment involving exposure of plant to the pest Aphelenchoides besseyi. It is a causal agent for rice white tip nematode disease.&quot; [GR:pj]")
+
+(mo-definition EO--0007152 "&quot;The treatment involving amount of energy of any radiation incident upon (or flowing through) unit area, perpendicular to the radiation source, in unit time.&quot; [GR:pj]")
+
+(documentation EnglishLanguage "General comments on the ontology.")
+
+(mo-definition EO--0007224 "&quot;The treatment involving exposure of plant or a plant part to the amount of light energy incident upon (or flowing through) unit area, perpendicular to the radiation source, in unit time.&quot; [GR:pj]")
+
+(mo-definition EO--0007028 "&quot;The exposure of reference/experimental plant to monocot plant Echinochloa crus-galli, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:90397]")
+
+(termFormat EnglishLanguage EO--0007519 "5-bromouridine")
+
+(mo-synonym EO--0007339 "&quot;rice yellow leaf virus&quot; []")
+
+(mo-definition EO--0007107 "&quot;Treatment involving the exposure of plant to the pathogen belonging to Ascomycetes class.&quot; [GR:ivy, NCBI_taxid:4890]")
+
+(termFormat EnglishLanguage EO--0007615 "Bevatron irradiation")
+
+(mo-synonym EO--0007272 "&quot;white stemborer&quot; []")
+
+(subclass EO--0007200 EO--0007128)
+
+(termFormat EnglishLanguage EO--0007319 "warm/hot air temperature
+regimen")
+
+(mo-definition EO--0007341 "&quot;The treatment involving exposure of plant to the pathogenic Fusarium spp. It is a causal agent for rice Water Mold disease also called as Seed Rot Disease or Seedling Damping-off Disease.&quot; [GR:ivy, NCBI_taxid:5506]")
+
+(mo-definition EO--0007522 "&quot;The treatment involving use of aminopterin for mutagenesis process.&quot; [GR:pj, CAS:[54-62-6]]")
+
+(termFormat EnglishLanguage EO--0007059 "acidic pH soil environment")
+
+(mo-definition EO--0007018 "&quot;The exposure of reference/experimental plant to monocot plant Scirpus fluviatilis, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(subclass EO--0007561 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007532 "DNA")
+
+(mo-definition EO--0007340 "&quot;The treatment involving exposure of plant to the heterokont Achlya conspicua. It is a causal agent for rice water mold diease which is also called as seed rot or seedling damping-off disease.&quot; [GR:pj, NCBI_taxid:112027]")
+
+(mo-definition EO--0007242 "&quot;The treatment involving exposure of plant to micronutrient iron as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-synonym EO--0007011 "&quot;longlobe arrowhead&quot; []")
+
+(subclass EO--0007307 EO--0007532)
+
+(mo-definition EO--0007151 "&quot;The treatment involving an exposure with a radiation type, intesity or quantity.&quot; [GR:pj]")
+
+(mo-synonym EO--0007018 "&quot;river bulrush&quot; []")
+
+(mo-synonym EO--0007379 "&quot;Rhizoctonia solani&quot; []")
+
+(subclass EO--0007194 EO--0007630)
+
+(documentation EnglishLanguage "Date/time of last edit and save.")
+
+(subclass EO--0007535 EO--0007149)
+
+(mo-definition EO--0007191 "&quot;The treatment involving an exposure to the abiotic/non-biological factors such as chemicals, location, growth conditions etc.&quot; [GR:pj]")
+
+(subclass EO--0007082 EO--0007396)
+
+(termFormat EnglishLanguage EO--0007398 "sub-tropical region")
+
+(termFormat EnglishLanguage EO--0007133 "basic pH growth media
+environment")
+
+(mo-definition EO--0007025 "&quot;The use of conditions in which gaseous or dissolved oxygen is absent (devoid of dioxygen) to study various types of responses on their extrinsic and/or intrinsic stimulus.&quot; [GR:pj]")
+
+(mo-synonym EO--0007350 "&quot;RSV&quot; []")
+
+(mo-synonym EO--0007356 "&quot;rice hoja blanca tenuivirus&quot; []")
+
+(termFormat EnglishLanguage EO--0007026 "Echinochloa glabrescens")
+
+(subclass EO--0007153 EO--0007151)
+
+(subclass EO--0007076 EO--0007224)
+
+(termFormat EnglishLanguage EO--0007021 "Alisma plantago-aquatica")
+
+(termFormat EnglishLanguage EO--0007544 "hycanthon methanesulfonate")
+
+(mo-definition EO--0007262 "&quot;The treatment suggesting the use of solid growth media for growing the plants or tissue cultured samples.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007539 "formaldehyde")
+
+(mo-definition EO--0007043 "&quot;Treatment involving the exposure of plant to molecular forms of nutrient as supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007105 "abscisic acid regimen")
+
+(termFormat EnglishLanguage EO--0007086 "chemical fertilizer regimen")
+
+(subclass EO--0007070 EO--0007074)
+
+(termFormat EnglishLanguage EO--0007226 "Magnaporthe grisea")
+
+(subclass EO--0007031 EO--0007349)
+
+(termFormat EnglishLanguage EO--0007340 "Achlya conspicua")
+
+(termFormat EnglishLanguage EO--0007569 "styryl quinoline")
+
+(mo-synonym EO--0007534 "&quot;EMS&quot; []")
+
+(termFormat EnglishLanguage EO--0007325 "Hirschmaniella caudacrena")
+
+(mo-definition EO--0007222 "&quot;The treatment using UV-B light either exclusively or as part of a supplemental light involving electromagnetic radiation in the wavelength range of 315-10nm.&quot; [GR:pj]")
+
+(subclass EO--0007041 EO--0007189)
+
+(termFormat EnglishLanguage EO--0007270 "continuous dark (no light)
+regimen")
+
+(termFormat EnglishLanguage EO--0007344 "rice tungro bacilliform
+virus")
+
+(termFormat EnglishLanguage EO--0007096 "potassium nitrate regimen")
+
+(mo-definition EO--0007198 "&quot;The treatment involving an exposure of varying amount of water and watering frequncies, which may depend on regional environment.&quot; [GR:pj]")
+
+(subclass EO--0007113 EO--0007109)
+
+(subclass EO--0007090 EO--0007406)
+
+(subclass EO--0007112 EO--0007210)
+
+(termFormat EnglishLanguage EO--0007178 "atmospheric pressure")
+
+(subclass EO--0007068 EO--0007023)
+
+(subclass EO--0007197 EO--0007198)
+
+(termFormat EnglishLanguage EO--0007044 "mineral nutrient regimen")
+
+(mo-definition EO--0007260 "&quot;The treatment involving exposure of plant to the pest commonly calles as rice stem borer.&quot; [GR:pj]")
+
+(mo-definition EO--0007554 "&quot;The treatment involving use of N-nitrosodimethylamine for mutagenesis process.&quot; [GR:pj, CAS:[62-75-9]]")
+
+(mo-definition EO--0007217 "&quot;The treatment using green light either exclusively or as part of a supplemental light treatment involving green color light in the wavelength range of 577-492 nM.&quot; [GR:pj]")
+
+(mo-synonym EO--0007264 "&quot;purple borer&quot; []")
+
+(mo-synonym EO--0007362 "&quot;Ephelis oryzae&quot; []")
+
+(subclass EO--0007239 EO--0007044)
+
+(mo-synonym EO--0007562 "&quot;chlorambucil&quot; []")
+
+(mo-synonym EO--0007088 "&quot;Ceratobasidium oryzae-sativae&quot; []")
+
+(mo-definition EO--0007204 "&quot;The treatment involving use of 1-naphthaleneacetic acid growth hormone/herbicide to study various types of responses on its extrinsic and/or intrinsic application.&quot; [CAS:[68-87-3], GR:pj]")
+
+(mo-synonym EO--0007324 "&quot;rice root nematode&quot; []")
+
+(subclass EO--0007115 EO--0007114)
+
+(subclass EO--0007167 EO--0007189)
+
+(instance part BinaryRelation)
+
+(mo-definition EO--0007539 "&quot;The treatment involving use of formaldehyde for mutagenesis process.&quot; [GR:pj, CAS:[50-00-0]]")
+
+(termFormat EnglishLanguage EO--0007542 "hexamethylmelamine")
+
+(termFormat EnglishLanguage EO--0007336 "Ditylenchus angustus")
+
+(termFormat EnglishLanguage EO--0007523 "benzo (or agr)pyrene")
+
+(mo-definition EO--0007350 "&quot;The treatment involving exposure of plant to the rice stripe virus. It is a causal agent for rice stripe disease.&quot; [GR:ivy, NCBI_taxid:12331]")
+
+(termFormat EnglishLanguage EO--0007327 "Mycovellosiella oryzae")
+
+(mo-definition EO--0007231 "&quot;The treatment suggesting what kind of growth facility was used.&quot; [GR:pj]")
+
+(mo-definition EO--0007629 "&quot;The treatment involving exposure of plant to molecular or ionic forms of hydrogen to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007324 EO--0007126)
+
+(subclass EO--0007244 EO--0007239)
+
+(mo-synonym EO--0007339 "&quot;rice penyakit mentek virus&quot; []")
+
+(mo-definition EO--0007021 "&quot;The exposure of reference/experimental plant to monocot plant Alisma plantago-aquatica found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:15000]")
+
+(mo-synonym EO--0007304 "&quot;leaffolder&quot; []")
+
+(mo-synonym EO--0007558 "&quot;CB1356&quot; []")
+
+(subclass EO--0007371 EO--0007127)
+
+(mo-synonym EO--0007546 "&quot;2-methoxy-6-dichloro-9-(3-ethyl-2-chloroethyl-aminopropylamino)acridine-dihydrochloride&quot; []")
+
+(mo-definition EO--0007261 "&quot;The treatment involving exposure of plant to micronutrient copper as supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007550 EO--0007149)
+
+(mo-definition EO--0007336 "&quot;The treatment involving exposure of plant to the pest Ditylenchus angustus. It is a causal agent for rice Ufra disease.&quot; [GR:ivy]")
+
+(mo-definition EO--0007510 "&quot;The treatment involving use of 1,6-dimethylsulfonoxy L-mannitol for mutagenesis process.&quot; [GR:pj, CAS:[2514-83-2]]")
+
+(subclass EO--0007405 EO--0007067)
+
+(domain Smo-definedSubset 2 Smo-Subset)
+
+(subclass EO--0007164 EO--0007282)
+
+(termFormat EnglishLanguage EO--0007376 "Pyrenochaeta oryzae")
+
+(subclass EO--0007261 EO--0007239)
+
+(subclass EO--0007166 EO--0007328)
+
+(mo-definition EO--0007034 "&quot;The treatment involving an exposure to the crop season (May-October) as practised in South Asia.&quot; [GR:pj]")
+
+(subclass Clay EO--0007155)
+
+(termFormat EnglishLanguage EO--0007387 "manganese nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007139 "Sagittaria spp.")
+
+(subclass EO--0007224 EO--0007152)
+
+(termFormat EnglishLanguage EO--0007616 "deuteron irradiation")
+
+(termFormat EnglishLanguage EO--0007269 "growth chamber study")
+
+(mo-definition EO--0007552 "&quot;The treatment involving use of mustard gas for mutagenesis process.&quot; [GR:pj, CAS:[505-60-2]]")
+
+(subclass EO--0007123 EO--0007116)
+
+(mo-synonym EO--0007195 "&quot;rice ragged stunt oryzavirus&quot; []")
+
+(documentation EnglishLanguage "Version of OBO format.")
+
+(mo-synonym EO--0007207 "&quot;Pr light&quot; []")
+
+(subclass EO--0007151 EO--0007191)
+
+(mo-definition EO--0007361 "&quot;The treatment involving exposure of plant to the rice gall dwarf virus. It is a causal agent for rice gall dwarf disease.&quot; [GR:ivy]")
+
+(mo-definition EO--0007388 "&quot;The treatment involving exposure of plant to the pathogen Alternaria padwickii. It is a causal agent for rice seedling blight (fungal) disease and/or stackburn disease also called as Alternaria Leaf Spot Disease.&quot; [GR:ivy]")
+
+(mo-definition EO--0007562 "&quot;The treatment involving use of p-N,N-di-(2-chloroethyl)aminophenylbutyric acid for mutagenesis process.&quot; [GR:pj, CAS:[305-03-3]]")
+
+(mo-definition EO--0007111 "&quot;Treatment involving the exposure of plant to the pathogenic single strand RNA negative stand virus.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007347 "Aves")
+
+(termFormat EnglishLanguage EO--0007077 "Tilletia barclayana")
+
+(mo-definition EO--0007041 "&quot;Treatment involving the use of antibiotic for selection purposes.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007309 "zinc nutrient regimen")
+
+(mo-definition EO--0007008 "&quot;The exposure of reference/experimental plant to monocot plant Monochoria vaginalis, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:44972]")
+
+(termFormat EnglishLanguage EO--0007377 "Athelia rolfsii")
+
+(domain Smo-inSubset 2 Smo-Subset)
+
+(mo-definition EO--0007368 "&quot;The treatment involving an exposure to above optimal water temperature, which may depend on the study type or the regional environment.&quot; [GR:pj]")
+
+(subclass EO--0007402 EO--0007189)
+
+(mo-synonym EO--0007373 "&quot;wounding&quot; []")
+
+(mo-synonym EO--0007346 "&quot;RTYV&quot; []")
+
+(mo-definition EO--0007060 "&quot;Treatment involving the exposure of plant to the pathogen Sphaerulina oryzina. It is a causal agent for rice Narrow Brown Leaf Spot disease.&quot; [GR:ivy, NCBI_taxid:237189]")
+
+(mo-definition EO--0007289 "&quot;The treatment involving exposure of plant to the pest rice whorl maggot.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007389 "Gibberella zeae")
+
+(mo-synonym EO--0007264 "&quot;purple stem borer&quot; []")
+
+(subclass EO--0007133 EO--0007171)
+
+(mo-definition EO--0007088 "&quot;Treatment involving the exposure of plant to the pathogen Ceratobasidium oryzae-sativae. It is a causal agent for rice Aggregate Sheath Spot disease, which is also known as Brown Sclerotial disease.&quot; [GR:ivy, NCBI_taxid:63189]")
+
+(subclass EO--0007259 EO--0007198)
+
+(termFormat EnglishLanguage EO--0007611 "3-H-deoxycytidine")
+
+(subclass EO--0007551 EO--0007149)
+
+(subclass EO--0007573 EO--0007149)
+
+(mo-synonym EO--0007313 "&quot;armyworm&quot; []")
+
+(subclass EO--0007337 EO--0007349)
+
+(termFormat EnglishLanguage EO--0007528 "diepoxybutane")
+
+(mo-definition EO--0007249 "&quot;The treatment involving exposure of plant to the pathogen Xanthomonas oryzae pv. oryzicola. It is a causal agent for rice bacterial blight disease.&quot; [GR:ivy, NCBI_taxid:129394]")
+
+(mo-synonym EO--0007263 "&quot;white rice borer&quot; []")
+
+(mo-synonym EO--0007508 "&quot;CB2041&quot; []")
+
+(termFormat EnglishLanguage EO--0007148 "Xanthomonas oryzae")
+
+(mo-synonym EO--0007106 "&quot;chromophyta&quot; []")
+
+(termFormat EnglishLanguage EO--0007515 "2-chloroethyl
+methanesulfonate")
+
+(mo-definition EO--0007547 "&quot;The treatment involving use of iodine for mutagenesis process.&quot; [GR:pj, CAS:[7553-56-2]]")
+
+(mo-definition EO--0007002 "&quot;The treatment using UV-A light either exclusively or as part of a supplemental electromagnetic radiation in the wavelength range of 380-315nm.&quot; [GR:pj]")
+
+(mo-definition EO--0007240 "&quot;The treatment involving use of element as supplement to study various types of responses. The macronutrients comprise the elements required by the plant in relatively large quantities for normal growth.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007187 "salicylic acid regimen")
+
+(termFormat EnglishLanguage EO--0007506 "1,4-dimethanesulfonoxy-1:4-dimethylbutane")
+
+(mo-synonym EO--0007329 "&quot;western yellowstriped armyworm&quot; []")
+
+(termFormat EnglishLanguage Smo-inSubset "inSubset")
+
+(mo-synonym EO--0007509 "&quot;CB2511&quot; []")
+
+(subclass EO--0007184 EO--0007328)
+
+(mo-synonym EO--0007236 "&quot;Burkholderia vandii&quot; []")
+
+(subclass EO--0007227 EO--0007055)
+
+(mo-synonym EO--0007258 "&quot;rice stink bug&quot; []")
+
+(termFormat EnglishLanguage EO--0007132 "far infra-red light regimen")
+
+(termFormat EnglishLanguage EO--0007507 "1,4-dimethanesulfonoxybut-2-yne")
+
+(termFormat EnglishLanguage EO--0007335 "Mollusca")
+
+(mo-synonym EO--0007107 "&quot;ascomycetes&quot; []")
+
+(termFormat EnglishLanguage EO--0007229 "Gibberella fujikuroi")
+
+(subclass EO--0007519 EO--0007149)
+
+(mo-definition EO--0007538 "&quot;The treatment involving use of fagaronine for mutagenesis process.&quot; [GR:pj]")
+
+(mo-synonym EO--0007226 "&quot;Pyricularia oryzae&quot; []")
+
+(mo-synonym EO--0007507 "&quot;CB2058&quot; []")
+
+(subclass EO--0007265 EO--0007147)
+
+(termFormat EnglishLanguage EO--0007205 "rice grassy stunt 2 virus")
+
+(mo-synonym EO--0007563 "&quot;CB3034&quot; []")
+
+(mo-definition EO--0007311 "&quot;The treatment involving exposure of plant to the pest rice gall midge.&quot; [GR:pj, NCBI_taxid:33408]")
+
+(termFormat EnglishLanguage EO--0007613 "32-P")
+
+(mo-xrefAnalogous EO--0007313 "NCBI_taxid:7105")
+
+(termFormat EnglishLanguage EO--0007310 "Ac/Ds transposable element")
+
+(mo-synonym EO--0007014 "&quot;creeping burhead&quot; []")
+
+(mo-definition EO--0007031 "&quot;The exposure of plant to the anilmals of higher order that may be resopnsible for damaging the plant due to grazing or feeding practices.&quot; [GR:pj, NCBI_taxid:40674]")
+
+(mo-synonym EO--0007223 "&quot;CdCl2&quot; []")
+
+(mo-synonym EO--0007226 "&quot;Pyricularia grisea&quot; []")
+
+(termFormat EnglishLanguage EO--0007108 "Proteobacteria")
+
+(mo-definition EO--0007343 "&quot;The treatment involving exposure of plant to the cattle.&quot; [GR:pj, NCBI_taxid:27592]")
+
+(mo-definition EO--0007561 "&quot;The treatment involving use of p-N,N-di-(2-chloroethyl)amino-L-phenylalanine for mutagenesis process.&quot; [GR:pj]")
+
+(subclass EO--0007015 EO--0007009)
+
+(subclass EO--0007074 EO--0007165)
+
+(termFormat EnglishLanguage EO--0007005 "Viridiplantae")
+
+(mo-definition EO--0007541 "&quot;The treatment involving use of hesperidine for mutagenesis process.&quot; [GR:pj, CAS:[520-26-3]]")
+
+(mo-definition EO--0007078 "&quot;In biological experiments often it refer to the length of the exposure time. The treatment also includes the quantity of light falling on a per unit area. This may be expressed either in terms of hours for which teh radiation was available or in the units of luminous flux or the lumens.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007085 "fertilizer regimen")
+
+(mo-definition EO--0007073 "&quot;Treatment involving the exposure of plant to the pathogen  belonging to Basidiomycetes class.&quot; [GR:ivy, NCBI_taxid:5204]")
+
+(mo-alternateID EO--0007133 "EO:0007169")
+
+(subclass EO--0007185 EO--0007189)
+
+(mo-definition EO--0007037 "&quot;The treatment involving an exposure to the spring season.&quot; [GR:pj]")
+
+(subclass EO--0007518 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007219 "indigo light regimen")
+
+(mo-definition EO--0007108 "&quot;Treatment involving the exposure of plant to the pathogenic purple bacteria.&quot; [GR:ivy, NCBI_taxid:1224]")
+
+(subclass EO--0007394 EO--0007064)
+
+(mo-synonym EO--0007005 "&quot;green plant&quot; []")
+
+(mo-synonym EO--0007011 "&quot;Flecha de Agua&quot; []")
+
+(mo-definition EO--0007131 "&quot;The treatment using middle infra-red light either exclusively or as part of a supplemental light treatment involving middle IR band that contains energy in the range of wavelengths 1300-3000nm.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007323 "Hirschmaniella mucronata")
+
+(termFormat EnglishLanguage EO--0007624 "radio wave")
+
+(subclass EO--0007087 EO--0007085)
+
+(mo-synonym EO--0007196 "&quot;artificial daylight&quot; []")
+
+(subclass EO--0007091 EO--0007087)
+
+(mo-definition EO--0007276 "&quot;The treatment involving exposure of plant to cobalt as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-definition EO--0007207 "&quot;The treatment using red light either exclusively or as part of a supplemental light treatment involving red color light in the wavelength range of 780-622 nM.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007503 "1,2-dibromoethane")
+
+(subclass EO--0007338 EO--0007160)
+
+(subclass EO--0007243 EO--0007144)
+
+(subclass EO--0007529 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007179 "Pythium irregulare")
+
+(mo-definition EO--0007252 "&quot;The treatment involving exposure of plant to the pest white-backed planthopper.&quot; [GR:pj, NCBI_taxid:113103]")
+
+(mo-definition EO--0007330 "&quot;The treatment involving exposure of plant to the pest commonly calles as lawn armyworm.&quot; [GR:pj]")
+
+(mo-synonym EO--0007028 "&quot;barnyardgrass&quot; []")
+
+(subclass EO--0007181 EO--0007198)
+
+(mo-synonym EO--0007308 "&quot;green leafhopper&quot; []")
+
+(subclass EO--0007275 EO--0007114)
+
+(subclass EO--0007409 EO--0007165)
+
+(mo-definition EO--0007110 "&quot;Treatment involving the exposure of plant to the pathogenic double stranded RNA virus.&quot; [GR:pj, NCBI_taxid:35325]")
+
+(mo-synonym EO--0007516 "&quot;CB1522&quot; []")
+
+(termFormat EnglishLanguage "obsolete environment term")
+
+(subclass EO--0007613 EO--0007154)
+
+(subclass EO--0007254 EO--0007144)
+
+(subclass EO--0007401 EO--0007064)
+
+(mo-synonym EO--0007339 "&quot;rice waika virus&quot; []")
+
+(termFormat EnglishLanguage EO--0007530 "diethyl sulfate")
+
+(subclass EO--0007079 EO--0007086)
+
+(termFormat EnglishLanguage Smo-definedSubset "definedSubset")
+
+(termFormat EnglishLanguage EO--0007162 "continuous light regimen")
+
+(subclass EO--0007522 EO--0007149)
+
+(mo-synonym EO--0007134 "&quot;acidic pH environment&quot; []")
+
+(termFormat EnglishLanguage EO--0007561 "p-N,N-di-(2-chloroethyl)amino-L-phenylalanine")
+
+(subclass EO--0007024 EO--0007023)
+
+(subclass EO--0007223 EO--0007189)
+
+(subclass EO--0007208 EO--0007358)
+
+(mo-synonym EO--0007066 "&quot;N-benzyl-adenine&quot; []")
+
+(mo-definition EO--0007212 "&quot;The treatment involving exposure of plant to the mycoplasma pest.&quot; [GR:pj, NCBI_taxid:2093]")
+
+(mo-definition EO--0007548 "&quot;The treatment involving use of Janus green B for mutagenesis process.&quot; [GR:pj, CAS:[2869-83-2]]")
+
+(mo-definition EO--0007049 "&quot;The treatment involving growing plants and exposing them to soil growth media with varying contents.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007342 "Achlya klebsiana")
+
+(mo-definition EO--0007106 "&quot;Treatment involving the exposure of plant to the Stramenopiles (heterokonts) present in the gorowth environment.&quot; [GR:pj, NCBI_taxid:33634]")
+
+(mo-definition EO--0007386 "&quot;The treatment involving exposure of plant to the pathogen Gerlachia oryzae. It is a causal agent for a form of rice Seedling Blight (Fungal) disease.&quot; [GR:ivy, NCBI_taxid:87749]")
+
+(subclass EO--0007551 EO--0007041)
+
+(termFormat EnglishLanguage EO--0007573 "urethane")
+
+(termFormat EnglishLanguage EO--0007295 "sulfur nutrient regimen")
+
+(subclass EO--0007088 EO--0007073)
+
+(mo-definition EO--0007020 "&quot;The exposure of reference/experimental plant to monocot plant Scirpus mucronatus, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007410 "cerebroside elicitor")
+
+(subclass EO--0007517 EO--0007149)
+
+(mo-synonym EO--0007339 "&quot;rice tungro spherical waikavirus&quot; []")
+
+(mo-definition EO--0007310 "&quot;The treatment involving use of Ac/Ds transposable system for mutagenesis process.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007020 "Scirpus mucronatus")
+
+(termFormat EnglishLanguage EO--0007397 "phosphorus nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007307 "transposable element insert")
+
+(subclass EO--0007569 EO--0007149)
+
+(mo-definition EO--0007366 "&quot;The treatment involving exposure of plant to the pathogen rice black streak dwarf virus. It is a causal agent for rice blast steak dwarf disease.&quot; [GR:ivy, NCBI_taxid:10990]")
+
+(termFormat EnglishLanguage EO--0007259 "soil water content")
+
+(termFormat EnglishLanguage EO--0007244 "chlorine nutrient regimen")
+
+(mo-definition EO--0007396 "&quot;A treatment in terms of plant's exposure to the regional conditions found in the vicinity of the water bodies like, sea, river, lake etc. Growth conditions may include aerobic to anaerobic soil,  salinity or toxicity in tidal areas. Treatment may include standing or flash flooding.&quot; [GR:pj]")
+
+(subclass EO--0007287 EO--0007183)
+
+(termFormat EnglishLanguage EO--0007239 "micronutrient regimen")
+
+(termFormat EnglishLanguage EO--0007399 "freezing water temperature
+regimen")
+
+(termFormat EnglishLanguage EO--0007314 "Nymphula depunctalis")
+
+(mo-synonym EO--0007195 "&quot;rice ragged stunt virus&quot; []")
+
+(mo-synonym EO--0007348 "&quot;RSNV&quot; []")
+
+(termFormat EnglishLanguage EO--0007375 "Meloidogyne graminicola")
+
+(mo-definition EO--0007123 "&quot;Treatment involving the exposure of plant to the pest rice spotting bug.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007045 "primary macronutrient")
+
+(mo-synonym EO--0007254 "&quot;Acidovorax avenae&quot; []")
+
+(subclass EO--0007524 EO--0007149)
+
+(subclass EO--0007289 EO--0007119)
+
+(mo-definition EO--0007210 "&quot;The treatment involving exposure of plant to the pathogenic virus.&quot; [GR:pj, NCBI_taxid:10239]")
+
+(termFormat EnglishLanguage EO--0007234 "Pseudomonas fuscovaginae")
+
+(mo-synonym EO--0007066 "&quot;verdan senescence&quot; []")
+
+(termFormat EnglishLanguage EO--0007321 "Hirschmaniella spinicaudata")
+
+(subclass EO--0007310 EO--0007307)
+
+(mo-definition EO--0007253 "&quot;The treatment involving exposure of plant to micronutrient molybdenum as supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007403 EO--0007359)
+
+(subclass EO--0007630 EO--0007106)
+
+(mo-synonym EO--0007550 "&quot;MMS&quot; []")
+
+(mo-synonym EO--0007122 "&quot;stemborer&quot; []")
+
+(subclass EO--0007068 EO--0007165)
+
+(mo-synonym EO--0007013 "&quot;upright burhead&quot; []")
+
+(termFormat EnglishLanguage "nuclear genetic background")
+
+(termFormat EnglishLanguage EO--0007386 "Gerlachia oryzae")
+
+(subclass EO--0007520 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007207 "red light regimen")
+
+(termFormat EnglishLanguage EO--0007107 "Ascomycota")
+
+(subclass EO--0007340 EO--0007136)
+
+(termFormat EnglishLanguage EO--0007149 "chemical mutagen")
+
+(termFormat EnglishLanguage EO--0007533 "ethyl ether")
+
+(mo-definition EO--0007306 "&quot;The treatment involving exposure of plant to aluminium as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-synonym EO--0007065 "&quot;Entyloma dactylidis&quot; []")
+
+(termFormat EnglishLanguage EO--0007262 "solid growth media")
+
+(termFormat EnglishLanguage EO--0007034 "kharif season")
+
+(mo-synonym EO--0007341 "&quot;Fusarium spp.&quot; []")
+
+(mo-definition EO--0007023 "&quot;The use of gasses in a given environment to study various types of responses on their extrinsic and/or intrinsic stimulus.&quot; [GR:pj]")
+
+(mo-definition EO--0007369 "&quot;The treatment involving exposure of plant to the pest Meloidogyne salasi. It is a causal agent for rice root knot nematode disease.&quot; [GR:pj]")
+
+(subclass EO--0007075 EO--0007224)
+
+(mo-definition EO--0007290 "&quot;The treatment involving use of kinetin, a cytokinin homolog to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(mo-synonym EO--0007506 "&quot;CB2348&quot; []")
+
+(termFormat EnglishLanguage EO--0007297 "calcium nutrient regimen")
+
+(subclass EO--0007396 EO--0007064)
+
+(termFormat EnglishLanguage EO--0007048 "sodium chloride regimen")
+
+(mo-definition EO--0007273 "&quot;The treatment involving exposure of plant to micronutrient boron as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-definition EO--0007533 "&quot;The treatment involving use of ethyl ether for mutagenesis process.&quot; [GR:pj, CAS:[60-29-7]]")
+
+(mo-definition EO--0007030 "&quot;The exposure of reference/experimental plant to monocot plant Leptochloa fascicularis found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(mo-synonym EO--0007246 "&quot;eubacteria&quot; []")
+
+(mo-definition EO--0007270 "&quot;The treatment involving continuous exposure to darkness (no light) to the plant. &quot; [GR:pj]")
+
+(mo-definition EO--0007102 "&quot;Treatment involving the use of nitrogen fertilizer and its components as supplements to study various types of responses.&quot; [GR:pj]")
+
+(mo-definition EO--0007142 "&quot;The treatment involving an exposure of plant to the pest Scirpophaga spp.&quot; [GR:pj, NCBI_taxid:72365]")
+
+(termFormat EnglishLanguage EO--0007106 "Stramenopiles")
+
+(subclass EO--0007331 EO--0007117)
+
+(mo-definition EO--0007333 "&quot;The treatment involving exposure of plant to the pests.&quot; [GR:pj, NCBI_taxid:50557]")
+
+(mo-synonym EO--0007542 "&quot;altretamine&quot; []")
+
+(mo-definition EO--0007013 "&quot;The exposure of reference/experimental plant to monocot plant Echinodorus berteroi, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(subclass EO--0007152 EO--0007151)
+
+(termFormat EnglishLanguage EO--0007095 "calcium nitrate regimen")
+
+(mo-definition EO--0007515 "&quot;The treatment involving use of 2-chloroethyl methanesulfonate for mutagenesis process.&quot; [GR:pj, CAS:[3570-58-9]]")
+
+(mo-definition EO--0007199 "&quot;The treatment involving exposure of plant to long day light duration followed by a short night cycle. &quot; [GR:pj]")
+
+(mo-definition EO--0007357 "&quot;The treatment involving an exposure to the biotic/biological factors such as pest, pathogens, plants, etc.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007556 "nitrogen mustard")
+
+(mo-synonym EO--0007252 "&quot;white-backed planthopper&quot; []")
+
+(termFormat EnglishLanguage EO--0007265 "liquid growth media")
+
+(termFormat EnglishLanguage EO--0007001 "UV-B light regimen")
+
+(mo-synonym EO--0007294 "&quot;small branded swift&quot; []")
+
+(mo-synonym EO--0007180 "&quot;Decamine&quot; [CAS:94-75-7]")
+
+(mo-synonym EO--0007346 "&quot;RYSV&quot; []")
+
+(subclass EO--0007292 EO--0007183)
+
+(subclass EO--0007245 EO--0007143)
+
+(subclass EO--0007397 EO--0007045)
+
+(mo-synonym EO--0007272 "&quot;white rice stemborer&quot; []")
+
+(mo-synonym EO--0007026 "&quot;barnyardgrass&quot; []")
+
+(subclass EO--0007298 EO--0007116)
+
+(mo-definition EO--0007511 "&quot;The treatment involving use of 1-amino-2-naphthol-4-sulfonic acid for mutagenesis process.&quot; [GR:pj, CAS:[116-63-2]]")
+
+(subclass EO--0007610 EO--0007154)
+
+(subclass EO--0007389 EO--0007118)
+
+(termFormat EnglishLanguage EO--0007126 "Hirschmaniella spp.")
+
+(mo-definition EO--0007360 "&quot;The treatment involving exposure of plant to the barley yellow dwarf virus. It is a causal agent for rice Giallume disease.&quot; [GR:ivy, NCBI_taxid:12037]")
+
+(mo-definition EO--0007247 "&quot;The treatment involving exposure of plant to the pathogen Erwinia herbicola. The susceptible plants suffer from Bacterial Palea Browning disease.&quot; [GR:ivy, NCBI_taxid:549]")
+
+(subclass EO--0007055 EO--0007107)
+
+(subclass EO--0007241 EO--0007189)
+
+(termFormat EnglishLanguage EO--0007407 "methyl jasmonate")
+
+(termFormat EnglishLanguage EO--0007250 "Recilia dorsalis")
+
+(mo-definition EO--0007011 "&quot;The exposure of reference/experimental plant to monocot plant Sagittaria longiloba, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007200 "short day length regimen")
+
+(termFormat EnglishLanguage EO--0007082 "sea coast region")
+
+(mo-definition EO--0007255 "&quot;The treatment where the plants were grown under laboratory / open room conditions, with very few controlled parameters. This may involve supplemantal treatments in addition to any naturally occurring conditions.&quot; [GR:pj]")
+
+(subclass EO--0007047 EO--0007241)
+
+(subclass EO--0007611 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007228 "chromium nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007120 "Coleoptera")
+
+(subclass EO--0007332 EO--0007161)
+
+(termFormat EnglishLanguage EO--0007274 "Scirpophaga incertulas")
+
+(mo-definition EO--0007192 "&quot;The treatment involving exposure of plant to the pathogen Drechslera gigantea. It is a causal agent for rice Eyespot disease.&quot; [GR:ivy]")
+
+(mo-definition EO--0007322 "&quot;The treatment involving exposure of plant to the pest Hirschmaniella oryzae. It is a causal agent for rice rice root nematode disease.&quot; [GR:pj]")
+
+(subclass EO--0007252 EO--0007116)
+
+(termFormat EnglishLanguage EO--0007306 "aluminum nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007261 "copper nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007199 "long day length regimen")
+
+(subclass EO--0007114 EO--0007333)
+
+(termFormat EnglishLanguage EO--0007343 "Bovinae")
+
+(mo-synonym EO--0007379 "&quot;black scurf of potato&quot; []")
+
+(subclass EO--0007291 EO--0007066)
+
+(mo-definition EO--0007324 "&quot;The treatment involving exposure of plant to the pest Hirschmaniella imamuri. It is a causal agent for rice rice root nematode disease.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage "monocot mixed crop neighbor")
+
+(mo-synonym EO--0007287 "&quot;2,5-dibromo -6-isopropyl-3-methyl-1,4-benzoquinone&quot; []")
+
+(termFormat EnglishLanguage EO--0007051 "sand content")
+
+(mo-definition EO--0007061 "&quot;Exposure to the geographical region of the Earth limited in latitude by the two tropics namely,  the Tropic of Cancer and the Tropic of Capricorn, and thus centered on the equator.. This area lies approximately between 23.5 N latitude and 23.5 S latitude, and includes all the parts of the Earth where the sun reaches a point directly overhead at least once during the solar year (north of the Tropic of Cancer and south of the Tropic of Capricorn the sun never reaches an azimuth of 90 or directly overhead).&quot; [GR:pj]")
+
+(mo-synonym EO--0007285 "&quot;wet season&quot; []")
+
+(mo-definition EO--0007346 "&quot;The treatment involving exposure of plant to the rice yellow stunt virus. It is a causal agent for rice transitory yellowing disease.&quot; [GR:ivy, NCBI_taxid:59380]")
+
+(subclass EO--0007328 EO--0007106)
+
+(mo-definition EO--0007209 "&quot;The treatment involving exposure of plant to the pathogen Phomopsis oryzae-sativae. It is a causal agent for rice Collar Rot Disease disease.&quot; [GR:ivy, NCBI_taxid:107452]")
+
+(mo-definition EO--0007551 "&quot;The treatment involving use of mitomycin C for mutagenesis process.&quot; [GR:pj, CAS:[50-07-7]]")
+
+(termFormat EnglishLanguage EO--0007097 "ammonium sulfate regimen")
+
+(subclass EO--0007546 EO--0007149)
+
+(subclass EO--0007048 EO--0007185)
+
+(mo-definition EO--0007349 "&quot;The treatment involving exposure of plant to the pests and weeds of higher order.&quot; [GR:pj, NCBI_taxid:33208]")
+
+(subclass EO--0007046 EO--0007240)
+
+(termFormat EnglishLanguage EO--0007553 "N-methyl-N'-nitro-N-nitrosoguanidine")
+
+(documentation EnglishLanguage "Represents the cyclic property.
+(Typedefs only)")
+
+(mo-definition EO--0007115 "&quot;Treatment involving the exposure of plant to the pest Spodoptera spp.&quot; [GR:pj, NCBI_taxid:7106]")
+
+(subclass EO--0007126 EO--0007337)
+
+(mo-definition EO--0007566 "&quot;The treatment involving use of S-2-chloroethylcysteine for mutagenesis process.&quot; [GR:pj, CAS:[28361-96-8]]")
+
+(termFormat EnglishLanguage EO--0007189 "chemical regimen")
+
+(termFormat EnglishLanguage EO--0007016 "Bacopa spp.")
+
+(mo-definition EO--0007172 "&quot;The treatment involving an exposure to standing water from flash floods for a small part of plant's life span. This also results in anaerobic soil conditions for a short period.&quot; [GR:pj]")
+
+(mo-synonym EO--0007556 "&quot;mechlorethamine&quot; []")
+
+(mo-definition EO--0007400 "&quot;The treatment involving the plant or the populations grown in regions where the land is excessively dry and receives insufficient rainfall to support agriculture.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007634 "Spodoptera litura")
+
+(mo-definition EO--0007542 "&quot;The treatment involving use of hexamethylmelamine for mutagenesis process.&quot; [GR:pj, CAS:[645-05-6]]")
+
+(subclass EO--0007025 EO--0007023)
+
+(mo-synonym EO--0007180 "&quot;Crotilin&quot; [CAS:94-75-7]")
+
+(mo-definition EO--0007319 "&quot;The treatment involving an exposure to above optimal air temperature, which may depend on the study type or the regional environment.&quot; [GR:pj]")
+
+(mo-synonym EO--0007060 "&quot;Cercospora janseana&quot; []")
+
+(mo-definition EO--0007033 "&quot;The treatment involving an exposure to the crop season (October-March) as practised in South Asia.&quot; [GR:pj]")
+
+(subclass EO--0007358 EO--0007111)
+
+(subclass EO--0007539 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007152 "radiation intensity regimen")
+
+(mo-synonym EO--0007211 "&quot;Dreschlera oryzae&quot; []")
+
+(mo-definition EO--0007012 "&quot;The exposure of reference/experimental plant to monocot plant Heteranthera limosa, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:44958]")
+
+(subclass EO--0007532 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007066 "cytokinin regimen")
+
+(mo-alternateID EO--0007229 "EO:0007299")
+
+(termFormat EnglishLanguage EO--0007088 "Ceratobasidium
+oryzae-sativae")
+
+(mo-synonym EO--0007363 "&quot;Helminthosporium sigmoideum&quot; []")
+
+(termFormat EnglishLanguage EO--0007271 "low light intensity regimen")
+
+(mo-synonym EO--0007072 "&quot;Rhynchosporium oryzae&quot; []")
+
+(mo-synonym EO--0007229 "&quot;Fusarium moniliforme&quot; []")
+
+(documentation Smo-definedSubset EnglishLanguage "Subset defined for
+the ontology.")
+
+(termFormat EnglishLanguage EO--0007618 "137-Cs or ggr ray")
+
+(mo-synonym EO--0007204 "&quot;Naphthylacetic acid&quot; []")
+
+(termFormat EnglishLanguage EO--0007089 "bone meal regimen")
+
+(termFormat EnglishLanguage EO--0007348 "rice stripe necrosis virus")
+
+(termFormat EnglishLanguage EO--0007296 "Dicladispa armigera")
+
+(mo-definition EO--0007014 "&quot;The exposure of reference/experimental plant to monocot plant Echinodorus cordifolius, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:13048]")
+
+(termFormat EnglishLanguage EO--0007015 "Ammannia spp.")
+
+(mo-synonym EO--0007011 "&quot;narrow-leaf arrowhead&quot; []")
+
+(mo-definition EO--0007375 "&quot;The treatment involving exposure of plant to the pest Meloidogyne oryzae. It is a causal agent for rice root knot nematode disease.&quot; [GR:pj, NCBI_taxid:189291]")
+
+(mo-definition EO--0007175 "&quot;The treatment involving an exposure to varying degree of temperature, which may depend on regional environment.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007135 "Magnaporthe spp.")
+
+(termFormat EnglishLanguage EO--0007138 "Echinodorus spp.")
+
+(mo-definition EO--0007100 "&quot;Treatment involving the use of super phosphate supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007624 EO--0007154)
+
+(mo-synonym EO--0007133 "&quot;basic pH environment&quot; []")
+
+(termFormat EnglishLanguage EO--0007116 "Hemiptera")
+
+(termFormat EnglishLanguage EO--0007047 "other nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007193 "day light intensity")
+
+(subclass EO--0007263 EO--0007114)
+
+(mo-definition EO--0007356 "&quot;The treatment involving exposure of plant to the rice hoja blanca virus. It is a causal agent for rice hoja blanca disease.&quot; [GR:ivy, NCBI_taxid:12332]")
+
+(mo-synonym EO--0007556 "&quot;CB1414&quot; []")
+
+(mo-synonym EO--0007562 "&quot;CB1348&quot; []")
+
+(mo-alternateID EO--0007196 "EO:0007201")
+
+(subclass EO--0007350 EO--0007111)
+
+(subclass EO--0007118 EO--0007107)
+
+(termFormat EnglishLanguage EO--0007144 "Pseudomonas spp.")
+
+(mo-synonym EO--0007534 "&quot;Methanesulfonic acid ethyl ester&quot; []")
+
+(mo-synonym EO--0007195 "&quot;RRSV&quot; []")
+
+(termFormat EnglishLanguage EO--0007622 "neutrons")
+
+(termFormat EnglishLanguage EO--0007541 "hesperidine")
+
+(subclass EO--0007063 EO--0007183)
+
+(mo-synonym EO--0007178 "&quot;barometric pressure&quot; []")
+
+(mo-definition EO--0007509 "&quot;The treatment involving use of 1,6-dimethylsulfonoxy D-mannitol for mutagenesis process.&quot; [GR:pj, CAS:[1187-00-4]]")
+
+(mo-synonym EO--0007363 "&quot;Nakataea sigmoidae&quot; []")
+
+(mo-definition EO--0007196 "&quot;The treatment involving day light as the light of the sun or the artificial light in a growth chamber.&quot; [GR:pj]")
+
+(mo-definition EO--0007558 "&quot;The treatment involving use of p-N,N-di(2-chloroethyl)aminophenylvaleric acid for mutagenesis process.&quot; [GR:pj, CAS:[64508-90-3]]")
+
+(termFormat EnglishLanguage EO--0007339 "rice tungro spherical virus")
+
+(subclass EO--0007274 EO--0007142)
+
+(mo-synonym EO--0007022 "&quot;monocotyledon&quot; []")
+
+(mo-definition EO--0007344 "&quot;The treatment involving exposure of plant to the rice tungro bacilliform virus. It is a causal agent for rice tungra disease which is also called as Mentek or Waika disease.&quot; [GR:ivy, NCBI_taxid:10654]")
+
+(mo-definition EO--0007528 "&quot;The treatment involving use of diepoxybutane for mutagenesis process.&quot; [GR:pj, CAS:[1464-53-5]]")
+
+(termFormat EnglishLanguage EO--0007076 "moderate light intensity
+regimen")
+
+(mo-synonym EO--0007196 "&quot;day light&quot; []")
+
+(mo-definition EO--0007568 "&quot;The treatment involving use of sodium fluoride for mutagenesis process.&quot; [GR:pj, CAS:[7681-49-4]]")
+
+(subclass EO--0007044 EO--0007241)
+
+(termFormat EnglishLanguage EO--0007143 "Erwinia spp.")
+
+(mo-synonym EO--0007561 "&quot;CB3025&quot; []")
+
+(termFormat EnglishLanguage EO--0007027 "seasonal environment")
+
+(subclass EO--0007155 EO--0007049)
+
+(termFormat EnglishLanguage EO--0007571 "triaziquone")
+
+(mo-definition EO--0007132 "&quot;The treatment using far infra-red light either exclusively or as part of a supplemental light treatment involving far IR band that contains energy in the range of wavelengths 3000-14000nm.&quot; [GR:pj]")
+
+(subclass EO--0007173 EO--0007175)
+
+(subclass EO--0007615 EO--0007154)
+
+(mo-definition EO--0007517 "&quot;The treatment involving use of 2-methoxyethanol for mutagenesis process.&quot; [GR:pj, CAS:[109-86-4]]")
+
+(termFormat EnglishLanguage EO--0007065 "Entyloma oryzae")
+
+(mo-synonym EO--0007333 "&quot;insect&quot; []")
+
+(subclass EO--0007212 EO--0007124)
+
+(subclass EO--0007240 EO--0007044)
+
+(subclass EO--0007034 EO--0007027)
+
+(mo-synonym EO--0007335 "&quot;mollusc&quot; []")
+
+(subclass EO--0007309 EO--0007239)
+
+(termFormat EnglishLanguage EO--0007165 "growth hormone regimen")
+
+(mo-definition "&quot;OBSOLETE. A treatment involving growing plants and  exposing them to varying types of fauna in soil growth media.&quot; [GR:pj]")
+
+(subclass EO--0007163 EO--0007128)
+
+(termFormat EnglishLanguage EO--0007249 "Xanthomonas oryzae pv.
+oryzicola")
+
+(mo-synonym EO--0007379 "&quot;Rhizoctonia praticola&quot; []")
+
+(subclass EO--0007054 EO--0007050)
+
+(mo-definition EO--0007259 "&quot;The treatment involving an exposure to varying amounts of water in soil growth media.&quot; [GR:pj]")
+
+(mo-synonym EO--0007311 "&quot;Asian rice gall midge&quot; []")
+
+(mo-definition EO--0007241 "&quot;The treatment involving use of nutrients to study various types of responses on their extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007098 "ferrous sulfate regimen")
+
+(mo-definition EO--0007335 "&quot;The treatment involving exposure of plant to the pest molluscs.&quot; [GR:pj, NCBI_taxid:6447]")
+
+(subclass EO--0007521 EO--0007041)
+
+(subclass EO--0007035 EO--0007027)
+
+(termFormat EnglishLanguage EO--0007094 "sodium nitrate regimen")
+
+(subclass EO--0007013 EO--0007138)
+
+(subclass EO--0007136 EO--0007106)
+
+(termFormat EnglishLanguage EO--0007168 "hygromycin regimen")
+
+(subclass EO--0007388 EO--0007214)
+
+(subclass EO--0007119 EO--0007333)
+
+(termFormat EnglishLanguage EO--0007043 "non-mineral nutrient
+regimen")
+
+(subclass EO--0007100 EO--0007103)
+
+(mo-definition EO--0007269 "&quot;The treatment involving study type in which plants were grown in growth chambers. &quot; [GR:pj]")
+
+(mo-synonym EO--0007365 "&quot;rice dwarf phytoreovirus RDV&quot; []")
+
+(mo-definition EO--0007079 "&quot;Treatment involving the use of sulfate fertilizer and its components as supplements to study various types of responses.&quot; [GR:pj]")
+
+(mo-definition EO--0007321 "&quot;The treatment involving exposure of plant to the pest Hirschmaniella spinicaudata. It is a causal agent for rice rice root nematode disease.&quot; [GR:pj]")
+
+(mo-synonym EO--0007012 "&quot;blue mud-plantain&quot; []")
+
+(mo-synonym EO--0007569 "&quot;CB3086&quot; []")
+
+(subclass EO--0007134 EO--0007171)
+
+(mo-synonym EO--0007542 "&quot;HMM&quot; []")
+
+(mo-definition EO--0007185 "&quot;The treatment involving use of salts as supplement to liquid and soil growth media to study various types of responses on their application. This treatment may be used to simulate the growth conditions of sea coast regions and saline/sodic soils.&quot; [GR:pj]")
+
+(mo-synonym EO--0007554 "&quot;DMN&quot; []")
+
+(termFormat EnglishLanguage EO--0007070 "indole acetic acid regimen")
+
+(termFormat EnglishLanguage EO--0007053 "silt content")
+
+(mo-definition EO--0007254 "&quot;The treatment involving exposure of plant to the pathogen Pseudomonas avenae. It is a causal agent for rice Bacterial Brown Stripe disease&quot; [GR:ivy, NCBI_taxid:80867]")
+
+(termFormat EnglishLanguage EO--0007308 "Nephotettix spp")
+
+(documentation EnglishLanguage "The program used to generate the
+ontology.")
+
+(mo-definition EO--0007163 "&quot;The treatment involving an exposure of plant to the scheduled or natural exposure of day light and night cycles to the plant. &quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007019 "Cyperus iria")
+
+(mo-definition EO--0007223 "&quot;The treatment involving use of CdCl2 to assess response against the heavy metals.&quot; [GR:pj]")
+
+(mo-synonym EO--0007349 "&quot;Animalia&quot; []")
+
+(subclass EO--0007366 EO--0007110)
+
+(mo-synonym EO--0007148 "&quot;Pseudomonas oryzae&quot; []")
+
+(mo-synonym EO--0007279 "&quot;Asiatic rice borer&quot; []")
+
+(mo-synonym EO--0007557 "&quot;MNU&quot; []")
+
+(mo-synonym EO--0007030 "&quot;bearded sprangeltop&quot; []")
+
+(mo-definition EO--0007519 "&quot;The treatment involving use of 5-bromouridine for mutagenesis process.&quot; [GR:pj, CAS:[957-75-5]]")
+
+(mo-xrefAnalogous EO--0007234 "NCBI_taxid:50340")
+
+(mo-definition EO--0007630 "&quot;The treatment involving exposure of plant to the pathogenic Sclerospora sp.&quot; [GR:pj]")
+
+(mo-definition EO--0007546 "&quot;The treatment involving use of ICR 170 for mutagenesis process.&quot; [GR:pj, CAS:[146-59-8]]")
+
+(termFormat EnglishLanguage EO--0007167 "pesticide regimen")
+
+(subclass EO--0007162 EO--0007078)
+
+(termFormat EnglishLanguage EO--0007025 "anaerobic environment")
+
+(termFormat EnglishLanguage EO--0007074 "auxin regimen")
+
+(mo-synonym EO--0007314 "&quot;rice caseworm&quot; []")
+
+(mo-definition EO--0007514 "&quot;The treatment involving use of 2,5,-bisethylene-imine-1,4-benzoquinone for mutagenesis process.&quot; [GR:pj, CAS:[526-62-5]]")
+
+(termFormat EnglishLanguage EO--0007272 "Scirpophaga innotata")
+
+(termFormat EnglishLanguage EO--0007567 "sodium bisulfite")
+
+(mo-definition EO--0007003 "&quot;Exposure to the regions with a temperate climate, which are usually characterized by having roughly equally long winters and summers.&quot; [GR:pj]")
+
+(mo-synonym EO--0007196 "&quot;artificial light&quot; []")
+
+(mo-definition EO--0007347 "&quot;The treatment involving exposure of plants to the birds.&quot; [GR:pj, NCBI_taxid:8782]")
+
+(mo-synonym EO--0007530 "&quot;DES&quot; []")
+
+(subclass EO--0007549 EO--0007149)
+
+(subclass EO--0007122 EO--0007114)
+
+(mo-synonym EO--0007270 "&quot;continuous night regimen&quot; []")
+
+(subclass EO--0007341 EO--0007118)
+
+(mo-definition EO--0007294 "&quot;The treatment involving exposure of plant to the pest Pelopidas mathias.&quot; [GR:pj]")
+
+(mo-synonym EO--0007314 "&quot;caseworm&quot; []")
+
+(mo-definition EO--0007098 "&quot;Treatment involving the use of ferrous sulfate supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007214 EO--0007107)
+
+(termFormat EnglishLanguage EO--0007315 "zero gravity")
+
+(mo-autoGeneratedBy "DAG-Edit 1.419 rev 3")
+
+(subclass EO--0007131 EO--0007202)
+
+(mo-definition EO--0007101 "&quot;Treatment involving the use of urea as source of nitrogen supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007203 "far red light regimen")
+
+(termFormat EnglishLanguage EO--0007154 "radiation quality regimen")
+
+(mo-definition EO--0007331 "&quot;The treatment involving exposure of plant to the pest Pseudaletia unipuncta&quot; [GR:pj]")
+
+(subclass EO--0007190 EO--0007107)
+
+(mo-definition EO--0007019 "&quot;The exposure of reference/experimental plant to monocot plant Cyperus difformis, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(mo-alternateID EO--0007195 "EO:0007352")
+
+(subclass EO--0007220 EO--0007221)
+
+(termFormat EnglishLanguage EO--0007504 "1,2-dichloroethane")
+
+(termFormat EnglishLanguage EO--0007405 "Hoagland solution")
+
+(termFormat EnglishLanguage EO--0007311 "Orseolia oryzae")
+
+(termFormat EnglishLanguage EO--0007129 "UV-C light regimen")
+
+(mo-synonym EO--0007117 "&quot;armyworm&quot; []")
+
+(mo-definition EO--0007074 "&quot;Treatment involving the use of auxin (or its homolog) growth hormone to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(mo-synonym EO--0007291 "&quot;N-(Phenylmethyl)-1H-purin-6-amine&quot; []")
+
+(subclass EO--0007622 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007091 "seaweed extract regimen")
+
+(subclass EO--0007141 EO--0007022)
+
+(termFormat EnglishLanguage EO--0007557 "nitrosomethyl urea")
+
+(termFormat EnglishLanguage EO--0007552 "mustard gas")
+
+(subclass EO--0007102 EO--0007086)
+
+(mo-synonym EO--0007119 "&quot;fly&quot; []")
+
+(subclass EO--0007290 EO--0007066)
+
+(subclass EO--0007147 EO--0007191)
+
+(mo-definition EO--0007086 "&quot;Treatment involving the use of inorganic fertilizer and its components as supplements to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007406 EO--0007102)
+
+(subclass EO--0007005 EO--0007124)
+
+(subclass EO--0007288 EO--0007046)
+
+(mo-synonym EO--0007359 "&quot;treatment ontology&quot; []")
+
+(termFormat EnglishLanguage EO--0007031 "Mammalia")
+
+(subclass EO--0007072 EO--0007107)
+
+(subclass EO--0007305 EO--0007114)
+
+(termFormat EnglishLanguage EO--0007176 "altitute")
+
+(termFormat EnglishLanguage EO--0007535 "ethyl nitrosourea")
+
+(subclass EO--0007387 EO--0007239)
+
+(subclass EO--0007302 EO--0007532)
+
+(mo-synonym EO--0007545 "&quot;quinacrine mustard&quot; []")
+
+(termFormat EnglishLanguage EO--0007554 "N-nitrosodimethylamine")
+
+(subclass EO--0007186 EO--0007328)
+
+(mo-synonym EO--0007508 "&quot;busulfan&quot; []")
+
+(termFormat EnglishLanguage EO--0007114 "Lepidoptera")
+
+(subclass EO--0007316 EO--0007191)
+
+(termFormat EnglishLanguage EO--0007252 "Sogatella furcifera")
+
+(termFormat EnglishLanguage EO--0007033 "rabi season")
+
+(subclass EO--0007108 EO--0007246)
+
+(mo-definition EO--0007153 "&quot;In biological experiments it refer to the treatment involving radiation in terms of length of the exposure time. It also includes the quantity of radiation falling on a per unit area. This is expressed in the units of luminous flux or the lumens.&quot; [GR:pj]")
+
+(subclass EO--0007099 EO--0007079)
+
+(termFormat EnglishLanguage EO--0007209 "Phomopsis oryzae-sativae")
+
+(termFormat EnglishLanguage EO--0007198 "water environment")
+
+(mo-definition EO--0007010 "&quot;The exposure of reference/experimental plant to monocot plant Sagittaria montevidensis, found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:118780]")
+
+(mo-definition EO--0007634 "&quot;The treatment involving exposure of plant to the pest commonly calles as cutworm.&quot; [GR:pj]")
+
+(subclass EO--0007271 EO--0007224)
+
+(subclass EO--0007338 EO--0007174)
+
+(termFormat EnglishLanguage EO--0007402 "fungal elicitor")
+
+(mo-definition EO--0007050 "&quot;The treatment involving growing plants in varying textures of soil growth media.&quot; [GR:pj]")
+
+(mo-definition EO--0007109 "&quot;Treatment involving the exposure of plant to the pathogenic single strand RNA positive stand virus.&quot; [GR:pj]")
+
+(subclass EO--0007547 EO--0007149)
+
+(mo-synonym EO--0007345 "&quot;rat&quot; []")
+
+(subclass EO--0007228 EO--0007047)
+
+(subclass EO--0007127 EO--0007337)
+
+(mo-synonym EO--0007087 "&quot;organic fertilizer regimen&quot; []")
+
+(subclass EO--0007248 EO--0007231)
+
+(mo-definition EO--0007257 "&quot;The treatment involving exposure of plant to the pathogen Xanthomonas oryzae pv. oryzae. It is a causal agent for rice bacterial blight disease.&quot; [GR:ivy, NCBI_taxid:64187]")
+
+(termFormat EnglishLanguage EO--0007172 "flood water")
+
+(mo-definition EO--0007399 "&quot;The treatment involving an exposure to frost or  freezing water temperature, which may depend on the study type or the regional environment. This temperature is either below or around 4C.&quot; [GR:pj]")
+
+(mo-definition EO--0007313 "&quot;The treatment involving exposure of plant to the pest Pseudaletia separata&quot; [GR:pj]")
+
+(mo-definition EO--0007206 "&quot;The treatment involving exposure of plant to the pathogen Gaeumannomyces graminis. It is a causal agent for rice Crown Sheath Rot Disease also called as Arkansas Foot Rot Disease, Black Sheath Rot Disease and Brown Sheath Rot Disease.&quot; [GR:ivy, NCBI_taxid:29850]")
+
+(mo-definition EO--0007147 "&quot;The treatment involving use of growth media for growing the plants or tissue cultured samples.&quot; [GR:pj]")
+
+(documentation EnglishLanguage "Version of data in the ontology.")
+
+(subclass EO--0007154 EO--0007151)
+
+(termFormat EnglishLanguage EO--0007623 "252-Cf fission neutrons")
+
+(mo-definition EO--0007146 "&quot;The treatment involving use of gravity factor to study various types of responses in presence, absence or modified levels of gravity.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007373 "mechanical damage")
+
+(termFormat EnglishLanguage "genetic background")
+
+(termFormat EnglishLanguage EO--0007164 "standing deep water")
+
+(mo-synonym EO--0007339 "&quot;tungro virus&quot; []")
+
+(subclass EO--0007196 EO--0007154)
+
+(mo-definition EO--0007348 "&quot;The treatment involving exposure of plant to the rice stripe necrosis virus. It is a causal agent for rice stripe necrosis disease.&quot; [GR:ivy]")
+
+(subclass EO--0007568 EO--0007149)
+
+(termFormat EnglishLanguage Sand "sandy soil")
+
+(mo-definition EO--0007009 "&quot;The exposure of reference/experimental plant to dicot plants found in its growth environment. These plants may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:71240]")
+
+(subclass EO--0007222 EO--0007196)
+
+(termFormat EnglishLanguage EO--0007009 "Eudicotyledon")
+
+(subclass EO--0007191 EO--0007359)
+
+(termFormat EnglishLanguage EO--0007028 "Echinochloa crus-galli")
+
+(subclass EO--0007614 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007625 "stratosphere exposure")
+
+(subclass EO--0007334 EO--0007335)
+
+(subclass EO--0007510 EO--0007149)
+
+(mo-definition EO--0007383 "&quot;The treatment involving an exposure to watering frequencies.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007124 "pest/pathogen/animal/plant
+environment")
+
+(mo-synonym EO--0007247 "&quot;Pantoea agglomerans&quot; []")
+
+(subclass EO--0007395 EO--0007396)
+
+(termFormat EnglishLanguage EO--0007004 "loam content")
+
+(mo-definition EO--0007065 "&quot;Treatment involving the exposure of plant to the pathogen Entyloma oryzae. It is a causal agent for rice Leaf Smut disease.&quot; [GR:ivy]")
+
+(termFormat EnglishLanguage EO--0007560 "p-N,N-di-(2-chloroethyl)amino-DL-phenylalanine")
+
+(subclass EO--0007540 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007037 "spring season")
+
+(mo-synonym EO--0007127 "&quot;root-knot nematode&quot; []")
+
+(termFormat EnglishLanguage EO--0007513 "1-diethylaminoethylethylamino-4-methyl-thioxanthenone")
+
+(mo-definition EO--0007506 "&quot;The treatment involving use of 1,4-dimethanesulfonoxy-1:4-dimethylbutane for mutagenesis process.&quot; [GR:pj, CAS:[2514-83-2]]")
+
+(mo-definition EO--0007117 "&quot;Treatment involving the exposure of plant to the pest rice army worm.&quot; [GR:pj, NCBI_taxid:7104]")
+
+(mo-definition EO--0007359 "&quot;A set of standardized controlled vocabularies to describe various types of treatments given to a individual plant / a population or a cultured tissue and/or cell type sample to evaluate the response on its exposure. It also includes the study types, where the terms can be used to identify the growth study facility. Each growth facility such as field study, growth chamber, green house etc is a environment on its own it may also involve instances of biotic and abiotic environments as supplemental treatments used in these studies. &quot; [GR:pj]")
+
+(mo-definition EO--0007553 "&quot;The treatment involving use of N-methyl-N'-nitro-N-nitrosoguanidine for mutagenesis process.&quot; [GR:pj, CAS:[70-25-7]]")
+
+(subclass EO--0007086 EO--0007085)
+
+(mo-synonym EO--0007151 "&quot;light regimen&quot; []")
+
+(mo-definition EO--0007024 "&quot;The use of conditions in which gaseous or dissolved oxygen is present  to study various types of responses on their extrinsic and/or intrinsic stimulus.&quot; [GR:pj]")
+
+(subclass EO--0007572 EO--0007149)
+
+(subclass EO--0007161 EO--0007175)
+
+(termFormat EnglishLanguage EO--0007147 "growth media")
+
+(mo-definition EO--0007239 "&quot;The treatment involving exposure of plant to elements that are required in tiny quantities for growth, as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-definition EO--0007144 "&quot;The treatment involving an exposure of plant to the pathogenic Pseudomonas sp.&quot; [GR:ivy, NCBI_taxid:286]")
+
+(mo-synonym EO--0007534 "&quot;CB1528&quot; []")
+
+(mo-synonym EO--0007366 "&quot;Rice black-streaked dwarf virus&quot; []")
+
+(termFormat EnglishLanguage EO--0007366 "rice black streak dwarf
+virus")
+
+(termFormat EnglishLanguage EO--0007574 "vinyl carbamate")
+
+(subclass EO--0007266 EO--0007262)
+
+(termFormat EnglishLanguage EO--0007620 "60-Co or ggr ray")
+
+(mo-definition EO--0007293 "&quot;The treatment involving exposure of plant to macronutrient potassium as supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007003 "temperate region")
+
+(subclass EO--0007621 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007060 "Sphaerulina oryzina")
+
+(mo-definition EO--0007295 "&quot;The treatment involving exposure of plant to macronutrient sulfur as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-definition EO--0007544 "&quot;The treatment involving use of hycanthon methanesulfonate for mutagenesis process.&quot; [GR:pj, CAS:[23255-93-8]]")
+
+(subclass EO--0007002 EO--0007222)
+
+(mo-definition EO--0007184 "&quot;The treatment involving exposure of plant to the Pythium dissotocum. It is a causal agent for rice seedling blight (fungal) or water mold dieases. Water mold diease is also called as seed rot or seedling damping-off disease.&quot; [GR:pj, NCBI_taxid:82936]")
+
+(mo-definition EO--0007256 "&quot;The treatment where the plants were grown under field conditions. This may involve supplemantal treatments in addition to any naturally occurring conditions.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007136 "Achlya spp.")
+
+(subclass EO--0007284 EO--0007045)
+
+(mo-definition EO--0007328 "&quot;The treatment involving exposure of plant to the heterokont Pythium.&quot; [GR:pj, NCBI_taxid:4797]")
+
+(mo-definition EO--0007063 "&quot;It blocks the reduction of plastoquinone in the photosynthetic light reaction and keeps the plastoquinone pool oxidized.&quot; [GR:pj]")
+
+(mo-definition EO--0007521 "&quot;The treatment involving use of actinomycin D for mutagenesis process.&quot; [GR:pj, CAS:[50-76-0]]")
+
+(mo-synonym EO--0007559 "&quot;CB3026&quot; []")
+
+(termFormat EnglishLanguage EO--0007293 "potassium nutrient regimen")
+
+(mo-alternateID EO--0007285 "EO:0007032")
+
+(subclass EO--0007315 EO--0007146)
+
+(mo-definition EO--0007530 "&quot;The treatment involving use of diethyl sulfate for mutagenesis process.&quot; [GR:pj, CAS:[64-67-5]]")
+
+(termFormat EnglishLanguage EO--0007069 "gibberellic acid regimen")
+
+(mo-definition EO--0007121 "&quot;Treatment involving the exposure of plant to the pest of Thysanoptera class.&quot; [GR:pj, NCBI_taxid:30262]")
+
+(termFormat EnglishLanguage EO--0007279 "Chilo suppressalis")
+
+(mo-definition EO--0007140 "&quot;The treatment involving an exposure of reference/experimental plant to monocot plant Scirpus spp., found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:46334]")
+
+(subclass EO--0007330 EO--0007115)
+
+(mo-synonym EO--0007105 "&quot;ABA regimen&quot; []")
+
+(mo-definition EO--0007304 "&quot;The treatment involving exposure of plant to the pest Marasmia patnalis .&quot; [GR:pj]")
+
+(mo-definition EO--0007523 "&quot;The treatment involving use of benzo (or agr)pyrene for mutagenesis process.&quot; [GR:pj, CAS:[50-32-8]]")
+
+(mo-definition EO--0007225 "&quot;The treatment involving exposure of plant to fluorine as supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007139 EO--0007022)
+
+(mo-definition EO--0007518 "&quot;The treatment involving use of 5-bromouracil for mutagenesis process.&quot; [GR:pj, CAS:[51-20-7]]")
+
+(subclass EO--0007098 EO--0007079)
+
+(mo-definition EO--0007537 "&quot;The treatment involving use of ethylenimine for mutagenesis process.&quot; [GR:pj, CAS:[151-56-4]]")
+
+(mo-synonym EO--0007305 "&quot;defloiator&quot; []")
+
+(mo-definition EO--0007545 "&quot;The treatment involving use of ICR 100 for mutagenesis process.&quot; [GR:pj, CAS:[4213-45-0]]")
+
+(subclass EO--0007318 EO--0007109)
+
+(mo-definition EO--0007529 "&quot;The treatment involving use of diepoxyoctane for mutagenesis process.&quot; [GR:pj, CAS:[2426-07-5]]")
+
+(mo-definition EO--0007401 "&quot;The treatment involving the plant or the populations grown in regions where the total annual rainfall received in in the range of 25-50cm (10-20inches).&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007062 "basic pH soil environment")
+
+(termFormat EnglishLanguage EO--0007022 "Liliopsida")
+
+(mo-definition EO--0007633 "&quot;This type of herbicides are taken up by plant root and leaf tissue and transported to the meristems via both phloem and xylem. The herbicide stops the activity of the enzyme, acetolactate synthase (ALS), which is involved in branch chain amino acid (valine, leucine and isoleucine) synthesis.&quot; [web:http://corn.agronomy.wisc.edu/AAdvice/1994/A001.html]")
+
+(subclass EO--0007626 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007140 "Scirpus spp.")
+
+(termFormat EnglishLanguage EO--0007558 "p-N,N-di(2-chloroethyl)aminophenylvaleric acid")
+
+(termFormat EnglishLanguage EO--0007049 "soil environment")
+
+(mo-synonym EO--0007540 "&quot;H3BO3&quot; []")
+
+(subclass EO--0007105 EO--0007165)
+
+(termFormat EnglishLanguage Loam "loam soil")
+
+(termFormat EnglishLanguage EO--0007551 "mitomycin C")
+
+(mo-definition EO--0007274 "&quot;The treatment involving exposure of plant to the pest Scirpophaga incertulas.&quot; [GR:pj]")
+
+(subclass EO--0007059 EO--0007058)
+
+(termFormat EnglishLanguage EO--0007113 "rice necrosis mosaic virus")
+
+(termFormat EnglishLanguage EO--0007268 "fungicide regimen")
+
+(mo-definition EO--0007135 "&quot;The treatment involving an exposure of plant to the pathogen Magnaporthe spp.&quot; [GR:ivy, NCBI_taxid:148303]")
+
+(mo-definition EO--0007077 "&quot;Treatment involving the exposure of plant to the pathogen Tilletia barclayana. It is a causal agent for rice Kernel Smut disease.&quot; [GR:ivy, NCBI_taxid:157178]")
+
+(subclass EO--0007146 EO--0007316)
+
+(subclass EO--0007516 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007151 "radiation regimen")
+
+(mo-definition EO--0007332 "&quot;The treatment involving an exposure to cold or sub-optimal air temperature, which may depend on the study type or the regional environment.&quot; [GR:pj]")
+
+(subclass EO--0007541 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007258 "Oebalus pugnax")
+
+(mo-definition EO--0007263 "&quot;The treatment involving exposure of plant to the pest white rice borer&quot; [GR:pj]")
+
+(mo-synonym EO--0007069 "&quot;GA regimen&quot; []")
+
+(mo-synonym EO--0007298 "&quot;rice delpahcid&quot; []")
+
+(mo-synonym EO--0007366 "&quot;rice black-streaked dwarf fijivirus&quot; []")
+
+(subclass EO--0007183 EO--0007167)
+
+(mo-definition EO--0007189 "&quot;The treatment involving use of chemical(s) to study various types of responses on their extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(subclass EO--0007132 EO--0007202)
+
+(termFormat EnglishLanguage EO--0007628 "X-ray")
+
+(termFormat EnglishLanguage EO--0007298 "Sogatodes oryzicola")
+
+(subclass EO--0007217 EO--0007221)
+
+(subclass EO--0007297 EO--0007046)
+
+(termFormat EnglishLanguage EO--0007084 "other animals")
+
+(mo-definition EO--0007397 "&quot;The treatment involving exposure of plant to macronutrient phosphorus as supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007379 "Thanatephorus cucumeris")
+
+(mo-alternateID EO--0007341 "EO:0007301")
+
+(subclass EO--0007093 EO--0007087)
+
+(mo-synonym EO--0007249 "&quot;Xanthomonas campestris pv. oryzicola&quot; []")
+
+(mo-definition EO--0007090 "&quot;Treatment involving the use of ammonium nitrate supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007364 "Rhizoctonia oryzae")
+
+(termFormat EnglishLanguage EO--0007073 "Basidiomycota")
+
+(subclass EO--0007562 EO--0007149)
+
+(mo-definition EO--0007298 "&quot;The treatment involving exposure of plant to the pest rice delpahcid.&quot; [GR:pj]")
+
+(subclass EO--0007617 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007061 "tropical region")
+
+(mo-synonym EO--0007257 "&quot;Xanthomonas campestris pv. oryza&quot; []")
+
+(mo-definition EO--0007229 "&quot;The treatment involving exposure of plant to the pathogen Gibberella fujikuroi. It is a causal agent for rice Bakanae disease and also for a form of rice Seedling Blight (Fungal) Disease disease.&quot; [GR:ivy, NCBI_taxid:5127]")
+
+(subclass EO--0007548 EO--0007149)
+
+(mo-definition EO--0007048 "&quot;Treatment involving the use of sodium chloride salt as supplement to liquid and soil growth media to study various types of responses on its application.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007177 "Pythium myriotylum")
+
+(termFormat EnglishLanguage EO--0007276 "cobalt nutrient regimen")
+
+(subclass EO--0007062 EO--0007058)
+
+(termFormat EnglishLanguage EO--0007181 "rainfall")
+
+(subclass EO--0007566 EO--0007149)
+
+(subclass EO--0007058 EO--0007049)
+
+(subclass EO--0007177 EO--0007328)
+
+(termFormat EnglishLanguage EO--0007549 "methoxy diethylnitrosamine")
+
+(subclass EO--0007236 EO--0007144)
+
+(mo-definition "&quot;The treatment involving the terms that are no longer in use or were deleted are placed under this parent term.&quot; [GR:pj]")
+
+(mo-definition EO--0007200 "&quot;The treatment involving exposure of plant to short day light duration followed by a long night cycle. &quot; [GR:pj]")
+
+(subclass EO--0007374 EO--0007107)
+
+(termFormat EnglishLanguage EO--0007137 "Echinochloa spp.")
+
+(subclass EO--0007211 EO--0007055)
+
+(mo-definition EO--0007283 "&quot;The treatment involving exposure of plant to the pest commonly called as oriental rice thrips.&quot; [GR:pj]")
+
+(mo-definition EO--0007507 "&quot;The treatment involving use of 1,4-dimethanesulfonoxybut-2-yne for mutagenesis process.&quot; [GR:pj, CAS:[2917-96-6]]")
+
+(mo-definition EO--0007114 "&quot;Treatment involving the exposure of plant to the pest of lepidoptera class.&quot; [GR:pj, NCBI_taxid:7088]")
+
+(subclass EO--0007260 EO--0007119)
+
+(termFormat EnglishLanguage EO--0007356 "rice hoja blanca virus")
+
+(termFormat EnglishLanguage EO--0007194 "Sclerospora macrospora")
+
+(mo-synonym EO--0007339 "&quot;RTSV&quot; []")
+
+(subclass EO--0007295 EO--0007046)
+
+(termFormat EnglishLanguage EO--0007067 "hydroponic plant culture
+media")
+
+(termFormat EnglishLanguage EO--0007163 "day light regimen")
+
+(mo-definition EO--0007080 "&quot;Treatment involving the use of JA (or its homolog) growth hormone to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(mo-definition EO--0007188 "&quot;The treatment involving exposure of plant to the Pythium arrhenomanes. It is a causal agent for rice feeder root necrosis disease.&quot; [GR:pj, NCBI_taxid:83932]")
+
+(mo-definition EO--0007145 "&quot;The treatment involving an exposure of plant to the pathogenic Xanthomonas sp.&quot; [GR:ivy, NCBI_taxid:338]")
+
+(subclass EO--0007010 EO--0007139)
+
+(subclass EO--0007097 EO--0007102)
+
+(mo-definition EO--0007264 "&quot;The treatment involving exposure of plant to the pest purple stem borer.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007359 "environment ontology")
+
+(mo-synonym EO--0007116 "&quot;bug&quot; []")
+
+(mo-synonym EO--0007365 "&quot;rice dwarf phytoreovirus&quot; []")
+
+(termFormat EnglishLanguage EO--0007002 "UV-A light regimen")
+
+(subclass EO--0007537 EO--0007149)
+
+(subclass EO--0007192 EO--0007107)
+
+(mo-definition EO--0007560 "&quot;The treatment involving use of p-N,N-di-(2-chloroethyl)amino-DL-phenylalanine for mutagenesis process.&quot; [GR:pj, CAS:[148-82-3]]")
+
+(termFormat EnglishLanguage EO--0007320 "Meloidogyne arenaria")
+
+(subclass EO--0007233 EO--0007124)
+
+(mo-definition EO--0007307 "&quot;The treatment involving use of transposable element as an insert for mutagenesis process.&quot; [GR:pj]")
+
+(subclass EO--0007384 EO--0007332)
+
+(mo-synonym EO--0007229 "&quot;Fusarium fujikuroi&quot; []")
+
+(documentation EnglishLanguage "A namespace defined for use in the
+ontology.")
+
+(mo-definition EO--0007195 "&quot;The treatment involving exposure of plant to the rice ragged stunt virus. It is a causal agent for rice ragged stunt disease.&quot; [GR:ivy, NCBI_taxid:42475]")
+
+(subclass EO--0007045 EO--0007240)
+
+(mo-definition EO--0007345 "&quot;The treatment involving exposure of plant to the pest rats and mouse.&quot; [GR:pj, NCBI_taxid:9989]")
+
+(mo-synonym EO--0007031 "&quot;mammal&quot; []")
+
+(subclass EO--0007180 EO--0007074)
+
+(mo-definition EO--0007016 "&quot;The exposure of reference/experimental plant to dicot plant Bacopa spp. found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(mo-synonym EO--0007063 "&quot;dichlorophenyldimethyl urea&quot; []")
+
+(mo-definition EO--0007066 "&quot;Treatment involving the use of cytokinin (or its homolog) growth hormone to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(subclass EO--0007023 EO--0007191)
+
+(subclass EO--0007512 EO--0007149)
+
+(subclass EO--0007199 EO--0007128)
+
+(subclass EO--0007619 EO--0007617)
+
+(mo-synonym EO--0007339 "&quot;rice leaf yellowing virus&quot; []")
+
+(mo-definition EO--0007134 "&quot;The treatment involving an exposure to acidic pH levels of the growth media.&quot; [GR:pj]")
+
+(mo-xrefAnalogous EO--0007331 "NCBI_taxid:42880")
+
+(mo-definition EO--0007258 "&quot;The treatment involving exposure of plant to the pest rice stink bug&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007332 "cold air temperature
+regimen")
+
+(termFormat EnglishLanguage EO--0007548 "Janus green B")
+
+(termFormat EnglishLanguage EO--0007345 "Rodentia")
+
+(mo-definition EO--0007068 "&quot;Treatment involving the use of ethylene (or its homolog) growth hormone to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(subclass EO--0007279 EO--0007122)
+
+(termFormat EnglishLanguage Clay "clay soil")
+
+(mo-synonym EO--0007066 "&quot;6-benzylaminopurine&quot; []")
+
+(termFormat EnglishLanguage "sub-sahara region")
+
+(mo-definition EO--0007162 "&quot;The treatment involving continuous exposure of light to the plant. &quot; [GR:pj]")
+
+(mo-synonym EO--0007550 "&quot;CB1540&quot; []")
+
+(mo-definition EO--0007282 "&quot;The treatment involving an exposure to standing water during a plant's life span. This also results in anaerobic soil conditions for a either long or short periods.&quot; [GR:pj]")
+
+(mo-definition EO--0007569 "&quot;The treatment involving use of styryl quinoline for mutagenesis process.&quot; [GR:pj]")
+
+(subclass EO--0007264 EO--0007114)
+
+(subclass EO--0007144 EO--0007108)
+
+(mo-definition EO--0007277 "&quot;The treatment involving exposure of plant to the pest dark-headed stemborer.&quot; [GR:pj]")
+
+(mo-synonym EO--0007379 "&quot;Thanatephorus praticola&quot; []")
+
+(termFormat EnglishLanguage EO--0007110 "dsRNA virus")
+
+(subclass EO--0007066 EO--0007165)
+
+(mo-savedDateTime "27:11:2006 15:07")
+
+(mo-synonym EO--0007344 "&quot;RTBV&quot; []")
+
+(termFormat EnglishLanguage EO--0007013 "Echinodorus berteroi")
+
+(termFormat EnglishLanguage EO--0007312 "Tos-17 transposable element")
+
+(subclass EO--0007382 EO--0007064)
+
+(termFormat EnglishLanguage EO--0007350 "rice stripe virus")
+
+(termFormat EnglishLanguage EO--0007363 "Magnaporthe salvinii")
+
+(termFormat EnglishLanguage EO--0007318 "rice yellow mottle virus")
+
+(mo-synonym EO--0007366 "&quot;Rice black streak virus&quot; []")
+
+(mo-definition EO--0007216 "&quot;The treatment using yellow light either exclusively or as part of a supplemental light treatment involving yellow color light in the wavelength range of 597-577 nM.&quot; [GR:pj]")
+
+(mo-synonym EO--0007113 "&quot;RNMV&quot; []")
+
+(termFormat EnglishLanguage EO--0007401 "semiarid region")
+
+(mo-synonym EO--0007396 "&quot;deep water&quot; []")
+
+(subclass EO--0007534 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007631 "Sclerospora graminicola")
+
+(termFormat EnglishLanguage EO--0007010 "Sagittaria montevidensis")
+
+(mo-definition EO--0007308 "&quot;The treatment involving exposure of plant to the pest green leaf hopper.&quot; [GR:pj, NCBI_taxid:94399]")
+
+(mo-synonym EO--0007028 "&quot;cockspur grass&quot; []")
+
+(subclass EO--0007400 EO--0007394)
+
+(mo-definition EO--0007234 "&quot;The treatment involving exposure of plant to the pathogen Pseudomonas fuscovaginae. It is a causal agent for rice Sheath Brown Rot disease.&quot; [GR:ivy, NCBI_taxid:50340]")
+
+(termFormat EnglishLanguage EO--0007112 "retroid virus")
+
+(mo-definition EO--0007045 "&quot;Treatment involving the use of macronutrients (N, P, K) as supplement to study various types of responses. These macronutrients comprise the elements N, P and K that are required by the plant in greatest quantities for normal growth.&quot; [GR:pj]")
+
+(mo-synonym EO--0007388 "&quot;Trichoconis padwickii&quot; []")
+
+(subclass EO--0007229 EO--0007118)
+
+(subclass EO--0007525 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007104 "NPK fertilizer regimen")
+
+(mo-definition EO--0007540 "&quot;The treatment involving use of boric acid for mutagenesis process.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007121 "Thysanoptera")
+
+(mo-synonym EO--0007336 "&quot;ufra nematode&quot; []")
+
+(subclass EO--0007342 EO--0007136)
+
+(mo-synonym EO--0007334 "&quot;golden apple snail&quot; []")
+
+(termFormat EnglishLanguage EO--0007383 "watering regimen")
+
+(mo-definition EO--0007165 "&quot;The treatment involving use of growth hormones to study various types of responses on their extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(mo-synonym EO--0007378 "&quot;Acrocylindrium oryzae&quot; []")
+
+(termFormat EnglishLanguage EO--0007263 "Maliarpha separatella")
+
+(termFormat EnglishLanguage EO--0007210 "Virus")
+
+(mo-xrefAnalogous EO--0007274 "NCBI_taxid:72366")
+
+(termFormat EnglishLanguage EO--0007283 "Stenchaetothrips biformis")
+
+(mo-synonym EO--0007305 "&quot;rice leaffolder&quot; []")
+
+(mo-alternateID EO--0007391 "EO:0007390")
+
+(subclass EO--0007159 EO--0007155)
+
+(mo-definition EO--0007029 "&quot;The exposure of reference/experimental plant to monocot plant Typha spp., found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:4732]")
+
+(termFormat EnglishLanguage EO--0007633 "imidazolinone")
+
+(termFormat EnglishLanguage EO--0007118 "Gibberella spp.")
+
+(mo-definition EO--0007378 "&quot;The treatment involving exposure of plant to the pathogen Sarocladium oryzae. It is a causal agent for rice Seedling Blight (Fungal) disease and/or Sheath Rot disease.&quot; [GR:ivy]")
+
+(mo-synonym EO--0007009 "&quot;Eudicot&quot; []")
+
+(subclass EO--0007029 EO--0007022)
+
+(subclass EO--0007368 EO--0007160)
+
+(termFormat EnglishLanguage EO--0007233 "Fungi")
+
+(mo-definition EO--0007180 "&quot;The treatment involving use of 2,4-D growth hormone/herbicide to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj, CAS:94-75-7]")
+
+(subclass EO--0007145 EO--0007108)
+
+(mo-definition EO--0007197 "&quot;The treatment involving an exposure to varying degree of humidity, which may depend on regional environment.&quot; [GR:pj]")
+
+(mo-definition EO--0007398 "&quot;The treatment involving the plant or the populations grown in regions that are adjacent to the tropics, usually roughly defined as the ranges 25-40 N and 25-40 S latitude. These areas typically have hot tropical summers, but non-tropical winters.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007564 "p-p'-N,N-di(2-chloroethyl)aminophenoxyphenylalanine")
+
+(subclass EO--0007050 EO--0007049)
+
+(mo-definition EO--0007572 "&quot;The treatment involving use of triethylenemelamine for mutagenesis process.&quot; [GR:pj, CAS:[51-18-3]]")
+
+(mo-definition EO--0007221 "&quot;The treatment using visible light in the wavelength range of 380-780 nM. is the portion of the electromagnetic spectrum that is visible to the human eye. The optical spectrum is a composite, or mixture, of the various colors.&quot; [GR:pj]")
+
+(subclass EO--0007149 EO--0007189)
+
+(mo-definedNamespace "environment_ontology")
+
+(termFormat EnglishLanguage EO--0007512 "1-bromo-2-chloroethane")
+
+(mo-synonym EO--0007239 "&quot;trace element regimen&quot; []")
+
+(mo-definition EO--0007337 "&quot;The treatment involving exposure of plant to the nematode pests.&quot; [GR:pj, NCBI_taxid:6231]")
+
+(mo-synonym EO--0007345 "&quot;rodent&quot; []")
+
+(subclass EO--0007361 EO--0007110)
+
+(subclass EO--0007130 EO--0007202)
+
+(mo-definition EO--0007513 "&quot;The treatment involving use of 1-diethylaminoethylethylamino-4-methyl-thioxanthenone for mutagenesis process.&quot; [GR:pj, CAS:[479-50-5]]")
+
+(termFormat EnglishLanguage EO--0007361 "rice gall dwarf virus")
+
+(mo-synonym EO--0007610 "&quot;tritium&quot; []")
+
+(subclass EO--0007319 EO--0007173)
+
+(mo-synonym EO--0007021 "&quot;water plantain&quot; []")
+
+(termFormat EnglishLanguage EO--0007527 "cupric sulfate")
+
+(termFormat EnglishLanguage EO--0007083 "Phoma sorghina")
+
+(termFormat EnglishLanguage EO--0007317 "Nilaparvata lugens")
+
+(termFormat EnglishLanguage EO--0007509 "1,6-dimethylsulfonoxy
+D-mannitol")
+
+(mo-synonym EO--0007260 "&quot;stalked-eyed fly&quot; []")
+
+(subclass EO--0007148 EO--0007145)
+
+(termFormat EnglishLanguage EO--0007357 "biotic environment")
+
+(termFormat EnglishLanguage "dicot mixed crop neighbor")
+
+(mo-definition EO--0007133 "&quot;The treatment involving an exposure to basic pH levels of the growth media.&quot; [GR:pj]")
+
+(mo-synonym EO--0007294 "&quot;black branded swift&quot; []")
+
+(subclass EO--0007251 EO--0007144)
+
+(termFormat EnglishLanguage EO--0007292 "CCP")
+
+(mo-definition EO--0007072 "&quot;Treatment involving the exposure of plant to the pathogen Microdochium oryzae. It is a causal agent for rice various forms of Leaf scald disease such as Brown Leaf Blight Disease , Leaf Sheath Browning Disease, Leaf Tip Blight Disease and Leaf Tip Dying Disease.&quot; [GR:ivy]")
+
+(mo-definition EO--0007384 "&quot;The treatment involving an exposure to frost or freezing air temperature, which may depend on the study type or the regional environment. This temperature is either below or around 4C.&quot; [GR:pj]")
+
+(mo-definition EO--0007243 "&quot;The treatment involving exposure of plant to the pathogen Pseudomonas glumae. It is a causal agent for rice Grain Rot disease.&quot; [GR:ivy, NCBI_taxid:337]")
+
+(mo-definition EO--0007113 "&quot;Treatment involving the exposure of plant to the rice necrosis mosaic virus. It is a causal agent for rice necrosis mosaic disease.&quot; [GR:ivy, NCBI_taxid:59500]")
+
+(mo-definition "&quot;OBSOLETE. &quot; [GR:pj]")
+
+(mo-synonym EO--0007337 "&quot;roundworm&quot; []")
+
+(termFormat EnglishLanguage "soil fauna")
+
+(termFormat EnglishLanguage EO--0007131 "middle infra-red light
+regimen")
+
+(mo-definition EO--0007559 "&quot;The treatment involving use of p-N,N-di-(2-chloroethyl)amino-D-phenylalanine for mutagenesis process.&quot; [GR:pj, CAS:[13045-94-8]]")
+
+(mo-synonym EO--0007537 "&quot;EI&quot; []")
+
+(mo-synonym EO--0007346 "&quot;rice yellow stunt rhabdovirus&quot; []")
+
+(termFormat EnglishLanguage EO--0007215 "orange light regimen")
+
+(subclass EO--0007618 EO--0007617)
+
+(mo-definition EO--0007320 "&quot;The treatment involving exposure of plant to the pest Meloidogyne oryzae. It is a causal agent for rice root knot nematode disease.&quot; [GR:pj, NCBI_taxid:6304]")
+
+(termFormat EnglishLanguage EO--0007185 "salt regimen")
+
+(mo-definition EO--0007631 "&quot;The treatment involving exposure of plant to the pathogen Sclerophthora graminicola. It is a causal agent for downy mildew disease.&quot; [GR:pj, NCBI_taxid:162130]")
+
+(subclass EO--0007092 EO--0007087)
+
+(mo-definition EO--0007215 "&quot;The treatment using orange light either exclusively or as part of a supplemental light treatment involving orange color light in the wavelength range of 622-597 nM.&quot; [GR:pj]")
+
+(mo-synonym EO--0007168 "&quot;Antibiotic A-396-II&quot; []")
+
+(subclass EO--0007206 EO--0007107)
+
+(subclass EO--0007369 EO--0007127)
+
+(subclass EO--0007016 EO--0007009)
+
+(termFormat EnglishLanguage EO--0007621 "magnetic field")
+
+(mo-synonym EO--0007300 "&quot;rice bug&quot; []")
+
+(termFormat EnglishLanguage EO--0007046 "secondary macronutrient")
+
+(termFormat EnglishLanguage EO--0007041 "antibiotic regimen")
+
+(mo-synonym EO--0007065 "&quot;Entyloma lineatum&quot; []")
+
+(termFormat EnglishLanguage EO--0007173 "warm/hot temperature
+regimen")
+
+(subclass EO--0007204 EO--0007074)
+
+(subclass EO--0007392 EO--0007064)
+
+(mo-definition EO--0007070 "&quot;Treatment involving the use of IAA (or its homolog) growth hormone to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(subclass EO--0007267 EO--0007268)
+
+(subclass EO--0007552 EO--0007149)
+
+(subclass EO--0007221 EO--0007196)
+
+(termFormat EnglishLanguage EO--0007630 "Sclerospora spp.")
+
+(subclass EO--0007542 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007406 "nitrate regimen")
+
+(termFormat EnglishLanguage EO--0007326 "mycoplasma like organism")
+
+(mo-definition EO--0007026 "&quot;The exposure of reference/experimental plant to monocot plant Echinochloa glabrescens found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(mo-definition EO--0007129 "&quot;The treatment using UV-C light either exclusively or as part of a supplemental electromagnetic radiation in the wavelength range of 280-10nm.&quot; [GR:pj]")
+
+(mo-synonym EO--0007070 "&quot;IAA regimen&quot; []")
+
+(mo-definition EO--0007535 "&quot;The treatment involving use of ethyl nitrosourea for mutagenesis process.&quot; [GR:pj, CAS:[759-73-9]]")
+
+(termFormat EnglishLanguage EO--0007517 "2-methoxyethanol")
+
+(mo-synonym EO--0007194 "&quot;Sclerophthora macrospora&quot; []")
+
+(mo-definition EO--0007534 "&quot;The treatment involving use of EMS as a mutagen by damaging DNA and is used experimentally for that effect.&quot; [GR:pj, CAS:[62-50-0]]")
+
+(subclass EO--0007142 EO--0007114)
+
+(termFormat EnglishLanguage EO--0007508 "1,4-dimethanesulfonoxybutane")
+
+(mo-definition EO--0007168 "&quot;The treatment involving use of hygromycin B antibiotic for selection purposes.&quot; [GR:pj]")
+
+(mo-synonym EO--0007386 "&quot;Monographella albescens&quot; []")
+
+(mo-definition EO--0007363 "&quot;The treatment involving exposure of plant to the pathogen Magnaporthe salvinii. It is a causal agent for rice stem rot disease and Seedling Blight (Fungal) Disease.&quot; [GR:ivy, NCBI_taxid:165778]")
+
+(subclass EO--0007182 EO--0007328)
+
+(subclass EO--0007073 EO--0007233)
+
+(termFormat EnglishLanguage "normal temperature regimen")
+
+(subclass EO--0007571 EO--0007149)
+
+(subclass EO--0007095 EO--0007406)
+
+(mo-synonym EO--0007088 "&quot;Ceratobasidium sativae&quot; []")
+
+(termFormat EnglishLanguage EO--0007346 "rice yellow stunt virus")
+
+(mo-synonym EO--0007275 "&quot;rice stemborer&quot; []")
+
+(subclass EO--0007620 EO--0007617)
+
+(termFormat EnglishLanguage EO--0007534 "ethyl methanesulfonate")
+
+(mo-definition EO--0007334 "&quot;The treatment involving exposure of plant to the pest Pomacea canaliculata&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007334 "Pomacea canaliculata")
+
+(mo-definition EO--0007527 "&quot;The treatment involving use of cupric sulfate for mutagenesis process.&quot; [GR:pj, CAS:[7758-98-7]]")
+
+(mo-alternateID EO--0007113 "EO:0007354")
+
+(mo-definition EO--0007563 "&quot;The treatment involving use of p-N,N-di-(2-chloroethyl)aminophenylethylamine for mutagenesis process.&quot; [GR:pj, CAS:[58880-18-5]]")
+
+(mo-synonym EO--0007243 "&quot;Burkholderia glumae&quot; []")
+
+(mo-definition EO--0007112 "&quot;Treatment involving the exposure of plant to the pathogenic retroid virus.&quot; [GR:pj, NCBI_taxid:35268]")
+
+(mo-synonym EO--0007008 "&quot;Asian pickerel weed&quot; []")
+
+(mo-synonym EO--0007110 "&quot;dsRNA nonenveloped viruses&quot; []")
+
+(mo-synonym EO--0007203 "&quot;Pfr light&quot; []")
+
+(mo-definition EO--0007148 "&quot;The treatment involving an exposure of plant to the pathogen Xanthomonas oryzae. It is a causal agent for rice bacterial blight disease.&quot; [GR:ivy, NCBI_taxid:347]")
+
+(termFormat EnglishLanguage EO--0007516 "2-fluoroethyl
+methanesulfonate")
+
+(subclass EO--0007326 EO--0007212)
+
+(mo-synonym EO--0007226 "&quot;rice blast fungus&quot; []")
+
+(termFormat EnglishLanguage EO--0007180 "2,4-dichlorophenoxyacetic
+acid")
+
+(mo-definition EO--0007122 "&quot;Treatment involving the exposure of plant to the pest Chilo.&quot; [GR:pj, NCBI_taxid:168630]")
+
+(mo-synonym EO--0007063 "&quot;diuron&quot; []")
+
+(mo-synonym EO--0007346 "&quot;rice transitory yellowing virus&quot; []")
+
+(termFormat EnglishLanguage EO--0007290 "kinetin regimen")
+
+(mo-synonym EO--0007377 "&quot;Sclerotium rolfsii&quot; []")
+
+(mo-definition EO--0007154 "&quot;The treatment involving an exposure to a given type of radiation. Often it is in the form of electromagnetic and ionizing radiation such as light (infrared, visible or ultraviolet), x-rays, gamma rays, etc.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007052 "organic matter content")
+
+(subclass EO--0007026 EO--0007137)
+
+(termFormat EnglishLanguage EO--0007329 "Spodoptera praefica")
+
+(termFormat EnglishLanguage EO--0007540 "boric acid")
+
+(termFormat EnglishLanguage EO--0007260 "Diopsis macrophthalma")
+
+(mo-definition EO--0007300 "&quot;The treatment involving exposure of plant to the pest paddy bug.&quot; [GR:pj]")
+
+(mo-synonym EO--0007017 "&quot;flatsedge&quot; []")
+
+(mo-formatVersion "1.0")
+
+(mo-definition EO--0007370 "&quot;The treatment involving exposure of plant to the pest Meloidogyne oryzae. It is a causal agent for rice root knot nematode disease.&quot; [GR:pj]")
+
+(mo-definition EO--0007173 "&quot;The treatment involving an exposure to above optimal temperature, which may depend on the study type or the regional environment.&quot; [GR:pj]")
+
+(mo-definition EO--0007203 "&quot;The treatment using far red light either exclusively or as part of a supplemental light treatment involving red color light in the wavelength range of 800-700 nM.&quot; [GR:pj]")
+
+(mo-definition EO--0007046 "&quot;Treatment involving the use of macronutrients (Ca, Mg, S) as supplement to study various types of responses. These macronutrients are used less often as fertilizers than the primary elements.&quot; [GR:pj]")
+
+(mo-definition EO--0007371 "&quot;The treatment involving exposure of plant to the pest Meloidogyne oryzae. It is a causal agent for rice root knot nematode disease.&quot; [GR:pj, NCBI_taxid:6303]")
+
+(mo-definition EO--0007120 "&quot;Treatment involving the exposure of plant to the pest commonly called as beetles or Coleoptera.&quot; [GR:pj, NCBI_taxid:7041]")
+
+(termFormat EnglishLanguage EO--0007141 "Cyperus spp.")
+
+(subclass EO--0007343 EO--0007031)
+
+(subclass EO--0007061 EO--0007064)
+
+(termFormat EnglishLanguage EO--0007369 "Meloidogyne salasi")
+
+(subclass EO--0007404 EO--0007198)
+
+(termFormat EnglishLanguage EO--0007214 "Alternaria spp.")
+
+(mo-synonym EO--0007333 "&quot;true insects&quot; []")
+
+(subclass EO--0007121 EO--0007333)
+
+(subclass EO--0007631 EO--0007630)
+
+(subclass EO--0007563 EO--0007149)
+
+(mo-synonym EO--0007180 "&quot;2,4-D regimen&quot; []")
+
+(termFormat EnglishLanguage EO--0007253 "molybdenum nutrient regimen")
+
+(mo-synonym EO--0007260 "&quot;rice stem borer&quot; []")
+
+(mo-definition EO--0007141 "&quot;The treatment involving an exposure of reference/experimental plant to monocot plant Cyperus spp. found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:4610]")
+
+(subclass EO--0007161 EO--0007382)
+
+(termFormat EnglishLanguage EO--0007153 "radiation quantity regimen")
+
+(termFormat EnglishLanguage EO--0007055 "Cochliobolus spp.")
+
+(mo-synonym EO--0007236 "&quot;Burkholderia plantarii&quot; []")
+
+(termFormat EnglishLanguage EO--0007300 "Leptocorisa oratorius")
+
+(termFormat EnglishLanguage part "part of")
+
+(mo-definition EO--0007391 "&quot;The treatment involving the plant or the populations grown in regions where the land level is slightly steep, noncontinuous flooding of variable depth and duration. Alternatingconditions of aerobic to anaerobic soil.&quot; [IRIS:SES]")
+
+(mo-synonym EO--0007180 "&quot;Weed Tox&quot; [CAS:94-75-7]")
+
+(termFormat EnglishLanguage Smo-Subset "Subset")
+
+(mo-definition EO--0007136 "&quot;The treatment involving an exposure of plant to the Achlya spp.&quot; [GR:pj, NCBI_taxid:4765]")
+
+(mo-definition EO--0007099 "&quot;Treatment involving the use of potassium sulfate supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass Sand EO--0007155)
+
+(termFormat EnglishLanguage EO--0007384 "freezing air temperature
+regimen")
+
+(termFormat EnglishLanguage EO--0007400 "arid region")
+
+(mo-definition EO--0007323 "&quot;The treatment involving exposure of plant to the pest Hirschmaniella mucronata. It is a causal agent for rice rice root nematode disease.&quot; [GR:pj]")
+
+(mo-definition EO--0007085 "&quot;Treatment involving the use of fertilier to study various types of responses.&quot; [GR:pj]")
+
+(mo-synonym EO--0007211 "&quot;Helminthosporium oryzae&quot; []")
+
+(mo-synonym EO--0007272 "&quot;Tipanaea sericea&quot; []")
+
+(subclass EO--0007247 EO--0007143)
+
+(subclass EO--0007231 EO--0007359)
+
+(mo-synonym EO--0007080 "&quot;JA regimen&quot; []")
+
+(subclass EO--0007268 EO--0007167)
+
+(mo-synonym EO--0007014 "&quot;Texas mudbaby&quot; []")
+
+(mo-alternateID EO--0007363 "EO:0007213")
+
+(mo-definition EO--0007503 "&quot;The treatment involving use of 1,2-dibromoethane for mutagenesis process.&quot; [GR:pj, CAS:[106-93-4]]")
+
+(subclass EO--0007160 EO--0007198)
+
+(subclass EO--0007391 EO--0007064)
+
+(termFormat EnglishLanguage EO--0007285 "rainy season")
+
+(mo-synonym EO--0007205 "&quot;RGSV-2&quot; []")
+
+(mo-synonym EO--0007396 "&quot;flooding&quot; []")
+
+(mo-synonym EO--0007556 "&quot;2-chloro-N-(2-chloroethyl)-N-methylethanamine&quot; []")
+
+(subclass EO--0007071 EO--0007265)
+
+(termFormat EnglishLanguage EO--0007204 "1-naphthaleneacetic acid")
+
+(mo-definition EO--0007286 "&quot;The treatment involving an exposure to the dry season.&quot; [GR:pj]")
+
+(subclass EO--0007210 EO--0007124)
+
+(owl-AnnotationProperty "null")
+
+(mo-alternateID EO--0007134 "EO:0007170")
+
+(mo-synonym EO--0007180 "&quot;U-5043&quot; [CAS:94-75-7]")
+
+(mo-synonym EO--0007048 "&quot;NaCl treatment&quot; []")
+
+(mo-synonym EO--0007168 "&quot;hygromycin B regimen&quot; []")
+
+(mo-definition EO--0007520 "&quot;The treatment involving use of 7-bromomethyl 12 methyl benz or agr/anthracine for mutagenesis process.&quot; [GR:pj, CAS:[16238-56-5]]")
+
+(subclass EO--0007363 EO--0007135)
+
+(termFormat EnglishLanguage EO--0007392 "upland region")
+
+(termFormat EnglishLanguage EO--0007188 "Pythium arrhenomanes")
+
+(mo-synonym EO--0007283 "&quot;oriental rice thrips&quot; []")
+
+(mo-definition EO--0007178 "&quot;The treatment involving an exposure to a given pressure of the atmosphere at a given point. Its measurement can be expressed in several ways. One is in millibars. Another is in inches or millimeters of mercury (Hg).&quot; [GR:pj]")
+
+(mo-synonym EO--0007358 "&quot;RGSV&quot; []")
+
+(mo-synonym EO--0007570 "&quot;CB1735&quot; []")
+
+(termFormat EnglishLanguage EO--0007155 "soil type")
+
+(subclass EO--0007138 EO--0007022)
+
+(subclass EO--0007027 EO--0007191)
+
+(subclass EO--0007052 EO--0007050)
+
+(mo-definition EO--0007230 "&quot;The treatment involving exposure of plant to iodine as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-synonym EO--0007544 "&quot;HMS&quot; []")
+
+(mo-definition EO--0007220 "&quot;The treatment using violet light either exclusively or as part of a supplemental light treatment involving violet color light in the wavelength range of 455-390 nM.&quot; [GR:pj]")
+
+(subclass EO--0007282 EO--0007198)
+
+(mo-synonym EO--0007389 "&quot;Fusarium graminearum&quot; []")
+
+(subclass EO--0007258 EO--0007116)
+
+(instance Smo-inSubset BinaryRelation)
+
+(mo-definition EO--0007001 "&quot;The treatment using UV-B light either exclusively or as part of a supplemental electromagnetic radiation in the wavelength range of 315-280nm.&quot; [GR:pj]")
+
+(subclass EO--0007187 EO--0007189)
+
+(termFormat EnglishLanguage EO--0007246 "Bacteria")
+
+(termFormat EnglishLanguage EO--0007619 "226-Ra or agr ray")
+
+(mo-synonym EO--0007294 "&quot;lesser millet skipper&quot; []")
+
+(termFormat EnglishLanguage EO--0007029 "Typha spp.")
+
+(termFormat EnglishLanguage EO--0007365 "rice dwarf virus")
+
+(termFormat EnglishLanguage EO--0007127 "Meloidogyne spp.")
+
+(mo-synonym EO--0007557 "&quot;N-methyl-N-nitrosourea&quot; []")
+
+(mo-definition EO--0007342 "&quot;The treatment involving exposure of plant to the heterokont Achlya klebsiana. It is a causal agent for rice water mold diease which is also called as seed rot or seedling damping-off disease.&quot; [GR:pj, NCBI_taxid:4767]")
+
+(mo-synonym EO--0007196 "&quot;natural light&quot; []")
+
+(mo-synonym EO--0007334 "&quot;apple snail&quot; []")
+
+(documentation EnglishLanguage "Represents the symmetric property.
+(Typedefs only)")
+
+(mo-definition EO--0007137 "&quot;The treatment involving an exposure of reference/experimental plant to monocot plant Echinochloa spp. found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:45618]")
+
+(subclass EO--0007004 EO--0007050)
+
+(mo-defaultNamespace "environment_ontology")
+
+(termFormat EnglishLanguage EO--0007050 "soil texture")
+
+(termFormat EnglishLanguage EO--0007385 "irrigated land region")
+
+(termFormat EnglishLanguage EO--0007403 "unknown environment")
+
+(mo-definition EO--0007550 "&quot;The treatment involving use of methyl methanesulfonate for mutagenesis process.&quot; [GR:pj, CAS:[66-27-3]]")
+
+(subclass EO--0007011 EO--0007139)
+
+(termFormat EnglishLanguage EO--0007011 "Sagittaria longiloba")
+
+(mo-definition EO--0007315 "&quot;The treatment involving use of gravity factor to study various types of responses in the absence of gravity or space like conditions.&quot; [GR:pj]")
+
+(mo-synonym EO--0007345 "&quot;mouse&quot; []")
+
+(mo-synonym EO--0007528 "&quot;erythritol anhydride&quot; []")
+
+(mo-synonym EO--0007543 "&quot;HMPA&quot; []")
+
+(termFormat EnglishLanguage EO--0007395 "river delta region")
+
+(mo-synonym EO--0007263 "&quot;African whiteheads&quot; []")
+
+(subclass EO--0007203 EO--0007196)
+
+(termFormat EnglishLanguage EO--0007349 "Metazoa")
+
+(subclass EO--0007523 EO--0007149)
+
+(subclass EO--0007094 EO--0007406)
+
+(subclass EO--0007300 EO--0007116)
+
+(termFormat EnglishLanguage EO--0007183 "herbicide regimen")
+
+(mo-synonym EO--0007364 "&quot;Waitea circinata&quot; []")
+
+(mo-definition EO--0007251 "&quot;The treatment involving exposure of plant to the pathogen Pseudomonas syringae pv. panici. It is a causal agent for rice Bacterial Brown Stripe disease.&quot; [GR:ivy]")
+
+(subclass EO--0007104 EO--0007102)
+
+(mo-definition EO--0007139 "&quot;The treatment involving an exposure of reference/experimental plant to monocot plant Sagittaria spp. found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj, NCBI_taxid:4450]")
+
+(mo-definition EO--0007296 "&quot;The treatment involving exposure of plant to the pest Dicladispa armigera.&quot; [GR:pj, NCBI_taxid:111238]")
+
+(subclass EO--0007077 EO--0007073)
+
+(mo-definition EO--0007275 "&quot;The treatment involving exposure of plant to the pest rice stemborer, Rupela albinella&quot; [GR:pj]")
+
+(mo-definition EO--0007244 "&quot;The treatment involving exposure of plant to micronutrient chlorine as supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007322 "Hirschmaniella oryzae")
+
+(mo-synonym EO--0007553 "&quot;MNNG&quot; []")
+
+(termFormat EnglishLanguage EO--0007287 "DBMIB regimen")
+
+(subclass EO--0007078 EO--0007153)
+
+(subclass EO--0007051 EO--0007050)
+
+(termFormat EnglishLanguage EO--0007316 "physical environment")
+
+(mo-definition EO--0007305 "&quot;The treatment involving exposure of plant to the pest Cnaphalocrocis medinalis.&quot; [GR:pj]")
+
+(mo-definition EO--0007372 "&quot;The treatment involving exposure of plant to the pest Meloidogyne oryzae. It is a causal agent for rice root knot nematode disease.&quot; [GR:pj, NCBI_taxid:6306]")
+
+(subclass EO--0007143 EO--0007108)
+
+(mo-synonym EO--0007106 "&quot;heterokont&quot; []")
+
+(subclass EO--0007104 EO--0007103)
+
+(subclass EO--0007179 EO--0007328)
+
+(subclass Loam EO--0007155)
+
+(mo-synonym EO--0007336 "&quot;rice stem nematode&quot; []")
+
+(termFormat EnglishLanguage EO--0007264 "Sesamia inferens")
+
+(subclass EO--0007273 EO--0007239)
+
+(mo-synonym EO--0007020 "&quot;ricefield bulrush&quot; []")
+
+(subclass EO--0007558 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007511 "1-amino-2-naphthol-4-sulfonic
+acid")
+
+(mo-synonym EO--0007298 "&quot;Tagosodes orizicolus&quot; []")
+
+(termFormat EnglishLanguage EO--0007521 "actinomycin D")
+
+(subclass EO--0007178 EO--0007064)
+
+(subclass EO--0007356 EO--0007111)
+
+(termFormat EnglishLanguage EO--0007254 "Pseudomonas avenae")
+
+(mo-definition EO--0007126 "&quot;Treatment involving the exposure of plant to the pest Hirschmaniella spp. It is a causal agent for rice root nematode disease.&quot; [GR:pj]")
+
+(mo-synonym EO--0007067 "&quot;soilless pant culture media&quot; []")
+
+(subclass EO--0007506 EO--0007149)
+
+(subclass EO--0007360 EO--0007109)
+
+(mo-synonym EO--0007234 "&quot;Pseudomonas fuscivaginae&quot; []")
+
+(mo-definition EO--0007374 "&quot;The treatment involving exposure of plant to the pathogen Cylindrocladium scoparium. It is a causal agent for rice Sheath Net Blotch Disease.&quot; [GR:ivy, NCBI_taxid:40624]")
+
+(mo-definition EO--0007525 "&quot;The treatment involving use of cisplatin for mutagenesis process.&quot; [GR:pj, CAS:[15663-27-1]]")
+
+(subclass EO--0007198 EO--0007191)
+
+(termFormat EnglishLanguage EO--0007358 "rice grassy stunt virus")
+
+(termFormat EnglishLanguage EO--0007572 "triethylenemelamine")
+
+(termFormat EnglishLanguage "dicot weed plant neighbor")
+
+(mo-definition EO--0007248 "&quot;The treatment where the plants were grown under green house conditions. This may involve supplemantal treatments in addition to any standard conditions.&quot; [GR:pj]")
+
+(mo-definition EO--0007202 "&quot;The treatment using infra red (IR) light either exclusively or as part of a supplemental light treatment involving IR light in the wavelength range of 700nm-1mm.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage "cytoplasmic genetic background")
+
+(termFormat EnglishLanguage EO--0007408 "5-methyltryptophan")
+
+(mo-synonym EO--0007373 "&quot;wound treatment&quot; []")
+
+(mo-synonym EO--0007331 "&quot;armyworm&quot; []")
+
+(mo-definition EO--0007186 "&quot;The treatment involving exposure of plant to the Pythium catenulatum. It is a causal agent for rice feeder root necrosis disease.&quot; [GR:pj, NCBI_taxid:83917]")
+
+(termFormat EnglishLanguage EO--0007291 "benzyladenine regimen")
+
+(subclass EO--0007064 EO--0007191)
+
+(termFormat EnglishLanguage EO--0007058 "soil pH environment")
+
+(mo-definition EO--0007309 "&quot;The treatment involving exposure of plant to micronutrient zinc as supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007255 "laboratory study")
+
+(termFormat EnglishLanguage EO--0007632 "insecticide regimen")
+
+(mo-synonym EO--0007366 "&quot;RBSDV&quot; []")
+
+(mo-definition EO--0007284 "&quot;The treatment involving exposure of plant to macronutrient nitrogen as supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007524 "caffeine")
+
+(termFormat EnglishLanguage EO--0007537 "ethylenimine")
+
+(mo-synonym EO--0007088 "&quot;Rhizoctonia oryzae-sativae&quot; []")
+
+(termFormat EnglishLanguage EO--0007242 "iron nutrient regimen")
+
+(mo-definition EO--0007183 "&quot;The treatment involving use of herbicides to study various types of responses on their application.&quot; [GR:pj]")
+
+(mo-synonym EO--0007113 "&quot;rice necrosis mosaic virus&quot; []")
+
+(subclass EO--0007124 EO--0007357)
+
+(subclass EO--0007570 EO--0007149)
+
+(mo-synonym EO--0007545 "&quot;2-methoxy-6-[3-(ethyl-2-chloroethyl)aminopropylamino]acridine&quot; []")
+
+(subclass EO--0007531 EO--0007149)
+
+(mo-synonym EO--0007363 "&quot;Sclerotium oryzae&quot; []")
+
+(mo-definition EO--0007365 "&quot;The treatment involving exposure of plant to the pathogen rice dwarf virus. It is a causal agent for rice dwarf phytoreo virus disease.&quot; [GR:ivy, NCBI_taxid:10991]")
+
+(subclass EO--0007560 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007610 "3-H")
+
+(mo-definition EO--0007155 "&quot;The treatment involving growing plants in different types of soil growth media.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007278 "oxygen regimen")
+
+(termFormat EnglishLanguage EO--0007225 "fluorine nutrient regimen")
+
+(mo-synonym EO--0007317 "&quot;brown planthopper&quot; []")
+
+(subclass EO--0007049 EO--0007262)
+
+(termFormat EnglishLanguage EO--0007206 "Gaeumannomyces graminis")
+
+(termFormat EnglishLanguage EO--0007251 "Pseudomonas syringae pv.
+panici")
+
+(subclass EO--0007623 EO--0007622)
+
+(subclass EO--0007111 EO--0007210)
+
+(subclass EO--0007365 EO--0007110)
+
+(subclass EO--0007505 EO--0007149)
+
+(mo-synonym EO--0007365 "&quot;RDV&quot; []")
+
+(subclass EO--0007209 EO--0007107)
+
+(termFormat EnglishLanguage EO--0007218 "blue light regimen")
+
+(mo-definition EO--0007302 "&quot;The treatment involving use of T-DNA in the flanking regions of a DNA insert for mutagenesis process.&quot; [GR:pj]")
+
+(mo-definition EO--0007531 "&quot;The treatment involving use of dimthyl sulfate for mutagenesis process.&quot; [GR:pj, CAS:[67-68-5]]")
+
+(subclass EO--0007242 EO--0007239)
+
+(mo-definition EO--0007272 "&quot;The treatment involving exposure of plant to the pest Scirpophaga innotata&quot; [GR:pj]")
+
+(mo-synonym EO--0007619 "&quot;radium&quot; []")
+
+(subclass EO--0007101 EO--0007102)
+
+(mo-synonym EO--0007009 "&quot;dicot&quot; []")
+
+(mo-definition EO--0007181 "&quot;The treatment involving an exposure to a given amount of rainfall.&quot; [GR:pj]")
+
+(subclass EO--0007189 EO--0007191)
+
+(mo-definition EO--0007376 "&quot;The treatment involving exposure of plant to the pathogen Pyrenochaeta oryzae. It is a causal agent for rice Sheath Blotch Disease.&quot; [GR:ivy]")
+
+(mo-definition EO--0007218 "&quot;The treatment using blue light either exclusively or as part of a supplemental light treatment involving blue color light in the wavelength range of 492-455 nM.&quot; [GR:pj]")
+
+(mo-synonym EO--0007296 "&quot;rice hispa&quot; []")
+
+(termFormat EnglishLanguage EO--0007240 "macronutrient regimen")
+
+(mo-definition EO--0007557 "&quot;The treatment involving use of nitrosomethyl urea for mutagenesis process.&quot; [GR:pj, CAS:[684-93-5]]")
+
+(termFormat EnglishLanguage EO--0007289 "Hydrellia philippina")
+
+(termFormat EnglishLanguage EO--0007247 "Erwinia herbicola")
+
+(termFormat EnglishLanguage EO--0007035 "winter season")
+
+(subclass EO--0007511 EO--0007149)
+
+(mo-savedBy "Pankaj Jaiswal")
+
+(subclass EO--0007633 EO--0007183)
+
+(subclass EO--0007175 EO--0007191)
+
+(termFormat EnglishLanguage EO--0007245 "Erwinia chrysanthemi")
+
+(termFormat EnglishLanguage EO--0007174 "cold temperature regimen")
+
+(mo-definition EO--0007164 "&quot;The treatment involving an exposure to standing water during whole life span of the plant. This also results in anaerobic soil conditions for a long period.&quot; [GR:pj]")
+
+(mo-definition EO--0007279 "&quot;The treatment involving exposure of plant to the pest rice striped stemborer.&quot; [GR:pj, NCBI_taxid:168631]")
+
+(mo-definition EO--0007096 "&quot;Treatment involving the use of potassiumium nitrate supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007202 EO--0007196)
+
+(mo-definition EO--0007087 "&quot;Treatment involving the use of organic fertilizer and its component as supplements to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007378 EO--0007233)
+
+(subclass EO--0007367 EO--0007337)
+
+(termFormat EnglishLanguage EO--0007566 "S-2-chloroethylcysteine")
+
+(subclass EO--0007312 EO--0007307)
+
+(subclass EO--0007172 EO--0007282)
+
+(subclass EO--0007103 EO--0007086)
+
+(subclass EO--0007386 EO--0007107)
+
+(termFormat EnglishLanguage EO--0007514 "2,5,-bisethylene-imine-1,4-benzoquinone")
+
+(subclass EO--0007399 EO--0007338)
+
+(subclass EO--0007117 EO--0007114)
+
+(termFormat EnglishLanguage EO--0007030 "Leptochloa fascicularis")
+
+(mo-definition EO--0007387 "&quot;The treatment involving exposure of plant to micronutrient manganese as supplement to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007305 "Cnaphalocrocis medinalis")
+
+(mo-definition EO--0007326 "&quot;The treatment involving exposure of plant to the pest mycoplasma like organism.&quot; [GR:pj]")
+
+(subclass EO--0007503 EO--0007149)
+
+(termFormat EnglishLanguage EO--0007520 "7-bromomethyl 12 methyl benz
+or agr/anthracine")
+
+(mo-synonym EO--0007029 "&quot;cattail&quot; []")
+
+(termFormat EnglishLanguage EO--0007277 "Chilo polychrysus")
+
+(termFormat EnglishLanguage EO--0007570 "sulfur mustard")
+
+(termFormat EnglishLanguage EO--0007018 "Scirpus fluviatilis")
+
+(mo-definition EO--0007160 "&quot;The treatment involving an exposure to water with varying degree of temperature, which may depend on regional environment.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007313 "Pseudaletia separata")
+
+(subclass EO--0007362 EO--0007107)
+
+(termFormat EnglishLanguage EO--0007079 "sulfate fertilizer regimen")
+
+(termFormat EnglishLanguage EO--0007196 "light regimen")
+
+(subclass EO--0007250 EO--0007116)
+
+(mo-definition EO--0007291 "&quot;The treatment involving use of benzyladenine a cytokinin homolog to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj, CAS:[1214-39-7]]")
+
+(subclass EO--0007181 EO--0007064)
+
+(mo-synonym EO--0007330 "&quot;lawn armyworm&quot; []")
+
+(mo-definition EO--0007015 "&quot;The exposure of reference/experimental plant to dicot plant Ammannia spp. found in its growth environment. This plant may be growing as a weed or as part of normal farming practices.&quot; [GR:pj]")
+
+(mo-synonym EO--0007305 "&quot;leaffolder&quot; []")
+
+(termFormat EnglishLanguage EO--0007202 "IR light regimen")
+
+(termFormat EnglishLanguage EO--0007612 "3-H-thymidine")
+
+(mo-synonym EO--0007343 "&quot;cattle&quot; []")
+
+(mo-synonym EO--0007019 "&quot;rice field flatsedge&quot; []")
+
+(subclass RiverBank EO--0007396)
+
+(mo-definition EO--0007047 "&quot;Treatment involving the exposure of plant to elemental forms of nutrient as supplement to study various types of responses. These are not considered essential elements.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007119 "Diptera")
+
+(subclass EO--0007219 EO--0007221)
+
+(mo-definition EO--0007314 "&quot;The treatment involving exposure of plant to the pest rice caseworm&quot; [GR:pj]")
+
+(mo-definition EO--0007124 "&quot;Treatment involving the exposure of plant to the pest/pathogen/animal/plants present as part of its growth environment.&quot; [GR:pj]")
+
+(mo-definition EO--0007358 "&quot;The treatment involving exposure of plant to the rice grassy stunt virus. It is a causal agent for rice grassy stunt disease.&quot; [GR:ivy, NCBI_taxid:66266]")
+
+(subclass EO--0007083 EO--0007107)
+
+(subclass EO--0007019 EO--0007141)
+
+(termFormat EnglishLanguage EO--0007565 "quinhydrone")
+
+(subclass EO--0007313 EO--0007117)
+
+(mo-definition EO--0007208 "&quot;The treatment involving exposure of plant to the rice grassy stunt 1 virus. It is a causal agent for rice grassy stunt disease.&quot; [GR:ivy, NCBI_taxid:66266]")
+
+(termFormat EnglishLanguage EO--0007275 "Rupela albinella")
+
+(termFormat EnglishLanguage EO--0007223 "cadmium chloride")
+
+(subclass EO--0007128 EO--0007078)
+
+(termFormat EnglishLanguage "genetic environment")
+
+(mo-synonym EO--0007277 "&quot;dark-headed stemborer&quot; []")
+
+(subclass EO--0007348 EO--0007109)
+
+(termFormat EnglishLanguage EO--0007109 "ssRNA positive-strand virus
+with no DNA stage")
+
+(termFormat EnglishLanguage EO--0007629 "hydrogen regimen")
+
+(termFormat EnglishLanguage EO--0007221 "visible light regimen")
+
+(subclass EO--0007368 EO--0007173)
+
+(mo-synonym EO--0007391 "&quot;rainfed lowland region&quot; []")
+
+(mo-definition EO--0007379 "&quot;The treatment involving exposure of plant to the pathogen Thanatephorus cucumeris. It is a causal agent for rice Sheath Blight diseases  such as Brown-bordered Leaf and Sheath Spot disease and/or Oriental Leaf and Sheath Blight disease&quot; [GR:ivy, NCBI_taxid:107832]")
+
+(mo-synonym EO--0007373 "&quot;wound&quot; []")
+
+(mo-definition EO--0007179 "&quot;The treatment involving exposure of plant to the Pythium irregulare. It is a causal agent for rice feeder root necrosis disease.&quot; [GR:pj, NCBI_taxid:36331]")
+
+(mo-synonym EO--0007291 "&quot;N-benzyl-adenine&quot; []")
+
+(mo-definition EO--0007176 "&quot;The treatment involving an exposure to a given elevation/height above sea level.&quot; [GR:pj]")
+
+(documentation EnglishLanguage "The user who last edited the
+ontology.")
+
+(mo-synonym EO--0007063 "&quot;3-(3,4-dichloro-phenyl)-1,1-dimethylurea&quot; []")
+
+(mo-definition EO--0007280 "&quot;The treatment involving study type where nothing is known in the reported literature/study about the kind of growth facilities used.&quot; [GR:pj]")
+
+(subclass EO--0007256 EO--0007231)
+
+(mo-synonym EO--0007371 "&quot;root-knot nematode&quot; []")
+
+(termFormat EnglishLanguage EO--0007080 "jasmonic acid regimen")
+
+(termFormat EnglishLanguage EO--0007330 "Spodoptera mauritia")
+
+(termFormat EnglishLanguage EO--0007368 "warm/hot water temperature
+regimen")
+
+(termFormat EnglishLanguage EO--0007195 "rice ragged stunt virus")
+
+(termFormat EnglishLanguage EO--0007166 "Pythium spinosum")
+
+(mo-synonym EO--0007372 "&quot;southern root-knot nematode&quot; []")
+
+(subclass EO--0007232 EO--0007047)
+
+(mo-definition EO--0007187 "&quot;The treatment involving use of salicylic acid to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(mo-synonym EO--0007366 "&quot;rice black-streaked dwarf virus RBSDV&quot; []")
+
+(mo-definition EO--0007161 "&quot;The treatment involving an exposure to wind with varying degree of temperature, which may depend on the study type or the regional environment.&quot; [GR:pj]")
+
+(subclass EO--0007407 EO--0007189)
+
+(subclass EO--0007507 EO--0007149)
+
+(subclass EO--0007357 EO--0007359)
+
+(mo-synonym EO--0007510 "&quot;CB2628&quot; []")
+
+(termFormat EnglishLanguage EO--0007241 "nutrient regimen")
+
+(termFormat EnglishLanguage EO--0007360 "barley yellow dwarf virus")
+
+(mo-definition EO--0007233 "&quot;The treatment involving exposure of plant to the pathogenic fungus.&quot; [GR:ivy, NCBI_taxid:4751]")
+
+(subclass EO--0007628 EO--0007154)
+
+(subclass EO--0007527 EO--0007149)
+
+(mo-synonym EO--0007120 "&quot;beetle&quot; []")
+
+(mo-synonym EO--0007263 "&quot;African white stemborer&quot; []")
+
+(subclass EO--0007246 EO--0007124)
+
+(termFormat EnglishLanguage EO--0007092 "wood ash regimen")
+
+(subclass EO--0007269 EO--0007231)
+
+(mo-synonym EO--0007566 "&quot;CB1592&quot; []")
+
+(mo-definition EO--0007265 "&quot;The treatment involving use of liquid growth media for growing the plants, cell or tissue cultured samples.&quot; [GR:pj]")
+
+(mo-definition EO--0007267 "&quot;The treatment involving use of fungicide benzothiadiazole to study various types of responses on its application.&quot; [GR:pj]")
+
+(mo-definition EO--0007329 "&quot;The treatment involving exposure of plant to the pest commonly called as western yellowstriped armyworm.&quot; [GR:pj]")
+
+(subclass EO--0007020 EO--0007140)
+
+(termFormat EnglishLanguage EO--0007068 "ethylene regimen")
+
+(subclass EO--0007283 EO--0007121)
+
+(subclass EO--0007323 EO--0007126)
+
+(subclass EO--0007009 EO--0007005)
+
+(subclass EO--0007370 EO--0007127)
+
+(subclass EO--0007538 EO--0007149)
+
+(mo-synonym EO--0007528 "&quot;DEB&quot; []")
+
+(mo-definition EO--0007317 "&quot;The treatment involving exposure of plant to the pest brown planthopper&quot; [GR:pj, NCBI_taxid:108931]")
+
+(mo-definition EO--0007516 "&quot;The treatment involving use of 2-fluoroethyl methanesulfonate for mutagenesis process.&quot; [GR:pj, CAS:[461-31-4]]")
+
+(termFormat EnglishLanguage EO--0007526 "colchicine")
+
+(mo-synonym EO--0007274 "&quot;yellow stem borer&quot; []")
+
+(mo-synonym EO--0007226 "&quot;Piricularia grisea&quot; []")
+
+(subclass EO--0007530 EO--0007149)
+
+(mo-definition EO--0007104 "&quot;Treatment involving the use of nitrogen, phosphorus and potassium supplements to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007327 EO--0007107)
+
+(termFormat EnglishLanguage "soil flora")
+
+(termFormat EnglishLanguage EO--0007099 "potassium sulfate regimen")
+
+(mo-synonym EO--0007361 "&quot;rice gall dwarf virus RGDV&quot; []")
+
+(subclass EO--0007257 EO--0007148)
+
+(subclass EO--0007559 EO--0007149)
+
+(subclass EO--0007296 EO--0007120)
+
+(termFormat EnglishLanguage EO--0007161 "air temperature regimen")
+
+(mo-definition "&quot;OBSOLETE. A treatment involving growing plants and  exposing them to varying types of flora in soil growth media.&quot; [GR:pj]")
+
+(mo-definition EO--0007632 "&quot;The treatment involving use of insecticides to study various types of responses on their application.&quot; [GR:pj]")
+
+(subclass EO--0007379 EO--0007073)
+
+(termFormat EnglishLanguage EO--0007012 "Heteranthera limosa")
+
+(mo-synonym EO--0007204 "&quot;NAA&quot; []")
+
+(subclass EO--0007225 EO--0007047)
+
+(termFormat EnglishLanguage "facultative anaerobic environment")
+
+(termFormat EnglishLanguage EO--0007536 "ethylene oxide")
+
+(mo-synonym EO--0007123 "&quot;rice spotting bug&quot; []")
+
+(termFormat EnglishLanguage EO--0007024 "aerobic environment")
+
+(subclass EO--0007325 EO--0007126)
+
+(termFormat EnglishLanguage EO--0007266 "tissue culture growth media")
+
+(termFormat EnglishLanguage EO--0007559 "p-N,N-di-(2-chloroethyl)amino-D-phenylalanine")
+
+(termFormat EnglishLanguage EO--0007282 "standing water")
+
+(mo-synonym EO--0007307 "&quot;TE insert&quot; []")
+
+(termFormat EnglishLanguage EO--0007111 "ssRNA negative-strand virus")
+
+(mo-definition EO--0007570 "&quot;The treatment involving use of sulfur mustard for mutagenesis process.&quot; [GR:pj, CAS:[505-60-2]]")
+
+(subclass EO--0007084 EO--0007349)
+
+(subclass EO--0007319 EO--0007161)
+
+(mo-definition EO--0007312 "&quot;The use of Tos-17 transposable element for mutagenesis process.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007064 "ecological environment")
+
+(subclass EO--0007216 EO--0007221)
+
+(mo-definition EO--0007166 "&quot;The treatment involving an exposure of plant to the Pythium spinosum. It is a causal agent for rice seedling blight (fungal) or feeder root necrosis or water mold dieases. Water mold diease is also called as seed rot or seedling damping-off disease.&quot; [GR:pj, NCBI_taxid:82948]")
+
+(mo-definition EO--0007549 "&quot;The treatment involving use of methoxy diethylnitrosamine for mutagenesis process.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007117 "Pseudaletia spp.")
+
+(mo-synonym EO--0007512 "&quot;BCE&quot; []")
+
+(termFormat EnglishLanguage EO--0007543 "hexamethylphosphoramide")
+
+(subclass EO--0007003 EO--0007064)
+
+(termFormat EnglishLanguage EO--0007023 "gaseous environment")
+
+(termFormat EnglishLanguage EO--0007100 "superphosphate regimen")
+
+(termFormat EnglishLanguage EO--0007538 "fagaronine")
+
+(mo-synonym EO--0007360 "&quot;BYDV&quot; []")
+
+(termFormat EnglishLanguage EO--0007102 "nitrogen fertilizer regimen")
+
+(mo-synonym EO--0007552 "&quot;1,1'-thiobis[2-chloroethane&quot; []")
+
+(termFormat EnglishLanguage EO--0007529 "diepoxyoctane")
+
+(mo-definition EO--0007505 "&quot;The treatment involving use of 1,2:5,6-dibenzanthracene for mutagenesis process.&quot; [GR:pj, CAS:[53-70-3]]")
+
+(subclass EO--0007060 EO--0007233)
+
+(subclass EO--0007107 EO--0007233)
+
+(documentation EO--0007196 EnglishLanguage "A type of light used in a
+commercial light box to simulate natural daylight. For experiments
+carried out in growth chambers, the daylight is a light source
+providing a color temperature of 6500+/-200 K at an illumination of 90
+to 120 ft/candles. This source is typically provided by fluorescent, 
+tungsten or halogen lamps.")
+
+(mo-definition EO--0007526 "&quot;The treatment involving use of colchicine for mutagenesis process.&quot; [GR:pj, CAS:[64-86-8]]")
+
+(subclass EO--0007030 EO--0007022)
+
+(mo-synonym EO--0007503 "&quot;DBE&quot; []")
+
+(subclass EO--0007038 EO--0007027)
+
+(mo-synonym EO--0007327 "&quot;Ramularia oryzae&quot; []")
+
+(mo-xrefAnalogous EO--0007083 "NCBI_taxid:73005")
+
+(documentation EnglishLanguage "Default namespace for the ontology.")
+
+(mo-synonym EO--0007564 "&quot;CB3051&quot; []")
+
+(mo-definition EO--0007105 "&quot;STreatment involving the use of abscisic acid (or its homolog) growth hormone to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007078 "light quantity regimen")
+
+(mo-definition EO--0007103 "&quot;Treatment involving the use of phosphate fertilizer and its components as supplements to study various types of responses.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007374 "Cylindrocladium scoparium")
+
+(termFormat EnglishLanguage EO--0007370 "Meloidogyne oryzae")
+
+(subclass EO--0007234 EO--0007144)
+
+(termFormat EnglishLanguage EO--0007362 "Balansia oryzae-sativae")
+
+(mo-definition EO--0007143 "&quot;The treatment involving an exposure of plant to the pathogen sof Genus Erwinia.&quot; [GR:ivy, NCBI_taxid:551]")
+
+(termFormat EnglishLanguage EO--0007134 "acidic pH growth media
+environment")
+
+(mo-definition EO--0007571 "&quot;The treatment involving use of triaziquone for mutagenesis process.&quot; [GR:pj, CAS:[68-76-8]]")
+
+(mo-definition EO--0007573 "&quot;The treatment involving use of urethane for mutagenesis process.&quot; [GR:pj, CAS:[51-79-6]]")
+
+(mo-definition EO--0007278 "&quot;The treatment involving exposure of plant to oxygen to study various types of responses.&quot; [GR:pj]")
+
+(mo-synonym EO--0007180 "&quot;Amidox&quot; [CAS:94-75-7]")
+
+(mo-definition EO--0007268 "&quot;The treatment involving use of fungicides to study various types of responses on their application.&quot; [GR:pj]")
+
+(mo-synonym EO--0007077 "&quot;Neovossia horrida&quot; []")
+
+(subclass EO--0007344 EO--0007112)
+
+(mo-synonym EO--0007535 "&quot;ENU&quot; []")
+
+(mo-synonym EO--0007572 "&quot;TEM&quot; []")
+
+(subclass EO--0007317 EO--0007116)
+
+(mo-synonym EO--0007122 "&quot;stalk borer&quot; []")
+
+(termFormat EnglishLanguage EO--0007303 "carbon nutrient regimen")
+
+(mo-synonym EO--0007291 "&quot;6-benzylaminopurine&quot; []")
+
+(subclass EO--0007280 EO--0007231)
+
+(termFormat EnglishLanguage EO--0007145 "Xanthomonas spp.")
+
+(mo-alternateID EO--0007189 "EO:0007042")
+
+(mo-definition EO--0007394 "&quot;The treatment involving an exposure to the conditions found in a type of biome characterized by low moisture levels and infrequent and unpredictable precipitation of rainfall.&quot; [GR:pj]")
+
+(subclass EO--0007043 EO--0007241)
+
+(mo-synonym EO--0007189 "&quot;other chemical regimen&quot; []")
+
+(subclass EO--0007235 EO--0007047)
+
+(termFormat EnglishLanguage EO--0007146 "gravity")
+
+(subclass EO--0007188 EO--0007328)
+
+(mo-synonym EO--0007292 "&quot;carbonylcyanide-m-chlorophenylhydrazone&quot; []")
+
+(mo-definition EO--0007069 "&quot;Treatment involving the use of GA (or its homolog) growth hormone to study various types of responses on its extrinsic and/or intrinsic application.&quot; [GR:pj]")
+
+(mo-definition EO--0007232 "&quot;The treatment involving exposure of plant to selenium as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-synonym EO--0007556 "&quot;HN2&quot; []")
+
+(termFormat EnglishLanguage EO--0007103 "phosphate fertilizer
+regimen")
+
+(documentation Smo-Subset EnglishLanguage "Subset of OBO terms from
+the ontology.")
+
+(termFormat EnglishLanguage EO--0007563 "p-N,N-di-(2-chloroethyl)aminophenylethylamine")
+
+(mo-synonym EO--0007139 "&quot;arrowhead&quot; []")
+
+(termFormat EnglishLanguage EO--0007328 "Pythium spp.")
+
+(mo-synonym EO--0007022 "&quot;monocot&quot; []")
+
+(subclass EO--0007612 EO--0007154)
+
+(termFormat EnglishLanguage EO--0007404 "drought environment")
+
+(mo-definition EO--0007246 "&quot;The treatment involving exposure of plant to the pathogenic bacteria.&quot; [GR:ivy, NCBI_taxid:2]")
+
+(subclass EO--0007165 EO--0007189)
+
+(mo-synonym EO--0007180 "&quot;Weedone-2,4-DP&quot; [CAS:94-75-7]")
+
+(subclass EO--0007314 EO--0007114)
+
+(termFormat EnglishLanguage EO--0007171 "pH regimen")
+
+(mo-definition EO--0007167 "&quot;The treatment involving use of pesticides to study various types of responses on their application.&quot; [GR:pj]")
+
+(subclass EO--0007557 EO--0007149)
+
+(subclass EO--0007195 EO--0007110)
+
+(subclass EO--0007515 EO--0007149)
+
+(subclass EO--0007193 EO--0007224)
+
+(mo-synonym EO--0007337 "&quot;round worm&quot; []")
+
+(termFormat EnglishLanguage EO--0007115 "Spodoptera spp.")
+
+(subclass EO--0007303 EO--0007043)
+
+(subclass EO--0007554 EO--0007149)
+
+(mo-definition EO--0007219 "&quot;The treatment using indigo light either exclusively or as part of a supplemental light treatment involving indigo color light in the wavelength range of 450-440 nM.&quot; [GR:pj]")
+
+(mo-definition EO--0007226 "&quot;The treatment involving exposure of plant to the pathogen Magnaporthe grisea. It is a causal agent for rice various forms of Blast diseases such as Collar Blast, Leaf Blast, Neck Blast, Panicle Blast and Nodal Blast disease.&quot; [GR:ivy, NCBI_taxid:148305]")
+
+(termFormat EnglishLanguage EO--0007614 "agr ray")
+
+(subclass EO--0007096 EO--0007406)
+
+(mo-synonym EO--0007374 "&quot;Calonectria morganii&quot; []")
+
+(mo-synonym EO--0007208 "&quot;RGSV-1&quot; []")
+
+(subclass EO--0007294 EO--0007114)
+
+(mo-definition EO--0007303 "&quot;The treatment involving exposure of plant to carbon source as supplement to study various types of responses.&quot; [GR:pj]")
+
+(subclass EO--0007528 EO--0007149)
+
+(mo-synonym EO--0007504 "&quot;DCE&quot; []")
+
+(mo-definition EO--0007245 "&quot;The treatment involving exposure of plant to the pathogen Erwinia chrysanthemi. It is a causal agent for rice Foot Rot disease.&quot; [GR:ivy, NCBI_taxid:556]")
+
+(subclass EO--0007629 EO--0007043)
+
+(mo-synonym EO--0007060 "&quot;Cercospora oryzae&quot; []")
+
+(subclass EO--0007255 EO--0007231)
+
+(subclass EO--0007135 EO--0007107)
+
+(mo-definition EO--0007536 "&quot;The treatment involving use of ethylene oxide for mutagenesis process.&quot; [GR:pj]")
+
+(subclass EO--0007014 EO--0007138)
+
+(subclass EO--0007262 EO--0007147)
+
+(mo-synonym EO--0007008 "&quot;heartshape false pickerelweed&quot; []")
+
+(mo-synonym EO--0007180 "&quot;Dicopur&quot; [CAS:94-75-7]")
+
+(mo-synonym EO--0007362 "&quot;Ephelis japonica&quot; []")
+
+(termFormat EnglishLanguage EO--0007371 "Meloidogyne javanica")
+
+(subclass EO--0007373 EO--0007316)
+
+(mo-definition EO--0007058 "&quot;The treatment involving growing plants in varying pH levels of soil growth media.&quot; [GR:pj]")
+
+(mo-synonym EO--0007138 "&quot;burhead&quot; []")
+
+(mo-definition EO--0007027 "&quot;The treatment involving an exposure to a given conditions of regional seasons.&quot; [GR:pj]")
+
+(termFormat EnglishLanguage EO--0007036 "summer season")
+
+(subclass EO--0007053 EO--0007050)
+
+(termFormat EnglishLanguage EO--0007550 "methyl methanesulfonate")
+
+(termFormat EnglishLanguage EO--0007267 "benzothiadiazole regimen")
+
+(termFormat EnglishLanguage EO--0007531 "dimethyl sulfoxide")
+
+(termFormat EnglishLanguage EO--0007222 "UV light regimen")
+
+(mo-definition EO--0007508 "&quot;The treatment involving use of 1,4-dimethanesulfonoxybutane for mutagenesis process.&quot; [GR:pj, CAS:[55-98-1]]")
+
+(termFormat EnglishLanguage EO--0007231 "study type")
+
+(termFormat EnglishLanguage EO--0007038 "autumn season")
+
+(termFormat EnglishLanguage EO--0007186 "Pythium catenulatum")
+
+(termFormat EnglishLanguage EO--0007208 "rice grassy stunt 1 virus")
+
+(termFormat EnglishLanguage EO--0007224 "light intensity regimen")
+
+(termFormat EnglishLanguage EO--0007338 "cold water temperature
+regimen")
+
+(subclass EO--0007276 EO--0007047)
+
+(mo-definition EO--0007297 "&quot;The treatment involving exposure of plant to macronutrient calcium as supplement to study various types of responses.&quot; [GR:pj]")
+
+(mo-xrefAnalogous EO--0007365 "NCBI_taxid:10991")
+
+(subclass EO--0007012 EO--0007022)
+
+(termFormat EnglishLanguage EO--0007394 "desert like region")
+
+(mo-definition EO--0007318 "&quot;The treatment involving exposure of plant to the rice yellow mottle virus. It is a causal agent for rice yellow mottle disease.&quot; [GR:ivy, NCBI_taxid:31744]")
+
+(subclass EO--0007398 EO--0007064)
+
+(termFormat EnglishLanguage EO--0007160 "water temperature regimen")
+
+(termFormat EnglishLanguage EO--0007017 "Cyperus difformis")
+

@@ -1,0 +1,5 @@
+(synonymousExternalConcept "CARO--0000003" AnatomicalStructure caro)
+(synonymousExternalConcept "CARO--0000013" Cell caro)
+(synonymousExternalConcept "CARO--0000028" Female caro)
+(synonymousExternalConcept "CARO--0000027" Male caro)
+(synonymousExternalConcept "part_of" part caro)

@@ -1,0 +1,1367 @@
+(mo-definition sep--00031 "&quot;Lecturer is a position.&quot; [PSI:Gel &quot;The PSI Gel working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage SocialRole "social role")
+
+(mo-definition sep--00138 "&quot;SilverQuest Silver Staining is a biological stain product that provides maximal silver staining sensitivity with minimal protein modification for optimal mass spectrometry results, manufactured by invitrogen.&quot; [Invitrogen:SilverQuest Silver Stain &quot;www.invitrogen.com&quot;]")
+
+(mo-definition sep--00019 "&quot;A logarithmic distribution is a statistical distribution which is a  scale in which the distances that numbers are at from a reference point are proportional to their logarithms. &quot; [McGraw-Hill Dictionary of Scientific and Technical Terms:logarithmic &quot;McGraw-Hill Companies Inc. 2003. Answers.com 14 Nov. 2006. http://www.answers.com/topic/logarithmic-scale-2&quot;]")
+
+(mo-definition sep--00058 "&quot;A pH range is a measurement range which has a unit of measure of pH&quot; [PSI:Gel &quot;The PSI Working Group for gel based experiments&quot;]")
+
+(documentation sep--00005 EnglishLanguage "Quality should be used to
+describe abstract qualities of entitiys such as color, shape and
+state. PATO (http://obo.sourceforge.net/cgi-bin/detail.cgi?quality)
+should be consulted and imported under this node before creating sepCV
+specific terms.")
+
+(termFormat EnglishLanguage sep--00081 "The Human Proteome
+Organisation Proteomics Standards Initiative")
+
+(mo-exactSynonym sep--00135 "&quot;PVDF&quot; []")
+
+(termFormat EnglishLanguage sep--00150 "one dimensional gel
+electrophoresis")
+
+(mo-definition sep--00118 "&quot;A solution selected or prepared to minimize changes in hydrogen ion concentration which would otherwise tend to occur as a result of a chemical reaction. In general, chemical buffers are systems which, once constituted, tend to resist further change due to external influences. Thus it is possible, for example, to make buffers resistant to changes in temperature, pressure, volume, redox potential, or acidity. The commonest buffer in chemical solution systems is the acid-base buffer, which resists changes in pH.&quot; [McGraw-Hill Encyclopedia of Science and Technology:buffer solution &quot;The McGraw-Hill Companies Inc. 2005. Answers.com 15 Nov. 2006. http://www.answers.com/topic/buffers-chemistry.&quot;]")
+
+(subclass sep--00145 sep--00144)
+
+(termFormat EnglishLanguage sep--00061 "image acquistion software")
+
+(subclass sep--00022 sep--00005)
+
+(mo-definition sep--00066 "&quot;Progenisis PG200 is a progenisis image analysis software that offers an advanced workflow and powerful data analysis for the proteomics researcher.&quot; [PSI:GEL &quot;The PSI working Group fro gel based experiments&quot;]")
+
+(termFormat EnglishLanguage Smo-inSubset "inSubset")
+
+(subclass sep--00156 sep--00139)
+
+(subclass Attribute Abstract)
+
+(termFormat EnglishLanguage sep--00156 "northern blot")
+
+(subclass sep--00175 sep--00151)
+
+(subclass Substance sep--00072)
+
+(mo-definition sep--00166 "&quot;Flourescent detection is a indirect detection protocol.The fluorescently labeled probe is excited by light and the emission of the excitation is then detected by a photosensor such as CCD camera equipped which appropriate emission filters which captures a digital image of the western blot and allows further data analysis such molecular weight analysis and a quantitative western blot analysis. Fluorescence is considered to be among the most sensitive detection methods for blotting analysis.&quot; [Wikipedia:flourescent detection &quot;http://en.wikipedia.org/wiki/Western_blot#Fluorescent_detection&quot;]")
+
+(mo-relatedSynonym sep--00119 "&quot;fixing solution&quot; []")
+
+(mo-definition sep--00177 "&quot;Well loading is a sample loading protocols that directly loads  a sample directly in the wells of a gel prior to electrophoresis&quot; [PSI:GEL &quot;The PSI GEL workin group&quot;]")
+
+(subclass sep--00151 sep--00101)
+
+(subclass sep--00019 sep--00009)
+
+(mo-definition sep--00181 "&quot;PubMed is data which is a service of the U.S. National Library of Medicine that includes over 16 million citations from MEDLINE and other life science journals for biomedical articles back to the 1950s. PubMed includes links to full text articles and other related resources.
+http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&quot; [Pubmed:Pubmed &quot;PubMed is a service of the U.S. National Library of Medicine that includes over 16 million citations from MEDLINE and other life science journals for biomedical articles back to the 1950s. PubMed includes links to full text articles and other related resources. http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&quot;]")
+
+(termFormat EnglishLanguage sep--00024 "gradient mode")
+
+(mo-definition Solution "&quot;A solution is a compund liquid which is a homogeneous mixture of two or more substances, which may be solids, liquids, gases, or a combination of these.&quot; [:The American Heritage Dictionary of the English Language, Fourth Edition:solution &quot;Houghton Mifflin Company 2004. Answers.com 15 Nov. 2006. http://www.answers.com/topic/solution.&quot;]")
+
+(mo-definition sep--00081 "&quot;The HUPO Proteomics Standards Initiative (PSI) defines community standards for data representation in proteomics to facilitate data comparision, exchange and verification. The PSI was founded at the HUPO meeting in Washington, April 28-29, 2002 (see  Science 296, 827).&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00096 "image acquisition device")
+
+(subclass sep--00006 Attribute)
+
+(termFormat EnglishLanguage sep--00092 "blot module")
+
+(termFormat EnglishLanguage sep--00080 "The Human Proteome
+Organisation")
+
+(mo-definition Label "&quot;A label is an attribute which is an identifying or descriptive marker or token that is attached to an object&quot; [Wordnet:label &quot;WordNet&quot;]")
+
+(mo-definition sep--00154 "&quot;A protein transfer protocol is a protocol which is the movement of proteins from one substance to another substance, possibly via a transfer medium.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(instance Smo-inSubset BinaryRelation)
+
+(subclass sep--00010 Attribute)
+
+(termFormat EnglishLanguage sep--00145 "first dimension gel
+equilibration")
+
+(subclass sep--00052 sep--00048)
+
+(subclass sep--00033 Position)
+
+(mo-definition sep--00084 "&quot;The PSI working group for Protein Modifications (MOD)&quot; [PSI:GEL &quot;The PSI GEL Working group&quot;]")
+
+(subclass Label Attribute)
+
+(termFormat EnglishLanguage sep--00128 "agarose gel")
+
+(mo-relatedSynonym sep--00132 "&quot;gel band&quot; []")
+
+(mo-definition sep--00005 "&quot;An abstract concept that is exhibited in full if it is possessed by an object at all (a categorical property). Examples: the color of a tomato, the ambient temperature of air, the circumference of a waist, the shape of a nose, the mass of a piece of gold, the weight of a chimpanzee.&quot; [BFO:quality &quot;Basic Formal Ontology http://ontology.buffalo.edu/bfo/&quot;]")
+
+(termFormat EnglishLanguage Position "position")
+
+(documentation EnglishLanguage "Version of data in the ontology.")
+
+(subclass sep--00180 sep--00155)
+
+(subclass sep--00136 Substance)
+
+(termFormat EnglishLanguage sep--00175 "paper bridge loading")
+
+(termFormat EnglishLanguage Researcher "researcher")
+
+(termFormat EnglishLanguage sep--00162 "Coomassie staining")
+
+(termFormat EnglishLanguage sep--00148 "inter dimension protocol")
+
+(termFormat EnglishLanguage sep--00117 "agarose sealing solution")
+
+(mo-definition sep--00131 "&quot;An immobiline dry strip is a immobilized pH gradinet gel which is a product of GE healthcare&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00157 "Southern blot")
+
+(mo-definedNamespace "default_namespace")
+
+(mo-definition sep--00172 "&quot;Polyacrylamide gel electrophoresis is a one dimensional gel electrophoresis protocol which use the application of voltage to separate a sample along a separation medium which is a gel matrix made of polyacrylamide&quot; [Pubmed:PMID:5432063 &quot;www.pubmed.org&quot;]")
+
+(subclass sep--00185 sep--00104)
+
+(termFormat EnglishLanguage sep--00062 "image analysis software")
+
+(termFormat EnglishLanguage sep--00102 "protein blocking")
+
+(subclass sep--00050 sep--00048)
+
+(mo-exactSynonym sep--00081 "&quot;HUPO PSI&quot; []")
+
+(mo-definition sep--00156 "&quot;A northern blot is a biological blot protocol which is  used in molecular biology research to study gene expression. It takes its name from the similarity of the procedure to the Southern blot procedure, named for biologist Edwin Southern, used to study DNA, with the key difference that RNA, rather than DNA, is the substance being analyzed by electrophoresis and detection with a hybridization probe.&quot; [Wikipeda:northern blot &quot;http://en.wikipedia.org/wiki/Northern_blot&quot;]")
+
+(termFormat EnglishLanguage sep--00071 "Delta2D")
+
+(termFormat EnglishLanguage sep--00144 "equilibration")
+
+(termFormat EnglishLanguage sep--00174 "cup loading")
+
+(documentation EnglishLanguage "Represents the symmetric property.
+(Typedefs only)")
+
+(termFormat EnglishLanguage sep--00172 "polyacrylamide gel
+electrohoresis")
+
+(subclass Group Collection)
+
+(termFormat EnglishLanguage sep--00123 "rehydration buffer")
+
+(termFormat EnglishLanguage sep--00036 "cross linker")
+
+(mo-definition Attribute "&quot;An attribute is an abstraction which belongs to or is a characteristic of an entity.&quot; [WordNet:attribute &quot;http://wordnet.princeton.edu/&quot;]")
+
+(termFormat EnglishLanguage sep--00039 "separation medium")
+
+(mo-relatedSynonym sep--00145 "&quot;equilibration step&quot; []")
+
+(mo-definition sep--00060 "&quot;Software is an abstract concept that is the general term for a variety of procedures and routines that harness the computational power of a computer to produce, for example, a general operating system that coordinates the basic workings of the computer or specific applications. A common misconception is that software is data. It is not. Software tells the hardware how to process the data.&quot; [West's Encyclopedia of American Law:software &quot;The Gale Group Inc 1998. Answers.com 15 Nov. 2006. http://www.answers.com/topic/computer-software.&quot;]")
+
+(termFormat EnglishLanguage UnitOfMeasure "unit of measure")
+
+(termFormat EnglishLanguage sep--00184 "Cy3")
+
+(termFormat EnglishLanguage University "university")
+
+(termFormat EnglishLanguage sep--00065 "software version number")
+
+(subclass sep--00016 sep--00012)
+
+(subclass sep--00037 sep--00029)
+
+(subclass sep--00131 sep--00130)
+
+(termFormat EnglishLanguage sep--00049 "graphics interchange format")
+
+(mo-definition sep--00110 "&quot;A gel is a compund substance which is a colloid in a more solid form than a solution&quot; [Wordnet:gel &quot;Wordnet&quot;]")
+
+(subclass sep--00079 Organization)
+
+(mo-definition sep--00001 "&quot;This is the root node of the ontology to provide controlled vocabulary terms protein separation based experiments&quot; [PSI:GEL &quot;The PSI Working group for gels&quot;]")
+
+(termFormat EnglishLanguage sep--00106 "compound liquid")
+
+(termFormat EnglishLanguage sep--00129 "polyacrylamide gel")
+
+(termFormat EnglishLanguage sep--00166 "flourescent detection")
+
+(mo-definition sep--00010 "&quot;A role is an attribute that is the activity assigned to or required or expected of an entiy within the context of a particular process&quot; [PSI:GEL &quot;The PSI Working Group for Gel based experiments&quot;]")
+
+(termFormat EnglishLanguage Solution "solution")
+
+(termFormat EnglishLanguage sep--00173 "sodium dodecyl sulfate
+polyacrylamide gel electrophoresis")
+
+(subclass sep--00118 Solution)
+
+(termFormat EnglishLanguage sep--00147 "image acquisition")
+
+(mo-exactSynonym sep--00130 "&quot;IPG strip&quot; []")
+
+(termFormat EnglishLanguage sep--00069 "SameSpots")
+
+(subclass sep--00069 sep--00062)
+
+(mo-definition UnitOfMeasure "&quot;A unit of measure is a quantity which is a standard of measurement for some dimension. 
+For example, the Meter is a Unit O fMeasure for the dimension of length, as is the Inch.  There is no intrinsic property of a UnitOfMeasure that 
+makes it primitive or fundamental; rather, a system of units (e.g. Systeme International Unit) defines a set of orthogonal dimensions and 
+assigns units for each.&quot; [SUMO:unit of measure &quot;Suggested Upper Merged Ontology&quot;]")
+
+(termFormat EnglishLanguage sep--00026 "mode")
+
+(mo-definition sep--00163 "&quot;Silver staining is a staining which uses silver to stain a substance&quot; [Wikipedia:silver staining &quot;http://en.wikipedia.org/wiki/Staining#Silver_staining&quot;]")
+
+(mo-definition sep--00072 "&quot;An object is a physical concept that has independent material existence and is a separate and distinct portion of matter.&quot; [Roget's II: The New Thesaurus, Third Edition:object &quot;Houghton Mifflin Company 1995. Answers.com 15 Nov. 2006. http://www.answers.com/topic/object.&quot;]")
+
+(termFormat EnglishLanguage sep--00066 "progenisis PG200")
+
+(mo-savedDateTime "28:11:2006 16:30")
+
+(termFormat EnglishLanguage sep--00091 "government organisation")
+
+(termFormat EnglishLanguage sep--00170 "radioactive detection")
+
+(subclass sep--00150 sep--00101)
+
+(termFormat EnglishLanguage sep--00177 "well loading")
+
+(subclass sep--00164 sep--00160)
+
+(subclass sep--00011 Abstract)
+
+(mo-definition sep--00061 "&quot;Image acquisition software is software that is designed to aquire a digitised image of a physical object.&quot; [PSI:GEL &quot;The PSI working group for gel based Experiments.&quot;]")
+
+(mo-definition sep--00059 "&quot;A molecular weight range is a measurement range which has a measurement unit of Kilo Daltons&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(mo-definition sep--00047 "&quot;A data format is a format of data  Each has its own headers, codes and rules for laying out the content. There are many different file structures for each kind of file, including executable programs, word processing documents, graphics files and databases.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(mo-exactSynonym sep--00140 "&quot;CE&quot; []")
+
+(termFormat EnglishLanguage sep--00084 "PSI MOD")
+
+(subclass sep--00113 Substance)
+
+(subclass sep--00154 sep--00153)
+
+(subclass sep--00013 Organization)
+
+(mo-definition sep--00120 "&quot;A carrier ampholyte buffer is a buffer solutions which contains Carrier ampholytes. They enhance protein solubility by minimizing protein aggregation due to charge-charge interactions&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass Device sep--00072)
+
+(mo-definition sep--00147 "&quot;Image acquisition is a protocol which is used to acquire a digitised image&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage Smo-definedSubset "definedSubset")
+
+(mo-definition Position "&quot;A position is a social role that is a formal declaration of reponsibility within an Organization. Examples of Positions include president, laboratory 
+director, senior researcher, sales representative, etc.&quot; [SUMO:position &quot;Suggested Upper Merged Ontology&quot;]")
+
+(subclass sep--00086 sep--00013)
+
+(mo-relatedSynonym sep--00158 "&quot;immunoblot&quot; []")
+
+(subclass sep--00080 sep--00079)
+
+(mo-definition sep--00122 "&quot;A loading buffer is a buffer solution which contains a suspended substance and facilitates loading onto another substance. For example in gel electrophoresis a sample is suspended in a loading buffer prior to application onto a gel matrix.&quot; [PSI:GEL &quot;The PSI GEL Working group&quot;]")
+
+(mo-definition sep--00021 "&quot;A minimum parameter is a parameter which has the smallest possible value for a parameter.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(mo-definition sep--00089 "&quot;An educational organization is an organisation which is an institution of learning. Some examples are public and private K-12 
+schools, and colleges and universities.&quot; [SUMO:educational organisation &quot;Suggested Upper Merged Ontology&quot;]")
+
+(subclass sep--00162 sep--00161)
+
+(subclass sep--00143 sep--00101)
+
+(documentation UnitOfMeasure EnglishLanguage "Units of measure should be
+imported from PATO units ontology under this node
+http://obo.cvs.sourceforge.net/obo/obo/ontology/phenotype/ .")
+
+(instance Smo-definedSubset BinaryRelation)
+
+(subclass sep--00106 Substance)
+
+(subclass sep--00160 sep--00141)
+
+(termFormat EnglishLanguage sep--00060 "software")
+
+(mo-definition sep--00016 "&quot;A catalogue identifier is a product attribute which is designated by a manufacture, seller, or producer of a product.&quot; [PSI:Gel &quot;The PSI working group for gel based experiments&quot;]")
+
+(subclass Collection sep--00072)
+
+(mo-definition sep--00169 "&quot;Secondary antibody probing is an indirect detection protocol. The unbound primary antibody, it is exposed to another antibody, directed at a species-specific portion of the primary antibody. This is known as a secondary antibody, and due to its targeting properties, tends to be referred to as &quot;anti-mouse,&quot; &quot;anti-goat,&quot; etc. The secondary antibody is usually linked to biotin or to a reporter enzyme such as alkaline phosphatase or horseradish peroxidase. This step confers an advantage in that several secondary antibodies will bind one primary antibody, providing enhanced signal.&quot; [Wikipedia:secondary antobody probing &quot;http://en.wikipedia.org/wiki/Western_blot#Two_step&quot;]")
+
+(termFormat EnglishLanguage sep--00168 "primary antibody probing")
+
+(subclass sep--00008 Attribute)
+
+(mo-exactSynonym sep--00133 "&quot;gel spot&quot; []")
+
+(subclass sep--00137 sep--00136)
+
+(termFormat EnglishLanguage Abstract "abstract")
+
+(mo-exactSynonym sep--00130 "&quot;IPG Gel&quot; []")
+
+(subclass sep--00084 sep--00013)
+
+(termFormat EnglishLanguage sep--00008 "parameter")
+
+(mo-exactSynonym sep--00114 "&quot;C.I. 42655&quot; []")
+
+(termFormat EnglishLanguage sep--00105 "gas substance")
+
+(subclass Solution sep--00106)
+
+(subclass Camera sep--00096)
+
+(termFormat EnglishLanguage sep--00085 "PSI MS")
+
+(subclass sep--00155 sep--00101)
+
+(mo-exactSynonym sep--00114 "&quot;Acid Blue 90&quot; []")
+
+(mo-exactSynonym sep--00145 "&quot;gel equilibration&quot; []")
+
+(mo-definition sep--00100 "&quot;A scanner is an image acquistion device that generates a digital representation of an image for data input to a computer.&quot; [Wordnet:scanner &quot;Wordnet&quot;]")
+
+(mo-definition sep--00024 "&quot;A gradient mode is an electic mode that is a graded process of increases or decreases for a given period in time in the context of use within a process.&quot; [PSI:Gel &quot;The PSI working group for gel based experiments&quot;]")
+
+(mo-definition sep--00011 "&quot;Data is an abstract concept which is the representation of information; facts, concepts, or instructions in a formalized manner suitable for communication, interpretation, or processing by humans or by automatic means. Any representations such as characters or analog quantities to which meaning is or might be assigned.&quot; [Military and Associated Words:data &quot;US Department of Defense 2003. Answers.com 14 Nov. 2006. http://www.answers.com/topic/data&quot;]")
+
+(termFormat EnglishLanguage sep--00011 "data")
+
+(subclass sep--00087 sep--00013)
+
+(subclass sep--00092 Device)
+
+(subclass sep--00120 sep--00118)
+
+(subclass sep--00081 sep--00079)
+
+(mo-definition sep--00107 "&quot;Fliter paper is a compund substance which is a porous unsized paper used for filtering. &quot; [WordNet:filter paper &quot;WordNet&quot;]")
+
+(mo-definition sep--00095 "&quot;A gel tank is a device which holds a gel and running buffers to allow electrophoresis to be performed.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00027 "&quot;A hold mode is an electric mode where the measure of electric remains constant for a given period in time in the context of use within a process.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(subclass sep--00183 sep--00104)
+
+(subclass sep--00144 sep--00101)
+
+(subclass sep--00184 sep--00104)
+
+(termFormat EnglishLanguage sep--00138 "SilverQuest Silver Stain")
+
+(termFormat EnglishLanguage sep--00108 "+lt;new term+gt;")
+
+(subclass sep--00020 sep--00008)
+
+(termFormat EnglishLanguage sep--00159 "direct detection")
+
+(mo-exactSynonym sep--00133 "&quot;spot&quot; []")
+
+(subclass sep--00112 Substance)
+
+(subclass sep--00152 sep--00101)
+
+(mo-exactSynonym sep--00093 "&quot;power pack&quot; []")
+
+(mo-definition sep--00041 "&quot;A gelling agent is a substance role of a substance to react with another substance to form a gel.&quot; [PSI:Gel &quot;The PSI working groupfor gel based experiments&quot;]")
+
+(mo-exactSynonym sep--00155 "&quot;2DG&quot; []")
+
+(subclass sep--00153 sep--00101)
+
+(subclass sep--00114 sep--00104)
+
+(mo-definition Device "&quot;A Device is an Object whose purpose is to 
+serve as an instrument in a specific subclass of Process.&quot; [PSI:Gel &quot;The PSI working group for gel based experiments&quot;]")
+
+(subclass sep--00187 Label)
+
+(subclass sep--00102 sep--00101)
+
+(mo-definition sep--00087 "&quot;The PSI working group for Separations and Sample Preparation (SP)&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00112 "membrane substance")
+
+(subclass sep--00147 sep--00101)
+
+(mo-definition sep--00117 "&quot;Agarose sealing solution is a solution which is an agarose/buffer solution used to seal the first dimension gel to the second dimension gel in Two dimensional gel electrophoresis.&quot; [PSI:GEL &quot;The PSI GEL Working Group&quot;]")
+
+(subclass sep--00108 sep--00029)
+
+(mo-definition sep--00178 "&quot;One dimensional gel electrophoresis image analysis is an image analysis protocol which is the analysis of multiple images produces as a result of one dimensional gel electrophoresis&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00036 "&quot;A cross linker is a substance role that induces covalent bonds linking one polymer chain to another They are the characteristic property of thermosetting plastics materials. In biology, cross-linking has applications in forming polyacrylamide gels for gel electrophoresis.&quot; [Wikkipedia:cross linker &quot;http://en.wikipedia.org/wiki/Cross-linker&quot;]")
+
+(mo-definition sep--00173 "&quot;Sodium dodecyl sulfate polyacrylamide gel electrophoresis is a polyacrylamide gel electrophoresis which which the charge of the proteins results from their binding SDS.&quot; [Pubmed:PMID: 5432063 &quot;www.pubmed.org&quot;]")
+
+(termFormat EnglishLanguage sep--00082 "PSI GEL")
+
+(termFormat EnglishLanguage sep--00100 "scanner")
+
+(subclass sep--00021 sep--00008)
+
+(mo-definition sep--00033 "&quot;Reader is a position.&quot; [PSI :Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00140 "capillary electrophoresis")
+
+(termFormat EnglishLanguage sep--00083 "PSI MI")
+
+(subclass sep--00110 Substance)
+
+(subclass sep--00179 sep--00152)
+
+(subclass sep--00170 sep--00160)
+
+(documentation sep--00104 EnglishLanguage "The ontology of chemical
+entities should be imported under this node, or created under this
+node, if not included in Chebi.")
+
+(mo-definition sep--00079 "&quot;A consortium is an association of organisations for some definite purpose.&quot; [SUMO:consortium &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-definition sep--00065 "&quot;A software version number is a software attribute that represents the version of software&quot; [PSI:GEL &quot;The PSI Working Group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00007 "format")
+
+(termFormat EnglishLanguage sep--00094 "gel dryer")
+
+(mo-exactSynonym sep--00185 "&quot;Indodicarbocyanine&quot; []")
+
+(termFormat EnglishLanguage sep--00089 "educational organisation")
+
+(mo-exactSynonym sep--00081 "&quot;HUPO Proteomics Standards Initiative&quot; []")
+
+(subclass sep--00101 Process)
+
+(termFormat EnglishLanguage sep--00009 "statistical distribution")
+
+(subclass sep--00041 sep--00029)
+
+(subclass sep--00039 sep--00037)
+
+(mo-definition sep--00070 "&quot;Decyder is image analysis software that significantly increases throughput by accurately addressing measurement of protein differences with statistical confidence . DeCyder Differential Analysis Software automatically detects, matches and analyzes protein spots in multiplexed fluorescent images, and is able to give routine detection of < 10% differences with > 95 % confidence. Statistical analysis is carried out on each and every difference. &quot; [PSI:GEL &quot;The PSI working group for gel based experiments&quot;]")
+
+(subclass sep--00107 Substance)
+
+(termFormat EnglishLanguage sep--00045 "read access")
+
+(termFormat EnglishLanguage Process "process")
+
+(subclass sep--00148 sep--00101)
+
+(mo-definition sep--00152 "&quot;Image analysis protocol is a protocol which is the process of the analysis of digitised images.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00101 "&quot;A protocol is a process which is a parameterizable description of a process&quot; [FUGE:protocol &quot;Functional Genomics Experiment&quot;]")
+
+(subclass SocialRole sep--00010)
+
+(mo-exactSynonym sep--00097 "&quot;isoelctric focusing unit&quot; []")
+
+(subclass sep--00042 sep--00029)
+
+(mo-definition sep--00175 "&quot;Paper bridge loading is a sample loading protocol that is the loading of samples on a gel prior to electrophoresis using a paper bridge.&quot; [Pubmed:PMID:11271483 &quot;www.pubmed.org&quot;]")
+
+(subclass sep--00098 Device)
+
+(subclass sep--00128 sep--00127)
+
+(mo-exactSynonym sep--00114 "&quot;Brilliant Blue G 250&quot; []")
+
+(documentation sep--00136 EnglishLanguage "Substances which are
+chemical substances in their own right should be recorded directly
+under chemical substance and should not be confused with a
+manufactured staining product, rather than a chemical susbtance which
+has been used in a role as a stain")
+
+(mo-definition sep--00159 "&quot;Direct detection is a detection protocol which is the detection of a substance directly on the susbtances location. For example in gel electrophoresis this can involve such process as; staining proteins on the gel.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00164 "&quot;Chemiluminescent detection is an indirect detection protocol that detects proteins with a substrate that will luminesce when exposed to the reporter on the secondary antibody. The light is then detected by photographic film, and more recently by CCD cameras which captures a digital image of the western blot.&quot; [WIkipedia:Chemiluminescence &quot;http://en.wikipedia.org/wiki/Western_blot#Chemiluminescence&quot;]")
+
+(mo-definition sep--00039 "&quot;A separation medium is a medium role of a  substance that is used to separate a substance in the context of use within a protocol. In gel electrophoresis the gel is the separation medium.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(subclass sep--00005 Abstract)
+
+(mo-definition sep--00161 "&quot;Staining is a direct detection which is a biochemical technique of adding a class-specific (DNA, proteins, lipids, carbohydrates) dye to a substrate to qualify or quantify the presence of a specific compound.&quot; [Wikipedia:staining &quot;http://en.wikipedia.org/wiki/Staining&quot;]")
+
+(termFormat EnglishLanguage sep--00079 "consortium")
+
+(subclass sep--00125 sep--00118)
+
+(mo-definition sep--00029 "&quot;A susbtance role is a role that the function or part assigned to or required or expected of a substance within the context of a particular process.&quot; [SUMO:role &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-definition sep--00128 "&quot;An agarose gel is a gel matrix which is composed of the chemical agent agarose&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00085 "&quot;The PSI working group for Mass Spectrometry Data Interchange (MS)&quot; [PSI:GEL &quot;The PSI Gel Working group&quot;]")
+
+(subclass sep--00138 sep--00136)
+
+(mo-definition sep--00008 "&quot;A parameter is an attribute that defines a system and determines (or limits) its performance.&quot; [Wordnet:parameter &quot;Wordnet&quot;]")
+
+(mo-definition sep--00133 "&quot;An excised spot is a gel excised analyte which is approximately circlar in geometric shape&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00007 sep--00005)
+
+(subclass sep--00068 sep--00063)
+
+(termFormat EnglishLanguage sep--00020 "maximum parameter")
+
+(subclass sep--00159 sep--00141)
+
+(mo-definition sep--00093 "&quot;An electrical power supply is a device that supplies electricity. For example a power pack.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-exactSynonym sep--00053 "&quot;tif&quot; []")
+
+(mo-definition sep--00018 "&quot;A linear distribution is a statsitical distribution that is equally sequential.&quot; [PSI:Gel &quot;The PSI working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00118 "buffer solution")
+
+(termFormat EnglishLanguage sep--00141 "detection")
+
+(mo-exactSynonym sep--00183 "&quot;cyanine&quot; []")
+
+(mo-definition sep--00126 "&quot;Laemmli bufferis an electrophoresis buffer which is used as a running buffer in gel electrophoresis&quot; [PubMed:PMID:236308 &quot;www.pubmed.org&quot;]")
+
+(mo-definition sep--00082 "&quot;The PSI working group for Gel-based methods of analysis (GEL)&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00044 Permission)
+
+(mo-definition sep--00020 "&quot;A maximum parameter is a parameter which has he largest possible value for a parameter.&quot; [PSI:Gel &quot;The PSi Working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00139 "biological blot protocol")
+
+(termFormat EnglishLanguage sep--00143 "electrophoresis")
+
+(mo-definition sep--00136 "&quot;A biological stain product is a compound substance which has been manufactued and sold as a product. A biological stain product reacts or concentrates in different parts of a cell or tissue. It is these properties that are used to highlight or identifiy specific parts or areas or substances. &quot; [Wikipedia:Staining Biology &quot;http://en.wikipedia.org/wiki/Staining_%28biology%29&quot;]")
+
+(termFormat EnglishLanguage sep--00185 "Cy5")
+
+(termFormat EnglishLanguage sep--00001 "sep")
+
+(mo-definition sep--00080 "&quot;The Human Proteome Organisation (HUPO) is an international consortium of national proteomics research associations, government researchers, academic institutions, and industry partners. HUPO promotes the development and awareness of proteomics research, advocates on behalf of proteomics researchers throughout the world, and facilitates scientific collaborations between HUPO members and Initiatives.&quot; [PSI :GEL &quot;The PSI working group for gel based experiments&quot;]")
+
+(mo-definition sep--00104 "&quot;A chemical agent is a substance that is synthetic compounds that are not an analogue of anything occurring naturally and that can result in serious burns, paralysis, and death to Organisms.&quot;).&quot; [SUMO:chemical agent &quot;Suggeste Upper Merged Ontology&quot;]")
+
+(mo-definition sep--00144 "&quot;Equilibration is a protocol to bring to a chemical stasis or equilibrium.&quot; [Wordnet:equilibrium &quot;WordNet 1.7.1&quot;]")
+
+(termFormat EnglishLanguage sep--00057 "measurement range")
+
+(termFormat EnglishLanguage sep--00042 "sample")
+
+(subclass sep--00139 sep--00101)
+
+(subclass sep--00070 sep--00062)
+
+(mo-definition sep--00094 "&quot;A gel dryer is a device which permits drying of gels&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00006 "identifier")
+
+(subclass sep--00091 Organization)
+
+(mo-definition sep--00135 "&quot;A PolyVinylidine DiFluoride membrane is a membrane compound which is a highly non-reactive and pure thermoplastic fluoropolymer.&quot; It Can be used for binding proteins that are transferred from a variety of gel matrices.&quot; [Wikipedia:PVDF &quot;http://en.wikipedia.org/wiki/PVDF&quot;]")
+
+(subclass sep--00165 sep--00160)
+
+(termFormat EnglishLanguage sep--00013 "proteomics standards
+initiative working group")
+
+(mo-definition sep--00129 "&quot;A polyacrylamide gel is a gel matrix which is the results of a chemical reactions of the chemical agent acrylamide and a chemical agent used in the role of a cross linker&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(documentation EnglishLanguage "A namespace defined for use in the
+ontology.")
+
+(mo-exactSynonym UniformResourceIdentifier "&quot;URI&quot; []")
+
+(subclass sep--00126 sep--00121)
+
+(termFormat EnglishLanguage sep--00023 "electrical mode")
+
+(mo-definition Camera "&quot;A camera is an image acquistion device which is used for taking photographs (usually consisting of a lightproof box with a lens at one end and light-sensitive film at the other).&quot; [Wordnet:camera &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00135 sep--00112)
+
+(subclass sep--00163 sep--00161)
+
+(termFormat EnglishLanguage sep--00160 "indirect detection")
+
+(mo-definition sep--00132 "&quot;An excised band is a gel excised analyte which has the geometric shape approximately that of a cuboid&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00183 "&quot;Cyanine is a chemical substance which is a polymer hydroxide formula achieved in 1986 by the Universal Chemical Society. It is used as a dye for CD-R and DVD-R media. Cyanine dyes are mostly green or light blue in color, and are chemically unstable. This made cyanine discs unsuitable for archival use, as they can fade and become unreadable in a few years.&quot; [Wikipedia:Cyanine &quot;http://en.wikipedia.org/wiki/Cyanine&quot;]")
+
+(termFormat EnglishLanguage sep--00005 "quality")
+
+(mo-exactSynonym sep--00133 "&quot;protein spot&quot; []")
+
+(mo-definition sep--00151 "&quot;Sample loading protocol is a protocol which is the loading a substance (sample) onto another substance&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00104 Substance)
+
+(mo-definition sep--00015 "&quot;A batch identifier is a product attribute which is a token which identifies the batch or lot number of a product.&quot; [PSI:GEL &quot;The PSI Workign group for gel based experiments&quot;]")
+
+(documentation Smo-inSubset EnglishLanguage "Declares a term/typedef
+to be in a subset.")
+
+(mo-definition sep--00155 "&quot;Two dimensional gel electrophoresis is a protocol which is the separation of proteins along two gel matrices based on a two characteristics or dimensions of the protein.&quot; [Pubmed:PMID:236308 &quot;www.pubmed.org&quot;]")
+
+(mo-definition sep--00125 "&quot;A transfer buffer is a buffer solution used to facilitate the transfer of one substance to another substance. For example; The buffer used in protein transfer procedure in immuno blots.&quot; [PSI:GEL &quot;The PSI GEL Working group&quot;]")
+
+(mo-definition sep--00143 "&quot;An electrophoresis is a protocol for capturing the details of electrophoresis. The runnning conditions applied to an electrophoresis substrate in terms of voltage against time and temperature if appropriate&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00190 "bisacrylamide")
+
+(subclass sep--00174 sep--00151)
+
+(termFormat EnglishLanguage sep--00038 "detection medium")
+
+(termFormat EnglishLanguage sep--00041 "gelling agent")
+
+(subclass sep--00029 sep--00010)
+
+(subclass sep--00067 sep--00063)
+
+(termFormat EnglishLanguage Quantity "quantity")
+
+(mo-definition sep--00185 "&quot;Cy5 is a chemical substance that has a reactive N-hydroxysuccinimide group that reacts readily with amine groups. Cy5 instead is excited maximally at 649 and emits maximally at 670nm, in the red part of the spectruum; quantum yield is 0.28. FW=792.&quot; [Wikipedia:Cy5 &quot;http://en.wikipedia.org/wiki/Cy3&quot;]")
+
+(termFormat EnglishLanguage sep--00104 "chemical substance")
+
+(subclass sep--00028 sep--00023)
+
+(mo-definition sep--00179 "&quot;Two dimensional gel electrophoresis image analysis is an image analysis protocol which is the analysis of multiple images produces as a result of two dimensional gel electrophoresis&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00161 "staining")
+
+(termFormat EnglishLanguage sep--00155 "two dimensional gel
+electrophoresis")
+
+(termFormat EnglishLanguage Collection "collection")
+
+(termFormat EnglishLanguage sep--00133 "excised spot")
+
+(termFormat EnglishLanguage sep--00046 "write access")
+
+(termFormat EnglishLanguage sep--00131 "immobiline dry strip")
+
+(termFormat EnglishLanguage sep--00179 "two dimensional gel
+electrophoresis image analysis")
+
+(mo-definition sep--00009 "&quot;A distribution is a quality that specifies an arrangement of values of a variable showing their observed or theoretical frequency of occurrence.&quot; [WordNet:statistical distribution &quot;WordNet 1.7.1&quot;]")
+
+(termFormat EnglishLanguage sep--00015 "batch identifier")
+
+(subclass sep--00015 sep--00012)
+
+(termFormat EnglishLanguage sep--00101 "protocol")
+
+(termFormat EnglishLanguage sep--00052 "Scalable Vector Graphics")
+
+(termFormat EnglishLanguage sep--00097 "isoelectric focusing device")
+
+(mo-exactSynonym sep--00013 "&quot;PSI WG&quot; []")
+
+(subclass sep--00062 sep--00060)
+
+(mo-definition sep--00103 "&quot;A biological substance is a substance which originates from a biological organism.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00016 "catalogue identifier")
+
+(termFormat EnglishLanguage sep--00169 "secondary antibody probing")
+
+(mo-definition sep--00114 "&quot;Coomassie blue is a chemical agent that nonspecifically stains proteins a strong blue colour. It is often used in gel electrophoresis.&quot; [Wikipedia:Coomassie blue &quot;http://en.wikipedia.org/wiki/Coomassie.&quot;]")
+
+(subclass sep--00060 Abstract)
+
+(subclass sep--00166 sep--00160)
+
+(mo-definition sep--00096 "&quot;An image acquisition device is a device which captures a digitiesed image of an object&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(documentation EnglishLanguage "Represents the transitive property.
+(Typedefs only)")
+
+(subclass sep--00038 sep--00037)
+
+(subclass sep--00054 sep--00048)
+
+(mo-definition SoftwareAttribute "&quot;A software attribute is an attribute that is associated with software.&quot; [PSI:GEL &quot;The PSI Working Group for gel based experiments&quot;]")
+
+(subclass UniformResourceIdentifier sep--00006)
+
+(subclass University sep--00089)
+
+(termFormat EnglishLanguage sep--00151 "sample loading protocol")
+
+(mo-definition sep--00188 "&quot;SYPRO Ruby is a biological stain product that is a ready to use, ultra sensitive, luminescent stain for the detection of proteins separated by PAGE. Designed especicially for 2D PAGE, SYPRO Ruby also performs impressively in PAGE and IEF gels. Stains glycoproteins, lipoproteins, calcium binding proteins, fibrillar proteins and others. Will not stain extraneous nucleic acids. Sensitive to 1 ng of protein.
+
+&quot; [Invitrogen:SYPRO Ruby &quot;Invitrogen&quot;]")
+
+(mo-definition sep--00112 "&quot;A  membrane compound is a compound substance which is a thin sheet of natural or synthetic material that is permeable to substances in solution.&quot; [:The American Heritage Dictionary of the English Language, Fourth Edition:membrane &quot;Houghton Mifflin Company 2004. Answers.com 15 Nov. 2006. http://www.answers.com/topic/membrane.&quot;]")
+
+(mo-relatedSynonym sep--00017 "&quot;model number&quot; []")
+
+(subclass sep--00122 sep--00118)
+
+(termFormat EnglishLanguage sep--00110 "gel")
+
+(subclass sep--00058 sep--00057)
+
+(termFormat EnglishLanguage Physical "physical")
+
+(termFormat EnglishLanguage Organization "organization")
+
+(mo-exactSynonym sep--00155 "&quot;2DGE&quot; []")
+
+(mo-definition sep--00137 "&quot;A SimplyBlue SafeStain is a biological stain product which is a fast, sensitive and safe Colloidal Coomassie G-250-based stain for nanogram-level detections of proteins, manufactured by Invitrogen.&quot; [Invitrogen:SimplyBlue SafeStain &quot;www.invitrogen.com&quot;]")
+
+(subclass sep--00132 sep--00111)
+
+(termFormat EnglishLanguage sep--00178 "one dimensional gel
+electrophoresis image analysis")
+
+(mo-definition sep--00026 "&quot;A mode is a state that is one of several alternative conditions or methods of operation of a device.&quot; [McGraw-Hill Dictionary of Scientific and Technical Terms:mode &quot;McGraw-Hill Companies Inc. 2003. Answers.com 14 Nov. 2006. http://www.answers.com/topic/mode-14&quot;]")
+
+(mo-definition sep--00130 "&quot;AN immobilised pH gradient gel is a polyacrylamide gel which has an immobilized pH gradient (IPG) . It is created by covalently incorporating a gradient of acidic and basic buffering groups into a polyacrylamide gel at the time it is cast.&quot; [Pubmed:PMID:7142660 &quot;www.pubmed.org&quot;]")
+
+(subclass sep--00082 sep--00013)
+
+(subclass sep--00171 sep--00150)
+
+(termFormat EnglishLanguage sep--00093 "electrical power supply")
+
+(termFormat EnglishLanguage sep--00031 "lecturer")
+
+(subclass sep--00065 SoftwareAttribute)
+
+(mo-definition sep--00012 "&quot;A product attribute is an attribute that is assigned to a physical object which has been produced by human or mechanical effort or by a natural process.&quot; [PSI:Gel &quot;The PSI working group for gel based methods of experiments&quot;]")
+
+(subclass sep--00059 sep--00057)
+
+(subclass sep--00083 sep--00013)
+
+(termFormat EnglishLanguage sep--00114 "Coomassie blue")
+
+(termFormat EnglishLanguage sep--00149 "isoelectric focusing")
+
+(subclass sep--00012 Attribute)
+
+(documentation EnglishLanguage "The user who last edited the
+ontology.")
+
+(mo-definition sep--00150 "&quot;One dimensional gel electrophoresis is a protocol  which separates a substance based on a single characteristic or dimension of the substance&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00048 sep--00047)
+
+(mo-definition sep--00057 "&quot;A measurement range is a quantity which consists of a lower value, an upper value and a unit of measure&quot; [PSI:Gel &quot;The PSI Working Group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00063 "progenisis")
+
+(mo-exactSynonym sep--00016 "&quot;catalogue number&quot; []")
+
+(termFormat EnglishLanguage sep--00111 "gel excised analyte")
+
+(mo-exactSynonym sep--00050 "&quot;jpg&quot; []")
+
+(mo-definition sep--00139 "&quot;A biological blot protocol is a protocol which defines the transfer of proteins, DNA or RNA, onto a carrier (for example, a nitrocellulose PVDF or nylon membrane). In many instances, this is done after a gel electrophoresis, transferring the molecules from the gel onto the blotting membrane, and other times adding the samples directly onto the membrane.&quot; [Wikipedia:Blot (Biology) &quot;http://en.wikipedia.org/wiki/Blot_%28biology%29&quot;]")
+
+(mo-definition sep--00187 "&quot;A fluorescent label is a label that is either a fluorescent molecule, or an enzyme system that generates a fluorescent product, which is linked to a ligand or binder tracer. The tracer is quantified by measuring the amount of light emitted by the tracer at a specific wavelength after exciting the tracer with incident light of a shorter wavelength. Fluorescent molecules include fluorescein and lanthanide chelates such as europium, samarium, and terbium.&quot; [Brendan Glossart:flourescent label &quot;http://www.brendan.com/glossary.html#f&quot;]")
+
+(mo-exactSynonym sep--00145 "&quot;equlibration&quot; []")
+
+(termFormat EnglishLanguage Corporation "corporation")
+
+(documentation EnglishLanguage "Represents the cyclic property.
+(Typedefs only)")
+
+(subclass sep--00057 Quantity)
+
+(termFormat EnglishLanguage sep--00068 "progenisis PG240")
+
+(subclass sep--00031 Position)
+
+(subclass sep--00036 sep--00029)
+
+(termFormat EnglishLanguage Camera "camera")
+
+(termFormat EnglishLanguage sep--00103 "biological substance")
+
+(subclass sep--00123 sep--00118)
+
+(mo-definition sep--00102 "&quot;A blocking protocol is a protocol to prevent non-specific protein interactions between it and the antibody used for detection of the target protein. Blocking of non-specific binding is achieved by placing the membrane in a dilute solution of protein - typically Bovine serum albumin (BSA) or non-fat dry milk, with a minute percentage of detergent such as Tween 20 or colloidal carbon.&quot; [Wikipedia:Blocking &quot;http://en.wikipedia.org/wiki/Western_blot&quot;]")
+
+(mo-exactSynonym sep--00049 "&quot;gif&quot; []")
+
+(mo-exactSynonym sep--00184 "&quot;indocarbocyanine&quot; []")
+
+(subclass sep--00023 sep--00026)
+
+(termFormat EnglishLanguage sep--00182 "WordNet")
+
+(termFormat EnglishLanguage sep--00163 "silver staining")
+
+(mo-definition sep--00098 "&quot;A thermostatic circulator is a device which cools or heats a circulating liquid.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00083 "&quot;The PSI working group for Molecular Interactions (MI)&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass SoftwareAttribute Attribute)
+
+(mo-exactSynonym sep--00050 "&quot;jpeg&quot; []")
+
+(termFormat EnglishLanguage Professor "professor")
+
+(mo-exactSynonym sep--00118 "&quot;chemical buffer&quot; []")
+
+(termFormat EnglishLanguage sep--00059 "molecular weight range")
+
+(subclass sep--00103 Substance)
+
+(subclass sep--00117 Solution)
+
+(subclass sep--00071 sep--00062)
+
+(subclass Professor Position)
+
+(termFormat EnglishLanguage UniformResourceIdentifier "Uniform Resource Identifier")
+
+(subclass sep--00024 sep--00023)
+
+(mo-definition sep--00184 "&quot;Cy3 is a chemical susbstance that has a reactive N-hydroxysuccinimide group. Cy3 is excited maximally at 550nm and emits maximally at 570nm, in the green part of the spectruum; quantum yield is 0.15; FW=766&quot; [Wikipedia:Cy3 &quot;http://en.wikipedia.org/wiki/Cy3&quot;]")
+
+(mo-definition sep--00067 "&quot;Progenisis PG220 is a progensis image analysis software that has all the features of the PG200 plus a range of additional tools designed specifically for the analysis of DIGE experiments.&quot; [PSI:GEL &quot;The PSI Working Group for gel based experiments&quot;]")
+
+(mo-definition Professor "&quot;Professor is a postion.&quot; [PSI:Gel &quot;The PSI working group for gel based experiments&quot;]")
+
+(documentation Smo-definedSubset EnglishLanguage "Subset defined for
+the ontology.")
+
+(subclass sep--00133 sep--00111)
+
+(mo-definition sep--00069 "&quot;SameSpots is image analysis software by Nonlinear Dynamice that is unique technology delivering a major advance for the analysis of single stain or 2D DIGE images, allowing you to match and compare all the proteins in your experiment. SameSpots redefines the 2D image analysis workflow, delivering significant improvements in speed, objectivity and statistical power that create new possibilities for proteomics research.&quot; [PSI:GEL &quot;The PSI working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00167 "immuno detection")
+
+(termFormat EnglishLanguage sep--00146 "excision")
+
+(subclass sep--00100 sep--00096)
+
+(termFormat EnglishLanguage sep--00136 "biological stain product")
+
+(subclass sep--00149 sep--00101)
+
+(subclass Physical sep--00001)
+
+(mo-definition Manufacturer "&quot;A person, an enterprise, or an entity that manufactures something.&quot; [:The American Heritage Dictionary of the English Language, Fourth Edition:manufacturer &quot;Houghton Mifflin Company  2004. Answers.com 28 Nov. 2006.&quot;]")
+
+(mo-exactSynonym sep--00135 "&quot;PVDF membrane&quot; []")
+
+(subclass sep--00095 Device)
+
+(mo-definition sep--00023 "&quot;Electric mode is a mode that represents one of several alternative conditions of a measure of electric from a device.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(subclass Corporation Organization)
+
+(subclass Suspension sep--00106)
+
+(mo-definition Abstract "&quot;Properties or qualities as distinguished from any 
+particular embodiment of the properties/qualities in a physical medium. Instances of Abstract can be said to exist in the same sense as mathematical objects such as sets and relations, but they cannot exist at a particular place and time without some physical encoding or embodiment.&quot; [SUMO:abstract &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-definition sep--00123 "&quot;A rehydration buffer is a buffer solution used to rehydrate a substance. For example in two dimensional gel electrophoresis the first dimension gel is rehydrated prior to the second dimension of electrophoresis.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00094 Device)
+
+(termFormat EnglishLanguage sep--00113 "Parafilm")
+
+(subclass sep--00061 sep--00060)
+
+(subclass sep--00017 sep--00012)
+
+(termFormat EnglishLanguage sep--00126 "Laemelli buffer")
+
+(subclass sep--00173 sep--00172)
+
+(termFormat EnglishLanguage sep--00072 "object")
+
+(termFormat EnglishLanguage sep--00051 "Portable Network Graphics")
+
+(termFormat EnglishLanguage sep--00058 "pH range")
+
+(mo-definition sep--00113 "&quot;Parafilm is a compound substance which is a product of the American Can Company, consisting of a flexible film that is commonly used for sealing or protecting vessels. Because it is stretchy, moldable, waterproof, odorless, thermoplastic, semitransparent and self-adhering, it can be used to make a temporary flexible seal on open vessels (such as flasks or cuvettes) as one might employ plastic wrap. It can also be used to further seal a lidded container against moisture for long term storage.&quot; [Wikipedia:Parafilm &quot;http://en.wikipedia.org/wiki/Parafilm.&quot;]")
+
+(termFormat EnglishLanguage sep--00044 "security access")
+
+(termFormat EnglishLanguage sep--00095 "gel tank")
+
+(mo-exactSynonym sep--00053 "&quot;tiff&quot; []")
+
+(termFormat EnglishLanguage Device "device")
+
+(mo-definition sep--00035 "&quot;A principle investigator is a position.&quot; [PSI:GEL &quot;The PSI working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00047 "data format")
+
+(subclass sep--00129 sep--00127)
+
+(mo-definition sep--00142 "&quot;Enzyme digestion is a protocol that describes the digestion of a protein by an enzyme&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-definition sep--00171 "&quot;Agarose gel electrophoresis is a one dimensional gel electrophoresis protocol which use the application of voltage to separate a sample along a separation medium which is a gel matrix made of agarose&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage Group "group")
+
+(mo-definition sep--00190 "&quot;A bisacrylaimde is a chemical substance that has a molecular formula of C7H10O2N2. Often a primary component of polyacrylamide gels used for sequencing and protein electrophoresis.&quot; [http://www.leighlabs.com/MSDS/bisacry.htm:bisacrylamide &quot;http://www.leighlabs.com/MSDS/bisacry.htm&quot;]")
+
+(subclass sep--00168 sep--00160)
+
+(mo-exactSynonym sep--00114 "&quot;Brilliant Blue&quot; []")
+
+(documentation EnglishLanguage "General comments on the ontology.")
+
+(subclass Researcher Position)
+
+(mo-definition sep--00042 "&quot;A sample is a substance role played by a biological substance as an input substance to a protocol.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(subclass sep--00142 sep--00101)
+
+(subclass sep--00051 sep--00048)
+
+(termFormat EnglishLanguage sep--00033 "reader")
+
+(subclass sep--00066 sep--00063)
+
+(mo-definition Organization "&quot;An organization is a group which the members of an Organization typically have a common 
+purpose or function. Note that this class also covers divisions, departments, etc. of organizations.  For example, both the Shell Corporation and the accounting department at Shell would both be instances of Organization.  
+Note too that the existence of an Organization is dependent on the existence 
+of at least one member (since Organization is a subclass of Collection).  
+Accordingly, in cases of purely legal organizations, a fictitious member 
+should be assumed.&quot; [SUMO:organisation &quot;The PSI working group for gel based experiments&quot;]")
+
+(mo-definition sep--00062 "&quot;Image analysis software is software which is the extraction of meaningful information from images; mainly from digital images by means of digital image processing techniques. Image analysis tasks can be as simple as reading bar coded tags or as sophisticated as identifying a person from their face.&quot; [PSI:GEL &quot;The PSI Working group for gel based experiments&quot;]")
+
+(subclass sep--00047 sep--00007)
+
+(mo-definition sep--00106 "&quot;A compound liquid is a compound substance that satisfies two conditions. It is made up predominantly of things which are a Liquid and any component other than Liquid in the Mixture is in the form of fine particles 
+which are suspended in the Liquid.&quot; [SUMO:liquid mixture &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-definition sep--00091 "&quot;A Government organization is the is an organisation that is concerned with the government of a Geopolitical Area at some level.  They may be a subOrganization 
+of a government.&quot; [SUMO:government organisation &quot;Suggested Upper Merged Ontology&quot;]")
+
+(subclass sep--00027 sep--00023)
+
+(subclass Manufacturer sep--00010)
+
+(termFormat EnglishLanguage sep--00018 "linear distribution")
+
+(mo-definition sep--00111 "&quot;A gel excised analyte is a compound substance which is a location on a gel which has been excised, cut out or removed.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00153 "transfer protocol")
+
+(mo-definition sep--00105 "&quot;A compound gas is a compound substance that is a mixture that satisfies two conditions.it is made up predominantly of things which are a Gas and any 
+component other than Gas in the Mixture is in the form of fine particles 
+which are suspended in the Gas.&quot; [SUMO:compound gas &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-exactSynonym sep--00015 "&quot;lot number&quot; []")
+
+(mo-definition sep--00097 "&quot;An isoelectric focussing device is a device in which isoelectric focusing can be performed&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00085 sep--00013)
+
+(mo-definition sep--00170 "&quot;Radio active detection is an indirect detection protocol that involves Radioactive labels that do not require enzyme substrates, but rather allow the placement of medical X-ray film directly against the radio active matierial which develops as it is exposed to the label and creates dark regions which correspond to the protein bands of interest (see image to the right). &quot; [Wikipedia :radioactive detection &quot;http://en.wikipedia.org/wiki/Western_blot#Radioactive_detection&quot;]")
+
+(termFormat EnglishLanguage Substance "substance")
+
+(termFormat EnglishLanguage sep--00127 "gel matrix")
+
+(documentation EnglishLanguage "Date/time of last edit and save.")
+
+(termFormat EnglishLanguage sep--00050 "Joint Photographic Experts
+Group")
+
+(subclass sep--00035 Position)
+
+(termFormat EnglishLanguage sep--00035 "principle investigator")
+
+(termFormat EnglishLanguage sep--00017 "model identifier")
+
+(mo-definition sep--00071 "&quot;Delata2D is image analysis software that is manufactured by Decodon.&quot; [PSI:GEL &quot;The PSI working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00134 "nitrocellulose memebrane")
+
+(mo-exactSynonym sep--00134 "&quot;nitrocellulose paper&quot; []")
+
+(subclass sep--00177 sep--00151)
+
+(subclass sep--00096 Device)
+
+(subclass sep--00190 sep--00104)
+
+(mo-definition sep--00160 "&quot;Indirect detection is a detection protocol that allows one substance to be detected using an intermediate substance. For example in gel electrophoresis exposing the gel which contains radiolabel sample to photographic film, or transfer of proteins to a matrix such as in immunoblotting (indirect detection)&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-exactSynonym sep--00150 "&quot;1D&quot; []")
+
+(subclass sep--00105 Substance)
+
+(mo-definition sep--00146 "&quot;An excision is a protocol that described removal of a defined location from a substance.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00040 sep--00037)
+
+(mo-definition sep--00148 "&quot;Inter dimension protocol is a protocol which is used to record any process or processes applied to, or carried out between the dimensions of gel electrophoresis.  This includes processes such as equilibration, reduction and alkylation.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00053 sep--00048)
+
+(subclass sep--00046 sep--00044)
+
+(termFormat EnglishLanguage Attribute "attribute")
+
+(termFormat EnglishLanguage sep--00152 "image analysis")
+
+(mo-definition sep--00141 "&quot;A detection is a protocol which allows the detection, or permits the viewing of a substance. This can involve such process as; staining the proteins on the gel (direct detection), exposing the gel which contains radiolabel sample to photographic film, or transfer of proteins to a matrix such as in immunoblotting (indirect detection)&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00164 "chemilumninescent detect")
+
+(termFormat EnglishLanguage Permission "permission")
+
+(mo-definition sep--00127 "&quot;A gel matrix is a gel which the constituants of a gel form a matirx structure&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00121 "electrophoresis buffer")
+
+(mo-exactSynonym sep--00114 "&quot;Brilliant Blue G&quot; []")
+
+(mo-exactSynonym sep--00051 "&quot;png&quot; []")
+
+(mo-definition sep--00040 "&quot;A transfer medium is a medium role in which a substance facilitates the transfer of a substance to another substance in the context of a process
+MIAPE.GE: If the proteins separated along the gel, are transferred to another medium to aid detection (such as a nitrocellulose membrane as used in immunoblots) then give details of the name and type of medium, models and manufacturers, where appropriate.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(mo-definition Process "&quot;A process is a physical concpet that has temporal parts or stages. Examples include extended events like a football match or a race, actions like Pursuing and Reading, and biological processes. The formal definition is: anything that lasts for a time but is not an Object. Note that a Process may have participants 'inside' it which are Objects, such as the players in a football match. In a 4D ontology, a Process is something whose spatiotemporal extent is thought of as dividing into temporal stages roughly perpendicular to the time-axis.&quot;).&quot; [SUMO:process &quot;Suggested Upper Merged Ontology&quot;]")
+
+(documentation EnglishLanguage "Default namespace for the ontology.")
+
+(termFormat EnglishLanguage sep--00048 "image file format")
+
+(mo-exactSynonym sep--00080 "&quot;HUPO&quot; []")
+
+(mo-definition Permission "&quot;A permission is an attribute which is a formal authorization.&quot; [Wordnet:permission &quot;WordNet 1.7.1.&quot;]")
+
+(termFormat EnglishLanguage Suspension "suspension")
+
+(subclass Position SocialRole)
+
+(mo-exactSynonym sep--00015 "&quot;batch number&quot; []")
+
+(mo-definition sep--00153 "&quot;A transfer protocol is a protocol which is the conveyance or removal an entity from one location to another.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00158 sep--00139)
+
+(subclass sep--00134 sep--00112)
+
+(mo-definition sep--00182 "&quot;WordNet is data which is an online lexical reference system whose design is inspired by current psycholinguistic theories of human lexical memory. English nouns, verbs, adjectives and adverbs are organized into synonym sets, each representing one underlying lexical concept. Different relations link the synonym sets.&quot; [WordNet:WordNet &quot;http://wordnet.princeton.edu/&quot;]")
+
+(termFormat EnglishLanguage sep--00132 "excised band")
+
+(subclass Organization Group)
+
+(subclass sep--00176 sep--00151)
+
+(mo-definition Substance "&quot;A substance is an Object in which every part is similar to every other in every relevant respect.  More precisely, something is a Substance when it has only arbitrary pieces as parts - any parts have properties which are similar to those of the whole.  Note that a Substance may nonetheless have physical properties that vary.  For example, the temperature, chemical constitution, density, etc. may change from one part to another.  An example would be a body of water.&quot; [SUMO:substance &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-definition SocialRole "&quot;A social role is a role that specify the position or status of a entity within an Organization or other Group.&quot; [SUMO:social role &quot;Suggested Upper Merged Ontology&quot;]")
+
+(termFormat EnglishLanguage sep--00122 "loading buffer")
+
+(termFormat EnglishLanguage sep--00087 "PSI SP")
+
+(termFormat EnglishLanguage sep--00183 "Cy2")
+
+(subclass UnitOfMeasure Quantity)
+
+(mo-definition sep--00149 "&quot;Isoelectric focussing is a protocol that separates a sample (ususally protein) along a separation matrix (usually gel) based on Isoelectric point. (pI)&quot; [PubMed:PMID:7142660 &quot;www.pubmed.org&quot;]")
+
+(termFormat EnglishLanguage sep--00125 "transfer buffer")
+
+(termFormat EnglishLanguage sep--00181 "PubMed")
+
+(mo-definition sep--00121 "&quot;An electrophoresis buffer is a buffer solution which is used to perform electrophoresis.&quot; [PSI:GEL &quot;The PSI Gel Working group&quot;]")
+
+(subclass sep--00119 Solution)
+
+(termFormat EnglishLanguage sep--00028 "step and hold mode")
+
+(termFormat EnglishLanguage sep--00165 "colorimetric detection")
+
+(mo-definition sep--00068 "&quot;The Progenisis PG240 is a progensis image analysis software that is the flagship of traditional and 2D DIGE gel analysis products, the PG240 caters for the needs of the most advanced users.&quot; [PSI:GEL &quot;The PSI Working Group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00067 "progeniss PG220")
+
+(mo-definition sep--00006 "&quot;An identifier is an attribute which characterises the identification of an entity.&quot; [PSI:GEL &quot;The PSI Workging Group for gel based experiments&quot;]")
+
+(mo-definition sep--00157 "&quot;A Southern blot is a biological blot protocol which is used in molecular biology to enhancing the result of an agarose gel electrophoresis by marking specific DNA sequences. The method is named after its inventor, the British biologist Edwin Southern. &quot; [Wikipedia:Southern blot &quot;http://en.wikipedia.org/wiki/Southern_blot&quot;]")
+
+(termFormat EnglishLanguage sep--00180 "difference gel
+electrophoresis")
+
+(mo-definition sep--00176 "&quot;Rehydration loading is a sample loading protocol which rehydrates the gel at the same time as the application of sample to a gel.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00097 Device)
+
+(mo-definition Corporation "&quot;A corporation is an organization that has a special legal status that allows a group of persons to act as a CommercialAgent and that insulates 
+the owners (shareholders) from many liabilities that might result from the 
+corporation's operation.&quot; [SUMO:corporation &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-definition sep--00134 "&quot;A nitrocellulose membrane is a memebrane compune which is a sticky membrane used for Western blots and immobilizing DNA. It is also used for immobilization of proteins, due to its non-specific affinity for amino acids. Nitrocellulose is widely used as support in diagnostic tests where antigen-antibody binding occur, e.g. pregnancy tests, U-Albumin tests and CRP.&quot; [Wikipedia:Nitrocellulose &quot;http://en.wikipedia.org/wiki/Nitrocellulose&quot;]")
+
+(mo-exactSynonym sep--00132 "&quot;band&quot; []")
+
+(mo-definition University "&quot;A university is an educational organisations which admits students that have graduated from high school (known as undergraduate students) and students who have received a bachelor's degree (known as graduate students). A University confers both bachelor's and graduate degrees.&quot;).&quot; [SUMO:university &quot;Suggested Upper Merged Ontology&quot;]")
+
+(documentation EnglishLanguage "The program used to generate the
+ontology.")
+
+(mo-definition sep--00124 "&quot;A sample buffer is a buffer solution which contains a biological substance used in the role of a sample.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00029 "substance role")
+
+(mo-defaultNamespace "default_namespace")
+
+(termFormat EnglishLanguage sep--00188 "SYPRO Ruby")
+
+(mo-exactSynonym sep--00173 "&quot;SDS PAGE&quot; []")
+
+(termFormat EnglishLanguage sep--00021 "minimum parameter")
+
+(termFormat EnglishLanguage Label "label")
+
+(termFormat EnglishLanguage Manufacturer "manufacturer")
+
+(mo-definition Group "&quot;A group is a defnined collection of objects, e.g. a flock of sheep, a herd of goats, or the local Boy Scout troop.&quot; [SUMO:group &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-definition Suspension "&quot;A suspension is a compund liquid in which microscopically visible particles are dispersed throughout a less dense liquid or gas from which they are easily filtered but not easily settled because of system viscocity or molecular interactions.&quot; [The American Heritage Dictionary of the English Language Fourth Edition:suspension &quot;Houghton Mifflin Company 2004. Answers.com 15 Nov. 2006. http://www.answers.com/topic/suspension.&quot;]")
+
+(documentation Smo-Subset EnglishLanguage "Subset of OBO terms from
+the ontology.")
+
+(termFormat EnglishLanguage sep--00158 "western blot")
+
+(mo-definition sep--00051 "&quot;A Portable Network Graphics  is an image file format which lossless compression, offering bit depths from 1 to 48.&quot; [Wikipedia:Portable Network Graphics &quot;http://en.wikipedia.org/wiki/Graphics_file_format&quot;]")
+
+(subclass sep--00140 sep--00101)
+
+(mo-definition Researcher "&quot;A researcher is a position.&quot; [PSI:Gel &quot;The PSI working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00070 "DeCyder")
+
+(subclass Process Physical)
+
+(mo-definition sep--00017 "&quot;A model identifier is a product attribute assigned to a product.&quot; [PSI:Gel &quot;The PSI working group for gel based experiments&quot;]")
+
+(mo-definition sep--00028 "&quot;a step and hold mode is an electrical mode which the measure of electric is increased (or decreased) in a defined series of increases (or decreases) from a low electric measure value to a high electric measure value and then remains constant (is held) for a given period in time in the context of use within a process.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00019 "logarithmic distribution")
+
+(mo-exactSynonym sep--00132 "&quot;protein band&quot; []")
+
+(mo-definition sep--00092 "&quot;A blot module is a device which permits the protocol of blotting to be performed&quot; [PSI:GEL &quot;The PSI Gel Working Group&quot;]")
+
+(mo-definition sep--00145 "&quot;The first dimension gel equilibration is a protocol which equilibrates the first dimension gel in Two dimensional gel electrophoresis protocol  with the buffer system required for the
+second-dimension separation.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(termFormat EnglishLanguage sep--00154 "protein transfer protocol")
+
+(mo-definition sep--00162 "&quot;Coomassie staining is a staining which uses the chemical susbstance Coomassie blue, nonspecifically stains proteins a strong blue colour. It is often used in gel electrophoresis.&quot; [WIkipedia:Coomassie staining &quot;http://en.wikipedia.org/wiki/Staining#Coomassie_blue&quot;]")
+
+(mo-formatVersion "1.0")
+
+(subclass sep--00146 sep--00101)
+
+(termFormat EnglishLanguage sep--00130 "immobilized pH gradient gel")
+
+(termFormat EnglishLanguage sep--00142 "enzyme digestion")
+
+(subclass sep--00111 Substance)
+
+(mo-definition sep--00045 "&quot;Read access is a security access permission attribute which is the access right to obtain (data) from a storage medium, such as a magnetic disk.&quot; [PSI :Gel &quot;The PSI Working Group of gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00040 "transfer medium")
+
+(mo-relatedSynonym sep--00120 "&quot;Imobbilized pH gradient Buffer&quot; []")
+
+(mo-definition Physical "&quot;An entity that has a location in space-time.  
+Note that locations are themselves understood to have a location in space-time.&quot; [SUMO:physical &quot;Suggested Upper Merged Ontology&quot;]")
+
+(domain Smo-definedSubset 2 Smo-Subset)
+
+(termFormat EnglishLanguage sep--00027 "hold mode")
+
+(mo-definition sep--00063 "&quot;The progenesis range is image analysis software manufactured by Nonlinear Dynamics that offers analysis and data-mining software for 2D electrophoresis and MS applications, including biomarker discovery.&quot; [PSI:GEL &quot;The PSI Working group for gel based experiments&quot;]")
+
+(mo-definition sep--00038 "&quot;A detection medium is a medium role of function of a substance to act as a medium which faciliates the detection of an entity.
+MAIPE.GE: If the proteins on the gel matrix must be exposed to another medium to permit detection (e.g. photographic film for radiolabel samples) then give details of name, model, manufacture, of detection medium.If the proteins on the gel matrix must be exposed to another medium to permit detection (e.g. photographic film for radiolabel samples) then give details of name, model, manufacture, of detection medium.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(mo-definition sep--00050 "&quot;A Joint Photographic Experts Group is an image file format which is used extensively for photos and other continuous tone images on the web. Uses lossy compression by trying to equalize eight by eight pixel blocks; the quality can vary greatly depending on the compression settings.&quot; [WIkipedia:Joint Photography Experts Group &quot;http://en.wikipedia.org/wiki/Graphics_file_format&quot;]")
+
+(mo-relatedSynonym sep--00135 "&quot;KYNAR&quot; []")
+
+(subclass sep--00049 sep--00048)
+
+(termFormat EnglishLanguage sep--00135 "PolyVinylidine DiFluoride")
+
+(mo-definition UniformResourceIdentifier "&quot;A Uniform Resource Identifier (URI) is an identifier which is a compact sequence of characters that identifies an abstract or physical resource.  This specification defines the generic URI syntax and a process for resolving URI references that might be in relative form, along with guidelines and security considerations for the use of URIs on the Internet.  The URI syntax defines a grammar that is a superset of all valid URIs, allowing an implementation to parse the common components of a URI reference without knowing the scheme-specific requirements of every possible identifier.  This specification does not define a generative grammar for URIs; that task is performed by the individual specifications of each URI scheme. http://tools.ietf.org/html/rfc3986.&quot; [IETF:rfc3986 &quot;The Internet Engineering Task Force  http://tools.ietf.org/html/rfc3986&quot;]")
+
+(termFormat EnglishLanguage sep--00137 "SimplyBlue SafeStain")
+
+(subclass sep--00167 sep--00160)
+
+(termFormat EnglishLanguage sep--00119 "fixation solution")
+
+(subclass Quantity Abstract)
+
+(subclass sep--00182 sep--00011)
+
+(mo-definition sep--00048 "&quot;An image file format is a data format that provides a standardized method of organizing and storing image data. Image files are made up of picture elements, called pixels. The pixels that comprise an image are in the form of a grid of columns and rows. Each of the pixels in an image stores digital numbers representing brightness and color.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(subclass sep--00178 sep--00152)
+
+(subclass sep--00026 sep--00022)
+
+(mo-autoGeneratedBy "OBO-Edit 1.002")
+
+(subclass sep--00121 sep--00118)
+
+(mo-definition sep--00165 "&quot;Colorimetric detection is an indirect detection protocol that detects proteins  with a substrate that reacts with the reporter enzyme (such as peroxidase) that is bound to the secondary antibody. This converts the soluble dye into an insoluble form of a different colour that precipitates next to the enzyme and thereby stains the nitrocellulose membrane. Development of the blot is then stopped by washing away the soluble dye. Protein levels are evaluated through densitometry (how intense the stain is) or spectrophotometry.&quot; [WIkipedia:colormetric detection &quot;http://en.wikipedia.org/wiki/Western_blot#Colorimetric_detection&quot;]")
+
+(documentation EnglishLanguage "Version of OBO format.")
+
+(subclass sep--00009 sep--00005)
+
+(mo-definition sep--00054 "&quot;A Windows Bitmap is a image file format which is commonly used by Microsoft Windows programs, and the Windows operating system itself. Lossless compression can be specified, but some programs use only uncompressed files.&quot; [Wikipedia:Windows Bitmap &quot;http://en.wikipedia.org/wiki/Graphics_file_format&quot;]")
+
+(mo-definition sep--00086 "&quot;The PSI working group for Proteomics Informatics (PI)&quot; [PSI :GEL &quot;The PSI Gel working group&quot;]")
+
+(termFormat EnglishLanguage sep--00187 "flourescent label")
+
+(mo-definition Quantity "&quot;A quantity is an abstract concept which is any specification of how many or how much of 
+something there is.&quot; [SUMO:quality &quot;Suggested Upper Merged Ontology&quot;]")
+
+(subclass sep--00161 sep--00159)
+
+(termFormat EnglishLanguage sep--00053 "Tagged Image File Format")
+
+(mo-definition sep--00119 "&quot;A fixing solution is a solution used to fix proteins in a gel after gel electrophoresis has been performed.&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(mo-exactSynonym sep--00081 "&quot;PSI&quot; []")
+
+(subclass sep--00072 Physical)
+
+(subclass sep--00063 sep--00062)
+
+(subclass sep--00089 Organization)
+
+(subclass sep--00107 Filter)
+
+(mo-exactSynonym sep--00120 "&quot;IPG Buffer&quot; []")
+
+(mo-definition sep--00174 "&quot;A cup loading protocol is a sample loading protocol which the sample is pipetted into sample cups precisely positioned on the surface of
+the gels (usually in first dimension).&quot; [PSI:GEL &quot;The PSI GEL working group&quot;]")
+
+(subclass sep--00018 sep--00009)
+
+(subclass sep--00127 sep--00110)
+
+(termFormat EnglishLanguage sep--00107 "filter paper")
+
+(mo-exactSynonym sep--00054 "&quot;bmp&quot; []")
+
+(subclass sep--00124 sep--00118)
+
+(termFormat EnglishLanguage SoftwareAttribute "software attribute")
+
+(termFormat EnglishLanguage sep--00124 "sample buffer")
+
+(mo-definition sep--00052 "&quot;Scalable Vector Graphics is an image file format which is an XML based vector graphics format, as defined by the World Wide Web Consortium for use in web browsers.&quot; [Wikipedia:Scalable Vector Graphics &quot;http://en.wikipedia.org/wiki/Graphics_file_format&quot;]")
+
+(mo-definition sep--00158 "&quot;A western blot is a biological blot protocol which is used in molecular biology/biochemistry/immunogenetics to detect protein in a given sample of tissue homogenate or extract. It uses gel electrophoresis to separate denatured proteins by mass. The proteins are then transferred out of the gel and onto a membrane (typically nitrocellulose), where they are &quot;probed&quot; using antibodies specific to the protein. &quot; [Wikipedia:western blot &quot;http://en.wikipedia.org/wiki/Western_blot&quot;]")
+
+(termFormat EnglishLanguage Smo-Subset "Subset")
+
+(mo-definition sep--00053 "&quot;A Tagged Image File Format is an image file format which is used extensively for traditional print graphics. Lossy and lossless compression available, but many programs only support a subset of available options.&quot; [Wikipedia:Tagged Image File Format &quot;http://en.wikipedia.org/wiki/Graphics_file_format&quot;]")
+
+(subclass sep--00093 Device)
+
+(mo-definition sep--00022 "&quot;A state is a quality that is the manner of being or form of existence.&quot; [:The American Heritage Dictionary of the English Language, Fourth Edition:state &quot;Houghton Mifflin Company 2004. Answers.com 14 Nov. 2006. http://www.answers.com/topic/state&quot;]")
+
+(termFormat EnglishLanguage sep--00120 "carrier ampholyte buffer")
+
+(domain Smo-inSubset 2 Smo-Subset)
+
+(mo-definition sep--00140 "&quot;Capillary electrophoresis is a protocol which can be used to separate ionic species by their charge and frictional forces. In traditional electrophoresis, electrically charged analytes move in a conductive liquid medium under the influence of an electric field. Introduced in the 1960s, the technique of capillary electrophoresis (CE) was designed to separate species based on their size to charge ratio in the interior of a small capillary filled with an electrolyte.&quot; [Wikipedia:Capillary Electrophroesis &quot;http://en.wikipedia.org/wiki/Capillary_electrophoresis&quot;]")
+
+(mo-definition sep--00046 "&quot;Write access is a security access permission attribute that is the access right to record or update stored data.&quot; [PSI:Gel &quot;The PSI Working group for gel based experiments&quot;]")
+
+(termFormat EnglishLanguage sep--00086 "PSI PI")
+
+(termFormat EnglishLanguage sep--00037 "medium")
+
+(subclass Permission Attribute)
+
+(subclass Abstract sep--00001)
+
+(mo-savedBy "Andy")
+
+(termFormat EnglishLanguage sep--00010 "role")
+
+(mo-definition sep--00007 "&quot;A format is a quality that is a specificiation or arrangement of a specified form. The structure, layout, or the digital manifestation of an entity&quot; [PSI:GEL &quot;The PSI working groups for gel based experiments&quot;]")
+
+(mo-definition sep--00180 "&quot;Difference gel electrophoresis is a two dimensional gel electrophoresis protocol which is where three different protein samples can be labeled with fluorescent dyes (for example Cy3, Cy5, Cy2) prior to two-dimensional electrophoresis. After the gel electrophoresis, the gel is scanned with the excitation wavelength of each dye one after the other. This technique is used to see changes in protein abundancy (for example, between a sample of a healthy person and a sample of a diseased person).&quot; [Pubmed:PMID:9420172 &quot;www.pubmed.org&quot;]")
+
+(termFormat EnglishLanguage sep--00054 "Windows Bitmap")
+
+(subclass sep--00157 sep--00139)
+
+(subclass sep--00141 sep--00101)
+
+(subclass sep--00188 sep--00136)
+
+(subclass sep--00130 sep--00129)
+
+(termFormat EnglishLanguage sep--00176 "rehydration loading")
+
+(mo-definition sep--00049 "&quot;A graphics interchange format is an image file format that supports animated images. Supports only 255 colors per frame, so requires lossy quantization for full-color photos (dithering); using multiple frames can improve color precision&quot; [Wikipedia:graphics interchange format &quot;http://en.wikipedia.org/wiki/Graphics_file_format&quot;]")
+
+(termFormat EnglishLanguage sep--00022 "state")
+
+(termFormat EnglishLanguage sep--00171 "agarose gel electrophoresis")
+
+(subclass sep--00169 sep--00160)
+
+(subclass sep--00045 sep--00044)
+
+(mo-definition sep--00167 "&quot;Immuno detection is an indirect detection protocol which is the use of an antibody-based method to detect a specific protein in a sample.
+
+&quot; [Wikipedia:immunostaining &quot;http://en.wikipedia.org/wiki/Immunostaining&quot;]")
+
+(mo-definition sep--00037 "&quot;A medium is a substance role which an intervening substance through which something else is transmitted or carried on.&quot; [:The American Heritage Dictionary of the English Language, Fourth Edition:medium &quot;Houghton Mifflin Company 2004. Answers.com 14 Nov. 2006. http://www.answers.com/topic/medium&quot;]")
+
+(termFormat EnglishLanguage sep--00098 "thermostatic circulator")
+
+(mo-definition sep--00044 "&quot;Security access is an permission attribute which is specification of the access right (e.g read or write) that is specified on a particular object.&quot; [FUGE:security access &quot;Functional genomics experiment&quot;]")
+
+(mo-definition sep--00013 "&quot;The proteomics standards intiative working group name is an identifier for the Proteomics Standards Initiative (PSI) working groups. The primary functions of creating, editing, maintaining and obsoleting recommendations are the task of a Working Group.&quot; [PSI:Gel &quot;The PSI Gel working group for gel based experiments&quot;]")
+
+(subclass sep--00172 sep--00150)
+
+(mo-definition sep--00168 "&quot;Primary antibody probing is an indeirect detection protocol. Antibodies are generated when a host species or immune cell culture is exposed to the protein of interest (or a part thereof). Normally a part of the immune response, here they are harvested and used as sensitive and specific detection tools that bind the protein directly - hence &quot;primary&quot; antibody.&quot; [Wikipedia:primary antibody probing &quot;http://en.wikipedia.org/wiki/Western_blot#Two_step&quot;]")
+
+(mo-definition Collection "&quot;A collection is an object which have members and a position in space-time and members can be added and subtracted without thereby changing the identity of the Collection. Some examples are toolkits, football teams, and flocks 
+of sheep.&quot; [SUMO:collection &quot;Suggested Upper Merged Ontology&quot;]")
+
+(mo-exactSynonym sep--00052 "&quot;svg&quot; []")
+
+(subclass sep--00181 sep--00011)
+
+(mo-exactSynonym sep--00180 "&quot;DIGE&quot; []")
+
+(owl-AnnotationProperty "null")
+
+(termFormat EnglishLanguage sep--00012 "product attribute")
+

@@ -17,6 +17,7 @@
 :- ensure_loaded(kaggle_arc_typecheck).
 :- ensure_loaded(kaggle_arc_interpreter).
 :- ensure_loaded(kaggle_arc_test_favs).
+:- ensure_loaded(kaggle_arc_unifiable).
 
 :- ensure_loaded(kaggle_arc_skels).
 :- ensure_loaded(kaggle_arc_reduce).

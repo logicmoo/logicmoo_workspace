@@ -498,25 +498,6 @@ hint_into_data(vis_hv_term(Hints),(F)):- !, hint_into_data(Hints,F).
 hint_into_data(mono(Hints),(F)):- !, hint_into_data(Hints,F).
 hint_into_data(Data,Data).
 
- 
-relax_hint(G,G):- (\+ compound(G)) -> !; true.
-relax_hint(X1,X2):- verbatum_unifiable(X1), !, X2=X1.
-%relax_hint(rev(G),rev(GG)):- !, relax_hint(G,GG).
-%relax_hint(mono(G),mono(GG)):- !, relax_hint(G,GG).
-%relax_hint(iz(G),iz(GG)):- relax_hint(G,GG).
-%relax_hint(info(G),info(GG)):- relax_hint(G,GG).
-relax_hint(P,PP):- compound_name_arguments(P,F,[G]),compound_name_arguments(PP,F,[GG]),relax_hint(G,GG).
-relax_hint(cg(W,G),cg(W,GG)):- !, relax_hint(G,GG).
-relax_hint(G,GG):- compound(G), duplicate_term(G,GG),arg(N,G,E),relax_arg(E,Hints),nb_setarg(N,GG,Hints).
-%relax_hint(G,GG):- functor(G,F,A),functor(GG,F,A).
-
-relax_arg(E,C):- is_color(E),!,relax_color_arg(E,C).
-%relax_arg(E,_):- var(E),!,fail.
-relax_arg(E,E):- var(E) -> !; true.
-relax_arg((G),(GG)):- relax_hint(G,GG).
-relax_arg(E,len(L)):- is_list(E),length(E,L).
-relax_arg(_,_).
-
 
 :- dynamic(io_xform/3).
 add_xform_maybe(In1,Out1):- ignore(get_current_test(TestID)),
@@ -729,85 +710,6 @@ ptv2(T):-
   numbervars(true),singletons(true),blobs(portray),
   quote_non_ascii(true),brace_terms(false),ignore_ops(true)]))).
 
-must_min_unifier(A,B,D):- must_det_ll(min_unifier_e(A,B,D)).
-%min_unifier_e(A,B,C):- compound(B),maybe_extract_value(B,BB), \+ maybe_extract_values(A,_), c_proportional(A,BB,AABB),min_unifier(AABB,B,C),!.
-%min_unifier_e(B,A,C):- compound(B),maybe_extract_value(B,BB), \+ maybe_extract_values(A,_), c_proportional(A,BB,AABB),min_unifier(AABB,B,C),!.
-min_unifier_e(A,B,C):- maybe_extract_value(B,BB), \+ maybe_extract_value(A,_), min_unifier(A,BB,C).
-min_unifier_e(B,A,C):- maybe_extract_value(B,BB), \+ maybe_extract_value(A,_), min_unifier(BB,A,C).
-min_unifier_e(A,B,C):- min_unifier(A,B,C),nonvar(C),!.
-%min_unifier_e(A,B,C):- compound(B),maybe_extract_values(B,BB), \+ maybe_extract_values(A,_), c_proportional(A,BB,AABB),must_min_unifier(AABB,B,C),!.
-%min_unifier_e(B,A,C):- compound(B),maybe_extract_values(B,BB), \+ maybe_extract_values(A,_), c_proportional(A,BB,AABB),must_min_unifier(AABB,B,C),!.
-min_unifier_e(_,_,_).
-
-some_min_unifier(X,X):- \+ compound(X),!.
-some_min_unifier([A|List],Term):- some_min_unifier_3(A,List,Term).
-
-can_unfy_already(A,B):- \+ \+ A = B.
-some_min_unifier_3(A,[B|List],O):- min_unifier(B,A,C),nonvar(C),some_min_unifier_3(C,List,O),!.
-some_min_unifier_3(A,[B|List],O):- relax_hint(A,AA),nonvar(AA),maplist(can_unfy_already(AA),[B|List]), some_min_unifier_3(AA,List,O),!.
-some_min_unifier_3(A,List,A):- my_maplist(can_unfy_already(A),List),!.
-
-
-is_a_min_unifier(A,B,C):- B==strict,A==loose,!,C=A.
-is_a_min_unifier(A,B,C):- A==fg,B\==unkC,B\==wbg,!,C=A.
-is_a_min_unifier(A,_,C):- plain_var(A),!,C=A.
-is_a_min_unifier(A,B,C):- compound(A),A=trim(BB),B==BB,!,C=A.
-
-min_unifier(A,B,C):- A=@=B,!,C=A.
-min_unifier(A,B,C):- is_a_min_unifier(A,B,C),!.
-min_unifier(B,A,C):- is_a_min_unifier(A,B,C),!.
-min_unifier(A,B,C):- min_unifier_u(A,B,C),!.
-/*
-
-min_unifier(A,B,A):- plain_var(B),!.
-min_unifier(A,B,B):- plain_var(A),!.
-*/
-
-min_unifier_n(A,B,D):- number(A),number(B),!,c_proportional(A,B,D).
-min_unifier_n(A,B,D):- min_unifier(A,B,D).
-
-
-
-min_unifier_u(A,B,_):- (\+ compound(A); \+ compound(B)),!.
-min_unifier_u(A,B,AA):- is_grid(A),is_grid(B),!,min_grid_unifier(A,B,AA),!.
-min_unifier_u(A,B,AA):- is_list(A),is_list(B),!,min_list_unifier(A,B,AA),
-  ignore((length(A,AL),length(B,AL),length(AA,AL))).
-min_unifier_u(A,B,AA):- is_cons(A),is_cons(B),!,min_list_unifier(A,B,AA),!.
-%min_unifier(A,B,C):- is_list(A),sort_safe(A,AA),A\==AA,!,min_unifier(B,AA,C).
-min_unifier_u(A,B,R):- compound(A),compound(B),
- compound_name_arguments(A,F,AA),compound_name_arguments(B,F,BB),!,
- my_maplist(min_unifier,AA,BB,RR),compound_name_arguments(R,F,RR).
-
-min_unifier_u(A,B,R):- relax_hint(A,R),\+ (B \= R),!.
-
-is_cons(A):- compound(A),A=[_|_].
-
-
-min_grid_unifier(A,B,_):- (\+ is_list(A) ; \+ is_list(B)),!.
-min_grid_unifier(A,B,[E1|C]):- select(E1,A,AA),select(E2,B,BB), E1=@=E2 ,!,min_grid_unifier(AA,BB,C).
-min_grid_unifier(A,B,[E |C]):- select(E1,A,AA),select(E2,B,BB),min_unifier(E1,E2,E),!,min_grid_unifier(AA,BB,C).
-min_grid_unifier(_,_,_).
-
-
-min_list_unifier(A,B,A):- A=@=B,!.
-min_list_unifier(A,B,_):- ( \+ compound(A); \+ compound(B) ),!.
-min_list_unifier(A,B,A):- is_list(A),is_list(B), sort_safe(A,AA),sort_safe(B,BB),BB=@=AA,!.
-min_list_unifier([A|AA],[B|BB],[A|CC]):- A=@=B,min_list_unifier(AA,BB,CC).
-min_list_unifier([A|AA],[B|BB],[C|CC]):- A\=@=B,min_list_unifier(AA,BB,CC),min_unifier(A,B,C),!.
-min_list_unifier(A,B,[EC|C]):- is_list(A),is_list(B),  select_two(A,B,E1,E2,AA,BB), min_unifier(E1,E2,EC) ,!,min_list_unifier(AA,BB,C).
-
-
-min_list_unifier(A,_,_):- (\+ is_list(A), \+ is_cons(A)),!.
-min_list_unifier(_,A,_):- (\+ is_list(A), \+ is_cons(A)),!.
-min_list_unifier(A,B,_):- (\+ is_list(A) ; \+ is_list(B)),!.
-
-%min_list_unifier([E1|AA],[E2|BB],[EC|C]):- min_unifier(E1,E2,EC) ,!,min_unifier(AA,BB,C).
-min_list_unifier(A,B,[E1|C]):- nonvar(A),nonvar(B), select(E1,A,AA),nonvar(E1),select(E2,B,BB),nonvar(E2), E1=@=E2 ,!,min_list_unifier(AA,BB,C).
-%min_list_unifier([_|A],[_|B],[_|C]):- !,min_list_unifier(A,B,C).
-%min_list_unifier([_],[_|B],[_|B]):-!.
-%min_list_unifier([_|B],[_],[_|B]):-!.
-min_list_unifier(_,_,_):-!.
-%min_unifier(A,B,C):- is_list(B), is_list(A), length(B,L), length(A,L), length(C,L).
 
 grid_hint_swap(TestID,ExampleNum,IO,In,Out):-
  ignore(kaggle_arc(TestID,ExampleNum,In,Out)),

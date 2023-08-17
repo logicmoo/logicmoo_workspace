@@ -1,0 +1,5 @@
+(synonymousExternalConcept "MI--0501" Enzyme psi-mi)
+(synonymousExternalConcept "MI--0838" KelvinDegree psi-mi)
+(synonymousExternalConcept "MI--0326" Protein psi-mi)
+(synonymousExternalConcept "MI--0649" SecondDuration psi-mi)
+(synonymousExternalConcept "part_of" part psi-mi)

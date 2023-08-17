@@ -1,0 +1,4104 @@
+(subclass REX--0000391 REX--0000389)
+
+(owl-someValuesFrom REX--0000443 REX--0000442)
+
+(termFormat EnglishLanguage REX--0000342 "magnesium chelatase
+reaction")
+
+(subclass REX--0000417 REX--0000418)
+
+(owl-someValuesFrom REX--0000118 REX--0000110)
+
+(mo-synonym REX--0000406 "&quot;ATP diphosphohydrolase (diphosphate-forming)&quot; []")
+
+(subclass REX--0000281 REX--0000284)
+
+(mo-synonym REX--0000396 "&quot;bacterial luciferase&quot; []")
+
+(termFormat EnglishLanguage REX--0000455 "membrane process")
+
+(mo-definition REX--0000397 "&quot;Any oxidoreductase reaction in which dioxygen is the electron acceptor.&quot; [ISBN:0198506732]")
+
+(subclass REX--0000173 REX--0000458)
+
+(mo-synonym REX--0000401 "&quot;internal monooxygenase reaction&quot; []")
+
+(mo-synonym REX--0000023 "&quot;beta positive emission&quot; []")
+
+(termFormat EnglishLanguage REX--0000202 "associative desorption")
+
+(termFormat EnglishLanguage REX--0000034 "photolysis")
+
+(termFormat EnglishLanguage REX--0000221 "activation")
+
+(mo-definition REX--0000284 "&quot;A chemical reaction caused by absorption of high-energy radiation.&quot; [EBI:kid]")
+
+(subclass REX--0000208 REX--0000198)
+
+(mo-definition REX--0000190 "&quot;The process by which nuclei are formed in solution.&quot; [http://goldbook.iupac.org/N04243.html]")
+
+(mo-xrefAnalogous REX--0000396 "EC:1.14.14.3")
+
+(subclass REX--0000109 REX--0000108)
+
+(termFormat EnglishLanguage REX--0000476 "NAD(P)+ reduction")
+
+(mo-definition REX--0000060 "&quot;A reaction or process generating free radicals (or some other reactive reaction intermediates) which then induce a chain reaction.&quot; [http://goldbook.iupac.org/I03042.html]")
+
+(termFormat EnglishLanguage REX--0000480 "propan-2-ol:NADP+
+dehydrogenase reaction")
+
+(subclass REX--0000365 REX--0000348)
+
+(mo-defaultNamespace "rex.obo")
+
+(subclass REX--0000198 REX--0000206)
+
+(termFormat EnglishLanguage REX--0000509 "donor:oxygen oxidoreductase
+reaction")
+
+(termFormat EnglishLanguage REX--0000494 "alcohol:quinone
+dehydrogenase reaction")
+
+(termFormat EnglishLanguage REX--0000536 "hydrogen:NAD+ oxidoreductase
+reaction")
+
+(subclass REX--0000040 REX--0000039)
+
+(mo-definition REX--0000545 "&quot;13(1)-oxo-magnesium-protoporphyrin IX 13-monomethyl ester + NADPH + H+ + O2 --> divinylprotochlorophyllide + NADP+ + 2 H2O&quot; [EC:1.14.13.81]")
+
+(subclass REX--0000034 REX--0000033)
+
+(owl-someValuesFrom REX--0000546 REX--0000551)
+
+(subclass REX--0000448 Oxidation)
+
+(mo-xrefAnalogous REX--0000534 "EC:1.12")
+
+(mo-xrefAnalogous REX--0000540 "EC:1.12.5")
+
+(subclass REX--0000500 REX--0000107)
+
+(subclass REX--0000417 REX--0000416)
+
+(mo-definition REX--0000322 "&quot;Transfer of excitation from an electronically excited donor in a singlet state to produce an electronically excited acceptor in a triplet state.&quot; [http://goldbook.iupac.org/S05701.html]")
+
+(termFormat EnglishLanguage REX--0000288 "electron-positron pair
+production")
+
+(subclass REX--0000319 REX--0000056)
+
+(termFormat EnglishLanguage REX--0000148 "attachment")
+
+(subclass REX--0000143 REX--0000147)
+
+(mo-definition REX--0000282 "&quot;Adsorption of a substance at solid or liquid interfaces induced by absorption of high-energy radiation by the solid or liquid adsorbent.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000295 REX--0000294)
+
+(subclass REX--0000385 REX--0000386)
+
+(subclass REX--0000221 REX--0000235)
+
+(termFormat EnglishLanguage REX--0000077 "protein-catalysed reaction")
+
+(subclass REX--0000352 REX--0000350)
+
+(termFormat EnglishLanguage REX--0000208 "chemisorption")
+
+(subclass REX--0000045 REX--0000033)
+
+(mo-definition REX--0000144 "&quot;The formation of a covalent bond by the combination or recombination of two radicals (A. + .B -> A:B).&quot; [http://goldbook.iupac.org/C01153.html]")
+
+(mo-definition REX--0000169 "&quot;A reaction with a molecularity of two.&quot; [http://goldbook.iupac.org/M03989.html]")
+
+(mo-definition REX--0000384 "&quot;Catalysis occurring by the simultaneous or sequential action of light and thermal energy.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000377 REX--0000374)
+
+(mo-definition REX--0000410 "&quot;Na+(in) --> Na+(out)&quot; [EBI:kid]")
+
+(subclass REX--0000531 REX--0000528)
+
+(subclass REX--0000131 REX--0000130)
+
+(mo-definition REX--0000419 "&quot;A reaction, elementary or stepwise, in which one atom or group in a molecular entity is replaced by another atom or group.&quot; [http://goldbook.iupac.org/S06078.html]")
+
+(mo-definition REX--0000188 "&quot;The process of one material (absorbent) being retained by another (absorbate).&quot; [http://goldbook.iupac.org/A00036.html]")
+
+(mo-synonym REX--0000074 "&quot;deoxyribozyme-catalysed reaction&quot; []")
+
+(termFormat EnglishLanguage REX--0000211 "diabatic photoreaction")
+
+(mo-xrefAnalogous REX--0000340 "GO:0004325")
+
+(mo-definition REX--0000281 "&quot;Desorption of a substrate from solid or liquid interfaces induced by absorption of high-energy radiation by the solid or liquid adsorbent.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(termFormat EnglishLanguage REX--0000249 "catalytic poisoning")
+
+(subclass REX--0000486 REX--0000485)
+
+(termFormat EnglishLanguage REX--0000000 "physico-chemical process
+ontology")
+
+(owl-someValuesFrom REX--0000488 REX--0000480)
+
+(mo-xrefAnalogous REX--0000390 "EC:1.13.12.5")
+
+(subclass REX--0000399 REX--0000397)
+
+(mo-definition REX--0000414 "&quot;Solvolysis by water.&quot; [http://goldbook.iupac.org/H02902.html]")
+
+(mo-definition REX--0000065 "&quot;A chain reaction which includes a propagation step or steps in which there is an increase in the number of active intermediates.&quot; [http://goldbook.iupac.org/B00723.html]")
+
+(termFormat EnglishLanguage REX--0000045 "photoreduction")
+
+(mo-definition REX--0000302 "&quot;The loss of electronic excitation energy without photon emission or chemical change.&quot; [http://goldbook.iupac.org/R05056.html]")
+
+(subclass REX--0000361 REX--0000348)
+
+(subclass REX--0000232 REX--0000230)
+
+(termFormat EnglishLanguage REX--0000244 "reversible modification of
+enzyme catalysis")
+
+(subclass REX--0000130 REX--0000106)
+
+(mo-synonym REX--0000546 "&quot;tunneling&quot; []")
+
+(mo-definition REX--0000539 "&quot;2 H2 + ferricytochrome c3 --> 4 H+ + ferrocytochrome c3&quot; [EC:1.12.2.1]")
+
+(mo-definition REX--0000276 "&quot;The process of converting a monomer or a mixture of monomers into an oligomer.&quot; [http://goldbook.iupac.org/O04285.html]")
+
+(mo-synonym REX--0000039 "&quot;energy transfer&quot; []")
+
+(termFormat EnglishLanguage REX--0000072 "enzymatic reaction")
+
+(mo-definition REX--0000180 "&quot;The direct transition of a solid to a vapour without passing through a liquid phase.&quot; [http://goldbook.iupac.org/S06069.html]")
+
+(mo-definition REX--0000435 "&quot;The insertion of a metal of a metal complex into a covalent bond involving formally an overall two-electron loss on one metal or a one-electron loss on each of two metals.&quot; [http://goldbook.iupac.org/O04367.html]")
+
+(subclass REX--0000428 REX--0000422)
+
+(subclass REX--0000053 REX--0000056)
+
+(termFormat EnglishLanguage REX--0000430 "electrophilic addition")
+
+(subclass REX--0000469 REX--0000465)
+
+(termFormat EnglishLanguage REX--0000190 "nucleation")
+
+(subclass REX--0000286 REX--0000285)
+
+(termFormat EnglishLanguage REX--0000400 "single donor dioxygenase
+reaction")
+
+(subclass REX--0000421 REX--0000424)
+
+(mo-definition REX--0000197 "&quot;Electron transfer process in which the reacting system has to cross over between different electronic surfaces in passing from reactants to products.&quot; [http://goldbook.iupac.org/D01659.html]")
+
+(subclass REX--0000322 REX--0000039)
+
+(subclass REX--0000148 REX--0000150)
+
+(termFormat EnglishLanguage REX--0000365 "inelastic scattering")
+
+(subclass REX--0000056 REX--0000057)
+
+(termFormat EnglishLanguage REX--0000544 "13(1)-hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester
+dehydrogenase reaction")
+
+(subclass REX--0000522 REX--0000533)
+
+(owl-someValuesFrom REX--0000068 REX--0000056)
+
+(termFormat EnglishLanguage REX--0000410 "Na+ export")
+
+(subclass REX--0000114 REX--0000113)
+
+(termFormat EnglishLanguage REX--0000315 "ion pair dissociation")
+
+(termFormat EnglishLanguage REX--0000144 "colligation")
+
+(mo-xrefAnalogous REX--0000076 "PUBMED:12869701")
+
+(termFormat EnglishLanguage REX--0000416 "solvolytic substitution")
+
+(termFormat EnglishLanguage REX--0000018 "gamma-decay")
+
+(instance inverse BinaryRelation)
+
+(subclass REX--0000395 REX--0000389)
+
+(instance Smo-definedSubset BinaryRelation)
+
+(subclass REX--0000236 REX--0000235)
+
+(subclass REX--0000279 REX--0000033)
+
+(owl-someValuesFrom REX--0000048 REX--0000451)
+
+(termFormat EnglishLanguage REX--0000159 "pi-sigma* transition")
+
+(termFormat EnglishLanguage REX--0000380 "type II photooxygenation")
+
+(termFormat EnglishLanguage REX--0000183 "nucleation and growth")
+
+(termFormat EnglishLanguage REX--0000050 "photooxygenation")
+
+(mo-synonym REX--0000524 "&quot;aquacobalamin reductase (NADPH)&quot; []")
+
+(mo-xrefAnalogous REX--0000389 "GO:0045289")
+
+(mo-definition REX--0000253 "&quot;A (usually stepwise) reaction in which two or more reactants (or remote reactive sites within the same molecular entity) yield a single main product with accompanying formation of water or of some other small molecule, e.g. ammonia, ethanol, acetic acid, hydrogen sulfide.&quot; [http://goldbook.iupac.org/C01238.html]")
+
+(owl-someValuesFrom REX--0000476 REX--0000472)
+
+(mo-definition REX--0000303 "&quot;Radiative deactivation of an excited state; transfer of energy from a molecular entity to an electromagnetic field.&quot; [http://goldbook.iupac.org/E02056.html]")
+
+(subclass REX--0000060 REX--0000059)
+
+(mo-definition REX--0000029 "&quot;A reaction in which the electron transfer takes place with no or very weak (4-16 kJ/mol) electronic interaction between the reactants in the transition state.&quot; [http://goldbook.iupac.org/O04351.html]")
+
+(subclass REX--0000347 REX--0000043)
+
+(subclass REX--0000386 REX--0000078)
+
+(mo-definition REX--0000480 "&quot;propan-2-ol + NADP+ --> acetone + NADPH + H+&quot; [EC:1.1.1.80]")
+
+(subclass REX--0000228 REX--0000227)
+
+(termFormat EnglishLanguage REX--0000219 "mechanism-based inhibition")
+
+(mo-definition REX--0000488 "&quot;propan-2-ol --> acetone + 2 e- + 2 H+&quot; [EBI:kid]")
+
+(subclass REX--0000159 REX--0000155)
+
+(subclass REX--0000364 REX--0000348)
+
+(termFormat EnglishLanguage REX--0000547 "proton tunnelling")
+
+(subclass REX--0000046 REX--0000043)
+
+(subclass REX--0000446 Oxidation)
+
+(mo-synonym REX--0000072 "&quot;enzyme-catalysed reaction&quot; []")
+
+(termFormat EnglishLanguage REX--0000274 "living copolymerization")
+
+(termFormat EnglishLanguage REX--0000226 "linear enzyme inhibition")
+
+(termFormat EnglishLanguage REX--0000466 "ethanol:NAD+ dehydrogenase
+reaction")
+
+(subclass REX--0000421 REX--0000422)
+
+(termFormat EnglishLanguage REX--0000013 "spontaneous fission")
+
+(termFormat EnglishLanguage REX--0000139 "one-electron transfer")
+
+(termFormat EnglishLanguage REX--0000026 "excitation")
+
+(subclass REX--0000473 REX--0000472)
+
+(subclass REX--0000187 REX--0000181)
+
+(mo-definition REX--0000098 "&quot;A chemical reaction, the principal product of which is isomeric with the principal reactant.&quot; [http://goldbook.iupac.org/I03295.html]")
+
+(termFormat EnglishLanguage REX--0000284 "radiochemical reaction")
+
+(subclass REX--0000039 REX--0000032)
+
+(termFormat EnglishLanguage REX--0000023 "positron emission")
+
+(mo-definition REX--0000380 "&quot;The reaction of photochemically produced singlet molecular oxygen with molecular entities to give rise to oxygen containing molecular entities.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(mo-synonym REX--0000187 "&quot;solubilization&quot; []")
+
+(termFormat EnglishLanguage REX--0000169 "bimolecular reaction")
+
+(mo-xrefAnalogous REX--0000392 "GO:0047077")
+
+(termFormat EnglishLanguage REX--0000320 "primary geminate
+recombination")
+
+(mo-definition REX--0000161 "&quot;An electronic transition in a metal complex that corresponds to excitation populating an electronic state in which considerable electron transfer from a ligand to a metal centre has occurred.&quot; [http://goldbook.iupac.org/L03520.html]")
+
+(termFormat EnglishLanguage REX--0000344 "ATP-hydrolysing chelatase
+reaction")
+
+(subclass REX--0000414 REX--0000413)
+
+(subclass REX--0000121 REX--0000135)
+
+(mo-xrefAnalogous REX--0000409 "EC:3.6.3.9")
+
+(subclass REX--0000329 REX--0000188)
+
+(mo-xrefAnalogous REX--0000134 "GO:0015293")
+
+(subclass REX--0000435 REX--0000427)
+
+(termFormat EnglishLanguage REX--0000302 "radiationless deactivation")
+
+(termFormat EnglishLanguage REX--0000010 "capture")
+
+(subclass REX--0000312 REX--0000292)
+
+(mo-definition REX--0000518 "&quot;Hg2+ + NADPH --> Hg + NADP+ + H+&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000125 "diphosphate-bond-hydrolysis-driven transport")
+
+(mo-synonym REX--0000546 "&quot;quantum tunneling&quot; []")
+
+(subclass REX--0000112 REX--0000117)
+
+(mo-definition REX--0000313 "&quot;A process in which, under the influence of a suitable driving force (e.g. provided by photoexcitation), electronic charge moves in a direction that increases the difference in local charges between donor and acceptor sites.&quot; [http://goldbook.iupac.org/C00999.html]")
+
+(owl-someValuesFrom REX--0000449 REX--0000450)
+
+(termFormat EnglishLanguage REX--0000307 "radiative transition")
+
+(subclass REX--0000025 REX--0000003)
+
+(termFormat EnglishLanguage REX--0000372 "endothermic process")
+
+(mo-definition REX--0000352 "&quot;The scattering of electromagnetic radiation by spherical particles of any size r, relative to the wavelength, lambda.&quot; [http://goldbook.iupac.org/M03919.html]")
+
+(mo-xrefAnalogous REX--0000464 "EC:4.99.1.2")
+
+(termFormat EnglishLanguage REX--0000417 "nucleophilic solvolytic
+substitution")
+
+(termFormat EnglishLanguage REX--0000437 "unimolecular electrophilic
+substitution")
+
+(mo-synonym REX--0000423 "&quot;free-radical substitution&quot; []")
+
+(termFormat EnglishLanguage REX--0000319 "geminate recombination")
+
+(subclass REX--0000178 REX--0000171)
+
+(termFormat EnglishLanguage REX--0000438 "bimolecular electrophilic
+substitution")
+
+(mo-definition REX--0000118 "&quot;X=Y + Z --> X-Y-Z&quot; [EBI:kid]")
+
+(subclass REX--0000285 REX--0000284)
+
+(subclass REX--0000213 REX--0000002)
+
+(mo-definition REX--0000283 "&quot;Radiocatalysis under the action of large radiation fluxes that simultaneously heat the system as a consequence of the absorption of radiation energy.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000099 REX--0000087)
+
+(subclass REX--0000021 REX--0000018)
+
+(termFormat EnglishLanguage REX--0000383 "photosensitization")
+
+(subclass REX--0000330 REX--0000027)
+
+(mo-definition REX--0000148 "&quot;A transformation by which one molecular entity (the substrate) is converted into another by the formation of one (and only one) two-centre bond between the substrate and another molecular entity and which involves no other changes in connectivity in the substrate.&quot; [http://goldbook.iupac.org/A00512.html]")
+
+(subclass REX--0000174 REX--0000166)
+
+(subclass REX--0000538 REX--0000508)
+
+(termFormat EnglishLanguage REX--0000504 "NAD(P)H:hemoprotein
+dehydrogenase reaction")
+
+(subclass REX--0000376 REX--0000374)
+
+(mo-definition REX--0000388 "&quot;A reaction which involves the enthalpy change.&quot; [EBI:kid]")
+
+(mo-definition REX--0000261 "&quot;A chain polymerization from which chain transfer and chain termination are absent.&quot; [http://goldbook.iupac.org/L03597.html]")
+
+(subclass REX--0000338 REX--0000337)
+
+(termFormat EnglishLanguage REX--0000532 "NADPH:metal oxidoreductase
+reaction")
+
+(termFormat EnglishLanguage REX--0000271 "graft copolymerization")
+
+(termFormat EnglishLanguage REX--0000280 "radiocatalysis")
+
+(subclass REX--0000124 REX--0000120)
+
+(subclass REX--0000318 REX--0000316)
+
+(mo-definition REX--0000172 "&quot;A transition between disordered and ordered arrays of atomic magnetic moments.&quot; [http://goldbook.iupac.org/M03690.html]")
+
+(subclass REX--0000238 REX--0000103)
+
+(subclass REX--0000475 REX--0000476)
+
+(termFormat EnglishLanguage REX--0000482 "aliphatic alcohol:NAD+
+dehydrogenase")
+
+(subclass REX--0000208 REX--0000002)
+
+(termFormat EnglishLanguage REX--0000228 "non-competitive inhibition")
+
+(mo-definition REX--0000444 "&quot;The reverse of oxidation.&quot; [http://goldbook.iupac.org/R05222.html]")
+
+(termFormat EnglishLanguage REX--0000356 "elastic electron
+scattering")
+
+(mo-definition REX--0000348 "&quot;A process in which a change in direction or energy of an incident radiation is caused by interaction with a particle, a system of particles, or a photon.&quot; [http://goldbook.iupac.org/S05487.html]")
+
+(mo-xrefAnalogous REX--0000121 "TC:1")
+
+(subclass REX--0000066 REX--0000058)
+
+(termFormat EnglishLanguage REX--0000488 "propan-2-ol
+dehydrogenation")
+
+(termFormat EnglishLanguage REX--0000069 "parallel reactions")
+
+(owl-someValuesFrom REX--0000407 REX--0000408)
+
+(mo-definition REX--0000223 "&quot;An added substance that increases the rate of a catalysed reaction is known as an activator, and the effect is called activation.&quot; [http://goldbook.iupac.org/A00093.html]")
+
+(termFormat EnglishLanguage REX--0000185 "continuous precipitation")
+
+(mo-synonym REX--0000302 "&quot;non-radiative decay&quot; []")
+
+(termFormat EnglishLanguage REX--0000453 "osmosis")
+
+(subclass REX--0000438 REX--0000169)
+
+(mo-definition REX--0000406 "&quot;ATP + H2O --> AMP + diphosphate&quot; [EC:3.6.1.8]")
+
+(termFormat EnglishLanguage REX--0000263 "cationic polymerization")
+
+(subclass REX--0000071 REX--0000103)
+
+(owl-someValuesFrom REX--0000407 REX--0000344)
+
+(termFormat EnglishLanguage REX--0000224 "inhibition of catalysis")
+
+(mo-definition REX--0000296 "&quot;Luminescence resulting from the rubbing together of the surface of certain solids.&quot; [http://goldbook.iupac.org/T06499.html]")
+
+(mo-definition REX--0000222 "&quot;When some of the energy required for a reaction is provided by a preceding exothermic chemical reaction there is said to be chemical activation.&quot; [http://goldbook.iupac.org/C01017.html]")
+
+(mo-synonym REX--0000454 "&quot;electro-endosmosis&quot; []")
+
+(subclass REX--0000452 REX--0000119)
+
+(subclass REX--0000382 REX--0000033)
+
+(subclass REX--0000064 REX--0000059)
+
+(documentation Smo-inSubset EnglishLanguage "Declares a term/typedef
+to be in a subset.")
+
+(termFormat EnglishLanguage REX--0000091 "alpha-addition")
+
+(subclass REX--0000301 REX--0000166)
+
+(mo-definition REX--0000187 "&quot;In a system formed by a solvent, an association colloid and at least one other component (the solubilizate), the incorporation of this other component into or on the micelles.&quot; [http://goldbook.iupac.org/M03887.html]")
+
+(subclass REX--0000063 REX--0000059)
+
+(mo-definition REX--0000183 "&quot;A process in a phase transition in which nuclei of a new phase are first formed, followed by the propagation of the new phase at a faster rate.&quot; [http://goldbook.iupac.org/N04244.html]")
+
+(owl-someValuesFrom REX--0000106 REX--0000107)
+
+(termFormat EnglishLanguage REX--0000277 "telomerization")
+
+(mo-definition REX--0000270 "&quot;Polymerization in which a copolymer is formed.&quot; [http://goldbook.iupac.org/C01336.html]")
+
+(mo-xrefAnalogous REX--0000109 "EC:3")
+
+(termFormat EnglishLanguage REX--0000477 "methanol:NAD+ dehydrogenase
+reaction")
+
+(subclass REX--0000324 REX--0000323)
+
+(subclass REX--0000513 REX--0000509)
+
+(mo-definition REX--0000047 "&quot;Oxidation reactions induced by light.&quot; [http://goldbook.iupac.org/P04640.html]")
+
+(subclass REX--0000370 REX--0000002)
+
+(subclass REX--0000006 REX--0000007)
+
+(subclass REX--0000042 REX--0000039)
+
+(mo-definition REX--0000185 "&quot;A diffusional reaction in a multi-component system in which atoms are transported to the growing nuclei by diffusion over relatively large distances in the parent phase and during which the mean composition of the parent phase changes continuously towards its equilibrium value.&quot; [http://goldbook.iupac.org/C01306.html]")
+
+(mo-synonym REX--0000160 "&quot;sigma-->sigma* transition&quot; []")
+
+(mo-definition REX--0000485 "&quot;R-CH(OH)-R' --> R-C(O)-R' + 2 e- + 2 H+&quot; [EBI:kid]")
+
+(subclass REX--0000542 REX--0000534)
+
+(termFormat EnglishLanguage REX--0000531 "cytochrome-c oxidase
+reaction")
+
+(mo-savedBy "kirill")
+
+(mo-definition REX--0000420 "&quot;A heterolytic reaction in which the reagent supplying the entering group acts as an electrophile.&quot; [http://goldbook.iupac.org/E02020.html]")
+
+(mo-definition REX--0000279 "&quot;Desorption of an adsorbate as a result of exposure to light.&quot; [http://goldbook.iupac.org/P04577.html, http://goldbook.iupac.org/P04596.html]")
+
+(subclass REX--0000536 REX--0000473)
+
+(subclass REX--0000465 REX--0000447)
+
+(termFormat EnglishLanguage REX--0000283 "radiothermal catalysis")
+
+(termFormat EnglishLanguage REX--0000081 "specific catalysis")
+
+(subclass REX--0000367 REX--0000358)
+
+(termFormat EnglishLanguage REX--0000339 "chelatase reaction")
+
+(subclass REX--0000202 REX--0000199)
+
+(mo-synonym REX--0000536 "&quot;hydrogen:NAD+ oxidoreductase&quot; []")
+
+(documentation EnglishLanguage "Represents the transitive property.
+(Typedefs only)")
+
+(termFormat EnglishLanguage REX--0000425 "bimolecular nucleophilic
+substitution")
+
+(subclass REX--0000501 REX--0000500)
+
+(termFormat EnglishLanguage REX--0000094 "rearrangement")
+
+(mo-definition REX--0000412 "&quot;ATP + H2O + K+(out) --> ADP + phosphate + K+(in)&quot; [EC:3.6.3.12]")
+
+(subclass REX--0000277 REX--0000256)
+
+(subclass REX--0000082 REX--0000078)
+
+(subclass REX--0000278 REX--0000033)
+
+(subclass REX--0000538 REX--0000534)
+
+(termFormat EnglishLanguage REX--0000324 "singlet-singlet
+annihilation")
+
+(mo-synonym REX--0000514 "&quot;ferroxidase&quot; []")
+
+(subclass REX--0000513 REX--0000511)
+
+(mo-definition REX--0000160 "&quot;An electronic transition described approximately as promotion of an electron from a 'bonding' sigma orbital to an 'antibonding' sigma orbital designated as sigma*. Such transitions generally involve high transition energies, and appear close to or mixed with Rydberg transitions.&quot; [http://goldbook.iupac.org/S05435.html]")
+
+(mo-synonym REX--0000219 "&quot;suicide inhibition&quot; []")
+
+(termFormat EnglishLanguage REX--0000124 "secondary active transport")
+
+(subclass REX--0000266 REX--0000251)
+
+(termFormat EnglishLanguage REX--0000550 "primary photoreaction")
+
+(subclass REX--0000092 REX--0000087)
+
+(termFormat EnglishLanguage REX--0000252 "condensation
+polymerization")
+
+(subclass REX--0000536 REX--0000535)
+
+(owl-someValuesFrom REX--0000147 REX--0000428)
+
+(subclass REX--0000176 REX--0000171)
+
+(termFormat EnglishLanguage REX--0000088 "substitution")
+
+(subclass REX--0000111 REX--0000104)
+
+(termFormat EnglishLanguage REX--0000040 "radiative energy transfer")
+
+(mo-synonym REX--0000477 "&quot;methanol:NAD+ oxidoreductase&quot; []")
+
+(mo-definition REX--0000321 "&quot;If the mutually reactive entities have been separated, and come together by diffusion, this is termed secondary geminate recombination.&quot; [http://goldbook.iupac.org/G02603.html]")
+
+(mo-definition REX--0000163 "&quot;An electronic transition of a bi- or polynuclear metal complex that corresponds to excitation populating an electronic state in which considerable electron transfer between two metal centres has occurred.&quot; [http://goldbook.iupac.org/M03869.html]")
+
+(subclass REX--0000456 REX--0000455)
+
+(mo-definition REX--0000013 "&quot;Nuclear fission which occurs without the addition of particles or energy to the nucleus.&quot; [http://goldbook.iupac.org/S05887.html]")
+
+(subclass REX--0000271 REX--0000270)
+
+(mo-definition REX--0000295 "&quot;Luminescence produced by electrode reactions.&quot; [http://goldbook.iupac.org/E01966.html]")
+
+(termFormat EnglishLanguage REX--0000304 "intersystem crossing")
+
+(termFormat EnglishLanguage REX--0000549 "concerted proton
+tunnelling-electron tunnelling")
+
+(subclass REX--0000152 REX--0000087)
+
+(mo-xrefAnalogous REX--0000127 "GO:0015452")
+
+(mo-definition REX--0000201 "&quot;Adsorption with dissociation into two or more fragments, both or all of which are bound to the surface of the adsorbent.&quot; [http://goldbook.iupac.org/D01803.html]")
+
+(mo-definition REX--0000487 "&quot;R-CH(OH)-R' --> R-C(O)-R' + 2 e- + 2 H+&quot; [EBI:kid]")
+
+(subclass REX--0000394 REX--0000401)
+
+(termFormat EnglishLanguage REX--0000456 "biological membrane
+process")
+
+(termFormat EnglishLanguage REX--0000102 "cheletropic elimination")
+
+(mo-definition REX--0000012 "&quot;Nuclear decay in which particles or electromagnetic radiation are emitted or the nucleus undergoes spontaneous fission or electron capture.&quot; [http://goldbook.iupac.org/R05083.html]")
+
+(termFormat EnglishLanguage REX--0000178 "evaporation")
+
+(mo-definition REX--0000541 "&quot;magnesium-protoporphyrin IX 13-monomethyl ester + 3 NADPH + 3 H+ + 3 O2 --> divinylprotochlorophyllide + 3 NADP+ + 5 H2O&quot; [GO:0048529]")
+
+(subclass REX--0000511 REX--0000107)
+
+(owl-someValuesFrom REX--0000411 REX--0000412)
+
+(subclass REX--0000245 REX--0000225)
+
+(mo-definition REX--0000338 "&quot;The motion of colloidal particles in an electric field.&quot; [http://goldbook.iupac.org/E02022.html]")
+
+(mo-synonym REX--0000207 "&quot;physical adsorption&quot; []")
+
+(subclass REX--0000283 REX--0000386)
+
+(termFormat EnglishLanguage REX--0000200 "desorption (by
+displacement)")
+
+(termFormat EnglishLanguage REX--0000498 "carbonyl:oxygen
+dehydrogenase reaction")
+
+(termFormat EnglishLanguage REX--0000423 "homolytic substitution
+reaction")
+
+(subclass REX--0000027 REX--0000026)
+
+(mo-definition REX--0000484 "&quot;3-hydroxybenzyl alcohol --> 3-hydroxybenzaldehyde + 2 e- + 2 H+&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000006 "electron capture")
+
+(termFormat EnglishLanguage REX--0000299 "thermoluminescence")
+
+(mo-definition REX--0000005 "&quot;Nuclear decay involving a splitting into more nuclei or the emission of particles.&quot; [ISBN:0865426848, http://goldbook.iupac.org/N04228.html]")
+
+(subclass REX--0000377 REX--0000099)
+
+(mo-definition REX--0000015 "&quot;The division of a nucleus into two or more parts with masses of equal order of magnitude, usually accompanied by the emission of neutrons, gamma radiation and, rarely, small charged nuclear fragments.&quot; [http://goldbook.iupac.org/N04229.html]")
+
+(mo-definition REX--0000055 "&quot;A reaction for which no reaction intermediates have been detected or need to be postulated in order to describe the chemical reaction on a molecular scale.&quot; [http://goldbook.iupac.org/E02035.html]")
+
+(instance is_reverse_of BinaryRelation)
+
+(subclass REX--0000132 REX--0000139)
+
+(termFormat EnglishLanguage REX--0000451 "photoelectronation")
+
+(mo-definition REX--0000156 "&quot;An electronic transition which does not involve a change in the spin part of the wavefunction.&quot; [http://goldbook.iupac.org/S05861.html]")
+
+(subclass REX--0000047 REX--0000033)
+
+(mo-xrefAnalogous REX--0000395 "EC:1.14.99.21")
+
+(mo-synonym REX--0000429 "&quot;free-radiacl addition&quot; []")
+
+(subclass REX--0000141 REX--0000167)
+
+(mo-definition REX--0000040 "&quot;Transfer of excitation energy by radiative deactivation of a donor molecular entity and reabsorption of the emitted light by an acceptor molecular entity.&quot; [http://goldbook.iupac.org/R05063.html]")
+
+(mo-definition REX--0000200 "&quot;The process in which expulsion of a previously adsorbed component from the interfacial layer is effected by subsequent stronger adsorption of another component.&quot; [http://goldbook.iupac.org/D01621.html]")
+
+(termFormat EnglishLanguage REX--0000454 "electro-osmosis")
+
+(mo-definition REX--0000549 "&quot;A concerted process where the proton and the electron tunnel at the same time but independently of each other.&quot; [PUBMED:12589565]")
+
+(mo-definition REX--0000331 "&quot;If a system is disturbed from its state of equilibrium it relaxes to that state, and the process is referred to as relaxation.&quot; [http://goldbook.iupac.org/R05285.html]")
+
+(subclass REX--0000327 REX--0000027)
+
+(mo-xrefAnalogous REX--0000127 "TC:3.C")
+
+(termFormat EnglishLanguage REX--0000002 "chemical reaction")
+
+(termFormat EnglishLanguage REX--0000495 "carbonyl:acceptor
+dehydrogenase reaction")
+
+(termFormat EnglishLanguage REX--0000057 "composite reaction")
+
+(termFormat EnglishLanguage REX--0000142 "coordination")
+
+(owl-someValuesFrom REX--0000485 REX--0000465)
+
+(mo-xrefAnalogous REX--0000342 "EC:6.6.1.1")
+
+(documentation EnglishLanguage "General comments on the ontology.")
+
+(owl-someValuesFrom REX--0000265 REX--0000264)
+
+(subclass REX--0000088 REX--0000087)
+
+(subclass REX--0000076 REX--0000075)
+
+(mo-definition REX--0000369 "&quot;A reaction for which the overall standard enthalpy change is negative.&quot; [http://goldbook.iupac.org/E02269.html]")
+
+(subclass REX--0000005 REX--0000004)
+
+(subclass REX--0000051 REX--0000056)
+
+(termFormat EnglishLanguage REX--0000076 "ribozymatic reaction")
+
+(mo-synonym REX--0000159 "&quot;pi-->sigma* transition&quot; []")
+
+(mo-definition REX--0000250 "&quot;Weak and reversible adsorption of a poison, such that removal of the poison from the fluid phase results in restoration of the original catalytic activity.&quot; [http://goldbook.iupac.org/T06270.html]")
+
+(termFormat EnglishLanguage REX--0000406 "ATP diphosphatase reaction")
+
+(termFormat EnglishLanguage REX--0000273 "ionic copolymerization")
+
+(subclass REX--0000463 REX--0000461)
+
+(termFormat EnglishLanguage REX--0000084 "noncatalytic reaction")
+
+(termFormat EnglishLanguage REX--0000303 "emission")
+
+(subclass REX--0000192 REX--0000190)
+
+(mo-definition REX--0000306 "&quot;A transition between two states of a system without photon emission or absorption.&quot; [http://goldbook.iupac.org/R05057.html]")
+
+(mo-definition REX--0000290 "&quot;Spontaneous emission of radiation from an electronically or vibrationally excited species not in thermal equilibrium with its environment.&quot; [http://goldbook.iupac.org/L03641.html]")
+
+(mo-xrefAnalogous REX--0000469 "EC:1.1.1")
+
+(mo-definition REX--0000069 "&quot;Composite reactions, in which processes like A --> Y and B --> Z occur in parallel.&quot; [http://goldbook.iupac.org/S05680.html]")
+
+(termFormat EnglishLanguage REX--0000008 "nuclear fusion reaction")
+
+(subclass REX--0000540 REX--0000510)
+
+(documentation EnglishLanguage "Date/time of last edit and save.")
+
+(owl-someValuesFrom REX--0000087 REX--0000002)
+
+(subclass REX--0000440 REX--0000433)
+
+(subclass REX--0000507 REX--0000510)
+
+(mo-synonym REX--0000523 "&quot;cob(II)alamin reductase&quot; []")
+
+(subclass REX--0000394 REX--0000389)
+
+(termFormat EnglishLanguage REX--0000242 "enzyme activation by
+phosphate group transfer")
+
+(termFormat EnglishLanguage REX--0000392 "Photinus-luciferin
+4-monooxygenase (ATP-hydrolysing) reaction")
+
+(subclass REX--0000457 REX--0000456)
+
+(subclass REX--0000549 REX--0000546)
+
+(termFormat EnglishLanguage REX--0000300 "piezoluminescence")
+
+(mo-definition REX--0000327 "&quot;Absorption which results in the transition from the singlet ground state of the molecule into singlet excited states and leads to the UV/visible absorption spectrum.&quot; [http://goldbook.iupac.org/S05696.html]")
+
+(owl-someValuesFrom REX--0000088 REX--0000419)
+
+(termFormat EnglishLanguage REX--0000022 "electron emission")
+
+(subclass REX--0000488 REX--0000487)
+
+(subclass REX--0000128 REX--0000107)
+
+(mo-xrefAnalogous REX--0000108 "GO:0016740")
+
+(termFormat EnglishLanguage REX--0000496 "carbonyl:NAD(P)+
+dehydrogenase reaction")
+
+(mo-synonym REX--0000231 "&quot;specific activation&quot; []")
+
+(subclass REX--0000035 REX--0000152)
+
+(subclass REX--0000225 REX--0000244)
+
+(termFormat EnglishLanguage REX--0000443 "electrocyclic ring opening")
+
+(subclass REX--0000390 REX--0000389)
+
+(termFormat EnglishLanguage REX--0000333 "biphotonic excitation")
+
+(mo-definition REX--0000178 "&quot;The physical process by which a liquid substance is converted to a gas or vapour.&quot; [http://goldbook.iupac.org/E02227.html]")
+
+(subclass REX--0000401 REX--0000399)
+
+(termFormat EnglishLanguage REX--0000197 "diabatic electron transfer")
+
+(subclass REX--0000119 REX--0000458)
+
+(termFormat EnglishLanguage REX--0000126 "decarboxylation-driven
+transport")
+
+(termFormat EnglishLanguage REX--0000131 "two-electron transmembrane
+electron transfer")
+
+(mo-synonym REX--0000451 "&quot;photochemical electronation&quot; []")
+
+(subclass REX--0000030 REX--0000028)
+
+(subclass REX--0000097 REX--0000094)
+
+(termFormat EnglishLanguage REX--0000052 "autocatalytic reaction")
+
+(mo-synonym REX--0000389 "&quot;luciferase&quot; []")
+
+(subclass REX--0000229 REX--0000226)
+
+(mo-definition REX--0000136 "&quot;Any process in which a substance to be transported across a biological membrane undergoes covalent modification prior crossing the membrane.&quot; [ISBN:0198506732]")
+
+(mo-definition REX--0000466 "&quot;ethanol + NAD+ --> acetaldehyde + NADH + H+&quot; [EBI:kid]")
+
+(mo-definition REX--0000218 "&quot;The decrease in rate of reaction brought about by the addition of a substance (inhibitor), by virtue of its effect on the concentration of a reactant, catalyst or reaction intermediate.&quot; [http://goldbook.iupac.org/I03034.html]")
+
+(subclass REX--0000096 REX--0000094)
+
+(mo-synonym REX--0000253 "&quot;condensation&quot; []")
+
+(subclass REX--0000254 REX--0000251)
+
+(subclass REX--0000550 REX--0000055)
+
+(owl-someValuesFrom REX--0000543 REX--0000541)
+
+(subclass REX--0000529 REX--0000527)
+
+(mo-synonym REX--0000518 "&quot;mercury(II) reductase&quot; []")
+
+(mo-xrefAnalogous REX--0000464 "GO:0018836")
+
+(subclass REX--0000280 REX--0000284)
+
+(mo-definition REX--0000198 "&quot;An increase in the concentration of a dissolved substance at the interface of a condensed and a liquid phase due to the operation of surface forces. Adsorption can also occur at the interface of a condensed and a gaseous phase.&quot; [http://goldbook.iupac.org/A00155.html]")
+
+(subclass REX--0000115 REX--0000117)
+
+(mo-xrefAnalogous REX--0000126 "GO:0015451")
+
+(termFormat EnglishLanguage REX--0000419 "substitution reaction")
+
+(subclass REX--0000081 REX--0000078)
+
+(owl-someValuesFrom REX--0000154 REX--0000153)
+
+(mo-definition REX--0000522 "&quot;2 aquacob(III)alamin + NADH + H+ --> 2 cob(II)alamin + NAD+&quot; [EBI:kid]")
+
+(instance part BinaryRelation)
+
+(subclass REX--0000481 REX--0000489)
+
+(mo-xrefAnalogous REX--0000399 "GO:0004497")
+
+(mo-synonym REX--0000232 "&quot;non-essential activation&quot; []")
+
+(mo-definition REX--0000033 "&quot;A chemical reaction caused by absorption of ultraviolet, visible, or infrared radiation.&quot; [http://goldbook.iupac.org/P04585.html]")
+
+(termFormat EnglishLanguage REX--0000234 "irreversible enzyme
+inhibition")
+
+(owl-someValuesFrom REX--0000049 Oxidation)
+
+(termFormat EnglishLanguage REX--0000048 "electronation")
+
+(termFormat EnglishLanguage REX--0000272 "ring-opening
+copolymerization")
+
+(mo-definition REX--0000209 "&quot;Oxidative or reductive chemisorption where 'reductive' and 'oxidative' refer to electron gain or loss on species in the solid.&quot; [http://goldbook.iupac.org/C01002.html]")
+
+(subclass REX--0000478 REX--0000486)
+
+(subclass REX--0000423 REX--0000419)
+
+(mo-definition REX--0000009 "&quot;Capture of a particle by a nucleus followed by immediate emission of gamma radiation.&quot; [http://goldbook.iupac.org/R05061.html]")
+
+(termFormat EnglishLanguage REX--0000375 "atom migration")
+
+(domain Smo-definedSubset 2 Smo-Subset)
+
+(owl-someValuesFrom REX--0000094 REX--0000111)
+
+(subclass REX--0000058 REX--0000055)
+
+(termFormat EnglishLanguage REX--0000186 "agglomeration")
+
+(mo-synonym REX--0000295 "&quot;electrochemiluminescence&quot; []")
+
+(subclass REX--0000211 REX--0000033)
+
+(subclass REX--0000493 REX--0000465)
+
+(subclass REX--0000320 REX--0000319)
+
+(mo-definition REX--0000368 "&quot;A reaction for which the overall standard enthalpy change is positive.&quot; [http://goldbook.iupac.org/E02095.html]")
+
+(subclass REX--0000138 REX--0000456)
+
+(subclass REX--0000188 REX--0000167)
+
+(mo-synonym REX--0000023 "&quot;positive beta decay&quot; []")
+
+(subclass REX--0000252 REX--0000251)
+
+(mo-xrefAnalogous REX--0000128 "GO:0015453")
+
+(termFormat EnglishLanguage REX--0000154 "electron detachment")
+
+(termFormat EnglishLanguage REX--0000370 "exergonic reaction")
+
+(subclass REX--0000262 REX--0000259)
+
+(subclass REX--0000057 REX--0000002)
+
+(subclass REX--0000272 REX--0000270)
+
+(mo-xrefAnalogous REX--0000502 "EC:1.6")
+
+(subclass REX--0000548 REX--0000546)
+
+(documentation EnglishLanguage "Version of OBO format.")
+
+(mo-definition REX--0000208 "&quot;Adsorption which results from chemical bond formation (strong interaction) between the adsorbent and the adsorbate in a monolayer on the surface.&quot; [http://goldbook.iupac.org/C01048.html]")
+
+(subclass REX--0000359 REX--0000364)
+
+(owl-someValuesFrom REX--0000147 REX--0000424)
+
+(owl-someValuesFrom REX--0000490 REX--0000339)
+
+(mo-synonym REX--0000066 "&quot;rate-determining step&quot; []")
+
+(mo-synonym REX--0000091 "&quot;1/1/addition&quot; []")
+
+(mo-xrefAnalogous REX--0000412 "GO:0008556")
+
+(termFormat EnglishLanguage REX--0000326 "particle-antiparticle pair
+production")
+
+(termFormat EnglishLanguage REX--0000116 "nucleoside-triphosphate
+diphosphatase reaction")
+
+(mo-xrefAnalogous REX--0000129 "GO:0015454")
+
+(termFormat EnglishLanguage REX--0000216 "micellar catalysis")
+
+(subclass REX--0000225 REX--0000247)
+
+(subclass REX--0000043 REX--0000038)
+
+(subclass REX--0000240 REX--0000239)
+
+(subclass REX--0000484 REX--0000486)
+
+(subclass REX--0000197 REX--0000028)
+
+(mo-definition REX--0000353 "&quot;The elastic scattering of a photon by an electron which afterwards occurs as a free electron. Part of the energy and momentum of the incident photon is transferred to the electron and the remaining part is carried away by the scattered photon.&quot; [http://goldbook.iupac.org/C01218.html]")
+
+(mo-definition REX--0000057 "&quot;A chemical reaction for which the expression for the rate of disappearance of a reactant (or rate of appearance of a product) involves rate constants of more than a single elementary reaction.&quot; [http://goldbook.iupac.org/C01211.html]")
+
+(termFormat EnglishLanguage REX--0000325 "triplet-triplet
+annihilation")
+
+(subclass REX--0000183 REX--0000171)
+
+(domain Smo-inSubset 2 Smo-Subset)
+
+(subclass REX--0000393 REX--0000389)
+
+(termFormat EnglishLanguage REX--0000460 "pseudo-catalytic reaction")
+
+(subclass REX--0000165 REX--0000155)
+
+(subclass REX--0000398 REX--0000397)
+
+(mo-definition REX--0000520 "&quot;cyanocob(III)alamin + NADPH + H+ --> cob(I)alamin + cyanide + NADP+&quot; [EBI:kid]")
+
+(owl-someValuesFrom REX--0000316 REX--0000147)
+
+(mo-synonym REX--0000516 "&quot;cob(II)yrinic acid-a,c-diamide:FMN oxidoreductase&quot; []")
+
+(termFormat EnglishLanguage REX--0000082 "homogeneous catalysis")
+
+(owl-someValuesFrom REX--0000058 REX--0000068)
+
+(subclass REX--0000293 REX--0000043)
+
+(subclass REX--0000447 REX--0000107)
+
+(termFormat EnglishLanguage REX--0000467 "ethanol dehydrogenation")
+
+(owl-someValuesFrom REX--0000027 REX--0000032)
+
+(subclass REX--0000438 REX--0000420)
+
+(termFormat EnglishLanguage REX--0000355 "electron scattering")
+
+(termFormat EnglishLanguage REX--0000447 "dehydrogenase reaction")
+
+(mo-synonym REX--0000530 "&quot;nitrate reductase (cytochrome)&quot; []")
+
+(subclass REX--0000132 REX--0000130)
+
+(owl-someValuesFrom REX--0000145 REX--0000144)
+
+(mo-xrefAnalogous REX--0000114 "EC:3.6.1")
+
+(subclass REX--0000372 REX--0000167)
+
+(mo-synonym REX--0000076 "&quot;ribozyme-catalysed reaction&quot; []")
+
+(subclass REX--0000428 REX--0000427)
+
+(termFormat EnglishLanguage REX--0000377 "migratory insertion")
+
+(termFormat EnglishLanguage REX--0000535 "hydrogen:NAD(P)+
+oxidoreductase reaction")
+
+(mo-synonym REX--0000353 "&quot;Compton effect&quot; []")
+
+(mo-definition REX--0000168 "&quot;A reaction with a molecularity of one.&quot; [http://goldbook.iupac.org/M03989.html]")
+
+(termFormat EnglishLanguage REX--0000516 "cob(II)yrinic acid
+a,c-diamide reductase reaction")
+
+(termFormat EnglishLanguage REX--0000182 "precipitation")
+
+(mo-synonym REX--0000241 "&quot;proteolytic activation&quot; []")
+
+(owl-someValuesFrom REX--0000544 REX--0000541)
+
+(termFormat EnglishLanguage REX--0000478 "methanol dehydrogenation")
+
+(mo-definition REX--0000309 "&quot;The process in which the first excited singlet state is populated by interaction of two molecules in the triplet state (triplet-triplet annihilation) thus producing one molecule in the excited singlet state. In this biphotonic process the lifetime of delayed fluorescence is half the value of the concomitant phosphorescence.&quot; [http://goldbook.iupac.org/D01579.html]")
+
+(termFormat EnglishLanguage REX--0000353 "Compton scattering")
+
+(subclass REX--0000342 REX--0000344)
+
+(mo-definition REX--0000064 "&quot;An elementary step in a chain reaction in which one chain carrier is converted into another. The conversion can be a unimolecular reaction or a bimolecular reaction with a reactant molecule.&quot; [http://goldbook.iupac.org/C00959.html]")
+
+(subclass REX--0000385 REX--0000036)
+
+(owl-someValuesFrom REX--0000028 REX--0000213)
+
+(termFormat EnglishLanguage REX--0000207 "physisorption")
+
+(termFormat EnglishLanguage REX--0000193 "heterogeneous nucleation")
+
+(termFormat EnglishLanguage REX--0000060 "chain initiation")
+
+(termFormat EnglishLanguage Smo-inSubset "inSubset")
+
+(subclass REX--0000142 REX--0000087)
+
+(mo-definition REX--0000311 "&quot;Triplet-triplet or singlet-singlet annihilation to form one molecular entity in its excited singlet state and another molecular entity in its electronic ground state.&quot; [http://goldbook.iupac.org/D01580.html]")
+
+(termFormat EnglishLanguage REX--0000136 "group translocation")
+
+(subclass REX--0000437 REX--0000168)
+
+(mo-synonym REX--0000163 "&quot;MMCT transition&quot; []")
+
+(mo-xrefAnalogous REX--0000131 "TC:5.A")
+
+(mo-synonym REX--0000066 "&quot;rate-limiting&quot; []")
+
+(subclass REX--0000457 REX--0000105)
+
+(mo-definition REX--0000219 "&quot;Irreversible inhibition of an enzyme due to its catalysis of the reaction of an artificial substrate.&quot; [http://goldbook.iupac.org/M03805.html]")
+
+(mo-xrefAnalogous REX--0000362 "DOI:10.1107/S0567739480001155")
+
+(subclass REX--0000470 REX--0000469)
+
+(subclass REX--0000424 REX--0000419)
+
+(subclass REX--0000106 REX--0000103)
+
+(subclass REX--0000264 REX--0000033)
+
+(termFormat EnglishLanguage REX--0000401 "single donor monooxygenase
+reaction")
+
+(mo-definition REX--0000448 "&quot;Oxidation of an organic compound by the removal of one or more hydrogen atoms.&quot; [ISBN:0198506732]")
+
+(subclass REX--0000070 REX--0000057)
+
+(mo-xrefAnalogous REX--0000408 "GO:0042626")
+
+(subclass REX--0000521 REX--0000533)
+
+(termFormat EnglishLanguage REX--0000349 "light scattering")
+
+(subclass REX--0000113 REX--0000109)
+
+(termFormat EnglishLanguage is_reverse_of "is reverse of")
+
+(subclass REX--0000535 REX--0000534)
+
+(mo-xrefAnalogous REX--0000074 "PUBMED:12041740")
+
+(mo-synonym REX--0000022 "&quot;negative beta decay&quot; []")
+
+(termFormat EnglishLanguage REX--0000113 "acid anhydride hydrolase
+reaction")
+
+(termFormat EnglishLanguage REX--0000115 "nucleoside-triphosphatase
+reaction")
+
+(mo-definition REX--0000196 "&quot;Electron transfer process in which the reacting system remains on a single electronic surface in passing from reactants to products.&quot; [http://goldbook.iupac.org/A00142.html]")
+
+(subclass REX--0000508 REX--0000491)
+
+(termFormat EnglishLanguage REX--0000176 "polymorphic transition")
+
+(subclass REX--0000462 REX--0000461)
+
+(mo-definition REX--0000267 "&quot;Polymerization processes requiring a photon for the propagation step.&quot; [http://goldbook.iupac.org/P04648.html]")
+
+(termFormat EnglishLanguage REX--0000507 "NAD(P)H:quinone
+dehydrogenase reaction")
+
+(subclass REX--0000353 REX--0000350)
+
+(mo-synonym REX--0000549 "&quot;PTET&quot; []")
+
+(termFormat EnglishLanguage REX--0000204 "reactive desorption")
+
+(subclass REX--0000145 REX--0000146)
+
+(subclass REX--0000310 REX--0000293)
+
+(termFormat EnglishLanguage REX--0000240 "irreversible enzyme
+activation")
+
+(mo-definition REX--0000165 "&quot;An electronic transition described approximately as promotion of an electron from a 'bonding' orbital to a Rydberg orbital.&quot; [http://goldbook.iupac.org/R05432.html]")
+
+(subclass REX--0000136 REX--0000457)
+
+(owl-someValuesFrom REX--0000449 REX--0000448)
+
+(termFormat EnglishLanguage REX--0000361 "X-ray scattering")
+
+(termFormat EnglishLanguage REX--0000152 "ionization")
+
+(termFormat EnglishLanguage REX--0000093 "alpha-elimination")
+
+(mo-synonym REX--0000412 "&quot;ATP phosphohydrolase (K+-importing)&quot; []")
+
+(subclass REX--0000300 REX--0000290)
+
+(termFormat EnglishLanguage REX--0000270 "copolymerization")
+
+(termFormat EnglishLanguage REX--0000141 "solvation")
+
+(mo-synonym REX--0000042 "&quot;electron exchange excitation transfer&quot; []")
+
+(mo-definition REX--0000259 "&quot;A chain polymerization in which the kinetic-chain carriers are ions or ion pairs.&quot; [http://goldbook.iupac.org/I03178.html]")
+
+(termFormat EnglishLanguage REX--0000189 "sol-gel transition")
+
+(termFormat EnglishLanguage REX--0000016 "thermal fission")
+
+(mo-definition REX--0000383 "&quot;The process by which a photochemical change or photophysical process occurs in one (molecular) entity as a result of initial absorption of radiation by another
+(molecular) entity called a photosensitizer. In mechanistic photochemistry, the term is limited to cases in which the photosensitizer is not consumed in the reaction.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(termFormat EnglishLanguage REX--0000147 "heterolysis")
+
+(termFormat EnglishLanguage REX--0000399 "monooxygenase reaction")
+
+(mo-definition REX--0000046 "&quot;A combined process of photon absorption by an atom followed by spontaneous photon emission.&quot; [http://goldbook.iupac.org/A00494.html]")
+
+(subclass REX--0000298 REX--0000294)
+
+(subclass REX--0000083 REX--0000078)
+
+(subclass REX--0000162 REX--0000158)
+
+(termFormat EnglishLanguage REX--0000080 "general base catalysis")
+
+(subclass REX--0000035 REX--0000033)
+
+(subclass REX--0000260 REX--0000256)
+
+(termFormat EnglishLanguage REX--0000352 "Mie scattering")
+
+(subclass REX--0000146 REX--0000149)
+
+(mo-definition REX--0000287 "&quot;A spontaneous transition between two isomeric states of a nucleus.&quot; [http://goldbook.iupac.org/I03293.html]")
+
+(termFormat EnglishLanguage REX--0000188 "absorption")
+
+(termFormat EnglishLanguage REX--0000415 "solvolytic elimination")
+
+(subclass REX--0000037 REX--0000036)
+
+(subclass REX--0000180 REX--0000171)
+
+(subclass REX--0000026 REX--0000166)
+
+(mo-definition REX--0000386 "&quot;Catalysis occurring by the action of thermal energy.&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000511 "metal oxidoreductase
+reaction")
+
+(mo-definition REX--0000551 "&quot;Dissociation occurring by tunnelling from a 'bound' to an 'unbound' vibronic state.&quot; [http://goldbook.iupac.org/P04808.html]")
+
+(termFormat EnglishLanguage REX--0000479 "aryl-alcohol:NADP+
+dehydrogenase reaction")
+
+(subclass REX--0000496 REX--0000472)
+
+(termFormat EnglishLanguage REX--0000539 "hydrogen:ferricytochrome-c3
+oxidoreductase reaction")
+
+(mo-definition REX--0000192 "&quot;The simultaneous condensation of more than one compound in solution.&quot; [http://goldbook.iupac.org/N04243.html]")
+
+(termFormat EnglishLanguage REX--0000042 "Dexter excitation transfer")
+
+(termFormat EnglishLanguage REX--0000335 "neutron-antineutron pair
+production")
+
+(mo-definition REX--0000427 "&quot;A chemical reaction of two or more reacting molecular entities, resulting in a single reaction product containing all atoms of all components, with formation of two chemical bonds and a net reduction in bond multiplicity in at least one of the reactants.&quot; [http://goldbook.iupac.org/A00133.html]")
+
+(subclass REX--0000379 REX--0000050)
+
+(subclass REX--0000007 REX--0000012)
+
+(termFormat EnglishLanguage REX--0000310 "recombination fluorescence")
+
+(subclass REX--0000363 REX--0000365)
+
+(termFormat EnglishLanguage Smo-definedSubset "definedSubset")
+
+(subclass REX--0000125 REX--0000123)
+
+(subclass REX--0000304 REX--0000302)
+
+(termFormat EnglishLanguage REX--0000098 "isomerization")
+
+(mo-definition REX--0000170 "&quot;A reaction with a molecularity of three.&quot; [http://goldbook.iupac.org/M03989.html]")
+
+(termFormat EnglishLanguage REX--0000087 "transformation")
+
+(termFormat EnglishLanguage REX--0000294 "chemiluminescence")
+
+(mo-synonym REX--0000013 "&quot;fission&quot; []")
+
+(mo-definition REX--0000475 "&quot;NADP+ + 2 e- + H+ --> NADPH&quot; [EBI:kid]")
+
+(mo-definition REX--0000256 "&quot;A chain reaction in which the growth of a polymer chain proceeds exclusively by reaction(s) between monomer(s) and reactive site(s) on the polymer chain with regeneration of the reactive site(s) at the end of each growth step.&quot; [http://goldbook.iupac.org/C00958.html]")
+
+(subclass REX--0000305 REX--0000302)
+
+(mo-definition REX--0000003 "&quot;The change of one nuclide into another with a different proton number or nucleon number.&quot; [ISBN:0865426848, http://goldbook.iupac.org/N04240.html]")
+
+(mo-xrefAnalogous REX--0000499 "EC:1.2.7")
+
+(subclass REX--0000006 REX--0000010)
+
+(termFormat EnglishLanguage REX--0000279 "photodesorption")
+
+(termFormat EnglishLanguage REX--0000289 "fast atom bombardment
+ionization")
+
+(subclass REX--0000409 REX--0000408)
+
+(subclass REX--0000356 REX--0000355)
+
+(subclass REX--0000272 REX--0000254)
+
+(termFormat EnglishLanguage REX--0000046 "atomic fluorescence")
+
+(subclass REX--0000551 REX--0000151)
+
+(mo-synonym REX--0000133 "&quot;countertransport&quot; []")
+
+(mo-xrefAnalogous REX--0000123 "TC:3")
+
+(subclass REX--0000257 REX--0000256)
+
+(mo-definition REX--0000263 "&quot;An ionic polymerization in which the kinetic-chain carriers are cations.&quot; [http://goldbook.iupac.org/C00910.html]")
+
+(subclass REX--0000249 REX--0000248)
+
+(subclass REX--0000054 REX--0000028)
+
+(subclass REX--0000256 REX--0000053)
+
+(termFormat EnglishLanguage REX--0000322 "singlet-triplet energy
+transfer")
+
+(termFormat EnglishLanguage REX--0000180 "sublimation")
+
+(termFormat EnglishLanguage REX--0000450 "photohydrogenation")
+
+(mo-definedNamespace "rex.obo")
+
+(termFormat EnglishLanguage REX--0000337 "mass transfer")
+
+(termFormat EnglishLanguage REX--0000173 "diffusion")
+
+(subclass REX--0000127 REX--0000123)
+
+(termFormat EnglishLanguage REX--0000212 "adiabatic photoreaction")
+
+(subclass REX--0000490 REX--0000142)
+
+(mo-definition REX--0000043 "&quot;Luminescence which occurs essentially only during the irradiation of a substance by electromagnetic radiation.&quot; [http://goldbook.iupac.org/F02453.html]")
+
+(subclass REX--0000065 REX--0000053)
+
+(owl-someValuesFrom REX--0000027 REX--0000329)
+
+(termFormat EnglishLanguage REX--0000418 "nucleophilic solvolysis")
+
+(mo-definition REX--0000337 "&quot;Movement of material from one location in solution to another as might arise either from differences in electrical or chemical potential at the two locations, or from movement of a volume element of solution.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000471 REX--0000474)
+
+(subclass REX--0000296 REX--0000290)
+
+(termFormat EnglishLanguage REX--0000469 "alcohol:NAD(P)+
+dehydrogenase reaction")
+
+(subclass REX--0000074 REX--0000075)
+
+(subclass REX--0000205 REX--0000208)
+
+(subclass REX--0000363 REX--0000361)
+
+(mo-synonym REX--0000022 "&quot;beta negative emission&quot; []")
+
+(mo-xrefAnalogous REX--0000107 "EC:1")
+
+(owl-someValuesFrom REX--0000446 REX--0000397)
+
+(mo-definition REX--0000002 "&quot;A process involving the interconversion of chemical species.&quot; [ISBN:0865426848, http://goldbook.iupac.org/C01033.html]")
+
+(mo-definition REX--0000318 "&quot;If the ions are paired as a loose ion pair and form the covalent chemical species via a tight ion pair, this is called external ion-pair return.&quot; [http://goldbook.iupac.org/E02286.html]")
+
+(mo-definition REX--0000145 "&quot;A unimolecular reaction involving homolysis of a bond (not forming part of a cyclic structure) in a molecular entity containing an even number of (paired) electrons results in the formation of two radicals (A:B --> A. + .B).&quot; [http://goldbook.iupac.org/H02851.html]")
+
+(owl-someValuesFrom REX--0000434 REX--0000427)
+
+(termFormat EnglishLanguage REX--0000331 "relaxation")
+
+(termFormat EnglishLanguage REX--0000442 "electrocyclic ring closing")
+
+(mo-definition REX--0000346 "&quot;The loss of vibrational excitation energy by a molecular entity through energy transfer to the environment caused by collisions. The molecular entity relaxes into vibrational equilibrium with its environment.&quot; [http://goldbook.iupac.org/V06615.html]")
+
+(subclass REX--0000455 REX--0000206)
+
+(subclass REX--0000295 REX--0000194)
+
+(termFormat EnglishLanguage REX--0000033 "photochemical reaction")
+
+(mo-definition REX--0000037 "&quot;Catalytic reaction involving production of a catalyst by absorption of light.&quot; [http://goldbook.iupac.org/P04579.html]")
+
+(termFormat EnglishLanguage REX--0000017 "alpha-decay")
+
+(subclass REX--0000477 REX--0000482)
+
+(mo-xrefAnalogous REX--0000112 "EC:6")
+
+(mo-definition REX--0000058 "&quot;An elementary reaction, constituting one of the stages of a stepwise reaction in which a reaction intermediate (or, for the first step, the reactants) is converted into the next reaction intermediate (or, for the last step, the products) in the sequence of intermediates between reactants and products.&quot; [http://goldbook.iupac.org/R05178.html]")
+
+(subclass REX--0000022 REX--0000007)
+
+(mo-definition REX--0000482 "&quot;an alcohol + NAD+ --> an aldehyde or ketone + NADH + H+&quot; [EC:1.1.1.1]")
+
+(mo-synonym REX--0000130 "&quot;transmembrane electron transport&quot; []")
+
+(subclass REX--0000253 REX--0000002)
+
+(subclass REX--0000230 REX--0000239)
+
+(mo-definition REX--0000436 "&quot;The reverse of oxidative addition.&quot; [http://goldbook.iupac.org/R05223.html]")
+
+(subclass REX--0000502 REX--0000447)
+
+(subclass REX--0000011 REX--0000014)
+
+(mo-definition REX--0000062 "&quot;Sometimes chain branching is brought about by an intermediate which has a long lifetime compared with an ordinary free radical. If this intermediate can break down in different ways, only one of which leads to branching, there may be a relatively slow increase in the number of radicals, and there is said to be degenerate chain branching.&quot; [http://goldbook.iupac.org/D01557.html]")
+
+(termFormat EnglishLanguage REX--0000028 "electron transfer")
+
+(mo-xrefAnalogous REX--0000507 "EC:1.6.5")
+
+(mo-definition REX--0000210 "&quot;Adsorption such that the adsorption space accommodates more than one layer of molecules, and not all adsorbed molecules are in contact with the surface layer of the adsorbent.&quot; [http://goldbook.iupac.org/M04050.html]")
+
+(mo-definition REX--0000152 "&quot;The generation of one or more ions. It may occur, e.g. by loss of an electron from a neutral molecular entity, by the unimolecular heterolysis of such an entity into two or more ions, or by a heterolytic substitution reaction involving neutral molecules.&quot; [http://goldbook.iupac.org/I03183.html]")
+
+(mo-synonym REX--0000546 "&quot;quantum tunnelling&quot; []")
+
+(subclass REX--0000358 REX--0000349)
+
+(subclass REX--0000307 REX--0000166)
+
+(termFormat EnglishLanguage REX--0000037 "photoassisted catalysis")
+
+(mo-definition REX--0000254 "&quot;A polymerization in which a cyclic monomer yields a monomeric unit which is acyclic or contains fewer cycles than the monomer.&quot; [http://goldbook.iupac.org/R05396.html]")
+
+(termFormat EnglishLanguage REX--0000156 "spin-allowed electronic
+transition")
+
+(subclass REX--0000036 REX--0000078)
+
+(subclass REX--0000054 REX--0000053)
+
+(mo-definition REX--0000231 "&quot;In essential activation, the free enzyme without activator bound to it has no activity and does not bind substrate.&quot; [ISBN:1855781581]")
+
+(termFormat EnglishLanguage REX--0000528 "hemoprotein:oxygen
+oxidoreductase reaction")
+
+(termFormat EnglishLanguage REX--0000397 "oxygenase reaction")
+
+(owl-someValuesFrom REX--0000143 REX--0000142)
+
+(mo-xrefAnalogous REX--0000466 "EC:1.1.1.1")
+
+(termFormat EnglishLanguage REX--0000517 "donor:flavin oxidoreductase
+reaction")
+
+(termFormat EnglishLanguage REX--0000205 "associative adsorption")
+
+(subclass REX--0000129 REX--0000123)
+
+(subclass REX--0000469 REX--0000472)
+
+(mo-definition REX--0000373 "&quot;A process occurring in a thermally insulated system, so that there is no flow of heat to or from the surroundings.&quot; [http://goldbook.iupac.org/A00141.html]")
+
+(subclass REX--0000525 REX--0000533)
+
+(subclass REX--0000380 REX--0000050)
+
+(subclass REX--0000373 REX--0000167)
+
+(mo-synonym REX--0000466 "&quot;ethanol dehydrogenase&quot; []")
+
+(mo-definition REX--0000193 "&quot;The condensation of a compound in solution on a foreign substance.&quot; [http://goldbook.iupac.org/N04243.html]")
+
+(subclass REX--0000181 REX--0000171)
+
+(termFormat EnglishLanguage REX--0000260 "radical polymerization")
+
+(subclass REX--0000390 REX--0000401)
+
+(termFormat EnglishLanguage REX--0000287 "isomeric transition")
+
+(mo-definition REX--0000310 "&quot;The process in which the first excited singlet state becomes populated by recombination of radical ions with electrons or by recombination of radical ions of opposite charge.&quot; [http://goldbook.iupac.org/D01579.html]")
+
+(termFormat EnglishLanguage REX--0000323 "excitation annihilation")
+
+(termFormat EnglishLanguage REX--0000296 "triboluminescence")
+
+(subclass REX--0000497 REX--0000508)
+
+(subclass REX--0000067 REX--0000058)
+
+(subclass REX--0000215 REX--0000214)
+
+(mo-definition REX--0000265 "&quot;The photoproduction of a free radical or ion capable of initiating a chain reaction such as a polymerization.&quot; [http://goldbook.iupac.org/P04619.html]")
+
+(termFormat EnglishLanguage REX--0000012 "radioactive decay")
+
+(subclass REX--0000166 Process)
+
+(subclass REX--0000235 REX--0000002)
+
+(termFormat EnglishLanguage REX--0000306 "radiationless transition")
+
+(mo-definition REX--0000216 "&quot;The acceleration of a chemical reaction in solution by the addition of a surfactant at a concentration higher than its critical micelle concentration so that the reaction can proceed in the environment of surfactant aggregates (micelles).&quot; [http://goldbook.iupac.org/M03885.html]")
+
+(subclass REX--0000079 REX--0000078)
+
+(mo-definition REX--0000333 "&quot;The simultaneous two-photon absorption.&quot; [http://goldbook.iupac.org/T06541.html]")
+
+(termFormat EnglishLanguage REX--0000470 "alcohol:NAD+ dehydrogenase
+reaction")
+
+(mo-xrefAnalogous REX--0000459 "GO:0006944")
+
+(subclass REX--0000303 REX--0000301)
+
+(mo-definition REX--0000514 "&quot;4 Fe(2+) + 4 H+ + O2 --> 4 Fe(3+) + 2 H2O&quot; [EC:1.16.3.1]")
+
+(subclass REX--0000384 REX--0000386)
+
+(subclass REX--0000381 REX--0000050)
+
+(termFormat EnglishLanguage REX--0000321 "secondary geminate
+recombination")
+
+(subclass REX--0000050 REX--0000047)
+
+(mo-synonym REX--0000318 "&quot;external return&quot; []")
+
+(termFormat EnglishLanguage REX--0000444 "reduction")
+
+(subclass REX--0000112 REX--0000108)
+
+(subclass REX--0000453 REX--0000452)
+
+(mo-synonym REX--0000306 "&quot;non-radiative transition&quot; []")
+
+(termFormat EnglishLanguage REX--0000497 "carbonyl:cytochrome
+dehydrogenase reaction")
+
+(mo-xrefAnalogous REX--0000075 "PUBMED:12749730")
+
+(termFormat EnglishLanguage REX--0000439 "electrocyclic reaction")
+
+(subclass REX--0000144 REX--0000148)
+
+(subclass REX--0000323 REX--0000039)
+
+(termFormat EnglishLanguage REX--0000398 "dioxygenase reaction")
+
+(termFormat EnglishLanguage REX--0000220 "competitive inhibition")
+
+(subclass REX--0000107 REX--0000108)
+
+(subclass REX--0000182 REX--0000181)
+
+(mo-definition REX--0000035 "&quot;Ionization of any species by photons.&quot; [http://goldbook.iupac.org/P04620.html]")
+
+(termFormat EnglishLanguage REX--0000348 "scattering")
+
+(mo-definition REX--0000543 "&quot;magnesium-protoporphyrin IX 13-monomethyl ester + NADPH + H+ + O2 --> 13(1)-hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + H2O&quot; [EC:1.14.13.81]")
+
+(mo-synonym REX--0000480 "&quot;isopropanol dehydrogenase (NADP+)&quot; []")
+
+(mo-xrefAnalogous REX--0000138 "PUBMED:12867466")
+
+(mo-definition REX--0000162 "&quot;An electronic transition of a metal complex that corresponds to excitation populating an electronic state in which considerable electron transfer from the metal to a ligand has occurred.&quot; [http://goldbook.iupac.org/M03868.html]")
+
+(termFormat EnglishLanguage REX--0000520 "NADPH:cyanocobalamin
+oxidoreductase reaction")
+
+(termFormat EnglishLanguage REX--0000276 "oligomerization")
+
+(subclass REX--0000142 REX--0000148)
+
+(termFormat EnglishLanguage REX--0000198 "adsorption")
+
+(subclass REX--0000406 REX--0000116)
+
+(mo-xrefAnalogous REX--0000539 "EC:1.12.2.1")
+
+(subclass REX--0000276 REX--0000251)
+
+(mo-synonym REX--0000477 "&quot;methanol dehydrogenase&quot; []")
+
+(subclass REX--0000154 REX--0000049)
+
+(subclass REX--0000147 REX--0000149)
+
+(termFormat EnglishLanguage REX--0000461 "pseudo-catalysis")
+
+(subclass REX--0000103 REX--0000002)
+
+(owl-someValuesFrom REX--0000092 REX--0000089)
+
+(subclass REX--0000541 REX--0000402)
+
+(subclass REX--0000184 REX--0000183)
+
+(termFormat EnglishLanguage REX--0000248 "irreversible inhibition of
+catalysis")
+
+(mo-definition REX--0000087 "&quot;The conversion of a substrate into a particular product, irrespective of reagents or mechanisms involved.&quot; [http://goldbook.iupac.org/T06446.html]")
+
+(mo-definition REX--0000134 "&quot;The process of solute translocation in which two solutes equilibrate across an osmotic barrier, and the translocation of one solute is coupled to the translocation of the other in the same direction.&quot; [ISBN:0198506732]")
+
+(mo-synonym REX--0000207 "&quot;van der Waals adsorption&quot; []")
+
+(subclass REX--0000201 REX--0000208)
+
+(subclass REX--0000241 REX--0000240)
+
+(mo-definition REX--0000379 "&quot;The reaction of triplet molecular oxygen with radicals formed photochemically.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(mo-definition REX--0000142 "&quot;The formation of a covalent bond, the two shared electrons of which have come from only one of the two parts of the molecular entity linked by it, as in the reaction of a Lewis acid and a Lewis base to form a Lewis adduct.&quot; [http://goldbook.iupac.org/C01329.html]")
+
+(termFormat EnglishLanguage REX--0000194 "electrode process")
+
+(mo-xrefAnalogous REX--0000390 "GO:0050248")
+
+(termFormat EnglishLanguage REX--0000128 "oxidoreduction-driven
+transport")
+
+(owl-someValuesFrom REX--0000314 REX--0000313)
+
+(subclass REX--0000291 REX--0000290)
+
+(documentation EnglishLanguage "Represents the cyclic property.
+(Typedefs only)")
+
+(termFormat EnglishLanguage REX--0000196 "adiabatic electron
+transfer")
+
+(termFormat EnglishLanguage REX--0000298 "bioluminescence")
+
+(mo-definition REX--0000385 "&quot;A (photo)catalytic phenomenon that occurs in circumstances when the system is also heated by light.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(termFormat EnglishLanguage REX--0000155 "electronic transition")
+
+(mo-xrefAnalogous REX--0000130 "TC:5")
+
+(subclass REX--0000033 REX--0000002)
+
+(mo-synonym REX--0000539 "&quot;cytochrome-c3 hydrogenase&quot; []")
+
+(subclass REX--0000089 REX--0000087)
+
+(termFormat EnglishLanguage REX--0000179 "crystallization")
+
+(termFormat EnglishLanguage REX--0000112 "ligase reaction")
+
+(mo-definition REX--0000479 "&quot;an aromatic alcohol + NADP+ --> an aromatic aldehyde + NADPH + H+&quot; [EC:1.1.1.91]")
+
+(subclass REX--0000432 REX--0000427)
+
+(termFormat EnglishLanguage REX--0000090 "cycloaddition")
+
+(termFormat EnglishLanguage REX--0000038 "photoluminescence")
+
+(termFormat EnglishLanguage REX--0000427 "addition reaction")
+
+(mo-definition REX--0000370 "&quot;A reaction for which the overall standard Gibbs energy change is negative.&quot; [http://goldbook.iupac.org/E02262.html]")
+
+(subclass REX--0000240 REX--0000243)
+
+(documentation Smo-definedSubset EnglishLanguage "Subset defined for
+the ontology.")
+
+(mo-synonym REX--0000054 "&quot;electron-transfer catalysis&quot; []")
+
+(owl-someValuesFrom REX--0000049 REX--0000435)
+
+(subclass REX--0000104 REX--0000103)
+
+(mo-definition REX--0000405 "&quot;A chemical reaction in which the oxidation of one reactant is coupled to the reduction of a second reactant.&quot; [ISBN:0198506732]")
+
+(mo-xrefAnalogous REX--0000494 "EC:1.1.5")
+
+(termFormat EnglishLanguage REX--0000491 "donor:hemoprotein
+oxidoreductase reaction")
+
+(mo-xrefAnalogous REX--0000109 "GO:0016787")
+
+(mo-synonym REX--0000211 "&quot;non-adiabatic photoreaction&quot; []")
+
+(termFormat EnglishLanguage REX--0000313 "charge separation")
+
+(subclass REX--0000396 REX--0000402)
+
+(mo-definition REX--0000070 "&quot;Composite reactions, occurring in forward and reverse directions: A + B <=> Z.&quot; [http://goldbook.iupac.org/O04302.html]")
+
+(termFormat EnglishLanguage REX--0000483 "3-hydroxybenzyl-alcohol:NADP+ dehydrogenase reaction")
+
+(mo-xrefAnalogous REX--0000511 "EC:1.16")
+
+(subclass REX--0000369 REX--0000388)
+
+(subclass REX--0000350 REX--0000349)
+
+(termFormat EnglishLanguage REX--0000232 "hyperbolic activation")
+
+(mo-xrefAnalogous REX--0000128 "TC:3.D")
+
+(termFormat EnglishLanguage REX--0000329 "photoabsorption")
+
+(mo-synonym REX--0000366 "&quot;Raman scattering&quot; []")
+
+(subclass REX--0000168 REX--0000055)
+
+(termFormat EnglishLanguage REX--0000107 "oxidoreductase reaction")
+
+(termFormat EnglishLanguage REX--0000243 "irreversible modification of
+enzyme catalysis")
+
+(subclass REX--0000224 REX--0000218)
+
+(termFormat EnglishLanguage REX--0000387 "photoradiocatalysis")
+
+(termFormat EnglishLanguage REX--0000481 "aryl-alcohol:NAD+
+dehydrogenase reaction")
+
+(subclass REX--0000413 REX--0000002)
+
+(mo-synonym REX--0000454 "&quot;electrosmosis&quot; []")
+
+(subclass REX--0000161 REX--0000158)
+
+(subclass REX--0000002 REX--0000167)
+
+(termFormat EnglishLanguage part "Part of")
+
+(mo-definition REX--0000490 "&quot;The formation or presence of bonds between two or more separate binding sites within the same ligand and a single central atom.&quot; [http://goldbook.iupac.org/C01012.html]")
+
+(mo-definition REX--0000257 "&quot;Chain polymerization occurring with the formation of small molecules.&quot; [http://goldbook.iupac.org/C00958.html]")
+
+(mo-xrefAnalogous REX--0000341 "EC:4.99.1.3")
+
+(subclass REX--0000157 REX--0000155)
+
+(mo-remark "autogenerated-by:     DAG-Edit version 1.419 rev 3")
+
+(termFormat EnglishLanguage BY "can be determined by")
+
+(mo-xrefAnalogous REX--0000495 "EC:1.2")
+
+(mo-definition REX--0000288 "&quot;The simultaneous formation of an electron and a positron as a result of the interaction of a photon of sufficient energy (> 1.02 MeV) with the field of a particle.&quot; [http://goldbook.iupac.org/P04398.html]")
+
+(subclass REX--0000080 REX--0000078)
+
+(mo-definition REX--0000413 "&quot;Generally, reaction with a solvent, or with a lyonium ion or lyate ion, involving the rupture of one or more bonds in the reacting solute. More specifically the term is used for substitution, elimination and fragmentation reactions in which a solvent species is the nucleophile.&quot; [http://goldbook.iupac.org/S05762.html]")
+
+(subclass REX--0000339 REX--0000108)
+
+(subclass REX--0000214 REX--0000194)
+
+(termFormat EnglishLanguage REX--0000464 "alkylmercury lyase
+reaction")
+
+(mo-definition REX--0000027 "&quot;The production of an excited state by the absorption of ultraviolet, visible, or infrared radiation.&quot; [http://goldbook.iupac.org/P04613.html]")
+
+(termFormat EnglishLanguage REX--0000170 "termolecular reaction")
+
+(owl-someValuesFrom REX--0000100 REX--0000099)
+
+(subclass REX--0000077 REX--0000071)
+
+(mo-synonym REX--0000520 "&quot;cyanocobalamin reductase (cyanide-eliminating)&quot; []")
+
+(termFormat EnglishLanguage REX--0000505 "NAD(P)H:oxygen dehydrogenase
+reaction")
+
+(termFormat EnglishLanguage REX--0000359 "elastic neutron scattering")
+
+(mo-definition REX--0000486 "&quot;R-CH2OH --> R-C(O)H + 2 e- + 2 H+&quot; [EBI:kid]")
+
+(subclass REX--0000134 REX--0000124)
+
+(owl-someValuesFrom REX--0000088 REX--0000108)
+
+(subclass REX--0000532 REX--0000519)
+
+(subclass REX--0000222 REX--0000221)
+
+(termFormat EnglishLanguage REX--0000347 "resonance fluorescence")
+
+(subclass REX--0000512 REX--0000472)
+
+(subclass REX--0000234 REX--0000233)
+
+(termFormat EnglishLanguage REX--0000036 "photocatalysis")
+
+(mo-xrefAnalogous REX--0000112 "GO:0016874")
+
+(termFormat EnglishLanguage REX--0000041 "Forster excitation
+transfer")
+
+(subclass REX--0000150 REX--0000087)
+
+(subclass REX--0000120 REX--0000457)
+
+(termFormat EnglishLanguage REX--0000363 "inelastic X-ray scattering")
+
+(termFormat EnglishLanguage REX--0000503 "NAD(P)H:NAD(P)+
+transhydrogenase reaction")
+
+(subclass REX--0000144 REX--0000087)
+
+(termFormat EnglishLanguage REX--0000268 "cyclopolymerization")
+
+(subclass REX--0000479 REX--0000489)
+
+(termFormat EnglishLanguage REX--0000055 "elementary reaction")
+
+(subclass REX--0000036 REX--0000033)
+
+(mo-definition REX--0000179 "&quot;The formation of a crystalline solid from a solution, melt vapour or a different solid phase, generally by the lowering of the temperature or by evaporation of a solvent.&quot; [http://goldbook.iupac.org/C01434.html]")
+
+(subclass Melting REX--0000171)
+
+(mo-definition REX--0000301 "&quot;Any loss of energy by an excited molecular entity.&quot; [http://goldbook.iupac.org/D01528.html]")
+
+(subclass REX--0000264 REX--0000251)
+
+(termFormat EnglishLanguage REX--0000071 "biomacromolecule-catalysed
+reaction")
+
+(mo-xrefAnalogous REX--0000541 "GO:0048529")
+
+(mo-definition REX--0000067 "&quot;The step of a stepwise reaction, in which the product distribution is determined. The product-determining step may be identical to, or occur later than, the rate-controlling step on the reaction coordinate.&quot; [http://goldbook.iupac.org/P04862.html]")
+
+(mo-synonym REX--0000546 "&quot;quantum-mechanical tunnelling&quot; []")
+
+(mo-definition REX--0000457 "&quot;Any movement of substances or electrons across a biological membrane.&quot; [EBI:kid]")
+
+(subclass REX--0000441 REX--0000433)
+
+(termFormat EnglishLanguage REX--0000117 "nucleoside triphosphate
+(di)phosphohydrolase reaction")
+
+(subclass REX--0000175 REX--0000171)
+
+(termFormat EnglishLanguage REX--0000551 "predissociation")
+
+(mo-definition REX--0000121 "&quot;Diffusion across a biological membrane through the participation of specific transporting agents (transporters) or carriers.&quot; [ISBN:0198506732]")
+
+(subclass REX--0000239 REX--0000223)
+
+(termFormat EnglishLanguage REX--0000433 "pericyclic reaction")
+
+(mo-xrefAnalogous REX--0000536 "EC:1.12.1.2")
+
+(subclass REX--0000337 REX--0000458)
+
+(mo-xrefAnalogous REX--0000111 "EC:5")
+
+(mo-definition REX--0000315 "&quot;Separation of the constituents of an ion pair into free ions.&quot; [http://goldbook.iupac.org/D01801.html]")
+
+(subclass REX--0000474 REX--0000472)
+
+(mo-synonym REX--0000522 "&quot;aquacobalamin reductase&quot; []")
+
+(termFormat EnglishLanguage REX--0000379 "type I photooxygenation")
+
+(subclass REX--0000535 REX--0000472)
+
+(termFormat EnglishLanguage REX--0000475 "NADP+ reduction")
+
+(subclass REX--0000466 REX--0000482)
+
+(mo-definition REX--0000506 "&quot;NAD(P)H + H+ + O2 --> NAD(P)+ + H2O2&quot; [EC:1.6.3.1]")
+
+(subclass REX--0000518 REX--0000532)
+
+(mo-synonym Process "&quot;physico-chemical process&quot; []")
+
+(termFormat EnglishLanguage REX--0000223 "activation of catalysis")
+
+(mo-definition REX--0000536 "&quot;H2 + NAD+ --> H+ + NADH&quot; [EC:1.12.1.2]")
+
+(mo-definition REX--0000141 "&quot;Any stabilizing interaction of a solute (or solute moiety) and the solvent or a similar interaction of solvent with groups of an insoluble material.&quot; [http://goldbook.iupac.org/S05747.html]")
+
+(subclass REX--0000497 REX--0000495)
+
+(subclass REX--0000412 REX--0000408)
+
+(subclass REX--0000225 REX--0000233)
+
+(termFormat EnglishLanguage REX--0000237 "competitive enzyme
+inhibition")
+
+(subclass REX--0000110 REX--0000104)
+
+(mo-definition REX--0000016 "&quot;Fission caused by thermal neutrons.&quot; [http://goldbook.iupac.org/T06302.html]")
+
+(mo-synonym REX--0000405 "&quot;oxidation-reduction&quot; []")
+
+(subclass REX--0000292 REX--0000290)
+
+(mo-definition REX--0000026 "&quot;Process causing the transition of a system from one state to another of higher energy.&quot; [http://goldbook.iupac.org/E02248.html]")
+
+(subclass REX--0000190 REX--0000181)
+
+(subclass REX--0000356 REX--0000364)
+
+(mo-xrefAnalogous REX--0000344 "EC:6.6.1")
+
+(termFormat EnglishLanguage REX--0000044 "phosphorescence")
+
+(mo-definition REX--0000530 "&quot;ferrocytochrome + nitrate --> ferricytochrome + nitrite&quot; [EC:1.9.6.1]")
+
+(documentation EnglishLanguage "The program used to generate the
+ontology.")
+
+(subclass REX--0000008 REX--0000025)
+
+(mo-xrefAnalogous REX--0000115 "GO:0017111")
+
+(subclass REX--0000461 REX--0000460)
+
+(termFormat EnglishLanguage REX--0000351 "Rayleigh scattering")
+
+(subclass REX--0000426 REX--0000168)
+
+(subclass REX--0000250 REX--0000247)
+
+(subclass REX--0000189 REX--0000171)
+
+(subclass REX--0000464 REX--0000108)
+
+(mo-xrefAnalogous REX--0000505 "EC:1.6.3")
+
+(mo-definition REX--0000211 "&quot;Within the Born-Oppenheimer approximation, a reaction beginning on one excited state 'potential-energy surface' and ending, as a result of radiationless transition, on another surface, usually that of the ground state.&quot; [http://goldbook.iupac.org/D01660.html]")
+
+(mo-definition REX--0000217 "&quot;Catalysis by a Lewis base, involving formation of a Lewis adduct as a reaction intermediate.&quot; [http://goldbook.iupac.org/N04250.html]")
+
+(termFormat EnglishLanguage REX--0000428 "heterolytic addition
+reaction")
+
+(mo-definition REX--0000239 "&quot;Any process leading to increase of enzymatic activity.&quot; [EBI:kid]")
+
+(subclass REX--0000494 REX--0000465)
+
+(subclass REX--0000086 REX--0000085)
+
+(subclass REX--0000517 REX--0000107)
+
+(subclass REX--0000308 REX--0000312)
+
+(termFormat EnglishLanguage REX--0000245 "hyperbolic inhibition")
+
+(mo-definition REX--0000039 "&quot;A photophysical process in which an excited state of one molecular entity (the donor) is deactivated to a lower-lying state by transferring energy to a second molecular entity (the acceptor) which is thereby raised to a higher energy state.&quot; [http://goldbook.iupac.org/E02116.html]")
+
+(mo-definition REX--0000304 "&quot;An isoenergetic radiationless transition between two electronic states having different multiplicities. It often results in a vibrationally excited molecular entity in the lower electronic state, which then usually deactivates to its lowest vibrational level.&quot; [http://goldbook.iupac.org/I03123.html]")
+
+(subclass REX--0000506 REX--0000505)
+
+(mo-xrefAnalogous REX--0000541 "EC:1.14.13.81")
+
+(termFormat EnglishLanguage REX--0000103 "biochemical reaction")
+
+(mo-xrefAnalogous REX--0000394 "EC:1.13.12.13")
+
+(subclass REX--0000335 REX--0000326)
+
+(subclass REX--0000460 REX--0000056)
+
+(mo-xrefAnalogous REX--0000393 "GO:0050397")
+
+(mo-definition REX--0000176 "&quot;A reversible transition of a solid crystalline phase at a certain temperature and pressure (the inversion point) to another phase of the same chemical composition with a different crystal structure.&quot; [http://goldbook.iupac.org/P04748.html]")
+
+(termFormat EnglishLanguage REX--0000137 "photobiochemical reaction")
+
+(subclass REX--0000247 REX--0000224)
+
+(subclass REX--0000402 REX--0000399)
+
+(mo-autoGeneratedBy "DAG-Edit 1.419 rev 3")
+
+(termFormat EnglishLanguage REX--0000101 "cheletropic reaction")
+
+(termFormat EnglishLanguage REX--0000508 "donor:cytochrome
+oxidoreductase reaction")
+
+(mo-synonym REX--0000056 "&quot;consecutive reactions&quot; []")
+
+(termFormat EnglishLanguage REX--0000269 "homopolymerization")
+
+(termFormat EnglishLanguage REX--0000032 "photophysical process")
+
+(mo-definition REX--0000273 "&quot;A copolymerization which is an ionic polymerization.&quot; [http://goldbook.iupac.org/I03176.html]")
+
+(mo-definition REX--0000399 "&quot;Any oxidoreductase reaction that brings about the incorporation of only one atom of oxygen from dioxygen into the donor.&quot; [ISBN:0198506732]")
+
+(mo-definition REX--0000289 "&quot;Ionization of any species by causing interaction of the sample (which may be dissolved in a solvent matrix) and a beam of neutral atoms having high translational energy.&quot; [http://goldbook.iupac.org/F02327.html]")
+
+(mo-definition REX--0000481 "&quot;an aromatic alcohol + NAD+ --> an aromatic aldehyde + NADH + H+&quot; [EC:1.1.1.90]")
+
+(subclass REX--0000093 REX--0000092)
+
+(mo-xrefAnalogous REX--0000542 "EC:1.12.7.2")
+
+(mo-synonym REX--0000329 "&quot;absorption (of electromagnetic radiation)&quot; []")
+
+(subclass REX--0000503 REX--0000502)
+
+(mo-definition REX--0000325 "&quot;Two atoms or molecular entities both in a triplet state often interact (usually upon collision) to produce one atom or molecular entity in an excited singlet state and another in its ground singlet state. This is often, but not always, followed by delayed fluorescence.&quot; [http://goldbook.iupac.org/T06505.html]")
+
+(subclass REX--0000547 REX--0000546)
+
+(termFormat EnglishLanguage REX--0000075 "nucleic acid-catalysed
+reaction")
+
+(subclass REX--0000216 REX--0000083)
+
+(mo-xrefAnalogous REX--0000471 "EC:1.1.1.2")
+
+(termFormat EnglishLanguage REX--0000529 "hemoprotein:nitrate
+oxidoreductase reaction")
+
+(subclass REX--0000313 REX--0000166)
+
+(termFormat EnglishLanguage REX--0000135 "solute transport")
+
+(subclass REX--0000492 REX--0000508)
+
+(subclass REX--0000153 REX--0000048)
+
+(termFormat EnglishLanguage REX--0000512 "metal:NAD(P)+ oxidoreductase
+reaction")
+
+(mo-definition REX--0000274 "&quot;A copolymerization which is a living polymerization.&quot; [http://goldbook.iupac.org/L03596.html]")
+
+(termFormat EnglishLanguage REX--0000106 "biological electron
+transfer")
+
+(mo-xrefAnalogous REX--0000340 "EC:4.99.1.1")
+
+(subclass REX--0000333 REX--0000332)
+
+(termFormat EnglishLanguage REX--0000095 "intramolecular
+rearrangement")
+
+(termFormat EnglishLanguage REX--0000431 "nucleophilic addition")
+
+(mo-synonym REX--0000483 "&quot;3-hydroxybenzyl-alcohol:NADP+ oxidoreductase&quot; []")
+
+(mo-synonym REX--0000302 "&quot;radiationless decay&quot; []")
+
+(mo-synonym REX--0000367 "&quot;Brillouin scattering&quot; []")
+
+(subclass REX--0000136 REX--0000135)
+
+(mo-definition REX--0000031 "&quot;An electron transfer resulting from an electronic state produced by the resonant interaction of electromagnetic radiation with matter.&quot; [http://goldbook.iupac.org/P04617.html]")
+
+(termFormat EnglishLanguage REX--0000138 "intermembrane electron
+transfer")
+
+(subclass REX--0000117 REX--0000114)
+
+(termFormat EnglishLanguage REX--0000278 "photoadsorption")
+
+(subclass REX--0000328 REX--0000027)
+
+(subclass REX--0000013 REX--0000015)
+
+(subclass REX--0000206 REX--0000167)
+
+(mo-xrefAnalogous REX--0000126 "TC:3.B")
+
+(subclass REX--0000498 REX--0000509)
+
+(termFormat EnglishLanguage REX--0000457 "biological membrane
+transport")
+
+(mo-synonym REX--0000107 "&quot;reductase reaction&quot; []")
+
+(mo-synonym REX--0000450 "&quot;photochemical hydrogenation&quot; []")
+
+(mo-xrefAnalogous REX--0000115 "EC:3.6.1.15")
+
+(termFormat EnglishLanguage REX--0000362 "elastic X-ray scattering")
+
+(subclass REX--0000425 REX--0000421)
+
+(mo-definition REX--0000025 "&quot;A transformation of a nucleus which occurs (i) when another nuclear particle approaches closely enough to be influenced by the mutual attractive nuclear force between them or (ii) when affected by an electromagnetic force of sufficient strength.&quot; [http://www.iupac.org/ACD/V7_karol/N.html#anchor425553]")
+
+(mo-synonym REX--0000048 "&quot;reduction&quot; []")
+
+(mo-synonym REX--0000226 "&quot;simple inhibition&quot; []")
+
+(mo-synonym REX--0000506 "&quot;NAD(P)H oxidase&quot; []")
+
+(owl-someValuesFrom REX--0000174 REX--0000055)
+
+(termFormat EnglishLanguage REX--0000545 "13(1)-oxo-magnesium-protoporphyrin IX 13-monomethyl ester cyclase
+reaction")
+
+(mo-definition REX--0000008 "&quot;A reaction between two light nuclei resulting in the production of a nuclear species heavier than either initial nucleus.&quot; [ISBN:0865426848, http://goldbook.iupac.org/N04232.html]")
+
+(mo-definition REX--0000345 "&quot;If the equilibrium mixture of a chemical reaction is disturbed by a sudden change, especially of some external parameter (such as temperature, pressure or electrical field strength), the system will readjust itself to a new position of the chemical equilibrium or return to the original position, if the perturbation is temporary. The readjustment is known as chemical relaxation.&quot; [http://goldbook.iupac.org/C01035.html]")
+
+(subclass REX--0000107 REX--0000405)
+
+(mo-synonym REX--0000033 "&quot;photoreaction&quot; []")
+
+(termFormat EnglishLanguage REX--0000070 "opposing reactions")
+
+(mo-synonym REX--0000201 "&quot;dissociative chemisorption&quot; []")
+
+(termFormat EnglishLanguage REX--0000500 "donor:iron protein
+oxidoreductase reaction")
+
+(mo-definition REX--0000477 "&quot;methanol + NAD+ --> formaldehyde + NADH + H+&quot; [EC:1.1.1.244]")
+
+(termFormat EnglishLanguage REX--0000393 "Watasenia-luciferin
+2-monooxygenase reaction")
+
+(owl-someValuesFrom Oxidation REX--0000047)
+
+(termFormat EnglishLanguage REX--0000083 "heterogeneous catalysis")
+
+(subclass REX--0000418 REX--0000422)
+
+(mo-xrefAnalogous REX--0000503 "EC:1.6.1")
+
+(termFormat EnglishLanguage REX--0000524 "NADPH:aquacobalamin
+oxidoreductase reaction")
+
+(termFormat EnglishLanguage REX--0000105 "biological transport")
+
+(documentation EnglishLanguage "Version of data in the ontology.")
+
+(subclass REX--0000308 REX--0000293)
+
+(termFormat EnglishLanguage REX--0000064 "chain propagation")
+
+(termFormat EnglishLanguage REX--0000388 "thermochemical reaction")
+
+(mo-definition REX--0000298 "&quot;Luminescence produced by living systems.&quot; [http://goldbook.iupac.org/B00659.html]")
+
+(mo-xrefAnalogous REX--0000412 "EC:3.6.3.12")
+
+(termFormat EnglishLanguage REX--0000305 "internal conversion (in
+photophysics)")
+
+(mo-definition REX--0000186 "&quot;The formation and growth of aggregates ultimately leading to phase separation by the formation of precipitates of larger than colloidal size.&quot; [http://goldbook.iupac.org/A00182.html]")
+
+(owl-someValuesFrom REX--0000102 REX--0000101)
+
+(termFormat EnglishLanguage REX--0000059 "chain reaction step")
+
+(subclass REX--0000013 REX--0000012)
+
+(mo-synonym REX--0000107 "&quot;oxidase reaction&quot; []")
+
+(subclass REX--0000015 REX--0000003)
+
+(termFormat EnglishLanguage REX--0000174 "microscopic chemical event")
+
+(subclass REX--0000218 REX--0000235)
+
+(subclass REX--0000227 REX--0000226)
+
+(mo-definition REX--0000010 "&quot;A process in which an atomic or nuclear system acquires an additional particle.&quot; [http://goldbook.iupac.org/C00796.html]")
+
+(termFormat EnglishLanguage REX--0000201 "dissociative adsorption")
+
+(subclass REX--0000362 REX--0000364)
+
+(mo-xrefAnalogous REX--0000522 "EC:1.16.1.3")
+
+(mo-definition REX--0000171 "&quot;A change in the nature of a phase or in the number of phases as a result of some variation in externally imposed conditions, such as temperature, pressure, activity of a component or a magnetic, electric or stress field.&quot; [http://goldbook.iupac.org/P04537.html]")
+
+(mo-definition REX--0000164 "&quot;Electron transfer (thermal or photoinduced) between two metal sites differing only in oxidation state. Quite often such electron transfer reverses the oxidation states of the sites. The term is frequently extended to the case of metal-to-metal charge transfer between non-equivalent metal centres.&quot; [http://goldbook.iupac.org/I03125.html]")
+
+(termFormat EnglishLanguage REX--0000404 "pyrolysis")
+
+(owl-someValuesFrom REX--0000436 REX--0000435)
+
+(subclass REX--0000499 REX--0000495)
+
+(termFormat EnglishLanguage REX--0000409 "Na+/K+-exchanging ATPase
+reaction")
+
+(termFormat EnglishLanguage REX--0000378 "postprecipitation")
+
+(subclass REX--0000306 REX--0000166)
+
+(termFormat EnglishLanguage REX--0000543 "magnesium-protoporphyrin IX
+13-monomethyl ester hydroxylase reaction")
+
+(mo-definition REX--0000305 "&quot;An isoenenergetic radiationless transition between two electronic states of the same multiplicity. When the transition results in a vibrationally excited molecular entity in the lower electronic state, this usually undergoes deactivation to its lowest vibrational level, provided the final state is not unstable to dissociation.&quot; [http://goldbook.iupac.org/I03102.html]")
+
+(subclass REX--0000238 REX--0000236)
+
+(mo-xrefAnalogous REX--0000492 "EC:1.1.2")
+
+(mo-definition REX--0000535 "&quot;H2 + NAD(P)+ --> H+ + NAD(P)H&quot; [EBI:kid]")
+
+(subclass REX--0000003 REX--0000011)
+
+(termFormat EnglishLanguage REX--0000341 "sirohydrochlorin
+cobaltochelatase reaction")
+
+(mo-xrefAnalogous REX--0000400 "EC:1.13.11")
+
+(termFormat EnglishLanguage REX--0000061 "chain branching")
+
+(termFormat EnglishLanguage REX--0000214 "electrodeposition")
+
+(subclass REX--0000472 REX--0000107)
+
+(termFormat EnglishLanguage REX--0000285 "radiolysis")
+
+(mo-definition REX--0000096 "&quot;In an intermolecular rearrangement, a migrating group is completely free from the parent molecule and is re-attached to a different position in a subsequent step.&quot; [http://goldbook.iupac.org/M03997.html]")
+
+(subclass REX--0000196 REX--0000028)
+
+(termFormat EnglishLanguage REX--0000123 "primary active transport")
+
+(termFormat EnglishLanguage REX--0000065 "branching chain reaction")
+
+(mo-synonym REX--0000530 "&quot;ferrocytochrome:nitrate oxidoreductase&quot; []")
+
+(subclass REX--0000533 REX--0000519)
+
+(termFormat EnglishLanguage REX--0000025 "nuclear reaction")
+
+(subclass REX--0000348 REX--0000167)
+
+(termFormat EnglishLanguage REX--0000021 "internal pair production")
+
+(subclass REX--0000126 REX--0000123)
+
+(subclass REX--0000389 REX--0000298)
+
+(subclass REX--0000302 REX--0000306)
+
+(subclass REX--0000375 REX--0000374)
+
+(mo-xrefAnalogous REX--0000530 "EC:1.9.6.1")
+
+(mo-definition REX--0000082 "&quot;Catalysis in which only one phase is involved.&quot; [http://goldbook.iupac.org/C00876.html]")
+
+(subclass REX--0000075 REX--0000071)
+
+(subclass REX--0000362 REX--0000361)
+
+(subclass REX--0000315 REX--0000151)
+
+(termFormat EnglishLanguage REX--0000218 "inhibition")
+
+(mo-xrefAnalogous REX--0000116 "EC:3.6.1.19")
+
+(mo-xrefAnalogous REX--0000498 "EC:1.2.3")
+
+(subclass REX--0000360 REX--0000365)
+
+(mo-xrefAnalogous REX--0000396 "GO:0047646")
+
+(mo-definition REX--0000050 "&quot;The incorporation of molecular oxygen into a molecular entity induced by light.&quot; [http://goldbook.iupac.org/P04641.html]")
+
+(subclass REX--0000468 REX--0000476)
+
+(subclass REX--0000263 REX--0000259)
+
+(mo-xrefAnalogous REX--0000074 "PUBMED:12022469")
+
+(mo-definition REX--0000093 "&quot;A transformation of the general type: R-Z(X)(Y)-R' --> R-Z-R' + XY [or X + Y, or X(+) + X(-)]&quot; [http://goldbook.iupac.org/A00007.html]")
+
+(mo-synonym REX--0000550 "&quot;primary photochemical process&quot; []")
+
+(termFormat EnglishLanguage REX--0000525 "NADH:ferric-chelate
+oxidoreductase reaction")
+
+(mo-xrefAnalogous REX--0000110 "EC:4")
+
+(termFormat EnglishLanguage REX--0000096 "intermolecular
+rearrangement")
+
+(subclass REX--0000368 REX--0000372)
+
+(termFormat EnglishLanguage REX--0000540 "hydrogen:quinone
+oxidoreductase reaction")
+
+(mo-definition REX--0000516 "&quot;2 cob(II)yrinic acid a,c-diamide + FMN --> 2 cob(I)yrinic acid a,c-diamide + FMNH2&quot; [EC:1.16.8.1]")
+
+(subclass REX--0000083 REX--0000206)
+
+(termFormat EnglishLanguage REX--0000548 "electron tunnelling")
+
+(mo-definition REX--0000349 "&quot;The redirection of a light beam due to interactions with molecules (Rayleigh and Raman scattering) and aerosols (Mie scattering).&quot; [http://goldbook.iupac.org/L03525.html]")
+
+(owl-someValuesFrom REX--0000444 REX--0000405)
+
+(termFormat EnglishLanguage REX--0000328 "singlet-triplet absorption")
+
+(subclass REX--0000258 REX--0000060)
+
+(owl-someValuesFrom REX--0000519 REX--0000512)
+
+(termFormat EnglishLanguage REX--0000382 "photosensitized reaction")
+
+(mo-definition REX--0000203 "&quot;Reactive adsorption (and its reverse, reactive desorption) resembles dissociative adsorption (and its reverse, associative desorption) but one fragment adds to an adsorbate rather than to a surface site.&quot; [http://goldbook.iupac.org/R05181.html]")
+
+(owl-someValuesFrom REX--0000545 REX--0000541)
+
+(subclass REX--0000387 REX--0000036)
+
+(termFormat EnglishLanguage REX--0000056 "stepwise reaction")
+
+(termFormat EnglishLanguage REX--0000165 "Rydberg transition")
+
+(subclass REX--0000258 REX--0000063)
+
+(subclass REX--0000129 REX--0000137)
+
+(subclass REX--0000527 REX--0000511)
+
+(mo-xrefAnalogous REX--0000504 "EC:1.6.2")
+
+(mo-synonym REX--0000483 "&quot;3-hydroxybenzyl-alcohol dehydrogenase&quot; []")
+
+(termFormat EnglishLanguage REX--0000385 "thermophotocatalysis")
+
+(subclass REX--0000492 REX--0000465)
+
+(subclass REX--0000061 REX--0000059)
+
+(subclass REX--0000391 REX--0000401)
+
+(termFormat EnglishLanguage REX--0000267 "photopolymerization")
+
+(subclass REX--0000471 REX--0000469)
+
+(termFormat EnglishLanguage REX--0000227 "mixed inhibition")
+
+(subclass REX--0000378 REX--0000182)
+
+(owl-someValuesFrom REX--0000092 REX--0000118)
+
+(mo-xrefAnalogous REX--0000123 "GO:0015399")
+
+(termFormat EnglishLanguage REX--0000215 "electro-crystallization")
+
+(termFormat EnglishLanguage REX--0000172 "magnetic transition")
+
+(subclass REX--0000509 REX--0000107)
+
+(termFormat EnglishLanguage REX--0000004 "nuclear decay")
+
+(mo-xrefAnalogous REX--0000129 "TC:3.E")
+
+(mo-definition REX--0000184 "&quot;A diffusional reaction in a multi-component system in which structural and compositional changes occur in regions immediately adjacent to the advancing interface. The parent phase remains unchanged until swept over by the interface; the transition is complete in regions over which the interface has passed.&quot; [http://goldbook.iupac.org/D01782.html]")
+
+(subclass REX--0000302 REX--0000301)
+
+(mo-xrefAnalogous REX--0000125 "TC:3.A")
+
+(mo-definition REX--0000422 "&quot;A reaction proceeding by the movement of pairs of electrons from areas of high electron density (nucleophiles) to areas of low electron density (electrophiles), or from filled orbitals to empty orbitals.&quot; [ISBN:0387985409]")
+
+(mo-definition REX--0000271 "&quot;Polymerization in which a graft copolymer is formed.&quot; [http://goldbook.iupac.org/G02676.html]")
+
+(subclass REX--0000524 REX--0000532)
+
+(subclass REX--0000219 REX--0000234)
+
+(mo-definition REX--0000151 "&quot;The separation of a molecular entity into two or more molecular entities (or any similar separation within a polyatomic molecular entity).&quot; [http://goldbook.iupac.org/D01801.html]")
+
+(termFormat EnglishLanguage REX--0000024 "induced fission")
+
+(subclass REX--0000442 REX--0000439)
+
+(mo-xrefAnalogous REX--0000393 "EC:1.13.12.8")
+
+(mo-definition REX--0000149 "&quot;The reverse of an attachment.&quot; [http://goldbook.iupac.org/D01625.html]")
+
+(mo-definition REX--0000191 "&quot;The condensation of a single chemical compound in solution.&quot; [http://goldbook.iupac.org/N04243.html]")
+
+(mo-definition REX--0000078 "&quot;The action of a catalyst.&quot; [http://goldbook.iupac.org/C00874.html]")
+
+(mo-definition REX--0000174 "&quot;A process that results in the interconversion of molecular entities.&quot; [http://goldbook.iupac.org/M03910.html, http://goldbook.iupac.org/C01033.html]")
+
+(termFormat EnglishLanguage REX--0000484 "3-hydroxybenzyl alcohol
+dehydrogenation")
+
+(mo-definition REX--0000264 "&quot;The polymerization of a monomer by a free radical or ionic chain reaction initiated by photoexcitation.&quot; [http://goldbook.iupac.org/P04618.html]")
+
+(termFormat EnglishLanguage REX--0000493 "alcohol:oxygen dehydrogenase
+reaction")
+
+(mo-definition REX--0000382 "&quot;A reaction initiated by photosensitization.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000071 REX--0000081)
+
+(termFormat EnglishLanguage REX--0000463 "general base
+pseudo-catalysis")
+
+(owl-someValuesFrom REX--0000448 REX--0000447)
+
+(termFormat EnglishLanguage REX--0000530 "ferrocytochrome:nitrate
+reductase reaction")
+
+(mo-synonym REX--0000176 "&quot;enantiotropic transition&quot; []")
+
+(subclass REX--0000163 REX--0000158)
+
+(mo-remark "date:                 Thu Jan 04 14:25:43 GMT 2007")
+
+(termFormat EnglishLanguage REX--0000292 "delayed luminescence")
+
+(subclass REX--0000024 REX--0000025)
+
+(termFormat EnglishLanguage REX--0000390 "Renilla-luciferin
+2-monooxygenase reaction")
+
+(subclass REX--0000395 REX--0000402)
+
+(termFormat EnglishLanguage REX--0000468 "NAD+ reduction")
+
+(owl-someValuesFrom REX--0000467 REX--0000466)
+
+(subclass REX--0000106 REX--0000028)
+
+(mo-definition REX--0000049 "&quot;The complete removal of one or more electrons from a molecular entity.&quot; [http://goldbook.iupac.org/O04362.html]")
+
+(mo-definition REX--0000280 "&quot;Catalysis occurring under the action of quanta of ionizing radiation absorbed by the radiocatalytic substance (radiocatalyst).&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000234 REX--0000248)
+
+(mo-definition REX--0000030 "&quot;A reaction in which the electron transfer takes place with significant (>20 kJ/mol) electronic interaction between the donor and acceptor centres in the transition state.&quot; [http://goldbook.iupac.org/I03052.html]")
+
+(subclass REX--0000017 REX--0000012)
+
+(subclass REX--0000255 REX--0000251)
+
+(owl-someValuesFrom REX--0000204 REX--0000203)
+
+(subclass REX--0000018 REX--0000012)
+
+(termFormat EnglishLanguage REX--0000343 "cobaltochelatase reaction")
+
+(termFormat EnglishLanguage REX--0000487 "secondary alcohol
+dehydrogenation")
+
+(termFormat EnglishLanguage REX--0000420 "electrophilic substitution
+reaction")
+
+(termFormat EnglishLanguage REX--0000407 "ATPase reaction")
+
+(termFormat EnglishLanguage REX--0000340 "ferrochelatase reaction")
+
+(mo-synonym REX--0000323 "&quot;excitation energy annihilation&quot; []")
+
+(termFormat EnglishLanguage REX--0000254 "ring-opening
+polymerization")
+
+(termFormat EnglishLanguage REX--0000111 "isomerase reaction")
+
+(termFormat EnglishLanguage REX--0000486 "primary alcohol
+dehydrogenation")
+
+(subclass REX--0000439 REX--0000433)
+
+(mo-definition REX--0000158 "&quot;An electronic transition in which a large fraction of an electronic charge is transferred from one region of a molecular entity, called the electron donor, to another, called the electron acceptor (intramolecular CT) or from one molecular entity to another (intermolecular CT).&quot; [http://goldbook.iupac.org/C01008.html]")
+
+(mo-synonym REX--0000514 "&quot;Fe(II):oxygen oxidoreductase&quot; []")
+
+(termFormat EnglishLanguage REX--0000368 "endothermic reaction")
+
+(mo-definition REX--0000330 "&quot;Absorption which takes place with the transition from the lowest triplet state of the molecule to higher triplet states thus leading to the triplet-triplet absorption spectrum.&quot; [http://goldbook.iupac.org/T06504.html]")
+
+(subclass REX--0000220 REX--0000247)
+
+(documentation EnglishLanguage "A namespace defined for use in the
+ontology.")
+
+(termFormat EnglishLanguage REX--0000473 "donor:NAD+ dehydrogenase
+reaction")
+
+(subclass REX--0000537 REX--0000535)
+
+(subclass REX--0000481 REX--0000470)
+
+(termFormat EnglishLanguage REX--0000261 "living polymerization")
+
+(mo-definition REX--0000446 "&quot;The incorporation of molecular oxygen into a substrate.&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000097 "degenerate rearrangement")
+
+(termFormat EnglishLanguage REX--0000510 "donor:quinone oxidoreductase
+reaction")
+
+(termFormat EnglishLanguage REX--0000246 "non-competitive inhibition
+by protons")
+
+(mo-synonym REX--0000518 "&quot;Hg:NADP+ oxidoreductase&quot; []")
+
+(owl-someValuesFrom REX--0000092 REX--0000434)
+
+(subclass REX--0000512 REX--0000511)
+
+(subclass REX--0000355 REX--0000348)
+
+(mo-definition REX--0000042 "&quot;Excitation transfer occurring as a result of an electron exchange mechanism. It requires an overlap of the wavefunctions of the energy donor and the energy acceptor.&quot; [http://goldbook.iupac.org/D01654.html]")
+
+(subclass REX--0000244 REX--0000238)
+
+(mo-definition REX--0000328 "&quot;Absorption which takes place with the transition from the singlet ground state of the molecule to triplet states and results in the singlet-triplet absorption spectrum.&quot; [http://goldbook.iupac.org/S05700.html]")
+
+(subclass REX--0000274 REX--0000261)
+
+(termFormat EnglishLanguage REX--0000241 "zymogen activation")
+
+(subclass REX--0000470 REX--0000473)
+
+(subclass REX--0000530 REX--0000529)
+
+(termFormat EnglishLanguage REX--0000149 "detachment")
+
+(mo-synonym REX--0000237 "&quot;competitive inhibition&quot; []")
+
+(mo-xrefAnalogous REX--0000465 "EC:1.1")
+
+(mo-definition REX--0000004 "&quot;A spontaneous nuclear transformation.&quot; [ISBN:0865426848, http://goldbook.iupac.org/N04227.html]")
+
+(subclass REX--0000021 REX--0000288)
+
+(subclass REX--0000408 REX--0000125)
+
+(subclass REX--0000289 REX--0000152)
+
+(mo-definition REX--0000542 "&quot;H2 + oxidized ferredoxin --> reduced ferredoxin + 2 H+&quot; [EC:1.12.7.2]")
+
+(mo-xrefAnalogous REX--0000074 "PUBMED:12044032")
+
+(mo-definition REX--0000329 "&quot;The transfer of energy from an electromagnetic field to an entity (molecular or otherwise).&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(termFormat EnglishLanguage REX--0000474 "donor:NADP+ dehydrogenase
+reaction")
+
+(mo-synonym REX--0000115 "&quot;nucleoside triphosphate phosphohydrolase reaction&quot; []")
+
+(mo-definition REX--0000537 "&quot;H2 + NADP+ --> H+ + NADPH&quot; [EC:1.12.1.3]")
+
+(mo-synonym REX--0000232 "&quot;partial activation&quot; []")
+
+(mo-synonym REX--0000245 "&quot;partial inhibition&quot; []")
+
+(subclass REX--0000407 REX--0000115)
+
+(subclass REX--0000023 REX--0000007)
+
+(termFormat EnglishLanguage REX--0000255 "stereoselective
+polymerization")
+
+(subclass REX--0000515 REX--0000511)
+
+(termFormat EnglishLanguage REX--0000541 "magnesium-protoporphyrin IX
+monomethyl ester (oxidative) cyclase reaction")
+
+(subclass REX--0000450 REX--0000045)
+
+(termFormat EnglishLanguage REX--0000317 "internal ion-pair return")
+
+(termFormat EnglishLanguage REX--0000369 "exothermic reaction")
+
+(mo-definition REX--0000347 "&quot;Fluorescence from the primary excited atomic or molecular species at the wavelength of the exciting radiation (no relaxation within the excited manifold).&quot; [http://goldbook.iupac.org/R05335.html]")
+
+(subclass REX--0000172 REX--0000171)
+
+(termFormat EnglishLanguage REX--0000316 "ion-pair return")
+
+(owl-someValuesFrom REX--0000059 REX--0000053)
+
+(subclass REX--0000415 REX--0000413)
+
+(subclass REX--0000528 REX--0000527)
+
+(owl-someValuesFrom REX--0000199 REX--0000198)
+
+(subclass REX--0000281 REX--0000199)
+
+(subclass REX--0000427 REX--0000002)
+
+(mo-xrefAnalogous REX--0000391 "EC:1.13.12.6")
+
+(subclass REX--0000424 REX--0000422)
+
+(subclass REX--0000393 REX--0000401)
+
+(subclass REX--0000483 REX--0000479)
+
+(subclass REX--0000151 REX--0000087)
+
+(mo-definition REX--0000189 "&quot;The transition of a suspension of solid particles in a liquid (sol) to an apparent solid, jelly-like material (gel).&quot; [http://goldbook.iupac.org/S05731.html]")
+
+(mo-xrefAnalogous REX--0000531 "EC:1.9.3.1")
+
+(subclass REX--0000234 REX--0000243)
+
+(termFormat EnglishLanguage REX--0000424 "heterolytic substitution
+reaction")
+
+(mo-synonym REX--0000480 "&quot;propan-2-ol:NADP+ oxidoreductase&quot; []")
+
+(mo-definition REX--0000181 "&quot;A transition that occurs at boundaries between phases.&quot; [http://goldbook.iupac.org/I03119.html]")
+
+(subclass REX--0000100 REX--0000087)
+
+(subclass REX--0000476 REX--0000449)
+
+(termFormat EnglishLanguage REX--0000130 "transmembrane electron
+transfer")
+
+(subclass REX--0000354 REX--0000348)
+
+(termFormat EnglishLanguage REX--0000426 "unimolecular nucleophilic
+substitution")
+
+(mo-synonym REX--0000370 "&quot;exoergic reaction&quot; []")
+
+(termFormat EnglishLanguage REX--0000308 "E-type delayed
+fluorescence")
+
+(termFormat EnglishLanguage REX--0000007 "beta-decay")
+
+(termFormat EnglishLanguage REX--0000518 "NADPH:mercury oxidoreductase
+reaction")
+
+(subclass REX--0000179 REX--0000171)
+
+(mo-xrefAnalogous REX--0000406 "GO:0047693")
+
+(subclass REX--0000010 REX--0000003)
+
+(termFormat EnglishLanguage REX--0000381 "type III photooxygenation")
+
+(subclass REX--0000504 REX--0000502)
+
+(mo-synonym REX--0000316 "&quot;ion pair return&quot; []")
+
+(mo-definition REX--0000143 "&quot;The cleavage of a covalent bond so that both bonding electrons remain with one of the two fragments between which the bond is broken (A:B --> A + :B).&quot; [http://goldbook.iupac.org/H02809.html]")
+
+(subclass REX--0000024 REX--0000015)
+
+(termFormat EnglishLanguage REX--0000162 "metal to ligand charge
+transfer transition")
+
+(mo-synonym REX--0000534 "&quot;dihydrogenase reaction&quot; []")
+
+(subclass REX--0000269 REX--0000251)
+
+(termFormat EnglishLanguage REX--0000175 "mesomorphic transition")
+
+(termFormat EnglishLanguage REX--0000051 "catalytic reaction")
+
+(mo-xrefAnalogous REX--0000525 "EC:1.16.1.7")
+
+(subclass REX--0000128 REX--0000123)
+
+(subclass REX--0000204 REX--0000199)
+
+(mo-definition REX--0000241 "&quot;Conversion of inactive precursors (zymogens) into active enzymes by limited proteolysis.&quot; [PUBMED:9568890]")
+
+(termFormat EnglishLanguage REX--0000157 "vibronic transition")
+
+(termFormat EnglishLanguage REX--0000413 "solvolysis")
+
+(subclass REX--0000094 REX--0000098)
+
+(mo-definition REX--0000081 "&quot;The acceleration of a reaction by a unique catalyst, rather than by a family of related substances.&quot; [http://goldbook.iupac.org/S05796.html]")
+
+(termFormat EnglishLanguage REX--0000158 "charge-transfer transition")
+
+(mo-synonym REX--0000231 "&quot;compulsory activation&quot; []")
+
+(mo-definition REX--0000088 "&quot;Transformation of the general type: AX + Y --> AY + X.&quot; [EBI:kid]")
+
+(mo-definition REX--0000207 "&quot;Adsorption in which the forces involved are intermolecular forces (van der Waals forces) of the same kind as those responsible for the imperfection of real gases and the condensation vapours, and which do not involve a significant change in the electronic orbital patterns of the species involved.&quot; [http://goldbook.iupac.org/P04667.html]")
+
+(mo-definition REX--0000159 "&quot;An electronic transition described approximately as a promotion of an electron from a 'bonding' pi orbital to an 'antibonding' sigma orbital designated as sigma*. Such transitions generally involve high transition energies and appear close to or mixed with Rydberg transitions.&quot; [http://goldbook.iupac.org/S04387.html]")
+
+(termFormat EnglishLanguage REX--0000281 "radiodesorption")
+
+(termFormat EnglishLanguage REX--0000039 "excitation energy transfer")
+
+(termFormat EnglishLanguage REX--0000150 "association")
+
+(termFormat EnglishLanguage REX--0000145 "unimolecular homolysis")
+
+(termFormat EnglishLanguage REX--0000058 "reaction step")
+
+(mo-definition REX--0000377 "&quot;A combination of migration and insertion. The term is mainly used in organometallic chemistry.&quot; [http://goldbook.iupac.org/M03924.html]")
+
+(mo-definition REX--0000320 "&quot;Geminate recombination occurring before any separation of two transient species by diffusion has occurred.&quot; [http://goldbook.iupac.org/G02603.html]")
+
+(subclass REX--0000207 REX--0000198)
+
+(subclass REX--0000550 REX--0000033)
+
+(subclass REX--0000537 REX--0000474)
+
+(termFormat EnglishLanguage REX--0000192 "simultaneous nucleation")
+
+(subclass REX--0000332 REX--0000027)
+
+(termFormat EnglishLanguage REX--0000501 "donor:iron-sulfur protein
+oxidoreductase reaction")
+
+(mo-xrefAnalogous REX--0000076 "PUBMED:13678961")
+
+(mo-definition REX--0000154 "&quot;The reverse of an electron attachment.&quot; [http://goldbook.iupac.org/E01987.html]")
+
+(subclass REX--0000357 REX--0000355)
+
+(termFormat EnglishLanguage REX--0000489 "aryl-alcohol:NAD(P)+
+dehydrogenase reaction")
+
+(mo-definition REX--0000061 "&quot;When in a chain reaction there is a net increase in the number of chain carriers there is said to be chain branching.&quot; [http://goldbook.iupac.org/C00948.html]")
+
+(owl-someValuesFrom REX--0000446 REX--0000050)
+
+(subclass REX--0000344 REX--0000339)
+
+(mo-definition REX--0000277 "&quot;The formation of an addition oligomer, having uniform end groups X' ... X'', by a chain reaction in which a chain transfer limits the length of the polymer ('telomer') produced.&quot; [http://goldbook.iupac.org/T06260.html]")
+
+(termFormat EnglishLanguage REX--0000120 "active transport")
+
+(subclass REX--0000031 REX--0000033)
+
+(mo-definition REX--0000398 "&quot;Oxidoreductase reaction involving incorporation of both atoms of dioxygen into the donor.&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000009 "radiative capture")
+
+(mo-definition REX--0000153 "&quot;The transfer of an electron to a molecular entity, resulting in a molecular entity of (algebraically) increased negative charge.&quot; [http://goldbook.iupac.org/E01979.html]")
+
+(owl-someValuesFrom REX--0000089 REX--0000427)
+
+(subclass REX--0000479 REX--0000471)
+
+(mo-definition REX--0000133 "&quot;The process of coupled solute translocation in which two solutes equilibrate across an osmotic barrier, the translocation of solute being coupled to the translocation of the other in the opposite direction.&quot; [ISBN:0198506732]")
+
+(termFormat EnglishLanguage REX--0000440 "sigmatropic rearrangement")
+
+(subclass REX--0000270 REX--0000251)
+
+(mo-synonym REX--0000094 "&quot;molecular rearrangement&quot; []")
+
+(mo-xrefAnalogous REX--0000514 "EC:1.16.3.1")
+
+(subclass REX--0000233 REX--0000224)
+
+(termFormat EnglishLanguage REX--0000537 "hydrogen:NADP+
+oxidoreductase reaction")
+
+(subclass REX--0000055 REX--0000002)
+
+(owl-someValuesFrom REX--0000444 REX--0000045)
+
+(subclass REX--0000246 REX--0000228)
+
+(termFormat EnglishLanguage REX--0000429 "homolytic addition
+reaction")
+
+(subclass REX--0000279 REX--0000199)
+
+(termFormat EnglishLanguage REX--0000275 "radical copolymerization")
+
+(mo-definition REX--0000350 "&quot;Radiation may be scattered by its transmission through a medium containing particles. If the scatter results in no significant change in the wavelength relative to the primary radiation it is called elastic scattering. In cases where the scattering centres are small compared to the wavelength of the radiation the elastic scattering is called Rayleigh scattering and Mie scattering if this condition is not fulfilled.&quot; [http://goldbook.iupac.org/E01917.html]")
+
+(subclass REX--0000275 REX--0000260)
+
+(subclass REX--0000404 REX--0000086)
+
+(mo-xrefAnalogous REX--0000526 "EC:1.16.1.8")
+
+(termFormat EnglishLanguage REX--0000257 "condensative chain
+polymerization")
+
+(subclass REX--0000019 REX--0000018)
+
+(subclass REX--0000499 REX--0000501)
+
+(mo-xrefAnalogous REX--0000515 "EC:1.16.8")
+
+(subclass REX--0000186 REX--0000181)
+
+(termFormat EnglishLanguage REX--0000143 "unimolecular heterolysis")
+
+(subclass REX--0000133 REX--0000124)
+
+(termFormat EnglishLanguage REX--0000350 "elastic light scattering")
+
+(subclass REX--0000416 REX--0000413)
+
+(mo-definition REX--0000079 "&quot;The catalysis of a chemical reaction by a series of Bronsted acids HA (which may include the solvated hydrogen ion). The acids HA are unchanged by the overall reaction.&quot; [http://goldbook.iupac.org/G02609.html]")
+
+(mo-synonym REX--0000516 "&quot;cob(II)yrinic acid a,c-diamide reductase&quot; []")
+
+(termFormat EnglishLanguage REX--0000332 "two-photon excitation")
+
+(mo-definition REX--0000115 "&quot;NTP + H2O --> NDP + phosphate&quot; [EC:3.6.1.15]")
+
+(mo-synonym REX--0000161 "&quot;LMCT transition&quot; []")
+
+(subclass REX--0000226 REX--0000225)
+
+(termFormat EnglishLanguage REX--0000386 "thermocatalysis")
+
+(termFormat EnglishLanguage REX--0000231 "essential activation")
+
+(termFormat EnglishLanguage REX--0000534 "hydrogenase reaction")
+
+(termFormat EnglishLanguage REX--0000371 "exothermic process")
+
+(mo-xrefAnalogous REX--0000407 "GO:0016887")
+
+(subclass REX--0000334 REX--0000326)
+
+(mo-definition REX--0000007 "&quot;Nuclear decay in which a beta particle is emitted or in which orbital electron capture occurs.&quot; [http://goldbook.iupac.org/B00572.html]")
+
+(termFormat EnglishLanguage REX--0000314 "charge recombination")
+
+(termFormat EnglishLanguage REX--0000031 "photoinduced electron
+transfer")
+
+(subclass REX--0000392 REX--0000401)
+
+(subclass REX--0000288 REX--0000326)
+
+(instance disjoint_from BinaryRelation)
+
+(mo-xrefAnalogous REX--0000520 "EC:1.16.1.6")
+
+(subclass REX--0000242 REX--0000240)
+
+(termFormat EnglishLanguage REX--0000374 "migration")
+
+(termFormat EnglishLanguage REX--0000542 "hydrogen:ferredoxin
+oxidoreductase reaction")
+
+(mo-definition REX--0000323 "&quot;Two atoms or molecular entities both in an excited electronic state interact often (usually upon collision) to produce one atom or molecular entity in an excited electronic state and another in its ground electronic state.&quot; [http://goldbook.iupac.org/A00366.html]")
+
+(termFormat EnglishLanguage REX--0000099 "insertion")
+
+(termFormat EnglishLanguage REX--0000151 "dissociation")
+
+(subclass REX--0000282 REX--0000208)
+
+(termFormat EnglishLanguage REX--0000432 "pericyclic addition
+reaction")
+
+(mo-definition REX--0000044 "&quot;Luminescence involving change in spin multiplicity.&quot; [http://goldbook.iupac.org/P04569.html]")
+
+(termFormat EnglishLanguage REX--0000522 "NADH:aquacobalamin
+oxidoreductase reaction")
+
+(mo-xrefAnalogous REX--0000524 "EC:1.16.1.5")
+
+(termFormat EnglishLanguage REX--0000546 "tunnelling")
+
+(mo-definition Melting "&quot;The conversion of a solid to a liquid by the application of heat and/or pressure.&quot; [http://goldbook.iupac.org/M03821.html]")
+
+(subclass REX--0000326 REX--0000014)
+
+(subclass REX--0000540 REX--0000534)
+
+(termFormat EnglishLanguage REX--0000408 "ATPase-coupled transmembrane
+transport")
+
+(mo-definition REX--0000116 "&quot;NTP + H2O --> NMP + diphosphate&quot; [EC:3.6.1.19]")
+
+(mo-xrefAnalogous REX--0000518 "EC:1.16.1.1")
+
+(termFormat EnglishLanguage REX--0000119 "transmembrane transport")
+
+(mo-synonym REX--0000098 "&quot;isomerisation&quot; []")
+
+(termFormat EnglishLanguage REX--0000519 "NAD(P)H:metal oxidoreductase
+reaction")
+
+(mo-definition REX--0000054 "&quot;A sequence of reactions such as shown in equations [1]-[3], leading from A to B: [1] A + e- --> A.- ; [2] A.- --> B.- ; [3] B.- + A --> B + A.- ; an analogous sequence involving radical cations (A.+, B.+) is also observed.&quot; [http://goldbook.iupac.org/E02012.html]")
+
+(subclass REX--0000239 REX--0000238)
+
+(mo-xrefAnalogous REX--0000110 "GO:0016829")
+
+(subclass REX--0000403 REX--0000398)
+
+(owl-someValuesFrom REX--0000151 REX--0000150)
+
+(termFormat EnglishLanguage REX--0000492 "alcohol:cytochrome
+dehydrogenase reaction")
+
+(termFormat EnglishLanguage REX--0000490 "chelation")
+
+(termFormat EnglishLanguage REX--0000360 "inelastic neutron
+scattering")
+
+(mo-formatVersion "1.0")
+
+(mo-xrefAnalogous REX--0000537 "EC:1.12.1.3")
+
+(subclass REX--0000268 REX--0000251)
+
+(subclass REX--0000155 REX--0000166)
+
+(subclass REX--0000231 REX--0000230)
+
+(owl-someValuesFrom REX--0000202 REX--0000201)
+
+(subclass REX--0000084 REX--0000002)
+
+(mo-synonym REX--0000537 "&quot;hydrogen:NADP+ oxidoreductase&quot; []")
+
+(mo-xrefAnalogous REX--0000512 "EC:1.16.1")
+
+(subclass REX--0000287 REX--0000011)
+
+(termFormat EnglishLanguage REX--0000164 "intervalence charge
+transfer")
+
+(subclass REX--0000257 REX--0000253)
+
+(termFormat EnglishLanguage REX--0000153 "electron attachment")
+
+(mo-synonym REX--0000215 "&quot;electrocrystallization&quot; []")
+
+(termFormat EnglishLanguage REX--0000133 "antiport")
+
+(mo-xrefAnalogous REX--0000108 "EC:2")
+
+(owl-someValuesFrom REX--0000048 REX--0000436)
+
+(mo-xrefAnalogous REX--0000106 "GO:0006118")
+
+(owl-someValuesFrom REX--0000468 REX--0000473)
+
+(mo-xrefAnalogous REX--0000132 "TC:5.B")
+
+(subclass REX--0000392 REX--0000389)
+
+(mo-definition REX--0000083 "&quot;Catalysis occurring at or near an interface between phases.&quot; [http://goldbook.iupac.org/C00876.html]")
+
+(mo-xrefAnalogous REX--0000105 "GO:0006810")
+
+(mo-xrefAnalogous REX--0000400 "GO:0016702")
+
+(termFormat EnglishLanguage REX--0000068 "reaction stage")
+
+(termFormat EnglishLanguage REX--0000239 "enzyme activation")
+
+(termFormat EnglishLanguage REX--0000538 "hydrogen:cytochrome
+oxidoreductase reaction")
+
+(mo-definition REX--0000544 "&quot;13(1)-hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADPH + H+ + O2 --> 13(1)-oxo-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + 2 H2O&quot; [EC:1.14.13.81]")
+
+(termFormat EnglishLanguage REX--0000253 "condensation reaction")
+
+(mo-xrefAnalogous REX--0000513 "EC:1.16.3")
+
+(subclass REX--0000090 REX--0000433)
+
+(subclass REX--0000031 REX--0000028)
+
+(subclass REX--0000278 REX--0000208)
+
+(termFormat EnglishLanguage Smo-Subset "Subset")
+
+(subclass REX--0000101 REX--0000090)
+
+(subclass REX--0000012 REX--0000004)
+
+(subclass REX--0000454 REX--0000453)
+
+(mo-definition REX--0000066 "&quot;An elementary reaction the rate constant for which exerts a strong effect - stronger than that of any other rate constant - on the overall rate.&quot; [http://goldbook.iupac.org/R05139.html]")
+
+(termFormat EnglishLanguage REX--0000293 "delayed fluorescence")
+
+(termFormat EnglishLanguage REX--0000336 "annihilation")
+
+(mo-definition REX--0000255 "&quot;Polymerization in which a polymer molecule is formed from a mixture of stereoisomeric monomer molecules by incorporation of only one stereoisomeric species.&quot; [http://goldbook.iupac.org/S05989.html]")
+
+(subclass REX--0000321 REX--0000319)
+
+(mo-synonym REX--0000525 "&quot;ferric-chelate reductase&quot; []")
+
+(termFormat EnglishLanguage REX--0000523 "NADH:cob(II)alamin
+oxidoreductase reaction")
+
+(mo-definition REX--0000157 "&quot;A transition which involves a change in both the electronic and vibrational quantum numbers of a molecular entity, as opposed to purely electronic or purely vibrational transitions.&quot; [http://goldbook.iupac.org/V06618.html]")
+
+(subclass REX--0000539 REX--0000538)
+
+(termFormat EnglishLanguage disjoint_from "disjoint from")
+
+(owl-someValuesFrom REX--0000484 REX--0000483)
+
+(subclass REX--0000457 REX--0000119)
+
+(mo-definition REX--0000175 "&quot;A transition that occurs between a fully-ordered crystalline solid and an isotropic liquid. Mesomorphic transitions can occur (i) from a crystal to a liquid crystal (ii) from a liquid crystal to another liquid crystal and (iii) from a liquid crystal to an isotropic liquid.&quot; [http://goldbook.iupac.org/M03847.html]")
+
+(mo-definition REX--0000332 "&quot;Excitation resulting from successive or simultaneous absorption of two photons by an atom or molecular entity.&quot; [http://goldbook.iupac.org/T06541.html]")
+
+(termFormat EnglishLanguage REX--0000118 "synthase reaction")
+
+(mo-remark "saved-by:             kirill")
+
+(subclass REX--0000449 REX--0000444)
+
+(owl-someValuesFrom REX--0000548 REX--0000549)
+
+(mo-synonym REX--0000295 "&quot;electroluminescence&quot; []")
+
+(termFormat EnglishLanguage REX--0000533 "NADH:metal oxidoreductase
+reaction")
+
+(subclass REX--0000343 REX--0000344)
+
+(subclass REX--0000259 REX--0000256)
+
+(termFormat EnglishLanguage REX--0000235 "modification of reaction")
+
+(owl-someValuesFrom REX--0000012 REX--0000286)
+
+(termFormat EnglishLanguage REX--0000290 "luminescence")
+
+(mo-definition REX--0000523 "&quot;cob(II)alamin + NADH + H+ --> 2 cob(I)alamin + NAD+ &quot; [EBI:kid]")
+
+(owl-AnnotationProperty "null")
+
+(subclass REX--0000223 REX--0000221)
+
+(termFormat EnglishLanguage REX--0000003 "nuclear transformation")
+
+(subclass REX--0000137 REX--0000033)
+
+(subclass REX--0000480 REX--0000471)
+
+(mo-synonym REX--0000095 "&quot;true molecular rearrangement&quot; []")
+
+(mo-synonym REX--0000205 "&quot;non-dissociative chemisorption&quot; []")
+
+(mo-xrefAnalogous REX--0000401 "EC:1.13.12")
+
+(termFormat EnglishLanguage REX--0000421 "nucleophilic substitution
+reaction")
+
+(termFormat EnglishLanguage REX--0000195 "electrode reaction")
+
+(subclass REX--0000149 REX--0000151)
+
+(subclass REX--0000514 REX--0000513)
+
+(subclass REX--0000510 REX--0000107)
+
+(termFormat EnglishLanguage REX--0000251 "polymerization")
+
+(mo-synonym REX--0000479 "&quot;aryl-alcohol:NADP+ oxidoreductase&quot; []")
+
+(mo-definition REX--0000467 "&quot;ethanol --> acetaldehyde + 2 e- + 2 H+&quot; [EBI:kid]")
+
+(subclass REX--0000388 REX--0000002)
+
+(subclass REX--0000215 REX--0000179)
+
+(subclass REX--0000131 REX--0000140)
+
+(mo-xrefAnalogous REX--0000395 "GO:0047098")
+
+(subclass REX--0000345 REX--0000331)
+
+(owl-someValuesFrom REX--0000089 REX--0000110)
+
+(mo-definition REX--0000100 "&quot;A transformation in which an atom or group Y connected to two other atoms or groups X and Z is lost from a molecule, leading to a product in which X is bonded to Z, e.g. X-Y-Z --> X-Z + Y.&quot; [http://goldbook.iupac.org/E02311.html]")
+
+(mo-definition REX--0000300 "&quot;Luminescence observed when certain solids are subjected to a change in pressure.&quot; [http://goldbook.iupac.org/P04672.html]")
+
+(subclass REX--0000416 REX--0000419)
+
+(termFormat EnglishLanguage REX--0000134 "symport")
+
+(mo-definition REX--0000376 "&quot;The movement of a bond to a new position within the same molecular entity.&quot; [http://goldbook.iupac.org/M03920.html]")
+
+(subclass REX--0000526 REX--0000532)
+
+(mo-xrefAnalogous REX--0000076 "PUBMED:12831882")
+
+(instance Smo-inSubset BinaryRelation)
+
+(termFormat EnglishLanguage REX--0000462 "general acid
+pseudo-catalysis")
+
+(mo-definition REX--0000199 "&quot;The converse of adsorption, i.e. the decrease in the amount of adsorbed substance.&quot; [http://goldbook.iupac.org/D01620.html]")
+
+(mo-definition REX--0000546 "&quot;The process by which a particle or a set of particles crosses a barrier on its potential-energy surface without having the energy required to surmount this barrier.&quot; [http://goldbook.iupac.org/T06531.html]")
+
+(mo-xrefAnalogous REX--0000406 "EC:3.6.1.8")
+
+(mo-definition REX--0000053 "&quot;A reaction in which one or more reactive reaction intermediates are continuously regenerated, usually through a repetitive cycle of elementary steps (the 'propagation step').&quot; [http://goldbook.iupac.org/C00960.html]")
+
+(subclass REX--0000265 REX--0000060)
+
+(subclass REX--0000429 REX--0000427)
+
+(subclass REX--0000178 REX--0000372)
+
+(subclass REX--0000496 REX--0000495)
+
+(mo-definition REX--0000056 "&quot;A chemical reaction with at least one reaction intermediate and involving at least two consecutive elementary reactions.&quot; [http://goldbook.iupac.org/S05970.html]")
+
+(subclass REX--0000523 REX--0000533)
+
+(mo-definition REX--0000476 "&quot;NAD(P)+ + 2 e- + H+ --> NAD(P)H&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000465 "alcohol:acceptor
+dehydrogenase reaction")
+
+(termFormat EnglishLanguage REX--0000403 "paired donor dioxygenase
+reaction")
+
+(documentation EnglishLanguage "Represents the symmetric property.
+(Typedefs only)")
+
+(subclass REX--0000400 REX--0000398)
+
+(mo-synonym REX--0000060 "&quot;initiation&quot; []")
+
+(mo-definition REX--0000521 "&quot;transferrin[Fe(III)]2 + NADH + H+ --> transferrin[Fe(II)]2 + NAD+&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000391 "Cypridina-luciferin
+2-monooxygenase reaction")
+
+(subclass REX--0000426 REX--0000421)
+
+(subclass REX--0000418 REX--0000413)
+
+(termFormat EnglishLanguage REX--0000354 "neutron scattering")
+
+(mo-definition REX--0000212 "&quot;Within the Born-Oppenheimer approximation, a reaction of an excited state species that occurs on a single 'potential-energy surface'.&quot; [http://goldbook.iupac.org/A00145.html]")
+
+(mo-savedDateTime "05:01:2007 09:19")
+
+(owl-someValuesFrom REX--0000336 REX--0000326)
+
+(mo-definition REX--0000099 "&quot;A chemical reaction or transformation of the general type: X-Z + Y --> X-Y-Z, in which the connecting atom or group Y replaces the bond joining the parts X and Z of the reactant XZ.&quot; [http://goldbook.iupac.org/I03058.html]")
+
+(subclass REX--0000360 REX--0000354)
+
+(termFormat EnglishLanguage REX--0000209 "charge-transfer adsorption")
+
+(mo-xrefAnalogous REX--0000538 "EC:1.12.2")
+
+(termFormat EnglishLanguage REX--0000110 "lyase reaction")
+
+(mo-definition REX--0000319 "&quot;The reaction of two transient species produced from a common precursor in solution with each other.&quot; [http://goldbook.iupac.org/G02603.html]")
+
+(subclass REX--0000038 REX--0000290)
+
+(termFormat EnglishLanguage REX--0000029 "outer-sphere electron
+transfer")
+
+(subclass REX--0000299 REX--0000294)
+
+(subclass REX--0000297 REX--0000290)
+
+(subclass REX--0000344 REX--0000112)
+
+(mo-synonym REX--0000162 "&quot;MLCT transition&quot; []")
+
+(subclass REX--0000243 REX--0000238)
+
+(termFormat EnglishLanguage REX--0000005 "nuclear disintegration")
+
+(subclass REX--0000130 REX--0000457)
+
+(subclass REX--0000386 REX--0000085)
+
+(termFormat EnglishLanguage REX--0000229 "uncompetitive inhibition")
+
+(subclass REX--0000397 REX--0000107)
+
+(termFormat EnglishLanguage REX--0000132 "one-electron transmembrane
+electron transfer")
+
+(subclass REX--0000156 REX--0000155)
+
+(mo-definition REX--0000041 "&quot;A mechanism of excitation transfer which can occur between molecular entities separated by distances considerably exceeding the sum of their van der Waals radii.&quot; [http://goldbook.iupac.org/F02488.html]")
+
+(subclass REX--0000317 REX--0000320)
+
+(subclass REX--0000366 REX--0000358)
+
+(subclass REX--0000237 REX--0000220)
+
+(mo-definition REX--0000220 "&quot;The reduction in rate due to reduction or loss of activity of a catalyst, caused by adsorption of poison which is not greatly preferred to adsorption of reactant.&quot; [http://goldbook.iupac.org/C01200.html]")
+
+(termFormat EnglishLanguage REX--0000422 "polar reaction")
+
+(termFormat EnglishLanguage REX--0000412 "K+-transporting ATPase
+reaction")
+
+(termFormat EnglishLanguage REX--0000073 "abzymatic reaction")
+
+(termFormat EnglishLanguage REX--0000062 "degenerate chain branching")
+
+(mo-definition REX--0000286 "&quot;Radiolysis of a radioactive material resulting directly or indirectly from its radioactive decay.&quot; [http://goldbook.iupac.org/A00534.html]")
+
+(subclass REX--0000248 REX--0000224)
+
+(termFormat EnglishLanguage REX--0000129 "light-driven transport")
+
+(mo-definition REX--0000314 "&quot;Reverse of charge separation.&quot; [http://goldbook.iupac.org/C00998.html]")
+
+(subclass REX--0000267 REX--0000251)
+
+(termFormat EnglishLanguage REX--0000282 "radioadsorption")
+
+(subclass REX--0000280 REX--0000078)
+
+(mo-synonym REX--0000158 "&quot;CT transition&quot; []")
+
+(subclass REX--0000516 REX--0000515)
+
+(mo-definition REX--0000550 "&quot;Elementary chemical process undergone by an electronically excited molecular entity and yielding a primary photoproduct.&quot; [http://goldbook.iupac.org/P04836.html]")
+
+(mo-synonym REX--0000063 "&quot;termination&quot; []")
+
+(mo-synonym REX--0000064 "&quot;propagating reaction&quot; []")
+
+(termFormat EnglishLanguage REX--0000384 "photothermocatalysis")
+
+(termFormat EnglishLanguage REX--0000334 "proton-antiproton pair
+production")
+
+(termFormat EnglishLanguage REX--0000047 "photooxidation")
+
+(mo-synonym REX--0000022 "&quot;beta- emission&quot; []")
+
+(subclass REX--0000256 REX--0000251)
+
+(termFormat EnglishLanguage REX--0000199 "desorption")
+
+(termFormat EnglishLanguage REX--0000236 "modification of catalysis")
+
+(mo-definition REX--0000195 "&quot;For an electrode process at a given potential the current is controlled by the kinetics of a number of steps which include the transport of reactants to and from the interface and the interfacial reaction itself. The latter, which is called the electrode reaction, must always include at least one elementary step in which charge is transferred from one phase to the other, but may also involve purely chemical steps within the interfacial region.&quot; [http://goldbook.iupac.org/E01960.html]")
+
+(termFormat EnglishLanguage REX--0000435 "oxidative addition")
+
+(termFormat EnglishLanguage REX--0000449 "hydrogenation")
+
+(mo-definition REX--0000068 "&quot;A set of one or more (possibly experimentally inseparable) reaction steps leading to and/or from a detectable or presumed reaction intermediate.&quot; [http://goldbook.iupac.org/R05177.html]")
+
+(termFormat EnglishLanguage REX--0000414 "hydrolysis")
+
+(termFormat EnglishLanguage Oxidation "oxidation")
+
+(termFormat EnglishLanguage REX--0000066 "rate-controlling step")
+
+(termFormat EnglishLanguage REX--0000222 "chemical activation")
+
+(mo-xrefAnalogous REX--0000116 "GO:0047429")
+
+(subclass REX--0000282 REX--0000284)
+
+(mo-synonym REX--0000409 "&quot;ATP phosphohydrolase (Na+/K+-exchanging)&quot; []")
+
+(mo-definition REX--0000378 "&quot;The subsequent precipitation of a chemically different species upon the surface of an initial precipitate usually, but not necessarily, including a common ion.&quot; [http://goldbook.iupac.org/P04773.html]")
+
+(subclass REX--0000505 REX--0000509)
+
+(subclass REX--0000210 REX--0000198)
+
+(termFormat EnglishLanguage REX--0000160 "sigma-sigma* transition")
+
+(subclass REX--0000358 REX--0000365)
+
+(mo-definition REX--0000045 "&quot;Reduction reactions induced by light.&quot; [http://goldbook.iupac.org/P04650.html]")
+
+(mo-xrefAnalogous REX--0000409 "GO:0005391")
+
+(subclass REX--0000072 REX--0000077)
+
+(termFormat EnglishLanguage REX--0000394 "Oplophorus-luciferin
+2-monooxygenase reaction")
+
+(subclass REX--0000170 REX--0000055)
+
+(subclass REX--0000193 REX--0000190)
+
+(mo-definition REX--0000524 "&quot;2 aquacob(III)alamin + NADPH + H+ --> 2 cob(II)alamin + NADP+&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000079 "general acid catalysis")
+
+(termFormat EnglishLanguage REX--0000301 "deactivation")
+
+(subclass REX--0000309 REX--0000311)
+
+(subclass REX--0000467 REX--0000486)
+
+(mo-definition REX--0000525 "&quot;2 Fe(III) + NADH + H+ --> 2 Fe(II) + NAD+&quot; [EBI:kid]")
+
+(subclass REX--0000515 REX--0000517)
+
+(owl-someValuesFrom REX--0000383 REX--0000382)
+
+(subclass REX--0000309 REX--0000293)
+
+(termFormat EnglishLanguage REX--0000262 "anionic polymerization")
+
+(subclass REX--0000194 REX--0000213)
+
+(termFormat EnglishLanguage REX--0000140 "two-electron transfer")
+
+(mo-xrefAnalogous REX--0000107 "GO:0016491")
+
+(termFormat EnglishLanguage REX--0000166 "microscopic process")
+
+(subclass REX--0000121 REX--0000173)
+
+(subclass REX--0000283 REX--0000280)
+
+(mo-definition REX--0000387 "&quot;Radiocatalysis taking place under the e?ect of the simultaneous action of quanta of light and ionizing radiation. There is also the case when the ionizing radiation alone causes the emission of light that is chemically active (e.g., as may occur in the Cherenkov light emission).&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000261 REX--0000256)
+
+(termFormat EnglishLanguage REX--0000092 "elimination")
+
+(termFormat EnglishLanguage REX--0000078 "catalysis")
+
+(termFormat EnglishLanguage REX--0000109 "hydrolase reaction")
+
+(termFormat EnglishLanguage REX--0000122 "simple diffusion")
+
+(termFormat EnglishLanguage REX--0000506 "NAD(P)H oxidase reaction")
+
+(subclass REX--0000014 REX--0000166)
+
+(mo-xrefAnalogous REX--0000343 "EC:6.6.1.2")
+
+(mo-synonym REX--0000539 "&quot;H2:ferricytochrome c3 oxidoreductase&quot; []")
+
+(subclass REX--0000009 REX--0000010)
+
+(mo-xrefAnalogous REX--0000497 "EC:1.2.2")
+
+(mo-definition REX--0000297 "&quot;Luminescence induced by sound waves.&quot; [http://goldbook.iupac.org/S05767.html]")
+
+(mo-definition REX--0000260 "&quot;A chain polymerization in which the kinetic-chain carriers are radicals.&quot; [http://goldbook.iupac.org/R05075.html]")
+
+(subclass REX--0000119 REX--0000455)
+
+(subclass REX--0000494 REX--0000510)
+
+(subclass REX--0000369 REX--0000371)
+
+(termFormat EnglishLanguage REX--0000247 "reversible inhibition of
+catalysis")
+
+(mo-definition REX--0000483 "&quot;3-hydroxybenzyl alcohol + NADP+ --> 3-hydroxybenzaldehyde + NADPH + H+&quot; [EC:1.1.1.97]")
+
+(termFormat EnglishLanguage Process "process")
+
+(termFormat EnglishLanguage REX--0000067 "product-determining step")
+
+(termFormat EnglishLanguage REX--0000217 "nucleophilic catalysis")
+
+(mo-definition REX--0000316 "&quot;The recombination of a pair of ions R(+) and Z(-) formed from ionization of RZ.&quot; [http://goldbook.iupac.org/I03233.html]")
+
+(mo-definition REX--0000097 "&quot;A molecular rearrangement in which the principal product is indistinguishable (in the absence of isotopic labelling) from the principal reactant.&quot; [http://goldbook.iupac.org/D01559.html]")
+
+(mo-xrefAnalogous REX--0000496 "EC:1.2.1")
+
+(mo-definition REX--0000294 "&quot;Emission of radiation resulting from a chemical reaction.&quot; [http://goldbook.iupac.org/C01045.html]")
+
+(subclass REX--0000273 REX--0000259)
+
+(termFormat EnglishLanguage REX--0000213 "electrochemical reaction")
+
+(termFormat EnglishLanguage REX--0000225 "reversible enzyme
+inhibition")
+
+(termFormat EnglishLanguage REX--0000020 "internal conversion")
+
+(termFormat EnglishLanguage REX--0000434 "elimination reaction")
+
+(subclass REX--0000167 Process)
+
+(subclass REX--0000123 REX--0000120)
+
+(termFormat EnglishLanguage REX--0000338 "electrophoresis")
+
+(termFormat EnglishLanguage REX--0000181 "interphase transition")
+
+(mo-xrefAnalogous REX--0000528 "EC:1.9.3")
+
+(mo-definition REX--0000411 "&quot;K+(out) --> K+(in)&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000161 "ligand to metal charge
+transfer transition")
+
+(mo-synonym REX--0000425 "&quot;SN2 mechanism&quot; []")
+
+(subclass REX--0000341 REX--0000339)
+
+(mo-synonym REX--0000526 "&quot;[methionine synthase] reductase&quot; []")
+
+(termFormat EnglishLanguage REX--0000250 "temporary poisoning")
+
+(subclass REX--0000237 REX--0000226)
+
+(termFormat EnglishLanguage REX--0000054 "electron-transfer induced
+chain reaction")
+
+(mo-synonym REX--0000531 "&quot;ferrocytochrome-c:oxygen oxidoreductase&quot; []")
+
+(owl-someValuesFrom REX--0000195 REX--0000194)
+
+(termFormat EnglishLanguage REX--0000167 "macroscopic process")
+
+(mo-definition REX--0000266 "&quot;A polymerization in which the growth of polymer chains proceeds by addition reactions between molecules of all degrees of polymerization.&quot; [http://goldbook.iupac.org/P04720.html]")
+
+(termFormat EnglishLanguage REX--0000376 "bond migration")
+
+(mo-definition REX--0000268 "&quot;A polymerization in which the number of cyclic structures in the constitutional units of the resulting macromolecules is larger than in the monomer molecules.&quot; [http://goldbook.iupac.org/C01505.html]")
+
+(termFormat EnglishLanguage REX--0000286 "autoradiolysis")
+
+(subclass REX--0000505 REX--0000502)
+
+(subclass REX--0000422 REX--0000002)
+
+(mo-xrefAnalogous REX--0000359 "PUBMED:963597")
+
+(subclass REX--0000160 REX--0000155)
+
+(subclass REX--0000437 REX--0000420)
+
+(owl-someValuesFrom REX--0000061 REX--0000065)
+
+(mo-definition REX--0000107 "&quot;Enzymatic redox reaction.&quot; [EBI:kid]")
+
+(mo-definition REX--0000032 "&quot;Photoexcitation and subsequent events which lead from one to another state of a molecular entity through radiation and radiationless transitions. No chemical change results.&quot; [http://goldbook.iupac.org/P04647.html]")
+
+(termFormat EnglishLanguage REX--0000256 "chain polymerization")
+
+(subclass REX--0000209 REX--0000208)
+
+(subclass REX--0000138 REX--0000106)
+
+(termFormat EnglishLanguage REX--0000527 "hemoprotein oxidoreductase
+reaction")
+
+(mo-definition REX--0000011 "&quot;For a nucleus a change from one quantized energy state into another or a nuclear transformation.&quot; [http://goldbook.iupac.org/N04241.html]")
+
+(subclass REX--0000203 REX--0000208)
+
+(mo-synonym REX--0000252 "&quot;polycondensation&quot; []")
+
+(termFormat EnglishLanguage REX--0000291 "radioluminescence")
+
+(subclass REX--0000293 REX--0000292)
+
+(subclass REX--0000346 REX--0000331)
+
+(termFormat EnglishLanguage REX--0000502 "NAD(P)H:acceptor
+dehydrogenase reaction")
+
+(termFormat EnglishLanguage REX--0000063 "chain termination")
+
+(mo-synonym REX--0000096 "&quot;apparent rearrangement&quot; []")
+
+(subclass REX--0000158 REX--0000155)
+
+(subclass REX--0000038 REX--0000032)
+
+(mo-definition REX--0000173 "&quot;The spreading or scattering of a gaseous or liquid material.&quot; [http://goldbook.iupac.org/D01716.html]")
+
+(subclass REX--0000482 REX--0000470)
+
+(termFormat EnglishLanguage REX--0000521 "NADH:diferric-transferrin
+oxidoreductase reaction")
+
+(mo-definition REX--0000308 "&quot;The process in which the first excited singlet state becomes populated by a thermally activated radiationless transition from the first excited triplet state. Since in this case the populations of the singlet and triplet states are in thermal equilibrium, the lifetimes of delayed fluorescence and the concomitant phosphorescence are equal.&quot; [http://goldbook.iupac.org/D01579.html]")
+
+(mo-definition REX--0000454 "&quot;The motion of a liquid through a membrane as a consequence of the application of an electric field across the membrane.&quot; [http://goldbook.iupac.org/E02016.html]")
+
+(subclass REX--0000171 REX--0000167)
+
+(termFormat EnglishLanguage REX--0000395 "Latia-luciferin
+monooxygenase (demethylating) reaction")
+
+(mo-synonym REX--0000069 "&quot;simultaneous reactions&quot; []")
+
+(subclass REX--0000420 REX--0000424)
+
+(subclass REX--0000318 REX--0000321)
+
+(mo-synonym REX--0000323 "&quot;energy pooling&quot; []")
+
+(mo-definition REX--0000478 "&quot;methanol --> formaldehyde + 2 e- + 2 H+&quot; [EBI:kid]")
+
+(termFormat EnglishLanguage REX--0000514 "ferroxidase reaction")
+
+(termFormat EnglishLanguage REX--0000264 "photoinduced
+polymerization")
+
+(termFormat EnglishLanguage REX--0000074 "deoxyribozymatic reaction")
+
+(termFormat EnglishLanguage REX--0000499 "carbonyl:ferredoxin
+dehydrogenase reaction")
+
+(subclass REX--0000164 REX--0000028)
+
+(owl-someValuesFrom REX--0000258 REX--0000277)
+
+(termFormat EnglishLanguage REX--0000441 "ene reaction")
+
+(subclass REX--0000487 REX--0000485)
+
+(termFormat EnglishLanguage REX--0000184 "discontinuous
+precipitation")
+
+(subclass REX--0000016 REX--0000024)
+
+(subclass REX--0000274 REX--0000270)
+
+(termFormat EnglishLanguage REX--0000458 "transport")
+
+(termFormat EnglishLanguage inverse "inverse of")
+
+(subclass REX--0000029 REX--0000028)
+
+(mo-xrefAnalogous REX--0000111 "GO:0016853")
+
+(subclass REX--0000135 REX--0000119)
+
+(owl-someValuesFrom REX--0000411 REX--0000409)
+
+(subclass REX--0000458 REX--0000167)
+
+(mo-definition REX--0000095 "&quot;In the intramolecular rearrangement, the atoms and groups that are common to a reactant and a product never separate into independent fragments during the rearrangement stage.&quot; [http://goldbook.iupac.org/M03997.html]")
+
+(subclass REX--0000121 REX--0000457)
+
+(mo-definition REX--0000006 "&quot;A nuclear transformation in which the nucleus captures an orbital electron.&quot; [ISBN:0865426848, http://goldbook.iupac.org/E01980.html]")
+
+(termFormat EnglishLanguage REX--0000265 "photoinitiation")
+
+(mo-synonym REX--0000323 "&quot;annihilation&quot; []")
+
+(subclass REX--0000359 REX--0000354)
+
+(subclass REX--0000217 REX--0000078)
+
+(termFormat EnglishLanguage REX--0000108 "transferase reaction")
+
+(mo-synonym REX--0000064 "&quot;chain-propagating reaction&quot; []")
+
+(mo-definition REX--0000531 "&quot;4 ferrocytochrome c + O2 --> 4 ferricytochrome c + 2 H2O&quot; [EC:1.9.3.1]")
+
+(subclass REX--0000041 REX--0000039)
+
+(subclass REX--0000489 REX--0000469)
+
+(subclass REX--0000004 REX--0000003)
+
+(subclass REX--0000140 REX--0000106)
+
+(mo-synonym REX--0000023 "&quot;beta+ emission&quot; []")
+
+(mo-synonym REX--0000134 "&quot;cotransport&quot; []")
+
+(termFormat EnglishLanguage REX--0000127 "methyl-transfer-driven
+transport")
+
+(subclass REX--0000491 REX--0000500)
+
+(subclass REX--0000028 REX--0000166)
+
+(termFormat EnglishLanguage REX--0000366 "Raman light scattering")
+
+(termFormat EnglishLanguage REX--0000027 "photoexcitation")
+
+(mo-definition REX--0000085 "&quot;A chemical reaction caused by absorption of thermal energy.&quot; [EBI:kid]")
+
+(mo-synonym REX--0000432 "&quot;simultaneous addition&quot; []")
+
+(documentation EnglishLanguage "The user who last edited the
+ontology.")
+
+(subclass REX--0000542 REX--0000501)
+
+(subclass REX--0000493 REX--0000509)
+
+(termFormat EnglishLanguage REX--0000452 "solvent transport")
+
+(owl-someValuesFrom REX--0000149 REX--0000148)
+
+(mo-xrefAnalogous REX--0000133 "GO:0015297")
+
+(subclass REX--0000350 REX--0000364)
+
+(termFormat EnglishLanguage REX--0000526 "NADPH:[methionine synthase]
+oxidoreductase reaction")
+
+(subclass REX--0000098 REX--0000087)
+
+(subclass REX--0000044 REX--0000038)
+
+(subclass REX--0000546 REX--0000166)
+
+(subclass REX--0000357 REX--0000365)
+
+(termFormat EnglishLanguage REX--0000238 "modification of enzyme
+catalysis")
+
+(termFormat EnglishLanguage REX--0000100 "extrusion")
+
+(termFormat EnglishLanguage REX--0000259 "ionic polymerization")
+
+(mo-definition REX--0000351 "&quot;The scattering of light by particles and molecules which are much smaller than the wavelength of the light. In the ideal case, the process is one of pure dipole and induced dipole interactions with the electric field of the
+light wave.&quot; [http://goldbook.iupac.org/R05160.html]")
+
+(termFormat EnglishLanguage REX--0000019 "gamma emission")
+
+(termFormat EnglishLanguage REX--0000405 "redox reaction")
+
+(mo-synonym REX--0000531 "&quot;cytochrome-c oxidase&quot; []")
+
+(mo-synonym REX--0000295 "&quot;ECL&quot; []")
+
+(mo-synonym REX--0000073 "&quot;catalytic antibody reaction&quot; []")
+
+(mo-definition REX--0000453 "&quot;The spontaneous net flow of solvent by diffusion through a semipermeable membrane from a phase where the solvent has a higher chemical potential to one where the solvent has a lower chemical potential.&quot; [ISBN:0198506732]")
+
+(mo-definition REX--0000269 "&quot;Polymerization in which a homopolymer is formed.&quot; [http://goldbook.iupac.org/H02855.html]")
+
+(termFormat EnglishLanguage Melting "melting")
+
+(subclass REX--0000095 REX--0000094)
+
+(subclass REX--0000425 REX--0000169)
+
+(mo-definition REX--0000526 "&quot;2 [methionine synthase]-cob(II)alamin + NADPH + H+ + 2 S-adenosyl-L-methionine --> 2 [methionine synthase]-methylcob(I)alamin + 2 S-adenosylhomocysteine + NADP+&quot; [EBI:kid]")
+
+(mo-synonym REX--0000438 "&quot;SE2 mechanism&quot; []")
+
+(owl-someValuesFrom REX--0000078 REX--0000051)
+
+(subclass REX--0000495 REX--0000447)
+
+(mo-synonym REX--0000549 "&quot;concerted proton tunneling-electron tunneling&quot; []")
+
+(subclass REX--0000251 REX--0000056)
+
+(mo-synonym REX--0000550 "&quot;primary photochemical reaction&quot; []")
+
+(subclass REX--0000185 REX--0000183)
+
+(termFormat EnglishLanguage REX--0000210 "multilayer adsorption")
+
+(termFormat EnglishLanguage REX--0000104 "biotransformation reaction")
+
+(termFormat EnglishLanguage REX--0000485 "alcohol dehydrogenation")
+
+(termFormat EnglishLanguage REX--0000311 "P-type delayed
+luminescence")
+
+(subclass REX--0000137 REX--0000103)
+
+(mo-definition REX--0000063 "&quot;The steps in a chain reaction in which reactive intermediates are destroyed or rendered inactive, thus ending the chain.&quot; [http://goldbook.iupac.org/T06274.html]")
+
+(termFormat EnglishLanguage REX--0000030 "inner-sphere electron
+transfer")
+
+(termFormat EnglishLanguage REX--0000085 "thermal reaction")
+
+(owl-someValuesFrom REX--0000048 REX--0000444)
+
+(mo-definition REX--0000275 "&quot;A copolymerization which is a radical polymerization.&quot; [http://goldbook.iupac.org/R05071.html]")
+
+(mo-definition REX--0000214 "&quot;The deposition of dissolved or suspended material by an electric field on an electrode.&quot; [http://goldbook.iupac.org/E01955.html]")
+
+(subclass REX--0000498 REX--0000495)
+
+(subclass REX--0000351 REX--0000350)
+
+(subclass REX--0000139 REX--0000106)
+
+(subclass REX--0000194 REX--0000206)
+
+(mo-synonym REX--0000208 "&quot;chemical adsorption&quot; []")
+
+(termFormat EnglishLanguage REX--0000187 "micellar solubilization")
+
+(mo-definition REX--0000404 "&quot;A chemical degradation reaction that is caused by thermal energy. The term pyrolysis generally refers to an inert environment.&quot; [http://goldbook.iupac.org/P04961.html]")
+
+(owl-someValuesFrom REX--0000547 REX--0000549)
+
+(termFormat EnglishLanguage REX--0000396 "alkanal monooxygenase
+(FMN-linked) reaction")
+
+(subclass REX--0000020 REX--0000018)
+
+(termFormat EnglishLanguage REX--0000053 "chain reaction")
+
+(termFormat EnglishLanguage REX--0000086 "thermolysis")
+
+(subclass REX--0000387 REX--0000280)
+
+(subclass REX--0000433 REX--0000002)
+
+(subclass REX--0000340 REX--0000339)
+
+(subclass REX--0000459 REX--0000456)
+
+(subclass REX--0000507 REX--0000502)
+
+(mo-definition REX--0000449 "&quot;Reduction of an organic compound by the addition of the hydrogen atoms or dihydrogen.&quot; [ISBN:0198506732]")
+
+(mo-synonym REX--0000426 "&quot;SN1 mechanism&quot; []")
+
+(termFormat EnglishLanguage REX--0000446 "oxygenation")
+
+(subclass REX--0000520 REX--0000532)
+
+(subclass REX--0000059 REX--0000058)
+
+(mo-xrefAnalogous REX--0000113 "EC:3.6")
+
+(owl-someValuesFrom REX--0000374 REX--0000094)
+
+(termFormat EnglishLanguage REX--0000258 "chain transfer")
+
+(mo-definition REX--0000421 "&quot;A heterolytic reaction in which the reagent supplying the entering group acts as a nucleophile.&quot; [http://goldbook.iupac.org/N04249.html]")
+
+(mo-definition REX--0000034 "&quot;The cleavage of one or more covalent bonds in a molecular entity resulting from absorption of light.&quot; [http://goldbook.iupac.org/P04624.html]")
+
+(termFormat EnglishLanguage REX--0000436 "reductive elimination")
+
+(subclass REX--0000052 REX--0000051)
+
+(mo-definition REX--0000090 "&quot;A reaction in which two or more unsaturated molecules (or parts of the same molecule) combine with the formation of a cyclic adduct in which there is a net reduction of the bond multiplicity.&quot; [http://goldbook.iupac.org/C01496.html]")
+
+(mo-definition REX--0000086 "&quot;The uncatalysed cleavage of one or more covalent bonds resulting from exposure of a compound to a raised temperature, or a process in which such cleavage is an essential part.&quot; [http://goldbook.iupac.org/T06326.html]")
+
+(mo-definition REX--0000285 "&quot;The cleavage of one or several bonds resulting from exposure to high-energy
+radiation.&quot; [http://goldbook.iupac.org/R05112.html]")
+
+(subclass REX--0000431 REX--0000428)
+
+(termFormat EnglishLanguage REX--0000367 "Brillouin light scattering")
+
+(subclass REX--0000419 REX--0000002)
+
+(subclass REX--0000405 REX--0000002)
+
+(owl-someValuesFrom Oxidation REX--0000405)
+
+(termFormat EnglishLanguage REX--0000266 "polyaddition")
+
+(owl-someValuesFrom REX--0000146 REX--0000429)
+
+(mo-definition REX--0000375 "&quot;The (usually intramolecular) transfer of an atom or group during the course of a molecular rearrangement.&quot; [http://goldbook.iupac.org/M03920.html]")
+
+(mo-synonym REX--0000008 "&quot;nuclear fusion&quot; []")
+
+(termFormat EnglishLanguage REX--0000358 "inelastic light scattering")
+
+(mo-xrefAnalogous REX--0000523 "EC:1.16.1.4")
+
+(mo-xrefAnalogous REX--0000354 "http://www.neutron.anl.gov/")
+
+(subclass REX--0000212 REX--0000033)
+
+(termFormat EnglishLanguage REX--0000168 "unimolecular reaction")
+
+(termFormat EnglishLanguage REX--0000389 "luciferin monooxygenase
+reaction")
+
+(subclass REX--0000105 REX--0000458)
+
+(mo-definition REX--0000038 "&quot;Luminescence arising from photoexcitation.&quot; [http://goldbook.iupac.org/P04623.html]")
+
+(mo-definition REX--0000204 "&quot;Reverse of reactive adsorption.&quot; [http://goldbook.iupac.org/R05183.html]")
+
+(owl-someValuesFrom REX--0000301 REX--0000026)
+
+(subclass REX--0000090 REX--0000427)
+
+(subclass REX--0000451 REX--0000045)
+
+(termFormat EnglishLanguage REX--0000297 "sonoluminescence")
+
+(subclass REX--0000073 REX--0000077)
+
+(owl-someValuesFrom REX--0000475 REX--0000474)
+
+(termFormat EnglishLanguage REX--0000472 "donor:NAD(P)+ oxidoreductase
+reaction")
+
+(mo-definition REX--0000278 "&quot;Adsorption initiated by light absorbed either by the adsorbate or by the adsorbent. Often it is considered as a chemical step (primary) in a heterogeneous photocatalytic reaction.&quot; [http://www.photoenergy.org/ijp/glossary.pdf, http://goldbook.iupac.org/P04577.html]")
+
+(mo-definition REX--0000036 "&quot;Catalytic reaction involving light absorption by a catalyst or by a substrate.&quot; [http://goldbook.iupac.org/P04580.html]")
+
+(subclass REX--0000233 REX--0000238)
+
+(mo-definition REX--0000249 "&quot;The action of catalytic poison.&quot; [http://goldbook.iupac.org/P04706.html]")
+
+(subclass REX--0000331 REX--0000167)
+
+(termFormat EnglishLanguage REX--0000035 "photoionization")
+
+(mo-xrefAnalogous REX--0000392 "EC:1.13.12.7")
+
+(mo-xrefAnalogous REX--0000391 "GO:0047712")
+
+(subclass REX--0000325 REX--0000323)
+
+(termFormat EnglishLanguage REX--0000043 "fluorescence")
+
+(subclass REX--0000120 REX--0000135)
+
+(mo-synonym REX--0000405 "&quot;oxidoreduction&quot; []")
+
+(subclass REX--0000349 REX--0000348)
+
+(mo-definition REX--0000312 "&quot;Thermally activated delayed fluorescence involving reversible intersystem crossing.&quot; [http://goldbook.iupac.org/D01580.html]")
+
+(termFormat EnglishLanguage REX--0000373 "adiabatic process")
+
+(subclass REX--0000091 REX--0000427)
+
+(mo-remark "version: $Revision: 1.13 $")
+
+(mo-definition REX--0000336 "&quot;An interaction between a particle and its antiparticle in which they both disappear.&quot; [http://goldbook.iupac.org/A00366.html]")
+
+(mo-synonym REX--0000537 "&quot;hydrogen dehydrogenase (NADP+)&quot; []")
+
+(mo-definition REX--0000101 "&quot;A form of cycloaddition across the terminal atoms of a fully conjugated system with formation of two new sigma-bonds to a single atom of the ('monocentric') reagent. There is formal loss of one pi-bond in the substrate and an increase in coordination number of the relevant atom of the reagent.&quot; [http://goldbook.iupac.org/C01014.html]")
+
+(mo-xrefAnalogous REX--0000535 "EC:1.12.1")
+
+(mo-definition REX--0000194 "&quot;The totality of changes occurring at or near a single electrode during the passage of current.&quot; [http://goldbook.iupac.org/E01959.html]")
+
+(subclass REX--0000169 REX--0000055)
+
+(subclass REX--0000368 REX--0000388)
+
+(mo-synonym REX--0000323 "&quot;exciton annihilation&quot; []")
+
+(termFormat EnglishLanguage REX--0000345 "chemical relaxation")
+
+(mo-xrefAnalogous REX--0000521 "EC:1.16.1.2")
+
+(subclass REX--0000032 REX--0000166)
+
+(mo-definition REX--0000291 "&quot;Luminescence arising from excitation by high energy particles or radiation.&quot; [http://goldbook.iupac.org/R05111.html]")
+
+(termFormat EnglishLanguage REX--0000121 "facilitated diffusion")
+
+(documentation EnglishLanguage "Default namespace for the ontology.")
+
+(mo-synonym REX--0000122 "&quot;passive diffusion&quot; []")
+
+(mo-definition REX--0000182 "&quot;The sedimentation of a solid material (a precipitate) from a liquid solution in which the material is present in amounts greater than its solubility in the liquid.&quot; [http://goldbook.iupac.org/P04795.html]")
+
+(mo-definition REX--0000120 "&quot;The carriage of a solute across a biological membrane from low to high concentration which requires the expenditure of (metabolic) energy.&quot; [http://goldbook.iupac.org/A00112.html]")
+
+(termFormat EnglishLanguage REX--0000364 "elastic scattering")
+
+(owl-someValuesFrom Process REX--0000000)
+
+(termFormat EnglishLanguage REX--0000203 "reactive adsorption")
+
+(mo-definition REX--0000150 "&quot;The assembling of separate molecular entities into any aggregate, especially of oppositely charged free ions into ion pairs or larger and not necessarily well-defined clusters of ions held together by electrostatic attraction.&quot; [http://goldbook.iupac.org/A00472.html]")
+
+(termFormat EnglishLanguage REX--0000515 "metal:flavin oxidoreductase
+reaction")
+
+(mo-definition Process "&quot;A phenomenon by which change takes place in a system. In physiological systems, a process may be chemical, physical or both.&quot; [http://goldbook.iupac.org/P04858.html]")
+
+(subclass REX--0000534 REX--0000107)
+
+(mo-xrefAnalogous REX--0000516 "EC:1.16.8.1")
+
+(mo-synonym REX--0000288 "&quot;pair production&quot; []")
+
+(mo-xrefAnalogous REX--0000493 "EC:1.1.3")
+
+(subclass REX--0000230 REX--0000244)
+
+(subclass REX--0000116 REX--0000117)
+
+(mo-definition REX--0000381 "&quot;The photooxygenation reaction proceeding by electron transfer to produce the superoxide radical anion as the reactive species.&quot; [http://www.photoenergy.org/ijp/glossary.pdf]")
+
+(subclass REX--0000122 REX--0000173)
+
+(mo-definition REX--0000091 "&quot;A chemical reaction resulting in a single reaction product from two or three reacting chemical species, with formation of two new chemical bonds to the same atom in one of the reactant molecular entities.&quot; [http://goldbook.iupac.org/A00001.html]")
+
+(subclass REX--0000085 REX--0000368)
+
+(subclass REX--0000122 REX--0000135)
+
+(termFormat EnglishLanguage REX--0000318 "external ion-pair return")
+
+(termFormat EnglishLanguage REX--0000448 "dehydrogenation")
+
+(mo-definition REX--0000317 "&quot;If the ions are paired as a tight ion pair and recombine without prior separation into a loose ion pair this is called internal ion-pair return.&quot; [http://goldbook.iupac.org/I03107.html]")
+
+(subclass REX--0000224 REX--0000236)
+
+(mo-definition REX--0000252 "&quot;Polymerization by a repeated condensation process.&quot; [http://goldbook.iupac.org/P04722.html, http://goldbook.iupac.org/C01237.html]")
+
+(mo-synonym REX--0000226 "&quot;complete inhibition&quot; []")
+
+(termFormat EnglishLanguage REX--0000471 "alcohol:NADP+ dehydrogenase
+reaction")
+
+(termFormat EnglishLanguage REX--0000049 "de-electronation")
+
+(termFormat EnglishLanguage REX--0000230 "reversible enzyme
+activation")
+
+(subclass REX--0000069 REX--0000057)
+
+(subclass REX--0000396 REX--0000298)
+
+(termFormat EnglishLanguage REX--0000163 "metal to metal charge
+transfer transition")
+
+(mo-synonym REX--0000437 "&quot;SE1 mechanism&quot; []")
+
+(mo-definition REX--0000017 "&quot;Radioactive decay in which an alpha particle is emitted.&quot; [http://goldbook.iupac.org/A00005.html]")
+
+(termFormat EnglishLanguage REX--0000330 "triplet-triplet absorption")
+
+(termFormat EnglishLanguage REX--0000089 "addition")
+
+(termFormat EnglishLanguage REX--0000011 "nuclear transition")
+
+(termFormat EnglishLanguage REX--0000206 "surface process")
+
+(subclass REX--0000311 REX--0000292)
+
+(instance BY BinaryRelation)
+
+(documentation Smo-Subset EnglishLanguage "Subset of OBO terms from
+the ontology.")
+
+(mo-definition REX--0000461 "&quot;Increase the rate of the reaction by one of the reactant that is present in nearly constant concentration but is consumed during the process.&quot; [http://goldbook.iupac.org/P04924.html]")
+
+(termFormat EnglishLanguage REX--0000171 "phase transition")
+
+(mo-definition REX--0000292 "&quot;Luminescence decaying more slowly than that expected from the rate of decay of the emitting state.&quot; [http://goldbook.iupac.org/D01580.html]")
+
+(termFormat EnglishLanguage REX--0000309 "P-type delayed
+fluorescence")
+
+(subclass REX--0000200 REX--0000199)
+
+(mo-definition REX--0000468 "&quot;NAD+ + 2 e- + H+ --> NADH&quot; [EBI:kid]")
+
+(mo-definition REX--0000048 "&quot;The complete transfer of one or more electrons to a molecular entity.&quot; [http://goldbook.iupac.org/R05222.html]")
+
+(mo-definition REX--0000122 "&quot;A diffusion across a membrane in the absence of any specific transporting agent or carrier.&quot; [ISBN:0198506732]")
+
+(mo-synonym REX--0000329 "&quot;light absorption&quot; []")
+
+(termFormat EnglishLanguage REX--0000459 "biological membrane fusion")
+
+(owl-someValuesFrom REX--0000478 REX--0000477)
+
+(subclass REX--0000371 REX--0000167)
+
+(mo-synonym REX--0000116 "&quot;nucleoside-triphosphate diphosphohydrolase reaction&quot; []")
+
+(mo-definition REX--0000407 "&quot;ATP + H2O --> ADP + phosphate&quot; [GO:0016887]")
+
+(subclass REX--0000275 REX--0000270)
+
+(subclass REX--0000430 REX--0000428)
+
+(subclass REX--0000317 REX--0000316)
+
+(owl-someValuesFrom REX--0000410 REX--0000409)
+
+(owl-someValuesFrom REX--0000303 REX--0000027)
+
+(mo-definition REX--0000092 "&quot;In an elimination two groups (called eliminands) are lost most often from two different centres (1/2/elimination or 1/3/elimination, etc.) with concomitant formation of an unsaturation in the molecule (double bond, triple bond) or formation of a new ring.&quot; [http://goldbook.iupac.org/E02038.html]")
+
+(mo-definition REX--0000299 "&quot;Luminescence arising from a reaction between species trapped in a rigid matrix and released as a result of an increase in temperature.&quot; [http://goldbook.iupac.org/T06325.html]")
+
+(subclass REX--0000417 REX--0000421)
+
+(mo-synonym REX--0000525 "&quot;iron chelate reductase&quot; []")
+
+(mo-definition REX--0000251 "&quot;The process of converting a monomer or a mixture of monomers into a polymer.&quot; [http://goldbook.iupac.org/P04740.html]")
+
+(subclass REX--0000108 REX--0000104)
+
+(mo-synonym REX--0000317 "&quot;internal return&quot; []")
+
+(mo-definition REX--0000080 "&quot;The catalysis of a chemical reaction by a series of Bronsted bases (which may include the lyate ion).&quot; [http://goldbook.iupac.org/G02610.html]")
+
+(mo-synonym REX--0000506 "&quot;NAD(P)H:oxygen oxidoreductase&quot; []")
+
+(termFormat EnglishLanguage REX--0000402 "paired donor monooxygenase
+reaction")
+
+(mo-synonym REX--0000049 "&quot;oxidation&quot; []")
+
+(subclass REX--0000273 REX--0000270)
+
+(mo-synonym REX--0000041 "&quot;dipole-dipole excitation transfer&quot; []")
+
+(termFormat EnglishLanguage REX--0000191 "homogeneous nucleation")
+
+(termFormat EnglishLanguage REX--0000014 "subatomic process")
+
+(mo-synonym REX--0000206 "&quot;interface process&quot; []")
+
+(subclass REX--0000191 REX--0000190)
+
+(termFormat EnglishLanguage REX--0000312 "E-type delayed
+luminescence")
+
+(mo-definition REX--0000052 "&quot;A chemical reaction in which a product (or a reaction intermediate) also functions as a catalyst.&quot; [http://goldbook.iupac.org/A00525.html]")
+
+(subclass REX--0000284 REX--0000002)
+
+(subclass REX--0000290 REX--0000303)
+
+(termFormat EnglishLanguage REX--0000346 "vibrational relaxation")
+
+(termFormat EnglishLanguage REX--0000513 "metal:oxygen oxidoreductase
+reaction")
+
+(mo-synonym REX--0000022 "&quot;beta emission&quot; []")
+
+(mo-definition REX--0000028 "&quot;The transfer of an electron from one molecular entity to another, or between two localized sites in the same molecular entity.&quot; [http://goldbook.iupac.org/E02011.html]")
+
+(mo-synonym REX--0000479 "&quot;aryl-alcohol dehydrogenase (NADP+)&quot; []")
+
+(termFormat EnglishLanguage REX--0000114 "phosphorus-containing
+anhydride hydrolase reaction")
+
+(subclass REX--0000062 REX--0000061)
+
+(subclass REX--0000384 REX--0000036)
+
+(mo-definition REX--0000307 "&quot;A transition between two states of a molecular entity, the energy difference being emitted or absorbed as photons.&quot; [http://goldbook.iupac.org/R05065.html]")
+
+(mo-definition REX--0000262 "&quot;An ionic polymerization in which the kinetic-chain carriers are anions.&quot; [http://goldbook.iupac.org/A00361.html]")
+
+(termFormat EnglishLanguage REX--0000327 "singlet-singlet absorption")
+
+(mo-synonym REX--0000536 "&quot;hydrogen dehydrogenase&quot; []")
+
+(termFormat EnglishLanguage REX--0000146 "homolysis")
+
+(termFormat EnglishLanguage REX--0000357 "inelastic electron
+scattering")
+
+(mo-definition REX--0000272 "&quot;A copolymerization which is a ring-opening polymerization with respect to at least one monomer.&quot; [http://goldbook.iupac.org/R05395.html]")
+
+(owl-someValuesFrom REX--0000146 REX--0000423)
+
+(termFormat EnglishLanguage REX--0000411 "K+ import")
+
+(subclass REX--0000294 REX--0000290)
+
+(mo-definition REX--0000409 "&quot;ATP + H2O + Na+(in) + K+(out) --> ADP + phosphate + Na+(out) + K+(in)&quot; [EC:3.6.3.9]")
+
+(mo-xrefAnalogous REX--0000125 "GO:0015405")
+
+(mo-xrefAnalogous REX--0000401 "GO:0016703")
+
+(termFormat EnglishLanguage REX--0000015 "nuclear fission")
+
+(mo-definition REX--0000258 "&quot;The abstraction, by the radical end of a growing chain-polymer, of an atom from another molecule. The growth of the polymer chain is thereby terminated but a new radical, capable of chain propagation and polymerization, is simultaneously created.&quot; [http://goldbook.iupac.org/C00963.html]")
+
+(termFormat EnglishLanguage REX--0000295 "electrogenerated
+chemiluminescence")
+
+(termFormat EnglishLanguage REX--0000233 "enzyme inhibition")
+

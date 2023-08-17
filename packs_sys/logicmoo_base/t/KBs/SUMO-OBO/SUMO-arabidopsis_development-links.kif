@@ -1,0 +1,3 @@
+(synonymousExternalConcept "part_of" part arabidopsis_development)
+(subsumedExternalConcept "TAIR--0000213" Seed arabidopsis_development)
+(subsumedExternalConcept "Smo-inSubset" subset arabidopsis_development)

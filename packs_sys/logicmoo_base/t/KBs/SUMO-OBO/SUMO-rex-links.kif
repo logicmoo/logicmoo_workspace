@@ -1,0 +1,5 @@
+(synonymousExternalConcept "REX--0000177" Melting rex)
+(synonymousExternalConcept "REX--0000445" Oxidation rex)
+(synonymousExternalConcept "REX--0000001" Process rex)
+(synonymousExternalConcept "inverse_of" inverse rex)
+(synonymousExternalConcept "part_of" part rex)

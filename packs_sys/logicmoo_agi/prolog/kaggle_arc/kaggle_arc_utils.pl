@@ -226,7 +226,8 @@ map_pred(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, map_pred(Pred, P, X, Sk, P1), !
 map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
 map_pred(_Pred, P, _, _, P).
 */
-
+is_cons(A):- compound(A),A=[_|_].
+  
 into_grid_or_var(G,G):- is_cons(G),!.
 into_grid_or_var(G,G):- var(G),!.
 into_grid_or_var(O,G):- cast_to_grid(O,G,_Uncast),!.

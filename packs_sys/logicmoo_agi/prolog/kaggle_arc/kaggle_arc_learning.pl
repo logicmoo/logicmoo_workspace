@@ -785,34 +785,6 @@ fix_group(AG00,AG):-
   maybe_exclude_whole(AG1,AG2),
  filter_redundant(AG2,AG).
 
-make_unifiable(A1,A2):- make_unifiable0(A1,O),!,A2=O.
-
-make_unifiable0(C1,_):- \+ compound(C1),fail.
-make_unifiable0(A1,A2):- var(A1),!,A2=A1.
-make_unifiable0(pg(A,B,C,_),pg(A,B,C,_)):-!.
-make_unifiable0(cc(C,_),cc(C,_)):-!.
-make_unifiable0(iz(C1),iz(C2)):- !, make_unifiable(C1,C2).
-make_unifiable0(giz(C1),giz(C2)):- !, make_unifiable(C1,C2).
-make_unifiable0(Cmp,CmpU):-  Cmp=..[F|List1], 
-  append(Left1,[C1],List1),append(Left2,[C2],List2), CmpU=..[F|List2],
-  my_maplist(unifiable_cmpd_else_keep,Left1,Left2),
-  unifiable_cmpd_else_var(C1,C2),!.
-make_unifiable0(C1,C2):- functor(C1,F,A),functor(C2,F,A).
-
-%unifiable_cmpd_else_keep(A1,A2):- unifiable_cmpd_keep(A1,A2).
-unifiable_cmpd_else_keep(Num,_):- number(Num),!.
-unifiable_cmpd_else_keep(A1,A1).
-
-unifiable_cmpd_else_var(A1,A2):- unifiable_cmpd_keep(A1,A2), \+ ground(A2).
-unifiable_cmpd_else_var(_,_).
-
-
-unifiable_cmpd_keep(A1,A2):- var(A1),!,A2=A1.
-unifiable_cmpd_keep(cc(C,_),cc(C,_)):-!.
-unifiable_cmpd_keep(A1,A2):- compound(A1), \+ is_list(A1), make_unifiable(A1,A2),!.
-
-
-make_unifiable_with_ftvars(C1,C2):- functor(C1,F,A),functor(C2,F,A),numbervars(C2).
 
 
 

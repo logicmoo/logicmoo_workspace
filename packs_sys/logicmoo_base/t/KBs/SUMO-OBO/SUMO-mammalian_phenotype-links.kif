@@ -1,0 +1,7 @@
+(synonymousExternalConcept "MP--0002001" Blind mammalian_phenotype-obo.owl)
+(synonymousExternalConcept "MP--0001967" Deaf mammalian_phenotype-obo.owl)
+(synonymousExternalConcept "MP--0005036" Diarrhea mammalian_phenotype-obo.owl)
+(synonymousExternalConcept "MP--0001958" Emphysema mammalian_phenotype-obo.owl)
+(synonymousExternalConcept "MP--0000753" Paralysis mammalian_phenotype-obo.owl)
+(synonymousExternalConcept "part_of" part mammalian_phenotype-obo.owl)
+(subsumedExternalConcept "MP--0003776" Atrophy mammalian_phenotype-obo.owl)

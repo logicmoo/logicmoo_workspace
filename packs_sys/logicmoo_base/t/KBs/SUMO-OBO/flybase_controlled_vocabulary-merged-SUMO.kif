@@ -1,0 +1,6198 @@
+(termFormat EnglishLanguage FBcv--0000012 "absolute temporal
+qualifier")
+
+(documentation FBcv--0000342 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-inSubset FBcv--0000609 camcur)
+
+(termFormat EnglishLanguage FBcv--0000143 "dorsal ventral gradient")
+
+(termFormat EnglishLanguage FBcv--0000008 "variegation")
+
+(mo-definedNamespace "genetic_interaction_type")
+
+(termFormat EnglishLanguage FBcv--0000007 "female semi-fertile")
+
+(termFormat EnglishLanguage FBcv--0000231 "white paper")
+
+(subclass FBcv--0000412 FBcv--0000411)
+
+(termFormat EnglishLanguage FBcv--0000380 "non-enhancer of
+variegation")
+
+(subclass FBcv--0000557 FBcv--0000553)
+
+(mo-inSubset FBcv--0000433 camcur)
+
+(documentation FBcv--0000037 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000182 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Subject to discussion and once its usage in old curation is removed,
+this term will be obsoleted.  DS")
+
+(subclass FBcv--0000241 FBcv--0000234)
+
+(subclass FBcv--0000166 FBcv--0000005)
+
+(termFormat EnglishLanguage FBcv--0000498 "hobo dysgenesis")
+
+(subclass FBcv--0000563 FBcv--0000561)
+
+(subclass FBcv--0000524 FBcv--0000519)
+
+(documentation FBcv--0000610 EnglishLanguage "Proforma field: GA19.")
+
+(subclass FBcv--0000502 FBcv--0000483)
+
+(subclass FBcv--0000018 FBcv--0000017)
+
+(subclass FBcv--0000045 FBcv--0000038)
+
+(termFormat EnglishLanguage FBcv--0000255 "Hebrew")
+
+(documentation FBcv--0000370 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000529 "2-fluoroethyl
+methanesulfonate")
+
+(subclass Biography Publication)
+
+(documentation FBcv--0000523 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000218 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000463 camcur)
+
+(mo-inSubset DanishLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000067 "restricted")
+
+(documentation FBcv--0000450 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000402 "song defective")
+
+(subclass FBcv--0000238 FBcv--0000234)
+
+(subclass FBcv--0000015 Publication)
+
+(termFormat EnglishLanguage FBcv--0000208 "microscope slides")
+
+(mo-definition FBcv--0000017 "&quot;Penetrance is the fraction of individuals of a given genotype who exhibit the phenotype associated with that genotype.&quot; [ISBN:0716735202]")
+
+(mo-inSubset FBcv--0000110 camcur)
+
+(documentation FBcv--0000582 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000212 camcur)
+
+(documentation KoreanLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage FBcv--0000429 "cell shape defective")
+
+(documentation FBcv--0000229 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000191 Publication)
+
+(documentation FBcv--0000380 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000127 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000022 FBcv--0000021)
+
+(termFormat EnglishLanguage FBcv--0000595 "p-N,N-di-(2-chloroethyl)amino-D-phenylalanine")
+
+(subclass FBcv--0000137 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000390 "hypoactive")
+
+(termFormat EnglishLanguage FBcv--0000034 "dorsal/ventral compartment
+boundary")
+
+(documentation FBcv--0000181 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Subject to discussion and once its usage in old curation is removed,
+this term will be obsoleted.  DS")
+
+(subclass FBcv--0010011 FBcv--0000618)
+
+(mo-inSubset FBcv--0000488 camcur)
+
+(termFormat EnglishLanguage FBcv--0000274 "Serbo-Croat")
+
+(termFormat EnglishLanguage FBcv--0000118 "40-70% egg length")
+
+(mo-relatedSynonym FBcv--0010021 "&quot;BDSC&quot; []")
+
+(documentation FBcv--0000527 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000162 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000349 "viable")
+
+(termFormat EnglishLanguage FBcv--0000508 "+lt;up+gt;137+lt;/up+gt;Cs
++amp;ggr; ray")
+
+(termFormat EnglishLanguage FBcv--0000058 "distal")
+
+(termFormat EnglishLanguage FBcv--0000203 "erratum")
+
+(mo-inSubset FBcv--0000628 camcur)
+
+(termFormat EnglishLanguage FBcv--0000371 "male semi-sterile")
+
+(subclass FBcv--0000101 FBcv--0000074)
+
+(mo-inSubset FBcv--0000483 camcur)
+
+(subclass FBcv--0000561 FBcv--0000525)
+
+(documentation FBcv--0000424 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-relatedSynonym FBcv--0000603 "&quot;CB3086&quot; []")
+
+(documentation FBcv--0000095 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000038 FBcv--0000052)
+
+(mo-inSubset FBcv--0000529 camcur)
+
+(termFormat EnglishLanguage FBcv--0010003 "E cytotype")
+
+(termFormat EnglishLanguage FBcv--0000502 "piggyBac transposase")
+
+(documentation FBcv--0000623 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(termFormat EnglishLanguage FBcv--0000300 "codominant")
+
+(subclass FBcv--0000357 FBcv--0000354)
+
+(documentation FBcv--0000419 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000504 FBcv--0000503)
+
+(documentation FBcv--0000577 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000566 FBcv--0000561)
+
+(subclass FBcv--0000639 FBcv--0010000)
+
+(documentation FBcv--0000604 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000574 camcur)
+
+(subclass FBcv--0000394 FBcv--0000387)
+
+(mo-inSubset Publication camcur)
+
+(termFormat EnglishLanguage FBcv--0000036 "posterior compartment")
+
+(documentation FBcv--0000583 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000065 camcur)
+
+(subclass FBcv--0000329 FBcv--0000043)
+
+(subclass FBcv--0000122 FBcv--0000074)
+
+(documentation FBcv--0000041 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(mo-inSubset FBcv--0000429 camcur)
+
+(documentation GreekLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000495 FBcv--0000492)
+
+(termFormat EnglishLanguage FBcv--0000085 "0-90% egg length")
+
+(termFormat EnglishLanguage FBcv--0000147 "even pair rule")
+
+(mo-definition FBcv--0000059 "&quot;Restricted to dorsal region of some specified type.&quot; [FB:DS]")
+
+(subclass FBcv--0000230 Publication)
+
+(mo-inSubset FBcv--0000132 camcur)
+
+(termFormat EnglishLanguage FBcv--0000480 "SCEI endonuclease")
+
+(subclass FBcv--0000493 FBcv--0000492)
+
+(mo-inSubset FBcv--0000431 camcur)
+
+(termFormat EnglishLanguage KoreanLanguage "Korean")
+
+(mo-inSubset FBcv--0000105 camcur)
+
+(subclass FBcv--0000399 FBcv--0000387)
+
+(mo-inSubset FBcv--0000139 camcur)
+
+(termFormat EnglishLanguage FBcv--0000428 "cell size defective")
+
+(termFormat EnglishLanguage LatvianLanguage "Latvian")
+
+(mo-inSubset FBcv--0000228 camcur)
+
+(documentation FBcv--0000447 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000040 "distal to")
+
+(termFormat EnglishLanguage FBcv--0000011 "relative temporal
+qualifier")
+
+(subclass FBcv--0000618 FBcv--0010000)
+
+(mo-inSubset FBcv--0000580 camcur)
+
+(subclass FBcv--0000285 FBcv--0000282)
+
+(termFormat EnglishLanguage FBcv--0000242 "Cumbrian")
+
+(subclass FBcv--0000573 FBcv--0000561)
+
+(subclass FBcv--0000380 FBcv--0000008)
+
+(termFormat EnglishLanguage FBcv--0000453 "piggyBac ammunition for
+transposable element mutagenesis")
+
+(mo-inSubset FBcv--0000398 camcur)
+
+(documentation FBcv--0000341 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-inSubset FBcv--0000814 camcur)
+
+(documentation FBcv--0000128 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000533 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000145 "striped")
+
+(documentation FBcv--0000050 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(termFormat EnglishLanguage FBcv--0000005 "qualifier")
+
+(termFormat EnglishLanguage FBcv--0000634 "duplication kit stock")
+
+(termFormat EnglishLanguage FBcv--0000014 "structural qualifier")
+
+(documentation ItalianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000454 FBcv--0000452)
+
+(instance Smo-definedSubset BinaryRelation)
+
+(mo-inSubset FBcv--0000542 camcur)
+
+(mo-inSubset FBcv--0000538 camcur)
+
+(termFormat EnglishLanguage FBcv--0000612 "In transgenic Drosophila
+(allele of foreign species in genome of drosophilid)")
+
+(mo-inSubset FBcv--0000425 camcur)
+
+(mo-inSubset KoreanLanguage camcur)
+
+(documentation FBcv--0000069 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-definition FBcv--0000033 "&quot;Restricted to an anterior/posterior compartment boundary within a specified type.&quot; [FB:DS]")
+
+(mo-inSubset JapaneseLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000559 "diepoxybutane")
+
+(subclass FBcv--0000409 FBcv--0000408)
+
+(subclass FBcv--0000366 FBcv--0000364)
+
+(subclass FBcv--0000209 Publication)
+
+(documentation FBcv--0000169 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000130 FBcv--0000074)
+
+(mo-inSubset FBcv--0000292 camcur)
+
+(mo-inSubset FBcv--0000515 camcur)
+
+(mo-relatedSynonym FBcv--0000576 "&quot;cis-dichlorodiammineplatinum(II)&quot; []")
+
+(termFormat EnglishLanguage BulgarianLanguage "Bulgarian")
+
+(subclass FBcv--0000491 FBcv--0000486)
+
+(mo-relatedSynonym FBcv--0000528 "&quot;CB1506&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000620 "genetic interaction
+qualifier")
+
+(mo-inSubset FBcv--0000374 camcur)
+
+(termFormat EnglishLanguage FBcv--0000318 "isogenic chromosome 2")
+
+(documentation FBcv--0000559 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000495 camcur)
+
+(documentation FBcv--0000048 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(documentation FBcv--0000355 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000233 camcur)
+
+(documentation FBcv--0000058 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000266 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0010001 FBcv--0000614)
+
+(subclass FBcv--0000192 Publication)
+
+(mo-definedNamespace "spatial_qualifier")
+
+(mo-inSubset FBcv--0000077 camcur)
+
+(subclass FBcv--0000406 FBcv--0000403)
+
+(subclass FBcv--0000350 FBcv--0000349)
+
+(documentation FBcv--0000599 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000410 "heat stress response
+defective")
+
+(mo-inSubset FBcv--0000439 camcur)
+
+(mo-inSubset FBcv--0000388 camcur)
+
+(subclass FBcv--0000623 FBcv--0000620)
+
+(termFormat EnglishLanguage FBcv--0000461 "in vitro construct |
+minigene")
+
+(subclass FBcv--0000614 FBcv--0000013)
+
+(subclass FBcv--0000335 FBcv--0000812)
+
+(termFormat EnglishLanguage FBcv--0000464 "in vitro construct |
+other")
+
+(mo-inSubset FBcv--0000231 camcur)
+
+(documentation FBcv--0000228 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000618 "wild-type stock")
+
+(documentation FBcv--0000036 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000055 camcur)
+
+(subclass FBcv--0000111 FBcv--0000074)
+
+(subclass FBcv--0010014 FBcv--0010012)
+
+(documentation FBcv--0000222 EnglishLanguage "Proforma field: P1.")
+
+(mo-relatedSynonym FBcv--0000499 "&quot;Hobbled1&quot; []")
+
+(documentation FBcv--0000508 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000526 "alkylating agent")
+
+(termFormat EnglishLanguage LatinLanguage "Latin")
+
+(subclass FBcv--0000032 FBcv--0000030)
+
+(termFormat EnglishLanguage FBcv--0000285 "RK3")
+
+(mo-inSubset FBcv--0000569 camcur)
+
+(subclass FBcv--0000184 FBcv--0000012)
+
+(termFormat EnglishLanguage FBcv--0000296 "isoallele")
+
+(subclass FBcv--0000632 FBcv--0000042)
+
+(mo-definition FBcv--0000067 "&quot;Restricted to unknown part(s) of a specified type.&quot; [FB:DS]")
+
+(termFormat EnglishLanguage FBcv--0000446 "melanotic 'tumor'")
+
+(mo-definition FBcv--0000299 "&quot;A phenotypic attribute is described as dominant when it is manifest in individuals heterozygous for the allele that causes that phenotype.
+definition_reference: ISBN:0805303162&quot; [ISBN:0805303162]")
+
+(termFormat EnglishLanguage FBcv--0000352 "semi-lethal")
+
+(subclass FBcv--0000098 FBcv--0000074)
+
+(mo-inSubset FBcv--0000437 camcur)
+
+(subclass FBcv--0000499 FBcv--0000497)
+
+(termFormat EnglishLanguage "pair of balancers for chromosome 2")
+
+(documentation FBcv--0000552 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000031 FBcv--0000030)
+
+(documentation FBcv--0000248 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000034 camcur)
+
+(subclass RussianLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000163 "rescuable maternal effect")
+
+(termFormat EnglishLanguage FBcv--0000625 "non-enhancer")
+
+(documentation FBcv--0000461 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000172 "variable")
+
+(subclass FBcv--0000141 FBcv--0000052)
+
+(termFormat EnglishLanguage FBcv--0000039 "anterior to")
+
+(termFormat EnglishLanguage FBcv--0000368 "female sterile
+germ-line-dependent")
+
+(documentation FBcv--0000498 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000118 camcur)
+
+(termFormat EnglishLanguage FBcv--0000530 "ethyl methanesulfonate")
+
+(termFormat EnglishLanguage FBcv--0000445 "tumorigenic")
+
+(termFormat EnglishLanguage FBcv--0000499 "HBL1")
+
+(documentation FBcv--0000092 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000398 FBcv--0000387)
+
+(mo-inSubset FBcv--0000247 camcur)
+
+(termFormat EnglishLanguage FBcv--0000119 "40-80% egg length")
+
+(mo-inSubset FBcv--0000116 camcur)
+
+(documentation FBcv--0000435 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000622 camcur)
+
+(termFormat EnglishLanguage FBcv--0000417 "flight behavior defective")
+
+(subclass MustardGas FBcv--0000526)
+
+(mo-inSubset FBcv--0000366 camcur)
+
+(mo-definition FBcv--0000685 "&quot;Parental effects describe the dependence of the expression of a phenotypic attribute of an allele on the parent from which that allele is inherited.&quot; [FB:rd]")
+
+(termFormat EnglishLanguage PolishLanguage "Polish")
+
+(termFormat EnglishLanguage FBcv--0000525 "chemical")
+
+(documentation FBcv--0000590 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000443 camcur)
+
+(subclass FBcv--0000318 FBcv--0000619)
+
+(subclass FBcv--0000118 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000083 "0-70% egg length")
+
+(mo-exactSynonym FBcv--0000420 "&quot;grooming behaviour defective&quot; []")
+
+(mo-inSubset FBcv--0000296 camcur)
+
+(documentation FBcv--0000081 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000602 camcur)
+
+(termFormat EnglishLanguage FBcv--0000587 "hexamethylphosphoramide")
+
+(mo-exactSynonym FBcv--0000403 "&quot;chemosensitive behaviour defective&quot; []")
+
+(mo-inSubset FBcv--0000214 camcur)
+
+(mo-inSubset FBcv--0000370 camcur)
+
+(subclass FBcv--0000577 FBcv--0000561)
+
+(mo-inSubset FBcv--0000568 camcur)
+
+(termFormat EnglishLanguage RomanianLanguage "Romanian")
+
+(subclass FBcv--0000343 FBcv--0000811)
+
+(documentation EnglishLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage FBcv--0000553 "inorganic compound")
+
+(documentation FBcv--0000589 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000217 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000556 "sodium bisulphite")
+
+(mo-inSubset LatvianLanguage camcur)
+
+(mo-inSubset FBcv--0000095 camcur)
+
+(termFormat EnglishLanguage FBcv--0000301 "semidominant")
+
+(subclass FBcv--0000652 Publication)
+
+(documentation FBcv--0000111 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000104 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000267 camcur)
+
+(termFormat EnglishLanguage FBcv--0000535 "N-methyl-N'-nitro-N-nitrosoguanidine")
+
+(subclass FBcv--0000222 Publication)
+
+(documentation FBcv--0000015 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000606 FBcv--0000807)
+
+(documentation FBcv--0000548 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000525 camcur)
+
+(termFormat EnglishLanguage "dominant temperature-sensitive lethal
+balancer for chromosome 3")
+
+(termFormat EnglishLanguage FBcv--0000152 "balancer stock")
+
+(mo-inSubset FBcv--0000311 camcur)
+
+(subclass FBcv--0000363 FBcv--0000357)
+
+(subclass FBcv--0000355 FBcv--0000354)
+
+(subclass FBcv--0000564 FBcv--0000561)
+
+(documentation FBcv--0000249 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000379 FBcv--0000008)
+
+(termFormat EnglishLanguage FBcv--0000809 "phenotype qualifier")
+
+(documentation SlovenianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage FBcv--0000351 "lethal")
+
+(subclass FBcv--0000494 FBcv--0000492)
+
+(mo-relatedSynonym FBcv--0000489 "&quot;Jumpstarter&quot; []")
+
+(mo-inSubset FBcv--0000539 camcur)
+
+(mo-inSubset FBcv--0000554 camcur)
+
+(subclass FBcv--0000528 FBcv--0000526)
+
+(mo-exactSynonym FBcv--0000655 "&quot;Vienna&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000130 "60-90% egg length")
+
+(termFormat EnglishLanguage FBcv--0000459 "in vitro construct |
+deletion")
+
+(documentation FBcv--0000556 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000233 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000519 FBcv--0000503)
+
+(subclass FBcv--0000059 FBcv--0000052)
+
+(mo-inSubset FBcv--0000229 camcur)
+
+(mo-relatedSynonym FBcv--0000605 "&quot;TEM&quot; []")
+
+(documentation FBcv--0000379 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000316 camcur)
+
+(mo-inSubset FBcv--0000607 camcur)
+
+(termFormat EnglishLanguage FBcv--0000594 "p-N,N-di(2-chloroethyl)aminophenylvaleric acid")
+
+(termFormat EnglishLanguage FBcv--0000026 "recessive visible allele
+recombination mapping stock")
+
+(mo-relatedSynonym FBcv--0000535 "&quot;MNNG&quot; []")
+
+(mo-inSubset FBcv--0000566 camcur)
+
+(subclass FBcv--0000134 FBcv--0000074)
+
+(subclass FBcv--0000181 FBcv--0000011)
+
+(mo-relatedSynonym FBcv--0000592 "&quot;MNU&quot; []")
+
+(mo-inSubset FBcv--0000383 camcur)
+
+(mo-definition FBcv--0000150 "&quot;Restricted to a segmentally repeated pattern with some specified type.&quot; [FB:DS]")
+
+(termFormat EnglishLanguage FBcv--0000474 "mitotic recombination")
+
+(termFormat EnglishLanguage FBcv--0000164 "paternal effect")
+
+(mo-inSubset FBcv--0000603 camcur)
+
+(subclass FBcv--0010024 FBcv--0010013)
+
+(mo-inSubset FBcv--0000497 camcur)
+
+(subclass FBcv--0000124 FBcv--0000074)
+
+(mo-inSubset FBcv--0000462 camcur)
+
+(mo-inSubset FBcv--0000410 camcur)
+
+(mo-inSubset FBcv--0000209 camcur)
+
+(termFormat EnglishLanguage FBcv--0000388 "geotaxis behavior
+defective")
+
+(documentation FBcv--0000125 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000359 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000257 camcur)
+
+(documentation FBcv--0000397 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000596 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000346 camcur)
+
+(documentation Smo-inSubset EnglishLanguage "Declares a term/typedef
+to be in a subset.")
+
+(mo-inSubset FBcv--0000108 camcur)
+
+(mo-inSubset FBcv--0000396 camcur)
+
+(subclass FBcv--0000522 FBcv--0000519)
+
+(documentation FBcv--0000420 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000467 camcur)
+
+(mo-inSubset FBcv--0000558 camcur)
+
+(subclass FBcv--0000312 FBcv--0000310)
+
+(subclass FBcv--0000123 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000192 "autobiography")
+
+(termFormat EnglishLanguage FBcv--0000101 "20-50% egg length")
+
+(subclass FBcv--0000151 Publication)
+
+(subclass FBcv--0000048 FBcv--0000038)
+
+(mo-inSubset FBcv--0000351 camcur)
+
+(termFormat EnglishLanguage FBcv--0000174 "dominant male sterile
+balancer")
+
+(subclass FBcv--0000310 FBcv--0000309)
+
+(mo-inSubset FBcv--0000610 camcur)
+
+(termFormat EnglishLanguage FBcv--0000030 "compartment")
+
+(termFormat EnglishLanguage FBcv--0000414 "locomotor behavior
+defective")
+
+(mo-inSubset FBcv--0000478 camcur)
+
+(termFormat EnglishLanguage FBcv--0000284 "RK2")
+
+(mo-inSubset FBcv--0000322 camcur)
+
+(documentation FBcv--0000469 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000596 "p-N,N-di-(2-chloroethyl)amino-DL-phenylalanine")
+
+(mo-inSubset FBcv--0000111 camcur)
+
+(termFormat EnglishLanguage FBcv--0000486 "P-element activity")
+
+(termFormat EnglishLanguage FBcv--0000342 "poor")
+
+(mo-relatedSynonym FBcv--0010022 "&quot;Drosophila species stock center&quot; []")
+
+(documentation FBcv--0000427 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000098 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000341 camcur)
+
+(mo-inSubset FBcv--0000255 camcur)
+
+(documentation FBcv--0000030 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000450 camcur)
+
+(documentation FBcv--0000171 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000601 "quinhydrone")
+
+(subclass FBcv--0000403 FBcv--0000387)
+
+(documentation FBcv--0000077 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation EnglishLanguage "Represents the transitive property.
+(Typedefs only)")
+
+(mo-inSubset FBcv--0000092 camcur)
+
+(subclass FBcv--0000584 FBcv--0000561)
+
+(subclass FBcv--0000422 FBcv--0000387)
+
+(termFormat EnglishLanguage FBcv--0000513 "+lt;up+gt;3+lt;/up+gt;H-thymidine")
+
+(subclass FBcv--0000619 FBcv--0010000)
+
+(subclass FBcv--0000547 FBcv--0000541)
+
+(termFormat EnglishLanguage FBcv--0000622 "suppressible")
+
+(subclass FBcv--0000460 FBcv--0000455)
+
+(termFormat EnglishLanguage FBcv--0000578 "dimethyl sulfoxide")
+
+(termFormat EnglishLanguage FBcv--0000516 "neutrons")
+
+(subclass FBcv--0000136 FBcv--0000074)
+
+(mo-exactSynonym FBcv--0000481 "&quot;Cre recombinase&quot; []")
+
+(subclass FBcv--0000507 FBcv--0000506)
+
+(documentation FBcv--0000358 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000076 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage "recessive lethal balancer for chromosome
+1")
+
+(mo-inSubset FBcv--0000002 camcur)
+
+(mo-inSubset FBcv--0000164 camcur)
+
+(mo-inSubset FBcv--0000298 camcur)
+
+(documentation Publication EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000163 FBcv--0000161)
+
+(documentation FBcv--0000296 EnglishLanguage "Proforma field: GA4.")
+
+(termFormat EnglishLanguage FBcv--0000061 "ectopic")
+
+(termFormat EnglishLanguage FBcv--0000427 "cell growth defective")
+
+(termFormat EnglishLanguage FBcv--0000343 "reduced")
+
+(documentation FBcv--0000349 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a. Proforma field: MA8.")
+
+(subclass FBcv--0000316 FBcv--0000014)
+
+(subclass FBcv--0000447 FBcv--0000347)
+
+(documentation FBcv--0000576 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000541 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass BulgarianLanguage FBcv--0000234)
+
+(documentation FBcv--0000490 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000438 camcur)
+
+(mo-inSubset FBcv--0000372 camcur)
+
+(documentation FBcv--0000221 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000476 FBcv--0000470)
+
+(mo-inSubset FBcv--0000054 camcur)
+
+(documentation FBcv--0000003 EnglishLanguage "Proforma field: GA19.")
+
+(subclass FBcv--0000249 FBcv--0000234)
+
+(documentation FBcv--0000119 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000526 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass Book Publication)
+
+(subclass FBcv--0000568 FBcv--0000561)
+
+(documentation FBcv--0000437 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000435 "neuroanatomy defective")
+
+(mo-definedNamespace "dominance_qualifier")
+
+(mo-inSubset FBcv--0000241 camcur)
+
+(documentation FBcv--0000563 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000196 Publication)
+
+(documentation FBcv--0000625 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(subclass FBcv--0000043 FBcv--0000029)
+
+(mo-inSubset FBcv--0000508 camcur)
+
+(documentation FBcv--0000452 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000325 FBcv--0000654)
+
+(subclass FBcv--0000216 Publication)
+
+(mo-inSubset FBcv--0000564 camcur)
+
+(documentation FBcv--0000514 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000416 camcur)
+
+(documentation FBcv--0000078 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000340 FBcv--0000811)
+
+(subclass FBcv--0000475 FBcv--0000470)
+
+(subclass FBcv--0000149 Publication)
+
+(mo-definition FBcv--0000653 "&quot;Restricted to unknown subtype(s) of a specifed type.&quot; [FB:DS]")
+
+(mo-inSubset FBcv--0000399 camcur)
+
+(termFormat EnglishLanguage FBcv--0000598 "dominant
+temperature-sensitive lethal balancer")
+
+(documentation DutchLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000055 FBcv--0000052)
+
+(termFormat EnglishLanguage FBcv--0000420 "grooming behavior
+defective")
+
+(termFormat EnglishLanguage FBcv--0000307 "male limited")
+
+(termFormat EnglishLanguage FBcv--0000323 "segment polarity")
+
+(documentation FBcv--0000067 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000463 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000610 "In transgenic Drosophila
+(allele of one drosophilid species in genome of another drosophilid)")
+
+(subclass FBcv--0000110 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000425 "cell death increase")
+
+(documentation FBcv--0000282 EnglishLanguage "Proforma field: GA3.")
+
+(documentation FBcv--0000161 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000236 camcur)
+
+(mo-inSubset FBcv--0000288 camcur)
+
+(subclass FBcv--0000006 FBcv--0000375)
+
+(termFormat EnglishLanguage FBcv--0000606 "allele assay method")
+
+(termFormat EnglishLanguage FBcv--0000434 "neurophysiology defective")
+
+(termFormat EnglishLanguage FBcv--0000135 "80% egg length")
+
+(subclass FBcv--0000419 FBcv--0000387)
+
+(subclass FBcv--0000330 FBcv--0000043)
+
+(documentation RomanianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000250 FBcv--0000234)
+
+(documentation FBcv--0000550 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000615 FBcv--0010000)
+
+(mo-inSubset FBcv--0000320 camcur)
+
+(documentation FBcv--0000472 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000117 FBcv--0000074)
+
+(documentation FBcv--0000052 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage "dominant female sterile balancer for
+chromosome 2")
+
+(subclass FBcv--0010004 FBcv--0000641)
+
+(subclass FBcv--0000156 FBcv--0000152)
+
+(termFormat EnglishLanguage FBcv--0000197 "book review")
+
+(subclass FBcv--0000201 Publication)
+
+(subclass FBcv--0000006 FBcv--0000376)
+
+(subclass FBcv--0000170 FBcv--0000166)
+
+(subclass FBcv--0000291 FBcv--0000290)
+
+(termFormat EnglishLanguage FBcv--0000319 "gap")
+
+(documentation FBcv--0000054 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAP6-q. Proforma field: GAT23-q. Proforma field: GAT6-q. Proforma
+field: GAP5-q.")
+
+(documentation FBcv--0000594 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000256 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000412 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000555 FBcv--0000553)
+
+(documentation FBcv--0000515 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000599 camcur)
+
+(mo-inSubset FBcv--0000094 camcur)
+
+(subclass ArmenianLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000515 "deuteron irradiation")
+
+(termFormat EnglishLanguage FBcv--0000071 "ventro-lateral")
+
+(mo-inSubset FBcv--0000081 camcur)
+
+(termFormat EnglishLanguage FBcv--0000335 "germ-line clone")
+
+(documentation FBcv--0000010 EnglishLanguage "Deprecated:  Use of this
+term is discouraged as there is no way to decide how to group anatomy
+terms combined with this qualifier with other terms in the anatomy
+ontology.  Subject to discussion and once its usage in old curation is
+removed, this term will be obsoleted.  DS")
+
+(termFormat EnglishLanguage FBcv--0000440 "chemical sensitive")
+
+(subclass FBcv--0000070 FBcv--0000052)
+
+(termFormat EnglishLanguage SlovakLanguage "Slovak")
+
+(documentation FBcv--0000362 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0010005 "genomic DNA")
+
+(subclass FBcv--0000451 FBcv--0000347)
+
+(mo-inSubset FBcv--0000224 camcur)
+
+(documentation FBcv--0000101 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000536 "sulfur mustard")
+
+(documentation FBcv--0000345 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-inSubset FBcv--0000078 camcur)
+
+(mo-inSubset FBcv--0000353 camcur)
+
+(mo-relatedSynonym FBcv--0000042 "&quot;deletion kit stock&quot; []")
+
+(documentation EnglishLanguage "General comments on the ontology.")
+
+(mo-inSubset FBcv--0000051 camcur)
+
+(documentation FBcv--0000361 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000430 FBcv--0000347)
+
+(mo-inSubset FBcv--0000468 camcur)
+
+(documentation FBcv--0000572 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000087 "10-100% egg length")
+
+(termFormat EnglishLanguage FBcv--0000649 "visible allele
+recombination mapping stock")
+
+(mo-inSubset FBcv--0000365 camcur)
+
+(subclass FBcv--0000478 FBcv--0000470)
+
+(documentation FBcv--0000068 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000599 FBcv--0000561)
+
+(subclass FBcv--0000514 FBcv--0000504)
+
+(termFormat EnglishLanguage FBcv--0000121 "50% egg length")
+
+(subclass FBcv--0000332 FBcv--0000809)
+
+(subclass FBcv--0000060 FBcv--0000052)
+
+(documentation FBcv--0000611 EnglishLanguage "Proforma field: GA19.")
+
+(mo-definition FBcv--0000035 "&quot;Restricted to the dorsal compartment of some specified type.&quot; [FB:DS]")
+
+(documentation FBcv--0000553 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000621 FBcv--0000620)
+
+(mo-inSubset FBcv--0000114 camcur)
+
+(mo-inSubset Book camcur)
+
+(documentation FBcv--0000063 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAP6-q. Proforma field: GAT23-q. Proforma field: GAT6-q. Proforma
+field: GAP5-q.")
+
+(mo-definition FBcv--0000024 "&quot;Expressivity measures the extent to which a given genotype is expressed at the phenotypic level.  &quot;High expressivity&quot; conveys that while expressivity is not complete, the phenotype expressed is approaching that of complete expressivity.&quot; [ISBN:0716735202]")
+
+(documentation FBcv--0000247 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation DanishLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000290 camcur)
+
+(termFormat EnglishLanguage FBcv--0000326 "isogenic chromosome 4")
+
+(subclass FBcv--0000008 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000447 "melanotic necrosis")
+
+(mo-inSubset FBcv--0000122 camcur)
+
+(documentation FBcv--0000365 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-exactSynonym FBcv--0000356 "&quot;body colour defective&quot; []")
+
+(documentation FBcv--0000148 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation EnglishLanguage "Date/time of last edit and save.")
+
+(termFormat EnglishLanguage FBcv--0000099 "20-30% egg length")
+
+(documentation FBcv--0000570 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000374 "fertile")
+
+(termFormat EnglishLanguage FBcv--0000306 "sex limited")
+
+(subclass FBcv--0000205 Publication)
+
+(termFormat EnglishLanguage FBcv--0000652 "compendium")
+
+(documentation FBcv--0000367 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000514 "Bevatron irradiation")
+
+(mo-inSubset FBcv--0000504 camcur)
+
+(mo-inSubset FBcv--0000203 camcur)
+
+(termFormat EnglishLanguage FBcv--0000314 "conditional RU486")
+
+(mo-definedNamespace "homeotic")
+
+(termFormat EnglishLanguage FBcv--0000055 "basal")
+
+(documentation FBcv--0000020 EnglishLanguage "This term modifed by a %
+value.")
+
+(termFormat EnglishLanguage FBcv--0000628 "non-suppressible")
+
+(subclass FBcv--0000105 FBcv--0000074)
+
+(documentation FBcv--0000544 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000524 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-definition FBcv--0000153 "&quot;A phenotypic effect which is expressed in and  limited to cells of the mutant genetic constitution under investigation is said to be cell autonomous.&quot; [FB:FBrf0002379]")
+
+(documentation FBcv--0000458 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000093 "10-70% egg length")
+
+(termFormat EnglishLanguage FBcv--0000631 "DrosDel Project deficiency
+kit stock")
+
+(termFormat EnglishLanguage FBcv--0000341 "good")
+
+(subclass FBcv--0000530 FBcv--0000526)
+
+(mo-inSubset FBcv--0000306 camcur)
+
+(subclass FBcv--0000322 FBcv--0000654)
+
+(documentation FBcv--0000116 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000128 "60-100% egg length")
+
+(termFormat EnglishLanguage FBcv--0000006 "male semi-fertile")
+
+(termFormat EnglishLanguage FBcv--0000370 "male sterile")
+
+(documentation FBcv--0000086 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000266 camcur)
+
+(subclass FBcv--0000392 FBcv--0000387)
+
+(termFormat EnglishLanguage MustardGas "mustard gas")
+
+(termFormat EnglishLanguage FBcv--0000566 "1,6-dimethylsulfonoxy
+D-mannitol")
+
+(subclass FBcv--0010023 FBcv--0010013)
+
+(termFormat EnglishLanguage FBcv--0000372 "male sterile
+germ-line-dependent")
+
+(subclass FBcv--0000364 FBcv--0000347)
+
+(termFormat EnglishLanguage ArmenianLanguage "Armenian")
+
+(subclass FBcv--0000029 FBcv--0010000)
+
+(termFormat EnglishLanguage FBcv--0000043 "transposase source for
+transposable element mutagenesis")
+
+(mo-inSubset FBcv--0000131 camcur)
+
+(termFormat EnglishLanguage FBcv--0000032 "compartment boundary")
+
+(termFormat EnglishLanguage FBcv--0000496 "MRF31.1")
+
+(termFormat EnglishLanguage FBcv--0000363 "increased cell size")
+
+(documentation FBcv--0000626 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(termFormat EnglishLanguage ComputerFile "computer file")
+
+(subclass FBcv--0000095 FBcv--0000074)
+
+(mo-inSubset FBcv--0000137 camcur)
+
+(termFormat EnglishLanguage FBcv--0000294 "wild-type allele")
+
+(documentation PortugueseLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass SwedishLanguage FBcv--0000234)
+
+(subclass FBcv--0000470 FBcv--0000452)
+
+(mo-inSubset FBcv--0000287 camcur)
+
+(documentation FBcv--0000510 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000454 camcur)
+
+(mo-inSubset FBcv--0000284 camcur)
+
+(mo-inSubset FBcv--0000466 camcur)
+
+(documentation Iodine EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000047 FBcv--0000038)
+
+(documentation FBcv--0000400 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000574 FBcv--0000561)
+
+(mo-definition FBcv--0000065 "&quot;Restricted to posterior region of some specified type.&quot; [FB:DS]")
+
+(mo-definedNamespace "origin_of_mutation")
+
+(mo-inSubset FBcv--0000470 camcur)
+
+(mo-inSubset FBcv--0000482 camcur)
+
+(mo-inSubset FBcv--0000345 camcur)
+
+(mo-inSubset FBcv--0000514 camcur)
+
+(mo-relatedSynonym FBcv--0000596 "&quot;melphalan&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000297 "extracted wild-type
+chromosome 1")
+
+(documentation FBcv--0000075 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000140 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000484 "IR-hybrid dysgenesis")
+
+(termFormat EnglishLanguage FBcv--0000204 "film")
+
+(mo-relatedSynonym FBcv--0000545 "&quot;DBE&quot; []")
+
+(mo-inSubset FBcv--0000349 camcur)
+
+(subclass FBcv--0000492 FBcv--0000486)
+
+(subclass FBcv--0000532 FBcv--0000526)
+
+(subclass FBcv--0000257 FBcv--0000234)
+
+(mo-inSubset Patent camcur)
+
+(documentation FBcv--0000555 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000559 camcur)
+
+(termFormat EnglishLanguage FBcv--0000162 "non-rescuable maternal
+effect")
+
+(mo-relatedSynonym FBcv--0010022 "&quot;Tucson&quot; []")
+
+(documentation FBcv--0000445 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000151 camcur)
+
+(documentation FBcv--0000485 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000522 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000082 FBcv--0000074)
+
+(subclass FBcv--0000013 FBcv--0000000)
+
+(documentation FBcv--0000531 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000385 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(domain Smo-definedSubset 2 Smo-Subset)
+
+(mo-inSubset FBcv--0000307 camcur)
+
+(subclass FBcv--0000526 FBcv--0000525)
+
+(subclass FBcv--0000311 FBcv--0000310)
+
+(subclass FBcv--0000023 FBcv--0000021)
+
+(documentation FBcv--0000298 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-relatedSynonym FBcv--0000203 "&quot;correction&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000168 "granular")
+
+(termFormat EnglishLanguage FBcv--0000376 "male fertile")
+
+(documentation FBcv--0000360 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000107 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000645 "P cytotype")
+
+(documentation FBcv--0000387 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000528 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000428 camcur)
+
+(documentation FBcv--0000507 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000539 FBcv--0000538)
+
+(mo-inSubset FBcv--0000112 camcur)
+
+(mo-inSubset FBcv--0000127 camcur)
+
+(subclass FBcv--0000027 FBcv--0000649)
+
+(termFormat EnglishLanguage FBcv--0000062 "ipsilateral")
+
+(mo-inSubset FBcv--0000161 camcur)
+
+(subclass FBcv--0000446 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000191 "advertisement")
+
+(documentation FBcv--0000509 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000268 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-xrefAnalogous FBcv--0000613 "abbrev:8")
+
+(subclass FBcv--0000146 FBcv--0000478)
+
+(documentation EnglishLanguage "Version of OBO format.")
+
+(mo-inSubset FBcv--0000035 camcur)
+
+(mo-relatedSynonym FBcv--0000602 "&quot;CB1592&quot; []")
+
+(subclass FBcv--0000076 FBcv--0000074)
+
+(subclass FBcv--0000487 FBcv--0000486)
+
+(subclass FBcv--0000605 FBcv--0000561)
+
+(subclass FBcv--0010000 FBcv--0000614)
+
+(termFormat EnglishLanguage FBcv--0000216 "poster")
+
+(documentation FBcv--0000532 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000120 "40-90% egg length")
+
+(termFormat EnglishLanguage FBcv--0000268 "Norwegian")
+
+(termFormat EnglishLanguage FBcv--0000557 "sodium fluoride")
+
+(mo-inSubset FBcv--0000553 camcur)
+
+(subclass FBcv--0000433 FBcv--0000347)
+
+(mo-definedNamespace "embryonic_pattern_qualifier")
+
+(mo-inSubset FBcv--0000258 camcur)
+
+(termFormat EnglishLanguage FBcv--0000626 "non-enhanceable")
+
+(documentation Male EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(domain Smo-inSubset 2 Smo-Subset)
+
+(mo-inSubset FBcv--0000420 camcur)
+
+(mo-inSubset FBcv--0000567 camcur)
+
+(termFormat EnglishLanguage FBcv--0000322 "pair rule")
+
+(subclass FBcv--0000148 FBcv--0000322)
+
+(mo-definition FBcv--0000797 "&quot;Cell autonomy statements describe the cellular focus of mutant phenotype, generally revealed by genetic mosaic analysis, in terms of whether the mutant has its phenotypic effect limited to, or not limited to, cells of the mutant genotype.&quot; [FB:rd]")
+
+(termFormat EnglishLanguage FBcv--0000089 "10-30% egg length")
+
+(subclass Letter Publication)
+
+(documentation FBcv--0000122 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000090 FBcv--0000074)
+
+(mo-inSubset FBcv--0000557 camcur)
+
+(documentation FBcv--0000567 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000178 FBcv--0000011)
+
+(termFormat EnglishLanguage FBcv--0000469 "spontaneous")
+
+(subclass FBcv--0000133 FBcv--0000074)
+
+(documentation FBcv--0000525 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-definition FBcv--0000018 "&quot;Penetrance is the fraction of individuals of a given genotype who exhibit the phenotype associated with that genotype.  Penetrance is complete when all the individuals of a given genotype exhibit the phenotype associated with that genotype.&quot; [ISBN:0716735202]")
+
+(termFormat EnglishLanguage FBcv--0000611 "Whole-organism transient
+assay (allele from one drosophilid species assayed in another
+drosophilid)")
+
+(documentation FBcv--0000150 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000635 "Cambridge University
+duplication kit for chromosome 2 stock")
+
+(subclass FBcv--0000521 FBcv--0000519)
+
+(subclass FBcv--0000607 FBcv--0000606)
+
+(documentation FBcv--0000436 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000353 FBcv--0000351)
+
+(documentation FBcv--0000094 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000292 EnglishLanguage "Proforma field: GA4.")
+
+(mo-inSubset RussianLanguage camcur)
+
+(subclass FBcv--0000323 FBcv--0000654)
+
+(documentation FBcv--0000376 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000274 FBcv--0000234)
+
+(mo-inSubset FBcv--0000440 camcur)
+
+(subclass FBcv--0000597 FBcv--0000561)
+
+(documentation FBcv--0000242 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage YiddishLanguage "Yiddish")
+
+(documentation FBcv--0000295 EnglishLanguage "Proforma field: GA4.")
+
+(subclass FBcv--0000092 FBcv--0000074)
+
+(documentation ComputerFile EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0010023 "Szeged Drosophila Stock
+Centre")
+
+(documentation FBcv--0000612 EnglishLanguage "Proforma field: GA19.")
+
+(documentation FBcv--0000325 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(termFormat EnglishLanguage FBcv--0000346 "intermediate")
+
+(subclass FBcv--0000372 FBcv--0000370)
+
+(documentation FBcv--0000112 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000283 FBcv--0000282)
+
+(subclass FBcv--0000147 FBcv--0000322)
+
+(documentation FBcv--0000500 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000113 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000568 "1-amino-2-naphthol-4-sulfonic acid")
+
+(mo-inSubset DutchLanguage camcur)
+
+(documentation FBcv--0000535 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-relatedSynonym FBcv--0000543 "&quot;2-methoxy-6-[3-(ethyl-2-chloroethyl)aminopropylamino]acridine&quot; []")
+
+(termFormat EnglishLanguage Smo-inSubset "inSubset")
+
+(subclass FBcv--0000436 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000619 "isogenic stock")
+
+(termFormat EnglishLanguage FBcv--0000426 "cell death decrease")
+
+(documentation FBcv--0000396 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000335 camcur)
+
+(subclass FBcv--0000515 FBcv--0000504)
+
+(mo-relatedSynonym FBcv--0000531 "&quot;ENU&quot; []")
+
+(mo-inSubset FBcv--0000007 camcur)
+
+(documentation FBcv--0000489 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset SwedishLanguage camcur)
+
+(mo-definedNamespace "environmental_qualifier")
+
+(termFormat EnglishLanguage FBcv--0000518 "X ray")
+
+(subclass FBcv--0000093 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000457 "in vitro construct | coding
+region fusion")
+
+(subclass Iodine FBcv--0000553)
+
+(subclass FBcv--0000233 Publication)
+
+(termFormat EnglishLanguage FBcv--0000141 "gradient")
+
+(termFormat EnglishLanguage FBcv--0000074 "egg length")
+
+(subclass FBcv--0000087 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000151 "archive")
+
+(mo-inSubset FBcv--0000190 camcur)
+
+(mo-inSubset FBcv--0000604 camcur)
+
+(subclass FBcv--0000102 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000485 "Stalker-hybrid dysgenesis")
+
+(subclass FBcv--0000067 FBcv--0000052)
+
+(mo-definition FBcv--0000025 "&quot;Expressivity measures the extent to which a given genotype is expressed at the phenotypic level.  &quot;Low expressivity&quot; conveys that phenotype expressed is a much reduced version compared to complete expressivity.&quot; [ISBN:0716735202]")
+
+(subclass FBcv--0000342 FBcv--0000811)
+
+(subclass FBcv--0000458 FBcv--0000455)
+
+(termFormat EnglishLanguage FBcv--0000131 "70% egg length")
+
+(termFormat EnglishLanguage FBcv--0000570 "2-methoxyethanol")
+
+(mo-inSubset FBcv--0000076 camcur)
+
+(documentation FBcv--0000133 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000385 FBcv--0000384)
+
+(mo-relatedSynonym FBcv--0000599 "&quot;CB3034&quot; []")
+
+(documentation FBcv--0000197 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000391 camcur)
+
+(mo-definition FBcv--0000146 "&quot;Endonuclease that recognizes and cleaves a 19-24 bp palindromic DNA site.&quot; [UniProt:P05725]")
+
+(mo-definition FBcv--0000032 "&quot;Restricted to some compartment boundary within a specified type.&quot; [FB:DS]")
+
+(subclass FBcv--0000592 FBcv--0000561)
+
+(documentation FBcv--0000480 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000519 "non-ionizing radiation")
+
+(mo-relatedSynonym FBcv--0000529 "&quot;CB1522&quot; []")
+
+(subclass FBcv--0000384 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0010006 "ethanol-preserved
+specimen")
+
+(subclass DNAMolecule FBcv--0000561)
+
+(termFormat EnglishLanguage FBcv--0000586 "hexamethylmelamine")
+
+(mo-definedNamespace "mode_of_assay")
+
+(termFormat EnglishLanguage FBcv--0000554 "cupric sulfate")
+
+(termFormat EnglishLanguage FBcv--0000102 "20-60% egg length")
+
+(subclass FBcv--0000345 FBcv--0000811)
+
+(mo-inSubset FBcv--0000459 camcur)
+
+(termFormat EnglishLanguage FBcv--0000546 "1,2-dichloroethane")
+
+(mo-inSubset FBcv--0000477 camcur)
+
+(termFormat EnglishLanguage FBcv--0000140 "FlyBase analysis")
+
+(documentation FBcv--0000066 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000070 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000293 EnglishLanguage "Proforma field: GA4.")
+
+(mo-inSubset FBcv--0000210 camcur)
+
+(termFormat EnglishLanguage FBcv--0000142 "anterior posterior
+gradient")
+
+(subclass FBcv--0000085 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000304 "extracted wild-type
+chromosome 4")
+
+(subclass FBcv--0000009 FBcv--0000176)
+
+(documentation FBcv--0000602 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000309 FBcv--0000005)
+
+(subclass FBcv--0000152 FBcv--0010000)
+
+(termFormat EnglishLanguage FBcv--0000545 "1,2-dibromoethane")
+
+(termFormat EnglishLanguage FrenchLanguage "French")
+
+(mo-savedDateTime "10:04:2007 13:20")
+
+(mo-inSubset FBcv--0000134 camcur)
+
+(termFormat EnglishLanguage FBcv--0000361 "large body")
+
+(subclass FBcv--0000565 FBcv--0000005)
+
+(termFormat EnglishLanguage FBcv--0000156 "pair of homologous
+balancers")
+
+(termFormat EnglishLanguage FBcv--0000076 "0-10% egg length")
+
+(documentation FBcv--0000142 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000051 "segment boundary")
+
+(termFormat EnglishLanguage Male "male")
+
+(termFormat EnglishLanguage FBcv--0000080 "0-40% egg length")
+
+(documentation FBcv--0000451 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000542 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000091 FBcv--0000074)
+
+(mo-inSubset FBcv--0000215 camcur)
+
+(mo-relatedSynonym NitrogenMustardGas "&quot;HN2&quot; []")
+
+(mo-inSubset FBcv--0000310 camcur)
+
+(mo-inSubset FBcv--0000513 camcur)
+
+(termFormat EnglishLanguage FBcv--0000449 "tissue polarity")
+
+(subclass FBcv--0000109 FBcv--0000074)
+
+(subclass FBcv--0000197 Publication)
+
+(termFormat EnglishLanguage FBcv--0010007 "pinned speciman")
+
+(subclass FBcv--0000121 FBcv--0000074)
+
+(mo-inSubset FBcv--0000121 camcur)
+
+(mo-inSubset FBcv--0000319 camcur)
+
+(mo-inSubset FBcv--0000227 camcur)
+
+(subclass FBcv--0000370 FBcv--0000364)
+
+(documentation FBcv--0000117 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000312 camcur)
+
+(subclass FBcv--0000413 FBcv--0000411)
+
+(subclass FBcv--0000428 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000477 "reduction")
+
+(termFormat EnglishLanguage FBcv--0000600 "p-p'-N,N-di(2-chloroethyl)aminophenoxyphenylalanine1")
+
+(subclass FBcv--0000517 FBcv--0000516)
+
+(termFormat EnglishLanguage FBcv--0000029 "transposable element
+mutagenesis stock")
+
+(subclass FBcv--0000155 FBcv--0000152)
+
+(termFormat EnglishLanguage FBcv--0000188 "publication descriptor")
+
+(subclass FBcv--0000308 FBcv--0000306)
+
+(termFormat EnglishLanguage FBcv--0000365 "semi-sterile")
+
+(subclass FBcv--0000585 FBcv--0000561)
+
+(termFormat EnglishLanguage Smo-definedSubset "definedSubset")
+
+(subclass FBcv--0000655 FBcv--0010013)
+
+(mo-relatedSynonym FBcv--0010020 "&quot;Artavanis-Tsakonas laboratory&quot; []")
+
+(mo-inSubset FBcv--0000555 camcur)
+
+(mo-inSubset FBcv--0000562 camcur)
+
+(documentation FBcv--0000413 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation Book EnglishLanguage "Proforma field: P1.")
+
+(documentation FBcv--0000061 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000434 FBcv--0000347)
+
+(subclass FBcv--0000449 FBcv--0000347)
+
+(subclass KoreanLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000148 "odd pair rule")
+
+(documentation Letter EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000324 "dorsal-ventral polarity")
+
+(documentation FBcv--0000557 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000639 "Golic laboratory gene
+replacement kit stock")
+
+(documentation FBcv--0000562 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000056 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000414 FBcv--0000387)
+
+(termFormat EnglishLanguage FBcv--0000654 "embryonic pattern
+qualifier")
+
+(subclass FBcv--0000297 FBcv--0000615)
+
+(documentation FBcv--0000153 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage DanishLanguage "Danish")
+
+(termFormat EnglishLanguage FBcv--0000161 "maternal effect")
+
+(termFormat EnglishLanguage FBcv--0000288 "amorph")
+
+(termFormat EnglishLanguage FBcv--0000491 "p+amp;pgr;25.7wc")
+
+(documentation FBcv--0000352 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000313 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000019 FBcv--0000017)
+
+(mo-inSubset FBcv--0000502 camcur)
+
+(subclass FBcv--0000622 FBcv--0000620)
+
+(subclass FBcv--0000651 Publication)
+
+(termFormat EnglishLanguage FBcv--0000481 "cre recombinase")
+
+(subclass FBcv--0000638 FBcv--0000614)
+
+(termFormat EnglishLanguage "dominant male sterile balancer for
+chromosome 2")
+
+(subclass FBcv--0000544 FBcv--0000541)
+
+(subclass FBcv--0000373 FBcv--0000370)
+
+(documentation FBcv--0000183 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Subject to discussion and once its usage in old curation is removed,
+this term will be obsoleted.  DS")
+
+(termFormat EnglishLanguage FBcv--0000313 "drug conditional")
+
+(termFormat EnglishLanguage FBcv--0000293 "hypermorph")
+
+(termFormat EnglishLanguage FBcv--0000331 "polyphasic")
+
+(termFormat EnglishLanguage "Artavanis laboratory")
+
+(termFormat EnglishLanguage FBcv--0000479 "FLPase")
+
+(subclass FBcv--0000247 FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000366 "female sterile")
+
+(termFormat EnglishLanguage FBcv--0010002 "preserved specimen")
+
+(documentation YiddishLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000461 camcur)
+
+(documentation SlovakLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage FBcv--0000812 "clone qualifier")
+
+(mo-savedBy "djs93")
+
+(documentation FBcv--0000311 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000460 camcur)
+
+(subclass FBcv--0000590 FBcv--0000561)
+
+(subclass FBcv--0000653 FBcv--0000052)
+
+(documentation FBcv--0000074 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000576 camcur)
+
+(subclass FBcv--0000107 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000159 "balancer for chromosome 2")
+
+(termFormat EnglishLanguage "gene descriptor")
+
+(termFormat EnglishLanguage FBcv--0000411 "visual behavior defective")
+
+(mo-definition FBcv--0000161 "&quot;A phenotypic attribute is described as showing a maternal effect when the phenotype of an individual is a manifestation of the genotype of the mother, rather than the genotype of the individual.&quot; [ISBN:0716735202]")
+
+(mo-inSubset FBcv--0000249 camcur)
+
+(mo-inSubset FBcv--0000652 camcur)
+
+(documentation MustardGas EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000549 "5-bromouracil")
+
+(subclass FBcv--0000012 FBcv--0000176)
+
+(mo-inSubset FBcv--0000570 camcur)
+
+(subclass FBcv--0000203 Publication)
+
+(documentation FBcv--0000053 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000258 "Indonesian")
+
+(documentation FBcv--0000454 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000338 FBcv--0000044)
+
+(mo-inSubset FBcv--0000650 camcur)
+
+(termFormat EnglishLanguage FBcv--0000387 "behavioral")
+
+(termFormat EnglishLanguage FBcv--0000455 "in vitro construct")
+
+(termFormat EnglishLanguage GreekLanguage "Greek")
+
+(subclass FBcv--0000119 FBcv--0000074)
+
+(documentation FBcv--0000178 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Subject to discussion and once its usage in old curation is removed,
+this term will be obsoleted.  DS")
+
+(documentation FBcv--0000371 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000287 EnglishLanguage "Proforma field: GA4.")
+
+(termFormat EnglishLanguage FBcv--0000240 "Catalan")
+
+(documentation FBcv--0000492 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-exactSynonym FBcv--0010021 "&quot;Bloomington&quot; []")
+
+(subclass FBcv--0000405 FBcv--0000403)
+
+(mo-inSubset FBcv--0000418 camcur)
+
+(termFormat EnglishLanguage FBcv--0000106 "30% egg length")
+
+(mo-inSubset FBcv--0000060 camcur)
+
+(termFormat EnglishLanguage FBcv--0000608 "Whole-organism transient
+assay")
+
+(documentation FBcv--0000316 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(documentation FBcv--0000267 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000393 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000217 camcur)
+
+(mo-inSubset FBcv--0000447 camcur)
+
+(documentation FBcv--0000236 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000391 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000478 "site specific recombinase")
+
+(mo-exactSynonym FBcv--0000388 "&quot;geotaxis behaviour defective&quot; []")
+
+(termFormat EnglishLanguage CzechLanguage "Czech")
+
+(subclass FBcv--0000582 FBcv--0000561)
+
+(termFormat EnglishLanguage FBcv--0000170 "punctate")
+
+(termFormat EnglishLanguage FBcv--0000505 "+amp;agr; ray")
+
+(subclass FBcv--0000356 FBcv--0000354)
+
+(mo-inSubset FBcv--0000261 camcur)
+
+(mo-inSubset FBcv--0000153 camcur)
+
+(documentation LatvianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000366 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000422 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000002 FBcv--0000387)
+
+(documentation FBcv--0000060 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000572 camcur)
+
+(mo-inSubset FBcv--0000314 camcur)
+
+(mo-inSubset FBcv--0000500 camcur)
+
+(subclass LithuanianLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000233 "unpublished")
+
+(mo-inSubset FBcv--0000358 camcur)
+
+(subclass FBcv--0000467 FBcv--0000466)
+
+(subclass FBcv--0000160 FBcv--0000152)
+
+(subclass FBcv--0000242 FBcv--0000234)
+
+(subclass FBcv--0000231 Publication)
+
+(documentation FBcv--0000650 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000492 "MR")
+
+(documentation FBcv--0000575 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000459 FBcv--0000455)
+
+(termFormat EnglishLanguage FBcv--0010000 "living stock")
+
+(documentation FBcv--0000394 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-relatedSynonym FBcv--0000139 "&quot;90-100% egg length&quot; []")
+
+(documentation FBcv--0000457 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000090 camcur)
+
+(documentation FBcv--0000289 EnglishLanguage "Proforma field: GA4.")
+
+(termFormat EnglishLanguage FBcv--0000154 "cell non-autonomous")
+
+(subclass FBcv--0000809 FBcv--0000005)
+
+(mo-definedNamespace "phenotypic_class")
+
+(mo-inSubset FBcv--0000407 camcur)
+
+(mo-inSubset CzechLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000212 "paper")
+
+(termFormat EnglishLanguage FBcv--0000539 "urethane")
+
+(subclass FBcv--0000408 FBcv--0000387)
+
+(subclass FBcv--0000484 FBcv--0000483)
+
+(subclass FBcv--0000267 FBcv--0000234)
+
+(mo-inSubset FBcv--0000444 camcur)
+
+(documentation FBcv--0000444 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000540 "vinyl carbamate")
+
+(termFormat EnglishLanguage FBcv--0000079 "0-30% egg length")
+
+(subclass FBcv--0000226 Publication)
+
+(mo-relatedSynonym FBcv--0000533 "&quot;CB1540&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000228 "thesis")
+
+(subclass FBcv--0000465 FBcv--0000452)
+
+(termFormat EnglishLanguage FBcv--0000582 "ethylene oxide")
+
+(mo-relatedSynonym FBcv--0000587 "&quot;HMPA&quot; []")
+
+(documentation FBcv--0000251 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000360 FBcv--0000357)
+
+(documentation FBcv--0000001 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000225 Publication)
+
+(documentation FBcv--0000097 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000079 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000528 "2-chloroethyl
+methanesulfonate")
+
+(subclass FBcv--0000512 FBcv--0000504)
+
+(mo-inSubset FBcv--0000584 camcur)
+
+(subclass FBcv--0000529 FBcv--0000526)
+
+(subclass FBcv--0000388 FBcv--0000387)
+
+(mo-definition FBcv--0000037 "&quot;Restricted to the ventral compartment of some specified type.&quot; [FB:DS]")
+
+(mo-inSubset FBcv--0000600 camcur)
+
+(subclass FBcv--0000327 FBcv--0000043)
+
+(termFormat EnglishLanguage FBcv--0000344 "slow")
+
+(subclass FBcv--0000503 FBcv--0000452)
+
+(termFormat EnglishLanguage FBcv--0000398 "memory defective")
+
+(mo-inSubset FBcv--0000533 camcur)
+
+(subclass JapaneseLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000532 "hycanthon
+methanesulfonate")
+
+(subclass FBcv--0000469 FBcv--0000452)
+
+(mo-inSubset FBcv--0000510 camcur)
+
+(documentation FBcv--0000351 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000369 FBcv--0000366)
+
+(termFormat EnglishLanguage FBcv--0000023 "expressivity incomplete")
+
+(subclass SpanishLanguage FBcv--0000234)
+
+(subclass FBcv--0000315 FBcv--0000313)
+
+(termFormat EnglishLanguage FBcv--0000329 "piggyBac transposase source
+for transposable element mutagenesis")
+
+(documentation FBcv--0000407 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000539 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000348 "wild-type")
+
+(termFormat EnglishLanguage FBcv--0000604 "triaziquone")
+
+(documentation FBcv--0000571 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000648 FBcv--0010000)
+
+(termFormat EnglishLanguage FBcv--0000096 "100% egg length")
+
+(mo-relatedSynonym FBcv--0000600 "&quot;CB305&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000234 "publication language")
+
+(mo-inSubset FBcv--0000240 camcur)
+
+(mo-inSubset FBcv--0000512 camcur)
+
+(subclass FBcv--0000054 FBcv--0000052)
+
+(termFormat EnglishLanguage FBcv--0000193 "bibliographic list")
+
+(subclass FBcv--0000448 FBcv--0000347)
+
+(mo-relatedSynonym FBcv--0000559 "&quot;DEB&quot; []")
+
+(subclass FBcv--0000024 FBcv--0000023)
+
+(termFormat EnglishLanguage FBcv--0000219 "retraction")
+
+(termFormat EnglishLanguage FBcv--0000406 "tarsal response defective")
+
+(subclass FBcv--0000481 FBcv--0000478)
+
+(termFormat EnglishLanguage FBcv--0000547 "1-bromo-2-chloroethane")
+
+(mo-inSubset FBcv--0000543 camcur)
+
+(subclass FBcv--0000367 FBcv--0000366)
+
+(documentation FBcv--0000471 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000638 "sequenced strain")
+
+(mo-inSubset FBcv--0000036 camcur)
+
+(mo-inSubset FBcv--0000471 camcur)
+
+(documentation FBcv--0000199 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000240 FBcv--0000234)
+
+(documentation FBcv--0000600 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000062 FBcv--0000052)
+
+(mo-inSubset FBcv--0000518 camcur)
+
+(mo-inSubset FBcv--0000079 camcur)
+
+(termFormat EnglishLanguage "recessive lethal balancer for chromosome
+2")
+
+(mo-inSubset FBcv--0000422 camcur)
+
+(documentation FBcv--0000592 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000389 camcur)
+
+(subclass FBcv--0010007 FBcv--0010002)
+
+(termFormat EnglishLanguage FBcv--0000385 "short lived")
+
+(termFormat EnglishLanguage FBcv--0000416 "uncoordinated")
+
+(subclass FBcv--0000578 FBcv--0000561)
+
+(documentation FBcv--0000172 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000603 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000116 "40-50% egg length")
+
+(subclass FBcv--0000183 FBcv--0000012)
+
+(mo-inSubset FBcv--0000218 camcur)
+
+(mo-relatedSynonym FBcv--0000814 "&quot;CB2041&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000211 "obituary")
+
+(termFormat EnglishLanguage FBcv--0000584 "formaldehyde")
+
+(subclass FBcv--0000367 FBcv--0000365)
+
+(mo-inSubset FBcv--0000364 camcur)
+
+(mo-relatedSynonym FBcv--0000546 "&quot;DCE&quot; []")
+
+(documentation FBcv--0000503 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000327 "P-element transposase
+source for transposable element mutagenesis")
+
+(mo-inSubset FBcv--0000492 camcur)
+
+(mo-inSubset FBcv--0000395 camcur)
+
+(subclass FBcv--0000097 FBcv--0000074)
+
+(subclass FBcv--0000301 FBcv--0000299)
+
+(termFormat EnglishLanguage FBcv--0010014 "laboratory collection")
+
+(termFormat EnglishLanguage JapaneseLanguage "Japanese")
+
+(subclass SlovenianLanguage FBcv--0000234)
+
+(documentation FBcv--0000493 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-definedSubset camcur)
+
+(subclass FBcv--0000400 FBcv--0000399)
+
+(documentation FBcv--0000467 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000121 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation EnglishLanguage "Represents the cyclic property.
+(Typedefs only)")
+
+(documentation FBcv--0000601 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass UkrainianLanguage FBcv--0000234)
+
+(mo-inSubset FBcv--0000457 camcur)
+
+(subclass FBcv--0000480 FBcv--0000478)
+
+(documentation FBcv--0000628 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(subclass FBcv--0000812 FBcv--0000809)
+
+(subclass FBcv--0000064 FBcv--0000052)
+
+(mo-inSubset FBcv--0000053 camcur)
+
+(mo-inSubset FBcv--0000583 camcur)
+
+(documentation FBcv--0000441 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000350 "semi-viable")
+
+(termFormat EnglishLanguage FBcv--0000136 "80-90% egg length")
+
+(mo-relatedSynonym FBcv--0000543 "&quot;quinacrine mustard&quot; []")
+
+(mo-inSubset FBcv--0000101 camcur)
+
+(mo-inSubset FBcv--0000242 camcur)
+
+(mo-inSubset FBcv--0000066 camcur)
+
+(mo-inSubset FBcv--0000089 camcur)
+
+(subclass ItalianLanguage FBcv--0000234)
+
+(documentation Patent EnglishLanguage "Proforma field: P1.")
+
+(documentation FBcv--0000491 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000815 "p-N,N-di-(2-chloroethyl)aminophenylbutyric acid")
+
+(mo-inSubset FBcv--0000613 camcur)
+
+(documentation FBcv--0000505 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0010024 "Drosophila Genetic Resource
+Center")
+
+(mo-inSubset FBcv--0000300 camcur)
+
+(subclass FBcv--0000543 FBcv--0000541)
+
+(termFormat EnglishLanguage FBcv--0000169 "intense")
+
+(mo-inSubset FBcv--0000547 camcur)
+
+(mo-inSubset FBcv--0000390 camcur)
+
+(mo-inSubset FBcv--0000325 camcur)
+
+(mo-inSubset FBcv--0000546 camcur)
+
+(documentation Smo-definedSubset EnglishLanguage "Subset defined for
+the ontology.")
+
+(subclass FBcv--0000580 FBcv--0000561)
+
+(mo-inSubset FBcv--0000530 camcur)
+
+(subclass FBcv--0000450 FBcv--0000347)
+
+(mo-inSubset FBcv--0000219 camcur)
+
+(documentation FBcv--0000377 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000105 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000308 "female limited")
+
+(subclass FBcv--0000080 FBcv--0000074)
+
+(mo-inSubset FBcv--0000571 camcur)
+
+(documentation FBcv--0000481 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000565 "dominance relationship
+qualifier")
+
+(termFormat EnglishLanguage FBcv--0000607 "In transgenic Drosophila")
+
+(documentation FBcv--0000335 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000033 camcur)
+
+(documentation FBcv--0000545 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000062 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  As far as I can tell,
+ipsilateral means - on the same side as ....  In curation usage: on
+the same side as what ?  Will be obsoleted once a replacement term
+agreed upon (if needed) and any old usage retrofitted. DS")
+
+(termFormat EnglishLanguage FBcv--0000201 "DNA/RNA sequence record")
+
+(termFormat EnglishLanguage FBcv--0000001 "death certificate")
+
+(termFormat EnglishLanguage FBcv--0000347 "phenotypic class")
+
+(termFormat EnglishLanguage Letter "letter")
+
+(termFormat EnglishLanguage FBcv--0000585 "hesperidine")
+
+(termFormat EnglishLanguage FBcv--0000517 "+lt;up+gt;252+lt;/up+gt;Cf
+fission neutrons")
+
+(subclass FBcv--0000542 FBcv--0000541)
+
+(mo-inSubset FBcv--0000436 camcur)
+
+(termFormat EnglishLanguage FBcv--0000550 "5-bromouridine")
+
+(mo-inSubset FBcv--0000221 camcur)
+
+(mo-inSubset FBcv--0000148 camcur)
+
+(termFormat EnglishLanguage FBcv--0010012 "collection")
+
+(mo-definition FBcv--0000145 "&quot;Restricted to stripes in some specified type&quot; [FB:DS]")
+
+(subclass FBcv--0000337 FBcv--0000044)
+
+(termFormat EnglishLanguage FBcv--0000558 "epoxy hydrocarbon")
+
+(mo-relatedSynonym FBcv--0000511 "&quot;tritium&quot; []")
+
+(documentation FBcv--0000346 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-inSubset FBcv--0000486 camcur)
+
+(mo-relatedSynonym FBcv--0010024 "&quot;Kyoto&quot; []")
+
+(mo-inSubset FBcv--0000577 camcur)
+
+(mo-inSubset FBcv--0000063 camcur)
+
+(termFormat EnglishLanguage FBcv--0000642 "H cytotype")
+
+(termFormat EnglishLanguage FBcv--0000221 "slides")
+
+(subclass FBcv--0000500 FBcv--0000483)
+
+(termFormat EnglishLanguage FBcv--0000533 "methyl methanesulfonate")
+
+(subclass FBcv--0010003 FBcv--0000641)
+
+(subclass FBcv--0000347 FBcv--0000807)
+
+(documentation FBcv--0000416 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000463 "in vitro construct | RNAi")
+
+(documentation FBcv--0000479 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000389 "paralytic")
+
+(mo-inSubset FBcv--0000130 camcur)
+
+(documentation EnglishLanguage "I don't think this is a useful
+term.")
+
+(termFormat EnglishLanguage "hobo family transposable element
+insertions present")
+
+(mo-inSubset FBcv--0000590 camcur)
+
+(termFormat EnglishLanguage FBcv--0000378 "grandchildless")
+
+(mo-inSubset FBcv--0000295 camcur)
+
+(mo-inSubset SpanishLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000114 "40% egg length")
+
+(documentation FBcv--0000099 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000135 FBcv--0000074)
+
+(mo-inSubset FBcv--0000126 camcur)
+
+(mo-inSubset SlovenianLanguage camcur)
+
+(mo-inSubset FBcv--0000197 camcur)
+
+(documentation FBcv--0000395 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000542 "mitomycin C")
+
+(termFormat EnglishLanguage FBcv--0000377 "female fertile")
+
+(termFormat EnglishLanguage FBcv--0000000 "FlyBase CV")
+
+(mo-unidentified "namespace-id-rule: * FBcv:$sequence(7,0,9999999)$")
+
+(subclass FBcv--0000052 FBcv--0000005)
+
+(termFormat EnglishLanguage FBcv--0000432 "mitotic")
+
+(mo-definition FBcv--0000054 "&quot;Restricted to apical region of some specified type.&quot; [FB:DS]")
+
+(documentation FBcv--0000468 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000204 Publication)
+
+(subclass FBcv--0000266 FBcv--0000234)
+
+(subclass FBcv--0000299 FBcv--0000565)
+
+(documentation FBcv--0000549 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000283 "RK1")
+
+(documentation FBcv--0000621 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(termFormat EnglishLanguage FBcv--0010013 "stock center collection")
+
+(documentation FBcv--0000350 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000645 FBcv--0000641)
+
+(termFormat EnglishLanguage FBcv--0000063 "lateral")
+
+(mo-inSubset FBcv--0000146 camcur)
+
+(termFormat EnglishLanguage FBcv--0000452 "origin of mutation")
+
+(termFormat EnglishLanguage FBcv--0000088 "10-20% egg length")
+
+(mo-relatedSynonym MustardGas "&quot;1,1'-thiobis[2-chloroethane&quot; []")
+
+(documentation BulgarianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000496 camcur)
+
+(mo-inSubset FBcv--0000201 camcur)
+
+(documentation FBcv--0000518 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000357 "size defective")
+
+(termFormat EnglishLanguage FBcv--0000146 "I-CreI endonuclease")
+
+(subclass FBcv--0000288 FBcv--0000287)
+
+(subclass FBcv--0000349 FBcv--0000347)
+
+(mo-inSubset FBcv--0000308 camcur)
+
+(documentation PolishLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000205 camcur)
+
+(documentation FBcv--0000083 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage "dominant male sterile balancer for
+chromosome 3")
+
+(termFormat EnglishLanguage FBcv--0000155 "single balancer")
+
+(subclass FBcv--0000496 FBcv--0000492)
+
+(termFormat EnglishLanguage FBcv--0000236 "Arabic")
+
+(subclass FBcv--0000129 FBcv--0000074)
+
+(subclass FBcv--0000426 FBcv--0000424)
+
+(mo-inSubset FBcv--0000434 camcur)
+
+(termFormat EnglishLanguage FBcv--0000633 "Exelixis Inc. deficiency
+kit stock")
+
+(documentation FBcv--0000561 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass DutchLanguage FBcv--0000234)
+
+(subclass FBcv--0000604 FBcv--0000561)
+
+(mo-inSubset FBcv--0000441 camcur)
+
+(subclass FBcv--0000306 FBcv--0000332)
+
+(documentation LatinLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000212 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000292 "antimorph")
+
+(mo-inSubset FBcv--0000401 camcur)
+
+(termFormat EnglishLanguage FBcv--0000544 "ICR 170")
+
+(mo-inSubset FBcv--0000448 camcur)
+
+(documentation FBcv--0000584 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000103 "20-70% egg length")
+
+(mo-relatedSynonym FBcv--0000533 "&quot;MMS&quot; []")
+
+(subclass FBcv--0000631 FBcv--0000042)
+
+(subclass FBcv--0010020 FBcv--0010014)
+
+(mo-inSubset FBcv--0000481 camcur)
+
+(termFormat EnglishLanguage FBcv--0000501 "gypsy element activity")
+
+(subclass FBcv--0000190 Publication)
+
+(documentation FBcv--0000569 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000439 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000115 camcur)
+
+(subclass FBcv--0000200 Publication)
+
+(documentation FBcv--0000040 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(mo-inSubset FBcv--0000549 camcur)
+
+(mo-inSubset FBcv--0000324 camcur)
+
+(subclass FBcv--0000290 FBcv--0000286)
+
+(subclass FBcv--0000797 FBcv--0000809)
+
+(documentation FBcv--0000310 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000517 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000399 "courtship defective")
+
+(termFormat EnglishLanguage FBcv--0000137 "90% egg length")
+
+(subclass FBcv--0010010 FBcv--0000152)
+
+(termFormat EnglishLanguage FBcv--0000405 "gustation defective")
+
+(documentation FBcv--0000164 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000154 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000268 camcur)
+
+(subclass FBcv--0000046 FBcv--0000176)
+
+(subclass FBcv--0000490 FBcv--0000486)
+
+(mo-inSubset NaturalGas camcur)
+
+(termFormat EnglishLanguage FBcv--0000113 "30-90% egg length")
+
+(mo-exactSynonym FBcv--0000411 "&quot;visual behaviour defective&quot; []")
+
+(mo-inSubset FBcv--0000362 camcur)
+
+(documentation EnglishLanguage "The program used to generate the
+ontology.")
+
+(mo-inSubset GermanLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000605 "triethylenemelamine")
+
+(documentation FBcv--0000192 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000249 "Farsi")
+
+(termFormat EnglishLanguage FBcv--0000004 "Whole-organism transient
+assay (intraspecific)")
+
+(termFormat EnglishLanguage "DNA sequence variant")
+
+(termFormat EnglishLanguage FBcv--0000181 "late")
+
+(documentation FBcv--0000064 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000174 FBcv--0000152)
+
+(documentation FBcv--0000344 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(termFormat EnglishLanguage FBcv--0000356 "body color defective")
+
+(mo-inSubset FBcv--0000449 camcur)
+
+(subclass FBcv--0000103 FBcv--0000074)
+
+(subclass FBcv--0000556 FBcv--0000553)
+
+(mo-inSubset ItalianLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000241 "Chinese")
+
+(termFormat EnglishLanguage FBcv--0000345 "fast")
+
+(documentation FBcv--0000421 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000620 FBcv--0000005)
+
+(termFormat EnglishLanguage FBcv--0000042 "deficiency kit stock")
+
+(documentation FBcv--0000401 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000261 "Jugoslavian")
+
+(subclass FBcv--0000468 FBcv--0000466)
+
+(mo-relatedSynonym FBcv--0000204 "&quot;video&quot; []")
+
+(mo-inSubset FBcv--0000143 camcur)
+
+(mo-relatedSynonym "&quot;restriction fragment length polymorphism&quot; []")
+
+(mo-definition FBcv--0000565 "&quot;Dominance relationships describe the dependence of the expression of a phenotypic attribute of an allele on the genotype at the locus in question.  An allele might be recessive with respect to one phenotypic attribute, but dominant with respect to another.&quot; [FB:rd]")
+
+(mo-definedNamespace "genotype_to_phenotype_relation")
+
+(mo-inSubset FBcv--0000523 camcur)
+
+(documentation FBcv--0000323 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000091 "10-50% egg length")
+
+(documentation FBcv--0000034 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0010018 FBcv--0010014)
+
+(mo-inSubset FBcv--0000611 camcur)
+
+(subclass FBcv--0000535 FBcv--0000526)
+
+(documentation FBcv--0000307 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(termFormat EnglishLanguage FBcv--0000092 "10-60% egg length")
+
+(documentation FBcv--0000402 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000006 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000141 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000322 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000431 "meiotic")
+
+(documentation FBcv--0000257 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000473 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000045 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(subclass FBcv--0000581 FBcv--0000561)
+
+(subclass FBcv--0000307 FBcv--0000306)
+
+(subclass FBcv--0000626 FBcv--0000620)
+
+(termFormat EnglishLanguage FBcv--0000541 "intercalating agent")
+
+(mo-relatedSynonym FBcv--0000219 "&quot;erratum&quot; []")
+
+(subclass FBcv--0000021 FBcv--0000005)
+
+(documentation FBcv--0000340 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(termFormat EnglishLanguage FBcv--0000057 "contralateral")
+
+(subclass FBcv--0000086 FBcv--0000074)
+
+(mo-inSubset FBcv--0000612 camcur)
+
+(mo-definition FBcv--0000306 "&quot;A phenotypic attribute is described as sex limited if its expression is limited to one or other sex by virtue of the particular biology of that sex, rather than the sex-linkage of the genes underlying the attribute.&quot; [ISBN:002418120X]")
+
+(termFormat EnglishLanguage FBcv--0000548 "base analog")
+
+(documentation FBcv--0000440 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000009 "temporal stage qualifier")
+
+(subclass FBcv--0000594 FBcv--0000561)
+
+(termFormat EnglishLanguage FBcv--0000015 "postage stamp")
+
+(mo-inSubset FBcv--0000563 camcur)
+
+(mo-inSubset FBcv--0000427 camcur)
+
+(documentation FBcv--0000223 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000531 FBcv--0000526)
+
+(termFormat EnglishLanguage FBcv--0000134 "70-90% egg length")
+
+(subclass FBcv--0000286 FBcv--0000807)
+
+(termFormat EnglishLanguage FBcv--0010001 "molecular extract")
+
+(mo-inSubset FBcv--0000145 camcur)
+
+(subclass FBcv--0000559 FBcv--0000558)
+
+(subclass FBcv--0000383 FBcv--0000347)
+
+(termFormat EnglishLanguage NitrogenMustardGas "nitrogen mustard")
+
+(mo-inSubset FBcv--0000524 camcur)
+
+(subclass FBcv--0000075 FBcv--0000074)
+
+(mo-inSubset FBcv--0000403 camcur)
+
+(termFormat EnglishLanguage FBcv--0000332 "sex qualifier")
+
+(termFormat EnglishLanguage "dominant female sterile balancer for
+chromosome 3")
+
+(documentation FBcv--0000210 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000423 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000257 "Icelandic")
+
+(subclass FBcv--0000094 FBcv--0000074)
+
+(mo-inSubset FBcv--0000099 camcur)
+
+(subclass FBcv--0000466 FBcv--0000452)
+
+(subclass FBcv--0000100 FBcv--0000074)
+
+(subclass FBcv--0000435 FBcv--0000347)
+
+(mo-inSubset FBcv--0000397 camcur)
+
+(mo-inSubset FBcv--0000222 camcur)
+
+(documentation FBcv--0000137 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0010006 FBcv--0010002)
+
+(subclass FBcv--0000376 FBcv--0000374)
+
+(termFormat EnglishLanguage FBcv--0000097 "20% egg length")
+
+(subclass FBcv--0000145 FBcv--0000052)
+
+(termFormat EnglishLanguage FBcv--0000286 "allele morphy class")
+
+(mo-inSubset LithuanianLanguage camcur)
+
+(documentation FBcv--0000375 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000082 camcur)
+
+(subclass FBcv--0000445 FBcv--0000347)
+
+(subclass FBcv--0000600 FBcv--0000561)
+
+(subclass FBcv--0000044 FBcv--0000029)
+
+(subclass FBcv--0000268 FBcv--0000234)
+
+(documentation FBcv--0000354 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000201 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000223 camcur)
+
+(mo-inSubset FBcv--0000517 camcur)
+
+(termFormat EnglishLanguage FBcv--0000100 "20-40% egg length")
+
+(documentation FBcv--0000146 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000583 "fagaronine")
+
+(mo-inSubset FBcv--0000289 camcur)
+
+(subclass FBcv--0000536 FBcv--0000526)
+
+(mo-inSubset FBcv--0000446 camcur)
+
+(mo-inSubset FBcv--0000238 camcur)
+
+(termFormat EnglishLanguage FBcv--0000127 "60% egg length")
+
+(mo-inSubset FBcv--0000605 camcur)
+
+(documentation FBcv--0000477 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0010011 "laboratory wild-type
+stock")
+
+(documentation FBcv--0000110 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000046 "precursor")
+
+(subclass FBcv--0000077 FBcv--0000074)
+
+(mo-inSubset FBcv--0000199 camcur)
+
+(mo-inSubset UkrainianLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000218 "recording")
+
+(termFormat EnglishLanguage FBcv--0000419 "feeding behavior
+defective")
+
+(termFormat EnglishLanguage FBcv--0000510 "+lt;up+gt;32+lt;/up+gt;P")
+
+(documentation FBcv--0000487 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000462 "in vitro construct | amino
+acid replacement")
+
+(termFormat EnglishLanguage FBcv--0000081 "0-50% egg length")
+
+(mo-inSubset FBcv--0000381 camcur)
+
+(subclass FBcv--0000068 FBcv--0000014)
+
+(termFormat EnglishLanguage Female "female")
+
+(mo-definedNamespace "intensity_qualifier")
+
+(documentation FBcv--0000434 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000112 "30-80% egg length")
+
+(subclass FBcv--0000421 FBcv--0000387)
+
+(subclass FBcv--0000271 FBcv--0000274)
+
+(mo-inSubset FBcv--0000107 camcur)
+
+(termFormat EnglishLanguage FBcv--0000176 "temporal  qualifier")
+
+(documentation FBcv--0000504 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000309 "conditional qualifier")
+
+(documentation EnglishLanguage "Version of data in the ontology.")
+
+(mo-inSubset FBcv--0000394 camcur)
+
+(subclass DanishLanguage FBcv--0000234)
+
+(mo-inSubset FBcv--0000601 camcur)
+
+(termFormat EnglishLanguage FBcv--0000230 "automatic genome
+annotation")
+
+(termFormat EnglishLanguage Iodine "iodine")
+
+(subclass FBcv--0000294 FBcv--0000286)
+
+(mo-definition FBcv--0000019 "&quot;Penetrance is the fraction of individuals of a given genotype who exhibit the phenotype associated with that genotype.  Penetrance is incomplete when only some the individuals of a given genotype exhibit the phenotype associated with that genotype.&quot; [ISBN:0716735202]")
+
+(documentation FBcv--0000071 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000163 camcur)
+
+(subclass FBcv--0000575 FBcv--0000561)
+
+(termFormat EnglishLanguage FBcv--0000560 "diepoxyoctane")
+
+(termFormat EnglishLanguage FBcv--0000391 "bang sensitive")
+
+(subclass FBcv--0000282 FBcv--0000807)
+
+(termFormat EnglishLanguage FBcv--0000603 "styryl quinoline")
+
+(documentation SwedishLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000172 FBcv--0000166)
+
+(termFormat EnglishLanguage FBcv--0000471 "gene conversion")
+
+(subclass FBcv--0000320 FBcv--0000654)
+
+(mo-inSubset FBcv--0000626 camcur)
+
+(termFormat EnglishLanguage FBcv--0000082 "0-60% egg length")
+
+(termFormat EnglishLanguage FBcv--0000202 "protein sequence record")
+
+(mo-definition FBcv--0000056 "&quot;Restricted to central region of some specified type.&quot; [FB:DS]")
+
+(termFormat EnglishLanguage FBcv--0000531 "ethyl nitrosourea")
+
+(documentation FBcv--0000425 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000521 camcur)
+
+(documentation FBcv--0000035 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000250 "Finnish")
+
+(termFormat EnglishLanguage FBcv--0000494 "MR+lt;up+gt;T007+lt;/up+gt;")
+
+(subclass PortugueseLanguage FBcv--0000234)
+
+(mo-inSubset FBcv--0000465 camcur)
+
+(subclass FBcv--0000014 FBcv--0000809)
+
+(mo-relatedSynonym FBcv--0000815 "&quot;CB1348&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000386 "long lived")
+
+(mo-inSubset FBcv--0000204 camcur)
+
+(documentation FBcv--0000513 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000470 "recombination")
+
+(mo-inSubset FBcv--0000594 camcur)
+
+(documentation FBcv--0000004 EnglishLanguage "Proforma field: GA19.")
+
+(mo-inSubset FBcv--0000503 camcur)
+
+(mo-definition FBcv--0000308 "&quot;A phenotypic attribute is described as female limited if its expression is limited to females by virtue of the particular biology of females, rather than the sex-linkage of the genes underlying the attribute.&quot; [ISBN:002418120X]")
+
+(subclass FBcv--0000359 FBcv--0000357)
+
+(subclass FBcv--0000354 FBcv--0000347)
+
+(subclass FBcv--0000391 FBcv--0000387)
+
+(subclass FBcv--0000162 FBcv--0000161)
+
+(subclass FBcv--0000479 FBcv--0000478)
+
+(termFormat EnglishLanguage FBcv--0000511 "+lt;up+gt;3+lt;/up+gt;H")
+
+(subclass FBcv--0000814 FBcv--0000561)
+
+(documentation FBcv--0000383 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000079 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000552 camcur)
+
+(documentation FBcv--0000357 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000147 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000520 "magnetic field")
+
+(mo-inSubset FBcv--0000149 camcur)
+
+(documentation FBcv--0000306 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(subclass FBcv--0000545 FBcv--0000541)
+
+(mo-definition FBcv--0000163 "&quot;A phenotypic attribute is described as showing a rescuable maternal effect when the introduction of a wild-type copy of the responsible mutation from the father ameliorates the maternal effect mutant phenotype.&quot; [PMID:2499512]")
+
+(subclass FBcv--0000099 FBcv--0000074)
+
+(subclass FBcv--0000088 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000467 "cold-treatment")
+
+(subclass FBcv--0000140 Publication)
+
+(subclass FBcv--0000444 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000551 "enzyme inhibitor")
+
+(mo-inSubset FBcv--0000031 camcur)
+
+(mo-inSubset FBcv--0000142 camcur)
+
+(documentation FBcv--0000443 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000378 FBcv--0000364)
+
+(termFormat EnglishLanguage DutchLanguage "Dutch")
+
+(documentation FBcv--0000495 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000466 "environmental treatment")
+
+(termFormat EnglishLanguage FBcv--0000184 "n hr")
+
+(documentation FBcv--0000482 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000815 camcur)
+
+(termFormat EnglishLanguage FBcv--0000053 "anterior")
+
+(documentation FBcv--0000426 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000090 "10-40% egg length")
+
+(termFormat EnglishLanguage FBcv--0000214 "personal communication to
+FlyBase")
+
+(mo-inSubset FBcv--0000103 camcur)
+
+(termFormat EnglishLanguage FBcv--0000581 "ethylenimine")
+
+(subclass FBcv--0000104 FBcv--0000074)
+
+(documentation FBcv--0000418 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-definedNamespace "FlyBase miscellaneous CV")
+
+(subclass FBcv--0010005 FBcv--0010001)
+
+(documentation FBcv--0000587 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000078 "0-20% egg length")
+
+(subclass FBcv--0000508 FBcv--0000506)
+
+(mo-inSubset FBcv--0000375 camcur)
+
+(mo-definition FBcv--0000164 "&quot;A phenotypic attribute is described as showing a paternal effect when the phenotype of an individual is a manifestation of the genotype of the father, rather than the genotype of the individual.&quot; [PMID:9630751]")
+
+(subclass FBcv--0000223 Publication)
+
+(mo-inSubset FBcv--0000070 camcur)
+
+(mo-relatedSynonym FBcv--0000544 "&quot;2-methoxy-6-dichloro-9-(3-ethyl-2-chloroethyl-aminopropylamino)acridine-dihydrochloride&quot; []")
+
+(subclass FBcv--0000348 FBcv--0000347)
+
+(mo-inSubset Letter camcur)
+
+(documentation FBcv--0000404 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000211 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000558 FBcv--0000525)
+
+(subclass FBcv--0000407 FBcv--0000387)
+
+(subclass FBcv--0000115 FBcv--0000074)
+
+(subclass FBcv--0000483 FBcv--0000452)
+
+(documentation FBcv--0000478 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000258 FBcv--0000234)
+
+(subclass FBcv--0000251 FBcv--0000234)
+
+(mo-inSubset FBcv--0000509 camcur)
+
+(mo-inSubset FBcv--0000368 camcur)
+
+(mo-definition FBcv--0000036 "&quot;Restricted to the posterior compartment of some specified type.&quot; [FB:DS]")
+
+(termFormat EnglishLanguage FBcv--0000069 "ubiquitous")
+
+(termFormat EnglishLanguage FBcv--0000797 "cell autonomy qualifier")
+
+(mo-relatedSynonym FBcv--0000592 "&quot;N-methyl-N-nitrosourea&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000627 "non-suppressor")
+
+(termFormat EnglishLanguage FBcv--0000321 "isogenic chromosome 3")
+
+(termFormat EnglishLanguage FBcv--0000407 "auditory system defective")
+
+(termFormat EnglishLanguage FBcv--0000613 "Whole-organism transient
+assay (allele of foreign species assayed in drosophilid)")
+
+(termFormat EnglishLanguage FBcv--0000279 "Turkish")
+
+(mo-inSubset FBcv--0000299 camcur)
+
+(termFormat EnglishLanguage FBcv--0000108 "30-40% egg length")
+
+(mo-inSubset FBcv--0000531 camcur)
+
+(subclass FBcv--0000224 Publication)
+
+(termFormat EnglishLanguage FBcv--0000569 "1-diethylaminoethylethylamino-4-methyl-thioxanthenone")
+
+(subclass FBcv--0000593 FBcv--0000561)
+
+(documentation FBcv--0000046 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(documentation FBcv--0000123 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000247 "Estonian")
+
+(mo-inSubset FBcv--0000414 camcur)
+
+(mo-inSubset FBcv--0000250 camcur)
+
+(subclass FBcv--0000431 FBcv--0000347)
+
+(documentation FBcv--0000136 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000381 FBcv--0000008)
+
+(termFormat EnglishLanguage FBcv--0010009 "fluorescent balancer")
+
+(subclass FBcv--0000041 FBcv--0000038)
+
+(subclass FBcv--0000211 Publication)
+
+(mo-inSubset FBcv--0000357 camcur)
+
+(mo-inSubset FBcv--0000499 camcur)
+
+(subclass FBcv--0000051 FBcv--0000052)
+
+(subclass FBcv--0000509 FBcv--0000506)
+
+(mo-inSubset FBcv--0000315 camcur)
+
+(subclass FBcv--0000576 FBcv--0000561)
+
+(termFormat EnglishLanguage FBcv--0000602 "S-2-chloroethylcysteine")
+
+(mo-inSubset FBcv--0000511 camcur)
+
+(termFormat EnglishLanguage PortugueseLanguage "Portuguese")
+
+(subclass FBcv--0000127 FBcv--0000074)
+
+(subclass FBcv--0000624 FBcv--0000620)
+
+(documentation FBcv--0000300 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(termFormat EnglishLanguage FBcv--0000027 "dominant visible allele
+recombination mapping stock")
+
+(documentation FBcv--0000348 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000361 FBcv--0000357)
+
+(termFormat EnglishLanguage FBcv--0000473 "unequal recombination")
+
+(subclass FBcv--0000120 FBcv--0000074)
+
+(mo-inSubset FBcv--0000098 camcur)
+
+(termFormat EnglishLanguage FBcv--0000220 "review")
+
+(subclass FBcv--0000196 Book)
+
+(documentation DNAMolecule EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000367 camcur)
+
+(mo-inSubset FBcv--0000624 camcur)
+
+(subclass FBcv--0000649 FBcv--0000648)
+
+(mo-inSubset FBcv--0000356 camcur)
+
+(subclass FBcv--0000567 FBcv--0000561)
+
+(termFormat EnglishLanguage SpanishLanguage "Spanish")
+
+(documentation FBcv--0000483 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000418 "flightless")
+
+(termFormat EnglishLanguage FBcv--0000038 "relative spatial
+qualifier")
+
+(documentation FBcv--0000206 EnglishLanguage "Proforma field: P1.")
+
+(documentation FBcv--0000624 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(mo-relatedSynonym FBcv--0000547 "&quot;BCE&quot; []")
+
+(documentation FBcv--0000578 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000097 camcur)
+
+(mo-inSubset FBcv--0000225 camcur)
+
+(termFormat EnglishLanguage RussianLanguage "Russian")
+
+(subclass FBcv--0000396 FBcv--0000394)
+
+(mo-inSubset FBcv--0000135 camcur)
+
+(subclass FBcv--0000020 FBcv--0000019)
+
+(termFormat EnglishLanguage FBcv--0000408 "environmental stress
+response defective")
+
+(mo-inSubset FBcv--0000120 camcur)
+
+(mo-relatedSynonym FBcv--0000527 "&quot;DES&quot; []")
+
+(documentation FBcv--0000484 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000543 "ICR 100")
+
+(documentation FBcv--0000108 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000017 "penetrance qualifier")
+
+(termFormat EnglishLanguage FBcv--0000597 "p-N,N-di-(2-chloroethyl)amino-L-phenylalanine")
+
+(subclass FBcv--0000114 FBcv--0000074)
+
+(documentation Biography EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000369 camcur)
+
+(subclass FBcv--0000167 FBcv--0000166)
+
+(termFormat EnglishLanguage FBcv--0000149 "species list")
+
+(documentation FBcv--0000474 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000128 camcur)
+
+(mo-inSubset FBcv--0000474 camcur)
+
+(subclass FBcv--0000182 FBcv--0000011)
+
+(mo-inSubset FBcv--0000544 camcur)
+
+(mo-definition FBcv--0000071 "&quot;Restricted to ventro-lateral region of some specified type.&quot; [FB:DS]")
+
+(subclass Female FBcv--0000332)
+
+(subclass FBcv--0000461 FBcv--0000455)
+
+(subclass FBcv--0010015 FBcv--0010014)
+
+(mo-definition FBcv--0000023 "&quot;Expressivity measures the extent to which a given genotype is expressed at the phenotypic level.  Expressivity is incomplete when an individual of a given genotype expresses only partially the phenotype associated with that genotype.&quot; [ISBN:0716735202]")
+
+(mo-relatedSynonym FBcv--0010024 "&quot;Kyoto stock center&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000354 "visible")
+
+(documentation FBcv--0000124 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000408 camcur)
+
+(documentation FBcv--0000368 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000368 FBcv--0000366)
+
+(mo-inSubset FBcv--0000015 camcur)
+
+(documentation FBcv--0000143 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000088 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-definedNamespace "sex_qualifier")
+
+(subclass FBcv--0000571 FBcv--0000561)
+
+(documentation FBcv--0000398 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000439 FBcv--0000347)
+
+(subclass FBcv--0000175 FBcv--0000152)
+
+(mo-inSubset FBcv--0000336 camcur)
+
+(mo-inSubset FBcv--0000294 camcur)
+
+(subclass FBcv--0000011 FBcv--0000176)
+
+(documentation FBcv--0000216 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000442 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000223 "stock list")
+
+(mo-inSubset FBcv--0000475 camcur)
+
+(termFormat EnglishLanguage FBcv--0000527 "diethyl sulfate")
+
+(mo-inSubset FBcv--0000100 camcur)
+
+(termFormat EnglishLanguage FBcv--0000022 "expressivity complete")
+
+(documentation FBcv--0000388 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000283 camcur)
+
+(termFormat EnglishLanguage FBcv--0000441 "radiation resistant")
+
+(mo-inSubset FBcv--0000140 camcur)
+
+(termFormat EnglishLanguage AfrikaansLanguage "Afrikaans")
+
+(subclass FBcv--0000161 FBcv--0000685)
+
+(termFormat EnglishLanguage FBcv--0000298 "recessive")
+
+(termFormat EnglishLanguage FBcv--0000158 "balancer for chromosome 1")
+
+(subclass FBcv--0000083 FBcv--0000074)
+
+(mo-inSubset SlovakLanguage camcur)
+
+(mo-relatedSynonym FBcv--0000559 "&quot;erythritol anhydride&quot; []")
+
+(subclass FBcv--0000108 FBcv--0000074)
+
+(documentation EnglishLanguage "A namespace defined for use in the
+ontology.")
+
+(mo-inSubset FBcv--0000406 camcur)
+
+(termFormat EnglishLanguage FBcv--0000217 "press release")
+
+(mo-inSubset FBcv--0000359 camcur)
+
+(documentation FBcv--0000574 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000374 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a. Proforma field: MA8.")
+
+(termFormat EnglishLanguage FBcv--0000125 "50-80% egg length")
+
+(mo-inSubset FBcv--0000058 camcur)
+
+(documentation FBcv--0000382 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000157 "recessive lethal balancer")
+
+(subclass FBcv--0000169 FBcv--0000166)
+
+(termFormat EnglishLanguage NaturalGas "natural gas")
+
+(mo-inSubset FBcv--0000597 camcur)
+
+(termFormat EnglishLanguage FBcv--0000423 "DNA repair defective")
+
+(documentation FBcv--0000496 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000218 Publication)
+
+(termFormat EnglishLanguage FBcv--0000206 "jigsaw puzzle")
+
+(mo-inSubset FBcv--0000582 camcur)
+
+(termFormat EnglishLanguage FBcv--0000509 "+lt;up+gt;226+lt;/up+gt;Ra
++amp;agr; ray")
+
+(termFormat EnglishLanguage FBcv--0000320 "terminal")
+
+(termFormat EnglishLanguage FBcv--0000182 "mid")
+
+(subclass FBcv--0000540 FBcv--0000538)
+
+(mo-inSubset FBcv--0000106 camcur)
+
+(subclass FBcv--0000603 FBcv--0000561)
+
+(documentation EnglishLanguage "&quot;camcur&quot;")
+
+(termFormat EnglishLanguage Biography "biography")
+
+(subclass FBcv--0000319 FBcv--0000654)
+
+(documentation FBcv--0000511 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000554 FBcv--0000553)
+
+(mo-inSubset FBcv--0000091 camcur)
+
+(mo-inSubset FBcv--0000491 camcur)
+
+(mo-inSubset FBcv--0000421 camcur)
+
+(termFormat EnglishLanguage FBcv--0000444 "hyperplastic")
+
+(termFormat EnglishLanguage "recessive lethal balancer for chromosome
+3")
+
+(termFormat EnglishLanguage FBcv--0000563 "1,4-dimethanesulfonoxy-1:4-dimethylbutane")
+
+(mo-inSubset FBcv--0000380 camcur)
+
+(mo-inSubset FBcv--0000593 camcur)
+
+(mo-inSubset FBcv--0000551 camcur)
+
+(termFormat EnglishLanguage "P-element family transposable element
+insertions present")
+
+(subclass FBcv--0000326 FBcv--0000619)
+
+(subclass FBcv--0000611 FBcv--0000608)
+
+(documentation FBcv--0000129 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000427 FBcv--0000347)
+
+(termFormat EnglishLanguage SlovenianLanguage "Slovenian")
+
+(documentation FBcv--0000255 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-relatedSynonym FBcv--0000814 "&quot;busulfan&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000299 "dominant")
+
+(mo-inSubset FBcv--0000382 camcur)
+
+(termFormat EnglishLanguage FBcv--0000490 "p+amp;pgr;25.1")
+
+(termFormat EnglishLanguage FBcv--0000589 "Janus green B")
+
+(termFormat EnglishLanguage FBcv--0000360 "reduced cell size")
+
+(subclass FBcv--0000411 FBcv--0000387)
+
+(documentation AfrikaansLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000234 camcur)
+
+(mo-relatedSynonym NitrogenMustardGas "&quot;mechlorethamine&quot; []")
+
+(subclass FBcv--0000106 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000609 "Drosophila cell culture")
+
+(documentation FBcv--0000319 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000362 "increased cell number")
+
+(termFormat EnglishLanguage FBcv--0000422 "photoperiod response
+variant")
+
+(termFormat EnglishLanguage FBcv--0000438 "electrophoretic variant")
+
+(termFormat EnglishLanguage FBcv--0000460 "in vitro construct |
+genomic fragment")
+
+(subclass FBcv--0000005 FBcv--0000000)
+
+(documentation FBcv--0000049 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(subclass FBcv--0000212 Publication)
+
+(subclass FBcv--0000613 FBcv--0000608)
+
+(subclass FBcv--0000462 FBcv--0000455)
+
+(termFormat EnglishLanguage FBcv--0000412 "optomotor behavior
+defective")
+
+(mo-inSubset FBcv--0000411 camcur)
+
+(subclass FBcv--0000164 FBcv--0000685)
+
+(termFormat EnglishLanguage FBcv--0000150 "segmentally repeated")
+
+(mo-inSubset FBcv--0000550 camcur)
+
+(termFormat EnglishLanguage FBcv--0000068 "supernumerary")
+
+(mo-inSubset FBcv--0000154 camcur)
+
+(subclass LatinLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000503 "irradiation")
+
+(documentation FBcv--0000139 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000596 FBcv--0000561)
+
+(termFormat EnglishLanguage FBcv--0000282 "mutant scorability rank")
+
+(documentation FBcv--0000372 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000423 camcur)
+
+(documentation FBcv--0000250 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage FBcv--0000537 "minos ammunition for
+transposable element mutagenesis")
+
+(mo-relatedSynonym FBcv--0000567 "&quot;CB2628&quot; []")
+
+(subclass FBcv--0000471 FBcv--0000470)
+
+(subclass FBcv--0000506 FBcv--0000504)
+
+(termFormat EnglishLanguage FBcv--0000028 "SNP recombination mapping
+stock")
+
+(documentation FBcv--0000203 EnglishLanguage "Proforma field: P1.")
+
+(documentation GermanLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000037 camcur)
+
+(documentation FBcv--0000464 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000511 FBcv--0000504)
+
+(mo-definition FBcv--0000162 "&quot;A phenotypic attribute is described as showing a non-rescuable maternal effect (strict maternal effect) when the introduction of a wild-type copy of the responsible mutation from the father has no ameliorating effect on the maternal effect mutant phenotype.&quot; [PMID:2499512]")
+
+(subclass FBcv--0000525 FBcv--0000452)
+
+(termFormat EnglishLanguage FBcv--0000495 "MRF23.5")
+
+(documentation FBcv--0000438 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000637 "Gene Disruption Project
+stock")
+
+(documentation FBcv--0000286 EnglishLanguage "Proforma field: GA4.")
+
+(termFormat EnglishLanguage FBcv--0000337 "P-element ammunition for
+transposable element mutagenesis")
+
+(subclass FBcv--0000188 FBcv--0000013)
+
+(documentation FBcv--0000240 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000171 FBcv--0000166)
+
+(mo-inSubset FBcv--0000561 camcur)
+
+(subclass FBcv--0000321 FBcv--0000619)
+
+(subclass FBcv--0000418 FBcv--0000417)
+
+(subclass FBcv--0000472 FBcv--0000470)
+
+(termFormat EnglishLanguage FBcv--0000488 "+amp;Dgr;2-3")
+
+(documentation FBcv--0000554 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000489 FBcv--0000486)
+
+(termFormat EnglishLanguage FBcv--0000375 "semi-fertile")
+
+(mo-inSubset FBcv--0000505 camcur)
+
+(mo-relatedSynonym FBcv--0000586 "&quot;HMM&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000401 "mating rhythm defective")
+
+(documentation FBcv--0000581 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000271 camcur)
+
+(mo-inSubset FBcv--0000548 camcur)
+
+(mo-inSubset RomanianLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000132 "70-100% egg length")
+
+(subclass FBcv--0000404 FBcv--0000403)
+
+(mo-inSubset FBcv--0000056 camcur)
+
+(documentation FBcv--0000230 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000215 Publication)
+
+(mo-definition FBcv--0000070 "&quot;Restricted to ventral region of some specified type.&quot; [FB:DS]")
+
+(mo-inSubset FBcv--0000458 camcur)
+
+(documentation FBcv--0000403 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000513 FBcv--0000504)
+
+(documentation FBcv--0000430 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000633 FBcv--0000042)
+
+(documentation FBcv--0000448 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000274 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000039 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(mo-inSubset FBcv--0000125 camcur)
+
+(documentation FBcv--0000090 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000506 camcur)
+
+(documentation FBcv--0000163 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000078 FBcv--0000074)
+
+(mo-inSubset FBcv--0000545 camcur)
+
+(termFormat EnglishLanguage FBcv--0000271 "Serbo-Croat(Roman)")
+
+(termFormat EnglishLanguage FBcv--0000035 "dorsal compartment")
+
+(documentation FBcv--0000033 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000590 "methoxy
+diethylnitrosamine")
+
+(termFormat EnglishLanguage FBcv--0000437 "dosage compensation
+defective")
+
+(mo-inSubset FBcv--0000061 camcur)
+
+(subclass FBcv--0000255 FBcv--0000234)
+
+(documentation FBcv--0000284 EnglishLanguage "Proforma field: GA3.")
+
+(subclass FBcv--0000050 FBcv--0000038)
+
+(subclass FBcv--0000628 FBcv--0000620)
+
+(subclass FBcv--0000420 FBcv--0000387)
+
+(mo-inSubset FBcv--0000489 camcur)
+
+(subclass LatvianLanguage FBcv--0000234)
+
+(mo-inSubset FBcv--0000424 camcur)
+
+(documentation FBcv--0000622 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(subclass FBcv--0000589 FBcv--0000561)
+
+(mo-inSubset FBcv--0000595 camcur)
+
+(mo-xrefAnalogous FBcv--0000609 "abbrev:3")
+
+(documentation FBcv--0000363 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000365 FBcv--0000364)
+
+(subclass FBcv--0000452 FBcv--0000807)
+
+(documentation FBcv--0000309 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000528 camcur)
+
+(documentation FBcv--0000131 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000226 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000540 camcur)
+
+(subclass FBcv--0000807 FBcv--0000013)
+
+(termFormat EnglishLanguage FBcv--0000049 "ventral to")
+
+(documentation FBcv--0000312 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage "+lt;new term+gt;")
+
+(termFormat EnglishLanguage FBcv--0000507 "+lt;up+gt;60+lt;/up+gt;Co
++amp;ggr; ray")
+
+(mo-inSubset ArmenianLanguage camcur)
+
+(mo-inSubset FBcv--0000384 camcur)
+
+(termFormat EnglishLanguage FBcv--0000267 "Malayalam")
+
+(mo-alternateID FBcv--0000139 "FBcv:0000138")
+
+(documentation FBcv--0000324 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(termFormat EnglishLanguage FBcv--0000573 "actinomycin D")
+
+(documentation FBcv--0000038 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000047 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Once its usage in old curation is removed, this term will be
+obsoleted.  DS")
+
+(subclass FBcv--0000305 FBcv--0000615)
+
+(termFormat EnglishLanguage FBcv--0010015 "Saxton laboratory")
+
+(subclass FBcv--0000346 FBcv--0000811)
+
+(documentation FBcv--0000499 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000437 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000266 "Malay")
+
+(termFormat EnglishLanguage FBcv--0000393 "pain response defective")
+
+(subclass FBcv--0000441 FBcv--0000347)
+
+(documentation FBcv--0000573 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000093 camcur)
+
+(subclass FBcv--0000438 FBcv--0000347)
+
+(documentation FBcv--0000241 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage FBcv--0000048 "surrounding")
+
+(subclass FBcv--0000324 FBcv--0000654)
+
+(mo-inSubset FBcv--0000067 camcur)
+
+(termFormat EnglishLanguage FBcv--0000493 "MR+lt;up+gt;h12+lt;/up+gt;")
+
+(documentation CzechLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(documentation FBcv--0000294 EnglishLanguage "Proforma field: GA4.")
+
+(mo-inSubset FBcv--0000419 camcur)
+
+(subclass FBcv--0000157 FBcv--0000152)
+
+(subclass FBcv--0000017 FBcv--0000005)
+
+(subclass FBcv--0010009 FBcv--0000152)
+
+(subclass FBcv--0000016 FBcv--0000648)
+
+(termFormat EnglishLanguage FBcv--0000013 "descriptor")
+
+(subclass FBcv--0000382 FBcv--0000008)
+
+(documentation FBcv--0000209 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000560 FBcv--0000558)
+
+(termFormat EnglishLanguage FBcv--0000084 "0-80% egg length")
+
+(subclass FBcv--0000049 FBcv--0000038)
+
+(termFormat EnglishLanguage FBcv--0000171 "uniform")
+
+(documentation FBcv--0000433 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000035 FBcv--0000030)
+
+(subclass FBcv--0000601 FBcv--0000561)
+
+(mo-inSubset FBcv--0000379 camcur)
+
+(termFormat EnglishLanguage "P-element family transposable element
+insertions absent")
+
+(termFormat EnglishLanguage FBcv--0000358 "small body")
+
+(termFormat EnglishLanguage FBcv--0000115 "40-100% egg length")
+
+(termFormat EnglishLanguage FBcv--0000077 "0-100% egg length")
+
+(termFormat EnglishLanguage FBcv--0000222 "spoof")
+
+(documentation EnglishLanguage "Proforma field: GA17-q. Proforma
+field: GA28b-q. Proforma field: GA29b-q. Proforma field: GAT6-q.
+Proforma field: GAP5-q.")
+
+(subclass FBcv--0000538 FBcv--0000525)
+
+(mo-inSubset FBcv--0000404 camcur)
+
+(subclass AfrikaansLanguage FBcv--0000234)
+
+(documentation FBcv--0000167 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000562 FBcv--0000561)
+
+(subclass FBcv--0010021 FBcv--0010013)
+
+(termFormat EnglishLanguage FBcv--0000109 "30-50% egg length")
+
+(subclass FBcv--0000351 FBcv--0000347)
+
+(mo-inSubset FBcv--0000129 camcur)
+
+(subclass FBcv--0000362 FBcv--0000357)
+
+(mo-relatedSynonym FBcv--0000595 "&quot;CB3026&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000328 "hobo transposase source for
+transposable element mutagenesis")
+
+(mo-inSubset FBcv--0000377 camcur)
+
+(termFormat EnglishLanguage FBcv--0000379 "enhancer of variegation")
+
+(subclass FBcv--0000007 FBcv--0000375)
+
+(subclass FBcv--0000132 FBcv--0000074)
+
+(subclass FBcv--0000625 FBcv--0000620)
+
+(subclass FBcv--0000217 Publication)
+
+(mo-exactSynonym FBcv--0000655 "&quot;VDRC&quot; []")
+
+(mo-inSubset FBcv--0000430 camcur)
+
+(documentation FBcv--0000415 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000004 camcur)
+
+(subclass FBcv--0000234 FBcv--0000188)
+
+(termFormat EnglishLanguage FBcv--0010017 "Nusslein-Volhard
+laboratory")
+
+(mo-definition FBcv--0000053 "&quot;Restricted to anterior region of some specified type.&quot; [FB:DS]")
+
+(subclass FBcv--0000341 FBcv--0000811)
+
+(mo-inSubset FBcv--0000006 camcur)
+
+(termFormat EnglishLanguage FBcv--0010016 "Garcia-Bellido laboratory")
+
+(subclass FBcv--0000635 FBcv--0000634)
+
+(documentation FBcv--0000343 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-relatedSynonym FBcv--0000564 "&quot;CB2058&quot; []")
+
+(subclass FBcv--0000193 Publication)
+
+(subclass FBcv--0000248 FBcv--0000234)
+
+(subclass FBcv--0000071 FBcv--0000052)
+
+(mo-inSubset FBcv--0000220 camcur)
+
+(subclass FBcv--0000397 FBcv--0000387)
+
+(subclass FBcv--0000358 FBcv--0000357)
+
+(mo-relatedSynonym FBcv--0000535 "&quot;NNG&quot; []")
+
+(mo-definition FBcv--0000300 "&quot;A phenotypic attribute is described as codominant when it is manifest in individuals carrying the allele that causes that phenotype, irrespective of the homologous allele.&quot; [ISBN:0805303162]")
+
+(termFormat EnglishLanguage FBcv--0000483 "transposable element
+activity")
+
+(termFormat EnglishLanguage FBcv--0000521 "radio waves")
+
+(subclass FBcv--0000415 FBcv--0000414)
+
+(subclass FBcv--0000113 FBcv--0000074)
+
+(mo-inSubset EnglishLanguage camcur)
+
+(mo-inSubset FBcv--0000409 camcur)
+
+(mo-inSubset FBcv--0000451 camcur)
+
+(documentation FBcv--0000446 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000392 camcur)
+
+(termFormat EnglishLanguage FBcv--0000209 "news article")
+
+(termFormat EnglishLanguage FBcv--0000523 "supersonic-treatment")
+
+(termFormat EnglishLanguage FBcv--0000433 "cytokinesis defective")
+
+(mo-relatedSynonym FBcv--0000509 "&quot;radium&quot; []")
+
+(documentation FBcv--0000538 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-xrefAnalogous FBcv--0000004 "abbrev:2")
+
+(subclass FBcv--0000007 FBcv--0000377)
+
+(termFormat EnglishLanguage FBcv--0010020 "Exelixis Drosophila Stock
+Collection at Harvard Medical School")
+
+(subclass FBcv--0000410 FBcv--0000408)
+
+(documentation FBcv--0000220 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000063 FBcv--0000052)
+
+(subclass FBcv--0000533 FBcv--0000526)
+
+(documentation FBcv--0000224 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000008 camcur)
+
+(subclass FBcv--0000236 FBcv--0000234)
+
+(documentation FBcv--0000126 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000238 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-definition FBcv--0000064 "&quot;Restricted to medial region of some specified type.&quot; [FB:DS]")
+
+(mo-inSubset FBcv--0000064 camcur)
+
+(mo-inSubset FBcv--0000361 camcur)
+
+(documentation FBcv--0000432 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000200 camcur)
+
+(subclass FBcv--0000058 FBcv--0000052)
+
+(documentation NitrogenMustardGas EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000052 "spatial qualifier")
+
+(termFormat EnglishLanguage FBcv--0000205 "interview")
+
+(termFormat EnglishLanguage FBcv--0000617 "selected wild-type stock")
+
+(mo-inSubset FBcv--0000088 camcur)
+
+(mo-inSubset FBcv--0000291 camcur)
+
+(subclass FBcv--0000004 FBcv--0000608)
+
+(mo-inSubset FBcv--0000086 camcur)
+
+(documentation FBcv--0000279 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0010016 FBcv--0010014)
+
+(mo-formatVersion "1.0")
+
+(termFormat EnglishLanguage FBcv--0000094 "10-80% egg length")
+
+(termFormat EnglishLanguage FBcv--0000305 "extracted wild-type
+chromosome Y")
+
+(subclass FBcv--0000548 FBcv--0000525)
+
+(documentation FBcv--0000417 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000093 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000415 camcur)
+
+(documentation FBcv--0000373 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000084 camcur)
+
+(termFormat EnglishLanguage FBcv--0000632 "Bloomington Stock Center
+deficiency kit stock")
+
+(subclass FBcv--0000289 FBcv--0000287)
+
+(subclass FBcv--0000010 FBcv--0000009)
+
+(termFormat EnglishLanguage FBcv--0000047 "proximal to")
+
+(subclass FBcv--0000142 FBcv--0000141)
+
+(mo-inSubset Iodine camcur)
+
+(termFormat EnglishLanguage FBcv--0000054 "apical")
+
+(subclass FBcv--0000617 FBcv--0000618)
+
+(termFormat EnglishLanguage FBcv--0000338 "hobo ammunition for
+transposable element mutagenesis")
+
+(termFormat EnglishLanguage FBcv--0000312 "conditional cs")
+
+(mo-inSubset FBcv--0000069 camcur)
+
+(mo-inSubset FBcv--0000378 camcur)
+
+(termFormat EnglishLanguage FBcv--0000355 "eye color defective")
+
+(mo-relatedSynonym NitrogenMustardGas "&quot;CB1414&quot; []")
+
+(documentation FBcv--0000103 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000256 camcur)
+
+(mo-inSubset FBcv--0000479 camcur)
+
+(subclass FBcv--0000304 FBcv--0000615)
+
+(documentation FBcv--0000331 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.
+
+Deprecated:  Use
+of this term is discouraged as there is no way to decide how to group
+anatomy terms combined with this qualifier with other terms in the
+anatomy ontology.  Subject to discussion and once its usage in old
+curation is removed, this term will be obsoleted.  DS")
+
+(mo-defaultNamespace "FlyBase miscellaneous CV")
+
+(termFormat EnglishLanguage FBcv--0000251 "Flemish")
+
+(documentation FBcv--0000204 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000624 "enhanceable")
+
+(termFormat EnglishLanguage FBcv--0000024 "expressivity high")
+
+(termFormat EnglishLanguage FBcv--0000339 "fully")
+
+(mo-definition FBcv--0000481 "&quot;Catalyzes site-specific recombination between two 34bp loxP sites.&quot; [UniProt:P06956]")
+
+(documentation FBcv--0000085 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000501 camcur)
+
+(documentation FBcv--0000356 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000010 "monophasic")
+
+(documentation FBcv--0000364 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset DNAMolecule camcur)
+
+(termFormat EnglishLanguage FBcv--0000310 "temperature conditional")
+
+(mo-inSubset FBcv--0000541 camcur)
+
+(termFormat EnglishLanguage FBcv--0000394 "circadian rhythm
+defective")
+
+(mo-inSubset Biography camcur)
+
+(mo-inSubset FBcv--0000208 camcur)
+
+(mo-inSubset FBcv--0000578 camcur)
+
+(termFormat EnglishLanguage FBcv--0000175 "dominant female sterile
+balancer")
+
+(termFormat EnglishLanguage FBcv--0000383 "auxotroph")
+
+(termFormat EnglishLanguage FBcv--0000814 "1,4-dimethanesulfonoxybutane")
+
+(termFormat EnglishLanguage "hobo family transposable element
+insertions absent")
+
+(documentation FBcv--0000605 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000348 camcur)
+
+(subclass FBcv--0000352 FBcv--0000351)
+
+(termFormat EnglishLanguage FBcv--0010004 "M cytotype")
+
+(documentation FBcv--0000456 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000316 "homeotic")
+
+(termFormat EnglishLanguage Smo-Subset "Subset")
+
+(subclass FBcv--0000298 FBcv--0000565)
+
+(documentation FBcv--0000227 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000287 FBcv--0000286)
+
+(termFormat EnglishLanguage FBcv--0000160 "balancer for chromosome 3")
+
+(subclass FBcv--0000227 Publication)
+
+(mo-inSubset FBcv--0000102 camcur)
+
+(documentation FBcv--0000392 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000558 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000413 "phototaxis behavior
+defective")
+
+(mo-inSubset FBcv--0000608 camcur)
+
+(subclass FBcv--0000371 FBcv--0000370)
+
+(termFormat EnglishLanguage FBcv--0000421 "touch sensitivity
+defective")
+
+(termFormat EnglishLanguage FBcv--0000129 "60-80% egg length")
+
+(mo-inSubset FBcv--0000387 camcur)
+
+(documentation FBcv--0000429 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000117 camcur)
+
+(documentation FrenchLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000482 FBcv--0000452)
+
+(mo-exactSynonym FBcv--0000413 "&quot;phototaxis behaviour defective&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000336 "somatic clone")
+
+(termFormat EnglishLanguage FBcv--0000289 "hypomorph")
+
+(subclass FBcv--0000527 FBcv--0000526)
+
+(mo-inSubset FBcv--0000193 camcur)
+
+(documentation FBcv--0000168 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000342 camcur)
+
+(termFormat EnglishLanguage FBcv--0000382 "non-suppressor of
+variegation")
+
+(termFormat EnglishLanguage FBcv--0000576 "cisplatin")
+
+(documentation FBcv--0000285 EnglishLanguage "Proforma field: GA3.")
+
+(subclass FBcv--0000030 FBcv--0000052)
+
+(documentation FBcv--0000585 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000313 FBcv--0000309)
+
+(subclass FBcv--0000377 FBcv--0000374)
+
+(mo-xrefAnalogous FBcv--0000611 "abbrev:6")
+
+(subclass FBcv--0010012 FBcv--0000614)
+
+(subclass FBcv--0000056 FBcv--0000052)
+
+(subclass FBcv--0000401 FBcv--0000399)
+
+(subclass FBcv--0000440 FBcv--0000347)
+
+(owl-AnnotationProperty "null")
+
+(termFormat EnglishLanguage FBcv--0000404 "olfaction defective")
+
+(termFormat EnglishLanguage LithuanianLanguage "Lithuanian")
+
+(subclass FBcv--0000153 FBcv--0000797)
+
+(termFormat EnglishLanguage FBcv--0000395 "locomotor rhythm
+defective")
+
+(subclass FBcv--0000042 FBcv--0010000)
+
+(termFormat EnglishLanguage FBcv--0000025 "expressivity low")
+
+(documentation FBcv--0000261 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000417 FBcv--0000387)
+
+(mo-inSubset FBcv--0000480 camcur)
+
+(mo-inSubset FBcv--0000119 camcur)
+
+(subclass FBcv--0000053 FBcv--0000052)
+
+(subclass FBcv--0000210 Publication)
+
+(mo-xrefAnalogous FBcv--0000610 "abbrev:5")
+
+(termFormat EnglishLanguage FBcv--0000107 "30-100% egg length")
+
+(documentation FBcv--0000031 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000340 camcur)
+
+(documentation LithuanianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset ComputerFile camcur)
+
+(documentation FBcv--0000597 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000577 "colchicine")
+
+(mo-inSubset FBcv--0000581 camcur)
+
+(documentation FBcv--0000057 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Contralateral means -
+on the oppsoite  side from ....  In curation usage: on the oppsoite 
+side froms what ?  Will be obsoleted once a replacement term agreed
+upon (if needed) and any old usage retrofitted. DS")
+
+(termFormat EnglishLanguage FBcv--0000811 "qualitative qualifier")
+
+(mo-inSubset FBcv--0000498 camcur)
+
+(subclass FBcv--0000228 Publication)
+
+(subclass FBcv--0000139 FBcv--0000074)
+
+(instance Smo-inSubset BinaryRelation)
+
+(mo-inSubset FBcv--0000376 camcur)
+
+(mo-definition FBcv--0000298 "&quot;A phenotypic attribute is described as recessive when it is manifest only in individuals homozygous or hemizygous for the allele that causes that phenotype.&quot; [ISBN:0805303162]")
+
+(mo-inSubset FBcv--0000352 camcur)
+
+(documentation FBcv--0000476 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000460 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000075 "0% egg length")
+
+(subclass FBcv--0000344 FBcv--0000811)
+
+(termFormat EnglishLanguage FBcv--0000580 "ethyl ether")
+
+(documentation FBcv--0000145 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000320 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000504 "ionizing radiation")
+
+(mo-inSubset FBcv--0000150 camcur)
+
+(mo-inSubset PortugueseLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000439 "chemical resistant")
+
+(mo-inSubset FBcv--0000402 camcur)
+
+(documentation FBcv--0000096 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-exactSynonym FBcv--0000419 "&quot;feeding behaviour defective&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000126 "50-90% egg length")
+
+(mo-inSubset BulgarianLanguage camcur)
+
+(mo-inSubset FBcv--0000536 camcur)
+
+(documentation FBcv--0000384 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000313 camcur)
+
+(termFormat EnglishLanguage FBcv--0000166 "morphological qualifier")
+
+(subclass FBcv--0000328 FBcv--0000043)
+
+(mo-relatedSynonym FBcv--0000581 "&quot;EI&quot; []")
+
+(documentation FBcv--0000283 EnglishLanguage "Proforma field: GA3.")
+
+(mo-inSubset FBcv--0000487 camcur)
+
+(documentation FBcv--0000814 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000340 "partially")
+
+(termFormat EnglishLanguage FBcv--0000033 "anterior/posterior
+compartment boundary")
+
+(termFormat EnglishLanguage UkrainianLanguage "Ukrainian")
+
+(documentation FBcv--0000586 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000564 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation EnglishLanguage "Represents the symmetric property.
+(Typedefs only)")
+
+(termFormat EnglishLanguage "RFLP")
+
+(documentation FBcv--0000613 EnglishLanguage "Proforma field: GA19.")
+
+(mo-inSubset Male camcur)
+
+(mo-inSubset GreekLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000442 "radiation sensitive")
+
+(subclass FBcv--0000572 FBcv--0000561)
+
+(subclass FBcv--0000395 FBcv--0000394)
+
+(documentation FBcv--0000609 EnglishLanguage "Proforma field: GA19.")
+
+(subclass FBcv--0000811 FBcv--0000809)
+
+(documentation FBcv--0000051 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000574 "benzo(+amp;agr;)pyrene")
+
+(termFormat EnglishLanguage FBcv--0000290 "gain of function")
+
+(mo-inSubset FBcv--0000413 camcur)
+
+(mo-relatedSynonym FBcv--0000563 "&quot;CB2348&quot; []")
+
+(documentation FBcv--0000200 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000019 "penetrance incomplete")
+
+(subclass FBcv--0000387 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000475 "magnification")
+
+(mo-relatedSynonym FBcv--0000536 "&quot;CB1735&quot; []")
+
+(documentation FBcv--0000202 EnglishLanguage "Proforma field: P1.")
+
+(mo-definition FBcv--0000066 "&quot;Restricted to proximal region of some specified type.&quot; [FB:DS]")
+
+(termFormat EnglishLanguage FBcv--0000384 "aging defective")
+
+(subclass FBcv--0000069 FBcv--0000052)
+
+(mo-definition FBcv--0000022 "&quot;Expressivity measures the extent to which a given genotype is expressed at the phenotypic level.  Expressivity is complete when an individual of a given genotype expresses the full phenotype associated with that genotype.&quot; [ISBN:0716735202]")
+
+(termFormat EnglishLanguage FBcv--0000016 "Baylor TE recombination
+mapping kit stock")
+
+(documentation FBcv--0000308 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-inSubset FBcv--0000030 camcur)
+
+(mo-inSubset FBcv--0000191 camcur)
+
+(subclass FBcv--0000084 FBcv--0000074)
+
+(subclass FBcv--0010017 FBcv--0010014)
+
+(termFormat EnglishLanguage FBcv--0000002 "thermotaxis behavior
+defective")
+
+(mo-inSubset FBcv--0000147 camcur)
+
+(termFormat EnglishLanguage FBcv--0000050 "vicinity of")
+
+(subclass FBcv--0000551 FBcv--0000525)
+
+(subclass FBcv--0000199 Publication)
+
+(subclass FrenchLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000367 "female semi-sterile")
+
+(documentation FBcv--0000205 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000393 camcur)
+
+(termFormat EnglishLanguage FBcv--0000224 "supplementary material")
+
+(mo-definedNamespace "scorability")
+
+(mo-inSubset FBcv--0000162 camcur)
+
+(mo-inSubset FBcv--0000192 camcur)
+
+(mo-inSubset FBcv--0000301 camcur)
+
+(mo-inSubset FBcv--0000560 camcur)
+
+(mo-inSubset FBcv--0000373 camcur)
+
+(termFormat EnglishLanguage FBcv--0000575 "caffeine")
+
+(mo-inSubset FBcv--0000400 camcur)
+
+(subclass FBcv--0000464 FBcv--0000455)
+
+(subclass FBcv--0000569 FBcv--0000561)
+
+(mo-exactSynonym FBcv--0000355 "&quot;eye colour defective&quot; []")
+
+(documentation FBcv--0000288 EnglishLanguage "Proforma field: GA4.")
+
+(termFormat EnglishLanguage FBcv--0000059 "dorsal")
+
+(mo-inSubset LatinLanguage camcur)
+
+(documentation FBcv--0000176 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000096 FBcv--0000074)
+
+(documentation FBcv--0000301 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(documentation FBcv--0000087 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000552 "aminopterin")
+
+(termFormat EnglishLanguage FBcv--0000044 "ammunition source for
+transposable element mutagenesis")
+
+(termFormat EnglishLanguage FBcv--0000330 "minos transposase source
+for transposable element mutagenesis")
+
+(documentation FBcv--0000593 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000571 "2,5,-bisethylene-imine-1,4-benzoquinone")
+
+(mo-inSubset FBcv--0000124 camcur)
+
+(documentation FBcv--0000115 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000586 camcur)
+
+(documentation FBcv--0000455 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000104 "20-80% egg length")
+
+(termFormat EnglishLanguage FBcv--0000562 "1,2:5,6-dibenzanthracene")
+
+(mo-definition FBcv--0000060 "&quot;Restricted to dorso-lateral region of some specified type.&quot; [FB:DS]")
+
+(documentation FBcv--0000466 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000393 FBcv--0000387)
+
+(subclass FBcv--0000510 FBcv--0000504)
+
+(termFormat EnglishLanguage FBcv--0000353 "cell lethal")
+
+(subclass FBcv--0000125 FBcv--0000074)
+
+(subclass FBcv--0000375 FBcv--0000374)
+
+(mo-inSubset FBcv--0000556 camcur)
+
+(documentation FBcv--0000082 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000595 FBcv--0000561)
+
+(subclass FBcv--0000143 FBcv--0000141)
+
+(mo-inSubset FBcv--0000596 camcur)
+
+(subclass FBcv--0000586 FBcv--0000561)
+
+(termFormat EnglishLanguage "laboratory stock")
+
+(termFormat EnglishLanguage FBcv--0000317 "isogenic chromosome 1")
+
+(termFormat EnglishLanguage FBcv--0010021 "Bloomington Drosophila
+Stock Center")
+
+(mo-inSubset FBcv--0000083 camcur)
+
+(mo-definition FBcv--0000307 "&quot;A  phenotypic attribute is described as male limited if its expression is limited to males by virtue of the particular biology of males, rather than the sex-linkage of the genes underlying the attribute.&quot; [ISBN:002418120X]")
+
+(termFormat EnglishLanguage FBcv--0000248 "Faroese")
+
+(termFormat EnglishLanguage FBcv--0000199 "conference report")
+
+(mo-exactSynonym FBcv--0010022 "&quot;species stock center&quot; []")
+
+(mo-relatedSynonym FBcv--0000532 "&quot;HMS&quot; []")
+
+(subclass FBcv--0000221 Publication)
+
+(mo-definition FBcv--0000301 "&quot;A phenotypic attribute is described as semidominant when individuals heterozygous for the allele show phenotypes part way between homozygotes for either allele.&quot; [ISBN:0805303162]")
+
+(subclass FBcv--0000634 FBcv--0010000)
+
+(subclass FBcv--0000339 FBcv--0000811)
+
+(subclass FBcv--0000331 FBcv--0000009)
+
+(subclass FBcv--0000453 FBcv--0000044)
+
+(mo-inSubset FBcv--0000587 camcur)
+
+(subclass FBcv--0000587 FBcv--0000561)
+
+(documentation FBcv--0000560 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000426 camcur)
+
+(mo-relatedSynonym ComputerFile "&quot;CD-ROM&quot; []")
+
+(mo-inSubset FBcv--0000526 camcur)
+
+(mo-inSubset Female camcur)
+
+(mo-inSubset FBcv--0000136 camcur)
+
+(mo-inSubset FBcv--0000206 camcur)
+
+(mo-inSubset FBcv--0000532 camcur)
+
+(mo-xrefAnalogous FBcv--0000003 "abbrev:1")
+
+(documentation SpanishLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000464 camcur)
+
+(termFormat EnglishLanguage FBcv--0000599 "p-N,N-di-(2-chloroethyl)aminophenylethylamine")
+
+(termFormat EnglishLanguage FBcv--0000448 "immune response defective")
+
+(mo-relatedSynonym FBcv--0000530 "&quot;EMS&quot; []")
+
+(subclass FBcv--0000025 FBcv--0000023)
+
+(termFormat EnglishLanguage FBcv--0000065 "posterior")
+
+(documentation FBcv--0000462 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000196 camcur)
+
+(mo-relatedSynonym FBcv--0000597 "&quot;CB3025&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000373 "male sterile
+soma-dependent")
+
+(documentation FBcv--0000314 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000443 "Minute")
+
+(subclass FBcv--0010022 FBcv--0010013)
+
+(termFormat EnglishLanguage FBcv--0000105 "20-90% egg length")
+
+(mo-inSubset FBcv--0000519 camcur)
+
+(mo-inSubset FBcv--0000493 camcur)
+
+(documentation FBcv--0000536 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000036 FBcv--0000030)
+
+(subclass FBcv--0000637 FBcv--0010000)
+
+(mo-inSubset FBcv--0000059 camcur)
+
+(termFormat EnglishLanguage FBcv--0000430 "cell polarity")
+
+(documentation FBcv--0000032 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000815 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-definition FBcv--0000020 "&quot;Penetrance is the fraction of individuals of a given genotype who exhibit the phenotype associated with that genotype.  Penetrance is incomplete when only a percentage of the individuals of a given genotype exhibit the phenotype associated with that genotype.&quot; [ISBN:0716735202]")
+
+(documentation FBcv--0000336 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000040 FBcv--0000038)
+
+(documentation FBcv--0000521 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage "gene expression qualifier")
+
+(subclass FBcv--0000636 FBcv--0000634)
+
+(mo-inSubset FBcv--0000432 camcur)
+
+(subclass Publication FBcv--0000188)
+
+(mo-inSubset PolishLanguage camcur)
+
+(documentation FBcv--0000580 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000001 Publication)
+
+(documentation FBcv--0000512 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass Male FBcv--0000332)
+
+(subclass FBcv--0000303 FBcv--0000615)
+
+(termFormat EnglishLanguage FBcv--0000397 "learning defective")
+
+(mo-relatedSynonym NitrogenMustardGas "&quot;2-chloro-N-(2-chloroethyl)-N-methylethanamine&quot; []")
+
+(subclass FBcv--0000292 FBcv--0000290)
+
+(termFormat EnglishLanguage EnglishLanguage "English")
+
+(termFormat EnglishLanguage FBcv--0010018 "Carpenter laboratory")
+
+(termFormat EnglishLanguage FBcv--0000139 "90-100% egg length")
+
+(termFormat EnglishLanguage FBcv--0000238 "Belarussian")
+
+(subclass FBcv--0000598 FBcv--0000152)
+
+(subclass FBcv--0000612 FBcv--0000607)
+
+(termFormat EnglishLanguage FBcv--0000641 "cytotype of stock")
+
+(documentation FBcv--0000389 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000505 FBcv--0000504)
+
+(termFormat EnglishLanguage FBcv--0000303 "extracted wild-type
+chromosome 3")
+
+(subclass FBcv--0000214 Publication)
+
+(subclass FBcv--0000026 FBcv--0000649)
+
+(subclass GermanLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage "embryonic expression pattern")
+
+(termFormat EnglishLanguage FBcv--0000133 "70-80% egg length")
+
+(mo-definedNamespace "expression_qualifier")
+
+(mo-inSubset FBcv--0000344 camcur)
+
+(documentation FBcv--0000470 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass ComputerFile Publication)
+
+(subclass FBcv--0000206 Publication)
+
+(documentation FBcv--0000196 EnglishLanguage "Proforma field: P1.")
+
+(documentation FBcv--0000106 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000506 "+amp;ggr; ray")
+
+(termFormat EnglishLanguage FBcv--0000060 "dorso-lateral")
+
+(subclass GreekLanguage FBcv--0000234)
+
+(mo-inSubset FBcv--0000363 camcur)
+
+(subclass FBcv--0000402 FBcv--0000399)
+
+(termFormat EnglishLanguage "Golic laboratory gene replacement kit
+stock")
+
+(documentation FBcv--0000486 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000428 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000045 "posterior to")
+
+(termFormat EnglishLanguage FBcv--0000400 "mating defective")
+
+(termFormat EnglishLanguage FBcv--0000456 "in vitro construct |
+regulatory fusion")
+
+(subclass FBcv--0000546 FBcv--0000541)
+
+(subclass FBcv--0000488 FBcv--0000486)
+
+(termFormat EnglishLanguage FBcv--0000041 "dorsal to")
+
+(documentation FBcv--0000100 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000523 FBcv--0000519)
+
+(subclass FBcv--0000057 FBcv--0000052)
+
+(documentation FBcv--0000566 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-definition FBcv--0000063 "&quot;Restricted to lateral region(s) of some specified type.&quot; [FB:DS]")
+
+(mo-inSubset FBcv--0000087 camcur)
+
+(documentation FBcv--0000475 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-relatedSynonym FBcv--0000593 "&quot;DMN&quot; []")
+
+(mo-inSubset FBcv--0000494 camcur)
+
+(subclass FBcv--0000336 FBcv--0000812)
+
+(subclass FBcv--0000386 FBcv--0000384)
+
+(mo-definition FBcv--0000058 "&quot;Restricted to distsal region of some specified type.&quot; [FB:DS]")
+
+(documentation FBcv--0000502 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000543 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000507 camcur)
+
+(termFormat EnglishLanguage FBcv--0000227 "teaching note")
+
+(termFormat EnglishLanguage FBcv--0000615 "extracted wild-type
+chromosome")
+
+(subclass FBcv--0000033 FBcv--0000032)
+
+(mo-inSubset FBcv--0000071 camcur)
+
+(subclass FBcv--0000261 FBcv--0000234)
+
+(mo-definition FBcv--0000154 "&quot;A phenotypic effect which is not expressed in/limited to cells of the mutant genetic constitution under investigation is said to be cell non-autonomous.&quot; [FB:FBrf0002379]")
+
+(documentation FBcv--0000007 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000648 "mapping stock")
+
+(termFormat EnglishLanguage "pair of balancers for chromosome 3")
+
+(termFormat EnglishLanguage FBcv--0000807 "allele descriptor")
+
+(termFormat EnglishLanguage FBcv--0000458 "in vitro construct | site
+directed mutagenesis")
+
+(subclass FBcv--0000202 Publication)
+
+(mo-exactSynonym FBcv--0000387 "&quot;behavioural&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000064 "medial")
+
+(mo-exactSynonym FBcv--0000412 "&quot;optomotor behaviour defective&quot; []")
+
+(mo-inSubset FrenchLanguage camcur)
+
+(subclass FBcv--0000296 FBcv--0000294)
+
+(mo-inSubset FBcv--0000104 camcur)
+
+(mo-inSubset FBcv--0000343 camcur)
+
+(mo-inSubset FBcv--0000386 camcur)
+
+(subclass FBcv--0000583 FBcv--0000561)
+
+(termFormat EnglishLanguage FBcv--0000178 "early")
+
+(termFormat EnglishLanguage FBcv--0000415 "jumpless")
+
+(termFormat EnglishLanguage "maternal pattern")
+
+(documentation FBcv--0000568 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000159 FBcv--0000152)
+
+(subclass FBcv--0000256 FBcv--0000234)
+
+(subclass FBcv--0000317 FBcv--0000619)
+
+(subclass FBcv--0000126 FBcv--0000074)
+
+(documentation FBcv--0000190 EnglishLanguage "Proforma field: P1.")
+
+(documentation FBcv--0000084 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000520 FBcv--0000519)
+
+(documentation FBcv--0000411 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000445 camcur)
+
+(documentation FBcv--0000290 EnglishLanguage "Proforma field: GA4.")
+
+(mo-inSubset FBcv--0000279 camcur)
+
+(documentation FBcv--0000214 EnglishLanguage "Proforma field: P1.")
+
+(subclass YiddishLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage "dominant temperature-sensitive lethal
+balancer for chromosome 2")
+
+(termFormat EnglishLanguage FBcv--0010010 "lacZ balancer")
+
+(subclass NaturalGas FBcv--0000561)
+
+(mo-definition FBcv--0000031 "&quot;Restricted to the anterior compartment of some specified type&quot; [FB:DS]")
+
+(documentation FBcv--0000258 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000552 FBcv--0000551)
+
+(mo-inSubset FBcv--0000592 camcur)
+
+(termFormat EnglishLanguage FBcv--0000364 "sterile")
+
+(termFormat EnglishLanguage Publication "publication class")
+
+(termFormat EnglishLanguage FBcv--0000066 "proximal")
+
+(subclass FBcv--0000300 FBcv--0000299)
+
+(mo-inSubset FBcv--0000123 camcur)
+
+(termFormat EnglishLanguage FBcv--0000117 "40-60% egg length")
+
+(mo-inSubset FBcv--0000211 camcur)
+
+(subclass FBcv--0000208 Publication)
+
+(documentation FBcv--0000520 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000293 camcur)
+
+(subclass FBcv--0000128 FBcv--0000074)
+
+(documentation FBcv--0000184 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.
+
+Deprecated:  Use of this term is
+discouraged as there is no way to decide how to group anatomy terms
+combined with this qualifier with other terms in the anatomy ontology.
+ Subject to discussion and once its usage in old curation is removed,
+this term will be obsoleted.  DS")
+
+(documentation FBcv--0000488 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000369 "female sterile
+soma-dependent")
+
+(subclass FBcv--0000302 FBcv--0000615)
+
+(mo-relatedSynonym FBcv--0000566 "&quot;CB2511&quot; []")
+
+(mo-inSubset AfrikaansLanguage camcur)
+
+(documentation FBcv--0000414 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation UkrainianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000627 FBcv--0000620)
+
+(mo-inSubset FBcv--0000001 camcur)
+
+(mo-inSubset FBcv--0000075 camcur)
+
+(mo-inSubset FBcv--0000371 camcur)
+
+(mo-exactSynonym FBcv--0000417 "&quot;flight behaviour defective&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000381 "suppressor of variegation")
+
+(subclass FBcv--0000609 FBcv--0000606)
+
+(subclass SlovakLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000311 "conditional ts")
+
+(mo-relatedSynonym FBcv--0010021 "&quot;BSC&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000086 "10% egg length")
+
+(subclass FBcv--0000154 FBcv--0000797)
+
+(termFormat EnglishLanguage FBcv--0000512 "+lt;up+gt;3+lt;/up+gt;H-deoxycytidine")
+
+(mo-relatedSynonym FBcv--0000605 "&quot;CB1246&quot; []")
+
+(mo-inSubset FBcv--0000074 camcur)
+
+(termFormat EnglishLanguage FBcv--0000122 "50-100% egg length")
+
+(mo-definition FBcv--0000021 "&quot;Expressivity measures the extent to which a given genotype is expressed at the phenotypic level.&quot; [ISBN:0716735202]")
+
+(termFormat EnglishLanguage FBcv--0000229 "curated genome annotation")
+
+(subclass FBcv--0000497 FBcv--0000483)
+
+(termFormat EnglishLanguage FBcv--0000472 "intralocus exchange")
+
+(subclass FBcv--0000229 Publication)
+
+(documentation FBcv--0000459 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation RussianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(termFormat EnglishLanguage FBcv--0000359 "reduced cell number")
+
+(subclass NitrogenMustardGas FBcv--0000526)
+
+(documentation FBcv--0000091 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000381 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000037 "ventral compartment")
+
+(mo-inSubset FBcv--0000202 camcur)
+
+(subclass Patent Publication)
+
+(termFormat EnglishLanguage FBcv--0000476 "detachment")
+
+(subclass FBcv--0000034 FBcv--0000032)
+
+(documentation EnglishLanguage "The user who last edited the
+ontology.")
+
+(mo-inSubset FBcv--0000484 camcur)
+
+(documentation FBcv--0000449 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000520 camcur)
+
+(documentation FBcv--0000519 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000110 "30-60% egg length")
+
+(termFormat EnglishLanguage FBcv--0000315 "conditional tetracycline")
+
+(subclass FBcv--0000516 FBcv--0000504)
+
+(documentation FBcv--0000529 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000284 FBcv--0000282)
+
+(subclass FBcv--0000176 FBcv--0000005)
+
+(documentation FBcv--0000494 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000385 camcur)
+
+(documentation FBcv--0000423 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000098 "20-100% egg length")
+
+(subclass FBcv--0000295 FBcv--0000294)
+
+(subclass FBcv--0000553 FBcv--0000525)
+
+(termFormat EnglishLanguage FBcv--0000636 "Bloomington Stock Center
+duplication kit for chromosome 1 stock")
+
+(termFormat EnglishLanguage FBcv--0000651 "meeting report")
+
+(subclass FBcv--0000485 FBcv--0000483)
+
+(termFormat EnglishLanguage FBcv--0000436 "sex-determination
+defective")
+
+(termFormat EnglishLanguage FBcv--0000020 "penetrance percent")
+
+(termFormat EnglishLanguage FBcv--0000291 "neomorph")
+
+(documentation FBcv--0000465 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000570 FBcv--0000561)
+
+(documentation FBcv--0000315 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000489 "Js")
+
+(documentation FBcv--0000378 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000473 FBcv--0000470)
+
+(documentation FBcv--0000109 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000651 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000465 "natural population")
+
+(termFormat EnglishLanguage SwedishLanguage "Swedish")
+
+(termFormat EnglishLanguage FBcv--0000111 "30-70% egg length")
+
+(subclass FBcv--0000116 FBcv--0000074)
+
+(termFormat EnglishLanguage FBcv--0000424 "cell death defective")
+
+(documentation FBcv--0000530 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000089 FBcv--0000074)
+
+(subclass FBcv--0000642 FBcv--0000641)
+
+(termFormat EnglishLanguage FBcv--0000325 "neurogenic")
+
+(mo-relatedSynonym FBcv--0000499 "&quot;Hobo transposase source&quot; []")
+
+(mo-inSubset FBcv--0000490 camcur)
+
+(termFormat EnglishLanguage FBcv--0000564 "1,4-dimethanesulfonoxybut-2-yne")
+
+(subclass FBcv--0000486 FBcv--0000483)
+
+(documentation FBcv--0000369 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000456 camcur)
+
+(mo-exactSynonym FBcv--0000002 "&quot;thermotaxis behaviour defective&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000538 "carbamate")
+
+(mo-inSubset FBcv--0000133 camcur)
+
+(subclass FBcv--0000654 FBcv--0000052)
+
+(termFormat EnglishLanguage FBcv--0000451 "wound healing defective")
+
+(mo-inSubset FBcv--0000226 camcur)
+
+(mo-inSubset FBcv--0000442 camcur)
+
+(mo-inSubset FBcv--0000485 camcur)
+
+(documentation FBcv--0000151 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000655 "Vienna Drosophila RNAi
+Center")
+
+(documentation FBcv--0000132 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000482 "segregation")
+
+(subclass FBcv--0000066 FBcv--0000052)
+
+(subclass FBcv--0010013 FBcv--0010012)
+
+(termFormat EnglishLanguage FBcv--0000522 "stratosphere exposure")
+
+(termFormat EnglishLanguage FBcv--0000003 "In transgenic Drosophila
+(intraspecific)")
+
+(documentation FBcv--0000546 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000215 "poem")
+
+(documentation FBcv--0000120 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000226 "tactile diagram")
+
+(termFormat EnglishLanguage FBcv--0010022 "Tucson Drosophila Stock
+Center")
+
+(mo-inSubset FBcv--0000354 camcur)
+
+(subclass FBcv--0000424 FBcv--0000347)
+
+(subclass FBcv--0000455 FBcv--0000452)
+
+(termFormat EnglishLanguage FBcv--0000555 "H+lt;down+gt;3+lt;/down+gt;BO+lt;down+gt;3+lt;/down+gt;")
+
+(mo-relatedSynonym FBcv--0000233 "&quot;privately distributed report&quot; []")
+
+(mo-relatedSynonym FBcv--0000484 "&quot;IR&quot; []")
+
+(documentation FBcv--0000002 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000371 FBcv--0000365)
+
+(mo-relatedSynonym FBcv--0000530 "&quot;CB1528&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000225 "T-shirt")
+
+(termFormat EnglishLanguage Patent "patent")
+
+(subclass FBcv--0000039 FBcv--0000038)
+
+(mo-inSubset YiddishLanguage camcur)
+
+(termFormat EnglishLanguage FBcv--0000685 "parental effect")
+
+(subclass FBcv--0000081 FBcv--0000074)
+
+(subclass FBcv--0000429 FBcv--0000347)
+
+(documentation FBcv--0000149 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000537 FBcv--0000044)
+
+(termFormat EnglishLanguage FBcv--0000200 "demonstration")
+
+(documentation FBcv--0000135 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000506 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-relatedSynonym "&quot;Harvard Medical School Exelixis Drosophila Collection&quot; []")
+
+(mo-inSubset FBcv--0000141 camcur)
+
+(subclass FBcv--0000003 FBcv--0000607)
+
+(documentation ArmenianLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-definedNamespace "language")
+
+(documentation FBcv--0000347 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-relatedSynonym FBcv--0000586 "&quot;altretamine&quot; []")
+
+(subclass FBcv--0000432 FBcv--0000347)
+
+(termFormat EnglishLanguage FBcv--0000018 "penetrance complete")
+
+(termFormat EnglishLanguage FBcv--0000653 "subset")
+
+(subclass FBcv--0010002 FBcv--0000614)
+
+(documentation FBcv--0000606 EnglishLanguage "Proforma field: GA19.")
+
+(documentation FBcv--0000065 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000248 camcur)
+
+(termFormat EnglishLanguage FBcv--0000650 "editorial")
+
+(subclass FBcv--0000443 FBcv--0000347)
+
+(documentation FBcv--0000291 EnglishLanguage "Proforma field: GA4.")
+
+(documentation FBcv--0000547 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000131 FBcv--0000074)
+
+(documentation FBcv--0000399 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000406 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass RomanianLanguage FBcv--0000234)
+
+(termFormat EnglishLanguage FBcv--0000500 "mariner transposase")
+
+(mo-inSubset FBcv--0000527 camcur)
+
+(mo-inSubset FBcv--0000585 camcur)
+
+(termFormat EnglishLanguage FBcv--0000524 "U.V.")
+
+(subclass FBcv--0000374 FBcv--0000347)
+
+(documentation FBcv--0000089 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation FBcv--0000170 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-relatedSynonym FBcv--0000596 "&quot;CB3007&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000287 "loss of function")
+
+(documentation FBcv--0000353 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000183 "n day")
+
+(documentation FBcv--0000059 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000472 camcur)
+
+(documentation FBcv--0000442 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000392 "hyperactive")
+
+(subclass FBcv--0000389 FBcv--0000387)
+
+(termFormat EnglishLanguage FBcv--0000031 "anterior compartment")
+
+(documentation FBcv--0000339 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. 
+
+Deprecated:  Use
+of this term is discouraged as 'fully' assumed in the absence of use
+of 'partially'.")
+
+(mo-relatedSynonym FBcv--0000238 "&quot;Belarusian&quot; []")
+
+(subclass FBcv--0000279 FBcv--0000234)
+
+(subclass FBcv--0000425 FBcv--0000424)
+
+(documentation FBcv--0000386 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(subclass FBcv--0000314 FBcv--0000313)
+
+(subclass FBcv--0000550 FBcv--0000548)
+
+(subclass FBcv--0000037 FBcv--0000030)
+
+(documentation FBcv--0000080 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-relatedSynonym FBcv--0000815 "&quot;chlorambucil&quot; []")
+
+(termFormat EnglishLanguage FBcv--0000123 "50-60% egg length")
+
+(termFormat EnglishLanguage FBcv--0000396 "eclosion rhythm defective")
+
+(subclass FBcv--0000065 FBcv--0000052)
+
+(subclass CzechLanguage FBcv--0000234)
+
+(documentation EnglishLanguage "Default namespace for the ontology.")
+
+(termFormat EnglishLanguage ItalianLanguage "Italian")
+
+(subclass FBcv--0000293 FBcv--0000290)
+
+(documentation FBcv--0000431 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000473 camcur)
+
+(mo-inSubset FBcv--0000003 camcur)
+
+(documentation FBcv--0000208 EnglishLanguage "Proforma field: P1.")
+
+(documentation FBcv--0000191 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000190 "abstract")
+
+(termFormat EnglishLanguage Book "book")
+
+(termFormat EnglishLanguage FBcv--0000572 "7-bromomethyl 12 methyl
+benz+lt;up+gt;+amp;agr;+lt;/up+gt; anthracine")
+
+(subclass FBcv--0000608 FBcv--0000606)
+
+(mo-inSubset FBcv--0000535 camcur)
+
+(subclass FBcv--0000501 FBcv--0000483)
+
+(subclass FBcv--0000463 FBcv--0000455)
+
+(documentation FBcv--0000130 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(documentation Female EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q. Proforma field:
+GA17-q. Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma
+field: GAT6-q. Proforma field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000561 "unclassified chemical")
+
+(documentation FBcv--0000055 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAP6-q. Proforma field: GAT23-q. Proforma field: GAT6-q. Proforma
+field: GAP5-q.")
+
+(termFormat EnglishLanguage FBcv--0000403 "chemosensitive behavior
+defective")
+
+(termFormat EnglishLanguage FBcv--0000021 "expressivity qualifier")
+
+(mo-relatedSynonym FBcv--0010023 "&quot;Szeged&quot; []")
+
+(mo-definedNamespace "temporal_qualifier")
+
+(termFormat EnglishLanguage FBcv--0000593 "N-nitrosodimethylamine")
+
+(documentation FBcv--0000231 EnglishLanguage "Proforma field: P1.")
+
+(documentation FBcv--0000409 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(documentation FBcv--0000390 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000360 camcur)
+
+(termFormat EnglishLanguage FBcv--0000621 "suppressor")
+
+(termFormat EnglishLanguage FBcv--0000095 "10-90% egg length")
+
+(mo-inSubset FBcv--0000651 camcur)
+
+(termFormat EnglishLanguage FBcv--0000256 "Hungarian")
+
+(mo-definedNamespace "allele_class")
+
+(subclass PolishLanguage FBcv--0000234)
+
+(mo-inSubset MustardGas camcur)
+
+(termFormat EnglishLanguage DNAMolecule "DNA")
+
+(documentation FBcv--0000271 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(subclass FBcv--0000650 Publication)
+
+(mo-inSubset FBcv--0000412 camcur)
+
+(subclass FBcv--0000602 FBcv--0000561)
+
+(mo-inSubset FBcv--0000355 camcur)
+
+(subclass EnglishLanguage FBcv--0000234)
+
+(mo-definedNamespace "pub_type")
+
+(subclass FBcv--0000150 FBcv--0000052)
+
+(documentation FBcv--0000225 EnglishLanguage "Proforma field: P1.")
+
+(termFormat EnglishLanguage FBcv--0000295 "wild-type generic")
+
+(termFormat EnglishLanguage FBcv--0000454 "synthetic")
+
+(termFormat EnglishLanguage FBcv--0000210 "note")
+
+(documentation FBcv--0000219 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000323 camcur)
+
+(mo-inSubset FBcv--0000405 camcur)
+
+(mo-inSubset FBcv--0000516 camcur)
+
+(subclass FBcv--0000390 FBcv--0000387)
+
+(mo-inSubset FBcv--0000080 camcur)
+
+(documentation FBcv--0000408 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-relatedSynonym FBcv--0010024 "&quot;DGRC&quot; []")
+
+(subclass FBcv--0000220 Publication)
+
+(mo-definition FBcv--0000152 "&quot;A stock with one or more chromosomes (balancers) that are used primarily for their ability to preserve a stock genotype without selection.&quot; [FB:KM]")
+
+(documentation Smo-Subset EnglishLanguage "Subset of OBO terms from
+the ontology.")
+
+(documentation FBcv--0000114 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-definition FBcv--0000055 "&quot;Restricted to basal region of some specified type.&quot; [FB:DS]")
+
+(documentation FBcv--0000516 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(termFormat EnglishLanguage FBcv--0000153 "cell autonomous")
+
+(mo-inSubset FBcv--0000113 camcur)
+
+(documentation FBcv--0000102 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000456 FBcv--0000455)
+
+(mo-inSubset FBcv--0000216 camcur)
+
+(termFormat EnglishLanguage FBcv--0000302 "extracted wild-type
+chromosome 2")
+
+(documentation JapaneseLanguage EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-xrefAnalogous FBcv--0000612 "abbrev:7")
+
+(termFormat EnglishLanguage "polymorphism assay")
+
+(documentation FBcv--0000627 EnglishLanguage "Proforma field: GA28a-q.
+Proforma field: GA29a-q. Proforma field: GA28b-q. Proforma field:
+GA29b-q.")
+
+(termFormat EnglishLanguage FBcv--0000450 "developmental rate
+defective")
+
+(documentation FBcv--0000540 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000522 camcur)
+
+(documentation FBcv--0000193 EnglishLanguage "Proforma field: P1.")
+
+(mo-inSubset FBcv--0000573 camcur)
+
+(subclass FBcv--0000474 FBcv--0000470)
+
+(mo-inSubset FBcv--0000274 camcur)
+
+(mo-definedNamespace "structural_qualifier")
+
+(mo-exactSynonym FBcv--0000414 "&quot;locomotor behaviour defective&quot; []")
+
+(subclass FBcv--0000061 FBcv--0000014)
+
+(documentation NaturalGas EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-relatedSynonym FBcv--0000594 "&quot;CB1356&quot; []")
+
+(documentation FBcv--0000410 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(termFormat EnglishLanguage FBcv--0000056 "central")
+
+(mo-definedNamespace "extent")
+
+(mo-inSubset FBcv--0000109 camcur)
+
+(documentation FBcv--0000234 EnglishLanguage "Proforma field: P13.
+Proforma field: P14.")
+
+(mo-inSubset FBcv--0000251 camcur)
+
+(subclass FBcv--0000685 FBcv--0000809)
+
+(subclass FBcv--0000158 FBcv--0000152)
+
+(termFormat EnglishLanguage FBcv--0000167 "faint")
+
+(subclass FBcv--0000498 FBcv--0000497)
+
+(mo-autoGeneratedBy "OBO-Edit 1.002")
+
+(documentation FBcv--0000551 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(documentation FBcv--0000497 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000219 Publication)
+
+(subclass FBcv--0000541 FBcv--0000525)
+
+(mo-inSubset FBcv--0000230 camcur)
+
+(termFormat EnglishLanguage FBcv--0000623 "enhancer")
+
+(termFormat EnglishLanguage FBcv--0000409 "osmotic stress response
+defective")
+
+(mo-inSubset FBcv--0000469 camcur)
+
+(mo-inSubset FBcv--0000575 camcur)
+
+(documentation FBcv--0000118 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(mo-inSubset FBcv--0000350 camcur)
+
+(termFormat EnglishLanguage FBcv--0000567 "1,6-dimethylsulfonoxy
+L-mannitol")
+
+(subclass FBcv--0000641 FBcv--0010000)
+
+(documentation FBcv--0000299 EnglishLanguage "Proforma field: GA56-q.
+Proforma field: GA28a-q. Proforma field: GA29a-q.")
+
+(mo-inSubset FBcv--0000589 camcur)
+
+(mo-inSubset NitrogenMustardGas camcur)
+
+(subclass FBcv--0000457 FBcv--0000455)
+
+(termFormat EnglishLanguage GermanLanguage "German")
+
+(termFormat EnglishLanguage FBcv--0000468 "heat-treatment")
+
+(documentation FBcv--0000501 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(mo-inSubset FBcv--0000476 camcur)
+
+(mo-inSubset FBcv--0000068 camcur)
+
+(subclass FBcv--0000112 FBcv--0000074)
+
+(documentation FBcv--0000134 EnglishLanguage "Proforma field: GA17-q.
+Proforma field: GA28b-q. Proforma field: GA29b-q. Proforma field:
+GAT6-q. Proforma field: GAP5-q.")
+
+(subclass FBcv--0000416 FBcv--0000414)
+
+(termFormat EnglishLanguage FBcv--0000487 "PM hybrid dysgenesis")
+
+(documentation FBcv--0000595 EnglishLanguage "Proforma field: GA8.
+Proforma field: A4.")
+
+(subclass FBcv--0000549 FBcv--0000548)
+
+(subclass FBcv--0000518 FBcv--0000504)
+
+(mo-inSubset FBcv--0000435 camcur)
+
+(mo-inSubset FBcv--0000096 camcur)
+
+(documentation FBcv--0000405 EnglishLanguage "Proforma field: GA56.
+Proforma field: GA28a. Proforma field: GA29a.")
+
+(mo-inSubset FBcv--0000417 camcur)
+
+(termFormat EnglishLanguage FBcv--0000592 "nitrosomethyl urea")
+
+(mo-inSubset FBcv--0000085 camcur)
+
+(subclass FBcv--0000168 FBcv--0000166)
+
+(subclass FBcv--0000074 FBcv--0000052)
+
+(subclass FBcv--0000477 FBcv--0000470)
+
+(subclass FBcv--0000028 FBcv--0000648)
+
+(termFormat EnglishLanguage FBcv--0000124 "50-70% egg length")
+
+(termFormat EnglishLanguage FBcv--0000497 "hobo activity")
+
+(termFormat EnglishLanguage FBcv--0000196 "booklet")
+
+(termFormat EnglishLanguage FBcv--0000070 "ventral")
+
+(termFormat EnglishLanguage FBcv--0000614 "stock descriptor")
+
+(subclass FBcv--0000610 FBcv--0000607)
+
+(mo-inSubset FBcv--0000032 camcur)
+
+(mo-inSubset FBcv--0000285 camcur)
+
+(documentation FBcv--0000215 EnglishLanguage "Proforma field: P1.")
+
+(subclass FBcv--0000815 FBcv--0000561)
+

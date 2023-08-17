@@ -1,0 +1,565 @@
+(subclass FAO--0000011 FAO--0000001)
+
+(subclass FAO--0001015 FAO--0001012)
+
+(mo-definition FAO--0001008 "&quot;A mycelial resting body, resistant to adverse environmental conditions.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(documentation EnglishLanguage "Represents the transitive property.
+(Typedefs only)")
+
+(termFormat EnglishLanguage develops_from "develops from")
+
+(termFormat EnglishLanguage FAO--0001011 "hyphal tip")
+
+(subclass FAO--0000030 FAO--0000042)
+
+(termFormat EnglishLanguage Smo-inSubset "inSubset")
+
+(termFormat EnglishLanguage FAO--0001010 "aseptate hypha")
+
+(termFormat EnglishLanguage FAO--0000017 "sexual spore")
+
+(termFormat EnglishLanguage FAO--0000023 "asexual spore")
+
+(mo-definition FAO--0001009 "&quot;A hypha that is divided internally by septa, or lateral cell walls.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(mo-definition FAO--0001018 "&quot;Hypha containing dolipore septa, or cross-walls; septa contain a central pore around which the septum is swollen to form a barrel-shaped structure; pore is covered on each side of the septum by a septal pore cap (parenthosome).&quot; [FAO:mcc, ISBN:0471522295]")
+
+(subclass FAO--0000017 Spore)
+
+(mo-definition FAO--0000028 "&quot;The smaller of two types of asexual spores formed by some fungi. An ovoid to pear-shaped asexual spore that contains very little cytoplasm and organelles, is uninucleate, and forms in vegetative hypae within a mycelium. Micronidia are extruded from the hyphal cell wall.&quot; [SGD:clt, PMID:8357339, ISBN:0471940526]")
+
+(subclass FAO--0001002 FAO--0000001)
+
+(subclass FAO--0001003 FAO--0001001)
+
+(subclass FAO--0000037 FAO--0000035)
+
+(subclass FAO--0001014 FAO--0001010)
+
+(termFormat EnglishLanguage FAO--0001009 "septate hypha")
+
+(termFormat EnglishLanguage FAO--0001013 "hypha with dolipore septa,
+in mycelium")
+
+(mo-definition FAO--0000022 "&quot;A spore with a very thick cell wall and extracellular peptidoglycan spikes that stores and protects one or more nuclei during dormancy in a Basidiomycete.&quot; [SGD:clt]")
+
+(documentation EnglishLanguage "The user who last edited the
+ontology.")
+
+(mo-definition FAO--0000006 "&quot;A stalk or stem; composed of hyphae arrayed parallel to the long axis of the structure; a stipe may be a single supporting hypha.&quot; [SGD:clt, ISBN:0471940526]")
+
+(owl-someValuesFrom FAO--0000009 FAO--0000012)
+
+(termFormat EnglishLanguage FAO--0001006 "mycelial cord")
+
+(owl-someValuesFrom FAO--0001003 FAO--0000011)
+
+(termFormat EnglishLanguage FAO--0001021 "hyphal tip, aseptate hypha")
+
+(instance Smo-inSubset BinaryRelation)
+
+(subclass FAO--0000028 FAO--0000025)
+
+(mo-definition FAO--0001006 "&quot;A thick strand of hyphae, oriented in parallel to each other, with specialized channels through which nutrients are conducted.&quot; [FAO:clt, ISBN:0632030771]")
+
+(mo-definition FAO--0000005 "&quot;Rather than deleting terms that are no longer wanted in the ontology, they are made direct children of 'obsolete', with relationship type, part_of. A comment is added that says why the term was made obsolete. In addition, &quot;OBSOLETE&quot; is added as the first word in the definition field. This practice creates a record of the development of the ontology. &quot; [FAO:curators]")
+
+(termFormat EnglishLanguage FAO--0001007 "stroma")
+
+(mo-remark "version: $Revision: 1.1 $")
+
+(subclass FAO--0000033 FAO--0000024)
+
+(subclass FAO--0001013 FAO--0001004)
+
+(mo-remark "saved-by:             mariacos")
+
+(mo-definition FAO--0000024 "&quot;An asexual, nonmotile spore formed by higher fungi; conidia are usually made from the side or tip of specialized sporogenous cells and do not form by progressive cleavage of the cytoplasm.&quot; [SGD:clt, PMID:2524423, PMID:9529886]")
+
+(subclass FAO--0000014 FAO--0000010)
+
+(owl-someValuesFrom FAO--0001019 FAO--0001018)
+
+(documentation EnglishLanguage "Version of data in the ontology.")
+
+(documentation EnglishLanguage "Represents the cyclic property.
+(Typedefs only)")
+
+(mo-defaultNamespace "fungal_anatomy")
+
+(subclass FAO--0001012 FAO--0001011)
+
+(termFormat EnglishLanguage Spore "spore")
+
+(mo-definition FAO--0000029 "&quot;A macroconidium that has only one nucleus.&quot; [SGD:clt]")
+
+(mo-definition Spore "&quot;A differentiated form of an organism produced during or as a result of an asexual or sexual reproductive process; usually a cell with a thick cell wall that stores and protects one or more nuclei. Spores may be produced in response to, and are characteristically resistant to, adverse environmental conditions.&quot; [ISBN:0471940526]")
+
+(subclass FAO--0000036 FAO--0000035)
+
+(mo-definition FAO--0001022 "&quot;A cell engaged in or about to engage in the process of mating; exhibits different morphology from a vegetative cell due to the action of mating pheromones.&quot; [FAO:mcc]")
+
+(termFormat EnglishLanguage FAO--0001012 "hyphal tip, hypha in
+mycelium")
+
+(instance develops_from BinaryRelation)
+
+(subclass FAO--0001019 FAO--0001016)
+
+(documentation EnglishLanguage "Represents the symmetric property.
+(Typedefs only)")
+
+(subclass FAO--0001017 FAO--0001019)
+
+(termFormat EnglishLanguage FAO--0000031 "uninucleate arthroconidium")
+
+(subclass FAO--0000004 FAO--0000014)
+
+(mo-definition FAO--0001003 "&quot;A threadlike, tubular filamentous fungal structure, existing as part of a group or mass of such structures, the mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(mo-synonym FAO--0000002 "&quot;multispecific structure&quot; []")
+
+(documentation Smo-definedSubset EnglishLanguage "Subset defined for
+the ontology.")
+
+(subclass FAO--0001004 FAO--0001009)
+
+(subclass FAO--0001018 FAO--0001009)
+
+(subclass FAO--0000039 Spore)
+
+(termFormat EnglishLanguage FAO--0000006 "stipe")
+
+(subclass FAO--0000015 FAO--0000014)
+
+(subclass FAO--0000032 FAO--0000018)
+
+(subclass FAO--0000013 FAO--0000020)
+
+(mo-savedDateTime "09:08:2005 14:53")
+
+(mo-definition FAO--0000032 "&quot;A single cell where nutrition and growth predominate, as opposed to cells that are undergoing sexual processes.  &quot; [SGD:clt, ISBN:0471940526]")
+
+(termFormat EnglishLanguage FAO--0000030 "uninucleate blastconidium")
+
+(mo-definition FAO--0000033 "&quot;A conidium that has more than one nucleus.&quot; [SGD:clt]")
+
+(mo-synonym FAO--0000006 "&quot;stem&quot; []")
+
+(subclass FAO--0000005 FAO--0000001)
+
+(mo-savedBy "gwg")
+
+(subclass FAO--0001015 FAO--0001016)
+
+(mo-definition FAO--0000018 "&quot;An individual cell composed of a plasma membrane, contents internal to the plasma membrane, and any external protective or encapsulating structure.&quot; [SGD:clt, FAO:curators]")
+
+(subclass FAO--0000016 FAO--0000020)
+
+(mo-remark "autogenerated-by:     DAG-Edit version 1.320")
+
+(termFormat EnglishLanguage FAO--0000021 "basidiospore")
+
+(termFormat EnglishLanguage FAO--0000032 "vegetative cell")
+
+(termFormat EnglishLanguage FAO--0001014 "aseptate hypha in mycelium")
+
+(termFormat EnglishLanguage FAO--0000001 "microbial structure
+ontology")
+
+(owl-someValuesFrom FAO--0000013 FAO--0000004)
+
+(mo-definition FAO--0001011 "&quot;The growing end of a hypha.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(owl-someValuesFrom FAO--0000016 FAO--0000015)
+
+(mo-definition FAO--0000007 "&quot;Any specialized structure which bears or contains sexually or asexually derived spores.&quot; [SGD:clt, FAO:curators]")
+
+(subclass FAO--0000040 Spore)
+
+(termFormat EnglishLanguage FAO--0000015 "free ascus")
+
+(owl-someValuesFrom FAO--0000021 FAO--0000003)
+
+(documentation EnglishLanguage "General comments on the ontology.")
+
+(subclass FAO--0000022 FAO--0000021)
+
+(subclass FAO--0000026 FAO--0000021)
+
+(termFormat EnglishLanguage Smo-definedSubset "definedSubset")
+
+(subclass FAO--0000031 FAO--0000041)
+
+(mo-definition FAO--0001005 "&quot;A thick strand of hyphae oriented in parallel to each other, with a central channel through which nutrients are conducted.&quot; [FAO:clt, ISBN:0632030771]")
+
+(subclass FAO--0000034 FAO--0000002)
+
+(mo-definition FAO--0001010 "&quot;A hypha whose growing portion contains multiple nuclei but is not divided internally by septa, or lateral cell walls.Septa may be present in older portions of the hypha, or at the base of reproductive structures.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(subclass FAO--0000023 Spore)
+
+(mo-definition FAO--0001001 "&quot;A threadlike, tubular filamentous fungal structure.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(mo-definition FAO--0000009 "&quot;The structure on which the spore-bearing tissue is carried in sexually-derived fruiting bodies.&quot; [ISBN:0471940526]")
+
+(owl-someValuesFrom FAO--0001021 FAO--0001010)
+
+(termFormat EnglishLanguage FAO--0000037 "multinucleate
+arthroconidium")
+
+(mo-definition FAO--0000014 "&quot;A sac-like structure containing sexual spores formed by Ascomycotina; mature asci may have little or no cytoplasm or cytoplasmic contents, and no nucleus outside of the spores.&quot; [SGD:clt]")
+
+(mo-definition FAO--0000013 "&quot;A thick walled spore that stores and protects one or more nuclei following sexual reproduction in an Ascomycete that is contained in an ascus associated with an ascocarp.&quot; [FAO:curators]")
+
+(instance Smo-definedSubset BinaryRelation)
+
+(mo-definition FAO--0001004 "&quot;A hypha that is divided internally by septa, or lateral cell walls, that exists as part of a group or mass of such structures, the mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(subclass FAO--0001001 FAO--0000001)
+
+(subclass FAO--0001010 FAO--0001001)
+
+(mo-synonym FAO--0000001 "&quot;fungal structure ontology&quot; []")
+
+(subclass FAO--0001009 FAO--0001001)
+
+(termFormat EnglishLanguage FAO--0001001 "hypha")
+
+(termFormat EnglishLanguage FAO--0001004 "septate hypha in mycelium")
+
+(mo-definition FAO--0000025 "&quot;A conidium that has only one nucleus.&quot; [SGD:clt]")
+
+(subclass FAO--0000020 FAO--0000017)
+
+(subclass FAO--0000042 FAO--0000038)
+
+(subclass FAO--0000030 FAO--0000029)
+
+(mo-definition FAO--0001020 "&quot;The growing tip of a hypha whose growing portion is not divided internally by septa, or lateral cell walls, existing as part of a group or mass of such hyphae, the mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(documentation EnglishLanguage "Date/time of last edit and save.")
+
+(mo-xrefAnalogous FAO--0001010 "FAO:mcc")
+
+(termFormat EnglishLanguage FAO--0000024 "conidium")
+
+(subclass FAO--0000039 FAO--0000023)
+
+(termFormat EnglishLanguage FAO--0001018 "hypha with dolipore septa")
+
+(termFormat EnglishLanguage FAO--0000012 "basidiocarp")
+
+(termFormat EnglishLanguage FAO--0000025 "uninucleate conidium")
+
+(termFormat EnglishLanguage FAO--0000009 "pileus")
+
+(mo-synonym FAO--0000012 "&quot;mushroom&quot; []")
+
+(mo-definition FAO--0000035 "&quot;A macroconidium that has more than one nucleus.&quot; [SGD:clt]")
+
+(owl-someValuesFrom FAO--0000004 FAO--0000008)
+
+(subclass FAO--0000021 FAO--0000017)
+
+(mo-definition FAO--0000008 "&quot; A structure within which or at the surface of, an ascus develops in Ascomycetes.&quot; [ISBN:0471940526]")
+
+(subclass FAO--0000003 FAO--0000010)
+
+(subclass FAO--0000029 FAO--0000025)
+
+(termFormat EnglishLanguage FAO--0000018 "unicellular structure")
+
+(termFormat EnglishLanguage FAO--0000011 "mycelium")
+
+(mo-definition FAO--0000015 "&quot;An ascus that is not associated with an ascocarp and is usually derived from a single cell.&quot; [FAO:curators]")
+
+(subclass FAO--0000035 FAO--0000038)
+
+(subclass FAO--0000038 FAO--0000024)
+
+(termFormat EnglishLanguage FAO--0000042 "blastoconidium")
+
+(mo-definition FAO--0000021 "&quot;A thick walled spore that stores and protects one or more nuclei following sexual reproduction in an Basidiomycete; formed externally on extrusions of the basidium&quot; [SGD:clt, ISBN:0471940526]")
+
+(mo-definition FAO--0000010 "&quot;A structure directly within which spores are contained or from which spores are formed.&quot; [FAO:curators]")
+
+(mo-definition FAO--0001007 "&quot;A compact hyphal mass, on or in which fruiting bodies are formed.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(subclass FAO--0000012 FAO--0000007)
+
+(subclass FAO--0000007 FAO--0000001)
+
+(mo-definition FAO--0000027 "&quot;A uninucleate spore formed on specialized cells or projections, sterigma, of a conidiophore head.&quot; [SGD:clt, PMID:9529886]")
+
+(termFormat EnglishLanguage FAO--0001015 "hyphal tip, septate hypha in
+mycelium")
+
+(mo-synonym FAO--0001010 "&quot;coenocytic hypha&quot; []")
+
+(documentation EnglishLanguage "Default namespace for the ontology.")
+
+(mo-definition FAO--0001023 "&quot;An elongated, asymmetric cell formed before mating, in response to mating pheromone, by Saccharomyces species and other fungi with similar life cycles. Named after the Al Capp cartoon character, whose shape it resembles.&quot; [FAO:mcc, ISBN:0879693798]")
+
+(mo-definition FAO--0001021 "&quot;The growing end of a hypha that is not divided internally by septa, or cross-walls.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(mo-definition FAO--0000040 "&quot;A thick walled, sexual, resting spore formed by Zygomycetes; sometimes refers to the spore and the multi-layered cell wall that encloses the spore, the zygosporangium.&quot; [ISBN:0471940526, SGD:clt]")
+
+(owl-someValuesFrom FAO--0000006 FAO--0000012)
+
+(mo-definition FAO--0001016 "&quot;The growing end of a hypha that is divided internally by septa, or lateral cell walls.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(termFormat EnglishLanguage FAO--0000035 "multinucleate
+macroconidium")
+
+(mo-definition FAO--0000030 "&quot;A blastoconidium that has only one nucleus.&quot; [SGD:clt]")
+
+(subclass FAO--0001022 FAO--0000018)
+
+(termFormat EnglishLanguage FAO--0000010 "sporophore")
+
+(subclass FAO--0000035 FAO--0000033)
+
+(termFormat EnglishLanguage FAO--0000016 "ascospore in free ascus")
+
+(mo-definition FAO--0000039 "&quot;An asexual spore formed by Oomycetes; formed upon fertilization of an oosphere.&quot; [SGD:clt, ISBN:0851988857]")
+
+(subclass FAO--0001004 FAO--0001003)
+
+(subclass FAO--0001021 FAO--0001011)
+
+(subclass FAO--0000029 FAO--0000038)
+
+(termFormat EnglishLanguage FAO--0000014 "ascus")
+
+(mo-definition FAO--0001002 "&quot;A chain of cells, formed under specific growth conditions, in which yeast-form fungal cells become elongated, bud only at the cellular pole distal to the mother cell, and fail to separate after division. Pseudohyphae exhibit constrictions at the cell-cell junctions, in contrast to true hyphae which are of more uniform diameter.&quot; [FAO:mcc]")
+
+(mo-definition FAO--0000041 "&quot;Cylindrical spore formed by development and compartmentation of hyphae; the hyphae are often supporting blastoconidiophores.&quot; [SGD:clt, PMID:2524423]")
+
+(subclass FAO--0001023 FAO--0001022)
+
+(mo-definition FAO--0000023 "&quot;A spore formed following mitosis or mitoses.&quot; [SGD:clt, PMID:2524423, PMID:9529886]")
+
+(owl-someValuesFrom FAO--0001012 FAO--0001003)
+
+(mo-definition FAO--0000011 "&quot;A group or mass of discrete hyphae; the vegetative structure of many fungi.&quot; [ISBN:0471940526]")
+
+(mo-definition FAO--0000031 "&quot;An arthroconidium that has only one nucleus.&quot; [SGD:clt]")
+
+(mo-synonym FAO--0000023 "&quot;mitotically-derived spore&quot; []")
+
+(subclass FAO--0000041 FAO--0000038)
+
+(subclass FAO--0000037 FAO--0000041)
+
+(subclass FAO--0000018 FAO--0000001)
+
+(subclass Spore FAO--0000018)
+
+(termFormat EnglishLanguage FAO--0000022 "teliospore")
+
+(mo-definition FAO--0000016 "&quot;A thick walled spore that stores and protects one or more nuclei following sexual reproduction in an Ascomycete that is contained in an ascus not associated with an ascocarp.&quot; [FAO:curators]")
+
+(subclass FAO--0000008 FAO--0000007)
+
+(termFormat EnglishLanguage FAO--0000004 "ascocarp-bound ascus")
+
+(documentation EnglishLanguage "The program used to generate the
+ontology.")
+
+(mo-synonym FAO--0000032 "&quot;yeast-form&quot; []")
+
+(owl-someValuesFrom FAO--0001011 FAO--0001001)
+
+(termFormat EnglishLanguage FAO--0001019 "hyphal tip, hypha with
+dolipore septa")
+
+(subclass FAO--0001020 FAO--0001012)
+
+(mo-synonym FAO--0000007 "&quot;fruiting body&quot; []")
+
+(mo-synonym FAO--0000026 "&quot;urediniospore&quot; []")
+
+(termFormat EnglishLanguage FAO--0001020 "hyphal tip, aseptate hypha
+in mycelium")
+
+(instance part BinaryRelation)
+
+(owl-someValuesFrom FAO--0001020 FAO--0001014)
+
+(mo-synonym FAO--0000042 "&quot;blastospore&quot; []")
+
+(documentation Smo-Subset EnglishLanguage "Subset of OBO terms from
+the ontology.")
+
+(mo-definition FAO--0000038 "&quot;The larger of two types of asexual spores formed by some fungi; usually round or oblong.&quot; [SGD:clt, ISBN:0471940526]")
+
+(owl-someValuesFrom FAO--0001017 FAO--0001013)
+
+(owl-someValuesFrom FAO--0001015 FAO--0001004)
+
+(termFormat EnglishLanguage FAO--0000028 "microconidium")
+
+(termFormat EnglishLanguage FAO--0001005 "rhizomorph")
+
+(mo-definition FAO--0000036 "&quot;A blastoconidium that has more than one nucleus.&quot; [SGD:clt]")
+
+(termFormat EnglishLanguage FAO--0000036 "multinucleate
+blastoconidium")
+
+(mo-synonym FAO--0001014 "&quot;coenocytic hypha in mycelium&quot; []")
+
+(termFormat EnglishLanguage FAO--0000040 "zygospore")
+
+(mo-definition FAO--0000026 "&quot;A thick walled spore that stores and protects one or more nuclei during dispersal following reproduction in an Basidiomycete.&quot; [SGD:clt]")
+
+(termFormat EnglishLanguage FAO--0000003 "basidium")
+
+(mo-definition FAO--0000002 "&quot;A multicellular formation composed of cells from more than one species.&quot; [SGD:clt, FAO:curators]")
+
+(mo-remark "date:                 Fri Jun 27 09:41:28 EDT 2003")
+
+(mo-formatVersion "1.0")
+
+(mo-synonym FAO--0000041 "&quot;arthrospore&quot; []")
+
+(mo-synonym FAO--0000017 "&quot;meiotically-derived spore&quot; []")
+
+(owl-someValuesFrom FAO--0000003 FAO--0000012)
+
+(termFormat EnglishLanguage FAO--0001002 "pseudohypha")
+
+(termFormat EnglishLanguage FAO--0000007 "fruitbody")
+
+(termFormat EnglishLanguage FAO--0000008 "ascocarp")
+
+(domain Smo-definedSubset 2 Smo-Subset)
+
+(mo-definition FAO--0001019 "&quot;The growing end of a hypha that is divided internally by septa, or cross-walls, of the dolipore type.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(mo-definition FAO--0000037 "&quot;An arthroconidium that has more than one nucleus.&quot; [SGD:clt]")
+
+(mo-definition FAO--0000020 "&quot;A thick walled spore that stores and protects one or more nuclei following sexual reproduction in an Ascomycete.&quot; [SGD:clt]")
+
+(termFormat EnglishLanguage FAO--0000020 "ascospore")
+
+(subclass FAO--0000025 FAO--0000024)
+
+(termFormat EnglishLanguage FAO--0000027 "conidium of conidiophore
+head")
+
+(mo-definition FAO--0000034 "&quot;A multicellular structure composed of multiple species; minimally composed of an alga or cyanobacterium and a fungus.&quot; [SGD:clt, ISBN:0471940526]")
+
+(termFormat EnglishLanguage FAO--0000041 "arthroconidium")
+
+(termFormat EnglishLanguage FAO--0001008 "sclerotium")
+
+(termFormat EnglishLanguage FAO--0001022 "mating cell")
+
+(subclass FAO--0001008 FAO--0000011)
+
+(termFormat EnglishLanguage FAO--0000038 "macroconidium")
+
+(mo-definition FAO--0000042 "&quot;An oblong or round asexual spore formed from conidial chains.&quot; [SGD:clt, PMID:2524423]")
+
+(mo-definition FAO--0001017 "&quot;The growing end of a hypha that is divided internally by dolipore septa, existing as part of a group or mass of such hyphae, the mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(termFormat EnglishLanguage FAO--0000013 "ascospore in ascocarp-bound
+ascus")
+
+(subclass FAO--0001007 FAO--0000011)
+
+(documentation EnglishLanguage "Version of OBO format.")
+
+(mo-autoGeneratedBy "DAG-Edit 1.419 rev 3")
+
+(subclass FAO--0001006 FAO--0000011)
+
+(mo-definition FAO--0001012 "&quot;The growing end of a hypha existing as a part of a mass or group of hyphae, the mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(termFormat EnglishLanguage FAO--0001023 "shmoo")
+
+(termFormat EnglishLanguage FAO--0000039 "oospore")
+
+(termFormat EnglishLanguage FAO--0000002 "composite structure")
+
+(subclass FAO--0001014 FAO--0001003)
+
+(documentation EnglishLanguage "A namespace defined for use in the
+ontology.")
+
+(subclass FAO--0000031 FAO--0000029)
+
+(owl-someValuesFrom FAO--0001016 FAO--0001009)
+
+(termFormat EnglishLanguage part "part of")
+
+(subclass FAO--0000002 FAO--0000001)
+
+(mo-definition FAO--0000003 "&quot;A structure directly from which spores are formed following sexual reproduction in a Basidiomycete.&quot; [FAO:curators, ISBN:0471940526]")
+
+(termFormat EnglishLanguage Smo-Subset "Subset")
+
+(mo-xrefAnalogous FAO--0001014 "FAO:mcc")
+
+(mo-definition FAO--0000004 "&quot;An ascus that is associated with an ascocarp.&quot; [FAO:curators]")
+
+(subclass FAO--0001016 FAO--0001011)
+
+(domain Smo-inSubset 2 Smo-Subset)
+
+(subclass FAO--0000036 FAO--0000042)
+
+(mo-synonym FAO--0000026 "&quot;urediospore&quot; []")
+
+(documentation Smo-inSubset EnglishLanguage "Declares a term/typedef
+to be in a subset.")
+
+(mo-definedNamespace "fungal_anatomy")
+
+(termFormat EnglishLanguage FAO--0001017 "hyphal tip, hypha with
+dolipore septa in mycelium")
+
+(termFormat EnglishLanguage FAO--0000029 "uninucleate macroconidium")
+
+(mo-definition FAO--0001015 "&quot;The growing end of a hypha that is divided internally by septa, or lateral cell walls, existing as part of a group or mass of such hyphae, the mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(subclass FAO--0000040 FAO--0000017)
+
+(mo-definition FAO--0001013 "&quot;Hypha containing dolipore septa, or cross-walls, containing a central pore around which the septum is swollen to form a barrel-shaped structure; existing as part of a group or mass of similar hyphae, or mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(termFormat EnglishLanguage FAO--0000026 "uredospore")
+
+(termFormat EnglishLanguage FAO--0000033 "multinucleate conidium")
+
+(termFormat EnglishLanguage FAO--0001003 "hypha in mycelium")
+
+(subclass FAO--0000024 FAO--0000023)
+
+(subclass FAO--0000027 FAO--0000025)
+
+(subclass FAO--0001005 FAO--0000011)
+
+(termFormat EnglishLanguage FAO--0001016 "hyphal tip, septate hypha")
+
+(mo-synonym FAO--0000009 "&quot;cap&quot; []")
+
+(mo-definition FAO--0000012 "&quot;A structure at the surface of which or, or within, basidia and basidiospores develop in Basidiomycetes; site of karyogamy and meiosis.&quot; [ISBN:0471940526]")
+
+(mo-definition FAO--0000017 "&quot;A spore formed following meiosis. Sometimes following meiosis, prospores may undergo one or more rounds of mitosis before they are fully mature.&quot; [SGD:clt]")
+
+(subclass FAO--0001020 FAO--0001021)
+
+(termFormat EnglishLanguage FAO--0000034 "lichen thallus")
+
+(termFormat EnglishLanguage FAO--0000005 "obsolete")
+
+(subclass FAO--0000010 FAO--0000001)
+
+(owl-AnnotationProperty "null")
+
+(mo-definition FAO--0001014 "&quot;A hypha whose growing portion contains multiple nuclei but is not divided internally by septa, or lateral cell walls; existing as part of a mass or group of such hyphae, the mycelium.&quot; [FAO:mcc, ISBN:0471522295]")
+
+(subclass FAO--0001017 FAO--0001015)
+

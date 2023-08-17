@@ -1,0 +1,5 @@
+(synonymousExternalConcept "ZEA--0015178" Seed zea_mays_anatomy)
+(synonymousExternalConcept "part_of" part zea_mays_anatomy)
+(subsumedExternalConcept "ZEA--0015031" Leaf zea_mays_anatomy)
+(subsumedExternalConcept "ZEA--0015050" Organ zea_mays_anatomy)
+(subsumedExternalConcept "ZEA--0015149" Tissue zea_mays_anatomy)

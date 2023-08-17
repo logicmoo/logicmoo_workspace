@@ -1,0 +1,1407 @@
+(mo-synonym ZEA--0015042 "&quot;Leaf epidermis&quot; []")
+
+(mo-synonym ZEA--0015091 "&quot;inner lemma of ear&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015058 "ligule consistency")
+
+(owl-someValuesFrom ZEA--0015086 ZEA--0015084)
+
+(termFormat EnglishLanguage ZEA--0015180 "shoot")
+
+(owl-someValuesFrom ZEA--0015058 ZEA--0015009)
+
+(owl-someValuesFrom ZEA--0015167 ZEA--0015163)
+
+(subclass ZEA--0015006 ZEA--0015014)
+
+(owl-someValuesFrom ZEA--0015104 ZEA--0015085)
+
+(mo-synonym ZEA--0015071 "&quot;axillary bud&quot; []")
+
+(mo-synonym ZEA--0015133 "&quot;style&quot; []")
+
+(subclass ZEA--0015156 ZEA--0015155)
+
+(owl-someValuesFrom ZEA--0015075 ZEA--0015073)
+
+(mo-xrefAnalogous ZEA--0015011 "MaizeDB:45980")
+
+(termFormat EnglishLanguage ZEA--0015036 "Zea mays Plant Structure
+Ontology")
+
+(termFormat EnglishLanguage Smo-inSubset "inSubset")
+
+(owl-someValuesFrom ZEA--0015116 ZEA--0015108)
+
+(owl-someValuesFrom ZEA--0015024 ZEA--0015060)
+
+(termFormat EnglishLanguage ZEA--0015131 "floret")
+
+(termFormat EnglishLanguage ZEA--0015015 "abaxial indumentum")
+
+(termFormat EnglishLanguage ZEA--0015034 "root")
+
+(mo-xrefAnalogous ZEA--0015036 "maizedb:pldv (ID#165572)")
+
+(mo-xrefAnalogous ZEA--0015039 "MaizeDB:pending")
+
+(owl-someValuesFrom ZEA--0015039 ZEA--0015024)
+
+(termFormat EnglishLanguage ZEA--0015174 "founder cells")
+
+(termFormat EnglishLanguage ZEA--0015156 "tassel meristem")
+
+(subclass ZEA--0015050 Organ)
+
+(mo-synonym ZEA--0015141 "&quot;flag leaves&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015052 "leaf blade collar")
+
+(mo-synonym ZEA--0015022 "&quot;Leaf margin&quot; []")
+
+(owl-someValuesFrom ZEA--0015162 ZEA--0015150)
+
+(mo-xrefAnalogous ZEA--0015140 "maizedb:pldv (ID # 165572)")
+
+(mo-definition ZEA--0015072 "&quot;the culm is equivalent to the stalk of the Zea mays plant. &quot; [MaizeGDB:58047]")
+
+(mo-definition ZEA--0015093 "&quot;The penultimate bract-like structure that subtends the upper (pedicelled) floret of the sessile spikelet of the ear (pistillate inflorescence). As part of the upper floret, the inner lemma is oriented in a position that is opposite the palea &amp; adjacent to the upper (inner) glume of the sessile spikelet. The lemma arises from the floret pedicel immediately below the palea.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015160 "&quot;Shoot meristematic tissue arising other than at the apex or in association with a leaf primordium. This is  the same meristem which gives rise to shoots, collectively called tillers. Observations indicate that while axillary buds may be involved in adventitious shoot growth (formation of tillers), several of these shoots (tillers) can arise from a single node. These observations suggest that the adventitious shoot meristem is recognizably distinct from the axillary bud meristem.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015061 "&quot;The primary root (radicle or tap root) is the initial root structure which emerges from the embryo of the caryopsis (kernel/seed). The primary root is formed early during embryogenesis, becoming defined as a distinctive region 10-15 days after pollination. The primary root is enclosed by a protective ensheathing structure, the coleorhiza. A variable number of adventitious lateral roots arise from the primary root (these are not formed during embryogenesis). See 'lateral root' for further information on lateral roots (seminal lateral roots). These lateral roots arise at varying points behind the zone of root hair formation on the primary root.  The primary root is always present (except when killed by some injury e.g. freezing).&quot; [MaizeGDB:lv, Feldman , in Freeling &amp; Walbot (eds) , The Maize Handbook , ID # 60920:< new dbxref>]")
+
+(owl-someValuesFrom ZEA--0015175 ZEA--0015172)
+
+(subclass ZEA--0015073 ZEA--0015050)
+
+(termFormat EnglishLanguage ZEA--0015055 "adaxial indumentum")
+
+(owl-someValuesFrom ZEA--0015005 ZEA--0015039)
+
+(termFormat EnglishLanguage ZEA--0015089 "pedicellate spikelet of
+ear")
+
+(termFormat EnglishLanguage ZEA--0015149 "tissue")
+
+(instance Smo-inSubset BinaryRelation)
+
+(mo-remark "version: $Revision: 1.1 $")
+
+(owl-someValuesFrom ZEA--0015050 ZEA--0015037)
+
+(owl-someValuesFrom ZEA--0015004 ZEA--0015039)
+
+(mo-xrefAnalogous ZEA--0015052 "MaizeDB:pending")
+
+(termFormat EnglishLanguage ZEA--0015165 "prop root meristem")
+
+(termFormat EnglishLanguage ZEA--0015063 "adventitious root system")
+
+(termFormat EnglishLanguage ZEA--0015095 "upper glume of pedicellate
+spikelet of ear")
+
+(owl-someValuesFrom ZEA--0015120 ZEA--0015106)
+
+(termFormat EnglishLanguage ZEA--0015121 "stamens of upper floret of
+pedicellate spikelet of tassel")
+
+(documentation EnglishLanguage "Version of data in the ontology.")
+
+(owl-someValuesFrom ZEA--0015044 ZEA--0015048)
+
+(owl-someValuesFrom ZEA--0015117 ZEA--0015108)
+
+(subclass ZEA--0015053 ZEA--0015057)
+
+(owl-someValuesFrom ZEA--0015032 ZEA--0015033)
+
+(subclass ZEA--0015037 ZEA--0015036)
+
+(owl-someValuesFrom ZEA--0015024 ZEA--0015059)
+
+(mo-definition ZEA--0015119 "&quot;Two, small, scale-like. pale-green structures (glandular-like organs) found adjacent to the inner surface of the base of the lemma of the floret. The adjacent margins of the two lodicules (opposite the mid-line of the lemma) are adpressed to each other while the inner surfaces of the lodicules form an angle of approximately 80 degrees to each other. Within the triangle of basal tissue, bounded on two sides by the two lodicules, are located the three filaments of the stamens. Just prior to anthesis the lodicules grow/swell laterally and the triangle of space between the lodicules is almost obscured. The two lodicules are thought to be involved in opening of the grass floret (flower) in readiness for pollination (at anthesis they grow/become increasingly turgid and are presumed to contribute to the displacing of the adjacent lemma and glume which facilitates the exsertion of the anthers for wind pollination). Gibbs Russell et al., Grasses of southern Africa, 1990; Ambrose et al., (2000), Molecular and Genetic Analyses of the Silky1 Gene Reveal Conservation in Floral Organ Specification between Eudicots and Monocots, Molecular Cell 5:569-579. Leszek Vincent 06/2000.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015074 "shank")
+
+(mo-synonym ZEA--0015003 "&quot;ciliolate ligule&quot; []")
+
+(mo-synonym ZEA--0015039 "&quot;vasculature&quot; []")
+
+(owl-someValuesFrom ZEA--0015049 ZEA--0015019)
+
+(owl-someValuesFrom ZEA--0015047 ZEA--0015027)
+
+(termFormat EnglishLanguage ZEA--0015076 "culm node")
+
+(termFormat EnglishLanguage ZEA--0015116 "palea of lower floret of
+sessile spikelet of tassel")
+
+(termFormat EnglishLanguage ZEA--0015099 "palea of upper floret of
+pedicellate spikelet of tassel")
+
+(subclass ZEA--0015059 ZEA--0015031)
+
+(subclass ZEA--0015063 ZEA--0015034)
+
+(termFormat EnglishLanguage ZEA--0015002 "leaf blade indumentum")
+
+(subclass ZEA--0015162 ZEA--0015149)
+
+(mo-definition ZEA--0015174 "&quot;A group of about 250 cells arranged in at least two layers forming a ring within the shoot apical meristem.&quot; [MaizeGDB:Freeling &amp; Lane (ID# 60922), MaizeGDB:lv (ID# 165572)]")
+
+(documentation EnglishLanguage "Represents the symmetric property.
+(Typedefs only)")
+
+(owl-someValuesFrom ZEA--0015142 ZEA--0015078)
+
+(termFormat EnglishLanguage ZEA--0015157 "ear meristem")
+
+(owl-someValuesFrom ZEA--0015103 ZEA--0015085)
+
+(mo-definition ZEA--0015109 "&quot;The upper (inner) of the two leaf-like (bract-like) structures that subtend the base of the pedicelled spikelets of the tassel (staminate inflorescence). Note that each of the many paired spikelets of the tassel (staminate inflorescence) has an upper glume. Each spikelet is subtended by a pair of glumes (lower &amp; upper glumes).&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015014 ZEA--0015037)
+
+(subclass ZEA--0015028 ZEA--0015027)
+
+(mo-definition ZEA--0015165 "&quot;The meristem which gives rise to the prop roots (ZEA:15068). Prop ('brace') roots are crown roots which have an aerial (above-ground) origin. They emerge from the extreme basal portion of 2-3 internodes above the soil surface.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015081 "&quot;A culm axillary (lateral) bud is found in the axil of each leaf arising from the culm nodes. Most of the culm axillary buds remain dormant throughout the life-span of the Zea mays plant. It is usual for only the upper two culm axillary buds to each develop into a lateral branch bearing an ear (pistillate inflorescence).&quot; [MaizeGDB:59445, MaizeGDB:60893, MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015017 "adaxial indumentum")
+
+(termFormat EnglishLanguage ZEA--0015044 "subsidiary cell")
+
+(mo-definition ZEA--0015115 "&quot;The uppermost bract-like structure that subtends the upper (pedicellate) floret of the sessile spikelet of the tassel (staminate inflorescence). The palea is oriented in a position that is opposite the lemma which subtends the same floret. The palea arises from the floret pedicel immediately above the lemma.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015072 "culm")
+
+(termFormat EnglishLanguage ZEA--0015073 "lateral branch")
+
+(termFormat EnglishLanguage ZEA--0015108 "lower floret of sessile
+spikelet of tassel")
+
+(mo-definition ZEA--0015083 "&quot;The attachment of the leaf to the node of the culm is via the base of the leaf sheath. The attachment of the leaf base is not in a circle but in a short spiral extending a little more than once around the culm (stem). The edge of the leaf which is attached lower on the culm (at a node) overlaps the other edge of the leaf which is attached to the culm slightly higher up. Note that the pattern of overlap alternates between successive leaves - each leaf  sheath is rolled around the culm in the opposite direction from that of the preceding leaf.&quot; [MaizeGDB:59445, MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015133 ZEA--0015139)
+
+(termFormat EnglishLanguage ZEA--0015022 "leaf blade margin")
+
+(mo-xrefAnalogous ZEA--0015028 "MaizeDB:163501")
+
+(owl-someValuesFrom ZEA--0015097 ZEA--0015089)
+
+(termFormat EnglishLanguage ZEA--0015054 "microhair")
+
+(termFormat EnglishLanguage ZEA--0015003 "ligule projections")
+
+(mo-xrefAnalogous ZEA--0015047 "MaizeDB:24738")
+
+(mo-definition ZEA--0015065 "&quot;These (adventitious) lateral roots  emerge from the primary root (radicle, tap root) at varying points behind the zone of root hair formation. They originate from the pericycle. They are not present during embyogenesis.&quot; [MaizeGDB:lv, Feldman in Freeling &amp; Walbot (eds) , 1994. The Maize Handbook , ID # 60920:< new dbxref>, Poethig in Sheridan , WF (ed) , 1982. Maize for Biological Research , ID # 25744:< new dbxref>]")
+
+(termFormat EnglishLanguage ZEA--0015114 "palea of lower floret of
+pedicellate spikelet of tassel")
+
+(termFormat EnglishLanguage ZEA--0015125 "stamens (abortive) of lower
+floret of pedicellate spikelet of ear")
+
+(mo-definition ZEA--0015099 "&quot;The uppermost bract-like structure that subtends the upper (pedicellate) floret of the pedicellate spikelet of the tassel (staminate inflorescence). The palea is oriented in a position that is opposite the lemma which subtends the same floret. The palea arises from the floret pedicel immediately above the lemma.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015041 "&quot;Provide defn.&quot; [****:*****]")
+
+(termFormat EnglishLanguage ZEA--0015172 "leaf primordium")
+
+(owl-someValuesFrom ZEA--0015027 ZEA--0015060)
+
+(mo-definition ZEA--0015169 "&quot;The meristem which gives rise to a root branch  (ZEA:15069). A root branch is an adventitious root that emerges from any of the various types of lateral root. Root branches arise at varying points behind (posterior to) the zone of root hair formation on the primary root. Root branches emerge from the surface of the main roots (the various types of lateral roots) at irregular intervals. When a root branches, the initial of each branch is formed from cells of the pericycle. Via cell division a bulging hemispherical mass of meristematic tissue is formed. The outer part of this forms the beginning of the rootcap, while the cells of the growing point are near the flat basal part of the hemispherical mass.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015161 "&quot;A meristematic tissue consisting of parallel layers of cells dividing anticlinally (perpendicular to the leaf surface). The divisions in this meristem constitute a major part of the intercalary growth by which the leaf reaches its mature size (with respect to surface area; periclinal divisions are responsible for increasing leaf thickness). (Esau, ID#139825; Vincent ID#165572, 2002)&quot; [MaizeGDB:lv (ID# 165572), MaizeGDB:Esau (ID# 139825)]")
+
+(termFormat EnglishLanguage ZEA--0015161 "plate meristem")
+
+(mo-definition ZEA--0015145 "&quot;Two, small, scale-like. pale-green structures (glandular-like organs) found adjacent to the inner surface of the base of the lemma of the floret. The adjacent margins of the two lodicules (opposite the mid-line of the lemma) are adpressed to each other while the inner surfaces of the lodicules form an angle of approximately 80 degrees to each other. Within the triangle of basal tissue, bounded on two sides by the two lodicules, are located the three filaments of the stamens. Just prior to anthesis the lodicules grow/swell laterally and the triangle of space between the lodicules is almost obscured. The two lodicules are thought to be involved in opening of the grass floret (flower) in readiness for pollination (at anthesis they grow/become increasingly turgid and are presumed to contribute to the displacing of the adjacent lemma and glume which facilitates the exsertion of the anthers for wind pollination). Gibbs Russell et al., Grasses of southern Africa, 1990; Ambrose et al., (2000), Molecular and Genetic Analyses of the Silky1 Gene Reveal Conservation in Floral Organ Specification between Eudicots and Monocots, Molecular Cell 5:569-579. Leszek Vincent 06/2000.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-synonym ZEA--0015013 "&quot;auricular setae&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015106 "lower floret of pedicellate
+spikelet of tassel")
+
+(mo-definition ZEA--0015091 "&quot;The penultimate bract-like structure that subtends the upper (pedicelled) floret of the pedicellate spikelet of the ear (pistillate inflorescence). As part of the upper floret, the inner lemma is oriented in a position that is opposite the palea &amp; adjacent to the upper (inner) glume of the pedicellate spikelet. The lemma arises from the floret pedicel immediately below the palea.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-xrefAnalogous ZEA--0015132 "maizedb:pldv (ID#165572)")
+
+(mo-definition ZEA--0015138 "&quot;The androecium is the male reproductive whorl of a flowering plant, comprising the stamen(s). Each stamen of the androecium usually comprises of a  filament (stalk-like structure) and anther (pollen producing structure). In some taxa one or more of the stamens may be sterile (producing no pollen). These modified stamens are called staminodes.&quot; [MaizeGDB:275295, Allaby 1992:The Concise Oxford Dictionary of Botany, Esau 1977:Anatomy of Seed Plants, MaizeGDB:lv (ID # 165572), MaizeGDB:wiedemeier (ID # 292238)]")
+
+(termFormat EnglishLanguage ZEA--0015024 "leaf sheath")
+
+(mo-definition ZEA--0015137 "&quot;A small rounded or scale-like structure (glandular-like organ) found between the base of the stamens in the grass floret (flower). The lodicules (usually 2) each arise adjacent to the base of the ovary and are between the stamens adjacent to the lemma of the grass floret. Note that the anterior lodicule (the third lodicule), adjacent to the palea, is suppressed in most grass species. This suppression results in the trimerous arrangement of the lodicules together with the stamens and carpels being overlooked. The lodicules are thought to be involved in opening of the grass flower in readiness for pollination (they become turgid at anthesis, thus opening (pushing apart) the lemma and palea and facilitating wind pollination).&quot; [MaizeGDB:lv (ID # 165572), :Ambrose et al. , (2000). Molecular and Genetic Analysis of the Silky1 Gene Reveal Conservation in Floral Organ Specification between Eudicots and Monocots , Molecular Cell 5 569-579, :Gibbs Russel et al. , (1990). Grasses of southern Africa]")
+
+(mo-definition ZEA--0015086 "&quot;The spikelet is the basic unit of the grass inflorescence and each spikelet is usually subtended by a pair of leaf-like (bract-like) structures, called glumes, at its base. The two glumes are referred to as the lower glume and the upper glume.  In Zea each spikelet of the tassel (staminate inflorescence) comprises two florets (flowers). Similarly each spikelet of the lateral branch (ear or pistillate inflorescence) contains initially two florets although one of these is usually arrested in its development very early on. Note that in both the staminate and pistillate inflorescences the spikelets occur in pairs (sessile &amp; pedicellate spikelets), joined to a common pedicel.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(subclass ZEA--0015177 ZEA--0015037)
+
+(termFormat EnglishLanguage ZEA--0015140 "husk sheath")
+
+(mo-synonym ZEA--0015088 "&quot;glumella&quot; []")
+
+(mo-xrefAnalogous ZEA--0015013 "MaizeDB:165572")
+
+(subclass ZEA--0015173 ZEA--0015149)
+
+(termFormat EnglishLanguage ZEA--0015142 "husk ligule")
+
+(mo-definition ZEA--0015136 "&quot;The stalk-like structure of the stamen, which bears the anther. (M.Allaby. 1992. The Concise Oxford Dictionary of Botany, The Oxford University Press.).&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015107 ZEA--0015104)
+
+(mo-definition ZEA--0015171 "&quot;The term tiller is a collective term used for all of the various forms of adventitious shoot which is produced by Zea mays. Tillers are produced by adventitous shoot meristematic tissue (ZEA:xxx). Observations indicate that while axillary buds may be involved in adventitious shoot growth (formation of tillers), several of these shoots (tillers) can arise from a single node.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(subclass ZEA--0015055 ZEA--0015057)
+
+(mo-definition ZEA--0015060 "&quot;The adult leaves are above the juvenile (oldest) leaves. Adult leaves are distinct from juvenile leaves in maize. The juvenile vs adult status is characterized by particular anatomical traits: wax and hair distribution, presence or absence of epidermal cell types, cell wall shape and biochemistry. The change from juvenile-phase to adult-phase leaves  is gradual.&quot; [MaizeGDB:lv, Sylvester et al.:American Journal of Botan 88(12) 2157-2167 , 2001, Freeling &amp; Lane:The Maize Leaf. In The Maize Handbook. ISBN 0387978267]")
+
+(mo-xrefAnalogous ZEA--0015141 "maizedb:ID# 77179")
+
+(termFormat EnglishLanguage Smo-definedSubset "definedSubset")
+
+(owl-someValuesFrom ZEA--0015051 ZEA--0015021)
+
+(mo-definition ZEA--0015013 "&quot;Trichomes (hairs) which are present at the distal and proximal ends of the margin of the auricle.&quot; [MaizeGDB:165572]")
+
+(subclass ZEA--0015172 ZEA--0015149)
+
+(subclass ZEA--0015179 ZEA--0015177)
+
+(subclass ZEA--0015061 ZEA--0015034)
+
+(owl-someValuesFrom ZEA--0015137 ZEA--0015131)
+
+(mo-definition ZEA--0015029 "&quot;A vein that arises from the midvein or one of the lateral veins.&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(mo-xrefAnalogous ZEA--0015003 "DELTA:Grass Character List")
+
+(instance Smo-definedSubset BinaryRelation)
+
+(mo-synonym ZEA--0015137 "&quot;glumella&quot; []")
+
+(mo-synonym ZEA--0015036 "&quot;anatomy (including morphology)&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015117 "stamens of lower floret of
+sessile spikelet of tassel")
+
+(mo-definition ZEA--0015121 "&quot;The stamens comprise the androecium of each tassel floret (flower). Each of the three stamens comprises of a stalk-like filament which terminates in the pollen-producing anther.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015143 "&quot;The development of the gynoecial tissue from the floral meristem occurs during the ongoing development of the three stamen primordia.The gynoecial tissue develops via the initiation of an adaxial ridge on the remainder of the floral meristem distal to the three stamens. Soon after initiation the gynoecial tissue begins to abort and subsequently degenerates. This abortion and degeneration of this tissue in the lower floret of the sessile spikelet occurs before the same process occurs in the upper floret. &quot; [MaizeGDB:lv (ID# 165572), MaizeGDB:60893]")
+
+(termFormat EnglishLanguage ZEA--0015043 "leaf blade midrib")
+
+(owl-someValuesFrom ZEA--0015112 ZEA--0015104)
+
+(termFormat EnglishLanguage ZEA--0015102 "stylar ridge (abortive) of
+lower floret of pedicellate spikelet of ear")
+
+(mo-remark "date:                 Thu Feb 12 16:13:57 CST 2004")
+
+(mo-definition ZEA--0015033 "&quot;Provide defn.&quot; [2222:33333]")
+
+(owl-someValuesFrom ZEA--0015074 ZEA--0015073)
+
+(termFormat EnglishLanguage ZEA--0015079 "culm internode")
+
+(mo-synonym ZEA--0015170 "&quot;seed&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015019 "adaxial")
+
+(termFormat EnglishLanguage ZEA--0015064 "seminal lateral root")
+
+(subclass ZEA--0015155 ZEA--0015149)
+
+(mo-definition ZEA--0015130 "&quot;Each spikelet in either of the inflorescences in Zea is subtended by a pair of leaf-like (bract-like) structures, called glumes, at its base. The two glumes are referred to as the lower glume and the upper glume. The spikelet is the basic unit of the grass inflorescence. In Zea each spikelet of the tassel (staminate inflorescence) comprises two florets (flowers). Similarly each spikelet of the lateral branch (ear or pistillate inflorescence) contains initially two florets although one of these is usually arrested in its development very early on. Note that in both the staminate and pistillate inflorescences the spikelets occur in pairs (sessile &amp; pedicellate spikelets), joined to a common pedicel. Glumes are considered to be homologous to the vegetative leaf.&quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:Freeling &amp; Lane (ID# 60922)]")
+
+(owl-someValuesFrom ZEA--0015075 ZEA--0015084)
+
+(subclass ZEA--0015130 ZEA--0015031)
+
+(termFormat EnglishLanguage ZEA--0015160 "adventitious shoot
+meristem")
+
+(termFormat EnglishLanguage ZEA--0015062 "seminal root system")
+
+(owl-someValuesFrom ZEA--0015002 ZEA--0015027)
+
+(termFormat EnglishLanguage ZEA--0015088 "palea")
+
+(termFormat EnglishLanguage ZEA--0015075 "cob")
+
+(mo-definition ZEA--0015118 "&quot;The development of the gynoecial tissue from the floral meristem occurs during the ongoing development of the three stamen primordia.The gynoecial tissue develops via the initiation of an adaxial ridge on the remainder of the floral meristem distal to the three stamens. Soon after initiation the gynoecial tissue begins to abort and subsequently degenerates. This abortion and degeneration of this tissue in the lower floret of the pedicellate spikelet occurs before the same process occurs in the upper floret. &quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:60893]")
+
+(mo-xrefAnalogous ZEA--0015139 "maizedb:pldv (ID# 165572)")
+
+(termFormat EnglishLanguage ZEA--0015134 "stamen")
+
+(termFormat EnglishLanguage ZEA--0015081 "culm axillary bud")
+
+(termFormat EnglishLanguage ZEA--0015035 "leaf blade auricles")
+
+(mo-definition ZEA--0015164 "&quot;The meristem which gives rise to the crown roots (ZEA:15066).There are two spatial components of the adventitious root system. 1. A subterranean (below-ground) origin; 2. An aerial (above-ground) origin. The subterranean adventitious roots are frequently called crown roots because they originate from the basal portion of the growing stem known as the crown. The first crown roots (4-5), arranged in a whorl, appear at the base of the second internode about as soon as the tip of the coleoptile reaches the soil surface. A few of the subsequent higher internodes may have a similar number of crown roots (in whorls), after which the successive internodes have more and larger crown roots up to 2-3 internodes above the soil surface.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015095 "&quot;The upper (inner) of the two bract-like structures that subtend the base of the pedicelled spikelets of the ear (pistillate inflorescence). Note that each of the many paired spikelets of the ear (pistillate inflorescence) has an upper glume. Each spikelet is subtended by a pair of glumes (lower &amp; upper glumes). (Vincent, ID#165572)&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015169 ZEA--0015166)
+
+(owl-someValuesFrom ZEA--0015042 ZEA--0015027)
+
+(termFormat EnglishLanguage ZEA--0015066 "crown roots")
+
+(owl-someValuesFrom ZEA--0015123 ZEA--0015107)
+
+(termFormat EnglishLanguage ZEA--0015093 "lemma of upper floret of
+sessile spikelet of ear")
+
+(mo-definition ZEA--0015027 "&quot;Expanded lateral outgrowth of the stem produced in succession from the growing point, and having a bud in its axil. The maize foliar leaf consists of 2 distict parts, the blade (lamina) (a flat portion extending away from the stem (culm), which is the distal part of the whole leaf, and the sheath (a basal part wrapped tightly around the stem), which is the proximal part of the whole leaf. At the junction of blade (lamina) and sheath is an indentation and a hinge of translucent tissue. Each leaf has a pair of auricles.  The auricles are triangular portions of  leaf tissue that are adjacent to the indentation (junction of leaf sheath with leaf blade). Each leaf has a ligule. The ligule is a thin collar of filmy tissue which grows semi perpendicularly from the junction of the leaf sheath and leaf blade on the adaxial (upper) surface of the leaf.&quot; [S. Poethig:1982. In W.F. Sheridan (ed.) , Maize for biological research , p.9-18. Plant Mol. Biol. Assn. , Charlottesville , VA.]")
+
+(termFormat EnglishLanguage ZEA--0015136 "filament")
+
+(subclass ZEA--0015154 ZEA--0015149)
+
+(mo-defaultNamespace "zea_mays_anatomy")
+
+(subclass ZEA--0015145 ZEA--0015107)
+
+(termFormat EnglishLanguage ZEA--0015176 "gametophyte")
+
+(subclass ZEA--0015085 ZEA--0015050)
+
+(owl-someValuesFrom ZEA--0015109 ZEA--0015103)
+
+(termFormat EnglishLanguage ZEA--0015168 "adventitious root meristem")
+
+(subclass ZEA--0015017 ZEA--0015021)
+
+(mo-synonym ZEA--0015079 "&quot;internode&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015126 "upper floret of sessile
+spikelet of ear")
+
+(mo-definition ZEA--0015047 "&quot;Provide defn.&quot; [***:*****]")
+
+(owl-someValuesFrom ZEA--0015169 ZEA--0015167)
+
+(mo-definition ZEA--0015016 "&quot;A vein that arises from one of the primary intermediate veins and conducts in a basipetal direction.&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(owl-someValuesFrom ZEA--0015023 ZEA--0015018)
+
+(termFormat EnglishLanguage ZEA--0015162 "primary root meristem")
+
+(owl-someValuesFrom ZEA--0015081 ZEA--0015072)
+
+(termFormat EnglishLanguage ZEA--0015020 "prickle hair")
+
+(termFormat EnglishLanguage ZEA--0015053 "abaxial indumentum")
+
+(owl-someValuesFrom ZEA--0015110 ZEA--0015103)
+
+(mo-definition ZEA--0015054 "&quot;Microhairs originate from one of the epidermal cells....&quot; [MaizeGDB:60922]")
+
+(subclass ZEA--0015060 ZEA--0015031)
+
+(subclass Seed ZEA--0015177)
+
+(mo-synonym ZEA--0015170 "&quot;kernel&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015021 "leaf sheath indumentum")
+
+(subclass ZEA--0015168 ZEA--0015149)
+
+(owl-someValuesFrom ZEA--0015087 ZEA--0015131)
+
+(termFormat EnglishLanguage ZEA--0015123 "stamens of upper floret of
+sessile spikelet of tassel")
+
+(mo-synonym ZEA--0015075 "&quot;rachis&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015127 "lower floret of sessile
+spikelet of ear")
+
+(owl-someValuesFrom ZEA--0015070 ZEA--0015073)
+
+(owl-someValuesFrom ZEA--0015134 ZEA--0015138)
+
+(mo-xrefAnalogous ZEA--0015022 "MaizeDB:65488")
+
+(owl-someValuesFrom ZEA--0015164 ZEA--0015168)
+
+(termFormat EnglishLanguage ZEA--0015050 "organ")
+
+(owl-someValuesFrom ZEA--0015029 ZEA--0015039)
+
+(owl-someValuesFrom ZEA--0015122 ZEA--0015106)
+
+(subclass ZEA--0015082 ZEA--0015079)
+
+(mo-definition ZEA--0015157 "&quot;The ear meristem gives rise to numerous spikelet-pair primordia which are arranged in characteristic rows along the longitudinal axis of the ear (functionally female inflorescence). Each spikelet-pair primordium exhibits determinate growth and differentiates into a pedicellate and sessile spikelet (each of these spikelets produces an upper and lower floret).&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-xrefAnalogous ZEA--0015045 "MaizeDB:246363")
+
+(termFormat EnglishLanguage ZEA--0015037 "whole plant")
+
+(owl-someValuesFrom ZEA--0015095 ZEA--0015089)
+
+(termFormat EnglishLanguage ZEA--0015080 "lateral branch node")
+
+(termFormat EnglishLanguage ZEA--0015135 "anther")
+
+(owl-someValuesFrom ZEA--0015035 ZEA--0015027)
+
+(mo-definition ZEA--0015023 "&quot;Microhairs originate from one of the epidermal cells.... About 15um in length.&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(mo-definition ZEA--0015040 "&quot;Trichome produced in midrib region on adaxial surface of mature leaf.&quot; [MaizeGDB:60922]")
+
+(mo-definition ZEA--0015150 "&quot;A group of meristematic cells at the apex of the root that by cell division (mitosis) produce the precursors of the primary tissues of the root.&quot; [MaizeGDB:Esau (ID# 139825), MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015168 "&quot;The meristem which gives rise to the adventitious root system. The adventitious root system consists of all those roots that arise in the basal intercalary meristem of the lower internodes (above the first internode) of the culm (stem). The adventitious root system comprises the bulk of the lateral roots of the maize plant. &quot; [MaizeGDB:lv (ID# 165572)]")
+
+(subclass ZEA--0015031 Leaf)
+
+(mo-definition ZEA--0015162 "&quot;The meristem which gives rise to the primary root (ZEA:15061). The primary root (radicle or tap root) is the initial root structure which emerges from the embryo of the caryopsis (kernel/seed). The primary root is formed early during embryogenesis, becoming defined as a distinctive region 10-15 days after pollination.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(owl-someValuesFrom ZEA--0015135 ZEA--0015134)
+
+(mo-definition ZEA--0015062 "&quot;The seminal root system consists of the adventitious lateral roots which are present in the ungerminated caryopsis (kernel, seed) - they are formed during embryogenesis. The adventitious seminal lateral roots arise from 3 to 7 seminal root primordia. These primordia originate 30-40 days postanthesis, and emerge between the scutellum and the first internode. The adventitious seminal lateral root system, the primary root and its associated adventitious lateral roots, forms a small part of the total root system of the plant. These roots are of greatest importance during the early growth of the seedling before the adventitious crown roots of higher internodes become well established.&quot; [MaizeGDB:lv, Feldman in Freeling &amp; Walbot (eds) , 1994. The Maize Handbook , ID # 60920:< new dbxref>, Kiesselbach , ID # 59445:< new dbxref>, Poethig in Sheridan , WF (ed) , 1982. Maize for Biological Research , ID # 25744:< new dbxref>]")
+
+(mo-definition ZEA--0015077 "&quot;The lowermost leaf on the short lateral (axillary) branch (shank) bearing the ear. The prophyll arises from the lateral (axillary) branch from the most proximal node and is positioned adjacent to the internode of the main culm. The prophyll is distinct from the husk leaves (non-homologous) in having two apices and two distinct midribs (keels; bikeeled).&quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:Clayton &amp; Renvoiz ref ID #]")
+
+(owl-someValuesFrom ZEA--0015169 ZEA--0015165)
+
+(termFormat EnglishLanguage ZEA--0015069 "root branch")
+
+(owl-someValuesFrom ZEA--0015140 ZEA--0015078)
+
+(owl-someValuesFrom ZEA--0015080 ZEA--0015073)
+
+(mo-xrefAnalogous ZEA--0015092 "maizedb:pldv (ID# 165572)")
+
+(subclass ZEA--0015008 ZEA--0015014)
+
+(owl-someValuesFrom ZEA--0015033 ZEA--0015027)
+
+(owl-someValuesFrom ZEA--0015163 ZEA--0015150)
+
+(owl-someValuesFrom ZEA--0015111 ZEA--0015104)
+
+(termFormat EnglishLanguage ZEA--0015010 "intercostal long cell")
+
+(mo-definition ZEA--0015068 "&quot;Prop ('brace') roots are crown roots which have an aerial (above-ground) origin. They emerge from the extreme basal portion of 2-3 internodes above the soil surface. Their emergence frequently disrupts the leaf sheath tissue that arises from the node immediately below the whorl of prop crown roots. Until each prop root reaches the soil, it remains unbranched and relatively rigid, and is usually covered by a mucilaginous substance that protects the aerial part of the root from drying (dessication). Note that once the prop / brace roots enter the soil they produce numerous lateral adventitious roots (see 'root branches'). The crown roots arising from internodes 2 to approximately 5 tend to grow horizontally for some distance before turning downward. The crown roots from the base of the higher internodes (appearing later in the growing season) grow downward immediately after initiation.&quot; [MaizeGDB:lv, Feldman in Freeling &amp; Walbot (eds) , 1994. The Maize Handbook , ID # 60920:< new dbxref>, Kiesselbach , ID # 59445:< new dbxref>, Poethig in Sheridan , WF (ed) , 1982. Maize for Biological Research , ID # 25744:< new dbxref>]")
+
+(owl-someValuesFrom ZEA--0015100 ZEA--0015098)
+
+(owl-someValuesFrom ZEA--0015108 ZEA--0015104)
+
+(termFormat EnglishLanguage ZEA--0015119 "lodicules of upper floret of
+pedicellate spikelet of tassel")
+
+(termFormat EnglishLanguage ZEA--0015097 "upper floret of pedicellate
+spikelet of ear")
+
+(termFormat EnglishLanguage ZEA--0015110 "lower glume of pedicellate
+spikelet of tassel")
+
+(subclass ZEA--0015077 ZEA--0015031)
+
+(mo-definition ZEA--0015079 "&quot;The culm internode is the region of the culm which is bounded by a culm node at each end. Culm internodes are an integral part of the structure of the culm. Typically the culm internodes are considered homologous with lateral branch internodes of the lateral branches (ear shoots). However, these two types of internodes are biologically distinct (non-homologous). Notwithstanding this non-homology, the general anatomical structure of a typical internode consists of the following: a pithy interior comprised mainly of parenchyma with vascular bundles distributed throughout (as is typical of monocot stem vascular anatomy). In cross section (transverse section) the epidermis is the outer single layer of cells. The walls of the epidermal cells are considerably thickened, lignified and silicified. Stomata are present in the epidermis but are less abundant than in the epidermis of leaves. Immediately below the epidermis is a layer of sclerenchyma which varies from 1-10 cells in thickness. This sclerenchyma tissue does not form a continuous band underneath the epidermis but forms longitudinal bands or strips around the peripheral vascular bundles, alternating with strips of parenchyma beneath the rows of stomata. Within this discontinuous band of sclerenchyma are several rows of vascular bundles, each surrounded by a large amount of sclerenchyma. The peripheral bundles are smaller and are spaced much closer than those in the central part of the internode (in cross section) and are separated from each other and from the peripheral sclerenchyma by narrow tracts of parenchyma. The non-peripheral vascular bundles are surrounded by a bundle sheath, the cells of which are lignified and sclerenchymatous. The sclerenchymatous bundle sheath is much more developed opposite the phloem and xylem of each vascular bundle, forming phloem and xylem caps.&quot; [MaizeGDB:59445, MaizeGDB:lv (ID # 165572)]")
+
+(mo-xrefAnalogous ZEA--0015141 "maizedb:http://www.agron.missouri.edu/mnl/77/08has.html")
+
+(termFormat EnglishLanguage ZEA--0015047 "leaf blade apex")
+
+(mo-xrefAnalogous ZEA--0015171 "maizedb:ID# 402669")
+
+(mo-xrefAnalogous ZEA--0015141 "maizedb:http://www.agron.missouri.edu/mnl/60/94bird.html")
+
+(termFormat EnglishLanguage ZEA--0015018 "abaxial")
+
+(termFormat EnglishLanguage ZEA--0015086 "spikelet")
+
+(termFormat EnglishLanguage ZEA--0015166 "subterranean crown root
+meristem")
+
+(owl-someValuesFrom ZEA--0015168 ZEA--0015150)
+
+(termFormat EnglishLanguage ZEA--0015158 "lateral root meristem")
+
+(mo-xrefAnalogous ZEA--0015073 "maizedb:pldv (ID#165572")
+
+(owl-someValuesFrom ZEA--0015086 ZEA--0015111)
+
+(mo-definition ZEA--0015024 "&quot;The proximal (basal) portion of the leaf that initiates at the culm node and wraps around the stem and extending to the ligule (adaxial surface) and collar (abaxial surface) regions of the leaf. Distal to this junction region is the lamina (leaf blade).&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015175 "leaf postprimordium")
+
+(mo-xrefAnalogous ZEA--0015024 "MaizeDB:13810")
+
+(subclass ZEA--0015152 ZEA--0015149)
+
+(mo-xrefAnalogous ZEA--0015027 "MaizeDB:24740")
+
+(subclass ZEA--0015164 ZEA--0015149)
+
+(owl-someValuesFrom ZEA--0015098 ZEA--0015089)
+
+(mo-xrefAnalogous ZEA--0015171 "maizedb:pldv (ID# 165572)")
+
+(mo-synonym ZEA--0015062 "&quot;temporary roots&quot; []")
+
+(mo-xrefAnalogous ZEA--0015081 "maizedb:XXXXX")
+
+(termFormat EnglishLanguage ZEA--0015177 "sporophyte")
+
+(subclass ZEA--0015062 ZEA--0015034)
+
+(owl-someValuesFrom ZEA--0015091 ZEA--0015097)
+
+(owl-someValuesFrom ZEA--0015102 ZEA--0015098)
+
+(owl-someValuesFrom ZEA--0015165 ZEA--0015164)
+
+(termFormat EnglishLanguage ZEA--0015028 "phyllotaxy")
+
+(mo-synonym ZEA--0015080 "&quot;node&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015164 "crown root meristem")
+
+(termFormat EnglishLanguage ZEA--0015171 "tiller")
+
+(mo-xrefAnalogous ZEA--0015042 "MaizeDB:104000")
+
+(mo-xrefAnalogous ZEA--0015070 "maizedb:XXXXX")
+
+(mo-definition ZEA--0015051 "&quot;The trichomes (hairs) that occur at the margin of the distal end of the leaf sheath - adjacent to the base of the ligule and the proximal edge of the auricular region.&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(mo-definition ZEA--0015092 "&quot;The penultimate bract-like structure that subtends the lower (sessile) floret of the pedicellate spikelet of the ear (pistillate inflorescence). As part of the lower floret, the outer lemma is oriented in a position that is opposite the palea &amp; adjacent to the lower (outer) glume of the pedicellate spikelet. The lemma arises from the floret pedicel immediately below the palea.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015022 "&quot;Provide definition&quot; [****:****]")
+
+(mo-definition ZEA--0015132 "&quot;The rachilla, or central axis, is the structure which bears the distichous glumes at the base and florets above. While the rachilla is recognizable in the spikelets of the 'tassel' in Zea mays, the rachilla of the 'ear' spikelets is much reduced. The bases of the rachillas of the ear can be considered to have anastomosed, forming the collective structure that is referred to as the cob.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015058 "&quot;This descriptor refers to whether the ligule is hyaline, membranous, scarious...&quot; [MaizeGDB:165572, DELTA:Grass Character List]")
+
+(mo-xrefAnalogous ZEA--0015076 "maizedb:64470")
+
+(documentation ZEA--0015064 EnglishLanguage "Re-defined lateral root
+&amp; seminal lateral root &amp; re-alligned their parentage to be
+more accurate. Still not sure about the relationship type for seminal
+lateral root (is it IS-A?). Same goes for seminal lateral root system
+relationship to adventitious root system - seems to be both IS-A &amp;
+Part-Of ???")
+
+(owl-someValuesFrom ZEA--0015115 ZEA--0015107)
+
+(termFormat EnglishLanguage ZEA--0015011 "leaf blade cuticle")
+
+(owl-someValuesFrom ZEA--0015030 ZEA--0015033)
+
+(documentation EnglishLanguage "A namespace defined for use in the
+ontology.")
+
+(mo-synonym ZEA--0015061 "&quot;radicle&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015077 "prophyll")
+
+(termFormat EnglishLanguage ZEA--0015128 "lower glume")
+
+(termFormat EnglishLanguage ZEA--0015030 "lateral vein")
+
+(owl-someValuesFrom ZEA--0015169 ZEA--0015158)
+
+(mo-synonym ZEA--0015003 "&quot;ligule apex&quot; []")
+
+(mo-definition ZEA--0015134 "&quot;The male reproductive organ of a flowering plant, comprising the filament (stalk-like structure) and anther (pollen producing structure). The stemens of the floret (flower) are known collectively as the androecium (M. Allaby. 1992. The Concise Oxford Dictionary of Botany, The Oxford University Press.) A Wiedemeier 5/2000; Esau, K.; Anatomy of Seed Plants 1977. Leszek Vincent 05/2000&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015163 "seminal root meristem")
+
+(termFormat EnglishLanguage ZEA--0015173 "apical meristem")
+
+(mo-definition ZEA--0015173 "&quot;A group of meristematic cells at the apex of root or shoot that by cell division produce the precursors of the primary tissues of root or shoot. The apical meristem may be vegetative, initiating vegetative tissues and organs, or reproductive, initiating reproductive tissues and organs.&quot; [MaizeGDB:Esau (ID# 139825]")
+
+(termFormat EnglishLanguage ZEA--0015103 "pedicellate spikelet of
+tassel")
+
+(subclass ZEA--0015018 ZEA--0015042)
+
+(owl-someValuesFrom ZEA--0015023 ZEA--0015019)
+
+(termFormat EnglishLanguage ZEA--0015133 "silk")
+
+(documentation Smo-inSubset EnglishLanguage "Declares a term/typedef
+to be in a subset.")
+
+(mo-definition ZEA--0015028 "&quot;Provide a definition for this.&quot; [ZEA:Provide a defn. for this.]")
+
+(termFormat EnglishLanguage ZEA--0015071 "lateral branch axillary
+bud")
+
+(subclass ZEA--0015051 ZEA--0015024)
+
+(mo-definition ZEA--0015005 "&quot;The midvein in the leaf sheath region of the leaf is seemingly the same diameter as the neighboring lateral veins and is indistinguishable from the lateral veins except on the basis of position.&quot; [MaizeGDB:60922]")
+
+(mo-definition ZEA--0015135 "&quot;The pollen bearing part of the stamen. In flowering plants, the tip of the stamen, which contains the pollen sacs and in which the pollen grains are formed; usually elevated by means of a filament.&quot; [MaizeGDB:esau (ID # 139825), MaizeGDB:lv (ID # 165572) - http //www.harcourt.com/dictionary/def/6/2/2/0/622000.html]")
+
+(owl-someValuesFrom ZEA--0015138 ZEA--0015131)
+
+(mo-synonym ZEA--0015028 "&quot;Arrangement&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015085 "tassel (functionally male
+inflorescence)")
+
+(mo-synonym ZEA--0015063 "&quot;prop roots&quot; []")
+
+(mo-definition ZEA--0015101 "&quot;The gynoecium development of the upper floret begins with the production of a ridge on the abaxial surface of the apical meristem of the floret, distal to the third stamen (which later degenerates). This is the stylar ridge. Continued overgrowth of the shoot apex (which becomes the ovule primordium) by the ring of stylar tissue leads to the formation of the stylar canal, which is detected as a slight protruberance on the mature ovary. (Cheng &amp; Pareddy, ID#60893, &quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:60893]")
+
+(owl-someValuesFrom ZEA--0015147 ZEA--0015105)
+
+(mo-definition ZEA--0015144 "&quot;Two, small, scale-like. pale-green structures (glandular-like organs) found adjacent to the inner surface of the base of the lemma of the floret. The adjacent margins of the two lodicules (opposite the mid-line of the lemma) are adpressed to each other while the inner surfaces of the lodicules form an angle of approximately 80 degrees to each other. Within the triangle of basal tissue, bounded on two sides by the two lodicules, are located the three filaments of the stamens. Just prior to anthesis the lodicules grow/swell laterally and the triangle of space between the lodicules is almost obscured. The two lodicules are thought to be involved in opening of the grass floret (flower) in readiness for pollination (at anthesis they grow/become increasingly turgid and are presumed to contribute to the displacing of the adjacent lemma and glume which facilitates the exsertion of the anthers for wind pollination). Gibbs Russell et al., Grasses of southern Africa, 1990; Ambrose et al., (2000), Molecular and Genetic Analyses of the Silky1 Gene Reveal Conservation in Floral Organ Specification between Eudicots and Monocots, Molecular Cell 5:569-579. Leszek Vincent 06/2000.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015082 "&quot;The mesocotyl is the first culm internode of the maize culm. The mesocotyl is the culm internode below the plumule, between the coleoptile node and the scutellar node. This first culm internode is a very characteristic and unique feature of the Poaceae (alt. Gramineae). The first culm internode is frequently termed the 'mesocotyl' in the literature. This first culm internode is not evident 15 days after pollination, when the coleoptile node is virtually in contact with the scutellar node. Subsequent intercalary growth results in considerable lengthening of the first culm internode (mesocotyl) in the embryo. &quot;The internode between the scutellar node and coeoptile in the embryo and seedling of Poaceae&quot; (K. Esau. 1977. The Anatomy of Seed Plants, John Wiley &amp; Sons)&quot; [MaizeGDB:208059, MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015009 ZEA--0015060)
+
+(owl-someValuesFrom ZEA--0015131 ZEA--0015086)
+
+(termFormat EnglishLanguage ZEA--0015144 "lodicules of lower floret of
+sessile spikelet of tassel")
+
+(mo-definition ZEA--0015117 "&quot;The stamens comprise the androecium of each tassel floret (flower). Each of the three stamens comprises of a stalk-like filament which terminates in the pollen-producing anther.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(subclass ZEA--0015150 ZEA--0015149)
+
+(termFormat EnglishLanguage ZEA--0015150 "root apical meristem")
+
+(mo-definition ZEA--0015139 "&quot;Gynoecium is the collective term for all of the carpels or pistils of a flower (floret). Each carpel or pistil comprises of a stigma, style and ovary. In Zea the silk comprises the stigma and extended style. &quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015084 "&quot;The 'ear' is the distal part of a lateral (axillary) branch and bears the functionally-female florets in a highly contracted inflorescence. The upper one or two culm axillary buds (associated with the nodes of the culm (stalk)), located about midway on the culm, develop fully into short lateral branches, each terminating in a developing ear capable of producing mature kernels (caryopses). Each of the culm axillary buds is covered with about 8-14 modified leaves called husks, and a prophyll (the most basal modified leaf on the lateral branch). The ear branch (lateral branch, shank) consists of nodes and short internodes. The ear itself does not have lateral branches but its thick axis (called the cob), is similar to the central spike of the tassel in that it produces multiple longitudinal rows of paired spikelets (polystichous phyllotaxy). Each spikelet is ensheathed (enclosed) by a pair of glumes and contains only one functionally-female floret. Although two florets are initiated during spikelet ontogeny, only the upper floret develops; the lower floret aborts at an early stage of development. Both florets within a spikelet produce a lemma, but usually only the upper floret produces a palea. The palea of the lower floret either does not initiate or remains rudimentary. Each functionally-female floret produces an ovary with an elongated silk (style) covered with hairs (trichomes). Note that the culm axillary buds, which are not appropriately placed for full development, degenerate at an early stage. The amount of growth before degeneration/senescence occurs varies, as the buds may either die without much development or form ears several centimeters long, which resemble the functional ears until they senesce (die). From a perspective of developmental biology the ear is initially smooth. But numerous outgrowths (primordia) typically soon appear (in an acropetal direction) which become two lobed (spikelet pair primordium), each lobe finally giving rise to a spikelet (the basic definitive structure of the grass inflorescence) with two florets (flowers). The two glumes, which arise from the pedicel of each spikelet, subtend and ensheath each spikelet and are formed in the same manner as the vegetative leaves. The glume initials emanate from the tissue of the spikelet primordium during the ontogeny of the spikelet. Note that Zea mays is monoecious (separate male &amp; female flowers/florets are found on the same plant). The growth of the ear (pistillate inflorescence) is indeterminate. (Kiesselbach, ID#59445, Cheng &amp; Pareddy, ID#60893, Vincent, ID#165572)&quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:59445, MaizeGDB:60893]")
+
+(mo-synonym ZEA--0015131 "&quot;flower&quot; []")
+
+(owl-someValuesFrom ZEA--0015139 ZEA--0015131)
+
+(owl-someValuesFrom ZEA--0015021 ZEA--0015024)
+
+(termFormat EnglishLanguage ZEA--0015151 "shoot apical meristem")
+
+(termFormat EnglishLanguage ZEA--0015120 "lodicules of lower floret of
+pedicellate spikelet of tassel")
+
+(subclass ZEA--0015078 ZEA--0015031)
+
+(subclass ZEA--0015012 ZEA--0015014)
+
+(termFormat EnglishLanguage ZEA--0015112 "lower glume of sessile
+spikelet of tassel")
+
+(termFormat EnglishLanguage Seed "seed")
+
+(termFormat EnglishLanguage ZEA--0015132 "rachilla")
+
+(mo-synonym ZEA--0015063 "&quot;permanent roots&quot; []")
+
+(mo-definition ZEA--0015113 "&quot;The uppermost bract-like structure that subtends the upper (pedicellate) floret of the pedicellate spikelet of the tassel (staminate inflorescence). The palea is oriented in a position that is opposite the lemma which subtends the same floret. The palea arises from the floret pedicel immediately above the lemma. &quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015102 "&quot;The gynoecium development of the lower floret begins with the production of a ridge on the abaxial surface of the apical meristem of the floret, distal to the third stamen (which later degenerates). This is the stylar ridge. While the development of this stylar ridge is very similar to that of the upper florets, the development does not proceed beyond the early ridge stage.&quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:60893]")
+
+(documentation EnglishLanguage "Represents the transitive property.
+(Typedefs only)")
+
+(owl-someValuesFrom ZEA--0015065 ZEA--0015063)
+
+(mo-xrefAnalogous ZEA--0015080 "maizedb:XXXXX")
+
+(mo-definition ZEA--0015085 "&quot;The functionally-male flowering structure (staminate inflorescence) which terminates the culm (stem) of a Zea mays plant. The tassel is a branched inflorescence and consists of a central spike (rachis) and about 10-50 lateral branches. Many paired spikelets (pedicellate &amp; sessile) arise from the central spike and lateral branches. The paired spikelets on the central spike occur in many ranks (longitudinal rows) around the central spike. The paired spikelets of the lateral branches are arranged in only two rows on the lower (adaxial) surface of each lateral branch. Each spikelet bears two male (staminate) florets, the upper and the lower floret. The development of the upper floret is about 2-3 days ahead of the lower floret (measured at anthesis). Each spikelet has a pair of leaf-like (bract-like) glumes, arising from the spikelet pedicel, which ensheath (encase) the two florets within. Within the glumes each floret is further enclosed by a pair of thin scale-like bracts - the lemma (located adjacent to the glume) and a palea (located opposite to the lemma and adjacent to the palea of the other floret in the spikelet). Within each floret, two of the three stamens are located adjacent to the margins of the palea; the third stamen is located adjacent to the midline of the lemma and is flanked by two lodicules. The two lodicules swell at the commencement of anthesis (period from floret opening to fertilization). This swelling forces apart the lemma and palea enclosing the floret, which facilitates the extrusion of the anthers via the elongation of the filaments. Following extrusion, the anthers dangle downward and shed pollen from an opening at the apex (tip) of each anther locule. The tassel exhibits an indeterminate growth pattern. Note that Zea mays is monoecious (separate male &amp; female flowers/florets borne on the same plant). From a perspective of developmental biology the central axis and lateral branches of the tassel are at first smooth. But numerous outgrowths (primordia) typically soon appear (in an acropetal direction) which become two lobed (spikelet pair primordium), each lobe finally giving rise to a spikelet (the basic definitive structure of the grass inflorescence) with two florets (flowers). The two glumes, which arise from the pedicel of each spikelet, subtend and ensheath each spikelet and are formed in the same manner as the vegetative leaves. The glume initials emanate from the tissue of the spikelet primordium during the ontogeny of the spikelet.&quot; [MaizeGDB:59445, MaizeGDB:60893, MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015067 ZEA--0015066)
+
+(mo-definition ZEA--0015031 "&quot;The Zea mays leaf consists of 3 parts: the sheath which envelops the culm; the blade (lamina) which extends from the sheath; the collar and ligule located at the junction of the sheath and the blade (lamina). Ref.:  Gibbs Russell et al. 1990, Grasses of southern Africa, p.7; ISBN: 0-620-14846-2.&quot; [MaizeGDB:lv]")
+
+(termFormat EnglishLanguage ZEA--0015005 "midvein")
+
+(termFormat EnglishLanguage ZEA--0015091 "lemma of upper floret of
+pedicellate spikelet of ear")
+
+(mo-definition ZEA--0015166 "&quot;The meristem which gives rise to the subterranean crown roots (ZEA:15067).The subterranean crown roots are a component of the adventitious root system. They are termed crown roots because they originate from the basal portion of the growing stem known as the crown. The first subterranean crown roots (4-5), arranged in a whorl, appear at the base of the second internode about as soon as the tip of the coleoptile reaches the soil surface. A few of the subsequent higher internodes may have a similar number of crown roots (in whorls), after which the successive internodes have more and larger crown roots up to 2-3 internodes above the soil surface.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015045 "leaf blade color")
+
+(mo-synonym ZEA--0015045 "&quot;Leaf color&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015029 "primary intermediate vein")
+
+(termFormat EnglishLanguage ZEA--0015013 "auricular trichomes")
+
+(owl-someValuesFrom ZEA--0015048 ZEA--0015019)
+
+(mo-definition ZEA--0015052 "&quot;The line of yellow tissue between the leaf sheath and the lamina on the abaxial surface of the leaf (equivalent to the proximal edge of the auricular region).&quot; [Chapman:ISBN 0851991114]")
+
+(mo-synonym ZEA--0015170 "&quot;grain&quot; []")
+
+(mo-synonym ZEA--0015047 "&quot;Leaf tip&quot; []")
+
+(subclass ZEA--0015010 ZEA--0015014)
+
+(subclass ZEA--0015013 ZEA--0015035)
+
+(mo-definition ZEA--0015094 "&quot;The penultimate bract-like structure that subtends the lower (sessile) floret of the sessile spikelet of the ear (pistillate inflorescence). As part of the lower floret, the outer lemma is oriented in a position that is opposite the palea &amp; adjacent to the lower (outer) glume of the sessile spikelet. The lemma arises from the floret pedicel immediately below the palea. (Vincent, ID#165572)&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015105 "upper floret of pedicellate
+spikelet of tassel")
+
+(termFormat EnglishLanguage ZEA--0015145 "lodicules of upper floret of
+sessile spikelet of tassel")
+
+(mo-definition ZEA--0015123 "&quot;The stamens comprise the androecium of each tassel floret (flower). Each of the three stamens comprises of a stalk-like filament which terminates in the pollen-producing anther.&quot; [MaizeGDB:lv (ID#165572)]")
+
+(mo-synonym ZEA--0015063 "&quot;crown roots&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015124 "stamens (abortive) of upper
+floret of pedicellate spikelet of ear")
+
+(documentation EnglishLanguage "The user who last edited the
+ontology.")
+
+(subclass ZEA--0015160 ZEA--0015149)
+
+(owl-someValuesFrom ZEA--0015118 ZEA--0015106)
+
+(mo-definition ZEA--0015064 "&quot;Some of the lateral roots of the maize plant comprise the seminal root system. These lateral roots are present in the ungerminated caryopsis (kernel, seed) - they are formed during embryogenesis. The seminal lateral roots arise from 3 to 7 seminal root primordia. These primordia originate 30-40 days post-anthesis, and emerge between the scutellum and the first internode. While these lateral roots comprise the seminal root system they are also part of the adventitious root system.&quot; [MaizeGDB:lv, Feldman in Freeling &amp; Walbot (eds) , 1994. The Maize Handbook , ID # 60920:< new dbxref>, Kiesselbach , ID # 59445:< new dbxref>, Poethig in Sheridan , WF (ed) , 1982. Maize for Biological Research , ID # 25744:< new dbxref>]")
+
+(owl-someValuesFrom ZEA--0015022 ZEA--0015027)
+
+(owl-someValuesFrom ZEA--0015126 ZEA--0015090)
+
+(mo-xrefAnalogous ZEA--0015137 "maizedb:pldv (ID#165572")
+
+(owl-someValuesFrom ZEA--0015016 ZEA--0015033)
+
+(owl-someValuesFrom ZEA--0015034 ZEA--0015177)
+
+(owl-someValuesFrom ZEA--0015029 ZEA--0015033)
+
+(termFormat EnglishLanguage ZEA--0015148 "flag leaf")
+
+(subclass ZEA--0015151 ZEA--0015173)
+
+(termFormat EnglishLanguage ZEA--0015137 "lodicule")
+
+(termFormat EnglishLanguage ZEA--0015046 "guard cell")
+
+(owl-someValuesFrom ZEA--0015180 ZEA--0015177)
+
+(termFormat EnglishLanguage ZEA--0015139 "gynoecium")
+
+(mo-xrefAnalogous ZEA--0015133 "maizedb:pldv (ID#165572)")
+
+(termFormat EnglishLanguage ZEA--0015027 "leaf blade")
+
+(documentation EnglishLanguage "Represents the cyclic property.
+(Typedefs only)")
+
+(termFormat EnglishLanguage ZEA--0015009 "ligule")
+
+(termFormat EnglishLanguage ZEA--0015051 "leaf sheath oral hairs")
+
+(mo-synonym ZEA--0015063 "&quot;brace roots&quot; []")
+
+(mo-synonym ZEA--0015073 "&quot;axillary branch&quot; []")
+
+(mo-definition ZEA--0015042 "&quot;Provide defn.&quot; [****:*****]")
+
+(termFormat EnglishLanguage DERIVED-DEVELOPS_FROM "Derived/Develops
+from")
+
+(termFormat EnglishLanguage ZEA--0015113 "palea of upper floret of
+pedicellate spikelet of tassel")
+
+(mo-definition ZEA--0015146 "&quot;The development of the gynoecial tissue from the floral meristem occurs during the ongoing development of the three stamen primordia.The gynoecial tissue develops via the initiation of an adaxial ridge on the remainder of the floral meristem distal to the three stamens. Soon after initiation the gynoecial tissue begins to abort and subsequently degenerates. This abortion and degeneration of this tissue in the upper floret of the sessile spikelet occurs after the same process occurs in the lower floret. &quot; [MaizeGDB:lv (ID# 165572), MaizeGDB:60893]")
+
+(mo-xrefAnalogous ZEA--0015027 "ZEA:0015059")
+
+(termFormat EnglishLanguage ZEA--0015061 "primary root")
+
+(mo-definition ZEA--0015140 "&quot;The husk structure consists mostly of the husk sheath. The husk sheath is the proximal (basal) portion of the husk that initiates at each of the nodes of the lateral branch (shank). The husk sheathes are much broader and thinner than the sheathes of adult and juvenile leaves. The broadness of the husk sheathes enable them to cover much of the circumference of the developing ear. The distal end of the husk sheath ends with the husk ligule region which is terminated with a diminutive (short) or extended husk leaf (flag leaf). The outer husks (lowermost/most proximal) on the lateral branch (shank) are distichous (in two vertical ranks or rows on opposite sides of an axis) like the adult &amp; juvenile leaves. While the inner (upper) husks are polystichous (arranged in several rows).
+
+Note that the term husk (instead of husk sheath) is colloquially used for the modified leaf tissue which surrounds the ear and the term is seldom associated with husk ligule and husk leaf (flag leaf). However, botanically, the term husk should be used for the entire structure (fide Kiesselbach, 1949), comprising the husk sheath, husk ligule and husk leaf (the latter components frequently being very diminutive). The perspective that husks are somewhat homologous with the adult and juvenile leaves justifies the usage of the term husk sheath for the predominant portion of the husk which surrounds the ear.&quot; [MaizeGDB:lv (ID# 165572), MaizeGDB:kiesselbach (ID# 59445)]")
+
+(owl-someValuesFrom ZEA--0015113 ZEA--0015105)
+
+(subclass ZEA--0015087 ZEA--0015031)
+
+(termFormat EnglishLanguage ZEA--0015098 "lower floret of pedicellate
+spikelet of ear")
+
+(owl-someValuesFrom ZEA--0015009 ZEA--0015059)
+
+(mo-definition ZEA--0015128 "&quot;Each spikelet in either of the inflorescences in Zea is subtended by a pair of leaf-like (bract-like) structures, called glumes, at its base. The two glumes are referred to as the lower glume and the upper glume. The spikelet is the basic unit of the grass inflorescence. In Zea each spikelet of the tassel (staminate inflorescence) comprises two florets (flowers). Similarly each spikelet of the lateral branch (ear or pistillate inflorescence) contains initially two florets although one of these is usually arrested in its development very early on. Note that in both the staminate and pistillate inflorescences the spikelets occur in pairs (sessile &amp; pedicellate spikelets), joined to a common pedicel.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-synonym ZEA--0015033 "&quot;Vasculature&quot; []")
+
+(mo-definition ZEA--0015003 "&quot;The ligule projections occur along the distal edge of the ligule and comprise numerous epidermal cell projections, forming a microscopic 'fringe' of projections.
+&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(documentation Smo-definedSubset EnglishLanguage "Subset defined for
+the ontology.")
+
+(termFormat EnglishLanguage ZEA--0015138 "androecium")
+
+(mo-definition ZEA--0015055 "&quot;Covering, usually of hairs (trichomes) on the surface.&quot; [MaizeGDB:lv 165572]")
+
+(termFormat EnglishLanguage ZEA--0015101 "stylar ridge of upper floret
+of pedicellate spikelet of ear")
+
+(subclass ZEA--0015158 ZEA--0015149)
+
+(termFormat EnglishLanguage ZEA--0015025 "auricle epidermis")
+
+(mo-definition ZEA--0015075 "&quot;The central axis/core of the 'ear' (distal end of the lateral branch/ear shoot) upon which the kernels (caryopses) are borne. The cob is similar to the central spike of the tassel (male inflorescence) in that it produces multiple rows of paired spikelets (polystichous phyllotaxy). &quot; [MaizeGDB:60893, MaizeGDB:165572]")
+
+(termFormat EnglishLanguage ZEA--0015087 "lemma")
+
+(mo-xrefAnalogous ZEA--0015075 "maizedb:59445 (p. 53)")
+
+(termFormat EnglishLanguage ZEA--0015048 "stomatal complex")
+
+(instance DERIVED-DEVELOPS_FROM BinaryRelation)
+
+(owl-someValuesFrom ZEA--0015127 ZEA--0015090)
+
+(mo-savedBy "gwg")
+
+(termFormat EnglishLanguage ZEA--0015014 "cell type")
+
+(subclass ZEA--0015001 ZEA--0015002)
+
+(mo-definition ZEA--0015159 "&quot;The meristem located in the axil of a leaf and giving rise to an axilllary bud. The axillary meristem is initiated in association with the formation of a leaf primordium.&quot; [MaizeGDB:lv (ID# 165572), MaizeGDB:ID# 402668, MaizeGDB:Esau (ID# 139825)]")
+
+(owl-someValuesFrom ZEA--0015154 ZEA--0015153)
+
+(owl-someValuesFrom ZEA--0015079 ZEA--0015072)
+
+(mo-synonym ZEA--0015080 "&quot;ear shoot node&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015057 "ligule indumentum")
+
+(mo-definition ZEA--0015096 "&quot;The lower (outer) of the two bract-like structures that subtend the base of the pedicelled spikelets of the ear (pistillate inflorescence). Note that each of the many paired spikelets of the ear (pistillate inflorescence) has a lower glume. Each spikelet is subtended by a pair of glumes (lower &amp; upper glumes). (Vincent, ID#165572)&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015074 "&quot;The shank is the portion of the lateral branch below the ear. 8-14 modified leaves, called husks, are arranged up the shank in an alternate pattern and surround the developing ear. The basal husk leaf is termed the prophyll and is not homologous with the other husk leaves. Each husk leaf arises from a node along the length of the lateral branch. A dormant lateral (axillary) bud is found in the axil of each husk leaf.&quot; [MaizeGDB:232442, MaizeGDB:165572]")
+
+(owl-someValuesFrom ZEA--0015020 ZEA--0015019)
+
+(termFormat EnglishLanguage ZEA--0015004 "lateral vein")
+
+(subclass ZEA--0015019 ZEA--0015042)
+
+(owl-someValuesFrom ZEA--0015092 ZEA--0015098)
+
+(mo-definition ZEA--0015133 "&quot;The hair-like styles in maize. Each silk arises from the distal end (silk scar region) of each of the two anterior functional carpels. A vascular strand passes up through each anterior carpel into the attached silk and extends to the branched tip of the silk where it divides and extends down the length of each branch. The surface of the silk becomes covered with numerous hairs (trichomes) which arise from the epidermal cells. The hairs are most numerous along the edges of the silk. Each hair (trichome) is composed of four rows of cells, so arranged that the intercelllular spaces between the rows form a continuous opening through the center of the hair. At the base of the silk is a growth zone (intercalary growth) where new cells develop causing continuous elongation of the silk until it is pollinated and fertilization occurs. At this time the zone of elongation shrivels up, forming the place where the silk later breaks loose. The silk is perhaps best considered as consisting of a very short style without hairs, above which is the region of intercalary growth. The branched part of the silk corresponds to the stigma of other grasses. The region formed by the intercalary growth zone is an addition to the stigma and has nothing homologous to it in most grasses.&quot; [MaizeGDB:kiesselbach (ID # 59445), MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015159 "axillary meristem")
+
+(mo-synonym ZEA--0015139 "&quot;pistil&quot; []")
+
+(subclass ZEA--0015159 ZEA--0015149)
+
+(owl-someValuesFrom ZEA--0015046 ZEA--0015048)
+
+(mo-synonym ZEA--0015085 "&quot;staminate inflorescence&quot; []")
+
+(owl-someValuesFrom ZEA--0015083 ZEA--0015024)
+
+(owl-someValuesFrom ZEA--0015069 ZEA--0015065)
+
+(termFormat EnglishLanguage part "Part of")
+
+(mo-synonym ZEA--0015062 "&quot;seedling root system&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015001 "adaxial")
+
+(mo-definition ZEA--0015149 "&quot;The terms and definitions of the various tissues in Zea mays.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(owl-someValuesFrom ZEA--0015003 ZEA--0015009)
+
+(owl-someValuesFrom ZEA--0015144 ZEA--0015108)
+
+(mo-definition ZEA--0015088 "&quot;The palea is the uppermost bract-like structure that subtends the grass floret. The palea is oriented in a position that is opposite the lemma which also subtends the floret and arises from the floret pedicel immediately below the palea. See elsewhere for further information on the palea associated with each individual floret of the male and female spikelets. The palea is a bikeeled structure and its relationship to the leaf (homology) is unknown.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(documentation EnglishLanguage "General comments on the ontology.")
+
+(owl-someValuesFrom ZEA--0015068 ZEA--0015066)
+
+(owl-someValuesFrom ZEA--0015114 ZEA--0015106)
+
+(mo-synonym ZEA--0015062 "&quot;seminal lateral roots&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015033 "leaf blade venation")
+
+(owl-someValuesFrom ZEA--0015065 ZEA--0015061)
+
+(owl-someValuesFrom ZEA--0015069 ZEA--0015064)
+
+(subclass ZEA--0015146 ZEA--0015107)
+
+(mo-definition ZEA--0015063 "&quot;The adventitious root system consists of all those roots that arise in the basal intercalary meristem of the lower internodes (above the first internode) of the culm (stem). The adventitious root system comprises the bulk of the lateral roots of the maize plant. There are two spatial components of the adventitious root system. 1. A subterranean (below-ground) origin; 2. An aerial (above-ground) origin. The subterranean adventitious roots are frequently called crown roots because they originate from the basal portion of the growing stem known as the crown. The first crown roots (4-5), arranged in a whorl, appear at the base of the second internode about as soon as the tip of the coleoptile reaches the soil surface. A few of the subsequent higher internodes may have a similar number of crown roots (in whorls), after which the successive internodes have more and larger crown roots up to 2-3 internodes above the soil surface. Note that the crown roots of the adventitious root system may appear to arise from the nodes of the culm but careful inspection will reveal their origin from the very base of the internode, frequently disrupting the leaf sheath tissue that arises from the node immediately below the whorl of crown roots. Those crown roots which are initially aerial in position relative to the soil surface are termed 'brace' or 'prop' roots. Until each prop root reaches the soil, it remains unbranched and relatively rigid, and is usually covered by a mucilaginous substance that protects the aerial part of the root from drying (dessication). Note that once the brace / prop roots enter the soil they produce numerous lateral adventitious roots (see 'root branches'). The subterranean crown roots produce numerous lateral adventitious roots early in their development. The crown roots arising from internodes 2 to approximately 5 tend to grow horizontally for some distance before turning downward. The crown roots from the base of the higher internodes (appearing later in the growing season) grow downward immediately after initiation.&quot; [MaizeGDB:lv, Feldman in Freeling &amp; Walbot (eds) , 1994. The Maize Handbook , ID # 60920:< new dbxref>, Kiesselbach , ID # 59445:< new dbxref>, Poethig in Sheridan , WF (ed) , 1982. Maize for Biological Research , ID # 25744:< new dbxref>]")
+
+(mo-definition ZEA--0015067 "&quot;The subterranean crown roots are a component of the adventitious root system. They are termed crown roots because they originate from the basal portion of the growing stem known as the crown. The first subterranean crown roots (4-5), arranged in a whorl, appear at the base of the second internode about as soon as the tip of the coleoptile reaches the soil surface. A few of the subsequent higher internodes may have a similar number of crown roots (in whorls), after which the successive internodes have more and larger crown roots up to 2-3 internodes above the soil surface. Note that the crown roots above the soil surface (aerial) are frequently called 'brace' or 'prop' roots. The crown roots emerge from the extreme base of the internode. The subterranean crown roots produce numerous lateral adventitious roots (see 'root branches')  early in their development. The crown roots arising from internodes 2 to approximately 5 tend to grow horizontally for some distance before turning downward. The crown roots from the base of the higher internodes (appearing later in the growing season) grow downward immediately after initiation.&quot; [MaizeGDB:lv, Feldman in Freeling &amp; Walbot (eds) , 1994. The Maize Handbook , ID # 60920:< new dbxref>, Kiesselbach , ID # 59445:< new dbxref>, Poethig in Sheridan , WF (ed) , 1982. Maize for Biological Research , ID # 25744:< new dbxref>]")
+
+(termFormat EnglishLanguage ZEA--0015111 "upper glume of sessile
+spikelet of tassel")
+
+(termFormat EnglishLanguage ZEA--0015141 "husk leaf")
+
+(termFormat EnglishLanguage ZEA--0015007 "ligule appearance")
+
+(mo-definedNamespace "zea_mays_anatomy")
+
+(termFormat EnglishLanguage ZEA--0015056 "abaxial")
+
+(termFormat EnglishLanguage ZEA--0015092 "lemma of lower floret of
+pedicellate spikelet of ear")
+
+(termFormat EnglishLanguage ZEA--0015070 "lateral branch internode")
+
+(mo-xrefAnalogous ZEA--0015079 "maizedb:XXXXX")
+
+(termFormat EnglishLanguage ZEA--0015179 "embryo")
+
+(mo-synonym ZEA--0015092 "&quot;outer lemma of ear&quot; []")
+
+(owl-someValuesFrom ZEA--0015141 ZEA--0015078)
+
+(owl-someValuesFrom ZEA--0015121 ZEA--0015105)
+
+(mo-definition ZEA--0015154 "&quot;The floret meristem is derived/develops from the spikelet meristem. The floret meristem produces the floret (lemma, palea, androecium &amp; gynoecium). Normally two florets are derived from one spikelet meristem.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(subclass ZEA--0015025 ZEA--0015035)
+
+(owl-someValuesFrom ZEA--0015011 ZEA--0015027)
+
+(mo-definition ZEA--0015025 "&quot;The epidermal tissue that is coincident with the auricular region of the lamina.&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(subclass ZEA--0015023 ZEA--0015014)
+
+(termFormat EnglishLanguage ZEA--0015008 "short cell")
+
+(owl-someValuesFrom ZEA--0015088 ZEA--0015131)
+
+(documentation EnglishLanguage "Date/time of last edit and save.")
+
+(mo-synonym ZEA--0015073 "&quot;ear shoot&quot; []")
+
+(subclass ZEA--0015072 ZEA--0015050)
+
+(mo-synonym ZEA--0015076 "&quot;node&quot; []")
+
+(subclass ZEA--0015153 ZEA--0015149)
+
+(owl-someValuesFrom ZEA--0015143 ZEA--0015108)
+
+(subclass ZEA--0015170 ZEA--0015139)
+
+(owl-someValuesFrom ZEA--0015020 ZEA--0015018)
+
+(owl-someValuesFrom ZEA--0015048 ZEA--0015018)
+
+(termFormat EnglishLanguage ZEA--0015040 "macrohair")
+
+(termFormat EnglishLanguage ZEA--0015122 "stamens of lower floret of
+pedicellate spikelet of tassel")
+
+(mo-definition ZEA--0015045 "&quot;Provide defn.&quot; [****:*****]")
+
+(mo-definition ZEA--0015004 "&quot;The lateral veins make up the majority of the vasculature of the leaf sheath. They occur on either side of the midvein (which is only distinguishable from the lateral veins on the basis of position).&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(mo-definition ZEA--0015129 "&quot;Each spikelet in either of the inflorescences in Zea is subtended by a pair of leaf-like (bract-like) structures, called glumes, at its base. The two glumes are referred to as the lower glume and the upper glume. The spikelet is the basic unit of the grass inflorescence. In Zea each spikelet of the tassel (staminate inflorescence) comprises two florets (flowers). Similarly each spikelet of the lateral branch (ear or pistillate inflorescence) contains initially two florets although one of these is usually arrested in its development very early on. Note that in both the staminate and pistillate inflorescences the spikelets occur in pairs (sessile &amp; pedicellate spikelets), joined to a common pedicel.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-definition ZEA--0015122 "&quot;The stamens comprise the androecium of each tassel floret (flower). Each of the three stamens comprises of a stalk-like filament which terminates in the pollen-producing anther.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(subclass ZEA--0015171 ZEA--0015050)
+
+(owl-someValuesFrom ZEA--0015077 ZEA--0015073)
+
+(termFormat EnglishLanguage ZEA--0015100 "palea of lower floret of
+pedicellate spikelet of ear")
+
+(termFormat EnglishLanguage ZEA--0015016 "intermediate vein")
+
+(mo-definition ZEA--0015131 "&quot;The floret is the individual flower of the Zea mays plant. In the grass family (Poaceae, alt. Gramineae) each floret is typically bisexual (perfect), possessing both an androecium and a gynoecium. Each floret typically has a pair of bracts, the lemma and palea, which subtend the floret. It is important to note that In Zea mays the florets of the 'tassel' are functionally male (the female component (gynoecium) having aborted early on in development). The florets of the 'ear' are functionally female (the male components (androecium) having aborted early on in development). The possession of functionally male and functionally female florets (or flowers) on the same plant is a condition called monoecy. While Zea mays is functionally monoecious, the presence of both androecial and gynoecial tissue in the early stages of floret ontogeny is phylogenetically significant. Consequently, the androecium is represented in the florets of the ear and the gynoecium is represented in the florets of the tassel, even though either of these whorls is absent in the functional florets. The inclusion of both whorls in the floret ontology for the florets of ears and spikelets is based on this phylogenetically significant ontogeny. East and Hayes (1911, p. 134-135) provided the following: &quot;Perhaps it should be mentioned in passing that the immature sex organs, so called, of maize seem endowed with the power of becoming either stamens or carpels. One often finds a normal ear ending in stamens, and nearly every plant produces lateral branches which have carpels and stamens mixed together indiscriminantly.&quot; Studies of mutants have explored these occurrences and similar occurrences in tassels, corroborating the inherent bisexual nature of the floret meristem prior to the subsequent development of the monoecious condition.&quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:East &amp; Hayes (ID# 13237)]")
+
+(mo-savedDateTime "09:08:2005 16:02")
+
+(termFormat EnglishLanguage ZEA--0015049 "macrohair")
+
+(mo-definition ZEA--0015059 "&quot;Juvenile leaves are distinct from adult leaves in maize. The juvenile vs adult status is characterized by particular anatomical traits: wax and hair distribution, presence or absence of epidermal cell types, cell wall shape and biochemistry. The juvenile leaves include the oldest leaves. The first 5 juvenile leaves are representative of the 5 embryonic leaves found in the maize kernel (caryopsis). The distinctness of these 5 embryonic leaves is not yet represented in the ontology. The change from juvenile- phase to adult-phase leaves  is gradual.&quot; [MaizeGDB:lv, Sylvester et al.:American Journal of Botany 88(12) 2157-2167 , 2001, Freeling &amp; Lane:The Maize Leaf. In The Maize Handbook , ISBN 0387978267]")
+
+(owl-someValuesFrom ZEA--0015106 ZEA--0015103)
+
+(mo-definition ZEA--0015170 "&quot;A dry, one-seeded, indehiscent fruit with the seed coat fused to the pericarp. The caryopsis includes the ovary. The caryopsis is the typical fruit structure of the grass (Poaceae / Gramineae) family.&quot; [MaizeGDB:lv (ID# 165572), Chapman:The Biology of Grasses - ISBN 0 85199 111 4, Harris &amp; Harris:Plant Identification Terminology - An Illustrated Glossary , ISBN 0 9640221 5 X]")
+
+(mo-definition ZEA--0015071 "&quot;a lateral branch axillary (lateral) bud is found in the axil of each of the husk leaves and the prophyll, which arise from the lateral branch nodes of the shank (proximal end of the lateral (axillary) branch(es)). All of the lateral branch axillary buds remain dormant throughout the life-span of the Zea mays plant.&quot; [MaizeGDB:59445, MaizeGDB:60893, MaizeGDB:lv (ID # 165572)]")
+
+(subclass ZEA--0015086 ZEA--0015050)
+
+(termFormat EnglishLanguage ZEA--0015039 "leaf sheath venation")
+
+(mo-definition ZEA--0015076 "&quot;The culm nodes are regions of dense tissue appearing as slightly swollen regions along the length of the culm. The culms of typical eastern Nebraska corn plants consist of about 24 culm nodes (alternating with culm internodes). The number of culm nodes may vary according to regional type and environmental effects. Approximately 8 culm internodes remain very short (contracted) and subterranean, forming an inverted cone-shaped basal end of the culm (stem) known as the crown. Culm nodes are an integral part of the structure of the culm (stalk). Culm nodes are not biologically homologous with lateral branch nodes, although they are colloquially referred to as 'nodes'. Notwithstanding this non-homology, the general anatomical structure of a typical node consists of the following: the structure of nodes is more complicated than that of the internodes due to the branching and cross connections between the vascular bundles forming the nodal complex. The vascular bundles with their cross connections fill up most of the space of the node, so there is relatively little parenchyma. In the zone of leaf attachment at the culm nodes, the epidermis of the adjacent culm internodes becomes continuous over the attached leaf sheath. Not much elongation occurs in the culm nodes and no protoxylem lacunae are formed. The arrangement of the tissues in the vascular bundles is more irregular and no bundle caps are formed in the endosperm adjacent to the vascular tissue. As the vascular bundles enter a culm node from below, they enlarge in diameter and form cross connections, creating a tangled network which extends for several millimeters up into the adjacent internode. Many of the vascular bundles branch as they pass through the culm node, while some turn abruptly sideways for a short distance. Some vascular bundles pass from the culm node into the base of the leaf sheath.&quot; [MaizeGDB:59445, MaizeGDB:lv (ID # 165572)]")
+
+(subclass ZEA--0015148 ZEA--0015060)
+
+(subclass ZEA--0015064 ZEA--0015063)
+
+(mo-xrefAnalogous ZEA--0015091 "maizedb:pldv (ID# 165572)")
+
+(mo-definition ZEA--0015053 "&quot;Covering, usually of hairs (trichomes) on the surface.&quot; [MaizeGDB:165572]")
+
+(owl-someValuesFrom ZEA--0015054 ZEA--0015017)
+
+(documentation EnglishLanguage "Default namespace for the ontology.")
+
+(termFormat EnglishLanguage ZEA--0015060 "adult leaf")
+
+(mo-xrefAnalogous ZEA--0015009 "MaizeDB:64473")
+
+(owl-someValuesFrom ZEA--0015043 ZEA--0015027)
+
+(termFormat EnglishLanguage ZEA--0015104 "sessile spikelet of tassel")
+
+(mo-remark "autogenerated-by:     DAG-Edit version 1.410")
+
+(mo-definition ZEA--0015069 "&quot;A root branch is an adventitious root that emerges from any of the various types of lateral root. Root branches arise at varying points behind (posterior to) the zone of root hair formation on the primary root. Root branches emerge from the surface of the main roots (the various types of lateral roots) at irregular intervals. When a root branches, the initial of each branch is formed from cells of the pericycle. Via cell division a bulging hemispherical mass of meristematic tissue is formed. The outer part of this forms the beginning of the rootcap, while the cells of the growing point are near the flat basal part of the hemispherical mass. During elongation the new root branch is forced through the adjoining tissues of the cortex of the originating root and emerges at the surface. As the xylem and phloem tissues are differentiated in the root branch they become joined to those of the originating root.&quot; [MaizeGDB:lv, Kiesselbach , ID # 59445:< new dbxref>]")
+
+(mo-xrefAnalogous ZEA--0015088 "maizedb:pldv (ID# 165572)")
+
+(owl-someValuesFrom ZEA--0015078 ZEA--0015073)
+
+(mo-definition ZEA--0015148 "&quot;The last leaf to emerge in a determinate plant in the Poaceae (determinate growth: formation of a restricted number of lateral organs by an apical meristem; apical meristem terminates growth e.g. tassel &amp; lateral branch meristems). Referred to as the &quot;flag leaf&quot; in cereal (grain) crops. The term 'flag leaf' should not be confused with 'flag leaves' which is a synonym term frequently used for the husk leaf (extended lamina) of the husks of sweet corn varieties.
+
+The flag leaf is frequently much less robust than the other adult leaves. In some cases the midrib is much reduced rendering the leaf very mobile.&quot; [MaizeGDB:lv (ID # 165572), MaizeGDB:esau (ID# 139825)]")
+
+(mo-xrefAnalogous ZEA--0015170 "maizedb:ID # 11089")
+
+(mo-synonym ZEA--0015171 "&quot;adventitious shoot&quot; []")
+
+(mo-definition ZEA--0015172 "&quot;A leaf primordium is typically referred to as a cell/an organized series of cells in their earliest stage of differentiation with the ontogenetic goal of forming a leaf. A leaf primordium is initiated by cell divisions in the peripheral region of the shoot apex, more or less far below the distal zone of the apical meristem. The first divisions occur in one or more layers beneath the protoderm and are periclinal to the surface of the shoot apex. In Zea the leaf primordium originates from about 250 cells in at least two layers forming a ring of founder cells within the apical meristem tissue associated with the leaf. Each founder cell divides about the same number of times to form the 6 mm square-shaped leaf primordium. The primordial stages of development ends when the lateral veins are complete and the periclinal divisions of the ligule are in progress. Three stages of leaf development are noted: founder cell (meristem founder cell), primordial and postprimordial. The location of each primordium, in relation to the sites of the previously formed leaves, is determined by the phyllotaxy.&quot; [MaizeGDB:lv (ID# 165572), MaizeGDB:Esau (ID# 139825), MaizeGDB:Freeling &amp; Lane (ID# 60922)]")
+
+(mo-definition ZEA--0015100 "&quot;The uppermost bract-like structure that subtends the lower (sessile) floret of the pedicellate spikelet of the ear (pistillate inflorescence). This palea either does not initiate or remains rudimentary. The palea is oriented in a position that is opposite the lemma which subtends the same floret. The palea arises from the floret pedicel immediately above the lemma. (Vincent, ID#165572)&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015006 "bulliform cell")
+
+(owl-someValuesFrom ZEA--0015099 ZEA--0015097)
+
+(termFormat EnglishLanguage ZEA--0015067 "subterranean crown roots")
+
+(mo-remark "saved-by:             Leszek")
+
+(termFormat EnglishLanguage ZEA--0015031 "leaf")
+
+(subclass ZEA--0015064 ZEA--0015062)
+
+(mo-definition ZEA--0015011 "&quot;Provide defn.&quot; [***:*****]")
+
+(mo-xrefAnalogous ZEA--0015085 "maizedb:pldv (ID#165572)")
+
+(owl-someValuesFrom ZEA--0015153 ZEA--0015156)
+
+(mo-synonym ZEA--0015068 "&quot;brace roots&quot; []")
+
+(owl-someValuesFrom ZEA--0015101 ZEA--0015097)
+
+(subclass ZEA--0015020 ZEA--0015014)
+
+(owl-someValuesFrom ZEA--0015125 ZEA--0015098)
+
+(termFormat EnglishLanguage ZEA--0015065 "lateral root")
+
+(termFormat EnglishLanguage ZEA--0015041 "leaf blade angle")
+
+(termFormat EnglishLanguage ZEA--0015026 "intermediate vein")
+
+(termFormat EnglishLanguage ZEA--0015082 "mesocotyl")
+
+(mo-definition ZEA--0015114 "&quot;The uppermost bract-like structure that subtends the lower (sessile) floret of the pedicellate spikelet of the tassel (staminate inflorescence). The palea is oriented in a position that is opposite the lemma which subtends the same floret. The palea arises from the floret pedicel immediately above the lemma.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-xrefAnalogous ZEA--0015084 "maizedb:pldv (ID#165572)")
+
+(termFormat EnglishLanguage ZEA--0015130 "glume")
+
+(mo-definition ZEA--0015070 "&quot;The lateral branch internode is the region of the lateral branch which is bounded by a lateral branch node at each end. Lateral branch internodes are an integral part of the structure of the lateral branches (ear shoots). Lateral branch internodes are not biologically homologous with culm internodes, although they are colloquially referred to as 'internodes'. Notwithstanding this non-homology, the general anatomical structure of a typical internode consists of the following: a pithy interior comprised mainly of parenchyma with vascular bundles distributed throughout (as is typical of monocot stem vascular anatomy). In cross section (transverse section) the epidermis is the outer single layer of cells. The walls of the epidermal cells are considerably thickened, lignified and silicified. Immediately below the epidermis is a layer of sclerenchyma which varies from 1-10 cells in thickness. This sclerenchyma tissue does not form a continuous band underneath the epidermis but forms longitudinal bands or strips around the peripheral vascular bundles, alternating with strips of parenchyma beneath the rows of stomata. Within this discontinuous band of sclerenchyma are several rows of vascular bundles, each surrounded by a large amount of sclerenchyma. The peripheral bundles are smaller and are spaced much closer than those in the central part of the internode (in cross section) and are separated from each other and from the peripheral sclerenchyma by narrow tracts of parenchyma. The non-peripheral vascular bundles are surrounded by a bundle sheath, the cells of which are lignified and sclerenchymatous. The sclerenchymatous bundle sheath is much more developed opposite the phloem and xylem of each vascular bundle, forming phloem and xylem caps.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015129 "upper glume")
+
+(mo-xrefAnalogous ZEA--0015022 "XXX:12345")
+
+(mo-synonym ZEA--0015132 "&quot;central axis&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015012 "costal long cell")
+
+(owl-someValuesFrom ZEA--0015153 ZEA--0015157)
+
+(termFormat EnglishLanguage ZEA--0015084 "ear (functionally female
+inflorescence)")
+
+(mo-definition ZEA--0015111 "&quot;The upper (inner) of the two leaf-like (bract-like) structures that subtend the base of the sessile spikelets of the tassel (staminate inflorescence). Note that each of the many paired spikelets of the tassel (staminate inflorescence) has an upper glume. Each spikelet is subtended by a pair of glumes (lower &amp; upper glumes).&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-xrefAnalogous ZEA--0015075 "ZEA:0015084")
+
+(termFormat EnglishLanguage ZEA--0015118 "gynoecial tissue (abortive)
+of lower floret of pedicellate spikelet of tassel")
+
+(documentation EnglishLanguage "The program used to generate the
+ontology.")
+
+(owl-someValuesFrom ZEA--0015026 ZEA--0015039)
+
+(termFormat EnglishLanguage ZEA--0015167 "seminal lateral root
+meristem")
+
+(subclass ZEA--0015149 Tissue)
+
+(owl-someValuesFrom ZEA--0015084 ZEA--0015073)
+
+(owl-someValuesFrom ZEA--0015069 ZEA--0015068)
+
+(owl-someValuesFrom ZEA--0015136 ZEA--0015134)
+
+(owl-someValuesFrom ZEA--0015027 ZEA--0015059)
+
+(mo-synonym ZEA--0015070 "&quot;internode&quot; []")
+
+(mo-xrefAnalogous ZEA--0015041 "MaizeDB:69813")
+
+(mo-definition ZEA--0015141 "&quot;The husk leaf (lamina) is a small (short, reduced - less than 20 mm) portion of modified leaf-blade tissue that is present at the distal end of each husk. The husk leaf region commences with a modified and diminutive ligular region and extends into a tapered lamina which is photosynthetic. The husk leaf is considered to be somewhat homologous with the leaf blade (lamina) of the adult and juvenile leaves. In all occurrences the husk leaf (lamina) lacks the well developed central midrib (midvein) and the widespread lateral veins are much less robust.The husk leaf is reduced in most forms of dent corn. However, in sweet corns the husk leaves are considerably longer (60 mm or longer) and are  frequently referred to as flag leaves. These 'flag leaves' should not be confused with the &quot;flag leaf&quot; (ZEA:15148). Where the husk leaves are well developed (flag leaves) the husk leaves are noticeably lacking in rigidity.&quot; [MaizeGDB:lv (ID# 165572), MaizeGDB:kiesselbach (ID# 59445), MaizeGDB:ID# 106158]")
+
+(mo-definition ZEA--0015142 "&quot;The husk ligule in Zea mays is sometimes absent. When present it takes the form of a diminutive protruding line of tissue on the inner/upper (adaxial) surface of the husk leaf at the boundary between the husk sheath and the tapered husk leaf (lamina). As in the ligules of adult and juvenile leaves, this unique line of epidermal tissue appears to be composed of 'fused hairs'. The husk leaf ligule is relatively short (laterally), spanning the width of the tapered end of the distal end of the husk.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-synonym ZEA--0015081 "&quot;lateral bud&quot; []")
+
+(instance part BinaryRelation)
+
+(mo-definition ZEA--0015036 "&quot;The Zea mays Plant Structure Ontology consists of controlled vocabulary terms for Zea mays anatomy (including morphology). Note that the name Plant Structure Ontology is used in preference to Anatomy Ontology as plant scientists differ on the appropriate use of the term 'anatomy'. In the strict sense 'anatomy' includes 'morphology'. However, some plant scientists relate more easily to external features being termed morphology &amp; internal features being termed anatomy. To overcome possible misunderstanding 'Plant Structure' is being used as the preferred term with 'Anatomy (incl. morphology)' as a synonym.&quot; [MaizeGDB:lv (ID # 165572]")
+
+(owl-someValuesFrom ZEA--0015149 ZEA--0015037)
+
+(termFormat EnglishLanguage ZEA--0015143 "gynoecial tissue (abortive)
+of lower floret of sessile spikelet of tassel")
+
+(owl-someValuesFrom ZEA--0015132 ZEA--0015086)
+
+(mo-definition ZEA--0015158 "&quot;The meristem which gives rise to a lateral root (ZEA:15065). These (adventitious) lateral roots  emerge from the primary root (radicle, tap root) at varying points behind the zone of root hair formation. They originate from the pericycle.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(owl-someValuesFrom ZEA--0015090 ZEA--0015084)
+
+(owl-someValuesFrom ZEA--0015093 ZEA--0015126)
+
+(subclass ZEA--0015041 ZEA--0015027)
+
+(documentation Smo-Subset EnglishLanguage "Subset of OBO terms from
+the ontology.")
+
+(mo-definition ZEA--0015050 "&quot;A natural part or structure in a plant, capable of performing some special action (termed its function), which is essential to the life or well-being of the whole; as, the root, stem, leaves etc, are organs of plants.&quot; [:http //cancerweb.ncl.ac.uk/cgi-bin/omd?query=organ]")
+
+(subclass ZEA--0015045 ZEA--0015027)
+
+(owl-someValuesFrom ZEA--0015119 ZEA--0015105)
+
+(mo-definition ZEA--0015116 "&quot;The uppermost bract-like structure that subtends the lower (sessile) floret of the sessile spikelet of the tassel (staminate inflorescence). The palea is oriented in a position that is opposite the lemma which subtends the same floret. The palea arises from the floret pedicel immediately above the lemma. &quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015170 "caryopsis")
+
+(owl-someValuesFrom ZEA--0015174 ZEA--0015151)
+
+(mo-definition ZEA--0015147 "&quot;The development of the gynoecial tissue from the floral meristem occurs during the ongoing development of the three stamen primordia.The gynoecial tissue develops via the initiation of an adaxial ridge on the remainder of the floral meristem distal to the three stamens. Soon after initiation the gynoecial tissue begins to abort and subsequently degenerates. This abortion and degeneration of this tissue in the upper floret of the pedicellate spikelet occurs after the same process occurs in the lower floret. &quot; [MaizeGDB:lv (ID# 165572)]")
+
+(owl-someValuesFrom ZEA--0015069 ZEA--0015067)
+
+(mo-definition ZEA--0015110 "&quot;The lower (outer) of the two leaf-like (bract-like) structures that subtend the base of the pedicelled spikelets of the tassel (staminate inflorescence). Note that each of the many paired spikelets of the tassel (staminate inflorescence) has a lower glume. Each spikelet is subtended by a pair of glumes (lower &amp; upper glumes).&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(mo-formatVersion "1.0")
+
+(mo-synonym ZEA--0015081 "&quot;axillary bud&quot; []")
+
+(mo-xrefAnalogous ZEA--0015148 "http://www.agriknowledge.co.uk/Dessac/Definitions/finallf.html:; synonym:final leaf")
+
+(owl-someValuesFrom ZEA--0015130 ZEA--0015086)
+
+(termFormat EnglishLanguage ZEA--0015107 "upper floret of sessile
+spikelet of tassel")
+
+(subclass ZEA--0015163 ZEA--0015149)
+
+(domain Smo-definedSubset 2 Smo-Subset)
+
+(termFormat EnglishLanguage ZEA--0015068 "prop roots")
+
+(owl-someValuesFrom ZEA--0015155 ZEA--0015151)
+
+(mo-definition ZEA--0015043 "&quot;Provide defn.&quot; [****:*****]")
+
+(mo-xrefAnalogous ZEA--0015071 "maizedb:pldv (ID#165572)")
+
+(owl-someValuesFrom ZEA--0015096 ZEA--0015089)
+
+(mo-definition ZEA--0015066 "&quot;There are two spatial components of the adventitious root system. 1. A subterranean (below-ground) origin; 2. An aerial (above-ground) origin. The subterranean adventitious roots are frequently called crown roots because they originate from the basal portion of the growing stem known as the crown. The first crown roots (4-5), arranged in a whorl, appear at the base of the second internode about as soon as the tip of the coleoptile reaches the soil surface. A few of the subsequent higher internodes may have a similar number of crown roots (in whorls), after which the successive internodes have more and larger crown roots up to 2-3 internodes above the soil surface. Note that the crown roots of the adventitious root system may appear to arise from the nodes of the culm but careful inspection will reveal their origin from the very base of the internode, frequently disrupting the leaf sheath tissue that arises from the node immediately below the whorl of crown roots. Those crown roots which are initially aerial in position relative to the soil surface are termed 'brace' or 'prop' roots. Until each prop root reaches the soil, it remains unbranched and relatively rigid, and is usually covered by a mucilaginous substance that protects the aerial part of the root from drying (desiccation). Note that once the brace / prop roots enter the soil they produce numerous lateral adventitious roots (see 'root branches'). The subterranean crown roots produce numerous lateral adventitious roots early in their development. The crown roots arising from internodes 2 to approximately 5 tend to grow horizontally for some distance before turning downward. The crown roots from the base of the higher internodes (appearing later in the growing season) grow downward immediately after initiation.&quot; [MaizeGDB:lv]")
+
+(termFormat EnglishLanguage ZEA--0015147 "gynoecial tissue (abortive)
+of upper floret of pedicellate spikelet of tassel")
+
+(termFormat EnglishLanguage ZEA--0015059 "juvenile leaf")
+
+(mo-definition ZEA--0015026 "&quot;A vein that arises from the midvein or one of the lateral veins. Usually only one intermediate vein can be found between any adjacent pair of lateral veins.&quot; [MaizeGDB:60922, MaizeGDB:165572]")
+
+(subclass ZEA--0015157 ZEA--0015155)
+
+(owl-someValuesFrom ZEA--0015071 ZEA--0015073)
+
+(subclass ZEA--0015049 ZEA--0015023)
+
+(termFormat EnglishLanguage ZEA--0015146 "gynoecial tissue (abortive)
+of upper floret of sessile spikelet of tassel")
+
+(owl-someValuesFrom ZEA--0015007 ZEA--0015009)
+
+(mo-definition ZEA--0015008 "&quot;silica and cork short cells.&quot; [MaizeGDB:60922]")
+
+(subclass ZEA--0015031 ZEA--0015050)
+
+(owl-someValuesFrom ZEA--0015076 ZEA--0015072)
+
+(termFormat EnglishLanguage ZEA--0015109 "upper glume of pedicellate
+spikelet of tassel")
+
+(owl-someValuesFrom ZEA--0015166 ZEA--0015164)
+
+(mo-definition ZEA--0015080 "&quot;The lateral branch nodes are regions of dense tissue appearing as slightly swollen regions along the length of the lateral branch. Lateral branch nodes are an integral part of the structure of the lateral branchs (ear shoots). Lateral branch internodes are not biologically homologous with culm nodes, although they are colloquially referred to as 'nodes'. Notwithstanding this non-homology, the general anatomical structure of a typical node consists of the following: the structure of nodes is more complicated than that of the internodes due to the branching and cross connections between the vascular bundles forming the nodal complex. The vascular bundles with their cross connections fill up most of the space of the node, so there is relatively little parenchyma. In the zone of husk and prophyll attachment at the lateral branch nodes, the epidermis of the adjacent lateral branch internodes becomes continuous over the prophyll and husk. Not much elongation occurs in the lateral branch nodes and no protoxylem lacunae are formed. The arrangement of the tissues in the vascular bundles is more irregular and no bundle caps are formed in the endosperm adjacent to the vascular tissue. As the vascular bundles enter a lateral branch node from below, they enlarge in diameter and form cross connections, creating a tangled network which extends for several millimeters along the length of the lateral branch. Many of the vascular bundles branch as they pass through the lateral branch node, while some turn abruptly sideways for a short distance. Some vascular bundles pass from the lateral branch node into the base of the prophyll of the sheathing base of the husk leaf.&quot; [MaizeGDB:59445, MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015105 ZEA--0015103)
+
+(owl-someValuesFrom ZEA--0015040 ZEA--0015017)
+
+(documentation EnglishLanguage "Version of OBO format.")
+
+(mo-autoGeneratedBy "DAG-Edit 1.419 rev 3")
+
+(termFormat EnglishLanguage ZEA--0015078 "husk")
+
+(mo-synonym ZEA--0015084 "&quot;pistillate inflorescence&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015042 "leaf blade epidermis")
+
+(termFormat EnglishLanguage ZEA--0015152 "vegetative meristem")
+
+(subclass ZEA--0015151 ZEA--0015149)
+
+(mo-definition ZEA--0015167 "&quot;The meristem which gives rise to the seminal lateral roots (ZEA:15064). Some of the lateral roots of the maize plant comprise the seminal root system. These lateral roots are present in the ungerminated caryopsis (kernel, seed) - they are formed during embryogenesis. The seminal lateral roots arise from 3 to 7 seminal root primordia. &quot; [MaizeGDB:lv (ID# 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015155 "inflorescence meristem")
+
+(subclass ZEA--0015170 Seed)
+
+(mo-definition ZEA--0015039 "&quot;The vascular tissue which forms distinct veins in the leaf sheath. The midvein is seemingly the same diameter as the lateral veins and is indistinguishable from the lateral veins except on the basis of location.&quot; [2222:33333]")
+
+(termFormat EnglishLanguage ZEA--0015115 "palea of upper floret of
+sessile spikelet of tassel")
+
+(termFormat EnglishLanguage ZEA--0015153 "spikelet pair meristem")
+
+(subclass ZEA--0015129 ZEA--0015130)
+
+(mo-definition ZEA--0015155 "&quot;The meristem which produces the tassel and the ear inflorescences. The tassel (functionally male inflorescence) meristem is derived from the apical meristem of the growing point of the determinate culm. An ear meristem is derived from the apical meristem of a lateral branch which produces the ear (functionally female inflorescence).&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(owl-someValuesFrom ZEA--0015124 ZEA--0015097)
+
+(subclass ZEA--0015066 ZEA--0015063)
+
+(mo-definition ZEA--0015009 "&quot;The ligule in Zea mays is a protruding line of tissue on the inner/upper (adaxial) surface of the leaf at the boundary between the leaf-sheath and the leaf blade (lamina) - the ligular region of the leaf. This unique line of epidermal tissue appears to be composed of 'fused hairs'. The ligule is oriented almost perpendicular to the adjacent leaf surface.&quot; [M. Freeling &amp; B. Lane:1994. The Maize Leaf. In M. Freeling &amp; V. Walbot (eds.) (1994). The Maize Handbook. Springer-Verlag , New York , ISBN 3-540-97826-7, A. Fahn:(1982). Plant Anatomy , p.244-245 , ISBN 0-08-028029-3, Gibbs Russell et al.:(1990). Grasses of Southern Africa , ISBN 0-620-14846-2, MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage Smo-Subset "Subset")
+
+(mo-definition ZEA--0015030 "&quot;One of the many veins which traverse the length of the leaf, running parallel to the midrib.&quot; [MaizeGDB:60922]")
+
+(termFormat EnglishLanguage ZEA--0015094 "lemma of lower floret of
+sessile spikelet of ear")
+
+(subclass ZEA--0015161 ZEA--0015149)
+
+(mo-synonym ZEA--0015027 "&quot;lamina&quot; []")
+
+(mo-synonym ZEA--0015041 "&quot;Leaf angle&quot; []")
+
+(domain Smo-inSubset 2 Smo-Subset)
+
+(termFormat EnglishLanguage ZEA--0015023 "microhair")
+
+(mo-definition ZEA--0015151 "&quot;A group of meristematic cells at the apex of the shoot that by cell division (mitosis) produce the precursors of the primary tissues of the shoot; may be vegetative, initiating vegetative tissues and organs, or reproductive, initiating reproductive tissues and organs.&quot; [MaizeGDB:Esau (ID# 139825), MaizeGDB:lv (ID# 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015090 "sessile spikelet of ear")
+
+(termFormat EnglishLanguage ZEA--0015154 "floret meristem")
+
+(mo-definition ZEA--0015035 "&quot;Leaf blade auricles are small appendages (portion of leaf tissue) in the collar area of the leaf (proximal end (base) of the lamina (leaf blade)) immediately lateral to the ligule. In Zea mays the auricles appear to arise from the 'collar' tissue of the leaf blade. Each auricle has an equilateral triangular shape. The base of the triangle forming the proximal margin of the leaf, the upper equilateral side being the boundary of the proximal region of the leaf blade. The lower equilateral side being the boundary of the distal edge of the leaf sheath. There are two auricles on each adult leaf of Zea mays. The auricular tissue extends from the adaxial to the abaxial surfaces of the lamina.&quot; [MaizeGDB:60922, ISBN:0620148462, MaizeGDB:165572]")
+
+(subclass ZEA--0015128 ZEA--0015130)
+
+(mo-definition ZEA--0015087 "&quot;The penultimate bract-like structure that subtends the grass floret. The lemma is oriented in a position that is opposite the palea in each floret. The lemma arises from the floret pedicel immediately below the palea. See elsewhere for further information on the lemma associated with each individual floret of the male and female spikelets. Lemmas are considered to be homologous to the vegetative leaf.&quot; [MaizeGDB:lv (ID # 165572)]")
+
+(termFormat EnglishLanguage ZEA--0015032 "midvein")
+
+(mo-definition ZEA--0015049 "&quot;Trichome found in the midrib region on the adaxial surface of a mature leaf.&quot; [MaizeGDB:60922]")
+
+(mo-xrefAnalogous ZEA--0015043 "MaizeDB:64474")
+
+(mo-xrefAnalogous ZEA--0015073 "maizedb:pldv (ID#165572)")
+
+(mo-definition ZEA--0015034 "&quot;The root system of Zea mays is a complex organ. While most of it arises from the basal portion of the plant below ground, a considerable number of above-ground adventitious roots also contribute significantly to the volume of the root system. below-ground &quot; [MaizeGDB:lv]")
+
+(subclass ZEA--0015150 ZEA--0015173)
+
+(mo-definition ZEA--0015078 "&quot;The husks are modified leaves which arise from the short lateral (axillary) branch (shank) bearing the ear. They surround the developing ear. The lower (outer) husks are arranged in a distichous pattern (opposite rows and alternate occurrence, like the foliar leaves) while the upper (inner) husks are polystichous in arrangement. Husks are considered to be somewhat homologous with the adult and juvenile leaves (foliar leaves). Vestiges of the ligular region and lamina (husk leaf, flag leaf) of the husk may be present. Some strains of maize (Zea mays) (e.g. sweet corn) produce husks with a prominent ligule and husk leaf (lamina), which are sometimes called &quot;flag leaves&quot;. Husks are relatively thin and flat, unlike the adult and juvenile foliar leaves. The sheaths of the husks are much broader and thinner than the sheaths of the foliar (ordinary) leaves. The venation lacks the presence of a distinct midvein, while lateral veins predominate throughout the husk. Each husk is attached to a unique lateral branch node on the shank (growing lateral (axillary) branch) of the ear. The lowermost husk on the shank, between the shank and the adjacent internode of the main culm, is a prophyll (ZEA:15077). It is easily confused as being a husk but the prophyll is not homologous with a husk. 
+
+Note that the term husk is colloquially used for the modified leaf tissue which surrounds the ear and the term is seldom associated with husk ligule and husk leaf (flag leaf). However, botanically, the term husk should be used for the entire structure (fide Kiesselbach, 1949), comprising the husk sheath, husk ligule and husk leaf (the latter components frequently being very diminutive). The perspective that husks are somewhat homologous with the adult and juvenile leaves justifies the usage of the term husk sheath for the predominant portion of the husk which surrounds the ear.&quot; [MaizeGDB:Clayton &amp; Renvoize ref ID #, MaizeGDB:lv (ID # 165572), http://www.harcourt.com/dictionary/def/4/9/6/3/4963600.html, MaizeGDB:kiesselbach (ID# 59445)]")
+
+(owl-someValuesFrom ZEA--0015089 ZEA--0015084)
+
+(mo-synonym ZEA--0015140 "&quot;husk&quot; []")
+
+(owl-someValuesFrom ZEA--0015052 ZEA--0015027)
+
+(subclass ZEA--0015015 ZEA--0015040)
+
+(mo-definition ZEA--0015120 "&quot;Two, small, scale-like. pale-green structures (glandular-like organs) found adjacent to the inner surface of the base of the lemma of the floret. The adjacent margins of the two lodicules (opposite the mid-line of the lemma) are adpressed to each other while the inner surfaces of the lodicules form an angle of approximately 80 degrees to each other. Within the triangle of basal tissue, bounded on two sides by the two lodicules, are located the three filaments of the stamens. Just prior to anthesis the lodicules grow/swell laterally and the triangle of space between the lodicules is almost obscured. The two lodicules are thought to be involved in opening of the grass floret (flower) in readiness for pollination (at anthesis they grow/become increasingly turgid and are presumed to contribute to the displacing of the adjacent lemma and glume which facilitates the exsertion of the anthers for wind pollination). Gibbs Russell et al., Grasses of southern Africa, 1990; Ambrose et al., (2000), Molecular and Genetic Analyses of the Silky1 Gene Reveal Conservation in Floral Organ Specification between Eudicots and Monocots, Molecular Cell 5:569-579. Leszek Vincent 06/2000.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(owl-someValuesFrom ZEA--0015094 ZEA--0015127)
+
+(owl-someValuesFrom ZEA--0015176 ZEA--0015037)
+
+(mo-synonym ZEA--0015070 "&quot;ear shoot internode&quot; []")
+
+(mo-definition ZEA--0015007 "&quot;The ligule is a unique line of epidermal tissue and  appears to be composed of 'fused hairs'. The ligule is oriented almost perpendicular to the adjacent leaf surface.&quot; [MaizeGDB:lv (ID# 165572)]")
+
+(mo-definition ZEA--0015112 "&quot;The lower (outer) of the two leaf-like (bract-like) structures that subtend the base of the sessile spikelets of the tassel (staminate inflorescence). Note that each of the many paired spikelets of the tassel (staminate inflorescence) has a lower glume. Each spikelet is subtended by a pair of glumes (lower &amp; upper glumes). &quot; [MaizeGDB:lv (ID # 165572)]")
+
+(owl-someValuesFrom ZEA--0015057 ZEA--0015009)
+
+(mo-synonym ZEA--0015067 "&quot;permanent roots&quot; []")
+
+(termFormat EnglishLanguage ZEA--0015083 "leaf base attachment")
+
+(mo-definition ZEA--0015073 "&quot;A lateral branch (often referred to as an ear shoot) of the corn plant bears the female inflorescence (flowering system). Each lateral branch arises from the development of a lateral (axillary) bud, adjacent to one of the nodes of the culm. The lateral branch is subtended by a leaf. After pollination via the silks and fertilization of the ovule within each functionally female floret, the lateral branch develops into the typical ear. The lateral branch arises from the culm (main stem/stalk) at a node. The portion of the lateral branch below the 'ear' is called the shank. The axillary buds arising from nodes above the soil surface terminate in a pistillate inflorescence (ear). Usually all soon degenerate except the upper one or two located about midway up the culm. The amount of growth before disintegration (senescence) varies as the axillary buds may either die without much development or form 'ears' several centimeters long which resemble the functional ears, until they senesce.&quot; [MaizeGDB:232442, MaizeGDB:lv (ID # 165572), MaizeGDB:59445]")
+
+(owl-someValuesFrom ZEA--0015172 ZEA--0015174)
+
+(owl-someValuesFrom ZEA--0015158 ZEA--0015162)
+
+(termFormat EnglishLanguage ZEA--0015169 "root branch meristem")
+
+(owl-AnnotationProperty "null")
+
+(subclass ZEA--0015056 ZEA--0015002)
+
+(termFormat EnglishLanguage ZEA--0015096 "lower glume of pedicellate
+spikelet of ear")
+

@@ -1,0 +1,821 @@
+(mo-synonym TAIR--0000044 "&quot;principal growth stage 3.50&quot; []")
+
+(mo-synonym TAIR--0000397 "&quot;principal growth stage 1.0&quot; []")
+
+(termFormat EnglishLanguage develops_from "develops from")
+
+(termFormat EnglishLanguage TAIR--0000010 "ovule stage 2-III")
+
+(termFormat EnglishLanguage TAIR--0000036 "16 rosette leaf")
+
+(termFormat EnglishLanguage TAIR--0000408 "5 rosette leaf")
+
+(termFormat EnglishLanguage Smo-inSubset "inSubset")
+
+(subclass TAIR--0000395 TAIR--0000393)
+
+(mo-definition TAIR--0000060 "&quot;Stage of microsporogenesis just after pollen mother cell meiosis during which the callose wall between the tetrads breaks down and the microspores are released and lie freely in the pollen sac.&quot; [PMID:12354970, ISBN:0387940898]")
+
+(subclass TAIR--0000170 TAIR--0000022)
+
+(mo-definition TAIR--0000029 "&quot;A transient stage between the late globular and heart stage when the first cell divisions of the cotyledon primordia begin and cell elongation starts in the procambium.&quot; [ISBN:0387940898]")
+
+(mo-xrefAnalogous TAIR--0000044 "PMID:11449047")
+
+(termFormat EnglishLanguage TAIR--0000305 "vegetative")
+
+(subclass TAIR--0000415 TAIR--0000305)
+
+(subclass TAIR--0000392 TAIR--0000004)
+
+(mo-definition TAIR--0000022 "&quot;stages of development of a part or parts of a plant defined by characteristic morphological, structural, histological or other visible features. &quot; [TAIR:lr]")
+
+(subclass TAIR--0000394 TAIR--0000305)
+
+(mo-definition TAIR--0000369 "&quot;The stage at which the embryo has undergone three mitotic divisions and contains sixteen cells. The outer protodermal cells will give rise to the epidermis through a series of anticlinal divisions. Development of the suspensor is complete at this stage.&quot; [ISBN:0387094898]")
+
+(subclass TAIR--0000416 TAIR--0000305)
+
+(termFormat EnglishLanguage TAIR--0000064 "pollen stage 9")
+
+(instance Smo-inSubset BinaryRelation)
+
+(subclass TAIR--0000010 TAIR--0000005)
+
+(subclass TAIR--0000026 TAIR--0000306)
+
+(subclass TAIR--0000051 TAIR--0000050)
+
+(mo-remark "version: $Revision: 1.1 $")
+
+(termFormat EnglishLanguage TAIR--0000170 "seed development")
+
+(termFormat EnglishLanguage TAIR--0000044 "mid rosette growth")
+
+(mo-definition TAIR--0000205 "&quot;Stages of growth and development of Arabidopsis&quot; [TAIR:lr]")
+
+(termFormat EnglishLanguage TAIR--0000028 "globular stage")
+
+(termFormat EnglishLanguage TAIR--0000177 "two-celled stage")
+
+(mo-definition TAIR--0000185 "&quot; At this stage the protoderm, procambium, hyposeal cell are present and the endosperm begins to cellularize.&quot; [ISBN:03870940898]")
+
+(documentation EnglishLanguage "Version of data in the ontology.")
+
+(termFormat EnglishLanguage TAIR--0000054 "leaf senescence stage")
+
+(subclass TAIR--0000411 TAIR--0000305)
+
+(mo-definition TAIR--0000054 "&quot;the final stage of leaf development where the leaf ceases metabolic activity and senesces&quot; [TAIR:tb]")
+
+(subclass TAIR--0000017 TAIR--0000005)
+
+(termFormat EnglishLanguage TAIR--0000422 "stage 18 flower")
+
+(subclass TAIR--0000386 TAIR--0000004)
+
+(instance develops_from BinaryRelation)
+
+(mo-definition TAIR--0000010 "&quot;outer integument initiates, chalazal nucellus divides&quot; [TAIR:publication 11808]")
+
+(mo-synonym TAIR--0000042 "&quot;principal growth stage 3&quot; []")
+
+(mo-definition TAIR--0000306 "&quot;In annual plants the stages that commence when the plant is capable of sexual reproduction (e.g. flowering) and continues until sexual reproduction ceases.&quot; [TAIR:lr]")
+
+(documentation EnglishLanguage "Represents the symmetric property.
+(Typedefs only)")
+
+(mo-synonym TAIR--0000412 "&quot;principal growth stage 1.09&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000382 "stage 8 flower")
+
+(subclass TAIR--0000422 TAIR--0000004)
+
+(termFormat EnglishLanguage TAIR--0000021 "plant growth stages")
+
+(mo-xrefAnalogous TAIR--0000025 "PMID:11449047")
+
+(termFormat EnglishLanguage TAIR--0000035 "senescence")
+
+(mo-definition TAIR--0000011 "&quot;megaspore meiosis occurs&quot; [TAIR:publication 11808]")
+
+(termFormat EnglishLanguage TAIR--0000420 "visible flower buds")
+
+(mo-definition TAIR--0000407 "&quot;stage at which the first 3 rosette leaves have reached > 1 mm in length.&quot; [PMID:11449047]")
+
+(owl-someValuesFrom TAIR--0000005 TAIR--0000306)
+
+(subclass TAIR--0000009 TAIR--0000005)
+
+(subclass TAIR--0000379 TAIR--0000004)
+
+(termFormat EnglishLanguage TAIR--0000397 "cotyledons fully open")
+
+(mo-definition TAIR--0000170 "&quot;The stages of seed development, from fertilization to the dry or quiescent state.&quot; [TAIR:ki]")
+
+(subclass TAIR--0000019 TAIR--0000021)
+
+(termFormat EnglishLanguage TAIR--0000012 "ovule stage 2-V")
+
+(subclass TAIR--0000380 TAIR--0000004)
+
+(mo-synonym TAIR--0000034 "&quot;principal growth stage 8&quot; []")
+
+(subclass TAIR--0000384 TAIR--0000004)
+
+(subclass TAIR--0000056 TAIR--0000055)
+
+(termFormat EnglishLanguage TAIR--0000392 "stage 17 flower")
+
+(subclass TAIR--0000185 TAIR--0000028)
+
+(subclass TAIR--0000050 TAIR--0000022)
+
+(termFormat EnglishLanguage TAIR--0000025 "mid reproductive")
+
+(subclass TAIR--0000027 TAIR--0000305)
+
+(mo-definition TAIR--0000025 "&quot;middle stages of reproductive phase&quot; [TAIR:lr]")
+
+(mo-definition TAIR--0000064 "&quot;Stage of microsporogenesis during which the second mitotic division of the microsporocyte occurs.  Storage bodies become visible in the microspores.&quot; [PMID:12354970, ISBN:0387940898]")
+
+(mo-definition TAIR--0000173 "&quot;Stage during which the seed storage products (storage proteins and lipids) are being accumulated, mainly in the cotyledons (which are already bended toward the chalazal end of the embryo sac). As a result, the body of the embryo increases in size while most of the endosperm is already depleted. Seed coat gradually changes from green to yellowish and finally to dark brown color.&quot; [TAIR:ki]")
+
+(subclass TAIR--0000062 TAIR--0000055)
+
+(mo-definition TAIR--0000063 "&quot;Stage of microsporogenesis during which the resorption of the prominent vacuole occurs followed by the first mitotic division of th microspores occurs, &quot; [ISBN:0387940898, PMID:12354970]")
+
+(mo-synonym TAIR--0000057 "&quot;microsporocyte stage&quot; []")
+
+(mo-definition TAIR--0000320 "&quot;The stage at which the cotyledons curve down towards the suspensor. At this time protein deposition in the cotyledons begins.&quot; [ISBN:0387940898]")
+
+(termFormat EnglishLanguage Smo-definedSubset "definedSubset")
+
+(mo-definition TAIR--0000017 "&quot;eight nucleate megagametophyte&quot; [TAIR:publication 11808]")
+
+(subclass TAIR--0000408 TAIR--0000305)
+
+(mo-xrefAnalogous TAIR--0000043 "PMID:11449047")
+
+(termFormat EnglishLanguage TAIR--0000006 "ovule stage 1-I")
+
+(subclass TAIR--0000391 TAIR--0000004)
+
+(termFormat EnglishLanguage TAIR--0000374 "embryonic")
+
+(instance Smo-definedSubset BinaryRelation)
+
+(termFormat EnglishLanguage TAIR--0000173 "seed maturation")
+
+(mo-definition TAIR--0000421 "&quot;whole plant stage at which the first flower has reached stage 13 (fully open, pollen dehiscence).&quot; [PMID:11449047]")
+
+(subclass TAIR--0000004 TAIR--0000022)
+
+(mo-definition TAIR--0000375 "&quot;stage of flower development marked by the emergence of the floral meristem on the flank of the inflorescence meristem.&quot; [ISBN:0387940898]")
+
+(mo-synonym TAIR--0000388 "&quot;anthesis&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000011 "ovule stage 2-IV")
+
+(mo-synonym TAIR--0000399 "&quot;principal growth stage 1.04&quot; []")
+
+(subclass TAIR--0000043 TAIR--0000042)
+
+(termFormat EnglishLanguage TAIR--0000393 "germination")
+
+(mo-synonym TAIR--0000393 "&quot;principal growth stage 0&quot; []")
+
+(mo-xrefAnalogous TAIR--0000045 "PMID:11449047")
+
+(termFormat EnglishLanguage TAIR--0000026 "late reproductive")
+
+(mo-synonym TAIR--0000369 "&quot;sixteen cell stage&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000375 "stage 1 flower")
+
+(mo-synonym TAIR--0000056 "&quot;microsporogeneous mass stage&quot; []")
+
+(subclass TAIR--0000396 TAIR--0000393)
+
+(termFormat EnglishLanguage TAIR--0000379 "stage 5 flower")
+
+(subclass TAIR--0000097 TAIR--0000374)
+
+(mo-definition TAIR--0000390 "&quot;Stage of floral development that begins when the stigma extends above the long anthers.&quot; [ISBN:0387940898]")
+
+(subclass TAIR--0000041 TAIR--0000035)
+
+(subclass TAIR--0000036 TAIR--0000305)
+
+(subclass TAIR--0000417 TAIR--0000305)
+
+(termFormat EnglishLanguage TAIR--0000051 "leaf initiation stage")
+
+(mo-synonym TAIR--0000306 "&quot;adult&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000186 "heart stage")
+
+(subclass TAIR--0000055 TAIR--0000022)
+
+(termFormat EnglishLanguage TAIR--0000407 "3 rosette leaf")
+
+(mo-synonym TAIR--0000413 "&quot;principal growth stage 1.10&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000009 "ovule stage 2-II")
+
+(mo-definition TAIR--0000412 "&quot;stage at which the first  9 leaves have reached > 1 mm length.&quot; [PMID:11449047]")
+
+(termFormat EnglishLanguage TAIR--0000416 "13 rosette leaf")
+
+(subclass TAIR--0000378 TAIR--0000004)
+
+(termFormat EnglishLanguage TAIR--0000417 "14 rosette leaf")
+
+(termFormat EnglishLanguage TAIR--0000029 "triangle stage")
+
+(mo-synonym TAIR--0000415 "&quot;principal growth stage 1.12&quot; []")
+
+(mo-definition TAIR--0000186 "&quot;Embryonic stage at which the cotyledon primordia have enlarged enough to form two mounds on either side of the apical meristem.&quot; [ISBN:03870940898, TAIR:lr]")
+
+(subclass TAIR--0000306 TAIR--0000021)
+
+(subclass TAIR--0000420 TAIR--0000024)
+
+(mo-synonym TAIR--0000026 "&quot;flowering complete&quot; []")
+
+(mo-definition TAIR--0000408 "&quot;stage at which the first 5 leaves have reached > 1 mm length.&quot; [PMID:11449047]")
+
+(subclass TAIR--0000410 TAIR--0000305)
+
+(mo-definition TAIR--0000410 "&quot;stage at which the first 7 leaves have reached > 1 mm length.&quot; [PMID:11449047]")
+
+(subclass TAIR--0000013 TAIR--0000005)
+
+(mo-synonym TAIR--0000097 "&quot;one cell stage&quot; []")
+
+(subclass TAIR--0000045 TAIR--0000042)
+
+(termFormat EnglishLanguage TAIR--0000045 "late rosette growth")
+
+(termFormat EnglishLanguage TAIR--0000396 "hypocotyl and cotyledon
+emergence")
+
+(termFormat EnglishLanguage TAIR--0000380 "stage 6 flower")
+
+(mo-definition TAIR--0000056 "&quot;Stage of microgametogenesis where the archesporial cells divide to give rise to primary parietal and sporogenous cells.&quot; [ISBN:0387940898]")
+
+(termFormat EnglishLanguage TAIR--0000041 "senescence complete")
+
+(termFormat EnglishLanguage TAIR--0000383 "stage 9 flower")
+
+(mo-synonym TAIR--0000180 "&quot;octant stage embryo&quot; []")
+
+(subclass TAIR--0000014 TAIR--0000005)
+
+(subclass TAIR--0000389 TAIR--0000004)
+
+(subclass TAIR--0000015 TAIR--0000005)
+
+(mo-definition TAIR--0000059 "&quot;Stage of microsporogenesis where pollen mother cells undergo meiosis to form isobilateral and tetrahedral tetrads of microspores that are enclosed by the callose wall.&quot; [ISBN:0387940898, PMID:12354970]")
+
+(mo-definition TAIR--0000416 "&quot;stage at which the first 13 leaves have reached > 1mm length.&quot; [PMID:11449047]")
+
+(mo-synonym TAIR--0000420 "&quot;principal growth stage 5.10&quot; []")
+
+(subclass TAIR--0000421 TAIR--0000024)
+
+(termFormat EnglishLanguage TAIR--0000065 "pollen stage 10")
+
+(mo-definition TAIR--0000305 "&quot;stages of development that occur  from seed germination up to flowering&quot; [TAIR:lr]")
+
+(subclass TAIR--0000016 TAIR--0000005)
+
+(mo-definition TAIR--0000004 "&quot;stages of flower development in Arabidopsis&quot; [ISBN:0387940898]")
+
+(termFormat EnglishLanguage TAIR--0000024 "early reproductive")
+
+(mo-synonym TAIR--0000407 "&quot;principal growth stage 1.03&quot; []")
+
+(subclass TAIR--0000063 TAIR--0000055)
+
+(mo-definition TAIR--0000398 "&quot;stage at which the first two rosette leaves have reached > 1 mm in length.&quot; [PMID:11449047]")
+
+(termFormat EnglishLanguage TAIR--0000027 "seedling")
+
+(subclass TAIR--0000035 TAIR--0000021)
+
+(subclass TAIR--0000058 TAIR--0000055)
+
+(mo-definition TAIR--0000009 "&quot;inner integument initiates&quot; [TAIR:publication 11808]")
+
+(subclass TAIR--0000054 TAIR--0000050)
+
+(mo-definition TAIR--0000018 "&quot;central cell nuclei fuse, antipodal cells degenerate, additional cell layer forms in inner integument&quot; [TAIR:publication 11808]")
+
+(mo-synonym TAIR--0000421 "&quot;principal growth stage 6.00&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000042 "rosette growth")
+
+(mo-remark "date:                 Tue Nov 09 18:39:15 PST 2004")
+
+(subclass TAIR--0000382 TAIR--0000004)
+
+(mo-definition TAIR--0000177 "&quot;The embryo after the first mitotic division that produces a smaller apical cell and larger basal cell. The basal cell gives rise to the radicle and the suspensor. The apical cell gives rise all of the embryo except the root.&quot; [ISBN:0387940898]")
+
+(subclass TAIR--0000376 TAIR--0000004)
+
+(subclass TAIR--0000061 TAIR--0000055)
+
+(subclass TAIR--0000029 TAIR--0000374)
+
+(subclass TAIR--0000052 TAIR--0000050)
+
+(mo-definition TAIR--0000418 "&quot;stage at which leaf growth has ceased and the rosette no longer increases in size.&quot; [PMID:11449047]")
+
+(termFormat EnglishLanguage TAIR--0000412 "9 rosette leaf")
+
+(mo-synonym TAIR--0000305 "&quot;juvenile&quot; []")
+
+(mo-definition TAIR--0000027 "&quot; A young plant that is partly dependent on substances of the maternal plant stored in the seed (especially the first leaves, called cotyledons). The plant always has embryological structures, including cotyledons, a primary root (the embryological root), and a primary shoot (the embryological stem)&quot; [URL:http //www.bbg.org/gar2/topics/botany/parts_grouping.html]")
+
+(mo-definition TAIR--0000377 "&quot;Stage of floral development that begins when the sepal primordia arise.&quot; [ISBN:038794898]")
+
+(termFormat EnglishLanguage TAIR--0000015 "ovule stage 3-III")
+
+(subclass TAIR--0000060 TAIR--0000055)
+
+(mo-definition TAIR--0000015 "&quot;megagametophyte develops large central vacuole, micropylar end of ovule at 90 degree angle from funiculus&quot; [TAIR:publication 11808]")
+
+(termFormat EnglishLanguage TAIR--0000058 "pollen stage 3")
+
+(subclass TAIR--0000205 TAIR--0000001)
+
+(documentation EnglishLanguage "A namespace defined for use in the
+ontology.")
+
+(mo-synonym TAIR--0000411 "&quot;principal growth stage 1.08&quot; []")
+
+(subclass TAIR--0000007 TAIR--0000005)
+
+(termFormat EnglishLanguage TAIR--0000386 "stage 12 flower")
+
+(mo-synonym TAIR--0000061 "&quot;early-vacuolate microspore stage&quot; []")
+
+(subclass TAIR--0000059 TAIR--0000055)
+
+(mo-definition TAIR--0000392 "&quot;Stage of floral development that begins when all of the floral organs have abscised and only the green silique remains.&quot; [ISBN:0387940898]")
+
+(documentation Smo-inSubset EnglishLanguage "Declares a term/typedef
+to be in a subset.")
+
+(termFormat EnglishLanguage TAIR--0000413 "10 rosette leaf")
+
+(subclass TAIR--0000006 TAIR--0000005)
+
+(mo-synonym TAIR--0000035 "&quot;principal growth stage 9&quot; []")
+
+(mo-definition TAIR--0000184 "&quot;Stage at which the embryo under goes mitotic divisions to produce a 32 then 64- celled embryo.&quot; [ISBN:03870940898]")
+
+(termFormat EnglishLanguage TAIR--0000213 "dry seed")
+
+(termFormat EnglishLanguage TAIR--0000062 "pollen stage 7")
+
+(mo-definition TAIR--0000065 "&quot;Stage of microsporogenesis during which the pollen grains mature and dessicate.  The tapetal layer disappears just prior to dehiscence of the anther.&quot; [ISBN:0387940898, PMID:12354970]")
+
+(subclass TAIR--0000267 TAIR--0000305)
+
+(termFormat EnglishLanguage TAIR--0000267 "post-germination")
+
+(termFormat EnglishLanguage TAIR--0000034 "silique ripening")
+
+(mo-xrefAnalogous TAIR--0000042 "PMID:11449047")
+
+(termFormat EnglishLanguage TAIR--0000007 "ovule stage 1-II")
+
+(termFormat EnglishLanguage TAIR--0000185 "late globular stage")
+
+(mo-definition TAIR--0000368 "&quot;Stage at which the embryo has ceased to divide. &quot; [ISBN:0387940898]")
+
+(mo-synonym TAIR--0000184 "&quot;16-cell embryo&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000004 "flower development")
+
+(mo-synonym TAIR--0000055 "&quot;microsporogenesis&quot; []")
+
+(mo-definition TAIR--0000417 "&quot;stage at which the first 14 leaves have reached > 1mm length.&quot; [PMID:11449047]")
+
+(termFormat EnglishLanguage TAIR--0000014 "ovule stage 3-II")
+
+(termFormat EnglishLanguage TAIR--0000415 "12 rosette stage")
+
+(documentation EnglishLanguage "Represents the transitive property.
+(Typedefs only)")
+
+(mo-synonym TAIR--0000394 "&quot;principal growth stage 0.10&quot; []")
+
+(mo-synonym TAIR--0000024 "&quot;inflorescence emergence&quot; []")
+
+(mo-definition TAIR--0000391 "&quot;Stage of floral development that begins when the petals and sepals begin to wither.&quot; [ISBN:0387940898]")
+
+(subclass TAIR--0000369 TAIR--0000028)
+
+(instance Smo-inSubset subset)
+
+(mo-synonym TAIR--0000398 "&quot;principal growth stage 1.02&quot; []")
+
+(subclass TAIR--0000186 TAIR--0000374)
+
+(termFormat EnglishLanguage TAIR--0000008 "ovule stage 2-I")
+
+(subclass TAIR--0000053 TAIR--0000050)
+
+(mo-definition TAIR--0000097 "&quot;One cell stage that takes place following the fertilization, (i.e., fusion of sperm cell nucleus and egg cell resulting in a diploid cell) and before the first mitotic cell division. It marks the beginning of sporophytic generation in the life cycle of the Angiosperms.&quot; [TAIR:KI]")
+
+(mo-definition TAIR--0000005 "&quot;stages of ovule and megagametophyte development&quot; [PMID:9118807]")
+
+(subclass TAIR--0000085 TAIR--0000055)
+
+(subclass TAIR--0000018 TAIR--0000005)
+
+(documentation EnglishLanguage "The user who last edited the
+ontology.")
+
+(termFormat EnglishLanguage TAIR--0000063 "pollen stage 8")
+
+(mo-synonym TAIR--0000369 "&quot;early globular stage&quot; []")
+
+(subclass TAIR--0000409 TAIR--0000305)
+
+(termFormat EnglishLanguage TAIR--0000187 "torpedo stage")
+
+(termFormat EnglishLanguage TAIR--0000395 "radicle emergence")
+
+(termFormat EnglishLanguage TAIR--0000205 "Arabidopsis growth")
+
+(mo-definition TAIR--0000058 "&quot;Stage of microsporogenesis where the pollen mother cells become separated from each other and from tapetum by a callose wall.&quot; [ISBN:0387940898]")
+
+(mo-definition TAIR--0000409 "&quot;stage at which the first 6 leaves have reached > 1 mm in length.&quot; [PMID:11449047]")
+
+(documentation EnglishLanguage "Represents the cyclic property.
+(Typedefs only)")
+
+(termFormat EnglishLanguage TAIR--0000171 "early seed development")
+
+(mo-definition TAIR--0000382 "&quot;Stage of floral development that begins when the locules appear on the long stamens.&quot; [ISBN:0387940898]")
+
+(termFormat EnglishLanguage TAIR--0000421 "first open flower")
+
+(subclass TAIR--0000034 TAIR--0000021)
+
+(mo-synonym TAIR--0000064 "&quot;second microsporocyte mitotic division stage&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000061 "pollen stage 6")
+
+(termFormat EnglishLanguage TAIR--0000409 "6 rosette leaf")
+
+(subclass TAIR--0000418 TAIR--0000042)
+
+(subclass TAIR--0000005 TAIR--0000022)
+
+(mo-synonym TAIR--0000389 "&quot;Zero hours after flowering&quot; []")
+
+(subclass TAIR--0000064 TAIR--0000055)
+
+(subclass TAIR--0000399 TAIR--0000305)
+
+(mo-definition TAIR--0000399 "&quot;stage at which the first 4 rosette leaves have reached > 1mm in length.&quot; [PMID:11449047]")
+
+(subclass TAIR--0000028 TAIR--0000374)
+
+(termFormat EnglishLanguage TAIR--0000060 "pollen stage 5")
+
+(subclass TAIR--0000057 TAIR--0000055)
+
+(subclass TAIR--0000390 TAIR--0000004)
+
+(documentation Smo-definedSubset EnglishLanguage "Subset defined for
+the ontology.")
+
+(termFormat EnglishLanguage TAIR--0000052 "leaf expansion stage")
+
+(mo-definition TAIR--0000062 "&quot;Stage of microsporogenesis where a large vacuole is formed in each microspore causing a rapid increase in size and a displacement of the nucleus to one side.&quot; [PMID:12354970]")
+
+(mo-definition TAIR--0000012 "&quot;tetrad of megaspores formed, integuments elongate towards apex of the nucellus&quot; [TAIR:publication 11808]")
+
+(mo-definition TAIR--0000053 "&quot;Stage of leaf development stage where the leaf is fully expanded, no longer increases in size by cell division and/or cell expansion and is metabolically active.&quot; [TAIR:tb]")
+
+(mo-definition TAIR--0000007 "&quot;ovule primordium elongate&quot; [TAIR:publication 11808]")
+
+(mo-definition TAIR--0000085 "&quot;The final stage in the life cycle of the male gametophyte. Upon rehydration, mature pollen grain forms tubular outgrowth, pollen tube, which carries male gametes.&quot; [TAIR:KI]")
+
+(mo-savedBy "gwg")
+
+(subclass TAIR--0000213 Seed)
+
+(mo-synonym TAIR--0000418 "&quot;principal growth stage 3.90&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000005 "ovule development")
+
+(mo-definition TAIR--0000414 "&quot;stage at which the first 11 leaves have reached > 1 mm length.&quot; [PMID:11449047]")
+
+(termFormat EnglishLanguage TAIR--0000057 "pollen stage 2")
+
+(mo-synonym TAIR--0000417 "&quot;principal growth stage 1.14&quot; []")
+
+(subclass TAIR--0000187 TAIR--0000374)
+
+(mo-definition TAIR--0000014 "&quot;two nucleate megagametophyte stage, outer integument surrounds nucellus, micropylar end points > 90 degrees away from funiculus, differential growth of integuments&quot; [TAIR:publication 11808]")
+
+(termFormat EnglishLanguage part "Part of")
+
+(mo-definition TAIR--0000374 "&quot;stages of development that occur after fertilization and before germination.&quot; [TAIR:lr]")
+
+(subclass TAIR--0000044 TAIR--0000042)
+
+(mo-synonym TAIR--0000065 "&quot;pollen maturation&quot; []")
+
+(mo-synonym TAIR--0000409 "&quot;principal growth stage 1.06&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000043 "early rosette growth")
+
+(documentation EnglishLanguage "General comments on the ontology.")
+
+(termFormat EnglishLanguage TAIR--0000391 "stage 16 flower")
+
+(subclass TAIR--0000385 TAIR--0000004)
+
+(termFormat EnglishLanguage TAIR--0000097 "zygote")
+
+(subclass TAIR--0000065 TAIR--0000055)
+
+(mo-definition TAIR--0000008 "&quot;megaspore mother cell enlarges&quot; [TAIR:publication 11808]")
+
+(mo-synonym TAIR--0000185 "&quot;64-cell embryo&quot; []")
+
+(mo-synonym TAIR--0000041 "&quot;principal growth stage 9.70&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000369 "dermatogen stage")
+
+(mo-synonym TAIR--0000396 "&quot;principal growth stage 0.7&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000418 "complete rosette")
+
+(subclass TAIR--0000412 TAIR--0000305)
+
+(termFormat EnglishLanguage TAIR--0000016 "ovule stage 3-IV")
+
+(subclass TAIR--0000375 TAIR--0000004)
+
+(termFormat EnglishLanguage TAIR--0000388 "stage 13 flower")
+
+(mo-definition TAIR--0000006 "&quot;ovule primordia arise&quot; [TAIR:publication 11808]")
+
+(mo-xrefAnalogous TAIR--0000026 "PMID:11449047")
+
+(termFormat EnglishLanguage TAIR--0000180 "eight-celled stage")
+
+(documentation EnglishLanguage "Date/time of last edit and save.")
+
+(mo-definition TAIR--0000381 "&quot;Stage of floral development that begins when the ling stamen primordia are stalked at the base.&quot; [ISBN:0387940898]")
+
+(termFormat EnglishLanguage TAIR--0000411 "8 rosette leaf")
+
+(termFormat EnglishLanguage TAIR--0000376 "stage 2 flower")
+
+(mo-definition TAIR--0000028 "&quot;A collective term referring to the stages of embryo development spanning the early globular stage when the protoderm is formed to the late globular stage (before the initial divisions of the cotyledon primordia&quot; [ISBN:0387940898]")
+
+(subclass TAIR--0000374 TAIR--0000021)
+
+(subclass TAIR--0000171 TAIR--0000170)
+
+(termFormat EnglishLanguage TAIR--0000059 "pollen stage 4")
+
+(subclass TAIR--0000414 TAIR--0000305)
+
+(termFormat EnglishLanguage TAIR--0000394 "imbibition")
+
+(termFormat EnglishLanguage TAIR--0000390 "stage 15 flower")
+
+(subclass TAIR--0000397 TAIR--0000305)
+
+(subclass TAIR--0000381 TAIR--0000004)
+
+(mo-synonym TAIR--0000416 "&quot;principal growth stage 1.13&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000013 "ovule stage 3-I")
+
+(mo-definition TAIR--0000379 "&quot;Stage of floral development that begins when the petal and stamen primordia arise.&quot; [ISBN:038790898]")
+
+(termFormat EnglishLanguage TAIR--0000368 "mature")
+
+(mo-definition TAIR--0000376 "&quot;Stage of floral development that begins when the floral meristem becomes demarcated from the inflorescence meristem by a slight indentation.&quot; [ISBN:0387940898]")
+
+(termFormat EnglishLanguage TAIR--0000017 "ovule stage 3-V")
+
+(termFormat EnglishLanguage TAIR--0000414 "11 rosette leaf")
+
+(mo-synonym TAIR--0000045 "&quot;principal growth stage 3.70&quot; []")
+
+(documentation EnglishLanguage "Default namespace for the ontology.")
+
+(termFormat EnglishLanguage TAIR--0000001 "Arabidopsis ontology")
+
+(mo-definition TAIR--0000052 "&quot;Stage of leaf development which begins when the leaf primordiumis visible on the shoot apex and continues throughout the time that it increases in size by cell division and/or cell expansion.&quot; [TAIR:tb]")
+
+(termFormat EnglishLanguage TAIR--0000399 "4 rosette leaf")
+
+(subclass TAIR--0000398 TAIR--0000305)
+
+(mo-synonym TAIR--0000062 "&quot;vacuolate microspore stage&quot; []")
+
+(subclass TAIR--0000320 TAIR--0000374)
+
+(subclass TAIR--0000383 TAIR--0000004)
+
+(mo-definition TAIR--0000411 "&quot;stage at which the first 8 leaves have reached > 1 mm length.&quot; [PMID:11449047]")
+
+(subclass TAIR--0000368 TAIR--0000374)
+
+(termFormat EnglishLanguage TAIR--0000056 "pollen stage 1")
+
+(mo-definition TAIR--0000386 "&quot;stage of flower development that begins when the petal height is level with the long stamens.&quot; [ISBN:0387940898]")
+
+(subclass TAIR--0000021 TAIR--0000205)
+
+(termFormat EnglishLanguage TAIR--0000050 "leaf development")
+
+(termFormat EnglishLanguage TAIR--0000022 "body part developmental
+stages")
+
+(termFormat EnglishLanguage TAIR--0000389 "stage 14 flower")
+
+(mo-definedNamespace "arabidopsis_development.ontology")
+
+(termFormat EnglishLanguage TAIR--0000384 "stage 10 flower")
+
+(mo-definition TAIR--0000422 "&quot;Stage of floral development that begins when the silique color changes from green to yellow.&quot; [ISBN:0387940898]")
+
+(mo-definition TAIR--0000389 "&quot;Stage of floral development when long anthers extend above the stigma.&quot; [ISBN:0387940898]")
+
+(mo-synonym TAIR--0000063 "&quot;first microsporocyte mitotic division stage&quot; []")
+
+(subclass TAIR--0000184 TAIR--0000028)
+
+(mo-definition TAIR--0000171 "&quot;Early stage of seed development (commencing with the formation of diploid zygote) during which embryonic organ system is established, i.e., embryo axis and cotyledons. This stage terminates with apical-basal elongation of the embryo resulting in green linear embryo with flattened cotyledons. The seed coat is light green at this stage.&quot; [TAIR:ki]")
+
+(mo-synonym TAIR--0000408 "&quot;principal growth stage 1.05&quot; []")
+
+(documentation EnglishLanguage "The program used to generate the
+ontology.")
+
+(subclass TAIR--0000213 TAIR--0000170)
+
+(mo-definition TAIR--0000388 "&quot;stage of flower development that begins when the floral bud opens and the petals are visible to the naked eye.&quot; [ISBN:0387940898]")
+
+(mo-definition TAIR--0000013 "&quot;non-functional megaspores degenerate, outer integument envelops the nucellus and inner integument, funiculus and nucellus begin to curve&quot; [TAIR:publication 11808]")
+
+(termFormat EnglishLanguage TAIR--0000410 "7 rosette leaf")
+
+(mo-definition TAIR--0000213 "&quot;Stage during which the seed has attained less than 20% of water content, entering into metabolically inactive or, quiescent state.&quot; [TAIR:ki]")
+
+(termFormat EnglishLanguage TAIR--0000018 "ovule stage 3-VI")
+
+(instance part BinaryRelation)
+
+(mo-synonym TAIR--0000026 "&quot;principal growth stage 6.5-6.9&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000055 "pollen development")
+
+(mo-definition TAIR--0000413 "&quot;stage at which the first 10 leaves have reached  > 1mm length.&quot; [PMID:11449047]")
+
+(termFormat EnglishLanguage TAIR--0000378 "stage 4 flower")
+
+(mo-synonym TAIR--0000025 "&quot;principal growth stages 6.1-6.3&quot; []")
+
+(mo-definition TAIR--0000057 "&quot;Stage of microsporogenesis where the microsporocytes become conspicuous.&quot; [ISBN:0387940898]")
+
+(documentation Smo-Subset EnglishLanguage "Subset of OBO terms from
+the ontology.")
+
+(termFormat EnglishLanguage TAIR--0000019 "post-reproductive")
+
+(subclass TAIR--0000388 TAIR--0000004)
+
+(subclass TAIR--0000393 TAIR--0000305)
+
+(mo-formatVersion "1.0")
+
+(subclass TAIR--0000413 TAIR--0000305)
+
+(termFormat EnglishLanguage TAIR--0000398 "2 rosette leaf")
+
+(domain Smo-definedSubset 2 Smo-Subset)
+
+(subclass TAIR--0000042 TAIR--0000021)
+
+(mo-synonym TAIR--0000414 "&quot;principal growth stage 1.11&quot; []")
+
+(mo-synonym TAIR--0000043 "&quot;principal growth stage 3.20&quot; []")
+
+(mo-definition TAIR--0000026 "&quot;reproductive stages that occur after the midpoint and before senescence or the end of reproductive growth.&quot; [TAIR:lr]")
+
+(termFormat EnglishLanguage TAIR--0000184 "mid-globular stage")
+
+(mo-synonym TAIR--0000389 "&quot;zero hours HAF&quot; []")
+
+(mo-definition TAIR--0000383 "&quot;Stage of floral development that begins when the petal primordia are stalked at the base.&quot; [ISBN:0387940898]")
+
+(termFormat EnglishLanguage TAIR--0000053 "fully expanded leaf stage")
+
+(mo-definition TAIR--0000380 "&quot;Stage of floral development that begins when the sepals enclose the floral bud.&quot; [ISBN:0387940898]")
+
+(mo-synonym TAIR--0000058 "&quot;pollen mother cell stage&quot; []")
+
+(mo-definition TAIR--0000055 "&quot;The stages of pollen development in Arabidopsis.&quot; [TAIR:tb]")
+
+(subclass TAIR--0000305 TAIR--0000021)
+
+(termFormat EnglishLanguage TAIR--0000377 "stage 3 flower")
+
+(mo-synonym TAIR--0000059 "&quot;microspore tetrad stage&quot; []")
+
+(mo-synonym TAIR--0000410 "&quot;principal growth stage 1.07&quot; []")
+
+(subclass TAIR--0000177 TAIR--0000374)
+
+(documentation EnglishLanguage "Version of OBO format.")
+
+(mo-autoGeneratedBy "DAG-Edit 1.419 rev 3")
+
+(mo-defaultNamespace "arabidopsis_development.ontology")
+
+(termFormat EnglishLanguage TAIR--0000306 "reproductive")
+
+(mo-definition TAIR--0000061 "&quot;Stage of microsporogenesis where the microspores round up and small vaualoles appear in their cytoplasm.  The cell walls also thicken because of the formation of the exine.&quot; [PMID:12354970]")
+
+(mo-xrefAnalogous TAIR--0000024 "PMID:11449047")
+
+(mo-definition TAIR--0000016 "&quot;four-nucleate megagametophyte , inner integument surrounds nucellus, endothelium differentiates&quot; [TAIR:publication 11808]")
+
+(mo-remark "saved-by:             Katica Ilic")
+
+(mo-definition TAIR--0000051 "&quot;Stage of leaf development that begins when cells are set aside in the meristem to form the leaf primordium and ends right before the leaf primordium is visible on the shoot apex.  Cells in the primordium are not yet differentiated.&quot; [TAIR:tb]")
+
+(mo-definition TAIR--0000050 "&quot;stages of leaf development in Arabidopsis&quot; [TAIR:tb]")
+
+(termFormat EnglishLanguage Smo-Subset "Subset")
+
+(mo-definition TAIR--0000180 "&quot;An embryo comprised of eight cell. The mitotic divisions leading to this stage do not cause a significant increase in size.&quot; [ISBN:0387094898]")
+
+(subclass TAIR--0000180 TAIR--0000374)
+
+(domain Smo-inSubset 2 Smo-Subset)
+
+(subclass TAIR--0000173 TAIR--0000170)
+
+(mo-definition TAIR--0000385 "&quot;stage of flower development that begins when the stigmatic papillae appear.&quot; [ISBN:0387940898]")
+
+(mo-savedDateTime "19:08:2005 14:14")
+
+(mo-definition TAIR--0000384 "&quot;stage of flower development that begins when the petal height is level with the short stamens.&quot; [ISBN:0387940898]")
+
+(mo-synonym TAIR--0000395 "&quot;principal growth stage 0.7&quot; []")
+
+(subclass TAIR--0000377 TAIR--0000004)
+
+(subclass TAIR--0000011 TAIR--0000005)
+
+(mo-definition TAIR--0000420 "&quot;Whole plant developmental stage at which the first flower buds become visible to the naked eye&quot; [PMID:11449047]")
+
+(termFormat EnglishLanguage TAIR--0000381 "stage 7 flower")
+
+(subclass TAIR--0000008 TAIR--0000005)
+
+(owl-someValuesFrom TAIR--0000004 TAIR--0000306)
+
+(termFormat EnglishLanguage TAIR--0000320 "curled cotyledon stage")
+
+(mo-synonym TAIR--0000060 "&quot;microspore release stage&quot; []")
+
+(termFormat EnglishLanguage TAIR--0000085 "germinated pollen grain")
+
+(mo-definition TAIR--0000378 "&quot;Stage of floral development that begins when the developing sepals overlie the floral meristem.&quot; [ISBN:0387940898]")
+
+(subclass TAIR--0000022 TAIR--0000205)
+
+(mo-remark "autogenerated-by:     DAG-Edit version 1.418")
+
+(subclass TAIR--0000024 TAIR--0000306)
+
+(subclass TAIR--0000012 TAIR--0000005)
+
+(termFormat EnglishLanguage TAIR--0000385 "stage 11 flower")
+
+(mo-definition TAIR--0000415 "&quot;stage at which the first 12 leaves have reached > 1mm length.&quot; [PMID:11449047]")
+
+(subclass TAIR--0000025 TAIR--0000306)
+
+(subclass TAIR--0000407 TAIR--0000305)
+
+(owl-AnnotationProperty "null")
+
