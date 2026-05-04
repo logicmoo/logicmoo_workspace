@@ -18,6 +18,8 @@
 :- system:multifile(baseKB:'$spft'/4).
 :- system:import(baseKB:'$spft'/4).
 
+:-  system:multifile(system:contains_dot/1).
+:- dynamic(system:contains_dot/1).
 
 :- dynamic(baseKB:'$pt'/3).
 :- export(baseKB:'$pt'/3).
