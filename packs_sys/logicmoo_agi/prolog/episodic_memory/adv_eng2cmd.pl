@@ -433,9 +433,13 @@ parse_cmd( Self, Logic, [F|Words], []):-
 % %%%%%%%%%%%%%%
 % Simple
 % %%%%%%%%%%%%%%
+x_args(X,Args)--> [X],arg_args(Args).
+arg_args([])-->[].
+arg_args([X|Args])-->x_args(X,Args).
 
 parsed_as_simple(X):- arg(_, v(look, wait, auto, inventory), X).
-parse_cmd(Agent, Logic) --> [X|Args], {parsed_as_simple(X0), same_verb(X0, X), !, Logic= act3(X0, Agent,Args)}.
+parse_cmd(Agent, Logic) --> x_args(X,Args),
+  {parsed_as_simple(X0), same_verb(X0, X), !, Logic= act3(X0, Agent,Args)}.
 
 ask_to_say(Ask, say):- arg(_, v(ask, say, tell, talk), Ask).
 ask_to_say(Ask, say):- arg(_, v(request, tell), Ask).
