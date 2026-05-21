@@ -8,7 +8,7 @@ cycler==0.10.0
 decorator==4.3.0
 docutils==0.14
 e==1.4.5
-future==0.16.0
+future==0.18.3
 -e 'git+https://github.com/rubenvereecken/py-vgdl/#egg=vgdl[all]'
 idna==2.7
 ipdb==0.11
